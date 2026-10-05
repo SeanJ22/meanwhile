@@ -1,0 +1,131 @@
+{
+  "applicationSha": "5a4a0a3109b5b4fb16522b3ec55c2c000682e71f",
+  "full": {
+    "testedSha": "04db1664dfe317511056023da5cb636629f05111",
+    "state": "completed; all six investigated and repaired/rechecked",
+    "productionDatabase": "unset",
+    "placeReferenceProjection": "rebuilt",
+    "nextBuildDuringTests": "absent",
+    "tests": 9371,
+    "passCount": 9354,
+    "failCount": 6,
+    "skip": 11,
+    "durationMs": 1630587.397334,
+    "failures": [
+      "agenda-version-projection CSS import",
+      "BAL-30 shared gap assertion",
+      "diligent-portal-reading CSS import",
+      "reader-last-mile-meetings CSS import",
+      "reader-recent-vote-expansion inline citation assertion",
+      "shared-notes neutral disclaimer assertion"
+    ]
+  },
+  "build": {
+    "testedSha": "5a4a0a3109b5b4fb16522b3ec55c2c000682e71f",
+    "result": "pass",
+    "homeRawBytes": 1977871,
+    "homeGzipBytes": 563357,
+    "ceilingsUnchanged": [
+      3100000,
+      940000
+    ],
+    "appTrace": [
+      403,
+      430
+    ],
+    "frameworkTrace": [
+      981,
+      1050
+    ],
+    "readerTraceFailures": 0
+  },
+  "rechecks": [
+    {
+      "testedSha": "04db1664d",
+      "log": "batch03-repair-checks.txt",
+      "pass": 56,
+      "fail": 0
+    },
+    {
+      "testedSha": "1e59d80f1",
+      "log": "repair-checks.txt",
+      "pass": 39,
+      "fail": 0
+    },
+    {
+      "testedSha": "2555f40b5",
+      "log": "material-checks.txt",
+      "pass": 36,
+      "fail": 0
+    },
+    {
+      "testedSha": "2555f40b5",
+      "log": "contrast.txt",
+      "pass": 2,
+      "fail": 0
+    },
+    {
+      "testedSha": "a5ba537df0d33d8e1953b978025778da4de5cf9e",
+      "log": "vote-repair-checks.txt",
+      "pass": 18,
+      "fail": 0
+    }
+  ],
+  "browser": {
+    "testedSha": "2555f40b531601f961176cfff011c7ef7f317db1",
+    "result": "pass",
+    "widths": [
+      390,
+      1280
+    ],
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "browser": "explicit /usr/bin/chromium substitute; not pinned download proof",
+    "inputs": "synthetic, real client components",
+    "liveAcceptance": false
+  },
+  "liveAccess": {
+    "result": "CONNECT 403 network policy",
+    "log": "live-access.txt",
+    "owner": "River",
+    "lastAttempt": "2026-10-05T20:14:22Z",
+    "lastLog": "live-access-latest.txt"
+  },
+  "normalReadySteps": [
+    "FE-08",
+    "FE-09",
+    "FE-11",
+    "FE-13",
+    "FE-15",
+    "FE-29",
+    "FE-30",
+    "FE-31",
+    "FE-34",
+    "FE-38",
+    "FE-41",
+    "FE-42",
+    "FE-45"
+  ],
+  "hookPendingBuiltSteps": {
+    "FE-32": "admin registry imports",
+    "FE-28": "bank publishReaderLinkHealth(results,sweptAt) after real DB-51 sweep"
+  },
+  "pendingSteps": {
+    "FE-19": "live good/bad screenshot pairs",
+    "FE-12": "CP-16",
+    "FE-35": "CA-07",
+    "FE-36": "CA-37",
+    "FE-14": "CP-16 and FE-12",
+    "FE-33": "CA-14",
+    "FE-22": "FE-12 and FE-14"
+  },
+  "selector": "FULL (CI_TIER=yes, CI_EVENT_NAME=pull_request, base=merge-base origin/river); missing-CI_TIER setup result corrected",
+  "exactReadySha": null,
+  "exactReadyChecks": "pending",
+  "lint": {
+    "testedSha": "f41cdf784947b0d2c16081b2379431a4ba063361",
+    "result": "0 errors,69 baseline warnings; later app vote edits 0 errors/0 warnings"
+  }
+}

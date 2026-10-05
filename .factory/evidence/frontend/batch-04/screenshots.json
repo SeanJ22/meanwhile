@@ -1,0 +1,78 @@
+{
+  "fixture": "synthetic inputs; real components; not live look-standard acceptance",
+  "recreate": "node .factory/evidence/frontend/batch-04/browser-proof.mjs (network-enabled command sandbox, system Chromium)",
+  "images": [
+    {
+      "path": "/tmp/frontend-person-proof/challenger-1280-dark.png",
+      "sha256": "e0af9d4bfebcebf0592519789d3096d070aef62435c97cee651aeb731f9b0860",
+      "bytes": 265747,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/challenger-1280-light.png",
+      "sha256": "357ff6b87600a4f8a989707070ea3a0180cc984165d7b4c713d0349b5310ab53",
+      "bytes": 148373,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/challenger-390-dark.png",
+      "sha256": "e9f3f65703e3d3c647cd2e6c7b4ab2bb1d8895c96b461fb371b08720c05303f9",
+      "bytes": 157146,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/challenger-390-light.png",
+      "sha256": "24a22cf8a160ac0961d8e4851b1efd98c9bbb3e5a013d6cd6d498aac7ad0acd8",
+      "bytes": 114151,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/incumbent-1280-dark.png",
+      "sha256": "853329269563ad3d20299ba5f5b2f25bcd4c858a94c36c39b2ea4d35b393c7c8",
+      "bytes": 264845,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/incumbent-1280-light.png",
+      "sha256": "fb3425c09cc3ad0c2c183a611248621729ed42f934a279db7a8528195c896b1f",
+      "bytes": 147978,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/incumbent-390-dark.png",
+      "sha256": "d98c5f9bf5010b8d5b999f716f2cf95044304f479f489de8747c4704f942ff4a",
+      "bytes": 156988,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/incumbent-390-light.png",
+      "sha256": "cf82273048573a00adf00b33437793cdb9bf5caa877171b4e98aac26b2832c86",
+      "bytes": 113693,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/sources-1280-dark.png",
+      "sha256": "2e3aff887fe7b6c2148f710f961cdd8df02f0abf370a6641f2eb44e24ba4537f",
+      "bytes": 314496,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/sources-1280-light.png",
+      "sha256": "1b70df618c3267840e69cdb857b8d6602ba583f85af1f0c6d11277eb1541bbe0",
+      "bytes": 197184,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/sources-390-dark.png",
+      "sha256": "e288255969521447aa71d3991327101067de32c565838149f7aab60ebc940403",
+      "bytes": 232790,
+      "tracked": false
+    },
+    {
+      "path": "/tmp/frontend-person-proof/sources-390-light.png",
+      "sha256": "7591d98cdd7b5991bd0a0adbec18ecc0db7521689eb1391d9b65e927ac15afea",
+      "bytes": 158996,
+      "tracked": false
+    }
+  ]
+}

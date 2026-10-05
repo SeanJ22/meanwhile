@@ -1,0 +1,47 @@
+✔ no unrecorded sentence-shaped render default exists (234.051428ms)
+✔ every baseline entry carries a reason, and none is a placeholder (0.256988ms)
+✔ the baseline only shrinks — a recorded entry that is gone must be removed (73.184312ms)
+✔ the shape catches every instance the class was named from (0.23055ms)
+✔ a single-token type default is not a claim and is not flagged (0.173201ms)
+✔ FE-31: every reader gap uses WorkingOnIt and disclaimers stay retired (65.140058ms)
+✔ FE-31: seeded inline gaps and each banned disclaimer fail the instrument (0.810239ms)
+✔ Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version (22.273432ms)
+✔ a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording (4.360689ms)
+✔ a revision at the same address is still two versions, and the old address is not offered as the old text (3.008137ms)
+✔ a sitting holding only publication-index pages is rendered as what it holds, with no version count and no revision (1.430338ms)
+✔ the real agenda route over the committed holding returns one row per distinct content and reconciles every held row (21531.795663ms)
+✔ BAL-30: the local measure text is committed, and it is not thin (1.392115ms)
+✔ BAL-30: the ballot page renders the question and the statement it holds (4.642042ms)
+✔ BAL-30: a null statement renders as a NAMED gap, never as the rich branch (1.658453ms)
+✔ BAL-30: a school-district override no longer files under 'Statewide measures' (3.554986ms)
+✔ the committed Tucson Unified roster resolves — the card under the defect (2.012424ms)
+✔ a district card with a roster and meetings is never sourceless (0.826989ms)
+✔ a district card with NO roster and NO meetings still cites its boundary (0.259656ms)
+✔ a meeting card lists the sitting and the body's roster (0.320082ms)
+✔ a person card cites the record its identity came from (0.750708ms)
+✔ same-source rows merge, and the merged row states the count (0.700974ms)
+✔ distinct publishers never merge (0.359759ms)
+✔ a holder with no record at all contributes no row, and says so by absence (0.214943ms)
+✔ a gap cannot turn into a searched absence without an equal-effort topic record (31.573104ms)
+✔ gap rows retain their valid inline HTML and published copy overrides (8.218091ms)
+✔ an official and a thin candidate share every section header and contact position (7.031871ms)
+✔ every held sitting reaches the real agenda route with the same class-filtered records as Ask (2440.880164ms)
+✔ vendor/event ambiguity and a different body cannot inherit recorded actions (0.566477ms)
+✔ an agenda never supplies a decision or inferred per-member vote (0.254154ms)
+✔ a reused publisher portal is classified identically by the real route and agenda renderer (25772.965447ms)
+✔ the rhythm sweep catches an off-scale value — the instrument works (RULING 110) (3.346181ms)
+✔ the rhythm token scales are declared in app/globals.css (0.508224ms)
+✔ component sweep catches new tiny type, off-scale spacing and literal colours (0.744349ms)
+✔ component exceptions only shrink, per file and value (128.093897ms)
+✔ spacing: off-scale count does not exceed the baseline (it only shrinks) (71.630159ms)
+✔ radius: off-scale count does not exceed the baseline (it only shrinks) (5.165572ms)
+✔ fontSize: off-scale count does not exceed the baseline (it only shrinks) (30.119429ms)
+✔ elevation: off-scale count does not exceed the baseline (it only shrinks) (1.413092ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 34100.099518

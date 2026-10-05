@@ -1,0 +1,10 @@
+✔ reader token pairs clear their contrast bars in both themes (5.903758ms)
+✔ a low-contrast palette and a missing surface cannot silently pass (3.537659ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 277.789537

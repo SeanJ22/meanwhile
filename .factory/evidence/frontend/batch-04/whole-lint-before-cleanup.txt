@@ -1,0 +1,162 @@
+
+/tmp/frontend-sources/app/(admin)/_mw/admin-v6/screen-now.tsx
+  294:9  warning  'N' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/components/ballot/ballot-narrowing.tsx
+  123:11  warning  Do not use `window.location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination
+
+/tmp/frontend-sources/components/map/coverage-notice.tsx
+    44:3  warning  'representationForDivision' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  1668:3  warning  'requestedRadiusKm' is defined but never used. Allowed unused args must match /^_/u          @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/components/map/popup/entity-modal.tsx
+  58:10  warning  'NoValue' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/components/map/popup/official-popup.tsx
+  602:3  warning  'billUrl' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/lib/calendar/event-links.ts
+  18:15  warning  'Meeting' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/lib/civic-data/firewall.ts
+  408:10  warning  'matchingCalls' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/lib/control-plane/shadow/pima-run.ts
+  86:10  warning  'endAttempt' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/lib/control-plane/workers/research-runtime.ts
+  75:98  warning  'bound' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/lib/control-plane/workers/runtime.ts
+   15:26  warning  'RESEARCH_BOUNDS' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  125:93  warning  'bound' is defined but never used. Allowed unused args must match /^_/u            @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/lib/extract/html-content.ts
+  483:5  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+/tmp/frontend-sources/lib/sources/legistar/outcomes.ts
+  57:15  warning  'RecordClass' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/lib/sources/nh-general-court/official-data.ts
+  505:9  warning  'employeeToPerson' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/netlify/functions/keep-warm.mts
+  42:1  warning  Assign arrow function to a variable before exporting as module default  import/no-anonymous-default-export
+
+/tmp/frontend-sources/scripts/consolidation-conserve.mts
+  46:7  warning  'baseById' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/scripts/coverage-four-layer.mts
+  87:15  warning  'Body' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/scripts/fetch-official-portraits.mts
+  43:7  warning  'ROOT' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/scripts/preflight.mjs
+  44:10  warning  'existsSync' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/scripts/probe-reaction-subscribe.mts
+  72:7  warning  'READ' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/scripts/retire-false-acquisition-diagnostic.mts
+  28:10  warning  'floorLine' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  28:21  warning  'floored' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/scripts/shipping-amplification.mts
+  234:10  warning  'base' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/scripts/state-money-az.mts
+  180:7   warning  'SNAPSHOT_PATH' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  251:42  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  255:47  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  256:47  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  257:47  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  271:67  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  360:11  warning  'StatewideCorpusFile' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/admin-feedback-9-4-pm.test.ts
+   38:10  warning  'METRIC_GROUP_MEANING' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   38:32  warning  'researchDigestRows' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+   40:15  warning  'WindowView' is defined but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+  423:7   warning  'attempt' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  450:7   warning  'METRICS' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/admin-feedback-9-6.test.ts
+   7:37  warning  'plainMeaning' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+   9:34  warning  'WorkerRoleView' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  99:10  warning  'attempt' is defined but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/admin-feedback-inbox.test.ts
+  35:3  warning  'ENVIRONMENT_WORDS' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/admin-google-signin.test.ts
+  35:24  warning  'PUBLIC_SITE_ORIGIN' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/admin-reader-intel.test.ts
+  20:3   warning  'readAsk' is defined but never used. Allowed unused vars must match /^_/u                     @typescript-eslint/no-unused-vars
+  34:10  warning  'organicDenominatorSentence' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  66:7   warning  'SURFACE' is assigned a value but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/ask-body-agenda.test.ts
+  391:7  warning  'soloDocs' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/ask-grounded.test.ts
+  15:10  warning  'emptySelectionState' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/assignment-identity.test.ts
+  177:10  warning  'plan0Writes' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/corpus-contract.test.ts
+  8:10  warning  'filesThatWouldBeCommitted' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/field-manual-scout.test.ts
+  9:3  warning  'knownRouteIds' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/incumbency.test.ts
+  28:3  warning  'namesAgree' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/legistar-outcome-store.test.ts
+  18:3  warning  'resetOutcomeSnapshotCache' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/measure-depth.test.ts
+  18:3  warning  'bothSidesShip' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/narrowing.test.ts
+  3:24  warning  'readdirSync' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/nj-state-rollcalls.test.ts
+  20:8  warning  'NjMemberVoteRow' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/plan-repair.test.ts
+  351:9  warning  'row' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/reader-verification-cache.test.ts
+  5:34  warning  'pdcV2CanonicalMeetingFactEvidence' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/state-money-selector.test.ts
+  5:10  warning  'mkdtempSync' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  5:23  warning  'mkdirSync' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  5:48  warning  'rmSync' is defined but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+  5:56  warning  'writeFileSync' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  7:10  warning  'dirname' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/tree-equivalence.test.ts
+   30:10  warning  'parse' is defined but never used. Allowed unused vars must match /^_/u                   @typescript-eslint/no-unused-vars
+   35:3   warning  'attestationCannotChain' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  339:7   warning  'workflow' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/trusted-lkg-import.test.ts
+  644:11  warning  'store' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/worker-fleet-activity.test.ts
+  4:10  warning  'nextAutonomousOperation' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  5:10  warning  'dispatchWorkerTask' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  5:30  warning  'enqueueWorkerTask' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+  8:10  warning  'registerWorkItem' is defined but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+  9:15  warning  'EvidenceWalkStep' is defined but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+
+/tmp/frontend-sources/tests/worker-fleet-research.test.ts
+  11:10  warning  'assertResearchResult' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 71 problems (0 errors, 71 warnings)
+

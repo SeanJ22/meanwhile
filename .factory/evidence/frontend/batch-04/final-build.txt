@@ -1,0 +1,155 @@
+
+> we-the-people@0.1.0 prebuild /tmp/frontend-sources
+> node --experimental-strip-types scripts/state-holdings-project.mts && node scripts/build-map-worker.mjs
+
+State serving projections: 148 canonical geo/street files; 0 mismatches.
+map worker → public/maplibre-gl-worker.mjs (461 KB, self-contained)
+
+> we-the-people@0.1.0 build /tmp/frontend-sources
+> next build
+
+▲ Next.js 16.3.0 (Turbopack)
+✓ Running next.config.ts took 107ms
+- Experiments (use with caution):
+  ⨯ preloadEntriesOnStart
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 7.7s
+  Running TypeScript ...
+  Finished TypeScript in 18.8s ...
+  Collecting page data using 4 workers ...
+ask · model claude-opus-5-5 · effort medium · reader claude-haiku-4-5 · fast writer claude-haiku-4-5 · classifier claude-haiku-4-5 · unsourced claude-haiku-4-5
+  Generating static pages using 4 workers (0/31) ...
+  Generating static pages using 4 workers (7/31) 
+  Generating static pages using 4 workers (15/31) 
+ask · model claude-opus-5-5 · effort medium · reader claude-haiku-4-5 · fast writer claude-haiku-4-5 · classifier claude-haiku-4-5 · unsourced claude-haiku-4-5
+  Generating static pages using 4 workers (23/31) 
+✓ Generating static pages using 4 workers (31/31) in 741ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /(.)ballot
+├ ƒ /about-area
+├ ƒ /about-area/compare
+├ ƒ /admin
+├ ƒ /admin/auth/callback
+├ ƒ /admin/auth/google
+├ ƒ /admin/login
+├ ƒ /api/address/resolve
+├ ƒ /api/admin/action
+├ ƒ /api/admin/bulk-hunts
+├ ƒ /api/admin/changes
+├ ƒ /api/admin/chat
+├ ƒ /api/admin/checklist-definitions
+├ ƒ /api/admin/decision
+├ ƒ /api/admin/deploy-preview
+├ ƒ /api/admin/evidence/[workItemId]/[attemptId]/[artifactId]
+├ ƒ /api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/status
+├ ƒ /api/admin/fix-history
+├ ƒ /api/admin/geography-preview
+├ ƒ /api/admin/live
+├ ƒ /api/admin/public-reader-observation
+├ ƒ /api/admin/reader-demand
+├ ƒ /api/admin/reports
+├ ƒ /api/admin/research
+├ ƒ /api/admin/runner-progress
+├ ƒ /api/admin/session
+├ ƒ /api/admin/v6/agents
+├ ƒ /api/admin/v6/data/capture
+├ ƒ /api/admin/v6/data/switches
+├ ƒ /api/admin/v6/doors
+├ ƒ /api/admin/v6/fixes
+├ ƒ /api/admin/v6/history
+├ ƒ /api/admin/v6/hunts
+├ ƒ /api/admin/v6/learning
+├ ƒ /api/admin/v6/money
+├ ƒ /api/admin/v6/national
+├ ƒ /api/admin/v6/place
+├ ƒ /api/admin/v6/publication
+├ ƒ /api/admin/v6/receipt
+├ ƒ /api/admin/v6/reliability
+├ ƒ /api/admin/v6/results
+├ ƒ /api/admin/v6/same-cause
+├ ƒ /api/admin/v6/scheduled
+├ ƒ /api/admin/v6/sends
+├ ƒ /api/admin/v6/settings
+├ ƒ /api/admin/v6/spend
+├ ƒ /api/admin/v6/stuck
+├ ƒ /api/admin/v6/topic-counts
+├ ƒ /api/admin/v6/trail
+├ ƒ /api/admin/v6/updates
+├ ƒ /api/admin/v6/workers
+├ ƒ /api/admin/v6/zip
+├ ƒ /api/admin/work-progress
+├ ƒ /api/agenda
+├ ƒ /api/ask/agenda
+├ ƒ /api/ask/classify
+├ ƒ /api/ask/grounded
+├ ƒ /api/ballot/scope
+├ ƒ /api/boundaries/[archive]
+├ ƒ /api/build
+├ ƒ /api/census-geography/zctas
+├ ƒ /api/demand-signal
+├ ƒ /api/directory
+├ ƒ /api/events
+├ ƒ /api/feedback
+├ ƒ /api/funding/[target]
+├ ƒ /api/geocode
+├ ƒ /api/log
+├ ƒ /api/meetings
+├ ƒ /api/official-actions/[subject]
+├ ƒ /api/portraits/[...path]
+├ ƒ /api/positions/[subject]/[topic]
+├ ƒ /api/profile/[subject]
+├ ƒ /api/questionnaire
+├ ƒ /api/reactions
+├ ƒ /api/reader/artifact/[sequence]/[scope]
+├ ƒ /api/reader/link-health
+├ ƒ /api/reader/manifest
+├ ƒ /api/reader/settings
+├ ƒ /api/representation/[...division]
+├ ƒ /api/schema
+├ ƒ /api/speak
+├ ƒ /api/state-members
+├ ƒ /api/votes
+├ ƒ /api/voting-sites
+├ ƒ /api/warm
+├ ○ /apple-icon.png
+├ ƒ /ballot
+├ ƒ /feedback
+├ ○ /icon.svg
+├ ○ /opengraph-image.png
+├ ƒ /questionnaire/[token]
+└ ○ /transparency
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+> we-the-people@0.1.0 postbuild /tmp/frontend-sources
+> node scripts/check-build-output.mjs && node --experimental-strip-types scripts/reader-trace-check.mts
+
+build-output · 99 trace manifests · 864 repo files traced · tests/ traced 0 · credential shapes 0 · named placeholders skipped 5
+budget 1a · largest APP trace: 403 files (server/app/api/admin/v6/place/route.js.nft.json) (baseline 374, ceiling 430) — a FILE COUNT, not bytes, and not the reader's JavaScript. This is the number R23 blew up.
+budget 1b · framework runtime trace, default mode: 981 files (next-server.js.nft.json) (baseline 935, ceiling 1050) — Next's own server runtime, containing no file of ours
+budget 2 · client cost for /: 1931.5 KB initial JS, 550.2 KB gzip, across 15 chunks (baseline 2653.0 KB / 799.3 KB, ceiling 3027.3 KB / 918.0 KB)
+           exact ceilings · raw 3100000 · gzip 940000
+           of which MapLibre ~1182.8 KB, application ~748.7 KB · ESTIMATE ONLY, NOT MEASUREMENT — whole chunks are attributed by a substring test, so this moves when chunks are reshuffled and it must not be compared across a chunking change. no chunk on this route carries a sourceMappingURL — rebuild with WTP_ATTRIBUTION_BUILD=1 to emit source maps.
+           exact bytes · raw 1977871 · gzip 563357
+{
+  "routes": 11,
+  "requirements": 16,
+  "files": 127,
+  "failures": []
+}

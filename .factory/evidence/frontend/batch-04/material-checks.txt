@@ -1,0 +1,44 @@
+✔ the stored skip-link rows of all three Diligent tenants read as the portal, not as an agenda we could not read (18.547249ms)
+✔ the fixed extractor's reading of the recorded pages is the portal too (17.466755ms)
+✔ a read recorded as the publisher's page is the portal; a read with no text stays unreadable (2.914686ms)
+✔ negative controls: the rule reads the portal's own furniture on the portal's own address, nothing wider (0.557632ms)
+✔ regression control: every Diligent portal page in the committed holding is still read as the portal (22.023068ms)
+✔ the rhythm sweep catches an off-scale value — the instrument works (RULING 110) (11.778114ms)
+✔ the rhythm token scales are declared in app/globals.css (0.726267ms)
+✔ component sweep catches new tiny type, off-scale spacing and literal colours (4.944531ms)
+✔ component exceptions only shrink, per file and value (186.710443ms)
+✔ spacing: off-scale count does not exceed the baseline (it only shrinks) (99.408867ms)
+✔ radius: off-scale count does not exceed the baseline (it only shrinks) (5.232502ms)
+✔ fontSize: off-scale count does not exceed the baseline (it only shrinks) (58.855677ms)
+✔ elevation: off-scale count does not exceed the baseline (it only shrinks) (5.028238ms)
+✔ the small popup renders identity only — no role line, no chips, no in-seat (5.122347ms)
+✔ the party pill stays — it is banned from the list, not from the card (0.657988ms)
+✔ the contact pills stack in one column, primary channels only (0.70235ms)
+✔ More is the way down, and it is full width like the column (2.330455ms)
+✔ a point resolves to the state it is actually in (1.913202ms)
+✔ a point in no covered state resolves to NULL, never to the last one (0.218934ms)
+✔ the state code comes off the OCD-ID, never off a name string (0.248718ms)
+✔ national district kinds have Census layers without an active-state file list (1.260368ms)
+✔ the layer filter pins a layer to one state, and reads back (0.347743ms)
+✔ simplification drops collinear noise and keeps the silhouette (0.467192ms)
+✔ simplification never reduces a ring below a triangle (0.566499ms)
+✔ the rise scales with zoom and never reaches zero (0.508991ms)
+✔ the offset stays comparable to the blur at every zoom (0.254154ms)
+✔ the light is brighter than the shade on a light ground (0.350339ms)
+✔ a ring far larger than the viewport comes back no larger than the box (0.341372ms)
+✔ a ring entirely outside the viewport clips to NOTHING, which means everything is muted (0.165958ms)
+✔ a ring already inside the box is returned unchanged (0.102297ms)
+✔ a ring crossing the border keeps the crossing, on the border (0.144454ms)
+✔ a hole is clipped like any other ring, so a viewport inside one cancels to nothing (0.149575ms)
+✔ the clip runs before simplification and leaves a ring the simplifier can hold (0.146549ms)
+✔ the rise is capped by the size of the state it is marking (0.208735ms)
+✔ the parity classifier reads literal vs derived correctly (RULING 110) (2.863377ms)
+✔ app/globals.css authors every literal colour in both themes (6.8113ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1892.101975

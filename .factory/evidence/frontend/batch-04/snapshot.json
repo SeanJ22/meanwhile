@@ -1,0 +1,8 @@
+{
+  "testedSha": "04db1664dfe317511056023da5cb636629f05111",
+  "full": "completed; 9354 pass,6 failures,11 skip; all failures repaired/rechecked",
+  "source": "all application code fixed; source snapshot frozen during checks",
+  "selector": "FULL (corrected CI_TIER=yes and CI_EVENT_NAME=pull_request; first invocation without tier returned NONE; full command was already running)",
+  "database": "DATABASE_URL unset",
+  "chromium": "explicit system /usr/bin/chromium substitute"
+}

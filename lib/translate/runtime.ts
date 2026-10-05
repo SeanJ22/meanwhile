@@ -25,11 +25,11 @@ export async function runMeasureTranslation(input: {
     const evidence = input.primary.evidence;
     const hash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
     const held = await readTranslations([input.subject.ocdId], { store: input.store, now: input.now, bypassCache: true });
-    const current = held.find(row => row.subjectId === input.subject.contestId && row.ocdId === input.subject.ocdId &&
+    const current = held.find(row => row.kind === "MEASURE" && row.subjectId === input.subject.contestId && row.ocdId === input.subject.ocdId &&
       row.sourceUrl === evidence.canonicalUrl && row.sourceHash === hash && row.sourceTextHash === translationHash(evidence.text));
     if (current) return { status: "REUSED" as const, record: current, usage: [], versionId: null };
-    const prior = held.find(row => row.subjectId === input.subject.contestId && row.ocdId === input.subject.ocdId);
-    const translated = await translateMeasure({ ...input, evidence, subject: { ...input.subject, prior: prior?.measure ?? input.subject.prior },
+    const prior = held.find(row => row.kind === "MEASURE" && row.subjectId === input.subject.contestId && row.ocdId === input.subject.ocdId);
+    const translated = await translateMeasure({ ...input, evidence, subject: { ...input.subject, prior: prior?.kind === "MEASURE" ? prior.measure : input.subject.prior },
       transportFor: subject => {
         const send = input.transportFor(subject);
         return async request => {

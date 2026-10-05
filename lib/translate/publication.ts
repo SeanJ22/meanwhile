@@ -7,11 +7,11 @@ import { captureIntact, section3SourceReceipt } from "../civic-data/worker-publi
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { section3Page, linkingPageFrom } from "../control-plane/promotion/section3.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { TRANSLATION_SCOPE, translationScope, translationRecordIssue, type MeasureTranslation } from "./records.ts";
+import { TRANSLATION_SCOPE, translationScope, translationRecordIssue, type TranslationRecord } from "./records.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { currentReaderAuthorityEdge, currentPromotedEdge } from "../registry/runtime-edge.ts";
 
-export interface TranslationProjection { readonly kind: "plain-english-translations"; readonly records: readonly MeasureTranslation[] }
+export interface TranslationProjection { readonly kind: "plain-english-translations"; readonly records: readonly TranslationRecord[] }
 
 export function translationProjectionProblems(payload: TranslationProjection): string[] {
   if (!payload || payload.kind !== "plain-english-translations" || !Array.isArray(payload.records)) return ["Translation records are missing."];
@@ -21,8 +21,8 @@ export function translationProjectionProblems(payload: TranslationProjection): s
   return problems;
 }
 
-export function measureTranslationPackage(input: {
-  record: MeasureTranslation; captures: readonly WorkerPublicationCapture[]; now: string;
+export function translationPackage(input: {
+  record: TranslationRecord; captures: readonly WorkerPublicationCapture[]; now: string;
 }): ManualProjectionPackage {
   const { record, now } = input;
   const issue = translationRecordIssue(record);
@@ -31,8 +31,9 @@ export function measureTranslationPackage(input: {
     capture.evidence.text === record.sourceText && (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash) === `sha256-${record.sourceHash}`);
   if (!primary || !captureIntact(primary) || primary.evidence.retrievedAt !== record.retrievedAt) throw new Error("Translation has no complete saved source capture.");
   const linkingPage = linkingPageFrom(record.sourceUrl, input.captures.filter(captureIntact).map(capture => capture.evidence));
-  const verified = section3Page({ url: record.sourceUrl, text: record.sourceText, retrievedAt: record.retrievedAt, linkingPage }, "BALLOT_MEASURE", now);
-  if (!verified.ok || !isOfficialSource(record.sourceUrl) && !linkingPage) throw new Error("Translation source is stale or not an official measure document.");
+  const verified = section3Page({ url: record.sourceUrl, text: record.sourceText, retrievedAt: record.retrievedAt, linkingPage },
+    record.kind === "MEASURE" ? "BALLOT_MEASURE" : record.kind === "AGENDA" || record.kind === "MINUTES" ? "MEETING" : "OFFICIAL_BOARD_DIRECTORY", now);
+  if (!verified.ok || !isOfficialSource(record.sourceUrl) && !linkingPage) throw new Error("Translation source is stale or not an official document.");
   return { contractId: "plain-english-translations", version: `${record.id}:${record.sourceHash}:${record.writtenAt}`,
     sourceThrough: record.retrievedAt, sourceReceipt: section3SourceReceipt(input.captures, now, record.checkerModel,
       "Writer and independent checker compared every translated sentence with the saved official source; code confirmed every supporting passage."),
@@ -40,10 +41,12 @@ export function measureTranslationPackage(input: {
 }
 
 /** One checked fact publishes through the existing Slide and typed readback. */
-export async function publishMeasureTranslation(store: RoutineDataStore, input: Parameters<typeof measureTranslationPackage>[0]) {
-  const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(measureTranslationPackage(input), store, input.now);
+export const measureTranslationPackage = translationPackage;
+export async function publishTranslation(store: RoutineDataStore, input: Parameters<typeof translationPackage>[0]) {
+  const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(translationPackage(input), store, input.now);
   return processRegisteredManualCandidate(store, "plain-english-translations", candidate, input.now, expectedBaseVersionId);
 }
+export const publishMeasureTranslation = publishTranslation;
 
 export async function readTranslationProjection(options: PromotedCivicDataReadOptions & { scope?: string } = {}) {
   const { scope = TRANSLATION_SCOPE, ...readOptions } = options;
@@ -53,7 +56,7 @@ export async function readTranslationProjection(options: PromotedCivicDataReadOp
   return result;
 }
 
-export async function readTranslations(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<readonly MeasureTranslation[]> {
+export async function readTranslations(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<readonly TranslationRecord[]> {
   const divisionsToRead = [...new Set(divisions)].filter(division => /^ocd-division\/country:us\/(state|district|territory):/.test(division));
   const edgeContext = options.store === undefined && currentReaderAuthorityEdge() !== null;
   // The translator's edge publication hook is part of its rollout. Existing
@@ -68,13 +71,13 @@ export async function readTranslations(divisions: readonly string[], options: Pr
 }
 
 /** Only the loaded ballot's exact subjects and currently held source hashes attach. */
-export function withMeasureTranslations(ballot: BallotSet, records: readonly MeasureTranslation[]): BallotSet {
+export function withMeasureTranslations(ballot: BallotSet, records: readonly TranslationRecord[]): BallotSet {
   const current = ballot.measureRecords ?? [];
   const translated = current.map(record => {
     const contest = ballot.contests.find(row => row.id === record.contestId && row.type === "MEASURE");
-    const translation = records.find(row => row.subjectId === record.contestId && row.ocdId === contest?.ocdId &&
+    const translation = records.find(row => row.kind === "MEASURE" && row.subjectId === record.contestId && row.ocdId === contest?.ocdId &&
       row.sourceUrl === record.sourceUrl && (row.sourceHash === record.sourceHash || Date.parse(row.retrievedAt) >= Date.parse(record.writtenAt)) && !translationRecordIssue(row));
-    return translation?.measure ?? record;
+    return translation?.kind === "MEASURE" ? translation.measure : record;
   });
   return translated.some((row, at) => row !== current[at]) ? { ...ballot, measureRecords: translated } : ballot;
 }

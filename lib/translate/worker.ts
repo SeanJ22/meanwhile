@@ -8,7 +8,7 @@ import { scoutThinkingOptions, type ModelRequest, type ModelResponse, type Model
 import type { WorkerEvidence } from "../control-plane/workers/types.ts";
 import { readMeteredUsage, priceMeteredUsage } from "../control-plane/model-cost.ts";
 import { measureRecordIssue, type MeasureRecord } from "../ballot/measure-records.ts";
-import { translationHash, translationRecordIssue, type TranslationSentence, type MeasureTranslation } from "./records.ts";
+import { translationHash, translationRecordIssue, type TranslationSentence, type MeasureTranslation, type TextTranslation } from "./records.ts";
 
 export interface TranslationPlaybook {
   readonly text: string;
@@ -54,6 +54,65 @@ const checkerTool = {
     type: "object", required: ["field", "text", "supported"], properties: { field: { type: "string" }, text: { type: "string" }, supported: { type: "boolean" } },
   } } } },
 };
+
+export interface TextTranslationSubject {
+  readonly kind: TextTranslation["kind"];
+  readonly subjectId: string;
+  readonly label: string;
+  readonly ocdId: string;
+  readonly state: string;
+}
+
+/** Legal class definitions never confer that class's powers on a particular body. */
+export async function translateText(input: {
+  readonly repos: FieldManualRepos;
+  readonly evidence: WorkerEvidence;
+  readonly subject: TextTranslationSubject;
+  readonly transportFor: (subject: { subjectId: string; state: string }) => ModelTransport;
+  readonly now: string;
+}) {
+  const { evidence, subject, now } = input;
+  if (!subject.subjectId.startsWith(`${subject.kind.toLowerCase()}:`) || !subject.label.trim() ||
+      !evidence.text.includes(subject.label) || !evidence.text.trim() ||
+      evidence.contentHash !== `sha256-${translationHash(evidence.text)}` || !/^https:\/\//.test(evidence.canonicalUrl) ||
+      jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Text translation lacks its exact source-named subject.");
+  // Read the same live translator playbook as measures; the task-specific tool
+  // supplies the output shape. Existing Bank edits and model routing apply here.
+  const manual = await readFieldManual(input.repos, { role: "SHARED", state: subject.state.toLowerCase(), recordClass: "BALLOT_MEASURE" });
+  if (manual.error) throw new Error(manual.error);
+  const playbook = translationPlaybook(manual.store.entries);
+  const instruction = subject.kind === "BODY_CLASS"
+    ? "Describe only what this class of body is under the supplied creating law. Do not assert that a named body possesses those powers."
+    : subject.kind === "BODY" ? "Describe only this named body's powers under its own charter or creating law. Do not import powers from its general class."
+    : subject.kind === "OFFICE" ? "Describe this state's legally defined office. Do not import duties from a similarly named office in another state."
+    : subject.kind === "AGENDA" ? "Describe what is on this held agenda, preserving dates, conditions and proposed status. The clerk's verbatim list remains alongside this text. Never describe a proposal as adopted."
+    : "Describe only what these held minutes record. Preserve votes, outcomes, qualifications and uncertainty; never invent a vote or speaker.";
+  const writer = { name: "write_text_translation", description: instruction,
+    input_schema: { type: "object", required: ["text", "sentences"], properties: {
+      text: { type: "string" }, sentences: writerTool.input_schema.properties.sentences,
+    } } };
+  const send = input.transportFor({ subjectId: subject.subjectId, state: subject.state });
+  const request = (model: string, tool: typeof writer | typeof checkerTool, content: unknown): ModelRequest => ({
+    model, max_tokens: 8192, ...scoutThinkingOptions(model, "medium"),
+    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${playbook.text}\n\n${instruction}\nUse the supplied text-translation tool for this non-measure task. Every sentence uses field text and an exact supporting quote.`, cache_control: { type: "ephemeral" } }],
+    tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
+  });
+  const written = await send(request(playbook.writerModel, writer, { source: evidence.text, subject }));
+  const proposal = toolResult(written, writer.name, playbook.writerModel) as { text: string; sentences: TranslationSentence[] };
+  if (typeof proposal?.text !== "string" || !proposal.text.trim() || !Array.isArray(proposal.sentences) ||
+      proposal.sentences.some(row => !row || row.field !== "text" || typeof row.quote !== "string" || !row.quote.trim() || !evidence.text.includes(row.quote))) throw new Error("Text translator returned unsupported source passages.");
+  const checked = await send(request(playbook.checkerModel, checkerTool, { originalSource: evidence.text, subject, instruction, proposal }));
+  const result = toolResult(checked, checkerTool.name, playbook.checkerModel) as { checked: TextTranslation["checked"] };
+  const record: TextTranslation = { id: `translation:${subject.subjectId}`, kind: subject.kind, subjectId: subject.subjectId,
+    ocdId: subject.ocdId, label: subject.label, text: proposal.text, sourceUrl: evidence.canonicalUrl,
+    sourceHash: (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, ""),
+    sourceText: evidence.text, sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt,
+    writtenAt: now, writerModel: canonicalModelId(written.model), checkerModel: canonicalModelId(checked.model),
+    playbookVersion: playbook.version, sentences: proposal.sentences, checked: result?.checked };
+  const issue = translationRecordIssue(record);
+  if (issue) throw new Error(issue);
+  return { record };
+}
 
 /** The caller supplies the existing Fleet/area budget transport for BOTH calls. */
 export async function translateMeasure(input: {

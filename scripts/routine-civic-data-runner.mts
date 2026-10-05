@@ -58,6 +58,7 @@ import { isDoorRecord } from "../lib/doors/registry.ts";
 import { doorReadModeFromEnv, refreshDoorsForPass } from "../lib/doors/install.ts";
 import { doorSeedOnFromEnv, seedDoorsOnStart } from "../lib/doors/seed-all.ts";
 import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
+import { editDeriveDueRequests } from "../lib/doors/edit-derive.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { attestPromotedVersion } from "../lib/civic-data/read-model.ts";
@@ -82,6 +83,7 @@ import {
 } from "../lib/civic-data/hot-read-catch-up.ts";
 import { statedSittingEndsByScope, statedSittingEndsRead } from "../lib/civic-data/sitting-window-admission.ts";
 import {
+  DOOR_DERIVE_CONTRACT_IDS,
   parseRoutineDueRequests,
   routineDueRequestDeadlineMs,
   routineDueRequestFor,
@@ -611,8 +613,10 @@ if (!FORCE && doorReadModeFromEnv() === "registry" && controlPlaneUrlFromEnv() !
     const settledAt = new Date().toISOString();
     const cleared = await settleReadNow(doorRepos.doors, settledAt);
     const marked = readNowDueRequests((await listDoors(doorRepos.doors)).doors, new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id)), settledAt);
-    dueRequests = [...dueRequests, ...marked.filter((request) => !dueRequests.some((held) => held.id === request.id))];
-    if (marked.length > 0 || cleared > 0) console.log(`RCD_DUE_REQUEST doors marked to be read now: ${marked.length} due, ${cleared} settled`);
+    // DB-36: a door edited in Admin asks for the two derive steps now, not on their six-hour clock.
+    const derive = editDeriveDueRequests((await listDoors(doorRepos.doors)).doors, new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
+    dueRequests = [...dueRequests, ...[...marked, ...derive].filter((request) => !dueRequests.some((held) => held.id === request.id))];
+    if (marked.length > 0 || cleared > 0 || derive.length > 0) console.log(`RCD_DUE_REQUEST doors marked to be read now: ${marked.length} due, ${cleared} settled; ${derive.length} derive request(s) after door edits`);
   } catch (error) {
     console.log(`RCD_DUE_REQUEST doors marked to be read now CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; every task keeps its normal schedule`);
   }

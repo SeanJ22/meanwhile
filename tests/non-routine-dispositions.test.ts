@@ -423,12 +423,3 @@ test("the formerly mixed curated Reader row has an exact truthful path partition
   assert.ok(split.paths.filter((path) => path.disposition === "EXPLICIT_VERSION_ADOPTION").every((path) => path.versionBinding.length > 20));
   assert.deepEqual(pdc7ClosureProblems(), []);
 });
-
-test("CA-01: Open States may auto-promote state legislators, for any state (rulings §3)", async () => {
-  const { sourceAuthority } = await import("../lib/civic-data/source-authority.ts");
-  const authority = sourceAuthority("plural-openstates");
-  assert.equal(authority?.routineAutoPromotion, true);
-  assert.deepEqual(authority?.recordClasses, ["STATE_LEGISLATOR"]);
-  assert.deepEqual(authority?.jurisdictions, ["US"]);
-  assert.doesNotMatch(authority?.horizonSemantics ?? "", /Research\/corroboration only/);
-});

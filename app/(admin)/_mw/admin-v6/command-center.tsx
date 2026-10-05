@@ -26,19 +26,18 @@ import { V6Context, VIEWS, type Detail, type V6, type View } from "./context.tsx
 import { DetailPanel } from "./details.tsx";
 import { whyNot, type Access, type Connection } from "./eligibility.ts";
 import type { Executor } from "./executor.ts";
+import { instructionDraftFor, withInstructionDraft, type InstructionDrafts } from "./instruction-draft.ts";
 import { mst, type ActionKind, type ActionRef, type AdminV6Data, type Place, type UiReceipt } from "./model.ts";
-import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches } from "./places.ts";
+import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches, relation } from "./places.ts";
 import { newActionKey, startReceipt } from "./receipts.ts";
 import { ChecklistScreen } from "./screen-checklist.tsx";
 import { FixQueueControls } from "./fix-queue-controls.tsx";
 import { FixScreen } from "./screen-fix.tsx";
+import { QueueScreen } from "./screen-queue.tsx";
 import { ScoreboardScreen } from "./screen-scoreboard.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
-import { NowScreen } from "./screen-now.tsx";
-import { ReaderDemandPanel } from "./reader-demand.tsx";
-import { TopicCountsPanel } from "./topic-counts.tsx";
-import { DataSwitchesPanel } from "./data-switches.tsx";
-import { CaptureHealthPanel } from "./capture-health.tsx";
+import { DataBusinessScreen } from "./screen-data.tsx";
+import { NowScreen, Readers } from "./screen-now.tsx";
 import { ReportsView } from "./reports-view.tsx";
 import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
 import { DoorsPanel } from "./doors-panel.tsx";
@@ -91,6 +90,7 @@ export function CommandCenter(props: CommandCenterProps) {
   const [sent, setSent] = useState<readonly UiReceipt[]>([]);
   const [dialog, setDialog] = useState<{ readonly ref: ActionRef; readonly key: string } | null>(null);
   const [announce, setAnnounce] = useState("");
+  const [instructionDrafts, setInstructionDrafts] = useState<InstructionDrafts>({});
   /** The many-hunts panel: closed (null), or open with the place it was opened from, if any. */
   const [bulk, setBulk] = useState<{ readonly pick: BulkPick | null } | null>(null);
   const sendingKeys = useRef(new Set<string>());
@@ -116,6 +116,7 @@ export function CommandCenter(props: CommandCenterProps) {
   const hunts = useMemo(() => data.hunts.data ?? [], [data.hunts.data]);
   const place: Place = index.get(props.scopeKey) ?? index.get(COUNTRY_KEY) ?? { key: COUNTRY_KEY, name: "United States", kind: "Country", navParent: null, within: [] };
   const scopeKey = place.key;
+  const instructionDraft = instructionDraftFor(instructionDrafts, scopeKey);
   const hunt = huntAt(index, hunts, scopeKey);
   const inHunts = huntsWithin(index, hunts, scopeKey);
   const clock = new Date();
@@ -145,10 +146,16 @@ export function CommandCenter(props: CommandCenterProps) {
     if (row) return row.title;
     const dec = data.stuck.data?.find((i) => i.decision?.id === id);
     if (dec) return dec.title;
+    const wf = data.stuck.data?.find((i) => i.actions.some((a) => a.kind === "workfirst" && a.target === id));
+    if (wf) return wf.title.replace(/ (are|is) saved but never read$/, " meeting extraction");
     return id;
   };
 
   const previewCtx = (ref: ActionRef): PreviewContext => {
+    const matching = (ref.kind === "scope-stop" || ref.kind === "retry-method")
+      ? (data.stuck.data ?? []).filter((i) => i.actions.some((a) => a.kind === "stopmethod") && !i.latest?.startsWith("Method stopped") && relation(index, i.applies, ref.target || scopeKey) === "local")
+        .map((i) => ({ id: i.id, name: i.title, where: index.get(i.applies[0])?.name ?? "" }))
+      : undefined;
     const openFix = data.fixes.data?.open.find((f) => f.id === ref.target);
     const stuckForFix = data.stuck.data?.find((i) => i.fixId === ref.target);
     return {
@@ -156,6 +163,7 @@ export function CommandCenter(props: CommandCenterProps) {
       targetName: ref.payload?.name ?? nameOf(ref.target || scopeKey),
       scopeName: index.get(ref.target)?.name ?? place.name,
       scopeIsCountry: (index.get(ref.target)?.kind ?? place.kind) === "Country",
+      matching,
       hunt: hunts.find((h) => h.placeKey === ref.target) ?? null,
       decision: data.stuck.data?.find((i) => i.decision?.id === ref.target)?.decision,
       fix: openFix ? { id: openFix.id, title: openFix.title, owner: openFix.owner, resourcesNow: openFix.resourcesNow, helps: openFix.helps, needsCode: openFix.origin === "engineering" && openFix.tab !== "update" }
@@ -170,7 +178,7 @@ export function CommandCenter(props: CommandCenterProps) {
 
   const whyNotRef = (ref: ActionRef): string | null => {
     const def = actionDef(ref.kind);
-    const target = ref.target;
+    const target = ref.kind === "scope-stop" && !ref.target ? scopeKey : ref.target;
     return whyNot({ connection: props.connection, access: props.access, def, target, receipts, mode: props.mode, supported: props.executor.supports(def), itemState: props.itemState?.(ref.kind, target) ?? null });
   };
 
@@ -183,7 +191,7 @@ export function CommandCenter(props: CommandCenterProps) {
     if (sendingKeys.current.has(key)) return; // one send per preview, however many clicks
     sendingKeys.current.add(key);
     const def = actionDef(ref.kind);
-    const target = ref.target;
+    const target = ref.kind === "scope-stop" && !ref.target ? scopeKey : ref.target;
     const ctx = previewCtx({ ...ref, target });
     const pv = def.preview(ctx);
     const optionLabel = pv.options?.find((o) => o.id === send.option)?.label;
@@ -260,6 +268,8 @@ export function CommandCenter(props: CommandCenterProps) {
 
   const v6: V6 = {
     data, mode: props.mode, scopeKey, place, places, index, hunts, connection: props.connection, access: props.access, receipts, period: effectivePeriod,
+    instructionDraft,
+    setInstructionDraft: (draft) => setInstructionDrafts((current) => withInstructionDraft(current, scopeKey, draft)),
     go: goView,
     open: openDetail,
     setScope,
@@ -278,6 +288,7 @@ export function CommandCenter(props: CommandCenterProps) {
     defOf: (ref) => actionDef(ref.kind),
     nameOf,
     query: (section, params) => props.onQuery?.(section, params),
+    focusInstruction: () => { goView("now"); setTimeout(() => document.getElementById("v6-instruct-input")?.focus(), 60); },
   };
 
   const crumbs = breadcrumbs(index, scopeKey);
@@ -287,7 +298,7 @@ export function CommandCenter(props: CommandCenterProps) {
   const lastGood = props.lastGoodAt ? mst(props.lastGoodAt, false) : null;
   const connLabel = props.connection === "live" ? (lastGood ? `Live · updated ${lastGood}` : "Live") : `${CONN_WORDS[props.connection]}${lastGood ? ` · last update ${lastGood}` : ""}`;
   const dialogDef = dialog ? actionDef(dialog.ref.kind) : null;
-  const dialogTarget = dialog ? dialog.ref.target : "";
+  const dialogTarget = dialog ? (dialog.ref.kind === "scope-stop" && !dialog.ref.target ? scopeKey : dialog.ref.target) : "";
 
   return (
     <V6Context.Provider value={v6}>
@@ -372,11 +383,13 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
           {detail ? <DetailPanel detail={detail} /> : (
             <>
-              {view === "now" && <><NowScreen key={scopeKey} /><UpdatesPanel /><ReaderDemandPanel /><CaptureHealthPanel /><TopicCountsPanel /><DataSwitchesPanel /></>}
+              {view === "now" && <><NowScreen key={scopeKey} /><UpdatesPanel /></>}
+              {view === "data" && <DataBusinessScreen />}
               {view === "workers" && <><WorkersScreen /><RunnerSettingsPanel /><DoorsPanel /></>}
               {view === "work" && <><ScheduledPanel /><WorkScreen /></>}
-              {view === "checklist" && <ChecklistScreen />}
+              {view === "checklist" && <><ChecklistScreen /><Readers /></>}
               {view === "money" && <MoneyScreen />}
+              {view === "queue" && <QueueScreen />}
               {view === "scoreboard" && <ScoreboardScreen />}
               {view === "fix" && <><FixQueueControls /><FixScreen /></>}
               {view === "settings" && <SettingsScreen />}

@@ -25,6 +25,7 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
   }
   if ((r.status === "failed" || r.status === "refused") && r.kind !== "decide") follow.push(<ActionButton key="again" action={{ kind: r.kind, target: r.target }} label="Try again" />);
   if (r.kind === "decide" && r.status === "refused") follow.push(<ActionButton key="other" action={{ kind: "decide", target: r.target }} label="Choose another option" />);
+  if (r.kind === "contain" && r.status === "done") follow.push(<ActionButton key="undo" action={{ kind: "uncontain", target: r.target }} label="Undo" />);
   if (r.notPickedUp) {
     const back = TAKE_BACK[r.kind];
     if (back) follow.push(<ActionButton key="back" action={{ kind: back, target: r.target }} label="Take it back" />);
@@ -72,8 +73,8 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
             aria-valuenow={r.progress?.done ?? 0}>
             {r.progress && r.progress.of ? (
               <>
-                <div style={{ height: 6, borderRadius: 3, background: "var(--line, #ddd)" }}>
-                  <div style={{ height: 6, borderRadius: 3, width: `${Math.min(100, Math.round(((r.progress.done ?? 0) / r.progress.of) * 100))}%`, background: "var(--teal, #0a7)" }} />
+                <div style={{ height: 6, borderRadius: 3, background: "var(--panel-border)" }}>
+                  <div style={{ height: 6, borderRadius: 3, width: `${Math.min(100, Math.round(((r.progress.done ?? 0) / r.progress.of) * 100))}%`, background: "var(--pill-teal-text)" }} />
                 </div>
                 <span className={s.meta}>{r.progress.done ?? 0} of {r.progress.of}</span>
               </>

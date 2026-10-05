@@ -22,7 +22,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { answerFor, type CandidateCorpus, type CandidateDocument } from "../lib/candidates/corpus.ts";
-import { DEFAULT_STANCE_TOPICS } from "../lib/stances/topics.ts";
+import { CANDIDATE_ISSUES } from "../lib/candidates/issues.ts";
 import { chromeSignal, repeatedBlocks } from "../lib/text/boilerplate.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -85,7 +85,7 @@ for (const key of candidateKeys) {
   const shipped = documents.filter((d) => (d.extractorVersion ?? 1) === 1);
   let beforeIssues = 0;
   let afterIssues = 0;
-  for (const issue of DEFAULT_STANCE_TOPICS) {
+  for (const issue of CANDIDATE_ISSUES) {
     const before = beforePassages(shipped, issue.phrases);
     const after = answerFor(documents, issue.phrases, null);
     const afterList = after.kind === "MATCHED" ? after.passages.map((p) => p.quote) : [];

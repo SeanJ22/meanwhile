@@ -253,7 +253,7 @@ test("every missing part lands beside a card and none is dropped", () => {
   assert.deepEqual(missingByCard([SECTION_DEP.workers.need]).other, [], "the stand-in's own note is shown by the page, once");
 });
 
-test("running jobs show as a count and a list on Workers and Now, with no explanation text", async () => {
+test("running jobs show as a count and a list on Workers, with no explanation text", async () => {
   mock.timers.enable({ apis: ["Date"], now: Date.parse(PULSE_AT) });
   try {
     for (const [key, scope] of SCOPES) {
@@ -273,10 +273,6 @@ test("running jobs show as a count and a list on Workers and Now, with no explan
       assert.doesNotMatch(w, /Stop this job|Cost —|Latest —|Next —/, `${key}: a live job shows only what its lease and attempt record`);
       if (key === "us") assert.doesNotMatch(w, /in the whole system/, key);
       else assert.match(w, /41 in the whole system/, key);
-      const n = text(page(sync, scope, key, "now"));
-      assert.match(n, /2 jobs working now in /, key);
-      assert.ok(n.includes(`Plain-code reader · az:city:hereford · ${HUNT} · 10 min so far`), key);
-      assert.doesNotMatch(n, /— jobs working now/, key);
     }
   } finally { mock.timers.reset(); }
 });
@@ -290,7 +286,6 @@ test("a read that stopped at its row limit shows the count as a lower bound", as
     sync.onPulse(pulse("w1"));
     await settle(sync);
     assert.match(text(page(sync, { kind: "all" }, "us", "workers")), /2\+ working now/);
-    assert.match(text(page(sync, { kind: "all" }, "us", "now")), /2\+ jobs working now in /);
   } finally { mock.timers.reset(); }
 });
 
@@ -330,9 +325,6 @@ test("an open page: unavailable → live → a later revision → an age step wi
     assert.match(t, /Waiting, and why —/, "a list that has not arrived is a dash");
     assert.match(t, /What changed —/);
     assert.doesNotMatch(t, /Nothing is waiting|No recorded changes/);
-    let now = text(page(sync, scope, key, "now"));
-    assert.match(now, /What’s happening now/);
-    assert.match(now, /— waiting in ZIP 85635/);
 
     // 2. Announced: exactly one read, and the same page shows the real reading.
     sync.onPulse(pulse("w1"));
@@ -341,12 +333,8 @@ test("an open page: unavailable → live → a later revision → an age step wi
     t = text(page(sync, scope, key, "workers"));
     assert.match(t, /9 failed tries since/);
     assert.doesNotMatch(t, /detailed Workers reading hasn’t arrived/);
-    now = text(page(sync, scope, key, "now"));
-    assert.match(now, /2 waiting in ZIP 85635: ZIP 85635 \(Census ZCTA\) hunt: 51 of 194 assigned tasks not finished/);
-    assert.match(now, /— jobs working now in ZIP 85635/);
-    assert.match(now, /Late The next round is late/);
-    assert.doesNotMatch(now, /Not connected yet\. This part turns on by itself[^.]*\. You don’t need to reload\. The detailed Workers reading/, "no generic note over arrived data");
-    assert.doesNotMatch(now, new RegExp(SECTION_DEP.workers.id));
+    assert.doesNotMatch(t, /Not connected yet\. This part turns on by itself[^.]*\. You don’t need to reload\. The detailed Workers reading/, "no generic note over arrived data");
+    assert.doesNotMatch(t, new RegExp(SECTION_DEP.workers.id));
 
     // 3. A later source revision: one more read, the new count replaces the old line.
     b.set((s) => ({ status: 200, body: section(s, 10) }));
@@ -393,11 +381,9 @@ test("an authentication failure is never shown as an empty, successful reading",
     sync.onPulse(pulse("w1"));
     await settle(sync);
     assert.equal(sync.snapshot().workers.phase, "denied");
-    for (const view of ["workers", "now"] as const) {
-      const t = text(page(sync, { kind: "all" }, "us", view));
-      assert.doesNotMatch(t, /Nothing is waiting|No recorded changes|Nothing is running|0 jobs working/, `${status} ${view}`);
-      assert.match(t, view === "workers" ? /Waiting, and why —/ : /— jobs working now/, `${status} ${view}`);
-    }
+    const t = text(page(sync, { kind: "all" }, "us", "workers"));
+    assert.doesNotMatch(t, /Nothing is waiting|No recorded changes|Nothing is running|0 jobs working/, `${status} workers`);
+    assert.match(t, /Waiting, and why —/, `${status} workers`);
     sync.onPulse(pulse("w1"));
     await settle(sync);
     assert.equal(b.log.length, 1, "a denial is not retried on the same announcement");

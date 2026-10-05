@@ -9,14 +9,13 @@ import { useMemo, useState } from "react";
 
 import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
 
-import { StatusBar, StatusLegend, StatusTable } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
-import { count, huntLeftUsd, mst, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
+import { INSTRUCTION_EXAMPLES, parseInstruction, type Parsed } from "./instruction.ts";
+import { count, mst, usd, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
 import { TILE_LAYOUT } from "./national-layout.ts";
 import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, nationalDepth, relation } from "./places.ts";
-import { ReceiptCard } from "./receipt-view.tsx";
-import { ageWords, roundReading, runningCount, systemRunningCount, usePageClock } from "./screen-workers.tsx";
-import { Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
+import { useQueueRows } from "./use-queue.ts";
+import { ActionButton, Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
 import s from "./v6.module.css";
 
 export const LANE_WORDS: Readonly<Record<Lane, string>> = {
@@ -37,25 +36,64 @@ export function useScoped() {
 
 export function NowScreen() {
   const v = useV6();
-  const loading = v.data.stuck.load === "loading" && v.data.results.load === "loading";
   return (
     <>
       <header>
         <p className={s.eyebrow}>{v.place.name} · {periodLabel(v.period, new Date())}</p>
         <h1 className={s.h1}>Now</h1>
       </header>
-      {/* The control Sean uses most (daily budget, paid search, start a hunt): first under the header, one click to open. */}
+      <Matters />
+      {/* The control Sean uses most (daily budget, paid search, start a hunt): one click to open. */}
       <DirectWork />
       {nationalDepth(v.scopeKey) !== null && <National />}
-      <NextSteps />
-      {loading ? <Loading what="this place" /> : <SixAnswers />}
-      <Readers />
-      <Stuck />
-      <Missing />
-      <Happening />
-      <Cost />
-      <Recent />
+      <Instruction />
     </>
+  );
+}
+
+/* ----------------------------------------------------- what matters now */
+
+const MOTION_KINDS = new Set(["order", "scheduled", "send", "hunt"]);
+
+/** The four things that matter, each with one sentence saying what it means. */
+function Matters() {
+  const v = useV6();
+  const { rows, unread } = useQueueRows();
+  const needs = rows.filter((r) => r.filter === "needs-me");
+  const motion = rows.filter((r) => MOTION_KINDS.has(r.kind) && (r.filter === "in-progress" || r.filter === "scheduled" || r.filter === "waiting")).slice(0, 5);
+  const completeness = v.data.checklist.data?.score?.measures?.completeness ?? null;
+  return (
+    <section aria-label="What matters now" className={s.stack}>
+      <div className={s.grid2}>
+        <Card title="Needs me" aside={<button type="button" className={s.btnLink} onClick={() => v.go("queue")}>Open the queue →</button>}>
+          <div><span className={cx(s.big, needs.length > 0 && s.textWarn)}>{unread.includes("stuck cases") && unread.includes("orders") ? "—" : needs.length}</span></div>
+          <p className={s.small}>{unread.length > 0 ? `Counted without ${unread.join(", ")}, which could not be read.` : needs.length === 0 ? "Good: nothing is waiting on you." : `Not good until they are cleared: ${needs.length === 1 ? "one thing is" : `${needs.length} things are`} waiting on you.`}</p>
+        </Card>
+        <Card title="Mission progress" aside={<button type="button" className={s.btnLink} onClick={() => v.go("checklist")}>Open the checklist →</button>}>
+          <div><span className={s.big}>{completeness && completeness.percent !== null ? `${Math.floor(completeness.percent)}%` : "—"}</span></div>
+          <p className={s.small}>{completeness ? `${count(completeness.n)} of ${count(completeness.of)} things owed for ${v.place.name} are held. More is better; the rest is still being found.` : `What ${v.place.name} is owed has not been counted yet.`}</p>
+        </Card>
+        <Card title="Facts live per hour" aside={<button type="button" className={s.btnLink} onClick={() => v.go("scoreboard")}>Open the scoreboard →</button>}>
+          <div><span className={s.big}>—</span></div>
+          <p className={s.small}>Not measured yet. Higher means the factory is producing; the trend shows here once it is counted.</p>
+        </Card>
+        <Card title="Cost per fact">
+          <div><span className={s.big}>—</span></div>
+          <p className={s.small}>Not measured yet. Lower is better; the trend shows here once it is counted.</p>
+        </Card>
+      </div>
+      <Card title="Orders in motion" aside={<button type="button" className={s.btnLink} onClick={() => v.go("queue")}>Open the queue →</button>}>
+        {motion.length === 0 && <Empty>{unread.length > 0 ? "—" : "Nothing in motion."}</Empty>}
+        <div className={s.stack}>
+          {motion.map((r) => (
+            <div key={r.key} className={s.row}>
+              <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.what}</strong><Pill tone={r.tone}>{r.chip}</Pill></span>
+              <span className={s.meta}>{r.progress ? r.progress.words : r.next}</span>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </section>
   );
 }
 
@@ -178,98 +216,56 @@ function National() {
   );
 }
 
-/* ------------------------------------------------------------ next steps */
+/* ------------------------------------------------------------ instruction */
 
-function NextSteps() {
+function Instruction() {
   const v = useV6();
-  const { stuck } = useScoped();
-  const ranked = stuck
-    .filter(({ item }) => item.lane === "decision" || item.readersAffected || (item.unlocks ?? 0) > 1)
-    .map(({ item }) => ({ item, score: (item.readersAffected ? 4 : 0) + (item.lane === "decision" ? 3 : 0) + (item.unlocks ?? 0) + item.ageRank }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 4);
-  const decided = v.data.decided.data ?? [];
+  const { text, chosenBody } = v.instructionDraft;
+  const setText = (next: string) => v.setInstructionDraft({ text: next, chosenBody: null });
+  const setChosenBody = (next: string | null) => v.setInstructionDraft({ text, chosenBody: next });
+  const [parsed, setParsed] = useState<Parsed | null>(null);
+  const readBack = (t = text, body = chosenBody) => {
+    if (!t.trim()) return;
+    setParsed(parseInstruction({ text: t, scope: v.scopeKey, places: v.places, index: v.index, stuck: v.data.stuck.data ?? [], chosenBody: body }));
+  };
+  const acts = (parsed?.actions ?? []).map((a) => ({ a, def: v.defOf({ kind: a.kind, target: a.target }), why: v.whyNot({ kind: a.kind, target: a.target, payload: a.payload }) }));
   return (
-    <Card id="v6-steps" title="Suggested next steps">
-      {v.data.stuck.state === "not-connected" ? <Empty>—</Empty> : !ranked.length && <Empty>Nothing here needs you right now.</Empty>}
-      <ol className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
-        {ranked.map(({ item }, n) => {
-          const last = v.receipts.find((r) => [item.id, item.resultId, item.fixId, item.decision?.id].includes(r.target));
-          return (
-            <li key={item.id} className={s.row}>
-              <div className={s.spread}>
-                <span className={s.inline}><strong className={s.mono}>{n + 1}</strong><Pill tone={LANE_TONE[item.lane]}>{LANE_WORDS[item.lane]}</Pill><span className={s.meta}>{v.index.get(item.applies[0])?.name}</span></span>
-                <span className={cx(s.meta, s.mono)}>{item.readersAffected ? "READERS AFFECTED · " : ""}{item.lane === "decision" ? "NEEDS YOU · " : ""}UNLOCKS {item.unlocks ?? 0} · WAITING {item.age.toUpperCase()}</span>
+    <Card id="v6-instruct" title="Tell it what to do">
+      <label className={s.srOnly} htmlFor="v6-instruct-input">Your instruction</label>
+      <textarea id="v6-instruct-input" className={s.textarea} value={text} placeholder="For example: Reprocess the files we already saved" onChange={(e) => { setText(e.target.value); setParsed(null); }} />
+      <div className={s.inline}>
+        <button type="button" className={cx(s.btn, s.btnPrimary)} aria-disabled={!text.trim() ? "true" : undefined} onClick={() => readBack()}>Read it back</button>
+        <span className={s.meta}>Examples:</span>
+        {INSTRUCTION_EXAMPLES.slice(0, 4).map((ex) => <button key={ex} type="button" className={cx(s.btn, s.btnGhost)} style={{ whiteSpace: "normal", textAlign: "left", overflowWrap: "anywhere" }} onClick={() => { setText(ex); setParsed(null); }}>{ex}</button>)}
+      </div>
+      {parsed && (
+        <div className={s.stack} role="region" aria-label="Read-back" aria-live="polite">
+          <p className={cx(s.p, s.small)}>Read back from: “{parsed.text}”</p>
+          {parsed.unsupported && <p className={s.why}>No matching action.</p>}
+          {parsed.clarify && (
+            <div className={s.row}>
+              <strong className={s.small}>{parsed.clarify.question}</strong>
+              {parsed.clarify.options.length ? (
+                <select className={s.select} value={chosenBody ?? ""} onChange={(e) => { setChosenBody(e.target.value || null); readBack(text, e.target.value || null); }}>
+                  <option value="">Choose one</option>
+                  {parsed.clarify.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+              ) : <span className={s.meta}>No matching item in {v.place.name}.</span>}
+            </div>
+          )}
+          {acts.map(({ a, def, why }) => {
+            const pv = def.preview({ target: a.target, targetName: v.nameOf(a.target), scopeName: v.index.get(a.target)?.name ?? v.place.name, scopeIsCountry: a.target === COUNTRY_KEY, url: a.payload?.url, outreachAuthorized: v.access.outreachAuthorized });
+            return (
+              <div key={`${a.kind}|${a.target}`} className={s.row}>
+                <div className={s.spread}><strong className={s.small}>{def.label}</strong><Pill tone={pv.level === "global" ? "warn" : "neutral"}>{pv.level === "global" ? "Whole system" : "Local"}</Pill></div>
+                {pv.rows.slice(0, 3).map(([k, val]) => <span key={k} className={s.small}><span className={s.dim}>{k}:</span> {val}</span>)}
+                {why ? <p className={s.why}>Won’t be sent: {why}</p> : <div><ActionButton action={{ kind: a.kind, target: a.target, payload: a.payload }} label="Preview and send" primary /></div>}
               </div>
-              <button type="button" className={s.btnLink} onClick={() => v.open({ type: "stuck", id: item.id })}><strong>{item.title}</strong></button>
-              <p className={cx(s.p, s.small, s.dim)}>{item.next}</p>
-              <Actions actions={item.actions.slice(0, 2)} primaryFirst />
-              {last && <span className={s.small}>Latest: {last.label} · <span className={last.status === "unknown" || last.status === "refused" || last.status === "failed" ? s.textWarn : s.textGood}>{last.statusWords}</span></span>}
-            </li>
-          );
-        })}
-      </ol>
-      {(decided.length > 0 || v.data.decided.state !== "not-connected") && (
-        <div className={s.stack}>
-          <h3 className={s.h3}>Already decided, waiting on implementation</h3>
-          {decided.map((d) => <div key={d.title} className={s.row}><strong className={s.small}>{d.title}</strong><span className={s.meta}>{d.state}</span></div>)}
+            );
+          })}
         </div>
       )}
     </Card>
-  );
-}
-
-/* ----------------------------------------------------------- six answers */
-
-export function checklistTotals(counts: readonly (readonly number[])[] | null): number[] | null {
-  if (!counts) return null;
-  const t = ITEM_STATUS_ORDER.map(() => 0);
-  for (const c of counts) c.forEach((n, i) => (t[i] += n));
-  return t;
-}
-
-function SixAnswers() {
-  const v = useV6();
-  const { stuck, results } = useScoped();
-  const local = results.filter((x) => x.rel === "local");
-  const shared = results.filter((x) => x.rel === "shared");
-  const ver = local.filter((x) => x.r.stages[5] === "done").length;
-  const pub = local.filter((x) => x.r.stages[4] === "done" && x.r.stages[5] !== "done").length;
-  const totals = checklistTotals(v.data.checklist.data?.placeGroups?.map((g) => g.counts) ?? null);
-  const N = totals ? totals.reduce((a, b) => a + b, 0) : null;
-  const score = v.data.checklist.data?.score ?? null;
-  const completeness = score?.measures?.completeness ?? null;
-  const harm = stuck.filter((x) => x.item.readersAffected).length;
-  const dec = stuck.filter((x) => x.item.lane === "decision").length;
-  const hunt = huntAt(v.index, v.hunts, v.scopeKey);
-  const inside = huntsWithin(v.index, v.hunts, v.scopeKey);
-  const multi = !hunt && inside.length > 1;
-  const hf: Hunt | null = hunt ?? (inside.length === 1 ? inside[0] : null);
-  const left = (h: Hunt) => { const n = huntLeftUsd(h); return n === null ? "—" : usd(n); };
-  /** Research workers on a hunt, or null when its run state isn't reported. */
-  const workers = (h: Hunt) => (h.status === "running" ? h.researchWorkers : h.status === "unreported" ? null : 0);
-  const insideWorkers = inside.map(workers);
-  const resultsKnown = v.data.results.state !== "not-connected" && v.data.results.data !== null;
-  const stuckKnown = v.data.stuck.state !== "not-connected";
-  const huntsKnown = v.data.hunts.state !== "not-connected";
-  const answers: { q: string; big: string; small: string; href: string; warn?: boolean }[] = [
-    { q: "Readers received", big: resultsKnown ? `${ver} checked on the page` : "—", small: resultsKnown ? `${pub} published, not checked on the page · ${shared.length} shared results` : "", href: "#v6-readers" },
-    { q: "Completeness", big: completeness && completeness.percent !== null ? `${completeness.percent.toFixed(1)}%` : "—", small: completeness ? `${count(completeness.n)} of ${count(completeness.of)} owed now, held · ${count(score!.measures!.freshness.n)} of ${count(score!.measures!.freshness.of)} fresh · ${count(score!.measures!.delivery.n)} of ${count(score!.measures!.delivery.of)} seen on the page` : "", href: "#v6-missing" },
-    { q: "Happening now", big: multi ? (insideWorkers.includes(null) ? "—" : String(insideWorkers.reduce<number>((a, n) => a + (n ?? 0), 0))) : hf ? (workers(hf) === null ? "—" : String(workers(hf))) : "—", small: multi ? `research workers across ${inside.length} hunts` : hf ? (hf.status === "running" && hf.researchWorkers !== null ? `research workers on the ${hf.name}` : hf.status === "unreported" ? hf.name : `${hf.name} is ${hf.status}`) : huntsKnown ? "No hunt here" : "", href: "#v6-happening" },
-    { q: "Stuck", big: stuckKnown ? String(stuck.length) : "—", small: stuckKnown ? `${harm} affecting readers · ${stuck.filter((x) => x.rel === "shared").length} through shared work` : "", href: "#v6-stuck", warn: harm > 0 },
-    { q: "Your decisions", big: stuckKnown ? String(dec) : "—", small: dec ? "See Suggested next steps" : stuckKnown ? "Nothing needs you here" : "", href: "#v6-steps", warn: dec > 0 },
-    { q: "Hunt money", big: multi ? `${inside.length} hunts` : hf ? left(hf) : "—", small: multi ? `${inside.map((h) => `${h.name}: ${left(h)} left of ${usd(h.limitUsd)}`).join(" · ")}` : hf ? `${hf.name}${hf.placeKey !== v.scopeKey ? " (inside)" : ""} · left of ${usd(hf.limitUsd)} · ${usd(hf.spentUsd)} spent · ${usd(hf.heldUsd)} set aside` : huntsKnown ? "No hunt here" : "", href: "#v6-cost" },
-  ];
-  return (
-    <section aria-label="Six answers" className={s.answers}>
-      {answers.map((a) => (
-        <a key={a.q} href={a.href} className={cx(s.answer, a.warn && s.answerWarn)}>
-          <span className={s.eyebrow}>{a.q}</span>
-          <span className={cx(s.big, a.warn && s.textWarn)}>{a.big}</span>
-          <span className={s.meta}>{a.small}</span>
-        </a>
-      ))}
-    </section>
   );
 }
 
@@ -288,7 +284,7 @@ export function ResultRow(props: { readonly r: ReaderResult; readonly shared?: b
   );
 }
 
-function Readers() {
+export function Readers() {
   const v = useV6();
   const { results } = useScoped();
   const local = results.filter((x) => x.rel === "local");
@@ -327,145 +323,6 @@ export function StuckRow(props: { readonly item: StuckItem; readonly shared?: bo
   );
 }
 
-const STUCK_SHOWN_ON_NOW = 6;
-
-function Stuck() {
-  const v = useV6();
-  const { stuck } = useScoped();
-  const [lane, setLane] = useState<Lane | "all">("all");
-  const shown = lane === "all" ? stuck : stuck.filter((x) => x.item.lane === lane);
-  const lanes: (Lane | "all")[] = ["all", "decision", "auto", "publisher", "software"];
-  return (
-    <Card id="v6-stuck" title="What’s stuck" aside={<button type="button" className={s.btnLink} onClick={() => v.go("work")}>See all work →</button>}>
-      {v.data.stuck.load === "failed" && !v.data.stuck.data && <Empty>—</Empty>}
-      {v.data.stuck.load === "loading" && <Loading what="stuck items" />}
-      {v.data.stuck.state !== "not-connected" && (
-        <div className={s.tabs} role="group" aria-label="Filter by who moves it">
-          {lanes.map((k) => (
-            <button key={k} type="button" className={s.tab} aria-pressed={lane === k} onClick={() => setLane(k)}>
-              {k === "all" ? "Everything" : LANE_WORDS[k]}<span className={s.tabCount}>{k === "all" ? stuck.length : stuck.filter((x) => x.item.lane === k).length}</span>
-            </button>
-          ))}
-        </div>
-      )}
-      {v.data.stuck.state !== "not-connected" && !shown.length && <Empty>{`Nothing ${lane === "all" ? "is stuck" : "in this group"} in ${v.place.name}.`}</Empty>}
-      <div className={s.stack}>{shown.slice(0, STUCK_SHOWN_ON_NOW).map((x) => <StuckRow key={x.item.id} item={x.item} shared={x.rel === "shared"} withActions />)}</div>
-      {shown.length > STUCK_SHOWN_ON_NOW && <p className={cx(s.p, s.meta)}>Showing {STUCK_SHOWN_ON_NOW} of {count(shown.length)}. <button type="button" className={s.btnLink} onClick={() => v.go("work")}>See them grouped by cause →</button></p>}
-    </Card>
-  );
-}
-
-/* --------------------------------------------------------------- missing */
-
-function Missing() {
-  const v = useV6();
-  const groups = v.data.checklist.data?.placeGroups ?? null;
-  const totals = checklistTotals(groups?.map((g) => g.counts) ?? null);
-  const N = totals ? totals.reduce((a, b) => a + b, 0) : 0;
-  const score = v.data.checklist.data?.score ?? null;
-  return (
-    <Card id="v6-missing" title="What’s still missing" aside={<button type="button" className={s.btnLink} onClick={() => v.go("checklist")}>Open the checklist →</button>}>
-      {totals && N > 0 ? (
-        <>
-          {score?.measures && <p className={cx(s.p, s.small)}>Completeness {score.measures.completeness.percent === null ? "—" : `${score.measures.completeness.percent.toFixed(1)}%`} · {count(score.measures.completeness.n)} of {count(score.measures.completeness.of)} · Freshness {count(score.measures.freshness.n)} of {count(score.measures.freshness.of)} · Delivery {count(score.measures.delivery.n)} of {count(score.measures.delivery.of)}</p>}
-          <p className={cx(s.p, s.small)}>
-            {count(N)} checklist items · Checked on a public page: {count(totals[0])} ({pctDown(totals[0], N)}) · Published, not checked on the page: {count(totals[1])} · Collected, not published: {count(totals[2])} · Applies: {count(N - totals[5])} · Not sure: {count(totals[5])}
-          </p>
-          <StatusBar counts={totals} label={`All checklist items in ${v.place.name}`} tall />
-          <StatusLegend />
-          <StatusTable rows={[{ name: `All groups in ${v.place.name}`, counts: totals }]} />
-        </>
-      ) : groups ? <Empty>No checklist items for {v.place.name}.</Empty> : <Empty>—</Empty>}
-    </Card>
-  );
-}
-
-/* ------------------------------------------------------------- happening */
-
-function Happening() {
-  const v = useV6();
-  const now = usePageClock();
-  const w = v.data.workers.data;
-  const isCountry = v.place.kind === "Country";
-  const jobs = w?.jobs ? w.jobs.filter((j) => relation(v.index, [j.placeKey], v.scopeKey) !== null) : null;
-  const waiting = w?.waiting ? w.waiting.filter((x) => relation(v.index, x.applies, v.scopeKey) !== null) : null;
-  const lanes = w?.status.lanes;
-  const round = roundReading(w?.status, now);
-  const progress = w?.status.lastUsefulProgress ?? null;
-  const running = w?.running ?? null;
-  return (
-    <Card id="v6-happening" title="What’s happening now" aside={<button type="button" className={s.btnLink} onClick={() => v.go("workers")}>Open Workers →</button>}>
-      <div className={s.gridTiles}>
-        <div className={s.row}>
-          <span className={s.big}>{runningCount(running, jobs)}</span>
-          <span className={s.meta}>{jobs ? `jobs working now in ${v.place.name}` : `jobs working now${isCountry ? "" : ` in ${v.place.name}`}`}{jobs && running && !isCountry ? ` · ${systemRunningCount(running)} in the whole system` : ""}</span>
-        </div>
-        <div className={s.row}>
-          <span className={s.big}>{waiting ? waiting.length : "—"}</span>
-          <span className={s.meta}>{waiting ? `waiting${isCountry ? "" : ` in ${v.place.name}`}${waiting.length ? `: ${waiting.slice(0, 2).map((x) => x.title).join(" · ")}${waiting.length > 2 ? ` · and ${waiting.length - 2} more` : ""}` : ""}` : `waiting${isCountry ? "" : ` in ${v.place.name}`}`}</span>
-        </div>
-        <div className={s.row}>
-          <span className={s.big}>{progress ? mst(progress.at, false) : "—"}</span>
-          <span className={s.meta}>{progress ? `last useful progress (${ageWords(progress.at, now) ?? ""}): ${progress.what}` : "last useful progress"}</span>
-        </div>
-        <div className={cx(s.row, round.overdue && s.cardWarn)}>
-          <span className={cx(s.big, round.overdue && s.textWarn)}>{round.overdue ? "Late" : round.headline}</span>
-          <span className={s.meta}>{round.overdue ? round.headline : "Round of work"}</span>
-        </div>
-      </div>
-      {jobs && jobs.length > 0 && (
-        <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
-          {jobs.slice(0, 5).map((j) => <li key={j.id} className={s.small}>{j.title} · {j.hunt} · {j.elapsed}</li>)}
-          {jobs.length > 5 && <li className={s.meta}>and {count(jobs.length - 5)} more</li>}
-        </ul>
-      )}
-      {!jobs && lanes && (
-        <div className={s.gridTiles}>
-          {lanes.map((l) => (
-            <div key={l.name} className={s.row}>
-              <span className={s.big}>{l.active ?? "—"}<span className={s.meta}> running · {count(l.waiting)} waiting</span></span>
-              <span className={s.meta}>{l.name}{l.blockedBy ? ` · ${l.blockedBy}` : ""}</span>
-            </div>
-          ))}
-        </div>
-      )}
-    </Card>
-  );
-}
-
-/* ----------------------------------------------------------------- cost */
-
-function Cost() {
-  const v = useV6();
-  const hunt = huntAt(v.index, v.hunts, v.scopeKey);
-  const inside = huntsWithin(v.index, v.hunts, v.scopeKey);
-  const list = hunt ? [hunt] : inside;
-  return (
-    <Card id="v6-cost" title="What it has cost" aside={<button type="button" className={s.btnLink} onClick={() => v.go("money")}>Open Money →</button>}>
-      {v.data.hunts.state === "not-connected" ? <Empty>—</Empty> : !list.length && <Empty>No hunt here</Empty>}
-      <div className={s.grid2}>
-        {list.map((h) => <HuntMeter key={h.id} hunt={h} inside={h.placeKey !== v.scopeKey} />)}
-      </div>
-    </Card>
-  );
-}
-
-export function HuntMeter(props: { readonly hunt: Hunt; readonly inside?: boolean }) {
-  const h = props.hunt;
-  const left = huntLeftUsd(h);
-  return (
-    <div className={s.row}>
-      <strong className={s.small}>{h.name} · Anthropic · lifetime{props.inside ? " (inside this place)" : ""}</strong>
-      <div className={s.meter} role="img" aria-label={`${usd(h.spentUsd)} spent and ${usd(h.heldUsd)} set aside of ${usd(h.limitUsd)}`}>
-        <span className={s.meterFill} style={{ width: `${Math.min(100, (h.spentUsd / h.limitUsd) * 100)}%`, background: "var(--pill-cyan-text)" }} />
-        <span className={s.meterHeld} style={{ width: `${Math.min(100, (h.heldUsd / h.limitUsd) * 100)}%` }} />
-      </div>
-      <span className={s.small}>{usd(h.spentUsd)} spent · {usd(h.heldUsd)} set aside for work in progress · {left === null ? <span className={s.textWarn}>—</span> : <span className={s.textGood}>{usd(left)}</span>} left of {usd(h.limitUsd)}</span>
-      {h.unpricedEntries > 0 && <span className={cx(s.small, s.textWarn)}>{count(h.unpricedEntries)} charges without a price</span>}
-    </div>
-  );
-}
-
 /* ----------------------------------------------------------- direct work */
 
 function DirectWork() {
@@ -498,6 +355,7 @@ function DirectWork() {
         </div>
         <div className={s.row}>
           <strong className={s.small}>In {v.place.name}</strong>
+          <Actions actions={[{ kind: "scope-first", target: v.scopeKey }, { kind: "scope-recheck", target: v.scopeKey }, { kind: "scope-stop", target: v.scopeKey }]} />
         </div>
         <div className={cx(s.row, s.cardGlobal)}>
           <strong className={s.small}>Whole system</strong>
@@ -506,20 +364,5 @@ function DirectWork() {
         {!hunt && huntCards}
       </div>
     </details>
-  );
-}
-
-/* ---------------------------------------------------------------- recent */
-
-function Recent() {
-  const v = useV6();
-  const [all, setAll] = useState(false);
-  const list = v.receipts.filter((r) => all || v.scopeKey === COUNTRY_KEY || relation(v.index, [r.scopeKey], v.scopeKey) !== null).slice(0, 5);
-  return (
-    <Card title={`Your recent instructions · ${all || v.scopeKey === COUNTRY_KEY ? "all places" : `${v.place.name} and shared`}`}
-      aside={<span className={s.inline}>{v.scopeKey !== COUNTRY_KEY && <button type="button" className={s.btn} aria-pressed={all} onClick={() => setAll(!all)}>{all ? `Only ${v.place.name}` : "Show all places"}</button>}<button type="button" className={s.btnLink} onClick={() => v.go("work")}>Full history →</button></span>}>
-      {!list.length && <Empty>No instructions {all || v.scopeKey === COUNTRY_KEY ? "yet" : `for ${v.place.name} yet`}.</Empty>}
-      <div className={s.stack}>{list.map((r) => <ReceiptCard key={r.key} receipt={r} compact />)}</div>
-    </Card>
   );
 }

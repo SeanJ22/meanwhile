@@ -63,7 +63,6 @@ import { CandidateCard } from "@/components/ballot/candidate-card";
 import {
   CandidatePositions,
 } from "@/components/ballot/candidate-positions";
-import { readStanceTopics } from "@/lib/stances/read";
 import {
   positionsFor,
   positionsHeadline,
@@ -152,7 +151,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LevelTag } from "@/components/ui/level-tag";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { BallotCapture } from "@/components/ballot/ballot-capture";
-import { tierForOcdId } from "@/lib/ocd/tiers";
+import { tierForOcdId, tierForOffice } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
 import { readerPartyLabel } from "@/lib/text/reader-names";
@@ -635,7 +634,7 @@ async function BallotBattlecard({
   let positionsUnavailable = !authorityAvailability.candidatePublications;
   if (!positionsUnavailable) {
     try {
-      positions = positionsFor(targetKey, null, await readStanceTopics());
+      positions = positionsFor(targetKey);
     } catch {
       positionsUnavailable = true;
     }
@@ -728,7 +727,7 @@ async function BallotBattlecard({
            Somebody voting for governor needs to know what a governor does. */
         office: officeBlurb ? (
           <>
-            <p className="text-[0.8125rem] leading-relaxed text-voice">{officeBlurb.text}</p>
+            <p className="t-body leading-relaxed text-voice">{officeBlurb.text}</p>
             {officeBlurb.basis && (
               <p className="mt-1.5 text-[0.6875rem] text-muted">{officeBlurb.basis}</p>
             )}
@@ -880,7 +879,7 @@ interface BallotAuthorityAvailability {
 
 function unavailableHolding(family: string) {
   return (
-    <p className="text-[0.8125rem] leading-relaxed text-voice" data-ballot-authority-unavailable={family}>
+    <p className="t-body leading-relaxed text-voice" data-ballot-authority-unavailable={family}>
       Our canonical {family} holding could not be read for this request. This is an unknown holding state, not evidence that no record exists.
     </p>
   );
@@ -1422,7 +1421,7 @@ export default async function BallotPage({
       */}
       <div className="ballot-page-chrome flex items-center justify-between gap-3">
         {/* 6b: the way back, top-left — the map is where the reader came from. */}
-        <p className="text-[0.8125rem]">
+        <p className="t-body">
           <Link
             href="/"
             className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
@@ -1453,7 +1452,7 @@ export default async function BallotPage({
 
       {/* The app's voice (design pass): guidance renders in the voice
           register, distinct from the filed record below. */}
-      <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice lg:max-w-2xl">
+      <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
         A zip code is orientation, not your exact ballot — zip areas cross
         town and district lines. Everything below is presented as filed with
         election authorities, with the filing linked on every item.{" "}
@@ -1576,7 +1575,7 @@ export default async function BallotPage({
         })}
       {set && (divisionHoldingUnavailable || auxiliaryFailures.length > 0) && (
         <section
-          className="mt-4 rounded-[8px] border border-line bg-panel p-4 text-[0.8125rem] leading-relaxed text-voice lg:max-w-3xl"
+          className="mt-4 rounded-[8px] border border-line bg-panel p-4 t-body leading-relaxed text-voice lg:max-w-3xl"
           data-ballot-canonical-holding-gaps
         >
           <p>
@@ -1641,7 +1640,7 @@ export default async function BallotPage({
                 {regStep && (
                   <li data-dated-event>
                     Register to vote by{" "}
-                    <span className="font-mono text-[0.8125rem] font-semibold">
+                    <span className="font-mono t-body font-semibold">
                       {formatDateMDY(regStep.date)}
                     </span>
                     {/*
@@ -1685,7 +1684,7 @@ export default async function BallotPage({
                 {earlyStep && (
                   <li data-dated-event>
                     {earlyStep.label}:{" "}
-                    <span className="font-mono text-[0.8125rem] font-semibold">
+                    <span className="font-mono t-body font-semibold">
                       {formatDateMDY(earlyStep.date)}
                     </span>
                     {/*
@@ -1879,7 +1878,7 @@ export default async function BallotPage({
           propositions sentence renders only where propositions actually share
           the ballot. */}
       {set && matched && (
-        <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice lg:max-w-2xl">
+        <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
           The contests below are recorded for areas that may overlap this ZIP. Check your address with your election office for the exact ballot.
           {measureContests.length > 0 &&
             " Propositions are voted on at the same time."}
@@ -1891,7 +1890,7 @@ export default async function BallotPage({
           back. Nothing was deleted; the route is unchanged. */}
 
       {!zip && (
-        <p className="mt-6 text-[0.8125rem] text-muted lg:max-w-2xl">
+        <p className="mt-6 t-body text-muted lg:max-w-2xl">
           Open this page with a zip, e.g.{" "}
           <Link href="/ballot?zip=07866" className="underline decoration-dotted">
             /ballot?zip=07866
@@ -1901,7 +1900,7 @@ export default async function BallotPage({
       )}
 
       {zip && !centroid && (
-        <p className="mt-6 text-[0.8125rem] text-muted lg:max-w-2xl">
+        <p className="mt-6 t-body text-muted lg:max-w-2xl">
           We couldn&apos;t place that zip. Try another, or return to{" "}
           <Link href="/" className="underline decoration-dotted">
             the map
@@ -1912,7 +1911,7 @@ export default async function BallotPage({
 
       {attempted && !matched && ballotLoaderFailures.length > 0 && (
         <p
-          className="mt-6 text-[0.8125rem] leading-relaxed text-muted lg:max-w-2xl"
+          className="mt-6 t-body leading-relaxed text-muted lg:max-w-2xl"
           data-ballot-authority-unavailable={ballotLoaderFailures.join(",")}
         >
           The canonical ballot authority for this area could not be read. This is an unknown holding state, not evidence that no candidates or ballot items exist.
@@ -1921,7 +1920,7 @@ export default async function BallotPage({
 
       {attempted && !matched && ballotLoaderFailures.length === 0 && divisionHoldingUnavailable && (
         <p
-          className="mt-6 text-[0.8125rem] leading-relaxed text-muted lg:max-w-2xl"
+          className="mt-6 t-body leading-relaxed text-muted lg:max-w-2xl"
           data-ballot-division-authority-unavailable
         >
           The canonical division registry could not be read, so this request could not be assigned to a ballot authority. This is an unknown holding state, not evidence that no ballot exists.
@@ -1929,7 +1928,7 @@ export default async function BallotPage({
       )}
 
       {attempted && !matched && ballotLoaderFailures.length === 0 && !divisionHoldingUnavailable && (
-        <p className="mt-6 text-[0.8125rem] leading-relaxed text-muted lg:max-w-2xl">
+        <p className="mt-6 t-body leading-relaxed text-muted lg:max-w-2xl">
           We&apos;re working on getting this info. Ballot coverage
           currently reaches Pima County AZ, Morris County NJ, and Merrimack
           County NH. This is not a statement that nothing is on your ballot.
@@ -1995,7 +1994,7 @@ export default async function BallotPage({
                 key={step.label}
                 className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1"
               >
-                <span className="text-[0.8125rem]">{step.label}</span>
+                <span className="t-body">{step.label}</span>
                 <span className="ml-auto min-w-0 text-right" data-dated-event>
                   <span className="font-mono text-[0.75rem] text-signal">
                     {formatDateMDY(step.date)}
@@ -2136,7 +2135,7 @@ export default async function BallotPage({
               data-ocd-id={contest.ocdId}
               data-office-tier-start={
                 contestIndex > 0 &&
-                tierForOcdId(contest.ocdId) !== tierForOcdId(candidacyContests[contestIndex - 1].ocdId)
+                tierForOffice(contest.title, contest.ocdId) !== tierForOffice(candidacyContests[contestIndex - 1].title, candidacyContests[contestIndex - 1].ocdId)
                   ? "true"
                   : undefined
               }
@@ -2153,7 +2152,7 @@ export default async function BallotPage({
                   {/* BAL-41 (2026-09-02): the level tag, immediately after the
                       last word of the race title, in the tier's accent. Tier
                       from the contest's OCD identity — never the office name. */}
-                  <LevelTag tier={tierForOcdId(contest.ocdId)} />
+                  <LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />
                   {/*
                     RULING 71, as JUR-4 leaves it (2026-08-23). The full
                     eleven-word pill rendered here twelve times across nine
@@ -2652,7 +2651,7 @@ export default async function BallotPage({
                   {/* BAL-41 (2026-09-02): the level tag on every proposition
                       title too — a statewide measure reads State, a county or
                       district one reads Local, from the measure's OCD identity. */}
-                  <LevelTag tier={tierForOcdId(contest.ocdId)} />
+                  <LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />
                 </h3>
 
                 {/*
@@ -2691,11 +2690,11 @@ export default async function BallotPage({
                       Plain-language summary — read the official text below
                     </p>
                     {/* 3b: the product's voice renders BOLD. */}
-                    <p className="mt-1.5 text-[0.8125rem] font-semibold leading-relaxed">
+                    <p className="mt-1.5 t-body font-semibold leading-relaxed">
                       {summary.summary}
                     </p>
-                    {summary.yesMeans && <p className="mt-2 text-[0.8125rem] leading-relaxed" data-measure-yes><strong>YES:</strong> {summary.yesMeans}</p>}
-                    {summary.noMeans && <p className="mt-2 text-[0.8125rem] leading-relaxed" data-measure-no><strong>NO:</strong> {summary.noMeans}</p>}
+                    {summary.yesMeans && <p className="mt-2 t-body leading-relaxed" data-measure-yes><strong>YES:</strong> {summary.yesMeans}</p>}
+                    {summary.noMeans && <p className="mt-2 t-body leading-relaxed" data-measure-no><strong>NO:</strong> {summary.noMeans}</p>}
                   </div>
                 ) : (
                   measure && (
@@ -2770,7 +2769,7 @@ export default async function BallotPage({
                           data-provision-id={provision.id}
                           className="border-l-2 border-[var(--panel-border)] pl-3"
                         >
-                          <p className="text-[0.8125rem] font-semibold leading-snug">
+                          <p className="t-body font-semibold leading-snug">
                             {provision.label}
                           </p>
                           {/* The kind names itself in the reader's words. The
@@ -2863,7 +2862,7 @@ export default async function BallotPage({
                         The question on the ballot, word for word
                       </p>
                       <p
-                        className="t-record mt-1.5 whitespace-pre-line text-[0.8125rem] leading-relaxed text-paper-dim"
+                        className="t-record mt-1.5 whitespace-pre-line t-body leading-relaxed text-paper-dim"
                         data-measure-question={measure.id}
                       >
                         {measure.questionText}
@@ -2873,7 +2872,7 @@ export default async function BallotPage({
                           <p className="t-eyebrow text-muted">
                             What the authority published with it
                           </p>
-                          <p className="t-record mt-1.5 whitespace-pre-line text-[0.8125rem] leading-relaxed text-paper-dim">
+                          <p className="t-record mt-1.5 whitespace-pre-line t-body leading-relaxed text-paper-dim">
                             {measure.officialStatement}
                           </p>
                         </div>
@@ -3030,7 +3029,7 @@ export default async function BallotPage({
           data-ballot-no-local-races
         >
           <h2 className="t-structure text-paper-dim">County, city and school-board races</h2>
-          <p className="mt-2 text-[0.8125rem] leading-relaxed text-voice">
+          <p className="mt-2 t-body leading-relaxed text-voice">
             We&apos;re working on getting this info. The state and federal races above are read from the official filings; the county, city, town and school-district contests that share this ballot appear here once their election office publishes them and we have read them. Your county election office has the complete ballot for your address.
           </p>
         </section>
@@ -3076,7 +3075,7 @@ export default async function BallotPage({
               data-absence-count={absence.members.length}
               data-absence-ocd-ids={absence.members.map((record) => record.ocdId).join(" ")}
             >
-              <p className="text-[0.8125rem] leading-relaxed text-paper-dim">
+              <p className="t-body leading-relaxed text-paper-dim">
                 {absence.statement}
               </p>
               <p className="mt-2 text-[0.6875rem] text-muted">

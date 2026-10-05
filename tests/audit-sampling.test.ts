@@ -78,11 +78,11 @@ test("an escalation is always reviewed, and the sampler counts its own decisions
 });
 
 test("a judgment call is always model-reviewed, even in a settled stratum; an ordinary record is only sampled", () => {
-  const settled = new Map([[stratumOf(contractFor("www.a.gov", "OFFICIAL_PORTRAIT")), { reviewed: 50, survivedSinceBreak: 50, everBroken: false }],
+  const settled = new Map([[stratumOf(contractFor("www.a.gov", "POSITION_SUMMARY")), { reviewed: 50, survivedSinceBreak: 50, everBroken: false }],
     [stratumOf(contractFor("www.a.gov")), { reviewed: 50, survivedSinceBreak: 50, everBroken: false }]]);
   let judgment = 0; let ordinary = 0;
   for (let i = 0; i < 200; i++) {
-    const call = sampleDecision(spec("www.a.gov", `j-${i}`, { contract: contractFor("www.a.gov", "OFFICIAL_PORTRAIT") }), settled, false);
+    const call = sampleDecision(spec("www.a.gov", `j-${i}`, { contract: contractFor("www.a.gov", "POSITION_SUMMARY") }), settled, false);
     if (call.sample) judgment += 1; else assert.fail("a judgment call was not reviewed");
     assert.equal(call.reason, "JUDGMENT_CALL");
     if (sampleDecision(spec("www.a.gov", `o-${i}`), settled, false).sample) ordinary += 1;
@@ -148,4 +148,16 @@ test("a boosted fact (past its refresh date, in demand, single-source) is model-
   assert.equal(boostReason({ demandRank: 400 }), null, "outside the top places is no boost");
   assert.equal(boostReason({ singleSource: true }), "SINGLE_SOURCE");
   assert.equal(boostReason({ pastRefresh: true, singleSource: true }), "PAST_REFRESH", "the strongest reason is the one reported");
+});
+
+
+test("CP-10: official portraits use ordinary sampling, while other portraits remain judgment calls", () => {
+  const policy = { ...DEFAULT_AUDIT_SAMPLE_POLICY, ratio: 0, quotedRatio: 0, floorPerStratum: 0 };
+  for (const [host, judgment] of [["city.gov", false], ["portrait.example", true]] as const) {
+    const contract = contractFor(host, "OFFICIAL_PORTRAIT");
+    const history = new Map([[stratumOf(contract), { reviewed: 10, everBroken: false, survivedSinceBreak: 10 }]]);
+    const decision = sampleDecision({ ...spec(host, "portrait"), contract }, history, false, policy);
+    assert.equal(decision.reason === "JUDGMENT_CALL", judgment);
+    assert.equal(decision.sample, judgment);
+  }
 });

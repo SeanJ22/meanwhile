@@ -235,10 +235,10 @@ test("capability readiness never sends an action", async () => {
   const realFetch = globalThis.fetch;
   globalThis.fetch = (async (input: unknown) => { posted.push(String(input)); return new Response("{}"); }) as typeof fetch;
   try {
-    sync.onPulse(pulse(stuckAnn("v1"), { "send-agents": { contract: "admin-v6/action/send-agents@1", type: "fleet.deployHere" } }));
+    sync.onPulse(pulse(stuckAnn("v1"), { recheck: { contract: "admin-v6/action/recheck@1", type: "reader.recheck" } }));
     calls[0].resolve(ok("st:az", "v1", []));
     await flush();
-    assert.equal(sync.capabilities()?.actions["send-agents"]?.type, "fleet.deployHere");
+    assert.equal(sync.capabilities()?.actions.recheck?.type, "reader.recheck");
     assert.deepEqual(posted, [], "an announced action is never submitted by the page");
     assert.ok(calls.every((c) => !c.url.includes("/api/admin/action")));
   } finally {

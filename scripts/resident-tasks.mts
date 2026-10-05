@@ -95,7 +95,7 @@ async function settled(page: Page): Promise<number> {
   }), { quiet: QUIET_MS, max: WAIT_MS });
 }
 
-type Found = { id: string; says: string } | { id: null; says: string; covered: boolean; offscreen: boolean };
+type Found = { id: string; says: string; at: { x: number; y: number } } | { id: null; says: string; covered: boolean; offscreen: boolean };
 
 /** Find what a resident would tap: visible, matching its words and its row, and on top (not covered). */
 async function find(page: Page, finders: readonly Finder[]): Promise<Found> {
@@ -105,10 +105,13 @@ async function find(page: Page, finders: readonly Finder[]): Promise<Found> {
       const s = getComputedStyle(el);
       return r.width > 0 && r.height > 0 && s.visibility !== "hidden" && s.display !== "none" && Number(s.opacity) > 0;
     };
-    const centre = (el: Element) => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; };
-    const onScreen = (el: Element) => { const { x, y } = centre(el); return x >= 0 && y >= 0 && x <= innerWidth && y <= innerHeight; };
-    const onTop = (el: Element) => {
-      const { x, y } = centre(el);
+    // Where a thumb would land: the middle of the part of the target that is on screen (a row cut off at the edge is still tapped where it shows).
+    const shownPart = (el: Element) => {
+      const r = el.getBoundingClientRect();
+      const left = Math.max(r.left, 0), right = Math.min(r.right, innerWidth), top = Math.max(r.top, 0), bottom = Math.min(r.bottom, innerHeight);
+      return right - left >= 4 && bottom - top >= 4 ? { x: (left + right) / 2, y: (top + bottom) / 2, r } : null;
+    };
+    const onTop = (el: Element, x: number, y: number) => {
       const hit = document.elementFromPoint(x, y);
       return hit !== null && (hit === el || el.contains(hit));
     };
@@ -131,11 +134,12 @@ async function find(page: Page, finders: readonly Finder[]): Promise<Found> {
           if (!ok) continue;
         }
         el.scrollIntoView({ block: "center", inline: "center" });
-        if (!onScreen(el)) { offscreen = true; continue; }
-        if (!onTop(el)) { covered = true; continue; }
+        const part = shownPart(el);
+        if (!part) { offscreen = true; continue; }
+        if (!onTop(el, part.x, part.y)) { covered = true; continue; }
         const id = `rt-${Math.random().toString(36).slice(2)}`;
         el.setAttribute("data-rt-target", id);
-        return { id, says: f.says };
+        return { id, says: f.says, at: { x: part.x - part.r.left, y: part.y - part.r.top } };
       }
     }
     return { id: null, says: list.map((f) => f.says).join(" or "), covered, offscreen };
@@ -208,13 +212,13 @@ async function runTask(browser: GuardedBrowser, task: ResidentTask, zip: string,
     await seedZip(page, zip);
     await page.addInitScript(LAYOUT_SHIFT_INIT_SCRIPT);
     await page.goto(`${BASE}${startPath(task.start, zip)}`, { waitUntil: "commit", timeout: 60_000 });
-    await page.waitForSelector(readySelector(task.start), { state: "visible", timeout: WAIT_MS });
+    await page.waitForSelector(readySelector(task.start, zip), { state: "visible", timeout: WAIT_MS });
     await record(`Opened the ${task.start === "home" || task.start === "ask" ? "home" : task.start} page`, await settled(page));
     for (const step of script.steps) {
       if (step.kind === "ask") {
         const found = await findWaiting(page, [{ says: "the Ask box", css: "button.ask-pill, button[aria-label^='Ask about']" }], false);
         if (found.id === null) { deadEnd = "could not find the Ask box"; break; }
-        await page.locator(`[data-rt-target="${found.id}"]`).click({ timeout: TAP_TIMEOUT_MS });
+        await page.locator(`[data-rt-target="${found.id}"]`).click({ timeout: TAP_TIMEOUT_MS, position: found.at });
         taps += 1;
         const box = page.locator("[data-ask-panel] [data-ask-box]").last();
         try { await box.waitFor({ state: "visible", timeout: WAIT_MS }); } catch { deadEnd = "the Ask box did not open"; break; }
@@ -235,7 +239,7 @@ async function runTask(browser: GuardedBrowser, task: ResidentTask, zip: string,
         const found = await findWaiting(page, step.finders, step.optional === true);
         if (found.id === null) { tapped = found; break; }
         try {
-          await page.locator(`[data-rt-target="${found.id}"]`).click({ timeout: TAP_TIMEOUT_MS });
+          await page.locator(`[data-rt-target="${found.id}"]`).click({ timeout: TAP_TIMEOUT_MS, position: found.at });
           tapped = found;
         } catch (error) {
           if (error instanceof Error && /intercepts pointer events/.test(error.message)) { tapped = { id: null, says: found.says, covered: true, offscreen: false }; break; }

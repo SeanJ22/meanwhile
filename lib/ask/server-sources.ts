@@ -11,8 +11,6 @@ import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
 import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts";
 import { positionsFor } from "../candidates/positions.ts";
-import { readStanceTopics } from "../stances/read.ts";
-import type { StanceTopic } from "../stances/topics.ts";
 import { heldRosterFiles } from "../holdings/discovery.ts";
 import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
@@ -170,7 +168,6 @@ export async function loadBallotForDivisions(
 ): Promise<BallotForDivisions> {
   if (ocdIds.length === 0) return EMPTY;
   const loaderFailures: string[] = [];
-  const stanceTopics = await readStanceTopics();
   for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, options)) {
     try {
       const candidate = source.normalize(await source.fetch());
@@ -188,7 +185,7 @@ export async function loadBallotForDivisions(
         contests: hit.contests,
         absences: hit.absences,
         nominees: (contestId) => (lineup?.contests.find((contest) => contest.contestId === contestId)?.nominees ?? []).map((nominee) => ({ ...nominee, sourceUrl: lineup!.canvass.url, sourceOrg: lineup!.canvass.issuedBy, retrievedAt: lineup!.canvass.readAt })),
-        positions: (targetKey: string) => sourcedPositions(targetKey, stanceTopics),
+        positions: sourcedPositions,
         measureSummary: (contestId) => {
           const summary = summaryForContest(contestId, measureRecords);
           return summary
@@ -220,9 +217,9 @@ export async function loadBallotForDivisions(
  * given a row with no statement will describe the absence as though it were
  * one. The named gap in the route says that instead, once, correctly.
  */
-function sourcedPositions(targetKey: string, topics: readonly StanceTopic[]) {
+function sourcedPositions(targetKey: string) {
   try {
-    return positionsFor(targetKey, null, topics).flatMap((position) =>
+    return positionsFor(targetKey).flatMap((position) =>
       position.answer.kind === "MATCHED"
         ? position.answer.passages.map((passage) => ({
             issueLabel: position.issue.label,

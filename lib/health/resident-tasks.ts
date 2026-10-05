@@ -101,7 +101,7 @@ export const WORDS = {
   money: "\\$\\s?\\d[\\d,.]*",
   funding: "fund|raised|contribut|donor|donat",
   hours: "\\bhours\\b|\\bopen\\b.{0,40}\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m|\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\.?\\s?(?:-|–|to)\\s?\\d",
-  contact: "\\(\\d{3}\\)\\s?\\d{3}-\\d{4}|\\b\\d{3}[-.]\\d{3}[-.]\\d{4}\\b|@[a-z0-9-]+\\.[a-z]{2,}|\\bphone\\b|\\bemail\\b|contact form|\\bwebsite\\b|official site",
+  contact: "\\(\\d{3}\\)\\s?\\d{3}-\\d{4}|\\b\\d{3}[-.]\\d{3}[-.]\\d{4}\\b|@[a-z0-9-]+\\.[a-z]{2,}|\\bphone\\b|\\bemail\\b|contact form|\\bwebsite\\b|official (?:site|page)",
   source: "\\bsources?\\b|sourced from|published by|from the .{1,80}(?:site|timeline|record|filing)|\\bread (?:on )?(?:\\w+ \\d|\\d{4}-\\d{2}-\\d{2})",
   housing: "housing|\\brent\\b|homeless|zoning|afford",
   plainMeasure: "\\byes\\b.{0,200}\\bno\\b|\\bno\\b.{0,200}\\byes\\b",
@@ -114,7 +114,8 @@ export const WORDS = {
 } as const;
 
 const DIRECTIONS = "a[href*='maps/dir'], a[href*='google.com/maps'], a[href*='maps.apple.com'], a[href*='bing.com/maps']";
-const PIN = ".wtp-pin, .maplibregl-marker";
+/** A meeting place on the map; the "centre of your ZIP" marker is not a place and cannot be tapped. */
+const PIN = ".wtp-pin";
 const CARD = ".mw-card";
 const ASK_ANSWER = "[data-ask-panel]";
 /** An answer from our records: a grounded mode (never the general-knowledge fallback), a destination or the bodies list. */
@@ -270,9 +271,9 @@ export const TASK_SCRIPTS: Readonly<Record<string, TaskScript>> = {
   },
 };
 
-/** What says the page each start surface opens on is ready to be tapped. */
-export function readySelector(start: string): string {
-  return start === "ballot" ? "main h1" : "button.ask-pill, button.mw-nav-seg";
+/** What says the page each start surface opens on is ready to be tapped: the ballot's heading, or the map page showing the ZIP. */
+export function readySelector(start: string, zip: string): string {
+  return start === "ballot" ? "main h1" : `button[aria-label^="Showing ${zip}"]`;
 }
 
 /** Whether `text` meets a check by saying plainly that its part is still being gathered. */

@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Swatch } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
 import { LEARNING_STATUSES, mstDay, TASK_STAGES, type ClosedFix, type FixTab, type LearningStatus, type OpenFix } from "./model.ts";
-import { cx, Empty, Facts, Pill, Tabs, Technical, useListView } from "./ui.tsx";
+import { Actions, cx, Empty, Facts, Pill, Tabs, Technical, useListView } from "./ui.tsx";
 import s from "./v6.module.css";
 
 export const LEARNING_CLASS: Readonly<Record<LearningStatus, string>> = {
@@ -80,6 +80,7 @@ function OpenFixCard(props: { readonly fix: OpenFix }) {
           {o.linkedStuck.map((id) => <button key={id} type="button" className={s.btnLink} onClick={() => v.open({ type: "stuck", id })}>{v.nameOf(id)}</button>)}
         </div>
       )}
+      <Actions actions={[{ kind: "fixfirst", target: o.id }, { kind: "focus", target: o.id }, ...(o.origin === "engineering" && o.taskId === null ? [{ kind: "eng-task" as const, target: o.id }] : [])]} />
       <Technical lines={[o.technical]} />
     </article>
   );

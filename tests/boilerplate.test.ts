@@ -17,7 +17,7 @@ import {
   type CandidateCorpus,
   type CandidateDocument,
 } from "../lib/candidates/corpus.ts";
-import { DEFAULT_STANCE_TOPICS } from "../lib/stances/topics.ts";
+import { CANDIDATE_ISSUES } from "../lib/candidates/issues.ts";
 
 /**
  * F01-continued item 11 (2026-08-19) — RULING 9 and RULING 10.
@@ -180,7 +180,7 @@ test("no passage this matcher produces breaks a word", () => {
   const offenders: string[] = [];
   for (const key of keys) {
     const documents = corpus.documents.filter((d) => d.candidateKey === key);
-    for (const issue of DEFAULT_STANCE_TOPICS) {
+    for (const issue of CANDIDATE_ISSUES) {
       const answer = answerFor(documents, issue.phrases, null);
       if (answer.kind !== "MATCHED") continue;
       for (const passage of answer.passages) {
@@ -203,7 +203,7 @@ test("no passage this matcher produces is template chrome", () => {
   const offenders: string[] = [];
   for (const key of keys) {
     const documents = corpus.documents.filter((d) => d.candidateKey === key);
-    for (const issue of DEFAULT_STANCE_TOPICS) {
+    for (const issue of CANDIDATE_ISSUES) {
       const answer = answerFor(documents, issue.phrases, null);
       if (answer.kind !== "MATCHED") continue;
       for (const passage of answer.passages) {

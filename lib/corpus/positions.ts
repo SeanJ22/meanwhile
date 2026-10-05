@@ -1,4 +1,3 @@
-import { DEFAULT_STANCE_TOPICS } from "../stances/topics.ts";
 import type { SourceSnapshot, StatementCorpus } from "./types.ts";
 
 /**
@@ -339,4 +338,15 @@ export function positionMatchCount(
  * "the housing crisis". A framing in the search box is the product taking a
  * position through the question.
  */
-export const POSITION_TOPICS: readonly string[] = DEFAULT_STANCE_TOPICS.map((topic) => topic.label);
+export const POSITION_TOPICS: readonly string[] = [
+  "housing",
+  "water",
+  "schools",
+  "taxes",
+  "immigration",
+  "health care",
+  "public safety",
+  "jobs",
+  "environment",
+  "transportation",
+];

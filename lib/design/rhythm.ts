@@ -29,6 +29,30 @@ export interface RhythmOffender {
   value: string;
 }
 
+/** Arbitrary component utilities belong to the same shrink-only scale. */
+export function componentRhythm(source: string): RhythmOffender[] {
+  const out: RhythmOffender[] = [];
+  // Tokens and brand colours already in use are preserved by the per-file baseline.
+  const patterns = [
+    /(?:^|[\s"'`])((?:[\w-]+:)*text-\[(-?\d*\.?\d+(?:px|rem|em))\])/g,
+    /(?:^|[\s"'`])((?:[\w-]+:)*-?(?:[pm][trblxyse]?|gap(?:-[xy])?)-\[([^\]]+)\])/g,
+    /#[0-9a-fA-F]{3,8}\b/g,
+  ];
+  const code = source.replace(/\/\*[\s\S]*?\*\//g, (s) => s.replace(/[^\n]/g, " "));
+  for (const [kind, pattern] of patterns.entries()) {
+    for (const m of code.matchAll(pattern)) {
+      const text = m[1] ?? m[0];
+      const value = m[2] ?? m[0];
+      if (kind === 1) {
+        const literals = value.match(/-?\d*\.?\d+(?:px|rem|em)/g) ?? [];
+        if (!literals.some((lit) => { const px = toPx(lit); return px !== null && px !== 0 && !SPACE_SET.has(px); })) continue;
+      }
+      out.push({ line: lineOf(source, m.index), text, value });
+    }
+  }
+  return out;
+}
+
 function lineOf(src: string, index: number): number {
   return src.slice(0, index).split("\n").length;
 }

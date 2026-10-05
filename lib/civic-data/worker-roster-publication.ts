@@ -29,6 +29,7 @@ import { compareCandidateWithSource } from "../control-plane/workers/record-veri
 import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
 
 export interface WorkerPublicationCapture {
+  readonly sourcePolicy?: import("../control-plane/promotion/source-kinds.ts").SourcePolicy;
   readonly evidence: WorkerEvidence;
   /** Latest successful network observation, not the time an old blob was replayed. */
   readonly observedAt: string;
@@ -121,7 +122,7 @@ export function workerRosterPublication(input: {
   const { reading, prior, now } = input;
   const capture = reading.capture;
   requireThat(captureIntact(capture), "ROSTER_CAPTURE_INCOMPLETE");
-  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage };
+  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage, sourcePolicy: capture.sourcePolicy };
   const pageVerdict = section3Page(page, "OFFICIAL_ROSTER", now);
   requireThat(pageVerdict.ok, `ROSTER_PAGE_UNVERIFIED:${pageVerdict.reason}`);
   const body = prior.payload.registry.bodies.find(row => row.id === input.bodyId);

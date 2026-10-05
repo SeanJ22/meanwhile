@@ -32,6 +32,8 @@ export {
 export type { CoverageTier } from "./constants.ts";
 
 export interface MeetingSearchResult {
+  /** Held meetings of the place’s governments, apart from widened nearby results. */
+  readerScope?: import("./reader-scope.ts").ReaderMeetingScope;
   meetings: Meeting[];
   /** Canonical public-comment rules hydrated by the server data plane. */
   commentAccess?: readonly import("../registry/comment-access.ts").CommentAccess[];

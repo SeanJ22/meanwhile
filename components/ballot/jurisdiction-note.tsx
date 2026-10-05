@@ -63,7 +63,7 @@ export function JurisdictionMark() {
         href="#jurisdiction-note"
         title={JURISDICTION_NOTE_HEADING}
         aria-label={JURISDICTION_NOTE_HEADING}
-        className="ml-0.5 align-super text-[0.625rem] text-signal no-underline"
+        className="ml-0.5 align-super t-caption text-signal no-underline"
         data-jurisdiction-mark="true"
       >
         {JURISDICTION_MARK}
@@ -123,13 +123,13 @@ export function JurisdictionNote({
       data-jurisdiction-note="true"
       className="mt-5 rounded-[10px] border border-[var(--signal)]/40 bg-[var(--signal)]/5 p-4"
     >
-      <h2 className="text-[0.9375rem] font-semibold leading-snug text-paper">
+      <h2 className="t-heading font-semibold leading-snug text-paper">
         <span aria-hidden="true" className="mr-1.5 text-signal">
           {JURISDICTION_MARK}
         </span>
         {JURISDICTION_NOTE_HEADING}
       </h2>
-      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-voice">
+      <p className="mt-1.5 t-body leading-relaxed text-voice">
         A zip code is a mail route, not a boundary — this one crosses several
         governments, and each of the contests marked{" "}
         <span aria-hidden="true" className="text-signal">
@@ -140,7 +140,7 @@ export function JurisdictionNote({
         which of them is yours.
       </p>
       {jurisdictions.length > 0 && (
-        <p className="mt-2 text-[0.8125rem] leading-relaxed text-voice">
+        <p className="mt-2 t-body leading-relaxed text-voice">
           The ones that cover only part of this zip:{" "}
           <span className="font-semibold text-paper">{jurisdictions.join(", ")}</span>.
         </p>

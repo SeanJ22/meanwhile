@@ -31,7 +31,7 @@ export const INCUMBENCY_FOOTNOTE =
 /** The asterisk that sits on the contest heading. */
 export function IncumbencyMarker() {
   return (
-    <sup data-incumbency-marker="" className="ml-0.5 font-mono text-[0.6875rem] text-muted">
+    <sup data-incumbency-marker="" className="ml-0.5 font-mono t-caption text-muted">
       *
     </sup>
   );
@@ -42,7 +42,7 @@ export function IncumbencyFootnote() {
   return (
     <p
       data-incumbency-footnote=""
-      className="mt-2.5 text-[0.6875rem] leading-relaxed text-muted"
+      className="mt-2.5 t-caption leading-relaxed text-muted"
     >
       * {INCUMBENCY_FOOTNOTE}
     </p>

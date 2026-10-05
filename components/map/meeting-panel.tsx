@@ -1,5 +1,10 @@
 "use client";
 
+import { CheckedLink } from "@/components/ui/checked-link";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { meetingCardSources, type CardSource } from "@/lib/officials/card-sources";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
+
 import { ExternalLink, X } from "lucide-react";
 import { useState } from "react";
 
@@ -29,14 +34,11 @@ import type { Venue } from "@/lib/meetings/venues";
 import { projectedCommentAccessFor } from "@/lib/registry/comment-access-client";
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
-import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 import {
   hasPhysicalLocation,
   isOnlineOnly,
   isPlaceUnrecorded,
-  joinLine,
   onlineAccessFor,
-  PLACE_UNRECORDED_LINE,
   statedVenueText,
   venueGapLine,
   venueGapOf,
@@ -115,12 +117,8 @@ export function MeetingPanel({
     groups.flatMap((group) => group.meetings),
   );
 
-  // A venue is a group of meetings at one building, so any of them carries the
-  // building's coordinates. `groupByVenue` keys on them, so they agree.
-  // A venue is a group of meetings at one building, so any of them carries
-  // the building's coordinates — and a venue never holds an online meeting,
-  // because `groupByVenue` keys on coordinates and skips the ones with none
-  // (D18). The null check is the type being honest, not a case that occurs.
+  // An ONLINE_ONLY venue orients the reader at the body's office. It has
+  // no physical directions action; joining online is the primary action.
   const first = venue.meetings[0];
   const directions = first?.location ? venueLink(first.location) : null;
   // MTG-6/MTG-7/MTG-8: one descent, read once, and the rows below read its
@@ -173,7 +171,7 @@ export function MeetingPanel({
               its note in `lib/map/format.ts` for why a distinct-`bodyName`
               count was the wrong question, and for the rung MTG-9 added when a
               shared `bodyName` turned out to name a sitting. */}
-          <h2 className="font-display text-lg font-semibold leading-snug tracking-tight text-paper">
+          <h2 className="font-display t-title font-semibold leading-snug tracking-tight text-paper">
             {cardTitle.title}
             {/* MTG-15 (2026-09-02): the level tag right after the body name, so
                 a reader knows whether this is a local, state or federal body
@@ -189,7 +187,8 @@ export function MeetingPanel({
               Recreation pattern, used as the reference. Where the
               building IS the title there is nothing left to repeat under it,
               so the address stands alone rather than printing twice. */}
-          <p className="mt-1 text-[0.8125rem] leading-snug text-muted">
+          <p className="mt-1 t-body leading-snug text-muted">
+            {venue.kind === "ONLINE_ONLY" && <><MeetingStatusPill status="online" /> Body’s office: </>}
             {cardTitle.basis === "venue"
               ? (venue.address ?? "")
               : locationLine(venue.name, venue.address)}
@@ -205,7 +204,7 @@ export function MeetingPanel({
           {embedded ? (
             <div className="mw-action-row">
               {directions && (
-                <a
+                <CheckedLink
                   href={directions.url}
                   target="_blank"
                   rel="noreferrer"
@@ -213,7 +212,7 @@ export function MeetingPanel({
                   className="mw-directions"
                 >
                   <span aria-hidden="true">➚</span> Directions
-                </a>
+                </CheckedLink>
               )}
               {onShowOnMap && (
                 <button type="button" className="mw-pill-btn" onClick={onShowOnMap}>
@@ -222,7 +221,7 @@ export function MeetingPanel({
               )}
             </div>
           ) : directions && (
-            <a
+            <CheckedLink
               href={directions.url}
               target="_blank"
               rel="noreferrer"
@@ -231,7 +230,7 @@ export function MeetingPanel({
             >
               Directions
               <ExternalLink className="size-3 translate-y-0.5" />
-            </a>
+            </CheckedLink>
           )}
         </div>
 
@@ -295,7 +294,7 @@ export function MeetingPanel({
           </section>
         ))}
 
-        <MeetingSourceCredit credit={credit} />
+        <MeetingSourceCredit credit={credit} sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])), ...(venue.officeAddressSource ? [{ what: "Online-only pin at the body’s published office address", provenance: venue.officeAddressSource }] : [])]} />
       </div>
     </aside>
   );
@@ -308,39 +307,9 @@ export function MeetingPanel({
  * organisation render verbatim, exactly as they did on every row before; what
  * changed is how many times.
  */
-export function MeetingSourceCredit({
-  credit,
-  className = "border-t border-rule-soft px-5 py-3",
-}: {
-  credit: SourceCredit;
-  className?: string;
-}) {
-  // SRC-1: nothing to credit renders NOTHING — no heading, no placeholder.
-  if (credit.kind === "none") return null;
-  return (
-    <div className={className}>
-      <p className="text-[0.6875rem] leading-relaxed text-muted">
-        {credit.lead}
-      </p>
-      {/* The multi-source list, still at the bottom, each source verbatim.
-          Empty for the single form, which already names its source in the
-          sentence above — printing it twice is the repetition SRC-1 removes. */}
-      {credit.sources.length > 0 && (
-        <ul className="mt-1">
-          {credit.sources.map((note) => (
-            <li
-              key={`${note.jurisdiction} ${note.sourceOrg}`}
-              className="text-[0.6875rem] leading-relaxed text-muted"
-            >
-              <span className="text-paper-dim">{note.jurisdiction}</span>
-              {" — "}
-              {note.sourceOrg}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+export function MeetingSourceCredit({ credit, sources = [], className = "border-t border-rule-soft px-5 py-3" }: { credit: SourceCredit; sources?: readonly CardSource[]; className?: string }) {
+  if (credit.kind === "none" && sources.length === 0) return null;
+  return <div className={className}><CardSourcesContribution id="meeting-calendar" sources={sources} /></div>;
 }
 
 function MeetingEntry({
@@ -367,15 +336,16 @@ function MeetingEntry({
    * what a null means, and it attributes the gap to the publisher ONLY where a
    * fresh first-party observation measured the publisher's own empty slot.
    */
-  const agendaState = agendaSentenceFor(meeting);
   // The carried row's reason, decided once for both surfaces that state it.
   const carriedClause = carriedRowClause(meeting.carried);
   const { location } = useShellData();
   const { badgeOf, bodyClassOf } = useMeetingBadge();
+  const nearby = useShellData().result?.readerScope?.nearbyMeetingIds.includes(meeting.id) ?? false;
   const jurisdiction = badgeOf(meeting);
 
   return (
     <article className="px-5 py-4" data-meeting-id={meeting.id}>
+      {nearby && <span className="t-detail text-muted" data-meeting-nearby>Nearby</span>}
       <div className="flex items-baseline gap-2.5">
         <span
           aria-hidden="true"
@@ -390,13 +360,13 @@ function MeetingEntry({
             <button
               type="button"
               onClick={() => onOpen(meeting)}
-              className="text-left font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper hover:text-signal"
+              className="text-left font-display t-heading font-semibold leading-snug tracking-tight text-paper hover:text-signal"
             >
               {meetingEntryTitle(meeting, { bodyShown })}
             </button>
           </h3>
         ) : (
-          <h3 className="font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper">
+          <h3 className="font-display t-heading font-semibold leading-snug tracking-tight text-paper">
             {meetingEntryTitle(meeting, { bodyShown })}
           </h3>
         )}
@@ -411,7 +381,7 @@ function MeetingEntry({
           `meetingSubline` asks the question that matters — what does the
           headline NOT already say — and answers "Work Session". */}
       {meetingSubline(meeting) && (
-        <p className="mt-1 pl-[1rem] text-sm leading-snug text-paper-dim">
+        <p className="mt-1 pl-4 t-body leading-snug text-paper-dim">
           {meetingSubline(meeting)}
         </p>
       )}
@@ -441,7 +411,7 @@ function MeetingEntry({
       */}
       {!hasPhysicalLocation(meeting) && <PlacelessWhere meeting={meeting} />}
 
-      <dl className="mt-3 pl-4 font-mono text-[0.8125rem] tabular-nums">
+      <dl className="mt-3 pl-4 font-mono t-body tabular-nums">
         <div className="flex gap-2">
           <dt className="sr-only">Date</dt>
           <dd className={concluded ? "text-concluded" : "text-signal"}>
@@ -461,7 +431,7 @@ function MeetingEntry({
 
       <div className="mt-3.5 pl-4">
         {meeting.agendaUrl ? (
-          <a
+          <CheckedLink
             href={meeting.agendaUrl}
             target="_blank"
             rel="noreferrer noopener"
@@ -469,15 +439,15 @@ function MeetingEntry({
           >
             Read the agenda
             <ExternalLink className="size-3" aria-hidden="true" />
-          </a>
+          </CheckedLink>
         ) : (
           <p className="trailing-space-trimmed-14 font-mono t-detail uppercase tracking-[0.14em] text-muted">
-            {agendaState.sentence}
+            <WorkingOnIt inline state={meeting.agendaSlotObservedEmpty ? { kind: "not-published", item: "Agenda" } : undefined} />
           </p>
         )}
         {/* BX-10: a concluded sitting links the recording its publisher's own record gives; its source is the card's Sources. */}
         {concluded && meeting.videoUrl ? (
-          <a
+          <CheckedLink
             href={meeting.videoUrl}
             target="_blank"
             rel="noreferrer noopener"
@@ -485,7 +455,7 @@ function MeetingEntry({
           >
             Watch the recording
             <ExternalLink className="size-3" aria-hidden="true" />
-          </a>
+          </CheckedLink>
         ) : null}
       </div>
 
@@ -514,7 +484,7 @@ function MeetingEntry({
             the provenance that is genuinely PER ROW — second-hand sourcing and
             the carry-forward stamp — which varies from meeting to meeting and
             would be a lie if collapsed. */}
-        <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
+        <p className="font-mono t-caption leading-relaxed text-muted">
           {/*
             6f2 (2026-08-15): "Not independently
             verified" is RETIRED where the source is the body's own site or
@@ -602,22 +572,22 @@ function PlacelessWhere({ meeting }: { meeting: Meeting }) {
         <>
           <MeetingStatusPill status="online" />
           {access.joinUrl ? (
-            <a
+            <CheckedLink
               href={access.joinUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="border-b border-signal-dim text-signal hover:border-signal"
             >
               {access.label}
-            </a>
+            </CheckedLink>
           ) : (
-            <span>{joinLine(access)}</span>
+            <>{access.label}{" · "}<WorkingOnIt inline subject={meeting.bodyId ? { type: "BODY", id: meeting.bodyId } : null} /></>
           )}
         </>
       ) : gap ? (
         <span>{venueGapLine(gap)}</span>
       ) : (
-        <span>{PLACE_UNRECORDED_LINE}</span>
+        <WorkingOnIt inline subject={meeting.bodyId ? { type: "BODY", id: meeting.bodyId } : null} />
       )}
     </p>
   );
@@ -649,30 +619,9 @@ export function HowToBeHeard({
   );
   if (!access) return null;
 
-  if (access.commentPeriod === "UNKNOWN") {
-    return (
-      <div className="mt-3 pl-4">
-        <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
-          {/* Item 4 (2026-08-14 second session): renamed to a call to
-              action — the tester's words, verbatim. */}
-          <span className="trailing-space-trimmed-14 uppercase tracking-[0.14em] text-paper-dim">
-            Make your voice heard
-          </span>
-          <br />
-          We don&apos;t know this body&apos;s public-comment rules yet —{" "}
-          <a
-            href={access.sourceUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="border-b border-signal-dim text-signal hover:border-signal"
-          >
-            check its own page
-          </a>
-          .
-        </p>
-      </div>
-    );
-  }
+  const sources: CardSource[] = [{ what: "Public-comment rules", provenance: { sourceUrl: access.sourceUrl, sourceOrg: bodyName, collectedAt: access.collectedAt, verifiedAt: access.verifiedAt } },
+    ...Object.entries(access.fieldSources ?? {}).map(([field, source]) => ({ what: `Public-comment ${field}`, provenance: { sourceUrl: source!.sourceUrl, sourceOrg: bodyName, collectedAt: source!.collectedAt, verifiedAt: source!.verifiedAt } }))];
+  if (access.commentPeriod === "UNKNOWN") return <div className="mt-3 pl-4"><WorkingOnIt subject={bodyId ? { type: "BODY", id: bodyId } : null} /><CardSourcesContribution id={`comment-rules:${bodyId ?? ocdId}`} sources={sources} /></div>;
 
   const lines = [
     access.commentPeriodDetail,
@@ -710,7 +659,7 @@ export function HowToBeHeard({
    */
   return (
     <details className="how-to-be-heard mt-3 pl-4">
-      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
+      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono t-caption uppercase tracking-[0.14em] text-paper-dim">
         Make your voice heard
       </summary>
       <ul className="mt-1 space-y-1 t-detail leading-relaxed text-paper-dim">
@@ -718,14 +667,7 @@ export function HowToBeHeard({
           <li key={line}>{line}</li>
         ))}
       </ul>
-      <a
-        href={access.sourceUrl}
-        target="_blank"
-        rel="noreferrer noopener"
-        className="trailing-space-trimmed-14 mt-1 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
-      >
-        source
-      </a>
+      <CardSourcesContribution id={`comment-rules:${bodyId ?? ocdId}`} sources={sources} />
     </details>
   );
 }

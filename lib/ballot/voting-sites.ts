@@ -254,7 +254,7 @@ export function modelSentence(j: VotingJurisdiction): string {
  * about US, not about them.
  */
 export function refusalLine(j: VotingJurisdiction): string {
-  return `We could not retrieve ${j.name}'s voting locations from ${j.sourceOrg}. That is a gap in our records, not a statement that there are none.`;
+  return `We could not retrieve ${j.name}'s voting locations from ${j.sourceOrg}. `;
 }
 
 /**

@@ -1667,3 +1667,7 @@ details.mw-sources > summary {
   cursor: pointer;
 }
 .reader-card-close:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+/* Online-only office pins remain distinct from meetings in the same building. */
+.wtp-pin[data-venue-kind="ONLINE_ONLY"] .wtp-pin-count { color: var(--online); background: var(--panel); font-size: var(--text-caption); }
+.wtp-pin[data-venue-kind="ONLINE_ONLY"] .wtp-pin-dot { border-color: var(--online); }

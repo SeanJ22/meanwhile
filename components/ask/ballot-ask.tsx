@@ -193,8 +193,8 @@ export function BallotAsk({
 
   return (
     <section className="mt-2 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-4" data-ballot-ask>
-      <h2 className="text-base font-semibold">Ask about this ballot</h2>
-      <p className="mt-1 text-sm text-[var(--text-muted)]">
+      <h2 className="t-heading font-semibold">Ask about this ballot</h2>
+      <p className="mt-1 t-body text-[var(--text-muted)]">
         Questions are answered from records this site holds, with the source shown.
       </p>
 
@@ -205,7 +205,7 @@ export function BallotAsk({
         <input
           id="ballot-ask-input"
           data-ask-input
-          className="min-w-0 flex-1 rounded-[10px] border border-[var(--panel-border)] bg-transparent px-3 py-2 text-sm"
+          className="min-w-0 flex-1 rounded-[10px] border border-[var(--panel-border)] bg-transparent px-3 py-2 t-body"
           placeholder="What does this office control?"
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -248,7 +248,7 @@ export function BallotAsk({
         <button
           type="button"
           data-ask-submit
-          className="rounded-[10px] border border-[var(--panel-border)] px-3 py-2 text-sm disabled:opacity-50"
+          className="rounded-[10px] border border-[var(--panel-border)] px-3 py-2 t-body disabled:opacity-50"
           onClick={() => ask()}
           disabled={working || text.trim().length === 0}
         >
@@ -262,13 +262,13 @@ export function BallotAsk({
         out of a failed request.
       */}
       {failed && (
-        <p className="mt-3 text-sm" data-ask-state="TRANSPORT_FAILED">
+        <p className="mt-3 t-body" data-ask-state="TRANSPORT_FAILED">
           That didn&rsquo;t reach us. Try again in a moment.
         </p>
       )}
 
       {reply && (
-        <div className="mt-4 text-sm" data-ask-mode={reply.mode} data-ask-question={answered}>
+        <div className="mt-4 t-body" data-ask-mode={reply.mode} data-ask-question={answered}>
           {/* A named government that fits more than one thing: ASKED, never chosen. */}
           <AskBodyConfirmation answer={reply} working={working} onConfirm={ask} onClarify={() => {
             setReply(null);
@@ -367,7 +367,7 @@ export function BallotAsk({
           <AskAnswerContacts contacts={reply.contacts ?? []} />
 
           {sources.length > 0 && (
-            <p className="mt-3 text-xs text-[var(--text-muted)]">
+            <p className="mt-3 t-detail text-[var(--text-muted)]">
               {/* One line per PUBLISHER, not one per document — see
                   `sourceLinks`. Six documents from one office are one source. */}
               Source

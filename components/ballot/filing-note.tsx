@@ -64,7 +64,7 @@ export function FilingNote({
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex max-w-full cursor-pointer items-center gap-1 rounded text-left text-[0.6875rem] leading-snug text-muted underline decoration-dotted underline-offset-2 hover:text-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--signal)]"
+        className="inline-flex max-w-full cursor-pointer items-center gap-1 rounded text-left t-caption leading-snug text-muted underline decoration-dotted underline-offset-2 hover:text-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--signal)]"
       >
         {marker && (
           <span aria-hidden="true" className="font-mono text-signal">
@@ -90,7 +90,7 @@ export function FilingNote({
         <div
           id={panelId}
           data-filing-note-panel
-          className="mt-1 rounded border border-[var(--panel-border)] bg-[var(--bg)] px-2.5 py-2 text-[0.6875rem] leading-relaxed text-muted"
+          className="mt-1 rounded border border-[var(--panel-border)] bg-[var(--bg)] px-2.5 py-2 t-caption leading-relaxed text-muted"
         >
           {children}
         </div>

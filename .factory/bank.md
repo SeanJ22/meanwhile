@@ -3,7 +3,7 @@ worker: codex-bank
 provider: Codex
 run_id: codex-bank-99c04da1004649588002e4767da9a504
 lock: codex-bank-99c04da1004649588002e4767da9a504
-heartbeat: 2026-10-05T19:16:40.512037Z
+heartbeat: 2026-10-05T19:26:49.442013Z
 on_river: 21 steps: DB-37, DB-38, DB-40, DB-41, DB-42, DB-43, DB-49, DB-51, DP-07, DP-08, DP-09, DP-19 @ d67aa5e29; DP-20 @ 616f91a1c; DB-57, DP-21, DP-22, DP-27 @ 8bbe9eeb5; DB-50, DP-24 @ 3690498b5; DP-28 @ bbe97c72a. These are integrated code, not a claim of live acceptance. Caught up with river ecf402600.
 ready: none newly published in this run yet; DB-44, DB-46, DP-23 and returned DB-57 are under final verification; DP-19 migration proposal is preserved as WIP, with the shared hooks below pending.
 checks: 26/26 final focused passed at 87893f09d280415ff4a56518892990e7436fdf66; types and all 23 changed source files lint passed at 620be3496fb79be7efea2a4bf1c2180f1fe9268a. FULL at that SHA: 9359 pass, 1 fail, 11 skipped; sole failure write-alarm journal/file equality is the unnumbered DP-19 proposal. It is now preserved under .factory for River coordination, outside the next application batch; a new complete FULL is required and running. Earlier default-sandbox pnpm exits are NOT valid checks: child Node spawnSync returned EPERM with an apparent status 0. Corrected tool permissions enable child processes. Chromium needs WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium. Cancelled exploratory FULL runs are not passing evidence. Tests always unset DATABASE_URL and WTP_ASSET_STORE.

@@ -1,3 +1,4 @@
+import { resolveRecordConflicts } from "./source-conflicts.ts";
 import { createHash } from "node:crypto";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
@@ -44,13 +45,30 @@ export async function prepareManualProjectionSuccessor(
     const prior = await readManualProjectionPrior(input.contractId, store, now);
     return { candidate: manualProjectionCandidate(input, { prior }), expectedBaseVersionId: prior?.versionId ?? null };
   }
-  const fresh = manualProjectionCandidate(input);
+  let fresh = manualProjectionCandidate(input);
   const read = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, { store, now, bypassCache: true });
   if (read.kind === "NOT_RECORDED") return { candidate: fresh, expectedBaseVersionId: null };
   if (read.kind !== "PROMOTED") throw new Error(`MANUAL_PROMOTION_BASE_UNAVAILABLE:${input.contractId}:${read.detail}`);
   const base = await store.readCandidate(read.projection.versionId);
   if (!base || base.candidate.sourceId !== fresh.sourceId || hash(base.candidate.readModel) !== hash(read.value)) {
     throw new Error("MANUAL_SUCCESSOR_EXACT_BASE_UNAVAILABLE");
+  }
+  const priorReceipt = base.candidate.retrieval.manualSourceReceipt;
+  if (priorReceipt) {
+    const earlier = exactMembers(read.value);
+    const resolved = (fresh.readModel as CuratedReaderProjection).records.map(record => {
+      const old = earlier.get(record.id);
+      return old ? resolveRecordConflicts(record, old, input.sourceReceipt, priorReceipt) : { record, conflicts: [] };
+    });
+    const conflicts = resolved.flatMap(result => result.conflicts);
+    if (conflicts.length) {
+      const sources = [...input.sourceReceipt.sources, ...priorReceipt.sources.filter(source => source.reviewOutcome !== "BLOCKED")];
+      const merged = { ...input, sourceReceipt: { ...input.sourceReceipt,
+        sources: sources.filter((source, index) => sources.findIndex(other => canonicalCivicDataJson(other) === canonicalCivicDataJson(source)) === index) },
+        payload: { ...(input.payload as CuratedReaderProjection), records: resolved.map(result => result.record) } };
+      fresh = manualProjectionCandidate(merged);
+      fresh = { ...fresh, excludedFacts: [...(fresh.excludedFacts ?? []), ...conflicts] };
+    }
   }
   const current = exactMembers(fresh.readModel as CuratedReaderProjection);
   const prior = exactMembers(read.value);

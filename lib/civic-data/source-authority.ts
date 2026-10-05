@@ -132,7 +132,7 @@ export const SOURCE_AUTHORITIES = {
     freshnessExpectation: "Explicit owner invocation after a reviewed source package changes; no standing clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
-    manualReceiptPromotion: { allowedSourceClasses: ["OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY", "REFERENCE_PUBLISHER"] },
+    manualReceiptPromotion: { allowedSourceClasses: MANUAL_SOURCE_CLASSES },
   },
   "curated-reader-primary-sources": {
     id: "curated-reader-primary-sources",
@@ -162,7 +162,7 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
     manualReceiptPromotion: {
-      allowedSourceClasses: ["ELECTION_AUTHORITY", "CANDIDATE_CONTROLLED", "OFFICIAL_PUBLISHER", "REFERENCE_PUBLISHER"],
+      allowedSourceClasses: MANUAL_SOURCE_CLASSES,
     },
   },
   "voting-sites": {

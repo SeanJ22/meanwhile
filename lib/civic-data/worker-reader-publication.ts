@@ -1,3 +1,5 @@
+import { resolveRecordConflicts } from "./source-conflicts.ts";
+import { parserFieldSources } from "./field-sources.ts";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord, FieldValue } from "../control-plane/workers/types.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -23,7 +25,7 @@ import { publicationRecordChanges } from "./publication-record-changes.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import { publishHeldElectionOffices } from "./worker-held-elections.ts";
-import { localHeldCaptureReader } from "./worker-publication-context.ts";
+import { publicationCaptureReaders } from "./worker-publication-context.ts";
 import { recordPublishedPageDoor } from "./worker-page-doors.ts";
 import { workerBallotContestsPackage, publishWorkerBallotContestsResults } from "./worker-ballot-contests.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
@@ -52,11 +54,11 @@ export function inheritVerifiedCommentDetails(input: ManualProjectionPackage, pr
         requirePublication(prior?.sourceReceipt.sources.some(source => source.reviewOutcome !== "BLOCKED" &&
           [source.requestedUrl, source.finalUrl].includes(sourceUrl)), "PRIOR_FIELD_AUTHORITY_MISSING");
         fields[field] = old[field];
-        fieldSources[field] = { sourceUrl, collectedAt: priorField?.collectedAt ?? String(old.collectedAt),
+        fieldSources[field] = { ...priorField, sourceUrl, collectedAt: priorField?.collectedAt ?? String(old.collectedAt),
           verifiedAt: priorField?.verifiedAt ?? (typeof old.verifiedAt === "string" ? old.verifiedAt : null), retainedFromVersion: prior!.versionId };
         retainedUrls.add(sourceUrl);
       } else if (row[field] !== null && row[field] !== undefined) {
-        fieldSources[field] = { sourceUrl: String(row.sourceUrl), collectedAt: String(row.collectedAt), verifiedAt: String(row.verifiedAt) };
+        fieldSources[field] = { ...(row.fieldSources as CommentAccess["fieldSources"])?.[field], sourceUrl: String(row.sourceUrl), collectedAt: String(row.collectedAt), verifiedAt: String(row.verifiedAt) };
       }
     }
     return { ...fields, id: String(fields.id), fieldSources };
@@ -139,7 +141,8 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
         signup: f.signup ?? null, writtenComment: f.writtenComment ?? null, attend: f.attend ?? null, timeLimit: f.timeLimit ?? null,
         sourceUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now };
   };
-  const records = checked.extraction.records.map(rowFor);
+  const records = checked.extraction.records.map(record => ({ ...rowFor(record),
+    fieldSources: parserFieldSources(record.id, record.fields, checked.extraction.spans, input.captures, input.now) }));
   requirePublication(records.length === checked.extraction.records.length && new Set(records.map(r => r.id)).size === records.length, "READER_IDENTITY_COLLISION");
   // A pulled record that cannot be turned into a row never reached the version, so it has nothing to remove.
   const pulledMemberIds = new Set(checked.pulledRecords.flatMap(record => { try { return [String(rowFor(record).id)]; } catch { return []; } }));
@@ -155,13 +158,14 @@ export async function publishWorkerReaderResults(input: {
   readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }) {
   if (input.contractId === "ballot-contests") return publishWorkerBallotContestsResults(input);
+  const { readHeld, readCapture } = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const results = await readCompletedWorkerResults(input.repos);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   // Owed election work with no extraction yet: the government's saved election pages are read in code.
   if (input.contractId === "ballot-navigation") {
     const held = input.workItemIds.filter(id => !latestParserResult(results, id));
     if (held.length) report.push(...await publishHeldElectionOffices({ repos: input.repos, store: input.store, workItemIds: held, now: input.now,
-      readHeld: input.readHeld ?? localHeldCaptureReader() }));
+      readHeld }));
   }
   // The Validator reads what earlier passes learned before it checks anything, and writes back once at the end.
   const manual = await readValidatorManual(input.repos);
@@ -181,14 +185,18 @@ export async function publishWorkerReaderResults(input: {
     let workerChecksComplete = false, captures: WorkerPublicationCapture[] = [], wentLive = 0;
     try {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
-      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture: input.readCapture, officialLinks: manual.officialLinks });
+      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
       const registry = await readRegistryRuntimePrior(input.store, input.now);
       const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results });
       const checked = built.package;
       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now);
       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
       const prepared = input.contractId === "comment-access" ? inheritVerifiedCommentDetails(checked, prior) : checked;
-      const delivered = (prepared.payload as CuratedReaderProjection).records;
+      const requested = (prepared.payload as CuratedReaderProjection).records;
+      const delivered = requested.map(record => {
+        const old = before.find(row => row.id === record.id);
+        return old && prior ? resolveRecordConflicts(record, old, prepared.sourceReceipt, prior.sourceReceipt).record : record;
+      });
       const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(prepared, input.store, input.now, built.pulledMemberIds);
       const composed = candidate.readModel as CuratedReaderProjection;
       requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))),

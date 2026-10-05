@@ -141,3 +141,19 @@ test("a departure publishes through the registry door: the holder's rows leave w
   assert.equal(after.payload.officialCandidacies.rows.some(row => row.holder.id === faye.id), false);
   assert.equal(after.payload.rosterReaderDispositions.some(row => row.sourceId === faye.id), false);
 });
+
+test("CP-08: a newer news phone cannot replace the official phone, and its losing value is kept", async () => {
+  const base = await prior();
+  const first = capture(page("Contact the Mayor & Council"));
+  const reading = (saved: WorkerPublicationCapture) => ({ id: `held:${saved.evidence.artifactId}`, capture: saved, linkingPage: null, complete: true, method: "fixture",
+    members: readHeldRoster(saved.evidence.text, saved.evidence.canonicalUrl)!.rows.map((member, i) => ({ recordId: `r${i}`, fields: { ...member } })) });
+  const official = workerRosterPublication({ bodyId: BODY, reading: reading(first), prior: base, now: NOW });
+  const held = { ...base, sourceReceipt: { ...base.sourceReceipt, sources: [...base.sourceReceipt.sources, ...official.sourceReceipt.sources] },
+    payload: { ...base.payload, bodyRosters: official.payload.bodyRosters, registry: { ...base.payload.registry,
+      bodies: base.payload.registry.bodies.map(body => official.payload.registry.bodies.find(row => row.id === body.id) ?? body) } } };
+  const news = { ...capture(page("Contact the Mayor & Council").replaceAll("5205551000", "5205552000").replaceAll("555-1000", "555-2000"), "https://news.example/council", NOW),
+    sourcePolicy: { hosts: { "news.example": "NEWS" as const }, enabled: { OFFICIAL: true, CAMPAIGN: true, FILING: true, VOTER_GUIDE: true, FORUM: true, NEWS: true, REFERENCE: true, OTHER: true } } };
+  const result = workerRosterPublication({ bodyId: BODY, reading: reading(news), prior: held, now: NOW });
+  assert.ok(result.payload.bodyRosters[0].members.every(member => member.phone === "(520) 555-1000"));
+  assert.ok(result.excludedFacts?.some(fact => fact.code === "CONFLICT_SUPERSEDED" && (fact.record as { value: string }).value === "(520) 555-2000"));
+});

@@ -67,7 +67,7 @@ export const BOUNDARY_PROVENANCE: Provenance = {
 
 /** Merge key: two rows from the same publisher and page are one source. */
 function keyOf(provenance: Provenance): string {
-  return `${provenance.sourceOrg}|${provenance.sourceUrl ?? ""}`;
+  return `${provenance.sourceOrg}|${provenance.sourceUrl ?? ""}|${provenance.quote ?? ""}`;
 }
 
 /**
@@ -116,12 +116,12 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
 }
 
 function retainedHolderSources(holder: SeatHolder): CardSource[] {
-  return Object.entries(holder.retainedFieldSources ?? {}).flatMap(([field, source]) => {
+  return [...Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({ what: `${holder.name} — ${field}`, provenance })), ...Object.entries(holder.retainedFieldSources ?? {}).flatMap(([field, source]) => {
     if (!source) return [];
     const label = { termNote: "term wording", termStart: "term start date", termEnd: "term end date", email: "office email", phone: "office phone", websiteUrl: "official page link" }[field] ?? field;
     return [{ what: `${holder.name}'s previously verified ${label}, retained after an incomplete update`,
       provenance: { ...source, verifiedAt: null } }];
-  });
+  })];
 }
 
 /**
@@ -164,6 +164,7 @@ export function meetingCardSources(
   const entries: CardSource[] = [
     { what: `This sitting — ${meeting.title}`, provenance: meeting.provenance },
   ];
+  for (const [field, provenance] of Object.entries(meeting.fieldSources ?? {})) entries.push({ what: `This sitting — ${field}`, provenance });
   if (meeting.agendaUrl) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
   for (const [kind, label] of Object.entries(MEETING_SOURCE_LABELS)) {
     for (const provenance of evidence[kind as keyof MeetingCardEvidence] ?? []) entries.push({ what: label, provenance });

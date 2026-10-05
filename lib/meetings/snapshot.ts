@@ -27,7 +27,7 @@ import {
 } from "../civic-data/meeting-partitions.ts";
 import { DERIVED_FAMILY_SOURCE, meetingHistoryContract } from "../civic-data/meeting-partitions.ts";
 import { mergeMeetingHistory } from "../civic-data/meeting-history.ts";
-import { collapseDuplicateSittings } from "../sources/composite/index.ts";
+import { mergeReaderSittings } from "./sitting-merge.ts";
 import {
   applyPartitionFreshCheck,
   confirmationCheckedAt,
@@ -1030,7 +1030,7 @@ export async function readMeetingsProjection(
         ...(partition.ocdId ? { unreachableOcdIds: [partition.ocdId] } : {}),
       });
     }
-    const collapsed = collapseDuplicateSittings(meetings);
+    const collapsed = mergeReaderSittings(meetings);
     const accounted = accountCarriedCollapses(
       promoted.map(({ value }) => value),
       sources,
@@ -1038,7 +1038,8 @@ export async function readMeetingsProjection(
     );
     sources.splice(0, sources.length, ...accounted.sources);
     const retainedIds = new Set(collapsed.rows.map((meeting) => meeting.id));
-    const retainedDocuments = agendaDocuments.filter((document) => retainedIds.has(document.meetingId));
+    const retainedDocuments = agendaDocuments.map(document => ({ ...document, meetingId: collapsed.aliases.get(document.meetingId) ?? document.meetingId }))
+      .filter(document => retainedIds.has(document.meetingId));
     const generatedAt = promoted.map(({ value }) => value.generatedAt).sort().at(-1) ?? now;
     const sourceThrough = promoted.map(({ result }) => result.metadata.sourceThrough).filter((value): value is string => value !== null).sort().at(-1) ?? null;
     const retrievedAt = promoted.map(({ result }) => result.metadata.retrievedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;

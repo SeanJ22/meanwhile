@@ -1,0 +1,39 @@
+# Slide shared-owner hooks
+
+Current requests through River. READY (hook pending) means built, not yet connected at the named caller. No credential or owner policy request.
+
+needs_hook: admin (via River): routine reader publication now persists runtimeOutcome.readerEdge {ok, readerEdge, store, sequence, detail} in existing ownerDigests and failure READER_EDGE_PUBLISH_FAILED. ownerDigestAttention reports plain-English RED. Current Admin has no latest-digest consumer (tests/routine-civic-data-admin-digest.test.tsx documents its removal). Connect latest ROUTINE_CIVIC_DATA_SUPERVISOR digest to runner/health view; show headline/happened/action, keep readerEdge.store, sequence and failure detail behind Technical details. BX-01 still needs River boxFindings canonical repository/schema; original hooks preserved in slide-continuation.md.
+
+needs_hook (CP-02/admin): import lib/control-plane/promotion/source-settings.ts in the Settings registry/gateway initialization; it registers publication.sourceHosts and publication.sourceKinds, with defaults/validation. Worker publication reads current AdminConfig on each pass.
+
+needs_hook (CP-02/CP-10/people): when constructing captures for a canonical verified campaign site, supply Section3Page.campaign {name,office,cycle} and PortraitSources.campaign {...identity,url}; never infer identity from the page alone. Official portrait path already connected. Campaign-owned portrait sampler must receive that same verified source identity.
+
+needs_hook (BX-12/hunters, scripts/pilot-runner.mts): register publishNowLane(runPublishNow) from lib/civic-data/publish-now.ts beside routine/intake on IndependentRuntimeLaneScheduler. Reuse child supervision/authority/memory/release adoption with scripts/publish-now-runner.mts; separate singleton49373, 60s cadence. This child only handles durable parser publication requests and changed-door reads, and must run while routine is active. Keep old path default behind runner switch until River live check, as rulings require. Admin Workers hook: show runtimeOutcome.lane=publish-now distinctly.
+
+needs_hook (BX-12/meetings): publishNowDoorTasks(doors,tasks,now) maps changed door partitions to runnable tasks; provide all registered/derived partition tasks via existing registry expansion, alongside the current built-in MEETING_PARTITION_CONTRACTS, so DB-26 changes reach this lane too.
+
+needs_hook (BX-13/hunters, scripts/freshness-shadow.mts transportFor): use batchEnabledForJob(lane,job) instead of role-only batchEnabledFor. Classify live refresh, publish-now and mission-core as LIVE_REFRESH/PUBLISH_NOW/MISSION_CORE (immediate); BACKFILL/HISTORY/AUDIT_SAMPLE may batch; unclassified defaults immediate. Recover an existing attemptBatchJournal entry before choosing new routing so an outstanding paid batch is not sent twice. Budget holds and owner pause unchanged. Durable journal/recovery module unchanged.
+
+needs_hook (CP-16/frontend): meetingCardSources now accepts evidence {agendas,minutes,records,commentAccess,cadence} as captured Provenance arrays; personCardSources accepts {money,votes,actions}. Feed the same visible section records to these optional args for FE-12/FE-14. Standalone moneyCardSources/voteCardSources/actionCardSources keep actual URLs and read dates; no dates invented.
+
+needs_hook (CP-04/meetings): when composing Meeting.provenance from the verified source receipt, carry kind (OFFICIAL for an official/government-linked vendor, otherwise exact source kind). Sources renderer now reads provenance.kind and verifies official vendor sources without a host whitelist. Existing snapshots remain readable but old non-.gov sources lacking a label may show Other until reprojected.
+
+needs_hook (CP-05/frontend): Sources assembler consumes holder.fieldSources; meeting comment-access evidence must include each published fieldSources[field] provenance to display exact parser quote under Read from. Do not synthesize quotes for held readers with no parser span.
+
+needs_hook (CP-15/hunters+meetings): remove retainRecentRoutineMeetingEvidence, projectFactChains/factChainLines runner invocation and imports from freshness-shadow.mts; remove retainRoutineMeetingPartition/research meeting activation receipt and approved-research overlay imports/calls in ingest.ts. Slide will retire the fact-chain libraries and local promotion pipeline entry once these shared callers are removed; routine adapters already publish verified meetings. Preserve ordinary saved responses and reader data.
+
+needs_hook (BX-07/measures+admin): lib/civic-data/worker-reader-contracts.ts exports CHECKLIST_PUBLICATION_DOORS/checklistPublicationDoors(family,field); it reads lib/coverage/checklist-map.json publicationDoors. Work creation already calls workerDoorForRecord. Show each mapped door on its family's checklist card. Unmapped fields remain honestly unconnected.
+
+needs_hook (CP-08/admin): count candidate receipt excludedFacts with code CONFLICT_SUPERSEDED in lib/control-plane/admin-view/v6-publication-read.ts and existing publication view. Code stores losing value and actual source, winner publishes immediately. Do not count conflicts as blocked work.
+
+needs_hook (CP-14/hunters+admin): remove readActivationGate imports and activation/gate arguments from shared freshness-shadow.mts and snapshot/Admin implemented-research-routes display. Live campaign chain/publication no longer reads a class/field gate; remaining compatibility types and diagnostic gate modules can be removed once shared callers stop importing. Keep spending, runner pause and credential checks.
+
+needs_River (CP-17): scoreboard wording is repaired. Curated worker scopes still use durable US-AZ+US-NH+US-NJ pointer identities. Renaming those requires a coordinated contract-version/read fallback migration preserving existing live pointers; please route the source-scope migration before display callers adopt new identities. No data pointer is renamed blindly.
+
+needs_hook (BX-01/River): add boxFindings: AggregateRepository<BoxFinding> to canonical repository interfaces/providers, with pg-schema + step-id migration numbered by River. Existing lib/control-plane/box.ts index/CAS lifecycle is tested but has no production repository. Then slide can connect standing-runtime.ts and build BX-02. Hunters must index both its Scout writer and detective completion, replay saved results once with backfillBox; Admin joins boxCountsByWorkItem to canonical Send mapping. Exact original hook remains in prior continuation history.
+
+needs_hook (CP-18/admin): count runtimeOutcome.readerEdge.supersededMeetingFields when supplied; omission means unmeasured on a carried pass. Drill down through meeting.publicationConflicts (CONFLICT_SUPERSEDED). Combine with CP-08 receipt counts, never treat a resolved conflict as blocked.
+
+needs_hook (CP-18/ballot): lib/ask/meeting-outcomes.ts meetingOutcomeEvidenceFor and its callers must accept a merged Meeting.mergedMeetingIds list and query original source ids for the same canonical body. Slide connected these aliases in app/api/agenda/route.ts and lib/meetings/reader-records.ts, retaining actions/votes and old agenda-id links; Ask is ballot-owned. Never cross a body boundary or infer outcomes from agenda text.
+
+CA-31 incoming hook is implemented at 72f59106b: heldPageCopies and capturesForPublication accept saved text/CSV/PDF-derived text; heldCaptureReader now uses readForParser/evidenceProjection and carries sourceDocument raw hash. No raw PDF bytes are decoded as page text. New held-document-publication regression passes.

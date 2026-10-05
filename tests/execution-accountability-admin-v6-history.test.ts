@@ -22,7 +22,7 @@ function receipt(key: string, type = "runner.pause", outcome: ActionReceipt["out
     openedWork: [], readBackAt: "/admin/work", undo: null };
 }
 
-test("only globally scoped runner control receipts are mapped; saved request is not application", () => {
+test("registered orders are mapped while saved requests retain their actual state", () => {
   const unrelated = { ...receipt("k3"), type: "decision.record", subjectKind: "a row waiting on you" };
   const view = projectV6History([receipt("k1"), receipt("k2", "runner.resume"), unrelated], { scope, asOf });
   assert.equal(view.contract, "admin-v6/history@1");
@@ -31,7 +31,7 @@ test("only globally scoped runner control receipts are mapped; saved request is 
   assert(view.data.every(row => row.level === "global" && row.scopeKey === "us" && row.target === "runner"));
   assert(view.data.every(row => row.status === "queued" && row.lifecycle.saved !== null && row.lifecycle.workersReceived === null));
   assert(view.data.every(row => row.lifecycle.published === null && row.lifecycle.checkedOnPublicPage === null));
-  assert(view.missingParts.some(part => part.includes("total is unknown")));
+  assert.deepEqual(view.missingParts, []);
   assert.equal(projectV6History([receipt("k1")], { scope: "zcta:2020/85635", asOf }).data.length, 0);
 });
 
@@ -55,17 +55,31 @@ test("status and search apply after exact mapping without inventing a total", ()
   assert.equal(filtered.page.total, null);
 });
 
-test("repository reads only exact action-type partitions; a place scope reads no log", async () => {
-  const calls: string[] = [];
-  const repos = { adminReceipts: { readWhere: async (key: string, path: readonly string[], value: string) => {
-    calls.push(`${key}:${path.join(".")}:${value}`); return [receipt(value === "runner.pause" ? "k1" : "k2", value)];
-  }, read: () => { throw new Error("whole log read"); } } } as unknown as ControlPlaneRepositories;
-  const section = await readV6History(repos, { scope, asOf });
-  assert.equal(section.data.length, 2);
-  assert.deepEqual(calls, ["admin-action:type:runner.pause", "admin-action:type:runner.resume"]);
-  const local = await readV6History(repos, { scope: "zcta:2020/85635", asOf });
-  assert.equal(local.data.length, 0);
-  assert.equal(calls.length, 2);
+test("repository reads one bounded projection page for each place, with stable keyset continuation", async () => {
+  const place = "geo:xx.zcta.00000";
+  const samples = [
+    { position: 8, receipt: { ...receipt("k1", "fleet.deployHere"), subject: "intent-one", requestedSubject: place, subjectKind: "where you want the fleet to work" } },
+    { position: 7, receipt: { ...receipt("k2", "config.setFleetSpendCeiling", "DONE"), subject: "fleet spend ceiling", subjectKind: "the Fleet's rolling ceiling" } },
+    { position: 6, receipt: { ...receipt("k3", "expansion.scope.setMany", "DONE"), subject: place, subjectKind: "the places to hunt" } },
+  ];
+  const calls: unknown[] = [];
+  const repos = { adminActionHistoryPage: async (query: { scope: string; limit: number; beforePosition?: number }) => {
+    calls.push(query);
+    return samples.filter(row => (query.beforePosition == null || row.position < query.beforePosition) &&
+      (query.scope === "us" || row.receipt.subject === query.scope || row.receipt.requestedSubject === query.scope)).slice(0, query.limit);
+  }, adminReceipts: { read() { throw new Error("whole log read"); }, readWhere() { throw new Error("unbounded type read"); } } } as unknown as ControlPlaneRepositories;
+  const first = await readV6History(repos, { scope, asOf, limit: 2 });
+  assert.deepEqual(first.data.map(row => row.kind), ["global-ceiling", "send-agents"]);
+  assert(first.page.nextCursor);
+  assert.equal(calls.length, 1);
+  samples.unshift({ position: 9, receipt: receipt("k4") } as typeof samples[number]);
+  const second = await readV6History(repos, { scope, asOf, limit: 2, cursor: first.page.nextCursor });
+  assert.deepEqual(second.data.map(row => row.kind), ["hunt-start"]);
+  assert.equal(second.page.nextCursor, null);
+  const local = await readV6History(repos, { scope: place, asOf });
+  assert.deepEqual(local.data.map(row => row.kind), ["hunt-start", "send-agents"]);
+  assert(local.data.every(row => row.scopeKey === place));
+  await assert.rejects(readV6History(repos, { scope: "st:xx", asOf, cursor: first.page.nextCursor }), /INVALID_HISTORY_CURSOR/);
 });
 
 test("route enforces Admin host/session and bounded query before touching the store", async () => {

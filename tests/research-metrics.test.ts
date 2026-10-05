@@ -15,7 +15,6 @@ import { MODELS, MODEL_TIERS } from "../lib/models.ts";
 import { CACHE_RATE_MULTIPLIERS } from "../lib/control-plane/model-cost.ts";
 import {
   ORDERING_RULE,
-  PILOT_JURISDICTION_KEYS,
   UNIVERSE_PROVIDERS,
   bandFor,
   cacheDefectCounts,
@@ -102,21 +101,20 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
     ordered.map((o) => [o.band, o.row.id]),
     [
       [1, "freshness:tracker:t#r"],
-      [1, "freshness:jurisdiction:az:county:county-of-pima#meetings-1"],
       [2, "freshness:candidate-enrichment:az:2026:y#site"],
       [2, "freshness:candidate-enrichment:az:2026:x#site"],
+      [2, "freshness:jurisdiction:az:county:county-of-pima#meetings-1"],
       [3, "freshness:meetings:x"],
     ],
   );
-  assert.deepEqual(ordering.bands, { 1: 2, 2: 2, 3: 1 });
+  assert.deepEqual(ordering.bands, { 1: 1, 2: 3, 3: 1 });
   assert.equal(ordering.rule, ORDERING_RULE);
   assert.equal(ordering.appliesTo, "BOUNDED_MODEL_WORKER");
   assert.equal(ordering.inputs.readerImpactAt, "FreshnessObligation.readerImpactAt");
-  assert.match(ordering.inputs.pilotJurisdictions, /PILOT_ZIPS 85701, 85641, 07866, 03255/);
+  assert.equal(ordering.inputs.pilotJurisdictions, undefined, "CH-12: no pilot place is ahead of the line");
   assert.deepEqual(ordering.inputs.universeProviders, UNIVERSE_PROVIDERS);
   assert.match(ordered[0].why, /readerImpactAt/);
-  assert.match(ordered[1].why, /pilot jurisdiction \(county-of-pima\)/);
-  assert.match(ordered[2].why, /RULING 229/);
+  assert.match(ordered[1].why, /RULING 229/);
   assert.match(ordered[4].why, /long tail/);
   /*
    * Positive control for the deleted Git coupling: even an object carrying the
@@ -136,12 +134,11 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
   );
   assert.equal(unaffected.band, 3);
   assert.match(unaffected.why, /long tail/);
-  assert.ok(Object.keys(PILOT_JURISDICTION_KEYS).length === 4);
   /* SEEDED (measured live 2026-09-02): a candidate SURNAMED Vail is not a pilot jurisdiction. */
   const surname = bandFor({ id: "freshness:candidate-enrichment:nh:2026:state-nh:united-states-senator:vail-john#candidate-wikipedia-api", subjectId: "nh:2026:state-nh:united-states-senator:vail-john", readerImpactAt: null, providerId: "candidate-enrichment", nextDueAt: NOW }, inputs);
   assert.equal(surname.band, 2, surname.why);
   const newbury = bandFor({ id: "freshness:candidate-enrichment:nh:2026:state-nh-county-merrimack-place-newbury-town:x#site", subjectId: "", readerImpactAt: null, providerId: "candidate-enrichment", nextDueAt: NOW }, inputs);
-  assert.equal(newbury.band, 1);
+  assert.equal(newbury.band, 2, "a former pilot place is only in the band its provider puts it in");
 });
 
 test("funnel: SCOUTED counts distinct non-refused obligations; pipeline stages read 'none recorded' by default; candidate stages come from the store counts", () => {

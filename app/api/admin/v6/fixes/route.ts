@@ -4,6 +4,8 @@ import { openControlPlane, readDecisions } from "@/lib/control-plane/admin-data.
 import { FIXES_MISSING_HISTORY, v6FixesView } from "@/lib/control-plane/admin-view/v6-fixes-read.ts";
 import { collapseDecisionLog } from "@/lib/control-plane/decision-log.ts";
 import { fixQueueView } from "@/lib/control-plane/fix-queue.ts";
+import { ADMIN_CONFIG_ID, isAdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
+import { fixItems } from "@/lib/control-plane/fix-list.ts";
 import { adminGet } from "@/lib/control-plane/gateway/admin-get.ts";
 
 export const dynamic = "force-dynamic";
@@ -18,13 +20,15 @@ export async function GET(request: NextRequest) {
     const decisions = await readDecisions(opened.repos);
     if (decisions.kind !== "HELD") throw new Error(decisions.detail);
     const queue = fixQueueView(collapseDecisionLog(decisions.value));
+    const held = await opened.repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const list = held && isAdminConfig(held.value) ? fixItems(held.value) : [];
     return {
       contract: "admin-v6/fixes@1",
       scope: request.nextUrl.searchParams.get("scope") ?? "united-states",
-      revision: `fixes:${queue.items.length}:${queue.counts.queued}:${queue.counts.sent}:${queue.counts.opened}:${queue.counts.refused}`,
+      revision: `fixes:${list.length}:${held?.revision ?? 0}:${queue.items.length}:${queue.counts.queued}:${queue.counts.sent}:${queue.counts.opened}:${queue.counts.refused}`,
       asOf: observedAt,
-      data: v6FixesView(queue),
-      missingParts: [FIXES_MISSING_HISTORY],
+      data: v6FixesView(queue, list),
+      missingParts: list.some((i) => i.state === "FIXED") ? [] : [FIXES_MISSING_HISTORY],
     };
   });
 }

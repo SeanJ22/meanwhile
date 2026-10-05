@@ -74,11 +74,12 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
       assert.equal(await surface.locator("[data-recent-vote-count]").getAttribute("data-recent-vote-count"), "21");
       assert.ok((await tail.innerText()).includes(votes[20].title));
       assert.equal(await tail.locator(`a[href="${votes[20].rollCallUrl}"]`).count(), 0, "citations never appear on the vote face");
-      await surface.getByRole("button", { name: "Sources", exact: true }).click();
+      await surface.getByRole("button", { name: /^Sources(?: \d+)?$/ }).click();
       const citation = surface.locator(`[data-card-sources] a[href="${votes[20].rollCallUrl}"]`);
       await citation.waitFor({ state: "visible" });
       assert.equal(await citation.count(), 1, "the expanded tail retains its real citation in Sources");
       await surface.getByRole("button", { name: mode === "map" ? "Voting Record" : "Voting record", exact: true }).click();
+      await surface.getByRole("button", { name: "Show all 21 recorded votes", exact: true }).click();
       await surface.getByRole("button", { name: "Show latest 20", exact: true }).click();
       assert.equal(await surface.locator("[data-recent-vote-id]").count(), 20);
     }

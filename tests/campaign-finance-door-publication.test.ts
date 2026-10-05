@@ -1,3 +1,5 @@
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -6,7 +8,7 @@ import type { BallotSet } from "../lib/ballot/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { campaignFinancePackage, publishCampaignFinance } from "../lib/funding/campaign-finance.ts";
+import { campaignFinancePackage, publishCampaignFinance, runFinanceDoorPublication } from "../lib/funding/campaign-finance.ts";
 import { campaignFinanceScope, readCampaignFinance, campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
 import { stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
 
@@ -74,7 +76,7 @@ test("incomplete source, wrong candidate, corrupted bytes and unverified source 
       changed.captures[0].evidence.canonicalUrl = changed.responses[0].url;
       changed.door = { ...changed.door, hosts: ["filings.example.com"] };
     }
-    assert.throws(() => campaignFinancePackage(changed), undefined, kind);
+    assert.throws(() => campaignFinancePackage(changed), kind);
     const read = await readCampaignFinance(division, { store, now, bypassCache: true });
     assert.equal(read.metadata.versionId, good.promoted!.versionId, kind);
   }
@@ -129,4 +131,28 @@ test("saved search API and raw ZIP captures publish through the same door, prese
       assert.throws(() => campaignFinancePackage({ ...base, door, captures: [], responses: [changed] }));
     }
   }
+});
+
+
+test("the admitted finance worker retains publication and unresolved rows in the existing work item", async () => {
+  const repos = createMemoryRepositories(), store = new MemoryRoutineDataStore();
+  const item = createWorkItem({ project: "fixture", subject: division, obligation: "campaign finance", why: "Held filings are owed", now });
+  const plan = { version: 1, jurisdiction: "US-OH", contract: { schemaVersion: 2, recordClass: "CAMPAIGN_FINANCE_FILING", jurisdiction: { state: "OH" } },
+    publication: { contractId: "campaign-finance", bodyId: division } } as unknown as NonNullable<WorkItem["autonomousPlan"]>;
+  await repos.workItems.put(item.id, { ...item, autonomousPlan: plan }, now);
+  const inputs = source("C2,Other committee,,Council,2026,R2,January through June,900,100\n");
+  const first = await runFinanceDoorPublication({ ...inputs, repos, store, workItemId: item.id, workerResultId: "held-source-read" });
+  assert.equal(first.outcome.status, "PARTIALLY_PUBLISHED");
+  assert.equal(first.outcome.acceptedRecordIds!.length, 1);
+  assert.equal(first.outcome.recovery, "WORKER");
+  assert.deepEqual((await repos.workItems.mustRead(item.id)).value.publicationOutcome, first.outcome);
+  const failed = source(); failed.responses[0].complete = false;
+  const refusal = await runFinanceDoorPublication({ ...failed, repos, store, workItemId: item.id, workerResultId: "incomplete-source-read" });
+  assert.equal(refusal.outcome.status, "HELD");
+  const read = await readCampaignFinance(division, { store, now });
+  assert.equal(read.metadata.versionId, first.outcome.versionId);
+  const foreign = { ...plan, contract: { ...plan.contract, schemaVersion: 2 as const, jurisdiction: { state: "MI" } } } as unknown as typeof plan;
+  const latest = await repos.workItems.mustRead(item.id);
+  await repos.workItems.compareAndSet(item.id, latest.revision, { ...latest.value, autonomousPlan: foreign }, now);
+  await assert.rejects(runFinanceDoorPublication({ ...source(), repos, store, workItemId: item.id, workerResultId: "foreign-worker" }), /admitted state/);
 });

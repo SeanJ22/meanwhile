@@ -52,7 +52,9 @@ function amount(value: unknown): number | null {
 }
 function fieldMap(door: DoorRecord): Partial<Record<Field, string>> {
   if (typeof door.config.fieldMap !== "string") throw new Error("The finance door has no field map.");
-  const value = JSON.parse(door.config.fieldMap) as Record<string, unknown>;
+  let value: Record<string, unknown>;
+  try { value = JSON.parse(door.config.fieldMap) as Record<string, unknown>; }
+  catch { throw new Error("The finance field map is unreadable."); }
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("The finance field map is unreadable.");
   const out: Partial<Record<Field, string>> = {};
   for (const field of FIELDS) if (typeof value[field] === "string" && value[field]) out[field] = value[field];
@@ -85,7 +87,9 @@ export function readFinanceDoor(door: DoorRecord, responses: readonly SavedFinan
     let sourceText = response.bytes.toString("utf8");
     let rows: Record<string, unknown>[];
     if (door.kind === "campaign-finance-search-api") {
-      const value = JSON.parse(response.bytes.toString("utf8"));
+      let value: unknown;
+      try { value = JSON.parse(response.bytes.toString("utf8")); }
+      catch { throw new Error("The finance search response is unreadable."); }
       const found = typeof door.config.rowsPath === "string" ? path(value, door.config.rowsPath) : value;
       if (!Array.isArray(found) || found.some(row => !row || typeof row !== "object" || Array.isArray(row))) throw new Error("The finance search response contains no record list.");
       rows = found;

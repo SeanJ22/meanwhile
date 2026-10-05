@@ -13,6 +13,7 @@ import { bindFinanceDoorFilings } from "./finance-door-bindings.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import { jurisdictionFromOcdId } from "../coverage/states.ts";
 
 /** Replay source bytes with the door's field map, then bind only source-stated candidate identities. */
 export interface CapturedFinanceResponse extends SavedFinanceResponse {
@@ -88,6 +89,11 @@ export async function runFinanceDoorPublication(input: Parameters<typeof campaig
   const plan = current.value.autonomousPlan;
   if (!plan || plan.publication?.contractId !== "campaign-finance" || plan.contract.recordClass !== "CAMPAIGN_FINANCE_FILING") {
     throw new Error("This work item is not an admitted campaign-finance publication.");
+  }
+  const state = jurisdictionFromOcdId(input.door.ocdId ?? "")?.usps;
+  const admitted = plan.contract.schemaVersion === 2 ? plan.contract.jurisdiction.state.toUpperCase().replace(/^US-/, "") : null;
+  if (!state || admitted !== state || input.ballots.some(ballot => ballot.election.state !== state)) {
+    throw new Error("Finance publication must stay inside its admitted state's held inputs.");
   }
   let candidateId: string | null = null, versionId: string | null = null;
   let outcome: NonNullable<WorkItem["publicationOutcome"]>;

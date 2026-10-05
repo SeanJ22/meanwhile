@@ -146,13 +146,20 @@
 }
 
 .select {
-  background: var(--surface);
+  color-scheme: dark;
+  background-color: Canvas;
   color: var(--text);
   border: 0;
   box-shadow: inset 0 0 0 1px var(--lumen-rim);
   border-radius: var(--radius-sm);
   padding: 5px 8px;
   font-size: 12px;
+}
+
+.select option,
+.select optgroup {
+  background-color: Canvas;
+  color: CanvasText;
 }
 
 .scopeBar {

@@ -20,6 +20,6 @@ export function DecisionOrdersPanel(){
  return <Card title="Needs me"><div className={s.stack}>{cards.map(card=><div key={card.id} className={s.row}>
   <div className={s.spread}><strong>{card.recommends}</strong><Pill tone={card.resolution?"neutral":"warn"}>{card.resolution?card.resolution.choice==="decline"?"Declined":"Now an order":"Needs me"}</Pill></div>
   <Facts rows={[["What is happening",card.happening],["Cost",card.cost],["What it gets",card.gets]]}/>
-  {card.resolution?<><p>{card.resolution.reason??"The recommended order was accepted."} · {mst(card.resolution.at)}</p><button className={s.btn} type="button" onClick={()=>v.go("work")}>See orders</button></>:<Actions actions={[decisionOrderAction(card)]} primaryFirst/>}
+  {card.resolution?<><p>{card.resolution.reason ?? (card.resolution.receiptId ? "The recommended order was accepted." : "No order was sent.")} · {mst(card.resolution.at)}</p><button className={s.btn} type="button" onClick={()=>v.go("work")}>See orders</button></>:<Actions actions={[decisionOrderAction(card)]} primaryFirst/>}
  </div>)}</div></Card>;
 }

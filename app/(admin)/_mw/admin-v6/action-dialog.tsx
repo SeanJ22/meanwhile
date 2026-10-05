@@ -125,7 +125,7 @@ export function ActionDialog(props: {
 
         {option === "change" && preview.fields?.map(field => <label key={field.key} className={s.stack}>
           <span className={s.small}>{field.label}</span>
-          {field.kind === "boolean" ? <select className={s.input} value={fields[field.key]} onChange={e=>setFields(v=>({...v,[field.key]:e.target.value}))}><option value="true">On</option><option value="false">Off</option></select>
+          {field.kind === "boolean" ? <select className={s.select} value={fields[field.key]} onChange={e=>setFields(v=>({...v,[field.key]:e.target.value}))}><option value="true">On</option><option value="false">Off</option></select>
             : <input className={s.input} type={field.kind === "number" ? "number" : "text"} value={fields[field.key]} onChange={e=>setFields(v=>({...v,[field.key]:e.target.value}))}/>}
         </label>)}
         {option === "schedule" && preview.schedule && <label className={s.stack}><span className={s.small}>Send at (Eastern time)</span><input className={s.input} type="datetime-local" value={startTime} onChange={e=>setStartTime(e.target.value)}/></label>}
@@ -138,7 +138,7 @@ export function ActionDialog(props: {
 
         {showWords && (
           <label className={s.stack} style={{ gap: 4 }}>
-            <span className={s.small}>{chosen?.ownWords ? chosen.wordsLabel ?? "Say what you want" : "Add a note (optional)"}</span>
+            <span className={s.small}>{chosen?.ownWords ? chosen.wordsLabel ?? "Note" : "Add a note (optional)"}</span>
             <textarea className={s.textarea} value={words} maxLength={1000} onChange={(e) => setWords(e.target.value)} />
           </label>
         )}

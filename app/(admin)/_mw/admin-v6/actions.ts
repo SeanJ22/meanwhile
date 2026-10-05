@@ -124,7 +124,7 @@ const defs: ActionDef[] = [
     needs: "owner",
     doneWords: "Decision saved.",
     preview: (ctx) => ({
-      title: ctx.payload?.name ?? ctx.decision?.question ?? "Decide about this recommendation",
+      title: ctx.payload?.name ?? ctx.decision?.question ?? "Recommendation",
       level: ctx.payload?.global === "true" ? "global" : "local",
       rows: [["What is happening",ctx.payload?.happening ?? "—"],["Recommendation",ctx.payload?.recommends ?? "—"],["Cost",ctx.payload?.cost ?? "—"],["What it gets",ctx.payload?.gets ?? "—"]],
       options: [{id:"approve",label:"Approve",note:"Send the recommended order"},{id:"decline",label:"Decline",note:"Keep a record of why",ownWords:true,wordsLabel:"Why are you declining?"},

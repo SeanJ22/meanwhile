@@ -14,6 +14,17 @@ function partFor(recordClass: string): { readonly missionPart?: string } {
   return part ? { missionPart: part } : {};
 }
 
+/** Ballot's record classes that publish through a worker door the checklist map does not list yet. */
+const PLAN_DOORS: Readonly<Record<string, WorkerReaderContract>> = {
+  BALLOT_MEASURE: "ballot-contests", PUBLIC_RECORD: "public-records",
+  ADOPTED_BUDGET: "government-budgets", BUDGET_RESPONSIBILITY: "government-budgets", BUDGET_AMENDMENT: "government-budgets",
+};
+
+/** The worker door a plan's record class publishes through: slide's checklist table first, then ballot's classes. */
+function planDoor(recordClass: string) {
+  return workerDoorForRecord(recordClass) ?? PLAN_DOORS[recordClass] ?? null;
+}
+
 /** Initial instructions for an owner-requested family. Registry addresses are
  * leads, never invented observations. An evidence-backed repair supplies the
  * extraction mapping; the Validator then applies §3 to the saved official page.
@@ -29,6 +40,16 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
       ? { recordClass: "VOTER_ACCESS_ROUTE", fields: ["bodyName", "state", "kind", "url", "coverage", "coverageEvidence"] }
     : source.recordClass === "BALLOT_AND_CANDIDATES"
       ? { recordClass: "BALLOT_CONTEST", fields: ["election", "office", "candidateName", "jurisdictionName"] }
+    : source.recordClass === "BALLOT_MEASURES"
+      ? { recordClass: "BALLOT_MEASURE", fields: ["election", "title", "jurisdictionName", "textUrl"] }
+    : source.recordClass === "PUBLIC_RECORDS"
+      ? { recordClass: "PUBLIC_RECORD", fields: ["bodyName", "title", "kindLabel", "sourceSentence"] }
+    : source.recordClass === "ADOPTED_BUDGETS"
+      ? { recordClass: "ADOPTED_BUDGET", fields: ["bodyName", "title", "fiscalYear", "version", "documentUrl", "sourceSentence"] }
+    : source.recordClass === "BUDGET_RESPONSIBILITIES"
+      ? { recordClass: "BUDGET_RESPONSIBILITY", fields: ["bodyName", "role", "responsible", "authorityKind", "sourceSentence"] }
+    : source.recordClass === "BUDGET_AMENDMENTS"
+      ? { recordClass: "BUDGET_AMENDMENT", fields: ["bodyName", "title", "fiscalYear", "budgetVersion", "documentUrl", "sourceSentence"] }
       : { recordClass: "CAMPAIGN_FINANCE_FILING", fields: ["bodyName", "jurisdictionName", "committeeName", "filingPeriod", "documentUrl"] };
   const seedUrls = [...new Set([source.url, jurisdiction.ownWebAddress].filter((url): url is string => {
     if (!url) return false;
@@ -38,7 +59,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
     sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
     ...partFor(spec.recordClass),
-    ...(bodyId && workerDoorForRecord(spec.recordClass) ? { publication: { contractId: workerDoorForRecord(spec.recordClass)!, bodyId } } : {}),
+    ...(bodyId && planDoor(spec.recordClass) ? { publication: { contractId: planDoor(spec.recordClass)!, bodyId } } : {}),
     contract: {
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
       requiredFields: spec.fields, identity: { namespace: `${jurisdiction.id}:${source.recordClass}`, keyFields: spec.fields },
@@ -119,7 +140,7 @@ export interface AutonomousWorkPlan {
   readonly ownerInstructions?: readonly string[];
   /** Existing reader door selected by the system's exact body join, never by a model. */
   readonly publication?:
-    { readonly contractId: "registry-runtime-bindings" | WorkerReaderContract; readonly bodyId: string };
+    { readonly contractId: "registry-runtime-bindings" | WorkerReaderContract | "campaign-finance"; readonly bodyId: string };
   readonly freshness?: Pick<FreshnessObligation,"readerImpactAt"|"observedChangeRateHours"|"declaredCycleHours">;
   readonly version: 1;
   readonly contract: CivicExtractionContract;

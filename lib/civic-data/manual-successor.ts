@@ -46,7 +46,7 @@ export async function prepareManualProjectionSuccessor(
     return { candidate: manualProjectionCandidate(input, { prior }), expectedBaseVersionId: prior?.versionId ?? null };
   }
   let fresh = manualProjectionCandidate(input);
-  const read = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, { store, now, bypassCache: true });
+  const read = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, fresh.scope, { store, now, bypassCache: true });
   if (read.kind === "NOT_RECORDED") return { candidate: fresh, expectedBaseVersionId: null };
   if (read.kind !== "PROMOTED") throw new Error(`MANUAL_PROMOTION_BASE_UNAVAILABLE:${input.contractId}:${read.detail}`);
   const base = await store.readCandidate(read.projection.versionId);

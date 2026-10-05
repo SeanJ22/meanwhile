@@ -7,8 +7,39 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import type { Meeting } from "../sources/types.ts";
 import { meetingListingIdentity } from "../meetings/listing-identity.ts";
 import { canonicalBodyIdentity } from "./body-identity.ts";
+import { readTranslations } from "../translate/publication.ts";
+import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
 export type MeetingSnapshotRead = () => MeetingsSnapshot | null;
+
+/** Checked translations attach only to their held body/sitting; agendas also require the current document revision. */
+export async function translatedMeetingEvidenceFor(bodyId: string, meetingId: string, question: string,
+  snapshot: MeetingsSnapshot | null, options: PromotedCivicDataReadOptions = {}) {
+  const records: EvidenceRecord[] = [], gaps: EvidenceGap[] = [];
+  const meetings = snapshot?.meetings.filter(meeting => meeting.id === meetingId && meeting.bodyId === bodyId) ?? [];
+  if (meetings.length !== 1 || !meetings[0].ocdId || outcomeQuestionClass(question) === "HOW_DID_THEY_VOTE") return { records, gaps };
+  const wantMinutes = outcomeQuestionClass(question) === "WHAT_WAS_DECIDED" || /\b(?:minutes|happened|discussed)\b/i.test(question);
+  const wantAgenda = !wantMinutes && /\b(?:agenda|notice|noticed|summary|summarize)\b/i.test(question);
+  if (!wantMinutes && !wantAgenda) return { records, gaps };
+  const kind = wantMinutes ? "MINUTES" : "AGENDA";
+  const held = await readTranslations([meetings[0].ocdId], options).catch(() => []);
+  const matching = held.filter(row => row.kind === kind && row.subjectId === `${kind.toLowerCase()}:${meetingId}` &&
+    row.ocdId === meetings[0].ocdId && row.meeting?.bodyId === bodyId && row.meeting.id === meetingId);
+  if (matching.length !== 1) return { records, gaps };
+  const row = matching[0];
+  if (row.kind === "MEASURE") return { records, gaps };
+  const document = [...snapshot?.agendaDocuments ?? []].filter(row => row.meetingId === meetingId && row.ocdId === meetings[0].ocdId)
+    .sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))[0];
+  if (kind === "AGENDA" && (!document || document.documentUrl !== row.sourceUrl ||
+      document.contentHash.replace(/^sha256-/, "") !== row.sourceHash)) return { records, gaps };
+  records.push({ kind: wantMinutes ? "MEETING_MINUTES_SUMMARY" : "MEETING_NOTICE_SUMMARY",
+    id: row.id, bodyId, text: `Plain-English summary of the published ${wantMinutes ? "minutes" : "agenda"}: ${row.text}`,
+    occurredAt: meetings[0].startsAt, sourceUrl: row.sourceUrl, sourceOrg: kind === "AGENDA" ? document?.sourceOrg ?? null : null,
+    retrievedAt: row.retrievedAt, ...(!wantMinutes && document ? { noticeSummary: {
+      documentId: document.id, contentHash: document.contentHash, writtenAt: row.writtenAt } } : {}) });
+  gaps.push(...meetingListingKnowledgeFor(snapshot?.meetings ?? [], [meetingId]).gaps);
+  return { records, gaps };
+}
 
 /** Source IDs remain distinct; equal body/time listings are not a proved event count. */
 export function meetingListingKnowledgeFor(meetings: readonly Meeting[], selectedSourceIds: readonly string[]) {

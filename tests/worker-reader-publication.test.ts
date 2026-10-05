@@ -22,6 +22,9 @@ import { commentAccessEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { verifiedWorkerRecords } from "../lib/civic-data/worker-publication-evidence.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readPublicRecords } from "../lib/civic-data/public-records.ts";
+import { takeUnshownUpdates } from "../lib/control-plane/updates.ts";
+import { readGovernmentBudgets, currentBudgetFacts, budgetChecklistEvidence } from "../lib/civic-data/government-budgets.ts";
 import { projectedCommentAccessFor, type CommentAccess } from "../lib/registry/comment-access-client.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { readEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
@@ -33,7 +36,7 @@ import { createElement } from "react";
 import { OfficialFilings } from "../components/ballot/official-filings.tsx";
 import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
 
-async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING") {
+async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT") {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -50,7 +53,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   }
   const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
   const directory = contractId === "registry-runtime-bindings";
-  const body = prior.payload.registry.bodies.find(row => row.name && (!(directory || contractId === "official-filings") || prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId &&
+  const body = prior.payload.registry.bodies.find(row => row.name && (!(directory || contractId === "official-filings" || contractId === "public-records" || contractId === "government-budgets") || prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId &&
     (contractId !== "official-filings" || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1))))!;
   const publisherDivisionId = body.ocdId;
   const division = prior.payload.registry.divisions.find(row => row.ocdId === publisherDivisionId)!;
@@ -249,6 +252,65 @@ test("independent normal workers automatically publish public-comment rules thro
   await readCuratedReaderProjection("comment-access", { store, now: h.now(), bypassCache: true });
   const spoken = commentAccessEvidenceFor(body.id, body.ocdId ?? null, body.name!);
   assert.equal(spoken.records.find(row => row.accessRule?.field === "signup")?.sourceUrl, sources.signup?.sourceUrl);
+});
+
+test("an unfamiliar source-worded kind publishes automatically to its exact place and adds one durable Admin update", async () => {
+  const f = await workerFixture("public-records", { title: "2026 watershed notice", kindLabel: "watershed notice",
+    sourceSentence: "The 2026 watershed notice is a watershed notice." });
+  const published = await publishWorkerReaderResults(f.input);
+  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
+  const read = await readPublicRecords(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("Public record missing");
+  assert.equal(read.value.records[0].kindLabel, "watershed notice");
+  assert.equal((await readPublicRecords("ocd-division/country:us/state:oh/county:alder", { store: f.store, now: f.h.now() })).kind, "NOT_RECORDED");
+  assert.equal((await takeUnshownUpdates(f.h.repos, f.h.now())).filter(row => row.what === "New kind found: watershed notice").length, 1);
+  await publishWorkerReaderResults(f.input);
+  assert.equal((await takeUnshownUpdates(f.h.repos, f.h.now())).length, 0);
+});
+
+test("an adopted budget publishes from saved official document bytes; a proposal cannot replace it", async () => {
+  const facts = { title: "Operating budget", fiscalYear: "FY2027", version: "adopted-v1", fiscalStart: "2026-07-01", fiscalEnd: "2027-06-30",
+    documentUrl: FIXTURE_URL, sourceSentence: "The adopted Operating budget for FY2027 is version adopted-v1." };
+  const f = await workerFixture("government-budgets", facts);
+  const published = await publishWorkerReaderResults(f.input);
+  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
+  const read = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("Budget missing");
+  assert.equal(currentBudgetFacts(read.value.records, f.body.id, "2026-10-05").length, 1);
+  assert.equal(currentBudgetFacts(read.value.records, f.body.id, "2028-10-05").length, 0);
+  const proposal = await workerFixture("government-budgets", { ...facts, version: "proposal-v2", sourceSentence: "The proposed Operating budget for FY2027 is version proposal-v2." });
+  const refused = await publishWorkerReaderResults({ ...proposal.input, store: f.store });
+  assert.equal(refused[0].outcome.status, "HELD");
+  const retained = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  assert.equal(retained.metadata.versionId, read.metadata.versionId);
+});
+
+test("source-worded legal budget roles and exact-version amendments fill the existing checklist", async () => {
+  const f = await workerFixture("government-budgets", { title: "Operating budget", fiscalYear: "FY2027", version: "adopted-v1",
+    fiscalStart: "2026-07-01", fiscalEnd: "2027-06-30", documentUrl: FIXTURE_URL,
+    sourceSentence: "The adopted Operating budget for FY2027 is version adopted-v1." });
+  assert.equal((await publishWorkerReaderResults(f.input))[0].outcome.status, "PUBLISHED");
+  for (const role of ["prepares", "adopts", "administers", "oversees"]) {
+    const legal = await workerFixture("government-budgets", { role, responsible: "The governing officer", authorityKind: "Municipal code",
+      sourceSentence: `The governing officer ${role} the budget under the municipal code.` }, "BUDGET_RESPONSIBILITY");
+    const result = await publishWorkerReaderResults({ ...legal.input, store: f.store });
+    assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
+  }
+  for (const budgetVersion of ["adopted-v1", "older-v0"]) {
+    const amendment = await workerFixture("government-budgets", { title: "Library amendment", fiscalYear: "FY2027", budgetVersion,
+      documentUrl: FIXTURE_URL, sourceSentence: `The Library amendment for FY2027 amends budget version ${budgetVersion}.` }, "BUDGET_AMENDMENT");
+    const result = await publishWorkerReaderResults({ ...amendment.input, store: f.store });
+    assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
+  }
+  const read = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  if (read.kind !== "PROMOTED") throw new Error("Budget missing");
+  const facts = budgetChecklistEvidence(read.value.records, f.body.id, "2026-10-05");
+  assert.equal(facts["FIN-04"].length, 4);
+  assert.equal(facts["FIN-05"].length, 1);
+  assert.equal(facts["FIN-05"][0].budgetVersion, "adopted-v1");
+  assert.equal(budgetChecklistEvidence(read.value.records, f.body.id, "2028-10-05")["FIN-03"].length, 0);
 });
 
 test("normal service workers publish verified applicability and channels while leaving missing topics visibly unacquired", async () => {

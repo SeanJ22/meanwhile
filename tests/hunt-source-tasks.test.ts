@@ -6,9 +6,7 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-con
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { routineTaskDue, ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
-import { DEFAULT_CONTRACT, type WorkItem } from "../lib/control-plane/work-item.ts";
 import { runtimeAuthorityIssue, type RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authority.ts";
-import { votingSitesReceiptSource } from "../lib/civic-data/voting-sites-source-task.ts";
 import { parseRoutineRunnerReceipt, printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import type { PromotionOutcome } from "../lib/civic-data/promotion.ts";
 
@@ -25,9 +23,9 @@ test("an actual resolved Send selects shared producers once, without expanding t
   assert.deepEqual(huntSourceTasks([{ ...legacy, decision: { ...legacy.decision, sourceWorkVersion: undefined } }], NOW), [], "deployment alone cannot launch the paused hunt or expand old Sends");
   const unresolved: ResolvedScope = { kind: "UNRESOLVED", decision: scope("AZ").decision, states: ["AZ"], why: "vintage absent" };
   assert.deepEqual(huntSourceTasks([unresolved], NOW), []);
-  assert.equal(huntSourceTasks([scope("NH")], NOW).length, 3);
+  assert.equal(huntSourceTasks([scope("NH")], NOW).length, 5, "national sources plus the voting-site pass and PRL, for any state");
   const tasks = huntSourceTasks([scope("AZ"), scope("AZ", "owner-send-2")], NOW);
-  assert.equal(tasks.length, 4);
+  assert.equal(tasks.length, 7);
   for (const task of tasks) {
     assert.deepEqual(task.ownerInvocation?.instructions, ["owner-send-1", "owner-send-2"]);
     assert.ok(!ROUTINE_SOURCE_TASKS.some(standing => standing.id === task.id));
@@ -36,27 +34,23 @@ test("an actual resolved Send selects shared producers once, without expanding t
   }
 });
 
-test("all registered manual contracts have an invocation disposition; only exact original 85635 adds scoped AZ reference and PRL", () => {
+test("all registered manual contracts have an invocation disposition; PRL, voting sites and the AZ reference apply by the Send's geography, never one receipt (CH-11)", () => {
   const ordinary = scope("AZ");
   const matrix = manualProducerInvocationMatrix([ordinary], NOW);
   assert.deepEqual(matrix.map(row => row.id), MANUAL_PRODUCTION_SOURCE_CONTRACTS.map(contract => contract.id));
   assert.equal(new Set(matrix.map(row => row.id)).size, matrix.length);
-  assert.equal(matrix.filter(row => row.id === "jurisdiction-operational-reference-az").length, 1);
   assert.equal(matrix.find(row => row.id === "az-sos-ballot")?.commandReady, false,
     "a manual projection is not source acquisition");
   assert.equal(matrix.find(row => row.id === "az-pima-local-finance")?.instructionIds.length, 0,
     "state membership does not establish Pima applicability");
   assert.equal(matrix.find(row => row.id === "campaign-sites")?.mode, "EXISTING_DERIVED");
   assert.equal(matrix.find(row => row.id === "meeting-body-crosswalk")?.mode, "EXISTING_DERIVED");
-  const original = { ...ordinary, decision: { ...ordinary.decision,
-    key: ORIGINAL_LIFETIME_HUNT.key, receiptId: ORIGINAL_LIFETIME_HUNT.receiptId,
-    budgetStartedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, budgetUsd: ORIGINAL_LIFETIME_HUNT.budgetUsd,
-    decidedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt } };
-  const tasks = huntSourceTasks([original], "2026-09-28T08:00:00.000Z");
-  assert.deepEqual(tasks.filter(task => ["prl", "jurisdiction-operational-reference", "jurisdiction-operational-reference-az"].includes(task.id)).map(task => task.id), ["jurisdiction-operational-reference-az", "prl"]);
-  assert.equal(tasks.length, 6);
-  const wrongReceipt = { ...original, decision: { ...original.decision, receiptId: "another-send" } };
-  assert.equal(huntSourceTasks([wrongReceipt], "2026-09-28T08:00:00.000Z").length, 4);
+  const ids = (sends: ResolvedScope[]) => huntSourceTasks(sends, "2026-09-28T08:00:00.000Z").map(task => task.id);
+  /* Any Arizona Send, not the original receipt, gets the AZ reference, PRL and the voting-site pass. */
+  assert.deepEqual(ids([scope("AZ", "any-send")]).filter(id => ["prl", "voting-sites", "jurisdiction-operational-reference-az"].includes(id)).sort(),
+    ["jurisdiction-operational-reference-az", "prl", "voting-sites"]);
+  /* A Send in another state gets PRL and the voting-site pass, and not the Arizona-only reference. */
+  assert.deepEqual(ids([scope("OH", "ohio-send")]).filter(id => ["prl", "voting-sites", "jurisdiction-operational-reference-az"].includes(id)).sort(), ["prl", "voting-sites"]);
 });
 
 test("source admission resumes from durable failure/success clocks rather than rerunning each pass or restart", () => {
@@ -73,50 +67,20 @@ test("source admission resumes from durable failure/success clocks rather than r
   assert.equal(routineTaskDue(nextTask, { lastAttemptedAt: NOW, lastSucceededObservedAt: NOW }, now + 86400_000), true);
 });
 
-test("only the exact original Cochise work binding admits the source-scoped voting-site task", () => {
-  const base = scope("AZ");
-  const original = { ...base, decision: { ...base.decision,
-    key: ORIGINAL_LIFETIME_HUNT.key, receiptId: ORIGINAL_LIFETIME_HUNT.receiptId,
-    budgetStartedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, budgetUsd: ORIGINAL_LIFETIME_HUNT.budgetUsd,
-    decidedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt } };
-  const work: WorkItem = { id: "wi-cochise", project: "original-85635", subject: "az:county:county-of-cochise",
-    obligation: "Acquire Cochise County 2026 voting sites", why: "Exact original Send county source remains owed",
-    priority: "P1", state: "OPEN", contract: DEFAULT_CONTRACT, dependencies: [], routeTaskIds: [],
-    escalations: [], createdAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, transitions: [],
-    autonomousPlan: { version: 1, ownerInstructions: [ORIGINAL_LIFETIME_HUNT.receiptId], capability: "VOTER_ACCESS",
-      jurisdiction: "AZ", sourceRegistryReferences: ["az:county:county-of-cochise"], seedUrls: [],
-      sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
-      contract: { schemaVersion: 2, recordClass: "VOTER_ACCESS_ROUTE", subjectId: "az:county:county-of-cochise",
-        requiredFields: ["bodyName", "state", "kind", "url", "coverage", "coverageEvidence"],
-        identity: { namespace: "az:county:county-of-cochise:VOTER_ACCESS", keyFields: ["url"] },
-        jurisdiction: { country: "US", state: "AZ", canonicalId: "az:county:county-of-cochise" },
-        completenessScope: "Official Cochise County voter-access routes remain owed.", expectedSourceDate: null,
-        methodVersion: 0, sourceScope: { sourceId: "unobserved:cochise", publisher: "Cochise County",
-          routeIds: [], canonicalUrls: [], observationArtifactIds: [] },
-        extraction: { format: "UNSUPPORTED", mediaType: "unobserved", fields: {}, reason: "Await official capture" },
-        verification: { required: true, authorities: [] } } } };
-  const now = "2026-09-28T12:00:00.000Z";
-  const tasks = huntSourceTasks([original], now, [work]);
-  const vote = tasks.find(task => task.id === "voting-sites:cochise-2026");
+test("the voting-site task is the registered contract's one automatic pass: no county flag, no county URL, no special task id", () => {
+  const vote = huntSourceTasks([scope("OH", "ohio-send")], "2026-09-28T08:00:00.000Z").find(task => task.registeredContractId === "voting-sites");
   assert.ok(vote);
-  assert.deepEqual(vote.command.slice(-2), ["--promote", "--cochise-only"]);
-  assert.equal(vote.registeredContractId, "voting-sites");
-  assert.equal(votingSitesReceiptSource(true), vote.id);
-  assert.equal(votingSitesReceiptSource(false), vote.registeredContractId);
+  assert.equal(vote.id, "voting-sites");
+  assert.deepEqual(vote.command.slice(-1), ["--promote"]);
+  assert.equal(vote.requestedUrl, "");
   const cwd = process.cwd();
   const envelope: RuntimeAuthorityEnvelope = { repo: cwd, sha: "a".repeat(40),
-    capability: "MANUAL_CONTRACT", contract: vote.registeredContractId, parentPid: 42, nonce: "b".repeat(64) };
+    capability: "MANUAL_CONTRACT", contract: vote.registeredContractId ?? null, parentPid: 42, nonce: "b".repeat(64) };
   const checkout = { repositoryRoot: cwd, headSha: envelope.sha, clean: true,
     detached: true, headOnOriginMain: true, readable: true };
   assert.equal(runtimeAuthorityIssue({ envelope, expectation: { capabilities: ["MANUAL_CONTRACT"],
     contract: "voting-sites", immediateParentPid: 42 }, checkout, cwd }), null);
-  assert.match(runtimeAuthorityIssue({ envelope: { ...envelope, contract: vote.id },
-    expectation: { capabilities: ["MANUAL_CONTRACT"], contract: "voting-sites", immediateParentPid: 42 },
-    checkout, cwd }) ?? "", /not voting-sites/);
-  assert.deepEqual(vote.ownerInvocation?.instructions, [ORIGINAL_LIFETIME_HUNT.receiptId]);
-  assert.equal(huntSourceTasks([original], now, [{ ...work, subject: "az:county:county-of-pima" }]).some(task => task.id === vote.id), false);
-  assert.equal(huntSourceTasks([original], now, [{ ...work, state: "VERIFIED_COMPLETE" }]).some(task => task.id === vote.id), false);
-  assert.equal(huntSourceTasks([{ ...original, decision: { ...original.decision, receiptId: "different" } }], now, [work]).some(task => task.id === vote.id), false);
+  assert.deepEqual(vote.ownerInvocation?.instructions, ["ohio-send"]);
 });
 
 test("all funded source Sends are admitted regardless of the former blackout", () => {
@@ -133,21 +97,21 @@ test("all funded source Sends are admitted regardless of the former blackout", (
   assert.deepEqual(admittedHuntSourceScopes([original, other], "2026-10-05T12:00:00.000Z"), [original, other]);
 });
 
-test("Cochise candidate outcome emits the one source-task receipt expected by the supervisor", () => {
+test("a voting-sites candidate outcome emits the one source-task receipt expected by the supervisor", () => {
   const captured: string[] = [];
   const log = console.log;
-  const candidate = { id: "cv-cochise" };
+  const candidate = { id: "cv-voting-sites" };
   const outcome = { candidate: { candidate, acquisitionSucceeded: true, state: "PROMOTED",
     receipt: { decision: "GOOD" }, lastKnownGoodVersion: candidate.id },
     promoted: { versionId: candidate.id }, confirmed: null } as unknown as PromotionOutcome;
   try {
     console.log = (...parts: unknown[]) => { captured.push(String(parts[0])); };
-    printSourceRunnerReceipt(votingSitesReceiptSource(true), candidate, outcome);
+    printSourceRunnerReceipt("voting-sites", candidate, outcome);
   } finally { console.log = log; }
   const parsed = parseRoutineRunnerReceipt(captured.join("\n"));
   assert.equal(parsed.ok, true);
   if (parsed.ok) {
-    assert.equal(parsed.receipt.source, "voting-sites:cochise-2026");
+    assert.equal(parsed.receipt.source, "voting-sites");
     assert.equal(parsed.receipt.candidateId, candidate.id);
   }
 });

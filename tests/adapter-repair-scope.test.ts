@@ -38,6 +38,7 @@ test("a repair may write only inside the folder, the kind's fixtures and those t
   assert.deepEqual(outOfScope(r.scope, [
     "lib/sources/ical/index.ts", "lib/sources/composite/wiring.ts", "tests/unrelated.test.ts", "lib/sources/iqm2/../ical/index.ts", "/etc/passwd", ["lib", "sources", "ical", "index.ts"].join(String.fromCharCode(92)),
   ]).length, 6);
+  assert.deepEqual(outOfScope(r.scope, ["tests/composite.test.ts"]), ["tests/composite.test.ts"], "the shared contract may run but cannot be changed by a kind repair");
 });
 
 test("shared plumbing, a missing folder, an unchecked kind, or no example is refused by name", () => {

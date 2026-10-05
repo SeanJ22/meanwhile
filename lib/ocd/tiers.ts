@@ -1,3 +1,4 @@
+import { officeIdentity } from "@/lib/officials/office-identity";
 import type { OcdId } from "@/lib/sources/types";
 
 /**
@@ -167,3 +168,19 @@ export const TIER_ACCENT_VAR: Readonly<Record<Tier, string>> = {
 
 /** The accent used when every tier is active at once. */
 export const ALL_TIERS_ACCENT_VAR = "--accent-all";
+
+const STATE_OFFICES = new Set([
+  "governor", "lieutenant_governor", "secretary_of_state", "attorney_general",
+  "state_treasurer", "superintendent_of_public_instruction", "state_mine_inspector",
+  "corporation_commissioner", "state_auditor", "state_comptroller",
+  "insurance_commissioner", "state_senator", "state_lower_house", "executive_councilor",
+]);
+
+/** Office identity takes precedence over the geography of its electorate. */
+export function tierForOffice(title: string | null | undefined, ocdId: OcdId): Tier | null {
+  const office = officeIdentity(title);
+  if (office === "us_senator" || office === "us_representative") return "national";
+  if (office !== null && STATE_OFFICES.has(office)) return "state";
+  if (office !== null) return "local";
+  return tierForOcdId(ocdId);
+}

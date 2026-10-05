@@ -99,10 +99,10 @@ export const SECTION_DEP = {
     owner: "Codex (accounting)",
     need: "The money read: account readings by provider, limits in force and per-work AI costs for this scope. The ledger exists; its exact read shape is not confirmed.",
   },
-  learning: {
-    id: "DEP-LEARNING",
-    owner: "Codex (MW-027)",
-    need: "Weekly learning measurements with their counted-out-of numbers.",
+  scoreboard: {
+    id: "DEP-SCOREBOARD",
+    owner: "Claude (measures)",
+    need: "The Scoreboard's numbers with the counts behind each, and the weekly learning measurements.",
   },
   fixes: {
     id: "DEP-FIX-LIFECYCLE",

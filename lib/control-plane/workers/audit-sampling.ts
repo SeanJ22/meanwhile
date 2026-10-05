@@ -25,6 +25,7 @@ import { createHash } from "node:crypto";
 import { newFieldManualEntry, readFieldManual, type FieldManualEntry, type FieldManualStore } from "../field-manual.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ModelClass } from "../scheduler/model-routing.ts";
+import { isOfficialSource } from "../../civic-data/source-authority.ts";
 import { needsSecondSource } from "../promotion/section3.ts";
 import { parseLearningEntries } from "./model-parser.ts";
 import { emptyFieldManual } from "../field-manual.ts";
@@ -155,7 +156,11 @@ export function sampleDecision(
   const stratum = stratumOf(spec.contract);
   if (spec.auditEscalation) return { sample: true, reason: "ESCALATION", stratum };
   // A judgment call (portrait, statement or position summary, one person matched across sources) is the one kind of fact a model always re-reads (rulings section 3).
-  if (needsSecondSource(spec.contract)) return { sample: true, reason: "JUDGMENT_CALL", stratum };
+  const urls = spec.contract.schemaVersion === 2 ? spec.contract.sourceScope.canonicalUrls : [];
+  // The publisher still binds the image to the named person. Own official
+  // pages receive the ordinary live sample rather than a blanket second-source audit.
+  const portraitBasis = urls.length > 0 && urls.every(url => isOfficialSource(url)) ? "OWN_PAGE" as const : undefined;
+  if (needsSecondSource({ ...spec.contract, portraitBasis })) return { sample: true, reason: "JUDGMENT_CALL", stratum };
   const h = history.get(stratum);
   if (!h || h.reviewed < policy.floorPerStratum) return { sample: true, reason: "NEW_STRATUM", stratum };
   if (h.everBroken && h.survivedSinceBreak < policy.survivedAfterBreak) return { sample: true, reason: "BROKEN_STRATUM", stratum };

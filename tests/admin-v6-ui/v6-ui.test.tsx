@@ -58,7 +58,7 @@ test("a finished receipt no longer blocks a new send of the same action", () => 
 
 test("only the kinds a real registry action carries out are wired, each to its own gateway type", () => {
   assert.deepEqual([...connectedKinds()].sort(), [
-    "cancel-send", "data-switch-off", "data-switch-on", "fix-go", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
+    "cancel-send", "data-switch-off", "data-switch-on", "fix-go", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "order-unschedule", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
   ]);
   assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
@@ -265,7 +265,7 @@ test("with nothing announced, the production bundle is real reference data plus 
   assert.equal(checklistDefinitions().length, 325);
   assert.equal(b.places.data?.filter((p) => p.kind === "State").length, 56);
   assert.ok(b.national.data?.every((r) => r.hunts === null && r.stuck === null && r.checklistItems === null), "unknown national figures are null, never 0");
-  for (const id of ["stuck", "results", "money", "fixes", "learning", "history", "hunts"] as const) {
+  for (const id of ["stuck", "results", "money", "fixes", "scoreboard", "history", "hunts"] as const) {
     assert.equal(b[id].state, "not-connected", id);
     assert.equal(b[id].problem, "waiting", id);
   }
@@ -282,7 +282,7 @@ test("sample adapters are isolated: no production module imports ./sample", () =
 });
 
 test("the same mounted page shows real data once the section is live — no remount, no switch", () => {
-  const stuckItem: StuckItem = { id: "real-1", title: "Real stuck item from the backend", applies: ["us"], lane: "auto", cause: "c", age: "1 h", ageRank: 1, tried: "t", helped: "h", next: "n", owner: "o", actions: [] };
+  const stuckItem: StuckItem = { id: "real-1", title: "Real stuck item from the backend", applies: ["us"], lane: "decision", cause: "c", age: "1 h", ageRank: 1, tried: "t", helped: "h", next: "n", owner: "o", actions: [] };
   const props = (snapshot: Record<(typeof SECTION_IDS)[number], SectionState>) => ({
     data: buildLiveBundle(snapshot, ref, workerStatusFromPulse(null)),
     mode: "live" as const,
@@ -293,9 +293,10 @@ test("the same mounted page shows real data once the section is live — no remo
     lastGoodAt: "2026-09-28T19:00:00.000Z",
     recovered: false,
     access: owner,
+    initialView: "queue" as const,
   });
   const before = renderToStaticMarkup(h(CommandCenter, props(waiting)));
-  assert.match(before, /<span class="big">—<\/span>/, "an unreached section shows a dash where its number would be");
+  assert.match(before, /Not read yet, so not shown here: .*stuck cases/, "an unreached section is said to be unread, not empty");
   assert.doesNotMatch(before, /Real stuck item from the backend/);
   assert.doesNotMatch(before, /SAMPLE DATA/, "a production page never carries the sample badge");
   const live = { ...waiting, stuck: { phase: "live", data: [stuckItem], asOf: "2026-09-28T19:01:00.000Z", revision: "v1", missingParts: [], attempts: 0 } as SectionState };

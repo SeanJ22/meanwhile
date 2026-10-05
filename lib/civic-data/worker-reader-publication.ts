@@ -96,7 +96,11 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
       const facts = Object.fromEntries(Object.entries(f).filter(([key]) => !["bodyName", "documentUrl", "jurisdictionName"].includes(key)));
       const id = `official-filing:${createHash("sha256").update(canonicalJson([body.id, territories[0].ocdId, checked.contract.recordClass, f.documentUrl,
         f.candidateName ?? f.committeeName, f.office ?? f.filingPeriod])).digest("hex")}`;
-      const row = { id, kind: checked.contract.recordClass, bodyId: body.id, ocdId: territories[0].ocdId, bodyName: body.name, jurisdictionName: territories[0].label,
+      const moneyFields = ["amount", "receipts", "expenditures", "cashOnHand"];
+      const hasMoney = moneyFields.some(field => typeof facts[field] === "number") && typeof facts.filingPeriod === "string";
+      const kind = checked.contract.recordClass === "CAMPAIGN_FINANCE_FILING" && !hasMoney ? "CAMPAIGN_FINANCE_DOCUMENT" : checked.contract.recordClass;
+      if (kind === "CAMPAIGN_FINANCE_DOCUMENT") for (const field of moneyFields) delete facts[field];
+      const row = { id, kind, bodyId: body.id, ocdId: territories[0].ocdId, bodyName: body.name, jurisdictionName: territories[0].label,
         sourceUrl: checked.primary.evidence.canonicalUrl, documentUrl: f.documentUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now, facts };
       requirePublication(officialFilingIssue(row) === null, `FILING_FIELDS_UNVERIFIED:${officialFilingIssue(row)}`);
       return row;

@@ -72,9 +72,9 @@ test("a wake reconciles the deployed release before admitting another research c
 test("both release and shutdown bound coordination and idle waits, and never await a timed-out drain again", () => {
   const hold = source.match(/async function holdStandingRuntimeAtQuiescence\(\): Promise<void> \{[\s\S]*?\n\}/)?.[0];
   assert.ok(hold);
-  assert.match(hold, /waitForRuntimeQuiescence\(async \(\) => \{\s*await stopAdminCopyClock\(\);\s*await activeControlRead;\s*await standingRuntimeScheduler.waitForIdle\(\);/);
+  assert.match(hold, /waitForRuntimeQuiescence\(async \(\) => \{\s*await stopAdminCopyClock\(\);\s*await stopScheduledOrderClock\(\);\s*await activeControlRead;\s*await standingRuntimeScheduler.waitForIdle\(\);/);
   const shutdown = source.slice(source.lastIndexOf("if (standingRuntimeTimer !== null) clearInterval"));
-  assert.match(shutdown, /if \(!standingDrainFailed\) \{[\s\S]*waitForRuntimeQuiescence\(async \(\) => \{\s*await stopAdminCopyClock\(\);\s*await activeControlRead;\s*await standingRuntimeScheduler.waitForIdle\(\);/);
+  assert.match(shutdown, /if \(!standingDrainFailed\) \{[\s\S]*waitForRuntimeQuiescence\(async \(\) => \{\s*await stopAdminCopyClock\(\);\s*await stopScheduledOrderClock\(\);\s*await activeControlRead;\s*await standingRuntimeScheduler.waitForIdle\(\);/);
   assert.match(shutdown, /if \(handoffExitCode !== null\) process.exit\(handoffExitCode\)/);
 });
 
@@ -126,7 +126,7 @@ test("console and nightly children use the research idle guard", async () => {
     const fn = source.match(new RegExp(`async function ${name}\\([\\s\\S]*?\\n\\}`))?.[0];
     assert.ok(fn);
     let observed: number | undefined;
-    const context = createContext({ CONSOLE_PUBLISHERS: [{ name: "fixture", args: [] }], ROOT: ".", process,
+    const context = createContext({ CONSOLE_PUBLISHERS: [{ name: "fixture", args: [] }], ROOT: ".", CODE_ROOT: ".", process,
       RUNTIME_NO_PROGRESS_MS: 600_000, standingChildEnvironment: () => process.env,
       recoverExitedWindowHolder: async () => {}, console: { log: () => {}, error: () => {} },
       runRuntimeChildren: async (_children: unknown, options: { noProgressMs?: number }) => {

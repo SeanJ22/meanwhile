@@ -1,6 +1,6 @@
 /** Source filing facts, kept separate from certified ballot membership and
  * candidate/committee joins. Those existing publishers retain their burdens. */
-export const OFFICIAL_FILING_CLASSES = ["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"] as const;
+export const OFFICIAL_FILING_CLASSES = ["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING", "CAMPAIGN_FINANCE_DOCUMENT"] as const;
 export type OfficialFilingClass = typeof OFFICIAL_FILING_CLASSES[number];
 export interface OfficialFiling {
   readonly id: string;
@@ -15,9 +15,11 @@ export interface OfficialFiling {
   readonly verifiedAt: string;
   readonly facts: Readonly<Record<string, string | number>>;
 }
+const financeFields = ["candidateName", "committeeName", "committeeId", "filingPeriod", "filingDate", "reportType", "currency", "amount", "receipts", "expenditures", "cashOnHand"];
 const fields = {
   CANDIDATE_FILING_DOCUMENT: ["candidateName", "office", "electionDate", "filingDate", "filingStatus", "party"],
-  CAMPAIGN_FINANCE_FILING: ["committeeName", "committeeId", "filingPeriod", "filingDate", "reportType", "currency", "receipts", "expenditures", "cashOnHand"],
+  CAMPAIGN_FINANCE_FILING: financeFields,
+  CAMPAIGN_FINANCE_DOCUMENT: financeFields,
 } as const;
 export function officialFilingIssue(value: unknown): string | null {
   if (!value || typeof value !== "object") return "Filing is not an object.";
@@ -33,9 +35,13 @@ export function officialFilingIssue(value: unknown): string | null {
   const allowed = fields[row.kind] as readonly string[];
   if (Object.entries(row.facts).some(([key, value]) => !allowed.includes(key) ||
     !(typeof value === "string" && value.trim() || typeof value === "number" && Number.isFinite(value)))) return "Filing has an unsupported or empty fact.";
-  const required = row.kind === "CANDIDATE_FILING_DOCUMENT" ? ["candidateName", "office"] : ["committeeName", "filingPeriod"];
+  const required = row.kind === "CANDIDATE_FILING_DOCUMENT" ? ["candidateName", "office"]
+    : row.kind === "CAMPAIGN_FINANCE_FILING" ? ["filingPeriod"] : [];
+  if (row.kind !== "CANDIDATE_FILING_DOCUMENT" && !["candidateName", "committeeName"].some(key => typeof row.facts[key] === "string" && String(row.facts[key]).trim())) return "Filing subject is missing.";
   if (required.some(key => typeof row.facts[key] !== "string" || !String(row.facts[key]).trim())) return "Filing required facts are missing.";
-  const amounts = ["receipts", "expenditures", "cashOnHand"].filter(key => row.facts[key] !== undefined);
+  const amounts = ["amount", "receipts", "expenditures", "cashOnHand"].filter(key => row.facts[key] !== undefined);
+  if (row.kind === "CAMPAIGN_FINANCE_FILING" && amounts.length === 0) return "Money amount is missing; publish the filing document instead.";
+  if (row.kind === "CAMPAIGN_FINANCE_DOCUMENT" && amounts.length > 0) return "Filing document cannot carry incomplete Money facts.";
   if (amounts.length && (row.facts.currency !== "USD" || amounts.some(key => typeof row.facts[key] !== "number"))) return "Financial amounts require numeric values and a verified USD currency.";
   return null;
 }

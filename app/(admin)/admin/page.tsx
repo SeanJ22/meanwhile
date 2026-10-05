@@ -1,6 +1,6 @@
 /**
  * **THE ADMIN HOME IS THE COMMAND CENTER.** (rulings §0: there is no Admin page
- * outside it.) Now, Workers, Work, Checklist, Money, Is it learning, Fix list,
+ * outside it.) Now, Workers, Work, Checklist, Money, Scoreboard, Fix list,
  * Reports, Changes and Ask the console are views of this one page; `?view=` says
  * which, and `?scope=` says where. The pages this replaced are gone, and an old
  * link to one of them is sent here by `middleware.ts`.

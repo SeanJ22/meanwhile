@@ -1,3 +1,4 @@
+import { BOX_PARSER_IMPLEMENTATION } from "./quoted-proof.ts";
 import { readSubjectScoutHistory } from "./detective.ts";
 import { adapterWaitReasonFromKnowledge, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
 import { randomUUID } from "node:crypto";
@@ -301,9 +302,14 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   let unresolved = false;
   let outsideExtractionScope=false;
   const pendingRefreshes: Parameters<typeof enqueueWorkerTask>[1][] = [];
+  const boxedArtifactIds = new Set(records.flatMap(r => r.workItemId === item.id && r.result.role === "PARSER" &&
+    r.result.implementation === BOX_PARSER_IMPLEMENTATION && r.result.verdict === "EXTRACTED" && r.methodVersion === runtime.methodVersion
+    ? [r.result.artifactId] : []));
+  const acquiredBoxPage = (record: WorkerResultRecord) => record.result.role === "ACQUIRER" &&
+    record.result.artifacts.some(artifact => boxedArtifactIds.has(artifact.artifactId));
   // Acquire the declared supporting authorities before scheduling their dependent validation.
   for (const acquisition of acquisitions) {
-    const history = records.filter(r => r.result.role === "ACQUIRER" && r.result.source.id === acquisition.route.id && r.result.source.url === acquisition.route.url);
+    const history = records.filter(r => r.result.role === "ACQUIRER" && (r.result.source.id === acquisition.route.id || acquiredBoxPage(r)) && r.result.source.url === acquisition.route.url);
     const latest = history[0];
     if (!latest) {
       const next = await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition});
@@ -353,7 +359,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     const common = {workItemId:item.id,contract:plan.contract,now};
     // A failed refresh does not erase the last trustworthy capture. The source
     // loop above keeps its freshness/recovery obligation unresolved separately.
-    const acquired = records.find(r=>r.result.role==="ACQUIRER" && r.result.verdict==="ACQUIRED" && r.result.source.id===acquisition.route.id && r.result.source.url===acquisition.route.url);
+    const acquired = records.find(r=>r.result.role==="ACQUIRER" && r.result.verdict==="ACQUIRED" && (r.result.source.id===acquisition.route.id || acquiredBoxPage(r)) && r.result.source.url===acquisition.route.url);
     if (!acquired) { const next = await taskFor({...common,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition}); if(next)return next; unresolved=true; continue; }
     if (acquired.result.role !== "ACQUIRER") continue;
     for (const artifact of acquired.result.artifacts.filter(a=>a.completeness==="COMPLETE")) {
@@ -363,8 +369,15 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
         continue;
       }
       const spec = {...common,artifactId:artifact.artifactId};
-      const parserTask = await enqueueWorkerTask(repos,{...spec,role:"PARSER"});
-      const parser = records.find(r=>r.routeTaskId===parserTask.id && r.result.role==="PARSER");
+      const boxed = records.find(r => r.workItemId === item.id && r.result.role === "PARSER" && r.result.verdict === "EXTRACTED" &&
+        r.result.implementation === BOX_PARSER_IMPLEMENTATION && r.result.artifactId === artifact.artifactId &&
+        r.result.subjectId === plan.contract.subjectId && r.result.recordClass === plan.contract.recordClass &&
+        r.methodVersion === runtime.methodVersion);
+      // The Box's quoted extraction is checked by the ordinary publication
+      // door in this pass. Do not create another Parser or validator turn.
+      if (boxed && !needsSecondSource(plan.contract)) { staged = true; continue; }
+      const parserTask = boxed ? null : await enqueueWorkerTask(repos,{...spec,role:"PARSER"});
+      const parser = boxed ?? records.find(r=>r.routeTaskId===parserTask?.id && r.result.role==="PARSER");
       if (!parser) { const next=await taskFor({...spec,role:"PARSER"}); if(next)return next; unresolved=true; continue; }
       if (parser.result.verdict!=="EXTRACTED") { unresolved=true; continue; }
       if (plan.contract.schemaVersion===2) {

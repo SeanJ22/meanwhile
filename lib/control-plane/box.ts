@@ -8,6 +8,8 @@ import type { DetectiveResult } from "./workers/research-types.ts";
 export interface BoxOrigin {
   readonly kind: "SCOUT" | "DETECTIVE";
   readonly resultId: string;
+  /** Existing Scout log partition; old origins are upgraded by backfill. */
+  readonly resultKey?: string;
   readonly workItemId: string;
   readonly findingIndex: number;
   readonly collection?: "findings" | "spans";
@@ -71,8 +73,11 @@ export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, inp
       try { return (await repo.put(id, next, now)).persisted.value; }
       catch (error) { if (error instanceof IdentityCollision) continue; throw error; }
     }
-    if (held.value.origins.some(origin => originId(origin) === originId(input.origin))) return held.value;
-    const next = { ...held.value, origins: [...held.value.origins, input.origin].sort((a, b) => originId(a).localeCompare(originId(b))) };
+    const prior = held.value.origins.find(origin => originId(origin) === originId(input.origin));
+    if (prior && (!input.origin.resultKey || prior.resultKey === input.origin.resultKey)) return held.value;
+    const origins = prior ? held.value.origins.map(origin => origin === prior ? { ...origin, resultKey: input.origin.resultKey } : origin)
+      : [...held.value.origins, input.origin];
+    const next = { ...held.value, origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))) };
     try { return (await repo.compareAndSet(id, held.revision, next, now)).value; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
   }
@@ -118,12 +123,12 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
 }
 
 /** Used by both Scout writers and the historical-result backfill. No finding is filtered out. */
-export type BoxScoutResult = Pick<ScoutResult, "findings" | "subjectId" | "attemptId" | "workItemId" | "recordedAt">;
+export type BoxScoutResult = Pick<ScoutResult, "findings" | "subjectId" | "attemptId" | "workItemId" | "recordedAt"> & Partial<Pick<ScoutResult, "obligationId">>;
 export async function indexScoutFindings(repo: AggregateRepository<BoxFinding>, result: BoxScoutResult, now: string): Promise<readonly BoxFinding[]> {
   const indexed: BoxFinding[] = [];
   for (const [findingIndex, finding] of result.findings.entries()) indexed.push(await indexBoxFinding(repo, {
     subjectId: finding.subjectId ?? result.subjectId, exactQuote: finding.exactQuote ?? null, sourceUrl: finding.sourceUrl ?? null,
-    origin: { kind: "SCOUT", resultId: result.attemptId, workItemId: result.workItemId, findingIndex,
+    origin: { kind: "SCOUT", resultId: result.attemptId, ...(result.obligationId ? { resultKey: result.obligationId } : {}), workItemId: result.workItemId, findingIndex,
       artifactIds: finding.artifactIds, recordedAt: result.recordedAt, ...(finding.missionPart ? { missionPart: finding.missionPart } : {}) },
   }, now));
   return indexed;

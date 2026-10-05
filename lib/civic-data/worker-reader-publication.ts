@@ -1,3 +1,4 @@
+import { recordPublicationFlow } from "./publication-flow.ts";
 import { resolveRecordConflicts } from "./source-conflicts.ts";
 import { parserFieldSources } from "./field-sources.ts";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
@@ -202,8 +203,13 @@ export async function publishWorkerReaderResults(input: {
       requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))),
         `READER_FACTS_HELD:${candidate.excludedFacts?.map(row => `${row.code}: ${row.detail}`).join("; ") ?? "typed record was withheld"}`);
       candidateId = candidate.id;
+      const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
+        accepted: delivered.map(row => ({ recordId: row.id, readerId: row.id, value: row, previous: before.find(old => old.id === row.id) })) });
       workerChecksComplete = true;
       const published = await processRegisteredManualCandidate(input.store, input.contractId, candidate, input.now, expectedBaseVersionId);
+      if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, candidateId,
+        { workerResultId: parser.id, stage: "CHECKED", records: changes.recordChanges.length,
+          changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       if (!published.promoted) {
         if (published.candidate.failureCode !== "PROMOTION_BASE_CHANGED") workerChecksComplete = false;
         throw new Error(`WORKER_PUBLICATION_READER_GATE_HELD:${published.candidate.failureDetail ?? published.candidate.state}`);
@@ -212,8 +218,10 @@ export async function publishWorkerReaderResults(input: {
       const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
         requiredManualProductionContract(input.contractId), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`WORKER_PUBLICATION_READER_READBACK_FAILED:${readback?.detail ?? "missing receipt"}`);
-      const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
-        accepted: delivered.map(row => ({ recordId: row.id, readerId: row.id, value: row, previous: before.find(old => old.id === row.id) })) });
+
+      await recordPublicationFlow(input.repos, candidateId,
+        { workerResultId: parser.id, stage: "LIVE", records: changes.recordChanges.length,
+          changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       outcome = { at: input.now, workerResultId: parser.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
         detail: `${input.contractId}: ${delivered.length} record(s) passed §3 on the saved official page, promotion completed and the typed Reader readback passed.`, candidateId, versionId,
         ...changes, acceptedRecordIds: delivered.map(row => row.id) };

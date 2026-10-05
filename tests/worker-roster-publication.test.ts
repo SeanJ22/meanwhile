@@ -80,10 +80,10 @@ async function proveRosterPublication(partial = false, box = false) {
   }
   if (box) {
     const acquired = (await h.repos.artifacts.read(h.item.id)).find(row => row.canonicalUrl === FIXTURE_URL)!;
-    const source: ScoutResult = { formatVersion: 1, attemptId: acquired.attemptId, obligationId: "fixture-box", routeTaskId: acquired.routeTaskId,
+    const source: ScoutResult = { formatVersion: 1, attemptId: acquired.attemptId, obligationId: "fixture-box", routeTaskId: acquired.routeTaskId!,
       workItemId: h.item.id, subjectId: h.item.subject, routeId: "official-roster", recordClass: "OFFICIAL_ROSTER", providerId: "fixture",
       reason: "Recorded hunter findings", outcome: "EVIDENCE_FOUND", stoppedBy: "MODEL", rungs: [], distinctEvidenceRungs: 1,
-      candidates: [], findings: rows.flatMap(row => Object.entries(row).map(([field, value]) => ({ subjectId: row.id, field, value,
+      candidates: [], findings: rows.flatMap(row => Object.entries(row).filter(([field]) => !("email" in row) || field === "email").map(([field, value]) => ({ subjectId: row.id, field, value,
         exactQuote: JSON.stringify(row), sourceUrl: FIXTURE_URL, artifactIds: [acquired.artifactId], kind: "RECORD" as const, summary: field }))),
       nextRungs: [], unverified: [], narrative: "Saved fields", worker: { provider: "fixture", model: "fixture", modelReported: "fixture" },
       usage: { inputTokens: 1, outputTokens: 1, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, turns: 1, toolCalls: 1 },
@@ -91,10 +91,18 @@ async function proveRosterPublication(partial = false, box = false) {
     await h.repos.scoutResults.append(source.obligationId, source.attemptId, source, source.recordedAt);
     await indexScoutFindings(h.repos.boxFindings, source, h.now());
     const calls = h.calls.length;
-    const consume = async () => buildBoxFindings({ repos: h.repos, items: [(await h.repos.workItems.mustRead(h.item.id)).value], now: h.now, leaseMs: 120000, readCapture: async id => {
+    let crashAfterCommit = true;
+    const consumingRepos = { ...h.repos, boxFindings: { ...h.repos.boxFindings,
+      compareAndSet: async (...args: Parameters<typeof h.repos.boxFindings.compareAndSet>) => {
+        if (crashAfterCommit && args[2].state === "built") { crashAfterCommit = false; throw Error("fixture crash after extraction commit"); }
+        return h.repos.boxFindings.compareAndSet(...args);
+      } } };
+    const consume = async () => buildBoxFindings({ repos: consumingRepos, items: [(await h.repos.workItems.mustRead(h.item.id)).value], now: h.now, leaseMs: 120000, readCapture: async id => {
       const evidence = evidenceProjection(await runtime.readEvidence(id));
       return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
     } });
+    await assert.rejects(consume(), /fixture crash after extraction commit/);
+    assert.equal((await h.repos.workerResults.read(h.item.id)).filter(row => row.result.role === "PARSER").length, 1);
     const built = await consume();
     assert.equal(built.built.length, rows.length, JSON.stringify(built));
     assert.equal(h.calls.length, calls, "Box consumption performs no acquisition or model turn");
@@ -213,7 +221,8 @@ async function proveRosterPublication(partial = false, box = false) {
   const item = await h.repos.workItems.mustRead(h.item.id);
   await h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value, publicationOutcome: { ...published[0].outcome,
     status: "HELD", code: "STORE_UNAVAILABLE", detail: "Recorded transient fixture", recovery: "PUBLISHER" } }, h.now());
-  assert.equal((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "publisher outage does not spend another research call");
+  const retry = await nextAutonomousOperation(runtime, h.item.id);
+  assert.equal(retry.action, "STAGED", "publisher outage does not spend another research call: " + JSON.stringify(retry));
   const held = await h.repos.workItems.mustRead(h.item.id);
   await h.repos.workItems.compareAndSet(held.id, held.revision, { ...held.value, publicationOutcome: { ...held.value.publicationOutcome!,
     code: "ROSTER_AUTHORITY_REPLAY_FAILED", recovery: "WORKER" } }, h.now());

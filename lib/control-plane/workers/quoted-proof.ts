@@ -201,6 +201,17 @@ const blocking = (code: string, detail: string, recordId?: string): WorkerFindin
  */
 export function quotedSourceFindings(candidate: ParserResult, contract: GeneralizedCivicExtractionContract, evidence: WorkerEvidence): WorkerFinding[] {
   const out: WorkerFinding[] = [];
+  if (candidate.implementation === BOX_PARSER_IMPLEMENTATION) {
+    const metadata = candidate.contractMetadata;
+    if (candidate.subjectId !== contract.subjectId || candidate.recordClass !== contract.recordClass ||
+        candidate.acquiredByAttemptId !== evidence.acquiredByAttemptId || !metadata ||
+        metadata.methodVersion !== contract.methodVersion || metadata.identity.namespace !== contract.identity.namespace ||
+        JSON.stringify(metadata.identity.keyFields) !== JSON.stringify(contract.identity.keyFields) ||
+        ["country", "state", "canonicalId"].some(key => metadata.jurisdiction[key as keyof typeof metadata.jurisdiction] !== contract.jurisdiction[key as keyof typeof contract.jurisdiction]) ||
+        candidate.records.some(record => record.subjectId !== contract.subjectId)) {
+      out.push(blocking("QUOTED_SCOPE_MISMATCH", "The Box extraction must name this subject, jurisdiction, record class, identity, method and acquisition."));
+    }
+  }
   if (candidate.artifactId !== evidence.artifactId || candidate.contentHash !== evidence.contentHash) {
     out.push(blocking("SPAN_ARTIFACT_MISMATCH", "The extraction names a different artifact or content hash than the immutable evidence."));
   }

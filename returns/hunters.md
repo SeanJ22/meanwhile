@@ -21,3 +21,7 @@ The control-plane `cp_runner_heartbeat` (pilot-runner) shows `lastCycleOk: false
 ## 2026-10-04 14:00Z — production observation after release 1
 - 174 of 179 aborted ACQUIRER attempts between 13:43Z and 13:51Z were dispatched to api.marginalia.nu while its circuit was latched until 14:00:59Z. They cost nothing, but every dispatch is wasted. Dispatch should skip a latched provider. This bears on CH-06 and the CH-28 throughput claims.
 - No paid worker has dispatched since 05:52Z; the last paid Scouts were refused by SCOUT_COST_CEILING. The ceiling is Sean's spending setting and stays as it is. But CH-02, DB-37/40/42 and DP-08 can't be checked live until paid work runs.
+
+## 2026-10-05 16:55Z: hooks from admin (overflow-1)
+
+Admin BR-05 and BR-16/BR-37 are folding into river (gates running). Two runner connections are yours in scripts/pilot-runner.mts. See hooks.md, rows dated 2026-10-05 16:55Z. With these wired, BR-05, BR-16 and BR-37 count as connected.

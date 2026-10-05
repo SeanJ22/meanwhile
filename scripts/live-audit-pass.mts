@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 /**
+ * @freshness-reads-here
+ *
  * **ONE LIVE-AUDIT PASS OVER WHAT READERS ARE SHOWN.** (DP-13, DP-14, DP-16.)
  *
  * Reads each curated Reader family's promoted version, samples a few facts per

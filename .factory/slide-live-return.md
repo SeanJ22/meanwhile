@@ -20,3 +20,7 @@ ORDER BY recorded_at DESC LIMIT 8;
 If kind differs, filter the headline as in the observation and inspect keys; do not infer missing data.
 
 Potential code path being checked: worker publication can produce HELD/no candidate; printWorkerPublicationReceipt confirms the existing canonical pointer if available, else exits2 with no receipt. Distinguish missing durable publication from ordinary source deferral using actual failures before changing the protocol. No fix or cause is claimed yet.
+
+Further evidence20:18Z: WTP_CONTROL_PLANE_DATABASE_URL is absent (controlPlaneUrlFromEnv only reads that variable, never DATABASE_URL). Configured DATABASE_URL has cp_work_items0rows as well; both tables have RLS disabled. River can answer with its own read-only production result; no new service or spend is requested. Release2 leaves worker-publication-tasks.ts and runner-receipt.ts byte-identical to the previous main; CP-19 affects saved quote/record matching, not frontier deferral accounting. Actual failures are still needed to distinguish secondary effects from other release changes.
+
+Local diagnostic verification: existing tests/publication-receipt.test.ts, tests/routine-civic-data-runner.test.ts, tests/routine-civic-data-frontier.test.ts pass79/79 on committed application98a8d44d9. This verifies local handling of receipted holds/deferrals, not the cause or repair of the live increase. Log /tmp/slide-live-return-diagnostic.log.

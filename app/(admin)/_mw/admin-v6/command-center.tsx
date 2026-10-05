@@ -36,11 +36,8 @@ import { FixScreen } from "./screen-fix.tsx";
 import { QueueScreen } from "./screen-queue.tsx";
 import { ScoreboardScreen } from "./screen-scoreboard.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
-import { NowScreen } from "./screen-now.tsx";
-import { ReaderDemandPanel } from "./reader-demand.tsx";
-import { TopicCountsPanel } from "./topic-counts.tsx";
-import { DataSwitchesPanel } from "./data-switches.tsx";
-import { CaptureHealthPanel } from "./capture-health.tsx";
+import { DataBusinessScreen } from "./screen-data.tsx";
+import { NowScreen, Readers } from "./screen-now.tsx";
 import { ReportsView } from "./reports-view.tsx";
 import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
 import { DoorsPanel } from "./doors-panel.tsx";
@@ -386,10 +383,11 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
           {detail ? <DetailPanel detail={detail} /> : (
             <>
-              {view === "now" && <><NowScreen key={scopeKey} /><UpdatesPanel /><ReaderDemandPanel /><CaptureHealthPanel /><TopicCountsPanel /><DataSwitchesPanel /></>}
+              {view === "now" && <><NowScreen key={scopeKey} /><UpdatesPanel /></>}
+              {view === "data" && <DataBusinessScreen />}
               {view === "workers" && <><WorkersScreen /><RunnerSettingsPanel /><DoorsPanel /></>}
               {view === "work" && <><ScheduledPanel /><WorkScreen /></>}
-              {view === "checklist" && <ChecklistScreen />}
+              {view === "checklist" && <><ChecklistScreen /><Readers /></>}
               {view === "money" && <MoneyScreen />}
               {view === "queue" && <QueueScreen />}
               {view === "scoreboard" && <ScoreboardScreen />}

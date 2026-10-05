@@ -7,38 +7,19 @@
  */
 import { useState } from "react";
 
-import type { DoorsView } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
-import type { ScheduledView } from "@/lib/control-plane/admin-view/v6-scheduled-read.ts";
-
 import { useV6 } from "./context.tsx";
-import { buildQueue, QUEUE_FILTERS, QUEUE_FILTER_WORDS, queueCounts, type QueueFilter, type QueueRow } from "./queue.ts";
+import { QUEUE_FILTERS, QUEUE_FILTER_WORDS, queueCounts, type QueueFilter, type QueueRow } from "./queue.ts";
 import { Actions, Empty, Pill, Tabs, Technical, usePager } from "./ui.tsx";
-import { useReading } from "./use-reading.ts";
+import { useQueueRows } from "./use-queue.ts";
 import s from "./v6.module.css";
 
 export function QueueScreen() {
-  const v = useV6();
-  const doors = useReading<DoorsView>("/api/admin/v6/doors", 60_000).reading;
-  const scheduled = useReading<ScheduledView>("/api/admin/v6/scheduled", 60_000).reading;
+  const { rows, unread } = useQueueRows();
   const [filter, setFilter] = useState<QueueFilter>("needs-me");
 
-  const rows = buildQueue({
-    receipts: v.data.history.data,
-    sends: v.data.sends.data,
-    hunts: v.data.hunts.data,
-    stuck: v.data.stuck.data,
-    fixes: v.data.fixes.data,
-    doors: doors.kind === "ready" ? doors.data.rows.filter((d) => d.status === "Shut") : null,
-    scheduled: scheduled.kind === "ready" ? scheduled.data.rows : null,
-  });
   const counts = queueCounts(rows);
   const shown = rows.filter((r) => r.filter === filter);
   const { page, pager } = usePager(shown, 10);
-  const unread = [
-    ["orders", v.data.history.data === null], ["instructions sent to the fleet", v.data.sends.data === null], ["hunts", v.data.hunts.data === null],
-    ["stuck cases", v.data.stuck.data === null], ["fixes", v.data.fixes.data === null], ["shut doors", doors.kind !== "ready"], ["scheduled orders", scheduled.kind !== "ready"],
-  ].filter(([, missing]) => missing).map(([name]) => name as string);
-
   return (
     <>
       <header>

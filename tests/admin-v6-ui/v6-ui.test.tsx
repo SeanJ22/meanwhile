@@ -282,7 +282,7 @@ test("sample adapters are isolated: no production module imports ./sample", () =
 });
 
 test("the same mounted page shows real data once the section is live — no remount, no switch", () => {
-  const stuckItem: StuckItem = { id: "real-1", title: "Real stuck item from the backend", applies: ["us"], lane: "auto", cause: "c", age: "1 h", ageRank: 1, tried: "t", helped: "h", next: "n", owner: "o", actions: [] };
+  const stuckItem: StuckItem = { id: "real-1", title: "Real stuck item from the backend", applies: ["us"], lane: "decision", cause: "c", age: "1 h", ageRank: 1, tried: "t", helped: "h", next: "n", owner: "o", actions: [] };
   const props = (snapshot: Record<(typeof SECTION_IDS)[number], SectionState>) => ({
     data: buildLiveBundle(snapshot, ref, workerStatusFromPulse(null)),
     mode: "live" as const,
@@ -293,9 +293,10 @@ test("the same mounted page shows real data once the section is live — no remo
     lastGoodAt: "2026-09-28T19:00:00.000Z",
     recovered: false,
     access: owner,
+    initialView: "queue" as const,
   });
   const before = renderToStaticMarkup(h(CommandCenter, props(waiting)));
-  assert.match(before, /<span class="big">—<\/span>/, "an unreached section shows a dash where its number would be");
+  assert.match(before, /Not read yet, so not shown here: .*stuck cases/, "an unreached section is said to be unread, not empty");
   assert.doesNotMatch(before, /Real stuck item from the backend/);
   assert.doesNotMatch(before, /SAMPLE DATA/, "a production page never carries the sample badge");
   const live = { ...waiting, stuck: { phase: "live", data: [stuckItem], asOf: "2026-09-28T19:01:00.000Z", revision: "v1", missingParts: [], attempts: 0 } as SectionState };

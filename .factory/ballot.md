@@ -3,7 +3,7 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-46fe3bdbd08c48b2ba1408922a8e1c46
 lock: codex-ballot-46fe3bdbd08c48b2ba1408922a8e1c46
-heartbeat: 2026-10-05T18:30:50Z
+heartbeat: 2026-10-05T18:44:10Z
 on_river: CA-20 CA-24 CA-30 CA-44 CA-45 CA-51 integrated through d67aa5e29ee7bc2e7bffe43458f1227bc607dcba; CA-30/51 returned live failures repaired in current WIP
 ready: previous batch bfc11e7b5ad94530244900c9c1a158427ad65a92 integrated; returned-repair batch pending exact FULL certification
 checks: Returned reader regression focused 35 tests pass (original county-board question and Prop425 NO through real Ask handler; missing meaning skips synthesis); file lint pass. Types first refused stale .next names for removed River routes; preserving .next under /tmp and rebuilding place references repairs the original conditions. Exact batch FULL/type/lint next. Logs and source evidence retained.

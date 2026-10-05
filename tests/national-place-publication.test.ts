@@ -210,7 +210,7 @@ test('state portrait publishes through the existing blob path and registry bindi
       officialCandidacies:{...after.payload.officialCandidacies,rows:[]},officialPhotos:{photos:[{...photo,url:'/api/portraits/officials/replaced.jpg',verification:undefined}]},
       rosterPhotos:{[holder.id]:'/api/portraits/officials/replaced.jpg'}}},{prior:after});
   assert.equal((changed.readModel as typeof after.payload).rosterPhotos[holder.id],photo.url,'an uncorroborated replacement retains the published portrait');
-  assert.ok(changed.excludedFacts?.some(f=>f.key===`official-photo:${holder.id}` && /source binding/.test(f.detail ?? '')));
+  assert.ok(changed.excludedFacts?.some(f=>f.key===`official-photo:${holder.id}` && /portrait binding/.test(f.detail ?? '')));
 });
 
 test('a non-official portrait without corroboration stays a gap while its official still publishes', async () => {

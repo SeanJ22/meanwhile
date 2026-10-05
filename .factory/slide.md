@@ -3,7 +3,7 @@ worker: codex-slide
 provider: Codex
 run_id: codex-slide-005c2146fa5b46a1b890f9f80e2de516
 lock: codex-slide-005c2146fa5b46a1b890f9f80e2de516
-heartbeat: 2026-10-05T18:33:30.424188Z
+heartbeat: 2026-10-05T18:40:49.582822Z
 on_river: CP-01, CP-19 via 85a0ad6, released on main ecf402600401783b094837c29e0c515eadbdb843
 ready: CP-01, CP-19 (READY commit is the one whose subject starts READY: CP-01, CP-19; source tested at 3233af52d3d9f4a785ea16b1f1fadda4f36c2a45)
 checks: Reader-edge return: 91/91 focused tests passed; TypeScript repaired stale .next route types, rerun pending; FULL still required before READY. Prior CP-01/CP-19 evidence preserved.
@@ -16,3 +16,5 @@ seen_not_fixed: full suite under 4 cores takes about 41 minutes and the two slow
 needs_River: Route Admin digest hook above; awaiting existing BX-01 repository/schema hook. No owner question.
 
 CP-02 hooks in preparation: source-settings.ts registers publication.sourceHosts and publication.sourceKinds; admin must import that registration module in its settings registry/gateway process. Canonical campaign identity must be supplied from the verified candidate binding when constructing Section3Page.campaign. No CP-02 READY claim yet.
+
+Saved WIP: .factory/slide-next.patch contains CP-02 source labels/settings, CP-09 minimums and amountless filing fallback (54 focused checks pass), and BX-12 independent publication mode (types pass, scheduler hook/tests pending). These changes are NOT in the application tree of this checkpoint, so River must not fold them. Apply only on continuation if absent from the worktree. Reader-edge return FULL remains running on 69facbbab.

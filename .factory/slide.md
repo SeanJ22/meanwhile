@@ -3,7 +3,7 @@ worker: codex-slide
 provider: Codex
 run_id: codex-slide-005c2146fa5b46a1b890f9f80e2de516
 lock: codex-slide-005c2146fa5b46a1b890f9f80e2de516
-heartbeat: 2026-10-05T18:50:44.538381+00:00
+heartbeat: 2026-10-05T18:55:53.944768+00:00
 on_river: CP-01, CP-19 via 85a0ad6, released on main ecf402600401783b094837c29e0c515eadbdb843
 ready: reader-edge-publication-return 5ce7136828fbb24dd80f53c6678e29be7d00ebd5 ( application tested at 69facbbab3a443c42e37ffc932a0cb30e50b8bed; hook pending Admin digest screen)
 checks: reader-edge return FULL: 1066 files, 9356 passed, 11 skipped, 0 failed at 69facbbab3a443c42e37ffc932a0cb30e50b8bed; types pass; full lint 0 errors/69 warnings. READY differs only in .factory coordination.

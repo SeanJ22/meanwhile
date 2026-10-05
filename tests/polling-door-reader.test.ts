@@ -76,7 +76,9 @@ test("incomplete, empty, repeated, cross-jurisdiction or contradictory site capt
   const contradictory = rows.map(row => [...row]); contradictory[1][1] = "Assigned";
   assert.throws(() => readPollingDoor(fixture("polling-places-csv", contradictory)), /contradicts/);
   const halfPoint = rows.map(row => [...row]); for (const row of halfPoint) row[8] = "";
-  assert.throws(() => readPollingDoor(fixture("polling-places-csv", halfPoint)), /half a point/);
+  const knownSites = readPollingDoor(fixture("polling-places-csv", halfPoint));
+  assert.equal(knownSites.sites.length, 2, "a missing point never removes a verified voting site");
+  assert.equal(knownSites.sites[0].lat, null); assert.equal(knownSites.sites[0].lng, null);
   const mixed = rows.map(row => [...row]); mixed[1][7] = "";
   assert.throws(() => readPollingDoor(fixture("polling-places-csv", mixed)), /lacks mapped field/,
     "until the shared extractor supports nullable cells, hold mixed known/unknown columns instead of dropping known values");

@@ -1,3 +1,5 @@
+import { checkDoorDraft, applyManualEdit } from "../lib/doors/registry.ts";
+import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { createHash } from "node:crypto";
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import assert from "node:assert/strict";
@@ -53,7 +55,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   }
   const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
   const directory = contractId === "registry-runtime-bindings";
-  const body = prior.payload.registry.bodies.find(row => row.name && (!(directory || contractId === "official-filings" || contractId === "public-records" || contractId === "government-budgets") || prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId &&
+  const body = prior.payload.registry.bodies.find(row => row.name && (!(directory || contractId === "official-filings" || contractId === "public-records" || contractId === "government-budgets" || contractId === "voting-sites") || prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId &&
     (contractId !== "official-filings" || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1))))!;
   const publisherDivisionId = body.ocdId;
   const division = prior.payload.registry.divisions.find(row => row.ocdId === publisherDivisionId)!;
@@ -111,7 +113,8 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   assert.equal((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "no auditor is dispatched");
   const queued = workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now());
   assert.equal(queued.length, 1);
-  if (!directory) assert.ok(queued[0].command.includes(`--contract=${contractId}`));
+  if (contractId === "voting-sites") assert.deepEqual(queued[0].command.slice(0, 2), ["scripts/fetch-voting-sites.mts", "--promote"], "the existing voting command handles worker results before legacy acquisition");
+  else if (!directory) assert.ok(queued[0].command.includes(`--contract=${contractId}`));
   assert.ok(queued[0].command.some(arg => arg === `--${directory ? "worker-rosters" : "worker-results"}=${h.item.id}`));
   const input = { repos: h.repos, store, contractId: contractId as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
     readCapture: async (id: string) => { const evidence = evidenceProjection(await runtime.readEvidence(id));
@@ -402,4 +405,33 @@ test("local government finance runs through the existing worker publisher and sc
   assert.equal(fact.sourceUrl, FIXTURE_URL);
   assert.equal(budgetChecklistEvidence(read.value.records, f.body.id, "2026-10-05")["FIN-03"].length, 0,
     "a revenue record cannot claim an adopted budget");
+});
+
+
+test("completed polling workers publish every registered site through the existing task dispatch and retain their exact work outcome", async () => {
+  const f = await workerFixture("voting-sites", (prior, bodyId) => {
+    const body = prior.payload.registry.bodies.find(row => row.id === bodyId)!;
+    const division = prior.payload.registry.divisions.find(row => row.ocdId === body.ocdId)!;
+    return [{ jurisdictionName: division.label, model: "Vote centers", name: "Public Library", address: "1 Public Road", kind: "Election day" }];
+  });
+  const doorId = "fixture:registered-polling", item = await f.h.repos.workItems.mustRead(f.h.item.id);
+  const contract = item.value.autonomousPlan!.contract;
+  if (contract.schemaVersion !== 2) throw new Error("fixture contract");
+  const draft = checkDoorDraft({ doorId, kind: "polling-places-json", ocdId: f.body.ocdId,
+    hosts: [new URL(FIXTURE_URL).hostname], config: { extraction: JSON.stringify(contract.extraction) } });
+  assert.ok(draft.ok);
+  const door = applyManualEdit(null, draft.value, f.h.now());
+  await f.h.repos.doors.put(doorId, door, f.h.now());
+  await f.h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value,
+    autonomousPlan: { ...item.value.autonomousPlan!, sourceRegistryReferences: [...item.value.autonomousPlan!.sourceRegistryReferences, doorId] } }, f.h.now());
+  const report = await publishWorkerReaderResults(f.input);
+  assert.equal(report.length, 1); assert.equal(report[0].outcome.status, "PUBLISHED", report[0].outcome.detail);
+  const read = await readVotingSitesProjection({ store: f.store, now: f.h.now(), bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") {
+    const sites = read.value.jurisdictions.find(j => j.ocdId === f.body.ocdId)!.sites;
+    assert.equal(sites.length, 1); assert.equal(sites[0].name, "Public Library");
+    assert.equal(sites[0].lat, null); assert.equal(sites[0].serves, null);
+  }
+  assert.deepEqual((await f.h.repos.workItems.mustRead(item.id)).value.publicationOutcome, report[0].outcome);
 });

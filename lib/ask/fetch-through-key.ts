@@ -41,7 +41,12 @@ export async function fetchThroughKey(input: {
 }): Promise<FinanceDetailRead | null> {
   if (input.subject.kind !== "PERSON" || !asksForFinanceDetail(input.question)) return null;
   const state = input.records.filter(r => r.kind === "FINANCE_SUMMARY" && r.subjectId === input.subject.id && r.stateDetailSource && r.sourceUrl);
-  if (state.length === 1) return fetchFinanceDocument({ summary: state[0]!, deadlineMs: input.deadlineMs, fetchImpl: input.apiOptions?.fetchImpl, env: input.apiOptions?.env });
+  if (state.length) {
+    const unique = state.filter((r, i) => state.findIndex(other => other.sourceUrl === r.sourceUrl && JSON.stringify(other.stateDetailSource) === JSON.stringify(r.stateDetailSource)) === i);
+    const reads = await Promise.all(unique.map(summary => fetchFinanceDocument({ question: input.question, summary, deadlineMs: input.deadlineMs, fetchImpl: input.apiOptions?.fetchImpl, env: input.apiOptions?.env })));
+    const records = reads.flatMap(r => r.records), complete = reads.every(r => r.complete);
+    return { summary: state[0]!, records, complete, status: complete ? "COMPLETE" : records.length ? "PARTIAL" : "UNAVAILABLE" };
+  }
   if (ripcordPulled("ripcord.fecContributorDisplay")) return null;
   const summaries = input.records.filter(r => r.kind === "FINANCE_SUMMARY" && r.subjectId === input.subject.id && r.fecDetailSource && r.sourceUrl);
   if (summaries.length !== 1) return null;
@@ -68,17 +73,22 @@ export async function fetchThroughKey(input: {
         new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Detail deadline")), remaining); }),
       ]).finally(() => { if (timer) clearTimeout(timer); });
       if (Date.now() >= input.deadlineMs || result.status !== 200) break;
-      const body = object(JSON.parse(result.text)), pagination = object(body?.pagination);
-      if (!Array.isArray(body?.results) || !pagination || typeof pagination.count !== "number" ||
-          !Number.isSafeInteger(pagination.count) || pagination.count < 0 || (expected !== null && expected !== pagination.count)) break;
-      expected = pagination.count;
+      const body = object(JSON.parse(result.text, (key: string, value: unknown, context?: { source?: string }) =>
+        key === "sub_id" && typeof value === "number" && context?.source && /^\d+$/.test(context.source) ? context.source : value)), pagination = object(body?.pagination);
+      if (!Array.isArray(body?.results)) break;
+      const count = pagination?.count;
+      const countValid = typeof count === "number" && Number.isSafeInteger(count) && count >= 0;
+      if (expected !== null && countValid && expected !== count) break;
+      if (countValid) expected = count as number;
       for (const value of body.results) {
         const row = object(value), id = text(row?.sub_id), committee = text(row?.committee_id);
         if (!row || !id || committee !== source.committeeId || seen.has(id)) throw new Error("FEC detail identity or pagination is ambiguous");
         seen.add(id); visited++;
         const entity = text(row.entity_type), contributor = object(row.contributor), type = text(contributor?.committee_type), line = text(row.line_number);
-        if (!entity || !publicEntities.has(entity) || !line || !(line.startsWith("11") || line === "12") ||
-            (onlyPacs && entity !== "PAC" && (!type || !pacTypes.has(type)))) continue;
+        if (entity === "IND" || entity === "CAN") continue;
+        if (!entity || !publicEntities.has(entity) || !line) { owedRows = true; continue; }
+        if (!(line.startsWith("11") || line === "12")) continue;
+        if (onlyPacs && entity !== "PAC" && (!type || !pacTypes.has(type))) { if (!type) owedRows = true; continue; }
         const name = text(row.contributor_name), amount = row.contribution_receipt_amount;
         if (!name || typeof amount !== "number" || !Number.isFinite(amount)) { owedRows = true; continue; }
         const receiptDate = text(row.contribution_receipt_date)?.slice(0, 10) ?? null;
@@ -89,9 +99,10 @@ export async function fetchThroughKey(input: {
           text: `${name}: $${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${receiptDate ? `, received ${receiptDate}` : ""}; filed entity ${entity}${type ? `, committee type ${type}` : ""}.`,
           sourceUrl, sourceOrg: "Federal Election Commission", retrievedAt: now.toISOString() });
       }
-      if (visited > expected) throw new Error("FEC detail exceeds its published count");
+      if (expected !== null && visited > expected) throw new Error("FEC detail exceeds its published count");
+      if (!countValid) break;
       if (visited === expected) { complete = !owedRows; break; }
-      const next = object(pagination.last_indexes);
+      const next = object(pagination?.last_indexes);
       const index = typeof next?.last_index === "string" || typeof next?.last_index === "number" ? String(next.last_index) : null;
       const amount = typeof next?.last_contribution_receipt_amount === "string" || typeof next?.last_contribution_receipt_amount === "number" ? String(next.last_contribution_receipt_amount) : null;
       const cursor = `${index}:${amount}`;

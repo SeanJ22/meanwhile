@@ -8,7 +8,7 @@ import type { FinanceDetailRead } from "./fetch-through-key.ts";
  * An API key reference can authorize only this registered HTTPS host; redirects
  * never forward a key. Raw private columns stay inside the source reader. */
 export async function fetchFinanceDocument(input: {
-  readonly summary: EvidenceRecord; readonly deadlineMs: number;
+  readonly question?: string; readonly summary: EvidenceRecord; readonly deadlineMs: number;
   readonly fetchImpl?: typeof fetch; readonly env?: Readonly<Record<string, string | undefined>>;
 }): Promise<FinanceDetailRead> {
   const { summary } = input, source = summary.stateDetailSource;
@@ -38,19 +38,27 @@ export async function fetchFinanceDocument(input: {
       const filings = read.filings.filter(f => f.committeeId === source.committeeId && f.ocdId === source.ocdId && f.electionYear === source.electionYear &&
         f.candidateName === source.candidateName && f.office === source.office);
       const records: EvidenceRecord[] = [];
+      const onlyPacs = /\bpacs?\b/i.test(input.question ?? "");
+      let unknownClassification = false;
       for (const filing of filings) {
         if (!filing.period || !filing.funding) continue;
-        for (const [index, organization] of filing.funding.organizations.entries()) records.push({
+        for (const [index, organization] of filing.funding.organizations.entries()) {
+          if (onlyPacs && !/\b(?:pac|political action committee)\b/i.test(organization.filedType ?? "")) {
+            if (!organization.filedType || /^committee$/i.test(organization.filedType)) unknownClassification = true;
+            continue;
+          }
+          records.push({
           kind: "FINANCE_SUMMARY", id: `finance-detail:${filing.id}:${index}`, subjectId: summary.subjectId,
           canonicalSubjectId: summary.canonicalSubjectId,
           text: `${organization.filedName}${organization.filedType ? ` (${organization.filedType})` : ""}: $${organization.amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}; ${filing.period}.`,
           sourceUrl: filing.sourceUrl, sourceOrg: summary.sourceOrg, retrievedAt: now });
-        if (filing.funding.individualTotal !== null) records.push({ kind: "FINANCE_SUMMARY", id: `finance-detail:${filing.id}:individuals`,
+        }
+        if (!onlyPacs && filing.funding.individualTotal !== null) records.push({ kind: "FINANCE_SUMMARY", id: `finance-detail:${filing.id}:individuals`,
           subjectId: summary.subjectId, canonicalSubjectId: summary.canonicalSubjectId,
           text: `Aggregate individual giving: $${filing.funding.individualTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}; ${filing.period}.`,
           sourceUrl: filing.sourceUrl, sourceOrg: summary.sourceOrg, retrievedAt: now });
       }
-      const complete = filings.length > 0 && filings.every(f => Boolean(f.period && f.funding)) &&
+      const complete = !unknownClassification && filings.length > 0 && filings.every(f => Boolean(f.period && f.funding)) &&
         (source.kind !== "campaign-finance-search-api" || Boolean(source.config.totalPath));
       return { summary, records, complete, status: complete ? "COMPLETE" : records.length ? "PARTIAL" : "UNAVAILABLE" } as FinanceDetailRead;
     };

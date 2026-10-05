@@ -55,3 +55,16 @@ test("missing identity, ordinary totals and a changing publisher denominator nev
   const result = await fetchThroughKey({ question, subject, records: [summary], deadlineMs: Date.now() + 1000, readApi });
   assert.equal(result?.status, "PARTIAL"); assert.equal(result?.records.length, 1); assert.equal(calls, 2);
 });
+
+
+test("FEC's large numeric filing IDs retain their exact source digits and incomplete classifications remain partial", async () => {
+  const raw = JSON.stringify({ results: [row("large")], pagination: { count: 1 } }).replace('"sub_id":"large"', '"sub_id":4021420181409336200');
+  const result = await fetchThroughKey({ question, subject, records: [summary], deadlineMs: Date.now() + 1000,
+    readApi: async () => ({ sourceUrl: "https://api.open.fec.gov/v1/schedules/schedule_a/", status: 200, text: raw, requests: 1, bytes: raw.length }) });
+  assert.equal(result?.status, "COMPLETE"); assert.equal(result.records[0].id, "fec-detail:C00000001:4021420181409336200");
+  const unknown = { ...row("unknown", "COM"), contributor: null };
+  const partial = await fetchThroughKey({ question, subject, records: [summary], deadlineMs: Date.now() + 1000,
+    readApi: async () => ({ sourceUrl: "https://api.open.fec.gov/v1/schedules/schedule_a/", status: 200,
+      text: JSON.stringify({ results: [row("known"), unknown], pagination: { count: 2 } }), requests: 1, bytes: 100 }) });
+  assert.equal(partial?.status, "PARTIAL"); assert.equal(partial.records.length, 1);
+});

@@ -1,3 +1,4 @@
+import { canonicalJson } from "../control-plane/repository/types.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
@@ -8,7 +9,7 @@ import { votingSitesCandidate, votingSitesScopedSuccessor } from "../ballot/voti
 import { readVotingSitesProjection } from "../ballot/voting-sites-server.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
-import { captureIntact, latestParserResult, verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
+import { captureIntact, capturesForPublication, latestParserResult, verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
 import { section3Page, linkingPageFrom } from "../control-plane/promotion/section3.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
@@ -67,10 +68,11 @@ export async function publishWorkerPollingResults(input: {
       const matching = doors.doors.filter(door => door.status !== "SUSPENDED" && door.ocdId === divisionId &&
         (POLLING_DOOR_KINDS as readonly string[]).includes(door.kind) && plan.sourceRegistryReferences.includes(door.doorId));
       requirePublication(division?.label && matching.length === 1, "POLLING_EXACT_DOOR_OR_DIVISION_MISSING");
-      const door = matching[0], capture = await input.readCapture(parser.result.artifactId, results);
-      const checked = verifiedWorkerRecords({ plan, parser, captures: [capture], results, now: input.now });
-      requirePublication(JSON.stringify(checked.contract.extraction) === JSON.stringify(JSON.parse(String(door.config.extraction))), "POLLING_REGISTERED_MAPPING_MISMATCH");
-      const publication = await publishPollingDoor({ ...input, door, capture, jurisdictionName: division.label });
+      const door = matching[0], captures = await capturesForPublication({ ...input, workItemId: id, primaryId: parser.result.artifactId, results });
+      const capture = captures.find(c => c.evidence.artifactId === parser.result.artifactId)!;
+      const checked = verifiedWorkerRecords({ plan, parser, captures, results, now: input.now });
+      requirePublication(canonicalJson(checked.contract.extraction) === canonicalJson(JSON.parse(String(door.config.extraction))), "POLLING_REGISTERED_MAPPING_MISMATCH");
+      const publication = await publishPollingDoor({ ...input, door, capture, linkingCaptures: captures, jurisdictionName: division.label });
       candidateId = publication.candidate.candidate.id; versionId = publication.promoted!.versionId;
       outcome = { at: input.now, workerResultId: parser.id, candidateId, versionId, status: "PUBLISHED",
         code: publication.confirmed ? "VERIFIED_RESULT_REUSED" : "OFFICIAL_POLLING_SITES_PUBLISHED",

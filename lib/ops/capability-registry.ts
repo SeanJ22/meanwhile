@@ -241,7 +241,7 @@ export const CAPABILITY_REGISTRY: readonly CapabilityEntry[] = [
   {
     id: "standing-net-only-grows",
     capability:
-      "The standing regression net exists and only grows: a committed identity baseline plus a walk that reports passed / could-not-run / gone by set difference, run against a LOCAL production build (RULING 125 hard-refuses non-local targets).",
+      "The standing regression net exists and only grows: a committed identity baseline plus a walk that reports passed / could-not-run / gone by set difference, run against a local production build by default, or the live site with every write route aborted in the browser (FE-01).",
     provenBy: {"kind":"WALK","checkIdentities":["[0814c] 85701: the map answers with something about this place"]},
     evidence:
       "docs/walk-checks.txt (committed baseline); docs/state.md, the 2026-08-30 session record (“The standing walk, and what it said”)",
@@ -278,7 +278,7 @@ export const CAPABILITY_REGISTRY: readonly CapabilityEntry[] = [
       "The production Ask surface answers “How did the Pima County Board of Supervisors vote last time?” with GROUNDED_CLAUDE prose naming the August 25 sitting and its items, subject resolved to the #governing body id, denominators stated (285 held / 60 in pack).",
     provenBy: null,
     neededCheck:
-      "a canonical `pnpm reader:suite` run on PRODUCTION_RENDER carrying a reader-question instance for this claim. The evaluator and the run record now exist (A.1 WI1); what does not is a PRODUCTION_RENDER target, which RULING 125 refuses from this harness, and an owner-stated typed expectation for the question.",
+      "a canonical `pnpm reader:suite` run on PRODUCTION_RENDER carrying a reader-question instance for this claim. The evaluator and the run record now exist (A.1 WI1); PRODUCTION_RENDER is now reachable with writes aborted in the browser (FE-01); what does not exist is a production run of it and an owner-stated typed expectation for the question.",
     evidence:
       "docs/state.md, the 2026-08-30 session record (“NH288 — the roster held the Board's name for seventeen days”, reader-verified paragraph)",
     target: "PRODUCTION_RENDER",

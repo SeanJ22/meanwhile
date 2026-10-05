@@ -67,6 +67,7 @@ import {
   type ImageVerdict,
 } from "../lib/health/visual-evaluation.ts";
 
+import { isLocalBase } from "../lib/ops/live-write-guard.ts";
 import { launchGuarded } from "./browser.mts";
 import { today } from "./doc-dates.mjs";
 import { decodePng } from "./png.mts";
@@ -74,23 +75,19 @@ import { decodePng } from "./png.mts";
 const DEFAULT_BASE = "http://localhost:3000";
 const BASE = (process.env.SHOOT_BASE_URL ?? DEFAULT_BASE).replace(/\/$/, "");
 
-{
-  let host: string;
-  try {
-    host = new URL(BASE).hostname;
-  } catch {
-    console.error(`visual:suite · SHOOT_BASE_URL is not a URL: ${BASE}`);
-    process.exit(1);
-  }
-  const local = host === "localhost" || host === "127.0.0.1" || host === "[::1]" || host === "::1";
-  if (!local) {
-    console.error(
-      `\nvisual:suite · REFUSED — the target is ${host}, which is not a local build.\n\n` +
-        "  RULING 125: every walk and check runs against the LOCAL production build.\n",
-    );
-    process.exit(1);
-  }
+try {
+  new URL(BASE);
+} catch {
+  console.error(`visual:suite · SHOOT_BASE_URL is not a URL: ${BASE}`);
+  process.exit(1);
 }
+/** FE-01: a non-local target is read with every write route aborted in the browser. */
+const LIVE_TARGET = !isLocalBase(BASE);
+if (LIVE_TARGET) {
+  console.log(`visual:suite · live target ${BASE}: write routes are aborted in the browser (FE-01).`);
+}
+/** Write requests the browser aborted, kept for the run record after it closes. */
+let writesBlocked: { count: number; paths: string[] } = { count: 0, paths: [] };
 
 const ROOT = process.cwd();
 const CHECKS_PATH = join(ROOT, "data", "health", "visual-checks.json");
@@ -282,7 +279,7 @@ async function main(): Promise<void> {
   const diagnostics: WorkItem[] = [];
 
   if (bindings.length > 0) {
-    const browser = await launchGuarded({ label: "visual-suite", headless: true });
+    const browser = await launchGuarded({ label: "visual-suite", headless: true, blockWrites: LIVE_TARGET });
     try {
       for (const binding of bindings) {
         const { check, selector } = binding;
@@ -659,6 +656,7 @@ async function main(): Promise<void> {
         await context.close();
       }
     } finally {
+      writesBlocked = { count: browser.writesBlocked.count, paths: [...browser.writesBlocked.paths].sort() };
       await browser.close();
     }
   }
@@ -711,6 +709,8 @@ async function main(): Promise<void> {
 
   const record = {
     baseUrl: BASE,
+    liveTarget: LIVE_TARGET,
+    writesBlocked,
     testedSha: TESTED_SHA,
     startedAt,
     finishedAt: new Date().toISOString(),

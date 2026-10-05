@@ -43,10 +43,10 @@
  *   8. RECORD        one canonical run record, with every count derived
  * ```
  *
- * THE TARGET IS LOCAL — RULING 125, mirrored from `walk-all.mts`. A non-local
- * `SHOOT_BASE_URL` is refused. `PRODUCTION_RENDER` exists in the run-record
- * type and is unreachable from this harness by construction; every record this
- * script writes says which it was.
+ * THE TARGET is the local build by default. A non-local `SHOOT_BASE_URL` is read
+ * as `PRODUCTION_RENDER` with every write route aborted in the browser (FE-01),
+ * mirrored from `walk-all.mts`; every record this script writes says which it
+ * was.
  */
 
 import { writeFileSync } from "node:fs";
@@ -88,6 +88,7 @@ import {
 import { EVERYDAY_ZIPS } from "../lib/routing/everyday.ts";
 
 import { askAndRead, openAskAt } from "./ask-harness.mts";
+import { isLocalBase } from "../lib/ops/live-write-guard.ts";
 import { launchGuarded } from "./browser.mts";
 import { today } from "./doc-dates.mjs";
 
@@ -96,36 +97,23 @@ const AWAITING = "0 questions loaded — awaiting owner corpus";
 const DEFAULT_BASE = "http://localhost:3000";
 const BASE = (process.env.SHOOT_BASE_URL ?? DEFAULT_BASE).replace(/\/$/, "");
 
-{
-  let host: string;
-  try {
-    host = new URL(BASE).hostname;
-  } catch {
-    console.error(`reader:suite · SHOOT_BASE_URL is not a URL: ${BASE}`);
-    process.exit(1);
-  }
-  const local = host === "localhost" || host === "127.0.0.1" || host === "[::1]" || host === "::1";
-  if (!local) {
-    console.error(
-      [
-        "",
-        `reader:suite · REFUSED — the target is ${host}, which is not a local build.`,
-        "",
-        "  RULING 125: every walk and check runs against the LOCAL production build.",
-        "  Production is the delivery truck, not the test bench, and every",
-        "  /api/meetings GET writes a row to the sold search log.",
-        "",
-        "  PRODUCTION_RENDER exists in the run-record type; it is unreachable from",
-        "  this harness by construction.",
-        "",
-      ].join("\n"),
-    );
-    process.exit(1);
-  }
+try {
+  new URL(BASE);
+} catch {
+  console.error(`reader:suite · SHOOT_BASE_URL is not a URL: ${BASE}`);
+  process.exit(1);
+}
+/** FE-01: a non-local target is read with every write route aborted in the browser. */
+const LIVE_TARGET = !isLocalBase(BASE);
+if (LIVE_TARGET) {
+  console.log(
+    `reader:suite · live target ${BASE}: write routes are aborted in the browser (FE-01), ` +
+      "so a question that needs Ask cannot be answered on this run.",
+  );
 }
 
 /** LOCAL by the refusal above. Kept as the typed value so the record says which. */
-const TARGET: EvaluationTarget = "LOCAL_RENDER";
+const TARGET: EvaluationTarget = LIVE_TARGET ? "PRODUCTION_RENDER" : "LOCAL_RENDER";
 
 const ROOT = process.cwd();
 const CORPUS_PATH = join(ROOT, "data", "health", "reader-questions.json");
@@ -270,7 +258,7 @@ async function main(): Promise<void> {
     notEvaluableZips,
   };
 
-  const browser = await launchGuarded({ label: "reader-suite", headless: true });
+  const browser = await launchGuarded({ label: "reader-suite", headless: true, blockWrites: LIVE_TARGET });
   let harness: HarnessReach;
   const results: InstanceResult[] = [];
   const diagnosticItems: WorkItem[] = [];
@@ -431,9 +419,10 @@ async function main(): Promise<void> {
 
   const record: RunRecord = {
     target: TARGET,
-    targetNote:
-      "LOCAL_RENDER by construction: non-local targets are refused (RULING 125), so " +
-      "PRODUCTION_RENDER is defined in the type and currently unreachable from this harness",
+    targetNote: LIVE_TARGET
+      ? `PRODUCTION_RENDER: ${BASE}, read with every write route aborted in the browser (FE-01); ` +
+        `${browser.writesBlocked.count} write request(s) aborted`
+      : "LOCAL_RENDER: the local production build",
     baseUrl: BASE,
     runId: browser.runId,
     testedSha: TESTED_SHA,

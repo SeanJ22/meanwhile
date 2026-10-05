@@ -4,9 +4,9 @@
  *   pnpm build && pnpm start   # in another shell — the LOCAL production build
  *   pnpm walk:all              # against http://localhost:3000
  *
- * **There is no production mode. RULING 125 (2026-08-24) removed it**, and a
- * non-local `SHOOT_BASE_URL` is refused rather than honoured. The reasoning is
- * at the `BASE` declaration below.
+ * `SHOOT_BASE_URL` points it at the live site instead. Writes are aborted in
+ * the browser on any non-local target (FE-01); the reasoning is at the `BASE`
+ * declaration below.
  *
  * ## Why this exists
  *
@@ -110,69 +110,37 @@ import { decodePng, patchStats, regionChange } from "./png.mts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+import { isLocalBase } from "../lib/ops/live-write-guard.ts";
+import { askRunHash } from "../lib/db/ask-signal.ts";
 
 /**
- * THE TARGET IS LOCAL, AND PRODUCTION IS REFUSED — RULING 125 (2026-08-24).
+ * THE TARGET: A LOCAL BUILD BY DEFAULT, THE LIVE SITE WHEN ASKED (FE-01).
  *
- * The rule: everything is confirmed visually and by code from the local
- * production build — never from Netlify. Production is the delivery truck, not
- * the test bench.
+ * RULING 125 (2026-08-24) refused every non-local target, because a walk of
+ * production wrote rows into stores this product sells. Current rulings §6
+ * require looking at the live page, so the refusal is gone and the reason for
+ * it is handled at the source instead: a live target opens its browser with
+ * `blockWrites`, which aborts every write route (`/api/log`, `/api/events`,
+ * `/api/reactions`, `/api/feedback`, `/api/ask`, Send) before it leaves the
+ * browser. The search log is written only through `/api/log` since PDC-9, so
+ * a live walk leaves no search-log or Ask row, and the census at the end of
+ * this file checks exactly that against production.
  *
- * This used to default to the live site — the Netlify default subdomain
- * then, the custom domain since ITEM F — and the cost was not
- * the traffic. **Every `/api/meetings` GET writes a row to the search log**,
- * and the search log is a store this product SELLS. A walk of four zips writes
- * dozens; 11,755 synthetic rows had accumulated in the production store by
- * 2026-08-24. They are excluded from every aggregate by the `T10` machinery and
- * that machinery works — but a store that is organic BY CONSTRUCTION is a
- * stronger claim than one that is organic after filtering, and it is free.
- *
- * A local production build serves the same bytes. There was never a reason to
- * find out on the live site.
- *
- * **The refusal has no escape hatch**, for the reason the build gate already
- * gives. The one remaining question about production — WHICH SHA IS LIVE — is
- * answered by `pnpm deploy:live`, from Netlify's deploy record, with zero
- * requests to the site.
+ *   SHOOT_BASE_URL=<the live origin, PUBLIC_SITE_ORIGIN> pnpm walk:all
  */
 const DEFAULT_BASE = "http://localhost:3000";
 const BASE = (process.env.SHOOT_BASE_URL ?? DEFAULT_BASE).replace(/\/$/, "");
 
-{
-  let host: string;
-  try {
-    host = new URL(BASE).hostname;
-  } catch {
-    console.error(`walk:all · SHOOT_BASE_URL is not a URL: ${BASE}`);
-    process.exit(1);
-  }
-  const local = host === "localhost" || host === "127.0.0.1" || host === "[::1]" || host === "::1";
-  if (!local) {
-    console.error(
-      [
-        "",
-        `walk:all · REFUSED — the target is ${host}, which is not a local build.`,
-        "",
-        "  RULING 125 (2026-08-24, Sean's ruling): every walk, screenshot and card",
-        "  check runs against the LOCAL production build. Production is the delivery",
-        "  truck, not the test bench.",
-        "",
-        "  Every /api/meetings GET writes a row to the search log, and that store is",
-        "  sold. Walking production makes the sold store organic-after-filtering",
-        "  instead of organic by construction.",
-        "",
-        "  Do this instead:",
-        "    corepack pnpm build",
-        "    corepack pnpm start          # in another shell, serving .next on :3000",
-        "    corepack pnpm walk:all",
-        "",
-        "  To ask which SHA is live, use `pnpm deploy:live` — Netlify's deploy",
-        "  record, one API call, zero requests to the site.",
-        "",
-      ].join("\n"),
-    );
-    process.exit(1);
-  }
+try {
+  new URL(BASE);
+} catch {
+  console.error(`walk:all · SHOOT_BASE_URL is not a URL: ${BASE}`);
+  process.exit(1);
+}
+/** True when this run reads a site other than the machine running it. */
+const LIVE_TARGET = !isLocalBase(BASE);
+if (LIVE_TARGET) {
+  console.log(`walk:all · live target ${BASE}: write routes are aborted in the browser (FE-01).`);
 }
 
 /** The four zips that are the product (state.md §9), plus the refusal zip. */
@@ -919,7 +887,7 @@ async function bodyText(page: Page): Promise<string> {
   return page.locator("body").innerText();
 }
 
-const browser = await launchGuarded({ label: "walk-all" });
+const browser = await launchGuarded({ label: "walk-all", blockWrites: LIVE_TARGET });
 
 console.log(`walk:all — ${BASE}\n${new Array(60).fill("─").join("")}`);
 
@@ -8294,7 +8262,10 @@ if (duplicates > 0) {
 console.log(
   `\nPRODUCTION ROWS THIS RUN CREATED: ${searchLogRows} search-log GET(s) issued ` +
     `(every /api/meetings GET writes one), ${askRows} ask/log request(s) issued. ` +
-    `No reaction was tapped.`,
+    `No reaction was tapped.` +
+    (LIVE_TARGET
+      ? ` Live target: the browser aborted ${browser.writesBlocked.count} write request(s).`
+      : ""),
 );
 
 /**
@@ -8325,7 +8296,7 @@ const PRODUCTION_DB = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
  *
  * RULING 24: every branch now DECLARES.
  */
-const LANDED_CHECK = "the sold store accepted this run's rows at all";
+const LANDED_CHECK = "a live walk left no search-log or Ask row";
 
 if (BASE !== PUBLIC_SITE_ORIGIN) {
   console.log(
@@ -8349,55 +8320,39 @@ if (BASE !== PUBLIC_SITE_ORIGIN) {
     const landed = (await sql`
       SELECT
         COUNT(*)::int                                          AS total,
-        COUNT(*) FILTER (WHERE event_type = 'SEARCH')::int      AS searches,
-        COUNT(*) FILTER (WHERE run_class <> 'SYNTHETIC')::int   AS misclassed
+        COUNT(*) FILTER (WHERE event_type = 'SEARCH')::int      AS searches
       FROM search_log WHERE run_id = ${RUN_ID}
-    `) as { total: number; searches: number; misclassed: number }[];
-    const { total, searches, misclassed } = landed[0];
+    `) as { total: number; searches: number }[];
+    const asked = (await sql`
+      SELECT COUNT(*)::int AS total FROM ask_interactions WHERE run_id = ${askRunHash(RUN_ID)}
+    `) as { total: number }[];
+    const { total, searches } = landed[0];
+    const askTotal = asked[0].total;
     console.log(
-      `  rows landed: ${total} row(s) carry run_id ${RUN_ID} (${searches} SEARCH). ` +
-        `Issued ${searchLogRows + askRows}, landed ${total} — a gap is ordinary ` +
-        `(a 404, a discarded non-ok response, or a CDN hit writes no row) and is not a failure.`,
+      `  rows landed: ${total} search-log row(s) (${searches} SEARCH) and ${askTotal} Ask row(s) ` +
+        `carry run_id ${RUN_ID}. The browser aborted ${browser.writesBlocked.count} write request(s).`,
     );
-    if (misclassed > 0) {
-      console.log(
-        `  WARNING: ${misclassed} of this run's own rows are NOT marked SYNTHETIC — ` +
-          `our robot is sitting in the sold store as reader signal.`,
-      );
-    }
 
     /*
-     * **ZERO LANDED IS NOT A GAP — PROMPT C, 2026-08-20.**
+     * **A LIVE WALK LEAVES NOTHING BEHIND (FE-01).**
      *
-     * The line above is right that a gap between issued and landed is
-     * ordinary: a 404, a discarded non-ok response and a CDN hit each write no
-     * row. What is NOT ordinary is landing NOTHING while issuing dozens, and
-     * treating the whole range as ordinary is how this walk read the sold
-     * store going dark and called it normal.
-     *
-     * What happened: migration 0011 added `coverage_tier` to both sold stores
-     * and shipped in Prompt B's code, and the migration was never applied to
-     * production. Every insert named a column that did not exist and failed.
-     * `app/api/meetings/route.ts` catches that and logs it — correct for a
-     * reader, because a search still answers — so the loss was invisible on
-     * every surface. The last row either store accepted was
-     * 2026-08-20 15:53:51Z; Prompt B's own walk ran at 17:53, issued 77
-     * search-log GETs, landed 0, and printed the gap as ordinary.
-     *
-     * So zero-against-nonzero is a CHECK now, and it fails. The revenue path
-     * has exactly one observable from outside — that a row lands — and this
-     * is it.
+     * This check used to require rows to LAND (Prompt C, 2026-08-20): it was
+     * the one outside view of the search log going dark when migration 0011
+     * was never applied. A production walk now aborts every write in the
+     * browser, so the right number is zero and any row is the leak. The cause
+     * D73 exposed is still watched by the schema gate and the write alarm
+     * below, which read the deploy itself.
      */
     check(
       "promptC",
       LANDED_CHECK,
-      !(searchLogRows + askRows > 0 && total === 0),
-      total === 0
-        ? `issued ${searchLogRows + askRows} write-triggering requests and NOTHING landed — ` +
-          `the search log is not recording. Check the migration state against ` +
-          `lib/db/migrations/meta/_journal.json: a column in the code and not in the ` +
-          `database fails every insert, and the route catches it.`
-        : `${total} landed`,
+      total === 0 && askTotal === 0,
+      total === 0 && askTotal === 0
+        ? `0 search-log and 0 Ask rows; ${browser.writesBlocked.count} write request(s) aborted ` +
+          `(${[...browser.writesBlocked.paths].sort().join(", ") || "none"})`
+        : `${total} search-log and ${askTotal} Ask row(s) landed from a walk that should write nothing — ` +
+          `a write route is missing from LIVE_WRITE_PATHS (lib/ops/live-write-guard.ts) or was ` +
+          `reached outside the browser`,
     );
   } catch (error) {
     // An unreadable census is COULD NOT RUN, never zero. Zero would read as
@@ -8864,6 +8819,11 @@ if (quarantined.length > 0) {
         failures: failures.length,
         searchLogRows,
         askRows,
+        liveTarget: LIVE_TARGET,
+        writesBlocked: {
+          count: browser.writesBlocked.count,
+          paths: [...browser.writesBlocked.paths].sort(),
+        },
         durations,
         slowest,
         /*

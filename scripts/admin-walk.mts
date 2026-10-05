@@ -40,6 +40,7 @@ import { join } from "node:path";
 
 import { ADMIN_SESSION_COOKIE, signSession } from "../lib/control-plane/admin-auth.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
+import { isLocalBase } from "../lib/ops/live-write-guard.ts";
 import { launchGuarded } from "./browser.mts";
 
 /** The admin host, derived from the one origins module rather than retyped. */
@@ -53,9 +54,9 @@ const SETTLE_MS = Number(process.env.ADMIN_WALK_SETTLE_MS ?? 0);
 /** A full-page capture of a console page hits tens of thousands of pixels; clamp it. */
 const MAX_CAPTURE_HEIGHT = 7000;
 
-if (!/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(BASE)) {
-  throw new Error(`admin:walk refuses ${BASE}: it reads a LOCAL server and never production.`);
-}
+/* FE-01: the live admin site is read with every write route aborted in the browser. */
+const LIVE_TARGET = !isLocalBase(BASE);
+if (LIVE_TARGET) console.log(`admin:walk · live target ${BASE}: write routes are aborted in the browser (FE-01).`);
 const key = process.env.WTP_ADMIN_SESSION_KEY;
 if (!key) throw new Error("WTP_ADMIN_SESSION_KEY is not set, so no session can be minted and every page would redirect to the login.");
 
@@ -63,7 +64,7 @@ const nowSeconds = Math.floor(Date.now() / 1000);
 const cookie = await signSession({ sid: "adm_walk00000000000000", iat: nowSeconds, exp: nowSeconds + 8 * 3600, via: "google" }, key);
 
 mkdirSync(OUT, { recursive: true });
-const browser = await launchGuarded({ label: "admin-walk" });
+const browser = await launchGuarded({ label: "admin-walk", blockWrites: LIVE_TARGET });
 const readings: Record<string, unknown>[] = [];
 
 for (const theme of THEMES) {
@@ -132,6 +133,9 @@ for (const theme of THEMES) {
   await context.close();
 }
 
+if (LIVE_TARGET) {
+  console.log(`admin:walk · the browser aborted ${browser.writesBlocked.count} write request(s).`);
+}
 await browser.close();
 writeFileSync(join(OUT, "timings.json"), `${JSON.stringify(readings, null, 2)}\n`);
 /*

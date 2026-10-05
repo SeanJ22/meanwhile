@@ -1,0 +1,153 @@
+diff --git a/lib/civic-data/worker-publication-evidence.ts b/lib/civic-data/worker-publication-evidence.ts
+index e05bca558..004573c8f 100644
+--- a/lib/civic-data/worker-publication-evidence.ts
++++ b/lib/civic-data/worker-publication-evidence.ts
+@@ -9,6 +9,7 @@ import type { ManualSourceSetReceipt } from "./types.ts";
+ import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+ import { isOfficialSource } from "./source-authority.ts";
+ import { hostOfUrl, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
++import type { LiveAuditPull } from "../control-plane/live-audit-log.ts";
+ 
+ export function requirePublication(value: unknown, reason: string): asserts value {
+   if (!value) throw new Error(`WORKER_PUBLICATION_${reason}`);
+@@ -71,6 +72,8 @@ export function verifiedWorkerRecords(input: {
+    * result may then publish fewer records, or none, and `pulledRecords` names what the audit took out.
+    */
+   pullRemoves?: boolean;
++  /** Live-audit pulls against this work item (DP-14); they remove records the same way. */
++  livePulls?: readonly LiveAuditPull[];
+ }) {
+   const { plan, parser, now } = input;
+   const contract = plan.contract;
+@@ -79,7 +82,7 @@ export function verifiedWorkerRecords(input: {
+   if (contract.schemaVersion !== 2) throw new Error("WORKER_PUBLICATION_CONTRACT_UNRESOLVED");
+   requirePublication(extraction.role === "PARSER" && extraction.verdict === "EXTRACTED", "PARSER_RESULT_UNRESOLVED");
+   if (extraction.role !== "PARSER") throw new Error("WORKER_PUBLICATION_PARSER_RESULT_UNRESOLVED");
+-  const pulled = input.results ? auditPull(input.results, parser) : null;
++  const pulled = input.results || input.livePulls?.length ? auditPull(input.results ?? [], parser, input.livePulls) : null;
+   requirePublication(!pulled?.all || input.pullRemoves, "AUDIT_BROKE:the Auditor broke this extraction; a new extraction is owed");
+   const primary = input.captures.find(c => c.evidence.artifactId === extraction.artifactId);
+   requirePublication(primary && captureIntact(primary), "PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE");
+@@ -176,13 +179,16 @@ export function registryEdition(label: string): string {
+  * no audit broke it. `at` is the newest such audit, so the publisher re-checks
+  * once after it.
+  */
+-export function auditPull(results: readonly WorkerResultRecord[], parser: WorkerResultRecord): { readonly all: boolean; readonly recordIds: ReadonlySet<string>; readonly at: string } | null {
++export function auditPull(results: readonly WorkerResultRecord[], parser: WorkerResultRecord,
++  livePulls: readonly LiveAuditPull[] = []): { readonly all: boolean; readonly recordIds: ReadonlySet<string>; readonly at: string } | null {
+   if (parser.result.role !== "PARSER") return null;
+   const attemptId = parser.result.attemptId;
+   const broke = results.filter(r => r.workItemId === parser.workItemId && r.result.role === "ADVERSARIAL_AUDITOR" &&
+     r.result.verdict === "BROKE" && r.result.producerAttemptId === attemptId);
+-  if (!broke.length) return null;
+-  const named = broke.map(r => (r.result as { brokenRecordIds?: readonly string[] }).brokenRecordIds ?? null);
++  // DP-14: a live-audit red flag pulls the extraction records behind a published fact the same way.
++  const live = livePulls.filter(p => p.workItemId === parser.workItemId && p.parserAttemptId === attemptId);
++  if (!broke.length && !live.length) return null;
++  const named = [...broke.map(r => (r.result as { brokenRecordIds?: readonly string[] }).brokenRecordIds ?? null), ...live.map(p => p.recordIds)];
+   return { all: named.some(ids => ids === null || ids.length === 0), recordIds: new Set(named.flatMap(ids => ids ?? [])),
+-    at: broke.map(r => r.endedAt).sort().at(-1)! };
++    at: [...broke.map(r => r.endedAt), ...live.map(p => p.at)].sort().at(-1)! };
+ }
+diff --git a/lib/civic-data/worker-publication-tasks.ts b/lib/civic-data/worker-publication-tasks.ts
+index 399728c35..3aa1ff091 100644
+--- a/lib/civic-data/worker-publication-tasks.ts
++++ b/lib/civic-data/worker-publication-tasks.ts
+@@ -4,6 +4,7 @@ import type { WorkItem } from "../control-plane/work-item.ts";
+ import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
+ import { isWorkerReaderContract } from "./worker-reader-contracts.ts";
+ import { auditPull, latestParserResult } from "./worker-publication-evidence.ts";
++import type { LiveAuditPull } from "../control-plane/live-audit-log.ts";
+ import type { RoutineDataStore } from "./store.ts";
+ import { ZERO_RELEASE_EVENTS } from "./release.ts";
+ 
+@@ -17,7 +18,8 @@ const HOUR = 3_600_000;
+  * No live Send, auditor or owner instruction is needed: publication is not
+  * paid work, and verified facts reach readers within minutes.
+  */
+-export function workerPublicationTasks(items: readonly WorkItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
++export function workerPublicationTasks(items: readonly WorkItem[], results: readonly WorkerResultRecord[], now: string,
++  livePulls: readonly LiveAuditPull[] = []): RoutineSourceTask[] {
+   const nowMs = Date.parse(now);
+   const hour = new Date(Math.floor(nowMs / HOUR) * HOUR).toISOString();
+   const owed = items.flatMap(item => {
+@@ -29,7 +31,7 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
+     if (parser && Date.parse(parser.endedAt) <= nowMs) {
+       // A published extraction, or a hold only new evidence can clear, waits for a newer extraction.
+       // ...unless the Auditor broke it after that publication: then it is re-checked once.
+-      const pull = auditPull(results, parser);
++      const pull = auditPull(results, parser, livePulls);
+       // A roster publication names its reading as `<parser>+<schedule page>` when a saved schedule page attached.
+       const published = outcome?.workerResultId === parser.id || outcome?.workerResultId.startsWith(`${parser.id}+`);
+       if (outcome && published && (outcome.status !== "HELD" || outcome.recovery === "WORKER") && !(pull && pull.at > outcome.at)) return [];
+diff --git a/lib/civic-data/worker-reader-publication.ts b/lib/civic-data/worker-reader-publication.ts
+index b2ff96887..4ef7691b9 100644
+--- a/lib/civic-data/worker-reader-publication.ts
++++ b/lib/civic-data/worker-reader-publication.ts
+@@ -14,6 +14,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
+ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
+ import { requiredManualProductionContract } from "./manual-contracts.ts";
+ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
++import { readLiveAuditPulls } from "../control-plane/live-audit-log.ts";
+ import { auditPull, capturesForPublication, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
+ import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
+ import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
+@@ -169,7 +170,8 @@ export async function publishWorkerReaderResults(input: {
+     const parser = latestParserResult(results, id);
+     if (!parser || plan?.publication?.contractId !== input.contractId) continue;
+     // A BROKE audit after this publication is re-checked once; otherwise a published or worker-owed result waits for a newer extraction.
+-    const pull = auditPull(results, parser);
++    const livePulls = await readLiveAuditPulls(input.repos, id);
++    const pull = auditPull(results, parser, livePulls);
+     if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.recovery !== "PUBLISHER" && !(pull && pull.at > item.publicationOutcome.at)) {
+       report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;
+     }
+@@ -179,7 +181,7 @@ export async function publishWorkerReaderResults(input: {
+       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
+       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture: input.readCapture, officialLinks: manual.officialLinks });
+       const registry = await readRegistryRuntimePrior(input.store, input.now);
+-      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results });
++      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results, livePulls });
+       const checked = built.package;
+       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now);
+       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
+diff --git a/scripts/routine-civic-data-runner.mts b/scripts/routine-civic-data-runner.mts
+index 0a62ea24f..3eee98c31 100644
+--- a/scripts/routine-civic-data-runner.mts
++++ b/scripts/routine-civic-data-runner.mts
+@@ -8,6 +8,7 @@
+  * candidate/promotion history; a child-process failure is operational evidence
+  * and never replaces a candidate's own source-through or retrieved-at facts.
+  */
++import { readAllLiveAuditPulls } from "../lib/control-plane/live-audit-log.ts";
+ import { hostname } from "node:os";
+ import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
+ import { neon } from "@neondatabase/serverless";
+@@ -404,7 +405,8 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
+   if (intents.runnerPause.paused) return [];
+   const items = (await repos.workItems.list()).map(row => row.value);
+   const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
+-  const publication = workerPublicationTasks(items, workers, RUN_STARTED_AT);
++  /* A live-audit red flag (DP-14) re-checks the publication it pulled from, as a BROKE audit does. */
++  const publication = workerPublicationTasks(items, workers, RUN_STARTED_AT, workers.length ? await readAllLiveAuditPulls(repos) : []);
+   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+   if (row === null) return publication;
+   if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");
+diff --git a/tests/audit-pull.test.ts b/tests/audit-pull.test.ts
+index 56a20827a..1ebdbc51d 100644
+--- a/tests/audit-pull.test.ts
++++ b/tests/audit-pull.test.ts
+@@ -15,3 +15,13 @@ test("a BROKE audit of an extraction pulls the records it names, or all of it wh
+   const whole = auditPull([parser, audit("BROKE", "2026-09-30T11:00:00.000Z", { brokenRecordIds: ["r2"] }), audit("BROKE", "2026-09-30T12:00:00.000Z")], parser)!;
+   assert.deepEqual([whole.all, whole.at], [true, "2026-09-30T12:00:00.000Z"]);
+ });
++
++test("a live-audit pull on the same extraction pulls the records it names, beside any BROKE audit (DP-14)", () => {
++  const live = (recordIds: string[], at: string, parserAttemptId = "at-parse") =>
++    ({ workItemId: "wi-1", parserResultId: "wr-parser", parserAttemptId, recordIds, factId: "f", at, reason: "left the page" });
++  assert.equal(auditPull([parser], parser, [live(["r1"], "2026-10-05T12:00:00.000Z", "at-older")]), null, "a pull of an older extraction does not reach this one");
++  const pulled = auditPull([parser], parser, [live(["r1"], "2026-10-05T12:00:00.000Z")])!;
++  assert.deepEqual([pulled.all, [...pulled.recordIds], pulled.at], [false, ["r1"], "2026-10-05T12:00:00.000Z"]);
++  const both = auditPull([parser, audit("BROKE", "2026-09-30T11:00:00.000Z", { brokenRecordIds: ["r2"] })], parser, [live(["r1"], "2026-10-05T12:00:00.000Z")])!;
++  assert.deepEqual([...both.recordIds].sort(), ["r1", "r2"]);
++});

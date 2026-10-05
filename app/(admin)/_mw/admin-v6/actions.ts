@@ -788,7 +788,7 @@ const defs: ActionDef[] = [
     preview: (ctx) => {
       const control = ctx.payload?.control ?? "text";
       return {
-        title: `Change: ${ctx.payload?.name ?? "this setting"}`,
+        title: `Change: ${ctx.payload?.name ?? "—"}`,
         level: "global",
         rows: [
           ["Now", ctx.payload?.now ?? "—"],
@@ -812,7 +812,7 @@ const defs: ActionDef[] = [
     needs: "owner",
     doneWords: "Undone.",
     preview: (ctx) => ({
-      title: `Undo the last change to: ${ctx.payload?.name ?? "this setting"}`,
+      title: `Undo the last change to: ${ctx.payload?.name ?? "—"}`,
       level: "global",
       rows: [
         ["Now", ctx.payload?.now ?? "—"],

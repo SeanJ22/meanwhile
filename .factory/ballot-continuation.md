@@ -1,3 +1,13 @@
+## Active continuation update, 2026-10-05T23:27:35Z
+
+Run remains active, token codex-ballot-edcf6152715b43d5a709a9eaa7410b04 (the exact authoritative token is ballot.md and /tmp/ballot-current-lock-token). Latest board d677a91a7 assigns codex-ballot; returns unchanged through17:40Z. Only stream/ballot pushes, no force/main/river/board, no PR. Latest certified f984126b remains ready; follow-on candidate is not yet ready.
+
+Exact unpublished follow-on 60cd61239cf1a5febe78dd7808adb5d93f1b9593 in /workspace/meanwhile-ballot-follow-on-fixed-check: canonical FULL session92573, types22716, lint50447; /tmp/ballot-follow-on-fixed-exact-{canonical-full,types,lint,selector}.log. Standard two file workers, complete source tree clean, explicit Chromium151 substitute. Stop/repair any owned failure, preserve exact evidence. Original38142312b failed types and partialFULL stopped; f7eff36d1 untested wrong-source candidate never-ready; both branches preserved. Actual callback narrowing fix a4db89525. Root may gain later CA-55/migration WIP; do not silently include it in exact60cd.
+
+CA-22 public organization funding+individual aggregates card/Ask, CA-34 fresh ballot/door provider, CA-35 normal completed-worker task/script callback/Slide/typed reader, CA-36 normal Ask FEC/state source detail and deadline fallback, CA-38 runtime kinds, CA-53 local and saved national government finance now built. Exact other-owner hooks in ballot.md. Actual Ask route1/1, completed polling worker1/1, finance callback/detail12/12, detail+polling8/8; source-model/API calls all local fixtures. No live verification claim.
+
+Continue ready owned CA-55 boundaries and CA-29/50 source-backed preserved curated migration; do not stop at this certification checkpoint. CP-03/SC-10/FE-13 prerequisites remain unintegrated. Cross-source replacement/legacy deletion waits on actual River live acceptance, not a new owner approval. All52 unknown-number reaction IDs must survive; River how request remains unanswered, no invented numbering.
+
 ## Active continuation, supersedes historical run-ended notes below
 
 Current Codex token is codex-ballot-edcf6152715b43d5a709a9eaa7410b04; read current ballot.md and board assignments before writing. Stream remains active. Latest exact certified boundary f984126b50e2e404449aaf15bf638c66ee360212 passes canonical FULL (9495 tests, 0 failures), types and whole lint; all 1096 files with complete timings. Its manifest is ballot-certificate-f984126b.json. Other-owner hooks are exact in ballot.md; only build/local verification is claimed. Older 6c874b3e collector certification remains valid/preserved. Never fold the later stream tip as part of this boundary.

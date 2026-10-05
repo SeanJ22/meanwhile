@@ -21,7 +21,7 @@ export async function checkAdapterRepair(files: readonly AdapterFile[], scope: R
       await mkdir(dirname(path), { recursive: true });
       await writeFile(path, file.content);
     }
-    const env = { ...process.env, CI_TEST_FILES: scope.testFiles.join("\n") };
+    const env: NodeJS.ProcessEnv = { ...process.env, CI_TEST_FILES: scope.testFiles.join("\n") };
     delete env.DATABASE_URL; delete env.WTP_ASSET_STORE;
     await exec(process.execPath, ["scripts/ci-tests.mjs"], { cwd: checkout, env, timeout: 120_000, maxBuffer: 4 * 1024 * 1024 });
     return { ok: true, summary: `${scope.kind}: ${scope.testFiles.length} fixture and composite test files passed` };

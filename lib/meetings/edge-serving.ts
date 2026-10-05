@@ -46,8 +46,7 @@ import {
   type MeetingsProjectionReadResult,
   type MeetingsSnapshot,
 } from "./snapshot.ts";
-import type { MeetingSettings } from "./settings.ts";
-import { readReaderMeetingSettings } from "./reader-settings.ts";
+import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "./constants.ts";
 
 /**
  * Publish + read for the geographic reader edge artifacts.
@@ -784,8 +783,8 @@ const areaReads = new Map<string, MeetingsProjectionReadResult>();
 export async function readReaderEdgeMeetings(
   options: ReaderEdgeMeetingsOptions = {},
 ): Promise<MeetingsProjectionReadResult> {
-  const [read, settings] = await Promise.all([readReaderEdgeMeetingsHeld(options), options.settings ?? readReaderMeetingSettings()]);
-  return applyServedWindow(read, options.window ?? "SHOWN", options.now, settings);
+  const read = await readReaderEdgeMeetingsHeld(options);
+  return applyServedWindow(read, options.window ?? "SHOWN", options.now);
 }
 
 /**
@@ -805,19 +804,18 @@ function applyServedWindow(
   read: MeetingsProjectionReadResult,
   window: ReaderMeetingsWindow,
   nowOption: string | undefined,
-  settings: MeetingSettings,
 ): MeetingsProjectionReadResult {
   if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return read;
   const now = nowOption ? Date.parse(nowOption) : Date.now();
   if (!Number.isFinite(now)) return read;
   const day = 86_400_000;
   // Cached area reads are shared across requests; key the windowed copy by the day it was cut.
-  const key = `${window}:${now}:${settings.shownBackDays}:${settings.shownAheadDays}`;
+  const key = `${window}:${Math.floor(now / day)}`;
   const memo = servedWindows.get(read) ?? new Map<string, MeetingsProjectionReadResult>();
   const hit = memo.get(key);
   if (hit) return hit;
-  const lower = window === "HELD" ? Number.NEGATIVE_INFINITY : now - settings.shownBackDays * day;
-  const upper = now + settings.shownAheadDays * day;
+  const lower = window === "HELD" ? Number.NEGATIVE_INFINITY : now - CONCLUDED_LOOKBACK_DAYS * day;
+  const upper = now + UPCOMING_HORIZON_DAYS * day;
   const meetings = read.value.meetings.filter((meeting) => {
     const startsAt = Date.parse(meeting.startsAt);
     return !Number.isFinite(startsAt) || (startsAt >= lower && startsAt <= upper);
@@ -856,8 +854,6 @@ type ReaderEdgeMeetingsOptions = {
     readonly fallback?: () => Promise<MeetingsProjectionReadResult>;
     /** `SHOWN` (default) or `HELD`; see `ReaderMeetingsWindow`. */
     readonly window?: ReaderMeetingsWindow;
-    /** One request's published settings, when its caller already read them. */
-    readonly settings?: MeetingSettings;
   };
 
 async function readReaderEdgeMeetingsHeld(

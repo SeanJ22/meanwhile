@@ -11,7 +11,6 @@ import type { DoorsView } from "@/lib/control-plane/admin-view/v6-doors-read.ts"
 import type { ScheduledView } from "@/lib/control-plane/admin-view/v6-scheduled-read.ts";
 
 import { useV6 } from "./context.tsx";
-import { mst } from "./model.ts";
 import { buildQueue, QUEUE_FILTERS, QUEUE_FILTER_WORDS, queueCounts, type QueueFilter, type QueueRow } from "./queue.ts";
 import { Actions, Empty, Pill, Tabs, Technical, usePager } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
@@ -31,7 +30,6 @@ export function QueueScreen() {
     fixes: v.data.fixes.data,
     doors: doors.kind === "ready" ? doors.data.rows.filter((d) => d.status === "Shut") : null,
     scheduled: scheduled.kind === "ready" ? scheduled.data.rows : null,
-    format: (iso) => mst(iso),
   });
   const counts = queueCounts(rows);
   const shown = rows.filter((r) => r.filter === filter);

@@ -7,7 +7,7 @@
  */
 import type { ActionRef, ClosedFix, FixView, Hunt, Lane, OpenFix, SentInstruction, StuckItem, UiReceipt } from "./model.ts";
 import { orderStepsReached, ORDER_STEPS } from "./receipts.ts";
-import { TASK_STAGES } from "./model.ts";
+import { mst, TASK_STAGES } from "./model.ts";
 
 export const QUEUE_FILTERS = ["needs-me", "in-progress", "scheduled", "waiting", "done"] as const;
 export type QueueFilter = (typeof QUEUE_FILTERS)[number];
@@ -53,8 +53,6 @@ export interface QueueInput {
   readonly fixes: FixView | null;
   readonly doors: readonly QueueDoor[] | null;
   readonly scheduled: readonly QueueScheduled[] | null;
-  /** A time in Admin's words (Eastern). */
-  readonly format: (iso: string) => string;
 }
 
 const LANE_FILTER: Readonly<Record<Lane, QueueFilter>> = { decision: "needs-me", auto: "in-progress", publisher: "waiting", software: "waiting" };
@@ -76,10 +74,10 @@ function orderRow(r: UiReceipt, input: QueueInput): QueueRow {
   const reached = orderStepsReached(r);
   const filter: QueueFilter = failed ? "needs-me" : r.status === "done" || r.status === "partial" ? "done"
     : r.status === "running" || r.lifecycle.workStarted ? "in-progress" : r.plan?.resultsBy && reached === 3 ? "scheduled" : "waiting";
-  const due = r.plan?.resultsBy ? input.format(r.plan.resultsBy) : null;
+  const due = r.plan?.resultsBy ? mst(r.plan.resultsBy) : null;
   return {
     key: `order:${r.key}`, kind: "order", what: r.label, chip: r.statusWords, tone: failed ? "warn" : filter === "done" ? "good" : "neutral", filter,
-    owner: r.plan?.who ?? "The runner", due, next: r.says,
+    owner: r.plan ? r.plan.who : "—", due, next: r.says,
     progress: { done: reached, of: ORDER_STEPS.length, words: ORDER_STEPS[Math.max(0, reached - 1)] },
     actions: [], open: null, at: r.sentAt,
   };
@@ -120,7 +118,7 @@ function stuckRow(i: StuckItem): QueueRow {
 function doorRow(d: QueueDoor, n: number): QueueRow {
   return {
     key: `door:${n}:${d.name}`, kind: "door", what: `Door shut: ${d.name}`, chip: "Shut", tone: "warn", filter: "waiting", owner: "The team",
-    due: null, next: d.why ?? "Waiting for the way in to be fixed.", progress: null, actions: [], open: null, at: d.since,
+    due: null, next: d.why === null ? "—" : d.why, progress: null, actions: [], open: null, at: d.since,
   };
 }
 
@@ -145,7 +143,7 @@ function closedFixRow(c: ClosedFix, returned: boolean): QueueRow {
 function scheduledRow(x: QueueScheduled): QueueRow {
   return {
     key: `scheduled:${x.id}`, kind: "scheduled", what: x.label, chip: "Scheduled", tone: "neutral", filter: "scheduled", owner: "The runner",
-    due: x.finishBy ? `${x.when} · finish by ${x.finishBy}` : x.when, next: x.repeats ?? "Sent once, at that time.", progress: null,
+    due: x.finishBy ? `${x.when} · finish by ${x.finishBy}` : x.when, next: x.repeats === null ? "Sent once, at that time." : x.repeats, progress: null,
     actions: [{ kind: "order-unschedule", target: x.id, label: "Cancel this scheduled order" }], open: null, at: null,
   };
 }

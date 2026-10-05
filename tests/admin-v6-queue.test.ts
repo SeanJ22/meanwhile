@@ -19,7 +19,7 @@ const send = (over: Partial<SentInstruction>): SentInstruction => ({ id: "i1", w
 const openFix = (over: Partial<OpenFix>): OpenFix => ({ id: "f1", title: "Repair the reader", tab: "attention", owner: "Engineering", problem: "It breaks.", helps: "", placeInLine: "1", resourcesNow: "", taskStage: 2, taskId: "T-1", linkedStuck: [], origin: "engineering", technical: "", ...over });
 
 const input = (over: Partial<QueueInput> = {}): QueueInput => ({
-  receipts: null, sends: null, hunts: null, stuck: null, fixes: null, doors: null, scheduled: null, format: (iso) => iso, ...over,
+  receipts: null, sends: null, hunts: null, stuck: null, fixes: null, doors: null, scheduled: null, ...over,
 });
 
 test("each kind of thing appears once, under the right filter, with its own stop or pause", () => {

@@ -15,7 +15,6 @@ test("CH-29: the words our own guard refuses with are recognised, and nothing el
 
 test("CH-29: an item our own guard refused goes back in line on a fixed pace, adds no failure, and keeps its case file", async () => {
   const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
-  let guardOpen = false;
   const runtime: AutonomousCoordinatorRuntime = {
     ...h.runtime,
     rollingCeilingUsd: 1,
@@ -25,7 +24,7 @@ test("CH-29: an item our own guard refused goes back in line on a fixed pace, ad
       run: async () => ({
         kind: "ABORTED", ranAs: "BOUNDED_MODEL_WORKER", failureOutcome: "DENIED_BY_POLICY", endedAt: h.now(),
         cost: { ...ZERO_COST, requestCount: 0, inputTokens: 0, outputTokens: 0, usd: 0 },
-        detail: guardOpen ? "unreachable" : GUARD_DETAIL,
+        detail: GUARD_DETAIL,
       }),
     }),
   };

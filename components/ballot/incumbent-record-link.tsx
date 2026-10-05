@@ -35,14 +35,14 @@ export function IncumbentRecordLink({
           trailing clause defended against an objection nobody had raised,
           and a disclosure that argues with the reader weakens the neutrality
           it is asserting. State the fact and stop. */}
-      <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+      <p className="mt-1.5 t-caption leading-relaxed text-muted">
         {holder.name} currently holds this seat, so there&apos;s more
         information about them.
       </p>
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mt-1.5 cursor-pointer text-[0.75rem] text-signal underline decoration-dotted hover:no-underline"
+        className="mt-1.5 cursor-pointer t-detail text-signal underline decoration-dotted hover:no-underline"
       >
         See their voting record →
       </button>
@@ -95,7 +95,7 @@ export function IncumbentNameLink({
         type="button"
         data-candidate-card
         onClick={() => setOpen(true)}
-        className="cursor-pointer text-left text-[0.9375rem] font-semibold tracking-tight underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
+        className="cursor-pointer text-left t-heading font-semibold tracking-tight underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
       >
         {name}
       </button>

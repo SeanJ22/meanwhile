@@ -1,3 +1,4 @@
+import { readerMeetingScope } from "@/lib/meetings/reader-scope";
 import { haversineKm } from "@/lib/geo/distance";
 import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
@@ -687,6 +688,7 @@ export async function GET(request: Request) {
 
   return Response.json({
     ...result,
+    readerScope: readerMeetingScope({ heldMeetings: heldMeetings ?? result.meetings, shownMeetings: result.meetings, bodies: coverage?.bodies ?? [], ownDivisionIds: resolvedDivisions ? pointOwnDivisionIds : null, radiusKm: result.radiusKm, requestedRadiusKm: result.requestedRadiusKm, now: new Date(), listingIdentity: meetingListingIdentity(heldMeetings ?? result.meetings, canonicalBodyIdentity) }),
     commentAccess,
     commentAccessDataState,
     commentAccessDataDetail,

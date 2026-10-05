@@ -1,3 +1,4 @@
+import { copy } from "../design/copy.ts";
 import type { Meeting, MeetingLocation, MeetingVenueGap, OnlineAccess } from "@/lib/sources/types";
 
 /**
@@ -35,11 +36,13 @@ import type { Meeting, MeetingLocation, MeetingVenueGap, OnlineAccess } from "@/
  * asks for the other half, so a divergence surfaces as a NAMED GAP rather than
  * as a surface silently deciding a meeting is physical.
  *
- * ## What this module refuses to do
+ * ## Online map pins (FE-34, approved launch plan)
  *
- * It does not produce a coordinate, a venue key or a pin. `lib/meetings/venues.ts`
- * keeps online sittings off the map and that gate is CORRECT: a marker on the
- * body's home address would put a reader outside a building nobody is going to.
+ * Online-only sittings may have an ONLINE_ONLY venue at their body's published
+ * office address. That coordinate orients the reader; it never changes the
+ * meeting's null physical location. The marker says "Online only", and the
+ * published join link remains the main action. A place we have not recorded
+ * still gets no pin.
  *
  * ## No room is NOT the same as online (2026-09-23, the owner's directive)
  *
@@ -55,7 +58,7 @@ import type { Meeting, MeetingLocation, MeetingVenueGap, OnlineAccess } from "@/
  *
  * - a BUILDING (`location` set) — the venue gate pins it;
  * - ONLINE (`location` null, the body published an online access) — the
- *   online sentence, the join line, never a pin;
+ *   online sentence and join line, plus an online-only office pin where sourced;
  * - PLACE NOT RECORDED (`location` null and no online access) — our own named
  *   gap, `PLACE_UNRECORDED_LINE`, never a pin and never "online".
  *
@@ -68,8 +71,8 @@ import type { Meeting, MeetingLocation, MeetingVenueGap, OnlineAccess } from "@/
  *   publisher's page states no place, the gap is the publisher's and says so.
  *   Never a pin, never "online", never "we haven't recorded a place".
  *
- * All four stay listed. `hasPhysicalLocation` is unchanged, so the venue gate
- * is unchanged.
+ * All four stay listed. `hasPhysicalLocation` still describes a physical room;
+ * the separate online office venue never changes that fact.
  */
 
 /** The shape any surface needs to answer the question. Meetings satisfy it. */
@@ -147,7 +150,7 @@ export const ONLINE_ONLY_LINE = "Online only — there is no room to attend in p
  * because nothing we hold says whether the body has published a place — the
  * same default `lib/ask/agenda-sentence.ts` applies to a missing agenda.
  */
-export const PLACE_UNRECORDED_LINE = "We haven't recorded a place for this meeting yet.";
+export const PLACE_UNRECORDED_LINE = copy("copy.working");
 
 /** The same gap, short enough for a list row's metadata line. */
 export const PLACE_UNRECORDED_MARK = "place not recorded yet";

@@ -200,7 +200,7 @@ test("F01 6.2: an absence reads as the working-on-it sentence", async () => {
     "utf8",
   );
   assert.ok(
-    /We[’']re working on getting this info\./.test(surface) &&
+    /<WorkingOnIt/.test(surface) &&
       !/not a statement that no vote happened/.test(surface),
     "the key-votes absence line is the working-on-it sentence (rulings §10), with no disclaimer",
   );
@@ -275,17 +275,10 @@ test("item 4: the office and body absence lines keep their whose-gap attribution
   const { readFileSync: read } = await import("node:fs");
   const { join: j } = await import("node:path");
 
-  const office = read(j(process.cwd(), "lib", "ballot", "battlecard-sections.ts"), "utf8");
-  assert.match(
-    office,
-    /We haven[’']?t yet read the law that says what this office decides\. What we do hold about it is below\./,
-    "the office section lost its whose-gap attribution",
-  );
-
-  const body = read(j(process.cwd(), "lib", "officials", "body-description.ts"), "utf8");
-  assert.match(
-    body,
-    /We haven[’']?t yet read the law that says what this body decides\. What we do hold about it is below\./,
-    "the body blurb lost its whose-gap attribution",
-  );
+  const sections = read(j(process.cwd(), "lib", "design", "card-sections.ts"), "utf8");
+  assert.match(sections, /id: "office"[^\n]+emptyLine: copy\("copy.working"\)/,
+    "the shared office section uses the approved Reader gap default");
+  const entity = read(j(process.cwd(), "components", "map", "popup", "entity-modal.tsx"), "utf8");
+  assert.match(entity, /<WorkingOnIt/,
+    "a missing body definition remains an open Reader hunt");
 });

@@ -175,7 +175,7 @@ export function PopupCard({
           type="button"
           onClick={onExpand}
           aria-label={expandLabel ?? `More about ${title}`}
-          className="popup-card-more mt-3 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded border border-[var(--panel-border)] px-3 py-2 text-[0.75rem] font-medium text-paper hover:border-[var(--signal)] hover:text-signal"
+          className="popup-card-more mt-3 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded border border-[var(--panel-border)] px-3 py-2 t-detail font-medium text-paper hover:border-[var(--signal)] hover:text-signal"
         >
           More
           <Maximize2 className="size-3" />
@@ -185,23 +185,7 @@ export function PopupCard({
   );
 }
 
-/** One key/value line. `mono` is Edia's `.pv.money` — digits and identifiers. */
-export function PopupRow({
-  label,
-  children,
-  mono = false,
-}: {
-  label: string;
-  children: ReactNode;
-  mono?: boolean;
-}) {
-  return (
-    <div className="popup-row">
-      <span className="pk">{label}</span>
-      <span className={mono ? "pv mono" : "pv"}>{children}</span>
-    </div>
-  );
-}
+export { PopupRow, NoValue } from "./popup-row";
 
 export function PopupSectionLabel({ children }: { children: ReactNode }) {
   return <p className="popup-section-label">{children}</p>;
@@ -213,14 +197,3 @@ export function PopupSectionLabel({ children }: { children: ReactNode }) {
  * expansion, never clipboard.
  */
 
-/**
- * A value the app does not have.
- *
- * Its own component so "we don't hold this" always renders the same way and is
- * never mistaken for a blank. Phase 5 keeps proving this matters: an empty
- * string reads as a bug, and worse, a plausible-looking placeholder reads as a
- * fact.
- */
-export function NoValue({ children = "not recorded" }: { children?: ReactNode }) {
-  return <span className="text-muted">{children}</span>;
-}

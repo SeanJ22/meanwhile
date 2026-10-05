@@ -11,7 +11,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 
 import { carryBackRuntimeState, linkRuntimeState, parentCodeChanged } from "../lib/ops/runtime-release-switch.ts";
-import { defaultAsyncRunCommand, stagedReleaseDirectory } from "../lib/ops/runtime-release-stage.ts";
+import { defaultAsyncRunCommand, discardStagedReleases, stagedReleaseDirectory } from "../lib/ops/runtime-release-stage.ts";
 
 const git = (cwd: string, ...args: string[]): string =>
   execFileSync("git", ["-c", "user.email=t@example.com", "-c", "user.name=t", "-c", "commit.gpgsign=false", ...args], { cwd, encoding: "utf8" }).trim();
@@ -106,6 +106,14 @@ test("the staged checkout shares the running checkout's host state and stays cle
   assert.equal(readFileSync(join(root, ".runtime", "new-lane", "state.json"), "utf8"), "{\"new\":true}");
   assert.equal(lstatSync(join(root, "data", "vault")).isDirectory(), true, "links are never carried back over the real state");
   assert.equal(readFileSync(join(root, "node_modules", "pkg", "index.js"), "utf8"), "old");
+
+  // Removing the staged checkout removes its links, never the state they point at.
+  await discardStagedReleases(root, defaultAsyncRunCommand);
+  assert.equal(existsSync(directory), false);
+  assert.equal(readFileSync(join(root, "data", "vault", "ab", "cd.bin"), "utf8"), "held bytes");
+  assert.equal(readFileSync(join(root, "data", "vault", "ab", "ef.bin"), "utf8"), "new bytes");
+  assert.equal(readFileSync(join(root, ".runtime", "ops", "state.json"), "utf8"), "{}");
+  assert.equal(readFileSync(join(root, "data", "states", "run.log"), "utf8"), "log");
 });
 
 test("the runner starts every child from the switched checkout, behind its switch, and keeps the drain path", () => {

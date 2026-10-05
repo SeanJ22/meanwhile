@@ -379,9 +379,12 @@ import {
 } from "../lib/control-plane/repository/request-bounds.ts";
 import {
   PendingOperations,
+  describePending,
   trackStoreCalls,
   type CycleStallDiagnostic,
 } from "../lib/control-plane/scheduler/cycle-stall.ts";
+import { answerStallProbes, roundProgressReporter } from "../lib/control-plane/scheduler/round-progress.ts";
+import { RUNTIME_NO_PROGRESS_MS } from "./pilot-runtime-child.mts";
 import { recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import { CYCLE_DRAIN_GRACE_MS, chosenExitCode, exitAfterDrainGrace } from "../lib/control-plane/scheduler/cycle-exit.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
@@ -420,6 +423,10 @@ const RUN_PROVENANCE = readRunProvenance(RUNNING_CODE_SHA, ROOT);
 const CYCLE_ID = `freshness-cycle:${HOST}:${NOW}`;
 const RUN_RECORD_PATH = nextRunRecordPath(RUNS_DIR, today());
 const pending = new PendingOperations();
+/* The runner asks what the round waits on shortly before its no-progress limit; the answer names the phase (round-progress.ts). */
+answerStallProbes({ describe: () => describePending(pending.snapshot()) });
+/* Finished tasks of the long phases (dispatch, worker wave, meetings walks) are progress the runner can see. */
+const roundProgress = roundProgressReporter();
 const stallDiagnostic: CycleStallDiagnostic | null = null;
 /** True once the cycle wrote its own record; a later failure must not overwrite it. */
 let finalRecordWritten = false;
@@ -2949,6 +2956,7 @@ const cycle = await runCycle({
     ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
     onDispatched: async (result: DispatchResult, lane) => {
       placeOrderDirty = true;
+      roundProgress.note("dispatch");
       startedThisCycle.add(result.obligationId);
       if (result.outcome === "WORKED") fleetSafety.recordSuccessfulActivity(nowIso());
       if (lane === "BOUNDED_MODEL_WORKER") {
@@ -3100,6 +3108,8 @@ async function runAutonomousWave() {
   let taskQueue: ReturnType<typeof readTaskQueue> | null = null;
   const workerDispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
     deadlineMs: dispatchDeadlineMs,
+    /* A hung worker is ended, and says so, before the runner's no-progress limit could end the whole round. */
+    childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000,
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
       searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, fundedSubjects: [...lifetimeHuntSubjects] },
@@ -3124,13 +3134,15 @@ async function runAutonomousWave() {
     },
     onDispatched: result => {
       placeOrderDirty = true;
+      roundProgress.note("worker wave");
       if (typeof result.repositoryCalls === "number") leaseTaskCalls.push(result.repositoryCalls);
       if (result.worker?.role !== "SCOUT") return;
       const outcome = result.disposition === "INGESTED" ? "CAPTURED"
         : result.disposition === "WALKED_NO_YIELD" || result.disposition === "DISCOVERED" ? "NOTHING_FOUND" : "REFUSED";
       console.log(`  Scout done: ${result.obligationId}; ${outcome}; code ${result.disposition ?? result.outcome ?? "NOT_RUN"}; usd ${result.cost?.usd === null || result.cost?.usd === undefined ? "unmeasured" : result.cost.usd.toFixed(6)}`);
     },
-    onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`) });
+    onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`),
+    onExited: (pid, why) => console.log(`  lease worker process ended: pid ${pid}; ${why}`) });
   const dispatches = [...queueFailures, ...workerDispatches];
   const scouts = dispatches.filter(row => row.attemptId && row.worker?.role === "SCOUT").length;
   return { ...planned, dispatches, scoutsAdmitted: scouts, scoutsLimitedAdmitted: scouts };
@@ -3257,6 +3269,7 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
         maxWalks, rotationStep: MEETINGS_DISCOVERY_MAX_WALKS, noProgressLimit: DISCOVERY_NO_PROGRESS_LIMIT,
         /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
         firstIds: new Set(sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:")).map((o) => o.subjectId)),
+        onWalk: () => roundProgress.note("meetings walks"),
         skipIds: new Set(
           sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
         ),

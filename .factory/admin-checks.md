@@ -61,3 +61,11 @@ Exact tested READY SHA: f2ca419ef23849c4c941fc7f6b78752ed9727e97. River baseline
 Local logs: /tmp/meanwhile-admin-ready-types.log, ready-lint.log, selection-network.txt, ready-full-network.log; baseline-browser.log, baseline-other-browser.log, baseline-beacon.log and baseline-vote-browser.log, all with the prefix /tmp/meanwhile-admin-. The publication includes this exact summary so a later environment need not have local files. Full logs remain local; no credentials were printed.
 
 Only stream/admin is published. No PR, main/river push, auto-merge, production data write, spending change or notification.
+
+## BR-04/11/26/35/36/39 final evidence (2026-10-05 19:30Z)
+
+- Exact foldable READY: `5f83a8c646140309545da256ed704cc654254d76`. BR-36 only READY with River writer/schema/migration hook pending. SQL is under `lib/db/pending-migrations/BR-36_admin_history_registered_kinds.sql` to keep unnumbered SQL out of the applied journal.
+- FULL exact application checkpoint `2c0c34018913da3c58d83a856d3888893923b032`: 9,366 tests, 9,339 PASS, 10 SKIP, 16 could-not-run pinned-browser failures, plus the unjournalled migration-file failure. Same 16 browser failures already independently compared to plain river `ecf402600401783b094837c29e0c515eadbdb843`. The recent-vote child leaked its fixture server after missing-browser launch (the same baseline bug); terminated only confirmed PID 47677 after >60s so FULL could finish. No timing artifact is usable.
+- The diff from that FULL SHA to final READY is only a byte-identical migration-file rename and status heartbeat. Exact READY: `env -u DATABASE_URL -u WTP_ASSET_STORE COREPACK_HOME=/tmp/meanwhile-corepack corepack pnpm exec tsc --noEmit` PASS; exact failing gate plus registered-history coverage through newline CI_TEST_FILES `tests/write-alarm.test.ts`, `tests/admin-history-registered.test.ts`: 19 PASS.
+- Other focused coverage: 146 PASS; final fix honor/migration 9 PASS; all Admin views including planted raw codes outside Technical details 23 PASS; projection/atomic/cause 48 PASS. Targeted changed-file eslint: 0 errors, 29 warnings.
+- Logs in this cloud: `/tmp/meanwhile-admin-batch-full.log`, `batch-migration-fix.log`, `batch-final-types.log`, `batch-lint.log` (each prefixed `/tmp/meanwhile-admin-`). No live DB write, browser acceptance, budget increase, or policy change claimed.

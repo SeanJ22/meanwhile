@@ -79,6 +79,10 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
       await citation.waitFor({ state: "visible" });
       assert.equal(await citation.count(), 1, "the expanded tail retains its real citation in Sources");
       await surface.getByRole("button", { name: mode === "map" ? "Voting Record" : "Voting record", exact: true }).click();
+      // The ballot's enclosing section remounts its fetched content; the
+      // map retains it. Either path must expose the complete held tail again.
+      const expand = surface.getByRole("button", { name: "Show all 21 recorded votes", exact: true });
+      if (await expand.isVisible()) await expand.click();
       await tail.waitFor({ state: "visible" });
       await surface.getByRole("button", { name: "Show latest 20", exact: true }).click();
       assert.equal(await surface.locator("[data-recent-vote-id]").count(), 20);

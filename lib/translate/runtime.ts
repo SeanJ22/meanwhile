@@ -1,18 +1,17 @@
-import type { FieldManualRepos } from "../control-plane/field-manual.ts";
 import type { ModelTransport } from "../control-plane/scheduler/scout-executor.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { captureIntact } from "../civic-data/worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { translationHash } from "./records.ts";
-import { translateMeasure } from "./worker.ts";
+import { translateMeasure, type MeasureTranslationRepos } from "./worker.ts";
 import { publishMeasureTranslation, readTranslations } from "./publication.ts";
 import { priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 
 /** Called inside an admitted worker with that worker's Fleet/area transport. */
 export async function runMeasureTranslation(input: {
-  readonly repos: FieldManualRepos;
+  readonly repos: MeasureTranslationRepos;
   readonly store: RoutineDataStore;
   readonly subject: Parameters<typeof translateMeasure>[0]["subject"];
   readonly primary: WorkerPublicationCapture;

@@ -15,6 +15,7 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { heldDirectoryReading, materializeBodyDirectoryWork, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
+import { runtimeKinds } from "../registry/kinds-settings.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { auditPull, capturesForPublication, captureIntact, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
@@ -308,6 +309,7 @@ export async function publishWorkerRosterResults(input: {
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   if (!input.workItemIds.length) return [];
+  const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
   const records = await readCompletedWorkerResults(input.repos);
   const readHeld = input.readHeld ?? localHeldCaptureReader();
   const allItems = (await input.repos.workItems.list()).map(row => row.value);
@@ -385,8 +387,8 @@ export async function publishWorkerRosterResults(input: {
       const already = publishedByBody.get(`${bodyId}
 ${readingId}`);
       if (already) throw Object.assign(new Error("REUSED"), { reused: already });
-      const directoryPackage = !directory ? null : parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now, results: records })
-        : workerBodyDirectoryPackage({ plan, held: heldDirectory!, prior, now: input.now });
+      const directoryPackage = !directory ? null : parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now, results: records, kinds })
+        : workerBodyDirectoryPackage({ plan, held: heldDirectory!, prior, now: input.now, kinds });
       const prepared: RegistryRuntimePackage = directoryPackage?.prepared ?? roster!;
       const unresolved = directoryPackage?.unresolved ?? roster!.unresolved;
       const before = prior.payload.bodyRosters.find(r => r.bodyId === bodyId)?.members ?? [];

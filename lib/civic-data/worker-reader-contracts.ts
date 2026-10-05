@@ -12,7 +12,7 @@ export type WorkerReaderContract = keyof typeof WORKER_READER_CLASSES;
 export function workerReaderClassMatches(id: WorkerReaderContract, recordClass: string): boolean {
   return recordClass === WORKER_READER_CLASSES[id] || id === "official-filings" && recordClass === "CAMPAIGN_FINANCE_FILING" ||
     id === "ballot-contests" && recordClass === "BALLOT_MEASURE" ||
-    id === "government-budgets" && ["BUDGET_RESPONSIBILITY", "BUDGET_AMENDMENT"].includes(recordClass);
+    id === "government-budgets" && ["BUDGET_RESPONSIBILITY", "BUDGET_AMENDMENT", "PUBLIC_RECORD"].includes(recordClass);
 }
 export function isWorkerReaderContract(id: string): id is WorkerReaderContract {
   return Object.hasOwn(WORKER_READER_CLASSES, id);

@@ -31,6 +31,7 @@ import { publicRecordIssue, recordNewPublicKinds } from "./public-records.ts";
 import type { PublicRecord } from "./types.ts";
 import { manualPayloadScope } from "./scoped-manual-contracts.ts";
 import { governmentBudgetIssue, governmentBudgetRecordId, budgetResponsibilityRole, budgetAuthorityKind } from "./government-budgets.ts";
+import { GOVERNMENT_FINANCE_FIELDS, governmentFinanceKind, governmentFinanceFact, type GovernmentFinanceField } from "./government-finance.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -107,6 +108,23 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
     requirePublication(body?.name, "CANONICAL_BODY_MISSING");
     if (contractId === "government-budgets") {
       const kind = checked.contract.recordClass;
+      if (kind === "PUBLIC_RECORD") {
+        requirePublication(Object.keys(f).every(field => ["bodyName", "title", "kindLabel", "sourceSentence", ...GOVERNMENT_FINANCE_FIELDS].includes(field)), "GOVERNMENT_FINANCE_FIELD_UNSUPPORTED");
+        const detailKind = governmentFinanceKind(text(f.kindLabel));
+        requirePublication(detailKind, "GOVERNMENT_FINANCE_KIND_UNRESOLVED");
+        requirePublication([f.title, f.kindLabel, f.sourceSentence].every(value => typeof value === "string" && checked.primary.evidence.text.includes(value)), "GOVERNMENT_FINANCE_WORDS_NOT_HELD");
+        const details: Partial<Record<GovernmentFinanceField, string | number | null>> = {};
+        for (const key of GOVERNMENT_FINANCE_FIELDS) {
+          const value = f[key];
+          if (value === undefined) continue;
+          requirePublication(value === null || typeof value === "string" || typeof value === "number", "GOVERNMENT_FINANCE_DETAIL_UNREADABLE");
+          details[key] = value;
+        }
+        return governmentFinanceFact({ bodyId: body.id, ocdId: body.ocdId!, government: body.name,
+          detailKind, title: text(f.title), sourceSentence: text(f.sourceSentence), sourceUrl: checked.primary.evidence.canonicalUrl,
+          sourceHash: (checked.primary.evidence.sourceDocument?.contentHash ?? checked.primary.evidence.contentHash).replace(/^sha256-/, ""),
+          capturedAt: checked.primary.observedAt, details });
+      }
       const allowed = new Set(["bodyName", "sourceSentence", ...(kind === "BUDGET_RESPONSIBILITY" ? ["role", "responsible", "authorityKind"] :
         ["title", "fiscalYear", "fiscalStart", "fiscalEnd", "version", "budgetVersion", "documentUrl"])]);
       requirePublication(Object.keys(f).every(field => allowed.has(field)), "BUDGET_FIELD_UNSUPPORTED");

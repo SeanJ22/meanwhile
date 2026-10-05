@@ -1,4 +1,6 @@
-export type ProvisionKind = "FUNDING" | "PROGRAM" | "OVERSIGHT" | "SUNSET" | "START";
+/** New writes validate kinds against the current runtime table. Historical
+ * promoted records retain their keys when Admin later changes that table. */
+export type ProvisionKind = string;
 
 /** Stored inside the ballot's civic-data projection, with stable reaction keys. */
 export interface MeasureRecord {
@@ -31,7 +33,7 @@ export function measureRecordIssue(record: MeasureRecord): string | null {
   const ids = new Set<string>();
   for (const part of record.parts) {
     if (!part || typeof part.id !== "string" || !part.id.startsWith(`${record.contestId}#`) || ids.has(part.id) ||
-        !["FUNDING", "PROGRAM", "OVERSIGHT", "SUNSET", "START"].includes(part.kind) ||
+        typeof part.kind !== "string" || !/^[A-Za-z][A-Za-z0-9_-]{0,99}$/.test(part.kind) ||
         typeof part.label !== "string" || !part.label.trim() || typeof part.what !== "string" || !part.what.trim() ||
         !(part.number === null || typeof part.number === "string" && part.number.trim())) {
       return "Measure part lacks its stable identity or source text.";
@@ -40,4 +42,3 @@ export function measureRecordIssue(record: MeasureRecord): string | null {
   }
   return null;
 }
-

@@ -8,6 +8,10 @@ import { scoutThinkingOptions, type ModelRequest, type ModelResponse, type Model
 import type { WorkerEvidence } from "../control-plane/workers/types.ts";
 import { readMeteredUsage, priceMeteredUsage } from "../control-plane/model-cost.ts";
 import { measureRecordIssue, type MeasureRecord } from "../ballot/measure-records.ts";
+import { runtimeKinds } from "../registry/kinds-settings.ts";
+import { registeredKind } from "../registry/kinds.ts";
+import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+export type MeasureTranslationRepos = FieldManualRepos & Pick<ControlPlaneRepositories, "adminConfig">;
 import { translationHash, translationRecordIssue, type TranslationSentence, type MeasureTranslation, type TextTranslation } from "./records.ts";
 
 export interface TranslationPlaybook {
@@ -134,7 +138,7 @@ export async function translateText(input: {
 
 /** The caller supplies the existing Fleet/area budget transport for BOTH calls. */
 export async function translateMeasure(input: {
-  readonly repos: FieldManualRepos;
+  readonly repos: MeasureTranslationRepos;
   readonly evidence: WorkerEvidence;
   readonly subject: { readonly contestId: string; readonly title: string; readonly ocdId: string; readonly state: string; readonly prior: MeasureRecord | null };
   readonly transportFor: (subject: { subjectId: string; state: string }) => ModelTransport;
@@ -152,12 +156,15 @@ export async function translateMeasure(input: {
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });
   const sourceHash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
+  const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
   const writer = await send(request(playbook.writerModel, writerTool, { source: evidence.text, subject,
-    sourceUrl: evidence.canonicalUrl, sourceHash, writtenAt: now }));
+    sourceUrl: evidence.canonicalUrl, sourceHash, writtenAt: now,
+    partKinds: kinds.measurePart }));
   const proposal = toolResult(writer, writerTool.name, playbook.writerModel) as { measure: MeasureRecord; sentences: TranslationSentence[] };
   if (!proposal || measureRecordIssue(proposal.measure) || proposal.measure.contestId !== subject.contestId ||
       proposal.measure.sourceUrl !== evidence.canonicalUrl || proposal.measure.sourceHash !== sourceHash || proposal.measure.writtenAt !== now ||
       !Array.isArray(proposal.sentences) || proposal.sentences.some(sentence => !sentence || typeof sentence.quote !== "string" || !evidence.text.includes(sentence.quote))) throw new Error("Translation writer returned unsupported fields or source passages.");
+  if (proposal.measure.parts.some(part => !registeredKind(kinds, "measurePart", part.kind))) throw new Error("Translation part kind is absent from the current kinds setting.");
   if (subject.prior?.parts.some(part => !proposal.measure.parts.some(proposed => proposed.id === part.id &&
       (part.number === null || proposed.number === part.number)))) throw new Error("Translation would lose or reassign an existing measure part's reaction identity.");
   const checker = await send(request(playbook.checkerModel, checkerTool, { originalSource: evidence.text, subject,

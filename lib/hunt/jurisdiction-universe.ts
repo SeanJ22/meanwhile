@@ -76,6 +76,7 @@ export type JurisdictionRecordClass =
   | "ADOPTED_BUDGETS"
   | "BUDGET_RESPONSIBILITIES"
   | "BUDGET_AMENDMENTS"
+  | "GOVERNMENT_FINANCE"
   | "MEETINGS";
 
 /**

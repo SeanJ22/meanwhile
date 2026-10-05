@@ -2,8 +2,9 @@ import { createHash } from "node:crypto";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { scopedManualContractScope } from "./scoped-manual-contracts.ts";
+import { governmentFinanceIssue, type GovernmentFinanceFact } from "./government-finance.ts";
 
-interface BudgetSource {
+export interface BudgetSource {
   readonly id: string; readonly bodyId: string; readonly ocdId: string; readonly government: string;
   readonly sourceUrl: string; readonly sourceSentence: string; readonly capturedAt: string;
 }
@@ -21,7 +22,7 @@ export interface BudgetAmendment extends BudgetSource {
   readonly kind: "BUDGET_AMENDMENT"; readonly title: string; readonly fiscalYear: string;
   readonly budgetVersion: string; readonly documentUrl: string; readonly documentHash: string;
 }
-export type GovernmentBudgetFact = AdoptedBudget | BudgetResponsibility | BudgetAmendment;
+export type GovernmentBudgetFact = AdoptedBudget | BudgetResponsibility | BudgetAmendment | GovernmentFinanceFact;
 const ROLES = { PROPOSES: /\b(?:propos(?:e|es|al)|prepares?|preparation)\b/i, ADOPTS: /\b(?:adopt(?:s|ion)?|approv(?:e|es|al))\b/i,
   RUNS: /\b(?:administer(?:s)?|administration|executes?|execution|runs?)\b/i, OVERSEES: /\b(?:oversee(?:s)?|oversight|supervis(?:e|es|ion))\b/i };
 
@@ -40,6 +41,7 @@ export function budgetAuthorityKind(sourceWords: string): BudgetResponsibility["
 
 export function governmentBudgetIssue(value: unknown): string | null {
   const row = value as GovernmentBudgetFact;
+  if (row?.kind === "GOVERNMENT_FINANCE") return governmentFinanceIssue(row);
   if (!row || !row.id || !row.bodyId || !row.government?.trim() || !row.sourceSentence?.trim() ||
       !jurisdictionFromOcdId(row.ocdId) && row.ocdId !== "ocd-division/country:us" || !/^https:\/\//.test(row.sourceUrl) ||
       !Number.isFinite(Date.parse(row.capturedAt))) return "Budget fact has no exact government or source identity.";

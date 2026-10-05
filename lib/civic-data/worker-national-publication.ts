@@ -21,7 +21,6 @@
 import type { RoutineDataStore } from "./store.ts";
 import type { OfficialLinkingPage } from "./source-authority.ts";
 import type { Body, Division, SourceDataset } from "../registry/types.ts";
-import type { Tier } from "../ocd/tiers.ts";
 import { bodiesFor } from "../registry/derive.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
@@ -36,6 +35,7 @@ import { createHash } from "node:crypto";
 import { storeVerifiedPortrait, type PortraitRuntime } from "../photos/store.ts";
 import type { PortraitSources } from "../photos/evidence.ts";
 import { isOfficialSource } from "./source-authority.ts";
+import { DEFAULT_KINDS, registeredKind, type KindTable } from "../registry/kinds.ts";
 
 /** One Census division as the place hunt resolved it. `sourceUrl` is the saved Census response it came from. */
 export interface NationalDivisionInput {
@@ -71,6 +71,8 @@ export interface NationalPlacePublicationInput {
   readonly geographyCaptures: readonly WorkerPublicationCapture[];
   readonly sources: { readonly officials: readonly NationalOfficialInput[] };
   readonly portraitRuntime?: PortraitRuntime;
+  /** Freshly read existing Admin setting; caller must not cache across passes. */
+  readonly kinds?: KindTable;
 }
 
 export interface NationalPlacePublication {
@@ -97,7 +99,6 @@ const DIVISION_TYPES: Readonly<Record<string, Division["divisionType"]>> = {
 const SCOPE_DIVISIONS = new Set(["country", "state"]);
 /** Census functional statuses of a government (active, partially consolidated, consolidated, subordinate). */
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
-const TIERS: Readonly<Record<Division["divisionType"], Tier>> = { cd: "national", sldu: "state", sldl: "state", county: "local", place: "local", school_district: "local" };
 const LEGISLATIVE = new Set<Division["divisionType"]>(["cd", "sldu", "sldl"]);
 const STATE_DIVISION = /^ocd-division\/country:us\/state:[a-z]{2}$/;
 const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -125,12 +126,14 @@ export function nationalBodyId(division: Pick<Division, "ocdId" | "divisionType"
 }
 
 /** The registry row for a division, when its saved Census response supports it (§3). */
-function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPublicationCapture[], now: string): Division | string | null {
+function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPublicationCapture[], now: string, kinds: KindTable): Division | string | null {
   if (SCOPE_DIVISIONS.has(input.divisionType)) return null;
   // A statistical or fictitious subdivision is not a government; Census has said so, and the place layer holds the one that is.
   if (["cousub", "county_subdivision"].includes(input.divisionType) && !GOVERNING_FUNCSTAT.has((input.funcstat ?? "").toUpperCase())) return null;
-  const divisionType = DIVISION_TYPES[input.divisionType];
+  const divisionType = registeredKind(kinds, "division", DIVISION_TYPES[input.divisionType] ?? input.divisionType);
   if (!divisionType) return `DIVISION_TYPE_NOT_A_REGISTRY_DIVISION:${input.divisionType}`;
+  const tier = kinds.division.find(row => row.key === divisionType)?.tier;
+  if (!tier) return `DIVISION_TIER_NOT_REGISTERED:${input.divisionType}`;
   const state = /\/state:([a-z]{2})\b/.exec(input.id)?.[1]?.toUpperCase();
   if (!state) return "DIVISION_STATE_UNRESOLVED";
   const capture = captures.find(c => c.evidence.canonicalUrl === input.sourceUrl);
@@ -139,7 +142,7 @@ function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPubl
   const verdict = section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt }, "CENSUS_GEOGRAPHY", now);
   if (!verdict.ok) return verdict.reason!;
   if (!valueOnPage(input.label, capture.evidence.text) || (input.geoid !== null && !capture.evidence.text.includes(input.geoid))) return "DIVISION_NOT_ON_SAVED_SOURCE";
-  return { ocdId: input.id, divisionType, tier: TIERS[divisionType], state, label: input.label, parentOcdId: input.id.replace(/\/[^/]+$/, ""),
+  return { ocdId: input.id, divisionType, tier, state, label: input.label, parentOcdId: input.id.replace(/\/[^/]+$/, ""),
     lsad: input.lsad ?? null, funcstat: input.funcstat ?? null, classfp: input.classfp ?? null, geoid: input.geoid,
     canonicalOcdId: input.id, canonicalMatch: "exact", sourceDataset: input.sourceDataset,
     provenance: { sourceUrl: input.sourceUrl, sourceOrg: "U.S. Census Bureau", collectedAt: capture.observedAt, verifiedAt: now } } as Division;
@@ -181,7 +184,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   const officialDivisions = new Set(input.sources.officials.map(o => o.divisionId));
   for (const row of input.divisions) {
     const held = heldDivisions.get(row.id);
-    let division = held ?? divisionRow(row, input.geographyCaptures, input.now);
+    let division = held ?? divisionRow(row, input.geographyCaptures, input.now, input.kinds ?? DEFAULT_KINDS);
     if (division === null) continue;
     if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
     if (!heldDivisions.has(row.id)) { divisions.push(division); used.add(row.sourceUrl); }
@@ -192,7 +195,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
       // Held registry provenance may name an older download, while this hunt
       // saved a current query. Bind a new body to the bytes checked here;
       // retaining the division never makes its old URL a current capture.
-      division = divisionRow(row, input.geographyCaptures, input.now);
+      division = divisionRow(row, input.geographyCaptures, input.now, input.kinds ?? DEFAULT_KINDS);
       if (division === null) continue;
       if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
       if (division.divisionType !== held.divisionType || division.geoid !== held.geoid) {

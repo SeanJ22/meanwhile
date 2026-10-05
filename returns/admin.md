@@ -1,25 +1,25 @@
-# Returns and hook requests for admin
+# Returned: admin
 
-River writes this file. Do these before new steps; a hook is a small connection in a file you own. Record each one as done in your status, with its commit.
+lane: admin
+owner: admin
+writer: the admin lane
+check: fold
+ready: no step ids 5f83a8c646140309545da256ed704cc654254d76
+river: ecf402600401783b094837c29e0c515eadbdb843
+at: 2026-10-05T20:08:25Z
+state: returned
+fix_subject: fix:fc3f3f9a
+fix: River · stream/admin — fold failed for admin: Your READY 5f83a8c64 (BR-07, BR-04, BR-11, BR-26, BR-35, BR-39, BR-36), and the earlier f2ca419ef (BR-07) alone, conflict with measures' BR-14 Queue view, BR-23 Scoreboard and BR-25 "Now shows the few things that matter" (measures READY e47
 
-## 2026-10-04 06:45Z — hook from measures
+## Failure
 
-BR-08: in `lib/control-plane/gateway/registry.ts`, make `expansion.scope.set` accept a "state" scope type. Measures owns scopes.ts and the rest.
+```
+Your READY 5f83a8c64 (BR-07, BR-04, BR-11, BR-26, BR-35, BR-39, BR-36), and the earlier f2ca419ef (BR-07) alone, conflict with measures' BR-14 Queue view, BR-23 Scoreboard and BR-25 "Now shows the few things that matter" (measures READY e47bf4a5f), which fold first in this batch.
+Conflicting files: app/(admin)/_mw/admin-v6/command-center.tsx, contract.ts, model.ts, screen-now.tsx, tests/admin-v6-ui/v6-ui.test.tsx.
+Example: screen-now.tsx NowScreen. river (measures BR-25) renders <Matters/>, <DirectWork/>, <National/>, <Instruction/>. Your branch renders <NextSteps/>, <SixAnswers/>, <Readers/>, <Stuck/>, <Missing/>, <Happening/>, <Cost/>, <Recent/>. model.ts ActionKind: river adds contain/uncontain/recheck/workfirst/fixfirst/stopmethod/scope-*/doc-request/use-url/reprocess/retry-method/resume-publish/eng-task/job-stop/focus/order-unschedule, and you need yours kept as well.
+Once River promotes this batch, catch up with `river` (not river-next), keep measures' BR-14/BR-23/BR-25 screens and connect your BR-07 sendable controls to them. Then re-run your checks and mark a new READY. Your other steps in that batch are held only because they sit on the same commit.
+```
 
-## 2026-10-04 06:45Z — hook from registry
+## Repair
 
-DB-09: render `listDoors(repos.doors)` from `lib/doors/registry.ts` and the door.save receipts in the command center (plain English, Eastern time, no IDs on screen).
-
-## 2026-10-04 08:20Z — continuation handoff
-
-This lane is now continued by its paired Claude worker (see assignments.md → Handoffs). Start from the saved continuation file on stream/admin. The waiting_on items about FULL failures are answered in assignments.md → "Checks guidance for FULL batches". Browser and live acceptance belong to River after release, so don't hold a step for them.
-
-## 2026-10-05 17:40Z: standing instruction from Sean (all lanes)
-
-Sean, to River, word for word: "Builders don't send me notifications or ask me questions. Their questions go to you, and you answer every "how" decision yourself under rulings §8. Bring me only credentials, new paid services, spending beyond the budget, and D7. Tell every lane this in its returns file."
-
-What this means for you, from now on:
-- **Never notify Sean and never ask him anything.** No push notifications, no questions in a final reply, no "needs_Sean" for how-to choices.
-- **Put every question under `needs_River:` in your status file.** River reads it each run and answers here in your returns file. Choices about which source, method, order, design, module, migration or fix are "how" decisions. River makes them under rulings §8. A design choice that touches spending controls is still "how", as long as it changes no limit and Sean's settings stay as they are.
-- **`needs_Sean:` is only for** a missing credential, a new paid service, spending beyond the budget, or D7 (SC-17). River checks each entry and takes it to Sean. You don't.
-- While you wait on an answer, keep building your other ready steps.
+Fix on stream/admin and publish a new READY commit; River folds the new READY and clears this return when it integrates.

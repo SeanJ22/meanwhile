@@ -181,6 +181,7 @@ export interface ReaderResult {
 export type Lane = "decision" | "auto" | "publisher" | "software";
 
 export interface StuckItem {
+  readonly technical?: readonly string[];
   readonly id: string;
   readonly title: string;
   readonly applies: readonly string[];
@@ -739,7 +740,7 @@ export interface FixView {
 /* --------------------------------------------------------------- actions */
 
 export type ActionKind =
-  "decide" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go" | "send-agents" | "cancel-send" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
+  "decide" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];
@@ -819,7 +820,6 @@ export interface AdminV6Data {
   readonly results: Sourced<readonly ReaderResult[]>;
   readonly stuck: Sourced<readonly StuckItem[]>;
   readonly sameCause: Sourced<readonly SameCause[]>;
-  readonly workRows: Sourced<{ readonly rows: readonly WorkRow[]; readonly totals: readonly WorkStageTotal[] }>;
   readonly history: Sourced<readonly UiReceipt[]>;
   readonly workers: Sourced<{ readonly status: WorkerStatus; readonly jobs: readonly WorkerJob[] | null; readonly running?: WorkersRunning | null; readonly waiting: readonly WaitingItem[] | null; readonly events: readonly WorkerEvent[] | null; readonly update: UpdateCard | null; readonly next: readonly string[] | null }>;
   readonly checklist: Sourced<ChecklistView>;
@@ -831,7 +831,6 @@ export interface AdminV6Data {
   readonly money: Sourced<MoneyView>;
   readonly learning: Sourced<LearningView>;
   readonly fixes: Sourced<FixView>;
-  readonly decided: Sourced<readonly { readonly title: string; readonly state: string }[]>;
 }
 
 /* ------------------------------------------------------------ small words */

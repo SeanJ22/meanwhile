@@ -45,7 +45,6 @@
  *
  * PURE.
  */
-import { FIX_QUEUE_SUBJECT, GO_FIX_OPTION } from "@/lib/control-plane/fix-queue.ts";
 import type { ActionKind, AdminV6Data } from "./model.ts";
 import { settingValueFromInput } from "./actions.ts";
 
@@ -53,7 +52,7 @@ export const V6_CAPABILITY_VERSION = 1;
 
 export type SectionId = keyof AdminV6Data;
 export const SECTION_IDS: readonly SectionId[] = [
-  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "learning", "fixes", "decided",
+  "places", "hunts", "national", "results", "stuck", "sameCause", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "learning", "fixes",
 ];
 
 export function sectionContract(id: SectionId): string {
@@ -100,7 +99,7 @@ export interface SectionPage {
 }
 
 /** Sections read one window at a time; the page never fetches their whole population. */
-export const PAGED_SECTIONS: readonly SectionId[] = ["workRows", "history", "checklist", "fixes"];
+export const PAGED_SECTIONS: readonly SectionId[] = ["history", "checklist", "fixes"];
 export const PAGE_LIMIT = 50;
 
 const SAME_ORIGIN_PATH = /^\/api\/admin\/[A-Za-z0-9/_\-.]+$/;
@@ -183,8 +182,6 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
     case "global-runner-pause":
     case "global-runner-resume":
       return { note: s.words.trim() || null };
-    case "fix-go":
-      return { subjectId: FIX_QUEUE_SUBJECT, chosenOption: GO_FIX_OPTION, consequenceShown: "The queued gaps were sent for a session to fix", ownerAnswer: null };
     case "global-ceiling":
       return { rollingCeilingUsd: s.amount.trim() === "" ? null : Number(s.amount) };
     case "target-set":

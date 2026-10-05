@@ -30,7 +30,6 @@ import { mst, type ActionKind, type ActionRef, type AdminV6Data, type Place, typ
 import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches } from "./places.ts";
 import { newActionKey, startReceipt } from "./receipts.ts";
 import { ChecklistScreen } from "./screen-checklist.tsx";
-import { FixQueueControls } from "./fix-queue-controls.tsx";
 import { FixScreen } from "./screen-fix.tsx";
 import { LearningScreen } from "./screen-learning.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
@@ -141,8 +140,6 @@ export function CommandCenter(props: CommandCenterProps) {
     for (const r of data.results.data ?? []) for (const st of r.trail) for (const d of st.docs ?? []) if (d.id === id) return d.name;
     const job = data.workers.data?.jobs?.find((j) => j.id === id);
     if (job) return job.title;
-    const row = data.workRows.data?.rows.find((w) => w.id === id);
-    if (row) return row.title;
     const dec = data.stuck.data?.find((i) => i.decision?.id === id);
     if (dec) return dec.title;
     return id;
@@ -163,7 +160,6 @@ export function CommandCenter(props: CommandCenterProps) {
       url: ref.payload?.url,
       words: ref.payload?.words,
       payload: ref.payload,
-      waitingCount: scopeKey === COUNTRY_KEY ? data.workRows.data?.totals.find((t) => t.stage === "waiting")?.total ?? null : null,
       outreachAuthorized: props.access.outreachAuthorized,
     };
   };
@@ -378,7 +374,7 @@ export function CommandCenter(props: CommandCenterProps) {
               {view === "checklist" && <ChecklistScreen />}
               {view === "money" && <MoneyScreen />}
               {view === "learning" && <LearningScreen />}
-              {view === "fix" && <><FixQueueControls /><FixScreen /></>}
+              {view === "fix" && <><FixScreen /></>}
               {view === "settings" && <SettingsScreen />}
               {view === "reports" && <ReportsView />}
               {view === "changes" && <ChangesView />}

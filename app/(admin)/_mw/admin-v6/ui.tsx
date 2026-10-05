@@ -5,6 +5,7 @@
  * something is an `ActionButton`: it asks the one eligibility rule, shows the
  * first reason it is off, and opens the preview dialog. Nothing here sends.
  */
+import { hasTechnicalText, plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 import { useEffect, useState, type ReactNode } from "react";
 
 import type { SectionId } from "./contract.ts";
@@ -24,7 +25,7 @@ export function Card(props: { readonly title?: ReactNode; readonly aside?: React
     <section id={props.id} aria-labelledby={props.title ? headId : props.labelledBy} className={cx(s.card, props.tone === "warn" && s.cardWarn, props.tone === "global" && s.cardGlobal)}>
       {(props.title || props.aside) && (
         <div className={s.cardHead}>
-          {props.title && <h2 id={headId} className={s.h2}>{props.title}</h2>}
+          {props.title && <h2 id={headId} className={s.h2}>{typeof props.title === "string" ? plainWords(props.title) : props.title}</h2>}
           {props.aside}
         </div>
       )}
@@ -95,7 +96,7 @@ export function Facts(props: { readonly rows: readonly (readonly [string, ReactN
       {props.rows.map(([k, val]) => (
         <div key={k} style={{ display: "contents" }}>
           <dt>{k}</dt>
-          <dd>{val}</dd>
+          <dd>{typeof val === "string" ? <>{plainWords(val)}{hasTechnicalText(val) && <Technical lines={[val]} />}</> : val}</dd>
         </div>
       ))}
     </dl>

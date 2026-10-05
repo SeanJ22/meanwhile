@@ -544,7 +544,6 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
       { key: "person", cause: "Automatic routes tried and failed", lane: "decision", count: "1", itemIds: ["i-davis"], action: a("decide", "davis") },
       { key: "retry", cause: "Retries repeating the same failure", lane: "auto", count: "319", itemIds: ["i-retry"],},
     ], SECTION_DEP.stuck, SAMPLE_AS_OF),
-    workRows: sample({ rows: sampleRows(), totals: [{ stage: "waiting", total: 932 }, { stage: "stuck", total: 78 }, { stage: "retrying", total: 731 }, { stage: "done", total: 1069 }, { stage: "retired", total: 591 }] }, SECTION_DEP.work, SAMPLE_AS_OF),
     agents: sample([], SECTION_DEP.agents, SAMPLE_AS_OF),
     sends: sample([], SECTION_DEP.sends, SAMPLE_AS_OF),
     reliability: sample([], SECTION_DEP.reliability, SAMPLE_AS_OF),
@@ -598,10 +597,6 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
       ],
     }, SECTION_DEP.learning, SAMPLE_AS_OF),
     fixes: sample(f, SECTION_DEP.fixes, SAMPLE_AS_OF),
-    decided: sample([
-      { title: "Remove the $105 rolling 24-hour ceiling", state: "Decision saved Sep 28 — change pending (waiting for the workers to restart)" },
-      { title: "Facts that pass their checks publish automatically, without owner review", state: "Settled · in force" },
-    ], SECTION_DEP.decided, SAMPLE_AS_OF),
   };
 }
 
@@ -644,7 +639,6 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
       const label = option === "other" ? `“${words.trim()}”` : ({ route: "look for another route", absent: "record as not available", clerk: "trust the clerk’s list", roster: "trust the roster", both: "show both dates", third: "look for a third source" } as Record<string, string>)[option ?? ""] ?? "recorded";
       return { final: "done", statusWords: "Decision saved — change pending", says: `Decision saved: ${label}. Carrying it out is a separate step, shown on the item.`, effect: (w) => ({ ...w, decisions: { ...w.decisions, [target]: label } }) };
     }
-    case "fix-go": return { final: "done", statusWords: "Sent for engineering", says: "Sample preview: the queue was sent. Nothing real was sent.", effect: (w) => w };
     case "global-ceiling": return { final: "done", statusWords: "Daily budget saved", says: "Sample preview: the daily budget was set. Nothing real was sent.", effect: (w) => w };
     case "global-search-on":
     case "global-search-off": return { final: "done", statusWords: "Paid search setting saved", says: "Sample preview: the paid search setting was saved. Nothing real was sent.", effect: (w) => w };

@@ -1,3 +1,6 @@
+import { openControlPlane } from "../admin-data.ts";
+import { recordUndescribedCauses } from "./undescribed-causes.ts";
+import { causeOf } from "./blocker-causes.ts";
 import { neon } from "@neondatabase/serverless";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
@@ -16,6 +19,11 @@ export async function population(): Promise<StuckPopulation | null> {
   const url = controlPlaneUrlFromEnv();
   if (!url) return null;
   const read = await readStuckPopulation(neon(url));
+  const unknown = new Map(read.rows.filter(row => causeOf(row).undescribed).map(row => [causeOf(row).key, row]));
+  if (unknown.size) {
+    const opened = await openControlPlane();
+    if (opened.ok) await recordUndescribedCauses(opened.repos, read.rows, new Date().toISOString()).catch(() => undefined);
+  }
   memo = { at: Date.now(), population: read };
   return read;
 }

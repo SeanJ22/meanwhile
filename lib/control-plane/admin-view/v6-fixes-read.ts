@@ -42,7 +42,7 @@ function openFix(item: FixQueueItem): OpenFix {
     id: item.subjectId,
     title: titleOf(item.says),
     tab: item.state === "QUEUED" || item.state === "REFUSED" ? "attention" : "fixing",
-    owner: "Engineering",
+    owner: "The team",
     problem: item.says,
     helps: item.where,
     placeInLine: placeInLine[item.state],
@@ -60,16 +60,16 @@ function listOpen(item: FixItem): OpenFix {
     id: item.id,
     title: titleOf(item.says),
     tab: item.state === "OPEN" ? "attention" : "fixing",
-    owner: "Engineering",
+    owner: "The team",
     problem: item.says,
     helps: item.where,
-    placeInLine: item.state === "OPEN" ? `Added ${formatEastern(item.addedAt)}` : `Started ${formatEastern(item.startedAt ?? item.addedAt)}`,
+    placeInLine: item.dispatch ? (item.dispatch.honoredAt ? "Agents sent" : "Waiting for the runner") : item.state === "OPEN" ? `Added ${formatEastern(item.addedAt)}` : `Started ${formatEastern(item.startedAt ?? item.addedAt)}`,
     resourcesNow: "—",
     taskStage: null,
     taskId: null,
     linkedStuck: [],
     origin: item.addedBy === "owner" ? "engineering" : "automatic",
-    technical: `Fix list item ${item.id}, state ${item.state}, added ${item.addedAt}.`,
+    technical: [`Fix list item ${item.id}, state ${item.state}, added ${item.addedAt}.`, ...(item.technical ?? []), ...(item.dispatch?.honoredDetail ? [item.dispatch.honoredDetail] : [])].join("\n"),
   };
 }
 

@@ -268,6 +268,7 @@ interface TopicRule {
 }
 
 const TOPIC_RULES: readonly TopicRule[] = [
+  { topic: "PLACE_STUCK", phrasings: [["why", "stuck"], ["place", "stuck"], ["district", "stuck"]] },
   {
     topic: "FLEET_BLOCKERS",
     phrasings: [
@@ -391,8 +392,8 @@ export const ACTION_MIN_COVERAGE = 0.4;
  *
  * Both halves of its own identity: the machine type and the label the button
  * shows. The type is split on its separators AND on camel case, because the
- * registry writes `fleet.retryWorkItem` and the owner writes *"retry this work
- * item"* — a split that stopped at the dot would leave one unmatchable token
+ * registry writes `fleet.deployHere` and the owner writes *"deploy the fleet
+ * here"* — a split that stopped at the dot would leave one unmatchable token
  * and the action would be unreachable by the words it is named after.
  */
 export function actionVocabulary(definition: ActionDefinition): Set<string> {

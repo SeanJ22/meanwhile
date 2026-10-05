@@ -103,7 +103,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
             {res && <button type="button" className={s.btnLink} onClick={() => v.open({ type: "result", id: res.id })}>Delivery trail: {res.title} →</button>}
             {i.fixId && <button type="button" className={s.btnLink} onClick={() => v.open({ type: "fix", id: i.fixId! })}>The fix: {v.nameOf(i.fixId)} →</button>}
           </div>
-          <Technical lines={[`stuck ${i.id}`, ...(i.fixId ? [`fix ${i.fixId}`] : [])]} />
+          <Technical lines={[...(i.technical ?? []), `stuck ${i.id}`, ...(i.fixId ? [`fix ${i.fixId}`] : [])]} />
         </Card>
         <Card title="What was saved for this work"><EvidenceTrail id={i.id} /></Card>
         {!!same.length && <Card title="Same cause"><div className={s.stack}>{same.map((x) => <StuckRow key={x.id} item={x} />)}</div></Card>}
@@ -174,16 +174,6 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     );
   }
 
-  if (d.type === "work") {
-    const r = v.data.workRows.data?.rows.find((x) => x.id === d.id);
-    if (!r) return <Empty>This work row isn’t available.</Empty>;
-    return (
-      <Panel eyebrow={`${v.index.get(r.placeKey)?.name} · work row`} title={r.title} summary={`Stage: ${r.stage} · ${r.age}`} targets={[r.id]}>
-        <Card title="Details"><Facts rows={[["Where", v.index.get(r.placeKey)?.name ?? r.placeKey], ["Attempts, evidence and costs", "—"]]} /></Card>
-      </Panel>
-    );
-  }
-
   // search
   const q = d.query.toLowerCase();
   const hits: { type: string; title: string; sub: string; go: () => void }[] = [
@@ -192,7 +182,6 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     ...(v.data.fixes.data?.open ?? []).map((f) => ({ type: "Fix", title: f.title, sub: f.owner, go: () => v.open({ type: "fix", id: f.id }) })),
     ...(v.data.checklist.data?.definitions ?? []).map((x) => ({ type: "Definition", title: `${x.id} ${x.requirement.split(" — ")[0]}`, sub: v.data.checklist.data?.groupNames[x.group] ?? x.group, go: () => v.go("checklist") })),
     ...v.places.map((p) => ({ type: "Place", title: p.name, sub: p.kind, go: () => v.setScope(p.key) })),
-    ...(v.data.workRows.data?.rows ?? []).filter((r) => relation(v.index, [r.placeKey], v.scopeKey)).map((r) => ({ type: `Work row · ${r.stage}`, title: r.title, sub: v.index.get(r.placeKey)?.name ?? "", go: () => v.open({ type: "work", id: r.id }) })),
   ].filter((h) => `${h.type} ${h.title} ${h.sub}`.toLowerCase().includes(q)).slice(0, 40);
   return (
     <>

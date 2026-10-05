@@ -123,3 +123,47 @@ test("BR-16/BR-37: due scheduled orders are sent once through the gateway, even 
   const receipts = await repos.adminReceipts.readAll();
   assert.equal(receipts.filter((r) => r.type === "runner.pause").length, 1);
 });
+
+test("BR-04: missing information dispatches once; engineering stays on the team's queue", async () => {
+  const repos = createMemoryRepositories();
+  const d = deps(repos);
+  const request = { type: "queue.add", subject: "", input: { where: "Example County", says: "Missing meeting agendas", kind: "data" },
+    stateVersion: null, idempotencyKey: "repair-data-1", caller: "OWNER_SESSION" as const, actorRef: "s" };
+  const saved = await submit(request, d);
+  assert.equal(saved.ok, true, saved.receipt.says);
+  const first = fixItems(await read(repos))[0];
+  assert.ok(first.dispatch?.intentId);
+  assert.equal(first.state, "FIXING");
+  assert.equal(v6FixesView(fixQueueView([]), [first]).open[0].placeInLine, "Waiting for the runner");
+  await submit({ ...request, idempotencyKey: "repair-data-2" }, d);
+  assert.equal(fixItems(await read(repos))[0].dispatch?.intentId, first.dispatch?.intentId);
+  await submit({ ...request, idempotencyKey: "repair-code", input: { where: "Example County", says: "The button is too small", kind: "engineering" } }, d);
+  const code = fixItems(await read(repos)).find(item => item.says.includes("button"))!;
+  assert.equal(code.state, "OPEN");
+  assert.equal(code.dispatch, undefined);
+});
+
+test("BR-04: the item shows Agents sent only after the runner's durable acknowledgment", async()=>{
+  const { refreshFixDispatchHonors }=await import("../lib/control-plane/fix-list.ts");
+  const { RESEARCH_INTENT_LOG_KEY }=await import("../lib/control-plane/scheduler/research-policy.ts");
+  const repos=createMemoryRepositories(); const d=deps(repos);
+  await submit({type:"queue.add",subject:"",input:{where:"Example County",says:"Missing meeting agendas",kind:"data"},stateVersion:null,idempotencyKey:"honor-fix",caller:"OWNER_SESSION",actorRef:"s"},d);
+  const item=fixItems(await read(repos))[0];
+  await repos.researchIntents.append(RESEARCH_INTENT_LOG_KEY,"honor-fix",{formatVersion:1,kind:"HONORED",honoredBy:"runner",intentId:"honor-fix",honors:item.dispatch!.intentId,action:"DISPATCH",honoredAt:at,detail:"Reordered 2 items."},at);
+  await refreshFixDispatchHonors(repos,at);
+  const updated=fixItems(await read(repos))[0];
+  assert.equal(updated.dispatch!.honoredAt,at);
+  assert.equal(v6FixesView(fixQueueView([]),[updated]).open[0].placeInLine,"Agents sent");
+});
+
+test("BR-04: old queued gaps migrate once through the live gateway",async()=>{
+  const { migrateQueuedFixes }=await import("../lib/control-plane/gateway/fix-migrate.ts");
+  const { DECISION_LOG_KEY }=await import("../lib/control-plane/admin-data.ts");
+  const { fixSubjectId, fixConsequence }=await import("../lib/control-plane/fix-queue.ts");
+  const repos=createMemoryRepositories();const d=deps(repos);const where="Example County",says="Missing meeting agendas";
+  await repos.ownerDecisions.append(DECISION_LOG_KEY,"legacy-fix",{formatVersion:1,intentId:"legacy-fix",subjectId:fixSubjectId(where,says),chosenOption:"Add this to the queue",consequenceShown:fixConsequence(where,says),decidedAt:at,state:"PENDING_CANONICALIZATION",canonicalRef:null,refusedReason:null,adminSessionRef:"s",ownerAnswer:null},at);
+  await migrateQueuedFixes(d,at);await migrateQueuedFixes(d,at);
+  assert.equal(fixItems(await read(repos)).length,1);assert.ok(fixItems(await read(repos))[0].dispatch);
+  assert.equal((await repos.adminReceipts.readAll()).filter(r=>r.type==="queue.add").length,1);
+  assert.equal((await read(repos)).legacyFixQueueImportedAt,at);
+});

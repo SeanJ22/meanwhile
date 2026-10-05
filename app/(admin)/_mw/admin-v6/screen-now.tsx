@@ -188,7 +188,6 @@ function NextSteps() {
     .map(({ item }) => ({ item, score: (item.readersAffected ? 4 : 0) + (item.lane === "decision" ? 3 : 0) + (item.unlocks ?? 0) + item.ageRank }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 4);
-  const decided = v.data.decided.data ?? [];
   return (
     <Card id="v6-steps" title="Suggested next steps">
       {v.data.stuck.state === "not-connected" ? <Empty>—</Empty> : !ranked.length && <Empty>Nothing here needs you right now.</Empty>}
@@ -209,12 +208,7 @@ function NextSteps() {
           );
         })}
       </ol>
-      {(decided.length > 0 || v.data.decided.state !== "not-connected") && (
-        <div className={s.stack}>
-          <h3 className={s.h3}>Already decided, waiting on implementation</h3>
-          {decided.map((d) => <div key={d.title} className={s.row}><strong className={s.small}>{d.title}</strong><span className={s.meta}>{d.state}</span></div>)}
-        </div>
-      )}
+
     </Card>
   );
 }

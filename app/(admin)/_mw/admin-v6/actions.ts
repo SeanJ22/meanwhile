@@ -323,21 +323,6 @@ const defs: ActionDef[] = [
     dependency: null,
   },
   {
-    kind: "fix-go",
-    label: "Go fix these",
-    needs: "owner",
-    doneWords: "Sent.",
-    preview: () => ({
-      title: "Send everything on the fix queue for engineering",
-      level: "global",
-      rows: [
-        ["What changes", "Every item waiting on the fix queue is sent"],
-      ],
-    }),
-    gateway: { type: "decision.record", requiresStateVersion: true },
-    dependency: null,
-  },
-  {
     kind: "global-ceiling",
     label: "Set the daily budget",
     needs: "spend",

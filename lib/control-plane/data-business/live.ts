@@ -124,7 +124,7 @@ const str = (v: unknown): string | null => (typeof v === "string" && v !== "" ? 
 const RESIDENCY: readonly Residency[] = ["HOME", "BROWSING", "MOVING", "UNKNOWN"];
 
 /** One stored batch into events: the exact time is reduced to its UTC day here, and nothing later can see it. */
-export function eventsOfBatch(json: string): CapturedEvent[] {
+export function eventsOfBatch(json: string, timeZone = "UTC"): CapturedEvent[] {
   const body = JSON.parse(json) as { reader?: unknown; tester?: unknown; events?: readonly StoredEvent[] };
   const reader = str(body.reader);
   if (reader === null || !Array.isArray(body.events)) return [];
@@ -135,7 +135,7 @@ export function eventsOfBatch(json: string): CapturedEvent[] {
     if (at === null || type === null || !Number.isFinite(Date.parse(at))) continue;
     const pick = e.ballotPick as CapturedEvent["ballotPick"] | null | undefined;
     out.push({
-      type, day: new Date(at).toISOString().slice(0, 10), reader, zip: str(e.zip), district: str(e.district),
+      type, day: timeZone === "UTC" ? new Date(at).toISOString().slice(0, 10) : new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(at)), reader, zip: str(e.zip), district: str(e.district),
       residency: (RESIDENCY as readonly unknown[]).includes(e.residencyRelation) ? (e.residencyRelation as Residency) : "UNKNOWN",
       cardId: str(e.cardId), cardKind: str(e.cardKind), durationMs: typeof e.durationMs === "number" ? e.durationMs : null, text: str(e.question),
       topic: str(e.topic) ?? "free-form", reaction: str(e.reaction), ballotPick: pick ?? null, tester: e.tester === true || body.tester === true,
@@ -145,22 +145,23 @@ export function eventsOfBatch(json: string): CapturedEvent[] {
 }
 
 /** The history source over a blob store. `cache` keeps parsed batches by key: they are immutable, so a copy is never stale. */
-export function historyEvents(store: HistoryStore, cache: Map<string, CapturedEvent[]> = new Map()) {
+export function historyEvents(store: HistoryStore, cache: Map<string, CapturedEvent[]> = new Map(), timeZone = "UTC") {
   return async (window: { readonly from: string; readonly to: string }): Promise<Loaded<CapturedEvent>> => {
     // A batch sits under the day of its first event and can run past midnight, so the day before the window is read too.
     const keys: string[] = [];
-    for (let day = daysBefore(window.from, 1); day <= window.to; day = daysBefore(day, -1)) keys.push(...await store.list(`events/${day}/`));
+    for (let day = daysBefore(window.from, 1); day <= (timeZone === "UTC" ? window.to : daysBefore(window.to, -1)); day = daysBefore(day, -1)) keys.push(...await store.list(`events/${day}/`));
     if (keys.length > HISTORY_BATCH_LIMIT) return { kind: "ROWS", rows: [], truncated: true };
     const rows: CapturedEvent[] = [];
     for (let i = 0; i < keys.length; i += PARALLEL) {
       const parts = await Promise.all(keys.slice(i, i + PARALLEL).map(async (key) => {
-        const held = cache.get(key);
+        const cacheKey = `${timeZone}:${key}`;
+        const held = cache.get(cacheKey);
         if (held !== undefined) return held;
         const bytes = await store.get(key);
         if (bytes === null) return [];
-        const events = eventsOfBatch(gunzipSync(bytes).toString("utf8"));
+        const events = eventsOfBatch(gunzipSync(bytes).toString("utf8"), timeZone);
         if (cache.size >= CACHE_LIMIT) cache.delete(cache.keys().next().value as string);
-        cache.set(key, events);
+        cache.set(cacheKey, events);
         return events;
       }));
       for (const part of parts) for (const e of part) if (e.day >= window.from && e.day <= window.to) rows.push(e);

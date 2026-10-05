@@ -83,7 +83,7 @@ export function CaptureHealthPanel() {
               {v.failures.lines.map((l) => <p key={l.says} className={s.p}><Pill tone={l.ok ? "good" : "warn"}>{l.ok ? "Fine" : "Check"}</Pill> {l.says}</p>)}
             </div>
           )}
-          <p className={cx(s.p, s.meta)}>Read {mst(v.observedAt)}, UTC days {v.from} to {v.to}</p>
+          <p className={cx(s.p, s.meta)}>Read {mst(v.observedAt)}, Eastern days {v.from} to {v.to}</p>
         </div>
       )}
       {reading.kind === "ready" && !v && <Empty>—</Empty>}

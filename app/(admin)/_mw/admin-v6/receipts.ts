@@ -1,3 +1,4 @@
+import { plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 /**
  * **WHAT HAPPENED TO EACH INSTRUCTION, WITHOUT OVERCLAIMING.**
  *
@@ -255,6 +256,7 @@ const SENTENCE_MAX = 140;
 
 /** The first sentence of a receipt's words, cut to fit on one line. The full words stay behind "Show details". */
 export function oneSentence(text: string): string {
+  text = plainWords(text, "The order could not be completed; the team is checking it.");
   const flat = text.replace(/\s+/g, " ").trim();
   const end = /[.!?](?=\s|$)/.exec(flat);
   const first = end ? flat.slice(0, end.index + 1) : flat;

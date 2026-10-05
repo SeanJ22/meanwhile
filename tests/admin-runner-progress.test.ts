@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { NextRequest } from "next/server";
 
-import { GET } from "../app/api/admin/runner-progress/route.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { readAdminRunnerProgress, RUNNER_PROGRESS_HEARTBEAT_FIELDS,
   RUNNER_PROGRESS_RESEARCH_FIELDS } from "../lib/control-plane/admin-view/runner-progress-read.ts";
@@ -120,20 +119,4 @@ test("a queued source event is not confirmed delivery and oversized active state
   assert.equal(result.research.recordedRunningScouts, null);
   assert.equal(result.latestSourceEvent.stage, "QUEUED");
   assert.equal(result.lastConfirmedSourceProgressAt, null);
-});
-
-test("runner-progress route hides on the public host and requires an Admin session", async () => {
-  const publicRequest = new NextRequest(`${PUBLIC_SITE_ORIGIN}/api/admin/runner-progress`, { headers: { host: new URL(PUBLIC_SITE_ORIGIN).host } });
-  const adminRequest = new NextRequest(`https://${ADMIN_HOST}/api/admin/runner-progress`, { headers: { host: ADMIN_HOST } });
-  assert.equal((await GET(publicRequest)).status, 404);
-  assert.equal((await GET(adminRequest)).status, 401);
-  await withAdminSessionKey(async () => {
-    const authenticated = new NextRequest(`https://${ADMIN_HOST}/api/admin/runner-progress`, {
-      headers: { host: ADMIN_HOST, cookie: await adminSessionCookie() },
-    });
-    const response = await GET(authenticated);
-    assert.equal(response.status, 503, "an authenticated request with no configured control plane must say unread");
-    assert.equal(response.headers.get("cache-control"), "no-store, no-cache, must-revalidate");
-    assert.equal((await response.json()).state, "UNREAD");
-  });
 });

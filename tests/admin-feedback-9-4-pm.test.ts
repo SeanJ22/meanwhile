@@ -52,7 +52,6 @@ import {
   dashboardCloser,
   fixRowMarker,
   goRowMarker,
-  planFixQueue,
   planOwnerDecisions,
   writeStore,
 } from "../scripts/tracker-core.mjs";
@@ -363,37 +362,6 @@ test("ADM-20: a gap's subject is stable per surface and sentence, and the queue 
   assert.deepEqual(opened.items[0].openedWork, [{ id: "FIX01", title: "Fix: not measured yet" }]);
 });
 
-test("ADM-20: the applier opens a FIX row only for a gap queued at or before a Go, marks it by intent, and refuses one with no session", () => {
-  const row = (over: Record<string, string>) => ({ ID: "", Section: "needs-sean", Title: "", "What this is": "", Resolution: "", "Closed by": "", Detail: "", "Opened by": "", ...over });
-  const working = [row({ ID: "T05", Title: "Abuse policy live" })];
-  const decisions = [
-    { intentId: "fix:a:2026-09-05T03:10:00.000Z", subjectId: "fix:a", chosenOption: ADD_TO_QUEUE_OPTION, consequenceShown: "Cost — not measured yet", decidedAt: "2026-09-05T03:10:00.000Z", adminSessionRef: "s" },
-    { intentId: "fix:b:2026-09-05T03:40:00.000Z", subjectId: "fix:b", chosenOption: ADD_TO_QUEUE_OPTION, consequenceShown: "Research — no state", decidedAt: "2026-09-05T03:40:00.000Z", adminSessionRef: "s" },
-    { intentId: "fix:c:2026-09-05T03:11:00.000Z", subjectId: "fix:c", chosenOption: ADD_TO_QUEUE_OPTION, consequenceShown: "Runner — silent", decidedAt: "2026-09-05T03:11:00.000Z", adminSessionRef: "" },
-    { intentId: "fix-queue:2026-09-05T03:20:00.000Z", subjectId: FIX_QUEUE_SUBJECT, chosenOption: GO_FIX_OPTION, consequenceShown: "", decidedAt: "2026-09-05T03:20:00.000Z", adminSessionRef: "s" },
-    { intentId: "T05:2026-09-05T03:00:00.000Z", subjectId: "T05", chosenOption: ANSWERED_IN_OWN_WORDS, consequenceShown: "", decidedAt: "2026-09-05T03:00:00.000Z", adminSessionRef: "s", ownerAnswer: "do it" },
-  ];
-  const plan = planFixQueue({ working, resolved: [], decisions });
-  assert.deepEqual(plan.opens.map((o) => o.subjectId), ["fix:a"]);
-  assert.equal(plan.opens[0].row.prefix, FIX_PREFIX);
-  assert.equal(plan.opens[0].row.Section, "decided");
-  assert.equal(plan.opens[0].row["Opened by"], FIX_OPENER);
-  assert.equal(plan.opens[0].row.Title, "Fix: not measured yet");
-  assert.match(plan.opens[0].row["What this is"], /^Cost: not measured yet Sean queued this gap/);
-  assert.ok(plan.opens[0].row.Detail.includes(fixRowMarker("fix:a:2026-09-05T03:10:00.000Z")));
-  assert.ok(plan.opens[0].row.Detail.includes(goRowMarker("fix-queue:2026-09-05T03:20:00.000Z")));
-  assert.deepEqual(plan.waiting.map((w) => w.subjectId), ["fix:b"], "queued after the Go waits for the next one");
-  assert.deepEqual(plan.refusals.map((r) => r.id), ["fix:c"]);
-  assert.equal(plan.go?.intentId, "fix-queue:2026-09-05T03:20:00.000Z");
-  // Applied once: a row carrying the marker is not opened again.
-  const again = planFixQueue({ working: [...working, row({ ID: "FIX01", Section: "decided", Detail: fixRowMarker("fix:a:2026-09-05T03:10:00.000Z") })], resolved: [], decisions });
-  assert.deepEqual(again.opens, []);
-  // The row applier ignores the fix queue's intents entirely.
-  const rows = planOwnerDecisions({ working, resolved: [], decisions, registry: [] });
-  assert.deepEqual(rows.closes.map((c) => c.id), ["T05"]);
-  assert.equal(rows.refusals.some((r) => r.id.startsWith("fix")), false, "no fix intent reaches the row applier as a refusal");
-  assert.notEqual(String(DASHBOARD_OPENER), String(FIX_OPENER));
-});
 
 test("ADM-20: every gap on the console carries the queue button, and the page has the queue with Go fix these", () => {
   assert.match(src("app/api/admin/decision/route.ts"), /parseFixField\(/);

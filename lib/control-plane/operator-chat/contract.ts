@@ -54,6 +54,7 @@ import type { ActionDefinition, ActionOutcome, ActionRequest, CallerAuthority } 
  * deterministic questions and every one of them is here.
  */
 export const CHAT_TOPICS = [
+  "PLACE_STUCK",
   /** "What is blocking the Fleet?" */
   "FLEET_BLOCKERS",
   /** "What changed since the last cycle?" */
@@ -83,6 +84,7 @@ export interface TopicDefinition {
 }
 
 export const TOPIC_DEFINITIONS: readonly TopicDefinition[] = [
+  { topic: "PLACE_STUCK", asks: "Why is this place stuck?", reads: "the place’s stuck work and capture score", readBackAt: "/admin?view=work" },
   {
     topic: "FLEET_BLOCKERS",
     asks: "What is blocking the Fleet?",

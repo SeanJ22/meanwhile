@@ -1,3 +1,4 @@
+import { UNKNOWN_PROBLEM } from "./plain-words.ts";
 import { stateCodeOf } from "../unit-state.ts";
 
 /**
@@ -57,6 +58,7 @@ export function needOf(blocker: string | null): Need {
 export interface Cause {
   /** Set exactly when the lane is "decision". */
   readonly needs: Need | null;
+  readonly undescribed?: boolean;
   readonly key: string;
   /** The cause in one plain sentence. */
   readonly words: string;
@@ -86,6 +88,17 @@ interface Shape {
 
 /** Order matters: the first shape that matches wins. */
 const SHAPES: readonly Shape[] = [
+  { key: "directory-page-unread", test: /DIRECTORY_NO_READABLE_SAVED_PAGE/i,
+    words: "The directory’s saved page could not be read.", next: "The team finds a readable directory page and tries it again." },
+  { key: "election-office-unfound", test: /ELECTION_OFFICE_NOT_ON_SAVED_PAGES/i,
+    words: "The saved pages do not name the election office yet.", next: "Agents look for the office on another official page." },
+  { key: "roster-page-unread", test: /ROSTER_NO_READABLE_SAVED_PAGE/i,
+    words: "The membership list’s saved page could not be read.", next: "The team finds a readable membership page and tries it again." },
+  { key: "stored-base-unconfirmed", test: /MANUAL_PROMOTION_BASE_PROOF_INVALID/i, lane: "software",
+    words: "This update could not confirm the saved record it builds on.", next: "The team checks that record and its source; other updates continue." },
+  { key: "spending-guard", test: /SCOUT_POLICY_DENIED/i,
+    words: "This attempt was refused by the spending controls.", next: "The team checks the refusal while keeping the current spending limits." },
+
   { key: "provider-silent", test: /model provider did not answer|model transport failed/i,
     words: "The AI model service didn’t answer. The agent’s steps so far are kept.",
     next: "The next agent resumes from those steps when the work comes due again, and moves up a model tier if the service keeps failing." },
@@ -134,9 +147,8 @@ function causeCore(row: Pick<StuckRowLike, "state" | "owner" | "blocker" | "over
     return { key: `no-reason:${row.state.toLowerCase()}`, words: row.overdue === true ? "Overdue, and the record gives no reason."
       : "Stuck, and the record gives no reason.", lane: laneByOwner, next: "Nothing says what moves it; this needs a look.", owner: OWNER_WORDS[owner] ?? "The runner (unassigned)" };
   }
-  const first = blocker.split(/(?<=[.!?])\s/)[0] ?? blocker;
-  return { key: `other:${normalized(blocker)}`, words: first.length > 160 ? `${first.slice(0, 157)}…` : first, lane: laneByOwner,
-    next: "See the item for what the system says happens next.", owner: OWNER_WORDS[owner] ?? "The runner (automatic)" };
+  return { key: `other:${normalized(blocker)}`, words: UNKNOWN_PROBLEM, undescribed: true, lane: laneByOwner,
+    next: "The team adds a description and works out the next step.", owner: OWNER_WORDS[owner] ?? "The runner (automatic)" };
 }
 
 export function causeOf(row: Pick<StuckRowLike, "state" | "owner" | "blocker" | "overdue">): Cause {

@@ -111,7 +111,6 @@ export function buildLiveBundle(snapshot: Readonly<Record<SectionId, SectionStat
     results: src("results", SECTION_DEP.results),
     stuck: src("stuck", SECTION_DEP.stuck),
     sameCause: src("sameCause", SECTION_DEP.stuck),
-    workRows: src("workRows", SECTION_DEP.work),
     history: src("history", SECTION_DEP.history),
     workers: workers as AdminV6Data["workers"],
     checklist,
@@ -123,6 +122,5 @@ export function buildLiveBundle(snapshot: Readonly<Record<SectionId, SectionStat
     money: src("money", SECTION_DEP.money),
     learning: src("learning", SECTION_DEP.learning),
     fixes: src("fixes", SECTION_DEP.fixes),
-    decided: src("decided", SECTION_DEP.decided),
   };
 }

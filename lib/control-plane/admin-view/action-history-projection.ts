@@ -12,7 +12,7 @@ import { canonicalJson } from "../repository/types.ts";
 
 export const ACTION_HISTORY_PROJECTION_VERSION = 1 as const;
 export const ACTION_HISTORY_MAX_PAGE = 50;
-export type ProjectedActionKind = "global-runner-pause" | "global-runner-resume";
+export type ProjectedActionKind = string;
 export type UnmappedReason = "VALIDATED_ACTION_UNAVAILABLE" | "LEGACY_ACTION_UNCLASSIFIED" |
   "SCOPE_SET_V6_KIND_UNPROVEN";
 export type ScopeRef = { readonly scopeKey: string; readonly instructionReceiptId: string | null;
@@ -35,6 +35,7 @@ export interface ActionHistoryProjection {
   readonly effectRefs: readonly [];
 }
 export type ValidatedActionEvidence =
+  | { readonly kind: "REGISTERED"; readonly type: string; readonly scopeKey: string }
   | { readonly kind: "GLOBAL_RUNNER"; readonly type: "runner.pause" | "runner.resume" }
   | { readonly kind: "SCOPE_SET_COMMITTED"; readonly canonicalScopeKey: string;
       readonly savedDecision: ExpansionScopeDecision }
@@ -58,6 +59,15 @@ export function prepareActionHistoryProjection(input: CommittedReceiptEvidence):
     sourceHash: createHash("sha256").update(canonicalJson(receipt)).digest("hex"),
     effectRefs: [] as const,
   };
+  if (validatedAction.kind === "REGISTERED") {
+    if (validatedAction.type !== receipt.type || !validId(validatedAction.scopeKey) ||
+      (validatedAction.scopeKey !== "us" && validatedAction.scopeKey !== receipt.subject && validatedAction.scopeKey !== receipt.requestedSubject))
+      throw new Error("ACTION_HISTORY_VALIDATION_MISMATCH");
+    return { ...base, actionKind: receipt.type, unmappedReason: null,
+      scopeRefs: [{ scopeKey: validatedAction.scopeKey, instructionReceiptId: validatedAction.scopeKey === "us" ? null : receipt.receiptId,
+        kind: validatedAction.scopeKey === "us" ? "GLOBAL" : "INSTRUCTION" }],
+      targetRef: receipt.subject ?? receipt.requestedSubject ?? null, targetLabel: null };
+  }
   if (validatedAction.kind === "GLOBAL_RUNNER") {
     if (validatedAction.type !== receipt.type || receipt.subjectKind !== "the standing runner")
       throw new Error("ACTION_HISTORY_VALIDATION_MISMATCH");

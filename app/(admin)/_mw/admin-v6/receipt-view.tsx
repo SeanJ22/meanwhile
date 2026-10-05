@@ -42,7 +42,7 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
       <p className={cx(s.p, s.small)} role={r.status === "unknown" || r.status === "failed" || r.notPickedUp ? "alert" : undefined}>{oneSentence(r.says)}</p>
       {(oneSentence(r.says) !== r.says.trim() || r.words) && (
         <details className={s.small}>
-          <summary style={{ cursor: "pointer" }}>Show details</summary>
+          <summary style={{ cursor: "pointer" }}>Technical details</summary>
           <p className={cx(s.p, s.small)}>{r.says}{r.words ? ` Your words: “${r.words}”` : ""}</p>
         </details>
       )}

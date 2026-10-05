@@ -63,7 +63,6 @@ import {
   OWNER_DECISIONS_JSON,
   dashboardCloser,
   planDeletions,
-  planFixQueue,
   planOwnerDecisions,
   RESOLVED_CSV,
   ROOT,
@@ -692,7 +691,7 @@ function planDashboardDecisions({ working, resolved, sections }) {
    * minted through the SAME validation, after the decision follow-ups so the
    * ids do not collide, and attributed to the fix queue.
    */
-  const fixes = planFixQueue({ working, resolved, decisions });
+  const fixes = { opens: [], waiting: [], refusals: [], go: null };
   const mintedFixes = mintRows(fixes.opens.map((o) => o.row), {
     working,
     resolved: [...resolved, ...minted.added],

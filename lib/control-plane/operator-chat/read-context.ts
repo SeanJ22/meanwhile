@@ -35,11 +35,13 @@ import {
   readHeartbeat,
   readSnapshot,
 } from "../admin-data.ts";
+import { readPlaceStuck } from "./place-stuck.ts";
 import { readResearchIntents } from "../research-view.ts";
 import { readPulse } from "../gateway/pulse-read.ts";
 import type { ContextRead, OperatorContext } from "./context.ts";
 
 export interface ContextRequest {
+  readonly asked?: string;
   readonly reads: readonly ContextRead[];
   readonly nowIso: string;
   /** The console path the owner asked from. */
@@ -107,12 +109,14 @@ export async function readOperatorContext(request: ContextRequest): Promise<Cont
    * make every such action stale forever while looking like it worked.
    */
   const stateVersion = pulse === undefined ? null : pulse.revision;
+  const placeStuck = wanted.has("placeStuck") ? await readPlaceStuck(request.asked ?? "", request.from, request.nowIso).catch(() => null) : undefined;
 
   return {
     context: {
       nowIso: request.nowIso,
       from: request.from,
       stateVersion,
+      ...(placeStuck === undefined ? {} : { placeStuck: placeStuck === null ? { kind: "NOT_RECORDED" as const, detail: "Choose a place, or try again when its live score and stuck work can be read." } : { kind: "HELD" as const, value: placeStuck } }),
       snapshot,
       heartbeat,
       digests,

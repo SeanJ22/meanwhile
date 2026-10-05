@@ -167,7 +167,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const [reading, environments] = await Promise.all([
     controlPlaneReads.length > 0
-      ? readOperatorContext({ reads: controlPlaneReads, nowIso, from })
+      ? readOperatorContext({ reads: controlPlaneReads, nowIso, from, asked: text })
       : Promise.resolve({ context: { nowIso, from, stateVersion: null } as OperatorContext, storeRefusedBecause: null }),
     /*
      * Both readers report a bad response as a reading rather than a throw, but

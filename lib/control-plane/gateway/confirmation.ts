@@ -205,6 +205,12 @@ export function orderProgress(receipt: Pick<ActionReceipt, "type" | "openedWork"
 async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionReceipt): Promise<Confirmation> {
   if (receipt.outcome === "REFUSED") return { state: "not-needed", at: null, words: receipt.says };
   const type = receipt.type;
+  if (type === "queue.add") {
+    try {
+      const item = (await repos.adminConfig.read("current"))?.value.fixList?.find(i=>i.id === receipt.subject);
+      if (item?.dispatch) return confirmCore(repos, { ...receipt, type: "fleet.deployHere", subject: item.dispatch.intentId });
+    } catch { return { state: "unread", at: null, words: "Saved. Runner status —" }; }
+  }
   const inIntent = INTENT_ACTIONS.has(type);
   const inRound = ROUND_ACTIONS.has(type);
   if (!inIntent && !inRound) return { state: "not-needed", at: receipt.completedAt, words: receipt.says };

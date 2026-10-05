@@ -290,7 +290,7 @@ test("the seven questions the brief names each route to their own topic, and the
   const routed = TOPIC_DEFINITIONS.map((t) => ({ asks: t.asks, got: topicOf(t.asks), want: t.topic }));
   const wrong = routed.filter((r) => r.got !== r.want);
   assert.deepEqual(wrong, [], "each canonical question must route to its own topic");
-  assert.equal(new Set(routed.map((r) => r.got)).size, 7, "seven distinct topics");
+  assert.equal(new Set(routed.map((r) => r.got)).size, CHAT_TOPICS.length, "every declared topic");
 });
 
 test("the owner's own phrasings route, not only the canonical ones", () => {
@@ -850,8 +850,6 @@ test("the chat's controls ARE the gateway's registry, matched by the words the g
    * this is also the proof that a control added there becomes askable here.
    */
   const cases: readonly [string, string][] = [
-    ["try this work again wi-4f2a9c1b3d5e", "fleet.retryWorkItem"],
-    ["retry this eligible work item wi-4f2a9c1b3d5e", "fleet.retryWorkItem"],
     ["pause the runner", "runner.pause"],
     ["resume the runner", "runner.resume"],
     ["run a cycle now", "runner.runCycleNow"],
@@ -906,7 +904,7 @@ test("only the records a question needs are read", () => {
   assert.deepEqual(readsFor("what is the weather in Tucson", []), []);
   // A proposal quotes the console's pulse revision — the same value the gateway
   // compares against — and needs nothing else.
-  assert.deepEqual([...readsFor("try this work again wi-4f2a9c1b3d5e", actionDefinitions())], ["pulse"]);
+  assert.deepEqual([...readsFor("deploy the fleet here", actionDefinitions())], ["pulse"]);
 });
 
 /* ========================================================================== */

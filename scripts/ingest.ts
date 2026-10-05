@@ -100,6 +100,8 @@ import {
 } from "../lib/civic-data/attested-promotion.ts";
 import type { PromotedCivicDataReadOptions } from "../lib/civic-data/read-model.ts";
 import { readCuratedReaderProjection, refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
+import type { ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
+import { publishVenueResolutions } from "../lib/meetings/venue-publication.ts";
 import { normalizeFamilyMeetingCitations, placeMeetingsFromCensusVenues, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/automatic-venue-resolutions.ts";
 import { currentVenueCache, resolveVenue, venueResolutionRecordId, type VenueEntry } from "../lib/meetings/venue-cache.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
@@ -901,11 +903,20 @@ export async function promoteDerivedMeetingFamily(
   // An unchanged family pass is receipted on the pointed version (R23).
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
+  if (outcome.promoted || outcome.confirmed) await publishVenuePins(store, partition.id, census.package);
   console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,
     retainedFromPrior: retained.filter((meeting, index) => meeting !== cited[index]).length,
     held: census.held.length, decision: outcome.candidate.receipt?.decision ?? null,
     promotedVersion: outcome.promoted?.versionId ?? null })}`);
+}
+
+/** BX-09: the pins this pass matched go into the venue-resolutions pointer on their own; a hold there never stops the pass. */
+async function publishVenuePins(store: RoutineDataStore, partitionId: string, pkg: ManualProjectionPackage | null): Promise<void> {
+  const published = await publishVenueResolutions({ store, package: pkg, now: new Date().toISOString() });
+  if (published.records === 0) return;
+  console.log(`VENUE_RESOLUTIONS_PUBLISHED=${JSON.stringify({ partition: partitionId, records: published.records,
+    promoted: published.outcome?.promoted?.versionId ?? null, held: published.held })}`);
 }
 
 async function main() {
@@ -1876,7 +1887,7 @@ export async function promoteMeetingPartitions(input: {
         recurrence.held,
         idSuffix,
       );
-      return { reconciled, snapshot, candidate, outcome };
+      return { reconciled, snapshot, candidate, outcome, census };
     };
     let attempted = await attempt(history.moved);
     // DB-06's safety net: a partition that is refused while sittings are moving to history must not stop its fresh
@@ -1897,6 +1908,7 @@ export async function promoteMeetingPartitions(input: {
     // independent reviews. Its separate durable witness may certify no change.
     const observed: MeetingsSnapshot = { ...snapshot, meetings: [...freshRows], agendaDocuments: [...freshDocuments],
       counts: snapshotCounts(freshRows, 0) };
+    if (outcome.promoted || outcome.confirmed) await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
     const research = outcome.promoted ? await offerResearch(partition, snapshot, observed) : null;
     results.push(research ?? { partition, candidate, outcome });
   }

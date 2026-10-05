@@ -214,6 +214,8 @@ export const MODEL_ESCALATION_REASONS = [
   "NO_TYPED_RESULT",
   /** The provider refused the cheaper model's request as invalid for it (HTTP 400) — a capability the cheaper model lacks. */
   "CAPABILITY_ERROR",
+  /** CH-30: the AI service did not answer the cheaper model on repeated attempts, so the next attempt starts a tier up. */
+  "PROVIDER_UNAVAILABLE",
 ] as const;
 export type ModelEscalationReason = (typeof MODEL_ESCALATION_REASONS)[number];
 

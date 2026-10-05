@@ -32,6 +32,7 @@ export const ESCALATION_REASON_WORDS: Readonly<Record<ModelEscalationReason, str
   RESULT_REFUSED: "its answer failed our checks and was never fixed",
   NO_TYPED_RESULT: "it stopped without giving an answer",
   CAPABILITY_ERROR: "the provider said that model cannot handle the request",
+  PROVIDER_UNAVAILABLE: "the AI service did not answer that model on repeated tries",
 };
 
 /** Why a move up was refused, in the owner's words. */

@@ -37,5 +37,7 @@
   "browser": {
     "testedSha": "9529c69fd",
     "result": "pass; 390/1280 dark/light Card/MapCanvas synthetic fixture; explicit system Chromium substitute; not live homepage acceptance"
-  }
+  },
+  "exactReadySha": "a5e7197a1855aae9d7aeafc537f417e29bb09fe6",
+  "exactReadyChecks": "36 tests, tsc, browser fixture all pass"
 }

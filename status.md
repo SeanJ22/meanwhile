@@ -1,18 +1,23 @@
 # River status
 
-build_state: releasing (release 3 #709)
+build_state: integrating (release 3 live; waiting on runner adoption and held lanes)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01NH24r1XGQSiiPDzK2fFJSp
 lock: river-20261005T1857Z-01NH24
-heartbeat: 2026-10-05T22:13:16Z
+heartbeat: 2026-10-05T22:14:23Z
 
 ## Next River run
 
-1. **Release 3 (#709, release/3 @ 13d29c5, auto-merge on):** when CI finishes, confirm merge, deploy (`/api/build`), post-deploy run for that SHA (`river.mjs observe`), runner adoption (cp_runner_heartbeat testedSha), then live-check CA-30 (Ask Prop 425 NO figures), FE-39 and the reader-edge store guard. Push Sean once the release merges or fails.
-2. Fold held lanes once they mark new READY on top of river 13d29c5: people CA-01, auditors, admin (see returns).
-3. Returns to watch: hunters (research child silent 600 s on every cycle) and slide (supervisor task failures doubled after release 2).
-4. **Notification rule (Sean, decisions.md 2026-10-05 ~21:00Z):** one push per river promotion naming the Codex lanes to Continue; otherwise only releases and real decisions.
+1. **Runner adoption of release 3 (6af6f8a):** check cp_runner_heartbeat testedSha. At 22:13Z it was still ecf4026, mid-cycle. After adoption, check the reader-edge store guard (supervisor/log names the store) and whether supervisor failures dropped.
+2. **Research crash (top priority, returned to hunters with a diagnosis):** 128 crashes since Oct 3 05:42Z. A 15-minute worker-slot wait (freshness-shadow.mts:2058) exceeds the 10-minute no-progress watchdog (pilot-runtime-child.mts:5). Fold hunters' fix as soon as it is READY and ship it as an urgent release (a halted runner qualifies).
+3. Fold held lanes when they mark new READY on top of river 6af6f8a: people CA-01, auditors, admin (see returns).
+4. **Notification rule (Sean, decisions.md):** one push per river promotion naming the Codex lanes to Continue; otherwise only releases and real decisions.
+
+## Current (2026-10-05 22:20Z)
+
+- **Release 3 live:** #709 merged 22:03:42Z as 6af6f8a, deployed 22:06:05Z, post-deploy run 37380007629 passed. Checked live in a browser: FE-39, CA-30 and CA-51, all three of which failed in release 1 (releases/3-live.md). river fast-forwarded to 6af6f8a (same tree as tested 13d29c5).
+- Sean was pushed: the promotion line, release 3 opened, and release 3 live.
 
 ## Current (2026-10-05 21:45Z)
 

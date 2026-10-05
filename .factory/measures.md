@@ -5,7 +5,7 @@ run_id: session_013PW45RsGrmm8TqPnYfTFmb
 lock: measures-session_013PW45R
 heartbeat: 2026-10-05T18:52:20Z
 on_river: SC-01, SC-02, SC-03, SC-04, SC-05, SC-06, SC-07, SC-08, SC-09 (build), SC-11, SC-12, SC-13, SC-16, SC-20, BR-08, BR-21 (River folds through a88a0726c; BR-23 was named in the 940b11c58 fold but scoreboard-read.ts is not on river, so BR-23 is not built)
-ready: BR-23 (SHA below)
+ready: BR-23 at 3753c6c126352d642c4426a3baa9577ed1932ed7
 checks: BR-23 on river tip ecf40260: tsc --noEmit clean; eslint clean on changed files; full suite as CI runs it (env -u DATABASE_URL -u WTP_ASSET_STORE): 9364 tests, 9353 pass, 0 fail, 11 skipped. New tests in tests/admin-v6-scoreboard.test.ts (3). Scoreboard not viewed live (no Admin sign-in here).
 working_on: BR-14 next (BR-01, BR-03, BR-12 are now on river)
 waiting_on: BR-38: RL-05 (river) and CH-01 (hunters). BR-31: BX-06 (slide). BR-32: DB-27, DB-31 (meetings), DB-34 (registry). SC-17: Sean's decision D7 (parked). BR-24 (admin) is on river now, so BR-25, SC-10, BR-33 are ready; BR-06 is on river so SC-14 is ready.

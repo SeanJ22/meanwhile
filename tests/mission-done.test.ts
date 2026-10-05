@@ -13,7 +13,7 @@ const member = (id: string, nextDueAt: string | null): MemberRecord => ({ id, la
   assignments: [{ assignmentKey: key, relation: "CREATED", at }] });
 function row(state: PlaceOwedItem["state"], statuses: Partial<PlaceOwedItem["statuses"]> = {}): PlaceOwedItem {
   return { id: `r${Math.random()}`, checklistId: "MTG-07", requirement: "", label: "", held: [], state,
-    subject: { id: "s", kind: "division", divisionIds: [], label: "" },
+    owedSince: null, subject: { id: "s", kind: "division", divisionIds: [], label: "" },
     statuses: { applies: "applies", due: "due", found: "nothing-yet", published: "not-known", fresh: "not-captured", seen: "not-checked",
       nextCheck: null, waitingWords: null, hasProducer: true, noProducerWords: null, ...statuses } } as PlaceOwedItem;
 }

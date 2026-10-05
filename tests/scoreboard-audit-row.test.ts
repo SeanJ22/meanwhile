@@ -15,7 +15,7 @@ const result = (factId: string, verdict: LiveAuditResult["verdict"], checkedAt =
   reread: null, basis: "REREAD", checks: [], reason: "Read the page again.",
 });
 const readings = (audit: ScoreboardReadings["audit"]): ScoreboardReadings => ({
-  orders: null, publication: null, shutDoors: null, returning: null, doors: null, gates: null, readiness: [],
+  places: null, placesUnread: 0, orders: null, publication: null, shutDoors: null, returning: null, doors: null, gates: null, readiness: [],
   learning: v6LearningView(buildLearningTrends([], NOW), null), audit,
 });
 

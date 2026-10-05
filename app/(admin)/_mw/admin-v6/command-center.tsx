@@ -31,8 +31,6 @@ import { mst, type ActionKind, type ActionRef, type AdminV6Data, type Place, typ
 import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches, relation } from "./places.ts";
 import { newActionKey, startReceipt } from "./receipts.ts";
 import { ChecklistScreen } from "./screen-checklist.tsx";
-import { FixQueueControls } from "./fix-queue-controls.tsx";
-import { FixScreen } from "./screen-fix.tsx";
 import { QueueScreen } from "./screen-queue.tsx";
 import { ScoreboardScreen } from "./screen-scoreboard.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
@@ -43,7 +41,6 @@ import { OwedPanel } from "./owed-panel.tsx";
 import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
 import { DoorsPanel } from "./doors-panel.tsx";
 import { UpdatesPanel } from "./updates-panel.tsx";
-import { ScheduledPanel } from "./scheduled-panel.tsx";
 import { WorkScreen } from "./screen-work.tsx";
 import { WorkersScreen } from "./screen-workers.tsx";
 import { cx } from "./ui.tsx";
@@ -387,12 +384,11 @@ export function CommandCenter(props: CommandCenterProps) {
               {view === "now" && <><NowScreen key={scopeKey} /><UpdatesPanel /></>}
               {view === "data" && <DataBusinessScreen />}
               {view === "workers" && <><WorkersScreen /><RunnerSettingsPanel /><DoorsPanel /></>}
-              {view === "work" && <><ScheduledPanel /><WorkScreen /></>}
+              {view === "work" && <WorkScreen />}
               {view === "checklist" && <><ChecklistScreen /><Readers /></>}
               {view === "money" && <MoneyScreen />}
               {view === "queue" && <QueueScreen />}
               {view === "scoreboard" && <ScoreboardScreen />}
-              {view === "fix" && <><FixQueueControls /><FixScreen /></>}
               {view === "settings" && <><SettingsScreen /><OwedPanel /></>}
               {view === "reports" && <ReportsView />}
               {view === "changes" && <ChangesView />}

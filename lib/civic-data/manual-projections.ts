@@ -1,6 +1,9 @@
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
 import { electionFieldIssue } from "./election-fields.ts";
+import { translationProjectionProblems, type TranslationProjection } from "../translate/publication.ts";
+import { jurisdictionFromOcdId } from "../coverage/states.ts";
+import { translationScope } from "../translate/records.ts";
 
 import { genericBallotProblems, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { BallotSet } from "../ballot/types.ts";
@@ -45,6 +48,7 @@ import type {
 import { sourceProjectionEvidence } from "./types.ts";
 
 export const MANUAL_PROJECTION_CONTRACT_IDS = [
+  "plain-english-translations",
   "ballot-contests",
   "az-sos-ballot",
   "nh-curated-ballot",
@@ -102,6 +106,7 @@ export interface CuratedReaderProjection {
 }
 
 export type ManualProjectionPayload =
+  | TranslationProjection
   | GenericBallotProjection
   | AzBallotProjection
   | NhBallotProjection
@@ -565,9 +570,10 @@ export async function readManualProjectionPrior(
   contractId: ManualProjectionContractId,
   store: CivicDataReadStore,
   now: string,
+  scope?: string,
 ): Promise<ManualProjectionPrior | null> {
   const contract = requiredManualProductionContract(contractId);
-  const read = await readPromotedCivicData<ManualProjectionPayload>(contract.recordClass, contract.scope, {
+  const read = await readPromotedCivicData<ManualProjectionPayload>(contract.recordClass, scope ?? contract.scope, {
     store,
     now,
     bypassCache: true,
@@ -588,6 +594,19 @@ export async function readManualProjectionPrior(
     payload: read.value,
     sourceReceipt,
   };
+}
+
+function plainEnglishProjection(payload: ManualProjectionPayload): BuiltProjection {
+  const value = payload as TranslationProjection;
+  const problems = translationProjectionProblems(value);
+  const records = Array.isArray(value?.records) ? value.records : [];
+  return { payload, records: records.map(record => ({ key: record.id, record })),
+    identities: records.map(record => ({ subjectId: record.subjectId, jurisdiction: `US-${jurisdictionFromOcdId(record.ocdId)?.usps ?? "UNRESOLVED"}`,
+      identifiers: { record_id: record.id }, matchBasis: "EXACT_SCOPED_ID", ambiguous: false })),
+    missingRequiredFields: records.length ? [] : ["records"], violations: problems,
+    schemaVersion: "plain-english-translations:1", factKind: "independently checked official-text translations",
+    consumerChecks: [{ consumer: "ballot and Ask measure translation reader", passed: records.length > 0 && problems.length === 0,
+      detail: `${records.length} source-bound translation(s) with independent sentence checks.` }] };
 }
 
 function genericBallotProjection(payload: ManualProjectionPayload): BuiltProjection {
@@ -951,6 +970,8 @@ export function manualProjectionCandidate(
     throw new Error(`MANUAL_SOURCE_RECEIPT_MALFORMED:${sourceReceiptIssue.code}:${sourceReceiptIssue.detail}`);
   }
   const contract = requiredManualProductionContract(input.contractId);
+  const scope = input.contractId === "plain-english-translations"
+    ? translationScope((input.payload as TranslationProjection).records[0]?.ocdId ?? "") : contract.scope;
   const sourceContract = sourceAuthority(contract.sourceId);
   const sourcePolicy = sourceContract?.manualReceiptPromotion;
   if (!sourceContract || !sourceContract.recordClasses.includes(contract.recordClass) || !sourcePolicy) {
@@ -971,7 +992,9 @@ export function manualProjectionCandidate(
   // contests, and Arizona additionally cross-checks filings, certified lineup,
   // identity registry, and reconciliation rows. Splitting those members would
   // permit a cross-record proof assembled from incompatible source versions.
-  const built = input.contractId === "ballot-contests"
+  const built = input.contractId === "plain-english-translations"
+    ? plainEnglishProjection(payload)
+    : input.contractId === "ballot-contests"
     ? genericBallotProjection(payload)
     : input.contractId === "az-sos-ballot" || input.contractId === "nh-curated-ballot"
     ? ballotProjection(input.contractId, payload)
@@ -1008,10 +1031,10 @@ export function manualProjectionCandidate(
     // Contract/record-class identity is part of the version id. Candidate
     // profiles and publications deliberately share a source and scope, and
     // must never collide merely because one review covered the same bytes.
-    id: `${contract.sourceId}:${sha256(`${contract.id}\n${contract.recordClass}\n${contract.scope}\n${attemptHash}\n${normalizedHash}\n${reviewedAt}`).slice(0, 32)}`,
+    id: `${contract.sourceId}:${sha256(`${contract.id}\n${contract.recordClass}\n${scope}\n${attemptHash}\n${normalizedHash}\n${reviewedAt}`).slice(0, 32)}`,
     sourceId: contract.sourceId,
     recordClass: contract.recordClass,
-    scope: contract.scope,
+    scope,
     retrieval: {
       succeeded: acquired,
       requestedUrl: acquired ? primary!.requestedUrl : "",
@@ -1054,7 +1077,7 @@ export function manualProjectionCandidate(
       claimsComplete: false,
     },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    sourceProjectionEvidence: sourceProjectionEvidence(contract.sourceId, contract.recordClass, contract.scope),
+    sourceProjectionEvidence: sourceProjectionEvidence(contract.sourceId, contract.recordClass, scope),
     dependentChecks: built.consumerChecks,
     normalizedPayload: built.payload,
     readModel: built.payload,

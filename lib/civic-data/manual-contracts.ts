@@ -43,6 +43,23 @@ const STORE = "civic_data_candidates+civic_data_candidate_events+civic_data_prom
 
 export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
   {
+    id: "plain-english-translations",
+    execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
+    sourceId: "curated-reader-primary-sources",
+    recordClass: "CURATED_READER_RECORD",
+    scope: "US:plain-english-translations",
+    command: ["scripts/promote-manual-civic-projection.mts", "--contract=plain-english-translations"],
+    parserNormalizerVersion: "curated-reader-records/2",
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" },
+    validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "plain-english-translations", consumers: ["/ballot", "Ask", "Admin"] },
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+    lkgBehavior: "Each translated fact advances only with its original source passages and independent model checks; a failed rewrite retains the last verified translation and leaves the blank open.",
+    delegatedInvocation: { to: "REVIEWING_AGENT_SESSION", authorization: "CA-25: the translator publishes checked official-text translations through the standing Slide under the existing budget dial." },
+  },
+  {
     id: "ballot-contests",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "official-ballot-authorities",

@@ -3,6 +3,7 @@ import { ballotSourcesForDivisions, ballotSourceForTargetId, type RegisteredBall
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
 import type { BallotSet } from "./types.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import { readTranslations, withMeasureTranslations } from "../translate/publication.ts";
 
 /** Data, rather than a state allowlist, determines which authority answers. */
 export function genericSourcesForDivisions(value: GenericBallotProjection, divisions: readonly string[]): RegisteredBallotSource[] {
@@ -29,10 +30,13 @@ export function genericSourcesForDivisions(value: GenericBallotProjection, divis
 export async function readerBallotSourcesForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<readonly RegisteredBallotSource[]> {
   if (!divisions.length) return [];
   const legacy = ballotSourcesForDivisions(divisions);
+  const translations = await readTranslations(divisions, options).catch(() => []);
+  const attach = (sources: readonly RegisteredBallotSource[]) => sources.map(row => ({ ...row, source: { ...row.source,
+    normalize: (raw: Parameters<typeof row.source.normalize>[0]) => withMeasureTranslations(row.source.normalize(raw), translations) } }));
   try {
     const read = await readGenericBallotProjection(options);
-    if (read.kind === "PROMOTED") return [...genericSourcesForDivisions(read.value, divisions), ...legacy];
-    if (read.kind !== "STORE_UNREACHABLE" || read.code === "STORE_NOT_CONFIGURED") return legacy;
+    if (read.kind === "PROMOTED") return attach([...genericSourcesForDivisions(read.value, divisions), ...legacy]);
+    if (read.kind !== "STORE_UNREACHABLE" || read.code === "STORE_NOT_CONFIGURED") return attach(legacy);
     throw new Error(read.code);
   } catch (error) {
     // Expose the failed general authority through each entry point's existing
@@ -40,7 +44,7 @@ export async function readerBallotSourcesForDivisions(divisions: readonly string
     return [{ state: "general ballot", source: { name: "ballot-contests",
       fetch: async () => { throw error; }, normalize: () => { throw error; },
       upsert: async () => { throw error; },
-    } }, ...legacy];
+    } }, ...attach(legacy)];
   }
 }
 

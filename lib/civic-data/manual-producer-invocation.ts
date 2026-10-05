@@ -9,6 +9,7 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } f
 export type ManualProducerMode = "DIRECT_SOURCE" | "VERIFIED_WORKER_RESULT" | "EXISTING_DERIVED" | "REVIEWED_INPUT" | "SCOPED_ADAPTER_OWED";
 interface Rule { readonly mode: ManualProducerMode; readonly state?: string; readonly originalOnly?: boolean; readonly reason: string }
 const RULES = {
+  "plain-english-translations": { mode: "VERIFIED_WORKER_RESULT", reason: "Every sentence is supported by the original official text and checked independently under the existing budget dial." },
   "ballot-contests": { mode: "VERIFIED_WORKER_RESULT", reason: "The saved official candidate list passes section 3 and each complete contest publishes with all of its candidates." },
   "congress-bulk-roster": { mode: "DIRECT_SOURCE", reason: "National congressional directory acquired from its registered public source." },
   "registry-runtime-bindings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker roster publication runs once it meets the section 3 standard; the audit follows and repairs what it finds." },

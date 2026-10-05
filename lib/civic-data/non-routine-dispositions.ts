@@ -327,7 +327,8 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS: readonly ManualProductionInve
   },
   {
     inventorySourceId: "az-sos-ballot", contractId: "az-sos-ballot", contractSourceId: "az-election-authorities",
-    additionalContracts: [{ contractId: "ballot-contests", contractSourceId: "official-ballot-authorities" }],
+    additionalContracts: [{ contractId: "ballot-contests", contractSourceId: "official-ballot-authorities" },
+      { contractId: "plain-english-translations", contractSourceId: "curated-reader-primary-sources" }],
     reason: "The first-seed ballot contract and its general official-authority worker replacement own canonical Reader projections; tracked holdings remain first-seed evidence only.",
   },
   {

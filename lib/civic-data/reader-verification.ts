@@ -5,6 +5,7 @@ import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
 import { headSha } from "../ops/git-facts.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import { isTranslationScope } from "../translate/records.ts";
 import {
   normalizeReaderCodeSha,
   parseReaderProjectionReadback,
@@ -82,6 +83,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
     case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
+    case "plain-english-translations": return "lib/translate/publication.ts#readTranslationProjection";
     case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
     case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
     case "candidate-profiles": return "lib/civic-data/manual-read-models.ts#readCandidateProfilesProjection";
@@ -233,6 +235,10 @@ export async function verifyRoutineReaderProjection(
       case "ballot-contests": {
         const { readGenericBallotProjection } = await import("../ballot/generic-projection.ts");
         return verifyExactVersion(verifierId, await readGenericBallotProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "state-election-ballots");
+      }
+      case "plain-english-translations": {
+        const { readTranslationProjection } = await import("../translate/publication.ts");
+        return verifyExactVersion(verifierId, await readTranslationProjection({ store: options.store, now: options.now, bypassCache: true, scope: options.scope }), options.expectedVersionId, "plain-English translation");
       }
       case "az-sos-ballot":
       case "nh-curated-ballot":
@@ -564,12 +570,13 @@ async function attestReaderProjectionReadback(
 }
 
 function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedPointerIdentity): string | null {
-  const expectedKey = `${contract.recordClass}:${contract.scope}`;
+  const scope = contract.id === "plain-english-translations" && isTranslationScope(promotion.scope) ? promotion.scope : contract.scope;
+  const expectedKey = `${contract.recordClass}:${scope}`;
   if (
     promotion.key !== expectedKey ||
     promotion.sourceId !== contract.sourceId ||
     promotion.recordClass !== contract.recordClass ||
-    promotion.scope !== contract.scope ||
+    promotion.scope !== scope ||
     typeof promotion.versionId !== "string" || promotion.versionId.trim() === "" ||
     promotion.lastKnownGoodVersionId !== promotion.versionId
   ) return `READER_PROMOTION_IDENTITY_INVALID:${contract.id}`;
@@ -592,7 +599,7 @@ function inspectReaderReadbackEvents(
     latest.contractId === contract.id &&
     latest.sourceId === contract.sourceId &&
     latest.recordClass === contract.recordClass &&
-    latest.scope === contract.scope &&
+    latest.scope === promotion.scope &&
     latest.projectionId === contract.readerProjection?.id &&
     latest.versionId === promotion.versionId &&
     latest.pointerKey === promotion.key;

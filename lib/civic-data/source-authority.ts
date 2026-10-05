@@ -144,6 +144,7 @@ export const SOURCE_AUTHORITIES = {
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "published public-comment rule",
+      "neutral official measure translations checked sentence by sentence by an independent model (CA-25)",
       "independently verified official candidate-filing and committee-report facts, without an inferred ballot or financial identity join",
       "official voter-registration lookup route",
       "official polling-place lookup route",

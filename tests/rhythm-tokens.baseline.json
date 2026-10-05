@@ -269,11 +269,6 @@
       "text-[0.6875rem]": 2,
       "text-[0.75rem]": 3
     },
-    "components/map/state-focus-overlay.tsx": {
-      "#ffffff": 3,
-      "#000000": 2,
-      "#0b0d12": 1
-    },
     "components/reactions/reaction-control.tsx": {
       "text-[0.6875rem]": 6,
       "text-[0.75rem]": 2

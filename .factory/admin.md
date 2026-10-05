@@ -3,7 +3,7 @@ worker: overflow-1
 provider: Claude (River-run overflow)
 run_id: overflow-1 2026-10-05 session_012Ufwyxx6iej1CSEX6khMyg
 lock: overflow-1-20261005T1600Z-c91d
-heartbeat: 2026-10-05T16:32:30Z
+heartbeat: 2026-10-05T16:39:00Z
 on_river: none confirmed
 ready: BR-05 BR-06 BR-01 BR-03 @ b593ef9b1; BR-24 @ 73a952059; BR-12 @ dadebfafb; BR-15 @ cfb115b24; BR-05 fix @ c53405a83; BR-09 @ 87e72a077; BR-02 @ a4a64e1f7; BR-10 @ b318ac51b; BR-16 BR-37 (library half) @ 3945aff27
 checks: per step: tsc PASS, eslint on changed files PASS (0 errors), focused tests PASS (admin-fix-list, admin-action-gateway, admin-settings, admin-history-*, admin-runner-confirmation, admin-v6-ui, admin-v6-stuck-causes, operator-chat, absence-defaults). FULL run at b593ef9b1 (env -u DATABASE_URL -u WTP_ASSET_STORE, CI-style): only failures were absence-defaults and v6-ui connected-kinds (both mine, fixed in c53405a83 and re-run PASS) plus two transport-timing tests under load (tests/control-plane-request-bounds.test.ts) that PASS alone on both my branch and origin/river.

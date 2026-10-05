@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-05T20:51:24.057094Z",
+  "river_sha": "ecf402600401783b094837c29e0c515eadbdb843",
+  "board_sha": "bd996ac82e237a403a86de52bb96ca35cecdbfc2",
+  "bank_assignment": "Codex",
+  "bank_returns": "no new instruction after 2026-10-05 17:40Z",
+  "ready_sha_unchanged": "cf0df0cb0acb4d79218593ac1aa5083d41ade841",
+  "application_diff_from_ready": [],
+  "missing_integrated_prerequisites": [
+    "DB-26",
+    "BR-14",
+    "BX-06"
+  ],
+  "BR-14": "River batch 3 undergoing gates; not integrated",
+  "DB-39": {
+    "condition": "nonzero observed Bank write-error count",
+    "observed_count": null,
+    "control_plane_url_configured": false,
+    "next_action": "River reads fieldManual/write-errors with its existing CP access"
+  },
+  "checks": "prior exact READY evidence retained; no code changed and no tests rerun",
+  "lock": "released"
+}

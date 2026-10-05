@@ -2,7 +2,7 @@ import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash } from "node:crypto";
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
-import { RESEARCH_PARENT_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
+import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
@@ -2076,8 +2076,10 @@ process.on("message", message => {
 // Paid admission happens before handing out a Scout. Held evidence and ordinary
 // code can still use the existing memory slots while the paid lane is closed.
 const dispatchDeadlineMs = Date.now() + 15 * 60_000;
+/* A memory wait can outlast the runner's no-progress limit; it says each minute that it is still waiting, so it ends as a deferral, not a crash. */
+const reportedHostSlots = reportingWorkerSlots(hostWorkerSlots);
 const workerSlots = { acquire: (entry?: string, deadlineMs = dispatchDeadlineMs) =>
-  hostWorkerSlots.acquire(entry, Math.min(deadlineMs, dispatchDeadlineMs)) };
+  reportedHostSlots.acquire(entry, Math.min(deadlineMs, dispatchDeadlineMs)) };
 const paidScoutSlots = paidWorkerSlots(workerSlots, paidWorkerCapacity);
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,

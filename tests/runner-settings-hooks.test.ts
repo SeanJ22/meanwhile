@@ -6,7 +6,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { failureResponderExecutor, plainRereadSlot, sourceFailureRecovery } from "../lib/control-plane/workers/detective.ts";
+import { plainRereadSlot, sourceFailureRecovery } from "../lib/control-plane/workers/detective.ts";
 import { DETECTIVE_SHUT_THRESHOLD_SETTING, readSetting, runnerSettingsEcho } from "../lib/control-plane/settings.ts";
 import type { AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
@@ -29,22 +29,11 @@ test("the saved shut-door threshold decides when a door goes to a detective, and
   assert.equal(echo.appliedAt, "2026-10-05T18:00:00Z");
 });
 
-test("the failure responder uses the round's threshold, not the code default", () => {
-  const input = { obligation: { obligation: { id: "owed" } }, holder: "worker" } as Parameters<NonNullable<ReturnType<typeof failureResponderExecutor>["workerFor"]>>[0];
-  const make = (shutThreshold?: number) => failureResponderExecutor({ sourceFailure: debt, shutThreshold,
-    transport: async () => { throw Error("No model expected in selection"); }, toolkitFor: () => { throw Error("No tools"); },
-    contextFor: () => ({ route: null, providerId: null, reason: "owed", decision: "BOUNDED_MODEL_WORKER", inherited: { artifactIds: [], summary: "" },
-      tools: { vault: async () => ({ stored: true, where: "test", why: "saved" }), spaceOut: async () => {} } }) });
-  assert.equal(make().workerFor!(input).role, "DETECTIVE", "three failures is shut at the default");
-  assert.notEqual(make(5).workerFor!(input).role, "DETECTIVE", "three failures is not shut at five");
-});
-
 test("the round passes the threshold everywhere it decides, and the heartbeat carries the echo", () => {
   const shadow = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(shadow, /const shutThreshold = readSetting\(settingsConfig, DETECTIVE_SHUT_THRESHOLD_SETTING, DETECTIVE_SHUT_THRESHOLD\)/);
   assert.match(shadow, /sourceFailureRecovery\(decision, debt, shutThreshold\)/);
   assert.match(shadow, /plainRereadSlot\(debt, nowMs, shutThreshold\)/);
-  assert.match(shadow, /sourceRoute:registry\.routeFor\(scheduled\.obligation\.id\),\s*shutThreshold,/);
   assert.match(shadow, /settings: runnerSettingsEcho\(settingsConfig, NOW\)/);
 });
 

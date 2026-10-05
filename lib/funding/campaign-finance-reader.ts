@@ -21,13 +21,14 @@ export interface CampaignFinanceProjection { readonly kind: "campaign-finance"; 
 
 export function campaignFinanceRecordIssue(value: unknown): string | null {
   const row = value as CampaignFinanceRecord;
-  const record = row?.record, jurisdiction = jurisdictionFromOcdId(row?.ocdId ?? "");
-  if (!row || !row.id?.startsWith("finance-filing:") || !jurisdiction || !/^https:\/\//.test(row.sourceUrl ?? "") ||
+  const record = row?.record, jurisdiction = jurisdictionFromOcdId(typeof row?.ocdId === "string" ? row.ocdId : "");
+  if (!row || typeof row.id !== "string" || !/^finance-filing:[a-f0-9]{64}$/.test(row.id) || !jurisdiction || !/^https:\/\//.test(row.sourceUrl ?? "") ||
       !/^[a-f0-9]{64}$/.test(row.sourceHash ?? "") || !Number.isFinite(Date.parse(row.collectedAt)) ||
       !record || record.dataClass !== "STATE_COMMITTEE" || record.jurisdiction !== jurisdiction.usps || record.filingState !== "FILED" ||
-      !record.agency?.trim() || !record.committeeId || !record.registeredName || !record.candidateNameAsFiled || !record.officeSought ||
+      typeof record.agency !== "string" || !record.agency.trim() ||
+      [record.committeeId, record.registeredName, record.candidateNameAsFiled, record.officeSought].some(value => typeof value !== "string" || !value.trim()) ||
       !Number.isSafeInteger(record.electionYear) || record.electionYear < 1900 ||
-      !Array.isArray(record.targetKeys) || record.targetKeys.length !== 1 || !record.targetKeys[0] || !record.match?.allThreeAgree ||
+      !Array.isArray(record.targetKeys) || record.targetKeys.length !== 1 || typeof record.targetKeys[0] !== "string" || !record.targetKeys[0] || !record.match?.allThreeAgree ||
       record.match.officeAsFiled !== record.officeSought || record.match.electionYearAsFiled !== record.electionYear ||
       record.match.electionYearOnBallot !== record.electionYear || !record.match.officeOnBallot ||
       record.provenance?.sourceUrl !== row.sourceUrl || record.provenance.collectedAt !== row.collectedAt ||

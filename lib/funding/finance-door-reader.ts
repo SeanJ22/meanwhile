@@ -72,7 +72,8 @@ function csvRows(bytes: Buffer, required: readonly string[]): Record<string, unk
 }
 
 /** Read saved bytes through the door's field map; never hunt or join by a name. */
-export function readFinanceDoor(door: DoorRecord, responses: readonly SavedFinanceResponse[]): FinanceDoorRead {
+export function readFinanceDoor(door: DoorRecord, responses: readonly SavedFinanceResponse[],
+  inspectSource?: (capture: FinanceDoorRead["captures"][number], text: string) => void): FinanceDoorRead {
   if (!(FINANCE_DOOR_KINDS as readonly string[]).includes(door.kind) || !door.ocdId) throw new Error("This door does not identify a finance reader and jurisdiction.");
   if (!responses.length) throw new Error("No saved finance response is available.");
   const fields = fieldMap(door), filings: FinanceFiling[] = [], captures: FinanceDoorRead["captures"][number][] = [];
@@ -81,7 +82,7 @@ export function readFinanceDoor(door: DoorRecord, responses: readonly SavedFinan
     if (!door.hosts.includes(new URL(response.url).hostname.toLowerCase())) throw new Error("The saved response is outside this door's source hosts.");
     if (!Number.isFinite(Date.parse(response.retrievedAt))) throw new Error("The saved response has no read date.");
     const sourceHash = hash(response.bytes);
-    captures.push({ url: response.url, hash: sourceHash, retrievedAt: response.retrievedAt });
+    let sourceText = response.bytes.toString("utf8");
     let rows: Record<string, unknown>[];
     if (door.kind === "campaign-finance-search-api") {
       const value = JSON.parse(response.bytes.toString("utf8"));
@@ -99,8 +100,13 @@ export function readFinanceDoor(door: DoorRecord, responses: readonly SavedFinan
       if (typeof door.config.fileName !== "string") throw new Error("The bulk door lacks its export file name.");
       const entries = readZip(response.bytes).filter(entry => entry.name === door.config.fileName);
       if (entries.length !== 1) throw new Error("The bulk archive does not contain exactly the named export.");
+      sourceText = entries[0].data.toString("utf8");
       rows = csvRows(entries[0].data, [fields.committeeId!, fields.registeredName!, fields.electionYear!]);
     } else rows = csvRows(response.bytes, [fields.committeeId!, fields.registeredName!, fields.electionYear!]);
+    const source = { url: response.url, hash: sourceHash, retrievedAt: response.retrievedAt };
+    captures.push(source);
+    // Admission may inspect the original source; raw donor/address columns never enter the returned projection.
+    inspectSource?.(source, sourceText);
     returnedRows += rows.length;
     for (const row of rows) {
       const get = (field: Field) => fields[field] ? Object.hasOwn(row, fields[field]!) ? row[fields[field]!] : path(row, fields[field]!) : undefined;

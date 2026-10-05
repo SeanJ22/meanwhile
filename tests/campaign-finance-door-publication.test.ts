@@ -93,3 +93,40 @@ test("same-place successor retains prior reported periods with their original au
     assert.equal(read.value.records.find(row => row.reportId === "R2")!.collectedAt, now);
   }
 });
+
+function zip(name: string, data: Buffer): Buffer {
+  const filename = Buffer.from(name), local = Buffer.alloc(30), central = Buffer.alloc(46), end = Buffer.alloc(22);
+  local.writeUInt32LE(0x04034b50); local.writeUInt16LE(20, 4); local.writeUInt32LE(data.length, 18); local.writeUInt32LE(data.length, 22); local.writeUInt16LE(filename.length, 26);
+  central.writeUInt32LE(0x02014b50); central.writeUInt16LE(20, 6); central.writeUInt32LE(data.length, 20); central.writeUInt32LE(data.length, 24); central.writeUInt16LE(filename.length, 28);
+  const first = Buffer.concat([local, filename, data]), directory = Buffer.concat([central, filename]);
+  end.writeUInt32LE(0x06054b50); end.writeUInt16LE(1, 8); end.writeUInt16LE(1, 10); end.writeUInt32LE(directory.length, 12); end.writeUInt32LE(first.length, 16);
+  return Buffer.concat([first, directory, end]);
+}
+
+
+test("saved search API and raw ZIP captures publish through the same door, preserving raw hashes and donor privacy", async () => {
+  for (const kind of ["campaign-finance-search-api", "campaign-finance-bulk-zip"]) {
+    const base = source(), store = new MemoryRoutineDataStore();
+    const bytes = kind.endsWith("zip") ? zip("filings.csv", base.responses[0].bytes) : Buffer.from(JSON.stringify({
+      count: 1, results: [{ Id: "C1", Name: "Friends of Avery", Candidate: "Avery Example", Office: "Council", Cycle: 2026,
+        Report: "R1", Period: "January through June", Raised: 1200, Spent: 0, DonorName: "Private Donor", Address: "99 Private Lane" }],
+    }));
+    const response = { ...base.responses[0], bytes, rawHash: createHash("sha256").update(bytes).digest("hex"),
+      publisher: "Fixture filing authority", httpStatus: 200, transport: "REACHABLE", partial: false };
+    const door = { ...base.door, kind, config: { ...base.door.config, rowsPath: "results", totalPath: "count", fileName: "filings.csv" } };
+    const result = await publishCampaignFinance(store, { ...base, door, responses: [response], captures: [] });
+    assert.ok(result.promoted, JSON.stringify(result.candidate));
+    assert.equal(result.readerReadback?.status, "PASS");
+    const read = await readCampaignFinance(division, { store, now });
+    assert.equal(read.kind, "PROMOTED");
+    if (read.kind === "PROMOTED") {
+      assert.equal(read.value.records[0].sourceHash, response.rawHash);
+      assert.equal(read.value.records[0].record.totals.receipts, 1200);
+      assert.doesNotMatch(JSON.stringify(read.value), /Private Donor|99 Private Lane/);
+    }
+    for (const changed of [{ ...response, partial: true }, { ...response, httpStatus: 206, partial: true },
+      { ...response, transport: "UNKNOWN" }, { ...response, rawHash: "0".repeat(64) }]) {
+      assert.throws(() => campaignFinancePackage({ ...base, door, captures: [], responses: [changed] }));
+    }
+  }
+});

@@ -89,7 +89,9 @@ export function readFinanceDoor(door: DoorRecord, responses: readonly SavedFinan
       if (!Array.isArray(found) || found.some(row => !row || typeof row !== "object" || Array.isArray(row))) throw new Error("The finance search response contains no record list.");
       rows = found;
       if (typeof door.config.totalPath === "string") {
-        const total = Number(path(value, door.config.totalPath));
+        const stated = path(value, door.config.totalPath);
+        if (typeof stated !== "number" && !(typeof stated === "string" && /^\d+$/.test(stated.trim()))) throw new Error("The search response's filed record count changed or is unreadable.");
+        const total = Number(stated);
         if (!Number.isSafeInteger(total) || total < 0 || (declaredTotal !== null && declaredTotal !== total)) throw new Error("The search response's filed record count changed or is unreadable.");
         declaredTotal = total;
       }

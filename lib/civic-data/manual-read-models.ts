@@ -1,3 +1,4 @@
+import { readerCandidateProfiles } from "../ballot/candidate-reader-privacy.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -270,7 +271,7 @@ function currentOrTestSeed<T>(result: CivicDataReadResult<T>, name: string, seed
 
 export const currentAzBallotProjection = (): AzBallotProjection => currentOrTestSeed(azState, "Arizona ballot projection", azBootstrap);
 export const currentNhBallotProjection = (): NhBallotProjection => currentOrTestSeed(nhState, "New Hampshire ballot projection", nhBootstrap);
-export const currentCandidateProfilesProjection = (): CandidateProfilesProjection => currentOrTestSeed(profilesState, "Candidate profile projection", profilesBootstrap);
+export const currentCandidateProfilesProjection = (): CandidateProfilesProjection => readerCandidateProfiles(currentOrTestSeed(profilesState, "Candidate profile projection", profilesBootstrap));
 export const currentCandidateCorpusProjection = (): CandidateCorpus => {
   const prior = currentOrTestSeed(corpusState, "Candidate publication projection", corpusBootstrap);
   const documents = new Map(prior.documents.map(row => [row.id, row]));

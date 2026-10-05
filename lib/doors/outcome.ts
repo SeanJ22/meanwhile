@@ -9,17 +9,24 @@
  * on the record, including its status (shutting a door is DB-32).
  */
 
+import { observeChange } from "./observed-rate.ts";
 import { isDoorRecord, type DoorRepository } from "./registry.ts";
 
 export type DoorOutcome = "SUCCESS" | "FAILURE";
 
 /** Returns true when the record was written; false when there is no such door (nothing is invented). */
-export async function recordDoorOutcome(repo: DoorRepository, doorId: string, outcome: DoorOutcome, at: string): Promise<boolean> {
+export async function recordDoorOutcome(
+  repo: DoorRepository, doorId: string, outcome: DoorOutcome, at: string,
+  /** DB-30: the read promoted something different from the version before it. Written in the same single write. */
+  changed = false,
+): Promise<boolean> {
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const row = await repo.read(doorId);
     if (row === null || !isDoorRecord(row.value)) return false;
     const door = row.value;
-    const next = outcome === "SUCCESS" ? { ...door, lastSuccessAt: at } : { ...door, lastFailureAt: at };
+    const next = outcome === "SUCCESS"
+      ? { ...door, lastSuccessAt: at, ...(changed ? observeChange(door, at) : {}) }
+      : { ...door, lastFailureAt: at };
     try {
       await repo.compareAndSet(doorId, row.revision, { ...next, updatedAt: door.updatedAt }, at);
       return true;

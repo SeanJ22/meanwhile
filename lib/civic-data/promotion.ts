@@ -21,7 +21,7 @@ import { verifySourceScopedCandidateProjection } from "./candidate-integrity.ts"
 import type { RoutineReaderVerification } from "./reader-verification.ts";
 import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/promotion-authority.ts";
 import { derivedInputAuthorityIssue } from "./derived-door.ts";
-import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
+import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -390,6 +390,11 @@ export function manualCandidateContractIssue(contractId: ManualProductionContrac
   if (candidate.sourceId !== contract.sourceId) return `source ${candidate.sourceId} does not equal ${contract.sourceId}`;
   if (candidate.recordClass !== contract.recordClass) return `record class ${candidate.recordClass} does not equal ${contract.recordClass}`;
   if (candidate.scope !== contract.scope && !isScopedManualContractScope(contractId, candidate.scope)) return `scope ${candidate.scope} does not equal ${contract.scope}`;
+  if (isScopedManualContractScope(contractId, candidate.scope)) {
+    try {
+      if (manualPayloadScope(contractId, contract.scope, candidate.readModel) !== candidate.scope) return "scoped candidate records do not belong to its exact jurisdiction";
+    } catch { return "scoped candidate records have no exact jurisdiction"; }
+  }
   if (candidate.normalization.parserVersion !== contract.parserNormalizerVersion) {
     return `parser ${candidate.normalization.parserVersion} does not equal ${contract.parserNormalizerVersion}`;
   }

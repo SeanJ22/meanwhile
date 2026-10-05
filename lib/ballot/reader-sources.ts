@@ -30,11 +30,15 @@ export function genericSourcesForDivisions(value: GenericBallotProjection, divis
 export async function readerBallotSourcesForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<readonly RegisteredBallotSource[]> {
   if (!divisions.length) return [];
   const legacy = ballotSourcesForDivisions(divisions);
-  const translations = await readTranslations(divisions, options).catch(() => []);
-  const attach = (sources: readonly RegisteredBallotSource[]) => sources.map(row => ({ ...row, source: { ...row.source,
-    normalize: (raw: Parameters<typeof row.source.normalize>[0]) => withMeasureTranslations(row.source.normalize(raw), translations) } }));
+  const translationsRead = readTranslations(divisions, options).catch(() => []);
+  const generalRead = readGenericBallotProjection(options);
+  const attach = async (sources: readonly RegisteredBallotSource[]) => {
+    const translations = await translationsRead;
+    return sources.map(row => ({ ...row, source: { ...row.source,
+      normalize: (raw: Parameters<typeof row.source.normalize>[0]) => withMeasureTranslations(row.source.normalize(raw), translations) } }));
+  };
   try {
-    const read = await readGenericBallotProjection(options);
+    const read = await generalRead;
     if (read.kind === "PROMOTED") return attach([...genericSourcesForDivisions(read.value, divisions), ...legacy]);
     if (read.kind !== "STORE_UNREACHABLE" || read.code === "STORE_NOT_CONFIGURED") return attach(legacy);
     throw new Error(read.code);
@@ -44,7 +48,7 @@ export async function readerBallotSourcesForDivisions(divisions: readonly string
     return [{ state: "general ballot", source: { name: "ballot-contests",
       fetch: async () => { throw error; }, normalize: () => { throw error; },
       upsert: async () => { throw error; },
-    } }, ...attach(legacy)];
+    } }, ...await attach(legacy)];
   }
 }
 

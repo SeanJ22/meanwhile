@@ -22,6 +22,7 @@ import { evaluateCompletion, type CompletionSnapshot, type RefusalCode } from ".
 import type { AssignmentMembership as SendMembership } from "./expansion/assignment-budget.ts";
 import type { WorkItemState } from "./work-item.ts";
 import { instructionReceiptKey } from "./scheduler/obligation.ts";
+import type { PlaceOwedItem } from "../coverage/place-owed.ts";
 
 /** One membership record, as the obligation carries it. */
 export interface AssignmentMembership {
@@ -46,11 +47,26 @@ export interface CompletionException {
   readonly says: string;
 }
 
+/**
+ * **THE MISSION MAP'S COUNT FOR ONE SEND (CH-19).** Rows its places owe, and of those the ones still unfilled:
+ * due, and neither held fresh nor waiting on the government to publish. `before` is the unfilled count when the
+ * map was first read for this Send, carried from reading to reading.
+ */
+export interface MissionMapCount {
+  readonly owed: number;
+  readonly unfilled: number;
+  /** Of the unfilled, the ones held once and now stale. */
+  readonly stale: number;
+  readonly before: number;
+}
+
 export type AssignmentCompletion =
   | {
       readonly kind: "COMPLETE";
       readonly assignmentKey: string;
       readonly members: number;
+      /** The mission map when Done was decided by it (CH-19). */
+      readonly map?: MissionMapCount;
       /** Each member's satisfied clauses, so a PASS is auditable too. */
       readonly satisfied: readonly { readonly obligationId: string; readonly clauses: readonly string[] }[];
     }
@@ -64,6 +80,7 @@ export type AssignmentCompletion =
       /** Whole counts when `exceptions` is capped; absent means the list is whole. */
       readonly refusedCount?: number;
       readonly unsettledCount?: number;
+      readonly map?: MissionMapCount;
     }
   | { readonly kind: "NO_MEMBERS"; readonly assignmentKey: string; readonly says: string };
 
@@ -155,6 +172,8 @@ export interface MemberRecord {
   readonly assignments?: readonly AssignmentMembership[] | null;
   readonly lastWorkedAt?: string | null;
   readonly openOccurrenceId?: string | null;
+  /** When this door is next read; a door with none does not refresh. */
+  readonly nextDueAt?: string | null;
   readonly absentUntil?: string | null;
   /** Current receipt's own durable join; older work is not its completion. */
   readonly instructionJoinedAt?: string;
@@ -242,4 +261,76 @@ export function evaluateAssignmentFromRecords(input: {
         refusedCount: exceptions.filter((e) => e.kind === "REFUSED").length,
         unsettledCount: exceptions.filter((e) => e.kind === "UNSETTLED").length,
       };
+}
+
+/**
+ * A row still unfilled on the mission map: it is due (or its due date cannot be told), and it is neither held
+ * fresh nor resolved by the government not publishing it (checked and not posted, awaiting or not published).
+ */
+export function isUnfilledRow(item: PlaceOwedItem): boolean {
+  if (item.state !== "missing" && item.state !== "stale") return false;
+  if (item.statuses.due === "not-yet-due") return false;
+  if (item.statuses.found === "checked-not-posted") return false;
+  return item.statuses.published !== "awaiting-publication" && item.statuses.published !== "not-published";
+}
+
+/** The mission map's count for a Send's places. `before` is the earlier reading's, or this one's when it is the first. */
+export function missionMapCount(items: readonly PlaceOwedItem[], before: number | null): MissionMapCount {
+  const unfilled = items.filter(isUnfilledRow);
+  return { owed: items.length, unfilled: unfilled.length, stale: unfilled.filter((item) => item.state === "stale").length,
+    before: before ?? unfilled.length };
+}
+
+/**
+ * **A MISSION IS DONE WHEN ITS MAP IS FULL AND ITS DOORS REFRESH.** (CH-19.)
+ *
+ * A Send is Done only when its places have no unfilled row (government-unpublished items count as resolved)
+ * and every door it opened (each member obligation) has a next scheduled read. Done never ends standing work:
+ * this reads the records and changes none, and a newly found owed row is unfilled on the next reading, which
+ * reopens the mission. A map that was not read is never Done. Member failures are listed, but the map decides.
+ */
+export function evaluateMissionDone(input: {
+  readonly assignmentKey: string;
+  readonly obligations: readonly MemberRecord[];
+  readonly debtFor: (obligationId: string) => MemberDebt | null;
+  /** This Send's mission map, or why it was not read. */
+  readonly map: MissionMapCount | { readonly unreadable: string };
+}): AssignmentCompletion {
+  const members = memberObligations(input.obligations, input.assignmentKey);
+  if ("unreadable" in input.map) {
+    const why = input.map.unreadable;
+    return members.length === 0
+      ? { kind: "NO_MEMBERS", assignmentKey: input.assignmentKey, says: `The mission map was not read (${why}), so nothing can be shown finished.` }
+      : { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members: members.length, settled: 0, refusedCount: 0, unsettledCount: members.length,
+        exceptions: members.slice(0, COMPLETION_EXCEPTION_CAP).map((member) => ({ obligationId: member.id, kind: "UNSETTLED" as const, codes: [],
+          says: `the mission map was not read (${why.slice(0, 160)})` })) };
+  }
+  const map = input.map;
+  if (members.length === 0 && map.owed === 0) {
+    return { kind: "NO_MEMBERS", assignmentKey: input.assignmentKey, says: "Nothing is owed or assigned yet, so nothing can be shown finished. An empty set of work is not evidence that the work is done." };
+  }
+  const unscheduled = members.filter((member) => !member.nextDueAt && !member.openOccurrenceId);
+  const failing = members.filter((member) => (input.debtFor(member.id)?.consecutiveFailures ?? 0) > 0);
+  if (map.unfilled === 0 && unscheduled.length === 0) {
+    return { kind: "COMPLETE", assignmentKey: input.assignmentKey, members: members.length, satisfied: [], map };
+  }
+  const exceptions: CompletionException[] = [
+    ...unscheduled.map((member) => ({ obligationId: member.id, kind: "UNSETTLED" as const, codes: [], says: "no next read is scheduled for this door" })),
+    ...failing.map((member) => {
+      const debt = input.debtFor(member.id)!;
+      return { obligationId: member.id, kind: "REFUSED" as const, codes: [],
+        says: `its last ${debt.consecutiveFailures} ${debt.consecutiveFailures === 1 ? "attempt" : "attempts"} failed (${debt.detail.slice(0, 160)}); the next try is at ${debt.retryAt}` };
+    }),
+  ];
+  return { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members: members.length,
+    settled: members.length - unscheduled.length, exceptions: exceptions.slice(0, COMPLETION_EXCEPTION_CAP),
+    refusedCount: failing.length, unsettledCount: map.unfilled + unscheduled.length, map };
+}
+
+/** One plain sentence for a Send decided by its mission map. */
+export function missionDoneWords(c: AssignmentCompletion): string {
+  if (c.kind === "NO_MEMBERS" || !c.map) return assignmentCompletionWords(c);
+  const owed = `${c.map.owed.toLocaleString("en-US")} owed`;
+  if (c.kind === "COMPLETE") return `Done: every one of ${owed} is filled or waiting on the government, and every door has its next read scheduled (${c.map.before.toLocaleString("en-US")} were open when the map was first read).`;
+  return `Not done: ${c.map.unfilled.toLocaleString("en-US")} of ${owed} still open (${c.map.before.toLocaleString("en-US")} when the map was first read).`;
 }

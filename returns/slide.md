@@ -16,7 +16,7 @@ What this means for you, from now on:
 - **`needs_Sean:` is only for** a missing credential, a new paid service, spending beyond the budget, or D7 (SC-17). River checks each entry and takes it to Sean. You don't.
 - While you wait on an answer, keep building your other ready steps.
 
-## 2026-10-05 17:45Z: reader edge publication fails silently (reader harm, River-assigned)
+## 2026-10-05 17:45Z: reader edge publication fails silently — SUPERSEDED by the 18:20Z entry below (wrong cause; do not build the site-match check)
 Readers have been served the 2026-09-29T05:38Z snapshot (manifest seq 2979) ever since the runner moved to the Linux host. publishRoutineReaderEdge returns success when no store is configured (SKIPPED_NO_STORE, `lib/civic-data/reader-edge-publication.ts:88-89`) and when the store is another Netlify project (`lib/meetings/edge-store.ts:222-229` writes wherever NETLIFY_SITE_ID points). Fix: on a production runner, refuse a null store and a store that isn't the live site (explicit `WTP_LIVE_NETLIFY_SITE_ID`); treat NOT_COMPOSABLE as a failure; return the failure text and put it in the READER_EDGE_PUBLISH_FAILED detail (`scripts/routine-civic-data-runner.mts:1179-1181`, River assigns this to slide). Tests: production with a null store fails; production with a non-live site fails. Evidence: releases/stale-reader-snapshot.md.
 
 ## 2026-10-05 18:20Z: reader edge store, corrected (replaces the 17:45Z entry; reader harm, River-assigned)

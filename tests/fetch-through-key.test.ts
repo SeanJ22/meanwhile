@@ -14,6 +14,7 @@ const row = (id: string, entity = "PAC") => ({ sub_id: id, committee_id: "C00000
   contributor_street_1: "PRIVATE ADDRESS", pdf_url: `https://docquery.fec.gov/pdf/${id}.pdf` });
 
 test("detail uses the registered credential transport and complete keyset pages, returning source-bound public rows only", async () => {
+  const started = Date.now();
   let calls = 0;
   const result = await fetchThroughKey({ question, subject, records: [summary], deadlineMs: Date.now() + 2000,
     now: new Date("2026-10-05T23:00:00Z"), apiOptions: { env: { FEC_API_KEY: "fixture-secret" },
@@ -31,6 +32,7 @@ test("detail uses the registered credential transport and complete keyset pages,
   for (const hidden of ["fixture-secret", "api_key", "PRIVATE", "street_1", "city"]) assert.ok(!serialized.includes(hidden), hidden);
   assert.equal(result.records[0]?.sourceUrl, "https://docquery.fec.gov/pdf/1.pdf");
   assert.equal(composeFinanceDetail(result).citedUrls.length, 3);
+  assert.ok(result.records.every(row => Date.parse(row.retrievedAt!) >= started && Date.parse(row.retrievedAt!) <= Date.now()), "receipt dates come from the actual API read, not the question calendar");
 });
 
 test("a slow detail read falls back within the request deadline and keeps the stored source without a false complete list", async () => {

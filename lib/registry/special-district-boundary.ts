@@ -48,8 +48,8 @@ export function specialDistrictsAt(point: readonly [number, number], records: re
  * no polygon, address membership or invented OCD identity. */
 export function countySpecialDistricts(countyOcdId: string,
   districts: readonly { bodyId: string; countyOcdId: string; name: string }[], records: readonly SpecialDistrictBoundary[]) {
-  return districts.filter(row => row.countyOcdId === countyOcdId).map(row => ({ ...row,
-    serves: "part of the county" as const,
-    boundaryHeld: records.some(boundary => boundary.ocdId === countyOcdId && boundary.bodyId === row.bodyId && !specialDistrictBoundaryIssue(boundary)),
-  }));
+  return districts.filter(row => row.countyOcdId === countyOcdId).map(row => {
+    const boundaryHeld = records.some(boundary => boundary.ocdId === countyOcdId && boundary.bodyId === row.bodyId && !specialDistrictBoundaryIssue(boundary));
+    return { ...row, serves: boundaryHeld ? null : "part of the county", boundaryHeld };
+  });
 }

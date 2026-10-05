@@ -49,6 +49,9 @@ test("official district polygons publish on the existing scoped Slide and attach
     assert.deepEqual(countySpecialDistricts(county,[{bodyId:"unknown",countyOcdId:county,name:"Boundary owed"}],records)[0],
       {bodyId:"unknown",countyOcdId:county,name:"Boundary owed",serves:"part of the county",boundaryHeld:false});
     await assert.rejects(publishSpecialDistrictBoundary(store,{...input,capture:{...input.capture,partial:true}}));
+    await assert.rejects(publishSpecialDistrictBoundary(store,{...input,capture:{...input.capture,httpStatus:206}}));
+    const paged = JSON.stringify({...JSON.parse(text),exceededTransferLimit:true});
+    await assert.rejects(publishSpecialDistrictBoundary(store,{...input,capture:saved(paged,state)}),/additional unread features/);
     assert.equal((await readSpecialDistrictBoundaries(county,{store,now,bypassCache:true})).kind,"PROMOTED");
     const repos=createMemoryRepositories();
     const item=createWorkItem({project:"fixture",subject:district.bodyId,obligation:"district boundary",why:"Admitted GIS",now});

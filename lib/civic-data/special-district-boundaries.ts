@@ -30,17 +30,21 @@ export function specialDistrictBoundaryPackage(input: {
     door.ocdId !== district.countyOcdId || !door.bodyIds.includes(district.bodyId) || !district.sourceGovernmentId ||
     !registeredKind(input.kinds, "division", district.kind)) throw new Error("Boundary must name the admitted district, county, registered kind and source government key.");
   const linking = (input.linkingCaptures ?? []).filter(captureIntact);
-  if (!captureIntact(capture) || !door.hosts.includes(new URL(capture.evidence.canonicalUrl).hostname.toLowerCase()) ||
+  if (!captureIntact(capture) || capture.httpStatus === 206 || !door.hosts.includes(new URL(capture.evidence.canonicalUrl).hostname.toLowerCase()) ||
     !section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt,
       sourcePolicy: capture.sourcePolicy, linkingPage: linkingPageFrom(capture.evidence.canonicalUrl, linking.map(row => row.evidence)) }, "PUBLIC_RECORD", now).ok)
     throw new Error("The district GIS layer is incomplete or outside its admitted official source.");
-  let layer: { type?: string; features?: { type?: string; properties?: Record<string, unknown>; geometry?: unknown }[]; crs?: unknown };
+  let layer: { type?: string; features?: { type?: string; properties?: Record<string, unknown>; geometry?: unknown }[]; crs?: unknown; exceededTransferLimit?: unknown; numberMatched?: unknown; numberReturned?: unknown; links?: unknown };
   let map: { governmentId?: string; governmentName?: string };
   try { layer = JSON.parse(capture.evidence.text); map = JSON.parse(String(door.config.fieldMap)); }
   catch { throw new Error("The saved district GIS layer or its registered field map is unreadable."); }
   if (!layer || layer.type !== "FeatureCollection" || !Array.isArray(layer.features) || !map || typeof map !== "object" || Array.isArray(map) ||
     typeof map.governmentId !== "string" || !map.governmentId || Object.keys(map).some(key => !["governmentId", "governmentName"].includes(key)) ||
     Object.values(map).some(value => typeof value !== "string" || !value)) throw new Error("District boundaries require the registered GeoJSON government-key columns.");
+  if (layer.exceededTransferLimit === true ||
+    typeof layer.numberMatched === "number" && typeof layer.numberReturned === "number" && layer.numberMatched > layer.numberReturned ||
+    Array.isArray(layer.links) && layer.links.some(link => link && typeof link === "object" && link.rel === "next"))
+    throw new Error("The district GIS layer has additional unread features; a complete boundary remains owed.");
   // RFC 7946 has longitude/latitude coordinates. A legacy explicit CRS must say
   // the same; no projected metres are mistaken for geographic degrees.
   if (layer.crs !== undefined && !["urn:ogc:def:crs:OGC:1.3:CRS84", "urn:ogc:def:crs:EPSG::4326", "EPSG:4326"].includes(

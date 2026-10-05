@@ -1,3 +1,8 @@
+/** @freshness-reads-here: retrieval dates are minted only after this path's
+ * registered API read returns a successful, nonempty body. Parsed filing rows
+ * carry that actual page-read instant; timeouts retain the stored summary's
+ * original date and never restamp it. `input.now` is the question's calendar,
+ * not evidence of when these live bytes were read. */
 import { fetchFinanceDocument } from "./fetch-finance-document.ts";
 import { readSourceApi, type SourceApiOptions } from "../control-plane/scheduler/scout-api.ts";
 import { ripcordPulled } from "../ripcords.ts";
@@ -72,7 +77,8 @@ export async function fetchThroughKey(input: {
           { ...input.apiOptions, timeoutMs: remaining }),
         new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Detail deadline")), remaining); }),
       ]).finally(() => { if (timer) clearTimeout(timer); });
-      if (Date.now() >= input.deadlineMs || result.status !== 200) break;
+      if (Date.now() >= input.deadlineMs || result.status !== 200 || result.bytes <= 0 || !result.text) break;
+      const receivedAt = new Date().toISOString();
       const body = object(JSON.parse(result.text, (key: string, value: unknown, context?: { source?: string }) =>
         key === "sub_id" && typeof value === "number" && context?.source && /^\d+$/.test(context.source) ? context.source : value)), pagination = object(body?.pagination);
       if (!Array.isArray(body?.results)) break;
@@ -97,7 +103,7 @@ export async function fetchThroughKey(input: {
         records.push({ kind: "FINANCE_SUMMARY", id: `fec-detail:${source.committeeId}:${id}`, subjectId: input.subject.id,
           canonicalSubjectId: summary.canonicalSubjectId,
           text: `${name}: $${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${receiptDate ? `, received ${receiptDate}` : ""}; filed entity ${entity}${type ? `, committee type ${type}` : ""}.`,
-          sourceUrl, sourceOrg: "Federal Election Commission", retrievedAt: now.toISOString() });
+          sourceUrl, sourceOrg: "Federal Election Commission", retrievedAt: receivedAt });
       }
       if (expected !== null && visited > expected) throw new Error("FEC detail exceeds its published count");
       if (!countValid) break;

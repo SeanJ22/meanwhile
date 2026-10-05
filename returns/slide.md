@@ -3,20 +3,25 @@
 lane: slide
 owner: slide
 writer: the slide lane
-check: live
+check: gates
 ready: no step ids unknown
-river: ecf402600401783b094837c29e0c515eadbdb843
-at: 2026-10-05T20:11:11Z
+river: 6af6f8a504a7224131ad567f62f7b6f63cb52f08
+at: 2026-10-05T23:18:53Z
 state: returned
-fix_subject: fix:3a340c15
-fix: River · stream/slide — live failed for slide: Evidence: cp_log_owner_digests headlines "ROUTINE CIVIC DATA SUPERVISOR FAILED — N task process/protocol failure(s)". Hourly max N was 235-321 from 2026-10-04 14:00Z to 2026-10-05 17:00Z, then 583 at 18:47:55Z and 552 at 20:00:29Z. The 20:0
+fix_subject: fix:55fff18a
+fix: River · stream/slide — gates failed for slide: civic-data-release-firewall … FAIL — 1 release-coupling finding(s).
 
 ## Failure
 
 ```
-LIVE OBSERVATION (River, read-only production check 2026-10-05 ~20:15Z). After release 2 (ecf4026, deployed 18:09Z), the routine civic data supervisor reports about twice as many task failures.
-Evidence: cp_log_owner_digests headlines "ROUTINE CIVIC DATA SUPERVISOR FAILED — N task process/protocol failure(s)". Hourly max N was 235-321 from 2026-10-04 14:00Z to 2026-10-05 17:00Z, then 583 at 18:47:55Z and 552 at 20:00:29Z. The 20:00Z pass still promoted 88 source tasks and held 12 LKGs, and ballot-navigation facts published at 20:10Z. Most of its lines read "Send section3-publication: shared worker-publication:registry-runtime-bindings:wi-... refresh offered to the normal source frontier" and the same for ballot-navigation.
-Ask: find which tasks make up the extra ~280 failures since ecf4026 (CP-01/CP-19 shipped in release 2 and touch worker publication), and say whether they are real failures or deferrals counted as failures. Fix whichever it is: a real failure gets its cause fixed, and a deferral must not count as a process/protocol failure. Plain-English Admin wording stays as it is.
+Your READY 7168232aa (CP-03, CP-04, CP-05, CP-07, CP-08, CP-11, CP-12, CP-18, BX-01, BX-02, BX-06, BX-07) folds, but `pnpm gates` refuses the combination at preflight (River, 2026-10-05 ~23:30Z, river-next 2b83037):
+
+  civic-data-release-firewall … FAIL — 1 release-coupling finding(s).
+    MEETING_PARTITION_AUTHORITY_GATE_MISSING · lib/meetings/snapshot.ts · Meetings production membership, promotion, and Reader composition must remain source/body-scoped and derived from SOURCE_WIRING.
+
+Cause: your commits 72f59106b / b0f79733b replace `collapseDuplicateSittings(meetings)` in lib/meetings/snapshot.ts with `mergeReaderSittings` (lib/meetings/sitting-merge.ts). The firewall's MEETING_PARTITION_AUTHORITY_GATES entry for snapshot.ts (lib/civic-data/firewall.ts ~line 1146) requires collapseDuplicateSittings there. Reproduce with `pnpm routine:civic-data:firewall` on your stream.
+
+Your status shows no `pnpm gates` run on this batch; run it (or at least the firewall) before marking READY. Repair so the firewall passes without weakening it: keep the composite collapse in the snapshot read path (for example have the field-level merge run after/inside collapseDuplicateSittings), or, if the new merge truly replaces it with the same source/body-scoped guarantee, say so under needs_River with the evidence and River will decide whether the firewall proof follows it. Also folded by River in the trial: autonomous-plan.ts now needs to keep hunters' CH-16 `...partFor(spec.recordClass)` and ballot's BALLOT_MEASURE / PUBLIC_RECORD / budget doors next to your workerDoorForRecord table (River's planDoor helper on river-next-slide shows one way). Catch up with `river` after the next promotion, re-run checks, mark a new READY. Nothing else in your batch is wrong; it is held only because it sits on this commit.
 ```
 
 ## Repair

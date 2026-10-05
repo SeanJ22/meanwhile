@@ -43,6 +43,15 @@ const STORE = "civic_data_candidates+civic_data_candidate_events+civic_data_prom
 
 export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
   {
+    id: "campaign-finance", execution: "EXPLICIT_OWNER_INVOCATION_ONLY", sourceId: "curated-reader-primary-sources",
+    recordClass: "CURATED_READER_RECORD", scope: "US:campaign-finance",
+    command: ["scripts/promote-manual-civic-projection.mts", "--contract=campaign-finance"], parserNormalizerVersion: "curated-reader-records/2",
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" }, validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE, readerProjection: { id: "campaign-finance", consumers: ["person cards", "ballot", "Ask"] },
+    classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+    lkgBehavior: "Each source-verified filed report retains its exact candidate binding and period; incomplete reads and failed bindings retain GOOD filings without sums or absence inference.",
+  },
+  {
     id: "government-budgets", execution: "EXPLICIT_OWNER_INVOCATION_ONLY", sourceId: "curated-reader-primary-sources",
     recordClass: "CURATED_READER_RECORD", scope: "US:government-budgets",
     command: ["scripts/promote-manual-civic-projection.mts", "--contract=government-budgets"], parserNormalizerVersion: "curated-reader-records/2",

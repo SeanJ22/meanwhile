@@ -1,3 +1,4 @@
+import { campaignFinanceForTarget, settleCampaignFinanceReads } from "./campaign-finance-reader.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -144,11 +145,13 @@ export function settleStateMoneyRead(state: StateCampaignFinanceJurisdiction): P
  */
 export async function settleStateMoneyReads(): Promise<string | null> {
   const states = Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[];
-  const reads = await Promise.allSettled(states.map((state) => settleStateMoneyRead(state)));
+  const [reads, general] = await Promise.all([
+    Promise.allSettled(states.map((state) => settleStateMoneyRead(state))), settleCampaignFinanceReads(),
+  ]);
   const versions = reads
     .flatMap((read) => read.status === "fulfilled" && read.value.kind === "PROMOTED" ? [read.value.metadata.versionId] : [])
     .filter((version): version is string => version !== null);
-  return versions.length ? versions.join(",") : null;
+  return [...versions, ...general].length ? [...versions, ...general].join(",") : null;
 }
 
 /** Read all independent state pointers; one unavailable state cannot erase another. */
@@ -291,8 +294,10 @@ function snapshotForTarget(targetKey: string): StateMoneySnapshot | null {
 
 export function stateMoneyForTarget(targetKey: string): StateMoneyRecord[] {
   const snapshot = snapshotForTarget(targetKey);
-  if (!snapshot) return [];
-  return snapshot.records.filter((record) => record.targetKeys.includes(targetKey) && isRenderable(record));
+  const general = campaignFinanceForTarget(targetKey);
+  if (!snapshot) return general;
+  const held = snapshot.records.filter((record) => record.targetKeys.includes(targetKey) && isRenderable(record));
+  return [...general, ...held.filter(record => !general.some(current => current.committeeId === record.committeeId && current.electionYear === record.electionYear && current.totals.coveringPeriod === record.totals.coveringPeriod))];
 }
 
 export function stateMoneyWasAsked(targetKey: string): boolean {

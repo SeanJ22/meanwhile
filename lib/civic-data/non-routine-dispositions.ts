@@ -354,6 +354,7 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS: readonly ManualProductionInve
   },
   {
     inventorySourceId: "az-sos-campaign-finance", contractId: "az-sos-campaign-finance", contractSourceId: "az-sos-campaign-finance",
+    additionalContracts: [{ contractId: "campaign-finance", contractSourceId: "curated-reader-primary-sources" }],
     reason: "Owner-invoked SeeTheMoney acquisition promotes validated 2026 records and exact changes to the canonical plane; tracked state-money/corpus files are test and first-seed evidence only.",
   },
   {

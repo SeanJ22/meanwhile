@@ -85,6 +85,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
     case "plain-english-translations": return "lib/translate/publication.ts#readTranslationProjection";
     case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
+    case "campaign-finance": return "lib/funding/campaign-finance-reader.ts#readCampaignFinance";
     case "government-budgets": return "lib/civic-data/government-budgets.ts#readGovernmentBudgets";
     case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
     case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
@@ -247,6 +248,12 @@ export async function verifyRoutineReaderProjection(
         const prefix = "US:public-records:";
         if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Public-record readback requires its exact jurisdiction.");
         return verifyExactVersion(verifierId, await readPublicRecords(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+      }
+      case "campaign-finance": {
+        const { readCampaignFinance } = await import("../funding/campaign-finance-reader.ts");
+        const prefix = "US:campaign-finance:";
+        if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Campaign-finance readback requires its exact jurisdiction.");
+        return verifyExactVersion(verifierId, await readCampaignFinance(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "government-budgets": {
         const { readGovernmentBudgets } = await import("./government-budgets.ts");

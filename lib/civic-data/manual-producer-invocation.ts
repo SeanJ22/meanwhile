@@ -9,6 +9,7 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } f
 export type ManualProducerMode = "DIRECT_SOURCE" | "VERIFIED_WORKER_RESULT" | "EXISTING_DERIVED" | "REVIEWED_INPUT" | "SCOPED_ADAPTER_OWED";
 interface Rule { readonly mode: ManualProducerMode; readonly state?: string; readonly originalOnly?: boolean; readonly reason: string }
 const RULES = {
+  "campaign-finance": { mode: "VERIFIED_WORKER_RESULT", reason: "Complete saved door bytes and filed candidate/office/cycle/jurisdiction identities publish through normal Slide; unmatched rows remain work." },
   "government-budgets": { mode: "VERIFIED_WORKER_RESULT", reason: "Official adopted budgets, amendments and government-specific legal responsibility use the normal saved-evidence worker and Slide." },
   "public-records": { mode: "VERIFIED_WORKER_RESULT", reason: "Source-worded kind and title publish with their exact jurisdiction and saved source sentence." },
   "plain-english-translations": { mode: "VERIFIED_WORKER_RESULT", reason: "Every sentence is supported by the original official text and checked independently under the existing budget dial." },

@@ -1,25 +1,30 @@
-# Returns and hook requests for people
+# Returned: people
 
-River writes this file.
+lane: people
+owner: people
+writer: the people lane
+check: gates
+ready: CA-01 71a308afe7eb
+river: ecf402600401783b094837c29e0c515eadbdb843
+at: 2026-10-05T20:06:47Z
+state: returned
+fix_subject: fix:25bb1115
+fix: River · stream/people — gates failed for people: Your READY 71a308afe (CA-01) folds cleanly but turns two gates red on river-next 92fda9c (pnpm gates, 2026-10-05 ~20:15Z; both reproduced in isolation at the fold point 6fd81327e, and absent at the fold before it, 0294696a7). It is held out
 
-## 2026-10-04T08:39:26Z — integration repair by River
+## Failure
 
-SC-18 deleted the tests pinning ADM-1 and ADM-23 but left `data/feedback/sweeps/9.4.26*.json` citing them, so `pnpm feedback:sweep --check` refused. River moved both to `checkDebt` on river (8c67d4b65). When you remove a test, run `pnpm feedback:sweep --check`; it's part of `pnpm gates`.
+```
+Your READY 71a308afe (CA-01) folds cleanly but turns two gates red on river-next 92fda9c (pnpm gates, 2026-10-05 ~20:15Z; both reproduced in isolation at the fold point 6fd81327e, and absent at the fold before it, 0294696a7). It is held out of this batch. Repair on your stream, re-run these checks and mark a new READY:
 
-## 2026-10-04 14:00Z — FAILED LIVE after release 1 (dcddcf5): returned
+1. state-manifest gate and tests/generated-artifacts.test.ts "RULING 92: a PURE generator's artifact is byte-identical":
+   `pnpm state-manifest --check` -> STALE docs/states/az.md, nh.md, nj.md. Your lib/holdings/datasets.ts change rewrote the Open States officeholders description; the state manifests quote it. Run `pnpm state-manifest` (the generator) and commit the three regenerated files.
 
-River checked release 1 against each step's "Done when" on production, using read-only SQL and git on main. These steps are on main and deployed, but **nothing in production calls them**. Each READY commit left its runtime call as a hook. They are returned: connect each one, or get the owning lane's hook landed, then mark READY again. Fix these before new steps.
+2. tests/meetings-official-page.test.ts "VERSION: the extractor id names the digest of the adapter's value-import closure":
+   "the official-page-events parser's runtime closure changed: set OFFICIAL_PAGE_EVENTS_VERSION in lib/hunt/meetings-site-discovery.ts to "official-page-events@7accc9bf224f"" (actual cfefbdaced51). One of your changed files (likely lib/civic-data/source-authority.ts) is in that parser's import closure. Either keep the change out of the closure, or bump the version key as the test says. That file is meetings' area: if you bump it, put it under needs_hook so River records it.
 
-- CA-40: said-at-the-time.ts is called only by tests.
-- CA-41: meeting-history-votes.ts is not imported by the Ask route or anything else.
-- CA-42: departed-seat.ts is called only by tests (the Ask connection was requested as a hook and never landed).
+Note for your local runs: five other failures in state-holdings-*-data and pdc-v2 bridge tests come from a shallow clone (`git show <old sha>:path` fails). Run `git fetch --unshallow origin main` first; with full history they pass.
+```
 
-## 2026-10-05 17:40Z: standing instruction from Sean (all lanes)
+## Repair
 
-Sean, to River, word for word: "Builders don't send me notifications or ask me questions. Their questions go to you, and you answer every "how" decision yourself under rulings §8. Bring me only credentials, new paid services, spending beyond the budget, and D7. Tell every lane this in its returns file."
-
-What this means for you, from now on:
-- **Never notify Sean and never ask him anything.** No push notifications, no questions in a final reply, no "needs_Sean" for how-to choices.
-- **Put every question under `needs_River:` in your status file.** River reads it each run and answers here in your returns file. Choices about which source, method, order, design, module, migration or fix are "how" decisions. River makes them under rulings §8. A design choice that touches spending controls is still "how", as long as it changes no limit and Sean's settings stay as they are.
-- **`needs_Sean:` is only for** a missing credential, a new paid service, spending beyond the budget, or D7 (SC-17). River checks each entry and takes it to Sean. You don't.
-- While you wait on an answer, keep building your other ready steps.
+Fix on stream/people and publish a new READY commit; River folds the new READY and clears this return when it integrates.

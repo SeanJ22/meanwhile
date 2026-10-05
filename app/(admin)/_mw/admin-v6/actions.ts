@@ -781,6 +781,24 @@ const defs: ActionDef[] = [
     dependency: null,
   },
   {
+    kind: "order-unschedule",
+    label: "Cancel this scheduled order",
+    needs: "owner",
+    doneWords: "Cancelled.",
+    preview: (ctx) => ({
+      title: "Cancel a scheduled order",
+      level: "global",
+      rows: [
+        ["Affects", ctx.targetName ? ctx.targetName : "The order you scheduled"],
+        ["What changes", "It is never sent"],
+        ["Cost", "Nothing"],
+        ["Undo", "Send the order again"],
+      ],
+    }),
+    gateway: { type: "orders.unschedule" },
+    dependency: null,
+  },
+  {
     kind: "setting-set",
     label: "Change a setting",
     needs: "owner",

@@ -9,7 +9,7 @@ const LIST = `<h1>2026 General Election — Candidate List</h1><table><tr><td>Sh
 test("the page half: an official page inside its window passes; a stale or unofficial one does not", () => {
   assert.equal(section3Page(page(LIST), "BALLOT_CONTEST", NOW).ok, true);
   assert.match(section3Page(page(LIST, undefined, "2026-09-01T00:00:00.000Z"), "BALLOT_CONTEST", NOW).reason!, /OUTSIDE_FRESHNESS_WINDOW/);
-  assert.match(section3Page(page(LIST, "https://candidates.example.com/list"), "BALLOT_CONTEST", NOW).reason!, /NOT_OFFICIAL_SOURCE/);
+  assert.match(section3Page(page(LIST, "https://candidates.example.com/list"), "BALLOT_CONTEST", NOW).reason!, /LINKED_SOURCE_UNVERIFIED/);
 });
 
 test("the record half: minimum facts put a record live; other fields attach only when on the page", () => {
@@ -87,4 +87,41 @@ test("CP-19: markup formatting a scalar name cell does not detach its own office
     assert.equal(verdict.live, true);
     assert.deepEqual(verdict.verifiedFields, ["email", "name", "office"]);
   }
+});
+
+test("CP-09: votes, stances and ballot measures require their own minimums", () => {
+  for (const [recordClass, fields] of [
+    ["VOTE", { person: "Alice Adams", subject: "Budget", position: "Yes", date: "2026-09-28" }],
+    ["STANCE", { personId: "alice", quote: "I support parks", date: "2026-09-28" }],
+    ["BALLOT_MEASURE", { election: "2026 General", title: "Parks bond", textUrl: "https://town.gov/text" }],
+    ["BALLOT_MEASURE", { election: "2026 General", number: "101", textUrl: "https://town.gov/text" }],
+  ] as const) {
+    const capture = page(JSON.stringify(fields));
+    assert.equal(section3Record({ recordClass, fields, page: capture, now: NOW }).live, true);
+    const entries = Object.entries(fields);
+    const missing = Object.fromEntries(entries.slice(0, -1));
+    assert.equal(section3Record({ recordClass, fields: missing, page: capture, now: NOW }).live, false);
+  }
+});
+
+test("CP-09: a Money record needs an amount and period; its filing document can publish independently", () => {
+  const fields = { committeeName: "Friends of Parks", documentUrl: "https://town.gov/filing", filingPeriod: "2026" };
+  const capture = page(JSON.stringify(fields));
+  assert.equal(section3Record({ recordClass: "CAMPAIGN_FINANCE_FILING", fields, page: capture, now: NOW }).live, false);
+  assert.equal(section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields, page: capture, now: NOW }).live, true);
+  const money = { ...fields, amount: 0 };
+  assert.equal(section3Record({ recordClass: "CAMPAIGN_FINANCE_FILING", fields: money, page: page(JSON.stringify(money)), now: NOW }).live, true, "a verified zero is an amount");
+});
+
+
+test("CP-06: old upcoming meetings are refused, concluded meetings and serving holdovers remain", () => {
+  const fields = { bodyName: "Council", date: "2026-09-25", time: "12:00:00", status: "upcoming" };
+  const copy = page("Council 2026-09-25 12:00:00 upcoming concluded");
+  assert.match(section3Record({ recordClass: "MEETING", fields, page: copy, now: NOW }).reason!, /DATE_IN_PAST/);
+  assert.equal(section3Record({ recordClass: "MEETING", fields: { ...fields, status: "concluded" }, page: copy, now: NOW }).live, true);
+  const held = { name: "Jane Ortiz", office: "Sheriff", termEnd: "2025-12-31" };
+  assert.equal(section3Record({ recordClass: "OFFICIAL_ROSTER", fields: held,
+    page: page("<article>Jane Ortiz Sheriff term end 2025-12-31, serving until successor sworn in</article>"), now: NOW }).live, true);
+  assert.equal(section3Record({ recordClass: "OFFICIAL_ROSTER", fields: held,
+    page: page("<article>Pat Smith Sheriff</article>"), now: NOW }).live, false);
 });

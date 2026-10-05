@@ -60,9 +60,9 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
   }
   // Publication status reads the reader store's promotion pointers and readbacks, so it needs neither policy nor snapshot; it re-reads on the worker clock bucket.
   sections.publication = { contract: "admin-v6/publication@1", href: "/api/admin/v6/publication", revision: `publication:${input.workerAgeBucket ?? "clock-unread"}` };
-  // Weekly Scout series: the same for every place, so it needs no policy or snapshot; it re-reads on the worker clock bucket.
-  sections.learning = { contract: "admin-v6/learning@1", href: "/api/admin/v6/learning", revision: `learning:${input.workerAgeBucket ?? "clock-unread"}` };
+  // The Scoreboard and its weekly Scout series: the same for every place, so it needs no policy or snapshot; it re-reads on the worker clock bucket.
+  sections.scoreboard = { contract: "admin-v6/scoreboard@1", href: "/api/admin/v6/scoreboard", revision: `scoreboard:${input.workerAgeBucket ?? "clock-unread"}` };
   return { ...ADMIN_V6_CAPABILITIES, sections };
 }
 
-export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:history/1:hunts/1:money/1:workers/1:learning/1:fixes/1:checklist/place1:stuck/1:agents/1:spend/1:sends/1:reliability/1:publication/1:results/1:national/1";
+export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:history/1:hunts/1:money/1:workers/1:scoreboard/1:fixes/1:checklist/place1:stuck/1:agents/1:spend/1:sends/1:reliability/1:publication/1:results/1:national/1";

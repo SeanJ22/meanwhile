@@ -55,6 +55,12 @@ export const ROUTINE_DUE_REQUEST_HISTORY = 20;
 const REASON_MAX = 200;
 const DEFAULT_REASON = "controlled refresh verification (owner instruction 2026-09-25)";
 
+/**
+ * DB-36: the two derive steps that build records from door edits. A door edit asks for them directly (lib/doors/edit-derive.ts),
+ * so they may be made due by a request even though they are not meeting partitions.
+ */
+export const DOOR_DERIVE_CONTRACT_IDS = ["meeting-body-crosswalk-derived", "meeting-source-wiring"] as const;
+
 /** The partitions a request may name: registered MEETING partitions with a sitting window. */
 function requestablePartition(contractId: string): boolean {
   return MEETING_PARTITION_CONTRACTS.some((contract) =>
@@ -177,7 +183,8 @@ export function routineDueRequestFor(
   nowMs: number,
   requests: readonly RoutineDueRequest[],
 ): RoutineDueRequest | null {
-  if (task.recordClass !== "MEETING" || task.contract.schedule?.kind !== "SITTING_WINDOW") return null;
+  const doorDerive = (DOOR_DERIVE_CONTRACT_IDS as readonly string[]).includes(task.id);
+  if (!doorDerive && (task.recordClass !== "MEETING" || task.contract.schedule?.kind !== "SITTING_WINDOW")) return null;
   return requests.find((request) => request.contractId === task.id && routineDueRequestState(request, clock, nowMs) === "DUE") ?? null;
 }
 

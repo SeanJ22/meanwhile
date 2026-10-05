@@ -43,6 +43,13 @@ export function batchEnabledFor(lane: BatchLane, env: Readonly<Record<string, st
   return value === undefined ? entry.defaultEnabled : ON.has(value.trim().toLowerCase());
 }
 
+/** Only work without a reader deadline can wait for the discount service. */
+export type BatchJob = "LIVE_REFRESH" | "PUBLISH_NOW" | "MISSION_CORE" | "BACKFILL" | "HISTORY" | "AUDIT_SAMPLE";
+export function batchEnabledForJob(lane: BatchLane, job: BatchJob | undefined,
+  env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return job !== undefined && ["BACKFILL", "HISTORY", "AUDIT_SAMPLE"].includes(job) && batchEnabledFor(lane, env);
+}
+
 /** One request inside a batch: the Messages API body, keyed by a caller-chosen id. Results come back in ANY order; key by `custom_id`, never position. */
 export interface BatchRequestItem {
   readonly custom_id: string;

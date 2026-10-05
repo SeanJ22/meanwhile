@@ -35,7 +35,6 @@ const PUBLIC_HOST = new URL(PUBLIC_SITE_ORIGIN).host;
 /** The routes that answer a form submit with a 303, and how many redirects each builds. */
 const REDIRECTING_ROUTES: Readonly<Record<string, number>> = {
   "app/api/admin/research/route.ts": 1,
-  "app/api/admin/decision/route.ts": 1,
   "app/api/admin/session/route.ts": 2,
   "app/api/admin/action/route.ts": 1,
   "app/(admin)/admin/auth/google/route.ts": 1,

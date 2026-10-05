@@ -72,6 +72,7 @@ export const ADMIN_CONFIG_ID = "current";
 export const ADMIN_CONFIG_NEVER_WRITTEN = "1970-01-01T00:00:00.000Z";
 
 export interface AdminConfig {
+  readonly decisionOrders?: readonly import("../decision-orders.ts").DecisionOrderCard[];
   readonly settings?: Readonly<Record<string, import("../settings.ts").SettingValue>>;
   /** The fix list (BR-03): broken things and their repairs. */
   readonly legacyFixQueueImportedAt?: string;

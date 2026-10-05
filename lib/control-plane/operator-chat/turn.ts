@@ -89,7 +89,7 @@ function canAnswer(deps: ChatDeps): readonly string[] {
 export function readsFor(text: string, registry: readonly ActionDefinition[]): readonly ContextRead[] {
   const routed = classify(text, registry);
   if (routed.kind === "TOPIC") return requiredReads(routed.topic);
-  if (routed.kind === "ACTION") return routed.actionType === "expansion.scope.set" ? [...ACTION_READS, "config"] : ACTION_READS;
+  if (routed.kind === "ACTION") return (routed.actionType === "expansion.scope.set" || routed.actionType === "orders.sequence") ? [...ACTION_READS, "config"] : ACTION_READS;
   return [];
 }
 

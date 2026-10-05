@@ -33,6 +33,8 @@ export interface SendRequest {
   readonly words: string;
   readonly amount: string;
   readonly selectedItems: readonly string[];
+  readonly fields?: Readonly<Record<string,string>>;
+  readonly startAt?: string;
   readonly payload?: Readonly<Record<string, string>>;
 }
 
@@ -136,7 +138,7 @@ export function liveExecutor(opts: {
           says: "Not sent. Waiting for Live." });
         return;
       }
-      const input = actionInput(request.def.kind, { target: request.target, scopeKey: request.scopeKey, option: request.option, words: request.words, amount: request.amount, selected: request.selectedItems, payload: request.payload });
+      const input = actionInput(request.def.kind, { target: request.target, scopeKey: request.scopeKey, option: request.option, words: request.words, amount: request.amount, selected: request.selectedItems, fields:request.fields, startAt:request.startAt, payload: request.payload });
       const body = { type: gw.type, subject: request.target, stateVersion, idempotencyKey: receipt.key, ...input };
       receipt = { ...receipt, gatewayType: gw.type };
       let status: number | null = null;

@@ -8,7 +8,7 @@ import { ADMIN_CONFIG_ID, isAdminConfig, type AdminConfig } from "./admin-config
 import { refreshFixDispatchHonors } from "../fix-list.ts";
 import { migrateQueuedFixes } from "./fix-migrate.ts";
 import { confirmReceipt } from "./confirmation.ts";
-import { ADMIN_RECEIPT_LOG_KEY, type ActionReceipt } from "./contract.ts";
+import { findReceipt, findScheduledChild } from "./receipts.ts";
 import { submit } from "./gateway.ts";
 import type { GatewayDeps } from "./registry.ts";
 import { scheduledOrders, type ScheduledOrder } from "./scheduled-orders.ts";
@@ -56,7 +56,7 @@ export async function fireDueOrders(deps: GatewayDeps, nowIso: string, lastFired
     const afterDone = order.after ? await completedDependency(deps, order.after, nowMs) : false;
     const due = order.after && afterDone ? order.startAt ?? order.decidedAt : dueAt(order, all, order.lastFiredAt ?? lastFired.get(order.id) ?? null);
     if (due === null || Date.parse(due) > nowMs) continue;
-    const outcome = await submit({ type: order.orderType, subject: "", input: order.input, stateVersion: null,
+    const outcome = await submit({ type: order.orderType, subject: order.subject ?? "", input: order.input, stateVersion: null,
       idempotencyKey: occurrenceKey(order.id, due), scheduleOrigin: { id: order.id, occurrence: due, finishBy: order.finishBy }, caller: "OWNER_SESSION", actorRef: order.decidedBy }, deps);
     fired.push({ id: order.id, orderType: order.orderType, occurrence: due, ok: outcome.ok });
     if (order.repeat) moved.set(order.id, due); else done.add(order.id);
@@ -77,11 +77,9 @@ export async function fireDueOrders(deps: GatewayDeps, nowIso: string, lastFired
 
 /** A schedule's removal is not Done. Find its child receipt, then use the same confirmation as Admin. */
 async function completedDependency(deps: GatewayDeps, id: string, nowMs: number): Promise<boolean> {
-  const projection = Object.fromEntries(["formatVersion","receiptId","idempotencyKey","type","label","authority","subjectKind","subject","requestedSubject","inputDigest","caller","actorRef","stateVersion","codeSha","startedAt","completedAt","outcome","says","refusal","openedWork","readBackAt","undo","change","huntScores","scheduleOrigin"].map(k => [k,true as const]));
   try {
-    let rows = await deps.repos.adminReceipts.readRecentWhere(ADMIN_RECEIPT_LOG_KEY,["receiptId"],id,1,projection);
-    if (!rows.length || (rows[0] as ActionReceipt).type === "orders.schedule") rows = await deps.repos.adminReceipts.readRecentWhere(ADMIN_RECEIPT_LOG_KEY,["scheduleOrigin","id"],id,1,projection);
-    const receipt = rows[0] as ActionReceipt | undefined;
+    let receipt = await findReceipt(deps.repos,id);
+    if(!receipt || receipt.type === "orders.schedule") receipt = await findScheduledChild(deps.repos,id);
     if (!receipt || receipt.outcome === "REFUSED") return false;
     const confirmation = await confirmReceipt(deps.repos,receipt,nowMs,deps.readPlaceScore);
     return confirmation.state === "applied" || confirmation.state === "not-needed";

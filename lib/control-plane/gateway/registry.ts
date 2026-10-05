@@ -48,6 +48,8 @@ import {
   validateIntentNote,
 } from "../research-view.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
+import { executeSequence } from "./sequence-orders.ts";
+import { executeDecisionOrder } from "../decision-orders.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { WakeHintWriter } from "./wake-hint.ts";
 import {
@@ -440,6 +442,23 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
+  /* ------------------------------------------------------ orders.sequence */
+  {
+    definition:{type:"orders.sequence",label:"Send two linked orders",does:"Starts the first order and schedules the second after its work is done.",doesNot:"Does not skip the first order's completion or change any spending limit.",authority:"OWNER_DECISION_REQUIRED",subjectKind:"two linked orders",requiresStateVersion:false,refusals:["INVALID_INPUT","DOWNSTREAM_REFUSED"]},
+    validate(input){
+      for(const name of ["first","second"]){
+        const order=input[name] as {type?:unknown;input?:unknown}|undefined;
+        if(!order||typeof order.type!=="string"||order.type.startsWith("orders.")||order.type.startsWith("decision."))return bad("choose two ordinary registered orders");
+        const entry=lookupAction(order.type);
+        if(!entry||entry.definition.authority==="PROHIBITED"||entry.definition.requiresStateVersion)return bad("this order can only be given from its current page");
+        const inner=(order.input??{}) as Record<string,unknown>;
+        const checked=entry.validate(inner);if(!checked.ok)return bad(checked.why);
+        if(inner.kind!==undefined&&JSON.stringify(checked.value.kind)!==JSON.stringify(inner.kind))return bad("This kind of focus is not connected yet. Nothing was sent; use a place-only order until the focus filter is available.");
+      }
+      return {ok:true,value:{first:input.first,second:input.second}};
+    },execute:executeSequence,
+  },
+
   /* ------------------------------------------------------ orders.schedule */
   {
     definition: {
@@ -462,12 +481,12 @@ const REGISTRY: readonly RegisteredAction[] = [
       const inner = (typeof input.input === "object" && input.input !== null ? input.input : {}) as Record<string, unknown>;
       const checked = target.validate(inner);
       if (!checked.ok) return bad(checked.why);
-      return { ok: true, value: { orderType, orderInput: inner, ...when.value } };
+      return { ok: true, value: { orderType, orderSubject:text(input.subject), orderInput: inner, ...when.value } };
     },
     async execute(deps, context, input) {
       const target = lookupAction(String(input.orderType))!;
       const order: ScheduledOrder = {
-        id: context.receiptId, orderType: String(input.orderType), input: input.orderInput as Record<string, unknown>,
+        id: context.receiptId, orderType: String(input.orderType), subject:String(input.orderSubject), input: input.orderInput as Record<string, unknown>,
         startAt: input.startAt as string | null, after: input.after as string | null, repeat: input.repeat as ScheduledOrder["repeat"],
         finishBy: input.finishBy as string | null, decidedBy: context.request.actorRef, decidedAt: context.at, receiptId: context.receiptId,
         label: target.definition.label,
@@ -536,6 +555,11 @@ const REGISTRY: readonly RegisteredAction[] = [
       refusals: ["INVALID_INPUT", "STALE_STATE", "DOWNSTREAM_REFUSED"],
     },
     validate(input) {
+      if (typeof input.decisionId === "string") {
+        if (!["approve","decline","change","schedule"].includes(String(input.option))) return bad("choose what to do with the recommendation");
+        if (String(input.words ?? "").length > 1000) return bad("the reason is over 1000 characters");
+        return {ok:true,value:{...input,orderCard:true}};
+      }
       const subjectId = text(input.subjectId);
       const chosenOption = collapse(input.chosenOption);
       const answer = typeof input.ownerAnswer === "string" ? input.ownerAnswer.replace(/\r\n/g, "\n").trim() : "";
@@ -554,6 +578,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       };
     },
     async execute(deps, context, input) {
+      if (input.orderCard) return executeDecisionOrder(deps,context,input);
       // The subject travels on the request; the input may name it instead when
       // the caller is a chat tool with no rendered control behind it.
       const subjectId = String(input.subjectId) || context.request.subject.trim();

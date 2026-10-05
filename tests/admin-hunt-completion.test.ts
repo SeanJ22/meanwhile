@@ -7,7 +7,7 @@ import type { ActionRequest } from "@/lib/control-plane/gateway/contract.ts";
 import type { GatewayDeps } from "@/lib/control-plane/gateway/registry.ts";
 import { RESEARCH_STATE_ID, RESEARCH_FORMAT_VERSION, RESEARCH_INTENT_LOG_KEY } from "@/lib/control-plane/scheduler/research-policy.ts";
 import type { ResearchState } from "@/lib/control-plane/scheduler/research-policy.ts";
-import { applyConfirmation, startReceipt } from "../app/(admin)/_mw/admin-v6/receipts.ts";
+import { applyConfirmation, applyGatewayReply, startReceipt } from "../app/(admin)/_mw/admin-v6/receipts.ts";
 import { actionDef } from "../app/(admin)/_mw/admin-v6/actions.ts";
 const AT="2026-10-05T18:00:00.000Z";
 const geography={type:"state",geoid:"04",version:"state:2020",label:"Arizona",stateAbbr:"AZ"};
@@ -28,6 +28,7 @@ test("hunt acceptance persists its score once; pickup stays in progress and comp
  assert.equal(running.state,"in-progress");assert.deepEqual(running.progress,{done:15,of:80});assert.match(running.change!.before,/20%/);assert.match(running.change!.after,/35%/);
  const def=actionDef("send-agents");const ui=startReceipt({key:"ui-score",def,target:"Arizona",targetName:"Arizona",label:def.label,scopeKey:"st:04",scopeName:"Arizona",level:"local",at:AT,simulated:false});
  assert.equal(applyConfirmation(ui,running,AT).status,"running");
+ assert.equal(applyGatewayReply(ui,def,200,{...out,confirmation:running},AT).status,"running","a saved DONE gateway outcome must not hide a hunt already in progress");
  const held=await s.repos.researchState.read(RESEARCH_STATE_ID);await s.repos.researchState.compareAndSet(RESEARCH_STATE_ID,held!.revision,state(true),AT);
  assert.equal((await confirmReceipt(s.repos,out.receipt,Date.parse(AT),s.deps.readPlaceScore)).state,"applied");
 });

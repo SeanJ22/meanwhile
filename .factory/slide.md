@@ -3,7 +3,7 @@ worker: codex-slide
 provider: Codex
 run_id: codex-slide-005c2146fa5b46a1b890f9f80e2de516
 lock: codex-slide-005c2146fa5b46a1b890f9f80e2de516
-heartbeat: 2026-10-05T19:22:20.942782+00:00
+heartbeat: 2026-10-05T19:34:00.818433+00:00
 on_river: CP-01, CP-19 via 85a0ad6, released on main ecf402600401783b094837c29e0c515eadbdb843
 ready: reader-edge-publication-return 5ce7136828fbb24dd80f53c6678e29be7d00ebd5 ( application tested at 69facbbab3a443c42e37ffc932a0cb30e50b8bed; hook pending Admin digest screen)
 checks: reader-edge return FULL: 1066 files, 9356 passed, 11 skipped, 0 failed at 69facbbab3a443c42e37ffc932a0cb30e50b8bed; types pass; full lint 0 errors/69 warnings. READY differs only in .factory coordination.
@@ -39,3 +39,6 @@ needs_hook (BX-07/measures+admin): lib/civic-data/worker-reader-contracts.ts exp
 needs_hook (CP-08/admin): count candidate receipt excludedFacts with code CONFLICT_SUPERSEDED in lib/control-plane/admin-view/v6-publication-read.ts and existing publication view. Code stores losing value and actual source, winner publishes immediately. Do not count conflicts as blocked work.
 needs_hook (CP-14/hunters+admin): remove readActivationGate imports and activation/gate arguments from shared freshness-shadow.mts and snapshot/Admin implemented-research-routes display. Live campaign chain/publication no longer reads a class/field gate; remaining compatibility types and diagnostic gate modules can be removed once shared callers stop importing. Keep spending, runner pause and credential checks.
 needs_River (CP-17): scoreboard wording is repaired. Curated worker scopes still use durable US-AZ+US-NH+US-NJ pointer identities. Renaming those requires a coordinated contract-version/read fallback migration preserving existing live pointers; please route the source-scope migration before display callers adopt new identities. No data pointer is renamed blindly.
+
+CP-18 WIP: reader partition composition and edge assembly now call mergeReaderSittings. Same-body/day joins across doors are conservative when either door lists multiple sittings. Field sources, original meeting ids, agenda documents and CONFLICT_SUPERSEDED values survive; 65 connected tests pass, types fixture spelling repaired. Admin hook: show runtimeOutcome.readerEdge.supersededMeetingFields when present (unknown when omitted) and read meeting.publicationConflicts for detail; combine with CP-08 receipt counts without treating conflicts as blocked. River live check must exercise a newly composed snapshot after release.
+CP-14 additional WIP: promotion-tail and window no longer consult class/field lists; research-progression drops PROMOTION_CLASS_NOT_ACTIVATED. CP-15 drops AUDIT_NOT_RECORDED. Shared runner/snapshot callers still pending. Gate-focused checks 56/56 pass.

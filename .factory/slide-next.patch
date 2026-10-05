@@ -146,6 +146,72 @@ index a3187141f..68eb99bfd 100644
            e.httpStatus < 200 || e.httpStatus >= 300) return `${record.id}: candidate publication lacks exact text, identity or captured-byte evidence`;
        documentIds.add(d.id);
        if (revision) revisions.set(revision.revisionId, d);
+diff --git a/lib/civic-data/election-field-publication.ts b/lib/civic-data/election-field-publication.ts
+index 83885a8cb..4b66d6bfd 100644
+--- a/lib/civic-data/election-field-publication.ts
++++ b/lib/civic-data/election-field-publication.ts
+@@ -1,3 +1,6 @@
++import { section3Page } from "../control-plane/promotion/section3.ts";
++import { manualClassForKind } from "../control-plane/promotion/source-kinds.ts";
++import { preferCurrentSource, receiptSourceKind } from "./source-conflicts.ts";
+ import { createHash } from "node:crypto";
+ import { ELECTION_FIELD_KINDS, electionFieldState, sourcedElectionDate, type ElectionFieldInput, type PublishedElectionField } from "./election-fields.ts";
+ import { prepareManualProjectionSuccessor } from "./manual-successor.ts";
+@@ -43,7 +46,7 @@ export async function publishElectionFields(input: {
+   readonly verify: ElectionFieldVerifier;
+ }) {
+   const records = new Map<string, PublishedElectionField>();
+-  const conflicts = new Set<string>();
++  const conflicts: NonNullable<import("./types.ts").RoutineCandidate["excludedFacts"]>[number][] = [];
+   const sources = new Map<string, ManualSourceReview>();
+   const gaps: { divisionId: string; kind: string; detail: string }[] = [];
+   for (const field of input.fields) {
+@@ -56,7 +59,7 @@ export async function publishElectionFields(input: {
+         capture.evidence.contentHash !== `sha256-${hash(capture.evidence.text)}` || capture.evidence.text !== field.document.text) {
+       gap("Saved complete source capture is missing or does not match these bytes."); continue;
+     }
+-    const page = { url: field.sourceUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: field.linkingPage };
++    const page = { url: field.sourceUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: field.linkingPage, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
+     // An election office's phone line is a fact too: it must be on the saved page.
+     const office = field.kind === "election_office";
+     if (office && !field.phone?.trim()) { gap("Election office has no phone line on the saved page."); continue; }
+@@ -70,10 +73,16 @@ export async function publishElectionFields(input: {
+       gap("Date is not supported by the quoted calendar context."); continue;
+     }
+     const id = fieldId(field);
+-    if (conflicts.has(id)) continue;
+     const previous = records.get(id);
++    const sourceKind = section3Page(page, "BALLOT_CONTEST", input.now).kind;
+     if (previous && (previous.value.text !== field.value || JSON.stringify(previous.value.dates) !== JSON.stringify(field.dates))) {
+-      records.delete(id); conflicts.add(id); gap("This source gives conflicting values for the same contextual election field."); continue;
++      const priorSource = sources.get(previous.value.url);
++      const currentWins = preferCurrentSource({ sourceUrl: field.sourceUrl, sourceOrg: capture.evidence.sourceId, collectedAt: capture.observedAt,
++        verifiedAt: input.now, kind: sourceKind }, { sourceUrl: previous.value.url, sourceOrg: previous.value.sourceOrg, collectedAt: previous.value.collectedAt,
++        verifiedAt: previous.value.verifiedAt, ...(priorSource ? { kind: receiptSourceKind(priorSource.sourceClass) } : {}) });
++      conflicts.push({ key: id, code: "CONFLICT_SUPERSEDED", detail: "Kept the higher source kind, then the newer election field read.",
++        record: currentWins ? previous.value : { value: field.value, dates: field.dates, sourceUrl: field.sourceUrl, collectedAt: capture.observedAt } });
++      if (!currentWins) continue;
+     }
+     records.set(id, { id, kind: "ELECTION_FIELD", value: {
+       state, divisionId: field.divisionId, fieldKind: field.kind, text: field.value, quote: field.quote, dates: field.dates,
+@@ -82,7 +91,7 @@ export async function publishElectionFields(input: {
+       verifiedAt: input.now, collectedAt: capture.observedAt, sourceOrg: capture.evidence.sourceId,
+     } });
+     sources.set(field.sourceUrl, { requestedUrl: field.sourceUrl, finalUrl: field.sourceUrl, publisher: capture.evidence.sourceId,
+-      sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: capture.observedAt, httpStatus: capture.httpStatus,
++      sourceClass: manualClassForKind(sourceKind), retrievedAt: capture.observedAt, httpStatus: capture.httpStatus,
+       rawHash: (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).slice(7), reviewOutcome: "SUPPORTED",
+       reviewedEvidence: "Saved official source; section3Record confirmed this field's value and quote within its freshness window." });
+   }
+@@ -92,7 +101,7 @@ export async function publishElectionFields(input: {
+     sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "code:section3Record", sources: [...sources.values()] },
+     payload: { kind: "ballot-navigation", records: [...records.values()] as unknown as readonly (Record<string, unknown> & { id: string })[] },
+   }, input.store, input.now);
+-  const outcome = await processRegisteredManualCandidate(input.store, "ballot-navigation", candidate, input.now, expectedBaseVersionId);
++  const outcome = await processRegisteredManualCandidate(input.store, "ballot-navigation", { ...candidate, excludedFacts: [...(candidate.excludedFacts ?? []), ...conflicts] }, input.now, expectedBaseVersionId);
+   if (!outcome.promoted) throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
+   return { candidateId: outcome.candidate.candidate.id, promotedVersionId: outcome.promoted.versionId, fields: [...records.keys()], gaps };
+ }
 diff --git a/lib/civic-data/field-sources.ts b/lib/civic-data/field-sources.ts
 new file mode 100644
 index 000000000..8750776ca
@@ -237,6 +303,48 @@ index 9b8fea5ed..b4dab1c04 100644
          const confirmed = byId.get(approval.chain.confirmed);
          if (confirmed?.stage !== "CONFIRMED" || verified?.stage !== "VERIFIED" || audited?.stage !== "AUDITED" ||
              [confirmed, verified, audited].some(stage => stage.itemId !== fact!.itemId) ||
+diff --git a/lib/civic-data/reader-edge-outcome.ts b/lib/civic-data/reader-edge-outcome.ts
+index a38d7ab7a..1e5fc28f2 100644
+--- a/lib/civic-data/reader-edge-outcome.ts
++++ b/lib/civic-data/reader-edge-outcome.ts
+@@ -3,6 +3,8 @@ export interface ReaderEdgePublicationOutcome {
+   readonly readerEdge: string;
+   readonly store: "local folder" | "Netlify Blobs" | "not configured";
+   readonly sequence: number | null;
++  /** Omitted when this pass carried the earlier meeting artifacts without reading them. */
++  readonly supersededMeetingFields?: number;
+   readonly detail: string | null;
+ }
+ 
+diff --git a/lib/civic-data/reader-edge-publication.ts b/lib/civic-data/reader-edge-publication.ts
+index e2387c1af..a64d08613 100644
+--- a/lib/civic-data/reader-edge-publication.ts
++++ b/lib/civic-data/reader-edge-publication.ts
+@@ -59,6 +59,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
+   let failed = false;
+   let destination: ReaderEdgePublicationOutcome["store"] = "not configured";
+   let sequence: number | null = null;
++  let supersededMeetingFields: number | undefined;
+   let status = "FAILED";
+   let detail: string | null = null;
+   const owns = (recordClass: RoutineRecordClass, scope: string) => selected === null || selected.some(pointer => pointer.recordClass === recordClass && pointer.scope === scope);
+@@ -357,6 +358,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
+       }
+       let meetingBodies: RegistryRuntimeReadModel["registry"]["bodies"] | undefined;
+       if (meetingRead?.kind === "PROMOTED") {
++        supersededMeetingFields = meetingRead.value.meetings.reduce((count, meeting) => count + (meeting.publicationConflicts?.length ?? 0), 0);
+         const registry = authority["registry-runtime"];
+         if (meetingRead.value.meetings.length === 0) {
+           meetingBodies = [];
+@@ -391,7 +393,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
+     process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${detail}\n`);
+   }
+   const outcome: ReaderEdgePublicationOutcome = { ok: !failed, readerEdge: failed && status !== "SKIPPED_NO_STORE" ? "FAILED" : status,
+-    store: destination, sequence, detail: failed ? detail ?? "Reader pages could not be fully updated. The earlier serving copies remain available." : null };
++    store: destination, sequence, ...(supersededMeetingFields !== undefined ? { supersededMeetingFields } : {}), detail: failed ? detail ?? "Reader pages could not be fully updated. The earlier serving copies remain available." : null };
+   console.log(JSON.stringify(outcome));
+   return outcome;
+ }
 diff --git a/lib/civic-data/source-authority.ts b/lib/civic-data/source-authority.ts
 index 681ea0321..16828abab 100644
 --- a/lib/civic-data/source-authority.ts
@@ -261,7 +369,7 @@ index 681ea0321..16828abab 100644
    "voting-sites": {
 diff --git a/lib/civic-data/source-conflicts.ts b/lib/civic-data/source-conflicts.ts
 new file mode 100644
-index 000000000..3274cf351
+index 000000000..eacc2f723
 --- /dev/null
 +++ b/lib/civic-data/source-conflicts.ts
 @@ -0,0 +1,63 @@
@@ -290,12 +398,12 @@ index 000000000..3274cf351
 +  const nested = path.slice(0, -1).reduce((value, key) => row(value[key]), record);
 +  const fieldSource = row(row(record.fieldSources)[field] ?? row(record.fieldSources)[path.at(-1)!]);
 +  record = { ...record, ...nested };
-+  const url = typeof fieldSource.sourceUrl === "string" ? fieldSource.sourceUrl : typeof record.sourceUrl === "string" ? record.sourceUrl : null;
++  const url = typeof fieldSource.sourceUrl === "string" ? fieldSource.sourceUrl : typeof record.sourceUrl === "string" ? record.sourceUrl : typeof record.url === "string" ? record.url : null;
 +  const source = receipt.sources.find(source => source.finalUrl === url || source.requestedUrl === url);
 +  return { sourceUrl: url, sourceOrg: typeof fieldSource.sourceOrg === "string" ? fieldSource.sourceOrg : source?.publisher ?? "",
 +    collectedAt: typeof fieldSource.collectedAt === "string" ? fieldSource.collectedAt : typeof record.collectedAt === "string" ? record.collectedAt : source?.retrievedAt ?? "",
 +    verifiedAt: typeof fieldSource.verifiedAt === "string" ? fieldSource.verifiedAt : null,
-+    ...(source ? { kind: receiptSourceKind(source.sourceClass) } : {}),
++    ...(source ? { kind: receiptSourceKind(source.sourceClass) } : typeof fieldSource.kind === "string" ? { kind: fieldSource.kind as SourceKind } : {}),
 +    ...(typeof fieldSource.quote === "string" ? { quote: fieldSource.quote } : {}) };
 +}
 +const META = new Set(["id", "bodyId", "ocdId", "sourceUrl", "sourceOrg", "collectedAt", "verifiedAt", "fieldSources", "kind"]);
@@ -341,24 +449,29 @@ index 64e373797..73d189c8a 100644
  export type ManualSourceClass = (typeof MANUAL_SOURCE_CLASSES)[number];
  
 diff --git a/lib/civic-data/worker-body-directory.ts b/lib/civic-data/worker-body-directory.ts
-index 44e14371f..15ae7f7e3 100644
+index 44e14371f..7dbed69fe 100644
 --- a/lib/civic-data/worker-body-directory.ts
 +++ b/lib/civic-data/worker-body-directory.ts
-@@ -1,3 +1,4 @@
+@@ -1,3 +1,5 @@
++import { receiptSourceKind } from "./source-conflicts.ts";
 +import { parserFieldSources } from "./field-sources.ts";
  import { canonicalJson, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
  import { createWorkItem, type WorkItem } from "../control-plane/work-item.ts";
  import { registerWorkItem } from "../control-plane/repository/coordinator.ts";
-@@ -105,6 +106,8 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
+@@ -105,7 +107,11 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
          homepageUrl: url?.href ?? prior?.homepageUrl ?? null, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
          ...(typeof f.meetingCadence === "string" ? { meetingCadence: f.meetingCadence } : {}),
          ...(address ? { officeAddress: address } : {}), ...(phone ? { officePhone: phone } : {}),
+-        provenance: { sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
 +        ...("held" in input ? {} : { fieldSources: parserFieldSources(record.id, f,
 +          input.parser.result.role === "PARSER" ? input.parser.result.spans : [], input.captures, input.now) }),
-         provenance: { sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
++        provenance: { kind: checked.sourceReceipt.sources.find(source => source.finalUrl === (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl)
++          ? receiptSourceKind(checked.sourceReceipt.sources.find(source => source.finalUrl === (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl)!.sourceClass) : undefined,
++          sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
            collectedAt: (checked.sourceOf?.get(record.id) ?? checked.primary).observedAt, verifiedAt: input.now } });
      } catch (error) {
-@@ -150,7 +153,7 @@ export async function heldDirectoryReading(input: {
+       unresolved.push(`${record.id}: ${error instanceof Error ? error.message : "DIRECTORY_ROW_REQUIRES_REPAIR"}`);
+@@ -150,7 +156,7 @@ export async function heldDirectoryReading(input: {
      if (readUrls.has(artifact.canonicalUrl)) continue;
      const capture = await input.readHeld(artifact);
      if (!capture || !captureIntact(capture)) continue;
@@ -571,7 +684,7 @@ index 4d00e8d8a..b70441f8a 100644
        const composed = candidate.readModel as CuratedReaderProjection;
        requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))),
 diff --git a/lib/civic-data/worker-roster-publication.ts b/lib/civic-data/worker-roster-publication.ts
-index 90fe4a468..5e7651109 100644
+index 90fe4a468..beb289ceb 100644
 --- a/lib/civic-data/worker-roster-publication.ts
 +++ b/lib/civic-data/worker-roster-publication.ts
 @@ -1,3 +1,5 @@
@@ -624,10 +737,12 @@ index 90fe4a468..5e7651109 100644
    const unresolved: string[] = [];
    for (const member of reading.members) {
      const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: member.fields, page, now, pageVerdict,
-@@ -154,6 +157,7 @@ export function workerRosterPublication(input: {
+@@ -153,7 +156,8 @@ export function workerRosterPublication(input: {
+     const value = member.fields[field];
      return member.verified.includes(field) && typeof value === "string" && value.trim() ? value.trim() : null;
    };
-   const source = { sourceUrl: capture.evidence.canonicalUrl, sourceOrg: capture.evidence.sourceId, collectedAt: capture.observedAt.slice(0, 10) };
+-  const source = { sourceUrl: capture.evidence.canonicalUrl, sourceOrg: capture.evidence.sourceId, collectedAt: capture.observedAt.slice(0, 10) };
++  const source = { kind: pageVerdict.kind, sourceUrl: capture.evidence.canonicalUrl, sourceOrg: capture.evidence.sourceId, collectedAt: capture.observedAt.slice(0, 10) };
 +  const conflicts: import("./manual-source-isolation.ts").SourceScopedHeldFact[] = [];
    const accepted: { recordId: string; memberId: string }[] = [];
    const members: BodyRoster["members"] = live.map(member => {
@@ -671,7 +786,7 @@ index 90fe4a468..5e7651109 100644
        const retained = isoTermDate(old?.[field]);
        if (retained !== null && priorSource) retainedFieldSources[field] = old?.retainedFieldSources?.[field] ?? priorSource;
        return retained;
-@@ -185,7 +206,8 @@ export function workerRosterPublication(input: {
+@@ -185,13 +206,14 @@ export function workerRosterPublication(input: {
      const phone = value("phone", publicContact), email = value("email", publicContact);
      const freshContact = publicContact && (verifiedValue(member, "phone") !== null || verifiedValue(member, "email") !== null);
      accepted.push({ recordId: member.recordId, memberId: identity.id });
@@ -681,6 +796,13 @@ index 90fe4a468..5e7651109 100644
        ...(freshContact ? { contactKind: "PUBLIC_OFFICE" as const } : old?.contactKind ? { contactKind: old.contactKind } : {}),
        ...(phone && freshContact ? { contactScope: (phones.get(phone) ?? 0) > 1 ? "SHARED_OFFICE" as const : old?.contactScope ?? "INDIVIDUAL_OFFICE" as const }
          : old?.contactScope ? { contactScope: old.contactScope } : {}),
+       ...(Object.keys(retainedFieldSources).length ? { retainedFieldSources } : {}) };
+   });
+-  const proposed: BodyRoster = { bodyId: body.id, bodyName, sourceUrl: source.sourceUrl, sourceOrg: source.sourceOrg, collectedAt: source.collectedAt,
++  const proposed: BodyRoster = { bodyId: body.id, bodyName, kind: pageVerdict.kind, sourceUrl: source.sourceUrl, sourceOrg: source.sourceOrg, collectedAt: source.collectedAt,
+     partisanship: previous?.partisanship ?? "UNDETERMINED", ...(previous?.partisanshipSourceUrl ? { partisanshipSourceUrl: previous.partisanshipSourceUrl } : {}), members };
+   const rendered = projectReaderRoster(proposed);
+   requireThat(rendered.roster.members.length > 0, "ROSTER_NO_READER_ELIGIBLE_MEMBERS");
 @@ -208,7 +230,7 @@ export function workerRosterPublication(input: {
      for (const member of previous.members.filter(old => !rendered.roster.members.some(current => current.id === old.id))) {
        // A complete official roster that no longer lists someone is the departure's evidence:
@@ -1029,6 +1151,107 @@ index 89f61c0c9..4819a613f 100644
    };
    readonly recordClass: string;
    /** PRDY-3/5: measured at offer time; absent on approvals written before the burdens existed. */
+diff --git a/lib/control-plane/promotion/window.ts b/lib/control-plane/promotion/window.ts
+index e5af1ba85..c8ed29764 100644
+--- a/lib/control-plane/promotion/window.ts
++++ b/lib/control-plane/promotion/window.ts
+@@ -308,16 +308,15 @@ export async function withNightlyWindowLease<R>(
+ /* ------------------------------------------------------------ evaluation */
+ 
+ /**
+- * Decide every item against the gate. PROMOTE_WOULD needs APPROVED and an
+- * open class; anything short of that is REFUSE_WOULD with the failing stage
+- * or the closed class named; DEFER carries the window-level reason.
++ * Describe each verified item for the publication window. DEFER retains the
++ * window-level execution reason; class and field activation lists are retired.
+  */
+ export function evaluateItems(
+   states: readonly PipelineItemState[],
+   gate: Pick<ActivationGateReading, "openRecordClasses" | "openFields">,
+   deferAll: string | null = null,
+ ): { readonly verdicts: readonly ItemVerdict[]; readonly byRecordClass: readonly RecordClassTally[] } {
+-  const open = new Set(gate.openRecordClasses);
++  void gate; // Compatibility argument for saved window callers; never publication authority.
+   const verdicts: ItemVerdict[] = states.map((s) => {
+     const recordClass = s.recordClass ?? "unknown";
+     const base = { itemId: s.itemId, recordClass, stage: s.stage };
+@@ -327,17 +326,8 @@ export function evaluateItems(
+     if (s.stage !== "APPROVED_FOR_PROMOTION") {
+       return { ...base, verdict: "REFUSE_WOULD", reason: `at ${s.stage ?? "no accepted stage"}; APPROVED_FOR_PROMOTION is required${lastRefusal}` };
+     }
+-    if (s.recordClass === null) return { ...base, verdict: "DEFER", reason: "the item names no record class, so the gate cannot be read for it" };
+-    if (!open.has(s.recordClass)) {
+-      return { ...base, verdict: "REFUSE_WOULD", reason: `record class ${s.recordClass} is not open at the activation gate` };
+-    }
+-    /* A class opened by field (2026-09-25: candidate-enrichment, campaign sites only) is open for those fields alone. */
+-    const fields = gate.openFields?.[s.recordClass];
+-    const field = s.byStage.APPROVED_FOR_PROMOTION?.field;
+-    if (fields !== undefined && (field === undefined || !fields.includes(field))) {
+-      return { ...base, verdict: "REFUSE_WOULD", reason: `record class ${s.recordClass} is open only for ${fields.join(", ")}; this approval names ${field ?? "no field"}` };
+-    }
+-    return { ...base, verdict: "PROMOTE_WOULD", reason: `APPROVED_FOR_PROMOTION and record class ${s.recordClass} is open` };
++    if (s.recordClass === null) return { ...base, verdict: "DEFER", reason: "the item names no record class or reader door" };
++    return { ...base, verdict: "PROMOTE_WOULD", reason: "Verified fact is approved for its reader door" };
+   });
+   const tallies = new Map<string, { items: number; promoteWould: number; refuseWould: number; deferred: number }>();
+   for (const v of verdicts) {
+@@ -449,9 +439,7 @@ export function buildWindowDigest(run: WindowRunRecord): string {
+   out.push("");
+   out.push("## ACTIVATION GATE");
+   out.push("");
+-  out.push(`- ${run.activationGate.reason}`);
+-  out.push(`- read from: ${run.activationGate.readFrom ?? "nothing readable"}`);
+-  out.push(`- open record classes: ${run.activationGate.openRecordClasses.length === 0 ? "NONE" : run.activationGate.openRecordClasses.join(", ")}`);
++  out.push("- Verified facts publish through their reader doors without a class activation gate.");
+   out.push("");
+   out.push("## STAGES");
+   out.push("");
+diff --git a/lib/control-plane/research-progression.ts b/lib/control-plane/research-progression.ts
+index e954c2d85..ac22c5e48 100644
+--- a/lib/control-plane/research-progression.ts
++++ b/lib/control-plane/research-progression.ts
+@@ -160,11 +160,9 @@ export function projectResearchProgression(input: {
+     }
+     if (detective?.result.role === "DETECTIVE" && detective.result.identity.state === "UNRESOLVED") block("IDENTITY_UNRESOLVED",a,"Detective","Bind each record to its canonical identity using independent official evidence.",detective.id);
+     if (parser?.result.verdict === "EXTRACTED" && (!verifier || !verifier.inputResultIds.includes(parser.id) || verifier.result.role !== "VALIDATOR" || verifier.result.verdict !== "PASS" || !verifier.result.externalVerifications?.length || verifier.result.externalVerifications.some(v => v.verdict !== "PASS"))) block("INDEPENDENT_VERIFICATION_MISSING",a,"Verifier","Acquire and compare a qualifying independent official record.",verifier?.id ?? parser.id);
+-    if (verifier?.result.role === "VALIDATOR" && verifier.result.verdict === "PASS" && verifier.result.externalVerifications?.length && verifier.result.externalVerifications.every(v => v.verdict === "PASS") && (!auditor || !auditor.inputResultIds.includes(verifier.id))) block("AUDIT_NOT_RECORDED",a,"Adversarial Auditor","Challenge the exact independently verified result and its evidence chain.",verifier.id);
+     if (auditor?.result.role === "ADVERSARIAL_AUDITOR" && auditor.result.verdict !== "SURVIVED") block("AUDIT_CONFLICT_OR_INCONCLUSIVE",a,"Adversarial Auditor","Resolve the recorded challenge with independently checked evidence.",auditor.id);
+     if (acquirer?.result.role === "ACQUIRER" && acquirer.result.verdict !== "ACQUIRED" && acquirer.result.walk.some(w => ["FAILED_AT_RUNG","CHALLENGED","TIMEOUT","TLS_CLIENT_MISMATCH","OTHER_NAMED_FAILURE"].includes(w.transport))) block("SOURCE_CURRENTLY_WALLED",a,"Scout / Detective","Branch to another public representation; preserve failed-route history and keep the obligation live.",acquirer.id);
+     else if(acquirer?.result.role === "ACQUIRER" && acquirer.result.verdict !== "ACQUIRED") block("ACQUISITION_INCOMPLETE_OR_NOT_RETAINED",a,"Acquirer / Engineering","Resolve the recorded completeness or evidence-retention failure; reachable transport alone does not establish a complete acquired record.",acquirer.id);
+-    if (accepted.some(p => p.stage === "APPROVED_FOR_PROMOTION") && (!input.gate.promotionEnabled || !input.gate.openRecordClasses.includes(a.recordClass ?? ""))) block("PROMOTION_CLASS_NOT_ACTIVATED",a,"Promotion governance","Satisfy the class-level activation contract through the governed path.",id);
+   }
+   const milestones = Object.fromEntries(RESEARCH_MILESTONES.map(stage => {
+     const first = new Map<string,MilestoneEvidence>();
+diff --git a/lib/control-plane/scheduler/promotion-tail.ts b/lib/control-plane/scheduler/promotion-tail.ts
+index a0c6ee4a1..6c0f0f01d 100644
+--- a/lib/control-plane/scheduler/promotion-tail.ts
++++ b/lib/control-plane/scheduler/promotion-tail.ts
+@@ -59,7 +59,6 @@ import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+ import { join } from "node:path";
+ 
+ import type { RouteDescriptor } from "./registry.ts";
+-import { ACTIVATION_GATE } from "../promotion/activation-policy.ts";
+ 
+ /** The one directory this module may write to. Enforced, not just documented. */
+ export const STAGING_DIR = [".runtime", "control-plane", "staging"] as const;
+@@ -619,7 +618,7 @@ export function writeStagingManifest(
+ 
+   const manifest: StagingManifest = {
+     stagedOn,
+-    promotionEnabled: ACTIVATION_GATE.promotionEnabled,
++    promotionEnabled: true, // Legacy manifest field; verified facts are not class-gated.
+     entries: [...merged.values()].sort((a, b) =>
+       a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0,
+     ),
+@@ -642,7 +641,7 @@ export function promotionLines(entries: readonly StagedEntry[]): string[] {
+   const out: string[] = [];
+   out.push(
+     `  promotion tail     ${entries.length} entry(ies) staged — ${ready.length} PROMOTION-READY, ` +
+-      `${gaps.length} honest gap(s). Promotion is ${ACTIVATION_GATE.promotionEnabled ? "ON" : "OFF"}.`,
++      `${gaps.length} honest gap(s). Verified facts publish through their reader doors.`,
+   );
+   for (const e of ready) {
+     out.push(
 diff --git a/lib/control-plane/workers/autonomous-plan.ts b/lib/control-plane/workers/autonomous-plan.ts
 index 6f7788db6..fd713f2b9 100644
 --- a/lib/control-plane/workers/autonomous-plan.ts
@@ -1284,8 +1507,151 @@ index d83c3a256..f463e0701 100644
      : satisfied === MEASURE_FIELDS.length
        ? "DONE"
        : "OWED";
+diff --git a/lib/meetings/edge-artifacts.ts b/lib/meetings/edge-artifacts.ts
+index 51fd4083c..ab19bcf71 100644
+--- a/lib/meetings/edge-artifacts.ts
++++ b/lib/meetings/edge-artifacts.ts
+@@ -1,3 +1,4 @@
++import { mergeReaderSittings } from "./sitting-merge.ts";
+ import { createHash } from "node:crypto";
+ 
+ import { ocdStateCode } from "../ocd/state-of.ts";
+@@ -394,13 +395,14 @@ export function mergeScopeArtifacts(
+     for (const meeting of artifact.meetings) if (!meetingsById.has(meeting.id)) meetingsById.set(meeting.id, meeting);
+     for (const doc of artifact.agendaDocuments) if (!agendaById.has(doc.id)) agendaById.set(doc.id, doc);
+   }
+-  const meetings = [...meetingsById.values()];
++  const merged = mergeReaderSittings([...meetingsById.values()]);
++  const meetings = merged.rows;
+   return {
+     formatVersion: 1,
+     generatedAt: manifest.generatedAt,
+     counts: snapshotCounts(meetings, 0),
+     sources: [...manifest.sources],
+     meetings,
+-    agendaDocuments: [...agendaById.values()],
++    agendaDocuments: [...agendaById.values()].map(document => ({ ...document, meetingId: merged.aliases.get(document.meetingId) ?? document.meetingId })),
+   };
+ }
+diff --git a/lib/meetings/sitting-merge.ts b/lib/meetings/sitting-merge.ts
+new file mode 100644
+index 000000000..a90fbfc26
+--- /dev/null
++++ b/lib/meetings/sitting-merge.ts
+@@ -0,0 +1,79 @@
++import { localWallClock, sittingKey } from "../sources/event-identity.ts";
++import type { Meeting, Provenance } from "../sources/types.ts";
++import { preferCurrentSource } from "../civic-data/source-conflicts.ts";
++import type { SourceScopedHeldFact } from "../civic-data/manual-source-isolation.ts";
++import { canonicalCivicDataJson } from "../civic-data/changes.ts";
++
++const source = (meeting: Meeting) => meeting.id.split(":")[0];
++const present = (value: unknown) => value !== null && value !== undefined && value !== "" && (!Array.isArray(value) || value.length > 0);
++const meta = new Set(["id", "bodyId", "ocdId", "jurisdiction", "provenance", "fieldSources", "publicationConflicts", "mergedMeetingIds", "carried"]);
++const timing = ["startsAt", "timeZone", "startPrecision"];
++const venue = ["location", "online", "venueGap"];
++
++/** Same body/day across doors. When a door lists multiple sittings that day,
++ * only an unambiguous exact sitting identity can join them. */
++export function mergeReaderSittings(input: readonly Meeting[]) {
++  const groups = new Map<string, Meeting[]>();
++  for (const meeting of input) {
++    let date: string | undefined;
++    try { if (meeting.timeZone && meeting.provenance) date = localWallClock(meeting.startsAt, meeting.timeZone)?.date; } catch { /* Invalid source dates do not acquire an identity. */ }
++    const body = meeting.bodyId ?? (meeting.ocdId && meeting.bodyName ? `${meeting.ocdId}:${meeting.bodyName}` : null);
++    const key = body && date ? `${body}\u001f${date}` : meeting.id;
++    groups.set(key, [...(groups.get(key) ?? []), meeting]);
++  }
++  const rows: Meeting[] = [], dropped: Meeting[] = [];
++  const aliases = new Map<string, string>();
++  const conflicts: SourceScopedHeldFact[] = [];
++  for (const group of groups.values()) {
++    const routes = new Set(group.map(source));
++    const buckets = new Map<string, Meeting[]>();
++    const unambiguousDay = routes.size === group.length;
++    for (const meeting of group) {
++      let identity: string | null = null;
++      try { identity = sittingKey({ ...meeting, bodyId: meeting.bodyId ?? `${meeting.ocdId}:${meeting.bodyName}` }); } catch { /* Keep malformed identities separate. */ }
++      const key = unambiguousDay ? "day" : identity ?? meeting.id;
++      buckets.set(key, [...(buckets.get(key) ?? []), meeting]);
++    }
++    for (const candidates of buckets.values()) {
++      if (candidates.length < 2 || new Set(candidates.map(source)).size !== candidates.length) {
++        rows.push(...candidates); continue;
++      }
++      // Stable ordering makes ties independent of partition fetch order.
++      const ordered = [...candidates].sort((a, b) => a.id.localeCompare(b.id));
++      const primary = ordered.reduce((best, row) => preferCurrentSource(row.provenance, best.provenance) ? row : best);
++      const result = { ...primary } as Meeting & Record<string, unknown>;
++      const fieldSources: Record<string, Provenance> = { ...primary.fieldSources };
++      const excluded: SourceScopedHeldFact[] = candidates.flatMap(row => row.publicationConflicts ?? []);
++      const fieldSource = (row: Meeting, field: string) => row.fieldSources?.[field] ?? row.provenance;
++      const merge = (fields: string[]) => {
++        const value = (row: Meeting) => fields.length === 1 ? (row as unknown as Record<string, unknown>)[fields[0]]
++          : Object.fromEntries(fields.map(key => [key, (row as unknown as Record<string, unknown>)[key] ?? null]));
++        const available = ordered.filter(row => fields.some(key => present((row as unknown as Record<string, unknown>)[key])));
++        if (!available.length) return;
++        const winner = available.reduce((best, row) => preferCurrentSource(fieldSource(row, fields[0]), fieldSource(best, fields[0])) ? row : best);
++        for (const field of fields) {
++          const next = (winner as unknown as Record<string, unknown>)[field];
++          if (next === undefined) delete result[field]; else result[field] = next;
++          fieldSources[field] = fieldSource(winner, field);
++        }
++        for (const loser of available) if (loser !== winner && canonicalCivicDataJson(value(loser)) !== canonicalCivicDataJson(value(winner))) {
++          excluded.push({ key: `${primary.id}:${fields[0]}:${loser.id}`, code: "CONFLICT_SUPERSEDED",
++            detail: `Kept the higher source kind, then the newer read for ${fields[0]}.`,
++            record: { memberId: primary.id, field: fields[0], value: value(loser), source: fieldSource(loser, fields[0]) } });
++        }
++      };
++      merge(timing); merge(venue);
++      const keys = new Set(candidates.flatMap(row => Object.keys(row)));
++      for (const key of keys) if (!meta.has(key) && !timing.includes(key) && !venue.includes(key)) merge([key]);
++      result.fieldSources = fieldSources;
++      result.mergedMeetingIds = [...new Set(candidates.flatMap(row => [row.id, ...(row.mergedMeetingIds ?? [])]))].sort();
++      result.publicationConflicts = [...new Map(excluded.map(row => [canonicalCivicDataJson(row), row])).values()];
++      for (const id of result.mergedMeetingIds) aliases.set(id, result.id);
++      conflicts.push(...result.publicationConflicts);
++      dropped.push(...candidates.filter(row => row !== primary));
++      rows.push(result);
++    }
++  }
++  for (const row of rows) for (const id of row.mergedMeetingIds ?? []) aliases.set(id, row.id);
++  return { rows, dropped, collapsed: dropped.length, aliases, conflicts };
++}
+diff --git a/lib/meetings/snapshot.ts b/lib/meetings/snapshot.ts
+index c0d249e2f..5d4808579 100644
+--- a/lib/meetings/snapshot.ts
++++ b/lib/meetings/snapshot.ts
+@@ -27,7 +27,7 @@ import {
+ } from "../civic-data/meeting-partitions.ts";
+ import { DERIVED_FAMILY_SOURCE, meetingHistoryContract } from "../civic-data/meeting-partitions.ts";
+ import { mergeMeetingHistory } from "../civic-data/meeting-history.ts";
+-import { collapseDuplicateSittings } from "../sources/composite/index.ts";
++import { mergeReaderSittings } from "./sitting-merge.ts";
+ import {
+   applyPartitionFreshCheck,
+   confirmationCheckedAt,
+@@ -1030,7 +1030,7 @@ export async function readMeetingsProjection(
+         ...(partition.ocdId ? { unreachableOcdIds: [partition.ocdId] } : {}),
+       });
+     }
+-    const collapsed = collapseDuplicateSittings(meetings);
++    const collapsed = mergeReaderSittings(meetings);
+     const accounted = accountCarriedCollapses(
+       promoted.map(({ value }) => value),
+       sources,
+@@ -1038,7 +1038,8 @@ export async function readMeetingsProjection(
+     );
+     sources.splice(0, sources.length, ...accounted.sources);
+     const retainedIds = new Set(collapsed.rows.map((meeting) => meeting.id));
+-    const retainedDocuments = agendaDocuments.filter((document) => retainedIds.has(document.meetingId));
++    const retainedDocuments = agendaDocuments.map(document => ({ ...document, meetingId: collapsed.aliases.get(document.meetingId) ?? document.meetingId }))
++      .filter(document => retainedIds.has(document.meetingId));
+     const generatedAt = promoted.map(({ value }) => value.generatedAt).sort().at(-1) ?? now;
+     const sourceThrough = promoted.map(({ result }) => result.metadata.sourceThrough).filter((value): value is string => value !== null).sort().at(-1) ?? null;
+     const retrievedAt = promoted.map(({ result }) => result.metadata.retrievedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
 diff --git a/lib/officials/card-sources.ts b/lib/officials/card-sources.ts
-index f7230e582..ab441457a 100644
+index f7230e582..d6ab909fb 100644
 --- a/lib/officials/card-sources.ts
 +++ b/lib/officials/card-sources.ts
 @@ -67,7 +67,7 @@ export const BOUNDARY_PROVENANCE: Provenance = {
@@ -1312,6 +1678,14 @@ index f7230e582..ab441457a 100644
  }
  
  /**
+@@ -164,6 +164,7 @@ export function meetingCardSources(
+   const entries: CardSource[] = [
+     { what: `This sitting — ${meeting.title}`, provenance: meeting.provenance },
+   ];
++  for (const [field, provenance] of Object.entries(meeting.fieldSources ?? {})) entries.push({ what: `This sitting — ${field}`, provenance });
+   if (meeting.agendaUrl) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
+   for (const [kind, label] of Object.entries(MEETING_SOURCE_LABELS)) {
+     for (const provenance of evidence[kind as keyof MeetingCardEvidence] ?? []) entries.push({ what: label, provenance });
 diff --git a/lib/officials/lookup.ts b/lib/officials/lookup.ts
 index 6823110e3..98aeaee17 100644
 --- a/lib/officials/lookup.ts
@@ -1504,7 +1878,7 @@ index 44ac76821..f488bffc0 100644
    return { kind: "unverified" };
  }
 diff --git a/lib/registry/body-rosters.ts b/lib/registry/body-rosters.ts
-index f6546d987..8fc11e850 100644
+index f6546d987..118723c26 100644
 --- a/lib/registry/body-rosters.ts
 +++ b/lib/registry/body-rosters.ts
 @@ -23,6 +23,7 @@ import { AZ_CAWCD_ROSTERS } from "./cawcd-rosters.ts";
@@ -1515,7 +1889,15 @@ index f6546d987..8fc11e850 100644
    /** An unresolved update must retain an older member on its actual source/date. */
    membershipSource?: { sourceUrl: string; sourceOrg: string; collectedAt: string };
    /** Optional facts kept from an earlier verified read when this update omits them. */
-@@ -2579,6 +2580,7 @@ export interface RosterHolder {
+@@ -79,6 +80,7 @@ export type Partisanship =
+   | "UNDETERMINED";
+ 
+ export interface BodyRoster {
++  kind?: import("../control-plane/promotion/source-kinds.ts").SourceKind;
+   /** Matches `BodySourceWiring.bodyId` exactly. */
+   bodyId: string;
+   bodyName: string;
+@@ -2579,6 +2581,7 @@ export interface RosterHolder {
    phone: string | null;
    contactKind?: "PUBLIC_OFFICE" | "PERSONAL";
    contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
@@ -1523,7 +1905,15 @@ index f6546d987..8fc11e850 100644
    retainedFieldSources?: RosterMember["retainedFieldSources"];
    contactFormUrl: null;
    photoUrl: string | null;
-@@ -2647,6 +2649,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
+@@ -2638,6 +2641,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
+     // with every member, so a card listing them can say who published the
+     // claim rather than only where it lives.
+     provenance: {
++      ...(member.fieldSources?.name?.kind ?? roster.kind ? { kind: member.fieldSources?.name?.kind ?? roster.kind } : {}),
+       sourceUrl: member.membershipSource?.sourceUrl ?? roster.sourceUrl,
+       sourceOrg: member.membershipSource?.sourceOrg ?? roster.sourceOrg,
+       collectedAt: member.membershipSource?.collectedAt ?? roster.collectedAt,
+@@ -2647,6 +2651,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
      phone: member.phone,
      contactKind: member.contactKind,
      contactScope: member.contactScope,
@@ -1578,7 +1968,7 @@ index de52ca014..54e726255 100644
    id: string;
    /**
 diff --git a/lib/sources/types.ts b/lib/sources/types.ts
-index e1ae50ee3..2ac442fc3 100644
+index e1ae50ee3..940156036 100644
 --- a/lib/sources/types.ts
 +++ b/lib/sources/types.ts
 @@ -29,6 +29,9 @@ export type OcdId = string;
@@ -1591,6 +1981,18 @@ index e1ae50ee3..2ac442fc3 100644
    /**
     * The exact page or endpoint this record was read from.
     *
+@@ -214,6 +217,11 @@ export type MeetingStatus = "SCHEDULED" | "CONCLUDED" | "CANCELED";
+  * school board meeting.
+  */
+ export interface Meeting {
++  /** Source and exact quote for each composed field, when available. */
++  fieldSources?: Readonly<Record<string, Provenance>>;
++  /** Original partition ids retained so agenda links and evidence can follow a merge. */
++  mergedMeetingIds?: readonly string[];
++  publicationConflicts?: readonly import("../civic-data/manual-source-isolation.ts").SourceScopedHeldFact[];
+   /** Stable within a source. Namespaced by source to stay unique across them. */
+   id: string;
+   /**
 diff --git a/scripts/derive-candidate-campaign-sites.mts b/scripts/derive-candidate-campaign-sites.mts
 index 72bb8dff3..c11c066aa 100644
 --- a/scripts/derive-candidate-campaign-sites.mts
@@ -1681,7 +2083,7 @@ index ae038cd99..052fdf49c 100644
    console.log(`  the standard is ${MEASURE_FIELDS.length} fields: ${MEASURE_FIELDS.join(", ")}\n`);
  }
 diff --git a/tests/campaign-site-chain.test.ts b/tests/campaign-site-chain.test.ts
-index d8cc08df8..590bc425e 100644
+index d8cc08df8..30af10ace 100644
 --- a/tests/campaign-site-chain.test.ts
 +++ b/tests/campaign-site-chain.test.ts
 @@ -143,10 +143,7 @@ test("a held paid-research finding reaches APPROVED with measured checks, clean
@@ -1768,6 +2170,21 @@ index d8cc08df8..590bc425e 100644
  });
  
  /*
+@@ -258,11 +252,11 @@ test("robots.txt is recorded, not a burden: a site whose robots.txt disallows ev
+   assert.match(challenged.detail, /an access control answered in place of the page \(a bot challenge/);
+ });
+ 
+-test("a class opened for another field does not approve a campaign site", async (t) => {
++test("CP-14: an obsolete field list cannot withhold a verified campaign site", async (t) => {
+   const { repos, vaultRoot, duarte } = await plane(t);
+   const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z", { promotionEnabled: true, openRecordClasses: ["candidate-enrichment"], openFields: { "candidate-enrichment": ["photo"] } });
+   await projectCampaignSiteChains(repos, run.options);
+   const d = (await readPipelineStates(repos)).find((s) => s.itemId === duarte.itemId)!;
+-  assert.notEqual(d.stage, "APPROVED_FOR_PROMOTION");
+-  assert.ok(d.refused!.reasons.some((r) => /candidate-enrichment\.campaignSite is not open/.test(r.detail)));
++  assert.equal(d.stage, "APPROVED_FOR_PROMOTION");
++  assert.ok(!d.refused);
+ });
 diff --git a/tests/campaign-site-publication.test.ts b/tests/campaign-site-publication.test.ts
 index ae989eeab..cb2a8ce96 100644
 --- a/tests/campaign-site-publication.test.ts
@@ -1964,6 +2381,89 @@ index 2294d12c0..de3069463 100644
      "an absence expires, and so does a presence — one side going stale is one side unshown",
    );
  });
+diff --git a/tests/meeting-source-conflicts.test.ts b/tests/meeting-source-conflicts.test.ts
+new file mode 100644
+index 000000000..28eaf48c0
+--- /dev/null
++++ b/tests/meeting-source-conflicts.test.ts
+@@ -0,0 +1,37 @@
++import assert from "node:assert/strict";
++import test from "node:test";
++import { mergeReaderSittings } from "../lib/meetings/sitting-merge.ts";
++import { mergeScopeArtifacts, partitionSnapshotByScope } from "../lib/meetings/edge-artifacts.ts";
++import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
++import type { Meeting } from "../lib/sources/types.ts";
++const at = "2026-10-05T12:00:00Z";
++const meeting = (id: string, extra: Partial<Meeting> = {}): Meeting => ({ id, bodyId: "body", bodyName: "Board", jurisdiction: "County", title: "Meeting", ocdId: "ocd-division/country:us/state:az/county:example", startsAt: "2026-10-06T18:00:00Z", timeZone: "UTC", location: null, agendaUrl: null, status: "SCHEDULED", provenance: { kind: "OFFICIAL", sourceUrl: `https://office.gov/${id}`, sourceOrg: "Clerk", collectedAt: at, verifiedAt: at }, ...extra });
++test("CP-18: two doors with different times merge, retaining the official value, other useful fields, and the losing value", () => {
++  const official = meeting("portal:1");
++  const news = meeting("calendar:1", { startsAt: "2026-10-06T19:00:00Z", agendaUrl: "https://office.gov/agenda", provenance: { ...official.provenance, kind: "NEWS", collectedAt: "2026-10-05T13:00:00Z" } });
++  const merged = mergeReaderSittings([official, news]);
++  assert.equal(merged.rows.length, 1);
++  assert.equal(merged.rows[0].startsAt, official.startsAt);
++  assert.equal(merged.rows[0].agendaUrl, news.agendaUrl);
++  assert.equal(merged.rows[0].fieldSources?.agendaUrl.kind, "NEWS");
++  assert.ok(merged.conflicts.some(row => row.code === "CONFLICT_SUPERSEDED" && (row.record as { field: string }).field === "startsAt"));
++  assert.deepEqual(mergeReaderSittings([news, official]), merged);
++});
++test("CP-18: a second same-day sitting stays distinct, and an exact cross-door match still merges", () => {
++  const a = meeting("portal:1"), b = meeting("portal:2", { startsAt: "2026-10-06T20:00:00Z" });
++  assert.equal(mergeReaderSittings([a, b, meeting("calendar:1", { startsAt: "2026-10-06T19:00:00Z" })]).rows.length, 3);
++  assert.equal(mergeReaderSittings([a, b, meeting("calendar:1")]).rows.length, 2);
++  assert.equal(mergeReaderSittings([a, meeting("calendar:1", { bodyId: "another-body" })]).rows.length, 2);
++});
++test("CP-18: edge composition retains both source ids and an agenda belonging to the merged-away row", () => {
++  const old = meeting("calendar:1");
++  const fresh = meeting("portal:1", { startsAt: "2026-10-06T19:00:00Z", provenance: { ...old.provenance, collectedAt: "2026-10-05T13:00:00Z" } });
++  const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: at, sources: [], counts: snapshotCounts([old, fresh], 0), meetings: [old, fresh], agendaDocuments: [{ id: "agenda", meetingId: old.id, ocdId: old.ocdId } as MeetingsSnapshot["agendaDocuments"][number]] };
++  const result = mergeScopeArtifacts(partitionSnapshotByScope(snapshot, at), snapshot);
++  assert.equal(result.meetings.length, 1);
++  assert.equal(result.meetings[0].startsAt, fresh.startsAt);
++  assert.equal(result.agendaDocuments[0].meetingId, fresh.id);
++  assert.deepEqual(result.meetings[0].mergedMeetingIds, [old.id, fresh.id]);
++  const again = mergeReaderSittings(result.meetings);
++  assert.deepEqual(again.rows, result.meetings);
++});
+diff --git a/tests/nightly-window.test.ts b/tests/nightly-window.test.ts
+index 019dab235..00926e141 100644
+--- a/tests/nightly-window.test.ts
++++ b/tests/nightly-window.test.ts
+@@ -151,18 +151,18 @@ function approvedState(itemId: string, recordClass: string): PipelineItemState {
+   return { ...deriveItemState(itemId, [s]), stage: "APPROVED_FOR_PROMOTION", byStage: { SCOUTED: s, APPROVED_FOR_PROMOTION: a } };
+ }
+ 
+-test("evaluation: PROMOTE_WOULD needs APPROVED and an open class; everything else is REFUSE_WOULD with the reason, grouped with denominators", () => {
++test("CP-14: verified approvals ignore obsolete class gates; unfinished items and execution deferrals remain explicit", () => {
+   const states = [
+     deriveItemState("pp-s", [scoutedItem("pp-s", "meetings")]),
+     approvedState("pp-a-closed", "campaign-finance"),
+     approvedState("pp-a-open", "meetings"),
+   ];
+   const closed = evaluateItems(states, { openRecordClasses: [] });
+-  assert.deepEqual(closed.verdicts.map((v) => v.verdict), ["REFUSE_WOULD", "REFUSE_WOULD", "REFUSE_WOULD"]);
++  assert.deepEqual(closed.verdicts.map((v) => v.verdict), ["REFUSE_WOULD", "PROMOTE_WOULD", "PROMOTE_WOULD"]);
+   assert.match(closed.verdicts[0].reason, /at SCOUTED; APPROVED_FOR_PROMOTION is required/);
+-  assert.match(closed.verdicts[2].reason, /record class meetings is not open/);
++  assert.match(closed.verdicts[2].reason, /approved for its reader door/);
+   const open = evaluateItems(states, { openRecordClasses: ["meetings"] });
+-  assert.deepEqual(open.verdicts.map((v) => v.verdict), ["REFUSE_WOULD", "REFUSE_WOULD", "PROMOTE_WOULD"]);
++  assert.deepEqual(open.verdicts.map((v) => v.verdict), ["REFUSE_WOULD", "PROMOTE_WOULD", "PROMOTE_WOULD"]);
+   const meetings = open.byRecordClass.find((t) => t.recordClass === "meetings");
+   assert.deepEqual(meetings, { recordClass: "meetings", items: 2, promoteWould: 1, refuseWould: 1, deferred: 0 });
+   const deferred = evaluateItems(states, { openRecordClasses: ["meetings"] }, "the research input was unavailable");
+diff --git a/tests/obligation-registry.test.ts b/tests/obligation-registry.test.ts
+index 9b9b04459..69ffd56de 100644
+--- a/tests/obligation-registry.test.ts
++++ b/tests/obligation-registry.test.ts
+@@ -849,7 +849,7 @@ test("the manifest MERGES, so a cycle cannot erase what it did not touch", () =>
+ test("the digest counts BOTH staged states, always", () => {
+   const lines = promotionLines([]).join("\n");
+   assert.match(lines, /0 entry\(ies\) staged/);
+-  assert.match(lines, /Promotion is ON/);
++  assert.match(lines, /Verified facts publish through their reader doors/);
+ });
+ 
+ test("both registered normalizers exist for the routes that acquire", () => {
 diff --git a/tests/officeholders.test.ts b/tests/officeholders.test.ts
 index 730e3db8f..75008dbe5 100644
 --- a/tests/officeholders.test.ts

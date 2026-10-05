@@ -9,6 +9,7 @@ export const campaignFinanceScope = (ocdId: string) => {
   return `${CAMPAIGN_FINANCE_SCOPE}:${ocdId}`;
 };
 export interface CampaignFinanceRecord extends Readonly<Record<string, unknown>> {
+  readonly kind: "CAMPAIGN_FINANCE_FILING" | "CAMPAIGN_FINANCE_DOCUMENT";
   readonly id: string;
   readonly ocdId: string;
   readonly sourceUrl: string;
@@ -18,6 +19,13 @@ export interface CampaignFinanceRecord extends Readonly<Record<string, unknown>>
   readonly record: StateMoneyRecord;
 }
 export interface CampaignFinanceProjection { readonly kind: "campaign-finance"; readonly records: readonly CampaignFinanceRecord[] }
+
+/** CP-09: unknown amounts or filing periods leave a source document, never a Money figure. */
+export function campaignFinanceRecordKind(record: StateMoneyRecord): CampaignFinanceRecord["kind"] {
+  return typeof record.totals.coveringPeriod === "string" && Boolean(record.totals.coveringPeriod.trim()) &&
+    [record.totals.receipts, record.totals.expenditures, record.totals.cashOnHand].some(amount => typeof amount === "number" && Number.isFinite(amount))
+    ? "CAMPAIGN_FINANCE_FILING" : "CAMPAIGN_FINANCE_DOCUMENT";
+}
 
 export function campaignFinanceRecordIssue(value: unknown): string | null {
   const row = value as CampaignFinanceRecord;
@@ -36,7 +44,7 @@ export function campaignFinanceRecordIssue(value: unknown): string | null {
       record.checkedAt !== row.collectedAt.slice(0, 10) || !record.totals ||
       [record.totals.receipts, record.totals.expenditures, record.totals.cashOnHand].some(amount => amount !== null &&
         (typeof amount !== "number" || !Number.isFinite(amount)))) return "Campaign filing lacks exact source, report totals or verified candidate/office/cycle/jurisdiction binding.";
-  return null;
+  return row.kind !== campaignFinanceRecordKind(record) ? "Campaign source document does not meet the Money amount and filing-period minimum." : null;
 }
 
 export async function readCampaignFinance(ocdId: string, options: PromotedCivicDataReadOptions = {}) {
@@ -68,7 +76,12 @@ export function campaignFinanceForTarget(targetKey: string): StateMoneyRecord[] 
   for (const [key, entry] of currentReaderAuthorityEdge()?.promoted ?? []) {
     if (!key.startsWith(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`) || entry.kind !== "PROMOTED") continue;
     const scope = key.slice("CURATED_READER_RECORD:".length);
-    for (const row of checkedEntries.get(entry) ?? []) if (campaignFinanceScope(row.ocdId) === scope && row.record.targetKeys.includes(targetKey)) records.push(row.record);
+    for (const row of checkedEntries.get(entry) ?? []) if (campaignFinanceScope(row.ocdId) === scope && row.record.targetKeys.includes(targetKey)) {
+      // Preserve all source cells in the typed holding; summary consumers show
+      // only the document name/link while incomplete Money facts remain owed.
+      records.push(row.kind === "CAMPAIGN_FINANCE_DOCUMENT" ? { ...row.record,
+        totals: { ...row.record.totals, receipts: null, expenditures: null, cashOnHand: null } } : row.record);
+    }
   }
   return records;
 }

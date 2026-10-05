@@ -95,7 +95,7 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   for (const ballot of Object.values(fresh.ballots)) {
     const key = ballotElectionKey(ballot), before = ballots[key];
     const ids = new Set(ballot.contests.map(row => row.id));
-    const keepsMeasure = (contestId: string, sourceUrl: string) => !ids.has(contestId) ||
+    const keepsMeasure = (contestId: string, sourceUrl: string | null) => !ids.has(contestId) ||
       !ballot.measures.some(row => row.contestId === contestId) && ballot.contests.some(row => row.id === contestId && row.measureTextUrl === sourceUrl);
     requirePublication(!before?.election.date || !ballot.election.date || before.election.date === ballot.election.date, "BALLOT_ELECTION_DATE_CONFLICT");
     ballots[key] = before ? { ...before, election: { ...ballot.election, date: ballot.election.date || before.election.date },

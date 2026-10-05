@@ -11,6 +11,7 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { campaignFinancePackage, publishCampaignFinance, runFinanceDoorPublication } from "../lib/funding/campaign-finance.ts";
 import { campaignFinanceScope, readCampaignFinance, campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
 import { stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
+import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
 
 const now = "2026-10-05T18:00:00Z", division = "ocd-division/country:us/state:oh/place:alder", target = "ballot-candidacy:avery";
 const provenance = { sourceUrl: "https://elections.example.gov/candidates", sourceOrg: "Fixture election authority", collectedAt: now, verifiedAt: now };
@@ -94,6 +95,32 @@ test("same-place successor retains prior reported periods with their original au
     assert.deepEqual(new Set(read.value.records.map(row => row.reportId)), new Set(["R1", "R2"]));
     assert.equal(read.value.records.find(row => row.reportId === "R2")!.collectedAt, now);
   }
+});
+
+test("incomplete Money facts publish as documents, preserve known cells and leave figures out of card/Ask summaries", async () => {
+  for (const missing of ["amount", "period"]) {
+    const input = source(), store = new MemoryRoutineDataStore();
+    const text = input.captures[0].evidence.text.replace(missing === "amount" ? ",1200,0" : ",January through June,",
+      missing === "amount" ? ",," : ",,");
+    input.responses[0].bytes = Buffer.from(text); input.captures[0].evidence.text = text;
+    input.captures[0].evidence.contentHash = `sha256-${createHash("sha256").update(text).digest("hex")}`;
+    const published = await publishCampaignFinance(store, input); assert.ok(published.promoted, JSON.stringify(published.candidate));
+    assert.equal(published.documentsWithOwedMoney.length, 1);
+    const read = await readCampaignFinance(division, { store, now }); assert.equal(read.kind, "PROMOTED");
+    if (read.kind !== "PROMOTED") continue;
+    assert.equal(read.value.records[0].kind, "CAMPAIGN_FINANCE_DOCUMENT");
+    assert.equal(read.value.records[0].record.totals.receipts, missing === "period" ? 1200 : null);
+    const edge = promotedEdgeEntryOf(read, "CURATED_READER_RECORD", campaignFinanceScope(division), store); assert.ok(edge);
+    await withReaderAuthorityEdge({ edgeOnly: true, promoted: new Map([[`CURATED_READER_RECORD:${campaignFinanceScope(division)}`, edge]]) }, async () => {
+      await settleCampaignFinanceReads();
+      const [record] = stateMoneyForTarget(target);
+      assert.equal(record.committeeId, "C1"); assert.equal(record.filingsUrl, input.responses[0].url);
+      assert.equal(record.totals.receipts, null); assert.equal(record.totals.expenditures, null); assert.equal(record.totals.cashOnHand, null);
+    });
+  }
+  const disabled = source();
+  Object.assign(disabled.captures[0], { sourcePolicy: { ...DEFAULT_SOURCE_POLICY, enabled: { ...DEFAULT_SOURCE_POLICY.enabled, FILING: false } } });
+  assert.throws(() => campaignFinancePackage(disabled), /SOURCE_KIND_DISABLED/);
 });
 
 function zip(name: string, data: Buffer): Buffer {

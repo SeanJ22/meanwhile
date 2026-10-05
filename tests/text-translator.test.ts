@@ -8,6 +8,11 @@ import { runTextTranslation } from "../lib/translate/text-runtime.ts";
 import { readTranslations } from "../lib/translate/publication.ts";
 import { readBodyTranslations, readOfficeTranslation, readMeetingTranslation } from "../lib/translate/reader.ts";
 import { translationHash, type TextTranslation } from "../lib/translate/records.ts";
+import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
+import { translatedMeetingEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
+import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+await installRegistryRuntimeFirstSeeds();
 
 const now = "2026-10-05T18:00:00Z", stateDivision = "ocd-division/country:us/state:mi";
 const division = `${stateDivision}/county:birch`, bodyId = `${division}#library`;
@@ -63,6 +68,15 @@ test("legal class, exact body, state office, agenda and minutes publish independ
   assert.equal((await readMeetingTranslation(document, { store, now, bypassCache: true }))?.text, specs[3].text);
   assert.equal(await readMeetingTranslation({ ...document, contentHash: translationHash("revised") }, { store, now, bypassCache: true }), null);
   assert.equal(await readMeetingTranslation({ ...document, meetingId: "other-meeting" }, { store, now, bypassCache: true }), null);
+  assert.equal(await readMeetingTranslation({ ...document, bodyId: "other-body" }, { store, now, bypassCache: true }), null);
+  const snapshot = { meetings: [{ id: "library-meeting", bodyId, ocdId: division, title: "Library meeting", startsAt: "2026-10-06T18:00:00Z" }],
+    agendaDocuments: [{ id: "held-agenda", meetingId: "library-meeting", ocdId: division, documentUrl: agenda.evidence.canonicalUrl,
+      contentHash: agenda.evidence.contentHash.replace(/^sha256-/, ""), retrievedAt: now, text: agenda.evidence.text, sourceOrg: "Birch library" }] } as unknown as MeetingsSnapshot;
+  assert.equal((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "What is on the agenda?", snapshot, { store, now, bypassCache: true })).records[0]?.kind, "MEETING_NOTICE_SUMMARY");
+  assert.equal((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "What happened in the minutes?", snapshot, { store, now, bypassCache: true })).records[0]?.kind, "MEETING_MINUTES_SUMMARY");
+  assert.deepEqual((await translatedMeetingEvidenceFor("other-body", "library-meeting", "What happened?", snapshot, { store, now, bypassCache: true })).records, []);
+  assert.deepEqual((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "How did they vote?", snapshot, { store, now, bypassCache: true })).records, []);
+  assert.deepEqual((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "What is on the agenda?", { ...snapshot, agendaDocuments: snapshot.agendaDocuments?.map(row => ({ ...row, contentHash: translationHash("revised") })) }, { store, now, bypassCache: true })).records, []);
   assert.equal((await readTranslations([division, stateDivision], { store, now, bypassCache: true })).length, 5);
 });
 
@@ -93,6 +107,8 @@ test("unadmitted, conflicting, stale and partial text captures never spend; atte
   assert.equal((await runHeldTextTranslations({ ...input, divisions: [stateDivision] })).outcomes.length, 0);
   assert.equal((await runHeldTextTranslations({ ...input, captures: [{ ...primary, partial: true }] })).deferred.length, 1);
   assert.equal((await runHeldTextTranslations({ ...input, now: "2026-10-06T18:00:00Z" })).deferred.length, 1);
+  assert.equal((await runHeldTextTranslations({ ...input, captures: [{ ...primary, sourcePolicy: { ...DEFAULT_SOURCE_POLICY,
+    enabled: { ...DEFAULT_SOURCE_POLICY.enabled, OFFICIAL: false } } }] })).deferred.length, 1);
   assert.equal((await runHeldTextTranslations({ ...input, subjects: [...input.subjects, { ...input.subjects[0], sourceUrl: "https://other.mi.gov/agenda" }] })).deferred.length, 1);
   await assert.rejects(runHeldTextTranslations({ ...input, saveAttempt: async () => { throw new Error("cannot save attempt"); } }), /cannot save/);
   assert.equal(calls, 0);

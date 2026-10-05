@@ -12,9 +12,10 @@ export const MEASURE_RECORD_FIRST_SEED = SEED as readonly MeasureRecord[];
 
 /** Keep an explicit vote sentence exactly as the publisher wrote it. */
 export function explicitVoteMeanings(text: string): { yesMeans: string | null; noMeans: string | null } {
+  text = text.trim();
   const result: { yesMeans: string | null; noMeans: string | null } = { yesMeans: null, noMeans: null };
   for (const vote of ["YES", "NO"] as const) {
-    const pattern = new RegExp(`\\b(?:A\\s+)?["“']?${vote}["”']?\\s+vote\\s+(?:shall|will|would|means?|has)\\b[\\s\\S]*?(?:\\.(?=\\s+[A-Z]|$)|[!?](?=\\s|$))`, "gi");
+    const pattern = new RegExp(`\\b(?:A\\s+)?["“']?${vote}["”']?\\s+vote\\s+(?:shall|will|would|means?|has|adopts?|approves?|pass(?:es)?|keeps?|retains?|rejects?|leaves?|continues?)\\b[\\s\\S]*?(?:\\.(?=\\s+[A-Z]|$)|[!?](?=\\s|$))`, "gi");
     const sentences = [...text.matchAll(pattern)].map(match => match[0].trim());
     if (sentences.length === 1) result[vote === "YES" ? "yesMeans" : "noMeans"] = sentences[0];
   }

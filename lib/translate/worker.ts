@@ -32,6 +32,21 @@ export function translationPlaybook(entries: readonly FieldManualEntry[]): Trans
   return { text, writerModel, checkerModel, version: translationHash(JSON.stringify([text, writerModel, checkerModel])) };
 }
 
+async function loadTranslationPlaybook(repos: FieldManualRepos, state: string, now: string) {
+  const manual = await readFieldManual(repos, { role: "SHARED", state: state.toLowerCase(), recordClass: "BALLOT_MEASURE" });
+  if (manual.error) throw new Error(manual.error);
+  const playbook = translationPlaybook(manual.store.entries);
+  if (!manual.store.entries.some(entry => entry.kind === "PLAYBOOK" && (entry.payload as { translator?: unknown })?.translator === true)) {
+    const saved = await writeFieldManual(repos, [newFieldManualEntry("translator-seed", "measures", {
+      role: "SHARED", kind: "PLAYBOOK", title: "Plain-English translator", summary: "Source-only writer with an independent sentence checker.",
+      outcome: "REFERENCE", observedAt: now, recordClasses: ["BALLOT_MEASURE"],
+      payload: { translator: true, text: playbook.text, writerModel: playbook.writerModel, checkerModel: playbook.checkerModel },
+    })], now);
+    if (saved.error) throw new Error(saved.error);
+  }
+  return playbook;
+}
+
 function toolResult(response: ModelResponse, name: string, model: string): unknown {
   if (response.stop_reason === "max_tokens" || canonicalModelId(response.model) !== canonicalModelId(model)) throw new Error("Translation model result is incomplete or from a different model.");
   const tools = response.content.filter(block => block.type === "tool_use" && block.name === name);
@@ -83,9 +98,7 @@ export async function translateText(input: {
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Text translation lacks its exact source-named subject.");
   // Read the same live translator playbook as measures; the task-specific tool
   // supplies the output shape. Existing Bank edits and model routing apply here.
-  const manual = await readFieldManual(input.repos, { role: "SHARED", state: subject.state.toLowerCase(), recordClass: "BALLOT_MEASURE" });
-  if (manual.error) throw new Error(manual.error);
-  const playbook = translationPlaybook(manual.store.entries);
+  const playbook = await loadTranslationPlaybook(input.repos, subject.state, now);
   const instruction = subject.kind === "BODY_CLASS"
     ? "Describe only what this class of body is under the supplied creating law. Do not assert that a named body possesses those powers."
     : subject.kind === "BODY" ? "Describe only this named body's powers under its own charter or creating law. Do not import powers from its general class."
@@ -131,17 +144,7 @@ export async function translateMeasure(input: {
   if (!evidence.text.trim() || evidence.contentHash !== `sha256-${translationHash(evidence.text)}` ||
       !/^https:\/\//.test(evidence.canonicalUrl) || !subject.title.trim() || !evidence.text.includes(subject.title) ||
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Translation source is incomplete or does not name this measure.");
-  const manual = await readFieldManual(input.repos, { role: "SHARED", state: subject.state.toLowerCase(), recordClass: "BALLOT_MEASURE" });
-  if (manual.error) throw new Error(manual.error);
-  const playbook = translationPlaybook(manual.store.entries);
-  if (!manual.store.entries.some(entry => entry.kind === "PLAYBOOK" && (entry.payload as { translator?: unknown })?.translator === true)) {
-    const saved = await writeFieldManual(input.repos, [newFieldManualEntry("translator-seed", "measures", {
-      role: "SHARED", kind: "PLAYBOOK", title: "Plain-English measure translator", summary: "Source-only writer with an independent sentence checker.",
-      outcome: "REFERENCE", observedAt: now, recordClasses: ["BALLOT_MEASURE"],
-      payload: { translator: true, text: playbook.text, writerModel: playbook.writerModel, checkerModel: playbook.checkerModel },
-    })], now);
-    if (saved.error) throw new Error(saved.error);
-  }
+  const playbook = await loadTranslationPlaybook(input.repos, subject.state, now);
   const send = input.transportFor({ subjectId: subject.contestId, state: subject.state });
   const request = (model: string, tool: typeof writerTool | typeof checkerTool, content: unknown): ModelRequest => ({
     model, max_tokens: 8192, ...scoutThinkingOptions(model, "medium"),

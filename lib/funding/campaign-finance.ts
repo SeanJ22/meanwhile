@@ -1,4 +1,4 @@
-import { campaignFinanceRecordIssue, type CampaignFinanceRecord } from "./campaign-finance-reader.ts";
+import { campaignFinanceRecordIssue, campaignFinanceRecordKind, type CampaignFinanceRecord } from "./campaign-finance-reader.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
@@ -53,7 +53,7 @@ export function campaignFinancePackage(input: {
   const bound = bindFinanceDoorFilings({ read, ballots: input.ballots,
     agency: typeof input.door.config.agency === "string" ? input.door.config.agency : used[0].publisher });
   const records: CampaignFinanceRecord[] = bound.bound.map(({ filing, record }) => ({
-    id: filing.id, ocdId: filing.ocdId, sourceUrl: filing.sourceUrl, sourceHash: filing.sourceHash,
+    id: filing.id, kind: campaignFinanceRecordKind(record), ocdId: filing.ocdId, sourceUrl: filing.sourceUrl, sourceHash: filing.sourceHash,
     collectedAt: filing.retrievedAt, reportId: filing.reportId,
     record: { ...record, provenance: { ...record.provenance, verifiedAt: input.now } },
   }));
@@ -65,7 +65,7 @@ export function campaignFinancePackage(input: {
     sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: source.retrievedAt, httpStatus: source.httpStatus, rawHash: source.hash,
     reviewOutcome: "SUPPORTED" as const,
     reviewedEvidence: "Code replayed complete saved filing bytes and matched filed candidate name, office, cycle and exact jurisdiction to one held ballot candidacy; periods stay separate." }));
-  return { unbound: bound.unbound, package: {
+  return { unbound: bound.unbound, documentsWithOwedMoney: records.filter(row => row.kind === "CAMPAIGN_FINANCE_DOCUMENT").map(row => row.id), package: {
     contractId: "campaign-finance", version: `campaign-finance-v2:${new Date(input.now).toISOString()}`, sourceThrough: used.map(source => source.retrievedAt).sort().at(-1)!,
     sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "Finance door field-map reader",
       sources: [...sources, ...section3SourceReceipt(linkingCaptures, input.now, "Finance door field-map reader", "Official publisher links to the filing source.").sources] },
@@ -77,7 +77,7 @@ export async function publishCampaignFinance(store: RoutineDataStore, input: Par
   const built = campaignFinancePackage(input);
   const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(built.package, store, input.now);
   const published = await processRegisteredManualCandidate(store, "campaign-finance", candidate, input.now, expectedBaseVersionId);
-  return { ...published, unbound: built.unbound, acceptedRecordIds: built.package.payload.records.map(row => row.id) };
+  return { ...published, unbound: built.unbound, documentsWithOwedMoney: built.documentsWithOwedMoney, acceptedRecordIds: built.package.payload.records.map(row => row.id) };
 }
 
 /** Called by the existing leased door worker with that place's admitted held inputs. */
@@ -105,11 +105,11 @@ export async function runFinanceDoorPublication(input: Parameters<typeof campaig
     versionId = published.promoted?.versionId ?? null;
     if (!published.promoted || published.readerReadback?.status !== "PASS") throw new Error(published.candidate.failureDetail ?? "Campaign finance has not reached its typed reader.");
     outcome = { at: input.now, workerResultId: input.workerResultId, candidateId, versionId,
-      status: published.unbound.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
+      status: published.unbound.length || published.documentsWithOwedMoney.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
       code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "FILED_CAMPAIGN_FINANCE_PUBLISHED",
       acceptedRecordIds: published.acceptedRecordIds,
-      detail: `${published.acceptedRecordIds.length} source-verified filing(s) published with separate reporting periods; ${published.unbound.length} filing(s) still need candidate/office/cycle/jurisdiction binding.`,
-      ...(published.unbound.length ? { recovery: "WORKER" as const } : {}) };
+      detail: `${published.acceptedRecordIds.length} source-verified filing/document(s) published with separate reporting periods; ${published.unbound.length} unmatched filing(s) and ${published.documentsWithOwedMoney.length} document(s) with incomplete Money facts remain owed work.`,
+      ...(published.unbound.length || published.documentsWithOwedMoney.length ? { recovery: "WORKER" as const } : {}) };
   } catch (error) {
     const detail = sanitizedErrorDiagnostic(error);
     outcome = { at: input.now, workerResultId: input.workerResultId, candidateId, versionId, status: "HELD",

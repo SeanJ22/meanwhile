@@ -37,7 +37,7 @@ function fixture(state = "OH", prefix = `state:${state.toLowerCase()}/county:ald
   assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed));
   const parser = { id: "parsed", workItemId: "measure", endedAt: now, result: parsed } as WorkerResultRecord;
   const plan = { contract, publication: { contractId: "ballot-contests", bodyId: "fixture-body" } } as AutonomousWorkPlan;
-  const registry = { payload: { registry: { divisions: [{ state, label: "Alder County", ocdId: division, sourceDataset: "fixture" }] } } } as RegistryRuntimePrior;
+  const registry = { payload: { registry: { divisions: [{ state, label: "Alder County", ocdId: division, sourceDataset: "fixture" }] } } } as unknown as RegistryRuntimePrior;
   return { division, question, plan, parser, registry, now, captures: [evidence, document].map(evidence => ({
     evidence, observedAt: now, partial: false, transport: "REACHABLE" as const, httpStatus: 200 })) };
 }

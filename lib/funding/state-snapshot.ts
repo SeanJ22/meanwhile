@@ -298,7 +298,9 @@ export function stateMoneyForTarget(targetKey: string): StateMoneyRecord[] {
   const snapshot = snapshotForTarget(targetKey, general.length > 0);
   if (!snapshot) return general;
   const held = snapshot.records.filter((record) => record.targetKeys.includes(targetKey) && isRenderable(record));
-  return [...general, ...held.filter(record => !general.some(current => current.committeeId === record.committeeId && current.electionYear === record.electionYear && current.totals.coveringPeriod === record.totals.coveringPeriod))];
+  return [...general, ...held.filter(record => !general.some(current =>
+    [current.totals.receipts, current.totals.expenditures, current.totals.cashOnHand].some(amount => amount !== null) &&
+    current.committeeId === record.committeeId && current.electionYear === record.electionYear && current.totals.coveringPeriod === record.totals.coveringPeriod))];
 }
 
 export function stateMoneyWasAsked(targetKey: string): boolean {

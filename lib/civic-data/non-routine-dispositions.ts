@@ -429,6 +429,8 @@ export const PDC7_RESOLVED_SPLIT_BINDINGS: readonly ResolvedSplitInventoryBindin
     inventorySourceId: "curated-reader-records",
     addedProductionPaths: [
       { path: "lib/civic-data/official-filings.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "official-filings", contractSourceId: "curated-reader-primary-sources", reason: "Independently verified filing facts use the existing curated source, candidate/event/promotion and Reader checks. Added after the frozen cutover; neither the historical paths nor the 42-family denominator is rewritten." },
+      { path: "lib/civic-data/public-records.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "public-records", contractSourceId: "curated-reader-primary-sources", reason: "Source-worded public records use the existing saved-evidence worker and normal Slide; frozen inventory families are unchanged." },
+      { path: "lib/civic-data/government-budgets.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "government-budgets", contractSourceId: "curated-reader-primary-sources", reason: "Official adopted budget facts use the normal source-backed worker and Slide; frozen inventory families are unchanged." },
       { path: "lib/officials/member-offices.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "member-offices", contractSourceId: "curated-reader-primary-sources", reason: "State legislators' capitol and district offices are refreshed daily from Open States (owner decision 2026-10-01), joined to each official roster, and read only from the canonical member-offices pointer. Added after the frozen cutover; neither the historical paths nor the 42-family denominator is rewritten." },
     ],
     paths: [

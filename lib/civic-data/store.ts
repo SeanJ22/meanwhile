@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { isTranslationScope } from "../translate/records.ts";
+import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 
 import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm";
 
@@ -300,7 +300,7 @@ function registeredMutationContract(
     .filter((contract) =>
       contract.sourceId === candidate.sourceId &&
       contract.recordClass === candidate.recordClass &&
-      (contract.scope === candidate.scope || contract.id === "plain-english-translations" && isTranslationScope(candidate.scope))
+      (contract.scope === candidate.scope || isScopedManualContractScope(contract.id, candidate.scope))
     )
     .map((contract) => ({
       id: contract.id,

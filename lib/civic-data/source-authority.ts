@@ -144,6 +144,8 @@ export const SOURCE_AUTHORITIES = {
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "published public-comment rule",
+      "source-worded public-record kind, title and sentence about an exact jurisdiction or body (CA-37)",
+      "official adopted government budgets, fiscal year dates, version-specific amendments and legal budget responsibilities (CA-52)",
       "neutral official measure translations checked sentence by sentence by an independent model (CA-25)",
       "independently verified official candidate-filing and committee-report facts, without an inferred ballot or financial identity join",
       "official voter-registration lookup route",

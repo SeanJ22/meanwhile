@@ -21,6 +21,14 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
       ? { recordClass: "VOTER_ACCESS_ROUTE", fields: ["bodyName", "state", "kind", "url", "coverage", "coverageEvidence"] }
     : source.recordClass === "BALLOT_AND_CANDIDATES"
       ? { recordClass: "BALLOT_CONTEST", fields: ["election", "office", "candidateName", "jurisdictionName"] }
+    : source.recordClass === "PUBLIC_RECORDS"
+      ? { recordClass: "PUBLIC_RECORD", fields: ["bodyName", "title", "kindLabel", "sourceSentence"] }
+    : source.recordClass === "ADOPTED_BUDGETS"
+      ? { recordClass: "ADOPTED_BUDGET", fields: ["bodyName", "title", "fiscalYear", "version", "documentUrl", "sourceSentence"] }
+    : source.recordClass === "BUDGET_RESPONSIBILITIES"
+      ? { recordClass: "BUDGET_RESPONSIBILITY", fields: ["bodyName", "role", "responsible", "authorityKind", "sourceSentence"] }
+    : source.recordClass === "BUDGET_AMENDMENTS"
+      ? { recordClass: "BUDGET_AMENDMENT", fields: ["bodyName", "title", "fiscalYear", "budgetVersion", "documentUrl", "sourceSentence"] }
       : { recordClass: "CAMPAIGN_FINANCE_FILING", fields: ["bodyName", "jurisdictionName", "committeeName", "filingPeriod", "documentUrl"] };
   const seedUrls = [...new Set([source.url, jurisdiction.ownWebAddress].filter((url): url is string => {
     if (!url) return false;
@@ -33,6 +41,8 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
     ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
     ...(spec.recordClass === "BALLOT_CONTEST" && bodyId ? { publication: { contractId: "ballot-contests" as const, bodyId } } : {}),
+    ...(spec.recordClass === "PUBLIC_RECORD" && bodyId ? { publication: { contractId: "public-records" as const, bodyId } } : {}),
+    ...(["ADOPTED_BUDGET", "BUDGET_RESPONSIBILITY", "BUDGET_AMENDMENT"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "government-budgets" as const, bodyId } } : {}),
     ...(["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "official-filings" as const, bodyId } } : {}),
     contract: {
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,

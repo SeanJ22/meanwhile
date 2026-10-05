@@ -40,6 +40,19 @@ export const ROUTINE_RECORD_CLASSES = [
 ] as const;
 export type RoutineRecordClass = (typeof ROUTINE_RECORD_CLASSES)[number];
 
+/** Unknown civic shapes retain the source's own words; no new kind union is required. */
+export interface PublicRecord {
+  readonly id: string;
+  readonly kind: "PUBLIC_RECORD";
+  readonly bodyId: string | null;
+  readonly ocdId: string;
+  readonly kindLabel: string;
+  readonly title: string;
+  readonly sourceUrl: string;
+  readonly capturedAt: string;
+  readonly sourceSentence: string;
+}
+
 export const ROUTINE_DATA_CLASSIFICATIONS = [
   "RUNTIME_CIVIC_DATA",
   "OPERATIONAL_REFERENCE_DATA",

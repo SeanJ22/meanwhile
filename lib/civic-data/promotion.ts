@@ -21,7 +21,7 @@ import { verifySourceScopedCandidateProjection } from "./candidate-integrity.ts"
 import type { RoutineReaderVerification } from "./reader-verification.ts";
 import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/promotion-authority.ts";
 import { derivedInputAuthorityIssue } from "./derived-door.ts";
-import { isTranslationScope } from "../translate/records.ts";
+import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -389,7 +389,7 @@ export function manualCandidateContractIssue(contractId: ManualProductionContrac
   const contract = requiredManualProductionContract(contractId);
   if (candidate.sourceId !== contract.sourceId) return `source ${candidate.sourceId} does not equal ${contract.sourceId}`;
   if (candidate.recordClass !== contract.recordClass) return `record class ${candidate.recordClass} does not equal ${contract.recordClass}`;
-  if (candidate.scope !== contract.scope && !(contractId === "plain-english-translations" && isTranslationScope(candidate.scope))) return `scope ${candidate.scope} does not equal ${contract.scope}`;
+  if (candidate.scope !== contract.scope && !isScopedManualContractScope(contractId, candidate.scope)) return `scope ${candidate.scope} does not equal ${contract.scope}`;
   if (candidate.normalization.parserVersion !== contract.parserNormalizerVersion) {
     return `parser ${candidate.normalization.parserVersion} does not equal ${contract.parserNormalizerVersion}`;
   }

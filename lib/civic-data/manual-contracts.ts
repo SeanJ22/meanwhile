@@ -43,6 +43,24 @@ const STORE = "civic_data_candidates+civic_data_candidate_events+civic_data_prom
 
 export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
   {
+    id: "government-budgets", execution: "EXPLICIT_OWNER_INVOCATION_ONLY", sourceId: "curated-reader-primary-sources",
+    recordClass: "CURATED_READER_RECORD", scope: "US:government-budgets",
+    command: ["scripts/promote-manual-civic-projection.mts", "--contract=government-budgets"], parserNormalizerVersion: "curated-reader-records/2",
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" }, validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE, readerProjection: { id: "government-budgets", consumers: ["Admin FIN-01 to FIN-05", "government budget records"] },
+    classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+    lkgBehavior: "Source-backed adopted budgets, exact fiscal years, amendments and legal responsibilities publish individually; proposals stay unpublished and prior GOOD facts retain their authority.",
+  },
+  {
+    id: "public-records", execution: "EXPLICIT_OWNER_INVOCATION_ONLY", sourceId: "curated-reader-primary-sources",
+    recordClass: "CURATED_READER_RECORD", scope: "US:public-records",
+    command: ["scripts/promote-manual-civic-projection.mts", "--contract=public-records"], parserNormalizerVersion: "curated-reader-records/2",
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" }, validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE, readerProjection: { id: "public-records", consumers: ["place records", "Admin updates"] },
+    classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+    lkgBehavior: "A source-backed title and kind publish individually; unverified records stay owed and prior GOOD records retain their exact authority.",
+  },
+  {
     id: "plain-english-translations",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "curated-reader-primary-sources",

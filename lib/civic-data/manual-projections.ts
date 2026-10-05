@@ -3,7 +3,9 @@ import { officialFilingIssue } from "./official-filings.ts";
 import { electionFieldIssue } from "./election-fields.ts";
 import { translationProjectionProblems, type TranslationProjection } from "../translate/publication.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
-import { translationScope } from "../translate/records.ts";
+import { manualPayloadScope } from "./scoped-manual-contracts.ts";
+import { publicRecordIssue } from "./public-records.ts";
+import { governmentBudgetIssue } from "./government-budgets.ts";
 
 import { genericBallotProblems, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { BallotSet } from "../ballot/types.ts";
@@ -49,6 +51,8 @@ import { sourceProjectionEvidence } from "./types.ts";
 
 export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "plain-english-translations",
+  "public-records",
+  "government-budgets",
   "ballot-contests",
   "az-sos-ballot",
   "nh-curated-ballot",
@@ -97,7 +101,7 @@ export interface CandidateProfilesProjection {
 }
 
 export interface CuratedReaderProjection {
-  readonly kind: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk";
+  readonly kind: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "public-records" | "government-budgets";
   /** Stable exact members. Each family has its own contract, pointer, and LKG. */
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
   /** Present on denominator-governed Reader families such as everyday routing. */
@@ -208,6 +212,8 @@ const SOURCE_ISOLATED_MANUAL_CONTRACTS = new Set<ManualProjectionContractId>([
   "venue-resolutions",
   "everyday-routing",
   "meeting-body-crosswalk",
+  "public-records",
+  "government-budgets",
 ]);
 
 interface IsolatedManualProjection {
@@ -220,10 +226,12 @@ interface IsolatedManualProjection {
 }
 
 function curatedRecordIssue(
-  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
+  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "public-records" | "government-budgets",
   row: Record<string, unknown>,
 ): string | null {
   if (!string(row.id)) return `A ${contractId} row has no stable id.`;
+  if (contractId === "public-records") return publicRecordIssue(row);
+  if (contractId === "government-budgets") return governmentBudgetIssue(row);
   if (contractId === "official-filings") return officialFilingIssue(row);
   if (contractId === "meeting-body-crosswalk") return crosswalkRowIssue(row);
   if (contractId === "everyday-routing") {
@@ -337,7 +345,7 @@ function sourceScopedMembers(
   if (contractId === "officeholder-statements") return statementMembers(payload);
   if (contractId === "official-filings" || contractId === "comment-access" || contractId === "ballot-navigation" ||
       contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
-      contractId === "everyday-routing" || contractId === "meeting-body-crosswalk") {
+      contractId === "everyday-routing" || contractId === "meeting-body-crosswalk" || contractId === "public-records" || contractId === "government-budgets") {
     return curatedMembers(payload);
   }
   return [];
@@ -418,7 +426,7 @@ function sourceScopedMemberIssue(
   }
   if (contractId === "official-filings" || contractId === "comment-access" || contractId === "ballot-navigation" ||
       contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
-      contractId === "everyday-routing" || contractId === "meeting-body-crosswalk") {
+      contractId === "everyday-routing" || contractId === "meeting-body-crosswalk" || contractId === "public-records" || contractId === "government-budgets") {
     const row = object(member.record);
     if (!row) return `${member.key} is not a curated Reader record.`;
     const issue = curatedRecordIssue(contractId, row);
@@ -865,7 +873,7 @@ function officeholderStatementProjection(
 }
 
 function curatedReaderProjection(
-  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
+  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "public-records" | "government-budgets",
   payload: ManualProjectionPayload,
   sourceReceipt: ManualSourceSetReceipt,
 ): BuiltProjection {
@@ -910,7 +918,7 @@ function curatedReaderProjection(
 
   const identities = records.map((row) => {
     const value = object(row.value);
-    const subjectId = contractId === "official-filings" ? string(row.id) : contractId === "comment-access" || contractId === "meeting-body-crosswalk"
+    const subjectId = contractId === "official-filings" ? string(row.id) : contractId === "comment-access" || contractId === "meeting-body-crosswalk" || contractId === "public-records" || contractId === "government-budgets"
       ? string(row.bodyId)
       : contractId === "campaign-sites" || contractId === "member-offices"
         ? string(row.officeholderId)
@@ -924,7 +932,7 @@ function curatedReaderProjection(
       : { record_id: string(row.id) };
     return {
       subjectId,
-      jurisdiction: contractId === "ballot-navigation" ? `US-${string(value?.state)}` : "US",
+      jurisdiction: ["public-records", "government-budgets"].includes(contractId) ? row.ocdId === "ocd-division/country:us" ? "US" : `US-${jurisdictionFromOcdId(string(row.ocdId))?.usps ?? "UNRESOLVED"}` : contractId === "ballot-navigation" ? `US-${string(value?.state)}` : "US",
       identifiers,
       matchBasis: "EXACT_SCOPED_ID" as const,
       ambiguous: false,
@@ -970,8 +978,7 @@ export function manualProjectionCandidate(
     throw new Error(`MANUAL_SOURCE_RECEIPT_MALFORMED:${sourceReceiptIssue.code}:${sourceReceiptIssue.detail}`);
   }
   const contract = requiredManualProductionContract(input.contractId);
-  const scope = input.contractId === "plain-english-translations"
-    ? translationScope((input.payload as TranslationProjection).records[0]?.ocdId ?? "") : contract.scope;
+  const scope = manualPayloadScope(input.contractId, contract.scope, input.payload);
   const sourceContract = sourceAuthority(contract.sourceId);
   const sourcePolicy = sourceContract?.manualReceiptPromotion;
   if (!sourceContract || !sourceContract.recordClasses.includes(contract.recordClass) || !sourcePolicy) {

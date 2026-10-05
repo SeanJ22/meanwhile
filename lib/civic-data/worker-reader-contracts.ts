@@ -1,5 +1,7 @@
 /** Existing publication doors and their executable worker record contracts. */
 export const WORKER_READER_CLASSES = {
+  "government-budgets": "ADOPTED_BUDGET",
+  "public-records": "PUBLIC_RECORD",
   "ballot-contests": "BALLOT_CONTEST",
   "comment-access": "PUBLIC_COMMENT_RULE",
   "everyday-routing": "SERVICE_CONTACT",
@@ -8,7 +10,8 @@ export const WORKER_READER_CLASSES = {
 } as const;
 export type WorkerReaderContract = keyof typeof WORKER_READER_CLASSES;
 export function workerReaderClassMatches(id: WorkerReaderContract, recordClass: string): boolean {
-  return recordClass === WORKER_READER_CLASSES[id] || id === "official-filings" && recordClass === "CAMPAIGN_FINANCE_FILING";
+  return recordClass === WORKER_READER_CLASSES[id] || id === "official-filings" && recordClass === "CAMPAIGN_FINANCE_FILING" ||
+    id === "government-budgets" && ["BUDGET_RESPONSIBILITY", "BUDGET_AMENDMENT"].includes(recordClass);
 }
 export function isWorkerReaderContract(id: string): id is WorkerReaderContract {
   return Object.hasOwn(WORKER_READER_CLASSES, id);

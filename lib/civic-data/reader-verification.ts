@@ -5,7 +5,7 @@ import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
 import { headSha } from "../ops/git-facts.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { isTranslationScope } from "../translate/records.ts";
+import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import {
   normalizeReaderCodeSha,
   parseReaderProjectionReadback,
@@ -84,6 +84,8 @@ function verifierIdFor(contract: ReaderContract): string {
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
     case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
     case "plain-english-translations": return "lib/translate/publication.ts#readTranslationProjection";
+    case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
+    case "government-budgets": return "lib/civic-data/government-budgets.ts#readGovernmentBudgets";
     case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
     case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
     case "candidate-profiles": return "lib/civic-data/manual-read-models.ts#readCandidateProfilesProjection";
@@ -239,6 +241,18 @@ export async function verifyRoutineReaderProjection(
       case "plain-english-translations": {
         const { readTranslationProjection } = await import("../translate/publication.ts");
         return verifyExactVersion(verifierId, await readTranslationProjection({ store: options.store, now: options.now, bypassCache: true, scope: options.scope }), options.expectedVersionId, "plain-English translation");
+      }
+      case "public-records": {
+        const { readPublicRecords } = await import("./public-records.ts");
+        const prefix = "US:public-records:";
+        if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Public-record readback requires its exact jurisdiction.");
+        return verifyExactVersion(verifierId, await readPublicRecords(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+      }
+      case "government-budgets": {
+        const { readGovernmentBudgets } = await import("./government-budgets.ts");
+        const prefix = "US:government-budgets:";
+        if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Budget readback requires its exact jurisdiction.");
+        return verifyExactVersion(verifierId, await readGovernmentBudgets(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "az-sos-ballot":
       case "nh-curated-ballot":
@@ -570,7 +584,7 @@ async function attestReaderProjectionReadback(
 }
 
 function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedPointerIdentity): string | null {
-  const scope = contract.id === "plain-english-translations" && isTranslationScope(promotion.scope) ? promotion.scope : contract.scope;
+  const scope = isScopedManualContractScope(contract.id, promotion.scope) ? promotion.scope : contract.scope;
   const expectedKey = `${contract.recordClass}:${scope}`;
   if (
     promotion.key !== expectedKey ||

@@ -71,6 +71,10 @@ export type JurisdictionRecordClass =
   | "PUBLIC_COMMENT"
   | "PUBLIC_SERVICES"
   | "VOTER_ACCESS"
+  | "PUBLIC_RECORDS"
+  | "ADOPTED_BUDGETS"
+  | "BUDGET_RESPONSIBILITIES"
+  | "BUDGET_AMENDMENTS"
   | "MEETINGS";
 
 /**

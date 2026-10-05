@@ -65,7 +65,7 @@ test("a quick admission prints nothing, and each wait line is new output", async
     { write: line => lines.push(line), everyMs: 20 });
   const release = await free.acquire("lease-worker.ts", Date.now() + 1000);
   await new Promise(resolve => setTimeout(resolve, 60));
-  assert.deepEqual(lines, []);
+  assert.equal(lines.length, 0);
   release();
   const full = reportingWorkerSlots(workerProcessSlots(() => 1, { availableBytes: () => 0 }), { write: line => lines.push(line), everyMs: 20 });
   await assert.rejects(full.acquire("lease-worker.ts", Date.now() + 90), /WORKER_MEMORY_DEADLINE/);

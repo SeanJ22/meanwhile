@@ -29,7 +29,8 @@ import type { ResolvedScope } from "./membership.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
 import { placePercent } from "../../coverage/place-measures.ts";
 import { readHeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
-import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
+import { setActiveOwedOverlay } from "../../coverage/owed-overlay.ts";
 import { expansionScopesOf, VERSION_PREFIX, type ExpansionScopeDecision } from "./scopes.ts";
 import { resolveScopes } from "./runner-load.ts";
 import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
@@ -99,6 +100,8 @@ export function clearPlaceReadingMemo(): void { readingMemo.clear(); }
 /** Due admission and process ordering share the owner's target and held facts. */
 export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, zips: readonly string[], now: string) {
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  // What the owner added to, or declined from, what places are owed counts in the order the runner works in (SC-14, BR-33).
+  setActiveOwedOverlay(row !== null && isAdminConfig(row.value) ? row.value.owedOverlay : null);
   const decisions = expansionScopesOf(row?.value ?? null);
   if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
   if (!decisions.scopes.length) return { ordered: [...zips], belowTarget: new Set<string>() };

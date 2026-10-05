@@ -69,7 +69,7 @@ function sendOf(receipt: UiReceipt, sends: readonly SentInstruction[]): SentInst
   return sends.find((x) => norm(x.words) === words && Math.abs(Date.parse(x.sentAt) - Date.parse(receipt.sentAt)) < 86_400_000) ?? null;
 }
 
-function orderRow(r: UiReceipt, input: QueueInput): QueueRow {
+function orderRow(r: UiReceipt): QueueRow {
   const failed = r.status === "refused" || r.status === "failed" || r.notPickedUp === true;
   const reached = orderStepsReached(r);
   const filter: QueueFilter = failed ? "needs-me" : r.status === "done" || r.status === "partial" ? "done"
@@ -153,7 +153,7 @@ export function buildQueue(input: QueueInput): readonly QueueRow[] {
   const rows: QueueRow[] = [];
   const sends = input.sends ?? [];
   if (input.sends) rows.push(...input.sends.map(sendRow));
-  if (input.receipts) rows.push(...input.receipts.filter((r) => sendOf(r, sends) === null).map((r) => orderRow(r, input)));
+  if (input.receipts) rows.push(...input.receipts.filter((r) => sendOf(r, sends) === null).map(orderRow));
   if (input.scheduled) rows.push(...input.scheduled.map(scheduledRow));
   if (input.hunts) rows.push(...input.hunts.map(huntRow));
   if (input.stuck) rows.push(...input.stuck.map(stuckRow));

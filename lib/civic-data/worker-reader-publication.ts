@@ -24,7 +24,7 @@ import type { CommentAccess } from "../registry/comment-access-client.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import { publishHeldElectionOffices } from "./worker-held-elections.ts";
 import { localHeldCaptureReader } from "./worker-publication-context.ts";
-import { recordPublishedPageDoor } from "./worker-page-doors.ts";
+import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
 import { workerBallotContestsPackage, publishWorkerBallotContestsResults } from "./worker-ballot-contests.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
@@ -213,7 +213,7 @@ export async function publishWorkerReaderResults(input: {
         detail: `${detail}. ${recovery === "WORKER" ? "Automatic evidence or contract repair remains owed" : "The existing publisher retries the retained result"}; no manual approval is required.`, recovery, candidateId, versionId };
     }
     const latest = await input.repos.workItems.mustRead(id);
-    await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
+    await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: plan ? withPageDoor(outcome, captures[0], plan.contract.recordClass) : outcome }, input.now);
     report.push({ workItemId: id, outcome });
     if (plan) await recordPublishedPageDoor({ repos: input.repos, page: captures[0], recordClass: plan.contract.recordClass, published: wentLive, now: input.now });
     if (plan) learned.push(validatorObservation({ plan, workItemId: id, page: captures[0], captures, published: wentLive, outcome }));

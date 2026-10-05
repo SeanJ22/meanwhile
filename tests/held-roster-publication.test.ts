@@ -155,5 +155,18 @@ test("CP-08: a newer news phone cannot replace the official phone, and its losin
     sourcePolicy: { hosts: { "news.example": "NEWS" as const }, enabled: { OFFICIAL: true, CAMPAIGN: true, FILING: true, VOTER_GUIDE: true, FORUM: true, NEWS: true, REFERENCE: true, OTHER: true } } };
   const result = workerRosterPublication({ bodyId: BODY, reading: reading(news), prior: held, now: NOW });
   assert.ok(result.payload.bodyRosters[0].members.every(member => member.phone === "(520) 555-1000"));
+  assert.equal(result.payload.bodyRosters[0].members[0].websiteUrl, official.payload.bodyRosters[0].members[0].websiteUrl);
+  assert.equal(result.payload.bodyRosters[0].members[0].fieldSources?.websiteUrl.sourceUrl, URL_);
   assert.ok(result.excludedFacts?.some(fact => fact.code === "CONFLICT_SUPERSEDED" && (fact.record as { value: string }).value === "(520) 555-2000"));
+});
+
+
+test("CP-19/CP-05: another roster row's term cannot supply a date or a published quote", async () => {
+  const base = await prior();
+  const held = capture(page("Contact the Mayor & Council", member(1, "McCaa II, Clea", "Mayor") + member(2, "Flowers, Carolyn", "Vice Mayor").replace("</tr>", "<td>2030-12-31</td></tr>")));
+  const first = readHeldRoster(held.evidence.text, URL_)!.rows[0];
+  const result = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, reading: { id: "held:wrong-term", capture: held, linkingPage: null, complete: false, method: "fixture",
+    members: [{ recordId: "person", fields: { ...first, termEnd: "2030-12-31" }, fieldSources: { termEnd: { sourceUrl: URL_, sourceOrg: "Clerk", collectedAt: held.observedAt, verifiedAt: NOW, quote: "2030-12-31", kind: "OFFICIAL" } } }] } });
+  assert.equal(result.payload.bodyRosters[0].members[0].termEnd, undefined);
+  assert.equal(result.payload.bodyRosters[0].members[0].fieldSources?.termEnd, undefined);
 });

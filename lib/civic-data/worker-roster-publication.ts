@@ -168,7 +168,7 @@ export function workerRosterPublication(input: {
       { id: `roster:${body.id}#${digest(member.recordId).slice(0, 16)}`, termNote: null, email: null, phone: null, websiteUrl: null };
     const priorSource = old?.membershipSource ?? (previous ? { sourceUrl: previous.sourceUrl, sourceOrg: previous.sourceOrg, collectedAt: previous.collectedAt } : null);
     const retainedFieldSources: NonNullable<BodyRoster["members"][number]["retainedFieldSources"]> = {};
-    const nextFieldSources = { ...(old?.fieldSources ?? {}), ...(member.fieldSources ?? {}) };
+    const nextFieldSources = { ...(old?.fieldSources ?? {}), ...Object.fromEntries(Object.entries(member.fieldSources ?? {}).filter(([field]) => member.verified.includes(field))) };
     const choose = (field: "termNote" | "email" | "phone" | "websiteUrl" | "termStart" | "termEnd", fresh: string | null): string | null => {
       const previousValue = old?.[field] ?? null;
       if (fresh === null || previousValue === null || fresh === previousValue || !priorSource) return fresh;
@@ -196,7 +196,7 @@ export function workerRosterPublication(input: {
     };
     const pageText = pageWords(capture.evidence.text);
     const termDate = (field: "termStart" | "termEnd"): string | null => {
-      const fresh = isoTermDate(member.fields[field]);
+      const fresh = member.verified.includes(field) ? isoTermDate(member.fields[field]) : null;
       if (fresh !== null && isoTermDateOnPage(fresh, pageText)) return choose(field, fresh);
       const retained = isoTermDate(old?.[field]);
       if (retained !== null && priorSource) retainedFieldSources[field] = old?.retainedFieldSources?.[field] ?? priorSource;
@@ -204,10 +204,11 @@ export function workerRosterPublication(input: {
     };
     const termStart = termDate("termStart"), termEnd = termDate("termEnd");
     const phone = value("phone", publicContact), email = value("email", publicContact);
+    const termNote = value("termNote"), websiteUrl = value("websiteUrl");
     const freshContact = publicContact && (verifiedValue(member, "phone") !== null || verifiedValue(member, "email") !== null);
     accepted.push({ recordId: member.recordId, memberId: identity.id });
     return { ...identity, name, officeTitle,
-      fieldSources: Object.fromEntries(Object.entries(nextFieldSources).filter(([field]) => (!["phone", "email"].includes(field) || publicContact))), termNote: value("termNote"), ...(termStart ? { termStart } : {}), ...(termEnd ? { termEnd } : {}), email, phone, websiteUrl: value("websiteUrl"),
+      fieldSources: Object.fromEntries(Object.entries(nextFieldSources).filter(([field]) => (!["phone", "email"].includes(field) || publicContact))), termNote, ...(termStart ? { termStart } : {}), ...(termEnd ? { termEnd } : {}), email, phone, websiteUrl,
       ...(freshContact ? { contactKind: "PUBLIC_OFFICE" as const } : old?.contactKind ? { contactKind: old.contactKind } : {}),
       ...(phone && freshContact ? { contactScope: (phones.get(phone) ?? 0) > 1 ? "SHARED_OFFICE" as const : old?.contactScope ?? "INDIVIDUAL_OFFICE" as const }
         : old?.contactScope ? { contactScope: old.contactScope } : {}),

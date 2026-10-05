@@ -77,6 +77,8 @@ export interface AdminConfig {
   readonly fixList?: readonly import("../fix-list.ts").FixItem[];
   /** The updates feed (BR-24). */
   readonly updates?: readonly import("../updates.ts").UpdateRecord[];
+  /** Orders scheduled for later (BR-15). */
+  readonly scheduledOrders?: readonly import("./scheduled-orders.ts").ScheduledOrder[];
   readonly settingHistory?: readonly import("../settings.ts").SettingChange[];
   readonly routineRefreshRequests?: readonly import("../../civic-data/owner-refresh.ts").RoutineRefreshRequest[];
   /**

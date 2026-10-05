@@ -45,6 +45,7 @@ import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
 import { addFixItem, completeFixItem, fixItems } from "../fix-list.ts";
 import { addUpdate } from "../updates.ts";
+import { parseWhen, scheduledOrders, withScheduled, withoutScheduled, type ScheduledOrder } from "./scheduled-orders.ts";
 import {
   ANSWERED_IN_OWN_WORDS,
   OWNER_ANSWER_MAX_CHARS,
@@ -424,6 +425,85 @@ const REGISTRY: readonly RegisteredAction[] = [
       } catch (error) { return storeRefusal("the updates feed", error); }
       return { ok: true, outcome: "DONE", subject: id, says: "It is on the fix list as Fixed and checked, with its before and after.",
         openedWork: [], readBackAt: "/admin?view=fixes", undo: null };
+    },
+  },
+
+  /* ------------------------------------------------------ orders.schedule */
+  {
+    definition: {
+      type: "orders.schedule",
+      label: "Schedule an order",
+      does: "Saves an order to be sent later: at a time, after another order, repeating, or by a date.",
+      doesNot: "Does not send the order now, and does not change its limits.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "an order to send later",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const orderType = text(input.orderType);
+      const target = lookupAction(orderType);
+      if (!target || orderType.startsWith("orders.") || target.definition.authority === "PROHIBITED") return bad("choose an order that can be sent");
+      const when = parseWhen(input);
+      if (!when.ok) return bad(when.why);
+      const inner = (typeof input.input === "object" && input.input !== null ? input.input : {}) as Record<string, unknown>;
+      const checked = target.validate(inner);
+      if (!checked.ok) return bad(checked.why);
+      return { ok: true, value: { orderType, orderInput: inner, ...when.value } };
+    },
+    async execute(deps, context, input) {
+      const target = lookupAction(String(input.orderType))!;
+      const order: ScheduledOrder = {
+        id: context.receiptId, orderType: String(input.orderType), input: input.orderInput as Record<string, unknown>,
+        startAt: input.startAt as string | null, after: input.after as string | null, repeat: input.repeat as ScheduledOrder["repeat"],
+        finishBy: input.finishBy as string | null, decidedBy: context.request.actorRef, decidedAt: context.at, receiptId: context.receiptId,
+        label: target.definition.label,
+      };
+      try {
+        for (let attempt = 0; ; attempt++) {
+          const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+          const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(context.at);
+          const next = withScheduled(current, order);
+          if (next === current) break;
+          try {
+            if (held) await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, context.at);
+            else await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, context.at);
+            break;
+          } catch (error) { if (attempt >= 1) throw error; }
+        }
+      } catch (error) { return storeRefusal("your scheduled order", error); }
+      return { ok: true, outcome: "DONE", subject: order.id, says: `${order.label} is scheduled.`, openedWork: [],
+        readBackAt: "/admin?view=work", undo: "Unschedule it and it will not be sent." };
+    },
+  },
+  /* ---------------------------------------------------- orders.unschedule */
+  {
+    definition: {
+      type: "orders.unschedule",
+      label: "Unschedule an order",
+      does: "Removes an order that was saved to be sent later, so it is never sent.",
+      doesNot: "Does not undo anything an earlier run of it already did.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "a scheduled order",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const id = text(input.id);
+      return id ? { ok: true, value: { id } } : bad("choose a scheduled order");
+    },
+    async execute(deps, context, input) {
+      const id = String(input.id);
+      try {
+        for (let attempt = 0; ; attempt++) {
+          const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+          const current = held && isAdminConfig(held.value) ? held.value : null;
+          if (!held || !current || !scheduledOrders(current).some((o) => o.id === id)) return refuse("INVALID_INPUT", "That order is not scheduled any more.");
+          try { await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, withoutScheduled(current, id, context.at), context.at); break; }
+          catch (error) { if (attempt >= 1) throw error; }
+        }
+      } catch (error) { return storeRefusal("your scheduled order", error); }
+      return { ok: true, outcome: "DONE", subject: id, says: "It is unscheduled and will not be sent.", openedWork: [], readBackAt: "/admin?view=work", undo: null };
     },
   },
 

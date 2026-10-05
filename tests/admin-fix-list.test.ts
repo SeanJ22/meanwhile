@@ -83,3 +83,23 @@ test("BR-24: a completed fix is one update on Now with its label and before/afte
   const rows = updatesFromChanges([{ number: 1, session: null, line: "Faster pages", status: "live", statusWords: "Live", why: "", url: "u", at }], Date.parse(at));
   assert.equal(rows[0].label, "TESTING");
 });
+
+test("BR-15: a scheduled order is saved with its time, shows Scheduled, survives a fresh read and can be unscheduled", async () => {
+  const { scheduledView } = await import("../lib/control-plane/admin-view/v6-scheduled-read.ts");
+  const repos = createMemoryRepositories();
+  const d = deps(repos);
+  const bad = await submit({ type: "orders.schedule", subject: "", input: { orderType: "runner.pause", input: {} }, stateVersion: null,
+    idempotencyKey: "sched-bad-1", caller: "OWNER_SESSION", actorRef: "s" }, d);
+  assert.equal(bad.ok, false, "needs a when");
+  const ok = await submit({ type: "orders.schedule", subject: "", input: { orderType: "runner.pause", input: {}, startAt: "2026-10-06T12:00:00Z", finishBy: "2026-10-07T12:00:00Z" },
+    stateVersion: null, idempotencyKey: "sched-ok-1", caller: "OWNER_SESSION", actorRef: "s" }, d);
+  assert.equal(ok.ok, true, ok.receipt.says);
+  const view = scheduledView(await read(repos), at);
+  assert.equal(view.rows.length, 1);
+  assert.equal(view.rows[0].status, "Scheduled");
+  assert.match(view.rows[0].when, /Oct/);
+  const id = ok.receipt.subject;
+  const gone = await submit({ type: "orders.unschedule", subject: id, input: { id }, stateVersion: null, idempotencyKey: "sched-un-1", caller: "OWNER_SESSION", actorRef: "s" }, d);
+  assert.equal(gone.ok, true);
+  assert.equal(scheduledView(await read(repos), at).rows.length, 0);
+});

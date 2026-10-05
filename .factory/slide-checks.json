@@ -861,6 +861,12 @@
       "public readback for acceptance is local typed reader evidence, not deployed live proof",
       "production supervisor return still requires actual failure arrays from River",
       "Chromium151 substitution and existing skips remain disclosed"
-    ]
+    ],
+    "interruptedOverlap": {
+      "source": "0863000be3d8cbadf2a9ae1baee4635a6fca2c98",
+      "exitCode": 1,
+      "reason": "Earlier interrupted Node test descendants survived wrapper termination and overlapped timing output. Both exact test process trees were then killed and confirmed stopped. No passing FULL evidence claimed.",
+      "log": "/tmp/slide-bx0206-interrupted-overlap.log"
+    }
   }
 }

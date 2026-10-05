@@ -370,7 +370,7 @@ import {
   budgetGuardedTransport,
   hasBudgetLines,
 } from "../lib/control-plane/expansion/spend-holds.ts";
-import { evaluateAssignmentFromRecords, memberRecordsForSend } from "../lib/control-plane/assignment-completion.ts";
+import { evaluateAssignmentFromRecords, evaluateMissionDone, memberRecordsForSend, missionMapCount, type MissionMapCount } from "../lib/control-plane/assignment-completion.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { runIndependentRuntimePass, type IndependentRuntimeOutcome } from "../lib/ops/independent-runtime-pass.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
@@ -1281,6 +1281,9 @@ const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
 let placeOrder: readonly string[] = [];
 /* CH-17: each Send's open blanks by mission part, read with the place order every wave. */
 let squadReading: { open: ReadonlyMap<string, ReadonlyMap<string, number>>; parts: ReturnType<typeof missionPartsOf> } | null = null;
+/* CH-19: each Send's mission map count, read with the place order; `before` is filled from the prior reading when Done is decided. */
+let missionMaps = new Map<string, Omit<MissionMapCount, "before">>();
+let missionMapUnread: string | null = "the owed list has not been read this round";
 let placeOrderDirty = true;
 let placeOrderRead: Promise<void> | null = null;
 async function refreshPlaceOrder(): Promise<void> {
@@ -1307,8 +1310,11 @@ async function refreshPlaceOrder(): Promise<void> {
     const parts = missionPartsOf(row !== null && isAdminConfig(row.value) ? row.value : null);
     squadReading = { parts, open: new Map(places.map(place => [place.receiptId,
       new Map(missionPartCounts(place.items, parts).map(count => [count.part, count.open] as const))] as const)) };
+    missionMaps = new Map(places.map(place => [place.receiptId, missionMapCount(place.items, null)] as const));
+    missionMapUnread = null;
   })().catch(error => {
     const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
+    if (missionMaps.size === 0) missionMapUnread = detail;
     runtimeConditions.push(detail);
     console.warn(`  ${detail}`);
   }).finally(() => { placeOrderRead = null; });
@@ -2102,13 +2108,25 @@ const nextDuePersistence = runPool(nextDueWrites, Math.max(1, workerCapacity), a
    read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
 const debtByObligation = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
 const assignmentObligations = [...sync.all, ...(sync.outside ?? [])];
-const assignmentCompletion = (key: string) =>
-  evaluateAssignmentFromRecords({
-    assignmentKey: key,
-    obligations: memberRecordsForSend(key, assignmentMembers, assignmentObligations, assignmentSpecs.find(spec=>spec.key===key)?.ref),
-    debtFor: (id) => debtByObligation.get(id) ?? null,
-    now: NOW,
-  });
+/* CH-19: a Send over resolved places is Done by its mission map: no unfilled row and every door it opened has a next read. */
+const resolvedReceipts = new Set((expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED").map(scope => scope.decision.receiptId));
+const priorMapBefore = (key: string, ref: string): number | null => {
+  const rows = (priorResearchState?.assignments as { assignments?: readonly { key?: unknown; ref?: unknown; completion?: { map?: { before?: unknown } } | null }[] } | null | undefined)?.assignments ?? [];
+  const before = rows.find(row => row.key === key && row.ref === ref)?.completion?.map?.before;
+  return typeof before === "number" && Number.isSafeInteger(before) && before >= 0 ? before : null;
+};
+const assignmentCompletion = (key: string) => {
+  const ref = assignmentSpecs.find(spec=>spec.key===key)?.ref;
+  const obligations = memberRecordsForSend(key, assignmentMembers, assignmentObligations, ref);
+  const debtFor = (id: string) => debtByObligation.get(id) ?? null;
+  if (ref !== undefined && resolvedReceipts.has(ref)) {
+    const counted = missionMaps.get(ref);
+    return evaluateMissionDone({ assignmentKey: key, obligations, debtFor,
+      map: counted ? { ...counted, before: priorMapBefore(key, ref) ?? counted.unfilled }
+        : { unreadable: missionMapUnread ?? "this Send's places were not in the owed-list read" } });
+  }
+  return evaluateAssignmentFromRecords({ assignmentKey: key, obligations, debtFor, now: NOW });
+};
 const assignmentsReading = (): AssignmentCycleReading | null =>
   assignmentSpecs.length === 0 && assignmentMembers.byKey.size === 0
     ? null

@@ -9,6 +9,7 @@ interface Rule { readonly mode: ManualProducerMode; readonly state?: string; rea
 const RULES = {
   "campaign-finance": { mode: "VERIFIED_WORKER_RESULT", reason: "Complete saved door bytes and filed candidate/office/cycle/jurisdiction identities publish through normal Slide; unmatched rows remain work." },
   "government-budgets": { mode: "VERIFIED_WORKER_RESULT", reason: "Official adopted budgets, amendments and government-specific legal responsibility use the normal saved-evidence worker and Slide." },
+  "special-district-boundaries": { mode: "VERIFIED_WORKER_RESULT", reason: "Registered saved GIS polygons bind to the held government key and exact body, without a model or guessed territory." },
   "public-records": { mode: "VERIFIED_WORKER_RESULT", reason: "Source-worded kind and title publish with their exact jurisdiction and saved source sentence." },
   "plain-english-translations": { mode: "VERIFIED_WORKER_RESULT", reason: "Every sentence is supported by the original official text and checked independently under the existing budget dial." },
   "ballot-contests": { mode: "VERIFIED_WORKER_RESULT", reason: "The saved official candidate list passes section 3 and each complete contest publishes with all of its candidates." },

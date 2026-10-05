@@ -84,6 +84,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
     case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
     case "plain-english-translations": return "lib/translate/publication.ts#readTranslationProjection";
+    case "special-district-boundaries": return "lib/registry/special-district-boundary-reader.ts#readSpecialDistrictBoundaries";
     case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
     case "campaign-finance": return "lib/funding/campaign-finance-reader.ts#readCampaignFinance";
     case "government-budgets": return "lib/civic-data/government-budgets.ts#readGovernmentBudgets";
@@ -242,6 +243,12 @@ export async function verifyRoutineReaderProjection(
       case "plain-english-translations": {
         const { readTranslationProjection } = await import("../translate/publication.ts");
         return verifyExactVersion(verifierId, await readTranslationProjection({ store: options.store, now: options.now, bypassCache: true, scope: options.scope }), options.expectedVersionId, "plain-English translation");
+      }
+      case "special-district-boundaries": {
+        const { readSpecialDistrictBoundaries } = await import("../registry/special-district-boundary-reader.ts");
+        const prefix = "US:special-district-boundaries:";
+        if (!options.scope?.startsWith(prefix)) return fail(verifierId, "District-boundary readback requires its exact county jurisdiction.");
+        return verifyExactVersion(verifierId, await readSpecialDistrictBoundaries(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "public-records": {
         const { readPublicRecords } = await import("./public-records.ts");

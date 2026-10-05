@@ -144,6 +144,7 @@ export const SOURCE_AUTHORITIES = {
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "published public-comment rule",
+      "official GIS/service-area district polygons bound to held government identities (CA-55)",
       "source-worded public-record kind, title and sentence about an exact jurisdiction or body (CA-37)",
       "official adopted government budgets, fiscal year dates, version-specific amendments and legal budget responsibilities (CA-52)",
       "neutral official measure translations checked sentence by sentence by an independent model (CA-25)",

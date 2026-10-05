@@ -2,12 +2,13 @@ import { jurisdictionFromOcdId } from "../coverage/states.ts";
 
 const PREFIXES: Readonly<Record<string, string>> = {
   "plain-english-translations": "US:plain-english-translations",
+  "special-district-boundaries": "US:special-district-boundaries",
   "public-records": "US:public-records",
   "government-budgets": "US:government-budgets",
   "campaign-finance": "US:campaign-finance",
 };
 const jurisdictionIsValid = (id: string, ocdId: string) => Boolean(jurisdictionFromOcdId(ocdId) ||
-  !["plain-english-translations", "campaign-finance"].includes(id) && ocdId === "ocd-division/country:us");
+  !["plain-english-translations", "campaign-finance", "special-district-boundaries"].includes(id) && ocdId === "ocd-division/country:us");
 
 /** These families publish and read one exact jurisdiction, never a nationwide payload. */
 export function scopedManualContractScope(id: string, ocdId: string): string {

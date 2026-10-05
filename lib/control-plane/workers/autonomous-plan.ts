@@ -23,7 +23,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
       ? { recordClass: "BALLOT_CONTEST", fields: ["election", "office", "candidateName", "jurisdictionName"] }
     : source.recordClass === "BALLOT_MEASURES"
       ? { recordClass: "BALLOT_MEASURE", fields: ["election", "title", "jurisdictionName", "textUrl"] }
-    : source.recordClass === "GOVERNMENT_FINANCE"
+    : source.recordClass === "GOVERNMENT_FINANCE" || source.recordClass === "SPECIAL_DISTRICT_BOUNDARIES"
       ? { recordClass: "PUBLIC_RECORD", fields: ["bodyName", "title", "kindLabel", "sourceSentence"] }
     : source.recordClass === "POLLING_PLACES"
       ? { recordClass: "VOTING_SITE", fields: ["jurisdictionName", "model", "name", "address", "kind"] }
@@ -48,7 +48,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     ...(source.recordClass === "POLLING_PLACES" && bodyId ? { publication: { contractId: "voting-sites" as const, bodyId } } : {}),
     ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
     ...(["BALLOT_CONTEST", "BALLOT_MEASURE"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "ballot-contests" as const, bodyId } } : {}),
-    ...(spec.recordClass === "PUBLIC_RECORD" && bodyId ? { publication: { contractId: source.recordClass === "GOVERNMENT_FINANCE" ? "government-budgets" as const : "public-records" as const, bodyId } } : {}),
+    ...(spec.recordClass === "PUBLIC_RECORD" && bodyId ? { publication: { contractId: source.recordClass === "SPECIAL_DISTRICT_BOUNDARIES" ? "special-district-boundaries" as const : source.recordClass === "GOVERNMENT_FINANCE" ? "government-budgets" as const : "public-records" as const, bodyId } } : {}),
     ...(["ADOPTED_BUDGET", "BUDGET_RESPONSIBILITY", "BUDGET_AMENDMENT"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "government-budgets" as const, bodyId } } : {}),
     ...(["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "official-filings" as const, bodyId } } : {}),
     contract: {
@@ -129,7 +129,7 @@ export interface AutonomousWorkPlan {
   readonly ownerInstructions?: readonly string[];
   /** Existing reader door selected by the system's exact body join, never by a model. */
   readonly publication?:
-    { readonly contractId: "registry-runtime-bindings" | WorkerReaderContract | "campaign-finance"; readonly bodyId: string };
+    { readonly contractId: "registry-runtime-bindings" | WorkerReaderContract | "campaign-finance" | "special-district-boundaries"; readonly bodyId: string };
   readonly freshness?: Pick<FreshnessObligation,"readerImpactAt"|"observedChangeRateHours"|"declaredCycleHours">;
   readonly version: 1;
   readonly contract: CivicExtractionContract;

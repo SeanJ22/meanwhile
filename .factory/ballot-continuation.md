@@ -1,3 +1,7 @@
+## Active update 2026-10-05T23:38:07Z
+
+Assigned codex-ballot, lock codex-ballot-edcf6152715b43d5a709a9eaa7410b04. Fresh board verified before stream-only push. Exact60cd types/lint pass; FULL session92573 remains active and candidate unpublished. Selector corrected explicit tier yes/pull_request/baseRiver; FULL/browsertrue. Boundary WIP now on root outside60cd, own focused normal Slide/readback + held lease outcomes + holes/union/unknown OCD + cold optional edge 2/2 pass. Source and exact hooks in ballot.md, broad types pending session47932 (/tmp/ballot-boundaries-types-fixed.log). Continue CA-29 preserved text/citations migration and remaining ready work; do not stop at checkpoint or delete legacy before replacement live acceptance.
+
 ## Active continuation update, 2026-10-05T23:27:35Z
 
 Run remains active, token codex-ballot-edcf6152715b43d5a709a9eaa7410b04 (the exact authoritative token is ballot.md and /tmp/ballot-current-lock-token). Latest board d677a91a7 assigns codex-ballot; returns unchanged through17:40Z. Only stream/ballot pushes, no force/main/river/board, no PR. Latest certified f984126b remains ready; follow-on candidate is not yet ready.

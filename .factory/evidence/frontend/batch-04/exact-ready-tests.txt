@@ -1,0 +1,128 @@
+
+> we-the-people@0.1.0 test /tmp/frontend-sources
+> node scripts/ci-tests.mjs
+
+Affected tests: 19/19 files; SHA de644b38c2bf3e4c8f33fe97c220f6c5976a83b5
+tests/absence-defaults.test.ts
+tests/agenda-version-projection.test.ts
+tests/asset-store.test.ts
+tests/ballot-measure-text.test.ts
+tests/brand-identity.test.ts
+tests/card-sources.test.ts
+tests/contrast-audit.test.ts
+tests/diligent-portal-reading.test.ts
+tests/frontend-link-health.test.ts
+tests/frontend-meeting-scope.test.ts
+tests/package-module-type.test.ts
+tests/reader-card.test.tsx
+tests/reader-gap-states.test.tsx
+tests/reader-last-mile-meetings.test.ts
+tests/reader-recent-vote-expansion.test.ts
+tests/rhythm-tokens.test.ts
+tests/shared-notes.test.ts
+tests/state-focus.test.ts
+tests/theme-parity.test.ts
+✔ no unrecorded sentence-shaped render default exists (90.624083ms)
+✔ every baseline entry carries a reason, and none is a placeholder (0.238787ms)
+✔ the baseline only shrinks — a recorded entry that is gone must be removed (81.743083ms)
+✔ the shape catches every instance the class was named from (0.254623ms)
+✔ a single-token type default is not a claim and is not flagged (0.183967ms)
+✔ FE-31: every reader gap uses WorkingOnIt and disclaimers stay retired (50.472778ms)
+✔ FE-31: seeded inline gaps and each banned disclaimer fail the instrument (0.454626ms)
+✔ Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version (16.668983ms)
+✔ a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording (3.076849ms)
+✔ a revision at the same address is still two versions, and the old address is not offered as the old text (1.195793ms)
+✔ a sitting holding only publication-index pages is rendered as what it holds, with no version count and no revision (0.804129ms)
+✔ the real agenda route over the committed holding returns one row per distinct content and reconciles every held row (21160.416554ms)
+✔ RULING 20: no NEW portrait or PDF binary is committed to the repo (118.530699ms)
+✔ RULING 20: the sweep actually reaches the binaries it claims to (132.87893ms)
+✔ RULING 20: every manifest row is a real file with the hash it claims (1.649452ms)
+✔ RULING 20: reference data and provenance stay in git (132.137261ms)
+✔ BAL-30: the local measure text is committed, and it is not thin (0.907389ms)
+✔ BAL-30: the ballot page renders the question and the statement it holds (12.813104ms)
+✔ BAL-30: a null statement renders as a NAMED gap, never as the rich branch (1.156119ms)
+✔ BAL-30: a school-district override no longer files under 'Statewide measures' (2.132968ms)
+✔ --mark is referenced only by its declaration and the logo square (43.770855ms)
+✔ the brand square is filled, and no brand rule makes it hollow or dashed (2.605037ms)
+✔ no Google font host is reachable from the app tree (57.001397ms)
+✔ the record face is loaded through next/font and exposed as --font-record (2.011779ms)
+✔ the Ask popup's placement tokens have values before layout measurement (1.65552ms)
+✔ CSS Module declarations resolve locally without lending tokens to unrelated modules (0.711061ms)
+✔ every var(--token) reference resolves to a declared token (194.352138ms)
+✔ app/icon.svg carries the dark theme's --bg and --mark, and the square is filled (1.628036ms)
+✔ app/favicon.ico is the generated mark, not the create-next-app default (0.736111ms)
+✔ the committed Tucson Unified roster resolves — the card under the defect (1.81599ms)
+✔ a district card with a roster and meetings is never sourceless (1.046847ms)
+✔ a district card with NO roster and NO meetings still cites its boundary (0.170785ms)
+✔ a meeting card lists the sitting and the body's roster (0.447095ms)
+✔ a person card cites the record its identity came from (0.679437ms)
+✔ same-source rows merge, and the merged row states the count (0.317611ms)
+✔ distinct publishers never merge (0.418257ms)
+✔ a holder with no record at all contributes no row, and says so by absence (0.204112ms)
+✔ reader token pairs clear their contrast bars in both themes (8.844216ms)
+✔ a low-contrast palette and a missing surface cannot silently pass (1.966979ms)
+✔ the stored skip-link rows of all three Diligent tenants read as the portal, not as an agenda we could not read (28.323327ms)
+✔ the fixed extractor's reading of the recorded pages is the portal too (16.927305ms)
+✔ a read recorded as the publisher's page is the portal; a read with no text stays unreadable (1.261562ms)
+✔ negative controls: the rule reads the portal's own furniture on the portal's own address, nothing wider (0.324018ms)
+✔ regression control: every Diligent portal page in the committed holding is still read as the portal (15.53786ms)
+✔ only recorded DEAD verdicts disable a destination, and recovery enables it (3.927313ms)
+✔ a concurrent and then stale sweep cannot erase a newer Reader finding (7.136869ms)
+✔ online-only venues use only the exact body's published office, without changing the meeting (3.882563ms)
+✔ a widened search counts each own government's held calendar apart from nearby results and agendas (5.027204ms)
+✔ R46: the package declares itself ESM (0.970022ms)
+✔ R46: no ambiguous-extension JavaScript file has appeared (81.472119ms)
+✔ R46: tracked source carries no CommonJS-only construct (413.809605ms)
+✔ the shared frame names its card and always includes a Sources disclosure (21.143476ms)
+✔ identity can carry the visible name without losing the card's accessible title (5.353864ms)
+✔ a gap cannot turn into a searched absence without an equal-effort topic record (1.626953ms)
+✔ gap rows retain their valid inline HTML and published copy overrides (7.752866ms)
+✔ an official and a thin candidate share every section header and contact position (8.45784ms)
+✔ every held sitting reaches the real agenda route with the same class-filtered records as Ask (2903.426222ms)
+✔ vendor/event ambiguity and a different body cannot inherit recorded actions (0.320844ms)
+✔ an agenda never supplies a decision or inferred per-member vote (0.338717ms)
+✔ a reused publisher portal is classified identically by the real route and agenda renderer (18331.841085ms)
+  chromium system — SUBSTITUTED for the pinned 1234, which is not installed. Launching /usr/bin/chromium
+✔ actual map and ballot vote components expose a planted held tail beyond twenty (3683.269965ms)
+✔ the rhythm sweep catches an off-scale value — the instrument works (RULING 110) (4.660202ms)
+✔ the rhythm token scales are declared in app/globals.css (1.266722ms)
+✔ component sweep catches new tiny type, off-scale spacing and literal colours (1.00076ms)
+✔ component exceptions only shrink, per file and value (108.601672ms)
+✔ spacing: off-scale count does not exceed the baseline (it only shrinks) (64.521754ms)
+✔ radius: off-scale count does not exceed the baseline (it only shrinks) (4.030441ms)
+✔ fontSize: off-scale count does not exceed the baseline (it only shrinks) (39.092425ms)
+✔ elevation: off-scale count does not exceed the baseline (it only shrinks) (2.454089ms)
+✔ F01 11.1: a note carried by many contests moves to the foot, once (1.715948ms)
+✔ F01 11.1: a note only ONE contest carries stays exactly where it is (1.646987ms)
+✔ F01 11.1: two different repeated notes get two different markers (0.996899ms)
+✔ F01 11.1: markers continue from the page's source footnotes, never collide (0.67836ms)
+✔ F01 11.1: contests with no note contribute nothing and break nothing (2.30151ms)
+✔ F01 11.1: the Arizona measures actually collapse — eleven into one (2.102084ms)
+✔ F01 11.2 / 11.3: the ballot page drops the contradiction and the false claim (3.564072ms)
+✔ a point resolves to the state it is actually in (4.761917ms)
+✔ a point in no covered state resolves to NULL, never to the last one (0.331021ms)
+✔ the state code comes off the OCD-ID, never off a name string (0.561868ms)
+✔ national district kinds have Census layers without an active-state file list (2.618638ms)
+✔ the layer filter pins a layer to one state, and reads back (0.270626ms)
+✔ simplification drops collinear noise and keeps the silhouette (0.805745ms)
+✔ simplification never reduces a ring below a triangle (0.340781ms)
+✔ the rise scales with zoom and never reaches zero (0.603016ms)
+✔ the offset stays comparable to the blur at every zoom (0.363836ms)
+✔ the light is brighter than the shade on a light ground (0.402465ms)
+✔ a ring far larger than the viewport comes back no larger than the box (0.755684ms)
+✔ a ring entirely outside the viewport clips to NOTHING, which means everything is muted (0.226655ms)
+✔ a ring already inside the box is returned unchanged (0.263489ms)
+✔ a ring crossing the border keeps the crossing, on the border (0.992357ms)
+✔ a hole is clipped like any other ring, so a viewport inside one cancels to nothing (0.555219ms)
+✔ the clip runs before simplification and leaves a ring the simplifier can hold (0.337249ms)
+✔ the rise is capped by the size of the state it is marking (0.454442ms)
+✔ the parity classifier reads literal vs derived correctly (RULING 110) (6.494366ms)
+✔ app/globals.css authors every literal colour in both themes (10.442298ms)
+ℹ tests 95
+ℹ suites 0
+ℹ pass 95
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 40747.020226

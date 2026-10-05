@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* FE-07: each type rung carries its size and reading rhythm together. */
+@utility t-display { font-size: var(--text-display); line-height: var(--text-display-lh); }
+@utility t-title { font-size: var(--text-title); line-height: var(--text-title-lh); }
+@utility t-heading { font-size: var(--text-heading); line-height: var(--text-heading-lh); }
+@utility t-body { font-size: var(--text-body); line-height: var(--text-body-lh); }
+@utility t-detail { font-size: var(--text-detail); line-height: var(--text-detail-lh); }
+@utility t-caption { font-size: var(--text-caption); line-height: var(--text-caption-lh); }
+
 /* Design tokens, ported from EdiaStratMap's src/styles/main.css — docs/globals-css-notes.md#design-tokens-ported-from-ediastratmap-s-src-styles-main-css-1 */
 
 :root {

@@ -1,7 +1,7 @@
 /**
  * Install a deployed release into its own checkout while the running one keeps
- * admitting work (DB-48). Nothing here switches which checkout children start
- * from; that is DB-53. When the staged checkout is ready, the existing
+ * admitting work (DB-48). Which checkout children start from is switched in
+ * the runner (DB-53, lib/ops/runtime-release-switch.ts). When the staged checkout is ready, the existing
  * boundary switch finds the package store already warm, so the drained window
  * shrinks to the switch itself.
  *
@@ -14,6 +14,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync
 import { dirname, join } from "node:path";
 
 import { runtimePackageManagerCommand } from "./runtime-release-handoff.ts";
+import { carryBackRuntimeState, linkRuntimeState } from "./runtime-release-switch.ts";
 
 const FULL_SHA = /^[0-9a-f]{40}$/i;
 const GIT_TIMEOUT_MS = 2 * 60_000;
@@ -95,13 +96,18 @@ export function stagedReleaseIsReady(root: string, targetSha: string): boolean {
   return record?.state === "READY" && record.targetSha === targetSha.toLowerCase() && existsSync(record.directory);
 }
 
-/** Remove staged checkouts for any other target; each is a registered Git worktree. */
-async function removeOtherStagedCheckouts(root: string, keepSha: string, run: AsyncRunCommand): Promise<void> {
+/**
+ * Remove staged checkouts for any other target; each is a registered Git
+ * worktree. `keep` names checkouts children may still be running from (DB-53).
+ * Host state a child left in one is carried back to the running checkout first.
+ */
+async function removeOtherStagedCheckouts(root: string, keep: readonly string[], run: AsyncRunCommand): Promise<void> {
   const base = join(root, STAGED_RELEASES_RELATIVE_DIR);
   if (!existsSync(base)) return;
   for (const name of readdirSync(base)) {
-    if (name === keepSha) continue;
     const dir = join(base, name);
+    if (keep.includes(name) || keep.includes(dir)) continue;
+    await carryBackRuntimeState({ root, directory: dir, run }).catch(() => []);
     await run("git", ["worktree", "remove", "--force", dir], { cwd: root, timeoutMs: GIT_TIMEOUT_MS });
     rmSync(dir, { recursive: true, force: true });
   }
@@ -118,6 +124,8 @@ export async function stageRuntimeRelease(input: {
   readonly targetSha: string;
   readonly run?: AsyncRunCommand;
   readonly now?: () => Date;
+  /** Staged checkouts children may still be running from; never removed here. */
+  readonly keep?: readonly string[];
 }): Promise<StagedReleaseRecord> {
   const run = input.run ?? defaultAsyncRunCommand;
   const now = input.now ?? (() => new Date());
@@ -132,7 +140,7 @@ export async function stageRuntimeRelease(input: {
   if (stagedReleaseIsReady(input.root, targetSha)) return readStagedRelease(input.root)!;
 
   record("INSTALLING", null, "installing the deployed release in its own checkout while work continues");
-  await removeOtherStagedCheckouts(input.root, targetSha, run);
+  await removeOtherStagedCheckouts(input.root, [targetSha, ...(input.keep ?? [])], run);
   const fail = (code: string, detail: string): StagedReleaseRecord => record("FAILED", code, detail);
 
   const fetched = await run("git", ["fetch", "--quiet", "--no-tags", "origin", "main"], { cwd: input.root, timeoutMs: GIT_TIMEOUT_MS });
@@ -157,11 +165,14 @@ export async function stageRuntimeRelease(input: {
   if (head.status !== 0 || head.stdout.trim().toLowerCase() !== targetSha) return fail("STAGED_CHECKOUT_EXACT_HEAD_FAILED", "staged checkout did not read back at the exact deployed target");
   const dirty = await run("git", ["status", "--porcelain=v1", "--untracked-files=all"], { cwd: directory, timeoutMs: GIT_TIMEOUT_MS });
   if (dirty.status !== 0 || dirty.stdout.trim() !== "") return fail("STAGED_CHECKOUT_DIRTY_AFTER_INSTALL", "frozen installation did not leave the staged checkout clean");
+  // DB-53: a child started from this checkout must see the running checkout's host state.
+  const linked = await linkRuntimeState({ root: input.root, directory, run });
+  if ("failed" in linked) return fail("STAGED_STATE_LINK_FAILED", linked.failed);
   return record("READY", null, `release ${targetSha} is installed in its own checkout; the running one kept admitting work`);
 }
 
 /** The main checkout has moved to the release; the staged copy is no longer needed. */
 export async function discardStagedReleases(root: string, run: AsyncRunCommand = defaultAsyncRunCommand): Promise<void> {
-  await removeOtherStagedCheckouts(root, "", run);
+  await removeOtherStagedCheckouts(root, [], run);
   rmSync(join(root, STAGED_RELEASE_RECORD_RELATIVE_PATH), { force: true });
 }

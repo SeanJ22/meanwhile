@@ -1,6 +1,6 @@
 /**
  * What readers can see: the section the backend now announces, read through the same sync every other section uses,
- * and what the Now screen prints for it at each stage of that connection.
+ * and what the Checklist screen prints for it at each stage of that connection.
  */
 import assert from "node:assert/strict";
 import { test } from "node:test";
@@ -32,10 +32,10 @@ const zipRef: LiveReference = { ...ref, geo: { key: "geo:az.zcta.85635", name: "
 function page(snapshot: Record<(typeof SECTION_IDS)[number], SectionState>, scopeKey: string): string {
   return renderToStaticMarkup(h(CommandCenter, {
     data: buildLiveBundle(snapshot, scopeKey.startsWith("geo:") ? zipRef : ref, workerStatusFromPulse(null)), mode: "live", executor: liveExecutor({ capabilities: () => null }),
-    scopeKey, onScopeChange: () => {}, connection: "live", lastGoodAt: "2026-10-01T22:00:00.000Z", recovered: false, access: owner,
+    scopeKey, onScopeChange: () => {}, connection: "live", lastGoodAt: "2026-10-01T22:00:00.000Z", recovered: false, access: owner, initialView: "checklist",
   }));
 }
-const readersCard = (html: string) => /id="v6-readers"[\s\S]*?(?=id="v6-stuck"|id="v6-missing")/.exec(html)?.[0] ?? "";
+const readersCard = (html: string) => /id="v6-readers"[\s\S]*/.exec(html)?.[0] ?? "";
 const live = (data: unknown): SectionState => ({ phase: "live", data, asOf: "2026-10-01T21:50:44.205Z", revision: "r1", missingParts: [], attempts: 0 });
 
 test("before the section is read, the panel shows a dash and no waiting copy", () => {

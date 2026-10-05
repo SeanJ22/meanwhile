@@ -227,7 +227,7 @@ export function MeetingPanel({
               target="_blank"
               rel="noreferrer"
               title={directions.hint}
-              className="mt-1 inline-flex items-baseline gap-1 text-[0.75rem] text-signal hover:underline"
+              className="mt-1 inline-flex items-baseline gap-1 t-detail text-signal hover:underline"
             >
               Directions
               <ExternalLink className="size-3 translate-y-0.5" />
@@ -465,13 +465,13 @@ function MeetingEntry({
             href={meeting.agendaUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="trailing-space-trimmed-14 inline-flex items-center gap-1.5 border-b border-signal-dim pb-0.5 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-signal transition-colors hover:border-signal"
+            className="trailing-space-trimmed-14 inline-flex items-center gap-1.5 border-b border-signal-dim pb-0.5 font-mono t-detail uppercase tracking-[0.14em] text-signal transition-colors hover:border-signal"
           >
             Read the agenda
             <ExternalLink className="size-3" aria-hidden="true" />
           </a>
         ) : (
-          <p className="trailing-space-trimmed-14 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-muted">
+          <p className="trailing-space-trimmed-14 font-mono t-detail uppercase tracking-[0.14em] text-muted">
             {agendaState.sentence}
           </p>
         )}
@@ -481,7 +481,7 @@ function MeetingEntry({
             href={meeting.videoUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="trailing-space-trimmed-14 mt-2 flex w-fit items-center gap-1.5 border-b border-signal-dim pb-0.5 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-signal transition-colors hover:border-signal"
+            className="trailing-space-trimmed-14 mt-2 flex w-fit items-center gap-1.5 border-b border-signal-dim pb-0.5 font-mono t-detail uppercase tracking-[0.14em] text-signal transition-colors hover:border-signal"
           >
             Watch the recording
             <ExternalLink className="size-3" aria-hidden="true" />
@@ -595,7 +595,7 @@ function PlacelessWhere({ meeting }: { meeting: Meeting }) {
       : "unrecorded";
   return (
     <p
-      className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 pl-4 text-[0.75rem] leading-snug text-muted"
+      className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 pl-4 t-detail leading-snug text-muted"
       data-meeting-where={where}
     >
       {access ? (
@@ -713,7 +713,7 @@ export function HowToBeHeard({
       <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
         Make your voice heard
       </summary>
-      <ul className="mt-1 space-y-1 text-[0.75rem] leading-relaxed text-paper-dim">
+      <ul className="mt-1 space-y-1 t-detail leading-relaxed text-paper-dim">
         {lines.map((line) => (
           <li key={line}>{line}</li>
         ))}

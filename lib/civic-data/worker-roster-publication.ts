@@ -26,9 +26,10 @@ import { linkingPageFrom, pageWords, section3Page, section3Record } from "../con
 import { isoTermDate, isoTermDateOnPage } from "./term-dates.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
 import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
-import { recordPublishedPageDoor } from "./worker-page-doors.ts";
+import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
 
 export interface WorkerPublicationCapture {
+  readonly sourcePolicy?: import("../control-plane/promotion/source-kinds.ts").SourcePolicy;
   readonly evidence: WorkerEvidence;
   /** Latest successful network observation, not the time an old blob was replayed. */
   readonly observedAt: string;
@@ -121,7 +122,7 @@ export function workerRosterPublication(input: {
   const { reading, prior, now } = input;
   const capture = reading.capture;
   requireThat(captureIntact(capture), "ROSTER_CAPTURE_INCOMPLETE");
-  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage };
+  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage, sourcePolicy: capture.sourcePolicy };
   const pageVerdict = section3Page(page, "OFFICIAL_ROSTER", now);
   requireThat(pageVerdict.ok, `ROSTER_PAGE_UNVERIFIED:${pageVerdict.reason}`);
   const body = prior.payload.registry.bodies.find(row => row.id === input.bodyId);
@@ -446,9 +447,10 @@ ${readingId}`, outcome);
     }
     // The data operation is already durable; failing to store this receipt never marks it published.
     const current = await input.repos.workItems.mustRead(id);
+    const pages = captures.length ? captures : [reading?.capture ?? heldDirectory?.checked.primary].filter((c): c is WorkerPublicationCapture => Boolean(c));
+    outcome = withPageDoor(outcome, pages[0], plan.contract.recordClass);
     await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
-    const pages = captures.length ? captures : [reading?.capture ?? heldDirectory?.checked.primary].filter((c): c is WorkerPublicationCapture => Boolean(c));
     if (outcome.code !== "VERIFIED_RESULT_REUSED") await recordPublishedPageDoor({ repos: input.repos, page: pages[0], recordClass: plan.contract.recordClass, bodyId, published: wentLive, now: input.now });
     if (outcome.code !== "VERIFIED_RESULT_REUSED") learned.push(validatorObservation({ plan, workItemId: id, page: pages[0], captures: pages, published: wentLive, outcome }));
   }

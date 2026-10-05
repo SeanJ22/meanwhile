@@ -1,3 +1,4 @@
+import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
 import { readerBallotSourceForTargetId } from "@/lib/ballot/reader-sources";
 import { writeReaction } from "@/lib/db/reactions";
@@ -146,7 +147,7 @@ export async function validReactionTargetsFor(
   }
 }
 
-export async function POST(request: Request) {
+async function postWithSettings(request: Request) {
   // The master ripcord (T08): intake closed means every write refused
   // before anything is read or counted. The reader's tap renders the
   // honest not-counted line; nothing silently records.
@@ -372,4 +373,8 @@ export async function POST(request: Request) {
     await raiseWriteAlarm("reactions", error);
     return Response.json({ error: "could not store the reaction" }, { status: 500 });
   }
+}
+
+export async function POST(request: Request) {
+  return withReaderFeatures(() => postWithSettings(request));
 }

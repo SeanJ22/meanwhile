@@ -400,8 +400,8 @@ function registryIsolationIssue(member: SourceScopedMember<RegistryIsolationReco
   return !photo || !photo.officeholderId || !photo.name || !photo.url ||
       (photo.verification !== undefined && !portraitBindingMatches(photo.name, photo)) ||
       registryIsolationUrls(member).length === 0 ||
-      (rosterPhoto !== null && (!photo.license || rosterPhoto !== photo.url))
-    ? `${member.key} lacks a licensed, sourced, exact portrait binding.`
+      (rosterPhoto !== null && ((!photo.license && !portraitBindingMatches(photo.name, photo)) || rosterPhoto !== photo.url))
+    ? `${member.key} lacks a sourced, exact portrait binding.`
     : null;
 }
 
@@ -470,7 +470,7 @@ function sourceScopedRegistryProjection(
       const photo = member.record.value.photo!;
       const published = priorPhotos.get(photo.officeholderId);
       if (published && canonicalCivicDataJson(published) === canonicalCivicDataJson(photo)) return null;
-      return portraitBindingMatches(photo.name, photo) ? null : `${member.key} needs its §3 second-source portrait check.`;
+      return portraitBindingMatches(photo.name, photo) ? null : `${member.key} needs its §3 portrait source binding.`;
     },
     sourceUrls: member => {
       const urls = registryIsolationUrls(member);
@@ -619,7 +619,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   })) issues.push("OFFICIAL_CANDIDACY_HOLDER_FACT_MISMATCH");
   if (duplicate(photos.map((photo) => photo.officeholderId))) issues.push("OFFICIAL_PHOTO_ID_INVALID_OR_DUPLICATED");
   if (photos.some((photo) => !photo.name || !photo.url)) issues.push("OFFICIAL_PHOTO_REQUIRED_FACT_MISSING");
-  const shippablePhotoUrls = new Set(photos.filter((photo) => photo.license).map((photo) => photo.url));
+  const shippablePhotoUrls = new Set(photos.filter((photo) => photo.license || portraitBindingMatches(photo.name, photo)).map((photo) => photo.url));
   if (Object.values(value.rosterPhotos ?? {}).some((url) => !shippablePhotoUrls.has(url))) issues.push("ROSTER_PHOTO_NOT_LICENSED_IN_MANIFEST");
   return issues;
 }

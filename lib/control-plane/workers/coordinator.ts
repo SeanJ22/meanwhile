@@ -1,5 +1,5 @@
-import { readSubjectScoutHistory } from "./detective.ts";
 import { adapterWaitReasonFromKnowledge, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
+import { readScoutResultsForSubjects, readSpendWindowCosts, readSubjectScoutHistoryScoped } from "./scoped-history.ts";
 import { randomUUID } from "node:crypto";
 import type { WorkItem } from "../work-item.ts";
 import { ZERO_COST, type Attempt } from "../attempt.ts";
@@ -142,7 +142,7 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
   onMissingArtifact?: (artifactId: string, reason: MissingHeldArtifactReason) => void): Promise<ObservedResearchRoute[]> {
   const plan = item.autonomousPlan!;
   const out: ObservedResearchRoute[] = [];
-  for (const scout of knownScouts ?? await runtime.repos.scoutResults.readAll()) {
+  for (const scout of knownScouts ?? await readScoutResultsForSubjects(runtime.repos, [item.subject], runtime.scopedReads === true)) {
     if (scout.subjectId !== item.subject || scout.recordClass !== plan.contract.recordClass || scout.refusal !== null) continue;
     const attempt = (await runtime.repos.attempts.mustRead(scout.attemptId)).value;
     if (attempt.outcome !== "COMPLETED") continue;
@@ -198,7 +198,8 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     reason: missingArtifacts.size ? `${reason}; ${[...missingArtifacts].map(([id,missingReason])=>`${missingReason}:${id}`).join("; ")}; these source references remain unresolved` : reason });
   if (!plan) return decision("BLOCKED","No versioned autonomous work instructions are registered for this obligation.");
   type LinkedItem = WorkItem & { planRepair?: { parentWorkItemId: string; authority: string }; planRepairObservation?: { successorWorkItemId: string | null } };
-  const children = (knownItems ?? (await repos.workItems.list()).map(row => row.value)).filter(row => (row as LinkedItem).planRepair?.parentWorkItemId === item.id);
+  const children = (knownItems ?? (await (runtime.scopedReads ? repos.workItems.listWhere(["planRepair", "parentWorkItemId"], item.id) : repos.workItems.list()))
+    .map(row => row.value)).filter(row => (row as LinkedItem).planRepair?.parentWorkItemId === item.id);
   const linkedId = (item as LinkedItem).planRepairObservation?.successorWorkItemId;
   if (children.length || linkedId) {
     const child = children[0] as LinkedItem | undefined;
@@ -225,8 +226,12 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   }
   const now = (runtime.now ?? (()=>new Date().toISOString()))();
   const records = [...(knownHistory?.completedRecords ?? await readCompletedWorkerResults(repos, item.id))];
+  /* CH-26: the held-artifact set is read once per decision when scoped, not once per parsed artifact. */
+  const readHeldArtifactIds = async () => new Set((await repos.artifacts.readAll()).map(artifact => artifact.artifactId));
+  let heldArtifactIdsRead: Promise<Set<string>> | null = null;
+  const heldArtifactIds = () => runtime.scopedReads ? (heldArtifactIdsRead ??= readHeldArtifactIds()) : readHeldArtifactIds();
   records.sort((a,b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id));
-  const attempts = knownHistory?.attempts ?? (await repos.attempts.list()).map(a=>a.value);
+  const attempts = knownHistory?.attempts ?? (await (runtime.scopedReads ? repos.attempts.listWhere(["workItemId"], item.id) : repos.attempts.list())).map(a=>a.value);
   const taskFor = async (input:Parameters<typeof enqueueWorkerTask>[1]) => {
     let task = await enqueueWorkerTask(repos,input);
     const admission = workerTaskAdmission(task,attempts,now);
@@ -252,8 +257,8 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       target:plan.seedUrls.join(" "),inherited:false,now});
     const prior = await repos.routeTasks.read(created.id);
     let task = prior?.value ?? (await registerRouteTask(repos,created,now)).value;
-    const {history,debt}=autonomousScoutHistory(task,knownHistory?.routeTasks ?? (await repos.routeTasks.list()).map(row=>row.value),attempts);
-    const scoutHistory=subjectScoutHistory(knownHistory?.scouts ?? await repos.scoutResults.readAll(),item.subject,plan.contract.recordClass);
+    const {history,debt}=autonomousScoutHistory(task,knownHistory?.routeTasks ?? (await (runtime.scopedReads ? repos.routeTasks.listWhere(["workItemId"],item.id) : repos.routeTasks.list())).map(row=>row.value),attempts);
+    const scoutHistory=subjectScoutHistory(knownHistory?.scouts ?? await readScoutResultsForSubjects(repos,[item.subject],runtime.scopedReads===true),item.subject,plan.contract.recordClass);
     const adapterWait = await adapterWaitReasonFromKnowledge(repos,scoutHistory);
     if (adapterWait) return decision("BLOCKED",adapterWait,task);
     const retained = (item as WorkItem & { readonly planRepair?: { readonly retainedEvidenceIds?: readonly string[]; readonly sourceArtifactId?: string } }).planRepair;
@@ -286,7 +291,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       ? (guardRecheckAtIso===null || Date.parse(guardRecheckAtIso)<=Date.parse(now))
       : Boolean(debt && Date.parse(debt.retryAt)<=Date.parse(now));
     if(task.state==="POLICY_DENIED" && latest?.outcome==="DENIED_BY_POLICY" && task.policyDenial && dueForRecheck) {
-      const spend=researchSpendInWindow(await repos.costs.readAll(),now);
+      const spend=researchSpendInWindow(await readSpendWindowCosts(repos,now,runtime.scopedReads===true),now);
       const conditionChanged=deniedCondition==="GUARD"||(deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&ceilingPermits(spend.windowUsd,(runtime.rollingCeilingUsd ?? 0)).permits);
       if(conditionChanged) {
         const row=await repos.routeTasks.mustRead(task.id); const {policyDenial,...rest}=row.value;
@@ -368,7 +373,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       if (!parser) { const next=await taskFor({...spec,role:"PARSER"}); if(next)return next; unresolved=true; continue; }
       if (parser.result.verdict!=="EXTRACTED") { unresolved=true; continue; }
       if (plan.contract.schemaVersion===2) {
-        const heldIds=new Set((await repos.artifacts.readAll()).map(artifact=>artifact.artifactId));
+        const heldIds=await heldArtifactIds();
         if(plan.contract.verification.authorities.some(authority=>[...authority.artifactIds,...authority.authorityEvidenceArtifactIds].some(id=>!heldIds.has(id)))) { unresolved=true; continue; }
       }
       const validatorTask=await enqueueWorkerTask(repos,{...spec,role:"VALIDATOR",producerResultId:parser.id});
@@ -439,10 +444,10 @@ export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: Re
 export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRuntime, task: RouteTask): Promise<DispatchResult> {
   if (task.workerTask) return dispatchWorkerTask(runtime, task);
   const now = runtime.now ?? (() => new Date().toISOString());
-        const spend=researchSpendInWindow(await runtime.repos.costs.readAll(),now());
+        const spend=researchSpendInWindow(await readSpendWindowCosts(runtime.repos,now(),runtime.scopedReads===true),now());
         const item=(await runtime.repos.workItems.mustRead(task.workItemId)).value; const plan=item.autonomousPlan!;
         const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!ceilingPermits(spend.windowUsd,runtime.rollingCeilingUsd ?? 0).permits?"SCOUT_COST_CEILING":null;
-        const history=await readSubjectScoutHistory(runtime.repos,[{subjectId:item.subject,recordClass:plan.contract.recordClass}]);
+        const history=await readSubjectScoutHistoryScoped(runtime.repos,[{subjectId:item.subject,recordClass:plan.contract.recordClass}],runtime.scopedReads===true);
         const executor:DeclaredExecutor=denial?{lane:"BOUNDED_MODEL_WORKER",workerFor:({holder})=>({role:"SCOUT",provider:"unavailable",version:FLEET_POLICY_VERSION,instance:holder}),run:async()=>({kind:"ABORTED",ranAs:"BOUNDED_MODEL_WORKER",failureOutcome:"DENIED_BY_POLICY",endedAt:now(),cost:{...ZERO_COST,requestCount:0,inputTokens:0,outputTokens:0,usd:0},detail:`DENIED_BY_POLICY:${denial}`})}:runtime.scoutFor!(item,task,history);
         // Charge the exact standing obligation that opened this WorkItem. A
         // synthetic Scout obligation without its Send marks would reserve the

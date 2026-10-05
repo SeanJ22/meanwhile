@@ -84,7 +84,8 @@ export function verifiedWorkerRecords(input: {
   const primary = input.captures.find(c => c.evidence.artifactId === extraction.artifactId);
   requirePublication(primary && captureIntact(primary), "PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE");
   const linkingPage = linkingPageFrom(primary.evidence.canonicalUrl, input.captures.filter(captureIntact).map(c => c.evidence));
-  const page = { url: primary.evidence.canonicalUrl, text: primary.evidence.text, retrievedAt: primary.observedAt, linkingPage };
+  const page = { url: primary.evidence.canonicalUrl, text: primary.evidence.text, retrievedAt: primary.observedAt, linkingPage, sourcePolicy: primary.sourcePolicy,
+    citations: input.captures.filter(c => c !== primary && captureIntact(c)).map(c => ({ url: c.evidence.canonicalUrl, text: c.evidence.text, retrievedAt: c.observedAt })) };
   const pageVerdict = section3Page(page, contract.recordClass, now);
   requirePublication(pageVerdict.ok, pageVerdict.reason ?? "PAGE_UNVERIFIED");
   const minimums = SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields;
@@ -102,7 +103,12 @@ ${f.field}`));
     if (input.pullRemoves && pulled && (pulled.all || pulled.recordIds.has(record.id))) { pulledRecords.push(record); heldRecordIds.push(record.id); continue; }
     const fields = Object.fromEntries(Object.entries(record.fields).filter(([field]) => !badFields.has(`${record.id}
 ${field}`)));
-    const verdict = section3Record({ recordClass: contract.recordClass, fields, page, now, pageVerdict, minimums });
+    let verdict = section3Record({ recordClass: contract.recordClass, fields, page, now, pageVerdict, minimums });
+    // An unverified amount leaves the filing document available; it cannot
+    // become a Money record. Recheck the independent document minimum.
+    if (!verdict.live && contract.recordClass === "CAMPAIGN_FINANCE_FILING") {
+      verdict = section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields, page, now, pageVerdict });
+    }
     if (heldIds.has(record.id) || pulled?.recordIds.has(record.id) || !verdict.live) { heldRecordIds.push(record.id); continue; }
     // Only verified values publish; the rest stay blank and owed.
     records.push({ ...record, fields: Object.fromEntries(Object.entries(record.fields).filter(([field]) => verdict.verifiedFields.includes(field))) });

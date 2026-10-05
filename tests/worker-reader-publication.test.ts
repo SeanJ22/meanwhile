@@ -230,7 +230,7 @@ test("independent normal workers automatically publish public-comment rules thro
   const captures = await Promise.all([parser.result.role === "PARSER" ? parser.result.artifactId : "", artifact.id].map(input.readCapture));
   const checked = { plan: ready, parser, captures, registry: prior, now: h.now() };
   assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, partial: true })) }), /PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE/);
-  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, evidence: { ...c.evidence, canonicalUrl: "https://mirror.example.com/rules" } })) }), /NOT_OFFICIAL_SOURCE/);
+  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, evidence: { ...c.evidence, canonicalUrl: "https://mirror.example.com/rules" } })) }), /LINKED_SOURCE_UNVERIFIED/);
   assert.throws(() => workerReaderPackage({ ...checked, plan: { ...ready, publication: { contractId: "comment-access", bodyId: "unknown-body" } } }), /CANONICAL_BODY_MISSING/);
   // The current evidence can omit a detail without suppressing its verified
   // neighbours or deleting independently proven last-good instructions.
@@ -305,4 +305,20 @@ test("a BROKE audit names the published reader members it takes out of the next 
   if (live.kind !== "PROMOTED") throw new Error("reader missing");
   assert.deepEqual([...built.pulledMemberIds], [live.value.records[0].id as string], "the pull names the exact published member");
   assert.equal((built.package.payload as CuratedReaderProjection).records.length, 0, "the pulled record is not republished");
+});
+
+test("CP-09: an amountless filing reaches its reader as a document without manufacturing Money", async () => {
+  const f = await workerFixture("official-filings", { committeeName: "Fixture Committee", committeeId: "123", documentUrl: FIXTURE_URL }, "CAMPAIGN_FINANCE_FILING");
+  const published = await publishWorkerReaderResults(f.input);
+  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
+  const projection = await readCuratedReaderProjection("official-filings", { store: f.store, now: f.h.now(), bypassCache: true });
+  assert.equal(projection.kind, "PROMOTED");
+  if (projection.kind !== "PROMOTED") throw Error("fixture reader");
+  const rows = filingsForDivisions(projection.value.records as unknown as OfficialFiling[], [f.body.ocdId!]);
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].kind, "CAMPAIGN_FINANCE_DOCUMENT");
+  assert.equal(officialFilingIssue(rows[0]), null);
+  const html = renderToStaticMarkup(createElement(OfficialFilings, { rows }));
+  assert.ok(html.includes(FIXTURE_URL) && html.includes("Fixture Committee"));
+  assert.doesNotMatch(html, /Reported receipts|Reported expenditures|Reported cash/);
 });

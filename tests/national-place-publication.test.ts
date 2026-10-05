@@ -201,7 +201,7 @@ test('state portrait publishes through the existing blob path and registry bindi
   const holder=after.payload.bodyRosters.find(r=>r.bodyId===`${OH}/sldl:7#seat`)!.members[0];
   const photo=after.payload.officialPhotos.photos.find(p=>p.officeholderId===holder.id)!;
   assert.ok(photo);assert.match(photo.url,/^\/api\/portraits\/officials\/[a-f0-9]{64}\.jpg$/);
-  assert.equal(photo.verification?.basis,'OWN_PAGE');assert.equal(photo.license,null);assert.equal(photo.attribution,officialUrl);
+  assert.equal(photo.verification?.basis,'OWN_PAGE');assert.equal(photo.license,null);assert.equal(photo.attribution,`Portrait: ${officialUrl}`);
   assert.equal(after.payload.rosterPhotos[holder.id],photo.url);assert.equal(reads,1);assert.equal(writes.size,1);
   assert.deepEqual(writes.values().next().value,image);
   const changed = registryRuntimeCandidate({contractId:'registry-runtime-bindings',scope:'MEMBERS',version:'unverified-photo-replacement',sourceThrough:NOW,

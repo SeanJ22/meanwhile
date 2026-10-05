@@ -769,6 +769,8 @@ export interface ClosedFix {
   readonly saved: string;
   readonly usedBy: string;
   readonly returnedDetail?: string;
+  /** DP-30: every time it broke, how it was fixed and how long each fix held, oldest first. */
+  readonly history?: string;
   readonly technical: string;
 }
 

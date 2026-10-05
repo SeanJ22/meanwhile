@@ -121,6 +121,7 @@ function History(props: { readonly list: readonly ClosedFix[]; readonly returned
                 ["Checked on the reader page", x.readerRecheck],
                 ["Since the fix", x.since],
                 ...(x.returnedDetail ? [["When it came back", x.returnedDetail] as const] : []),
+                ...(x.history ? [["History", x.history] as const] : []),
                 ["Saved to prevent it", x.saved],
                 ["Used by", x.usedBy],
               ]} />

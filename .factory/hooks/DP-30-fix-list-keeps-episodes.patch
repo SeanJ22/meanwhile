@@ -1,0 +1,55 @@
+diff --git a/lib/control-plane/fix-list.ts b/lib/control-plane/fix-list.ts
+index f79d3c890..d5e2a1ed8 100644
+--- a/lib/control-plane/fix-list.ts
++++ b/lib/control-plane/fix-list.ts
+@@ -17,6 +17,7 @@
+  * compare-and-set the row (retried once on a concurrent write).
+  */
+ import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } from "./gateway/admin-config.ts";
++import { withEpisodeKept } from "./fix-history.ts";
+ import { fixSubjectId } from "./fix-queue.ts";
+ import type { ControlPlaneRepositories } from "./repository/types.ts";
+ 
+@@ -69,7 +70,8 @@ export function withFixAdded(config: AdminConfig, add: { where: string; says: st
+   const held = items.find((i) => i.id === id);
+   if (held) {
+     if (held.state !== "FIXED") return config;
+-    return put(config, items.map((i) => (i.id === id ? { ...i, state: "CAME_BACK" as const, cameBackAt: add.at } : i)), add.at);
++    // DP-30: the finished episode stays on the item (`earlier`), so its history reads every break and how long each fix held.
++    return put(config, items.map((i) => (i.id === id ? withEpisodeKept(i, add.at) : i)), add.at);
+   }
+   return put(config, [...items, { id, where: add.where.trim(), says: add.says.trim(), addedBy: add.addedBy, addedAt: add.at, state: "OPEN" }], add.at);
+ }
+diff --git a/tests/fix-history-door-twice.test.ts b/tests/fix-history-door-twice.test.ts
+new file mode 100644
+index 000000000..1448ed498
+--- /dev/null
++++ b/tests/fix-history-door-twice.test.ts
+@@ -0,0 +1,27 @@
++/** DP-30 with the fix list keeping episodes: a door that shut, reopened, shut and reopened again shows two episodes and how long each fix held. */
++import assert from "node:assert/strict";
++import test from "node:test";
++
++import { fixEpisodes } from "../lib/control-plane/fix-history.ts";
++import { fixItems } from "../lib/control-plane/fix-list.ts";
++import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
++import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
++import { completeReopenedDoorFix, openShutDoorFix } from "../lib/doors/shut-repair.ts";
++import type { DoorRecord } from "../lib/doors/registry.ts";
++
++test("a door that broke twice shows two episodes, with how long each fix held", async () => {
++  const repos = createMemoryRepositories();
++  const shut = (since: string) => ({ doorId: "d-1", kind: "meetings", shutReason: "the page moved", shutSince: since, hosts: ["clerk.example.gov"], editedAt: null, reopenedAt: null }) as unknown as DoorRecord;
++  const reopened = (at: string) => ({ ...shut("x"), shutSince: null, shutReason: null, reopenedAt: at }) as unknown as DoorRecord;
++  await openShutDoorFix(repos, shut("2026-09-01T00:00:00.000Z"), "2026-09-01T00:00:00.000Z");
++  await completeReopenedDoorFix(repos, shut("2026-09-01T00:00:00.000Z"), reopened("2026-09-02T00:00:00.000Z"), "2026-09-02T00:00:00.000Z");
++  await openShutDoorFix(repos, shut("2026-09-10T00:00:00.000Z"), "2026-09-10T00:00:00.000Z");
++  await completeReopenedDoorFix(repos, shut("2026-09-10T00:00:00.000Z"), reopened("2026-09-11T00:00:00.000Z"), "2026-09-11T00:00:00.000Z");
++  const items = fixItems((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value as AdminConfig);
++  assert.equal(items.length, 1, "one gap, one item");
++  const episodes = fixEpisodes(items[0], "2026-09-13T00:00:00.000Z");
++  assert.deepEqual(episodes.map((e) => [e.brokeAt, e.fixedAt, e.heldHours, e.stillHolding]), [
++    ["2026-09-01T00:00:00.000Z", "2026-09-02T00:00:00.000Z", 192, false],
++    ["2026-09-10T00:00:00.000Z", "2026-09-11T00:00:00.000Z", 48, true],
++  ]);
++});

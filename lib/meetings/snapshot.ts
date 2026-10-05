@@ -27,6 +27,7 @@ import {
 } from "../civic-data/meeting-partitions.ts";
 import { DERIVED_FAMILY_SOURCE, meetingHistoryContract } from "../civic-data/meeting-partitions.ts";
 import { mergeMeetingHistory } from "../civic-data/meeting-history.ts";
+import { stampMeetingDoor } from "../civic-data/fact-door.ts";
 import { collapseDuplicateSittings } from "../sources/composite/index.ts";
 import {
   applyPartitionFreshCheck,
@@ -968,10 +969,10 @@ export async function readMeetingsProjection(
       const history = historyByPartition.get(read.partition.id);
       return {
         ...read,
-        value: mergeMeetingHistory(
+        value: stampMeetingDoor(read.partition, mergeMeetingHistory(
           applyPartitionFreshCheck(read.result.value, checkedAt),
           history !== undefined && "value" in history ? history.value : null,
-        ),
+        )),
         freshCheck: routes === null ? undefined : { routes, checkedAt } satisfies MeetingPartitionFreshCheck,
       };
     });

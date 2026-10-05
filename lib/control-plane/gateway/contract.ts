@@ -183,6 +183,8 @@ export interface ActionReceipt {
   readonly subject: string;
   /** A stable digest of the input, so the record is auditable without storing free text. */
   readonly inputDigest: string;
+  /** Original target, retained when the action's subject becomes a derived intent id. */
+  readonly requestedSubject?: string;
   readonly caller: CallerAuthority;
   readonly actorRef: string;
   /** The revision/SHA the action was rendered against, when it quoted one. */
@@ -201,6 +203,8 @@ export interface ActionReceipt {
   readonly readBackAt: string | null;
   /** What would undo this, when anything would. */
   readonly undo: string | null;
+  /** BR-13: the value before and after, when the action changed one. */
+  readonly change?: { readonly before: string; readonly after: string };
 }
 
 /** The gateway's answer. One shape for success and refusal alike. */

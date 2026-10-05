@@ -26,6 +26,7 @@ export const VIEWS: readonly (readonly [View, string])[] = [
   ["money", "Money"],
   ["learning", "Is it learning"],
   ["fix", "Fix list"],
+  ["settings", "Settings"],
   ["reports", "Reports"],
   ["changes", "Changes"],
   ["chat", "Ask the console"],

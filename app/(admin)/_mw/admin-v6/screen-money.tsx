@@ -70,7 +70,7 @@ export function MoneyScreen() {
   const days = v.data.spend.data ? dailyRows(v.data.spend.data, v.period, new Date()) : [];
   const shownDays = all ? days : days.slice(0, TOP);
   /** Hosting is billed by the month: the provider's own reading for the month in the picker, or a dash. */
-  const hosting = /^20dd-dd$/.test(v.period) ? v.data.money.data?.account.find((a) => a.provider === "Netlify")?.amountUsd ?? null : null;
+  const hosting = /^20\d\d-\d\d$/.test(v.period) ? v.data.money.data?.account.find((a) => a.provider === "Netlify")?.amountUsd ?? null : null;
   const switcher = (
     <span className={s.inline}>
       {(["hunt", "day"] as const).map((k) => (

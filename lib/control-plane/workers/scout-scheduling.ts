@@ -1,6 +1,6 @@
 import type { Attempt } from "../attempt.ts";
 import type { RouteTask } from "../route-task.ts";
-import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
+import { FIRST_BACKOFF_MINUTES, recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
 import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, type ScoutResult } from "../scheduler/scout-result.ts";
 
 /** A newly handed saved representation may receive one immediate Scout turn
@@ -25,6 +25,8 @@ export function autonomousScoutHistory(root: RouteTask, tasks: readonly RouteTas
     .sort((a, b) => a.startedAt.localeCompare(b.startedAt) || a.id.localeCompare(b.id));
   let debt: FreshnessDebt | null = null;
   for (const attempt of history) {
+    /* CH-29: our own guard refusing a request is not an attempt on the source; it adds no failure and no backoff. */
+    if (attempt.outcome === "DENIED_BY_POLICY" && refusedByOurOwnGuard(attempt.abortReason)) continue;
     // Completing one bounded search does not settle an unresolved source obligation.
     if (attempt.endedAt) debt = recordFailure(debt, { obligationId: root.id,
       cause: attempt.outcome === "COMPLETED" ? "EXTRACTION_FAILED" : attempt.abortReason?.includes("COST_CEILING") ? "RATE_LIMITED" : "TRANSPORT_FAILED",
@@ -34,9 +36,28 @@ export function autonomousScoutHistory(root: RouteTask, tasks: readonly RouteTas
   return { familyTaskIds: [...family].sort(), history, debt };
 }
 
-export function scoutTransientDenial(reason: string | null): "TRANSPORT" | "COST" | null {
+/**
+ * CH-29: a request our own spending or execution guard refused before anything was sent (the executor words every
+ * such refusal `SCOUT_POLICY_DENIED … refused before sending by the spending or execution policy`). It touched no
+ * source, so it is not an attempt on the source and not a dead end; it is re-checked on a fixed pace, not backed off.
+ */
+export function refusedByOurOwnGuard(reason: string | null | undefined): boolean {
+  return /SCOUT_POLICY_DENIED|refused before sending by the spending or execution policy/.test(reason ?? "");
+}
+
+/** How long after our own guard refused a request the item is checked again. The refusal itself cost nothing. */
+export const GUARD_RECHECK_MINUTES = FIRST_BACKOFF_MINUTES;
+
+export function scoutTransientDenial(reason: string | null): "TRANSPORT" | "COST" | "GUARD" | null {
   return reason?.includes("SCOUT_MODEL_TRANSPORT_UNAVAILABLE") ? "TRANSPORT"
-    : reason?.includes("SCOUT_COST_CEILING") ? "COST" : null;
+    : reason?.includes("SCOUT_COST_CEILING") ? "COST"
+      : refusedByOurOwnGuard(reason) ? "GUARD" : null;
+}
+
+/** When an item our own guard refused is next checked: the refusal's end plus the fixed pace. */
+export function guardRecheckAt(attempt: Pick<Attempt, "endedAt">): string | null {
+  const ended = Date.parse(attempt.endedAt ?? "");
+  return Number.isFinite(ended) ? new Date(ended + GUARD_RECHECK_MINUTES * 60_000).toISOString() : null;
 }
 
 /** Provider outages may recover; unchanged request/schema failures cannot. */
@@ -82,6 +103,12 @@ export function scoutTaskAdmission(task: RouteTask, tasks: readonly RouteTask[],
   if (task.state === "POLICY_DENIED") {
     const transient = latest?.outcome === "DENIED_BY_POLICY" && task.policyDenial && scoutTransientDenial(latest.abortReason);
     if (!transient) return reading("POLICY_DENIED", task.policyDenial?.requiredChange ?? "The recorded denial has no established automatic reauthorization condition.");
+    if (transient === "GUARD") {
+      const recheckAt = guardRecheckAt(latest!);
+      return recheckAt !== null && Date.parse(recheckAt) > Date.parse(now)
+        ? reading("BACKOFF", "Our own spending guard refused this request before anything was sent; it is checked again on its fixed pace.", recheckAt, true)
+        : reading("POLICY_RECHECK", "Our own spending guard refused this request before anything was sent; the work goes back in line with its case file.", recheckAt, true);
+    }
     if (debt && Date.parse(debt.retryAt) > Date.parse(now)) {
       return reading("BACKOFF", "Scout backoff must elapse before the named policy condition is rechecked.", debt.retryAt, true);
     }

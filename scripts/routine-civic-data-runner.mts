@@ -56,6 +56,7 @@ import { recordDoorOutcome, type DoorOutcome } from "../lib/doors/outcome.ts";
 import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
 import { isDoorRecord } from "../lib/doors/registry.ts";
 import { doorReadModeFromEnv, refreshDoorsForPass } from "../lib/doors/install.ts";
+import { doorSeedOnFromEnv, seedDoorsOnStart } from "../lib/doors/seed-all.ts";
 import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -158,12 +159,17 @@ const FORCE = process.argv.includes("--force");
 // DB-13: with WTP_DOORS_READ=registry the meeting work is built from the door
 // registry on every pass; otherwise (the default) the code's list is used as before.
 const CODE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
-if (doorReadModeFromEnv() === "registry" && controlPlaneUrlFromEnv() !== null) {
+if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlaneUrlFromEnv() !== null) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
-    const doorPass = await refreshDoorsForPass(doorRepos.doors);
-    console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from ${doorPass.reading} (${doorPass.partitions?.partitions ?? doorPass.rows} partitions)` +
-      `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}`);
+    // DB-10/DB-11/DB-23: an empty registry is seeded once from today's doors (WTP_DOORS_SEED=on); otherwise nothing is written.
+    const seeded = await seedDoorsOnStart(doorRepos.doors);
+    console.log(`RCD_TASK routine-civic-data-runner: door registry seed — ${seeded.seeded ? `${seeded.result.total} doors now held` : seeded.reason}`);
+    if (doorReadModeFromEnv() === "registry") {
+      const doorPass = await refreshDoorsForPass(doorRepos.doors);
+      console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from ${doorPass.reading} (${doorPass.partitions?.partitions ?? doorPass.rows} partitions)` +
+        `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}`);
+    }
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, the code's meeting list stays in use — ${error instanceof Error ? error.message : String(error)}`);
   }

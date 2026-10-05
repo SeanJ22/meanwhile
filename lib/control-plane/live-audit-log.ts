@@ -14,6 +14,11 @@
  *   SPEED       one worst-case speed pass over the live site (FE-02): each
  *               surface and sampled ZIP, phone and desktop, PASS or FAIL
  *               against three seconds. Keyed by the UTC day it ran.
+ *   TASKS       one resident-task pass over the live site (FE-18): each task
+ *               at each sampled ZIP, phone and desktop, PASS or FAIL with its
+ *               screenshot strip. Keyed by the UTC day it ran.
+ *   TASK_ZIP    a ZIP the resident tasks have run at, keyed "task-zips"; a
+ *               published ZIP missing here is queued for its first run.
  * ```
  *
  * Append-only because an audit is a reading taken at a time; a later pass never
@@ -24,6 +29,7 @@ import type { AuditCorrection } from "./admin-view/v6-audit-read.ts";
 import { AUDIT_WEEK_DAYS } from "./admin-view/v6-audit-read.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import type { LiveAuditResult } from "./workers/live-audit.ts";
+import type { TaskPass } from "../health/resident-tasks.ts";
 import type { SpeedPass } from "../health/worst-case-speed.ts";
 
 export interface LiveAuditPull {
@@ -41,7 +47,9 @@ export type LiveAuditLogRow =
   | { readonly kind: "RESULT"; readonly result: LiveAuditResult }
   | { readonly kind: "CORRECTION"; readonly correction: AuditCorrection }
   | { readonly kind: "PULL"; readonly pull: LiveAuditPull }
-  | { readonly kind: "SPEED"; readonly pass: SpeedPass };
+  | { readonly kind: "SPEED"; readonly pass: SpeedPass }
+  | { readonly kind: "TASKS"; readonly pass: TaskPass }
+  | { readonly kind: "TASK_ZIP"; readonly zip: string; readonly at: string };
 
 export type LiveAuditRepos = Pick<ControlPlaneRepositories, "liveAudits">;
 
@@ -49,6 +57,8 @@ export const CORRECTIONS_KEY = "corrections";
 export const dayKey = (iso: string): string => `day:${iso.slice(0, 10)}`;
 export const PULLS_KEY = "pulls";
 export const speedDayKey = (iso: string): string => `speed:${iso.slice(0, 10)}`;
+export const tasksDayKey = (iso: string): string => `tasks:${iso.slice(0, 10)}`;
+export const TASK_ZIPS_KEY = "task-zips";
 
 /** The day keys a week back from `now`, plus today: what a weekly reading and "last audited" need. */
 export function weekDayKeys(now: string, days: number = AUDIT_WEEK_DAYS): string[] {
@@ -101,5 +111,25 @@ export async function readLatestSpeedPass(repos: LiveAuditRepos, now: string): P
   const keys = [0, 1].map((d) => speedDayKey(new Date(end - d * 86_400_000).toISOString()));
   const rows = (await Promise.all(keys.map((k) => repos.liveAudits.read(k)))).flat();
   const passes = rows.flatMap((row) => (row.kind === "SPEED" ? [row.pass] : [])).sort((a, b) => a.at.localeCompare(b.at));
+  return passes.at(-1) ?? null;
+}
+
+/** FE-18: keep one resident-task pass by the day it ran, and note each ZIP it reached so it is not queued again. */
+export async function recordTaskPass(repos: LiveAuditRepos, pass: TaskPass): Promise<void> {
+  await repos.liveAudits.append(tasksDayKey(pass.at), `tasks@${pass.at}`, { kind: "TASKS", pass }, pass.at);
+  for (const zip of pass.zips) await repos.liveAudits.append(TASK_ZIPS_KEY, `${zip}@${pass.at}`, { kind: "TASK_ZIP", zip, at: pass.at }, pass.at);
+}
+
+/** Every ZIP the resident tasks have run at. */
+export async function readTaskZips(repos: LiveAuditRepos): Promise<Set<string>> {
+  return new Set((await repos.liveAudits.read(TASK_ZIPS_KEY)).flatMap((row) => (row.kind === "TASK_ZIP" ? [row.zip] : [])));
+}
+
+/** The newest resident-task pass from today or yesterday; null when none ran. */
+export async function readLatestTaskPass(repos: LiveAuditRepos, now: string): Promise<TaskPass | null> {
+  const end = Date.parse(now);
+  const keys = [0, 1].map((d) => tasksDayKey(new Date(end - d * 86_400_000).toISOString()));
+  const rows = (await Promise.all(keys.map((k) => repos.liveAudits.read(k)))).flat();
+  const passes = rows.flatMap((row) => (row.kind === "TASKS" ? [row.pass] : [])).sort((a, b) => a.at.localeCompare(b.at));
   return passes.at(-1) ?? null;
 }

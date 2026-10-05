@@ -49,6 +49,12 @@ export interface SourceSnapshot {
   /** Original captured-source identity when held; older snapshots may lack it. */
   sourceRevision?: CandidateSourceRevision;
   retrievedAt: string;
+  /**
+   * The calendar day (YYYY-MM-DD) a social post was published, when its source
+   * states one. Only a dated post can be tied to a vote (CA-40); `retrievedAt`
+   * is when we read it, never when it was said.
+   */
+  postedOn?: string;
   httpStatus: number;
   extraction: "ok" | "failed";
   /** Extracted visible text. Null when extraction failed. */

@@ -332,6 +332,8 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "nj-legislature",
     "legiscan",
     "plural-openstates",
+    // DB-06: a partition's durable history promotes under its partition's own contract (`meetingHistoryContract`), so it has no contract of its own to list.
+    "meetings-history",
   ];
   const expectedAuthorities = new Set([
     ...observableRoutineContracts().map((contract) => contract.sourceId),
@@ -1334,7 +1336,7 @@ test("the routine runner derives its clock from durable candidate history", () =
   // and the publisher-stated ends read in the same pass (C6).
   const statedEnds = source.indexOf("statedSittingEndsRead(getDb())");
   const sittingSignals = source.indexOf("sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask)");
-  const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs, sittingHot)");
+  const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs)");
   assert.ok(frozenAdmission > 0 && frozenAdmission < clockReads && clockReads < statedEnds && statedEnds < sittingSignals && sittingSignals < dueDecision);
   assert.match(source, /STATED_ENDS_READ_FAILED/, "an unreadable end set is reported, and the day bound stands");
   assert.doesNotMatch(source, /routine-civic-data-runner\.json|readState\(|writeState\(/);

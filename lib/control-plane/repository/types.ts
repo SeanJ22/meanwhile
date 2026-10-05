@@ -106,7 +106,6 @@ import type {
   WindowIntent,
   WindowRunRecord,
 } from "../promotion/types.ts";
-import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
@@ -674,6 +673,8 @@ export interface RecordedTransition {
  * (slow, and it is the one that proves the process may die).
  */
 export interface ControlPlaneRepositories {
+  /** Bounded, newest-first projection joined to its authoritative receipt. */
+  readonly adminActionHistoryPage?: (query: import("./action-history-atomic.ts").ActionHistoryReadQuery) => Promise<readonly import("./action-history-atomic.ts").ActionHistoryReadRow[]>;
   readonly workItems: AggregateRepository<WorkItem>;
   readonly routeTasks: AggregateRepository<RouteTask>;
   readonly attempts: AggregateRepository<Attempt>;
@@ -722,8 +723,6 @@ export interface ControlPlaneRepositories {
    * not an exception to RULING 226 — his page is a rendering like any other.
    */
   readonly ownerSnapshots: AggregateRepository<OwnerSnapshot>;
-  /** The readiness control panel's data plane — one snapshot per state, keyed by two-letter state code; derived, never authored. */
-  readonly readinessSnapshots: AggregateRepository<ReadinessStateSnapshot>;
   /** The field manual — one aggregate, id "live": the growing store of learned discovery knowledge every model-driven worker reads (as a projection) and writes back to, no human step. */
   readonly fieldManual: AggregateRepository<FieldManualStore>;
   /** Keyed by runner id. "Alive" is DERIVED from this beat, never stored. */

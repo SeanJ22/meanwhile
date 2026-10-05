@@ -52,7 +52,6 @@ import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { AggregateRepository } from "../lib/control-plane/repository/types.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
-import { buildChecklistCensus } from "../lib/control-plane/readiness/checklist-census.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import type { RouteDisposition, RouteTask } from "../lib/control-plane/route-task.ts";
 import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
@@ -746,11 +745,6 @@ test("projected publisher listings retain the full assignment view and named gap
   const after = await readAllAssignmentSources(repos, base, already);
   assert.deepEqual(buildAssignments(after), buildAssignments(before));
   assert.deepEqual(buildAssignmentView(after), buildAssignmentView(before));
-  const census = (sources: AssignmentSources) => buildChecklistCensus({ scope, sources, observedAt: NOW });
-  assert.deepEqual(census(after), census(before));
-  const timing = census(after).deliveryTimings?.find(row => row.workItemId === "timed-work");
-  assert.equal(timing?.timingIssue, true, "measured execution with identical endpoint stamps stays unknown");
-  assert.equal(timing?.firstStartedAt, null);
   assert.ok(Buffer.byteLength(JSON.stringify(after)) < Buffer.byteLength(JSON.stringify(before)),
     "unused replay and task fields no longer reach the publisher");
   assert.ok(after.attempts.every(row => !("usd" in row.cost) && !("policyVersion" in row)));
@@ -766,7 +760,8 @@ test("succeeded (plain code, INGESTED with a document): downloads counted, the p
   // 1 — where comes from the candidacy's own jurisdiction segment, through the one display projection.
   assert.ok(a.what.where.held && a.what.where.value.name === "Rockaway, New Jersey");
   assert.ok(a.what.workers.held && a.what.workers.value[0].model.kind === "PLAIN_CODE");
-  assert.equal(a.what.why.band?.band, 1, "Rockaway is a pilot jurisdiction for 07866");
+  assert.notEqual(a.what.why.band?.band, undefined, "the row is placed in a band by its own provider, not by a pilot list")
+  assert.ok((a.what.why.band?.band ?? 0) >= 2, "CH-12: a former pilot place has no band 1 of its own");
   // 2 — the source's own row count, and the one vaulted document.
   assert.ok(a.discovery.discovered.held && a.discovery.discovered.value.sourceRows === 20);
   assert.ok(a.discovery.downloaded.held);

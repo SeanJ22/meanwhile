@@ -69,3 +69,30 @@ test("hunt activity comes from work items by subject and by the body they publis
   const searched = rowStatuses({ checklistId: "GOV-01", subject: { id: "body-2" }, held: [] }, { now, hunt: (id) => evidence.get(id) ?? null });
   assert.equal(searched.found, "attempted");
 });
+
+import { buildPlaceOwedList as buildOwed } from "../lib/coverage/place-owed.ts";
+
+test("items are counted at the right unit: ZIP items per ZIP, gated division items by kind, laws and votes per legislature", () => {
+  const state = "ocd-division/country:us/state:az";
+  const school = `${state}/county:cochise/school_district:bisbee`;
+  const place = `${state}/county:cochise/place:bisbee`;
+  const rows = buildOwed({ divisions: [{ id: "ocd-division/country:us", label: "United States" }, { id: state, label: "Arizona" }, { id: school, label: "Bisbee Unified" }, { id: place, label: "Bisbee" }],
+    subjects: [{ id: "seat:1", kind: "seat", captureKind: "state-legislator", divisionIds: [state], label: "Senator" },
+      { id: "seat:2", kind: "seat", captureKind: "state-legislator", divisionIds: [state], label: "Representative" }],
+    held: [], now, zips: ["85603", "85604"] });
+  const idsOf = (subject: string) => rows.filter(r => r.subject.id === subject).map(r => r.checklistId);
+  assert.deepEqual(idsOf("zip:85603"), ["GEO-01", "GEO-02", "GEO-04", "GEO-05", "GEO-06", "GEO-12"], "ZIP items go per ZIP");
+  assert.equal(rows.filter(r => r.checklistId === "GEO-01").length, 2);
+  assert.ok(idsOf(school).includes("GEO-09") && !idsOf(school).includes("GEO-10") && !idsOf(school).includes("GEO-11"), "only school districts owe school-district items");
+  assert.ok(!idsOf(place).some(id => ["GEO-09", "GEO-10", "GEO-11"].includes(id)), "a town owes none of the gated items");
+  assert.ok(idsOf(place).includes("GEO-03") && !idsOf(place).includes("GEO-01"));
+  assert.deepEqual(idsOf(`${state}#legislature`).sort(), ["LEG-01", "LEG-10", "LEG-22"]);
+  assert.deepEqual(idsOf("ocd-division/country:us#legislature").sort(), ["LEG-01", "LEG-10"]);
+  assert.ok(idsOf("seat:1").includes("LEG-02") && !idsOf("seat:1").includes("LEG-03"), "a seat owes only the seat items");
+  assert.ok(!rows.some(r => r.subject.kind === "rollcall"), "roll calls are owed only where they are held");
+  const withoutZips = buildOwed({ divisions: [{ id: state, label: "Arizona" }], subjects: [], held: [], now });
+  assert.ok(!withoutZips.some(r => r.checklistId === "GEO-01"), "a place whose ZIPs are not known owes no ZIP rows rather than invented ones");
+  const tribal = buildOwed({ divisions: [{ id: place, label: "Bisbee" }], subjects: [], now,
+    held: [{ subjectId: place, checklistId: "GEO-11", state: "published", sourceUrl: "https://x.gov", checkedAt: now, freshUntil: "2026-10-05T00:00:00Z" }] });
+  assert.ok(tribal.some(r => r.subject.id === place && r.checklistId === "GEO-11"), "a tribal overlap is owed where one is held");
+});

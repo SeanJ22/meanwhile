@@ -50,6 +50,7 @@ const REASONS: readonly CarriedReason[] = [
   "SOURCE_UNAVAILABLE",
   "PARTIAL_SCOPE_UNAVAILABLE",
   "UNEXPLAINED_DISAPPEARANCE",
+  "OUTSIDE_FETCH_WINDOW",
 ];
 
 /* ── the recorded case: Rockaway Township, production, 2026-09-23 ─────────── */
@@ -234,6 +235,7 @@ test("each recorded carry reason earns its own plain clause, and a mark without 
   assert.equal(carriedRowClause({ reason: "SOURCE_UNAVAILABLE" }), "our latest check couldn't reach this calendar");
   assert.equal(carriedRowClause({ reason: "PARTIAL_SCOPE_UNAVAILABLE" }), "our latest check couldn't read all of this calendar");
   assert.equal(carriedRowClause({ reason: "UNEXPLAINED_DISAPPEARANCE" }), "our latest check of this calendar didn't find this listing");
+  assert.equal(carriedRowClause({ reason: "OUTSIDE_FETCH_WINDOW" }), "our latest check covered nearer dates than this one");
 
   // The contract names every reason the type does, and no other.
   assert.deepEqual(Object.keys(CARRIED_ROW_CLAUSE).sort(), [...REASONS].sort());

@@ -183,7 +183,7 @@ export async function persistVerifiedPublicationAnchors(repos:ControlPlaneReposi
         subject:current.value.subjectId,plan:current.value.autonomousPlan,
         instructionReceipts:(current.value.assignments??[]).map(mark=>mark.ref)})===lineage.key);
     if (!stillBound) continue;
-    const next={...current.value,lastWorkedAt:observedAt,absentUntil:null,updatedAt:input.now};
+    const next={...current.value,lastWorkedAt:observedAt,absentUntil:null,absenceUnlock:null,updatedAt:input.now};
     const scheduled=scheduleObligation(next,nowMs);
     if (!isScheduled(scheduled)) continue;
     const persisted={...next,nextDueAt:scheduled.nextDueAt};

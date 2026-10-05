@@ -7,7 +7,6 @@ import type { Meeting } from "../sources/types.ts";
 import { resolveVenue, venueResolutionRecordId, type VenueEntry } from "./venue-cache.ts";
 
 const CENSUS_URL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress";
-const MAX_ADDRESSES_PER_PASS = 20;
 const hash = (bytes: Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
 const words = (value: string): string => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const hasWords = (whole: string, part: string): boolean => ` ${whole} `.includes(` ${part} `);
@@ -50,7 +49,10 @@ interface CensusMatch {
   };
 }
 
-/** A Census street point is accepted only for one exact house/street/city/state/ZIP match. */
+/**
+ * A Census street point is accepted only for one exact house/street/city/state match.
+ * The ZIP is checked only when the published text carries one.
+ */
 export function verifiedCensusVenuePoint(published: string, response: unknown): { lat: number; lng: number; address: string } | null {
   const matches = (response as { result?: { addressMatches?: CensusMatch[] } })?.result?.addressMatches;
   if (!Array.isArray(matches) || matches.length !== 1) return null;
@@ -58,11 +60,13 @@ export function verifiedCensusVenuePoint(published: string, response: unknown): 
   const components = match.addressComponents;
   const address = match.matchedAddress ?? "";
   const house = /^\s*(\d+)\b/.exec(address)?.[1];
-  if (!house || !components?.streetName || !components.city || !components.state || !/^\d{5}$/.test(components.zip ?? "")) return null;
+  if (!house || !components?.streetName || !components.city || !components.state) return null;
   const publishedWords = words(published);
   const street = words([house, components.preDirection, components.streetName, components.suffixType].filter(Boolean).join(" "));
   if (!hasWords(publishedWords, street) || !hasWords(publishedWords, words(components.city)) ||
-      !hasWords(publishedWords, words(components.state)) || !hasWords(publishedWords, components.zip!)) return null;
+      !hasWords(publishedWords, words(components.state))) return null;
+  const publishedZip = /\b\d{5}\b/.exec(published)?.[0];
+  if (publishedZip && components.zip !== publishedZip) return null;
   const lat = match.coordinates?.y;
   const lng = match.coordinates?.x;
   if (typeof lat !== "number" || typeof lng !== "number" || !Number.isFinite(lat) || !Number.isFinite(lng) ||
@@ -137,10 +141,8 @@ export async function automaticVenuePackage(input: {
     if (!pending.has(id)) pending.set(id, meeting);
   }
   const keys = [...pending.keys()].sort();
-  const hour = Math.floor(Date.parse(input.snapshot.generatedAt) / 3_600_000);
-  const offset = keys.length === 0 || !Number.isFinite(hour) ? 0 : (hour * MAX_ADDRESSES_PER_PASS) % keys.length;
-  const selected = [...keys.slice(offset), ...keys.slice(0, offset)].slice(0, MAX_ADDRESSES_PER_PASS);
-  for (const id of selected) {
+  // Federal sites are read at full speed (rulings §2): every new address is matched in the pass.
+  for (const id of keys) {
     const meeting = pending.get(id)!;
     const gap = meeting.venueGap!;
     const published = gap.publishedText!;
@@ -196,4 +198,43 @@ export async function automaticVenuePackage(input: {
       payload: { kind: "venue-resolutions", records: rows },
     }, held,
   };
+}
+
+/** What the Census match adds to one acquired set of meetings: placed rows and the receipts that prove each pin. */
+export interface CensusVenuePlacement {
+  readonly meetings: readonly Meeting[];
+  readonly placedCount: number;
+  readonly held: readonly string[];
+  readonly venueReferenceEvidence: readonly Readonly<Record<string, unknown>>[];
+  /** The new matches as a `venue-resolutions` package (BX-09), or null when nothing new was matched. */
+  readonly package: ManualProjectionPackage | null;
+}
+
+/**
+ * Match every newly published, freshly read address to a Census street point and place
+ * its meeting. Works for any acquired set, derived family or hand-wired body. A match
+ * that fails any check leaves the address visible without a pin.
+ */
+export async function placeMeetingsFromCensusVenues(input: {
+  readonly snapshot: MeetingsSnapshot;
+  readonly existingIds: ReadonlySet<string>;
+  readonly memberRoutes: ReadonlyMap<string, string>;
+  readonly fetchImpl?: typeof fetch;
+  readonly clock?: () => string;
+}): Promise<CensusVenuePlacement> {
+  const proposed = await automaticVenuePackage(input);
+  const newRows = (proposed.package?.payload as { records?: VenueEntry[] } | undefined)?.records ?? [];
+  const placed = placeMeetingsFromVerifiedVenues(input.snapshot.meetings, newRows);
+  const references = (proposed.package?.sourceReceipt.sources ?? []).filter((source) => source.sourceClass === "REFERENCE_PUBLISHER");
+  const venueReferenceEvidence = newRows.map((row) => {
+    const reference = references.find((source) => source.finalUrl === row.coordinateSourceUrl);
+    if (!reference || reference.httpStatus < 200 || reference.httpStatus >= 300 || !/^[a-f0-9]{64}$/.test(reference.rawHash)) {
+      throw new Error(`AUTOMATIC_VENUE_REFERENCE_MISSING:${venueResolutionRecordId(row)}`);
+    }
+    return { venueId: venueResolutionRecordId(row), addressSourceUrl: row.addressSourceUrl,
+      censusRequestedUrl: reference.requestedUrl, censusFinalUrl: reference.finalUrl,
+      censusRawSha256: reference.rawHash, retrievedAt: reference.retrievedAt,
+      publishedAddress: row.address, lat: row.lat, lng: row.lng };
+  });
+  return { meetings: placed.meetings, placedCount: placed.placedCount, held: proposed.held, venueReferenceEvidence, package: proposed.package };
 }

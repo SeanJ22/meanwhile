@@ -292,7 +292,7 @@ test("a serving-window boundary crossed during collection uses the actual final 
   const crosswalk = await promoteCrosswalk(store);
   await deriveWiring(store, crosswalk, FEED, T_WIRING);
   const prior = await promoteFamily(store, T_FAMILY, FEED, HOST, {}, read => ({ ...read, freshMeetings: [
-    ...read.freshMeetings, { ...read.freshMeetings[0], id: "ical:expires", startsAt: "2026-06-26T21:30:05.000Z" },
+    ...read.freshMeetings, { ...read.freshMeetings[0], id: "ical:expires", startsAt: "2026-05-26T21:30:05.000Z", status: "CONCLUDED", agendaUrl: null },
   ] }));
   assert.ok(prior.outcome.promoted, prior.outcome.candidate.failureDetail ?? "");
   const readAt = "2026-09-24T21:30:10.574Z";

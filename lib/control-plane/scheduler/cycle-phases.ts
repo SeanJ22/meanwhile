@@ -28,6 +28,12 @@ export function observeCyclePhases(repos: ControlPlaneRepositories, now: () => n
   return {
     repos: observed,
     phases,
+    /** A timed step that runs beside the sequential phases (for example the round's one vault index); it never moves the phase clock. */
+    note(name: string, durationMs: number): CyclePhase {
+      const phase = { name, durationMs: Math.max(0, durationMs), repositoryCalls: 0 };
+      phases.push(phase);
+      return phase;
+    },
     finish(name: string): CyclePhase {
       const at = now();
       const phase = { name, durationMs: Math.max(0, at - since), repositoryCalls: calls - phaseCalls };

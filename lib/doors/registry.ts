@@ -26,6 +26,40 @@ export type DoorOrigin = "MANUAL" | "DERIVED";
 /** A config value: plain data only. Secrets are referenced by name, never held. */
 export type DoorConfigValue = string | number | boolean | readonly string[];
 
+/**
+ * What a meeting door needs beyond the common fields so an adapter can read
+ * it exactly as it reads a wiring row today (DB-12). Absent on non-meeting doors.
+ */
+export interface DoorMeeting {
+  /** The adapter's agenda source type, as wiring names it (e.g. `ICAL`). */
+  readonly agendaSourceType: string;
+  /** Display only. */
+  readonly jurisdiction: string;
+  /** Who published the records: the public body, never the vendor. */
+  readonly publishingOrg: string;
+  /** IANA zone the body meets in. */
+  readonly timeZone: string;
+  readonly noticeUrl?: string;
+  /** False only when the route carries no past sitting; then `historyGapReason` says why. */
+  readonly publishesHistory?: false;
+  readonly historyGapReason?: string;
+  /** When the settings were last confirmed working. */
+  readonly verifiedAt: string;
+  /** The family partition a derived member belongs to; null for a hand-wired door. */
+  readonly family: string | null;
+}
+
+/** What the last first look saw (DB-25). Stored on the door so the next look can be conditional. */
+export interface DoorValidators {
+  readonly etag: string | null;
+  readonly lastModified: string | null;
+  /** SHA-256 of the listing page or feed bytes, when the last look read them. */
+  readonly contentHash: string | null;
+  readonly checkedAt: string;
+  /** When a look last found a change. */
+  readonly changedAt: string | null;
+}
+
 export interface DoorRecord {
   readonly formatVersion: 1;
   /** Stable and readable, e.g. `meetings:<source>:<bodyId>`. Never reused. */
@@ -45,13 +79,29 @@ export interface DoorRecord {
   /** How often the door is checked, in minutes. Null means the standing cadence for its kind. */
   readonly checkEveryMinutes: number | null;
   readonly notes: string;
+  /** Meeting doors only: what an adapter needs to read this door like a wiring row. */
+  readonly meeting: DoorMeeting | null;
   readonly status: DoorStatus;
   readonly lastSuccessAt: string | null;
   readonly lastFailureAt: string | null;
   /** When the door last went SHUT. Null unless it is. */
   readonly shutSince: string | null;
+  /** DB-32, system-kept: consecutive reads that could not reach the door. Absent means none. */
+  readonly transportFailures?: number;
+  /** DB-32, system-kept: in a sentence, why the door went SHUT. Null unless it is. */
+  readonly shutReason?: string | null;
+  /** DB-32, system-kept: when the door last reopened after being shut. */
+  readonly reopenedAt?: string | null;
+  /** DB-30, system-kept: when a read of this door last promoted something different from before. Absent means never seen. */
+  readonly lastChangedAt?: string | null;
+  /** DB-30, system-kept: minutes between its changed promotions, as a running average (lib/doors/observed-rate.ts). Absent until two have been seen. */
+  readonly observedChangeMinutes?: number | null;
+  /** DB-30, system-kept: how many changed promotions the average rests on. */
+  readonly observedChanges?: number;
   /** Read at the next opportunity instead of waiting for the schedule. */
   readonly readNow: boolean;
+  /** System-kept: what the last first look saw. Never edited by hand, never a derive input. */
+  readonly validators?: DoorValidators | null;
   readonly origin: DoorOrigin;
   /** When the editable fields last changed by hand, or null if never. */
   readonly editedAt: string | null;
@@ -72,6 +122,7 @@ export interface DoorDraft {
   readonly holds?: readonly string[];
   readonly checkEveryMinutes?: number | null;
   readonly notes?: string;
+  readonly meeting?: DoorMeeting | null;
   readonly status?: DoorStatus;
   readonly readNow?: boolean;
 }
@@ -150,6 +201,43 @@ function configOf(value: unknown): Checked<Readonly<Record<string, DoorConfigVal
   return { ok: true, value: out };
 }
 
+function meetingOf(value: unknown): Checked<DoorMeeting | null> {
+  if (value === undefined || value === null) return { ok: true, value: null };
+  if (typeof value !== "object" || Array.isArray(value)) return { ok: false, why: "meeting details must be a set of fields" };
+  const m = value as Record<string, unknown>;
+  const need = (key: string): string | null => (typeof m[key] === "string" && (m[key] as string).trim() !== "" && (m[key] as string).length <= 600 ? (m[key] as string).trim() : null);
+  const agendaSourceType = need("agendaSourceType");
+  const jurisdiction = need("jurisdiction");
+  const publishingOrg = need("publishingOrg");
+  const timeZone = need("timeZone");
+  const verifiedAt = need("verifiedAt");
+  if (agendaSourceType === null || jurisdiction === null || publishingOrg === null || timeZone === null || verifiedAt === null) {
+    return { ok: false, why: "meeting details need the source type, jurisdiction, publisher, time zone and the day the settings were confirmed" };
+  }
+  const noticeUrl = m.noticeUrl === undefined ? undefined : need("noticeUrl");
+  if (noticeUrl === null) return { ok: false, why: "the notice page must be text" };
+  if (m.publishesHistory !== undefined && m.publishesHistory !== false) return { ok: false, why: "publishesHistory is only ever false" };
+  const reason = m.historyGapReason === undefined ? undefined : need("historyGapReason");
+  if (reason === null) return { ok: false, why: "the history gap reason must be text" };
+  if (m.publishesHistory === false && reason === undefined) return { ok: false, why: "a route with no past meetings must say why" };
+  const family = m.family === undefined || m.family === null ? null : need("family");
+  if (m.family !== undefined && m.family !== null && family === null) return { ok: false, why: "the family must be text" };
+  return {
+    ok: true,
+    value: {
+      agendaSourceType,
+      jurisdiction,
+      publishingOrg,
+      timeZone,
+      ...(noticeUrl === undefined ? {} : { noticeUrl }),
+      ...(m.publishesHistory === false ? { publishesHistory: false as const } : {}),
+      ...(reason === undefined ? {} : { historyGapReason: reason }),
+      verifiedAt,
+      family,
+    },
+  };
+}
+
 /** Shape and bounds for one door's editable fields. Same checks for a person and for a derive step. */
 export function checkDoorDraft(input: unknown): Checked<Required<DoorDraft>> {
   if (typeof input !== "object" || input === null || Array.isArray(input)) return { ok: false, why: "a door must be a set of fields" };
@@ -186,6 +274,8 @@ export function checkDoorDraft(input: unknown): Checked<Required<DoorDraft>> {
   }
   const notes = typeof draft.notes === "string" ? draft.notes.trim() : "";
   if (notes.length > MAX_NOTES) return { ok: false, why: `notes are longer than ${MAX_NOTES} characters` };
+  const meeting = meetingOf(draft.meeting);
+  if (!meeting.ok) return meeting;
   const status = draft.status === undefined ? "OPEN" : draft.status;
   if (!(DOOR_STATUSES as readonly unknown[]).includes(status)) return { ok: false, why: "status must be open, shut or suspended" };
   if (draft.readNow !== undefined && typeof draft.readNow !== "boolean") return { ok: false, why: "read-now must be true or false" };
@@ -201,6 +291,7 @@ export function checkDoorDraft(input: unknown): Checked<Required<DoorDraft>> {
       holds: holds.value,
       checkEveryMinutes,
       notes,
+      meeting: meeting.value,
       status: status as DoorStatus,
       readNow: draft.readNow === true,
     },
@@ -220,6 +311,19 @@ function shutSinceFor(status: DoorStatus, previous: DoorRecord | null, at: strin
   return previous !== null && previous.status === "SHUT" && previous.shutSince !== null ? previous.shutSince : at;
 }
 
+/** DB-32's system-kept fields carried over from what was there; the shut reason follows the status. */
+function healthKept(previous: DoorRecord | null, status: DoorStatus): Partial<DoorRecord> {
+  if (previous === null) return {};
+  return {
+    ...(previous.transportFailures !== undefined ? { transportFailures: previous.transportFailures } : {}),
+    ...(status === "SHUT" && previous.shutReason !== undefined ? { shutReason: previous.shutReason } : {}),
+    ...(previous.reopenedAt !== undefined ? { reopenedAt: previous.reopenedAt } : {}),
+    ...(previous.lastChangedAt !== undefined ? { lastChangedAt: previous.lastChangedAt } : {}),
+    ...(previous.observedChangeMinutes !== undefined ? { observedChangeMinutes: previous.observedChangeMinutes } : {}),
+    ...(previous.observedChanges !== undefined ? { observedChanges: previous.observedChanges } : {}),
+  };
+}
+
 /** A new door, or a hand edit of one, with the system's own fields carried over from what was there. */
 export function applyManualEdit(previous: DoorRecord | null, draft: Required<DoorDraft>, at: string): DoorRecord {
   return {
@@ -227,7 +331,9 @@ export function applyManualEdit(previous: DoorRecord | null, draft: Required<Doo
     ...draft,
     lastSuccessAt: previous?.lastSuccessAt ?? null,
     lastFailureAt: previous?.lastFailureAt ?? null,
+    validators: previous?.validators ?? null,
     shutSince: shutSinceFor(draft.status, previous, at),
+    ...healthKept(previous, draft.status),
     origin: "MANUAL",
     editedAt: at,
     updatedAt: at,
@@ -257,7 +363,9 @@ export function applyDerivedRow(
     readNow: previous?.readNow ?? draft.readNow,
     lastSuccessAt: previous?.lastSuccessAt ?? null,
     lastFailureAt: previous?.lastFailureAt ?? null,
+    validators: previous?.validators ?? null,
     shutSince: previous?.shutSince ?? shutSinceFor(draft.status, null, at),
+    ...healthKept(previous, previous?.status ?? draft.status),
     origin: "DERIVED",
     editedAt: previous?.editedAt ?? null,
     updatedAt: at,
@@ -266,7 +374,7 @@ export function applyDerivedRow(
   return next;
 }
 
-const FIELDS = ["kind", "ocdId", "bodyIds", "hosts", "config", "holds", "checkEveryMinutes", "notes", "status", "readNow"] as const;
+const FIELDS = ["kind", "ocdId", "bodyIds", "hosts", "config", "holds", "checkEveryMinutes", "notes", "meeting", "status", "readNow"] as const;
 function sameFields(a: DoorRecord, b: DoorRecord): boolean {
   return FIELDS.every((f) => JSON.stringify(a[f]) === JSON.stringify(b[f]));
 }
@@ -283,6 +391,7 @@ export function editableFieldsOf(record: DoorRecord): Required<DoorDraft> {
     holds: record.holds,
     checkEveryMinutes: record.checkEveryMinutes,
     notes: record.notes,
+    meeting: record.meeting,
     status: record.status,
     readNow: record.readNow,
   };

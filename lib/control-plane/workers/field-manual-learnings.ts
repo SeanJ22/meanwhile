@@ -18,8 +18,8 @@
  *   detective lane.
  * - An ENGINEERING learning is keyed by its **method route id**. The manual
  *   carries the POINTER — the candidate's paths, adoption gate, reproducibility
- *   and risks — never the proposed file bytes, which stay in the review-gated
- *   candidate store.
+ *   and risks — never the proposed file bytes, which stay in the candidate
+ *   store.
  */
 
 import {
@@ -80,6 +80,7 @@ export function researchLearningEntries(result: FleetResult, now: string): Field
         states: statesFor(question.jurisdiction, question.subjectId),
         recordClasses: question.recordClass ? [question.recordClass] : [],
         platforms: [],
+        foundBy: "DETECTIVE",
         outcome,
         url: null,
         source: DETECTIVE_LEARNING_SOURCE,
@@ -111,7 +112,7 @@ export function researchLearningEntries(result: FleetResult, now: string): Field
         kind: "ENGINEERING_CANDIDATE",
         title: result.methodRouteId,
         summary:
-          `${result.verdict}; ${result.adoption}; proposes ${result.affectedPaths.length} review-gated file(s); ` +
+          `${result.verdict}; ${result.adoption}; proposes ${result.affectedPaths.length} file(s) held in the candidate store; ` +
           `${result.unresolvedRisks.length} unresolved risk(s)`,
         states: [],
         recordClasses: [],
@@ -132,7 +133,7 @@ export function researchLearningEntries(result: FleetResult, now: string): Field
           reproducibility: result.reproducibility.verdict,
           unresolvedRisks: result.unresolvedRisks,
           learnedProcedure: result.learnedProcedure,
-          // The proposed file bytes stay in the review-gated candidate store; the manual holds the pointer.
+          // The proposed file bytes stay in the candidate store; the manual holds the pointer.
         },
       },
     ];

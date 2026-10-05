@@ -1,6 +1,16 @@
-import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "./constants.ts";
+import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "./constants.ts";
 import type { MeetingsSnapshot } from "./snapshot.ts";
 import type { Meeting, PartialScopeFailure } from "../sources/types.ts";
+
+/**
+ * A carried row retained out of a response that ANSWERED: either its listing
+ * was absent from the answer, or it lies outside the dates the read fetched
+ * (`OUTSIDE_FETCH_WINDOW`, never a disappearance). Both charge a successful
+ * report.
+ */
+export function carriedFromAnswer(reason: string | undefined): boolean {
+  return reason === "UNEXPLAINED_DISAPPEARANCE" || reason === "OUTSIDE_FETCH_WINDOW";
+}
 
 /**
  * The refresh corollary: **a failed fetch never silently empties a
@@ -132,7 +142,7 @@ export function carryForward(
   const carried = new Map<string, number>();
   if (!previous) return { meetings: fresh, carried };
 
-  const windowEnd = now.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000;
+  const windowEnd = now.getTime() + MEETING_HELD_HORIZON_DAYS * 86_400_000;
 
   /**
    * The back edge, per source (g13, 2026-08-18).
@@ -140,7 +150,7 @@ export function carryForward(
    * "The window still applies" is still the rule — a sitting that a healthy
    * run would NOT have produced is not resurrected because its source went
    * dark. What changed is whose window decides. It used to be
-   * `CONCLUDED_LOOKBACK_DAYS` for everyone, which silently assumed every
+   * `MEETING_HELD_LOOKBACK_DAYS` for everyone, which silently assumed every
    * adapter clips its retrieval to the serving window. Most do. Revize does
    * not: its M59 archive rung emits every dated document the notices page
    * lists, so on 2026-08-18 a 403 to the CI runner carried 8 of Merrimack
@@ -155,7 +165,7 @@ export function carryForward(
   const backEdgeFor = (child: CarryForwardChild): number => {
     const declared = child.publishedLookbackDays;
     if (declared === null) return -Infinity;
-    const days = declared ?? CONCLUDED_LOOKBACK_DAYS;
+    const days = declared ?? MEETING_HELD_LOOKBACK_DAYS;
     return now.getTime() - days * 86_400_000;
   };
 

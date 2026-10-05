@@ -2470,6 +2470,8 @@ export interface RoutineObservabilityProjectionReadOptions {
   /** Identity inlined into the currently deployed Admin/Reader build. */
   readonly currentReaderBuild?: CurrentReaderBuildIdentity;
   readonly readRows?: (since: string) => Promise<RoutineObservabilityRows>;
+  /** DB-14: bring the registry's doors into the meeting lists before the projection; a failure leaves the last good lists. */
+  readonly adoptDoors?: () => Promise<unknown>;
 }
 
 /**
@@ -2519,6 +2521,7 @@ export async function projectRoutineDataObservabilityRead(
       detail: `The routine civic-data tables could not be read (${error instanceof Error ? error.name : "unknown error"}). We could not ask, so no empty or zero outcome is being claimed.`,
     };
   }
+  try { await options.adoptDoors?.(); } catch { /* the lists stay as they were */ }
   try {
     return {
       kind: "HELD",

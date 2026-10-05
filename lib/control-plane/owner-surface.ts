@@ -421,6 +421,13 @@ export interface RunnerHeartbeat {
    * it. Absent on every beat written before the field existed.
    */
   readonly discoverySearch?: DiscoverySearchApplied | null;
+  /**
+   * BR-05: the runner-side settings this pass applied, from the config it
+   * re-read (`runnerSettingsEcho` in settings.ts). Admin compares it with the
+   * saved value to say a setting is in force. Absent on beats written before
+   * the field existed.
+   */
+  readonly settings?: import("./settings.ts").RunnerSettingsApplied | null;
 }
 
 /** The runner's acknowledgement of the paid discovery search switch, written into its heartbeat each cycle. */
@@ -1415,8 +1422,8 @@ export interface OwnerCostRow {
  * and it carries that instant.
  */
 export interface OwnerSnapshot {
-  /** Derived exact-instruction inventories. Unknown object universes remain open. */
-  readonly checklists?: readonly import("./readiness/checklist-census.ts").ChecklistCensus[];
+  /** Daily completeness, freshness and delivery counts for each place with a saved scope, newest last. Counts only; it never gates publishing. */
+  readonly placeHistory?: Readonly<Record<string, readonly import("../coverage/place-history.ts").PlaceHistoryPoint[]>>;
   readonly formatVersion: number;
   readonly publishedAt: string;
   readonly publishedFromSha: string | null;

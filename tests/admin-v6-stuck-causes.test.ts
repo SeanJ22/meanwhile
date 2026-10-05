@@ -86,3 +86,18 @@ test("the views count every stuck row by cause, list the most urgent, scope them
   assert.match(STUCK_INDEX_SQL, /allRowsIndex/, "the published index is unpacked in the database, not loaded whole");
   assert.match(STUCK_INDEX_SQL, /FAILED.*BLOCKED.*UNKNOWN/);
 });
+
+import { causeOf as br09CauseOf, needOf as br09NeedOf } from "../lib/control-plane/admin-view/blocker-causes.ts";
+test("BR-09: unowned work goes to the team; every decision-lane cause names one of the five reasons", () => {
+  const nobody = br09CauseOf({ state: "STUCK", owner: "NOBODY", blocker: "something odd", overdue: false });
+  assert.equal(nobody.lane, "auto");
+  assert.equal(nobody.owner, "The runner (unassigned)");
+  assert.equal(nobody.needs, null);
+  const owner = br09CauseOf({ state: "STUCK", owner: "OWNER", blocker: "the budget ceiling is reached", overdue: false });
+  assert.equal(owner.lane, "decision");
+  assert.equal(owner.needs, "money");
+  assert.equal(br09NeedOf("needs an api key"), "credentials");
+  assert.equal(br09NeedOf("needs a data license"), "contract");
+  assert.equal(br09NeedOf("our vendor account lapsed"), "platform");
+  assert.equal(br09NeedOf(null), "broken");
+});

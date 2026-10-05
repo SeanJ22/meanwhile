@@ -12,16 +12,15 @@
  * that the derived ones were not.
  */
 
-import { readDerivedMeetingWiring } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { openControlPlane } from "../lib/control-plane/admin-data.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
-import { feedDoorDrafts, seedFeedDoors } from "../lib/doors/seed-feeds.ts";
-import { doorFromDerivedRecord, doorsFromWiringRow, seedMeetingDoors } from "../lib/doors/seed-meetings.ts";
-import type { DerivedWiringRecord } from "../lib/civic-data/derived-meeting-wiring.ts";
+import { readDerivedForSeed, seedAllDoors } from "../lib/doors/seed-all.ts";
+import { feedDoorDrafts } from "../lib/doors/seed-feeds.ts";
+import { doorFromDerivedRecord, doorsFromWiringRow } from "../lib/doors/seed-meetings.ts";
 
 const FLAGS = new Map<string, string>(
   process.argv.slice(2).filter((a) => a.startsWith("--")).map((a) => {
@@ -46,17 +45,9 @@ const now = new Date().toISOString();
 const repos = await open();
 say(repos.describe());
 
-let derived: readonly DerivedWiringRecord[] = [];
-let derivedNote = "derived rows were not read: the promoted wiring could not be read here.";
-try {
-  const read = await readDerivedMeetingWiring({ bypassCache: true, now });
-  if (read.kind === "PROMOTED") {
-    derived = read.value.records;
-    derivedNote = `${derived.length} derived rows read from the promoted wiring.`;
-  } else derivedNote = `derived rows were not read (${read.kind}).`;
-} catch {
-  /* the note above already says so */
-}
+const derivedRead = await readDerivedForSeed(now);
+const derived = derivedRead.records;
+const derivedNote = derivedRead.note;
 say(derivedNote);
 
 const handWired = SOURCE_WIRING.flatMap((row) => {
@@ -74,17 +65,21 @@ if (!FLAGS.has("apply")) {
   process.exit(0);
 }
 
-const counts = await seedMeetingDoors({ repo: repos.doors, wiring: SOURCE_WIRING, derived, deriveInputAt: now, at: now });
+const all = await seedAllDoors({ repo: repos.doors, derived, derivedNote, now });
+const { meetings: counts, feeds, routeHints: hintDoors } = all;
 say(`created ${counts.created}, updated ${counts.updated}, unchanged ${counts.unchanged}, kept hand edits ${counts.keptManualEdit}, refused ${counts.refused.length}.`);
 for (const line of counts.refused) say(`refused: ${line}`);
 // RULING 159: the import reports what it settled out of what it was handed.
 const meetingSettled = counts.created + counts.updated + counts.unchanged + counts.keptManualEdit;
 say(floorLine(floored("meeting doors settled", "seedMeetingDoors", meetingSettled + counts.refused.length, meetingSettled, "no meeting door drafts were handed to the import")));
-const feeds = await seedFeedDoors({ repo: repos.doors, deriveInputAt: now, at: now });
 say(`feeds: created ${feeds.created}, updated ${feeds.updated}, unchanged ${feeds.unchanged}, kept hand edits ${feeds.keptManualEdit}, refused ${feeds.refused.length}.`);
 for (const line of feeds.refused) say(`refused: ${line}`);
 const feedSettled = feeds.created + feeds.updated + feeds.unchanged + feeds.keptManualEdit;
 say(floorLine(floored("feed doors settled", "seedFeedDoors", feedSettled + feeds.refused.length, feedSettled, "no feed door drafts were handed to the import")));
-const after = await listDoors(repos.doors);
-say(`the registry now holds ${after.doors.length} doors.`);
-process.exit(counts.refused.length + feeds.refused.length === 0 ? 0 : 2);
+// DB-23: the committed route hints, one door per government.
+say(`route hints: created ${hintDoors.created}, updated ${hintDoors.updated}, unchanged ${hintDoors.unchanged}, kept hand edits ${hintDoors.keptManualEdit}, refused ${hintDoors.refused.length}.`);
+for (const line of hintDoors.refused) say(`refused: ${line}`);
+const hintSettled = hintDoors.created + hintDoors.updated + hintDoors.unchanged + hintDoors.keptManualEdit;
+say(floorLine(floored("route hint doors settled", "seedRouteHintDoors", hintSettled + hintDoors.refused.length, hintSettled, "no route hints were handed to the import")));
+say(`the registry now holds ${all.total} doors.`);
+process.exit(counts.refused.length + feeds.refused.length + hintDoors.refused.length === 0 ? 0 : 2);

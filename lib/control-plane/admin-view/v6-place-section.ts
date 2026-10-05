@@ -4,6 +4,9 @@ import { OWED_STATE_WORDS, pageOwed, scorePlace, type GroupScore, type OwedListI
 import { GROUP_NAMES, PLACE_GROUPS, ADMIN_V6_CHECKLIST_CONTRACT } from "./v6-checklist-section.ts";
 import type { PlaceOwedRead } from "./place-owed-read.ts";
 import type { RowStatuses } from "../../coverage/place-statuses.ts";
+import { trendOf, type PlaceHistoryPoint, type PlaceTrend } from "../../coverage/place-history.ts";
+import type { NotCaptured, PlaceMeasures } from "../../coverage/place-measures.ts";
+import { peopleCoverage, peopleCoverageWords, type PeopleCoverage } from "../../coverage/people-coverage.ts";
 import { coverageWords, placeCoverage, type PlaceCoverage } from "../../coverage/place-coverage.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { sendWordsFor } from "./blocker-causes.ts";
@@ -47,6 +50,16 @@ export interface AdminV6PlaceScore {
   readonly extension: GroupScore | null;
   /** Summary items whose detail items carry the count: listed, out of the denominator. Null when none. */
   readonly summary: GroupScore | null;
+  /** Completeness, freshness and delivery, each with its counts and never blended. */
+  readonly measures: PlaceMeasures;
+  readonly familyMeasures: readonly { readonly group: string; readonly measures: PlaceMeasures }[];
+  /** Up, down or same against the last earlier day's completeness, with that day's value. Null with no earlier point. */
+  readonly trend: PlaceTrend | null;
+  /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
+  readonly notCaptured: NotCaptured;
+  readonly familyNotCaptured: readonly ({ readonly group: string } & NotCaptured)[];
+  /** Officials and candidates with a full profile, with the count behind each field. A measure, never a gate. */
+  readonly profiles: { readonly words: string; readonly figures: PeopleCoverage };
   /** Governments, bodies, seats and people accounted for against what is expected; "total unknown" where it cannot be known. */
   readonly coverage: { readonly words: readonly string[]; readonly figures: PlaceCoverage };
 }
@@ -107,6 +120,7 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
     subject: item.subject, period: "Current", status,
     missing: item.state === "published" ? "—"
       : item.statuses?.waitingWords ? item.statuses.waitingWords
+      : item.statuses?.noProducerWords ? item.statuses.noProducerWords
       : item.state === "held" ? "Captured, not published yet"
       : item.state === "unpublished" ? "Not published by the government"
       : item.state === "stale" ? "Captured earlier, refresh due"
@@ -123,7 +137,7 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
 
 export interface PlaceSectionQuery { readonly group: string | null; readonly states: readonly OwedState[] | null; readonly q: string | null; readonly offset: number; readonly limit: number }
 
-export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, target: { readonly goalPercent: number; readonly setAt: string } | null = null): {
+export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, target: { readonly goalPercent: number; readonly setAt: string } | null = null, history: readonly PlaceHistoryPoint[] = []): {
   readonly contract: typeof ADMIN_V6_CHECKLIST_CONTRACT; readonly scope: string; readonly revision: string; readonly asOf: string;
   readonly data: AdminV6PlaceChecklistView; readonly missingParts: readonly string[];
   readonly page: { readonly total: number; readonly nextCursor: string | null; readonly prevCursor: string | null };
@@ -131,6 +145,7 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
   const rows = read.rows as readonly OwedRowLike[];
   const score = scorePlace(rows, GROUP_NAMES, GROUP_ORDER);
   const coverage = placeCoverage(read.rows, read.divisions);
+  const profiles = peopleCoverage(read.rows);
   const windowed = pageOwed(rows, query);
   const placeGroups = score.groups.map((g) => {
     const counts = [0, 0, 0, 0, 0, 0, 0];
@@ -146,12 +161,13 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
       groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
-        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary,
-          coverage: { words: coverageWords(coverage), figures: coverage } },
+        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary, measures: score.measures, familyMeasures: score.familyMeasures, trend: trendOf(history, score.measures.completeness.percent, read.observedAt.slice(0, 10)), notCaptured: score.notCaptured, familyNotCaptured: score.familyNotCaptured,
+          coverage: { words: coverageWords(coverage), figures: coverage },
+          profiles: { words: peopleCoverageWords(profiles), figures: profiles } },
     },
     missingParts: [
-      "The owed list is what the checklist says a place is owed for the governments, districts and bodies we know about. Governments we haven’t found yet are listed as “discover every …” items, so a total here can grow as agents find more.",
-      "Captured means we hold it from an official source. It is not a check of the public page, and it never holds back publishing.",
+      "Totals grow as agents find more governments, districts and bodies.",
+      "Held means we have it from an official source. It never holds back publishing.",
     ],
     page: { total: windowed.total, nextCursor: windowed.nextOffset === null ? null : String(windowed.nextOffset), prevCursor: windowed.prevOffset === null ? null : String(windowed.prevOffset) },
   };

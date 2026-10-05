@@ -1,0 +1,186 @@
+[
+  {
+    "id": "legistar",
+    "label": "Legistar / Granicus",
+    "haveAdapter": true,
+    "hostPattern": "\\blegistar\\.com\\b",
+    "flags": "i",
+    "markup": []
+  },
+  {
+    "id": "boardbook",
+    "label": "BoardBook",
+    "haveAdapter": true,
+    "hostPattern": "\\bboardbook\\.org\\b",
+    "flags": "i",
+    "markup": []
+  },
+  {
+    "id": "civicplus",
+    "label": "CivicPlus",
+    "haveAdapter": true,
+    "hostPattern": "\\bcivicplus\\.com\\b",
+    "flags": "i",
+    "markup": [
+      {
+        "pattern": "CivicPlus|\\/Common\\/Modules\\/|CivicAlerts\\.aspx|AgendaCenter",
+        "flags": "i",
+        "why": "CivicPlus module paths and its AgendaCenter route"
+      }
+    ]
+  },
+  {
+    "id": "iqm2",
+    "label": "IQM2 / Accela",
+    "haveAdapter": true,
+    "hostPattern": "\\biqm2\\.com\\b",
+    "flags": "i",
+    "markup": []
+  },
+  {
+    "id": "onbase",
+    "label": "OnBase",
+    "haveAdapter": true,
+    "hostPattern": "\\bonbase\\b",
+    "flags": "i",
+    "markup": []
+  },
+  {
+    "id": "revize",
+    "label": "Revize",
+    "haveAdapter": true,
+    "hostPattern": "\\brevize\\.com\\b",
+    "flags": "i",
+    "markup": [
+      {
+        "pattern": "revize|revizeadmin",
+        "flags": "i",
+        "why": "Revize's own name in template paths"
+      }
+    ]
+  },
+  {
+    "id": "apptegy",
+    "label": "Apptegy",
+    "haveAdapter": true,
+    "hostPattern": "\\b(apptegy|thrillshare)\\.com\\b",
+    "flags": "i",
+    "markup": [
+      {
+        "pattern": "apptegy|thrillshare|edlio",
+        "flags": "i",
+        "why": "Apptegy's Thrillshare asset host"
+      }
+    ]
+  },
+  {
+    "id": "diligent",
+    "label": "Diligent / BoardDocs",
+    "haveAdapter": true,
+    "hostPattern": "\\b(boarddocs|diligent)\\.com\\b",
+    "flags": "i",
+    "markup": []
+  },
+  {
+    "id": "schedulepage",
+    "label": "SchedulePage",
+    "haveAdapter": true,
+    "hostPattern": "\\bschedulepage\\b",
+    "flags": "i",
+    "markup": []
+  },
+  {
+    "id": "escribe",
+    "label": "eSCRIBE",
+    "haveAdapter": false,
+    "hostPattern": "\\bescribemeetings\\.com\\b",
+    "flags": "i",
+    "markup": [
+      {
+        "pattern": "escribe",
+        "flags": "i",
+        "why": "eSCRIBE's embedded meeting list"
+      }
+    ]
+  },
+  {
+    "id": "novusagenda",
+    "label": "NovusAgenda",
+    "haveAdapter": false,
+    "hostPattern": "\\bnovusagenda\\.com\\b",
+    "flags": "i",
+    "markup": [
+      {
+        "pattern": "novusagenda|NovusAGENDA",
+        "flags": "i",
+        "why": "NovusAgenda's portal path"
+      }
+    ]
+  },
+  {
+    "id": "civicclerk",
+    "label": "CivicClerk",
+    "haveAdapter": false,
+    "hostPattern": "\\bcivicclerk\\.com\\b",
+    "flags": "i",
+    "markup": [
+      {
+        "pattern": "civicclerk",
+        "flags": "i",
+        "why": "CivicClerk's portal script"
+      }
+    ]
+  },
+  {
+    "id": "municode",
+    "label": "Municode",
+    "haveAdapter": false,
+    "hostPattern": "\\bmunicode\\.com\\b",
+    "flags": "i",
+    "markup": []
+  },
+  {
+    "id": "ecode360",
+    "label": "eCode360 / General Code",
+    "haveAdapter": false,
+    "hostPattern": "\\becode360\\.com\\b",
+    "flags": "i",
+    "markup": []
+  },
+  {
+    "id": "granicus-vp",
+    "label": "Granicus ViewPublisher",
+    "haveAdapter": false,
+    "hostPattern": "\\bgranicus\\.com\\b",
+    "flags": "i",
+    "markup": [
+      {
+        "pattern": "granicus|ViewPublisher\\.php",
+        "flags": "i",
+        "why": "Granicus ViewPublisher, the video-and-agenda product"
+      }
+    ]
+  },
+  {
+    "id": "primegov",
+    "label": "PrimeGov",
+    "haveAdapter": false,
+    "hostPattern": "\\bprimegov\\.com\\b",
+    "flags": "i",
+    "markup": [
+      {
+        "pattern": "primegov",
+        "flags": "i",
+        "why": "PrimeGov's portal script"
+      }
+    ]
+  },
+  {
+    "id": "swagit",
+    "label": "Swagit",
+    "haveAdapter": false,
+    "hostPattern": "\\bswagit\\.com\\b",
+    "flags": "i",
+    "markup": []
+  }
+]

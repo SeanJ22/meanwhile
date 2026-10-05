@@ -69,11 +69,13 @@ export function validateV6Query(params: URLSearchParams): { readonly ok: true; r
 /** The UI place key of a saved hunt, from its saved Census lookup (never a breadcrumb). */
 export function huntPlaceKey(decision: Pick<ExpansionScopeDecision, "geography">): string {
   const g = decision.geography;
+  // A whole-state mission lives on the state's own place, where its place score is read.
+  if (g.type === "state") return `st:${g.stateAbbr.toLowerCase()}`;
   return `geo:${g.stateAbbr.toLowerCase()}.${g.type}.${g.geoid}`;
 }
 
 /** Types whose areas never cross a state line. ZCTAs and metro areas can. */
-const WITHIN_ONE_STATE: ReadonlySet<ExpansionScopeType> = new Set(["county", "congressional_district", "state_leg_upper", "state_leg_lower"]);
+const WITHIN_ONE_STATE: ReadonlySet<ExpansionScopeType> = new Set(["state", "county", "congressional_district", "state_leg_upper", "state_leg_lower"]);
 /** Types with exactly one saved plan version, so two different GEOIDs are two disjoint areas. */
 const SINGLE_VERSION_PARTITION: ReadonlySet<ExpansionScopeType> = new Set(["zcta", "county"]);
 

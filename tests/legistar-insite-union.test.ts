@@ -373,20 +373,17 @@ test("every instance carries a disposition, and each names WHOSE fact it is", ()
 
 test("a sitting past the app's serving horizon is HELD and NAMED, never dropped", () => {
   /*
-   * All fourteen published sittings remain accounted for: eleven reach the reader
-   * within the rolling 90-day window and three remain explicitly beyond it.
+   * All fourteen published sittings remain accounted for. Under the 90-day horizon eleven reached the reader and three
+   * were held beyond it; the adapter now holds the 120-day window (DB-03), which reaches all fourteen from NOW, so the
+   * held-and-named path is exercised from a January vantage below.
    */
   const result = normalizeWithDrops([pimaReading()], NOW);
   const beyond = result.dispositions.filter((d) => d.verdict === "BEYOND_APP_SERVING_HORIZON");
   const represented = result.dispositions.filter((d) => d.verdict === "REPRESENTED_IN_READER");
 
   assert.equal(represented.length + beyond.length, 14);
-  assert.equal(
-    beyond.length,
-    3,
-    "the three later sittings remain explicitly held beyond the rolling 90-day horizon",
-  );
-  assert.equal(represented.length, 11);
+  assert.equal(beyond.length, 0, "the three later sittings are inside the held 120-day horizon");
+  assert.equal(represented.length, 14);
 
   /*
    * The mechanism, exercised on the SAME published sittings by moving the
@@ -423,7 +420,7 @@ test("a sitting past the app's serving horizon is HELD and NAMED, never dropped"
       /^OURS, and only ours/,
       "the horizon is OUR limit and must never read as a fact about the county",
     );
-    assert.match(disposition.claimAboutContent ?? "", /UPCOMING_HORIZON_DAYS/);
+    assert.match(disposition.claimAboutContent ?? "", /MEETING_HELD_HORIZON_DAYS/);
   }
 });
 
@@ -1109,14 +1106,14 @@ test("ZERO SILENT LOSSES: every control-tenant instance is served, superseded-wi
 
 test("REGRESSION: Pima's in-window sittings are untouched — no supersession", () => {
   /*
-   * The union retains all fourteen source sittings; the reader uses the
-   * rolling 90-day window without inventing supersession or a missing venue.
+   * The union retains all fourteen source sittings; the adapter holds the 120-day window (DB-03; eleven of them
+   * were inside 90 days) without inventing supersession or a missing venue.
    */
   const result = normalizeWithDrops([pimaReading()], NOW);
   assert.equal(result.union.length, 14);
   assert.equal(
     result.dispositions.filter((d) => d.verdict === "REPRESENTED_IN_READER").length,
-    11,
+    14,
   );
   assert.deepEqual(
     result.dispositions.filter((d) => d.verdict === "SUPERSEDED_BY_RICHER_ROUTE"),

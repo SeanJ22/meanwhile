@@ -64,7 +64,7 @@ export function campaignFinancePackage(input: {
     reviewOutcome: "SUPPORTED" as const,
     reviewedEvidence: "Code replayed complete saved filing bytes and matched filed candidate name, office, cycle and exact jurisdiction to one held ballot candidacy; periods stay separate." }));
   return { unbound: bound.unbound, package: {
-    contractId: "campaign-finance", version: `${input.door.doorId}:${input.now}`, sourceThrough: used.map(source => source.retrievedAt).sort().at(-1)!,
+    contractId: "campaign-finance", version: `campaign-finance-v2:${new Date(input.now).toISOString()}`, sourceThrough: used.map(source => source.retrievedAt).sort().at(-1)!,
     sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "Finance door field-map reader",
       sources: [...sources, ...section3SourceReceipt(linkingCaptures, input.now, "Finance door field-map reader", "Official publisher links to the filing source.").sources] },
     payload: { kind: "campaign-finance", records },

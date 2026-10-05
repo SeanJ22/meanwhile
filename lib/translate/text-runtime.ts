@@ -14,7 +14,7 @@ export async function runTextTranslation(input: Omit<Parameters<typeof translate
   readonly primary: WorkerPublicationCapture;
   readonly captures: readonly WorkerPublicationCapture[];
 }) {
-  const usage: { model: string; usage: ReturnType<typeof readMeteredUsage>; usd: number }[] = [];
+  const usage: { model: string; usage: ReturnType<typeof readMeteredUsage>; usd: number | null }[] = [];
   try {
     if (!captureIntact(input.primary)) throw new Error("Text translation source is incomplete.");
     const evidence = input.primary.evidence;

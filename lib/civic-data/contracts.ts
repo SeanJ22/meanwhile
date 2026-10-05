@@ -58,11 +58,12 @@ export const ROUTINE_DATA_ADMISSION_MS = 5 * 60_000;
 export const PLAIN_ENGLISH_TRANSLATION_ROUTINE = {
   id: "plain-english-translations",
   inputRecordClass: "BALLOT_MEASURE",
+  heldInputKinds: ["MEASURE", "BODY_CLASS", "BODY", "OFFICE", "AGENDA", "MINUTES"],
   publicationRecordClass: "CURATED_READER_RECORD",
   execution: "EXISTING_GUARDED_WORKER",
   trigger: "HELD_SOURCE_CHANGED",
   retryAfterMs: 15 * 60_000,
-  readerConsumers: ["/ballot", "Ask"],
+  readerConsumers: ["/ballot", "body and office cards", "meeting cards", "Ask"],
 } as const;
 
 /**

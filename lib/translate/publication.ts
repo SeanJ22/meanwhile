@@ -34,7 +34,10 @@ export function translationPackage(input: {
   const verified = section3Page({ url: record.sourceUrl, text: record.sourceText, retrievedAt: record.retrievedAt, linkingPage },
     record.kind === "MEASURE" ? "BALLOT_MEASURE" : record.kind === "AGENDA" || record.kind === "MINUTES" ? "MEETING" : "OFFICIAL_BOARD_DIRECTORY", now);
   if (!verified.ok || !isOfficialSource(record.sourceUrl) && !linkingPage) throw new Error("Translation source is stale or not an official document.");
-  return { contractId: "plain-english-translations", version: `${record.id}:${record.sourceHash}:${record.writtenAt}`,
+  // The review clock orders this open fact set. Subject IDs and source hashes
+  // identify members, but cannot order unrelated subjects or changed documents.
+  // The v2 prefix sorts after the original "translation:" package versions.
+  return { contractId: "plain-english-translations", version: `translations-v2:${new Date(record.writtenAt).toISOString()}`,
     sourceThrough: record.retrievedAt, sourceReceipt: section3SourceReceipt(input.captures, now, record.checkerModel,
       "Writer and independent checker compared every translated sentence with the saved official source; code confirmed every supporting passage."),
     payload: { kind: "plain-english-translations", records: [record] } };

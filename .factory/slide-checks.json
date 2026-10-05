@@ -1081,7 +1081,9 @@
         "source": "12cbaca6ad0bd555e56622ea48d8357a63b6dd1d",
         "command": "corepack pnpm lint",
         "exitCode": 0,
-        "log": "/tmp/slide-river-catchup-lint.log"
+        "log": "/tmp/slide-river-catchup-lint.log",
+        "errors": 0,
+        "warnings": 68
       },
       "earlierMergeFocused": {
         "source": "b0f79733b47a8753b976b247934bbc79f1ec02f2",
@@ -1090,6 +1092,13 @@
         "skipped": 0,
         "types": "failed because the new isolated test env lacked required NODE_ENV; repaired in source above"
       }
+    },
+    "cumulativeReady": "7168232aad0a0fe87d239e557cab2ef50e30487c",
+    "continuation": {
+      "lock": "none",
+      "at": "2026-10-05T22:02:09.726163+00:00",
+      "board": "4b88f1afdec1ae5b4daa07e870fb9e5f6abf5862",
+      "noReadyStep": "CP-14/15 shared callers still integrated onriver; CP-17 next contract version not scheduled; CH-20/CH-23 absent; production runtimeOutcome.failures not supplied"
     }
   }
 }

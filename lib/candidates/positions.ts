@@ -6,7 +6,7 @@ import {
   type CandidateCorpus,
   type CandidateDocument,
 } from "./corpus.ts";
-import { CANDIDATE_ISSUES, type CandidateIssue } from "./issues.ts";
+import { DEFAULT_STANCE_TOPICS, type StanceTopic } from "../stances/topics.ts";
 import { verifiedReaderPersonKeys } from "../identity/reader-person.ts";
 import { currentCandidateCorpusProjection } from "../civic-data/manual-read-models.ts";
 
@@ -62,7 +62,7 @@ export function failuresFor(candidateKey: string) {
 }
 
 export interface IssuePosition {
-  issue: CandidateIssue;
+  issue: StanceTopic;
   answer: CandidateAnswer;
   /** The level-register sentence for this answer. */
   sentence: string;
@@ -81,9 +81,10 @@ export interface IssuePosition {
 export function positionsFor(
   candidateKey: string,
   ownSiteUrl: string | null = null,
+  topics: readonly StanceTopic[] = DEFAULT_STANCE_TOPICS,
 ): IssuePosition[] {
   const documents = documentsFor(candidateKey);
-  return CANDIDATE_ISSUES.map((issue) => {
+  return topics.map((issue) => {
     const answer = answerFor(documents, issue.phrases, ownSiteUrl);
     return { issue, answer, sentence: answerSentence(answer, issue.label) };
   });

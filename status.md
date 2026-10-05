@@ -2,10 +2,10 @@
 
 build_state: integrating
 worker: river
-provider: Claude (this run: Sonnet 5.5 per session; scheduled resume)
-run_id: session_012Ufwyxx6iej1CSEX6khMyg
-lock: none
-heartbeat: 2026-10-05T18:50:00Z
+provider: Claude (this run: Opus 5.5 per session; scheduled resume)
+run_id: session_01NH24r1XGQSiiPDzK2fFJSp
+lock: river-20261005T1857Z-01NH24
+heartbeat: 2026-10-05T18:57:39Z
 
 ## Next River run
 

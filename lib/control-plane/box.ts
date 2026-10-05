@@ -174,3 +174,9 @@ export async function boxCounts(repo: AggregateRepository<BoxFinding>): Promise<
   for (const row of await repo.list()) counts[row.value.state]++;
   return counts;
 }
+
+/** Rollout switch: the existing runner path remains available until River has
+ * applied cp_box_findings and checked the connected index live. Not a fact gate. */
+export function boxIndexEnabled(environment: Readonly<NodeJS.ProcessEnv> = process.env): boolean {
+  return environment.WTP_BOX_ENABLED === "1";
+}

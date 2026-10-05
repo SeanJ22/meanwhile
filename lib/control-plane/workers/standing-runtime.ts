@@ -1,3 +1,4 @@
+import { backfillBox, boxIndexEnabled, indexScoutFindings } from "../box.ts";
 import { workAdapterQueue } from "./engineering-adapter.ts";
 import { detectiveExecutor, heldRecoveryBrief, investigationRole, subjectScoutHistory } from "./detective.ts";
 import { outsideRecordBlockBriefs } from "./record-block.ts";
@@ -66,6 +67,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const [prior, initialWorkers] = await Promise.all([
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
+  const indexFindings = boxIndexEnabled(input.environment ?? process.env);
   // One worker process builds this runtime once and runs many tasks through it; `beginTask` keeps one task's
   // worker history current without re-reading everyone's.
   let priorWorkers = initialWorkers;
@@ -100,6 +102,11 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const [allWorkRows,allOccurrenceRows,allArtifactRows,allAttemptRows] = await Promise.all([
     input.repos.workItems.list(),input.repos.occurrences.list(),input.repos.artifacts.readAll(),input.repos.attempts.list(),
   ]);
+  if (indexFindings) {
+    await backfillBox(input.repos.boxFindings, { scouts: prior,
+      detectives: initialWorkers.filter(record => record.result.role === "DETECTIVE") as import("../box.ts").BoxDetectiveRecord[],
+      artifacts: new Map(allArtifactRows.map(artifact => [artifact.artifactId, artifact])) }, now());
+  }
   const allWork=allWorkRows.map(row=>row.value);
   const lineages=selectStandingLineages({occurrences:allOccurrenceRows.map(row=>row.value),workItems:allWork,
     artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value),workerResults:priorWorkers});
@@ -247,6 +254,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           recordClasses:[recorded.recordClass],observedAt:recorded.recordedAt,
           payload:{subjectId:recorded.subjectId,recordClass:recorded.recordClass,facts:recorded.findings,routes:recorded.candidates,tried:recorded.rungs,nextRungs:recorded.nextRungs}})],recorded.recordedAt);
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
+        if (indexFindings) await indexScoutFindings(input.repos.boxFindings, recorded, now());
         return recorded;
       }
     })}:{})};

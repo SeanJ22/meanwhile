@@ -18,7 +18,7 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
   const findings: WorkerFinding[] = [];
   // The Validator confirms what the extraction claims; each reader door then requires its class's §3 minimums.
   const mapped = new Set([...Object.keys("fields" in contract.extraction ? contract.extraction.fields : {}), ...contract.requiredFields]);
-  const classMinimums = (SECTION3_MINIMUMS[contract.recordClass] ?? []).filter(field => mapped.has(field));
+  const classMinimums = (SECTION3_MINIMUMS[contract.recordClass] ?? []).filter(requirement => requirement.split("|").some(field => mapped.has(field)));
   const minimums = classMinimums.length ? classMinimums : contract.requiredFields;
   if (input.worker.role !== "VALIDATOR" || input.producer.role !== "PARSER" || !input.worker.instance || !input.producer.instance || input.worker.instance === input.producer.instance || input.attemptId === input.producerAttemptId) findings.push(issue("SELF_VALIDATION_REFUSED", "Validator and parser must have distinct machine actors and Attempts."));
   if (input.candidate.attemptId !== input.producerAttemptId || !input.worker.provider || !input.worker.version || !input.producer.provider || !input.producer.version) findings.push(issue("MACHINE_PROVENANCE_MISMATCH", "Candidate and worker identities must match machine-issued producer provenance."));
@@ -55,7 +55,8 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
   const held = new Set(findings.filter(recordScoped).map(f => f.recordId!));
   const validatedRecordIds = overall !== "PASS" ? [] : input.candidate.records.flatMap(record => {
     if (held.has(record.id)) return [];
-    const verdict = section3Record({ recordClass: contract.recordClass, fields: record.fields, page, now, pageVerdict, minimums });
+    let verdict = section3Record({ recordClass: contract.recordClass, fields: record.fields, page, now, pageVerdict, minimums });
+    if (!verdict.live && contract.recordClass === "CAMPAIGN_FINANCE_FILING") verdict = section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields: record.fields, page, now, pageVerdict });
     if (verdict.live) return [record.id];
     findings.push(issue("MINIMUM_FACTS_UNVERIFIED", verdict.reason ?? "The record's minimum facts are not on the page.", "INFO", record.id));
     return [];

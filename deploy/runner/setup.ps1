@@ -20,7 +20,6 @@ function ConvertTo-LinuxRunnerSettings {
         WTP_RUNTIME_REPO = '/opt/meanwhile'
         WTP_BILLING_ENV_FILE = '/etc/meanwhile/runner.env'
         WTP_MIRROR = '/opt/meanwhile/.mirror'
-        WTP_READER_EDGE_DIR = '/var/lib/meanwhile/reader-edge'
         WTP_OCR_BINARY = '/usr/bin/tesseract'
         WTP_PDF_RASTERIZER = '/usr/bin/pdftoppm'
         PLAYWRIGHT_BROWSERS_PATH = '/var/lib/meanwhile/browsers'
@@ -29,7 +28,8 @@ function ConvertTo-LinuxRunnerSettings {
     foreach ($line in ($Text.TrimStart([char]0xFEFF) -split '\r?\n')) {
         if ($line -match '^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=') {
             $name = $Matches[1]
-            if ($name -match 'PROD' -or $name -eq 'WTP_ADMIN_SESSION_KEY' -or $overrides.Contains($name)) { continue }
+            # A local reader folder would divert reader pages away from the live site, so it never reaches the runner.
+            if ($name -match 'PROD' -or $name -eq 'WTP_ADMIN_SESSION_KEY' -or $name -eq 'WTP_READER_EDGE_DIR' -or $overrides.Contains($name)) { continue }
         }
         $lines.Add($line)
     }

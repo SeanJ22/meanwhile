@@ -88,7 +88,8 @@ export function ballotQuestionShape(question: string, contests: readonly Contest
 
 /** An office named by this ballot, including local offices outside the synonym table. */
 export function contestsForOfficePhrase(contests: readonly Contest[], phrase: string): Contest[] {
-  const words = (value: string) => normalizeName(value).replace(/\b(members?|of|the|for|a|an|seat)\b/g, " ").replace(/\s+/g, " ").trim();
+  const words = (value: string) => normalizeName(value).replace(/\b(members?|of|the|for|a|an|seat)\b/g, " ")
+    .replace(/\bcommissioners\b/g, "commissioner").replace(/\s+/g, " ").trim();
   const requested = words(phrase);
   if (!requested) return [];
   const exact = contests.filter(contest => contest.type === "CANDIDACY" && words(contest.title) === requested);
@@ -97,7 +98,11 @@ export function contestsForOfficePhrase(contests: readonly Contest[], phrase: st
   return contests.filter(contest => {
     if (contest.type !== "CANDIDACY") return false;
     const title = words(contest.title).split(" ");
-    return tokens.every(token => title.includes(token));
+    // A publisher can omit the place from an office title. The contest's
+    // division supplies that place, without accepting a different county.
+    const place = [...contest.ocdId.matchAll(/\/(county|place|school_district|special_district):([^/]+)/g)]
+      .flatMap(match => words(`${match[2].replaceAll("_", " ")} ${match[1].replaceAll("_", " ")}`).split(" "));
+    return tokens.some(token => title.includes(token)) && tokens.every(token => title.includes(token) || place.includes(token));
   });
 }
 

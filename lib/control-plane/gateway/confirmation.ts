@@ -90,6 +90,7 @@ export const INTENT_ACTIONS: ReadonlySet<string> = new Set([
   "research.pause",
   "research.resume",
   "fleet.deployHere",
+  "fleet.cancelDispatch",
 ]);
 
 /** Actions the runner reads when a round starts. */
@@ -111,6 +112,7 @@ const APPLIED_WORDS: Readonly<Record<string, string>> = {
   "research.pause": "Paid research paused.",
   "research.resume": "Paid research resumed.",
   "fleet.deployHere": "Sent.",
+  "fleet.cancelDispatch": "Taken back.",
   "expansion.scope.set": "Runner has it.",
   "expansion.scope.setMany": "Runner has the list.",
   "expansion.scope.budget": "Budget in use.",
@@ -127,6 +129,7 @@ const WAITING_WORDS: Readonly<Record<string, string>> = {
   "research.pause": "Saved. Waiting for the next round.",
   "research.resume": "Saved. Waiting for the next round.",
   "fleet.deployHere": "Saved. Waiting for the runner.",
+  "fleet.cancelDispatch": "Saved. Waiting for the runner to take it back.",
   "expansion.scope.set": "Saved. Waiting for the runner.",
   "expansion.scope.setMany": "Saved. Waiting for the runner.",
   "expansion.scope.budget": "Saved. Waiting for the next round.",

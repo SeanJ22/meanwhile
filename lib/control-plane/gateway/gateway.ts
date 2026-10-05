@@ -278,7 +278,7 @@ export async function submit(request: ActionRequest, deps: GatewayDeps): Promise
     readBackAt: result.readBackAt ?? null,
     undo: result.undo ?? null,
     ...(result.change ? { change: result.change } : {}),
-    ...(huntScores ? { huntScores: await bindScoreAssignments(deps.repos,huntScores) } : {}),
+    ...(huntScores ? { huntScores: await bindScoreAssignments(deps.repos,huntScores,receiptId) } : {}),
     codeSha: deps.codeSha,
   });
   const wrote = await appendReceipt(deps.repos, receipt, receipt.completedAt ?? startedAt);

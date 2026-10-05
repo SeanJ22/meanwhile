@@ -60,11 +60,11 @@ export async function confirmHuntScores(repos:ControlPlaneRepositories,receipt:A
 }
 
 /** Existing lifetime hunts retain their original assignment identity when edited. */
-export async function bindScoreAssignments(repos:ControlPlaneRepositories,scores:readonly HuntAcceptanceScore[]):Promise<readonly HuntAcceptanceScore[]> {
+export async function bindScoreAssignments(repos:ControlPlaneRepositories,scores:readonly HuntAcceptanceScore[],receiptId:string):Promise<readonly HuntAcceptanceScore[]> {
   try {
     const held=await repos.adminConfig.read(ADMIN_CONFIG_ID);
     if(!held||!isAdminConfig(held.value))return scores;
     const scopes=expansionScopesOf(held.value).scopes;
-    return scores.map(score=>({...score,assignmentRef:scopes.find(s=>s.key===score.scopeKey)?.receiptId}));
+    return scores.map(score=>{ const scope=scopes.find(s=>s.key===score.scopeKey); return {...score,assignmentRef:scope&&(scope.latestDecisionReceiptId===receiptId||scope.receiptId===receiptId)?scope.receiptId:undefined}; });
   }catch{return scores;}
 }

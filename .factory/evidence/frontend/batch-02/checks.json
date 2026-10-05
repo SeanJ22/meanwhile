@@ -1,0 +1,41 @@
+{
+  "full": {
+    "testedSha": "337ad670e",
+    "tests": 9370,
+    "pass": 9355,
+    "fail": 4,
+    "skip": 11,
+    "durationMs": 1638637,
+    "result": "completed; every named failure repaired and rechecked at 9529c69fd"
+  },
+  "repairs": {
+    "testedSha": "9529c69fd",
+    "pass": 36,
+    "fail": 0,
+    "files": [
+      "asset-store",
+      "brand-identity",
+      "package-module-type",
+      "visual-feedback-9-2",
+      "office-tiers",
+      "rhythm-tokens",
+      "reader-card"
+    ]
+  },
+  "types": {
+    "testedSha": "9529c69fd",
+    "result": "pass"
+  },
+  "build": {
+    "testedSha": "9529c69fd",
+    "result": "pass; trace/client budgets unchanged and within existing ceilings; build gates 0 failures"
+  },
+  "lint": {
+    "testedSha": "337ad670e",
+    "result": "pass; 0 errors,70 baseline warnings"
+  },
+  "browser": {
+    "testedSha": "9529c69fd",
+    "result": "pass; 390/1280 dark/light Card/MapCanvas synthetic fixture; explicit system Chromium substitute; not live homepage acceptance"
+  }
+}

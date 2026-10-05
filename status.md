@@ -4,8 +4,8 @@ build_state: integrating (release 3 live; waiting on runner adoption and held la
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01NH24r1XGQSiiPDzK2fFJSp
-lock: river-20261005T1857Z-01NH24
-heartbeat: 2026-10-05T22:33:24Z
+lock: none
+heartbeat: 2026-10-05T22:40:13Z
 
 ## Next River run
 

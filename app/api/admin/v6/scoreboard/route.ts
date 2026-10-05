@@ -20,6 +20,8 @@ import { readSwitchConfig } from "@/lib/control-plane/data-business/switches.ts"
 import { adminGet } from "@/lib/control-plane/gateway/admin-get.ts";
 import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
+import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
+import { ADMIN_CONFIG_ID, isAdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -36,7 +38,7 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
     const url = controlPlaneUrlFromEnv();
-    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture, audit, speed] = await Promise.all([
+    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture, audit, speed, provenFixes] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
@@ -53,6 +55,12 @@ export async function GET(request: NextRequest) {
       attempt(async () => (opened ? weeklyAuditAccuracy({ ...(await readAuditWeek(opened, observedAt)), now: observedAt }) : null)),
       // FE-02: the latest worst-case speed pass on the live site (today's and yesterday's keys).
       attempt(async () => (opened ? readLatestSpeedPass(opened, observedAt) : null)),
+      // DP-26: where each reusable fix stands, from the config row.
+      attempt(async () => {
+        if (!opened) return null;
+        const held = await opened.adminConfig.read(ADMIN_CONFIG_ID);
+        return provenFixesReading(held && isAdminConfig(held.value) ? held.value : null, observedAt);
+      }),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
@@ -64,6 +72,7 @@ export async function GET(request: NextRequest) {
       doors: learning?.doors ?? null,
       audit,
       speed,
+      provenFixes,
       gates: opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null }),
       readiness: readinessCounts(recoveryWitnesses({
         bankEntriesInherited: learning?.doors.given ?? null, bankEntriesUsed: learning?.doors.used ?? null,

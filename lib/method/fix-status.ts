@@ -46,3 +46,87 @@ export function fixProof(map: readonly FixMapRow[], bar: FixProofBar = DEFAULT_F
 export function fixStatus(map: readonly FixMapRow[], bar: FixProofBar = DEFAULT_FIX_PROOF_BAR, held: FixProofGeography = {}): "TESTING" | "PROVEN" {
   return fixProof(map, bar, held).status;
 }
+
+/* ------------------------------------------- DP-26: shown once, then quiet */
+
+/**
+ * Where a method stands, kept so each status change is told once. TESTING is a
+ * queue row; PROVEN is quiet. `brokeAt` stays on a proven fix that broke, so
+ * the Scoreboard can name it.
+ */
+export interface MethodStanding {
+  readonly methodId: string;
+  /** Plain words for Admin; the id never shows. */
+  readonly title: string;
+  readonly status: "TESTING" | "PROVEN";
+  readonly works: number;
+  readonly tried: number;
+  /** When it entered this status. */
+  readonly since: string;
+  readonly provenAt: string | null;
+  readonly brokeAt: string | null;
+  readonly lessonAt: string | null;
+}
+
+export type StandingUpdateKind = "PROVEN" | "LESSON" | "BROKE";
+
+export interface StandingUpdate {
+  readonly id: string;
+  readonly kind: StandingUpdateKind;
+  readonly what: string;
+  readonly at: string;
+  readonly label: "PROVEN" | "TESTING";
+  /** A setback is never shown as a win. */
+  readonly setback: boolean;
+}
+
+export interface StandingEvent {
+  /** Places where the method had worked and has now failed. */
+  readonly brokeIn?: number;
+  /** A lesson from its losses changed the method; it has to prove itself again. */
+  readonly lesson?: string;
+}
+
+const places = (k: number): string => `${k.toLocaleString("en-US")} place${k === 1 ? "" : "s"}`;
+
+/**
+ * The next standing and the one update a status change writes, if any. A first
+ * result enters Testing quietly (the queue shows it); proving out, a lesson and
+ * a proven fix breaking each write one update. Nothing else writes.
+ */
+export function nextStanding(methodId: string, prior: MethodStanding | null, proof: ReturnType<typeof fixProof>, title: string, at: string,
+  event: StandingEvent = {}): { readonly standing: MethodStanding; readonly update: StandingUpdate | null } {
+  const failed = proof.tried - proof.works;
+  const base = { methodId, title: title.trim() || prior?.title || "A reusable way in", works: proof.works, tried: proof.tried };
+  const update = (kind: StandingUpdateKind, what: string, label: StandingUpdate["label"], setback: boolean): StandingUpdate =>
+    ({ id: `fix-status:${base.methodId}:${kind.toLowerCase()}:${at}`, kind, what, at, label, setback });
+  const keep = (s: Partial<MethodStanding>): MethodStanding => ({
+    since: prior?.since ?? at, provenAt: prior?.provenAt ?? null, brokeAt: prior?.brokeAt ?? null, lessonAt: prior?.lessonAt ?? null,
+    status: prior?.status ?? "TESTING", ...base, ...s,
+  });
+  if (event.lesson?.trim()) {
+    const standing = keep({ status: "TESTING", since: at, lessonAt: at, provenAt: null });
+    return { standing, update: update("LESSON", `A lesson changed ${base.title}: ${event.lesson.trim().replace(/\.$/, "")}. It is being tested again.`, "TESTING", false) };
+  }
+  if (prior?.status === "PROVEN" && ((event.brokeIn ?? 0) > 0 || proof.status === "TESTING")) {
+    const standing = keep({ status: proof.status, since: proof.status === prior.status ? prior.since : at, brokeAt: at });
+    const where = (event.brokeIn ?? 0) > 0 ? `stopped working in ${places(event.brokeIn!)} where it had worked` : `failed in new places`;
+    const still = proof.status === "PROVEN" ? "It is still proven" : "It is back in testing";
+    return { standing, update: update("BROKE", `A proven fix broke: ${base.title} ${where}. ${still}: works in ${places(proof.works)} of ${places(proof.tried)} tried.`, "TESTING", true) };
+  }
+  if (proof.status === "PROVEN" && prior?.status !== "PROVEN") {
+    const standing = keep({ status: "PROVEN", since: at, provenAt: at });
+    return { standing, update: update("PROVEN", `Proven: ${base.title} worked in ${places(proof.works)}, failed in ${places(failed)}.`, "PROVEN", false) };
+  }
+  return { standing: keep({ status: prior?.status ?? "TESTING" }), update: null };
+}
+
+export const METHOD_STANDINGS_CAP = 1000;
+
+/** Keeps the list bounded: the oldest quiet proven fixes that never broke go first; fixes in testing are never dropped. */
+export function capStandings(list: readonly MethodStanding[]): readonly MethodStanding[] {
+  if (list.length <= METHOD_STANDINGS_CAP) return list;
+  const quiet = list.filter((s) => s.status === "PROVEN" && s.brokeAt === null).sort((a, b) => a.since.localeCompare(b.since));
+  const drop = new Set(quiet.slice(0, list.length - METHOD_STANDINGS_CAP).map((s) => s.methodId));
+  return list.filter((s) => !drop.has(s.methodId));
+}

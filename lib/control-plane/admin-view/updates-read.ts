@@ -32,7 +32,7 @@ export function updatesView(records: readonly UpdateRecord[], observedAt: string
   return {
     observedAt,
     updates: [...records].sort((a, b) => b.at.localeCompare(a.at)).map((u) => ({
-      id: u.id, what: u.what, when: formatEastern(u.at), label: UPDATE_LABEL_WORDS[u.label], isWin: u.label !== "EXPECTED",
+      id: u.id, what: u.what, when: formatEastern(u.at), label: UPDATE_LABEL_WORDS[u.label], isWin: u.label !== "EXPECTED" && u.setback !== true,
       before: u.before, after: u.after, evidenceHref: u.evidenceHref,
     })),
   };

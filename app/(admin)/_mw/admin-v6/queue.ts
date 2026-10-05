@@ -5,7 +5,7 @@
  * stops or pauses that kind of thing. PURE: the loaded sections in, rows out; a section that could not be read is null and adds no
  * rows (the screen says it could not be read, never "nothing in motion").
  */
-import type { ActionRef, ClosedFix, FixView, Hunt, Lane, OpenFix, SentInstruction, StuckItem, UiReceipt } from "./model.ts";
+import type { ActionRef, ClosedFix, FixView, Hunt, Lane, OpenFix, SentInstruction, StuckItem, TestingFix, UiReceipt } from "./model.ts";
 import { orderStepsReached, ORDER_STEPS } from "./receipts.ts";
 import { mst, TASK_STAGES } from "./model.ts";
 
@@ -20,7 +20,7 @@ export const QUEUE_FILTER_WORDS: Readonly<Record<QueueFilter, string>> = {
   done: "Done",
 };
 
-export type QueueKind = "order" | "scheduled" | "send" | "hunt" | "stuck" | "door" | "fix";
+export type QueueKind = "order" | "scheduled" | "send" | "hunt" | "stuck" | "door" | "fix" | "testing";
 
 export interface QueueRow {
   /** One per thing: `<kind>:<id>`. Never shown. */
@@ -140,6 +140,15 @@ function closedFixRow(c: ClosedFix, returned: boolean): QueueRow {
   };
 }
 
+/** DP-26: a fix proving itself across places. Once proven it leaves the Queue; its one Proven update shows on Now. */
+function testingRow(t: TestingFix): QueueRow {
+  return {
+    key: `testing:${t.id}`, kind: "testing", what: `Testing: ${t.title}`, chip: "Testing", tone: "info", filter: "in-progress", owner: "The team",
+    due: null, next: t.next, progress: { done: Math.min(t.works, t.needPlaces), of: Math.max(1, t.needPlaces), words: `Works in ${t.works} of ${t.needPlaces} places needed` },
+    actions: [], open: null, at: t.since,
+  };
+}
+
 function scheduledRow(x: QueueScheduled): QueueRow {
   return {
     key: `scheduled:${x.id}`, kind: "scheduled", what: x.label, chip: "Scheduled", tone: "neutral", filter: "scheduled", owner: "The runner",
@@ -159,6 +168,7 @@ export function buildQueue(input: QueueInput): readonly QueueRow[] {
   if (input.stuck) rows.push(...input.stuck.map(stuckRow));
   if (input.doors) rows.push(...input.doors.map(doorRow));
   if (input.fixes) rows.push(...input.fixes.open.map(openFixRow), ...input.fixes.closed.map((c) => closedFixRow(c, false)), ...input.fixes.returned.map((c) => closedFixRow(c, true)));
+  if (input.fixes?.testing) rows.push(...input.fixes.testing.map(testingRow));
   const rank = (f: QueueFilter) => QUEUE_FILTERS.indexOf(f);
   return rows
     .map((r, n) => ({ r, n }))

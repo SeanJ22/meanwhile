@@ -726,16 +726,6 @@ export interface ScoreboardView {
 
 export type FixTab = "attention" | "fixing" | "update" | "done" | "returned";
 
-export const LEARNING_STATUSES = [
-  "Fixed once",
-  "Prevention saved",
-  "Prevention tested",
-  "Reused successfully on another job",
-  "Problem returned",
-  "Not checked yet",
-] as const;
-export type LearningStatus = (typeof LEARNING_STATUSES)[number];
-
 export const TASK_STAGES = ["Task created", "Engineer accepted", "Implemented", "Tested", "Released", "Workers using it", "Checked on the public page"] as const;
 
 export interface OpenFix {
@@ -762,7 +752,6 @@ export interface ClosedFix {
   readonly places: string;
   readonly fixedAt: string;
   readonly origin: "Engineering fix" | "Automatic repair";
-  readonly learning: LearningStatus;
   readonly whatChanged: string;
   readonly readerRecheck: string;
   readonly since: string;
@@ -774,10 +763,24 @@ export interface ClosedFix {
   readonly technical: string;
 }
 
+/** DP-26: a reusable fix still proving itself across places. It is a Queue row until it is proven, then it goes quiet. */
+export interface TestingFix {
+  readonly id: string;
+  readonly title: string;
+  readonly works: number;
+  readonly tried: number;
+  /** Places it must work in to be proven (the bar in Settings). */
+  readonly needPlaces: number;
+  readonly next: string;
+  readonly since: string;
+}
+
 export interface FixView {
   readonly open: readonly OpenFix[];
   readonly closed: readonly ClosedFix[];
   readonly returned: readonly ClosedFix[];
+  /** DP-26: fixes in Testing. Absent when not read. */
+  readonly testing?: readonly TestingFix[];
 }
 
 /* --------------------------------------------------------------- actions */

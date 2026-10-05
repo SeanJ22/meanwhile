@@ -3,26 +3,16 @@
 /**
  * **FIX LIST.** Needs attention · Being fixed · Waiting for update · Fixed and
  * checked · Came back. Reordering ("Move up the list") and asking for more
- * resources ("Focus more resources here") are separate controls. The fixed
- * history separates a one-time fix, saved prevention, tested prevention and
- * successful reuse by a later job, each with its evidence.
+ * resources ("Focus more resources here") are separate controls. A fix proving
+ * itself across places is a Queue row, and shows once on Now when it proves
+ * out (DP-26); this list keeps no running learning status.
  */
 import { useState } from "react";
 
-import { Swatch } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
-import { LEARNING_STATUSES, mstDay, TASK_STAGES, type ClosedFix, type FixTab, type LearningStatus, type OpenFix } from "./model.ts";
+import { mstDay, TASK_STAGES, type ClosedFix, type FixTab, type OpenFix } from "./model.ts";
 import { Actions, cx, Empty, Facts, Pill, Tabs, Technical, useListView } from "./ui.tsx";
 import s from "./v6.module.css";
-
-export const LEARNING_CLASS: Readonly<Record<LearningStatus, string>> = {
-  "Fixed once": "c-gray",
-  "Prevention saved": "c-amber",
-  "Prevention tested": "c-blue",
-  "Reused successfully on another job": "c-teal",
-  "Problem returned": "c-coral",
-  "Not checked yet": "c-dark",
-};
 
 export function FixScreen() {
   const v = useV6();
@@ -88,22 +78,16 @@ function OpenFixCard(props: { readonly fix: OpenFix }) {
 
 function History(props: { readonly list: readonly ClosedFix[]; readonly returned: boolean }) {
   const [q, setQ] = useState("");
-  const [learn, setLearn] = useState<LearningStatus | "all">("all");
   const [openAll, setOpenAll] = useState(true);
-  const filtered = props.list.filter((x) => (learn === "all" || x.learning === learn) && (!q.trim() || [x.title, x.changed, x.places, x.saved, x.usedBy, x.since].join(" ").toLowerCase().includes(q.trim().toLowerCase())));
+  const filtered = props.list.filter((x) => (!q.trim() || [x.title, x.changed, x.places, x.saved, x.usedBy, x.since].join(" ").toLowerCase().includes(q.trim().toLowerCase())));
   const v = useV6();
-  const { page, pager, reset } = useListView({ section: "fixes", page: v.data.fixes.page, list: filtered, params: { tab: props.returned ? "returned" : "done", q: q.trim(), learning: learn === "all" ? "" : learn }, size: 5 });
+  const { page, pager, reset } = useListView({ section: "fixes", page: v.data.fixes.page, list: filtered, params: { tab: props.returned ? "returned" : "done", q: q.trim() }, size: 5 });
   return (
     <details className={s.card} open={openAll} onToggle={(e) => setOpenAll((e.target as HTMLDetailsElement).open)}>
       <summary className={s.h2} style={{ cursor: "pointer" }}>{props.returned ? "Came back after a fix" : "Fixed and checked"} ({props.list.length})</summary>
       <div className={s.stack} style={{ marginTop: 12 }}>
-        <div className={s.legend} aria-label="Learning statuses">{LEARNING_STATUSES.map((k) => <span key={k} className={s.legendItem}><Swatch cls={LEARNING_CLASS[k]} />{k}</span>)}</div>
         <div className={s.inline}>
           <input className={s.input} style={{ flex: "1 1 220px" }} aria-label="Search fixed history" placeholder="Search fixes" value={q} onChange={(e) => { setQ(e.target.value); reset(); }} />
-          <select className={s.select} aria-label="Learning status" value={learn} onChange={(e) => { setLearn(e.target.value as LearningStatus | "all"); reset(); }}>
-            <option value="all">Any learning status</option>
-            {LEARNING_STATUSES.map((k) => <option key={k} value={k}>{k}</option>)}
-          </select>
         </div>
         {!filtered.length && <Empty>No fix matches.</Empty>}
         {page.map((x) => (
@@ -111,7 +95,6 @@ function History(props: { readonly list: readonly ClosedFix[]; readonly returned
             <summary style={{ cursor: "pointer", listStyle: "none" }}>
               <span className={s.spread}>
                 <strong style={{ fontSize: 13 }}>{x.title}</strong>
-                <span className={s.legendItem}><Swatch cls={LEARNING_CLASS[x.learning]} /><span className={s.small}>{x.learning}</span></span>
               </span>
               <span className={s.meta}>{x.places} · fixed {mstDay(x.fixedAt)} · {x.origin}</span>
             </summary>

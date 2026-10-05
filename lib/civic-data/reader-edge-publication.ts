@@ -406,7 +406,7 @@ export async function publishSupervisorReaderEdge(
   store: RoutineDataStore, observedAt: string,
   selected: Parameters<typeof publishRoutineReaderEdgeOutcome>[2] = null,
   options: Parameters<typeof publishRoutineReaderEdgeOutcome>[3] = {},
-  env: { readonly WTP_READER_EDGE_LOCAL_OK?: string } = process.env,
+  env: Readonly<Record<string, string | undefined>> = process.env,
 ): Promise<ReaderEdgePublicationOutcome> {
   return publishRoutineReaderEdgeOutcome(store, observedAt, selected,
     { ...options, requireLiveStore: env.WTP_READER_EDGE_LOCAL_OK !== "1" });

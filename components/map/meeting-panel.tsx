@@ -581,7 +581,7 @@ function PlacelessWhere({ meeting }: { meeting: Meeting }) {
               {access.label}
             </CheckedLink>
           ) : (
-            <WorkingOnIt inline subject={meeting.bodyId ? { type: "BODY", id: meeting.bodyId } : null} />
+            <>{access.label}{" · "}<WorkingOnIt inline subject={meeting.bodyId ? { type: "BODY", id: meeting.bodyId } : null} /></>
           )}
         </>
       ) : gap ? (

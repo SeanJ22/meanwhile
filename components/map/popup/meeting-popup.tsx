@@ -220,7 +220,7 @@ export function MeetingPopup({
              * — the body's homepage, the portal, the agenda — would look like
              * a way in and not be one.
              */
-            <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} />
+            <>{onlineAccess.label}{" · "}<WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /></>
           )}
         </PopupRow>
       )}

@@ -70,7 +70,7 @@ test("roster-source link label never supplies a missing note, publisher or read 
   assert.ok(markup.includes(`href="${holder.sourceUrl!.replaceAll("&", "&amp;")}"`));
   assert.ok(markup.includes("data-card-sources"), "The observed URL remains inside Sources");
   assert.ok(!markup.includes(holder.provenance!.sourceOrg), "No organization is borrowed from another field or record");
-  assert.ok(!markup.includes("Read "), "No read date is invented from missing provenance");
+  assert.match(markup.slice(markup.indexOf("Last checked"), markup.indexOf("Verified")), /data-working-on-it=/, "No read date is invented from missing provenance");
   assert.equal(withoutNote, "");
   assert.ok(withoutUrl.includes(escapedNote));
   assert.ok(!withoutUrl.includes("<a "));

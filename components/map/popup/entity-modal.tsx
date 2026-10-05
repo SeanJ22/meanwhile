@@ -645,8 +645,8 @@ function BodySections({
               control was the thing that let the tabbed card ship a clipped one
               while the body card's was fine.
             */}
-            <CardSection title={section.title} meta={section.meta}>
-              {section.content ?? <WorkingOnIt subject={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null} />}
+            <CardSection title={section.title} meta={section.meta} keepMounted={section.id === "sources"}>
+              <div data-card-sources={section.id === "sources" ? "" : undefined}>{section.content ?? <WorkingOnIt subject={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null} />}</div>
             </CardSection>
           </Fragment>
         ))}

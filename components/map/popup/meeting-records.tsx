@@ -9,7 +9,7 @@ export function MeetingRecords({ records }: { records: MeetingReaderRecords | nu
   return <div data-meeting-records={records.meetingId} className="space-y-3 t-detail leading-relaxed">
     <CardSourcesContribution id={`meeting-records:${records.meetingId}`} sources={[
       ...(records.sourceUrl ? [{ what: "Meeting outcome records", provenance: { sourceUrl: records.sourceUrl, sourceOrg: records.sourceOrg ?? "", collectedAt: "", verifiedAt: null } }] : []),
-      ...[...records.agenda, ...records.actions, ...records.rollCalls].map(row => ({ what: `Meeting record: ${row.recordClass}`, provenance: { sourceUrl: row.provenance.endpoint, sourceOrg: row.provenance.sourceOrg, collectedAt: String(row.provenance.readOn), verifiedAt: null } })),
+      ...[...records.agenda, ...records.actions, ...records.rollCalls].map(row => ({ what: `Meeting record: ${row.recordClass}`, provenance: { sourceUrl: row.provenance.endpoint, sourceOrg: row.provenance.sourceOrg, collectedAt: row.provenance.readOn === "UNKNOWN" ? "" : row.provenance.readOn, verifiedAt: null } })),
     ]} />
     {records.agenda.length > 0 && <details>
       <summary className="cursor-pointer text-signal">Recorded agenda items ({records.counts.agenda})</summary>

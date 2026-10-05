@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       scope: request.nextUrl.searchParams.get("scope") ?? "united-states",
       revision: `fixes:${list.length}:${held?.revision ?? 0}:${queue.items.length}:${queue.counts.queued}:${queue.counts.sent}:${queue.counts.opened}:${queue.counts.refused}`,
       asOf: observedAt,
-      data: v6FixesView(queue, list),
+      data: v6FixesView(queue, list, observedAt),
       missingParts: list.some((i) => i.state === "FIXED") ? [] : [FIXES_MISSING_HISTORY],
     };
   });

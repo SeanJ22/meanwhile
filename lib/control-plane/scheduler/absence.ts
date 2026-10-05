@@ -25,6 +25,8 @@ export const ABSENCE_EXPIRY_DAYS = 30;
 export interface AbsenceUnlock {
   readonly text: string;
   readonly triggers: readonly AbsenceUnlockTrigger[];
+  /** When the absence was argued; only a capability that appears after it reopens it. Absent on older rows. */
+  readonly recordedAt?: string;
 }
 export type AbsenceUnlockTrigger =
   | { readonly kind: "ADAPTER"; readonly platform: string }

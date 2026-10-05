@@ -24,6 +24,9 @@ import { summarizeGateHealth } from "./gate-health.ts";
 import type { LearningSeries, LearningTrends } from "./learning-trends.ts";
 import type { V6HistoryReceipt } from "./admin-v6-history.ts";
 import type { PipelineRead } from "./v6-results-read.ts";
+import type { AuditAccuracyReading } from "./v6-audit-read.ts";
+import { formatEastern } from "../eastern-time.ts";
+import type { SpeedPass } from "../../health/worst-case-speed.ts";
 
 export interface DoorFacts {
   readonly walks: number;
@@ -195,6 +198,10 @@ export interface ScoreboardReadings {
   readonly doors: DoorFacts | null;
   readonly gates: readonly GateHealthRow[] | null;
   readonly readiness: readonly ReadinessCount[];
+  /** The week's live audits of published facts (DP-18); null when the audit log could not be read. Absent means not read. */
+  readonly audit?: AuditAccuracyReading | null;
+  /** The latest worst-case speed pass on the live site (FE-02); null when unreadable or none ran. Absent means not read. */
+  readonly speed?: SpeedPass | null;
 }
 
 /** Approved records by what the public page showed, from the published pipeline read; every state is counted, none is dropped. */
@@ -400,13 +407,49 @@ function headStartRow(d: DoorFacts | null): ScoreboardRow {
   });
 }
 
+const easternDay = (iso: string): string => new Date(iso).toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
+
+/** DP-18: "Of N facts audited this week, X% are still accurate. Here are the K we fixed." "—" when nothing was judged. */
+export function auditRow(a: AuditAccuracyReading | null | undefined): ScoreboardRow {
+  const id = "Audit accuracy", name = "Audit accuracy";
+  if (a === undefined) return unmeasured(id, name, "The auditors' green and red flags are not recorded here yet.");
+  if (a === null) return unmeasured(id, name, "The auditors' record could not be read just now.");
+  const counts = [
+    `${n(a.stillRight)} still right`, `${n(a.wrong)} wrong`,
+    ...(a.couldNotJudge > 0 ? [`${n(a.couldNotJudge)} could not be checked`] : []),
+    `${n(a.fixed)} fixed`, `${n(a.pulled)} taken off the page`,
+  ].join(" · ");
+  const items = a.fixedFacts.map((f) => `${f.action === "PULLED" ? "Taken off the page" : "Fixed"} ${easternDay(f.at)}: ${f.summary}`);
+  const technical = a.fixedFacts.map((f) => `${f.factId} · ${f.family} · ${f.area} · ${f.action} · ${f.at}`);
+  const second = a.coverageLine === null ? "" : ` ${a.coverageLine}`;
+  if (a.accuratePercent === null) {
+    return row(id, name, { counts: a.couldNotJudge > 0 || a.fixedFacts.length > 0 ? counts : null, says: `No published fact was judged this week.${second}`,
+      notMeasured: a.notMeasured ?? "No published fact has been audited this week.", items, technical });
+  }
+  return row(id, name, { value: `${a.accuratePercent}%`, counts, says: `${a.sentence}${second}`, items, technical });
+}
+
+/** FE-02: each surface and sampled ZIP, phone and desktop, judged by its slowest visit against three seconds. */
+export function speedRow(p: SpeedPass | null | undefined): ScoreboardRow {
+  const id = "Site speed and reliability", name = "Site speed and reliability";
+  if (p === undefined) return unmeasured(id, name, "Page load times and errors are not recorded here yet.");
+  if (p === null) return unmeasured(id, name, "No speed check of the live site has been recorded in the last two days.");
+  const total = p.passed + p.failed;
+  if (total === 0) return unmeasured(id, name, "The last speed check measured nothing.");
+  const failing = p.rows.filter((r) => r.verdict === "FAIL");
+  return row(id, name, {
+    value: `${n(p.passed)} of ${n(total)}`,
+    counts: `${n(p.passed)} within ${p.budgetMs / 1000} seconds · ${n(p.failed)} too slow or never finished · ${n(p.zips.length)} ZIP codes`,
+    says: `Every page and Ask question, judged by its slowest visit on a phone and a desktop. Checked ${formatEastern(p.at)}.`,
+    items: [...failing, ...p.rows.filter((r) => r.verdict === "PASS")].map((r) => `${r.verdict === "PASS" ? "Within the limit" : "Too slow"}: ${r.says}`),
+  });
+}
+
 const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
   { id: "Facts live per hour", name: "Facts live per hour", why: "Counted in a later step, once each fact carries when it went live." },
   { id: "Cost per fact", name: "Cost per fact", why: "Counted in a later step, from the same record as facts live per hour." },
-  { id: "Audit accuracy", name: "Audit accuracy", why: "The auditors' green and red flags are not recorded here yet." },
   { id: "Posted to live", name: "Posted to live", why: "The time from a body posting to our page showing it is not recorded yet." },
   { id: "Look and feel", name: "Look and feel", why: "The front-end flags are not recorded here yet." },
-  { id: "Site speed and reliability", name: "Site speed and reliability", why: "Page load times and errors are not recorded here yet." },
   { id: "Time to repair", name: "Time to repair", why: "The time from breaking to working again is not recorded yet." },
   { id: "Repairs without code", name: "Repairs without code", why: "Which repairs needed no code change is not recorded yet." },
   { id: "Proven fixes", name: "Proven fixes", why: "Fixes proved across places are not recorded yet." },
@@ -427,6 +470,8 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Shut doors", shutDoorsRow(r.shutDoors)],
     ["Return visits", returnsRow(r.returning)],
     ["Head-start hit rate", headStartRow(r.doors)],
+    ["Audit accuracy", auditRow(r.audit)],
+    ["Site speed and reliability", speedRow(r.speed)],
     ...GATE_ROWS.map((g): [string, ScoreboardRow] => [g.id, unmeasured(g.id, g.name, g.why)]),
   ]);
   const ORDER = ["Orders", "Mission progress", "Checklist completeness", "Coverage", "Public delivery", "People coverage", "Facts live per hour", "Cost per fact", "Audit accuracy",

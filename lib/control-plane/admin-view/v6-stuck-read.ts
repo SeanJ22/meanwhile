@@ -79,7 +79,7 @@ function sendAction(target: string, label: string, words: string): StuckActionRe
   return { kind: "send-agents", target, label, payload: { words } };
 }
 
-export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowIso: string): {
+export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowIso: string, shutDoors: readonly AdminV6StuckItem[] = []): {
   readonly items: readonly AdminV6StuckItem[]; readonly sameCause: readonly AdminV6SameCause[]; readonly total: number;
 } {
   const scope = parseV6PlaceKey(scopeKey);
@@ -92,7 +92,8 @@ export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowI
     return { row, cause, age, score: urgency * 100 + harm * 30 + Math.min(age.rank, 60) };
   }).sort((a, b) => b.score - a.score || a.row.id.localeCompare(b.row.id));
   const place = (row: StuckRowLike) => placeKeyOfRow(row);
-  const items = scored.slice(0, STUCK_ITEM_LIMIT).map(({ row, cause, age }): AdminV6StuckItem => {
+  // DB-34: shut doors rank first in every scope (the door is already live), longest shut first.
+  const items = [...shutDoors, ...scored.slice(0, STUCK_ITEM_LIMIT - shutDoors.length).map(({ row, cause, age }): AdminV6StuckItem => {
     const at = place(row);
     const title = [row.label, row.subjectName && row.label && !row.label.includes(row.subjectName) ? row.subjectName : null].filter(Boolean).join(" — ") || row.id;
     const state = stateNameOf(stateOfRow(row));
@@ -101,7 +102,7 @@ export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowI
       tried: row.blocker === null ? "—" : row.blocker, helped: "—", next: row.nextAction ?? cause.next,
       owner: cause.owner, readersAffected: row.band === 1 ? true : undefined, group: cause.key,
       actions: words === null ? [] : [sendAction(at, "Send agents", words)] };
-  });
+  })];
   const groups = new Map<string, { cause: Cause; rows: StuckRowLike[]; states: Set<string> }>();
   for (const { row, cause } of scored) {
     const g = groups.get(cause.key) ?? { cause, rows: [], states: new Set<string>() };
@@ -122,5 +123,5 @@ export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowI
         itemIds: g.rows.filter((r) => shownIds.has(r.id)).map((r) => r.id),
         ...(words === null ? {} : { action: sendAction(target, `Send agents to all ${g.rows.length}`, words) }) } as AdminV6SameCause;
     });
-  return { items, sameCause, total: scored.length };
+  return { items, sameCause, total: scored.length + shutDoors.length };
 }

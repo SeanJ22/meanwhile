@@ -31,7 +31,7 @@ import { linkingPageFrom, pageWords, section3Page, section3Record } from "../con
 import { isoTermDate, isoTermDateOnPage } from "./term-dates.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
 import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
-import { recordPublishedPageDoor } from "./worker-page-doors.ts";
+import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
 
 export interface WorkerPublicationCapture {
   readonly campaign?: import("../control-plane/promotion/section3.ts").Section3Page["campaign"];
@@ -482,9 +482,10 @@ ${readingId}`, outcome);
     }
     // The data operation is already durable; failing to store this receipt never marks it published.
     const current = await input.repos.workItems.mustRead(id);
+    const pages = captures.length ? captures : [reading?.capture ?? heldDirectory?.checked.primary].filter((c): c is WorkerPublicationCapture => Boolean(c));
+    outcome = withPageDoor(outcome, pages[0], plan.contract.recordClass);
     await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
-    const pages = captures.length ? captures : [reading?.capture ?? heldDirectory?.checked.primary].filter((c): c is WorkerPublicationCapture => Boolean(c));
     if (outcome.code !== "VERIFIED_RESULT_REUSED") await recordPublishedPageDoor({ repos: input.repos, page: pages[0], recordClass: plan.contract.recordClass, bodyId, published: wentLive, now: input.now });
     if (outcome.code !== "VERIFIED_RESULT_REUSED") learned.push(validatorObservation({ plan, workItemId: id, page: pages[0], captures: pages, published: wentLive, outcome }));
   }

@@ -6,6 +6,7 @@ import type { EvidenceRecord, EvidenceSubject } from "../lib/ask/evidence.ts";
 import type { MeasureRecord } from "../lib/ballot/measure-records.ts";
 import { ballotRecordsFor, ballotSubject, type BallotSubjectRecord } from "../lib/ask/ballot-inventory.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
+import { explicitVoteMeanings } from "../lib/ballot/measure-records.ts";
 
 const subject = { kind: "MEASURE", id: "held-measure", name: "Held question" } as EvidenceSubject;
 const records: EvidenceRecord[] = [{ kind: "MEASURE_SUMMARY", id: "held-measure#no-meaning", subjectId: subject.id,
@@ -39,4 +40,15 @@ test("the ballot evidence builder carries the stored NO meaning with the measure
     summary: "Changes the funding limit.", summarizesUrl: provenance.sourceUrl, noMeans: records[0].measureMeaning!.meaning }) });
   const answer = composeMeasureMeaningAnswer({ subject: ballotSubject(record), question: "What does a NO vote mean?", records: built.records });
   assert.deepEqual(answer, { answer: records[0].text, citedUrls: [provenance.sourceUrl] });
+});
+
+test("explicit official vote sentences are preserved verbatim and contradictory meanings stay unknown", () => {
+  const text = 'A “YES” vote shall have the effect of allowing the county to adjust its base expenditure limit. A “NO” vote shall have the effect of not allowing the county to adjust its base expenditure limit.';
+  assert.deepEqual(explicitVoteMeanings(text), {
+    yesMeans: text.split('. ')[0] + '.', noMeans: text.split('. ')[1],
+  });
+  assert.equal(explicitVoteMeanings('The proposal would raise a limit.').noMeans, null);
+  assert.equal(explicitVoteMeanings(text + ' A “NO” vote shall do something different.').noMeans, null);
+  assert.equal(explicitVoteMeanings('A NO vote would retain the $1.25 rate. A YES vote would raise it.').noMeans,
+    'A NO vote would retain the $1.25 rate.');
 });

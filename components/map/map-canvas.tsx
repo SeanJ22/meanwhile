@@ -17,6 +17,7 @@ import {
   type MapMouseEvent,
 } from "maplibre-gl";
 import { Protocol } from "pmtiles";
+import { startMap } from "@/lib/map/start-map";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "@/lib/map/flight-presentation";
@@ -323,6 +324,7 @@ export function MapCanvas({
   selectedVotingSiteId = null,
 }: MapCanvasProps) {
   const [presentationReady, setPresentationReady] = useState(false);
+  const [graphicsUnavailable, setGraphicsUnavailable] = useState(false);
   const presentationCallbackRef = useRef(onPresentationReadyChange);
   useEffect(() => { presentationCallbackRef.current = onPresentationReadyChange; }, [onPresentationReadyChange]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -470,8 +472,9 @@ export function MapCanvas({
      */
     const remembered = recallCamera();
 
-    const map = new MapLibreMap({
-      container: containerRef.current,
+    const container = containerRef.current;
+    const map = startMap(() => new MapLibreMap({
+      container,
       // Districts start without any dependency on the basemap provider.
       style: withDistricts(FALLBACK_STYLE, districtTypesRef.current),
       ...(camera
@@ -489,7 +492,14 @@ export function MapCanvas({
       // The entry notice sits over the map; spinning it adds nothing.
       pitchWithRotate: false,
       dragRotate: false,
-    });
+    }));
+    if (!map) {
+      const frame = window.requestAnimationFrame(() => {
+        setGraphicsUnavailable(true);
+        setPresentationReady(true);
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }
 
     holdMapPresentation(map);
 
@@ -504,7 +514,6 @@ export function MapCanvas({
       "Map. Use plus and minus to zoom, arrow keys to pan.",
     );
     map.addControl(new AttributionControl({ compact: true }), "bottom-left");
-    map.touchZoomRotate.disableRotation();
 
     // A failed style request would otherwise leave a blank screen with a
     // working UI drawn on nothing. Drop to a plain ground color instead, so
@@ -1542,6 +1551,11 @@ export function MapCanvas({
     // Marker visibility changes once at motion start and once at idle.
     <div ref={shellRef} className={`absolute inset-0 ${flightStyles.shell}`}>
       <div ref={containerRef} className="size-full" />
+      {graphicsUnavailable && (
+        <p role="status" className="absolute inset-x-0 bottom-0 p-4 t-body text-voice bg-panel">
+          The map can’t show on this device. You can still browse the meeting list.
+        </p>
+      )}
     </div>
   );
 }

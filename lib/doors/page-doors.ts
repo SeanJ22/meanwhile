@@ -64,6 +64,12 @@ export function pageDoorId(recordClass: string, address: { readonly url: string;
   return `page:${holdsOf(recordClass)}:${address.host}:${createHash("sha256").update(address.url).digest("hex").slice(0, 12)}`;
 }
 
+/** The id of the door a published page becomes, or null when the page cannot be one. Same answer as the door record's own id. */
+export function doorIdOfPage(recordClass: string, url: string): string | null {
+  const address = pageAddress(url);
+  return address === null || address.url.length > 1900 || recordClass.trim() === "" ? null : pageDoorId(recordClass, address);
+}
+
 const FOUND_BY_NOTE: Record<PageFinder, string> = { SCOUT: "Found by a Scout.", DETECTIVE: "Found by a detective." };
 
 /** The record a published page becomes, or null when it cannot be one. `foundBy` is kept from an earlier record when this pass does not know it. */

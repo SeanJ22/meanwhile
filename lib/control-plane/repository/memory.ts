@@ -260,6 +260,10 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
         .flatMap(([, entries]) => entries.map((entry) => jsonCopy(entry.record))),
 
     keys: async (): Promise<readonly string[]> => [...partitions.keys()].sort(),
+
+    keysWhere: async (jsonPath: readonly string[], value: string): Promise<readonly string[]> =>
+      [...partitions.entries()].filter(([, entries]) => entries.some((entry) => jsonTextAtPath(entry.record, jsonPath) === value))
+        .map(([key]) => key).sort(),
   };
 }
 

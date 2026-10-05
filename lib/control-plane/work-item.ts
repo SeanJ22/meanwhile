@@ -296,6 +296,8 @@ export interface WorkItem {
     readonly at: string; readonly workerResultId: string; readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
     readonly code: string; readonly detail: string; readonly candidateId: string | null; readonly versionId: string | null;
     readonly recovery?: "WORKER" | "PUBLISHER";
+    /** The door (registry id of the saved page) the published facts were read through (DB-28). */
+    readonly doorId?: string;
     /** Verified reader records compared with this body's previous published records. */
     readonly records?: { readonly added: number; readonly changed: number; readonly reused: number };
     readonly recordChanges?: readonly import("../civic-data/publication-record-changes.ts").PublicationRecordChange[];

@@ -43,6 +43,9 @@ import { evidenceProjection } from "./runtime.ts";
 import { researchVaultResolver } from "./vault-object.ts";
 import { promotedRegistries } from "../scheduler/provider-inputs.ts";
 import { brokeredSiblingCaptures, selectStandingLineages } from "./standing-lineage.ts";
+import { readLineageHistory } from "./scoped-history.ts";
+import type { ScoutResult } from "../scheduler/scout-result.ts";
+import type { WorkItem } from "../work-item.ts";
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
@@ -55,6 +58,8 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   /** The rolling ceiling in force; the auditor admits against it (model-audit.ts). */
   auditCeilingUsd?:number;
   lifetimeHuntSubject?:(subjectId:string)=>boolean;
+  /** CH-26: each task's history reads are scoped to its own work item, subject and lineage. */
+  scopedReads?:boolean;
   /** MW-033: the rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
   reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"];
   /** MW-021 (2026-09-25): the transport for the work on one jurisdiction, so its requests are held on the area budget covering it; absent, `transport` serves all. */
@@ -67,7 +72,11 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     siblingHeldRootFor: held=>siblingHeldRootFor(held),
     spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{}),
     ...(input.openBytesFor?{openBytesFor:input.openBytesFor}:{})};
-  const [prior, initialWorkers] = await Promise.all([
+  // CH-26: a scoped runtime (a lease worker's) reads each task's own history as the task begins, and leaves the
+  // whole-store upkeep below (method-version upgrade, adapter queue, plan repairs) to the research round that
+  // queued the task, which builds this runtime unscoped every wave.
+  const scoped = input.scopedReads === true;
+  const [prior, initialWorkers] = scoped ? [[] as ScoutResult[], [] as Awaited<ReturnType<typeof readCompletedWorkerResults>>] : await Promise.all([
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
   const indexFindings = boxIndexEnabled(input.environment ?? process.env);
@@ -75,7 +84,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   // worker history current without re-reading everyone's.
   let priorWorkers = initialWorkers;
   const knowledge=await readMethodKnowledge(input.repos);
-  for (const row of await input.repos.workItems.list()) {
+  for (const row of scoped ? [] : await input.repos.workItems.list()) {
     const plan = row.value.autonomousPlan;
     if (plan?.contract.schemaVersion !== 2 || plan.contract.methodVersion !== 0 ||
       plan.contract.extraction.format !== "UNSUPPORTED" || plan.contract.sourceScope.observationArtifactIds.length) continue;
@@ -86,6 +95,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
   const heldRuntime = standingFleetRuntime({...input,method:knowledge,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
+
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
   const installed = promotedRegistries();
   const registeredPublisherAddressFor = (subjectId:string):string|null => {
@@ -96,47 +106,63 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     try { const url = new URL(address ?? ""); return ["http:","https:"].includes(url.protocol) && !url.username && !url.password ? address : null; }
     catch { return null; }
   };
-  const [allWorkRows,allOccurrenceRows,allArtifactRows,allAttemptRows] = await Promise.all([
-    input.repos.workItems.list(),input.repos.occurrences.list(),input.repos.artifacts.readAll(),input.repos.attempts.list(),
-  ]);
-  if (indexFindings) {
-    await backfillBox(input.repos.boxFindings, { scouts: prior,
-      detectives: initialWorkers.filter(record => record.result.role === "DETECTIVE") as import("../box.ts").BoxDetectiveRecord[],
-      artifacts: new Map(allArtifactRows.map(artifact => [artifact.artifactId, artifact])) }, now());
+  // The round owns Box replay/build upkeep. Lease runtimes retain CH-26 scoped reads.
+  if (!scoped && indexFindings) {
+    const [allWorkRows, allArtifactRows] = await Promise.all([
+      input.repos.workItems.list(), input.repos.artifacts.readAll(),
+    ]);
+    if (indexFindings) {
+      await backfillBox(input.repos.boxFindings, { scouts: prior,
+        detectives: initialWorkers.filter(record => record.result.role === "DETECTIVE") as import("../box.ts").BoxDetectiveRecord[],
+        artifacts: new Map(allArtifactRows.map(artifact => [artifact.artifactId, artifact])) }, now());
+    }
+    if (indexFindings && !readIntents([...(await input.repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused) {
+      const sourcePolicy = publicationSourcePolicy((await input.repos.adminConfig.read("current"))?.value ?? null);
+      const built = await buildBoxFindings({ repos: input.repos, items: allWorkRows.map(row => row.value), now, leaseMs: 120_000,
+        readCapture: async id => {
+          const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
+          return { evidence: evidenceProjection(evidence), sourcePolicy, observedAt: artifact.retrievedAt,
+            httpStatus: artifact.httpStatus, transport: artifact.transport,
+            partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
+        } });
+      if (built.built.length) priorWorkers = await readCompletedWorkerResults(input.repos);
+    }
   }
-  const allWork=allWorkRows.map(row=>row.value);
-  if (indexFindings && !readIntents([...(await input.repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused) {
-    const sourcePolicy = publicationSourcePolicy((await input.repos.adminConfig.read("current"))?.value ?? null);
-    const built = await buildBoxFindings({ repos: input.repos, items: allWork, now, leaseMs: 120_000,
-      readCapture: async id => {
-        const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
-        return { evidence: evidenceProjection(evidence), sourcePolicy, observedAt: artifact.retrievedAt,
-          httpStatus: artifact.httpStatus, transport: artifact.transport,
-          partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
-      } });
-    if (built.built.length) priorWorkers = await readCompletedWorkerResults(input.repos);
-  }
-  // Held data and plain adapters first; generated adapters use the same guarded area transport as research.
-  await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
+  // Build saved findings before any paid adapter work; include freshly installed routes in the Scout brief.
+  if (!scoped) await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
     ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
-  // Include routes installed by the adapter pass in this runtime's first Scout brief.
   const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
   let fieldManual: FieldManualStore = fmRead.store;
   let fieldManualRevision = fmRead.revision ?? 0;
 
-  const lineages=selectStandingLineages({occurrences:allOccurrenceRows.map(row=>row.value),workItems:allWork,
-    artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value),workerResults:priorWorkers});
-  const sharedHeldByRoot=new Map<string,string[]>();
-  const sharedOriginByRoot=new Map<string,Set<string>>();
-  for (const lineage of lineages.filter(row=>row.siblingRootIds.length>1)) {
-    const address=registeredPublisherAddressFor(allWork.find(item=>item.id===lineage.rootWorkItemId)?.subject??"");
-    if (!address) continue;
-    const registeredHost=new URL(address).hostname.toLowerCase();
-    const brokered=brokeredSiblingCaptures({lineage,artifacts:allArtifactRows,
-      attempts:allAttemptRows.map(row=>row.value),scouts:prior,registeredHost});
-    sharedHeldByRoot.set(lineage.rootWorkItemId,[...new Set(brokered.map(row=>row.artifactId))]);
-    sharedOriginByRoot.set(lineage.rootWorkItemId,new Set(brokered.map(row=>`${row.originWorkItemId}\u0000${row.artifactId}`)));
-  }
+  // The lineage broker: which sibling's captures each lineage root may reuse. Whole-store when unscoped; one task's lineage when scoped.
+  let lineages: ReturnType<typeof selectStandingLineages> = [];
+  let sharedHeldByRoot=new Map<string,string[]>();
+  let sharedOriginByRoot=new Map<string,Set<string>>();
+  const brokerLineages=(history:{occurrences:Parameters<typeof selectStandingLineages>[0]["occurrences"];workItems:readonly WorkItem[];
+    artifacts:Parameters<typeof selectStandingLineages>[0]["artifacts"];attempts:Parameters<typeof selectStandingLineages>[0]["attempts"];
+    workerResults:Parameters<typeof selectStandingLineages>[0]["workerResults"];scouts:readonly ScoutResult[]})=>{
+    lineages=selectStandingLineages(history);
+    sharedHeldByRoot=new Map(); sharedOriginByRoot=new Map();
+    for (const lineage of lineages.filter(row=>row.siblingRootIds.length>1)) {
+      const address=registeredPublisherAddressFor(history.workItems.find(item=>item.id===lineage.rootWorkItemId)?.subject??"");
+      if (!address) continue;
+      const registeredHost=new URL(address).hostname.toLowerCase();
+      const brokered=brokeredSiblingCaptures({lineage,artifacts:history.artifacts,attempts:history.attempts,scouts:history.scouts,registeredHost});
+      sharedHeldByRoot.set(lineage.rootWorkItemId,[...new Set(brokered.map(row=>row.artifactId))]);
+      sharedOriginByRoot.set(lineage.rootWorkItemId,new Set(brokered.map(row=>`${row.originWorkItemId}\u0000${row.artifactId}`)));
+    }
+  };
+  const brokerWholeStore=async()=>{
+    const [allWorkRows,allOccurrenceRows,allArtifactRows,allAttemptRows,scouts,workers] = await Promise.all([
+      input.repos.workItems.list(),input.repos.occurrences.list(),input.repos.artifacts.readAll(),input.repos.attempts.list(),
+      scoped ? input.repos.scoutResults.readAll() : prior, scoped ? readCompletedWorkerResults(input.repos) : priorWorkers,
+    ]);
+    brokerLineages({occurrences:allOccurrenceRows.map(row=>row.value),workItems:allWorkRows.map(row=>row.value),
+      artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value),workerResults:workers,scouts});
+  };
+  if (!scoped) await brokerWholeStore();
+
   siblingHeldRootFor=held=>{
     const lineage=lineages.find(row=>row.siblingRootIds.includes(held.originWorkItemId) &&
       row.rootWorkItemId!==held.originWorkItemId &&
@@ -144,7 +170,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     return lineage?.rootWorkItemId??null;
   };
   const deferredSiblingRoots=new Set(lineages.flatMap(lineage=>lineage.siblingRootIds.filter(id=>id!==lineage.rootWorkItemId)));
-  await consumePlanRepairs({ repos: input.repos, scouts: prior.filter(result=>!deferredSiblingRoots.has(result.workItemId)),
+  if (!scoped) await consumePlanRepairs({ repos: input.repos, scouts: prior.filter(result=>!deferredSiblingRoots.has(result.workItemId)),
     now: now(),registeredPublisherAddressFor,
     authorizedSiblingArtifactIdsFor: parent=>sharedHeldByRoot.get(parent.id)??[],
     readCapture: async id => {
@@ -157,7 +183,12 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     .flatMap(w=>"warnings" in w.result?w.result.warnings:w.result.findings));
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,
     beginTask:async task=>{ const fresh=await readCompletedWorkerResults(input.repos,task.workItemId);
-      priorWorkers=[...priorWorkers.filter(w=>w.workItemId!==task.workItemId),...fresh]; },
+      priorWorkers=[...priorWorkers.filter(w=>w.workItemId!==task.workItemId),...fresh];
+      if (scoped) {
+        // A store without the filtered reads (a test double) brokers from the whole store, as before.
+        const history=await readLineageHistory(input.repos,task.workItemId);
+        if (history) brokerLineages(history); else await brokerWholeStore();
+      } },
     rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
     authorizedSiblingHeldArtifactIdsFor:item=>sharedHeldByRoot.get(item.id)??[],
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder,input.root),

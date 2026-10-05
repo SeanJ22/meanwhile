@@ -378,9 +378,12 @@ test("the auditor's review goes through the jurisdiction's transport, and a budg
 
 test("the runner wires autonomous work to its jurisdiction's area only, never to a Send's budget", () => {
   const runner = readFileSync(join(process.cwd(), "scripts", "freshness-shadow.mts"), "utf8");
-  const start = runner.indexOf("const autonomousTransportFor =");
-  const end = runner.indexOf("});", start);
-  const block = runner.slice(start, end);
+  /* CH-24: the guards are built in paid-work-guards.ts, which the round calls. */
+  const guards = readFileSync(join(process.cwd(), "lib", "control-plane", "workers", "paid-work-guards.ts"), "utf8");
+  assert.match(runner, /const \{ budgetLinesFor, guardedMessagesFor, autonomousTransportFor, paidWorkerCapacity \} = guards;/);
+  const start = guards.indexOf("const autonomousTransportFor =");
+  const end = guards.indexOf("});", start);
+  const block = guards.slice(start, end);
   assert.ok(start > 0 && end > start);
   assert.match(block, /expansionBudget\.gate\.linesFor\(j\.subjectId, j\.state\)/);
   assert.doesNotMatch(block, /assignmentBudget|sends:/, "no Send budget is consulted for autonomous work");

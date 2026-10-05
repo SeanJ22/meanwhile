@@ -7,7 +7,7 @@ import { test } from "node:test";
  * 1a (2026-08-17): the welcome overlay's mission text is the author's,
  * verbatim. This test pins every sentence so an edit — however
  * well-intentioned — fails the build instead of shipping. The zip entry and
- * the one-tap examples must stay beneath it.
+ * the reader's ZIP entry stays beneath it.
  */
 
 const MISSION_SENTENCES = [
@@ -36,14 +36,12 @@ test("the welcome overlay carries the author's mission text verbatim", () => {
   }
 });
 
-test("the zip entry and one-tap examples stay beneath the mission text", () => {
+test("ZIP and location entry remain, with no hard-coded pilot examples", () => {
   const source = readFileSync(
     join(process.cwd(), "components", "map", "welcome-overlay.tsx"),
     "utf8",
   );
   assert.ok(source.includes("<ZipComb"), "zip entry removed from the overlay");
-  assert.ok(
-    source.includes("QUICK_ZIPS.map"),
-    "one-tap example buttons removed from the overlay",
-  );
+  assert.ok(source.includes("useMyLocation"), "location entry removed from the overlay");
+  assert.doesNotMatch(source, /QUICK_ZIPS|Or start with one of these/, "FE-39 removes the pilot examples");
 });

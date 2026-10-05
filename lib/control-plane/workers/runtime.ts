@@ -23,6 +23,7 @@ import { auditLearningEntries } from "./audit-sampling.ts";
 import { writeFieldManual } from "../field-manual.ts";
 import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicExtractionContract, type FleetInput,
   type FleetRole, type IndependentAuditContext, type ParserWorkerInput, type WorkerResultRecord, type WorkerTaskSpec, type WorkerUsage } from "./types.ts";
+import { readSpendWindowCosts } from "./scoped-history.ts";
 
 export const FLEET_IMPLEMENTATION_VERSION = "civic-record-workers/2.0.0";
 export const FLEET_POLICY_VERSION = "worker-fleet/2; R248 R252 R263 R264 R268";
@@ -67,6 +68,8 @@ export interface FleetRuntime {
   /** Exact subjects whose model calls reserve the selected lifetime hunt budget durably. */
   readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   readonly rollingCeilingUsd?: number;
+  /** CH-26: a task's history reads are scoped to its own work item, subject and lineage (`scoped-history.ts`). Absent: the old whole-table reads. */
+  readonly scopedReads?: boolean;
   readonly now?: () => string;
   /** The parser's fallback when no parsing rule exists: a model pulls the fields with exact quotes and code confirms each quote is in the saved document (model-parser.ts). */
   readonly parseReasoner?: ReturnType<typeof modelParseReasoner>;
@@ -286,7 +289,7 @@ export async function reauthorizeWorkerTask(runtime: FleetRuntime, task: RouteTa
   let reason: string | null = null;
   if (denial.reason.includes("AUDIT_MODEL_TRANSPORT_UNAVAILABLE") && runtime.auditReasoner) reason = "The configured model transport is now available; the current capability and rolling-cost policy will be evaluated again.";
   if (denial.reason.includes("AUDIT_ROLLING_COST_CEILING")) {
-    const spend = researchSpendInWindow(await runtime.repos.costs.readAll(), now);
+    const spend = researchSpendInWindow(await readSpendWindowCosts(runtime.repos, now, runtime.scopedReads === true), now);
     if (runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) reason = "The selected lifetime hunt uses its durable reservation ledger; current policy will be checked again.";
     else if (ceilingPermits(spend.windowUsd, (runtime.rollingCeilingUsd ?? 0)).permits) reason = "The existing rolling-cost window now permits admission; no ceiling or grant was changed.";
   }

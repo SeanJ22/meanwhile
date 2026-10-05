@@ -40,7 +40,7 @@ export async function completeWorkerTask(repos: ControlPlaneRepositories, result
   return committed;
 }
 
-async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: WorkerResultRecord, costAlreadyApplied = false): Promise<void> {
+export async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: WorkerResultRecord, costAlreadyApplied = false): Promise<void> {
   const { completion: c, endedAt: now } = record;
   const attempt = await repos.attempts.mustRead(record.attemptId);
   if (canonicalJson(attempt.value) !== canonicalJson(c.closedAttempt)) {

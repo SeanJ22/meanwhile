@@ -7,16 +7,16 @@ import { researchVaultResolver } from "../control-plane/workers/vault-object.ts"
 import { workerVaultResolver } from "../control-plane/workers/vault.ts";
 import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import type { ArtifactRecord } from "../control-plane/repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { Artifact } from "../control-plane/evidence/artifact.ts";
 import { datePath, readForParser, type EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 
 /** Server-side publisher reads the same durable evidence used by the workers. */
-export async function workerPublicationContext(now: string) {
+export async function workerPublicationContext(now: string, existingRepos?: ControlPlaneRepositories) {
   const connection = controlPlaneUrlFromEnv();
-  if (!connection) throw new Error("WORKER_PUBLICATION_CONTROL_PLANE_UNAVAILABLE");
-  const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
+  if (!existingRepos && !connection) throw new Error("WORKER_PUBLICATION_CONTROL_PLANE_UNAVAILABLE");
+  const repos = existingRepos ?? await createPgRepositories(connection!, now, { skipBootstrap: true });
   const sourcePolicy = publicationSourcePolicy((await repos.adminConfig.read("current"))?.value ?? null);
   const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
   const readObject = researchVaultResolver(repos, vault, "freshness");

@@ -1,0 +1,141 @@
+import { ZERO_COST, type WorkerRef } from "../attempt.ts";
+import { finishBoxFinding, takeBoxFinding } from "../box.ts";
+import { contentHash, fingerprint } from "../ids.ts";
+import { SECTION3_MINIMUMS, linkingPageFrom, section3Record } from "../promotion/section3.ts";
+import { beginAttemptFor, claimRouteTask } from "../repository/coordinator.ts";
+import { applyWorkerCompletion, completeWorkerTask } from "../repository/worker-completion.ts";
+import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
+import type { ScoutFinding } from "../scheduler/scout-result.ts";
+import type { WorkItem } from "../work-item.ts";
+import { captureIntact, capturesForPublication } from "../../civic-data/worker-publication-evidence.ts";
+import type { WorkerPublicationCapture } from "../../civic-data/worker-roster-publication.ts";
+import { normalizedParserResult } from "./parser.ts";
+import { BOX_PARSER_IMPLEMENTATION, confirmQuotedRecords, quotedSourceFindings } from "./quoted-proof.ts";
+import { enqueueWorkerTask, fleetGrant, FLEET_POLICY_VERSION } from "./runtime.ts";
+import type { GeneralizedCivicExtractionContract, ParserResult, WorkerEvidence, WorkerResultRecord } from "./types.ts";
+
+/** Scout and modern Detective findings use one proof, with no model or acquisition. */
+export function scoutExtraction(input: {
+  contract: GeneralizedCivicExtractionContract; evidence: WorkerEvidence; findings: readonly ScoutFinding[]; attemptId: string;
+}): ParserResult {
+  const { contract, evidence } = input;
+  const groups = new Map<string, ScoutFinding[]>();
+  for (const finding of input.findings) {
+    if (!finding.field || finding.value === undefined || finding.value === null || !finding.exactQuote ||
+        finding.sourceUrl !== evidence.canonicalUrl || !finding.artifactIds.includes(evidence.artifactId)) continue;
+    const key = finding.subjectId ?? contract.subjectId;
+    groups.set(key, [...groups.get(key) ?? [], finding]);
+  }
+  const proofContract = { ...contract, requiredFields: SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields };
+  const confirmed = confirmQuotedRecords({ contract: proofContract, evidence }, [...groups.values()].map(findings => ({ windowStart: 0,
+    fields: [...new Map(findings.map(f => [canonicalJson([f.field, f.value, f.exactQuote]), { name: f.field!, value: String(f.value), quote: f.exactQuote! }])).values()] })));
+  const result: ParserResult = { role: "PARSER", attemptId: input.attemptId, implementation: BOX_PARSER_IMPLEMENTATION, version: "1", schemaVersion: 2,
+    recordClass: contract.recordClass, artifactId: evidence.artifactId, contentHash: evidence.contentHash,
+    acquiredByAttemptId: evidence.acquiredByAttemptId, subjectId: contract.subjectId,
+    contractMetadata: { jurisdiction: contract.jurisdiction, identity: contract.identity, sourceScope: contract.sourceScope, methodVersion: contract.methodVersion },
+    verdict: confirmed.records.length ? "EXTRACTED" : "FAILED", records: confirmed.records, spans: confirmed.spans,
+    warnings: [...confirmed.warnings, ...confirmed.rejections.map(r => ({ code: r.code, severity: "INFO" as const, field: r.field,
+      detail: `Box finding record ${r.recordIndex}: ${r.code}; the unsupported field remains owed.` }))],
+    declaredRowCount: null, sourceRowCount: null, actualRowCount: confirmed.records.length };
+  const failures = quotedSourceFindings(result, proofContract, evidence);
+  return failures.length ? { ...result, verdict: "FAILED", warnings: [...result.warnings, ...failures] } : result;
+}
+
+export interface BoxBuildReport {
+  readonly built: readonly string[];
+  readonly waiting: readonly { readonly findingId: string; readonly reason: string }[];
+}
+
+/** Consume at most one page per work item per pass: its normal door publishes in
+ * this same pass before another page can replace the latest extraction. All
+ * claims from that page travel together; a sparse finding stays owed until its
+ * record's minimum facts are available. No queue or model budget is created. */
+export async function buildBoxFindings(input: {
+  repos: ControlPlaneRepositories; items: readonly WorkItem[]; now: () => string; leaseMs: number;
+  readCapture: (id: string, records: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
+}): Promise<BoxBuildReport> {
+  const { repos } = input;
+  const rows = (await repos.boxFindings.list()).map(row => row.value);
+  const pending = rows.filter(row => row.state === "waiting" || (row.state === "taken" && row.claim && row.claim.expiresAt <= input.now()));
+  if (!pending.length) return { built: [], waiting: [] };
+  const scouts = new Map((await repos.scoutResults.readAll()).map(result => [result.attemptId, result]));
+  const built: string[] = [], waiting: { findingId: string; reason: string }[] = [];
+  const handled = new Set<string>();
+  for (const item of input.items) {
+    const contract = item.autonomousPlan?.contract;
+    if (!item.autonomousPlan?.publication || contract?.schemaVersion !== 2) continue;
+    const own = rows.filter(row => row.origins.some(origin => origin.workItemId === item.id));
+    const tried = new Set<string>();
+    for (const first of pending.filter(row => !handled.has(row.id) && own.includes(row))) {
+    const key = first.sourceUrl ?? first.id;
+    if (tried.has(key)) continue;
+    tried.add(key);
+    const before = built.length;
+    // The lock covers a shared page/subject even when two Sends reference it.
+    await repos.locks.withLock(`box-build:${fingerprint([first.sourceUrl ?? first.id, first.subjectId])}`, async () => {
+      const pageRows = own.filter(row => row.sourceUrl === first.sourceUrl);
+      const origins = pageRows.flatMap(row => row.origins.filter(origin => origin.workItemId === item.id && origin.kind === "SCOUT")
+        .map(origin => ({ row, finding: scouts.get(origin.resultId)?.findings[origin.findingIndex] })));
+      const artifactId = origins.find(({ row, finding }) => row.id === first.id && finding?.field)?.finding?.artifactIds[0];
+      if (!artifactId) { waiting.push({ findingId: first.id, reason: "No structured field and saved-page reference; the original finding remains owed." }); return; }
+      const relevant = origins.filter(({ finding }) => finding?.artifactIds.includes(artifactId));
+      const findings = relevant.map(({ finding }) => finding!);
+      const candidates = [...new Map(relevant.map(({ row }) => [row.id, row])).values()];
+      const records = await repos.workerResults.read(item.id);
+      const captures = await capturesForPublication({ repos, workItemId: item.id, primaryId: artifactId, results: records, readCapture: input.readCapture });
+      const capture = captures[0];
+      const proposal = scoutExtraction({ contract, evidence: capture.evidence, findings, attemptId: "box-proposal" });
+      const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign,
+        linkingPage: linkingPageFrom(capture.evidence.canonicalUrl, captures.filter(captureIntact).map(c => c.evidence)),
+        citations: captures.filter(c => c !== capture && captureIntact(c)).map(c => ({ url: c.evidence.canonicalUrl, text: c.evidence.text, retrievedAt: c.observedAt })) };
+      if (!captureIntact(capture) || proposal.verdict !== "EXTRACTED" || !proposal.records.some(record =>
+        section3Record({ recordClass: contract.recordClass, fields: record.fields, page, now: input.now() }).live)) {
+        waiting.push({ findingId: first.id, reason: proposal.warnings.map(w => w.code).join(", ") || "The saved page or record does not yet meet §3." });
+        return;
+      }
+      const accepted = candidates.filter(row => relevant.some(ref => ref.row.id === row.id && ref.finding !== undefined && proposal.spans.some(span =>
+        span.field === ref.finding?.field && span.quote === ref.finding?.exactQuote &&
+        proposal.records.some(record => record.id === span.recordId && String(record.fields[span.field]) === String(ref.finding?.value)))));
+      const claims = new Map<string, string>();
+      const holder = `box-builder:${fingerprint([item.id, artifactId])}`;
+      for (const row of accepted) {
+        const at = input.now();
+        const claim = await takeBoxFinding(repos.boxFindings, row.id, holder, at, new Date(Date.parse(at) + input.leaseMs).toISOString());
+        if (claim) claims.set(row.id, claim.token);
+      }
+      if (!claims.size) return;
+      try {
+        // Stable across a crash between the result commit and the Box projection.
+        const signature = contentHash(canonicalJson([artifactId, proposal.records, proposal.spans]));
+        const task = await enqueueWorkerTask(repos, { workItemId: item.id, role: "PARSER", artifactId, contract, now: input.now(), replayLabel: `box:${signature}` });
+        let committed = records.find(record => record.routeTaskId === task.id);
+        if (committed) await applyWorkerCompletion(repos, committed);
+        else {
+          const worker: WorkerRef = { role: "PARSER", provider: "we-the-people", version: BOX_PARSER_IMPLEMENTATION, instance: holder };
+          const claim = await claimRouteTask(repos, { routeTaskId: task.id, holder, now: input.now(), ttlMs: input.leaseMs });
+          const attempt = await beginAttemptFor(repos, { routeTaskId: task.id, workItemId: item.id, worker, lease: claim.lease.value,
+            now: input.now(), methodVersion: contract.methodVersion, policyVersion: FLEET_POLICY_VERSION });
+          const result = { ...proposal, attemptId: attempt.id };
+          committed = await completeWorkerTask(repos, { id: `wr-${fingerprint([attempt.id])}`, schemaVersion: 1, workItemId: item.id,
+            routeTaskId: task.id, attemptId: attempt.id, worker, grant: fleetGrant("PARSER", item.project, attempt.value.startedAt),
+            methodVersion: contract.methodVersion, policyVersion: FLEET_POLICY_VERSION, startedAt: attempt.value.startedAt, endedAt: input.now(),
+            executionMode: "DETERMINISTIC", cost: { ...ZERO_COST, usd: 0, inputTokens: 0, outputTokens: 0, bytesFetched: 0, requestCount: 0 },
+            usage: { inputTokens: 0, outputTokens: 0, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, uncachedInputTokens: 0 },
+            inputArtifactIds: [artifactId], inputResultIds: [...new Set(relevant.flatMap(({ row }) => row.origins.map(origin => origin.resultId)))],
+            semanticHash: contentHash(canonicalJson(normalizedParserResult(result))), result });
+        }
+        for (const [id, token] of claims) {
+          if (await finishBoxFinding(repos.boxFindings, id, token, { state: "built", buildResultId: committed.id }, input.now())) built.push(id);
+          handled.add(id);
+        }
+      } catch (error) {
+        for (const [id, token] of claims) await finishBoxFinding(repos.boxFindings, id, token,
+          { state: "failed", reason: error instanceof Error ? error.message : String(error) }, input.now());
+        throw error;
+      }
+    });
+    if (built.length > before) break;
+    }
+  }
+  return { built, waiting };
+}

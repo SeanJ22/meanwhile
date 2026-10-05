@@ -39,6 +39,8 @@ export interface BoxFinding {
   readonly attempts: readonly (BoxClaim & { readonly outcome: "failed" | "expired" | "built" | "refused"; readonly endedAt: string; readonly detail: string })[];
   readonly generation: number;
   readonly publicationId: string | null;
+  /** Durable extraction; built is not a claim of reader delivery. */
+  readonly buildResultId?: string;
   readonly refusal: string | null;
 }
 
@@ -94,18 +96,20 @@ export async function takeBoxFinding(repo: AggregateRepository<BoxFinding>, id: 
 }
 
 export type BoxOutcome = { readonly state: "built"; readonly publicationId: string } |
+  { readonly state: "built"; readonly buildResultId: string } |
   { readonly state: "refused"; readonly reason: string } | { readonly state: "failed"; readonly reason: string };
 
-/** BX-02 must publish with finding.id as its idempotency key before recording built. */
+/** Record the durable extraction or publication before finishing its fenced claim. */
 export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id: string, token: string, outcome: BoxOutcome, now: string): Promise<boolean> {
   instant(now);
-  const detail = outcome.state === "built" ? outcome.publicationId : outcome.reason;
+  const detail = outcome.state === "built" ? ("buildResultId" in outcome ? outcome.buildResultId : outcome.publicationId) : outcome.reason;
   if (!detail.trim()) throw new Error("BOX_OUTCOME_DETAIL_REQUIRED");
   for (;;) {
     const held = await repo.mustRead(id), value = held.value;
     if (value.state !== "taken" || value.claim?.token !== token || instant(value.claim.expiresAt) <= instant(now)) return false;
     const next: BoxFinding = { ...value, state: outcome.state === "failed" ? "waiting" : outcome.state, claim: null,
-      publicationId: outcome.state === "built" ? outcome.publicationId : null,
+      publicationId: outcome.state === "built" && "publicationId" in outcome ? outcome.publicationId : null,
+      ...(outcome.state === "built" && "buildResultId" in outcome ? { buildResultId: outcome.buildResultId } : {}),
       refusal: outcome.state === "refused" ? outcome.reason : null,
       attempts: [...value.attempts, { ...value.claim, outcome: outcome.state, endedAt: now, detail }] };
     try { await repo.compareAndSet(id, held.revision, next, now); return true; }

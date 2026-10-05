@@ -1,3 +1,4 @@
+import { isQuotedExtraction, quotedSourceFindings } from "../control-plane/workers/quoted-proof.ts";
 import { manualClassForKind } from "../control-plane/promotion/source-kinds.ts";
 import { createHash } from "node:crypto";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
@@ -91,7 +92,9 @@ export function verifiedWorkerRecords(input: {
   const pageVerdict = section3Page(page, contract.recordClass, now);
   requirePublication(pageVerdict.ok, pageVerdict.reason ?? "PAGE_UNVERIFIED");
   const minimums = SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields;
-  const replay = compareCandidateWithSource(extraction, contract, primary.evidence, inventoryRecordEvidence(primary.evidence, contract.extraction));
+  const replay = isQuotedExtraction(contract, extraction)
+    ? quotedSourceFindings(extraction, { ...contract, requiredFields: SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields }, primary.evidence)
+    : compareCandidateWithSource(extraction, contract, primary.evidence, inventoryRecordEvidence(primary.evidence, contract.extraction));
   const global = replay.filter(f => !f.recordId && !COVERAGE_CODES.has(f.code));
   requirePublication(global.length === 0, `SOURCE_REPLAY_FAILED:${global.map(f => f.code).join(",")}`);
   const heldIds = new Set(replay.filter(f => f.recordId && !(f.field && !minimums.includes(f.field))).map(f => f.recordId!));

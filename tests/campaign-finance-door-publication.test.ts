@@ -12,6 +12,12 @@ import { campaignFinancePackage, publishCampaignFinance, runFinanceDoorPublicati
 import { campaignFinanceScope, readCampaignFinance, campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
 import { stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
+import { filedOrganizations, stateSmallDonorSentence } from "../lib/funding/state-money-funding.ts";
+import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
+import { composeMoneyAnswer } from "../lib/ask/money-answer.ts";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { StateMoneySection } from "../components/funding/state-money-section.tsx";
 
 const now = "2026-10-05T18:00:00Z", division = "ocd-division/country:us/state:oh/place:alder", target = "ballot-candidacy:avery";
 const provenance = { sourceUrl: "https://elections.example.gov/candidates", sourceOrg: "Fixture election authority", collectedAt: now, verifiedAt: now };
@@ -182,4 +188,48 @@ test("the admitted finance worker retains publication and unresolved rows in the
   const latest = await repos.workItems.mustRead(item.id);
   await repos.workItems.compareAndSet(item.id, latest.revision, { ...latest.value, autonomousPlan: foreign }, now);
   await assert.rejects(runFinanceDoorPublication({ ...source(), repos, store, workItemId: item.id, workerResultId: "foreign-worker" }), /admitted state/);
+});
+
+test("filed organizations and aggregate private giving reach cards and Ask, with cycle-only small-donor share", async () => {
+  const check = checkDoorDraft({ doorId: "finance:organizations", kind: "campaign-finance-search-api", ocdId: division,
+    hosts: ["filings.example.gov"], config: { agency: "Fixture filing authority", rowsPath: "results", totalPath: "count", fieldMap: JSON.stringify({
+      committeeId: "Id", registeredName: "Name", candidateName: "Candidate", office: "Office", electionYear: "Cycle", reportId: "Report", period: "Period",
+      receipts: "Raised", organizations: "Groups", individualItemized: "Itemized", individualUnitemized: "Unitemized", individualTotal: "Individual", donorScope: "Scope" }) } });
+  assert.ok(check.ok);
+  const door = applyManualEdit(null, check.value, now);
+  const text = JSON.stringify({ count: 1, results: [{ Id: "C1", Name: "Friends of Avery", Candidate: "Avery Example", Office: "Council", Cycle: 2026,
+    Report: "Cycle report", Period: "2026 election cycle", Raised: 1200, Itemized: 300, Unitemized: 100, Individual: 400, Scope: "ELECTION_CYCLE", Groups: [
+      { kind: "COMMITTEE", filedName: "Neighbors PAC", filedType: "PAC", amount: 700, MailingAddress: "66 Private Road" },
+      { kind: "CORPORATION", filedName: "Alder Organization", filedType: "Corporation", amount: 100 },
+      { kind: "INDIVIDUAL", filedName: "Private Donor", filedType: "Person", amount: 99, MailingAddress: "99 Private Lane" },
+      { filedName: "Unclassified Person", amount: 50 },
+    ] }] });
+  const bytes = Buffer.from(text), url = "https://filings.example.gov/export";
+  const store = new MemoryRoutineDataStore();
+  const input = { door, now, ballots: [ballot], captures: [], responses: [{ url, bytes, retrievedAt: now, complete: true, partial: false,
+    rawHash: createHash("sha256").update(bytes).digest("hex"), publisher: "Fixture filing authority", httpStatus: 200, transport: "REACHABLE" as const }] };
+  const result = await publishCampaignFinance(store, input);
+  assert.ok(result.promoted, result.candidate.failureDetail ?? "held");
+  assert.equal(result.readerReadback?.status, "PASS");
+  const read = await readCampaignFinance(division, { store, now });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("Finance absent");
+  const record = read.value.records[0].record;
+  assert.deepEqual(filedOrganizations(record.funding).map(row => [row.filedName, row.amount]), [["Neighbors PAC", 700], ["Alder Organization", 100]]);
+  assert.match(stateSmallDonorSentence(record.funding)!, /25%/);
+  assert.equal(stateSmallDonorSentence({ ...record.funding!, scope: "REPORT_PERIOD" }), null);
+  assert.doesNotMatch(JSON.stringify(read.value), /Private Donor|Private Lane|Private Road|Unclassified Person/);
+  const html = renderToStaticMarkup(createElement(StateMoneySection, { records: [record] }));
+  assert.match(html, /Neighbors PAC/);
+  assert.match(html, /Individual giving/);
+  assert.match(html, /<summary>Sources<\/summary>/);
+  assert.doesNotMatch(html, /Private Donor|Private Lane|Private Road|Unclassified Person/);
+  const subject = { kind: "PERSON" as const, id: target, name: "Avery Example" };
+  const evidence = campaignMoneyEvidenceFor(subject, target, undefined, () => ({ requestedTargetKey: target, officialIdentity: "NOT_OFFICIAL",
+    federal: { kind: "none" }, state: { records: [record], resolution: "DIRECT_CANDIDACY_KEY", resolvedTargetKey: target } }));
+  const answer = composeMoneyAnswer({ ask: { kind: "WHO_GAVE" }, subject, records: evidence.records, gaps: [] });
+  assert.ok(answer, "held organization amounts should compose without a writer");
+  assert.match(answer.answer, /Neighbors PAC/);
+  assert.doesNotMatch(answer.answer, /not the identities|name no donors|Private Donor/);
+  assert.deepEqual(answer.citedUrls, [url]);
 });

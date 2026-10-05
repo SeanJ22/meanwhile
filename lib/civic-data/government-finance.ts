@@ -60,7 +60,7 @@ export function governmentFinanceIssue(value: unknown): string | null {
 }
 /** Shared by worker and national code readers. Callers supply only fields
  * independently read from this government and the complete original capture. */
-export function governmentFinanceFact(input: Omit<GovernmentFinanceFact, "id" | "kind" | "category">): GovernmentFinanceFact {
+export function governmentFinanceFact(input: Omit<BudgetSource, "id"> & Pick<GovernmentFinanceFact, "detailKind" | "title" | "sourceHash" | "details">): GovernmentFinanceFact {
   const row: GovernmentFinanceFact = { ...input, kind: "GOVERNMENT_FINANCE", category: GOVERNMENT_FINANCE_KINDS[input.detailKind].category,
     id: `government-finance:${createHash("sha256").update(JSON.stringify([input.bodyId, input.detailKind, input.title,
       input.details.fiscalPeriod ?? null, input.details.identifier ?? null, input.details.fundScope ?? null, input.details.budgetVersion ?? null,
@@ -99,8 +99,8 @@ export function governmentFinanceChecklistEvidence(records: readonly GovernmentF
     };
     const values = [...rows.map(row => decimal(row.details.amount as number)), decimal(rows[0].details.publishedTotal as number)];
     const scale = Math.max(...values.map(value => value.scale));
-    const integers = values.map(value => value.integer * 10n ** BigInt(scale - value.scale));
-    return integers.slice(0, -1).reduce((sum, value) => sum + value, 0n) === integers.at(-1);
+    const integers = values.map(value => value.integer * BigInt(10) ** BigInt(scale - value.scale));
+    return integers.slice(0, -1).reduce((sum, value) => sum + value, BigInt(0)) === integers.at(-1);
   }).flat();
   return {
     "FIN-06": pairedBudgets,

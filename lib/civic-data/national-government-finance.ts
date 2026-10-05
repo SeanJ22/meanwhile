@@ -7,7 +7,7 @@ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { captureIntact, section3SourceReceipt } from "./worker-publication-evidence.ts";
 import { linkingPageFrom, section3Page, valueOnPage } from "../control-plane/promotion/section3.ts";
 import { GOVERNMENT_FINANCE_FIELDS, governmentFinanceFact, governmentFinanceKind, type GovernmentFinanceField } from "./government-finance.ts";
-import type { ManualProjectionPackage } from "./manual-projections.ts";
+import type { ManualProjectionPackage, CuratedReaderProjection } from "./manual-projections.ts";
 import { prepareManualProjectionSuccessor } from "./manual-successor.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
@@ -35,7 +35,7 @@ export function nationalGovernmentFinancePackage(input: {
   /** Official saved metadata/codebook, if the source's units or labels are not in every row. */
   readonly metadataCaptures?: readonly WorkerPublicationCapture[];
   readonly now: string;
-}): ManualProjectionPackage {
+}): ManualProjectionPackage & { readonly payload: CuratedReaderProjection } {
   const { door, government, now } = input;
   if (!(NATIONAL_GOVERNMENT_FINANCE_DOOR_KINDS as readonly string[]).includes(door.kind) || !government.sourceGovernmentId ||
     !government.bodyId || !government.name || door.ocdId !== government.ocdId || !input.responses.length) throw new Error("National finance must name this admitted government's door and publisher key.");

@@ -560,7 +560,7 @@ test("a worker kill timer defers unfinished work and ends only its owned process
 test("the autonomous wave loop stops at its dispatch slice even while waves keep working", async () => {
   const source = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   const start = source.indexOf("async function runAutonomousProcesses()");
-  const end = source.indexOf("let meetingsDiscovery:", start);
+  const end = source.indexOf("let meetingsDiscovery", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   let calls = 0, now = 0;
   const wave = async () => { calls++; now += 20; return { dispatches: [{ outcome: calls <= 3 ? "WORKED" : "FAILED" }],

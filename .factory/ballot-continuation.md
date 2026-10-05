@@ -1,3 +1,5 @@
+Latest certification update: c6ba was superseded after a new test reproduced rejection of normal legal role words. The fix normalizes only source-stated unambiguous words. A full end-to-end proof now publishes four roles and two amendments, showing only the amendment linked to the current adopted budget and leaving expired years blank. Final exact candidate is 6c874b3ef81c1d2f8b53dbdefbab2853b2778268, UNPUBLISHED and not yet ready, in /workspace/meanwhile-ballot-final-check. Canonical FULL shards 1/4..4/4, types and lint are running. Older running-candidate text below is historical. Read current status/evidence for the outcome.
+
 ## Current Codex handback run, 2026-10-05
 
 This section supersedes older preparation/assignment notes below. River assigned ballot back to codex-ballot at 16:50Z. Read current assignments before writing; do not infer an assignment from historical handoff text. This run owns token codex-ballot-46fe3bdbd08c48b2ba1408922a8e1c46 until current ballot.md says lock:none.

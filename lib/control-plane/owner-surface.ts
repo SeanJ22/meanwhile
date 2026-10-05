@@ -636,6 +636,7 @@ export interface RoutineCivicDataReaderReadbackReference {
 }
 
 export interface RoutineCivicDataSupervisorOutcome {
+  readonly lane?: "routine-civic-data" | "publish-now";
   readonly readerEdge?: import("../civic-data/reader-edge-outcome.ts").ReaderEdgePublicationOutcome;
   /** Committed input snapshot attempted through an exact campaign publication receipt; not a publication count. */
   readonly campaignPublicationApprovalsAttempted?: number;

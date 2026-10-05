@@ -1255,7 +1255,7 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
-  assert.match(runner, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/);
+  assert.match(runner, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), !PUBLISH_NOW && ONLY === null \? null : selectedTasks\)/);
   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);

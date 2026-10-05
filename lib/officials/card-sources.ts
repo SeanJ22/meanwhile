@@ -1,5 +1,7 @@
 import type { Meeting, Provenance } from "../sources/types.ts";
 
+import type { RollCallVote } from "../votes/types.ts";
+import type { ExecutiveAction } from "./executive-actions.ts";
 import type { SeatHolder } from "./lookup.ts";
 
 /**
@@ -157,10 +159,15 @@ export function districtCardSources(
 export function meetingCardSources(
   meeting: Meeting,
   representation: SeatHolder[],
+  evidence: MeetingCardEvidence = {},
 ): CardSource[] {
   const entries: CardSource[] = [
     { what: `This sitting — ${meeting.title}`, provenance: meeting.provenance },
   ];
+  if (meeting.agendaUrl) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
+  for (const [kind, label] of Object.entries(MEETING_SOURCE_LABELS)) {
+    for (const provenance of evidence[kind as keyof MeetingCardEvidence] ?? []) entries.push({ what: label, provenance });
+  }
   // BX-10: the recording is linked from the publisher's own record of the sitting, so that record is its source.
   if (meeting.videoUrl) entries.push({ what: "The recording of this sitting", provenance: meeting.provenance });
 
@@ -181,13 +188,13 @@ export function meetingCardSources(
  * photo carries the door it shipped through, because a portrait is a claim
  * about a face and the photo rule is the reason it may be shown at all.
  *
- * Money and votes are NOT listed here: those sections carry their own
- * citations on the row, per the clean-render doctrine, and repeating them in
- * a list would be the same claim twice in two registers.
+ * Money, votes and official actions join this same Sources list. Their
+ * sections pass the records they actually display; absent sections add no rows.
  */
 export function personCardSources(
   holder: SeatHolder,
   extra: CardSource[] = [],
+  sections: PersonCardEvidence = {},
 ): CardSource[] {
   const entries: CardSource[] = [];
 
@@ -201,7 +208,8 @@ export function personCardSources(
 
   entries.push(...retainedHolderSources(holder));
 
-  entries.push(...extra);
+  entries.push(...extra, ...moneyCardSources(sections.money ?? []), ...voteCardSources(sections.votes ?? []),
+    ...actionCardSources(sections.actions ?? []));
 
   return mergeSources(entries);
 }
@@ -233,4 +241,31 @@ export function prlCardSource(profile: { attribution: { text: string; url: strin
 export function sourceCountLabel(sources: CardSource[]): string | null {
   if (sources.length === 0) return null;
   return String(sources.length);
+}
+
+
+const MEETING_SOURCE_LABELS = { agendas: "Agenda contents", minutes: "Meeting minutes", records: "Meeting decisions and records",
+  commentAccess: "How to take part", cadence: "The regular meeting schedule" } as const;
+export type MeetingCardEvidence = { readonly [K in keyof typeof MEETING_SOURCE_LABELS]?: readonly Provenance[] };
+export interface PersonCardEvidence {
+  readonly money?: readonly { readonly provenance: Provenance }[];
+  readonly votes?: readonly Pick<RollCallVote, "title" | "chamber" | "rollCallUrl" | "retrievedAt">[];
+  readonly actions?: readonly Pick<ExecutiveAction, "designation" | "sourceUrl" | "documentUrl" | "sourceOrg" | "collectedAt">[];
+}
+/** FEC and state records already carry the exact filing provenance. */
+export function moneyCardSources(records: NonNullable<PersonCardEvidence["money"]>): CardSource[] {
+  return mergeSources(records.map(record => ({ what: "Money reported in the filings", provenance: record.provenance })));
+}
+export function voteCardSources(votes: NonNullable<PersonCardEvidence["votes"]>): CardSource[] {
+  return mergeSources(votes.map(vote => ({ what: `Recorded vote — ${vote.title}`, provenance: {
+    sourceUrl: vote.rollCallUrl, sourceOrg: vote.chamber === "house" ? "U.S. House of Representatives" : "U.S. Senate",
+    collectedAt: vote.retrievedAt, verifiedAt: null,
+  } })));
+}
+export function actionCardSources(actions: NonNullable<PersonCardEvidence["actions"]>): CardSource[] {
+  return mergeSources(actions.flatMap(action => {
+    const provenance = { sourceUrl: action.sourceUrl, sourceOrg: action.sourceOrg, collectedAt: action.collectedAt, verifiedAt: null };
+    return [{ what: `Official action — ${action.designation}`, provenance }, ...(action.documentUrl && action.documentUrl !== action.sourceUrl
+      ? [{ what: `Published document — ${action.designation}`, provenance: { ...provenance, sourceUrl: action.documentUrl } }] : [])];
+  }));
 }

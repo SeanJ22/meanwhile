@@ -320,8 +320,8 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
     if (record.totals.cashOnHand !== null) add("CAM-07", { cashOnHand: record.totals.cashOnHand, period: record.totals.coveringPeriod });
   }
   for (const filing of families.filings ?? []) {
-    if (officialFilingIssue(filing) !== null || !subject(filing.id, filing.kind === "CAMPAIGN_FINANCE_FILING" ? "funding" : "contest", [filing.ocdId], filing.bodyName,
-      filing.kind === "CAMPAIGN_FINANCE_FILING" ? "campaign-finance" : "candidate")) continue;
+    if (officialFilingIssue(filing) !== null || !subject(filing.id, filing.kind !== "CANDIDATE_FILING_DOCUMENT" ? "funding" : "contest", [filing.ocdId], filing.bodyName,
+      filing.kind !== "CANDIDATE_FILING_DOCUMENT" ? "campaign-finance" : "candidate")) continue;
     const add = (id: string, item: unknown) => field(filing.id, id, item, filing.documentUrl, filing.collectedAt, FRESHNESS_HOURS.daily);
     if (filing.kind === "CANDIDATE_FILING_DOCUMENT") {
       add("CAN-01", { name: filing.facts.candidateName, document: filing.documentUrl });

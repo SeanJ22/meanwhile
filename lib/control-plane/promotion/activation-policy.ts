@@ -22,7 +22,7 @@ export const ACTIVATION_GATE = {
     "CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING",
   ] as readonly string[],
   /** Within an open class, the only fields that may be approved. A class absent here has no field restriction. */
-  openFields: { "candidate-enrichment": ["campaignSite", "bio"] } as Readonly<Record<string, readonly string[]>>,
+  openFields: {} as Readonly<Record<string, readonly string[]>>,
 } as const;
 
 /** What `classFieldOpen` reads of a gate reading. */

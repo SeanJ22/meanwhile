@@ -1,0 +1,134 @@
+diff --git a/lib/control-plane/box.ts b/lib/control-plane/box.ts
+index b1f8d80bc..e81234e87 100644
+--- a/lib/control-plane/box.ts
++++ b/lib/control-plane/box.ts
+@@ -174,3 +174,9 @@ export async function boxCounts(repo: AggregateRepository<BoxFinding>): Promise<
+   for (const row of await repo.list()) counts[row.value.state]++;
+   return counts;
+ }
++
++/** Rollout switch: the existing runner path remains available until River has
++ * applied cp_box_findings and checked the connected index live. Not a fact gate. */
++export function boxIndexEnabled(environment: Readonly<NodeJS.ProcessEnv> = process.env): boolean {
++  return environment.WTP_BOX_ENABLED === "1";
++}
+diff --git a/lib/control-plane/repository/file-store.ts b/lib/control-plane/repository/file-store.ts
+index ee68131fe..a0513f14e 100644
+--- a/lib/control-plane/repository/file-store.ts
++++ b/lib/control-plane/repository/file-store.ts
+@@ -1,3 +1,4 @@
++import type { BoxFinding } from "../box.ts";
+ import type { WorkerResultRecord } from "../workers/types.ts";
+ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
+ import type { AskGapObservation } from "../ask-gap-observations.ts";
+@@ -791,6 +792,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
+     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
+     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
+     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
++    boxFindings: fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings"),
+     scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
+     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
+     /* The nightly door (RULING 242, schema v5). */
+diff --git a/lib/control-plane/repository/memory.ts b/lib/control-plane/repository/memory.ts
+index 040952f24..20e37b1c1 100644
+--- a/lib/control-plane/repository/memory.ts
++++ b/lib/control-plane/repository/memory.ts
+@@ -1,3 +1,4 @@
++import type { BoxFinding } from "../box.ts";
+ import type { WorkerResultRecord } from "../workers/types.ts";
+ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
+ import type { AskGapObservation } from "../ask-gap-observations.ts";
+@@ -330,6 +331,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
+     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
+     methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
+     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
++    boxFindings: memoryAggregateRepository<BoxFinding>("BoxFinding"),
+     scoutResults: memoryAppendOnlyRepository<ScoutResult>("scout_results"),
+     workerResults: memoryAppendOnlyRepository<WorkerResultRecord>("worker_results"),
+     /* The nightly door (RULING 242, schema v5). */
+diff --git a/lib/control-plane/repository/pg-store.ts b/lib/control-plane/repository/pg-store.ts
+index f877bddca..853918b73 100644
+--- a/lib/control-plane/repository/pg-store.ts
++++ b/lib/control-plane/repository/pg-store.ts
+@@ -1,3 +1,4 @@
++import type { BoxFinding } from "../box.ts";
+ import type { WorkerResultRecord } from "../workers/types.ts";
+ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
+ import { installDatabaseTransferCounter } from "../../db/transfer.ts";
+@@ -1200,6 +1201,7 @@ export async function createPgRepositories(
+     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state", bounded),
+     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
+     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
++    boxFindings: pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", bounded),
+     scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results", bounded),
+     workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql, "worker_results", bounded),
+     /* The nightly door (RULING 242, schema v5). */
+diff --git a/lib/control-plane/repository/types.ts b/lib/control-plane/repository/types.ts
+index 316a235dc..b30225ff6 100644
+--- a/lib/control-plane/repository/types.ts
++++ b/lib/control-plane/repository/types.ts
+@@ -1,3 +1,4 @@
++import type { BoxFinding } from "../box.ts";
+ import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
+ import type { ActiveWorkClaimReader } from "./active-work-claims.ts";
+ import type { WorkerResultRecord } from "../workers/types.ts";
+@@ -751,6 +752,7 @@ export interface ControlPlaneRepositories {
+   readonly methodCandidates: AggregateRepository<CandidateStore>;
+   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
+   readonly scoutResults: AppendOnlyRepository<ScoutResult>;
++  readonly boxFindings: AggregateRepository<BoxFinding>;
+   readonly workerResults: AppendOnlyRepository<WorkerResultRecord>;
+   /**
+    * THE NIGHTLY DOOR. (RULING 242 — schema v5.)
+diff --git a/lib/control-plane/repository/worker-completion.ts b/lib/control-plane/repository/worker-completion.ts
+index a98303f41..fc4c2f235 100644
+--- a/lib/control-plane/repository/worker-completion.ts
++++ b/lib/control-plane/repository/worker-completion.ts
+@@ -1,3 +1,4 @@
++import { boxIndexEnabled, indexDetectiveFindings } from "../box.ts";
+ import { endAttempt, isExpired, release, type Attempt } from "../attempt.ts";
+ import type { AuditFinding, ValidationRecord } from "../audit.ts";
+ import type { RouteTask } from "../route-task.ts";
+@@ -32,6 +33,10 @@ export async function completeWorkerTask(repos: ControlPlaneRepositories, result
+   };
+   await repos.workerResults.append(result.workItemId, result.id, committed, result.endedAt);
+   await applyWorkerCompletion(repos, committed);
++  if (boxIndexEnabled() && committed.result.role === "DETECTIVE") {
++    await indexDetectiveFindings(repos.boxFindings, { ...committed, result: committed.result },
++      new Map((await repos.artifacts.readAll()).map(artifact => [artifact.artifactId, artifact])), committed.endedAt);
++  }
+   return committed;
+ }
+ 
+diff --git a/lib/control-plane/workers/standing-runtime.ts b/lib/control-plane/workers/standing-runtime.ts
+index b338db991..7e60d1f28 100644
+--- a/lib/control-plane/workers/standing-runtime.ts
++++ b/lib/control-plane/workers/standing-runtime.ts
+@@ -1,3 +1,4 @@
++import { backfillBox, boxIndexEnabled, indexScoutFindings } from "../box.ts";
+ import { workAdapterQueue } from "./engineering-adapter.ts";
+ import { detectiveExecutor, heldRecoveryBrief, investigationRole, subjectScoutHistory } from "./detective.ts";
+ import { outsideRecordBlockBriefs } from "./record-block.ts";
+@@ -66,6 +67,14 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
+   const [prior, initialWorkers] = await Promise.all([
+     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
+   ]);
++  const indexFindings = boxIndexEnabled(input.environment ?? process.env);
++  if (indexFindings) {
++    const detectives = initialWorkers.filter(record => record.result.role === "DETECTIVE");
++    const artifacts = detectives.length ? await input.repos.artifacts.readAll() : [];
++    await backfillBox(input.repos.boxFindings, { scouts: prior,
++      detectives: detectives as import("../box.ts").BoxDetectiveRecord[],
++      artifacts: new Map(artifacts.map(artifact => [artifact.artifactId, artifact])) }, now());
++  }
+   // One worker process builds this runtime once and runs many tasks through it; `beginTask` keeps one task's
+   // worker history current without re-reading everyone's.
+   let priorWorkers = initialWorkers;
+@@ -247,6 +256,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
+           recordClasses:[recorded.recordClass],observedAt:recorded.recordedAt,
+           payload:{subjectId:recorded.subjectId,recordClass:recorded.recordClass,facts:recorded.findings,routes:recorded.candidates,tried:recorded.rungs,nextRungs:recorded.nextRungs}})],recorded.recordedAt);
+         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
++        if (indexFindings) await indexScoutFindings(input.repos.boxFindings, recorded, now());
+         return recorded;
+       }
+     })}:{})};

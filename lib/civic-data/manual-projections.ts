@@ -290,8 +290,10 @@ function curatedRecordIssue(
       (bodyOcdId === null && !string(row.tenant)) ||
       !Number.isFinite(row.lat) ||
       !Number.isFinite(row.lng) ||
-      Number(row.lat) < -90 || Number(row.lat) > 90 ||
-      Number(row.lng) < -180 || Number(row.lng) > 180 ||
+      // BX-09: no person reviews an automatic pin, so the validator holds the same United States box the matcher uses
+      // (lib/meetings/automatic-venue-resolutions.ts); a (0, 0) or overseas point can never be promoted.
+      Number(row.lat) < 18 || Number(row.lat) > 72 ||
+      Number(row.lng) < -180 || Number(row.lng) > -65 ||
       !/^https:\/\//.test(string(row.addressSourceUrl)) ||
       !/^https:\/\//.test(string(row.coordinateSourceUrl)) ||
       !Number.isFinite(Date.parse(string(row.verifiedAt)))

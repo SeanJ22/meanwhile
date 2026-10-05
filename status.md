@@ -3,9 +3,9 @@
 build_state: integrating (release 3 live; waiting on runner adoption and held lanes)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
-run_id: session_01NH24r1XGQSiiPDzK2fFJSp
-lock: none
-heartbeat: 2026-10-05T22:40:13Z
+run_id: session_01VxkjQwRW6tEj8XDPVSGkKU
+lock: river-20261005T225818Z-15877
+heartbeat: 2026-10-05T22:58:19Z
 
 ## Next River run
 

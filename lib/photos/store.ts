@@ -29,6 +29,6 @@ export async function storeVerifiedPortrait(name: string, sources: PortraitSourc
   const imageHash = portraitHash(bytes);
   const key = `officials/${imageHash.slice(7)}.${decoded.format === "jpeg" ? "jpg" : decoded.format}`;
   await io.put(key, bytes);
-  return {url:`/api/portraits/${key}`,sourceUrl:sources.imageUrl,license:sourceCheck.license.value,
-    attribution:`Portrait: ${sourceCheck.license.sourceUrl}`,collectedAt:now,verification:{...sourceCheck,imageHash,sourceImageHash:portraitHash(original)}};
+  return {url:`/api/portraits/${key}`,sourceUrl:sources.imageUrl,license:sourceCheck.license?.value ?? null,
+    attribution:`Portrait: ${sourceCheck.attribution!.sourceUrl}`,collectedAt:now,verification:{...sourceCheck,imageHash,sourceImageHash:portraitHash(original)}};
 }

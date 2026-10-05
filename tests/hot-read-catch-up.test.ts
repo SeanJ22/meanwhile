@@ -442,7 +442,7 @@ test("C6: the repairs a catch-up read could race run first", () => {
   assert.match(runner, /\.\.\.\[\.\.\.unsettledSourceRuns\]\.map\(\(id\) => pendingByTaskId\.get\(id\)!\.task\.acquisitionFailureDomain\)/, "never beside a read of the same lane");
   assert.match(runner, /limitMs: hotReadLimitsMs\[phase\]/);
   assert.match(runner, /setTimeout\(resolve, Math\.max\(0, atMs - Date\.now\(\)\)\)\.unref\(\)/);
-  assert.match(runner, /const hotReadTasks = FORCE\s*\? \[\]/, "a forced pass keeps its exact selection");
+  assert.match(runner, /const hotReadTasks = FORCE \|\| PUBLISH_NOW\s*\? \[\]/, "a forced pass keeps its exact selection");
 });
 
 test("C6: the parent's account of a killed pass counts the reads admitted during repair", () => {

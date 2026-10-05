@@ -367,6 +367,8 @@ export interface WorkOutcome {
 /** What one dispatched unit of work did. Recorded whatever the outcome. */
 export interface DispatchResult {
   readonly obligationId: string;
+  /** CH-26: the repository calls a lease worker made for this one task, when it counted them. */
+  readonly repositoryCalls?: number;
   readonly routeTaskId: string | null;
   /**
    * What actually ran, as the worker reported it. The FACT.

@@ -48,14 +48,12 @@ import {
   VOTING_SITES_CONTRACT,
   votingSitesCandidate,
   votingSitesStandardSuccessor,
-  votingSitesScopedSuccessor,
   type VotingSiteAcquisitionFailure,
 } from "../lib/ballot/voting-sites-data-plane.ts";
 import { COCHISE_ELECTIONS_URL, COCHISE_VOTER_URL, COCHISE_VOTE_CENTERS_URL,
   cochiseVotingJurisdiction } from "../lib/sources/cochise-vote-centers.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
-import { votingSitesReceiptSource } from "../lib/civic-data/voting-sites-source-task.ts";
 import { OUTBOUND_USER_AGENT } from "../lib/geo/outbound-agent.ts";
 import {
   CENSUS_BENCHMARK,
@@ -82,8 +80,7 @@ import {
  * a named gap; it is never promoted into this one.
  */
 const CURRENT_ELECTION = "2026 General";
-const COCHISE_ONLY = process.argv.slice(2).includes("--cochise-only");
-const RECEIPT_SOURCE = votingSitesReceiptSource(COCHISE_ONLY);
+const RECEIPT_SOURCE = "voting-sites";
 
 // One home for the contact address; see lib/geo/outbound-agent.ts.
 const UA = OUTBOUND_USER_AGENT;
@@ -852,22 +849,6 @@ async function main(): Promise<void> {
   const prior = priorRead.kind === "PROMOTED" ? priorRead.value : null;
   for (const [address, point] of heldVotingSiteCoordinates(prior)) geocodeCache.set(address, point);
 
-  if (COCHISE_ONLY) {
-    const cochise = await retrieveCochise();
-    const file = votingSitesScopedSuccessor(prior, cochise, TODAY);
-    const retrievedAt = new Date().toISOString();
-    const candidate = votingSitesCandidate({ current: file, prior, failures: [], rawBodies: officialRawBodies,
-      successfulAuthorityReads, requestedUrl: COCHISE_VOTE_CENTERS_URL,
-      finalUrl: COCHISE_VOTE_CENTERS_URL, retrievedAt, retainRawBodies: true,
-      carriedFromVersionId: priorRead.kind === "PROMOTED" ? priorRead.metadata.versionId : null });
-    candidateSubmitted = true;
-    const outcome = await processRegisteredManualCandidate(store, VOTING_SITES_CONTRACT.id, candidate, retrievedAt);
-    printSourceRunnerReceipt(RECEIPT_SOURCE, candidate, outcome);
-    if (!outcome.promoted) throw new Error(`Cochise voting-site promotion refused: ${outcome.candidate.failureCode}`);
-    console.log(`promoted Cochise's 18 official vote centers with other exact jurisdictions retained from ${priorRead.kind} base`);
-    return;
-  }
-
   const jurisdictions: VotingJurisdiction[] = [];
   const failures: VotingSiteAcquisitionFailure[] = [];
 
@@ -982,7 +963,7 @@ try {
       sourceId: VOTING_SITES_CONTRACT.sourceId,
       recordClass: VOTING_SITES_CONTRACT.recordClass,
       scope: VOTING_SITES_CONTRACT.scope,
-      requestedUrl: COCHISE_ONLY ? COCHISE_VOTE_CENTERS_URL : PIMA_SOURCE_PAGE,
+      requestedUrl: PIMA_SOURCE_PAGE,
       attemptedAt,
       failureDetail: error instanceof Error ? error.message : String(error),
       parserVersion: VOTING_SITES_CONTRACT.parserVersion,

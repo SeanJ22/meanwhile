@@ -458,6 +458,20 @@ export interface AppendOnlyRepository<T> {
   readLatest(keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>>;
   /** The keys this log holds. */
   keys(): Promise<readonly string[]>;
+  /**
+   * The keys holding at least one record whose JSON value at `path` (a scalar
+   * `#>>` text extraction, as `readWhere`) equals `value`, sorted. EXACTLY
+   * `keys()` narrowed to those keys: Postgres answers from an index on that
+   * expression where one exists (CH-26), the file and memory providers filter
+   * their own records. Optional so a test double need not carry it; callers
+   * use `keysWhere` in this file, which says when it is missing.
+   */
+  keysWhere?(path: readonly string[], value: string): Promise<readonly string[]>;
+}
+
+/** The keys of a log holding a record whose value at `path` equals `value`, or null when the provider has no filtered read (the caller then reads as before). */
+export async function keysWhere<T>(log: AppendOnlyRepository<T>, path: readonly string[], value: string): Promise<readonly string[] | null> {
+  return log.keysWhere ? log.keysWhere(path, value) : null;
 }
 
 /**

@@ -47,6 +47,12 @@ export interface Provenance {
   /** When a human or check last confirmed it still matches the source. */
   verifiedAt: string | null;
   /**
+   * The door this record was read through (DB-28): the registry id of the feed or page that holds it. Stamped where the
+   * record is published, never by an adapter, so a fact's Sources row can name its door. Absent on a record whose door
+   * is not known yet.
+   */
+  doorId?: string;
+  /**
    * The record came from somewhere OTHER than the publishing body's own site
    * or feed — an aggregator, a press report, a third party's index (6f2,
    * 2026-08-15).

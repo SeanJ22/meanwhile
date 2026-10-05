@@ -1,9 +1,11 @@
+import { isQuotedExtraction, quotedSourceFindings } from "../control-plane/workers/quoted-proof.ts";
+import { manualClassForKind } from "../control-plane/promotion/source-kinds.ts";
 import { createHash } from "node:crypto";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { ParserResult, WorkerResultRecord } from "../control-plane/workers/types.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
 import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
-import { linkingPageFrom, SECTION3_MINIMUMS, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
+import { linkingPageFrom, pageLinksTo, SECTION3_MINIMUMS, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { ManualSourceSetReceipt } from "./types.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -18,7 +20,7 @@ export function requirePublication(value: unknown, reason: string): asserts valu
 const COVERAGE_CODES = new Set(["COMPLETENESS_SOURCE_ROW_OMITTED", "DECLARED_COUNT_MISMATCH"]);
 
 /**
- * Any job's saved official HTML pages to read in code, newest first: each
+ * Any job's saved text pages, CSV and extracted PDF text to read in code, newest first: each
  * distinct content once, and at most `pages` distinct pages. Every saved copy
  * of a page is kept, so a reader can pass over a later "Access Denied" copy
  * to the good one saved before it.
@@ -26,7 +28,7 @@ const COVERAGE_CODES = new Set(["COMPLETENESS_SOURCE_ROW_OMITTED", "DECLARED_COU
 export function heldPageCopies(artifacts: readonly ArtifactRecord[], pages: number): readonly ArtifactRecord[] {
   const hashes = new Set<string>(), urls = new Set<string>();
   // Only HTTPS copies: the publication door accepts no other source, and a page it would refuse must not hold the facts beside it.
-  return [...artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && a.canonicalUrl.startsWith("https://") && isOfficialSource(a.canonicalUrl))
+  return [...artifacts].filter(a => !a.partial && /^(?:text\/(?:html|plain|csv|tab-separated-values)|application\/(?:xhtml\+xml|json|csv))(?:;|$)/i.test(a.contentType) && a.canonicalUrl.startsWith("https://"))
     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
     .filter(a => !hashes.has(a.contentHash) && Boolean(hashes.add(a.contentHash)))
     .filter(a => urls.has(a.canonicalUrl) || (urls.size < pages && Boolean(urls.add(a.canonicalUrl))));
@@ -48,10 +50,11 @@ export function captureProblem(capture: WorkerPublicationCapture): string | null
 }
 
 /** One reader-facing source receipt for the saved pages a publication rests on. */
-export function section3SourceReceipt(captures: readonly WorkerPublicationCapture[], now: string, reviewedBy: string, reviewedEvidence: string): ManualSourceSetReceipt {
+export function section3SourceReceipt(captures: readonly WorkerPublicationCapture[], now: string, reviewedBy: string, reviewedEvidence: string, recordClass = ""): ManualSourceSetReceipt {
   return { contractVersion: 1, reviewedAt: now, reviewedBy,
     sources: captures.map(c => ({ requestedUrl: c.evidence.canonicalUrl, finalUrl: c.evidence.canonicalUrl, publisher: c.evidence.sourceId,
-      sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: c.observedAt, httpStatus: c.httpStatus!,
+      sourceClass: manualClassForKind(section3Page({ url: c.evidence.canonicalUrl, text: c.evidence.text, retrievedAt: c.observedAt,
+        sourcePolicy: c.sourcePolicy, campaign: c.campaign, linkingPage: linkingPageFrom(c.evidence.canonicalUrl, captures.map(copy => copy.evidence)) }, recordClass, now).kind), retrievedAt: c.observedAt, httpStatus: c.httpStatus!,
       rawHash: (c.evidence.sourceDocument?.contentHash ?? c.evidence.contentHash).slice(7), reviewOutcome: "SUPPORTED", reviewedEvidence })) };
 }
 
@@ -84,12 +87,14 @@ export function verifiedWorkerRecords(input: {
   const primary = input.captures.find(c => c.evidence.artifactId === extraction.artifactId);
   requirePublication(primary && captureIntact(primary), "PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE");
   const linkingPage = linkingPageFrom(primary.evidence.canonicalUrl, input.captures.filter(captureIntact).map(c => c.evidence));
-  const page = { url: primary.evidence.canonicalUrl, text: primary.evidence.text, retrievedAt: primary.observedAt, linkingPage, sourcePolicy: primary.sourcePolicy,
+  const page = { url: primary.evidence.canonicalUrl, text: primary.evidence.text, retrievedAt: primary.observedAt, linkingPage, sourcePolicy: primary.sourcePolicy, campaign: primary.campaign,
     citations: input.captures.filter(c => c !== primary && captureIntact(c)).map(c => ({ url: c.evidence.canonicalUrl, text: c.evidence.text, retrievedAt: c.observedAt })) };
   const pageVerdict = section3Page(page, contract.recordClass, now);
   requirePublication(pageVerdict.ok, pageVerdict.reason ?? "PAGE_UNVERIFIED");
   const minimums = SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields;
-  const replay = compareCandidateWithSource(extraction, contract, primary.evidence, inventoryRecordEvidence(primary.evidence, contract.extraction));
+  const replay = isQuotedExtraction(contract, extraction)
+    ? quotedSourceFindings(extraction, { ...contract, requiredFields: SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields }, primary.evidence)
+    : compareCandidateWithSource(extraction, contract, primary.evidence, inventoryRecordEvidence(primary.evidence, contract.extraction));
   const global = replay.filter(f => !f.recordId && !COVERAGE_CODES.has(f.code));
   requirePublication(global.length === 0, `SOURCE_REPLAY_FAILED:${global.map(f => f.code).join(",")}`);
   const heldIds = new Set(replay.filter(f => f.recordId && !(f.field && !minimums.includes(f.field))).map(f => f.recordId!));
@@ -114,9 +119,10 @@ ${field}`)));
     records.push({ ...record, fields: Object.fromEntries(Object.entries(record.fields).filter(([field]) => verdict.verifiedFields.includes(field))) });
   }
   requirePublication(records.length > 0 || pulledRecords.length > 0, `NO_RECORD_MEETS_MINIMUMS:${minimums.join(",")}`);
-  const captures = linkingPage ? [primary, ...input.captures.filter(c => c.evidence.canonicalUrl === linkingPage.url).slice(0, 1)] : [primary];
+  const captures = [primary, ...input.captures.filter(c => c !== primary && captureIntact(c) &&
+    (c.evidence.canonicalUrl === linkingPage?.url || pageLinksTo(page, c.evidence.canonicalUrl)))];
   const sourceReceipt = section3SourceReceipt(captures, now, `section3-validator:${parser.id}`,
-    `Parser result ${parser.id}: ${records.length} record(s) found on the saved official page inside its freshness window (§3).`);
+    `Parser result ${parser.id}: ${records.length} record(s) found on the saved page inside its freshness window (§3).`, contract.recordClass);
   return { contract, extraction: { ...extraction, records }, primary, captures, sourceReceipt, heldRecordIds, pulledRecords };
 }
 
@@ -141,7 +147,7 @@ export async function capturesForPublication(input: {
   const primary = await input.readCapture(input.primaryId, input.results);
   if (isOfficialSource(primary.evidence.canonicalUrl)) return [primary];
   const own = (await input.repos.artifacts.read(input.workItemId))
-    .filter(a => a.artifactId !== input.primaryId && !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl)).slice(-10).map(a => a.artifactId);
+    .filter(a => a.artifactId !== input.primaryId && !a.partial && /^(?:text\/(?:html|plain|csv|tab-separated-values)|application\/(?:xhtml\+xml|json|csv))(?:;|$)/i.test(a.contentType)).slice(-10).map(a => a.artifactId);
   const learned = input.officialLinks?.get(hostOfUrl(primary.evidence.canonicalUrl) ?? "")?.slice(0, 3) ?? [];
   const read = await Promise.all([...new Set([...learned, ...own])].map(id => input.readCapture(id, input.results).catch(() => null)));
   return [primary, ...read.filter((c): c is WorkerPublicationCapture => c !== null)];

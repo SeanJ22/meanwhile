@@ -8,6 +8,8 @@ import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
 import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
 import type { MethodKnowledge } from "../lib/method/knowledge.ts";
+import { finishBoxFinding, takeBoxFinding } from "../lib/control-plane/box.ts";
+import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 
 test("a lease worker builds its runtime once per process; the old per-task build stays behind its switch", async () => {
@@ -29,4 +31,39 @@ test("beginTask refreshes one task's worker history on a runtime that serves man
   assert.ok(typeof runtime.beginTask === "function");
   for (const row of tasks) await runtime.beginTask!(row.value);
   assert.ok(runtime.repos === h.repos, "same stores across tasks");
+});
+
+
+test("Box startup replays durable Scout findings once without resetting a completed build", async t => {
+  const h = await autonomousHarness({ response: { transportError: "socket timeout" } });
+  const root = await mkdtemp(join(tmpdir(), "box-runtime-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const method: MethodKnowledge = { version: 56, updatedOn: "2026-09-03", routes: [] };
+  await writeFieldManual(h.repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
+  const scout: ScoutResult = {
+    formatVersion: 1, attemptId: "box-scout", obligationId: "box-obligation", routeTaskId: "box-task",
+    workItemId: "box-send", subjectId: "body:example", routeId: null, recordClass: "meetings", providerId: null,
+    reason: "saved finding", outcome: "EVIDENCE_FOUND", stoppedBy: "MODEL", rungs: [], distinctEvidenceRungs: 0,
+    candidates: [], findings: [{ kind: "RECORD", summary: "Clerk", exactQuote: "Alice Adams is Clerk",
+      sourceUrl: "https://example.gov/roster", subjectId: "person:alice", artifactIds: ["saved-artifact"] }],
+    nextRungs: [], unverified: [], narrative: "", worker: { provider: "anthropic", model: "fixture", modelReported: null },
+    usage: { inputTokens: 0, outputTokens: 0, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, turns: 1, toolCalls: 1 },
+    usd: 0, elapsedMs: 1, artifactIds: ["saved-artifact"], methodCandidateIds: [], refusal: null,
+    startedAt: h.now(), recordedAt: h.now(),
+  };
+  await h.repos.scoutResults.append(scout.obligationId, scout.attemptId, scout, scout.recordedAt);
+  const start = (enabled: boolean) => autonomousStandingRuntime({ root, repos: h.repos, now: h.now,
+    auditCeilingUsd: 1, environment: { NODE_ENV: "test", WTP_BOX_ENABLED: enabled ? "1" : "0" } });
+  await start(false);
+  assert.equal((await h.repos.boxFindings.list()).length, 0, "old runtime path stays available");
+  await start(true);
+  const [row] = await h.repos.boxFindings.list();
+  assert.equal(row.value.subjectId, "person:alice");
+  assert.equal(row.value.origins[0].resultId, scout.attemptId);
+  const end = new Date(Date.parse(h.now()) + 60_000).toISOString();
+  const claim = (await takeBoxFinding(h.repos.boxFindings, row.id, "builder", h.now(), end))!;
+  assert.equal(await finishBoxFinding(h.repos.boxFindings, row.id, claim.token, { state: "built", publicationId: "published" }, h.now()), true);
+  await start(true);
+  assert.equal((await h.repos.boxFindings.list()).length, 1);
+  assert.equal((await h.repos.boxFindings.mustRead(row.id)).value.publicationId, "published");
 });

@@ -134,9 +134,7 @@ test("a persisted facts-only Scout with no parser reaches the existing campaign-
   assert.ok(!p.requests.includes(PROFILE), "the profile's captured bytes are reused without a new request");
   assert.equal(first.report.chain.approved.length, 1, "independent saved profile and primary campaign page publish in the same pass");
   const approval = first.report.chain.approved[0]!;
-  assert.match(approval.campaignSite.audit.secondSignal, /^INDEPENDENT_PROFILE:/);
-  assert.ok(approval.campaignSite.audit.secondSignal.includes(artifact.contentHash));
-  assert.deepEqual(approval.campaignSite.audit.startedFrom, ["EVIDENCE_VAULT", "CANONICAL_SUBJECT_IDENTITY"]);
+  assert.equal(approval.campaignSite.audit, undefined, "identity evidence is enough; no independent audit record is manufactured");
   assert.equal(first.report.chain.rereadsUsed, 0);
   assert.equal(approval.campaignSite.evidence.cycleSource?.artifactId, artifact.id);
   assert.match(approval.campaignSite.verification, /; https:\/\/www.ballotready.org\/people\/lily-tang-williams identifies the 2026 election/);
@@ -193,7 +191,7 @@ async function captureProfile(p: Plane, body = PROFILE_HTML, now = T1, sourceUrl
   return artifact;
 }
 
-test("saved profiles cannot certify a different person, office, cycle, campaign URL or publisher", async t => {
+test("conflicting supplemental profiles cannot hold a campaign page that independently identifies its own candidate", async t => {
   for (const { body, sourceUrl = PROFILE, at = T1 } of [
     { body: PROFILE_HTML.replaceAll("Lily Tang Williams", "Someone Else") },
     { body: PROFILE_HTML.replace("Representative in Congress - District 2", "Governor") },
@@ -208,9 +206,9 @@ test("saved profiles cannot certify a different person, office, cycle, campaign 
     await captureProfile(p, body, at, sourceUrl);
     const report = await cycle(p, T1);
     const state = (await readPipelineStates(p.repos)).find(s => s.itemId === discoveryPointerItemId(TANG_WILLIAMS, LILY))!;
-    assert.equal(state.stage, "VERIFIED", `the primary can verify, but conflicting or stale profile bytes cannot certify identity: ${body}`);
-    assert.match(state.refused!.reasons[0]!.detail, /NO_INDEPENDENT_SECOND_SIGNAL/);
-    assert.equal(report.report.chain.approved.length, 0);
+    assert.equal(state.stage, "APPROVED_FOR_PROMOTION");
+    assert.equal(report.report.chain.approved.length, 1);
+    assert.equal(report.report.chain.approved[0].campaignSite.evidence.cycleSource, undefined, "an unrelated profile never becomes the source of the cycle");
   }
 });
 
@@ -725,7 +723,7 @@ test("read bounds hold without a pass deadline; held independent sources publish
   /* A clock change does not turn the same site into an independent source. */
   const held = await cycle(p, T2, { maxReads: 0 }, pages);
   assert.equal(held.report.chain.rereadsUsed, 0);
-  assert.equal(held.report.chain.approved.length, 0);
+  assert.equal(held.report.chain.approved.length, 1);
   await captureProfile(p, PROFILE_HTML, T2);
   const reread = await cycle(p, "2026-09-24T23:30:00.000Z", { maxReads: 0 }, pages);
   assert.equal(reread.report.chain.readsUsed, 0, "held independent evidence does not need a new request");
@@ -808,7 +806,7 @@ test("held independent evidence advances before new leads and slow backlog reads
   const p = await plane(t);
   const pointer = discoveryPointerItemId(TANG_WILLIAMS, LILY);
   await cycle(p, T1);
-  assert.equal((await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)?.stage, "VERIFIED", "a real independent source remains owed");
+  assert.equal((await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)?.stage, "APPROVED_FOR_PROMOTION", "CP-12: its own identity published in the first pass");
   await captureProfile(p, PROFILE_HTML, T2);
   const { pages } = await backlog(p);
 
@@ -975,8 +973,8 @@ test("the door verifies the vault again and holds by name what it cannot prove; 
   assert.equal(derivedAuthorityFor(candidate).ok, true);
   const tampered = { ...candidate, retrieval: { ...candidate.retrieval, derived: { inputs: candidate.retrieval.derived!.inputs.map((i) => (i.kind === "PIPELINE_APPROVAL" ? { ...i, recordId: "" } : i)) } } };
   assert.deepEqual(derivedAuthorityFor(tampered), { ok: false, code: "DERIVED_INPUT_MALFORMED", detail: "a pipeline-approval input lacks its item, record or approval time" });
-  /* A closed gate publishes nothing new. */
-  assert.match(derivedCampaignSitesPass({ approvals: [structural], held: () => heldBytes, profiles: null, gateOpen: false, now: T2 }).candidate.retrieval.failureDetail ?? "", /^GATE_CLOSED/);
+  /* CP-14: the retired gate cannot withhold independently verified facts. */
+  assert.ok(derivedCampaignSitesPass({ approvals: [structural], held: () => heldBytes, profiles: null, gateOpen: false, now: T2 }).plan);
 });
 
 test("newer fully verified campaign evidence refreshes the same reader URL automatically", () => {

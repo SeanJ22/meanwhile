@@ -22,23 +22,11 @@
  * standard tracks which measures had well-funded campaigns**, which is the
  * information asymmetry the equal-effort rule exists to catch.
  *
- * ## EQUAL EFFORT FOR AND AGAINST IS CONSTITUTIONAL
+ * ## Equal effort is measured, not a publication gate
  *
- * It follows directly from equal-effort-per-candidate. **Showing who funded the
- * yes and not the no is taking a side by omission** — and it is worse than the
- * candidate case, because a measure has exactly two sides and a reader can see
- * that one column is empty.
- *
- * So `money` is not one field but a PAIR, and the pair is enforced rather than
- * reported: `bothSidesShip` refuses a measure whose support committees are
- * hunted and whose opposition committees are not. **Both sides ship at equal
- * depth or neither ships.**
- *
- * *The one honest exception, and it is narrow.* A contest can genuinely have no
- * registered opposition committee. That is a FINDING and it renders as one —
- * `NONE_REGISTERED` with the filing officer named and the date checked — and it
- * is completely different from `NOT_HUNTED`. Collapsing them would let a session
- * skip the harder side and call it an absence.
+ * Money is measured as a pair so an unfinished side remains visible as work.
+ * Each verified fact publishes immediately; the score never holds its neighbor.
+ * A sourced NONE_REGISTERED finding is distinct from NOT_HUNTED.
  *
  * ## The vote-recommendation ban is UNCHANGED
  *
@@ -179,21 +167,8 @@ export interface SymmetryVerdict {
   readonly reason: string;
 }
 
-/**
- * **BOTH SIDES SHIP AT EQUAL DEPTH OR NEITHER SHIPS.**
- *
- * This is a CHECK that refuses, not a report that notices — the brief's own
- * words, and the difference is everything. A report of asymmetry is a thing
- * somebody reads after the asymmetric card has already been in front of a
- * reader.
- *
- * The asymmetry that matters is one side FOUND and the other NOT_HUNTED. Two
- * sides both argued-absent is symmetric; two sides both found is symmetric; one
- * side found and the other genuinely having no registered committee is
- * symmetric, because that is a fact about the contest rather than about our
- * effort.
- */
-export function bothSidesShip(reading: MeasureReading, today: string): SymmetryVerdict {
+/** Scoreboard comparison only. It never controls whether a fact publishes. */
+export function moneyCoverageSymmetry(reading: MeasureReading, today: string): SymmetryVerdict {
   const forSide = reading.fields.find((f) => f.field === "moneyFor");
   const againstSide = reading.fields.find((f) => f.field === "moneyAgainst");
 
@@ -210,7 +185,7 @@ export function bothSidesShip(reading: MeasureReading, today: string): SymmetryV
   const aOk = fieldSatisfied(againstSide, today);
   if (fOk && aOk) return { symmetric: true, reason: "both sides carry a satisfied reading" };
   if (!fOk && !aOk) {
-    return { symmetric: true, reason: "neither side is hunted yet — symmetric, and neither ships" };
+    return { symmetric: true, reason: "neither side is hunted yet; both remain open work" };
   }
 
   const hunted = fOk ? "support" : "opposition";
@@ -220,13 +195,13 @@ export function bothSidesShip(reading: MeasureReading, today: string): SymmetryV
     reason:
       `the ${hunted} side is satisfied and the ${notHunted} side is not (${
         fOk ? againstSide.state : forSide.state
-      }). Both sides ship at equal depth or neither ships. If that side genuinely has no registered ` +
+      }). Verified facts publish; the missing side remains open work. If that side has no registered ` +
       "committee, record NONE_REGISTERED with the filing officer named — which is a finding, and is not " +
       "the same thing as nobody having looked.",
   };
 }
 
-export type MeasureVerdict = "DONE" | "OWED" | "BLOCKED_ASYMMETRIC";
+export type MeasureVerdict = "DONE" | "OWED" | "ASYMMETRIC_COVERAGE";
 
 export interface MeasureScore {
   readonly measureId: string;
@@ -244,13 +219,10 @@ export interface MeasureScore {
  * any source moves and nothing would notice — RULING 116's frozen gap in a
  * per-row costume. Same reasoning as the Kelly scoreboard's.
  *
- * `BLOCKED_ASYMMETRIC` is deliberately its own verdict rather than folded into
- * `OWED`. A measure missing its plain-language decoding needs MORE HUNTING; a
- * measure whose money is one-sided must not SHIP, whatever else it carries.
- * Those are different instructions and a single verdict cannot give both.
+ * ASYMMETRIC_COVERAGE reports which side still needs work. It is never a hold.
  */
 export function scoreMeasure(reading: MeasureReading, today: string): MeasureScore {
-  const symmetry = bothSidesShip(reading, today);
+  const symmetry = moneyCoverageSymmetry(reading, today);
   const owed: MeasureField[] = [];
   let satisfied = 0;
 
@@ -261,7 +233,7 @@ export function scoreMeasure(reading: MeasureReading, today: string): MeasureSco
   }
 
   const verdict: MeasureVerdict = !symmetry.symmetric
-    ? "BLOCKED_ASYMMETRIC"
+    ? "ASYMMETRIC_COVERAGE"
     : satisfied === MEASURE_FIELDS.length
       ? "DONE"
       : "OWED";

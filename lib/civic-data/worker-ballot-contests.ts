@@ -1,3 +1,5 @@
+import { recordPublicationFlow } from "./publication-flow.ts";
+import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { createHash } from "node:crypto";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
@@ -127,14 +129,21 @@ export async function publishWorkerBallotContestsResults(input: {
       const prior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
       const candidate = manualProjectionCandidate(mergeBallotContests(checked.package, prior));
       candidateId = candidate.id; verified = true;
+      const contests = Object.values((checked.package.payload as GenericBallotProjection).ballots).flatMap(ballot => ballot.contests);
+      const before = Object.values((prior?.payload as GenericBallotProjection | undefined)?.ballots ?? {}).flatMap(ballot => ballot.contests);
+      const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
+        accepted: contests.map(contest => ({ recordId: contest.id, readerId: contest.id, value: contest, previous: before.find(old => old.id === contest.id) })) });
       const published = await processRegisteredManualCandidate(input.store, "ballot-contests", candidate, input.now, prior?.versionId ?? null);
+      if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, published.candidate.candidate.id,
+        { workerResultId: parser.id, stage: "CHECKED", records: contests.length, changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       requirePublication(published.promoted && published.readerReadback?.status === "PASS", `BALLOT_READER_HELD:${published.candidate.failureDetail ?? published.candidate.state}`);
       versionId = published.promoted.versionId;
-      const contests = Object.values((checked.package.payload as GenericBallotProjection).ballots).flatMap(ballot => ballot.contests);
+      await recordPublicationFlow(input.repos, published.candidate.candidate.id,
+        { workerResultId: parser.id, stage: "LIVE", records: contests.length, changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       outcome = { at: input.now, workerResultId: parser.id, status: checked.heldContests.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "COMPLETE_BALLOT_CONTESTS_PUBLISHED", candidateId, versionId,
         detail: `${contests.length} complete official contest(s) published together with every listed candidate; ${checked.heldContests.length} incomplete contest(s) remain owed: ${checked.heldContests.join("; ")}.`,
-        acceptedRecordIds: contests.map(contest => contest.id), ...(checked.heldContests.length ? { recovery: "WORKER" as const } : {}) };
+        ...changes, acceptedRecordIds: contests.map(contest => contest.id), ...(checked.heldContests.length ? { recovery: "WORKER" as const } : {}) };
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);
       outcome = { at: input.now, workerResultId: parser.id, status: "HELD", code: detail.split(":")[0], detail,

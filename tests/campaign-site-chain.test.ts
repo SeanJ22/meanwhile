@@ -143,10 +143,7 @@ test("a held paid-research finding reaches APPROVED with measured checks, clean 
   assert.notEqual(d.byStage.CONFIRMED!.actor.instance, SCOUT_ATTEMPT);
   assert.equal(d.byStage.VERIFIED!.checks.length, VERIFICATION_CHECKS.length);
   assert.ok(d.byStage.VERIFIED!.checks.every((c) => c.result === "PASS"), JSON.stringify(d.byStage.VERIFIED!.checks));
-  const audited = d.byStage.AUDITED!;
-  assert.ok(audited.survived && audited.startedFrom.includes("EVIDENCE_VAULT"));
-  assert.ok(audited.findings.some((f) => f.startsWith("INDEPENDENT_PROFILE: ar-profile-duarte")), audited.findings.join(" | "));
-  assert.ok(audited.controls !== null && audited.controls.recall === 1 && audited.controls.falsePresences === 0 && audited.controls.knownAbsenceCount === 2);
+  assert.equal(d.byStage.AUDITED, undefined, "CP-11: publication writes no planted-control audit stage");
   const approved = d.byStage.APPROVED_FOR_PROMOTION!;
   assert.equal(approved.field, CAMPAIGN_SITE_FIELD);
   assert.ok(approved.burdens!.every((b) => b.result === "PASS"), JSON.stringify(approved.burdens));
@@ -162,33 +159,31 @@ test("a held paid-research finding reaches APPROVED with measured checks, clean 
   assert.deepEqual(k.refused?.reasons.map((r) => r.code), ["CONFIRMATION_FACT_CONFLICT"]);
   assert.match(k.refused!.reasons[0]!.detail, /CYCLE_NOT_EVIDENCED/);
 
-  /* A Marginalia pointer: read and verified, then held at VERIFIED — no second signal yet. */
+  /* CP-12: its own candidate, office and cycle publish without a second signal. */
   const pointer = states.get(discoveryPointerItemId(TANG_WILLIAMS, LILY))!;
   assert.equal(pointer.byStage.SCOUTED!.source.kind, "DISCOVERY_POINTER");
   assert.equal(pointer.byStage.CONFIRMED!.basis, "SECOND_ACQUISITION");
-  assert.equal(pointer.stage, "VERIFIED");
-  assert.deepEqual(pointer.refused?.reasons.map((r) => r.code), ["AUDIT_DID_NOT_SURVIVE"]);
-  assert.match(pointer.refused!.reasons[0]!.detail, /NO_INDEPENDENT_SECOND_SIGNAL/);
+  assert.equal(pointer.stage, "APPROVED_FOR_PROMOTION");
+  assert.equal(pointer.byStage.AUDITED, undefined);
   assert.ok(report.leads.some((l) => l.lead.origin === "MARGINALIA_POINTER" && l.outcome === "REFUSED" && l.refusals[0]?.code === "AGGREGATOR"));
 
-  /* More clocks on the same page do not add an independent source. */
+  /* Later supporting sources do not delay or duplicate the existing approval. */
   const later = await options(repos, vaultRoot, "2026-09-25T23:00:00.000Z");
   const noSource = await projectCampaignSiteChains(repos, later.options);
-  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === pointer.itemId)!.stage, "VERIFIED");
+  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === pointer.itemId)!.stage, "APPROVED_FOR_PROMOTION");
   assert.equal(noSource.rereadsUsed, 0);
   await repos.artifacts.append(`held:${lilyProfile.attemptId}`, lilyProfile.artifactId, heldArtifactRecord(lilyProfile), lilyProfile.retrievedAt);
   const second = await projectCampaignSiteChains(repos, later.options);
   const after = (await readPipelineStates(repos)).find((s) => s.itemId === pointer.itemId)!;
   assert.equal(after.stage, "APPROVED_FOR_PROMOTION", JSON.stringify(second.offers.filter((o) => o.itemId === pointer.itemId)));
-  assert.ok(after.byStage.AUDITED!.startedFrom.includes("EVIDENCE_VAULT"));
-  assert.ok(after.byStage.AUDITED!.findings.some((f) => /^INDEPENDENT_PROFILE: ar-profile-lily/.test(f)));
+  assert.equal(after.byStage.AUDITED, undefined);
   assert.equal(second.approved.length, 2);
   /* Re-running offers nothing new for an approved item. */
   const third = await projectCampaignSiteChains(repos, (await options(repos, vaultRoot, "2026-09-25T23:30:00.000Z")).options);
   assert.ok(third.offers.filter((o) => o.itemId === duarte.itemId).length === 0);
 });
 
-test("an unchanged digest label cannot certify profile bytes that do not match the saved artifact", async t => {
+test("a self-identifying campaign publishes without relying on altered supplemental profile bytes", async t => {
   const { repos, vaultRoot, duarte } = await plane(t);
   const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z");
   const report = await projectCampaignSiteChains(repos, { ...run.options, heldPage: async artifact => {
@@ -196,8 +191,8 @@ test("an unchanged digest label cannot certify profile bytes that do not match t
     return artifact.artifactId === duarteProfile.artifactId && page
       ? { ...page, body: `${page.body}<p>Altered bytes.</p>` } : page;
   } });
-  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === duarte.itemId)!.stage, "VERIFIED");
-  assert.equal(report.approved.length, 0);
+  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === duarte.itemId)!.stage, "APPROVED_FOR_PROMOTION");
+  assert.ok(report.approved.some(row => row.itemId === duarte.itemId));
 });
 
 test("omitting a middle given name never resolves a collision between full canonical names", async t => {
@@ -213,15 +208,14 @@ test("omitting a middle given name never resolves a collision between full canon
   assert.match(state.refused!.reasons[0]!.detail, /CANONICAL_IDENTITY_UNIQUE/);
 });
 
-test("with the gate closed (the state before this change) nothing is approved: the class burden refuses", async (t) => {
+test("CP-14: an obsolete closed-gate reading cannot withhold a verified campaign", async (t) => {
   const { repos, vaultRoot, duarte } = await plane(t);
   const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z", { promotionEnabled: false, openRecordClasses: [] });
   const report = await projectCampaignSiteChains(repos, run.options);
   const d = (await readPipelineStates(repos)).find((s) => s.itemId === duarte.itemId)!;
-  assert.equal(d.stage, "AUDITED");
-  assert.equal(d.refused?.atStage, "APPROVED_FOR_PROMOTION");
-  assert.ok(d.refused!.reasons.some((r) => r.code === "APPROVAL_BURDEN_FAILED" && /RECORD_CLASS_CANDIDATE/.test(r.detail)));
-  assert.equal(report.approved.length, 0);
+  assert.equal(d.stage, "APPROVED_FOR_PROMOTION");
+  assert.ok(report.approved.some(row => row.itemId === duarte.itemId));
+  assert.ok(!d.byStage.APPROVED_FOR_PROMOTION?.burdens?.some(burden => burden.name === "RECORD_CLASS_CANDIDATE"));
 });
 
 /*
@@ -258,11 +252,11 @@ test("robots.txt is recorded, not a burden: a site whose robots.txt disallows ev
   assert.match(challenged.detail, /an access control answered in place of the page \(a bot challenge/);
 });
 
-test("a class opened for another field does not approve a campaign site", async (t) => {
+test("CP-14: an obsolete field list cannot withhold a verified campaign site", async (t) => {
   const { repos, vaultRoot, duarte } = await plane(t);
   const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z", { promotionEnabled: true, openRecordClasses: ["candidate-enrichment"], openFields: { "candidate-enrichment": ["photo"] } });
   await projectCampaignSiteChains(repos, run.options);
   const d = (await readPipelineStates(repos)).find((s) => s.itemId === duarte.itemId)!;
-  assert.notEqual(d.stage, "APPROVED_FOR_PROMOTION");
-  assert.ok(d.refused!.reasons.some((r) => /candidate-enrichment\.campaignSite is not open/.test(r.detail)));
+  assert.equal(d.stage, "APPROVED_FOR_PROMOTION");
+  assert.ok(!d.refused);
 });

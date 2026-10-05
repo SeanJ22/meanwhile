@@ -1,3 +1,6 @@
+import { boxIndexEnabled } from "../lib/control-plane/box.ts";
+import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
+import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 /**
  * @freshness-reads-here
  *
@@ -409,6 +412,10 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   const intents = readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]);
   if (intents.runnerPause.paused) return [];
   const items = (await repos.workItems.list()).map(row => row.value);
+  if (boxIndexEnabled()) {
+    const context = await workerPublicationContext(RUN_STARTED_AT, repos);
+    await buildBoxFindings({ repos, items, now: () => new Date().toISOString(), leaseMs: 120_000, readCapture: context.readCapture });
+  }
   const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
   const publication = PUBLISH_NOW ? publishNowWorkerTasks(items, workers, RUN_STARTED_AT) : workerPublicationTasks(items, workers, RUN_STARTED_AT);
   if (PUBLISH_NOW) return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { isOfficialHost } from "../lib/officials/verification.ts";
+import { provenanceKind } from "../lib/officials/verification.ts";
 
 import {
   CONGRESS_ROSTER_FLOOR,
@@ -135,7 +135,7 @@ test("every officeholder carries provenance naming where it was read", () => {
       }
     })();
     assert.ok(
-      host !== null && isOfficialHost(host),
+      host !== null && provenanceKind({ sourceUrl: `https://${host}` }) === "OFFICIAL",
       `${person.name}: verifiedAt is set but the page it names (${person.websiteUrl ?? "none"}) ` +
         "is not an official host. A read is the verification only when it is the " +
         "subject's OWN official source; anywhere else a second rung is still owed.",

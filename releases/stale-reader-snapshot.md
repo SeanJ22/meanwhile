@@ -1,4 +1,21 @@
-# Stale reader snapshot (manifest seq 2979, 2026-09-29T05:38:58Z) — investigation notes
+# Stale reader snapshot (manifest seq 2979, 2026-09-29T05:38:58Z)
+
+## Correction (2026-10-05 18:20Z), from Sean's check on the runner host
+
+**Actual cause:** `/etc/meanwhile/runner.env` on the Linux runner set `WTP_READER_EDGE_DIR=/var/lib/meanwhile/reader-edge`, a default written by `deploy/runner/setup.ps1` (`ConvertTo-LinuxRunnerSettings` overrides). `resolveReaderArtifactWriteStore()` in `lib/meetings/edge-store.ts` returns the local file store whenever that variable is set, before it checks `NETLIFY_SITE_ID` and the token. The runner therefore wrote the reader artifacts to a folder on the droplet and logged `PUBLISHED` at local sequences 113 to 117, while production stayed at 2979. No purge ran either, because purge happens only for the `netlify-blobs` store.
+
+**The staging-site theory below was wrong.** `NETLIFY_SITE_ID` and `WTP_BLOBS_SITE_ID` were already the live site, and the token was set. The "SKIPPED_NO_STORE" alternative was wrong too: a store was configured, just the local one.
+
+**Fix applied:** Sean commented out `WTP_READER_EDGE_DIR` in runner.env at 11:08 AM MST (18:08Z). The next cycle should publish to Netlify Blobs on the live site as sequence 2980 or higher. The live result is recorded in status.md ("Stale snapshot live check").
+
+**Code fixes assigned 18:20Z:**
+- hunters: remove the `WTP_READER_EDGE_DIR` default from `deploy/runner/setup.ps1` (keep stripping any incoming copy), so re-running setup can't bring it back.
+- slide: the runner logs which store it published to (local folder or Netlify Blobs), and a local-folder publish on the production runner is a visible failure in Admin. This replaces the 17:45Z slide return, which was based on the wrong theory.
+
+---
+
+## Original notes (17:36Z), superseded where they conflict with the correction above
+
 Repo river 85a0ad660; read-only.
 
 ## Facts

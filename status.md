@@ -1,26 +1,29 @@
 # River status
 
-build_state: integrating
+build_state: releasing (release 3 #709)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01NH24r1XGQSiiPDzK2fFJSp
 lock: river-20261005T1857Z-01NH24
-heartbeat: 2026-10-05T21:35:33Z
+heartbeat: 2026-10-05T21:42:53Z
 
 ## Next River run
 
-1. If gates on river-next f2f11fe passed (or were repaired), promote river to it, record integration.json, and decide on release 3 (normal batching; no deadline exception left).
-2. Fold the held lanes after their returns: people CA-01 (stale state manifests + parser version key), auditors (schema v21, shut threshold, and its READY carries CA-01), admin (BR-07 vs measures BR-14/23/25 on the Admin Now screen).
-3. Recheck the runner: the 18:48Z cycle on ecf4026 was still running at 19:01Z.
+1. **Release 3 (#709, release/3 @ 13d29c5, auto-merge on):** when CI finishes, confirm merge, deploy (`/api/build`), post-deploy run for that SHA (`river.mjs observe`), runner adoption (cp_runner_heartbeat testedSha), then live-check CA-30 (Ask Prop 425 NO figures), FE-39 and the reader-edge store guard. Push Sean once the release merges or fails.
+2. Fold held lanes once they mark new READY on top of river 13d29c5: people CA-01, auditors, admin (see returns).
+3. Returns to watch: hunters (research child silent 600 s on every cycle) and slide (supervisor task failures doubled after release 2).
+4. **Notification rule (Sean, decisions.md 2026-10-05 ~21:00Z):** one push per river promotion naming the Codex lanes to Continue; otherwise only releases and real decisions.
 
-## Current (2026-10-05 ~20:40Z, after hour 36)
+## Current (2026-10-05 21:45Z)
 
-- **Batch 3 in gates:** river-next f2f11fe from river ecf4026: measures BR-14, BR-23, BR-25; registry DB-34, DB-35, DB-36, DP-12; hunters CH-11, CH-24, CH-26, DB-53 and hooks BR-05, BR-16, BR-37; meetings DB-28, DB-58; slide CP-02, CP-06, CP-09, CP-10, CP-13, CP-16, BX-03, BX-12, BX-13 and the reader-edge publication guard; ballot CA-30, CA-51; bank DB-44, DB-46, DB-57, DP-23; frontend FE-05, FE-06, FE-07, FE-10, FE-39, FE-43, FE-44. Fold repair: an import-only conflict in scripts/routine-civic-data-runner.mts (both imports kept).
-- **Held and returned:** people CA-01 (gates red: 3 stale state manifests and the official-page-events version key); auditors (pg-schema v20/v21 and a duplicate shut-threshold read in freshness-shadow.mts; its newer READY merged untested river-next); admin (its Admin Now screen conflicts with measures' BR-25).
-- **First gates attempt (92fda9c, with people):** 10/12 green. Five other test failures came from this session's shallow clone; they pass with full history.
-- **Codex lanes resumed** after Sean's handback: all five had heartbeats under 15 minutes at 18:58Z, and ballot, bank, frontend, slide and admin have published READY work. No handoff is needed.
-- **Runner:** adopted ecf4026 (testedSha and effectiveExecutableSha). The cycle started 18:48:43Z and was still in progress at 19:01Z; lastCycleOk false refers to the 18:31Z cycle.
-- **Lesson:** builders caught up from a pushed river-next. Pushed river-next is untested; builders catch up only from river.
+- **river 13d29c5** (promoted 21:41Z from ecf4026). `pnpm gates` 12/12 on that exact SHA: 9455 pass, 0 fail, 11 skipped. Eight lanes: measures BR-14, BR-23, BR-25; registry DB-34, DB-35, DB-36, DP-12; hunters CH-11, CH-24, CH-26, DB-53 and hooks BR-05, BR-16, BR-37; meetings DB-28, DB-58; slide CP-02, CP-06, CP-09, CP-10, CP-13, CP-16, BX-03, BX-12, BX-13 and the reader-edge publication guard; ballot CA-30, CA-51; bank DB-44, DB-46, DB-57, DP-23; frontend FE-05, FE-06, FE-07, FE-10, FE-39, FE-43, FE-44.
+- **River fold repairs:** 356b59f, an import-only conflict in routine-civic-data-runner.mts (both kept); 13d29c5, the BR-14 Queue view used an undefined `--teal` with a raw #0a7 fallback, which frontend's token guard rejects; it now uses `--pill-teal-text`, like receipt-view.
+- **Held and returned:** people CA-01 (stale state manifests; official-page-events version key); auditors (schema v20/v21, duplicate shut-threshold read, and its newer READY carries CA-01); admin (BR-07 batch vs measures' Admin Now and Queue screens).
+- **Release 3 opened:** #709 at 21:42Z, auto-merge enabled through the GitHub MCP (GraphQL is blocked in this session). releases/2.json gained integration_count 70, so release 3 lists only the new 39 steps.
+- **Pushed to Sean:** the promotion line (all five Codex lanes Continue), and release 3 opened.
+- **Runner (read-only, 20:10Z):** on ecf4026 and publishing (ballot-navigation published 20:10Z). The research child crashes with RESEARCH_CHILD_NO_PROGRESS every cycle, as it has for 30+ hours; returned to hunters. Supervisor task failures went from about 250-320 to 552-583 per pass after release 2; returned to slide.
+- **Environment note:** this cloud clone starts shallow. Five history-reading tests fail until `git fetch --unshallow origin main`; with full history they pass.
+- **Seen, fixed in session:** a River cleanup command moved 196 committed data/ops/gate-runs records into the scratch area. All were moved back before any commit (git showed no diff). River now moves only untracked run records.
 
 ## Earlier (2026-10-05 17:35Z, hour 35.4)
 

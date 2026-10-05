@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { newFieldManualEntry } from "../lib/control-plane/field-manual.ts";
+import { newFieldManualEntry, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { absenceUnlockFrom } from "../lib/control-plane/scheduler/absence.ts";
 import { capabilitiesFromEntries, reopenAbsencesFor, triggerMatches } from "../lib/control-plane/scheduler/absence-reopen.ts";
@@ -66,4 +66,16 @@ test("an absence that has already expired is left to its own clock", async () =>
   await recordArguedAbsence(repos, { obligationId: "old", absentUntil: "2026-10-01T00:00:00.000Z", now: NOW,
     unlockWhen: absenceUnlockFrom({ nextRungs: [], narrative: "n", recordClass: "meetings" }, "2026-10-01T00:00:00.000Z") });
   assert.deepEqual(await reopenAbsencesFor(repos, capabilitiesFromEntries([method("legistar", "meetings")]), NOW), []);
+});
+
+test("the field-manual write itself reopens what a working entry unlocks; a failed entry reopens nothing", async () => {
+  const repos = createMemoryRepositories();
+  await absent(repos, "on-platform", "legistar");
+  const failed = await writeFieldManual(repos, [method("legistar", "meetings", "FAILED")], NOW);
+  assert.equal(failed.reopened, undefined);
+  assert.ok((await repos.obligations.mustRead("on-platform")).value.absentUntil);
+  const wrote = await writeFieldManual(repos, [method("legistar", "meetings")], NOW);
+  assert.equal(wrote.written, 1);
+  assert.equal(wrote.reopened, 1);
+  assert.equal((await repos.obligations.mustRead("on-platform")).value.absentUntil, null);
 });

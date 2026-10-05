@@ -42,7 +42,7 @@ import { agendaItems } from "../lib/routing/agenda-search.ts";
 import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import { meetingCarriesRecords } from "../lib/meetings/carries-records.ts";
-import { meetingHistoryRestoreEnabled, restoreRemovedMeetingHistory, withRestoredHistory } from "../lib/civic-data/meeting-history-restore.ts";
+import { markMeetingHistoryRestoreFinished, meetingHistoryRestoreEnabled, meetingHistoryRestoreFinished, restoreRemovedMeetingHistory, withRestoredHistory } from "../lib/civic-data/meeting-history-restore.ts";
 import { meetingHistoryMoveEnabled, movedToHistoryEvidence, moveConcludedMeetingsToHistory, readMeetingHistory, type MeetingHistoryMove, type MeetingHistoryMoveRecord } from "../lib/civic-data/meeting-history.ts";
 import {
   readMeetingPartitionProjection,
@@ -1249,8 +1249,9 @@ async function moveConcludedMeetingsForPartition(
 }
 
 /**
- * DB-55: with `WTP_MEETING_HISTORY_RESTORE=on`, add back the concluded sittings with records that the old 90-day rule
- * removed (`restoreRemovedMeetingHistory`), as carried rows of this partition's own candidate. Anything that goes
+ * DB-55: add back the concluded sittings with records that the old 90-day rule
+ * removed (`restoreRemovedMeetingHistory`), as carried rows of this partition's own candidate, until one walk of its whole chain finds nothing
+ * more (a marker then ends it; `WTP_MEETING_HISTORY_RESTORE=off` stops it). Anything that goes
  * wrong leaves the partition exactly as it was.
  */
 async function restoreRemovedHistoryForPartition(
@@ -1259,13 +1260,14 @@ async function restoreRemovedHistoryForPartition(
   previous: MeetingsSnapshot | null,
   generatedAt: string,
 ): Promise<MeetingsSnapshot | null> {
-  if (previous === null || !meetingHistoryRestoreEnabled()) return previous;
+  if (previous === null || !meetingHistoryRestoreEnabled() || meetingHistoryRestoreFinished(partition.scope)) return previous;
   try {
     const history = await readMeetingHistory(partition, { store, now: generatedAt });
     const restored = await restoreRemovedMeetingHistory({
       store, partition, live: previous, history: history.kind === "PROMOTED" ? history.value : null, generatedAt,
     });
     if (restored.meetings.length > 0 || restored.versionsRead > 0) console.log(`  ${partition.id}: history restore: ${restored.detail}`);
+    if (restored.meetings.length === 0 && restored.complete && restored.versionsRead > 0) markMeetingHistoryRestoreFinished(partition.scope, generatedAt);
     return withRestoredHistory(previous, restored, generatedAt);
   } catch (error) {
     console.warn(`  ${partition.id}: history restore skipped: ${error instanceof Error ? error.message : String(error)}`);

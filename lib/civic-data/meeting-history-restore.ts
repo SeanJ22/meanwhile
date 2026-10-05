@@ -14,6 +14,10 @@
  * It restores only what the window removed. A sitting a fresh occurrence record or a re-issued listing replaced, and a
  * series record its occurrences replaced, are other removals and are not brought back beside their successors.
  */
+import { createHash } from "node:crypto";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
 import { readPromotedCivicData, readPromotedCivicDataPredecessors, type CivicDataReadResult, type ProvenCivicDataHistory } from "./read-model.ts";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
 import type { RoutineDataStore } from "./store.ts";
@@ -25,9 +29,35 @@ import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import { reissuesSitting, supersedesSeriesRecord, type ListedSittingFacts } from "../sources/event-identity.ts";
 import type { Meeting } from "../sources/types.ts";
 
-/** The way to ask for it: `WTP_MEETING_HISTORY_RESTORE=on` for one full pass, then remove it. Off by default. */
+/**
+ * The restore runs by itself: nobody has to set a switch on the runner. Each partition walks its promoted chain until
+ * one walk finishes with nothing left to add, then leaves a marker and does no more chain reads.
+ * `WTP_MEETING_HISTORY_RESTORE=off` stops it. (It was an opt-in switch first; the switch was never set and the
+ * deleted meetings stayed deleted.)
+ */
 export function meetingHistoryRestoreEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
-  return env.WTP_MEETING_HISTORY_RESTORE?.trim().toLowerCase() === "on";
+  return env.WTP_MEETING_HISTORY_RESTORE?.trim().toLowerCase() !== "off";
+}
+
+/** Where the "this partition is fully restored" markers live. A lost marker only costs one more idempotent walk. */
+function restoreMarkerFile(scope: string, env: Readonly<Record<string, string | undefined>>): string {
+  const dir = env.WTP_RESTORE_STATE_DIR?.trim() || join(tmpdir(), "meanwhile-history-restore");
+  return join(dir, `${createHash("sha256").update(scope).digest("hex").slice(0, 24)}.done`);
+}
+
+export function meetingHistoryRestoreFinished(scope: string, env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  try { return existsSync(restoreMarkerFile(scope, env)); } catch { return false; }
+}
+
+/** Called after a walk of the whole chain that found nothing to add. */
+export function markMeetingHistoryRestoreFinished(scope: string, at: string, env: Readonly<Record<string, string | undefined>> = process.env): void {
+  try {
+    const file = restoreMarkerFile(scope, env);
+    mkdirSync(dirname(file), { recursive: true });
+    writeFileSync(file, `${scope}\n${at}\n`);
+  } catch {
+    // No marker only means the next pass walks the chain again.
+  }
 }
 
 export interface RestoredMeetingHistory {

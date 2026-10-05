@@ -1,9 +1,13 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 
 import { MEETING_PARTITION_CONTRACTS, meetingHistoryContract, meetingHistoryScope } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { meetingHistoryRestoreFinished } from "../lib/civic-data/meeting-history-restore.ts";
 import {
   buildMeetingHistorySnapshot,
   mergeMeetingHistory,
@@ -259,7 +263,7 @@ test("DB-55: a sitting the old rule removed is restored from an earlier promoted
   const gone = (await promotedRows(store, legistar.scope))!;
   assert.ok(!gone.meetings.some(({ id }) => id === oldRecord.id), "it was deleted the old way");
 
-  process.env.WTP_MEETING_HISTORY_RESTORE = "on";
+  process.env.WTP_RESTORE_STATE_DIR = mkdtempSync(join(tmpdir(), "restore-"));
   try {
     const [restoredPass] = await promoteMeetingPartitions({
       store, partitions: [legistar], meetings: [meeting("fresh", daysBefore(-5))], agendaDocuments: [],
@@ -268,7 +272,7 @@ test("DB-55: a sitting the old rule removed is restored from an earlier promoted
     });
     assert.equal(restoredPass?.outcome.candidate.state, "PROMOTED", restoredPass?.outcome.candidate.failureDetail ?? "");
   } finally {
-    delete process.env.WTP_MEETING_HISTORY_RESTORE;
+    delete process.env.WTP_RESTORE_STATE_DIR;
   }
   const back = (await promotedRows(store, legistar.scope))!;
   const row = back.meetings.find(({ id }) => id === oldRecord.id);
@@ -290,29 +294,36 @@ test("DB-55: a sitting the old rule removed is restored from an earlier promoted
   assert.ok(!(await promotedRows(store, legistar.scope))!.meetings.some(({ id }) => id === oldRecord.id));
 });
 
-test("DB-55: nothing is restored unless it is asked for, and a restore is idempotent", async () => {
-  const store = await seedThenDeleteTheOldWay();
-  const [plain] = await promoteMeetingPartitions({
-    store, partitions: [legistar], meetings: [meeting("fresh", daysBefore(-5))], agendaDocuments: [],
-    reports: [report(NOW)], generatedAt: NOW,
-  });
-  assert.equal(plain?.outcome.candidate.state, "PROMOTED");
-  assert.ok(!(await promotedRows(store, legistar.scope))!.meetings.some(({ id }) => id === oldRecord.id), "off by default");
-  process.env.WTP_MEETING_HISTORY_RESTORE = "on";
+test("DB-55: the restore runs without a switch, is idempotent, can be turned off, and stops once a walk finds nothing", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "restore-"));
+  process.env.WTP_RESTORE_STATE_DIR = dir;
   try {
-    for (const at of [NEXT, "2026-09-08T15:00:01.000Z"]) {
+    const off = await seedThenDeleteTheOldWay();
+    process.env.WTP_MEETING_HISTORY_RESTORE = "off";
+    await promoteMeetingPartitions({
+      store: off, partitions: [legistar], meetings: [meeting("fresh", daysBefore(-5))], agendaDocuments: [],
+      reports: [report(NOW)], generatedAt: NOW,
+    });
+    delete process.env.WTP_MEETING_HISTORY_RESTORE;
+    assert.ok(!(await promotedRows(off, legistar.scope))!.meetings.some(({ id }) => id === oldRecord.id), "off stops it");
+    assert.equal(meetingHistoryRestoreFinished(legistar.scope), false);
+
+    const store = await seedThenDeleteTheOldWay();
+    for (const at of [NOW, NEXT, "2026-09-08T15:00:01.000Z", "2026-09-08T16:00:01.000Z"]) {
       await promoteMeetingPartitions({
         store, partitions: [legistar], meetings: [meeting("fresh", daysBefore(-5, at))], agendaDocuments: [],
         reports: [report(at)], generatedAt: at,
       });
     }
+    const live = (await promotedRows(store, legistar.scope))!;
+    const history = (await promotedRows(store, meetingHistoryScope(legistar.scope)))!;
+    const holding = [...live.meetings, ...history.meetings].filter(({ id }) => id === oldRecord.id);
+    assert.equal(holding.length, 1, "restored once, in one place");
+    assert.equal(meetingHistoryRestoreFinished(legistar.scope), true, "a walk that found nothing ends the restore");
   } finally {
+    delete process.env.WTP_RESTORE_STATE_DIR;
     delete process.env.WTP_MEETING_HISTORY_RESTORE;
   }
-  const live = (await promotedRows(store, legistar.scope))!;
-  const history = (await promotedRows(store, meetingHistoryScope(legistar.scope)))!;
-  const holding = [...live.meetings, ...history.meetings].filter(({ id }) => id === oldRecord.id);
-  assert.equal(holding.length, 1, "restored once, in one place");
 });
 
 class HistoryHiddenFromTheDoor extends MemoryRoutineDataStore {

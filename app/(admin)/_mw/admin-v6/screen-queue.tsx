@@ -57,7 +57,7 @@ function QueueCard(props: { readonly row: QueueRow }) {
       {r.progress && (
         <div role="progressbar" aria-label="Progress" aria-valuemin={0} aria-valuemax={r.progress.of} aria-valuenow={r.progress.done}>
           <div style={{ height: 6, borderRadius: 3, background: "var(--surface)" }}>
-            <div style={{ height: 6, borderRadius: 3, width: `${Math.min(100, Math.round((r.progress.done / r.progress.of) * 100))}%`, background: "var(--teal, #0a7)" }} />
+            <div style={{ height: 6, borderRadius: 3, width: `${Math.min(100, Math.round((r.progress.done / r.progress.of) * 100))}%`, background: "var(--pill-teal-text)" }} />
           </div>
           <span className={s.meta}>{r.progress.words}</span>
         </div>

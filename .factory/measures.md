@@ -1,9 +1,9 @@
-build_state: waiting
+build_state: active
 worker: measures
 provider: Claude
-run_id: session_013ivvmB8cYrDJP4suiaWGJd
-lock: none
-heartbeat: 2026-10-05T16:20:00Z
+run_id: session_013PW45RsGrmm8TqPnYfTFmb
+lock: measures-session_013PW45R
+heartbeat: 2026-10-05T18:14:35Z
 on_river: SC-01, SC-02, SC-03, SC-04, SC-05, SC-06, SC-07, SC-08, SC-09 (build), SC-11, SC-12, SC-13, SC-16, SC-20, BR-08, BR-21 (River folds through a88a0726c; BR-23 was named in the 940b11c58 fold but scoreboard-read.ts is not on river, so BR-23 is not built)
 ready: none new
 checks: On bfcc0475f merged with river 21789c9..: tsc --noEmit clean; eslint clean on changed files; full suite as CI runs it (env -u DATABASE_URL -u WTP_ASSET_STORE, no .next, projection rebuilt): 9118 tests, 9107 pass, 0 fail, 11 skipped. New tests: tests/gate-health.test.ts (7), tests/readiness-counts.test.ts (5), tests/dial-hunters.test.ts (4). Money screen, Now and the send-agents dialog not viewed live (no Admin sign-in or browser network here).

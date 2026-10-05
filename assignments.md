@@ -12,9 +12,16 @@ The authoritative assignment table. River writes it. Workers read it every run.
 | people | people | Claude | yes | — |
 | admin | **overflow-1** (River-run worker, 13:30Z; measures' handoff blocked) | Claude | yes | measures (only after a recorded handoff below) |
 | slide | **overflow-2** (River-run worker, 13:30Z; hunters never claimed it) | Claude | yes | hunters (only after a recorded handoff below) |
-| ballot | **meetings** (handed off 11:05Z) | Claude | yes | meetings (only after a recorded handoff below) |
+| ballot | **codex-ballot** (handed back by Sean 2026-10-05 ~16:50Z) | Codex | yes | meetings (only after a new recorded handoff below) |
 | bank | **registry** (handed off 08:20Z) | Claude | yes | registry (only after a recorded handoff below) |
-| frontend | **auditors** (handed off 08:20Z) | Claude | yes | auditors (only after a recorded handoff below) |
+| frontend | **codex-frontend** (handed back by Sean 2026-10-05 ~16:50Z) | Codex | yes | auditors (only after a new recorded handoff below) |
+
+## Handback to Codex (2026-10-05 16:50Z, Sean's instruction)
+
+- **meetings: release stream/ballot and stop claiming it.** **auditors: release stream/frontend and stop claiming it.** If you hold either lock, push your checkpoint with `lock: none` and leave the lane. A READY commit you already pushed stays foldable.
+- codex-ballot and codex-frontend own those lanes from now. Each claims `.factory/<lane>.md` under the common lock rules once the Claude lock is `none` or stale.
+- If either Codex task stops again with unfinished work, River hands the lane back to its paired Claude worker (meetings, auditors) the same way as before, with a new line in the table below.
+- admin (overflow-1), slide (overflow-2) and bank (registry) do not change.
 
 ## Handoffs
 
@@ -25,6 +32,8 @@ The authoritative assignment table. River writes it. Workers read it every run.
 | 2026-10-04 08:20Z | bank | codex-bank | registry | released at 07:34Z and stopped | stream/bank as of 08:20Z |
 | 2026-10-04 08:20Z | frontend | codex-frontend | auditors | released at 07:24Z and stopped | stream/frontend as of 08:20Z |
 | 2026-10-04 11:05Z | ballot | codex-ballot | meetings | released its lock at 09:23Z "for recorded continuation" and stopped | stream/ballot @ d63bbe831 |
+| 2026-10-05 16:50Z | ballot | meetings | codex-ballot | Sean's instruction in the River session, 2026-10-05 ~16:50Z: "Hand ballot and frontend back to Codex now." | stream/ballot @ d63bbe831 |
+| 2026-10-05 16:50Z | frontend | auditors | codex-frontend | Same instruction from Sean, 2026-10-05 ~16:50Z | stream/frontend @ bb0cfe7c |
 
 The continuation worker reads the lane's brief and its saved continuation file, claims `.factory/<lane>.md` with its own token (the previous lock is `none`), and alternates ready batches with its primary lane. Do returned failures and unblocking work first, and never starve either lane. If a Codex run comes back, it sees this table and exits without writing. Ballot was handed to meetings at 11:05Z.
 

@@ -21,3 +21,7 @@ River checked release 1 against each step's "Done when" on production, using rea
 - DP-18: only the core is built; no Scoreboard exists on main, so nothing shows it.
 - FE-17: data/health/resident-tasks.json exists but nothing outside tests reads it.
 - FE-18: no FE-18 code on main; nothing runs the resident tasks or shows them in Admin.
+
+## 2026-10-05 16:50Z: release frontend (Sean's instruction)
+
+Sean handed frontend back to codex-frontend. Stop claiming stream/frontend. If you hold its lock, push your checkpoint with `lock: none` and leave it. Keep working your primary lane. See assignments.md, "Handback to Codex".

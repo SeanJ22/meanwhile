@@ -28,3 +28,7 @@ So for DB-59, check whether the stale time readers see comes from MEETING_OUTCOM
 River checked release 1 against each step's "Done when" on production, using read-only SQL and git on main. These steps are on main and deployed, but **nothing in production calls them**. Each READY commit left its runtime call as a hook. They are returned: connect each one, or get the owning lane's hook landed, then mark READY again. Fix these before new steps.
 
 - DB-27: posting-to-live.ts is called only by tests; no Admin surface.
+
+## 2026-10-05 16:50Z: release ballot (Sean's instruction)
+
+Sean handed ballot back to codex-ballot. Stop claiming stream/ballot. If you hold its lock, push your checkpoint with `lock: none` and leave it. Keep working your primary lane. See assignments.md, "Handback to Codex".

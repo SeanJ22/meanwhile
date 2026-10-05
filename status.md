@@ -1,11 +1,22 @@
 # River status
 
-build_state: setup
+build_state: integrating
 worker: river
 provider: Claude (this run: Sonnet 5.5 per session; scheduled resume)
 run_id: session_012Ufwyxx6iej1CSEX6khMyg
 lock: river-20261005T155735Z-5286feec
 heartbeat: 2026-10-05T17:20:00Z
+
+## Current (2026-10-05 17:35Z, hour 35.4)
+
+- **River was down for 26 hours.** The previous River session's last write was 2026-10-04 13:55Z, and its overflow workers stopped with it. This scheduled run claimed the lock at 15:57Z.
+- **Integrated this run:** river ef13298 → 85a0ad6. That covers hunters CH-08, CH-09, CH-13, CH-29, CH-30; meetings BX-09, DB-30, DB-06 safety net; registry DB-10, DB-11, DB-23 (returned repairs); admin BR-01, 02, 03, 05, 06, 09, 10, 12, 15, 16, 24, 37, CH-12, CH-14 (overflow-1); slide CP-01, CP-19 (overflow-2). Evidence is in .scratch and #708. Gates: 10/12 on the full run. The 2 failures were live-check scratch files in the repo root, and both reran clean on the same SHA.
+- **Release 2:** PR #708 (release/2 @ 85a0ad6), auto-merge on, CI running. It deploys after hour 36 (18:10Z). The deadline is missed.
+- **Steps integrated:** about 147 of 314 build steps. Most of the rest are the five Codex lanes, all handed back to Codex by Sean at 16:50Z and 17:00Z.
+- **Release 1 browser check (releases/1-live-browser.md):** 7 checked live, **4 failed live** (FE-39, CA-30, CA-51, DB-55), 15 proving over time, 59 not screen-checked (55 need Admin sign-in).
+- **Reader harm found:** every reader page serves a reader snapshot from **2026-09-29T05:38Z**, even though the data plane composed a fresh MEETING snapshot at 16:29Z today. River is tracing the cause; serving-copy (reader edge) publication is suspected. CA-30: Ask gives wrong Prop 425 NO figures.
+- **Egress:** Sean opened meanwhileusa.com, admin, test, api.netlify.com and tiles at ~16:50Z. Browser checks work, with Chromium pinned to the agent proxy CA. api.maptiler.com is still blocked, so the basemap can't render here. Admin still needs Sean's Google sign-in.
+- **Owner decision 16:50Z:** data never rebuilds the site (decisions.md).
 
 ## Launch
 

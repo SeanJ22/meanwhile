@@ -5,6 +5,7 @@
  * checks is returned to its writer with a fix-list entry.
  */
 import assert from "node:assert/strict";
+import { repairScope } from "../lib/control-plane/workers/adapter-repair-scope.ts";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -375,4 +376,32 @@ test("River takes an adapter stream like any lane, returns a conflicting one to 
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+test("DB-57 connects saved failure, adapter files and its own tests to a scoped engineer request and checked publication", async () => {
+  const repos = createMemoryRepositories();
+  const gh = fakeGitHub();
+  const changed = [{ path: 'lib/sources/iqm2/index.ts', content: 'export const repaired = true;' }];
+  let checked = 0;
+  const opened = await workAdapterQueue({
+    repos, results: [needsAdapter('scoped-repair')], now: '2026-10-05T12:00:00Z', mode: 'river', request: gh.request,
+    readEvidence: async () => ({ text: 'Saved failing calendar', canonicalUrl: 'https://calendar.example/meeting', artifactId: 'held' } as never),
+    repairScopeFor: (_kind, example) => repairScope({ kind: 'iqm2', example,
+      paths: ['lib/sources/iqm2/index.ts', 'tests/iqm2.test.ts', 'tests/composite.test.ts'],
+      readText: path => path.endsWith('iqm2.test.ts') ? 'import "../lib/sources/iqm2/index.ts"; /* existing behavior check */' : 'export const prior = true;' }),
+    transportFor: () => async request => {
+      assert.match(String(request.system?.[0]?.text), /supplied repair scope governs allowed paths/);
+      const brief = String(request.messages[0].content);
+      assert.match(brief, /Saved failing calendar/);
+      assert.match(brief, /lib\/sources\/iqm2\/index.ts/);
+      assert.match(brief, /existing behavior check/);
+      assert.doesNotMatch(brief, /lib\/sources\/ical/);
+      return { content: [{ type: 'text', text: JSON.stringify({ files: changed }) }], usage: { input_tokens: 1, output_tokens: 1 } } as never;
+    },
+    check: files => { checked++; assert.deepEqual(files, changed); return { ok: true, summary: 'iqm2 fixture and composite tests passed' }; },
+  });
+  assert.equal(checked, 1);
+  assert.equal(opened.length, 1);
+  assert.equal(opened[0].branch, 'stream/adapter-iqm2');
+  assert.ok(gh.calls.every(call => !call.path.includes('/pulls')));
 });

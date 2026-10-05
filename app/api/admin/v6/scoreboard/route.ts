@@ -1,0 +1,74 @@
+import { neon } from "@neondatabase/serverless";
+import type { NextRequest } from "next/server";
+
+import { loadLearningTrends } from "@/app/(admin)/_mw/data/learning-trends.ts";
+import { openControlPlane, RUNNER_ID } from "@/lib/control-plane/admin-data.ts";
+import { readV6History } from "@/lib/control-plane/admin-view/admin-v6-history.ts";
+import { readGateHealth } from "@/lib/control-plane/admin-view/gate-health.ts";
+import { buildLearningTrends } from "@/lib/control-plane/admin-view/learning-trends.ts";
+import { buildScoreboard, publicationCountsOf, v6LearningView, type ScoreboardReadings } from "@/lib/control-plane/admin-view/scoreboard-read.ts";
+import { captureWindow, readCaptureHealth } from "@/lib/control-plane/admin-view/v6-capture-health.ts";
+import { projectDoors } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
+import { publicationView } from "@/lib/control-plane/admin-view/v6-publication-read.ts";
+import { readPipeline } from "@/lib/control-plane/admin-view/v6-results-read.ts";
+import { readRoutinePublicationStatus } from "@/lib/civic-data/observability-server.ts";
+import { readinessCounts, recoveryWitnesses } from "@/lib/coverage/readiness-counts.ts";
+import { liveSources, netlifyHistoryStore, readCaptureFailures } from "@/lib/control-plane/data-business/live.ts";
+import { readSwitchConfig } from "@/lib/control-plane/data-business/switches.ts";
+import { adminGet } from "@/lib/control-plane/gateway/admin-get.ts";
+import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
+import { listDoors } from "@/lib/doors/registry.ts";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const runtime = "nodejs";
+
+/** A reading that could not be taken is null, so its row says "not measured" instead of showing a zero. */
+async function attempt<T>(read: () => Promise<T>): Promise<T | null> {
+  try { return await read(); } catch { return null; }
+}
+
+/** `admin-v6/scoreboard@1`: the Scoreboard's rows with the counts behind each, the launch-gate health group, readiness counts and the weekly learning series. Read only; the same for every place. */
+export async function GET(request: NextRequest) {
+  return adminGet(request, async (observedAt) => {
+    const now = new Date(observedAt);
+    const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
+    const url = controlPlaneUrlFromEnv();
+    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture] = await Promise.all([
+      attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
+      attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
+      attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
+      attempt(async () => (opened ? (await opened.runnerHeartbeat.read(RUNNER_ID))?.value ?? null : null)),
+      attempt(async () => { if (!url) return null; const r = await readPipeline(neon(url), observedAt); return r.state === "READ" ? r : null; }),
+      attempt(async () => { const r = await readRoutinePublicationStatus(); if (r.kind !== "HELD") return null; const v = publicationView(r.view); return { readBack: v.counts.find((c) => c.verdict === "READER_VISIBLE")?.count ?? 0, total: v.total }; }),
+      attempt(async () => {
+        const config = opened ? await readSwitchConfig(opened) : null;
+        const failures = await readCaptureFailures({ ...captureWindow(now), history: netlifyHistoryStore() }).catch(() => null);
+        const view = await readCaptureHealth({ sources: liveSources(), switchOn: () => true }, config, failures, now);
+        return view.readers.kind === "READ" ? view.readers.rows : null;
+      }),
+    ]);
+    const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
+    const readings: ScoreboardReadings = {
+      orders: history,
+      publication: pipeline === null ? null : publicationCountsOf(pipeline, contracts),
+      shutDoors: doors === null ? null : { shut: doors.shut, open: doors.open, setAside: doors.setAside, unreadable: doors.unreadable },
+      returning: capture === null ? null : { days: capture.length, readerDays: capture.reduce((a, d) => a + d.readers, 0), returningDays: capture.reduce((a, d) => a + d.returning, 0) },
+      learning: v6LearningView(learning?.trends ?? buildLearningTrends([], observedAt), learning?.doors ?? null, learning === null ? null : learning.bankWriteErrors),
+      doors: learning?.doors ?? null,
+      gates: opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null }),
+      readiness: readinessCounts(recoveryWitnesses({
+        bankEntriesInherited: learning?.doors.given ?? null, bankEntriesUsed: learning?.doors.used ?? null,
+        failureDebts: null, failureDebtsWithReason: null, absences: null, absencesWithRecheck: null, manualWriteBacks: null,
+      })),
+    };
+    return {
+      contract: "admin-v6/scoreboard@1",
+      scope: request.nextUrl.searchParams.get("scope") ?? "united-states",
+      revision: `scoreboard:${observedAt.slice(0, 13)}`,
+      asOf: observedAt,
+      data: buildScoreboard(readings),
+      missingParts: [],
+    };
+  });
+}

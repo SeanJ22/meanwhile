@@ -24,7 +24,7 @@ apt-get install -y nodejs
 npm install --global corepack
 corepack prepare pnpm@10.33.0 --activate
 id meanwhile >/dev/null 2>&1 || useradd --system --create-home --home-dir /var/lib/meanwhile --shell /bin/bash meanwhile
-install -d -o meanwhile -g meanwhile -m 750 /opt/meanwhile /var/lib/meanwhile/browsers /var/lib/meanwhile/digests /var/lib/meanwhile/reader-edge
+install -d -o meanwhile -g meanwhile -m 750 /opt/meanwhile /var/lib/meanwhile/browsers /var/lib/meanwhile/digests
 install -d -o root -g meanwhile -m 750 /etc/meanwhile
 if [[ -n "$env_source" ]]; then
   install -o root -g meanwhile -m 640 "$env_source" /etc/meanwhile/runner.env

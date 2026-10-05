@@ -4,6 +4,8 @@ import { nextDue, scheduledOrders, type ScheduledOrder } from "../gateway/schedu
 import type { AdminConfig } from "../gateway/admin-config.ts";
 
 export interface ScheduledRow {
+  /** What `orders.unschedule` names; the control carries it, the screen never shows it. */
+  readonly id: string;
   readonly label: string;
   readonly status: "Scheduled";
   /** When it is due, or what it waits for. */
@@ -19,7 +21,7 @@ function row(o: ScheduledOrder, all: readonly ScheduledOrder[]): ScheduledRow {
   const due = nextDue(o);
   const follows = o.after ? all.find((x) => x.id === o.after)?.label : null;
   return {
-    label: o.label, status: "Scheduled",
+    id: o.id, label: o.label, status: "Scheduled",
     when: due ? formatEastern(due) : o.after ? `After ${follows ?? "another order"}` : o.repeat ? "On its repeat" : "—",
     repeats: o.repeat ? REPEAT_WORDS[o.repeat] : null,
     finishBy: o.finishBy && o.startAt ? formatEastern(o.finishBy) : null,

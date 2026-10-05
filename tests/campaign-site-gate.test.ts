@@ -19,23 +19,23 @@ import type { PromotionPipelineRecord } from "../lib/control-plane/promotion/typ
 
 const ROOT = process.cwd();
 
-test("the gate opens the §3 classes, keeps candidate-enrichment to its implemented fields, and cites the owner's authorization", () => {
+test("the gate opens the §3 classes, opens every candidate-enrichment field, and cites the owner's authorization", () => {
   const gate = readActivationGate(ROOT);
   assert.equal(gate.promotionEnabled, true);
   for (const cls of ["candidate-enrichment", "meeting-times", "agendas", "OFFICIAL_ROSTER", "OFFICIAL_BOARD_DIRECTORY", "VOTER_ACCESS_ROUTE"]) assert.ok(gate.openRecordClasses.includes(cls), cls);
-  assert.deepEqual(gate.openFields, { "candidate-enrichment": ["campaignSite", "bio"] });
+  assert.deepEqual(gate.openFields, {});
   assert.equal(gate.mode, "SHADOW", "the nightly window itself still promotes nothing");
   assert.ok(classFieldOpen(gate, "candidate-enrichment", "campaignSite"));
   assert.ok(classFieldOpen(gate, "candidate-enrichment", "bio"));
-  // Portraits and position summaries are judgment calls that need a second source; not opened here.
-  for (const field of ["photo", "positions"]) assert.equal(classFieldOpen(gate, "candidate-enrichment", field), false, field);
+  // Each field still passes its own §3 verification before publication.
+  for (const field of ["email", "phone", "photo", "positions"]) assert.equal(classFieldOpen(gate, "candidate-enrichment", field), true, field);
   for (const cls of ["candidate-positions", "ballot", "votes", "local-jurisdiction"]) assert.equal(classFieldOpen(gate, cls, "campaignSite"), false, cls);
   assert.deepEqual(readActivationGate(mkdtempSync(join(tmpdir(), "wtp-gate-"))), gate, "no file on disk changes the decision");
   const source = readFileSync(join(ROOT, "lib", "control-plane", "promotion", "activation-gate.ts"), "utf8");
   assert.match(source, /Sean,\s+\*\s+2026-09-21: "You may enable automatic promotion for qualifying results\. Fix\s+\*\s+the gap, recover value already paid for\."/);
   assert.doesNotMatch(source, /readFileSync|readdirSync|freshness-shadow-runs/);
-  assert.match(gate.reason, /candidate-enrichment \(campaignSite, bio only\)/);
-  assert.equal(ACTIVATION_GATE.openFields["candidate-enrichment"]?.length, 2);
+  assert.match(gate.reason, /candidate-enrichment \(every field only\)/);
+  assert.equal(ACTIVATION_GATE.openFields["candidate-enrichment"], undefined);
 });
 
 test("gate open + owner pause: the paid lane stays CLOSED (PAUSED); the pause is what holds it", () => {
@@ -75,7 +75,7 @@ function item(itemId: string, recordClass: string, field: string | undefined): P
   ];
 }
 
-test("the window promotes-would only an approved item of an open class AND an open field", () => {
+test("the window promotes-would an approved item of an implemented class without a candidate field restriction", () => {
   const states = [
     deriveItemState("site", item("site", "candidate-enrichment", "campaignSite")),
     deriveItemState("photo", item("photo", "candidate-enrichment", "photo")),
@@ -85,8 +85,7 @@ test("the window promotes-would only an approved item of an open class AND an op
   const { verdicts } = evaluateItems(states, readActivationGate(ROOT));
   const by = new Map(verdicts.map((v) => [v.itemId, v]));
   assert.equal(by.get("site")?.verdict, "PROMOTE_WOULD");
-  assert.equal(by.get("photo")?.verdict, "REFUSE_WOULD");
-  assert.match(by.get("photo")!.reason, /open only for campaignSite, bio/);
-  assert.equal(by.get("unscoped")?.verdict, "REFUSE_WOULD");
+  assert.equal(by.get("photo")?.verdict, "PROMOTE_WOULD");
+  assert.equal(by.get("unscoped")?.verdict, "PROMOTE_WOULD");
   assert.equal(by.get("agenda")?.verdict, "PROMOTE_WOULD", "meeting agendas are open under §3");
 });

@@ -21,6 +21,7 @@ import { getRegistryRuntimeReadModel } from "../../registry/runtime-read-model.t
 import { registeredHeldMeetingContract } from "./held-meeting-contract.ts";
 import { authorizeInheritedHeldArtifact, type ResearchRuntimeTools } from "./research-runtime.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
+import { readAuditHistory } from "./scoped-history.ts";
 
 const SUBJECT = "az:city:city-of-avondale";
 const API_HOST = "avondaleaz.api.civicclerk.com";
@@ -217,13 +218,17 @@ export async function resolvedHeldAuditAttribution(input: {
 async function generalizedIndependentContext(input: {
   root: string; repos: ControlPlaneRepositories; method: MethodKnowledge; readEvidence: FleetRuntime["readEvidence"];
   artifactId: string; contract: GeneralizedCivicExtractionContract; auditScope: IndependentAuditContext["scope"]; methodVersion: number; workItemId?: string;
-  siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
+  siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"]; scopedReads?: boolean;
 }): Promise<IndependentAuditContext> {
   const { contract } = input;
   // The method only grows, so a contract planned under an earlier version is still audited, against today's floor; one from a later version is not.
   if (contract.methodVersion > input.methodVersion) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
-  const artifacts = await input.repos.artifacts.readAll();
-  const items = (await input.repos.workItems.list()).map(row => row.value);
+  // CH-26: when scoped, only the rows this audit reads (`readAuditHistory`); otherwise every row as before.
+  const scoped = input.scopedReads === true ? await readAuditHistory(input.repos, { workItemId: input.workItemId, subjectId: contract.subjectId,
+    requiredArtifactIds: [input.artifactId, ...contract.sourceScope.observationArtifactIds,
+      ...contract.verification.authorities.flatMap(authority => [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds])] }) : null;
+  const artifacts = scoped?.artifacts ?? await input.repos.artifacts.readAll();
+  const items = scoped?.items ?? (await input.repos.workItems.list()).map(row => row.value);
   if (!input.workItemId) throw new Error("AUDIT_WORK_ITEM_SCOPE_REQUIRED");
   const { primary, owner } = await resolvedHeldAuditAttribution({ repos: input.repos, artifacts, items,
     artifactId: input.artifactId, contract, workItemId: input.workItemId, siblingHeldRootFor: input.siblingHeldRootFor });
@@ -302,6 +307,8 @@ async function generalizedIndependentContext(input: {
 /** `auditCeilingUsd`: the rolling ceiling in force, which the auditor admits against (model-audit.ts). */
 export function standingFleetRuntime(input: { root: string; /** The method knowledge, read from the field manual (`readMethodKnowledge`). */ method: MethodKnowledge; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
   lifetimeHuntSubject?: (subjectId: string) => boolean;
+  /** CH-26: scope each task's history reads (`scoped-history.ts`). */
+  scopedReads?: boolean;
   siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
   /** MW-021 (2026-09-25): the auditor's transport for the jurisdiction a record is about, held on the area budget covering it. */
   transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport }): FleetRuntime {
@@ -309,10 +316,12 @@ export function standingFleetRuntime(input: { root: string; /** The method knowl
   const method = input.method;
   const readEvidence = workerVaultResolver(input.repos, new DurableEvidenceStore(input.vaultRoot ?? join(input.root, ...VAULT_DIR)), "freshness");
   return { repos: input.repos, readEvidence, methodVersion: method.version, now, requireModelAudit: true,
+    ...(input.scopedReads ? { scopedReads: true } : {}),
     ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }),
     ...(input.transport ? (() => {
       const modelOptions = { ...(input.auditCeilingUsd === undefined ? {} : { ceilingUsd: input.auditCeilingUsd }), ...(input.transportFor === undefined ? {} : { transportFor: input.transportFor }),
-        ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }) };
+        ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }),
+        ...(input.scopedReads ? { scopedReads: true } : {}) };
       return { auditReasoner: modelAuditReasoner(input.repos, input.transport, now, modelOptions), parseReasoner: modelParseReasoner(input.repos, input.transport, now, modelOptions),
         modelAuditSample: createModelAuditSampler(input.repos) };
     })() : {}),

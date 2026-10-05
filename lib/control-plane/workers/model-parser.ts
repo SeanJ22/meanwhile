@@ -277,6 +277,8 @@ export function modelParseReasoner(
   now: () => string,
   options: {
     readonly ceilingUsd?: number;
+    /** CH-26: read only the cost rows the rolling window can count. */
+    readonly scopedReads?: boolean;
     readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
     readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   } = {},
@@ -289,7 +291,7 @@ export function modelParseReasoner(
     const started = performance.now();
     const contract = input.contract;
     if (contract.schemaVersion !== 2 || contract.extraction.format !== "UNSUPPORTED") throw new Error("PARSE_MODEL_LANE_NOT_APPLICABLE");
-    const spend = researchSpendInWindow(await repos.costs.readAll(), now());
+    const spend = researchSpendInWindow(await readSpendWindowCosts(repos, now(), options.scopedReads === true), now());
     const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
     if (!admission.permits) throw new Error(`DENIED_BY_POLICY:PARSE_ROLLING_COST_CEILING; ${admission.why}`);
     const host = (() => { try { return new URL(input.evidence.canonicalUrl).host.toLowerCase(); } catch { return input.evidence.canonicalUrl; } })();
@@ -413,3 +415,4 @@ export function modelParseReasoner(
 }
 import type { CostModelShare } from "../cost.ts";
 import { activeModelTierFor } from "../../models.ts";
+import { readSpendWindowCosts } from "./scoped-history.ts";

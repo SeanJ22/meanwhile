@@ -1,3 +1,4 @@
+import { publicationSourcePolicy } from "../control-plane/promotion/source-settings.ts";
 import { join } from "node:path";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
 import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
@@ -16,6 +17,7 @@ export async function workerPublicationContext(now: string) {
   const connection = controlPlaneUrlFromEnv();
   if (!connection) throw new Error("WORKER_PUBLICATION_CONTROL_PLANE_UNAVAILABLE");
   const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
+  const sourcePolicy = publicationSourcePolicy((await repos.adminConfig.read("current"))?.value ?? null);
   const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
   const readObject = researchVaultResolver(repos, vault, "freshness");
   const readEvidence = workerVaultResolver(repos, vault, "freshness", { snapshot: true });
@@ -35,7 +37,7 @@ export async function workerPublicationContext(now: string) {
         ? result.walk.filter(step => step.rung === result.source.retrieval && step.target === evidence.canonicalUrl &&
           step.transport === "REACHABLE" && step.outcome === "WALKED_AND_FOUND" && step.artifactIds.includes(id)).map(step => step.at) : [];
     });
-    return { evidence, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!, httpStatus: artifact.httpStatus,
+    return { evidence, sourcePolicy, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!, httpStatus: artifact.httpStatus,
       transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
   } };
 }

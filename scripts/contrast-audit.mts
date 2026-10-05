@@ -22,11 +22,9 @@
  */
 
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve as resolvePath } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const css = readFileSync(join(root, "app", "globals.css"), "utf8");
 
 const AA = 4.5;
 const SUN = 7;
@@ -58,7 +56,7 @@ function ratio(a: string, b: string): number {
  * which is exactly how the stylesheet behaves and exactly the trap a
  * hand-maintained copy of this table would fall into.
  */
-function tokensIn(selector: string): Map<string, string> {
+function tokensIn(css: string, selector: string): Map<string, string> {
   // Anchored at a line start, because both selector strings also appear in
   // this stylesheet's own header comment — the first attempt matched the
   // COMMENT, so the light block was never read and light reported dark's
@@ -91,18 +89,6 @@ function resolve(tokens: Map<string, string>): Map<string, string> {
     else out.delete(key);
   }
   return out;
-}
-
-const darkRaw = tokensIn(":root");
-const lightRaw = new Map(darkRaw);
-for (const [k, v] of tokensIn('[data-theme="light"]')) lightRaw.set(k, v);
-const dark = resolve(darkRaw);
-const light = resolve(lightRaw);
-
-// The parse must not silently read one block twice — that is exactly the bug
-// this script shipped with for ten minutes.
-if (dark.get("--bg") === light.get("--bg")) {
-  throw new Error("light and dark parsed to the same --bg; the block anchor is wrong");
 }
 
 /** Text token → the surfaces it actually renders on. */
@@ -195,6 +181,19 @@ const EXEMPT: Record<string, string> = {
   "--accent-school": "structure only, as above.",
 };
 
+export function auditContrast(css: string): { failures: number; rows: string[] } {
+  const darkRaw = tokensIn(css, ":root");
+  const lightRaw = new Map(darkRaw);
+  for (const [k, v] of tokensIn(css, '[data-theme="light"]')) lightRaw.set(k, v);
+  const dark = resolve(darkRaw);
+  const light = resolve(lightRaw);
+
+  // The parse must not silently read one block twice — that is exactly the bug
+  // this script shipped with for ten minutes.
+  if (dark.get("--bg") === light.get("--bg")) {
+    throw new Error("light and dark parsed to the same --bg; the block anchor is wrong");
+}
+
 let failures = 0;
 const rows: string[] = [];
 
@@ -220,7 +219,11 @@ for (const [themeName, tokens] of [
     }
     for (const surface of pair.on) {
       const bg = tokens.get(surface);
-      if (!bg) continue;
+      if (!bg) {
+        failures += 1;
+        rows.push(`  ??   ${surface} — not defined in ${themeName}`);
+        continue;
+      }
       check(`${pair.text} on ${surface}`, ratio(fg, bg), SUN);
     }
   }
@@ -251,13 +254,16 @@ for (const [themeName, tokens] of [
   }
 }
 
-console.log("Contrast audit — the sun bar is 7:1, AA is 4.5:1");
-console.log(rows.join("\n"));
-console.log("\nexempt, with reasons:");
-for (const [token, why] of Object.entries(EXEMPT)) {
-  console.log(`  ${token} — ${why}`);
+return { failures, rows };
 }
-console.log(
-  `\n${failures === 0 ? "all pairs clear their bar" : `${failures} pair(s) below bar`}`,
-);
-if (failures > 0) process.exit(1);
+
+if (process.argv[1] && resolvePath(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+  const { failures, rows } = auditContrast(readFileSync(join(root, "app", "globals.css"), "utf8"));
+  console.log("Contrast audit — the sun bar is 7:1, AA is 4.5:1");
+  console.log(rows.join("\n"));
+  console.log("\nexempt, with reasons:");
+  for (const [token, why] of Object.entries(EXEMPT)) console.log(`  ${token} — ${why}`);
+  console.log(`\n${failures === 0 ? "all pairs clear their bar" : `${failures} pair(s) below bar`}`);
+  if (failures > 0) process.exitCode = 1;
+}

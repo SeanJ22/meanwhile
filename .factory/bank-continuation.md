@@ -2,7 +2,7 @@
 
 Current assignment: Codex, primary logical lane `bank`, only `stream/bank` may be pushed. Re-read `board/briefs`, `board/river` assignments and returns, and the remote lock before writing. No launch, hunt, budget, notification or policy changes are needed.
 
-The previous 21 Bank steps are integrated. The current batch adds DB-44, DB-46 and DP-23 plus the DB-57 repair. DP-19 migration coordination remains WIP, preserved as `.factory/bank-DP-19_fix_map.sql`. These have focused code checks; runtime hooks remain the owning lanes' work. River owns deployment and live acceptance. The SHA and final checks belong in `bank.md`; earlier status and READY commits remain in Git history.
+The previous 21 Bank steps are integrated. The current batch adds DB-44, DB-46 and DP-23 plus the DB-57 repair. DP-19 migration coordination remains WIP, preserved as `.factory/bank-DP-19_fix_map.sql`. These have passed the complete FULL, types and lint checks; runtime hooks remain the owning lanes' work. River owns deployment and live acceptance. The SHA and final checks belong in `bank.md`; earlier status and READY commits remain in Git history.
 
 ## Connections River must route
 
@@ -50,4 +50,4 @@ env -u DATABASE_URL -u WTP_ASSET_STORE \
 
 The retained Corepack setup at `/workspace/.setup-tools/corepack` is another supported cache. No dependency install or model subscription change is required. Full Git history is present. Generate place references once when needed; keep stale `.next` out of the test leg. The current ready batch's selector says FULL. Keep its actual pass/fail/skip counts and tested SHA, never report a cancelled run as passing. For an affected selection, pass the actual newline-separated paths to `CI_TEST_FILES`.
 
-The first actual complete FULL on 620be3496 had 9359 pass, 1 fail and 11 skipped. The only failure was write-alarm journal/file equality for the step-ID DP-19 SQL, because River must assign its journal/number. The SQL proposal is therefore preserved outside the application tree, not silently journalled by Bank and not claimed READY. No test, migration numbering rule, or production schema was changed. A new complete FULL checks the remaining READY batch.
+The first actual complete FULL on 620be3496 had 9359 pass, 1 fail and 11 skipped. The only failure was write-alarm journal/file equality for the step-ID DP-19 SQL, because River must assign its journal/number. The SQL proposal is therefore preserved outside the application tree, not silently journalled by Bank and not claimed READY. No test, migration numbering rule, or production schema was changed. The complete rerun on e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee passed: 9360 pass, 0 fail, 11 skipped. Raw logs and command evidence are retained in `.factory/bank-evidence/`.

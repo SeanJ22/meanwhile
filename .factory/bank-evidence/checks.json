@@ -1,0 +1,52 @@
+{
+  "full": {
+    "tested_sha": "e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee",
+    "files": 1068,
+    "tests": 9371,
+    "pass": 9360,
+    "fail": 0,
+    "skipped": 11,
+    "exit": 0,
+    "command": "env -u DATABASE_URL -u WTP_ASSET_STORE WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium COREPACK_HOME=/tmp/bank-corepack corepack pnpm test",
+    "log": "full-e41.log.gz"
+  },
+  "previous_full": {
+    "tested_sha": "620be3496fb79be7efea2a4bf1c2180f1fe9268a",
+    "pass": 9359,
+    "fail": 1,
+    "skipped": 11,
+    "exit": 1,
+    "failure": "write-alarm journal/file equality for the unnumbered DP-19 migration; proposal moved to WIP coordination storage; no schema guard or journal changed",
+    "log": "full-620.log.gz"
+  },
+  "selection": {
+    "tested_sha": "e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee",
+    "plan": "FULL",
+    "needs_browser": true,
+    "log": "selection.log"
+  },
+  "types": {
+    "tested_sha": "e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee",
+    "command": "corepack pnpm exec tsc --noEmit",
+    "exit": 0
+  },
+  "lint": {
+    "tested_sha": "620be3496fb79be7efea2a4bf1c2180f1fe9268a",
+    "command": "corepack pnpm exec eslint <all 23 changed .ts/.tsx/.mjs files>",
+    "files": 23,
+    "exit": 0,
+    "scope_unchanged_in_ready_application": true
+  },
+  "original_failure_regression": {
+    "tested_sha": "e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee",
+    "files": [
+      "tests/write-alarm.test.ts"
+    ],
+    "pass": 18,
+    "fail": 0,
+    "exit": 0,
+    "log": "write-alarm.log"
+  },
+  "application_tree_sha256": "85934afecc2308af12bf597f5c420fcc7933aecc53bd009f95b7e4f798d0f16c",
+  "production_acceptance": "not claimed; River owns migration application, shared hooks, integration, release and live checks"
+}

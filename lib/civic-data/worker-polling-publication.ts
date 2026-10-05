@@ -68,8 +68,9 @@ export async function publishWorkerPollingResults(input: {
       const matching = doors.doors.filter(door => door.status !== "SUSPENDED" && door.ocdId === divisionId &&
         (POLLING_DOOR_KINDS as readonly string[]).includes(door.kind) && plan.sourceRegistryReferences.includes(door.doorId));
       requirePublication(division?.label && matching.length === 1, "POLLING_EXACT_DOOR_OR_DIVISION_MISSING");
-      const door = matching[0], captures = await capturesForPublication({ ...input, workItemId: id, primaryId: parser.result.artifactId, results });
-      const capture = captures.find(c => c.evidence.artifactId === parser.result.artifactId)!;
+      const door = matching[0], primaryId = parser.result.artifactId;
+      const captures = await capturesForPublication({ ...input, workItemId: id, primaryId, results });
+      const capture = captures.find(c => c.evidence.artifactId === primaryId)!;
       const checked = verifiedWorkerRecords({ plan, parser, captures, results, now: input.now });
       requirePublication(canonicalJson(checked.contract.extraction) === canonicalJson(JSON.parse(String(door.config.extraction))), "POLLING_REGISTERED_MAPPING_MISMATCH");
       const publication = await publishPollingDoor({ ...input, door, capture, linkingCaptures: captures, jurisdictionName: division.label });

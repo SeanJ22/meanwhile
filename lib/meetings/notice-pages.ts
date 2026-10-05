@@ -1,4 +1,4 @@
-import { SOURCE_WIRING } from "../registry/source-wiring.ts";
+import { activeWiring, type BodySourceWiring } from "../registry/source-wiring.ts";
 
 /**
  * **A NOTICE PAGE IS ITS BODY'S PAGE, NEVER A SITTING'S AGENDA BY DEFAULT.**
@@ -27,9 +27,18 @@ interface NoticePageOwners {
   readonly publishers: ReadonlySet<string>;
 }
 
-const OWNERS: ReadonlyMap<string, NoticePageOwners> = (() => {
+/** Built from the doors in use, and rebuilt when a pass installs a different list (DB-15). */
+let ownersFor: { readonly wiring: readonly BodySourceWiring[]; readonly owners: ReadonlyMap<string, NoticePageOwners> } | null = null;
+
+function owners(): ReadonlyMap<string, NoticePageOwners> {
+  const wiring = activeWiring();
+  if (ownersFor?.wiring !== wiring) ownersFor = { wiring, owners: buildOwners(wiring) };
+  return ownersFor.owners;
+}
+
+function buildOwners(wiring: readonly BodySourceWiring[]): ReadonlyMap<string, NoticePageOwners> {
   const owners = new Map<string, { bodyIds: Set<string>; publishers: Set<string> }>();
-  for (const row of SOURCE_WIRING) {
+  for (const row of wiring) {
     if (!row.noticeUrl) continue;
     const entry = owners.get(row.noticeUrl) ?? { bodyIds: new Set<string>(), publishers: new Set<string>() };
     entry.bodyIds.add(row.bodyId);
@@ -37,11 +46,11 @@ const OWNERS: ReadonlyMap<string, NoticePageOwners> = (() => {
     owners.set(row.noticeUrl, entry);
   }
   return owners;
-})();
+}
 
 /** Whether a URL is a body's notice page, as the wiring names it. */
 export function isWiredNoticePage(url: string): boolean {
-  return OWNERS.has(url);
+  return owners().has(url);
 }
 
 /**
@@ -55,9 +64,9 @@ export function isAnotherBodysNoticePage(
   url: string,
   sitting: { readonly bodyId?: string | null; readonly publisher?: string | null },
 ): boolean {
-  const owners = OWNERS.get(url);
-  if (!owners || !sitting.bodyId) return false;
-  if (owners.bodyIds.has(sitting.bodyId)) return false;
-  if (sitting.publisher && owners.publishers.has(sitting.publisher)) return false;
+  const pageOwners = owners().get(url);
+  if (!pageOwners || !sitting.bodyId) return false;
+  if (pageOwners.bodyIds.has(sitting.bodyId)) return false;
+  if (sitting.publisher && pageOwners.publishers.has(sitting.publisher)) return false;
   return true;
 }

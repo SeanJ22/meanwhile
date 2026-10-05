@@ -25,7 +25,7 @@
  * canonical read model's explicit first-seed gate.
  */
 import { surnameDisplayCase } from "../ballot/name-case.ts";
-import { ballotSourceForTargetId } from "../ballot/registry.ts";
+import { readerBallotSourceForTargetId } from "../ballot/reader-sources.ts";
 
 interface BallotFile {
   contests: { id: string; title: string }[];
@@ -41,7 +41,7 @@ export interface CandidacyDisplay {
 
 async function load(candidacyId: string): Promise<Map<string, CandidacyDisplay>> {
   const out = new Map<string, CandidacyDisplay>();
-  const entry = ballotSourceForTargetId(candidacyId);
+  const entry = await readerBallotSourceForTargetId(candidacyId);
   if (!entry) return out;
   const raw = entry.source.normalize(await entry.source.fetch()) as BallotFile;
   const titles = new Map(raw.contests.map((c) => [c.id, c.title]));

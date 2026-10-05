@@ -142,7 +142,7 @@ const STOP_WORDS = new Set([
   "view", "views", "on",
 ]);
 
-function normalize(text: string): string {
+export function normalize(text: string): string {
   return text
     .toLowerCase()
     .normalize("NFD")
@@ -172,7 +172,7 @@ export function searchTerms(topic: string): string[] {
  * the most that can be claimed, and every run is returned EXACTLY as it
  * appears — trimming whitespace is the only edit this function makes.
  */
-function passagesOf(text: string): string[] {
+export function passagesOf(text: string): string[] {
   return text
     .split(/(?<=[.!?])\s+/)
     .map((s) => s.trim())

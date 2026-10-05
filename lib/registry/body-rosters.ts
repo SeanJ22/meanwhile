@@ -26,7 +26,7 @@ export interface RosterMember {
   /** An unresolved update must retain an older member on its actual source/date. */
   membershipSource?: { sourceUrl: string; sourceOrg: string; collectedAt: string };
   /** Optional facts kept from an earlier verified read when this update omits them. */
-  retainedFieldSources?: Partial<Record<"termNote" | "email" | "phone" | "websiteUrl", { sourceUrl: string; sourceOrg: string; collectedAt: string }>>;
+  retainedFieldSources?: Partial<Record<"termNote" | "termStart" | "termEnd" | "email" | "phone" | "websiteUrl", { sourceUrl: string; sourceOrg: string; collectedAt: string }>>;
   /** A shared public office line is not a person's private contact route. */
   contactKind?: "PUBLIC_OFFICE" | "PERSONAL";
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
@@ -37,6 +37,9 @@ export interface RosterMember {
   officeTitle: string;
   /** The body's own wording for the term, where it states one. */
   termNote: string | null;
+  /** ISO dates (`YYYY-MM-DD`, or `YYYY-MM`) the member's term starts and ends, only where the page writes them. */
+  termStart?: string | null;
+  termEnd?: string | null;
   email: string | null;
   phone: string | null;
   /** The member's own official page, where the body publishes one. */
@@ -2581,10 +2584,11 @@ export interface RosterHolder {
   photoUrl: string | null;
   campaignUrl: null;
   /**
-   * The roster holds wording in termNote, not normalized term-end/birth dates.
-   * Preserve that wording separately; never compute a date from its prose.
+   * The term dates a roster states as dates; wording stays in termNote and no
+   * date is ever computed from its prose.
    */
-  termEnd: null;
+  termStart?: string | null;
+  termEnd: string | null;
   birthDate: null;
 }
 
@@ -2647,7 +2651,8 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     contactFormUrl: null,
     photoUrl: photos[member.id] ?? null,
     campaignUrl: null,
-    termEnd: null,
+    termStart: member.termStart ?? null,
+    termEnd: member.termEnd ?? null,
     birthDate: null,
   }));
 }

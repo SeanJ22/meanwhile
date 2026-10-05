@@ -1,6 +1,7 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
+import type { DoorRecord } from "../../doors/registry.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
 /**
@@ -45,7 +46,6 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { FieldManualStore } from "../field-manual.ts";
-import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
@@ -226,9 +226,12 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       value: string,
       limit: number,
       projection: RecordProjection,
+      recordedAtSince?: string,
     ): Promise<readonly unknown[]> => {
+      const since = recordedAtSince === undefined ? null : Date.parse(recordedAtSince);
       const matches = (partitions.get(key) ?? [])
-        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value);
+        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value &&
+          (since === null || Date.parse(entry.at) >= since));
       const bounded = Math.max(0, Math.trunc(limit));
       return matches
         .slice(Math.max(0, matches.length - bounded))
@@ -288,8 +291,16 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
   const locks = memoryLockManager();
   const budgetAggregate = memoryAggregateRepository<BudgetLedger>("BudgetLedger");
   const artifacts = memoryAppendOnlyRepository<ArtifactRecord>("artifacts");
+  const adminReceipts = memoryAppendOnlyRepository<ActionReceipt>("admin_receipts");
 
   return {
+    async adminActionHistoryPage(query) {
+      // Positions belong to the append log, so new rows do not shift an older cursor.
+      return (await adminReceipts.read("admin-action")).map((receipt, position) => ({ receipt, position }))
+        .filter(row => (query.scope === "us" || row.receipt.subject === query.scope || row.receipt.requestedSubject === query.scope) &&
+          (query.beforePosition == null || row.position < query.beforePosition))
+        .sort((a, b) => b.position - a.position).slice(0, query.limit);
+    },
     workItems: memoryAggregateRepository<WorkItem>("WorkItem"),
     routeTasks: memoryAggregateRepository<RouteTask>("RouteTask"),
     attempts: memoryAggregateRepository<Attempt>("Attempt"),
@@ -310,7 +321,6 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
     /* The owner control centre's data plane (ITEM H). */
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
-    readinessSnapshots: memoryAggregateRepository<ReadinessStateSnapshot>("ReadinessStateSnapshot"),
     fieldManual: memoryAggregateRepository<FieldManualStore>("FieldManual"),
     runnerHeartbeat: memoryAggregateRepository<RunnerHeartbeat>("RunnerHeartbeat"),
     cacheObservations: memoryAggregateRepository<CacheObservationRecord>("CacheObservationRecord"),
@@ -330,12 +340,14 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     /* Software release review (Admin Pass B, schema v8). */
     softwareReleaseReviews: memoryAppendOnlyRepository<SoftwareReleaseReviewRecord>("software_release_reviews"),
     /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
-    adminReceipts: memoryAppendOnlyRepository<ActionReceipt>("admin_receipts"),
+    adminReceipts,
     agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
     discoveryAttempts: memoryAppendOnlyRepository<MeetingsDiscoveryAttempt>("discovery_attempts"),
     adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
     /* What readers were told Ask does not hold (schema v13). */
     askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),
+    /* The Door Registry (DB-09, schema v19). */
+    doors: memoryAggregateRepository<DoorRecord>("Door"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",

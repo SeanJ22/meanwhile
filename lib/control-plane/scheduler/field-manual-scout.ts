@@ -11,13 +11,21 @@
 
 import {
   fieldManualEntryId,
+  fieldManualPlaceRank,
+  normalizeEntry,
+  emptyFieldManual,
+  upsertEntries,
+  readFieldManual,
   projectFieldManual,
   writeFieldManual,
   type FieldManualEntry,
   type FieldManualProjection,
   type FieldManualStore,
+  type FieldManualRepos,
 } from "../field-manual.ts";
 import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
+import { doorMethodEntries, type SavedDoorPage } from "../bank-methods.ts";
+import { scoutJobCostEntries } from "../bank-job-cost.ts";
 
 /** The source label a scout's own write-backs carry, so a re-observation updates one row. */
 export const SCOUT_DISCOVERY_SOURCE = "scout-discovery";
@@ -63,11 +71,17 @@ export function scoutFieldManualProjection(
   const full = projectFieldManual(store, {
     role: "SCOUT",
     ...(states[0] ? { state: states[0] } : {}),
+    ...(opts.subjectId?.startsWith("ocd-division/") ? { ocdIds: [opts.subjectId] } : {}),
     limit: store.entries.length,
   });
   const byId = new Map(store.entries.map(entry => [entry.id, entry] as const));
   const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, entry: byId.get(id)! }));
   indexed.sort((a, b) => {
+    if (opts.subjectId?.startsWith("ocd-division/")) {
+      const query = { ocdIds: [opts.subjectId], state: states[0] };
+      const place = fieldManualPlaceRank(normalizeEntry(a.entry), query) - fieldManualPlaceRank(normalizeEntry(b.entry), query);
+      if (place) return place;
+    }
     const affinity = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : entry.recordClasses.length === 0 ? 1 : 2;
     return affinity(a.entry) - affinity(b.entry);
   });
@@ -83,8 +97,9 @@ export function scoutFieldManualCatalog(
   opts: { readonly subjectId?: string | null; readonly obligationId?: string | null },
 ): readonly FieldManualEntry[] {
   const state = scoutStateHint(opts.subjectId, opts.obligationId)[0];
-  return store.entries.filter(entry => (entry.role === "SCOUT" || entry.role === "SHARED") &&
-    (!state || entry.states.length === 0 || entry.states.some(value => value.toLowerCase() === state)));
+  const applicable = new Set(projectFieldManual(store, { role: "SCOUT", state,
+    ...(opts.subjectId?.startsWith("ocd-division/") ? { ocdIds: [opts.subjectId] } : {}), limit: store.entries.length }).entryIds);
+  return store.entries.filter(entry => applicable.has(entry.id) || (entry.kind === "PLAYBOOK" && entry.role === "DETECTIVE"));
 }
 
 /** A projected door recorded as dead (BLOCKED or FAILED), from its rendered line (`<role>/<kind> <outcome> (...)`). */
@@ -127,11 +142,11 @@ export function fieldManualBriefLines(projection: FieldManualProjection): string
  * Only candidates the Attempt actually opened become YIELDED doors; the store's
  * own upsert dedups by id so a re-discovery refreshes rather than forks.
  */
-export function scoutDiscoveryEntries(result: ScoutResult, stateHint: readonly string[]): FieldManualEntry[] {
+export function scoutDiscoveryEntries(result: ScoutResult, stateHint: readonly string[], pages: readonly SavedDoorPage[] = []): FieldManualEntry[] {
   const rejected = new Set((result.sourceDeadEnds ?? []).map(source => source.artifactId));
   const discoveries: FieldManualEntry[] = (result.refusal === null ? result.candidates : []).filter(c =>
     !c.evidenceArtifactIds.some(id => rejected.has(id))).map((c: ScoutCandidate) => ({
-    id: fieldManualEntryId(SCOUT_DISCOVERY_SOURCE, c.routeId),
+    id: fieldManualEntryId(SCOUT_DISCOVERY_SOURCE, `${result.subjectId}:${c.routeId}`),
     role: "SCOUT",
     kind: "SCOUT_DISCOVERY",
     title: c.title,
@@ -139,6 +154,7 @@ export function scoutDiscoveryEntries(result: ScoutResult, stateHint: readonly s
     states: [...stateHint],
     recordClasses: [c.recordClass],
     platforms: [],
+    foundBy: result.researchRole === "DETECTIVE" ? "DETECTIVE" : "SCOUT",
     outcome: "YIELDED",
     url: c.url,
     source: SCOUT_DISCOVERY_SOURCE,
@@ -151,11 +167,15 @@ export function scoutDiscoveryEntries(result: ScoutResult, stateHint: readonly s
       permission: c.permission,
       recordClass: c.recordClass,
       obligationId: result.obligationId,
+      subjectId: result.subjectId,
       attemptId: result.attemptId,
       evidenceArtifactIds: c.evidenceArtifactIds,
     },
   }));
-  return [...discoveries, ...(result.sourceDeadEnds ?? []).map(source => ({
+  const methods = discoveries.flatMap(door => doorMethodEntries(door, pages));
+  const stamped = discoveries.map(door => ({ ...door, platforms: methods.filter(method =>
+    (method.payload as { doorEntryIds: string[] }).doorEntryIds.includes(door.id)).flatMap(method => method.platforms) }));
+  return [...stamped, ...methods, ...scoutJobCostEntries(result), ...(result.sourceDeadEnds ?? []).map(source => ({
     id: fieldManualEntryId('source-dead-end', `${result.subjectId}:${result.recordClass}:${source.url}`),
     role: 'SHARED' as const, kind: 'SOURCE_DEAD_END', title: `Historical source: ${source.url}`,
     summary: `${source.sourceDate ?? 'Unknown source date'}: ${source.reason}`.slice(0, 300),
@@ -235,4 +255,9 @@ export function usedFieldManualEntryIds(result: ScoutResult, handedIds: readonly
 }
 
 /** A scout's write-back is the shared field-manual write (`writeFieldManual`). */
-export const writeFieldManualDiscoveries = writeFieldManual;
+export async function writeFieldManualDiscoveries(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string) {
+  const bank = await readFieldManual(repos);
+  const methods = entries.flatMap(door => doorMethodEntries(door, [], bank.store.entries));
+  const folded = upsertEntries(emptyFieldManual(), [...entries, ...methods], now);
+  return writeFieldManual(repos, folded.entries, now);
+}

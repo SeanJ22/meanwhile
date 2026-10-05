@@ -1,3 +1,4 @@
+import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FilingChanges } from "@/components/ballot/filing-changes";
@@ -6,7 +7,7 @@ import { filingsForDivisions, type OfficialFiling } from "@/lib/civic-data/offic
 import { readOfficialFilingsForReader } from "@/lib/civic-data/curated-reader-read-model";
 
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
-import { ballotSourcesForDivisions } from "@/lib/ballot/registry";
+import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { coverageNotesForScope } from "@/lib/ballot/coverage-notes";
 import {
   ballotAuxiliaryPreloadSucceeded,
@@ -557,7 +558,7 @@ async function BallotBattlecard({
    * How many seats this contest fills. The contest-level eligibility gate
    * reconciles the holders a source returns against it (2026-08-28).
    */
-  contestVoteFor: number;
+  contestVoteFor: number | null;
   context: { zip: string; lat: number; lng: number } | null;
   authorityAvailability: BallotAuthorityAvailability;
   /**
@@ -596,7 +597,7 @@ async function BallotBattlecard({
    * three states. A miss is UNKNOWN, never `Challenger`.
    */
   let resolvedStanding: Awaited<ReturnType<typeof contestIncumbency>> | null = null;
-  if (authorityAvailability.officeholders) {
+  if (authorityAvailability.officeholders && contestVoteFor !== null) {
     try {
       resolvedStanding = await withReaderAuthorityEdge(readerEdge, () => contestIncumbency(
         {
@@ -1000,7 +1001,7 @@ export default async function BallotPage({
      */
     const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds);
     askOcdIds = ocdIds;
-    for (const { state, source } of ballotSourcesForDivisions(ocdIds)) {
+    for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds)) {
       try {
         const candidate = source.normalize(await source.fetch());
         const hit = contestsForDivisions(candidate, ocdIds);
@@ -1112,6 +1113,7 @@ export default async function BallotPage({
    * wins where one is published; otherwise the proposition number, compared
    * as a NUMBER so 100 never sorts before 20. See lib/ballot/measure-order.ts.
    */
+  const measureRecords = set ? measureRecordsForBallot(set) : [];
   const measureContests = orderMeasures(
     matched?.contests.filter((c) => c.type === "MEASURE") ?? [],
   );
@@ -1239,11 +1241,11 @@ export default async function BallotPage({
    */
   const pickableContests =
     set && matched
-      ? [...candidacyContests, ...measureContests].map((contest) => ({
+      ? [...candidacyContests, ...measureContests].filter(contest => contest.voteFor !== null).map((contest) => ({
           contestId: contest.id,
           contestTitle: contest.title,
           contestOcdId: contest.ocdId,
-          voteFor: contest.type === "MEASURE" ? 1 : contest.voteFor,
+          voteFor: contest.type === "MEASURE" ? 1 : contest.voteFor ?? 0,
           options: pickOptionsFor(set, contest),
         }))
       : [];
@@ -2182,7 +2184,7 @@ export default async function BallotPage({
                   )}
                 </h2>
                 <p className="t-eyebrow text-muted">
-                  Vote for {contest.voteFor}
+                  {contest.voteFor !== null ? `Vote for ${contest.voteFor}` : "We're working on getting this info"}
                   {contest.termYears ? ` · ${contest.termYears}-year term` : ""}
                 </p>
               </div>
@@ -2369,7 +2371,7 @@ export default async function BallotPage({
                 <PickControl
                   contestId={contest.id}
                   contestTitle={contest.title}
-                  voteFor={contest.voteFor}
+                  voteFor={contest.voteFor ?? 0}
                   /* M134: the reaction target for this nominee, so a Yes on
                      the control above becomes the pick here. F01-continued
                      item 8: through the shared builder, so the tally counts
@@ -2531,7 +2533,7 @@ export default async function BallotPage({
                   <PickControl
                     contestId={contest.id}
                     contestTitle={contest.title}
-                    voteFor={contest.voteFor}
+                    voteFor={contest.voteFor ?? 0}
                     /* M134: same, keyed the way this branch keys reactions. */
                     options={pickOptionsFor(set, contest)}
                   />
@@ -2629,7 +2631,7 @@ export default async function BallotPage({
           <div className="ballot-card-grid">
           {group.list.map((contest) => {
             const analysis = analysisForContest(contest.id);
-            const summary = summaryForContest(contest.id);
+            const summary = summaryForContest(contest.id, measureRecords);
             /*
              * BAL-30: the official words this repository already holds for
              * this contest. Null for the eleven statewide propositions, whose
@@ -2691,6 +2693,8 @@ export default async function BallotPage({
                     <p className="mt-1.5 text-[0.8125rem] font-semibold leading-relaxed">
                       {summary.summary}
                     </p>
+                    {summary.yesMeans && <p className="mt-2 text-[0.8125rem] leading-relaxed" data-measure-yes><strong>YES:</strong> {summary.yesMeans}</p>}
+                    {summary.noMeans && <p className="mt-2 text-[0.8125rem] leading-relaxed" data-measure-no><strong>NO:</strong> {summary.noMeans}</p>}
                   </div>
                 ) : (
                   measure && (
@@ -2747,7 +2751,7 @@ export default async function BallotPage({
                   one buys a page a reader can navigate, and the control names
                   exactly what is behind it.
                 */}
-                {provisionsForContest(contest.id).length > 0 && (
+                {provisionsForContest(contest.id, measureRecords).length > 0 && (
                   <details className="mt-3.5" data-provisions>
                     {/* Styled as the voting pills are — the author named them
                         as the pattern: light-purple, bolded, a right-pointing
@@ -2759,7 +2763,7 @@ export default async function BallotPage({
                       What&apos;s in it, part by part
                     </summary>
                     <ul className="mt-2.5 space-y-2.5">
-                      {provisionsForContest(contest.id).map((provision) => (
+                      {provisionsForContest(contest.id, measureRecords).map((provision) => (
                         <li
                           key={provision.id}
                           data-provision-id={provision.id}

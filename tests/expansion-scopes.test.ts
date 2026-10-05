@@ -124,7 +124,7 @@ async function zctasOf(g: ExpansionScopeGeography): Promise<string[]> {
 
 /** A geography's ZCTAs as the overlap rule reads them: all, the wholly-inside ones, and each partial share. */
 async function geometryOf(g: ExpansionScopeGeography): Promise<ScopeZctas> {
-  if (g.type === "zcta") throw new Error("Use resolveScopes for a ZIP hunt");
+  if (g.type === "zcta" || g.type === "state") throw new Error("Use resolveScopes for a ZIP or state hunt");
   const lookup = loadBootstrapLookup();
   const result = await lookup.zctasForGrouping({ type: g.type, geoid: g.geoid, version: g.version });
   assert.equal(result.status.kind, "OK", `${g.label} resolves in the bootstrap fixture`);
@@ -541,7 +541,7 @@ test("the budget arms from the ledger: 24h and 7d spend, unmeasured as null, and
   assert.equal(armed.gate.admit("o2", "az:county:county-of-coconino").admit, true, "Coconino is in no scope; the Fleet ceiling governs it alone");
 
   const unmeasured = armExpansionBudget(plan, { now: NOW, costs: [cost("az:county:county-of-pima", null, "2026-09-23T01:00:00.000Z")], worstCaseUsd: 0.6 });
-  assert.equal(unmeasured.reading.scopes.find((s) => s.key === "county:2020/04019")?.spend?.rolling24hUsd, null);
+  assert.equal((unmeasured.reading.scopes.find((s) => s.key === "county:2020/04019")?.spend?.rolling24hUsd ?? 0) > 0, true, "an unpriced charge is counted at its worst case, not left out");
   const unread = armExpansionBudget(plan, { now: NOW, costs: null, worstCaseUsd: 0.6 });
   assert.equal(unread.reading.scopes[0].spend, null);
   assert.match(unread.reading.scopes[0].budgetSays, /could not be read/);

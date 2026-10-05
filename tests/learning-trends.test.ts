@@ -91,3 +91,10 @@ test("MW-027: no rows means no weeks and no measured series, never a row of zero
   assert.equal(t.series.handed.says, "Not recorded in any of the 0 weeks on record.");
   assert.equal(t.escalations.says, "No paid walk is on record, so no model escalation is either.");
 });
+
+test('route reuse splits by recorded finder and leaves unattributed history as a gap', () => {
+  const trends = buildLearningTrends([row('2026-09-07'), row('2026-09-21', { finderAttributed: 5, scoutReusedDoors: 2, detectiveReusedDoors: 3 })], '2026-09-25T12:00:00Z');
+  assert.equal(trends.series.detectiveReused.points[0]!.value, null);
+  assert.equal(trends.series.detectiveReused.points[2]!.value, 3);
+  assert.equal(trends.series.scoutReused.points[2]!.value, 2);
+});

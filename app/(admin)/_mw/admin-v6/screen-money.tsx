@@ -62,10 +62,15 @@ export function MoneyScreen() {
     dailyLimitUsd: v.data.spend.data?.dailyLimitUsd ?? null, period: v.period, now: new Date(),
   });
 
+  const spendData = v.data.spend.data;
+  const hunters = spendData?.huntersNow ?? null;
+  const dialWords = hunters === null || sum.dailyLimitUsd === null ? DASH : `${usd(sum.dailyLimitUsd)} a day → about ${hunters} hunter${hunters === 1 ? "" : "s"} at once now`;
+  const worstCase = spendData?.worstCaseCharges ?? 0;
+
   const days = v.data.spend.data ? dailyRows(v.data.spend.data, v.period, new Date()) : [];
   const shownDays = all ? days : days.slice(0, TOP);
   /** Hosting is billed by the month: the provider's own reading for the month in the picker, or a dash. */
-  const hosting = /^20dd-dd$/.test(v.period) ? v.data.money.data?.account.find((a) => a.provider === "Netlify")?.amountUsd ?? null : null;
+  const hosting = /^20\d\d-\d\d$/.test(v.period) ? v.data.money.data?.account.find((a) => a.provider === "Netlify")?.amountUsd ?? null : null;
   const switcher = (
     <span className={s.inline}>
       {(["hunt", "day"] as const).map((k) => (
@@ -94,11 +99,17 @@ export function MoneyScreen() {
             <span className={s.big}>{money(sum.todayUsd)} <span className={s.dim}>of {money(sum.dailyLimitUsd)}</span></span>
           </div>
           <div className={s.row}><span className={s.eyebrow}>Left today</span><span className={s.big}>{money(sum.leftUsd)}</span></div>
+          <div className={s.row}><span className={s.eyebrow}>What the daily limit buys</span><span className={s.big}>{dialWords}</span></div>
           <div className={s.row}>
             <span className={s.eyebrow}>By model tier</span>
             {sum.tiers === null ? <span className={s.big}>{DASH}</span> : sum.tiers.map((t) => <span key={t.name} className={s.small}>{t.name} <span className={s.mono}>{usd(t.usd)}</span></span>)}
           </div>
         </div>
+        {worstCase > 0 && (
+          <p className={cx(s.p, s.small, s.textWarn)} role="status">
+            {worstCase} charge{worstCase === 1 ? " was" : "s were"} counted at the most it could have cost because no price was recorded. Spend is still counted and the daily limit still holds.
+          </p>
+        )}
       </Card>
 
       <Card title={by === "hunt" ? "Hunts" : "Days"} aside={switcher}>

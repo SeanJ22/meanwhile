@@ -7,12 +7,12 @@ import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { canonicalJson, RepositoryLockHeld, type ControlPlaneRepositories } from "../repository/types.ts";
 import { isControlPlaneRequestTimeout } from "../repository/request-bounds.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
-import { dispatchOne, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
+import { dispatchOne, hunterWallLimitMs, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
-import { autonomousScoutHistory, eligibleHeldProtocolRecovery, scoutTransientDenial, unchangedScoutFailure } from "./scout-scheduling.ts";
+import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, scoutTransientDenial, unchangedScoutFailure } from "./scout-scheduling.ts";
 import { selectStandingLineages } from "./standing-lineage.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
@@ -22,6 +22,7 @@ import type { FreshnessObligation } from "../scheduler/obligation.ts";
 import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
+import type { WorkerResultRecord } from "./types.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
 import { needsSecondSource } from "../promotion/section3.ts";
 
@@ -32,6 +33,8 @@ import { needsSecondSource } from "../promotion/section3.ts";
 const ROBOTS_ONLY_BLOCKERS: ReadonlySet<string> = new Set(["PERMISSION_DENIED", "PERMISSION_UNKNOWN"]);
 
 export interface AutonomousCoordinatorRuntime extends FleetRuntime {
+  /** Called before a task runs on a runtime built once for the whole process: refreshes only that task's own history. */
+  readonly beginTask?: (task: RouteTask) => Promise<void>;
   /** Existing Scout executor, configured with this canonical WorkItem and its inherited history. */
   readonly scoutFor?: (item: WorkItem, task: RouteTask, history?: readonly ScoutResult[]) => DeclaredExecutor;
   /** Only the standing lineage broker may hand complete, attributed sibling captures to this root.
@@ -106,23 +109,37 @@ export function exactInstructionAutonomousWorkIds(input: {
 
 export function assertAutonomousPlanIdentity(item: WorkItem, plan: AutonomousWorkPlan): void {
   if (plan.version !== 1 || plan.contract.subjectId !== item.subject || !plan.sourceRegistryReferences.length ||
-    !plan.jurisdiction || !plan.capability || plan.acquisition.some(a => a.route.subjectId !== item.subject) ||
-    plan.detective.some(d => d.question.subjectId !== item.subject)) throw new Error("AUTONOMOUS_PLAN_CANONICAL_IDENTITY_REFUSED");
+    !plan.jurisdiction || !plan.capability || plan.acquisition.some(a => a.route.subjectId !== item.subject)) throw new Error("AUTONOMOUS_PLAN_CANONICAL_IDENTITY_REFUSED");
+}
+
+function withoutRetiredDetective<T extends object>(plan: T): Omit<T, "detective"> {
+  const { detective: _retired, ...rest } = plan as T & { detective?: unknown };
+  return rest;
 }
 
 export async function registerAutonomousPlan(repos: ControlPlaneRepositories, workItemId: string, plan: AutonomousWorkPlan, now: string): Promise<void> {
   const item = await repos.workItems.mustRead(workItemId);
   assertAutonomousPlanIdentity(item.value, plan);
   if (item.value.autonomousPlan) {
-    if (canonicalJson(item.value.autonomousPlan) !== canonicalJson(plan)) throw new Error("AUTONOMOUS_PLAN_ALREADY_REGISTERED_DIFFERENT_CONTRACT");
+    // Plans stored before the rule-based detective was retired still carry an empty `detective` list.
+    if (canonicalJson(withoutRetiredDetective(item.value.autonomousPlan)) !== canonicalJson(withoutRetiredDetective(plan))) throw new Error("AUTONOMOUS_PLAN_ALREADY_REGISTERED_DIFFERENT_CONTRACT");
     return;
   }
   await repos.workItems.compareAndSet(workItemId,item.revision,{...item.value,autonomousPlan:plan},now);
 }
 
+type MissingHeldArtifactReason = "WORKER_ARTIFACT_MISSING_OR_PARTIAL" | "WORKER_ARTIFACT_NOT_IN_VAULT";
+
+function missingHeldArtifactReason(error: unknown): MissingHeldArtifactReason | null {
+  if (!(error instanceof Error)) return null;
+  if (/^WORKER_ARTIFACT_MISSING_OR_PARTIAL(?::|$)/.test(error.message)) return "WORKER_ARTIFACT_MISSING_OR_PARTIAL";
+  if (/^WORKER_ARTIFACT_NOT_IN_VAULT(?::|$)/.test(error.message)) return "WORKER_ARTIFACT_NOT_IN_VAULT";
+  return null;
+}
+
 /** Candidate assertions are usable only after matching the accepted Scout's actual vaulted observation. */
 async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?: readonly ScoutResult[],
-  onMissingArtifact?: (artifactId: string) => void): Promise<ObservedResearchRoute[]> {
+  onMissingArtifact?: (artifactId: string, reason: MissingHeldArtifactReason) => void): Promise<ObservedResearchRoute[]> {
   const plan = item.autonomousPlan!;
   const out: ObservedResearchRoute[] = [];
   for (const scout of knownScouts ?? await runtime.repos.scoutResults.readAll()) {
@@ -134,8 +151,9 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
         let input: Awaited<ReturnType<FleetRuntime["readEvidence"]>>;
         try { input = await runtime.readEvidence(id); }
         catch (error) {
-          if (!(error instanceof Error) || !/^WORKER_ARTIFACT_MISSING_OR_PARTIAL(?::|$)/.test(error.message)) throw error;
-          onMissingArtifact?.(id);
+          const reason = missingHeldArtifactReason(error);
+          if (!reason) throw error;
+          onMissingArtifact?.(id, reason);
           continue;
         }
         const evidence = evidenceProjection(input);
@@ -167,16 +185,17 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
 /** Typed state chooses one next operation. Absence is never inferred from an empty list. */
 export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRuntime, workItemId: string, knownItems?: readonly WorkItem[],
   knownHistory?: { readonly attempts: readonly Attempt[]; readonly scouts: readonly ScoutResult[]; readonly routeTasks: readonly RouteTask[];
-    readonly onMissingArtifact?: (artifactId: string) => void }): Promise<AutonomousDecision> {
+    readonly completedRecords?: readonly WorkerResultRecord[];
+    readonly onMissingArtifact?: (artifactId: string, reason: MissingHeldArtifactReason) => void }): Promise<AutonomousDecision> {
   const repos = runtime.repos;
   // The coordinator already took a consistent candidate snapshot. Re-reading
   // each item is a costly point request for every owed subject and can consume
   // the entire runner selection wall before a held continuation is admitted.
   const item = knownItems?.find(row => row.id === workItemId) ?? (await repos.workItems.mustRead(workItemId)).value;
   const plan = item.autonomousPlan;
-  const missingArtifacts = new Set<string>();
+  const missingArtifacts = new Map<string, MissingHeldArtifactReason>();
   const decision = (action:AutonomousDecision["action"],reason:string,task:RouteTask|null=null):AutonomousDecision => ({workItemId,action,task,
-    reason: missingArtifacts.size ? `${reason}; WORKER_ARTIFACT_MISSING_OR_PARTIAL:${[...missingArtifacts].join(",")}; these source references remain unresolved` : reason });
+    reason: missingArtifacts.size ? `${reason}; ${[...missingArtifacts].map(([id,missingReason])=>`${missingReason}:${id}`).join("; ")}; these source references remain unresolved` : reason });
   if (!plan) return decision("BLOCKED","No versioned autonomous work instructions are registered for this obligation.");
   type LinkedItem = WorkItem & { planRepair?: { parentWorkItemId: string; authority: string }; planRepairObservation?: { successorWorkItemId: string | null } };
   const children = (knownItems ?? (await repos.workItems.list()).map(row => row.value)).filter(row => (row as LinkedItem).planRepair?.parentWorkItemId === item.id);
@@ -190,7 +209,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       next.contract.subjectId === plan.contract.subjectId && next.contract.recordClass === plan.contract.recordClass &&
       next.contract.schemaVersion === 2 && plan.contract.schemaVersion === 2 && next.contract.verification.required &&
       canonicalJson(next.contract.identity) === canonicalJson(plan.contract.identity) &&
-      canonicalJson(next.contract.requiredFields) === canonicalJson(plan.contract.requiredFields) && canonicalJson(next.detective) === canonicalJson(plan.detective);
+      canonicalJson(next.contract.requiredFields) === canonicalJson(plan.contract.requiredFields);
     if (!valid) return decision("BLOCKED", "REPAIR_SUCCESSOR_LINK_INVALID: linked work is missing, incomplete or outside the unchanged obligation; recovery remains owed.");
     assertAutonomousPlanIdentity(child, next);
     return decision("BLOCKED", `REPAIR_WAITING_ON_SUCCESSOR:${child.id}: original obligation and blockers remain open; dispatch continues on the linked successor.`);
@@ -205,7 +224,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     );
   }
   const now = (runtime.now ?? (()=>new Date().toISOString()))();
-  const records = [...await readCompletedWorkerResults(repos, item.id)];
+  const records = [...(knownHistory?.completedRecords ?? await readCompletedWorkerResults(repos, item.id))];
   records.sort((a,b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id));
   const attempts = knownHistory?.attempts ?? (await repos.attempts.list()).map(a=>a.value);
   const taskFor = async (input:Parameters<typeof enqueueWorkerTask>[1]) => {
@@ -216,10 +235,10 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     }
     return admission.due ? decision("WORKER",admission.reason,task) : null;
   };
-  const sources = [...plan.sources,...await scoutSources(runtime,item,knownHistory?.scouts, id => {
+  const sources = [...plan.sources,...await scoutSources(runtime,item,knownHistory?.scouts, (id, reason) => {
     if (missingArtifacts.has(id)) return;
-    missingArtifacts.add(id);
-    knownHistory?.onMissingArtifact?.(id);
+    missingArtifacts.set(id, reason);
+    knownHistory?.onMissingArtifact?.(id, reason);
   })];
   const acquisitions: AcquirerTaskSpec[] = [...plan.acquisition];
   for (const source of sources) if (!acquisitions.some(a=>a.route.id===source.id && a.route.url===source.url)) acquisitions.push({route:source,held:[]});
@@ -260,10 +279,15 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       task=existing?.value??(await registerRouteTask(repos,continuation,now)).value;
       latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
     }
-    if(task.state==="POLICY_DENIED" && latest?.outcome==="DENIED_BY_POLICY" && task.policyDenial && debt && Date.parse(debt.retryAt)<=Date.parse(now)) {
-      const deniedCondition=scoutTransientDenial(latest.abortReason);
+    const deniedCondition=latest?.outcome==="DENIED_BY_POLICY" ? scoutTransientDenial(latest.abortReason) : null;
+    /* CH-29: our own guard's refusal is paced from its own end and needs no debt; every other denial waits out its debt as before. */
+    const guardRecheckAtIso=deniedCondition==="GUARD" ? guardRecheckAt(latest!) : null;
+    const dueForRecheck=deniedCondition==="GUARD"
+      ? (guardRecheckAtIso===null || Date.parse(guardRecheckAtIso)<=Date.parse(now))
+      : Boolean(debt && Date.parse(debt.retryAt)<=Date.parse(now));
+    if(task.state==="POLICY_DENIED" && latest?.outcome==="DENIED_BY_POLICY" && task.policyDenial && dueForRecheck) {
       const spend=researchSpendInWindow(await repos.costs.readAll(),now);
-      const conditionChanged=deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&ceilingPermits(spend.windowUsd,(runtime.rollingCeilingUsd ?? 0)).permits;
+      const conditionChanged=deniedCondition==="GUARD"||(deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&ceilingPermits(spend.windowUsd,(runtime.rollingCeilingUsd ?? 0)).permits);
       if(conditionChanged) {
         const row=await repos.routeTasks.mustRead(task.id); const {policyDenial,...rest}=row.value;
         task=(await repos.routeTasks.compareAndSet(task.id,row.revision,{...rest,state:"RECLAIMABLE",policyReauthorizations:[...(task.policyReauthorizations??[]),{at:now,denial:policyDenial!,reason:"The named Scout transport or rolling-cost condition changed; current policy will be checked again."}]},now)).value;
@@ -343,18 +367,6 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       const parser = records.find(r=>r.routeTaskId===parserTask.id && r.result.role==="PARSER");
       if (!parser) { const next=await taskFor({...spec,role:"PARSER"}); if(next)return next; unresolved=true; continue; }
       if (parser.result.verdict!=="EXTRACTED") { unresolved=true; continue; }
-      let identityUnresolved=false;
-      for (const detective of plan.detective) {
-        const detectiveSpec={...spec,artifactId:detective.artifactIds[0],role:"DETECTIVE" as const,detective};
-        const detectiveTask=await enqueueWorkerTask(repos,detectiveSpec);
-        const finding=records.find(r=>r.routeTaskId===detectiveTask.id);
-        if (!finding) { const next=await taskFor(detectiveSpec); if(next)return next; identityUnresolved=true; }
-        else if(finding.result.role!=="DETECTIVE" || finding.result.verdict!=="SUPPORTED" ||
-          (detective.question.kind==="IDENTITY" && (finding.result.identity.state!=="CANDIDATE" || finding.result.identity.canonicalId!==plan.contract.subjectId))) identityUnresolved=true;
-      }
-      // Independent checking can diagnose held extraction while identity work
-      // remains open. An unresolved Detective still prevents staging below.
-      if(identityUnresolved) unresolved=true;
       if (plan.contract.schemaVersion===2) {
         const heldIds=new Set((await repos.artifacts.readAll()).map(artifact=>artifact.artifactId));
         if(plan.contract.verification.authorities.some(authority=>[...authority.artifactIds,...authority.authorityEvidenceArtifactIds].some(id=>!heldIds.has(id)))) { unresolved=true; continue; }
@@ -364,26 +376,22 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       if (!validator) { const next=await taskFor({...spec,role:"VALIDATOR",producerResultId:parser.id}); if(next)return next; unresolved=true; continue; }
       if (validator.result.role!=="VALIDATOR" || (validator.result.verdict!=="PASS" && validator.result.extractionVerdict!=="PASS")) { unresolved=true; continue; }
       // §3: a fact that is not a judgment call is verified when the Validator passes; there is no audit stage.
-      if (validator.result.verdict==="PASS" && !needsSecondSource(plan.contract)) { if (identityUnresolved) unresolved=true; else staged=true; continue; }
+      if (validator.result.verdict==="PASS" && !needsSecondSource(plan.contract)) { staged=true; continue; }
       let auditSpec: Parameters<typeof enqueueWorkerTask>[1] = {...spec,role:"ADVERSARIAL_AUDITOR",producerResultId:parser.id,validatorResultId:validator.id,auditScope:plan.auditScope};
       for (;;) {
         const auditTask = await enqueueWorkerTask(repos, auditSpec);
         const audit = records.find(r => r.routeTaskId === auditTask.id);
         if (!audit) { const next = await taskFor(auditSpec); if (next) return next; unresolved = true; break; }
         const escalation = nextAuditEscalation(audit);
-        if (escalation && validator.result.verdict === "PASS" && !identityUnresolved) {
+        if (escalation && validator.result.verdict === "PASS") {
           auditSpec = { ...auditSpec, auditEscalation: escalation };
           continue; // At most Haiku → Sonnet → Opus; each is one durable attempt.
         }
-        if (!identityUnresolved && validator.result.verdict === "PASS" && audit.result.role === "ADVERSARIAL_AUDITOR" && audit.result.verdict === "SURVIVED") staged = true;
+        if (validator.result.verdict === "PASS" && audit.result.role === "ADVERSARIAL_AUDITOR" && audit.result.verdict === "SURVIVED") staged = true;
         else unresolved = true;
         break;
       }
     }
-  }
-  for (const detective of plan.detective) {
-    const next=await taskFor({workItemId:item.id,contract:plan.contract,now,role:"DETECTIVE",artifactId:detective.artifactIds[0],detective});
-    if(next)return next;
   }
   for (const engineering of plan.engineering) {
     const next=await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ENGINEERING",artifactId:engineering.methodArtifactId,engineering});
@@ -447,7 +455,7 @@ export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRunti
         return dispatchOne(runtime.repos,{obligation:{obligation:{id:task.id,subjectId:item.subject,recordClass:plan.contract.recordClass,
           routeId:task.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null,assignments},nextDueAt:task.createdAt,cadenceHours:24,
           cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Canonical obligation needs source discovery"},routeTaskId:task.id,holder:`autonomous:SCOUT:${randomUUID()}`,
-          now:now(),clock:now,leaseTtlMs:300_000,bound:{maxAttempts:3,maxWallMs:0,maxCostUnits:0},
+          now:now(),clock:now,leaseTtlMs:300_000,bound:{maxAttempts:3,maxWallMs:hunterWallLimitMs(),maxCostUnits:0},
           maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION,...proofChargeOf(item.project)});
 }
 
@@ -455,6 +463,8 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   maximum?:number; concurrency?:number; deadlineMs?:number; maxScoutDispatches?:number;
   /** Selection enqueues existing RouteTasks; worker processes claim them later. */
   planOnly?: boolean;
+  /** Invocation-local ordering metadata, including held work without an autonomous plan. */
+  onSelectionSnapshot?:(items:readonly WorkItem[])=>void;
   acceptsWorkItem?:(item:WorkItem)=>boolean;
   prioritizedInstructions?:readonly {receiptId:string;priority:number}[];
   admitDispatch?:(work:string)=>{admit:true}|{admit:false;code:string;why:string};
@@ -462,14 +472,16 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   const now = runtime.now ?? (()=>new Date().toISOString());
   const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
   const allItems=(await runtime.repos.workItems.list()).map(row=>row.value);
+  options.onSelectionSnapshot?.(allItems);
   const candidates=allItems.filter(item=>item.autonomousPlan && (options.acceptsWorkItem?.(item) ?? true));
-  const attempts=(await runtime.repos.attempts.list()).map(row=>row.value);
+  const attemptRows=await runtime.repos.attempts.list();
+  const attempts=attemptRows.map(row=>row.value);
   // A cycle's candidate set is fixed before dispatch. Join immutable Scout
   // results and existing route tasks once, then hand each item only its own
   // history. Re-reading both entire logs for every owed item made selection
   // quadratic and exhausted the original hunt's early worker wall.
-  const [scouts, routeTaskRows] = await Promise.all([
-    runtime.repos.scoutResults.readAll(), runtime.repos.routeTasks.list(),
+  const [scouts, routeTaskRows, workerRecords] = await Promise.all([
+    runtime.repos.scoutResults.readAll(), runtime.repos.routeTasks.list(), runtime.repos.workerResults.readAll(),
   ]);
   const scoutsByWork=new Map<string,ScoutResult[]>();
   for(const scout of scouts) {
@@ -485,7 +497,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   }
   const lineages=selectStandingLineages({occurrences:(await runtime.repos.occurrences.list()).map(row=>row.value),
     workItems:allItems,artifacts:await runtime.repos.artifacts.readAll(),attempts,
-    workerResults:await runtime.repos.workerResults.readAll()});
+    workerResults:workerRecords});
   const selectedRoot=new Map(lineages.flatMap(lineage=>lineage.siblingRootIds.map(id=>[id,lineage.rootWorkItemId] as const)));
   const byItem=new Map(allItems.map(item=>[item.id,item] as const));
   const lineageRoot=(item:WorkItem):string|null=>{
@@ -517,6 +529,18 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
     if (attempt.startedAt>(lastServed.get(attempt.workItemId)??"")) lastServed.set(attempt.workItemId,attempt.startedAt);
   }
   const ids=fairAutonomousWorkIds(items.map(row => row.value), lastServed, options.prioritizedInstructions);
+  // Validate this invocation's already loaded history through the same shared
+  // completion path. Independent calls still read current repository state;
+  // leases, capabilities and budget admission are never frozen by this join.
+  const candidateIds=new Set(ids);
+  const completedRecords=await readCompletedWorkerResults({...runtime.repos,
+    workerResults:{...runtime.repos.workerResults,readAll:async()=>workerRecords.filter(record=>candidateIds.has(record.workItemId))},
+    attempts:{...runtime.repos.attempts,list:async()=>attemptRows},
+  });
+  const recordsByWork=new Map<string,WorkerResultRecord[]>();
+  for(const record of completedRecords) {
+    const rows=recordsByWork.get(record.workItemId)??[]; rows.push(record); recordsByWork.set(record.workItemId,rows);
+  }
   const decisions:AutonomousDecision[]=[]; const dispatches:DispatchResult[]=[];
   const deferred:{workItemId:string;reason:string;detail:string}[]=[...duplicateLineageDeferred];
   const maximum=options.maximum??ids.length; const concurrency=Math.min(options.concurrency??Math.max(1,ids.length),Math.max(1,ids.length));
@@ -537,7 +561,8 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       try {
         d=await nextAutonomousOperation(runtime,id,knownItems,{
           attempts:attemptsByWork.get(id)??[],scouts:scoutsByWork.get(id)??[],routeTasks:routeTasksByWork.get(id)??[],
-          onMissingArtifact: artifactId => deferred.push({workItemId:id,reason:"WORKER_ARTIFACT_MISSING_OR_PARTIAL",
+          completedRecords:recordsByWork.get(id)??[],
+          onMissingArtifact: (artifactId,reason) => deferred.push({workItemId:id,reason,
             detail:`${artifactId}; this source reference remains unresolved; other eligible work continues`}),
         });
       } catch (error) {

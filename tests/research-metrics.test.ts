@@ -11,9 +11,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import type { CostEntry } from "../lib/control-plane/cost.ts";
+import { MODELS, MODEL_TIERS } from "../lib/models.ts";
+import { CACHE_RATE_MULTIPLIERS } from "../lib/control-plane/model-cost.ts";
 import {
   ORDERING_RULE,
-  PILOT_JURISDICTION_KEYS,
   UNIVERSE_PROVIDERS,
   bandFor,
   cacheDefectCounts,
@@ -100,21 +101,20 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
     ordered.map((o) => [o.band, o.row.id]),
     [
       [1, "freshness:tracker:t#r"],
-      [1, "freshness:jurisdiction:az:county:county-of-pima#meetings-1"],
       [2, "freshness:candidate-enrichment:az:2026:y#site"],
       [2, "freshness:candidate-enrichment:az:2026:x#site"],
+      [2, "freshness:jurisdiction:az:county:county-of-pima#meetings-1"],
       [3, "freshness:meetings:x"],
     ],
   );
-  assert.deepEqual(ordering.bands, { 1: 2, 2: 2, 3: 1 });
+  assert.deepEqual(ordering.bands, { 1: 1, 2: 3, 3: 1 });
   assert.equal(ordering.rule, ORDERING_RULE);
   assert.equal(ordering.appliesTo, "BOUNDED_MODEL_WORKER");
   assert.equal(ordering.inputs.readerImpactAt, "FreshnessObligation.readerImpactAt");
-  assert.match(ordering.inputs.pilotJurisdictions, /PILOT_ZIPS 85701, 85641, 07866, 03255/);
+  assert.equal(ordering.inputs.pilotJurisdictions, undefined, "CH-12: no pilot place is ahead of the line");
   assert.deepEqual(ordering.inputs.universeProviders, UNIVERSE_PROVIDERS);
   assert.match(ordered[0].why, /readerImpactAt/);
-  assert.match(ordered[1].why, /pilot jurisdiction \(county-of-pima\)/);
-  assert.match(ordered[2].why, /RULING 229/);
+  assert.match(ordered[1].why, /RULING 229/);
   assert.match(ordered[4].why, /long tail/);
   /*
    * Positive control for the deleted Git coupling: even an object carrying the
@@ -134,12 +134,11 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
   );
   assert.equal(unaffected.band, 3);
   assert.match(unaffected.why, /long tail/);
-  assert.ok(Object.keys(PILOT_JURISDICTION_KEYS).length === 4);
   /* SEEDED (measured live 2026-09-02): a candidate SURNAMED Vail is not a pilot jurisdiction. */
   const surname = bandFor({ id: "freshness:candidate-enrichment:nh:2026:state-nh:united-states-senator:vail-john#candidate-wikipedia-api", subjectId: "nh:2026:state-nh:united-states-senator:vail-john", readerImpactAt: null, providerId: "candidate-enrichment", nextDueAt: NOW }, inputs);
   assert.equal(surname.band, 2, surname.why);
   const newbury = bandFor({ id: "freshness:candidate-enrichment:nh:2026:state-nh-county-merrimack-place-newbury-town:x#site", subjectId: "", readerImpactAt: null, providerId: "candidate-enrichment", nextDueAt: NOW }, inputs);
-  assert.equal(newbury.band, 1);
+  assert.equal(newbury.band, 2, "a former pilot place is only in the band its provider puts it in");
 });
 
 test("funnel: SCOUTED counts distinct non-refused obligations; pipeline stages read 'none recorded' by default; candidate stages come from the store counts", () => {
@@ -177,6 +176,7 @@ test("share: this cycle against the trailing window, with the delta in points an
 function meteredCost(attemptId: string, m: { read: number; write: number; uncached: number; split?: boolean; batch?: boolean; requests?: number }, role: CostEntry["role"] = "SCOUT", recordedAt = NOW): CostEntry {
   return {
     ...cost(attemptId, 1, recordedAt, role),
+    model: MODELS.haiku.model, tier: "haiku",
     cost: {
       inputTokens: m.read + m.write + m.uncached, outputTokens: 10, usd: 1, durationMs: 1, bytesFetched: null, requestCount: m.requests ?? 1,
       cacheReadInputTokens: m.read, cacheCreationInputTokens: m.write,
@@ -196,10 +196,11 @@ test("cache hit rate by role reads the COST LEDGER: a row predating the cache fi
   assert.equal(rows[0].predatingRows, 1);
   assert.equal(rows[0].unreportedRows, 1);
   assert.equal(rows[0].hitRate, null, "no measured row: no rate, never 0%");
+  assert.equal(rows[0].savedUsd, null, "missing usage and identity are not a measured zero saving");
   assert.match(rows[0].denominator, /1 predate the cache fields and are NOT MEASURED/);
 
   const measured = cacheHitRateByRole({
-    costs: [meteredCost("a", { read: 900, write: 100, uncached: 200 }), meteredCost("b", { read: 300, write: 0, uncached: 600, batch: true, requests: 2 }), meteredCost("audit", { read: 50, write: 50, uncached: 0, split: false }, "ADVERSARIAL_AUDITOR")],
+    costs: [meteredCost("a", { read: 900, write: 100, uncached: 200 }), meteredCost("b", { read: 300, write: 0, uncached: 600, batch: true, requests: 2 }), { ...meteredCost("audit", { read: 50, write: 50, uncached: 0, split: false }, "ADVERSARIAL_AUDITOR"), model: MODELS.opus.model, tier: "opus" }],
     results: [result({ attemptId: "a", steps: [modelStep(1, 0), modelStep(2, 0), modelStep(3, 900)], cacheDefect: { turns: [2, 3], detail: "d", stationaryTurns: [3], zeroReadTurns: [2] } })],
   });
   const scout = measured.find((r) => r.role === "SCOUT")!;
@@ -213,10 +214,52 @@ test("cache hit rate by role reads the COST LEDGER: a row predating the cache fi
   assert.equal(scout.repeatedPrefixTurns, 2);
   assert.equal(scout.repeatedPrefixMisses, 1);
   assert.equal(scout.stationaryTurns, 1);
-  assert.ok(Math.abs((scout.savedUsd ?? 0) - (1200 / 1_000_000) * 4 * 0.95) < 1e-12, "read tokens × (base − read price) at claude-opus-5-5's rate ($4/MTok in, 0.05x cache read)");
+  assert.ok(Math.abs((scout.savedUsd ?? 0) - ((900 + 300 * CACHE_RATE_MULTIPLIERS.batch) / 1_000_000) * MODELS.haiku.inputUsdPerMillion * (1 - MODELS.haiku.cacheReadMultiplier)) < 1e-12, "each recorded Haiku row uses its actual batch discount, without an Opus role guess");
   const audit = measured.find((r) => r.role === "ADVERSARIAL_AUDITOR")!;
   assert.equal(audit.aggregatePricedRows, 1, "a row with the aggregate and no split is counted by name");
   assert.equal(audit.hitRate, 0.5);
+  assert.ok(Math.abs(audit.savedUsd! - 50 / 1_000_000 * MODELS.opus.inputUsdPerMillion * (1 - MODELS.opus.cacheReadMultiplier)) < 1e-12);
+
+  for (const tier of MODEL_TIERS) {
+    for (const batch of [false, true]) {
+      const row = { ...meteredCost(`${tier}-${batch}`, { read: 1_000_000, write: 0, uncached: 0, batch }, "PARSER"), model: `${MODELS[tier].model}-20261002`, tier };
+      const actual = cacheHitRateByRole({ costs: [row], results: [] })[0];
+      assert.equal(actual.role, "PARSER");
+      assert.equal(actual.savedUsd, MODELS[tier].inputUsdPerMillion * (1 - MODELS[tier].cacheReadMultiplier) * (batch ? CACHE_RATE_MULTIPLIERS.batch : 1));
+    }
+  }
+  const tierOnly = { ...meteredCost("tier-only", { read: 1_000_000, write: 0, uncached: 0 }, "ENGINEERING"), model: undefined, tier: "sonnet" as const };
+  assert.equal(cacheHitRateByRole({ costs: [tierOnly], results: [] })[0].savedUsd, MODELS.sonnet.inputUsdPerMillion * (1 - MODELS.sonnet.cacheReadMultiplier));
+
+  const splitRow = { ...meteredCost("mixed-models", { read: 300, write: 30, uncached: 40, batch: true, requests: 2 }, "ENGINEERING"), model: MODELS.haiku.model };
+  const shares: NonNullable<CostEntry["byModel"]> = [
+    { model: MODELS.haiku.model, tier: "haiku", requestCount: 1, usd: 0.4, inputTokens: 120, outputTokens: 5, cacheReadInputTokens: 100, cacheCreationInputTokens: 10, cacheCreation5mInputTokens: 10, cacheCreation1hInputTokens: 0, uncachedInputTokens: 10 },
+    { model: MODELS.opus.model, tier: "opus", requestCount: 1, usd: 0.6, inputTokens: 250, outputTokens: 5, cacheReadInputTokens: 200, cacheCreationInputTokens: 20, cacheCreation5mInputTokens: 20, cacheCreation1hInputTokens: 0, uncachedInputTokens: 30 },
+  ];
+  const mixed = cacheHitRateByRole({ costs: [{ ...splitRow, byModel: shares }], results: [] })[0];
+  assert.equal(mixed.role, "ENGINEERING");
+  assert.equal(mixed.cacheRead, 300);
+  assert.equal(mixed.attempts, 1);
+  assert.equal(mixed.measuredRows, 1);
+  assert.equal(mixed.batchShare, 1);
+  assert.ok(Math.abs(mixed.savedUsd! - (100 * MODELS.haiku.inputUsdPerMillion * (1 - MODELS.haiku.cacheReadMultiplier) + 200 * MODELS.opus.inputUsdPerMillion * (1 - MODELS.opus.cacheReadMultiplier)) / 1_000_000 * CACHE_RATE_MULTIPLIERS.batch) < 1e-12, "validated shares replace the aggregate rather than adding another charge");
+  const unknownRows: CostEntry[] = [
+    { ...meteredCost("missing-model", { read: 100, write: 0, uncached: 0 }), model: undefined, tier: undefined },
+    { ...meteredCost("unknown-served", { read: 100, write: 0, uncached: 0 }), model: "unpriced-served-model" },
+    { ...meteredCost("contradictory-tier", { read: 100, write: 0, uncached: 0 }), tier: "opus" },
+    { ...splitRow, byModel: [{ ...shares[0], model: "unpriced-model", tier: null }, shares[1]] },
+    { ...splitRow, byModel: [{ ...shares[0], cacheReadInputTokens: null }, shares[1]] },
+    { ...splitRow, byModel: [{ ...shares[0], cacheReadInputTokens: 101 }, shares[1]] },
+    { ...splitRow, byModel: [{ ...shares[0], usd: 0.5 }, shares[1]] },
+    { ...splitRow, byModel: [{ ...shares[0], tier: "opus" }, shares[1]] },
+  ];
+  const wrongBatch = { ...shares[0], batch: false };
+  const malformedBatch = { ...shares[0], batch: "true" };
+  unknownRows.push({ ...splitRow, byModel: [wrongBatch, shares[1]] }, { ...splitRow, byModel: [malformedBatch, shares[1]] });
+  unknownRows.push(JSON.parse(JSON.stringify({ ...tierOnly, tier: "unpriced-tier" })), JSON.parse(JSON.stringify({ ...tierOnly, model: 42 })));
+  for (const row of unknownRows) assert.equal(cacheHitRateByRole({ costs: [row], results: [] })[0].savedUsd, null, "unknown or contradictory portions cannot be assigned a neighboring model's price");
+  assert.equal(cacheHitRateByRole({ costs: [meteredCost("known", { read: 100, write: 0, uncached: 0 }), unknownRows[0]], results: [] })[0].savedUsd, null, "a partial known subtotal never reads as complete savings");
+  assert.deepEqual(cacheHitRateByRole({ costs: [{ ...meteredCost("plain-parser", { read: 0, write: 0, uncached: 0 }, "PARSER"), model: null, tier: "none" }, { ...meteredCost("plain-engineer", { read: 0, write: 0, uncached: 0 }, "ENGINEERING"), model: null, tier: "none" }], results: [] }), [], "plain workers do not become missing model measurements");
 
   /* The window: a row outside it is not in the denominator. */
   const windowed = cacheHitRateByRole({ costs: [meteredCost("a", { read: 900, write: 100, uncached: 200 }), meteredCost("stale", { read: 1, write: 1, uncached: 1 }, "SCOUT", "2026-08-01T00:00:00.000Z")], results: [], sinceIso: "2026-09-01T00:00:00.000Z" });

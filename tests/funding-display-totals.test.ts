@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { fundingAnswerForTarget } from "../lib/funding/display.ts";
+import { fundingAnswerForTarget, smallDonorShare } from "../lib/funding/display.ts";
 import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
 
 test("numeric funding totals copy the exact five held committee values for every target", async () => {
@@ -16,7 +16,9 @@ test("numeric funding totals copy the exact five held committee values for every
         receipts: candidate.totals.receipts,
         disbursements: candidate.totals.disbursements,
         cashOnHand: candidate.totals.cashOnHand,
-        smallDonorShare: candidate.totals.smallDonorShare,
+        smallDonorShare: smallDonorShare(candidate.totals.individualItemized, candidate.totals.individualUnitemized),
+        individualItemized: candidate.totals.individualItemized,
+        individualUnitemized: candidate.totals.individualUnitemized,
         coverageEndDate: candidate.totals.coverageEndDate,
       }, targetKey);
     }
@@ -33,13 +35,13 @@ test("numeric funding totals copy the exact five held committee values for every
 test("an absent small-donor share stays null in the numeric payload", async () => {
   await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
   const candidate = getFundingSnapshot().candidates[0];
-  const previous = candidate.totals.smallDonorShare;
+  const previous = candidate.totals.individualItemized;
   try {
-    candidate.totals.smallDonorShare = null;
+    candidate.totals.individualItemized = null;
     const answer = fundingAnswerForTarget(candidate.targetKeys[0]);
     assert.equal(answer.kind, "funding");
     if (answer.kind === "funding") assert.equal(answer.data.totals?.smallDonorShare, null);
   } finally {
-    candidate.totals.smallDonorShare = previous;
+    candidate.totals.individualItemized = previous;
   }
 });

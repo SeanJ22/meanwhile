@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useCardVisibility } from "@/hooks/use-card-visibility";
 
@@ -11,9 +11,11 @@ import type { ReactionViewContext } from "@/lib/reactions/client";
 
 import {
   personCardSources,
+  prlCardSource,
 } from "@/lib/officials/card-sources";
 
 import { FundingBlock } from "@/components/funding/funding-block";
+import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
 import { OfficialActions } from "@/components/officials/official-actions";
 import {
@@ -85,20 +87,24 @@ export function OfficialModal({
    */
   // A state legislator's offices are read from Open States onto the legislature's own row;
   // the card names that source once, beside the legislature's.
+  const [prlProfile, setPrlProfile] = useState<PrlReaderProfile | null>(null);
   const { directory } = useMemberDirectory(holder.id);
   const officeSource = directory?.officeDetails?.[0];
   const sources = personCardSources(
     holder,
-    holder.id.startsWith("congress:") && holder.provenance
-      ? [
-          {
-            what: "Their official accounts, committee seats and district offices",
-            provenance: holder.provenance,
-          },
-        ]
-      : officeSource
-        ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: officeSource.sourceUrl, sourceOrg: officeSource.sourceOrg, collectedAt: officeSource.collectedAt, verifiedAt: null } }]
-        : [],
+    [
+      ...(holder.id.startsWith("congress:") && holder.provenance
+        ? [
+            {
+              what: "Their official accounts, committee seats and district offices",
+              provenance: holder.provenance,
+            },
+          ]
+        : officeSource
+          ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: officeSource.sourceUrl, sourceOrg: officeSource.sourceOrg, collectedAt: officeSource.collectedAt, verifiedAt: null } }]
+          : []),
+      ...(prlProfile ? [prlCardSource(prlProfile)] : []),
+    ],
   );
 
   /*
@@ -204,7 +210,7 @@ export function OfficialModal({
           <CardSection title="Campaign money" defaultOpen={embedded}>
             <FundingBlock holder={holder} reactionContext={reactionContext} bare />
           </CardSection>
-          <PublicStatementsProfile subjectId={holder.id} />
+          <PublicStatementsProfile subjectId={holder.id} onProfile={setPrlProfile} />
           <OfficialActions subjectId={holder.id} />
 
           {/* Item 6b: two columns inside, each its own collapsed section. */}

@@ -2,8 +2,11 @@ import { createHash } from "node:crypto";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
 import { derivedAuthorityFor } from "./derived-door.ts";
+import { MEETING_HISTORY_SCOPE_SUFFIX } from "./meeting-history-scope.ts";
 import {
   MEETING_READER_SERVING_WINDOW_CONTRACT,
+  MEETING_READER_SERVING_WINDOW_CONTRACT_V1,
+  meetingLegacyServingWindowAt,
   meetingReaderServingWindowAt,
 } from "../meetings/constants.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
@@ -21,6 +24,7 @@ import type {
   CandidateDecision,
   CandidateState,
   CandidateVersionRecord,
+  AuditPullRemovalEvidence,
   CensusPlaceholderBodyRemovalEvidence,
   DependentCheck,
   RoutineCandidate,
@@ -176,6 +180,27 @@ function stateFinanceGapResolution(candidate: RoutineCandidate): ValidationCheck
   );
 }
 
+/**
+ * Removals an auditor's BROKE verdict caused (DP-15). Every removed key must be named by exactly one
+ * pull row and be held by this candidate as an audit-pulled excluded fact for the same member, so a
+ * removal can never be claimed without the pull that explains it. Anything else falls through.
+ */
+function auditPullRemovalCheck(candidate: RoutineCandidate, removed: readonly { readonly key: string }[],
+  evidence: NonNullable<RoutineCandidate["removalEvidence"]>): ValidationCheck | null {
+  if (candidate.recordClass !== "CURATED_READER_RECORD" || removed.length === 0 || evidence.length !== removed.length) return null;
+  const pulledFacts = new Set((candidate.excludedFacts ?? []).filter((fact) => fact.code === "AUDIT_PULLED_FROM_VERSION")
+    .map((fact) => fact.key));
+  const seen = new Set<string>();
+  for (const delta of removed) {
+    const rows = evidence.filter((row) => row.key === delta.key);
+    const row = rows[0];
+    if (rows.length !== 1 || row.code !== "REMOVED_BY_AUDIT_PULL" || !pulledFacts.has(row.memberId) || seen.has(row.memberId)) return null;
+    seen.add(row.memberId);
+  }
+  return result("COMPLETENESS_HORIZON_VALIDITY", "PASS", "REMOVED_BY_AUDIT_PULL",
+    `${removed.length} record(s) left this version because an auditor broke them.`);
+}
+
 function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationCheck | null {
   const removed = candidate.changeSet?.removed ?? [];
   const evidence = candidate.removalEvidence ?? [];
@@ -207,6 +232,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
   const financeResolution = stateFinanceGapResolution(candidate);
   if (financeResolution !== null) return financeResolution;
+
+  const auditPull = auditPullRemovalCheck(candidate, removed, evidence);
+  if (auditPull !== null) return auditPull;
 
   if (candidate.recordClass !== "MEETING" && candidate.recordClass !== "REGISTRY_RUNTIME_BINDING") {
     return result(
@@ -241,8 +269,10 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
   if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") return registryPlaceholderRemovalCheck(candidate, removed, evidenceByKey);
 
   // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
-  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence>>();
+  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence>>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
+  // One pass after DB-01: a `V1` row (the old shown window) is still accepted.
+  const legacyWindow = meetingLegacyServingWindowAt(candidate.retrieval.retrievedAt);
   let currentMembers: ReadonlyMap<string, unknown> | null = null;
   const currentMember = (key: string): unknown => {
     currentMembers ??= new Map(
@@ -252,6 +282,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
   };
   for (const delta of removed.filter(({ key }) => key.startsWith("meeting:"))) {
     const row = evidenceByKey.get(delta.key)!;
+    if (row.code === "REMOVED_BY_AUDIT_PULL") {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; an audit pull removes only curated Reader members.`);
+    }
     if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; a registry placeholder removal cannot prove it.`);
     }
@@ -331,17 +364,48 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       validMeetingEvidence.set(delta.key, row);
       continue;
     }
+    if (row.code === "MOVED_TO_HISTORY") {
+      /*
+       * A concluded sitting leaves its live partition only into the partition's durable history (DB-06). The record
+       * must have been concluded, started before this clock's held window, and be named here under exactly its own
+       * partition's history scope. That the named history version really holds the record is the door's check against
+       * the store (`movedToHistoryAuthorityIssue`), which runs before this validator.
+       */
+      const heldWindow = registeredWindow;
+      const prior = Date.parse(row.priorStartsAt);
+      const lower = Date.parse(row.lowerBound);
+      if (
+        heldWindow === null ||
+        row.lowerBound !== heldWindow.lowerBound ||
+        row.historyScope !== `${candidate.scope}${MEETING_HISTORY_SCOPE_SUFFIX}` ||
+        typeof row.historyVersionId !== "string" || row.historyVersionId === "" ||
+        row.parentMeetingKey !== undefined ||
+        before?.status !== "CONCLUDED" ||
+        !meetingId || delta.key !== `meeting:${meetingId}` ||
+        !startsAt || startsAt !== row.priorStartsAt ||
+        !Number.isFinite(prior) || !Number.isFinite(lower) || !(prior < lower)
+      ) {
+        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven a concluded sitting older than the held window, moved to its own history.`);
+      }
+      validMeetingEvidence.set(delta.key, row);
+      continue;
+    }
     if (row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} names no removal authority this validator recognizes.`);
     }
     const lower = Date.parse(row.lowerBound);
     const upper = Date.parse(row.upperBound);
     const prior = Date.parse(row.priorStartsAt);
+    const expectedWindow = row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT
+      ? registeredWindow
+      : row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT_V1 ? legacyWindow : null;
+    const keptForRecords = row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT &&
+      before?.status === "CONCLUDED" && meetingRowCarriesRecords(before);
     if (
-      row.windowContract !== MEETING_READER_SERVING_WINDOW_CONTRACT ||
-      registeredWindow === null ||
-      row.lowerBound !== registeredWindow.lowerBound ||
-      row.upperBound !== registeredWindow.upperBound ||
+      expectedWindow === null ||
+      keptForRecords ||
+      row.lowerBound !== expectedWindow.lowerBound ||
+      row.upperBound !== expectedWindow.upperBound ||
       row.parentMeetingKey !== undefined ||
       !meetingId || delta.key !== `meeting:${meetingId}` ||
       !startsAt || startsAt !== row.priorStartsAt ||
@@ -355,7 +419,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
   for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
     const row = evidenceByKey.get(delta.key)!;
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS") {
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
     }
     const before = object(delta.before);
@@ -368,8 +432,11 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       !!parentKey && row.parentMeetingKey === parentKey && removedKeys.has(parentKey) && !!parent &&
       row.code === parent.code && row.priorStartsAt === parent.priorStartsAt &&
       (row.code === "OUTSIDE_REGISTERED_SERVING_WINDOW" && parent.code === "OUTSIDE_REGISTERED_SERVING_WINDOW"
-        ? row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT &&
+        ? row.windowContract === parent.windowContract &&
           row.lowerBound === parent.lowerBound && row.upperBound === parent.upperBound
+        : row.code === "MOVED_TO_HISTORY" && parent.code === "MOVED_TO_HISTORY"
+          ? row.historyScope === parent.historyScope && row.historyVersionId === parent.historyVersionId &&
+            row.lowerBound === parent.lowerBound
         : row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY" && parent.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY"
           ? row.successorKey === parent.successorKey
           : row.code === "EXCLUDED_BY_PUBLISHER" && parent.code === "EXCLUDED_BY_PUBLISHER" &&
@@ -784,4 +851,12 @@ export function validateRoutineCandidate(
     excludedFacts: candidate.excludedFacts ?? [],
   };
   return { receipt, state: blocking ? failureStateFor(blocking) : "VALIDATED" };
+}
+
+/** A concluded meeting row that names an agenda, minutes, an outcome or a vote is a kept record (DB-01). */
+function meetingRowCarriesRecords(row: Record<string, unknown>): boolean {
+  if (typeof row.agendaUrl === "string" && row.agendaUrl !== "") return true;
+  const links = Array.isArray(row.publishedLinks) ? row.publishedLinks : [];
+  if (links.some((link) => typeof (link as { label?: unknown })?.label === "string" && /minutes|outcome|vote|result/i.test((link as { label: string }).label))) return true;
+  return row.outcome != null || (Array.isArray(row.votes) ? row.votes.length > 0 : row.votes != null);
 }

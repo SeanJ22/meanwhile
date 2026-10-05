@@ -171,12 +171,17 @@ export function fleetBlockers(ctx: OperatorContext): ChatAnswer {
       );
       detail.push(...safety.deferred.map((d) => `${d.work} — ${d.code}: ${d.why}`));
     }
-    if (safety.providerCircuits.length > 0) {
+    const activeCircuits = safety.providerCircuits.filter(circuit => Date.parse(circuit.eligibleAt) > Date.parse(ctx.nowIso));
+    if (activeCircuits.length > 0) {
       says.push(
-        `${count(safety.providerCircuits.length)} ${safety.providerCircuits.length === 1 ? "provider is" : "providers are"} paused after refusing work: ${safety.providerCircuits.map((c) => `${c.provider} until ${formatEastern(c.eligibleAt)}`).join("; ")}.`,
+        `${count(activeCircuits.length)} ${activeCircuits.length === 1 ? "provider is" : "providers are"} paused after refusing work: ${activeCircuits.map((c) => `${c.provider} until ${formatEastern(c.eligibleAt)}`).join("; ")}.`,
       );
-      detail.push(...safety.providerCircuits.map((c) => `${c.provider} — ${c.condition}; eligible ${c.eligibleAt}`));
     }
+    const eligibleCircuits = safety.providerCircuits.filter(circuit => Date.parse(circuit.eligibleAt) <= Date.parse(ctx.nowIso));
+    if (eligibleCircuits.length > 0) says.push(
+      `${count(eligibleCircuits.length)} ${eligibleCircuits.length === 1 ? "provider is" : "providers are"} eligible to retry: ${eligibleCircuits.map(circuit => `${circuit.provider} after ${circuit.condition}`).join("; ")}.`,
+    );
+    detail.push(...safety.providerCircuits.map((c) => `${c.provider} — ${c.condition}; eligible ${c.eligibleAt}`));
     if (safety.rolling24Hours.modelUsd !== null) {
       says.push(
         `Paid model work over the last 24 hours came to ${usdCents(safety.rolling24Hours.modelUsd)} against a ceiling of ${usdCents(safety.bounds.rolling24HourModelUsd)}.`,

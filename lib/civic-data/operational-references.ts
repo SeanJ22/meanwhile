@@ -13,7 +13,12 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
-import { JURISDICTION_REFERENCE_STATES, type JurisdictionReferenceState } from "./reviewed-registry-states.ts";
+import {
+  hasReviewedRegistry,
+  installReviewedRegistryStates,
+  JURISDICTION_REFERENCE_STATES,
+  type JurisdictionReferenceState,
+} from "./reviewed-registry-states.ts";
 import { sourceProjectionEvidence, type CivicRecordMember, type RoutineCandidate } from "./types.ts";
 import {
   applicableWebsiteCorrections,
@@ -36,7 +41,8 @@ export { JURISDICTION_REFERENCE_STATES, type JurisdictionReferenceState };
 export interface OperationalReferenceBundle {
   readonly formatVersion: 1;
   readonly sourceVersion: typeof JURISDICTION_REFERENCE_VERSION;
-  readonly registries: Readonly<Record<JurisdictionReferenceState, JurisdictionRegistry>>;
+  /** The seed states are required; a state added as data rides beside them (CH-13). */
+  readonly registries: Readonly<Record<JurisdictionReferenceState, JurisdictionRegistry>> & Readonly<Record<string, JurisdictionRegistry>>;
 }
 export interface AzOperationalReferenceBundle {
   readonly formatVersion: 1;
@@ -60,7 +66,7 @@ function sourceThrough(registries: Readonly<Partial<Record<JurisdictionReference
   return latest ? `${latest}T00:00:00.000Z` : "";
 }
 
-function registryIssues(registries: Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>>, states: readonly JurisdictionReferenceState[] = JURISDICTION_REFERENCE_STATES): string[] {
+function registryIssues(registries: Readonly<Partial<Record<string, JurisdictionRegistry>>>, states: readonly string[] = JURISDICTION_REFERENCE_STATES): string[] {
   const issues: string[] = [];
   for (const state of states) {
     const registry = registries[state];
@@ -132,9 +138,9 @@ function sourceReceiptIssues(receipts: readonly JurisdictionReferenceSourceRecei
  * must have the receipts of the pages it read.
  */
 function websiteCorrectionIssues(
-  registries: Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>>,
+  registries: Readonly<Partial<Record<string, JurisdictionRegistry>>>,
   receipts: readonly JurisdictionReferenceSourceReceipt[],
-  states: readonly JurisdictionReferenceState[] = JURISDICTION_REFERENCE_STATES,
+  states: readonly string[] = JURISDICTION_REFERENCE_STATES,
 ): string[] {
   const issues: string[] = [];
   const read = new Set(receipts.map((receipt) => receipt.sourceId));
@@ -168,16 +174,25 @@ export function operationalReferenceBundle(
 
 /** Explicit process initialization; there is no implicit repository-file fallback. */
 export function installOperationalReferenceBundle(bundle: OperationalReferenceBundle): void {
-  const issues = registryIssues(bundle.registries);
+  /* The seeds must be present; any further state the bundle carries is checked the same way and becomes reviewed. */
+  const states = [...new Set([...JURISDICTION_REFERENCE_STATES, ...Object.keys(bundle.registries ?? {}).map((state) => state.toLowerCase())])];
+  const issues = registryIssues(bundle.registries, states);
   if (bundle.formatVersion !== 1 || bundle.sourceVersion !== JURISDICTION_REFERENCE_VERSION || issues.length > 0) {
     throw new Error(`OPERATIONAL_REFERENCE_BUNDLE_INVALID:${issues.join(",") || "format/version"}`);
   }
   installedBundle = structuredClone(bundle);
+  installReviewedRegistryStates(states);
+  /* The reviewed registry wins: a state read from registration earlier in this process steps aside. */
+  for (const state of states) {
+    installedRegistration.delete(state);
+    refusedRegistration.delete(state);
+  }
 }
 
 export function clearOperationalReferenceBundle(): void {
   installedBundle = null;
   installedAzBundle = null;
+  installReviewedRegistryStates([]);
 }
 
 export function installAzOperationalReferenceBundle(bundle: AzOperationalReferenceBundle): void {
@@ -191,7 +206,7 @@ export function installAzOperationalReferenceBundle(bundle: AzOperationalReferen
 
 /** Exact installed state set, with a promoted AZ-only pointer preferred over
  * the older multi-state version. Missing states stay missing. */
-export function installedOperationalReferenceRegistries(states?: Iterable<string>): Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>> {
+export function installedOperationalReferenceRegistries(states?: Iterable<string>): Readonly<Record<string, JurisdictionRegistry>> {
   const held = { ...installedBundle?.registries, ...installedAzBundle?.registries };
   const wanted = states ? new Set([...states].map(state => state.toLowerCase())) : null;
   return structuredClone(Object.fromEntries(Object.entries(held).filter(([state]) => !wanted || wanted.has(state))));
@@ -207,8 +222,8 @@ export function requiredOperationalReferenceBundle(): OperationalReferenceBundle
 }
 
 export function requiredOperationalJurisdictionRegistry(state: string): JurisdictionRegistry {
-  const key = state.toLowerCase() as JurisdictionReferenceState;
-  if (!JURISDICTION_REFERENCE_STATES.includes(key)) {
+  const key = state.toLowerCase();
+  if (!hasReviewedRegistry(key)) {
     throw new Error(`OPERATIONAL_REFERENCE_STATE_NOT_REGISTERED:${state}`);
   }
   const registry = installedOperationalReferenceRegistries([key])[key];
@@ -242,7 +257,7 @@ export function installRegistrationJurisdictionRegistries(
   const nextRefused = new Map(refusedRegistration);
   for (const [state, registry] of registries) {
     const key = state.toLowerCase();
-    if ((JURISDICTION_REFERENCE_STATES as readonly string[]).includes(key)) {
+    if (hasReviewedRegistry(key)) {
       throw new Error(`REGISTRATION_REGISTRY_FOR_REVIEWED_STATE:${key}: the reviewed registry wins wherever it exists`);
     }
     if (registry.registration?.kind !== "REGISTRATION" || registry.stateCode.toLowerCase() !== key || registry.jurisdictions.length === 0) {
@@ -253,7 +268,7 @@ export function installRegistrationJurisdictionRegistries(
   }
   for (const [state, why] of refused) {
     const key = state.toLowerCase();
-    if ((JURISDICTION_REFERENCE_STATES as readonly string[]).includes(key) || next.has(key)) continue;
+    if (hasReviewedRegistry(key) || next.has(key)) continue;
     nextRefused.set(key, why);
   }
   installedRegistration = next;
@@ -280,7 +295,7 @@ export function installedRegistrationJurisdictionRegistries(): {
  */
 export function requiredJurisdictionRegistry(state: string): JurisdictionRegistry {
   const key = state.toLowerCase();
-  if ((JURISDICTION_REFERENCE_STATES as readonly string[]).includes(key)) return requiredOperationalJurisdictionRegistry(key);
+  if (hasReviewedRegistry(key)) return requiredOperationalJurisdictionRegistry(key);
   const registry = installedRegistration.get(key);
   if (registry !== undefined) return registry;
   const why = refusedRegistration.get(key);

@@ -43,6 +43,22 @@ const STORE = "civic_data_candidates+civic_data_candidate_events+civic_data_prom
 
 export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
   {
+    id: "ballot-contests",
+    execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
+    sourceId: "official-ballot-authorities",
+    recordClass: "BALLOT_CANDIDACY",
+    scope: "US:state-election-ballots",
+    command: ["scripts/promote-manual-civic-projection.mts", "--contract=ballot-contests"],
+    parserNormalizerVersion: "ballot-contests/1",
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "official-ballot-authorities" },
+    validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "state-election-ballots", consumers: ["Admin", "Ask", "/ballot"] },
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+    lkgBehavior: "Each contest publishes only with its complete saved official candidate list; incomplete contests retain their prior GOOD candidates together and remain owed work.",
+  },
+  {
     id: "congress-bulk-roster",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "congress-directory-project",
@@ -458,7 +474,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     readerProjection: { id: "reviewed-venue-resolutions", consumers: ["meetings acquisition adapters", "map"] },
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: ["lib/meetings/venue-cache.ts"],
-    lkgBehavior: "A bad address, coordinate, scope key, or source receipt holds only venue resolutions and leaves their prior GOOD version available to meeting acquisition.",
+    lkgBehavior: "Pins are promoted by the meeting passes themselves from automatic Census matches (BX-09). A bad address, coordinate, scope key, or source receipt holds only venue resolutions and leaves their prior GOOD version available to meeting acquisition.",
   },
   {
     id: "meeting-body-crosswalk",

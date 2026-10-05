@@ -42,7 +42,10 @@
  */
 
 import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
-import { ADD_TO_QUEUE_OPTION, fixConsequence, fixSubjectId, parseFixField } from "../fix-queue.ts";
+import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
+import { addFixItem, completeFixItem, fixItems } from "../fix-list.ts";
+import { addUpdate } from "../updates.ts";
+import { parseWhen, scheduledOrders, withScheduled, withoutScheduled, type ScheduledOrder } from "./scheduled-orders.ts";
 import {
   ANSWERED_IN_OWN_WORDS,
   OWNER_ANSWER_MAX_CHARS,
@@ -106,7 +109,10 @@ import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { BULK_ACTIONS } from "./bulk-actions.ts";
+import { DOOR_ACTIONS } from "../../doors/actions.ts";
 import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
+import { settingDefinition, settingUndo, settingValueWords, SPEND_CEILING_LOG_KEY, withLoggedChange, withSetting, type SettingValue } from "../settings.ts";
+import { publishReaderSettings } from "../../civic-data/reader-settings-publication.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
@@ -146,6 +152,8 @@ export interface ActionEffect {
   readonly openedWork?: readonly { readonly kind: string; readonly id: string; readonly title: string }[];
   readonly readBackAt?: string | null;
   readonly undo?: string | null;
+  /** BR-13: the value before and after, in the words the screen prints ("$50.00" and "$80.00"). */
+  readonly change?: { readonly before: string; readonly after: string };
 }
 
 export interface ActionRefusal {
@@ -273,6 +281,54 @@ const READBACK_SUBJECTS: Readonly<Record<string, { readonly name: string; readon
 };
 
 const REGISTRY: readonly RegisteredAction[] = [
+  {
+    definition: {
+      type: "config.setSetting", label: "Change a setting",
+      does: "Saves the new value with when it changed, its previous value and an optional note, so it can be undone.",
+      doesNot: "Leaves spending limits and pauses as they are.",
+      authority: "OWNER_DECISION_REQUIRED", subjectKind: "a setting", requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const key = text(input.key);
+      const definition = settingDefinition(key);
+      const why = input.why === undefined || input.why === null ? "" : collapse(input.why);
+      if (!definition) return bad("choose a registered setting");
+      if (why.length > 2000) return bad("keep the note to 2,000 characters");
+      if (input.undoOf !== undefined && (typeof input.undoOf !== "string" || !input.undoOf)) return bad("choose the change to undo");
+      if (!definition.validate(input.value)) return bad(`choose a valid value for ${definition.label.toLowerCase()}`);
+      return { ok: true, value: { key, value: input.value, why, ...(input.undoOf ? { undoOf: input.undoOf } : {}) } };
+    },
+    async execute(deps, context, input) {
+      const key = String(input.key);
+      const definition = settingDefinition(key)!;
+      let next: import("./admin-config.ts").AdminConfig;
+      let revision: number;
+      try {
+        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(context.at);
+        if (input.undoOf) {
+          const undo = settingUndo(current, String(input.undoOf));
+          if (!undo || undo.key !== key || JSON.stringify(undo.value) !== JSON.stringify(input.value)) return refuse("INVALID_INPUT", "This setting has changed again. Refresh its history before undoing it.");
+        }
+        next = withSetting(current, { id: context.receiptId, key, after: input.value as SettingValue,
+          at: context.at, why: String(input.why), ...(input.undoOf ? { undoOf: String(input.undoOf) } : {}) });
+        const written = held ? await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, context.at)
+          : (await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, context.at)).persisted;
+        revision = written.revision;
+      } catch (error) { return storeRefusal("your setting", error); }
+      let published = true;
+      if (definition.readerFacing) {
+        try { published = await publishReaderSettings(next, revision); } catch { published = false; }
+      }
+      const words = settingValueWords(input.value as SettingValue, definition.unit);
+      const beforeValue = (next.settingHistory ?? []).find((h) => h.id === context.receiptId)?.before;
+      return { ok: true, outcome: published ? "DONE" : "QUEUED", subject: key,
+        ...(beforeValue !== undefined ? { change: { before: settingValueWords(beforeValue as SettingValue, definition.unit), after: words } } : {}),
+        says: published ? `${definition.label} is now ${words}.` : `${definition.label} is saved as ${words}; readers get it on the next publish.`,
+        readBackAt: "/admin?view=settings", undo: null };
+    },
+  },
   /* ---------------------------------------------------------- queue.add */
   {
     definition: {
@@ -302,25 +358,157 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
     async execute(deps, context, input) {
       const subjectId = String(input.subjectId);
-      const intent = decisionIntent({
-        subjectId,
-        chosenOption: ADD_TO_QUEUE_OPTION,
-        consequenceShown: String(input.consequenceShown),
-        ownerAnswer: null,
-        decidedAt: context.at,
-        actorRef: context.request.actorRef,
-      });
-      const wrote = await appendDecisionIntent(deps.repos, intent, context.at);
-      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
+      // BR-03: the fix list is a control-plane record, not a decision intent that waits on a local script.
+      const consequence = String(input.consequenceShown);
+      const at = consequence.indexOf(WHERE_SEPARATOR);
+      try {
+        await addFixItem(deps.repos, {
+          where: at < 0 ? "the control centre" : consequence.slice(0, at),
+          says: at < 0 ? consequence : consequence.slice(at + WHERE_SEPARATOR.length),
+          by: "owner", at: context.at,
+        });
+      } catch (error) { return storeRefusal("the fix list", error); }
       return {
         ok: true,
         outcome: "QUEUED",
         subject: subjectId,
-        says: "It is on the queue. Nothing has been fixed yet — the queue is what you send when you are ready.",
+        says: "It is on the fix list as Open.",
         openedWork: [],
         readBackAt: "/admin",
         undo: "Nothing has happened yet, so there is nothing to undo. Decide it differently and the later decision stands.",
       };
+    },
+  },
+
+  /* ---------------------------------------------------------- fix.complete */
+  {
+    definition: {
+      type: "fix.complete",
+      label: "Mark a fix done",
+      does: "Records what broke, what changed, who or what changed it, and the before and after, so the fix list shows it as fixed.",
+      doesNot: "Does not change anything itself.",
+      authority: "REVERSIBLE_NONPRODUCTION",
+      subjectKind: "an item on the fix list",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const id = text(input.id);
+      const whatChanged = collapse(input.whatChanged);
+      const changedBy = collapse(input.changedBy);
+      const before = collapse(input.before);
+      const after = collapse(input.after);
+      if (!id.startsWith("fix:")) return bad("choose an item on the fix list");
+      if (!whatChanged || !changedBy || !before || !after) return bad("say what changed, who changed it, and the before and after");
+      let undo: { type: string; input: Record<string, unknown> } | null = null;
+      if (input.undo !== undefined && input.undo !== null) {
+        const u = input.undo as { type?: unknown; input?: unknown };
+        if (typeof u.type !== "string" || !u.type || typeof u.input !== "object" || u.input === null) return bad("the undo needs an action and its input");
+        undo = { type: u.type, input: u.input as Record<string, unknown> };
+      }
+      const label = input.label === "PROVEN" || input.label === "TESTING" ? input.label : undefined;
+      return { ok: true, value: { id, whatChanged, changedBy, before, after, undo, ...(label ? { label } : {}) } };
+    },
+    async execute(deps, context, input) {
+      const id = String(input.id);
+      try {
+        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const config = held && isAdminConfig(held.value) ? held.value : null;
+        if (!config || !fixItems(config).some((i) => i.id === id)) return refuse("INVALID_INPUT", "That item is not on the fix list.");
+        await completeFixItem(deps.repos, id, {
+          whatChanged: String(input.whatChanged), changedBy: String(input.changedBy),
+          before: String(input.before), after: String(input.after),
+          undo: input.undo as { type: string; input: Record<string, unknown> } | null,
+        }, context.at);
+      } catch (error) { return storeRefusal("the fix list", error); }
+      // BR-24: a completed fix is an update on Now, once. It is Testing until it has been proven.
+      try {
+        await addUpdate(deps.repos, { id: `fix:${id}:${context.at}`, what: `Fixed: ${String(input.whatChanged)}`, at: context.at,
+          label: input.label === "PROVEN" ? "PROVEN" : "TESTING", evidenceHref: `/admin?view=fix`,
+          before: String(input.before), after: String(input.after) });
+      } catch (error) { return storeRefusal("the updates feed", error); }
+      return { ok: true, outcome: "DONE", subject: id, says: "It is on the fix list as Fixed and checked, with its before and after.",
+        openedWork: [], readBackAt: "/admin?view=fixes", undo: null };
+    },
+  },
+
+  /* ------------------------------------------------------ orders.schedule */
+  {
+    definition: {
+      type: "orders.schedule",
+      label: "Schedule an order",
+      does: "Saves an order to be sent later: at a time, after another order, repeating, or by a date.",
+      doesNot: "Does not send the order now, and does not change its limits.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "an order to send later",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const orderType = text(input.orderType);
+      const target = lookupAction(orderType);
+      if (!target || orderType.startsWith("orders.") || target.definition.authority === "PROHIBITED") return bad("choose an order that can be sent");
+      if (target.definition.requiresStateVersion) return bad("this order depends on what the screen showed, so it can only be sent now");
+      const when = parseWhen(input);
+      if (!when.ok) return bad(when.why);
+      const inner = (typeof input.input === "object" && input.input !== null ? input.input : {}) as Record<string, unknown>;
+      const checked = target.validate(inner);
+      if (!checked.ok) return bad(checked.why);
+      return { ok: true, value: { orderType, orderInput: inner, ...when.value } };
+    },
+    async execute(deps, context, input) {
+      const target = lookupAction(String(input.orderType))!;
+      const order: ScheduledOrder = {
+        id: context.receiptId, orderType: String(input.orderType), input: input.orderInput as Record<string, unknown>,
+        startAt: input.startAt as string | null, after: input.after as string | null, repeat: input.repeat as ScheduledOrder["repeat"],
+        finishBy: input.finishBy as string | null, decidedBy: context.request.actorRef, decidedAt: context.at, receiptId: context.receiptId,
+        label: target.definition.label,
+      };
+      try {
+        for (let attempt = 0; ; attempt++) {
+          const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+          const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(context.at);
+          const next = withScheduled(current, order);
+          if (next === current) break;
+          try {
+            if (held) await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, context.at);
+            else await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, context.at);
+            break;
+          } catch (error) { if (attempt >= 1) throw error; }
+        }
+      } catch (error) { return storeRefusal("your scheduled order", error); }
+      return { ok: true, outcome: "DONE", subject: order.id, says: `${order.label} is scheduled.`, openedWork: [],
+        readBackAt: "/admin?view=work", undo: "Unschedule it and it will not be sent." };
+    },
+  },
+  /* ---------------------------------------------------- orders.unschedule */
+  {
+    definition: {
+      type: "orders.unschedule",
+      label: "Unschedule an order",
+      does: "Removes an order that was saved to be sent later, so it is never sent.",
+      doesNot: "Does not undo anything an earlier run of it already did.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "a scheduled order",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const id = text(input.id);
+      return id ? { ok: true, value: { id } } : bad("choose a scheduled order");
+    },
+    async execute(deps, context, input) {
+      const id = String(input.id);
+      try {
+        for (let attempt = 0; ; attempt++) {
+          const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+          const current = held && isAdminConfig(held.value) ? held.value : null;
+          if (!held || !current || !scheduledOrders(current).some((o) => o.id === id)) return refuse("INVALID_INPUT", "That order is not scheduled any more.");
+          try { await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, withoutScheduled(current, id, context.at), context.at); break; }
+          catch (error) { if (attempt >= 1) throw error; }
+        }
+      } catch (error) { return storeRefusal("your scheduled order", error); }
+      return { ok: true, outcome: "DONE", subject: id, says: "It is unscheduled and will not be sent.", openedWork: [], readBackAt: "/admin?view=work", undo: null };
     },
   },
 
@@ -780,13 +968,14 @@ const REGISTRY: readonly RegisteredAction[] = [
         // carries no override, so the previous ceiling is the built-in fallback.
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
         previousUsd = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(current)).rollingCeilingUsd;
-        const next = withFleetSpendCeiling(current, {
+        // BR-05/BR-06: the change also joins the settings log, so Settings shows when it changed, its value before, and an undo.
+        const next = withLoggedChange(withFleetSpendCeiling(current, {
           rollingCeilingUsd,
           previousUsd,
           decidedAt: at,
           decidedBy: context.request.actorRef,
           receiptId: context.receiptId,
-        });
+        }), { id: context.receiptId, key: SPEND_CEILING_LOG_KEY, before: previousUsd, after: rollingCeilingUsd, at, why: "" });
         if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
         else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
       } catch (error) {
@@ -803,6 +992,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         openedWork: [],
         readBackAt: "/admin",
         undo: `Set it back to $${previousUsd.toFixed(2)}.`,
+        change: { before: `$${previousUsd.toFixed(2)}`, after: `$${rollingCeilingUsd.toFixed(2)}` },
       };
     },
   },
@@ -1153,6 +1343,9 @@ const REGISTRY: readonly RegisteredAction[] = [
 
   /* ------------------------------------ expansion.scope.setMany and .budget */
   ...BULK_ACTIONS,
+
+  /* ------------------------------------------------------------ door.save */
+  ...DOOR_ACTIONS,
 
   /* ---------------------------------------------------- billing.fact.record */
   {

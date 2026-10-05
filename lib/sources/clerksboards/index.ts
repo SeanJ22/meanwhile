@@ -9,6 +9,7 @@
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
   CONCLUDED_LOOKBACK_DAYS,
+  MEETING_HELD_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
 } from "../../meetings/constants.ts";
 import {
@@ -72,6 +73,13 @@ const SOURCE_NAME = "clerksboards";
  */
 const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
+/**
+ * The Past Agendas list is the only part of this adapter that carries concluded records (each citing its agenda PDF),
+ * so it holds the full held window back (DB-05, 120 days). The schedule's own dates stay on the shown window: whether a
+ * schedule "places a sitting in the window" is what sends a board to the list (R8), and a wider window would let an old
+ * schedule date satisfy that and hide the very sittings the list exists to supply.
+ */
+const PAST_AGENDA_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
 export interface ClerksBoardsRaw {
   wiring: BodySourceWiring;
@@ -86,14 +94,29 @@ export interface ClerksBoardsRaw {
 }
 
 const BOARD_PAGE = "https://clerksboards.tucsonaz.gov/boards/";
+/** Where the portal this adapter was built on keeps its agenda documents; a door names its own with `documentHost`. */
+const DEFAULT_DOCUMENT_HOST = "assets.tucsonaz.gov";
 
-export function boardPageUrl(boardId: string): string {
-  return `${BOARD_PAGE}?board=${boardId}`;
+/**
+ * DB-18: the portal's boards page, from the door's own `portalUrl` when it
+ * names one, so another place running this product is a door row and not a
+ * code edit. A row without it reads the page this adapter was built on.
+ */
+export function boardPortalUrl(config?: Readonly<Record<string, string | undefined>>): string {
+  const named = config?.portalUrl?.trim();
+  if (!named) return BOARD_PAGE;
+  const url = new URL(named);
+  if (url.protocol !== "https:") throw new Error(`CLERKSBOARDS_PORTAL_NOT_HTTPS:${named}`);
+  return url.href.endsWith("/") ? url.href : `${url.href}/`;
+}
+
+export function boardPageUrl(boardId: string, config?: Readonly<Record<string, string | undefined>>): string {
+  return `${boardPortalUrl(config)}?board=${boardId}`;
 }
 
 /** The Past Agendas list every board page links from its Documentation table. */
-export function pastAgendaListUrl(boardId: string): string {
-  return `${BOARD_PAGE}?run=pastagenda&board=${boardId}`;
+export function pastAgendaListUrl(boardId: string, config?: Readonly<Record<string, string | undefined>>): string {
+  return `${boardPortalUrl(config)}?run=pastagenda&board=${boardId}`;
 }
 
 /** One text segment of the page after tags become separators. */
@@ -556,11 +579,13 @@ export interface PastAgendaEntry {
 }
 
 /** Every document link in a board's Past Agendas list, newest first as published. */
-export function parsePastAgendaList(html: string): PastAgendaEntry[] {
+export function parsePastAgendaList(html: string, documentHost: string | undefined = DEFAULT_DOCUMENT_HOST): PastAgendaEntry[] {
   const start = html.indexOf("Past Agendas:");
   if (start < 0) return [];
   const out: PastAgendaEntry[] = [];
-  for (const m of html.slice(start).matchAll(/<a\b[^>]*\bhref="\s*(https:\/\/assets\.tucsonaz\.gov\/[^"\s]+)\s*"[^>]*>([^<]+)<\/a>/g)) {
+  const host = (documentHost?.trim() || DEFAULT_DOCUMENT_HOST).toLowerCase().replace(/[^a-z0-9.-]/g, "").replace(/\./g, "\\.");
+  const link = new RegExp(`<a\\b[^>]*\\bhref="\\s*(https:\\/\\/${host}\\/[^"\\s]+)\\s*"[^>]*>([^<]+)<\\/a>`, "g");
+  for (const m of html.slice(start).matchAll(link)) {
     out.push({ pdfUrl: decodeEntities(m[1]), title: decodeEntities(m[2]).replace(/\s+/g, " ").trim() });
   }
   return out;
@@ -690,7 +715,7 @@ export function makeClerksBoardsSource(
 
     for (const { wiring, html, pastAgendaHtml, collectedAt } of raw) {
       const page = parseBoardPage(html);
-      const boardUrl = boardPageUrl(wiring.config.boardId);
+      const boardUrl = boardPageUrl(wiring.config.boardId, wiring.config);
 
       const tally: ScheduleTally = { outsideWindow: 0, tbdMonths: 0 };
       const expanded = page.scheduleText ? expandSchedule(page.scheduleText, windowStart, windowEnd, tally) : null;
@@ -704,7 +729,10 @@ export function makeClerksBoardsSource(
       // A schedule that places nothing in the window falls back to the
       // sittings the board's own Past Agendas list dates (R8, 2026-09-25).
       const pastSittings = (expanded === null || expanded.length === 0) && pastAgendaHtml !== undefined
-        ? concludedSittingsFromPastAgendas(parsePastAgendaList(pastAgendaHtml), page.boardName, windowStart, now, wiring.timeZone)
+        ? concludedSittingsFromPastAgendas(
+            parsePastAgendaList(pastAgendaHtml, wiring.config.documentHost), page.boardName,
+            new Date(now.getTime() - PAST_AGENDA_BACK_DAYS * 86_400_000), now, wiring.timeZone,
+          )
         : [];
       if (expanded === null) {
         // No schedule, "Meets as required", or a format this parser does not
@@ -833,7 +861,7 @@ export function makeClerksBoardsSource(
           jurisdiction: wiring.jurisdiction,
           status: sitting.canceled ? "CANCELED" : "CONCLUDED",
           provenance: {
-            sourceUrl: pastAgendaListUrl(wiring.config.boardId),
+            sourceUrl: pastAgendaListUrl(wiring.config.boardId, wiring.config),
             sourceOrg: wiring.publishingOrg,
             collectedAt,
             verifiedAt: null,
@@ -855,7 +883,7 @@ export function makeClerksBoardsSource(
     async fetch(query?: MeetingQuery): Promise<ClerksBoardsRaw[]> {
       const collected: ClerksBoardsRaw[] = [];
       for (const wiring of wiringRows) {
-        const url = boardPageUrl(wiring.config.boardId);
+        const url = boardPageUrl(wiring.config.boardId, wiring.config);
         const { text } = await politeGetText(url, {
           fetchImpl,
           accept: "text/html",
@@ -875,7 +903,7 @@ export function makeClerksBoardsSource(
           : null;
         let pastAgendaHtml: string | undefined;
         if (expanded === null || expanded.length === 0) {
-          pastAgendaHtml = (await politeGetText(pastAgendaListUrl(wiring.config.boardId), {
+          pastAgendaHtml = (await politeGetText(pastAgendaListUrl(wiring.config.boardId, wiring.config), {
             fetchImpl,
             accept: "text/html",
             signal: query?.signal,

@@ -36,3 +36,55 @@ test("a candidate counts only inside their own contest's section, not anywhere o
     contest: { election: "2026 General Election", office: "County Attorney", candidates: ["Brian McIntyre", "Mark Dannels"] } });
   assert.deepEqual([attorney.verifiedCandidates, attorney.openCandidates], [["Brian McIntyre"], ["Mark Dannels"]]);
 });
+
+test("CP-19: publication leaves a mismatched contact open and publishes each person's minimum facts", () => {
+  const source = page('<table><tr><td>Alice Adams</td><td>Clerk</td><td>alice@example.test</td></tr><tr><td>Bob Brown</td><td>Treasurer</td><td>bob@example.test</td></tr></table>');
+  const alice = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: "Alice Adams", office: "Clerk", email: "bob@example.test" }, page: source, now: NOW });
+  assert.equal(alice.live, true);
+  assert.deepEqual(alice.verifiedFields, ["name", "office"]);
+  assert.deepEqual(alice.openFields, ["email"]);
+  const bob = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: "Bob Brown", office: "Treasurer", email: "bob@example.test" }, page: source, now: NOW });
+  assert.equal(bob.live, true);
+  assert.deepEqual(bob.verifiedFields, ["email", "name", "office"]);
+});
+
+test("CP-19: a two-column roster and ambiguous names cannot pool contacts", () => {
+  const source = page('<div class="roster"><article><h2>Alice Adams</h2><p>Clerk</p><a href="mailto:alice@example.test">Email</a></article><article><h2>Bob Brown</h2><p>Treasurer</p><a href="mailto:bob@example.test">Email</a></article></div>');
+  const fields = { name: "Alice Adams", office: "Clerk", email: "bob@example.test" };
+  assert.deepEqual(section3Record({ recordClass: "OFFICIAL_ROSTER", fields, page: source, now: NOW }).openFields, ["email"]);
+  const repeated = page('<p>Alice Adams, Clerk, alice@example.test</p><p>Alice Adams, Clerk, bob@example.test</p>');
+  assert.equal(section3Record({ recordClass: "OFFICIAL_ROSTER", fields, page: repeated, now: NOW }).live, false);
+});
+
+
+test("CP-19: derived display names anchor on the name actually written in their row", () => {
+  const source = page('<table><tr><td>Adams, Alice</td><td>Clerk</td><td>alice@example.test</td></tr><tr><td>Brown, Bob</td><td>Treasurer</td><td>bob@example.test</td></tr></table>');
+  const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: "Alice Adams", nameAsWritten: "Adams, Alice", office: "Clerk", email: "bob@example.test" }, derived: { name: "nameAsWritten" }, page: source, now: NOW });
+  assert.equal(verdict.live, true);
+  assert.deepEqual(verdict.verifiedFields, ["name", "nameAsWritten", "office"]);
+  assert.deepEqual(verdict.openFields, ["email"]);
+});
+
+test("CP-19: identical desktop/mobile rows remain publishable without pooling distinct rows", () => {
+  const row = '<tr><td>Alice Adams</td><td>Clerk</td><td>alice@example.test</td></tr>';
+  const source = page(`<table>${row}</table><table>${row}</table>`);
+  const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: "Alice Adams", office: "Clerk", email: "alice@example.test" }, page: source, now: NOW });
+  assert.equal(verdict.live, true);
+  assert.deepEqual(verdict.verifiedFields, ["email", "name", "office"]);
+});
+
+test("CP-19: a heading is its own text block; a neighbouring person's paragraph is not", () => {
+  const source = page('<h1>Clerk Alice Adams</h1><p>Bob Brown, bob@example.test</p>');
+  const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: "Alice Adams", office: "Clerk", email: "bob@example.test" }, page: source, now: NOW });
+  assert.equal(verdict.live, true);
+  assert.deepEqual(verdict.openFields, ["email"]);
+});
+
+test("CP-19: markup formatting a scalar name cell does not detach its own office and contact columns", () => {
+  for (const name of ["<div>Alice Adams</div>", "Alice<br>Adams"]) {
+    const source = page(`<table><tr><td>${name}</td><td>Clerk</td><td>alice@example.test</td></tr><tr><td>Bob Brown</td><td>Treasurer</td><td>bob@example.test</td></tr></table>`);
+    const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: "Alice Adams", office: "Clerk", email: "alice@example.test" }, page: source, now: NOW });
+    assert.equal(verdict.live, true);
+    assert.deepEqual(verdict.verifiedFields, ["email", "name", "office"]);
+  }
+});

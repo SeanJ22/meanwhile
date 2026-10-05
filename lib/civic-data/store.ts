@@ -34,7 +34,7 @@ import {
 } from "./trusted-lkg-import.ts";
 import { assertWriteAllowed } from "../db/write-guard.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
-import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
+import { MEETING_HISTORY_SOURCE_ID, MEETING_PARTITION_CONTRACTS, meetingHistoryContract, meetingPartitionForHistoryScope } from "./meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import {
   assertSanctionedRuntimeAuthority,
@@ -273,6 +273,13 @@ export type CandidateAuthorityIdentity = Pick<RoutineCandidate, "id" | "sourceId
 function registeredMutationContract(
   candidate: Pick<RoutineCandidate, "sourceId" | "recordClass" | "scope">,
 ): RegisteredMutationContract | null {
+  // A partition's durable history is written by that partition's own child, under that partition's contract (DB-06).
+  if (candidate.sourceId === MEETING_HISTORY_SOURCE_ID && candidate.recordClass === "MEETING") {
+    const partition = meetingPartitionForHistoryScope(candidate.scope);
+    return partition === null
+      ? null
+      : { id: partition.id, kind: "routine", readerProjectionId: meetingHistoryContract(partition).readerProjection!.id };
+  }
   const routine = [...ROUTINE_SOURCE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS]
     .filter((contract) =>
       contract.sourceId === candidate.sourceId &&

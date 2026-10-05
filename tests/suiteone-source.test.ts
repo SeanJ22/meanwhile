@@ -84,6 +84,10 @@ test("WINSLOW · the council's in-window sittings reach readers with their own t
   const { meetings, drops, accounting } = makeSuiteOneSource([WIRING]).normalizeWithDrops([raw()], NOW);
   assert.equal(accounting.outcome, "CONSERVED");
   assert.deepEqual(meetings.map((m) => [m.startsAt, m.status, m.title]), [
+    // DB-05: the held 120-day window reaches back to 9 and 23 June.
+    ["2026-06-09T18:30:00-07:00", "CONCLUDED", "City Council Regular Meeting (2nd Tuesday)"],
+    ["2026-06-23T18:30:00-07:00", "CONCLUDED", "City Council Regular Meeting (4th Tuesday)"],
+    ["2026-06-23T19:30:00-07:00", "CONCLUDED", "City Council Special Meetings & Work Sessions"],
     ["2026-07-14T18:30:00-07:00", "CONCLUDED", "City Council Regular Meeting (2nd Tuesday)"],
     ["2026-07-28T18:30:00-07:00", "CONCLUDED", "City Council Regular Meeting (4th Tuesday)"],
     ["2026-08-11T18:30:00-07:00", "CONCLUDED", "City Council Regular Meeting (2nd Tuesday)"],
@@ -118,7 +122,7 @@ test("WINSLOW · the council's in-window sittings reach readers with their own t
   assert.equal(oct27.agendaSlotObservedEmpty, true, "the row's document area shows no agenda yet");
   // Six other bodies' upcoming rows are set aside and counted.
   assert.equal(drops.notConfigured, 6);
-  assert.equal(drops.unknownVenue, 10);
+  assert.equal(drops.unknownVenue, 13);
 });
 
 test("WINSLOW · a portal that no longer carries the council's own panel is never read as a council with no meetings", () => {

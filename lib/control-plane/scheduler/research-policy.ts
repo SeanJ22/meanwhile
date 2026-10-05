@@ -32,6 +32,7 @@ import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { HEARTBEAT_LATE_MINUTES } from "../owner-surface.ts";
 import type { CostEntry } from "../cost.ts";
 import { MODEL_FOR_CLASS, SCOUT_STEPS } from "./model-routing.ts";
+import { MODELS } from "../../models.ts";
 import type { DispatchOrdering, ResearchMetrics } from "../research-metrics.ts";
 import { aggregateModelSpend, type FleetSafetySnapshot } from "../fleet-safety.ts";
 import type { SpendHold } from "../budget.ts";
@@ -659,6 +660,28 @@ export function researchPaidWorkerCapacity(input: Omit<Parameters<typeof researc
 }): number {
   if (!input.modelEnabled || input.spentUsd === null || !Number.isFinite(input.spentUsd) || input.spentUsd < 0) return 0;
   return researchWorkerCapacity({ ...input, availableUsd: Math.max(0, input.ceilingUsd - input.spentUsd) });
+}
+
+/** What one Scout request is counted at: its output-token limit at the Haiku price. The runner and Admin both use this figure. */
+export function scoutRequestUsd(): number {
+  return MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000;
+}
+
+/**
+ * BR-21: how many paid hunters the daily limit buys right now. The same math the runner admits with
+ * (`researchPaidWorkerCapacity`), fed from what Admin can read: the limit, what the last 24 hours spent
+ * and the provider's request rate when one is configured. Null when either money figure is unread.
+ */
+export function huntersTheDialBuys(input: {
+  readonly dailyLimitUsd: number | null;
+  readonly spentLast24hUsd: number | null;
+  readonly requestsPerMinute?: number;
+}): number | null {
+  if (input.dailyLimitUsd === null || input.spentLast24hUsd === null) return null;
+  return researchPaidWorkerCapacity({
+    modelEnabled: true, spentUsd: input.spentLast24hUsd, ceilingUsd: input.dailyLimitUsd, requestUsd: scoutRequestUsd(),
+    ...(input.requestsPerMinute === undefined ? {} : { requestsPerMinute: input.requestsPerMinute }),
+  });
 }
 
 /** A paid job rechecks its admission after waiting for the shared host's

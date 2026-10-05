@@ -243,3 +243,19 @@ test("the browsers root default is per platform, and windows has no HOME", () =>
     "the windows default must not be the POSIX one",
   );
 });
+
+
+test("an explicit system browser is a stated substitution, never an installed pinned build", () => {
+  const root = mkdtempSync(join(tmpdir(), "wtp-system-chromium-"));
+  try {
+    const executable = join(root, "system-chromium");
+    writeFileSync(executable, "#!/bin/sh\nexit 0\n", { mode: 0o755 });
+    const env = { PLAYWRIGHT_BROWSERS_PATH: join(root, "missing-cache"), WTP_CHROMIUM_EXECUTABLE: executable };
+    const result = resolveChromium(env);
+    assert.deepEqual(result, { kind: "SUBSTITUTED", revision: "system", executablePath: executable });
+    assert.match(describeChromium(result), /SUBSTITUTED/);
+    assert.equal(resolveChromium({ ...env, WTP_CHROMIUM_EXECUTABLE: root }).kind, "ABSENT");
+    assert.equal(resolveChromium({ ...env, WTP_CHROMIUM_EXECUTABLE: join(root, "missing") }).kind, "ABSENT");
+    assert.equal(resolveChromium({ ...env, WTP_CHROMIUM_EXECUTABLE: "relative-browser" }).kind, "ABSENT");
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});

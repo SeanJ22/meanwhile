@@ -443,8 +443,8 @@ test("the river committee's every-other-month series is expanded: another body's
   );
   assert.deepEqual(
     meetings.map((m) => new Date(m.startsAt).toISOString()),
-    ["2026-07-22T23:00:00.000Z", "2026-09-23T23:00:00.000Z", "2026-11-19T00:00:00.000Z"],
-    "22 July and 23 September at 7 PM from the series, and 25 November as the library moved it to 18 November",
+    ["2026-06-18T21:30:00.000Z", "2026-07-22T23:00:00.000Z", "2026-09-23T23:00:00.000Z", "2026-11-19T00:00:00.000Z"],
+    "18 June (inside the held 120 days back, DB-03), 22 July and 23 September at 7 PM from the series, and 25 November as the library moved it to 18 November",
   );
   assert.ok(meetings.every((m) => m.bodyId === row.bodyId && m.title === "WRLAC"));
   assert.match(JSON.stringify(meetings[0].location ?? meetings[0].venueGap), /Pillsbury Free Library/, "the library's own place, never the town hall");

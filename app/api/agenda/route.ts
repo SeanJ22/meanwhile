@@ -41,7 +41,7 @@ export async function GET(request: Request) {
     const manifest = await readReaderManifest().catch(() => null);
     const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(() => null) : null;
     if (authority) enterReaderAuthorityEdge(authority);
-    read = await readReaderEdgeMeetings({ meetingId, manifest });
+    read = await readReaderEdgeMeetings({ meetingId, manifest, window: "HELD" });
   } catch (error) {
     return Response.json(
       {

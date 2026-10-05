@@ -1,6 +1,7 @@
 import { readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
+import { carriedFromAnswer } from "./carry-forward.ts";
 import { canonicalAgendaDocument, type AgendaDocument } from "./agenda-documents.ts";
 import type { Meeting, NormalizeDropCounts } from "../sources/types.ts";
 import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts";
@@ -24,6 +25,8 @@ import {
   type HeldMeetingPartition,
   type MeetingPartitionContract,
 } from "../civic-data/meeting-partitions.ts";
+import { DERIVED_FAMILY_SOURCE, meetingHistoryContract } from "../civic-data/meeting-partitions.ts";
+import { mergeMeetingHistory } from "../civic-data/meeting-history.ts";
 import { collapseDuplicateSittings } from "../sources/composite/index.ts";
 import {
   applyPartitionFreshCheck,
@@ -334,7 +337,7 @@ export function accountCarriedCollapses(
   const answered = (report: SnapshotSourceReport) => report.ok && (report.unreachableOcdIds?.length ?? 0) === 0;
   for (const row of carriedDropped) {
     const carried = row.carried!;
-    const fromAnswer = carried.reason === "UNEXPLAINED_DISAPPEARANCE";
+    const fromAnswer = carriedFromAnswer(carried.reason);
     const report = (ownReports.get(row.id) ?? []).find((candidate) => {
       const now = current(candidate);
       return now.source === carried.source && (now.carriedForward ?? 0) > 0 && answered(now) === fromAnswer;
@@ -430,11 +433,11 @@ export function reconcileCounts(snap: MeetingsSnapshot): void {
       .filter((row) => row.ok && (row.unreachableOcdIds?.length ?? 0) === 0)
       .reduce((sum, row) => sum + (row.carriedForward ?? 0), 0);
     const unexplainedRows = snap.meetings.filter((meeting) =>
-      meeting.carried?.source === source && meeting.carried.reason === "UNEXPLAINED_DISAPPEARANCE"
+      meeting.carried?.source === source && carriedFromAnswer(meeting.carried.reason)
     ).length;
     if (unexplainedClaims !== unexplainedRows) {
       throw new Error(
-        `${source}: reports ${unexplainedClaims} successful-response carry row(s) but ${unexplainedRows} row(s) name UNEXPLAINED_DISAPPEARANCE`,
+        `${source}: reports ${unexplainedClaims} successful-response carry row(s) but ${unexplainedRows} row(s) name UNEXPLAINED_DISAPPEARANCE or OUTSIDE_FETCH_WINDOW`,
       );
     }
   }
@@ -701,6 +704,8 @@ export interface MeetingPartitionReadback {
    * records it so a later check is applied without reading any payload.
    */
   readonly freshCheck?: MeetingPartitionFreshCheck;
+  /** Why this partition's durable history (DB-06) was left out of the composition; its live rows are served regardless. */
+  readonly historyIssue?: string;
 }
 
 export interface MeetingPartitionHeldFrom {
@@ -739,7 +744,10 @@ export async function readMeetingPartitionProjection(
 }
 
 function validateMeetingPartitionProjection(
-  partition: Pick<MeetingPartitionContract | HeldMeetingPartition, "id" | "meetingSource" | "bodyId"> & { readonly derivedFamily?: string | null },
+  partition: Pick<MeetingPartitionContract | HeldMeetingPartition, "id" | "meetingSource" | "bodyId"> & {
+    readonly derivedFamily?: string | null;
+    readonly historyOf?: string;
+  },
   result: CivicDataReadResult<MeetingsSnapshot>,
 ): CivicDataReadResult<MeetingsSnapshot> {
   if (result.kind !== "PROMOTED") return result;
@@ -753,6 +761,16 @@ function validateMeetingPartitionProjection(
         allowAllSourcesFailedForDurableTransfer: true,
       });
       validatedProjectionValues.add(result.value);
+    }
+    if (partition.historyOf !== undefined) {
+      /* A partition's durable history (DB-06): sittings of that partition's own body, as last published; a family's span its members. */
+      const family = partition.meetingSource === DERIVED_FAMILY_SOURCE;
+      for (const meeting of result.value.meetings) {
+        if (!meeting.id || !meeting.bodyId || (!family && (meeting.bodyId !== partition.bodyId || !meeting.id.startsWith(`${partition.meetingSource}:`)))) {
+          throw new Error(`MEETING_HISTORY_ROW_SCOPE_MISMATCH:${partition.id}:${meeting.id}`);
+        }
+      }
+      return result;
     }
     if (partition.derivedFamily) {
       /* A derived family (C16): every sitting belongs to exactly one member it accounts for, under that member's source. */
@@ -824,10 +842,13 @@ export async function readMeetingsProjection(
   // Proof-only (lib/meetings/proof-pin.ts): null in every deployed build and
   // outside the Reader proof harness, which leaves this read exactly as it was.
   const pin = activeReaderProofMeetingPin();
-  const partitionResults = pin === null
+  // Each partition's durable history (DB-06) is read in the same batch, so it adds no round trip. A pinned proof run
+  // reads exactly the captured partition versions and no history.
+  const historyContracts = pin === null ? MEETING_PARTITION_CONTRACTS.map((partition) => meetingHistoryContract(partition)) : [];
+  const batchResults = pin === null
     ? await readPromotedCivicDataBatch<MeetingsSnapshot>(
         MEETINGS_RECORD_CLASS,
-        MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
+        [...MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope), ...historyContracts.map((contract) => contract.scope)],
         readOptions,
       )
     : await readPinnedPromotedCivicDataBatch<MeetingsSnapshot>(
@@ -840,9 +861,21 @@ export async function readMeetingsProjection(
           ...(options.store ? { store: options.store as CivicDataPinnedReadStore } : {}),
         },
       );
+  const partitionResults = pin === null ? batchResults.slice(0, MEETING_PARTITION_CONTRACTS.length) : batchResults;
   const ownResults = MEETING_PARTITION_CONTRACTS.map((partition, index) =>
     validateMeetingPartitionProjection(partition, partitionResults[index]!)
   );
+  // A history that is unreadable or fails its proof is left out and named on its partition's readback; the live rows
+  // are never held back by it.
+  const historyByPartition = new Map<string, { readonly value: MeetingsSnapshot; readonly versionId: string | null } | { readonly issue: string }>();
+  historyContracts.forEach((contract, index) => {
+    const read = validateMeetingPartitionProjection(contract, batchResults[MEETING_PARTITION_CONTRACTS.length + index]!);
+    if (read.kind === "PROMOTED") {
+      historyByPartition.set(contract.historyOf!, { value: read.value, versionId: read.metadata.versionId });
+    } else if (read.kind === "STORE_UNREACHABLE") {
+      historyByPartition.set(contract.historyOf!, { issue: `${read.code}: ${read.detail}` });
+    }
+  });
   // A retired route's last promoted version, proved like any pointer, and
   // composed in its successor's place only while the successor has none. It
   // is read only then — one more batch in that window, and none once every
@@ -932,9 +965,13 @@ export async function readMeetingsProjection(
         ? confirmationCheckedAt(read.result.projection?.latestConfirmation, read.result.metadata.versionId, readsASource)
         : readsASource ? readerProofPinnedCheckedAt(pin, read.partition.id, read.result.metadata.versionId) : null;
       const routes = meetingVersionRoutes(read.result.value);
+      const history = historyByPartition.get(read.partition.id);
       return {
         ...read,
-        value: applyPartitionFreshCheck(read.result.value, checkedAt),
+        value: mergeMeetingHistory(
+          applyPartitionFreshCheck(read.result.value, checkedAt),
+          history !== undefined && "value" in history ? history.value : null,
+        ),
         freshCheck: routes === null ? undefined : { routes, checkedAt } satisfies MeetingPartitionFreshCheck,
       };
     });
@@ -956,6 +993,10 @@ export async function readMeetingsProjection(
         : "detail" in result ? result.detail : null),
       ...(heldFrom ? { heldFrom } : {}),
       ...(freshChecks.has(partition.id) ? { freshCheck: freshChecks.get(partition.id)! } : {}),
+      ...(() => {
+        const history = historyByPartition.get(partition.id);
+        return history !== undefined && "issue" in history ? { historyIssue: history.issue } : {};
+      })(),
     };
   });
 

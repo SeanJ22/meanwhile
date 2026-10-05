@@ -7,6 +7,7 @@ import { readAutonomousActivity } from "../lib/control-plane/workers/activity.ts
 import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, validateScoutFinishWithCandidates, type ScoutResult, type ScoutRung } from "../lib/control-plane/scheduler/scout-result.ts";
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
@@ -23,6 +24,8 @@ import { unchangedScoutFailure } from "../lib/control-plane/workers/scout-schedu
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { claimRouteTask, registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import { huntRoundComparator } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
   const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
@@ -124,11 +127,15 @@ test("cycle selection uses its already joined item and history instead of reopen
 test("coordinator joins Scout and route history once before bounded selection", async () => {
   const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
   await nextAutonomousOperation(h.runtime,h.item.id);
-  let scoutReads=0,routeLists=0,pointReads=0;
+  let scoutReads=0,routeLists=0,pointReads=0,workerResultReads=0,workerResultLists=0,attemptScopeLists=0;
   const runtime:AutonomousCoordinatorRuntime={...h.runtime,repos:{...h.repos,
     workItems:{...h.repos.workItems,mustRead:async (...args)=>{pointReads++;return h.repos.workItems.mustRead(...args);}},
     scoutResults:{...h.repos.scoutResults,readAll:async()=>{scoutReads++;return h.repos.scoutResults.readAll();}},
     routeTasks:{...h.repos.routeTasks,list:async()=>{routeLists++;return h.repos.routeTasks.list();}},
+    workerResults:{...h.repos.workerResults,
+      read:async (...args)=>{workerResultReads++;return h.repos.workerResults.read(...args);},
+      readAll:async()=>{workerResultLists++;return h.repos.workerResults.readAll();}},
+    attempts:{...h.repos.attempts,listWhere:async (...args)=>{attemptScopeLists++;return h.repos.attempts.listWhere(...args);}},
   }};
   const cycle=await runAutonomousCoordinator(runtime,{maximum:1,maxScoutDispatches:0,concurrency:1});
   assert.equal(cycle.decisions[0]?.action,"SCOUT");
@@ -136,6 +143,9 @@ test("coordinator joins Scout and route history once before bounded selection", 
   assert.equal(scoutReads,1,"all Scout results are joined once, not scanned per WorkItem");
   assert.equal(routeLists,1,"route tasks are joined once, not scanned per WorkItem");
   assert.equal(pointReads,0,"selection uses the already loaded WorkItem snapshot");
+  assert.equal(workerResultLists,2,"recovery reads history first; lineage and completion validation share the fresh selection snapshot");
+  assert.equal(workerResultReads,0,"selection does not reread results per item");
+  assert.equal(attemptScopeLists,0,"completion validation uses the already loaded exact Attempt rows");
 
   await acceptRecordedScout(h);
   const scout = (await h.repos.scoutResults.readAll())[0]!;
@@ -152,9 +162,9 @@ test("coordinator joins Scout and route history once before bounded selection", 
       sources: [], acquisition: [] } }, h.now());
     goodIds.push(id);
   }
-  const isolated: AutonomousCoordinatorRuntime = { ...h.runtime,
+  const isolated: AutonomousCoordinatorRuntime = { ...runtime,
     readEvidence: workerVaultResolver(h.repos, h.store, h.item.project),
-    repos: { ...h.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [missingOnly] } } };
+    repos: { ...runtime.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [missingOnly] } } };
   const named = new RegExp(`WORKER_ARTIFACT_MISSING_OR_PARTIAL:${missingId}`);
   const remaining = await runAutonomousCoordinator(isolated, { planOnly: true, concurrency: 4 });
   assert.equal(remaining.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3,
@@ -165,6 +175,9 @@ test("coordinator joins Scout and route history once before bounded selection", 
   assert.deepEqual(remaining.deferred.map(row => [row.workItemId, row.reason]), [[h.item.id, "WORKER_ARTIFACT_MISSING_OR_PARTIAL"]]);
   assert.match(remaining.deferred[0]!.detail, new RegExp(missingId));
   assert.equal(remaining.dispatches.length, 0);
+  assert.equal(workerResultLists,4,"the next invocation performs recovery and takes a fresh selection snapshot for all four items");
+  assert.equal(workerResultReads,0);
+  assert.equal(attemptScopeLists,0);
 
   const mixed = { ...scout, candidates: scout.candidates.map(candidate => ({ ...candidate,
     evidenceArtifactIds: [missingId, ...candidate.evidenceArtifactIds] })) };
@@ -180,11 +193,34 @@ test("coordinator joins Scout and route history once before bounded selection", 
   assert.equal(continued.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3);
   assert.equal((await h.repos.workerResults.readAll()).length, 0, "selection cannot assert parsed or verified facts");
   assert.deepEqual(h.calls, [], "held planning makes no source or model request");
-  for (const message of ["CONTROL_PLANE_REQUEST_TIMEOUT: repository read", "MODEL_PROVIDER_FAILURE:503", "WORKER_ARTIFACT_NOT_IN_VAULT"]) {
+  const absent = await runAutonomousCoordinator({ ...isolated,
+    readEvidence: workerVaultResolver(h.repos, new MemoryEvidenceStore(), h.item.project),
+    repos: { ...isolated.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [scout] } } },
+  { planOnly: true, concurrency: 4 });
+  assert.equal(absent.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3);
+  assert.equal(absent.decisions.find(decision => decision.workItemId === h.item.id)?.action, "SCOUT");
+  assert.deepEqual(absent.deferred.map(row => [row.workItemId,row.reason]), [[h.item.id,"WORKER_ARTIFACT_NOT_IN_VAULT"]]);
+  assert.match(absent.deferred[0]!.detail, new RegExp(scout.candidates[0]!.evidenceArtifactIds[0]!));
+  assert.equal(absent.dispatches.length, 0);
+  const mixedVault = await runAutonomousCoordinator({ ...usable, readEvidence: async id => {
+    if (id === missingId) throw new Error("WORKER_ARTIFACT_NOT_IN_VAULT");
+    return isolated.readEvidence(id);
+  } }, { planOnly: true, concurrency: 4 });
+  const vaultSameWork = mixedVault.decisions.find(decision => decision.workItemId === h.item.id)!;
+  assert.equal(vaultSameWork.action, "WORKER");
+  assert.equal(vaultSameWork.task?.workerTask?.acquisition?.route.observation.artifactId, scout.candidates[0]!.evidenceArtifactIds[0]);
+  assert.match(vaultSameWork.reason, new RegExp(`WORKER_ARTIFACT_NOT_IN_VAULT:${missingId}`));
+  assert.equal(mixedVault.deferred.length, 1);
+  assert.equal(mixedVault.deferred[0]!.reason, "WORKER_ARTIFACT_NOT_IN_VAULT");
+  assert.equal(mixedVault.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3);
+  assert.equal((await h.repos.workerResults.readAll()).length, 0);
+  assert.deepEqual(h.calls, []);
+  for (const message of ["CONTROL_PLANE_REQUEST_TIMEOUT: repository read", "MODEL_PROVIDER_FAILURE:503",
+    "WORKER_ARTIFACT_PROVENANCE_REFUSED", "WORKER_ARTIFACT_NOT_IN_VAULTISH", "EvidenceCorrupted"]) {
     const failure = new Error(message);
     await assert.rejects(runAutonomousCoordinator({ ...usable, readEvidence: async () => { throw failure; } },
       { planOnly: true, concurrency: 4 }), error => error === failure,
-    "only the authorized missing-or-partial record class is isolated; other failures still propagate");
+    "only named absent held evidence is isolated; repository, provider and invalid evidence failures still propagate");
   }
 });
 
@@ -417,34 +453,25 @@ test("a stored plan that still demands verification with no authorities validate
   assert.ok(Date.parse(FIXTURE_NOW)<Date.parse(h.now()));
 });
 
-test("unresolved identity permits independent diagnosis but never staging", async () => {
-  const h=await autonomousHarness({plan:plan=>{
-    const source=plan.sources[0]; const span=source.observation;
-    return {...plan,detective:[{artifactIds:[span.artifactId],walk:[],walkState:{state:"OPEN",nextRouteIds:["independent-identity-register"]},question:{
-      id:"fixture-identity-disagreement",text:"Which canonical identity does this publisher evidence establish?",subjectId:plan.contract.subjectId,
-      jurisdiction:"NH",recordClass:plan.contract.recordClass,kind:"IDENTITY",populationDefinition:null,denominator:null,
-      authorities:[{artifactId:span.artifactId,organization:source.publisher,type:"PUBLISHER_DIRECTORY",observedAt:source.observedAt}],
-      alternatives:[plan.contract.subjectId,"fixture:nh:other-county"].map((id,index)=>({id:`alternative-${index}`,statement:`The evidence identifies ${id}.`,canonicalIdentity:id,tests:[{artifactId:span.artifactId,predicate:{kind:"EXACT_TEXT" as const,quote:span.quote}}]})),
-      nextAction:"Acquire the independent identity register.",falsificationCondition:"An independent authority contradicts the proposed identity."
-    }}]};
-  }});
-  const roles:string[]=[];
-  for(let index=0;index<4;index++) {
-    const run=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
-    roles.push(run.decisions[0].task!.workerTask!.role);
-    assert.equal(run.dispatches[0]?.outcome,"WORKED",run.dispatches[0]?.detail);
-  }
-  assert.deepEqual(roles,["ACQUIRER","PARSER","DETECTIVE","VALIDATOR"]);
-  assert.equal((await h.repos.workerResults.readAll()).find(r=>r.result.role==="DETECTIVE")?.result.verdict,"UNRESOLVED");
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
-  assert.equal((await h.repos.promotionPipeline.readAll()).length,0);
-});
-
- test("coordinator selection hands out canonical tasks without running tools or opening an Attempt", async () => {
+test("coordinator selection hands out canonical tasks without running tools or opening an Attempt", async () => {
   const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+  const legacy = { ...h.item, id: "work:legacy-held", autonomousPlan: undefined };
+  await h.repos.workItems.put(legacy.id, legacy, h.now());
   const before = (await h.repos.attempts.list()).length;
-  const planned = await runAutonomousCoordinator(h.runtime, { planOnly: true });
+  let snapshotCalls = 0;
+  let snapshot: readonly WorkItem[] = [];
+  const planned = await runAutonomousCoordinator(h.runtime, { planOnly: true,
+    onSelectionSnapshot: items => { snapshotCalls++; snapshot = items; },
+    acceptsWorkItem: item => {
+      assert.equal(item, snapshot.find(row => row.id === item.id), "ordering receives the exact selection rows, without another read or clone");
+      return true;
+    },
+  });
+  assert.equal(snapshotCalls, 1);
+  assert.deepEqual(snapshot.map(item => item.id).sort(), [h.item.id, legacy.id].sort());
+  assert.equal(snapshot.find(item => item.id === legacy.id)?.autonomousPlan, undefined, "held work without an autonomous plan is also available for ordering");
   assert.equal(planned.decisions[0]?.action, "SCOUT");
+  assert.equal(planned.decisions[0]?.task?.workItemId, h.item.id);
   assert.equal(planned.dispatches.length, 0);
   assert.equal((await h.repos.attempts.list()).length, before);
   assert.equal(h.calls.length, 0);
@@ -533,7 +560,7 @@ test("a worker kill timer defers unfinished work and ends only its owned process
 test("the autonomous wave loop stops at its dispatch slice even while waves keep working", async () => {
   const source = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   const start = source.indexOf("async function runAutonomousProcesses()");
-  const end = source.indexOf("let meetingsDiscovery:", start);
+  const end = source.indexOf("let meetingsDiscovery", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   let calls = 0, now = 0;
   const wave = async () => { calls++; now += 20; return { dispatches: [{ outcome: calls <= 3 ? "WORKED" : "FAILED" }],
@@ -542,6 +569,50 @@ test("the autonomous wave loop stops at its dispatch slice even while waves keep
   const report = await run();
   assert.equal(calls, 2);
   assert.equal(report.dispatches.length, 2, "completed work is retained when the slice defers later waves");
+
+  const h = await autonomousHarness();
+  const legacy = { ...h.item, id: "work:legacy-held", subject: "subject:legacy", autonomousPlan: undefined };
+  const current = { ...h.item, id: "work:planned", subject: "subject:planned",
+    autonomousPlan: { ...h.item.autonomousPlan!, ownerInstructions: ["hunt:planned"] } };
+  const task = (workItemId: string, routeId: string) => createRouteTask({ workItemId, routeId,
+    routeLabel: routeId, target: FIXTURE_URL, inherited: false, now: h.now() });
+  const held = [task(legacy.id, "legacy:first"), task(legacy.id, "legacy:second"), task("work:missing", "dangling")];
+  const plannedTask = task(current.id, "planned:first");
+  const placeOrder = ["hunt:legacy", "hunt:planned"];
+  const snapshotStart = source.indexOf("const workItemsById =", source.indexOf("async function runAutonomousWave()"));
+  const snapshotEnd = source.indexOf("const plainTaskIds =", snapshotStart);
+  const queueStart = source.indexOf("const readTaskQueue =", snapshotEnd);
+  const queueEnd = source.indexOf("let taskQueue:", queueStart);
+  assert.ok(snapshotStart >= 0 && snapshotEnd > snapshotStart && queueStart > snapshotEnd && queueEnd > queueStart);
+  const ordering = transpileModule(`return (async () => {
+    ${source.slice(snapshotStart, snapshotEnd)}
+    ${source.slice(queueStart, queueEnd)}
+    return { taskIds, metadata, remainingSnapshotItems: workItemsById.size, readTaskQueue };
+  })();`, { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
+  let orderingReads = 0;
+  const unreadable = () => { orderingReads++; throw new Error("ordering must reuse the selected metadata"); };
+  const selected = await new Function("held", "fleet", "runAutonomousCoordinator", "placeOrder", "paidWorkerCapacity",
+    "placeRankFor", "huntRoundComparator", "repos", ordering)(held, {},
+    async (_fleet: unknown, options: { onSelectionSnapshot: (items: readonly WorkItem[]) => void }) => {
+      options.onSelectionSnapshot([legacy, current]);
+      return { decisions: [{ action: "WORKER", task: plannedTask }] };
+    }, placeOrder, () => 1,
+    (subject: string) => subject === legacy.subject ? placeOrder.indexOf("hunt:legacy") : null,
+    huntRoundComparator, { routeTasks: { read: unreadable }, workItems: { read: unreadable } });
+  assert.equal(selected.remainingSnapshotItems, 0, "the whole selection index is released after retaining only queued metadata");
+  assert.equal(selected.metadata.get(held[0]!.id), legacy);
+  assert.equal(selected.metadata.get(plannedTask.id), current);
+  assert.equal(selected.metadata.get(held[2]!.id), undefined, "a dangling task has no fabricated metadata and remains for the child's fresh read");
+  placeOrder.reverse(); // The first child asks after the owner priority refresh.
+  const queue = selected.readTaskQueue();
+  assert.equal(queue.rank(plannedTask.id), 0);
+  assert.equal(queue.rank(held[2]!.id), Infinity);
+  const ordered = [...selected.taskIds].sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b));
+  assert.equal(ordered[0], plannedTask.id);
+  assert.ok(ordered.indexOf(held[0]!.id) < ordered.indexOf(held[1]!.id));
+  assert.ok(ordered.includes(held[2]!.id), "ordering does not drop unresolved tasks or claim that they are absent");
+  assert.ok(queue.compareRound(held[1]!.id, plannedTask.id) > 0, "removing a completed first task does not reset the hunt's second round");
+  assert.equal(orderingReads, 0);
 });
 
 test("pool returns a completed dispatch and records unfinished work when a child exits unsuccessfully", async () => {

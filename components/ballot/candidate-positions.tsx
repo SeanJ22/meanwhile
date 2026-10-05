@@ -1,4 +1,5 @@
 import type { IssuePosition } from "@/lib/candidates/positions";
+import { sourceKindLabel } from "@/lib/corpus/source-kinds";
 
 /**
  * **What held campaign and official pages say** — P02's reader surface,
@@ -91,9 +92,7 @@ export function CandidatePositions({
                     &ldquo;{passage.quote}&rdquo;
                   </p>
                   <p className="mt-0.5 text-[0.6875rem] text-muted">
-                    {passage.sourceClass === "CAMPAIGN_SITE"
-                      ? "campaign site"
-                      : "official site"}
+                    {sourceKindLabel(passage.sourceClass)}
                     {" · "}
                     <a
                       href={passage.documentUrl}

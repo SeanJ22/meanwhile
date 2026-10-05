@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { refreshDoorsForPass } from "../doors/install.ts";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../control-plane/gateway/admin-config.ts";
@@ -29,6 +30,8 @@ export function routineRefreshSelection(args: readonly string[]): { contractId: 
 
 /** A request only changes owner policy. The standing parent remains the only source clock. */
 export async function requestRoutineRefresh(repos: ControlPlaneRepositories, args: readonly string[], now: string) {
+  // DB-14: a door added as data is a partition this request may name.
+  await refreshDoorsForPass(repos.doors);
   const selection = routineRefreshSelection(args);
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   const config = row?.value ?? defaultAdminConfig();

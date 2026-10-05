@@ -56,7 +56,7 @@ const text = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/&#x27;|&#3
 test("at the country, the states carry the five columns, a figure we lack is a dash, and each row opens its state", () => {
   const html = card(page("us", live(STATES)));
   const t = text(html);
-  for (const head of ["Place", "Hunts", "ZIPs worked / total", "Place score", "Stuck"]) assert.ok(t.includes(head), head);
+  for (const head of ["Place", "Hunts", "ZIPs worked / total", "Completeness", "Stuck"]) assert.ok(t.includes(head), head);
   assert.match(t, /Arizona 2 1 \/ 420 12\.3% 4/);
   assert.match(t, /New Jersey 0 0 \/ 600 — 0/, "a state with no score yet shows a dash, not 0%");
   assert.match(html, /<button[^>]*>Arizona<\/button>/, "the state name is a button that opens it");

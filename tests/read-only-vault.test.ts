@@ -10,6 +10,7 @@ import {
   crosswalkEvidenceWorkItem,
   findHeldCapture,
   indexVault,
+  includeVaultCapture,
   READ_ONLY_VAULT_PROJECT,
   readHeldBytes,
 } from "../lib/control-plane/evidence/read-only-vault.ts";
@@ -93,6 +94,38 @@ test("manual crosswalk evidence reads the cited directory without describing unr
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
+test("vault metadata indexing uses a bounded pool and retains key order at thousands of pages", async t => {
+  const held = Array.from({length: 2000}, (_, i) => {
+    const {artifact} = recordAcquisition({canonicalUrl:`https://example.gov/page-${i}`,retrievedAt:"2026-10-02T00:00:00.000Z",httpStatus:200,
+      contentType:"text/html",sourceId:"fixture",methodRouteId:"fixture",workItemId:`work-${i}`,attemptId:`attempt-${i}`,permission:"ALLOWED",transport:"REACHABLE"},`<p>${i}</p>`);
+    return {artifact,key:objectKey(READ_ONLY_VAULT_PROJECT,artifact),metadata:{meta:artifactMeta(artifact),bodySha256:artifact.contentHash}};
+  }).sort((a,b)=>a.key.localeCompare(b.key));
+  const envKeys=["WTP_VAULT_PROVIDER","WTP_BLOBS_SITE_ID","WTP_BLOBS_TOKEN"];
+  const previous=envKeys.map(key=>process.env[key]);
+  Object.assign(process.env,{WTP_VAULT_PROVIDER:"netlify",WTP_BLOBS_SITE_ID:"offline-vault-fixture",WTP_BLOBS_TOKEN:"offline-fixture"});
+  t.after(()=>envKeys.forEach((key,i)=>{if(previous[i]===undefined)delete process.env[key];else process.env[key]=previous[i];}));
+  const byKey=new Map(held.map(row=>[row.key,row]));
+  let active=0,peak=0,bodyReads=0;
+  t.mock.method(globalThis,"fetch",async (url:RequestInfo|URL,options?:RequestInit)=>{
+    const parsed=new URL(String(url));
+    if(parsed.searchParams.has("prefix")) return Response.json({blobs:held.map(row=>({key:row.key})),directories:[]});
+    if(options?.method?.toLowerCase()!=="head") bodyReads++;
+    assert.equal(options?.method?.toLowerCase(),"head","metadata indexing must not download page bodies");
+    const row=byKey.get(parsed.pathname.slice(parsed.pathname.indexOf("project/")));
+    assert.ok(row);
+    active++;peak=Math.max(peak,active);
+    await new Promise(resolve=>setTimeout(resolve,1));
+    active--;
+    return new Response(null,{headers:{"netlify-blobs-metadata":"b64;"+Buffer.from(JSON.stringify(row.metadata)).toString("base64")}});
+  });
+  const start=performance.now(),index=await indexVault("unused-local-root");
+  console.log(`VAULT_POOL pages=${held.length} peak=${peak} elapsedMs=${(performance.now()-start).toFixed(2)} bodyReads=${bodyReads}`);
+  assert.ok(peak>1 && peak<=16,`expected a pool of at most16; observed${peak}`);
+  assert.equal(bodyReads,0);
+  assert.deepEqual([...index.byId.values()].map(row=>row.canonicalUrl),held.map(row=>row.artifact.canonicalUrl));
+  for(const row of held) assert.equal(index.byHash.get(row.artifact.contentHash.slice(7))?.id,row.artifact.id);
+});
+
 test("Netlify vault preserves oversized metadata atomically with original bytes", async () => {
   const bytes = new TextEncoder().encode("held evidence bytes");
   const meta = { contentType: "text/plain", contentHash: contentHash(bytes), byteLength: bytes.length,
@@ -102,7 +135,11 @@ test("Netlify vault preserves oversized metadata atomically with original bytes"
   let writes = 0;
   const remote = new NetlifyEvidenceStore({
     async getMetadata() { return data === null ? null : { metadata }; },
-    async getWithMetadata() { return data === null ? null : { data, metadata }; },
+    async getWithMetadata(_key: string, options: { type: string }) {
+      return data === null ? null : { data: options.type === "stream"
+        ? new ReadableStream({ start(controller) { controller.enqueue(new Uint8Array(data!)); controller.close(); } })
+        : data, metadata };
+    },
     async set(_key: string, body: ArrayBuffer, options: { metadata: Record<string, unknown>; onlyIfNew?: boolean }) {
       assert.ok("netlify-blobs-metadata".length + 4 + Buffer.from(JSON.stringify(options.metadata)).toString("base64").length <= 2048);
       if (options.onlyIfNew && data !== null) return { modified: false };
@@ -133,6 +170,83 @@ test("Netlify vault preserves oversized metadata atomically with original bytes"
   new DataView(data!).setUint32(0, data!.byteLength);
   await assert.rejects(remote.get("large-note"), /envelope is unreadable/);
   await assert.rejects(remote.describe("large-note"), /envelope is unreadable/);
+});
+
+test("envelope describe reads only a split metadata header and cancels the unread body", async () => {
+  const bytes = new TextEncoder().encode("original body");
+  const meta = { contentType: "text/plain", contentHash: contentHash(bytes), byteLength: bytes.length };
+  const json = new TextEncoder().encode(JSON.stringify({ meta, bodySha256: contentHash(bytes) }));
+  const header = new Uint8Array(4 + json.length);
+  new DataView(header.buffer).setUint32(0, json.length);
+  header.set(json, 4);
+  const chunks = [header.subarray(0, 2), header.subarray(2, 7), header.subarray(7)];
+  let reads = 0, cancelled = false;
+  const remote = new NetlifyEvidenceStore({
+    async getMetadata() { return { metadata: { format: "evidence-envelope@1" } }; },
+    async getWithMetadata(_key: string, options: { type: string }) {
+      assert.equal(options.type, "stream");
+      return { data: new ReadableStream({
+        pull(controller) {
+          assert.ok(reads < chunks.length, "must not pull the page body");
+          controller.enqueue(chunks[reads++]);
+        },
+        cancel() { cancelled = true; },
+      }, { highWaterMark: 0 }), metadata: { format: "evidence-envelope@1" } };
+    },
+  } as unknown as Store);
+  assert.deepEqual(await remote.describe("enveloped-page"), { meta, bodySha256: contentHash(bytes) });
+  assert.equal(reads, 3);
+  assert.equal(cancelled, true);
+});
+
+test("vault indexing propagates its deadline to every real SDK request", async t => {
+  const keys = ["WTP_VAULT_PROVIDER", "WTP_BLOBS_SITE_ID", "WTP_BLOBS_TOKEN"];
+  const previous = keys.map(key => process.env[key]);
+  Object.assign(process.env, { WTP_VAULT_PROVIDER: "netlify", WTP_BLOBS_SITE_ID: "offline-vault-fixture", WTP_BLOBS_TOKEN: "offline-fixture" });
+  t.after(() => keys.forEach((key, i) => { if (previous[i] === undefined) delete process.env[key]; else process.env[key] = previous[i]; }));
+  const requests: AbortSignal[] = [];
+  t.mock.method(globalThis, "fetch", async (url: RequestInfo | URL, options?: RequestInit) => {
+    if (new URL(String(url)).searchParams.has("prefix")) {
+      return Response.json({ blobs: Array.from({ length: 100 }, (_, i) => ({ key: `project/freshness/${i}` })), directories: [] });
+    }
+    assert.ok(options?.signal);
+    requests.push(options.signal);
+    return new Promise<Response>((_, reject) => {
+      options.signal!.addEventListener("abort", () => reject(options.signal!.reason), { once: true });
+    });
+  });
+  const deadline = new AbortController();
+  const timer = setTimeout(() => deadline.abort(new Error("fixture deadline")), 40);
+  t.after(() => clearTimeout(timer));
+  const start = performance.now();
+  await assert.rejects(indexVault("unused-local-root", READ_ONLY_VAULT_PROJECT, { signal: deadline.signal }), /fixture deadline/);
+  assert.equal(requests.length, 16, "only the first pool starts before the deadline");
+  assert.ok(requests.every(signal => signal.aborted));
+  assert.ok(performance.now() - start < 1000, "does not wait for SDK retries");
+});
+
+test("adding vaulted captures keeps the shared maps identical to a fresh scan", async () => {
+  const root = mkdtempSync(join(tmpdir(), "wtp-shared-vault-"));
+  try {
+    const store = new DurableEvidenceStore(root);
+    const capture = (sourceId: string, workItemId: string, body: string) => recordAcquisition({
+      canonicalUrl: `https://${sourceId}/page`, retrievedAt: "2026-10-02T00:00:00.000Z", httpStatus: 200,
+      contentType: "text/html", sourceId, methodRouteId: "fixture", workItemId, attemptId: `attempt-${workItemId}`,
+      permission: "ALLOWED", transport: "REACHABLE",
+    }, body).artifact;
+    const original = capture("middle.example.gov", "work-middle", "same body");
+    await putArtifact(store, READ_ONLY_VAULT_PROJECT, original, Buffer.from("same body"));
+    const shared = await indexVault(root);
+    const maps = [shared.byId, shared.byHash, shared.byWorkItem];
+    for (const [source, work, body] of [["z.example.gov", "work-last", "same body"], ["a.example.gov", "work-first", "same body"], ["other.example.gov", "work-other", "new body"]]) {
+      const artifact = capture(source, work, body);
+      const { key } = await putArtifact(store, READ_ONLY_VAULT_PROJECT, artifact, Buffer.from(body));
+      includeVaultCapture(shared, artifact, key, root);
+      const fresh = await indexVault(root);
+      assert.deepEqual(shared, fresh, "all capture owners and duplicate-id precedence match rescanning");
+    }
+    assert.deepEqual([shared.byId, shared.byHash, shared.byWorkItem], maps, "existing consumers retain the same maps");
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 test("C16: the derived wiring child's closure reaches no filesystem writer", () => {

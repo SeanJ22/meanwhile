@@ -32,10 +32,9 @@
  * state.
  */
 
-import { MODELS } from "../models.ts";
-import { cacheMeteringOf, type CostEntry } from "./cost.ts";
-import type { WorkerRole } from "./attempt.ts";
-import { cacheReadMultiplierFor, rateFor } from "./model-cost.ts";
+import { MODELS, canonicalModelId, modelTierFor } from "../models.ts";
+import { cacheMeteringOf, costPortionsByModel, type CostEntry } from "./cost.ts";
+import { CACHE_RATE_MULTIPLIERS, cacheSavingUsd } from "./model-cost.ts";
 import type { ScoutResult, ScoutStep } from "./scheduler/scout-result.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import { waitingSince, type QueueDebt } from "./scheduler/obligation.ts";
@@ -97,28 +96,12 @@ export function scoutCapacity(input: {
 
 export type ReaderImpactBand = 1 | 2 | 3;
 
-/**
- * The pilot jurisdictions, as the committed jurisdiction registries name
- * them, keyed by the pilot ZIP each serves. `PILOT_ZIPS` is
- * `lib/health/owner-corpus-compile.ts`'s list; the ids are
- * `data/jurisdictions/<state>.json` entries and the OCD divisions the meeting
- * corpus keys bodies on. A subject id or obligation id containing one of these
- * keys belongs to a pilot jurisdiction.
- */
-export const PILOT_JURISDICTION_KEYS: Readonly<Record<string, readonly string[]>> = {
-  /* Tucson, Pima County. Jurisdiction-shaped keys only: a bare place name would match a candidate's surname. */
-  "85701": ["county-of-pima", "county:pima", "county-pima", "city-of-tucson", "place:tucson", "place-tucson"],
-  "85641": ["county-of-pima", "county:pima", "county-pima", "place:vail", "place-vail", "vail-unified"],
-  "07866": ["county-of-morris", "county:morris", "county-morris", "place:rockaway", "place-rockaway"],
-  "03255": ["county-of-merrimack", "county:merrimack", "county-merrimack", "place:newbury", "place-newbury"],
-};
-
 /** Providers whose obligations are a source-universe denominator (RULING 229). */
 export const UNIVERSE_PROVIDERS: readonly string[] = ["candidate-enrichment", "local-jurisdictions", "campaign-finance"];
 
 export interface OrderingInputs {
-  /** The pilot ZIPs in force. */
-  readonly pilotZips: readonly string[];
+  /** Retired (CH-12): no place is ahead of the line because it was a pilot. Order comes from sends and place targets only. Callers may still pass it; it is ignored. */
+  readonly pilotZips?: readonly string[];
 }
 
 export interface OrderableObligation {
@@ -172,7 +155,8 @@ export interface DispatchOrdering {
   readonly scope: string;
   readonly inputs: {
     readonly readerImpactAt: "FreshnessObligation.readerImpactAt";
-    readonly pilotJurisdictions: string;
+    /** Retired (CH-12). Records written before it was removed still carry it. */
+    readonly pilotJurisdictions?: string;
     readonly universeProviders: readonly string[];
     /** A record written before 2026-09-25 carries the older rule, which ordered by next-due alone. */
     readonly tieBreak: typeof TIE_BREAK | "oldest nextDueAt first within a band";
@@ -185,23 +169,16 @@ export interface DispatchOrdering {
 export const TIE_BREAK = "longest wait first within a band: the next-due, or the end of the backoff after a failed attempt";
 
 export const ORDERING_RULE =
-  "band 1 = feeds a pilot surface (canonical FreshnessObligation.readerImpactAt set or release-pinned pilot jurisdiction); " +
+  "band 1 = a reader is waiting on it (canonical FreshnessObligation.readerImpactAt set); " +
   "band 2 = source-universe completion (RULING 229 universe providers); band 3 = long tail; within a band, the longest wait first " +
   "(a row that failed waits from the end of its backoff)";
 
 export const ORDERING_SCOPE =
   "orders every due model-class row before admission to the bounded Scout pool, so reader-impact priority decides both which rows fit the per-cycle ceiling and which one starts first. The plain-code lane has its own longest-wait-first order";
 
-function pilotKeysFor(zips: readonly string[]): string[] {
-  return [...new Set(zips.flatMap((z) => PILOT_JURISDICTION_KEYS[z] ?? []))];
-}
-
 /** Which band one obligation falls in, and why. Pure. */
-export function bandFor(row: OrderableObligation, inputs: OrderingInputs): { readonly band: ReaderImpactBand; readonly why: string } {
-  const hay = `${row.id} ${row.subjectId}`.toLowerCase();
+export function bandFor(row: OrderableObligation, _inputs: OrderingInputs): { readonly band: ReaderImpactBand; readonly why: string } {
   if (row.readerImpactAt !== null) return { band: 1, why: `readerImpactAt ${row.readerImpactAt} is set by the provider` };
-  const pilotKey = pilotKeysFor(inputs.pilotZips).find((k) => hay.includes(k));
-  if (pilotKey !== undefined) return { band: 1, why: `subject is in a pilot jurisdiction (${pilotKey})` };
   if (row.providerId !== null && UNIVERSE_PROVIDERS.includes(row.providerId)) {
     return { band: 2, why: `provider ${row.providerId} is a source-universe denominator (RULING 229)` };
   }
@@ -251,7 +228,6 @@ export function orderByReaderImpact<T extends OrderableObligation>(
       scope: ORDERING_SCOPE,
       inputs: {
         readerImpactAt: "FreshnessObligation.readerImpactAt",
-        pilotJurisdictions: `PILOT_ZIPS ${inputs.pilotZips.join(", ")} -> PILOT_JURISDICTION_KEYS (lib/control-plane/research-metrics.ts)`,
         universeProviders: UNIVERSE_PROVIDERS,
         tieBreak: TIE_BREAK,
       },
@@ -353,15 +329,40 @@ export function modelShareTrend(input: {
 /* ----------------------------------------------------------------- cache */
 
 
-/**
- * The model each role's requests run on, for the dollar effect of caching.
- * A role not named here reports its saving as UNMEASURED rather than at a
- * guessed rate.
- */
-export const ROLE_MODEL: Readonly<Partial<Record<WorkerRole, string>>> = {
-  SCOUT: MODELS.opus.model,
-  ADVERSARIAL_AUDITOR: MODELS.opus.model,
-};
+/** Historical model roles stay in the denominator when their identity is missing.
+ * Roles that also run plain code require recorded model evidence. */
+const LEGACY_MODEL_CACHE_ROLES = new Set(["SCOUT", "ADVERSARIAL_AUDITOR", "ASK"]);
+
+function recordedCacheSaving(entry: CostEntry): number | null {
+  const aggregate = cacheMeteringOf(entry.cost);
+  if (aggregate.status !== "MEASURED") return null;
+  const portions = costPortionsByModel(entry, "");
+  const split = portions[0].entry !== entry;
+  // A contradictory split cannot assign the aggregate cache reads to one model.
+  if (entry.byModel?.length && !split) return null;
+  let read = 0, write = 0, uncached = 0, saved = 0;
+  for (const [index, portion] of portions.entries()) {
+    const share = split ? entry.byModel![index] : undefined;
+    const tier = share ? share.tier : entry.tier;
+    if (typeof portion.model !== "string") return null;
+    const identity = portion.model.trim() || (tier && tier !== "none" && modelTierFor(tier) === tier ? MODELS[tier].model : "");
+    const model = canonicalModelId(identity);
+    if (!model || (tier != null && modelTierFor(model) !== tier)) return null;
+    const metering = cacheMeteringOf(portion.entry.cost);
+    if (metering.status !== "MEASURED") return null;
+    // Current shares inherit the row's batch flag. Retained explicit flags must
+    // be actual booleans and agree; conflicting metadata is not a price estimate.
+    if (share && "batch" in share && (typeof share.batch !== "boolean" || share.batch !== metering.batch)) return null;
+    const amount = cacheSavingUsd(metering.cacheReadInputTokens, model);
+    if (amount === null) return null;
+    saved += amount * (metering.batch ? CACHE_RATE_MULTIPLIERS.batch : 1);
+    read += metering.cacheReadInputTokens;
+    write += metering.cacheCreationInputTokens;
+    uncached += metering.uncachedInputTokens;
+  }
+  return read === aggregate.cacheReadInputTokens && write === aggregate.cacheCreationInputTokens &&
+    uncached === aggregate.uncachedInputTokens ? saved : null;
+}
 
 export interface CacheHitRate {
   readonly role: string;
@@ -391,7 +392,8 @@ export interface CacheHitRate {
   readonly uncachedPerAttempt?: { readonly mean: number; readonly max: number } | null;
   /** Requests served through the Batches API, over requests, on measured rows. Null when nothing was measured. */
   readonly batchShare?: number | null;
-  /** read tokens × (base input price − cache read price) at the role's model rate. Null when the role has no stated model. */
+  /** Saved cache-read cost at each recorded model's rate and batch discount.
+   * Null when any included row's usage or model portions are unknown. */
   readonly savedUsd?: number | null;
   /** Measured rows whose cache write was priced from the aggregate at the requested TTL because the response carried no split. */
   readonly aggregatePricedRows?: number;
@@ -422,20 +424,23 @@ export function cacheHitRateByRole(input: {
   interface Acc {
     read: number; write: number; uncached: number; attempts: number; measured: number; predating: number; unreported: number;
     uncachedPerRow: number[]; batched: number; requests: number; aggregatePriced: number;
-    turns: number | null; misses: number | null; stationary: number | null;
+    turns: number | null; misses: number | null; stationary: number | null; saved: number | null;
   }
   const byRole = new Map<string, Acc>();
-  const fresh = (): Acc => ({ read: 0, write: 0, uncached: 0, attempts: 0, measured: 0, predating: 0, unreported: 0, uncachedPerRow: [], batched: 0, requests: 0, aggregatePriced: 0, turns: null, misses: null, stationary: null });
+  const fresh = (): Acc => ({ read: 0, write: 0, uncached: 0, attempts: 0, measured: 0, predating: 0, unreported: 0, uncachedPerRow: [], batched: 0, requests: 0, aggregatePriced: 0, turns: null, misses: null, stationary: null, saved: 0 });
   const inWindow = new Set<string>();
   for (const c of input.costs) {
     const at = Date.parse(c.recordedAt);
     if (at < since || at > until) continue;
     if (c.routeId === SCOUT_PREWARM_ROUTE_ID) continue;
-    /* Only the roles that invoke a model have a cache to measure; a deterministic lane's row is not a missing measurement. */
-    if (c.role !== "ASK" && ROLE_MODEL[c.role] === undefined) continue;
+    /* A deterministic parser/engineer is not missing model usage. Recorded
+     * identities include actual model rows without assigning a model by role. */
+    if (!LEGACY_MODEL_CACHE_ROLES.has(c.role) && !c.model && (!c.tier || c.tier === "none") && !c.byModel?.length) continue;
     const acc = byRole.get(c.role) ?? fresh();
     acc.attempts += 1;
     inWindow.add(c.attemptId);
+    const saving = recordedCacheSaving(c);
+    acc.saved = acc.saved === null || saving === null ? null : acc.saved + saving;
     const m = cacheMeteringOf(c.cost);
     if (m.status === "PREDATES_FIELDS") acc.predating += 1;
     else if (m.status === "UNREPORTED") acc.unreported += 1;
@@ -470,7 +475,6 @@ export function cacheHitRateByRole(input: {
   }
   return [...byRole.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([role, a]) => {
     const total = a.read + a.write + a.uncached;
-    const rate = ROLE_MODEL[role as WorkerRole] === undefined ? null : rateFor(ROLE_MODEL[role as WorkerRole]!);
     const mean = a.uncachedPerRow.length === 0 ? null : a.uncachedPerRow.reduce((n, v) => n + v, 0) / a.uncachedPerRow.length;
     return {
       role,
@@ -487,7 +491,7 @@ export function cacheHitRateByRole(input: {
       unreportedRows: a.unreported,
       uncachedPerAttempt: mean === null ? null : { mean, max: Math.max(...a.uncachedPerRow) },
       batchShare: a.requests === 0 ? null : a.batched / a.requests,
-      savedUsd: rate === null ? null : (a.read / 1_000_000) * rate.inputUsdPerMillion * (1 - cacheReadMultiplierFor(rate.model)),
+      savedUsd: a.measured === 0 ? null : a.saved,
       aggregatePricedRows: a.aggregatePriced,
       denominator:
         `cacheRead over cacheRead + cacheWrite + uncachedInput across ${a.measured} measured ${role} ledger row(s) of ${a.attempts} in the window` +

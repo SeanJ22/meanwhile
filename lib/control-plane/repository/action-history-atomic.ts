@@ -13,6 +13,30 @@ import { canonicalJson } from "./types.ts";
 import { boundedQuery, type ControlPlaneRequestBounds } from "./request-bounds.ts";
 import type { Sql } from "./pg-store.ts";
 
+export interface ActionHistoryReadQuery { readonly scope: string; readonly beforePosition?: number | null; readonly limit: number; }
+export interface ActionHistoryReadRow { readonly position: number; readonly receipt: ActionReceipt; }
+export const ACTION_HISTORY_PAGE_SQL = `
+SELECT p.source_position AS position, a.record
+FROM cp_admin_action_history_projection p
+JOIN cp_log_admin_receipts a ON a.log_key = p.gateway_log_key AND a.record_id = p.gateway_receipt_id
+WHERE ($1 = 'us'
+  OR COALESCE(NULLIF(a.record->>'requestedSubject', ''), a.record->>'subject') = $1
+  OR a.record->>'subject' = $1
+  OR EXISTS (SELECT 1 FROM cp_admin_action_history_scope_ref s
+    WHERE s.gateway_receipt_id = p.gateway_receipt_id AND s.scope_key = $1))
+  AND ($2::bigint IS NULL OR p.source_position < $2::bigint)
+ORDER BY p.source_position DESC
+LIMIT $3`;
+
+export async function readActionHistoryPage(sql: Sql, query: ActionHistoryReadQuery, bounds?: ControlPlaneRequestBounds): Promise<readonly ActionHistoryReadRow[]> {
+  if (!query.scope || query.scope.length > 256 || !Number.isSafeInteger(query.limit) || query.limit < 1 || query.limit > 51 ||
+    query.beforePosition != null && (!Number.isSafeInteger(query.beforePosition) || query.beforePosition < 0)) throw new Error("INVALID_HISTORY_QUERY");
+  const result = await boundedQuery(sql, { operation: "cp_admin_action_history.page", callClass: "PAGE" },
+    ACTION_HISTORY_PAGE_SQL, [query.scope, query.beforePosition ?? null, query.limit], bounds ? { bounds } : {});
+  return rows(result).map(row => ({ position: integer(row.position),
+    receipt: (typeof row.record === "string" ? JSON.parse(row.record) : row.record) as ActionReceipt }));
+}
+
 /** One SQL statement; the CTE dependency chain is receipt -> projection -> scope. */
 export const ATOMIC_ACTION_HISTORY_INSERT_SQL = `
 WITH allocated AS (

@@ -126,16 +126,35 @@ async function run(h: Harness, artifact: Artifact, role: FleetRole, options: {
 test("actual isolated Parser → Validator → Auditor dispatch persists the existing durable execution contract", async () => {
   const h = await harness();
   const artifact = await h.hold(CAPTURE);
-  const parser = await run(h, artifact, "PARSER");
+  let wholeResultReads = 0;
+  const scopedResultReads: string[] = [];
+  const currentAttemptReads: string[] = [];
+  const observedRepos: ControlPlaneRepositories = { ...h.repos,
+    workerResults: { ...h.repos.workerResults,
+      readAll: async () => { wholeResultReads++; return h.repos.workerResults.readAll(); },
+      read: async id => { scopedResultReads.push(id); return h.repos.workerResults.read(id); },
+    },
+    attempts: { ...h.repos.attempts,
+      mustRead: async id => { currentAttemptReads.push(id); return h.repos.attempts.mustRead(id); },
+    },
+  };
+  const observedRuntime = { ...h.runtime, repos: observedRepos };
+  const parser = await run(h, artifact, "PARSER", { runtime: observedRuntime });
   assert.equal(parser.result.verdict, "EXTRACTED");
   assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state, "AWAITING_VALIDATION");
-  const validator = await run(h, artifact, "VALIDATOR", { producerResultId: parser.id });
+  const parserAttemptReadsBeforeValidation = currentAttemptReads.filter(id => id === parser.attemptId).length;
+  const validator = await run(h, artifact, "VALIDATOR", { producerResultId: parser.id, runtime: observedRuntime });
   assert.equal(validator.result.verdict, "PASS");
   assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state, "AWAITING_AUDIT");
-  const auditor = await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id, validatorResultId: validator.id });
+  const validatorAttemptReadsBeforeAudit = currentAttemptReads.filter(id => id === validator.attemptId).length;
+  const auditor = await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id, validatorResultId: validator.id, runtime: observedRuntime });
   assert.equal(auditor.result.verdict, "SURVIVED", JSON.stringify(auditor.result));
   assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state, "OPEN");
   assert.equal(new Set([parser.worker.instance, validator.worker.instance, auditor.worker.instance]).size, 3);
+  assert.deepEqual(scopedResultReads, [h.item.id, h.item.id], "Validator and Auditor each read their own result log once; Parser reads no producer history.");
+  assert.equal(wholeResultReads, 0, "Present exact references need no whole-history result read.");
+  assert.equal(currentAttemptReads.filter(id => id === parser.attemptId).length - parserAttemptReadsBeforeValidation, 2, "Both roles validate the producer against its current persisted Attempt.");
+  assert.equal(currentAttemptReads.filter(id => id === validator.attemptId).length - validatorAttemptReadsBeforeAudit, 1, "The Auditor still reads the Validator's current Attempt.");
   for (const record of [parser, validator, auditor]) {
     const attempt = (await h.repos.attempts.mustRead(record.attemptId)).value;
     const task = (await h.repos.routeTasks.mustRead(record.routeTaskId)).value;
@@ -174,7 +193,8 @@ test("actual isolated Parser → Validator → Auditor dispatch persists the exi
   await assert.rejects(dispatchWorkerTask(h.runtime, completed.value), /WORKER_TASK_NOT_DISPATCHABLE/);
   assert.deepEqual(await h.repos.attempts.list(), attemptsBefore, "Direct redispatch must not mint another Attempt or invalidate replayable completion.");
   assert.deepEqual(await h.repos.routeTasks.mustRead(completed.id), completed);
-  await reconcileWorkerCompletions(h.repos);
+  await reconcileWorkerCompletions(observedRepos);
+  assert.equal(wholeResultReads, 1, "Recovery independently scans all committed history; the execution batch never replaces it.");
   assert.equal((await h.repos.workerResults.readAll()).length, 3);
 
   const at = h.now();
@@ -280,7 +300,47 @@ test("stale producer contract and prior Validator Attempt cannot certify a diffe
   const changed = await dispatchWorkerTask(h.runtime, changedContract);
   assert.equal(changed.outcome, "FAILED");
   assert.match(changed.detail, /WORKER_EXACT_CANDIDATE_BINDING_REFUSED/);
-  for (const failed of [stale, changed]) {
+  const foreignItem = createWorkItem({ project: PROJECT, subject: CONTRACT.subjectId,
+    obligation: "A distinct obligation cannot supply this work item's producer result", why: "Retain exact work ownership.",
+    contract: { requiresValidation: true, requiresAudit: true }, now: h.now() });
+  await registerWorkItem(h.repos, foreignItem, h.now());
+  const foreignParserTask = await enqueueWorkerTask(h.repos, { workItemId: foreignItem.id, artifactId: artifact.id,
+    role: "PARSER", contract: CONTRACT, now: h.now() });
+  const foreignParserDispatch = await dispatchWorkerTask(h.runtime, foreignParserTask);
+  assert.equal(foreignParserDispatch.outcome, "WORKED", foreignParserDispatch.detail);
+  const foreignParser = (await h.repos.workerResults.read(foreignItem.id))[0]!;
+  let fallbackReads = 0;
+  let batchReads = 0;
+  const observedRuntime = { ...h.runtime, repos: { ...h.repos, workerResults: { ...h.repos.workerResults,
+    read: async (id: string) => { batchReads++; return h.repos.workerResults.read(id); },
+    readAll: async () => { fallbackReads++; return h.repos.workerResults.readAll(); },
+  } } };
+  const foreignTask = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: artifact.id,
+    role: "VALIDATOR", contract: CONTRACT, producerResultId: foreignParser.id, now: h.now() });
+  const foreign = await dispatchWorkerTask(observedRuntime, foreignTask);
+  assert.equal(foreign.outcome, "FAILED");
+  assert.match(foreign.detail, /WORKER_EXACT_CANDIDATE_BINDING_REFUSED/);
+  assert.equal(fallbackReads, 1, "A foreign reference retains the exact cross-work refusal through the original point helper.");
+  const missingTask = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: artifact.id,
+    role: "VALIDATOR", contract: CONTRACT, producerResultId: "wr-absent-producer", now: h.now() });
+  const missing = await dispatchWorkerTask(observedRuntime, missingTask);
+  assert.equal(missing.outcome, "FAILED");
+  assert.match(missing.detail, /WORKER_RESULT_MISSING/);
+  assert.equal(fallbackReads, 2, "An absent reference keeps its original failure classification.");
+  assert.equal(batchReads, 2);
+  const unreadableTask = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: artifact.id,
+    role: "VALIDATOR", contract: CONTRACT, producerResultId: first.id, replayLabel: "unreadable-batch", now: h.now() });
+  let failedBatchReads = 0;
+  const unreadable = await dispatchWorkerTask({ ...observedRuntime, repos: { ...observedRuntime.repos,
+    workerResults: { ...observedRuntime.repos.workerResults,
+      read: async () => { failedBatchReads++; throw new Error("RESULT_BATCH_UNREADABLE"); },
+    },
+  } }, unreadableTask);
+  assert.equal(unreadable.outcome, "FAILED");
+  assert.match(unreadable.detail, /RESULT_BATCH_UNREADABLE/);
+  assert.equal(failedBatchReads, 1, "A failed read is neither retried nor treated as an absent result.");
+  assert.equal(fallbackReads, 2, "An unreadable batch never falls back to a whole-history read.");
+  for (const failed of [stale, changed, foreign, missing, unreadable]) {
     assert.equal(failed.dispositionCommitted, false);
     assert.equal((await h.repos.attempts.mustRead(failed.attemptId!)).value.outcome, "ABORTED");
     assert.ok(!(await h.repos.workerResults.readAll()).some((record) => record.attemptId === failed.attemptId));

@@ -10,7 +10,7 @@ import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
 import { readCompletedWorkerResult, reconcileWorkerCompletions, type UncommittedWorkerResult } from "../repository/worker-completion.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
-import { dispatchOne, proofChargeOf, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
+import { dispatchOne, hunterWallLimitMs, proofChargeOf, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import type { ScheduledObligation } from "../scheduler/obligation.ts";
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
@@ -85,7 +85,7 @@ export async function enqueueWorkerTask(repos: ControlPlaneRepositories, input: 
   workItemId: string; role: FleetRole; artifactId: string; contract: CivicExtractionContract; now: string;
   producerResultId?: string; validatorResultId?: string; auditScope?: WorkerTaskSpec["auditScope"]; replayLabel?: string;
   purpose?: WorkerTaskSpec["purpose"];
-  acquisition?: WorkerTaskSpec["acquisition"]; detective?: WorkerTaskSpec["detective"]; engineering?: WorkerTaskSpec["engineering"];
+  acquisition?: WorkerTaskSpec["acquisition"]; engineering?: WorkerTaskSpec["engineering"];
   auditEscalation?: WorkerTaskSpec["auditEscalation"];
 }): Promise<RouteTask> {
   const spec: WorkerTaskSpec = { schemaVersion: 1, role: input.role, artifactId: input.artifactId, contract: input.contract,
@@ -93,7 +93,7 @@ export async function enqueueWorkerTask(repos: ControlPlaneRepositories, input: 
     auditScope: input.auditScope ?? "CAPTURED_ARTIFACT", implementationVersion: FLEET_IMPLEMENTATION_VERSION,
     ...(input.auditEscalation ? { auditEscalation: input.auditEscalation } : {}),
     ...(input.purpose ? { purpose: input.purpose } : {}),
-    ...(input.acquisition ? { acquisition: input.acquisition } : {}), ...(input.detective ? { detective: input.detective } : {}),
+    ...(input.acquisition ? { acquisition: input.acquisition } : {}),
     ...(input.engineering ? { engineering: input.engineering } : {}) };
   const signature = fingerprint([canonicalJson(spec), input.replayLabel ?? "canonical"]);
   const task: RouteTask = { ...createRouteTask({ workItemId: input.workItemId, routeId: `worker:${input.role}:${signature}`,
@@ -156,7 +156,13 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
     let input: FleetInput = { attemptId, worker, evidence, contract: spec.contract };
     if (role !== "PARSER") {
       if (!spec.producerResultId) throw new Error("WORKER_PRODUCER_REFERENCE_MISSING");
-      const producer = await readCompletedWorkerResult(runtime.repos, spec.producerResultId);
+      const heldResults = await runtime.repos.workerResults.read(workItemId);
+      const heldRepos = { ...runtime.repos, workerResults: { ...runtime.repos.workerResults, readAll: async () => heldResults } };
+      // Keep the exact producer validation and its current Attempt read. Only a
+      // successfully read batch can fall back to classify an absent/foreign id.
+      const readResult = (id: string) => readCompletedWorkerResult(
+        heldResults.some(record => record.id === id) ? heldRepos : runtime.repos, id);
+      const producer = await readResult(spec.producerResultId);
       if (producer.record.result.role !== "PARSER" || producer.record.result.verdict !== "EXTRACTED" ||
           producer.record.workItemId !== workItemId || producer.record.result.artifactId !== spec.artifactId ||
           canonicalJson(producer.record.completion.completedTask.workerTask!.contract) !== canonicalJson(spec.contract)) throw new Error("WORKER_EXACT_CANDIDATE_BINDING_REFUSED");
@@ -166,7 +172,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
         verifiedAt: now(), authorityEvidence: spec.contract.schemaVersion === 2 ? await Promise.all([...new Set(spec.contract.verification.authorities.flatMap(a => [...a.artifactIds, ...a.authorityEvidenceArtifactIds]))].map(async id => evidenceProjection(await runtime.readEvidence(id)))) : [] };
       else {
         if (!spec.validatorResultId || !independent) throw new Error("AUDIT_VALIDATOR_REFERENCE_MISSING");
-        const validator = await readCompletedWorkerResult(runtime.repos, spec.validatorResultId);
+        const validator = await readResult(spec.validatorResultId);
         if (validator.record.result.role !== "VALIDATOR" ||
             (validator.record.result.verdict !== "PASS" && !(spec.contract.schemaVersion === 2 && validator.record.result.verdict === "INCONCLUSIVE" && validator.record.result.extractionVerdict === "PASS")) ||
             validator.record.result.producerAttemptId !== producer.attempt.id || validator.record.workItemId !== workItemId ||
@@ -267,7 +273,7 @@ async function dispatchAdmittedWorkerTask(runtime: FleetRuntime, task: RouteTask
   const proof = proofChargeOf((await runtime.repos.workItems.read(task.workItemId).catch(() => null))?.value.project);
   return dispatchOne(runtime.repos, { obligation, routeTaskId: task.id, holder, now, leaseTtlMs: 300_000,
     clock: runtime.now ?? (()=>new Date().toISOString()),
-    bound: { maxAttempts: 3, maxWallMs: 0, maxCostUnits: 20_000 }, maturity: () => executor.lane === "DETERMINISTIC" ? "GRADUATED" : "UNGRADUATED",
+    bound: { maxAttempts: 3, maxWallMs: hunterWallLimitMs(), maxCostUnits: 20_000 }, maturity: () => executor.lane === "DETERMINISTIC" ? "GRADUATED" : "UNGRADUATED",
     executor, methodVersion: runtime.methodVersion, policyVersion: FLEET_POLICY_VERSION, ...proof });
 }
 

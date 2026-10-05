@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "about": "Plain-word tasks a resident does on the live site. Each has a start surface, a success condition in reader terms and a tap budget (most taps allowed from the start). FE-18 runs them. No task names a particular place: the runner supplies a ZIP code for the place being checked.",
+  "surfaces": ["home", "ask", "map", "meetings", "ballot", "officials"],
+  "tasks": [
+    {
+      "id": "council-meeting-and-comment",
+      "title": "Find when my council meets and how to comment",
+      "source": "design 6.11",
+      "start": "home",
+      "success": "The page shows the date and time of the next council meeting, where it is held, and how to attend or comment, each with its source.",
+      "tapBudget": 3
+    },
+    {
+      "id": "mayor-vote",
+      "title": "See how my mayor voted",
+      "source": "design 6.11",
+      "start": "home",
+      "success": "The page shows the mayor's name and at least one recent vote with the outcome of the vote, each with its source.",
+      "tapBudget": 4
+    },
+    {
+      "id": "school-district-office-directions",
+      "title": "Find the school district office and get directions",
+      "source": "design 6.11",
+      "start": "map",
+      "success": "The page shows the school district office address, a map pin for it and a way to get directions.",
+      "tapBudget": 3
+    },
+    {
+      "id": "ask-school-district-office",
+      "title": "Ask where the school district office is",
+      "source": "design 11",
+      "start": "ask",
+      "success": "The answer gives an address, a map pin, directions and hours, with the source for each.",
+      "tapBudget": 2,
+      "question": "Where is my school district office?"
+    },
+    {
+      "id": "ask-next-council-meeting",
+      "title": "Ask when my city council meets next and what is on the agenda",
+      "source": "design 11",
+      "start": "ask",
+      "success": "The answer gives the next meeting date and its agenda items, with the source.",
+      "tapBudget": 2,
+      "question": "When does my city council meet next, and what's on the agenda?"
+    },
+    {
+      "id": "ask-mayor-votes",
+      "title": "Ask what my mayor voted on at the last council meeting",
+      "source": "design 11",
+      "start": "ask",
+      "success": "The answer lists the votes the mayor cast at the last meeting and how each turned out, with the source.",
+      "tapBudget": 2,
+      "question": "What did my mayor vote on at the last council meeting, and how did it turn out?"
+    },
+    {
+      "id": "ask-state-house-candidates",
+      "title": "Ask who is running for my state house seat and where they stand on housing",
+      "source": "design 11",
+      "start": "ask",
+      "success": "The answer lists the candidates for the seat, matching the ballot page, and says what each says about housing or says plainly that it is still being gathered.",
+      "tapBudget": 2,
+      "question": "Who is running for my state house seat, and what do they say about housing?"
+    },
+    {
+      "id": "ask-congress-funders",
+      "title": "Ask who gives money to my member of Congress",
+      "source": "design 11",
+      "start": "ask",
+      "success": "The answer names the biggest funders with amounts, or says plainly that the figures are still being gathered, with the source.",
+      "tapBudget": 2,
+      "question": "Who gives money to my member of Congress?"
+    },
+    {
+      "id": "ask-ballot-measure",
+      "title": "Ask what a ballot measure does and what a no vote means",
+      "source": "design 11",
+      "start": "ask",
+      "success": "The answer says in plain English what the measure does and what a yes vote and a no vote each mean, with the source.",
+      "tapBudget": 2,
+      "question": "What does the measure on my ballot actually do, and what does a NO vote mean?"
+    },
+    {
+      "id": "official-portrait-and-contacts",
+      "title": "See an official's portrait and how to contact them",
+      "source": "design 6.7",
+      "start": "officials",
+      "success": "An official's page shows their portrait and at least one way to reach them (phone, email, form or page), each with its source.",
+      "tapBudget": 3
+    },
+    {
+      "id": "official-votes-and-money",
+      "title": "See how an official voted and who funds them",
+      "source": "design 6.7",
+      "start": "officials",
+      "success": "An official's page shows recent votes with outcomes and their funding, or says plainly that a part is still being gathered.",
+      "tapBudget": 4
+    },
+    {
+      "id": "office-pin-with-directions",
+      "title": "Find a government office on the map and get directions",
+      "source": "design 6.7",
+      "start": "map",
+      "success": "Tapping an office pin shows its address and a directions link.",
+      "tapBudget": 3
+    },
+    {
+      "id": "meeting-attend-or-comment",
+      "title": "See an upcoming meeting's agenda and how to attend or comment",
+      "source": "design 6.7",
+      "start": "meetings",
+      "success": "An upcoming meeting shows its agenda and how to attend or comment.",
+      "tapBudget": 3
+    },
+    {
+      "id": "past-meeting-results",
+      "title": "See what a past meeting decided",
+      "source": "design 6.7",
+      "start": "meetings",
+      "success": "A concluded meeting shows its results.",
+      "tapBudget": 3
+    },
+    {
+      "id": "ballot-in-plain-english",
+      "title": "See my ballot in plain English with deadlines and polling place",
+      "source": "design 6.7",
+      "start": "ballot",
+      "success": "The ballot lists the contests in plain English, with the registration and voting deadlines and the polling place.",
+      "tapBudget": 3
+    }
+  ]
+}

@@ -226,6 +226,7 @@ export const CARRIED_ROW_CLAUSE: Readonly<Record<CarriedReason, string>> = {
   SOURCE_UNAVAILABLE: "our latest check couldn't reach this calendar",
   PARTIAL_SCOPE_UNAVAILABLE: "our latest check couldn't read all of this calendar",
   UNEXPLAINED_DISAPPEARANCE: "our latest check of this calendar didn't find this listing",
+  OUTSIDE_FETCH_WINDOW: "our latest check covered nearer dates than this one",
 };
 
 /**

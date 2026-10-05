@@ -243,7 +243,7 @@ test("the admitted worker rereads the saved Send and publishes once through its 
       const sources = { officials: [], gaps: [], electionFields: [], electionDocuments: [], documents: [saved] };
       const publication = await value.publish({ store: value.store, now, divisions: [], geographyCaptures: [], sources });
       return { zip: value.zip, divisions: [], sources, publication, publications: [publication], electionPublications: [],
-        items: [], work: [], open: [], closed: [], knowledge: value.knowledge!,
+        items: [], work: [], open: [], blanks: [], families: { officials: true, elections: true }, knowledge: value.knowledge!,
         inherited: { subjects: 0, fields: 0, publishedFields: 0, knowledgeEntries: 0 }, conditions: [] };
     } };
   assert.equal((await runNationalPlaceTask(input)).length, 1, "the actual worker's second cadence check preserves the wake");

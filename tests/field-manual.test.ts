@@ -159,3 +159,37 @@ test("newFieldManualEntry derives its id from (source, key) so a rewrite refresh
   assert.equal(a.id, b.id);
   assert.equal(a.id, fieldManualEntryId("s", "k"));
 });
+
+test("place scopes rank county doors first and exclude sibling divisions without prefix collisions", () => {
+  const county = "ocd-division/country:us/state:ca/county:example";
+  const store = upsertEntries(emptyFieldManual(), [
+    entry({ id: "portable", states: [], observedAt: "2026-10-04" }),
+    entry({ id: "state", states: ["ca"] }),
+    entry({ id: "county", states: ["ca"], ocdIds: [county] }),
+    entry({ id: "other", states: ["ca"], ocdIds: [county + "ton"] }),
+    entry({ id: "body", states: ["ca"], bodyIds: ["board-1"] }),
+  ], "now");
+  const projected = projectFieldManual(store, { state: "ca", ocdIds: [county + "/place:town"], bodyIds: ["board-1"] });
+  assert.deepEqual(projected.entryIds.slice(0, 2), ["body", "county"]);
+  assert.ok(!projected.entryIds.includes("other"));
+  assert.ok(!projectFieldManual(store, { state: "ca", bodyIds: ["board-2"] }).entryIds.includes("body"));
+});
+
+test("legacy investigation and admitted route payloads retain their place without leaking as portable", () => {
+  const subjectId = "ocd-division/country:us/state:ca/county:example#governing";
+  const investigation = entry({ id: "investigation", kind: "INVESTIGATION_RESULT", states: [], payload: { subjectId } });
+  const route = entry({ id: "route", kind: "ROUTE", states: [], payload: { outcomes: [{ jurisdiction: subjectId }] } });
+  const store = { ...emptyFieldManual(), entries: [investigation, route] };
+  assert.equal(projectFieldManual(store, { state: "nv" }).matched, 0);
+  assert.equal(projectFieldManual(store, { state: "ca", ocdIds: ["ocd-division/country:us/state:ca/county:other"] }).matched, 0);
+  const written = upsertEntries(store, [route], "now");
+  assert.deepEqual(written.entries.find(e => e.id === "route")!.ocdIds, [subjectId.split("#")[0]]);
+});
+
+test("reobserving an entry unions place and body scope without dropping earlier reach", () => {
+  const first = entry({ id: "scoped", ocdIds: ["ocd-division/country:us/state:ca/county:a"], bodyIds: ["board-a"] });
+  const next = { ...first, ocdIds: ["ocd-division/country:us/state:ca/county:b"], bodyIds: ["board-b"] };
+  const store = upsertEntries(upsertEntries(emptyFieldManual(), [first], "one"), [next], "two");
+  assert.deepEqual(store.entries[0]!.bodyIds, ["board-a", "board-b"]);
+  assert.equal(store.entries[0]!.ocdIds!.length, 2);
+});

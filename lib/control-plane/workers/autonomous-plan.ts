@@ -1,5 +1,5 @@
 import type { CivicExtractionContract } from "./types.ts";
-import type { AcquirerTaskSpec, DetectiveTaskSpec, ObservedResearchRoute } from "./research-types.ts";
+import type { AcquirerTaskSpec, ObservedResearchRoute } from "./research-types.ts";
 import type { EngineeringTaskSpec } from "./engineering-types.ts";
 import { scheduleObligation, type FreshnessObligation } from "../scheduler/obligation.ts";
 import type { AcquirerResult } from "./research-types.ts";
@@ -20,7 +20,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     : source.recordClass === "VOTER_ACCESS"
       ? { recordClass: "VOTER_ACCESS_ROUTE", fields: ["bodyName", "state", "kind", "url", "coverage", "coverageEvidence"] }
     : source.recordClass === "BALLOT_AND_CANDIDATES"
-      ? { recordClass: "CANDIDATE_FILING_DOCUMENT", fields: ["bodyName", "jurisdictionName", "candidateName", "office", "documentUrl"] }
+      ? { recordClass: "BALLOT_CONTEST", fields: ["election", "office", "candidateName", "jurisdictionName"] }
       : { recordClass: "CAMPAIGN_FINANCE_FILING", fields: ["bodyName", "jurisdictionName", "committeeName", "filingPeriod", "documentUrl"] };
   const seedUrls = [...new Set([source.url, jurisdiction.ownWebAddress].filter((url): url is string => {
     if (!url) return false;
@@ -28,10 +28,11 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
   }))];
   return {
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
-    sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], detective: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
+    sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
     ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
     ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
     ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
+    ...(spec.recordClass === "BALLOT_CONTEST" && bodyId ? { publication: { contractId: "ballot-contests" as const, bodyId } } : {}),
     ...(["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "official-filings" as const, bodyId } } : {}),
     contract: {
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
@@ -121,7 +122,6 @@ export interface AutonomousWorkPlan {
   readonly seedUrls: readonly string[];
   readonly sources: readonly ObservedResearchRoute[];
   readonly acquisition: readonly AcquirerTaskSpec[];
-  readonly detective: readonly DetectiveTaskSpec[];
   readonly engineering: readonly EngineeringTaskSpec[];
   readonly auditScope: "CAPTURED_ARTIFACT" | "SOURCE_UNIVERSE";
 }

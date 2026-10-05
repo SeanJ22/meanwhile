@@ -127,7 +127,7 @@ export interface StateRow {
   readonly parentKey?: string;
   readonly zipsWorked?: number | null;
   readonly zipsTotal?: number | null;
-  /** The place score as a percentage, floored to one decimal. */
+  /** The place's completeness as a percentage, floored to one decimal. */
   readonly score?: number | null;
 }
 
@@ -186,6 +186,8 @@ export interface StuckItem {
   readonly applies: readonly string[];
   readonly lane: Lane;
   readonly cause: string;
+  /** Why it needs Sean (BR-09): set on every decision-lane item. */
+  readonly needs?: "money" | "platform" | "credentials" | "contract" | "broken";
   readonly age: string;
   readonly ageRank: number;
   readonly tried: string;
@@ -396,6 +398,8 @@ export interface ChecklistItem {
   readonly resultId?: string;
   /** The saved official page this fact came from, when we hold one. */
   readonly sourceUrl?: string | null;
+  /** When the next check is due, for an item awaiting publication or due for a refresh. */
+  readonly nextCheckAt?: string | null;
   readonly actions: readonly ActionRef[];
 }
 
@@ -413,6 +417,20 @@ export interface ScoreGroup {
   readonly percent: number | null;
 }
 
+/** One of the three measures: what is counted, what it is counted against, and the counts beside it. A count we do not have is null. */
+export interface MeasureView {
+  readonly n: number;
+  readonly of: number;
+  readonly percent: number | null;
+  readonly beside: Readonly<Record<string, number | null>>;
+}
+/** Completeness, freshness and delivery, each with its counts and never blended into one number. */
+export interface PlaceMeasuresView {
+  readonly completeness: MeasureView;
+  readonly freshness: MeasureView;
+  readonly delivery: MeasureView;
+}
+
 /** Sean’s checklist score for one place, overall and by group. It measures capture and never gates publishing. */
 export interface PlaceScoreView {
   readonly placeKey: string;
@@ -424,8 +442,24 @@ export interface PlaceScoreView {
   readonly sendWords: string | null;
   /** The target Sean set for this place, or null. Nothing here gates publishing. */
   readonly target: { readonly goalPercent: number; readonly setAt: string } | null;
+  /** Core items only. The family rows below add up to it. */
   readonly overall: ScoreGroup;
   readonly groups: readonly ScoreGroup[];
+  /** Extension items, counted apart from the headline. Null when the place owes none. */
+  readonly extension?: ScoreGroup | null;
+  /** Summary items whose detail items carry the count: listed, out of the denominator. Null when none. */
+  readonly summary?: ScoreGroup | null;
+  /** Governments, bodies, seats and people accounted for against what is expected. */
+  readonly coverage?: { readonly words: readonly string[] };
+  /** Completeness, freshness and delivery, each with its counts. */
+  readonly measures?: PlaceMeasuresView;
+  /** Up, down or same against the last earlier day's completeness. Null with no earlier point. */
+  readonly trend?: { readonly direction: "up" | "down" | "same"; readonly previousPercent: number | null; readonly previousDay: string } | null;
+  /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
+  readonly notCaptured?: { readonly huntedNotFound: number; readonly nothingHunts: number };
+  readonly familyNotCaptured?: readonly { readonly group: string; readonly huntedNotFound: number; readonly nothingHunts: number }[];
+  /** Officials and candidates with a full profile, with the count behind each field. */
+  readonly profiles?: { readonly words: string; readonly figures: { readonly fields: readonly { readonly key: string; readonly label: string; readonly applies: number; readonly held: number | null }[]; readonly notMeasured: readonly string[] } };
 }
 
 export interface SystemGroup {
@@ -600,6 +634,10 @@ export interface SpendView {
   readonly setAsideUsd?: number | null;
   /** The daily spending limit in force; null when not read. */
   readonly dailyLimitUsd?: number | null;
+  /** How many paid hunters the daily limit buys at once right now; null when unread. */
+  readonly huntersNow?: number | null;
+  /** Charges in the last 24 hours counted at their worst case; null when unread. */
+  readonly worstCaseCharges?: number | null;
 }
 
 /* -------------------------------------------------------------- learning */
@@ -707,7 +745,7 @@ export type ActionKind =
   | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
   | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send" | "target-set" | "target-clear"
-  | "data-switch-on" | "data-switch-off";
+  | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];
@@ -762,6 +800,13 @@ export interface UiReceipt {
   readonly gatewayType: string | null;
   readonly gatewayReceiptId: string | null;
   readonly readBackAt: string | null;
+  /** BR-12: the plan the order was accepted with, and its one progress bar. */
+  /** BR-02: saved, overdue and not taken by the runner. Shown red with the reason and three options. */
+  readonly notPickedUp?: boolean;
+  /** BR-13: before and after, shown beside Done. */
+  readonly change?: { readonly before: string; readonly after: string };
+  readonly plan?: import("@/lib/control-plane/gateway/confirmation.ts").OrderPlan;
+  readonly progress?: import("@/lib/control-plane/gateway/confirmation.ts").OrderProgress;
   readonly replayed: boolean;
   readonly sentAt: string;
   readonly words?: string;

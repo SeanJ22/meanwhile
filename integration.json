@@ -930,5 +930,132 @@
     "tested_sha": "85a0ad660c36f753a890e48a0990332ef53850fc",
     "gates": "pass",
     "at": "2026-10-05T17:26:09Z"
+  },
+  {
+    "lane": "measures",
+    "steps": [
+      "BR-23",
+      "BR-14",
+      "BR-25"
+    ],
+    "ready_sha": "e47bf4a5f4f22ec7d7b69a2a5b7d17a3e385fed6",
+    "merge_sha": "0ae7ccbdb6fad9b24fa242b6479fed63fa7973b5",
+    "river_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "tested_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "gates": "pass",
+    "at": "2026-10-05T21:41:06Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-34",
+      "DB-35",
+      "DB-36",
+      "DP-12"
+    ],
+    "ready_sha": "06fed3b4384dab07b72e8904117eacebab4b97d8",
+    "merge_sha": "a08e8f5c520181b44b340c406b778c41d8e608ca",
+    "river_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "tested_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "gates": "pass",
+    "at": "2026-10-05T21:41:06Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CH-11",
+      "BR-05",
+      "BR-16",
+      "BR-37",
+      "CH-24",
+      "CH-26",
+      "DB-53"
+    ],
+    "ready_sha": "d7e93a3359c06792c60c874f92b63bb86211cae3",
+    "merge_sha": "eff4413260212e5c4b08b6427540a9f5944fe7a7",
+    "river_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "tested_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "gates": "pass",
+    "at": "2026-10-05T21:41:06Z"
+  },
+  {
+    "lane": "meetings",
+    "steps": [
+      "DB-28",
+      "DB-58"
+    ],
+    "ready_sha": "9750e9f7cd422849dfd54fe9214a131fdcc8cada",
+    "merge_sha": "356b59fb05986eec41d00898a1c088f80aba3677",
+    "river_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "tested_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "gates": "pass",
+    "at": "2026-10-05T21:41:06Z"
+  },
+  {
+    "lane": "slide",
+    "steps": [
+      "CP-02",
+      "CP-09",
+      "BX-12",
+      "BX-03",
+      "CP-10",
+      "CP-13",
+      "CP-16",
+      "CP-06",
+      "BX-13",
+      "reader-edge-publication-return"
+    ],
+    "ready_sha": "483737aec77945887a7d7a3e484947cc20f1ebe6",
+    "merge_sha": "b45ef9a74a45c6b82dd889b8fc79039cf0b533f4",
+    "river_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "tested_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "gates": "pass",
+    "at": "2026-10-05T21:41:06Z"
+  },
+  {
+    "lane": "ballot",
+    "steps": [
+      "CA-30",
+      "CA-51"
+    ],
+    "ready_sha": "8760257b34009d057c729bb949d6f882c89c8259",
+    "merge_sha": "5fcf5d661e88cffcd6672ac614be9571a4a70a4f",
+    "river_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "tested_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "gates": "pass",
+    "at": "2026-10-05T21:41:06Z"
+  },
+  {
+    "lane": "bank",
+    "steps": [
+      "DB-44",
+      "DB-46",
+      "DP-23",
+      "DB-57"
+    ],
+    "ready_sha": "cf0df0cb0acb4d79218593ac1aa5083d41ade841",
+    "merge_sha": "34620138b4418d8a1d99a56e0f771f5f870f4ff7",
+    "river_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "tested_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "gates": "pass",
+    "at": "2026-10-05T21:41:06Z"
+  },
+  {
+    "lane": "frontend",
+    "steps": [
+      "FE-05",
+      "FE-06",
+      "FE-07",
+      "FE-10",
+      "FE-39",
+      "FE-43",
+      "FE-44"
+    ],
+    "ready_sha": "a5e7197a1855aae9d7aeafc537f417e29bb09fe6",
+    "merge_sha": "f2f11fe687d09c08957cedbbdf964a58cc91ca14",
+    "river_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "tested_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
+    "gates": "pass",
+    "at": "2026-10-05T21:41:06Z"
   }
 ]

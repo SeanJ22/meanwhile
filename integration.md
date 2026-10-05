@@ -130,3 +130,11 @@ One line per batch folded into river.
 - 2026-10-05T17:26:09Z · slide · CP-01, CP-19 · ready 6921176ca005 · river 85a0ad660c36 · pnpm gates pass on 85a0ad660c36
 
 - 2026-10-05 19:06Z: river-next replaced by fold 92fda9c (base river ecf4026; measures BR-23, registry DB-34/35, hunters CH-11/BR-05/BR-16/BR-37/CH-24/CH-26, meetings DB-28, people CA-01, admin BR-07, slide reader-edge-publication-return). Previous remote river-next tip was 150a8728 (older BX-09/DB-30 fold, already integrated).
+- 2026-10-05T21:41:06Z · measures · BR-23, BR-14, BR-25 · ready e47bf4a5f4f2 · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8
+- 2026-10-05T21:41:06Z · registry · DB-34, DB-35, DB-36, DP-12 · ready 06fed3b4384d · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8
+- 2026-10-05T21:41:06Z · hunters · CH-11, BR-05, BR-16, BR-37, CH-24, CH-26, DB-53 · ready d7e93a3359c0 · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8
+- 2026-10-05T21:41:06Z · meetings · DB-28, DB-58 · ready 9750e9f7cd42 · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8
+- 2026-10-05T21:41:06Z · slide · CP-02, CP-09, BX-12, BX-03, CP-10, CP-13, CP-16, CP-06, BX-13, reader-edge-publication-return · ready 483737aec779 · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8
+- 2026-10-05T21:41:06Z · ballot · CA-30, CA-51 · ready 8760257b3400 · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8
+- 2026-10-05T21:41:06Z · bank · DB-44, DB-46, DP-23, DB-57 · ready cf0df0cb0acb · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8
+- 2026-10-05T21:41:06Z · frontend · FE-05, FE-06, FE-07, FE-10, FE-39, FE-43, FE-44 · ready a5e7197a1855 · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8

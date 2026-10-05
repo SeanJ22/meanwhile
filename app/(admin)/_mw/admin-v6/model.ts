@@ -186,6 +186,8 @@ export interface StuckItem {
   readonly applies: readonly string[];
   readonly lane: Lane;
   readonly cause: string;
+  /** Why it needs Sean (BR-09): set on every decision-lane item. */
+  readonly needs?: "money" | "platform" | "credentials" | "contract" | "broken";
   readonly age: string;
   readonly ageRank: number;
   readonly tried: string;

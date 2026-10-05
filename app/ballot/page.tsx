@@ -63,6 +63,7 @@ import { CandidateCard } from "@/components/ballot/candidate-card";
 import {
   CandidatePositions,
 } from "@/components/ballot/candidate-positions";
+import { readStanceTopics } from "@/lib/stances/read";
 import {
   positionsFor,
   positionsHeadline,
@@ -634,7 +635,7 @@ async function BallotBattlecard({
   let positionsUnavailable = !authorityAvailability.candidatePublications;
   if (!positionsUnavailable) {
     try {
-      positions = positionsFor(targetKey);
+      positions = positionsFor(targetKey, null, await readStanceTopics());
     } catch {
       positionsUnavailable = true;
     }

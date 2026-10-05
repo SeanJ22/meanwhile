@@ -19,6 +19,8 @@
  *               screenshot strip. Keyed by the UTC day it ran.
  *   TASK_ZIP    a ZIP the resident tasks have run at, keyed "task-zips"; a
  *               published ZIP missing here is queued for its first run.
+ *   CLAIMS      one weekly check of the team's own claimed wins (DP-33),
+ *               keyed by the week it covers. A controlled run is never kept.
  * ```
  *
  * Append-only because an audit is a reading taken at a time; a later pass never
@@ -31,6 +33,7 @@ import type { ControlPlaneRepositories } from "./repository/types.ts";
 import type { LiveAuditResult } from "./workers/live-audit.ts";
 import type { TaskPass } from "../health/resident-tasks.ts";
 import type { SpeedPass } from "../health/worst-case-speed.ts";
+import type { ClaimPass } from "./workers/claim-audit.ts";
 
 export interface LiveAuditPull {
   readonly workItemId: string;
@@ -49,7 +52,8 @@ export type LiveAuditLogRow =
   | { readonly kind: "PULL"; readonly pull: LiveAuditPull }
   | { readonly kind: "SPEED"; readonly pass: SpeedPass }
   | { readonly kind: "TASKS"; readonly pass: TaskPass }
-  | { readonly kind: "TASK_ZIP"; readonly zip: string; readonly at: string };
+  | { readonly kind: "TASK_ZIP"; readonly zip: string; readonly at: string }
+  | { readonly kind: "CLAIMS"; readonly pass: ClaimPass };
 
 export type LiveAuditRepos = Pick<ControlPlaneRepositories, "liveAudits">;
 
@@ -59,6 +63,7 @@ export const PULLS_KEY = "pulls";
 export const speedDayKey = (iso: string): string => `speed:${iso.slice(0, 10)}`;
 export const tasksDayKey = (iso: string): string => `tasks:${iso.slice(0, 10)}`;
 export const TASK_ZIPS_KEY = "task-zips";
+export const claimsWeekKey = (week: string): string => `claims:${week}`;
 
 /** The day keys a week back from `now`, plus today: what a weekly reading and "last audited" need. */
 export function weekDayKeys(now: string, days: number = AUDIT_WEEK_DAYS): string[] {
@@ -132,4 +137,16 @@ export async function readLatestTaskPass(repos: LiveAuditRepos, now: string): Pr
   const rows = (await Promise.all(keys.map((k) => repos.liveAudits.read(k)))).flat();
   const passes = rows.flatMap((row) => (row.kind === "TASKS" ? [row.pass] : [])).sort((a, b) => a.at.localeCompare(b.at));
   return passes.at(-1) ?? null;
+}
+
+/** DP-33: keep one weekly claim check. A controlled run is refused here, so it can never be read as real. */
+export async function recordClaimPass(repos: LiveAuditRepos, pass: ClaimPass): Promise<void> {
+  if (pass.synthetic) throw new Error("A controlled claim check is never recorded");
+  await repos.liveAudits.append(claimsWeekKey(pass.week), `claims@${pass.at}`, { kind: "CLAIMS", pass }, pass.at);
+}
+
+/** This week's and last week's claim checks (two keys, never the whole log). */
+export async function readRecentClaimPasses(repos: LiveAuditRepos, weeks: readonly string[]): Promise<ClaimPass[]> {
+  const rows = (await Promise.all(weeks.map((w) => repos.liveAudits.read(claimsWeekKey(w))))).flat();
+  return rows.flatMap((row) => (row.kind === "CLAIMS" && !row.pass.synthetic ? [row.pass] : []));
 }

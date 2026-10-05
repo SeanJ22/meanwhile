@@ -78,6 +78,8 @@ export interface StandingUpdate {
   readonly label: "PROVEN" | "TESTING";
   /** A setback is never shown as a win. */
   readonly setback: boolean;
+  /** For a Proven update, the numbers it claims (DP-33 recomputes them). */
+  readonly claim?: { readonly kind: "FIX_PROVEN"; readonly methodId: string; readonly works: number; readonly failed: number };
 }
 
 export interface StandingEvent {
@@ -116,7 +118,8 @@ export function nextStanding(methodId: string, prior: MethodStanding | null, pro
   }
   if (proof.status === "PROVEN" && prior?.status !== "PROVEN") {
     const standing = keep({ status: "PROVEN", since: at, provenAt: at });
-    return { standing, update: update("PROVEN", `Proven: ${base.title} worked in ${places(proof.works)}, failed in ${places(failed)}.`, "PROVEN", false) };
+    return { standing, update: { ...update("PROVEN", `Proven: ${base.title} worked in ${places(proof.works)}, failed in ${places(failed)}.`, "PROVEN", false),
+      claim: { kind: "FIX_PROVEN", methodId, works: proof.works, failed } } };
   }
   return { standing: keep({ status: prior?.status ?? "TESTING" }), update: null };
 }

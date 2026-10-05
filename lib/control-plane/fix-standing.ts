@@ -33,7 +33,8 @@ export function withStanding(config: AdminConfig, standing: MethodStanding, upda
   const prior = list.find((s) => s.methodId === standing.methodId);
   if (prior && update === null && JSON.stringify(prior) === JSON.stringify(standing)) return config;
   const next = { ...config, methodStandings: capStandings([...list.filter((s) => s.methodId !== standing.methodId), standing]), updatedAt: update?.at ?? config.updatedAt };
-  return update === null ? next : withUpdateAdded(next, { id: update.id, what: update.what, at: update.at, label: update.label, setback: update.setback });
+  return update === null ? next : withUpdateAdded(next, { id: update.id, what: update.what, at: update.at, label: update.label, setback: update.setback,
+    ...(update.claim ? { claim: update.claim } : {}) });
 }
 
 async function mutate(repos: Repos, at: string, change: (c: AdminConfig) => AdminConfig): Promise<void> {

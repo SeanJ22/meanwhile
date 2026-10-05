@@ -7,7 +7,8 @@ import { readV6History } from "@/lib/control-plane/admin-view/admin-v6-history.t
 import { readGateHealth } from "@/lib/control-plane/admin-view/gate-health.ts";
 import { buildLearningTrends } from "@/lib/control-plane/admin-view/learning-trends.ts";
 import { weeklyAuditAccuracy } from "@/lib/control-plane/admin-view/v6-audit-read.ts";
-import { readAuditWeek, readLatestSpeedPass } from "@/lib/control-plane/live-audit-log.ts";
+import { readAuditWeek, readLatestSpeedPass, readRecentClaimPasses } from "@/lib/control-plane/live-audit-log.ts";
+import { reportAccuracy, weekOf } from "@/lib/control-plane/workers/claim-audit.ts";
 import { buildScoreboard, publicationCountsOf, v6LearningView, type ScoreboardReadings } from "@/lib/control-plane/admin-view/scoreboard-read.ts";
 import { captureWindow, readCaptureHealth } from "@/lib/control-plane/admin-view/v6-capture-health.ts";
 import { projectDoors } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
@@ -38,7 +39,7 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
     const url = controlPlaneUrlFromEnv();
-    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture, audit, speed, provenFixes] = await Promise.all([
+    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture, audit, speed, provenFixes, claims] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
@@ -61,6 +62,8 @@ export async function GET(request: NextRequest) {
         const held = await opened.adminConfig.read(ADMIN_CONFIG_ID);
         return provenFixesReading(held && isAdminConfig(held.value) ? held.value : null, observedAt);
       }),
+      // DP-33: the latest weekly claim check, this week's and last week's keys.
+      attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
@@ -73,6 +76,7 @@ export async function GET(request: NextRequest) {
       audit,
       speed,
       provenFixes,
+      reportAccuracy: claims,
       gates: opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null }),
       readiness: readinessCounts(recoveryWitnesses({
         bankEntriesInherited: learning?.doors.given ?? null, bankEntriesUsed: learning?.doors.used ?? null,

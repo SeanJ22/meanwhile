@@ -21,6 +21,7 @@ import type { AuditAccuracyReading } from "./v6-audit-read.ts";
 import { formatEastern } from "../eastern-time.ts";
 import type { SpeedPass } from "../../health/worst-case-speed.ts";
 import type { ProvenFixesReading } from "../fix-standing.ts";
+import type { ReportAccuracyReading } from "../workers/claim-audit.ts";
 
 export interface DoorFacts {
   readonly walks: number;
@@ -180,6 +181,8 @@ export interface ScoreboardReadings {
   readonly speed?: SpeedPass | null;
   /** Where reusable fixes stand (DP-26); null when unreadable. Absent means not read. */
   readonly provenFixes?: ProvenFixesReading | null;
+  /** The latest weekly check of the team's claimed wins (DP-33); null when none in two weeks or unreadable. Absent means not read. */
+  readonly reportAccuracy?: ReportAccuracyReading | null;
 }
 
 /** Approved records by what the public page showed, from the published pipeline read; every state is counted, none is dropped. */
@@ -330,6 +333,21 @@ export function provenFixesRow(p: ProvenFixesReading | null | undefined): Scoreb
   });
 }
 
+/** DP-33: "X of K claimed wins confirmed", recomputed from source records by the claim auditors. */
+export function reportAccuracyRow(a: ReportAccuracyReading | null | undefined): ScoreboardRow {
+  const id = "Report accuracy", name = "Report accuracy";
+  if (a === undefined) return unmeasured(id, name, "Auditor confirmation of the team's claimed wins is not recorded here yet.");
+  if (a === null) return unmeasured(id, name, "No weekly check of the team's claimed wins in the last two weeks.");
+  const judged = a.confirmed + a.wrong;
+  if (judged === 0) return unmeasured(id, name, a.couldNotCheck > 0 ? `${n(a.couldNotCheck)} claimed wins were sampled, but none could be checked against its records.` : "No claimed win was sampled in the last check.");
+  return row(id, name, {
+    value: `${n(a.confirmed)} of ${n(judged)}`,
+    counts: `${n(a.confirmed)} confirmed · ${n(a.wrong)} wrong${a.couldNotCheck > 0 ? ` · ${n(a.couldNotCheck)} could not be checked` : ""}`,
+    says: `Report accuracy: ${n(a.confirmed)} of ${n(judged)} claimed wins confirmed from their source records. Checked ${formatEastern(a.at)}.`,
+    items: a.wrongClaims.map((w) => `Wrong: ${w.claimed} ${w.cause}`.trim()),
+  });
+}
+
 const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
   { id: "Mission progress", name: "Mission progress", why: "The mission map is built in a later step." },
   { id: "Checklist completeness", name: "Checklist completeness", why: "Counted place by place; the Scoreboard reads those counts in a later step." },
@@ -341,7 +359,6 @@ const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
   { id: "Look and feel", name: "Look and feel", why: "The front-end flags are not recorded here yet." },
   { id: "Time to repair", name: "Time to repair", why: "The time from breaking to working again is not recorded yet." },
   { id: "Repairs without code", name: "Repairs without code", why: "Which repairs needed no code change is not recorded yet." },
-  { id: "Report accuracy", name: "Report accuracy", why: "Auditor confirmation of the team's claimed wins is not recorded yet." },
 ];
 
 /** The Scoreboard in the design's order. Every number in the list has a row; one with no reading says "—" and why. */
@@ -356,6 +373,7 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Audit accuracy", auditRow(r.audit)],
     ["Site speed and reliability", speedRow(r.speed)],
     ["Proven fixes", provenFixesRow(r.provenFixes)],
+    ["Report accuracy", reportAccuracyRow(r.reportAccuracy)],
     ...GATE_ROWS.map((g): [string, ScoreboardRow] => [g.id, unmeasured(g.id, g.name, g.why)]),
   ]);
   const ORDER = ["Orders", "Mission progress", "Checklist completeness", "Coverage", "Public delivery", "People coverage", "Facts live per hour", "Cost per fact", "Audit accuracy",

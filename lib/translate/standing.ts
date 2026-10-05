@@ -27,7 +27,7 @@ export interface TranslationAttempt {
 /** The parent leased worker names source-backed subjects; no global document sweep. */
 export async function runHeldTextTranslations(input: Pick<Parameters<typeof runTextTranslation>[0], "repos" | "store" | "transportFor" | "now"> & {
   readonly divisions: readonly string[];
-  readonly subjects: readonly { readonly subject: Parameters<typeof runTextTranslation>[0]["subject"]; readonly sourceUrl: string }[];
+  readonly subjects: readonly { readonly subject: Parameters<typeof runTextTranslation>[0]["subject"]; readonly sourceUrl: string; readonly preservedText?: Parameters<typeof runTextTranslation>[0]["preservedText"] }[];
   readonly captures: readonly WorkerPublicationCapture[];
   readonly attempts: readonly TranslationAttempt[];
   readonly saveAttempt: (attempt: TranslationAttempt) => Promise<void>;
@@ -37,13 +37,14 @@ export async function runHeldTextTranslations(input: Pick<Parameters<typeof runT
   if (!Number.isFinite(now) || states.size !== 1 || states.has(undefined)) throw new Error("Text translation admission must name one state and a clock.");
   const pages = input.captures.filter(captureIntact), seen = new Set<string>();
   const outcomes: TranslationAttempt[] = [], deferred: { subjectId: string; reason: string }[] = [];
-  for (const { subject, sourceUrl } of input.subjects) {
+  for (const entry of input.subjects) {
+    const { subject, sourceUrl, preservedText } = entry;
     if (!divisions.has(subject.ocdId)) continue;
     const scope = translationScope(subject.ocdId), key = JSON.stringify([scope, subject.subjectId]);
     if (seen.has(key)) continue;
     seen.add(key);
     if (input.subjects.some(other => other.subject.subjectId === subject.subjectId && other.subject.ocdId === subject.ocdId &&
-        JSON.stringify(other) !== JSON.stringify({ subject, sourceUrl }))) {
+        JSON.stringify(other) !== JSON.stringify(entry))) {
       deferred.push({ subjectId: subject.subjectId, reason: "Held text subjects disagree." }); continue;
     }
     const candidates = pages.filter(row => row.evidence.canonicalUrl === sourceUrl && row.evidence.text.includes(subject.label))
@@ -72,7 +73,7 @@ export async function runHeldTextTranslations(input: Pick<Parameters<typeof runT
     const attempt: TranslationAttempt = { id: `translation:${translationHash(JSON.stringify([scope, subject.subjectId, sourceHash, sourceTextHash, input.now]))}`,
       scope, subjectId: subject.subjectId, sourceHash, sourceTextHash, at: input.now, status: "RUNNING", usage: [], versionId: null };
     await input.saveAttempt(attempt);
-    const result = await runTextTranslation({ ...input, subject, primary, captures: pages });
+    const result = await runTextTranslation({ ...input, subject, preservedText, primary, captures: pages });
     const finished: TranslationAttempt = { ...attempt, status: result.status, usage: result.usage, versionId: result.versionId,
       ...("detail" in result ? { detail: result.detail } : {}) };
     outcomes.push(finished);

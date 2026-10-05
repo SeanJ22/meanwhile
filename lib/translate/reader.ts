@@ -44,3 +44,12 @@ export async function readMeetingTranslation(input: {
   });
   return row && (!input.bodyId || row.meeting?.bodyId === input.bodyId) ? row : null;
 }
+
+/** Form definitions are their own shared legal layer, never a guessed body's
+ * charter. The exact registered form key selects their translation subject. */
+export async function readFormTranslation(formKey: string, options: PromotedCivicDataReadOptions = {}) {
+  const state = formKey.split(":")[0]?.toUpperCase(), jurisdiction = US_JURISDICTIONS.find(row => row.usps === state);
+  if (!jurisdiction) return null;
+  const ocdId = `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
+  return textTranslationFor(await readTranslations([ocdId], options), { kind: "BODY_CLASS", subjectId: `body_class:${state}:form:${formKey}`, ocdId });
+}

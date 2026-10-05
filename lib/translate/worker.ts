@@ -12,7 +12,7 @@ import { runtimeKinds } from "../registry/kinds-settings.ts";
 import { registeredKind } from "../registry/kinds.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 export type MeasureTranslationRepos = FieldManualRepos & Pick<ControlPlaneRepositories, "adminConfig">;
-import { translationHash, translationRecordIssue, type TranslationSentence, type MeasureTranslation, type TextTranslation } from "./records.ts";
+import { translationHash, translationRecordIssue, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
 
 export interface TranslationPlaybook {
   readonly text: string;
@@ -88,6 +88,7 @@ export async function translateText(input: {
   readonly repos: FieldManualRepos;
   readonly evidence: WorkerEvidence;
   readonly subject: TextTranslationSubject;
+  readonly preservedText?: PreservedCuratedText;
   readonly transportFor: (subject: { subjectId: string; state: string }) => ModelTransport;
   readonly now: string;
 }) {
@@ -109,24 +110,28 @@ export async function translateText(input: {
     : subject.kind === "OFFICE" ? "Describe this state's legally defined office. Do not import duties from a similarly named office in another state."
     : subject.kind === "AGENDA" ? "Describe what is on this held agenda, preserving dates, conditions and proposed status. The clerk's verbatim list remains alongside this text. Never describe a proposal as adopted."
     : "Describe only what these held minutes record. Preserve votes, outcomes, qualifications and uncertainty; never invent a vote or speaker.";
-  const writer = { name: "write_text_translation", description: instruction,
+  if (input.preservedText && (input.preservedText.origin.kind !== "CURATED_MIGRATION" ||
+    translationHash(input.preservedText.text) !== input.preservedText.origin.textHash)) throw new Error("Curated migration lacks its unchanged original text.");
+  const preservation = input.preservedText ? "The supplied curated text must remain byte-for-byte unchanged, including punctuation. Return that exact text and annotate each sentence with its original-source passage. Do not rewrite, correct or add facts; unsupported text must fail the independent check." : "";
+  const writer = { name: "write_text_translation", description: `${instruction} ${preservation}`,
     input_schema: { type: "object", required: ["text", "sentences"], properties: {
       text: { type: "string" }, sentences: writerTool.input_schema.properties.sentences,
     } } };
   const send = input.transportFor({ subjectId: subject.subjectId, state: subject.state });
   const request = (model: string, tool: typeof writer | typeof checkerTool, content: unknown): ModelRequest => ({
     model, max_tokens: 8192, ...scoutThinkingOptions(model, "medium"),
-    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${playbook.text}\n\n${instruction}\nUse the supplied text-translation tool for this non-measure task. Every sentence uses field text and an exact supporting quote.`, cache_control: { type: "ephemeral" } }],
+    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${playbook.text}\n\n${instruction}\n${preservation}\nUse the supplied text-translation tool for this non-measure task. Every sentence uses field text and an exact supporting quote.`, cache_control: { type: "ephemeral" } }],
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });
-  const written = await send(request(playbook.writerModel, writer, { source: evidence.text, subject }));
+  const written = await send(request(playbook.writerModel, writer, { source: evidence.text, subject, ...(input.preservedText ? { curatedText: input.preservedText.text } : {}) }));
   const proposal = toolResult(written, writer.name, playbook.writerModel) as { text: string; sentences: TranslationSentence[] };
   if (typeof proposal?.text !== "string" || !proposal.text.trim() || !Array.isArray(proposal.sentences) ||
       proposal.sentences.some(row => !row || row.field !== "text" || typeof row.quote !== "string" || !row.quote.trim() || !evidence.text.includes(row.quote))) throw new Error("Text translator returned unsupported source passages.");
+  if (input.preservedText && proposal.text !== input.preservedText.text) throw new Error("Curated migration would rewrite the existing text.");
   const checked = await send(request(playbook.checkerModel, checkerTool, { originalSource: evidence.text, subject, instruction, proposal }));
   const result = toolResult(checked, checkerTool.name, playbook.checkerModel) as { checked: TextTranslation["checked"] };
   const record: TextTranslation = { id: `translation:${subject.subjectId}`, kind: subject.kind, subjectId: subject.subjectId,
-    ocdId: subject.ocdId, label: subject.label, text: proposal.text, sourceUrl: evidence.canonicalUrl,
+    ocdId: subject.ocdId, ...(input.preservedText ? { curatedOrigin: input.preservedText.origin } : {}), label: subject.label, text: proposal.text, sourceUrl: evidence.canonicalUrl,
     sourceHash: hash, ...(subject.meeting ? { meeting: subject.meeting } : {}),
     sourceText: evidence.text, sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt,
     writtenAt: now, writerModel: canonicalModelId(written.model), checkerModel: canonicalModelId(checked.model),

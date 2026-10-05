@@ -42,9 +42,18 @@ export interface MeasureTranslation extends TranslationEvidence {
   readonly kind: "MEASURE";
   readonly measure: MeasureRecord;
 }
+/** Original content/citation stay intact; the model calls annotate its source
+ * passages and independently check them, rather than author replacement text. */
+export interface CuratedTranslationOrigin {
+  readonly kind: "CURATED_MIGRATION";
+  readonly file: string; readonly fileHash: string; readonly recordKey: string; readonly textHash: string;
+  readonly citation: { readonly basis: string; readonly url: string | null; readonly readOn: string | null };
+}
+export interface PreservedCuratedText { readonly text: string; readonly origin: CuratedTranslationOrigin }
 export interface TextTranslation extends TranslationEvidence {
   readonly kind: "BODY_CLASS" | "BODY" | "OFFICE" | "AGENDA" | "MINUTES";
   /** BODY_CLASS names the class, BODY names one body, OFFICE names the state-defined office. */
+  readonly curatedOrigin?: CuratedTranslationOrigin;
   readonly label: string;
   readonly text: string;
   readonly meeting?: { readonly id: string; readonly bodyId: string; readonly documentUrl: string; readonly documentHash: string };
@@ -68,6 +77,13 @@ export function translationRecordIssue(row: TranslationRecord): string | null {
       row.measure.sourceUrl !== row.sourceUrl || row.measure.writtenAt !== row.writtenAt || !row.measure.yesMeans || !row.measure.noMeans)) return "Translation lacks its exact measure identity or vote meanings.";
   if (row.kind !== "MEASURE" && (typeof row.label !== "string" || !row.label.trim() || !row.sourceText.includes(row.label) ||
       typeof row.text !== "string" || !row.text.trim())) return "Translation lacks its source-named subject or text.";
+  if (row.kind !== "MEASURE" && row.curatedOrigin) {
+    const origin = row.curatedOrigin;
+    if (origin.kind !== "CURATED_MIGRATION" || !origin.file || !origin.recordKey || !/^[a-f0-9]{64}$/.test(origin.fileHash) ||
+      translationHash(row.text) !== origin.textHash || !origin.citation || typeof origin.citation.basis !== "string" ||
+      !(origin.citation.url === null || /^https:\/\//.test(origin.citation.url)) ||
+      !(origin.citation.readOn === null || Number.isFinite(Date.parse(origin.citation.readOn)))) return "Curated migration changed its text or lost its original citation.";
+  }
   if ((row.kind === "AGENDA" || row.kind === "MINUTES") && (!row.meeting?.id || !row.meeting.bodyId ||
       row.subjectId !== `${row.kind.toLowerCase()}:${row.meeting.id}` || row.meeting.documentUrl !== row.sourceUrl ||
       row.meeting.documentHash !== row.sourceHash)) return "Meeting translation lacks its exact held body, sitting and document revision.";

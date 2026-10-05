@@ -25,7 +25,8 @@ export async function runTextTranslation(input: Omit<Parameters<typeof translate
     const hash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
     const held = await readTranslations([input.subject.ocdId], { store: input.store, now: input.now, bypassCache: true });
     const current = held.find(row => row.kind === input.subject.kind && row.subjectId === input.subject.subjectId &&
-      row.ocdId === input.subject.ocdId && row.sourceUrl === evidence.canonicalUrl && row.sourceHash === hash && row.sourceTextHash === translationHash(evidence.text));
+      row.ocdId === input.subject.ocdId && row.sourceUrl === evidence.canonicalUrl && row.sourceHash === hash && row.sourceTextHash === translationHash(evidence.text) &&
+      (!input.preservedText || row.text === input.preservedText.text && JSON.stringify(row.curatedOrigin) === JSON.stringify(input.preservedText.origin)));
     if (current) return { status: "REUSED" as const, record: current, usage, versionId: null };
     const { record } = await translateText({ ...input, evidence, transportFor: subject => {
       const send = input.transportFor(subject);

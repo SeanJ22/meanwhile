@@ -46,13 +46,21 @@ function safeFailure(value: string): string {
 }
 
 
+import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
+export type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
+
 /** Publish serving copies independently of per-contract reader repair. */
-export async function publishRoutineReaderEdge(store: RoutineDataStore, observedAt: string,
+export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, observedAt: string,
   selected: readonly Pick<PromotedPointerIdentity, "recordClass" | "scope">[] | null = null,
   options: { readonly artifactStore?: ReaderArtifactStore | null;
+    readonly requireLiveStore?: boolean;
     readonly readMeetingRegistry?: (divisions: readonly string[], bodies: readonly string[]) => Promise<PlaceCaptureRead<RegistryRuntimeReadModel>> } = {},
-): Promise<boolean> {
+): Promise<ReaderEdgePublicationOutcome> {
   let failed = false;
+  let destination: ReaderEdgePublicationOutcome["store"] = "not configured";
+  let sequence: number | null = null;
+  let status = "FAILED";
+  let detail: string | null = null;
   const owns = (recordClass: RoutineRecordClass, scope: string) => selected === null || selected.some(pointer => pointer.recordClass === recordClass && pointer.scope === scope);
   const manual = (id: string) => MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === id)!;
   const specialPointers = {
@@ -74,23 +82,29 @@ export async function publishRoutineReaderEdge(store: RoutineDataStore, observed
   // state, writes the immutable artifacts and flips the manifest with a monotonic
   // CAS, then purges the manifest cache tag for instant switchover. Idempotent
   // (unchanged data republishes nothing) and last-valid-safe (a failure leaves
-  // the previous manifest serving). Degrades to SKIPPED when the runner has no
-  // Netlify credentials — the reader then falls back to the DB prepared row.
+  // the previous manifest serving). The production supervisor reports missing
+  // or local-only storage as a failure; it cannot establish live delivery.
   //
   // R28 (2026-09-25): the served manifest is read first, and the prepared row
   // (about 7.5 MB) is read only when the publish could change something
   // (scripts/lib/reader-edge-current.ts). Every pass once read the whole row to
   // learn that the manifest was already current.
   try {
-    // The runner write store, when this host has one; without it the publish
-    // is SKIPPED_NO_STORE whatever it is given, so nothing below is read.
+    // Resolve the write destination once; report it even when publication fails.
     const artifactStore = options.artifactStore === undefined ? resolveReaderArtifactWriteStore() : options.artifactStore;
+    destination = artifactStore?.kind === "local-file" ? "local folder" : artifactStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured";
     if (artifactStore === null) {
-      console.log(JSON.stringify({ readerEdge: "SKIPPED_NO_STORE" }));
+      status = "SKIPPED_NO_STORE";
+      failed = true;
+      detail = "Reader pages could not be updated because their publication store is not configured. Readers are still seeing the older copy.";
     } else {
       // A failed read cannot establish that no serving copy exists. Let the
       // outer publication error handler retain it and report a retryable error.
       const servedManifest = (await artifactStore.readManifest())?.manifest ?? null;
+      sequence = servedManifest?.sequence ?? null;
+      if (options.requireLiveStore && artifactStore.kind === "local-file") {
+        throw new Error("Reader pages would be saved to a folder on the runner. Readers are still seeing the older copy.");
+      }
       // Read only identities, grouped by class, once for this publication pass.
       const grouped = new Map<RoutineRecordClass, Set<string>>();
       for (const pointer of [...Object.values(specialPointers).flat().filter(pointer => owns(pointer.recordClass, pointer.scope)), ...Object.values(pointerFamilies).flat(),
@@ -112,7 +126,11 @@ export async function publishRoutineReaderEdge(store: RoutineDataStore, observed
       } });
       const preparesMeetings = selected === null || selected.some(pointer => pointer.recordClass === "MEETING" || pointer.recordClass === "REGISTRY_RUNTIME_BINDING");
       const prepared = preparesMeetings ? await preparePublishedMeetingSnapshot(store, observedAt) : null;
-      if (prepared?.status === "FAILED") { failed = true; console.error("PREPARED_MEETING_SNAPSHOT_FAILED: " + safeFailure(prepared.error)); }
+      if (prepared?.status === "FAILED" || prepared?.status === "NOT_COMPOSABLE") {
+        failed = true;
+        detail = prepared.status === "FAILED" ? safeFailure(prepared.error) : "Reader meetings could not be assembled. " + safeFailure(prepared.detail);
+        console.error("PREPARED_MEETING_SNAPSHOT_FAILED: " + detail);
+      }
 
       // The other ready-to-display families the reader serves, read here (the
       // single clock, production DB) so the visitor never reads them from the DB.
@@ -359,14 +377,42 @@ export async function publishRoutineReaderEdge(store: RoutineDataStore, observed
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
           : { sourceThrough: servedManifest?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedManifest?.retrievedAt ?? null, promotedThrough: servedManifest?.promotedThrough ?? null },
         { store: artifactStore, now: observedAt, extras, authority, registrations, meetingBodies, meetingRegistryVersion, ...(checks ? { checks } : {}) });
+      status = edge.status;
+      if ("sequence" in edge) sequence = edge.sequence;
       if (edge.status === "FAILED") throw new Error(edge.error);
+      if (edge.status === "NOT_COMPOSABLE") throw new Error("Reader pages could not be assembled. " + edge.detail);
       const purge = edge.status === "PUBLISHED" && artifactStore.kind === "netlify-blobs" ? await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]) : null;
-      console.log(JSON.stringify({ readerEdge: edge.status, ...("sequence" in edge ? { sequence: edge.sequence } : {}), ...(purge ? { purged: purge.purged } : {}) }));
+      if (purge) console.log(JSON.stringify({ readerEdgePurge: purge.purged, store: destination, sequence }));
 
     }
   } catch (error) {
     failed = true;
-    process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+    detail = safeFailure(sanitizedErrorDiagnostic(error));
+    process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${detail}\n`);
   }
-  return !failed;
+  const outcome: ReaderEdgePublicationOutcome = { ok: !failed, readerEdge: failed && status !== "SKIPPED_NO_STORE" ? "FAILED" : status,
+    store: destination, sequence, detail: failed ? detail ?? "Reader pages could not be fully updated. The earlier serving copies remain available." : null };
+  console.log(JSON.stringify(outcome));
+  return outcome;
+}
+
+/** Compatibility for individual data publishers and local measurement callers. */
+export async function publishRoutineReaderEdge(...args: Parameters<typeof publishRoutineReaderEdgeOutcome>): Promise<boolean> {
+  return (await publishRoutineReaderEdgeOutcome(...args)).ok;
+}
+
+/** The supervisor is production unless its local measurement/development opt-in is explicit. */
+export async function publishSupervisorReaderEdge(
+  store: RoutineDataStore, observedAt: string,
+  selected: Parameters<typeof publishRoutineReaderEdgeOutcome>[2] = null,
+  options: Parameters<typeof publishRoutineReaderEdgeOutcome>[3] = {},
+  env: { readonly WTP_READER_EDGE_LOCAL_OK?: string } = process.env,
+): Promise<ReaderEdgePublicationOutcome> {
+  return publishRoutineReaderEdgeOutcome(store, observedAt, selected,
+    { ...options, requireLiveStore: env.WTP_READER_EDGE_LOCAL_OK !== "1" });
+}
+
+export function readerEdgeSupervisorFailure(outcome: ReaderEdgePublicationOutcome) {
+  return outcome.ok ? null : { taskId: "reader-edge-publication", code: "READER_EDGE_PUBLISH_FAILED",
+    detail: outcome.detail ?? "Reader pages could not be updated." };
 }

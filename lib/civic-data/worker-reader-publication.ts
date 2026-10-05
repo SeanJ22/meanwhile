@@ -30,7 +30,7 @@ import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type Everyday
 import { publicRecordIssue, recordNewPublicKinds } from "./public-records.ts";
 import type { PublicRecord } from "./types.ts";
 import { manualPayloadScope } from "./scoped-manual-contracts.ts";
-import { governmentBudgetIssue, governmentBudgetRecordId } from "./government-budgets.ts";
+import { governmentBudgetIssue, governmentBudgetRecordId, budgetResponsibilityRole, budgetAuthorityKind } from "./government-budgets.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -114,7 +114,7 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
         bodyId: body.id, ocdId: body.ocdId, government: body.name, kind, sourceSentence: text(f.sourceSentence),
         sourceUrl: checked.primary.evidence.canonicalUrl, capturedAt: checked.primary.observedAt };
       let row;
-      if (kind === "BUDGET_RESPONSIBILITY") row = { ...common, role: text(f.role).toUpperCase(), responsible: text(f.responsible), authorityKind: text(f.authorityKind).toUpperCase() };
+      if (kind === "BUDGET_RESPONSIBILITY") row = { ...common, role: budgetResponsibilityRole(text(f.role)), responsible: text(f.responsible), authorityKind: budgetAuthorityKind(text(f.authorityKind)) };
       else {
         const document = input.captures.find(capture => capture.evidence.canonicalUrl === f.documentUrl && captureIntact(capture));
         requirePublication(document && document.evidence.text.trim(), "BUDGET_DOCUMENT_NOT_HELD");

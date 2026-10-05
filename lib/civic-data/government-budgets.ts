@@ -23,7 +23,20 @@ export interface BudgetAmendment extends BudgetSource {
 }
 export type GovernmentBudgetFact = AdoptedBudget | BudgetResponsibility | BudgetAmendment;
 const ROLES = { PROPOSES: /\b(?:propos(?:e|es|al)|prepares?|preparation)\b/i, ADOPTS: /\b(?:adopt(?:s|ion)?|approv(?:e|es|al))\b/i,
-  RUNS: /\b(?:administer(?:s)?|administration|executes?|execution)\b/i, OVERSEES: /\b(?:oversee(?:s)?|oversight|supervis(?:e|es|ion))\b/i };
+  RUNS: /\b(?:administer(?:s)?|administration|executes?|execution|runs?)\b/i, OVERSEES: /\b(?:oversee(?:s)?|oversight|supervis(?:e|es|ion))\b/i };
+
+/** Normalize only the role words the source actually supplies. Mixed roles stay unresolved. */
+export function budgetResponsibilityRole(sourceWords: string): BudgetResponsibility["role"] | null {
+  const canonical = sourceWords.trim().toUpperCase();
+  if (Object.hasOwn(ROLES, canonical)) return canonical as BudgetResponsibility["role"];
+  const roles = (Object.keys(ROLES) as BudgetResponsibility["role"][]).filter(role => ROLES[role].test(sourceWords));
+  return roles.length === 1 ? roles[0] : null;
+}
+
+export function budgetAuthorityKind(sourceWords: string): BudgetResponsibility["authorityKind"] | null {
+  const kinds = (["CHARTER", "CODE", "LAW"] as const).filter(kind => new RegExp(`\\b${kind}\\b`, "i").test(sourceWords));
+  return kinds.length === 1 ? kinds[0] : null;
+}
 
 export function governmentBudgetIssue(value: unknown): string | null {
   const row = value as GovernmentBudgetFact;

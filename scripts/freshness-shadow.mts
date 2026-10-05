@@ -17,7 +17,7 @@ import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
-import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
+import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
 import { selectedCycleRepositories } from "../lib/control-plane/scheduler/cycle-selection.ts";
 import { readRelaunchTriggerVerification, websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
@@ -2116,6 +2116,10 @@ const paidScoutSlots = paidWorkerSlots(workerSlots, paidWorkerCapacity);
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused });
+/* CH-26: repository calls per lease task this round; their mean is the round's "lease-task-reads" phase (no duration of its own). */
+const leaseTaskCalls: number[] = [];
+const leaseTaskReadsPhase = (): CyclePhase[] => leaseTaskCalls.length === 0 ? [] : [{ name: "lease-task-reads", durationMs: 0,
+  repositoryCalls: Math.round(leaseTaskCalls.reduce((sum, n) => sum + n, 0) / leaseTaskCalls.length) }];
 const earlyOriginal = autonomousCycleOpen ? runAutonomousProcesses().catch(error => {
   runtimeConditions.push(`autonomous worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
   return null;
@@ -2472,7 +2476,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     },
     running: [...running],
     runtimeConditions: [...runtimeConditions],
-    cyclePhases: [...cycleObservation.phases],
+    cyclePhases: [...cycleObservation.phases, ...leaseTaskReadsPhase()],
     methodCandidates: (() => {
       const counts = canonicalCandidateCounts;
       return counts === null
@@ -3209,6 +3213,7 @@ async function runAutonomousWave() {
     },
     onDispatched: result => {
       placeOrderDirty = true;
+      if (typeof result.repositoryCalls === "number") leaseTaskCalls.push(result.repositoryCalls);
       if (result.worker?.role !== "SCOUT") return;
       const outcome = result.disposition === "INGESTED" ? "CAPTURED"
         : result.disposition === "WALKED_NO_YIELD" || result.disposition === "DISCOVERED" ? "NOTHING_FOUND" : "REFUSED";

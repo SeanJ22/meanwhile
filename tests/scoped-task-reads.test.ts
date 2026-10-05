@@ -252,3 +252,16 @@ test("CH-26: schema version 20 builds the scoped indexes online, on the exact ex
   assert.equal(calls.filter(text => text === SCOPED_HISTORY_INDEXES[0]!.ddl).length, 1);
   assert.ok(!calls.some(text => /\bBEGIN\b|\bCOMMIT\b/.test(text)), "never inside a transaction");
 });
+
+test("CH-26: each lease task reports its repository calls, and the round records their mean as a phase", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const worker = await readFile(new URL("../lib/control-plane/workers/lease-worker.ts", import.meta.url), "utf8");
+  assert.match(worker, /const observer = observeCyclePhases\(stores\);\s*const repos = observer\.repos;/);
+  assert.match(worker, /observer\.finish\("runtime"\);\s*await runtime\.beginTask\?\.\(task\);/, "the runtime build is not charged to the task");
+  assert.match(worker, /repositoryCalls: observer\.finish\("task"\)\.repositoryCalls/);
+  assert.match(worker, /WTP_SCOPED_TASK_READS === "1"/, "the scoped path is behind its runner switch");
+  const round = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  assert.match(round, /if \(typeof result\.repositoryCalls === "number"\) leaseTaskCalls\.push\(result\.repositoryCalls\);/);
+  assert.match(round, /cyclePhases: \[\.\.\.cycleObservation\.phases, \.\.\.leaseTaskReadsPhase\(\)\]/);
+  assert.ok(round.indexOf("const leaseTaskCalls") < round.indexOf("const earlyOriginal"), "declared before the first wave can report");
+});

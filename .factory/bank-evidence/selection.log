@@ -1,0 +1,30 @@
+ci-affected-tests · FULL — .factory/bank-DP-19_fix_map.sql is not code the import graph follows
+changed:
+  .factory/bank-DP-19_fix_map.sql
+  .factory/bank-continuation.md
+  .factory/bank-db45.patch
+  .factory/bank.md
+  app/(admin)/_mw/admin-v6/playbook-editor.tsx
+  app/api/admin/v6/playbooks/route.ts
+  app/api/demand-signal/route.ts
+  app/api/log/route.ts
+  app/api/reactions/route.ts
+  app/api/speak/route.ts
+  lib/civic-data/reader-feature-context.ts
+  lib/control-plane/bank-settings.ts
+  lib/control-plane/features.ts
+  lib/control-plane/gateway/playbook-action.ts
+  lib/control-plane/playbook-edit.ts
+  lib/control-plane/playbooks.ts
+  lib/control-plane/workers/adapter-repair-check.ts
+  lib/control-plane/workers/adapter-repair-load.ts
+  lib/control-plane/workers/adapter-repair-scope.ts
+  lib/control-plane/workers/engineering-adapter.ts
+  lib/method/fix-status.ts
+  lib/ripcords.ts
+  tests/adapter-repair-scope.test.ts
+  tests/bank-settings.test.ts
+  tests/fix-status.test.ts
+  tests/playbook-edit.test.ts
+  tests/river-adapter-streams.test.ts
+scope=code needs_browser=true

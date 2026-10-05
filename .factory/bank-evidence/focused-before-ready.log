@@ -1,0 +1,45 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 6/6 files; SHA 87893f09d280415ff4a56518892990e7436fdf66
+tests/adapter-repair-scope.test.ts
+tests/bank-playbooks.test.ts
+tests/bank-settings.test.ts
+tests/fix-status.test.ts
+tests/playbook-edit.test.ts
+tests/river-adapter-streams.test.ts
+✔ a repair is given one kind's folder, the failing example and that kind's own tests (2.563838ms)
+✔ a repair may write only inside the folder, the kind's fixtures and those tests (0.376129ms)
+✔ shared plumbing, a missing folder, an unchecked kind, or no example is refused by name (0.346856ms)
+✔ a changed role playbook is read on the next start and changes the cached system block (4.110657ms)
+✔ role text is separate from document pointers and the fixed laws survive an empty playbook (0.320676ms)
+✔ the next actual Scout transport request reads the current Bank playbook (16.293764ms)
+✔ switch changes and undo publish through the ordinary settings map and synchronous readers use that request's values (12.650983ms)
+✔ concurrent requests keep separate switch values, and emergency overrides still win (3.609692ms)
+✔ a failed request is never executed again by the settings fallback (0.814209ms)
+✔ proof uses distinct places and spread, and a settings change immediately changes the measured label (3.638525ms)
+✔ mostly working can prove out, failed places stay visible, and untried places do not inflate the denominator (0.63974ms)
+✔ a kind found in multiple states must work in multiple states; held geography supports other place-id formats (0.204344ms)
+✔ edited instructions reach the next worker and undo restores the previous cached-system version (9.765876ms)
+✔ editing one role preserves other instructions and learned doors, and stale edits or a stale undo are refused (2.930483ms)
+✔ imported instructions and their source records survive an edit while the next worker reads only the current playbook (0.644587ms)
+✔ the publication switch defaults to pr, reads the env override, and an unreadable value turns both routes off (1.537774ms)
+✔ the merge workflow passes the switch and its script merges nothing unless the switch reads pr (68.200035ms)
+✔ river mode pushes a READY commit and a status record River's scan parses, from river when the stream is new, and opens no PR (1.799783ms)
+✔ an existing adapter stream moves by fast-forward only, never forced (0.529346ms)
+✔ nothing is marked READY until the engineer's own checks pass (0.6864ms)
+✔ the engineer's queue publishes to the adapter stream with no PR when the switch reads river (54.58729ms)
+✔ an unreadable switch publishes nothing and records why (3.460571ms)
+✔ pr mode is unchanged: the engineer still opens its labelled pull request (2.846648ms)
+✔ a returned stream becomes one fix-list item owned by the lane that wrote it (1.091061ms)
+✔ River takes an adapter stream like any lane, returns a conflicting one to its writer, and clears the return when the repair integrates (994.328896ms)
+✔ DB-57 connects saved failure, adapter files and its own tests to a scoped engineer request and checked publication (5.583434ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3823.765138

@@ -48,5 +48,38 @@
     "log": "write-alarm.log"
   },
   "application_tree_sha256": "85934afecc2308af12bf597f5c420fcc7933aecc53bd009f95b7e4f798d0f16c",
-  "production_acceptance": "not claimed; River owns migration application, shared hooks, integration, release and live checks"
+  "production_acceptance": "not claimed; River owns migration application, shared hooks, integration, release and live checks",
+  "ready": {
+    "sha": "cf0df0cb0acb4d79218593ac1aa5083d41ade841",
+    "steps": [
+      "DB-44",
+      "DB-46",
+      "DP-23",
+      "DB-57"
+    ],
+    "hook_pending": true,
+    "application_tree_equal_to_full": true,
+    "application_tree_sha256": "85934afecc2308af12bf597f5c420fcc7933aecc53bd009f95b7e4f798d0f16c",
+    "focused": {
+      "tested_sha": "cf0df0cb0acb4d79218593ac1aa5083d41ade841",
+      "files": 6,
+      "tests": 26,
+      "pass": 26,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0,
+      "log": "focused-ready.log"
+    }
+  },
+  "final_dependency_check": {
+    "at": "2026-10-05T19:35:29.165490Z",
+    "river_sha": "ecf402600401783b094837c29e0c515eadbdb843",
+    "board_sha": "b430c257027d7a90e50ee651d3800165064ae5ef",
+    "missing_integrated_prerequisites": [
+      "DB-26",
+      "BR-14",
+      "BX-06"
+    ],
+    "DB-39": "conditional, actual Bank write-error count requested from River; none invented"
+  }
 }

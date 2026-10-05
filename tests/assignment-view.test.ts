@@ -760,7 +760,8 @@ test("succeeded (plain code, INGESTED with a document): downloads counted, the p
   // 1 — where comes from the candidacy's own jurisdiction segment, through the one display projection.
   assert.ok(a.what.where.held && a.what.where.value.name === "Rockaway, New Jersey");
   assert.ok(a.what.workers.held && a.what.workers.value[0].model.kind === "PLAIN_CODE");
-  assert.equal(a.what.why.band?.band, 1, "Rockaway is a pilot jurisdiction for 07866");
+  assert.notEqual(a.what.why.band?.band, undefined, "the row is placed in a band by its own provider, not by a pilot list")
+  assert.ok((a.what.why.band?.band ?? 0) >= 2, "CH-12: a former pilot place has no band 1 of its own");
   // 2 — the source's own row count, and the one vaulted document.
   assert.ok(a.discovery.discovered.held && a.discovery.discovered.value.sourceRows === 20);
   assert.ok(a.discovery.downloaded.held);

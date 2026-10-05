@@ -41,6 +41,16 @@ function rowOf(door: DoorRecord): BodySourceWiring | null {
   };
 }
 
+/** DB-16: every host the registry's meeting doors read, so a door with a new host needs no edit to a host list. */
+export function meetingDoorHosts(doors: readonly DoorRecord[]): string[] {
+  const hosts = new Set<string>();
+  for (const door of doors) {
+    if (door.status === "SUSPENDED" || door.meeting == null) continue;
+    for (const host of door.hosts) hosts.add(host);
+  }
+  return [...hosts].sort();
+}
+
 /** The wiring rows the registry's meeting doors describe, one per body and source type. */
 export function wiringRowsFromDoors(doors: readonly DoorRecord[], options: DoorRowOptions = {}): BodySourceWiring[] {
   const rows = new Map<string, BodySourceWiring>();

@@ -39,7 +39,7 @@ export function Pill(props: { readonly tone?: "neutral" | "info" | "good" | "gol
 
 export function ReceiptChip(props: { readonly receipt: UiReceipt }) {
   const r = props.receipt;
-  return <Pill tone={STATUS_TONE[r.status]}>{r.statusWords}{r.simulated ? " (sample)" : ""}</Pill>;
+  return <Pill tone={r.notPickedUp ? "warn" : STATUS_TONE[r.status]}>{r.statusWords}{r.simulated ? " (sample)" : ""}</Pill>;
 }
 
 export function Loading(props: { readonly what: string }) {

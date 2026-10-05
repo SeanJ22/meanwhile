@@ -225,16 +225,12 @@ test("placeFirstRows moves the dispatched rows to the front, keeps both groups' 
 
 /* ------------------------------------------------- pilot-runner.mts, as text */
 
-/** ADM-1: inputs are checked after the digest; changed inputs run both publishers. */
+/** ADM-1: inputs are checked after the digest; changed inputs run the publisher. */
 function checkRunnerPublishesConsole(src: string): void {
   const list = src.match(/const CONSOLE_PUBLISHERS[^\n]*\n[\s\S]*?\n\];/);
   assert.ok(list, "pilot-runner.mts names no CONSOLE_PUBLISHERS list");
   const snapshot = list[0].indexOf("scripts/publish-owner-snapshot.mts");
-  const readiness = list[0].indexOf("scripts/readiness-refresh.mts");
   assert.ok(snapshot >= 0, "publishConsole does not run publish-owner-snapshot.mts");
-  assert.ok(readiness >= 0, "publishConsole does not run readiness-refresh.mts");
-  assert.ok(snapshot < readiness, "the owner snapshot must publish before readiness");
-  assert.match(list[0], /"scripts\/readiness-refresh\.mts", "--target=control-plane"/, "readiness-refresh.mts is not asked to publish to the control plane");
 
   const fn = src.match(/async function publishConsole\(\): Promise<void> \{[\s\S]*?\n\}/);
   assert.ok(fn, "pilot-runner.mts has no publishConsole()");
@@ -371,16 +367,12 @@ test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on
   assert.equal(context.activeControlRead, null);
 });
 
-test("POSITIVE CONTROL: a runner that drops the publish call, the readiness target, or the dispatch check fails its checker", () => {
+test("POSITIVE CONTROL: a runner that drops the publish call or the dispatch check fails its checker", () => {
   const src = source("scripts/pilot-runner.mts");
 
   const noCall = src.replace("\n  await publishConsole();", "\n  /* not published */");
   assert.notEqual(noCall, src, "the mutation did not apply; the test would prove nothing");
   assert.ok(fails(() => checkRunnerPublishesConsole(noCall)), "a loop that never publishes passed");
-
-  const noTarget = src.replace('"scripts/readiness-refresh.mts", "--target=control-plane"', '"scripts/readiness-refresh.mts"');
-  assert.notEqual(noTarget, src);
-  assert.ok(fails(() => checkRunnerPublishesConsole(noTarget)), "a readiness refresh that publishes nowhere passed");
 
   const noDispatch = src.replace("reading.pendingDispatch.length > 0", "false");
   assert.notEqual(noDispatch, src);

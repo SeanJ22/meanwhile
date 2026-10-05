@@ -163,6 +163,8 @@ const RUNTIME_OWNED = [
   /* A recorded expiring absence (RULING 52/53) is runtime state a scout produced,
      not a corpus signal; a registration pass must never reset it. */
   "absentUntil",
+  "absenceUnlock",
+  "absenceReopened",
   /* The owner's dispatch materialized this row (MW-028). A provider that
      re-emits it without the mark must not erase the mark that keeps it owed. */
   "materializedBy",
@@ -270,6 +272,7 @@ export async function syncObligations(
       openOccurrenceId: held.openOccurrenceId,
       lastWorkedAt: held.lastWorkedAt,
       absentUntil: held.absentUntil,
+      ...(held.absenceUnlock !== undefined ? { absenceUnlock: held.absenceUnlock } : {}),
       ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
       ...(held.assignments !== undefined ? { assignments: held.assignments } : {}),
       ...(held.materializedFrom !== undefined ? { materializedFrom: held.materializedFrom } : {}),
@@ -1174,7 +1177,7 @@ export async function closeOccurrence(
       /* A productive disposition also clears any standing absence: a record that
          was argued absent and is now found is no longer absent (RULING 52/53). */
       ...(input.disposition !== null
-        ? { lastWorkedAt: input.workedAt ?? input.now, absentUntil: null }
+        ? { lastWorkedAt: input.workedAt ?? input.now, absentUntil: null, absenceUnlock: null }
         : {}),
       updatedAt: input.now,
     },
@@ -1265,7 +1268,7 @@ export async function recordNextDue(
  */
 export async function recordArguedAbsence(
   repos: ControlPlaneRepositories,
-  input: { readonly obligationId: string; readonly absentUntil: string; readonly now: string },
+  input: { readonly obligationId: string; readonly absentUntil: string; readonly now: string; readonly unlockWhen?: import("./absence.ts").AbsenceUnlock },
 ): Promise<void> {
   const row = await repos.obligations.mustRead(input.obligationId);
   if (row.value.absentUntil === input.absentUntil && row.value.nextDueAt === input.absentUntil) return;
@@ -1275,7 +1278,7 @@ export async function recordArguedAbsence(
     /* Advance the stored next-due to the expiry too, so the durable due-query
        (`dueByStoredTime`) and the derived schedule agree at once rather than at
        the next cycle's re-derivation. */
-    { ...row.value, absentUntil: input.absentUntil, nextDueAt: input.absentUntil, updatedAt: input.now },
+    { ...row.value, absentUntil: input.absentUntil, ...(input.unlockWhen !== undefined ? { absenceUnlock: input.unlockWhen } : {}), nextDueAt: input.absentUntil, updatedAt: input.now },
     input.now,
   );
 }

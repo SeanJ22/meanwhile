@@ -199,9 +199,23 @@ for (const contract of CONTRACTS) {
       assert.equal(rosters.reduce((sum, roster) => sum + roster.members.length, 0), contract.members);
     }
     const consumer = readFileSync(join(ROOT, row.consumerPath), "utf8");
-    const importPath = relative(dirname(row.consumerPath), contract.path).replaceAll("\\", "/");
-    assert.ok(consumer.includes(JSON.stringify(importPath)), "The generic consumer must import the new canonical JSON");
-    for (const symbol of Object.keys(contract.counts)) assert.ok(consumer.includes(`HOLDINGS.records.${symbol}`));
+    if (contract.path === MEASURE_PATH) {
+      // CA-24 moves runtime descriptions into source-bound ballot records. The
+      // historical extraction remains frozen and every held description survives.
+      const seed = JSON.parse(readFileSync(join(ROOT, "data/ballot/measure-records-first-seed.json"), "utf8")) as {
+        contestId: string; whatItDoes: string; sourceUrl: string; writtenAt: string; citation?: string;
+      }[];
+      assert.deepEqual(seed.map(record => ({
+        contestId: record.contestId, summary: record.whatItDoes,
+        summarizesUrl: record.sourceUrl, writtenAt: record.writtenAt,
+        ...(record.citation === "measure-source" ? { citation: record.citation } : {}),
+      })), data.records.MEASURE_SUMMARIES);
+      assert.match(consumer, /currentMeasureRecords/);
+    } else {
+      const importPath = relative(dirname(row.consumerPath), contract.path).replaceAll("\\", "/");
+      assert.ok(consumer.includes(JSON.stringify(importPath)), "The generic consumer must import the new canonical JSON");
+      for (const symbol of Object.keys(contract.counts)) assert.ok(consumer.includes(`HOLDINGS.records.${symbol}`));
+    }
 
     const object = `${plan.baseSha}:${row.oldPath}`;
     const baseAvailable = spawnSync("git", ["cat-file", "-e", object], { cwd: ROOT, stdio: "pipe" }).status === 0;

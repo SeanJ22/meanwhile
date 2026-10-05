@@ -72,9 +72,8 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { FieldManualStore } from "../field-manual.ts";
-import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
-import { appendActionReceiptWithHistoryAtomic } from "./action-history-atomic.ts";
+import { appendActionReceiptWithHistoryAtomic, readActionHistoryPage } from "./action-history-atomic.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
@@ -1144,6 +1143,7 @@ export async function createPgRepositories(
   };
 
   const repositories: ControlPlaneRepositories = {
+    adminActionHistoryPage: query => readActionHistoryPage(sql, query, bounds),
     workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
     routeTasks: pgAggregateRepository<RouteTask>(sql, "RouteTask", "cp_route_tasks", bounded),
     attempts: pgAggregateRepository<Attempt>(sql, "Attempt", "cp_attempts", bounded),
@@ -1174,12 +1174,6 @@ export async function createPgRepositories(
       sql,
       "OwnerSnapshot",
       "cp_owner_snapshots",
-      bounded,
-    ),
-    readinessSnapshots: pgAggregateRepository<ReadinessStateSnapshot>(
-      sql,
-      "ReadinessStateSnapshot",
-      "cp_readiness_snapshots",
       bounded,
     ),
     fieldManual: pgAggregateRepository<FieldManualStore>(

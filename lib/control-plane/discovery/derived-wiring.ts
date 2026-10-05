@@ -73,6 +73,17 @@ const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>>
   OFFICIAL_PAGE_EVENTS: ["official-page-events"],
   DILIGENT: ["diligent"],
   LEGISTAR: ["legistar-api"],
+  CIVICPLUS: ["civicplus-agendacenter"],
+  BOARDBOOK: ["boardbook"],
+  CIVICCLERK: ["civicclerk-api"],
+  IQM2: ["iqm2"],
+  REVIZE: ["revize"],
+  APPTEGY: ["apptegy"],
+  ONBASE: ["onbase"],
+  SUITEONE: ["suiteone"],
+  SCHEDULEPAGE: ["schedulepage"],
+  DOCUMENT_LISTING: ["document-listing"],
+  LEGISTAR_INSITE: ["legistar-insite"],
 };
 
 /** A discovery vendor's route as the wiring kind the reader runs, or why it cannot be one. */
@@ -94,6 +105,13 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
   }
   if (find.vendor === "diligent" && url.pathname === "/Services/MeetingsService.svc/meetings") return { kind: "DILIGENT", endpoint: { serviceBase: url.origin } };
   if (find.vendor === "official-page-events") return { kind: "OFFICIAL_PAGE_EVENTS", endpoint: { pageUrl: url.toString(), officialHost: url.host } };
+  if (find.vendor === "civicclerk-api" && url.hostname.endsWith(".api.civicclerk.com")) return { kind: "CIVICCLERK", endpoint: { apiBase: url.origin } };
+  if (find.vendor === "boardbook") {
+    const orgId = /^\/Public\/Organization\/([^/]+)/.exec(url.pathname)?.[1];
+    if (orgId && url.hostname === "meetings.boardbook.org") return { kind: "BOARDBOOK", endpoint: { orgId } };
+  }
+  if (find.vendor === "iqm2" && url.hostname.endsWith(".iqm2.com")) return { kind: "IQM2", endpoint: { base: url.origin } };
+  if (find.vendor === "legistar-insite" && url.hostname.endsWith(".legistar.com")) return { kind: "LEGISTAR_INSITE", endpoint: { insiteHost: url.host } };
   if (find.vendor === "civicplus-agendacenter") {
     return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: "CIVICPLUS wiring reads the site's iCal feed (icalUrl); an AgendaCenter page alone cannot be wired" };
   }

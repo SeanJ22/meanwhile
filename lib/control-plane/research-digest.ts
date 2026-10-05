@@ -41,7 +41,7 @@ export function researchDigestLines(m: ResearchMetrics): string[] {
     const o = m.ordering;
     lines.push(
       `  queue by band      band 1 ${o.bands[1]} · band 2 ${o.bands[2]} · band 3 ${o.bands[3]} (${o.appliesTo}; ${o.rule})`,
-      `  ordering inputs    ${o.inputs.readerImpactAt}; ${o.inputs.pilotJurisdictions}; ` +
+      `  ordering inputs    ${o.inputs.readerImpactAt}; ` +
         `universe providers ${o.inputs.universeProviders.join(", ")}; tie-break ${o.inputs.tieBreak}`,
     );
   }

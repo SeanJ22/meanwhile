@@ -122,7 +122,7 @@ test("a proved engineering candidate becomes an ENGINEER pointer — the paths, 
   assert.ok((payload.affectedPaths ?? []).length === 1, "the pointer carries the proposed paths");
   assert.ok(
     !JSON.stringify(entry).includes("UNIQUE_PROPOSED_SOURCE_BYTES_marker"),
-    "the proposed file CONTENT must never enter the manual — the review-gated store keeps the bytes",
+    "the proposed file CONTENT must never enter the manual — the candidate store keeps the bytes",
   );
 });
 

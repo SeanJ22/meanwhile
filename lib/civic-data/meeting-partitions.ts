@@ -1,6 +1,7 @@
 import {
   RETIRED_MEETING_ROUTES,
   SOURCE_WIRING,
+  activeWiring,
   meetingSourceNamesForWiring,
   type BodySourceWiring,
 } from "../registry/source-wiring.ts";
@@ -13,7 +14,13 @@ import {
   type RoutineSourceContract,
 } from "./contracts.ts";
 
+import { MEETING_HISTORY_SCOPE_SUFFIX } from "./meeting-history-scope.ts";
+import { derivedRequestedUrl } from "./derived-door.ts";
+
 export const LEGACY_MEETINGS_AGGREGATE_SCOPE = "supported-bodies";
+
+/** The source authority a partition's durable history promotes under (`source-authority.ts`). */
+export const MEETING_HISTORY_SOURCE_ID = "meetings-history" as const;
 
 export interface MeetingPartitionContract extends RoutineSourceContract {
   readonly meetingSource: string;
@@ -28,6 +35,12 @@ export interface MeetingPartitionContract extends RoutineSourceContract {
    * ACTIVE rows for that state. Null for a SOURCE_WIRING partition.
    */
   readonly derivedFamily: DerivedMeetingFamilyState | null;
+  /**
+   * Set only on a history contract (DB-06): the id of the live partition whose concluded sittings it keeps. A history
+   * contract is built from its partition (`meetingHistoryContract`), is never in `MEETING_PARTITION_CONTRACTS`, has no
+   * clock or task of its own, and is written only by its partition's own child.
+   */
+  readonly historyOf?: string;
 }
 
 /** A derived family's meetings carry their members' own sources; the family itself is named by this one. */
@@ -116,9 +129,9 @@ export function meetingAcquisitionFailureDomain(
   return `meeting-upstream:${host}`;
 }
 
-function buildMeetingPartitions(): readonly MeetingPartitionContract[] {
+function buildMeetingPartitions(wirings: readonly BodySourceWiring[]): MeetingPartitionContract[] {
   const { readerConsumers, ...policy } = MEETING_PARTITION_POLICY;
-  const partitions: MeetingPartitionContract[] = SOURCE_WIRING.flatMap((wiring) =>
+  const partitions: MeetingPartitionContract[] = wirings.flatMap((wiring) =>
     meetingSourceNamesForWiring(wiring).map((meetingSource) => ({
       ...policy,
       id: meetingPartitionId(meetingSource, wiring.bodyId),
@@ -183,8 +196,16 @@ function buildMeetingPartitions(): readonly MeetingPartitionContract[] {
   return partitions;
 }
 
-/** One permanent contract and canonical pointer per registered route/body. */
-export const MEETING_PARTITION_CONTRACTS = buildMeetingPartitions();
+/**
+ * One permanent contract and canonical pointer per registered route/body.
+ *
+ * Built from the code's list at load. With the door registry switched on
+ * (lib/doors/install.ts) the runner calls `refreshMeetingPartitions()` at the
+ * start of each pass, which replaces the contents of this array and the lists
+ * built from it IN PLACE, so every importer sees the registry's doors on that
+ * pass and no deploy is needed (DB-13).
+ */
+export const MEETING_PARTITION_CONTRACTS: MeetingPartitionContract[] = buildMeetingPartitions(SOURCE_WIRING);
 
 /**
  * **A RETIRED ROUTE'S LAST PROMOTED VERSION, HELD UNTIL ITS SUCCESSOR PROMOTES.**
@@ -223,8 +244,8 @@ export interface HeldMeetingPartition {
   readonly retiredOn: string;
 }
 
-function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
-  const registered = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition]));
+function buildHeldMeetingPartitions(contracts: readonly MeetingPartitionContract[]): HeldMeetingPartition[] {
+  const registered = new Map(contracts.map((partition) => [partition.id, partition]));
   const held = RETIRED_MEETING_ROUTES.flatMap((route) => {
     const id = meetingPartitionId(route.meetingSource, route.bodyId);
     const successorId = meetingPartitionId(route.replacedBy, route.bodyId);
@@ -254,7 +275,7 @@ function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
   return held;
 }
 
-export const HELD_MEETING_PARTITIONS = buildHeldMeetingPartitions();
+export const HELD_MEETING_PARTITIONS: HeldMeetingPartition[] = buildHeldMeetingPartitions(MEETING_PARTITION_CONTRACTS);
 
 /**
  * Retired partitions that hold nothing: the successor was already a wired,
@@ -280,10 +301,10 @@ export function heldMeetingPartitionFor(successorId: string): HeldMeetingPartiti
  * none for any other task. Refused at load, rather than silently cooled to the
  * base cadence, when a followed partition is not registered.
  */
-function buildSittingWindowSources(): ReadonlyMap<string, readonly string[]> {
-  const registered = new Set(MEETING_PARTITION_CONTRACTS.map((partition) => partition.id));
+function buildSittingWindowSources(contracts: readonly MeetingPartitionContract[]): Map<string, readonly string[]> {
+  const registered = new Set(contracts.map((partition) => partition.id));
   const sources = new Map<string, readonly string[]>();
-  for (const partition of MEETING_PARTITION_CONTRACTS) {
+  for (const partition of contracts) {
     if (partition.schedule?.kind === "SITTING_WINDOW") sources.set(partition.id, [partition.id]);
   }
   for (const contract of ROUTINE_SOURCE_CONTRACTS) {
@@ -301,7 +322,41 @@ function buildSittingWindowSources(): ReadonlyMap<string, readonly string[]> {
   return sources;
 }
 
-const SITTING_WINDOW_SOURCES = buildSittingWindowSources();
+const SITTING_WINDOW_SOURCES = buildSittingWindowSources(MEETING_PARTITION_CONTRACTS);
+
+export interface MeetingPartitionRefresh {
+  /** True when the lists now follow `wirings`; false when they were left as they were. */
+  readonly refreshed: boolean;
+  readonly partitions: number;
+  /** Why the lists were left as they were, in a sentence; null when refreshed. */
+  readonly reason: string | null;
+}
+
+/**
+ * DB-13: rebuild the partition lists from the doors in use now (the registry's
+ * rows when installed, else the code's). All three lists are built first and
+ * swapped in only if every check passes, so a door that collides with another,
+ * names a retired route's successor wrongly, or breaks a sitting window leaves
+ * the last good lists in place (last-known-good isolation is unchanged).
+ */
+export function refreshMeetingPartitions(wirings: readonly BodySourceWiring[] = activeWiring()): MeetingPartitionRefresh {
+  try {
+    const contracts = buildMeetingPartitions(wirings);
+    const held = buildHeldMeetingPartitions(contracts);
+    const sources = buildSittingWindowSources(contracts);
+    MEETING_PARTITION_CONTRACTS.splice(0, MEETING_PARTITION_CONTRACTS.length, ...contracts);
+    HELD_MEETING_PARTITIONS.splice(0, HELD_MEETING_PARTITIONS.length, ...held);
+    SITTING_WINDOW_SOURCES.clear();
+    for (const [id, ids] of sources) SITTING_WINDOW_SOURCES.set(id, ids);
+    return { refreshed: true, partitions: contracts.length, reason: null };
+  } catch (error) {
+    return {
+      refreshed: false,
+      partitions: MEETING_PARTITION_CONTRACTS.length,
+      reason: `the registry's doors could not be built into meeting work (${error instanceof Error ? error.message : String(error)}), so the previous list stays in use`,
+    };
+  }
+}
 
 /** The partition ids whose sittings decide whether a task is hot; empty when the task has no sitting window. */
 export function sittingWindowSourceIds(taskId: string): readonly string[] {
@@ -335,4 +390,55 @@ export function observableRoutineContracts(): readonly RoutineSourceContract[] {
     ...ROUTINE_SOURCE_CONTRACTS,
     ...MEETING_PARTITION_CONTRACTS,
   ];
+}
+
+/** A partition's durable history scope: its own scope plus `:history`, under the same record class. */
+export function meetingHistoryScope(partitionScope: string): string {
+  return `${partitionScope}${MEETING_HISTORY_SCOPE_SUFFIX}`;
+}
+
+export function isMeetingHistoryScope(scope: string): boolean {
+  return scope.endsWith(MEETING_HISTORY_SCOPE_SUFFIX);
+}
+
+const historyContracts = new WeakMap<MeetingPartitionContract, MeetingPartitionContract>();
+
+/**
+ * The contract a partition's durable history promotes under (DB-06). Derived from its partition, so it can never name
+ * a partition that is not registered, and kept out of `MEETING_PARTITION_CONTRACTS` so no clock, task or reader
+ * composition treats it as a partition of its own.
+ */
+export function meetingHistoryContract(partition: MeetingPartitionContract): MeetingPartitionContract {
+  const held = historyContracts.get(partition);
+  if (held) return held;
+  const scope = meetingHistoryScope(partition.scope);
+  const contract: MeetingPartitionContract = {
+    ...partition,
+    id: `${partition.id}${MEETING_HISTORY_SCOPE_SUFFIX}`,
+    sourceId: MEETING_HISTORY_SOURCE_ID,
+    scope,
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: MEETING_HISTORY_SOURCE_ID },
+    acquisitionAdapter: { authorityMode: "DERIVED", command: partition.acquisitionAdapter.command },
+    readerProjection: {
+      id: `meetings-history:${partition.id}`,
+      consumers: ["Ask", "/api/agenda"],
+    },
+    lkgBehavior: `Only ${partition.id} may move this pointer, and only by adding sittings that left its live partition. History is never removed or replaced by an older version.`,
+    derivedFamily: null,
+    historyOf: partition.id,
+  };
+  historyContracts.set(partition, contract);
+  return contract;
+}
+
+/** The live partition a history scope belongs to, or null when the scope is no registered partition's history. */
+export function meetingPartitionForHistoryScope(scope: string): MeetingPartitionContract | null {
+  if (!isMeetingHistoryScope(scope)) return null;
+  const partitionScope = scope.slice(0, -MEETING_HISTORY_SCOPE_SUFFIX.length);
+  return MEETING_PARTITION_CONTRACTS.find((partition) => partition.scope === partitionScope) ?? null;
+}
+
+/** The request a history candidate names in place of a URL. */
+export function meetingHistoryRequestedUrl(partition: MeetingPartitionContract): string {
+  return derivedRequestedUrl(MEETING_HISTORY_SOURCE_ID, meetingHistoryScope(partition.scope));
 }

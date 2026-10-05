@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       scope: request.nextUrl.searchParams.get("scope") ?? "united-states",
       revision: `learning:${observedAt.slice(0, 13)}`,
       asOf: observedAt,
-      data: v6LearningView(buildLearningTrends(read.facts.weeks, observedAt), read.facts.doors),
+      data: v6LearningView(buildLearningTrends(read.facts.weeks, observedAt), read.facts.doors, read.facts.bankWriteErrors),
       missingParts: [],
     };
   });

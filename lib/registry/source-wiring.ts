@@ -1,3 +1,4 @@
+import { feedKindForWiringType } from "../sources/feed-kind-registry.ts";
 import type { OcdId } from "../sources/types.ts";
 import type { AgendaSourceType } from "./types.ts";
 
@@ -149,7 +150,10 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
       );
     }
   }
-  return route ? [route] : [];
+  if (route) return [route];
+  // DB-50: a door of an installed engineer-built feed kind is served by that kind's own source.
+  const feed = feedKindForWiringType(row.agendaSourceType);
+  return feed ? [feed.kind] : [];
 }
 
 /**

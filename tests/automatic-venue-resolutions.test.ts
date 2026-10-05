@@ -67,3 +67,20 @@ test("a retry retains only an exact previously verified sitting and address", ()
   assert.equal(retainPreviouslyVerifiedVenuePoints([fresh], [prior])[0]?.location?.lat, 31.3939);
   assert.equal(retainPreviouslyVerifiedVenuePoints([{ ...fresh, venueGap: { ...fresh.venueGap!, publishedText: "different address" } }], [prior])[0]?.location, null);
 });
+
+test("BX-08: a published address without a ZIP matches; a wrong published ZIP does not", () => {
+  const noZip = "- 1415 W Melody Ln Bldg G Bisbee AZ";
+  assert.ok(verifiedCensusVenuePoint(noZip, GEO));
+  assert.equal(verifiedCensusVenuePoint(RAW.replace("85603", "85604"), GEO), null);
+});
+
+test("BX-08: every new address in a pass is matched, with no per-pass cap", async () => {
+  const many = { ...snapshot, meetings: Array.from({ length: 45 }, (_, i) => ({
+    ...snapshot.meetings[0]!, id: `ical:county:meeting-${i}`, venueGap: { kind: "STATED_NOT_PLACED", publishedText: `${RAW} #${i}`, publisher: "County" },
+  })) } as unknown as MeetingsSnapshot;
+  let calls = 0;
+  const result = await automaticVenuePackage({ snapshot: many, existingIds: new Set(), memberRoutes: ROUTES, clock: () => NOW,
+    fetchImpl: (async () => { calls++; return new Response(JSON.stringify(GEO), { status: 200 }); }) as typeof fetch });
+  assert.equal(calls, 45);
+  assert.equal((result.package?.payload as unknown as { records: unknown[] }).records.length, 45);
+});

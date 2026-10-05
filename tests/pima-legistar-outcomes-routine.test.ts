@@ -519,3 +519,31 @@ test("a dry run reads the events route and writes nothing", async () => {
   assert.equal((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.versionId, before?.versionId);
   resetOutcomeSnapshotCache();
 });
+
+test("DB-07: outcomes older than the routine window stay published; a narrower window changes only what is re-read", async () => {
+  const store = await storeHoldingSeed();
+  const before = heldSeed().sittings.filter((sitting) => sitting.eventId !== 1821 && sitting.eventId !== 1825);
+  assert.ok(before.length > 0, "the held seed carries sittings");
+  // A window that starts after every held sitting: the events route says nothing about any of them.
+  const latestHeld = before.map((sitting) => String(sitting.startsAt ?? "").slice(0, 10)).sort().at(-1)!;
+  const from = new Date(Date.parse(`${latestHeld}T00:00:00.000Z`) + 86_400_000).toISOString().slice(0, 10);
+  const stub = recordedLegistar({ events: [recordedEvent(1825, "2026-09-20T18:00:00.12")] });
+  const client = findClient("pima");
+  assert.ok(client);
+  const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
+    store,
+    client,
+    args: ROUTINE_ARGS,
+    window: { from, to: "2026-09-21" },
+    now: steppedClock("2026-09-21T00:00:00.000Z"),
+    log: () => {},
+  }));
+  assert.equal(result.exitCode, 0);
+  const read = await readOutcomeProjection({ store, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") return;
+  const held = new Set(read.value.sittings.map((sitting) => sitting.meetingId));
+  for (const sitting of before) assert.ok(held.has(sitting.meetingId), `${sitting.meetingId} stays published past the window`);
+  assert.ok(held.has("legistar:pima:1825"), "the sitting this window did read is added");
+  resetOutcomeSnapshotCache();
+});

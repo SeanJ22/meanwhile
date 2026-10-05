@@ -85,7 +85,7 @@ test("only the exact original Cochise work binding admits the source-scoped voti
     escalations: [], createdAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, transitions: [],
     autonomousPlan: { version: 1, ownerInstructions: [ORIGINAL_LIFETIME_HUNT.receiptId], capability: "VOTER_ACCESS",
       jurisdiction: "AZ", sourceRegistryReferences: ["az:county:county-of-cochise"], seedUrls: [],
-      sources: [], acquisition: [], detective: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
+      sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
       contract: { schemaVersion: 2, recordClass: "VOTER_ACCESS_ROUTE", subjectId: "az:county:county-of-cochise",
         requiredFields: ["bodyName", "state", "kind", "url", "coverage", "coverageEvidence"],
         identity: { namespace: "az:county:county-of-cochise:VOTER_ACCESS", keyFields: ["url"] },

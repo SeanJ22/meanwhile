@@ -205,7 +205,7 @@ export function scoutStory(facts: ScoutFacts, subject: WorkSubject): PlainWork {
     };
   }
 
-  const ranOut = facts.stoppedBy === "BOUND";
+  const ranOut = facts.stoppedBy === "BOUND" || facts.stoppedBy === "TIMEOUT";
   switch (facts.outcome) {
     case "ROUTE_CANDIDATE":
       return {

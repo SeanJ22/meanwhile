@@ -51,10 +51,10 @@ export interface Executor {
 }
 
 /** How often an open receipt asks the runner's record: quickly at first, then calmly. */
-export function followUpDelayMs(asked: number): number | null {
+export function followUpDelayMs(asked: number): number {
   if (asked < 30) return 3_000; // the first 90 seconds
-  if (asked < 30 + 56) return 15_000; // then up to about 15 minutes in all
-  return null;
+  if (asked < 30 + 56) return 15_000; // then calmly
+  return 60_000; // an open order keeps asking until the runner takes it or it is taken back
 }
 
 export const ACTION_ROUTE = "/api/admin/action";
@@ -93,7 +93,6 @@ export function liveExecutor(opts: {
       try {
         for (let asked = 0; epoch === mine && isOpen(current); asked += 1) {
           const delay = followUpDelayMs(asked);
-          if (delay === null) return;
           await wait(delay);
           const url = lookupUrl(current, def);
           if (epoch !== mine || url === null) return;

@@ -36,6 +36,8 @@
 import { createHash } from "node:crypto";
 import { httpsHost } from "./derived-door.ts";
 
+import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, isDataDoorKind, type DataDoorKind } from "./derived-door-kinds.ts";
+
 /**
  * The citation every row carries. The text is kept byte-identical so the rows
  * already stored still pass and none migrate; despite its words it is not an
@@ -45,7 +47,7 @@ export const CROSSWALK_CITATION =
   "C16: owner decision recorded 2026-09-24T22:43Z (agents may review and promote the records connecting a calendar to its governing body, on saved official evidence)" as const;
 
 /** The calendar kinds a reviewed filter is defined for. */
-export const CROSSWALK_KINDS = ["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR"] as const;
+export const CROSSWALK_KINDS = ["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR", ...DATA_DOOR_KINDS] as const;
 export type CrosswalkKind = (typeof CROSSWALK_KINDS)[number];
 
 /** The filter keys each kind's reader adapter reads, and the ones that select (one of which is required). */
@@ -55,6 +57,11 @@ const FILTER_KEYS: Readonly<Record<CrosswalkKind, { readonly allowed: readonly s
   OFFICIAL_PAGE_EVENTS: { allowed: ["nameTerms"], selecting: ["nameTerms"] },
   DILIGENT: { allowed: ["titleMatch", "titleExclude"], selecting: ["titleMatch"] },
   LEGISTAR: { allowed: ["eventBodyId"], selecting: ["eventBodyId"] },
+  ...(Object.fromEntries(DATA_DOOR_KINDS.map((kind) => {
+    const spec = DOOR_KIND_SPECS[kind];
+    // A kind that declares no required setting is selected by its route alone.
+    return [kind, { allowed: spec.allowed, selecting: spec.required }];
+  })) as Record<DataDoorKind, { readonly allowed: readonly string[]; readonly selecting: readonly string[] }>),
 };
 
 export interface MeetingBodyCrosswalkRow {
@@ -159,8 +166,12 @@ export function crosswalkRowIssue(value: unknown): string | null {
   const rule = FILTER_KEYS[kind];
   const stray = keys.find((key) => !rule.allowed.includes(key));
   if (stray !== undefined) return `${who}: a ${kind} filter has no ${stray}`;
-  if (!rule.selecting.some((key) => text(filter[key]))) {
-    return `${who}: a ${kind} calendar is this body's only through a filter naming it (${rule.selecting.join(" or ")})`;
+  // A data-door kind (DB-17) needs every setting its adapter requires; one with none is
+  // a portal that serves a single body, so its route is the body's and no filter selects.
+  const dataKind = isDataDoorKind(kind);
+  const selects = dataKind ? rule.selecting.every((key) => text(filter[key])) : rule.selecting.some((key) => text(filter[key]));
+  if (!selects) {
+    return `${who}: a ${kind} calendar is this body's only through a filter naming it (${rule.selecting.join(dataKind ? " and " : " or ")})`;
   }
   if (keys.some((key) => typeof filter[key] !== "string")) return `${who}: a filter value is not text`;
   if (kind === "LEGISTAR" && !/^\d+$/.test(filter.eventBodyId)) return `${who}: no numeric Legistar body id`;

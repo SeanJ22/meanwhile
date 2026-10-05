@@ -587,7 +587,6 @@ for (const c of filed) {
       familyName: c.familyName,
       givenName: c.givenName,
       email: c.email,
-      filedAddress: c.address,
       route: "filing-county",
       sourceUrl: c.sourceUrl,
       sourceOrg: "Morris County Clerk",

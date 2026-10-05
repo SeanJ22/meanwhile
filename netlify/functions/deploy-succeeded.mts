@@ -9,7 +9,7 @@
  *
  * The work is lib/ops/post-deploy-warm.ts: wait for `/api/build` to serve the
  * commit, make the keep-warm pinger's fourteen marked calls, fill the CDN with
- * the pilot ZIPs' map answers and read them back. Bounded to ~55 s by its own
+ * the map answer for one ZIP per published county and read them back. Bounded to ~55 s by its own
  * deadlines, inside the 60 s synchronous limit; the result is one log line.
  *
  * Like every function it is reachable by URL. A forged event can make it do no
@@ -36,6 +36,12 @@ export async function handleDeploySucceeded(
 
 export default async function deploySucceeded(request: Request): Promise<Response> {
   const handled = await handleDeploySucceeded(request);
-  console.log(`post-deploy-warm: ${JSON.stringify(handled)}`);
+  const result = handled.result;
+  // One line, not one entry per county: how many places were asked for, filled and read back from the CDN.
+  const summary = result?.outcome === "WARMED"
+    ? { ...result, fills: undefined, rereads: undefined, filled: result.fills.filter((r) => r.status === 200).length,
+        skipped: result.fills.filter((r) => r.status === "SKIPPED").length, cdnHits: result.rereads.filter((r) => r.cacheStatus?.includes("hit")).length }
+    : result;
+  console.log(`post-deploy-warm: ${JSON.stringify({ ...handled, result: summary })}`);
   return new Response(null, { status: 204 });
 }

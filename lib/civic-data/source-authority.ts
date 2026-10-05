@@ -53,6 +53,24 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
 }
 
 export const SOURCE_AUTHORITIES = {
+  "official-ballot-authorities": {
+    id: "official-ballot-authorities",
+    publisher: "Exact official election authorities in the saved-source receipt",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map(target => target.jurisdiction)],
+    recordClasses: ["BALLOT_CANDIDACY"],
+    competentFacts: ["election", "contest", "complete listed candidate set", "filed candidate name", "party", "seat count"],
+    expectedIdentifierKeys: ["contest_id", "candidacy_id"],
+    expectedTemporalFields: ["source_through", "collected_at"],
+    horizonSemantics: "Each state/election key contains only source-verified complete contests; no wider coverage or absence is inferred.",
+    parserVersion: "ballot-contests/1",
+    freshnessExpectation: "Recheck saved election lists inside the BALLOT_CONTEST freshness window; source gaps remain owed.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: { allowedSourceClasses: ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"] },
+  },
   "federal-legislative-records": {
     id: "federal-legislative-records",
     publisher: "U.S. House Clerk, U.S. Senate, and Congress.gov",
@@ -536,6 +554,33 @@ export const SOURCE_AUTHORITIES = {
     },
   },
   /*
+   * A partition's durable meeting history (DB-06): concluded sittings that carry an agenda, minutes, an outcome or a
+   * vote, moved out of the live partition once they are older than the held window, and kept for good (rulings §4:
+   * "do not delete history"). No route of its own: authentic only as the exact promoted partition version the
+   * sittings were taken from (and the history version it extends), each of which carries its publisher's own evidence.
+   */
+  "meetings-history": {
+    id: "meetings-history",
+    publisher: "The public bodies whose sittings the live meeting partitions hold, kept from the promoted partition version they were read in",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: [],
+    jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
+    recordClasses: ["MEETING"],
+    competentFacts: ["meeting time", "meeting status", "public body", "location", "agenda link", "agenda document"],
+    expectedIdentifierKeys: ["meeting_id", "body_id", "source_route"],
+    expectedTemporalFields: ["starts_at", "ends_at", "source_through"],
+    horizonSemantics: "Append-only: a sitting is added when it leaves its live partition and is never removed. It is never re-read, so it makes no claim about what the publisher lists today.",
+    parserVersion: "meetings-composite/2",
+    freshnessExpectation: "None: history is kept as last published and moves only when a sitting leaves its partition.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+    derivedPromotion: {
+      inputKinds: ["PROMOTED_VERSION"],
+      authorization: "Rulings §4 (history is kept, never deleted; Sean, October 3, 2026) and build plan v6 DB-06",
+    },
+  },
+  /*
    * The verified campaign sites the standing runner's campaign-site chain approves (2026-09-25): each row is a site
    * our own robots-first read verified, audited with measured controls and an independent second signal, and
    * approved; the writer verifies its vaulted bytes again before it cites them. No route of its own: authentic only
@@ -942,6 +987,21 @@ export function authorityForManualReceipt(
   return { ok: true, contract };
 }
 
+/**
+ * DB-16: hosts the doors in use name for meetings, installed by a pass that
+ * reads the registry (lib/doors/install.ts). Null, the default and the way
+ * back, means only the contract's own routes are registered. A door's host
+ * lets a read land anywhere on that host over HTTPS; the rulings §3 rule that
+ * a vendor host counts when an official page links to it is checked elsewhere
+ * and is unchanged.
+ */
+let doorHosts: ReadonlySet<string> | null = null;
+const DOOR_HOST_SOURCE = "meetings-public-bodies";
+
+export function installDoorHosts(hosts: Iterable<string> | null): void {
+  doorHosts = hosts === null ? null : new Set([...hosts].map((host) => host.trim().toLowerCase()).filter((host) => host !== ""));
+}
+
 export function authorityFor(
   sourceId: string,
   recordClass: RoutineRecordClass,
@@ -956,7 +1016,8 @@ export function authorityFor(
   try { url = new URL(finalUrl); }
   catch { return { ok: false, code: "FINAL_URL_INVALID", detail: `Final URL is not parseable: ${JSON.stringify(finalUrl)}.` }; }
   if (url.protocol !== "https:") return { ok: false, code: "FINAL_URL_NOT_HTTPS", detail: `${url.href} is not HTTPS.` };
-  if (!contract.routePrefixes.some((prefix) => url.href.startsWith(prefix))) {
+  const onDoorHost = sourceId === DOOR_HOST_SOURCE && doorHosts !== null && doorHosts.has(url.hostname.toLowerCase());
+  if (!onDoorHost && !contract.routePrefixes.some((prefix) => url.href.startsWith(prefix))) {
     return { ok: false, code: "FINAL_ROUTE_NOT_REGISTERED", detail: `${url.href} is outside ${sourceId}'s registered publication routes.` };
   }
   if (!contract.routineAutoPromotion) {

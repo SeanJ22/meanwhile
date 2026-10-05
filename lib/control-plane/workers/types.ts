@@ -4,7 +4,7 @@ import { ATTACK_MODES, AUDIT_EVIDENCE_BASES } from "../audit.ts";
 import type { CapabilityGrant } from "../capability.ts";
 import type { Attempt } from "../attempt.ts";
 import type { RouteTask } from "../route-task.ts";
-import { assertResearchResult, type AcquirerResult, type DetectiveResult, type AcquirerTaskSpec, type DetectiveTaskSpec } from "./research-types.ts";
+import { assertResearchResult, type AcquirerResult, type DetectiveResult, type AcquirerTaskSpec } from "./research-types.ts";
 import type { EngineeringResult, EngineeringTaskSpec } from "./engineering-types.ts";
 
 /** One wire contract: the broker validates both sides of the disposable worker boundary. */
@@ -282,7 +282,6 @@ export type FleetResult = ParserResult | ValidatorResult | AuditorResult | Acqui
 export interface WorkerTaskSpec {
   readonly auditEscalation?: { readonly previousResultId: string; readonly from: string; readonly to: "sonnet" | "frontier"; readonly reason: string };
   readonly acquisition?: AcquirerTaskSpec;
-  readonly detective?: DetectiveTaskSpec;
   readonly engineering?: EngineeringTaskSpec;
   readonly schemaVersion: 1;
   /** Replay proves reproducibility without advancing or resetting the civic obligation. */

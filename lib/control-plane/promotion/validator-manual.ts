@@ -17,6 +17,7 @@ import {
   type FieldManualEntry,
   type FieldManualRepos,
 } from "../field-manual.ts";
+import { rolePlaybook } from "../playbooks.ts";
 
 const SOURCE = "section3-validator";
 
@@ -25,6 +26,7 @@ export interface ValidatorManual {
   /** host → saved official pages (artifact ids) that link it, newest first. */
   readonly officialLinks: ReadonlyMap<string, readonly string[]>;
   readonly offered: number;
+  readonly playbook: string;
   readonly error?: string;
 }
 
@@ -42,7 +44,7 @@ export async function readValidatorManual(repos: FieldManualRepos): Promise<Vali
     if (entry.kind !== "OFFICIAL_LINK" || entry.outcome !== "YIELDED" || typeof payload?.host !== "string" || typeof payload.linkingArtifactId !== "string") continue;
     links.set(payload.host, [...(links.get(payload.host) ?? []), payload.linkingArtifactId]);
   }
-  return { officialLinks: links, offered: read.projection.entryIds.length, ...(read.error ? { error: read.error } : {}) };
+  return { officialLinks: links, offered: read.projection.entryIds.length, playbook: rolePlaybook(read.store.entries, "VALIDATOR").text, ...(read.error ? { error: read.error } : {}) };
 }
 
 /** One publication attempt, as the Validator saw it. */

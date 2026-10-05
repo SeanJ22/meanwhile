@@ -86,6 +86,18 @@ export interface DoorRecord {
   readonly lastFailureAt: string | null;
   /** When the door last went SHUT. Null unless it is. */
   readonly shutSince: string | null;
+  /** DB-32, system-kept: consecutive reads that could not reach the door. Absent means none. */
+  readonly transportFailures?: number;
+  /** DB-32, system-kept: in a sentence, why the door went SHUT. Null unless it is. */
+  readonly shutReason?: string | null;
+  /** DB-32, system-kept: when the door last reopened after being shut. */
+  readonly reopenedAt?: string | null;
+  /** DB-30, system-kept: when a read of this door last promoted something different from before. Absent means never seen. */
+  readonly lastChangedAt?: string | null;
+  /** DB-30, system-kept: minutes between its changed promotions, as a running average (lib/doors/observed-rate.ts). Absent until two have been seen. */
+  readonly observedChangeMinutes?: number | null;
+  /** DB-30, system-kept: how many changed promotions the average rests on. */
+  readonly observedChanges?: number;
   /** Read at the next opportunity instead of waiting for the schedule. */
   readonly readNow: boolean;
   /** System-kept: what the last first look saw. Never edited by hand, never a derive input. */
@@ -299,6 +311,19 @@ function shutSinceFor(status: DoorStatus, previous: DoorRecord | null, at: strin
   return previous !== null && previous.status === "SHUT" && previous.shutSince !== null ? previous.shutSince : at;
 }
 
+/** DB-32's system-kept fields carried over from what was there; the shut reason follows the status. */
+function healthKept(previous: DoorRecord | null, status: DoorStatus): Partial<DoorRecord> {
+  if (previous === null) return {};
+  return {
+    ...(previous.transportFailures !== undefined ? { transportFailures: previous.transportFailures } : {}),
+    ...(status === "SHUT" && previous.shutReason !== undefined ? { shutReason: previous.shutReason } : {}),
+    ...(previous.reopenedAt !== undefined ? { reopenedAt: previous.reopenedAt } : {}),
+    ...(previous.lastChangedAt !== undefined ? { lastChangedAt: previous.lastChangedAt } : {}),
+    ...(previous.observedChangeMinutes !== undefined ? { observedChangeMinutes: previous.observedChangeMinutes } : {}),
+    ...(previous.observedChanges !== undefined ? { observedChanges: previous.observedChanges } : {}),
+  };
+}
+
 /** A new door, or a hand edit of one, with the system's own fields carried over from what was there. */
 export function applyManualEdit(previous: DoorRecord | null, draft: Required<DoorDraft>, at: string): DoorRecord {
   return {
@@ -308,6 +333,7 @@ export function applyManualEdit(previous: DoorRecord | null, draft: Required<Doo
     lastFailureAt: previous?.lastFailureAt ?? null,
     validators: previous?.validators ?? null,
     shutSince: shutSinceFor(draft.status, previous, at),
+    ...healthKept(previous, draft.status),
     origin: "MANUAL",
     editedAt: at,
     updatedAt: at,
@@ -339,6 +365,7 @@ export function applyDerivedRow(
     lastFailureAt: previous?.lastFailureAt ?? null,
     validators: previous?.validators ?? null,
     shutSince: previous?.shutSince ?? shutSinceFor(draft.status, null, at),
+    ...healthKept(previous, previous?.status ?? draft.status),
     origin: "DERIVED",
     editedAt: previous?.editedAt ?? null,
     updatedAt: at,

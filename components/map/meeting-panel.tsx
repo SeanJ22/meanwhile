@@ -475,6 +475,18 @@ function MeetingEntry({
             {agendaState.sentence}
           </p>
         )}
+        {/* BX-10: a concluded sitting links the recording its publisher's own record gives; its source is the card's Sources. */}
+        {concluded && meeting.videoUrl ? (
+          <a
+            href={meeting.videoUrl}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="trailing-space-trimmed-14 mt-2 flex w-fit items-center gap-1.5 border-b border-signal-dim pb-0.5 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-signal transition-colors hover:border-signal"
+          >
+            Watch the recording
+            <ExternalLink className="size-3" aria-hidden="true" />
+          </a>
+        ) : null}
       </div>
 
       {/* 3i (2026-08-19): the calendar links ride on EVERY upcoming-meeting

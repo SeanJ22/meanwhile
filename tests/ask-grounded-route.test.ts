@@ -436,8 +436,8 @@ test("RED CONTROL: nothing in the Hobbs reply is an action the corpus does not h
     if (record.kind === "CANDIDATE_CONTACT" && !record.sourceUrl) {
       const profile = record.candidateProfile;
       assert.ok(profile);
-      assert.ok(["email", "phone", "filedAddress"].includes(profile.field));
-      const field = profile.field as "email" | "phone" | "filedAddress";
+      assert.ok(["email", "phone"].includes(profile.field));
+      const field = profile.field as "email" | "phone";
       const held = allCandidateCards().cards[profile.holdingKey];
       assert.ok(held, "contact exception requires an exact curated card holding");
       assert.equal(profile.value, held[field], "contact must be the native held field, never a generated substitute");

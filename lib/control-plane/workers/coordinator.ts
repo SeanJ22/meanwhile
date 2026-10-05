@@ -7,12 +7,12 @@ import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { canonicalJson, RepositoryLockHeld, type ControlPlaneRepositories } from "../repository/types.ts";
 import { isControlPlaneRequestTimeout } from "../repository/request-bounds.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
-import { dispatchOne, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
+import { dispatchOne, hunterWallLimitMs, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
-import { autonomousScoutHistory, eligibleHeldProtocolRecovery, scoutTransientDenial, unchangedScoutFailure } from "./scout-scheduling.ts";
+import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, scoutTransientDenial, unchangedScoutFailure } from "./scout-scheduling.ts";
 import { selectStandingLineages } from "./standing-lineage.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
@@ -109,15 +109,20 @@ export function exactInstructionAutonomousWorkIds(input: {
 
 export function assertAutonomousPlanIdentity(item: WorkItem, plan: AutonomousWorkPlan): void {
   if (plan.version !== 1 || plan.contract.subjectId !== item.subject || !plan.sourceRegistryReferences.length ||
-    !plan.jurisdiction || !plan.capability || plan.acquisition.some(a => a.route.subjectId !== item.subject) ||
-    plan.detective.some(d => d.question.subjectId !== item.subject)) throw new Error("AUTONOMOUS_PLAN_CANONICAL_IDENTITY_REFUSED");
+    !plan.jurisdiction || !plan.capability || plan.acquisition.some(a => a.route.subjectId !== item.subject)) throw new Error("AUTONOMOUS_PLAN_CANONICAL_IDENTITY_REFUSED");
+}
+
+function withoutRetiredDetective<T extends object>(plan: T): Omit<T, "detective"> {
+  const { detective: _retired, ...rest } = plan as T & { detective?: unknown };
+  return rest;
 }
 
 export async function registerAutonomousPlan(repos: ControlPlaneRepositories, workItemId: string, plan: AutonomousWorkPlan, now: string): Promise<void> {
   const item = await repos.workItems.mustRead(workItemId);
   assertAutonomousPlanIdentity(item.value, plan);
   if (item.value.autonomousPlan) {
-    if (canonicalJson(item.value.autonomousPlan) !== canonicalJson(plan)) throw new Error("AUTONOMOUS_PLAN_ALREADY_REGISTERED_DIFFERENT_CONTRACT");
+    // Plans stored before the rule-based detective was retired still carry an empty `detective` list.
+    if (canonicalJson(withoutRetiredDetective(item.value.autonomousPlan)) !== canonicalJson(withoutRetiredDetective(plan))) throw new Error("AUTONOMOUS_PLAN_ALREADY_REGISTERED_DIFFERENT_CONTRACT");
     return;
   }
   await repos.workItems.compareAndSet(workItemId,item.revision,{...item.value,autonomousPlan:plan},now);
@@ -204,7 +209,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       next.contract.subjectId === plan.contract.subjectId && next.contract.recordClass === plan.contract.recordClass &&
       next.contract.schemaVersion === 2 && plan.contract.schemaVersion === 2 && next.contract.verification.required &&
       canonicalJson(next.contract.identity) === canonicalJson(plan.contract.identity) &&
-      canonicalJson(next.contract.requiredFields) === canonicalJson(plan.contract.requiredFields) && canonicalJson(next.detective) === canonicalJson(plan.detective);
+      canonicalJson(next.contract.requiredFields) === canonicalJson(plan.contract.requiredFields);
     if (!valid) return decision("BLOCKED", "REPAIR_SUCCESSOR_LINK_INVALID: linked work is missing, incomplete or outside the unchanged obligation; recovery remains owed.");
     assertAutonomousPlanIdentity(child, next);
     return decision("BLOCKED", `REPAIR_WAITING_ON_SUCCESSOR:${child.id}: original obligation and blockers remain open; dispatch continues on the linked successor.`);
@@ -274,10 +279,15 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       task=existing?.value??(await registerRouteTask(repos,continuation,now)).value;
       latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
     }
-    if(task.state==="POLICY_DENIED" && latest?.outcome==="DENIED_BY_POLICY" && task.policyDenial && debt && Date.parse(debt.retryAt)<=Date.parse(now)) {
-      const deniedCondition=scoutTransientDenial(latest.abortReason);
+    const deniedCondition=latest?.outcome==="DENIED_BY_POLICY" ? scoutTransientDenial(latest.abortReason) : null;
+    /* CH-29: our own guard's refusal is paced from its own end and needs no debt; every other denial waits out its debt as before. */
+    const guardRecheckAtIso=deniedCondition==="GUARD" ? guardRecheckAt(latest!) : null;
+    const dueForRecheck=deniedCondition==="GUARD"
+      ? (guardRecheckAtIso===null || Date.parse(guardRecheckAtIso)<=Date.parse(now))
+      : Boolean(debt && Date.parse(debt.retryAt)<=Date.parse(now));
+    if(task.state==="POLICY_DENIED" && latest?.outcome==="DENIED_BY_POLICY" && task.policyDenial && dueForRecheck) {
       const spend=researchSpendInWindow(await repos.costs.readAll(),now);
-      const conditionChanged=deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&ceilingPermits(spend.windowUsd,(runtime.rollingCeilingUsd ?? 0)).permits;
+      const conditionChanged=deniedCondition==="GUARD"||(deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&ceilingPermits(spend.windowUsd,(runtime.rollingCeilingUsd ?? 0)).permits);
       if(conditionChanged) {
         const row=await repos.routeTasks.mustRead(task.id); const {policyDenial,...rest}=row.value;
         task=(await repos.routeTasks.compareAndSet(task.id,row.revision,{...rest,state:"RECLAIMABLE",policyReauthorizations:[...(task.policyReauthorizations??[]),{at:now,denial:policyDenial!,reason:"The named Scout transport or rolling-cost condition changed; current policy will be checked again."}]},now)).value;
@@ -357,18 +367,6 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       const parser = records.find(r=>r.routeTaskId===parserTask.id && r.result.role==="PARSER");
       if (!parser) { const next=await taskFor({...spec,role:"PARSER"}); if(next)return next; unresolved=true; continue; }
       if (parser.result.verdict!=="EXTRACTED") { unresolved=true; continue; }
-      let identityUnresolved=false;
-      for (const detective of plan.detective) {
-        const detectiveSpec={...spec,artifactId:detective.artifactIds[0],role:"DETECTIVE" as const,detective};
-        const detectiveTask=await enqueueWorkerTask(repos,detectiveSpec);
-        const finding=records.find(r=>r.routeTaskId===detectiveTask.id);
-        if (!finding) { const next=await taskFor(detectiveSpec); if(next)return next; identityUnresolved=true; }
-        else if(finding.result.role!=="DETECTIVE" || finding.result.verdict!=="SUPPORTED" ||
-          (detective.question.kind==="IDENTITY" && (finding.result.identity.state!=="CANDIDATE" || finding.result.identity.canonicalId!==plan.contract.subjectId))) identityUnresolved=true;
-      }
-      // Independent checking can diagnose held extraction while identity work
-      // remains open. An unresolved Detective still prevents staging below.
-      if(identityUnresolved) unresolved=true;
       if (plan.contract.schemaVersion===2) {
         const heldIds=new Set((await repos.artifacts.readAll()).map(artifact=>artifact.artifactId));
         if(plan.contract.verification.authorities.some(authority=>[...authority.artifactIds,...authority.authorityEvidenceArtifactIds].some(id=>!heldIds.has(id)))) { unresolved=true; continue; }
@@ -378,26 +376,22 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       if (!validator) { const next=await taskFor({...spec,role:"VALIDATOR",producerResultId:parser.id}); if(next)return next; unresolved=true; continue; }
       if (validator.result.role!=="VALIDATOR" || (validator.result.verdict!=="PASS" && validator.result.extractionVerdict!=="PASS")) { unresolved=true; continue; }
       // §3: a fact that is not a judgment call is verified when the Validator passes; there is no audit stage.
-      if (validator.result.verdict==="PASS" && !needsSecondSource(plan.contract)) { if (identityUnresolved) unresolved=true; else staged=true; continue; }
+      if (validator.result.verdict==="PASS" && !needsSecondSource(plan.contract)) { staged=true; continue; }
       let auditSpec: Parameters<typeof enqueueWorkerTask>[1] = {...spec,role:"ADVERSARIAL_AUDITOR",producerResultId:parser.id,validatorResultId:validator.id,auditScope:plan.auditScope};
       for (;;) {
         const auditTask = await enqueueWorkerTask(repos, auditSpec);
         const audit = records.find(r => r.routeTaskId === auditTask.id);
         if (!audit) { const next = await taskFor(auditSpec); if (next) return next; unresolved = true; break; }
         const escalation = nextAuditEscalation(audit);
-        if (escalation && validator.result.verdict === "PASS" && !identityUnresolved) {
+        if (escalation && validator.result.verdict === "PASS") {
           auditSpec = { ...auditSpec, auditEscalation: escalation };
           continue; // At most Haiku → Sonnet → Opus; each is one durable attempt.
         }
-        if (!identityUnresolved && validator.result.verdict === "PASS" && audit.result.role === "ADVERSARIAL_AUDITOR" && audit.result.verdict === "SURVIVED") staged = true;
+        if (validator.result.verdict === "PASS" && audit.result.role === "ADVERSARIAL_AUDITOR" && audit.result.verdict === "SURVIVED") staged = true;
         else unresolved = true;
         break;
       }
     }
-  }
-  for (const detective of plan.detective) {
-    const next=await taskFor({workItemId:item.id,contract:plan.contract,now,role:"DETECTIVE",artifactId:detective.artifactIds[0],detective});
-    if(next)return next;
   }
   for (const engineering of plan.engineering) {
     const next=await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ENGINEERING",artifactId:engineering.methodArtifactId,engineering});
@@ -461,7 +455,7 @@ export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRunti
         return dispatchOne(runtime.repos,{obligation:{obligation:{id:task.id,subjectId:item.subject,recordClass:plan.contract.recordClass,
           routeId:task.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null,assignments},nextDueAt:task.createdAt,cadenceHours:24,
           cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Canonical obligation needs source discovery"},routeTaskId:task.id,holder:`autonomous:SCOUT:${randomUUID()}`,
-          now:now(),clock:now,leaseTtlMs:300_000,bound:{maxAttempts:3,maxWallMs:0,maxCostUnits:0},
+          now:now(),clock:now,leaseTtlMs:300_000,bound:{maxAttempts:3,maxWallMs:hunterWallLimitMs(),maxCostUnits:0},
           maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION,...proofChargeOf(item.project)});
 }
 

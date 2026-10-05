@@ -115,6 +115,8 @@ export function PickControl({
   const labelOf = (id: string) =>
     options.find((o) => o.id === id)?.label ?? parsed?.labels?.[id] ?? id;
 
+  if (voteFor <= 0) return null;
+
   return (
     /*
      * Item 5 (2026-08-16), the author's pass: "no prompt renders quieter

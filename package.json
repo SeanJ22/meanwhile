@@ -180,7 +180,6 @@
     "owner:corpus": "tsx scripts/owner-corpus.mts",
     "owner:decision-proof": "node --env-file=.env.local --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/owner-decision-proof.mts",
     "owner:intake": "tsx scripts/owner-intake.mts",
-    "readiness:refresh": "node --env-file=.env.local --experimental-strip-types scripts/readiness-refresh.mts",
     "owner:readback": "node --env-file=.env.local --experimental-strip-types scripts/owner-surface-readback.mts",
     "pairs": "tsx scripts/pairs.mts",
     "party:directory": "tsx scripts/party-directory-0825.mts",

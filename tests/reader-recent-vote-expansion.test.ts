@@ -19,11 +19,12 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
     stdin: {
       contents: `import React from "react"; import {createRoot} from "react-dom/client";
         import {RecentVotes} from "./components/map/popup/official-popup.tsx";
-        import {CardSection,CardSectionGroup} from "./components/officials/card-section.tsx";
+        import {CardSection} from "./components/officials/card-section.tsx";
+        import {Card} from "./components/ui/card.tsx";
         const holder={id:${JSON.stringify(member)},name:"Planted official"};
         createRoot(document.getElementById("root")).render(<>
-          <div id="map"><CardSectionGroup><RecentVotes holder={holder} reactionContext={null} columns /></CardSectionGroup></div>
-          <div id="ballot"><CardSectionGroup><CardSection title="Voting record"><RecentVotes holder={holder} reactionContext={null} contentOnly /></CardSection></CardSectionGroup></div>
+          <div id="map"><Card title="Map official" sources={[]}><RecentVotes holder={holder} reactionContext={null} columns /></Card></div>
+          <div id="ballot"><Card title="Ballot official" sources={[]}><CardSection title="Voting record"><RecentVotes holder={holder} reactionContext={null} contentOnly /></CardSection></Card></div>
         </>);`,
       resolveDir: process.cwd(), sourcefile: "reader-vote-expansion-fixture.tsx", loader: "tsx",
     },
@@ -72,7 +73,12 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
       assert.equal(await surface.locator("[data-recent-vote-id]").count(), 21);
       assert.equal(await surface.locator("[data-recent-vote-count]").getAttribute("data-recent-vote-count"), "21");
       assert.ok((await tail.innerText()).includes(votes[20].title));
-      assert.equal(await tail.locator(`a[href="${votes[20].rollCallUrl}"]`).count(), 1);
+      assert.equal(await tail.locator(`a[href="${votes[20].rollCallUrl}"]`).count(), 0, "citations never appear on the vote face");
+      await surface.getByRole("button", { name: "Sources", exact: true }).click();
+      const citation = surface.locator(`[data-card-sources] a[href="${votes[20].rollCallUrl}"]`);
+      await citation.waitFor({ state: "visible" });
+      assert.equal(await citation.count(), 1, "the expanded tail retains its real citation in Sources");
+      await surface.getByRole("button", { name: mode === "map" ? "Voting Record" : "Voting record", exact: true }).click();
       await surface.getByRole("button", { name: "Show latest 20", exact: true }).click();
       assert.equal(await surface.locator("[data-recent-vote-id]").count(), 20);
     }

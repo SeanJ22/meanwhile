@@ -295,17 +295,11 @@ function RecentVotesInner({
   const visibleVotes = votes?.slice(0, showAll ? undefined : VOTE_LIMIT) ?? null;
   const history = /^congress:[A-Z]\d{6}$/.test(holder.id) && votes !== null ? <>
     <p className="mb-1.5 t-caption leading-relaxed text-voice">
-      Earlier recorded votes from verified prior source windows. These are separate from the current Recent list; each row links to its official roll call.
+      Earlier recorded votes from verified prior source windows. These are separate from the current Recent list.
     </p>
     {historicalVotes.length > 0 ? <RecentVoteRecords votes={historicalVotes} attribution={null} failed={false} reactionContext={null} /> :
-      <p className="t-caption text-muted">
-        {historyStatus === "LOADING" ? "Checking earlier source windows…" :
-          historyStatus === "COMPLETE" ? "No earlier recorded votes were found in the verified source history." :
-          historyStatus === "MORE" ? "No earlier votes in the checked versions yet; more source versions remain." :
-          "Earlier vote history could not be checked just now."}
-      </p>}
-    {historyStatus === "UNAVAILABLE" && historicalVotes.length > 0 &&
-      <p className="mt-2 t-caption text-muted">More earlier records could not be checked just now.</p>}
+      historyStatus === "LOADING" ? <p className="t-caption text-muted">Checking earlier source windows…</p> : <WorkingOnIt />}
+    {historyStatus === "UNAVAILABLE" && historicalVotes.length > 0 && <WorkingOnIt />}
     {historyStatus === "MORE" && historyCursor && <button type="button" onClick={() => void loadMoreHistory()}
       disabled={historyLoadingMore} className="mt-2 t-detail text-link underline decoration-dotted underline-offset-2">
       {historyLoadingMore ? "Checking more earlier records…" : "Load more earlier records"}
@@ -398,33 +392,14 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
 }) {
   return (
     <>
-      {failed ? (
-        <p className="mt-1.5 t-caption leading-relaxed text-muted">
-          Couldn&apos;t load the vote record just now.
-        </p>
-      ) : votes === null ? (
-        <p className="mt-1.5 t-caption leading-relaxed text-muted">
-          Loading…
-        </p>
-      ) : votes.length === 0 ? (
-        <p className="mt-1.5 t-caption leading-relaxed text-muted">
-          No recorded votes on file in our current window yet.
-        </p>
-      ) : (
+      {failed ? <WorkingOnIt /> : votes === null ? (
+        <p className="mt-1.5 t-caption leading-relaxed text-muted">Loading…</p>
+      ) : votes.length === 0 ? <WorkingOnIt /> : (
         <>
-          {/* 5c (2026-08-17): attribution once, TOS pattern — stated at the
-              top of the section instead of repeated under every bill. */}
-          <p className="mt-1 t-caption leading-relaxed text-muted">
-            Plain-language bill summaries below are ours — each paraphrases
-            the bill&apos;s official summary, linked on its row.
-          </p>
-          {/* D49 (2026-08-15): the CC BY 4.0 attribution LegiScan's licence
-              requires, wherever its data appears. Sent with the rows so it
-              cannot drift from the store it describes. */}
-
           <CardSourcesContribution id="recent-votes" sources={[
             ...(attribution ? [{ what: `Vote data attribution and ${attribution.licence} licence`, provenance: { sourceUrl: attribution.url, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }, { what: "Vote data licence", provenance: { sourceUrl: attribution.licenceUrl, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }] : []),
             ...votes.map(vote => ({ what: `Roll call: ${vote.title}`, provenance: { sourceUrl: vote.rollCallUrl, sourceOrg: attribution?.text ?? "", collectedAt: "", verifiedAt: null } })),
+            ...votes.flatMap(vote => vote.billUrl ? [{ what: "Official bill summary; plain-language summary is ours", provenance: { sourceUrl: vote.billUrl, sourceOrg: "", collectedAt: "", verifiedAt: null } }] : []),
           ]} />
           {votes.map((vote) => {
             const explainer = explainVoteQuestion(vote.question);
@@ -463,10 +438,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                     ))}
                   </p>
                 ) : (
-                  <p className="mt-1 t-caption leading-relaxed text-muted">
-                    A party-by-party count isn&apos;t available for this
-                    vote.
-                  </p>
+                  <WorkingOnIt inline />
                 )}
                 {explainer && (
                   // The vote-type explainer (4b): what kind of vote this was,
@@ -599,26 +571,13 @@ function VotingRecordViews({
  * blocked either way.
  */
 export function BillPlainSummary({
-  billUrl,
   summary,
-  pending,
 }: {
   billUrl: string | null;
   summary: BillSummary | null;
   pending: boolean;
 }) {
-  if (!summary && !pending) return null;
-  if (!summary) {
-    return (
-      <p className="mt-1 t-caption leading-relaxed text-muted">
-        Official summary at the bill link — plain-language version coming.
-      </p>
-    );
-  }
-  // 5a (2026-08-17): open by default — the summary is the point of the row,
-  // and hiding it behind a click was reader friction. The collapse
-  // affordance stays for closing. 5c moved the "ours" attribution to the
-  // section top; the per-bill basis stays in the data file.
+  if (!summary) return <WorkingOnIt inline />;
   return (
     <details className="mt-1" open>
       <summary className="cursor-pointer t-caption text-paper-dim underline decoration-dotted hover:text-signal">

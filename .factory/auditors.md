@@ -3,7 +3,7 @@ worker: auditors
 provider: Claude
 run_id: session_012BuLqyA84nSi2Wc57kAbHi
 lock: auditors-20261005T1920Z-ve53ih
-heartbeat: 2026-10-05T19:48:09Z
+heartbeat: 2026-10-05T20:00:11Z
 on_river: DP-01, DP-02 (core), DP-03, DP-04, DP-05, DP-06, DP-10 (core), DP-13 (core), DP-14 (core), DP-15, DP-16, DP-18 (core), FE-01, FE-03, FE-16, FE-17, FE-18 (none) — release 1 and 2 on main
 ready: DP-02 hook (44d0350a0ee301fe3fc87f84fbb5673fa8003ff6): the runner reads Admin's "Failures before a detective is sent" (detective.shutThreshold) each cycle. | aa633fa202dec9edc3f8214b9cb52e9cad26d4e8: DP-10, DP-11, DP-13, DP-14, DP-16, DP-17 connections (see below). Fold aa633fa202dec9edc3f8214b9cb52e9cad26d4e8 to take both. | WITHDRAWN: 71073e6 (READY: DP-10) edited bank's field-manual.ts; reverted in 4b0bdf5f5. Do not fold 71073e6 on its own.
 checks: env -u DATABASE_URL -u WTP_ASSET_STORE pnpm test (FULL) at 4845fedb6: 9371 tests, 9359 pass, 1 fail (RULING 107 stamp sweep: live-audit-pass.mts stamps retrievedAt at its read). Fixed in aa633fa2 by declaring @freshness-reads-here; tests/freshness-provenance.test.ts 7/7 pass at aa633fa2. Focused: live-audit run/log/response, audit-accuracy, control-plane conformance, admin-settings, absence hold/reopen, scout-absence, plain-reread: all pass. tsc --noEmit clean; eslint 0 errors (69 warnings, none in changed files); control-plane:gate NOT_CONFIGURED here (declares v21). Not run live: nothing here reaches production.

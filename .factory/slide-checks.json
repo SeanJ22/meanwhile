@@ -286,6 +286,7 @@
     "lint": "passed: 0 errors, 69 existing warnings",
     "browser": "system Chromium 151 substituted for pinned 1234",
     "setup": "full history; 56 projected references; no .next; DB/store env unset; local map fixture NO_PROXY",
-    "readyApplicationEquivalentTo": "69facbbab3a443c42e37ffc932a0cb30e50b8bed"
+    "readyApplicationEquivalentTo": "69facbbab3a443c42e37ffc932a0cb30e50b8bed",
+    "ready": "5ce7136828fbb24dd80f53c6678e29be7d00ebd5"
   }
 }

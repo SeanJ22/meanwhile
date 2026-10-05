@@ -828,10 +828,10 @@ const defs: ActionDef[] = [
     needs: "owner",
     doneWords: "Declined.",
     preview: (ctx) => ({
-      title: `Decline what was added to ${ctx.targetName || "this place"}`,
+      title: `Decline what was added to ${ctx.targetName}`,
       level: "local",
       rows: [
-        ["Affects", ctx.payload?.what ?? "The items that were added"],
+        ["Affects", ctx.payload?.what ?? "—"],
         ["What changes", "They are no longer owed there. Nothing we hold is deleted"],
         ["Undo", "From the log in Settings"],
       ],
@@ -850,7 +850,7 @@ const defs: ActionDef[] = [
       title: "Undo a change to what is owed",
       level: "global",
       rows: [
-        ["Undoes", ctx.payload?.what ?? "An earlier change"],
+        ["Undoes", ctx.payload?.what ?? "—"],
         ["What changes", "The next read counts what is owed as it was before"],
       ],
     }),

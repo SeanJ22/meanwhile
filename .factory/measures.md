@@ -3,11 +3,11 @@ worker: measures
 provider: Claude
 run_id: session_013PW45RsGrmm8TqPnYfTFmb
 lock: measures-session_013PW45R
-heartbeat: 2026-10-05T19:19:45Z
+heartbeat: 2026-10-05T19:47:18Z
 on_river: SC-01, SC-02, SC-03, SC-04, SC-05, SC-06, SC-07, SC-08, SC-09 (build), SC-11, SC-12, SC-13, SC-16, SC-20, BR-08, BR-21 (River folds through a88a0726c; BR-23 was named in the 940b11c58 fold but scoreboard-read.ts is not on river, so BR-23 is not built)
 ready: BR-23 at 3753c6c126352d642c4426a3baa9577ed1932ed7; BR-14 at 033dd9abf0ea76644b4d100281141f342195fc51
-checks: BR-23 and BR-14 on river tip ecf40260. Full suite on the BR-14 commit: 9367 tests, 9354 pass, 2 fail, 11 skipped; the 2 failures were my new Queue files (an absence-default and a client function prop), fixed, and those two files plus tests/admin-v6-queue.test.ts (3) re-run: all pass. tsc --noEmit clean; eslint clean on changed files. Queue and Scoreboard not viewed live (no Admin sign-in here).
-working_on: BR-25 next, then SC-10, BR-33, SC-14
+checks: BR-25 on the BR-14 base: full suite as CI runs it (env -u DATABASE_URL -u WTP_ASSET_STORE): 9369 tests, 9358 pass, 0 fail, 11 skipped. tsc --noEmit clean; eslint clean on admin-v6 and its tests. Tests changed with the deleted cards: workers-screen (Now assertions removed), results-screen (the readers card now renders on Checklist), v6-ui (the live-data test reads the Queue). New: tests/admin-v6-ui/now-screen.test.tsx. Now, Queue, Scoreboard and Data business not viewed live (no Admin sign-in here); the phone above-the-fold check is not done.
+working_on: SC-10 next, then BR-33, SC-14
 waiting_on: BR-38: RL-05 (river) and CH-01 (hunters). BR-31: BX-06 (slide). BR-32: DB-27, DB-31 (meetings), DB-34 (registry). SC-17: Sean's decision D7 (parked). BR-24 (admin) is on river now, so BR-25, SC-10, BR-33 are ready; BR-06 is on river so SC-14 is ready.
 returned: none
 needs_hook: BR-08: no change to registry.ts was needed (the gateway reads scope types from scopes.ts); hunters already made the freshness-shadow hook. | SC-04: hunters-owned scripts/freshness-shadow.mts:1269 builds the place order without ZIPs; to keep the runner order equal to Admin it should pass `zips: [...scope.zctas]` to buildPlaceOwedList (dispatch-work.ts, Admin and the national list already do). Until then the runner order ignores the per-ZIP GEO rows. | BR-22: registry.ts:510 fleet.deployHere and freshness-shadow.mts dispatch filter, same owners. | BR-23: the checklist-completeness and mission rows show "—" until BR-30/SC-12; GATE rows read the runner heartbeat only; GATE-03, GATE-04, GATE-06 need database-reach, last-dispatch and spend readings passed in by the admin lane (the route passes null).

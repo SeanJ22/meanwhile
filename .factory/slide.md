@@ -5,7 +5,7 @@ run_id: codex-slide-005c2146fa5b46a1b890f9f80e2de516
 lock: codex-slide-005c2146fa5b46a1b890f9f80e2de516
 heartbeat: 2026-10-05T19:41:15.554898+00:00
 on_river: CP-01, CP-19 via 85a0ad6, released on main ecf402600401783b094837c29e0c515eadbdb843
-ready: reader-edge-publication-return 5ce7136828fbb24dd80f53c6678e29be7d00ebd5 ( application tested at 69facbbab3a443c42e37ffc932a0cb30e50b8bed; hook pending Admin digest screen)
+ready: 483737aec77945887a7d7a3e484947cc20f1ebe6 CP-02 CP-09 BX-12 BX-03 CP-10 CP-13 CP-16 CP-06 BX-13 (shared hooks pending); earlier reader-edge return 5ce7136828fbb24dd80f53c6678e29be7d00ebd5
 checks: reader-edge return FULL: 1066 files, 9356 passed, 11 skipped, 0 failed at 69facbbab3a443c42e37ffc932a0cb30e50b8bed; types pass; full lint 0 errors/69 warnings. READY differs only in .factory coordination.
 working_on: CP-02, CP-09, BX-12/BX-03, CP-10, CP-13, CP-16; next batch remains uncommitted WIP
 waiting_on: BX-01 canonical repository/schema hook owned by River

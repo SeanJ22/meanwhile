@@ -383,6 +383,7 @@
         "tests/worker-reader-publication.test.ts"
       ]
     },
-    "browser": "system Chromium 151 substituted; 11 skips preserved"
+    "browser": "system Chromium 151 substituted; 11 skips preserved",
+    "ready": "483737aec77945887a7d7a3e484947cc20f1ebe6"
   }
 }

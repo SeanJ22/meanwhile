@@ -537,6 +537,7 @@
       "warnings": 69
     },
     "browser": "Chromium151 substitute for pinned1234; 11 skips preserved",
-    "scope": "CP-11 CP-12 CP-03 CP-04 CP-05 CP-07 CP-08 CP-18 BX-07; listed shared callers hook pending; CP-14/15/17 partial, not claimed complete"
+    "scope": "CP-11 CP-12 CP-03 CP-04 CP-05 CP-07 CP-08 CP-18 BX-07; listed shared callers hook pending; CP-14/15/17 partial, not claimed complete",
+    "ready": "78e126520031b3dda9244a9e663eea22299c7971"
   }
 }

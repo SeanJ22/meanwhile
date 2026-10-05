@@ -589,7 +589,7 @@ test("L7: Opus 5.5 remains the maximum, a Fable is refused, and cheaper-first au
   assert.equal(assertStepMayEscalate("adversarial-audit", "RESULT_REFUSED").model, SONNET);
   assert.throws(() => assertStepMayEscalate("scout-research-loop", "IT_FELT_HARD" as ModelEscalationReason), UnrecordedEscalation, "an unrecorded reason never escalates");
   assert.throws(() => assertStepMayEscalate("page-to-representation", "RESULT_REFUSED"), DeterministicStepInvokedModel);
-  assert.deepEqual([...MODEL_ESCALATION_REASONS], ["BOUND_EXHAUSTED_WITHOUT_RESULT", "RESULT_REFUSED", "NO_TYPED_RESULT", "CAPABILITY_ERROR"]);
+  assert.deepEqual([...MODEL_ESCALATION_REASONS], ["BOUND_EXHAUSTED_WITHOUT_RESULT", "RESULT_REFUSED", "NO_TYPED_RESULT", "CAPABILITY_ERROR", "PROVIDER_UNAVAILABLE"]);
 
   /* A loop injected at the frontier is already at the top: it never escalates, whatever it shows. */
   const reservation = recordingReservation();

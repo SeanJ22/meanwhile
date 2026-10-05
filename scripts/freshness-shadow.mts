@@ -254,7 +254,7 @@ import { failureResponderExecutor, plainRereadSlot, readSubjectScoutHistory, sol
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import { consecutiveTransportFailures, MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   RESEARCH_BOUNDS,
   RESEARCH_FORMAT_VERSION,
@@ -2294,6 +2294,7 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     summary: [...manualLines, ...lines].join("\n"),
     provenance,
     priorRungs,
+    transportFailures: consecutiveTransportFailures(all),
     nextRungs: Array.isArray(all.at(-1)?.nextRungs)
       ? all.at(-1)!.nextRungs.filter((value): value is string => typeof value === "string")
       : [],
@@ -3226,7 +3227,15 @@ let meetingsDiscoveryByOutcome: Record<string, number> = {};
 let roundVaultIndex: VaultIndex | undefined;
 let roundVaultRead: Promise<VaultIndex> | undefined;
 let discoveryLaneRun: Promise<readonly IndependentRuntimeOutcome[]> | null = null;
-const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= indexVault(join(ROOT, ...VAULT_DIR), undefined, { signal }).then(index => (roundVaultIndex=index,index));
+/* One full listing per round; later captures join it through includeVaultCapture. The step is timed once in the round's phases. */
+const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= (async () => {
+  const startedMs = Date.now();
+  const index = await indexVault(join(ROOT, ...VAULT_DIR), undefined, { signal });
+  roundVaultIndex = index;
+  const phase = cycleObservation.note("vault-index", Date.now() - startedMs);
+  console.log(`  phase ${phase.name}: ${phase.durationMs}ms`);
+  return index;
+})();
 try {
 
 /*

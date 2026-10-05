@@ -68,8 +68,8 @@ interface Shape {
 /** Order matters: the first shape that matches wins. */
 const SHAPES: readonly Shape[] = [
   { key: "provider-silent", test: /model provider did not answer|model transport failed/i,
-    words: "The AI model service didn’t answer, so the agent’s work was thrown away.",
-    next: "The runner sends a new agent when the work comes due again." },
+    words: "The AI model service didn’t answer. The agent’s steps so far are kept.",
+    next: "The next agent resumes from those steps when the work comes due again, and moves up a model tier if the service keeps failing." },
   { key: "service-timeout", test: /operation was aborted|timed out|timeout|nothing was reached at/i,
     words: "A search or data service took too long and was cut off.",
     next: "The runner tries again on its backoff. Repeated timeouts point at that service, not at the place." },

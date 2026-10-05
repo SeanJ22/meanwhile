@@ -400,6 +400,8 @@ export interface ChecklistItem {
   readonly sourceUrl?: string | null;
   /** When the next check is due, for an item awaiting publication or due for a refresh. */
   readonly nextCheckAt?: string | null;
+  /** When it started being owed, for a blank added after the mission started (SC-10). */
+  readonly addedAt?: string | null;
   readonly actions: readonly ActionRef[];
 }
 
@@ -458,6 +460,8 @@ export interface PlaceScoreView {
   /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
   readonly notCaptured?: { readonly huntedNotFound: number; readonly nothingHunts: number };
   readonly familyNotCaptured?: readonly { readonly group: string; readonly huntedNotFound: number; readonly nothingHunts: number }[];
+  /** Completeness on the starting list and the grown list, side by side. Null until the place has a mission start. */
+  readonly growth?: { readonly missionStart: string; readonly starting: { readonly n: number; readonly of: number; readonly percent: number | null }; readonly grown: { readonly n: number; readonly of: number; readonly percent: number | null }; readonly added: number } | null;
   /** Officials and candidates with a full profile, with the count behind each field. */
   readonly profiles?: { readonly words: string; readonly figures: { readonly fields: readonly { readonly key: string; readonly label: string; readonly applies: number; readonly held: number | null }[]; readonly notMeasured: readonly string[] } };
 }

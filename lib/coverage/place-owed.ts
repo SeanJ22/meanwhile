@@ -42,7 +42,16 @@ export interface PlaceOwedItem {
   readonly label: string;
   /** The six statuses of this blank. `state` is the old blended state, kept for compatibility. */
   readonly statuses: RowStatuses;
+  /**
+   * When this blank started being owed: the first time its subject was seen held, for a subject discovered after the place was
+   * known (a body, seat, contest, filing deadline, funding record or roll call). Null for what a place owes from the start
+   * (the place itself, its ZIPs, its inventories and legislature) and when no held record dates the subject: unknown, never "now".
+   */
+  readonly owedSince: string | null;
 }
+
+/** Kinds of subject a hunt finds; the rest a place owes from the moment it is known. */
+export const DISCOVERED_SUBJECT_KINDS: ReadonlySet<PlaceSubjectKind> = new Set(["body", "seat", "rollcall", "funding", "contest", "deadline"]);
 
 const GROUPS = CHECKLIST_GROUPS as Readonly<Record<PlaceSubjectKind, readonly string[]>>;
 const GROUPED = new Set(Object.values(GROUPS).flat());
@@ -131,8 +140,20 @@ export function buildPlaceOwedList(input: {
     const key = JSON.stringify([field.subjectId, canonicalItemId(field.checklistId)]);
     heldByKey.set(key, [...(heldByKey.get(key) ?? []), field]);
   }
+  // The first time each subject was seen held. A body's calendar is owed from the day its body was first seen.
+  const firstSeen = new Map<string, string>();
+  for (const field of input.held) {
+    if (!field.sourceUrl || Date.parse(field.checkedAt) > now || !Number.isFinite(Date.parse(field.checkedAt))) continue;
+    const prior = firstSeen.get(field.subjectId);
+    if (prior === undefined || Date.parse(field.checkedAt) < Date.parse(prior)) firstSeen.set(field.subjectId, field.checkedAt);
+  }
+  const owedSinceOf = (subject: PlaceSubject): string | null => {
+    if (subject.kind === "calendar") return firstSeen.get(subject.id.replace(/#calendar$/, "")) ?? null;
+    return DISCOVERED_SUBJECT_KINDS.has(subject.kind) && !subject.id.includes("#inventory:") ? firstSeen.get(subject.id) ?? null : null;
+  };
   return [...subjects.values()].sort((a, b) => a.id.localeCompare(b.id)).flatMap(subject => {
     const inventory = subject.id.includes("#inventory:");
+    const owedSince = owedSinceOf(subject);
     const heldHere = (d: { id: string }): boolean => heldByKey.has(JSON.stringify([subject.id, d.id]));
     const gated = (d: { id: string }): boolean => {
       const only = checklistItem(d.id)?.onlyFor;
@@ -154,7 +175,7 @@ export function buildPlaceOwedList(input: {
         : current.some(f => f.state === "unpublished") ? "unpublished" : held.length ? "stale" : "missing";
       const requirement = inventory ? `Discover every ${subject.kind} for ${subject.label.split(": ")[0]}` : definition.requirement;
       const statuses = rowStatuses({ checklistId: definition.id, subject, held }, { now: input.now, hunt: input.hunt, witness: input.witness });
-      return { id, subject, checklistId: definition.id, requirement, state, held, statuses,
+      return { id, subject, checklistId: definition.id, requirement, state, held, statuses, owedSince,
         label: state === "missing" ? `${requirement} — not covered yet`
           : state === "stale" ? `${requirement} — captured; source refresh due`
           : state === "held" ? `${requirement} — captured, not published yet`

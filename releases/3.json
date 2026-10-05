@@ -60,5 +60,12 @@
     "number": 709,
     "url": "https://github.com/SeanJ22/meanwhile/pull/709"
   },
-  "at": "2026-10-05T21:42:20Z"
+  "at": "2026-10-05T21:42:20Z",
+  "merged_sha": "6af6f8a504a7224131ad567f62f7b6f63cb52f08",
+  "merged_at": "2026-10-05T22:03:42Z",
+  "ci_run": 37377643973,
+  "ci_note": "run 37377627379 was cancelled by the concurrency group after auto-merge was enabled; 37377643973 passed every job on 13d29c5",
+  "deploy": "live 2026-10-05T22:06:05Z (/api/build commitShort 6af6f8a)",
+  "post_deploy_run": 37380007629,
+  "runner_adoption": "pending: at 22:13Z the heartbeat still read ecf4026, with a cycle in progress since 21:55Z"
 }

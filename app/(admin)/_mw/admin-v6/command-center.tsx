@@ -33,6 +33,7 @@ import { newActionKey, startReceipt } from "./receipts.ts";
 import { ChecklistScreen } from "./screen-checklist.tsx";
 import { FixQueueControls } from "./fix-queue-controls.tsx";
 import { FixScreen } from "./screen-fix.tsx";
+import { QueueScreen } from "./screen-queue.tsx";
 import { ScoreboardScreen } from "./screen-scoreboard.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
 import { NowScreen } from "./screen-now.tsx";
@@ -390,6 +391,7 @@ export function CommandCenter(props: CommandCenterProps) {
               {view === "work" && <><ScheduledPanel /><WorkScreen /></>}
               {view === "checklist" && <ChecklistScreen />}
               {view === "money" && <MoneyScreen />}
+              {view === "queue" && <QueueScreen />}
               {view === "scoreboard" && <ScoreboardScreen />}
               {view === "fix" && <><FixQueueControls /><FixScreen /></>}
               {view === "settings" && <SettingsScreen />}

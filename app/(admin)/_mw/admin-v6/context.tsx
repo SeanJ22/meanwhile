@@ -20,6 +20,7 @@ import type { View } from "./view-param.ts";
 export type { View };
 export const VIEWS: readonly (readonly [View, string])[] = [
   ["now", "Now"],
+  ["queue", "Queue"],
   ["workers", "Workers"],
   ["work", "Work"],
   ["checklist", "Checklist"],

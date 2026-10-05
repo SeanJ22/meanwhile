@@ -8,7 +8,7 @@ import type { ReactElement } from "react";
 
 import { useV6 } from "./context.tsx";
 import { mst, type UiReceipt } from "./model.ts";
-import { acceptedLine, doneWithChange, ORDER_STEPS, orderStepsReached, STATUS_TONE, TAKE_BACK } from "./receipts.ts";
+import { acceptedLine, doneWithChange, oneSentence, ORDER_STEPS, orderStepsReached, STATUS_TONE, TAKE_BACK } from "./receipts.ts";
 import { ActionButton, cx, ReceiptChip, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
@@ -40,7 +40,13 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
         <ReceiptChip receipt={r} />
       </div>
       <span className={s.meta}>{r.level === "global" ? "Whole system" : "Local"} · {r.scopeName} · sent {mst(r.sentAt)}{r.simulated ? " · sample receipt" : ""}</span>
-      <p className={cx(s.p, s.small)} role={r.status === "unknown" || r.status === "failed" || r.notPickedUp ? "alert" : undefined}>{r.says}{r.words ? ` Your words: “${r.words}”` : ""}</p>
+      <p className={cx(s.p, s.small)} role={r.status === "unknown" || r.status === "failed" || r.notPickedUp ? "alert" : undefined}>{oneSentence(r.says)}</p>
+      {(oneSentence(r.says) !== r.says.trim() || r.words) && (
+        <details className={s.small}>
+          <summary style={{ cursor: "pointer" }}>Show details</summary>
+          <p className={cx(s.p, s.small)}>{r.says}{r.words ? ` Your words: “${r.words}”` : ""}</p>
+        </details>
+      )}
       {doneWithChange(r) && <p className={cx(s.p, s.small)}>{doneWithChange(r)}</p>}
       {!!r.items.length && (
         <ul className={s.stack} style={{ gap: 4, margin: 0, paddingLeft: 0, listStyle: "none" }} aria-label="Result for each item">

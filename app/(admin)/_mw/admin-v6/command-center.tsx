@@ -285,7 +285,7 @@ export function CommandCenter(props: CommandCenterProps) {
     check: (r) => { const p = props.executor.check(r, actionDef(r.kind), update); if (p) void p; },
     canCheck: () => {
       if (props.connection !== "live") return "Reconnect first.";
-      return props.executor.canCheck() ? null : "Checking needs a read-only receipt lookup that isn’t connected yet. It turns on by itself. Don’t send the action again until its result is known.";
+      return props.executor.canCheck() ? null : "Checking isn’t available yet.";
     },
     defOf: (ref) => actionDef(ref.kind),
     nameOf,

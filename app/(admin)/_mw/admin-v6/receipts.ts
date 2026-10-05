@@ -250,3 +250,13 @@ export const TAKE_BACK: Readonly<Partial<Record<UiReceipt["kind"], UiReceipt["ki
 export function doneWithChange(r: Pick<UiReceipt, "status" | "change">): string | null {
   return r.status === "done" && r.change ? `Done · ${r.change.before} → ${r.change.after}` : null;
 }
+
+const SENTENCE_MAX = 140;
+
+/** The first sentence of a receipt's words, cut to fit on one line. The full words stay behind "Show details". */
+export function oneSentence(text: string): string {
+  const flat = text.replace(/\s+/g, " ").trim();
+  const end = /[.!?](?=\s|$)/.exec(flat);
+  const first = end ? flat.slice(0, end.index + 1) : flat;
+  return first.length > SENTENCE_MAX ? `${first.slice(0, SENTENCE_MAX - 1).trimEnd()}…` : first;
+}

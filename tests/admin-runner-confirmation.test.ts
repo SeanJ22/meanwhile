@@ -355,3 +355,10 @@ test("BR-13: a ceiling change finishes as Done with the before and after, kept o
   assert.equal(doneWithChange({ status: "done", change: out.receipt.change }), "Done · $50.00 → $80.00");
   assert.equal(doneWithChange({ status: "queued", change: out.receipt.change }), null);
 });
+
+import { oneSentence } from "../app/(admin)/_mw/admin-v6/receipts.ts";
+test("BR-10: a receipt face is one plain sentence; the long words stay for Show details", () => {
+  assert.equal(oneSentence("Paused. The runner stops at the end of its round. Nothing else changes."), "Paused.");
+  assert.equal(oneSentence("Saved   with no stop"), "Saved with no stop");
+  assert.ok(oneSentence(`${"word ".repeat(60)}.`).length <= 140);
+});

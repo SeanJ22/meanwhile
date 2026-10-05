@@ -206,6 +206,8 @@ export interface CensusVenuePlacement {
   readonly placedCount: number;
   readonly held: readonly string[];
   readonly venueReferenceEvidence: readonly Readonly<Record<string, unknown>>[];
+  /** The new matches as a `venue-resolutions` package (BX-09), or null when nothing new was matched. */
+  readonly package: ManualProjectionPackage | null;
 }
 
 /**
@@ -234,5 +236,5 @@ export async function placeMeetingsFromCensusVenues(input: {
       censusRawSha256: reference.rawHash, retrievedAt: reference.retrievedAt,
       publishedAddress: row.address, lat: row.lat, lng: row.lng };
   });
-  return { meetings: placed.meetings, placedCount: placed.placedCount, held: proposed.held, venueReferenceEvidence };
+  return { meetings: placed.meetings, placedCount: placed.placedCount, held: proposed.held, venueReferenceEvidence, package: proposed.package };
 }

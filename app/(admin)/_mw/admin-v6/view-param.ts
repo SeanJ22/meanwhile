@@ -3,7 +3,7 @@
  * anything unrecognised opens Now. A plain module (no client directive) so the
  * server page and the client shell read one list.
  */
-export const VIEW_IDS = ["now", "workers", "work", "checklist", "money", "learning", "fix", "reports", "changes", "chat"] as const;
+export const VIEW_IDS = ["now", "workers", "work", "checklist", "money", "learning", "fix", "settings", "reports", "changes", "chat"] as const;
 
 export type View = (typeof VIEW_IDS)[number];
 

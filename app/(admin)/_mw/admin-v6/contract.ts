@@ -47,6 +47,7 @@
  */
 import { FIX_QUEUE_SUBJECT, GO_FIX_OPTION } from "@/lib/control-plane/fix-queue.ts";
 import type { ActionKind, AdminV6Data } from "./model.ts";
+import { settingValueFromInput } from "./actions.ts";
 
 export const V6_CAPABILITY_VERSION = 1;
 
@@ -232,6 +233,12 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { fixId: s.target, resource: s.option };
     case "cancel-send":
       return { intentId: s.target };
+    case "setting-set":
+      // config.setSetting: the target is the setting's key; the payload says how its value is typed.
+      return { key: s.target, value: settingValueFromInput(s.payload?.control ?? "text", s.amount, s.option) ?? null, why: s.words.trim() };
+    case "setting-undo":
+      // The same action with the logged previous value, quoting the change it undoes so a later change is never jumped over.
+      return { key: s.target, value: JSON.parse(s.payload?.value ?? "null") as unknown, why: s.words.trim() || "Undo", undoOf: s.payload?.undoOf ?? "" };
     case "send-agents":
       // fleet.deployHere: where the fleet goes next, in words. A typed dollar amount is that Send's own rolling budget.
       return { note: (s.payload?.words ?? s.words).trim(), ...(s.amount.trim() === "" ? {} : { budgetUsd: Number(s.amount) }) };

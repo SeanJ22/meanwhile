@@ -139,6 +139,8 @@ export interface InheritedEvidence {
   readonly priorRungs?: readonly PriorRung[];
   /** What the newest prior Attempt said it would try next. */
   readonly nextRungs?: readonly string[];
+  /** CH-30: how many of the newest prior Attempts in a row ended because the AI service did not answer. Absent means none. */
+  readonly transportFailures?: number;
   /** Full selected envelopes stay outside the model prefix until requested. */
   readonly manualEntries?: readonly FieldManualEntry[];
 }

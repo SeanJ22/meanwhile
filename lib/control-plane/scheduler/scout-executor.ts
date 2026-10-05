@@ -669,6 +669,9 @@ export type ScoutEscalationAdmission =
 /** The escalation evidence line is short: a sentence an owner reads, never a transcript. */
 export const SCOUT_ESCALATION_EVIDENCE_MAX_CHARS = 300;
 
+/** CH-30: after this many attempts in a row that the AI service did not answer, the next one starts a tier up. */
+export const OUTAGE_TIER_AFTER = 2;
+
 /**
  * Initial response allowance at the model's dearest token rate. The attempt
  * has no cumulative token cap. This starts the existing job/escalation hold;
@@ -1219,9 +1222,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
    * overrides the id only. The escalation target is the registry's, or none
    * when the start is already the top of the ladder.
    */
-  const base = scoutLoopBase(deps.model);
-  const model = base.model;
-  const effort: ModelEffort = base.effort;
+  const defaultBase = scoutLoopBase(deps.model);
+  const model = defaultBase.model;
 
   return {
     lane: "BOUNDED_MODEL_WORKER",
@@ -1250,6 +1252,23 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         };
       }
       const sourceRecordClass = ctx.sourceRecordClass ?? row.obligation.recordClass;
+      /*
+       * CH-30: when the AI service has not answered the last OUTAGE_TIER_AFTER attempts at this item, the next one
+       * starts on the next tier up (the same guarded ladder an escalation uses), so an outage that is one model's
+       * does not keep the work waiting. An injected test model, the top of the ladder, or a target above the ceiling
+       * leaves the start where it was.
+       */
+      const outageTier = (ctx.inherited.transportFailures ?? 0) >= OUTAGE_TIER_AFTER && deps.model === undefined
+        ? (() => { try { return assertStepMayEscalate(SCOUT_LOOP_STEP, "PROVIDER_UNAVAILABLE", defaultBase.modelClass); } catch { return null; } })()
+        : null;
+      const base = outageTier === null ? defaultBase : {
+        model: outageTier.model,
+        modelClass: outageTier.modelClass,
+        effort: outageTier.effort,
+        why: `${defaultBase.why} Started a tier up: the AI service did not answer the ${defaultBase.modelClass} model on the last ${ctx.inherited.transportFailures} tries.`,
+      };
+      const model = base.model;
+      const effort: ModelEffort = base.effort;
       const toolkit = deps.toolkitFor({
         obligation: row,
         route: ctx.route,
@@ -1768,7 +1787,11 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       let escalationEvidence: string | null = null;
       let escalationRefused: ScoutEscalationRefused | null = null;
 
-      const first: ModelAttemptRun = { model, modelClass: base.modelClass, consult: () => assertStepMayInvokeModel(SCOUT_LOOP_STEP) };
+      const first: ModelAttemptRun = {
+        model,
+        modelClass: base.modelClass,
+        consult: () => (outageTier === null ? assertStepMayInvokeModel(SCOUT_LOOP_STEP) : assertStepMayEscalate(SCOUT_LOOP_STEP, "PROVIDER_UNAVAILABLE", defaultBase.modelClass)),
+      };
       await runModelAttempt(first);
       if (!graduated) closeAttempt(first, 1);
 
@@ -2013,6 +2036,18 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
        * never files it as a 30-day absence.
        */
       const timedOut = finish === null && stoppedBy === "TIMEOUT";
+      /*
+       * CH-30: an AI service that did not answer is not a thrown-away walk. The steps walked are saved as the case file
+       * (the same shape a timed-out hunter saves), so the next agent resumes from them; the refusal still names the cause.
+       */
+      const walkedSteps = rungs.map((r) => `${r.tool} -> ${r.target}${r.observed ? `: ${String(r.observed).slice(0, 160)}` : ""}`).slice(0, 40);
+      const outageCaseFile: { narrative: string; nextRungs: string[] } | null =
+        finish === null && !timedOut && transportFailure !== null && !policyRefusedBeforeSending && rungs.length > 0
+          ? {
+              narrative: `The AI service did not answer after ${turns} turn(s) and ${rungs.length} step(s); those steps are kept and the next agent resumes from them. Not a finding of absence.`,
+              nextRungs: walkedSteps,
+            }
+          : null;
       const timeoutCaseFile: { narrative: string; nextRungs: string[] } | null = timedOut
         ? {
             narrative: `Stopped at the ${Math.round(wallLimitMs / 1000)}-second time limit after ${turns} turn(s) and ${rungs.length} step(s); not a finding of absence.`,
@@ -2075,9 +2110,9 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         distinctEvidenceRungs: distinctEvidenceRungs(rungsAnnotated),
         candidates: accepted ? acceptedCandidates : [],
         findings: accepted?.findings ?? [],
-        nextRungs: accepted?.nextRungs ?? timeoutCaseFile?.nextRungs ?? [],
+        nextRungs: accepted?.nextRungs ?? timeoutCaseFile?.nextRungs ?? outageCaseFile?.nextRungs ?? [],
         unverified: accepted?.unverified ?? [],
-        narrative: accepted?.narrative ?? timeoutCaseFile?.narrative ?? (refusal ? `REFUSED: ${refusal.map((i) => i.code).join(", ")}` : ""),
+        narrative: accepted?.narrative ?? timeoutCaseFile?.narrative ?? outageCaseFile?.narrative ?? (refusal ? `REFUSED: ${refusal.map((i) => i.code).join(", ")}` : ""),
         /* The model whose attempt produced this result; `modelAttempts` names every model that ran. */
         worker: { provider: "anthropic", model: last.model, modelReported },
         usage: {

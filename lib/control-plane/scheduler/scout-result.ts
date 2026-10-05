@@ -193,6 +193,9 @@ export interface ScoutCandidate {
 
 /** An evidence finding: the record itself, or a pointer to it, was acquired. */
 export interface ScoutFinding {
+  /** The finding's target, which may differ from the Scout's starting subject. */
+  readonly subjectId?: string;
+  readonly missionPart?: string;
   /** A captured fact, never an inferred summary. Older findings may lack these fields. */
   readonly field?: string;
   readonly value?: string | number | boolean | null;
@@ -923,4 +926,17 @@ export function classifyPriorRung(rung: {
   if (/\(wall\)|HTTP 4\d\d|\((AUTHENTICATION|PAYMENT|FORBIDDEN|RATE_LIMIT|LEGAL|CHALLENGE)\)/i.test(o)) return "DURABLE";
   if (rung.ok === false) return "TRANSIENT";
   return "NOT_A_FAILURE";
+}
+
+/**
+ * CH-30: how many of the newest results, in a row and oldest first, ended because the AI service did not answer
+ * (`SCOUT_TRANSPORT_FAILED`). A result that ended any other way stops the count. The history is what backoff learns from.
+ */
+export function consecutiveTransportFailures(results: readonly Pick<ScoutResult, "refusal">[]): number {
+  let count = 0;
+  for (let i = results.length - 1; i >= 0; i--) {
+    if (!results[i]!.refusal?.some((issue) => issue.code === "SCOUT_TRANSPORT_FAILED")) break;
+    count += 1;
+  }
+  return count;
 }

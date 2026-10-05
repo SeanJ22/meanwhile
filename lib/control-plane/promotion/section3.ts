@@ -9,6 +9,7 @@
  * A record goes live when its minimum facts pass; every other fact attaches
  * when it passes, and every blank stays open as work.
  */
+import { personNameField, personRecordBlocks } from "../workers/record-block.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 
 /** A saved capture as the check needs it. */
@@ -160,15 +161,26 @@ export function section3Record(input: {
   const page = input.pageVerdict ?? section3Page(input.page, input.recordClass, input.now);
   const present = Object.entries(input.fields).filter(([, value]) => value !== null && value !== undefined && value !== "").map(([field]) => field);
   if (!page.ok) return { live: false, verifiedFields: [], openFields: present, reason: page.reason };
-  const words = pageWords(input.page.text);
+  const nameField = personNameField(input.fields, input.recordClass);
+  const anchorField = nameField ? input.derived?.[nameField] ?? nameField : null;
+  const blocks = anchorField ? personRecordBlocks(input.page.text, String(input.fields[anchorField]), (name, text) => pageWords(text).includes(pageWords(name))) : [];
+  // Repeated names are resolved by the record's other minimums, never by
+  // pooling contact fields from several rows belonging to different people.
+  const minimums = input.minimums ?? SECTION3_MINIMUMS[input.recordClass] ?? [];
+  const matching = [...new Map(blocks.filter(block => minimums.every(field =>
+    SECTION3_LABEL_FIELDS.includes(field) || input.derived?.[field] || valueOnPage(input.fields[field], input.page.text.slice(block.start, block.end))))
+    // CMS pages may repeat the exact same row for desktop and mobile. This
+    // is one record twice, not permission to combine differing rows.
+    .map(block => [input.page.text.slice(block.start, block.end), block])).values()];
+  const recordText = nameField ? (matching.length === 1 ? input.page.text.slice(matching[0].start, matching[0].end) : "") : input.page.text;
+  const words = pageWords(recordText);
   const verified = new Set<string>();
   for (const field of present) {
     if (SECOND_SOURCE_FIELDS.includes(field) || input.derived?.[field]) continue;
     if (SECTION3_LABEL_FIELDS.includes(field)) { verified.add(field); continue; }
-    if (valueOnPage(input.fields[field], input.page.text, words)) verified.add(field);
+    if (valueOnPage(input.fields[field], recordText, words)) verified.add(field);
   }
   for (const [field, from] of Object.entries(input.derived ?? {})) if (present.includes(field) && verified.has(from)) verified.add(field);
-  const minimums = input.minimums ?? SECTION3_MINIMUMS[input.recordClass] ?? [];
   const missing = minimums.filter((field) => !verified.has(field));
   return {
     live: missing.length === 0,

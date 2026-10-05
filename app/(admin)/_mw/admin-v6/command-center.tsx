@@ -41,6 +41,10 @@ import { TopicCountsPanel } from "./topic-counts.tsx";
 import { DataSwitchesPanel } from "./data-switches.tsx";
 import { CaptureHealthPanel } from "./capture-health.tsx";
 import { ReportsView } from "./reports-view.tsx";
+import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
+import { DoorsPanel } from "./doors-panel.tsx";
+import { UpdatesPanel } from "./updates-panel.tsx";
+import { ScheduledPanel } from "./scheduled-panel.tsx";
 import { WorkScreen } from "./screen-work.tsx";
 import { WorkersScreen } from "./screen-workers.tsx";
 import { cx } from "./ui.tsx";
@@ -123,8 +127,10 @@ export function CommandCenter(props: CommandCenterProps) {
 
   const receipts = useMemo(() => {
     const keys = new Set(sent.map((r) => r.key));
-    return [...sent, ...(data.history.data ?? []).filter((r) => !keys.has(r.key))];
-  }, [sent, data.history.data]);
+    // History rows carry the place key; the page names it from its own place list.
+    return [...sent, ...(data.history.data ?? []).filter((r) => !keys.has(r.key)).map((r) => ({ ...r,
+      scopeName: index.get(r.scopeKey)?.name ?? r.scopeName, targetName: index.get(r.target)?.name ?? r.targetName }))];
+  }, [sent, data.history.data, index]);
 
   const nameOf = (id: string): string => {
     const stuck = data.stuck.data?.find((i) => i.id === id);
@@ -156,7 +162,7 @@ export function CommandCenter(props: CommandCenterProps) {
     const stuckForFix = data.stuck.data?.find((i) => i.fixId === ref.target);
     return {
       target: ref.target,
-      targetName: nameOf(ref.target || scopeKey),
+      targetName: ref.payload?.name ?? nameOf(ref.target || scopeKey),
       scopeName: index.get(ref.target)?.name ?? place.name,
       scopeIsCountry: (index.get(ref.target)?.kind ?? place.kind) === "Country",
       matching,
@@ -166,6 +172,7 @@ export function CommandCenter(props: CommandCenterProps) {
         : stuckForFix ? { id: ref.target, title: nameOf(ref.target), owner: stuckForFix.owner, resourcesNow: "Not reported", helps: stuckForFix.title, needsCode: true } : undefined,
       url: ref.payload?.url,
       words: ref.payload?.words,
+      payload: ref.payload,
       waitingCount: scopeKey === COUNTRY_KEY ? data.workRows.data?.totals.find((t) => t.stage === "waiting")?.total ?? null : null,
       outreachAuthorized: props.access.outreachAuthorized,
     };
@@ -278,7 +285,7 @@ export function CommandCenter(props: CommandCenterProps) {
     check: (r) => { const p = props.executor.check(r, actionDef(r.kind), update); if (p) void p; },
     canCheck: () => {
       if (props.connection !== "live") return "Reconnect first.";
-      return props.executor.canCheck() ? null : "Checking needs a read-only receipt lookup that isn’t connected yet. It turns on by itself. Don’t send the action again until its result is known.";
+      return props.executor.canCheck() ? null : "Checking isn’t available yet.";
     },
     defOf: (ref) => actionDef(ref.kind),
     nameOf,
@@ -378,13 +385,14 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
           {detail ? <DetailPanel detail={detail} /> : (
             <>
-              {view === "now" && <><NowScreen key={scopeKey} /><ReaderDemandPanel /><CaptureHealthPanel /><TopicCountsPanel /><DataSwitchesPanel /></>}
-              {view === "workers" && <WorkersScreen />}
-              {view === "work" && <WorkScreen />}
+              {view === "now" && <><NowScreen key={scopeKey} /><UpdatesPanel /><ReaderDemandPanel /><CaptureHealthPanel /><TopicCountsPanel /><DataSwitchesPanel /></>}
+              {view === "workers" && <><WorkersScreen /><RunnerSettingsPanel /><DoorsPanel /></>}
+              {view === "work" && <><ScheduledPanel /><WorkScreen /></>}
               {view === "checklist" && <ChecklistScreen />}
               {view === "money" && <MoneyScreen />}
               {view === "learning" && <LearningScreen />}
               {view === "fix" && <><FixQueueControls /><FixScreen /></>}
+              {view === "settings" && <SettingsScreen />}
               {view === "reports" && <ReportsView />}
               {view === "changes" && <ChangesView />}
               {view === "chat" && <ChatView controls={props.chatControls ?? []} />}

@@ -421,6 +421,13 @@ export interface RunnerHeartbeat {
    * it. Absent on every beat written before the field existed.
    */
   readonly discoverySearch?: DiscoverySearchApplied | null;
+  /**
+   * BR-05: the runner-side settings this pass applied, from the config it
+   * re-read (`runnerSettingsEcho` in settings.ts). Admin compares it with the
+   * saved value to say a setting is in force. Absent on beats written before
+   * the field existed.
+   */
+  readonly settings?: import("./settings.ts").RunnerSettingsApplied | null;
 }
 
 /** The runner's acknowledgement of the paid discovery search switch, written into its heartbeat each cycle. */

@@ -698,7 +698,7 @@
       "BX-06"
     ],
     "testedCommit": "0863000be3d8cbadf2a9ae1baee4635a6fca2c98",
-    "state": "FULL completed with own failure, repaired; exact committed repair checks pending",
+    "state": "READY: owned BX-02 runtime connected; BX-06 measurement built; River schema/enable and measures BR-31 flow caller pending",
     "selector": {
       "plan": "full",
       "files": [],
@@ -888,7 +888,51 @@
         "lib/control-plane/workers/standing-runtime.ts"
       ],
       "precommitFocused": "25/25 complete runtime-reference tests pass; final committed runner check pending",
-      "excludedRun": "Initial direct focused repair invocation inherited cloud DATABASE_URL and produced2store errors; not used as passing evidence. Clean CI environment run passed25/25."
+      "excludedRun": "Initial direct focused repair invocation inherited cloud DATABASE_URL and produced2store errors; not used as passing evidence. Clean CI environment run passed25/25.",
+      "source": "ed5b8727ac26fa7b3ac2e407698ee5565c4d7f59",
+      "manifest": ".factory/slide-bx0206-repair-tests.json",
+      "summary": {
+        "schemaVersion": 1,
+        "kind": "run",
+        "durationMs": 43976.05706,
+        "success": true,
+        "counts": {
+          "tests": 41,
+          "failed": 0,
+          "passed": 41,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 41,
+          "suites": 0
+        }
+      },
+      "exitCode": 0,
+      "log": "/tmp/slide-bx0206-exact-repair.log",
+      "logSha256": "33f927a5afa9d51ba537571a95f35c9fbbe9b80ee82e3e45eda3e8e45a3aff43",
+      "types": {
+        "command": "corepack pnpm exec tsc --noEmit",
+        "source": "ed5b8727ac26fa7b3ac2e407698ee5565c4d7f59",
+        "exitCode": 0,
+        "log": "/tmp/slide-bx0206-repair-exact-types.log"
+      },
+      "lint": {
+        "command": "corepack pnpm exec eslint lib/control-plane/workers/standing-runtime.ts",
+        "exitCode": 0,
+        "log": "/tmp/slide-bx0206-repair-lint.log"
+      }
+    },
+    "types": {
+      "source": "0863000be3d8cbadf2a9ae1baee4635a6fca2c98",
+      "exitCode": 0,
+      "log": "/tmp/slide-bx0206-exact-types.log"
+    },
+    "lint": {
+      "source": "0863000be3d8cbadf2a9ae1baee4635a6fca2c98",
+      "exitCode": 0,
+      "errors": 0,
+      "existingWarnings": 69,
+      "log": "/tmp/slide-bx0206-exact-lint.log"
     }
   }
 }

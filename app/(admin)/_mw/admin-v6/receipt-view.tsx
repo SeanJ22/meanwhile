@@ -73,8 +73,8 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
             aria-valuenow={r.progress?.done ?? 0}>
             {r.progress && r.progress.of ? (
               <>
-                <div style={{ height: 6, borderRadius: 3, background: "var(--line, #ddd)" }}>
-                  <div style={{ height: 6, borderRadius: 3, width: `${Math.min(100, Math.round(((r.progress.done ?? 0) / r.progress.of) * 100))}%`, background: "var(--teal, #0a7)" }} />
+                <div style={{ height: 6, borderRadius: 3, background: "var(--line)" }}>
+                  <div style={{ height: 6, borderRadius: 3, width: `${Math.min(100, Math.round(((r.progress.done ?? 0) / r.progress.of) * 100))}%`, background: "var(--teal)" }} />
                 </div>
                 <span className={s.meta}>{r.progress.done ?? 0} of {r.progress.of}</span>
               </>

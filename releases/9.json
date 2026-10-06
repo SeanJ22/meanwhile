@@ -1,0 +1,50 @@
+{
+  "n": 9,
+  "branch": "release/9",
+  "river_sha": "4fabb668cdceed1b734048830934d1319d04b2c8",
+  "tested_sha": "4fabb668cdceed1b734048830934d1319d04b2c8",
+  "steps": [
+    "BR-31",
+    "FE-24",
+    "FE-21",
+    "FE-37",
+    "FE-25",
+    "FE-40",
+    "DB-32",
+    "DB-34",
+    "FE-26",
+    "FE-27",
+    "FE-23",
+    "BX-03",
+    "BX-12",
+    "DB-37",
+    "DP-08",
+    "DB-45",
+    "DB-52",
+    "FE-35",
+    "FE-36",
+    "BX-08",
+    "BX-10",
+    "DP-13",
+    "DP-16",
+    "DP-17",
+    "FE-18"
+  ],
+  "lanes": [
+    "measures",
+    "registry",
+    "meetings",
+    "auditors",
+    "slide",
+    "bank",
+    "frontend",
+    "hunters"
+  ],
+  "integration_from": 99,
+  "integration_count": 109,
+  "pr": {
+    "number": 715,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/715"
+  },
+  "at": "2026-10-06T10:12:39Z"
+}

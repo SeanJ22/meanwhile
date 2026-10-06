@@ -250,6 +250,32 @@ export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
 };
 
 /**
+ * CH-20: the `report_finding` spec, appended only when the runtime can write the
+ * Box. It opens nothing and costs nothing: the quote must already be in a page
+ * this walk saved, so a dropped finding carries the same proof a finished one does.
+ */
+export const REPORT_FINDING_TOOL_SPEC: ScoutToolSpec = {
+  name: "report_finding",
+  description:
+    "Drop a finding into the Box now, for your own target or for any subject named in the MISSION lines of your brief, " +
+    "when a page you already saved in this walk answers it. The builders pick it up from the Box; you keep working your own target. " +
+    "The exact quote must appear word for word in that saved page. No network call, no cost.",
+  input_schema: {
+    type: "object",
+    properties: {
+      subjectId: { type: "string", description: "The subject id in [brackets] on a MISSION line, or your own target's." },
+      subjectHint: { type: "string", description: "Who or what the finding is about, in a few words (e.g. the person's name and office)." },
+      field: { type: "string", description: "The fact's field name, e.g. name, office, email, phone, meetingDate." },
+      value: { type: ["string", "number", "boolean"], description: "The fact's value, as the page states it." },
+      exactQuote: { type: "string", description: "The words on the saved page that state it, copied exactly." },
+      sourceUrl: { type: "string", description: "The saved page's address." },
+      artifactId: { type: "string", description: "Optional: the saved page's artifact id, when you have it." },
+    },
+    required: ["subjectId", "field", "value", "exactQuote", "sourceUrl"],
+  },
+};
+
+/**
  * **THE RESEARCH TOOL LIST, FOR ONE SETTING OF THE SEARCH SWITCH — the one
  * answer the toolkit and the pre-warm both read.** (2026-09-25.) The tool list
  * is the first part of the cached prefix, so a pre-warm built from the list
@@ -257,8 +283,8 @@ export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
  * Attempt reads — a paid write and a miss every cycle the owner's paid-search
  * switch is on.
  */
-export function scoutToolSpecsFor(search: boolean): readonly ScoutToolSpec[] {
-  return [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, ...(search ? [SEARCH_TOOL_SPEC] : [])];
+export function scoutToolSpecsFor(search: boolean, reportFinding = false): readonly ScoutToolSpec[] {
+  return [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, ...(search ? [SEARCH_TOOL_SPEC] : []), ...(reportFinding ? [REPORT_FINDING_TOOL_SPEC] : [])];
 }
 
 /* ------------------------------------------------------------ transport */
@@ -1445,12 +1471,52 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     } catch(error) { return refusal(name+': '+(error instanceof Error ? error.message : String(error))); }
   }
 
+  /* ----------------------------------------------------- report_finding */
+
+  /** CH-20: one finding into the Box, proved by a page this walk saved. Never throws; a refusal says why. */
+  const reported = new Map<string, string>();
+  async function reportFinding(raw: unknown): Promise<ScoutToolCallResult> {
+    const report = ctx.reportFinding;
+    if (!report) return refusal("report_finding is not available in this walk; put the finding in finish.");
+    const o = (raw !== null && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+    const text = (key: string, max: number) => typeof o[key] === "string" && o[key].trim() !== "" && o[key].length <= max ? o[key].trim() : null;
+    const subjectId = text("subjectId", 300), field = text("field", 80), exactQuote = typeof o.exactQuote === "string" && o.exactQuote.trim() !== "" && o.exactQuote.length <= 1000 ? o.exactQuote : null;
+    const sourceUrl = text("sourceUrl", 2000), artifactId = text("artifactId", 200), subjectHint = text("subjectHint", 200);
+    const value = typeof o.value === "number" && Number.isFinite(o.value) || typeof o.value === "boolean" ? o.value
+      : typeof o.value === "string" && o.value.trim() !== "" && o.value.length <= 500 ? o.value.trim() : null;
+    if (!subjectId || !field || value === null || !exactQuote || !sourceUrl) {
+      return refusal("report_finding needs subjectId, field, value, exactQuote (at most 1000 characters) and sourceUrl.");
+    }
+    if (!report.subjects.has(subjectId)) {
+      return refusal(`REPORT_SUBJECT_NOT_IN_MISSION: ${JSON.stringify(subjectId)} is not your target or a subject on a MISSION line; use the id in [brackets].`);
+    }
+    const page = [...factEvidence.entries()].find(([id, evidence]) =>
+      (artifactId ? id === artifactId : evidence.sourceUrl === sourceUrl || evidence.retrievalUrl === sourceUrl) &&
+      (evidence.text.includes(exactQuote) || evidence.visibleText.includes(exactQuote)));
+    if (!page) {
+      return refusal("REPORT_QUOTE_NOT_IN_SAVED_PAGE: the exact quote must appear word for word in a page you saved in this walk at that address. Open the page first, then report.");
+    }
+    const [savedId, evidence] = page;
+    const key = JSON.stringify([subjectId, field, exactQuote, evidence.sourceUrl]);
+    const already = reported.get(key);
+    if (already) return { ok: true, forModel: `ALREADY IN THE BOX: ${already}. Keep working your own target.`, artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
+    try {
+      const written = await report.write({ subjectId, field, value, exactQuote, sourceUrl: evidence.sourceUrl, artifactIds: [savedId], subjectHint, index: reported.size });
+      reported.set(key, written.boxId);
+      return { ok: true, forModel: `IN THE BOX: ${field} = ${JSON.stringify(value)} for ${subjectId}, from ${evidence.sourceUrl} (saved page ${savedId}). Builders take it from here; keep working your own target.`,
+        artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
+    } catch (error) {
+      return refusal(`REPORT_NOT_SAVED: ${error instanceof Error ? error.message : String(error)}. Put the finding in finish instead.`);
+    }
+  }
+
   /* -------------------------------------------------------------- call */
 
   async function call(name: string, input: unknown, rungLabel: string | null): Promise<ScoutToolCallResult> {
     if (!(SCOUT_RESEARCH_TOOLS as readonly string[]).includes(name)) {
       return refusal(`${JSON.stringify(name)} is not a research tool; the research tools are ${SCOUT_RESEARCH_TOOLS.join(", ")}.`);
     }
+    if (name === "report_finding") return await reportFinding(input);
     toolCalls += 1;
     const tool = name as ScoutResearchTool;
     const needsUrl = tool === "read_permission" || tool === "fetch_public" || tool === "browse";
@@ -1507,7 +1573,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   }
 
   return {
-    specs: scoutToolSpecsFor(Boolean(ctx.search)),
+    specs: scoutToolSpecsFor(Boolean(ctx.search), Boolean(ctx.reportFinding)),
     factEvidence,
     heldEvidenceProtocolAvailable: Boolean(ctx.readHeldArtifact),
     call,

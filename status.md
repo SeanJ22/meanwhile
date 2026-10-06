@@ -1,6 +1,6 @@
 # River status
 
-build_state: release 10 live (d79f179, 8:26 AM EDT); restart steps pushed to Sean 8:28 AM EDT; runner still stopped at last check
+build_state: release 11 folding (river-next 9863a25 over river d79f179; firewall PASS; gates running); runner still stopped at 8:57 AM EDT (last beat 07:12Z on a5fd753; restart with Sean since 8:28 AM EDT)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_019dfFq5HGoipanBrVDSSrbK
@@ -9,7 +9,13 @@ heartbeat: 2026-10-06T12:57:07Z
 
 
 
-## This run (session_01EnWcsto9iudrVWwszS9urS, claimed the free lock Oct 6, 3:57 AM EDT)
+## This run (session_019dfFq5HGoipanBrVDSSrbK, claimed the free lock Oct 6, 8:57 AM EDT)
+
+- Runner: still stopped at 8:57 AM EDT (cp_runner_heartbeat updated 07:12:49Z, testedSha a5fd753; cp_vital_signs not yet created, so v25 waits on the restart). Neon control-plane total 1,857,008,881,367 at 12:57Z (about 0.5 MB since 12:27Z with the runner off). Restart steps already with Sean; not re-pushed.
+- Folding on river-next 9863a25 over river d79f179: measures 551ee41dc (VS-01: Admin Now reads the last two cp_vital_signs rows; one bounded read of at most two rows); hunters 9a7965c67 (BX-13 hook a9ef516dc, CP-10 repair 1b49f3fd6, campaign-site chain scope; Neon estimate none, disk/CPU only). Release firewall PASS (0 findings). `pnpm gates` running.
+- Not folded, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b (runner door switches); admin 734ee9633 (returned).
+
+## Previous run (session_01EnWcsto9iudrVWwszS9urS, claimed the free lock Oct 6, 3:57 AM EDT)
 
 **Release 9: #715** (release/9 at 4fabb66), opened at 6:12 AM EDT with auto-merge on. **`pnpm gates` 12/12 on 4fabb66**: 9,872 tests, 9,861 pass, 0 fail, 11 skipped; firewall 0 findings. It contains:
 - the tested 3 AM fold (fb10f50: BR-31; FE-24, 21, 37, 25, 40; DB-32, DB-34, FE-26, FE-27, FE-23; BX-03, BX-12; DB-37, DP-08, DB-45, DB-52; FE-35, FE-36);

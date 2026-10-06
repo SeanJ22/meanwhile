@@ -8,6 +8,7 @@ import { boundedQuery } from "../repository/request-bounds.ts";
 export interface VendorSpendLine {
   readonly vendor: string; readonly todayUsd: number | null; readonly monthUsd: number | null;
   readonly dailyLimitUsd: number | null; readonly monthlyLimitUsd: number | null;
+  readonly todayPeriodStart?: string; readonly todayPeriodEnd?: string;
   readonly todayBytes: number | null; readonly monthBytes: number | null; readonly detail: string;
 }
 export interface VendorSpendReading { readonly day: string; readonly month: string; readonly readAt: string; readonly vendors: readonly VendorSpendLine[] }
@@ -51,7 +52,7 @@ export async function readVendorSpend(input: {
   await Promise.all([
     (async()=>{const token=env.DIGITALOCEAN_TOKEN??env.DIGITALOCEAN_ACCESS_TOKEN;
       if(!token){vendors[2]={...vendors[2],detail:"DigitalOcean billing credential is not configured (DIGITALOCEAN_TOKEN or DIGITALOCEAN_ACCESS_TOKEN)."};return;}
-      try{const r=await get("https://api.digitalocean.com/v2/customers/my/balance",token);vendors[2]={...vendors[2],monthUsd:amount(r.month_to_date_usage),detail:"DigitalOcean's reported month-to-date usage, read from the customer balance API. The API does not report daily charges or an account spending limit."};}
+      try{const r=await get("https://api.digitalocean.com/v2/customers/my/balance",token);vendors[2]={...vendors[2],monthUsd:input.now.slice(0,7)===month?amount(r.month_to_date_usage):null,detail:"DigitalOcean's reported month-to-date usage, read from the customer balance API. The API does not report daily charges or an account spending limit."};}
       catch{vendors[2]={...vendors[2],detail:"DigitalOcean billing could not be read with the configured access."};}
     })(),
     (async()=>{const token=env.GITHUB_BILLING_TOKEN,account=env.GITHUB_BILLING_ORG??env.GITHUB_BILLING_USER;
@@ -61,8 +62,9 @@ export async function readVendorSpend(input: {
         if(!Array.isArray(r.usageItems))throw new Error("unread");
         const rows=r.usageItems as Record<string,unknown>[];
         if(rows.some(r=>amount(r.netAmount)===null||typeof r.date!=="string"||!Number.isFinite(Date.parse(r.date))))throw new Error("unread");
-        const today=rows.filter(r=>easternDay(new Date(r.date as string))===day);
-        vendors[4]={...vendors[4],todayUsd:today.reduce((n,r)=>n+Number(r.netAmount),0),monthUsd:rows.reduce((n,r)=>n+Number(r.netAmount),0),detail:"GitHub's reported net metered usage after discounts. Days use each usage timestamp in Eastern time; the vendor's month uses its UTC billing period. Fixed subscriptions and an account spending limit are not reported by this usage endpoint."};
+        const providerDay=input.now.slice(0,10);
+        const today=rows.filter(r=>(r.date as string).slice(0,10)===providerDay);
+        vendors[4]={...vendors[4],todayUsd:input.now.slice(0,7)===month?today.reduce((n,r)=>n+Number(r.netAmount),0):null,todayPeriodStart:providerDay+"T00:00:00.000Z",todayPeriodEnd:new Date(Date.parse(providerDay+"T00:00:00.000Z")+86400000).toISOString(),monthUsd:rows.reduce((n,r)=>n+Number(r.netAmount),0),detail:"GitHub's reported net metered usage after discounts. The provider reports daily UTC billing buckets; their boundaries are supplied explicitly and shown in Eastern time. They cannot be split into guessed Eastern-day amounts. At a month boundary, a missing daily bucket stays unknown. The vendor's month uses its UTC billing period. Fixed subscriptions and an account spending limit are not reported by this usage endpoint."};
       }catch{vendors[4]={...vendors[4],detail:vendors[4].detail+" The daily usage API could not be read completely with the configured billing access."};}
     })(),
   ]);

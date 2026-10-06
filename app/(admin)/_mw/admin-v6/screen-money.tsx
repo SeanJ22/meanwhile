@@ -87,8 +87,8 @@ export function MoneyScreen() {
       <Card title="Spend by vendor" aside={<span className={s.meta}>{spendData?.vendors ? `Today (${spendData.vendors.day}) · month (${spendData.vendors.month}) · read ${mst(spendData.vendors.readAt)}` : DASH}</span>}>
         <div className={s.tableWrap}><table className={s.table}>
           <thead><tr><th>Vendor</th><th>Today</th><th>Daily limit</th><th>Month to date</th><th>Monthly limit</th></tr></thead>
-          <tbody>{(spendData?.vendors?.vendors ?? ["Anthropic","Neon","DigitalOcean","Netlify","GitHub"].map(vendor=>({vendor,todayUsd:null,monthUsd:null,dailyLimitUsd:null,monthlyLimitUsd:null,todayBytes:null,monthBytes:null,detail:"The vendor reading is not available yet."}))).map(r=><tr key={r.vendor}>
-            <th scope="row">{r.vendor}<Technical lines={[r.detail]}/></th><td>{money(r.todayUsd)}{r.todayBytes!==null&&<div className={s.small}>{gigabytes(r.todayBytes)} transferred</div>}</td><td>{money(r.dailyLimitUsd)}</td><td>{money(r.monthUsd)}{r.monthBytes!==null&&<div className={s.small}>{gigabytes(r.monthBytes)} transferred</div>}</td><td>{money(r.monthlyLimitUsd)}</td>
+          <tbody>{(spendData?.vendors?.vendors ?? ["Anthropic","Neon","DigitalOcean","Netlify","GitHub"].map(vendor=>({vendor,todayUsd:null,monthUsd:null,dailyLimitUsd:null,monthlyLimitUsd:null,todayBytes:null,monthBytes:null,todayPeriodStart:undefined as string|undefined,todayPeriodEnd:undefined as string|undefined,detail:"The vendor reading is not available yet."}))).map(r=><tr key={r.vendor}>
+            <th scope="row">{r.vendor}<Technical lines={[r.detail]}/></th><td>{money(r.todayUsd)}{r.todayPeriodStart&&r.todayPeriodEnd&&<div className={s.small}>Provider day: {mst(r.todayPeriodStart)} to {mst(r.todayPeriodEnd)}</div>}{r.todayBytes!==null&&<div className={s.small}>{gigabytes(r.todayBytes)} transferred</div>}</td><td>{money(r.dailyLimitUsd)}</td><td>{money(r.monthUsd)}{r.monthBytes!==null&&<div className={s.small}>{gigabytes(r.monthBytes)} transferred</div>}</td><td>{money(r.monthlyLimitUsd)}</td>
           </tr>)}</tbody>
         </table></div>
       </Card>

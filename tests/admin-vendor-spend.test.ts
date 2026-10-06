@@ -19,15 +19,21 @@ test("unpriced ledger charges, provider estimates, stale reads and old billing p
  }
  const r=await readVendorSpend({...base,billing:{formatVersion:1,collectedAt:now,readings:[reading({})]}});assert.equal(r.vendors[3].monthUsd,7);assert.equal(r.vendors[3].todayUsd,null);
 });
-test("configured vendor reads use GET, preserve actual zero and put GitHub usage timestamps in Eastern days",async()=>{
+test("configured vendor reads use GET, preserve actual zero and preserve the GitHub billing-day boundaries",async()=>{
  const urls:string[]=[];
  const r=await readVendorSpend({...base,env:{GITHUB_BILLING_TOKEN:"fixture",GITHUB_BILLING_USER:"fixture-user",DIGITALOCEAN_TOKEN:"fixture"},fetcher:async(url,init)=>{
  assert.equal(init?.method,"GET");urls.push(String(url));return Response.json(String(url).includes("digitalocean")?{month_to_date_usage:"0.00"}:{usageItems:[{date:"2026-10-06T00:00:00Z",netAmount:3},{date:"2026-10-05T02:00:00Z",netAmount:2}]});
  }});
- assert.equal(r.vendors[2].monthUsd,0);assert.equal(r.vendors[2].todayUsd,null);assert.equal(r.vendors[4].todayUsd,3);assert.equal(r.vendors[4].monthUsd,5);assert.equal(urls.length,2);
+ assert.equal(r.vendors[2].monthUsd,0);assert.equal(r.vendors[2].todayUsd,null);assert.equal(r.vendors[4].todayUsd,3);assert.equal(r.vendors[4].todayPeriodStart,"2026-10-06T00:00:00.000Z");assert.equal(r.vendors[4].monthUsd,5);assert.equal(urls.length,2);
 });
 test("incomplete or malformed vendor reads never show a partial total",async()=>{
  for(const response of [Response.json({usageItems:[{date:"wrong",netAmount:99}]}),Response.json({usageItems:[{date:now,netAmount:99}]},{headers:{link:'<https://example.test/page2>; rel="next"'}}),new Response(null,{status:403})]){
  const r=await readVendorSpend({...base,env:{GITHUB_BILLING_TOKEN:"fixture",GITHUB_BILLING_USER:"fixture"},fetcher:async()=>response});assert.equal(r.vendors[4].todayUsd,null);
  }
+});
+
+test("a UTC billing month is never passed off as the previous Eastern month",async()=>{
+ const at="2026-11-01T00:30:00.000Z";
+ const r=await readVendorSpend({...base,now:at,sql:({query:async()=>[{today:2,month:4,today_unpriced:0,month_unpriced:0}]}) as unknown as Sql,env:{DIGITALOCEAN_TOKEN:"fixture",GITHUB_BILLING_TOKEN:"fixture",GITHUB_BILLING_USER:"fixture"},fetcher:async(url)=>Response.json(String(url).includes("digitalocean")?{month_to_date_usage:"17"}:{usageItems:[{date:"2026-10-31",netAmount:2}]})});
+ assert.equal(r.month,"2026-10");assert.equal(r.vendors[2].monthUsd,null);assert.equal(r.vendors[4].todayUsd,null);assert.equal(r.vendors[4].monthUsd,2);
 });

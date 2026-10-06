@@ -188,3 +188,12 @@ test("using handed doors alone does not claim targets solved from the Bank", () 
   const view = buildScoreboard(readings({ doors: { walks: 6, given: 12, used: 5, since: "2026-09-25" } }));
   assert.equal(view.rows.find(r => r.id === "Head-start hit rate")!.value, null);
 });
+
+test("four direct learning measures replace the old weekly Scout panel when connected", () => {
+  const factory = { secondCoverage: { pairs: 1, firstMs: 3600000, secondMs: 900000, ratio: 0.25 },
+    headStart: { solved: 2, measured: 4, share: 0.5 }, detectiveReuse: 3,
+    factsByWeek: [{ week: "2026-10-05T00:00:00Z", facts: 24, observedHours: 12, perHour: 2 }] };
+  const view = v6LearningView(buildLearningTrends([], "2026-10-06T00:00:00Z"), null, null, factory);
+  assert.equal(view.trends.length, 0);
+  assert.deepEqual(view.readings.map(r => r.big), ["3", "50%", "25%", "2.00"]);
+});

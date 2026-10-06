@@ -81,6 +81,19 @@ function trend(trends: LearningTrends, input: {
 }
 
 export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, bankWriteErrors?: number | null, factory?: FactoryLearning | null): LearningView {
+  if (factory) {
+    const readings: Reading[] = [
+      { question: "How often are detectives’ routes reused?", big: factory.detectiveReuse === null ? "—" : n(factory.detectiveReuse),
+        bigNote: "successful uses of detectives’ routes", body: "Counts successful inherited routes whose recorded finder is a detective.", method: [] },
+      { question: "How many targets does the head start solve?", big: factory.headStart.share === null ? "—" : `${Math.floor(factory.headStart.share * 100)}%`,
+        bigNote: `${n(factory.headStart.solved)} of ${n(factory.headStart.measured)} measured targets`, body: "Targets solved using the Bank alone, without new acquisition.", method: [] },
+      { question: "How long does the second coverage take?", big: factory.secondCoverage.ratio === null ? "—" : `${Math.round(factory.secondCoverage.ratio * 100)}%`,
+        bigNote: "of the first coverage time", body: `${n(factory.secondCoverage.pairs)} complete pairs for the same government and target set.`, method: [] },
+      ...factory.factsByWeek.map(week => ({ question: "How many facts reach readers per hour?", big: week.perHour.toFixed(2),
+        bigNote: `week of ${week.week.slice(0,10)}`, body: `${n(week.facts)} new or updated reader records over ${week.observedHours.toFixed(1)} measured hours.`, method: [] })),
+    ];
+    return { trends: [], readings, notMeasured: [] };
+  }
   const s = trends.series;
   const trendList: Trend[] = [];
   if (s.handed.measuredWeeks > 0) {
@@ -122,13 +135,6 @@ export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, 
   }
 
   const readings: Reading[] = [];
-  if (factory) {
-    readings.push({ question: "How often are detectives’ routes reused?", big: factory.detectiveReuse === null ? "—" : n(factory.detectiveReuse),
-      bigNote: "successful uses of detectives’ routes", body: "Counts recorded successful walks through inherited routes whose finder is a detective.", method: [] });
-    for (const week of factory.factsByWeek) readings.push({ question: "How many facts reach readers per hour?",
-      big: week.perHour.toFixed(2), bigNote: `week of ${week.week.slice(0,10)}`, body: `${n(week.facts)} new or updated reader records over ${week.observedHours.toFixed(1)} measured hours.`, method: [] });
-  }
-
   for (const series of [s.scoutReused, s.detectiveReused]) {
     const latest = [...series.points].reverse().find(point => point.value !== null);
     if (latest) readings.push({ question: series.label, big: latest.value!.toLocaleString("en-US"),

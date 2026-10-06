@@ -11,6 +11,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { openOccurrence, syncObligations } from "../lib/control-plane/scheduler/durable.ts";
 import { UNREAD_MEETING_PARTITIONS, type MeetingPartitionOwnership } from "../lib/control-plane/scheduler/provider-inputs.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
+import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import type { FleetRuntime } from "../lib/control-plane/workers/runtime.ts";
@@ -79,8 +80,20 @@ test("an opened local row is planned work: the coordinator queues its Scout for 
 
 test("with paid work in the hunter lane the round opens a due planned row instead of only deferring it", () => {
   const round = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
-  assert.match(round, /const queuesForHunterLane = laneClosure !== null && CONTINUOUS_HUNTERS &&\s+modelLaneClosure\(\{ \.\.\.laneClosureInput, paidWorkInHunterLane: false \}\) === null;/,
-    "only the hunter-lane closure queues; a pause, hold or unread control still holds the row");
-  assert.match(round, /if \(queuesForHunterLane && row\.obligation\.autonomousPlan && await openOccurrenceInStep\(row\) === true\) \{\s+return \{ admit: false, code: "QUEUED_FOR_HUNTER_LANE"/);
+  assert.match(round, /const queuesForHunterLane = laneClosure\?\.hunterLane === true;/);
+  assert.match(round, /if \(queuesForHunterLane && row\.obligation\.autonomousPlan && await openOccurrenceInStep\(row\) === true\) \{\s+return \{ admit: false, code: "QUEUED_FOR_HUNTER_LANE"[^\n]*\n\s+\}\n\s+if \(!modelLaneEnabled\) return/,
+    "the queue check runs before the closed lane defers the row");
   assert.match(round, /local research rows: \$\{local\.length\} paid; \$\{planned\.length\} carry a work plan/);
+});
+
+test("the model lane names the hunter-lane closure only when nothing else holds paid work", () => {
+  const facts = { dry: false, noModel: false, credentialConfigured: true, credentialVar: "KEY",
+    activation: { promotionEnabled: true, openRecordClasses: ["BALLOT_CONTEST"] }, paused: false, pauseIntentId: null,
+    runnerPaused: false, runnerPauseIntentId: null, spendHold: null, unreadableControls: [] } as unknown as Parameters<typeof modelLaneClosure>[0];
+  assert.equal(modelLaneClosure(facts), null);
+  assert.equal(modelLaneClosure({ ...facts, paidWorkInHunterLane: true })?.hunterLane, true);
+  const paused = modelLaneClosure({ ...facts, paidWorkInHunterLane: true, paused: true, pauseIntentId: "intent-1" });
+  assert.equal(paused?.code, "PAUSED");
+  assert.equal(paused?.hunterLane, undefined, "an owner pause holds the row; nothing is queued");
+  assert.equal(modelLaneClosure({ ...facts, paidWorkInHunterLane: true, spendHold: "the ledger is held" })?.hunterLane, undefined);
 });

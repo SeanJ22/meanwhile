@@ -46,7 +46,7 @@ import {
   type DiscoveryRuntime,
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import type { Artifact } from "../lib/control-plane/evidence/artifact.ts";
-import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
+import { meetingsDiscoveryNeeds, withWebsiteCorrection, type JurisdictionRegistryFile, type MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { ROUTE_HINTS, namesItself, routeHintProblems, routeHintsFingerprint, type JurisdictionRouteHints } from "../lib/hunt/meetings-route-hints.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
@@ -753,12 +753,20 @@ test("A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FRO
   assert.ok(!namesItself("<title>This domain may be for sale</title>", "City of El Mirage"));
 });
 
-test("THE COMMITTED HINTS ARE SOUND: each names a government the ledger owes, replaces exactly the address it records, and the runner passes them to every walk", () => {
+test("THE COMMITTED HINTS ARE SOUND: each names a government its registry owes discovery, replaces exactly the address it records, and the runner passes them to every walk", () => {
   assert.deepEqual(routeHintProblems(ROUTE_HINTS), []);
-  const ledger = (JSON.parse(readFileSync("data/derived/gap-ledger.json", "utf8")) as { meetingsDiscovery: { needs: MeetingsDiscoveryNeed[] } }).meetingsDiscovery.needs;
+  /* What the retired gap ledger held, derived as it was (CH-21): each hinted state's registry, reviewed corrections applied. */
+  const owedIn = new Map<string, readonly MeetingsDiscoveryNeed[]>();
+  const owedNeed = (id: string): MeetingsDiscoveryNeed | undefined => {
+    const state = id.split(":")[0]!;
+    if (!owedIn.has(state)) {
+      owedIn.set(state, meetingsDiscoveryNeeds([JSON.parse(readFileSync(`data/states/${state}/jurisdictions/${state}.json`, "utf8")) as JurisdictionRegistryFile]).map(withWebsiteCorrection));
+    }
+    return owedIn.get(state)!.find((n) => n.jurisdictionId === id);
+  };
   for (const h of ROUTE_HINTS) {
-    const owed = ledger.find((n) => n.jurisdictionId === h.jurisdictionId);
-    assert.ok(owed !== undefined, `${h.jurisdictionId} is not a government the gap ledger owes meetings discovery`);
+    const owed = owedNeed(h.jurisdictionId);
+    assert.ok(owed !== undefined, `${h.jurisdictionId} is not a government its registry owes meetings discovery`);
     assert.ok(walkableByFreeWalk(owed), `${h.jurisdictionId}: the free walk cannot walk it`);
     if (h.officialSite !== null) {
       assert.equal(h.officialSite.replaces, owed.ownWebAddress, `${h.jurisdictionId}: the hint replaces an address the reference no longer records`);
@@ -954,5 +962,5 @@ test("CH-08 LANES: the three discovery passes start together beside the worker w
   assert.match(source, /discoveryLaneRun = runIndependentRuntimePass\(\[\s*timed\("meetings-discovery"[\s\S]*timed\("campaign-sites"[\s\S]*timed\("candidate-publications"/);
   assert.match(source, /runMeetingsDiscoveryPass\(dispatchDeadlineMs, Number\.MAX_SAFE_INTEGER\)/, "the new path is bounded by the time left, not a walk count");
   assert.match(source, /runMeetingsDiscoveryPass\(Date\.now\(\) \+ MEETINGS_DISCOVERY_BUDGET_MS, MEETINGS_DISCOVERY_MAX_WALKS\)/, "the old path keeps 12 walks and 60 s");
-  assert.ok(source.indexOf("await discoveryLaneRun") > source.indexOf("const autonomous = await runAutonomousProcesses()"), "the round joins the lanes after the worker wave, before finalization");
+  assert.ok(source.indexOf("await boundedAfterCutoff(discoveryLaneRun)") > source.indexOf("const autonomous = await runAutonomousProcesses()"), "the round joins the lanes after the worker wave, before finalization");
 });

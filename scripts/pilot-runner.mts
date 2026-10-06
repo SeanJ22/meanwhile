@@ -759,6 +759,13 @@ async function publishConsole(): Promise<void> {
     console.log("  console publish: skipped — the file provider is a local proof with no deployed console to publish to");
     return;
   }
+  /* The publisher still reads the whole cost log and every assignment source
+   * (River's scoped-read list); it ran in no measured hour from Oct 4 to Oct 6.
+   * If its bytes put the hour over target, this turns it off without a release. */
+  if (process.env.WTP_OWNER_SNAPSHOT_PUBLISH === "off") {
+    console.log("  console publish: owner snapshot switched off (WTP_OWNER_SNAPSHOT_PUBLISH=off); Admin keeps the last snapshot");
+    return;
+  }
   if (await publishChangedConsole() === "UNCHANGED") {
     console.log("  console publish: unchanged inputs; owner snapshot retained");
   }

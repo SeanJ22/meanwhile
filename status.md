@@ -157,6 +157,7 @@ Fold these after release 8 merges, as release 9. Keep the release-8 diff small.
 - **Held out and returned:** people (CA-11, CA-05 conflict with river); admin (overlap with BR-31).
 
 ### Pushes to Sean (record every one here, EDT)
+- 3:20 AM EDT: correction. The spend holds are not the cause (their scans run inside Postgres). The cause is unidentified until the per-query byte counter exists. No fix on a guess, no rollback.
 - 3:10 AM EDT: release 8's first hour was about 9.4 GB (worse than release 6's 7.8 GB; over the 1.5 GB stop line). Cause: budget checks fetch every counting spend hold as rows. River is building the fix. No rollback done. Release 9 tested, not shipped.
 - 1:37 AM EDT: release 8 live, with the restart steps (ssh, `systemctl start meanwhile-runner.service`, journalctl), the campaign-sites answer (cause not fixed; hunters next), and the Codex Continue line (admin return).
 

@@ -59,11 +59,21 @@ These are rows Postgres touched, not bytes sent to the runner. Reads inside cp_a
   - cp_work_items: 21 seq scans;
   - cp_route_tasks: 3 seq scans.
 
-### Cause (River's own step, MW-021)
-`SpendHoldGate.left()` (lib/control-plane/expansion/spend-holds.ts:455) calls `store.liveFor(lineKeys)`. In Postgres (pg-store.ts:1204) that returns **every hold that still counts on those lines as whole JSON rows**, settled holds in the rolling window included. The shared fleet line covers almost every hold, so each budget check pulls about 1,400 to 3,800 rows (1.3 KB each) to the runner, and does that about 2,244 times an hour. At about 1,350 rows a scan that is roughly 4 GB an hour from this one read. The table grows by about 2,200 holds an hour until the 24-hour window fills (about 50,000 holds), so **this read grows every hour**, the way the ledger row did. Separately, cp_log_artifacts' 4,043 whole scans need a scoped read (hunters, scoped reads).
+### Cause: NOT YET IDENTIFIED (corrected 3:20 AM EDT)
+River first blamed `SpendHoldGate.left()`, which fetches counting holds as rows. **That was wrong.** Nothing in production calls `left()` or `liveFor()`. cp_spend_holds' 2,244 seq scans this hour match its 2,230 admissions: `cp_admit_spend_hold()` scans the table **inside Postgres**, and those reads never reach the runner. They cost compute, not transfer. The holds reads that do return rows are `readLiveSpendHolds` at each round's start and in the owner snapshot: about 3,800 rows (4.9 MB) each, a few times an hour, so tens of MB.
 
-### Fix (River, smallest change)
-Compute what each line has left inside Postgres: one SUM over the line's counting holds, by index, returning one number per line, never the rows. readLiveSpendHolds (round start, owner snapshot) is limited to unsettled holds plus a per-line sum. Estimate after the fix: under 50 MB an hour for holds.
+Upper bounds from this hour's counters. Rows fetched by index times average row size; some of these fetches are internal and never reach the runner:
+
+| Table | Index fetches this hour | Approx. ceiling |
+|---|---|---|
+| cp_attempts | 1,369,086 | ~2.1 GB |
+| cp_log_artifacts | 260,290 (+4,043 whole scans, filtered in the database) | ~0.8 GB |
+| cp_work_items | 246,926 | ~0.5 GB |
+| cp_log_costs | 189,072 (+517k rows by seq scan) | ~0.3 GB + |
+| cp_occurrences | 179,648 | ~0.3 GB |
+| cp_route_tasks | 118,091 | ~0.1 GB |
+
+These sum to about 4 GB at most; the remaining 5 GB or more is in reads these counters can't show (seq-scan results returned whole). This database has no pg_stat_statements, so **the source cannot be named from here.** The per-query byte counter tagged by calling code (vital-signs.md, hunters) is what names it. River sent no fix on a guess.
 
 ### Verdict
 **Clearly worse**: transfer 9.4 GB against 7.8 GB for release 6's hour (+21%), and 13 times the target. Under Sean's gate it would roll back. **No rollback was done.** Sean's rule says River first shows him how "clearly worse" is decided, using real hours, and the rollback screen (DB-47) is not on any Admin view (live ledger). Sean's oversight session holds the stop line (1.5 GB a full hour). Sean was pushed at 3:10 AM EDT.

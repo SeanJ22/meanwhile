@@ -1,15 +1,15 @@
-build_state: waiting
+build_state: active
 worker: codex-ballot
 provider: Codex
-run_id: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
-lock: none
-heartbeat: 2026-10-06T02:00:21Z
+run_id: codex-ballot-052086658733454ba3af891d884d700b
+lock: codex-ballot-052086658733454ba3af891d884d700b
+heartbeat: 2026-10-06T04:16:29Z
 on_river: CA-20 CA-24 CA-30 CA-44 CA-45 CA-51 integrated through release ecf402600401783b094837c29e0c515eadbdb843; returned CA-30/51 repairs retained at 8760257.
-ready: CA-21 CA-22 CA-25 CA-26 CA-27 CA-28 CA-29 CA-31 CA-32 CA-33 CA-34 CA-35 CA-36 CA-37 CA-38 CA-39 CA-52 CA-53 CA-54 CA-55 exact 0fc6ef6d21a6aa90af928ff082d2ea0c073d445e (hook pending: exact shared-owner requests below); fix:e8918c6e. Supersedes returned f984 and failed597d; neither is newly READY.
+ready: none new; exact0fc6 20step batch integrated/tested by River458f0a196f52347b0c879a673c2f03069260922b; hooks/live acceptance retain separate status.
 checks: Exact0fc6: canonical FULL PASS 9631 registered/9620 pass/11 skip/0 failure/0 cancelled,1126 files,two workers,clean start,complete timings. Requested pnpm gates original10PASS/2build ENVFAIL (external dependency symlink rejected before compilation); both exact failed build commands retried PASS after local hard links to identical installed bytes, source unchanged. Default warm399/430,largestapp407/430; standalone PASS within unchanged ceilings; no offending reference/PRL/voting/bootstrap traces. Original gate record preserved unchanged. SystemChromium151 substitute, pinned1234 not executed. Certificate .factory/ballot-certificate-0fc6ef6d.json + full logs/manifests. Additional normal publication/card/Ask/inventory5/5PASS.
-working_on: None ready after final board/returns/integration check. Post-READY catch-up WIP source22b1916bf361290b090b6a5f6832b49d22b1c58f on River005800; focused49/49 and typesPASS. Exact tested READY0fc6 remains fold target; latest stream status commits are coordination/WIP, not a new FULL-tested batch.
+working_on: Returned CA25 registered batch transport, then newly integrated CP03 unblocks CA19 general executive actions. Catch up Riverf545 first; preserve all exact checkpoints.
 waiting_on: CA19 awaits integrated CP03 (slide); CA23 awaits normal source-backed committee-person relation and filed totals; CA49 awaits River release/live cold section11 proof; CA50 awaits source-backed official part mapping or a compatible migration that preserves old reaction subjects. Shared owner hooks below remain pending. No routine Sean decision requested.
-returned: e8918c6e build trace448/430 repaired at source, exact0fc6 default399/430 and standalone PASS. Return remains open until River folds tested READY; no ceilings raised. CA30/51 earlier repairs on River retained.
+returned: e8918c6e source trace repair integrated exact0fc6 at River458f; old failure text historical. New return: CA25 unattended plain-English model requests use model-batch registered lane; Ask stays Messages.
 needs_hook: Existing f984/6c874 collector and translator hooks remain. New combined batch needs registry registered finance/polling/boundary doors; slide admitted budget-guarded callbacks + scoped edge publication; hunters fresh campaign-finance provider inputs/runtimeKinds; admin kinds-settings registration; people source-kind admission; frontend migrated body/office consumers; measures FIN06..16 capture. Exact file/function requests in follow_on_hooks, CA55_hooks and curated_migration_hooks below. No hook implies live completion.
 needs_Sean: none
 seen_not_fixed: The MapTiler baseline failures reproduce on river 8f6185c54; local-proxy-only harness repair now passes 4/4 with production quota guard unchanged, fake key and non-forwarding instrument. Chromium 151 system substitution reported; pinned 1234 unavailable. Corepack pinned pnpm 10.33.0 uses /workspace/.cache/corepack.

@@ -1597,6 +1597,8 @@
     },
     "browser": "Chromium151 substituted for unavailable pinned1234; 11skips retained. Synthetic maptiler browser fixture routed to loopback as in prior checks.",
     "command": "env -u CI_TEST_FILES -u DATABASE_URL -u WTP_ASSET_STORE -u WTP_DB_ROLE -u WTP_CONTROL_PLANE_DATABASE_URL WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium COREPACK_HOME=/workspace/.setup-tools/corepack corepack pnpm test (additional execution permission; local-only synthetic maptiler proxy exclusion)",
-    "finalBoard": "594f0691811fe823d7afb7cd03053ef98b8118d3"
+    "finalBoard": "594f0691811fe823d7afb7cd03053ef98b8118d3",
+    "ready": "e6ffab73b81679a71586445bc0e8a506114cc887",
+    "lockReleasedAt": "2026-10-06T05:04:00.154137+00:00"
   }
 }

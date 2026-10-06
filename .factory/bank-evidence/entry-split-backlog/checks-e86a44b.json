@@ -1,0 +1,41 @@
+{
+  "testedSource": "e86a44bf69a10e16cc01a4895a91abcd57e31e5a",
+  "applicationFingerprintSha256": "544b25064ecb1f555ff1d6e994cbab40c94718577892a64421b4e6c21261c47f",
+  "full": {
+    "tests": 9820,
+    "suites": 54,
+    "pass": 9809,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 11,
+    "todo": 0,
+    "exitCode": 0,
+    "elapsedMs": 1108622,
+    "selectedFiles": 1156,
+    "timing": {
+      "complete": true,
+      "usableForScheduling": true,
+      "issues": [],
+      "file": "test-shard-1-of-1.timings.jsonl",
+      "measurement": "Node file harness duration; excludes some process startup/exit time and is not billed runner usage.",
+      "measuredFiles": 1156
+    }
+  },
+  "focused": {
+    "pass": 122,
+    "fail": 0,
+    "skip": 0
+  },
+  "types": {
+    "exitCode": 0
+  },
+  "lint": {
+    "exitCode": 0,
+    "files": 15,
+    "warnings": 0
+  },
+  "sqlValidation": "sql-validation.json",
+  "liveBefore": "live-before.json",
+  "isolatedActualStatePreview": "live-backlog-preview.json",
+  "liveAcceptance": "PENDING: River schema/provider/runtime and hunters/auditors/Admin hooks; no READY based on tests or isolated preview."
+}

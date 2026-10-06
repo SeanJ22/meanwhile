@@ -3,9 +3,9 @@
 build_state: release 11 open (#717, release/11 at 92102c8, auto-merge on; gates 12/12); runner still stopped at 8:57 AM EDT (restart with Sean since 8:28 AM EDT)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
-run_id: session_019dfFq5HGoipanBrVDSSrbK
-lock: river-20261006T125707Z-6525
-heartbeat: 2026-10-06T14:10:38Z
+run_id: session_01PNZmtjma5s373mH41mVk6q
+lock: river-20261006T145827Z-27345
+heartbeat: 2026-10-06T14:58:27Z
 
 
 

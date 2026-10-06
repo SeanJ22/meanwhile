@@ -25,6 +25,28 @@ Measured by hand (Neon MCP, read-only) until the hourly vital-signs row exists. 
 
 cp_attempts has been read whole about 131,000 times. The whole-table `repos.attempts.list()` call at campaign-publication-cycle.ts:56 is one of those callers; returns/hunters.md has the details.
 
+## Runner restarted on release 8 (River's own reading, 2:07 AM EDT)
+
+- The runner is on a5fd753 and schema version 24. Its first cycle started at 2:02:01 AM EDT. (Sean's oversight session started it after checking the settings file.)
+- **The one-time move worked.** The ledger row is now 1,088 bytes (it was 422,619), with spendHolds empty. cp_spend_holds has 2,794 rows: the 2,117 moved holds plus new ones admitted since the start.
+- **First cycle's lastError:** "incremental reads: cp_attempts changed-since read failed (Neon request timed out); reading it whole". So the first round fell back to a whole-table read of cp_attempts (43,130 rows, 67 MB). One fallback a round is acceptable. If it repeats every round, it is a transfer source (hunters).
+- **Neon's own project counter had not moved** since 1:20 AM EDT: 1,840,099,187,583 bytes, updated 2:04 AM EDT. Neon updates it in batches. The hour is read again at about 3:05 AM EDT, and later once the counter catches up.
+- **Read counters at 2:07 AM EDT** (cumulative; the hour's delta is what counts):
+
+| Table | Seq scans | Rows read by seq scan | Rows fetched by index |
+|---|---|---|---|
+| cp_attempts | 130,980 | 1,527,714,465 | 313,731,913 |
+| cp_log_artifacts | 10,152 | 127,222,383 | 76,178,508 |
+| cp_route_tasks | 9,061 | 85,068,381 | 28,371,707 |
+| cp_log_owner_digests | 28,622 | 85,032,898 | 7,372,401 |
+| cp_log_scout_results | 17,142 | 43,815,941 | 6,540,358 |
+| cp_log_costs | 5,536 | 29,085,729 | 25,612,219 |
+| cp_work_items | 3,241 | 16,938,310 | 242,075,745 |
+| cp_budget | 81,255 | n/a | n/a |
+| cp_spend_holds | 239 | 451,622 | 2,835,526 |
+
+These are rows Postgres touched, not bytes sent to the runner. Reads inside cp_admit_spend_hold() never leave the database. So this table says which code is scanning, not what Sean pays for. Neon's project total is the billable number. This project has no pg_stat_statements to break the transfer down by query, which is why the hourly vital-signs row needs its own per-query byte counter (vital-signs.md).
+
 ## First hour after restart
 
 (River fills this in: the transfer delta from data_transfer_bytes, the seq-scan deltas above, cp_spend_holds rows, and ledger row size. Compare with release 6's first hour: 7.8 GB, about 5.5 GB of it ledger reads. Target: under 0.7 GB.)

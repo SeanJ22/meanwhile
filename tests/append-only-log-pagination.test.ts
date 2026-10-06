@@ -143,6 +143,12 @@ function fakeLogSql(rows: readonly Row[]) {
           .sort((a, b) => a.position - b.position).slice(0, limit)
           .map((r) => ({ position: r.position, record: r.record }));
       }
+      // readKeys: WHERE log_key = ANY($1) AND (log_key, position) > ($2, $3), keyset-paged in (key, position) order
+      if (/WHERE\s+log_key = ANY\(\$1::text\[\]\) AND \(log_key, position\) > \(\$2, \$3\)/i.test(text)) {
+        const [keys, key, position] = params as [string[], string, number];
+        return rows.filter((r) => keys.includes(r.log_key) && (r.log_key > key || (r.log_key === key && r.position > position)))
+          .sort(byKeyPos).slice(0, limit).map((r) => ({ log_key: r.log_key, position: r.position, record: r.record }));
+      }
       // readAll next page: WHERE (log_key, position) > ($1, $2)
       if (/WHERE\s+\(log_key,\s*position\)\s*>\s*\(\$1,\s*\$2\)/i.test(text)) {
         const [key, position] = params as [string, number];
@@ -203,6 +209,20 @@ test("recent cycle projection retains the complete time window with late finishe
   assert.match(calls[0], /recorded_at >= \$4::timestamptz/);
   assert.ok(JSON.stringify(projected).length < JSON.stringify(rows.map(row => row.record)).length / 50);
   console.log(`CYCLE_HISTORY archived=4000 current=600 lateOld=1 selected=${projected.length} fields=kind,startedAt,research`);
+});
+
+test("readKeys() answers read() for every named key in a few bounded pages, never one statement per key", async () => {
+  const keys = Array.from({ length: 300 }, (_, i) => `item-${String(i).padStart(3, "0")}`);
+  const rows: Row[] = [...keys.flatMap((key, i) => seq(i % 7 + 1, key)), ...seq(APPEND_ONLY_LOG_READ_PAGE, "unnamed")];
+  const { sql, calls } = fakeLogSql(rows);
+  const repo = pgAppendOnlyRepository<{ seq: number }>(sql, "promotion_pipeline");
+  const out = await repo.readKeys!([...keys, keys[0]!, "absent"]);
+  assert.deepEqual([...out.keys()], keys, "every named key with records, in key order; an absent key is left out");
+  for (const key of keys) assert.deepEqual(out.get(key), await repo.read(key), `${key} is exactly read(${key})`);
+  const batched = calls.filter((c) => /ANY\(\$1::text\[\]\)/.test(c)).length;
+  const records = keys.reduce((n, _, i) => n + i % 7 + 1, 0);
+  assert.equal(batched, Math.floor(records / APPEND_ONLY_LOG_READ_PAGE) + 1, "one statement per page of records");
+  assert.ok(batched < keys.length / 10);
 });
 
 test("read() of an absent key is one empty bounded page", async () => {

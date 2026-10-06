@@ -4,13 +4,12 @@ import { createHash } from "node:crypto";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { Attempt } from "../attempt.ts";
 import type { VaultIndex } from "../evidence/read-only-vault.ts";
-import { deriveItemState, isPipelineRecord, readPipelineStates } from "./pipeline.ts";
-import type { PipelineItemState } from "./types.ts";
+import { readPipelineStatesWhere } from "./pipeline.ts";
 import { CANDIDATE_PUBLICATION_READ_ROUTE, campaignSiteReadRecorder } from "./campaign-site-reads.ts";
 import { candidatePublicationLinks, candidatePublicationCaptureUrls, candidatePublicationCaptureIssue,
   heldCandidatePublicationRead } from "./campaign-publication-links.ts";
 import { withinWallTime } from "./campaign-site-cycle.ts";
-import type { CampaignSiteApprovedRecord } from "./campaign-site-chain.ts";
+import { CAMPAIGN_SITE_FIELD, type CampaignSiteApprovedRecord } from "./campaign-site-chain.ts";
 import { memoryInProcess, researchFetch, type ResearchGet, type ResearchRuntime } from "../../hunt/robots-first-fetch.ts";
 
 export const CANDIDATE_PUBLICATION_MAX_READS = 2;
@@ -54,24 +53,6 @@ async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<r
   return new Map(rows.map(row => [row.id, row.value]));
 }
 
-/**
- * The approved items' pipeline states, read by key: the log's keys holding an
- * APPROVED_FOR_PROMOTION record (only keys cross the wire), then each of those
- * items' own records. The same states `readPipelineStates` derives for those
- * items, without the whole promotion log. A store with no filtered key read
- * reads the log whole, as before. Null when `stop()` ended it.
- */
-async function approvedPipelineStates(repos: ControlPlaneRepositories, stop: () => boolean): Promise<PipelineItemState[] | null> {
-  const log = repos.promotionPipeline;
-  if (!log.keysWhere) return (await readPipelineStates(repos)).filter(state => state.byStage.APPROVED_FOR_PROMOTION !== undefined);
-  const keys = await log.keysWhere(["stage"], "APPROVED_FOR_PROMOTION");
-  const states = await inBatches(keys, stop, async key => {
-    const records = (await log.read(key)).filter(isPipelineRecord);
-    return records.length === 0 ? null : deriveItemState(key, records);
-  });
-  return states === null ? null : states.filter((state): state is PipelineItemState => state !== null);
-}
-
 /** The original instruction controls which canonical candidacies may acquire
  * deeper pages. Every other approved site remains available to the existing
  * campaign-link routine but receives no new work from this pass. */
@@ -99,14 +80,14 @@ export async function runCandidatePublicationCycle(input: {
     methodVersion: input.methodVersion, now: () => new Date(input.clock()).toISOString(), heldVault: input.heldVault });
   /*
    * Rows read scale with the eligible candidacies, never with the tables (Sean, Oct 6: this pass began with four
-   * whole-table reads; production cp_attempts alone was 66.7 MB): the approved items by key, then for candidacies with
+   * whole-table reads; production cp_attempts alone was 66.7 MB): the approved campaign sites by key (batched), then for candidacies with
    * one approved host their own work items (indexed subject), those items' route tasks (indexed work item) and the
    * Attempts those tasks name (primary key). No read starts after the round's dispatch cutoff.
    */
   const stop = () => input.deadlineMs !== undefined && input.clock() >= input.deadlineMs;
   const stopped = (step: string): CandidatePublicationCycleReport => ({ ...empty, stoppedLoading: step });
-  const states = await approvedPipelineStates(input.repos, stop);
-  if (states === null) return stopped("the approved campaign sites");
+  if (stop()) return stopped("the approved campaign sites");
+  const states = await readPipelineStatesWhere(input.repos, [{ path: ["campaignSite", "field"], value: CAMPAIGN_SITE_FIELD }]);
   const sourceReads = new Map<string, Awaited<ReturnType<NonNullable<ControlPlaneRepositories["artifactsByCanonicalUrl"]>>>>();
   const sourceRecords = async (url: string) => {
     const cached = sourceReads.get(url);

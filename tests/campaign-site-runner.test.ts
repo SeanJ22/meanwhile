@@ -897,7 +897,7 @@ test("the linked-publication pass reads rows in proportion to its candidacies, n
   const p = await plane(t);
   await captureProfile(p);
   await cycle(p, T1);
-  await cycle(p, T2);
+  const { report: held } = await cycle(p, T2);
   const reads = { rows: 0 };
   const forbid = (name: string) => async () => { throw new Error(`${name} read whole`); };
   const counted = <R extends object>(repo: R, whole: readonly string[], scoped: readonly string[]): R => new Proxy(repo, { get(target, key, receiver) {
@@ -906,7 +906,8 @@ test("the linked-publication pass reads rows in proportion to its candidacies, n
     if (typeof key !== "string" || !scoped.includes(key) || typeof value !== "function") return value;
     return async (...args: unknown[]) => {
       const out = await (value as (...a: unknown[]) => Promise<unknown>).apply(target, args);
-      reads.rows += Array.isArray(out) ? out.length : out === null ? 0 : 1;
+      reads.rows += Array.isArray(out) ? out.length : out instanceof Map ? [...out.values()].reduce((n, v) => n + (v as unknown[]).length, 0)
+        : out === null ? 0 : 1;
       return out;
     };
   } });
@@ -914,7 +915,7 @@ test("the linked-publication pass reads rows in proportion to its candidacies, n
     workItems: counted(p.repos.workItems, ["list", "listNarrowed"], ["listWhere", "readMany", "read"]),
     routeTasks: counted(p.repos.routeTasks, ["list", "listNarrowed"], ["listWhere", "readMany", "read"]),
     attempts: counted(p.repos.attempts, ["list", "listNarrowed"], ["listWhere", "readMany", "read"]),
-    promotionPipeline: counted(p.repos.promotionPipeline, ["readAll", "keys"], ["keysWhere", "read"]) });
+    promotionPipeline: counted(p.repos.promotionPipeline, ["readAll", "keys"], ["keysWhere", "read", "readKeys"]) });
   const web = servedRuntime(served(), PUBLISH);
   const pass = async () => {
     reads.rows = 0;
@@ -932,11 +933,20 @@ test("the linked-publication pass reads rows in proportion to its candidacies, n
     await p.repos.workItems.put(`wi-noise-${i}`, { id: `wi-noise-${i}`, subject: `candidate-publication:other-${i}` } as never, at);
     await p.repos.routeTasks.put(`rt-noise-${i}`, { id: `rt-noise-${i}`, workItemId: `wi-noise-${i}`, routeId: "candidate-publication-linked:x",
       target: "https://example.org/", attemptIds: [`at-noise-${i}`] } as never, at);
-    await p.repos.attempts.put(`at-noise-${i}`, { id: `at-noise-${i}`, startedAt: at } as never, at);
+    await p.repos.attempts.put(`at-noise-${i}`, { id: `at-noise-${i}`, startedAt: at, worker: { role: "SCOUT" }, outcome: "ABORTED", artifactIds: [] } as never, at);
+    await p.repos.promotionPipeline.append(`pp-noise-${i}`, `pp-noise-${i}:approved`, { itemId: `pp-noise-${i}`,
+      recordId: `pp-noise-${i}:approved`, stage: "APPROVED_FOR_PROMOTION", recordClass: "official-fact" } as never, at);
   }
   const large = await pass();
   assert.deepEqual(large.out, small.out, "the same answer");
   assert.equal(large.rows, small.rows, `rows read do not grow with the tables (${small.rows} on the small store)`);
+
+  /* The campaign-site chain reads only campaign-site items from the promotion log, never the log whole. */
+  reads.rows = 0;
+  const { report: again } = await cycle(p, T2, { repos: { ...p.repos, promotionPipeline: scopedRepos().promotionPipeline } });
+  assert.deepEqual(again.chain.byStage, held.chain.byStage);
+  assert.deepEqual(again.chain.approved.map(row => row.recordId), held.chain.approved.map(row => row.recordId));
+  assert.ok(reads.rows < 100, `the chain read ${reads.rows} pipeline records beside 3,000 other approved items`);
 });
 
 test("withinWallTime ends a promise that never settles and clears its timer when one does", async () => {

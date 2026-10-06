@@ -304,6 +304,15 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       };
     },
 
+    readKeys: async (keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>> => {
+      const out = new Map<string, readonly T[]>();
+      for (const key of new Set(keys)) {
+        const entries = partitions.get(key);
+        if (entries !== undefined && entries.length > 0) out.set(key, entries.map((entry) => jsonCopy(entry.record)));
+      }
+      return out;
+    },
+
     keysWhere: async (jsonPath: readonly string[], value: string): Promise<readonly string[]> =>
       [...partitions.entries()].filter(([, entries]) => entries.some((entry) => jsonTextAtPath(entry.record, jsonPath) === value))
         .map(([key]) => key).sort(),

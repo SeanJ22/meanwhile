@@ -545,7 +545,7 @@ test("normal complete candidate workers publish their whole contest into general
 
 
 test("publication jobs reuse supplied repositories and return independent receipts without changing the parent's exit status", async () => {
-  const f = await workerFixture("comment-access", { commentPeriod: "YES", signup: "Register before the session", writtenComment: "Submit a letter" });
+  const f = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "Public comment is welcome.", signup: "Register before the session", writtenComment: "Submit a letter" });
   const exitCode = process.exitCode;
   const context = { repos: f.input.repos, readCapture: f.input.readCapture };
   const job = { ...f.input, context };

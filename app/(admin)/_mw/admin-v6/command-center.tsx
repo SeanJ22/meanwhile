@@ -30,6 +30,7 @@ import { mst, type ActionKind, type ActionRef, type AdminV6Data, type Place, typ
 import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches } from "./places.ts";
 import { newActionKey, startReceipt } from "./receipts.ts";
 import { ChecklistScreen } from "./screen-checklist.tsx";
+import { WorkScreen } from "./screen-work.tsx";
 import { QueueScreen } from "./screen-queue.tsx";
 import { ScoreboardScreen } from "./screen-scoreboard.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
@@ -76,7 +77,7 @@ const CONN_WORDS: Readonly<Record<Connection, string>> = {
 
 export function CommandCenter(props: CommandCenterProps) {
   const { data } = props;
-  const [view, setView] = useState<View>(props.initialView === "work" ? "queue" : props.initialView ?? "now");
+  const [view, setView] = useState<View>(props.initialView === "work" && !props.data.workRows?.data ? "queue" : props.initialView ?? "now");
   const [stack, setStack] = useState<readonly { readonly view: View; readonly detail: Detail | null }[]>([]);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -290,7 +291,7 @@ export function CommandCenter(props: CommandCenterProps) {
           <div className={s.headerTop}>
             <span className={s.brand}>meanwhile<span style={{ color: "var(--pill-teal-text)" }}> …</span></span>
             <nav className={s.nav} aria-label="Admin">
-              {VIEWS.map(([id, label]) => (
+              {VIEWS.filter(([id]) => id !== "work" || data.workRows?.data != null).map(([id, label]) => (
                 <button key={id} type="button" className={s.navBtn} aria-current={view === id && !detail ? "page" : undefined} onClick={() => goView(id)}>{label}</button>
               ))}
             </nav>
@@ -372,6 +373,7 @@ export function CommandCenter(props: CommandCenterProps) {
               {view === "checklist" && <><ChecklistScreen /><Readers /></>}
               {view === "money" && <MoneyScreen />}
               {view === "queue" && <QueueScreen />}
+              {view === "work" && <WorkScreen />}
               {view === "scoreboard" && <ScoreboardScreen />}
               {view === "settings" && <><SettingsScreen /><OwedPanel /></>}
               {view === "reports" && <ReportsView />}

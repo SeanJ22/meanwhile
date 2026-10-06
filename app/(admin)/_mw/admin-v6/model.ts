@@ -920,6 +920,8 @@ export interface AdminV6Data {
   readonly results: Sourced<readonly ReaderResult[]>;
   readonly stuck: Sourced<readonly StuckItem[]>;
   readonly sameCause: Sourced<readonly SameCause[]>;
+  /** Compatibility for measures' already supplied work rows; no read is invented. */
+  readonly workRows?: Sourced<{readonly rows:readonly WorkRow[];readonly totals:readonly WorkStageTotal[]}>;
   readonly history: Sourced<readonly UiReceipt[]>;
   readonly workers: Sourced<{ readonly status: WorkerStatus; readonly jobs: readonly WorkerJob[] | null; readonly running?: WorkersRunning | null; readonly waiting: readonly WaitingItem[] | null; readonly events: readonly WorkerEvent[] | null; readonly update: UpdateCard | null; readonly next: readonly string[] | null }>;
   readonly checklist: Sourced<ChecklistView>;

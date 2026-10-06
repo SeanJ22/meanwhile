@@ -257,7 +257,7 @@ test("CH-26: each lease task reports its repository calls, and the round records
   const { readFile } = await import("node:fs/promises");
   const worker = await readFile(new URL("../lib/control-plane/workers/lease-worker.ts", import.meta.url), "utf8");
   assert.match(worker, /const observer = observeCyclePhases\(stores\);\s*const repos = observer\.repos;/);
-  assert.match(worker, /observer\.finish\("runtime"\);\s*await runtime\.beginTask\?\.\(task\);/, "the runtime build is not charged to the task");
+  assert.match(worker, /observer\.finish\("runtime"\);\s*await runtime\.beginTask\?\.\(task, item\);/, "the runtime build is not charged to the task");
   assert.match(worker, /repositoryCalls: observer\.finish\("task"\)\.repositoryCalls/);
   assert.match(worker, /WTP_SCOPED_TASK_READS !== "0"/, "the scoped path is the default; the whole-table path stays behind its runner switch");
   const round = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");

@@ -18,7 +18,7 @@ import {
   type ScoutToolContext,
   type VaultBytes,
 } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf, savedPageReader } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { REPORT_FINDING_TOOL_SPEC, SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf, savedPageReader } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { cannotRun, extracted } from "../lib/extract/types.ts";
 import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { carriesCredential } from "../lib/hunt/access-control.ts";
@@ -409,7 +409,7 @@ test("robots: transport shapes — 404 is NO_ROBOTS; 403/429/3xx/5xx/timeout/HTM
 /* ======================================================== the specs */
 
 test("the toolkit exposes exactly the research tools with their required locator and rationale", () => {
-  assert.deepEqual([...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, ...SOURCE_API_SPECS].map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
+  assert.deepEqual([...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, REPORT_FINDING_TOOL_SPEC, ...SOURCE_API_SPECS].map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
   const locatorByTool: Readonly<Record<string, string | null>> = {
     read_permission: "url",
     fetch_public: "url",

@@ -36,13 +36,24 @@ export function jobCostProfiles(entries: readonly FieldManualEntry[], affected: 
     const totalRequests = rows.every(r => r.requestCount !== null) ? rows.reduce((n, r) => n + r.requestCount!, 0) : null;
     const totalMs = rows.reduce((n, r) => n + r.durationMs, 0);
     const priced = rows.filter(r => r.usd !== null);
-    const usd = priced.length === rows.length && successes ? priced.reduce((n, r) => n + r.usd!, 0) / successes : null;
-    const requests = successes && totalRequests !== null ? Math.round(totalRequests / successes * 10) / 10 : null;
-    return newFieldManualEntry("job-cost-profile", key, { role: "SHARED", kind: "COST_PROFILE", title: key,
-      summary: successes ? `typically ${requests === null ? "request count not recorded" : requests + " requests"}, ${usd === null ? "cost not fully recorded" : "$" + usd.toFixed(2)} per success; ${Math.round(totalMs / successes)} ms` : "No successful attempt recorded yet",
-      platforms: [first.platform], recordClasses: [first.recordClass], observedAt: now, outcome: "REFERENCE",
-      payload: { platform: first.platform, recordClass: first.recordClass, attempts: rows.length, successes, typicalRequests: requests,
-        usdPerSuccess: usd, durationMsPerSuccess: successes ? totalMs / successes : null },
-    });
+    return jobCostProfileFromTotals({ platform: first.platform, recordClass: first.recordClass,
+      attempts: rows.length, successes, totalMs, totalRequests, totalUsd: priced.length === rows.length ? priced.reduce((n,r)=>n+r.usd!,0) : null }, now);
+  });
+}
+
+/** Same profile from a small SQL aggregate; no historical payloads cross the network. */
+export function jobCostProfileFromTotals(t: {
+  platform: string; recordClass: string; attempts: number; successes: number;
+  totalMs: number | null; totalRequests: number | null; totalUsd: number | null;
+}, now: string): FieldManualEntry {
+  const key = `${t.platform}:${t.recordClass}`;
+  const usd = t.totalUsd !== null && t.successes ? t.totalUsd / t.successes : null;
+  const requests = t.successes && t.totalRequests !== null ? Math.round(t.totalRequests / t.successes * 10) / 10 : null;
+  const duration = t.successes && t.totalMs !== null ? t.totalMs / t.successes : null;
+  return newFieldManualEntry("job-cost-profile", key, { role: "SHARED", kind: "COST_PROFILE", title: key,
+    summary: t.successes ? `typically ${requests === null ? "request count not recorded" : requests + " requests"}, ${usd === null ? "cost not fully recorded" : "$" + usd.toFixed(2)} per success; ${duration === null ? "duration not fully recorded" : Math.round(duration) + " ms"}` : "No successful attempt recorded yet",
+    platforms: [t.platform], recordClasses: [t.recordClass], observedAt: now, outcome: "REFERENCE",
+    payload: { platform: t.platform, recordClass: t.recordClass, attempts: t.attempts, successes: t.successes, typicalRequests: requests,
+      usdPerSuccess: usd, durationMsPerSuccess: duration },
   });
 }

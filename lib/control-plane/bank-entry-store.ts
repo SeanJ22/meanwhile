@@ -7,6 +7,7 @@ import {
   type FieldManualStore,
 } from "./field-manual.ts";
 
+import { jobCostProfileFromTotals } from "./bank-job-cost.ts";
 import { isDeepStrictEqual } from "node:util";
 import { boundedQuery, type BoundableQueryOptions } from "./repository/request-bounds.ts";
 
@@ -42,6 +43,15 @@ export function bankEntrySelection(query: FieldManualQuery): { text: string; par
   if (query.bodyIds?.length) clauses.push(`(cardinality(body_ids) = 0 OR body_ids && ${param(query.bodyIds)}::text[])`);
   return { text: `SELECT value FROM cp_field_manual_entries WHERE ${clauses.join(" AND ")} ORDER BY id`, params };
 }
+
+export const BANK_COST_TOTALS_SQL = `SELECT v->>'platform' AS platform, v->>'recordClass' AS record_class,
+ count(*)::int AS attempts, count(*) FILTER (WHERE v->'success'='true'::jsonb)::int AS successes,
+ CASE WHEN count(*) FILTER (WHERE jsonb_typeof(v->'durationMs')='number')=count(*) THEN sum((v->>'durationMs')::float8) ELSE NULL END AS total_ms,
+ CASE WHEN count(*) FILTER (WHERE jsonb_typeof(v->'requestCount')='number')=count(*) THEN sum((v->>'requestCount')::float8) ELSE NULL END AS total_requests,
+ CASE WHEN count(*) FILTER (WHERE jsonb_typeof(v->'usd')='number')=count(*) THEN sum((v->>'usd')::float8) ELSE NULL END AS total_usd
+ FROM (SELECT value->'payload' AS v FROM cp_field_manual_entries WHERE kind='JOB_COST'
+ AND ((value->'payload'->>'platform') || ':' || (value->'payload'->>'recordClass')) = ANY($1::text[])) costs
+ GROUP BY v->>'platform',v->>'recordClass'`;
 
 async function writeEntry(sql: BankSql, entry: FieldManualEntry, now: string) {
   await sql.query(`INSERT INTO cp_field_manual_entries
@@ -118,12 +128,17 @@ export function createBankEntryStore(sql: BankSql): BankEntryStore {
           const locks = [...ids.map(id => `bank-entry:${id}`), ...profiles.map(key => `bank-profile:${key}`), ...entries.filter(e=>e.kind === "PLAYBOOK").map(e=>`bank-playbook:${e.role}`)].sort();
           for (const key of locks) await tx.query("SELECT pg_advisory_xact_lock(hashtextextended($1, 0))", [key]);
           const prior = rows<{ value: FieldManualEntry }>(await tx.query(
-            "SELECT value FROM cp_field_manual_entries WHERE id = ANY($1::text[]) OR (kind = 'JOB_COST' AND ((value->'payload'->>'platform') || ':' || (value->'payload'->>'recordClass')) = ANY($2::text[])) FOR UPDATE",
-            [ids, profiles],
+            "SELECT value FROM cp_field_manual_entries WHERE id = ANY($1::text[]) FOR UPDATE",
+            [ids],
           )).map(row => row.value);
           const next = upsertEntries({ ...emptyFieldManual(), entries: prior }, entries, now);
-          for (const entry of next.entries.filter(e => ids.includes(e.id) || e.kind === "COST_PROFILE")) {
+          for (const entry of next.entries.filter(e => ids.includes(e.id) && !(e.kind === "COST_PROFILE" && profiles.includes(`${(e.payload as { platform: string }).platform}:${(e.payload as { recordClass: string }).recordClass}`)))) {
             await writeEntry(tx, entry, now);
+          }
+          if (profiles.length) {
+            const totals = rows<{ platform: string; record_class: string; attempts: number; successes: number; total_ms: number | null; total_requests: number | null; total_usd: number | null }>(await tx.query(BANK_COST_TOTALS_SQL, [profiles]));
+            for (const t of totals) await writeEntry(tx, jobCostProfileFromTotals({ platform: t.platform, recordClass: t.record_class,
+              attempts: t.attempts, successes: t.successes, totalMs: t.total_ms, totalRequests: t.total_requests, totalUsd: t.total_usd }, now), now);
           }
           await tx.query("COMMIT");
         } catch (error) {

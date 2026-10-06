@@ -49,11 +49,11 @@ DB-52 reads four aggregate queries, not raw tables into Admin memory. Estimate a
 
 ## Paid endings — exact needs_hook (hunters / auditors)
 
-In scripts/freshness-shadow.mts dispatch, replace the candidate/refusal gate around manual write-back with an unconditional call to writePaidEndingLearning(repos,result,now) from scheduler/field-manual-scout.ts for every saved paid Scout/Detective ending. It writes only supported discoveries on accepted finishes and saves EXHAUSTED_RUNGS for NO_PROGRESS/refused finishes. It records original machine rung observations, annotations, failure reasons, subject/class, next rungs and refusal as a REFERENCE lesson, never government absence or a dead-source claim. Empty legacy refusal arrays remain accepted legacy envelopes. Failed write-back must keep the existing result durably and use the normal retry path.
+In scripts/freshness-shadow.mts dispatch, replace the candidate/refusal gate around manual write-back with an unconditional call to writePaidEndingLearning(repos,result,now) from scheduler/field-manual-scout.ts for every saved paid Scout/Detective ending. It writes only supported discoveries on accepted finishes and saves EXHAUSTED_RUNGS for NO_PROGRESS/refused/BLOCKED/NEEDS_ADAPTER/HUMAN_REQUIRED finishes. Evidence-only endings on unknown platforms get an exact-subject PAID_ENDING reference with their findings, tried rungs, artifacts, next rungs and actual measurements, without being called failures. It records original machine rung observations, annotations, failure reasons, subject/class, next rungs and refusal as a REFERENCE lesson, never government absence or a dead-source claim. Empty legacy refusal arrays remain accepted legacy envelopes. Failed write-back must keep the existing result durably and use the normal retry path.
 
 Detective/scout reads pass subjectId and class. Cache handling must follow DB-39 item 6 so the next worker actually sees the lesson. Avoid calling a full manual refresh after every write.
 
-Live acceptance: a real paid NO_PROGRESS/refused ending persists its lesson and the next worker for the same subject reads it and resumes beyond the saved rungs; a different subject does not inherit a place-specific exhausted walk. Confirm no paid ending with no result/learning in the hourly vital signs.
+Live acceptance: real paid terminal outcomes, including evidence-only and BLOCKED/NEEDS_ADAPTER/HUMAN_REQUIRED endings, persists its lesson and the next worker for the same subject reads it and resumes beyond the saved rungs; a different subject does not inherit a place-specific exhausted walk. Confirm no paid ending with no result/learning in the hourly vital signs.
 
 ## DB-52 — exact needs_hook (hunters / River / admin)
 

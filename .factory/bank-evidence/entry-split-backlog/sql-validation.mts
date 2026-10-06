@@ -15,7 +15,7 @@ const sql={query:async(text:string,params:readonly unknown[]=[])=>{ const result
 const bank=createBankEntryStore(sql);
 const stamp='2026-10-06T05:30:00Z';
 const make=(key:string,fields:any={})=>newFieldManualEntry('sql-test',key,{role:'SHARED',kind:'ROUTE',title:key,summary:key,outcome:'YIELDED',observedAt:stamp,...fields});
-const entries=[make('portable'),make('az',{states:['AZ'],recordClasses:['Meetings']}),make('ny',{states:['ny']}),make('subject',{kind:'EXHAUSTED_RUNGS',payload:{subjectId:'exact'}}),make('scoped',{ocdIds:['ocd-division/country:us/state:az']}),make('body',{bodyIds:['b1']}),make('huge',{states:['ny'],payload:{raw:'x'.repeat(6600000)}})];
+const entries=[make('portable'),make('az',{states:['AZ'],recordClasses:['Meetings']}),make('ny',{states:['ny']}),make('subject',{kind:'EXHAUSTED_RUNGS',payload:{subjectId:'exact'}}),make('accepted-lesson',{kind:'PAID_ENDING',payload:{subjectId:'exact'}}),make('scoped',{ocdIds:['ocd-division/country:us/state:az']}),make('body',{bodyIds:['b1']}),make('huge',{states:['ny'],payload:{raw:'x'.repeat(6600000)}})];
 await bank.mergeEntries(entries,stamp);
 const expected=upsertEntries(emptyFieldManual(),entries,stamp);
 for(const q of [{role:'SCOUT',state:'az',recordClass:'meetings',subjectId:'exact'},{state:'ny'},{ocdIds:['ocd-division/country:us/state:az/place:test']},{bodyIds:['b2']}]){

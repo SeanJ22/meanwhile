@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
+  GET,
   directOfficialActionTargetPlan,
   settleOfficialActionHoldingAnswer,
   type OfficialActionHoldingReaders,
@@ -87,4 +88,16 @@ test("ambiguous official target fails closed when person identity is unavailable
     kind: "HOLDING_UNAVAILABLE",
     unavailableAuthorities: ["PERSON_IDENTITY"],
   });
+});
+
+
+test("CA-19: the actual card API retains verified legacy actions when the optional state family is unavailable", async () => {
+  const api = await GET(new Request("https://wtp.test/api/official-actions/statewide%3Aaz%2Fgovernor"), { params: Promise.resolve({ subject: "statewide:az/governor" }) });
+  const result = await api.json();
+  assert.equal(api.status, 200, JSON.stringify(result));
+  assert.equal(result.count, 42);
+  assert.ok(result.records.every((row: { officialId: string }) => row.officialId === "statewide:az/governor"));
+  const unavailable = await GET(new Request("https://wtp.test/api/official-actions/statewide%3Anh%2Fgovernor"), { params: Promise.resolve({ subject: "statewide:nh/governor" }) });
+  assert.equal(unavailable.status, 503, "An unavailable state action family never becomes an empty answer or another state's records");
+  assert.deepEqual((await unavailable.json()).unavailableAuthorities, ["STATE_OFFICIAL_ACTION"]);
 });

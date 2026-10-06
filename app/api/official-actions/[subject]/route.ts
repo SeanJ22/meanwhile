@@ -81,16 +81,18 @@ export async function settleOfficialActionHoldingAnswer(
   ]);
   const plan = identityResult.status === "fulfilled" ? identityResult.value : direct;
 
+  let generalUnavailable = false;
   if (readers === defaultReaders && identityResult.status === "fulfilled") {
     try {
       const general = await generalOfficialActionsForTarget(subject);
       if (general) return { kind: "ANSWER", answer: general };
     } catch {
-      return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities: ["STATE_OFFICIAL_ACTION"] };
+      generalUnavailable = true;
     }
   }
 
   if (!plan.applies) {
+    if (generalUnavailable) return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities: ["STATE_OFFICIAL_ACTION"] };
     // A non-AZ ballot identity proves the AZ source is inapplicable without
     // consulting it. Other official ids remain unknown if identity failed.
     if (identityResult.status === "rejected" && !subject.startsWith("ballot-")) {
@@ -113,7 +115,9 @@ export async function settleOfficialActionHoldingAnswer(
   if (plan.azIdentity && azIdentityResult.status === "rejected") unavailableAuthorities.push("AZ_CANDIDACY_IDENTITY");
   if (unavailableAuthorities.length) return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities };
   try {
-    return { kind: "ANSWER", answer: readers.answer(subject) };
+    const answer = readers.answer(subject);
+    if (generalUnavailable && !answer.records.length) return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities: ["STATE_OFFICIAL_ACTION"] };
+    return { kind: "ANSWER", answer };
   } catch {
     return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities: ["ANSWER_ASSEMBLY"] };
   }

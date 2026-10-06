@@ -423,8 +423,9 @@ async function officeholderActionEvidence(
 ): Promise<void> {
   let general: Awaited<ReturnType<typeof generalActionsForOfficial>>;
   try { general = await generalActionsForOfficial(seatId, personName); } catch {
-    gaps.push({ whose: "OURS", statement: `We could not load the action records for ${personName}.` });
-    return;
+    gaps.push({ whose: "OURS", statement: "Some action records are temporarily unavailable." });
+    if (!seatId.startsWith("statewide:az/")) return;
+    general = [];
   }
   if (general.length) {
     const from = trailingMonths ? monthsBefore(today, trailingMonths) : null;

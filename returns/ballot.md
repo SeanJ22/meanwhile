@@ -15,19 +15,6 @@ Sean, Oct 6: a step is done only when it works live. Integrated is not done. The
 - **Ask blames a government for a gap that is ours.** Seen: At 85701 Ask said 'The county has not published this financial information' when we simply hold no budget record. Rulings: a gap of ours reads 'We're working on getting this info', never a claim about the government.
 - **An off-target vote answer.** Seen: Asked how Goodlander voted on the continuing appropriations bill, Ask listed unrelated September votes.
 
-# Returned: ballot
-
-lane: ballot
-owner: ballot
-writer: the ballot lane
-check: build
-ready: no step ids unknown
-river: 6af6f8a504a7224131ad567f62f7b6f63cb52f08
-at: 2026-10-06T00:04:17Z
-state: returned
-fix_subject: fix:e8918c6e
-fix: River · stream/ballot — build failed for ballot: build-output · REFUSED
-
 ## Failure
 
 ```

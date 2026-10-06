@@ -9,10 +9,6 @@ Sean, Oct 6: a step is done only when it works live. Integrated is not done. The
 
 - **Sources rows say 'Last checked: We're working on getting this info' under a shown read date.** Seen: Many ballot Sources rows read 'Last checked: We're working on getting this info' even when the row above shows a read date (e.g. 85701, 03255 ballot Sources).
 
-# Returns and hook requests for frontend
-
-River writes this file. Do these before new steps.
-
 ## 2026-10-04 08:20Z — continuation handoff
 
 This lane is now continued by its paired Claude worker (see assignments.md → Handoffs). Start from the saved continuation file on stream/frontend. The waiting_on items about FULL failures are answered in assignments.md → "Checks guidance for FULL batches". Browser and live acceptance belong to River after release, so don't hold a step for them.

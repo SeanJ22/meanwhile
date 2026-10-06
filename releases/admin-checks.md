@@ -1,6 +1,6 @@
 # Admin checks for Sean's oversight session
 
-Each check needs Sean's Admin sign-in (https://admin.meanwhileusa.com). Work through them in Sean's Chrome and record a verdict per step: Working live, or Failed live with what was seen. River folds the verdicts into releases/live-ledger.md. Last updated Oct 6, 2:27 AM EDT.
+Each check needs Sean's Admin sign-in (https://admin.meanwhileusa.com). Work through them in Sean's Chrome and record a verdict per step: Working live, or Failed live with what was seen. River folds the verdicts into releases/live-ledger.md. Last updated Oct 6, 2:28 AM EDT.
 
 Checks marked "after the runner restart" need the runner to have run at least one round on release 8 (it restarted at 2:02 AM EDT).
 

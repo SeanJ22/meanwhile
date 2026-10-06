@@ -14,10 +14,6 @@ Sean, Oct 6: a step is done only when it works live. Integrated is not done. The
 - **DP-27 · Failures are compared to find what they share.** Seen: cp_fix_map does not exist in the production control plane (to_regclass is null in both neondb and postgres). At a5fd753 its CREATE TABLE (lib/method/fix-map.ts FIX_MAP_EXPAND_SQL) is 'never applied', and the only database-backed fix map is in scripts/claim-audit-pass.mts, which nothing schedules. recordAttemptsKeepingHistory, the writer that fills the map from attempts, has no caller. scripts/loss-study-pass.mts, which compares failures, is also not scheduled anywhere.
 - **DB-50 · An engineer-built adapter can become a feed.** Seen: No engineer-built-kind doors exist: the door registry holds 0 rows, and no meeting on the live site comes from an engineer-built kind (kinds seen: clerksboards, diligent, onbase, legistar, legistar-insite, pima-edu, boardbook, ical, schedulepage, iqm2, apptegy, civicplus, civicclerk, official-page-events).
 
-# Returns and hook requests for bank
-
-River writes this file. Do these before new steps.
-
 ## 2026-10-04 08:20Z — continuation handoff
 
 This lane is now continued by its paired Claude worker (see assignments.md → Handoffs). Start from the saved continuation file on stream/bank. The waiting_on items about FULL failures are answered in assignments.md → "Checks guidance for FULL batches". Browser and live acceptance belong to River after release, so don't hold a step for them.

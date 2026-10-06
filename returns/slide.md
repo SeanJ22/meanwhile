@@ -11,19 +11,6 @@ Sean, Oct 6: a step is done only when it works live. Integrated is not done. The
 - **CP-10 · A portrait from the person's own page publishes at once.** Seen: After about 6 hours of runner passes on release 3+ code (Oct 5 6:39 PM to Oct 6 12:40 AM EDT), local and state officials whose official profiles carry photos (Pima supervisors on pima.gov, AZ legislators on azleg.gov, e.g. Alma Hernandez shows initials 'AH') still show initials. No card's Sources section has a portrait row. The READY commit marks CP-10 'hooks pending'.
 - **The owner snapshot has not been republished in 40 hours (not a plan step, but it breaks every Admin money and cost screen).** Seen: cp_owner_snapshots 'current' has publishedAt 2026-10-04T13:38:24Z (9:38 AM EDT Oct 4). The runner starts scripts/publish-owner-snapshot.mts as its console publisher every cycle (pilot-runner.mts:717). Either it fails (the runner prints the exit code and last stderr line, 'console-publish:owner snapshot') or the change detector keeps reporting 'unchanged inputs; owner snapshot retained'. Find which, fix the cause, and make a stale owner snapshot a visible failure on Admin Now. SC-20's attempts and every Admin cost and money view read this snapshot.
 
-# Returned: slide
-
-lane: slide
-owner: slide
-writer: the slide lane
-check: gates
-ready: no step ids unknown
-river: 6af6f8a504a7224131ad567f62f7b6f63cb52f08
-at: 2026-10-05T23:18:53Z
-state: returned
-fix_subject: fix:55fff18a
-fix: River · stream/slide — gates failed for slide: civic-data-release-firewall … FAIL — 1 release-coupling finding(s).
-
 ## Failure
 
 ```

@@ -14,19 +14,6 @@ Sean, Oct 6: a step is done only when it works live. Integrated is not done. The
 - **DP-18 · Audit accuracy on the Scoreboard.** Seen: cp_log_live_audits has 0 rows ever, so the Audit accuracy row can only show "—". The audit pass (scripts/live-audit-pass.mts) says the runner starts it every cycle, but scripts/pilot-runner.mts at a5fd753 never starts it; its only console publisher is the owner snapshot. Not seen on screen: Admin needs sign-in.
 - **DP-33 · Auditors check the team's own claims.** Seen: No claim-audit pass has ever been recorded: cp_log_live_audits has 0 rows. scripts/claim-audit-pass.mts is not started by the pilot runner or any workflow at a5fd753, so the Report accuracy row can only say "No weekly check of the team's claimed wins in the last two weeks." The controlled false-claim test has not been run.
 
-# Returned: auditors
-
-lane: auditors
-owner: auditors
-writer: the auditors lane
-check: fold
-ready: no step ids e1e995fd647e8f735496e260f62ee2f721db3119
-river: ecf402600401783b094837c29e0c515eadbdb843
-at: 2026-10-05T20:08:30Z
-state: returned
-fix_subject: fix:5c560d82
-fix: River · stream/auditors — fold failed for auditors: Update (River, after 20:00Z): your newer READY e1e995fd6 merged river-next 92fda9c, which was an untested combination and not river. It carries people's CA-01 (71a308afe), which River held out after gates failed (see returns/people.md). So
-
 ## Failure
 
 ```

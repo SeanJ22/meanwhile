@@ -21,7 +21,6 @@ Sean, Oct 6: a step is done only when it works live. Integrated is not done. The
 - **DB-17 · Any adapter kind can be added as a data row.** Seen: No door rows have been saved (door registry: 0 rows), so no newly added kind has doors and none shows meetings on the map.
 - **DB-18 · The Tucson board portal reader becomes a general kind.** Seen: Tucson board-portal meetings still show (145 clerksboards meetings at 85701, e.g. Tucson-Pima County Historical Commission 2026-07-08). The door registry holds 0 rows, so they're read through the code's 27 Tucson rows, not door records.
 
-
 ## 2026-10-04 07:15Z — integration repair by River (no action unless you edit this file again)
 
 `scripts/seed-doors-from-meetings.mts` (DB-10/DB-11) printed import counts with no denominator floor, and `tests/denominator-floor.test.ts` failed on the combined tree. River added `floored()` lines on river-next (c846a56): "meeting doors settled" and "feed doors settled", each out of the drafts handed to the import. Take it when you catch up with `river`. Any new counting output must go through `floored()` from `lib/ops/denominator-floor.ts`, and the baseline is never extended.

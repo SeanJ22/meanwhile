@@ -2,7 +2,7 @@
 
 Sean, Oct 6: integrated is not done. A step is done only when it works live. River updates this table as verdicts change; every release's steps are added during its measured hour.
 
-Last updated Oct 6, 2:27 AM EDT. Production: a5fd753 (release 8). Order: reader-facing, then the factory behind the vital signs, then Admin.
+Last updated Oct 6, 2:28 AM EDT. Production: a5fd753 (release 8). Order: reader-facing, then the factory behind the vital signs, then Admin.
 
 | Verdict | Steps |
 |---|---|
@@ -18,7 +18,7 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | Step | Area | Lane | Release | Verdict | What was seen |
 |---|---|---|---|---|---|
 | BR-30 | Reader | measures | 4 | **Can't check** | The Scoreboard is an Admin screen behind Sean's Google sign-in; nothing public shows it. |
-| BX-02 | Reader | pr-677 | 1–2 | **Needs time** | Needs a hunter to find a board member's email on a body's official page after the restart. No new member emails are on the live cards checked (Tucson council, Newbury selectboard, Morris County commissioners show the same contacts as Aug 13–14 reads). The runner restarted on release 8 at 2:02 AM EDT. **When:** After the first hunt pass on release 8 that returns a board-member email. Recheck about 4:00 AM EDT. |
+| BX-02 | Reader | slide | 1–2 | **Needs time** | Needs a hunter to find a board member's email on a body's official page after the restart. No new member emails are on the live cards checked (Tucson council, Newbury selectboard, Morris County commissioners show the same contacts as Aug 13–14 reads). The runner restarted on release 8 at 2:02 AM EDT. **When:** After the first hunt pass on release 8 that returns a board-member email. Recheck about 4:00 AM EDT. |
 | BX-03 | Reader | slide | 3 | **Can't check** | The proof is the publish-now lane's timing in Admin, behind Sean's sign-in. It also needs a parser result written after the runner restarted at 2:02 AM EDT. |
 | BX-07 | Reader | slide | 7 | **Can't check** | The checklist card is an Admin screen behind Sean's sign-in. |
 | BX-08 | Reader | meetings | 1–2 | **Failed live** | In the 04:40Z snapshot (composed by release-6 runner code, which includes BX-08), meetings at full street addresses are still unpinned with venueGap STATED_NOT_PLACED: '55 West Joppa Rd. Warner, NH 03278' (Warner Village Water District, 12 meetings from Jul 8 on, at 03255) and 'B-1 MPR 220 W. 6th Street Tucson, Arizona 85701' (TUSD, Sep 16, at 85701). Both have house number, street, city and ZIP, so the automatic Census match should have pinned them. 35 meetings at 03255 and 13 at 85701 carry venue gaps. I couldn't run the Census geocoder from here (blocked). |
@@ -59,7 +59,7 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | CP-02 | Reader | slide | 3 | **Working live** | Every campaign-site source on ballot cards across 6 ZIPs (about 50 rows, e.g. kellyfornh.com on Ayotte, adelitaforcongress.com on Grijalva, teriann4azgov.org on Hourihan) is on its own candidate's card. No row from one campaign's page appears on an opponent. |
 | CP-03 | Reader | slide | 7 | **Needs time** | No source labeled voter guide appears on any ballot page checked (11 ZIPs). No promoted record anywhere carries a voter-guide source kind. **When:** The first candidate publication after the runner restart that includes a voter-guide-only fact. The runner resumed on a5fd753 at 2:02 AM EDT; recheck after its first publication, about 3:00 AM EDT. |
 | CP-04 | Reader | slide | 7 | **Failed live** | Ballot Sources rows read 'Other · Biography in the candidate's own words' for campaign sites (Ayotte's kellyfornh.com at 03255: 25 'Other' vs 2 'Official'; 14 'Other' at 85701; 6 at 07866), and 'Official measure filing' reads 'Other' at 85701. A Legistar meeting card (Pima BOS July 14, 85701) shows 'Other · This sitting' from pima.legistar.com with Verified 'We're working on getting this info.' The promoted campaign-site records carry no CAMPAIGN source kind. |
-| CP-05 | Reader | pr-677 | 1–2 | **Needs time** | Across 9 ZIPs, none of the 18 comment-access rows in /api/meetings carries a quote. The comment-rule record was last promoted 2026-09-14, so no quote can show until a new comment-access worker result publishes. **When:** The first comment-access publication after the runner restart (runner resumed 2:02 AM EDT). It depends on a comment-rule worker result, so check again at the end of today's first research rounds, about 6:00 AM EDT. |
+| CP-05 | Reader | slide | 1–2 | **Needs time** | Across 9 ZIPs, none of the 18 comment-access rows in /api/meetings carries a quote. The comment-rule record was last promoted 2026-09-14, so no quote can show until a new comment-access worker result publishes. **When:** The first comment-access publication after the runner restart (runner resumed 2:02 AM EDT). It depends on a comment-rule worker result, so check again at the end of today's first research rounds, about 6:00 AM EDT. |
 | CP-06 | Reader | slide | 3 | **Can't check** | First half holds: 759 meetings across 85701, 85201, 03255 and 07866 include no past-dated sitting still shown as upcoming (all past ones are CONCLUDED or CANCELED). Second half can't be exercised: no live official is currently past a term end (roster term ends are null or in the future), so the 'stays on their card' case doesn't exist yet. |
 | CP-07 | Reader | slide | 7 | **Can't check** | No live card has a news-sourced phone being replaced by an official one, and receipts with the superseded value are only in Admin. |
 | CP-09 | Reader | slide | 3 | **Needs time** | No 'Official filing records' section appears on any of 11 ballot pages, and no official-filings record is promoted. The state legislator and county supervisor cards (Alma Hernandez, Jennifer Allen) show Campaign money as 'We're working on getting this info'. **When:** The first official-filings publication after the runner restart (resumed 2:02 AM EDT). Check after today's first research rounds, about 6:00 AM EDT. |
@@ -107,7 +107,7 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | FE-31 | Reader | frontend | 4 | **Not yet checked** |  |
 | FE-32 | Reader | frontend | 4 | **Not yet checked** |  |
 | FE-34 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-39 | Reader | pr-642 | 1–2 | **Not yet checked** |  |
+| FE-39 | Reader | frontend | 1–2 | **Not yet checked** |  |
 | FE-41 | Reader | frontend | 4 | **Not yet checked** |  |
 | FE-42 | Reader | frontend | 4 | **Not yet checked** |  |
 | FE-43 | Reader | frontend | 3 | **Not yet checked** |  |
@@ -115,7 +115,7 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | SC-02 | Reader | measures | 1–2 | **Not yet checked** |  |
 | SC-07 | Reader | measures | 1–2 | **Not yet checked** |  |
 | BR-23 | Factory | measures | 1–2 | **Can't check** | The Scoreboard is Admin-only (GET /api/admin/v6/scoreboard returns 401 without sign-in). Live code a5fd753 builds 22 rows; rows with no reading say "Not measured yet" with a reason. |
-| BR-31 | Factory | pr-703 | 1–2 | **Failed live** | Live a5fd753 hard-codes the Scoreboard's 'Facts live per hour' and 'Cost per fact' rows as not measured (scoreboard-read.ts:477-480), so both can only show '—'. The fix is measures' READY 30922c2, already folded into release 9 (gates rerunning), which replaces them with the hourly flow rows. Recheck after release 9 deploys. |
+| BR-31 | Factory | measures | 1–2 | **Failed live** | Live a5fd753 hard-codes the Scoreboard's 'Facts live per hour' and 'Cost per fact' rows as not measured (scoreboard-read.ts:477-480), so both can only show '—'. The fix is measures' READY 30922c2, already folded into release 9 (gates rerunning), which replaces them with the hourly flow rows. Recheck after release 9 deploys. |
 | BR-32 | Factory | measures | 7 | **Can't check** | Admin-only screen. Data caveat: the door registry (cp_doors) has 0 rows in production at 2:09 AM EDT, so the door rows (shut doors, posted to live, overdue doors) have no doors to count. |
 | CA-27 | Factory | ballot | 7 | **Failed live** | Office cards show the older hand-written blurbs, not translator definitions written from each state's law. Examples: /ballot?zip=07866, county commissioner card: "(Powers defined in: State statutes on county government.)"; 03255, sheriff: "State statutes on county officers". Those texts were already in lib/officials/office-blurbs.ts at release 2. In live code, readOfficeTranslation (lib/translate/reader.ts) is called by no app or component file, and no translation record is published (the commit says "hooks pending"). |
 | CA-45 | Factory | ballot | 1–2 | **Working live** | Re-rendered on a5fd753 at about 2:15 AM EDT. /ballot?zip=85701, Grijalva card, Campaign money: raised $2.3M, spent $1.9M, $428,000 on hand; "$1,015,921.45 (55%) of individual money came from donors giving $200 or less"; contributions listed as filed with filed categories (e.g. "LEADERSHIP PAC"). 03255 Goodlander shows the same layout ("$275,917.47 (9%)..."). No other percentage or interpretive sentence was seen. |
@@ -181,13 +181,13 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | CA-46 | Admin | people | 4 | **Can't check** | PRL data is live: /api/profile/congress:K000377 (Kelly), W000817, D000563 return PRL measurements dated Oct 4. Key votes cannot show: the default pick list is empty by design and /api/reader/settings returns available:false (no reader settings published), so Sean's picks and their publication are needed; the card itself was not opened in this batch. |
 | CA-52 | Admin | ballot | 7 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CA-53 | Admin | ballot | 7 | **Can't check** | Admin screen; needs Sean's sign-in. |
-| CH-01 | Admin | pr-685 | 1–2 | **Can't check** | Data: the last heartbeat (1:08 AM EDT) was on 8b6322c9, which includes 022a183c, flagged as behind main; the runner is stopped now. No no-progress kills in the last 3 days of logs. The production runner is stopped (last heartbeat 1:08 AM EDT), so do this after Sean restarts it on release 8. |
+| CH-01 | Admin | hunters | 1–2 | **Can't check** | Data: the last heartbeat (1:08 AM EDT) was on 8b6322c9, which includes 022a183c, flagged as behind main; the runner is stopped now. No no-progress kills in the last 3 days of logs. The production runner is stopped (last heartbeat 1:08 AM EDT), so do this after Sean restarts it on release 8. |
 | CH-02 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CH-03 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CH-04 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CH-06 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
-| CH-08 | Admin | pr-685 | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
-| CH-09 | Admin | pr-690 | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
+| CH-08 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
+| CH-09 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CH-10 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CH-11 | Admin | hunters | 3 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CH-12 | Admin | admin | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
@@ -199,11 +199,11 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | CH-19 | Admin | hunters | 4 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CH-21 | Admin | hunters | 7 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CH-24 | Admin | hunters | 3 | **Can't check** | Admin screen; needs Sean's sign-in. |
-| CH-25 | Admin | pr-699 | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
-| CH-26 | Admin | pr-695 | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
-| CH-28 | Admin | pr-699 | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
-| CH-29 | Admin | pr-694 | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
-| CH-30 | Admin | pr-698 | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
+| CH-25 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
+| CH-26 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
+| CH-28 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
+| CH-29 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
+| CH-30 | Admin | hunters | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CP-08 | Admin | slide | 7 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CP-18 | Admin | slide | 7 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CP-19 | Admin | slide | 1–2 | **Can't check** | The refusing test is in the shipped code (tests/person-row-alignment.test.ts at a5fd753); the daily-count half needs the Admin screen. |
@@ -232,7 +232,7 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | DB-53 | Admin | hunters | 3 | **Can't check** | Needs a release to land while the runner is running. It is stopped now. |
 | DB-54 | Admin | registry | 1–2 | **Failed live** | Door registry is empty in production: SELECT count(*) FROM cp_doors = 0 at 06:00 UTC (02:00 AM EDT) Oct 6, the same as in the release-1 check. The runner seeds it only at startup when WTP_DOORS_SEED=on, and reads from it only when WTP_DOORS_READ=registry (scripts/routine-civic-data-runner.mts at a5fd753), so both switches must be on in runner.env at the restart. Roster and contact fact pages therefore have no doors. The live Doors card would also omit open doors and has no 'holds' or 'next due' column. |
 | DB-56 | Admin | meetings | 1–2 | **Can't check** | Needs a mission to be started in Admin, which is an owner action, plus known doors. The registry is empty (cp_doors = 0), so there are no known doors to refresh yet. |
-| DB-58 | Admin | pr-694 | 1–2 | **Can't check** | Needs the running runner and a slow host. The registry is empty, so there are no per-door cadences yet. |
+| DB-58 | Admin | meetings | 1–2 | **Can't check** | Needs the running runner and a slow host. The registry is empty, so there are no per-door cadences yet. |
 | DP-01 | Admin | auditors | 1–2 | **Can't check** | Needs the runner. It is stopped; its restart on release 8 shows it (expected about 2:30 AM EDT). |
 | DP-02 | Admin | auditors | 1–2 | **Can't check** | Needs the runner and a real source that returns 503, then one refused three times. |
 | DP-03 | Admin | auditors | 1–2 | **Can't check** | Needs a held record and the runner. |

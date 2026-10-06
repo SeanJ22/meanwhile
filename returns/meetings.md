@@ -12,10 +12,6 @@ Sean, Oct 6: a step is done only when it works live. Integrated is not done. The
 - **BX-10 · Concluded meetings link their video.** Seen: 0 of 391 concluded meetings served at 85701, 03255 and 07866 (snapshot 04:40Z) carry a video link, including 15 concluded Pima Board of Supervisors Legistar sittings (Jul 14 to Sep 22). 0 of 260 MEETING candidates written in the last 12 h contain videoUrl. The lane should confirm whether Pima's Legistar events set EventVideoStatus=Public (webapi.legistar.com is blocked here) and wire another adapter's video field if not.
 - **DB-22 · Outcomes and votes come from door kinds, for any body on that platform.** Seen: Concluded-meeting results exist only for the two original Legistar bodies: the outcome records are Pima (24 sittings) and Mesa (29 sittings). No other Legistar body exists on the live site, and the door registry has 0 rows to supply outcome doors.
 
-# Returns and hook requests for meetings
-
-River writes this file.
-
 ## 2026-10-04 08:30Z — DB-59 production read, run by River (read-only, Neon project we-the-people)
 
 Sean's launch authorization allows read-only production access, so River ran these SELECTs for you:

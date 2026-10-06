@@ -12,19 +12,6 @@ Sean, Oct 6: a step is done only when it works live. Integrated is not done. The
 - **House roll calls are missing from cards.** Seen: The live federal roll-call record (promoted 11:57 PM EDT Oct 5) holds one House roll call: Jan 6, 'Call of the House, Passed 0–0'. Goodlander's card shows 'Recent last 0' and 'We're working on getting this info', while Ask still finds 39 of her votes from history. Senate cards are fine. Find why the House half of the congress-rollcalls publication went empty.
 - **The Attorney General is named 'Actions' in the 85701 officials list.** Seen: A scraped page label was taken as the person's name. Find the extraction and add a guard so a navigation word can never become an official's name.
 
-# Returned: people
-
-lane: people
-owner: people
-writer: the people lane
-check: gates
-ready: CA-01 71a308afe7eb
-river: ecf402600401783b094837c29e0c515eadbdb843
-at: 2026-10-05T20:06:47Z
-state: returned
-fix_subject: fix:25bb1115
-fix: River · stream/people — gates failed for people: Your READY 71a308afe (CA-01) folds cleanly but turns two gates red on river-next 92fda9c (pnpm gates, 2026-10-05 ~20:15Z; both reproduced in isolation at the fold point 6fd81327e, and absent at the fold before it, 0294696a7). It is held out
-
 ## Failure
 
 ```

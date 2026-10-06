@@ -23,6 +23,8 @@ import type { GateHealthRow } from "./gate-health.ts";
 import { summarizeGateHealth } from "./gate-health.ts";
 import type { LearningSeries, LearningTrends } from "./learning-trends.ts";
 import { doorRows, type DoorNumberReadings } from "./door-numbers.ts";
+import { flowRows, flowStages } from "./flow-rows.ts";
+import type { FlowWeek } from "./flow-read.ts";
 import type { V6HistoryReceipt } from "./admin-v6-history.ts";
 import type { PipelineRead } from "./v6-results-read.ts";
 import type { AuditAccuracyReading } from "./v6-audit-read.ts";
@@ -202,6 +204,8 @@ export interface ScoreboardReadings {
   readonly gates: readonly GateHealthRow[] | null;
   /** BR-32: overdue doors, posting-to-live and the repair log; null when none could be read. */
   readonly doorNumbers?: Omit<DoorNumberReadings, "shutDoors"> | null;
+  /** BR-31: the last seven days of the flow from findings to live; null when it could not be read or none is recorded. Absent means not read. */
+  readonly flow?: FlowWeek | null;
   readonly readiness: readonly ReadinessCount[];
   /** The week's live audits of published facts (DP-18); null when the audit log could not be read. Absent means not read. */
   readonly audit?: AuditAccuracyReading | null;
@@ -475,8 +479,6 @@ export function reportAccuracyRow(a: ReportAccuracyReading | null | undefined): 
 }
 
 const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
-  { id: "Facts live per hour", name: "Facts live per hour", why: "Counted in a later step, once each fact carries when it went live." },
-  { id: "Cost per fact", name: "Cost per fact", why: "Counted in a later step, from the same record as facts live per hour." },
   { id: "Look and feel", name: "Look and feel", why: "The front-end flags are not recorded here yet." },
 ];
 
@@ -496,6 +498,7 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Audit accuracy", auditRow(r.audit)],
     ["Site speed and reliability", speedRow(r.speed)],
     ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
+    ...flowRows(r.flow),
     ["Proven fixes", provenFixesRow(r.provenFixes)],
     ["Report accuracy", reportAccuracyRow(r.reportAccuracy)],
     ...GATE_ROWS.map((g): [string, ScoreboardRow] => [g.id, unmeasured(g.id, g.name, g.why)]),
@@ -518,6 +521,7 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
   return {
     rows,
     byPlace, byFamily, missions,
+    flow: flowStages(r.flow),
     gates: gateRows === null || gateSummary === null ? null : { rows: gateRows, pass: gateSummary.pass, attention: gateSummary.attention, notMeasured: gateSummary.notMeasured },
     readiness,
     learning: r.learning,

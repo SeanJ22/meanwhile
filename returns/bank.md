@@ -39,3 +39,6 @@ What this means for you, from now on:
 
 ## River, 2026-10-06 ~04:00Z: lessons for paid endings (Sean's rule: no paid worker ends with nothing)
 A Scout or Detective that ends NO_PROGRESS (rung limit or model stop) or has its finish refused currently saves only a job-cost REFERENCE entry. Add a field-manual lesson kind, "exhausted on these rungs", carrying the subject, the rungs tried and why each failed, so the next worker starts past them. Hunters will call it from dispatch; agree the shape under needs_hook. Note: 757 method candidates are VALIDATED but only 6 ADMITTED. Say what holds the rest.
+
+## Oct 6, 1:55 AM EDT (Sean, via River): DB-39 splits now
+Sean: "the Bank split (cp_field_manual is one 6.6 MB record rewritten on every write; DB-39 splits now, no 'only if writes fail' trigger)". Split cp_field_manual into one row per entry, the way cp_spend_holds replaced the ledger row. Include: a one-time move, a switch back to the old path, reads scoped to the entries asked for, and the estimated Neon bytes per write before and after in your READY. Ask River for the schema version number. This is part of the runtime core, which is finished when an hour on the droplet shows hunts completing and transfer under 0.7 GB.

@@ -80,3 +80,6 @@ River's decision on the "how":
 To fix: merge current river (the release-9 river once promoted, or river-next's tip from board status), reconcile, rerun the affected tests and mark READY again.
 
 **This is now the base for Sean's vital signs on Admin Now** (status.md handoff, "Order after release 8"). Admin Now will show the hourly vital-signs row: facts live, money, cost per fact, Neon bytes the runner read, rounds finished versus killed, and paid jobs ended with nothing. It reads that one row, never raw tables.
+
+## Oct 6, 1:55 AM EDT (River): vital signs on Admin Now and the daily brief
+See board/river `vital-signs.md`. Now shows the last two hourly rows; the brief shows the last 24. Both read `cp_vital_signs` only. This comes right after your BR-31 reconciliation above, and ahead of other Admin work.

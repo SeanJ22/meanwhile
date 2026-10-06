@@ -119,3 +119,6 @@ Do this before every other item. Then the design-it-out items above.
    - Record host total memory, current RSS and reservations in the runner heartbeat, so River can report how many jobs fit and what more memory would buy.
    - Keep the old timed-round path behind a switch until the new one is checked live.
 3. Then the design-it-out items (admission, route candidate to builder, lessons, saving before a kill) and the rest.
+
+## Oct 6, 1:55 AM EDT (River): vital signs, your part, after the campaign-sites cause
+See board/river `vital-signs.md`. You own the per-query byte counter in the repository layer, and the hourly writer in the runner. The writer covers: spend, cost per fact, Neon bytes by caller, rounds finished, killed and deferred, paid jobs ended and ended empty, and release_sha. River adds the `cp_vital_signs` table (next schema version) on stream/river. Build against the column list in vital-signs.md.

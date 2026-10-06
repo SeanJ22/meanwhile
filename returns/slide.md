@@ -32,3 +32,6 @@ Your status shows no `pnpm gates` run on this batch; run it (or at least the fir
 ## Repair
 
 Fix on stream/slide and publish a new READY commit; River folds the new READY and clears this return when it integrates.
+
+## Oct 6, 1:55 AM EDT (River): vital signs, your part
+See board/river `vital-signs.md`. You own `facts_live`, counted at publish time when a reader record goes live. You also own the live-site sampler: 3 random facts each hour, fetched from the public site and confirmed present (`facts_confirmed` / `facts_sampled`). Hand the counts to hunters' hourly writer through a small in-process counter. Do not write the row yourself.

@@ -3,11 +3,11 @@ worker: codex-admin
 provider: Codex
 run_id: codex-admin-0a20c74f8d1a49a49f492bf94bfe2e71
 lock: codex-admin-0a20c74f8d1a49a49f492bf94bfe2e71
-heartbeat: 2026-10-06T06:04:20.473809Z
+heartbeat: 2026-10-06T06:10:41.706616Z
 on_river: promoted river 8e47854b1; main release 8 a5fd753b7; existing integrated Admin steps preserved
 ready: none newly live-verified; historical READY 734ee9633567651c94a6bb12a0628c7b965a4102 is RETURNED and superseded, not foldable
-working_on: WIP source 2414a228caa3e72e7fe9aafcb0acfbd7cb9011de; finish immutable full gates aa40b7ba3480de6bf3796da5d12f2af73fda0a11 and inspect refreshed River returns
-checks: exact 2414a228caa3e72e7fe9aafcb0acfbd7cb9011de types PASS; 341 focused PASS/0 FAIL/0 SKIP across44 files; final two-file lint PASS. Full gates aa40b7ba3480de6bf3796da5d12f2af73fda0a11 still running; browser assertion cannot run (pinned1234 absent). Eight ET cadence expectations found by full run corrected; exact11 cadence checks PASS. No FULL/browser/live PASS claim. Historical exact evidence remains preserved.
+working_on: WIP source 07fcad7eda5b152314a8180d3169215d495cdd0d; finish immutable full gates aa40b7ba3480de6bf3796da5d12f2af73fda0a11 and both builds; take any newly integrated prerequisite
+checks: exact 07fcad7eda5b152314a8180d3169215d495cdd0d types PASS; 348 focused PASS/0 FAIL/0 SKIP across45 files. Full gates aa40b7ba3480de6bf3796da5d12f2af73fda0a11 still running; nine old ET expectations now corrected with original-condition checks. Missing-browser checks unverified. No FULL/browser/live PASS claim.
 returned: fix:5abe56f2 compatibility repaired with disabled metadata for 18 gateway-null controls, conditional existing Work reader, Look/Testing/Queue/owed/target/data/settings retained. New 1:50 AM EDT BR-31 overlap reconciled against measures exact 30922c2e1 locally: one authoritative Scoreboard/chat flow reader and SPEND_AND_FACTS topic; Money summary separate. Await promoted release 9 for final catch-up.
 waiting_on: River cp_vital_signs schema; hunters hourly writer/query-byte counter; slide publish/sample counters; normal deployment and named live Now/brief checks. Remaining shared writer connections below.
 needs_River:

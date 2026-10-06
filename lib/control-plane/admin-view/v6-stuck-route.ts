@@ -6,6 +6,7 @@ import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { ADMIN_V6_SAME_CAUSE_CONTRACT, ADMIN_V6_STUCK_CONTRACT, STUCK_ITEM_LIMIT, readStuckPopulation, stuckViews, type StuckPopulation } from "./v6-stuck-read.ts";
 import { readShutDoorRecords, shutDoorItems } from "./v6-stuck-doors.ts";
 import { validateV6Query } from "./v6-hunts-read.ts";
+import { readSurfaceItems } from "./v6-stuck-surfaces.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 const MEMO_MS = 60_000;
@@ -36,11 +37,14 @@ export async function v6StuckGet(request: NextRequest, which: "stuck" | "sameCau
   const now = new Date().toISOString();
   let doorsUnread = false;
   const shut = await (async () => { const url = controlPlaneUrlFromEnv(); try { return url ? shutDoorItems(await readShutDoorRecords(neon(url)), now) : []; } catch { doorsUnread = true; return []; } })();
-  const views = stuckViews(read.rows, query.scopeKey, now, shut);
+  // FE-26: a surface over its speed or dead-link limit sits at the top beside the shut doors.
+  const surfaces = await readSurfaceItems(now);
+  const views = stuckViews(read.rows, query.scopeKey, now, [...shut, ...surfaces.items]);
   const base = { scope: query.scopeKey, revision: `${which}:${read.publishedAt ?? "unpublished"}:${query.scopeKey}`, asOf: read.publishedAt ?? now };
   const capped = views.total > STUCK_ITEM_LIMIT;
   const missingParts = [
     "These counts come from the work index the runner last published, not from a live read of every worker.",
+    ...(surfaces.unread ? ["The speed and dead-link checks could not be read just now, so slow pages are not shown here; that is unknown, not zero."] : []),
     ...(doorsUnread ? ["The door list could not be read just now, so shut doors are not shown here; that is unknown, not zero."] : []),
     ...(capped && which === "stuck" ? [`Only the ${STUCK_ITEM_LIMIT} most urgent of ${views.total} stuck items are listed; the cause groups count all ${views.total}.`] : []),
   ];

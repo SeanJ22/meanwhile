@@ -29,8 +29,8 @@ const items = async (repos: Awaited<ReturnType<typeof setup>>) => {
 
 describe("DB-32/34 connection: what a read tells its door", () => {
   it("the switch is off unless WTP_DOOR_SHUT=on", () => {
-    assert.equal(doorShutEnabled({}), false);
-    assert.equal(doorShutEnabled({ WTP_DOOR_SHUT: "on" }), true);
+    assert.equal(doorShutEnabled({ NODE_ENV: "test" }), false);
+    assert.equal(doorShutEnabled({ NODE_ENV: "test", WTP_DOOR_SHUT: "on" }), true);
   });
 
   it("a held partition: a refused address is the door's; bytes that arrived and failed validation are not", () => {

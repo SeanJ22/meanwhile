@@ -1,13 +1,13 @@
-build_state: waiting
+build_state: active
 worker: codex-bank
 provider: Codex
-run_id: codex-bank-b5575f5372fa456486b5a92a890e1463
-lock: none
-heartbeat: 2026-10-06T00:43:35.456027Z
+run_id: codex-bank-19fecffa4a5a441fa9f5bf3e4dce7152
+lock: codex-bank-19fecffa4a5a441fa9f5bf3e4dce7152
+heartbeat: 2026-10-06T04:18:32.894340Z
 on_river: 23 unique Bank steps: DP-07, DB-42, DB-38, DB-49, DP-09, DB-37, DB-40, DB-41, DP-08, DP-19, DB-51, DB-43, DB-46, DB-57, DP-20, DB-44, DB-50, DP-21, DP-27, DP-23, DP-24, DP-22, DP-28. Prior bank batch folded at 13d29c572; release 3 main 6af6f8a50. Built code, with live/shared-hook gaps as recorded. Latest integrated river inspected: 186f747a8769709e05f24c0fc452f950d92d5f4c.
 ready: DB-47 @ f92b4d4f1bf192d069f32070d6a3203bfcf7165e. READY (hook pending: Admin gateway/view, hunters parent dispatch, Queue projections, River release/migration coordination). Hosted Netlify permission and live restore unverified; see needs_River.
 checks: DB-47 FULL at 2bd8546aa2c4799539f61168f980173cf2c963a8: 9465 pass, 0 fail, 11 skipped (9476 tests, 1092 files). Types and lint six files pass at the same SHA. Raw FULL, selector and corrected first type-failure evidence: .factory/bank-evidence/db47/. Existing bank checks retained; missing WIP proposals and older logs restored from preserved stream 5bdbdc0eb. No live restore or credential-scope probe performed. Exact READY f92b4d4f1bf192d069f32070d6a3203bfcf7165e: 10/10 focused checks pass, no failures or skips; its application-tree diff from the FULL-tested SHA is empty. Fingerprint fc9b9b3a9a2e1f3d8b29912ae25796f4e5c7971bd72ab9d079b73fb3ff8d5185.
-working_on: No further Bank step ready. Current river 186f747a8769709e05f24c0fc452f950d92d5f4c inspected; DB-26 and BX-06 absent, no new Bank return, DB-39 actual count remains unavailable. Tested DB-47 batch is based on integrated release 3, without an untested river-next merge. Source proposals/logs restored, exact continuation saved, lock released.
+working_on: River paid-ending lessons return; reviewing new integrated prerequisites
 waiting_on: DB-26 before DB-45; BX-06 before DB-52. DB-39 remains conditional on the actual Bank error count, unavailable here. DB-47 is ready to build because BR-14 is integrated.
 returned: DB-57 is now connected in workAdapterQueue (scoped bytes, adapter code and own test sources, path enforcement, isolated credential-free checks); DB-49 still needs River's CI planner hook. DP-19 has a step-ID expand SQL proposal preserved as .factory/bank-DP-19_fix_map.sql (also at WIP 620be3496:lib/db/migrations/DP-19_fix_map.sql); River must copy it into its correctly targeted migration path, number/journal/apply it and expose the repository. DP-20, DP-24, DP-27, DP-28 and DB-51 remain built with owning-lane runtime hooks pending; no live repair claimed.
 needs_hook: DB-47: Admin registers releaseRollbackAction(() => netlifyRollbackAdapter().read()) from gateway/release-rollback-action.ts and mounts ReleaseRollback with the normal preview/Send using GET /api/admin/v6/releases/rollback. Hunters calls executeQueuedRollback(repos, receiptId, netlifyRollbackAdapter(), nowCallback) for recorded QUEUED release.rollback requests between rounds before handoff. Queue joins claim/result receipts to the original request, plus existing served/runner code identity; unknown outcomes stay visible and never cause another POST. River serializes its deployment/contract-migration work with this executor using existing coordination. All prior per-owner hooks remain in .factory/bank-continuation.md.

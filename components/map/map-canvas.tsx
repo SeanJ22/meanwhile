@@ -108,7 +108,13 @@ interface CameraProbe {
   (): { zoom: number; lat: number; lng: number };
 }
 
+import { syncOfficeMarkers } from "@/lib/map/office-markers";
+import type { OfficeSite } from "@/lib/map/office-pins";
+
 interface MapCanvasProps {
+  officeSites?: readonly OfficeSite[];
+  onSelectOffice?: (id: string) => void;
+  selectedOfficeId?: string | null;
   onPresentationReadyChange?: (ready: boolean) => void;
   /**
    * **EVERY venue the DATA contains** — P-001, 2026-08-24.
@@ -319,6 +325,9 @@ export function MapCanvas({
   onViewportSettle,
   allowAutoFrame,
   focusStateOcdId = null,
+  officeSites,
+  onSelectOffice,
+  selectedOfficeId = null,
   votingSites,
   votingAddressPoint = null,
   onSelectVotingSite,
@@ -339,6 +348,9 @@ export function MapCanvas({
   const poolRef = useRef(createMarkerPool());
   const hereRef = useRef<Marker | null>(null);
   /** Voting-site markers, keyed by site id. Their own set, never the pool. */
+  const officePinsRef = useRef(new Map<string, Marker>());
+  const onSelectOfficeRef = useRef(onSelectOffice);
+  useEffect(() => { onSelectOfficeRef.current = onSelectOffice; }, [onSelectOffice]);
   const votePinsRef = useRef(new Map<string, Marker>());
   /**
    * Has the reader taken the camera by hand? (g4 item 5.)
@@ -930,6 +942,8 @@ export function MapCanvas({
       map.off("click", onClick);
       window.removeEventListener("keydown", onKeyDown);
       map.off("styledata", ensureDistricts);
+      for (const marker of officePinsRef.current.values()) marker.remove();
+      officePinsRef.current.clear();
       map.remove();
       // A removed map left on `window` is a handle the walk would read a style
       // off after the instance was disposed — a stale reading, which is the one
@@ -942,6 +956,14 @@ export function MapCanvas({
     // Mount once. onTileError is stable by construction in the parent.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !presentationReady || mapPresentationHeld(map)) return;
+    syncOfficeMarkers(officePinsRef.current, officeSites ?? [],
+      button => new Marker({ element: button, anchor: "center", offset: [24, 0] }).addTo(map),
+      id => onSelectOfficeRef.current?.(id), selectedOfficeId);
+  }, [officeSites, selectedOfficeId, presentationReady]);
 
   // Mark the zip's centroid. When the cascade widens, the gap between this and
   // the nearest pin is the honest picture of how far away the meetings are.

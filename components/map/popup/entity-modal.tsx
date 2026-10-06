@@ -8,6 +8,7 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
+import { PlacePublicRecords } from "../public-records";
 import { MeetingCard } from "@/components/ui/meeting-card";
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -212,6 +213,7 @@ export interface PlaceCardData {
 
 /** Everything the modal renders, whichever entity opened it. */
 export interface ModalSubject {
+  publicRecordsDivisionId?: string | null;
   title: string;
   subtitle: string;
   tier: Tier;
@@ -892,6 +894,13 @@ export function EntityModal({
             </button>
           </div>
         )}
+
+        {subject.subjectKind !== "MEETING" && (subject.publicRecordsDivisionId ?? subject.divisionOcdId) && <div className="account-modal-body">
+          <CardSection title="Public records">
+            <PlacePublicRecords key={subject.publicRecordsDivisionId ?? subject.divisionOcdId} divisionId={(subject.publicRecordsDivisionId ?? subject.divisionOcdId)!}
+              bodyId={subject.bodyCard ? subject.subjectId : undefined} />
+          </CardSection>
+        </div>}
 
         {subject.bodyCard ? (
           <BodySections subject={{ ...subject, sources: allSources }} onOpenHolder={onOpenHolder} />

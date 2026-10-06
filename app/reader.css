@@ -1671,3 +1671,31 @@ details.mw-sources > summary {
 /* Online-only office pins remain distinct from meetings in the same building. */
 .wtp-pin[data-venue-kind="ONLINE_ONLY"] .wtp-pin-count { color: var(--online); background: var(--panel); font-size: var(--text-caption); }
 .wtp-pin[data-venue-kind="ONLINE_ONLY"] .wtp-pin-dot { border-color: var(--online); }
+
+/* FE-35: square office symbol beside the building's meeting pin, using reader tokens. */
+.wtp-office-pin {
+  display: grid;
+  place-items: center;
+  width: var(--space-12);
+  height: var(--space-12);
+  padding: var(--space-2);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text);
+}
+.wtp-office-pin span {
+  display: grid;
+  place-items: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  background: var(--panel);
+  border: 2px solid var(--text);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-body);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+.wtp-office-pin:hover span,
+.wtp-office-pin:focus-visible span,
+.wtp-office-pin[data-selected="true"] span { border-color: var(--accent-local); }
+.wtp-office-pin:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }

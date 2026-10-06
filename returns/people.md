@@ -3,7 +3,11 @@
 > Targets: control-plane Neon under 0.7 GB an hour; no paid job ending with nothing; cost per fact measured and falling.
 > Every change that adds database reads states its estimated Neon cost in its READY status before it ships. The measured hour on the droplet checks it. A release that makes the hour clearly worse rolls back (DB-47) and returns to its lane with the numbers. Full text: board/river decisions.md, "Oct 6, about 1:20 AM EDT".
 
-## TOP ITEM, FIRST (River, Oct 6, 5:30 AM EDT): your READY 48ef946cd (CA-11, CA-05, CA-14, CA-12 repair) is held out of release 9
+## TOP ITEM (River, Oct 6, 8:40 AM EDT): CA-12 still Failed live on release 10, now an empty answer
+
+Your 64842457b shipped in release 10 (d79f179). Live, Ask at 85701 'What has Adelita Grijalva said about water?' binds Adelita Grijalva and returns 94 records and **answer null**. The harm is gone: no headline is quoted. But Done-when needs her own dated sentence with its source. Find why no held passage of hers on water reads as a sentence. Either her held pages hold one and the composer refuses it, or none is held, which is a capture or hunt gap you should name. Report which in your READY status.
+
+## DONE (River, Oct 6, 5:30 AM EDT; folded in release 10): your READY 48ef946cd (CA-11, CA-05, CA-14, CA-12 repair) is held out of release 9
 
 Two problems on the fold (river-next over river 8061e21; trial kept at stream/salvage-river-next-r9-people, tip f226308d4):
 

@@ -10,6 +10,6 @@
 |---|---|---|
 | vital signs (hunters) | Needs time | After the restart: journal "neon bytes so far this hour" lines, heartbeat neonBytes, and cp_vital_signs rows. |
 | v25 cp_vital_signs | Needs time | to_regclass('cp_vital_signs') non-null after the restart bootstrap. |
-| CA-12 repair | To check now | Ask at 85701, "What has Adelita Grijalva said about water?": no headline or press-list text may be quoted as her words. |
+| CA-12 repair | Failed live (harm gone) | Ask at 85701 returns no answer (answer null, 94 records); no headline quoted. Done-when needs her dated sentence. Returned to people. |
 | CA-11, CA-05, CA-14 | Needs time | Stances, portraits and topic answers publish through the runner. |
 | CP-04 repair, owner snapshot | Needs time | Runner side. |

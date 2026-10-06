@@ -27,7 +27,9 @@ test("doors show counts, shut doors first in words, and the newest door changes 
     { subject: true, says: true, outcome: true, startedAt: true, completedAt: true }) as readonly ActionReceipt[];
   const view = projectDoors({ doors, unreadable, saves, observedAt: AT });
   assert.deepEqual(view.counts, { open: 1, shut: 0, setAside: 1, unreadable: 0 });
-  assert.deepEqual(view.rows.map((r) => [r.name, r.status]), [["Votes on votes.example.gov", "Set aside"]]);
+  assert.deepEqual(view.rows.map((r) => [r.name, r.kind, r.status]), [["Votes on votes.example.gov", "Rollcall", "Set aside"], ["Meetings on calendar.example.gov", "Ical", "Open"]]);
+  assert.equal(view.total, 2);
+  assert.deepEqual(view.rows.map((r) => [r.body, r.lastWorked, r.lastFailed]), [["—", null, null], ["—", null, null]]);
   assert.deepEqual(view.changes.map((c) => c.says), ["Door added: Votes on votes.example.gov (set aside)", "Door added: Meetings on calendar.example.gov (open)"]);
   for (const text of [...view.rows.map((r) => r.name), ...view.changes.map((c) => c.says)]) assert.doesNotMatch(text, /body-one|body-two|meetings:|votes:/);
 });

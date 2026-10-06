@@ -50,4 +50,4 @@ Drop the no-result spend line from the Money page and the digest (the earlier ad
 4. Batch versus full-price spend.
 5. A fix-list hook (fix-list.ts is yours): when a paid ending bought nothing (CostEntry.endingKind NOTHING, from River and hunters), open a fix item at its cause, the way a broken door does.
 
-Correction, Oct 6, 12:25 AM EDT (Sean): **cost per hunt goes in the Money page's existing Hunts table** (spent, set aside, limit per place). Fix that table so its figures are measured; do not build a second one. All Admin times are EDT: no Z, no UTC.
+Correction, Oct 6, 12:07 AM EDT (Sean): **cost per hunt goes in the Money page's existing Hunts table** (spent, set aside, limit per place). Fix that table so its figures are measured; do not build a second one. All Admin times are EDT: no Z, no UTC.

@@ -596,6 +596,7 @@ export function MapCanvas({
 
     mapRef.current = map;
     const pool = poolRef.current;
+    const officePins = officePinsRef.current;
 
     // Standing invariant: any time the style changes — including the initial
     // load and every theme swap — put the district overlay back if it is wanted
@@ -942,8 +943,8 @@ export function MapCanvas({
       map.off("click", onClick);
       window.removeEventListener("keydown", onKeyDown);
       map.off("styledata", ensureDistricts);
-      for (const marker of officePinsRef.current.values()) marker.remove();
-      officePinsRef.current.clear();
+      for (const marker of officePins.values()) marker.remove();
+      officePins.clear();
       map.remove();
       // A removed map left on `window` is a handle the walk would read a style
       // off after the instance was disposed — a stale reading, which is the one

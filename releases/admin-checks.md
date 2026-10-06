@@ -146,3 +146,8 @@ Checks marked "after the runner restart" need the runner to have run at least on
 | 134 | SC-16 | Admin > Scoreboard (left menu: Scoreboard), Readiness section | ACQ, REC, PUB and ASK readiness counts appear with what witnessed each, shown apart from civic completeness and not added into it. | |
 | 135 | SC-18 | https://admin.meanwhileusa.com/admin?view=scoreboard › 'Readiness, counted apart from what places are owed' and 'Launch checks' | The cards render with values, and no card is blank or erroring. | |
 | 136 | SC-19 | Admin > Scoreboard (left menu: Scoreboard), Missions table | Each recent mission shows its start time and the time to core information live (or that it is not live yet). | |
+| 137 | FE-23 | Admin > Scoreboard, Look and feel row (after the runner restart and one look pass, about 15 minutes) | A red from the live look pass shows with its screenshot. | |
+| 138 | FE-24 | Admin > the screen-rating sample (Scoreboard, Look and feel); tap a dislike on one screen | After the reviewer's next look pass, that screen appears as a "bad" example the reviewer cites. | |
+| 139 | FE-25 | Admin > Scoreboard, Look and feel (after a look pass) | Comparison verdicts with both screenshots (ours beside the reference page). | |
+| 140 | FE-26 | Admin > Scoreboard, speed and reliability row; then Queue > Needs me / stuck list | The row shows real values; the first surface over three seconds is at the top of the stuck list. | |
+| 141 | FE-37 | Admin > Scoreboard, Admin review row (after the runner restart) | Red and green flags from Admin reviews, each with a screenshot. | |

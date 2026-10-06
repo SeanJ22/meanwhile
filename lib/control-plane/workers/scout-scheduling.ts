@@ -60,9 +60,27 @@ export function guardRecheckAt(attempt: Pick<Attempt, "endedAt">): string | null
   return Number.isFinite(ended) ? new Date(ended + GUARD_RECHECK_MINUTES * 60_000).toISOString() : null;
 }
 
+/**
+ * CH-23: a walk that finished and found nothing (the executor words it `SCOUT_NO_PROGRESS`). It is not a failed
+ * request: the next walk goes to a detective on the ordinary backoff, and a detective's argued absence holds the
+ * item on its absence clock (`absentUntil` on the owning obligation) rather than blocking it for good.
+ */
+export function scoutWalkedToNothing(attempt: Pick<Attempt, "abortReason"> | undefined): boolean {
+  return /\bSCOUT_NO_PROGRESS\b/.test(attempt?.abortReason ?? "");
+}
+
+/**
+ * CH-23's runner switch (an entry in the runner's environment file until DB-46's switches exist). Off, a walk that
+ * found nothing stays blocked as before; on, it goes to a detective after its backoff. Removed once checked live.
+ */
+export function oneHunterPath(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.WTP_ONE_HUNTER_PATH === "1";
+}
+
 /** Provider outages may recover; unchanged request/schema failures cannot. */
 export function unchangedScoutFailure(attempt: Attempt | undefined): boolean {
   if (!attempt?.endedAt || ["COMPLETED", "DENIED_BY_POLICY", "CRASHED", "LEASE_EXPIRED"].includes(attempt.outcome ?? "")) return false;
+  if (scoutWalkedToNothing(attempt) && oneHunterPath()) return false;
   return !workerFailureCanRetry(attempt.abortReason ?? "");
 }
 

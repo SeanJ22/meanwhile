@@ -160,7 +160,8 @@ test("F01 3.2: the venue row no longer prints the jurisdiction on every meeting"
     join(ROOT, "components", "map", "meeting-panel.tsx"),
     "utf8",
   );
-  const entry = source.slice(source.indexOf("function MeetingEntry"));
+  assert.match(source, /<MeetingRow/);
+  const entry = readFileSync(join(ROOT, "components", "ui", "meeting-row.tsx"), "utf8");
   assert.ok(
     !/\{meeting\.jurisdiction\}/.test(entry),
     "the per-row jurisdiction line is back",
@@ -169,7 +170,7 @@ test("F01 3.2: the venue row no longer prints the jurisdiction on every meeting"
     !/\{meeting\.provenance\.sourceOrg\}/.test(entry),
     "the per-row source-org line is back",
   );
-  // But the per-row provenance that genuinely varies stays on the row.
-  assert.match(entry, /meeting\.provenance\.secondHand/);
-  assert.match(entry, /meeting\.carried/);
+  // Metadata that varies by sitting remains in its retained Sources.
+  assert.match(readFileSync(join(ROOT, "components/officials/card-sources-list.tsx"), "utf8"), /entry\.provenance\.secondHand/);
+  assert.match(readFileSync(join(ROOT, "lib/officials/card-sources.ts"), "utf8"), /meeting\.carried/);
 });

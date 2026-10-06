@@ -24,3 +24,13 @@ test("only a fresh first-party empty-slot observation earns Agenda not posted ye
     assert.match(render(meeting), /data-working-on-it="not-searched"/);
   }
 });
+
+
+test("a second-hand meeting retains its classification only within Sources", () => {
+  const html = render({ ...base, provenance: { ...base.provenance, secondHand: true } });
+  const sourcesAt = html.indexOf('data-card-sources');
+  assert.ok(sourcesAt > 0);
+  assert.doesNotMatch(html.slice(0, sourcesAt), /Second-hand listing/);
+  assert.match(html.slice(sourcesAt), /Second-hand listing/);
+  assert.doesNotMatch(render(base), /Second-hand listing/);
+});

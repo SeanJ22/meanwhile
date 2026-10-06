@@ -24,7 +24,7 @@ import {CandidatePositions} from '${root}/components/ballot/candidate-positions'
 import {OfficialFilings} from '${root}/components/ballot/official-filings';
 import {FilingChanges} from '${root}/components/ballot/filing-changes';
 import {collectPageObservation,measurePage} from '${root}/lib/health/page-metrics';
-const provenance={sourceUrl:'https://calendar.example.gov/meeting',sourceOrg:'Example Council',collectedAt:'2026-10-05',verifiedAt:null};
+const provenance={sourceUrl:'https://calendar.example.gov/meeting',sourceOrg:'Example Council',collectedAt:'2026-10-05',verifiedAt:null,secondHand:true};
 const meeting={id:'fixture:meeting',bodyId:'fixture:body',bodyName:'Council',jurisdiction:'Example',ocdId:'ocd-division/country:us/state:az/place:example',title:'Public hearing',startsAt:'2026-10-06T18:00:00Z',timeZone:'America/Phoenix',endsAt:null,status:'SCHEDULED',location:null,online:{label:'Published online room',joinUrl:'https://join.example.gov/meeting'},agendaUrl:'https://agenda.example.gov/current',provenance};
 const docs=[{id:'revision:current',documentUrl:meeting.agendaUrl,contentHash:'current',retrievedAt:'2026-10-05',contentType:'text/html',extraction:'html',extractionNote:null,text:'1. Public hearing on the budget. 2. Adjournment.',sourceOrg:'Example Council'},{id:'revision:old',documentUrl:meeting.agendaUrl,contentHash:'old',retrievedAt:'2026-10-01',contentType:'text/html',extraction:'html',extractionNote:null,text:'1. Call to order. 2. Adjournment.',sourceOrg:'Example Council'}];
 const funding={fecCandidateId:'fixture:person',name:'Reader fixture',cycleLabel:'2025–26',sentences:['The committee reported $800 raised.'],totals:{receipts:800,disbursements:200,cashOnHand:500},contributors:[],contributorGroups:{individuals:[],committees:[]},contributorsShown:false,secondHop:{},reportedThrough:'2026-09-30',concentration:null,concentrationSentences:[],typeConcentrationSentences:[],sourceUrl:'https://filings.example.gov/money',sourceOrg:'Filing agency',collectedAt:'2026-10-04'};
@@ -53,7 +53,9 @@ try {for(const width of [390,1280])for(const theme of ['dark','light']){
  let report=await page.evaluate(()=>window.sourceReport());const leaks=report.issues.filter(i=>i.kind==='source-outside-sources');assert.deepEqual(leaks.map(i=>i.element).sort(),['#date-leak','#host-leak','#ordinal-leak','#uncommon-leak']);
  await page.locator('#leak-controls').evaluate(node=>node.remove());
  report=await page.evaluate(()=>window.sourceReport());assert.deepEqual(report.issues.filter(i=>i.kind==='source-outside-sources'),[]);
- await page.locator('#meeting').getByRole('button',{name:/^Sources/}).click();await page.locator('#meeting [data-agenda-version="revision:old"]').waitFor({state:'visible'});
+ assert.equal(await page.locator('#meeting').getByText('Second-hand listing',{exact:true}).isVisible(),false);
+ await page.locator('#meeting').getByRole('button',{name:/^Sources/}).click();
+ assert.equal(await page.locator('#meeting [data-card-sources]').getByText('Second-hand listing',{exact:true}).isVisible(),true);await page.locator('#meeting [data-agenda-version="revision:old"]').waitFor({state:'visible'});
  assert.equal(await page.locator('#meeting [data-agenda-version="revision:old"] a').count(),0,'old captured content at same URL never links current bytes');
  assert.ok((await page.locator('#meeting [data-agenda-version="revision:old"]').textContent()).includes('2026-10-01'));
  await page.locator('#ballot').getByRole('button',{name:/^Sources/}).click();await page.locator('#ballot [data-card-sources] a[href="https://campaign.example.org/housing"]').waitFor({state:'visible'});

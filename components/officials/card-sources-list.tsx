@@ -22,6 +22,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
       {sources.map((entry, i) => (
         <div key={`${entry.what}-${i}`} className="account-modal-person" {...entry.dataAttrs}>
           <p className="t-body text-paper">{entry.what}</p>
+          {entry.provenance.secondHand && <p className="t-caption text-muted">Second-hand listing</p>}
 
           <PopupRow label="Published by">
             {entry.provenance.sourceOrg || <NoValue />}

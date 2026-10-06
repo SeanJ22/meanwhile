@@ -211,9 +211,10 @@ export function AgendaDocuments(props: {
   publication?: AgendaPublicationReading | null;
 }) {
   const { documents, meetingId, publication } = props;
+  const indexPages = publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX";
   const sourceRows = documents.map((document, index) => ({
-    what: `${index === 0 ? "Current" : "Earlier"} ${publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX" ? "listing page" : "agenda document"}${documents.length > 1 ? ` · ${documents.length} ${publication?.revised !== false ? "versions" : "documents"} on file` : ""}${document.extractionNote ? ` · ${document.extractionNote}` : ""}`,
-    dataAttrs: { "data-agenda-version": document.id ?? document.contentHash, ...(documents.length > 1 ? { "data-agenda-versions": documents.length } : {}), ...(publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX" ? { "data-agenda-listing-page": document.id ?? document.documentUrl } : {}) },
+    what: `${indexPages ? index === 0 ? "Current listing page" : "another listing page" : index === 0 ? "Current agenda document" : "earlier version read"}${index === 0 && documents.length > 1 && !indexPages ? ` · ${documents.length} ${publication?.revised !== false ? "versions on file — a revised agenda is itself news" : "documents on file"}` : ""}${document.extractionNote ? ` · ${document.extractionNote}` : ""}`,
+    dataAttrs: indexPages ? { "data-agenda-listing-page": document.id ?? document.documentUrl } : { "data-agenda-version": document.id ?? document.contentHash, ...(index === 0 && documents.length > 1 ? { "data-agenda-versions": documents.length } : {}) },
     provenance: { sourceUrl: index > 0 && documents.slice(0,index).some(prior => prior.documentUrl === document.documentUrl) ? "" : document.documentUrl, sourceOrg: document.sourceOrg, collectedAt: document.retrievedAt, verifiedAt: null },
   }));
   return <><CardSourcesContribution id={`agenda-documents:${meetingId}`} sources={sourceRows} /><AgendaDocumentContents {...props} /></>;

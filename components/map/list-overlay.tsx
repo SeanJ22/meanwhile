@@ -424,7 +424,7 @@ export function ListOverlay({
                 would be a claim about rows that do not carry it — so those
                 keep their per-row badges and this renders nothing.
               */}
-              {!collapsed && <CardSourcesContribution id={`meeting-list:${group.label}`} sources={group.items.flatMap(meeting => meetingCardSources(meeting, []))} />}
+              {!collapsed && <CardSourcesContribution id={`meeting-list:${group.key}`} sources={group.items.flatMap(meeting => meetingCardSources(meeting, []))} />}
 
               {!collapsed && groupBadge !== null && (
                 <p className="al-group-jurisdiction">
@@ -449,7 +449,7 @@ export function ListOverlay({
                       : null;
 
                   return (
-                    <div key={meeting.id} className="al-row" data-meeting-id={meeting.id} style={tierVars(tierForMeeting(meeting))}>
+                    <div key={meeting.id} className="al-row" style={tierVars(tierForMeeting(meeting))}>
                       <MeetingRow meeting={meeting} compact sourcesInParent
                         title={meetingRowTitle(meeting, { jurisdictionShown: ui.listGroupBy === "jurisdiction" })}
                         onOpen={() => { onPickMeeting(meeting); dispatch({ type: "list/open", open: false }); }}

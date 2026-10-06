@@ -74,7 +74,7 @@ export function MeetingPopup({ meeting, representation = [], body = null, onExpa
   const minutes = concluded ? minutesSummaryForMeeting(meeting.id) : null;
   const officePhone = concluded ? body?.readerRoster?.officePhone ?? null : null;
   const sources = minutes ? [{ what: "Meeting minutes; plain-language paraphrase is ours", provenance: { sourceUrl: minutes.minutesUrl, sourceOrg: minutes.sourceOrg, collectedAt: minutes.readAt, verifiedAt: null } }] : [];
-  if (officePhone) sources.push({ what: "The body's office phone", provenance: { sourceUrl: officePhone.sourceUrl, sourceOrg: officePhone.sourceOrg, collectedAt: officePhone.collectedAt, verifiedAt: null } });
+  if (officePhone) sources.push({ what: "The body's office phone", provenance: { sourceUrl: officePhone.sourceUrl, sourceOrg: officePhone.sourceOrg, collectedAt: "", verifiedAt: null } });
   return <MeetingCard meeting={meeting} representation={representation} sources={sources} onClose={onClose} onExpand={onExpand}
     jurisdiction={<JurisdictionPill badge={badgeOf(meeting)} bodyClass={bodyClassOf(meeting)} zip={location?.zip ?? null} />}>
     <MeetingListingNotice groups={listingCount.groups} />

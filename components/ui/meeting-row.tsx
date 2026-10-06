@@ -41,7 +41,7 @@ export function MeetingRow(props: RowProps) {
       {children}
     </div>;
   }
-  const { meeting, title = meetingEntryTitle(meeting, { bodyShown: props.bodyShown }), jurisdiction, nearby, distance, onOpen } = props;
+  const { meeting, title = meetingEntryTitle(meeting, { bodyShown: props.bodyShown ?? false }), jurisdiction, nearby, distance, onOpen } = props;
   const access = onlineAccessFor(meeting);
   const gap = venueGapOf(meeting);
   const where = meeting.location ? "physical" : access ? "online" : gap ? statedVenueText(gap) !== null ? "stated" : "not-stated" : "unrecorded";
@@ -64,7 +64,7 @@ export function MeetingRow(props: RowProps) {
     <div className="mt-2 t-detail text-muted" data-meeting-where={where}>
       {meeting.location ? <>{locationLine(meeting.location.name, meeting.location.address)}{directions && <> · <CheckedLink href={directions.url} target="_blank" rel="noreferrer" className="text-link underline">Directions</CheckedLink></>}</>
         : access ? <><MeetingStatusPill status="online" /> {access.label}{access.joinUrl ? <> · <CheckedLink href={access.joinUrl} target="_blank" rel="noreferrer" className="text-link underline">Join online</CheckedLink></> : <> · <WorkingOnIt inline subject={body} /></>}</>
-          : gap && statedVenueText(gap) !== null ? venueGapLine(gap) : <WorkingOnIt inline subject={body} />}
+          : gap && statedVenueText(gap) !== null ? venueGapLine(gap) : <WorkingOnIt inline subject={body} state={gap?.kind === "NOT_STATED_BY_PUBLISHER" ? { kind: "not-published", item: "Meeting place" } : undefined} />}
     </div>
     <div className="mt-2 flex flex-wrap items-baseline gap-2 t-detail">
       {meeting.agendaUrl ? <CheckedLink href={meeting.agendaUrl} target="_blank" rel="noreferrer" className="text-link underline">Read the agenda</CheckedLink>

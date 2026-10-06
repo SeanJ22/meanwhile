@@ -3,12 +3,12 @@ worker: codex-frontend
 provider: Codex
 run_id: codex-frontend-007dee1f774646f8bccce2d5bbb65e09
 lock: codex-frontend-007dee1f774646f8bccce2d5bbb65e09
-heartbeat: 2026-10-06T00:12:13Z
-on_river: none
+heartbeat: 2026-10-06T00:22:33Z
+on_river: FE-05 FE-06 FE-07 FE-10 FE-39 FE-43 FE-44 at release3 / river 6af6f8a504a7224131ad567f62f7b6f63cb52f08
 ready: FE-05 FE-06 FE-07 FE-10 FE-39 FE-43 FE-44 at a5e7197a1855aae9d7aeafc537f417e29bb09fe6; FE-08 FE-09 FE-11 FE-13 FE-15 FE-29 FE-30 FE-31 FE-34 FE-38 FE-41 FE-42 FE-45 at de644b38c2bf3e4c8f33fe97c220f6c5976a83b5; FE-28 FE-32 at de644b38c2bf3e4c8f33fe97c220f6c5976a83b5 READY (hook pending: Bank sweep publication; Admin registry imports)
 checks: Exact READY de644b38c2bf3e4c8f33fe97c220f6c5976a83b5:95/95 focused tests (19 files, includes every FULL failure module/test), tsc,390/1280 dark/light real-client synthetic browser pass. Final build at application-identical 5a4a0a310:403/430 app trace,981/1050 framework,1977871 raw/563357 gzip below unchanged3100000/940000. Whole lint0 errors/69 baseline warnings; later vote edits0 errors/0 warnings. FULL04db1664d:9354 pass,6 fail,11 skip; all6 repaired/rechecked, no full-green claim. First exact READY a5e7197a1855aae9d7aeafc537f417e29bb09fe6 retains batch-02 evidence. Exact logs and setup correction in batch-04/checks.json.
 working_on: Catch up with tested river 6af6f8a; CP-16 integrated so FE-12 and FE-14 ready, then FE-22. Preserve earlier READY boundaries.
-waiting_on: FE-19 live screenshot pairs (River accessible capture); FE-12 and FE-14 slide CP-16 integrated (still only untested river-next); FE-35 people CA-07; FE-36 ballot CA-37; FE-33 people CA-14; FE-22 own FE-12/14. FE-28 Bank sweep publication and FE-32 Admin registry imports hook pending.
+waiting_on: FE-19 live screenshot pairs (River accessible capture); FE-35 people CA-07; FE-36 ballot CA-37; FE-33 people CA-14; FE-22 own FE-12/14. FE-28 Bank sweep publication and FE-32 Admin registry imports hook pending.
 returned: FE-39 repair released in release3; River browser checked live pass (releases/3-live.md).
 needs_hook: FE-32 Admin: import lib/design/copy-settings.ts in lib/control-plane/admin-view/v6-settings-read.ts and gateway/settings publication startup before registry reads; expose validated reader-facing text keys copy.working, copy.notFound, copy.notPublished, copy.askMap, copy.askSidebar, copy.askWgh, copy.askAccessible through existing edit/publish/log/undo. FE-28 Bank: after successful DB-51 recordSweep call lib/civic-data/reader-link-health-publication.ts publishReaderLinkHealth(results,sweptAt) using the same successful sweep timestamp; retry publication failures. API /api/reader/link-health and CheckedLink use existing Reader edge store; actual DEAD only, recovery OK, temporary/unchecked retains last finding.
 needs_Sean: none

@@ -9,6 +9,7 @@ export const WORKER_READER_CLASSES = {
   "everyday-routing": "SERVICE_CONTACT",
   "ballot-navigation": "VOTER_ACCESS_ROUTE",
   "official-filings": "CANDIDATE_FILING_DOCUMENT",
+  stances: "STANCE",
 } as const;
 export type WorkerReaderContract = keyof typeof WORKER_READER_CLASSES;
 export function workerReaderClassMatches(id: WorkerReaderContract, recordClass: string): boolean {

@@ -1,5 +1,5 @@
 import { searchTerms } from "../corpus/positions.ts";
-import { readerPositionsFor } from "../corpus/reader-positions.ts";
+import { readerPositionsFor, readerPositionsForKeys } from "../corpus/reader-positions.ts";
 import { ReaderPersonIdentityError } from "../identity/reader-person.ts";
 import { unifiedCorpus } from "../corpus/unified.ts";
 import type { StatementCorpus } from "../corpus/types.ts";
@@ -11,6 +11,8 @@ export function statementEvidenceFor(
   question: string,
   _canonicalKeys: readonly string[],
   readCorpus: () => StatementCorpus = unifiedCorpus,
+  /** Identity keys the caller already proved (the published topic answers, CA-14). Ask itself re-derives them. */
+  provenKeys?: readonly string[],
 ): { records: EvidenceRecord[]; gaps: EvidenceGap[]; denominators: Record<string, number> } {
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];
@@ -30,7 +32,7 @@ export function statementEvidenceFor(
     return { records, gaps, denominators };
   }
   let answer;
-  try { answer = readerPositionsFor(subject.id, topic, corpus); }
+  try { answer = provenKeys ? readerPositionsForKeys(subject.id, topic, corpus, provenKeys) : readerPositionsFor(subject.id, topic, corpus); }
   catch (error) {
     denominators[error instanceof ReaderPersonIdentityError ? "statementIdentityUnresolved" : "statementLoaderFailures"] = 1;
     gaps.push({ whose: "OURS", statement: error instanceof ReaderPersonIdentityError ? error.message : `The published statements for ${subject.name} could not be read for this answer.` });

@@ -193,7 +193,15 @@ test("four direct learning measures replace the old weekly Scout panel when conn
   const factory = { secondCoverage: { pairs: 1, firstMs: 3600000, secondMs: 900000, ratio: 0.25 },
     headStart: { solved: 2, measured: 4, share: 0.5 }, detectiveReuse: 3,
     factsByWeek: [{ week: "2026-10-05T00:00:00Z", facts: 24, observedHours: 12, perHour: 2 }] };
-  const view = v6LearningView(buildLearningTrends([], "2026-10-06T00:00:00Z"), null, null, factory);
+  const view = v6LearningView(buildLearningTrends([], "2026-10-06T00:00:00Z"), null, undefined, factory);
   assert.equal(view.trends.length, 0);
   assert.deepEqual(view.readings.map(r => r.big), ["3", "50%", "25%", "2.00"]);
+});
+
+test("the replacement learning panel retains failed Bank writes and unknown counts", () => {
+  const factory = { secondCoverage: { pairs: 0, firstMs: 0, secondMs: 0, ratio: null }, headStart: { solved: 0, measured: 0, share: null }, detectiveReuse: null, factsByWeek: [] };
+  for (const count of [null, 0, 3]) {
+    const view = v6LearningView(buildLearningTrends([], "2026-10-06T00:00:00Z"), null, count, factory);
+    assert.equal(view.readings.find(r => r.bigNote === "Bank write errors")!.big, count === null ? "—" : String(count));
+  }
 });

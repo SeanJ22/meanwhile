@@ -92,6 +92,9 @@ export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, 
       ...factory.factsByWeek.map(week => ({ question: "How many facts reach readers per hour?", big: week.perHour.toFixed(2),
         bigNote: `week of ${week.week.slice(0,10)}`, body: `${n(week.facts)} new or updated reader records over ${week.observedHours.toFixed(1)} measured hours.`, method: [] })),
     ];
+    if (bankWriteErrors !== undefined) readings.push({ question: "Are lessons reaching the Bank?", big: bankWriteErrors === null ? "—" : n(bankWriteErrors),
+      bigNote: "Bank write errors", body: "Failed writes after their retry attempts.",
+      method: [{ k: "Counted", v: "Bank writes that could not be saved after retries. A count unavailable from the store shows —." }] });
     return { trends: [], readings, notMeasured: [] };
   }
   const s = trends.series;

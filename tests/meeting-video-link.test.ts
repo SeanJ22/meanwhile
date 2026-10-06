@@ -51,3 +51,11 @@ test("BX-10: the map's meeting row shows the recording link only on a concluded 
   assert.match(source, /meeting\.status === "CONCLUDED" && meeting\.videoUrl[\s\S]{0,200}href=\{meeting\.videoUrl\}/);
   assert.match(source, /Watch the recording/);
 });
+
+test("BX-10: Pima's shape (public, clip id in EventMedia, no path) links the sitting's own Legistar page", () => {
+  const page = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243";
+  const meeting = normalizeOne({ EventVideoStatus: "Public", EventVideoPath: null, EventMedia: "2027", EventInSiteURL: page });
+  assert.equal(meeting.videoUrl, page);
+  assert.equal("videoUrl" in normalizeOne({ EventVideoStatus: "Not Available", EventVideoPath: null, EventMedia: "2027", EventInSiteURL: page }), false);
+  assert.equal("videoUrl" in normalizeOne({ EventVideoStatus: "Public", EventVideoPath: null, EventMedia: null, EventInSiteURL: page }), false);
+});

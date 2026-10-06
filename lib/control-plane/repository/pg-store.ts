@@ -988,6 +988,38 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
+    async readKeys(keys) {
+      /* Keyset-paged on `(log_key, position)` (the log's unique order index), so a response stays under the 64 MiB cap
+         however many records the keys hold, and the keys cost a few statements, not one each. */
+      const unique = [...new Set(keys)];
+      const out = new Map<string, T[]>();
+      if (unique.length === 0) return out;
+      let afterKey = "";
+      let afterPosition = -1;
+      for (;;) {
+        const rows = (await run(
+          "readKeys",
+          "PAGE",
+          `SELECT log_key, position, record FROM ${table}
+           WHERE log_key = ANY($1::text[]) AND (log_key, position) > ($2, $3)
+           ORDER BY log_key ASC, position ASC
+           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+          [unique, afterKey, afterPosition],
+        )) as Record<string, unknown>[];
+        for (const r of rows) {
+          const key = String(r.log_key);
+          const held = out.get(key);
+          const record = parseValue<T>(r.record, `${table} ${key}`);
+          if (held) held.push(record);
+          else out.set(key, [record]);
+        }
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        afterKey = String(rows[rows.length - 1].log_key);
+        afterPosition = Number(rows[rows.length - 1].position);
+      }
+      return out;
+    },
+
     async keys() {
       const rows = (await run(
         "keys",

@@ -30,6 +30,11 @@ import { publishHeldElectionOffices } from "./worker-held-elections.ts";
 import { publicationCaptureReaders } from "./worker-publication-context.ts";
 import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
 import { workerBallotContestsPackage, publishWorkerBallotContestsResults } from "./worker-ballot-contests.ts";
+import { stanceRowFrom } from "./stance-rows.ts";
+import { DEFAULT_STANCE_TOPICS } from "../stances/topics.ts";
+import { readStanceTopics } from "../stances/read.ts";
+import { campaignSiteFor } from "../officials/campaign-sites.ts";
+import { currentDerivedCampaignSiteRecords } from "./derived-campaign-sites.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 import { publicRecordIssue, recordNewPublicKinds } from "./public-records.ts";
 import type { PublicRecord } from "./types.ts";
@@ -39,6 +44,12 @@ import { GOVERNMENT_FINANCE_FIELDS, governmentFinanceKind, governmentFinanceFact
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+const hostOf = (url: string) => { try { return new URL(url).hostname.toLowerCase().replace(/^www\./, ""); } catch { return null; } };
+/** The hosts of the verified sites held for a person: an officeholder's campaign site, or a candidacy's verified campaign link. */
+function ownSiteHostsFromHeld(personId: string): readonly string[] {
+  const urls = [campaignSiteFor(personId)?.url, ...currentDerivedCampaignSiteRecords().filter(r => r.id === personId || r.candidacyId === personId).map(r => r.campaign.url)];
+  return urls.flatMap(url => url ? [hostOf(url)].filter((h): h is string => h !== null) : []);
+}
 const COMMENT_FIELDS = ["commentPeriod", "commentPeriodDetail", "signup", "writtenComment", "attend", "timeLimit"] as const;
 
 /** Current independently checked fields advance; omitted details keep their
@@ -77,14 +88,20 @@ export function inheritVerifiedCommentDetails(input: ManualProjectionPackage, pr
     sources: sources.filter((source, index) => sources.findIndex(other => canonicalJson(other) === canonicalJson(source)) === index) } };
 }
 
+/** What the stances door needs beyond the page: the ten topic ids in force and the hosts of a person's own sites. */
+export interface StancesInput {
+  readonly stanceTopicIds?: readonly string[];
+  readonly ownSiteHosts?: (personId: string) => readonly string[];
+}
+
 /** Field-specific conversion to existing readers; no arbitrary model payloads.
  * Null fields mean unacquired, never an assertion that a service is absent. */
-export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }): ManualProjectionPackage {
+export function workerReaderPackage(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }): ManualProjectionPackage {
   return workerReaderPackageWithPulls(input).package;
 }
 
 /** The package plus the published member ids an auditor's pull takes out of the next version (DP-15). */
-export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
+export function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
   { readonly package: ManualProjectionPackage; readonly pulledMemberIds: ReadonlySet<string> } {
   if (input.plan.publication?.contractId === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };
   const target = input.plan.publication;
@@ -95,9 +112,14 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
   requirePublication(workerReaderClassMatches(contractId, checked.contract.recordClass), "READER_CLASS_MISMATCH");
   const body = input.registry?.payload.registry.bodies.find(body => body.id === target.bodyId);
   const place = contractId === "public-records" ? input.registry?.payload.registry.divisions.find(row => row.ocdId === target.bodyId) : null;
-  requirePublication(body?.name || place?.label, "CANONICAL_BODY_MISSING");
+  // A stance belongs to a person, not to the body whose page it sits on.
+  if (contractId !== "stances") requirePublication(body?.name || place?.label, "CANONICAL_BODY_MISSING");
   const rowFor = (record: (typeof checked.extraction.records)[number]) => {
     const f = record.fields;
+    if (contractId === "stances") {
+      return stanceRowFrom({ fields: f, pageUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, now: input.now,
+        topicIds: input.stanceTopicIds ?? DEFAULT_STANCE_TOPICS.map(topic => topic.id), ownSiteHosts: input.ownSiteHosts ?? ownSiteHostsFromHeld });
+    }
     requirePublication(words(text(f.bodyName)) === words(body?.name ?? place!.label), "CANONICAL_BODY_MISMATCH");
     if (contractId === "public-records") {
       const allowed = new Set(["bodyName", "title", "kindLabel", "sourceSentence"]);
@@ -154,19 +176,19 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
       return row;
     }
     if (contractId === "official-filings") {
-      const publisherDivisionId = body.ocdId;
+      const publisherDivisionId = body!.ocdId;
       requirePublication(publisherDivisionId && input.registry?.payload.registry.divisions.some(row => row.ocdId === publisherDivisionId), "FILING_TERRITORY_UNRESOLVED");
       const territories = input.registry?.payload.registry.divisions.filter(row => row.state.toUpperCase() === checked.contract.jurisdiction.state.toUpperCase() &&
         words(row.label) === words(text(f.jurisdictionName))) ?? [];
       requirePublication(territories.length === 1, "FILING_EXACT_JURISDICTION_UNRESOLVED");
       const facts = Object.fromEntries(Object.entries(f).filter(([key]) => !["bodyName", "documentUrl", "jurisdictionName"].includes(key)));
-      const id = `official-filing:${createHash("sha256").update(canonicalJson([body.id, territories[0].ocdId, checked.contract.recordClass, f.documentUrl,
+      const id = `official-filing:${createHash("sha256").update(canonicalJson([body!.id, territories[0].ocdId, checked.contract.recordClass, f.documentUrl,
         f.candidateName ?? f.committeeName, f.office ?? f.filingPeriod])).digest("hex")}`;
       const moneyFields = ["amount", "receipts", "expenditures", "cashOnHand"];
       const hasMoney = moneyFields.some(field => typeof facts[field] === "number") && typeof facts.filingPeriod === "string";
       const kind = checked.contract.recordClass === "CAMPAIGN_FINANCE_FILING" && !hasMoney ? "CAMPAIGN_FINANCE_DOCUMENT" : checked.contract.recordClass;
       if (kind === "CAMPAIGN_FINANCE_DOCUMENT") for (const field of moneyFields) delete facts[field];
-      const row = { id, kind, bodyId: body.id, ocdId: territories[0].ocdId, bodyName: body.name, jurisdictionName: territories[0].label,
+      const row = { id, kind, bodyId: body!.id, ocdId: territories[0].ocdId, bodyName: body!.name, jurisdictionName: territories[0].label,
         sourceUrl: checked.primary.evidence.canonicalUrl, documentUrl: f.documentUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now, facts };
       requirePublication(officialFilingIssue(row) === null, `FILING_FIELDS_UNVERIFIED:${officialFilingIssue(row)}`);
       return row;
@@ -180,7 +202,7 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
       requirePublication(!f.requestUrl || /^https:\/\//.test(text(f.requestUrl)), "SERVICE_CHANNEL_INVALID");
       return { id: `everyday-contact:${f.topicId}:${f.serviceZip}:${checked.primary.evidence.canonicalUrl}`, kind: "CONTACT",
         topicId: f.topicId, zip: f.serviceZip, serviceAreaEvidence: f.serviceAreaEvidence,
-        contact: { topicId: f.topicId, zips: [f.serviceZip], body: body.name, service: f.service,
+        contact: { topicId: f.topicId, zips: [f.serviceZip], body: body!.name, service: f.service,
           phone: f.phone ?? null, email: f.email ?? null, requestUrl: f.requestUrl ?? null, note: f.note ?? null,
           sourceUrl: checked.primary.evidence.canonicalUrl, sourceOrg: checked.primary.evidence.sourceId,
           collectedAt: checked.primary.observedAt, verification: "PAGE_FETCHED" } };
@@ -257,7 +279,8 @@ export async function publishWorkerReaderResults(input: {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
       const registry = await readRegistryRuntimePrior(input.store, input.now);
-      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results });
+      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results,
+        ...(input.contractId === "stances" ? { stanceTopicIds: (await readStanceTopics()).map(topic => topic.id) } : {}) });
       const checked = built.package;
       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now,
         manualPayloadScope(input.contractId, requiredManualProductionContract(input.contractId).scope, checked.payload));

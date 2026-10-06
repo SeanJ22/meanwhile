@@ -8,6 +8,8 @@ import { useStanceTopics } from "@/hooks/use-stance-topics";
 import type { PositionAnswer } from "@/lib/corpus/positions";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { sourceKindLabel } from "@/lib/corpus/source-kinds";
+import { AskAnswerRecords } from "@/components/ask/answer-records";
+import type { StoredTopicAnswer } from "@/lib/corpus/topic-answers";
 
 /**
  * D35's THREE ANSWERS, ON SCREEN.
@@ -38,12 +40,20 @@ export function PositionsSection({
   subjectId,
   subjectName,
   contentOnly = false,
+  topicAnswers,
 }: {
   subjectId: string;
   /** Used only in the honest-gap sentences, so they read as English. */
   subjectName: string;
   /** The ballot already owns the Positions disclosure. */
   contentOnly?: boolean;
+  /**
+   * CA-14: the answers published ahead of time for this person, keyed by chip
+   * label. A chip with a stored answer renders it at once with Ask's own
+   * components and makes no request. A chip without one, and anything typed,
+   * still goes through the positions route as before.
+   */
+  topicAnswers?: Readonly<Record<string, StoredTopicAnswer>>;
 }) {
   const stanceTopics = useStanceTopics();
   const [topic, setTopic] = useState("");
@@ -56,6 +66,7 @@ export function PositionsSection({
   >(null);
   const [asking, setAsking] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [stored, setStored] = useState<StoredTopicAnswer | null>(null);
   const inputId = useId();
   const request = useRef(0);
 
@@ -69,6 +80,15 @@ export function PositionsSection({
   const look = async (value: string) => {
     const query = value.trim();
     setTopic(value);
+    const ready = topicAnswers?.[query] ?? null;
+    request.current += 1;
+    setStored(ready);
+    if (ready) {
+      setAnswer(null);
+      setFailed(false);
+      setAsking(false);
+      return;
+    }
     if (!query) {
       setAnswer(null);
       setFailed(false);
@@ -137,6 +157,19 @@ export function PositionsSection({
             </button>
           ))}
         </div>
+
+        {stored && (
+          <div className="mt-2.5" data-positions-stored={stored.topicId}>
+            {stored.prose || stored.records.length > 0 ? (
+              <>
+                {stored.prose && <p className="t-body leading-relaxed text-paper" data-positions-stored-prose>{stored.prose}</p>}
+                <AskAnswerRecords records={stored.records} initiallyOpen={!stored.prose} />
+              </>
+            ) : (
+              <WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} attrs={{ "data-positions-answer": "STORED_NO_PASSAGE" }} />
+            )}
+          </div>
+        )}
 
         {asking && (
           <p className="mt-2.5 t-detail text-muted" aria-live="polite">

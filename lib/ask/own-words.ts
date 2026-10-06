@@ -21,6 +21,29 @@ const MAX_PASSAGES = 3;
 /** The own-page passage records `statements.ts` mints: "...a held campaign page linked to NAME for TOPIC found this passage: "QUOTE". ..." */
 const OWN_PAGE = /^Searching a held (?:campaign|official) page linked to .+? for .+? found this passage: "([\s\S]+?)"\. (?:Latest captured version\.|Earlier captured version, not the latest captured page\.|Source version status unknown\.)/;
 
+/** Words that mean a run of scraped page text is a list, menu or headline block and not a sentence a person said. */
+const PAGE_FURNITURE = /\b(?:read more|press releases?|skip to|menu|subscribe|sign up|share this|all rights reserved|privacy policy|view all|learn more|click here|back to top)\b/i;
+const MONTH_DATE = /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.? \d{1,2},? \d{4}\b/i;
+const TITLE_ABBREVIATION_END = /\b(?:rep|sen|dr|mr|mrs|ms|gov|hon|st|jr|sr|no)\.$/i;
+
+/**
+ * True only for a run that reads as something a person said: a real sentence, with
+ * no page furniture, no dateline pasted into the middle and not a headline.
+ * (CA-12, live: a press-list headline plus "Read More Press Release Rep." was quoted as her words.)
+ */
+export function readsAsSpokenSentence(quote: string): boolean {
+  const text = quote.trim();
+  const words = text.split(/\s+/).filter(Boolean);
+  if (words.length < 6 || words.length > 120) return false;
+  if (!/^[“"'A-Z0-9]/.test(text) || !/[.!?][”"')]*$/.test(text)) return false;
+  if (TITLE_ABBREVIATION_END.test(text.replace(/[”"')]+$/, ""))) return false;
+  if (PAGE_FURNITURE.test(text) || MONTH_DATE.test(text)) return false;
+  // A headline capitalises nearly every word; a sentence does not.
+  const capitalised = words.filter((w) => /^[“"'(]?[A-Z]/.test(w)).length;
+  if (capitalised / words.length > 0.6) return false;
+  return true;
+}
+
 export interface OwnWordsPassage {
   quote: string;
   url: string;
@@ -35,6 +58,7 @@ export function ownWordsPassages(records: readonly EvidenceRecord[], subjectId: 
     if (record.kind !== "SOURCE_PASSAGE") continue;
     const quote = record.subjectId === subjectId ? OWN_PAGE.exec(record.text)?.[1]?.trim() : undefined;
     if (!quote || !record.sourceUrl || !record.retrievedAt || !formatDateLong(record.retrievedAt.slice(0, 10))) { unclean += 1; continue; }
+    if (!readsAsSpokenSentence(quote)) { unclean += 1; continue; }
     if (passages.some((p) => p.quote === quote && p.url === record.sourceUrl)) continue;
     passages.push({ quote, url: record.sourceUrl, retrievedAt: record.retrievedAt });
   }
@@ -49,8 +73,9 @@ export function composeOwnWordsAnswer(input: {
   const { subject } = input;
   if (!subject || subject.kind !== "PERSON" || !asksForPersonalStance(input.question)) return null;
   const { passages, unclean } = ownWordsPassages(input.records, subject.id);
-  // Every passage in the pack must be a clean own-page quotation; a mixed pack is for the existing path.
-  if (passages.length === 0 || unclean > 0) return null;
+  // Only clean own-page sentences are quoted; other records in the pack are never claimed as the person's words.
+  void unclean;
+  if (passages.length === 0) return null;
   const shown = passages.slice(0, MAX_PASSAGES);
   const lines = shown.map((p) =>
     `On ${formatDateLong(p.retrievedAt.slice(0, 10))}, we read this on a page of theirs: “${p.quote}”`);

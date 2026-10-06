@@ -3,8 +3,7 @@ import { join } from "node:path";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
 import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../control-plane/scheduler/vault.ts";
-import { researchVaultResolver } from "../control-plane/workers/vault-object.ts";
-import { workerVaultResolver } from "../control-plane/workers/vault.ts";
+import { publicationVaultReaders } from "./publication-vault.ts";
 import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -20,8 +19,7 @@ export async function workerPublicationContext(now: string, existingRepos?: Cont
   const repos = existingRepos ?? await createPgRepositories(connection!, now, { skipBootstrap: true });
   const sourcePolicy = publicationSourcePolicy((await repos.adminConfig.read("current"))?.value ?? null);
   const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
-  const readObject = researchVaultResolver(repos, vault, "freshness");
-  const readEvidence = workerVaultResolver(repos, vault, "freshness", { snapshot: true });
+  const { readObject, readEvidence } = publicationVaultReaders(repos, vault);
   return { repos, readSavedFinanceResponse: async (id: string): Promise<CapturedFinanceResponse> => {
     const { artifact, bytes } = await readObject(id);
     const partial = artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false;

@@ -151,6 +151,7 @@ import {
   routineSupervisorOuterEvidence,
 } from "../lib/civic-data/runner-receipt.ts";
 import { childFatalLine } from "../lib/ops/fatal-line.ts";
+import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import {
   appendIntakeRuntimeObservationDigest,
@@ -1132,6 +1133,7 @@ async function requestQueuedReleaseDrain(): Promise<void> {
   if (!researchCycleChild?.connected) return;
   // Reconciliation still applies only after both the research child and source lanes settle.
   runtimeAdmissionsHeld = true;
+  drainHunterLane();
   researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
     if (error) console.error("  runtime release drain message could not be delivered; existing cycle continues");
   });
@@ -1237,9 +1239,47 @@ let lastPauseBeatMs = 0;
 const actedOn = new Set<string>();
 const honorFailurePrinted = new Set<string>();
 
+/*
+ * CH-24 part 2 (Proposal A): with WTP_CONTINUOUS_HUNTERS=1 the standing hunter lane is the one process that admits paid
+ * model work; the research round plans and queues it (lib/control-plane/workers/hunter-lane.ts). Off by default until it
+ * is checked live; the round's own lease waves run as before while it is off. The round's reading and queue live under
+ * this parent's root, so children started from a staged release checkout (DB-53) share them.
+ */
+const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
+if (!process.env.WTP_HUNTER_LANE_ARMING) process.env.WTP_HUNTER_LANE_ARMING = hunterLaneArmingPath(ROOT);
+let hunterLaneChild: ChildProcess | null = null;
+async function runHunterLane(): Promise<void> {
+  if (!CONTINUOUS_HUNTERS || canary || runtimeAdmissionsHeld) return;
+  const [run] = await runRuntimeChildren([{
+    id: "hunter-lane",
+    executable: process.execPath,
+    args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/hunter-lane.mts", `--provider=${provider}`],
+    env: standingChildEnvironment("RESEARCH_CYCLE"),
+  }], {
+    cwd: CODE_ROOT,
+    env: process.env,
+    maxBufferBytes: 16 * 1024 * 1024,
+    noProgressMs: RUNTIME_NO_PROGRESS_MS,
+    onStdout: (_id, output) => process.stdout.write(output),
+    onStderr: (_id, output) => process.stderr.write(output),
+    onStarted: (_id, child) => { hunterLaneChild = child; },
+  });
+  hunterLaneChild = null;
+  if (!run) throw new Error("HUNTER_LANE_CHILD_RESULT_MISSING");
+  if (run.status !== 0) throw new Error(`HUNTER_LANE_EXITED: ${run.status ?? `signal ${run.signal ?? "none"}`}; queued work remains owed and the lane starts again`);
+}
+/** A release asks the hunter lane to stop handing out tasks; each worker finishes the one it holds. */
+function drainHunterLane(): void {
+  if (!hunterLaneChild?.connected) return;
+  hunterLaneChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
+    if (error) console.error("  hunter lane drain message could not be delivered; the lane ends at the end of its life");
+  });
+}
+
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },
+  { id: "hunter-lane", everyMs: 60_000, run: runHunterLane },
 ], (outcome) => {
   if (outcome.state === "FAILED") {
     console.error(`  ${outcome.id}: standing operation failed — ${outcome.error}`);
@@ -1375,6 +1415,7 @@ function startStandingRuntimeClock(): void {
 let standingDrainFailed = false;
 async function holdStandingRuntimeAtQuiescence(): Promise<void> {
   runtimeAdmissionsHeld = true;
+  drainHunterLane();
   if (standingRuntimeTimer !== null) {
     clearInterval(standingRuntimeTimer);
     standingRuntimeTimer = null;

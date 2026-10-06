@@ -6,23 +6,7 @@ import type { Meeting } from "@/lib/sources/types";
 import { isOnlineOnly } from "@/lib/meetings/online";
 import type { BodyOfficeLocation } from "@/lib/meetings/venues";
 
-// Public office addresses use the existing free Census geocoder. Each address
-// is read once per reader session; a failed lookup never invents a coordinate.
-const points = new Map<string, Promise<{ lat: number; lng: number } | null>>();
-function pointFor(address: string) {
-  let pending = points.get(address);
-  if (!pending) {
-    pending = fetch("/api/geocode", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ address }) })
-      .then(async response => {
-        if (!response.ok) return null;
-        const value = await response.json() as { match?: boolean; lat?: number; lng?: number };
-        return value.match && Number.isFinite(value.lat) && Number.isFinite(value.lng)
-          ? { lat: value.lat!, lng: value.lng! } : null;
-      }).catch(() => null);
-    points.set(address, pending);
-  }
-  return pending;
-}
+import { officePointFor as pointFor } from "@/lib/map/office-geocode";
 
 export function useBodyOfficeLocations(bodies: readonly CoveredBody[], meetings: readonly Meeting[]): readonly BodyOfficeLocation[] {
   const requested = useMemo(() => {

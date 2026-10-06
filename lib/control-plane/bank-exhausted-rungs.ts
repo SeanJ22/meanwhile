@@ -7,7 +7,7 @@ export const EXHAUSTED_RUNGS = "EXHAUSTED_RUNGS";
 export function exhaustedRungEntries(result: ScoutResult, states: readonly string[] = []): FieldManualEntry[] {
   // Historic envelopes may have an empty refusal array and no rung list.
   const refused = Array.isArray(result.refusal) && result.refusal.length > 0;
-  if (!refused && result.outcome !== "NO_PROGRESS") return [];
+  if (!refused && !["NO_PROGRESS", "BLOCKED", "NEEDS_ADAPTER", "HUMAN_REQUIRED"].includes(result.outcome)) return [];
   const role = result.researchRole ?? "SCOUT";
   const nextRungs = result.nextRungs ?? [];
   const reasons = result.refusal?.map(issue => `${issue.code}: ${issue.detail}`) ?? [];

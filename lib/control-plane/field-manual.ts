@@ -264,7 +264,7 @@ function entryMatches(raw: FieldManualEntry, q: FieldManualQuery): boolean {
   const entry = normalizeEntry(raw);
   if (q.kinds && !q.kinds.includes(entry.kind)) return false;
   if (entry.kind === "JOB_COST") return false;
-  if (entry.kind === "EXHAUSTED_RUNGS" && (!q.subjectId || (entry.payload as { subjectId?: string } | null)?.subjectId !== q.subjectId)) return false;
+  if (["EXHAUSTED_RUNGS", "PAID_ENDING"].includes(entry.kind) && (!q.subjectId || (entry.payload as { subjectId?: string } | null)?.subjectId !== q.subjectId)) return false;
   if (q.role !== undefined && entry.role !== "SHARED" && entry.role !== q.role) return false;
   if (q.state !== undefined && entry.states.length > 0 && !entry.states.includes(q.state.toLowerCase())) return false;
   if (q.recordClass !== undefined && entry.recordClasses.length > 0 && !entry.recordClasses.includes(q.recordClass.toLowerCase())) return false;

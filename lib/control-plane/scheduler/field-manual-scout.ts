@@ -11,6 +11,7 @@
 
 import {
   fieldManualEntryId,
+  newFieldManualEntry,
   fieldManualPlaceRank,
   normalizeEntry,
   emptyFieldManual,
@@ -267,5 +268,20 @@ export async function writeFieldManualDiscoveries(repos: FieldManualRepos, entri
 
 /** One ending, accepted or refused: the caller never gates learning on candidates. */
 export async function writePaidEndingLearning(repos: FieldManualRepos, result: ScoutResult, now: string) {
-  return writeFieldManualDiscoveries(repos, scoutDiscoveryEntries(result, scoutStateHint(result.subjectId, result.obligationId)), now);
+  const states = scoutStateHint(result.subjectId, result.obligationId);
+  const entries = scoutDiscoveryEntries(result, states);
+  // Evidence-only/custom-host endings can have no route or known-platform cost
+  // entry. Preserve their walk as a scoped reference, not a fabricated failure.
+  if (!entries.some(entry => !["JOB_COST", "COST_PROFILE"].includes(entry.kind))) {
+    entries.push(newFieldManualEntry("paid-ending", result.attemptId, {
+      role: "SHARED", kind: "PAID_ENDING", title: "Saved research walk",
+      summary: `${result.researchRole ?? "SCOUT"} ${result.outcome}; ${(result.findings ?? []).length} findings. Reuse saved evidence and procedure before new research.`,
+      states, recordClasses: [result.recordClass], foundBy: result.researchRole ?? "SCOUT", observedAt: result.recordedAt, outcome: "REFERENCE",
+      payload: { subjectId: result.subjectId, attemptId: result.attemptId, recordClass: result.recordClass,
+        outcome: result.outcome, rungs: result.rungs ?? [], findings: result.findings ?? [],
+        artifactIds: result.artifactIds, nextRungs: result.nextRungs ?? [], unverified: result.unverified,
+        usd: result.usd, elapsedMs: result.elapsedMs },
+    }));
+  }
+  return writeFieldManualDiscoveries(repos, entries, now);
 }

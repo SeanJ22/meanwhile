@@ -208,3 +208,26 @@ test("the paid-ending entry point saves a refused empty result and the next role
   const other = await readFieldManual(repos, { role: "SCOUT", subjectId: "other", recordClass: "meetings" });
   assert(!other.projection.lines.some(line => line.includes("Exhausted on these rungs")));
 });
+
+for (const outcome of ["BLOCKED", "NEEDS_ADAPTER", "HUMAN_REQUIRED"] as const) test(`${outcome} paid endings preserve their tried rungs as reference lessons`, async () => {
+  const repos = createMemoryRepositories(); const ending = result({ outcome, candidates: [], nextRungs: ["use the recorded alternative"],
+    rungs: [{ index: 1, rung: "primary-site-navigation", tool: "fetch_public", target: "https://public.example.gov/calendar",
+      observed: "HTTP 403", ok: false, artifactIds: [], note: "Try the recorded public alternative", at: "2026-09-19T00:00:01Z" }] });
+  await writePaidEndingLearning(repos, ending, ending.recordedAt);
+  const read = await readFieldManual(repos, { subjectId: ending.subjectId });
+  const lesson = read.store.entries.find(e => e.kind === "EXHAUSTED_RUNGS")!;
+  assert.equal(lesson.outcome, "REFERENCE");
+  assert.equal((lesson.payload as { rungs: { whyNoProgress: string }[] }).rungs[0].whyNoProgress, "HTTP 403");
+});
+
+test("evidence-only paid endings on unknown platforms preserve the walk without claiming failure", async () => {
+  const repos = createMemoryRepositories(); const ending = result({ outcome: "EVIDENCE_FOUND", candidates: [],
+    findings: [{ summary: "Captured the published calendar", artifactIds: ["a1"], kind: "RECORD" }] });
+  const written = await writePaidEndingLearning(repos, ending, ending.recordedAt); assert.equal(written.written, 1);
+  const read = await readFieldManual(repos, { subjectId: ending.subjectId, recordClass: "meetings" });
+  assert.equal(read.projection.entryIds.length, 1);
+  const saved = read.store.entries.find(e=>e.kind === "PAID_ENDING")!;
+  assert.equal(saved.outcome, "REFERENCE");assert.deepEqual((saved.payload as { findings: unknown }).findings,ending.findings);
+  assert(!(await readFieldManual(repos, { subjectId: "another" })).projection.entryIds.includes(saved.id));
+  assert(!read.store.entries.some(e=>e.kind === "EXHAUSTED_RUNGS"));
+});

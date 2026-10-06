@@ -34,7 +34,7 @@ export function bankEntrySelection(query: FieldManualQuery): { text: string; par
   const param = (value: unknown) => { params.push(value); return `$${params.length}`; };
   const clauses = ["kind <> 'JOB_COST'"];
   if (query.kinds) clauses.push(`kind = ANY(${param(query.kinds)}::text[])`);
-  clauses.push(query.subjectId ? `(kind <> 'EXHAUSTED_RUNGS' OR value->'payload'->>'subjectId' = ${param(query.subjectId)})` : "kind <> 'EXHAUSTED_RUNGS'");
+  clauses.push(query.subjectId ? `(kind NOT IN ('EXHAUSTED_RUNGS','PAID_ENDING') OR value->'payload'->>'subjectId' = ${param(query.subjectId)})` : "kind NOT IN ('EXHAUSTED_RUNGS','PAID_ENDING')");
   if (query.role) clauses.push(`(role = 'SHARED' OR role = ${param(query.role)})`);
   for (const [column, value] of [["states", query.state], ["record_classes", query.recordClass], ["platforms", query.platform]] as const) {
     if (value !== undefined) clauses.push(`(cardinality(${column}) = 0 OR ${column} @> ARRAY[${param(value.toLowerCase())}]::text[])`);

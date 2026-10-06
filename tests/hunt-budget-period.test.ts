@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { createMemoryRepositories, memoryAggregateRepository } from "../lib/control-plane/repository/memory.ts";
 import { budgetRepositoryFrom } from "../lib/control-plane/repository/shared.ts";
 import type { BudgetLedger } from "../lib/control-plane/budget.ts";
-import { DurableSpendHolds, JobSpend, committedUsd, type BudgetLine } from "../lib/control-plane/expansion/spend-holds.ts";
+import { DurableSpendHolds, JobSpend, committedUsd, liveSpendHolds, type BudgetLine } from "../lib/control-plane/expansion/spend-holds.ts";
 import { withScopeSet } from "../lib/control-plane/expansion/scopes.ts";
 import { aggregateModelSpend } from "../lib/control-plane/fleet-safety.ts";
 import { ScopeBudgetGate } from "../lib/control-plane/expansion/membership.ts";
@@ -27,10 +27,14 @@ test("$50 is shared across concurrent work in one hunt and cannot reset after a 
   const admitted = await Promise.all(Array.from({ length: 12 }, (_,i) => new JobSpend(spend, `job-${i}`, `ob-${i}`, { sends: [], areas: [line] }).admit(10, "bounded request")));
   assert.equal(admitted.filter(a => a.admit).length, 5);
   now = "2026-09-28T08:00:00.000Z";
+  /* Two days and a restart later the five jobs' rounds are long over (2026-10-06: a hold leaves once no job of
+     its round can be running). The hunt's budget does not reset: its line reads the hunt's whole recorded spend
+     from the cost ledger since the hunt began, and the jobs' dead holds no longer count on top of it. */
   const restarted = new DurableSpendHolds({ budget: repos.budget, now: () => now, sleep: async () => undefined });
-  const refusal = await new JobSpend(restarted, "retry-next-day", "ob-1", { sends: [], areas: [line] }).admit(0.01, "retry or escalation");
+  const afterRestart: BudgetLine = { ...line, historicalUsd: 50, historyReadAt: now };
+  const refusal = await new JobSpend(restarted, "retry-next-day", "ob-1", { sends: [], areas: [afterRestart] }).admit(0.01, "retry or escalation");
   assert.equal(refusal.admit, false);
-  assert.equal(committedUsd((await repos.budget.read()).value.spendHolds!, line, now), 50);
+  assert.equal(committedUsd(liveSpendHolds((await repos.budget.read()).value.spendHolds, now), afterRestart, now), 50);
   const separate = { ...line, key: "area:zcta:2020/85635@hunt2" };
   assert.equal((await new JobSpend(restarted, "separate-hunt", "ob-1", { sends: [], areas: [separate] }).admit(1, "separately authorized future hunt")).admit, true);
 });

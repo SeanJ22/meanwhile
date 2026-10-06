@@ -1,6 +1,8 @@
 import { contentHash } from "../control-plane/ids.ts";
 import { OWNER_SURFACE_FORMAT_VERSION } from "../control-plane/owner-surface.ts";
 import { canonicalJson, AppendOnlyViolation, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import { countVitalSign } from "../db/transfer-by-caller.ts";
+import { VITAL_COUNTERS } from "../control-plane/vital-signs.ts";
 
 /** Aggregate measurements in the existing operational activity log. No facts,
  * quotes or publisher payloads are copied. A check and typed-reader delivery
@@ -27,5 +29,8 @@ export async function recordPublicationFlow(repos: Pick<ControlPlaneRepositories
       lines: [], cycleOk: null, testedSha: null, publicationFlow: { candidateId, ...receipt } }, at);
   } catch (error) {
     if (!(error instanceof AppendOnlyViolation) || !(await prior()).length) throw error;
+    return;
   }
+  /* Vital signs: facts live this hour, in BR-31's unit (new or changed records; a recheck earns none), counted once, when the receipt is first written. */
+  if (receipt.stage === "LIVE") countVitalSign(VITAL_COUNTERS.factsLive, receipt.changedRecords);
 }

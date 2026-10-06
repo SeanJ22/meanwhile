@@ -1,13 +1,13 @@
-build_state: waiting for shared hooks and BR-19 dependency
+build_state: active — Oct 6 mission; hourly vital signs and live acceptance
 worker: codex-admin
 provider: Codex
-run_id: codex-admin-6c412aa48ac64643b9ca5ea1867b2297
-lock: none
-heartbeat: 2026-10-06T05:00:17Z
+run_id: codex-admin-0a20c74f8d1a49a49f492bf94bfe2e71
+lock: codex-admin-0a20c74f8d1a49a49f492bf94bfe2e71
+heartbeat: 2026-10-06T05:25:46Z
 on_river: BR-01 BR-02 BR-03 BR-05 BR-06 BR-09 BR-10 BR-12 BR-15 BR-16 BR-24 BR-37 CH-12 CH-14 @ 6af6f8a504a7224131ad567f62f7b6f63cb52f08; BR-05/16/37 runtime hooks connected in release 3. Measures BR-14/23/25 integrated there; BR-34 integrated at 186f747a8769709e05f24c0fc452f950d92d5f4c.
 ready: BR-04 BR-07 BR-11 BR-12 BR-13 BR-16 BR-17 BR-18 BR-20 BR-26 BR-27 BR-28 BR-29 BR-31 BR-35 BR-36 BR-39 @ 734ee9633567651c94a6bb12a0628c7b965a4102 (pushed, exact types and 322 focused PASS). Fold-return fix:5abe56f2 repaired against promoted f545fcf9493def91294bccf219ed65071b2093b1. Money owner return and paid NOTHING fix hook included. BR-31/Money READY (hook pending: scripts/publish-owner-snapshot.mts + OwnerSnapshot, River). Paid NOTHING READY (hook pending: actual paid-ending producer, River/Hunters). BR-20 READY (hook pending: actual team recommendation raiser, Hunters). BR-36 READY (hook pending: pg-store/pg-schema/numbered migration, River). Built, not connected until those shared callers land.
 checks: Frozen source ef9d902e9b0f27b6e4dfe39fb23d29d4bc7f74ad: pnpm gates finished; preflight/lint/types/control-plane/state-holdings/state-manifest/db/default build/test:bundle/standalone build PASS. 9/12 gates green; original feedback:sweep stale applier citation fixed, corrected sweep PASS. FULL 9810 total/9778 PASS/22 FAIL/10 SKIP; 16 current-River missing-browser baseline failures and six own outdated fixtures/expectations now repaired. Corrected a54 types/312 focus PASS; rollback correction10 PASS. Final captions only app delta (no query/import/aggregation change), lint clean. Exact final source d276f66bf2530b5d9ac75980d474e0b188118381 types PASS and 322 focused PASS/0 FAIL/0 SKIP (41 files). Exact READY 734ee9633567651c94a6bb12a0628c7b965a4102: types PASS, 322 focused PASS/0 FAIL/0 SKIP. Gate machine record .factory/admin-cost-gate-run.json; exact-ready admin-ready-evidence.json; history admin-checks.md. No clean FULL/browser/live PASS claim.
-working_on: none ready after final fetch. Exact READY published; release ownership with complete continuation. River folds exact READY, not later evidence-only WIP.
+working_on: mission order: EDT, runner hourly row for Now/daily brief, Money, fold return, remaining ready work
 waiting_on: BR-19 exact BR-22 kind preservation/runner filtering; Money/BR-31 River-owned summary publisher, actual flow instrumentation start and measured transfer inputs; paid NOTHING ending actual River/Hunters caller. Release7 promoted: saved fold repair now merged with f545fcf94; new cost-priority work checked and published; no independent Admin step remains ready. No Sean decision is missing.
 returned: fix:5abe56f2 received and reproduced (13 content hunks plus own coordination deletions). Prepared union keeps Look detail/screenshots, Testing fix rows, door/owed/target/data/settings features, decision and reader-report rows, late scheduling and receipt details. Removed implicit merge revivals outside conflict hunks. Source batch promoted; saved repair merged, combined gates finished and exact READY published. Previous fix:fc3f3f9a repair and Money owner-return evidence preserved.
 needs_hook:

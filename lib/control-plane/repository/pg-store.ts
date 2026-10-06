@@ -2,6 +2,7 @@ import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
+import { queryCallerTag, withQueryCaller } from "../../db/query-bytes.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
@@ -243,6 +244,8 @@ const queryWaiters: Array<() => void> = [];
 
 function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBounds) {
   return async (operation: string, callClass: ControlPlaneCallClass, text: string, params?: readonly unknown[]) => {
+    /* The caller, from the stack before the first await, so the bytes this query receives are counted against it. */
+    const caller = queryCallerTag(`${prefix}.${operation}`);
     await new Promise<void>((resolve, reject) => {
       if (activeQueries < CONTROL_PLANE_QUERY_CONCURRENCY) { activeQueries++; resolve(); }
       else {
@@ -261,7 +264,8 @@ function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBoun
       }
     });
     try {
-      return await boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds });
+      return await withQueryCaller(caller, () =>
+        boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds }));
     } finally {
       const next = queryWaiters.shift();
       if (next) next();

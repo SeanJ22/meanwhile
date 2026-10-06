@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { neon, neonConfig } from "@neondatabase/serverless";
+import { recordQueryBytes, startQueryBytesLog } from "./query-bytes.ts";
 
 type FetchLike = typeof fetch;
 export interface DatabaseTransfer {
@@ -29,6 +30,7 @@ export function databaseTransferFetch(underlying: FetchLike, record: (value: Dat
     if (connection === process.env.FEEDBACK_DATABASE_URL && connection !== process.env.DATABASE_URL &&
         connection !== process.env.WTP_CONTROL_PLANE_DATABASE_URL) return response;
     const bytes = await response.arrayBuffer();
+    recordQueryBytes(bytes.byteLength);
     await record({
       day: new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" }).format(new Date()),
       database: connection === process.env.DATABASE_URL ? "reader" : "control-plane",
@@ -87,6 +89,7 @@ function accumulate(row: DatabaseTransfer): void {
 export function installDatabaseTransferCounter(): void {
   if (installed) return;
   installed = true;
+  startQueryBytesLog();
   neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, (row) => {
     accumulate(row);
     // An answered query must not wait on the accounting write to the reader database.

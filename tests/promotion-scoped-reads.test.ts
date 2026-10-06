@@ -85,6 +85,9 @@ test("scoped fact collection preserves cross-item byte-identical reacquisition a
   await h.repos.attempts.compareAndSet(secondAttempt.id, secondAttempt.revision,
     { ...secondAttempt.value, workItemId: "another-item" }, h.now());
   const options = { now: h.now(), readArtifactText: h.readArtifactText };
+  const repeated = await contextFromRepositories(h.repos, { artifacts: [first, { ...first, attemptId: second.attemptId }], results: [] });
+  assert.equal(repeated.attemptRoleById(first.attemptId), "ACQUIRER", "an earlier observation's owner survives content-id deduplication");
+  assert.equal(repeated.attemptRoleById(second.attemptId), "ACQUIRER");
   const baseline = await collectFactChains(h.repos, options);
   const allArtifacts = await h.repos.artifacts.readAll();
   const allAttempts = (await h.repos.attempts.list()).map(row => row.value);

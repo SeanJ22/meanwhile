@@ -434,12 +434,13 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories, e
   readonly attemptIds?: readonly string[];
 }): Promise<PipelineContext> {
   const artifacts = new Map<string, ArtifactRecord>();
-  for (const a of evidence?.artifacts ?? await repos.artifacts.readAll()) artifacts.set(a.artifactId, a);
+  const artifactRecords = evidence?.artifacts ?? await repos.artifacts.readAll();
+  for (const a of artifactRecords) artifacts.set(a.artifactId, a);
   const roles = new Map<string, WorkerRole>();
   const results = evidence?.results ?? await repos.workerResults.readAll();
   const [attempts, workItems] = await Promise.all([
     evidence === undefined ? repos.attempts.list().then(rows => new Map(rows.map(row => [row.id, row.value])))
-      : readPromotionRows(repos.attempts, [...artifacts.values()].map(a => a.attemptId)
+      : readPromotionRows(repos.attempts, artifactRecords.map(a => a.attemptId)
         .concat(results.map(r => r.attemptId), evidence.attemptIds ?? [])),
     readPromotionRows(repos.workItems, results.map(r => r.workItemId)),
   ]);

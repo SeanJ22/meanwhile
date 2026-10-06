@@ -223,3 +223,55 @@ test('a non-official portrait without corroboration stays a gap while its offici
     assert.ok(result.members.some(m=>m.discoveryIds.includes('russo')));
     assert.ok(result.gaps.some(g=>g.key==='portrait:russo' && g.detail==='PORTRAIT_SECOND_SOURCE_MISSING'),JSON.stringify(result.gaps));
 });
+
+const openStatesUrl = "https://data.openstates.org/people/current/oh.csv";
+const csvCapture = (rows: string) => capture(`id,name,current_party,current_district,current_chamber\n${rows}\n`, openStatesUrl);
+const russoRow = "ocd-person/0001,Allison Russo,Democratic,7,lower";
+
+test("CA-02: a legislator whose own page fails the seat check still fills the seat from the Open States row, as a Reference source", async () => {
+  const s = await store();
+  const elsewhere = capture(profile.evidence.text.replace("District 7", "District 8"), profileUrl);
+  const result = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [
+    { discoveryId: "plural:0001", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl,
+      document: { url: profileUrl, capture: elsewhere }, openStatesCapture: csvCapture(russoRow) }] } });
+  assert.deepEqual(result.members.map(m => [m.bodyId, m.discoveryIds]), [[`${OH}/sldl:7#seat`, ["plural:0001"]]], JSON.stringify(result.gaps));
+  const after = (await readRegistryRuntimePrior(s, NOW))!;
+  const roster = after.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`);
+  assert.deepEqual(roster?.members.map(m => [m.name, m.officeTitle]), [["Allison Russo", "State Representative"]], "the title is the chamber's own word in Open States, not read off a page");
+  assert.equal(roster?.sourceUrl, openStatesUrl);
+});
+
+test("CA-02: the Open States row is checked on the saved file: a name or district the file does not show stays a gap, and an own page that passes is used", async () => {
+  const s = await store();
+  const elsewhere = capture(profile.evidence.text.replace("District 7", "District 8"), profileUrl);
+  const official = { discoveryId: "plural:0001", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl, capture: elsewhere } };
+  const wrongDistrict = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography,
+    sources: { officials: [{ ...official, openStatesCapture: csvCapture("ocd-person/0001,Allison Russo,Democratic,9,lower") }] } });
+  assert.deepEqual(wrongDistrict.members, []);
+  assert.match(wrongDistrict.gaps.find(g => g.key === "official:plural:0001")!.detail, /ROSTER_PAGE_NOT_THIS_BODY/);
+  const wrongName = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography,
+    sources: { officials: [{ ...official, openStatesCapture: csvCapture("ocd-person/0001,Someone Else,Democratic,7,lower") }] } });
+  assert.deepEqual(wrongName.members, []);
+  const passing = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography,
+    sources: { officials: [{ ...official, document: { url: profileUrl, capture: profile }, openStatesCapture: csvCapture(russoRow) }] } });
+  assert.equal((await readRegistryRuntimePrior(s, NOW))!.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`)?.sourceUrl, profileUrl);
+  assert.equal(passing.members.length, 1);
+});
+
+test("CA-02: an own page that cannot be read at all is filled from the Open States row, and an official roster value replaces it later", async () => {
+  const s = await store();
+  const csv = csvCapture(russoRow);
+  const first = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [
+    { discoveryId: "plural:0001", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: openStatesUrl, document: { url: openStatesUrl, capture: csv }, basis: "OPEN_STATES_ROW" }] } });
+  assert.equal(first.members.length, 1, JSON.stringify(first.gaps));
+  const held = (await readRegistryRuntimePrior(s, NOW))!.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`)!;
+  assert.equal(held.sourceUrl, openStatesUrl);
+  const later = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [
+    { discoveryId: "plural:0001", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "State Representative", officialUrl: profileUrl,
+      document: { url: profileUrl, capture: capture(profile.evidence.text.replace("<h1>Representative", "<h1>State Representative"), profileUrl) } }] } });
+  assert.equal(later.members.length, 1, JSON.stringify(later.gaps));
+  const after = (await readRegistryRuntimePrior(s, NOW))!.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`)!;
+  assert.deepEqual(after.members.map(m => [m.name, m.officeTitle]), [["Allison Russo", "State Representative"]], "one person, not two");
+  assert.equal(after.members[0].id, held.members[0].id);
+  assert.equal(after.sourceUrl, profileUrl);
+});

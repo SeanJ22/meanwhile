@@ -1,3 +1,7 @@
+import { Card } from "@/components/ui/card";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { ContactPills } from "@/components/officials/contact-pills";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -32,7 +36,8 @@ import {
   linksForNominee,
   type CandidateLinks,
 } from "@/lib/ballot/candidate-sites";
-import { blurbForContestTitle } from "@/lib/officials/office-blurbs";
+import type { OfficeBlurb } from "@/lib/officials/office-blurbs";
+import { readCuratedContestOfficeBlurbs } from "@/lib/officials/curated-definition-reader";
 import { surnameDisplayCase } from "@/lib/ballot/name-case";
 import {
   cardForCandidacy,
@@ -44,7 +49,6 @@ import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
 import { jurisdictionNameFromOcdId } from "@/lib/ballot/could-govern";
 import { photosFirst } from "@/lib/ballot/photo-order";
-import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
 import { StateMoneySection } from "@/components/funding/state-money-section";
@@ -63,6 +67,7 @@ import { CandidateCard } from "@/components/ballot/candidate-card";
 import {
   CandidatePositions,
 } from "@/components/ballot/candidate-positions";
+import { readStanceTopics } from "@/lib/stances/read";
 import {
   positionsFor,
   positionsHeadline,
@@ -134,7 +139,7 @@ import type {
   Contest,
   Measure,
 } from "@/lib/ballot/types";
-import { CandidateContact, TAGLINE_SOURCE_NOTE } from "@/components/ballot/candidate-contact";
+import { CandidateContact, CandidateContactSources } from "@/components/ballot/candidate-contact";
 import { candidateContactForCandidacy } from "@/lib/ballot/candidate-contacts";
 import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { groupAbsences } from "@/lib/ballot/absence-grouping";
@@ -217,9 +222,6 @@ const AUXILIARY_READER_LABEL: Record<BallotAuxiliaryFamily, string> = {
  * than as a disclaimer defending it — the author's distinction, and the same
  * one rule 4g drew when it cut "that's not a bias, it's a record".
  */
-const NEUTRAL_NOTE =
-  "The official ballot order either hasn't been drawn yet or wasn't machine-readable from the authority's filings. Candidates with a photo are listed first, then the rest, alphabetically by surname within each group — a photo is what lets someone tell two names apart. Party labels and slogans appear as filed. Nothing on this page is a recommendation.";
-
 /**
  * **BAL-48 (2026-09-02): the length at which a contest's scope note is
  * "extended election-mechanics text" and collapses behind "More info".**
@@ -509,6 +511,7 @@ async function BallotBattlecard({
   targetKey,
   contestTitle,
   contestOcdId,
+  officeBlurb,
   federal,
   contestCandidates,
   contestId,
@@ -538,6 +541,7 @@ async function BallotBattlecard({
   contestTitle: string;
   /** The contest's division, so a state-scoped office explainer can resolve. */
   contestOcdId: string;
+  officeBlurb: OfficeBlurb | null;
   /** Whether the contest is federal, which decides whether FEC money applies. */
   federal: boolean;
   /**
@@ -629,12 +633,11 @@ async function BallotBattlecard({
    */
   const recordHolder = holder ?? resolvedStanding?.holderFor.get(targetKey) ?? null;
 
-  const officeBlurb = blurbForContestTitle(contestTitle, contestOcdId);
   let positions: ReturnType<typeof positionsFor> = [];
   let positionsUnavailable = !authorityAvailability.candidatePublications;
   if (!positionsUnavailable) {
     try {
-      positions = positionsFor(targetKey);
+      positions = positionsFor(targetKey, null, await readStanceTopics());
     } catch {
       positionsUnavailable = true;
     }
@@ -687,7 +690,7 @@ async function BallotBattlecard({
       name={name}
       /* The contest's real government tier for the modal's tier ring — derived
          from the contest OCD id, never guessed; null stays neutral. */
-      tier={tierForOcdId(contestOcdId)}
+      tier={tierForOffice(contestTitle, contestOcdId)}
       partyLine={partyLine}
       partyLabel={partyLabel}
       photoUrl={card?.photoUrl ?? null}
@@ -722,6 +725,7 @@ async function BallotBattlecard({
        * is available everywhere".
        */
       contactHolder={recordHolder}
+      contact={<><CandidateContact card={card ?? null} links={links} filing={filingContact} />{recordHolder && <ContactPills holder={recordHolder} scope="primary" />}{!card?.email && !links?.campaign && !filingContact?.email && !recordHolder && <WorkingOnIt subject={{ type: "CANDIDATE", id: targetKey }} />}</>}
       sections={{
         /* BC-6: mandatory for every candidate and every elected official.
            Somebody voting for governor needs to know what a governor does. */
@@ -826,7 +830,8 @@ async function BallotBattlecard({
         ) : null,
         /*
          * **BAL-15 (2026-08-25).** Sources now carries three things the ballot
-         * row let go of, plus the sentence Sean asked for about the tagline.
+         * row let go of. Funding, voting, positions and bios contribute their exact
+         * citations to this same card registry; they no longer cite on their face.
          *
          * It renders even where there is no officeholder record — which is the
          * change that matters for equal effort. `CandidateSources` returns
@@ -839,10 +844,8 @@ async function BallotBattlecard({
           <>
             {!authorityAvailability.candidateProfiles && unavailableHolding("candidate-profile")}
             {holder && <CandidateSources holder={holder} />}
-            <CandidateContact card={card ?? null} links={links} filing={filingContact} />
-            <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted">
-              {TAGLINE_SOURCE_NOTE}
-            </p>
+            <CandidateContactSources links={links} filing={filingContact} />
+            
           </>
         ),
       }}
@@ -854,10 +857,9 @@ async function BallotBattlecard({
  * The card's answer to "says who?", for a person we hold an officeholder
  * record for.
  *
- * Money and votes are deliberately absent from the list: those sections cite
- * themselves on the row, and the same claim in two registers reads as two
- * claims. Same assembler as the map's person card — one function, so the two
- * surfaces cannot disagree about provenance.
+ * Money, votes, positions, bios and contacts contribute their citations to
+ * the same card Sources registry. This assembler supplies the held roster
+ * and office records, just as it does on the map person card.
  */
 function CandidateSources({ holder }: { holder: SeatHolder }) {
   // Read only as the reader edge primed it: this card never adds a database read to a cold ballot.
@@ -878,11 +880,7 @@ interface BallotAuthorityAvailability {
 }
 
 function unavailableHolding(family: string) {
-  return (
-    <p className="t-body leading-relaxed text-voice" data-ballot-authority-unavailable={family}>
-      Our canonical {family} holding could not be read for this request. This is an unknown holding state, not evidence that no record exists.
-    </p>
-  );
+  return <WorkingOnIt attrs={{ "data-ballot-authority-unavailable": family }} />;
 }
 
 
@@ -1367,6 +1365,8 @@ export default async function BallotPage({
       ? { shared: false, marker: null, anchor: null }
       : { shared: true, marker: sharedSources[index].marker, anchor: `source-note-${index}` };
   };
+
+  const officeBlurbs = await readCuratedContestOfficeBlurbs(matched?.contests ?? []);
 
   const filingProjection = await filingRead;
   const filingRows = filingProjection?.kind === "PROMOTED"
@@ -1910,29 +1910,15 @@ export default async function BallotPage({
       )}
 
       {attempted && !matched && ballotLoaderFailures.length > 0 && (
-        <p
-          className="mt-6 t-body leading-relaxed text-muted lg:max-w-2xl"
-          data-ballot-authority-unavailable={ballotLoaderFailures.join(",")}
-        >
-          The canonical ballot authority for this area could not be read. This is an unknown holding state, not evidence that no candidates or ballot items exist.
-        </p>
+        <WorkingOnIt className="mt-6 lg:max-w-2xl" />
       )}
 
       {attempted && !matched && ballotLoaderFailures.length === 0 && divisionHoldingUnavailable && (
-        <p
-          className="mt-6 t-body leading-relaxed text-muted lg:max-w-2xl"
-          data-ballot-division-authority-unavailable
-        >
-          The canonical division registry could not be read, so this request could not be assigned to a ballot authority. This is an unknown holding state, not evidence that no ballot exists.
-        </p>
+        <WorkingOnIt className="mt-6 lg:max-w-2xl" />
       )}
 
       {attempted && !matched && ballotLoaderFailures.length === 0 && !divisionHoldingUnavailable && (
-        <p className="mt-6 t-body leading-relaxed text-muted lg:max-w-2xl">
-          We&apos;re working on getting this info. Ballot coverage
-          currently reaches Pima County AZ, Morris County NJ, and Merrimack
-          County NH. This is not a statement that nothing is on your ballot.
-        </p>
+        <WorkingOnIt className="mt-6 lg:max-w-2xl" />
       )}
 
       {/*
@@ -2184,7 +2170,7 @@ export default async function BallotPage({
                   )}
                 </h2>
                 <p className="t-eyebrow text-muted">
-                  {contest.voteFor !== null ? `Vote for ${contest.voteFor}` : "We're working on getting this info"}
+                  {contest.voteFor !== null ? `Vote for ${contest.voteFor}` : <WorkingOnIt inline />}
                   {contest.termYears ? ` · ${contest.termYears}-year term` : ""}
                 </p>
               </div>
@@ -2193,7 +2179,7 @@ export default async function BallotPage({
                   register, at the top of the contest. Describes the office,
                   never the people running for it. Voice register. */}
               {(() => {
-                const blurb = blurbForContestTitle(contest.title, contest.ocdId);
+                const blurb = officeBlurbs.get(contest.id) ?? null;
                 return blurb ? (
                   <p className="mt-2 text-[0.75rem] leading-relaxed text-voice">
                     {blurb.text}
@@ -2312,6 +2298,7 @@ export default async function BallotPage({
                             targetKey={`${contest.id}|${nominee.name}`}
                             contestTitle={contest.title}
                             contestOcdId={contest.ocdId}
+                            officeBlurb={officeBlurbs.get(contest.id) ?? null}
                             federal={isFederalContest(contest)}
                             contestId={contest.id}
                             contestVoteFor={contest.voteFor}
@@ -2486,6 +2473,7 @@ export default async function BallotPage({
                               targetKey={cand.id}
                               contestTitle={contest.title}
                               contestOcdId={contest.ocdId}
+                              officeBlurb={officeBlurbs.get(contest.id) ?? null}
                               federal={isFederalContest(contest)}
                               contestId={contest.id}
                               contestVoteFor={contest.voteFor}
@@ -2641,18 +2629,9 @@ export default async function BallotPage({
              */
             const measure = measureFor(contest.id);
             return (
-              <div
-                key={contest.id}
-                data-contest-id={contest.id}
-                className="mt-3.5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)]"
-              >
-                <h3 className="text-[0.9375rem] font-semibold tracking-tight">
-                  {contest.title}
-                  {/* BAL-41 (2026-09-02): the level tag on every proposition
-                      title too — a statewide measure reads State, a county or
-                      district one reads Local, from the measure's OCD identity. */}
-                  <LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />
-                </h3>
+              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={contest.title} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[]}>
+              <div>
+
 
                 {/*
                   **THE QUESTION, VERBATIM, FIRST** (BAL-30, 2026-08-28).
@@ -2877,42 +2856,13 @@ export default async function BallotPage({
                           </p>
                         </div>
                       ) : (
-                        <p
-                          className="mt-3 text-[0.75rem] leading-relaxed text-muted"
-                          data-measure-statement="GAP_OURS"
-                        >
-                          We have not recorded an official statement for this
-                          question.
-                        </p>
+                        <WorkingOnIt className="mt-3" attrs={{ "data-measure-statement": "GAP_OURS" }} />
                       )}
                     </div>
                   </details>
                 )}
 
-                {/*
-                  The measure text's OWN citation, and only when the card's
-                  foot does not already carry it. Every current row cites the
-                  same document the contest does, so nothing renders here
-                  today; a future row whose question came from a different
-                  document gets its own line rather than borrowing the foot's.
-                */}
-                {measure &&
-                  measure.provenance.sourceUrl !==
-                    (analysis?.analysisUrl ?? contest.provenance.sourceUrl) && (
-                    <p className="mt-2 text-[0.6875rem]">
-                      <a
-                        href={measure.provenance.sourceUrl ?? undefined}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline decoration-dotted"
-                      >
-                        {measure.provenance.sourceOrg}
-                      </a>{" "}
-                      <span className="text-muted">
-                        · read {formatDateMDY(measure.provenance.collectedAt)}
-                      </span>
-                    </p>
-                  )}
+                {measure && <CardSourcesContribution id={`measure-text:${contest.id}`} sources={[{ what: "Official measure text", provenance: measure.provenance }]} />}
 
                 {analysis?.text ? (
                   // 3f (2026-08-19): the official analysis collapses by
@@ -2968,23 +2918,9 @@ export default async function BallotPage({
                   options={pickOptionsFor(set, contest)}
                 />
 
-                <p className="mt-2 text-[0.6875rem]">
-                  <a
-                    href={analysis?.analysisUrl ?? contest.provenance.sourceUrl ?? undefined}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline decoration-dotted"
-                  >
-                    {analysis?.sourceOrg ?? contest.provenance.sourceOrg}
-                  </a>{" "}
-                  <span className="text-muted">
-                    · read{" "}
-                    {analysis
-                      ? formatDateMDY(analysis.retrievedAt.slice(0, 10))
-                      : formatDateMDY(contest.provenance.collectedAt)}
-                  </span>
-                </p>
+                <CardSourcesContribution id={`measure-analysis:${contest.id}`} sources={[{ what: analysis ? "Official analysis" : "Official measure filing", provenance: { sourceUrl: analysis?.analysisUrl ?? contest.provenance.sourceUrl ?? "", sourceOrg: analysis?.sourceOrg ?? contest.provenance.sourceOrg, collectedAt: analysis?.retrievedAt ?? contest.provenance.collectedAt, verifiedAt: null } }]} />
               </div>
+              </Card>
             );
           })}
           </div>
@@ -3029,9 +2965,7 @@ export default async function BallotPage({
           data-ballot-no-local-races
         >
           <h2 className="t-structure text-paper-dim">County, city and school-board races</h2>
-          <p className="mt-2 t-body leading-relaxed text-voice">
-            We&apos;re working on getting this info. The state and federal races above are read from the official filings; the county, city, town and school-district contests that share this ballot appear here once their election office publishes them and we have read them. Your county election office has the complete ballot for your address.
-          </p>
+          <WorkingOnIt className="mt-6 lg:max-w-2xl" />
         </section>
       )}
 
@@ -3116,20 +3050,13 @@ export default async function BallotPage({
             </div>
           )}
 
-          <p className="mt-6 text-[0.75rem] leading-relaxed text-voice lg:max-w-2xl">
-            {NEUTRAL_NOTE}
-          </p>
+
 
           {/* RULING 42: the page-level disclosure, once, at the bottom. It
               renders inside this block because this block is what renders
               when contests render — a note about the cards on a page with no
               cards would be a claim about nothing. */}
-          <p
-            data-collection-note
-            className="mt-3 text-[0.75rem] leading-relaxed text-voice lg:max-w-2xl"
-          >
-            {COLLECTION_NOTE}
-          </p>
+          
         </>
       )}
 

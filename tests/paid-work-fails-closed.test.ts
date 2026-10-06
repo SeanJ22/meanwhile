@@ -151,7 +151,7 @@ function checkFreeWorkUntouched(src: string): void {
   assert.ok(walk.length > 0, "the discovery walk anchors moved");
   assert.match(
     walk,
-    /if \(!MEETINGS_DISCOVERY_ENABLED\) \{[\s\S]*?\} else if \(dry \|\| canary\) \{[\s\S]*?\} else if \("unreadable" in gapLedgerRead\) \{[\s\S]*?\} else \{/,
+    /if \(!MEETINGS_DISCOVERY_ENABLED\) \{[\s\S]*?\} else if \(dry \|\| canary\) \{[\s\S]*?\} else if \(discoveryToWalk\.length === 0\) \{[\s\S]*?\} else \{/,
     "the free discovery walk is gated differently",
   );
   for (const paidFact of ["modelLaneEnabled", "laneClosure", "laneDisabledReason", "unreadableControls", "configHold", "intentLogUnreadable", "ownerIntentsUnreadableByRunner"]) {
@@ -194,7 +194,7 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
   const intakeOnLane = src.replace("if (!dry && !canary && !intents.runnerPause.paused) {\n  try {\n    const retained", "if (!dry && !canary && !intents.runnerPause.paused && modelLaneEnabled) {\n  try {\n    const retained");
   assert.notEqual(intakeOnLane, src);
   assert.ok(fails(() => checkFreeWorkUntouched(intakeOnLane)), "routine intake gated on the paid lane passed");
-  const walkOnUnreadable = src.replace('} else if ("unreadable" in gapLedgerRead) {', '} else if (unreadableControls.length > 0 || "unreadable" in gapLedgerRead) {');
+  const walkOnUnreadable = src.replace("} else if (discoveryToWalk.length === 0) {", "} else if (unreadableControls.length > 0 || discoveryToWalk.length === 0) {");
   assert.notEqual(walkOnUnreadable, src);
   assert.ok(fails(() => checkFreeWorkUntouched(walkOnUnreadable)), "a free walk stopped by an unreadable control passed");
 });

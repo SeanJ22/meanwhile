@@ -8,7 +8,7 @@ export function AskBodyConfirmation({ answer, working, onConfirm, onClarify }: {
 }) {
   const suggestion = answer.confirmation;
   if (!suggestion && !answer.clarification) return null;
-  return <div data-ask-body-confirmation className="text-[0.8125rem] leading-relaxed text-paper" role="status">
+  return <div data-ask-body-confirmation className="t-body leading-relaxed text-paper" role="status">
     <p>{suggestion ? `Did you mean ${suggestion.name}?` : answer.clarification}</p>
     <div className="mt-2 flex flex-wrap gap-3">
       {suggestion && <button type="button" disabled={working} onClick={() => onConfirm(suggestion)}

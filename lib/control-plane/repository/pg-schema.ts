@@ -134,7 +134,42 @@
  * version 18's source-URL index is, so captures and leases continue while it
  * builds. Additive: no table, column or statement moved.
  */
-export const BOOTSTRAP_VERSION = 20;
+// Version 21 adds the live-audit log (DP-13): results, corrections and pulls. Additive.
+/*
+ * ## What version 22 adds, and why (each table says when it last changed, by the database's clock, 2026-10-06)
+ *
+ * The research round re-read whole control-plane tables on every worker wave
+ * (planner selection, standing runtime, round start, promotion tail, campaign
+ * chain), and that re-reading was most of the control-plane data-transfer bill.
+ * The round now keeps one in-memory copy of those tables and each later read
+ * fetches only the rows changed since its last read (`incremental-reads.ts`).
+ * That needs a "changed since" the database itself vouches for:
+ *
+ * ```
+ *   changed_at   timestamptz NOT NULL DEFAULT now(), on every aggregate and
+ *                every log table. An insert takes the default; an UPDATE is
+ *                stamped by a BEFORE UPDATE trigger (`cp_touch_changed_at`),
+ *                so a writer running older code, or any raw upsert, still
+ *                moves it. compareAndSet also sets it explicitly.
+ * ```
+ *
+ * Not `updated_at` / `recorded_at`: both hold the WRITER's `now`, which can be
+ * stale or skewed, so they cannot answer "what changed since my last read".
+ * `now()` is the database's clock (transaction start).
+ *
+ * The column is added inside a guard that first asks the catalog whether it is
+ * already there, so a bootstrap on a current database takes no table lock.
+ * Adding it is metadata only: on Postgres 11+ a column with a non-volatile
+ * default (`now()` is STABLE) is not a table rewrite; existing rows read the
+ * default evaluated once at the ALTER, which is a correct "changed at or
+ * before" for them. Indexes on `changed_at` for the tables the round reads are
+ * built online (`CREATE INDEX CONCURRENTLY`), as versions 18 and 20 are.
+ * Additive: no table, column or statement moved.
+ */
+// Version 23 adds the RouteTask indexes for Attempts and leases: `listWhere(["routeTaskId"])` (the
+// coordinator's attempt lookup, model batches, cycle selection) scanned the whole table on every call
+// (2026-10-06: 130,945 full scans of cp_attempts). Built online. Additive.
+export const BOOTSTRAP_VERSION = 23;
 
 /**
  * The tables, and the shape each one carries.
@@ -389,6 +424,17 @@ export const APPEND_ONLY_LOGS = [
   "admin_receipts",
   "agent_jobs",
   "discovery_attempts",
+  /*
+   * THE LIVE AUDIT. (DP-13 — version 21.)
+   *
+   *   live_audits  published facts re-read on their own pages after they
+   *                publish: one RESULT per fact checked (keyed by UTC day),
+   *                the CORRECTION each red flag led to (keyed "corrections"),
+   *                and the PULL a red flag takes off the live page (keyed by
+   *                work item). Append-only: an audit is a reading taken at a
+   *                time. Additive: no existing table or statement moved.
+   */
+  "live_audits",
 ] as const;
 
 /** Every table this schema declares, for the drift check. */
@@ -430,7 +476,8 @@ function aggregateTable(name: string): readonly string[] {
       id          text PRIMARY KEY,
       revision    bigint NOT NULL,
       updated_at  timestamptz NOT NULL,
-      value       jsonb NOT NULL
+      value       jsonb NOT NULL,
+      changed_at  timestamptz NOT NULL DEFAULT now()
     );`,
   ];
 }
@@ -472,6 +519,7 @@ function appendOnlyTable(name: string): readonly string[] {
       position    bigint NOT NULL,
       recorded_at timestamptz NOT NULL,
       record      jsonb NOT NULL,
+      changed_at  timestamptz NOT NULL DEFAULT now(),
       PRIMARY KEY (log_key, record_id)
     );`,
     `CREATE UNIQUE INDEX IF NOT EXISTS cp_log_${name}_order
@@ -513,9 +561,58 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_log_costs_recorded_at", "cp_log_costs (recorded_at)"),
 ];
 
+/** Version 22: every aggregate and log table this schema declares, each of which carries `changed_at`. */
+export const CHANGED_AT_TABLES: readonly string[] = [
+  ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
+  ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
+];
+
+/** Version 22: the trigger function that stamps `changed_at` with the database clock on every UPDATE. */
+export const CHANGED_AT_TOUCH_FUNCTION_DDL = `CREATE OR REPLACE FUNCTION cp_touch_changed_at() RETURNS trigger
+LANGUAGE plpgsql AS $$
+BEGIN
+  NEW.changed_at := now();
+  RETURN NEW;
+END $$;`;
+
+/**
+ * Version 22: one guarded statement per table. The catalog is asked first, so
+ * a database that already has the column and trigger takes no lock at all;
+ * otherwise the ALTER is metadata only (non-volatile default, Postgres 11+).
+ */
+export function changedAtColumnDdl(table: string): string {
+  if (!/^cp_[a-z0-9_]+$/.test(table)) throw new Error(`unsafe control-plane table name ${JSON.stringify(table)}`);
+  return `DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema() AND table_name = '${table}' AND column_name = 'changed_at') THEN
+    ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS changed_at timestamptz NOT NULL DEFAULT now();
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = '${table}_changed_at' AND tgrelid = '${table}'::regclass) THEN
+    -- Two first bootstraps can both pass the check; the second one's duplicate is the same trigger.
+    BEGIN
+      CREATE TRIGGER ${table}_changed_at BEFORE UPDATE ON ${table}
+FOR EACH ROW EXECUTE FUNCTION cp_touch_changed_at();
+    EXCEPTION WHEN duplicate_object THEN NULL;
+    END;
+  END IF;
+END $$;`;
+}
+
+/** Version 22: the `changed_at` indexes for the tables the research round reads incrementally, built online. */
+export const CHANGED_AT_INDEXES: readonly OnlineIndex[] = [
+  "cp_work_items", "cp_attempts", "cp_route_tasks", "cp_occurrences", "cp_leases",
+  "cp_log_artifacts", "cp_log_scout_results", "cp_log_worker_results", "cp_log_costs",
+].map(table => onlineIndex(`${table}_changed_at`, `${table} (changed_at)`));
+
+/** Version 23: the RouteTask lookups, on the exact expression `listWhere(["routeTaskId"])` sends. */
+export const ROUTE_TASK_INDEXES: readonly OnlineIndex[] = [
+  onlineIndex("cp_attempts_route_task", "cp_attempts ((value #>> '{routeTaskId}'))"),
+  onlineIndex("cp_leases_route_task", "cp_leases ((value #>> '{routeTaskId}'))"),
+];
+
 /** Every index the bootstrap builds online, by its DDL statement. */
 export const ONLINE_INDEXES: ReadonlyMap<string, OnlineIndex> = new Map(
-  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES].map(index => [index.ddl, index] as const));
+  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES, ...ROUTE_TASK_INDEXES].map(index => [index.ddl, index] as const));
 
 export const BOOTSTRAP_DDL: readonly string[] = [
   `CREATE TABLE IF NOT EXISTS cp_schema_version (
@@ -756,6 +853,12 @@ END $$;`,
      ON cp_occurrences ((value->>'obligationId'));`,
   // Version 20 (CH-26): built online, after every table they index exists.
   ...SCOPED_HISTORY_INDEXES.map(index => index.ddl),
+  // Version 22: every aggregate and log says when it last changed, by the database's clock.
+  CHANGED_AT_TOUCH_FUNCTION_DDL,
+  ...CHANGED_AT_TABLES.map(changedAtColumnDdl),
+  ...CHANGED_AT_INDEXES.map(index => index.ddl),
+  // Version 23: the RouteTask lookups for Attempts and leases.
+  ...ROUTE_TASK_INDEXES.map(index => index.ddl),
 ];
 
 /**

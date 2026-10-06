@@ -151,18 +151,18 @@ function approvedState(itemId: string, recordClass: string): PipelineItemState {
   return { ...deriveItemState(itemId, [s]), stage: "APPROVED_FOR_PROMOTION", byStage: { SCOUTED: s, APPROVED_FOR_PROMOTION: a } };
 }
 
-test("evaluation: PROMOTE_WOULD needs APPROVED and an open class; everything else is REFUSE_WOULD with the reason, grouped with denominators", () => {
+test("CP-14: verified approvals ignore obsolete class gates; unfinished items and execution deferrals remain explicit", () => {
   const states = [
     deriveItemState("pp-s", [scoutedItem("pp-s", "meetings")]),
     approvedState("pp-a-closed", "campaign-finance"),
     approvedState("pp-a-open", "meetings"),
   ];
   const closed = evaluateItems(states, { openRecordClasses: [] });
-  assert.deepEqual(closed.verdicts.map((v) => v.verdict), ["REFUSE_WOULD", "REFUSE_WOULD", "REFUSE_WOULD"]);
+  assert.deepEqual(closed.verdicts.map((v) => v.verdict), ["REFUSE_WOULD", "PROMOTE_WOULD", "PROMOTE_WOULD"]);
   assert.match(closed.verdicts[0].reason, /at SCOUTED; APPROVED_FOR_PROMOTION is required/);
-  assert.match(closed.verdicts[2].reason, /record class meetings is not open/);
+  assert.match(closed.verdicts[2].reason, /approved for its reader door/);
   const open = evaluateItems(states, { openRecordClasses: ["meetings"] });
-  assert.deepEqual(open.verdicts.map((v) => v.verdict), ["REFUSE_WOULD", "REFUSE_WOULD", "PROMOTE_WOULD"]);
+  assert.deepEqual(open.verdicts.map((v) => v.verdict), ["REFUSE_WOULD", "PROMOTE_WOULD", "PROMOTE_WOULD"]);
   const meetings = open.byRecordClass.find((t) => t.recordClass === "meetings");
   assert.deepEqual(meetings, { recordClass: "meetings", items: 2, promoteWould: 1, refuseWould: 1, deferred: 0 });
   const deferred = evaluateItems(states, { openRecordClasses: ["meetings"] }, "the research input was unavailable");

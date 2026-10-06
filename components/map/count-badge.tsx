@@ -54,7 +54,7 @@ export function CountBadge() {
           {venues.length === 1 ? "venue" : "venues"}
         </>
       )}
-      {listingCount.countNote && <span className="basis-full text-left text-[0.625rem] font-normal">{listingCount.countNote}</span>}
+      {listingCount.countNote && <span className="basis-full text-left t-caption font-normal">{listingCount.countNote}</span>}
     </button>
   );
 }

@@ -1,3 +1,4 @@
+import { workerDoorForRecord } from "../../civic-data/worker-reader-contracts.ts";
 import type { CivicExtractionContract } from "./types.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute } from "./research-types.ts";
 import type { EngineeringTaskSpec } from "./engineering-types.ts";
@@ -5,6 +6,13 @@ import { scheduleObligation, type FreshnessObligation } from "../scheduler/oblig
 import type { AcquirerResult } from "./research-types.ts";
 import type { Jurisdiction, JurisdictionSource } from "../../hunt/jurisdiction-universe.ts";
 import type { WorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
+import { missionPartOf } from "../expansion/mission-parts.ts";
+
+/** The mission part a plan's record class starts in (CH-15's starting parts). Omitted when no part takes it. */
+function partFor(recordClass: string): { readonly missionPart?: string } {
+  const part = missionPartOf({ recordClass });
+  return part ? { missionPart: part } : {};
+}
 
 /** Initial instructions for an owner-requested family. Registry addresses are
  * leads, never invented observations. An evidence-backed repair supplies the
@@ -21,6 +29,20 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
       ? { recordClass: "VOTER_ACCESS_ROUTE", fields: ["bodyName", "state", "kind", "url", "coverage", "coverageEvidence"] }
     : source.recordClass === "BALLOT_AND_CANDIDATES"
       ? { recordClass: "BALLOT_CONTEST", fields: ["election", "office", "candidateName", "jurisdictionName"] }
+    : source.recordClass === "BALLOT_MEASURES"
+      ? { recordClass: "BALLOT_MEASURE", fields: ["election", "title", "jurisdictionName", "textUrl"] }
+    : source.recordClass === "GOVERNMENT_FINANCE" || source.recordClass === "SPECIAL_DISTRICT_BOUNDARIES"
+      ? { recordClass: "PUBLIC_RECORD", fields: ["bodyName", "title", "kindLabel", "sourceSentence"] }
+    : source.recordClass === "POLLING_PLACES"
+      ? { recordClass: "VOTING_SITE", fields: ["jurisdictionName", "model", "name", "address", "kind"] }
+    : source.recordClass === "PUBLIC_RECORDS"
+      ? { recordClass: "PUBLIC_RECORD", fields: ["bodyName", "title", "kindLabel", "sourceSentence"] }
+    : source.recordClass === "ADOPTED_BUDGETS"
+      ? { recordClass: "ADOPTED_BUDGET", fields: ["bodyName", "title", "fiscalYear", "version", "documentUrl", "sourceSentence"] }
+    : source.recordClass === "BUDGET_RESPONSIBILITIES"
+      ? { recordClass: "BUDGET_RESPONSIBILITY", fields: ["bodyName", "role", "responsible", "authorityKind", "sourceSentence"] }
+    : source.recordClass === "BUDGET_AMENDMENTS"
+      ? { recordClass: "BUDGET_AMENDMENT", fields: ["bodyName", "title", "fiscalYear", "budgetVersion", "documentUrl", "sourceSentence"] }
       : { recordClass: "CAMPAIGN_FINANCE_FILING", fields: ["bodyName", "jurisdictionName", "committeeName", "filingPeriod", "documentUrl"] };
   const seedUrls = [...new Set([source.url, jurisdiction.ownWebAddress].filter((url): url is string => {
     if (!url) return false;
@@ -29,10 +51,15 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
   return {
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
     sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
+    ...partFor(spec.recordClass),
+    ...(bodyId && workerDoorForRecord(spec.recordClass) ? { publication: { contractId: workerDoorForRecord(spec.recordClass)!, bodyId } } : {}),
     ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
     ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
+    ...(source.recordClass === "POLLING_PLACES" && bodyId ? { publication: { contractId: "voting-sites" as const, bodyId } } : {}),
     ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
-    ...(spec.recordClass === "BALLOT_CONTEST" && bodyId ? { publication: { contractId: "ballot-contests" as const, bodyId } } : {}),
+    ...(["BALLOT_CONTEST", "BALLOT_MEASURE"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "ballot-contests" as const, bodyId } } : {}),
+    ...(spec.recordClass === "PUBLIC_RECORD" && bodyId ? { publication: { contractId: source.recordClass === "SPECIAL_DISTRICT_BOUNDARIES" ? "special-district-boundaries" as const : source.recordClass === "GOVERNMENT_FINANCE" ? "government-budgets" as const : "public-records" as const, bodyId } } : {}),
+    ...(["ADOPTED_BUDGET", "BUDGET_RESPONSIBILITY", "BUDGET_AMENDMENT"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "government-budgets" as const, bodyId } } : {}),
     ...(["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "official-filings" as const, bodyId } } : {}),
     contract: {
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
@@ -60,7 +87,7 @@ export function publicCommentDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
     routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED", owed: "Find the body's published public-comment rules, including signup, written comments, attendance and speaking limits. Take each from the body's own official page; do not infer permission to speak from an open meeting.",
     citation: `Registered government ${jurisdiction.id}, body ${bodyId}.` }, routeId, bodyId)!;
   if (base.contract.schemaVersion !== 2) throw new Error("PUBLIC_COMMENT_TEMPLATE_INVALID");
-  return { ...base, capability: "meetings/public-comment", publication: { contractId: "comment-access", bodyId },
+  return { ...base, capability: "meetings/public-comment", publication: { contractId: "comment-access", bodyId }, ...partFor("PUBLIC_COMMENT_RULE"),
     sourceRegistryReferences: [...base.sourceRegistryReferences, bodyId],
     contract: { ...base.contract, recordClass: "PUBLIC_COMMENT_RULE", requiredFields: ["bodyName", "commentPeriod", "commentPeriodDetail"],
       identity: { namespace: `${jurisdiction.id}:public-comment`, keyFields: ["bodyName"] },
@@ -79,7 +106,7 @@ export function bodyDirectoryDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
   if (base.contract.schemaVersion !== 2) throw new Error("DIRECTORY_TEMPLATE_INVALID");
   const { publication: _old, ...plan } = base;
   const divisionId = jurisdiction.ocdId ?? bodyId?.split("#")[0] ?? null;
-  return { ...plan, capability: "governments/body-directory",
+  return { ...plan, capability: "governments/body-directory", ...partFor("OFFICIAL_BOARD_DIRECTORY"),
     directorySubject: { jurisdiction, divisionId },
     publication: { contractId: "registry-runtime-bindings", bodyId: bodyId ?? `unresolved:${jurisdiction.id}` },
     contract: { ...base.contract, recordClass: "OFFICIAL_BOARD_DIRECTORY",
@@ -108,11 +135,13 @@ export function isRetiredRoutineMeetingAcquisition(
 
 /** Work instructions, never evidence or a readiness label. Stored with the owed WorkItem. */
 export interface AutonomousWorkPlan {
+  /** The mission part this work belongs to (CH-16), set where the plan is built. Read it with `missionPartOfPlan`. */
+  readonly missionPart?: string;
   readonly directorySubject?: { readonly jurisdiction: Jurisdiction; readonly divisionId: string | null };
   readonly ownerInstructions?: readonly string[];
   /** Existing reader door selected by the system's exact body join, never by a model. */
   readonly publication?:
-    { readonly contractId: "registry-runtime-bindings" | WorkerReaderContract; readonly bodyId: string };
+    { readonly contractId: "registry-runtime-bindings" | WorkerReaderContract | "campaign-finance" | "special-district-boundaries"; readonly bodyId: string };
   readonly freshness?: Pick<FreshnessObligation,"readerImpactAt"|"observedChangeRateHours"|"declaredCycleHours">;
   readonly version: 1;
   readonly contract: CivicExtractionContract;

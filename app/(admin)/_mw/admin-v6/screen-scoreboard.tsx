@@ -36,7 +36,8 @@ export function ScoreboardScreen() {
                 <div><span className={s.big}>{r.value ?? "—"}</span></div>
                 {r.counts && <p className={s.meta}>{r.counts}</p>}
                 <p className={s.meta}>{r.notMeasured ?? r.says}</p>
-                <Technical lines={[r.id, ...(r.notMeasured ? [r.says] : [])]} />
+                {r.items && r.items.length > 0 && <ul className={s.meta}>{r.items.map((item, i) => <li key={i}>{item}</li>)}</ul>}
+                <Technical lines={[r.id, ...(r.notMeasured ? [r.says] : []), ...(r.technical ?? [])]} />
               </Card>
             ))}
           </section>

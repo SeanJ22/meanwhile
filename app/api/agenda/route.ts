@@ -65,11 +65,11 @@ export async function GET(request: Request) {
     );
   }
   const snapshot = read.value;
-  const meeting = snapshot.meetings.find((row) => row.id === meetingId);
+  const meeting = snapshot.meetings.find((row) => row.id === meetingId || row.mergedMeetingIds?.includes(meetingId));
   const support = await settleAgendaSupportingHoldings(meetingId, meeting?.bodyId ?? null, {
     outcomes: async () => {
       await settleOutcomeRead();
-      return meetingReaderRecords(meetingId, meeting?.bodyId);
+      return meetingReaderRecords(meetingId, meeting?.bodyId, meeting?.mergedMeetingIds);
     },
     listingIdentity: async () => {
       await settleRegistryAuthorityReads("REGISTRY");
@@ -77,7 +77,7 @@ export async function GET(request: Request) {
     },
   });
   const observation = meeting ? observationFromMeetingRecord(meeting) : null;
-  const heldDocuments = snapshot.agendaDocuments.filter(doc => doc.meetingId === meetingId);
+  const heldDocuments = snapshot.agendaDocuments.filter(doc => doc.meetingId === (meeting?.id ?? meetingId));
   const bodyName = meeting?.bodyName ?? heldDocuments[0]?.sourceOrg;
   const publication = bodyName ? classifyAgendaPublication({
     meetingId, bodyName,

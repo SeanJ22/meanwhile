@@ -102,11 +102,12 @@ Byte-current means current against committed inputs. External observations keep 
 
 ### Tracked holdings superseded by a successor holding
 
-1 of 1 tracked holdings superseded by a successor holding; every table row is rendered below.
+2 of 2 tracked holdings superseded by a successor holding; every table row is rendered below.
 
 | Former tracked holding | Disposition | Successor holding | Frozen bytes kept at | Reason |
 | --- | --- | --- | --- | --- |
 | `data/derived/zip-division-ids.json` (frozen SHA-256 `823606e9c052a0961b03dd236cc4123870b1baa857e6e7bb29f0fa5aaa9c33cd`) | SUPERSEDED_BY_SUCCESSOR_HOLDING | [data/derived/zip-divisions](../../data/derived/zip-divisions) | [tests/fixtures/zip-division-ids-three-state.json](../../tests/fixtures/zip-division-ids-three-state.json) | The three-state ZIP index named a government for a ZIP only where this repository had committed its polygon, so it held 279 ZIPs in three states. Sean's direction (2026-09-23) is to track every area without a code change: the national index built by scripts/build-zip-division-shards.mts carries every division reaching each of the country's 33,791 ZIP codes, one shard per two-digit ZIP prefix, and every reader of the old file now reads it. The exact frozen bytes are kept as the baseline that build and tests/zip-division-shards.test.ts compare against, so no ZIP loses a division the committed geometry still carries. |
+| `data/derived/gap-ledger.json` (frozen SHA-256 `eeb1f2900c4889be7bd2d376c01a3f124553b6ee9ece6dc8865928178b357275`) | SUPERSEDED_BY_SUCCESSOR_HOLDING | [data/states](../../data/states) | [tests/fixtures/gap-ledger-frozen.json](../../tests/fixtures/gap-ledger-frozen.json) | The gap ledger was a committed snapshot of the meetings-discovery needs derived from the jurisdiction registries, for a hard-coded list of pilot ZIPs. The approved plan's CH-21 (2026-10-05) retires it: the free discovery walk now takes the calendar blanks of every Send's mission map, derived at run time from the same registries under data/states/<st>/jurisdictions/ and the promoted registrations, and an old jurisdiction meetings row retires only when its body holds a calendar route on the owed rows. The exact frozen bytes are kept as a test baseline. |
 
 ### Curated holding records
 

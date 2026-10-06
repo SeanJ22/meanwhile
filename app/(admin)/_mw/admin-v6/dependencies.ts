@@ -107,7 +107,7 @@ export const SECTION_DEP = {
   fixes: {
     id: "DEP-FIX-LIFECYCLE",
     owner: "Codex (fix lifecycle)",
-    need: "Open fixes with owner, resources and task stages, and fixed history with recheck, results since, what was saved, who uses it and learning status from evidence.",
+    need: "Open fixes with owner, resources and task stages, and fixed history with recheck, results since, what was saved and who uses it.",
   },
   decided: {
     id: "DEP-DECISIONS",

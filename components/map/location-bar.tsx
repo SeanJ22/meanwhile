@@ -1,5 +1,6 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,7 @@ import { ZipComb } from "./zip-comb";
 const MESSAGES = {
   malformed: "Five digits.",
   unknown: "No such zip code.",
-  uncovered: "We’re working on getting this info.",
+  uncovered: "__coverage_gap__",
 } as const;
 
 interface LocationBarProps {
@@ -63,10 +64,10 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
     return (
       <div className="panel pointer-events-auto flex items-stretch">
         <div className="px-4 py-2.5">
-          <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
+          <p className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
             Showing
           </p>
-          <p className="mt-0.5 font-mono text-lg leading-none tabular-nums text-paper">
+          <p className="mt-0.5 font-mono t-title leading-none tabular-nums text-paper">
             {zip}
           </p>
         </div>
@@ -79,10 +80,10 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
           data-meeting-count={meetingCount}
           className="hidden border-l border-rule-soft px-4 py-2.5 sm:block"
         >
-          <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
+          <p className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
             Meetings
           </p>
-          <p className="mt-0.5 font-mono text-lg leading-none tabular-nums text-paper">
+          <p className="mt-0.5 font-mono t-title leading-none tabular-nums text-paper">
             {meetingCount}
           </p>
         </div>
@@ -93,7 +94,7 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
             setError(null);
             setEditing(true);
           }}
-          className="trailing-space-trimmed-16 border-l border-rule-soft px-4 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-paper-dim transition-colors hover:bg-ink-raised hover:text-signal"
+          className="trailing-space-trimmed-16 border-l border-rule-soft px-4 font-mono t-caption uppercase tracking-[0.16em] text-paper-dim transition-colors hover:bg-ink-raised hover:text-signal"
         >
           Change
         </button>
@@ -103,7 +104,7 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
 
   return (
     <div className="panel pointer-events-auto w-[19rem] p-4">
-      <p className="trailing-space-trimmed-18 mb-2.5 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-muted">
+      <p className="trailing-space-trimmed-18 mb-2.5 font-mono t-caption uppercase tracking-[0.18em] text-muted">
         New zip code
       </p>
 
@@ -120,8 +121,8 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
       />
 
       {error && (
-        <p id="location-bar-error" role="alert" className="mt-2 text-sm text-signal">
-          {error}
+        <p id="location-bar-error" role="alert" className="mt-2 t-body text-signal">
+          {error === MESSAGES.uncovered ? <WorkingOnIt inline /> : error}
         </p>
       )}
 

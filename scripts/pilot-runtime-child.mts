@@ -1,8 +1,11 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { createHash } from "node:crypto";
 import type { BoundedChildCommand, BoundedChildResult } from "../lib/civic-data/bounded-child-pass.ts";
+import { RESEARCH_STALL_PROBE, STALL_REPORT_PREFIX } from "../lib/control-plane/scheduler/round-progress.ts";
 
 export const RUNTIME_NO_PROGRESS_MS = 10 * 60_000;
+/** How long before the no-progress limit the child is asked what it is waiting on; its answer is not progress. */
+export const STALL_PROBE_LEAD_MS = 60_000;
 const ownedChildren = new Set<{ lastProgressAt: number; stop: (reason: string) => Promise<void> }>();
 const progressListeners = new Set<() => void>();
 
@@ -84,6 +87,7 @@ export async function runRuntimeChildren(
     let overflow = false;
     let stopped = false;
     let idle: ReturnType<typeof setTimeout> | undefined;
+    let probe: ReturnType<typeof setTimeout> | undefined;
     const partial = { stdout: "", stderr: "" };
     const observed = new Set<string>();
     const child = spawn(command.executable, [...command.args], {
@@ -98,6 +102,7 @@ export async function runRuntimeChildren(
       stopped = true;
       errorMessage = reason;
       clearTimeout(idle);
+      clearTimeout(probe);
       const line = `\n${reason}; ending owned child ${command.id} process tree pid ${child.pid ?? "unstarted"}\n`;
       stderr += line;
       options.onStderr?.(command.id, line);
@@ -108,6 +113,13 @@ export async function runRuntimeChildren(
       owned.lastProgressAt = Date.now();
       for (const listener of progressListeners) listener();
       clearTimeout(idle);
+      clearTimeout(probe);
+      if (options.noProgressMs && child.connected) {
+        const noProgressMs = options.noProgressMs;
+        probe = setTimeout(() => {
+          if (child.connected) child.send({ kind: RESEARCH_STALL_PROBE }, () => undefined);
+        }, Math.max(noProgressMs - STALL_PROBE_LEAD_MS, Math.floor(noProgressMs / 2)));
+      }
       if (options.noProgressMs) idle = setTimeout(() => {
         void owned.stop(`RESEARCH_CHILD_NO_PROGRESS: no completed phase, worker admission or changed child output for ${options.noProgressMs}ms`)
           .catch(error => { errorMessage = `${errorMessage}; ${String(error)}`; child.kill("SIGKILL"); });
@@ -123,7 +135,7 @@ export async function runRuntimeChildren(
       const lines = partial[stream].split(/\r?\n/);
       partial[stream] = lines.pop() ?? "";
       for (const line of lines) {
-        if (!line.trim() || /heartbeat|\bbeatAt\b|runtime release|release (?:drain|handoff)|RUNTIME_RELEASE_DRAIN/i.test(line)) continue;
+        if (!line.trim() || line.includes(STALL_REPORT_PREFIX) || /heartbeat|\bbeatAt\b|runtime release|release (?:drain|handoff)|RUNTIME_RELEASE_DRAIN/i.test(line)) continue;
         const key = createHash("sha256").update(`${stream}:${line}`).digest("hex");
         if (!observed.has(key)) { observed.add(key); renew(); }
       }
@@ -138,6 +150,7 @@ export async function runRuntimeChildren(
     child.once("error", error => { errorMessage = error.message; });
     child.once("close", (code, signal) => {
       clearTimeout(idle);
+      clearTimeout(probe);
       ownedChildren.delete(owned);
       resolve({ id: command.id, status: stopped ? null : code,
         signal, stdout, stderr, termination: overflow ? "OUTPUT_LIMIT_EXCEEDED" : stopped ? "TIMED_OUT" : errorMessage ? "SPAWN_FAILED" : "EXITED",

@@ -213,17 +213,15 @@ function innerText(markup: string): string {
     .trim();
 }
 
-/** The venue card's per-row carried line — the row's footer, where it lives. */
-function panelLine(markup: string, meetingId: string): string | null {
-  const article = markup.split(`data-meeting-id="${meetingId}"`)[1]?.split("</article>")[0];
-  assert.ok(article !== undefined, `the venue card rendered no row for ${meetingId}`);
-  return /Last reached.*$/.exec(innerText(`<i ${article}`))?.[0] ?? null;
+/** Carried metadata belongs to this sitting's retained Sources row. */
+function sourceLine(markup: string, meetingId: string): string | null {
+  const tail = markup.split(`data-meeting-carried-source="${meetingId}"`)[1];
+  return tail ? innerText(/<p[^>]*>([\s\S]*?)<\/p>/.exec(tail)?.[1] ?? "") : null;
 }
-
-/** The popup's "Last reached" row, label and value. */
+function panelLine(markup: string, meetingId: string): string | null { return sourceLine(markup, meetingId); }
 function popupLine(markup: string): string | null {
-  const row = /<div class="popup-row"><span class="pk">Last reached<\/span><span class="pv">([\s\S]*?)<\/span><\/div>/.exec(markup);
-  return row ? `Last reached ${innerText(row[1]!)}` : null;
+  const id = /data-meeting-carried-source="([^"]+)"/.exec(markup)?.[1];
+  return id ? sourceLine(markup, id) : null;
 }
 
 const AGE = String.raw`(?:just now|\d+ (?:minute|hour|day)s? ago)`;
@@ -416,7 +414,7 @@ test("both surfaces render the decided clause for every reason, and neither call
     );
     assert.match(
       popupLine(popups[meeting.id] ?? "") ?? "(no line)",
-      clause === null ? new RegExp(`^Last reached ${AGE}$`) : new RegExp(`^Last reached ${AGE} ${escape(clause)}$`),
+      clause === null ? new RegExp(`^Last reached ${AGE}$`) : new RegExp(`^Last reached ${AGE} — ${escape(clause)}$`),
       `popup, ${reason}`,
     );
   }
@@ -457,10 +455,10 @@ function withoutComments(source: string): string {
 }
 
 test("no reader surface writes a carried-row sentence of its own; both go through the one decider", () => {
-  for (const rel of ["components/map/meeting-panel.tsx", "components/map/popup/meeting-popup.tsx"]) {
+  for (const rel of ["lib/officials/card-sources.ts"]) {
     const code = withoutComments(readFileSync(join(ROOT, rel), "utf8"));
     assert.ok(
-      /import \{[^}]*\bcarriedRowClause\b[^}]*\} from "@\/lib\/meetings\/freshness"/.test(code),
+      /import \{[^}]*\bcarriedRowClause\b[^}]*\} from "\.\.\/meetings\/freshness\.ts"/.test(code),
       `${rel} does not import the decider`,
     );
     assert.ok(/carriedRowClause\(meeting\.carried\)/.test(code), `${rel} does not ask the decider about its own row`);

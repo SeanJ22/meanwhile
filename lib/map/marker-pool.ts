@@ -135,7 +135,7 @@ export function renderedSignature(venue: Venue): string {
   );
   const concluded =
     venue.meetings.length > 0 && venue.meetings.every((m) => m.status === "CONCLUDED");
-  return [venue.name, venue.meetings.length, concluded ? "c" : "o", levels.join(","), readerMeetingCount(venue.meetings, venue.listingIdentity).groups.map(group => group.sourceIds.join(",")).join(";")].join("|");
+  return [venue.kind ?? "PHYSICAL", venue.name, venue.meetings.length, concluded ? "c" : "o", levels.join(","), readerMeetingCount(venue.meetings, venue.listingIdentity).groups.map(group => group.sourceIds.join(",")).join(";")].join("|");
 }
 
 export function createMarkerPool(): MarkerPool {
@@ -280,6 +280,9 @@ export function updateMarkerIcon(
     count > 0 && venue.meetings.every((m) => m.status === "CONCLUDED");
 
   element.dataset.concluded = String(concluded);
+  element.dataset.venueKind = venue.kind ?? "PHYSICAL";
+  element.dataset.meetingIds = JSON.stringify(venue.meetings.map(meeting => meeting.id));
+  element.dataset.joinUrls = JSON.stringify(venue.kind === "ONLINE_ONLY" ? venue.meetings.map(meeting => meeting.online?.joinUrl ?? null) : []);
 
   /*
    * Dot color says which level of government meets here (2g): school, local,
@@ -296,7 +299,11 @@ export function updateMarkerIcon(
     );
     element.dataset.levels = levels.join(" ");
 
-    if (concluded || levels.length === 0) {
+    if (venue.kind === "ONLINE_ONLY") {
+      dot.style.background = "";
+      element.style.setProperty("--pin-color", "var(--online)");
+      element.style.setProperty("--pin-glow", "var(--online)");
+    } else if (concluded || levels.length === 0) {
       dot.style.background = "";
       element.style.removeProperty("--pin-color");
       element.style.removeProperty("--pin-glow");
@@ -320,13 +327,13 @@ export function updateMarkerIcon(
 
   element.setAttribute(
     "aria-label",
-    `${venue.name}, ${count} ${listingCount.unit}${listingCount.countNote ? `. ${listingCount.countNote}` : ""}`,
+    `${venue.kind === "ONLINE_ONLY" ? "Online only: " : ""}${venue.name}, ${count} ${listingCount.unit}${listingCount.countNote ? `. ${listingCount.countNote}` : ""}`,
   );
 
   const badge = element.querySelector<HTMLSpanElement>(".wtp-pin-count");
   if (badge) {
-    badge.textContent = count > 1 ? String(count) : "";
-    badge.hidden = count <= 1;
+    badge.textContent = venue.kind === "ONLINE_ONLY" ? "Online only" : count > 1 ? String(count) : "";
+    badge.hidden = venue.kind !== "ONLINE_ONLY" && count <= 1;
   }
 }
 

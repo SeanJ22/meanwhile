@@ -44,6 +44,46 @@ export const MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT = {
   calendarUrl: "https://mesa.legistar.com/Calendar.aspx",
 } as const;
 
+/**
+ * One Legistar body's outcome tenant (DB-22): the facts a candidate builder needs that differ between bodies. The
+ * defaults below are Pima's and Mesa's own contracts, so their candidates are built exactly as before; a body added
+ * as a door builds the same candidate from the tenant `lib/civic-data/outcome-partitions.ts` makes for it.
+ */
+export interface OutcomeTenant {
+  readonly contractId: string;
+  readonly sourceId: string;
+  readonly recordClass: "MEETING_OUTCOME";
+  readonly scope: string;
+  readonly parserVersion: string;
+  /** The `{client}` segment at webapi.legistar.com, and the tenant name every sitting carries. */
+  readonly slug: string;
+  /** A name for the body's government in a sentence ("Pima", "Mesa"). */
+  readonly label: string;
+  /** The state jurisdiction a sitting's identity is filed under, e.g. `US-AZ`. */
+  readonly jurisdiction: string;
+  /** The first route the run reads; named when no response was acquired. */
+  readonly requestedUrl: string;
+  /** The portal host the minutes route reads (`mesa.legistar.com`); the API route has none. */
+  readonly portalHost: string | null;
+}
+
+export const PIMA_OUTCOME_TENANT: OutcomeTenant = {
+  ...PIMA_LEGISTAR_OUTCOMES_CONTRACT,
+  slug: "pima",
+  label: "Pima",
+  jurisdiction: "US-AZ",
+  requestedUrl: "https://webapi.legistar.com/v1/pima/events",
+  portalHost: null,
+};
+
+export const MESA_OUTCOME_TENANT: OutcomeTenant = {
+  ...MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT,
+  label: "Mesa",
+  jurisdiction: "US-AZ",
+  requestedUrl: MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.calendarUrl,
+  portalHost: "mesa.legistar.com",
+};
+
 function sha256(value: string | Uint8Array): string {
   return createHash("sha256").update(value).digest("hex");
 }
@@ -370,21 +410,21 @@ function acquisitionHash(evidence: readonly SourceAcquisitionEvidence[]): string
   return sha256(canonicalCivicDataJson(evidence.map(({ source: _source, ...row }) => row)));
 }
 
-/** A Pima Legistar candidate built only from exact HTTP-response receipts. */
-export function pimaLegistarOutcomesCandidate(input: {
+/** A Legistar candidate for one tenant (Pima unless told otherwise), built only from exact HTTP-response receipts. */
+export function legistarOutcomesCandidate(input: {
   readonly snapshot: OutcomeSnapshot;
   readonly acquisitions: readonly SourceAcquisitionEvidence[];
   readonly retrievedAt: string;
   readonly sourceThrough: string;
   readonly failureDetail?: string;
-}): RoutineCandidate {
+}, tenant: OutcomeTenant = PIMA_OUTCOME_TENANT): RoutineCandidate {
   const { snapshot, acquisitions } = input;
   const members = snapshot.sittings.flatMap(sittingMembers).sort((left, right) => left.key.localeCompare(right.key));
   const ids = snapshot.sittings.map((sitting) => sitting.meetingId);
   const violations: string[] = [];
   if (new Set(ids).size !== ids.length) violations.push("Legistar sitting ids are duplicated.");
-  if (snapshot.tenants.some((tenant) => tenant !== "pima") || snapshot.sittings.some((sitting) => sitting.slug !== "pima")) {
-    violations.push("The Pima outcome contract contains a different tenant.");
+  if (snapshot.tenants.some((name) => name !== tenant.slug) || snapshot.sittings.some((sitting) => sitting.slug !== tenant.slug)) {
+    violations.push(`The ${tenant.label} outcome contract contains a different tenant.`);
   }
   const failedSittings = snapshot.sittings.filter((sitting) => sitting.extraction !== "RETRIEVED");
   if (failedSittings.length > 0) {
@@ -394,7 +434,7 @@ export function pimaLegistarOutcomesCandidate(input: {
   if (voteFailures.length > 0) {
     violations.push(`${voteFailures.length} expected per-item vote request(s) failed; the prior GOOD projection remains live.`);
   }
-  if (snapshot.sittings.some((sitting) => !sitting.meetingId.startsWith("legistar:pima:") || !sitting.sourceOrg || !sitting.publication.observedAt)) {
+  if (snapshot.sittings.some((sitting) => !sitting.meetingId.startsWith(`legistar:${tenant.slug}:`) || !sitting.sourceOrg || !sitting.publication.observedAt)) {
     violations.push("A sitting lacks its exact tenant identity, publisher, or observation time.");
   }
   if (new Set(members.map((member) => member.key)).size !== members.length) {
@@ -406,27 +446,27 @@ export function pimaLegistarOutcomesCandidate(input: {
   const normalizedPayloadHash = sha256(canonicalCivicDataJson(normalizedPayload));
   const primary = acquisitions[0];
   return {
-    id: `cv-${sha256(`${PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId}\u001f${PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope}\u001f${rawHash ?? "failed"}\u001f${projectionHash}\u001f${input.failureDetail ?? "ok"}\u001f${input.retrievedAt}`).slice(0, 32)}`,
-    sourceId: PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId,
-    recordClass: PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
-    scope: PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
+    id: `cv-${sha256(`${tenant.sourceId}\u001f${tenant.scope}\u001f${rawHash ?? "failed"}\u001f${projectionHash}\u001f${input.failureDetail ?? "ok"}\u001f${input.retrievedAt}`).slice(0, 32)}`,
+    sourceId: tenant.sourceId,
+    recordClass: tenant.recordClass,
+    scope: tenant.scope,
     sourceProjectionEvidence: sourceProjectionEvidence(
-      PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId,
-      PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
-      PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
+      tenant.sourceId,
+      tenant.recordClass,
+      tenant.scope,
     ),
     retrieval: {
       succeeded: acquisitions.length > 0 && input.failureDetail === undefined,
-      requestedUrl: primary?.requestedUrl ?? "https://webapi.legistar.com/v1/pima/events",
+      requestedUrl: primary?.requestedUrl ?? tenant.requestedUrl,
       finalUrl: primary?.finalUrl ?? null,
       httpStatus: primary?.httpStatus ?? null,
       retrievedAt: input.retrievedAt,
       rawHash,
-      failureDetail: input.failureDetail ?? (acquisitions.length > 0 ? undefined : "No Pima Legistar response bytes were acquired."),
+      failureDetail: input.failureDetail ?? (acquisitions.length > 0 ? undefined : `No ${tenant.label} Legistar response bytes were acquired.`),
     },
     normalization: {
       succeeded: true,
-      parserVersion: PIMA_LEGISTAR_OUTCOMES_CONTRACT.parserVersion,
+      parserVersion: tenant.parserVersion,
       schemaVersion: "legistar-outcomes/2",
       normalizedHash: projectionHash,
       normalizedPayloadHash,
@@ -437,7 +477,7 @@ export function pimaLegistarOutcomesCandidate(input: {
     },
     identities: snapshot.sittings.map((sitting) => ({
       subjectId: sitting.meetingId,
-      jurisdiction: "US-AZ",
+      jurisdiction: tenant.jurisdiction,
       identifiers: { meeting_id: sitting.meetingId, event_id: String(sitting.eventId) },
       matchBasis: "OFFICIAL_ID" as const,
       ambiguous: false,
@@ -448,10 +488,10 @@ export function pimaLegistarOutcomesCandidate(input: {
       sourceThrough: input.sourceThrough,
       staleAtRetrieval: false,
     },
-    semantics: { factKind: "Pima Legistar agenda actions and exact per-person roll calls", violations },
+    semantics: { factKind: `${tenant.label} Legistar agenda actions and exact per-person roll calls`, violations },
     horizon: {
       kind: "OPEN_FACT_SET",
-      query: "Pima Legistar events and each changed sitting's event-items and item-votes routes",
+      query: `${tenant.label} Legistar events and each changed sitting's event-items and item-votes routes`,
       returnedRecords: members.length,
       declaredTotal: null,
       paginationComplete: true,
@@ -461,7 +501,7 @@ export function pimaLegistarOutcomesCandidate(input: {
     dependentChecks: [
       {
         consumer: "lib/outcomes/store.ts",
-        passed: snapshot.sittings.every((sitting) => sitting.meetingId === `legistar:pima:${sitting.eventId}`),
+        passed: snapshot.sittings.every((sitting) => sitting.meetingId === `legistar:${tenant.slug}:${sitting.eventId}`),
         detail: "Every outcome joins to its sitting by the adapter's exact source-namespaced meeting id.",
       },
       {
@@ -488,14 +528,24 @@ export function pimaLegistarOutcomesCandidate(input: {
   };
 }
 
+/** Pima's candidate, as it has always been built. */
+export function pimaLegistarOutcomesCandidate(input: Parameters<typeof legistarOutcomesCandidate>[0]): RoutineCandidate {
+  return legistarOutcomesCandidate(input, PIMA_OUTCOME_TENANT);
+}
+
 const SHA256_HEX = /^[0-9a-f]{64}$/;
 
-/** Mesa's projection identity: the tenant's own slug and portal meeting ids, nothing else. */
-export function mesaMinutesOutcomeScopeIssue(snapshot: OutcomeSnapshot): string | null {
-  const slug = MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.slug;
-  if (snapshot.tenants.some((tenant) => tenant !== slug)) return "The Mesa minutes outcome contract names a different tenant.";
+/** A minutes tenant's projection identity: its own slug and portal meeting ids, nothing else. */
+export function minutesOutcomeScopeIssue(snapshot: OutcomeSnapshot, tenant: OutcomeTenant = MESA_OUTCOME_TENANT): string | null {
+  const slug = tenant.slug;
+  if (snapshot.tenants.some((name) => name !== slug)) return `The ${tenant.label} minutes outcome contract names a different tenant.`;
   const stray = snapshot.sittings.find((sitting) => sitting.slug !== slug || sitting.meetingId !== `legistar-insite:${slug}:${sitting.eventId}`);
-  return stray ? `${stray.meetingId} crosses the Mesa tenant or its portal meeting-id scope.` : null;
+  return stray ? `${stray.meetingId} crosses the ${tenant.label} tenant or its portal meeting-id scope.` : null;
+}
+
+/** Mesa's projection identity, as it has always been checked. */
+export function mesaMinutesOutcomeScopeIssue(snapshot: OutcomeSnapshot): string | null {
+  return minutesOutcomeScopeIssue(snapshot, MESA_OUTCOME_TENANT);
 }
 
 /**
@@ -508,20 +558,21 @@ export function mesaMinutesOutcomeScopeIssue(snapshot: OutcomeSnapshot): string 
  * sitting whose minutes are not yet published is a valid, stated row — a fact
  * about the publisher, never a failure of ours.
  */
-export function mesaLegistarMinutesOutcomesCandidate(input: {
+export function legistarMinutesOutcomesCandidate(input: {
   readonly snapshot: OutcomeSnapshot;
   readonly acquisitions: readonly SourceAcquisitionEvidence[];
   readonly retrievedAt: string;
   readonly sourceThrough: string;
   readonly failureDetail?: string;
-}): RoutineCandidate {
+}, tenant: OutcomeTenant = MESA_OUTCOME_TENANT): RoutineCandidate {
   const { snapshot, acquisitions } = input;
-  const contract = MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT;
+  const contract = tenant;
+  const portalPrefix = `https://${tenant.portalHost}/`;
   const members = snapshot.sittings.flatMap(sittingMembers).sort((left, right) => left.key.localeCompare(right.key));
   const violations: string[] = [];
   const ids = snapshot.sittings.map((sitting) => sitting.meetingId);
-  if (new Set(ids).size !== ids.length) violations.push("Mesa sitting ids are duplicated.");
-  const scopeIssue = mesaMinutesOutcomeScopeIssue(snapshot);
+  if (new Set(ids).size !== ids.length) violations.push(`${tenant.label} sitting ids are duplicated.`);
+  const scopeIssue = minutesOutcomeScopeIssue(snapshot, tenant);
   if (scopeIssue) violations.push(scopeIssue);
   /*
    * A failed REQUEST read no bytes and is retried soon: it refuses the candidate and the prior GOOD pointer stays
@@ -537,7 +588,7 @@ export function mesaLegistarMinutesOutcomesCandidate(input: {
   }
   for (const sitting of snapshot.sittings.filter((row) => row.failedMinutesRead !== undefined)) {
     const read = sitting.failedMinutesRead!;
-    if (!SHA256_HEX.test(read.sha256) || !read.url.startsWith("https://mesa.legistar.com/") || !read.reason.trim() || !read.parserRevision) {
+    if (!SHA256_HEX.test(read.sha256) || !read.url.startsWith(portalPrefix) || !read.reason.trim() || !read.parserRevision) {
       violations.push(`${sitting.meetingId} holds a failed minutes read without the exact document, digest, parser and reason it failed on.`);
     }
     if (sitting.extraction === "ZERO_ROWS_FAILED" && (sitting.outcomes.length > 0 || sitting.agenda.length > 0 || sitting.rollCalls.length > 0)) {
@@ -556,7 +607,7 @@ export function mesaLegistarMinutesOutcomesCandidate(input: {
   }
   for (const sitting of snapshot.sittings.filter((row) => row.extraction === "RETRIEVED")) {
     const document = sitting.minutesDocument;
-    if (!document || !SHA256_HEX.test(document.sha256) || !document.url.startsWith("https://mesa.legistar.com/")) {
+    if (!document || !SHA256_HEX.test(document.sha256) || !document.url.startsWith(portalPrefix)) {
       violations.push(`${sitting.meetingId} carries outcomes without the exact minutes document they were read from.`);
       continue;
     }
@@ -584,12 +635,12 @@ export function mesaLegistarMinutesOutcomesCandidate(input: {
     sourceProjectionEvidence: sourceProjectionEvidence(contract.sourceId, contract.recordClass, contract.scope),
     retrieval: {
       succeeded: acquisitions.length > 0 && input.failureDetail === undefined,
-      requestedUrl: primary?.requestedUrl ?? contract.calendarUrl,
+      requestedUrl: primary?.requestedUrl ?? contract.requestedUrl,
       finalUrl: primary?.finalUrl ?? null,
       httpStatus: primary?.httpStatus ?? null,
       retrievedAt: input.retrievedAt,
       rawHash,
-      failureDetail: input.failureDetail ?? (acquisitions.length > 0 ? undefined : "No Mesa portal response bytes were acquired."),
+      failureDetail: input.failureDetail ?? (acquisitions.length > 0 ? undefined : `No ${tenant.label} portal response bytes were acquired.`),
     },
     normalization: {
       succeeded: true,
@@ -604,7 +655,7 @@ export function mesaLegistarMinutesOutcomesCandidate(input: {
     },
     identities: snapshot.sittings.map((sitting) => ({
       subjectId: sitting.meetingId,
-      jurisdiction: "US-AZ",
+      jurisdiction: tenant.jurisdiction,
       identifiers: { meeting_id: sitting.meetingId, event_id: String(sitting.eventId) },
       matchBasis: "OFFICIAL_ID" as const,
       ambiguous: false,
@@ -615,10 +666,10 @@ export function mesaLegistarMinutesOutcomesCandidate(input: {
       sourceThrough: input.sourceThrough,
       staleAtRetrieval: false,
     },
-    semantics: { factKind: "Mesa City Council actions and their recorded results, read off the council's minutes", violations },
+    semantics: { factKind: tenant === MESA_OUTCOME_TENANT ? "Mesa City Council actions and their recorded results, read off the council's minutes" : `${tenant.label} actions and their recorded results, read off the body's minutes`, violations },
     horizon: {
       kind: "OPEN_FACT_SET",
-      query: "Mesa's InSite calendar grid and each changed concluded sitting's minutes document on the portal host",
+      query: `${tenant.label}'s InSite calendar grid and each changed concluded sitting's minutes document on the portal host`,
       returnedRecords: members.length,
       declaredTotal: null,
       paginationComplete: true,
@@ -628,7 +679,7 @@ export function mesaLegistarMinutesOutcomesCandidate(input: {
     dependentChecks: [
       {
         consumer: "lib/outcomes/store.ts",
-        passed: mesaMinutesOutcomeScopeIssue(snapshot) === null,
+        passed: minutesOutcomeScopeIssue(snapshot, tenant) === null,
         detail: "Every outcome joins to its sitting by the InSite adapter's exact portal meeting id.",
       },
       {
@@ -662,4 +713,9 @@ export function mesaLegistarMinutesOutcomesCandidate(input: {
         })),
     ],
   };
+}
+
+/** Mesa's candidate, as it has always been built. */
+export function mesaLegistarMinutesOutcomesCandidate(input: Parameters<typeof legistarMinutesOutcomesCandidate>[0]): RoutineCandidate {
+  return legistarMinutesOutcomesCandidate(input, MESA_OUTCOME_TENANT);
 }

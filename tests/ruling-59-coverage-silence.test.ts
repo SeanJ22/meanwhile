@@ -5,7 +5,6 @@ import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { COLLECTION_NOTE } from "../lib/ballot/collection-note.ts";
 
 /**
  * Rulings §0 supersedes the blanket coverage silence below: derived missing-field
@@ -338,17 +337,9 @@ test("RULING 59: the tier prose is internal-only and reaches no reader", () => {
   );
 });
 
-test("RULING 59: the sanctioned line is exactly one sentence and unchanged", () => {
-  assert.equal(
-    COLLECTION_NOTE,
-    "What we have found, we are displaying here.",
-    "this is the author's own wording (PE01, verbatim). It is the ONE " +
-      "reader-facing completeness statement, and it survives being right " +
-      "forever precisely because it counts nothing.",
-  );
-  assert.equal(
-    COLLECTION_NOTE.split(".").filter((s) => s.trim()).length,
-    1,
-    "one sentence. A second clause is where a count gets added back.",
-  );
+test("FE-30: the retired completeness sentence has no reader import", () => {
+  for (const dir of ["app", "components"]) for (const file of walk(join(ROOT, dir))) {
+    const source = readFileSync(file, "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    assert.doesNotMatch(source, /import[^;]*collection-note|\{COLLECTION_NOTE\}/);
+  }
 });

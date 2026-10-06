@@ -1,6 +1,7 @@
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "./types.ts";
+import { measureRecordIssue } from "./measure-record-contract.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
 /** Each state/election has its own data key; no software source list admits it. */
@@ -22,8 +23,16 @@ export function genericBallotProblems(value: GenericBallotProjection): string[] 
     const ids = new Set(ballot.contests.map(row => row.id));
     if (ids.size !== ballot.contests.length || new Set(ballot.candidacies.map(row => row.id)).size !== ballot.candidacies.length) problems.push("A ballot repeats an identity.");
     if (ballot.contests.some(row => row.electionId !== ballot.election.id || !row.title || jurisdictionFromOcdId(row.ocdId)?.usps !== ballot.election.state ||
-      !row.provenance?.sourceUrl || (row.type === "CANDIDACY" && !ballot.candidacies.some(candidate => candidate.contestId === row.id)))) problems.push("A contest lacks its election, territory, source or candidates.");
+      !row.provenance?.sourceUrl || (row.type === "CANDIDACY" && !ballot.candidacies.some(candidate => candidate.contestId === row.id)) ||
+      row.measureTextUrl !== undefined && (row.type !== "MEASURE" || !/^https:\/\//.test(row.measureTextUrl)))) problems.push("A contest lacks its election, territory, source or candidates.");
     if (ballot.candidacies.some(row => !ids.has(row.contestId) || !row.familyName || !row.provenance?.sourceUrl)) problems.push("A candidacy lacks its exact contest, filed name or source.");
+    const measures = Array.isArray(ballot.measures) ? ballot.measures : [];
+    if (new Set(measures.map(row => row.id)).size !== measures.length || measures.some(row => !row.id || !row.questionText?.trim() ||
+        !ballot.contests.some(contest => contest.id === row.contestId && contest.type === "MEASURE") || !row.provenance?.sourceUrl ||
+        row.officialNumber !== undefined && (typeof row.officialNumber !== "string" || !row.officialNumber.trim()))) problems.push("A measure lacks its exact contest, official wording or source.");
+    if (ballot.measureRecords !== undefined && (!Array.isArray(ballot.measureRecords) ||
+        new Set(ballot.measureRecords.map(row => row.contestId)).size !== ballot.measureRecords.length ||
+        ballot.measureRecords.some(row => measureRecordIssue(row) || !measures.some(measure => measure.contestId === row.contestId)))) problems.push("A measure record lacks its stable source-bound identity.");
   }
   return problems;
 }

@@ -199,6 +199,8 @@ export function bodyPlainLabel(body: Body, divisionLabel: string | null): string
       return `the agency serving ${where}`;
     case "SOVEREIGN_TRIBAL":
       return `the tribal government for ${where}`;
+    default:
+      return `the body for ${where}`;
   }
 }
 

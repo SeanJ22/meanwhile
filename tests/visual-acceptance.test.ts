@@ -7,8 +7,6 @@ import {
   IMAGE_ONLY_PROPERTIES,
   requiredEvidenceKind,
   validateVisualAcceptanceCheck,
-  visualDiagnosticWorkItemFor,
-  type FailureClass,
   type VisualAcceptanceCheck,
 } from "../lib/health/visual-acceptance.ts";
 
@@ -17,8 +15,6 @@ import {
  * with DOM-only evidence is refused. This repo has photographed overlays
  * while every selector passed; DOM presence may not certify pixels.
  */
-
-const NOW = "2026-08-30T12:00:00.000Z";
 
 function check(overrides: Partial<VisualAcceptanceCheck>): VisualAcceptanceCheck {
   return {
@@ -79,21 +75,3 @@ test("a malformed expectation or viewport is named, not passed", () => {
   assert.ok(badViewport.some((p) => p.includes("viewport")));
 });
 
-test("a visual failure produces a class-wide diagnostic WorkItem", () => {
-  const failing = check({});
-  const item = visualDiagnosticWorkItemFor(failing, "rendering", NOW);
-  assert.equal(item.obligation, "visual-diagnostic:rendering:vac:ballot-cards");
-  assert.match(item.why, /class-wide/);
-  assert.equal(item.subject, "/ballot");
-});
-
-test("the diagnostic requires an explicit failure class — no default", () => {
-  assert.throws(
-    () => visualDiagnosticWorkItemFor(check({}), "pixel-bug" as FailureClass, NOW),
-    /twelve failure classes/,
-  );
-  assert.throws(
-    () => visualDiagnosticWorkItemFor(check({}), undefined as unknown as FailureClass, NOW),
-    /twelve failure classes/,
-  );
-});

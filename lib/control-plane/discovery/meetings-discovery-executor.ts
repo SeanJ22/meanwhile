@@ -2,11 +2,11 @@ import { officialLinkingPageFromAsync, type LazyOfficialPage } from "../../sourc
 /**
  * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR.** (2026-09-23.)
  *
- * The gap ledger records every government whose meetings are still to be
- * discovered (`data/derived/gap-ledger.json` → `meetingsDiscovery.needs`).
- * Nothing walked that list: the local-jurisdictions provider opens no MEETINGS
- * route, and the only executor that walks a site is the paid Scout lane. This
- * is the deterministic one. It makes no model call.
+ * A Send's mission map owes every government in its places a meeting calendar;
+ * where a body holds no calendar route, its meetings are still to be discovered
+ * (`lib/hunt/mission-meetings-discovery.ts`, CH-21). The local-jurisdictions
+ * provider opens no MEETINGS route, and the only other executor that walks a
+ * site is the paid Scout lane. This is the deterministic one. It makes no model call.
  *
  * For one need it:
  *
@@ -1094,17 +1094,17 @@ export function walkableByFreeWalk(need: Pick<MeetingsDiscoveryNeed, "basis" | "
 
 /**
  * The needs a pass may walk: every need the owner's dispatch materialized, as
- * its registry records it now, then the committed ledger's others. A dispatched
- * government the ledger does not hold is still walked, and the ledger's older
- * copy of one it does hold gives way.
+ * its registry records it now, then the mission map's calendar blanks (CH-21:
+ * each government in a Send's places whose body holds no calendar route). A
+ * government both name is walked once, as dispatched.
  */
 export function discoveryNeedsToWalk(
-  ledger: readonly MeetingsDiscoveryNeed[],
+  mission: readonly MeetingsDiscoveryNeed[],
   dispatched: readonly MeetingsDiscoveryNeed[],
   accepts: (need: MeetingsDiscoveryNeed) => boolean = () => true,
 ): readonly MeetingsDiscoveryNeed[] {
   const ids = new Set(dispatched.map((n) => n.jurisdictionId));
-  return [...dispatched, ...ledger.filter((n) => !ids.has(n.jurisdictionId))].filter(accepts);
+  return [...dispatched, ...mission.filter((n) => !ids.has(n.jurisdictionId))].filter(accepts);
 }
 
 /**
@@ -1127,6 +1127,8 @@ export async function runMeetingsDiscovery(
     readonly firstIds?: ReadonlySet<string>;
     /** Jurisdictions another executor is working now (an open occurrence): never walked by this one too. */
     readonly skipIds?: ReadonlySet<string>;
+    /** Each walk that ended, however it ended: the round counts it as progress. */
+    readonly onWalk?: (jurisdictionId: string) => void;
   },
 ): Promise<MeetingsDiscoveryPass> {
   const skip = input.skipIds ?? new Set<string>();
@@ -1182,6 +1184,7 @@ export async function runMeetingsDiscovery(
     try {
       attempt = await walkMeetingsDiscoveryNeed(need, { ...input.runtime, priorAttempts });
     } catch (error) {
+      input.onWalk?.(need.jurisdictionId);
       if (error instanceof DiscoveryTimeSpent) {
         deferred.push(need.jurisdictionId);
         cutShort.push({ jurisdictionId: need.jurisdictionId, requests: error.requestCount, search: error.search });
@@ -1197,6 +1200,7 @@ export async function runMeetingsDiscovery(
       continue;
     }
     stalledInARow = 0;
+    input.onWalk?.(need.jurisdictionId);
     walked.push(attempt);
     try {
       await repos.discoveryAttempts.append(need.jurisdictionId, attempt.attemptId, attempt, attempt.finishedAt);

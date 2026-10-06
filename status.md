@@ -4,8 +4,8 @@ build_state: release 10 live (d79f179, 8:26 AM EDT); restart steps pushed to Sea
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01EnWcsto9iudrVWwszS9urS
-lock: river-20261006T075753Z-4037
-heartbeat: 2026-10-06T10:08:43Z
+lock: none
+heartbeat: 2026-10-06T12:29:10Z
 
 
 

@@ -28,3 +28,7 @@ If a removed kind has no executor, keep it on screen as "not available yet" with
 ## Repair
 
 Fix on stream/admin and publish a new READY commit; River folds the new READY and clears this return when it integrates.
+
+## River note, 2026-10-06 ~03:50Z
+
+Money page (Sean, 2026-10-06), in addition to the returns above: show (1) no-result spend by role (Sean's rule: no paid worker ends with nothing; River supplies the result-kind data) and (2) batch versus full-price model spend by role. Plain English.

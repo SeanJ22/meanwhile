@@ -32,3 +32,7 @@ Run `pnpm gates` (it includes the build) before marking READY. Catch up with `ri
 ## Repair
 
 Fix on stream/ballot and publish a new READY commit; River folds the new READY and clears this return when it integrates.
+
+## River note, 2026-10-06 ~03:50Z
+
+Batch API (Sean, 2026-10-06): plain-English summaries (CA-25 translations) are single requests with nobody waiting; send them through model-batch.ts as a registered lane (BATCH_LANES entry with its flag and reason). Ask stays on Messages.

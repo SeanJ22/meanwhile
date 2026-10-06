@@ -40,3 +40,7 @@ Sean's direction (2026-10-06, River session): research runs continuously, withou
 Spend holds under A (River's MW-021 follow-up, on stream/river c51d19d and in release 5): spend-holds.ts now has releaseOpenJobs(holds, jobs, now), and every reader of the ledger goes through liveSpendHolds. The standing lane must call releaseOpenJobs on its shutdown and crash paths for jobs it never settled. A hold older than SPEND_HOLD_STALE_MS (2 h) stops counting, so no job may hold longer than that. Bound the lane's jobs below it.
 
 Order: the post-cutoff deferral return above (01:10Z) comes first. CH-24 part 2 replaces timed rounds, but a round that still exists must not crash in the meantime.
+
+## River note, 2026-10-06 ~03:50Z
+
+Batch API (Sean, 2026-10-06): after CH-24 Proposal A, unattended Scouts send each step through River's shared step batcher (model-batch.ts, coming from River): the job pauses between steps, its conversation is saved so it survives a restart, and it picks up again on the batch result. Ask and Sean's direct orders stay on Messages. Also count the round's cache pre-warm (attemptId scout-prewarm:*) as its own result kind, not a Scout with no result (Sean's no-empty-paid-endings rule, decisions.md).

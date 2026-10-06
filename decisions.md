@@ -91,3 +91,23 @@ Direction: fix the causes, not a cap.
 - Show no-result spend by role on Admin's Money page and in the daily brief, so it cannot hide.
 
 How River carries it: River investigates the causes from production records (read-only) and routes each fix to its owning lane; River builds the shared parts. Recorded in returns as the work lands.
+
+## 2026-10-06 ~03:50Z: Sean, unattended paid work goes through the Batch API
+
+Sean's direction: in the last 30 days, Scout and Detective spend was $209, all at full price, with zero batch requests. Batches are half price, stack with caching, and usually finish within an hour. Route every paid job where nobody is waiting through batches: hunting, plain-English summaries, audits. Keep Ask and Sean's direct orders on the normal path.
+
+River's findings (code, 2026-10-06):
+- model-batch.ts registers only two lanes, background-worker-parse and background-worker-audit (lease-worker PARSER and ADVERSARIAL_AUDITOR, on by default). Those workers have done almost nothing: 83 results ever, the last on Oct 4.
+- Scout, Detective, translation and live-audit transports never call model-batch.ts.
+- Every Scout and Detective tool runs on our side: read_permission, fetch_public, browse (Playwright), search (our Brave/Exa), read_held, read_inherited, find_manual, read_manual. No Anthropic server-side tools are used. A 17-step job is 17 dependent requests, not one batch request.
+- Anthropic's server-side web_fetch/web_search would bypass our robots and permission checks, exact-bytes evidence vaulting (§3), Playwright and held evidence, so it is not used for acquisition.
+
+Design (engineering choice): batch per step.
+- A shared step batcher (River, model-batch.ts) collects pending steps from all unattended jobs, submits a batch on a timer, routes results back by custom_id, records the attempt's provider batch, and keeps the request journal so a restart resumes.
+- Jobs pause between steps; a paused job's conversation is saved.
+- Owners:
+  - Scout through the batcher in the CH-24 Proposal A standing lane: hunters.
+  - Detective and the live-audit sampler: auditors.
+  - Plain-English summaries: ballot.
+  - Money page batch versus full-price spend by role: admin.
+- Kept on Messages: Ask (lib/ask, app/api/ask) and anything a person waits on, including Sean's direct Admin orders.

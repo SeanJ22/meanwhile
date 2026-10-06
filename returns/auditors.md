@@ -20,3 +20,7 @@ Update (River, after 20:00Z): your newer READY e1e995fd6 merged river-next 92fda
 ## Repair
 
 Fix on stream/auditors and publish a new READY commit; River folds the new READY and clears this return when it integrates.
+
+## River note, 2026-10-06 ~03:50Z
+
+Batch API (Sean, 2026-10-06): the Detective and the live-audit model sampler send their steps through River's shared step batcher (model-batch.ts, coming from River) when no person is waiting. Ask and Sean's direct orders stay on Messages.

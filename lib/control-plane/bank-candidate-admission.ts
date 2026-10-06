@@ -48,6 +48,8 @@ export async function admitValidatedBankCandidates(input: {
         const route = learned.knowledge.routes.find(row => row.id === proposal.id);
         if (!route) throw new Error("LEARNED_ROUTE_MISSING");
         const jurisdiction = proposal.outcome.jurisdiction;
+        const existence = proposal.claims?.find(claim => claim.class === "ROUTE_EXISTENCE");
+        const observedUrl = existence?.statement.match(/^https?:\/\/[^\s]+/)?.[0] ?? null;
         const state = jurisdiction.match(/(?:^|\/)state:([a-z]{2})(?:\/|$)/i)?.[1]?.toLowerCase();
         entries.push(newFieldManualEntry("scout-candidate", route.id, {
           role: "SHARED", kind: "ROUTE", title: route.title,
@@ -55,7 +57,7 @@ export async function admitValidatedBankCandidates(input: {
           outcome: "YIELDED", states: state ? [state] : [],
           ocdIds: jurisdiction.startsWith("ocd-division/") ? [jurisdiction] : [],
           recordClasses: route.fields, observedAt: candidate.submittedAt,
-          tier: route.tier, url: null, payload: route,
+          tier: route.tier, url: observedUrl, payload: route,
         }));
         knowledge = learned.knowledge;
         accepted.push({ id: candidate.id, routeId: route.id, learned: learned.learned > 0 });

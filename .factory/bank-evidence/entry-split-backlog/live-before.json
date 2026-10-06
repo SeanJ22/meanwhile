@@ -1,0 +1,38 @@
+{
+  "observedAt": "2026-10-06T05:45:24.132230+00:00",
+  "via": "Neon MCP read-only bounded aggregate queries",
+  "project": "withered-sunset-39821877",
+  "bankEntries": 3970,
+  "bankBytes": 6624973,
+  "writeErrorRow": "absent; count unknown",
+  "candidateLifecycle": {
+    "VALIDATED": {
+      "offers": 757,
+      "distinctRoutes": 575
+    },
+    "ADMITTED": {
+      "offers": 6,
+      "distinctRoutes": 3
+    }
+  },
+  "validated": {
+    "alreadyInManual": 12,
+    "missingFromManual": 745,
+    "savedValidationOk": 757,
+    "savedYielded": 757,
+    "claims": 757,
+    "originMachineDerived": 757,
+    "originScoutAttempt": 757,
+    "provenanceRederived": 7,
+    "firstOffer": "2026-09-01",
+    "lastOffer": "2026-10-05"
+  },
+  "entryTableExists": false,
+  "fixMapExists": false,
+  "runnerSha": "f545fcf9493def91294bccf219ed65071b2093b1",
+  "exhaustedLessons": 0,
+  "jobCostObservations": 0,
+  "routeEntries": 158,
+  "methodBytes": 378742,
+  "acceptance": "BEFORE state only; no live repair claimed"
+}

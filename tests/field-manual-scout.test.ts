@@ -2,16 +2,16 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { projectFieldManual } from "../lib/control-plane/field-manual.ts";
+import { projectFieldManual, readFieldManual } from "../lib/control-plane/field-manual.ts";
 import {
   compoundingPair,
   fieldManualBriefLines,
-  knownRouteIds,
   scoutDiscoveryEntries,
   scoutFieldManualProjection,
   scoutFieldManualCatalog,
   scoutStateHint,
   writeFieldManualDiscoveries,
+  writePaidEndingLearning,
 } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 
@@ -196,4 +196,15 @@ test("legacy empty refusal lists do not invent a failed finish or require missin
   const lesson = stopped.find(e => e.kind === "EXHAUSTED_RUNGS")!;
   assert.deepEqual((lesson.payload as { rungs: unknown[] }).rungs, []);
   assert.equal(lesson.outcome, "REFERENCE");
+});
+
+test("the paid-ending entry point saves a refused empty result and the next role inherits its exact-subject lesson", async () => {
+  const repos = createMemoryRepositories();
+  const stopped = result({ candidates: [], outcome: "NO_PROGRESS", refusal: ["finish refused"], researchRole: "DETECTIVE" });
+  const written = await writePaidEndingLearning(repos, stopped, stopped.recordedAt);
+  assert.equal(written.error, undefined); assert(written.written > 0);
+  const read = await readFieldManual(repos, { role: "SCOUT", subjectId: stopped.subjectId, recordClass: "meetings" });
+  assert(read.projection.lines.some(line => line.includes("Exhausted on these rungs")));
+  const other = await readFieldManual(repos, { role: "SCOUT", subjectId: "other", recordClass: "meetings" });
+  assert(!other.projection.lines.some(line => line.includes("Exhausted on these rungs")));
 });

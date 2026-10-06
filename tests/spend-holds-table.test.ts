@@ -235,7 +235,7 @@ test("the bootstrap runs the move by default and skips it behind WTP_SPEND_HOLDS
     await bootstrap(on.sql, NOW);
     assert.ok(on.statements.includes(SPEND_HOLDS_MOVE_DDL));
     assert.ok(on.statements.includes(ADMIT_SPEND_HOLD_FUNCTION_DDL));
-    assert.match(on.statements.at(-1)!, /VALUES \(true, 24,/, "the version is recorded after every statement");
+    assert.match(on.statements.at(-1)!, new RegExp(`VALUES \\(true, ${BOOTSTRAP_VERSION},`), "the version is recorded after every statement");
     process.env.WTP_SPEND_HOLDS_TABLE = "0";
     const off = recordingSql();
     await bootstrap(off.sql, NOW);

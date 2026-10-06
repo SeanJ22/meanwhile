@@ -1470,5 +1470,40 @@
       "lock": "none",
       "remaining": "No ready lane step; exact dependencies in slide.md"
     }
+  },
+  "release7Reconciliation": {
+    "observedAt": "2026-10-06T04:21:10.774015+00:00",
+    "applicationCatchupCommit": "d53979d20b04ae6bf466c2ebb58817b633b67767",
+    "river": "f545fcf9493def91294bccf219ed65071b2093b1",
+    "main": "f545fcf9493def91294bccf219ed65071b2093b1",
+    "board": "c19c6ad682358f8126162b7fd0bf63aec27411c7",
+    "briefs": "e076cd0c3d400174c188cbe0446cb059f3111f0a",
+    "integratedReady": "66f6ed84a8ce3c6ca1c5e099d2a1394475592263",
+    "integrationCommit": "ce7fc11bc692708469fb6a11c54735d50a076da9",
+    "applicationDiffOutsideFactory": "empty",
+    "verification": "No application changes; prior exact checks retained, no repeat FULL or new test pass claimed. Restored own factory evidence removed by River integration.",
+    "readOnlyDatabase": {
+      "observedAt": "2026-10-06T04:19:56.770Z",
+      "workItems": 0,
+      "ownerDigests": 0,
+      "firstRecordedAt": null,
+      "lastRecordedAt": null,
+      "rowLevelSecurity": false,
+      "controlPlaneUrlAvailable": false,
+      "mode": "Neon SQL readOnly transaction over configured endpoint and inherited proxy; SELECT only"
+    },
+    "remaining": [
+      "CP-14 shared activation callers remain",
+      "CP-15 shared fact-chain callers remain",
+      "CP-17 existing three-state scopes remain; next version/read fallback coordination pending",
+      "BX-04 CH-20 absent from River integration",
+      "BX-05 CH-23 absent from River integration"
+    ],
+    "boxSchema": {
+      "bootstrapVersion": 23,
+      "boxFindingsRegistered": false
+    },
+    "finalBoard": "71db4cb1c01781b19fa462578753cb4f6b4f17db",
+    "lockReleasedAt": "2026-10-06T04:21:46.236075+00:00"
   }
 }

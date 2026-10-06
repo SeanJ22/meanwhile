@@ -1,0 +1,425 @@
+{
+  "commit": "12cbaca6ad0bd555e56622ea48d8357a63b6dd1d",
+  "tree": "fe74a592d20fb84ce1ffd6060c4a65e444dcbb3d",
+  "workingTreeStatus": "",
+  "runner": {
+    "platform": "linux",
+    "arch": "x64",
+    "totalMemoryBytes": 18882699264
+  },
+  "node": "v24.19.0",
+  "configInputs": [
+    "package.json",
+    "pnpm-lock.yaml",
+    "tsconfig.json",
+    "scripts/register-test-loader.mjs",
+    "scripts/test-alias-loader.mjs",
+    "scripts/ci-tests.mjs",
+    "scripts/ci-test-timing-reporter.mjs",
+    "scripts/ci-test-scheduling-hints.mjs"
+  ],
+  "configHash": "7e213bb4b77d74c5005427c7a18e94443cf468469fa5b4d0c175f0b055d36602",
+  "suiteHash": "2e7a8524b9edd432143c2e981efa976bc336fe96160673e1555b65a12ab610eb",
+  "command": "node scripts/ci-tests.mjs",
+  "mode": "explicit",
+  "shard": {
+    "index": 1,
+    "count": 1
+  },
+  "assignments": [
+    {
+      "file": "tests/box.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/fact-door.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/flow-read.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/lease-runtime-once.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/meeting-source-conflicts.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/meetings-official-page.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/model-parser.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/scoped-task-reads.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/scout-extraction.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/worker-fleet-novelty.test.ts",
+      "shard": 1,
+      "hintDurationMs": 80.0149,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/worker-reader-publication.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    },
+    {
+      "file": "tests/worker-roster-publication.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 80.0149
+    }
+  ],
+  "scheduling": {
+    "algorithm": "lexical-model-fallback-with-bounded-swaps-v1",
+    "hintsValid": true,
+    "source": "Complete successful local canonical suite at f3e18b585c86735355e4405f2a6a457de7b84fb9; tree c1326824efff1a50536e51018bbb7ebb7ee5e007; v24.19.0 win32/x64; concurrency 2; NODE_OPTIONS=--max-old-space-size=4096; 682 exact-once file summaries. File-harness duration hints only, never verification reuse or hosted savings. Full identity and input hashes: local.weights.json and run.json.",
+    "hintedFiles": 1,
+    "unknownFiles": 11,
+    "unknownEstimate": 80.0149,
+    "estimateBasis": "measured-p95-with-1ms-floor",
+    "model": {
+      "label": "ESTIMATE",
+      "model": "lexical-greedy-worker-dispatch-v1",
+      "workers": 2,
+      "initialPlan": "round-robin",
+      "roundRobinMakespanCost": 480.0894,
+      "longestFirstMakespanCost": 480.0894,
+      "selectedMakespanCost": 480.0894,
+      "shardMakespanCosts": [
+        480.0894
+      ],
+      "swapsAccepted": 0,
+      "evaluatedSwaps": 0,
+      "passLimit": 8,
+      "candidatesPerEnd": 16,
+      "limitation": "Scheduling estimate from historical file-harness hints; excludes startup, shared-resource contention, queues and billing. Not an actual runtime measurement.",
+      "costUnit": "estimated-ms"
+    },
+    "note": "Hints change scheduling only; unknown files always run with an explicitly estimated cost, never a measured duration."
+  },
+  "concurrency": {
+    "available": 4,
+    "effective": 2
+  },
+  "selected": [
+    "tests/box.test.ts",
+    "tests/fact-door.test.ts",
+    "tests/flow-read.test.ts",
+    "tests/lease-runtime-once.test.ts",
+    "tests/meeting-source-conflicts.test.ts",
+    "tests/meetings-official-page.test.ts",
+    "tests/model-parser.test.ts",
+    "tests/scoped-task-reads.test.ts",
+    "tests/scout-extraction.test.ts",
+    "tests/worker-fleet-novelty.test.ts",
+    "tests/worker-reader-publication.test.ts",
+    "tests/worker-roster-publication.test.ts"
+  ],
+  "args": [
+    "--test",
+    "--experimental-strip-types",
+    "--import",
+    "./scripts/register-test-loader.mjs",
+    "tests/box.test.ts",
+    "tests/fact-door.test.ts",
+    "tests/flow-read.test.ts",
+    "tests/lease-runtime-once.test.ts",
+    "tests/meeting-source-conflicts.test.ts",
+    "tests/meetings-official-page.test.ts",
+    "tests/model-parser.test.ts",
+    "tests/scoped-task-reads.test.ts",
+    "tests/scout-extraction.test.ts",
+    "tests/worker-fleet-novelty.test.ts",
+    "tests/worker-reader-publication.test.ts",
+    "tests/worker-roster-publication.test.ts"
+  ],
+  "invocationArgs": [
+    "--test",
+    "--experimental-strip-types",
+    "--import",
+    "./scripts/register-test-loader.mjs",
+    "--test-concurrency=2",
+    "--test-reporter=spec",
+    "--test-reporter-destination=stdout",
+    "--test-reporter=file:///workspace/meanwhile/scripts/ci-test-timing-reporter.mjs",
+    "--test-reporter-destination=/workspace/meanwhile/.scratch/ci/test-affected.timings.jsonl",
+    "tests/box.test.ts",
+    "tests/fact-door.test.ts",
+    "tests/flow-read.test.ts",
+    "tests/lease-runtime-once.test.ts",
+    "tests/meeting-source-conflicts.test.ts",
+    "tests/meetings-official-page.test.ts",
+    "tests/model-parser.test.ts",
+    "tests/scoped-task-reads.test.ts",
+    "tests/scout-extraction.test.ts",
+    "tests/worker-fleet-novelty.test.ts",
+    "tests/worker-reader-publication.test.ts",
+    "tests/worker-roster-publication.test.ts"
+  ],
+  "startedAt": "2026-10-05T21:59:44.912Z",
+  "status": "passed",
+  "exitCode": 0,
+  "signal": null,
+  "elapsedMs": 65138,
+  "timing": {
+    "complete": true,
+    "issues": [],
+    "missingFiles": [],
+    "files": [
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/box.test.ts",
+        "durationMs": 68.718379,
+        "success": true,
+        "counts": {
+          "tests": 5,
+          "failed": 0,
+          "passed": 5,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 5,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/fact-door.test.ts",
+        "durationMs": 21.607878,
+        "success": true,
+        "counts": {
+          "tests": 3,
+          "failed": 0,
+          "passed": 3,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 1,
+          "suites": 1
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/flow-read.test.ts",
+        "durationMs": 17.516396,
+        "success": true,
+        "counts": {
+          "tests": 3,
+          "failed": 0,
+          "passed": 3,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 3,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/lease-runtime-once.test.ts",
+        "durationMs": 186.60941,
+        "success": true,
+        "counts": {
+          "tests": 3,
+          "failed": 0,
+          "passed": 3,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 3,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/meeting-source-conflicts.test.ts",
+        "durationMs": 24.291781,
+        "success": true,
+        "counts": {
+          "tests": 3,
+          "failed": 0,
+          "passed": 3,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 3,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/meetings-official-page.test.ts",
+        "durationMs": 2352.936035,
+        "success": true,
+        "counts": {
+          "tests": 12,
+          "failed": 0,
+          "passed": 12,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 12,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/model-parser.test.ts",
+        "durationMs": 51.607656,
+        "success": true,
+        "counts": {
+          "tests": 20,
+          "failed": 0,
+          "passed": 20,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 20,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/scoped-task-reads.test.ts",
+        "durationMs": 166.281609,
+        "success": true,
+        "counts": {
+          "tests": 8,
+          "failed": 0,
+          "passed": 8,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 8,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/scout-extraction.test.ts",
+        "durationMs": 43.664863,
+        "success": true,
+        "counts": {
+          "tests": 4,
+          "failed": 0,
+          "passed": 4,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 4,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/worker-fleet-novelty.test.ts",
+        "durationMs": 239.580874,
+        "success": true,
+        "counts": {
+          "tests": 2,
+          "failed": 0,
+          "passed": 2,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 2,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/worker-reader-publication.test.ts",
+        "durationMs": 54991.119995,
+        "success": true,
+        "counts": {
+          "tests": 11,
+          "failed": 0,
+          "passed": 11,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 11,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/worker-roster-publication.test.ts",
+        "durationMs": 42250.502975,
+        "success": true,
+        "counts": {
+          "tests": 4,
+          "failed": 0,
+          "passed": 4,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 4,
+          "suites": 0
+        }
+      }
+    ],
+    "run": {
+      "schemaVersion": 1,
+      "kind": "run",
+      "durationMs": 65031.724755,
+      "success": true,
+      "counts": {
+        "tests": 78,
+        "failed": 0,
+        "passed": 78,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 76,
+        "suites": 1
+      }
+    },
+    "usableForScheduling": true,
+    "file": "test-affected.timings.jsonl",
+    "measurement": "Node file harness duration; excludes some process startup/exit time and is not billed runner usage."
+  }
+}

@@ -3,11 +3,12 @@ import { jurisdictionFromOcdId } from "../coverage/states.ts";
 const PREFIXES: Readonly<Record<string, string>> = {
   "plain-english-translations": "US:plain-english-translations",
   "special-district-boundaries": "US:special-district-boundaries",
+  "executive-actions": "US:executive-actions",
   "public-records": "US:public-records",
   "government-budgets": "US:government-budgets",
   "campaign-finance": "US:campaign-finance",
 };
-const jurisdictionIsValid = (id: string, ocdId: string) => Boolean(jurisdictionFromOcdId(ocdId) ||
+const jurisdictionIsValid = (id: string, ocdId: string) => Boolean(id === "executive-actions" ? /^ocd-division\/country:us\/(?:state|territory|district):[^/]+$/.test(ocdId) && jurisdictionFromOcdId(ocdId) : jurisdictionFromOcdId(ocdId) ||
   !["plain-english-translations", "campaign-finance", "special-district-boundaries"].includes(id) && ocdId === "ocd-division/country:us");
 
 /** These families publish and read one exact jurisdiction, never a nationwide payload. */

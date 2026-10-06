@@ -12,6 +12,12 @@ export const MESSAGE_BATCHES_ENDPOINT = "https://api.anthropic.com/v1/messages/b
  * caller inventing an environment variable.
  */
 export const BATCH_LANES = {
+  "background-translation": {
+    flag: "WTP_TRANSLATION_BATCH",
+    defaultEnabled: true,
+    readerFacing: false as const,
+    why: "unattended plain-English writer and checker requests each carry their complete saved source and proposal; no reader waits on either response",
+  },
   "background-worker-audit": {
     flag: "WTP_BACKGROUND_WORKER_BATCH",
     defaultEnabled: true,

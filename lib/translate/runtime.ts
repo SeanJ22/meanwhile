@@ -38,7 +38,7 @@ export async function runMeasureTranslation(input: {
         const send = input.transportFor(subject);
         return async request => {
           const response = await send(request);
-          const metered = readMeteredUsage(response.usage);
+          const metered = readMeteredUsage(response.usage, response.batch === true);
           usage.push({ model: response.model, usage: metered, usd: priceMeteredUsage(response.model, metered, "5m").usd });
           return response;
         };

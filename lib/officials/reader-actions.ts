@@ -1,6 +1,31 @@
 import { actionsFor, actionText, executiveActionStore, type ExecutiveAction } from "./executive-actions.ts";
 import { candidacyOfficialIdentityStatus, currentOfficialIdentity, currentOfficialIdentityStatus, officialIdsForCandidacy } from "../funding/campaign-money.ts";
 import { azLineupReconciliation, reconciledCandidacyIdForCard } from "../identity/az-2026.ts";
+import { currentStatewideExecutives } from "./statewide-executives.ts";
+import { stateExecutiveActionsFor } from "./executive-action-reader.ts";
+import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+
+/** The exact held executive slot and source name select only that state's
+ * independent action family. A successor never inherits a predecessor's acts. */
+export async function generalActionsForOfficial(officialId: string, name: string, options: PromotedCivicDataReadOptions = {}) {
+  const held = currentStatewideExecutives().filter(row => row.holder.id === officialId && row.holder.name === name);
+  if (held.length !== 1) return [];
+  return stateExecutiveActionsFor({ division: held[0].stateOcdId, officialId, name }, options);
+}
+
+export async function generalOfficialActionsForTarget(subjectId: string): Promise<ReaderOfficialActions | null> {
+  const officialIds = subjectId.startsWith("ballot-") ? officialIdsForCandidacy(subjectId)
+    : currentOfficialIdentity(subjectId) ? [subjectId] : [];
+  const records: ReaderOfficialAction[] = [];
+  for (const id of officialIds) {
+    const current = currentOfficialIdentity(id);
+    if (!current) continue;
+    for (const row of await generalActionsForOfficial(id, current.name)) records.push({ id: row.id, officialId: id, kind: row.kind,
+      text: row.sourceSentence, sourceUrl: row.sourceUrl, documentUrl: row.documentUrl, sourceOrg: row.sourceOrg, collectedAt: row.collectedAt,
+      sourceKind: row.sourceKind });
+  }
+  return records.length ? { subjectId, officialIds, resolvedTargetId: subjectId, status: "RESOLVED", withheldRecords: [], count: records.length, records } : null;
+}
 
 export interface ReaderOfficialAction {
   id: string;
@@ -11,6 +36,7 @@ export interface ReaderOfficialAction {
   documentUrl: string | null;
   sourceOrg: string;
   collectedAt: string;
+  sourceKind?: string;
 }
 export interface ReaderOfficialActions {
   subjectId: string;

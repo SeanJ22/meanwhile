@@ -19,6 +19,7 @@ import type { AssignmentBudgetGate } from "../lib/control-plane/expansion/assign
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { MODELS } from "../lib/models.ts";
+import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 
 const NOW = "2026-10-05T18:00:00.000Z";
 const line = (key: string, budgetUsd: number, historicalUsd = 0): BudgetLine => ({ key, label: key, budgetUsd, historicalUsd, historyReadAt: NOW });
@@ -28,6 +29,7 @@ async function harness(options: {
   sends?: ReturnType<AssignmentBudgetGate["linesFor"]>;
   areas?: { lines: readonly BudgetLine[] } | { refusal: { code: string; why: string } };
   modelHold?: string | null; costs?: readonly CostEntry[]; ceilingUsd?: number; modelLaneEnabled?: boolean;
+  batchFetch?: typeof fetch;
 } = {}) {
   const repos = createMemoryRepositories();
   const task = createRouteTask({ workItemId: "wi-1", routeId: "autonomous:scout:x", routeLabel: "Discover", target: "https://x.example.gov/", inherited: false, now: NOW });
@@ -47,12 +49,61 @@ async function harness(options: {
   const deps: PaidWorkGuardDeps = { repos, now: () => NOW, armedAt: NOW, fleetSafety, providerQueue: new ModelProviderQueue(), spendHolds,
     assignmentBudget: { linesFor: () => options.sends ?? { lines: [] } } as unknown as AssignmentBudgetGate,
     expansionBudget: { gate: { linesFor: () => options.areas ?? { lines: [] } } } as never,
-    messages, batch: backgroundBatchTransport({ apiKey: "" }), modelLaneEnabled: options.modelLaneEnabled ?? true,
+    messages, batch: backgroundBatchTransport({ apiKey: "test", ...(options.batchFetch ? { fetchImpl: options.batchFetch } : {}) }), modelLaneEnabled: options.modelLaneEnabled ?? true,
     ceilingUsd: () => options.ceilingUsd ?? 50, onCondition: sentence => { conditions.push(sentence); } };
   const guards = paidWorkGuards(deps);
   const ledger = async () => (await repos.budget.read()).value;
-  return { guards, sent, conditions, task, ledger, jurisdiction: { subjectId: "ocd-division/country:us/state:nh/county:x", state: "NH" } };
+  return { guards, repos, sent, conditions, task, ledger, jurisdiction: { subjectId: "ocd-division/country:us/state:nh/county:x", state: "NH" } };
 }
+
+test("CA-25: unattended translation requests use the existing guarded batch and durable attempt, while ordinary work uses Messages", async () => {
+  const before = process.env.WTP_TRANSLATION_BATCH;
+  process.env.WTP_TRANSLATION_BATCH = "1";
+  try {
+    let posts = 0, customId = "";
+    const batch = { id: "translation-batch", processing_status: "ended", results_url: "https://provider.test/results" };
+    const h = await harness({ sends: { lines: [line("send:a", 5)] }, batchFetch: async (url, init) => {
+      if (init?.method === "POST") {
+        posts++;
+        const items = JSON.parse(String(init.body)).requests;
+        assert.equal(items.length, 1);
+        customId = items[0].custom_id;
+        return new Response(JSON.stringify(batch));
+      }
+      if (String(url).endsWith(batch.id)) return new Response(JSON.stringify(batch));
+      return new Response(JSON.stringify({ custom_id: customId, result: { type: "succeeded", message: {
+        model: request.model, content: [], stop_reason: "end_turn", usage: { input_tokens: 100, output_tokens: 100 },
+      } } }));
+    } });
+    await h.repos.leases.put(h.task.id, { id: "lease-translation", routeTaskId: h.task.id, holder: "worker", claimedAt: NOW,
+      heartbeatAt: NOW, expiresAt: "2026-10-05T19:00:00Z", released: false }, NOW);
+    await h.repos.attempts.put("translation-attempt", { id: "translation-attempt", routeTaskId: h.task.id, workItemId: h.task.workItemId,
+      worker: { role: "ACQUIRER", provider: "anthropic", version: request.model, instance: "worker" }, leaseId: "lease-translation",
+      startedAt: NOW, endedAt: null, outcome: null, abortReason: null, artifactIds: [], cost: ZERO_COST,
+      methodVersion: 1, policyVersion: "test" }, NOW);
+    const send = h.guards.workerTransportFor(h.jurisdiction, h.task.id);
+    const translation = { ...request, tools: [{ name: "write_measure_translation", description: "source-supported text", input_schema: { type: "object" } }] };
+    assert.equal((await send(translation)).batch, true);
+    assert.equal(posts, 1); assert.equal(h.sent.length, 0);
+    const attempts = (await h.repos.attempts.mustRead("translation-attempt")).value.providerBatches;
+    assert.equal(attempts?.[0].batchId, batch.id);
+    const holds = (await h.ledger()).spendHolds ?? {};
+    assert.equal(Object.keys(holds).length, 1);
+    const charged = Object.values(holds)[0].settled!.usd;
+    assert.ok(charged > 0);
+    await send(translation); // Recovery retrieves the same request; no second POST or spend hold.
+    assert.equal(posts, 1); assert.equal(Object.keys((await h.ledger()).spendHolds ?? {}).length, 1);
+    assert.equal(Object.values((await h.ledger()).spendHolds!)[0].settled!.usd, charged);
+    await send(request);
+    assert.equal(h.sent.length, 1);
+    assert.equal(Object.values((await h.ledger()).spendHolds!).find(row => row.jobId.startsWith("worker-request:") && row.settled?.usd !== charged)?.settled?.usd, charged * 2);
+    process.env.WTP_TRANSLATION_BATCH = "0";
+    await send({ ...translation, messages: [{ role: "user", content: "different source" }] });
+    assert.equal(posts, 1); assert.equal(h.sent.length, 2);
+  } finally {
+    if (before === undefined) delete process.env.WTP_TRANSLATION_BATCH; else process.env.WTP_TRANSLATION_BATCH = before;
+  }
+});
 
 test("CH-24: a request with room is sent once, held against its Send, and settled at what it measured", async () => {
   const h = await harness({ sends: { lines: [line("send:a", 5)] } });

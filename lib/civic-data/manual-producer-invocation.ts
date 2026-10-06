@@ -7,6 +7,7 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } f
 export type ManualProducerMode = "DIRECT_SOURCE" | "VERIFIED_WORKER_RESULT" | "EXISTING_DERIVED" | "REVIEWED_INPUT" | "SCOPED_ADAPTER_OWED";
 interface Rule { readonly mode: ManualProducerMode; readonly state?: string; readonly reason: string }
 const RULES = {
+  "executive-actions": { mode: "VERIFIED_WORKER_RESULT", reason: "Saved governor and legislature door records publish their exact state and held officeholder identities through the existing worker Slide." },
   "campaign-finance": { mode: "VERIFIED_WORKER_RESULT", reason: "Complete saved door bytes and filed candidate/office/cycle/jurisdiction identities publish through normal Slide; unmatched rows remain work." },
   "government-budgets": { mode: "VERIFIED_WORKER_RESULT", reason: "Official adopted budgets, amendments and government-specific legal responsibility use the normal saved-evidence worker and Slide." },
   "special-district-boundaries": { mode: "VERIFIED_WORKER_RESULT", reason: "Registered saved GIS polygons bind to the held government key and exact body, without a model or guessed territory." },

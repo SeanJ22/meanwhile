@@ -36,6 +36,8 @@ import type { PublicRecord } from "./types.ts";
 import { manualPayloadScope } from "./scoped-manual-contracts.ts";
 import { governmentBudgetIssue, governmentBudgetRecordId, budgetResponsibilityRole, budgetAuthorityKind } from "./government-budgets.ts";
 import { GOVERNMENT_FINANCE_FIELDS, governmentFinanceKind, governmentFinanceFact, type GovernmentFinanceField } from "./government-finance.ts";
+import { executiveActionKind, executiveActionFactIssue } from "../officials/executive-action-contract.ts";
+import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -94,11 +96,34 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
   const checked = verifiedWorkerRecords({ ...input, pullRemoves: true });
   requirePublication(workerReaderClassMatches(contractId, checked.contract.recordClass), "READER_CLASS_MISMATCH");
   const body = input.registry?.payload.registry.bodies.find(body => body.id === target.bodyId);
-  const place = contractId === "public-records" ? input.registry?.payload.registry.divisions.find(row => row.ocdId === target.bodyId) : null;
+  const place = ["public-records", "executive-actions"].includes(contractId) ? input.registry?.payload.registry.divisions.find(row => row.ocdId === target.bodyId) : null;
   requirePublication(body?.name || place?.label, "CANONICAL_BODY_MISSING");
   const rowFor = (record: (typeof checked.extraction.records)[number]) => {
     const f = record.fields;
     requirePublication(words(text(f.bodyName)) === words(body?.name ?? place!.label), "CANONICAL_BODY_MISMATCH");
+    if (contractId === "executive-actions") {
+      const ocdId = place?.ocdId ?? body?.ocdId;
+      requirePublication(ocdId && jurisdictionFromOcdId(ocdId)?.usps === checked.contract.jurisdiction.state, "ACTION_STATE_MISMATCH");
+      const matches = input.registry?.payload.statewideExecutives.filter(row => row.stateOcdId === ocdId &&
+        words(row.holder.name) === words(text(f.officeholderName)) && words(row.holder.officeTitle) === words(text(f.officeTitle))) ?? [];
+      requirePublication(matches.length === 1, "ACTION_HOLDER_UNRESOLVED");
+      const holder = matches[0].holder, kind = executiveActionKind(text(f.kindLabel));
+      requirePublication(kind, "ACTION_KIND_UNRESOLVED");
+      const allowed = new Set(["bodyName", "officeholderName", "officeTitle", "kindLabel", "designation", "title", "occurredAt", "documentUrl", "sourceSentence"]);
+      requirePublication(Object.keys(f).every(field => allowed.has(field)), "ACTION_FIELD_UNSUPPORTED");
+      const row = { id: `executive-action:${createHash("sha256").update(canonicalJson([ocdId, holder.id, f.officeholderName, kind, f.designation])).digest("hex")}`,
+        bodyId: target.bodyId, ocdId, officeholderId: holder.id, officeholderName: text(f.officeholderName), officeTitle: text(f.officeTitle), kind,
+        kindLabel: text(f.kindLabel), designation: text(f.designation), title: text(f.title) || null, occurredAt: text(f.occurredAt) || null,
+        documentUrl: text(f.documentUrl) || null, sourceSentence: text(f.sourceSentence), sourceUrl: checked.primary.evidence.canonicalUrl,
+        sourceOrg: checked.primary.evidence.sourceId, collectedAt: checked.primary.observedAt,
+        sourceHash: (checked.primary.evidence.sourceDocument?.contentHash ?? checked.primary.evidence.contentHash).replace(/^sha256-/, ""),
+        sourceKind: section3Page({ url: checked.primary.evidence.canonicalUrl, text: checked.primary.evidence.text,
+          retrievedAt: checked.primary.observedAt, sourcePolicy: checked.primary.sourcePolicy,
+          linkingPage: linkingPageFrom(checked.primary.evidence.canonicalUrl, input.captures.map(c => c.evidence)) }, "STATE_EXECUTIVE_ACTION", input.now).kind };
+      requirePublication(executiveActionFactIssue(row) === null, `ACTION_SOURCE_UNVERIFIED:${executiveActionFactIssue(row)}`);
+      requirePublication(checked.primary.evidence.text.includes(row.sourceSentence), "ACTION_SENTENCE_NOT_HELD");
+      return row;
+    }
     if (contractId === "public-records") {
       const allowed = new Set(["bodyName", "title", "kindLabel", "sourceSentence"]);
       requirePublication(Object.keys(f).every(field => allowed.has(field)), "PUBLIC_RECORD_FIELD_UNSUPPORTED");

@@ -3,7 +3,7 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-052086658733454ba3af891d884d700b
 lock: codex-ballot-052086658733454ba3af891d884d700b
-heartbeat: 2026-10-06T04:16:29Z
+heartbeat: 2026-10-06T04:25:37Z
 on_river: CA-20 CA-24 CA-30 CA-44 CA-45 CA-51 integrated through release ecf402600401783b094837c29e0c515eadbdb843; returned CA-30/51 repairs retained at 8760257.
 ready: none new; exact0fc6 20step batch integrated/tested by River458f0a196f52347b0c879a673c2f03069260922b; hooks/live acceptance retain separate status.
 checks: Exact0fc6: canonical FULL PASS 9631 registered/9620 pass/11 skip/0 failure/0 cancelled,1126 files,two workers,clean start,complete timings. Requested pnpm gates original10PASS/2build ENVFAIL (external dependency symlink rejected before compilation); both exact failed build commands retried PASS after local hard links to identical installed bytes, source unchanged. Default warm399/430,largestapp407/430; standalone PASS within unchanged ceilings; no offending reference/PRL/voting/bootstrap traces. Original gate record preserved unchanged. SystemChromium151 substitute, pinned1234 not executed. Certificate .factory/ballot-certificate-0fc6ef6d.json + full logs/manifests. Additional normal publication/card/Ask/inventory5/5PASS.
@@ -120,3 +120,6 @@ combined20_progress_late: Exact0fc6 canonicalFULL994of1126files8514tests0fail; o
 
 combined20_certified: exact0fc6ef6d21a6aa90af928ff082d2ea0c073d445e published in stream ancestry. Full9631/0fail and original gate10PASS+2dependency-layout ENVFAIL plus two actual exact build command retriesPASS preserved; warm399files/430. Never rewrite original aggregate failure as pnpm-gates PASS. Root appsource matched exact candidate before post-READY River-only catch-up. All earlier failed/incomplete/superseded checkpoints remain. River still owns fold/return clearance/live acceptance.
 river005800_catchup: clean merge; normal publication, candidate inventory, held elections, parser, scoped task and spend holds49/49PASS; types0; proof .factory/ballot-river005800-catchup-proof.json. Hunters partFor and parserdigestc2c32a193bd2 preserved. No CP03 integration; no own ready work after final assignment/returns inspection.
+
+resume_batch_WIP: CA25 registered background-translation/WTP_TRANSLATION_BATCH defaulton; existing paid-work-guards selects self-contained translationtools only, retaining Fleet/Send/area holds and durable Attempt batch recovery. Metered usage preserves response.batch once. Focused translation/guard/recovery38/38PASS. No paid provider calls.
+resume_CA19_WIP: CP03 now integrated release7. Generic state-scoped executive-actions contract, saved-source worker binding, typedreadback, sourcekind and source-stated kinds/dates, existing cardAPI/Ask consumers. Initial action focused run failed test await syntax and expected parserclosure rekey; fixing own test and permitted digest. No READY yet. Source hooks: registry governor/legislature doors and hunters use executiveActionDiscoveryPlan; Slide existing CURATED_READER_RECORD edge publication includes exact US:executive-actions:<stateOCD>. LegacyAZ wayback retained until live comparison.

@@ -3,6 +3,7 @@ import checklist from "../coverage/checklist-map.json" with { type: "json" };
 export const WORKER_READER_CLASSES = {
   "voting-sites": "VOTING_SITE",
   "government-budgets": "ADOPTED_BUDGET",
+  "executive-actions": "STATE_EXECUTIVE_ACTION",
   "public-records": "PUBLIC_RECORD",
   "ballot-contests": "BALLOT_CONTEST",
   "comment-access": "PUBLIC_COMMENT_RULE",

@@ -67,6 +67,14 @@ export const PLAIN_ENGLISH_TRANSLATION_ROUTINE = {
   readerConsumers: ["/ballot", "body and office cards", "meeting cards", "Ask"],
 } as const;
 
+/** Saved changed governor/legislature door results enter the ordinary
+ * worker-publication pass; the door owns acquisition and its refresh cadence. */
+export const EXECUTIVE_ACTION_ROUTINE = {
+  id: "executive-actions", inputRecordClass: "STATE_EXECUTIVE_ACTION",
+  publicationRecordClass: "CURATED_READER_RECORD", execution: "EXISTING_WORKER_PUBLICATION",
+  trigger: "VERIFIED_DOOR_RESULT_CHANGED", readerConsumers: ["official action cards", "Ask"],
+} as const;
+
 /**
  * Whether a body has a sitting within the window of `nowMs`, from its
  * partitions' sitting starts. `undefined` means it cannot be told: a sitting

@@ -183,5 +183,5 @@ export async function translateMeasure(input: {
   const issue = translationRecordIssue(record);
   if (issue) throw new Error(issue);
   return { record, usage: [writer, checker].map(response => ({ model: response.model,
-    usage: readMeteredUsage(response.usage), usd: priceMeteredUsage(response.model, readMeteredUsage(response.usage), "5m").usd })) };
+    usage: readMeteredUsage(response.usage, response.batch === true), usd: priceMeteredUsage(response.model, readMeteredUsage(response.usage, response.batch === true), "5m").usd })) };
 }

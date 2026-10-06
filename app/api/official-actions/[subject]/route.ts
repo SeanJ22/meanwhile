@@ -1,4 +1,4 @@
-import { officialActionsForTarget, type ReaderOfficialActions } from "@/lib/officials/reader-actions";
+import { officialActionsForTarget, generalOfficialActionsForTarget, type ReaderOfficialActions } from "@/lib/officials/reader-actions";
 import { refreshExecutiveActionsFromPromoted } from "@/lib/officials/executive-actions";
 import { refreshAzBallotFromPromoted } from "@/lib/civic-data/manual-read-models";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
@@ -75,6 +75,15 @@ export async function settleOfficialActionHoldingAnswer(
     Promise.resolve().then(() => readers.identityPlan(subject)),
   ]);
   const plan = identityResult.status === "fulfilled" ? identityResult.value : direct;
+
+  if (readers === defaultReaders && identityResult.status === "fulfilled") {
+    try {
+      const general = await generalOfficialActionsForTarget(subject);
+      if (general) return { kind: "ANSWER", answer: general };
+    } catch {
+      return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities: ["STATE_OFFICIAL_ACTION"] };
+    }
+  }
 
   if (!plan.applies) {
     // A non-AZ ballot identity proves the AZ source is inapplicable without

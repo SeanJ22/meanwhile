@@ -31,7 +31,7 @@ export async function runTextTranslation(input: Omit<Parameters<typeof translate
     const { record } = await translateText({ ...input, evidence, transportFor: subject => {
       const send = input.transportFor(subject);
       return async request => {
-        const response = await send(request), metered = readMeteredUsage(response.usage);
+        const response = await send(request), metered = readMeteredUsage(response.usage, response.batch === true);
         usage.push({ model: response.model, usage: metered, usd: priceMeteredUsage(response.model, metered, "5m").usd });
         return response;
       };

@@ -1,3 +1,4 @@
+import { generalActionsForOfficial } from "@/lib/officials/reader-actions";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
@@ -411,7 +412,7 @@ function divisionNameOf(ocdId: string): string {
  * rather than written into a sentence that cannot notice when it stops being
  * true.
  */
-function officeholderActionEvidence(
+async function officeholderActionEvidence(
   seatId: string,
   personName: string,
   today: string,
@@ -419,7 +420,19 @@ function officeholderActionEvidence(
   records: EvidenceRecord[],
   gaps: EvidenceGap[],
   denominators: Record<string, number>,
-): void {
+): Promise<void> {
+  const general = await generalActionsForOfficial(seatId, personName);
+  if (general.length) {
+    const from = trailingMonths ? monthsBefore(today, trailingMonths) : null;
+    const selected = trailingMonths ? general.filter(row => row.occurredAt !== null && row.occurredAt >= from! && row.occurredAt <= today) : general;
+    denominators.actionRecordsHeld = (denominators.actionRecordsHeld ?? 0) + general.length;
+    denominators.actionRecordsInAskedWindow = (denominators.actionRecordsInAskedWindow ?? 0) + selected.length;
+    records.push(...selected.map(row => ({ kind: "OFFICIAL_ACTION" as const, id: row.id, text: row.sourceSentence,
+      occurredAt: row.occurredAt, sourceUrl: row.sourceUrl, sourceOrg: row.sourceOrg, retrievedAt: row.collectedAt })));
+    if (trailingMonths && general.some(row => row.occurredAt === null)) gaps.push({ whose: "OURS", statement: "Some held action records have no source date and cannot be placed in the requested period." });
+    if (!selected.length) gaps.push({ whose: "OURS", statement: "We have no dated action records in the period you asked about." });
+    return;
+  }
   const store = executiveActionStore();
   if (!store) {
     /* No store is a STATE and is reported as one, never as "they did nothing". */
@@ -1671,7 +1684,7 @@ export async function POST(request: Request) {
              is, and the one an answer about the Governor was missing while it
              listed the reader's state senator. */
           contacts.push(contactForOfficeholder(seat));
-          if (!moneyOnly) officeholderActionEvidence(
+          if (!moneyOnly) await officeholderActionEvidence(
             seat.id,
             seat.name,
             today,
@@ -2186,7 +2199,7 @@ export async function POST(request: Request) {
       if (moneyOnly) {
         /* Not asked about: no action records, and no gap about them. */
       } else if (seat) {
-        officeholderActionEvidence(
+        await officeholderActionEvidence(
           seat.id,
           seat.name,
           today,

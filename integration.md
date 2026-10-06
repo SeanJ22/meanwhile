@@ -177,3 +177,4 @@ One line per batch folded into river.
 - 2026-10-06T15:49:55Z · hunters · CH-22 · ready 76b84e3a4318 · river 405a7f67b635 · pnpm gates pass on 405a7f67b635
 - 2026-10-06T15:49:55Z · auditors · DP-06 · ready 2830c4bfb3d1 · river 405a7f67b635 · pnpm gates pass on 405a7f67b635
 - 2026-10-06T17:37:54Z · hunters · CH-23 · ready cbb51190e6ab · river c83c04d79089 · pnpm gates pass on c83c04d79089
+- 2026-10-06T19:41:12Z · hunters · CH-20, CH-23 · ready 544e2032310c · river d89746be4470 · pnpm gates pass on d89746be4470

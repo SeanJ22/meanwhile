@@ -1620,5 +1620,18 @@
     "tested_sha": "c83c04d790899fafcd0ca05dafdbcc6e0628dbcd",
     "gates": "pass",
     "at": "2026-10-06T17:37:54Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CH-20",
+      "CH-23"
+    ],
+    "ready_sha": "544e2032310cdfc572033105332f1bafc881bd9e",
+    "merge_sha": "d89746be44704ed235382db296cd68875d750e62",
+    "river_sha": "d89746be44704ed235382db296cd68875d750e62",
+    "tested_sha": "d89746be44704ed235382db296cd68875d750e62",
+    "gates": "pass",
+    "at": "2026-10-06T19:41:12Z"
   }
 ]

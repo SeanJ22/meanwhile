@@ -13,8 +13,8 @@
  * is not lost — the `<When>` component in `console-ui.tsx` carries it as the
  * `dateTime` attribute and the hover title — but it never leads.
  *
- * PURE: no clock is read. "ET" is used for both EST and EDT on purpose; the
- * owner asked for Eastern, and the hour shown is already the local one.
+ * PURE: no clock is read. The abbreviation follows the Eastern clock: EDT
+ * during daylight saving time, EST during standard time.
  */
 
 export const EASTERN_ZONE = "America/New_York";
@@ -25,6 +25,7 @@ const DATE_TIME = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   hour: "numeric",
   minute: "2-digit",
+  timeZoneName: "short",
 });
 const DATE_TIME_YEAR = new Intl.DateTimeFormat("en-US", {
   timeZone: EASTERN_ZONE,
@@ -33,6 +34,7 @@ const DATE_TIME_YEAR = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   hour: "numeric",
   minute: "2-digit",
+  timeZoneName: "short",
 });
 const DATE_ONLY = new Intl.DateTimeFormat("en-US", {
   timeZone: EASTERN_ZONE,
@@ -49,6 +51,7 @@ const TIME_ONLY = new Intl.DateTimeFormat("en-US", {
   timeZone: EASTERN_ZONE,
   hour: "numeric",
   minute: "2-digit",
+  timeZoneName: "short",
 });
 
 /** What a missing or unreadable stamp reads as. Never a blank, never a dash. */
@@ -67,7 +70,7 @@ function tidy(parts: string): string {
 }
 
 /**
- * "September 5, 10:20 PM ET". With `year: true`, "September 5, 2026, 10:20 PM ET"
+ * "September 5, 10:20 PM EDT". With `year: true`, "September 5, 2026, 10:20 PM EDT"
  * — used where the year is not obvious from context (a decision decided months
  * ago, an opened-on date).
  */
@@ -76,7 +79,7 @@ export function formatEastern(iso: string | null | undefined, options: { readonl
   const date = parse(iso);
   if (date === null) return BAD_STAMP;
   const fmt = options.year ? DATE_TIME_YEAR : DATE_TIME;
-  return `${tidy(fmt.format(date))} ET`;
+  return tidy(fmt.format(date));
 }
 
 /** "September 5" (or "September 5, 2026" with `year: true`). */
@@ -87,16 +90,16 @@ export function formatEasternDate(iso: string | null | undefined, options: { rea
   return (options.year ? DATE_ONLY_YEAR : DATE_ONLY).format(date);
 }
 
-/** "10:20 PM ET". */
+/** "10:20 PM EDT". */
 export function formatEasternTime(iso: string | null | undefined): string {
   if (iso === null || iso === undefined || iso.trim() === "") return NO_STAMP;
   const date = parse(iso);
   if (date === null) return BAD_STAMP;
-  return `${TIME_ONLY.format(date)} ET`;
+  return TIME_ONLY.format(date);
 }
 
 /**
- * A span within one sentence: "September 4, 4:04 AM – 4:15 AM ET" when both
+ * A span within one sentence: "September 4, 4:04 AM – 4:15 AM EDT" when both
  * ends fall on the same Eastern day, else both ends in full.
  */
 export function formatEasternSpan(startIso: string | null | undefined, endIso: string | null | undefined): string {
@@ -107,7 +110,7 @@ export function formatEasternSpan(startIso: string | null | undefined, endIso: s
   if (end === null) return `from ${formatEastern(startIso)}`;
   const sameDay = DATE_ONLY.format(start) === DATE_ONLY.format(end);
   return sameDay
-    ? `${DATE_ONLY.format(start)}, ${TIME_ONLY.format(start)} – ${TIME_ONLY.format(end)} ET`
+    ? `${DATE_ONLY.format(start)}, ${TIME_ONLY.format(start)} – ${TIME_ONLY.format(end)}`
     : `${formatEastern(startIso)} – ${formatEastern(endIso)}`;
 }
 

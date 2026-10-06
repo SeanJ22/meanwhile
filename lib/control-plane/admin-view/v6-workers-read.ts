@@ -246,9 +246,9 @@ export async function readV6WorkersSources(repos: ControlPlaneRepositories, read
 
 /* ------------------------------------------------------------- the words */
 
-const EASTERN = new Intl.DateTimeFormat("en-US", { timeZone: EASTERN_ZONE, month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+const EASTERN = new Intl.DateTimeFormat("en-US", { timeZone: EASTERN_ZONE, month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
 /** Eastern time, the way Admin shows every time (rulings §10). The name is older than that ruling. */
-const mstWords = (iso: string) => `${EASTERN.format(new Date(iso))} ET`;
+const mstWords = (iso: string) => EASTERN.format(new Date(iso));
 
 function modelWords(version: unknown): string {
   if (!text(version)) return "Not recorded";

@@ -38,8 +38,8 @@ const PROVIDER_NAMES: Readonly<Record<ReportingProvider, string>> = {
   "anthropic-api": "Anthropic (API)", neon: "Neon", exa: "Exa", github: "GitHub", brave: "Brave Search", netlify: "Netlify",
 };
 
-/** Providers bill by UTC calendar day, so period edges are shown as UTC dates, not local times. */
-const billingDate = (iso: string) => new Date(iso).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+/** Show the provider's actual billing boundaries on the Eastern clock. */
+const billingDate = (iso: string) => formatEastern(iso, {year: true});
 const monthWords = (month: string) => new Date(`${month}-01T12:00:00Z`).toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 
 function monthBounds(month: string): { readonly start: number; readonly end: number } {

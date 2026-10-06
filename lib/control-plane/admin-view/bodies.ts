@@ -1154,12 +1154,13 @@ const FMT = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   hour: "numeric",
   minute: "2-digit",
+  timeZoneName: "short",
 });
 const FMT_DATE = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", month: "short", day: "numeric", year: "numeric" });
 
 function fmt(iso: string | null | undefined): string {
   const t = ms(iso);
-  return Number.isFinite(t) ? `${FMT.format(new Date(t))} ET` : "at no recorded time";
+  return Number.isFinite(t) ? FMT.format(new Date(t)) : "at no recorded time";
 }
 function fmtDate(iso: string | null | undefined): string {
   const t = ms(iso);

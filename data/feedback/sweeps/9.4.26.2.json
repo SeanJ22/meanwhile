@@ -328,6 +328,11 @@
   ],
   "checkDebt": [
     {
+      "itemId": "ADM-20",
+      "reason": "Approved plan BR-03/BR-04 replaced local tracker dispatch with the control-plane fix list and explicitly retired planFixQueue and Go fix these. The historical applier test no longer exists, so its earlier verified-fixed claim is no longer counted. Current automatic repair behavior is checked separately by tests/admin-fix-list.test.ts; this record preserves the original report rather than claiming the retired tracker path still works.",
+      "since": "2026-10-05"
+    },
+    {
       "itemId": "ADM-18",
       "reason": "Withdrawn with its surface, not verified. The Meanwhile Admin design (the owner's spec, 2026-09-23) replaced the old home page, and with it the reader-suite section this item fixed. The reading is now drawn only on the fleet operations map's Panels tab, in engineering terms with no owner-facing lead sentence, so the fixed form no longer exists anywhere the owner reads. It counts as fixed again when the owner-facing reader check has a place in the design.",
       "since": "2026-09-23"

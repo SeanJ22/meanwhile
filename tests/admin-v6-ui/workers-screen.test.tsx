@@ -157,10 +157,10 @@ test("parent cycle metadata reaches the existing Workers round through bounded r
       await settle(sync);
       const rendered = text(page(sync, { kind: "all" }, "us", "workers"));
       if (!ended) {
-        assert.match(rendered, /Running since 6:05 PM ET/);
+        assert.match(rendered, /Running since 6:05 PM EDT/);
         assert.doesNotMatch(rendered, /signal SIGTERM|Last round error/);
       } else {
-        assert.match(rendered, /Started Sep 28, 6:05 PM ET; finished Sep 28, 6:12 PM ET; signal SIGTERM/);
+        assert.match(rendered, /Started Sep 28, 6:05 PM EDT; finished Sep 28, 6:12 PM EDT; signal SIGTERM/);
         assert.match(rendered, /Last round error: SOURCE_READ_FAILED/);
         assert.doesNotMatch(rendered, /Running since/);
       }
@@ -214,8 +214,8 @@ test("the saved readback shows on Workers for the country, Arizona and ZIP 85635
       assert.doesNotMatch(t, /No publication or promotion|A check-in only means|A check-in isn’t progress/, key);
       // The round is late, from saved times.
       assert.match(t, /The next round is late/, key);
-      assert.match(t, /Last finished 5:58 PM ET/, key);
-      assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET about 10 minutes ago/, key);
+      assert.match(t, /Last finished 5:58 PM EDT/, key);
+      assert.match(t, /Workers last checked in Sep 28, 5:58 PM EDT about 10 minutes ago/, key);
       // Jobs: no list, so a dash and the lane counts; no explanation paragraphs or notices.
       assert.doesNotMatch(t, /unknown, not zero|Supplied by|DEP-WORKER-ACTIVE-INDEX|Not shown here, and why|Some of this didn’t arrive/, key);
       assert.doesNotMatch(t, /\b0 running · 2,585 waiting/, `${key}: an unknown lane is not summed as 0`);
@@ -232,7 +232,7 @@ test("the saved readback shows on Workers for the country, Arizona and ZIP 85635
       assert.doesNotMatch(t, /detailed Workers reading hasn’t arrived/, key);
       assert.doesNotMatch(t, new RegExp(SECTION_DEP.workers.id), key);
       assert.doesNotMatch(t, /Nothing is waiting|No recorded changes|Nothing is running/, key);
-      assert.match(t, /Read Sep 28, 6:12 PM ET/, key);
+      assert.match(t, /Read Sep 28, 6:12 PM EDT/, key);
     }
   } finally { mock.timers.reset(); }
 });
@@ -297,11 +297,11 @@ test("ages move in five-minute steps and a round turns late without a new worker
   assert.equal(ageWords(STATUS.lastCheckIn, beat + 3 * 3_600_000), "about 3 hours ago");
   assert.equal(ageWords(null, beat), null);
   const due = Date.parse(STATUS.nextRoundDueAt!);
-  assert.deepEqual(roundReading(STATUS, due - 20 * 60_000), { headline: "Next round due 6:01 PM ET", detail: "That is in about 20 minutes. The last round finished 5:58 PM ET.", overdue: false });
+  assert.deepEqual(roundReading(STATUS, due - 20 * 60_000), { headline: "Next round due 6:01 PM EDT", detail: "That is in about 20 minutes. The last round finished 5:58 PM EDT.", overdue: false });
   assert.equal(roundReading(STATUS, due + 3 * 60_000).overdue, false, "a few minutes past due is not yet late");
   assert.match(roundReading(STATUS, due + 3 * 60_000).detail, /It was due less than 5 minutes ago\. No start is saved yet/);
   assert.equal(roundReading(STATUS, due + 6 * 60_000).overdue, true);
-  assert.equal(roundReading({ ...STATUS, roundStartedAt: "2026-09-28T22:05:00.000Z" }, due + 20 * 60_000).headline, "Running since 6:05 PM ET");
+  assert.equal(roundReading({ ...STATUS, roundStartedAt: "2026-09-28T22:05:00.000Z" }, due + 20 * 60_000).headline, "Running since 6:05 PM EDT");
   assert.equal(roundReading({ ...STATUS, nextRoundDueAt: null, lastRoundFinishedAt: null }, due).headline, "Not reported");
   assert.deepEqual(laneTotals(STATUS.lanes), { running: null, waiting: 2585 });
   assert.deepEqual(laneTotals([{ name: "a", active: 2, waiting: 1, blockedBy: null }]), { running: 2, waiting: 1 });
@@ -321,7 +321,7 @@ test("an open page: unavailable → live → a later revision → an age step wi
     let t = text(page(sync, scope, key, "workers"));
     assert.equal(b.log.length, 0);
     assert.doesNotMatch(t, /The detailed Workers reading hasn’t arrived/);
-    assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET/, "the pulse's check-in still shows");
+    assert.match(t, /Workers last checked in Sep 28, 5:58 PM EDT/, "the pulse's check-in still shows");
     assert.match(t, /Waiting, and why —/, "a list that has not arrived is a dash");
     assert.match(t, /What changed —/);
     assert.doesNotMatch(t, /Nothing is waiting|No recorded changes/);
@@ -347,20 +347,20 @@ test("an open page: unavailable → live → a later revision → an age step wi
     assert.equal(occurrences(t, "failed tries since"), 1, "replaced, not appended");
 
     // 4. Five minutes on, the same revision: no read, but the ages step on.
-    assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET about 10 minutes ago/);
+    assert.match(t, /Workers last checked in Sep 28, 5:58 PM EDT about 10 minutes ago/);
     mock.timers.setTime(Date.parse(PULSE_AT) + 5 * 60_000);
     sync.onPulse(pulse("w2", new Date(Date.now()).toISOString()));
     await settle(sync);
     assert.equal(b.log.length, 2, "an unchanged revision reads nothing");
     t = text(page(sync, scope, key, "workers"));
-    assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET about 15 minutes ago/);
+    assert.match(t, /Workers last checked in Sep 28, 5:58 PM EDT about 15 minutes ago/);
     assert.match(t, /The next round is late/);
 
     // 5. Disconnected: no pulses, the last good reading stays and says so.
     t = text(page(sync, scope, key, "workers", "reconnecting"));
     assert.match(t, /Reconnecting/);
     assert.match(t, /10 failed tries since/);
-    assert.match(t, /Read Sep 28, 6:12 PM ET/);
+    assert.match(t, /Read Sep 28, 6:12 PM EDT/);
 
     // 6. Reconnected: one catch-up read, no double counting, no action sent.
     sync.catchUp();

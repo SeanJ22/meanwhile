@@ -198,6 +198,7 @@ import {
 import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansion/mission-parts.ts";
+import { missionBlanksFrom, relatedMissionBlanks, type MissionBlank } from "../lib/control-plane/workers/mission-brief.ts";
 import { liveFamiliesByGovernment } from "../lib/control-plane/expansion/live-families.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
@@ -1357,6 +1358,9 @@ let squadReading: { open: ReadonlyMap<string, ReadonlyMap<string, number>>; part
 /* CH-19: each Send's mission map count, read with the place order; `before` is filled from the prior reading when Done is decided. */
 let missionMaps = new Map<string, Omit<MissionMapCount, "before">>();
 let missionMapUnread: string | null = "the owed list has not been read this round";
+/* CH-20: every Send's open blanks, read with the place order; each Scout's brief lists the ones related to its government. */
+let missionBlanks: readonly MissionBlank[] = [];
+const missionBlanksFor = (subjectId: string): readonly MissionBlank[] => relatedMissionBlanks(subjectId, missionBlanks);
 let placeOrderDirty = true;
 let placeOrderRead: Promise<void> | null = null;
 async function refreshPlaceOrder(): Promise<void> {
@@ -1385,6 +1389,7 @@ async function refreshPlaceOrder(): Promise<void> {
       new Map(missionPartCounts(place.items, parts).map(count => [count.part, count.open] as const))] as const)) };
     missionMaps = new Map(places.map(place => [place.receiptId, missionMapCount(place.items, null)] as const));
     missionMapUnread = null;
+    missionBlanks = missionBlanksFrom(places.flatMap(place => place.items), parts);
     /* CH-21: every government in a mission place whose body holds no calendar route is owed discovery. */
     const mission = missionMeetingsDiscoveryNeeds({
       jurisdictionIds: scopes.flatMap(scope => [...scope.members]),
@@ -3214,7 +3219,7 @@ console.log(
 // finalization, alongside the independent discovery/publication passes.
 async function makeAutonomousFleet() {
   const fleetTransport = modelLaneEnabled ? workerMessages : null;
-  return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
+  const runtime = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
     spaceOut: spacer, browse: browseWithPlaywright,
@@ -3223,7 +3228,9 @@ async function makeAutonomousFleet() {
     ...(fleetTransport !== null && paidWorkerCapacity() > 0 ? { transport: fleetTransport,
       transportFor: autonomousTransportFor(fleetTransport), reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),
     auditCeilingUsd: effectiveCeilingUsd,
-    lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) });
+    lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject), missionBlanksFor });
+  /* CH-23 part 3 (DP-02): the coordinator's known doors use Admin's shut threshold from this round, as the round's own doors do. */
+  return { ...runtime, shutThreshold };
 }
 async function runAutonomousWave() {
   placeOrderDirty = true;
@@ -3305,6 +3312,7 @@ async function runAutonomousWave() {
     transportFor: guards.workerTransportFor,
     ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
     reserveEscalation: scoutEscalationReservation(fleetSafety),
+    missionBlanksFor,
     orderPending: async ids => {
       await Promise.all([refreshPlaceOrder(), refreshOwnerSettings()]);
       const queue = taskQueue ??= readTaskQueue();

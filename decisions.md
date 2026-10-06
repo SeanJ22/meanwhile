@@ -210,3 +210,26 @@ What it settles (River's reading, not new policy):
 - **Runner:** stays stopped until release 8 is live. The one-time ledger move needs it off.
 - **Order after release 8:** (1) the campaign-sites cause; (2) hourly vital signs; (3) the rest of the runtime core: research-state split, Bank split (DB-39 now, unconditionally), CH-24 Proposal A on the isolation basis, scoped reads everywhere.
 - **Overnight:** a stopped Codex lane goes to its paired Claude worker (assignments.md) and back to Codex when Sean is up. Every push to Sean is recorded in status.md. All times are EDT.
+
+## Oct 6, about 1:45 AM EDT: overnight plan, the runner restart, and the live ledger
+
+Sean, live in River session session_01GomLhSQqS2qk8vHjjkBzbT, word for word:
+
+> Overnight plan. My oversight session will start the runner once release 8 is merged and its after-deploy check passes. It checks the runner's settings file first, then measures each hour. It stops the runner if control-plane transfer is above 1.5 GB in a full hour or climbing hour over hour, or if AI money is being spent and nothing reaches the site for a full hour. AI spend has no cap while facts are being found and published. You don't need to wait for me to restart it. Measure the hour yourself too, so the two readings cross-check.
+>
+> Then check every integrated step live, releases 1 through 8 (about 260 steps), against its "Done when" line in the plan. Integrated is not done. A step is done only when it's working live.
+> 1. Give every step one verdict: Working live; Failed live (what you saw); Needs time (what will show it and when, in EDT); or Can't check (exactly what's needed). Keep them in one table on the board, releases/live-ledger.md, and update it as verdicts change.
+> 2. Order: what readers see first (reader pages, Ask, maps, cards), then the factory pieces behind the vital signs (hunts finishing, publishing, cost per fact), then Admin.
+> 3. Every Failed live step goes back to its lane as that lane's top item, with what you saw.
+> 4. Every Admin check that needs my sign-in goes in releases/admin-checks.md: the screen, what to look for, and the step it proves. My oversight session works through them in my Chrome overnight and gives me the verdicts in the morning.
+> 5. From now on, every release's steps are checked live during its measured hour, and the release isn't done until they are.
+>
+> Record this in decisions.md and in the "Next River run" list in status.md, so every River run carries it. Morning summary in EDT: release 8's first measured hour, how many steps are Working live, and what failed.
+
+What it settles:
+- **Runner:** Sean's oversight session starts and stops it. Its stop lines are: over 1.5 GB of control-plane transfer in a full hour; transfer climbing hour over hour; or AI money spent with nothing reaching the site for a full hour. River does not wait for Sean. River measures each hour independently, as a cross-check, in releases/<n>-live.md.
+- **AI spend:** no cap while facts are being found and published.
+- **Done means working live.** Integrated is not done. Every integrated step, releases 1 to 8, gets exactly one verdict in releases/live-ledger.md: Working live; Failed live (what was seen); Needs time (what will show it and when, in EDT); or Can't check (exactly what is needed). Order: reader-facing first, then the factory behind the vital signs, then Admin.
+- **Failed live** goes back to its lane as that lane's top item, with what was seen.
+- **Admin checks that need Sean's sign-in** go in releases/admin-checks.md (the screen, what to look for, the step). Sean's oversight session runs them in his Chrome.
+- **Standing rule from release 9 on:** a release's steps are checked live during its measured hour, and the release is not done until they are.

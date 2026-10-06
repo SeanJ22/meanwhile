@@ -14,6 +14,14 @@ Read this section first. It replaces "Next River run (12:35 AM EDT)" below where
 
 **Who wrote this.** River session session_01GomLhSQqS2qk8vHjjkBzbT, on Sean's live instruction. At about 1:30 AM EDT Sean said the previous River session (session_01VxkjQwRW6tEj8XDPVSGkKU) had ended and told this session to take over its lock, which it did. A later River run claims the lock under the normal rules once this session's heartbeat is 45 minutes stale.
 
+### STANDING EVERY RUN (Sean, Oct 6 ~1:45 AM EDT; decisions.md)
+1. **Runner:** Sean's oversight session starts and stops it. It stops at more than 1.5 GB of control-plane transfer in a full hour, at transfer climbing hour over hour, or at AI spend with nothing reaching the site for a full hour. River does not wait for Sean, and measures every hour itself as a cross-check (releases/<n>-live.md).
+2. **releases/live-ledger.md:** one verdict for every integrated step (Working live / Failed live / Needs time + when in EDT / Can't check + what's needed). Order: reader-facing, then the factory behind the vital signs, then Admin. Update it as verdicts change.
+3. **Failed live** → the lane's top item in returns/<lane>.md, with what was seen.
+4. **Admin checks needing Sean's sign-in** → releases/admin-checks.md (screen, what to look for, step). His oversight session runs them in his Chrome.
+5. **Every release's steps are checked live during its measured hour.** The release is not done until they are.
+6. **Morning summary (EDT):** release 8's first measured hour, the count of steps Working live, and what failed.
+
 ### The mission (Sean, Oct 6)
 A verified fact reaches a reader within minutes, at a known and falling cost, and the system proves it every hour. Targets: **control-plane Neon under 0.7 GB an hour; no paid job ends with nothing; cost per fact measured and falling.** Work is done only when the live vital signs show it, never because tests pass.
 

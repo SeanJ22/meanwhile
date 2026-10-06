@@ -1,16 +1,31 @@
 # River status
 
-build_state: release 12 LIVE on main (c814d4c); river = c83c04d (adds hunters CH-23, gates 12/12, not yet released; next normal batch); runner still stopped (restart with Sean since 8:28 AM EDT)
+build_state: release 12 LIVE on main (c814d4c); river = d89746b (adds hunters CH-23 parts 1–3 and CH-20, all behind switches off by default; gates 12/12; not yet released, next normal batch or first release after the runner restarts); runner still stopped (restart with Sean since 8:28 AM EDT)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01EJWrnyFbffUajJtnCW6EWs
-lock: river-session_01EJWrnyFbffUajJtnCW6EWs
-heartbeat: 2026-10-06T19:34:17Z
+lock: none
+heartbeat: 2026-10-06T19:45:00Z
 
+## This run (session_01EJWrnyFbffUajJtnCW6EWs, claimed the free lock Oct 6, 2:57 PM EDT)
 
+- Runner: still stopped at 2:59 PM EDT (cp_runner_heartbeat last beat 07:12:49Z on a5fd753; cp_vital_signs absent). Restart already with Sean; not re-pushed.
+- **Folded hunters 544e20323 (CH-23 part 3, CH-20 re-ready; behind WTP_ONE_HUNTER_PATH and WTP_BOX_ENABLED)** on river-next d89746b over river c83c04d. No conflicts; no migrations. Firewall PASS (0 findings, 7,608 files). History unshallowed first.
+- **`pnpm gates` 12/12 on d89746b** (9,944 tests, 9,933 pass, 0 fail, 11 skipped; tests 1,566 s). river promoted c83c04d → d89746b.
+- river-next: remote moved 2b83037 → d89746b with lease (old tip preserved at stream/salvage-river-next-slide); trial also at stream/salvage-river-next-r14.
+- No release: everything on river ahead of main is behind off-by-default switches and the runner is stopped, so a release now changes nothing a reader sees. Ship with the next normal batch or right after the runner restarts.
+- Held, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b DB-21 (runner door switches); admin 734ee9633 (returned). Open PRs #704, #701, #599 unchanged. No push to Sean.
+- Engineering note: the stop hook flags local river-next as unpushed when remote river-next diverges; pushing the tested fold to river-next (lease, old tip preserved) clears it.
+- Lock released at a safe checkpoint.
 
+### Next River run
+1. Runner restart (Sean's): when cp_runner_heartbeat testedSha matches main, confirm `to_regclass('cp_vital_signs')`, measure the first hour, check releases 9–12 runner-side steps against the ledger.
+2. river d89746b is ahead of main by CH-23 (parts 1–3) and CH-20: include in the next release batch.
+3. Held READYs as above; firewall first on any fold; unshallow history before `river.mjs test`.
+4. Auto-merge: use the GitHub MCP tool (enable_pr_auto_merge); river.mjs's GraphQL call is refused from cloud sessions.
+5. In the board worktree, catch up with `git merge --ff-only`.
 
-## This run (session_0143FbQt9iKZUszoLdVyVdQv, claimed the free lock Oct 6, 1:57 PM EDT)
+## Previous run (session_0143FbQt9iKZUszoLdVyVdQv, claimed the free lock Oct 6, 1:57 PM EDT)
 
 - No change; no fold, no gates, no release. Runner still stopped at 1:58 PM EDT (cp_runner_heartbeat last beat 07:12:49Z on a5fd753; cp_vital_signs absent). Restart already with Sean; not re-pushed.
 - Scan: no new READY on any lane. Held, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b DB-21 (runner door switches); admin 734ee9633 (returned). Codex lanes still with their paired Claude workers (no handback recorded).

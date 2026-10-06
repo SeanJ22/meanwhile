@@ -48,6 +48,8 @@ export interface NeonTransfer {
 }
 /** Structurally `SpendView` in app/(admin)/_mw/admin-v6/model.ts. */
 export interface AdminV6SpendView {
+  readonly flow?: import("./cost-reporting.ts").FlowSummary;
+  readonly batchSpend?: import("./cost-reporting.ts").BatchSpend | null;
   readonly neonProjects?: readonly import("./spend-summary.ts").NeonProjectTransfer[] | null;
   readonly vendors?: import("./vendor-spend.ts").VendorSpendReading;
   readonly windowDays: number;

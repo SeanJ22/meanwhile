@@ -320,3 +320,24 @@ test("BR-39: every Admin view keeps planted code names and raw errors behind Tec
   }
   assert.throws(()=>check("<p>SCOUT_POLICY_DENIED</p>"),"positive control: leaking an error onto the face fails the check");
 });
+
+
+test("Money renders the measured cost in its existing Hunts table and keeps dates Eastern", () => {
+  const at = "2026-10-06T02:00:00Z";
+  const liveSection = (data: unknown) => ({phase:"live",data,asOf:at,revision:"cost-v1",missingParts:[],attempts:0}) as SectionState;
+  const snapshot = { ...waiting,
+    hunts: liveSection([{id:"measured-hunt",placeKey:"us",name:"Measured hunt",startedAt:at,limitUsd:50,limitSource:"your hunt instruction",spentUsd:38,reportedSpendUsd:1.25,heldUsd:2,status:"unreported",researchWorkers:null,unpricedEntries:0}]),
+    spend: liveSection({windowDays:30,byTier:[],byDay:[],byMonth:[],work:[],anthropicUsd:0,searchUsd:0,unpricedRows:0,neon:{kind:"not-recorded",detail:"Unread",days:[]},readAt:at,batchSpend:{from:at,through:at,rows:[{role:"SCOUT",mode:"batch",usd:.5,charges:1,unpriced:0},{role:"SCOUT",mode:"standard",usd:1,charges:1,unpriced:0}]}}),
+  };
+  const html = renderToStaticMarkup(h(CommandCenter,{data:buildLiveBundle(snapshot,ref,workerStatusFromPulse(null)),mode:"live",executor:liveExecutor({capabilities:()=>null}),scopeKey:"us",onScopeChange:()=>{},connection:"live",lastGoodAt:null,recovered:false,access:owner,initialView:"money"}));
+  const tables = [...html.matchAll(/<table[^>]*>(.*?)<\/table>/g)].map(m=>m[1]);
+  const huntTables = tables.filter(t=>t.includes("ZIP") && t.includes("Set aside"));
+  assert.equal(huntTables.length,1);
+  assert.match(huntTables[0],/\$1\.25/);
+  assert.match(huntTables[0],/\$2\.00/);
+  assert.match(huntTables[0],/\$50\.00/);
+  assert.doesNotMatch(huntTables[0],/\$38\.00/);
+  assert.match(html,/Oct 5.*10:00 PM EDT/);
+  assert.match(html,/Batch and full-price spend by role/);
+  assert.doesNotMatch(html,/spend with no result|No result recorded| UTC| MST/);
+});

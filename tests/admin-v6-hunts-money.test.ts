@@ -75,6 +75,7 @@ test("the original 85635 hunt keeps its exact $50 lifetime accounting: spent, se
   assert.equal(h.startedAt, ORIGINAL_LIFETIME_HUNT.budgetStartedAt);
   assert.equal(h.limitUsd, 50);
   assert.equal(h.spentUsd, 38.491002);
+  assert.equal(h.reportedSpendUsd, null, "unpriced other-service charges cannot become a measured hunt total");
   assert.equal(h.heldUsd, 8.16384);
   assert.equal(h.availableUsd, 3.345158);
   assert.equal(h.unpricedEntries, 0, "481 unpriced rows are other-service rows, not charges against the Anthropic allowance");

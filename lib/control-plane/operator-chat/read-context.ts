@@ -92,7 +92,7 @@ export async function readOperatorContext(request: ContextRequest): Promise<Cont
    * one instant, and a serial read chain lets the runner beat between the
    * heartbeat and the work it is supposed to explain.
    */
-  const [snapshot, heartbeat, digests, decisions, intents, fleet, research, pulse, config] = await Promise.all([
+  const [snapshot, heartbeat, digests, decisions, intents, fleet, research, pulse, config, spendSummary] = await Promise.all([
     wanted.has("snapshot") ? readSnapshot(repos) : Promise.resolve(undefined),
     wanted.has("heartbeat") ? readHeartbeat(repos) : Promise.resolve(undefined),
     wanted.has("digests") ? readDigests(repos) : Promise.resolve(undefined),
@@ -102,6 +102,7 @@ export async function readOperatorContext(request: ContextRequest): Promise<Cont
     wanted.has("research") ? readFleetSafety(repos) : Promise.resolve(undefined),
     wanted.has("pulse") ? readPulse(repos, request.nowIso) : Promise.resolve(undefined),
     wanted.has("config") ? repos.adminConfig.read(ADMIN_CONFIG_ID).catch(() => null) : Promise.resolve(undefined),
+    wanted.has("spendSummary") ? import("../admin-view/spend-summary.ts").then(m => m.readSpendSummary(repos)).catch(() => null) : Promise.resolve(undefined),
   ]);
 
   /*
@@ -118,6 +119,7 @@ export async function readOperatorContext(request: ContextRequest): Promise<Cont
       nowIso: request.nowIso,
       from: request.from,
       stateVersion,
+      ...(spendSummary === undefined ? {} : { spendSummary }),
       ...(config === undefined ? {} : { adminConfig: config && isAdminConfig(config.value) ? config.value : null }),
       ...(placeStuck === undefined ? {} : { placeStuck: placeStuck === null ? { kind: "NOT_RECORDED" as const, detail: "Choose a place, or try again when its live score and stuck work can be read." } : { kind: "HELD" as const, value: placeStuck } }),
       snapshot,

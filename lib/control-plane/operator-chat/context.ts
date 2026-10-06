@@ -80,6 +80,7 @@ export interface FleetInputs {
 
 /** The readings a question can require. Names are the context's field names. */
 export const CONTEXT_READS = [
+  "spendSummary",
   "config",
   "placeStuck",
   "snapshot",
@@ -110,6 +111,7 @@ export type ContextRead = (typeof CONTEXT_READS)[number];
  * the one the pages already treat as "when this was true".
  */
 export interface OperatorContext {
+  readonly spendSummary?: import("../admin-view/spend-summary.ts").SpendSummary | null;
   readonly nowIso: string;
   /** The console path the owner asked from. */
   readonly from: string;
@@ -137,6 +139,7 @@ export interface OperatorContext {
  */
 export function requiredReads(topic: ChatTopic): readonly ContextRead[] {
   switch (topic) {
+    case "YESTERDAY_SPEND": return ["spendSummary"];
     case "PLACE_STUCK": return ["placeStuck"];
     case "FLEET_BLOCKERS":
       return ["heartbeat", "intents", "research", "fleet", "snapshot"];

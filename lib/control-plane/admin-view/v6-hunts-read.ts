@@ -105,6 +105,7 @@ export function huntRelation(scope: V6PlaceScope, decision: ExpansionScopeDecisi
  * amendment) without importing the UI bundle. Always one lifetime hunt.
  */
 export interface AdminV6HuntView {
+  readonly reportedSpendUsd: number | null;
   readonly id: string;
   readonly placeKey: string;
   readonly name: string;
@@ -182,6 +183,7 @@ function huntView(decision: ExpansionScopeDecision & { readonly budgetStartedAt:
     limitSource: decision.latestDecisionReceiptId && decision.latestDecisionReceiptId !== decision.receiptId
       ? "your latest limit change to this hunt" : "your hunt instruction",
     spentUsd: spent,
+    reportedSpendUsd: row.unpriced > 0 || row.anthropicUsd === null || row.otherUsd === null ? null : cents6(row.anthropicUsd + row.otherUsd),
     heldUsd: held,
     unpricedEntries: row.budgetUnpriced,
     status: decision.budgetUsd === 0 ? "paused" : "unreported",

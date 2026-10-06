@@ -28,6 +28,7 @@ import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.
 import { listDoors } from "@/lib/doors/registry.ts";
 import { readDoorNumbers } from "@/lib/control-plane/admin-view/door-numbers-read.ts";
 import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
+import { readSpendSummary } from "@/lib/control-plane/admin-view/spend-summary.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -48,7 +49,7 @@ export async function GET(request: NextRequest) {
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
     const doorList = opened ? await attempt(async () => (await listDoors(opened.doors)).doors) : null;
-    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims] = await Promise.all([
+    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, summary] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
@@ -76,9 +77,11 @@ export async function GET(request: NextRequest) {
       attempt(async () => (opened ? provenFixesReading(config, observedAt) : null)),
       // DP-33: the latest weekly claim check, this week's and last week's keys.
       attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
+      attempt(async () => opened ? readSpendSummary(opened) : null),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
+      flow: summary?.spend.flow?.week ?? null,
       places: sentPlaces === null ? null : sentPlaces.places,
       placesUnread: sentPlaces === null ? 0 : sentPlaces.unread,
       orders: history,

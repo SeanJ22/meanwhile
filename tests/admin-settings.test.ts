@@ -103,7 +103,7 @@ test("the runner re-reads each pass and its heartbeat echo shows the new value i
   const nextPass = "2026-10-04T06:15:00Z";
   const after = row(beat(runnerSettingsEcho(config, nextPass)));
   assert.deepEqual(after.inForce, { where: "runner", yes: true, since: nextPass });
-  assert.match(inForceWords(after).words, /^In force since Oct 4, 2:15 AM ET$/);
+  assert.match(inForceWords(after).words, /^In force since Oct 4, 2:15 AM EDT$/);
   assert.equal(after.valueWords, "6 failures in a row");
   assert.equal(after.log[0].beforeWords, "3 failures in a row");
   assert.equal(after.log[0].why, null);

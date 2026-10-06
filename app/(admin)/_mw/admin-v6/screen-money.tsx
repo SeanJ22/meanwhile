@@ -11,7 +11,8 @@ import { plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
 
 import { useV6 } from "./context.tsx";
-import { mst, usd, type Hunt } from "./model.ts";
+import { usd, type Hunt } from "./model.ts";
+import { moneyTime, roleWords, measuredHuntSpend } from "../../../../lib/control-plane/admin-view/cost-reporting-view.ts";
 import { huntAt, huntsWithin } from "./places.ts";
 import { Card, cx, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -44,7 +45,7 @@ export function MoneyScreen() {
       switch (sort.key) {
         case "zip": return zipOf(h.placeKey);
         case "place": return placeOf(h);
-        case "spent": return h.spentUsd;
+        case "spent": return measuredHuntSpend(h) ?? -1;
         case "held": return h.heldUsd;
         case "limit": return h.limitUsd;
         case "status": return STATUS[h.status];
@@ -85,11 +86,11 @@ export function MoneyScreen() {
         <h1 className={s.h1}>Money</h1>
       </header>
 
-      <Card title="Spend by vendor" aside={<span className={s.meta}>{spendData?.vendors ? `Today (${spendData.vendors.day}) · month (${spendData.vendors.month}) · read ${mst(spendData.vendors.readAt)}` : DASH}</span>}>
+      <Card title="Spend by vendor" aside={<span className={s.meta}>{spendData?.vendors ? `Today (${spendData.vendors.day}) · month (${spendData.vendors.month}) · read ${moneyTime(spendData.vendors.readAt)}` : DASH}</span>}>
         <div className={s.tableWrap}><table className={s.table}>
           <thead><tr><th>Vendor</th><th>Today</th><th>Daily limit</th><th>Month to date</th><th>Monthly limit</th></tr></thead>
           <tbody>{(spendData?.vendors?.vendors ?? ["Anthropic","Neon","DigitalOcean","Netlify","GitHub"].map(vendor=>({vendor,todayUsd:null,monthUsd:null,dailyLimitUsd:null,monthlyLimitUsd:null,todayBytes:null,monthBytes:null,todayPeriodStart:undefined as string|undefined,todayPeriodEnd:undefined as string|undefined,detail:"The vendor reading is not available yet."}))).map(r=><tr key={r.vendor}>
-            <th scope="row">{r.vendor}<Technical lines={[r.detail]}/></th><td>{money(r.todayUsd)}{r.todayPeriodStart&&r.todayPeriodEnd&&<div className={s.small}>Provider day: {mst(r.todayPeriodStart)} to {mst(r.todayPeriodEnd)}</div>}{r.todayBytes!==null&&<div className={s.small}>{gigabytes(r.todayBytes)} transferred</div>}</td><td>{money(r.dailyLimitUsd)}</td><td>{money(r.monthUsd)}{r.monthBytes!==null&&<div className={s.small}>{gigabytes(r.monthBytes)} transferred</div>}</td><td>{money(r.monthlyLimitUsd)}</td>
+            <th scope="row">{r.vendor}<Technical lines={[r.detail]}/></th><td>{money(r.todayUsd)}{r.todayPeriodStart&&r.todayPeriodEnd&&<div className={s.small}>Provider day: {moneyTime(r.todayPeriodStart)} to {moneyTime(r.todayPeriodEnd)}</div>}{r.todayBytes!==null&&<div className={s.small}>{gigabytes(r.todayBytes)} transferred</div>}</td><td>{money(r.dailyLimitUsd)}</td><td>{money(r.monthUsd)}{r.monthBytes!==null&&<div className={s.small}>{gigabytes(r.monthBytes)} transferred</div>}</td><td>{money(r.monthlyLimitUsd)}</td>
           </tr>)}</tbody>
         </table></div>
       </Card>
@@ -100,7 +101,14 @@ export function MoneyScreen() {
         </tbody></table></div> : <><p className={s.p}>{DASH}</p><Technical lines={["The runner has not published measured daily transfer and cause attribution by database project."]}/></>}
       </Card>
 
-      <Card title="Summary" aside={<span className={s.meta}>{v.data.spend.data?.readAt ? `Read ${mst(v.data.spend.data.readAt)}` : DASH}</span>}>
+      <Card title="Batch and full-price spend by role" aside={<span className={s.meta}>Last 24 hours</span>}>
+        {spendData?.batchSpend ? <div className={s.tableWrap}><table className={s.table}>
+          <thead><tr><th>Role</th><th>Request pricing</th><th>Settled spend</th><th>Charges</th></tr></thead>
+          <tbody>{spendData.batchSpend.rows.map(r => <tr key={`${r.role}:${r.mode}`}><th scope="row">{roleWords(r.role)}<Technical lines={[r.role]} /></th><td>{r.mode === "batch" ? "Batch" : r.mode === "standard" ? "Full-price" : "—"}</td><td>{money(r.usd)}{r.unpriced > 0 && <Technical lines={[`${r.unpriced} charges have no reported price.`]} />}</td><td>{r.charges}</td></tr>)}</tbody>
+        </table><Technical lines={["Full-price means requests recorded outside the batch API. Amounts include the provider's measured cache pricing. A missing batch flag is not assigned to either price."]} /></div> : <p className={s.p}>—</p>}
+      </Card>
+
+      <Card title="Summary" aside={<span className={s.meta}>{v.data.spend.data?.readAt ? `Read ${moneyTime(v.data.spend.data.readAt)}` : DASH}</span>}>
         <div className={s.gridTiles}>
           <div className={s.row}><span className={s.eyebrow}>Spent</span><span className={s.big}>{money(sum.spentUsd)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Last 24 hours</span><span className={s.big}>{money(v.data.spend.data?.last24h?.modelUsd ?? null)}</span></div>
@@ -165,7 +173,7 @@ export function MoneyScreen() {
                     <tr key={h.id}>
                       <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{zip}</th>
                       <td>{place}</td>
-                      <td className={s.num}>{usd(h.spentUsd)}</td>
+                      <td className={s.num}>{money(measuredHuntSpend(h))}</td>
                       <td className={s.num}>{usd(h.heldUsd)}</td>
                       <td className={s.num}>{usd(h.limitUsd)}</td>
                       <td>{STATUS[h.status]}</td>

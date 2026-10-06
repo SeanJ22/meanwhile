@@ -34,6 +34,7 @@
  */
 
 import { formatEastern } from "../eastern-time.ts";
+import { yesterdayWindow } from "../admin-view/cost-reporting-view.ts";
 import { ageWords, count, plainCode, plainText, usdCents } from "../plain-words.ts";
 import { codeIdentityLine } from "../code-identity.ts";
 import { collapseDecisionLog } from "../decision-log.ts";
@@ -764,6 +765,14 @@ export function placeStuck(ctx: OperatorContext): ChatAnswer {
  */
 export function answerFor(topic: ChatTopic, ctx: OperatorContext, asked: string, subject: string | null): ChatAnswer {
   switch (topic) {
+    case "YESTERDAY_SPEND": {
+      const flow = ctx.spendSummary?.spend.flow?.yesterday;
+      const missing: Gap = { whose: "OURS", says: "The runner's measured spending and deliveries for yesterday are not available yet." };
+      if (!flow || Date.parse(flow.through) !== Date.parse(yesterdayWindow(ctx.nowIso).through)) return assemble(topic, { says: [missing.says], denominator: noNumber(missing), sources: [], needsYou: NOTHING_NEEDED, gaps: [missing], detail: [] });
+      const facts = flow.hours.reduce((sum, h) => sum + h.liveRecords, 0);
+      const spent = flow.settledSpendUsd === null ? "—" : `$${flow.settledSpendUsd.toFixed(2)}`;
+      return assemble(topic, { says: [`Yesterday's measured window: ${spent} settled; ${count(facts)} new or updated reader records reached readers.`], denominator: denominator(`${count(facts)} reader records`, facts, facts, "New or updated reader records delivered in the measured Eastern-day window", "runner publication-flow summary"), sources: [source("Runner's measured publication and spending window", ctx.spendSummary!.readAt, "spendSummary.flow.yesterday")], needsYou: NOTHING_NEEDED, gaps: flow.settledSpendUsd === null ? [{whose:"OURS",says:"A charge in this window has no reported price."}] : [], detail: [`Measured ${formatEastern(flow.from)} to ${formatEastern(flow.through)}.`] });
+    }
     case "PLACE_STUCK": return placeStuck(ctx);
     case "FLEET_BLOCKERS":
       return fleetBlockers(ctx);

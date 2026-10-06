@@ -60,6 +60,8 @@ function Matters() {
   const needs = rows.filter((r) => r.filter === "needs-me");
   const motion = rows.filter((r) => MOTION_KINDS.has(r.kind) && (r.filter === "in-progress" || r.filter === "scheduled" || r.filter === "waiting")).slice(0, 5);
   const completeness = v.data.checklist.data?.score?.measures?.completeness ?? null;
+  const flowRow = v.data.scoreboard.data?.rows.find(r => r.name === "Facts live per hour");
+  const costRow = v.data.scoreboard.data?.rows.find(r => r.name === "Cost per fact");
   return (
     <section aria-label="What matters now" className={s.stack}>
       <div className={s.grid2}>
@@ -72,12 +74,12 @@ function Matters() {
           <p className={s.small}>{completeness ? `${count(completeness.n)} of ${count(completeness.of)} things owed for ${v.place.name} are held. More is better; the rest is still being found.` : `What ${v.place.name} is owed has not been counted yet.`}</p>
         </Card>
         <Card title="Facts live per hour" aside={<button type="button" className={s.btnLink} onClick={() => v.go("scoreboard")}>Open the scoreboard →</button>}>
-          <div><span className={s.big}>—</span></div>
-          <p className={s.small}>Not measured yet. Higher means the factory is producing; the trend shows here once it is counted.</p>
+          <div><span className={s.big}>{flowRow?.value ?? "—"}</span></div>
+          <p className={s.small}>{flowRow?.counts ?? flowRow?.notMeasured ?? "—"}</p>
         </Card>
         <Card title="Cost per fact">
-          <div><span className={s.big}>—</span></div>
-          <p className={s.small}>Not measured yet. Lower is better; the trend shows here once it is counted.</p>
+          <div><span className={s.big}>{costRow?.value ?? "—"}</span></div>
+          <p className={s.small}>{costRow?.counts ?? costRow?.notMeasured ?? "—"}</p>
         </Card>
       </div>
       <Card title="Orders in motion" aside={<button type="button" className={s.btnLink} onClick={() => v.go("queue")}>Open the queue →</button>}>

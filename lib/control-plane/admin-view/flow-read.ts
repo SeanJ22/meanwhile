@@ -29,7 +29,7 @@ export interface FlowRows {
 const HOUR = 3_600_000;
 export function projectFlow(rows: FlowRows, from: string, through: string): FlowRead {
   const start = Date.parse(from), end = Date.parse(through);
-  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start || end - start > 24 * HOUR) throw Error("FLOW_WINDOW_INVALID");
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start || end - start > 7 * 24 * HOUR) throw Error("FLOW_WINDOW_INVALID");
   const hours = new Map<string, { hour: string; findings: number; builtFindings: number; checkedRecords: number; liveRecords: number; settledSpendUsd: number | null; unpricedCharges: number }>();
   for (let at = Math.floor(start / HOUR) * HOUR; at < end; at += HOUR) {
     const hour = new Date(at).toISOString();
@@ -66,7 +66,8 @@ export const PUBLICATION_FLOW_SQL = `SELECT date_trunc('hour', recorded_at AT TI
 export const FLOW_SPEND_SQL = `SELECT date_trunc('hour', recorded_at AT TIME ZONE 'UTC') AT TIME ZONE 'UTC' AS hour,
  coalesce(sum((record->'cost'->>'usd')::float8), 0)::float8 AS usd,
  count(*) FILTER (WHERE record->'cost'->>'usd' IS NULL)::int AS unpriced
- FROM cp_log_costs WHERE recorded_at >= $1::timestamptz AND recorded_at < $2::timestamptz GROUP BY 1`;
+ FROM cp_log_costs WHERE recorded_at >= $1::timestamptz AND recorded_at < $2::timestamptz
+ AND (record->>'role' <> 'ACQUIRER' OR record->'cost'->>'usd' IS NOT NULL) GROUP BY 1`;
 
 /** Caller supplies the actual deployment time: older uninstrumented hours must
  * not appear as zero. An unavailable store remains unknown on the Admin card. */

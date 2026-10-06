@@ -81,6 +81,8 @@ export interface Place {
 }
 
 export interface Hunt {
+  /** Actual allocated charges, rather than the allowance consumed by overlapping hunts. */
+  readonly reportedSpendUsd?: number | null;
   readonly id: string;
   /** The place key the hunt was started on. */
   readonly placeKey: string;
@@ -618,6 +620,8 @@ export interface ReachedView {
 
 /** What the agents cost by model tier and day, and what the database sent (server: v6-spend-read.ts). Whole-system. */
 export interface SpendView {
+  readonly flow?: import("../../../../lib/control-plane/admin-view/cost-reporting.ts").FlowSummary;
+  readonly batchSpend?: import("../../../../lib/control-plane/admin-view/cost-reporting.ts").BatchSpend | null;
   readonly neonProjects?: readonly import("../../../../lib/control-plane/admin-view/spend-summary.ts").NeonProjectTransfer[] | null;
   readonly vendors?: import("../../../../lib/control-plane/admin-view/vendor-spend.ts").VendorSpendReading;
   readonly windowDays: number;
@@ -744,6 +748,7 @@ export interface ScoreboardMissionRow {
 }
 
 export interface ScoreboardView {
+  readonly flow?: import("../../../../lib/control-plane/admin-view/flow-read.ts").FlowRead | null;
   readonly rows: readonly ScoreboardRow[];
   /** Completeness by place and by family, with the counts behind each; empty until a place has been sent. */
   readonly byPlace: readonly ScoreboardPlaceRow[];
@@ -965,6 +970,7 @@ export function mst(iso: string | null, withDay = true): string {
     ...(withDay ? { month: "short", day: "numeric" } : {}),
     hour: "numeric",
     minute: "2-digit",
+    timeZoneName: "short",
   });
-  return `${f.format(new Date(iso))} ET`;
+  return f.format(new Date(iso));
 }

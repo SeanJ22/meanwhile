@@ -1,3 +1,12 @@
+## New returned fold — prepared WIP, not READY
+
+- Stream caught up to promoted River `8b6322c98c5639f5cabd9de205f7baad147c31b6` at `99adffb05`.
+- Returned `fix:5abe56f2`, exact pending screen batch `2861b8fe841f2a4a68a39a2a89f9b01241753da7`; it is not promoted at the final fetch. Only promoted River was merged into stream/admin.
+- Local checked combination `7f2a3390c89c875ca015853067b6623df1ac6e66` in `/tmp/meanwhile-admin-return-fold`: types PASS, 222 focused PASS, 0 FAIL, 0 SKIP; 34 files saved in `.factory/admin-return-tests.txt`. Lint on reconciled screens/types: 0 errors, 2 existing warnings. Logs `/tmp/meanwhile-admin-return-trial-{types3,focused,lint}.log`.
+- Initial mechanical merge revived deleted controls and instruction state outside marked hunks; initial types failed. Restored Admin's files where pending batch made no change, then applied the batch's actual diff to Details and sample data. Types and focused checks pass after that repair. New look/Testing features and plain-words/decision/schedule behaviors coexist.
+- Valid affected selector (`CI_TIER=yes CI_EVENT_NAME=pull_request`, full base SHA, network-enabled child Git): FULL because 522 changed files exceed 400. `/tmp/meanwhile-admin-return-trial-selection.log`. FULL and `pnpm gates` deliberately remain outstanding until the prerequisite batch promotes. This combination is WIP, not a clean FULL or READY claim.
+- `.factory/admin-return-overlay.patch` preserves the complete application overlay from the exact pending batch to the tested combination, including binary patches; reverse `git apply --check` succeeds on that combination. Do not blindly apply it to a changed batch. No unpromoted application commit was pushed, only the saved coordination artifact.
+
 # Admin WIP check evidence
 
 Historical checkpoint evidence follows; each result applies only to its named SHA. Current READY and check evidence are recorded in the latest sections and admin.md. No deployed/live acceptance is claimed.

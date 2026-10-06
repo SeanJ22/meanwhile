@@ -4,8 +4,8 @@ build_state: releases 11 and 12 LIVE (c814d4c); river = main c814d4c; nothing re
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01PNZmtjma5s373mH41mVk6q
-lock: river-20261006T145827Z-27345
-heartbeat: 2026-10-06T15:58:54Z
+lock: none
+heartbeat: 2026-10-06T16:36:19Z
 
 
 
@@ -21,6 +21,8 @@ heartbeat: 2026-10-06T15:58:54Z
 - **Release 12: #718** opened 11:50 AM EDT, auto-merge on (enabled through the GitHub MCP tool; river.mjs's GraphQL call is refused from cloud sessions), with the read-cost statement. Shipped now so CH-22 and DP-06 are in the runner's first measured hour after restart.
 - **Release 12 live:** #718 merged 12:32 PM EDT as c814d4c (tree = tested 405a7f6); CI run 37490899697 green (37490860810 cancelled by concurrency, explained on the PR); /api/build c814d4c at 12:35 PM EDT; post-deploy 37496564929 passed. river fast-forwarded to c814d4c. releases/12-live.md; ledger updated (CP-10 Failed live → Needs time on its release 11 repair; VS-01, CH-22 added; DP-06 note; 269 steps).
 - Runner: still stopped at 12:40 PM EDT (last beat 07:12:49Z). Every runner-side step of releases 9–12 waits on it.
+- Pushed to Sean 12:42 PM EDT: release 12 live; runner still stopped; restart installs c814d4c.
+- Lock released 12:43 PM EDT at a safe checkpoint (no fold or release in flight).
 
 ### Next River run
 1. Runner restart (Sean's): when cp_runner_heartbeat shows testedSha c814d4c65e7236284e08adff63ae774b2b06c7ca, confirm `to_regclass('cp_vital_signs')`, then measure the first hour (heartbeat neonBytes lastFullHour byCaller vs Neon project delta; baseline 1,857,008,881,367 at 14:57Z) and check releases 9–12 runner-side steps against the ledger.

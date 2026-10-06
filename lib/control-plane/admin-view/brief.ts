@@ -73,10 +73,10 @@ export async function writeDailyBrief(repos:ControlPlaneRepositories,at:string,r
   const clock=easternBriefClock(at);const held=await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if(!held||!isAdminConfig(held.value))return false;
   const time=readSetting<string>(held.value,BRIEF_TIME_SETTING,"");
-  if(!time||clock.time<time||held.value.latestBrief?.day===clock.day)return false;
+  if(!time||clock.time<time||(held.value.latestBrief?.day??"")>=clock.day)return false;
   const snapshot=(await read(repos,at)).fresh;
   for(let n=0;n<4;n++){
-    const latest=await repos.adminConfig.read(ADMIN_CONFIG_ID);if(!latest||!isAdminConfig(latest.value)||latest.value.latestBrief?.day===clock.day)return false;
+    const latest=await repos.adminConfig.read(ADMIN_CONFIG_ID);if(!latest||!isAdminConfig(latest.value)||(latest.value.latestBrief?.day??"")>=clock.day)return false;
     const currentTime=readSetting<string>(latest.value,BRIEF_TIME_SETTING,"");if(!currentTime||clock.time<currentTime)return false;
     try{await repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID,latest.revision,{...latest.value,latestBrief:snapshot},at);return true;}catch(e){if(n===3)throw e;}
   }

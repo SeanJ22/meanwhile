@@ -53,3 +53,12 @@ test("all brief readings reject the public host before any source read",async()=
 test("the Settings control can clear the brief time to turn snapshots off",()=>{
  assert.equal(actionInput("setting-set",{target:BRIEF_TIME_SETTING,scopeKey:"us",amount:"",option:null,words:"",selected:[],payload:{control:"text"}}).value,"");
 });
+test("an older tick finishing after midnight cannot replace the newer day's brief",async()=>{
+ const repos=createMemoryRepositories();const oldAt="2026-10-06T03:59:00Z",newAt="2026-10-06T04:01:00Z";
+ await repos.adminConfig.put(ADMIN_CONFIG_ID,{...defaultAdminConfig(oldAt),settings:{[BRIEF_TIME_SETTING]:"00:00"}},oldAt);
+ let finish!:()=>void,started!:()=>void;const waiting=new Promise<void>(r=>finish=r),reading=new Promise<void>(r=>started=r);
+ const read=async(_repos:unknown,clock:string):Promise<BriefReading>=>{if(clock===oldAt){started();await waiting;}return {fresh:projectBrief(defaultAdminConfig(clock),[],clock),latest:null,alertsOn:false};};
+ const older=writeDailyBrief(repos,oldAt,read);await reading;
+ assert.equal(await writeDailyBrief(repos,newAt,read),true);finish();
+ assert.equal(await older,false,"the stale older day must not save over the new day");assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value.latestBrief?.day,"2026-10-06");
+});

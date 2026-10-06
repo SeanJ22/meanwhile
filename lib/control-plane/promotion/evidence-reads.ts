@@ -16,21 +16,21 @@ export async function readPromotionArtifacts(repos: PromotionEvidenceRepositorie
 export function promotionArtifactReader(repos: PromotionEvidenceRepositories) {
   let fallback: Promise<readonly ArtifactRecord[]> | undefined;
   return async (artifactIds: readonly string[], canonicalUrls: readonly string[] = []): Promise<readonly ArtifactRecord[]> => {
-  const ids = [...new Set(artifactIds)];
-  const urls = [...new Set(canonicalUrls)];
-  if (!ids.length && !urls.length) return [];
-  if (repos.artifactsForPromotion) {
-    const selected = await repos.artifactsForPromotion(ids, urls);
-    if (!urls.length) return selected;
-    // A content id may have observations under several URLs. The context's
-    // last-observation lookup must see the same row as the full log did.
-    return repos.artifactsForPromotion([...new Set([...ids, ...selected.map(row => row.artifactId)])], []);
-  }
-  // File/memory/legacy providers have no network transfer. Keep their exact log
-  // order, including multiple observations of a content-addressed artifact.
-  const all = await (fallback ??= repos.artifacts.readAll());
-  const selectedIds = new Set([...ids, ...all.filter(row => urls.includes(row.canonicalUrl)).map(row => row.artifactId)]);
-  return all.filter(row => selectedIds.has(row.artifactId));
+    const ids = [...new Set(artifactIds)];
+    const urls = [...new Set(canonicalUrls)];
+    if (!ids.length && !urls.length) return [];
+    if (repos.artifactsForPromotion) {
+      const selected = await repos.artifactsForPromotion(ids, urls);
+      if (!urls.length) return selected;
+      // A content id may have observations under several URLs. The context's
+      // last-observation lookup must see the same row as the full log did.
+      return repos.artifactsForPromotion([...new Set([...ids, ...selected.map(row => row.artifactId)])], []);
+    }
+    // File/memory/legacy providers have no network transfer. Keep their exact log
+    // order, including multiple observations of a content-addressed artifact.
+    const all = await (fallback ??= repos.artifacts.readAll());
+    const selectedIds = new Set([...ids, ...all.filter(row => urls.includes(row.canonicalUrl)).map(row => row.artifactId)]);
+    return all.filter(row => selectedIds.has(row.artifactId));
   };
 }
 

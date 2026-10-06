@@ -1,0 +1,21 @@
+--- a/scripts/routine-civic-data-runner.mts
++++ b/scripts/routine-civic-data-runner.mts
+@@ -1,3 +1,4 @@
++import { huntSourceProgressDigest } from "../lib/civic-data/hunt-source-progress.ts";
+ import { boxIndexEnabled } from "../lib/control-plane/box.ts";
+ import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
+ import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
+@@ -581,11 +582,9 @@
+   const progress: HuntSourceProgress = { instructionIds: task.ownerInvocation.instructions, taskId: task.id,
+     sourceId: task.sourceId, scope: task.scope, stage, at, detail: safeFailure(detail), candidateId,
+     readerPaths: stage === "PUBLISHED" || stage === "REUSED" ? task.contract.readerProjection?.consumers.filter(path => path.startsWith("/") && !path.startsWith("//")) ?? [] : [] };
+-  const digestId = `${SUPERVISOR_CYCLE_ID}:${task.id}:${stage}`;
++  const digest = huntSourceProgressDigest(SUPERVISOR_CYCLE_ID, RUNNING_CODE_SHA, progress);
+   assertAggregateOnly(progress, "hunt source progress");
+-  await repos.ownerDigests.append(HUNT_SOURCE_PROGRESS_LOG_KEY, digestId, { formatVersion: OWNER_SURFACE_FORMAT_VERSION,
+-    digestId, writtenAt: at, headline: `${task.id}: ${stage}`, lines: [progress.detail], cycleOk: null,
+-    testedSha: RUNNING_CODE_SHA, huntSourceProgress: progress }, at);
++  await repos.ownerDigests.append(HUNT_SOURCE_PROGRESS_LOG_KEY, digest.digestId, digest, at);
+ }
+ 
+ // Resolve every due scope at one frozen instant before launching. Canonical

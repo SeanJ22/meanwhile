@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "[\n  [],\n  [\n    {\n      \"QUERY PLAN\": \"Limit  (cost=8149.96..8149.97 rows=1 width=1133)\"\n    },\n    {\n      \"QUERY PLAN\": \"  ->  Sort  (cost=8149.96..8149.97 rows=1 width=1133)\"\n    },\n    {\n      \"QUERY PLAN\": \"        Sort Key: id\"\n    },\n    {\n      \"QUERY PLAN\": \"        ->  Seq Scan on cp_attempts  (cost=0.00..8149.95 rows=1 width=1133)\"\n    },\n    {\n      \"QUERY PLAN\": \"              Filter: (((value -> 'artifactIds'::text) ?| '{sample-artifact}'::text[]) AND ((value #>> '{worker,role}'::text[]) = 'ACQUIRER'::text) AND ((value ->> 'outcome'::text) = 'COMPLETED'::text))\"\n    }\n  ],\n  [\n    {\n      \"parser_artifact_ids\": \"18\",\n      \"source_urls\": \"7\",\n      \"id_observations\": \"18\",\n      \"id_json_bytes\": \"8969\",\n      \"source_observations\": \"18\",\n      \"source_json_bytes\": \"8969\"\n    }\n  ]\n]"
+    }
+  ],
+  "isError": false
+}

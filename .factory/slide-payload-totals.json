@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "[\n  [],\n  [],\n  [\n    {\n      \"kind\": \"artifacts\",\n      \"rows\": \"22154\",\n      \"json_bytes\": \"124841010\"\n    },\n    {\n      \"kind\": \"attempts\",\n      \"rows\": \"43022\",\n      \"json_bytes\": \"45677663\"\n    },\n    {\n      \"kind\": \"workItems\",\n      \"rows\": \"21445\",\n      \"json_bytes\": \"33972095\"\n    }\n  ]\n]"
+    }
+  ],
+  "isError": false
+}

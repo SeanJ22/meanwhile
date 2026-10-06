@@ -1,0 +1,476 @@
+{
+  "observedAt": "2026-10-06T05:41:00Z",
+  "project": "withered-sunset-39821877",
+  "branch": "br-tiny-frog-aeufpjeq",
+  "readOnly": true,
+  "results": [
+    [],
+    [
+      {
+        "recorded_at": "2026-10-05T12:03:12.748Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T11:28:55.969Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "128",
+        "failure_count": 251,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "250",
+        "sample_task": "national-place:85602",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T11:28:55.969Z:national-place:85602:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T11:28:55.969Z:national-place:85602:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85602: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T11:30:25.434Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T12:03:12.748Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T11:28:55.969Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "128",
+        "failure_count": 251,
+        "code": "DURABLE_CLOCK_READ_FAILED",
+        "code_count": "1",
+        "sample_task": "nj-state-rollcalls",
+        "sample_detail": "NeonDbError: Error connecting to database: TimeoutError: Neon request timed out <- TimeoutError(23): Neon request timed out"
+      },
+      {
+        "recorded_at": "2026-10-05T12:41:50.437Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T12:03:55.987Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "88",
+        "failure_count": 321,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "318",
+        "sample_task": "national-place:85128",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T12:03:55.987Z:national-place:85128:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T12:03:55.987Z:national-place:85128:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85128: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T12:05:32.781Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T12:41:50.437Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T12:03:55.987Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "88",
+        "failure_count": 321,
+        "code": "DURABLE_CLOCK_READ_FAILED",
+        "code_count": "2",
+        "sample_task": "meetings:boardbook:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Aamphitheater_unified_district%23board",
+        "sample_detail": "NeonDbError: Error connecting to database: TimeoutError: Neon request timed out <- TimeoutError(23): Neon request timed out"
+      },
+      {
+        "recorded_at": "2026-10-05T12:41:50.437Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T12:03:55.987Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "88",
+        "failure_count": 321,
+        "code": "RECEIPT_COUNT_INVALID",
+        "code_count": "1",
+        "sample_task": "congress-bulk-roster",
+        "sample_detail": "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0. Child process: Command failed: /usr/bin/node --experimental-strip-types scripts/fetch-congress-legislators.mts --promote | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model | legislators-current: 539 rows | legislators-social-media: 518 rows | legislators-district-offices: 535 rows | committees-current: 49 rows | committee-membership-current: 230 rows | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model"
+      },
+      {
+        "recorded_at": "2026-10-05T13:18:57.906Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T12:41:56.003Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "130",
+        "failure_count": 259,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "259",
+        "sample_task": "national-place:85603",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T12:41:56.003Z:national-place:85603:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T12:41:56.003Z:national-place:85603:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85603: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T12:43:13.256Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T13:56:59.470Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T13:19:56.042Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "137",
+        "failure_count": 274,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "274",
+        "sample_task": "national-place:85131",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T13:19:56.042Z:national-place:85131:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T13:19:56.042Z:national-place:85131:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85131: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T13:21:27.441Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T14:35:03.144Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T13:57:56.069Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "78",
+        "failure_count": 296,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "293",
+        "sample_task": "national-place:85614",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T13:57:56.069Z:national-place:85614:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T13:57:56.069Z:national-place:85614:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85614: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T13:59:29.392Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T14:35:03.144Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T13:57:56.069Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "78",
+        "failure_count": 296,
+        "code": "CHILD_TIMEOUT",
+        "code_count": "1",
+        "sample_task": "nj-elec-campaign-finance",
+        "sample_detail": "TIMED_OUT: WOOLWICH TOWNSHIP        code 824 — HTTP 200, 18 row(s) of 18 stated | WOOLWICH TOWNSHIP (GLOUCESTER COUNTY) code 824 — HTTP 200, 18 row(s) of 18 stated | WRIGHTSTOWN BOROUGH      code 340 — HTTP 200, 5 row(s) of 5 stated | WRIGHTSTOWN BOROUGH (BURLINGTON COUNTY) code 340 — HTTP 200, 5 row(s) of 5 stated | WYCKOFF TOWNSHIP         code 270 — HTTP 200, 16 row(s) of 16 stated | WYCKOFF TOWNSHIP (BERGEN COUNTY) code 270 — HTTP 200, 16 row(s) of 16 stated | locations asked THIS RUN 1215 · SHORT extractions 0 · entities held 12618 | ELEC filing locations ACQUIRED: 1215 of 1215 · 0 still owed, and the remainder is a durable obligation rather than this run's leftover; RECEIPT_COUNT_INVALID: RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0. Child process: WOOLWICH TOWNSHIP        code 824 — HTTP 200, 18 row(s) of 18 stated | WOOLWICH TOWNSHIP (GLOUCESTER COUNTY"
+      },
+      {
+        "recorded_at": "2026-10-05T14:35:03.144Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T13:57:56.069Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "78",
+        "failure_count": 296,
+        "code": "DURABLE_CLOCK_READ_FAILED",
+        "code_count": "1",
+        "sample_task": "nj-state-rollcalls",
+        "sample_detail": "NeonDbError: Error connecting to database: TimeoutError: Neon request timed out <- TimeoutError(23): Neon request timed out"
+      },
+      {
+        "recorded_at": "2026-10-05T14:35:03.144Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T13:57:56.069Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "78",
+        "failure_count": 296,
+        "code": "RECEIPT_COUNT_INVALID",
+        "code_count": "1",
+        "sample_task": "congress-bulk-roster",
+        "sample_detail": "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0. Child process: Command failed: /usr/bin/node --experimental-strip-types scripts/fetch-congress-legislators.mts --promote | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model | legislators-current: 539 rows | legislators-social-media: 518 rows | legislators-district-offices: 535 rows | committees-current: 49 rows | committee-membership-current: 230 rows | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model"
+      },
+      {
+        "recorded_at": "2026-10-05T15:13:13.096Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T14:35:56.105Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "121",
+        "failure_count": 284,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "284",
+        "sample_task": "national-place:85131",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T14:35:56.105Z:national-place:85131:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T14:35:56.105Z:national-place:85131:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85131: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T14:37:27.314Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T15:50:00.531Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T15:13:56.163Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "163",
+        "failure_count": 258,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "255",
+        "sample_task": "national-place:85615",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T15:13:56.163Z:national-place:85615:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T15:13:56.163Z:national-place:85615:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85615: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T15:15:48.190Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T15:50:00.531Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T15:13:56.163Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "163",
+        "failure_count": 258,
+        "code": "DURABLE_CLOCK_READ_FAILED",
+        "code_count": "3",
+        "sample_task": "meetings:boardbook:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Aamphitheater_unified_district%23board",
+        "sample_detail": "NeonDbError: Error connecting to database: TimeoutError: Neon request timed out <- TimeoutError(23): Neon request timed out"
+      },
+      {
+        "recorded_at": "2026-10-05T16:29:14.826Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T15:50:56.185Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "102",
+        "failure_count": 276,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "275",
+        "sample_task": "national-place:85132",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T15:50:56.185Z:national-place:85132:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T15:50:56.185Z:national-place:85132:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85132: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T15:52:14.217Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T16:29:14.826Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T15:50:56.185Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "102",
+        "failure_count": 276,
+        "code": "RECEIPT_COUNT_INVALID",
+        "code_count": "1",
+        "sample_task": "congress-bulk-roster",
+        "sample_detail": "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0. Child process: Command failed: /usr/bin/node --experimental-strip-types scripts/fetch-congress-legislators.mts --promote | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model | legislators-current: 539 rows | legislators-social-media: 518 rows | legislators-district-offices: 535 rows | committees-current: 49 rows | committee-membership-current: 230 rows | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model"
+      },
+      {
+        "recorded_at": "2026-10-05T17:06:31.054Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T16:29:56.211Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "147",
+        "failure_count": 273,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "271",
+        "sample_task": "national-place:85615",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T16:29:56.211Z:national-place:85615:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T16:29:56.211Z:national-place:85615:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85615: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T16:31:36.618Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T17:06:31.054Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T16:29:56.211Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "147",
+        "failure_count": 273,
+        "code": "DURABLE_CLOCK_READ_FAILED",
+        "code_count": "2",
+        "sample_task": "nj-state-rollcalls",
+        "sample_detail": "NeonDbError: Error connecting to database: TimeoutError: Neon request timed out <- TimeoutError(23): Neon request timed out"
+      },
+      {
+        "recorded_at": "2026-10-05T17:43:34.766Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T17:06:56.292Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "112",
+        "failure_count": 256,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "256",
+        "sample_task": "national-place:85132",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T17:06:56.292Z:national-place:85132:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T17:06:56.292Z:national-place:85132:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85132: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T17:08:20.268Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T18:47:55.638Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T18:10:20.585Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "131",
+        "failure_count": 583,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "582",
+        "sample_task": "national-place:85193",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T18:10:20.585Z:national-place:85193:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T18:10:20.585Z:national-place:85193:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85193: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T18:11:51.168Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T18:47:55.638Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T18:10:20.585Z",
+        "tested_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
+        "attempted_tasks": "131",
+        "failure_count": 583,
+        "code": "RECEIPT_COUNT_INVALID",
+        "code_count": "1",
+        "sample_task": "congress-bulk-roster",
+        "sample_detail": "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0. Child process: Command failed: /usr/bin/node --experimental-strip-types scripts/fetch-congress-legislators.mts --promote | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model | legislators-current: 539 rows | legislators-social-media: 518 rows | legislators-district-offices: 535 rows | committees-current: 49 rows | committee-membership-current: 230 rows | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model"
+      },
+      {
+        "recorded_at": "2026-10-05T20:00:29.384Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T19:22:39.522Z",
+        "tested_sha": "ecf402600401783b094837c29e0c515eadbdb843",
+        "attempted_tasks": "100",
+        "failure_count": 552,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "551",
+        "sample_task": "national-place:85194",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T19:22:39.522Z:national-place:85194:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T19:22:39.522Z:national-place:85194:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85194: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T19:24:08.894Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T20:00:29.384Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T19:22:39.522Z",
+        "tested_sha": "ecf402600401783b094837c29e0c515eadbdb843",
+        "attempted_tasks": "100",
+        "failure_count": 552,
+        "code": "DURABLE_CLOCK_READ_FAILED",
+        "code_count": "1",
+        "sample_task": "nj-state-rollcalls",
+        "sample_detail": "NeonDbError: Error connecting to database: TimeoutError: Neon request timed out <- TimeoutError(23): Neon request timed out"
+      },
+      {
+        "recorded_at": "2026-10-05T20:38:52.278Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T20:00:39.645Z",
+        "tested_sha": "ecf402600401783b094837c29e0c515eadbdb843",
+        "attempted_tasks": "151",
+        "failure_count": 1,
+        "code": "RECEIPT_COUNT_INVALID",
+        "code_count": "1",
+        "sample_task": "congress-bulk-roster",
+        "sample_detail": "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0. Child process: Command failed: /usr/bin/node --experimental-strip-types scripts/fetch-congress-legislators.mts --promote | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model | legislators-current: 539 rows | legislators-social-media: 518 rows | legislators-district-offices: 535 rows | committees-current: 49 rows | committee-membership-current: 230 rows | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model"
+      },
+      {
+        "recorded_at": "2026-10-05T21:17:25.266Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T20:39:39.696Z",
+        "tested_sha": "ecf402600401783b094837c29e0c515eadbdb843",
+        "attempted_tasks": "144",
+        "failure_count": 509,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "509",
+        "sample_task": "national-place:85531",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T20:39:39.696Z:national-place:85531:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T20:39:39.696Z:national-place:85531:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85531: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T20:40:57.175Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T21:55:13.223Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T21:17:39.796Z",
+        "tested_sha": "ecf402600401783b094837c29e0c515eadbdb843",
+        "attempted_tasks": "126",
+        "failure_count": 25,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "23",
+        "sample_task": "worker-publication:ballot-navigation:wi-6e124443f54eacde1d2a792e",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T21:17:39.796Z:worker-publication:ballot-navigation:wi-6e124443f54eacde1d2a792e:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T21:17:39.796Z:worker-publication:ballot-navigation:wi-6e124443f54eacde1d2a792e:QUEUED\",\"formatVersion\":1,\"headline\":\"worker-publication:ballot-navigation:wi-6e124443f54eacde1d2a792e: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T21:19:13.749Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instruct"
+      },
+      {
+        "recorded_at": "2026-10-05T21:55:13.223Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T21:17:39.796Z",
+        "tested_sha": "ecf402600401783b094837c29e0c515eadbdb843",
+        "attempted_tasks": "126",
+        "failure_count": 25,
+        "code": "DURABLE_CLOCK_READ_FAILED",
+        "code_count": "2",
+        "sample_task": "nj-state-rollcalls",
+        "sample_detail": "NeonDbError: Error connecting to database: TimeoutError: Neon request timed out <- TimeoutError(23): Neon request timed out"
+      },
+      {
+        "recorded_at": "2026-10-05T22:34:16.055Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T21:55:39.815Z",
+        "tested_sha": "ecf402600401783b094837c29e0c515eadbdb843",
+        "attempted_tasks": "104",
+        "failure_count": 530,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "529",
+        "sample_task": "national-place:85533",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T21:55:39.815Z:national-place:85533:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T21:55:39.815Z:national-place:85533:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85533: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T21:57:02.626Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-05T22:34:16.055Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T21:55:39.815Z",
+        "tested_sha": "ecf402600401783b094837c29e0c515eadbdb843",
+        "attempted_tasks": "104",
+        "failure_count": 530,
+        "code": "RECEIPT_COUNT_INVALID",
+        "code_count": "1",
+        "sample_task": "congress-bulk-roster",
+        "sample_detail": "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0. Child process: Command failed: /usr/bin/node --experimental-strip-types scripts/fetch-congress-legislators.mts --promote | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model | legislators-current: 539 rows | legislators-social-media: 518 rows | legislators-district-offices: 535 rows | committees-current: 49 rows | committee-membership-current: 230 rows | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model"
+      },
+      {
+        "recorded_at": "2026-10-05T23:12:07.119Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T22:34:52.739Z",
+        "tested_sha": "6af6f8a504a7224131ad567f62f7b6f63cb52f08",
+        "attempted_tasks": "154",
+        "failure_count": 2,
+        "code": "RECEIPT_COUNT_INVALID",
+        "code_count": "2",
+        "sample_task": "jurisdiction-operational-reference-az",
+        "sample_detail": "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0."
+      },
+      {
+        "recorded_at": "2026-10-05T23:51:42.653Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T23:12:53.033Z",
+        "tested_sha": "6af6f8a504a7224131ad567f62f7b6f63cb52f08",
+        "attempted_tasks": "133",
+        "failure_count": 517,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "517",
+        "sample_task": "national-place:85533",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-05T23:12:53.033Z:national-place:85533:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-05T23:12:53.033Z:national-place:85533:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85533: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-05T23:14:17.050Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-06T00:32:28.925Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-05T23:51:53.141Z",
+        "tested_sha": "6af6f8a504a7224131ad567f62f7b6f63cb52f08",
+        "attempted_tasks": "122",
+        "failure_count": 1,
+        "code": "RECEIPT_COUNT_INVALID",
+        "code_count": "1",
+        "sample_task": "congress-bulk-roster",
+        "sample_detail": "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0. Child process: Command failed: /usr/bin/node --experimental-strip-types scripts/fetch-congress-legislators.mts --promote | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model | legislators-current: 539 rows | legislators-social-media: 518 rows | legislators-district-offices: 535 rows | committees-current: 49 rows | committee-membership-current: 230 rows | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model"
+      },
+      {
+        "recorded_at": "2026-10-06T03:56:01.918Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-06T03:18:19.821Z",
+        "tested_sha": "8b6322c98c5639f5cabd9de205f7baad147c31b6",
+        "attempted_tasks": "184",
+        "failure_count": 602,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "599",
+        "sample_task": "national-place:85533",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-06T03:18:19.821Z:national-place:85533:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-06T03:18:19.821Z:national-place:85533:QUEUED\",\"formatVersion\":1,\"headline\":\"national-place:85533: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-06T03:19:49.504Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.\",\"instructionIds\":[\"[host-redacted]:v6-d194df23-76dc-47c0-89a1-4f572ead85a1\"],\"readerPaths\":[],\"scope\":\"US:reader-registry-runtime-bindings\",\""
+      },
+      {
+        "recorded_at": "2026-10-06T03:56:01.918Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-06T03:18:19.821Z",
+        "tested_sha": "8b6322c98c5639f5cabd9de205f7baad147c31b6",
+        "attempted_tasks": "184",
+        "failure_count": 602,
+        "code": "DURABLE_CLOCK_READ_FAILED",
+        "code_count": "1",
+        "sample_task": "nj-state-rollcalls",
+        "sample_detail": "NeonDbError: Error connecting to database: TimeoutError: Neon request timed out <- TimeoutError(23): Neon request timed out"
+      },
+      {
+        "recorded_at": "2026-10-06T03:56:01.918Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-06T03:18:19.821Z",
+        "tested_sha": "8b6322c98c5639f5cabd9de205f7baad147c31b6",
+        "attempted_tasks": "184",
+        "failure_count": 602,
+        "code": "RECEIPT_COUNT_INVALID",
+        "code_count": "2",
+        "sample_task": "congress-bulk-roster",
+        "sample_detail": "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0. Child process: Command failed: /usr/bin/node --experimental-strip-types scripts/fetch-congress-legislators.mts --promote | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model | legislators-current: 539 rows | legislators-social-media: 518 rows | legislators-district-offices: 535 rows | committees-current: 49 rows | committee-membership-current: 230 rows | candidate cv-7643d65a4c4893c834a3b35d43f7648f unchanged confirmation does not name this live version and its read model"
+      },
+      {
+        "recorded_at": "2026-10-06T04:07:04.141Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-06T03:56:19.874Z",
+        "tested_sha": "8b6322c98c5639f5cabd9de205f7baad147c31b6",
+        "attempted_tasks": "42",
+        "failure_count": 2,
+        "code": "DURABLE_CLOCK_READ_FAILED",
+        "code_count": "2",
+        "sample_task": "meetings:boardbook:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Aamphitheater_unified_district%23board",
+        "sample_detail": "NeonDbError: Error connecting to database: TimeoutError: Neon request timed out <- TimeoutError(23): Neon request timed out"
+      },
+      {
+        "recorded_at": "2026-10-06T04:41:03.616Z",
+        "record_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-06T04:07:19.915Z",
+        "tested_sha": "8b6322c98c5639f5cabd9de205f7baad147c31b6",
+        "attempted_tasks": "178",
+        "failure_count": 448,
+        "code": "CHILD_SETTLEMENT_FAILED",
+        "code_count": "448",
+        "sample_task": "worker-publication:registry-runtime-bindings:wi-1bbd812f7c53e10952d1acd4",
+        "sample_detail": "AppendOnlyViolation: Append-only log cp_log_owner_digests (hunt-source-progress) already contains record routine-civic-data-supervisor:meanwhile-runner:2026-10-06T04:07:19.915Z:worker-publication:registry-runtime-bindings:wi-1bbd812f7c53e10952d1acd4:QUEUED with different content. History is appended to, never rewritten; a corrected record is a NEW record that supersedes the old one by name. recorded: {\"cycleOk\":null,\"digestId\":\"routine-civic-data-supervisor:meanwhile-runner:2026-10-06T04:07:19.915Z:worker-publication:registry-runtime-bindings:wi-1bbd812f7c53e10952d1acd4:QUEUED\",\"formatVersion\":1,\"headline\":\"worker-publication:registry-runtime-bindings:wi-1bbd812f7c53e10952d1acd4: QUEUED\",\"huntSourceProgress\":{\"at\":\"2026-10-06T04:08:31.615Z\",\"candidateId\":null,\"detail\":\"Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication ar"
+      }
+    ],
+    [
+      {
+        "relname": "cp_work_items",
+        "n_live_tup": "21445",
+        "seq_scan": "3240",
+        "seq_tup_read": "16916865"
+      },
+      {
+        "relname": "cp_attempts",
+        "n_live_tup": "43022",
+        "seq_scan": "130978",
+        "seq_tup_read": "1527628421"
+      },
+      {
+        "relname": "cp_log_artifacts",
+        "n_live_tup": "22154",
+        "seq_scan": "10149",
+        "seq_tup_read": "127155921"
+      },
+      {
+        "relname": "cp_log_worker_results",
+        "n_live_tup": "83",
+        "seq_scan": "133857",
+        "seq_tup_read": "10460746"
+      }
+    ],
+    [
+      {
+        "tablename": "cp_log_artifacts",
+        "indexname": "cp_log_artifacts_pkey",
+        "indexdef": "CREATE UNIQUE INDEX cp_log_artifacts_pkey ON public.cp_log_artifacts USING btree (log_key, record_id)"
+      },
+      {
+        "tablename": "cp_log_artifacts",
+        "indexname": "cp_log_artifacts_order",
+        "indexdef": "CREATE UNIQUE INDEX cp_log_artifacts_order ON public.cp_log_artifacts USING btree (log_key, \"position\")"
+      },
+      {
+        "tablename": "cp_log_artifacts",
+        "indexname": "cp_log_artifacts_source_url",
+        "indexdef": "CREATE INDEX cp_log_artifacts_source_url ON public.cp_log_artifacts USING btree (md5((record ->> 'canonicalUrl'::text)), ((record ->> 'recordedAt'::text)) DESC NULLS LAST, ((record ->> 'artifactId'::text)))"
+      },
+      {
+        "tablename": "cp_log_artifacts",
+        "indexname": "cp_log_artifacts_work_item",
+        "indexdef": "CREATE INDEX cp_log_artifacts_work_item ON public.cp_log_artifacts USING btree (((record #>> '{workItemId}'::text[])))"
+      },
+      {
+        "tablename": "cp_log_artifacts",
+        "indexname": "cp_log_artifacts_artifact_id",
+        "indexdef": "CREATE INDEX cp_log_artifacts_artifact_id ON public.cp_log_artifacts USING btree (((record #>> '{artifactId}'::text[])))"
+      },
+      {
+        "tablename": "cp_log_artifacts",
+        "indexname": "cp_log_artifacts_changed_at",
+        "indexdef": "CREATE INDEX cp_log_artifacts_changed_at ON public.cp_log_artifacts USING btree (changed_at)"
+      }
+    ]
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "tested_sha": "e16aac3e08572e5b115613aa2ff4cef83e7c5d5b",
+  "application_fingerprint": "d2215d6c9e180b28862cb6d4dd136791e3293df5e71bbf4a307b09bad58770ea",
+  "started_at": "2026-10-06T04:54:44.811842+00:00",
+  "prior_full_failure": "dac66b491d3641ea0c9af5e0e47b4dabfa8ddf91; legacy refusal/rung regression repaired; older full runner stopped before this invocation",
+  "full": {
+    "tests": 9774,
+    "pass": 9763,
+    "fail": 0,
+    "skipped": 11,
+    "files": 1151,
+    "exit_code": 0
+  },
+  "focused": {
+    "tests": 92,
+    "pass": 92,
+    "fail": 0,
+    "skipped": 0
+  },
+  "types_exit_code": 0,
+  "lint_exit_code": 0,
+  "lint_note": "one inherited unused knownRouteIds import warning",
+  "ready_sha": null,
+  "finished_at": "2026-10-06T05:12:41.042528+00:00"
+}

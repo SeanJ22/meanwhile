@@ -16,7 +16,7 @@
  * empty and say so (`missingParts`) rather than looking like "nothing was ever
  * fixed". PURE: queue in, view out.
  */
-import type { ClosedFix, FixView, OpenFix, TestingFix } from "../../../app/(admin)/_mw/admin-v6/model.ts";
+import type { ClosedFix, FixShot, FixView, LookView, OpenFix, TestingFix } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { FixProofBar, MethodStanding } from "../../method/fix-status.ts";
 import { brokeSince } from "../fix-standing.ts";
 import type { FixQueueItem, FixQueueView } from "../fix-queue.ts";
@@ -118,13 +118,16 @@ export function testingFix(s: MethodStanding, bar: FixProofBar): TestingFix {
 }
 
 export function v6FixesView(queue: FixQueueView, list: readonly FixItem[] = [], now: string = new Date().toISOString(),
-  testing?: { readonly standings: readonly MethodStanding[]; readonly bar: FixProofBar }): FixView {
+  testing?: { readonly standings: readonly MethodStanding[]; readonly bar: FixProofBar },
+  look?: { readonly view: LookView | null; readonly shots: ReadonlyMap<string, readonly FixShot[]> }): FixView {
+  const withShots = <T extends OpenFix | ClosedFix>(f: T): T => (look?.shots.has(f.id) ? { ...f, shots: look.shots.get(f.id)! } : f);
   const held = new Set(list.map((i) => i.id));
   const legacy = queue.items.filter((i) => !held.has(i.subjectId)).map(openFix);
   const open = list.filter((i) => i.state === "OPEN" || i.state === "FIXING").map(listOpen);
   const fixed = list.filter((i) => i.state === "FIXED").sort((a, b) => (b.fixedAt ?? "").localeCompare(a.fixedAt ?? "")).map((i) => listClosed(i, now));
   // A came-back item is also open work again: it reads in both places.
   const returned = list.filter((i) => i.state === "CAME_BACK");
-  return { open: [...open, ...returned.map(listOpen), ...legacy], closed: fixed, returned: returned.map((i) => listClosed(i, now)),
-    ...(testing ? { testing: testing.standings.filter((s) => s.status === "TESTING").map((s) => testingFix(s, testing.bar)) } : {}) };
+  return { open: [...open, ...returned.map(listOpen), ...legacy].map(withShots), closed: fixed.map(withShots), returned: returned.map((i) => withShots(listClosed(i, now))),
+    ...(testing ? { testing: testing.standings.filter((s) => s.status === "TESTING").map((s) => testingFix(s, testing.bar)) } : {}),
+    ...(look ? { look: look.view } : {}) };
 }

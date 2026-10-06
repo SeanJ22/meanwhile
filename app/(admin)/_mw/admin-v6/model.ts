@@ -10,6 +10,9 @@
  * PURE: types and tiny helpers only. No fetch, no clock, no store.
  */
 import { EASTERN_ZONE } from "@/lib/control-plane/eastern-time.ts";
+import type { LookView } from "@/lib/frontend/look-pass.ts";
+
+export type { LookScreenView, LookView } from "@/lib/frontend/look-pass.ts";
 
 /* ------------------------------------------------------------ provenance */
 
@@ -774,7 +777,11 @@ export interface OpenFix {
   readonly linkedStuck: readonly string[];
   readonly origin: "engineering" | "automatic";
   readonly technical: string;
+  /** FE-21: the screenshot a look-check red flag points at. */
+  readonly shots?: readonly FixShot[];
 }
+
+export interface FixShot { readonly label: string; readonly image: string }
 
 export interface ClosedFix {
   readonly id: string;
@@ -792,6 +799,8 @@ export interface ClosedFix {
   /** DP-30: every time it broke, how it was fixed and how long each fix held, oldest first. */
   readonly history?: string;
   readonly technical: string;
+  /** FE-21: the screenshot a look-check red flag points at. */
+  readonly shots?: readonly FixShot[];
 }
 
 /** DP-26: a reusable fix still proving itself across places. It is a Queue row until it is proven, then it goes quiet. */
@@ -814,6 +823,8 @@ export interface FixView {
   readonly returned: readonly ClosedFix[];
   /** DP-26: fixes in Testing. Absent when not read. */
   readonly testing?: readonly TestingFix[];
+  /** FE-21: the latest deploy's look check on the live site. Absent when not read; null when none has run. */
+  readonly look?: LookView | null;
 }
 
 /* --------------------------------------------------------------- actions */

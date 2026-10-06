@@ -5,7 +5,7 @@
  * stops or pauses that kind of thing. PURE: the loaded sections in, rows out; a section that could not be read is null and adds no
  * rows (the screen says it could not be read, never "nothing in motion").
  */
-import type { ActionRef, ClosedFix, FixView, Hunt, Lane, OpenFix, SentInstruction, StuckItem, TestingFix, UiReceipt } from "./model.ts";
+import type { ActionRef, ClosedFix, FixView, Hunt, Lane, LookView, OpenFix, SentInstruction, StuckItem, TestingFix, UiReceipt } from "./model.ts";
 import { orderStepsReached, ORDER_STEPS } from "./receipts.ts";
 import { mst, TASK_STAGES } from "./model.ts";
 
@@ -20,7 +20,7 @@ export const QUEUE_FILTER_WORDS: Readonly<Record<QueueFilter, string>> = {
   done: "Done",
 };
 
-export type QueueKind = "order" | "scheduled" | "send" | "hunt" | "stuck" | "door" | "fix" | "testing";
+export type QueueKind = "order" | "scheduled" | "send" | "hunt" | "stuck" | "door" | "fix" | "testing" | "look";
 
 export interface QueueRow {
   /** One per thing: `<kind>:<id>`. Never shown. */
@@ -37,7 +37,7 @@ export interface QueueRow {
   /** How far along, or null when this kind of thing has no steps. */
   readonly progress: { readonly done: number; readonly of: number; readonly words: string } | null;
   readonly actions: readonly ActionRef[];
-  readonly open: { readonly type: "stuck" | "fix"; readonly id: string } | null;
+  readonly open: { readonly type: "stuck" | "fix" | "look"; readonly id: string } | null;
   /** Newest first within a filter. */
   readonly at: string | null;
   /** The saved order, for an order row: its seven facts and its own follow-up controls sit behind "Show details". */
@@ -154,6 +154,15 @@ function testingRow(t: TestingFix): QueueRow {
   };
 }
 
+/** FE-21: the latest deploy's look check on the live site. Red needs someone; green is done; not reviewed is still waiting. */
+function lookRow(l: LookView): QueueRow {
+  return {
+    key: `look:${l.sha}`, kind: "look", what: "Look check of the latest deploy", chip: l.verdict === "Green" ? "Looks right" : l.verdict === "Red" ? "Looks wrong" : "Not judged",
+    tone: l.verdict === "Green" ? "good" : l.verdict === "Red" ? "warn" : "slate", filter: l.verdict === "Green" ? "done" : l.verdict === "Red" ? "needs-me" : "waiting",
+    owner: "The look check", due: null, next: l.summary, progress: null, actions: [], open: { type: "look", id: l.sha }, at: l.ran, receipt: null, sendId: null,
+  };
+}
+
 function scheduledRow(x: QueueScheduled): QueueRow {
   return {
     key: `scheduled:${x.id}`, kind: "scheduled", what: x.label, chip: "Scheduled", tone: "neutral", filter: "scheduled", owner: "The runner",
@@ -174,6 +183,7 @@ export function buildQueue(input: QueueInput): readonly QueueRow[] {
   if (input.doors) rows.push(...input.doors.map(doorRow));
   if (input.fixes) rows.push(...input.fixes.open.map(openFixRow), ...input.fixes.closed.map((c) => closedFixRow(c, false)), ...input.fixes.returned.map((c) => closedFixRow(c, true)));
   if (input.fixes?.testing) rows.push(...input.fixes.testing.map(testingRow));
+  if (input.fixes?.look) rows.push(lookRow(input.fixes.look));
   const rank = (f: QueueFilter) => QUEUE_FILTERS.indexOf(f);
   return rows
     .map((r, n) => ({ r, n }))

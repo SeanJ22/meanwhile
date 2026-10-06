@@ -1477,12 +1477,23 @@ const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation)
     orderableDueRow(row, registry.providerOf(row.obligation.id), debtAtCycleStart.get(row.obligation.id));
   return compareReaderImpact(orderable(left), orderable(right), orderingInputs);
 };
+/*
+ * The method version the round's plain-code passes stamp on what they record, read once: the field manual is one
+ * multi-megabyte row (6.6 MB on Oct 6), and the intake, campaign-site and linked-publication passes each read it whole
+ * for this one number. A failed read is not kept, so the next caller reads again.
+ */
+let roundMethodVersionRead: Promise<number> | null = null;
+const roundMethodVersion = (): Promise<number> => {
+  roundMethodVersionRead ??= readMethodKnowledge(repos).then((knowledge) => knowledge.version,
+    (error: unknown) => { roundMethodVersionRead = null; throw error; });
+  return roundMethodVersionRead;
+};
 /* Plain-code intake: an unreadable intent log does not stop it (the paid lane is what fails closed, above). */
 if (!dry && !canary && !intents.runnerPause.paused) {
   try {
     const retained = await retainRecentRoutineMeetingEvidence({ repos,
       store: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
-      methodVersion: (await readMethodKnowledge(repos)).version, now: nowIso });
+      methodVersion: await roundMethodVersion(), now: nowIso });
     console.log(`  permanent meeting captures retained for independent workers: ${retained.length}`);
   } catch (error) {
     runtimeConditions.push(`permanent meeting evidence could not enter independent workers: ${error instanceof Error ? error.message : "ROUTINE_MEETING_INTAKE_FAILED"}`);
@@ -3533,7 +3544,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
           runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
         }
         const held = await step("the held Marginalia answers", () => heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso()));
-        const methodVersion = (await step("the method version", () => readMethodKnowledge(repos))).version;
+        const methodVersion = await step("the method version", roundMethodVersion);
         const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
         const report = await step("the campaign-site chain", () => runCampaignSiteCycle({
           startedAtMs: campaignStartedMs,
@@ -3598,7 +3609,7 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
       const pass = await runCandidatePublicationCycle({
         repos, eligibleCandidacyIds: lifetimeHuntSubjects,
         heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
-        methodVersion: (await readMethodKnowledge(repos)).version,
+        methodVersion: await roundMethodVersion(),
         clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
         deadlineMs: dispatchDeadlineMs,
         openFor: candidacyId => {
@@ -3611,7 +3622,8 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
         },
       });
       candidatePublications = pass;
-      candidatePublicationsState = `ran: ${pass.acquired} acquired, ${pass.deferred} deferred, ${pass.failed} failed of ${pass.due} due linked pages`;
+      candidatePublicationsState = `ran: ${pass.acquired} acquired, ${pass.deferred} deferred, ${pass.failed} failed of ${pass.due} due linked pages` +
+        (pass.stoppedLoading ? ` (the dispatch cutoff stopped it while reading ${pass.stoppedLoading}; the linked pages stay owed)` : "");
     } catch (error) {
       candidatePublicationsState = `failed: ${error instanceof Error ? error.message : String(error)}`;
       runtimeConditions.push(`candidate publication acquisition ${candidatePublicationsState}`);

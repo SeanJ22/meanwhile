@@ -25,6 +25,7 @@ import {
 } from "../field-manual.ts";
 import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
 import { doorMethodEntries, type SavedDoorPage } from "../bank-methods.ts";
+import { exhaustedRungEntries } from "../bank-exhausted-rungs.ts";
 import { scoutJobCostEntries } from "../bank-job-cost.ts";
 
 /** The source label a scout's own write-backs carry, so a re-observation updates one row. */
@@ -69,13 +70,14 @@ export function scoutFieldManualProjection(
   const hints = new Set([opts.recordClass?.toLowerCase() ?? "", ...(related[opts.recordClass ?? ""] ?? [])]);
   // One state is the common case; portable entries remain available.
   const full = projectFieldManual(store, {
-    role: "SCOUT",
+    role: "SCOUT", subjectId: opts.subjectId ?? undefined,
     ...(states[0] ? { state: states[0] } : {}),
     ...(opts.subjectId?.startsWith("ocd-division/") ? { ocdIds: [opts.subjectId] } : {}),
     limit: store.entries.length,
   });
   const byId = new Map(store.entries.map(entry => [entry.id, entry] as const));
-  const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, entry: byId.get(id)! }));
+  const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, entry: byId.get(id)! }))
+    .filter(row => row.entry.kind !== "EXHAUSTED_RUNGS" || !opts.recordClass || row.entry.recordClasses.includes(opts.recordClass.toLowerCase()));
   indexed.sort((a, b) => {
     if (opts.subjectId?.startsWith("ocd-division/")) {
       const query = { ocdIds: [opts.subjectId], state: states[0] };
@@ -97,7 +99,7 @@ export function scoutFieldManualCatalog(
   opts: { readonly subjectId?: string | null; readonly obligationId?: string | null },
 ): readonly FieldManualEntry[] {
   const state = scoutStateHint(opts.subjectId, opts.obligationId)[0];
-  const applicable = new Set(projectFieldManual(store, { role: "SCOUT", state,
+  const applicable = new Set(projectFieldManual(store, { role: "SCOUT", state, subjectId: opts.subjectId ?? undefined,
     ...(opts.subjectId?.startsWith("ocd-division/") ? { ocdIds: [opts.subjectId] } : {}), limit: store.entries.length }).entryIds);
   return store.entries.filter(entry => applicable.has(entry.id) || (entry.kind === "PLAYBOOK" && entry.role === "DETECTIVE"));
 }
@@ -175,7 +177,7 @@ export function scoutDiscoveryEntries(result: ScoutResult, stateHint: readonly s
   const methods = discoveries.flatMap(door => doorMethodEntries(door, pages));
   const stamped = discoveries.map(door => ({ ...door, platforms: methods.filter(method =>
     (method.payload as { doorEntryIds: string[] }).doorEntryIds.includes(door.id)).flatMap(method => method.platforms) }));
-  return [...stamped, ...methods, ...scoutJobCostEntries(result), ...(result.sourceDeadEnds ?? []).map(source => ({
+  return [...stamped, ...methods, ...scoutJobCostEntries(result), ...exhaustedRungEntries(result, stateHint), ...(result.sourceDeadEnds ?? []).map(source => ({
     id: fieldManualEntryId('source-dead-end', `${result.subjectId}:${result.recordClass}:${source.url}`),
     role: 'SHARED' as const, kind: 'SOURCE_DEAD_END', title: `Historical source: ${source.url}`,
     summary: `${source.sourceDate ?? 'Unknown source date'}: ${source.reason}`.slice(0, 300),

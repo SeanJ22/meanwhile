@@ -213,7 +213,7 @@ Interactive and government-tier accents retain separate token roles; tier identi
 Source: [DESIGN ruling](DESIGN.md), line 483; current rulings §§3, 6 and 10 govern source/copy conflicts.
 
 Good live screenshot: pending River capture and visual review.
-Bad live screenshot: pending matching archived capture inspection.
+Bad live screenshot: [release 3 welcome screen](https://github.com/SeanJ22/meanwhile/blob/83df898007dc3af85bc2fc07771ec4edfbb74ecb/releases/3-live/fe39-home.png), served `6af6f8a`, 1280 × 900, dark. Inspected as an image: the focused ZIP cell is amber and “Use my location” is orange, although these controls are not tier identity. This is an archived bad example; a matching good live capture is still pending.
 
 ## L24: The state EXTRUDES from the map — it does not float above it (2026-08-16)
 

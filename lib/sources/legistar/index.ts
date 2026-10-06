@@ -259,7 +259,9 @@ export function publisherPostedAt(event: LegistarEvent): string | null {
 
 export function publicVideoUrl(event: LegistarEvent): string | null {
   if (event.EventVideoStatus?.trim().toLowerCase() !== "public") return null;
-  const raw = event.EventVideoPath?.trim();
+  // Many Legistar clients (Pima) publish only a clip id in `EventMedia` and no `EventVideoPath`; the sitting's own
+  // Legistar page is then the publisher's record that carries the video, so the pointer goes there.
+  const raw = event.EventVideoPath?.trim() || (event.EventMedia?.trim() ? event.EventInSiteURL?.trim() : "");
   if (!raw) return null;
   try {
     const url = new URL(raw);

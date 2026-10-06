@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import type { DirectoryOffice } from "@/lib/officials/directory";
+import type { DirectoryOffice, DirectorySource } from "@/lib/officials/directory";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 
 /**
@@ -50,6 +50,7 @@ export interface DirectoryCommitteeSeat {
 }
 
 export interface MemberDirectory {
+  source?: DirectorySource | null;
   districtOffices: DirectoryOffice[];
   committees: DirectoryCommitteeSeat[];
   /**
@@ -66,7 +67,7 @@ export function isFederalMember(id: string): boolean {
   return id.startsWith("congress:");
 }
 
-function load(memberId: string): Promise<MemberDirectory> {
+export function loadMemberDirectory(memberId: string): Promise<MemberDirectory> {
   const existing = cache.get(memberId);
   if (existing) return existing;
 
@@ -112,7 +113,7 @@ export function useMemberDirectory(memberId: string): MemberDirectoryState {
      * reader has already left must never be applied, which is the same rule
      * as the stale zip shading and the stale focus mask.
      */
-    void load(memberId)
+    void loadMemberDirectory(memberId)
       .then((payload) => {
         if (live) setDirectory(payload);
       })

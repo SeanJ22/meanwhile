@@ -507,12 +507,33 @@ export interface AppendOnlyRepository<T> {
    */
   keysWhere?(path: readonly string[], value: string): Promise<readonly string[]>;
   /**
+   * The records under each of `keys`, in append order, by key; a key with no
+   * record is absent. EXACTLY `read(key)` for each key, in one batched read:
+   * Postgres pages on `(log_key, position)`, so a few hundred items cost a few
+   * statements, never one per key (629 sequential `read`s once held a research
+   * round to its wall). Optional; callers use `readByKeys` in this file.
+   */
+  readKeys?(keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>>;
+  /**
    * The records whose database-clock `changed_at` is at or after `since`
    * (every record when `since` is null), in `readAll()` order (key, then
    * position), each with its key, record id and position. `through` is as for
    * `AggregateRepository.listChangedSince`. Optional, like that method.
    */
   readChangedSince?(since: string | null): Promise<ChangedRecords<T>>;
+}
+
+/** `log.readKeys(keys)`, or `read` per key where the provider has no batched read. */
+export async function readByKeys<T>(log: AppendOnlyRepository<T>, keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>> {
+  const unique = [...new Set(keys)];
+  if (unique.length === 0) return new Map();
+  if (log.readKeys) return log.readKeys(unique);
+  const out = new Map<string, readonly T[]>();
+  for (const key of unique) {
+    const records = await log.read(key);
+    if (records.length > 0) out.set(key, records);
+  }
+  return out;
 }
 
 /** The keys of a log holding a record whose value at `path` equals `value`, or null when the provider has no filtered read (the caller then reads as before). */

@@ -7,13 +7,22 @@ run_id: session_01VxkjQwRW6tEj8XDPVSGkKU
 lock: river-20261006T004626Z-3384
 heartbeat: 2026-10-06T04:21:18Z
 
-## Next River run
+## Next River run (written Oct 6, 12:35 AM EDT)
 
-1. **Release 4 (#710):** opened 00:35Z with auto-merge on, at river 186f747. Watch CI. On merge, check the deploy and the post-deploy run (`river.mjs observe <sha>`), and that the runner adopts it (cp_runner_heartbeat testedSha). Then reconcile main into river.
-2. **Research crash:** once the runner is on release 4, read the first "research stall report:" line before any RESEARCH_CHILD_NO_PROGRESS kill (PILOT HEALTH digest, crash record lastOutput). Add it to returns/hunters.md. Second cause: silence after the 15-minute cutoff (23:30:50 to 23:40:50Z on the 23:13:58Z cycle). Paid job ruled out; phase unconfirmed (see returns/hunters.md, 01:10Z).
-3. Fold new READYs: hunters (post-cutoff deferral), slide (firewall), ballot (build trace), admin (BR-07 on measures' screens), meetings, bank. Note: auditors' and admin's streams carry river-next 92fda9c's held folds (people 71a308afe, admin f2ca419ef) in history. A real merge of a later lane can silently drop changes. Check the result tree, or apply as a diff, as done for auditors this run.
-4. Notification rule unchanged (decisions.md).
+1. **Neon transfer is still far above target.** The first hour after the 11:17 PM EDT restart, on release 6, was an estimated 5 to 13 GB/h. That figure is from Postgres read counters times row sizes; Neon's own counter had not updated since 11:23 PM. River asked Sean to stop the runner again, per his rule.
+   - Still reading: the ledger row about 71 times a minute (1.2 MB as text, growing); the artifact log (about 1.08M rows and 158 full scans); Attempts and work items (about 20 to 28 whole copies each).
+   - The incremental cache covers only the research round. The routine supervisor is a fresh child process each pass that opens its repositories a dozen times, and each publication task is its own process.
+2. **Release 8, River:** the spend-hold ledger split (builder agent running; v24, cp_spend_holds). Then extend shared reads beyond the round, as part of Sean's isolation design: the routine passes and publication work run inside the one long-lived parent holding the cache (hunters, with meetings for the routine runner and slide for publication children). Also scope the remaining whole-log artifact reads (promotion pipeline, mapping, fact chain, vault snapshot reads, Admin activity).
+3. **Hunters' order:** bound campaign-sites (the stall probe confirmed it; the 12:01 AM EDT kill took two Scouts with it); then lane and job isolation as the basis for CH-24 Proposal A; then the design-it-out items.
+4. **The fit at the 0.75 GiB margin:** once hunters records host memory in the heartbeat, compute how many jobs fit and what more memory buys.
+5. **Batch:** single-request work now (ballot summaries, auditors' samples). Per-step batching of Scouts and Detectives is on hold until River shows the speed versus cost trade from measured batch turnaround.
+6. Every time to Sean, on the board and in Admin, is EDT, with no Z and no UTC.
 
+## Current (Oct 6, 12:35 AM EDT)
+
+- **Live:** release 7 (f545fcf, merged 12:08 AM EDT, post-deploy passed). Release 6 (8b6322c) is the one the runner adopted at its 11:17 PM EDT restart. Schema v22 is applied. v23 comes when the runner adopts release 7.
+- **river** f545fcf. Admin is held on its return. Admin, slide, ballot, bank and frontend have work; Sean was sent the Continue line at release 7.
+- **Ledger:** cleaned twice tonight (River about 8:42 PM EDT, snapshot snapshot-before-spendhold-cleanup-20261006; Sean 8:50 PM EDT, snapshot before-hold-cleanup-2026-10-06T0041Z). It cleared again on the runner's first write after the restart (8.7 MB to 1.2 MB), then refilled.
 ## Current (2026-10-06 00:40Z)
 
 - **river 6af6f8a → 186f747** (promoted ~00:30Z). `pnpm gates` 12/12 on that exact SHA: 9565 pass, 0 fail, 11 skipped. Lanes: measures SC-10, SC-14, BR-30, BR-33, BR-34, SC-19 (3ebea50); registry FE-20, FE-21 (a302a93); hunters CH-15, CH-16, CH-17, CH-19 and the 21:54Z research-crash return (671b0b5); people CA-01 repaired, CA-46 (0fa3d0c); auditors DP-02, 10, 11, 13, 14, 16, 17, 18, 30, 31, 32, FE-02, FE-18 (498a414, applied as its own diff over 13d29c5); frontend FE-08, 09, 11, 13, 15, 28, 29, 30, 31, 32, 34, 38, 41, 42, 45 (de644b3).

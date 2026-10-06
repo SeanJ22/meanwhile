@@ -245,7 +245,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
   if (d.type === "work") {
     const row = v.data.workRows?.data?.rows.find(r => r.id === d.id);
     if (!row) return <Empty>This work row is not available.</Empty>;
-    return <Panel title={plainWords(row.title)} summary={row.age} targets={[row.id]}><Card title="Details"><Facts rows={[["Where",v.index.get(row.placeKey)?.name ?? "—"],["Stage",row.stage]]}/></Card></Panel>;
+    return <Panel eyebrow="Work row" title={plainWords(row.title)} summary={row.age} targets={[row.id]}><Card title="Details"><Facts rows={[["Where",v.index.get(row.placeKey)?.name ?? "—"],["Stage",row.stage]]}/></Card></Panel>;
   }
 
   // search

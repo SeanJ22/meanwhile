@@ -98,3 +98,55 @@ export async function readOperatorContext(request: ContextRequest): Promise<Cont
    * heartbeat and the work it is supposed to explain.
    */
   const [snapshot, heartbeat, digests, decisions, intents, fleet, research, pulse, config, flow] = await Promise.all([
+    wanted.has("snapshot") ? readSnapshot(repos) : Promise.resolve(undefined),
+    wanted.has("heartbeat") ? readHeartbeat(repos) : Promise.resolve(undefined),
+    wanted.has("digests") ? readDigests(repos) : Promise.resolve(undefined),
+    wanted.has("decisions") ? readDecisions(repos) : Promise.resolve(undefined),
+    wanted.has("intents") ? readResearchIntents(repos) : Promise.resolve(undefined),
+    wanted.has("fleet") ? readFleetInputs(repos) : Promise.resolve(undefined),
+    wanted.has("research") ? readFleetSafety(repos) : Promise.resolve(undefined),
+    wanted.has("pulse") ? readPulse(repos, request.nowIso) : Promise.resolve(undefined),
+    wanted.has("config") ? repos.adminConfig.read(ADMIN_CONFIG_ID).catch(() => null) : Promise.resolve(undefined),
+    wanted.has("flow") ? readFlow(request.nowIso) : Promise.resolve(undefined),
+  ]);
+
+  /*
+   * The pulse revision, or nothing. There is deliberately no fallback to some
+   * other timestamp: an action that requires a state version and cannot get the
+   * one the gateway compares against is refused, and a substitute value would
+   * make every such action stale forever while looking like it worked.
+   */
+  const stateVersion = pulse === undefined ? null : pulse.revision;
+  const placeStuck = wanted.has("placeStuck") ? await readPlaceStuck(request.asked ?? "", request.from, request.nowIso).catch(() => null) : undefined;
+
+  return {
+    context: {
+      nowIso: request.nowIso,
+      from: request.from,
+      stateVersion,
+      ...(flow === undefined ? {} : { flow }),
+      ...(config === undefined ? {} : { adminConfig: config && isAdminConfig(config.value) ? config.value : null }),
+      ...(placeStuck === undefined ? {} : { placeStuck: placeStuck === null ? { kind: "NOT_RECORDED" as const, detail: "Choose a place, or try again when its live score and stuck work can be read." } : { kind: "HELD" as const, value: placeStuck } }),
+      snapshot,
+      heartbeat,
+      digests,
+      decisions,
+      intents,
+      fleet,
+      research,
+    },
+    storeRefusedBecause: null,
+  };
+}
+
+/** The week of flow counts; a store that cannot be asked, or no record yet, is a named outcome and never a zero. */
+async function readFlow(nowIso: string): Promise<ReadOutcome<FlowWeek>> {
+  const url = controlPlaneUrlFromEnv();
+  if (!url) return { kind: "STORE_UNREACHABLE", detail: "The place that keeps the hourly flow record could not be reached." };
+  try {
+    const week = await readFlowWeek({ control: neon(url), through: nowIso });
+    return week === null ? { kind: "NOT_RECORDED", detail: "No fact has been recorded going live yet, so there is nothing to count." } : { kind: "HELD", value: week };
+  } catch (error) {
+    return unreachable("the hourly flow record", error);
+  }
+}

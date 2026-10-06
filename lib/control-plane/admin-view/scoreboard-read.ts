@@ -24,6 +24,7 @@ import { summarizeGateHealth } from "./gate-health.ts";
 import type { LearningSeries, LearningTrends } from "./learning-trends.ts";
 import { doorRows, type DoorNumberReadings } from "./door-numbers.ts";
 import { flowRows, flowStages } from "./flow-rows.ts";
+export { flowRows } from "./flow-rows.ts";
 import type { FlowWeek } from "./flow-read.ts";
 import type { V6HistoryReceipt } from "./admin-v6-history.ts";
 import type { PipelineRead } from "./v6-results-read.ts";
@@ -32,7 +33,6 @@ import { formatEastern } from "../eastern-time.ts";
 import type { SpeedPass } from "../../health/worst-case-speed.ts";
 import type { ProvenFixesReading } from "../fix-standing.ts";
 import type { ReportAccuracyReading } from "../workers/claim-audit.ts";
-import type { FlowRead } from "./flow-read.ts";
 import { moneyTime } from "./cost-reporting-view.ts";
 import { dayInEastern } from "./cost-reporting-view.ts";
 
@@ -192,7 +192,6 @@ export interface ScoreboardPlace {
 }
 
 export interface ScoreboardReadings {
-  readonly flow?: FlowRead | null;
   /** The sent places the Scorecard measured; an empty list is "no place has been sent", null is "could not be read". */
   readonly places: readonly ScoreboardPlace[] | null;
   /** Sent places whose owed list could not be read in time; they are named, never counted as zero. */
@@ -486,26 +485,6 @@ const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
   { id: "Look and feel", name: "Look and feel", why: "The front-end flags are not recorded here yet." },
 ];
 
-export function flowRows(flow: FlowRead | null | undefined): readonly (readonly [string, ScoreboardRow])[] {
-  const missing = (name: string) => [name, unmeasured(name, name, "The runner has not published the measured publication window yet.")] as const;
-  if (!flow) return [missing("Facts live per hour"), missing("Cost per fact")];
-  const facts = flow.hours.reduce((sum, h) => sum + h.liveRecords, 0);
-  const days = new Map<string, { facts: number; hours: number }>();
-  for (const h of flow.hours) {
-    const day = dayInEastern(h.hour), d = days.get(day) ?? { facts: 0, hours: 0 };
-    d.facts += h.liveRecords;
-    d.hours += Math.max(0, Math.min(Date.parse(flow.through), Date.parse(h.hour) + 3_600_000) - Math.max(Date.parse(flow.from), Date.parse(h.hour))) / 3_600_000;
-    days.set(day, d);
-  }
-  const rate = (v: number) => v.toLocaleString("en-US", { maximumFractionDigits: 2 });
-  const period = `${moneyTime(flow.from)} to ${moneyTime(flow.through)}`;
-  return [
-    ["Facts live per hour", row("Facts live per hour", "Facts live per hour", { value: rate(flow.factsLivePerHour), counts: `${n(facts)} new or updated reader records across the factory`, says: `Whole factory · measured ${period}.`, items: [...days].map(([day,d]) => `${day}: ${rate(d.facts / d.hours)} per hour (${n(d.facts)} records)`) })],
-    ["Cost per fact", row("Cost per fact", "Cost per fact", { value: flow.costPerFactUsd === null ? null : `$${flow.costPerFactUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 8 })}`, counts: flow.settledSpendUsd === null ? null : `$${flow.settledSpendUsd.toFixed(2)} settled over ${n(facts)} reader records`, says: `Whole factory · measured ${period}.`, notMeasured: flow.costPerFactUsd === null ? facts === 0 ? "No new or updated record reached a reader in this window." : "A charge has no reported price." : null })],
-  ];
-}
-
-/** The Scoreboard in the design's order. Every number in the list has a row; one with no reading says "—" and why. */
 export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
   const byId = new Map<string, ScoreboardRow>([
     ["Orders", ordersRow(r.orders)],
@@ -521,7 +500,6 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Audit accuracy", auditRow(r.audit)],
     ["Site speed and reliability", speedRow(r.speed)],
     ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
-    ...flowRows(r.flow),
     ["Proven fixes", provenFixesRow(r.provenFixes)],
     ["Report accuracy", reportAccuracyRow(r.reportAccuracy)],
     ...flowRows(r.flow),
@@ -543,7 +521,6 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
   const byFamily: ScoreboardFamilyRow[] = [...families].filter(([, f]) => f.of > 0).map(([group, f]) => ({ name: GROUP_NAMES[group] ?? group, completeness: f })).sort((a, b) => a.name.localeCompare(b.name));
   const missions: ScoreboardMissionRow[] = places.flatMap((p) => (p.core === null ? [] : [{ label: p.label, startedAt: p.core.missionStart, coreLive: coreWords(p.core), withinHour: withinHour(p.core) }]));
   return {
-    flow: r.flow ?? null,
     rows,
     byPlace, byFamily, missions,
     flow: flowStages(r.flow),

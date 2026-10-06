@@ -269,7 +269,6 @@ interface TopicRule {
 }
 
 const TOPIC_RULES: readonly TopicRule[] = [
-  { topic: "YESTERDAY_SPEND", phrasings: [["spend", "yesterday"], ["spent", "yesterday"], ["yesterday", "cost"], ["what", "spend", "get"]] },
   { topic: "PLACE_STUCK", phrasings: [["why", "stuck"], ["place", "stuck"], ["district", "stuck"]] },
   {
     topic: "FLEET_BLOCKERS",

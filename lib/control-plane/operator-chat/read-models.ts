@@ -745,7 +745,6 @@ export function integrationStatus(ctx: OperatorContext, subject: string | null):
   });
 }
 
-<<<<<<< HEAD
 export function placeStuck(ctx: OperatorContext): ChatAnswer {
   const read = holding(ctx.placeStuck, "this place’s live score and stuck work");
   if (!read.held) return assemble("PLACE_STUCK", { says: [read.gap.says], denominator: noNumber(read.gap), sources: [], needsYou: NOTHING_NEEDED, gaps: [read.gap], detail: [] });
@@ -756,10 +755,15 @@ export function placeStuck(ctx: OperatorContext): ChatAnswer {
     sources: [source("the place’s capture score and published stuck work", r.observedAt, r.key)], needsYou: NOTHING_NEEDED, gaps: [], detail: [],
   });
   return { ...answer, readBackAt: `/admin?view=work&scope=${encodeURIComponent(r.key)}` };
-=======
-/* ------------------------------------------------------------------ topic 8 */
+}
 
-/** "What did we spend yesterday and what did it get us?" One line from the last day's settled spend and facts live. */
+/* --------------------------------------------------------------- the switch */
+
+/**
+ * The one place a topic becomes an answer. Exhaustive over {@link ChatTopic},
+ * so adding a topic without a query is a compile error rather than a blank
+ * panel.
+ */
 export function spendAndFacts(ctx: OperatorContext): ChatAnswer {
   const ours = (says: string): Gap => ({ whose: "OURS", says });
   const flow = holding(ctx.flow, "the hourly flow of facts and settled spend");
@@ -805,7 +809,6 @@ export function spendAndFacts(ctx: OperatorContext): ChatAnswer {
     gaps: unpriced ? [ours("Some charges in the last day have no price.")] : [],
     detail: [`facts live ${line.facts}`, `settled spend ${line.spendUsd ?? "not known"}`],
   });
->>>>>>> 30922c2e1
 }
 
 /* --------------------------------------------------------------- the switch */
@@ -815,16 +818,10 @@ export function spendAndFacts(ctx: OperatorContext): ChatAnswer {
  * so adding a topic without a query is a compile error rather than a blank
  * panel.
  */
+
 export function answerFor(topic: ChatTopic, ctx: OperatorContext, asked: string, subject: string | null): ChatAnswer {
   switch (topic) {
-    case "YESTERDAY_SPEND": {
-      const flow = ctx.spendSummary?.spend.flow?.yesterday;
-      const missing: Gap = { whose: "OURS", says: "The runner's measured spending and deliveries for yesterday are not available yet." };
-      if (!flow || Date.parse(flow.through) !== Date.parse(yesterdayWindow(ctx.nowIso).through)) return assemble(topic, { says: [missing.says], denominator: noNumber(missing), sources: [], needsYou: NOTHING_NEEDED, gaps: [missing], detail: [] });
-      const facts = flow.hours.reduce((sum, h) => sum + h.liveRecords, 0);
-      const spent = flow.settledSpendUsd === null ? "—" : `$${flow.settledSpendUsd.toFixed(2)}`;
-      return assemble(topic, { says: [`Yesterday's measured window: ${spent} settled; ${count(facts)} new or updated reader records reached readers.`], denominator: denominator(`${count(facts)} reader records`, facts, facts, "New or updated reader records delivered in the measured Eastern-day window", "runner publication-flow summary"), sources: [source("Runner's measured publication and spending window", ctx.spendSummary!.readAt, "spendSummary.flow.yesterday")], needsYou: NOTHING_NEEDED, gaps: flow.settledSpendUsd === null ? [{whose:"OURS",says:"A charge in this window has no reported price."}] : [], detail: [`Measured ${formatEastern(flow.from)} to ${formatEastern(flow.through)}.`] });
-    }
+    case "SPEND_AND_FACTS": return spendAndFacts(ctx);
     case "PLACE_STUCK": return placeStuck(ctx);
     case "FLEET_BLOCKERS":
       return fleetBlockers(ctx);
@@ -840,7 +837,5 @@ export function answerFor(topic: ChatTopic, ctx: OperatorContext, asked: string,
       return compareEnvironments(ctx);
     case "INTEGRATION_STATUS":
       return integrationStatus(ctx, subject);
-    case "SPEND_AND_FACTS":
-      return spendAndFacts(ctx);
   }
 }

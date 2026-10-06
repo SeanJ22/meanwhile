@@ -445,7 +445,6 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories, e
     readPromotionRows(repos.workItems, results.map(r => r.workItemId)),
   ]);
   for (const [id, attempt] of attempts) roles.set(id, attempt.worker.role);
-  const resultsById = new Map(results.map(r => [r.id, r]));
   const completion = new Map(await Promise.all([...new Set(results.map(r => r.workItemId))].map(async id => [id, await loadWorkerCompletionEvidence(repos, id)] as const)));
   return {
     artifactById: (id) => artifacts.get(id) ?? null,
@@ -455,7 +454,7 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories, e
       return attempt === undefined || attempt.outcome !== "COMPLETED" ? null : attempt.artifactIds;
     },
     workerResultById: (id) => {
-      const result = resultsById.get(id);
+      const result = results.find(r => r.id === id);
       if (!result || attempts.get(result.attemptId)?.outcome !== "COMPLETED" ||
           canonicalJson(attempts.get(result.attemptId)) !== canonicalJson(result.completion.closedAttempt)) return null;
       try { assertFleetResult(result.result, result.completion.completedTask.workerTask!.role, result.attemptId); return result; }

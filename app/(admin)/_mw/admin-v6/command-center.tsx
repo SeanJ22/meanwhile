@@ -37,7 +37,7 @@ import { ScoreboardScreen } from "./screen-scoreboard.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
 import { DataBusinessScreen } from "./screen-data.tsx";
 import { NowScreen, Readers } from "./screen-now.tsx";
-import { ReportsView } from "./reports-view.tsx";
+import { ReportsView, DailyBrief, AlertStrip } from "./reports-view.tsx";
 import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
 import { DoorsPanel } from "./doors-panel.tsx";
 import { UpdatesPanel } from "./updates-panel.tsx";
@@ -351,6 +351,7 @@ export function CommandCenter(props: CommandCenterProps) {
 
         <main id="v6-main" ref={mainRef} tabIndex={-1} className={s.main} style={{ outline: "none" }}>
           {props.reviewPanel}
+          {props.mode==="live"&&<AlertStrip/>}
           {connWarn && props.connection !== "connecting" && (
             <div className={cx(s.banner, props.connection === "reconnecting" && s.bannerCalm)} role="status">
               <strong>{props.connection === "stale" ? "These figures are out of date." : props.connection === "reconnecting" ? "Reconnecting." : "Disconnected."}</strong>
@@ -367,7 +368,7 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
           {detail ? <DetailPanel detail={detail} /> : (
             <>
-              {view === "now" && <><NowScreen key={scopeKey} /><UpdatesPanel /></>}
+              {view === "now" && <>{props.mode==="live"&&<DailyBrief/>}<NowScreen key={scopeKey} /><UpdatesPanel /></>}
               {view === "data" && <DataBusinessScreen />}
               {view === "workers" && <><WorkersScreen /><RunnerSettingsPanel /><DoorsPanel /></>}
               {view === "work" && <><DecisionOrdersPanel /><ScheduledPanel /><WorkScreen /></>}

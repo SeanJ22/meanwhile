@@ -143,8 +143,8 @@ export function liveExecutor(opts: {
       const input = actionInput(request.def.kind, { target: request.target, scopeKey: request.scopeKey, option: request.option, words: request.words, amount: request.amount, selected: request.selectedItems, fields:request.fields, startAt:request.startAt, payload: request.payload });
       const timing = request.when ? scheduledWhen(request.when,now()) : null;
       const effectiveType = timing ? "orders.schedule" : gw.type;
-      const body = timing ? {type:effectiveType,subject:request.target,stateVersion:null,idempotencyKey:receipt.key,orderType:gw.type,input,...timing} : { type: gw.type, subject: request.target, stateVersion, idempotencyKey: receipt.key, ...input };
-      receipt = { ...receipt, gatewayType: effectiveType };
+      const body = timing ? {type:effectiveType,subject:request.target,stateVersion:null,idempotencyKey:receipt.key,input:{orderType:gw.type,subject:request.target,input,...timing}} : { type: gw.type, subject: request.target, stateVersion, idempotencyKey: receipt.key, ...input };
+      receipt = { ...receipt, gatewayType: effectiveType,finishBy:timing?.finishBy??null };
       let status: number | null = null;
       let parsed: unknown = null;
       try {

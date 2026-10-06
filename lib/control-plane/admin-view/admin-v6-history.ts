@@ -12,6 +12,7 @@ export type V6ReceiptStatus = "queued" | "read" | "running" | "done" | "partial"
 /** Structural counterpart of Admin v6's UiReceipt; the UI source owns its type. */
 export interface V6HistoryReceipt {
   readonly key: string; readonly kind: ActionKind;
+  readonly notPickedUp?: boolean; readonly finishBy?: string | null; readonly scheduledParentId?:string;
   readonly target: string; readonly targetName: string; readonly label: string;
   readonly scopeKey: string; readonly scopeName: string; readonly level: "local" | "global";
   readonly status: V6ReceiptStatus; readonly statusWords: string;
@@ -66,21 +67,23 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
   const place = /^(?:us|st:[a-z]{2}|geo:[a-z]{2}\.[a-z_]+\.[0-9A-Za-z]{1,16})$/.test(target) ? target : global ? "us" : "unknown";
   if (scope !== "us" && place !== scope && receipt.subject !== scope) return null;
   const confirmed = confirmation?.state === "applied" && receipt.outcome !== "REFUSED";
-  const status = confirmed ? "done" : confirmation?.state === "in-progress" ? "running" : receipt.huntScores?.length && receipt.outcome !== "REFUSED" ? "queued" : statusOf(receipt);
+  const status = receipt.outcome==="REFUSED" ? "refused" : confirmed ? "done" : confirmation?.state === "in-progress" ? "running" : confirmation && ["waiting","unread","not-picked-up"].includes(confirmation.state) ? "queued" : receipt.huntScores?.length ? "queued" : statusOf(receipt);
   const completed = eventTime(receipt.completedAt);
   const confirmedAt = confirmed ? eventTime(confirmation!.at) ?? completed : null;
   return {
     key: receipt.idempotencyKey,
+    notPickedUp:confirmation?.state==="not-picked-up", finishBy:receipt.scheduleOrigin?.finishBy??null,
+    ...(receipt.scheduleOrigin?{scheduledParentId:receipt.scheduleOrigin.id}:{}),
     kind,
     target: kind.startsWith("global-runner-") ? "runner" : target, targetName: targetWords(kind), label: receipt.label,
     scopeKey: place, scopeName: place === "us" ? "United States" : place === "unknown" ? "Place not recorded" : "—", level: place === "us" ? "global" : "local", status,
-    statusWords: status === "queued" ? "Request saved; runner response unknown" :
+    statusWords: confirmation?.state==="not-picked-up" ? "Not picked up" : status === "queued" ? "Request saved; runner response unknown" :
       status === "refused" ? "Request refused" : confirmed ? "Done" : status === "done" ? "Gateway action recorded" :
       status === "running" ? "Gateway action in progress" : "Outcome unknown",
     steps: [{ label: "Sent", at: receipt.startedAt },
       ...(completed ? [{ label: status === "refused" ? "Refused" : "Gateway receipt recorded", at: completed }] : []),
       ...(confirmedAt ? [{ label: "Runner confirmed", at: confirmedAt }] : [])],
-    says: confirmation?.state === "in-progress" || confirmed ? confirmation!.words : receipt.says, items: [],
+    says: confirmation ? confirmation.words : receipt.says, items: [],
     lifecycle: { saved: status === "queued" || status === "done" ? completed : null,
       workersReceived: confirmedAt, workStarted: null, workFinished: null, factsChecked: null,
       published: null, checkedOnPublicPage: null },

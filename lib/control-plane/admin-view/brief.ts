@@ -15,6 +15,9 @@ import { fixQueueView } from "../fix-queue.ts";
 import { buildQueue, type QueueRow } from "../../../app/(admin)/_mw/admin-v6/queue.ts";
 import type { UiReceipt, StuckItem } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import { listDoors } from "../../doors/registry.ts";
+import { projectDoors } from "./v6-doors-read.ts";
+import { scheduledView } from "./v6-scheduled-read.ts";
 import { plainWords } from "./plain-words.ts";
 
 export interface BriefSnapshot {
@@ -40,8 +43,10 @@ export function easternBriefClock(at:string):{day:string;time:string} {
 }
 export function projectBrief(config:AdminConfig,rows:readonly QueueRow[],at:string,unread:readonly string[]=[]):BriefSnapshot {
   const cards=decisionOrders(config).filter(c=>!c.resolution);
-  const alerts=[...rows.filter(r=>r.filter==="needs-me").map(r=>({key:r.key,what:r.what,next:r.next})),...cards.map(c=>({key:c.id,what:plainWords(c.recommends),next:"Your decision is needed."}))];
-  return {day:easternBriefClock(at).day,createdAt:at,updates:updatesView(updateRecords(config),at).updates.slice(0,50),
+  const needed=new Map(rows.filter(r=>r.filter==="needs-me").map(r=>[r.key,{key:r.key,what:r.what,next:r.next}]));
+  for(const card of cards)if(!needed.has(`decision:${card.id}`))needed.set(`decision:${card.id}`,{key:`decision:${card.id}`,what:plainWords(card.recommends),next:"Your decision is needed."});
+  const alerts=[...needed.values()];
+  return {day:easternBriefClock(at).day,createdAt:at,updates:updatesView(updateRecords(config),at).updates.slice(0,50).map(u=>({...u,what:plainWords(u.what),before:u.before===null?null:plainWords(u.before),after:u.after===null?null:plainWords(u.after)})),
     problems:rows.filter(r=>r.tone==="warn").map(r=>({key:r.key,what:r.what,owner:r.owner,next:r.next})),decisions:cards,alerts,unread};
 }
 /** Same inputs as Queue; failures name the unread part instead of claiming there are no problems. */
@@ -49,15 +54,17 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
   const held=await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if(held&&!isAdminConfig(held.value))throw new Error("The settings could not be read.");
   const config=held?.value??defaultAdminConfig(at);const unread:string[]=[];
-  const [history,stuck,reports]=await Promise.all([
+  const [history,stuck,reports,doors]=await Promise.all([
     readV6History(repos,{scope:"us",asOf:at,limit:50}).catch(()=>{unread.push("orders");return null;}),
     population().catch(()=>null).then(p=>{if(!p){unread.push("stuck cases");return null;}return stuckViews(p.rows,"us",at).items;}),
     readReports(at).catch(()=>{unread.push("reader problems");return null;}),
+    listDoors(repos.doors).then(d=>{if(d.unreadable)unread.push("some doors");const view=projectDoors({...d,saves:[],observedAt:at});if(view.counts.shut>view.rows.filter(r=>r.status==="Shut").length)unread.push("shut doors outside the current page");return view.rows.filter(r=>r.status==="Shut");}).catch(()=>{unread.push("doors");return null;}),
   ]);
   if(history?.page.nextCursor)unread.push("older orders outside the current page");
   if(reports?.sites.some(s=>s.kind==="UNREADABLE"))unread.push("reader problems from an unread site");
   const fixes=v6FixesView(fixQueueView(collapseDecisionLog([])),fixItems(config));
-  const rows=buildQueue({receipts:history?.data as readonly UiReceipt[]|null ?? null,stuck:stuck as readonly StuckItem[]|null,fixes,sends:null,hunts:null,doors:null,scheduled:null});
+  const rows=buildQueue({receipts:history?.data as readonly UiReceipt[]|null ?? null,stuck:stuck as readonly StuckItem[]|null,fixes,sends:null,hunts:null,doors,scheduled:scheduledView(config,at).rows,decisions:decisionOrders(config)});
+  if(reports?.sites.some(s=>s.kind==="READ"&&s.total>s.rows.length))unread.push("older reader problems outside the current page");
   const fresh=projectBrief(config,[...rows,...(reports?readerProblemRows(reports):[])],at,unread);
   return {fresh,latest:config.latestBrief??null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
 }
@@ -65,12 +72,12 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
 export async function writeDailyBrief(repos:ControlPlaneRepositories,at:string,read:(repos:ControlPlaneRepositories,at:string)=>Promise<BriefReading>=readBrief):Promise<boolean> {
   const clock=easternBriefClock(at);const held=await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if(!held||!isAdminConfig(held.value))return false;
-  const time=readSetting(held.value,BRIEF_TIME_SETTING,"");
+  const time=readSetting<string>(held.value,BRIEF_TIME_SETTING,"");
   if(!time||clock.time<time||held.value.latestBrief?.day===clock.day)return false;
   const snapshot=(await read(repos,at)).fresh;
   for(let n=0;n<4;n++){
     const latest=await repos.adminConfig.read(ADMIN_CONFIG_ID);if(!latest||!isAdminConfig(latest.value)||latest.value.latestBrief?.day===clock.day)return false;
-    const currentTime=readSetting(latest.value,BRIEF_TIME_SETTING,"");if(!currentTime||clock.time<currentTime)return false;
+    const currentTime=readSetting<string>(latest.value,BRIEF_TIME_SETTING,"");if(!currentTime||clock.time<currentTime)return false;
     try{await repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID,latest.revision,{...latest.value,latestBrief:snapshot},at);return true;}catch(e){if(n===3)throw e;}
   }
   return false;

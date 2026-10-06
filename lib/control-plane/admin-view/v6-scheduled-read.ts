@@ -12,6 +12,7 @@ export interface ScheduledRow {
   readonly when: string;
   readonly repeats: string | null;
   readonly finishBy: string | null;
+  readonly finishByAt: string | null;
 }
 export interface ScheduledView { readonly rows: readonly ScheduledRow[]; readonly observedAt: string }
 
@@ -24,7 +25,7 @@ function row(o: ScheduledOrder, all: readonly ScheduledOrder[]): ScheduledRow {
     id: o.id, label: o.label, status: "Scheduled",
     when: due ? formatEastern(due) : o.after ? `After ${follows ?? "another order"}` : o.repeat ? "On its repeat" : "—",
     repeats: o.repeat ? REPEAT_WORDS[o.repeat] : null,
-    finishBy: o.finishBy && o.startAt ? formatEastern(o.finishBy) : null,
+    finishBy: o.finishBy ? formatEastern(o.finishBy) : null, finishByAt:o.finishBy,
   };
 }
 

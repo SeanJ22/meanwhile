@@ -170,7 +170,7 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
   }
   if (httpStatus !== null && httpStatus >= 200 && httpStatus < 300 && isOutcome(body)) {
     const r = body.receipt;
-    const base = { ...prev, gatewayReceiptId: r.receiptId, readBackAt: r.readBackAt, replayed: body.replayed === true, ...(r.change ? { change: r.change } : {}) };
+    const base = { ...prev, finishBy:r.scheduleOrigin?.finishBy??prev.finishBy,scheduledParentId:r.scheduleOrigin?.id??prev.scheduledParentId, gatewayReceiptId: r.receiptId, readBackAt: r.readBackAt, replayed: body.replayed === true, ...(r.change ? { change: r.change } : {}) };
     if (r.outcome === "REFUSED") {
       return { ...base, status: "refused", statusWords: STATUS_WORDS.refused, steps: step("Refused"), says: r.says };
     }

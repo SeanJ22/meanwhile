@@ -4,6 +4,7 @@
  * through the gateway's `submit()` under an idempotency key made from the order and its occurrence, so a restart, a
  * second timer or a hung round never sends it twice. A one-time order is removed once sent; a repeating one moves on.
  */
+import { writeDailyBrief } from "../admin-view/brief.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig, type AdminConfig } from "./admin-config.ts";
 import { refreshFixDispatchHonors } from "../fix-list.ts";
 import { migrateQueuedFixes } from "./fix-migrate.ts";
@@ -42,6 +43,7 @@ export function occurrenceKey(orderId: string, occurrence: string): string {
  * has one key. Returns what was sent this call.
  */
 export async function fireDueOrders(deps: GatewayDeps, nowIso: string, lastFired: ReadonlyMap<string, string> = new Map()): Promise<readonly FiredOrder[]> {
+  await writeDailyBrief(deps.repos,nowIso).catch(() => undefined);
   await migrateQueuedFixes(deps, nowIso).catch(() => undefined);
   await refreshFixDispatchHonors(deps.repos, nowIso).catch(() => undefined);
   const nowMs = Date.parse(nowIso);

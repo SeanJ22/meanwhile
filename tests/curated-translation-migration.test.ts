@@ -132,6 +132,9 @@ test("CA-50: original measure text and unnumbered reaction groups migrate throug
   assert.ok(held.every(row => row.kind === "MEASURE_TEXT" && row.curatedOrigin?.citation.url === original.sourceUrl && row.curatedOrigin.citation.readOn === null));
   const ballot = { measureRecords: [record], contests: [{ id: record.contestId, type: "MEASURE", ocdId }] } as unknown as BallotSet;
   assert.deepEqual(withMeasureTranslations(ballot, held).measureRecords, [record]);
+  assert.deepEqual(withMeasureTranslations({ ...ballot, measureRecords: [] }, held).measureRecords, [record], "Complete checked records survive retirement of the old static summary");
+  assert.deepEqual(withMeasureTranslations({ ...ballot, measureRecords: [] }, held.slice(1)).measureRecords, [], "Incomplete checked text cannot stand in for the retired summary");
+  assert.deepEqual(withMeasureTranslations({ ...ballot, measureRecords: [], contests: [{ ...ballot.contests[0], ocdId: "ocd-division/country:us/state:nj" }] }, held).measureRecords, []);
   assert.deepEqual(withMeasureTranslations(ballot, held.slice(1)).measureRecords, [record], "Partial publication cannot drop old groups");
   assert.equal(curatedMeasureRecordFor(held, record.contestId, "ocd-division/country:us/state:nj"), null);
   assert.equal(curatedMeasureRecordFor(held.slice(1), record.contestId, ocdId), null);

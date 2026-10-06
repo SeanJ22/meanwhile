@@ -27,7 +27,8 @@ export async function readTranslations(divisions: readonly string[], options: Pr
   return results.flatMap(result => result.kind === "PROMOTED" ? result.value.records : []);
 }
 
-/** Only the loaded ballot's exact subjects and currently held source hashes attach. */
+/** Only the loaded ballot's exact subjects attach. Existing records keep their
+ * source-hash guard; a complete preserved set also survives static retirement. */
 export function withMeasureTranslations(ballot: BallotSet, records: readonly TranslationRecord[]): BallotSet {
   const current = ballot.measureRecords ?? [];
   const translated = current.map(record => {
@@ -38,5 +39,13 @@ export function withMeasureTranslations(ballot: BallotSet, records: readonly Tra
     const preserved = contest && curatedMeasureRecordFor(records, record.contestId, contest.ocdId);
     return preserved && preserved.sourceUrl === record.sourceUrl && preserved.sourceHash === record.sourceHash ? { ...preserved, yesMeans: preserved.yesMeans ?? record.yesMeans, noMeans: preserved.noMeans ?? record.noMeans } : record;
   });
+  const subjects = new Set(current.map(record => record.contestId));
+  for (const contest of ballot.contests) {
+    if (contest.type !== "MEASURE" || subjects.has(contest.id) ||
+        ballot.contests.filter(row => row.id === contest.id).length !== 1) continue;
+    const preserved = curatedMeasureRecordFor(records, contest.id, contest.ocdId);
+    if (preserved) { translated.push(preserved); subjects.add(contest.id); }
+  }
+  if (translated.length !== current.length) return { ...ballot, measureRecords: translated };
   return translated.some((row, at) => row !== current[at]) ? { ...ballot, measureRecords: translated } : ballot;
 }

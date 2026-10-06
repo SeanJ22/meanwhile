@@ -1,0 +1,7 @@
+{
+  "sha": "05c1d9886be851b592527bd4ea9b8a164d8d061f",
+  "status": "SUPERSEDED_INCOMPLETE",
+  "reason": "CA50 complete records must survive removal of static summary holdings without an old ballot record. Stopped before full test completion; never PASS or READY.",
+  "at": "2026-10-06T05:37:45.166638+00:00",
+  "gateLog": "\n> we-the-people@0.1.0 gates /workspace/meanwhile-ballot-actions-check\n> node scripts/gates.mjs\n\nlocal gates \u2014 the set CI requires (RULING 155)\n\n  visible-tree \u2026 PASS \u2014 files a sweep of the committed tree can see: 7693 of 7693.\n"
+}

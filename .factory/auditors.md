@@ -1,13 +1,13 @@
-build_state: waiting
+build_state: active
 worker: auditors
 provider: Claude
-run_id: session_01CLkpuYxoM52oTvMcpUfieS
-lock: none
-heartbeat: 2026-10-06T00:19:30Z
+run_id: session_01QUzyktL7MgBwQ8vgLAMt8w
+lock: auditors-20261006T011826Z-826
+heartbeat: 2026-10-06T01:18:26Z
 on_river: DP-01, DP-02 (core), DP-03, DP-04, DP-05, DP-06, DP-10 (core), DP-13 (core), DP-14 (core), DP-15, DP-16, DP-18 (core), FE-01, FE-03, FE-16, FE-17 — release 1 and 2 on main. (River's ninth fold also listed FE-18 because FE-17's READY subject says "FE-18 runs them"; nothing for FE-18 shipped then. FE-18 is built now and rides the READY below.)
 ready: ba53aa4a506ae167bc9245d70db9a91d74c68fd5 (READY: DP-25, DP-26, DP-33, DP-34). Built on river 6af6f8a (release 3); carries the earlier batch from 498a4140c (DP-02, DP-10, DP-11, DP-13, DP-14, DP-16, DP-17, DP-18, DP-30, DP-31, DP-32, FE-02, FE-18), which River had not folded yet. Supersedes 498a4140c.
 checks: On tree 5dcb3b3d6 (river 6af6f8a + this lane): env -u DATABASE_URL -u WTP_ASSET_STORE pnpm test on the affected selection (scripts/ci-affected-tests.mjs selectTests over git diff river...HEAD, .factory/ left out because River drops it): 632 of 1102 files, 5936 tests, 5930 pass, 0 fail, 6 skipped. tsc --noEmit clean (no .next). eslint on every changed file: 0 problems. scripts/claim-audit-pass.mts --controlled: "the false claim was caught", nothing written. A first selection run was discarded because it overlapped edits to scout-candidates.ts; the run above started after the last source edit.
-working_on: none (lock released).
+working_on: catch up with river 186f747 (release 4); then FE-21.
 waiting_on: FE-21 waits on registry FE-20 (not on river). DP-29 waits on FE-21 (front-end red flags); its other prerequisites DP-28 and DB-32 are on river now. FE-04 waits on ballot CA-32 (only a WIP commit on river) and the design note. Every other auditors step is built.
 returned: fold return 20:08Z (fix:5c560d82) repaired in 498a4140c (river-only base, no held CA-01/BR-07); this READY sits on river 6af6f8a, as River asked.
 needs_hook:

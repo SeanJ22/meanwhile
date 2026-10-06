@@ -147,3 +147,13 @@ One line per batch folded into river.
 - 2026-10-06T01:42:33Z · river · MW-021, CH-26 · ready 227399e2cd72 · river 005800718335 · pnpm gates pass on 005800718335
 - 2026-10-06T02:27:12Z · river · CH-26 · ready f26f5807c9b8 · river 64528dfb416b · pnpm gates pass on 64528dfb416b
 - 2026-10-06T02:27:54Z: main 3a5ed2b reconciled into river as 45fbf4e (tree identical to tested 64528df, gates 12/12).
+- 2026-10-06T03:41:32Z · measures · BR-32 · ready df6f5e2f1103 · river 458f0a196f52 · pnpm gates pass on 458f0a196f52
+- 2026-10-06T03:41:32Z · hunters · CH-21 · ready 9be549cb1278 · river 458f0a196f52 · pnpm gates pass on 458f0a196f52
+- 2026-10-06T03:41:32Z · meetings · DB-22, DB-26, BX-11 · ready 2395df94ec07 · river 458f0a196f52 · pnpm gates pass on 458f0a196f52
+- 2026-10-06T03:41:32Z · auditors · DP-25, DP-26, DP-29, DP-33, DP-34, FE-21 · ready c428dc394e42 · river 458f0a196f52 · pnpm gates pass on 458f0a196f52
+- 2026-10-06T03:41:32Z · people · CA-02, CA-07, CA-08, CA-16 · ready 058085829420 · river 458f0a196f52 · pnpm gates pass on 458f0a196f52
+- 2026-10-06T03:41:32Z · slide · CP-03, CP-04, CP-05, CP-07, CP-08, CP-11, CP-12, CP-18, BX-01, BX-02, BX-06, BX-07 · ready 66f6ed84a8ce · river 458f0a196f52 · pnpm gates pass on 458f0a196f52
+- 2026-10-06T03:41:32Z · ballot · CA-21, CA-22, CA-25, CA-26, CA-27, CA-28, CA-29, CA-31, CA-32, CA-33, CA-34, CA-35, CA-36, CA-37, CA-38, CA-39, CA-52, CA-53, CA-54, CA-55 · ready 0fc6ef6d21a6 · river 458f0a196f52 · pnpm gates pass on 458f0a196f52
+- 2026-10-06T03:41:32Z · bank · DB-47 · ready f92b4d4f1bf1 · river 458f0a196f52 · pnpm gates pass on 458f0a196f52
+- 2026-10-06T03:41:32Z · frontend · FE-12, FE-14, FE-22 · ready b3a24040e8b3 · river 458f0a196f52 · pnpm gates pass on 458f0a196f52
+- 2026-10-06T03:41:32Z · river · CH-26 · ready acd6efcb8f80 · river 458f0a196f52 · pnpm gates pass on 458f0a196f52

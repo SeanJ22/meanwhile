@@ -1,0 +1,91 @@
+CAMPAIGN_CONTEXT workerResultReads=1 workItemLists=0
+✔ a held paid-research finding reaches APPROVED with measured checks, clean controls and an independent saved profile (258.025722ms)
+✔ a self-identifying campaign publishes without relying on altered supplemental profile bytes (57.152591ms)
+✔ omitting a middle given name never resolves a collision between full canonical names (67.455918ms)
+✔ CP-14: an obsolete closed-gate reading cannot withhold a verified campaign (65.889621ms)
+✔ robots.txt is recorded, not a burden: a site whose robots.txt disallows every path is approved with the verdict on its record; an access control or an unread robots.txt still fails the class burden (136.488314ms)
+✔ CP-14: an obsolete field list cannot withhold a verified campaign site (80.542403ms)
+✔ captured candidate profiles supply only observed campaign links tied to their candidate and office (88.958515ms)
+✔ a persisted facts-only Scout with no parser reaches the existing campaign-site publication door through saved profile hrefs (216.653869ms)
+✔ conflicting supplemental profiles cannot hold a campaign page that independently identifies its own candidate (727.653977ms)
+✔ a runner cycle over held results publishes a verified site through the derived door with no owner step, and /ballot and Ask show it (208.317607ms)
+✔ a bounded linked publication capture reaches the existing derived corpus with distinct approval, href and child Attempt (348.669182ms)
+✔ already captured linked pages from another job reach the corpus without a replacement acquisition (102.892553ms)
+✔ a blocked first linked page records a route Attempt and yields the next page on the next bounded pass (89.669178ms)
+✔ a refused lead publishes nothing and keeps its typed reason where Admin reads it (39.911289ms)
+✔ a year-less site stays refused however often it is read: judged again from its vaulted read, re-read after the recheck, never approved (148.968092ms)
+✔ read bounds hold without a pass deadline; held independent sources publish without extra reads (1135.310341ms)
+✔ the pass reads the leads of candidates with no campaign link first; a linked candidate's leads wait, deferred and never refused, and are read once the others are (366.173195ms)
+✔ held independent evidence advances before new leads and slow backlog reads continue without a pass deadline (193.46915ms)
+✔ slow loading and store work complete before the pass reports, without a pass deadline (30.861723ms)
+✔ at the round's dispatch cutoff both candidate lanes stop starting reads; every unread lead and page stays owed (516.629236ms)
+✔ withinWallTime ends a promise that never settles and clears its timer when one does (54.629577ms)
+✔ who already carries a campaign link is read by the door's own rule: a reviewed campaign link on one of the candidacy's Reader keys (2.198266ms)
+✔ the paid lane stays closed under the owner's pause, and the pass is plain code that never consults it (1.698091ms)
+✔ the door verifies the vault again and holds by name what it cannot prove; a reviewed link always wins (158.590816ms)
+✔ newer fully verified campaign evidence refreshes the same reader URL automatically (65.854874ms)
+✔ new campaign facts publish without dropping prior GOOD links or quoted history whose raw captures are unavailable (223.695436ms)
+✔ the Reader composes: a derived link fills an empty campaign slot beside the reviewed official link; any reviewed campaign link of that person wins on every key (0.439331ms)
+✔ PRDY-3/PDC: immutable facts can read the permanent meetings receipt, but cannot install or run their own acquisition clock (1241.739271ms)
+✔ PDC: a failed permanent meetings attempt stays a data-plane LKG/retry receipt and never becomes a legacy acquisition clock (0.471501ms)
+✔ PRDY-3: a second acquisition that moves a sitting is a CONFIRMATION_FACT_CONFLICT hold for that fact and confirms the others; a stale class is refused at approval; a malformed capture bridges nothing (1068.102852ms)
+✔ a stopped stage changes that stage's hourly count, not earlier observations (17.139799ms)
+✔ deployment boundary clips an uninstrumented hour; a failed read never turns into zeros (1.998664ms)
+✔ publication stage observations deduplicate restarts and shared Sends without changing fact authority (2.850596ms)
+✔ a queued task deferred before spawn keeps both events without a settlement failure (8.361738ms)
+✔ the three origins are three distinct hosts (1.207405ms)
+✔ the legacy host is NOT one of ours (0.424193ms)
+✔ the Netlify site id is kept apart from the public origin (1.137334ms)
+✔ the production host is not hardcoded outside the origins module (91.1023ms)
+✔ an allowlisted file holds PROSE, never a bare origin literal (3.530714ms)
+✔ the legacy host survives only as the site id and the redirect (70.337085ms)
+✔ netlify.toml forwards the legacy host with a 301 (0.390108ms)
+✔ the full chain is ACCEPTED when every burden is met — the positive control for every refusal below (4.634258ms)
+✔ a stage out of order is refused, the refusal is APPENDED as history, and it refuses the OFFER, not the item (2.187005ms)
+✔ an identical re-offer of a held record is a NO-OP SUCCESS, so a re-map cannot refuse what it already mapped (1.399705ms)
+✔ a foreign row under the pipeline log is not an item (0.473004ms)
+✔ item states come from one paged read of the log, equal to reading every item's key (2.931667ms)
+✔ CONFIRMED refuses an artifact vaulted by the Scout's own Attempt — model prose never confirms model prose (0.526944ms)
+✔ CONFIRMED refuses an artifact from a SCOUT-role Attempt even when it is a different Attempt (0.323033ms)
+✔ CONFIRMED refuses no artifact, an unknown artifact, an unknown Attempt, and a URL mismatch (0.51874ms)
+✔ a SECOND_ROUTE confirmation must name the shared fact; with it, a different URL is accepted (0.446504ms)
+✔ CONFIRMED by the Scout actor is SELF_CERTIFICATION even with good artifacts (0.314348ms)
+✔ VERIFIED refuses a FAILED check, a NOT_IMPLEMENTED check and a MISSING check — never a silent pass (0.955966ms)
+✔ VERIFIED by the confirming actor is SELF_CERTIFICATION (0.226423ms)
+✔ AUDITED refuses an unmeasured control score, a dependent starting point, a non-surviving audit, and a non-independent auditor (0.428591ms)
+✔ APPROVED_FOR_PROMOTION carries the full chain by record id and refuses a chain the log does not hold (0.370652ms)
+✔ a DIFFERENT record at a stage already reached is refused rather than duplicated (0.24646ms)
+✔ mapping: ROUTE_CANDIDATE and EVIDENCE_FOUND become SCOUTED; refused and absence-shaped results map to nothing (0.580654ms)
+✔ mapping: a VALIDATED method candidate is SCOUTED, not VERIFIED (0.290753ms)
+✔ mapping reuses accepted confirmation at a later clock instead of stranding it behind a duplicate-stage refusal (1.924696ms)
+✔ method lifecycle advancement reuses its scouting evidence but changed source identity is still refused (1.912583ms)
+✔ mapping: CONFIRMED exists only where an ACQUIRER artifact at the same URL comes from another Attempt (0.291685ms)
+✔ indexed artifact selection retains every observation and crosses page boundaries (2.692881ms)
+✔ URL selection closes over content ids so a later observation at another URL is retained (1.730022ms)
+✔ reobservation SQL scopes by artifact membership without a work-item boundary (0.391762ms)
+✔ empty mapping reads no artifacts, attempts, work items or worker results (0.870927ms)
+✔ scoped fact collection preserves cross-item byte-identical reacquisition and rejects newly broken audit (1069.424745ms)
+  chromium system — SUBSTITUTED for the pinned 1234, which is not installed. Launching /usr/bin/chromium
+✔ guarded live sampler reads visible fields only inside the requested record (2498.485895ms)
+✔ a long job credits its publication hour, not its frozen source-receipt clock (5.09088ms)
+✔ publisher counts only newly appended LIVE changes; concurrent replays and provenance rechecks earn nothing (0.962578ms)
+✔ reservoir checks at most three exact public record containers, once, across flushes and restart (1.979037ms)
+✔ Admin/API responses, redirected pages and failed public reads cannot establish reader confirmation (0.884342ms)
+✔ a measurement failure does not hold publication and cannot silently report complete totals (0.596334ms)
+✔ a numeric prefix or another field's value is not the sampled fact (0.309047ms)
+partition LKG base: meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing has no promoted pointer yet
+RCD_MEETING_PARTITION_RECEIPT={"source":"meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","partitionId":"meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","meetingSource":"legistar","bodyId":"ocd-division/country:us/state:az/county:pima#governing","scope":"source:legistar:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","candidateId":"cv-8e3ea44382ca203976bbff04f2967252","acquisitionSucceeded":true,"state":"PROMOTED","decision":"GOOD","promotedVersion":"cv-8e3ea44382ca203976bbff04f2967252","lastKnownGoodVersion":"cv-8e3ea44382ca203976bbff04f2967252","failureDetail":null,"structuralReleaseContract":{"testSitePromotions":0,"gitDataCommits":0,"pullRequests":0,"githubActionsRuns":0,"netlifyDeploys":0,"nextBuilds":0,"fullSiteBrowserWalks":0}}
+partition LKG base: meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing at cv-8e3ea44382ca203976bbff04f2967252
+  meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing: history MOVED: 1 sitting(s) added to history cv-e08eaa3a63015611d746cdc777925f21
+RCD_MEETING_PARTITION_RECEIPT={"source":"meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","partitionId":"meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","meetingSource":"legistar","bodyId":"ocd-division/country:us/state:az/county:pima#governing","scope":"source:legistar:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","candidateId":"cv-87114ef498243efb5a89451e62189008","acquisitionSucceeded":true,"state":"PROMOTED","decision":"GOOD","promotedVersion":"cv-87114ef498243efb5a89451e62189008","lastKnownGoodVersion":"cv-87114ef498243efb5a89451e62189008","failureDetail":null,"structuralReleaseContract":{"testSitePromotions":0,"gitDataCommits":0,"pullRequests":0,"githubActionsRuns":0,"netlifyDeploys":0,"nextBuilds":0,"fullSiteBrowserWalks":0}}
+RCD_MEETING_PARTITION_RECEIPT={"source":"meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","partitionId":"meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","meetingSource":"legistar","bodyId":"ocd-division/country:us/state:az/county:pima#governing","scope":"source:legistar:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","candidateId":"cv-87114ef498243efb5a89451e62189008","acquisitionSucceeded":true,"state":"PROMOTED","decision":"GOOD","promotedVersion":"cv-87114ef498243efb5a89451e62189008","lastKnownGoodVersion":"cv-87114ef498243efb5a89451e62189008","failureDetail":null,"confirmedAt":"2026-09-05T18:01:14.000Z","structuralReleaseContract":{"testSitePromotions":0,"gitDataCommits":0,"pullRequests":0,"githubActionsRuns":0,"netlifyDeploys":0,"nextBuilds":0,"fullSiteBrowserWalks":0}}
+RCD_MEETING_PARTITION_RECEIPT={"source":"meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","partitionId":"meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","meetingSource":"legistar","bodyId":"ocd-division/country:us/state:az/county:pima#governing","scope":"source:legistar:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing","candidateId":"cv-ad28d72bf7f5f6b28d8afe5b3b5cda95","acquisitionSucceeded":false,"state":"SOURCE_BLOCKED","decision":"FAIL","promotedVersion":null,"lastKnownGoodVersion":"cv-87114ef498243efb5a89451e62189008","failureDetail":"recorded source wall","failureKind":"WALL","structuralReleaseContract":{"testSitePromotions":0,"gitDataCommits":0,"pullRequests":0,"githubActionsRuns":0,"netlifyDeploys":0,"nextBuilds":0,"fullSiteBrowserWalks":0}}
+✔ routine acquisition bytes reach independent workers, approved facts, the sole partition door and Reader readback (844.72355ms)
+ℹ tests 74
+ℹ suites 0
+ℹ pass 74
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14257.442375

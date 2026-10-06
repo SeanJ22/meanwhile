@@ -1,0 +1,30 @@
+✖ failing tests:
+
+test at tests/origins.test.ts:161:1
+✖ the production host is not hardcoded outside the origins module (56.30792ms)
+  AssertionError [ERR_ASSERTION]: import PUBLIC_SITE_ORIGIN from lib/ops/origins.ts instead of writing the host again:
+    lib/civic-data/publication-vitals.ts
+    tests/publication-vitals.test.ts
+  + actual - expected
+  
+  + [
+  +   'lib/civic-data/publication-vitals.ts',
+  +   'tests/publication-vitals.test.ts'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///workspace/slide-final-validation/tests/origins.test.ts:169:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'lib/civic-data/publication-vitals.ts', 'tests/publication-vitals.test.ts' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+ ELIFECYCLE  Test failed. See above for more details.

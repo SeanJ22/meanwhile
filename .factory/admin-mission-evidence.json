@@ -25,7 +25,10 @@
     "schema_version": 23,
     "snapshot_updated_at": "2026-10-04T13:38:24.377Z",
     "has_spend_summary": false,
-    "snapshot_observed_at": "2026-10-06T05:56:17.031Z"
+    "snapshot_observed_at": "2026-10-06T05:56:17.031Z",
+    "brief_time_eastern": null,
+    "latest_brief": null,
+    "brief_config_observed_at": "2026-10-06T06:12:39.461Z"
   },
   "browser": "not live verified; egress CONNECT403, no signed-in session",
   "hourly_source": "cp_vital_signs only",
@@ -133,5 +136,34 @@
     ],
     "cause": "expected generic ET label while correct live-clock formatter now says EDT",
     "corrected_checks": "exact348 focused PASS at final source; actual instants/cadence unchanged"
-  }
+  },
+  "full": {
+    "source_sha": "aa40b7ba3480de6bf3796da5d12f2af73fda0a11",
+    "result": "FAIL",
+    "tests": 9852,
+    "pass": 9817,
+    "fail": 25,
+    "skip": 10,
+    "own_failures": {
+      "count": 9,
+      "cause": "old ET fixture expectations",
+      "corrected_at": "07fcad7eda5b152314a8180d3169215d495cdd0d",
+      "focused_corrected_pass": 348
+    },
+    "browser_failures": 16,
+    "timing_complete": false,
+    "timing_usable": false,
+    "log": "/tmp/meanwhile-admin-mission-gates/.scratch/ci/test-shard-1-of-1.log"
+  },
+  "bounded_termination": {
+    "pid": 221462,
+    "parent": 207566,
+    "elapsed_seconds": 83,
+    "source_sha": "aa40b7ba3480de6bf3796da5d12f2af73fda0a11",
+    "file": "tests/reader-recent-vote-expansion.test.ts",
+    "reason": "fixture server starts before guarded browser launch and try/finally; pinned1234 absent",
+    "result": "bounded termination; test/timing incomplete, not PASS"
+  },
+  "live_checklist": ".factory/admin-live-checks.md",
+  "builds": "running default, bundle and standalone through original gate run"
 }

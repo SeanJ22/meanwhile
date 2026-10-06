@@ -381,6 +381,12 @@ export interface AggregateRepository<T> {
     next: T,
     now: string,
   ): Promise<Persisted<T>>;
+  /**
+   * The named aggregates that exist, in id order; absent ids are left out. A
+   * failed read THROWS. Optional: Postgres answers in primary-key batches; a
+   * caller without it falls back to `read` per id.
+   */
+  readMany?(ids: readonly string[]): Promise<readonly Persisted<T>[]>;
   /** Every aggregate of this kind, ordered by id so reports are diffable. */
   list(): Promise<readonly Persisted<T>[]>;
   /** Every row in the same id order, with only projected value fields crossing the wire. */
@@ -397,6 +403,36 @@ export interface AggregateRepository<T> {
    * THROWS and is never an empty list.
    */
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
+  /**
+   * The rows whose database-clock `changed_at` is at or after `since` (every
+   * row when `since` is null), in id order like `list()`. `through` is the
+   * store's clock when the read BEGAN (ISO), so a later read from
+   * `through` minus a slack misses no change committed after this one started.
+   * `updated_at` is the writer's clock and cannot answer this. Optional: the
+   * Postgres and memory stores carry it; a caller without it reads `list()`
+   * (`incremental-reads.ts`). A store whose schema lacks the column THROWS.
+   */
+  listChangedSince?(since: string | null): Promise<ChangedRows<T>>;
+}
+
+/** What `AggregateRepository.listChangedSince` answers. */
+export interface ChangedRows<T> {
+  readonly rows: readonly Persisted<T>[];
+  readonly through: string | null;
+}
+
+/** One log record with the coordinates `readAll()` orders it by. */
+export interface ChangedRecord<T> {
+  readonly key: string;
+  readonly recordId: string;
+  readonly position: number;
+  readonly record: T;
+}
+
+/** What `AppendOnlyRepository.readChangedSince` answers. */
+export interface ChangedRecords<T> {
+  readonly records: readonly ChangedRecord<T>[];
+  readonly through: string | null;
 }
 
 /**
@@ -468,6 +504,13 @@ export interface AppendOnlyRepository<T> {
    * use `keysWhere` in this file, which says when it is missing.
    */
   keysWhere?(path: readonly string[], value: string): Promise<readonly string[]>;
+  /**
+   * The records whose database-clock `changed_at` is at or after `since`
+   * (every record when `since` is null), in `readAll()` order (key, then
+   * position), each with its key, record id and position. `through` is as for
+   * `AggregateRepository.listChangedSince`. Optional, like that method.
+   */
+  readChangedSince?(since: string | null): Promise<ChangedRecords<T>>;
 }
 
 /** The keys of a log holding a record whose value at `path` equals `value`, or null when the provider has no filtered read (the caller then reads as before). */

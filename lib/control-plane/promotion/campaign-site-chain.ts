@@ -6,7 +6,7 @@ import { accessControlIn } from "../../hunt/access-control.ts";
 import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
 import type { WorkerRole } from "../attempt.ts";
 import type { AuditEvidenceBase } from "../audit.ts";
-import { appendTransition, contextFromRepositories, readPipelineStates, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
+import { appendTransition, contextFromRepositories, readPipelineStatesWhere, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
 import {
   PROMOTION_PIPELINE_FORMAT_VERSION,
   type ActivationGateReading,
@@ -381,7 +381,16 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   let ctx = await contextFromRepositories(repos);
   /* Every artifact the log holds, read once; this run's reads are added as they are recorded. */
   const allArtifacts: ArtifactRecord[] = [...(await repos.artifacts.readAll())];
-  let heldStates = new Map((await readPipelineStates(repos)).map((s) => [s.itemId, s] as const));
+  /*
+   * Only this pass's items, read by key: every state below is filtered to the campaign-site class, so the rest of the
+   * promotion log (every other record class) never crosses the wire. An item whose only record is a refused offer
+   * carries its class on the offer.
+   */
+  const readCampaignStates = async () => new Map((await readPipelineStatesWhere(repos, [
+    { path: ["recordClass"], value: CAMPAIGN_SITE_RECORD_CLASS },
+    { path: ["offered", "recordClass"], value: CAMPAIGN_SITE_RECORD_CLASS },
+  ])).map((s) => [s.itemId, s] as const));
+  let heldStates = await readCampaignStates();
   let recordedThisRun = 0;
   const offer = async (record: TransitionRecord): Promise<PipelineItemState> => {
     const held = heldStates.get(record.itemId);
@@ -427,7 +436,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
       await offer(scouted);
     }
   }
-  if (pointersOffered > 0) heldStates = new Map((await readPipelineStates(repos)).map((s) => [s.itemId, s] as const));
+  if (pointersOffered > 0) heldStates = await readCampaignStates();
 
   /* Publishable missing links precede already linked candidacies. Advance
    * held verified items before spending requests on the discovery backlog. */

@@ -133,6 +133,7 @@ import {
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
+import { hostMemoryReading } from "../lib/control-plane/workers/worker-slots.ts";
 import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
@@ -141,6 +142,7 @@ import {
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
 import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
 import { runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
+import { auditPassClock } from "./audit-pass-clock.mts";
 import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
@@ -1150,11 +1152,13 @@ async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | nul
   try {
     const repos = await ownerRepositories();
     if (!repos) return;
+    /* Sean, Oct 6: the host's memory, the runner's process tree and the reservations, so River can say how many jobs fit. */
+    const memory = await hostMemoryReading().catch(() => null);
     for (let attempt = 0; attempt < 3; attempt++) {
       const at = new Date().toISOString();
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
       const next = liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
-        testedSha: RUNNING_CODE_SHA, host: hostname(), lastError,
+        testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory,
         ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
       try {
         if (current) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, at);
@@ -1276,6 +1280,13 @@ function drainHunterLane(): void {
   });
 }
 
+/* One auditors' pass at a time, outside the standing lanes: a look check can wait an hour on its batch, and a drain ends it. */
+const auditPasses = auditPassClock({
+  statePath: join(ROOT, ".mirror", "audit-pass-clock.json"),
+  codeRoot: () => CODE_ROOT,
+  env: () => standingChildEnvironment("CONSOLE_PUBLISHER"),
+});
+
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },
@@ -1391,6 +1402,8 @@ function runStandingRuntimeTick(reason: string, force = false): void {
 function startStandingRuntimeClock(): void {
   if (runtimeAdmissionsHeld || standingRuntimeTimer !== null) return;
   startScheduledOrderClock();
+  // The auditors' passes (live audit, resident tasks, look check, speed, claim audit, loss study, break patterns).
+  if (provider === "postgres" && !canary && !STAGING) auditPasses.start();
   runStandingRuntimeTick("independent standing clock startup", true);
   standingRuntimeTimer = setInterval(
     () => {
@@ -1427,6 +1440,7 @@ async function holdStandingRuntimeAtQuiescence(): Promise<void> {
       await stopScheduledOrderClock();
       await activeControlRead;
       await standingRuntimeScheduler.waitForIdle();
+      await auditPasses.stop();
     }, { reason: "release handoff quiescence" });
   } catch (error) {
     standingDrainFailed = true;
@@ -2255,6 +2269,7 @@ if (!standingDrainFailed) {
       await stopScheduledOrderClock();
       await activeControlRead;
       await standingRuntimeScheduler.waitForIdle();
+      await auditPasses.stop();
     }, { reason: "runner shutdown" });
   } catch (error) {
     standingDrainFailed = true;

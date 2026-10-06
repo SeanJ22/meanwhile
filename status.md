@@ -3,9 +3,9 @@
 build_state: CLEANUP RELEASE (Sean, Oct 6 evening) — baseline started, BLOCKED on credentials and a local-database decision; nothing deleted yet. river = d89746b; main = c814d4c (release 12); runner stopped
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
-run_id: session_01EJWrnyFbffUajJtnCW6EWs-cleanup
-lock: none
-heartbeat: 2026-10-06T23:20:00Z
+run_id: session_01EJWrnyFbffUajJtnCW6EWs-cleanup2
+lock: river-cleanup2-session_01EJWrnyFbffUajJtnCW6EWs
+heartbeat: 2026-10-06T23:53:35Z
 
 ## CLEANUP RELEASE — read first (Sean's instruction, Oct 6 evening; session_01EJWrnyFbffUajJtnCW6EWs)
 

@@ -36,6 +36,7 @@ import { createHash } from "node:crypto";
 import { storeVerifiedPortrait, type PortraitRuntime } from "../photos/store.ts";
 import type { PortraitSources } from "../photos/evidence.ts";
 import { isOfficialSource } from "./source-authority.ts";
+import { openStatesSeatHolders } from "../sources/plural/place.ts";
 
 /** One Census division as the place hunt resolved it. `sourceUrl` is the saved Census response it came from. */
 export interface NationalDivisionInput {
@@ -62,6 +63,10 @@ export interface NationalOfficialInput {
   readonly document: { readonly url: string; readonly capture?: WorkerPublicationCapture };
   readonly linkingPage?: OfficialLinkingPage | null;
   readonly portrait?: PortraitSources;
+  /** CA-02: the row is the Open States row for the seat (own page failed the check); `document.capture` is the saved CSV. */
+  readonly basis?: "OPEN_STATES_ROW";
+  /** CA-02: the saved Open States CSV this person's row is in, the fallback when the own page fails the seat check at publication. */
+  readonly openStatesCapture?: WorkerPublicationCapture;
 }
 
 export interface NationalPlacePublicationInput {
@@ -287,18 +292,39 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     // One saved page per reading: the §3 check reads each official's own page.
     for (const official of officials) {
       const capture = official.document.capture!;
-      const reading: RosterReading = { id: `national:${official.discoveryId}`, capture, linkingPage: official.linkingPage ?? null, complete: false,
+      const ownReading: RosterReading = { id: `national:${official.discoveryId}`, capture, linkingPage: official.linkingPage ?? null, complete: false,
         method: "Place-first national lead; official profile page read",
         members: [{ recordId: `national:${official.discoveryId}`, fields: { name: official.name, office: official.officeTitle, websiteUrl: official.officialUrl } }] };
+      // CA-02: the Open States row for this seat, when its name and district are on the saved CSV.
+      const referenceReading = (csv: WorkerPublicationCapture): RosterReading | null => {
+        if (captureProblem(csv)) return null;
+        const state = official.divisionId.match(/\/state:([a-z]{2})\b/)?.[1] ?? "";
+        const held = openStatesSeatHolders(csv.evidence.text, state, [...registered.values()], csv.observedAt)
+          .find(row => row.id === official.discoveryId && row.divisionId === official.divisionId && row.name === official.name);
+        if (!held) return null;
+        const office = held.officeTitle;
+        return { id: `national:${official.discoveryId}`, capture: csv, linkingPage: null, complete: false, reference: "OPEN_STATES",
+          method: "Place-first national lead; Open States row for the seat (own page did not show the seat)",
+          members: [{ recordId: `national:${official.discoveryId}`, fields: { name: official.name, office } }] };
+      };
+      const reading = official.basis === "OPEN_STATES_ROW" ? referenceReading(capture) : ownReading;
+      let publishedTitle = official.officeTitle;
+      if (!reading) { gaps.push({ key: `official:${official.discoveryId}`, detail: "OPEN_STATES_ROW_NOT_ON_SAVED_FILE" }); continue; }
       try {
         const published = await publishRosterReading({ store: input.store, bodyId, reading, now: input.now,
-          prior, onPublished: next => { prior = next; } });
+          prior, onPublished: next => { prior = next; } }).catch(async (error: unknown) => {
+          // Only a failed own-page seat check falls back; a held gate or a stale base is not that.
+          const fallback = official.basis !== "OPEN_STATES_ROW" && official.openStatesCapture ? referenceReading(official.openStatesCapture) : null;
+          if (!fallback || !/^ROSTER_(PAGE_UNVERIFIED|PAGE_NOT_THIS_BODY|NO_MEMBER_MEETS_MINIMUMS)/.test(error instanceof Error ? error.message : String(error))) throw error;
+          publishedTitle = String(fallback.members[0].fields.office);
+          return publishRosterReading({ store: input.store, bodyId, reading: fallback, now: input.now, prior: prior ?? undefined, onPublished: next => { prior = next; } });
+        });
         if (!published.confirmed) promotedVersionId = published.versionId;
         members.push({ bodyId, versionId: published.versionId, discoveryIds: [official.discoveryId] });
         if (official.portrait) {
           try {
             const holder = prior!.payload.bodyRosters.find(row => row.bodyId === bodyId)?.members
-              .find(row => row.name === official.name && row.officeTitle === official.officeTitle);
+              .find(row => row.name === official.name && row.officeTitle === (official.basis === "OPEN_STATES_ROW" ? String(reading.members[0].fields.office) : publishedTitle));
             if (!holder) throw Error("PORTRAIT_HOLDER_NOT_PUBLISHED");
             const existing = prior!.payload.officialPhotos.photos.find(row => row.officeholderId === holder.id);
             if (existing?.sourceUrl === official.portrait.imageUrl && existing.verification) continue;

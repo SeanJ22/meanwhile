@@ -1,6 +1,6 @@
 # River status
 
-build_state: release 9 open (#715, auto-merge on, CI running); runner stopped since about 3:13 AM EDT until the byte counter is live
+build_state: release 9 live (8fdeb4e, 6:37 AM EDT); release 10 (byte counter, v25, people CA-12) in gates; runner stopped until release 10 is live
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01EnWcsto9iudrVWwszS9urS
@@ -30,6 +30,10 @@ CI: the first run, 37448256510, was cancelled by the concurrency rule when the P
 **River's own READY:** stream/river 69fc6b1ed, cp_vital_signs (schema v25), the table hunters' writer upserts. Not run: the DDL on a real Postgres. Fold it with the byte counter.
 
 **Engineering lesson (River):** run `node --experimental-strip-types scripts/civic-data-firewall.mts` (about 3.5 minutes) on every lane's READY before a full gates run. Two of three gates runs this session stopped at the firewall within 4 minutes. Builders' own checks skip it.
+
+
+**Release 9 live** at 6:37 AM EDT (8fdeb4e; post-deploy 37450769611 passed; releases/9-live.md; ledger updated). river = main 8fdeb4e.
+**Release 10 folding (river-next 211c48c6c over river 8fdeb4e), gates running:** hunters 6e4631295 (byte counter, firewall repaired; also CP-04 repair 966786dc1 and owner snapshot d78f967d2); people 64842457b (CA-11, CA-05, CA-14, CA-12, firewall and Hourihan repaired); river 69fc6b1ed (v25 cp_vital_signs). Fold repairs: the pilot-runner import union (hook 0 + receiveChildVitalSigns); OFFICIAL_PAGE_EVENTS_VERSION re-keyed to 3d7cbd75f850. Not folded: measures ffd003bc5 (duplicate counter and v25; returned); meetings 91f23e059 DB-29 (hook pending); registry a1aad625b; admin (returned).
 
 **Next River run:**
 1. #715 merged? Observe the deploy by SHA (`river.mjs observe <merge sha>`). The runner is stopped, so adoption waits for the restart.
@@ -204,6 +208,7 @@ Fold these after release 8 merges, as release 9. Keep the release-8 diff small.
 - **Held out and returned:** people (CA-11, CA-05 conflict with river); admin (overlap with BR-31).
 
 ### Pushes to Sean (record every one here, EDT)
+- 7:12 AM EDT: morning summary (release 8's 9.4 GB hour; release 9 live; release 10 in gates with the byte counter; ledger 27/42/62/136; hooks pattern; needs: Codex handback, $25 ceiling check, runtime owner).
 - 6:15 AM EDT: release 9 opened (#715, 25 steps, gates green); runner stays stopped (byte counter failed the firewall, returned to hunters); held-out lanes; Codex Continue line (the five lanes are on their paired Claude workers overnight; hand back when up); morning summary to follow once release 9 is live.
 - 3:20 AM EDT: correction. The spend holds are not the cause (their scans run inside Postgres). The cause is unidentified until the per-query byte counter exists. No fix on a guess, no rollback.
 - 3:10 AM EDT: release 8's first hour was about 9.4 GB (worse than release 6's 7.8 GB; over the 1.5 GB stop line). Cause: budget checks fetch every counting spend hold as rows. River is building the fix. No rollback done. Release 9 tested, not shipped.

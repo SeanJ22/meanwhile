@@ -133,6 +133,7 @@ import {
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
+import { hostMemoryReading } from "../lib/control-plane/workers/worker-slots.ts";
 import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
@@ -1150,11 +1151,13 @@ async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | nul
   try {
     const repos = await ownerRepositories();
     if (!repos) return;
+    /* Sean, Oct 6: the host's memory, the runner's process tree and the reservations, so River can say how many jobs fit. */
+    const memory = await hostMemoryReading().catch(() => null);
     for (let attempt = 0; attempt < 3; attempt++) {
       const at = new Date().toISOString();
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
       const next = liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
-        testedSha: RUNNING_CODE_SHA, host: hostname(), lastError,
+        testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory,
         ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
       try {
         if (current) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, at);

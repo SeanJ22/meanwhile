@@ -65,6 +65,8 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         websiteSize = websiteSizeForObligation({ id: item.id, subjectId: item.subject, autonomousPlan: item.autonomousPlan }, config.root);
         broker.assignment(id, { subjectId: item.subject, state: item.autonomousPlan?.jurisdiction ?? null });
         current = id;
+        // The lane's per-job clock: which task this worker is on (process-pool.ts StandingPoolOptions).
+        broker.send("task-start", "", id);
         // Old path (one runtime per task) stays behind WTP_LEASE_RUNTIME_PER_TASK=1 until the shared runtime is checked live.
         const runtime = perTask ? await buildRuntime(item.subject)
           : (shared ??= await buildRuntime(null));

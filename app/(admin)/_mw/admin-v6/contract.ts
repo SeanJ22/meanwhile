@@ -208,7 +208,7 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { id: s.target };
     case "setting-set":
       // config.setSetting: the target is the setting's key; the payload says how its value is typed.
-      return { key: s.target, value: settingValueFromInput(s.payload?.control ?? "text", s.amount, s.option) ?? null, why: s.words.trim() };
+      return { key: s.target, value: s.target==="brief.time" && s.amount.trim()==="" ? "" : settingValueFromInput(s.payload?.control ?? "text", s.amount, s.option) ?? null, why: s.words.trim() };
     case "setting-undo":
       // The same action with the logged previous value, quoting the change it undoes so a later change is never jumped over.
       return { key: s.target, value: JSON.parse(s.payload?.value ?? "null") as unknown, why: s.words.trim() || "Undo", undoOf: s.payload?.undoOf ?? "" };

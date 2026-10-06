@@ -527,7 +527,7 @@ const defs: ActionDef[] = [
           ? { options: [{ id: "on", label: "On", note: "" }, { id: "off", label: "Off", note: "" }] }
           : { amount: { label: control === "number" ? "New value" : control === "json" ? "New value (as data)" : "New wording", initial: ctx.payload?.current ?? "", text: control !== "number" } }),
         note: true,
-        invalid: ({ amount, option }) => settingValueFromInput(control, amount, option) === undefined
+        invalid: ({ amount, option }) => ctx.target==="brief.time" && amount.trim()==="" ? null : settingValueFromInput(control, amount, option) === undefined
           ? control === "number" ? "Enter a number." : control === "json" ? "Enter valid data." : control === "boolean" ? null : "Enter the new wording." : null,
       };
     },

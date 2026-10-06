@@ -9,6 +9,7 @@ import { briefGet } from "@/lib/control-plane/admin-view/brief-route.ts";
 import { buildQueue, type QueueInput } from "@/app/(admin)/_mw/admin-v6/queue.ts";
 import type { DecisionOrderCard } from "@/lib/control-plane/decision-cards.ts";
 import { fireDueOrders } from "@/lib/control-plane/gateway/scheduled-fire.ts";
+import { actionInput } from "@/app/(admin)/_mw/admin-v6/contract.ts";
 import { submit } from "@/lib/control-plane/gateway/gateway.ts";
 const at="2026-10-06T13:00:00Z";
 const card:DecisionOrderCard={id:"decision-one",need:"money",happening:"The approved budget is used.",recommends:"Choose whether to extend the hunt",cost:"$2",gets:"Two more records",order:{type:"runner.pause",subject:"us",input:{}},fields:[],schedulable:true,version:"one",raisedAt:at};
@@ -47,4 +48,8 @@ test("the existing always-running scheduled-order path writes a due brief withou
 });
 test("all brief readings reject the public host before any source read",async()=>{
  for(const which of ["brief","alerts","daily-brief","reader-problems"] as const){const response=await briefGet(new NextRequest(`https://meanwhile.vote/api/admin/v6/${which}`,{headers:{host:"meanwhile.vote"}}),which);assert.equal(response.status,404);}
+});
+
+test("the Settings control can clear the brief time to turn snapshots off",()=>{
+ assert.equal(actionInput("setting-set",{target:BRIEF_TIME_SETTING,scopeKey:"us",amount:"",option:null,words:"",selected:[],payload:{control:"text"}}).value,"");
 });

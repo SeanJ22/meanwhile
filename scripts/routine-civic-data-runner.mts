@@ -52,6 +52,7 @@ import {
   MEETING_PARTITION_CONTRACTS,
   observableRoutineContracts,
 } from "../lib/civic-data/meeting-partitions.ts";
+import { OUTCOME_PARTITION_CONTRACTS } from "../lib/civic-data/outcome-partitions.ts";
 import { recordDoorOutcome, type DoorOutcome } from "../lib/doors/outcome.ts";
 import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
 import { isDoorRecord } from "../lib/doors/registry.ts";
@@ -97,6 +98,9 @@ import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
+import { doorProbesOn, runHourlyProbes } from "../lib/doors/hourly-check.ts";
+import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
+import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
 import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
@@ -175,6 +179,11 @@ if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlan
       const doorPass = await refreshDoorsForPass(doorRepos.doors);
       console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from ${doorPass.reading} (${doorPass.partitions?.partitions ?? doorPass.rows} partitions)` +
         `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}`);
+      if (doorPass.outcomes !== null) {
+        console.log(`RCD_TASK routine-civic-data-runner: outcome doors — ${doorPass.outcomes.partitions} door(s) collect outcomes` +
+          `${doorPass.outcomes.reason ? ` — ${doorPass.outcomes.reason}` : ""}` +
+          `${doorPass.outcomes.skipped.length > 0 ? `; ${doorPass.outcomes.skipped.length} left out (${doorPass.outcomes.skipped.map((skip) => `${skip.doorId}: ${skip.why}`).join("; ")})` : ""}`);
+      }
     }
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, the code's meeting list stays in use — ${error instanceof Error ? error.message : String(error)}`);
@@ -183,6 +192,7 @@ if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlan
 const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([
   ...ROUTINE_SOURCE_TASKS.filter((task) => !CODE_MEETING_PARTITION_IDS.has(task.id)),
   ...MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract),
+  ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract),
   ...AUTOMATIC_REFRESH_TASKS,
 ], process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
@@ -411,8 +421,22 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   const items = (await repos.workItems.list()).map(row => row.value);
   const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
   const publication = PUBLISH_NOW ? publishNowWorkerTasks(items, workers, RUN_STARTED_AT) : workerPublicationTasks(items, workers, RUN_STARTED_AT);
-  if (PUBLISH_NOW) return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
-    MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
+  if (PUBLISH_NOW) {
+    // DB-26: the hourly first look. Each hot door's page or feed is looked at once an hour; a change is stored on the
+    // door and read below at once. A look that cannot be made never stops the read of a door already known to have changed.
+    if (doorProbesOn()) {
+      try {
+        const listed = (await listDoors(repos.doors)).doors;
+        const clockStore = new PostgresRoutineDataStore();
+        const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb() }, Date.now()), pacedProbeFetch(), new Date().toISOString());
+        if (report.looked > 0 || report.deferred > 0) console.log(`RCD_PROBE ${report.looked} door(s) looked at (${report.requests} request(s)): ${report.changed} changed, ${report.unchanged} the same, ${report.failed} failed; ${report.deferred} waiting`);
+      } catch (error) {
+        console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
+      }
+    }
+    return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
+      MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
+  }
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if (row === null) return publication;
   if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");

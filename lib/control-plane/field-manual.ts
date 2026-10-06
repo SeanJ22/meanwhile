@@ -213,6 +213,8 @@ const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
 };
 
 export interface FieldManualQuery {
+  /** Exact research subject for saved exhausted walks; they are never portable failures. */
+  readonly subjectId?: string;
   /** The reading worker's role; SHARED entries always match. Omit to match every role. */
   readonly role?: FieldManualRole;
   /** Lowercase two-letter state; a portable ([]-state) entry always matches. */
@@ -258,6 +260,7 @@ function entryMatches(raw: FieldManualEntry, q: FieldManualQuery): boolean {
   // Old investigation rows also gain their recorded place scope on reads.
   const entry = normalizeEntry(raw);
   if (entry.kind === "JOB_COST") return false;
+  if (entry.kind === "EXHAUSTED_RUNGS" && (!q.subjectId || (entry.payload as { subjectId?: string } | null)?.subjectId !== q.subjectId)) return false;
   if (q.role !== undefined && entry.role !== "SHARED" && entry.role !== q.role) return false;
   if (q.state !== undefined && entry.states.length > 0 && !entry.states.includes(q.state.toLowerCase())) return false;
   if (q.recordClass !== undefined && entry.recordClasses.length > 0 && !entry.recordClasses.includes(q.recordClass.toLowerCase())) return false;
@@ -280,6 +283,8 @@ export function projectFieldManual(store: FieldManualStore, query: FieldManualQu
   const ranked = [...matched].sort((a, b) => {
     const place = query.ocdIds?.length || query.bodyIds?.length ? fieldManualPlaceRank(a, query) - fieldManualPlaceRank(b, query) : 0;
     if (place !== 0) return place;
+    const exhausted = Number(b.kind === "EXHAUSTED_RUNGS") - Number(a.kind === "EXHAUSTED_RUNGS");
+    if (exhausted !== 0) return exhausted;
     const outcome = OUTCOME_RANK[a.outcome] - OUTCOME_RANK[b.outcome];
     if (outcome !== 0) return outcome;
     const aSpecific = query.state !== undefined && a.states.includes(query.state.toLowerCase()) ? 0 : 1;

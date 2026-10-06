@@ -44,3 +44,13 @@ test("the window follows its meetings: agenda documents and counts agree", async
   assert.deepEqual(shown.value.agendaDocuments.map(({ id }) => id), ["doc-recent"]);
   assert.equal(shown.value.counts.total, shown.value.meetings.length);
 });
+
+test("published shown window changes and undo are applied to the same held snapshot", async () => {
+  const { meetingSettingsFromValues } = await import("../lib/meetings/settings.ts");
+  const read = heldRead();
+  const wider = await readReaderEdgeMeetings({ now: NOW, fallback: async () => read, settings: meetingSettingsFromValues({ "meetings.shownAheadDays": 110 }) });
+  assert.deepEqual(idsOf(wider), ["recent", "soon", "later"]);
+  const restored = await readReaderEdgeMeetings({ now: NOW, fallback: async () => read, settings: meetingSettingsFromValues() });
+  assert.deepEqual(idsOf(restored), ["recent", "soon"]);
+  assert.equal(read.kind === "PROMOTED" && read.value.meetings.length, 5, "settings never delete held history");
+});

@@ -28,6 +28,8 @@
 
 import {
   openControlPlane,
+  unreachable,
+  type ReadOutcome,
   readDecisions,
   readDigests,
   readFleetInputs,
@@ -37,6 +39,9 @@ import {
 } from "../admin-data.ts";
 import { readResearchIntents } from "../research-view.ts";
 import { readPulse } from "../gateway/pulse-read.ts";
+import { neon } from "@neondatabase/serverless";
+import { readFlowWeek, type FlowWeek } from "../admin-view/flow-read.ts";
+import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import type { ContextRead, OperatorContext } from "./context.ts";
 
 export interface ContextRequest {
@@ -89,7 +94,7 @@ export async function readOperatorContext(request: ContextRequest): Promise<Cont
    * one instant, and a serial read chain lets the runner beat between the
    * heartbeat and the work it is supposed to explain.
    */
-  const [snapshot, heartbeat, digests, decisions, intents, fleet, research, pulse] = await Promise.all([
+  const [snapshot, heartbeat, digests, decisions, intents, fleet, research, pulse, flow] = await Promise.all([
     wanted.has("snapshot") ? readSnapshot(repos) : Promise.resolve(undefined),
     wanted.has("heartbeat") ? readHeartbeat(repos) : Promise.resolve(undefined),
     wanted.has("digests") ? readDigests(repos) : Promise.resolve(undefined),
@@ -98,6 +103,7 @@ export async function readOperatorContext(request: ContextRequest): Promise<Cont
     wanted.has("fleet") ? readFleetInputs(repos) : Promise.resolve(undefined),
     wanted.has("research") ? readFleetSafety(repos) : Promise.resolve(undefined),
     wanted.has("pulse") ? readPulse(repos, request.nowIso) : Promise.resolve(undefined),
+    wanted.has("flow") ? readFlow(request.nowIso) : Promise.resolve(undefined),
   ]);
 
   /*
@@ -120,7 +126,20 @@ export async function readOperatorContext(request: ContextRequest): Promise<Cont
       intents,
       fleet,
       research,
+      flow,
     },
     storeRefusedBecause: null,
   };
+}
+
+/** The week of flow counts; a store that cannot be asked, or no record yet, is a named outcome and never a zero. */
+async function readFlow(nowIso: string): Promise<ReadOutcome<FlowWeek>> {
+  const url = controlPlaneUrlFromEnv();
+  if (!url) return { kind: "STORE_UNREACHABLE", detail: "The place that keeps the hourly flow record could not be reached." };
+  try {
+    const week = await readFlowWeek({ control: neon(url), through: nowIso });
+    return week === null ? { kind: "NOT_RECORDED", detail: "No fact has been recorded going live yet, so there is nothing to count." } : { kind: "HELD", value: week };
+  } catch (error) {
+    return unreachable("the hourly flow record", error);
+  }
 }

@@ -63,12 +63,12 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
  * with nothing delivered and its gaps counted; only a pass with no items or
  * no readable door prints none and exits non-zero.
  */
-export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate"> & Partial<Pick<RoutineDataStore, "readPromotionIdentity" | "readCandidateSummary">>, source: string,
+export async function workerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate"> & Partial<Pick<RoutineDataStore, "readPromotionIdentity" | "readCandidateSummary">>, source: string,
   report: readonly { readonly workItemId: string; readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[],
   /** Anything else this pass published outside work items (the national place publisher), with its gaps. */
   extra: { readonly records: number; readonly versionId: string | null; readonly candidateId: string | null; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null,
   /** This pass's clock. An item already published reports its earlier outcome, whose version may no longer be current. */
-  now?: string): Promise<boolean> {
+  now?: string) {
   const delivered = publicationDelivery(report, extra, now);
   // Only this pass's own publications; a pass that only re-reports earlier ones published nothing.
   const passAt = now ?? report.map(row => row.outcome.at).sort().at(-1);
@@ -86,10 +86,18 @@ export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore
   const read = store.readCandidateSummary?.bind(store) ?? store.readCandidate.bind(store);
   const created = last?.candidateId ? await read(last.candidateId) : null;
   const record = created ?? (last?.versionId ? await read(last.versionId) : null);
-  if (!last || !record) { process.exitCode = 2; return false; }
-  console.log("RCD_RECEIPT=" + JSON.stringify({ source, candidateId: record.candidate.id, acquisitionSucceeded: record.acquisitionSucceeded,
+  if (!last || !record) return null;
+  return { source, candidateId: record.candidate.id, acquisitionSucceeded: record.acquisitionSucceeded,
     state: record.state, decision: record.receipt?.decision ?? null, promotedVersion: last.versionId, lastKnownGoodVersion: record.lastKnownGoodVersion,
-    ...(created ? {} : { confirmedAt: last.at || new Date().toISOString() }), delivered, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+    ...(created ? {} : { confirmedAt: last.at || new Date().toISOString() }), delivered, structuralReleaseContract: ZERO_RELEASE_EVENTS };
+}
+
+/** CLI adapter only. In-process jobs return their own receipt without changing
+ * another lane's exit status or writing into another job's output. */
+export async function printWorkerPublicationReceipt(...args: Parameters<typeof workerPublicationReceipt>): Promise<boolean> {
+  const receipt = await workerPublicationReceipt(...args);
+  if (!receipt) { process.exitCode = 2; return false; }
+  console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
   return true;
 }
 

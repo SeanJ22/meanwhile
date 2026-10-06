@@ -73,15 +73,8 @@ function Matters() {
           <div><span className={s.big}>{completeness && completeness.percent !== null ? `${Math.floor(completeness.percent)}%` : "—"}</span></div>
           <p className={s.small}>{completeness ? `${count(completeness.n)} of ${count(completeness.of)} things owed for ${v.place.name} are held. More is better; the rest is still being found.` : `What ${v.place.name} is owed has not been counted yet.`}</p>
         </Card>
-        <Card title="Facts live per hour" aside={<button type="button" className={s.btnLink} onClick={() => v.go("scoreboard")}>Open the scoreboard →</button>}>
-          <div><span className={s.big}>—</span></div>
-          <p className={s.small}>Not measured yet. Higher means the factory is producing; the trend shows here once it is counted.</p>
-        </Card>
-        <Card title="Cost per fact">
-          <div><span className={s.big}>—</span></div>
-          <p className={s.small}>Not measured yet. Lower is better; the trend shows here once it is counted.</p>
-        </Card>
       </div>
+      <LastHours />
       <Card title="Orders in motion" aside={<button type="button" className={s.btnLink} onClick={() => v.go("queue")}>Open the queue →</button>}>
         {motion.length === 0 && <Empty>{unread.length > 0 ? "—" : "Nothing in motion."}</Empty>}
         <div className={s.stack}>
@@ -94,6 +87,44 @@ function Matters() {
         </div>
       </Card>
     </section>
+  );
+}
+
+/* ------------------------------------------------------ the last full hours */
+
+const gb = (n: number | null): string => (n === null ? "—" : `${n.toFixed(2)} GB`);
+const orDash = (n: number | null, f: (n: number) => string): string => (n === null ? "—" : f(n));
+
+/** The last two full hours from the runner's hourly row. A number nobody recorded shows "—", never zero. */
+function LastHours() {
+  const v = useV6();
+  const hours = v.data.scoreboard.data?.vital ?? null;
+  const last = hours?.[0] ?? null, before = hours?.[1] ?? null;
+  const rows: readonly { readonly name: string; readonly says: string; readonly of: (h: NonNullable<typeof last>) => { readonly text: string; readonly bad?: boolean } }[] = [
+    { name: "Facts live", says: "New or changed reader records that went live. Higher is better.", of: (h) => ({ text: orDash(h.factsLive, count) }) },
+    { name: "Cost per fact", says: "Money spent divided by facts live. Lower is better.", of: (h) => ({ text: orDash(h.costPerFactUsd, (n) => (n >= 1 ? usd(n) : `$${n.toFixed(4)}`)) }) },
+    { name: "Data read from the database", says: "Target: under 0.7 GB an hour.", of: (h) => ({ text: gb(h.neonGb), bad: h.overNeonTarget === true }) },
+    { name: "Research rounds", says: "Finished, against killed by the watchdog.", of: (h) => ({ text: h.roundsFinished === null || h.roundsKilled === null ? "—" : `${count(h.roundsFinished)} finished · ${count(h.roundsKilled)} killed` }) },
+    { name: "Paid jobs that ended with nothing", says: "Must be none.", of: (h) => ({ text: orDash(h.paidJobsEndedEmpty, (n) => (h.paidJobsEnded === null ? count(n) : `${count(n)} of ${count(h.paidJobsEnded)}`)), bad: (h.paidJobsEndedEmpty ?? 0) > 0 }) },
+  ];
+  return (
+    <Card title="The last full hour" aside={<button type="button" className={s.btnLink} onClick={() => v.go("scoreboard")}>Open the scoreboard →</button>}>
+      {last === null && <Empty>{hours === null ? "—" : "The hour has not been recorded yet."}</Empty>}
+      {last !== null && (
+        <div className={s.stack}>
+          <p className={s.small}>{mst(last.hour)}{before !== null ? ` · the hour before: ${mst(before.hour)}` : ""}</p>
+          {rows.map((r) => {
+            const now = r.of(last), earlier = before === null ? null : r.of(before);
+            return (
+              <div key={r.name} className={s.row}>
+                <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.name}</strong><span className={cx(now.bad && s.textWarn)}>{now.text}{earlier !== null ? ` (before: ${earlier.text})` : ""}</span></span>
+                <span className={s.meta}>{r.says}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </Card>
   );
 }
 

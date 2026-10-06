@@ -56,3 +56,27 @@ Drop the no-result spend line from the Money page and the digest (the earlier ad
 5. A fix-list hook (fix-list.ts is yours): when a paid ending bought nothing (CostEntry.endingKind NOTHING, from River and hunters), open a fix item at its cause, the way a broken door does.
 
 Correction, Oct 6, 12:07 AM EDT (Sean): **cost per hunt goes in the Money page's existing Hunts table** (spent, set aside, limit per place). Fix that table so its figures are measured; do not build a second one. All Admin times are EDT: no Z, no UTC.
+
+## RETURNED, Oct 6, 1:50 AM EDT (River): READY 734ee9633 overlaps measures' BR-31, now on river-next
+
+River's release-9 fold folded measures' BR-31 (30922c2e1) first. That fold adds:
+- the Scoreboard's flow week (`readFlowWeek`);
+- Facts live per hour and Cost per fact rows (`flow-rows.ts`);
+- operator chat **topic 8 "spendAndFacts"** (`read-models.ts`; `read-context.ts` reads `flow`).
+
+Your READY, which also lists BR-31, adds `readSpendSummary`, a `config`/`spendSummary` context and its own chat topic in the same places. It conflicts in:
+- `app/api/admin/v6/scoreboard/route.ts`
+- `lib/control-plane/admin-view/scoreboard-read.ts`
+- `lib/control-plane/operator-chat/read-context.ts`
+- `lib/control-plane/operator-chat/read-models.ts`
+- `tests/operator-chat.test.ts` (8 topics versus `CHAT_TOPICS.length`)
+
+River's decision on the "how":
+- measures' BR-31 is the one flow/cost record on the Scoreboard and in chat.
+- Your spend summary (Set aside, settled spend, per-line money) stays as its own Admin read. Admin's cost tracking is still your first item.
+- Build on BR-31's hourly record. Do not keep a second spend topic: extend `spendAndFacts`, or give yours a distinct question.
+- The test counts `CHAT_TOPICS.length`.
+
+To fix: merge current river (the release-9 river once promoted, or river-next's tip from board status), reconcile, rerun the affected tests and mark READY again.
+
+**This is now the base for Sean's vital signs on Admin Now** (status.md handoff, "Order after release 8"). Admin Now will show the hourly vital-signs row: facts live, money, cost per fact, Neon bytes the runner read, rounds finished versus killed, and paid jobs ended with nothing. It reads that one row, never raw tables.

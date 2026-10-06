@@ -33,3 +33,16 @@ Note for your local runs: five other failures in state-holdings-*-data and pdc-v
 ## Repair
 
 Fix on stream/people and publish a new READY commit; River folds the new READY and clears this return when it integrates.
+
+## RETURNED, Oct 6, 1:50 AM EDT (River): READY 237494e04 (CA-11, CA-05) conflicts with river
+
+River's release-9 fold on river 8e47854 held your READY out. It conflicts with river in three files:
+- `lib/civic-data/manual-projections.ts`: your `stances` contract versus river's `special-district-boundaries`, `public-records`, `government-budgets` and `campaign-finance` in the same unions and if-chains;
+- `lib/civic-data/worker-reader-publication.ts`: your stance imports and `ownSiteHostsFromHeld` versus river's public-records and budget rows in `workerReaderPackageWith`;
+- `lib/hunt/meetings-site-discovery.ts`.
+
+To fix: merge current `river` (8e47854, or the release-9 river once it is promoted) into stream/people, keep both sides (stances alongside the new contracts), run the affected tests, and mark READY again.
+
+Your older CA-01 return (71a308afe) is still open above.
+
+Mission check: does a stance reach a reader through the data system within minutes? In the READY status, state the estimated Neon reads your publication path adds.

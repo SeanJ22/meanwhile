@@ -42,13 +42,16 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { MODELS } from "../lib/models.ts";
+import type { InProcessSpendHoldStore } from "../lib/control-plane/expansion/spend-holds.ts";
+/** The holds table's rows (schema v24), live or not yet deleted: the memory store's view of `cp_spend_holds`. */
+const heldRows = (r: { readonly spendHolds?: unknown }) => (r.spendHolds as InProcessSpendHoldStore).rows();
 
 const NOW = "2026-09-26T05:00:00.000Z";
 const WORST = scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch)!;
 
 function holds(now = () => NOW) {
   const repos = createMemoryRepositories();
-  return { repos, spend: new DurableSpendHolds({ budget: repos.budget, now, sleep: async () => undefined }) };
+  return { repos, spend: new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now, sleep: async () => undefined }) };
 }
 
 const send = (budgetUsd: number, historicalUsd = 0, key = "send:dispatch:ri-1"): BudgetLine => ({ key, label: `assignment "Pima County" (${key.slice(5)})`, budgetUsd, historicalUsd, historyReadAt: NOW });
@@ -137,11 +140,11 @@ test("N jobs racing for a budget that fits N−1 admit exactly N−1, on one led
   const verdicts = await Promise.all(jobs.map((j) => j.admit(WORST, "one Scout job")));
   assert.equal(verdicts.filter((v) => v.admit).length, N - 1);
   assert.equal(verdicts.filter((v) => !v.admit).length, 1);
-  const ledger = (await repos.budget.read()).value;
+  const ledger = { spendHolds: heldRows(repos) };
   assert.equal(Object.keys(ledger.spendHolds ?? {}).length, N - 1);
   assert.ok(committedUsd(ledger.spendHolds ?? {}, send(budget), NOW) <= budget, "never more held than the budget");
   /* A second cycle (a second ledger reader, same store) sees the first cycle's holds: no room for one more. */
-  const other = new DurableSpendHolds({ budget: repos.budget, now: () => NOW, sleep: async () => undefined });
+  const other = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
   const late = await new JobSpend(other, "job-next-cycle", "ob-x", lines([send(budget)])).admit(WORST, "one Scout job");
   assert.equal(late.admit, false, "an overlapping cycle decides against the same remaining budget");
 });
@@ -163,7 +166,7 @@ test("settling releases the unused hold; a failed or unmeasured job keeps its ho
   assert.equal((await retry.admit(WORST, "the retry")).admit, false, "settled spend plus two full holds exceeds the original two-hold budget");
   /* Job b fails with its spend unknown (settled unmeasured): its whole hold stands. */
   assert.equal(await spend.settle("job-b", null, now), null);
-  const ledger = (await repos.budget.read()).value;
+  const ledger = { spendHolds: heldRows(repos) };
   assert.equal(ledger.spendHolds?.["job-b#0"]?.settled, null, "unmeasured: the hold keeps counting");
   /* A crash: job b never settles. Its hold counts for the rolling 24 hours, then the window drops it. */
   now = "2026-09-27T05:00:01.000Z";
@@ -176,7 +179,7 @@ test("a settled job's measured spend counts until the cost history carries it, n
   const job = new JobSpend(spend, "job-s", "ob-1", lines([send(10)]));
   await job.admit(WORST, "job");
   await spend.settle("job-s", 1.25, "2026-09-26T05:10:00.000Z");
-  const held = (await repos.budget.read()).value.spendHolds ?? {};
+  const held = heldRows(repos) ?? {};
   assert.equal(committedUsd(held, send(10, 0), "2026-09-26T05:20:00.000Z"), 1.25, "history read before the cost row: the settled spend counts from the hold");
   assert.equal(committedUsd(held, { ...send(10, 1.25), historyReadAt: "2026-09-26T05:15:00.000Z" }, "2026-09-26T05:20:00.000Z"), 1.25, "history read after: it counts once, from the history");
 });
@@ -280,7 +283,7 @@ test("an exhausted Send in NJ does not block an autonomous AZ job: autonomous wo
   const { sent, transport } = fakeTransport();
   await autonomous(spend, areaGate([azScope(50, 1)]), { subjectId: PIMA, state: "AZ" }, transport)(request());
   assert.equal(sent.length, 1);
-  const held = Object.values((await repos.budget.read()).value.spendHolds ?? {}).filter((h) => h.jobId.startsWith("autonomous:"));
+  const held = Object.values(heldRows(repos) ?? {}).filter((h) => h.jobId.startsWith("autonomous:"));
   assert.deepEqual(held.map((h) => h.keys), [["area:zip-85701"]], "held on the area it researches, on no Send");
   assert.ok(held[0].settled !== null && held[0].settled.usd > 0 && held[0].settled.usd < held[0].usd, "settled to its measured cost");
   /* Autonomous work in NJ, where no area budget stands, passes straight to the Fleet guard — the spent NJ Send does not bind it either. */
@@ -321,11 +324,11 @@ test("autonomous work fails closed: an unreadable area budget or ledger refuses;
   class Refused extends Error {}
   const refusing: ModelTransport = async () => { throw new Refused("ceiling"); };
   await assert.rejects(autonomous(spend, areaGate([azScope(50, 1)]), { subjectId: PIMA, state: "AZ" }, refusing, (e) => e instanceof Refused)(request()), Refused);
-  assert.equal(Object.keys((await repos.budget.read()).value.spendHolds ?? {}).length, 0);
+  assert.equal(Object.keys(heldRows(repos) ?? {}).length, 0);
   /* A failure after it may have been sent keeps the whole hold: what it was billed is unknown. */
   const failing: ModelTransport = async () => { throw new Error("socket hang up"); };
   await assert.rejects(autonomous(spend, areaGate([azScope(50, 1)]), { subjectId: PIMA, state: "AZ" }, failing, (e) => e instanceof Refused)(request()), /socket hang up/);
-  const kept = Object.values((await repos.budget.read()).value.spendHolds ?? {});
+  const kept = Object.values(heldRows(repos) ?? {});
   assert.equal(kept.length, 1);
   assert.equal(kept[0].settled, null);
 });
@@ -345,7 +348,7 @@ test("a provider response with incomplete usage keeps the durable autonomous are
   await assert.rejects(afterResponse(request()), (error: unknown) =>
     error instanceof FleetSafetyRefusal && error.code === "UNMEASURED_MODEL_SPEND" && !(error instanceof FleetPreSendRefusal));
   assert.equal(providerCalls, 1, "the model provider actually returned a response");
-  let held = Object.values((await repos.budget.read()).value.spendHolds ?? {});
+  let held = Object.values(heldRows(repos) ?? {});
   assert.equal(held.length, 1);
   assert.equal(held[0].settled, null, "unknown-cost provider processing cannot release its durable area hold");
 
@@ -355,7 +358,7 @@ test("a provider response with incomplete usage keeps the durable autonomous are
     preController.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
   await assert.rejects(beforeRequest(request()), FleetPreSendRefusal);
   assert.equal(providerCalls, 1, "the typed pre-send refusal never called the provider");
-  held = Object.values((await preRepos.budget.read()).value.spendHolds ?? {});
+  held = Object.values(heldRows(preRepos) ?? {});
   assert.equal(held.length, 0, "a proven local pre-send refusal releases only its unused hold");
 });
 

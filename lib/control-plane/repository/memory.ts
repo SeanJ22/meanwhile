@@ -5,6 +5,7 @@ import type { DoorRecord } from "../../doors/registry.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
+import { inProcessSpendHoldStore } from "../expansion/spend-holds.ts";
 /**
  * THE IN-PROCESS DOUBLE.
  *
@@ -397,6 +398,8 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     /* The Door Registry (DB-09, schema v19). */
     doors: memoryAggregateRepository<DoorRecord>("Door"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
+    /* The spend holds, one per row (schema v24), by the same pure rules. */
+    spendHolds: inProcessSpendHoldStore(),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",
     durable: false,

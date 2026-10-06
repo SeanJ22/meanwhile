@@ -1,29 +1,34 @@
-# Returns and hook requests for ballot
+# Returned: ballot
 
-River writes this file. Do these before new steps; a hook is a small connection in a file you own. Record each one as done in your status, with its commit.
+lane: ballot
+owner: ballot
+writer: the ballot lane
+check: build
+ready: no step ids unknown
+river: 6af6f8a504a7224131ad567f62f7b6f63cb52f08
+at: 2026-10-06T00:04:17Z
+state: returned
+fix_subject: fix:e8918c6e
+fix: River · stream/ballot — build failed for ballot: build-output · REFUSED
 
-## 2026-10-04 06:45Z — hook from people
+## Failure
 
-In `app/api/ask/grounded/route.ts`, before synthesis, near the money and sitting compositions (~:2683): call `composeOwnWordsAnswer({subject, question, records: packRecords})` from `lib/ask/own-words.ts` (CA-12, people @ cf622f3, already on river-next). If it returns text, run `validateAnswer` on it as the other composed answers do, return it with its citedUrls, and skip the "have not verified a statement" gap (~:2584). Do not change synthesize.ts.
+```
+Your READY f984126b5 (CA-21, CA-25, CA-26, CA-27, CA-28, CA-33, CA-37, CA-52) folds and passes lint, tsc and the firewall, but the production build refuses it (River, 2026-10-06 ~00:50Z):
 
-## 2026-10-04 06:45Z — hook from slide
+  build-output · REFUSED
+  app trace cardinality 448 files (server/app/api/warm/route.js.nft.json) exceeds the committed ceiling of 430 (baseline 374).
 
-CP-01 privacy (slide owns the step; `lib/ask` is yours): remove `filedAddress` from the AskContact/evidence candidateProfile union, the contactForCandidate mapping, the contactEvidence text and the projectCandidateProfile field loop and source-note logic, and update the Ask tests. Keep the filing Sources link. Slide sanitizes the card and filing projections itself. CP-01 is incomplete until this lands, so do it early.
+Bisected by build on River's trial fold: river + measures, registry, hunters, people, auditors = 397 files on /api/warm; adding only your READY = 448. The files that join the warm route's trace are all of data/reference/ (26 files: acs5_2024_b01003_*.csv/.md, census_govt_units_2022*, boarddocs/civicplus/granicus tenants, fec_*, nces_ccd_lea_directory_2025_26, openstates_legislators, state-cf-agencies), data/prl/prl-profiles.json, data/voting-sites.json and lib/census-geography/bootstrap-az.json. That is the R23 shape: a module newly reachable from the warm route reads data/ through a computed path. Likely entry: your new imports in lib/civic-data/manual-projections.ts and the new reader-verification cases (public-records, campaign-finance, government-budgets, translations) and lib/civic-data/promotion.ts / store.ts importing scoped-manual-contracts; follow them to the reader that opens data/reference/ or voting-sites.json dynamically.
 
-## 2026-10-04 11:05Z — continuation handoff
+Reproduce: `CI=1 pnpm build` on your stream (unset DATABASE_URL), then `node -e 'console.log(require("./.next/server/app/api/warm/route.js.nft.json").files.filter(f=>f.includes("data/")).join("\n"))'`. Fix at the source (static map pattern in lib/sources/ballot-curated/index.ts, or keep the data reader out of the warm/verification import graph). Do not raise the ceiling. Owner decision 2026-10-05: data never rebuilds the site, so no new traced data/ files.
 
-ballot is now continued by meetings (see assignments.md → Handoffs). Its READY batch through bfc11e7 (CA-20, 24, 30, 44, 45, 51 and the returned Ask hooks) is on river. Start from the preserved WIP after that boundary. Run checks as described in assignments.md → "Checks guidance for FULL batches".
+Also needed when you mark the new READY (River resolved these in its trial fold stream/salvage-river-next-ballot; take them or equivalent):
+- lib/control-plane/workers/autonomous-plan.ts: hunters' CH-16 `...partFor(spec.recordClass)` line now sits next to your publication-door lines; keep both.
+- lib/hunt/meetings-site-discovery.ts OFFICIAL_PAGE_EVENTS_VERSION: re-key from the test message after catching up.
+Run `pnpm gates` (it includes the build) before marking READY. Catch up with `river` after this promotion first.
+```
 
-## 2026-10-05 17:30Z: CA-30 and CA-51 failed live (browser, production dcddcf5)
-- **CA-30:** at 85701, asked "What does a NO vote on Proposition 425 mean?". Ask paraphrased with wrong figures instead of quoting the stored NO meaning. `/ballot?zip=85701` shows no "NO:" line on any of its 15 measures, and every `noMeans` in `data/ballot/measure-records-first-seed.json` is null. **This is wrong information reaching readers: fix first.**
-- **CA-51:** at 07866, "Who is running for Morris County Board of County Commissioners?" got "no candidate information" plus a list of current members, while `/ballot?zip=07866` lists Tayfun Selen (R) and Christopher Russo (D). The same question for an NH race at 03255 works.
+## Repair
 
-## 2026-10-05 17:40Z: standing instruction from Sean (all lanes)
-
-Sean, to River, word for word: "Builders don't send me notifications or ask me questions. Their questions go to you, and you answer every "how" decision yourself under rulings §8. Bring me only credentials, new paid services, spending beyond the budget, and D7. Tell every lane this in its returns file."
-
-What this means for you, from now on:
-- **Never notify Sean and never ask him anything.** No push notifications, no questions in a final reply, no "needs_Sean" for how-to choices.
-- **Put every question under `needs_River:` in your status file.** River reads it each run and answers here in your returns file. Choices about which source, method, order, design, module, migration or fix are "how" decisions. River makes them under rulings §8. A design choice that touches spending controls is still "how", as long as it changes no limit and Sean's settings stay as they are.
-- **`needs_Sean:` is only for** a missing credential, a new paid service, spending beyond the budget, or D7 (SC-17). River checks each entry and takes it to Sean. You don't.
-- While you wait on an answer, keep building your other ready steps.
+Fix on stream/ballot and publish a new READY commit; River folds the new READY and clears this return when it integrates.

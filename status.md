@@ -1,11 +1,11 @@
 # River status
 
-build_state: release 8 LIVE (a5fd753, deployed 1:35 AM EDT, post-deploy run 37419174889 passed); waiting on Sean to restart the runner; release 9 gates running
+build_state: release 8 live but its first hour was clearly worse (about 9.4 GB); runner stopped since about 3:13 AM EDT; release 9 tested, not released; lock free for the next River run
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01GomLhSQqS2qk8vHjjkBzbT
-lock: river-20261006T052241Z-31638
-heartbeat: 2026-10-06T07:50:27Z
+lock: none
+heartbeat: 2026-10-06T07:50:52Z
 
 
 ## HANDOFF FOR THE NEXT RIVER RUN (written Oct 6, 1:25 AM EDT)
@@ -13,6 +13,24 @@ heartbeat: 2026-10-06T07:50:27Z
 Read this section first. It replaces "Next River run (12:35 AM EDT)" below wherever they differ. Sean's full message is in decisions.md under "Oct 6, about 1:20 AM EDT". It is the plan.
 
 **Who wrote this.** River session session_01GomLhSQqS2qk8vHjjkBzbT, on Sean's live instruction. At about 1:30 AM EDT Sean said the previous River session (session_01VxkjQwRW6tEj8XDPVSGkKU) had ended and told this session to take over its lock, which it did. A later River run claims the lock under the normal rules once this session's heartbeat is 45 minutes stale.
+
+### NEXT RIVER RUN: do these first (written Oct 6, 4:00 AM EDT by session_01GomLhSQqS2qk8vHjjkBzbT, lock released)
+1. **Release 9:** river is at 8061e21 (the same tree as fb10f50, which passed gates 12/12).
+   - On a river-next checkout of river, run `node scripts/river.mjs test` then `node scripts/river.mjs release 9`.
+   - The runner is stopped, so deploying release 9 does not cut into a measured hour.
+   - Check every release-9 step live right after deploy (Sean's rule 5) and add them to releases/live-ledger.md.
+   - Do NOT edit .scratch/river/test.json.
+2. **Fold the new READYs:** meetings BX-08 and BX-10 (returned Failed live fixes); people's CA-12 repair; auditors 78aa3f5ed. Then measures' byte counter as soon as it is READY. **Ship the byte counter as its own small release if that is the fastest way to restart the runner:** the runner has been stopped since about 3:13 AM EDT, after release 8's first hour moved about 9.4 GB from a source nobody can name yet (releases/8-live.md).
+3. **Restart the runner with `WTP_QUERY_BYTES_LOG=1`** once the counter is live. That gives Sean's oversight session the top callers by bytes within 10 minutes. Name the source, then fix that cause.
+4. **Morning summary to Sean (EDT), about 7:30 AM EDT:**
+   - Release 8's first measured hour: about 9.4 GB from 2:02 to 3:02 AM EDT, clearly worse than release 6's 7.8 GB. The cause is unidentified. The holds were wrongly blamed and then corrected. The runner was stopped by the oversight session at about 3:13 AM EDT.
+   - The live ledger: 27 working live, 50 failed live, 45 need time, 134 can't check. Plus what has changed since.
+   - What failed live. The main pattern: integrated steps whose hooks were never connected (an empty door registry, audit passes never started, the fix map never created, publishers never called).
+   - The owner snapshot is 40 hours stale (slide).
+   - The $25 daily AI ceiling question (admin-checks.md, first item).
+   - The runtime-owner proposal (hunters, River measuring).
+   - Codex lanes handed to Claude overnight; hand them back when Sean is up.
+5. **Engineering lesson (River's own):** READY with "hooks pending" is not done. From now on River does not fold a step whose Done-when needs an unconnected hook unless the hook is in the same fold, and hooks.md lists every open hook with an owner.
 
 ### STANDING EVERY RUN (Sean, Oct 6 ~1:45 AM EDT; decisions.md)
 1. **Runner:** Sean's oversight session starts and stops it. It stops at more than 1.5 GB of control-plane transfer in a full hour, at transfer climbing hour over hour, or at AI spend with nothing reaching the site for a full hour. River does not wait for Sean, and measures every hour itself as a cross-check (releases/<n>-live.md).

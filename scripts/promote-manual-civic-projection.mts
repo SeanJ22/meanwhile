@@ -20,9 +20,8 @@ import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { assignment } from "./cli-args.mts";
 import { isWorkerReaderContract } from "../lib/civic-data/worker-reader-contracts.ts";
-import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
+import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
-import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 
 const contractId = assignment(process.argv, "contract") as ManualProjectionContractId | null;
 const packageArgument = assignment(process.argv, "package");
@@ -33,14 +32,15 @@ if (workerResults) {
   const now = new Date().toISOString();
   const context = await workerPublicationContext(now);
   const store = new PostgresRoutineDataStore();
-  const report = await publishWorkerReaderResults({ ...context, store, contractId,
+  const { report, receipt, exitCode } = await runWorkerPublicationJob({ repos: context.repos, context, store, contractId,
     workItemIds: workerResults.split(",").filter(Boolean), now });
   const published = report.filter(row => row.outcome.status === "PUBLISHED");
   console.log("MANUAL_CIVIC_DATA_RECEIPT=" + JSON.stringify({ contractId,
     candidateId: published.at(-1)?.outcome.candidateId ?? null, promotedVersion: published.at(-1)?.outcome.versionId ?? null,
     workerPublications: report, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
   // Holds stay on their own work items as owed work; the pass fails only when nothing went live.
-  await printWorkerPublicationReceipt(store, contractId, report, null, now);
+  if (receipt) console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
+  if (exitCode) process.exitCode = exitCode;
 } else {
 if (!contractId || !MANUAL_PROJECTION_CONTRACT_IDS.includes(contractId) || !packageArgument) {
   throw new Error(

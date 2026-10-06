@@ -156,7 +156,7 @@ import {
 import {
   routineSupervisorOuterEvidence,
 } from "../lib/civic-data/runner-receipt.ts";
-import { childFatalLine } from "../lib/ops/fatal-line.ts";
+import { childFatalLine, childStderrCause } from "../lib/ops/fatal-line.ts";
 import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import {
@@ -199,6 +199,15 @@ import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts
 /* Before anything connects: a per-address connect window that fits this host,
    for this process and, through NODE_OPTIONS, every child (connect-attempt-window.ts). */
 installConnectAttemptWindow();
+
+/**
+ * Every TypeScript child the runner starts loads the same way: type stripping
+ * plus the `@/` alias resolver. The owner-snapshot publisher was started
+ * without the resolver; from Oct 4 an import chain under it used `@/`, every
+ * publish died at import, and the Admin money and cost screens read a snapshot
+ * that stopped moving. One prefix for every child keeps them from diverging.
+ */
+const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"] as const;
 
 /** How much of a failed cycle's stderr the digest carries (see runOneCycle). */
 const STDERR_TAIL_LINES = 40;
@@ -414,9 +423,8 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     return { ok: false, recordPath: null, stdout: "", stderrTail: `${latched.provider}: ${latched.condition}; no automated retry before ${latched.eligibleAt}`, signal: null, exitCode: null, circuit: latched };
   }
   const args = [
-    "--experimental-strip-types",
     /* PRDY-3: the fact bridge reaches the Reader's own renderer, which imports by the `@/` alias the loader resolves. */
-    "--import", "./scripts/register-test-loader.mjs",
+    ...TS_CHILD,
     "scripts/freshness-shadow.mts",
     `--provider=${provider}`,
     /* So the child's heartbeat can state when the next cycle is due. */
@@ -765,7 +773,7 @@ async function publishConsoleChildren(): Promise<boolean> {
       executable: process.execPath,
       /* Workers inherit the launch environment. Only the owner snapshot reloads
        * five billing keys from the same absolute private file, never cwd-relative. */
-      args: ["--experimental-strip-types", ...publisher.args],
+      args: [...TS_CHILD, ...publisher.args],
       env: standingChildEnvironment("CONSOLE_PUBLISHER", process.env, publisher.name === "owner snapshot"),
     }], {
       cwd: CODE_ROOT,
@@ -784,9 +792,8 @@ async function publishConsoleChildren(): Promise<boolean> {
       console.log(`  console publish: ${publisher.name} OK (${seconds}s)`);
       continue;
     }
-    const stderrLines = (run.stderr ?? "").split("\n").map((l) => l.trimEnd()).filter((l) => l.trim() !== "");
     succeeded = false;
-    const last = stderrLines.at(-1) ?? run.errorMessage ?? "(nothing on stderr)";
+    const last = childStderrCause(run.stderr ?? "") ?? run.errorMessage ?? "(nothing on stderr)";
     const exit = run.status === null ? `signal ${run.signal ?? "none"}` : String(run.status);
     console.error(`  console publish: ${publisher.name} FAILED exit ${exit} — ${last}`);
   }
@@ -814,7 +821,7 @@ async function runRoutineCivicData(): Promise<void> {
   const [run] = await runRuntimeChildren([{
     id: "routine-civic-data",
     executable: process.execPath,
-    args: ["--experimental-strip-types", "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
+    args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
     env: childEnvironment,
   }], {
     cwd: CODE_ROOT,
@@ -940,7 +947,7 @@ async function runIntakeRuntime(): Promise<void> {
   const [run] = await runRuntimeChildren([{
     id: "intake-runtime",
     executable: process.execPath,
-    args: ["--experimental-strip-types", "scripts/intake-tripwire.mts"],
+    args: [...TS_CHILD, "scripts/intake-tripwire.mts"],
     env: standingChildEnvironment("INTAKE_RUNTIME"),
   }], {
     cwd: CODE_ROOT,
@@ -1322,7 +1329,7 @@ async function runHunterLane(): Promise<void> {
   const [run] = await runRuntimeChildren([{
     id: "hunter-lane",
     executable: process.execPath,
-    args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/hunter-lane.mts", `--provider=${provider}`],
+    args: [...TS_CHILD, "scripts/hunter-lane.mts", `--provider=${provider}`],
     env: standingChildEnvironment("RESEARCH_CYCLE"),
   }], {
     cwd: CODE_ROOT,
@@ -1678,7 +1685,7 @@ const runtimeContractsApplied = new Set<string>();
 async function applyRuntimeContracts(sha: string | null, cwd: string = CODE_ROOT): Promise<boolean> {
   if (sha === null || runtimeContractsApplied.has(sha)) return sha !== null;
   const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", executable: process.execPath,
-    args: ["--experimental-strip-types", "scripts/db-apply.mts", "--target=production", "--phase=contract",
+    args: [...TS_CHILD, "scripts/db-apply.mts", "--target=production", "--phase=contract",
       "--production-runtime", `--runtime-commit=${sha}`] }], {
     cwd, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
     onStdout: (_id, output) => process.stdout.write(output),
@@ -1983,7 +1990,7 @@ async function runNightlyWindow(trigger: string): Promise<void> {
   const [run] = await runRuntimeChildren([{
     id: "nightly-research-window",
     executable: process.execPath,
-    args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/nightly-window.mts", "--shadow", trigger === "WAKEUP" ? "--force" : "", `--trigger=${trigger}`].filter((a) => a !== ""),
+    args: [...TS_CHILD, "scripts/nightly-window.mts", "--shadow", trigger === "WAKEUP" ? "--force" : "", `--trigger=${trigger}`].filter((a) => a !== ""),
     env: standingChildEnvironment("NIGHTLY_RESEARCH"),
   }], {
     cwd: CODE_ROOT,

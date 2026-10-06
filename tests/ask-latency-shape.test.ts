@@ -670,3 +670,14 @@ test("the ladder stops at once on a structural refusal — the next writer would
   assert.deepEqual(result.attempts.map((attempt) => [attempt.role, attempt.result, attempt.detail]), [["FAST", "UNAVAILABLE", "no-evidence"]]);
   assert.equal(result.escalation, null);
 });
+
+
+test("government budget questions bind the named or focused body without borrowing a person or ambiguous card", () => {
+  const input = {inventory:INVENTORY,namedBodies:INVENTORY};
+  assert.equal(lexicalReading({...input,question:"What is the Mesa City Council budget?"})?.shape,"GOVERNMENT_MONEY");
+  const focus = {id:MESA,name:"Mesa",kind:"BODY" as const,focused:true};
+  assert.equal(lexicalReading({...input,question:"What is this government's budget?",activeSubjects:[focus]})?.subjectId,MESA);
+  assert.equal(lexicalReading({...input,question:"What is this government's budget?"}),null);
+  assert.equal(lexicalReading({...input,question:"What is this government's budget?",activeSubjects:[focus,{id:MESA_SCHOOLS,name:"Mesa Unified School District Governing Board",kind:"BODY",focused:true}]}),null);
+  assert.equal(lexicalReading({...input,question:"What is this government's campaign budget?",activeSubjects:[focus]}),null);
+});

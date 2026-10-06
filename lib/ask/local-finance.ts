@@ -118,6 +118,7 @@ const FINANCE_PHRASES: readonly RegExp[] = [
   /\bindependent expenditures?\b/,
   /\boutside spending\b/,
   /\bpac (?:money|contributions?|spending)\b/,
+  /\b(?:list|all|every|itemized|itemised)\b.*\b(?:pacs?|donors?|contributors?|filings?)\b/,
 ];
 
 /** Did the reader ask about campaign money? False never means "not finance". */

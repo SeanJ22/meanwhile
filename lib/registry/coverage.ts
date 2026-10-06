@@ -238,7 +238,7 @@ export interface CoveredBody {
 export interface Seat {
   ocdId: string;
   label: string;
-  divisionType: Extract<DivisionType, "cd" | "sldu" | "sldl">;
+  divisionType: "cd" | "sldu" | "sldl";
   tier: Tier;
   /**
    * Who currently holds this seat, where a sourced record exists.

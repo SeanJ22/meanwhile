@@ -23,13 +23,8 @@ import type { Tier } from "../ocd/tiers.ts";
  */
 
 /** Census layer a division's geometry came from. */
-export type DivisionType =
-  | "county"
-  | "place"
-  | "school_district"
-  | "sldu"
-  | "sldl"
-  | "cd";
+/** Accepted builder values come from the freshly loaded kinds setting. */
+export type DivisionType = string;
 
 /**
  * What kind of body this is, so a reader can tell a school board from an HOA.
@@ -39,16 +34,8 @@ export type DivisionType =
  * That is genuinely useful to a resident and genuinely not their government,
  * and the UI has to be able to say which.
  */
-export type BodyClass =
-  | "GOVERNING"
-  | "ADVISORY"
-  | "COMMISSION"
-  | "REGIONAL"
-  | "PRIVATE_ASSOCIATION"
-  /** Run by an appointed head, not an elected one — NS07, RULING 118. */
-  | "EXECUTIVE_AGENCY"
-  /** A sovereign nation: neither federal nor state nor local — NS08, RULING 119. */
-  | "SOVEREIGN_TRIBAL";
+/** Accepted builder values come from the freshly loaded kinds setting. */
+export type BodyClass = string;
 
 /**
  * How much we actually know about this body's meetings.
@@ -353,6 +340,7 @@ export type CanonicalGap =
   | "UNDETERMINED";
 
 export interface RegistryProvenance {
+  kind?: import("../control-plane/promotion/source-kinds.ts").SourceKind;
   sourceUrl: string | null;
   sourceOrg: string;
   collectedAt: string;
@@ -405,6 +393,7 @@ export interface Division {
 }
 
 export interface Body {
+  fieldSources?: Record<string, import("../sources/types.ts").Provenance>;
   /** Stable within the registry: `<ocdId>#<slot>`. */
   id: string;
   /**

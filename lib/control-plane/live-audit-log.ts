@@ -19,6 +19,13 @@
  *               screenshot strip. Keyed by the UTC day it ran.
  *   TASK_ZIP    a ZIP the resident tasks have run at, keyed "task-zips"; a
  *               published ZIP missing here is queued for its first run.
+ *   CLAIMS      one weekly check of the team's own claimed wins (DP-33),
+ *               keyed by the week it covers. A controlled run is never kept.
+ *   LOOK        one look pass on the live site after a deploy (FE-21): each
+ *               screen's screenshot, measurements and the look reviewer's
+ *               verdict. Keyed by the commit it looked at.
+ *   LOOKED      the commits a look pass has run on, keyed "looked", so the
+ *               runner looks at each deploy once and Admin finds the latest.
  * ```
  *
  * Append-only because an audit is a reading taken at a time; a later pass never
@@ -31,6 +38,8 @@ import type { ControlPlaneRepositories } from "./repository/types.ts";
 import type { LiveAuditResult } from "./workers/live-audit.ts";
 import type { TaskPass } from "../health/resident-tasks.ts";
 import type { SpeedPass } from "../health/worst-case-speed.ts";
+import type { ClaimPass } from "./workers/claim-audit.ts";
+import type { LookPass } from "../frontend/look-pass.ts";
 
 export interface LiveAuditPull {
   readonly workItemId: string;
@@ -49,7 +58,10 @@ export type LiveAuditLogRow =
   | { readonly kind: "PULL"; readonly pull: LiveAuditPull }
   | { readonly kind: "SPEED"; readonly pass: SpeedPass }
   | { readonly kind: "TASKS"; readonly pass: TaskPass }
-  | { readonly kind: "TASK_ZIP"; readonly zip: string; readonly at: string };
+  | { readonly kind: "TASK_ZIP"; readonly zip: string; readonly at: string }
+  | { readonly kind: "CLAIMS"; readonly pass: ClaimPass }
+  | { readonly kind: "LOOK"; readonly pass: LookPass }
+  | { readonly kind: "LOOKED"; readonly sha: string; readonly at: string; readonly verdict: LookPass["verdict"] };
 
 export type LiveAuditRepos = Pick<ControlPlaneRepositories, "liveAudits">;
 
@@ -59,6 +71,9 @@ export const PULLS_KEY = "pulls";
 export const speedDayKey = (iso: string): string => `speed:${iso.slice(0, 10)}`;
 export const tasksDayKey = (iso: string): string => `tasks:${iso.slice(0, 10)}`;
 export const TASK_ZIPS_KEY = "task-zips";
+export const claimsWeekKey = (week: string): string => `claims:${week}`;
+export const lookKey = (sha: string): string => `look:${sha}`;
+export const LOOKED_KEY = "looked";
 
 /** The day keys a week back from `now`, plus today: what a weekly reading and "last audited" need. */
 export function weekDayKeys(now: string, days: number = AUDIT_WEEK_DAYS): string[] {
@@ -132,4 +147,35 @@ export async function readLatestTaskPass(repos: LiveAuditRepos, now: string): Pr
   const rows = (await Promise.all(keys.map((k) => repos.liveAudits.read(k)))).flat();
   const passes = rows.flatMap((row) => (row.kind === "TASKS" ? [row.pass] : [])).sort((a, b) => a.at.localeCompare(b.at));
   return passes.at(-1) ?? null;
+}
+
+/** DP-33: keep one weekly claim check. A controlled run is refused here, so it can never be read as real. */
+export async function recordClaimPass(repos: LiveAuditRepos, pass: ClaimPass): Promise<void> {
+  if (pass.synthetic) throw new Error("A controlled claim check is never recorded");
+  await repos.liveAudits.append(claimsWeekKey(pass.week), `claims@${pass.at}`, { kind: "CLAIMS", pass }, pass.at);
+}
+
+/** This week's and last week's claim checks (two keys, never the whole log). */
+export async function readRecentClaimPasses(repos: LiveAuditRepos, weeks: readonly string[]): Promise<ClaimPass[]> {
+  const rows = (await Promise.all(weeks.map((w) => repos.liveAudits.read(claimsWeekKey(w))))).flat();
+  return rows.flatMap((row) => (row.kind === "CLAIMS" && !row.pass.synthetic ? [row.pass] : []));
+}
+
+/** FE-21: keep one deploy's look pass, then note the commit so it is looked at once. */
+export async function recordLookPass(repos: LiveAuditRepos, pass: LookPass): Promise<void> {
+  await repos.liveAudits.append(lookKey(pass.sha), `look@${pass.at}`, { kind: "LOOK", pass }, pass.at);
+  await repos.liveAudits.append(LOOKED_KEY, `${pass.sha}@${pass.at}`, { kind: "LOOKED", sha: pass.sha, at: pass.at, verdict: pass.verdict }, pass.at);
+}
+
+/** The commits a look pass has run on, oldest first. */
+export async function readLookedCommits(repos: LiveAuditRepos): Promise<readonly { sha: string; at: string; verdict: LookPass["verdict"] }[]> {
+  return (await repos.liveAudits.read(LOOKED_KEY)).flatMap((row) => (row.kind === "LOOKED" ? [{ sha: row.sha, at: row.at, verdict: row.verdict }] : []));
+}
+
+/** The newest look passes, newest first (`count` deploys; one read per deploy). */
+export async function readLatestLookPasses(repos: LiveAuditRepos, count = 1): Promise<LookPass[]> {
+  const looked = [...(await readLookedCommits(repos))].sort((a, b) => b.at.localeCompare(a.at));
+  const shas = [...new Set(looked.map((l) => l.sha))].slice(0, count);
+  const rows = (await Promise.all(shas.map((sha) => repos.liveAudits.read(lookKey(sha))))).flat();
+  return rows.flatMap((row) => (row.kind === "LOOK" ? [row.pass] : [])).sort((a, b) => b.at.localeCompare(a.at));
 }

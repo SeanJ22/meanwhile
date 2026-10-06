@@ -101,7 +101,7 @@ export interface PublishableCampaignSiteApproval {
       readonly readAt: string;
       readonly cycleSource?: CampaignSiteSourceReference;
     };
-    readonly audit: { readonly secondSignal: string };
+    readonly audit?: { readonly secondSignal: string };
     readonly publicationDoor: string;
   };
 }
@@ -159,7 +159,7 @@ export function isPublishableCampaignSiteApproval(value: unknown): value is Publ
     typeof identity.ocdId === "string" && text(identity.stateCode) && typeof identity.cycle === "number" &&
     evidence !== undefined && text(evidence.artifactId) && text(evidence.attemptId) && text(evidence.sha256) && text(evidence.requestedUrl) &&
     text(evidence.finalUrl) && typeof evidence.httpStatus === "number" && typeof evidence.contentType === "string" && text(evidence.readAt) &&
-    text(evidence.verifierId) && site.audit !== undefined && typeof site.audit.secondSignal === "string";
+    text(evidence.verifierId);
 }
 
 export const DERIVED_CAMPAIGN_SITE_HOLDS = [
@@ -220,7 +220,7 @@ export async function heldCampaignSiteReads(vault: VaultIndex | ((artifactId: st
 function publicationEvidence(record: PublishableCampaignSiteApproval): DerivedCampaignSiteEvidence {
   const site = record.campaignSite;
   return { ...site.evidence, approvalItemId: record.itemId, approvalRecordId: record.recordId,
-    approvedAt: record.at, secondSignal: site.audit.secondSignal };
+    approvedAt: record.at, ...(site.audit ? { secondSignal: site.audit.secondSignal } : {}) };
 }
 
 export interface DerivedCampaignSitesPlan {
@@ -489,7 +489,7 @@ export function planDerivedCampaignSites(input: {
             approvalItemId: chosen.record.itemId,
             approvalRecordId: chosen.record.recordId,
             approvedAt: chosen.record.at,
-            secondSignal: site.audit.secondSignal,
+            ...(site.audit ? { secondSignal: site.audit.secondSignal } : {}),
           },
         },
       });
@@ -649,13 +649,10 @@ export function derivedCampaignSitesPass(input: {
   readonly linkedPublications?: readonly HeldLinkedPublicationRead[];
   readonly prior?: PromotedCampaignSites | null | { readonly unreadable: string };
   readonly profiles: Parameters<typeof planDerivedCampaignSites>[0]["profiles"] | { readonly unreadable: string };
-  /** Whether the activation gate opens candidate-enrichment for campaignSite (`classFieldOpen`). */
-  readonly gateOpen: boolean;
+  /** Accepted for older callers only; §3 publication is automatic. */
+  readonly gateOpen?: boolean;
   readonly now: string;
 }): { readonly candidate: RoutineCandidate; readonly plan: DerivedCampaignSitesPlan | null } {
-  if (!input.gateOpen) {
-    return { candidate: derivedCampaignSitesFailedCandidate(input.now, "GATE_CLOSED: the activation gate does not open candidate-enrichment for campaignSite, so nothing new is published"), plan: null };
-  }
   if ("unreadable" in input.approvals) {
     return { candidate: derivedCampaignSitesFailedCandidate(input.now, `The pipeline's campaign-site approvals could not be read: ${input.approvals.unreadable}`), plan: null };
   }

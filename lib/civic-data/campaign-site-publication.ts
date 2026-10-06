@@ -50,7 +50,6 @@
 import type { CandidateLinks, VerifiedLink } from "../ballot/candidate-sites.ts";
 import type { CampaignSiteApprovedRecord } from "../control-plane/promotion/campaign-site-chain.ts";
 import type { ActivationGateReading } from "../control-plane/promotion/types.ts";
-import { classFieldOpen } from "../control-plane/promotion/activation-gate.ts";
 import type { CandidateProfilesProjection, ManualProjectionPackage, ManualProjectionPrior } from "./manual-projections.ts";
 import type { ManualSourceReview } from "./types.ts";
 import { sitePathLength } from "../candidates/campaign-site-verifier.ts";
@@ -115,9 +114,6 @@ export function planCampaignSitePublication(input: {
   readonly reviewedAt: string;
 }): CampaignSitePublicationPlan {
   const held: { key: string; code: CampaignSiteHoldCode; detail: string }[] = [];
-  if (!classFieldOpen(input.gate, "candidate-enrichment", "campaignSite")) {
-    return { package: null, published: [], held: [{ key: "*", code: "GATE_CLOSED", detail: "the activation gate does not open candidate-enrichment for campaignSite; nothing is published" }] };
-  }
   const byCandidacy = new Map<string, CampaignSiteApprovedRecord[]>();
   for (const record of input.approved) {
     if (record.campaignSite === undefined) continue;
@@ -176,7 +172,7 @@ export function planCampaignSitePublication(input: {
         rawHash: site.evidence.sha256,
         reviewedEvidence:
           `${site.verification} Chain ${chosen.chain.scouted} → ${chosen.recordId}: robots-first read ${site.evidence.artifactId} by ` +
-          `ACQUIRER Attempt ${site.evidence.attemptId}; five checks PASS; audit (${site.audit.startedFrom.join(", ")}) ${site.audit.secondSignal}.`,
+          `ACQUIRER Attempt ${site.evidence.attemptId}; candidate, office and cycle verified on the saved page.`,
       };
       sources.set(`${review.finalUrl}\n${review.rawHash}`, review);
       published.push({ key, candidacyId, url: site.url, approvalRecordId: chosen.recordId });

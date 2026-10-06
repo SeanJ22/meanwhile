@@ -50,6 +50,8 @@ export interface CardSource {
   /** Which facts on this card this source is behind. */
   what: string;
   provenance: Provenance;
+  /** A status line about the listing (e.g. when a carried row was last reached), not a source: shown without a source-kind label. */
+  status?: true;
 }
 
 /**
@@ -70,7 +72,7 @@ export const BOUNDARY_PROVENANCE: Provenance = {
 
 /** Merge key: two rows from the same publisher and page are one source. */
 function keyOf(provenance: Provenance): string {
-  return `${provenance.sourceOrg}|${provenance.sourceUrl ?? ""}`;
+  return `${provenance.sourceOrg}|${provenance.sourceUrl ?? ""}|${provenance.quote ?? ""}`;
 }
 
 /**
@@ -120,12 +122,12 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
 }
 
 function retainedHolderSources(holder: SeatHolder): CardSource[] {
-  return Object.entries(holder.retainedFieldSources ?? {}).flatMap(([field, source]) => {
+  return [...Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({ what: `${holder.name} — ${field}`, provenance })), ...Object.entries(holder.retainedFieldSources ?? {}).flatMap(([field, source]) => {
     if (!source) return [];
     const label = { termNote: "term wording", termStart: "term start date", termEnd: "term end date", email: "office email", phone: "office phone", websiteUrl: "official page link" }[field] ?? field;
     return [{ what: `${holder.name}'s previously verified ${label}, retained after an incomplete update`,
       provenance: { ...source, verifiedAt: null } }];
-  });
+  })];
 }
 
 /**
@@ -168,9 +170,10 @@ export function meetingCardSources(
   const entries: CardSource[] = [
     { what: `This sitting — ${meeting.title}${meeting.venueGap ? ` · ${meeting.venueGap.kind === "NOT_STATED_BY_PUBLISHER" ? "Meeting place not stated by" : "Published meeting place from"} ${meeting.venueGap.publisher}` : ""}`, provenance: meeting.provenance },
   ];
+  for (const [field, provenance] of Object.entries(meeting.fieldSources ?? {})) entries.push({ what: `This sitting — ${field}`, provenance });
   if (meeting.carried) {
     const clause = carriedRowClause(meeting.carried);
-    entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } });
+    entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, status: true, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } });
   }
   if (meeting.agendaUrl) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
   for (const [kind, label] of Object.entries(MEETING_SOURCE_LABELS)) {

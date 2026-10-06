@@ -87,7 +87,7 @@ export interface DeliveryPromotionRow {
     readonly scouted: string;
     readonly confirmed: string;
     readonly verified: string;
-    readonly audited: string;
+    readonly audited?: string;
   };
   /** When the record was approved for promotion. Absent only on snapshots published before it was named truthfully. */
   readonly approvedAt?: string;

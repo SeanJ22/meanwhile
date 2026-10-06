@@ -73,7 +73,7 @@ interface FactStage {
   readonly survived?: boolean;
   readonly readerMeeting?: unknown;
   readonly publicationDoor?: string;
-  readonly chain?: { readonly scouted: string; readonly confirmed: string; readonly verified: string; readonly audited: string };
+  readonly chain?: { readonly scouted: string; readonly confirmed: string; readonly verified: string; readonly audited?: string };
 }
 interface WorkerWitness {
   readonly id: string; readonly endedAt: string; readonly inputResultIds: readonly string[]; readonly inputArtifactIds: readonly string[];
@@ -107,7 +107,7 @@ export function meetingResearchWitness(partition: MeetingPartitionContract, snap
             stages.filter(stage => stage.itemId === fact!.itemId).at(-1)?.stage !== "APPROVED_FOR_PROMOTION" ||
             civicFacts(approval.readerMeeting) !== civicFacts(meeting) || !approval.burdens || approval.burdens.length !== 5 ||
             approval.burdens.some(burden => burden.result !== "PASS")) continue;
-        const verified = byId.get(approval.chain.verified); const audited = byId.get(approval.chain.audited);
+        const verified = byId.get(approval.chain.verified); const audited = approval.chain.audited ? byId.get(approval.chain.audited) : undefined;
         const confirmed = byId.get(approval.chain.confirmed);
         if (confirmed?.stage !== "CONFIRMED" || verified?.stage !== "VERIFIED" || audited?.stage !== "AUDITED" ||
             [confirmed, verified, audited].some(stage => stage.itemId !== fact!.itemId) ||

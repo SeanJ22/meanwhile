@@ -147,3 +147,131 @@ export async function reviewLook(input: LookReviewInput, deps: LookReviewDeps = 
     return { kind: "NOT_RUN", why: "error" };
   }
 }
+
+/**
+ * **FE-25 — pages are judged side by side with the best.**
+ *
+ * Comparison mode: the reviewer sees our screen next to one reference screen
+ * and says which is better and why. A loss is a red flag that names what the
+ * reference does better. The same rules as the single-screen review hold:
+ * the input has no room for data counts or checklists, and nothing paid runs
+ * without a model, spend authority and room under the owner's dial.
+ */
+export interface ComparePair {
+  /** Our screenshot. */
+  ours: LookScreenshot;
+  /** The reference screenshot it is judged against. */
+  reference: LookScreenshot;
+}
+
+export interface CompareInput {
+  pairs: readonly ComparePair[];
+  task: string;
+  standard: string;
+}
+
+export interface CompareVerdict {
+  /** Both labels travel with the verdict so the look pass can show both screenshots. */
+  ours: string;
+  reference: string;
+  winner: "ours" | "reference" | "tie";
+  why: string;
+  /** What the reference does better. Required when the reference wins. */
+  betterElement: string | null;
+  /** A loss is a red flag. */
+  red: boolean;
+}
+
+export type CompareOutcome =
+  | { kind: "COMPARED"; pairs: CompareVerdict[]; losses: number }
+  | { kind: "NOT_RUN"; why: "no-model" | "no-spend-authority" | "spend-refused" | "no-pairs" | "error" };
+
+export function lookComparePrompt(input: Pick<CompareInput, "task" | "standard">): string {
+  return [
+    "You are a design reviewer who has never seen the code or the data behind these screens.",
+    "The images come in pairs: first ours, then a reference screen from a product people love to use.",
+    "For each pair, as a resident opening both for the first time, say which is better: ours, the reference, or a tie, and why in one line.",
+    "If the reference wins, name the element it does better (for example its spacing or its one clear action).",
+    "Do not assume anything a screen does not show. Do not favor ours to be polite.",
+    "",
+    "The task the screen was built for:",
+    input.task,
+    "",
+    "The look standard:",
+    input.standard,
+  ].join("\n");
+}
+
+export function lookCompareSchema(): Record<string, unknown> {
+  return {
+    type: "object",
+    additionalProperties: false,
+    required: ["pairs"],
+    properties: {
+      pairs: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["winner", "why", "betterElement"],
+          properties: {
+            winner: { enum: ["ours", "reference", "tie"] },
+            why: { type: "string", minLength: 1, maxLength: 240 },
+            betterElement: { type: ["string", "null"] },
+          },
+        },
+      },
+    },
+  };
+}
+
+/** Checks the model's answer against the pairs that were sent. Null if it does not hold. */
+export function readLookCompare(raw: string, sent: readonly ComparePair[]): CompareVerdict[] | null {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  const list = (parsed as { pairs?: unknown } | null)?.pairs;
+  if (!Array.isArray(list) || list.length !== sent.length) return null;
+  const out: CompareVerdict[] = [];
+  for (let i = 0; i < list.length; i++) {
+    const p = list[i] as { winner?: unknown; why?: unknown; betterElement?: unknown } | null;
+    if (!p || typeof p !== "object") return null;
+    if (p.winner !== "ours" && p.winner !== "reference" && p.winner !== "tie") return null;
+    if (typeof p.why !== "string" || !p.why.trim()) return null;
+    const better = typeof p.betterElement === "string" && p.betterElement.trim() ? p.betterElement.trim() : null;
+    // A loss that names nothing cannot be fixed, so it does not count as a comparison.
+    if (p.winner === "reference" && !better) return null;
+    out.push({
+      ours: sent[i].ours.label,
+      reference: sent[i].reference.label,
+      winner: p.winner,
+      why: p.why.trim(),
+      betterElement: p.winner === "reference" ? better : null,
+      red: p.winner === "reference",
+    });
+  }
+  return out;
+}
+
+export async function compareLook(input: CompareInput, deps: LookReviewDeps = {}): Promise<CompareOutcome> {
+  if (input.pairs.length === 0) return { kind: "NOT_RUN", why: "no-pairs" };
+  if (!deps.callModel) return { kind: "NOT_RUN", why: "no-model" };
+  if (!deps.reserveSpend) return { kind: "NOT_RUN", why: "no-spend-authority" };
+  const images = input.pairs.flatMap((p) => [p.ours, p.reference]);
+  if (!(await deps.reserveSpend(images.length))) return { kind: "NOT_RUN", why: "spend-refused" };
+  try {
+    const raw = await deps.callModel({
+      prompt: lookComparePrompt({ task: input.task, standard: input.standard }),
+      schema: lookCompareSchema(),
+      images,
+    });
+    const pairs = readLookCompare(raw, input.pairs);
+    if (!pairs) return { kind: "NOT_RUN", why: "error" };
+    return { kind: "COMPARED", pairs, losses: pairs.filter((p) => p.red).length };
+  } catch {
+    return { kind: "NOT_RUN", why: "error" };
+  }
+}

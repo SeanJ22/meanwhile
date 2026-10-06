@@ -20,7 +20,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
   return (
     <>
       {sources.map((entry, i) => (
-        <div key={`${entry.what}-${i}`} className="account-modal-person">
+        <div key={`${entry.what}-${i}`} className="account-modal-person" {...entry.dataAttrs}>
           <p className="t-body text-paper">{entry.what}</p>
 
           <PopupRow label="Published by">

@@ -1,12 +1,15 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+
 import { CheckedLink } from "@/components/ui/checked-link";
 import { useEffect, useState } from "react";
 import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 import type { AgendaPublicationReading } from "@/lib/ask/agenda-publication";
 
 import { noticeSummaryFor } from "@/lib/meetings/notice-summary";
-import { formatDateMDY } from "@/lib/map/format";
+
 import { agendaItems } from "@/lib/routing/agenda-search";
 import type { MeetingReaderRecords } from "@/lib/meetings/reader-records";
 import { MeetingRecords } from "./meeting-records";
@@ -184,7 +187,7 @@ function MinutesRecord({ meetingId }: { meetingId: string }) {
   return <details className="mb-3 t-detail leading-relaxed" open data-minutes-summary={meetingId}>
     <summary className="cursor-pointer text-signal">What happened — plain language</summary>
     <p className="mt-2 font-semibold">{summary.summary}</p>
-    <p className="mt-1 text-muted">Our paraphrase of <CheckedLink href={summary.minutesUrl} target="_blank" rel="noreferrer" className="text-signal underline">the {summary.sourceOrg} minutes</CheckedLink> · read {formatDateMDY(summary.readAt)}.</p>
+    <CardSourcesContribution id={`minutes:${meetingId}`} sources={[{ what: "Meeting minutes; plain-language paraphrase is ours", provenance: { sourceUrl: summary.minutesUrl, sourceOrg: summary.sourceOrg, collectedAt: summary.readAt, verifiedAt: null } }]} />
   </details>;
 }
 
@@ -203,32 +206,20 @@ function MinutesRecord({ meetingId }: { meetingId: string }) {
  * serves the newer content, and a link would hand the reader the wrong
  * version. Every distinct address is linked exactly where its version is.
  */
-function VersionsOnFile({ documents, publication }: {
-  documents: readonly AgendaDocumentView[]; publication?: AgendaPublicationReading | null;
+export function AgendaDocuments(props: {
+  documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
+  publication?: AgendaPublicationReading | null;
 }) {
-  if (documents.length < 2) return null;
-  const latestUrl = documents[0].documentUrl;
-  const linked = new Set([latestUrl]);
-  const revised = publication?.revised !== false;
-  return <span data-agenda-versions={documents.length}>
-    {revised
-      ? ` · ${documents.length} versions on file — a revised agenda is itself news: `
-      : ` · ${documents.length} documents on file: `}
-    {documents.map((document, index) => {
-      const label = `${index === 0 ? "current" : "earlier"} version read ${formatDateMDY(document.retrievedAt.slice(0, 10))}`;
-      const link = !linked.has(document.documentUrl);
-      if (link) linked.add(document.documentUrl);
-      return <span key={document.id ?? `${document.contentHash}:${document.retrievedAt}`} data-agenda-version={document.id ?? document.contentHash}>
-        {index > 0 && ", "}
-        {link
-          ? <CheckedLink href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">{label}</CheckedLink>
-          : label}
-      </span>;
-    })}
-  </span>;
+  const { documents, meetingId, publication } = props;
+  const sourceRows = documents.map((document, index) => ({
+    what: `${index === 0 ? "Current" : "Earlier"} ${publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX" ? "listing page" : "agenda document"}${documents.length > 1 ? ` · ${documents.length} ${publication?.revised !== false ? "versions" : "documents"} on file` : ""}${document.extractionNote ? ` · ${document.extractionNote}` : ""}`,
+    dataAttrs: { "data-agenda-version": document.id ?? document.contentHash, ...(documents.length > 1 ? { "data-agenda-versions": documents.length } : {}), ...(publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX" ? { "data-agenda-listing-page": document.id ?? document.documentUrl } : {}) },
+    provenance: { sourceUrl: index > 0 && documents.slice(0,index).some(prior => prior.documentUrl === document.documentUrl) ? "" : document.documentUrl, sourceOrg: document.sourceOrg, collectedAt: document.retrievedAt, verifiedAt: null },
+  }));
+  return <><CardSourcesContribution id={`agenda-documents:${meetingId}`} sources={sourceRows} /><AgendaDocumentContents {...props} /></>;
 }
 
-export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentence, publication }: {
+function AgendaDocumentContents({ documents, meetingId, agendaUrl, agendaSentence, publication }: {
   documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
   publication?: AgendaPublicationReading | null;
 }) {
@@ -238,67 +229,20 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
     // Only publication-index pages are held for this sitting. They are shown
     // for what they are — listing pages, never versions of its agenda — and a
     // second distinct listing page is linked rather than counted as a revision.
-    const otherListingPages = documents.filter((document, index, all) =>
-      document.documentUrl !== latest.documentUrl &&
-      all.findIndex((candidate) => candidate.documentUrl === document.documentUrl) === index);
     return <div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 t-detail leading-relaxed text-muted">
       <p>{publication.gap?.statement} <CheckedLink href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</CheckedLink>.</p>
-      <p className="mt-1 t-caption">{publication.documentSharedAcrossGovernments ? "Unresolved source link" : `From ${latest.sourceOrg}`} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}.
-        {otherListingPages.map((document) => <span key={document.documentUrl} data-agenda-listing-page={document.id ?? document.documentUrl}>
-          {" "}Also held: <CheckedLink href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">another listing page, read {formatDateMDY(document.retrievedAt.slice(0, 10))}</CheckedLink>.
-        </span>)}
-      </p>
+
     </div>;
   }
 
-  if (!latest) {
-    return (
-      <p className="mt-1.5 t-detail leading-relaxed text-muted">
-        {agendaUrl ? (
-          <>
-            We haven&apos;t stored this agenda&apos;s text yet —{" "}
-            <CheckedLink
-              href={agendaUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-signal hover:underline"
-            >
-              read it at the source
-            </CheckedLink>
-            .
-          </>
-        ) : (
-          `${agendaSentence}.`
-        )}
-      </p>
-    );
-  }
+  if (!latest) return <p className="mt-1.5 t-detail text-muted">
+    <WorkingOnIt inline state={/not posted yet/i.test(agendaSentence) ? { kind: "not-published", item: "Agenda" } : undefined} />
+    {agendaUrl && <> · <CheckedLink href={agendaUrl} target="_blank" rel="noreferrer" className="text-link underline">Read the agenda</CheckedLink></>}
+  </p>;
 
-  if (!latest.text || publication?.acquisition === "ACQUIRED_NOT_READABLE") {
-    return (
-      <p data-agenda-publication="ACQUIRED_NOT_READABLE" className="mt-1.5 t-detail leading-relaxed text-muted">
-        We fetched this meeting&apos;s document but couldn&apos;t read its
-        {/*
-          **A REASON WE DO NOT HOLD IS NOT "extraction failed"**
-          (2026-08-23, item 3). The branch is already inside "we could not
-          read it", so restating that as the REASON says nothing while
-          looking like an explanation. Where no note was recorded, the gap is
-          named as ours.
-        */}
-        text ({latest.extractionNote ?? (latest.text ? "the stored extraction contains document bytes rather than readable text" : "we haven't recorded why")}).{" "}
-        <CheckedLink
-          href={latest.documentUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="text-signal hover:underline"
-        >
-          Open the document
-        </CheckedLink>
-        . From {latest.sourceOrg} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}
-        <VersionsOnFile documents={documents} publication={publication} />.
-      </p>
-    );
-  }
+  if (!latest.text || publication?.acquisition === "ACQUIRED_NOT_READABLE") return <p data-agenda-publication="ACQUIRED_NOT_READABLE" className="mt-1.5 t-detail text-muted">
+    <WorkingOnIt inline /> · <CheckedLink href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-link underline">Open the document</CheckedLink>
+  </p>;
 
   const summary = noticeSummaryFor(meetingId, latest.contentHash);
   /*
@@ -375,19 +319,7 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
       <p className="max-h-56 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 t-detail leading-relaxed text-paper-dim">
         {sanitizeStoredText(latest.text)}
       </p>
-      <p className="mt-1 t-caption text-muted">
-        From{" "}
-        <CheckedLink
-          href={latest.documentUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="underline decoration-dotted hover:text-signal"
-        >
-          the {latest.sourceOrg} document
-        </CheckedLink>{" "}
-        · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}
-        <VersionsOnFile documents={documents} publication={publication} />
-      </p>
+
     </div>
   );
 }

@@ -44,6 +44,8 @@ import type { SeatHolder } from "./lookup.ts";
  */
 
 export interface CardSource {
+  /** Native document/listing identities remain inspectable inside Sources. */
+  dataAttrs?: Readonly<Record<`data-${string}`, string | number>>;
   /** Which facts on this card this source is behind. */
   what: string;
   provenance: Provenance;

@@ -145,6 +145,7 @@ export const MANUAL_SOURCE_CLASSES = [
   "CANDIDATE_CONTROLLED",
   "OFFICIAL_PUBLISHER",
   "REFERENCE_PUBLISHER",
+  "FILING", "NEWS", "VOTER_GUIDE", "FORUM", "OTHER",
 ] as const;
 export type ManualSourceClass = (typeof MANUAL_SOURCE_CLASSES)[number];
 

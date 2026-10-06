@@ -264,7 +264,8 @@ function approvalReasons(state: PipelineItemState, offered: ApprovedRecord): Pip
     ["SCOUTED", offered.chain.scouted],
     ["CONFIRMED", offered.chain.confirmed],
     ["VERIFIED", offered.chain.verified],
-    ["AUDITED", offered.chain.audited],
+    ...(offered.recordClass === "candidate-enrichment" && offered.field === "campaignSite" && offered.chain.audited === undefined
+      ? [] : [["AUDITED", offered.chain.audited ?? ""] as const]),
   ];
   for (const [stage, id] of expect) {
     const held: TransitionRecord | undefined = state.byStage[stage];
@@ -295,7 +296,9 @@ export function validateTransition(
   ctx: PipelineContext,
 ): { readonly ok: true; readonly record: TransitionRecord } | { readonly ok: false; readonly record: RefusedRecord } {
   const reasons: PipelineRefusalReason[] = [];
-  const preceding = PRECEDING_STAGE[offered.stage];
+  const preceding = offered.stage === "APPROVED_FOR_PROMOTION" && offered.recordClass === "candidate-enrichment" &&
+    offered.field === "campaignSite" && offered.chain.audited === undefined && state.stage === "VERIFIED"
+    ? "VERIFIED" : PRECEDING_STAGE[offered.stage];
   const held: TransitionRecord | undefined = state.byStage[offered.stage];
   if (held !== undefined) {
     if (held.recordId === offered.recordId && canonicalJson(held) === canonicalJson(offered)) {

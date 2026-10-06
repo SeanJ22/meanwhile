@@ -26,6 +26,7 @@ import type {
  * the bundle for no benefit.
  */
 export interface SeatHolder {
+  fieldSources?: Record<string, Provenance>;
   id: string;
   name: string;
   officeTitle: string;

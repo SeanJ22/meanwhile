@@ -1,6 +1,6 @@
 import { CheckedLink } from "@/components/ui/checked-link";
 import type { CardSource } from "@/lib/officials/card-sources";
-import { verificationOf } from "@/lib/officials/verification";
+import { verificationOf, provenanceKind, PROVENANCE_KIND_LABELS } from "@/lib/officials/verification";
 
 import { NoValue, PopupRow } from "@/components/map/popup/popup-row";
 
@@ -21,7 +21,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
     <>
       {sources.map((entry, i) => (
         <div key={`${entry.what}-${i}`} className="account-modal-person">
-          <p className="t-body text-paper">{entry.what}</p>
+          <p className="t-body text-paper">{PROVENANCE_KIND_LABELS[provenanceKind(entry.provenance)]} · {entry.what}</p>
 
           <PopupRow label="Published by">
             {entry.provenance.sourceOrg || <NoValue />}
@@ -41,6 +41,8 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
               <NoValue>no published page</NoValue>
             )}
           </PopupRow>
+
+          {entry.provenance.quote && <p className="t-body text-muted">“{entry.provenance.quote}”</p>}
 
           <PopupRow label="Last checked" mono>
             {entry.provenance.collectedAt ? (

@@ -62,6 +62,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
   let failed = false;
   let destination: ReaderEdgePublicationOutcome["store"] = "not configured";
   let sequence: number | null = null;
+  let supersededMeetingFields: number | undefined;
   let status = "FAILED";
   let detail: string | null = null;
   const owns = (recordClass: RoutineRecordClass, scope: string) => selected === null || selected.some(pointer => pointer.recordClass === recordClass && pointer.scope === scope);
@@ -381,6 +382,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       }
       let meetingBodies: RegistryRuntimeReadModel["registry"]["bodies"] | undefined;
       if (meetingRead?.kind === "PROMOTED") {
+        supersededMeetingFields = meetingRead.value.meetings.reduce((count, meeting) => count + (meeting.publicationConflicts?.length ?? 0), 0);
         const registry = authority["registry-runtime"];
         if (meetingRead.value.meetings.length === 0) {
           meetingBodies = [];
@@ -415,7 +417,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
     process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${detail}\n`);
   }
   const outcome: ReaderEdgePublicationOutcome = { ok: !failed, readerEdge: failed && status !== "SKIPPED_NO_STORE" ? "FAILED" : status,
-    store: destination, sequence, detail: failed ? detail ?? "Reader pages could not be fully updated. The earlier serving copies remain available." : null };
+    store: destination, sequence, ...(supersededMeetingFields !== undefined ? { supersededMeetingFields } : {}), detail: failed ? detail ?? "Reader pages could not be fully updated. The earlier serving copies remain available." : null };
   console.log(JSON.stringify(outcome));
   return outcome;
 }

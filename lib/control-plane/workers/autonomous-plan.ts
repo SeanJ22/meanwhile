@@ -1,3 +1,4 @@
+import { workerDoorForRecord } from "../../civic-data/worker-reader-contracts.ts";
 import type { CivicExtractionContract } from "./types.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute } from "./research-types.ts";
 import type { EngineeringTaskSpec } from "./engineering-types.ts";
@@ -37,11 +38,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
     sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
     ...partFor(spec.recordClass),
-    ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
-    ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
-    ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
-    ...(spec.recordClass === "BALLOT_CONTEST" && bodyId ? { publication: { contractId: "ballot-contests" as const, bodyId } } : {}),
-    ...(["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "official-filings" as const, bodyId } } : {}),
+    ...(bodyId && workerDoorForRecord(spec.recordClass) ? { publication: { contractId: workerDoorForRecord(spec.recordClass)!, bodyId } } : {}),
     contract: {
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
       requiredFields: spec.fields, identity: { namespace: `${jurisdiction.id}:${source.recordClass}`, keyFields: spec.fields },

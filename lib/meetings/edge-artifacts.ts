@@ -1,3 +1,4 @@
+import { mergeReaderSittings } from "./sitting-merge.ts";
 import { createHash } from "node:crypto";
 
 import { ocdStateCode } from "../ocd/state-of.ts";
@@ -351,7 +352,7 @@ export function partitionSnapshotByScope(
       scope,
       ...(scope !== NATIONAL_SCOPE && ocdId ? { ocdId } : {}),
       ...(bounds ? { bounds } : {}),
-      meetingIds: [...new Set([...meetings.map(meeting => meeting.id), ...agenda.map(doc => doc.meetingId)])].sort(),
+      meetingIds: [...new Set([...meetings.flatMap(meeting => [meeting.id, ...(meeting.mergedMeetingIds ?? [])]), ...agenda.map(doc => doc.meetingId)])].sort(),
       generatedAt: snapshot.generatedAt || now,
       counts: countsFor(meetings),
       meetings,
@@ -394,13 +395,14 @@ export function mergeScopeArtifacts(
     for (const meeting of artifact.meetings) if (!meetingsById.has(meeting.id)) meetingsById.set(meeting.id, meeting);
     for (const doc of artifact.agendaDocuments) if (!agendaById.has(doc.id)) agendaById.set(doc.id, doc);
   }
-  const meetings = [...meetingsById.values()];
+  const merged = mergeReaderSittings([...meetingsById.values()]);
+  const meetings = merged.rows;
   return {
     formatVersion: 1,
     generatedAt: manifest.generatedAt,
     counts: snapshotCounts(meetings, 0),
     sources: [...manifest.sources],
     meetings,
-    agendaDocuments: [...agendaById.values()],
+    agendaDocuments: [...agendaById.values()].map(document => ({ ...document, meetingId: merged.aliases.get(document.meetingId) ?? document.meetingId })),
   };
 }

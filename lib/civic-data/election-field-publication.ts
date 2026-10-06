@@ -1,3 +1,6 @@
+import { section3Page } from "../control-plane/promotion/section3.ts";
+import { manualClassForKind } from "../control-plane/promotion/source-kinds.ts";
+import { preferCurrentSource, receiptSourceKind } from "./source-conflicts.ts";
 import { createHash } from "node:crypto";
 import { ELECTION_FIELD_KINDS, electionFieldState, sourcedElectionDate, type ElectionFieldInput, type PublishedElectionField } from "./election-fields.ts";
 import { prepareManualProjectionSuccessor } from "./manual-successor.ts";
@@ -43,7 +46,7 @@ export async function publishElectionFields(input: {
   readonly verify: ElectionFieldVerifier;
 }) {
   const records = new Map<string, PublishedElectionField>();
-  const conflicts = new Set<string>();
+  const conflicts: NonNullable<import("./types.ts").RoutineCandidate["excludedFacts"]>[number][] = [];
   const sources = new Map<string, ManualSourceReview>();
   const gaps: { divisionId: string; kind: string; detail: string }[] = [];
   for (const field of input.fields) {
@@ -56,7 +59,7 @@ export async function publishElectionFields(input: {
         capture.evidence.contentHash !== `sha256-${hash(capture.evidence.text)}` || capture.evidence.text !== field.document.text) {
       gap("Saved complete source capture is missing or does not match these bytes."); continue;
     }
-    const page = { url: field.sourceUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: field.linkingPage };
+    const page = { url: field.sourceUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: field.linkingPage, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
     // An election office's phone line is a fact too: it must be on the saved page.
     const office = field.kind === "election_office";
     if (office && !field.phone?.trim()) { gap("Election office has no phone line on the saved page."); continue; }
@@ -70,10 +73,16 @@ export async function publishElectionFields(input: {
       gap("Date is not supported by the quoted calendar context."); continue;
     }
     const id = fieldId(field);
-    if (conflicts.has(id)) continue;
     const previous = records.get(id);
+    const sourceKind = section3Page(page, "BALLOT_CONTEST", input.now).kind;
     if (previous && (previous.value.text !== field.value || JSON.stringify(previous.value.dates) !== JSON.stringify(field.dates))) {
-      records.delete(id); conflicts.add(id); gap("This source gives conflicting values for the same contextual election field."); continue;
+      const priorSource = sources.get(previous.value.url);
+      const currentWins = preferCurrentSource({ sourceUrl: field.sourceUrl, sourceOrg: capture.evidence.sourceId, collectedAt: capture.observedAt,
+        verifiedAt: input.now, kind: sourceKind }, { sourceUrl: previous.value.url, sourceOrg: previous.value.sourceOrg, collectedAt: previous.value.collectedAt,
+        verifiedAt: previous.value.verifiedAt, ...(priorSource ? { kind: receiptSourceKind(priorSource.sourceClass) } : {}) });
+      conflicts.push({ key: id, code: "CONFLICT_SUPERSEDED", detail: "Kept the higher source kind, then the newer election field read.",
+        record: currentWins ? previous.value : { value: field.value, dates: field.dates, sourceUrl: field.sourceUrl, collectedAt: capture.observedAt } });
+      if (!currentWins) continue;
     }
     records.set(id, { id, kind: "ELECTION_FIELD", value: {
       state, divisionId: field.divisionId, fieldKind: field.kind, text: field.value, quote: field.quote, dates: field.dates,
@@ -82,7 +91,7 @@ export async function publishElectionFields(input: {
       verifiedAt: input.now, collectedAt: capture.observedAt, sourceOrg: capture.evidence.sourceId,
     } });
     sources.set(field.sourceUrl, { requestedUrl: field.sourceUrl, finalUrl: field.sourceUrl, publisher: capture.evidence.sourceId,
-      sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: capture.observedAt, httpStatus: capture.httpStatus,
+      sourceClass: manualClassForKind(sourceKind), retrievedAt: capture.observedAt, httpStatus: capture.httpStatus,
       rawHash: (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).slice(7), reviewOutcome: "SUPPORTED",
       reviewedEvidence: "Saved official source; section3Record confirmed this field's value and quote within its freshness window." });
   }
@@ -92,7 +101,7 @@ export async function publishElectionFields(input: {
     sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "code:section3Record", sources: [...sources.values()] },
     payload: { kind: "ballot-navigation", records: [...records.values()] as unknown as readonly (Record<string, unknown> & { id: string })[] },
   }, input.store, input.now);
-  const outcome = await processRegisteredManualCandidate(input.store, "ballot-navigation", candidate, input.now, expectedBaseVersionId);
+  const outcome = await processRegisteredManualCandidate(input.store, "ballot-navigation", { ...candidate, excludedFacts: [...(candidate.excludedFacts ?? []), ...conflicts] }, input.now, expectedBaseVersionId);
   if (!outcome.promoted) throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
   return { candidateId: outcome.candidate.candidate.id, promotedVersionId: outcome.promoted.versionId, fields: [...records.keys()], gaps };
 }

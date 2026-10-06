@@ -1,3 +1,4 @@
+import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
@@ -1320,6 +1321,7 @@ export async function createPgRepositories(
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state", bounded),
     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
+    boxFindings: pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", bounded),
     scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results", bounded),
     workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql, "worker_results", bounded),
     /* The nightly door (RULING 242, schema v5). */

@@ -353,6 +353,7 @@ export type CanonicalGap =
   | "UNDETERMINED";
 
 export interface RegistryProvenance {
+  kind?: import("../control-plane/promotion/source-kinds.ts").SourceKind;
   sourceUrl: string | null;
   sourceOrg: string;
   collectedAt: string;
@@ -405,6 +406,7 @@ export interface Division {
 }
 
 export interface Body {
+  fieldSources?: Record<string, import("../sources/types.ts").Provenance>;
   /** Stable within the registry: `<ocdId>#<slot>`. */
   id: string;
   /**

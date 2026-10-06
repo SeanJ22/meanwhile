@@ -224,6 +224,7 @@ test("independent normal workers automatically publish public-comment rules thro
   if (read.kind !== "PROMOTED") throw new Error("reader missing");
   const rendered = projectedCommentAccessFor(body.ocdId ?? null, body.name ?? undefined, body.id, read.value.records as unknown as CommentAccess[]);
   assert.equal(rendered?.signup, rows[0]["signup"]);
+  assert.ok(rendered?.fieldSources?.signup?.quote?.includes("Sign up before the meeting."), "CP-05: the parser's saved quote survives publication and the typed reader");
   assert.deepEqual(await publishWorkerReaderResults(input), published, "restart reuses the publication and spends nothing");
   assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0, "a published extraction is not offered again");
   const parser = results.find(row => row.result.role === "PARSER")!;
@@ -321,4 +322,38 @@ test("CP-09: an amountless filing reaches its reader as a document without manuf
   const html = renderToStaticMarkup(createElement(OfficialFilings, { rows }));
   assert.ok(html.includes(FIXTURE_URL) && html.includes("Fixture Committee"));
   assert.doesNotMatch(html, /Reported receipts|Reported expenditures|Reported cash/);
+});
+
+test("CP-03: a saved voter-guide fact keeps its kind through the actual reader package", async () => {
+  const fixture = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "Public comment is welcome." });
+  const parser = fixture.results.find(row => row.result.role === "PARSER")!;
+  if (parser.result.role !== "PARSER") throw Error("parser missing");
+  const original = await fixture.input.readCapture(parser.result.artifactId);
+  const capture = { ...original, evidence: { ...original.evidence, canonicalUrl: "https://www.vote411.org/local-guide" } };
+  const built = workerReaderPackage({ plan: fixture.ready, parser, captures: [capture], registry: fixture.prior, now: fixture.h.now() });
+  assert.equal(built.sourceReceipt.sources[0].sourceClass, "VOTER_GUIDE");
+  const prepared = await prepareManualProjectionSuccessor(built, fixture.store, fixture.h.now());
+  const outcome = await processRegisteredManualCandidate(fixture.store, "comment-access", prepared.candidate, fixture.h.now(), prepared.expectedBaseVersionId);
+  assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "guide fact held");
+});
+
+test("CP-07: a receipt keeps the superseded value while the winning fact reaches the typed reader", async () => {
+  const f = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "Public comment is welcome.", signup: "Sign up with the clerk." });
+  assert.equal((await publishWorkerReaderResults(f.input))[0].outcome.status, "PUBLISHED");
+  const prior = (await readManualProjectionPrior("comment-access", f.store, f.h.now()))!;
+  const original = (prior.payload as CuratedReaderProjection).records[0];
+  const sourceUrl = "https://news.example/comment";
+  const later = "2026-09-08T12:10:00.000Z";
+  const input = { contractId: "comment-access" as const, version: "source-conflict-news", sourceThrough: later,
+    sourceReceipt: { ...prior.sourceReceipt, reviewedAt: later, sources: [{ ...prior.sourceReceipt.sources[0], sourceClass: "NEWS" as const,
+      requestedUrl: sourceUrl, finalUrl: sourceUrl, retrievedAt: later }] },
+    payload: { kind: "comment-access" as const, records: [{ ...original, signup: "No signup needed.", sourceUrl, collectedAt: later,
+      fieldSources: { signup: { sourceUrl, sourceOrg: "News", collectedAt: later, verifiedAt: later, quote: "No signup needed." } } }] } };
+  const prepared = await prepareManualProjectionSuccessor(input, f.store, later);
+  assert.ok(prepared.candidate.excludedFacts?.some(fact => fact.code === "CONFLICT_SUPERSEDED"));
+  const published = await processRegisteredManualCandidate(f.store, "comment-access", prepared.candidate, later, prepared.expectedBaseVersionId);
+  assert.ok(published.promoted, published.candidate.failureDetail ?? "conflict blocked the whole record");
+  const read = await readCuratedReaderProjection("comment-access", { store: f.store, now: later, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") assert.equal(read.value.records.find(row => row.id === original.id)?.signup, "Sign up with the clerk.");
 });

@@ -18,19 +18,31 @@
  * Nothing is logged per query and nothing is written to a database.
  *
  * The runner is several processes (the parent, the research child, its lease
- * workers, routine and publication children). When `WTP_VITAL_SIGNS_DIR` is set,
- * which the standing runner does for itself and every child it starts, each
- * process writes its own hour totals, with its other hour counters
- * (`countVitalSign`: rounds finished, killed or deferred; facts published), to one small file there once a minute and
- * when it exits, and the parent sums the hour's files. A process killed without
- * warning loses at most its last minute. Outside the runner (the site, Admin,
+ * workers, routine and publication children). When `WTP_VITAL_SIGNS_REPORT=1`,
+ * which the standing runner sets for every child it starts, each process prints
+ * its hour totals, with its other hour counters (`countVitalSign`: rounds
+ * finished, killed or deferred; facts published), as one
+ * `vital-signs-bytes {json}` line on its stdout once a minute and when it exits.
+ * The output already reaches the runner (lease workers share the research
+ * child's stdout; routine children's lines are passed on by
+ * bounded-child-pass.ts); the runner takes those lines out of the stream
+ * (pilot-runtime-child.mts) and alone keeps and sums the hour
+ * (lib/ops/vital-signs-hours.ts). Each line is the process's whole hour so far,
+ * so a lost line costs nothing once the next one arrives, and a process killed
+ * without warning loses at most its last minute. This module touches no file:
+ * it is in every data command's import closure, and the release firewall
+ * allows no repository writer there. Outside the runner (the site, Admin,
  * tests) the counts stay in memory.
  */
 import { AsyncLocalStorage } from "node:async_hooks";
-import { mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
-import { basename, join } from "node:path";
+import { basename } from "node:path";
 
-export const VITAL_SIGNS_DIR_ENV = "WTP_VITAL_SIGNS_DIR";
+/** Set by the runner for its children: print this process's hour totals to stdout. */
+export const VITAL_SIGNS_REPORT_ENV = "WTP_VITAL_SIGNS_REPORT";
+/** The report line's prefix; the runner never shows these lines or counts them as progress. */
+export const VITAL_SIGNS_LINE_PREFIX = "vital-signs-bytes ";
+/* One write below the pipe's atomic size (4,096 bytes on Linux), so processes sharing a pipe never split a line. */
+const VITAL_SIGNS_LINE_LIMIT = 3_800;
 
 export type NeonDatabase = "reader" | "control-plane";
 
@@ -44,6 +56,9 @@ export interface NeonBytesHour {
   readonly byCaller: Readonly<Record<string, number>>;
   /** Which processes contributed: script name and pid. */
   readonly processes: readonly string[];
+  /** The one process this part came from (a report line), and when it started; absent on a sum. */
+  readonly pid?: number;
+  readonly startedMs?: number;
   /** Other hour counts (`countVitalSign`), e.g. rounds_finished. Absent on files that counted none. */
   readonly counters?: Readonly<Record<string, number>>;
 }
@@ -65,7 +80,8 @@ const buckets = new Map<string, Bucket>();
 const siteCache = new Map<string, string>();
 /* Stack strings run to a few KB; a small cache keeps the per-process memory under 1 MB. */
 const SITE_CACHE_LIMIT = 256;
-let flushInstalled = false;
+let reportInstalled = false;
+let keptInProcess = false;
 
 export function hourStart(nowMs: number): string {
   return new Date(Math.floor(nowMs / 3_600_000) * 3_600_000).toISOString();
@@ -132,6 +148,7 @@ function bucketFor(nowMs: number): Bucket {
 export function countVitalSign(name: string, by = 1, nowMs: number = Date.now()): void {
   try {
     if (!Number.isFinite(by)) return;
+    installNeonBytesReport();
     const bucket = bucketFor(nowMs);
     bucket.counters.set(name, (bucket.counters.get(name) ?? 0) + by);
     bucket.dirty = true;
@@ -154,67 +171,112 @@ export function processNeonBytes(): readonly NeonBytesHour[] {
 }
 
 /**
- * Write this process's hour files (atomically, one per hour it has counts for)
- * and forget finished hours once written. Synchronous so it can run at exit.
+ * This process's hours with counts not yet handed on (its whole total for each),
+ * marked handed on; finished hours are forgotten once handed on.
  */
-export function flushNeonBytes(dir: string | undefined = process.env[VITAL_SIGNS_DIR_ENV], nowMs: number = Date.now()): boolean {
-  if (!dir) return false;
+export function takeNeonBytesHours(nowMs: number = Date.now()): readonly NeonBytesHour[] {
   const current = hourStart(nowMs);
+  const taken: NeonBytesHour[] = [];
+  for (const [hour, bucket] of [...buckets.entries()]) {
+    if (bucket.dirty) { taken.push({ ...snapshot(hour, bucket), pid: process.pid, startedMs: Math.floor(performance.timeOrigin) }); bucket.dirty = false; }
+    if (hour < current) buckets.delete(hour);
+  }
+  return taken;
+}
+
+/**
+ * The report line for one process's hour. Callers beyond what fits one atomic
+ * pipe write are summed as "other" (largest kept), so the totals stay whole.
+ */
+export function formatVitalSignsReport(part: NeonBytesHour): string {
+  const ranked = Object.entries(part.byCaller).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const line = (byCaller: Record<string, number>) => `${VITAL_SIGNS_LINE_PREFIX}${JSON.stringify({ ...part, byCaller })}`;
+  let kept = ranked.length;
+  for (;;) {
+    const rest = ranked.slice(kept).reduce((total, [, bytes]) => total + bytes, 0);
+    const byCaller = Object.fromEntries(ranked.slice(0, kept));
+    if (rest > 0) byCaller.other = (byCaller.other ?? 0) + rest;
+    const text = line(byCaller);
+    if (new TextEncoder().encode(text).length <= VITAL_SIGNS_LINE_LIMIT || kept === 0) return text;
+    kept -= 1;
+  }
+}
+
+/** One report line back into its hour part; anything else is null. */
+export function parseVitalSignsReport(line: string): NeonBytesHour | null {
+  const text = line.trim();
+  if (!text.startsWith(VITAL_SIGNS_LINE_PREFIX.trim())) return null;
   try {
-    mkdirSync(dir, { recursive: true });
-    for (const [hour, bucket] of [...buckets.entries()]) {
-      if (bucket.dirty) {
-        const file = join(dir, `${hour.slice(0, 13)}--${process.pid}.json`);
-        writeFileSync(`${file}.tmp`, JSON.stringify(snapshot(hour, bucket)), "utf8");
-        renameSync(`${file}.tmp`, file);
-        bucket.dirty = false;
-      }
-      if (hour < current) buckets.delete(hour);
-    }
+    const part = JSON.parse(text.slice(VITAL_SIGNS_LINE_PREFIX.trim().length)) as NeonBytesHour;
+    if (typeof part?.hour !== "string" || !Number.isSafeInteger(part.pid) || typeof part.requests !== "number" ||
+      !part.bytes || typeof part.byCaller !== "object" || !Array.isArray(part.processes)) return null;
+    return part;
+  } catch { return null; }
+}
+
+/**
+ * Print this process's unreported hour totals as report lines, when the runner
+ * asked for them. Synchronous so it can run at exit. Never throws.
+ */
+export function reportNeonBytes(nowMs: number = Date.now(), write: (text: string) => void = text => { process.stdout.write(text); }): boolean {
+  if (keptInProcess || process.env[VITAL_SIGNS_REPORT_ENV] !== "1") return false;
+  try {
+    for (const part of takeNeonBytesHours(nowMs)) write(`${formatVitalSignsReport(part)}\n`);
     return true;
   } catch { return false; }
 }
 
-/** One flush a minute and one at exit, in every process that counts. */
-export function installNeonBytesFlush(): void {
-  if (flushInstalled) return;
-  flushInstalled = true;
-  const timer = setInterval(() => { flushNeonBytes(); }, 60_000);
+/**
+ * Take report lines out of a child's output stream, chunk by chunk: each whole
+ * report line goes to `onReport`, everything else comes back unchanged and in
+ * order. Only a partial line that may still become a report line is held for
+ * the next chunk; `end()` returns whatever is still held when the stream closes.
+ */
+export function vitalSignsLineFilter(onReport: (part: NeonBytesHour) => void): { readonly take: (chunk: string) => string; readonly end: () => string } {
+  let held = "";
+  let midLine = false;
+  const take = (chunk: string): string => {
+    let text = held + chunk;
+    held = "";
+    let out = "";
+    while (text) {
+      const newline = text.indexOf("\n");
+      if (midLine) {
+        if (newline < 0) { out += text; break; }
+        out += text.slice(0, newline + 1);
+        text = text.slice(newline + 1);
+        midLine = false;
+        continue;
+      }
+      if (newline < 0) {
+        const mayBeReport = VITAL_SIGNS_LINE_PREFIX.startsWith(text) || text.startsWith(VITAL_SIGNS_LINE_PREFIX);
+        if (mayBeReport && text.length <= 2 * VITAL_SIGNS_LINE_LIMIT) held = text;
+        else { out += text; midLine = true; }
+        break;
+      }
+      const line = text.slice(0, newline);
+      const part = line.startsWith(VITAL_SIGNS_LINE_PREFIX) ? parseVitalSignsReport(line) : null;
+      if (part) { try { onReport(part); } catch { /* accounting never breaks output */ } }
+      else out += text.slice(0, newline + 1);
+      text = text.slice(newline + 1);
+    }
+    return out;
+  };
+  return { take, end: () => { const rest = held; held = ""; return rest; } };
+}
+
+/** One report a minute and one at exit, in every process that counts. */
+export function installNeonBytesReport(): void {
+  if (reportInstalled) return;
+  reportInstalled = true;
+  const timer = setInterval(() => { reportNeonBytes(); }, 60_000);
   timer.unref();
-  process.once("exit", () => { flushNeonBytes(); });
+  process.once("exit", () => { reportNeonBytes(); });
 }
 
-/** Sum every process's file for one hour. Unreadable files are skipped, not fatal. */
-export function readNeonBytesHour(dir: string, hour: string): NeonBytesHour {
-  const sum = { requests: 0, bytes: { reader: 0, "control-plane": 0 } as Record<NeonDatabase, number>,
-    byCaller: {} as Record<string, number>, processes: [] as string[], counters: {} as Record<string, number> };
-  let names: string[] = [];
-  try { names = readdirSync(dir); } catch { /* no runner files yet */ }
-  const prefix = `${hour.slice(0, 13)}--`;
-  for (const name of names) {
-    if (!name.startsWith(prefix) || !name.endsWith(".json")) continue;
-    try {
-      const part = JSON.parse(readFileSync(join(dir, name), "utf8")) as NeonBytesHour;
-      if (part.hour !== hour) continue;
-      sum.requests += part.requests;
-      sum.bytes.reader += part.bytes.reader ?? 0;
-      sum.bytes["control-plane"] += part.bytes["control-plane"] ?? 0;
-      for (const [caller, bytes] of Object.entries(part.byCaller)) sum.byCaller[caller] = (sum.byCaller[caller] ?? 0) + bytes;
-      sum.processes.push(...part.processes);
-      for (const [name, count] of Object.entries(part.counters ?? {})) sum.counters[name] = (sum.counters[name] ?? 0) + count;
-    } catch { /* a half-written or foreign file */ }
-  }
-  return { hour, ...sum };
-}
-
-/** Delete hour files older than `keepMs` (default two days). */
-export function pruneNeonBytes(dir: string, nowMs: number = Date.now(), keepMs = 48 * 3_600_000): void {
-  const oldest = hourStart(nowMs - keepMs).slice(0, 13);
-  let names: string[] = [];
-  try { names = readdirSync(dir); } catch { return; }
-  for (const name of names) {
-    if (name.slice(0, 13) < oldest) { try { unlinkSync(join(dir, name)); } catch { /* already gone */ } }
-  }
+/** The runner parent sums the hour itself (takeNeonBytesHours); it never reports to its own output. */
+export function keepNeonBytesInProcess(): void {
+  keptInProcess = true;
 }
 
 export function summarizeNeonBytes(hour: NeonBytesHour, top = 20): NeonBytesSummary {

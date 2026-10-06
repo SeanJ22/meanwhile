@@ -134,8 +134,9 @@ import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "..
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { hostMemoryReading } from "../lib/control-plane/workers/worker-slots.ts";
-import { VITAL_SIGNS_DIR_ENV, countVitalSign, flushNeonBytes, formatNeonBytesLine, hourStart, pruneNeonBytes,
-  readNeonBytesHour, summarizeNeonBytes } from "../lib/db/transfer-by-caller.ts";
+import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
+  summarizeNeonBytes, takeNeonBytesHours } from "../lib/db/transfer-by-caller.ts";
+import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import { VITAL_COUNTERS, composeVitalSignsRow, formatVitalSignsLine, readHourCosts, writeVitalSignsRow,
   type HourCosts } from "../lib/control-plane/vital-signs.ts";
 import { neon } from "@neondatabase/serverless";
@@ -146,7 +147,7 @@ import {
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
 import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
-import { runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
+import { receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
 import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
@@ -213,10 +214,17 @@ const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-
 const STDERR_TAIL_LINES = 40;
 
 const ROOT = process.cwd();
-/* Vital signs (Sean, Oct 6): every runner process, this one and each child it starts,
-   writes its hour counts (Neon bytes by calling code, rounds, facts) here, and this parent sums the hour. */
+/* Vital signs (Sean, Oct 6): each child this parent starts, and theirs, prints its hour counts (Neon bytes
+   by calling code, rounds, facts) as report lines; this parent alone keeps them here, with its own, and sums the hour. */
 const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
-process.env[VITAL_SIGNS_DIR_ENV] = VITAL_SIGNS_DIR;
+process.env[VITAL_SIGNS_REPORT_ENV] = "1";
+keepNeonBytesInProcess();
+receiveChildVitalSigns(part => { keepNeonBytesPart(VITAL_SIGNS_DIR, part); });
+/** This process's own hour counts, kept beside its children's. */
+function keepOwnNeonBytes(nowMs: number): void {
+  for (const part of takeNeonBytesHours(nowMs)) keepNeonBytesPart(VITAL_SIGNS_DIR, part);
+}
+process.once("exit", () => { keepOwnNeonBytes(Date.now()); });
 // Keep the exact launch path, but do not pass reporting secrets to workers.
 // The owner-snapshot collector reloads only those keys from this private file.
 if (!process.env.WTP_BILLING_ENV_FILE) {
@@ -1165,7 +1173,7 @@ async function requestQueuedReleaseDrain(): Promise<void> {
 }
 /** The last full UTC hour and the hour so far, summed over every runner process's file. */
 function neonBytesReading(nowMs = Date.now()): NonNullable<RunnerHeartbeat["neonBytes"]> {
-  flushNeonBytes(VITAL_SIGNS_DIR, nowMs);
+  keepOwnNeonBytes(nowMs);
   const current = hourStart(nowMs);
   return {
     lastFullHour: summarizeNeonBytes(readNeonBytesHour(VITAL_SIGNS_DIR, hourStart(nowMs - 3_600_000)), 20),
@@ -1200,7 +1208,7 @@ const vitalSignsTimer = setInterval(() => {
   if (vitalSignsWork) return;
   vitalSignsWork = (async () => {
     const nowMs = Date.now();
-    flushNeonBytes(VITAL_SIGNS_DIR, nowMs);
+    keepOwnNeonBytes(nowMs);
     const previous = hourStart(nowMs - 3_600_000);
     if (nowMs - Date.parse(hourStart(nowMs)) >= 120_000 && vitalSignsFinalHour !== previous) {
       vitalSignsFinalHour = previous;

@@ -3,7 +3,8 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { countNeonBytes, countVitalSign, flushNeonBytes, readNeonBytesHour } from "../lib/db/transfer-by-caller.ts";
+import { countNeonBytes, countVitalSign, takeNeonBytesHours } from "../lib/db/transfer-by-caller.ts";
+import { keepNeonBytesPart, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import {
   HOUR_COSTS_SQL, VITAL_COUNTERS, composeVitalSignsRow, controlPlaneByCaller, costPerFact, formatVitalSignsLine,
   readHourCosts, writeVitalSignsRow,
@@ -19,7 +20,7 @@ test("the hour row sums every process's counts, keeps control-plane bytes apart,
     countNeonBytes("reader", 900, AT);
     countVitalSign(VITAL_COUNTERS.roundsFinished, 2, AT);
     countVitalSign(VITAL_COUNTERS.roundsDeferred, 1, AT);
-    flushNeonBytes(dir, AT);
+    for (const part of takeNeonBytesHours(AT)) keepNeonBytesPart(dir, part);
     const accounting = readNeonBytesHour(dir, HOUR);
     const row = composeVitalSignsRow({ accounting, releaseSha: "abc", writtenAt: "2020-02-03T05:20:00.000Z",
       costs: { spendUsd: 1.5, unpricedCharges: 0, paidJobsEnded: 4, paidJobsEndedEmpty: 1 } });

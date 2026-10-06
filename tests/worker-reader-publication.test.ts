@@ -576,7 +576,8 @@ test("CA-19: a registered state executive action traverses normal workers, Slide
   assert.equal(served.length, 2);
   assert.equal((await withReaderAuthorityEdge({ promoted: new Map(), edgeOnly: true },
     () => stateExecutiveActionsFor({ division, officialId: action.officeholderId, name: action.officeholderName }))).length, 0);
-  await withReaderAuthorityEdge(context, async () => {
+  const independentContext = { ...context, registryRuntime: { ...context.registryRuntime, value: { ...context.registryRuntime.value, officialCandidacies: { ...context.registryRuntime.value.officialCandidacies, rows: context.registryRuntime.value.officialCandidacies.rows.map(row => row.holder.id === action.officeholderId ? { ...row, status: "NO_APPLICABLE_CANDIDACY" as const, candidacy: null, reason: "Offline control: held executive has no election relationship.", unresolvedCandidacyIds: [] } : row) } } } };
+  await withReaderAuthorityEdge(independentContext, async () => {
     const { GET } = await import("@/app/api/official-actions/[subject]/route");
     const api = await GET(new Request("https://wtp.test/api/official-actions/test"), { params: Promise.resolve({ subject: action.officeholderId }) });
     const answer = await api.json();

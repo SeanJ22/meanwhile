@@ -1,0 +1,38 @@
+{
+  "commit": "f420e0bd2af96e282fb2d8e0d5e66d01c638fa07",
+  "status": "INTERRUPTED, SUPERSEDED, NEVER PUBLISHED READY",
+  "gateExitCode": 130,
+  "reason": "Source review found state action API depends on a ballot bridge. CA19 actions must stand alone. Repair and new exact candidate required. Canonical test incomplete, never PASS.",
+  "evidence": {
+    "/tmp/ballot-actions-exact-gates.log": {
+      "archive": ".factory/ballot-f420-superseded-ballot-actions-exact-gates.log.gz",
+      "sha256": "b7e1588359ba47faa65c2b5434e0e5c3eb6571b1df99ef998123eff5af5d09e1",
+      "bytes": 628
+    },
+    "/tmp/ballot-actions-selector.log": {
+      "archive": ".factory/ballot-f420-superseded-ballot-actions-selector.log.gz",
+      "sha256": "2fc1a5254df4411c6b16c3b04db33a494e7e017ab607a97e9e2bfd51b9d1e57f",
+      "bytes": 123
+    },
+    "/tmp/ballot-actions-selector-verified.log": {
+      "archive": ".factory/ballot-f420-superseded-ballot-actions-selector-verified.log.gz",
+      "sha256": "8557958ed71f8293dbafe45ae1a99f7fdbf401b1f235326aea039567dca5f321",
+      "bytes": 3478
+    },
+    "/workspace/meanwhile-ballot-actions-check/.scratch/ci/test-shard-1-of-1.log": {
+      "archive": ".factory/ballot-f420-superseded-test-shard-1-of-1.log.gz",
+      "sha256": "fd0890df1468939b920faf40d8ed3f5341f01127a46bac6389aabd29f3b06254",
+      "bytes": 142193
+    },
+    "/workspace/meanwhile-ballot-actions-check/.scratch/ci/test-shard-1-of-1.json": {
+      "archive": ".factory/ballot-f420-superseded-test-shard-1-of-1.json.gz",
+      "sha256": "aee54482b6cc20637943ac7eaffa3551b84da0e02261ed098602a9aaef9e9c1a",
+      "bytes": 312193
+    },
+    "/workspace/meanwhile-ballot-actions-check/.scratch/ci/test-shard-1-of-1.timings.jsonl": {
+      "archive": ".factory/ballot-f420-superseded-test-shard-1-of-1.timings.jsonl.gz",
+      "sha256": "bc1db775f72875748fee832c0f5e78769d0784fb7429c89389381223f4e91c93",
+      "bytes": 26106
+    }
+  }
+}

@@ -15,12 +15,12 @@ export async function generalActionsForOfficial(officialId: string, name: string
 
 export async function generalOfficialActionsForTarget(subjectId: string): Promise<ReaderOfficialActions | null> {
   const officialIds = subjectId.startsWith("ballot-") ? officialIdsForCandidacy(subjectId)
-    : currentOfficialIdentity(subjectId) ? [subjectId] : [];
+    : [subjectId];
   const records: ReaderOfficialAction[] = [];
   for (const id of officialIds) {
-    const current = currentOfficialIdentity(id);
-    if (!current) continue;
-    for (const row of await generalActionsForOfficial(id, current.name)) records.push({ id: row.id, officialId: id, kind: row.kind,
+    const held = currentStatewideExecutives().filter(row => row.holder.id === id);
+    if (held.length !== 1) continue;
+    for (const row of await generalActionsForOfficial(id, held[0].holder.name)) records.push({ id: row.id, officialId: id, kind: row.kind,
       text: row.sourceSentence, sourceUrl: row.sourceUrl, documentUrl: row.documentUrl, sourceOrg: row.sourceOrg, collectedAt: row.collectedAt,
       sourceKind: row.sourceKind });
   }

@@ -33,6 +33,7 @@ export interface RepairScope {
   readonly files: readonly { readonly path: string; readonly content: string }[];
   /** The kind's own tests, which are all that run to check the repair. */
   readonly testFiles: readonly string[];
+  readonly testSources: readonly { readonly path: string; readonly content: string }[];
   readonly example: FailingExample;
 }
 
@@ -59,9 +60,10 @@ export function repairScope(input: {
     ok: true,
     scope: {
       kind,
-      writable: { folder, fixtures: `tests/fixtures/${kind}/`, tests: selected.files },
+      writable: { folder, fixtures: `tests/fixtures/${kind}/`, tests: selected.files.filter(path => !path.startsWith("tests/composite")) },
       files: files.map((path) => ({ path, content: input.readText(path) })),
       testFiles: selected.files,
+      testSources: selected.files.filter(path => !path.startsWith("tests/composite")).map(path => ({ path, content: input.readText(path) })),
       example: input.example,
     },
   };
@@ -86,6 +88,8 @@ export function repairBrief(scope: RepairScope): string {
     scope.example.savedBytes,
     "The adapter's files:",
     ...scope.files.map((f) => `--- ${f.path}\n${f.content}`),
+    "The adapter's tests:",
+    ...scope.testSources.map((f) => `--- ${f.path}\n${f.content}`),
     `It is checked by these tests alone: ${scope.testFiles.join(", ")}.`,
   ].join("\n");
 }

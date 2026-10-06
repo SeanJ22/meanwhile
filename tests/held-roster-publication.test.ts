@@ -74,7 +74,7 @@ test("the wrong page, a stale page and an unlinked non-government page never pub
     members: readHeldRoster(c.evidence.text, c.evidence.canonicalUrl)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) });
   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Boards"))), prior: base, now: NOW }), /ROSTER_PAGE_NOT_THIS_BODY/);
   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), URL_, "2026-07-01T00:00:00.000Z")), prior: base, now: NOW }), /OUTSIDE_FRESHNESS_WINDOW/);
-  assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), "https://benson-az.example.com/council")), prior: base, now: NOW }), /NOT_OFFICIAL_SOURCE/);
+  assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), "https://benson-az.example.com/council")), prior: base, now: NOW }), /LINKED_SOURCE_UNVERIFIED/);
 });
 
 test("a complete official roster records a departure; a partial one keeps the prior member on its own source", async () => {

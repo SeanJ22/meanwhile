@@ -3,7 +3,7 @@ import type { OfficialFiling } from "../../lib/civic-data/official-filings";
 const labels: Record<string, string> = { candidateName: "Candidate", office: "Office as filed", electionDate: "Election date",
   filingDate: "Filing date", filingStatus: "Status as filed", party: "Party as filed", committeeName: "Committee",
   committeeId: "Agency committee ID", filingPeriod: "Reporting period", reportType: "Report type", currency: "Currency",
-  receipts: "Reported receipts", expenditures: "Reported expenditures", cashOnHand: "Reported cash on hand" };
+  amount: "Reported amount", receipts: "Reported receipts", expenditures: "Reported expenditures", cashOnHand: "Reported cash on hand" };
 
 export function OfficialFilings({ rows }: { rows: readonly OfficialFiling[] }) {
   if (!rows.length) return null;

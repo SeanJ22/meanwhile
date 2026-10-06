@@ -1,5 +1,5 @@
 diff --git a/lib/civic-data/publish-now.ts b/lib/civic-data/publish-now.ts
-index 605b340d..8759e10b 100644
+index 605b340dd..8759e10b7 100644
 --- a/lib/civic-data/publish-now.ts
 +++ b/lib/civic-data/publish-now.ts
 @@ -3,6 +3,7 @@ import type { RoutineSourceTask } from "./runner.ts";
@@ -23,7 +23,7 @@ index 605b340d..8759e10b 100644
  
  /** Probe changes stay pending until a successful read; no due-request expiry
 diff --git a/lib/civic-data/worker-publication-evidence.ts b/lib/civic-data/worker-publication-evidence.ts
-index 7102f203..4794b317 100644
+index 7102f203b..4794b3179 100644
 --- a/lib/civic-data/worker-publication-evidence.ts
 +++ b/lib/civic-data/worker-publication-evidence.ts
 @@ -11,6 +11,7 @@ import type { ManualSourceSetReceipt } from "./types.ts";
@@ -74,7 +74,7 @@ index 7102f203..4794b317 100644
 +    at: [...broke.map(r => r.endedAt), ...live.map(p => p.at)].sort().at(-1)! };
  }
 diff --git a/lib/civic-data/worker-publication-tasks.ts b/lib/civic-data/worker-publication-tasks.ts
-index d0d94c3e..0a0d8b54 100644
+index d0d94c3ec..0a0d8b54a 100644
 --- a/lib/civic-data/worker-publication-tasks.ts
 +++ b/lib/civic-data/worker-publication-tasks.ts
 @@ -4,6 +4,7 @@ import type { WorkItem } from "../control-plane/work-item.ts";
@@ -105,7 +105,7 @@ index d0d94c3e..0a0d8b54 100644
        const published = outcome?.workerResultId === parser.id || outcome?.workerResultId.startsWith(`${parser.id}+`);
        if (outcome && published && (outcome.status !== "HELD" || outcome.recovery === "WORKER") && !(pull && pull.at > outcome.at)) return [];
 diff --git a/lib/civic-data/worker-reader-publication.ts b/lib/civic-data/worker-reader-publication.ts
-index 08ea40dd..f3c4e779 100644
+index a9e18f8de..40df5a3be 100644
 --- a/lib/civic-data/worker-reader-publication.ts
 +++ b/lib/civic-data/worker-reader-publication.ts
 @@ -18,6 +18,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
@@ -116,7 +116,7 @@ index 08ea40dd..f3c4e779 100644
  import { auditPull, captureIntact, capturesForPublication, section3SourceReceipt, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
  import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
  import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
-@@ -247,7 +248,8 @@ export async function publishWorkerReaderResults(input: {
+@@ -280,7 +281,8 @@ export async function publishWorkerReaderResults(input: {
      const parser = latestParserResult(results, id);
      if (!parser || plan?.publication?.contractId !== input.contractId) continue;
      // A BROKE audit after this publication is re-checked once; otherwise a published or worker-owed result waits for a newer extraction.
@@ -126,17 +126,17 @@ index 08ea40dd..f3c4e779 100644
      if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.recovery !== "PUBLISHER" && !(pull && pull.at > item.publicationOutcome.at)) {
        report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;
      }
-@@ -257,7 +259,7 @@ export async function publishWorkerReaderResults(input: {
+@@ -290,7 +292,7 @@ export async function publishWorkerReaderResults(input: {
        requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
        captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
        const registry = await readRegistryRuntimePrior(input.store, input.now);
--      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results });
-+      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results, livePulls });
+-      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results,
++      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results, livePulls,
+         ...(input.contractId === "stances" ? { stanceTopicIds: await readStanceTopicIds() } : {}) });
        const checked = built.package;
        const prior = await readManualProjectionPrior(input.contractId, input.store, input.now,
-         manualPayloadScope(input.contractId, requiredManualProductionContract(input.contractId).scope, checked.payload));
 diff --git a/scripts/routine-civic-data-runner.mts b/scripts/routine-civic-data-runner.mts
-index 9d3d4a5b..d7068345 100644
+index 9d3d4a5b4..d7068345f 100644
 --- a/scripts/routine-civic-data-runner.mts
 +++ b/scripts/routine-civic-data-runner.mts
 @@ -11,6 +11,7 @@ import { workerPublicationContext } from "../lib/civic-data/worker-publication-c
@@ -159,7 +159,7 @@ index 9d3d4a5b..d7068345 100644
      // DB-26: the hourly first look. Each hot door's page or feed is looked at once an hour; a change is stored on the
      // door and read below at once. A look that cannot be made never stops the read of a door already known to have changed.
 diff --git a/tests/audit-pull.test.ts b/tests/audit-pull.test.ts
-index 56a20827..1ebdbc51 100644
+index 56a20827a..1ebdbc51d 100644
 --- a/tests/audit-pull.test.ts
 +++ b/tests/audit-pull.test.ts
 @@ -15,3 +15,13 @@ test("a BROKE audit of an extraction pulls the records it names, or all of it wh

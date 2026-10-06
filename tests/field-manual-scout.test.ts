@@ -200,7 +200,7 @@ test("legacy empty refusal lists do not invent a failed finish or require missin
 
 test("the paid-ending entry point saves a refused empty result and the next role inherits its exact-subject lesson", async () => {
   const repos = createMemoryRepositories();
-  const stopped = result({ candidates: [], outcome: "NO_PROGRESS", refusal: ["finish refused"], researchRole: "DETECTIVE" });
+  const stopped = result({ candidates: [], outcome: "NO_PROGRESS", refusal: [{ code: "SCOUT_NO_TOOL_USED", detail: "finish refused" }], researchRole: "DETECTIVE" });
   const written = await writePaidEndingLearning(repos, stopped, stopped.recordedAt);
   assert.equal(written.error, undefined); assert(written.written > 0);
   const read = await readFieldManual(repos, { role: "SCOUT", subjectId: stopped.subjectId, recordClass: "meetings" });

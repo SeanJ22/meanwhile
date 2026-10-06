@@ -2,7 +2,7 @@
  * Uses existing validators and durable outcomes. Admission follows manual
  * persistence; retry after either store's failure is safe. No human gate.
  */
-import { candidateCounts, introducedIssues, markAdmitted, markRejected, type CandidateLifecycle } from "../method/candidate.ts";
+import { candidateCounts, introducedIssues, markAdmitted, markRejected, type CandidateLifecycle, type CandidateStore } from "../method/candidate.ts";
 import { learnBatch } from "../method/learn-batch.ts";
 import { readMethodKnowledge } from "../method/manual-bridge.ts";
 import { ConcurrentModification, type ControlPlaneRepositories } from "./repository/types.ts";
@@ -21,13 +21,13 @@ export async function admitValidatedBankCandidates(input: {
     const current = await input.repos.methodCandidates.read("live");
     if (!current || current.value.storeVersion !== 1 || !Array.isArray(current.value.candidates)) throw new Error("METHOD_CANDIDATE_STORE_UNREADABLE");
     let knowledge = await readMethodKnowledge(input.repos);
-    let store = current.value;
+    let store: CandidateStore = current.value;
     const before = candidateCounts(store);
     const decisions: { candidateId: string; routeId: string; lifecycle: CandidateLifecycle; why: string }[] = [];
     let changed = false;
     const entries: FieldManualEntry[] = [];
     const accepted: { id: string; routeId: string; learned: boolean }[] = [];
-    for (const candidate of current.value.candidates.filter(row => row.lifecycle === "VALIDATED")) {
+    for (const candidate of store.candidates.filter(row => row.lifecycle === "VALIDATED")) {
       const proposal = candidate.proposal;
       const decision = (lifecycle: CandidateLifecycle, why: string) => decisions.push({ candidateId: candidate.id, routeId: proposal.id, lifecycle, why });
       // Do not invent successful evidence for pre-ruling or damaged envelopes.

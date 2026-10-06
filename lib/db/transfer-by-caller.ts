@@ -63,7 +63,8 @@ interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; byCall
 const scope = new AsyncLocalStorage<string>();
 const buckets = new Map<string, Bucket>();
 const siteCache = new Map<string, string>();
-const SITE_CACHE_LIMIT = 5_000;
+/* Stack strings run to a few KB; a small cache keeps the per-process memory under 1 MB. */
+const SITE_CACHE_LIMIT = 256;
 let flushInstalled = false;
 
 export function hourStart(nowMs: number): string {

@@ -31,7 +31,7 @@ export function VitalSignsRow({ row, hour }: { readonly row: HourlyVitalSigns | 
       <div><h3 className={s.h3}>Neon GB per hour</h3><span className={`${s.big} ${(row?.neonBytesRead ?? 0) > 700_000_000 ? s.textWarn : ""}`}>{gb(row?.neonBytesRead)}</span><p className={s.small}>Target: under 0.7 GB</p><Causes rows={row?.neonBytesByCaller}/></div>
       <div><h3 className={s.h3}>Rounds finished</h3><span className={s.big}>{number(row?.roundsFinished)}</span></div>
       <div><h3 className={s.h3}>Rounds killed</h3><span className={s.big}>{number(row?.roundsKilled)}</span></div>
-      <div><h3 className={s.h3}>Paid jobs ending with nothing</h3><span className={`${s.big} ${(row?.paidJobsEndedEmpty ?? 0) > 0 ? s.textWarn : ""}`}>{number(row?.paidJobsEndedEmpty)}</span></div>
+      <div><h3 className={s.h3}>Paid jobs ending with nothing</h3><span className={`${s.big} ${(row?.paidJobsEndedEmpty ?? 0) > 0 ? s.legacyTextDanger : ""}`}>{number(row?.paidJobsEndedEmpty)}</span></div>
     </div>
     <p className={s.meta}>Confirmed on the live site: {number(row?.factsConfirmed)} of {number(row?.factsSampled)} sampled · Rounds deferred: {number(row?.roundsDeferred)}</p>
     {row?.releaseSha && <Technical lines={[`Runner release ${row.releaseSha}`]}/>} 
@@ -55,7 +55,7 @@ export function BriefVitalSigns({ reading }: { readonly reading: VitalSignsReadi
         <td>{number(row?.factsLive)}</td><td>{money(row?.settledSpendUsd)}</td><td>{money(row?.costPerFactUsd)}</td>
         <td>{gb(row?.neonBytesRead)}<details><summary>Causes</summary><Causes rows={row?.neonBytesByCaller}/></details></td>
         <td>{number(row?.roundsFinished)}</td><td>{number(row?.roundsKilled)}</td>
-        <td className={(row?.paidJobsEndedEmpty ?? 0)>0?s.textWarn:undefined}>{number(row?.paidJobsEndedEmpty)}</td>
+        <td className={(row?.paidJobsEndedEmpty ?? 0)>0?s.legacyTextDanger:undefined}>{number(row?.paidJobsEndedEmpty)}</td>
       </tr>)}</tbody>
     </table></div> : <p>—</p>}
   </Card>;

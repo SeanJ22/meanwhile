@@ -1,3 +1,4 @@
+import { carriedRowClause, relativeAge } from "../meetings/freshness.ts";
 import type { Meeting, Provenance } from "../sources/types.ts";
 
 import type { RollCallVote } from "../votes/types.ts";
@@ -84,7 +85,8 @@ export function mergeSources(entries: CardSource[]): CardSource[] {
   const byKey = new Map<string, { entry: CardSource; extra: number }>();
 
   for (const entry of entries) {
-    const key = keyOf(entry.provenance);
+    // Captured versions and carried sittings retain their native identity.
+    const key = keyOf(entry.provenance) + (entry.dataAttrs ? `|${JSON.stringify(entry.dataAttrs)}` : "");
     const existing = byKey.get(key);
     if (existing) existing.extra += 1;
     else byKey.set(key, { entry, extra: 0 });
@@ -166,6 +168,10 @@ export function meetingCardSources(
   const entries: CardSource[] = [
     { what: `This sitting — ${meeting.title}${meeting.venueGap ? ` · ${meeting.venueGap.kind === "NOT_STATED_BY_PUBLISHER" ? "Meeting place not stated by" : "Published meeting place from"} ${meeting.venueGap.publisher}` : ""}`, provenance: meeting.provenance },
   ];
+  if (meeting.carried) {
+    const clause = carriedRowClause(meeting.carried);
+    entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } });
+  }
   if (meeting.agendaUrl) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
   for (const [kind, label] of Object.entries(MEETING_SOURCE_LABELS)) {
     for (const provenance of evidence[kind as keyof MeetingCardEvidence] ?? []) entries.push({ what: label, provenance });

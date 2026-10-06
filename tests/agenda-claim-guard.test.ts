@@ -117,7 +117,7 @@ test("SWEEP-01: both agenda surfaces go through the ONE decider", () => {
    * function would leave the next author free to reintroduce the divergence.
    */
   for (const rel of [
-    "components/map/meeting-panel.tsx",
+    "components/ui/meeting-row.tsx",
     "components/map/popup/agenda-section.tsx",
   ]) {
     const source = readFileSync(join(ROOT, rel), "utf8");

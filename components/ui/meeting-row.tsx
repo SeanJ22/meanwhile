@@ -1,11 +1,11 @@
 "use client";
 
+import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 import type { ReactNode } from "react";
 import type { Meeting } from "@/lib/sources/types";
 import type { EvidenceRecord } from "@/lib/ask/evidence";
 import { formatMeetingDate, formatMeetingTime, formatRelativeDay, locationLine, meetingEntryTitle, meetingSubline } from "@/lib/map/format";
 import { onlineAccessFor, venueGapOf, statedVenueText, venueGapLine } from "@/lib/meetings/online";
-import { carriedRowClause, relativeAge } from "@/lib/meetings/freshness";
 import { meetingCardSources } from "@/lib/officials/card-sources";
 import { venueLink } from "@/lib/registry/links";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
@@ -43,6 +43,7 @@ export function MeetingRow(props: RowProps) {
   }
   const { meeting, title = meetingEntryTitle(meeting, { bodyShown: props.bodyShown ?? false }), jurisdiction, nearby, distance, onOpen } = props;
   const access = onlineAccessFor(meeting);
+  const agendaState = agendaSentenceFor(meeting);
   const gap = venueGapOf(meeting);
   const where = meeting.location ? "physical" : access ? "online" : gap ? statedVenueText(gap) !== null ? "stated" : "not-stated" : "unrecorded";
   const directions = meeting.location && meeting.status !== "CONCLUDED" ? venueLink(meeting.location) : null;
@@ -68,12 +69,11 @@ export function MeetingRow(props: RowProps) {
     </div>
     <div className="mt-2 flex flex-wrap items-baseline gap-2 t-detail">
       {meeting.agendaUrl ? <CheckedLink href={meeting.agendaUrl} target="_blank" rel="noreferrer" className="text-link underline">Read the agenda</CheckedLink>
-        : <WorkingOnIt inline subject={body} state={meeting.agendaSlotObservedEmpty ? { kind: "not-published", item: "Agenda" } : undefined} />}
+        : <WorkingOnIt inline subject={body} state={agendaState.whose === "THEIRS" ? { kind: "not-published", item: "Agenda" } : undefined} />}
       {meeting.status === "CONCLUDED" && meeting.videoUrl && <CheckedLink href={meeting.videoUrl} target="_blank" rel="noreferrer" className="text-link underline">Watch the recording</CheckedLink>}
     </div>
     {!compact && meeting.status === "SCHEDULED" && <CalendarLinks meeting={meeting} />}
     {!sourcesInParent && <CardSourcesContribution id={`meeting:${meeting.id}`} sources={meetingCardSources(meeting, [])} />}
-    {meeting.carried && <CardSourcesContribution id={`meeting-carried:${meeting.id}`} sources={[{ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${carriedRowClause(meeting.carried) ? ` — ${carriedRowClause(meeting.carried)}` : ""}`, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } }]} />}
     {children}
   </article>;
 }

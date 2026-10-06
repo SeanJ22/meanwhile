@@ -422,6 +422,7 @@ export function collectPageObservation(): PageObservation {
   // Do not confuse the meeting's date or a reporting period with a read stamp.
   const readStamp = /\b(?:read|checked|retrieved|collected)(?:\s+on)?\s+(?:\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}\/\d{2,4}|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}\b)/i;
   const hostname = /(?<![@\w.-])\b(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:gov|com|org|net|edu|us|io)\b/i;
+  const sourceHosts = new WeakMap<Element, string[]>();
   const cards = '.reader-card, [data-card-id], .candidate-row, .account-modal, .popup-card, [data-official-filing], [data-contest-id], [data-meeting-card]';
   const elements: ObservedElement[] = [];
   const all = document.body ? Array.from(document.body.querySelectorAll("*")) : [];
@@ -439,8 +440,14 @@ export function collectPageObservation(): PageObservation {
       .trim();
     const inSources = el.closest('[data-card-sources]');
     if (ownText && rect.width > 0 && rect.height > 0 && el.closest(cards) && !inSources) {
+      const card = el.closest(cards)!;
+      let hosts = sourceHosts.get(card);
+      if (!hosts) {
+        hosts = Array.from(card.querySelectorAll('[data-card-sources] a[href]')).flatMap(link => { try { return [new URL(link.getAttribute('href')!, location.href).hostname.toLowerCase()]; } catch { return []; } });
+        sourceHosts.set(card, hosts);
+      }
       const sourceText = el.matches("p, a, span, dt, dd") ? (el.textContent ?? ownText) : ownText;
-      const reason = readStamp.test(sourceText) ? "A source read date is visible outside Sources." : hostname.test(sourceText) ? "A source hostname is visible outside Sources." : null;
+      const reason = readStamp.test(sourceText) ? "A source read date is visible outside Sources." : hostname.test(sourceText) || hosts.some(host => sourceText.trim().toLowerCase() === host) ? "A source hostname is visible outside Sources." : null;
       if (reason) sourceLeaks.push({ selector: selectorOf(el), text: ownText, reason });
     }
     const interactive = el.matches(INTERACTIVE);

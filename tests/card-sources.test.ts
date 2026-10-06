@@ -224,3 +224,15 @@ test("shared meeting card retains agenda, minutes, decisions and comment sources
   for (const provenance of [agendas, minutes, records, commentAccess]) assert.deepEqual(sources.find(row => row.provenance.sourceUrl === provenance.sourceUrl)?.provenance, provenance);
   assert.equal(sourceCountLabel(sources), String(sources.length));
 });
+
+test("carried sitting metadata cannot disappear into its calendar's ordinary source row", () => {
+  const meeting = meetingFixture("carried:one", "Example Clerk", "https://clerk.example.gov/calendar");
+  meeting.carried = { source: "calendar", lastFreshAt: "2026-09-30", reason: "UNEXPLAINED_DISAPPEARANCE" };
+  const sources = meetingCardSources(meeting, []);
+  const carried = sources.find(row => row.dataAttrs?.["data-meeting-carried-source"] === meeting.id);
+  assert.ok(carried);
+  assert.equal(carried.provenance.collectedAt, meeting.carried.lastFreshAt);
+  assert.match(carried.what, /latest check of this calendar didn't find this listing/);
+  assert.doesNotMatch(carried.what, /couldn't reach/);
+  assert.equal(sourceCountLabel(sources), String(sources.length));
+});

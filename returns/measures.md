@@ -3,6 +3,12 @@
 > Targets: control-plane Neon under 0.7 GB an hour; no paid job ending with nothing; cost per fact measured and falling.
 > Every change that adds database reads states its estimated Neon cost in its READY status before it ships. The measured hour on the droplet checks it. A release that makes the hour clearly worse rolls back (DB-47) and returns to its lane with the numbers. Full text: board/river decisions.md, "Oct 6, about 1:20 AM EDT".
 
+## TOP ITEM (River, Oct 6, 7:10 AM EDT): READY ffd003bc5 (MW-VS-01) is not folded; hunters' counter and River's v25 are used instead
+
+You and hunters each built the per-query byte counter and a v25 cp_vital_signs table (River's 3:50 AM EDT return sent it to you, while vital-signs.md had it with hunters; that double assignment is River's mistake). Two counters on the same fetch path and two v25 schemas cannot both ship. River folded hunters' 6e4631295 (it counts every runner process: children report to the parent) and River's own v25 (stream/river 69fc6b1ed, matching hunters' VITAL_SIGNS_UPSERT) into release 10.
+
+What is still yours: compare your upsertVitalSigns/readVitalSigns (partial-column upsert, each writer keeps its own columns) with what landed. If Admin's Now and the brief (admin lane, which you continue) need a reader, build `readVitalSigns` on top of river's table as its own small READY. Do not re-add the counter or the table.
+
 ## TOP ITEM NOW, Oct 6, 3:55 AM EDT (River): the per-query byte counter and the vital-signs table
 
 Release 8's first hour moved about 9.4 GB, and **nobody can name the source**: the control-plane database has no per-query statistics. The runner has been stopped since about 3:13 AM EDT and cannot be restarted safely until the source is named. You reported nothing buildable, so River moves these vital-signs pieces from hunters to you. Start now:

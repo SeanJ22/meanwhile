@@ -84,6 +84,7 @@
 
 import type { ExecutorKind } from "./dispatch.ts";
 import type { FreshnessObligation } from "./obligation.ts";
+import type { AutonomousWorkPlan } from "../workers/autonomous-plan.ts";
 
 /* ------------------------------------------------------------------ routes */
 
@@ -227,6 +228,11 @@ export interface ProvidedObligation {
    * normal case for anything a vendor serves.
    */
   readonly routes: readonly RouteDescriptor[];
+  /**
+   * CH-22: the work plan a route's paid work carries, by route id, so its findings go through the
+   * coordinator and the builders to a reader door, the way a Send's do. A route with none stays as it was.
+   */
+  readonly autonomousPlans?: Readonly<Record<string, AutonomousWorkPlan>>;
 }
 
 /** What a provider was given to read. No clock is read inside a provider. */
@@ -367,6 +373,7 @@ export function buildRegistry(
               ? { declaredCycleHours: record.declaredCycleHours }
               : {}),
             lastWorkedAt: record.lastWorkedAt,
+            ...(record.autonomousPlans?.[route.routeId] ? { autonomousPlan: record.autonomousPlans[route.routeId] } : {}),
           },
         });
         count += 1;

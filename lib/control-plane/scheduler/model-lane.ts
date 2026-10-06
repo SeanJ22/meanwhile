@@ -74,6 +74,8 @@ export interface ModelLaneFacts {
 export interface ModelLaneClosure {
   readonly code: "LANE_DISABLED" | "PAUSED";
   readonly reason: string;
+  /** CH-22: closed only because paid work runs in the standing hunter lane; the round queues planned work for it. */
+  readonly hunterLane?: true;
 }
 
 /** The latest saved lane decision awaiting this normal cycle's acknowledgement. */
@@ -133,7 +135,7 @@ export function modelLaneClosure(f: ModelLaneFacts): ModelLaneClosure | null {
     return { code: "LANE_DISABLED", reason: `${f.spendHold}; paid model work waits while held and plain-code work continue` };
   }
   if (f.paidWorkInHunterLane) {
-    return { code: "LANE_DISABLED", reason: "paid model work runs in the standing hunter lane (WTP_CONTINUOUS_HUNTERS=1); this round plans and queues it, and plain-code work continues" };
+    return { code: "LANE_DISABLED", hunterLane: true, reason: "paid model work runs in the standing hunter lane (WTP_CONTINUOUS_HUNTERS=1); this round plans and queues it, and plain-code work continues" };
   }
   return null;
 }

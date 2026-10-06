@@ -1,3 +1,8 @@
+import {governmentMoneyView} from "../lib/funding/government-money.ts";
+import {governmentFinanceEvidence,composeGovernmentFinanceAnswer} from "../lib/ask/government-finance.ts";
+import {createElement} from "react";
+import {renderToStaticMarkup} from "react-dom/server";
+import {GovernmentMoneySection} from "../components/funding/government-money-section.tsx";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -44,6 +49,15 @@ test("Census, FAC and USAspending saved rows publish to the exact scoped typed r
     assert.equal(record.details.amount, 123.45, "source units are retained; dollars are not computed");
     assert.equal(record.details.units, "thousand dollars");
     assert.equal(record.sourceHash, response.rawHash);
+    const view=governmentMoneyView(read.value.records,government.bodyId,ocdId);
+    assert.match(view.rows[0].text,/amount: 123.45; units: thousand dollars/);
+    assert.equal(view.rows[0].period,"FY2025");
+    const markup=renderToStaticMarkup(createElement(GovernmentMoneySection,{bodyId:government.bodyId,divisionId:ocdId,records:read.value.records}));
+    assert.match(markup,/thousand dollars/);
+    assert.match(markup,/Sources/);
+    assert.doesNotMatch(markup,/Foreign government|99 Private Lane/);
+    const evidence=await governmentFinanceEvidence(government.bodyId,ocdId,{store,now});
+    assert.equal(composeGovernmentFinanceAnswer({subject:{kind:"BODY",id:government.bodyId,name:government.name},question:"What is its revenue?",records:evidence})?.answer,view.rows[0].text);
     assert.equal(governmentFinanceChecklistEvidence([record], government.bodyId)["FIN-08"].length, 0, "unheld reconciliation stays owed");
     await assert.rejects(publishNationalGovernmentFinance(store, { ...input, responses: [{ ...response, partial: true }] }));
     assert.equal((await readGovernmentBudgets(ocdId, { store, now, bypassCache: true })).kind, "PROMOTED", "failed acquisition preserves GOOD");
@@ -77,4 +91,20 @@ test("checklist finance categories distinguish budgets from spending and reconci
   assert.equal(governmentFinanceChecklistEvidence([operation, capital, spending], "body")["FIN-06"].length, 2);
   assert.equal(governmentFinanceChecklistEvidence([{ ...operation, sourceSentence: "The proposed budget is version v1." }, capital], "body")["FIN-06"].length, 0);
   assert.equal(governmentFinanceChecklistEvidence([spending], "body")["FIN-10"].length, 0, "unheld payee and category stay blank");
+});
+
+
+test("card and Ask select audit fiscal periods without treating capture order as the year or inventing totals",async()=>{
+  const bodyId="fixture-county#governing",ocdId="ocd-division/country:us/state:oh/county:alder";
+  const audit=(year:string,capturedAt:string)=>governmentFinanceFact({bodyId,ocdId,government:"Alder County",sourceUrl:`https://finance.example.gov/audit-${year}`,sourceHash:"a".repeat(64),capturedAt,title:`Audit ${year}`,sourceSentence:`The audit for ${year} reports no findings.`,detailKind:"AUDIT",details:{fiscalPeriod:year}});
+  const records=[audit("FY2024","2026-10-06T00:00:00Z"),audit("FY2025","2026-10-05T00:00:00Z")];
+  const card=governmentMoneyView(records,bodyId,ocdId);
+  assert.deepEqual(card.rows.map(row=>row.period),["FY2025"]);
+  assert.deepEqual(card.sources.map(row=>row.provenance.sourceUrl),[records[1].sourceUrl]);
+  const evidence=records.map(row=>({kind:"GOVERNMENT_FINANCE" as const,id:row.id,subjectId:bodyId,bodyId,text:row.sourceSentence,sourceUrl:row.sourceUrl,governmentFinance:row}));
+  const subject={kind:"BODY" as const,id:bodyId,name:"Alder County"};
+  assert.equal(composeGovernmentFinanceAnswer({subject,question:"What is its latest audit?",records:evidence})?.answer,records[1].sourceSentence);
+  assert.equal(composeGovernmentFinanceAnswer({subject,question:"What is its FY2024 audit?",records:evidence})?.answer,records[0].sourceSentence);
+  assert.equal(composeGovernmentFinanceAnswer({subject,question:"How much is its debt?",records:evidence}),null);
+  assert.match(renderToStaticMarkup(createElement(GovernmentMoneySection,{bodyId,divisionId:ocdId,records:[]})),/We.*working on getting this info/);
 });

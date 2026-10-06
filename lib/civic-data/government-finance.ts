@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { GOVERNMENT_FINANCE_KINDS, governmentFinanceIssue, type GovernmentFinanceFact } from "./government-finance-contract.ts";
+import { GOVERNMENT_FINANCE_KINDS, governmentFinanceIssue, type GovernmentFinanceFact, type GovernmentFinanceField, type GovernmentFinanceKind } from "./government-finance-contract.ts";
 import type { BudgetSource } from "./government-budget-contract.ts";
 
 /** Shared by worker and national code readers. Callers supply only fields

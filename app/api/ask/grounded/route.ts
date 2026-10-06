@@ -1,3 +1,4 @@
+import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
@@ -710,7 +711,7 @@ export async function POST(request: Request) {
   const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
   /* Shapes whose subject is never a person: their answer reads no vote, statement or action record, and no county finance
      unless it is a money question. Deferred the same way the sitting shapes are, on the same proof (2026-09-29, S3). */
-  const noPersonRecordShapes = new Set([...sittingShapes, "BODY_ROSTER", "BODY_CIVICS", "MEASURE_EXPLAIN", "CONTEST_FIELD"]);
+  const noPersonRecordShapes = new Set([...sittingShapes, "BODY_ROSTER", "BODY_CIVICS", "GOVERNMENT_MONEY", "MEASURE_EXPLAIN", "CONTEST_FIELD"]);
   const deferShape = !topicRoute && !financeQuestionAsked(question) && noPersonRecordShapes.has(lexicalQuestionShape(question)?.shape ?? "");
   /* A question about a person's campaign money and nothing they did in office reads none of their votes, key votes,
      statements or actions (`moneyOnly` below), whoever the subject turns out to be: no proof is needed to leave them unread. */
@@ -1743,6 +1744,13 @@ export async function POST(request: Request) {
       }
     } else if (subject?.kind === "BODY") {
       const identity = canonicalBodyIdentity(subject.id);
+      const financeDivision = bound?.ocdId ?? identity?.ocdId;
+      if (financeDivision && governmentFinanceQuestion(question)) {
+        const finance = await governmentFinanceEvidence(subject.id, financeDivision).catch(() => []);
+        records.push(...finance);
+        denominators.governmentFinanceRecordsReturned = finance.length;
+        if (!finance.length) gaps.push({ whose: "OURS", statement: "We're working on getting this info about this government's finances." });
+      }
       const access = commentAccessEvidenceFor(subject.id, bound?.ocdId ?? null, subject.name);
       records.push(...access.records);
       gaps.push(...access.gaps);
@@ -2874,8 +2882,10 @@ export async function POST(request: Request) {
       (text, urls) => validateAnswer(text, urls, pack, bodies));
     const ownWordsSettled = settleSittingComposition(ownWordsComposed,
       (text, urls) => validateAnswer(text, urls, pack, bodies));
-    const composed = ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const governmentFinanceSettled = settleSittingComposition(composeGovernmentFinanceAnswer({ subject, question, records: packRecords }),
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const composed = governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"

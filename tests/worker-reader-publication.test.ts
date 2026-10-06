@@ -1,3 +1,9 @@
+import { promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { scopedManualContractScope } from "../lib/civic-data/scoped-manual-contracts.ts";
+import { readPublicKindOwed } from "../lib/coverage/public-kind-owed.ts";
+import { governmentMoneyView } from "../lib/funding/government-money.ts";
+import { governmentFinanceEvidence, composeGovernmentFinanceAnswer } from "../lib/ask/government-finance.ts";
 import { checkDoorDraft, applyManualEdit } from "../lib/doors/registry.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { createHash } from "node:crypto";
@@ -267,7 +273,14 @@ test("an unfamiliar source-worded kind publishes automatically to its exact plac
   assert.equal(read.value.records[0].kindLabel, "watershed notice");
   assert.equal((await readPublicRecords("ocd-division/country:us/state:oh/county:alder", { store: f.store, now: f.h.now() })).kind, "NOT_RECORDED");
   assert.equal((await takeUnshownUpdates(f.h.repos, f.h.now())).filter(row => row.what === "New kind found: watershed notice").length, 1);
-  await publishWorkerReaderResults(f.input);
+  const owed = await readPublicKindOwed(f.h.repos, [f.body.ocdId!]);
+  assert.equal(owed.length, 1);
+  assert.equal(owed[0].kindLabel, "watershed notice");
+  assert.equal(owed[0].owedSince, f.input.now);
+  assert.equal(owed[0].sourceUrl, read.value.records[0].sourceUrl);
+  assert.deepEqual(await readPublicKindOwed(f.h.repos, ["ocd-division/country:us/state:oh/county:alder"]), []);
+  await publishWorkerReaderResults({ ...f.input, now: "2026-10-06T00:00:00Z" });
+  assert.deepEqual(await readPublicKindOwed(f.h.repos, [f.body.ocdId!]), owed);
   assert.equal((await takeUnshownUpdates(f.h.repos, f.h.now())).length, 0);
 });
 
@@ -280,6 +293,38 @@ test("an adopted budget publishes from saved official document bytes; a proposal
   const read = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("Budget missing");
+  const money = governmentMoneyView(read.value.records, f.body.id, f.body.ocdId!);
+  assert.equal(money.rows[0].period, "FY2027");
+  assert.equal(money.rows[0].text, facts.sourceSentence);
+  assert.equal(money.sources[0].provenance.sourceUrl, FIXTURE_URL);
+  assert.equal(governmentMoneyView(read.value.records, "other-body", f.body.ocdId!).rows.length, 0);
+  const evidence = await governmentFinanceEvidence(f.body.id, f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  const answer = composeGovernmentFinanceAnswer({subject:{kind:"BODY",id:f.body.id,name:f.body.name!},question:"What is this government's budget?",records:evidence});
+  assert.equal(answer?.answer, facts.sourceSentence);
+  const scope = scopedManualContractScope("government-budgets", f.body.ocdId!);
+  const edge = promotedEdgeEntryOf(await readGovernmentBudgets(f.body.ocdId!, {store:f.store,now:f.h.now()}), "CURATED_READER_RECORD", scope, f.store);
+  assert.ok(edge);
+  await withReaderAuthorityEdge({registryRuntime:{value:f.prior.payload,versionId:f.prior.versionId},promoted:new Map([[`CURATED_READER_RECORD:${scope}`,edge]]),edgeOnly:true},async () => {
+    assert.deepEqual(await governmentFinanceEvidence(f.body.id, f.body.ocdId!), evidence);
+    const { GET } = await import("@/app/api/government-finance/route");
+    const api = await GET(new Request(`https://wtp.test/api/government-finance?division=${encodeURIComponent(f.body.ocdId!)}&body=${encodeURIComponent(f.body.id)}`));
+    assert.equal(api.status, 200);
+    assert.equal((await api.json()).records[0].sourceSentence, facts.sourceSentence);
+    const { POST } = await import("@/app/api/ask/grounded/route");
+    const response = await POST(new Request("https://wtp.test/api/ask/grounded", {method:"POST", headers:{"content-type":"application/json",origin:"https://wtp.test",host:"wtp.test","x-wtp-synthetic-run":"ballot-government-budget"},
+      body:JSON.stringify({question:"What is this government's budget?",today:"2026-10-05",ocdIds:[f.body.ocdId!],activeSubjects:[{id:f.body.id,kind:"BODY",name:f.body.name,focused:true}]})}));
+    const result = await response.json();
+    assert.equal(response.status,200,JSON.stringify(result));
+    assert.equal(result.subject?.id,f.body.id,JSON.stringify(result));
+    assert.ok(result.records.some((row:{kind:string;text:string})=>row.kind==="GOVERNMENT_FINANCE" && row.text===facts.sourceSentence),JSON.stringify(result));
+    assert.equal(result.answer,facts.sourceSentence,JSON.stringify(result));
+  });
+  await withReaderAuthorityEdge({promoted:new Map(),edgeOnly:true},async () => {
+    assert.deepEqual(await governmentFinanceEvidence(f.body.id, f.body.ocdId!), []);
+  });
+  assert.deepEqual(answer?.citedUrls, [FIXTURE_URL]);
+  assert.equal(composeGovernmentFinanceAnswer({subject:{kind:"BODY",id:"other-body",name:"Other"},question:"What is this government's budget?",records:evidence}), null);
+  assert.equal(composeGovernmentFinanceAnswer({subject:{kind:"BODY",id:f.body.id,name:f.body.name!},question:"What is its debt?",records:evidence}), null);
   assert.equal(currentBudgetFacts(read.value.records, f.body.id, "2026-10-05").length, 1);
   assert.equal(currentBudgetFacts(read.value.records, f.body.id, "2028-10-05").length, 0);
   const proposal = await workerFixture("government-budgets", { ...facts, version: "proposal-v2", sourceSentence: "The proposed Operating budget for FY2027 is version proposal-v2." });

@@ -27,7 +27,8 @@ import {
 } from "../civic-data/meeting-partitions.ts";
 import { DERIVED_FAMILY_SOURCE, meetingHistoryContract } from "../civic-data/meeting-partitions.ts";
 import { mergeMeetingHistory } from "../civic-data/meeting-history.ts";
-import { mergeReaderSittings } from "./sitting-merge.ts";
+import { mergeDuplicateSittingFields, mergeReaderSittings } from "./sitting-merge.ts";
+import { collapseDuplicateSittings } from "../sources/composite/index.ts";
 import { stampMeetingDoor } from "../civic-data/fact-door.ts";
 import {
   applyPartitionFreshCheck,
@@ -1031,7 +1032,12 @@ export async function readMeetingsProjection(
         ...(partition.ocdId ? { unreachableOcdIds: [partition.ocdId] } : {}),
       });
     }
-    const collapsed = mergeReaderSittings(meetings);
+    // Keep the source/body-scoped composite collapse in the Reader path.
+    // Reconcile fields inside it, before a losing row (and its evidence) disappears.
+    const exact = collapseDuplicateSittings(meetings, mergeDuplicateSittingFields);
+    const merged = mergeReaderSittings(exact.rows);
+    const collapsed = { ...merged, collapsed: exact.collapsed + merged.collapsed,
+      dropped: [...exact.dropped, ...merged.dropped] };
     const accounted = accountCarriedCollapses(
       promoted.map(({ value }) => value),
       sources,

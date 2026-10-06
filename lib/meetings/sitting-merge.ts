@@ -4,7 +4,9 @@ import { preferCurrentSource } from "../civic-data/source-conflicts.ts";
 import type { SourceScopedHeldFact } from "../civic-data/manual-source-isolation.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 
-const source = (meeting: Meeting) => meeting.id.split(":")[0];
+// Retain every contributing door after exact duplicate collapse, so two
+// sittings from one door never become an unambiguous day merely by merging.
+const sources = (meeting: Meeting) => [...new Set([meeting.id, ...(meeting.mergedMeetingIds ?? [])].map(id => id.split(":")[0]))];
 const present = (value: unknown) => value !== null && value !== undefined && value !== "" && (!Array.isArray(value) || value.length > 0);
 const meta = new Set(["id", "bodyId", "ocdId", "jurisdiction", "provenance", "fieldSources", "publicationConflicts", "mergedMeetingIds", "carried"]);
 const timing = ["startsAt", "timeZone", "startPrecision"];
@@ -25,9 +27,9 @@ export function mergeReaderSittings(input: readonly Meeting[]) {
   const aliases = new Map<string, string>();
   const conflicts: SourceScopedHeldFact[] = [];
   for (const group of groups.values()) {
-    const routes = new Set(group.map(source));
+    const routes = group.flatMap(sources);
     const buckets = new Map<string, Meeting[]>();
-    const unambiguousDay = routes.size === group.length;
+    const unambiguousDay = new Set(routes).size === routes.length;
     for (const meeting of group) {
       let identity: string | null = null;
       try { identity = sittingKey({ ...meeting, bodyId: meeting.bodyId ?? `${meeting.ocdId}:${meeting.bodyName}` }); } catch { /* Keep malformed identities separate. */ }
@@ -35,7 +37,7 @@ export function mergeReaderSittings(input: readonly Meeting[]) {
       buckets.set(key, [...(buckets.get(key) ?? []), meeting]);
     }
     for (const candidates of buckets.values()) {
-      if (candidates.length < 2 || new Set(candidates.map(source)).size !== candidates.length) {
+      if (candidates.length < 2 || new Set(candidates.flatMap(sources)).size !== candidates.flatMap(sources).length) {
         rows.push(...candidates); continue;
       }
       // Stable ordering makes ties independent of partition fetch order.
@@ -78,4 +80,11 @@ export function mergeReaderSittings(input: readonly Meeting[]) {
   }
   for (const row of rows) for (const id of row.mergedMeetingIds ?? []) aliases.set(id, row.id);
   return { rows, dropped, collapsed: dropped.length, aliases, conflicts };
+}
+
+/** Reconcile fields only after the composite has identified an exact duplicate.
+ * An ambiguous source history or a different canonical body keeps both rows. */
+export function mergeDuplicateSittingFields(held: Meeting, next: Meeting): Meeting | null {
+  const merged = mergeReaderSittings([held, next]);
+  return merged.rows.length === 1 ? merged.rows[0] : null;
 }

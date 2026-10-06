@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mergeReaderSittings } from "../lib/meetings/sitting-merge.ts";
+import { mergeDuplicateSittingFields, mergeReaderSittings } from "../lib/meetings/sitting-merge.ts";
 import { mergeScopeArtifacts, partitionSnapshotByScope } from "../lib/meetings/edge-artifacts.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { collapseDuplicateSittings } from "../lib/sources/composite/index.ts";
 const at = "2026-10-05T12:00:00Z";
 const meeting = (id: string, extra: Partial<Meeting> = {}): Meeting => ({ id, bodyId: "body", bodyName: "Board", jurisdiction: "County", title: "Meeting", ocdId: "ocd-division/country:us/state:az/county:example", startsAt: "2026-10-06T18:00:00Z", timeZone: "UTC", location: null, agendaUrl: null, status: "SCHEDULED", provenance: { kind: "OFFICIAL", sourceUrl: `https://office.gov/${id}`, sourceOrg: "Clerk", collectedAt: at, verifiedAt: at }, ...extra });
 test("CP-18: two doors with different times merge, retaining the official value, other useful fields, and the losing value", () => {
@@ -36,4 +37,29 @@ test("CP-18: edge composition retains both source ids and an agenda belonging to
   assert.ok(artifact.meetingIds?.includes(old.id));
   const again = mergeReaderSittings(result.meetings);
   assert.deepEqual(again.rows, result.meetings);
+});
+
+test("CP-18: composite collapse keeps field winners, losing evidence and source aliases before day reconciliation", () => {
+  const old = meeting("calendar:1", { location: { name: "Old Hall", address: "Old address", lat: 1, lng: 2 } });
+  const fresh = meeting("portal:1", { agendaUrl: "https://office.gov/new-agenda", location: { name: "New Hall", address: "New address", lat: 1, lng: 2 }, provenance: { ...old.provenance, collectedAt: "2026-10-05T13:00:00Z" } });
+  const exact = collapseDuplicateSittings([old, fresh], mergeDuplicateSittingFields);
+  assert.equal(exact.collapsed, 1);
+  assert.deepEqual(exact.dropped, [old]);
+  const final = mergeReaderSittings(exact.rows);
+  assert.equal(final.rows.length, 1);
+  assert.equal(final.rows[0].location?.name, "New Hall");
+  assert.equal(final.rows[0].agendaUrl, fresh.agendaUrl);
+  assert.deepEqual(final.rows[0].mergedMeetingIds, [old.id, fresh.id]);
+  assert.ok(final.rows[0].publicationConflicts?.some(row => (row.record as { field: string }).field === "location"));
+  assert.equal(final.aliases.get(old.id), fresh.id);
+});
+test("CP-18: exact collapse never joins different canonical bodies or conceals a second sitting from one door", () => {
+  const a = meeting("portal:1"), other = meeting("calendar:1", { bodyId: "other-body" });
+  assert.equal(collapseDuplicateSittings([a, other], mergeDuplicateSittingFields).rows.length, 2);
+  const b = meeting("portal:2", { startsAt: "2026-10-06T20:00:00Z" });
+  const exact = collapseDuplicateSittings([a, meeting("calendar:1"), b], mergeDuplicateSittingFields);
+  assert.equal(exact.rows.length, 2);
+  assert.equal(mergeReaderSittings(exact.rows).rows.length, 2, "the first record still represents both doors; the later portal sitting stays separate");
+  const sameInstant = collapseDuplicateSittings([a, meeting("calendar:1"), meeting("portal:2")], mergeDuplicateSittingFields);
+  assert.equal(mergeReaderSittings(sameInstant.rows).rows.length, 2, "two catalogue entries from the same source remain distinct");
 });

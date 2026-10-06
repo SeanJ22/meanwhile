@@ -84,6 +84,7 @@ import {
   type RenderedNumber,
 } from "./owner-surface.ts";
 import { plainCode } from "./plain-words.ts";
+import { formatEastern } from "./eastern-time.ts";
 import {
   PIPELINE_STAGES,
   type ActivationGateReading,
@@ -2169,6 +2170,14 @@ function askGapStep(d: RouteDisposition | null, clipAt: number): { readonly owne
   return null;
 }
 
+/** The next step of an obligation a detective argued absent, while the absence stands: its recheck and its stored unlock. */
+export function arguedAbsenceWords(ob: Pick<StandingObligation, "absentUntil" | "absenceUnlock"> | null, now: number, clipAt: number): string | null {
+  if (ob === null || !ob.absentUntil || !(ms(ob.absentUntil) > now)) return null;
+  const recheck = `Recorded as not published; it is looked for again by ${formatEastern(ob.absentUntil)}.`;
+  const text = ob.absenceUnlock?.text.trim() ?? "";
+  return text === "" ? recheck : `${recheck} Would unlock: ${clip(text.replace(/[.\s]+$/, ""), clipAt)}.`;
+}
+
 function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Clips): Derived {
   const ob = g.obligation;
   const now = idx.now;
@@ -2299,6 +2308,8 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
         ? (backoff?.since ?? (overdue ? eligibleAt : null))
         : outcome.at;
   const askGap = ob !== null && parseAskGapObligationId(ob.id) !== null ? askGapStep(latest?.routeTask?.disposition ?? null, clips.text) : null;
+  /* DP-06: a standing argued absence says what would unlock it, from the condition stored with it. */
+  const argued = arguedAbsenceWords(ob, now, clips.text);
   return {
     state,
     stateSays: outcome.says,
@@ -2312,7 +2323,7 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
       backoff,
       blocker,
       owner: askGap?.owner ?? (state === "SUCCEEDED" ? "RUNNER" : outcome.owner),
-      nextAction: askGap?.nextAction ?? stepWords(state, outcome),
+      nextAction: askGap?.nextAction ?? argued ?? stepWords(state, outcome),
       openRound,
     },
   };

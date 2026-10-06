@@ -43,6 +43,7 @@ import { membersOfBody } from "../registry/body-membership.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { isDivisionsOwnGovernment } from "../officials/division-government.ts";
 import type { BodyDivisionType } from "../officials/body-description.ts";
+import { officeLocationLine, type OfficeLocation } from "../officials/office-locations.ts";
 
 /** Where a contact came from, so the answer can say the relationship out loud. */
 export type ContactBasis =
@@ -68,6 +69,8 @@ export interface AskContact {
   sourceUrl: string | null;
   sourceOrg: string | null;
   retrievedAt: string | null;
+  /** Where the office is and when it is open, as its own page publishes them. */
+  office?: { address: string; hours: string | null; kind: string } | null;
 }
 
 /**
@@ -279,6 +282,28 @@ export function contactForOfficeholder(seat: {
 }
 
 /**
+ * **AN OFFICE AS A CONTACT** (CA-07): the address and hours a body, a member
+ * or a campaign publishes for an office, carrying that page as its source.
+ * The relationship says whose office it is; nothing is ranked.
+ */
+export function contactForOfficeLocation(location: OfficeLocation, name: string, relationship: string): AskContact {
+  return {
+    id: `office-location:${location.ownerId}:${location.kind.toLowerCase()}`,
+    name,
+    officeTitle: relationship,
+    relationship,
+    basis: "SUBJECT_OFFICE",
+    email: null,
+    phone: location.phone,
+    websiteUrl: null,
+    sourceUrl: location.sourceUrl,
+    sourceOrg: location.sourceOrg,
+    retrievedAt: location.collectedAt,
+    office: { address: location.address, hours: location.hours, kind: location.kind },
+  };
+}
+
+/**
  * A contact as an evidence record.
  *
  * The text is a MECHANICAL READ of the fields — name, relationship, and the
@@ -292,10 +317,14 @@ export function contactRecord(contact: AskContact): EvidenceRecord {
   if (contact.email) channels.push(`email ${contact.email}`);
   if (contact.phone) channels.push(`phone ${contact.phone}`);
   const tail = channels.length > 0 ? ` Published contact: ${channels.join(", ")}.` : "";
+  const where = contact.office
+    ? ` ${officeLocationLine({ ownerId: contact.id, kind: contact.office.kind as OfficeLocation["kind"], address: contact.office.address,
+        hours: contact.office.hours, phone: null, sourceUrl: contact.sourceUrl ?? "", sourceOrg: null, collectedAt: null })}`
+    : "";
   return {
     kind: "CONTACT",
     id: contact.id,
-    text: `${contact.name} — ${contact.relationship}.${tail}`,
+    text: `${contact.name} — ${contact.relationship}.${tail}${where}`,
     sourceUrl: contact.sourceUrl,
     sourceOrg: contact.sourceOrg,
     retrievedAt: contact.retrievedAt,

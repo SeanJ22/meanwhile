@@ -1,4 +1,4 @@
-/** Held campaign-site leads run without a pass deadline; HTTP requests retain transport timeouts. */
+/** Held campaign-site leads stop being read at the round's dispatch cutoff (`deadlineMs`); HTTP requests retain transport timeouts. */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -73,6 +73,8 @@ export interface CampaignSiteCycleInput {
   readonly recheckAfterMs?: number;
   /** When loading started, for elapsed-time reporting. */
   readonly startedAtMs?: number;
+  /** The round's dispatch cutoff: no lead read starts after it, and an unread lead stays owed. */
+  readonly deadlineMs?: number;
 }
 
 export interface CampaignSiteCycleReport {
@@ -107,6 +109,8 @@ export async function runCampaignSiteCycle(input: CampaignSiteCycleInput): Promi
     spacingMs: 0, timeoutMs: CAMPAIGN_SITE_REQUEST_TIMEOUT_MS,
   };
   const readLead = async (lead: Parameters<typeof readCampaignSiteLead>[0]): Promise<LeadReadResult> => {
+    if (input.deadlineMs !== undefined && input.clock() >= input.deadlineMs) return { ok: false, refusal: { code: "NOT_READ",
+      detail: `the round's dispatch time ended before ${lead.url} was read; the lead stays owed` } };
     const before = timeouts;
     const out = await readCampaignSiteLead(lead, runtime);
     if (out.ok) return { ok: true, read: out.read };

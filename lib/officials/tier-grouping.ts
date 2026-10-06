@@ -91,8 +91,8 @@ export function groupOfficials(coverage: CoverageSummary): TieredOfficials {
       // an unknown division type already sorted. The `?? 3` was always the
       // honest branch; what changed is that null now reaches it instead of
       // being turned into "place" upstream.
-      ((a.divisionType && LOCAL_SCOPE_RANK[a.divisionType]) ?? 3) -
-      ((b.divisionType && LOCAL_SCOPE_RANK[b.divisionType]) ?? 3),
+      ((a.divisionType ? LOCAL_SCOPE_RANK[a.divisionType] : undefined) ?? 3) -
+      ((b.divisionType ? LOCAL_SCOPE_RANK[b.divisionType] : undefined) ?? 3),
   );
   for (const body of bodiesByScope) {
     for (const holder of projectedBodyRoster(body).members) {

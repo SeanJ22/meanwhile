@@ -14,7 +14,16 @@ export interface MeetingReaderRecords {
 }
 
 /** The same class-filtered evidence selector Ask uses, scoped to an exact sitting. */
-export function meetingReaderRecords(meetingId: string, expectedBodyId?: string | null): MeetingReaderRecords {
+export function meetingReaderRecords(meetingId: string, expectedBodyId?: string | null, mergedMeetingIds: readonly string[] = []): MeetingReaderRecords {
+  if (mergedMeetingIds.some(id => id !== meetingId)) {
+    const readings = [...new Set([meetingId, ...mergedMeetingIds])].map(id => meetingReaderRecords(id, expectedBodyId));
+    const held = readings.filter(reading => reading.status === "HELD");
+    if (!held.length) return { ...readings[0], meetingId };
+    const unique = <T>(rows: readonly T[]): T[] => [...new Map(rows.map(row => [JSON.stringify(row), row])).values()];
+    const agenda = unique(held.flatMap(row => row.agenda)), actions = unique(held.flatMap(row => row.actions)), rollCalls = unique(held.flatMap(row => row.rollCalls));
+    return { ...held[0], meetingId, agenda, actions, rollCalls,
+      counts: { agenda: agenda.length, actions: actions.length, rollCalls: rollCalls.length, votes: rollCalls.reduce((n, row) => n + row.votes.length, 0) } };
+  }
   const empty: MeetingReaderRecords = { meetingId, bodyId: expectedBodyId ?? null, status: "NOT_HELD", agenda: [], actions: [], rollCalls: [], counts: { agenda: 0, actions: 0, rollCalls: 0, votes: 0 }, sourceUrl: null, sourceOrg: null };
   const snapshot = getOutcomeSnapshot();
   if (loadedFrom() === "EMPTY_STORE") return { ...empty, status: "HOLDING_UNAVAILABLE" };

@@ -48,9 +48,13 @@ import { isDirectModuleExecution } from "../lib/ops/main-module.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { mergeSnapshot } from "../lib/outcomes/ingest.ts";
 import {
-  MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT,
-  mesaLegistarMinutesOutcomesCandidate,
+  MESA_OUTCOME_TENANT,
+  legistarMinutesOutcomesCandidate,
+  type OutcomeTenant,
 } from "../lib/outcomes/data-plane.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import { inSiteTenantsFromWiring } from "../lib/sources/legistar-insite/tenant-registry.ts";
+import { loadOutcomePartitionForDoor } from "../lib/doors/outcome-door-load.ts";
 import {
   applyMinutesApprovals,
   concludedSittingRows,
@@ -89,10 +93,11 @@ export const MINUTES_ROUTINE_WINDOW_DAYS = 120;
 const DEFAULT_MAX_DOCUMENTS = 25;
 /** The InSite adapter's own page budget per range (lib/sources/legistar-insite/index.ts MAX_GRID_PAGES). */
 const MAX_GRID_PAGES = 6;
-const CONTRACT = MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT;
 
 export interface MinutesIngestArgs {
   readonly slug: string;
+  /** DB-22: the door whose minutes outcomes this run reads; null for Mesa's own contract. */
+  readonly door: string | null;
   readonly from: string | null;
   readonly to: string | null;
   /** Documents read per run; a floor on this run, never a completion condition. */
@@ -109,7 +114,8 @@ export function parseMinutesIngestArgs(argv: readonly string[]): MinutesIngestAr
   };
   const max = read("--max-documents");
   return {
-    slug: read("--slug") ?? CONTRACT.slug,
+    slug: read("--slug") ?? MESA_OUTCOME_TENANT.slug,
+    door: read("--door"),
     from: read("--from"),
     to: read("--to"),
     maxDocuments: max === null ? DEFAULT_MAX_DOCUMENTS : Number(max),
@@ -140,9 +146,10 @@ export function minutesSourceThrough(prior: string | null, observed: string): st
   return laterInstant && observed > prior ? observed : prior;
 }
 
-export function minutesRunnerReceiptLine(outcome: PromotionOutcome): string {
+export function minutesRunnerReceiptLine(outcome: PromotionOutcome, source?: string): string {
   return "RCD_RECEIPT=" + JSON.stringify({
     source: "mesa-legistar-minutes-outcomes",
+    ...(source === undefined || source === "mesa-legistar-minutes-outcomes" ? {} : { source }),
     candidateId: outcome.candidate.candidate.id,
     acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
     state: outcome.candidate.state,
@@ -155,8 +162,11 @@ export function minutesRunnerReceiptLine(outcome: PromotionOutcome): string {
 
 const EMPTY: OutcomeSnapshot = { generatedOn: "UNKNOWN", generatedAt: "UNKNOWN", tenants: [], sittings: [] };
 
-async function currentProjection(store: RoutineDataStore): Promise<{ readonly snapshot: OutcomeSnapshot; readonly sourceThrough: string | null }> {
-  const read = await readMesaOutcomeProjection({ store, bypassCache: true });
+async function currentProjection(store: RoutineDataStore, outcome: OutcomeTenant): Promise<{ readonly snapshot: OutcomeSnapshot; readonly sourceThrough: string | null }> {
+  // Mesa's own pointer keeps its reader; a door's outcomes are read from the door's own scope.
+  const read = outcome.contractId === MESA_OUTCOME_TENANT.contractId
+    ? await readMesaOutcomeProjection({ store, bypassCache: true })
+    : await readPromotedCivicData<OutcomeSnapshot>(outcome.recordClass, outcome.scope, { store, bypassCache: true });
   if (read.kind === "PROMOTED") return { snapshot: read.value, sourceThrough: read.metadata.sourceThrough };
   if (read.kind === "NOT_RECORDED") return { snapshot: EMPTY, sourceThrough: null };
   if (read.kind === "BOOTSTRAP") throw new Error("MINUTES_OUTCOME_PRODUCTION_BOOTSTRAP_FORBIDDEN");
@@ -168,6 +178,8 @@ export interface MinutesIngestInput {
   readonly tenant: InSiteTenant;
   readonly args: MinutesIngestArgs;
   readonly window: { readonly from: string; readonly to: string };
+  /** The outcome tenant this run extends; Mesa's own unless a door names another (DB-22). */
+  readonly outcomeTenant?: OutcomeTenant;
   /** The observation clock; production reads the wall clock after each read returns. */
   readonly now?: () => string;
   readonly log?: (line: string) => void;
@@ -225,6 +237,7 @@ async function readCalendar(session: InSiteSession, calendarUrl: string, ranges:
 /** One bounded routine pass over one tenant's concluded sittings. */
 export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): Promise<MinutesIngestResult> {
   const { store, tenant, args, window } = input;
+  const outcomeTenant = input.outcomeTenant ?? MESA_OUTCOME_TENANT;
   const now = input.now ?? (() => new Date().toISOString());
   const log = input.log ?? ((line: string) => console.log(line));
   const writes = args.promote && !args.dryRun;
@@ -239,7 +252,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   let skippedUnchanged = 0;
   let heldFailedExtractions = 0;
 
-  const current = await currentProjection(store);
+  const current = await currentProjection(store, outcomeTenant);
   let snapshot = current.snapshot;
   let sourceThrough = current.sourceThrough;
   const held = new Map(snapshot.sittings.map((sitting) => [sitting.meetingId, sitting]));
@@ -252,12 +265,12 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     readonly failureDetail?: string;
   }): Promise<PromotionOutcome> => processRegisteredRoutineCandidate(
     store,
-    CONTRACT.contractId,
-    mesaLegistarMinutesOutcomesCandidate(candidate),
+    outcomeTenant.contractId,
+    legistarMinutesOutcomesCandidate(candidate, outcomeTenant),
     candidate.retrievedAt,
   );
   const settle = (last: PromotionOutcome): MinutesIngestResult => ({
-    receiptLine: minutesRunnerReceiptLine(last),
+    receiptLine: minutesRunnerReceiptLine(last, outcomeTenant.contractId),
     exitCode: last.promoted ? 0 : 2,
     promotedSittings,
     refusedSittings,
@@ -272,7 +285,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   let calendar: { readonly rows: InSiteCalendarRow[]; readonly gridRendered: boolean };
   try {
     const captured = await captureSourceAcquisitions((runForSource) =>
-      runForSource(CONTRACT.sourceId, () => readCalendar(session, calendarUrl, rangesForWindow(window), log)),
+      runForSource(outcomeTenant.sourceId, () => readCalendar(session, calendarUrl, rangesForWindow(window), log)),
     );
     calendar = captured.value;
     calendarEvidence = captured.evidence;
@@ -366,7 +379,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     }
 
     const read = await captureSourceAcquisitions((runForSource) =>
-      runForSource(CONTRACT.sourceId, async () => {
+      runForSource(outcomeTenant.sourceId, async () => {
         try {
           const fetched = await session.getBytes(link.url, link.format === "PDF" ? "application/pdf" : "text/html,application/xhtml+xml");
           return {
@@ -465,19 +478,30 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
 
 async function main(): Promise<void> {
   const args = parseMinutesIngestArgs(process.argv.slice(2));
-  if (args.slug !== CONTRACT.slug) {
-    throw new Error("MINUTES_OUTCOME_CONTRACT_SCOPE_MISMATCH: add a separate tenant contract before reading another portal's minutes.");
+  // DB-22: any other portal is read through the door that names it; Mesa's own contract serves only Mesa.
+  if (args.door === null && args.slug !== MESA_OUTCOME_TENANT.slug) {
+    throw new Error("MINUTES_OUTCOME_CONTRACT_SCOPE_MISMATCH: another portal's minutes are read through its own door (--door).");
   }
   if (!args.promote && !args.dryRun) throw new Error("MINUTES_OUTCOME_PROMOTION_REQUIRED: use --promote, or --dry-run for a read-only plan.");
   if (args.promote && args.dryRun) throw new Error("MINUTES_OUTCOME_MODE_AMBIGUOUS: --promote writes and --dry-run never does; pass exactly one.");
   if (!Number.isInteger(args.maxDocuments) || args.maxDocuments < 1) throw new Error("--max-documents must be a positive integer");
   installNeonRequestDeadline();
   if (args.promote) prepareProductionCivicDataWrite();
-  const tenant = findTenant(args.slug);
+  let outcomeTenant: OutcomeTenant = MESA_OUTCOME_TENANT;
+  let tenant: InSiteTenant | undefined;
+  if (args.door !== null) {
+    const partition = await loadOutcomePartitionForDoor(args.door);
+    if (partition.kind !== "legistar-insite" || partition.tenant.slug !== args.slug) {
+      throw new Error(`OUTCOME_DOOR_MISMATCH: ${args.door} is not the InSite door of ${args.slug}.`);
+    }
+    outcomeTenant = partition.tenant;
+    tenant = inSiteTenantsFromWiring([partition.wiring])[0];
+  } else tenant = findTenant(args.slug);
   if (!tenant) throw new Error("MINUTES_OUTCOME_TENANT_NOT_WIRED");
   const run = await runInSiteMinutesOutcomeIngest({
     store: new PostgresRoutineDataStore(),
     tenant,
+    outcomeTenant,
     args,
     window: minutesOutcomeWindow(args, tenant.timeZone, new Date()),
   });

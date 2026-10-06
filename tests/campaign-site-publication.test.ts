@@ -121,10 +121,10 @@ test("approved sites publish a validated successor that carries the prior versio
   assert.equal(linksForCandidacy(DUARTE_KEY)?.campaign?.url, "https://www.duarte4mendham.com/meet-amalia");
 });
 
-test("nothing publishes while the gate is closed, and two verified hosts for one candidate are never chosen between", async () => {
+test("CP-14: a verified site publishes despite an obsolete gate reading; identity conflicts still stay open", async () => {
   const closed = planCampaignSitePublication({ approved: [approval(DUARTE, "https://www.duarte4mendham.com/meet-amalia", "d")], prior: null, gate: { promotionEnabled: false, openRecordClasses: [] }, reviewedAt: NOW });
-  assert.equal(closed.package, null);
-  assert.deepEqual(closed.held.map((h) => h.code), ["GATE_CLOSED"]);
+  assert.ok(closed.package);
+  assert.deepEqual(closed.held, []);
   const two = planCampaignSitePublication({
     approved: [approval(DUARTE, "https://www.duarte4mendham.com/meet-amalia", "d"), approval(DUARTE, "https://www.amaliaduarte.example/", "e")],
     prior: null, gate: readActivationGate("."), reviewedAt: NOW,

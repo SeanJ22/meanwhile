@@ -229,13 +229,13 @@ test("DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, 
   assert.equal(walkableByFreeWalk(aj), true);
   assert.equal(walkableByFreeWalk(coolidge), false, "no site is recorded");
 
-  /* The committed ledger holds an older copy of Apache Junction and nothing of a newly promoted town. */
+  /* A mission map's blanks (CH-21) hold an older copy of Apache Junction and nothing of a newly promoted town. */
   const newTown: MeetingsDiscoveryNeed = { ...aj, jurisdictionId: "az:city:town-of-newly-promoted", name: "TOWN OF NEWLY PROMOTED", ownWebAddress: "https://newly.example.gov" };
-  const ledger: MeetingsDiscoveryNeed[] = [{ ...aj, ownWebAddress: "http://old.example.net" }, { ...aj, jurisdictionId: "az:city:city-of-avondale", name: "CITY OF AVONDALE" }];
-  const toWalk = discoveryNeedsToWalk(ledger, [aj, newTown]);
+  const mission: MeetingsDiscoveryNeed[] = [{ ...aj, ownWebAddress: "http://old.example.net" }, { ...aj, jurisdictionId: "az:city:city-of-avondale", name: "CITY OF AVONDALE" }];
+  const toWalk = discoveryNeedsToWalk(mission, [aj, newTown]);
   assert.deepEqual(toWalk.map((n) => n.jurisdictionId), [AJ, "az:city:town-of-newly-promoted", "az:city:city-of-avondale"]);
-  assert.equal(toWalk.find((n) => n.jurisdictionId === AJ)?.ownWebAddress, "http://www.ajcity.net", "the registry's copy wins over the ledger's");
-  assert.deepEqual(discoveryNeedsToWalk(ledger, [aj, newTown], need => need.jurisdictionId === AJ), [aj],
+  assert.equal(toWalk.find((n) => n.jurisdictionId === AJ)?.ownWebAddress, "http://www.ajcity.net", "the dispatched copy wins over the mission's");
+  assert.deepEqual(discoveryNeedsToWalk(mission, [aj, newTown], need => need.jurisdictionId === AJ), [aj],
     "a narrow discovery pass keeps the current selected need and excludes every other government's work");
 
   for (const [label, repos] of await eachStore("wtp-free-walks-first-")) {
@@ -252,11 +252,11 @@ test("DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, 
       recipes: [],
     };
     const pass = await runMeetingsDiscovery(repos, { needs: toWalk, runtime, cycleIndex: 0, maxWalks: 1, firstIds: new Set(["az:city:town-of-newly-promoted"]) });
-    assert.deepEqual(pass.walked.map((a) => a.jurisdictionId), ["az:city:town-of-newly-promoted"], `${label}: a dispatched government outside the ledger is walked first`);
+    assert.deepEqual(pass.walked.map((a) => a.jurisdictionId), ["az:city:town-of-newly-promoted"], `${label}: a dispatched government outside the mission is walked first`);
     assert.ok(opened.length > 0, `${label}: the walk opened its site`);
     assert.ok(
       opened.every((u) => ["newly.example.gov", "www.newly.example.gov"].includes(new URL(u).host)),
-      `${label}: at the address its registry records (its own origin and its www twin), never the ledger's: ${opened.join(", ")}`,
+      `${label}: at the address its registry records (its own origin and its www twin), never the mission's older copy: ${opened.join(", ")}`,
     );
   }
 });
@@ -270,5 +270,6 @@ test("THE RUNNER IS WIRED: it reads the walk before dispatch while the paid lane
   assert.match(runner, /paidDiscoveryHold\(row\.obligation\.id, freeWalks\)/, "the hold reads it");
   assert.doesNotMatch(runner, /paidDiscoveryHold\([^)]*UNREAD_FREE_DISCOVERY_WALKS/, "the hold no longer reads the unwired stand-in");
   assert.match(runner, /freeWalks\.evidenceFor\?\.\(discovery\.jurisdictionId\)/, "the Scout's brief carries the walk's line");
-  assert.match(runner, /needs: discoveryNeedsToWalk\(gapLedgerRead\.needs, \[\.\.\.dispatchedNeeds\.values\(\)\], need =>/, "the walk list carries the dispatched needs with exact selection");
+  assert.match(runner, /const discoveryToWalk = discoveryNeedsToWalk\(\[\.\.\.missionDiscoveryNeeds\.values\(\)\], \[\.\.\.dispatchedNeeds\.values\(\)\], need =>/, "the walk list carries the dispatched needs, then the mission's blanks, with exact selection");
+  assert.match(runner, /needs: discoveryToWalk,/, "and the walk takes that list");
 });

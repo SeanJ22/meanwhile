@@ -33,12 +33,19 @@ export interface UpdateRecord {
   readonly shownAt: string | null;
   /** For an update about items added to a place's owed list: what Decline would remove (BR-33). */
   readonly decline?: OwedDeclinePayload;
+  /** Something that went wrong (a proven fix broke). Never shown as a win. */
+  readonly setback?: boolean;
+  /** The numbers a win claims, so the claim auditors can recompute them from source records (DP-33). */
+  readonly claim?: UpdateClaim;
 }
 
 export interface OwedDeclinePayload {
   readonly placeKey: string;
   readonly rows: readonly { readonly rowId: string; readonly subjectLabel: string; readonly requirement: string }[];
 }
+
+/** What a claimed win says, in numbers its source records can confirm. */
+export type UpdateClaim = { readonly kind: "FIX_PROVEN"; readonly methodId: string; readonly works: number; readonly failed: number };
 
 export const UPDATES_CAP = 200;
 
@@ -55,13 +62,16 @@ export interface NewUpdate {
   readonly before?: string | null;
   readonly after?: string | null;
   readonly decline?: OwedDeclinePayload;
+  readonly setback?: boolean;
+  readonly claim?: UpdateClaim;
 }
 
 export function withUpdateAdded(config: AdminConfig, add: NewUpdate): AdminConfig {
   const items = updateRecords(config);
   if (items.some((u) => u.id === add.id) || !add.what.trim() || !(UPDATE_LABELS as readonly string[]).includes(add.label)) return config;
   const next = [...items, { id: add.id, what: add.what.trim(), at: add.at, label: add.label, evidenceHref: add.evidenceHref ?? null,
-    before: add.before ?? null, after: add.after ?? null, shownAt: null, ...(add.decline ? { decline: add.decline } : {}) }];
+    before: add.before ?? null, after: add.after ?? null, shownAt: null, ...(add.decline ? { decline: add.decline } : {}),
+    ...(add.setback ? { setback: true } : {}), ...(add.claim ? { claim: add.claim } : {}) }];
   // Shown updates are the first to go when the list is full.
   const kept = next.length <= UPDATES_CAP ? next : [...next.filter((u) => u.shownAt === null), ...next.filter((u) => u.shownAt !== null)].slice(-UPDATES_CAP);
   return { ...config, updates: kept, updatedAt: add.at };

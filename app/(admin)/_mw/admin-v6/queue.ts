@@ -8,7 +8,7 @@
 import type { DecisionOrderCard } from "../../../../lib/control-plane/decision-cards.ts";
 import { decisionOrderAction } from "./decision-order-action.ts";
 import { plainWords, hasTechnicalText } from "../../../../lib/control-plane/admin-view/plain-words.ts";
-import type { ActionRef, ClosedFix, FixView, Hunt, Lane, OpenFix, SentInstruction, StuckItem, UiReceipt } from "./model.ts";
+import type { ActionRef, ClosedFix, FixView, Hunt, Lane, LookView, OpenFix, SentInstruction, StuckItem, TestingFix, UiReceipt } from "./model.ts";
 import { orderStepsReached, ORDER_STEPS } from "./receipts.ts";
 import { mst, TASK_STAGES } from "./model.ts";
 
@@ -23,7 +23,7 @@ export const QUEUE_FILTER_WORDS: Readonly<Record<QueueFilter, string>> = {
   done: "Done",
 };
 
-export type QueueKind = "order" | "scheduled" | "send" | "hunt" | "stuck" | "door" | "fix" | "decision" | "reader-report";
+export type QueueKind = "order" | "scheduled" | "send" | "hunt" | "stuck" | "door" | "fix" | "decision" | "reader-report" | "testing" | "look";
 
 export interface QueueRow {
   readonly technical?: readonly string[];
@@ -41,7 +41,7 @@ export interface QueueRow {
   /** How far along, or null when this kind of thing has no steps. */
   readonly progress: { readonly done: number; readonly of: number; readonly words: string } | null;
   readonly actions: readonly ActionRef[];
-  readonly open: { readonly type: "stuck" | "fix"; readonly id: string } | null;
+  readonly open: { readonly type: "stuck" | "fix" | "look"; readonly id: string } | null;
   /** Newest first within a filter. */
   readonly at: string | null;
   /** The saved order, for an order row: its seven facts and its own follow-up controls sit behind "Show details". */
@@ -151,6 +151,25 @@ function closedFixRow(c: ClosedFix, returned: boolean): QueueRow {
   };
 }
 
+/** DP-26: a fix proving itself across places. Once proven it leaves the Queue; its one Proven update shows on Now. */
+function testingRow(t: TestingFix): QueueRow {
+  return {
+    key: `testing:${t.id}`, kind: "testing", what: `Testing: ${t.title}`, chip: t.brokeSince ? `Proven, broke since ${t.brokeSince}` : "Testing",
+    tone: t.brokeSince ? "warn" : "info", filter: "in-progress", owner: "The team",
+    due: null, next: t.next, progress: { done: Math.min(t.works, t.needPlaces), of: Math.max(1, t.needPlaces), words: `Works in ${t.works} of ${t.needPlaces} places needed` },
+    actions: [], open: null, at: t.since, receipt: null, sendId: null,
+  };
+}
+
+/** FE-21: the latest deploy's look check on the live site. Red needs someone; green is done; not reviewed is still waiting. */
+function lookRow(l: LookView): QueueRow {
+  return {
+    key: `look:${l.sha}`, kind: "look", what: "Look check of the latest deploy", chip: l.verdict === "Green" ? "Looks right" : l.verdict === "Red" ? "Looks wrong" : "Not judged",
+    tone: l.verdict === "Green" ? "good" : l.verdict === "Red" ? "warn" : "slate", filter: l.verdict === "Green" ? "done" : l.verdict === "Red" ? "needs-me" : "waiting",
+    owner: "The look check", due: null, next: l.summary, progress: null, actions: [], open: { type: "look", id: l.sha }, at: l.ran, receipt: null, sendId: null,
+  };
+}
+
 function scheduledRow(x: QueueScheduled,nowMs:number): QueueRow {
   const late=!!x.finishByAt && Date.parse(x.finishByAt)<nowMs;
   return {
@@ -180,6 +199,8 @@ export function buildQueue(input: QueueInput,nowMs=Date.now()): readonly QueueRo
   if (input.stuck) rows.push(...input.stuck.map(stuckRow));
   if (input.doors) rows.push(...input.doors.map(doorRow));
   if (input.fixes) rows.push(...input.fixes.open.map(openFixRow), ...input.fixes.closed.map((c) => closedFixRow(c, false)), ...input.fixes.returned.map((c) => closedFixRow(c, true)));
+  if (input.fixes?.testing) rows.push(...input.fixes.testing.map(testingRow));
+  if (input.fixes?.look) rows.push(lookRow(input.fixes.look));
   const rank = (f: QueueFilter) => QUEUE_FILTERS.indexOf(f);
   return rows
     .map((r, n) => ({ r, n }))

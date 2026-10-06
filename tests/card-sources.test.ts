@@ -213,3 +213,26 @@ test("a holder with no record at all contributes no row, and says so by absence"
   assert.equal(personCardSources(bare).length, 0);
   assert.equal(sourceCountLabel([]), null, "no count is stated when there is none");
 });
+
+test("shared meeting card retains agenda, minutes, decisions and comment sources with their exact read dates", () => {
+  const meeting = meetingFixture("shared", "Calendar publisher", "https://calendar.gov/sitting");
+  const agendas = { ...meeting.provenance, sourceUrl: "https://agenda.gov/document", collectedAt: "2026-10-01" };
+  const minutes = { ...meeting.provenance, sourceUrl: "https://minutes.gov/document", collectedAt: "2026-10-02" };
+  const records = { ...meeting.provenance, sourceUrl: "https://records.gov/outcomes", collectedAt: "2026-10-03" };
+  const commentAccess = { ...meeting.provenance, sourceUrl: "https://comment.gov/rules", collectedAt: "2026-10-04" };
+  const sources = meetingCardSources(meeting, [], { agendas: [agendas], minutes: [minutes], records: [records], commentAccess: [commentAccess] });
+  for (const provenance of [agendas, minutes, records, commentAccess]) assert.deepEqual(sources.find(row => row.provenance.sourceUrl === provenance.sourceUrl)?.provenance, provenance);
+  assert.equal(sourceCountLabel(sources), String(sources.length));
+});
+
+test("carried sitting metadata cannot disappear into its calendar's ordinary source row", () => {
+  const meeting = meetingFixture("carried:one", "Example Clerk", "https://clerk.example.gov/calendar");
+  meeting.carried = { source: "calendar", lastFreshAt: "2026-09-30", reason: "UNEXPLAINED_DISAPPEARANCE" };
+  const sources = meetingCardSources(meeting, []);
+  const carried = sources.find(row => row.dataAttrs?.["data-meeting-carried-source"] === meeting.id);
+  assert.ok(carried);
+  assert.equal(carried.provenance.collectedAt, meeting.carried.lastFreshAt);
+  assert.match(carried.what, /latest check of this calendar didn't find this listing/);
+  assert.doesNotMatch(carried.what, /couldn't reach/);
+  assert.equal(sourceCountLabel(sources), String(sources.length));
+});

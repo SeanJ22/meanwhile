@@ -21,8 +21,12 @@
  *   2. REFUSE    any check whose evidence kind cannot certify its property
  *   3. CAPTURE   the check's own bound viewport, at its own ZIP
  *   4. EVALUATE  the decoded PIXELS, never the selector that found the box
- *   5. DIAGNOSE  every RED into a persisted typed diagnostic WorkItem (WI3)
- *   6. RECORD    one canonical run record
+ *   5. RECORD    one canonical run record
+ *
+ * A RED is no longer written as a diagnostic into the pilot-health store,
+ * which nothing read (retired by FE-21). Looks on the live site are judged
+ * after each deploy by scripts/look-pass.mts, whose red flags go to the fix
+ * list.
  * ```
  *
  * THE TARGET IS LOCAL — RULING 125, as every other harness here.
@@ -31,15 +35,8 @@
 import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
-import type { WorkItem } from "../lib/control-plane/work-item.ts";
-import {
-  closeSatisfiedDiagnostics,
-  persistDiagnostics,
-  visualDiagnostic,
-} from "../lib/health/diagnostics.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
-import { containsCommit, headSha } from "../lib/ops/git-facts.ts";
+import { headSha } from "../lib/ops/git-facts.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import {
   assertValidVisualAcceptanceCheck,
@@ -95,7 +92,6 @@ const BASE = (process.env.SHOOT_BASE_URL ?? DEFAULT_BASE).replace(/\/$/, "");
 const ROOT = process.cwd();
 const CHECKS_PATH = join(ROOT, "data", "health", "visual-checks.json");
 const RUNS_DIR = join(ROOT, "data", "health", "visual-suite-runs");
-const CONTROL_PLANE_ROOT = join(ROOT, "data", "control-plane", "pilot-health");
 
 /** The tree this run measured, through the shared helper (RULING 103). */
 const TESTED_SHA = headSha();
@@ -264,7 +260,6 @@ async function main(): Promise<void> {
       evaluatedRed: 0,
       notEvaluable: 0,
       results: [] as CheckResult[],
-      diagnostics: { created: [], existing: [], closed: [] },
     };
     const emptyPath = nextRunRecordPath(RUNS_DIR, today());
     writeFileSync(emptyPath, `${JSON.stringify(emptyRecord, null, 2)}\n`, "utf8");
@@ -279,7 +274,6 @@ async function main(): Promise<void> {
   }
 
   const results: CheckResult[] = [];
-  const diagnostics: WorkItem[] = [];
 
   if (bindings.length > 0) {
     const browser = await launchGuarded({ label: "visual-suite", headless: true });
@@ -465,11 +459,6 @@ async function main(): Promise<void> {
             evidenceKind: "DOM_EVALUATED",
             observation,
           });
-          if (domVerdict.verdict === "RED") {
-            diagnostics.push(
-              visualDiagnostic(check, "rendering", domVerdict.detail, TESTED_SHA, startedAt),
-            );
-          }
           await page.close();
           await context.close();
           continue;
@@ -649,11 +638,6 @@ async function main(): Promise<void> {
             evidenceKind: "IMAGE_EVALUATED",
             observation: null,
           });
-          if (!verdict.passed) {
-            diagnostics.push(
-              visualDiagnostic(check, "rendering", verdict.detail, TESTED_SHA, startedAt),
-            );
-          }
         }
         await page.close();
         await context.close();
@@ -664,14 +648,6 @@ async function main(): Promise<void> {
   }
 
   const greens = results.filter((r) => r.verdict === "GREEN").map((r) => r.checkId);
-  const repos = await createFileRepositories(CONTROL_PLANE_ROOT);
-  const persisted = await persistDiagnostics(repos, diagnostics, startedAt);
-  const closure = await closeSatisfiedDiagnostics(
-    repos,
-    { instrument: "VISUAL_SUITE", testedSha: TESTED_SHA, greenInstanceIds: greens },
-    containsCommit,
-    startedAt,
-  );
 
   const red = results.filter((r) => r.verdict === "RED");
   const unevaluable = results.filter((r) => r.verdict === "NOT_EVALUABLE");
@@ -721,11 +697,6 @@ async function main(): Promise<void> {
     evaluatedRed: red.length,
     notEvaluable: unevaluable.length,
     results,
-    diagnostics: {
-      created: persisted.created,
-      existing: persisted.existing,
-      closed: closure.closed,
-    },
   };
   const recordPath = nextRunRecordPath(RUNS_DIR, today());
   writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
@@ -750,10 +721,6 @@ async function main(): Promise<void> {
         bindings.length === 0 ? "no visual acceptance check is loaded" : undefined,
       ),
     )}`,
-  );
-  console.log(
-    `  DIAGNOSTICS: ${persisted.created.length} created · ${persisted.existing.length} ` +
-      `already open · ${closure.closed.length} closed`,
   );
   console.log(`  run record: ${recordPath}`);
 

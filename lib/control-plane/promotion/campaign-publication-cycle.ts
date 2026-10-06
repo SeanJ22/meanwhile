@@ -13,6 +13,8 @@ import { memoryInProcess, researchFetch, type ResearchGet, type ResearchRuntime 
 
 export const CANDIDATE_PUBLICATION_MAX_READS = 2;
 export const CANDIDATE_PUBLICATION_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
+/** Newest captures read per source URL; a page is re-read at most weekly, so this spans about two years of captures. */
+export const CANDIDATE_PUBLICATION_CAPTURES_PER_URL = 100;
 
 export interface CandidatePublicationCycleReport {
   readonly inventoried: number;
@@ -39,6 +41,8 @@ export async function runCandidatePublicationCycle(input: {
   readonly maxReads?: number;
   /** Replay may compress the clock; production keeps the seven-day default. */
   readonly recheckMs?: number;
+  /** The round's dispatch cutoff: no page read starts after it, and an unread page stays owed. */
+  readonly deadlineMs?: number;
 }): Promise<CandidatePublicationCycleReport> {
   const empty = { inventoried: 0, due: 0, acquired: 0, deferred: 0, failed: 0, outcomes: [] } as const;
   if (!input.eligibleCandidacyIds.size) return empty;
@@ -53,7 +57,7 @@ export async function runCandidatePublicationCycle(input: {
     const cached = sourceReads.get(url);
     if (cached) return cached;
     if (!input.repos.artifactsByCanonicalUrl) throw new Error("The repository cannot read captures by their exact source URL");
-    const rows = await input.repos.artifactsByCanonicalUrl(url, Number.MAX_SAFE_INTEGER);
+    const rows = await input.repos.artifactsByCanonicalUrl(url, CANDIDATE_PUBLICATION_CAPTURES_PER_URL);
     sourceReads.set(url, rows);
     return rows;
   };
@@ -143,6 +147,10 @@ export async function runCandidatePublicationCycle(input: {
   for (const link of due) {
     if (readsUsed >= limit) {
       deferred += 1; outcomes.push({ candidacyId: link.source.candidacyId, url: link.url, code: "NOT_READ_BOUNDED", artifactId: null });
+      continue;
+    }
+    if (input.deadlineMs !== undefined && input.clock() >= input.deadlineMs) {
+      deferred += 1; outcomes.push({ candidacyId: link.source.candidacyId, url: link.url, code: "NOT_READ_DEADLINE", artifactId: null });
       continue;
     }
     readsUsed += 1;

@@ -22,11 +22,14 @@ import type { ReadinessCount } from "../../coverage/readiness-counts.ts";
 import type { GateHealthRow } from "./gate-health.ts";
 import { summarizeGateHealth } from "./gate-health.ts";
 import type { LearningSeries, LearningTrends } from "./learning-trends.ts";
+import { doorRows, type DoorNumberReadings } from "./door-numbers.ts";
 import type { V6HistoryReceipt } from "./admin-v6-history.ts";
 import type { PipelineRead } from "./v6-results-read.ts";
 import type { AuditAccuracyReading } from "./v6-audit-read.ts";
 import { formatEastern } from "../eastern-time.ts";
 import type { SpeedPass } from "../../health/worst-case-speed.ts";
+import type { ProvenFixesReading } from "../fix-standing.ts";
+import type { ReportAccuracyReading } from "../workers/claim-audit.ts";
 
 export interface DoorFacts {
   readonly walks: number;
@@ -197,11 +200,17 @@ export interface ScoreboardReadings {
   readonly learning: LearningView;
   readonly doors: DoorFacts | null;
   readonly gates: readonly GateHealthRow[] | null;
+  /** BR-32: overdue doors, posting-to-live and the repair log; null when none could be read. */
+  readonly doorNumbers?: Omit<DoorNumberReadings, "shutDoors"> | null;
   readonly readiness: readonly ReadinessCount[];
   /** The week's live audits of published facts (DP-18); null when the audit log could not be read. Absent means not read. */
   readonly audit?: AuditAccuracyReading | null;
   /** The latest worst-case speed pass on the live site (FE-02); null when unreadable or none ran. Absent means not read. */
   readonly speed?: SpeedPass | null;
+  /** Where reusable fixes stand (DP-26); null when unreadable. Absent means not read. */
+  readonly provenFixes?: ProvenFixesReading | null;
+  /** The latest weekly check of the team's claimed wins (DP-33); null when none in two weeks or unreadable. Absent means not read. */
+  readonly reportAccuracy?: ReportAccuracyReading | null;
 }
 
 /** Approved records by what the public page showed, from the published pipeline read; every state is counted, none is dropped. */
@@ -376,16 +385,6 @@ function freshnessRow(p: PublicationCounts | null, places: readonly ScoreboardPl
   return row(id, name, { value: share(p.seen, checked), counts: `${n(p.seen)} of ${n(checked)} seen on the page recently · ${n(p.stale)} overdue`, says: "Counts records last seen on the public page within the allowed time; records never seen there are counted under Public delivery." });
 }
 
-function shutDoorsRow(d: ScoreboardReadings["shutDoors"]): ScoreboardRow {
-  const id = "Shut doors", name = "Shut doors";
-  if (d === null) return unmeasured(id, name, "The door registry could not be read just now, so no door is called shut.");
-  return row(id, name, {
-    value: n(d.shut),
-    counts: `${n(d.shut)} shut · ${n(d.open)} open · ${n(d.setAside)} set aside${d.unreadable > 0 ? ` · ${n(d.unreadable)} unreadable` : ""}`,
-    says: "How many ways in are shut right now. How long each took to reopen is not recorded yet.",
-  });
-}
-
 function returnsRow(r: ScoreboardReadings["returning"]): ScoreboardRow {
   const id = "Return visits", name = "Return visits";
   if (r === null) return unmeasured(id, name, "Reader counts could not be read just now.");
@@ -445,15 +444,40 @@ export function speedRow(p: SpeedPass | null | undefined): ScoreboardRow {
   });
 }
 
+/** DP-26: how many fixes proved out across places, and any proven fix that broke. */
+export function provenFixesRow(p: ProvenFixesReading | null | undefined): ScoreboardRow {
+  const id = "Proven fixes", name = "Proven fixes";
+  if (p === undefined) return unmeasured(id, name, "Fixes proved across places are not recorded here yet.");
+  if (p === null) return unmeasured(id, name, "Where each fix stands could not be read just now.");
+  if (p.proven + p.testing === 0) return unmeasured(id, name, "No reusable fix has been tried in a place yet.");
+  const broke = p.broke.length;
+  return row(id, name, {
+    value: n(p.proven),
+    counts: `${n(p.proven)} proven · ${n(p.testing)} testing${broke > 0 ? ` · ${n(broke)} broke in the last 30 days` : ""}`,
+    says: broke > 0 ? `${n(broke)} proven fix${broke === 1 ? "" : "es"} broke in the last 30 days.` : "A proven fix worked in enough places across more than one district or state. None broke in the last 30 days.",
+    items: p.broke.map((b) => `Broke ${easternDay(b.at)}: ${b.title}${b.stillProven ? " (still proven)" : " (back in testing)"}`),
+  });
+}
+
+/** DP-33: "X of K claimed wins confirmed", recomputed from source records by the claim auditors. */
+export function reportAccuracyRow(a: ReportAccuracyReading | null | undefined): ScoreboardRow {
+  const id = "Report accuracy", name = "Report accuracy";
+  if (a === undefined) return unmeasured(id, name, "Auditor confirmation of the team's claimed wins is not recorded here yet.");
+  if (a === null) return unmeasured(id, name, "No weekly check of the team's claimed wins in the last two weeks.");
+  const judged = a.confirmed + a.wrong;
+  if (judged === 0) return unmeasured(id, name, a.couldNotCheck > 0 ? `${n(a.couldNotCheck)} claimed wins were sampled, but none could be checked against its records.` : "No claimed win was sampled in the last check.");
+  return row(id, name, {
+    value: `${n(a.confirmed)} of ${n(judged)}`,
+    counts: `${n(a.confirmed)} confirmed · ${n(a.wrong)} wrong${a.couldNotCheck > 0 ? ` · ${n(a.couldNotCheck)} could not be checked` : ""}`,
+    says: `Report accuracy: ${n(a.confirmed)} of ${n(judged)} claimed wins confirmed from their source records. Checked ${formatEastern(a.at)}.`,
+    items: a.wrongClaims.map((w) => `Wrong: ${w.claimed} ${w.cause}`.trim()),
+  });
+}
+
 const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
   { id: "Facts live per hour", name: "Facts live per hour", why: "Counted in a later step, once each fact carries when it went live." },
   { id: "Cost per fact", name: "Cost per fact", why: "Counted in a later step, from the same record as facts live per hour." },
-  { id: "Posted to live", name: "Posted to live", why: "The time from a body posting to our page showing it is not recorded yet." },
   { id: "Look and feel", name: "Look and feel", why: "The front-end flags are not recorded here yet." },
-  { id: "Time to repair", name: "Time to repair", why: "The time from breaking to working again is not recorded yet." },
-  { id: "Repairs without code", name: "Repairs without code", why: "Which repairs needed no code change is not recorded yet." },
-  { id: "Proven fixes", name: "Proven fixes", why: "Fixes proved across places are not recorded yet." },
-  { id: "Report accuracy", name: "Report accuracy", why: "Auditor confirmation of the team's claimed wins is not recorded yet." },
 ];
 
 /** The Scoreboard in the design's order. Every number in the list has a row; one with no reading says "—" and why. */
@@ -467,15 +491,17 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Time to core information live", coreRow(r)],
     ["Public delivery", deliveryRow(r.publication, r.places ?? [])],
     ["Freshness", freshnessRow(r.publication, r.places ?? [])],
-    ["Shut doors", shutDoorsRow(r.shutDoors)],
     ["Return visits", returnsRow(r.returning)],
     ["Head-start hit rate", headStartRow(r.doors)],
     ["Audit accuracy", auditRow(r.audit)],
     ["Site speed and reliability", speedRow(r.speed)],
+    ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
+    ["Proven fixes", provenFixesRow(r.provenFixes)],
+    ["Report accuracy", reportAccuracyRow(r.reportAccuracy)],
     ...GATE_ROWS.map((g): [string, ScoreboardRow] => [g.id, unmeasured(g.id, g.name, g.why)]),
   ]);
   const ORDER = ["Orders", "Mission progress", "Checklist completeness", "Coverage", "Public delivery", "People coverage", "Facts live per hour", "Cost per fact", "Audit accuracy",
-    "Freshness", "Shut doors", "Posted to live", "Time to core information live", "Look and feel", "Site speed and reliability", "Return visits", "Time to repair", "Repairs without code", "Proven fixes", "Report accuracy", "Head-start hit rate"];
+    "Freshness", "Shut doors", "Posted to live", "Overdue doors", "Time to core information live", "Look and feel", "Site speed and reliability", "Return visits", "Time to repair", "Repairs without code", "Proven fixes", "Report accuracy", "Head-start hit rate"];
   const rows = ORDER.map((id) => byId.get(id)!);
   const gateRows: ScoreboardGateRow[] | null = r.gates === null ? null : r.gates.map((g) => ({ name: g.name, state: g.state, sentence: g.sentence }));
   const gateSummary = r.gates === null ? null : summarizeGateHealth(r.gates);

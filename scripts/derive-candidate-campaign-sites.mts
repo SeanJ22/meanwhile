@@ -52,7 +52,6 @@ import { indexVault, type VaultIndex } from "../lib/control-plane/evidence/read-
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
 import { candidatePublicationLinks, candidatePublicationCaptureUrls,
   heldCandidatePublicationRead } from "../lib/control-plane/promotion/campaign-publication-links.ts";
-import { ACTIVATION_GATE, classFieldOpen } from "../lib/control-plane/promotion/activation-policy.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 
@@ -176,7 +175,6 @@ async function main(): Promise<void> {
     held: (record) => held.get(record.recordId) ?? null,
     linkedPublications,
     profiles,
-    gateOpen: classFieldOpen(ACTIVATION_GATE, "candidate-enrichment", "campaignSite"),
     now,
   });
   for (const p of pass.plan?.published ?? []) console.log(`  published ${p.key}: ${p.url} (${p.approvalRecordId})`);

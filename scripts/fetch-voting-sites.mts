@@ -1,3 +1,7 @@
+import { assignment } from "./cli-args.mts";
+import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
+import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
+import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 /**
  * `pnpm voting-sites:fetch` — owner-invoked acquisition and canonical
  * promotion of every covered jurisdiction's voting locations (tracker B19).
@@ -842,6 +846,15 @@ function acquisitionRefusal(input: {
 let candidateSubmitted = false;
 
 async function main(): Promise<void> {
+  const workerResults = assignment(process.argv, "worker-results");
+  if (workerResults) {
+    const now = new Date().toISOString(), store = new PostgresRoutineDataStore();
+    const context = await workerPublicationContext(now);
+    const report = await publishWorkerReaderResults({ ...context, store, contractId: "voting-sites",
+      workItemIds: workerResults.split(",").filter(Boolean), now });
+    if (!await printWorkerPublicationReceipt(store, "voting-sites", report, null, now)) throw new Error("No registered polling worker publication reached the reader.");
+    return;
+  }
   console.log(`voting-sites:fetch — ${TODAY}`);
   const store = new PostgresRoutineDataStore();
   const priorRead = await readVotingSitesProjection({ store, bypassCache: true });
@@ -957,7 +970,7 @@ async function main(): Promise<void> {
 try {
   await main();
 } catch (error) {
-  if (!candidateSubmitted) {
+  if (!candidateSubmitted && !assignment(process.argv, "worker-results")) {
     const attemptedAt = new Date().toISOString();
     const failed = failedAcquisitionCandidate({
       sourceId: VOTING_SITES_CONTRACT.sourceId,

@@ -100,6 +100,10 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
   return {
     read,
 
+    /* `AggregateRepository.readMany`: the named rows that exist, in id order, as Postgres answers it. */
+    readMany: async (ids: readonly string[]): Promise<readonly Persisted<T>[]> =>
+      [...new Set(ids)].sort().flatMap((id) => { const row = rows.get(id); return row === undefined ? [] : [{ ...row, value: jsonCopy(row.value) }]; }),
+
     readNarrowed: async (id: string, projection: RecordProjection): Promise<Persisted<unknown> | null> => {
       const row = await read(id);
       return row === null ? null : { ...row, value: projectAggregate(row.value, projection) };

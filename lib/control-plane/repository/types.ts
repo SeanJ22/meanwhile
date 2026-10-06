@@ -381,6 +381,12 @@ export interface AggregateRepository<T> {
     next: T,
     now: string,
   ): Promise<Persisted<T>>;
+  /**
+   * The named aggregates that exist, in id order; absent ids are left out. A
+   * failed read THROWS. Optional: Postgres answers in primary-key batches; a
+   * caller without it falls back to `read` per id.
+   */
+  readMany?(ids: readonly string[]): Promise<readonly Persisted<T>[]>;
   /** Every aggregate of this kind, ordered by id so reports are diffable. */
   list(): Promise<readonly Persisted<T>[]>;
   /** Every row in the same id order, with only projected value fields crossing the wire. */

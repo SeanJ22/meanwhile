@@ -1,5 +1,5 @@
 import { BOX_PARSER_IMPLEMENTATION } from "./quoted-proof.ts";
-import { adapterWaitReasonFromKnowledge, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
+import { adapterWaitReasonFromKnowledge, DETECTIVE_SHUT_THRESHOLD, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
 import { readScoutResultsForSubjects, readSpendWindowCosts, readSubjectScoutHistoryScoped } from "./scoped-history.ts";
 import { randomUUID } from "node:crypto";
 import type { WorkItem } from "../work-item.ts";
@@ -13,7 +13,7 @@ import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-pol
 import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
-import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, scoutTransientDenial, scoutWalkedToNothing, unchangedScoutFailure } from "./scout-scheduling.ts";
+import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, oneHunterPath, scoutTransientDenial, scoutWalkedToNothing, unchangedScoutFailure } from "./scout-scheduling.ts";
 import { absenceExpiry, absenceUnlockFrom, isArguedAbsence } from "../scheduler/absence.ts";
 import { recordArguedAbsence } from "../scheduler/durable.ts";
 import { selectStandingLineages } from "./standing-lineage.ts";
@@ -28,6 +28,7 @@ import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../scheduler/scout-result.
 import type { WorkerResultRecord } from "./types.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
 import { needsSecondSource } from "../promotion/section3.ts";
+import { acquirerFailureCause, knownDoorRetry } from "./known-door-failure.ts";
 import { interleaveByWeight, partOfItem, sendOf, squadKey, squadWeights, type SquadReading, type SquadWeight } from "./squad-weights.ts";
 
 /**
@@ -38,12 +39,14 @@ const ROBOTS_ONLY_BLOCKERS: ReadonlySet<string> = new Set(["PERMISSION_DENIED", 
 
 export interface AutonomousCoordinatorRuntime extends FleetRuntime {
   /** Called before a task runs on a runtime built once for the whole process: refreshes only that task's own history. */
-  readonly beginTask?: (task: RouteTask) => Promise<void>;
+  readonly beginTask?: (task: RouteTask, item?: WorkItem) => Promise<void>;
   /** Existing Scout executor, configured with this canonical WorkItem and its inherited history. */
   readonly scoutFor?: (item: WorkItem, task: RouteTask, history?: readonly ScoutResult[]) => DeclaredExecutor;
   /** Only the standing lineage broker may hand complete, attributed sibling captures to this root.
    * Keep the scheduling recovery gate in sync with the Scout's actual inherited artifact IDs. */
   readonly authorizedSiblingHeldArtifactIdsFor?: (item: WorkItem) => readonly string[];
+  /** BR-05: Admin's shut-door threshold for this round (`detective.shutThreshold`); the code default when absent. */
+  readonly shutThreshold?: number;
 }
 export interface AutonomousDecision {
   readonly workItemId: string;
@@ -229,6 +232,8 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     );
   }
   const now = (runtime.now ?? (()=>new Date().toISOString()))();
+  const switched = oneHunterPath();
+  const shutThreshold = runtime.shutThreshold ?? DETECTIVE_SHUT_THRESHOLD;
   const records = [...(knownHistory?.completedRecords ?? await readCompletedWorkerResults(repos, item.id))];
   /* CH-26: the held-artifact set is read once per decision when scoped, not once per parsed artifact. */
   const readHeldArtifactIds = async () => new Set((await repos.artifacts.readAll()).map(artifact => artifact.artifactId));
@@ -328,6 +333,9 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     ? [r.result.artifactId] : []));
   const acquiredBoxPage = (record: WorkerResultRecord) => record.result.role === "ACQUIRER" &&
     record.result.artifacts.some(artifact => boxedArtifactIds.has(artifact.artifactId));
+  /* CH-23 part 3 (DP-02): known doors in a passing outage, each waiting for its free plain retry. */
+  const outageWaits = new Map<string, string>();
+  const doorKey = (acquisition: AcquirerTaskSpec) => `${acquisition.route.id}\u0000${acquisition.route.url}`;
   // Acquire the declared supporting authorities before scheduling their dependent validation.
   for (const acquisition of acquisitions) {
     const history = records.filter(r => r.result.role === "ACQUIRER" && (r.result.source.id === acquisition.route.id || acquiredBoxPage(r)) && r.result.source.url === acquisition.route.url);
@@ -352,6 +360,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       }
       continue;
     }
+    const unresolvedBefore: boolean = unresolved;
     unresolved = true;
     // A result blocked by robots.txt alone (PERMISSION_DENIED / PERMISSION_UNKNOWN, only ever recorded before the owner
     // decision of 2026-09-25) is not a failure of the route: robots.txt is recorded and never blocks a public page, so
@@ -366,14 +375,20 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     let debt: FreshnessDebt | null = null;
     for (const failed of [...history].reverse()) {
       if (failed.result.verdict === "ACQUIRED") { debt = null; continue; }
-      debt = recordFailure(debt,{obligationId:item.id,cause:"TRANSPORT_FAILED",detail:`ACQUIRER ${failed.result.verdict}`,target:acquisition.route.url,dueAt:failed.startedAt,now:failed.endedAt});
+      const cause = switched && failed.result.role === "ACQUIRER" ? acquirerFailureCause(failed.result) : "TRANSPORT_FAILED";
+      debt = recordFailure(debt,{obligationId:item.id,cause,detail:`ACQUIRER ${failed.result.verdict}`,target:acquisition.route.url,dueAt:failed.startedAt,now:failed.endedAt});
     }
-    // An hourly runner must not spend every pass retrying the same failed URL
-    // before the unresolved investigation ever gets a Scout turn.
+    // Switch off: an hourly runner must not spend every pass retrying the same failed URL before the unresolved
+    // investigation ever gets a Scout turn. Switch on (DP-02): a passing outage keeps its free plain retry and owes no
+    // paid walk; a shut door goes to its investigation, with a plain re-read in alternate hourly slots.
     const scoutTriedAfterFailure = attempts.some(a => a.workItemId === item.id && (a.worker.role === "SCOUT" || a.worker.role === "DETECTIVE") && a.endedAt !== null && Date.parse(a.endedAt) >= Date.parse(latest.endedAt));
-    if (debt && Date.parse(debt.retryAt) <= Date.parse(now) && scoutTriedAfterFailure) {
+    const retry = knownDoorRetry({debt,now,scoutTriedAfterFailure,shutThreshold,oneHunterPath:switched});
+    if (retry.kind === "PLAIN_RETRY") {
       const next = await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition,replayLabel:`retry-after:${latest.id}`});
       if (next) return next;
+    } else if (retry.kind === "OUTAGE_WAIT") {
+      outageWaits.set(doorKey(acquisition), retry.retryAt);
+      unresolved = unresolvedBefore;
     }
   }
   for (const acquisition of acquisitions) {
@@ -381,6 +396,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     // A failed refresh does not erase the last trustworthy capture. The source
     // loop above keeps its freshness/recovery obligation unresolved separately.
     const acquired = records.find(r=>r.result.role==="ACQUIRER" && r.result.verdict==="ACQUIRED" && (r.result.source.id===acquisition.route.id || acquiredBoxPage(r)) && r.result.source.url===acquisition.route.url);
+    if (!acquired && outageWaits.has(doorKey(acquisition))) continue;
     if (!acquired) { const next = await taskFor({...common,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition}); if(next)return next; unresolved=true; continue; }
     if (acquired.result.role !== "ACQUIRER") continue;
     for (const artifact of acquired.result.artifacts.filter(a=>a.completeness==="COMPLETE")) {
@@ -435,10 +451,14 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     const next = await taskFor(refresh);
     if (next) return next;
   }
-  if (staged && !unresolved && item.publicationOutcome?.recovery !== "WORKER" &&
+  if (staged && !unresolved && !outageWaits.size && item.publicationOutcome?.recovery !== "WORKER" &&
     (item.publicationOutcome?.status !== "HELD" || item.publicationOutcome.recovery === "PUBLISHER")) return decision("STAGED",
     item.publicationOutcome?.status === "PUBLISHED" ? `Verified records published in ${item.publicationOutcome.versionId}; other coverage obligations remain open.`
       : "Scoped reviewed results are retained. Reader/Ask and promotion gates remain independent.");
+  if (outageWaits.size && !unresolved) {
+    const at = [...outageWaits.values()].sort()[0];
+    return decision("BLOCKED", `A known source had a passing outage; it is read again with plain code at ${at}. No paid walk is owed for it.`);
+  }
   const novelty = await scoutOperation(true);
   return outsideExtractionScope ? {...novelty,reason:`EXTRACTION_SCOPE_UNESTABLISHED: the acquired representation needs a compatible extraction contract. ${novelty.reason}`} : novelty;
 }

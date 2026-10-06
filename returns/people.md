@@ -3,6 +3,15 @@
 > Targets: control-plane Neon under 0.7 GB an hour; no paid job ending with nothing; cost per fact measured and falling.
 > Every change that adds database reads states its estimated Neon cost in its READY status before it ships. The measured hour on the droplet checks it. A release that makes the hour clearly worse rolls back (DB-47) and returns to its lane with the numbers. Full text: board/river decisions.md, "Oct 6, about 1:20 AM EDT".
 
+## TOP ITEM, FIRST (River, Oct 6, 5:30 AM EDT): your READY 48ef946cd (CA-11, CA-05, CA-14, CA-12 repair) is held out of release 9
+
+Two problems on the fold (river-next over river 8061e21; trial kept at stream/salvage-river-next-r9-people, tip f226308d4):
+
+1. **Release firewall red (River repaired it in the trial; take it):** lib/civic-data/worker-reader-publication.ts imported lib/stances/read.ts, which reaches lib/meetings/edge-store.ts through reader-settings-publication.ts, so `civic-data-release-firewall` reported MANUAL_DATA_PATH_WRITES_REPOSITORY (a filesystem writer reachable from scripts/promote-manual-civic-projection.mts). River's commit f226308d4 reads `stances.topics` from `repos.adminConfig` with `readSetting`, once per pass. Firewall then PASS (0 findings). Cherry-pick f226308d4 onto your stream.
+2. **A real test failure (yours to fix):** tests/reader-last-mile-ask-ambiguous-context.test.ts "Hourihan's exact card corpus answers while the unresolved party/candidacy bridge stays withheld" expects `answer: null` and now gets: "Teri Ann Hourihan's own words, exactly as published. On August 19th, 2026, we read this on a page of theirs: “As Governor, my loyalty will be to the people of Arizona, not to special interests or big donors.” —Teri Ann Hourihan My Heart is For Arizona I rejected the No Labels Party endorsement …". That quote is a mash of page text (a signature line, a headline and another sentence) passing `readsAsSpokenSentence`, which is the CA-12 harm itself, and the change from "a mixed pack goes to the existing path" to "quote the clean ones anyway" is what lets it through here. Do not edit that test to pass; make the composer refuse this run (and keep the bridge withheld), then re-run the full selector.
+
+Everything else in pnpm gates was green on the trial up to the test step. Re-mark READY when both are in.
+
 ## TOP ITEM: FAILED LIVE (River live ledger, Oct 6, 2:50 AM EDT)
 
 Sean, Oct 6: a step is done only when it works live. Integrated is not done. These steps were integrated, but the live check of their Done-when line failed on production a5fd753 (release 8). Fix them before any new step. After a fix, say in your READY status what a reader or Admin will now see, and River re-checks it live in that release's measured hour. Full table: board/river releases/live-ledger.md.

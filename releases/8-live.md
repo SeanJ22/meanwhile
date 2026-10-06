@@ -47,6 +47,23 @@ cp_attempts has been read whole about 131,000 times. The whole-table `repos.atte
 
 These are rows Postgres touched, not bytes sent to the runner. Reads inside cp_admit_spend_hold() never leave the database. So this table says which code is scanning, not what Sean pays for. Neon's project total is the billable number. This project has no pg_stat_statements to break the transfer down by query, which is why the hourly vital-signs row needs its own per-query byte counter (vital-signs.md).
 
-## First hour after restart
+## First hour after restart (2:02 to 3:02 AM EDT): CLEARLY WORSE
 
-(River fills this in: the transfer delta from data_transfer_bytes, the seq-scan deltas above, cp_spend_holds rows, and ledger row size. Compare with release 6's first hour: 7.8 GB, about 5.5 GB of it ledger reads. Target: under 0.7 GB.)
+- **Neon project transfer: about 9.4 GB.** Neon's counter read 1,840,099,187,583 bytes from 1:20 to 2:04 AM EDT (unchanged while the runner was off), and 1,849,523,516,847 at 3:02 AM EDT. The delta is 9,424,329,264 bytes. It covers the counter's last batch before the restart to 3:02 AM, and the runner was off for nearly all of that before 2:02 AM.
+- Compare **release 6's first hour: 7.8 GB** (Sean's figure, 11:23 PM to 12:29 AM EDT). **Target: 0.7 GB. Sean's stop line: 1.5 GB.**
+- **Ledger row:** 1,088 bytes (the move held). cp_budget: 791 seq scans of a 1 KB row (negligible).
+- **cp_spend_holds:** 3,862 rows at 3:03 AM EDT (2,794 at 2:07). 2,230 holds were admitted in the hour; 76 are unsettled; the oldest is from 11:22 PM EDT. Average row 1,272 bytes, 4.9 MB of rows in all. **2,244 seq scans this hour, 3.04M rows read by seq scan, 13.1M fetched by index.**
+- **Other read deltas this hour:**
+  - cp_log_artifacts: 4,043 seq scans and 91.8M rows read by seq scan (a whole-log read about once a second);
+  - cp_attempts: 8 seq scans (the incremental read is working) and 1.37M rows fetched by index;
+  - cp_work_items: 21 seq scans;
+  - cp_route_tasks: 3 seq scans.
+
+### Cause (River's own step, MW-021)
+`SpendHoldGate.left()` (lib/control-plane/expansion/spend-holds.ts:455) calls `store.liveFor(lineKeys)`. In Postgres (pg-store.ts:1204) that returns **every hold that still counts on those lines as whole JSON rows**, settled holds in the rolling window included. The shared fleet line covers almost every hold, so each budget check pulls about 1,400 to 3,800 rows (1.3 KB each) to the runner, and does that about 2,244 times an hour. At about 1,350 rows a scan that is roughly 4 GB an hour from this one read. The table grows by about 2,200 holds an hour until the 24-hour window fills (about 50,000 holds), so **this read grows every hour**, the way the ledger row did. Separately, cp_log_artifacts' 4,043 whole scans need a scoped read (hunters, scoped reads).
+
+### Fix (River, smallest change)
+Compute what each line has left inside Postgres: one SUM over the line's counting holds, by index, returning one number per line, never the rows. readLiveSpendHolds (round start, owner snapshot) is limited to unsettled holds plus a per-line sum. Estimate after the fix: under 50 MB an hour for holds.
+
+### Verdict
+**Clearly worse**: transfer 9.4 GB against 7.8 GB for release 6's hour (+21%), and 13 times the target. Under Sean's gate it would roll back. **No rollback was done.** Sean's rule says River first shows him how "clearly worse" is decided, using real hours, and the rollback screen (DB-47) is not on any Admin view (live ledger). Sean's oversight session holds the stop line (1.5 GB a full hour). Sean was pushed at 3:10 AM EDT.

@@ -79,3 +79,16 @@ Confirmed by the stall probe on release 6's first cycle, killed at 12:01 AM EDT 
 - The discovery-lane join in the round (`await discoveryLaneRun`) and the promotion tail must also end before the no-progress window, as a deferral (the 01:10 return above).
 - Test: a campaign-sites lane that never returns ends the round as a deferral with the lane named, within the window.
 Do this before every other item. Then the design-it-out items above.
+
+## Oct 6, 12:14 AM EDT (Sean): one lane must never crash another — your order is now
+1. **Bound campaign-sites** (the top item above).
+2. **Isolation as the basis for CH-24 Proposal A**, ahead of everything else:
+   - One long-lived parent (pilot-runner's standing research lane) holds release 6's shared incremental read cache (withIncrementalReads), so no job re-reads a table on its own.
+   - Each lane and job inside it runs with its own deadline and its own progress signal, and saves as it goes (findings, rungs, cost).
+   - A stuck job is ended alone, its state recorded for you (what it was waiting on, the last progress, the rungs walked), and the others keep running. No single watchdog kill covers a whole round.
+   - Nothing joins on the slowest lane.
+   - Use a separate process only for work that can freeze the event loop: synchronous or CPU-bound parsing, Playwright browse. Give it its own memory reservation through worker-slots.
+   - Fit inside the droplet's current memory at the 0.75 GiB margin (WORKER_MEMORY_HEADROOM_MIB).
+   - Record host total memory, current RSS and reservations in the runner heartbeat, so River can report how many jobs fit and what more memory would buy.
+   - Keep the old timed-round path behind a switch until the new one is checked live.
+3. Then the design-it-out items (admission, route candidate to builder, lessons, saving before a kill) and the rest.

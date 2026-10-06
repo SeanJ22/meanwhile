@@ -154,3 +154,25 @@ Every time given to Sean, written on the board, or shown in Admin is in Eastern 
 ## Oct 6, 12:07 AM EDT: Sean, the stall probe confirms the research crash's second cause
 
 Release 6's first research cycle was killed at 12:01 AM EDT after 43 minutes. The stall probe reported "pending: campaign-sites; last phase: occurrence-and-debt-commit". Every killed round also kills its running Scouts (two tonight, mid-work), so this is money spent for nothing until it is fixed. It is now hunters' top item (returns/hunters.md). Cost per hunt: fix the Money page's existing Hunts table (spent, set aside, limit per place); do not build a second one.
+
+## Oct 6, 12:14 AM EDT: Sean, one lane must never crash another
+
+Tonight the campaign-sites lane stalled and the watchdog killed the whole research round, including two healthy Scouts mid-work. That is the design, not a bug: every lane shares one process, one heartbeat and one kill. Sean's direction:
+- Each job and lane runs and saves independently.
+- A stuck one is ended alone, with its state recorded for hunters.
+- Nothing waits on the slowest lane to finish.
+- Put CH-24 Proposal A (continuous research, no timed rounds) on that basis, and move it ahead of the other hunters work, right after bounding campaign-sites.
+
+Constraints:
+- Build within the droplet's current memory at the 0.75 GiB margin (WORKER_MEMORY_HEADROOM_MIB = 768, lib/control-plane/workers/worker-slots.ts).
+- Keep one long-lived parent holding release 6's shared incremental read cache, so jobs never re-read tables on their own.
+- Isolate jobs inside it with their own deadlines and progress. Use a separate process only where a job can freeze the whole program (synchronous or CPU-bound work, Playwright).
+- Report how many jobs fit at the margin, and what more memory would buy.
+- Measure Neon transfer before and after.
+
+Owner: hunters. Order:
+1. Bound campaign-sites (top item).
+2. Lane and job isolation in one long-lived parent, as the basis for CH-24 Proposal A.
+3. The rest.
+
+River measures Neon transfer before and after, and computes the fit at the margin from the host memory hunters records (the heartbeat does not carry it today) and the measured peaks in worker-slots.ts (research parent 2,928 MiB, Scout 248, lease worker 342, route 285, national 1,258).

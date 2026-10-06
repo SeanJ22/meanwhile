@@ -188,7 +188,7 @@ export function CommandCenter(props: CommandCenterProps) {
     });
     update(receipt);
     setDialog(null);
-    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, fields:send.fields, startAt:send.startAt, payload: ref.payload }, update);
+    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, fields:send.fields, startAt:send.startAt, when:send.when, payload: ref.payload }, update);
   };
 
   const doSendBulk = (send: { readonly items: readonly BulkItem[]; readonly missions: readonly BulkMission[]; readonly priority: number }) => {
@@ -401,6 +401,7 @@ export function CommandCenter(props: CommandCenterProps) {
             mode={props.mode}
             blocked={whyNotRef({ ...dialog.ref, target: dialogTarget })}
             onClose={() => setDialog(null)}
+            afterOrders={receipts.filter(r=>r.gatewayReceiptId).map(r=>({id:r.gatewayReceiptId!,label:r.label}))}
             onSend={(send) => doSend(dialog.ref, dialog.key, send)}
           />
         )}

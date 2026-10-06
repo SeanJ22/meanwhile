@@ -78,6 +78,9 @@ import type {
 } from "./model.ts";
 
 export const PROJECT = "we-the-people";
+/** The runtime provider uses this scoped ballot/data-door path. Historical
+ * proving obligations below remain the rollout way back until live acceptance. */
+export { ballotFinanceObligations, ballotFinanceScheduledId, type BallotFinanceInputs } from "./ballot-obligations.ts";
 
 /** The Pima body id this project already uses for the county's governing body. */
 export const PIMA_BODY_ID = "ocd-division/country:us/state:az/county:pima#governing";

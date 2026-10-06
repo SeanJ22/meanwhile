@@ -144,6 +144,10 @@ export const SOURCE_AUTHORITIES = {
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "published public-comment rule",
+      "official GIS/service-area district polygons bound to held government identities (CA-55)",
+      "source-worded public-record kind, title and sentence about an exact jurisdiction or body (CA-37)",
+      "official adopted government budgets, fiscal year dates, version-specific amendments and legal budget responsibilities (CA-52)",
+      "neutral official measure translations checked sentence by sentence by an independent model (CA-25)",
       "independently verified official candidate-filing and committee-report facts, without an inferred ballot or financial identity join",
       "official voter-registration lookup route",
       "official polling-place lookup route",
@@ -173,8 +177,7 @@ export const SOURCE_AUTHORITIES = {
     // Transport routes are data. The candidate applies §3 to each site's
     // publisher URL and saves the official linking page for non-.gov sources.
     routePrefixes: ["https://"],
-    jurisdictions: REGISTRATION_TARGETS.filter(target => FIPS_TO_STATE[target.fips].prefix !== "territory")
-      .map(target => target.jurisdiction),
+    jurisdictions: REGISTRATION_TARGETS.map(target => target.jurisdiction),
     recordClasses: ["VOTING_SITE"],
     competentFacts: [
       "official voting-site identity and address",

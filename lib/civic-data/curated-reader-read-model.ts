@@ -16,6 +16,7 @@ export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
   "comment-access",
   "ballot-navigation",
+  "stances",
   "campaign-sites",
   "member-offices",
   "venue-resolutions",

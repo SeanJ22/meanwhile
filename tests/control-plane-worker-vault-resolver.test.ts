@@ -1,3 +1,4 @@
+import { publicationVaultReaders } from "../lib/civic-data/publication-vault.ts";
 import assert from "node:assert/strict";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -221,4 +222,46 @@ test("research snapshots share successful and failed content resolution, and a n
   assert.ok(held.every(row => row.artifact.attemptId === first.attemptId));
   assert.equal(listings, 2);
   assert.equal(attemptReads, 1);
+});
+
+
+test("publication reads matching artifact metadata once for both provenance validators, preserving later held observations", async t => {
+  const store = await vault(t);
+  const [first, second] = [capture(1), capture(2)];
+  await hold(store, second);
+  const repository = repos([]);
+  let keysRead = 0, rowsRead = 0, vaultLists = 0;
+  const listed = store.list.bind(store);
+  t.mock.method(store, "list", async (prefix: string) => { vaultLists++; return listed(prefix); });
+  repository.artifacts.keysWhere = async (path, id) => {
+    keysRead++; assert.deepEqual(path, ["artifactId"]); assert.equal(id, first.id);
+    return [first.workItemId, second.workItemId];
+  };
+  repository.artifacts.readWhere = async (key, path, id) => {
+    rowsRead++; assert.deepEqual(path, ["artifactId"]); assert.equal(id, first.id);
+    return [record(key === first.workItemId ? first : second)];
+  };
+  repository.artifacts.readAll = async () => { throw new Error("whole artifact log must not transfer"); };
+  const readers = publicationVaultReaders(repository, store, PROJECT);
+  const [object, evidence] = await Promise.all([readers.readObject(first.id), readers.readEvidence(first.id)]);
+  assert.equal(object.artifact.attemptId, second.attemptId);
+  assert.equal(evidence.attemptId, second.attemptId);
+  assert.equal(evidence.text, BODY);
+  await readers.readEvidence(first.id);
+  assert.deepEqual({ keysRead, rowsRead, vaultLists }, { keysRead: 1, rowsRead: 2, vaultLists: 1 });
+});
+
+test("a later publication job sees newly saved metadata and bytes; a failed database read stays a failure", async t => {
+  const store = await vault(t);
+  const artifact = capture(1);
+  const repository = repos([]);
+  let available = false;
+  repository.artifacts.keysWhere = async () => available ? [artifact.workItemId] : [];
+  repository.artifacts.readWhere = async () => [record(artifact)];
+  repository.artifacts.readAll = async () => { throw new Error("whole log"); };
+  await assert.rejects(publicationVaultReaders(repository, store).readEvidence(artifact.id), /MISSING_OR_PARTIAL/);
+  await hold(store, artifact); available = true;
+  assert.equal((await publicationVaultReaders(repository, store).readEvidence(artifact.id)).text, BODY);
+  repository.artifacts.keysWhere = async () => { throw new Error("database unavailable"); };
+  await assert.rejects(publicationVaultReaders(repository, store).readEvidence(artifact.id), /database unavailable/);
 });

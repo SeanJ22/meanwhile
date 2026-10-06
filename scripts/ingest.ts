@@ -34,6 +34,8 @@ import { meetingFetchedWindowFor } from "../lib/meetings/fetch-window.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { doorReadModeFromEnv } from "../lib/doors/install.ts";
 import { recordFamilyReads } from "../lib/doors/outcome.ts";
+import { doorShutEnabled, evidenceFromFamilyRead } from "../lib/doors/ingest-evidence.ts";
+import { recordDoorEvidence } from "../lib/doors/shut.ts";
 import {
   attributionSummary,
   resolveMeetingBodies,
@@ -792,7 +794,18 @@ async function recordFamilyMemberOutcomes(reads: readonly FamilyMemberRead[]): P
   if (connection === null || doorReadModeFromEnv() !== "registry" || reads.length === 0) return;
   try {
     const repos = await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true });
-    const recorded = await recordFamilyReads(repos.doors, reads, new Date().toISOString());
+    const at = new Date().toISOString();
+    // DB-32/34: with the switch on, a member's own read can shut its door (and open its fix item) or reopen it.
+    const judged = doorShutEnabled() ? reads.map((read) => ({ read, evidence: evidenceFromFamilyRead(read) })) : [];
+    const plain = reads.filter((read) => !judged.some((entry) => entry.read === read && entry.evidence !== null));
+    let shut = 0;
+    for (const { read, evidence } of judged) {
+      if (evidence === null) continue;
+      const result = await recordDoorEvidence(repos.doors, read.member.id, evidence, at, repos);
+      if (result.change === "SHUT") shut += 1;
+    }
+    if (shut > 0) console.log(`  family doors: ${shut} member door(s) shut by their own read`);
+    const recorded = await recordFamilyReads(repos.doors, plain, at);
     if (recorded !== null) console.log(`  family doors: ${recorded.recorded} member outcome(s) recorded, ${recorded.missing} not in the registry`);
   } catch (error) {
     console.warn(`  family doors: member outcomes not recorded — ${error instanceof Error ? error.message : String(error)}`);

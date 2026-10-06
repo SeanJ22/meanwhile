@@ -1,3 +1,4 @@
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type {
   FundingAbsenceData,
   FundingDisplayData,
@@ -70,7 +71,7 @@ export function FundingDisplay({
       {!bare && <p className={SECTION_LABEL_CLASS}>Campaign money · FEC</p>}
       <MoneyOverview data={data} />
       {data.sentences.map((sentence) => (
-        <p key={sentence} className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+        <p key={sentence} className="mt-1.5 t-body leading-relaxed text-paper-dim">
           {sentence}
         </p>
       ))}
@@ -90,7 +91,7 @@ export function FundingDisplay({
       {data.contributorsShown && (
         <div className="mt-3">
           <p className={SECTION_LABEL_CLASS}>Largest reported contributions</p>
-          <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
+          <p className="mt-0.5 t-caption leading-relaxed text-voice">
             The biggest contributions this campaign&apos;s main committee has
             reported, listed exactly as filed — biggest first, in two groups.
           </p>
@@ -190,7 +191,7 @@ export function FundingDisplay({
             {data.concentrationSentences.map((sentence) => (
               <li
                 key={sentence}
-                className="text-[0.75rem] leading-relaxed text-paper-dim"
+                className="t-detail leading-relaxed text-paper-dim"
               >
                 {sentence}
               </li>
@@ -246,7 +247,7 @@ export function FundingDisplay({
             {data.typeConcentrationSentences.map((sentence) => (
               <li
                 key={sentence}
-                className="text-[0.75rem] leading-relaxed text-paper-dim"
+                className="t-detail leading-relaxed text-paper-dim"
               >
                 {sentence}
               </li>
@@ -255,7 +256,7 @@ export function FundingDisplay({
         </details>
       )}
 
-      <p className="mt-2 text-[0.625rem] text-muted">
+      <p className="mt-2 t-caption text-muted">
         {data.sourceUrl ? (
           <a
             href={data.sourceUrl}
@@ -318,7 +319,7 @@ function MoneyOverview({ data }: { data: FundingDisplayData }) {
       )}
       {!totals && (
         <p className="mw-share-note" data-money-chart="totals-not-held">
-          {"We're working on getting this info"}
+          <WorkingOnIt inline />
         </p>
       )}
     </div>
@@ -355,7 +356,7 @@ function OriginBars({ data }: { data: FundingDisplayData }) {
   if (c.totalAmount <= 0) {
     return (
       <p className="mw-share-note" data-money-chart="origin-not-held">
-        {"We're working on getting this info"}
+        <WorkingOnIt inline />
       </p>
     );
   }
@@ -406,7 +407,7 @@ function TypeBars({ data }: { data: FundingDisplayData }) {
   if (rows.length === 0 || total <= 0) {
     return (
       <p className="mw-share-note" data-money-chart="type-not-held">
-        {"We're working on getting this info"}
+        <WorkingOnIt inline />
       </p>
     );
   }
@@ -456,7 +457,7 @@ function ContributorColumn({
   if (groups.length === 0) return null;
   return (
     <div>
-      <p className="text-[0.625rem] font-semibold uppercase trailing-space-trimmed-8 tracking-[0.08em] text-muted">
+      <p className="t-caption font-semibold uppercase trailing-space-trimmed-8 tracking-[0.08em] text-muted">
         {title}
       </p>
       <ul className="mt-1" data-contributor-group={title}>
@@ -503,12 +504,12 @@ function IndividualDonorsPanel({ aggregate }: { aggregate: IndividualAggregate }
   const fromStrangers = aggregate.amount - aggregate.candidateOwnMoney;
   return (
     <div data-contributor-group="Individual donors">
-      <p className="text-[0.625rem] font-semibold uppercase trailing-space-trimmed-8 tracking-[0.08em] text-muted">
+      <p className="t-caption font-semibold uppercase trailing-space-trimmed-8 tracking-[0.08em] text-muted">
         Individual donors
       </p>
       <ul className="mt-1">
         <li
-          className="border-b border-[var(--panel-border)] py-1.5 text-[0.75rem] last:border-0"
+          className="border-b border-[var(--panel-border)] py-1.5 t-detail last:border-0"
           data-individual-total={Math.round(aggregate.amount)}
         >
           <div className="flex items-baseline justify-between gap-3">
@@ -521,14 +522,14 @@ function IndividualDonorsPanel({ aggregate }: { aggregate: IndividualAggregate }
                 {aggregate.filings === 1 ? "filing" : "filings"}
               </span>
             </span>
-            <span className="shrink-0 font-mono text-[0.75rem] font-medium tabular-nums">
+            <span className="shrink-0 font-mono t-detail font-medium tabular-nums">
               ${Math.round(aggregate.amount).toLocaleString("en-US")}
             </span>
           </div>
         </li>
         {aggregate.candidateOwnMoney > 0 && (
           <li
-            className="border-b border-[var(--panel-border)] py-1.5 text-[0.75rem] last:border-0"
+            className="border-b border-[var(--panel-border)] py-1.5 t-detail last:border-0"
             data-candidate-own-money={Math.round(aggregate.candidateOwnMoney)}
           >
             <div className="flex items-baseline justify-between gap-3">
@@ -540,7 +541,7 @@ function IndividualDonorsPanel({ aggregate }: { aggregate: IndividualAggregate }
                   above came from other people
                 </span>
               </span>
-              <span className="shrink-0 font-mono text-[0.75rem] font-medium tabular-nums">
+              <span className="shrink-0 font-mono t-detail font-medium tabular-nums">
                 ${Math.round(aggregate.candidateOwnMoney).toLocaleString("en-US")}
               </span>
             </div>
@@ -552,7 +553,7 @@ function IndividualDonorsPanel({ aggregate }: { aggregate: IndividualAggregate }
           {aggregate.byState.map((share) => (
             <li
               key={share.state ?? "unstated"}
-              className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] py-1 text-[0.6875rem] last:border-0"
+              className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] py-1 t-caption last:border-0"
             >
               <span className="min-w-0 text-paper">
                 {share.state ?? STATE_NOT_ON_FILING}
@@ -591,7 +592,7 @@ function ContributorRow({
   const typeLabel = contributorTypeLabel(group);
   return (
     <li
-      className="border-b border-[var(--panel-border)] py-1.5 text-[0.75rem] last:border-0"
+      className="border-b border-[var(--panel-border)] py-1.5 t-detail last:border-0"
       data-contributor-amount={Math.round(group.amount)}
     >
       <div className="flex items-baseline justify-between gap-3">
@@ -604,7 +605,7 @@ function ContributorRow({
             <span className="font-normal text-muted"> · {entityLabel}</span>
           )}
         </span>
-        <span className="shrink-0 font-mono text-[0.75rem] font-medium tabular-nums">
+        <span className="shrink-0 font-mono t-detail font-medium tabular-nums">
           ${Math.round(group.amount).toLocaleString("en-US")}
         </span>
       </div>
@@ -620,7 +621,7 @@ function ContributorRow({
                 `label` fragment is untouched and still used inline elsewhere. */}
             <span className={pillClassFor(typeLabel)}>{committeePillLabel(typeLabel)}</span>
           </summary>
-          <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
+          <p className="mt-1 t-caption leading-relaxed text-voice">
             {typeLabel.explainer}{" "}
             <a
               href={typeLabel.sourceUrl}
@@ -642,7 +643,7 @@ function ContributorRow({
         // total is the reader's own check that the parts equal the whole.
         <details className="funding-type mt-0.5" data-collapsed-filings={group.count}>
           <summary>
-            <span className="text-[0.6875rem] text-muted">
+            <span className="t-caption text-muted">
               {group.count} {group.countNoun} ·{" "}
               <span className="font-mono tabular-nums">
                 ${Math.round(group.amount).toLocaleString("en-US")}
@@ -653,7 +654,7 @@ function ContributorRow({
             {group.filings.map((filing, i) => (
               <li
                 key={`${filing.receiptDate}-${filing.amount}-${i}`}
-                className="flex items-baseline justify-between gap-3 text-[0.6875rem] text-voice"
+                className="flex items-baseline justify-between gap-3 t-caption text-voice"
               >
                 <span>
                   {filing.receiptDate
@@ -708,7 +709,7 @@ function SecondHopPanel({
   return (
     <details className="funding-type mt-1" data-second-hop={hop.committeeId}>
       <summary>
-        <span className="rounded-full border border-[var(--signal)]/40 bg-[var(--signal)]/10 px-2 py-0.5 text-[0.625rem] font-semibold text-signal">
+        <span className="rounded-full border border-[var(--signal)]/40 bg-[var(--signal)]/10 px-2 py-0.5 t-caption font-semibold text-signal">
           Give me the tea
         </span>
       </summary>
@@ -739,10 +740,10 @@ function SecondHopPanel({
             </div>
           )}
         </div>
-        <p className="text-[0.6875rem] font-semibold text-paper">
+        <p className="t-caption font-semibold text-paper">
           Who gives to {hop.name}
         </p>
-        <p className="mt-0.5 text-[0.625rem] leading-relaxed text-voice">
+        <p className="mt-0.5 t-caption leading-relaxed text-voice">
           {isJointFundraiser
             ? "Joint fundraisers split what they raise among the campaigns and committees they raise for, following a formula they file with the FEC. These are that fund's own biggest reported donors — not this campaign's."
             : "These are that committee's own biggest reported donors — not this campaign's."}
@@ -751,7 +752,7 @@ function SecondHopPanel({
           {rows.map((row) => (
             <li
               key={row.key}
-              className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] py-1 text-[0.6875rem] last:border-0"
+              className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] py-1 t-caption last:border-0"
             >
               <span className="min-w-0 text-paper">
                 {row.contributorName}
@@ -772,7 +773,7 @@ function SecondHopPanel({
           ))}
           {hopIndividuals.donors > 0 && (
             <li
-              className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] py-1 text-[0.6875rem] last:border-0"
+              className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] py-1 t-caption last:border-0"
               data-hop-individual-total={Math.round(hopIndividuals.amount)}
             >
               <span className="min-w-0 text-paper">
@@ -790,7 +791,7 @@ function SecondHopPanel({
             </li>
           )}
         </ul>
-        <p className="mt-1.5 text-[0.5625rem] text-muted">
+        <p className="mt-1.5 t-caption text-muted">
           <a
             href={hop.provenance.sourceUrl ?? undefined}
             target="_blank"
@@ -810,7 +811,7 @@ export function FundingAbsence({ data }: { data: FundingAbsenceData }) {
   return (
     <div className="mt-2">
       <p className={SECTION_LABEL_CLASS}>Campaign money · FEC</p>
-      <p className="mt-1 text-[0.75rem] leading-relaxed text-muted">
+      <p className="mt-1 t-detail leading-relaxed text-muted">
         {data.statement}{" "}
         {data.searchUrl && (
           <a
@@ -831,6 +832,6 @@ export function FundingAbsence({ data }: { data: FundingAbsenceData }) {
 /** The honest line for state and local races — a stated gap, never silence. */
 export function StateFundingNote({ note }: { note: string }) {
   return (
-    <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted">{note}</p>
+    <p className="mt-2 t-caption leading-relaxed text-muted">{note}</p>
   );
 }

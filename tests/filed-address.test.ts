@@ -46,21 +46,23 @@ test("filing email and its source survive while the filed address cannot reach A
 });
 
 test("both renderers reject legacy address props and retain a filing source even with no public contact", () => {
-  const result = JSON.parse(execFileSync(process.execPath, ["--import", "tsx", "--input-type=module", "-e", `
+  const result = JSON.parse(execFileSync(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", `
     import { createElement } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
-    import { CandidateContact } from './components/ballot/candidate-contact.tsx';
+    import { CandidateContact, CandidateContactSources } from './components/ballot/candidate-contact.tsx';
     import { AskAnswerContacts } from './components/ask/answer-contacts.tsx';
     const address = '123 Private Lane, Example City';
     const filing = { candidacyId:'example', email:null, filedAddress:address, sourceUrl:'https://filing.example.gov/list', sourceOrg:'Election office', collectedAt:'2026-10-01' };
     const card = { filedAddress:address, filedAddressSource:'Source', email:'campaign@example.test' };
     const contact = { id:'example', name:'Candidate', relationship:'Candidate for office', basis:'SUBJECT_OFFICE', filedAddress:address, email:card.email, sourceUrl:filing.sourceUrl };
-    console.log(JSON.stringify({card:renderToStaticMarkup(createElement(CandidateContact,{card,filing,links:null})), ask:renderToStaticMarkup(createElement(AskAnswerContacts,{contacts:[contact]})), sourceOnly:renderToStaticMarkup(createElement(CandidateContact,{card:null,filing,links:null}))}));
+    console.log(JSON.stringify({card:renderToStaticMarkup(createElement(CandidateContact,{card,filing,links:null})), ask:renderToStaticMarkup(createElement(AskAnswerContacts,{contacts:[contact]})), sourceOnly:renderToStaticMarkup(createElement(CandidateContactSources,{filing,links:null}))}));
   `], { encoding: "utf8", timeout: 120_000 }));
   for (const markup of [result.card, result.ask, result.sourceOnly]) {
     assert.ok(!markup.includes("123 Private Lane"));
-    assert.ok(markup.includes("https://filing.example.gov/list"));
   }
+  assert.ok(result.sourceOnly.includes("https://filing.example.gov/list"), "filing provenance remains in Sources with no public contact");
+  assert.ok(result.ask.includes("https://filing.example.gov/list"));
+  assert.ok(!result.card.includes("https://filing.example.gov/list"), "citation is absent from the card face");
   assert.ok(result.card.includes("mailto:campaign@example.test"));
   assert.ok(result.ask.includes("mailto:campaign@example.test"));
 });

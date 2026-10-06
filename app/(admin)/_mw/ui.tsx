@@ -20,7 +20,7 @@
  */
 import type { ReactNode } from "react";
 
-import s from "./mw.module.css";
+import { s } from "./legacy-styles";
 
 export type Tone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
 

@@ -11,7 +11,7 @@ import { useV6, type Detail } from "./context.tsx";
 import { mst, STAGE_NAMES, type ActionRef, type SavedDoc } from "./model.ts";
 import { relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
-import { TaskStages } from "./screen-fix.tsx";
+import { TaskStages } from "./task-stages.tsx";
 import { EvidenceTrail } from "./trail-view.tsx";
 import { LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
 import { Actions, Card, cx, Empty, Facts, markWords, Pill, Technical } from "./ui.tsx";
@@ -164,6 +164,26 @@ export function DetailPanel(props: { readonly detail: Detail }) {
 
   if (d.type === "fix") {
     const f = v.data.fixes.data?.open.find((x) => x.id === d.id);
+    const c = f ? undefined : [...(v.data.fixes.data?.returned ?? []), ...(v.data.fixes.data?.closed ?? [])].find((x) => x.id === d.id);
+    if (c) {
+      return (
+        <Panel eyebrow={`Fix list · ${c.origin}`} title={c.title} summary={c.changed} badge={<Pill>{c.learning}</Pill>} targets={[c.id]}>
+          <Card title="What happened">
+            <Facts rows={[
+              ["Where", c.places],
+              ["What changed", c.whatChanged],
+              ["Checked on the reader page", c.readerRecheck],
+              ["Since the fix", c.since],
+              ...(c.returnedDetail ? [["When it came back", c.returnedDetail] as const] : []),
+              ...(c.history ? [["History", c.history] as const] : []),
+              ["Saved to prevent it", c.saved],
+              ["Used by", c.usedBy],
+            ]} />
+            <Technical lines={[c.technical]} />
+          </Card>
+        </Panel>
+      );
+    }
     if (!f) return <Empty>This fix isn’t available.</Empty>;
     return (
       <Panel eyebrow={`Fix list · ${f.owner}`} title={f.title} summary={f.problem} badge={<Pill>{({ attention: "Needs attention", fixing: "Being fixed", update: "Waiting for update" })[f.tab]}</Pill>}

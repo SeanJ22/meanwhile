@@ -54,7 +54,7 @@ import { launchGuarded, type GuardedBrowser } from "../scripts/browser.mts";
 
 const ROOT = process.cwd();
 const LAYOUT = "app/(admin)/layout.tsx";
-const SHELL_CSS = "app/(admin)/_mw/mw.module.css";
+const SHELL_CSS = "app/(admin)/_mw/admin-v6/v6.module.css";
 /** The layer every generic recipe lives in. Named once here and once in the stylesheet. */
 const RECIPE_LAYER = "ce-recipe";
 /** The #281 reset, verbatim from `git show dc2294b0:app/(admin)/layout.tsx`. */
@@ -189,19 +189,19 @@ function keptPagesHarness(layoutCss: string): string {
 /** The controls the redesigned shell draws: the header frame the kept pages carry, and a screen with every control shape the Fleet and Readiness areas use. */
 function shellHarness(shellCss: string): string {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>${shellCss}</style></head><body>
-<div class="frame"><header class="header"><a class="brand" href="/admin" data-ctl="frame-brand">Meanwhile</a><nav class="areaToggle"><a class="areaBtn" href="/admin" data-ctl="frame-area">Fleet</a></nav><div class="headerRight"><button type="button" class="otherBtn" data-ctl="frame-other">Other pages</button></div></header></div>
-<main class="root">
-<header class="header"><nav class="areaToggle"><a class="areaBtn areaBtnOn" href="/admin" data-ctl="area">Fleet</a></nav><div class="headerRight"><select class="select" data-ctl="scope"><option>Everywhere</option></select><button type="button" class="otherBtn" data-ctl="other">Other pages</button></div></header>
-<nav class="tabs"><a class="tab tabOn" href="/admin" data-ctl="tab">Now</a></nav>
-<div class="container"><div class="card">
-<div class="actions"><button type="button" class="btnPrimary" data-ctl="btn-primary">Do it</button><button type="button" class="btnSecondary" data-ctl="btn-secondary">Do not</button><button type="button" class="btnToggle" data-ctl="btn-toggle">Something else</button><button type="button" class="btnLink" data-ctl="btn-link">Open</button></div>
-<textarea class="textarea" data-ctl="textarea"></textarea>
-<button type="button" class="chip" data-ctl="chip">Neither of these</button>
-<button type="button" class="rowChoice" data-ctl="row-choice">When my budget is reached</button>
-<input class="input" data-ctl="input" value="0"><input class="inputText" data-ctl="input-text">
-<a class="btnPrimary" href="/admin/work" data-ctl="link-primary">Deploy fleet here</a>
-<a class="chip" href="/readiness/az?by=county" data-ctl="link-chip">County</a>
-<a class="linkStrong" href="/readiness/az" data-ctl="link-strong">Arizona</a>
+<div class="legacyFrame"><header class="legacyHeader"><a class="legacyBrand" href="/admin" data-ctl="frame-brand">Meanwhile</a><nav class="legacyAreaToggle"><a class="legacyAreaBtn" href="/admin" data-ctl="frame-area">Fleet</a></nav><div class="legacyHeaderRight"><button type="button" class="legacyOtherBtn" data-ctl="frame-other">Other pages</button></div></header></div>
+<main class="legacyRoot">
+<header class="legacyHeader"><nav class="legacyAreaToggle"><a class="legacyAreaBtn legacyAreaBtnOn" href="/admin" data-ctl="area">Fleet</a></nav><div class="legacyHeaderRight"><select class="legacySelect" data-ctl="scope"><option>Everywhere</option></select><button type="button" class="legacyOtherBtn" data-ctl="other">Other pages</button></div></header>
+<nav class="legacyTabs"><a class="legacyTab legacyTabOn" href="/admin" data-ctl="tab">Now</a></nav>
+<div class="legacyContainer"><div class="legacyCard">
+<div class="legacyActions"><button type="button" class="legacyBtnPrimary" data-ctl="btn-primary">Do it</button><button type="button" class="legacyBtnSecondary" data-ctl="btn-secondary">Do not</button><button type="button" class="legacyBtnToggle" data-ctl="btn-toggle">Something else</button><button type="button" class="legacyBtnLink" data-ctl="btn-link">Open</button></div>
+<textarea class="legacyTextarea" data-ctl="textarea"></textarea>
+<button type="button" class="legacyChip" data-ctl="chip">Neither of these</button>
+<button type="button" class="legacyRowChoice" data-ctl="row-choice">When my budget is reached</button>
+<input class="legacyInput" data-ctl="input" value="0"><input class="legacyInputText" data-ctl="input-text">
+<a class="legacyBtnPrimary" href="/admin/work" data-ctl="link-primary">Deploy fleet here</a>
+<a class="legacyChip" href="/readiness/az?by=county" data-ctl="link-chip">County</a>
+<a class="legacyLinkStrong" href="/readiness/az" data-ctl="link-strong">Arizona</a>
 </div></div></main></body></html>`;
 }
 
@@ -247,7 +247,7 @@ test("class-wide: every focusable console control shows a keyboard focus indicat
 });
 
 test("POSITIVE CONTROL: a shell control whose focus indicator is taken away is caught", async () => {
-  const unfocused = `${read(SHELL_CSS)}\n.root button:focus-visible, .root select:focus-visible { outline: none; }\n`;
+  const unfocused = `${read(SHELL_CSS)}\n.legacyRoot button:focus-visible, .legacyRoot select:focus-visible { outline: none; }\n`;
   const page = await openHarness(shellHarness(unfocused));
   try {
     const { blind } = await focusBlindControls(page);

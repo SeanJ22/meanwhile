@@ -99,14 +99,12 @@ export interface Officeholder {
   photo: OfficeholderPhoto | null;
   portraitCandidate?: PortraitCandidate;
   /**
-   * The member's OFFICIAL accounts (item 7, 2026-08-16), from the
-   * congress-legislators directory, joined by bioguide.
-   *
-   * **Official only, and that is why these may render on an officeholder's
-   * card at all.** The upstream project's own policy is to carry the accounts
-   * a member's office publishes as its own, not campaign accounts — so a pill
-   * here points at the office, in the same register as the office phone
-   * number beside it. Nothing is ever backfilled from a campaign account.
+   * The member's social accounts, each with its kind (OFFICIAL, CAMPAIGN or
+   * PERSONAL_PUBLIC), its source page and when it was collected. The
+   * congress-legislators directory (item 7, 2026-08-16), joined by bioguide,
+   * supplies OFFICIAL accounts: the accounts a member's office publishes as
+   * its own, so a pill points at the office, in the same register as the
+   * office phone number beside it.
    *
    * Render what is held, only what is held: an absent channel is an absent
    * pill, never a greyed placeholder.
@@ -119,12 +117,13 @@ export interface Officeholder {
 }
 
 /**
- * The channels the directory carries. `twitter` is the source's own field
- * name; it renders as X. The name in the data is not rewritten — a stored
- * field renamed to match a rebrand is a field that no longer matches the
- * file it came from.
+ * The channels the congress-legislators directory carries, as it stores them.
+ * `twitter` is the source's own field name; it renders as X. The name in the
+ * data is not rewritten — a stored field renamed to match a rebrand is a field
+ * that no longer matches the file it came from. `socialAccountsOf`
+ * (`lib/officials/social-platforms.ts`) reads this shape as the one list.
  */
-export interface SocialAccounts {
+export interface DirectorySocial {
   twitter?: string;
   facebook?: string;
   youtube?: string;
@@ -132,6 +131,22 @@ export interface SocialAccounts {
   instagram?: string;
   mastodon?: string;
 }
+
+/** Whose account it is: the office's own, the campaign's, or a person's public personal page. */
+export type AccountKind = "OFFICIAL" | "CAMPAIGN" | "PERSONAL_PUBLIC";
+
+/** One social account (CA-04), with the page it was read from and when. */
+export interface SocialAccount {
+  /** The id of a platform in the social platform list. */
+  platform: string;
+  url: string;
+  accountKind: AccountKind;
+  sourceUrl: string;
+  collectedAt: string;
+}
+
+/** What a stored record holds: the directory's own fields, or the list of accounts. */
+export type SocialAccounts = DirectorySocial | readonly SocialAccount[];
 
 /**
  * Which divisions a person represents. **A join, never a column.**

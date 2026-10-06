@@ -58,8 +58,8 @@ export function DataFreshness({
   // that body's row in the who-governs card, in plain language. The footer keeps
   // its age and, when a run carried listings forward, that.
   return (
-    <p className="pointer-events-auto max-w-md text-[0.625rem] leading-relaxed text-muted">
-      <span className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em]">
+    <p className="pointer-events-auto max-w-md t-caption leading-relaxed text-muted">
+      <span className="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em]">
         Last checked
       </span>{" "}
       <time dateTime={snapshot.generatedAt} title={when.toLocaleString()}>

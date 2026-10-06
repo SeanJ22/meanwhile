@@ -1,0 +1,27 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 1/1 files; SHA 1a72f8f9a40016085d07d8f84867ab3290bca5a9
+tests/reader-recent-vote-expansion.test.ts
+✖ actual map and ballot vote components expose a planted held tail beyond twenty (484.952803ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1312.648362
+
+✖ failing tests:
+
+test at tests/reader-recent-vote-expansion.test.ts:7:1
+✖ actual map and ballot vote components expose a planted held tail beyond twenty (484.952803ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///workspace/meanwhile/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/reader-recent-vote-expansion.test.ts:61:21)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+ ELIFECYCLE  Test failed. See above for more details.

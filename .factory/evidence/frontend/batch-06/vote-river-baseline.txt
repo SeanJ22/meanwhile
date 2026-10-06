@@ -1,0 +1,14 @@
+
+> we-the-people@0.1.0 test /tmp/frontend-baseline
+> node scripts/ci-tests.mjs
+
+Affected tests: 1/1 files; SHA f545fcf9493def91294bccf219ed65071b2093b1
+tests/reader-recent-vote-expansion.test.ts
+✖ actual map and ballot vote components expose a planted held tail beyond twenty (341.280028ms)
+
+Interrupted while running:
+
+⚠ tests/reader-recent-vote-expansion.test.ts (tests/reader-recent-vote-expansion.test.ts:1:1)
+Timing evidence incomplete; unusable for scheduling hints: Exactly one terminal stream-end record is required. Exactly one overall run summary is required. Missing file summaries: tests/reader-recent-vote-expansion.test.ts.
+ ELIFECYCLE  Test failed. See above for more details.
+BASELINE_EXIT=124

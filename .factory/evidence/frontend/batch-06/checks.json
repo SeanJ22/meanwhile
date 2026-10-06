@@ -2,8 +2,17 @@
   "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
   "full": {
     "testedSha": "791958e2e97450bf2c0a51e7bb5a375cad96ec7c",
-    "result": "running",
-    "claim": "No full-green claim; isolate original source, recheck repairs on final application, baseline failures on River."
+    "result": "failed; completed after terminating one baseline leaked child",
+    "claim": "No full-green or pinned-browser claim. Two frontend failures repaired/rechecked; sixteen identical failures reproduced on River. Original baseline recent-vote test child terminated after launch failure leaked fixture server; final cleanup recheck reports same missing browser and exits normally.",
+    "tests": 9768,
+    "passCount": 9740,
+    "failCount": 18,
+    "skipped": 10,
+    "cancelled": 0,
+    "ownFailures": 2,
+    "ownFailuresRepaired": true,
+    "baselineFailures": 16,
+    "timing": "incomplete; recent-vote file summary missing after child termination"
   },
   "focused": {
     "pass": 47,
@@ -66,10 +75,18 @@
       "tests/admin-v6-ui/mounted-live-transition.test.ts",
       "tests/beacon-guard.test.ts",
       "tests/chromium-pin.test.ts",
-      "tests/maptiler-barrier.test.ts"
+      "tests/maptiler-barrier.test.ts",
+      "tests/reader-recent-vote-expansion.test.ts"
     ],
-    "failures": 15,
-    "result": "same failures as running FULL; pinned build1234 unavailable; legacy Admin style tests baseline on River"
+    "failures": 16,
+    "result": "Sixteen original-source failures reproduced on plain River f545fcf9493def91294bccf219ed65071b2093b1. Recent-vote baseline timeout124; cleanup recheck exit1 in ~1.3s (missing Chromium), no hang."
   },
-  "readySha": null
+  "readySha": null,
+  "cleanup": {
+    "file": "tests/reader-recent-vote-expansion.test.ts",
+    "types": "pass",
+    "lint": "pass",
+    "guard": "unchanged",
+    "recheck": "expected missing-browser failure; normal exit, no leaked fixture server"
+  }
 }

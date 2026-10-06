@@ -754,6 +754,19 @@ export interface ScoreboardMissionRow {
   readonly withinHour: boolean | null;
 }
 
+/** One full hour from the runner's hourly row (Now). A number nobody recorded is null and shows "—". */
+export interface ScoreboardVitalHour {
+  readonly hour: string;
+  readonly factsLive: number | null;
+  readonly costPerFactUsd: number | null;
+  readonly neonGb: number | null;
+  readonly overNeonTarget: boolean | null;
+  readonly roundsFinished: number | null;
+  readonly roundsKilled: number | null;
+  readonly paidJobsEndedEmpty: number | null;
+  readonly paidJobsEnded: number | null;
+}
+
 export interface ScoreboardView {
   readonly rows: readonly ScoreboardRow[];
   /** Completeness by place and by family, with the counts behind each; empty until a place has been sent. */
@@ -763,6 +776,8 @@ export interface ScoreboardView {
   readonly missions: readonly ScoreboardMissionRow[];
   /** Where the flow of facts stops, day by day, for "find out why something is slow" (BR-31); null when nothing could be read. */
   readonly flow: readonly ScoreboardFlowDay[] | null;
+  /** The last two full hours of the runner's vital signs, newest first, for Now; null when none could be read. */
+  readonly vital: readonly ScoreboardVitalHour[] | null;
   /** Launch gates as health checks; they never hold anything back. Null when the readings could not be taken. */
   readonly gates: { readonly rows: readonly ScoreboardGateRow[]; readonly pass: number; readonly attention: number; readonly notMeasured: number } | null;
   /** Operational readiness, counted apart from what any place is owed. */

@@ -3109,7 +3109,9 @@ async function runAutonomousWave() {
   placeOrderDirty = true;
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
-  const held = await planHeldWorkerFleet(ROOT, fleet, true);
+  /* The legacy held-evidence plan read every artifact, Attempt, work item and route task on every wave, and has found no
+     work since 2026-10-04 (no schema-1 work items remain). Off by default (2026-10-06, Neon transfer); WTP_HELD_FLEET_PLAN=1 runs it. */
+  const held = process.env.WTP_HELD_FLEET_PLAN === "1" ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },

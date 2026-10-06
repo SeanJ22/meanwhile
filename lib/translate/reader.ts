@@ -1,6 +1,6 @@
 import { jurisdictionFromOcdId, US_JURISDICTIONS } from "../coverage/states.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { readTranslations } from "./publication.ts";
+import { readTranslations } from "./projection-reader.ts";
 import { translationRecordIssue, type TextTranslation, type TranslationRecord } from "./records.ts";
 
 export function textTranslationFor(records: readonly TranslationRecord[], input: {

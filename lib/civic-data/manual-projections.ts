@@ -2,11 +2,11 @@ import { campaignFinanceRecordIssue } from "../funding/campaign-finance-reader.t
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
 import { electionFieldIssue } from "./election-fields.ts";
-import { translationProjectionProblems, type TranslationProjection } from "../translate/publication.ts";
+import { translationProjectionProblems, type TranslationProjection } from "../translate/projection-contract.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { manualPayloadScope } from "./scoped-manual-contracts.ts";
 import { specialDistrictBoundaryIssue } from "../registry/special-district-boundary.ts";
-import { publicRecordIssue } from "./public-records.ts";
+import { publicRecordIssue } from "./public-record-contract.ts";
 import { governmentBudgetIssue } from "./government-budgets.ts";
 
 import { genericBallotProblems, type GenericBallotProjection } from "../ballot/generic-projection.ts";

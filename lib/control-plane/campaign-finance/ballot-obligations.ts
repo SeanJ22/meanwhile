@@ -1,6 +1,6 @@
 import type { BallotSet } from "../../ballot/types.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
-import { FINANCE_DOOR_KINDS } from "../../funding/finance-door-reader.ts";
+import { FINANCE_DOOR_KINDS } from "../../funding/finance-door-kinds.ts";
 import type { ProvidedObligation, ProviderYield, RouteDescriptor } from "../scheduler/registry.ts";
 import { createHash } from "node:crypto";
 

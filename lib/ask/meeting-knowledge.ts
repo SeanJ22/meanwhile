@@ -7,7 +7,7 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import type { Meeting } from "../sources/types.ts";
 import { meetingListingIdentity } from "../meetings/listing-identity.ts";
 import { canonicalBodyIdentity } from "./body-identity.ts";
-import { readTranslations } from "../translate/publication.ts";
+import { readTranslations } from "../translate/projection-reader.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
 export type MeetingSnapshotRead = () => MeetingsSnapshot | null;

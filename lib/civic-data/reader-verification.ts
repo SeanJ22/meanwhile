@@ -83,7 +83,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
     case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
-    case "plain-english-translations": return "lib/translate/publication.ts#readTranslationProjection";
+    case "plain-english-translations": return "lib/translate/projection-reader.ts#readTranslationProjection";
     case "special-district-boundaries": return "lib/registry/special-district-boundary-reader.ts#readSpecialDistrictBoundaries";
     case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
     case "campaign-finance": return "lib/funding/campaign-finance-reader.ts#readCampaignFinance";
@@ -241,7 +241,7 @@ export async function verifyRoutineReaderProjection(
         return verifyExactVersion(verifierId, await readGenericBallotProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "state-election-ballots");
       }
       case "plain-english-translations": {
-        const { readTranslationProjection } = await import("../translate/publication.ts");
+        const { readTranslationProjection } = await import("../translate/projection-reader.ts");
         return verifyExactVersion(verifierId, await readTranslationProjection({ store: options.store, now: options.now, bypassCache: true, scope: options.scope }), options.expectedVersionId, "plain-English translation");
       }
       case "special-district-boundaries": {

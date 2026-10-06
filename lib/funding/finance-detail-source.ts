@@ -1,4 +1,4 @@
-import { FINANCE_DOOR_KINDS } from "./finance-door-reader.ts";
+import { FINANCE_DOOR_KINDS } from "./finance-door-kinds.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 export interface FinanceDoorDetailSource {
   readonly doorId: string; readonly kind: string; readonly ocdId: string;

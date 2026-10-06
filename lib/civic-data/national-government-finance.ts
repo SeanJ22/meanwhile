@@ -1,6 +1,6 @@
 import { readGovernmentBudgets } from "./government-budgets.ts";
 import { createHash } from "node:crypto";
-import { parseCsv } from "../reference/index.ts";
+import { parseCsv } from "../reference/csv.ts";
 import { readZip } from "../sources/legiscan/zip.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import type { CapturedFinanceResponse } from "../funding/campaign-finance.ts";

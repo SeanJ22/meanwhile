@@ -1,11 +1,11 @@
 import { createHash } from "node:crypto";
-import { parseCsv } from "../reference/index.ts";
+import { parseCsv } from "../reference/csv.ts";
 import { readZip } from "../sources/legiscan/zip.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import { stateMoneyFundingIssue, type StateMoneyFunding, type FiledOrganizationAmount } from "./state-money-funding.ts";
 
-export const FINANCE_DOOR_KINDS = ["campaign-finance-csv", "campaign-finance-search-api", "campaign-finance-bulk-zip"] as const;
-export type FinanceDoorKind = typeof FINANCE_DOOR_KINDS[number];
+import { FINANCE_DOOR_KINDS } from "./finance-door-kinds.ts";
+export { FINANCE_DOOR_KINDS, type FinanceDoorKind } from "./finance-door-kinds.ts";
 export interface FinanceFiling {
   readonly id: string;
   readonly doorId: string;

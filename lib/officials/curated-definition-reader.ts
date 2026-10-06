@@ -2,7 +2,7 @@ import { formFor } from "./body-form.ts";
 import { definitionsForBody } from "./body-definitions.ts";
 import { blurbForTitle, officeTypeForTitle, blurbForContestTitle, officeTypeForContestTitle } from "./office-blurbs.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
-import { readTranslations } from "../translate/publication.ts";
+import { readTranslations } from "../translate/projection-reader.ts";
 import { textTranslationFor } from "../translate/reader.ts";
 import type { TextTranslation } from "../translate/records.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";

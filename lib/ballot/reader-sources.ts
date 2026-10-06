@@ -3,7 +3,7 @@ import { ballotSourcesForDivisions, ballotSourceForTargetId, type RegisteredBall
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
 import type { BallotSet } from "./types.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { readTranslations, withMeasureTranslations } from "../translate/publication.ts";
+import { readTranslations, withMeasureTranslations } from "../translate/projection-reader.ts";
 
 /** Data, rather than a state allowlist, determines which authority answers. */
 export function genericSourcesForDivisions(value: GenericBallotProjection, divisions: readonly string[]): RegisteredBallotSource[] {

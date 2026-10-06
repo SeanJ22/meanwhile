@@ -158,3 +158,32 @@ test("a dead door recorded for robots.txt alone is not a wall: the brief says so
   assert.equal(live.length, 2);
   assert.doesNotMatch(live.join("\n"), /not a wall/);
 });
+
+for (const researchRole of ["SCOUT", "DETECTIVE"] as const) test(`${researchRole} stopped walks save scoped resumable lessons even when finish is refused`, async () => {
+  const r = result({ researchRole, outcome: "NO_PROGRESS", candidates: [], stoppedBy: "BOUND",
+    nextRungs: ["alternate-official-host-or-mirror"],
+    rungs: [{ index: 1, rung: "primary-site-navigation", tool: "fetch_public", target: "https://government.example/calendar",
+      observed: "HTTP 404", ok: false, artifactIds: [], note: null, at: "2026-09-19T00:00:01Z" }],
+    refusal: [{ code: "SCOUT_NO_TOOL_USED", detail: "finish refused" }] });
+  const repos = createMemoryRepositories();
+  await writeFieldManualDiscoveries(repos, scoutDiscoveryEntries(r, ["nj"]), r.recordedAt);
+  await writeFieldManualDiscoveries(repos, scoutDiscoveryEntries(r, ["nj"]), r.recordedAt);
+  const store = (await repos.fieldManual.read("live"))!.value;
+  const lesson = store.entries.find(e => e.kind === "EXHAUSTED_RUNGS")!;
+  assert.equal(store.entries.filter(e => e.kind === "EXHAUSTED_RUNGS").length, 1);
+  assert.equal(lesson.outcome, "REFERENCE");
+  assert.equal((lesson.payload as { rungs: { whyNoProgress: string }[] }).rungs[0].whyNoProgress, "HTTP 404");
+  assert.equal(scoutFieldManualProjection(store, { subjectId: r.subjectId, recordClass: r.recordClass, limit: 1 }).entryIds[0], lesson.id);
+  assert.equal(scoutFieldManualProjection(store, { subjectId: r.subjectId + "-other", recordClass: r.recordClass }).entryIds.includes(lesson.id), false);
+  assert.equal(scoutFieldManualProjection(store, { subjectId: r.subjectId, recordClass: "photo" }).entryIds.includes(lesson.id), false);
+  assert.equal(projectFieldManual(store, { role: researchRole }).entryIds.includes(lesson.id), false);
+});
+
+test("successful transport without progress stays a resumable observation, not a dead door", () => {
+  const r = result({ outcome: "NO_PROGRESS", candidates: [], rungs: [{ index: 1, rung: "site-search-or-sitemap", tool: "fetch_public",
+    target: "https://government.example/", observed: "HTTP 200", ok: true, note: "No current calendar found on this page", artifactIds: ["a1"], at: "2026-09-19T00:00:01Z" }] });
+  const lesson = scoutDiscoveryEntries(r, ["nj"]).find(e => e.kind === "EXHAUSTED_RUNGS")!;
+  assert.equal((lesson.payload as { rungs: { whyNoProgress: string }[] }).rungs[0].whyNoProgress, r.rungs[0].note);
+  assert.equal(lesson.outcome, "REFERENCE");
+  assert.equal(scoutDiscoveryEntries(result(), ["nj"]).some(e => e.kind === "EXHAUSTED_RUNGS"), false);
+});

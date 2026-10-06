@@ -1,12 +1,12 @@
 import { OWNER_DISPATCH, withAssignment, type FreshnessObligation, type ObligationAssignment } from "../scheduler/obligation.ts";
 import type { WorkQuestion } from "../work-question.ts";
 import { standing } from "../scheduler/durable.ts";
-import { bodyDirectoryDiscoveryPlan, jurisdictionDiscoveryPlan, publicCommentDiscoveryPlan, inheritPublicationConnection } from "../workers/autonomous-plan.ts";
+import { inheritPublicationConnection } from "../workers/autonomous-plan.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ExecutorKind } from "../scheduler/dispatch.ts";
 import { parseDispatchTarget, unitMatchesTarget, type DispatchTarget } from "../scheduler/dispatch-target.ts";
 import type { MeetingPartitionOwnership } from "../scheduler/provider-inputs.ts";
-import { jurisdictionRequirements } from "../scheduler/providers/local-jurisdictions.ts";
+import { jurisdictionRequirements, requirementBodyId, requirementPlan } from "../scheduler/providers/local-jurisdictions.ts";
 import {
   MEETINGS_DISCOVERY_RECORD_CLASS,
   meetingsDiscoveryObligationId,
@@ -345,11 +345,10 @@ export function requirementsFor(
 ): RequirementInstance[] {
   const out: RequirementInstance[] = [];
   const from = registrySourceOf(reg);
-  const bodyId = meetingPartitions.bodyIdFor ? meetingPartitions.bodyIdFor(j.id) : j.bodyId ?? null;
+  const bodyId = requirementBodyId(j, meetingPartitions);
   for (const r of jurisdictionRequirements(reg, j, meetingPartitions, discoverMissingFamilies, liveFamilies)) {
-    const autonomousPlan = discoverMissingFamilies ? r.route.routeId === "coverage-discovery:body-directory"
-      ? bodyDirectoryDiscoveryPlan(j, bodyId) : r.source.recordClass === "PUBLIC_COMMENT"
-      ? publicCommentDiscoveryPlan(j, bodyId) : jurisdictionDiscoveryPlan(j, r.source, r.route.routeId, bodyId) : null;
+    // CH-22: the same plan the local-jurisdictions provider gives this row, so both writers agree.
+    const autonomousPlan = requirementPlan(j, r, bodyId, discoverMissingFamilies);
     out.push({
       obligation: { ...obligationOf(r.obligationId, "local-jurisdiction", j.id, r.route.routeId, from), ...(autonomousPlan ? { autonomousPlan } : {}) },
       kind: "REGISTRY_ROUTE",

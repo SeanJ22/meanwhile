@@ -136,7 +136,7 @@ import { ABSENCE_EXPIRY_DAYS, absenceExpiry, absenceUnlockFrom, isArguedAbsence 
 import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/registry.ts";
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
-import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
+import { LOCAL_JURISDICTION_NAMESPACE, localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import {
   candidateEnrichmentHoldings,
   candidateEnrichmentProvider,
@@ -826,6 +826,12 @@ console.log(
 
 let sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle });
 finishPhase("references-and-registration");
+{
+  /* CH-22: the tracked governments' paid rows and how many reach a reader door; a row with no door waits on its body join. */
+  const local = sync.all.filter(o => o.active && o.id.startsWith(LOCAL_JURISDICTION_NAMESPACE) && registry.routeFor(o.id)?.executorClass === "BOUNDED_MODEL_WORKER");
+  const planned = local.filter(o => o.autonomousPlan);
+  console.log(`  local research rows: ${local.length} paid; ${planned.length} carry a work plan; ${planned.filter(o => o.autonomousPlan?.publication).length} with a reader door`);
+}
 console.log(
   `  ${floorLine(
     floored(
@@ -1710,6 +1716,22 @@ const laneClosure = modelLaneClosure({
   paidWorkInHunterLane: CONTINUOUS_HUNTERS,
   unreadableControls,
 });
+/* CH-22: the lane is closed only because paid work runs in the standing hunter lane (no pause, hold or unread control). */
+const queuesForHunterLane = laneClosure?.hunterLane === true;
+/*
+ * CH-22: with the lane closed only for the hunter lane, each due paid row that carries a work plan has its occurrence
+ * opened here (plain-code work, no spend). Its work item then joins this round's coordinator wave and the one hunter
+ * queue, and the hunter lane admits its Scout. A row with no plan waits for the lane, as before.
+ */
+if (queuesForHunterLane && !canary) {
+  let queued = 0;
+  for (const row of dueModel) {
+    if (!row.obligation.autonomousPlan) continue;
+    const scheduled = scheduleObligation(row.obligation, nowMs);
+    if (isScheduled(scheduled) && await openOccurrenceInStep({ ...scheduled, nextDueAt: row.nextDueAt }) === true) queued += 1;
+  }
+  console.log(`  planned paid rows queued for the hunter lane: ${queued} of ${dueModel.filter(row => row.obligation.autonomousPlan).length} due`);
+}
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
 const modelLaneEnabled = laneClosure === null;

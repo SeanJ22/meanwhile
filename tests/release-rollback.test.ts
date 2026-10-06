@@ -92,7 +92,7 @@ test("DB-47 no stored owner receipt, unreadable store or failed execution claim 
   await appendReceipt(repos,request,now());
   const failed={...repos,adminReceipts:{...repos.adminReceipts,append:async()=>{throw new Error("unreachable private credential");}}};
   assert.equal((await executeQueuedRollback(failed,request.receiptId,adapter,now)).state,"CLAIMED");assert.equal(posts,0);
-  const unread={...repos,adminReceipts:{...repos.adminReceipts,read:async()=>{throw new Error("unavailable");}}};
+  const unread={...repos,adminReceipts:{...repos.adminReceipts,readWhere:async()=>{throw new Error("unavailable");}}};
   await assert.rejects(executeQueuedRollback(unread,request.receiptId,adapter,now));assert.equal(posts,0);
 });
 

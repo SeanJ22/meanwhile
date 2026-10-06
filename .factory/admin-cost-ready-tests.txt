@@ -38,3 +38,4 @@ tests/admin-v6-ui/now-screen.test.tsx
 tests/admin-v6-ui/workers-screen.test.tsx
 tests/admin-feedback-9-4-pm.test.ts
 tests/feedback-sweep.test.ts
+tests/release-rollback.test.ts

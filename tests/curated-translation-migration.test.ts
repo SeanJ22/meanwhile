@@ -1,3 +1,7 @@
+import { curatedMeasureTextEntries, runCuratedMeasureMigrations } from "../lib/translate/curated-measure-migration.ts";
+import { curatedMeasureRecordFor } from "../lib/translate/curated-measure-values.ts";
+import { withMeasureTranslations } from "../lib/translate/projection-reader.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { curatedDefinitionEntries, curatedMeasureMigrationInventory, runCuratedDefinitionMigrations, runCuratedMeetingMigrations, curatedMeetingEntries } from "../lib/translate/curated-migration.ts";
@@ -92,4 +96,53 @@ test("the normal ballot office reader shares one scoped held translation and pre
  assert.equal(result.outcomes[0]?.status,"PUBLISHED",JSON.stringify(result));
  const blurbs=await readCuratedContestOfficeBlurbs([{id:"held-race",title:"United States Senator",ocdId}],{store,now,bypassCache:true});
  assert.equal(blurbs.get("held-race")?.text,entry.preservedText.text);assert.equal(blurbs.get("held-race")?.basisUrl,entry.preservedText.origin.citation.url);
+});
+
+
+test("CA-50: original measure text and unnumbered reaction groups migrate through normal attempts, two models, Slide and ballot readers", async () => {
+  const original = curatedMeasureMigrationInventory()[0].original;
+  const label = "Offline measure source";
+  const source = [label, original.whatItDoes, ...original.parts.flatMap(part => [part.label, part.what])].join("\n");
+  // The control retains original text/IDs and uses synthetic saved source bytes;
+  // it does not claim the original PDF was downloaded in this test.
+  const hash = translationHash(source), record = { ...original, sourceHash: hash };
+  const entries = curatedMeasureTextEntries({ records: [record], file: "offline-curated-measures.json", fileHash: translationHash(JSON.stringify([record])), bindings: [{ contestId: record.contestId, ocdId, label }] });
+  assert.equal(entries.length, 1 + record.parts.length * 2);
+  const capture: WorkerPublicationCapture = { evidence: { artifactId: "measure-migration-fixture", acquiredByAttemptId: "fixture", canonicalUrl: record.sourceUrl,
+    contentHash: `sha256-${hash}`, text: source, retrievedAt: now, sourceId: "Offline Legislature", methodRouteId: "held-measure" }, observedAt: now, httpStatus: 200, transport: "REACHABLE", partial: false };
+  const repos = createMemoryRepositories(), store = new MemoryRoutineDataStore(), attempts: TranslationAttempt[] = [];
+  let calls = 0, rewrite = false;
+  const run = (captures = [capture], at = now) => runCuratedMeasureMigrations({ repos, store, now: at, divisions: [ocdId], entries, captures, attempts,
+    saveAttempt: async attempt => { attempts.push(attempt); }, transportFor: () => async request => {
+      calls++; assert.ok(attempts.some(row => row.status === "RUNNING"));
+      const content = JSON.parse(request.messages[0].content as string);
+      if (request.tools[0].name === "write_text_translation") {
+        const text: string = content.curatedText;
+        const sentences = text.split(/(?<=[.!?])\s+(?=[A-Z])/u).map(text => ({ field: "text", text, quote: text }));
+        return response(request, { text: rewrite ? "Changed text." : text, sentences });
+      }
+      return response(request, { checked: content.proposal.sentences.map(({ field, text }: { field: string; text: string }) => ({ field, text, supported: true })) });
+    } });
+  const result = await run();
+  assert.ok(result.outcomes.every(row => row.status === "PUBLISHED"), JSON.stringify(result));
+  assert.equal(result.outcomes.length, entries.length);
+  assert.equal(calls, entries.length * 2);
+  const held = await readTranslations([ocdId], { store, now, bypassCache: true });
+  assert.deepEqual(curatedMeasureRecordFor(held, record.contestId, ocdId), record);
+  assert.ok(held.every(row => row.kind === "MEASURE_TEXT" && row.curatedOrigin?.citation.url === original.sourceUrl && row.curatedOrigin.citation.readOn === null));
+  const ballot = { measureRecords: [record], contests: [{ id: record.contestId, type: "MEASURE", ocdId }] } as unknown as BallotSet;
+  assert.deepEqual(withMeasureTranslations(ballot, held).measureRecords, [record]);
+  assert.deepEqual(withMeasureTranslations(ballot, held.slice(1)).measureRecords, [record], "Partial publication cannot drop old groups");
+  assert.equal(curatedMeasureRecordFor(held, record.contestId, "ocd-division/country:us/state:nj"), null);
+  assert.equal(curatedMeasureRecordFor(held.slice(1), record.contestId, ocdId), null);
+  const replay = await run(); assert.ok(replay.outcomes.every(row => row.status === "REUSED")); assert.equal(calls, entries.length * 2);
+  const changed = { ...capture, evidence: { ...capture.evidence, text: source + " Changed.", contentHash: `sha256-${translationHash(source + " Changed.")}` } };
+  assert.equal((await run([changed])).outcomes.length, 0); assert.equal(calls, entries.length * 2, "A changed revision refuses before spending");
+  rewrite = true;
+  const newStore = new MemoryRoutineDataStore();
+  const rejected = await runCuratedMeasureMigrations({ repos, store: newStore, now: "2026-10-06T00:00:00Z", divisions: [ocdId], entries: [entries[0]], captures: [capture], attempts: [], saveAttempt: async () => {},
+    transportFor: () => async request => response(request, { text: "Changed text.", sentences: [{ field: "text", text: "Changed text.", quote: original.whatItDoes }] }) });
+  assert.equal(rejected.outcomes[0]?.status, "HELD");
+  assert.equal(rejected.outcomes[0]?.usage.length, 1);
+  assert.deepEqual(await readTranslations([ocdId], { store: newStore, now, bypassCache: true }), []);
 });

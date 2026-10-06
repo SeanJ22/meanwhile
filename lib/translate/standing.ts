@@ -68,7 +68,7 @@ export async function runHeldTextTranslations(input: Pick<Parameters<typeof runT
     // Source admission precedes the attempt and both paid calls.
     const admitted = section3Page({ url: sourceUrl, text: primary.evidence.text, retrievedAt: primary.evidence.retrievedAt,
       linkingPage: linkingPageFrom(sourceUrl, pages.map(row => row.evidence)), sourcePolicy: primary.sourcePolicy },
-    subject.kind === "AGENDA" || subject.kind === "MINUTES" ? "MEETING" : "OFFICIAL_BOARD_DIRECTORY", input.now);
+    subject.kind === "MEASURE_TEXT" ? "BALLOT_MEASURE" : subject.kind === "AGENDA" || subject.kind === "MINUTES" ? "MEETING" : "OFFICIAL_BOARD_DIRECTORY", input.now);
     if (!admitted.ok) { deferred.push({ subjectId: subject.subjectId, reason: admitted.reason ?? "Source admission failed." }); continue; }
     const attempt: TranslationAttempt = { id: `translation:${translationHash(JSON.stringify([scope, subject.subjectId, sourceHash, sourceTextHash, input.now]))}`,
       scope, subjectId: subject.subjectId, sourceHash, sourceTextHash, at: input.now, status: "RUNNING", usage: [], versionId: null };

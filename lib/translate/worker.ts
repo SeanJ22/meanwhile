@@ -81,6 +81,7 @@ export interface TextTranslationSubject {
   readonly ocdId: string;
   readonly state: string;
   readonly meeting?: TextTranslation["meeting"];
+  readonly measureField?: TextTranslation["measureField"];
 }
 
 /** Legal class definitions never confer that class's powers on a particular body. */
@@ -109,6 +110,7 @@ export async function translateText(input: {
     : subject.kind === "BODY" ? "Describe only this named body's powers under its own charter or creating law. Do not import powers from its general class."
     : subject.kind === "OFFICE" ? "Describe this state's legally defined office. Do not import duties from a similarly named office in another state."
     : subject.kind === "AGENDA" ? "Describe what is on this held agenda, preserving dates, conditions and proposed status. The clerk's verbatim list remains alongside this text. Never describe a proposal as adopted."
+    : subject.kind === "MEASURE_TEXT" ? "Preserve this original measure summary or reaction-group text exactly. A reaction group is not an officially numbered provision; do not assign numbers or alter its identity."
     : "Describe only what these held minutes record. Preserve votes, outcomes, qualifications and uncertainty; never invent a vote or speaker.";
   if (input.preservedText && (input.preservedText.origin.kind !== "CURATED_MIGRATION" ||
     translationHash(input.preservedText.text) !== input.preservedText.origin.textHash)) throw new Error("Curated migration lacks its unchanged original text.");
@@ -132,7 +134,7 @@ export async function translateText(input: {
   const result = toolResult(checked, checkerTool.name, playbook.checkerModel) as { checked: TextTranslation["checked"] };
   const record: TextTranslation = { id: `translation:${subject.subjectId}`, kind: subject.kind, subjectId: subject.subjectId,
     ocdId: subject.ocdId, ...(input.preservedText ? { curatedOrigin: input.preservedText.origin } : {}), label: subject.label, text: proposal.text, sourceUrl: evidence.canonicalUrl,
-    sourceHash: hash, ...(subject.meeting ? { meeting: subject.meeting } : {}),
+    sourceHash: hash, ...(subject.meeting ? { meeting: subject.meeting } : {}), ...(subject.measureField ? { measureField: subject.measureField } : {}),
     sourceText: evidence.text, sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt,
     writtenAt: now, writerModel: canonicalModelId(written.model), checkerModel: canonicalModelId(checked.model),
     playbookVersion: playbook.version, sentences: proposal.sentences, checked: result?.checked };

@@ -1,3 +1,4 @@
+import { curatedMeasureTextEntries } from "./curated-measure-migration.ts";
 import { readFileSync } from "node:fs";
 import { CLASS_DEFINITIONS, DEPENDENT_SCHOOL_DEFINITION, UNCLASSIFIED_SCHOOL_DEFINITION, definitionsForBody } from "../officials/body-definitions.ts";
 import { FORM_DEFINITIONS } from "../officials/form-definitions.ts";
@@ -114,4 +115,12 @@ export function runCuratedMeetingMigrations(input: Omit<Parameters<typeof runHel
   const subjects=curatedMeetingEntries(input).filter(entry=>input.captures.some((capture: WorkerPublicationCapture)=>
     capture.evidence.canonicalUrl===entry.sourceUrl && (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash)===`sha256-${entry.subject.meeting.documentHash}`));
   return runHeldTextTranslations({...input,subjects});
+}
+
+
+/** Original measure text and reaction IDs, with actual source labels/divisions
+ * supplied by the admitted ballot worker. Unknown numbers are never filled. */
+export function curatedLegacyMeasureTextEntries(bindings: Parameters<typeof curatedMeasureTextEntries>[0]["bindings"]) {
+  const inventory = curatedMeasureMigrationInventory();
+  return curatedMeasureTextEntries({ records: inventory.map(row => row.original), file: "data/ballot/measure-records-first-seed.json", fileHash: inventory[0].fileHash, bindings });
 }

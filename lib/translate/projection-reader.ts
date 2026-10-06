@@ -1,3 +1,4 @@
+import { curatedMeasureRecordFor } from "./curated-measure-values.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { TRANSLATION_SCOPE, translationScope, translationRecordIssue, type TranslationRecord } from "./records.ts";
 import { translationProjectionProblems, type TranslationProjection } from "./projection-contract.ts";
@@ -33,7 +34,9 @@ export function withMeasureTranslations(ballot: BallotSet, records: readonly Tra
     const contest = ballot.contests.find(row => row.id === record.contestId && row.type === "MEASURE");
     const translation = records.find(row => row.kind === "MEASURE" && row.subjectId === record.contestId && row.ocdId === contest?.ocdId &&
       row.sourceUrl === record.sourceUrl && (row.sourceHash === record.sourceHash || Date.parse(row.retrievedAt) >= Date.parse(record.writtenAt)) && !translationRecordIssue(row));
-    return translation?.kind === "MEASURE" ? translation.measure : record;
+    if (translation?.kind === "MEASURE") return translation.measure;
+    const preserved = contest && curatedMeasureRecordFor(records, record.contestId, contest.ocdId);
+    return preserved && preserved.sourceUrl === record.sourceUrl && preserved.sourceHash === record.sourceHash ? { ...preserved, yesMeans: preserved.yesMeans ?? record.yesMeans, noMeans: preserved.noMeans ?? record.noMeans } : record;
   });
   return translated.some((row, at) => row !== current[at]) ? { ...ballot, measureRecords: translated } : ballot;
 }

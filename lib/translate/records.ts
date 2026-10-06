@@ -1,3 +1,4 @@
+import { curatedMeasureFieldIssue, type CuratedMeasureField } from "./curated-measure-contract.ts";
 import { createHash } from "node:crypto";
 import type { MeasureRecord } from "../ballot/measure-record-contract.ts";
 import { measureRecordIssue } from "../ballot/measure-record-contract.ts";
@@ -51,9 +52,10 @@ export interface CuratedTranslationOrigin {
 }
 export interface PreservedCuratedText { readonly text: string; readonly origin: CuratedTranslationOrigin }
 export interface TextTranslation extends TranslationEvidence {
-  readonly kind: "BODY_CLASS" | "BODY" | "OFFICE" | "AGENDA" | "MINUTES";
+  readonly kind: "BODY_CLASS" | "BODY" | "OFFICE" | "AGENDA" | "MINUTES" | "MEASURE_TEXT";
   /** BODY_CLASS names the class, BODY names one body, OFFICE names the state-defined office. */
   readonly curatedOrigin?: CuratedTranslationOrigin;
+  readonly measureField?: CuratedMeasureField;
   readonly label: string;
   readonly text: string;
   readonly meeting?: { readonly id: string; readonly bodyId: string; readonly documentUrl: string; readonly documentHash: string };
@@ -67,7 +69,7 @@ const outputFields = (measure: MeasureRecord) => [
 
 /** Every written sentence has its own source passage and independent check. */
 export function translationRecordIssue(row: TranslationRecord): string | null {
-  if (!row || !["MEASURE", "BODY_CLASS", "BODY", "OFFICE", "AGENDA", "MINUTES"].includes(row.kind) || !row.subjectId || row.id !== `translation:${row.subjectId}` ||
+  if (!row || !["MEASURE", "BODY_CLASS", "BODY", "OFFICE", "AGENDA", "MINUTES", "MEASURE_TEXT"].includes(row.kind) || !row.subjectId || row.id !== `translation:${row.subjectId}` ||
       !jurisdictionFromOcdId(row.ocdId ?? "") || !/^https:\/\//.test(row.sourceUrl) ||
       !/^[a-f0-9]{64}$/.test(row.sourceHash) || !row.sourceText?.trim() || translationHash(row.sourceText) !== row.sourceTextHash ||
       !Number.isFinite(Date.parse(row.retrievedAt)) || !Number.isFinite(Date.parse(row.writtenAt)) ||
@@ -84,6 +86,7 @@ export function translationRecordIssue(row: TranslationRecord): string | null {
       !(origin.citation.url === null || /^https:\/\//.test(origin.citation.url)) ||
       !(origin.citation.readOn === null || Number.isFinite(Date.parse(origin.citation.readOn)))) return "Curated migration changed its text or lost its original citation.";
   }
+  if (row.kind === "MEASURE_TEXT") { const issue = curatedMeasureFieldIssue(row); if (issue) return issue; }
   if ((row.kind === "AGENDA" || row.kind === "MINUTES") && (!row.meeting?.id || !row.meeting.bodyId ||
       row.subjectId !== `${row.kind.toLowerCase()}:${row.meeting.id}` || row.meeting.documentUrl !== row.sourceUrl ||
       row.meeting.documentHash !== row.sourceHash)) return "Meeting translation lacks its exact held body, sitting and document revision.";

@@ -1,0 +1,89 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 6/6 files; SHA 2d3f1b3427842d752b53337d8dce5c3f91e9d013
+tests/card-sources.test.ts
+tests/carried-row-reason.test.ts
+tests/meeting-row-sources.test.tsx
+tests/page-metrics.test.ts
+tests/refresh-corollary.test.ts
+tests/visual-feedback-9-2.test.ts
+✔ the committed Tucson Unified roster resolves — the card under the defect (1.136508ms)
+✔ a district card with a roster and meetings is never sourceless (0.807211ms)
+✔ a district card with NO roster and NO meetings still cites its boundary (0.149181ms)
+✔ a meeting card lists the sitting and the body's roster (0.402021ms)
+✔ a person card cites the record its identity came from (0.606337ms)
+✔ same-source rows merge, and the merged row states the count (0.251707ms)
+✔ distinct publishers never merge (0.142277ms)
+✔ a holder with no record at all contributes no row, and says so by absence (0.130051ms)
+✔ shared meeting card retains agenda, minutes, decisions and comment sources with their exact read dates (0.714692ms)
+✔ carried sitting metadata cannot disappear into its calendar's ordinary source row (0.562332ms)
+partition LKG base: meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing has no promoted pointer yet
+RCD_MEETING_PARTITION_RECEIPT={"source":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","partitionId":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","meetingSource":"civicplus","bodyId":"ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing","scope":"source:civicplus:body:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","candidateId":"cv-634c22f07f3ae905c98474213cb0fe7f","acquisitionSucceeded":true,"state":"PROMOTED","decision":"GOOD","promotedVersion":"cv-634c22f07f3ae905c98474213cb0fe7f","lastKnownGoodVersion":"cv-634c22f07f3ae905c98474213cb0fe7f","failureDetail":null,"structuralReleaseContract":{"testSitePromotions":0,"gitDataCommits":0,"pullRequests":0,"githubActionsRuns":0,"netlifyDeploys":0,"nextBuilds":0,"fullSiteBrowserWalks":0}}
+partition LKG base: meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing at cv-634c22f07f3ae905c98474213cb0fe7f
+RCD_MEETING_PARTITION_RECEIPT={"source":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","partitionId":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","meetingSource":"civicplus","bodyId":"ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing","scope":"source:civicplus:body:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","candidateId":"cv-75da0a99b7f117bf5a7d20eceb43df28","acquisitionSucceeded":true,"state":"PROMOTED","decision":"GOOD","promotedVersion":"cv-75da0a99b7f117bf5a7d20eceb43df28","lastKnownGoodVersion":"cv-75da0a99b7f117bf5a7d20eceb43df28","failureDetail":null,"structuralReleaseContract":{"testSitePromotions":0,"gitDataCommits":0,"pullRequests":0,"githubActionsRuns":0,"netlifyDeploys":0,"nextBuilds":0,"fullSiteBrowserWalks":0}}
+✔ each recorded carry reason earns its own plain clause, and a mark without one earns none (2.115318ms)
+✔ a calendar that answered is never called unreachable, and its answer is never read as the body's act (0.392401ms)
+✔ the reason survives its writer, the Reader composition, the edge artifacts, the wire and the route's search (37.505977ms)
+✔ both surfaces render the decided clause for every reason, and neither calls an answering calendar unreachable (3683.299143ms)
+✔ no reader surface writes a carried-row sentence of its own; both go through the one decider (105.785931ms)
+✔ shared meeting row keeps its native identity and published online action (37.391858ms)
+✔ only a fresh first-party empty-slot observation earns Agenda not posted yet (40.468775ms)
+✔ a second-hand meeting retains its classification only within Sources (11.337453ms)
+✔ shared meeting card keeps its OCD-derived level after the title (7.099868ms)
+✔ a clean page lists nothing (3.029829ms)
+✔ layout shift over the bar is listed; input-caused shifts do not count (0.399226ms)
+✔ no recorder is 'not measured', never a pass (0.190734ms)
+✔ horizontal overflow names the page and the element (0.372131ms)
+✔ a scroller is not overflow (0.668317ms)
+✔ cut-off text: hidden or ellipsised content wider than its box (0.993882ms)
+✔ tap targets: 44 normally, 40 compact (0.418943ms)
+✔ font size and spacing off the token scales (0.486078ms)
+✔ contrast under the bar is listed; large text gets the lower bar; image backdrops are not measured (0.718923ms)
+✔ collectPageObservation is self-contained (serialisable to a page) (0.458004ms)
+✔ card source leaks join the existing look report with exact elements (0.347359ms)
+
+  2 of 13 source(s) emit rows older than the 90-day serving window: civicplus -> 2026-01-06, revize -> 2026-02-09
+
+✔ one host's refusal does not empty the bodies on the other hosts (57.442493ms)
+✔ a source refused on EVERY row still reads as a failed source (2.017479ms)
+✔ the composite carries a partial refusal through to its report (16.280725ms)
+✔ a refused source keeps the calendar it had, and says how many rows are stale (0.534092ms)
+✔ a row carried twice keeps naming the run that actually fetched it (0.262039ms)
+✔ a fresh row always beats a carried one, and a healthy source carries nothing (0.246143ms)
+✔ a snapshot must state its carry-forward, and may not carry without a refusal (1.315464ms)
+✔ the client meta names the carried rows and the day they were last reached (1.715325ms)
+✔ every surface that states a meeting's freshness reads the row's own stamp (0.960274ms)
+✔ g13: a source that publishes its whole archive carries its whole archive (0.48685ms)
+✔ g13: declaring no back clip is per source, not a global loosening (0.407288ms)
+✔ g13: a declared window survives the composite's FAILURE branch (1.226229ms)
+✔ F01 7.2: a refused body with rows on screen is STALE, not missing (1.638538ms)
+✔ F01 7.2: the card reads the SAME meeting array the pins are drawn from (1.532398ms)
+✔ F22: every source whose rows outrun the serving window declares its own (25.811037ms)
+✔ a source that fetched documents and extracted nothing goes RED, so carry-forward runs (1.408512ms)
+✔ a source that fetched documents and DROPPED everything is left alone (0.475287ms)
+✔ A-004 · REPRODUCTION: a source reporting plain success carries no concluded rows back (0.270424ms)
+✔ A-004 · a scoped ARCHIVE failure carries the concluded rows back (0.210987ms)
+✔ A-004 · an ARCHIVE failure never resurrects a FUTURE sitting the fresh run dropped (0.124741ms)
+✔ A-004 · a division-less body's archive failure is still scoped, not dropped (0.092044ms)
+✔ A-004 · a source with no partial scopes and no refusal still carries NOTHING (0.062552ms)
+✔ A-004 · the ical adapter no longer swallows a past-feed failure (0.957278ms)
+✔ F22: a day of clock-gap slack does not reach a real undeclared archive (0.151727ms)
+✔ BAL-41/MTG-15: the level tag is ONE component, tier-derived, colour from the accent token (14.326482ms)
+✔ BAL-41: the ballot wires the tag onto every race, every measure, and the section headers, from office and OCD identity (FE-44) (3.072717ms)
+✔ MTG-15: the meeting surfaces carry the tag from the meeting's OCD identity (0.372072ms)
+✔ BAL-40: on every wordmark-above-headline page the logo is larger than the headline (7.195214ms)
+✔ BAL-46: every local measure carries a plain-language summary, cited to its own source, never advocacy (0.508133ms)
+✔ BAL-45/46/47: the summary leads on the face; the verbatim serif ballot text is collapsed below (1.324835ms)
+✔ BAL-48: extended election-mechanics text collapses behind a disclosure by default (1.419212ms)
+✔ POS-5: the statewide measure treatment the owner praised is intact — summary, part-by-part, collapsed analysis (1.423863ms)
+✔ POS-4: the desktop map still renders the Who Governs Here panel and the district card — untouched by this session (1.459203ms)
+ℹ tests 63
+ℹ suites 0
+ℹ pass 63
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6896.438097

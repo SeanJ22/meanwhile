@@ -1,0 +1,41 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 1/1 files; SHA 8e756fe774185e42626391805c72e869695ca5f1
+tests/refresh-corollary.test.ts
+
+  2 of 13 source(s) emit rows older than the 90-day serving window: civicplus -> 2026-01-06, revize -> 2026-02-09
+
+✔ one host's refusal does not empty the bodies on the other hosts (123.57537ms)
+✔ a source refused on EVERY row still reads as a failed source (3.513023ms)
+✔ the composite carries a partial refusal through to its report (17.319029ms)
+✔ a refused source keeps the calendar it had, and says how many rows are stale (0.724361ms)
+✔ a row carried twice keeps naming the run that actually fetched it (0.403366ms)
+✔ a fresh row always beats a carried one, and a healthy source carries nothing (0.595909ms)
+✔ a snapshot must state its carry-forward, and may not carry without a refusal (2.366651ms)
+✔ the client meta names the carried rows and the day they were last reached (0.58697ms)
+✔ every surface that states a meeting's freshness reads the row's own stamp (1.752458ms)
+✔ g13: a source that publishes its whole archive carries its whole archive (0.865153ms)
+✔ g13: declaring no back clip is per source, not a global loosening (0.332826ms)
+✔ g13: a declared window survives the composite's FAILURE branch (1.251467ms)
+✔ F01 7.2: a refused body with rows on screen is STALE, not missing (1.03594ms)
+✔ F01 7.2: the card reads the SAME meeting array the pins are drawn from (1.340532ms)
+✔ F22: every source whose rows outrun the serving window declares its own (26.339561ms)
+✔ a source that fetched documents and extracted nothing goes RED, so carry-forward runs (0.771551ms)
+✔ a source that fetched documents and DROPPED everything is left alone (0.940276ms)
+✔ A-004 · REPRODUCTION: a source reporting plain success carries no concluded rows back (0.316177ms)
+✔ A-004 · a scoped ARCHIVE failure carries the concluded rows back (0.328344ms)
+✔ A-004 · an ARCHIVE failure never resurrects a FUTURE sitting the fresh run dropped (0.297455ms)
+✔ A-004 · a division-less body's archive failure is still scoped, not dropped (0.228848ms)
+✔ A-004 · a source with no partial scopes and no refusal still carries NOTHING (0.136138ms)
+✔ A-004 · the ical adapter no longer swallows a past-feed failure (0.796278ms)
+✔ F22: a day of clock-gap slack does not reach a real undeclared archive (0.196076ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3146.528431

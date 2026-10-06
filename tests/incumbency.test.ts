@@ -210,7 +210,7 @@ test("neither voting-record empty state asserts a fact about a person", () => {
       [],
       `"${line}" asserts something about the candidate rather than about our sourcing`,
     );
-    assert.match(line, /^We haven't sourced/, "and it says whose gap it is");
+    assert.equal(line, "We’re working on getting this info", "FE-30 uses the shared collection state");
   }
 });
 

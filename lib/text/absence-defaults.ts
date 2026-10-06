@@ -97,3 +97,9 @@ export function absenceDefaultsIn(source: string): AbsenceDefaultHit[] {
   }
   return out;
 }
+
+/** FE-31: reader gaps use the shared component; disclaimer copy cannot return. */
+export function readerCopyViolations(source: string): string[] {
+  const code = source.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:])\/\/[^\n]*/gm, "$1 ");
+  return [...code.matchAll(/We(?:['’]|&apos;)re working on getting this info|not a statement that|not evidence that|We (?:don't|don’t|don&apos;t) hold/gi)].map(match => match[0]);
+}

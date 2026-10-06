@@ -40,6 +40,10 @@ export interface QueueRow {
   readonly open: { readonly type: "stuck" | "fix"; readonly id: string } | null;
   /** Newest first within a filter. */
   readonly at: string | null;
+  /** The saved order, for an order row: its seven facts and its own follow-up controls sit behind "Show details". */
+  readonly receipt: UiReceipt | null;
+  /** For an instruction sent to the fleet that the runner has taken up: what its work reached. */
+  readonly sendId: string | null;
 }
 
 export interface QueueDoor { readonly name: string; readonly why: string | null; readonly since: string | null }
@@ -79,7 +83,7 @@ function orderRow(r: UiReceipt): QueueRow {
     key: `order:${r.key}`, kind: "order", what: r.label, chip: r.statusWords, tone: failed ? "warn" : filter === "done" ? "good" : "neutral", filter,
     owner: r.plan ? r.plan.who : "—", due, next: r.says,
     progress: { done: reached, of: ORDER_STEPS.length, words: ORDER_STEPS[Math.max(0, reached - 1)] },
-    actions: [], open: null, at: r.sentAt,
+    actions: [], open: null, at: r.sentAt, receipt: r, sendId: null,
   };
 }
 
@@ -89,7 +93,7 @@ function sendRow(x: SentInstruction): QueueRow {
     key: `send:${x.id}`, kind: "send", what: x.words === "" ? "An instruction sent to the fleet" : x.words, chip: x.stateWords,
     tone: filter === "done" ? "good" : "neutral", filter, owner: "The runner", due: null, next: x.ranAs ?? x.stateWords, progress: null,
     actions: x.canCancel ? [{ kind: "cancel-send", target: x.id, label: "Take it back", payload: { words: x.words } }] : [],
-    open: null, at: x.sentAt,
+    open: null, at: x.sentAt, receipt: null, sendId: x.state === "waiting" ? null : x.id,
   };
 }
 
@@ -103,7 +107,7 @@ function huntRow(h: Hunt): QueueRow {
     next: h.status === "running" ? "Works on its next round." : h.status === "paused" ? "Resume it to keep going." : h.status === "stopped" ? "Nothing more will be started." : "Whether paid work is running is not reported.",
     progress: h.limitUsd > 0 ? { done: Math.min(spent, h.limitUsd), of: h.limitUsd, words: `$${spent.toFixed(2)} of $${h.limitUsd.toFixed(2)} budget used` } : null,
     actions: h.status === "stopped" ? [] : [{ kind: h.status === "paused" ? "hunt-resume" : "hunt-pause", target: h.placeKey }, { kind: "hunt-stop", target: h.placeKey }],
-    open: null, at: h.startedAt,
+    open: null, at: h.startedAt, receipt: null, sendId: null,
   };
 }
 
@@ -111,14 +115,14 @@ function stuckRow(i: StuckItem): QueueRow {
   return {
     key: `stuck:${i.id}`, kind: "stuck", what: i.title, chip: LANE_CHIP[i.lane], tone: i.lane === "decision" ? "warn" : i.lane === "auto" ? "good" : "slate",
     filter: LANE_FILTER[i.lane], owner: i.owner === "" ? LANE_OWNER[i.lane] : i.owner, due: null, next: i.next, progress: null,
-    actions: i.actions.slice(0, 2), open: { type: "stuck", id: i.id }, at: null,
+    actions: i.actions.slice(0, 2), open: { type: "stuck", id: i.id }, at: null, receipt: null, sendId: null,
   };
 }
 
 function doorRow(d: QueueDoor, n: number): QueueRow {
   return {
     key: `door:${n}:${d.name}`, kind: "door", what: `Door shut: ${d.name}`, chip: "Shut", tone: "warn", filter: "waiting", owner: "The team",
-    due: null, next: d.why === null ? "—" : d.why, progress: null, actions: [], open: null, at: d.since,
+    due: null, next: d.why === null ? "—" : d.why, progress: null, actions: [], open: null, at: d.since, receipt: null, sendId: null,
   };
 }
 
@@ -129,14 +133,14 @@ function openFixRow(o: OpenFix): QueueRow {
     filter, owner: o.owner, due: null, next: o.problem,
     progress: o.taskStage === null ? null : { done: o.taskStage + 1, of: TASK_STAGES.length, words: TASK_STAGES[o.taskStage] },
     actions: [{ kind: "fixfirst", target: o.id }, { kind: "focus", target: o.id }, ...(o.origin === "engineering" && o.taskId === null ? [{ kind: "eng-task" as const, target: o.id }] : [])],
-    open: { type: "fix", id: o.id }, at: null,
+    open: { type: "fix", id: o.id }, at: null, receipt: null, sendId: null,
   };
 }
 
 function closedFixRow(c: ClosedFix, returned: boolean): QueueRow {
   return {
     key: `fix:${c.id}`, kind: "fix", what: c.title, chip: returned ? "Came back" : "Fixed and checked", tone: returned ? "warn" : "good", filter: returned ? "needs-me" : "done",
-    owner: c.origin, due: null, next: returned ? (c.returnedDetail ?? c.since) : c.changed, progress: null, actions: [], open: { type: "fix", id: c.id }, at: c.fixedAt,
+    owner: c.origin, due: null, next: returned ? (c.returnedDetail ?? c.since) : c.changed, progress: null, actions: [], open: { type: "fix", id: c.id }, at: c.fixedAt, receipt: null, sendId: null,
   };
 }
 
@@ -144,7 +148,7 @@ function scheduledRow(x: QueueScheduled): QueueRow {
   return {
     key: `scheduled:${x.id}`, kind: "scheduled", what: x.label, chip: "Scheduled", tone: "neutral", filter: "scheduled", owner: "The runner",
     due: x.finishBy ? `${x.when} · finish by ${x.finishBy}` : x.when, next: x.repeats === null ? "Sent once, at that time." : x.repeats, progress: null,
-    actions: [{ kind: "order-unschedule", target: x.id, label: "Cancel this scheduled order" }], open: null, at: null,
+    actions: [{ kind: "order-unschedule", target: x.id, label: "Cancel this scheduled order" }], open: null, at: null, receipt: null, sendId: null,
   };
 }
 

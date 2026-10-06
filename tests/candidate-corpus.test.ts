@@ -65,8 +65,7 @@ test("D05: the three answers are three, and none of them is a blank", () => {
   // 1. Nothing collected — a fact about US.
   const none = answerFor([], ["housing"], "https://example.org");
   assert.equal(none.kind, "NOTHING_COLLECTED");
-  assert.match(answerSentence(none, "housing"), /we haven’t collected|we haven't collected/i);
-  assert.match(answerSentence(none, "housing"), /not a statement about them/i);
+  assert.equal(answerSentence(none, "housing"), "We’re working on getting this info");
 
   // 2. Searched and nothing matched — a fact about THEIR pages, with the
   //    pages and dates named so the two cannot read alike.

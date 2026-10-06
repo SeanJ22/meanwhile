@@ -34,7 +34,7 @@ export function CalendarLinks({ meeting }: { meeting: CalendarMeeting }) {
   if (meeting.status !== "SCHEDULED") return null;
   const origin = typeof window !== "undefined" ? window.location.origin : "";
   return (
-    <p className="mt-1.5 text-[0.75rem]">
+    <p className="mt-1.5 t-detail">
       <AddToCalendar event={meetingCalendarEvent(meeting, { origin })} />
     </p>
   );

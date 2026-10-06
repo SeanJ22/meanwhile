@@ -106,7 +106,7 @@ export function BrowsingSubjectLine({
   return (
     <p
       data-browsing-standing={subject.standing}
-      className="mt-1 text-[0.6875rem] leading-relaxed text-muted"
+      className="mt-1 t-caption leading-relaxed text-muted"
     >
       {subject.standing === "CONFIRMED" ? (
         <>You&apos;re looking at {label} — the one your address is in.</>
@@ -352,7 +352,7 @@ export function DistrictPopup({
           </div>
         ))
       ) : (
-        <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mt-1 t-caption leading-relaxed text-muted">
           {TOP_OFFICES_GAP}
         </p>
       )}
@@ -431,7 +431,7 @@ export function DistrictPopup({
           </div>
         ))
       ) : (
-        <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mt-1.5 t-caption leading-relaxed text-muted">
           {/* The same line the battlecard shows for the same division — the
               two surfaces cannot say different things about one gap, and
               neither may claim a gap before the lookup answers (M112). */}

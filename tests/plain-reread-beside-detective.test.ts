@@ -46,7 +46,9 @@ test("paid research open: the detective dispatches and is not duplicated", async
   assert.deepEqual(deferred, []);
 });
 
-import { plainRereadSlot, PLAIN_REREAD_SLOT_MS } from "../lib/control-plane/workers/detective.ts";
+import { DETECTIVE_SHUT_THRESHOLD, plainRereadSlot, PLAIN_REREAD_SLOT_MS, shutThresholdFrom, sourceFailureRecovery } from "../lib/control-plane/workers/detective.ts";
+import { DETECTIVE_SHUT_THRESHOLD_SETTING } from "../lib/control-plane/settings.ts";
+import type { AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
 
 test("an admitted detective alternates with the plain re-read by hourly slot; a fresh refusal goes to the detective at once", () => {
@@ -59,4 +61,15 @@ test("an admitted detective alternates with the plain re-read by hourly slot; a 
   assert.equal(plainRereadSlot({ ...debt, cause: "REFUSED_BY_HOST", consecutiveFailures: 1 }, odd), false);
   assert.equal(plainRereadSlot({ ...debt, cause: "REFUSED_BY_HOST", consecutiveFailures: 2 }, odd), true);
   assert.equal(plainRereadSlot(null, odd), false);
+});
+
+test("the shut threshold is Admin's setting; unset or invalid reads the code default of 3", () => {
+  const config = (value: unknown) => ({ settings: { [DETECTIVE_SHUT_THRESHOLD_SETTING]: value } }) as unknown as AdminConfig;
+  assert.equal(shutThresholdFrom(null), DETECTIVE_SHUT_THRESHOLD);
+  assert.equal(shutThresholdFrom(config(5)), 5);
+  assert.equal(shutThresholdFrom(config(0)), DETECTIVE_SHUT_THRESHOLD, "an invalid stored value reads the default");
+  const debt = { obligationId: "o", cause: "UPSTREAM_ERROR", target: "h", detail: "", lastFailedAt: NOW, consecutiveFailures: 3, retryAt: NOW } as FreshnessDebt;
+  const plain = { kind: "DETERMINISTIC", why: "plain", disagreement: null } as const;
+  assert.equal(sourceFailureRecovery(plain, debt, shutThresholdFrom(config(5))), plain, "three failures under a threshold of five stay a free retry");
+  assert.equal(sourceFailureRecovery(plain, { ...debt, consecutiveFailures: 5 }, shutThresholdFrom(config(5))).kind, "BOUNDED_MODEL_WORKER");
 });

@@ -20,6 +20,7 @@ import type { ClosedFix, FixView, OpenFix } from "../../../app/(admin)/_mw/admin
 import type { FixQueueItem, FixQueueView } from "../fix-queue.ts";
 import { formatEastern } from "../eastern-time.ts";
 import type { FixItem } from "../fix-list.ts";
+import { fixEpisodes, fixHistoryLine, type FixItemWithHistory } from "../fix-history.ts";
 
 export const FIXES_MISSING_HISTORY = "Fixed and checked, and Came back: only fixes recorded on the fix list";
 
@@ -73,8 +74,11 @@ function listOpen(item: FixItem): OpenFix {
   };
 }
 
-function listClosed(item: FixItem): ClosedFix {
+function listClosed(item: FixItemWithHistory, now: string): ClosedFix {
   const cameBack = item.state === "CAME_BACK";
+  // DP-30: every episode the item has had, so a door that broke twice reads as two, with how long each fix held.
+  const episodes = fixEpisodes(item, now);
+  const holding = episodes.at(-1)?.stillHolding ? episodes.at(-1)!.heldHours : null;
   return {
     id: item.id,
     title: titleOf(item.says),
@@ -85,7 +89,8 @@ function listClosed(item: FixItem): ClosedFix {
     learning: cameBack ? "Problem returned" : "Not checked yet",
     whatChanged: `Before: ${item.before ?? "—"}. After: ${item.after ?? "—"}. Changed by ${item.changedBy ?? "—"}.${item.undo ? " It can be undone." : ""}`,
     readerRecheck: "—",
-    since: cameBack && item.cameBackAt ? `Came back ${formatEastern(item.cameBackAt)}` : "—",
+    since: cameBack && item.cameBackAt ? `Came back ${formatEastern(item.cameBackAt)}` : holding !== null ? `Holding for ${holding < 48 ? `${Math.round(holding)} hours` : `${Math.round(holding / 24)} days`}` : "—",
+    history: fixHistoryLine(item, now),
     saved: "—",
     usedBy: "—",
     ...(cameBack && item.cameBackAt ? { returnedDetail: formatEastern(item.cameBackAt) } : {}),
@@ -98,12 +103,12 @@ function listClosed(item: FixItem): ClosedFix {
  * checked, Came back), plus any older queued gap still waiting in the decision
  * log. Items the list already holds are not shown twice.
  */
-export function v6FixesView(queue: FixQueueView, list: readonly FixItem[] = []): FixView {
+export function v6FixesView(queue: FixQueueView, list: readonly FixItem[] = [], now: string = new Date().toISOString()): FixView {
   const held = new Set(list.map((i) => i.id));
   const legacy = queue.items.filter((i) => !held.has(i.subjectId)).map(openFix);
   const open = list.filter((i) => i.state === "OPEN" || i.state === "FIXING").map(listOpen);
-  const fixed = list.filter((i) => i.state === "FIXED").sort((a, b) => (b.fixedAt ?? "").localeCompare(a.fixedAt ?? "")).map(listClosed);
+  const fixed = list.filter((i) => i.state === "FIXED").sort((a, b) => (b.fixedAt ?? "").localeCompare(a.fixedAt ?? "")).map((i) => listClosed(i, now));
   // A came-back item is also open work again: it reads in both places.
   const returned = list.filter((i) => i.state === "CAME_BACK");
-  return { open: [...open, ...returned.map(listOpen), ...legacy], closed: fixed, returned: returned.map(listClosed) };
+  return { open: [...open, ...returned.map(listOpen), ...legacy], closed: fixed, returned: returned.map((i) => listClosed(i, now)) };
 }

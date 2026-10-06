@@ -32,6 +32,7 @@ import {
   pageVisibleText,
   pageHeadings,
   cycleEvidence,
+  linkedSiteHosts,
   profileCampaignSiteLeads,
   profileSupportsCampaign,
   registrableDomain,
@@ -221,12 +222,55 @@ async function scoutLeads(state: PipelineItemState, ctx: PipelineContext, subjec
   return leads;
 }
 
+/**
+ * Saved pages of other publishers that could support a campaign, by the hosts
+ * they link to. Each saved HTML page recent enough to count is read once per
+ * pass; a lead then re-reads only the pages that link to its own host, instead
+ * of every page in the vault.
+ */
+interface ProfileIndex {
+  readonly linking: (host: string) => Promise<readonly ArtifactRecord[]>;
+}
+
+/** A read recorded more than this long before the age bound cannot have been retrieved inside it. */
+const RECORDED_AFTER_READ_SLACK_MS = 24 * 60 * 60 * 1000;
+
+function profileIndex(artifacts: readonly ArtifactRecord[], options: CampaignSiteChainOptions): ProfileIndex {
+  const byHost = new Map<string, ArtifactRecord[]>();
+  const now = Date.parse(options.now);
+  let indexed = 0;
+  /* The run's own new reads are appended to `artifacts`; each lookup first indexes what arrived, one catch-up at a time. */
+  const catchUp = async (): Promise<void> => {
+    for (; indexed < artifacts.length; indexed += 1) {
+      const artifact = artifacts[indexed]!;
+      if (artifact.partial || !/html/i.test(artifact.contentType)) continue;
+      if (now - Date.parse(artifact.recordedAt) > MAX_READ_AGE_MS + RECORDED_AFTER_READ_SLACK_MS) continue;
+      const page = await options.heldPage(artifact);
+      if (!page) continue;
+      for (const linked of linkedSiteHosts(page)) {
+        const list = byHost.get(linked);
+        if (list === undefined) byHost.set(linked, [artifact]);
+        else list.push(artifact);
+      }
+    }
+  };
+  let caughtUp: Promise<void> = Promise.resolve();
+  return {
+    async linking(host) {
+      caughtUp = caughtUp.then(catchUp);
+      await caughtUp;
+      return byHost.get(host) ?? [];
+    },
+  };
+}
+
 /** A different captured publisher that names this candidacy and cites the campaign we independently read. */
-async function independentProfileSignal(subject: CampaignSiteSubject, primary: ArtifactRecord, artifacts: readonly ArtifactRecord[],
+async function independentProfileSignal(subject: CampaignSiteSubject, primary: ArtifactRecord, profiles: ProfileIndex,
   options: CampaignSiteChainOptions, primaryPage: CampaignSitePageRead): Promise<{ artifact: ArtifactRecord; supporting: CampaignSiteSupportingRead } | null> {
-  for (const artifact of artifacts) {
-    if (artifact.partial || !/html/i.test(artifact.contentType) ||
-      registrableDomain(siteHost(artifact.canonicalUrl) ?? "") === registrableDomain(siteHost(primary.canonicalUrl) ?? "")) continue;
+  const primaryHost = siteHost(primaryPage.finalUrl);
+  if (primaryHost === null) return null;
+  for (const artifact of await profiles.linking(primaryHost)) {
+    if (registrableDomain(siteHost(artifact.canonicalUrl) ?? "") === registrableDomain(siteHost(primary.canonicalUrl) ?? "")) continue;
     const page = await options.heldPage(artifact);
     if (!page || page.httpStatus < 200 || page.httpStatus >= 300 || contentHash(page.body) !== artifact.contentHash ||
       `sha256-${page.sha256}` !== artifact.contentHash) continue;
@@ -381,6 +425,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   let ctx = await contextFromRepositories(repos);
   /* Every artifact the log holds, read once; this run's reads are added as they are recorded. */
   const allArtifacts: ArtifactRecord[] = [...(await repos.artifacts.readAll())];
+  const profiles = profileIndex(allArtifacts, options);
   /*
    * Only this pass's items, read by key: every state below is filtered to the campaign-site class, so the rest of the
    * promotion log (every other record class) never crosses the wire. An item whose only record is a refused offer
@@ -486,7 +531,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     const read = await options.heldPage(artifact);
     if (read === null) return;
     /* The verdict every later stage rests on is re-made from the vaulted bytes, never carried from the read. */
-    const independent = await independentProfileSignal(subject, artifact, allArtifacts, options, read);
+    const independent = await independentProfileSignal(subject, artifact, profiles, options, read);
     const verdict = verifyCampaignSitePage(subject, { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: confirmed.recordId }, read, independent?.supporting);
 
     if (state.stage === "CONFIRMED") {
@@ -618,7 +663,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
         leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: refusal.code === "NOT_READ" ? "DEFERRED" : "REFUSED", refusals: [refusal], historical: null, via: refusal.code === "NOT_READ" ? "NONE" : "READ" });
         continue;
       }
-      const independent = await independentProfileSignal(subject, cached.artifact, allArtifacts, options, cached.result.read);
+      const independent = await independentProfileSignal(subject, cached.artifact, profiles, options, cached.result.read);
       const verdict = verifyCampaignSitePage(subject, lead, cached.result.read, independent?.supporting);
       verdicts.push({ lead, verdict, artifact: cached.artifact });
       leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: verdict.verdict,

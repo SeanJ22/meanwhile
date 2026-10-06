@@ -260,3 +260,30 @@ test("CP-14: an obsolete field list cannot withhold a verified campaign site", a
   assert.equal(d.stage, "APPROVED_FOR_PROMOTION");
   assert.ok(!d.refused);
 });
+
+test("each saved page is read once per pass to find independent profiles; a page too old to count is never read", async t => {
+  const { repos, vaultRoot, duarte } = await plane(t);
+  /* Unrelated publishers: ten recent pages linking elsewhere, ten saved long before the read-age bound. */
+  const unrelated: HeldRead[] = [];
+  for (let i = 0; i < 20; i++) {
+    const body = `<title>Directory ${i}</title><h1>Local listings</h1><a href="https://elsewhere-${i}.example/">Website</a>`;
+    const retrievedAt = i < 10 ? "2026-09-24T12:00:00.000Z" : "2026-08-01T12:00:00.000Z";
+    const page: HeldRead = { ...heldScoutPage, artifactId: `ar-unrelated-${i}`, attemptId: `at-unrelated-${i}`,
+      canonicalUrl: `https://directory-${i}.example/listing`, body, sha256: sha256(body), retrievedAt };
+    unrelated.push(page);
+    await repos.artifacts.append(`held:${page.attemptId}`, page.artifactId, heldArtifactRecord(page), page.retrievedAt);
+  }
+  const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z");
+  const reads = new Map<string, number>();
+  const report = await projectCampaignSiteChains(repos, { ...run.options, heldPage: async artifact => {
+    reads.set(artifact.artifactId, (reads.get(artifact.artifactId) ?? 0) + 1);
+    const held = unrelated.find(page => page.artifactId === artifact.artifactId);
+    return held ? { ...heldPageRead({ requestedUrl: held.canonicalUrl, httpStatus: 200, contentType: held.contentType,
+      body: held.body, retrievedAt: held.retrievedAt, sha256: held.sha256 }), permissions: [] } : run.options.heldPage(artifact);
+  } });
+  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === duarte.itemId)!.stage, "APPROVED_FOR_PROMOTION",
+    JSON.stringify(report.offers.filter(o => o.itemId === duarte.itemId)));
+  for (const page of unrelated.slice(0, 10)) assert.equal(reads.get(page.artifactId), 1, `${page.artifactId} is read once to index its links`);
+  for (const page of unrelated.slice(10)) assert.equal(reads.get(page.artifactId), undefined, `${page.artifactId} is older than any read that can count`);
+  assert.ok((reads.get(duarteProfile.artifactId) ?? 0) >= 2, "the profile linking to the campaign is indexed, then read again as support");
+});

@@ -77,3 +77,10 @@ These sum to about 4 GB at most; the remaining 5 GB or more is in reads these co
 
 ### Verdict
 **Clearly worse**: transfer 9.4 GB against 7.8 GB for release 6's hour (+21%), and 13 times the target. Under Sean's gate it would roll back. **No rollback was done.** Sean's rule says River first shows him how "clearly worse" is decided, using real hours, and the rollback screen (DB-47) is not on any Admin view (live ledger). Sean's oversight session holds the stop line (1.5 GB a full hour). Sean was pushed at 3:10 AM EDT.
+
+## After the first hour (River reading, 3:50 AM EDT)
+
+- The runner's last heartbeat was 3:12:49 AM EDT, during a cycle that started at 3:08:49 AM EDT. The control-plane read counters barely moved after that: cp_attempts index fetches went up 223,689 between 3:03 and 3:49 AM EDT, almost all before 3:13, and the artifact log had no new scans. **The runner appears stopped since about 3:13 AM EDT**, consistent with Sean's oversight session's stop line (more than 1.5 GB in a full hour). That session holds the details.
+- Neon's project counter is unchanged since 3:02 AM EDT (1,849,523,516,847). There is no second hour to compare.
+- cp_spend_holds holds 4,416 rows.
+- **Next measured hour:** only after a fix for the transfer source exists. The source has to be named first, by the per-query byte counter (vital-signs.md). The runner stays stopped until then unless Sean decides otherwise.

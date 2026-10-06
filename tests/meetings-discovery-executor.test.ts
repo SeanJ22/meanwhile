@@ -962,5 +962,5 @@ test("CH-08 LANES: the three discovery passes start together beside the worker w
   assert.match(source, /discoveryLaneRun = runIndependentRuntimePass\(\[\s*timed\("meetings-discovery"[\s\S]*timed\("campaign-sites"[\s\S]*timed\("candidate-publications"/);
   assert.match(source, /runMeetingsDiscoveryPass\(dispatchDeadlineMs, Number\.MAX_SAFE_INTEGER\)/, "the new path is bounded by the time left, not a walk count");
   assert.match(source, /runMeetingsDiscoveryPass\(Date\.now\(\) \+ MEETINGS_DISCOVERY_BUDGET_MS, MEETINGS_DISCOVERY_MAX_WALKS\)/, "the old path keeps 12 walks and 60 s");
-  assert.ok(source.indexOf("await discoveryLaneRun") > source.indexOf("const autonomous = await runAutonomousProcesses()"), "the round joins the lanes after the worker wave, before finalization");
+  assert.ok(source.indexOf("await boundedAfterCutoff(discoveryLaneRun)") > source.indexOf("const autonomous = await runAutonomousProcesses()"), "the round joins the lanes after the worker wave, before finalization");
 });

@@ -5,7 +5,7 @@ worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_0123HcBRvYjpHDb1FwB9LTVg
 lock: river-session_0123HcBRvYjpHDb1FwB9LTVg-1791305878
-heartbeat: 2026-10-06T17:23:53Z
+heartbeat: 2026-10-06T17:33:54Z
 
 
 

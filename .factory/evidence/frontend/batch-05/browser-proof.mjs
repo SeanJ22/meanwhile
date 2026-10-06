@@ -60,7 +60,7 @@ try {for(const width of [390,1280])for(const theme of ['dark','light']){
  assert.equal(await page.locator('#meeting [data-agenda-version="revision:old"] a').count(),0,'old captured content at same URL never links current bytes');
  assert.ok((await page.locator('#meeting [data-agenda-version="revision:old"]').textContent()).includes('2026-10-01'));
  await page.locator('#ballot').getByRole('button',{name:/^Sources/}).click();await page.locator('#ballot [data-card-sources] a[href="https://campaign.example.org/housing"]').waitFor({state:'visible'});
- await page.screenshot({path:dir+'/'+width+'-'+theme+'.png',fullPage:true});
+ await page.screenshot({path:dir+'/'+width+'-'+theme+'.png',fullPage:true,animations:'disabled'});
  const observation=await page.evaluate(()=>window.sourceObservation());writeFileSync(dir+'/'+width+'-'+theme+'.json',JSON.stringify(observation,null,2));assert.deepEqual(observation.sourceLeaks,[]);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  results.push({width,theme,meetingRows:1,agendaVersions:2,sourceLeaks:0,seededLeaks:leaks.length});await page.close();
 } assert.deepEqual(errors,[]);console.log(JSON.stringify({browser:'/usr/bin/chromium (explicit substitute)',synthetic:true,live:false,results,errors},null,2));}finally{await browser.close();server.close();}

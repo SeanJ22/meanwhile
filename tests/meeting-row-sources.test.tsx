@@ -39,7 +39,7 @@ test("a second-hand meeting retains its classification only within Sources", () 
 
 test("shared meeting card keeps its OCD-derived level after the title", () => {
   const html = renderToStaticMarkup(<MeetingCard meeting={{ ...base, title: "Federal meeting by title only" }} title="Federal meeting by title only" />);
-  const heading = html.match(/<h2[^>]*>(.*?)<\/h2>/s)?.[1];
+  const heading = html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/)?.[1];
   assert.ok(heading);
   assert.match(heading, /Federal meeting by title only.*data-level-tag="local"/);
   assert.doesNotMatch(heading, /data-level-tag="national"/);

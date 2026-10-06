@@ -1697,5 +1697,5 @@ details.mw-sources > summary {
 }
 .wtp-office-pin:hover span,
 .wtp-office-pin:focus-visible span,
-.wtp-office-pin[data-selected="true"] span { border-color: var(--accent-local); }
+.wtp-office-pin[data-selected="true"] span { border-color: var(--action); }
 .wtp-office-pin:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }

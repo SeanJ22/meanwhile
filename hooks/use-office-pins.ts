@@ -12,6 +12,7 @@ export function useOfficePins(coverage: CoverageSummary | null): readonly Office
     const bodies = (coverage?.bodies ?? []).flatMap(body => { const office = bodyOffice(body); return office ? [office] : []; });
     const holders = [...new Map([
       ...(coverage?.seats ?? []).flatMap(seat => seat.representatives),
+      ...(coverage?.senators ?? []),
       ...(coverage?.bodies ?? []).flatMap(body => body.readerRoster?.members ?? []),
     ].filter(holder => memberDirectoryReaches(holder.id, "offices")).map(holder => [holder.id, { id: holder.id, name: holder.name }])).values()];
     return { bodies, holders };

@@ -962,7 +962,7 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map || !presentationReady || mapPresentationHeld(map)) return;
     syncOfficeMarkers(officePinsRef.current, officeSites ?? [],
-      button => new Marker({ element: button, anchor: "center", offset: [24, 0] }).addTo(map),
+      (button, site) => new Marker({ element: button, anchor: "center", offset: [24, 0] }).setLngLat([site.lng, site.lat]).addTo(map),
       id => onSelectOfficeRef.current?.(id), selectedOfficeId);
   }, [officeSites, selectedOfficeId, presentationReady]);
 

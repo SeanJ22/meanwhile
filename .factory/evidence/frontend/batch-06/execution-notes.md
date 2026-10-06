@@ -1,0 +1,13 @@
+# FE-35/36 continuation evidence
+
+Started from release7 f545fcf94 / tested458f0a196. CA-07/37 integrated; CA-14 absent. Codex assignment and unique lock rechecked before each push. Only stream/frontend is writable; River routes hooks and live acceptance. Prior checkpoints/evidence retained.
+
+Full selector includes restored own .factory evidence and requires FULL. Isolated source791958e2e97450bf2c0a51e7bb5a375cad96ec7c runs in /tmp/frontend-repairs without .next, rebuilt place-reference projection, env -u DATABASE_URL -u WTP_ASSET_STORE COREPACK_HOME=/tmp/frontend-corepack. Do not call the run green. Root application repair source remains separate. One test runner per worktree.
+
+Initial0ec65e25e focused28 checks pass. Types caught nullable body.name; fixed using the body's native divisionLabel. Lint cleanup captures the marker pool for disposal. Build791958e2e passes fixed budgets:408/430 app trace,981/1050 framework,1996723 raw/571015 gzip (ceilings3100000/940000 unchanged); reader trace127 files/0 failures. Two own FULL failures identified: multi-word fallback sourceOrg and new hover reading tier amber. Fixed missing org to empty (Sources can show the real URL) and hover to the existing action token;27 affected rechecks pass. No guard or baseline was weakened.
+
+Code inspection caught MapLibre Marker.addTo before setLngLat; corrected factory to place before attach. Official pins now include senators as well as division/body rosters. The actual CA-07 campaignOfficeFrom has no publication/reader transport; request its verified office fact through River, never infer an office from a filing/home/contact address.
+
+Browser fixture initially lacked UTF-8 (regex decoding failed) and then the existing onboarding tour trapped keyboard input. Replay now declares UTF-8 and dismisses the tour through Skip. Synthetic390/1280 dark/light replay runs actual MapEntry handlers, ReaderCard, EntityModal and PlacePublicRecords with controlled endpoints, a DOM marker adapter and ZIP/router test boundaries. Native MapLibre check is separate. Explicit system Chromium substitute; no pinned-browser or production acceptance claim. Sources/date/URL scoping, Directions, zero meeting denominator, stale place cancellation and503 distinct from not-held are checked. New PNGs stay outside Git; manifests/replay are saved.
+
+FE-19 full live pairs remain a real network block: frontend meanwhileusa.com CONNECT403 at2026-10-06T00:11:45Z, prior River release3 captures insufficient. Live served-SHA acceptance is River's. FE-22 is now connected in scripts/look-pass.mts. FE-28 Bank and FE-32 Admin hooks are still absent on release7. No new service, budget, policy, gate or Sean decision.

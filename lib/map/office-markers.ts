@@ -7,7 +7,7 @@ export interface OfficeMarker {
 }
 /** The office layer never enters the meeting pool or its count/filter denominator. */
 export function syncOfficeMarkers<M extends OfficeMarker>(pins: Map<string, M>, sites: readonly OfficeSite[],
-  create: (button: HTMLButtonElement) => M, onSelect: (id: string) => void, selected: string | null) {
+  create: (button: HTMLButtonElement, site: OfficeSite) => M, onSelect: (id: string) => void, selected: string | null) {
   const wanted = new Set(sites.map(site => site.id));
   for (const [id, marker] of pins) {
     if (!wanted.has(id)) { marker.remove(); pins.delete(id); }
@@ -24,7 +24,7 @@ export function syncOfficeMarkers<M extends OfficeMarker>(pins: Map<string, M>, 
       icon.textContent = "▤";
       button.appendChild(icon);
       button.addEventListener("click", event => { event.stopPropagation(); onSelect(site.id); });
-      marker = create(button);
+      marker = create(button, site);
       pins.set(site.id, marker);
     }
     marker.setLngLat([site.lng, site.lat]);

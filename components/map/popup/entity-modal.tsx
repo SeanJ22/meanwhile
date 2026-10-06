@@ -436,8 +436,17 @@ function PlaceSections({
           ))}
         </ul>
       )}
+      <PublicRecordSection subject={subject} />
     </div>
   );
+}
+
+function PublicRecordSection({ subject }: { subject: ModalSubject }) {
+  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
+  if (subject.subjectKind === "MEETING" || !divisionId) return null;
+  return <CardSection title="Public records">
+    <PlacePublicRecords key={divisionId} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
+  </CardSection>;
 }
 
 function BodySections({
@@ -648,6 +657,7 @@ function BodySections({
               control was the thing that let the tabbed card ship a clipped one
               while the body card's was fine.
             */}
+            {section.id === "sources" && <PublicRecordSection subject={subject} />}
             <CardSection title={section.title} meta={section.meta} keepMounted={section.id === "sources"}>
               <div data-card-sources={section.id === "sources" ? "" : undefined}>{section.content ?? <WorkingOnIt subject={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null} />}</div>
             </CardSection>
@@ -895,13 +905,6 @@ export function EntityModal({
           </div>
         )}
 
-        {subject.subjectKind !== "MEETING" && (subject.publicRecordsDivisionId ?? subject.divisionOcdId) && <div className="account-modal-body">
-          <CardSection title="Public records">
-            <PlacePublicRecords key={subject.publicRecordsDivisionId ?? subject.divisionOcdId} divisionId={(subject.publicRecordsDivisionId ?? subject.divisionOcdId)!}
-              bodyId={subject.bodyCard ? subject.subjectId : undefined} />
-          </CardSection>
-        </div>}
-
         {subject.bodyCard ? (
           <BodySections subject={{ ...subject, sources: allSources }} onOpenHolder={onOpenHolder} />
         ) : subject.placeCard ? (
@@ -915,6 +918,7 @@ export function EntityModal({
                 onOpenHolder={onOpenHolder} showTopOffices={runsSomething(subject.divisionKind)} />
             </CardSection>
             {subject.subjectKind !== "MEETING" && <CardSection title={listingCount.heading}><Meetings meetings={subject.meetings} /></CardSection>}
+            <PublicRecordSection subject={subject} />
             <CardSection title="Sources" meta={sourceCount}><Sources sources={allSources} /></CardSection>
           </CardSectionGroup>
         </div>

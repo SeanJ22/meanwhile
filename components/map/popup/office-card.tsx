@@ -8,7 +8,7 @@ export function OfficeCard({ site }: { site: OfficeSite }) {
   const directions = venueLink({ name: site.name, address: site.address, lat: site.lat, lng: site.lng });
   return <Card title={site.name} eyebrow={site.offices.length === 1 ? OFFICE_KIND_LABEL[site.offices[0].kind] : "Offices"}
     attrs={{ "data-office-card": site.id }} sources={site.offices.map(office => ({
-      what: `${office.name}: office address and contact`, provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg ?? "Office listing",
+      what: `${office.name}: office address and contact`, provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg ?? "",
         collectedAt: office.collectedAt ?? "", verifiedAt: null },
     }))}>
     <p>{site.address}</p>

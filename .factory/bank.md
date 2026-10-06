@@ -3,7 +3,7 @@ worker: codex-bank
 provider: Codex
 run_id: codex-bank-b5575f5372fa456486b5a92a890e1463
 lock: codex-bank-b5575f5372fa456486b5a92a890e1463
-heartbeat: 2026-10-06T00:22:56.786990Z
+heartbeat: 2026-10-06T00:31:58.272042Z
 on_river: 24 unique Bank steps; prior 21 plus DB-44, DB-46 and DP-23 at 13d29c572dc8da6a1dbe2646d4845416e94bfc64; DB-57 runtime repair also folded there. Current river 6af6f8a50f (release 3). Built code, with shared hooks and live acceptance pending as recorded.
 ready: Prior READY cf0df0cb0 is integrated. DB-47 WIP is being checked; not newly READY yet.
 checks: FULL at e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee: 9360 pass, 0 fail, 11 skipped (9371 tests, 1068 files). Types pass at the same SHA. Lint 23 changed source files pass at 620be3496 (identical .ts/.tsx/.mjs code). Corrected original write-alarm file: 18/18 pass at e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee. Raw logs and structured evidence: .factory/bank-evidence/. Earlier 620be3496 FULL failed only for the step-ID migration; proposal isolated and the complete FULL rerun passed. Cancelled runs and default-sandbox EPERM exits are rejected evidence. Exact READY cf0df0cb0acb4d79218593ac1aa5083d41ade841 focused: 26/26 pass, 0 fail, 0 skipped (six files). FULL-to-READY application-tree diff is empty; fingerprint 85934afecc2308af12bf597f5c420fcc7933aecc53bd009f95b7e4f798d0f16c.

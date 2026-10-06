@@ -1,18 +1,28 @@
 # River status
 
-build_state: integrating (release 3 live; waiting on runner adoption and held lanes)
+build_state: integrating (release 4 #710 open, auto-merge on; slide, ballot, admin held on returns)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01VxkjQwRW6tEj8XDPVSGkKU
 lock: river-20261005T225818Z-15877
-heartbeat: 2026-10-06T00:34:09Z
+heartbeat: 2026-10-06T00:40:00Z
 
 ## Next River run
 
-1. **Release 3 runner side:** adopted 6af6f8a (cycle started 22:34:59Z). Check the first supervisor pass on 6af6f8a: does the reader-edge outcome name its store, and what is the failure count? It swings between passes on ecf4026 (25 at 21:55Z, 530 at 22:34Z), so compare several passes before judging slide's return.
-2. **Research crash (top priority, returned to hunters with a diagnosis):** 128 crashes since Oct 3 05:42Z. A 15-minute worker-slot wait (freshness-shadow.mts:2058) exceeds the 10-minute no-progress watchdog (pilot-runtime-child.mts:5). Fold hunters' fix as soon as it is READY and ship it as an urgent release (a halted runner qualifies).
-3. Fold held lanes when they mark new READY on top of river 6af6f8a: people CA-01, auditors, admin (see returns).
-4. **Notification rule (Sean, decisions.md):** one push per river promotion naming the Codex lanes to Continue; otherwise only releases and real decisions.
+1. **Release 4 (#710):** opened 00:35Z with auto-merge on, at river 186f747. Watch CI. On merge, check the deploy and the post-deploy run (`river.mjs observe <sha>`), and that the runner adopts it (cp_runner_heartbeat testedSha). Then reconcile main into river.
+2. **Research crash:** once the runner is on release 4, read the first "research stall report:" line before any RESEARCH_CHILD_NO_PROGRESS kill (PILOT HEALTH digest, crash record lastOutput). Add it to returns/hunters.md. Second cause: silence after the 15-minute cutoff (23:30:50 to 23:40:50Z on the 23:13:58Z cycle). Paid job ruled out; phase unconfirmed (see returns/hunters.md, 01:10Z).
+3. Fold new READYs: hunters (post-cutoff deferral), slide (firewall), ballot (build trace), admin (BR-07 on measures' screens), meetings, bank. Note: auditors' and admin's streams carry river-next 92fda9c's held folds (people 71a308afe, admin f2ca419ef) in history. A real merge of a later lane can silently drop changes. Check the result tree, or apply as a diff, as done for auditors this run.
+4. Notification rule unchanged (decisions.md).
+
+## Current (2026-10-06 00:40Z)
+
+- **river 6af6f8a → 186f747** (promoted ~00:30Z). `pnpm gates` 12/12 on that exact SHA: 9565 pass, 0 fail, 11 skipped. Lanes: measures SC-10, SC-14, BR-30, BR-33, BR-34, SC-19 (3ebea50); registry FE-20, FE-21 (a302a93); hunters CH-15, CH-16, CH-17, CH-19 and the 21:54Z research-crash return (671b0b5); people CA-01 repaired, CA-46 (0fa3d0c); auditors DP-02, 10, 11, 13, 14, 16, 17, 18, 30, 31, 32, FE-02, FE-18 (498a414, applied as its own diff over 13d29c5); frontend FE-08, 09, 11, 13, 15, 28, 29, 30, 31, 32, 34, 38, 41, 42, 45 (de644b3).
+- **Fold repairs:** the scoreboard route keeps measures' sent-places read and auditors' audit/speed reads. BR-34 removed screen-fix.tsx, so DP-30's history row moved to the fix detail in details.tsx, which now also opens closed and returned fixes. Test fixtures gained owedSince, places and placesUnread. CA-46 picked-key-votes uses t-caption/t-detail. positions-section imports are the union, minus the unused formatDateMDY.
+- **Held, returned:** slide 7168232 (firewall MEETING_PARTITION_AUTHORITY_GATE_MISSING: snapshot.ts swapped collapseDuplicateSittings for mergeReaderSittings; trial fold at stream/salvage-river-next-slide). Ballot f984126 (build-output: /api/warm trace 397 → 448, all of data/reference/ plus voting-sites.json, prl-profiles.json, bootstrap-az.json; bisected by build; trial fold at stream/salvage-river-next-ballot). Admin 5f83a8c, unchanged since its 20:08Z return.
+- **Release 4:** #710, release/4 at 186f747, auto-merge enabled through the GitHub MCP. Pushed to Sean: the promotion line (Codex Continue → admin, slide, ballot, bank, frontend) and release 4 opened.
+- **Sean's runner journal (23:13:58Z cycle, killed 23:40:50Z):** analyzed. See returns/hunters.md 01:10Z. Lease workers end at the dispatch cutoff (kill timer min(childTimeoutMs, deadline - now)), and run-host's 15-minute spawnSync is used only by agent-bridge. So the quiet-paid-job theory is ruled out. Plain ACQUIRER cost rows stopped at 23:30:21Z. The unbounded post-cutoff work is the discovery-lane join and the promotion tail. Hunters' fix already keeps stdout in the crash record (currentCycleOutput).
+- **Remote river-next** still points at the untested trial 2b83037 (with slide). The tested fold went to river via promote, and the trials are kept as stream/salvage-river-next-*. River did not force-push river-next.
+- **Seen, not fixed:** a River command deleted the untracked gate-run record data/ops/gate-runs/2026-10-05-01.json from the first trial run (red, superseded). Later records are moved to the scratch area.
 
 ## Current (2026-10-05 22:20Z)
 

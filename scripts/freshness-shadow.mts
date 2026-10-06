@@ -18,6 +18,8 @@ import { paidWorkerSlots, researchPaidWorkerCapacity } from "../lib/control-plan
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
+import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
+import { oneHunterPath } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
@@ -196,6 +198,7 @@ import {
 import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansion/mission-parts.ts";
+import { missionBlanksFrom, relatedMissionBlanks, type MissionBlank } from "../lib/control-plane/workers/mission-brief.ts";
 import { liveFamiliesByGovernment } from "../lib/control-plane/expansion/live-families.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
@@ -761,7 +764,8 @@ const registryProviders = [
       (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, observations: repos.askGapObservations })),
   ),
 ];
-const registryContext = { root: ROOT, nowIso: NOW };
+/* CH-23 part 2: with WTP_ONE_HUNTER_PATH on, every paid route no provider planned carries a route plan, so its Scout is hunter work. */
+const registryContext = { root: ROOT, nowIso: NOW, planEveryPaidRoute: oneHunterPath() };
 let registry = buildRegistry(registryProviders, registryContext);
 const trackedReading = trackedStates.read();
 const trackedStateCodes: readonly string[] = "states" in trackedReading ? trackedReading.states : [];
@@ -831,6 +835,17 @@ finishPhase("references-and-registration");
   const local = sync.all.filter(o => o.active && o.id.startsWith(LOCAL_JURISDICTION_NAMESPACE) && registry.routeFor(o.id)?.executorClass === "BOUNDED_MODEL_WORKER");
   const planned = local.filter(o => o.autonomousPlan);
   console.log(`  local research rows: ${local.length} paid; ${planned.length} carry a work plan; ${planned.filter(o => o.autonomousPlan?.publication).length} with a reader door`);
+  /* CH-23 part 2: how much paid work in each provider is planned hunter work; with the switch on every paid row should be. */
+  const paidByProvider = new Map<string, { paid: number; planned: number }>();
+  for (const o of sync.all) {
+    if (!o.active || registry.routeFor(o.id)?.executorClass !== "BOUNDED_MODEL_WORKER") continue;
+    const tally = paidByProvider.get(registry.providerOf(o.id) ?? "unregistered") ?? { paid: 0, planned: 0 };
+    tally.paid += 1;
+    if (plannedForHunters(o.autonomousPlan)) tally.planned += 1;
+    paidByProvider.set(registry.providerOf(o.id) ?? "unregistered", tally);
+  }
+  console.log(`  paid rows planned as hunter work (one hunter path ${oneHunterPath() ? "on" : "off"}): ${[...paidByProvider].sort(([a], [b]) => a.localeCompare(b))
+    .map(([provider, tally]) => `${provider} ${tally.planned} of ${tally.paid}`).join("; ") || "none"}`);
 }
 console.log(
   `  ${floorLine(
@@ -1128,11 +1143,11 @@ for (const o of sync.all) {
 // verification or publication. Continue the same recorded source period instead
 // of opening another paid root every cycle while its actual work remains owed.
 const continuedStandingLineages: { obligationId: string; rootWorkItemId: string }[] = [];
-if (dueThisCycle.some(row => row.obligation.autonomousPlan && row.obligation.openOccurrenceId === null)) {
+if (dueThisCycle.some(row => plannedForHunters(row.obligation.autonomousPlan) && row.obligation.openOccurrenceId === null)) {
   for (let i = dueThisCycle.length - 1; i >= 0; i--) {
     const row = dueThisCycle[i]!;
     const o = row.obligation;
-    if (!o.autonomousPlan || o.openOccurrenceId !== null) continue;
+    if (!plannedForHunters(o.autonomousPlan) || o.openOccurrenceId !== null) continue;
     const key = standingLineageKeyFor({ obligationId: o.id, dueAt: row.nextDueAt, project: FRESHNESS_PROJECT,
       subject: o.subjectId, plan: o.autonomousPlan, instructionReceipts: (o.assignments ?? []).map(mark => mark.ref) });
     if (!key) continue;
@@ -1343,6 +1358,9 @@ let squadReading: { open: ReadonlyMap<string, ReadonlyMap<string, number>>; part
 /* CH-19: each Send's mission map count, read with the place order; `before` is filled from the prior reading when Done is decided. */
 let missionMaps = new Map<string, Omit<MissionMapCount, "before">>();
 let missionMapUnread: string | null = "the owed list has not been read this round";
+/* CH-20: every Send's open blanks, read with the place order; each Scout's brief lists the ones related to its government. */
+let missionBlanks: readonly MissionBlank[] = [];
+const missionBlanksFor = (subjectId: string): readonly MissionBlank[] => relatedMissionBlanks(subjectId, missionBlanks);
 let placeOrderDirty = true;
 let placeOrderRead: Promise<void> | null = null;
 async function refreshPlaceOrder(): Promise<void> {
@@ -1371,6 +1389,7 @@ async function refreshPlaceOrder(): Promise<void> {
       new Map(missionPartCounts(place.items, parts).map(count => [count.part, count.open] as const))] as const)) };
     missionMaps = new Map(places.map(place => [place.receiptId, missionMapCount(place.items, null)] as const));
     missionMapUnread = null;
+    missionBlanks = missionBlanksFrom(places.flatMap(place => place.items), parts);
     /* CH-21: every government in a mission place whose body holds no calendar route is owed discovery. */
     const mission = missionMeetingsDiscoveryNeeds({
       jurisdictionIds: scopes.flatMap(scope => [...scope.members]),
@@ -1509,7 +1528,7 @@ if (!dry && !canary && !intents.runnerPause.paused) {
 }
 const recoveryRepos = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
 const allPlannedWork = canary ? [] : (await recoveryRepos.workItems.list()).filter(item =>
-  item.value.autonomousPlan && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
+  plannedForHunters(item.value.autonomousPlan) && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
 );
 for (const item of allPlannedWork) if (lifetimeHuntSubjects.has(item.value.subject)) lifetimeHuntWorkIds.add(item.id);
 const [settledTaskIds, neverClaimedTaskIds] = await (async () => {
@@ -1726,11 +1745,11 @@ const queuesForHunterLane = laneClosure?.hunterLane === true;
 if (queuesForHunterLane && !canary) {
   let queued = 0;
   for (const row of dueModel) {
-    if (!row.obligation.autonomousPlan) continue;
+    if (!plannedForHunters(row.obligation.autonomousPlan)) continue;
     const scheduled = scheduleObligation(row.obligation, nowMs);
     if (isScheduled(scheduled) && await openOccurrenceInStep({ ...scheduled, nextDueAt: row.nextDueAt }) === true) queued += 1;
   }
-  console.log(`  planned paid rows queued for the hunter lane: ${queued} of ${dueModel.filter(row => row.obligation.autonomousPlan).length} due`);
+  console.log(`  planned paid rows queued for the hunter lane: ${queued} of ${dueModel.filter(row => plannedForHunters(row.obligation.autonomousPlan)).length} due`);
 }
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
@@ -3200,7 +3219,7 @@ console.log(
 // finalization, alongside the independent discovery/publication passes.
 async function makeAutonomousFleet() {
   const fleetTransport = modelLaneEnabled ? workerMessages : null;
-  return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
+  const runtime = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
     spaceOut: spacer, browse: browseWithPlaywright,
@@ -3209,7 +3228,9 @@ async function makeAutonomousFleet() {
     ...(fleetTransport !== null && paidWorkerCapacity() > 0 ? { transport: fleetTransport,
       transportFor: autonomousTransportFor(fleetTransport), reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),
     auditCeilingUsd: effectiveCeilingUsd,
-    lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) });
+    lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject), missionBlanksFor });
+  /* CH-23 part 3 (DP-02): the coordinator's known doors use Admin's shut threshold from this round, as the round's own doors do. */
+  return { ...runtime, shutThreshold };
 }
 async function runAutonomousWave() {
   placeOrderDirty = true;
@@ -3219,7 +3240,7 @@ async function runAutonomousWave() {
      capture whose Parser, Validator, Auditor chain has a step left. Both reads come from the round's incremental copy. */
   const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
-  const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
+  const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan),
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })),
     ...(squadReading ? { squads: squadReading } : {}) });
@@ -3291,6 +3312,7 @@ async function runAutonomousWave() {
     transportFor: guards.workerTransportFor,
     ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
     reserveEscalation: scoutEscalationReservation(fleetSafety),
+    missionBlanksFor,
     orderPending: async ids => {
       await Promise.all([refreshPlaceOrder(), refreshOwnerSettings()]);
       const queue = taskQueue ??= readTaskQueue();

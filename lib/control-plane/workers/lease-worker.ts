@@ -5,6 +5,7 @@ import type { ModelResponse, ScoutEscalationAdmission } from "../scheduler/scout
 import { FleetSafetyController } from "../fleet-safety.ts";
 import { websiteSizeForObligation, type WebsiteSizeForUrl } from "../scheduler/host-supervision.ts";
 import { autonomousStandingRuntime } from "./standing-runtime.ts";
+import type { MissionBlank } from "./mission-brief.ts";
 import { observeCyclePhases } from "../scheduler/cycle-phases.ts";
 import { dispatchAutonomousTask } from "./coordinator.ts";
 import { browseWithPlaywright } from "../../../scripts/scout-browse.mts";
@@ -44,7 +45,9 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         return response.admit ? { ...response, draw: usd => broker.send("draw", response.reservationId, usd), release: () => broker.send("release", response.reservationId, null) } : response;
       } } : {}),
     ...(config.searchEnabled ? { search: request => broker.call("search", request) } : {}),
-    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject), scopedReads });
+    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject), scopedReads,
+    // CH-20: the parent holds the mission's owed list; ask it for this government's blanks as each task begins.
+    readMissionBlanks: subject => broker.call<readonly MissionBlank[]>("mission-blanks", subject) });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.
   // The first process to claim wins in the existing repository dispatcher.
@@ -71,7 +74,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         const runtime = perTask ? await buildRuntime(item.subject)
           : (shared ??= await buildRuntime(null));
         observer.finish("runtime");
-        await runtime.beginTask?.(task);
+        await runtime.beginTask?.(task, item);
         const result = await dispatchAutonomousTask(runtime, task);
         broker.send("result", "", { ...result, repositoryCalls: observer.finish("task").repositoryCalls });
         ran = true;

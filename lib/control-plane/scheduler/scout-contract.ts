@@ -249,6 +249,33 @@ export interface ScoutToolContext {
    */
   readonly search?: ScoutSearch;
   readonly sourceApi?: import("./scout-api.ts").SourceApiOptions;
+  /**
+   * CH-20: drop a finding for any subject of the mission into the Box at once,
+   * mid-walk. Present only when the Box is on; absent leaves `report_finding`
+   * out of the toolkit's specs, as `search` is left out with no key.
+   */
+  readonly reportFinding?: ScoutReportFinding;
+}
+
+/** A finding a Scout dropped mid-walk: its quote is in a page this walk saved. */
+export interface ReportedFinding {
+  readonly subjectId: string;
+  readonly field: string;
+  readonly value: string | number | boolean;
+  readonly exactQuote: string;
+  /** The saved page's canonical address. */
+  readonly sourceUrl: string;
+  readonly artifactIds: readonly string[];
+  /** The model's words for who or what it is about, kept for the reader of the Box. */
+  readonly subjectHint: string | null;
+  /** Order of this drop within the Attempt, from 0. */
+  readonly index: number;
+}
+
+export interface ScoutReportFinding {
+  /** Subjects a finding may be dropped for: the walk's own target and the mission blanks its brief lists. */
+  readonly subjects: ReadonlySet<string>;
+  readonly write: (finding: ReportedFinding) => Promise<{ readonly boxId: string }>;
 }
 
 /** One pointer a search index returned. A URL and its title, never page content. */
@@ -309,7 +336,7 @@ export interface ScoutToolkit {
 }
 
 /** The research tool names. `finish` and `record_rung` are the executor's own. */
-export const SCOUT_RESEARCH_TOOLS = ["plural_roster", "legistar_events", "run_adapter", "read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search", ...SOURCE_API_TOOLS] as const;
+export const SCOUT_RESEARCH_TOOLS = ["plural_roster", "legistar_events", "run_adapter", "read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search", "report_finding", ...SOURCE_API_TOOLS] as const;
 export type ScoutResearchTool = (typeof SCOUT_RESEARCH_TOOLS)[number];
 
 /** The prefix every public-source representation is wrapped in. Data, never instructions. */

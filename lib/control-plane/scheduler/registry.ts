@@ -85,6 +85,7 @@
 import type { ExecutorKind } from "./dispatch.ts";
 import type { FreshnessObligation } from "./obligation.ts";
 import type { AutonomousWorkPlan } from "../workers/autonomous-plan.ts";
+import { routeWorkPlan } from "../workers/route-plan.ts";
 
 /* ------------------------------------------------------------------ routes */
 
@@ -239,6 +240,8 @@ export interface ProvidedObligation {
 export interface ProviderContext {
   readonly root: string;
   readonly nowIso: string;
+  /** CH-23 part 2 (WTP_ONE_HUNTER_PATH): every paid route no provider planned gets a route plan, so its Scout is coordinator work. */
+  readonly planEveryPaidRoute?: boolean;
 }
 
 /**
@@ -321,6 +324,8 @@ export class ObligationIdCollision extends Error {
  * other provider's obligations still schedule. One blocked domain never
  * freezes the rest of the hunt.
  */
+const withPlan = (plan: AutonomousWorkPlan | null) => plan ? { autonomousPlan: plan } : {};
+
 export function buildRegistry(
   providers: readonly ObligationProvider[],
   ctx: ProviderContext,
@@ -373,7 +378,8 @@ export function buildRegistry(
               ? { declaredCycleHours: record.declaredCycleHours }
               : {}),
             lastWorkedAt: record.lastWorkedAt,
-            ...(record.autonomousPlans?.[route.routeId] ? { autonomousPlan: record.autonomousPlans[route.routeId] } : {}),
+            ...(record.autonomousPlans?.[route.routeId] ? { autonomousPlan: record.autonomousPlans[route.routeId] }
+              : ctx.planEveryPaidRoute ? withPlan(routeWorkPlan({ providerId: provider.id, record, route })) : {}),
           },
         });
         count += 1;

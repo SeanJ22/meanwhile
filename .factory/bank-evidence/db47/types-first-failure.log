@@ -1,0 +1,3 @@
+tests/release-rollback.test.ts(104,41): error TS2741: Property 'NODE_ENV' is missing in type '{ NETLIFY_AUTH_TOKEN: string; NETLIFY_SITE_ID: string; }' but required in type 'ProcessEnv'.
+tests/release-rollback.test.ts(107,40): error TS2741: Property 'NODE_ENV' is missing in type '{ NETLIFY_TOKEN: string; }' but required in type 'ProcessEnv'.
+tests/release-rollback.test.ts(109,41): error TS2741: Property 'NODE_ENV' is missing in type '{}' but required in type 'ProcessEnv'.

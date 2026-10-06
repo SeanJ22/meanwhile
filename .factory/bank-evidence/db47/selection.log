@@ -1,0 +1,17 @@
+ci-affected-tests · FULL — .factory/bank-continuation.md is not code the import graph follows
+changed:
+  .factory/bank-continuation.md
+  .factory/bank-evidence/checks.json
+  .factory/bank-evidence/focused-before-ready.log
+  .factory/bank-evidence/focused-ready.log
+  .factory/bank-evidence/resume-readiness.json
+  .factory/bank-evidence/selection.log
+  .factory/bank-evidence/write-alarm.log
+  .factory/bank.md
+  app/(admin)/_mw/admin-v6/release-rollback.tsx
+  app/api/admin/v6/releases/rollback/route.ts
+  lib/control-plane/gateway/release-rollback-action.ts
+  lib/ops/release-rollback-netlify.ts
+  lib/ops/release-rollback.ts
+  tests/release-rollback.test.ts
+scope=code needs_browser=true

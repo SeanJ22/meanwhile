@@ -1,0 +1,37 @@
+{
+  "step": "DB-47",
+  "full": {
+    "tested_sha": "2bd8546aa2c4799539f61168f980173cf2c963a8",
+    "files": 1092,
+    "tests": 9476,
+    "pass": 9465,
+    "fail": 0,
+    "skipped": 11,
+    "exit": 0,
+    "log": "full.log.gz",
+    "command": "env -u DATABASE_URL -u WTP_ASSET_STORE WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium COREPACK_HOME=/tmp/bank-corepack corepack pnpm test"
+  },
+  "types": {
+    "tested_sha": "2bd8546aa2c4799539f61168f980173cf2c963a8",
+    "command": "corepack pnpm exec tsc --noEmit",
+    "exit": 0
+  },
+  "lint": {
+    "tested_sha": "2bd8546aa2c4799539f61168f980173cf2c963a8",
+    "files": 6,
+    "command": "corepack pnpm exec eslint <six changed source/test files>",
+    "exit": 0
+  },
+  "first_type_failure": {
+    "log": "types-first-failure.log",
+    "cause": "Next ProcessEnv requires NODE_ENV; test fixtures supplied only credential fields. Adapter env input now declares the readonly string fields it consumes. Same compiler invocation passes after the correction."
+  },
+  "selection": {
+    "tested_sha": "2bd8546aa2c4799539f61168f980173cf2c963a8",
+    "plan": "FULL",
+    "log": "selection.log"
+  },
+  "application_tree_sha256": "fc9b9b3a9a2e1f3d8b29912ae25796f4e5c7971bd72ab9d079b73fb3ff8d5185",
+  "production_acceptance": "not claimed; hosted Netlify credential permission and live restore untested; Admin/runner/Queue/coordination hooks pending",
+  "restored_coordination_checkpoint": "5bdbdc0eb"
+}

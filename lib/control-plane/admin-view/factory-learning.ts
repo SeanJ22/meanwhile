@@ -74,6 +74,13 @@ export const DETECTIVE_REUSE_SQL = `SELECT count(*)::int AS reused FROM cp_log_s
  WHERE e->>'id'=used.id AND e->>'foundBy'='DETECTIVE' AND r.recorded_at >= $1::timestamptz AND r.recorded_at < $2::timestamptz
  AND (r.record->'refusal' IS NULL OR r.record->'refusal'='null'::jsonb OR r.record->'refusal'='[]'::jsonb)`;
 
+/** DB-39 read after cutover: join indexed entry ids without expanding the retired 6.6 MB document. */
+export const DETECTIVE_REUSE_ENTRY_ROWS_SQL = `SELECT count(*)::int AS reused FROM cp_log_scout_results r
+ CROSS JOIN LATERAL jsonb_array_elements_text(CASE WHEN jsonb_typeof(r.record->'usedFieldManualEntryIds')='array' THEN r.record->'usedFieldManualEntryIds' ELSE '[]'::jsonb END) used(id)
+ JOIN cp_field_manual_entries e ON e.id=used.id
+ WHERE e.value->>'foundBy'='DETECTIVE' AND r.recorded_at >= $1::timestamptz AND r.recorded_at < $2::timestamptz
+ AND (r.record->'refusal' IS NULL OR r.record->'refusal'='null'::jsonb OR r.record->'refusal'='[]'::jsonb)`;
+
 export const HEAD_START_LEARNING_SQL = `WITH targets AS (
  SELECT DISTINCT ON (t->>'attemptId', t->>'targetId') t FROM cp_log_owner_digests r
  CROSS JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(record->'factoryLearning'->'targets')='array' THEN record->'factoryLearning'->'targets' ELSE '[]'::jsonb END) t
@@ -98,12 +105,12 @@ export function weeklyFactRates(rows: readonly { week: string; facts: number }[]
   });
 }
 
-export async function readFactoryLearning(input: { control: Sql; from: string; through: string; recordingSince: string }): Promise<FactoryLearning> {
+export async function readFactoryLearning(input: { control: Sql; from: string; through: string; recordingSince: string; bankStorage?: "entry-rows" | "aggregate" }): Promise<FactoryLearning> {
   const from = new Date(Math.max(Date.parse(input.from), Date.parse(input.recordingSince))).toISOString();
   weeklyFactRates([], from, input.through);
   const [coverage, reuse, facts, targets] = await Promise.all([
     boundedQuery(input.control, { operation: "learning.coverage", callClass: "PAGE" }, COVERAGE_LEARNING_SQL, []),
-    boundedQuery(input.control, { operation: "learning.detective_reuse", callClass: "PAGE" }, DETECTIVE_REUSE_SQL, [from, input.through]),
+    boundedQuery(input.control, { operation: "learning.detective_reuse", callClass: "PAGE" }, input.bankStorage === "entry-rows" ? DETECTIVE_REUSE_ENTRY_ROWS_SQL : DETECTIVE_REUSE_SQL, [from, input.through]),
     boundedQuery(input.control, { operation: "learning.facts", callClass: "PAGE" }, FACTS_LEARNING_SQL, [from, input.through]),
     boundedQuery(input.control, { operation: "learning.head_start", callClass: "PAGE" }, HEAD_START_LEARNING_SQL, []),
   ]) as [{ pairs: number; first_ms: number; second_ms: number }[], { reused: number }[], { week: string; facts: number }[], { measured: number; solved: number }[]];

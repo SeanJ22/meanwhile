@@ -258,8 +258,14 @@ export function usedFieldManualEntryIds(result: ScoutResult, handedIds: readonly
 
 /** A scout's write-back is the shared field-manual write (`writeFieldManual`). */
 export async function writeFieldManualDiscoveries(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string) {
-  const bank = await readFieldManual(repos);
-  const methods = entries.flatMap(door => doorMethodEntries(door, [], bank.store.entries));
+  const needsFingerprints = entries.some(door => door.url && ["SCOUT_DISCOVERY", "ROUTE"].includes(door.kind) && typeof (door.payload as { procedure?: unknown } | null)?.procedure === "string");
+  const fingerprints = needsFingerprints ? (await readFieldManual(repos, { kinds: ["PLATFORM_FINGERPRINT"] })).store.entries : [];
+  const methods = entries.flatMap(door => doorMethodEntries(door, [], fingerprints));
   const folded = upsertEntries(emptyFieldManual(), [...entries, ...methods], now);
   return writeFieldManual(repos, folded.entries, now);
+}
+
+/** One ending, accepted or refused: the caller never gates learning on candidates. */
+export async function writePaidEndingLearning(repos: FieldManualRepos, result: ScoutResult, now: string) {
+  return writeFieldManualDiscoveries(repos, scoutDiscoveryEntries(result, scoutStateHint(result.subjectId, result.obligationId)), now);
 }

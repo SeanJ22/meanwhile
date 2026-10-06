@@ -44,6 +44,7 @@
  * argument, so this module still imports nothing that touches a store.
  */
 
+import type { BankEntryStore } from "./bank-entry-store.ts";
 import type { FixMapRow } from "../method/fix-map.ts";
 import { hereNote, mergePlaceResults, methodHere, placeResultsOf, type PlaceResult } from "./field-manual-places.ts";
 import { createHash } from "node:crypto";
@@ -213,6 +214,8 @@ const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
 };
 
 export interface FieldManualQuery {
+  /** Store-side kind selection for callers that need only fingerprints or route knowledge. */
+  readonly kinds?: readonly string[];
   /** Exact research subject for saved exhausted walks; they are never portable failures. */
   readonly subjectId?: string;
   /** The reading worker's role; SHARED entries always match. Omit to match every role. */
@@ -259,6 +262,7 @@ export function fieldManualPlaceRank(entry: FieldManualEntry, query: FieldManual
 function entryMatches(raw: FieldManualEntry, q: FieldManualQuery): boolean {
   // Old investigation rows also gain their recorded place scope on reads.
   const entry = normalizeEntry(raw);
+  if (q.kinds && !q.kinds.includes(entry.kind)) return false;
   if (entry.kind === "JOB_COST") return false;
   if (entry.kind === "EXHAUSTED_RUNGS" && (!q.subjectId || (entry.payload as { subjectId?: string } | null)?.subjectId !== q.subjectId)) return false;
   if (q.role !== undefined && entry.role !== "SHARED" && entry.role !== q.role) return false;
@@ -317,7 +321,7 @@ export function fieldManualLine(entry: FieldManualEntry): string {
 }
 
 /** The repositories the two calls need: just the manual's own aggregate. */
-export type FieldManualRepos = Pick<ControlPlaneRepositories, "fieldManual">;
+export type FieldManualRepos = Pick<ControlPlaneRepositories, "fieldManual"> & { readonly bankEntries?: BankEntryStore };
 
 /** The aggregate id the one live manual is stored under. */
 export const FIELD_MANUAL_ID = "live";
@@ -325,7 +329,7 @@ export const FIELD_MANUAL_ID = "live";
 export interface FieldManualRead {
   /** What applies to the asking role/jurisdiction: the lines to put in front of the worker and the ids offered. */
   readonly projection: FieldManualProjection;
-  /** The whole store the projection was cut from, for a caller that narrows it further (a scout's catalog, a used-door check). */
+  /** The matching store the projection was cut from (scoped by SQL on DB-39), for a caller that narrows it further (a scout's catalog, a used-door check). */
   readonly store: FieldManualStore;
   /** The stored revision this read saw; null when the manual has never been written. */
   readonly revision: number | null;
@@ -367,6 +371,10 @@ export async function readFieldManual(repos: FieldManualRepos, query: FieldManua
         body: JSON.stringify({ kind: "manual", body: query }), signal: AbortSignal.timeout(30_000) });
       if (!response.ok) throw new Error(`SHARED_MANUAL_FAILED:${response.status}`);
       return await response.json() as FieldManualRead;
+    }
+    if (repos.bankEntries) {
+      const read = await repos.bankEntries.readEntries(query);
+      return { store: read.store, revision: null, projection: { ...projectFieldManual(read.store, query), total: read.total } };
     }
     const row = await repos.fieldManual.read(FIELD_MANUAL_ID);
     const store = row?.value ?? emptyFieldManual();
@@ -416,6 +424,11 @@ export async function writeFieldManual(
   if (entries.length === 0) return { written: 0 };
   for (let attempt = 0; attempt < 4; attempt += 1) {
     try {
+      if (repos.bankEntries) {
+        await repos.bankEntries.mergeEntries(entries, now);
+        await flushBankWriteFailures(repos, now);
+        return { written: entries.length };
+      }
       const current = await repos.fieldManual.read(FIELD_MANUAL_ID);
       const next = upsertEntries(current?.value ?? emptyFieldManual(), entries, now);
       if (current === null) await repos.fieldManual.put(FIELD_MANUAL_ID, next, now);

@@ -3,6 +3,14 @@
 > Targets: control-plane Neon under 0.7 GB an hour; no paid job ending with nothing; cost per fact measured and falling.
 > Every change that adds database reads states its estimated Neon cost in its READY status before it ships. The measured hour on the droplet checks it. A release that makes the hour clearly worse rolls back (DB-47) and returns to its lane with the numbers. Full text: board/river decisions.md, "Oct 6, about 1:20 AM EDT".
 
+## TOP ITEM: FAILED LIVE (River live ledger, Oct 6, 2:45 AM EDT)
+
+Sean, Oct 6: a step is done only when it works live. Integrated is not done. These steps were integrated, but the live check of their Done-when line failed on production a5fd753 (release 8). Fix them before any new step. After a fix, say in your READY status what a reader or Admin will now see, and River re-checks it live in that release's measured hour. Full table: board/river releases/live-ledger.md.
+
+- **CP-04 · Every Sources row says what kind of source it is.** Seen: Ballot Sources rows read 'Other · Biography in the candidate's own words' for campaign sites (Ayotte's kellyfornh.com at 03255: 25 'Other' vs 2 'Official'; 14 'Other' at 85701; 6 at 07866), and 'Official measure filing' reads 'Other' at 85701. A Legistar meeting card (Pima BOS July 14, 85701) shows 'Other · This sitting' from pima.legistar.com with Verified 'We're working on getting this info.' The promoted campaign-site records carry no CAMPAIGN source kind.
+- **CP-10 · A portrait from the person's own page publishes at once.** Seen: After about 6 hours of runner passes on release 3+ code (Oct 5 6:39 PM to Oct 6 12:40 AM EDT), local and state officials whose official profiles carry photos (Pima supervisors on pima.gov, AZ legislators on azleg.gov, e.g. Alma Hernandez shows initials 'AH') still show initials. No card's Sources section has a portrait row. The READY commit marks CP-10 'hooks pending'.
+- **The owner snapshot has not been republished in 40 hours (not a plan step, but it breaks every Admin money and cost screen).** Seen: cp_owner_snapshots 'current' has publishedAt 2026-10-04T13:38:24Z (9:38 AM EDT Oct 4). The runner starts scripts/publish-owner-snapshot.mts as its console publisher every cycle (pilot-runner.mts:717). Either it fails (the runner prints the exit code and last stderr line, 'console-publish:owner snapshot') or the change detector keeps reporting 'unchanged inputs; owner snapshot retained'. Find which, fix the cause, and make a stale owner snapshot a visible failure on Admin Now. SC-20's attempts and every Admin cost and money view read this snapshot.
+
 # Returned: slide
 
 lane: slide

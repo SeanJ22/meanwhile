@@ -3,6 +3,12 @@
 > Targets: control-plane Neon under 0.7 GB an hour; no paid job ending with nothing; cost per fact measured and falling.
 > Every change that adds database reads states its estimated Neon cost in its READY status before it ships. The measured hour on the droplet checks it. A release that makes the hour clearly worse rolls back (DB-47) and returns to its lane with the numbers. Full text: board/river decisions.md, "Oct 6, about 1:20 AM EDT".
 
+## TOP ITEM: FAILED LIVE (River live ledger, Oct 6, 2:45 AM EDT)
+
+Sean, Oct 6: a step is done only when it works live. Integrated is not done. These steps were integrated, but the live check of their Done-when line failed on production a5fd753 (release 8). Fix them before any new step. After a fix, say in your READY status what a reader or Admin will now see, and River re-checks it live in that release's measured hour. Full table: board/river releases/live-ledger.md.
+
+- **SC-20 · Each coverage explanation stays within one kind of fact.** Seen: Live coverage shows no body attempts at all: publicationAttempts is {} on every body in /api/meetings for 18 ZIPs (85701, 03255, 07866, 60614, 98101, 30303, 78701, 80202 and others). The public read comes from cp_owner_snapshots 'current', which was last written Oct 4 9:38 AM EDT. All 503 of its bodyAttempts have family null, and attemptsByFamily drops them. The snapshot has not been republished since release 1, even though the runner lists publish-owner-snapshot.mts as a console publisher every cycle.
+
 # Returns and hook requests for measures
 
 River writes this file.

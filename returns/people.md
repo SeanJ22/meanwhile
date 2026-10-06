@@ -3,6 +3,15 @@
 > Targets: control-plane Neon under 0.7 GB an hour; no paid job ending with nothing; cost per fact measured and falling.
 > Every change that adds database reads states its estimated Neon cost in its READY status before it ships. The measured hour on the droplet checks it. A release that makes the hour clearly worse rolls back (DB-47) and returns to its lane with the numbers. Full text: board/river decisions.md, "Oct 6, about 1:20 AM EDT".
 
+## TOP ITEM: FAILED LIVE (River live ledger, Oct 6, 2:45 AM EDT)
+
+Sean, Oct 6: a step is done only when it works live. Integrated is not done. These steps were integrated, but the live check of their Done-when line failed on production a5fd753 (release 8). Fix them before any new step. After a fix, say in your READY status what a reader or Admin will now see, and River re-checks it live in that release's measured hour. Full table: board/river releases/live-ledger.md.
+
+- **CA-12 · Ask answers with a person's exact words.** Seen: Ask at 85701 'What has Adelita Grijalva said about water?' returns "Adelita Grijalva's own words, exactly as published. On August 20th, 2026, we read this on a page of theirs: 'Grijalva Statement on Newly Announced Federal Proposal for Colorado River Water Cuts July 31, 2026 Read More Press Release Rep.'" That is a press-list headline with navigation text, not her sentence. At 03255 'What has Maggie Goodlander said about water?' returns no answer text (mode STRUCTURED_GROUNDED, answer null), only records.
+- **CA-42 · A person's votes stay with them after they leave.** Seen: Ask at 85701, 'How did Raúl Grijalva vote in Congress?', bound to Adelita Grijalva and said 'I have no records about Raúl Grijalva's congressional votes'. In a5fd753 the departed-member resolver (lib/votes/departed-seat.ts, departedFederalVoteSeat) has no caller anywhere in app/ or lib/, so Ask can't reach it. The READY commit says the Ask connection was left as a hook.
+- **House roll calls are missing from cards.** Seen: The live federal roll-call record (promoted 11:57 PM EDT Oct 5) holds one House roll call: Jan 6, 'Call of the House, Passed 0–0'. Goodlander's card shows 'Recent last 0' and 'We're working on getting this info', while Ask still finds 39 of her votes from history. Senate cards are fine. Find why the House half of the congress-rollcalls publication went empty.
+- **The Attorney General is named 'Actions' in the 85701 officials list.** Seen: A scraped page label was taken as the person's name. Find the extraction and add a guard so a navigation word can never become an official's name.
+
 # Returned: people
 
 lane: people

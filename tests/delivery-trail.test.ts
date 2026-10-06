@@ -192,7 +192,7 @@ test("MW-053: each approved row says what changed, from its own SCOUTED and CONF
   const row = buildDeliveryTrail([withChain], input()).promotions[0]!;
   assert.match(
     row.changeSummary ?? "",
-    /^A meeting time \(mtg-9@2026-10-01T17:00:00\.000Z\) from legistar:pima, for October 1, 2026, 1:00 PM ET: Board of Supervisors regular meeting <https:\/\/pima\.legistar\.com\/Calendar\.aspx>; the confirming read states 2026-10-01T17:00:00\.000Z$/,
+    /^A meeting time \(mtg-9@2026-10-01T17:00:00\.000Z\) from legistar:pima, for October 1, 2026, 1:00 PM EDT: Board of Supervisors regular meeting <https:\/\/pima\.legistar\.com\/Calendar\.aspx>; the confirming read states 2026-10-01T17:00:00\.000Z$/,
   );
   // An item without its SCOUTED record says so rather than inventing a change.
   assert.equal(buildDeliveryTrail([base], input()).promotions[0]!.changeSummary, "What changed is not recorded: the item holds no SCOUTED record.");

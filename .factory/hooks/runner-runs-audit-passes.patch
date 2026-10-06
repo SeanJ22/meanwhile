@@ -1,0 +1,63 @@
+diff --git a/scripts/pilot-runner.mts b/scripts/pilot-runner.mts
+index 007ba6937..d96e01dea 100644
+--- a/scripts/pilot-runner.mts
++++ b/scripts/pilot-runner.mts
+@@ -141,6 +141,7 @@ import {
+ import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
+ import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
+ import { runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
++import { auditPassClock } from "./audit-pass-clock.mts";
+ import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
+ import {
+   ROUTINE_DATA_ADMISSION_MS,
+@@ -1276,6 +1277,13 @@ function drainHunterLane(): void {
+   });
+ }
+ 
++/* One auditors' pass at a time, outside the standing lanes: a look check can wait an hour on its batch, and a drain ends it. */
++const auditPasses = auditPassClock({
++  statePath: join(ROOT, ".mirror", "audit-pass-clock.json"),
++  codeRoot: () => CODE_ROOT,
++  env: () => standingChildEnvironment("CONSOLE_PUBLISHER"),
++});
++
+ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
+   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData },
+   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },
+@@ -1391,6 +1399,8 @@ function runStandingRuntimeTick(reason: string, force = false): void {
+ function startStandingRuntimeClock(): void {
+   if (runtimeAdmissionsHeld || standingRuntimeTimer !== null) return;
+   startScheduledOrderClock();
++  // The auditors' passes (live audit, resident tasks, look check, speed, claim audit, loss study, break patterns).
++  if (provider === "postgres" && !canary && !STAGING) auditPasses.start();
+   runStandingRuntimeTick("independent standing clock startup", true);
+   standingRuntimeTimer = setInterval(
+     () => {
+@@ -1427,6 +1437,7 @@ async function holdStandingRuntimeAtQuiescence(): Promise<void> {
+       await stopScheduledOrderClock();
+       await activeControlRead;
+       await standingRuntimeScheduler.waitForIdle();
++      await auditPasses.stop();
+     }, { reason: "release handoff quiescence" });
+   } catch (error) {
+     standingDrainFailed = true;
+@@ -2255,6 +2266,7 @@ if (!standingDrainFailed) {
+       await stopScheduledOrderClock();
+       await activeControlRead;
+       await standingRuntimeScheduler.waitForIdle();
++      await auditPasses.stop();
+     }, { reason: "runner shutdown" });
+   } catch (error) {
+     standingDrainFailed = true;
+diff --git a/tests/runner-owner-intents.test.ts b/tests/runner-owner-intents.test.ts
+index 53d189455..284e193c7 100644
+--- a/tests/runner-owner-intents.test.ts
++++ b/tests/runner-owner-intents.test.ts
+@@ -349,6 +349,7 @@ test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on
+     runtimeAdmissionsHeld: false, standingRuntimeTimer: null, ownerControlTimer: null, researchCycleActive: false,
+     canary: false, activeControlRead: null, ownerWakePending: false, POLL_MS: 60_000, CONTROL_WAKE_POLL_MS,
+     runStandingRuntimeTick: () => {}, startScheduledOrderClock: () => {}, console,
++    provider: "postgres", STAGING: false, auditPasses: { start: () => {} },
+     setInterval: (callback: () => void) => { tick = callback; return 1; },
+     ownerSays: () => { reads++; return new Promise<string>(resolve => { finishRead = resolve; }); },
+   });

@@ -1,3 +1,4 @@
+import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import {readGenericBallotProjection} from "../lib/ballot/generic-projection.ts";
 import {readerBallotSourcesForDivisions} from "../lib/ballot/reader-sources.ts";
 import {candidateEnrichmentUniversesFromHoldings} from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
@@ -115,7 +116,8 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   for (const role of ["ACQUIRER", "PARSER", "VALIDATOR"]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
-    assert.equal((await dispatchWorkerTask(runtime, next.task!)).outcome, "WORKED");
+    const dispatched = await dispatchWorkerTask(runtime, next.task!);
+    assert.equal(dispatched.outcome, "WORKED", JSON.stringify(dispatched));
   }
   const results = await h.repos.workerResults.read(h.item.id);
   assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS"]);
@@ -539,4 +541,37 @@ test("normal complete candidate workers publish their whole contest into general
   const universe=inventory.universes[ballot.election.state.toLowerCase()];
   assert.equal(universe?.candidacies.length,2);
   assert.deepEqual(new Set(universe!.candidacies.flatMap(row=>row.pilotIds)),new Set(ballot.candidacies.map(row=>row.id)));
+});
+
+
+test("publication jobs reuse supplied repositories and return independent receipts without changing the parent's exit status", async () => {
+  const f = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "Public comment is welcome.", signup: "Register before the session", writtenComment: "Submit a letter" });
+  const exitCode = process.exitCode;
+  const context = { repos: f.input.repos, readCapture: f.input.readCapture };
+  const job = { ...f.input, context };
+  const published = await runWorkerPublicationJob(job);
+  assert.equal(published.exitCode, 0, JSON.stringify(published.report));
+  assert.ok(published.receipt?.promotedVersion);
+  assert.ok(published.receipt.delivered.records > 0);
+  assert.equal(published.report[0].outcome.status, "PUBLISHED");
+  assert.equal(process.exitCode, exitCode);
+  // An empty concurrent job cannot poison another job's process exit code.
+  const empty = await runWorkerPublicationJob({ ...job, workItemIds: [] });
+  assert.deepEqual([empty.exitCode, empty.receipt], [2, null]);
+  assert.equal(process.exitCode, exitCode);
+  const reused = await runWorkerPublicationJob({ ...job, now: "2026-09-08T12:05:00.000Z" });
+  assert.equal(reused.exitCode, 0);
+  assert.equal(reused.receipt?.delivered.records, 0);
+  await assert.rejects(runWorkerPublicationJob({ ...job, repos: { ...job.repos } }), /REPOSITORY_MISMATCH/);
+});
+
+test("registry publication job uses the same saved directory evidence and typed receipt", async () => {
+  const f = await workerFixture("registry-runtime-bindings", { bodyName: "Fixture Shared Job Commission", bodyClass: "ADVISORY", homepageUrl: "https://directory.example.gov/shared" });
+  const result = await runWorkerPublicationJob({ ...f.input, contractId: "registry-runtime-bindings",
+    context: { repos: f.input.repos, readCapture: f.input.readCapture } });
+  assert.equal(result.exitCode, 0, JSON.stringify(result.report));
+  assert.equal(result.receipt?.source, "registry-runtime-bindings");
+  assert.ok(result.receipt?.delivered.records);
+  const read = await readRegistryRuntimePrior(f.store, f.h.now());
+  assert.ok(read?.payload.registry.bodies.some(body => body.name === "Fixture Shared Job Commission"));
 });

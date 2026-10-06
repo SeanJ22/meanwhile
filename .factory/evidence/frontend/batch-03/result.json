@@ -1,9 +1,0 @@
-{
-  "testedSha": "82ad85193",
-  "tests": 9377,
-  "pass": 9356,
-  "fail": 10,
-  "skipped": 11,
-  "duration_ms": 1755561.253553,
-  "notes": "All failures investigated; eight stale copy/source/structure guards, a missing test CSS loader, and online-label render regression. Repairs at 38631a207 and 04db1664d; full rerun follows."
-}

@@ -1,7 +1,0 @@
-{
-  "testedSha": "82ad85193",
-  "full": "completed; 9356 pass,10 failures,11 skip; every failure repaired and rechecked; see result.json and batch-04/batch03-repair-checks.txt",
-  "node": "v24.19.0",
-  "chromium": "explicit /usr/bin/chromium substitute",
-  "productionDatabase": "unset"
-}

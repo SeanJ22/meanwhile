@@ -865,18 +865,78 @@ test("at the round's dispatch cutoff both candidate lanes stop starting reads; e
 
   await cycle(p, T1, {}, pages);
   await cycle(p, T2, {}, pages);
-  let ms = Date.parse(PUBLISH);
+  const deadlineMs = Date.parse(PUBLISH);
   const opened: string[] = [];
   const web = servedRuntime(served(), PUBLISH);
-  const late = await runCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
+  /* Past the cutoff once `late` is set: the pass starts no read, of the store or of the web. */
+  let late = true;
+  const pass = async (repos: typeof p.repos) => runCandidatePublicationCycle({ repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
     heldVault: await indexVault(p.vaultRoot), vaultRoot: p.vaultRoot, methodVersion: 1,
-    clock: () => (ms += 5), sleep: async wait => { ms += wait; },
-    openFor: () => async request => { opened.push(request.url); return web.get(request); }, maxReads: 100, deadlineMs: ms });
+    clock: () => (late ? deadlineMs : deadlineMs - 60_000), sleep: async () => undefined,
+    openFor: () => async request => { opened.push(request.url); return web.get(request); }, maxReads: 100, deadlineMs });
+  const atCutoff = await pass(p.repos);
   assert.equal(opened.length, 0, "no linked page read starts after the cutoff");
-  assert.equal(late.acquired + late.failed, 0);
-  assert.ok(late.due > 0, "the approved site offers linked pages");
-  assert.equal(late.deferred, late.due);
-  assert.ok(late.outcomes.filter(row => row.code === "NOT_READ_DEADLINE").length === late.due);
+  assert.equal(atCutoff.acquired + atCutoff.failed + atCutoff.due, 0);
+  assert.equal(atCutoff.stoppedLoading, "the approved campaign sites", "the stopped step is named");
+
+  /* The cutoff passes while the pass loads: the linked pages it already knows stay owed by name. */
+  late = false;
+  const turning = { ...p.repos, artifactsByCanonicalUrl: async (url: string, limit: number) => {
+    late = true;
+    return p.repos.artifactsByCanonicalUrl!(url, limit);
+  } };
+  const midway = await pass(turning);
+  assert.equal(opened.length, 0, "no linked page read starts after the cutoff");
+  assert.equal(midway.acquired + midway.failed, 0);
+  assert.ok(midway.due > 0, "the approved site offers linked pages");
+  assert.equal(midway.deferred, midway.due);
+  assert.ok(midway.outcomes.filter(row => row.code === "NOT_READ_DEADLINE").length === midway.due);
+});
+
+test("the linked-publication pass reads rows in proportion to its candidacies, never whole tables", async (t) => {
+  const p = await plane(t);
+  await captureProfile(p);
+  await cycle(p, T1);
+  await cycle(p, T2);
+  const reads = { rows: 0 };
+  const forbid = (name: string) => async () => { throw new Error(`${name} read whole`); };
+  const counted = <R extends object>(repo: R, whole: readonly string[], scoped: readonly string[]): R => new Proxy(repo, { get(target, key, receiver) {
+    const value = Reflect.get(target, key, receiver);
+    if (typeof key === "string" && whole.includes(key)) return forbid(key);
+    if (typeof key !== "string" || !scoped.includes(key) || typeof value !== "function") return value;
+    return async (...args: unknown[]) => {
+      const out = await (value as (...a: unknown[]) => Promise<unknown>).apply(target, args);
+      reads.rows += Array.isArray(out) ? out.length : out === null ? 0 : 1;
+      return out;
+    };
+  } });
+  const scopedRepos = (): typeof p.repos => ({ ...p.repos,
+    workItems: counted(p.repos.workItems, ["list", "listNarrowed"], ["listWhere", "readMany", "read"]),
+    routeTasks: counted(p.repos.routeTasks, ["list", "listNarrowed"], ["listWhere", "readMany", "read"]),
+    attempts: counted(p.repos.attempts, ["list", "listNarrowed"], ["listWhere", "readMany", "read"]),
+    promotionPipeline: counted(p.repos.promotionPipeline, ["readAll", "keys"], ["keysWhere", "read"]) });
+  const web = servedRuntime(served(), PUBLISH);
+  const pass = async () => {
+    reads.rows = 0;
+    const out = await runCandidatePublicationCycle({ repos: scopedRepos(), eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
+      heldVault: await indexVault(p.vaultRoot), vaultRoot: p.vaultRoot, methodVersion: 1,
+      clock: () => Date.parse(PUBLISH), sleep: async () => undefined, openFor: () => web.get, maxReads: 0 });
+    return { out, rows: reads.rows };
+  };
+  const small = await pass();
+  assert.ok(small.out.due > 0, "the approved site offers linked pages");
+
+  /* A large store: thousands of other work items, route tasks and Attempts, and other approved items. */
+  const at = "2026-09-24T22:00:00.000Z";
+  for (let i = 0; i < 3_000; i++) {
+    await p.repos.workItems.put(`wi-noise-${i}`, { id: `wi-noise-${i}`, subject: `candidate-publication:other-${i}` } as never, at);
+    await p.repos.routeTasks.put(`rt-noise-${i}`, { id: `rt-noise-${i}`, workItemId: `wi-noise-${i}`, routeId: "candidate-publication-linked:x",
+      target: "https://example.org/", attemptIds: [`at-noise-${i}`] } as never, at);
+    await p.repos.attempts.put(`at-noise-${i}`, { id: `at-noise-${i}`, startedAt: at } as never, at);
+  }
+  const large = await pass();
+  assert.deepEqual(large.out, small.out, "the same answer");
+  assert.equal(large.rows, small.rows, `rows read do not grow with the tables (${small.rows} on the small store)`);
 });
 
 test("withinWallTime ends a promise that never settles and clears its timer when one does", async () => {

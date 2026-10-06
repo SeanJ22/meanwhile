@@ -3611,7 +3611,8 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
         },
       });
       candidatePublications = pass;
-      candidatePublicationsState = `ran: ${pass.acquired} acquired, ${pass.deferred} deferred, ${pass.failed} failed of ${pass.due} due linked pages`;
+      candidatePublicationsState = `ran: ${pass.acquired} acquired, ${pass.deferred} deferred, ${pass.failed} failed of ${pass.due} due linked pages` +
+        (pass.stoppedLoading ? ` (the dispatch cutoff stopped it while reading ${pass.stoppedLoading}; the linked pages stay owed)` : "");
     } catch (error) {
       candidatePublicationsState = `failed: ${error instanceof Error ? error.message : String(error)}`;
       runtimeConditions.push(`candidate publication acquisition ${candidatePublicationsState}`);

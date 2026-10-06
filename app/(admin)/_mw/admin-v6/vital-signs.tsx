@@ -42,7 +42,7 @@ export function VitalSignsHours({ reading }: { readonly reading: VitalSignsReadi
 }
 export function NowVitalSigns() {
   const { reading } = useReading<VitalSignsReading>("/api/admin/v6/vital-signs");
-  return <>{reading.kind === "ready" && reading.stale && <p role="status">The latest read failed; these are the earlier saved hours.</p>}<VitalSignsHours reading={reading.kind === "ready" ? reading.data : null}/></>;
+  return <>{reading.kind === "failed" && <p role="status">The hourly records could not be read just now.</p>}{reading.kind === "ready" && reading.stale && <p role="status">The latest read failed; these are the earlier saved hours.</p>}<VitalSignsHours reading={reading.kind === "ready" ? reading.data : null}/></>;
 }
 
 /** The brief keeps its 24-hour history compact, with the same row values as Now. */
@@ -57,6 +57,6 @@ export function BriefVitalSigns({ reading }: { readonly reading: VitalSignsReadi
         <td>{number(row?.roundsFinished)}</td><td>{number(row?.roundsKilled)}</td>
         <td className={(row?.paidJobsEndedEmpty ?? 0)>0?s.legacyTextDanger:undefined}>{number(row?.paidJobsEndedEmpty)}</td>
       </tr>)}</tbody>
-    </table></div> : <p>—</p>}
+    </table></div> : <p>The hourly records could not be read for this brief. —</p>}
   </Card>;
 }

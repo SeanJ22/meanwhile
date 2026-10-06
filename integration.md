@@ -169,3 +169,6 @@ One line per batch folded into river.
 - 2026-10-06T10:12:30Z · hunters ·  · ready f34b81aaab8a · river 4fabb668cdce · pnpm gates pass on 4fabb668cdce
 - 2026-10-06T10:12:30Z · meetings · BX-08, BX-10 · ready 375d7afb11de · river 4fabb668cdce · pnpm gates pass on 4fabb668cdce
 - 2026-10-06T10:12:30Z · auditors · DP-13, DP-16, DP-17, FE-18, FE-21 · ready 78aa3f5edfce · river 4fabb668cdce · pnpm gates pass on 4fabb668cdce
+- 2026-10-06T11:50:21Z · hunters · CP-04 · ready 6e463129544e · river 211c48c6cf84 · pnpm gates pass on 211c48c6cf84
+- 2026-10-06T11:50:21Z · people · CA-11, CA-05, CA-14, CA-12 · ready 64842457be2e · river 211c48c6cf84 · pnpm gates pass on 211c48c6cf84
+- 2026-10-06T11:50:21Z · river ·  · ready 69fc6b1ed248 · river 211c48c6cf84 · pnpm gates pass on 211c48c6cf84

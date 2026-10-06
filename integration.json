@@ -1522,5 +1522,42 @@
     "tested_sha": "4fabb668cdceed1b734048830934d1319d04b2c8",
     "gates": "pass",
     "at": "2026-10-06T10:12:30Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CP-04"
+    ],
+    "ready_sha": "6e463129544ea515e4e54121b5b3758c29d78825",
+    "merge_sha": "6b3fa0ac3173e16c69b1d9493447f36d6c464ea4",
+    "river_sha": "211c48c6cf843834be98b1e53023d7c8a34d3fcf",
+    "tested_sha": "211c48c6cf843834be98b1e53023d7c8a34d3fcf",
+    "gates": "pass",
+    "at": "2026-10-06T11:50:21Z"
+  },
+  {
+    "lane": "people",
+    "steps": [
+      "CA-11",
+      "CA-05",
+      "CA-14",
+      "CA-12"
+    ],
+    "ready_sha": "64842457be2e58f6752d7cb483adeb4ba7039351",
+    "merge_sha": "467a01c1edbb9b87d918173a198517cd1a0891d9",
+    "river_sha": "211c48c6cf843834be98b1e53023d7c8a34d3fcf",
+    "tested_sha": "211c48c6cf843834be98b1e53023d7c8a34d3fcf",
+    "gates": "pass",
+    "at": "2026-10-06T11:50:21Z"
+  },
+  {
+    "lane": "river",
+    "steps": [],
+    "ready_sha": "69fc6b1ed2483628f1c3fe0915281dedbb602e4b",
+    "merge_sha": "c3899ed28978bb586e5b305a48984c31c544292e",
+    "river_sha": "211c48c6cf843834be98b1e53023d7c8a34d3fcf",
+    "tested_sha": "211c48c6cf843834be98b1e53023d7c8a34d3fcf",
+    "gates": "pass",
+    "at": "2026-10-06T11:50:21Z"
   }
 ]

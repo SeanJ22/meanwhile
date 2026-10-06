@@ -41,7 +41,7 @@ export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
   CAMPAIGN_FINANCE_FILING: ["candidateName|committeeName", "amount|receipts|expenditures|cashOnHand", "filingPeriod", "documentUrl"],
   CAMPAIGN_FINANCE_DOCUMENT: ["candidateName|committeeName", "documentUrl"],
   VOTE: ["person", "subject", "position", "date"],
-  STANCE: ["personId", "quote", "date", "topicId"],
+  STANCE: ["personId", "quote", "date"],
   BALLOT_MEASURE: ["election", "number|title", "textUrl"],
   VOTER_ACCESS_ROUTE: ["kind", "url"],
   PUBLIC_COMMENT_RULE: ["commentPeriod"],

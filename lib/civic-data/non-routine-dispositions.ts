@@ -344,6 +344,7 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS: readonly ManualProductionInve
   },
   {
     inventorySourceId: "officeholder-statements", contractId: "officeholder-statements", contractSourceId: "officeholder-primary-publications",
+    additionalContracts: [{ contractId: "stances", contractSourceId: "curated-reader-primary-sources" }],
     reason: "Owner-reviewed primary-publication snapshots promote through the canonical candidate/event/promotion plane; the tracked append corpus is an immutable first seed and has no writer or production fallback.",
   },
   {

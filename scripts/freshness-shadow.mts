@@ -374,7 +374,7 @@ import {
   SendBudgetRefusal,
   budgetGuardedTransport,
   hasBudgetLines,
-  liveSpendHolds,
+  readLiveSpendHolds,
   releaseOpenJobs,
   SPEND_HOLD_STALE_MS,
 } from "../lib/control-plane/expansion/spend-holds.ts";
@@ -1648,8 +1648,8 @@ try {
     () => repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
     () => null, startupReadRetry)];
   if (researchSpendInWindow(costLedger, NOW).windowUsd === null) {
-    const heldBudget = await retryStartupRead(() => repos.budget.read(), () => null, startupReadRetry);
-    historicalSpendHolds = Object.values(liveSpendHolds(heldBudget.value.spendHolds, NOW));
+    /* The holds that count now, one row each (schema v24; the ledger row behind WTP_SPEND_HOLDS_TABLE=0). */
+    historicalSpendHolds = Object.values(await retryStartupRead(() => readLiveSpendHolds(repos, NOW), () => null, startupReadRetry));
   }
 } catch (error) {
   ledgerUnreadable = error instanceof Error ? error.message : String(error);
@@ -2117,10 +2117,16 @@ const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as 
  * settled job books what it measured; an unmeasured job or a crash leaves the
  * whole hold counting for the rolling 24 hours.
  */
-const spendHolds = new DurableSpendHolds({ budget: repos.budget, now: nowIso });
+const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: nowIso });
 /** The admitted Scout job on each obligation this cycle, with what it holds. */
 const jobSpend = new Map<string, JobSpend>();
-releaseRoundHolds = () => { const open = [...jobSpend.values()]; jobSpend.clear(); return releaseOpenJobs(spendHolds, open, nowIso()); };
+/* A round's end settles what it never settled, then deletes the holds that no longer count (bounded; never accumulated). */
+releaseRoundHolds = async () => {
+  const open = [...jobSpend.values()]; jobSpend.clear();
+  const failed = await releaseOpenJobs(spendHolds, open, nowIso());
+  await spendHolds.sweep();
+  return failed;
+};
 /** Each held job's subject, so a pre-warm charged to it names the same jurisdiction. */
 const jobSubject = new Map<string, string>();
 let scoutJobSeq = 0;

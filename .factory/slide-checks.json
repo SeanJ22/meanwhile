@@ -1639,13 +1639,28 @@
     },
     "types": {
       "path": "/tmp/slide-verified-final-types.log",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "PASS",
+      "exitCode": 0,
+      "source": "479e7fc0ad208f221c4b3947b54b717132422fdb"
     },
     "lint": {
       "path": "/tmp/slide-verified-final-lint.log",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "PASS",
+      "exitCode": 0,
+      "source": "479e7fc0ad208f221c4b3947b54b717132422fdb"
     },
-    "firewall": "Final run pending; previous6584 pass0findings7630files289contracts",
+    "firewall": {
+      "result": "PASS",
+      "exitCode": 0,
+      "source": "479e7fc0ad208f221c4b3947b54b717132422fdb",
+      "findings": 0,
+      "files": 7634,
+      "contracts": 289,
+      "path": "/tmp/slide-verified-final-firewall.log",
+      "sha256": "35d57659ea3670351ff83818a1b6d80806e2cea98fd612d1e20854b29c9759c5"
+    },
     "browser": "Chromium151 substituted for unavailable pinned1234;11FULLskips remain skips. Browser sampler proof is a routed fixture, not a live fact.",
     "selector": {
       "plan": "FULL",
@@ -1659,6 +1674,18 @@
       "slide-scoped-query-plan.json"
     ],
     "costEstimate": ".factory/slide-neon-estimates.md",
-    "rollout": "River repository/runner connectors, parent writer, public reader bindings, migration/enable and named live checks pending. No runtime restart/DBwrite/budgetchange/READY."
+    "rollout": "River repository/runner connectors, parent writer, public reader bindings, migration/enable and named live checks pending. No runtime restart/DBwrite/budgetchange/READY.",
+    "closeout": {
+      "at": "2026-10-06T06:20:04.879080+00:00",
+      "atEDT": "2026-10-06 02:20:04 AM EDT",
+      "refs": {
+        "main": "a5fd753b740f9e1f7620460ab3dd6d4250fd6a3c",
+        "river": "8e47854b1a507df4215ad42aa24eb8f7486d85de",
+        "board/river": "562a203b9df320a809e84ae333e68e9eaf3e5f2b",
+        "board/briefs": "e076cd0c3d400174c188cbe0446cb059f3111f0a"
+      },
+      "lock": "none",
+      "remaining": "No lane step ready; shared connectors and named live checks pending. CP14/15/17 and BX04/05 dependencies unchanged."
+    }
   }
 }

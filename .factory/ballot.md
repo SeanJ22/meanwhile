@@ -3,7 +3,7 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
 lock: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
-heartbeat: 2026-10-06T00:34:12Z
+heartbeat: 2026-10-06T00:35:20Z
 on_river: CA-20 CA-24 CA-30 CA-44 CA-45 CA-51 integrated through release ecf402600401783b094837c29e0c515eadbdb843; returned CA-30/51 repairs retained at 8760257.
 ready: none new. Prior f984126b/6c874b3e test certificates preserved; f984 returned production build. Replacement b4b7e7c21ac2bc2a58c69f308ef2f0df62142b05 is unpublished until requested gates pass.
 checks: Exact f984126b canonical FULL PASS: 9495 tests, 9484 pass, 0 fail, 11 skip, 46 suites; all 1096 files, standard two file workers, clean start/end, complete timings, runner exit 0. Types exit 0; whole lint exit 0 (68 warnings, no errors); selector FULL/needs_browser=true. Explicit system Chromium 151 substitute, pinned 1234 did not run. Exact tree 4a354c13578d8c49b7f25d7faff86dbf3a1528b9; certificate ballot-certificate-f984126b.json. No deployed/live acceptance claimed.
@@ -97,3 +97,4 @@ returned_build_source_repair: e8918c6e reproduced CI build450 warm trace. Transl
 
 CA38_runtime_import_repair: Exact4de9 pnpm gates preflight refused a filesystem writer newly reachable through worker-roster-publication -> kinds-settings -> reader-settings-publication -> edge-store. Expensive gates did not run; preserved ballot-4de9-gates-preflight-failure.json and original log. runtimeKinds + its existing setting registration now in pure kinds-runtime.ts; worker/translator use that module, kinds-settings re-exports for Admin compatibility and retains readerKinds edge reader. No firewall/settings/shared-store changes. Value graph no edge writer reachable; focused Admin edit/edge/undo2/2 and parser12/12 pass, worker roster proof running. New exact candidate required, 4de9 NEVER READY.
 runtime_import_focused_final: all17/17 (Admin edit/edge/undo, parser12, normal worker roster publications) PASS after kinds-runtime separation; /tmp/ballot-kinds-import-repair-focused.log. No changes to firewall, filesystem store, settings registry or assertions.
+new_River_ready: River186f747a8769709e05f24c0fc452f950d92d5f4c promoted SC10 and FE13; CA39/54 now ready, CA19stillCP03waiting. Candidate4196 preflight stopped before expensivegates/FULL, supersededneverREADY; preserved ballot-4196-superseded.json. Catch up retaining huntersCH16partFor + publication-door additions and parsercomputedkey; then build newlyready steps before finalsingleexactcertification.

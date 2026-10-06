@@ -1,0 +1,8 @@
+{
+  "commit": "4196f8e38517d6d4a3f9812328102b765ab3369b",
+  "neverReady": true,
+  "reason": "River promoted186f747a8 and SC10/FE13; stop old-base preflight and catch up/build newlyreadyCA39/54 before final gates",
+  "gatesStatus": "Stopped preflight; expensive gates and canonical FULL not run",
+  "log": "/tmp/ballot-config-final-exact-gates.log",
+  "sha256": "e490cfb451bbbb964c9bd9431a782c46ec30300cf9a89816ff62086414c22155"
+}

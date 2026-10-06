@@ -33,5 +33,28 @@
   },
   "application_tree_sha256": "fc9b9b3a9a2e1f3d8b29912ae25796f4e5c7971bd72ab9d079b73fb3ff8d5185",
   "production_acceptance": "not claimed; hosted Netlify credential permission and live restore untested; Admin/runner/Queue/coordination hooks pending",
-  "restored_coordination_checkpoint": "5bdbdc0eb"
+  "restored_coordination_checkpoint": "5bdbdc0eb",
+  "ready": {
+    "sha": "f92b4d4f1bf192d069f32070d6a3203bfcf7165e",
+    "focused_tested_sha": "f92b4d4f1bf192d069f32070d6a3203bfcf7165e",
+    "focused_pass": 10,
+    "focused_fail": 0,
+    "focused_skipped": 0,
+    "focused_exit": 0,
+    "focused_log": "focused-ready.log",
+    "application_equal_to_full": true,
+    "hooks_pending": true
+  },
+  "final_readiness": {
+    "at": "2026-10-06T00:43:35.456027Z",
+    "river_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "board_sha": "a70b9bc7be98325262b2f61c399cb52f1ab7c651",
+    "missing_integrated_prerequisites": [
+      "DB-26",
+      "BX-06"
+    ],
+    "DB-39_actual_count": null,
+    "control_plane_url_configured": false,
+    "netlify_auth_configured_here": false
+  }
 }

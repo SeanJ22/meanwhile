@@ -1,0 +1,24 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 1/1 files; SHA f92b4d4f1bf192d069f32070d6a3203bfcf7165e
+tests/release-rollback.test.ts
+✔ DB-47 offers only code retaining every applied contract, with exact immutable bytes (1.250688ms)
+✔ DB-47 normal Send queues an exact compatible request; stale migration or release views refuse (2.064547ms)
+✔ DB-47 concurrent runner calls restore once and read the result from the standard receipt history (1.314172ms)
+✔ DB-47 an applied contract arriving after Send or a moving publication pointer makes no restore request (0.876582ms)
+✔ DB-47 the final fresh-journal confirmation refuses a contract applied during the history reading (19.254715ms)
+✔ DB-47 lost restore response is confirmed from publication when possible, otherwise remains unknown without resubmission (1.181946ms)
+✔ DB-47 no stored owner receipt, unreadable store or failed execution claim cannot reach the provider (0.632299ms)
+✔ DB-47 a failed result write preserves the execution claim and never repeats a successful restore (2.004267ms)
+✔ DB-47 exact-commit catalog reads derive phases from SQL and preserve the applied byte hashes (3.173375ms)
+✔ DB-47 production adapter uses the existing credential, ignores previews/unpublished builds and makes only the documented restore POST (2.127671ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 805.027548

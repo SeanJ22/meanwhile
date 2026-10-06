@@ -36,8 +36,15 @@
  *   room (the shared-work rule), and is held against every one of them. Areas:
  *   EVERY binding area must have room.
  * - Settling a job books what it measured and releases the rest. An unmeasured
- *   job, a failed settle, or a crash leaves the whole hold standing until the
- *   window ends: unknown spend counts as reserved until settled.
+ *   job or a failed settle leaves the whole hold standing; a round that ends,
+ *   or fails where it can still act, releases every job it never settled
+ *   (`releaseOpenJobs`). A hold is live only while its job can still run: an
+ *   unsettled hold older than `SPEND_HOLD_STALE_MS` belongs to a round that has
+ *   ended (a killed round cannot release its own), and whatever its job sent
+ *   is in the canonical cost ledger by then, so it stops counting and leaves
+ *   the ledger. A settled hold leaves once its cost is in the history every
+ *   reader starts from (`SETTLED_HOLD_RETENTION_MS`). The ledger row stays
+ *   small: it is read on every admission (2026-10-06: 19,719 holds, 38 MB).
  * - The ledger unreadable or a write refused: the hold is refused, by name.
  *   Nothing is ever run unbudgeted.
  */
@@ -50,6 +57,15 @@ export const SPEND_HOLD_CODE_SEND = "ASSIGNMENT_BUDGET";
 export const SPEND_HOLD_CODE_AREA = "SCOPE_BUDGET";
 /** The Send and area budgets are rolling 24-hour windows; a hold counts for as long. */
 export const SPEND_HOLD_WINDOW_MS = 24 * 3_600_000;
+
+/**
+ * How long an unsettled hold can belong to a job that is still running. A job
+ * never outlives the research round that took it, and no round runs this long
+ * (the runner ends a silent one after 10 minutes; the dispatch slice is 15).
+ */
+export const SPEND_HOLD_STALE_MS = 2 * 3_600_000;
+/** How long a settled hold is kept after its cost was recorded: longer than any round's history read is old. */
+export const SETTLED_HOLD_RETENTION_MS = 6 * 3_600_000;
 
 /** Contention on the one ledger (another Scout or cycle mid-decision) is retried this many times, waiting a little longer each time, then refused. */
 export const SPEND_HOLD_CONTENTION_TRIES = 20;
@@ -110,11 +126,23 @@ export function leftUsd(holds: Readonly<Record<string, SpendHold>>, line: Budget
   return Math.round((line.budgetUsd - committedUsd(holds, line, now)) * 1e9) / 1e9;
 }
 
-function pruned(ledger: BudgetLedger, now: string): Record<string, SpendHold> {
+/** A hold that still counts: its job can still run, or its settled cost is newer than any history a reader started from. */
+function live(h: SpendHold, nowMs: number): boolean {
+  if (!h.lifetimeKeys?.length && !inWindow(h, nowMs)) return false;
+  if (h.settled === null) return Date.parse(h.heldAt) >= nowMs - SPEND_HOLD_STALE_MS;
+  return Date.parse(h.settled.costRecordedAt) >= nowMs - SETTLED_HOLD_RETENTION_MS;
+}
+
+/** The holds that count now. Every reader of the ledger (admission, Admin's Set aside, the Fleet's window) reads through this. */
+export function liveSpendHolds(holds: Readonly<Record<string, SpendHold>> | undefined, now: string): Record<string, SpendHold> {
   const nowMs = Date.parse(now);
   const out: Record<string, SpendHold> = {};
-  for (const [id, h] of Object.entries(ledger.spendHolds ?? {})) if (h.lifetimeKeys?.length || inWindow(h, nowMs)) out[id] = h;
+  for (const [id, h] of Object.entries(holds ?? {})) if (live(h, nowMs)) out[id] = h;
   return out;
+}
+
+function pruned(ledger: BudgetLedger, now: string): Record<string, SpendHold> {
+  return liveSpendHolds(ledger.spendHolds, now);
 }
 
 /**
@@ -325,6 +353,21 @@ export class JobSpend {
     if (decision.admit) this.heldUsd += worstCaseUsd;
     return decision;
   }
+}
+
+/**
+ * A round ending (or failing where it can still act) settles every job it
+ * never settled: what the job's requests committed (measured, or their worst
+ * case when unpriced), so a job that never sent releases its whole hold.
+ * Returns the jobs whose settle failed, by id.
+ */
+export async function releaseOpenJobs(holds: DurableSpendHolds, jobs: Iterable<JobSpend>, now: string): Promise<readonly string[]> {
+  const failed: string[] = [];
+  for (const job of jobs) {
+    const error = await holds.settle(job.jobId, Math.max(0, job.committedUsd), now);
+    if (error !== null) failed.push(`${job.jobId}: ${error}`);
+  }
+  return failed;
 }
 
 /**

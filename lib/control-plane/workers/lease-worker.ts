@@ -29,8 +29,9 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   // (a process runs one lease at a time). `subject` is only set on the old per-task path.
   let current = "";
   const perTask = process.env.WTP_LEASE_RUNTIME_PER_TASK === "1";
-  // CH-26: each task reads only its own history. Off until the scoped path is checked live (WTP_SCOPED_TASK_READS=1 turns it on).
-  const scopedReads = process.env.WTP_SCOPED_TASK_READS === "1";
+  // CH-26: each task reads only its own history. On by default since 2026-10-06 (Sean: the whole-table reads are
+  // most of the control plane's Neon transfer); WTP_SCOPED_TASK_READS=0 is the way back to the whole-table path.
+  const scopedReads = process.env.WTP_SCOPED_TASK_READS !== "0";
   let shared: Awaited<ReturnType<typeof autonomousStandingRuntime>> | undefined;
   const buildRuntime = (subject: string | null) => autonomousStandingRuntime({ root: config.root, repos, environment: process.env,
     browse: browseWithPlaywright,

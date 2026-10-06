@@ -378,9 +378,10 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   const leadsOut: CampaignSiteLeadOutcome[] = [];
   const unjoined: { itemId: string; subjectId: string }[] = [];
   const maxReads = options.maxReads ?? 200;
-  let ctx = await contextFromRepositories(repos);
   /* Every artifact the log holds, read once; this run's reads are added as they are recorded. */
   const allArtifacts: ArtifactRecord[] = [...(await repos.artifacts.readAll())];
+  let ctx = await contextFromRepositories(repos, { artifacts: allArtifacts,
+    attemptIds: (options.marginalia ?? []).map(held => held.attemptId) });
   let heldStates = new Map((await readPipelineStates(repos)).map((s) => [s.itemId, s] as const));
   let recordedThisRun = 0;
   const offer = async (record: TransitionRecord): Promise<PipelineItemState> => {

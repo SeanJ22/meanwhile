@@ -20,6 +20,8 @@ import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { MethodCandidate } from "../../method/candidate.ts";
 import { loadWorkerCompletionEvidence } from "../repository/worker-completion.ts";
 import { assertFleetResult } from "../workers/types.ts";
+import type { WorkerResultRecord } from "../workers/types.ts";
+import { readPromotionRows } from "./evidence-reads.ts";
 import {
   PIPELINE_STAGES,
   PRECEDING_STAGE,
@@ -424,17 +426,25 @@ export async function readPipelineStates(repos: ControlPlaneRepositories): Promi
   return out;
 }
 
-/** A context over the live logs, read once. */
-export async function contextFromRepositories(repos: ControlPlaneRepositories): Promise<PipelineContext> {
+/** A fresh context over this job's evidence. Legacy unscoped callers retain
+ * arbitrary artifact/Attempt lookups until they provide their evidence set. */
+export async function contextFromRepositories(repos: ControlPlaneRepositories, evidence?: {
+  readonly artifacts: readonly ArtifactRecord[];
+  readonly results?: readonly WorkerResultRecord[];
+  readonly attemptIds?: readonly string[];
+}): Promise<PipelineContext> {
   const artifacts = new Map<string, ArtifactRecord>();
-  for (const a of await repos.artifacts.readAll()) artifacts.set(a.artifactId, a);
+  for (const a of evidence?.artifacts ?? await repos.artifacts.readAll()) artifacts.set(a.artifactId, a);
   const roles = new Map<string, WorkerRole>();
-  /* One listing serves both maps; each was a whole read of the Attempts. */
-  const attemptRows = await repos.attempts.list();
-  for (const a of attemptRows) roles.set(a.id, a.value.worker.role);
-  const results = await repos.workerResults.readAll();
-  const attempts = new Map(attemptRows.map(a => [a.id, a.value]));
-  const workItems = new Map((await repos.workItems.list()).map(w => [w.id, w.value]));
+  const results = evidence?.results ?? await repos.workerResults.readAll();
+  const [attempts, workItems] = await Promise.all([
+    evidence === undefined ? repos.attempts.list().then(rows => new Map(rows.map(row => [row.id, row.value])))
+      : readPromotionRows(repos.attempts, [...artifacts.values()].map(a => a.attemptId)
+        .concat(results.map(r => r.attemptId), evidence.attemptIds ?? [])),
+    readPromotionRows(repos.workItems, results.map(r => r.workItemId)),
+  ]);
+  for (const [id, attempt] of attempts) roles.set(id, attempt.worker.role);
+  const resultsById = new Map(results.map(r => [r.id, r]));
   const completion = new Map(await Promise.all([...new Set(results.map(r => r.workItemId))].map(async id => [id, await loadWorkerCompletionEvidence(repos, id)] as const)));
   return {
     artifactById: (id) => artifacts.get(id) ?? null,
@@ -444,7 +454,7 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories): 
       return attempt === undefined || attempt.outcome !== "COMPLETED" ? null : attempt.artifactIds;
     },
     workerResultById: (id) => {
-      const result = results.find(r => r.id === id);
+      const result = resultsById.get(id);
       if (!result || attempts.get(result.attemptId)?.outcome !== "COMPLETED" ||
           canonicalJson(attempts.get(result.attemptId)) !== canonicalJson(result.completion.closedAttempt)) return null;
       try { assertFleetResult(result.result, result.completion.completedTask.workerTask!.role, result.attemptId); return result; }

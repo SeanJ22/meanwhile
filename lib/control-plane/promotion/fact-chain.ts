@@ -33,6 +33,7 @@ import { getRegistryRuntimeReadModel } from "../../registry/runtime-read-model.t
 import { fingerprint } from "../ids.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
+import { readAcquisitionAttempts, promotionArtifactReader } from "./evidence-reads.ts";
 import { LOW_RISK_CANDIDATE_CLASSES } from "./activation-gate.ts";
 import { controlsClean, measureFactControls, verifyMeetingFact } from "./fact-verification.ts";
 import { factSubjectsFromStates, readFactFreshness, type FactFreshnessReading, type FactSubject } from "./fact-freshness.ts";
@@ -156,9 +157,26 @@ function completedAuditorFor(validator: WorkerResultRecord | null, results: read
  * through this; the projection offers through `projectFactChains`.
  */
 export async function collectFactChains(repos: ControlPlaneRepositories, options: FactChainOptions, ctx?: PipelineContext): Promise<FactChainCollection> {
-  const context = ctx ?? (await contextFromRepositories(repos));
+  return collectWithEvidence(repos, options, await factChainEvidence(repos, ctx));
+}
+
+async function factChainEvidence(repos: ControlPlaneRepositories, ctx?: PipelineContext) {
+  // Retain every result, including failed audits. There are no broad artifact,
+  // Attempt or WorkItem reads, and no newest-N cutoff on source observations.
   const results = await repos.workerResults.readAll();
-  const artifacts = await repos.artifacts.readAll();
+  const parserIds = results.flatMap(r => r.result.role === "PARSER" && meetingFactContract(r) !== null &&
+    r.completion.completedTask.workerTask?.purpose !== "DIAGNOSTIC_REPLAY" ? [r.result.artifactId] : []);
+  const readArtifacts = promotionArtifactReader(repos);
+  const captures = await readArtifacts(parserIds);
+  const artifacts = await readArtifacts(parserIds, captures.map(row => row.canonicalUrl));
+  const attempts = await readAcquisitionAttempts(repos, parserIds);
+  const context = ctx ?? await contextFromRepositories(repos, { artifacts, results, attemptIds: attempts.map(a => a.id) });
+  return { results, artifacts, attempts, context };
+}
+
+async function collectWithEvidence(repos: ControlPlaneRepositories, options: FactChainOptions,
+  evidence: Awaited<ReturnType<typeof factChainEvidence>>): Promise<FactChainCollection> {
+  const { context, results, artifacts, attempts } = evidence;
   const refusals: (FactRefusal & { artifactId: string })[] = [];
   const parsers = results
     .filter((r) => r.result.role === "PARSER" && meetingFactContract(r) !== null &&
@@ -207,7 +225,6 @@ export async function collectFactChains(repos: ControlPlaneRepositories, options
     return source;
   };
 
-  const attempts = (await repos.attempts.list()).map((row) => row.value);
   const items: FactItem[] = [];
   for (const chain of chains) {
     const sameUrl = artifacts
@@ -281,8 +298,9 @@ export function factClassCounts(states: readonly PipelineItemState[]): FactChain
  * change re-appends nothing.
  */
 export async function projectFactChains(repos: ControlPlaneRepositories, options: FactChainOptions): Promise<FactChainReport> {
-  const ctx = await contextFromRepositories(repos);
-  const collected = await collectFactChains(repos, options, ctx);
+  const evidence = await factChainEvidence(repos);
+  const ctx = evidence.context;
+  const collected = await collectWithEvidence(repos, options, evidence);
   const registryBodyIds = options.registryBodyIds ?? readRegistryBodyIds(options.root ?? process.cwd(), options.wiring);
   const freshness = options.freshness ?? (async (input) => readFactFreshness(repos, { ...input, now: options.now }));
   const statesById = new Map((await readFactItemStates(repos)).map((s) => [s.itemId, s]));

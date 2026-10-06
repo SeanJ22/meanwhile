@@ -8,6 +8,7 @@ import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
 import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 import { isWorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
+import { readPromotionArtifacts, readPromotionRows } from "../promotion/evidence-reads.ts";
 
 /**
  * PRDY-3 (2026-09-06): a completed extraction under a meeting-fact contract
@@ -28,7 +29,8 @@ export async function projectFleetPipeline(repos: ControlPlaneRepositories, opti
   // Fact normalization consumes the promoted venue authority synchronously.
   // Refuse a missing/unreachable production pointer before offering any facts.
   if (options && !mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
-  const ctx = await contextFromRepositories(repos);
+  const artifacts = await readPromotionArtifacts(repos, results.flatMap(r => r.inputArtifactIds));
+  const ctx = await contextFromRepositories(repos, { artifacts, results });
   for (const scout of await repos.scoutResults.readAll()) {
     for (const offered of scoutedFromScoutResult(scout)) {
       if (results.some(r => r.inputArtifactIds.some(id => offered.artifactIds.includes(id)))) await appendTransition(repos, offered, ctx, offered.at);
@@ -36,10 +38,10 @@ export async function projectFleetPipeline(repos: ControlPlaneRepositories, opti
   }
   const factPath = options !== undefined;
   const states = await readPipelineStates(repos);
-  const registryWork = new Set((await repos.workItems.list()).filter(row => {
-    const id = row.value.autonomousPlan?.publication?.contractId;
+  const registryWork = new Set([...(await readPromotionRows(repos.workItems, results.map(r => r.workItemId)))].filter(([, item]) => {
+    const id = item.autonomousPlan?.publication?.contractId;
     return id === "registry-runtime-bindings" || (id !== undefined && isWorkerReaderContract(id));
-  }).map(row => row.id));
+  }).map(([id]) => id));
   for (const result of results) {
     if (result.result.role !== "VALIDATOR") continue;
     if (factPath && meetingFactContract(result) !== null) continue;

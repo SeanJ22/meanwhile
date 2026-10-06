@@ -134,7 +134,7 @@ test("a held paid-research finding reaches APPROVED with measured checks, clean 
   }
   console.log(`CAMPAIGN_CONTEXT workerResultReads=${workerResultReads} workItemLists=${workItemLists}`);
   assert.equal(workerResultReads, 1, "recording campaign acquisitions changes no worker result");
-  assert.equal(workItemLists, 1, "campaign acquisition owners have no worker audit result to refresh");
+  assert.equal(workItemLists, 0, "campaign context reads only work items named by worker results");
   const states = new Map((await readPipelineStates(repos)).map((s) => [s.itemId, s]));
 
   const d = states.get(duarte.itemId)!;

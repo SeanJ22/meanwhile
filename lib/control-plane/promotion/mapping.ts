@@ -16,6 +16,7 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { canonicalJson } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import { readMethodCandidateStore } from "../scheduler/scout-candidates.ts";
+import { readPromotionArtifacts } from "./evidence-reads.ts";
 import {
   appendTransition,
   confirmationFromArtifacts,
@@ -61,8 +62,6 @@ export async function mapEvidenceIntoPipeline(
     const k = r.refusal !== null ? `${r.outcome} (REFUSED)` : r.outcome;
     byOutcome[k] = (byOutcome[k] ?? 0) + 1;
   }
-  const ctx = await contextFromRepositories(repos);
-  const artifacts = await repos.artifacts.readAll();
   const heldStates = new Map((await readPipelineStates(repos)).map(state => [state.itemId, state]));
 
   const scoutedOffers = results.flatMap(scoutedFromScoutResult);
@@ -86,6 +85,14 @@ export async function mapEvidenceIntoPipeline(
     storeNote = `the canonical candidate store could not be read: ${error instanceof Error ? error.message : String(error)}`;
   }
   const eligibleCandidates = scoutedOffers.filter((o) => o.source.kind === "METHOD_CANDIDATE").length;
+
+  // Held confirmations keep their durable evidence/date. Only unresolved
+  // offers need same-URL acquisitions; no worker audit is evaluated by these
+  // SCOUTED/CONFIRMED transitions.
+  const pending = scoutedOffers.filter(offer => !heldStates.get(offer.itemId)?.byStage.CONFIRMED);
+  const artifacts = await readPromotionArtifacts(repos, pending.flatMap(offer => offer.artifactIds),
+    pending.flatMap(offer => offer.canonicalUrl === null ? [] : [offer.canonicalUrl]));
+  const ctx = await contextFromRepositories(repos, { artifacts, results: [] });
 
   let scoutedAppended = 0;
   let scoutedHeld = 0;

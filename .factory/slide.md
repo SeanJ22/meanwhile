@@ -3,10 +3,10 @@ worker: codex-slide
 provider: Codex
 run_id: codex-slide-6298834f6a894d32884c1ad9e1afd6f9
 lock: codex-slide-6298834f6a894d32884c1ad9e1afd6f9
-heartbeat: 2026-10-06T05:24:48.030145+00:00
+heartbeat: 2026-10-06T05:35:36.281670+00:00
 on_river: 23/28 built steps integrated, shared hooks pending. Latest 12-step repaired READY66f6ed84a8ce3c6ca1c5e099d2a1394475592263 folded at ce7fc11bc692708469fb6a11c54735d50a076da9, released in main/river f545fcf9493def91294bccf219ed65071b2093b1. Prior 11 steps and exact checks preserved in continuation.
 ready: No new READY without named live proof. Historical e6ffab73b remains preserved; publication parent hookup/live verification outstanding.
-working_on: Mission: scope pipeline/mapping/fact-chain reads, estimate Neon transfer, investigate live supervisor failures, and recheck remaining steps. Runner remains stopped per River.
+working_on: Scoped read implementation and tests in progress; River repository wiring prepared in slide-repository-scoped.patch. Mission: scope pipeline/mapping/fact-chain reads, estimate Neon transfer, investigate live supervisor failures, and recheck remaining steps. Runner remains stopped per River.
 checks: Application7311335de: FULL9736pass17setupfail11skip1149files; canonical postinstall generated missing data, four complete files48/48pass on same source. Combined9753pass0fail11skip; raw FULL not claimed pass. TypesPASS; lint0errors68warnings; firewall0findings7605files289contracts. Manifests in slide-checks.json.publicationParent.
 waiting_on: River fold of new READY; hunters/meetings parent job integration; CP-14/15 shared caller removals; CP-17 contract-version/read fallback; BX-04 CH-20 and BX-05 CH-23 integration. River Box schema/enable/live; Admin BR-31 caller.
 returned: fix:55fff18a repaired and integrated at ce7fc11bc692708469fb6a11c54735d50a076da9; board return still names obsolete READY7168232. Live supervisor investigation still needs production failure arrays.

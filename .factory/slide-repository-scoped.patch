@@ -1,0 +1,33 @@
+diff --git a/lib/control-plane/repository/pg-store.ts b/lib/control-plane/repository/pg-store.ts
+index 4f5b17faa..c19e6c6d2 100644
+--- a/lib/control-plane/repository/pg-store.ts
++++ b/lib/control-plane/repository/pg-store.ts
+@@ -1,3 +1,4 @@
++import { pgArtifactsForPromotion, pgAcquisitionAttemptsForArtifacts } from "../promotion/postgres-evidence.ts";
+ import type { BoxFinding } from "../box.ts";
+ import type { WorkerResultRecord } from "../workers/types.ts";
+ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
+@@ -1396,6 +1397,8 @@ export async function createPgRepositories(
+     dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions", bounded),
+     artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts", bounded),
+     artifactsByCanonicalUrl: (url, limit) => pgArtifactsByCanonicalUrl(sql, url, limit, bounded),
++    artifactsForPromotion: (ids, urls) => pgArtifactsForPromotion((operation, text, params) => boundedRunner(sql, "cp_log_artifacts", bounds)(operation, "PAGE", text, params), ids, urls),
++    acquisitionAttemptsForArtifacts: ids => pgAcquisitionAttemptsForArtifacts((operation, text, params) => boundedRunner(sql, "cp_attempts", bounds)(operation, "PAGE", text, params), ids),
+     adminEvidenceCopyRequests: pgAggregateRepository<AdminEvidenceCopyRequest>(sql, "AdminEvidenceCopyRequest", "cp_admin_evidence_copy_requests", bounded),
+     costs: pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded),
+     /* The owner control centre's data plane (ITEM H, schema v3). */
+diff --git a/lib/control-plane/repository/types.ts b/lib/control-plane/repository/types.ts
+index d4dbdb220..2593d9ec7 100644
+--- a/lib/control-plane/repository/types.ts
++++ b/lib/control-plane/repository/types.ts
+@@ -771,6 +771,10 @@ export interface ControlPlaneRepositories {
+   readonly artifacts: AppendOnlyRepository<ArtifactRecord>;
+   /** Exact source-owned captures across jobs, newest acquisition first; no general log scan in Postgres. */
+   readonly artifactsByCanonicalUrl?: (url: string, limit: number) => Promise<readonly ArtifactRecord[]>;
++  /** All matching observations, in log-key/append order; no recent-history cutoff. */
++  readonly artifactsForPromotion?: (artifactIds: readonly string[], canonicalUrls: readonly string[]) => Promise<readonly ArtifactRecord[]>;
++  /** Completed acquisitions which named any of these artifacts, including cross-item reobservations. */
++  readonly acquisitionAttemptsForArtifacts?: (artifactIds: readonly string[]) => Promise<readonly Attempt[]>;
+   /** Exact Admin original-byte copy requests, CAS-leased by the permanent runner. */
+   readonly adminEvidenceCopyRequests: AggregateRepository<AdminEvidenceCopyRequest>;
+   readonly costs: AppendOnlyRepository<CostEntry>;

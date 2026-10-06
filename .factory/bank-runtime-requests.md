@@ -21,6 +21,8 @@ Normal maintenance entry point: scripts/bank-admit-validated.mts, read-only by d
 
 Hunters/auditors: call this drain once after adoption and after incoming proposal processing in the long-lived parent; retain its report and reuse the parent's method knowledge/cache. No per-job repeated full candidate read. The one-time drain is separate from paid research.
 
+Isolated preview on a 2,244,595-byte read-only copy of the actual live method/manual state: all 757 admitted under current validators, no rejection and no remaining VALIDATED offer (6 -> 763 ADMITTED). This confirms a workflow hold, not a current validator hold. No production mutation. Summary in bank-evidence/entry-split-backlog/live-backlog-preview.json; original CP payload remains private under /tmp.
+
 Live acceptance: before/after lifecycle counts and per-offer dispositions explain all 757; successful saved offers appear in the next applicable worker manual/catalog without a paid re-offer. Do not label every currently VALIDATED offer automatically admitted if current validators reject it.
 
 ## DB-39 — exact needs_River

@@ -1,0 +1,23 @@
+{
+  "mode": "ISOLATED MEMORY PREVIEW of read-only production snapshot; no production mutation",
+  "source": "8e15dd7a448c614cbc71f98a1557d99dce6cfeb9",
+  "stamp": "2026-10-06T06:03:00Z",
+  "snapshotBytes": 2244595,
+  "before": {
+    "PROPOSED": 0,
+    "VALIDATED": 757,
+    "ADMITTED": 6,
+    "REJECTED": 0
+  },
+  "after": {
+    "PROPOSED": 0,
+    "VALIDATED": 0,
+    "ADMITTED": 763,
+    "REJECTED": 0
+  },
+  "decisionCounts": {
+    "ADMITTED": 757
+  },
+  "rejectedIssueRules": {},
+  "remainingReasons": []
+}

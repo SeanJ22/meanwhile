@@ -1,0 +1,10 @@
+{
+  "automationId": "6ac486819f8c8191bb89c06123cfc6f4",
+  "threadId": "01a10d4a-8ab6-77fb-a22a-ca936cd70010",
+  "enabled": true,
+  "schedule": "BEGIN:VEVENT\nDTSTART:20261006T052625Z\nRRULE:FREQ=MINUTELY;INTERVAL=90\nEND:VEVENT",
+  "timezone": "America/New_York",
+  "createdAt": "2026-10-06T05:26:25.777158Z",
+  "verification": "Tool confirmed creation attached to this thread; first resumed execution not yet observed.",
+  "instructions": "Full mission and Bank tasks in saved automation prompt; fetch river/returns, verify assignment/lock, work every ready step; skip overlapping work, quiet unchanged state; Claude assignment exits without writing; all questions River."
+}

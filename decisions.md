@@ -74,3 +74,20 @@ How River carries it (engineering choices): River owns the repository layer and 
 - routine-civic-data-runner.mts:411.
 - readPlaceWorkItems and readPlaceArtifacts miss their indexes.
 - cp_attempts has no routeTaskId index, so coordinator.ts:448 and model-batch.ts:191/197 do full scans.
+
+## 2026-10-06 ~03:35Z: Sean, no paid worker ends with nothing
+
+Sean's rule, in substance: no worker (Scout, Detective, any paid role) spends money and ends with nothing. Every paid job ends with a result: a finding, an ingest, a source shown blocked or unpublished with what was tried, or a lesson saved for the next worker.
+
+His evidence: over the last 14 days, $40.40 of $85.35 recorded worker spend ended with nothing.
+- 94 Scout jobs had no result recorded at all ($35.09), and 31 of them had zero output tokens.
+- The rest ended with no disposition, refused, or needs-adapter.
+- One zero-output Scout ran on release 6 at 11:22 PM EDT (2026-10-06 03:22Z).
+- Spend from killed research rounds never reached cp_log_costs at all.
+
+Direction: fix the causes, not a cap.
+- Find why Scouts end with no result, and why some return zero output after paying for input, and fix it at the source.
+- Give every paid ending a result kind, and save what was learned.
+- Show no-result spend by role on Admin's Money page and in the daily brief, so it cannot hide.
+
+How River carries it: River investigates the causes from production records (read-only) and routes each fix to its owning lane; River builds the shared parts. Recorded in returns as the work lands.

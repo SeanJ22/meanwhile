@@ -1,5 +1,7 @@
 "use client";
 
+import { mst } from "./model.ts";
+
 /**
  * **SCOREBOARD.** One card per number with its value and the counts behind it; a number we do not have shows "—" and says why.
  * Rows are never added together. The launch-gate health checks and readiness counts sit in their own groups, then the

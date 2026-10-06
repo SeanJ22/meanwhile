@@ -302,6 +302,7 @@
     "verify:positions": "tsx scripts/verify-positions-search.mts",
     "verify:readonly": "tsx scripts/verify-readonly.mts",
     "verify:sources": "tsx scripts/verify-sources-tab.mts",
+    "verify:visual-feedback-9-2": "tsx scripts/verify-visual-feedback-9-2.mts",
     "verify:write-handle": "tsx scripts/verify-write-handle.mts",
     "visual:suite": "tsx scripts/visual-suite.mts",
     "votes:fetch": "node scripts/installed-runtime-command.mjs manual-promote --contract=congress-rollcalls",

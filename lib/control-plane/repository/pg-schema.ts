@@ -135,7 +135,80 @@
  * builds. Additive: no table, column or statement moved.
  */
 // Version 21 adds the live-audit log (DP-13): results, corrections and pulls. Additive.
-export const BOOTSTRAP_VERSION = 21;
+/*
+ * ## What version 22 adds, and why (each table says when it last changed, by the database's clock, 2026-10-06)
+ *
+ * The research round re-read whole control-plane tables on every worker wave
+ * (planner selection, standing runtime, round start, promotion tail, campaign
+ * chain), and that re-reading was most of the control-plane data-transfer bill.
+ * The round now keeps one in-memory copy of those tables and each later read
+ * fetches only the rows changed since its last read (`incremental-reads.ts`).
+ * That needs a "changed since" the database itself vouches for:
+ *
+ * ```
+ *   changed_at   timestamptz NOT NULL DEFAULT now(), on every aggregate and
+ *                every log table. An insert takes the default; an UPDATE is
+ *                stamped by a BEFORE UPDATE trigger (`cp_touch_changed_at`),
+ *                so a writer running older code, or any raw upsert, still
+ *                moves it. compareAndSet also sets it explicitly.
+ * ```
+ *
+ * Not `updated_at` / `recorded_at`: both hold the WRITER's `now`, which can be
+ * stale or skewed, so they cannot answer "what changed since my last read".
+ * `now()` is the database's clock (transaction start).
+ *
+ * The column is added inside a guard that first asks the catalog whether it is
+ * already there, so a bootstrap on a current database takes no table lock.
+ * Adding it is metadata only: on Postgres 11+ a column with a non-volatile
+ * default (`now()` is STABLE) is not a table rewrite; existing rows read the
+ * default evaluated once at the ALTER, which is a correct "changed at or
+ * before" for them. Indexes on `changed_at` for the tables the round reads are
+ * built online (`CREATE INDEX CONCURRENTLY`), as versions 18 and 20 are.
+ * Additive: no table, column or statement moved.
+ */
+// Version 23 adds the RouteTask indexes for Attempts and leases: `listWhere(["routeTaskId"])` (the
+// coordinator's attempt lookup, model batches, cycle selection) scanned the whole table on every call
+// (2026-10-06: 130,945 full scans of cp_attempts). Built online. Additive.
+/*
+ * ## What version 24 adds, and why (one row per spend hold, 2026-10-06)
+ *
+ * Every dollar paid work may spend on a Send or an area is held first
+ * (MW-021, `expansion/spend-holds.ts`). The holds lived in ONE jsonb document,
+ * the shared budget ledger row's `spendHolds`, so every admission (each Scout
+ * job, each model request on budgeted work) read and compare-and-set the whole
+ * row: 38 MB at its worst and the largest control-plane transfer, and 656
+ * Scout holds landed within two minutes of a runner start. Sean, 2026-10-06:
+ * "Split the giant single-row records into real tables, one row per item: the
+ * spend ledger (holds) ... Settled holds are cleared or moved out, never
+ * accumulated."
+ *
+ * ```
+ *   cp_spend_holds        one row per hold: its lines (`keys`, GIN-indexed),
+ *                         amount, when it was held, and once settled what
+ *                         was measured and when that cost was recorded
+ *   cp_admit_spend_hold   the admission, in the database: one statement, so
+ *                         one implicit transaction. It takes a transaction
+ *                         advisory lock on each line it names (sorted, so two
+ *                         admissions never deadlock), drops the holds on those
+ *                         lines that no longer count, and decides exactly as
+ *                         `decideHold` does on what is left. Two admissions on
+ *                         one line serialize; admissions on different lines
+ *                         run in parallel. Nothing reads the whole table
+ *   the move              the holds still on the ledger row are copied into
+ *                         the table and the row's `spendHolds` emptied, under
+ *                         a row lock, with the revision bumped so a writer
+ *                         mid compare-and-set retries on the emptied row.
+ *                         Re-running it finds nothing to move. Skipped while
+ *                         `WTP_SPEND_HOLDS_TABLE=0` keeps the holds on the row
+ * ```
+ *
+ * The table is new and small, so its indexes are built in the bootstrap after
+ * a catalog check (no lock at all once they exist), and the function is
+ * replaced only when its body's version marker is not the one installed.
+ * Additive: no existing table, column or statement moved; the ledger row's
+ * other fields are untouched.
+ */
+export const BOOTSTRAP_VERSION = 24;
 
 /**
  * The tables, and the shape each one carries.
@@ -412,6 +485,8 @@ export const DECLARED_TABLES: readonly string[] = [
   "cp_admin_action_history_readiness",
   "cp_checklist_scope_heads",
   "cp_checklist_instance_projections",
+  /* Version 24: one row per spend hold. */
+  "cp_spend_holds",
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
 ];
@@ -442,7 +517,8 @@ function aggregateTable(name: string): readonly string[] {
       id          text PRIMARY KEY,
       revision    bigint NOT NULL,
       updated_at  timestamptz NOT NULL,
-      value       jsonb NOT NULL
+      value       jsonb NOT NULL,
+      changed_at  timestamptz NOT NULL DEFAULT now()
     );`,
   ];
 }
@@ -484,6 +560,7 @@ function appendOnlyTable(name: string): readonly string[] {
       position    bigint NOT NULL,
       recorded_at timestamptz NOT NULL,
       record      jsonb NOT NULL,
+      changed_at  timestamptz NOT NULL DEFAULT now(),
       PRIMARY KEY (log_key, record_id)
     );`,
     `CREATE UNIQUE INDEX IF NOT EXISTS cp_log_${name}_order
@@ -525,9 +602,256 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_log_costs_recorded_at", "cp_log_costs (recorded_at)"),
 ];
 
+/** Version 22: every aggregate and log table this schema declares, each of which carries `changed_at`. */
+export const CHANGED_AT_TABLES: readonly string[] = [
+  ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
+  ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
+];
+
+/** Version 22: the trigger function that stamps `changed_at` with the database clock on every UPDATE. */
+export const CHANGED_AT_TOUCH_FUNCTION_DDL = `CREATE OR REPLACE FUNCTION cp_touch_changed_at() RETURNS trigger
+LANGUAGE plpgsql AS $$
+BEGIN
+  NEW.changed_at := now();
+  RETURN NEW;
+END $$;`;
+
+/**
+ * Version 22: one guarded statement per table. The catalog is asked first, so
+ * a database that already has the column and trigger takes no lock at all;
+ * otherwise the ALTER is metadata only (non-volatile default, Postgres 11+).
+ */
+export function changedAtColumnDdl(table: string): string {
+  if (!/^cp_[a-z0-9_]+$/.test(table)) throw new Error(`unsafe control-plane table name ${JSON.stringify(table)}`);
+  return `DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema() AND table_name = '${table}' AND column_name = 'changed_at') THEN
+    ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS changed_at timestamptz NOT NULL DEFAULT now();
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = '${table}_changed_at' AND tgrelid = '${table}'::regclass) THEN
+    -- Two first bootstraps can both pass the check; the second one's duplicate is the same trigger.
+    BEGIN
+      CREATE TRIGGER ${table}_changed_at BEFORE UPDATE ON ${table}
+FOR EACH ROW EXECUTE FUNCTION cp_touch_changed_at();
+    EXCEPTION WHEN duplicate_object THEN NULL;
+    END;
+  END IF;
+END $$;`;
+}
+
+/** Version 22: the `changed_at` indexes for the tables the research round reads incrementally, built online. */
+export const CHANGED_AT_INDEXES: readonly OnlineIndex[] = [
+  "cp_work_items", "cp_attempts", "cp_route_tasks", "cp_occurrences", "cp_leases",
+  "cp_log_artifacts", "cp_log_scout_results", "cp_log_worker_results", "cp_log_costs",
+].map(table => onlineIndex(`${table}_changed_at`, `${table} (changed_at)`));
+
+/** Version 23: the RouteTask lookups, on the exact expression `listWhere(["routeTaskId"])` sends. */
+export const ROUTE_TASK_INDEXES: readonly OnlineIndex[] = [
+  onlineIndex("cp_attempts_route_task", "cp_attempts ((value #>> '{routeTaskId}'))"),
+  onlineIndex("cp_leases_route_task", "cp_leases ((value #>> '{routeTaskId}'))"),
+];
+
+/* ------------------------------------------------------------ version 24: spend holds */
+
+/** Version 24: one row per spend hold. `cost_recorded_at` is null until the hold's job is settled. */
+export const SPEND_HOLDS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_spend_holds (
+     hold_id          text PRIMARY KEY,
+     job_id           text NOT NULL,
+     obligation_id    text NOT NULL,
+     keys             text[] NOT NULL,
+     lifetime_keys    text[] NOT NULL DEFAULT '{}',
+     usd              numeric NOT NULL,
+     held_at          timestamptz NOT NULL,
+     what             text NOT NULL,
+     settled_usd      numeric,
+     cost_recorded_at timestamptz,
+     changed_at       timestamptz NOT NULL DEFAULT now()
+   );`;
+
+/**
+ * Version 24: the hold reads' indexes. `keys` (GIN) serves "the holds on these
+ * lines"; `job_id` the settle; the two partial indexes serve "live" and its
+ * negation (unsettled by when held, settled by when its cost was recorded);
+ * `held_at` the 24-hour window. Each is created only when the catalog does
+ * not have it, so a current database takes no lock.
+ */
+export const SPEND_HOLDS_INDEXES: readonly { readonly name: string; readonly on: string }[] = [
+  { name: "cp_spend_holds_keys", on: "cp_spend_holds USING gin (keys)" },
+  { name: "cp_spend_holds_job", on: "cp_spend_holds (job_id)" },
+  { name: "cp_spend_holds_unsettled", on: "cp_spend_holds (held_at) WHERE cost_recorded_at IS NULL" },
+  { name: "cp_spend_holds_settled", on: "cp_spend_holds (cost_recorded_at) WHERE cost_recorded_at IS NOT NULL" },
+  { name: "cp_spend_holds_held_at", on: "cp_spend_holds (held_at)" },
+];
+
+export const SPEND_HOLDS_INDEXES_DDL = `DO $do$ BEGIN
+${SPEND_HOLDS_INDEXES.map(i => `  IF to_regclass('${i.name}') IS NULL THEN
+    CREATE INDEX IF NOT EXISTS ${i.name} ON ${i.on};
+  END IF;`).join("\n")}
+END $do$;`;
+
+/** A hold row as the `SpendHold` JSON every reader takes, instants as `toISOString()` writes them. */
+export function spendHoldJsonSql(alias: string): string {
+  const iso = (column: string) => `to_char(${alias}.${column} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')`;
+  return `jsonb_build_object('holdId', ${alias}.hold_id, 'jobId', ${alias}.job_id, 'obligationId', ${alias}.obligation_id, ` +
+    `'keys', to_jsonb(${alias}.keys), 'lifetimeKeys', to_jsonb(${alias}.lifetime_keys), 'usd', ${alias}.usd, ` +
+    `'heldAt', ${iso("held_at")}, 'what', ${alias}.what, 'settled', CASE WHEN ${alias}.cost_recorded_at IS NULL THEN 'null'::jsonb ` +
+    `ELSE jsonb_build_object('usd', ${alias}.settled_usd, 'costRecordedAt', ${iso("cost_recorded_at")}) END)`;
+}
+
+/**
+ * A hold that still counts (`liveSpendHolds`), as SQL over `alias`, given the
+ * three instants it is measured from: the 24-hour window's start, the stale
+ * line for unsettled holds, and the retention line for settled ones.
+ */
+export function spendHoldLiveSql(alias: string, windowStart: string, staleBefore: string, keptSince: string): string {
+  return `((cardinality(${alias}.lifetime_keys) > 0 OR ${alias}.held_at >= ${windowStart}) AND ` +
+    `CASE WHEN ${alias}.cost_recorded_at IS NULL THEN ${alias}.held_at >= ${staleBefore} ELSE ${alias}.cost_recorded_at >= ${keptSince} END)`;
+}
+
+/** Exactly NOT `spendHoldLiveSql`, written as the disjunction its indexes serve. */
+export function spendHoldDeadSql(alias: string, windowStart: string, staleBefore: string, keptSince: string): string {
+  return `((${alias}.cost_recorded_at IS NULL AND ${alias}.held_at < ${staleBefore}) OR ` +
+    `(${alias}.cost_recorded_at IS NOT NULL AND ${alias}.cost_recorded_at < ${keptSince}) OR ` +
+    `(cardinality(${alias}.lifetime_keys) = 0 AND ${alias}.held_at < ${windowStart}))`;
+}
+
+/** The marker the bootstrap looks for in the installed body; move it whenever the function's body moves. */
+export const ADMIT_SPEND_HOLD_MARKER = "cp_admit_spend_hold body v1";
+
+/**
+ * One line's left, as `leftUsd` computes it: budget − (history + every live
+ * hold on it in its window unsettled + settled spend recorded after the
+ * line's history read), normalized at nanodollar precision.
+ */
+const LINE_LEFT_SQL = `(SELECT round(((l->>'budgetUsd')::numeric - ((l->>'historicalUsd')::numeric + coalesce(sum(
+        CASE WHEN h.cost_recorded_at IS NULL THEN h.usd
+             WHEN h.cost_recorded_at > (l->>'historyReadAt')::timestamptz THEN h.settled_usd
+             ELSE 0 END), 0))) * 1000000000) / 1000000000
+      FROM cp_spend_holds h
+      WHERE h.keys @> ARRAY[l->>'key'] AND ${spendHoldLiveSql("h", "win", "stale", "kept")}
+        AND (coalesce((l->>'lifetime')::boolean, false) OR h.held_at >= win))`;
+
+/**
+ * Version 24: the admission (`decideHold`, in the database). Arguments: the
+ * hold (`holdId`, `jobId`, `obligationId`, `usd` — null when not a measured
+ * amount — and `what`), the lines (`{sends, areas}`, each `{key, budgetUsd,
+ * historicalUsd, historyReadAt, lifetime}`), now, the window / stale /
+ * retention lengths in ms, and how many dead holds on the locked lines one
+ * admission may delete. Returns `{admit: true, hold}` (null hold: no lines),
+ * or `{admit: false, refusal: 'AMOUNT' | 'SEND' | 'AREA', left, position}`;
+ * the caller words the refusal with the same functions `decideHold` uses.
+ * One difference, on purpose: a line whose left cannot be computed (a
+ * non-numeric budget) refuses, where `decideHold` would compare NaN.
+ */
+export const ADMIT_SPEND_HOLD_FUNCTION_DDL = `DO $do$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'cp_admit_spend_hold'
+      AND pronamespace = current_schema()::regnamespace AND prosrc LIKE '%${ADMIT_SPEND_HOLD_MARKER}%') THEN
+    BEGIN
+      CREATE OR REPLACE FUNCTION cp_admit_spend_hold(hold jsonb, lines jsonb, now_at timestamptz,
+          window_ms bigint, stale_ms bigint, retention_ms bigint, prune_limit integer)
+        RETURNS jsonb LANGUAGE plpgsql VOLATILE AS $fn$
+      -- ${ADMIT_SPEND_HOLD_MARKER}
+      DECLARE
+        hid text := hold->>'holdId';
+        amount numeric := (hold->>'usd')::numeric;
+        win timestamptz := now_at - window_ms * interval '1 millisecond';
+        stale timestamptz := now_at - stale_ms * interval '1 millisecond';
+        kept timestamptz := now_at - retention_ms * interval '1 millisecond';
+        sends jsonb := coalesce(lines->'sends', '[]'::jsonb);
+        areas jsonb := coalesce(lines->'areas', '[]'::jsonb);
+        line_keys text[];
+        k text;
+        l jsonb;
+        line_left numeric;
+        first_left numeric;
+        fits boolean := false;
+        pos integer := 0;
+        found_hold jsonb;
+      BEGIN
+        SELECT coalesce(array_agg(DISTINCT e->>'key' ORDER BY e->>'key'), '{}') INTO line_keys
+          FROM jsonb_array_elements(sends || areas) AS e;
+        -- One lock per line, in one order, held until this statement's transaction ends.
+        FOREACH k IN ARRAY line_keys LOOP
+          PERFORM pg_advisory_xact_lock(hashtextextended('cp_spend_holds:' || k, 0));
+        END LOOP;
+        -- What no longer counts is deleted, never read again: this hold id, then the dead holds on these lines.
+        DELETE FROM cp_spend_holds d WHERE d.hold_id = hid AND ${spendHoldDeadSql("d", "win", "stale", "kept")};
+        IF cardinality(line_keys) > 0 THEN
+          DELETE FROM cp_spend_holds x WHERE x.hold_id IN (SELECT d.hold_id FROM cp_spend_holds d
+            WHERE d.keys && line_keys AND ${spendHoldDeadSql("d", "win", "stale", "kept")} LIMIT prune_limit);
+        END IF;
+        -- Idempotent by hold id.
+        SELECT ${spendHoldJsonSql("h")} INTO found_hold FROM cp_spend_holds h WHERE h.hold_id = hid;
+        IF found_hold IS NOT NULL THEN RETURN jsonb_build_object('admit', true, 'hold', found_hold); END IF;
+        IF cardinality(line_keys) = 0 THEN RETURN jsonb_build_object('admit', true, 'hold', 'null'::jsonb); END IF;
+        IF amount IS NULL OR amount < 0 THEN RETURN jsonb_build_object('admit', false, 'refusal', 'AMOUNT'); END IF;
+        -- Sends: one with room suffices.
+        IF jsonb_array_length(sends) > 0 THEN
+          FOR l IN SELECT e FROM jsonb_array_elements(sends) WITH ORDINALITY AS t(e, n) ORDER BY n LOOP
+            line_left := ${LINE_LEFT_SQL};
+            IF first_left IS NULL THEN first_left := coalesce(line_left, 0); END IF;
+            IF line_left >= amount THEN fits := true; EXIT; END IF;
+          END LOOP;
+          IF NOT fits THEN RETURN jsonb_build_object('admit', false, 'refusal', 'SEND', 'left', first_left); END IF;
+        END IF;
+        -- Every area, then every lifetime Send: each must have room.
+        FOR l IN SELECT e FROM (
+            SELECT e, 0 AS part, n FROM jsonb_array_elements(areas) WITH ORDINALITY AS a(e, n)
+            UNION ALL
+            SELECT e, 1 AS part, n FROM jsonb_array_elements(sends) WITH ORDINALITY AS s(e, n)
+              WHERE coalesce((e->>'lifetime')::boolean, false)) every_line ORDER BY part, n LOOP
+          line_left := ${LINE_LEFT_SQL};
+          IF line_left IS NULL OR line_left < amount THEN
+            RETURN jsonb_build_object('admit', false, 'refusal', 'AREA', 'left', coalesce(line_left, 0), 'position', pos);
+          END IF;
+          pos := pos + 1;
+        END LOOP;
+        INSERT INTO cp_spend_holds (hold_id, job_id, obligation_id, keys, lifetime_keys, usd, held_at, what)
+          VALUES (hid, hold->>'jobId', hold->>'obligationId',
+            ARRAY(SELECT e->>'key' FROM jsonb_array_elements(sends || areas) WITH ORDINALITY AS t(e, n) ORDER BY n),
+            ARRAY(SELECT e->>'key' FROM jsonb_array_elements(sends || areas) WITH ORDINALITY AS t(e, n)
+              WHERE coalesce((e->>'lifetime')::boolean, false) ORDER BY n),
+            amount, now_at, hold->>'what')
+          ON CONFLICT (hold_id) DO NOTHING;
+        SELECT ${spendHoldJsonSql("h")} INTO found_hold FROM cp_spend_holds h WHERE h.hold_id = hid;
+        RETURN jsonb_build_object('admit', true, 'hold', found_hold);
+      END $fn$;
+    -- Two first bootstraps can both pass the check; the other one installed the same body.
+    EXCEPTION WHEN unique_violation OR internal_error THEN NULL;
+    END;
+  END IF;
+END $do$;`;
+
+/**
+ * Version 24: the one-time move. The ledger row is locked, its holds copied
+ * (an id already in the table is kept as it is), and its `spendHolds`
+ * emptied with the revision bumped, in one transaction. A hold that cannot be
+ * read as one (no job, amount or instant) is not copied.
+ */
+export const SPEND_HOLDS_MOVE_DDL = `DO $do$
+DECLARE held jsonb;
+BEGIN
+  SELECT value->'spendHolds' INTO held FROM cp_budget WHERE id = 'shared-budget-ledger' FOR UPDATE;
+  IF held IS NULL OR jsonb_typeof(held) <> 'object' OR held = '{}'::jsonb THEN RETURN; END IF;
+  INSERT INTO cp_spend_holds (hold_id, job_id, obligation_id, keys, lifetime_keys, usd, held_at, what, settled_usd, cost_recorded_at)
+  SELECT e.key, e.value->>'jobId', coalesce(e.value->>'obligationId', ''),
+    ARRAY(SELECT jsonb_array_elements_text(CASE WHEN jsonb_typeof(e.value->'keys') = 'array' THEN e.value->'keys' ELSE '[]'::jsonb END)),
+    ARRAY(SELECT jsonb_array_elements_text(CASE WHEN jsonb_typeof(e.value->'lifetimeKeys') = 'array' THEN e.value->'lifetimeKeys' ELSE '[]'::jsonb END)),
+    (e.value->>'usd')::numeric, (e.value->>'heldAt')::timestamptz, coalesce(e.value->>'what', ''),
+    CASE WHEN jsonb_typeof(e.value->'settled') = 'object' AND e.value->'settled'->>'costRecordedAt' IS NOT NULL
+      THEN coalesce((e.value->'settled'->>'usd')::numeric, 0) END,
+    CASE WHEN jsonb_typeof(e.value->'settled') = 'object' THEN (e.value->'settled'->>'costRecordedAt')::timestamptz END
+  FROM jsonb_each(held) AS e
+  WHERE jsonb_typeof(e.value) = 'object' AND e.value->>'jobId' IS NOT NULL
+    AND jsonb_typeof(e.value->'usd') = 'number' AND e.value->>'heldAt' IS NOT NULL
+  ON CONFLICT (hold_id) DO NOTHING;
+  UPDATE cp_budget SET value = jsonb_set(value, '{spendHolds}', '{}'::jsonb), revision = revision + 1, changed_at = now()
+    WHERE id = 'shared-budget-ledger';
+END $do$;`;
+
 /** Every index the bootstrap builds online, by its DDL statement. */
 export const ONLINE_INDEXES: ReadonlyMap<string, OnlineIndex> = new Map(
-  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES].map(index => [index.ddl, index] as const));
+  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES, ...ROUTE_TASK_INDEXES].map(index => [index.ddl, index] as const));
 
 export const BOOTSTRAP_DDL: readonly string[] = [
   `CREATE TABLE IF NOT EXISTS cp_schema_version (
@@ -768,6 +1092,17 @@ END $$;`,
      ON cp_occurrences ((value->>'obligationId'));`,
   // Version 20 (CH-26): built online, after every table they index exists.
   ...SCOPED_HISTORY_INDEXES.map(index => index.ddl),
+  // Version 22: every aggregate and log says when it last changed, by the database's clock.
+  CHANGED_AT_TOUCH_FUNCTION_DDL,
+  ...CHANGED_AT_TABLES.map(changedAtColumnDdl),
+  ...CHANGED_AT_INDEXES.map(index => index.ddl),
+  // Version 23: the RouteTask lookups for Attempts and leases.
+  ...ROUTE_TASK_INDEXES.map(index => index.ddl),
+  // Version 24: one row per spend hold, the admission in the database, and the one-time move off the ledger row.
+  SPEND_HOLDS_TABLE_DDL,
+  SPEND_HOLDS_INDEXES_DDL,
+  ADMIT_SPEND_HOLD_FUNCTION_DDL,
+  SPEND_HOLDS_MOVE_DDL,
 ];
 
 /**

@@ -54,7 +54,9 @@ test("MTG-15: the meeting surfaces carry the tag from the meeting's OCD identity
   assert.match(panel, /<LevelTag tier=\{first \? tierForMeeting\(first\) : null\} \/>/);
   // The compact map-pin card carries it too, from its already-resolved tier.
   const popup = read("components/map/popup/meeting-popup.tsx");
-  assert.match(popup, /levelTier=\{tier\}/, "the compact meeting card passes its tier as the level word");
+  assert.match(popup, /<MeetingCard meeting=\{meeting\}/, "the popup delegates its actual meeting to the shared card");
+  const shared = read("components/ui/meeting-card.tsx");
+  assert.match(shared, /titleAfter=\{<LevelTag tier=\{tierForMeeting\(meeting\)\}/, "the shared card derives the level from OCD identity and places it after its title");
 });
 
 /* -------------------------------------------------------------- BAL-40 logo */

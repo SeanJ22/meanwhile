@@ -84,3 +84,14 @@ test("a reused publisher portal is classified identically by the real route and 
     assert.equal(row.gap.whose, "OURS");
   }
 });
+
+test("CP-18: a merged calendar card retains the original portal's actions and votes", () => {
+  const sitting = held.sittings.find(row => row.outcomes.length > 0 && row.rollCalls.length > 0)!;
+  const original = meetingReaderRecords(sitting.meetingId, sitting.bodyId);
+  const merged = meetingReaderRecords("calendar:merged", sitting.bodyId, ["calendar:merged", sitting.meetingId]);
+  assert.equal(merged.meetingId, "calendar:merged");
+  assert.deepEqual(merged.actions, original.actions);
+  assert.deepEqual(merged.rollCalls, original.rollCalls);
+  assert.deepEqual(merged.counts, original.counts);
+  assert.equal(meetingReaderRecords("calendar:merged", "another-body", [sitting.meetingId]).counts.actions, 0);
+});

@@ -1,3 +1,4 @@
+import type { BoxFinding } from "../box.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import type { ActiveWorkClaimReader } from "./active-work-claims.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
@@ -86,6 +87,7 @@ import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { BudgetLedger } from "../budget.ts";
+import type { SpendHoldStore } from "../expansion/spend-holds.ts";
 import type { CostEntry } from "../cost.ts";
 import type { ArtifactTier } from "../evidence/artifact.ts";
 import type { RouteDisposition, RouteTask } from "../route-task.ts";
@@ -403,6 +405,36 @@ export interface AggregateRepository<T> {
    * THROWS and is never an empty list.
    */
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
+  /**
+   * The rows whose database-clock `changed_at` is at or after `since` (every
+   * row when `since` is null), in id order like `list()`. `through` is the
+   * store's clock when the read BEGAN (ISO), so a later read from
+   * `through` minus a slack misses no change committed after this one started.
+   * `updated_at` is the writer's clock and cannot answer this. Optional: the
+   * Postgres and memory stores carry it; a caller without it reads `list()`
+   * (`incremental-reads.ts`). A store whose schema lacks the column THROWS.
+   */
+  listChangedSince?(since: string | null): Promise<ChangedRows<T>>;
+}
+
+/** What `AggregateRepository.listChangedSince` answers. */
+export interface ChangedRows<T> {
+  readonly rows: readonly Persisted<T>[];
+  readonly through: string | null;
+}
+
+/** One log record with the coordinates `readAll()` orders it by. */
+export interface ChangedRecord<T> {
+  readonly key: string;
+  readonly recordId: string;
+  readonly position: number;
+  readonly record: T;
+}
+
+/** What `AppendOnlyRepository.readChangedSince` answers. */
+export interface ChangedRecords<T> {
+  readonly records: readonly ChangedRecord<T>[];
+  readonly through: string | null;
 }
 
 /**
@@ -474,6 +506,13 @@ export interface AppendOnlyRepository<T> {
    * use `keysWhere` in this file, which says when it is missing.
    */
   keysWhere?(path: readonly string[], value: string): Promise<readonly string[]>;
+  /**
+   * The records whose database-clock `changed_at` is at or after `since`
+   * (every record when `since` is null), in `readAll()` order (key, then
+   * position), each with its key, record id and position. `through` is as for
+   * `AggregateRepository.listChangedSince`. Optional, like that method.
+   */
+  readChangedSince?(since: string | null): Promise<ChangedRecords<T>>;
 }
 
 /** The keys of a log holding a record whose value at `path` equals `value`, or null when the provider has no filtered read (the caller then reads as before). */
@@ -567,6 +606,13 @@ export interface BudgetRepository {
     now: string,
   ): Promise<{ readonly result: R; readonly persisted: Persisted<BudgetLedger> }>;
 }
+
+/**
+ * The Send and area spend holds, one row per hold (schema v24,
+ * `cp_spend_holds`). The rule and the stores live in
+ * `lib/control-plane/expansion/spend-holds.ts`.
+ */
+export type SpendHoldRepository = SpendHoldStore;
 
 /**
  * Exclusive sections for read-modify-write sequences.
@@ -772,6 +818,7 @@ export interface ControlPlaneRepositories {
   readonly methodCandidates: AggregateRepository<CandidateStore>;
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
   readonly scoutResults: AppendOnlyRepository<ScoutResult>;
+  readonly boxFindings: AggregateRepository<BoxFinding>;
   readonly workerResults: AppendOnlyRepository<WorkerResultRecord>;
   /**
    * THE NIGHTLY DOOR. (RULING 242 — schema v5.)
@@ -846,6 +893,12 @@ export interface ControlPlaneRepositories {
   /** The Door Registry (DB-09, schema v19): one aggregate per door, id = door id. Written only through the `door.save` gateway action, and by derive steps that never overwrite a newer manual edit. */
   readonly doors: AggregateRepository<DoorRecord>;
   readonly budget: BudgetRepository;
+  /**
+   * The spend holds, one row per hold (schema v24). Absent (the file store),
+   * the holds stay on the budget ledger row, as they do behind the
+   * `WTP_SPEND_HOLDS_TABLE=0` switch.
+   */
+  readonly spendHolds?: SpendHoldRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */
   readonly describe: () => string;

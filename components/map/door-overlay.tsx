@@ -1,5 +1,6 @@
 "use client";
 
+import { MeetingRow } from "@/components/ui/meeting-row";
 import { X } from "lucide-react";
 import { createContext, useContext } from "react";
 
@@ -20,10 +21,10 @@ import {
   TIER_GROUP_LABELS,
   type TierGroup,
 } from "@/lib/officials/tier-grouping";
-import { formatMeetingDate } from "@/lib/map/format";
+
 import { bodyDisplayName } from "@/lib/text/reader-names";
-import { isOnlineOnly } from "@/lib/meetings/online";
-import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
+
+
 
 /**
  * The sidebar-count doors (8a, 2026-08-17): tapping a stat number opens the
@@ -277,33 +278,7 @@ function BodiesDoor({
                 {bodyClassShort(body.bodyClass)}
               </span>
             </div>
-            {next && (
-              <button
-                type="button"
-                onClick={() => onOpenMeeting(next)}
-                className="mt-0.5 cursor-pointer text-left t-detail text-signal underline decoration-dotted"
-              >
-                Next meeting: {formatMeetingDate(next)} →
-                {/*
-                  **MTG-14 (2026-08-28): THIS DOOR NEVER SAID SO.** The list
-                  overlay has marked an online sitting since D18; this line —
-                  one of the two other places a reader first meets a meeting —
-                  showed a body and a date and nothing else. A reader who found
-                  the sitting here learned there was no room to attend only if
-                  they happened to open the card.
-
-                  It is inside the button on purpose: the mark's screen-reader
-                  qualifier then reaches the button's accessible name, so the
-                  fact is spoken with the thing it is about rather than beside
-                  it.
-                */}
-                {isOnlineOnly(next) && (
-                  <span className="ml-1.5 inline-block no-underline">
-                    <MeetingStatusPill status="online" />
-                  </span>
-                )}
-              </button>
-            )}
+            {next && <MeetingRow meeting={next} compact title="Next meeting" onOpen={onOpenMeeting} /> }
           </li>
         );
       })}

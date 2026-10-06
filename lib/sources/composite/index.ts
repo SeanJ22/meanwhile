@@ -261,7 +261,11 @@ export interface CompositeOptions {
  * otherwise have seen" is a stated number with a reason — the same rule every
  * drop counter in this file exists to satisfy.
  */
-export function collapseDuplicateSittings(rows: Meeting[]): {
+export function collapseDuplicateSittings(rows: Meeting[],
+  /** Optional field reconciliation inside the existing exact-sitting collapse.
+   * null keeps both rows when their body/source identities cannot safely join. */
+  resolveDuplicate?: (held: Meeting, next: Meeting) => Meeting | null,
+): {
   rows: Meeting[];
   collapsed: number;
   /**
@@ -314,6 +318,15 @@ export function collapseDuplicateSittings(rows: Meeting[]): {
     if (sourceOf(m) === sourceOf(held)) {
       // Same source, same instant: its own catalogue, and not ours to merge.
       kept.push(m);
+      continue;
+    }
+    if (resolveDuplicate) {
+      const resolved = resolveDuplicate(held, m);
+      if (resolved === null) { kept.push(m); continue; }
+      kept[kept.indexOf(held)] = resolved;
+      best.set(key, resolved);
+      dropped.push(resolved.id === m.id ? held : m);
+      collapsed += 1;
       continue;
     }
     collapsed += 1;

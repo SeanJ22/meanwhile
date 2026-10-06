@@ -79,6 +79,7 @@ const ROUTED = [
   "components/map/door-overlay.tsx",
   "components/map/popup/meeting-popup.tsx",
   "lib/meetings/venues.ts",
+  "components/ui/meeting-row.tsx",
 ];
 
 /**
@@ -106,7 +107,7 @@ test("MTG-14: every routed surface asks the helper rather than re-deriving the p
   for (const file of ROUTED) {
     const src = read(file);
     if (/meeting\.location\s*===\s*null/.test(src)) offenders.push(`${file} (inline predicate)`);
-    if (!/from "(@\/lib\/meetings\/online|\.\/online\.ts)"/.test(src)) {
+    if (!/from "(@\/lib\/meetings\/online|\.\/online\.ts)"/.test(src) && !(/from "@\/components\/ui\/meeting-(row|card)"/.test(src) && /<Meeting(Row|Card)/.test(src))) {
       offenders.push(`${file} (does not import the helper)`);
     }
   }
@@ -176,17 +177,12 @@ test("MTG-14: both discovery surfaces this session owns render the online mark",
    */
   for (const file of ["components/map/list-overlay.tsx", "components/map/door-overlay.tsx"]) {
     const src = read(file);
-    assert.match(src, /MeetingStatusPill/, `${file} renders no status pill`);
-    assert.match(
-      src,
-      /status="online"/,
-      `${file} never marks an online sitting`,
-    );
-    assert.match(
-      src,
-      /isOnlineOnly\(/,
-      `${file} marks online without asking the one predicate`,
-    );
+    assert.match(src, /<MeetingRow/, `${file} must mount the shared row`);
+    const shared = read("components/ui/meeting-row.tsx");
+    assert.match(shared, /MeetingStatusPill/);
+    assert.match(shared, /status="online"/);
+    assert.match(shared, /onlineAccessFor\(meeting\)/);
+
   }
 });
 

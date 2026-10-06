@@ -28,8 +28,9 @@ function kind(value: unknown): SiteKind {
 }
 function coordinate(value: unknown, limit: number): number | null {
   if (value === null || value === undefined || value === "") return null;
+  if (typeof value !== "number" && typeof value !== "string") return null;
   const number = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(number) || number < -limit || number > limit) throw new Error("A published voting-site coordinate is invalid.");
+  if (!Number.isFinite(number) || number < -limit || number > limit) return null;
   return number;
 }
 
@@ -74,8 +75,9 @@ export function readPollingDoor(input: {
     const value = row.fields;
     if (words(string(value.jurisdictionName)) !== words(input.jurisdictionName)) throw new Error("A polling source row belongs to another jurisdiction.");
     models.add(model(value.model));
-    const lat = coordinate(value.lat, 90), lng = coordinate(value.lng, 180);
-    if ((lat === null) !== (lng === null)) throw new Error("A voting site carries only half a point.");
+    const sourceLat = coordinate(value.lat, 90), sourceLng = coordinate(value.lng, 180);
+    // A verified site remains listed when a complete point is unreported.
+    const lat = sourceLng === null ? null : sourceLat, lng = sourceLat === null ? null : sourceLng;
     return { id: `voting-site:${digest(`${door.doorId}\n${row.id}`)}`, name: string(value.name), address: string(value.address),
       room: string(value.room) || null, lat, lng, kind: kind(value.kind),
       election: string(value.election) || null, serves: string(value.serves) || null };

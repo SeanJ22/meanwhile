@@ -54,7 +54,6 @@ import {
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 
 import type { FailureClass, ReaderQuestionInstance } from "./reader-question.ts";
-import type { VisualAcceptanceCheck } from "./visual-acceptance.ts";
 
 /* ------------------------------------------------------------- creation */
 
@@ -96,38 +95,6 @@ export function readerDiagnostic(
          either answers it or does not. There is no separate validator whose
          record would add anything, and requiring one would mean an item could
          sit open with the question long since green. */
-      requiresValidation: false,
-    },
-    now,
-  });
-}
-
-/** The same, for a visual acceptance check. One taxonomy, two artifact types. */
-export function visualDiagnostic(
-  check: VisualAcceptanceCheck,
-  failureClass: FailureClass,
-  detail: string,
-  testedSha: string | null,
-  now: string,
-): WorkItem {
-  return createWorkItem({
-    project: "pilot-health",
-    subject: check.surface,
-    obligation: `visual-diagnostic:${failureClass}:${check.id}`,
-    why:
-      `Visual acceptance check ${check.id} on ${check.surface} (zip ${check.zip}, ` +
-      `${check.viewport.width}x${check.viewport.height}) failed with class "${failureClass}": ` +
-      `${detail}. The fix is CLASS-WIDE — one clipped card is every card that clips under ` +
-      "that condition — and the completion contract is this check passing on a fresh capture " +
-      "evaluated as an image.",
-    priority: "P1",
-    contract: {
-      instrumentEvidence: {
-        instrument: "VISUAL_SUITE",
-        instanceId: check.id,
-        createdAtSha: testedSha,
-        requiredVerdict: "GREEN",
-      },
       requiresValidation: false,
     },
     now,

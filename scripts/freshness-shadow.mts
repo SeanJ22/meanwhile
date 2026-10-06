@@ -5,7 +5,7 @@ import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-p
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
-import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
+import { legacyHeldWorkOwed, planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
 import { costEntryWithModel } from "../lib/control-plane/cost.ts";
 import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
@@ -114,6 +114,7 @@ import {
   CONTROL_PLANE_QUERY_CONCURRENCY,
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { incrementalReadsEnabled, INCREMENTAL_READS_ENV, withIncrementalReads } from "../lib/control-plane/repository/incremental-reads.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import {
   closeCycleOccurrences,
@@ -373,7 +374,7 @@ import {
   SendBudgetRefusal,
   budgetGuardedTransport,
   hasBudgetLines,
-  liveSpendHolds,
+  readLiveSpendHolds,
   releaseOpenJobs,
   SPEND_HOLD_STALE_MS,
 } from "../lib/control-plane/expansion/spend-holds.ts";
@@ -594,6 +595,16 @@ if (wantsPostgres) {
     process.exit(1);
   }
   repos = await pending.step("control-plane:open", () => createPgRepositories(url, NOW));
+  /* One in-memory copy of the tables every wave re-reads (planner, standing
+     runtime, round start, promotion tail, campaign chain); each later read
+     fetches only rows changed since (schema v22). The lease-worker children
+     open their own repositories and are not wrapped. WTP_INCREMENTAL_READS=0
+     is the way back to whole reads. */
+  if (incrementalReadsEnabled()) {
+    repos = withIncrementalReads(repos, { log: (line) => console.warn(`freshness:shadow · ${line}`) });
+  } else {
+    console.log(`freshness:shadow · ${INCREMENTAL_READS_ENV}=0: control-plane tables are read whole on every wave`);
+  }
 } else {
   mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
   repos = await createFileRepositories(CONTROL_PLANE_ROOT);
@@ -1637,8 +1648,8 @@ try {
     () => repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
     () => null, startupReadRetry)];
   if (researchSpendInWindow(costLedger, NOW).windowUsd === null) {
-    const heldBudget = await retryStartupRead(() => repos.budget.read(), () => null, startupReadRetry);
-    historicalSpendHolds = Object.values(liveSpendHolds(heldBudget.value.spendHolds, NOW));
+    /* The holds that count now, one row each (schema v24; the ledger row behind WTP_SPEND_HOLDS_TABLE=0). */
+    historicalSpendHolds = Object.values(await retryStartupRead(() => readLiveSpendHolds(repos, NOW), () => null, startupReadRetry));
   }
 } catch (error) {
   ledgerUnreadable = error instanceof Error ? error.message : String(error);
@@ -2106,10 +2117,16 @@ const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as 
  * settled job books what it measured; an unmeasured job or a crash leaves the
  * whole hold counting for the rolling 24 hours.
  */
-const spendHolds = new DurableSpendHolds({ budget: repos.budget, now: nowIso });
+const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: nowIso });
 /** The admitted Scout job on each obligation this cycle, with what it holds. */
 const jobSpend = new Map<string, JobSpend>();
-releaseRoundHolds = () => { const open = [...jobSpend.values()]; jobSpend.clear(); return releaseOpenJobs(spendHolds, open, nowIso()); };
+/* A round's end settles what it never settled, then deletes the holds that no longer count (bounded; never accumulated). */
+releaseRoundHolds = async () => {
+  const open = [...jobSpend.values()]; jobSpend.clear();
+  const failed = await releaseOpenJobs(spendHolds, open, nowIso());
+  await spendHolds.sweep();
+  return failed;
+};
 /** Each held job's subject, so a pre-warm charged to it names the same jurisdiction. */
 const jobSubject = new Map<string, string>();
 let scoutJobSeq = 0;
@@ -3163,9 +3180,9 @@ async function runAutonomousWave() {
   placeOrderDirty = true;
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
-  /* The legacy held-evidence plan read every artifact, Attempt, work item and route task on every wave, and has found no
-     work since 2026-10-04 (no schema-1 work items remain). Off by default (2026-10-06, Neon transfer); WTP_HELD_FLEET_PLAN=1 runs it. */
-  const held = process.env.WTP_HELD_FLEET_PLAN === "1" ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
+  /* The legacy held-evidence plan runs only when schema-1 held work is owed (Sean, 2026-10-06): a registered event
+     capture whose Parser, Validator, Auditor chain has a step left. Both reads come from the round's incremental copy. */
+  const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },

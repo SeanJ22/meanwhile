@@ -472,6 +472,33 @@ export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime
   }
 }
 
+/**
+ * Whether any schema-1 held evidence still has a step of its Parser, Validator, Auditor chain to run: the
+ * only work the round's legacy plan (`planHeldWorkerFleet(..., legacyOnly)`) can create. Its sources are the two
+ * registered event APIs in `heldEventContract`; captures of them still arrive (2026-10-04). Sean, 2026-10-06:
+ * the plan runs only when such work exists. A chain ends where `advanceHeldWorkerFleet` stops it: a Parser
+ * that did not extract, a Validator that did not pass, or an Auditor result.
+ */
+export async function legacyHeldWorkOwed(root: string, runtime: FleetRuntime): Promise<boolean> {
+  const candidates = (await runtime.repos.artifacts.readAll()).filter(artifact => !artifact.partial && heldEventContract(root, artifact) !== null);
+  if (candidates.length === 0) return false;
+  const [itemRows, records] = await Promise.all([runtime.repos.workItems.list(), runtime.repos.workerResults.readAll()]);
+  const items = new Map(itemRows.map(row => [row.id, row.value]));
+  for (const artifact of candidates) {
+    const item = items.get(artifact.workItemId);
+    if (!item || item.autonomousPlan?.contract.schemaVersion === 2 || item.subject !== heldEventContract(root, artifact)!.subjectId) continue;
+    const chain = records.filter(r => r.workItemId === item.id && r.completion.completedTask.workerTask?.artifactId === artifact.artifactId);
+    const parser = chain.find(r => r.result.role === "PARSER");
+    if (!parser) return true;
+    if (parser.result.verdict !== "EXTRACTED") continue;
+    const validator = chain.find(r => r.result.role === "VALIDATOR");
+    if (!validator) return true;
+    if (validator.result.verdict !== "PASS") continue;
+    if (!chain.some(r => r.result.role === "ADVERSARIAL_AUDITOR")) return true;
+  }
+  return false;
+}
+
 /** Held work joins the same lease queue as acquisition. Planning invokes no worker or model. */
 export async function planHeldWorkerFleet(root: string, runtime: FleetRuntime, legacyOnly = false): Promise<readonly RouteTask[]> {
   await advanceHeldWorkerFleet(root, runtime, Infinity, legacyOnly);

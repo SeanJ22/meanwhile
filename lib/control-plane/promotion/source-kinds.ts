@@ -33,3 +33,9 @@ export function validSourceKinds(value: unknown): value is SourcePolicy["enabled
   return value !== null && typeof value === "object" && !Array.isArray(value) &&
     Object.keys(value).length === SOURCE_KINDS.length && SOURCE_KINDS.every(kind => typeof (value as Record<string, unknown>)[kind] === "boolean");
 }
+
+/** Preserve the source-kind label in the existing receipt vocabulary. */
+export function manualClassForKind(kind: SourceKind): import("../../civic-data/types.ts").ManualSourceClass {
+  return ({ OFFICIAL: "OFFICIAL_PUBLISHER", CAMPAIGN: "CANDIDATE_CONTROLLED", REFERENCE: "REFERENCE_PUBLISHER" } as const)[kind as "OFFICIAL" | "CAMPAIGN" | "REFERENCE"] ??
+    kind as import("../../civic-data/types.ts").ManualSourceClass;
+}

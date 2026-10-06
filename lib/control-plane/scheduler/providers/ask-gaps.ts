@@ -106,6 +106,7 @@ import {
 import type { AgendaDocumentLike } from "../../../routing/agenda-search.ts";
 import type { PersistedSittingOutcomes } from "../../../outcomes/types.ts";
 import { ROUTINE_SOURCE_CONTRACTS, type RoutineSourceContract } from "../../../civic-data/contracts.ts";
+import { RUNTIME_ROUTINE_CONTRACTS } from "../../../civic-data/runtime-routine-contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../../../civic-data/meeting-partitions.ts";
 import { displayNameOf } from "../../display-name.ts";
 import { ASK_GAPS_PROVIDER_ID, ASK_GAP_OBLIGATION_CLASS, NEXT_READ_MARK } from "../../ask-gap-id.ts";
@@ -185,7 +186,7 @@ export function askGapCarriers(
   } = {},
 ): readonly string[] {
   const partitions = registered.partitions ?? MEETING_PARTITION_CONTRACTS;
-  const contracts = registered.contracts ?? ROUTINE_SOURCE_CONTRACTS;
+  const contracts = registered.contracts ?? [...ROUTINE_SOURCE_CONTRACTS, ...RUNTIME_ROUTINE_CONTRACTS];
   if (recordClass === "MEETING") {
     const own = ownMeetingPartitions(bodyId, partitions);
     if (own.length > 0) return own;

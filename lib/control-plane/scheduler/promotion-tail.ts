@@ -59,7 +59,6 @@ import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 import type { RouteDescriptor } from "./registry.ts";
-import { ACTIVATION_GATE } from "../promotion/activation-policy.ts";
 
 /** The one directory this module may write to. Enforced, not just documented. */
 export const STAGING_DIR = [".runtime", "control-plane", "staging"] as const;
@@ -619,7 +618,7 @@ export function writeStagingManifest(
 
   const manifest: StagingManifest = {
     stagedOn,
-    promotionEnabled: ACTIVATION_GATE.promotionEnabled,
+    promotionEnabled: true, // Legacy manifest field; verified facts are not class-gated.
     entries: [...merged.values()].sort((a, b) =>
       a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0,
     ),
@@ -642,7 +641,7 @@ export function promotionLines(entries: readonly StagedEntry[]): string[] {
   const out: string[] = [];
   out.push(
     `  promotion tail     ${entries.length} entry(ies) staged — ${ready.length} PROMOTION-READY, ` +
-      `${gaps.length} honest gap(s). Promotion is ${ACTIVATION_GATE.promotionEnabled ? "ON" : "OFF"}.`,
+      `${gaps.length} honest gap(s). Verified facts publish through their reader doors.`,
   );
   for (const e of ready) {
     out.push(

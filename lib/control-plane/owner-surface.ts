@@ -507,6 +507,8 @@ export interface OwnerDigestRecord {
   readonly testedSha: string | null;
   /** Source progress for an exact Admin Send, in this existing append-only activity log. */
   readonly huntSourceProgress?: HuntSourceProgress;
+  /** Hourly flow measurements reference existing publication receipts only. */
+  readonly publicationFlow?: import("../civic-data/publication-flow.ts").PublicationFlowReceipt;
   /**
    * Structured runtime outcome carried beside the exact human digest. Optional
    * only for historical rows written before PDC. Distinct kinds keep a civic

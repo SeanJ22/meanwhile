@@ -1,28 +1,19 @@
 "use client";
 
+import { MeetingRow } from "@/components/ui/meeting-row";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { meetingCardSources } from "@/lib/officials/card-sources";
 import { useEffect, useMemo, useState } from "react";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { MeetingListingNotice } from "./meeting-listing-notice";
 
 import { haversineKm } from "@/lib/geo/distance";
-import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
+import { orderByUpcomingFirst } from "@/lib/meetings/ordering";
 import { concludedGapNote } from "@/lib/meetings/history-gaps";
-import {
-  isOnlineOnly,
-  isPlaceUnrecorded,
-  PLACE_UNRECORDED_MARK,
-  statedVenueText,
-  venueGapMark,
-  venueGapOf,
-} from "@/lib/meetings/online";
+
 import { focusList } from "@/lib/state/list-focus";
-import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
-import {
-  formatMeetingDate,
-  formatMiles,
-  meetingRowTitle,
-  meetingSubline,
-} from "@/lib/map/format";
+
+import { formatMeetingDate, formatMiles, meetingRowTitle } from "@/lib/map/format";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { useMeetingBadge } from "@/hooks/use-meeting-badge";
 import type { JurisdictionBadge } from "@/lib/meetings/jurisdiction-badge";
@@ -65,16 +56,6 @@ const GROUPS: { value: ListGroupBy; label: string }[] = [
   { value: "district", label: "District" },
   { value: "date", label: "Date" },
 ];
-
-/** "Published by X" — the office(s) whose calendar these meetings came from. */
-function creditFor(items: readonly Meeting[]): string | null {
-  const offices = [
-    ...new Set(items.map((m) => m.provenance.sourceOrg.trim()).filter(Boolean)),
-  ];
-  if (offices.length === 0) return null;
-  if (offices.length <= 2) return `Published by ${offices.join(" and ")}`;
-  return `Published by ${offices[0]}, ${offices[1]} and ${offices.length - 2} other office${offices.length === 3 ? "" : "s"}`;
-}
 
 function groupKeyFor(meeting: Meeting, groupBy: ListGroupBy): string {
   switch (groupBy) {
@@ -443,9 +424,7 @@ export function ListOverlay({
                 would be a claim about rows that do not carry it — so those
                 keep their per-row badges and this renders nothing.
               */}
-              {!collapsed && creditFor(group.items) && (
-                <p className="al-group-credit">{creditFor(group.items)}</p>
-              )}
+              {!collapsed && <CardSourcesContribution id={`meeting-list:${group.key}`} sources={group.items.flatMap(meeting => meetingCardSources(meeting, []))} />}
 
               {!collapsed && groupBadge !== null && (
                 <p className="al-group-jurisdiction">
@@ -459,7 +438,6 @@ export function ListOverlay({
 
               {!collapsed &&
                 group.items.map((meeting) => {
-                  const when = formatMeetingDate(meeting);
                   const km =
                     center && meeting.location
                       ? haversineKm(
@@ -471,136 +449,14 @@ export function ListOverlay({
                       : null;
 
                   return (
-                    <button
-                      key={meeting.id}
-                      type="button"
-                      className="al-row"
-                      data-meeting-id={meeting.id}
-                      style={tierVars(tierForMeeting(meeting))}
-                      onClick={() => {
-                        onPickMeeting(meeting);
-                        dispatch({ type: "list/open", open: false });
-                      }}
-                    >
-                      <span className="al-row-title">
-                        {/* 3a: what-first, said once — sources that title a
-                            sitting with the body's own name must not read
-                            the same words twice. */}
-                        {meetingRowTitle(meeting, {
-                          jurisdictionShown: ui.listGroupBy === "jurisdiction",
-                        })}
-                        {/* MTG-2 (2026-08-23): only what the headline does not
-                            already say. Twenty Morris County rows each printed
-                            the same two facts twice, reordered — the old guard
-                            asked whether the sitting had a distinct title, when
-                            the question is whether the HEADLINE already carries
-                            the words about to go under it. An empty subline
-                            renders nothing rather than an empty line. */}
-                        {meetingSubline(meeting) && (
-                          <span className="al-row-sub">{meetingSubline(meeting)}</span>
-                        )}
-                        {/*
-                          MTG-1, second pass (2026-08-23). The badge used to
-                          live in the meta line beside the date, where it
-                          painted over it. Giving the meta line a flex gap
-                          stopped the overlap and revealed the real problem:
-                          "Could govern you" is wider than "Governs your area"
-                          was, and at 430px it squeezed the body name down to
-                          "Rockaway Tow…" — READ AS AN IMAGE, which is the only
-                          way that was ever going to be caught.
-
-                          A truncated body name is worse than the overlap it
-                          replaced: a reader scanning nineteen rows cannot tell
-                          which body is meeting. So the badge leaves the meta
-                          line entirely and sits under the title, where the
-                          meeting panel has always put it, and the title gets
-                          the width back.
-                        */}
-                        {/* Only where the GROUP could not answer for all of
-                            its rows — see the group pill above. */}
-                        {groupBadge === null && (
-                          <span className="al-row-jurisdiction">
-                            <JurisdictionPill
-                              badge={badgeOf(meeting)}
-                              bodyClass={bodyClassOf(meeting)}
-                              zip={location?.zip ?? null}
-                              detail={false}
-                            />
-                          </span>
-                        )}
-                      </span>
-                      <span className="al-row-meta">
-                        {/*
-                          g4 item 11: a finished sitting says so, and a
-                          cancelled one says so in its own shade. A filled
-                          pill rather than a word in the metadata line,
-                          because the point is that a reader scanning the past
-                          half of the list can tell at a glance which rows are
-                          history and which were called off.
-                        */}
-                        {meeting.status === "CANCELED" ? (
-                          <MeetingStatusPill status="canceled" />
-                        ) : hasConcluded(meeting, now) ? (
-                          <MeetingStatusPill status="concluded" />
-                        ) : null}
-                        {/*
-                          D18: a meeting held online has no pin, so the LIST is
-                          the only place a reader can find it — and it has to
-                          say why it is not on the map.
-
-                          **MTG-14 (2026-08-28) CORRECTS THIS COMMENT.** It used
-                          to claim "an outline pill rather than a filled one",
-                          and the stylesheet has always rendered
-                          `[data-status="online"]` FILLED. The code and its
-                          comment disagreed, and the CSS is what ships, so the
-                          CSS wins — an outline `--online` measures 5.73:1 dark
-                          and 5.06:1 light as TEXT, under the 7:1 sun bar. The
-                          difference in KIND — these two are claims about what
-                          happened to the sitting, this is a claim about where
-                          it is — is carried by the mark and the word instead.
-                          See components/map/meeting-status-pill.tsx.
-                        */}
-                        {result?.readerScope?.nearbyMeetingIds.includes(meeting.id) && <span className="t-detail text-muted" data-meeting-nearby>Nearby</span>}
-                        {isOnlineOnly(meeting) && <MeetingStatusPill status="online" />}
-                        {/*
-                          M81. Impact is jurisdiction MEMBERSHIP, not distance
-                          — a meeting forty miles away at the county seat
-                          governs the reader and the next town's select board
-                          four miles away does not. So this sits AHEAD of the
-                          mileage, and the mileage stays as the secondary
-                          fact it should always have been.
-                        */}
-                        {when}
-                        {km !== null &&
-                          // Anything under a mile rounds to 0, which reads as
-                          // a missing value rather than "very close".
-                          ` · ${formatMiles(km) < 1 ? "<1" : formatMiles(km)} mi`}
-                        {/*
-                          2026-09-23: no building AND no published online
-                          access. Still listed — a missing place never removes a
-                          meeting — and never marked online, which would be a
-                          claim nothing established. Our own gap, named.
-                        */}
-                        {isPlaceUnrecorded(meeting) && (
-                          <span data-meeting-where="unrecorded">{` · ${PLACE_UNRECORDED_MARK}`}</span>
-                        )}
-                        {/*
-                          A named venue gap (official-page events): a physical
-                          sitting with no pin and so no distance. The place the
-                          publisher stated, verbatim — it IS recorded, as text —
-                          or the publisher's own gap when its page states none.
-                          Never "online", never "place not recorded".
-                        */}
-                        {(() => {
-                          const gap = venueGapOf(meeting);
-                          return gap ? (
-                            <span data-meeting-where={statedVenueText(gap) !== null ? "stated" : "not-stated"}>
-                              {` · ${venueGapMark(gap)}`}
-                            </span>
-                          ) : null;
-                        })()}
-                      </span>
-                    </button>
+                    <div key={meeting.id} className="al-row" style={tierVars(tierForMeeting(meeting))}>
+                      <MeetingRow meeting={meeting} compact sourcesInParent
+                        title={meetingRowTitle(meeting, { jurisdictionShown: ui.listGroupBy === "jurisdiction" })}
+                        onOpen={() => { onPickMeeting(meeting); dispatch({ type: "list/open", open: false }); }}
+                        jurisdiction={groupBadge === null ? <JurisdictionPill badge={badgeOf(meeting)} bodyClass={bodyClassOf(meeting)} zip={location?.zip ?? null} detail={false} /> : undefined}
+                        nearby={result?.readerScope?.nearbyMeetingIds.includes(meeting.id)}
+                        distance={km !== null ? `${formatMiles(km) < 1 ? "<1" : formatMiles(km)} mi` : null} />
+                    </div>
                   );
                 })}
             </div>

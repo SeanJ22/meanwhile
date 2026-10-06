@@ -1,4 +1,5 @@
 import type { BodyClass } from "./types.ts";
+import { DEFAULT_KINDS, kindLabel, type KindTable } from "./kinds.ts";
 
 /**
  * **RULING 118 — AN APPOINTED BODY NEVER CARRIES THE GOVERN VERB.**
@@ -129,13 +130,13 @@ export const BODY_CLASS_LABELS: Readonly<Record<BodyClass, BodyClassLabel>> = {
 };
 
 /** The short structural label. */
-export function bodyClassShort(bodyClass: BodyClass): string {
-  return BODY_CLASS_LABELS[bodyClass].short;
+export function bodyClassShort(bodyClass: BodyClass, kinds: KindTable = DEFAULT_KINDS): string {
+  return BODY_CLASS_LABELS[bodyClass]?.short ?? kindLabel(kinds, "body", bodyClass) ?? "Body";
 }
 
 /** The fuller noun phrase. */
-export function bodyClassLong(bodyClass: BodyClass): string {
-  return BODY_CLASS_LABELS[bodyClass].long;
+export function bodyClassLong(bodyClass: BodyClass, kinds: KindTable = DEFAULT_KINDS): string {
+  return BODY_CLASS_LABELS[bodyClass]?.long ?? kindLabel(kinds, "body", bodyClass) ?? "Body";
 }
 
 /**
@@ -145,7 +146,7 @@ export function bodyClassLong(bodyClass: BodyClass): string {
  * advisory.
  */
 export function governVerbMayAttach(bodyClass: BodyClass): boolean {
-  return BODY_CLASS_LABELS[bodyClass].governVerbMayAttach;
+  return BODY_CLASS_LABELS[bodyClass]?.governVerbMayAttach ?? false;
 }
 
 /**

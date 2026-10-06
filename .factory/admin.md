@@ -3,7 +3,7 @@ worker: codex-admin
 provider: Codex
 run_id: codex-admin-210f8cd213384f2b836e9c27f07ab5c8
 lock: codex-admin-210f8cd213384f2b836e9c27f07ab5c8
-heartbeat: 2026-10-06T01:29:00Z
+heartbeat: 2026-10-06T01:32:57Z
 on_river: BR-01 BR-02 BR-03 BR-05 BR-06 BR-09 BR-10 BR-12 BR-15 BR-16 BR-24 BR-37 CH-12 CH-14 @ 6af6f8a504a7224131ad567f62f7b6f63cb52f08; BR-05/16/37 runtime hooks connected in release 3. Measures BR-14/23/25 integrated there; BR-34 integrated at 186f747a8769709e05f24c0fc452f950d92d5f4c.
 ready: none currently foldable — River returned 5f83a8c646140309545da256ed704cc654254d76 and f2ca419ef23849c4c941fc7f6b78752ed9727e97 for conflicts with incoming measures BR-14/23/25. Preserve those tested historical checkpoints; repair after the new batch is promoted to river.
 checks: promoted-River merge source e731f20910422f372193b23bc7b0245cab085ab1 types PASS; focused 157 PASS plus narrow/first-open/promoted/plain-faces 26 PASS; changed lint 0 errors, 1 pre-existing warning. Actual selector FULL; frozen required FULL running on that exact SHA in /tmp/meanwhile-admin-river4-full. Earlier e4d37d2ef FULL completed 9500 total, 9474 PASS, 16 could-not-run missing-browser failures, 10 SKIP; timing unusable. Later native-source 8d16cc59d types PASS, 210 focused PASS. Boundary correction now being checked separately; no FULL PASS claimed.

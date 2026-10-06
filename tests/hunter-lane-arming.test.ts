@@ -177,3 +177,11 @@ test("CH-24 lane: a sent request whose bill never came back keeps its hold until
   const hold = Object.values((await h.repos.budget.read()).value.spendHolds ?? {})[0];
   assert.notEqual(hold?.settled, null, "released at what it held: it still counts, it is no longer open");
 });
+
+test("CH-24 lane: the round writes its Send and area reading once its gates are armed, and never in a dry or canary round", async () => {
+  const { readFileSync } = await import("node:fs");
+  const round = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  assert.match(round, /const writeHunterLaneReading = \(\): void => \{\n  if \(dry \|\| canary\) return;/);
+  assert.ok(round.indexOf("writeHunterLaneReading();") > round.indexOf("const guards = paidWorkGuards({"), "written after the guards are armed");
+  assert.match(round, /writeLaneArming\(hunterLaneArmingPath\(ROOT\), laneArmingOf\(\{ readAt: NOW,/);
+});

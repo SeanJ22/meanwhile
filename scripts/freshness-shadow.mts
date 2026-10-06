@@ -13,6 +13,7 @@ import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control
 import { MODELS } from "../lib/models.ts";
 import { paidWorkGuards } from "../lib/control-plane/workers/paid-work-guards.ts";
 import { hunterLaneArmingPath, laneArmingOf, writeLaneArming } from "../lib/control-plane/workers/hunter-lane-arming.ts";
+import { hunterQueuePath, writeHunterQueue } from "../lib/control-plane/workers/hunter-lane.ts";
 import { paidWorkerSlots, researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
@@ -347,7 +348,7 @@ import {
 import { DETECTIVE_SHUT_THRESHOLD_SETTING, readSetting, runnerSettingsEcho } from "../lib/control-plane/settings.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
-import { modelLaneClosure, pendingResearchLaneAcknowledgment } from "../lib/control-plane/scheduler/model-lane.ts";
+import { modelLaneClosure, pendingResearchLaneAcknowledgment, type ModelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
 import {
   armExpansionBudget,
   countByScope,
@@ -1668,7 +1669,9 @@ const unreadableControls: string[] = [
    Either owner pause closes it — the research-lane PAUSE and the runner-level
    PAUSE_RUNNER Admin's runner card issues — and so does any control above that
    could not be read (2026-09-25). */
-const laneClosure = modelLaneClosure({
+/* CH-24 part 2 (Proposal A): with the switch on, the standing hunter lane is the one process that admits paid work; this round plans and queues. */
+const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
+const ownerLaneClosure = modelLaneClosure({
   dry,
   noModel,
   credentialConfigured,
@@ -1681,6 +1684,10 @@ const laneClosure = modelLaneClosure({
   spendHold: paidSpendHold,
   unreadableControls,
 });
+/* An owner pause or an unreadable control still closes the lane under its own name first; the lane's acknowledgment says so. */
+const laneClosure: ModelLaneClosure | null = ownerLaneClosure ?? (CONTINUOUS_HUNTERS
+  ? { code: "LANE_DISABLED", reason: "paid model work runs in the standing hunter lane (WTP_CONTINUOUS_HUNTERS=1); this round plans and queues it, and plain-code work continues" }
+  : null);
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
 const modelLaneEnabled = laneClosure === null;
@@ -3166,8 +3173,9 @@ async function runAutonomousWave() {
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })),
     ...(squadReading ? { squads: squadReading } : {}) });
+  /* Under the hunter lane the lane decides paid admission, so every planned Scout is queued. */
   const plannedTasks = planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
-    (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!);
+    (row.action === "SCOUT" && (CONTINUOUS_HUNTERS || paidWorkerCapacity() > 0)))).map(row => row.task!);
   const taskIds = [...new Set([...held.map(task => task.id),
     ...plannedTasks.map(task => task.id)])];
   const taskWorkIds = new Map([...held, ...plannedTasks].map(task => [task.id, task.workItemId]));
@@ -3207,6 +3215,21 @@ async function runAutonomousWave() {
     return { rank, compareRound };
   };
   let taskQueue: ReturnType<typeof readTaskQueue> | null = null;
+  if (CONTINUOUS_HUNTERS) {
+    /* CH-24 part 2: the round's order, written for the standing hunter lane; no lease worker starts here. */
+    const queue = taskQueue ??= readTaskQueue();
+    const ordered = taskIds.filter(id => !failedTaskIds.has(id)).sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b) ||
+      (plannedOrder.get(a) ?? Number.MAX_SAFE_INTEGER) - (plannedOrder.get(b) ?? Number.MAX_SAFE_INTEGER));
+    if (!dry && !canary) {
+      try {
+        writeHunterQueue(hunterQueuePath(hunterLaneArmingPath(ROOT)), { writtenAt: nowIso(), taskIds: ordered, plainTaskIds: ordered.filter(id => plainTaskIds.has(id)) });
+        console.log(`  hunter lane queue: ${ordered.length} task(s) written for the standing hunter lane (${ordered.filter(id => plainTaskIds.has(id)).length} plain-code)`);
+      } catch (error) {
+        runtimeConditions.push(`the hunter lane's queue could not be written (${error instanceof Error ? error.message : String(error)}); the planned tasks remain owed`);
+      }
+    }
+    return { ...planned, dispatches: [...queueFailures], scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 };
+  }
   const workerDispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
     deadlineMs: dispatchDeadlineMs,
     /* A hung worker is ended, and says so, before the runner's no-progress limit could end the whole round. */

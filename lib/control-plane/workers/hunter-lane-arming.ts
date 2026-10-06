@@ -39,7 +39,7 @@ import type { CostEntry } from "../cost.ts";
 import type { SpendHold } from "../budget.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { FleetSafetyController, FleetPreSendRefusal, modelRequestWorstCaseUsd, modelResponseUsd, resolveRollingCeiling, type ProviderCircuit } from "../fleet-safety.ts";
-import { ADMIN_CONFIG_ID, adminConfigForPaidWork, fleetSpendCeilingOverrideUsd, type AdminConfigRead } from "../gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, adminConfigForPaidWork, discoverySearchEnabled, fleetSpendCeilingOverrideUsd, type AdminConfigRead } from "../gateway/admin-config.ts";
 import {
   ASSIGNMENT_BUDGET_CODE,
   AssignmentBudgetGate,
@@ -252,6 +252,8 @@ export interface ArmedHunterLane {
   readonly arming: HunterLaneArming | null;
   readonly spendHolds: DurableSpendHolds;
   readonly ceilingUsd: number;
+  /** The owner's paid-search switch, read from the same row (off when the row cannot be trusted). */
+  readonly discoverySearchOn: boolean;
 }
 
 const message = (error: unknown): string => error instanceof Error ? error.message : String(error);
@@ -277,6 +279,7 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
   if (configHold !== null) unreadable.push(configHold);
   const ceilingOverride = fleetSpendCeilingOverrideUsd(config);
   const ceilingUsd = resolveRollingCeiling(ceilingOverride).rollingCeilingUsd;
+  const discoverySearchOn = configHold === null && discoverySearchEnabled(config);
 
   /* As the round does: the ledger first; the durable holds stand in for an unpriced charge only when the window cannot be priced without them. */
   const ownTasks = deps.ownSpend.tasks(now);
@@ -320,7 +323,7 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
   });
   if (closure !== null || fleetSafety === null || arming === null) {
     return { closed: closure ?? { code: "LANE_DISABLED", reason: armingHold ?? `the cost ledger could not be read (${ledgerUnreadable})` },
-      armedAt: now, fleetSafety, guards: null, arming, spendHolds, ceilingUsd };
+      armedAt: now, fleetSafety, guards: null, arming, spendHolds, ceilingUsd, discoverySearchOn };
   }
 
   /* The Send lines: the round's Sends and history; the DISPATCH budgets the owner sent since are read from the live log. */
@@ -364,7 +367,7 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
     messages: deps.messages, batch: deps.batch, modelLaneEnabled: true, ceilingUsd: () => ceilingUsd,
     ...(deps.requestsPerMinute === undefined ? {} : { requestsPerMinute: deps.requestsPerMinute }),
     onCondition: deps.onCondition });
-  return { closed: null, armedAt: now, fleetSafety, guards, arming, spendHolds, ceilingUsd };
+  return { closed: null, armedAt: now, fleetSafety, guards, arming, spendHolds, ceilingUsd, discoverySearchOn };
 }
 
 /**

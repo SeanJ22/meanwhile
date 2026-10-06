@@ -56,7 +56,7 @@ const readings = (over: Partial<ScoreboardReadings> = {}): ScoreboardReadings =>
 
 test("the Scoreboard has one row for every number in the design, in order, and unread rows say so with no value", () => {
   const view = buildScoreboard(readings());
-  assert.equal(view.rows.length, 21);
+  assert.equal(view.rows.length, 22);
   assert.deepEqual(view.rows.map((r) => r.id).slice(0, 3), ["Orders", "Mission progress", "Checklist completeness"]);
   for (const r of view.rows) {
     assert.equal(r.value, null, `${r.id} shows — with nothing read`);

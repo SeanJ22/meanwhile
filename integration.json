@@ -1190,5 +1190,15 @@
     "tested_sha": "64528dfb416b4154a36b8c1f13a27be613a2f4e6",
     "gates": "pass",
     "at": "2026-10-06T02:27:12Z"
+  },
+  {
+    "lane": "river",
+    "steps": [],
+    "ready_sha": "f26f5807c9b8341ec82d0e3da10393e6d4e28c68",
+    "river_sha": "45fbf4e1904d",
+    "tested_sha": "45fbf4e1904dee2fdc8278482093f5cd167d882b",
+    "gates": "pass (same tree)",
+    "evidence": "main 3a5ed2b (release 5 merge) reconciled into river as 45fbf4e with no tree change; its tree is byte-identical to 64528df, which passed pnpm gates 12/12 (9577 pass, 0 fail) in this run.",
+    "at": "2026-10-06T02:27:54.975Z"
   }
 ]

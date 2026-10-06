@@ -30,7 +30,7 @@ export function curatedMeasureTextEntries(input: {
       ...(["yesMeans", "noMeans"] as const).flatMap(field => record[field] ? [{ field, text: record[field]!, reaction: null }] : []),
       ...record.parts.flatMap(part => (["label", "what"] as const).map(field => ({ field, text: part[field], reaction: { id: part.id, kind: part.kind, number: null } }))),
     ];
-    const expectedFields = fields.map(field => curatedMeasureFieldKey({ ...field, contestId: record.contestId } as CuratedMeasureField));
+    const expectedFields = fields.map(field => curatedMeasureFieldKey(field));
     const partOrder = record.parts.map(part => part.id);
     const original = { sourceUrl: record.sourceUrl, sourceHash: record.sourceHash, ...(record.sourceHashKind ? { sourceHashKind: record.sourceHashKind } : {}), writtenAt: record.writtenAt, ...(record.citation ? { citation: record.citation } : {}) };
     return fields.map(({ field, text, reaction }) => {

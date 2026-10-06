@@ -11,7 +11,7 @@ export interface CuratedMeasureField {
   readonly partOrder: readonly string[];
   readonly original: Pick<MeasureRecord, "sourceUrl" | "sourceHash" | "sourceHashKind" | "writtenAt" | "citation">;
 }
-export const curatedMeasureFieldKey = (field: CuratedMeasureField) => field.reaction ? `${field.reaction.id}.${field.field}` : field.field;
+export const curatedMeasureFieldKey = (field: Pick<CuratedMeasureField, "field" | "reaction">) => field.reaction ? `${field.reaction.id}.${field.field}` : field.field;
 
 export function curatedMeasureFieldIssue(row: TextTranslation): string | null {
   const f = row.measureField;

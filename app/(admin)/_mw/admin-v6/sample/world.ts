@@ -211,7 +211,7 @@ function sampleResults(w: SampleWorld): readonly ReaderResult[] {
       trail: [
         st("Found", "done", "posted Sep 26, 4:00 PM", "The Executive Council’s official agenda page."),
         st("Saved", "done", "Sep 26, 4:20 PM", "Public page saved.", { docs: [DOCS["doc-nh-agenda"]] }),
-        st("Facts pulled out", "done", "Sep 26, 4:24 PM", "Plain code, then the cheapest AI (Haiku 4.5) for the location line.", { facts: [{ field: "Date", value: "Wed, Oct 7, 2026", note: "new" }, { field: "Time", value: "10:00 AM ET", note: "new" }, { field: "Location", value: "State House, Room 207", note: "new" }, { field: "Agenda link", value: "official PDF", note: "new" }, { field: "Remote access", value: "Not published by the source", note: "source doesn’t publish it · evidence saved" }] }),
+        st("Facts pulled out", "done", "Sep 26, 4:24 PM", "Plain code, then the cheapest AI (Haiku 4.5) for the location line.", { facts: [{ field: "Date", value: "Wed, Oct 7, 2026", note: "new" }, { field: "Time", value: "10:00 AM EDT", note: "new" }, { field: "Location", value: "State House, Room 207", note: "new" }, { field: "Agenda link", value: "official PDF", note: "new" }, { field: "Remote access", value: "Not published by the source", note: "source doesn’t publish it · evidence saved" }] }),
         st("Facts checked against sources", "done", "Sep 26, 4:31 PM", "All 6 checks passed."),
         st("Published", "done", "v2 · Sep 26, 4:32 PM", "Published automatically.", { facts: [{ field: "v2 · current", value: "adds agenda link", note: "updated" }, { field: "v1 · earlier", value: "no agenda link", note: "replaced" }] }),
         st("Checked on the public page", "done", "seen Sep 27, 9:12 PM", "The exact card matches v2.", { publicLink: { url: `${PUBLIC_SITE_ORIGIN}/?state=NH&body=nh-executive-council&tab=meetings&meeting=2026-10-07`, label: "Open the exact card (sample link)", seenAt: "2026-09-28T04:12:00.000Z" } }),
@@ -684,6 +684,8 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
       return { final: "done", statusWords: "Saved", says: "Sample preview: the setting is saved with its earlier value." };
     case "send-agents":
       return { final: "done", statusWords: "Sent", says: "The fleet was told where to go. The runner puts it first on its next round." };
+    default:
+      return { final: "refused", says: "This control is not available yet." };
   }
 }
 

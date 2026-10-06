@@ -296,9 +296,12 @@ test("a place target is wired to its own gateway action, and its input carries t
   assert.equal(actionDef("data-switch-off").gateway?.type, "config.setDataSwitch");
 });
 
-test("retired controls and the old instruction box are absent", () => {
+test("returned screen controls remain unavailable; the old instruction box stays retired", () => {
   for (const kind of ["contain", "uncontain", "recheck", "workfirst", "fixfirst", "stopmethod", "scope-stop", "stoprepeats", "scope-recheck", "doc-request", "reprocess", "retry-method", "resume-publish", "eng-task", "job-stop", "focus", "scope-first", "use-url"]) {
-    assert.equal([...ACTIONS.keys()].some(k => k === kind), false, kind);
+    const def = ACTIONS.get(kind as never);
+    assert.ok(def, kind);
+    assert.equal(def.gateway, null, kind);
+    assert.ok(def.dependency, kind);
   }
   assert.doesNotMatch(readFileSync(join(V6, "screen-now.tsx"), "utf8"), /Tell it what to do|<Instruction/);
   assert.ok(!readdirSync(V6).includes("instruction.ts"));

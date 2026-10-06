@@ -102,6 +102,32 @@ export interface ActionDef {
 /* ---------------------------------------------------------- dependencies */
 
 export const DEP = {
+  typedPlans: {
+    id: "DEP-ACTION-PLANS",
+    owner: "Codex (gateway)",
+    need: "A typed action in /api/admin/action.",
+  },
+  resources: {
+    id: "DEP-RESOURCE-EXECUTOR",
+    owner: "Codex (scheduler and engineering intake)",
+    need: "A resource request the scheduler or engineering intake accepts.",
+  },
+  engineering: {
+    id: "DEP-ENGINEERING-TASKS",
+    owner: "Codex (engineering-task adapter)",
+    need: "A connection to the engineering task tracker.",
+  },
+  readerCheck: {
+    id: "DEP-READER-CHECK",
+    owner: "Codex (MW-011 reader proof)",
+    need: "An action that opens the public card and compares it with what was published.",
+  },
+  capture: {
+    id: "DEP-SAVED-COPY",
+    owner: "Codex (exact saved-copy route, default off)",
+    need: "The saved-copy request route.",
+  },
+
   receiptLookup: {
     id: "DEP-RECEIPT-LOOKUP",
     owner: "Codex (gateway)",
@@ -118,7 +144,26 @@ function localOrGlobal(ctx: PreviewContext): "local" | "global" {
 
 /* --------------------------------------------------------------- catalog */
 
+// Returned screens retain their action references; these legacy controls have no executor.
 const defs: ActionDef[] = [
+{kind:"contain",label:"Hide the wrong records from this card",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Hide the wrong records from this card",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"uncontain",label:"Undo: show those records on the card again",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Undo: show those records on the card again",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"recheck",label:"Check the public page now",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Check the public page now",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.readerCheck},
+{kind:"workfirst",label:"Put this work first",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Put this work first",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"fixfirst",label:"Move up the list",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Move up the list",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"stopmethod",label:"Stop the failing method",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Stop the failing method",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"scope-stop",label:"Stop failing methods here",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Stop failing methods here",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"stoprepeats",label:"Stop repeats that can’t succeed",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Stop repeats that can’t succeed",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"scope-first",label:"Put waiting work here first",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Put waiting work here first",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"scope-recheck",label:"Recheck every public page here",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Recheck every public page here",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.readerCheck},
+{kind:"doc-request",label:"Open the saved copy",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Open the saved copy",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.capture},
+{kind:"use-url",label:"Use this official address",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Use this official address",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"reprocess",label:"Reprocess the evidence we already saved",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Reprocess the evidence we already saved",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"retry-method",label:"Try another permitted method",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Try another permitted method",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"resume-publish",label:"Resume checks and publishing, then recheck the reader card",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Resume checks and publishing, then recheck the reader card",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"eng-task",label:"Create an engineering task",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Create an engineering task",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.engineering},
+{kind:"job-stop",label:"Stop this job",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Stop this job",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
+{kind:"focus",label:"Focus more resources here",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Focus more resources here",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.resources},
   {
     kind: "decide",
     label: "Decide",

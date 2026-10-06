@@ -40,11 +40,9 @@ test("the data cards live in Data business, not on Now", () => {
 });
 
 
-test("Now uses the Scoreboard measured facts and dollars, with the counts behind both", () => {
-  const live = { ...waiting, scoreboard: {phase:"live",asOf:ref.observedAt,revision:"flow",missingParts:[],attempts:0,data:{rows:[{name:"Facts live per hour",value:"4.25",counts:"102 new or updated reader records",notMeasured:null},{name:"Cost per fact",value:"$0.25",counts:"$25.50 settled over 102 reader records",notMeasured:null}]}} as SectionState };
+test("Now reads its vital signs separately from Scoreboard aggregates", () => {
+  const live = { ...waiting, scoreboard: {phase:"live",asOf:ref.observedAt,revision:"flow",missingParts:[],attempts:0,data:{rows:[{name:"Facts live per hour",value:"4.25",counts:"102 new or updated reader records",notMeasured:null}]}} as SectionState };
   const html = renderToStaticMarkup(h(CommandCenter,{data:buildLiveBundle(live,ref,workerStatusFromPulse(null)),mode:"live",executor:liveExecutor({capabilities:()=>null}),scopeKey:"us",onScopeChange:()=>{},connection:"live",lastGoodAt:null,recovered:false,access:owner,initialView:"now"}));
-  assert.match(html,/Facts live per hour<.*?4\.25/);
-  assert.match(html,/102 new or updated reader records/);
-  assert.match(html,/Cost per fact<.*?\$0\.25/);
-  assert.match(html,/\$25\.50 settled over 102 reader records/);
+  assert.match(html,/Hourly vital signs/);
+  assert.doesNotMatch(html,/102 new or updated reader records|4\.25/);
 });

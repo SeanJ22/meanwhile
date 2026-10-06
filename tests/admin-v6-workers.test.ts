@@ -199,7 +199,7 @@ test("the saved retry loop is one feed line, and a past-due round is not present
   const voting = (s.data.events ?? []).filter(e => /voting sites/.test(e.text));
   assert.equal(voting.length, 1, "QUEUED → COLLECTING → FAILED repeats are one line about the newest state");
   assert.match(voting[0].text, /stopped before publishing 9 times since/);
-  assert.ok(s.data.next?.includes("Next round was due Sep 28, 5:55 PM ET."));
+  assert.ok(s.data.next?.includes("Next round was due Sep 28, 5:55 PM EDT."));
   assert.ok(!(s.data.next ?? []).some(n => /Next round due/.test(n)));
 });
 
@@ -252,7 +252,7 @@ test("waiting explains the hunt's unfinished tasks, its money limit and the fail
   assert.ok(!w.some(x => x.kind === "In line"), "whole-system queue counts are not presented as this ZIP's waiting work");
   assert.ok(s.missingParts.some(m => /Only work sent to a hunt is split by place/.test(m)));
   assert.ok(s.data.next?.some(n => /174 assigned tasks to finish/.test(n)));
-  assert.ok(s.data.next?.some(n => /Next round due Sep 28, 6:30 PM ET/.test(n)));
+  assert.ok(s.data.next?.some(n => /Next round due Sep 28, 6:30 PM EDT/.test(n)));
 });
 
 test("the whole country lists queue lanes as waiting, with the oldest due time", async () => {

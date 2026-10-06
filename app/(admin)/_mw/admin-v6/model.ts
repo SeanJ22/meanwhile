@@ -837,6 +837,7 @@ export interface FixView {
 /* --------------------------------------------------------------- actions */
 
 export type ActionKind =
+  "contain" | "uncontain" | "recheck" | "workfirst" | "fixfirst" | "stopmethod" | "scope-stop" | "stoprepeats" | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish" | "eng-task" | "job-stop" | "focus" |
   "decide" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo" | "owed-add" | "owed-decline" | "owed-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
@@ -959,8 +960,8 @@ export function count(n: number): string {
 }
 
 /**
- * Eastern time, as Admin shows every time (rulings §10). "ET" covers EST and
- * EDT; the hour printed is already the local one. The name predates the
+ * Eastern time, as Admin shows every time (rulings §10), with EDT or EST
+ * matching the timestamp. The name predates the
  * Eastern ruling and is kept so the screen files that import it keep compiling.
  */
 export function mst(iso: string | null, withDay = true): string {

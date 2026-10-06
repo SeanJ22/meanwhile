@@ -65,16 +65,16 @@ const src = (rel: string): string => readFileSync(join(ROOT, rel), "utf8");
  * ================================================================== */
 
 test("ADM-22: an ISO stamp reads as Eastern time spelled out, with the year only when asked; a missing or unreadable stamp says so", () => {
-  assert.equal(formatEastern("2026-09-05T02:20:57.808Z"), "September 4, 10:20 PM ET", "02:20Z is the evening before in New York");
-  assert.equal(formatEastern("2026-01-05T15:20:57.808Z", { year: true }), "January 5, 2026, 10:20 AM ET", "EST in January");
+  assert.equal(formatEastern("2026-09-05T02:20:57.808Z"), "September 4, 10:20 PM EDT", "02:20Z is the evening before in New York");
+  assert.equal(formatEastern("2026-01-05T15:20:57.808Z", { year: true }), "January 5, 2026, 10:20 AM EST", "EST in January");
   assert.equal(formatEasternDate("2026-09-05T02:20:57.808Z"), "September 4");
-  assert.equal(formatEasternSpan("2026-09-04T08:04:50.476Z", "2026-09-04T08:15:00.553Z"), "September 4, 4:04 AM – 4:15 AM ET");
+  assert.equal(formatEasternSpan("2026-09-04T08:04:50.476Z", "2026-09-04T08:15:00.553Z"), "September 4, 4:04 AM EDT – 4:15 AM EDT");
   assert.equal(formatCalendarDate("2026-08-11"), "August 11, 2026", "a bare tracker date is the day it names, never shifted through UTC");
   assert.equal(formatEastern(null), NO_STAMP);
   assert.equal(formatEastern("garbage"), BAD_STAMP);
   assert.equal(
     easternize("parent relaunch proven 2026-09-02T15:36:25.8796479Z: pid 20240; trigger present at 2026-09-05T06:17:17.081Z"),
-    "parent relaunch proven September 2, 2026, 11:36 AM ET: pid 20240; trigger present at September 5, 2026, 2:17 AM ET",
+    "parent relaunch proven September 2, 2026, 11:36 AM EDT: pid 20240; trigger present at September 5, 2026, 2:17 AM EDT",
     "an instrument's own sentence keeps its words and loses its machine stamps",
   );
 });

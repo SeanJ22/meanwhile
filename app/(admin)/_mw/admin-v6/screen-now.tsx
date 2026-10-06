@@ -15,6 +15,7 @@ import { TILE_LAYOUT } from "./national-layout.ts";
 import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, nationalDepth, relation } from "./places.ts";
 import { useQueueRows } from "./use-queue.ts";
 import { ActionButton, Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
+import { NowVitalSigns } from "./vital-signs.tsx";
 import s from "./v6.module.css";
 
 export const LANE_WORDS: Readonly<Record<Lane, string>> = {
@@ -41,6 +42,7 @@ export function NowScreen() {
         <p className={s.eyebrow}>{v.place.name} · {periodLabel(v.period, new Date())}</p>
         <h1 className={s.h1}>Now</h1>
       </header>
+      <NowVitalSigns />
       <Matters />
       {/* The control Sean uses most (daily budget, paid search, start a hunt): one click to open. */}
       <DirectWork />
@@ -60,8 +62,6 @@ function Matters() {
   const needs = rows.filter((r) => r.filter === "needs-me");
   const motion = rows.filter((r) => MOTION_KINDS.has(r.kind) && (r.filter === "in-progress" || r.filter === "scheduled" || r.filter === "waiting")).slice(0, 5);
   const completeness = v.data.checklist.data?.score?.measures?.completeness ?? null;
-  const flowRow = v.data.scoreboard.data?.rows.find(r => r.name === "Facts live per hour");
-  const costRow = v.data.scoreboard.data?.rows.find(r => r.name === "Cost per fact");
   return (
     <section aria-label="What matters now" className={s.stack}>
       <div className={s.grid2}>
@@ -72,14 +72,6 @@ function Matters() {
         <Card title="Mission progress" aside={<button type="button" className={s.btnLink} onClick={() => v.go("checklist")}>Open the checklist →</button>}>
           <div><span className={s.big}>{completeness && completeness.percent !== null ? `${Math.floor(completeness.percent)}%` : "—"}</span></div>
           <p className={s.small}>{completeness ? `${count(completeness.n)} of ${count(completeness.of)} things owed for ${v.place.name} are held. More is better; the rest is still being found.` : `What ${v.place.name} is owed has not been counted yet.`}</p>
-        </Card>
-        <Card title="Facts live per hour" aside={<button type="button" className={s.btnLink} onClick={() => v.go("scoreboard")}>Open the scoreboard →</button>}>
-          <div><span className={s.big}>{flowRow?.value ?? "—"}</span></div>
-          <p className={s.small}>{flowRow?.counts ?? flowRow?.notMeasured ?? "—"}</p>
-        </Card>
-        <Card title="Cost per fact">
-          <div><span className={s.big}>{costRow?.value ?? "—"}</span></div>
-          <p className={s.small}>{costRow?.counts ?? costRow?.notMeasured ?? "—"}</p>
         </Card>
       </div>
       <Card title="Orders in motion" aside={<button type="button" className={s.btnLink} onClick={() => v.go("queue")}>Open the queue →</button>}>

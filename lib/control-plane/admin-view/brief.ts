@@ -18,9 +18,11 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { listDoors } from "../../doors/registry.ts";
 import { projectDoors } from "./v6-doors-read.ts";
 import { scheduledView } from "./v6-scheduled-read.ts";
+import { readHourlyVitalSigns, type HourlyVitalSigns } from "./hourly-vital-signs.ts";
 import { plainWords } from "./plain-words.ts";
 
 export interface BriefSnapshot {
+  readonly vitalSigns?: HourlyVitalSigns | null;
   readonly day: string; readonly createdAt: string;
   readonly updates: readonly UpdateLine[];
   readonly problems: readonly {key:string;what:string;owner:string;next:string}[];
@@ -54,11 +56,12 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
   const held=await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if(held&&!isAdminConfig(held.value))throw new Error("The settings could not be read.");
   const config=held?.value??defaultAdminConfig(at);const unread:string[]=[];
-  const [history,stuck,reports,doors]=await Promise.all([
+  const [history,stuck,reports,doors,vitalSigns]=await Promise.all([
     readV6History(repos,{scope:"us",asOf:at,limit:50}).catch(()=>{unread.push("orders");return null;}),
     population().catch(()=>null).then(p=>{if(!p){unread.push("stuck cases");return null;}return stuckViews(p.rows,"us",at).items;}),
     readReports(at).catch(()=>{unread.push("reader problems");return null;}),
     listDoors(repos.doors).then(d=>{if(d.unreadable)unread.push("some doors");const view=projectDoors({...d,saves:[],observedAt:at});if(view.counts.shut>view.rows.filter(r=>r.status==="Shut").length)unread.push("shut doors outside the current page");return view.rows.filter(r=>r.status==="Shut");}).catch(()=>{unread.push("doors");return null;}),
+    readHourlyVitalSigns(repos).catch(()=>null).then(row=>{if(!row)unread.push("hourly vital signs");return row;}),
   ]);
   if(history?.page.nextCursor)unread.push("older orders outside the current page");
   if(reports?.sites.some(s=>s.kind==="UNREADABLE"))unread.push("reader problems from an unread site");
@@ -66,7 +69,7 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
   const rows=buildQueue({receipts:history?.data as readonly UiReceipt[]|null ?? null,stuck:stuck as readonly StuckItem[]|null,fixes,sends:null,hunts:null,doors,scheduled:scheduledView(config,at).rows,decisions:decisionOrders(config)});
   if(reports?.sites.some(s=>s.kind==="READ"&&s.total>s.rows.length))unread.push("older reader problems outside the current page");
   const fresh=projectBrief(config,[...rows,...(reports?readerProblemRows(reports):[])],at,unread);
-  return {fresh,latest:config.latestBrief??null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
+  return {fresh:{...fresh,vitalSigns},latest:config.latestBrief??null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
 }
 /** Runs in BR-37's existing parent timer, even with the owner's PC off. Restart and competing ticks cannot save twice. */
 export async function writeDailyBrief(repos:ControlPlaneRepositories,at:string,read:(repos:ControlPlaneRepositories,at:string)=>Promise<BriefReading>=readBrief):Promise<boolean> {

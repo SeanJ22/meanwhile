@@ -38,7 +38,7 @@ const ROBOTS_ONLY_BLOCKERS: ReadonlySet<string> = new Set(["PERMISSION_DENIED", 
 
 export interface AutonomousCoordinatorRuntime extends FleetRuntime {
   /** Called before a task runs on a runtime built once for the whole process: refreshes only that task's own history. */
-  readonly beginTask?: (task: RouteTask) => Promise<void>;
+  readonly beginTask?: (task: RouteTask, item?: WorkItem) => Promise<void>;
   /** Existing Scout executor, configured with this canonical WorkItem and its inherited history. */
   readonly scoutFor?: (item: WorkItem, task: RouteTask, history?: readonly ScoutResult[]) => DeclaredExecutor;
   /** Only the standing lineage broker may hand complete, attributed sibling captures to this root.

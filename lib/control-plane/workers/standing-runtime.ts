@@ -1,7 +1,9 @@
 import { buildBoxFindings } from "./scout-extraction.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../scheduler/research-policy.ts";
 import { publicationSourcePolicy } from "../promotion/source-settings.ts";
-import { backfillBox, boxIndexEnabled, indexScoutFindings } from "../box.ts";
+import { backfillBox, boxIndexEnabled, indexReportedFinding, indexScoutFindings } from "../box.ts";
+import { MISSION_BRIEF_LINE_CAP, missionBriefLines, SCOUT_BRIEF_LINE_BUDGET, type MissionBlank } from "./mission-brief.ts";
+import { missionPartOfPlan } from "../expansion/mission-parts.ts";
 import { workAdapterQueue } from "./engineering-adapter.ts";
 import { detectiveExecutor, heldRecoveryBrief, investigationRole, subjectScoutHistory } from "./detective.ts";
 import { outsideRecordBlockBriefs } from "./record-block.ts";
@@ -60,6 +62,10 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   lifetimeHuntSubject?:(subjectId:string)=>boolean;
   /** CH-26: each task's history reads are scoped to its own work item, subject and lineage. */
   scopedReads?:boolean;
+  /** CH-20: the mission's open blanks related to one government, from the owed list the round already holds (no store read). */
+  missionBlanksFor?:(subjectId:string)=>readonly MissionBlank[];
+  /** CH-20: the same, asked of the process that started this one; read once as each task begins. */
+  readMissionBlanks?:(subjectId:string)=>Promise<readonly MissionBlank[]>;
   /** MW-033: the rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
   reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"];
   /** MW-021 (2026-09-25): the transport for the work on one jurisdiction, so its requests are held on the area budget covering it; absent, `transport` serves all. */
@@ -181,8 +187,16 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   // CP-19: a field dropped for sitting outside its person's row goes to a detective (DP-03); the kept record still publishes.
   const outsideBlockLines=(workItemId:string)=>outsideRecordBlockBriefs(priorWorkers.filter(w=>w.workItemId===workItemId)
     .flatMap(w=>"warnings" in w.result?w.result.warnings:w.result.findings));
+  // CH-20: a worker process asks its parent for the task's mission blanks as the task begins; a failed ask leaves the brief without them.
+  const askedBlanks=new Map<string,readonly MissionBlank[]>();
+  const blanksFor=(subjectId:string)=>askedBlanks.get(subjectId)??input.missionBlanksFor?.(subjectId)??[];
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,
-    beginTask:async task=>{ const fresh=await readCompletedWorkerResults(input.repos,task.workItemId);
+    beginTask:async (task,item)=>{
+      if (item && input.readMissionBlanks) {
+        try { askedBlanks.set(item.subject,await input.readMissionBlanks(item.subject)); }
+        catch (error) { askedBlanks.delete(item.subject); console.warn(`  mission blanks unread for this task: ${error instanceof Error?error.message:String(error)}`); }
+      }
+      const fresh=await readCompletedWorkerResults(input.repos,task.workItemId);
       priorWorkers=[...priorWorkers.filter(w=>w.workItemId!==task.workItemId),...fresh];
       if (scoped) {
         // A store without the filtered reads (a test double) brokers from the whole store, as before.
@@ -192,7 +206,11 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
     authorizedSiblingHeldArtifactIdsFor:item=>sharedHeldByRoot.get(item.id)??[],
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder,input.root),
-    ...(input.transport?{scoutFor:(item,task,currentHistory)=>(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED","CANDIDATE_PROVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
+    ...(input.transport?{scoutFor:(item,task,currentHistory)=>{
+      const blanks=blanksFor(item.subject);
+      const mission=missionBriefLines(item.subject,blanks,MISSION_BRIEF_LINE_CAP);
+      const ownPart=item.autonomousPlan?missionPartOfPlan(item.autonomousPlan):null;
+      return (investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED","CANDIDATE_PROVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,root:input.root,
         obligation:{...ctx.obligation,obligation:{...ctx.obligation.obligation,autonomousPlan:item.autonomousPlan}},
@@ -213,7 +231,12 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           if (!within || within === ".." || within.startsWith(`..${sep}`) || isAbsolute(within)) throw new Error("MANUAL_DOCUMENT_OUTSIDE_CHECKOUT");
           return readFile(absolute, "utf8");
         },
-        ...((input.searchFor?.(item.subject) ?? input.search) ? { search: input.searchFor?.(item.subject) ?? input.search } : {})}),
+        ...((input.searchFor?.(item.subject) ?? input.search) ? { search: input.searchFor?.(item.subject) ?? input.search } : {}),
+        // CH-20: drop a finding for this target or any mission subject its brief lists, straight into the Box.
+        ...(indexFindings ? { reportFinding: { subjects: new Set([item.subject,...mission.subjects]),
+          write: async finding => ({ boxId: (await indexReportedFinding(input.repos.boxFindings, { workItemId: item.id, attemptId: ctx.attemptId,
+            missionPart: finding.subjectId===item.subject ? ownPart : blanks.find(blank=>blank.subjectId===finding.subjectId)?.missionPart ?? null,
+            finding }, now())).id }) } } : {})}),
       contextFor:()=>{
         const history=subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass);
         const plan=item.autonomousPlan!;
@@ -227,7 +250,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           fields:plan.contract.schemaVersion===2?methodFields(plan.capability,plan.contract):["meeting","agenda"],
           adapterRoutes:plan.sources.map(source=>({routeId:source.id,label:source.applicableBecause,target:source.url}))});
         // RULING 63: inherit the one growing field manual too, projected to this jurisdiction.
-        const manualProjection=scoutFieldManualProjection(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id,recordClass:plan.contract.recordClass});
+        // DP-21's line budget is shared: the mission's lines first, the field manual takes the rest.
+        const manualProjection=scoutFieldManualProjection(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id,recordClass:plan.contract.recordClass,
+          limit:SCOUT_BRIEF_LINE_BUDGET-mission.lines.length});
         const manualEntries=scoutFieldManualCatalog(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id});
         const repair=(item as typeof item & {readonly planRepair?:PlanRepairLink}).planRepair;
         inheritedFieldManualCounts.set(item.id,manualEntries.length);
@@ -240,6 +265,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
             ...(repair?.retainedEvidenceIds??[]),...(repair?.sourceArtifactId?[repair.sourceArtifactId]:[]),
             ...(sharedHeldByRoot.get(item.id)??[])])],manualEntries,summary:[
             ...manualLines,
+            ...mission.lines,
             ...planRepairFailureBrief(item),
             ...(heldRecoveryBrief(item.publicationOutcome) ? [heldRecoveryBrief(item.publicationOutcome)!] : item.publicationOutcome && item.publicationOutcome.status !== "PUBLISHED" ? [`Publication repair remains owed: ${item.publicationOutcome.code}. ${item.publicationOutcome.detail}`] : []),
             ...outsideBlockLines(item.id),
@@ -304,6 +330,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         if (indexFindings) await indexScoutFindings(input.repos.boxFindings, recorded, now());
         return recorded;
       }
-    })}:{})};
+    });}}:{})};
   return runtime;
 }

@@ -47,6 +47,7 @@ import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import type { AutonomousJurisdiction } from "../expansion/spend-holds.ts";
 import type { runNationalPlaceTask } from "../../hunt/place-source-task.ts";
 import type { NationalPlacePublicationInput } from "../../hunt/place-source.ts";
+import type { MissionBlank } from "./mission-brief.ts";
 
 export type NationalPlaceReport = Awaited<ReturnType<typeof runNationalPlaceTask>>[number];
 type NationalPublication = Omit<NationalPlacePublicationInput, "store">;
@@ -180,6 +181,8 @@ export async function runLeaseWorkerProcesses(input: {
   readonly onExited?: (pid: number, why: string) => void;
   /** Read current place priority before the next existing lease is claimed. */
   readonly orderPending?: (ids: readonly string[]) => Promise<readonly string[]>;
+  /** CH-20: the mission's open blanks related to one government, held in this process. Absent: none. */
+  readonly missionBlanksFor?: (subjectId: string) => readonly MissionBlank[];
   readonly onDispatched?: (result: DispatchResult) => void | Promise<void>;
   readonly route?: { readonly tool: (name: string, args: readonly unknown[]) => Promise<unknown> };
   readonly scout?: {
@@ -316,6 +319,8 @@ export async function runLeaseWorkerProcesses(input: {
           const requested = (message.body as readonly string[]).filter(id => pending.has(id) && !inFlight.has(id));
           if (standing?.retireAfterMs !== undefined && Date.now() - startedAt >= standing.retireAfterMs) { retired = true; body = []; }
           else body = input.orderPending ? await input.orderPending(requested) : requested;
+        } else if (message.kind === "mission-blanks") {
+          body = input.missionBlanksFor?.(String(message.body)) ?? [];
         } else if (message.kind === "route-tool") {
           if (!input.route) throw new Error("ROUTE_PROCESS_BROKER_UNAVAILABLE");
           const request = message.body as { name: string; args: readonly unknown[] };

@@ -2,21 +2,23 @@
 
 Sean, Oct 6: integrated is not done. A step is done only when it works live. River updates this table as verdicts change; every release's steps are added during its measured hour.
 
-Last updated Oct 6, 8:40 AM EDT. Production: d79f179 (release 10, live 8:26 AM EDT). The runner is stopped pending Sean's restart, so runner-side steps wait. Order: reader-facing, then the factory behind the vital signs, then Admin.
+Last updated Oct 6, 12:40 PM EDT. Production: c814d4c (release 12, live 12:35 PM EDT). The runner has been stopped since 3:12 AM EDT pending Sean's restart, so runner-side steps wait. Order: reader-facing, then the factory behind the vital signs, then Admin.
 
 | Verdict | Steps |
 |---|---|
 | Working live | 27 |
-| Failed live | 42 |
-| Needs time | 62 |
+| Failed live | 41 |
+| Needs time | 65 |
 | Can't check | 136 |
 | Not yet checked | 0 |
-| **Total** | **267** |
+| **Total** | **269** |
 
 Can't check entries that need Sean's Admin sign-in are listed with exact clicks in releases/admin-checks.md. Every Failed live step is the top item in its lane's returns file.
 
 | Step | Area | Lane | Release | Verdict | What was seen |
 |---|---|---|---|---|---|
+| CH-22 | Factory | hunters | 12 | **Needs time** | Live in release 12 (c814d4c). **When:** first round after restart: journal line 'local research rows: N paid; N carry a work plan; D with a reader door'; with WTP_CONTINUOUS_HUNTERS=1, 'planned paid rows queued for the hunter lane: Q of P due'. |
+| VS-01 | Admin | measures | 11 | **Needs time** | Live in release 11 (0a0f744). cp_vital_signs does not exist yet (v25 is applied by the restart bootstrap). **When:** an hour after restart; then Sean's sign-in check of Admin Now's last-full-hour card. |
 | FE-35 | Reader | frontend | 9 | **Needs time** | Release 9 is live. No published office address exists for a pin: civic_data_reader_projections holds no office projection, and the ledger's CA-06 check found 0 bodies with officeContact. The basemap also cannot render here (api.maptiler.com is blocked). **When:** after body-directory hunts publish an office address once the runner restarts; then check a school district office pin with Directions in a browser that can load tiles. |
 | FE-36 | Reader | frontend | 9 | **Needs time** | Release 9 is live. /api/public-records returns NOT_HELD with 0 records for Pima County, Tucson and New Hampshire (curl, 6:40 AM EDT), and no public-records projection exists. **When:** after the first public-records publication (CA-37) once the runner restarts. |
 | FE-27 | Factory | meetings | 9 | **Needs time** | The worst-case speed pass is now scheduled daily by release 9's audit-pass clock; the runner has been stopped since about 3:13 AM EDT; release 9 (8fdeb4e, live 6:37 AM EDT) is adopted when it restarts, and the restart waits on the byte counter (returns/hunters.md). **When:** a SPEED row within a day of restart. |
@@ -74,7 +76,7 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | CP-06 | Reader | slide | 3 | **Can't check** | First half holds: 759 meetings across 85701, 85201, 03255 and 07866 include no past-dated sitting still shown as upcoming (all past ones are CONCLUDED or CANCELED). Second half can't be exercised: no live official is currently past a term end (roster term ends are null or in the future), so the 'stays on their card' case doesn't exist yet. |
 | CP-07 | Reader | slide | 7 | **Can't check** | No live card has a news-sourced phone being replaced by an official one, and receipts with the superseded value are only in Admin. |
 | CP-09 | Reader | slide | 3 | **Needs time** | No 'Official filing records' section appears on any of 11 ballot pages, and no official-filings record is promoted. The state legislator and county supervisor cards (Alma Hernandez, Jennifer Allen) show Campaign money as 'We're working on getting this info'. **When:** The first official-filings publication after the runner restart (resumed 2:02 AM EDT). Check after today's first research rounds, about 6:00 AM EDT. |
-| CP-10 | Reader | slide | 3 | **Failed live** | After about 6 hours of runner passes on release 3+ code (Oct 5 6:39 PM to Oct 6 12:40 AM EDT), local and state officials whose official profiles carry photos (Pima supervisors on pima.gov, AZ legislators on azleg.gov, e.g. Alma Hernandez shows initials 'AH') still show initials. No card's Sources section has a portrait row. The READY commit marks CP-10 'hooks pending'. |
+| CP-10 | Reader | slide | 3, repair 11 | **Needs time** | Was Failed live (officials with photos on their own official pages still showed initials). Hunters' repair 1b49f3fd6 (offer the legislator's own official-page image as the portrait) is live in release 11 (0a0f744). **When:** the first portrait publication after the runner restarts; then check a state legislator's card for a photo and a portrait row in Sources. |
 | CP-11 | Reader | slide | 7 | **Needs time** | All 21 campaign sites in the live campaign-site record were approved before release 7 (newest 2026-10-03 03:07Z), and each still carries an audit record. No site found on a5fd753 exists yet. **When:** The first campaign site found after the runner restart (resumed 2:02 AM EDT). Check the next campaign-site publication, about 6:00 AM EDT. |
 | CP-12 | Reader | slide | 7 | **Needs time** | All 21 live campaign sites were approved before release 7 with a second signal (e.g. Clara Pratte's via a BallotReady profile). None has been found under the new rule yet. **When:** The first campaign site found after the runner restart (resumed 2:02 AM EDT). Check the next campaign-site publication, about 6:00 AM EDT. |
 | CP-13 | Reader | slide | 3 | **Needs time** | No ballot card across 11 ZIPs shows a 'Campaign contacts and website' source. Candidate contacts seen come from filings (e.g. Russo's email is from the Morris County Clerk). **When:** The first candidate enrichment publication after the runner restart (resumed 2:02 AM EDT), about 6:00 AM EDT. |
@@ -183,7 +185,7 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | BX-06 | Admin | slide | 7 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | BX-09 | Admin | meetings | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | BX-12 | Factory | slide | 9 | **Needs time** | Release 9 code; the runner has been stopped since about 3:13 AM EDT; release 9 (8fdeb4e, live 6:37 AM EDT) is adopted when it restarts, and the restart waits on the byte counter (returns/hunters.md). Same proof as BX-03. |
-| BX-13 | Admin | slide | 3 | **Can't check** | Admin screen; needs Sean's sign-in. |
+| BX-13 | Admin | slide | 3 | **Can't check** | Admin screen; needs Sean's sign-in. Hook a9ef516dc (lease-worker model requests route by job) is live in release 11; the runner-side effect waits on the restart. |
 | CA-15 | Admin | people | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CA-34 | Admin | ballot | 7 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | CA-37 | Admin | ballot | 7 | **Can't check** | Admin screen; needs Sean's sign-in. |
@@ -249,7 +251,7 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | DP-03 | Admin | auditors | 1–2 | **Can't check** | Needs a held record and the runner. |
 | DP-04 | Admin | auditors | 1–2 | **Can't check** | Needs a stuck subject whose walk hit its limit. |
 | DP-05 | Admin | auditors | 1–2 | **Can't check** | Code side: no deterministic detective. Model detectives dispatching needs the runner, which is stopped. |
-| DP-06 | Admin | auditors | 1–2 | **Can't check** | The text 'would unlock' does not appear in any Admin or admin-view code at a5fd753 (git grep finds nothing), so the box may use other words or may not show it. |
+| DP-06 | Admin | auditors | 1–2, repair 12 | **Can't check** | Earlier: 'would unlock' was not in any Admin code. Auditors' 2830c4bfb is live in release 12 (c814d4c): the Stuck list's next step reads 'Recorded as not published; it is looked for again by <date>. Would unlock: <stored text>.' Needs Sean's sign-in (admin-checks.md) and a current owner snapshot, which needs the runner. |
 | DP-07 | Admin | bank | 1–2 | **Can't check** | Data side not met yet: the one field-manual document (cp_field_manual, 6.6 MB) holds a single 'placeResults' entry naming one place, so no method has two places under it. Needs a second place walked on the same platform, which needs the stopped runner. |
 | DP-09 | Admin | bank | 1–2 | **Can't check** | Shown on the Scoreboard as a learning reading 'routes reused in the week of …' (scoreboard-read.ts:127). |
 | DP-11 | Admin | auditors | 4 | **Can't check** | The settings exist: 'Longest a dead end may wait' (days) and 'How long a dead end waits, by kind of record' (lib/control-plane/scheduler/absence-hold.ts). |

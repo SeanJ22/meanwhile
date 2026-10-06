@@ -4,26 +4,29 @@ lane: hunters
 owner: hunters
 writer: the hunters lane
 check: live
-ready: CH-11, BR-05, BR-16, BR-37, CH-24, CH-26, DB-53 d7e93a3359c06792c60c874f92b63bb86211cae3
-river: ecf402600401783b094837c29e0c515eadbdb843
-at: 2026-10-05T21:54:20Z
+ready: CH-15, CH-16, CH-17, CH-19 671b0b567a7beb962c3f18fba60298325befdcc4
+river: 6af6f8a504a7224131ad567f62f7b6f63cb52f08
+at: 2026-10-06T00:17:26Z
 state: returned
-fix_subject: fix:70a100a1
-fix: River · stream/hunters — live failed for hunters: DIAGNOSIS UPDATE for the research crash (River, read-only, 2026-10-05 ~22:00Z). Fix this before other hunters work.
+fix_subject: fix:57653541
+fix: River · stream/hunters — live failed for hunters: SECOND CAUSE of RESEARCH_CHILD_NO_PROGRESS (River, 2026-10-06 ~01:10Z, from Sean's runner journal for the 23:13:58Z cycle on 6af6f8a, killed 23:40:50Z). Your memory-wait fix (READY 671b0b567) is integrated and ships in release 4, but it doe
 
 ## Failure
 
 ```
-DIAGNOSIS UPDATE for the research crash (River, read-only, 2026-10-05 ~22:00Z). Fix this before other hunters work.
+SECOND CAUSE of RESEARCH_CHILD_NO_PROGRESS (River, 2026-10-06 ~01:10Z, from Sean's runner journal for the 23:13:58Z cycle on 6af6f8a, killed 23:40:50Z). Your memory-wait fix (READY 671b0b567) is integrated and ships in release 4, but it does not cover this crash. Fix this next, before other hunters work.
 
-- Started with the Oct 2 runner changes. PILOT HEALTH digests: Sep 29 had 20 healthy cycles. Since 2026-10-03 05:42Z there have been 128 RESEARCH_CHILD_NO_PROGRESS crashes and 1 healthy cycle. Research output has stopped landing: cp_log_worker_results last at 2026-10-04 06:19Z, cp_log_scout_results last at 2026-10-04 05:52Z.
-- Where it goes silent: each cycle runs its plain candidate-enrichment lookups (candidate-marginalia-index and candidate-wikipedia-api rows in cp_log_costs) for about 13 minutes. Then nothing is written for 10 minutes and the watchdog kills it: last write 19:05Z, killed 19:15:56Z; last write 19:42:11Z, killed 19:53:48Z. In both windows the routine supervisor was running national-place work (3,181 MiB reservation) and dozens of ballot-navigation publications.
-- Likely cause: freshness-shadow.mts:2058 gives worker-slot waits a 15-minute dispatch deadline (4a93fb3, Oct 2), while pilot-runtime-child.mts:5 kills a silent research child after 10 minutes (RUNTIME_NO_PROGRESS_MS, 10f7287, Oct 2). A worker waiting on the shared host memory slots (worker-slots.ts) prints nothing, so a wait the design treats as a clean deferral at 15 min ("WORKER_MEMORY_DEADLINE: memory wait deferred; work remains owed") is killed first as a crash, losing the whole cycle.
-- Fix asked:
-  (1) Keep every bounded wait inside the research child shorter than the no-progress window (dispatch deadline below 10 min, e.g. 8), or have the slot wait log a changing "waiting for memory: N of M min" line each minute so the watchdog sees progress. Either way a memory wait ends as a deferral, never a crash.
-  (2) Make the crash diagnosable: pass the last child stderr/stdout lines (pilot-runner.mts currentCycleErrors) into recordFailedCycle as `pending` (it is null today), so Admin's crash record says what was running.
-  (3) Test: a fake slot that never frees, with the real RUNTIME_NO_PROGRESS_MS relationship. It must end as a deferral, not RESEARCH_CHILD_NO_PROGRESS.
-- Confirm on the runner first if you can: the runner's local log lines just before each "RESEARCH_CHILD_NO_PROGRESS ... ending owned child research-cycle" show the last phase. If it is not a slot wait (for example a slow history read that CH-26's v20 indexes target), fix that phase the same way.
+Evidence:
+- Timeline: cycle start 23:13:58Z; dispatch cutoff (dispatchDeadlineMs = start + 15 min) 23:28:58Z; plain ACQUIRER lookups written to cp_log_costs about 40 a minute from 23:18 to 23:30:21Z, then none; the research child's last output at about 23:30:50Z; killed at 23:40:50Z. Every journal line in the last 10 minutes came from the parent (ballot-navigation RCD_TASK/RCD_RECEIPT). At that point research was not waiting on memory: slot acquisition stops at the cutoff.
+- Ruled out (Sean's theory): a paid job that runs to maxJobWallMs (15 min, provider.ts:122) with no output. run-host.ts (the spawnSync job runner using that wall) is reached only from scripts/agent-bridge-run.mts, not from research. Lease workers are ended at the cutoff: process-pool.ts sets their kill timer to min(childTimeoutMs, deadlineMs - now), and every exit prints "lease worker process ended". On river they are capped at 9 min (childTimeoutMs = RUNTIME_NO_PROGRESS_MS - 60s). So no worker or paid job can be running quietly at 23:30:50.
+- That leaves work that runs after the cutoff with no bound: the join `await discoveryLaneRun` (freshness-shadow.mts ~3588: campaign-sites and candidate-publications lanes are not bounded by dispatchDeadlineMs; meetings-discovery walks are bounded only by deadline), then the promotion tail (pending "promotion-tail"). One unbounded read sits in that path: campaign-publication-cycle.ts:56 `artifactsByCanonicalUrl(url, Number.MAX_SAFE_INTEGER)`. Which of these hung is NOT confirmed. The runner journal has no child lines, and on 6af6f8a the stall probe was not yet wired.
+- Stdout: your crash-record fix already keeps it. pilot-runner.mts passes lastChildLines(currentCycleOutput), and currentCycleOutput takes both the child's stdout and stderr. Sean's blank "last stderr" line is the old 6af6f8a code. Keep it that way, and make sure the Admin crash record shows lastOutput, not only stderrTail.
+
+Fix asked:
+1. Every wait in the research child after dispatchDeadlineMs (the discovery-lane join, the promotion tail's reads, and any lane still running) ends before the no-progress window as a deferral ("work remains owed"), never as RESEARCH_CHILD_NO_PROGRESS. For example, race the discovery-lane join against a bound that ends before RUNTIME_NO_PROGRESS_MS since the last progress. Record unfinished lanes as deferred, and pass a deadline into the candidate lanes and the promotion tail's reads. No change to the watchdog, and no heartbeat that hides a real hang.
+2. Test with the real RUNTIME_NO_PROGRESS_MS relationship: a lane or job that is still running and prints nothing for more than 10 minutes after the cutoff. The round must end as a deferral with the lane named, not as RESEARCH_CHILD_NO_PROGRESS.
+3. Bound campaign-publication-cycle.ts:56 (a limit, not MAX_SAFE_INTEGER).
+4. After release 4 deploys, River reads the first "research stall report:" line (answerStallProbes now names the pending phase at minute 9) and adds it here. If it names a different phase, fix that phase the same way. If no stall report appears before a kill, the child's event loop is blocked by synchronous work. Look for CPU-bound or *Sync calls in that phase.
 ```
 
 ## Repair

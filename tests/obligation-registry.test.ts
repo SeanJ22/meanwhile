@@ -849,7 +849,7 @@ test("the manifest MERGES, so a cycle cannot erase what it did not touch", () =>
 test("the digest counts BOTH staged states, always", () => {
   const lines = promotionLines([]).join("\n");
   assert.match(lines, /0 entry\(ies\) staged/);
-  assert.match(lines, /Promotion is ON/);
+  assert.match(lines, /Verified facts publish through their reader doors/);
 });
 
 test("both registered normalizers exist for the routes that acquire", () => {

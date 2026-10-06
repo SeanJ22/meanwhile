@@ -1,6 +1,6 @@
 import { CheckedLink } from "@/components/ui/checked-link";
 import type { CardSource } from "@/lib/officials/card-sources";
-import { verificationOf } from "@/lib/officials/verification";
+import { verificationOf, provenanceKind, PROVENANCE_KIND_LABELS } from "@/lib/officials/verification";
 
 import { NoValue, PopupRow } from "@/components/map/popup/popup-row";
 
@@ -18,10 +18,11 @@ import { NoValue, PopupRow } from "@/components/map/popup/popup-row";
  */
 export function CardSourcesList({ sources }: { sources: CardSource[] }) {
   return (
-    <>
+    <div data-card-sources>
       {sources.map((entry, i) => (
-        <div key={`${entry.what}-${i}`} className="account-modal-person">
-          <p className="t-body text-paper">{entry.what}</p>
+        <div key={`${entry.what}-${i}`} className="account-modal-person" {...entry.dataAttrs}>
+          <p className="t-body text-paper">{PROVENANCE_KIND_LABELS[provenanceKind(entry.provenance)]} · {entry.what}</p>
+          {entry.provenance.secondHand && <p className="t-caption text-muted">Second-hand listing</p>}
 
           <PopupRow label="Published by">
             {entry.provenance.sourceOrg || <NoValue />}
@@ -42,6 +43,8 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
             )}
           </PopupRow>
 
+          {entry.provenance.quote && <p className="t-body text-muted">“{entry.provenance.quote}”</p>}
+
           <PopupRow label="Last checked" mono>
             {entry.provenance.collectedAt ? (
               entry.provenance.collectedAt.slice(0, 10)
@@ -53,7 +56,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
           <VerifiedRow provenance={entry.provenance} />
         </div>
       ))}
-    </>
+    </div>
   );
 }
 

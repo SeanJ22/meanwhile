@@ -80,7 +80,8 @@ export interface DerivedCampaignSiteEvidence {
   readonly approvalRecordId: string;
   readonly approvedAt: string;
   /** The audit's independent second signal, as it recorded it. */
-  readonly secondSignal: string;
+  /** Historical evidence only; the campaign page identity is sufficient. */
+  readonly secondSignal?: string;
 }
 
 /** A deeper page inherits publisher identity from a separately approved site
@@ -180,7 +181,7 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
     if (!evidence || !SHA256.test(evidence.sha256 ?? "") || !text(evidence.artifactId) || !text(evidence.attemptId) || !text(evidence.verifierId) ||
         !instant(evidence.readAt) || evidence.readAt.slice(0, 10) !== link.attemptedAt || !https(evidence.finalUrl) || !text(evidence.requestedUrl) ||
         !Number.isInteger(evidence.httpStatus) || evidence.httpStatus < 200 || evidence.httpStatus >= 300 ||
-        !text(evidence.approvalItemId) || !text(evidence.approvalRecordId) || !instant(evidence.approvedAt) || !text(evidence.secondSignal)) {
+        !text(evidence.approvalItemId) || !text(evidence.approvalRecordId) || !instant(evidence.approvedAt)) {
       return `${record.id}: its evidence does not name its vaulted read and its approval exactly`;
     }
     /* One person, one campaign link: every key of one candidacy carries the same site. */
@@ -222,7 +223,7 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
               !https(e.sourceUrl) || !Number.isSafeInteger(e.hrefStart) || !Number.isSafeInteger(e.hrefEnd) ||
               e.hrefStart < 0 || e.hrefEnd <= e.hrefStart || !text(e.hrefQuote) || e.offsetUnit !== "UTF16_CODE_UNITS" ||
               !https(e.requestedUrl) || new URL(e.sourceUrl).hostname !== new URL(d.documentUrl).hostname
-            : !text(e.secondSignal) || !instant(e.approvedAt)) ||
+            : !instant(e.approvedAt)) ||
           e.httpStatus < 200 || e.httpStatus >= 300) return `${record.id}: candidate publication lacks exact text, identity or captured-byte evidence`;
       documentIds.add(d.id);
       if (revision) revisions.set(revision.revisionId, d);

@@ -1,3 +1,5 @@
+import { Card } from "@/components/ui/card";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { ContactPills } from "@/components/officials/contact-pills";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
@@ -34,7 +36,8 @@ import {
   linksForNominee,
   type CandidateLinks,
 } from "@/lib/ballot/candidate-sites";
-import { blurbForContestTitle } from "@/lib/officials/office-blurbs";
+import type { OfficeBlurb } from "@/lib/officials/office-blurbs";
+import { readCuratedContestOfficeBlurbs } from "@/lib/officials/curated-definition-reader";
 import { surnameDisplayCase } from "@/lib/ballot/name-case";
 import {
   cardForCandidacy,
@@ -508,6 +511,7 @@ async function BallotBattlecard({
   targetKey,
   contestTitle,
   contestOcdId,
+  officeBlurb,
   federal,
   contestCandidates,
   contestId,
@@ -537,6 +541,7 @@ async function BallotBattlecard({
   contestTitle: string;
   /** The contest's division, so a state-scoped office explainer can resolve. */
   contestOcdId: string;
+  officeBlurb: OfficeBlurb | null;
   /** Whether the contest is federal, which decides whether FEC money applies. */
   federal: boolean;
   /**
@@ -628,7 +633,6 @@ async function BallotBattlecard({
    */
   const recordHolder = holder ?? resolvedStanding?.holderFor.get(targetKey) ?? null;
 
-  const officeBlurb = blurbForContestTitle(contestTitle, contestOcdId);
   let positions: ReturnType<typeof positionsFor> = [];
   let positionsUnavailable = !authorityAvailability.candidatePublications;
   if (!positionsUnavailable) {
@@ -826,7 +830,8 @@ async function BallotBattlecard({
         ) : null,
         /*
          * **BAL-15 (2026-08-25).** Sources now carries three things the ballot
-         * row let go of, plus the sentence Sean asked for about the tagline.
+         * row let go of. Funding, voting, positions and bios contribute their exact
+         * citations to this same card registry; they no longer cite on their face.
          *
          * It renders even where there is no officeholder record — which is the
          * change that matters for equal effort. `CandidateSources` returns
@@ -852,10 +857,9 @@ async function BallotBattlecard({
  * The card's answer to "says who?", for a person we hold an officeholder
  * record for.
  *
- * Money and votes are deliberately absent from the list: those sections cite
- * themselves on the row, and the same claim in two registers reads as two
- * claims. Same assembler as the map's person card — one function, so the two
- * surfaces cannot disagree about provenance.
+ * Money, votes, positions, bios and contacts contribute their citations to
+ * the same card Sources registry. This assembler supplies the held roster
+ * and office records, just as it does on the map person card.
  */
 function CandidateSources({ holder }: { holder: SeatHolder }) {
   // Read only as the reader edge primed it: this card never adds a database read to a cold ballot.
@@ -1361,6 +1365,8 @@ export default async function BallotPage({
       ? { shared: false, marker: null, anchor: null }
       : { shared: true, marker: sharedSources[index].marker, anchor: `source-note-${index}` };
   };
+
+  const officeBlurbs = await readCuratedContestOfficeBlurbs(matched?.contests ?? []);
 
   const filingProjection = await filingRead;
   const filingRows = filingProjection?.kind === "PROMOTED"
@@ -2173,7 +2179,7 @@ export default async function BallotPage({
                   register, at the top of the contest. Describes the office,
                   never the people running for it. Voice register. */}
               {(() => {
-                const blurb = blurbForContestTitle(contest.title, contest.ocdId);
+                const blurb = officeBlurbs.get(contest.id) ?? null;
                 return blurb ? (
                   <p className="mt-2 text-[0.75rem] leading-relaxed text-voice">
                     {blurb.text}
@@ -2292,6 +2298,7 @@ export default async function BallotPage({
                             targetKey={`${contest.id}|${nominee.name}`}
                             contestTitle={contest.title}
                             contestOcdId={contest.ocdId}
+                            officeBlurb={officeBlurbs.get(contest.id) ?? null}
                             federal={isFederalContest(contest)}
                             contestId={contest.id}
                             contestVoteFor={contest.voteFor}
@@ -2466,6 +2473,7 @@ export default async function BallotPage({
                               targetKey={cand.id}
                               contestTitle={contest.title}
                               contestOcdId={contest.ocdId}
+                              officeBlurb={officeBlurbs.get(contest.id) ?? null}
                               federal={isFederalContest(contest)}
                               contestId={contest.id}
                               contestVoteFor={contest.voteFor}
@@ -2621,18 +2629,9 @@ export default async function BallotPage({
              */
             const measure = measureFor(contest.id);
             return (
-              <div
-                key={contest.id}
-                data-contest-id={contest.id}
-                className="mt-3.5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)]"
-              >
-                <h3 className="text-[0.9375rem] font-semibold tracking-tight">
-                  {contest.title}
-                  {/* BAL-41 (2026-09-02): the level tag on every proposition
-                      title too — a statewide measure reads State, a county or
-                      district one reads Local, from the measure's OCD identity. */}
-                  <LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />
-                </h3>
+              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={contest.title} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[]}>
+              <div>
+
 
                 {/*
                   **THE QUESTION, VERBATIM, FIRST** (BAL-30, 2026-08-28).
@@ -2863,30 +2862,7 @@ export default async function BallotPage({
                   </details>
                 )}
 
-                {/*
-                  The measure text's OWN citation, and only when the card's
-                  foot does not already carry it. Every current row cites the
-                  same document the contest does, so nothing renders here
-                  today; a future row whose question came from a different
-                  document gets its own line rather than borrowing the foot's.
-                */}
-                {measure &&
-                  measure.provenance.sourceUrl !==
-                    (analysis?.analysisUrl ?? contest.provenance.sourceUrl) && (
-                    <p className="mt-2 text-[0.6875rem]">
-                      <a
-                        href={measure.provenance.sourceUrl ?? undefined}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline decoration-dotted"
-                      >
-                        {measure.provenance.sourceOrg}
-                      </a>{" "}
-                      <span className="text-muted">
-                        · read {formatDateMDY(measure.provenance.collectedAt)}
-                      </span>
-                    </p>
-                  )}
+                {measure && <CardSourcesContribution id={`measure-text:${contest.id}`} sources={[{ what: "Official measure text", provenance: measure.provenance }]} />}
 
                 {analysis?.text ? (
                   // 3f (2026-08-19): the official analysis collapses by
@@ -2942,23 +2918,9 @@ export default async function BallotPage({
                   options={pickOptionsFor(set, contest)}
                 />
 
-                <p className="mt-2 text-[0.6875rem]">
-                  <a
-                    href={analysis?.analysisUrl ?? contest.provenance.sourceUrl ?? undefined}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline decoration-dotted"
-                  >
-                    {analysis?.sourceOrg ?? contest.provenance.sourceOrg}
-                  </a>{" "}
-                  <span className="text-muted">
-                    · read{" "}
-                    {analysis
-                      ? formatDateMDY(analysis.retrievedAt.slice(0, 10))
-                      : formatDateMDY(contest.provenance.collectedAt)}
-                  </span>
-                </p>
+                <CardSourcesContribution id={`measure-analysis:${contest.id}`} sources={[{ what: analysis ? "Official analysis" : "Official measure filing", provenance: { sourceUrl: analysis?.analysisUrl ?? contest.provenance.sourceUrl ?? "", sourceOrg: analysis?.sourceOrg ?? contest.provenance.sourceOrg, collectedAt: analysis?.retrievedAt ?? contest.provenance.collectedAt, verifiedAt: null } }]} />
               </div>
+              </Card>
             );
           })}
           </div>

@@ -61,10 +61,14 @@ import {
   type IngestTally,
 } from "../lib/outcomes/ingest.ts";
 import {
-  PIMA_LEGISTAR_OUTCOMES_CONTRACT,
-  pimaLegistarOutcomesCandidate,
+  PIMA_OUTCOME_TENANT,
+  legistarOutcomesCandidate,
+  type OutcomeTenant,
 } from "../lib/outcomes/data-plane.ts";
 import { readOutcomeProjection } from "../lib/outcomes/store.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
+import { loadOutcomePartitionForDoor } from "../lib/doors/outcome-door-load.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { rollingOutcomeWindow, type OutcomeWindow } from "../lib/outcomes/window.ts";
 
@@ -74,6 +78,8 @@ const DEFAULT_MAX_SITTINGS = 40;
 
 export interface PimaOutcomeIngestArgs {
   readonly slug: string;
+  /** DB-22: the door whose outcomes this run reads; null for Pima's own contract. */
+  readonly door: string | null;
   readonly bodyId: number | null;
   /** Explicit operator bounds; null takes the rolling routine window. */
   readonly from: string | null;
@@ -93,6 +99,7 @@ export function parsePimaOutcomeIngestArgs(argv: readonly string[]): PimaOutcome
   const max = read("--max-sittings");
   return {
     slug: read("--slug") ?? "pima",
+    door: read("--door"),
     bodyId: body === null ? null : Number(body),
     from: read("--from"),
     to: read("--to"),
@@ -155,9 +162,10 @@ export function outcomeSourceThrough(prior: string | null, observed: string): st
 }
 
 /** The one protocol line the standing runner correlates to this exact task. */
-export function pimaOutcomeRunnerReceiptLine(outcome: PromotionOutcome): string {
+export function pimaOutcomeRunnerReceiptLine(outcome: PromotionOutcome, source?: string): string {
   return "RCD_RECEIPT=" + JSON.stringify({
     source: "pima-legistar-outcomes",
+    ...(source === undefined || source === "pima-legistar-outcomes" ? {} : { source }),
     candidateId: outcome.candidate.candidate.id,
     acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
     state: outcome.candidate.state,
@@ -170,11 +178,14 @@ export function pimaOutcomeRunnerReceiptLine(outcome: PromotionOutcome): string 
 
 const EMPTY: OutcomeSnapshot = { generatedOn: "UNKNOWN", generatedAt: "UNKNOWN", tenants: [], sittings: [] };
 
-async function currentProjection(store: RoutineDataStore): Promise<{
+async function currentProjection(store: RoutineDataStore, tenant: OutcomeTenant): Promise<{
   readonly snapshot: OutcomeSnapshot;
   readonly sourceThrough: string | null;
 }> {
-  const read = await readOutcomeProjection({ store, bypassCache: true });
+  // Pima's own pointer keeps its reader; a door's outcomes are read from the door's own scope.
+  const read = tenant.contractId === PIMA_OUTCOME_TENANT.contractId
+    ? await readOutcomeProjection({ store, bypassCache: true })
+    : await readPromotedCivicData<OutcomeSnapshot>(tenant.recordClass, tenant.scope, { store, bypassCache: true });
   if (read.kind === "PROMOTED") return { snapshot: read.value, sourceThrough: read.metadata.sourceThrough };
   if (read.kind === "NOT_RECORDED") return { snapshot: EMPTY, sourceThrough: null };
   if (read.kind === "BOOTSTRAP") throw new Error("PIMA_OUTCOME_PRODUCTION_BOOTSTRAP_FORBIDDEN");
@@ -186,6 +197,8 @@ export interface PimaOutcomeIngestInput {
   readonly client: LegistarClient;
   readonly args: PimaOutcomeIngestArgs;
   readonly window: OutcomeWindow;
+  /** The tenant whose pointer this run extends; Pima's own unless a door names another (DB-22). */
+  readonly tenant?: OutcomeTenant;
   /** The observation clock; production reads the wall clock after each read returns. */
   readonly now?: () => string;
   readonly log?: (line: string) => void;
@@ -203,6 +216,7 @@ export interface PimaOutcomeIngestResult {
 /** One bounded routine pass over the Pima events window. */
 export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): Promise<PimaOutcomeIngestResult> {
   const { store, client, args, window: eventsWindow } = input;
+  const tenant = input.tenant ?? PIMA_OUTCOME_TENANT;
   const now = input.now ?? (() => new Date().toISOString());
   const log = input.log ?? ((line: string) => console.log(line));
   const writes = args.promote && !args.dryRun;
@@ -210,7 +224,7 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
   const refusedSittings: string[] = [];
   let promotedSittings = 0;
 
-  const current = await currentProjection(store);
+  const current = await currentProjection(store, tenant);
   let snapshot = current.snapshot;
   let sourceThrough = current.sourceThrough;
   const heldById = new Map(snapshot.sittings.map((sitting) => [sitting.meetingId, sitting]));
@@ -223,12 +237,12 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
     readonly failureDetail?: string;
   }): Promise<PromotionOutcome> => processRegisteredRoutineCandidate(
     store,
-    PIMA_LEGISTAR_OUTCOMES_CONTRACT.contractId,
-    pimaLegistarOutcomesCandidate(candidate),
+    tenant.contractId,
+    legistarOutcomesCandidate(candidate, tenant),
     candidate.retrievedAt,
   );
   const settle = (last: PromotionOutcome): PimaOutcomeIngestResult => ({
-    receiptLine: pimaOutcomeRunnerReceiptLine(last),
+    receiptLine: pimaOutcomeRunnerReceiptLine(last, tenant.contractId),
     exitCode: last.promoted ? 0 : 2,
     tally,
     promotedSittings,
@@ -240,7 +254,7 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
   let events: readonly LegistarEvent[] = [];
   try {
     const captured = await captureSourceAcquisitions((runForSource) =>
-      runForSource(PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId, () =>
+      runForSource(tenant.sourceId, () =>
         fetchEvents<LegistarEvent>(args.slug, { from: eventsWindow.from, to: eventsWindow.to }),
       ),
     );
@@ -255,7 +269,7 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
       acquisitions: [],
       retrievedAt: attemptedAt,
       sourceThrough: attemptedAt,
-      failureDetail: `Pima events acquisition failed: ${detail}`,
+      failureDetail: `${tenant.label} events acquisition failed: ${detail}`,
     }));
   }
   const eventsRetrievedAt = now();
@@ -280,7 +294,7 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
       acquisitions: eventEvidence,
       retrievedAt: eventsRetrievedAt,
       sourceThrough: eventsRetrievedAt,
-      failureDetail: "The bounded Pima events query returned zero sittings; no governmental absence is inferred.",
+      failureDetail: `The bounded ${tenant.label} events query returned zero sittings; no governmental absence is inferred.`,
     }));
   }
 
@@ -305,7 +319,7 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
     }
 
     const detail = await captureSourceAcquisitions((runForSource) =>
-      runForSource(PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId, async () => {
+      runForSource(tenant.sourceId, async () => {
         try {
           const collected = await collectEventOutcomes(args.slug, event.EventId, {
             sourceOrg: client.publishingOrg,
@@ -399,7 +413,7 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
       retrievedAt: observedAt,
       sourceThrough: sourceThrough ?? eventsRetrievedAt,
       failureDetail:
-        `${refusedSittings.length} Pima sitting acquisition(s) were refused in this run: ${refusedSittings.join("; ")}. ` +
+        `${refusedSittings.length} ${tenant.label} sitting acquisition(s) were refused in this run: ${refusedSittings.join("; ")}. ` +
         "Every sitting that validated is live in the canonical pointer; the refused sittings stay due for the next attempt.",
     });
     log(`  run held: ${refusedSittings.length} refused sitting(s) recorded against the moved pointer`);
@@ -409,8 +423,9 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
 
 async function main(): Promise<void> {
   const args = parsePimaOutcomeIngestArgs(process.argv.slice(2));
-  if (args.slug !== "pima") {
-    throw new Error("PIMA_OUTCOME_CONTRACT_SCOPE_MISMATCH: add a separate tenant contract before acquiring another Legistar client.");
+  // DB-22: any other body is read through the door that names it; Pima's own contract serves only Pima.
+  if (args.door === null && args.slug !== "pima") {
+    throw new Error("PIMA_OUTCOME_CONTRACT_SCOPE_MISMATCH: another Legistar body is read through its own door (--door).");
   }
   if (!args.promote && !args.dryRun) {
     throw new Error("PIMA_OUTCOME_PROMOTION_REQUIRED: use --promote, or --dry-run for a read-only plan.");
@@ -422,12 +437,22 @@ async function main(): Promise<void> {
   if (args.bodyId !== null && !Number.isInteger(args.bodyId)) throw new Error("--body must be an integer Legistar body id");
   installNeonRequestDeadline();
   if (args.promote) prepareProductionCivicDataWrite();
-  const client = findClient(args.slug);
+  let tenant: OutcomeTenant = PIMA_OUTCOME_TENANT;
+  let client: LegistarClient | undefined;
+  if (args.door !== null) {
+    const partition = await loadOutcomePartitionForDoor(args.door);
+    if (partition.kind !== "legistar" || partition.tenant.slug !== args.slug) {
+      throw new Error(`OUTCOME_DOOR_MISMATCH: ${args.door} is not the Legistar Web API door of ${args.slug}.`);
+    }
+    tenant = partition.tenant;
+    client = legistarClientsFromWiring([partition.wiring])[0];
+  } else client = findClient(args.slug);
   if (!client) throw new Error("PIMA_LEGISTAR_CLIENT_NOT_REGISTERED");
   const run = await runPimaLegistarOutcomeIngest({
     store: new PostgresRoutineDataStore(),
     client,
     args,
+    tenant,
     window: pimaOutcomeWindow(args, client.timeZone, new Date()),
   });
   if (run.receiptLine !== null) console.log(run.receiptLine);

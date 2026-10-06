@@ -28,6 +28,8 @@ import { plainMoney } from "./plain-money.ts";
 
 export interface FundingDisplayData {
   fecCandidateId: string;
+  /** Exact held committee/cycle for on-demand filing reads; no credential value. */
+  detailSource?: { committeeId: string; cycle: number };
   name: string;
   /** e.g. "2025–26" — always stated; totals never wear an unnamed cycle. */
   cycleLabel: string;
@@ -124,6 +126,7 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
       kind: "funding",
       data: {
         fecCandidateId: candidate.fecCandidateId,
+        ...(candidate.principalCommitteeId ? { detailSource: { committeeId: candidate.principalCommitteeId, cycle: candidate.cycle } } : {}),
         name: candidate.name,
         cycleLabel: cycleLabelFor(candidate.cycle),
         sentences,

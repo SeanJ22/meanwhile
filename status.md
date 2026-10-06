@@ -3,9 +3,9 @@
 build_state: release 8 live but its first hour was clearly worse (about 9.4 GB); runner stopped since about 3:13 AM EDT; release 9 tested, not released; lock free for the next River run
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
-run_id: session_01GomLhSQqS2qk8vHjjkBzbT
-lock: none
-heartbeat: 2026-10-06T07:50:52Z
+run_id: session_01EnWcsto9iudrVWwszS9urS
+lock: river-20261006T075753Z-4037
+heartbeat: 2026-10-06T07:57:54Z
 
 
 ## HANDOFF FOR THE NEXT RIVER RUN (written Oct 6, 1:25 AM EDT)

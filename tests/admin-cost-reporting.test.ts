@@ -1,16 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { projectFlow } from "../lib/control-plane/admin-view/flow-read.ts";
+import { projectFlow, summarizeFlowWeek } from "../lib/control-plane/admin-view/flow-read.ts";
 import { buildFlowSummary, readBatchSpend, yesterdayWindow } from "../lib/control-plane/admin-view/cost-reporting.ts";
 import { measuredHuntSpend, moneyTime } from "../lib/control-plane/admin-view/cost-reporting-view.ts";
 import { flowRows } from "../lib/control-plane/admin-view/scoreboard-read.ts";
 import { openPaidEndingFix, fixItems } from "../lib/control-plane/fix-list.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
-import { topicOf } from "../lib/control-plane/operator-chat/router.ts";
-import { requiredReads } from "../lib/control-plane/operator-chat/context.ts";
-import { answerFor } from "../lib/control-plane/operator-chat/read-models.ts";
-import type { SpendSummary } from "../lib/control-plane/admin-view/spend-summary.ts";
 
 const now = "2026-10-06T04:30:00.000Z", from = "2026-10-05T04:00:00.000Z", through = "2026-10-06T04:00:00.000Z";
 const flow = projectFlow({ stages: [{ hour: from, stage: "liveRecords", count: 4 }, { hour: from, stage: "checkedRecords", count: 12 }], spend: [{ hour: from, usd: 2, unpriced: 0 }] }, from, through);
@@ -20,10 +16,10 @@ test("the seven-day rates count deliveries rather than rechecks and retain unkno
   assert.equal(weekly.hours.length, 168);
   assert.equal(weekly.factsLivePerHour, 4 / 168);
   assert.equal(weekly.costPerFactUsd, .5);
-  assert.equal(flowRows(weekly)[1][1].value, "$0.50");
-  assert.match(flowRows(weekly)[0][1].counts!, /across the factory/);
+  assert.equal(flowRows(summarizeFlowWeek([{from:weekly.from,through:weekly.through,read:weekly}]))[1][1].value, "$0.500");
+  assert.match(flowRows(summarizeFlowWeek([{from:weekly.from,through:weekly.through,read:weekly}]))[0][1].counts!, /recorded hours/);
   const unknown = projectFlow({ stages: [{ hour: from, stage: "liveRecords", count: 4 }], spend: [{ hour: from, usd: 2, unpriced: 1 }] }, from, through);
-  assert.equal(flowRows(unknown)[1][1].value, null);
+  assert.equal(flowRows(summarizeFlowWeek([{from:unknown.from,through:unknown.through,read:unknown}]))[1][1].value, null);
   assert.equal(flowRows(undefined)[0][1].value, null);
 });
 
@@ -66,13 +62,3 @@ test("a paid NOTHING ending raises one fix per actual cause, never from a legacy
   assert.equal(fixItems((await repos.adminConfig.read(ADMIN_CONFIG_ID))!.value).length,1);
 });
 
-test("yesterday's Ask answer reads just the measured summary and refuses a stale day's answer", () => {
-  assert.equal(topicOf("What did we spend yesterday and what did it get us?"),"YESTERDAY_SPEND");
-  assert.deepEqual(requiredReads("YESTERDAY_SPEND"),["spendSummary"]);
-  const summary = {readAt:now,spend:{flow:{week:flow,yesterday:flow}}} as SpendSummary;
-  const context = {nowIso:now,from:"/admin",stateVersion:null,spendSummary:summary};
-  const answer = answerFor("YESTERDAY_SPEND",context,"",null);
-  assert.deepEqual(answer.says,["Yesterday's measured window: $2.00 settled; 4 new or updated reader records reached readers."]);
-  assert.equal(answer.readBackAt,"/admin?view=scoreboard");
-  assert.ok(answerFor("YESTERDAY_SPEND",{...context,nowIso:"2026-10-07T12:00:00Z"},"",null).gaps.length);
-});

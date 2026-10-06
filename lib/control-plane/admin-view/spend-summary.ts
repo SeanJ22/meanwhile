@@ -5,7 +5,7 @@ import type { DailyDatabaseTransferRead } from "../../db/transfer.ts";
 import type { ProviderBillingSnapshot } from "../provider-billing.ts";
 import { readSpend, type AdminV6SpendView } from "./v6-spend-read.ts";
 import { readVendorSpend } from "./vendor-spend.ts";
-import { buildFlowSummary, readBatchSpend } from "./cost-reporting.ts";
+import { readBatchSpend } from "./cost-reporting.ts";
 
 export interface NeonProjectTransfer {
   readonly project: "control-plane" | "we-the-people"; readonly day: string;
@@ -24,8 +24,8 @@ export async function buildSpendSummary(input: {
 }): Promise<SpendSummary> {
   const spend=await readSpend(input.sql,input.transfer);
   const vendors=await readVendorSpend({now:input.now,sql:input.sql,billing:input.billing,dailyLimitUsd:input.dailyLimitUsd,transfer:spend.neon,env:input.env,fetcher:input.fetcher});
-  const [flow, batchSpend] = await Promise.all([buildFlowSummary(input.sql,input.now,input.flowRecordingSince ?? null),readBatchSpend(input.sql,input.now).catch(()=>null)]);
-  return {readAt:input.now,spend:{...spend,readAt:input.now,vendors,flow,batchSpend,setAsideUsd:input.liveSetAsideUsd,dailyLimitUsd:input.dailyLimitUsd,neonProjects:input.neonProjects}};
+  const batchSpend = await readBatchSpend(input.sql,input.now).catch(()=>null);
+  return {readAt:input.now,spend:{...spend,readAt:input.now,vendors,batchSpend,setAsideUsd:input.liveSetAsideUsd,dailyLimitUsd:input.dailyLimitUsd,neonProjects:input.neonProjects}};
 }
 export async function readSpendSummary(repos:Pick<ControlPlaneRepositories,"ownerSnapshots">):Promise<SpendSummary|null> {
   const row=await repos.ownerSnapshots.readNarrowed("current",{spendSummary:true});

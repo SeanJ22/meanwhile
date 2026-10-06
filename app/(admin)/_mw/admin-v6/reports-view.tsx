@@ -6,12 +6,12 @@ import { decisionOrderAction } from "./decision-order-action.ts";
 import { mst } from "./model.ts";
 import { Actions, Card, Empty, Failed, Loading, Pill } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
-import { VitalSignsRow } from "./vital-signs.tsx";
+import { BriefVitalSigns } from "./vital-signs.tsx";
 import s from "./v6.module.css";
 export function BriefParts({brief}:{readonly brief:BriefSnapshot}){
  return <div className={s.stack}>
   <p className={s.meta}>Read {mst(brief.createdAt)}</p>
-  <VitalSignsRow row={brief.vitalSigns ?? null}/>
+  <BriefVitalSigns reading={brief.vitalSigns ?? null}/>
   {brief.unread.length>0&&<p role="status">Could not read: {brief.unread.join(", ")}. Those parts are unknown.</p>}
   <Card title="Wins and updates">{brief.updates.length?<ul>{brief.updates.map(u=><li key={u.id}><p>{u.what} <Pill tone={u.isWin?"good":"neutral"}>{u.label}</Pill></p><p className={s.meta}>{u.when}{u.before!==null?` · Before: ${u.before}`:""}{u.after!==null?` · After: ${u.after}`:""}</p></li>)}</ul>:<Empty>No updates in this reading.</Empty>}</Card>
   <Card title="Problems">{brief.problems.length?<ul>{brief.problems.map(p=><li key={p.key}><p>{p.what} · {p.owner} · {p.next}</p></li>)}</ul>:<Empty>No problems in the parts read.</Empty>}</Card>

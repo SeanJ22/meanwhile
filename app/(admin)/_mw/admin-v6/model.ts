@@ -759,7 +759,6 @@ export interface ScoreboardMissionRow {
 }
 
 export interface ScoreboardView {
-  readonly flow?: import("../../../../lib/control-plane/admin-view/flow-read.ts").FlowRead | null;
   readonly rows: readonly ScoreboardRow[];
   /** Completeness by place and by family, with the counts behind each; empty until a place has been sent. */
   readonly byPlace: readonly ScoreboardPlaceRow[];

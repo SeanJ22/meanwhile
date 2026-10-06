@@ -6,6 +6,7 @@ import { guardAdminRequest } from "../gateway/admin-guard.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import { ALERTS_ON_SETTING, readSetting } from "../settings.ts";
 import { readReports } from "../reports/read-reports.ts";
+import { readVitalSignsFromEnv } from "./hourly-vital-signs.ts";
 import { readBrief, readerProblemRows } from "./brief.ts";
 const headers={"cache-control":"no-store"};
 export async function briefGet(request:NextRequest,which:"brief"|"alerts"|"daily-brief"|"reader-problems"):Promise<NextResponse>{
@@ -17,7 +18,11 @@ export async function briefGet(request:NextRequest,which:"brief"|"alerts"|"daily
   const opened=await openControlPlane();if(!opened.ok)throw new Error("unread");
   if(which==="brief")return NextResponse.json(await readBrief(opened.repos,at),{headers});
   const held=await opened.repos.adminConfig.read(ADMIN_CONFIG_ID);if(held&&!isAdminConfig(held.value))throw new Error("unread");
-  if(which==="daily-brief")return NextResponse.json({latest:held?.value.latestBrief??null,observedAt:at},{headers});
+  if(which==="daily-brief") {
+   const latest=held?.value.latestBrief??null;
+   const vitalSigns=latest?await readVitalSignsFromEnv(latest.createdAt,24).catch(()=>null):null;
+   return NextResponse.json({latest:latest?{...latest,vitalSigns}:null,observedAt:at},{headers});
+  }
   const on=readSetting(held?.value??null,ALERTS_ON_SETTING,false);
   return NextResponse.json({on,alerts:on?(await readBrief(opened.repos,at)).fresh.alerts:[],observedAt:at},{headers});
  }catch{return NextResponse.json({says:"The brief could not be read just now."},{status:503,headers});}

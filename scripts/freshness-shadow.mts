@@ -834,6 +834,17 @@ finishPhase("references-and-registration");
   const local = sync.all.filter(o => o.active && o.id.startsWith(LOCAL_JURISDICTION_NAMESPACE) && registry.routeFor(o.id)?.executorClass === "BOUNDED_MODEL_WORKER");
   const planned = local.filter(o => o.autonomousPlan);
   console.log(`  local research rows: ${local.length} paid; ${planned.length} carry a work plan; ${planned.filter(o => o.autonomousPlan?.publication).length} with a reader door`);
+  /* CH-23 part 2: how much paid work in each provider is planned hunter work; with the switch on every paid row should be. */
+  const paidByProvider = new Map<string, { paid: number; planned: number }>();
+  for (const o of sync.all) {
+    if (!o.active || registry.routeFor(o.id)?.executorClass !== "BOUNDED_MODEL_WORKER") continue;
+    const tally = paidByProvider.get(registry.providerOf(o.id) ?? "unregistered") ?? { paid: 0, planned: 0 };
+    tally.paid += 1;
+    if (plannedForHunters(o.autonomousPlan)) tally.planned += 1;
+    paidByProvider.set(registry.providerOf(o.id) ?? "unregistered", tally);
+  }
+  console.log(`  paid rows planned as hunter work (one hunter path ${oneHunterPath() ? "on" : "off"}): ${[...paidByProvider].sort(([a], [b]) => a.localeCompare(b))
+    .map(([provider, tally]) => `${provider} ${tally.planned} of ${tally.paid}`).join("; ") || "none"}`);
 }
 console.log(
   `  ${floorLine(

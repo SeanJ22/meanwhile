@@ -20,9 +20,18 @@
   "types_exit_code": 0,
   "lint_exit_code": 0,
   "lint_note": "one inherited unused knownRouteIds import warning",
-  "ready_sha": null,
+  "ready_sha": "34bb40ec6731660395e39273a77794ce81c23a9c",
   "finished_at": "2026-10-06T05:12:41.042528+00:00",
   "ready_hook_pending": true,
   "timing_complete": true,
-  "timing_usable_for_scheduling": true
+  "timing_usable_for_scheduling": true,
+  "exact_ready_focused": {
+    "tests": 92,
+    "pass": 92,
+    "fail": 0,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "ready_application_diff_from_full": "empty",
+  "last_river_inspected": "8e47854b1a507df4215ad42aa24eb8f7486d85de"
 }

@@ -168,3 +168,22 @@ test("CH-24: the round builds its guards from this module, with no inline copy l
     assert.ok(!round.includes(inline), `no inline ${inline}`);
   }
 });
+
+
+test("CA-25: translation batching preserves Send and Fleet refusals before provider dispatch", async () => {
+  let providerCalls = 0;
+  const batchFetch: typeof fetch = async () => { providerCalls++; throw new Error("Refused work must not call provider"); };
+  const translation = { ...request, tools: [{ name: "write_measure_translation", description: "held source", input_schema: { type: "object" } }] };
+  for (const options of [
+    { sends: { lines: [line("send:spent", 0.000001)] } },
+    { sends: { refusal: { code: "ASSIGNMENT_BUDGET_UNREADABLE", why: "Unavailable Send budget" } } },
+    { modelHold: "Owner pause" },
+  ]) {
+    const h = await harness({ ...options, batchFetch } as Parameters<typeof harness>[0]);
+    await h.repos.budget.install({ hosts: {}, spendHolds: {} } as never, NOW);
+    await assert.rejects(h.guards.workerTransportFor(h.jurisdiction, h.task.id)(translation), error => error instanceof SendBudgetRefusal || error instanceof FleetPreSendRefusal);
+    assert.equal(h.sent.length, 0);
+    assert.equal(Object.values((await h.ledger()).spendHolds ?? {}).reduce((sum, hold) => sum + (hold.settled?.usd ?? 0), 0), 0);
+  }
+  assert.equal(providerCalls, 0);
+});

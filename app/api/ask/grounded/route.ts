@@ -421,7 +421,11 @@ async function officeholderActionEvidence(
   gaps: EvidenceGap[],
   denominators: Record<string, number>,
 ): Promise<void> {
-  const general = await generalActionsForOfficial(seatId, personName);
+  let general: Awaited<ReturnType<typeof generalActionsForOfficial>>;
+  try { general = await generalActionsForOfficial(seatId, personName); } catch {
+    gaps.push({ whose: "OURS", statement: `We could not load the action records for ${personName}.` });
+    return;
+  }
   if (general.length) {
     const from = trailingMonths ? monthsBefore(today, trailingMonths) : null;
     const selected = trailingMonths ? general.filter(row => row.occurredAt !== null && row.occurredAt >= from! && row.occurredAt <= today) : general;

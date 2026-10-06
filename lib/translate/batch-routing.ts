@@ -7,9 +7,11 @@ const TRANSLATION_TOOLS = new Set([
 
 /** Each translation turn is a self-contained source/proposal request. Tool
  * conversations and reader synthesis continue on their existing transport. */
+export function isTranslationRequest(request: ModelRequest): boolean {
+  return request.tools.length === 1 && TRANSLATION_TOOLS.has(request.tools[0].name) &&
+    request.messages.length === 1 && request.messages[0].role === "user";
+}
 export function translationBatchEnabled(request: ModelRequest,
   env: Readonly<Record<string, string | undefined>> = process.env): boolean {
-  return request.tools.length === 1 && TRANSLATION_TOOLS.has(request.tools[0].name) &&
-    request.messages.length === 1 && request.messages[0].role === "user" &&
-    batchEnabledFor("background-translation", env);
+  return isTranslationRequest(request) && batchEnabledFor("background-translation", env);
 }

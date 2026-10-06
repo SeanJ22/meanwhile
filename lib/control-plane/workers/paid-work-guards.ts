@@ -30,7 +30,7 @@ import type { ModelProviderQueue } from "../scheduler/model-lane.ts";
 import { RESEARCH_BOUNDS, researchPaidWorkerCapacity } from "../scheduler/research-policy.ts";
 import type { ModelTransport } from "../scheduler/scout-executor.ts";
 import { MODELS } from "../../models.ts";
-import { translationBatchEnabled } from "../../translate/batch-routing.ts";
+import { isTranslationRequest, translationBatchEnabled } from "../../translate/batch-routing.ts";
 
 export interface PaidWorkGuardDeps {
   readonly repos: ControlPlaneRepositories;
@@ -122,7 +122,7 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
    */
   const workerTransportFor = (jurisdiction: AutonomousJurisdiction, taskId: string): ModelTransport => async request => {
     const task = (await repos.routeTasks.mustRead(taskId)).value;
-    const batching = translationBatchEnabled(request) || (task.workerTask?.role === "ADVERSARIAL_AUDITOR" ? batchEnabledFor("background-worker-audit")
+    const batching = isTranslationRequest(request) ? translationBatchEnabled(request) : (task.workerTask?.role === "ADVERSARIAL_AUDITOR" ? batchEnabledFor("background-worker-audit")
       : task.workerTask?.role === "PARSER" && batchEnabledFor("background-worker-parse"));
     const journal = attemptBatchJournal(repos, taskId, deps.now);
     const requestJobId = `worker-request:${taskId}:${batching ? batchRequestHash(request) : randomUUID()}`;

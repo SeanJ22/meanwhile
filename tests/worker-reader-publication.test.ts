@@ -46,6 +46,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
 import { OfficialFilings } from "../components/ballot/official-filings.tsx";
 import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
+import { federalDirectoryFirstSeed } from "../lib/officials/federal-directory-read-model.ts";
 import { readStateExecutiveActions, stateExecutiveActionsFor } from "../lib/officials/executive-action-reader.ts";
 import { executiveActionDiscoveryPlan } from "../lib/officials/executive-action-plan.ts";
 
@@ -66,11 +67,11 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   }
   const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
   const directory = contractId === "registry-runtime-bindings";
-  const actionState = contractId === "executive-actions" ? prior.payload.registry.divisions.find(row => row.ocdId === "ocd-division/country:us/state:nh") : null;
+  const actionState = contractId === "executive-actions" ? { ocdId: "ocd-division/country:us/state:nh", label: "New Hampshire" } : null;
   const body = actionState ? { id: actionState.ocdId, ocdId: actionState.ocdId, name: actionState.label } : prior.payload.registry.bodies.find(row => row.name && (!(directory || contractId === "official-filings" || contractId === "public-records" || contractId === "government-budgets" || contractId === "ballot-contests" || contractId === "voting-sites") || prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId &&
     (!["official-filings", "ballot-contests"].includes(contractId) || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1))))!;
   const publisherDivisionId = body.ocdId;
-  const division = prior.payload.registry.divisions.find(row => row.ocdId === publisherDivisionId)!;
+  const division = prior.payload.registry.divisions.find(row => row.ocdId === publisherDivisionId) ?? (actionState ? { state: "NH", label: actionState.label } : null)!;
   const recordClass = classOverride ?? (directory ? "OFFICIAL_BOARD_DIRECTORY" : WORKER_READER_CLASSES[contractId]);
   const supplied = typeof facts === "function" ? facts(prior, body.id) : facts;
   const rows: Record<string, string | number>[] = (Array.isArray(supplied) ? supplied : [supplied]).map(fact => ({ bodyName: body.name!, ...(["official-filings","ballot-contests"].includes(contractId) ? { jurisdictionName: division.label } : {}), ...(directory ? {
@@ -84,8 +85,8 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
       stateCode: "NH", name: division.label, govClass: "COUNTY" as const, countyName: null, enumeratedFrom: "offline-fixture", ownWebAddress: FIXTURE_URL,
       sourceIds: [], ocdId: body.ocdId, bodyId: body.id } } } : {}),
     sources: plan.sources.map(route => ({ ...route, recordClass })),
-    contract: { ...plan.contract, ...(["official-filings","ballot-contests","executive-actions"].includes(contractId) ? { jurisdiction: { country: "US", state: division.state, canonicalId: contractId === "ballot-contests" ? body.ocdId : plan.contract.subjectId } } : {}), schemaVersion: 2, recordClass, identity: { namespace: contractId, keyFields: contractId === "ballot-contests" ? ["candidateName"] : ["bodyName"] },
-      requiredFields: Object.keys(fields), extraction, verification: { required: true, authorities: [] } } as never }) });
+    contract: { ...plan.contract, ...(["official-filings","ballot-contests","executive-actions"].includes(contractId) ? { jurisdiction: { country: "US", state: division.state, canonicalId: contractId === "ballot-contests" ? body.ocdId : plan.contract.subjectId } } : {}), schemaVersion: 2, recordClass, identity: { namespace: contractId, keyFields: contractId === "ballot-contests" ? ["candidateName"] : contractId === "executive-actions" ? ["officeholderName", "designation", "kindLabel"] : ["bodyName"] },
+      requiredFields: contractId === "executive-actions" ? ["bodyName", "officeholderName", "officeTitle", "kindLabel", "designation", "sourceSentence"] : Object.keys(fields), extraction, verification: { required: true, authorities: [] } } as never }) });
   const task = createRouteTask({ workItemId: h.item.id, routeId: "independent-rule", routeLabel: "Offline independent rule record", target: "https://register.example.gov/rules.json", inherited: false, now: h.now() });
   await registerRouteTask(h.repos, task, h.now());
   const claim = await claimRouteTask(h.repos, { routeTaskId: task.id, holder: "independent-rule", now: h.now(), ttlMs: 120000 });
@@ -109,7 +110,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const ready = { ...plan, contract: { ...plan.contract, verification: { required: true, authorities: [{ id: "rules", type: "STATUTORY_RECORD" as const,
     publisher: "Independent Register", sourceId: artifact.sourceId, canonicalUrls: [artifact.canonicalUrl], artifactIds: [artifact.id], authorityEvidenceArtifactIds: [artifact.id],
     independenceBasis: "DISTINCT_AUTHORITY" as const, independenceExplanation: "Separately retained official rules confirm every published detail.",
-    extraction: { ...extraction, rowsPointer: "/records" }, comparison: { kind: "RECORD_VALUES" as const, keyFields: contractId === "ballot-contests" ? ["candidateName"] : ["bodyName"], fields: Object.keys(fields) } }] } } };
+    extraction: { ...extraction, rowsPointer: "/records" }, comparison: { kind: "RECORD_VALUES" as const, keyFields: contractId === "ballot-contests" ? ["candidateName"] : contractId === "executive-actions" ? ["officeholderName", "designation", "kindLabel"] : ["bodyName"], fields: Object.keys(fields) } }] } } };
   await h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value, autonomousPlan: ready }, h.now());
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
   const runtime = { ...h.runtime, independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({
@@ -549,31 +550,55 @@ test("CA-19: a registered state executive action traverses normal workers, Slide
     const governor = prior.payload.statewideExecutives.find(row => row.stateOcdId === "ocd-division/country:us/state:nh" && row.holder.officeTitle === "Governor")!;
     const common = { officeholderName: governor.holder.name, officeTitle: governor.holder.officeTitle };
     return [{ ...common, kindLabel: "executive order", designation: "EO 12", title: "School nutrition", occurredAt: "2026-09-08",
-      sourceSentence: `${governor.holder.name} issued executive order EO 12, School nutrition, on 2026-09-08.` }];
+      sourceSentence: `${governor.holder.name} issued executive order EO 12, School nutrition, on 2026-09-08.` },
+      { ...common, kindLabel: "enacted", designation: "HB 9", title: "", occurredAt: "", sourceSentence: `${governor.holder.name}: HB 9 was enacted.` }];
   });
   const report = await publishWorkerReaderResults(fixture.input);
   assert.equal(report[0].outcome.status, "PUBLISHED", report[0].outcome.detail);
-  const division = fixture.body.ocdId;
+  const division = fixture.body.ocdId!;
   const read = await readStateExecutiveActions(division, { store: fixture.store, now: fixture.h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
-  const action = read.value.records[0];
+  const action = read.value.records.find(row => row.kind === "EXECUTIVE_ORDER")!;
+  const enacted = read.value.records.find(row => row.designation === "HB 9")!;
+  assert.equal(enacted.kind, "BILL_ENACTED");
+  assert.equal(enacted.occurredAt, null, "No source date is invented");
+  assert.doesNotMatch(enacted.sourceSentence, /signed/i);
   assert.equal(action.sourceSentence, fixture.rows[0].sourceSentence);
   assert.equal(action.kind, "EXECUTIVE_ORDER"); assert.equal(action.sourceKind, "OFFICIAL");
-  assert.equal((await stateExecutiveActionsFor({ division, officialId: action.officeholderId, name: action.officeholderName }, { store: fixture.store, now: fixture.h.now() })).length, 1);
+  assert.equal((await stateExecutiveActionsFor({ division, officialId: action.officeholderId, name: action.officeholderName }, { store: fixture.store, now: fixture.h.now() })).length, 2);
   assert.equal((await stateExecutiveActionsFor({ division, officialId: action.officeholderId, name: "A successor" }, { store: fixture.store, now: fixture.h.now() })).length, 0);
-  const served = await withReaderAuthorityEdge({ promoted: [promotedEdgeEntryOf(read)!], refusals: {}, serving: null },
+  const actionScope = scopedManualContractScope("executive-actions", division);
+  const actionEdge = promotedEdgeEntryOf(read, "CURATED_READER_RECORD", actionScope, fixture.store)!;
+  const context = { federalDirectory: { value: federalDirectoryFirstSeed().value, versionId: "fixture:held-federal-directory" }, registryRuntime: { value: fixture.prior.payload, versionId: fixture.prior.versionId }, promoted: new Map([[`CURATED_READER_RECORD:${actionScope}`, actionEdge]]), edgeOnly: true as const };
+  const served = await withReaderAuthorityEdge(context,
     () => stateExecutiveActionsFor({ division, officialId: action.officeholderId, name: action.officeholderName }));
-  assert.equal(served.length, 1);
-  assert.equal((await withReaderAuthorityEdge({ promoted: [], refusals: {}, serving: null },
+  assert.equal(served.length, 2);
+  assert.equal((await withReaderAuthorityEdge({ promoted: new Map(), edgeOnly: true },
     () => stateExecutiveActionsFor({ division, officialId: action.officeholderId, name: action.officeholderName }))).length, 0);
+  await withReaderAuthorityEdge(context, async () => {
+    const { GET } = await import("@/app/api/official-actions/[subject]/route");
+    const api = await GET(new Request("https://wtp.test/api/official-actions/test"), { params: Promise.resolve({ subject: action.officeholderId }) });
+    const answer = await api.json();
+    assert.equal(api.status, 200, JSON.stringify(answer));
+    assert.ok(answer.records.some((row: { text: string }) => row.text === action.sourceSentence), JSON.stringify(answer));
+    const { POST } = await import("@/app/api/ask/grounded/route");
+    const response = await POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ballot-state-actions" },
+      body: JSON.stringify({ question: `What has ${action.officeholderName} done in office?`, today: "2026-09-08", ocdIds: [division], activeSubjects: [{ id: action.officeholderId, kind: "PERSON", name: action.officeholderName, focused: true }] }) }));
+    const grounded = await response.json();
+    assert.equal(response.status, 200, JSON.stringify(grounded));
+    assert.ok(grounded.records.some((row: { kind: string; text: string; sourceUrl: string }) => row.kind === "OFFICIAL_ACTION" && row.text === action.sourceSentence && row.sourceUrl === FIXTURE_URL), JSON.stringify(grounded));
+  });
   const item = (await fixture.h.repos.workItems.mustRead(fixture.h.item.id)).value;
   const actionParser = fixture.results.find(row => row.result.role === "PARSER")!;
   const actionCaptures = await Promise.all([actionParser.result.role === "PARSER" ? actionParser.result.artifactId : "", fixture.artifact.id].map(fixture.input.readCapture));
-  assert.throws(() => workerReaderPackage({ plan: { ...item.autonomousPlan!, contract: { ...item.autonomousPlan!.contract,
-    jurisdiction: { ...item.autonomousPlan!.contract.jurisdiction, state: "NJ" } } }, parser: fixture.results.find(row => row.result.role === "PARSER")!,
+  const actionContract = item.autonomousPlan!.contract;
+  assert.equal(actionContract.schemaVersion, 2);
+  if (actionContract.schemaVersion !== 2) throw new Error("Action contract missing");
+  assert.throws(() => workerReaderPackage({ plan: { ...item.autonomousPlan!, contract: { ...actionContract,
+    jurisdiction: { ...actionContract.jurisdiction, state: "NJ" } } }, parser: fixture.results.find(row => row.result.role === "PARSER")!,
     captures: actionCaptures,
-    results: fixture.results, registry: fixture.prior, now: fixture.h.now() }), /STATE|JURISDICTION/);
+    results: fixture.results, registry: fixture.prior, now: fixture.h.now() }), /CONTRACT_PROVENANCE_MISMATCH/);
   const plan = executiveActionDiscoveryPlan({ id: "NH:state", ocdId: division, name: "New Hampshire", ownWebAddress: "https://governor.example.gov/" } as never,
     { recordClass: "PUBLIC_RECORDS", url: "https://legislature.example.gov/actions", authority: "State publications", authorityBasis: "Held registered door" } as never, "registered-door");
   assert.equal(plan?.publication.contractId, "executive-actions");

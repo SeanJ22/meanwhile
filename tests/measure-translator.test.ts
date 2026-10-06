@@ -160,3 +160,19 @@ test("a rewrite cannot drop or move a prior reaction identity to another officia
     assert.equal(calls, 1, "unsupported identity rewrites stop before another paid model call");
   }
 });
+
+test("CA-25: published and refused translations retain batch metering and halve each request's measured price once", async () => {
+  const run = (batch: boolean, supported: boolean) => runMeasureTranslation({ repos: createMemoryRepositories(), store: new MemoryRoutineDataStore(),
+    subject, now, primary: { evidence, observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" },
+    captures: [{ evidence, observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" }],
+    transportFor: () => async request => ({ ...response(request, request.tools[0].name === "write_measure_translation"
+      ? { measure, sentences } : { checked: checked.map(row => ({ ...row, supported })) }), batch }) });
+  const full = await run(false, true), batched = await run(true, true), refused = await run(true, false);
+  assert.equal(full.status, "PUBLISHED"); assert.equal(batched.status, "PUBLISHED"); assert.equal(refused.status, "HELD");
+  assert.equal(batched.usage.length, 2); assert.equal(refused.usage.length, 2);
+  for (let i = 0; i < 2; i++) {
+    assert.equal(batched.usage[i].usage.batch, true);
+    assert.equal(batched.usage[i].usd, full.usage[i].usd! / 2);
+    assert.equal(refused.usage[i].usd, batched.usage[i].usd);
+  }
+});

@@ -1,0 +1,55 @@
+{
+  "logs": {
+    "ballot-state-actions-focused-fixed.log": {
+      "sha256": "6ae2cd16d555e187d5a00a281a67387909cf70dd7b92ff7bdca1c76f75eed95b",
+      "bytes": 8603,
+      "archive": ".factory/ballot-resume-ballot-state-actions-focused-fixed.log.gz"
+    },
+    "ballot-batch-actions-types-final.log": {
+      "sha256": "2e4d42bec301938009ef2b107d6392cb6ecbf54c92d7ae962c207f5296a52bb7",
+      "bytes": 2307,
+      "archive": ".factory/ballot-resume-ballot-batch-actions-types-final.log.gz"
+    },
+    "ballot-batch-metering-proof.log": {
+      "sha256": "ed389f5c335ad06db0f62b969fc32e7cda3fbb78737e27a236f95270250b6514",
+      "bytes": 2354,
+      "archive": ".factory/ballot-resume-ballot-batch-metering-proof.log.gz"
+    },
+    "ballot-ca19-proof.log": {
+      "sha256": "2d449925434dfd904276dc694654cc9bad74a86bad649474382e17ab2899482e",
+      "bytes": 2168,
+      "archive": ".factory/ballot-resume-ballot-ca19-proof.log.gz"
+    },
+    "ballot-ca19-connected-proof.log": {
+      "sha256": "7320c0fdd515181cbb5a2f24ea1fffe861820561c94177b6ddded42a6524e756",
+      "bytes": 1284,
+      "archive": ".factory/ballot-resume-ballot-ca19-connected-proof.log.gz"
+    },
+    "ballot-ca19-connected-proof2.log": {
+      "sha256": "fba0939368be79b15ebfa4b21b395a2bc014977d0518f07f6a4d46a870219a3f",
+      "bytes": 1734,
+      "archive": ".factory/ballot-resume-ballot-ca19-connected-proof2.log.gz"
+    },
+    "ballot-actions-batch-connected-final.log": {
+      "sha256": "779fb64809a0d722b0f539b4fa0304fa4d1134f0ebf55002cf3dd56139147dba",
+      "bytes": 686,
+      "archive": ".factory/ballot-resume-ballot-actions-batch-connected-final.log.gz"
+    },
+    "ballot-final-actions-parser.log": {
+      "sha256": "b4cdb39e0e73ee2cce2c77234fe150b59fb570f26a2a59b6fa8b512dd990d94b",
+      "bytes": 3204,
+      "archive": ".factory/ballot-resume-ballot-final-actions-parser.log.gz"
+    },
+    "ballot-final-actions-parser2.log": {
+      "sha256": "ca8a8f263b12a50c02ce27f5f8cf375daf9f4df8e29f01b71631f69c594b9d75",
+      "bytes": 572,
+      "archive": ".factory/ballot-resume-ballot-final-actions-parser2.log.gz"
+    },
+    "ballot-new-actions-final-types2.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "archive": ".factory/ballot-resume-ballot-new-actions-final-types2.log.gz"
+    }
+  },
+  "status": "WIP; original failures retained; connected final actions/parser2 pass2/2, batch connected final3/3, types2 exit0; exact FULL and gates required"
+}

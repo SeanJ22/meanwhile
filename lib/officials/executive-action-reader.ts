@@ -17,6 +17,7 @@ export async function stateExecutiveActionsFor(input: { division: string; offici
   const scope = scopedManualContractScope("executive-actions", input.division);
   if (options.store === undefined && currentReaderAuthorityEdge() && !currentPromotedEdge("CURATED_READER_RECORD", scope)) return [];
   const read = await readStateExecutiveActions(input.division, options);
+  if (read.kind === "STORE_UNREACHABLE") throw new Error("The state executive action holding is temporarily unavailable.");
   if (read.kind !== "PROMOTED") return [];
   return read.value.records.filter(row => row.officeholderId === input.officialId && row.officeholderName === input.name);
 }

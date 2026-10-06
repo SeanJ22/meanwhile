@@ -3,9 +3,12 @@ import { refreshExecutiveActionsFromPromoted } from "@/lib/officials/executive-a
 import { refreshAzBallotFromPromoted } from "@/lib/civic-data/manual-read-models";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import {
+  primeRegistryRuntimeFromValue,
   getRegistryRuntimeReadModel,
   refreshRegistryRuntimeFromPromoted,
 } from "@/lib/registry/runtime-read-model";
+
+import { currentRegistryRuntimeEdge } from "@/lib/registry/runtime-edge";
 
 export const runtime = "nodejs";
 
@@ -32,7 +35,9 @@ export function directOfficialActionTargetPlan(subject: string): OfficialActionT
 }
 
 async function currentOfficialActionTargetPlan(subject: string): Promise<OfficialActionTargetPlan> {
-  await refreshRegistryRuntimeFromPromoted();
+  const edge = currentRegistryRuntimeEdge();
+  if (edge) primeRegistryRuntimeFromValue(edge.value, edge.versionId);
+  else await refreshRegistryRuntimeFromPromoted();
   const direct = directOfficialActionTargetPlan(subject);
   const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
     row.holder.id === subject || row.candidacy?.candidacyId === subject,

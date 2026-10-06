@@ -97,12 +97,13 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
   requirePublication(workerReaderClassMatches(contractId, checked.contract.recordClass), "READER_CLASS_MISMATCH");
   const body = input.registry?.payload.registry.bodies.find(body => body.id === target.bodyId);
   const place = ["public-records", "executive-actions"].includes(contractId) ? input.registry?.payload.registry.divisions.find(row => row.ocdId === target.bodyId) : null;
-  requirePublication(body?.name || place?.label, "CANONICAL_BODY_MISSING");
+  requirePublication(contractId === "executive-actions" || body?.name || place?.label, "CANONICAL_BODY_MISSING");
   const rowFor = (record: (typeof checked.extraction.records)[number]) => {
     const f = record.fields;
-    requirePublication(words(text(f.bodyName)) === words(body?.name ?? place!.label), "CANONICAL_BODY_MISMATCH");
     if (contractId === "executive-actions") {
-      const ocdId = place?.ocdId ?? body?.ocdId;
+      const ocdId = target.bodyId;
+      const state = jurisdictionFromOcdId(ocdId);
+      requirePublication(state && ocdId === `ocd-division/country:us/${state.prefix}:${state.slug}`, "ACTION_STATE_MISMATCH");
       requirePublication(ocdId && jurisdictionFromOcdId(ocdId)?.usps === checked.contract.jurisdiction.state, "ACTION_STATE_MISMATCH");
       const matches = input.registry?.payload.statewideExecutives.filter(row => row.stateOcdId === ocdId &&
         words(row.holder.name) === words(text(f.officeholderName)) && words(row.holder.officeTitle) === words(text(f.officeTitle))) ?? [];
@@ -124,6 +125,7 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
       requirePublication(checked.primary.evidence.text.includes(row.sourceSentence), "ACTION_SENTENCE_NOT_HELD");
       return row;
     }
+    requirePublication(words(text(f.bodyName)) === words(body?.name ?? place!.label), "CANONICAL_BODY_MISMATCH");
     if (contractId === "public-records") {
       const allowed = new Set(["bodyName", "title", "kindLabel", "sourceSentence"]);
       requirePublication(Object.keys(f).every(field => allowed.has(field)), "PUBLIC_RECORD_FIELD_UNSUPPORTED");

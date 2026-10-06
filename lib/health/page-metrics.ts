@@ -423,7 +423,7 @@ export function collectPageObservation(): PageObservation {
   const readStamp = /\b(?:read|checked|retrieved|collected)(?:\s+on)?\s+(?:\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}\/\d{2,4}|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:st|nd|rd|th)?\b)/i;
   const hostname = /(?<![@\w.-])\b(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:gov|com|org|net|edu|us|io)\b/i;
   const sourceHosts = new WeakMap<Element, string[]>();
-  const cards = '.reader-card, [data-card-id], .candidate-row, .account-modal, .popup-card, [data-official-filing], [data-contest-id], [data-meeting-card]';
+  const cards = '.reader-card, [data-card-id], .candidate-row, .account-modal, .popup-card, [data-official-filing], [data-contest-id], [data-meeting-card], [data-ask-panel], [data-ballot-ask]';
   const elements: ObservedElement[] = [];
   const all = document.body ? Array.from(document.body.querySelectorAll("*")) : [];
   for (const el of all) {

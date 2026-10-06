@@ -40,6 +40,14 @@ export function ScoreboardScreen() {
                   <p className={s.meta}>Last seven days: {r.trend.map((t) => `${t.label} ${t.value === null ? "—" : Math.round(t.value * 100) / 100}`).join(" · ")}</p>
                 )}
                 {r.items && r.items.length > 0 && <ul className={s.meta}>{r.items.map((item, i) => <li key={i}>{item}</li>)}</ul>}
+                {r.images && r.images.length > 0 && (
+                  <div className={s.meta}>{r.images.map((im, i) => (
+                    <a key={i} href={im.src} target="_blank" rel="noreferrer">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={im.src} alt={`Screenshot: ${im.label}`} width={96} loading="lazy" />
+                    </a>
+                  ))}</div>
+                )}
                 <Technical lines={[r.id, ...(r.notMeasured ? [r.says] : []), ...(r.technical ?? [])]} />
               </Card>
             ))}

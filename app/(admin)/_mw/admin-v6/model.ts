@@ -714,6 +714,8 @@ export interface ScoreboardRow {
   readonly technical?: readonly string[];
   /** A short run of days, oldest first, drawn under the number; a null value is a day nothing was recorded, not a zero. */
   readonly trend?: readonly { readonly label: string; readonly value: number | null }[];
+  /** Screenshots shown under the row (FE-23: the newest red screens). */
+  readonly images?: readonly { readonly label: string; readonly src: string }[];
 }
 
 export interface ScoreboardGateRow {

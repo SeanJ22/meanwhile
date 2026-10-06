@@ -33,6 +33,7 @@ import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-pla
 import {
   judgeSpeed, sampleZips, speedTargets, SPEED_PROFILES, type ResidentTaskSet, type SpeedRun, type SpeedTarget,
 } from "../lib/health/worst-case-speed.ts";
+import { openSurfaceFixes } from "../lib/health/surface-fixes.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
@@ -135,5 +136,8 @@ if (DRY) {
 } else {
   const repos = await createPgRepositories(url!, now, { skipBootstrap: true });
   await recordSpeedPass(repos, pass);
+  // FE-26: a page over its limit goes onto the fix list now, not at the next look at Admin.
+  const fixes = await openSurfaceFixes(repos, pass, now).catch((error) => { console.error(`speed: fix items were not opened (${error instanceof Error ? error.message : error})`); return { opened: [] }; });
+  if (fixes.opened.length > 0) console.log(`speed: ${fixes.opened.length} fix item${fixes.opened.length === 1 ? "" : "s"} kept open`);
 }
 console.log(`speed: ${pass.passed} within three seconds, ${pass.failed} too slow or unfinished, at ${pass.zips.join(", ")} (run ${reader.runId})`);

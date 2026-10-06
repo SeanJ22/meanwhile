@@ -30,7 +30,10 @@ import type { PipelineRead } from "./v6-results-read.ts";
 import type { AuditAccuracyReading } from "./v6-audit-read.ts";
 import { formatEastern } from "../eastern-time.ts";
 import type { SpeedPass } from "../../health/worst-case-speed.ts";
+import { deadLinkSurfaces, DEAD_LINKS_SURFACE_DEFAULT, slowSurfaces, surfaceName, surfaceSpeeds, type DeadLinkReading } from "../../health/surface-speed.ts";
 import type { ProvenFixesReading } from "../fix-standing.ts";
+import type { FixState } from "../fix-list.ts";
+import type { LookPass, LookScreen } from "../../frontend/look-pass.ts";
 import type { ReportAccuracyReading } from "../workers/claim-audit.ts";
 
 export interface DoorFacts {
@@ -211,8 +214,14 @@ export interface ScoreboardReadings {
   readonly audit?: AuditAccuracyReading | null;
   /** The latest worst-case speed pass on the live site (FE-02); null when unreadable or none ran. Absent means not read. */
   readonly speed?: SpeedPass | null;
+  /** FE-26: the link sweep's dead links per surface; null when unreadable. Absent means not read. */
+  readonly deadLinks?: readonly DeadLinkReading[] | null;
+  /** The two limits the speed row judges by (the settings); absent uses the code defaults. */
+  readonly speedLimits?: { readonly share?: number; readonly deadLinks?: number };
   /** Where reusable fixes stand (DP-26); null when unreadable. Absent means not read. */
   readonly provenFixes?: ProvenFixesReading | null;
+  /** FE-23: the look passes of the last deploys, newest first, with each fix item's state; null when unreadable. Absent means not read. */
+  readonly look?: LookReading | null;
   /** The latest weekly check of the team's claimed wins (DP-33); null when none in two weeks or unreadable. Absent means not read. */
   readonly reportAccuracy?: ReportAccuracyReading | null;
 }
@@ -432,19 +441,34 @@ export function auditRow(a: AuditAccuracyReading | null | undefined): Scoreboard
   return row(id, name, { value: `${a.accuratePercent}%`, counts, says: `${a.sentence}${second}`, items, technical });
 }
 
-/** FE-02: each surface and sampled ZIP, phone and desktop, judged by its slowest visit against three seconds. */
-export function speedRow(p: SpeedPass | null | undefined): ScoreboardRow {
+/**
+ * FE-02 and FE-26: each surface, judged by its slowest visits against three seconds: the share of visits over the limit, the visits that
+ * never finished (errors) and the dead links found on the links readers follow. `deadLinks` absent means the link sweep was not read.
+ */
+export function speedRow(p: SpeedPass | null | undefined, deadLinks?: readonly DeadLinkReading[] | null, limits: { readonly share?: number; readonly deadLinks?: number } = {}): ScoreboardRow {
   const id = "Site speed and reliability", name = "Site speed and reliability";
   if (p === undefined) return unmeasured(id, name, "Page load times and errors are not recorded here yet.");
   if (p === null) return unmeasured(id, name, "No speed check of the live site has been recorded in the last two days.");
   const total = p.passed + p.failed;
   if (total === 0) return unmeasured(id, name, "The last speed check measured nothing.");
   const failing = p.rows.filter((r) => r.verdict === "FAIL");
+  const speeds = surfaceSpeeds(p);
+  const errors = speeds.reduce((a, s) => a + s.errors, 0);
+  const deadTotal = (deadLinks ?? []).reduce((a, r) => a + r.dead, 0);
+  const perSurface = speeds.map((s) => `${surfaceName(s.surface)}: ${s.over} of ${s.visits} visits over ${p.budgetMs / 1000} seconds${s.errors > 0 ? `, ${s.errors} never finished` : ""}`);
+  const over = slowSurfaces(speeds, limits.share ?? 0.2);
+  const dead = deadLinks === undefined ? null : deadLinks === null ? "The dead-link check could not be read just now." : deadLinks.length === 0 ? "No dead-link check has been recorded yet." : null;
+  const deadWords = deadLinks === undefined || deadLinks === null || deadLinks.length === 0 ? [] : deadLinks.map((r) => `Links, ${r.surface}: ${r.dead} dead of ${r.links}`);
+  const atLimit = deadLinks ? deadLinkSurfaces(deadLinks, limits.deadLinks ?? DEAD_LINKS_SURFACE_DEFAULT) : [];
   return row(id, name, {
     value: `${n(p.passed)} of ${n(total)}`,
-    counts: `${n(p.passed)} within ${p.budgetMs / 1000} seconds · ${n(p.failed)} too slow or never finished · ${n(p.zips.length)} ZIP codes`,
-    says: `Every page and Ask question, judged by its slowest visit on a phone and a desktop. Checked ${formatEastern(p.at)}.`,
-    items: [...failing, ...p.rows.filter((r) => r.verdict === "PASS")].map((r) => `${r.verdict === "PASS" ? "Within the limit" : "Too slow"}: ${r.says}`),
+    counts: [`${n(p.passed)} within ${p.budgetMs / 1000} seconds`, `${n(p.failed)} too slow or never finished`, `${n(errors)} errors`,
+      deadLinks && deadLinks.length > 0 ? `${n(deadTotal)} dead links` : null, `${n(p.zips.length)} ZIP codes`].filter((x) => x !== null).join(" · "),
+    says: `Every page and Ask question, judged by its slowest visit on a phone and a desktop. These are our own test visits, not readers'. ${
+      over.length > 0 ? `${over.map((s) => surfaceName(s.surface)).join(", ")} ${over.length === 1 ? "is" : "are"} over the limit and on the stuck list. ` : ""}${
+      atLimit.length > 0 ? `${atLimit.map((r) => r.surface).join(", ")} ${atLimit.length === 1 ? "has" : "have"} dead links to fix. ` : ""}Checked ${formatEastern(p.at)}.`.replace(/\s+/g, " ").trim(),
+    items: [...perSurface, ...deadWords, ...(dead === null ? [] : [dead]),
+      ...[...failing, ...p.rows.filter((r) => r.verdict === "PASS")].map((r) => `${r.verdict === "PASS" ? "Within the limit" : "Too slow"}: ${r.says}`)],
   });
 }
 
@@ -478,8 +502,73 @@ export function reportAccuracyRow(a: ReportAccuracyReading | null | undefined): 
   });
 }
 
+export interface LookReading {
+  readonly now: string;
+  /** Newest first. */
+  readonly passes: readonly LookPass[];
+  /** The fix list's state by item id, so a red shows where its fix stands. */
+  readonly fixStates: ReadonlyMap<string, FixState>;
+  /** Where a stored screenshot is served from. */
+  readonly imageUrl: (key: string) => string;
+}
+
+const FIX_WORDS: Record<FixState, string> = { OPEN: "fix not started", FIXING: "being fixed", FIXED: "fixed", CAME_BACK: "came back after a fix" };
+
+/** The first later pass that looked at the same screen again (same surface and size), oldest first; null when none has. */
+function relook(red: LookScreen, at: string, passes: readonly LookPass[]): LookScreen | null {
+  const later = passes.filter((p) => p.at > at).sort((a, b) => a.at.localeCompare(b.at));
+  for (const p of later) {
+    const hit = p.screens.find((x) => x.surface === red.surface && x.profile === red.profile && x.verdict !== "not reviewed");
+    if (hit) return hit;
+  }
+  return null;
+}
+
+/**
+ * FE-23: how the live site looked this week. The green and red screens counted across the week's deploy looks, the newest reds with
+ * their screenshots, and each red's fix and re-look. Our own look passes judge it, never readers.
+ */
+export function lookRow(l: LookReading | null | undefined): ScoreboardRow {
+  const id = "Look and feel", name = "Look and feel";
+  if (l === undefined) return unmeasured(id, name, "The front-end flags are not recorded here yet.");
+  if (l === null) return unmeasured(id, name, "The look checks could not be read just now.");
+  const since = new Date(new Date(l.now).getTime() - 7 * 86_400_000).toISOString();
+  const week = l.passes.filter((p) => p.at >= since);
+  if (week.length === 0) return unmeasured(id, name, "No look check of the live site has run in the last week.");
+  const screens = week.flatMap((p) => p.screens);
+  const red = screens.filter((s) => s.verdict === "red").length;
+  const green = screens.filter((s) => s.verdict === "green").length;
+  const notJudged = screens.length - red - green;
+  const seen = new Set<string>();
+  const reds: { screen: LookScreen; at: string }[] = [];
+  for (const p of week) for (const s of p.screens) {
+    if (s.verdict !== "red") continue;
+    const key = s.fixId ?? `${s.surface}|${s.profile}|${s.element ?? ""}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    reds.push({ screen: s, at: p.at });
+  }
+  const shown = reds.slice(0, 6);
+  const items = shown.map(({ screen, at }) => {
+    const fix = screen.fixId === null ? "no fix item" : (l.fixStates.has(screen.fixId) ? FIX_WORDS[l.fixStates.get(screen.fixId)!] : "fix item not found");
+    const again = relook(screen, at, l.passes);
+    const look = again === null ? "not looked at again yet" : again.verdict === "green" ? "looked at again: now right" : "looked at again: still wrong";
+    return `Wrong ${easternDay(at)}: the ${screen.label}${screen.element ? `, ${screen.element}` : ""}. ${fix[0].toUpperCase()}${fix.slice(1)}; ${look}.`;
+  });
+  const judged = red + green;
+  return {
+    ...row(id, name, {
+      value: judged === 0 ? null : `${n(green)} of ${n(judged)}`,
+      counts: `${n(green)} green · ${n(red)} red${notJudged > 0 ? ` · ${n(notJudged)} not judged` : ""} · ${n(week.length)} ${week.length === 1 ? "deploy" : "deploys"} looked at this week`,
+      says: judged === 0 ? "No screen was judged this week." : red === 0 ? "Every screen judged this week looked right. The reviewer sees only the screenshot, the task and the written standard." : `${n(red)} screen${red === 1 ? "" : "s"} looked wrong this week; the newest are below with their screenshots. The reviewer sees only the screenshot, the task and the written standard.`,
+      items,
+      technical: shown.map(({ screen }) => `${screen.fixId ?? "no fix"} · ${screen.surface} · ${screen.zip} · ${screen.profile}`),
+    }),
+    images: shown.flatMap(({ screen }) => (screen.shot === null ? [] : [{ label: screen.label, src: l.imageUrl(screen.shot) }])),
+  };
+}
+
 const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
-  { id: "Look and feel", name: "Look and feel", why: "The front-end flags are not recorded here yet." },
 ];
 
 /** The Scoreboard in the design's order. Every number in the list has a row; one with no reading says "—" and why. */
@@ -496,7 +585,8 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Return visits", returnsRow(r.returning)],
     ["Head-start hit rate", headStartRow(r.doors)],
     ["Audit accuracy", auditRow(r.audit)],
-    ["Site speed and reliability", speedRow(r.speed)],
+    ["Look and feel", lookRow(r.look)],
+    ["Site speed and reliability", speedRow(r.speed, r.deadLinks, r.speedLimits)],
     ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
     ...flowRows(r.flow),
     ["Proven fixes", provenFixesRow(r.provenFixes)],

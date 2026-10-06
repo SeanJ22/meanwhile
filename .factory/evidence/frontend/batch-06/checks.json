@@ -81,12 +81,28 @@
     "failures": 16,
     "result": "Sixteen original-source failures reproduced on plain River f545fcf9493def91294bccf219ed65071b2093b1. Recent-vote baseline timeout124; cleanup recheck exit1 in ~1.3s (missing Chromium), no hang."
   },
-  "readySha": null,
+  "readySha": "16a36b422b6a87fc8d8e8cee64aa61687914e810",
   "cleanup": {
     "file": "tests/reader-recent-vote-expansion.test.ts",
     "types": "pass",
     "lint": "pass",
     "guard": "unchanged",
     "recheck": "expected missing-browser failure; normal exit, no leaked fixture server"
+  },
+  "exactReady": {
+    "testedSha": "16a36b422b6a87fc8d8e8cee64aa61687914e810",
+    "focused": "47/47 in 9 files",
+    "types": "pass",
+    "readerBrowser": "390/1280 dark/light pass, synthetic, explicit system Chromium substitute",
+    "nativeMapLibre": "pass, synthetic blank style, explicit system Chromium substitute",
+    "buildApplicationEquivalentTo": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+    "readyPolicy": "baseline guidance in board/river assignments; no full-green claim"
+  },
+  "lastCoordination": {
+    "at": "2026-10-06T05:08:57Z",
+    "river": "f545fcf9493def91294bccf219ed65071b2093b1",
+    "boardRiver": "a546788daba8867800f8147641333594c89c1d3e",
+    "CA-14Integrated": false,
+    "newFrontendReturns": false
   }
 }

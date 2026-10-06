@@ -21,6 +21,7 @@ import { fixSubjectId } from "./fix-queue.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import { applyFixResult, type FixMapRepository, type FixMapRow } from "../method/fix-map.ts";
 import { fixResultsFromAttempt, type MethodAttempt, type RecordedAttempts } from "../method/fix-map-record.ts";
+import { noteMethodStandings, type MethodTouch } from "./fix-standing.ts";
 
 /** A finished episode kept on its item when the gap came back. */
 export interface FixEpisodeRecord {
@@ -163,10 +164,15 @@ export async function noteMethodTransition(repos: FixRepos, prior: FixMapRow | n
  * and a working-to-failing change (or the reverse) is put on the fix list.
  * Reads are scoped to the attempt's place, never the whole map. A failed write
  * is counted, never thrown into the attempt it describes.
+ *
+ * DP-26: then each touched method is measured against the proof bar, and a
+ * status change (proven, or a proven fix broke) writes its one update.
  */
-export async function recordAttemptsKeepingHistory(fixMap: Pick<FixMapRepository, "put" | "forPlace">, repos: FixRepos,
-  attempts: readonly MethodAttempt[]): Promise<RecordedAttempts & { readonly broke: number; readonly fixed: number }> {
-  let written = 0, skipped = 0, failed = 0, broke = 0, fixed = 0;
+export async function recordAttemptsKeepingHistory(fixMap: Pick<FixMapRepository, "put" | "forPlace" | "forMethod">, repos: FixRepos,
+  attempts: readonly MethodAttempt[], titleOf?: (methodId: string) => string | null,
+): Promise<RecordedAttempts & { readonly broke: number; readonly fixed: number; readonly updates: number }> {
+  let written = 0, skipped = 0, failed = 0, broke = 0, fixed = 0, updates = 0;
+  const touched: MethodTouch[] = [];
   const known = new Map<string, Map<string, FixMapRow>>();
   for (const attempt of attempts) {
     const rows = fixResultsFromAttempt(attempt);
@@ -183,6 +189,7 @@ export async function recordAttemptsKeepingHistory(fixMap: Pick<FixMapRepository
         written += 1;
         const next = applyFixResult(prior, row);
         place.set(row.methodId, next);
+        touched.push({ methodId: row.methodId, brokeIn: prior?.state === "WORKS" && next.state === "FAILS" ? 1 : 0 });
         const change = await noteMethodTransition(repos, prior, next);
         if (change === "BROKE") broke += 1;
         if (change === "FIXED") fixed += 1;
@@ -191,5 +198,9 @@ export async function recordAttemptsKeepingHistory(fixMap: Pick<FixMapRepository
       }
     }
   }
-  return { written, skipped, failed, broke, fixed };
+  const at = attempts.map((a) => a.at).filter((t) => Number.isFinite(Date.parse(t))).sort().at(-1);
+  if (at !== undefined) {
+    try { updates = (await noteMethodStandings(fixMap, repos, touched, at, titleOf)).length; } catch { failed += 1; }
+  }
+  return { written, skipped, failed, broke, fixed, updates };
 }

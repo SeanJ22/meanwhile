@@ -28,6 +28,8 @@ import type { PipelineRead } from "./v6-results-read.ts";
 import type { AuditAccuracyReading } from "./v6-audit-read.ts";
 import { formatEastern } from "../eastern-time.ts";
 import type { SpeedPass } from "../../health/worst-case-speed.ts";
+import type { ProvenFixesReading } from "../fix-standing.ts";
+import type { ReportAccuracyReading } from "../workers/claim-audit.ts";
 
 export interface DoorFacts {
   readonly walks: number;
@@ -205,6 +207,10 @@ export interface ScoreboardReadings {
   readonly audit?: AuditAccuracyReading | null;
   /** The latest worst-case speed pass on the live site (FE-02); null when unreadable or none ran. Absent means not read. */
   readonly speed?: SpeedPass | null;
+  /** Where reusable fixes stand (DP-26); null when unreadable. Absent means not read. */
+  readonly provenFixes?: ProvenFixesReading | null;
+  /** The latest weekly check of the team's claimed wins (DP-33); null when none in two weeks or unreadable. Absent means not read. */
+  readonly reportAccuracy?: ReportAccuracyReading | null;
 }
 
 /** Approved records by what the public page showed, from the published pipeline read; every state is counted, none is dropped. */
@@ -438,12 +444,40 @@ export function speedRow(p: SpeedPass | null | undefined): ScoreboardRow {
   });
 }
 
+/** DP-26: how many fixes proved out across places, and any proven fix that broke. */
+export function provenFixesRow(p: ProvenFixesReading | null | undefined): ScoreboardRow {
+  const id = "Proven fixes", name = "Proven fixes";
+  if (p === undefined) return unmeasured(id, name, "Fixes proved across places are not recorded here yet.");
+  if (p === null) return unmeasured(id, name, "Where each fix stands could not be read just now.");
+  if (p.proven + p.testing === 0) return unmeasured(id, name, "No reusable fix has been tried in a place yet.");
+  const broke = p.broke.length;
+  return row(id, name, {
+    value: n(p.proven),
+    counts: `${n(p.proven)} proven · ${n(p.testing)} testing${broke > 0 ? ` · ${n(broke)} broke in the last 30 days` : ""}`,
+    says: broke > 0 ? `${n(broke)} proven fix${broke === 1 ? "" : "es"} broke in the last 30 days.` : "A proven fix worked in enough places across more than one district or state. None broke in the last 30 days.",
+    items: p.broke.map((b) => `Broke ${easternDay(b.at)}: ${b.title}${b.stillProven ? " (still proven)" : " (back in testing)"}`),
+  });
+}
+
+/** DP-33: "X of K claimed wins confirmed", recomputed from source records by the claim auditors. */
+export function reportAccuracyRow(a: ReportAccuracyReading | null | undefined): ScoreboardRow {
+  const id = "Report accuracy", name = "Report accuracy";
+  if (a === undefined) return unmeasured(id, name, "Auditor confirmation of the team's claimed wins is not recorded here yet.");
+  if (a === null) return unmeasured(id, name, "No weekly check of the team's claimed wins in the last two weeks.");
+  const judged = a.confirmed + a.wrong;
+  if (judged === 0) return unmeasured(id, name, a.couldNotCheck > 0 ? `${n(a.couldNotCheck)} claimed wins were sampled, but none could be checked against its records.` : "No claimed win was sampled in the last check.");
+  return row(id, name, {
+    value: `${n(a.confirmed)} of ${n(judged)}`,
+    counts: `${n(a.confirmed)} confirmed · ${n(a.wrong)} wrong${a.couldNotCheck > 0 ? ` · ${n(a.couldNotCheck)} could not be checked` : ""}`,
+    says: `Report accuracy: ${n(a.confirmed)} of ${n(judged)} claimed wins confirmed from their source records. Checked ${formatEastern(a.at)}.`,
+    items: a.wrongClaims.map((w) => `Wrong: ${w.claimed} ${w.cause}`.trim()),
+  });
+}
+
 const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
   { id: "Facts live per hour", name: "Facts live per hour", why: "Counted in a later step, once each fact carries when it went live." },
   { id: "Cost per fact", name: "Cost per fact", why: "Counted in a later step, from the same record as facts live per hour." },
   { id: "Look and feel", name: "Look and feel", why: "The front-end flags are not recorded here yet." },
-  { id: "Proven fixes", name: "Proven fixes", why: "Fixes proved across places are not recorded yet." },
-  { id: "Report accuracy", name: "Report accuracy", why: "Auditor confirmation of the team's claimed wins is not recorded yet." },
 ];
 
 /** The Scoreboard in the design's order. Every number in the list has a row; one with no reading says "—" and why. */
@@ -462,6 +496,8 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Audit accuracy", auditRow(r.audit)],
     ["Site speed and reliability", speedRow(r.speed)],
     ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
+    ["Proven fixes", provenFixesRow(r.provenFixes)],
+    ["Report accuracy", reportAccuracyRow(r.reportAccuracy)],
     ...GATE_ROWS.map((g): [string, ScoreboardRow] => [g.id, unmeasured(g.id, g.name, g.why)]),
   ]);
   const ORDER = ["Orders", "Mission progress", "Checklist completeness", "Coverage", "Public delivery", "People coverage", "Facts live per hour", "Cost per fact", "Audit accuracy",

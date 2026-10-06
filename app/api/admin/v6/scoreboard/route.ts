@@ -12,7 +12,8 @@ import { readV6History } from "@/lib/control-plane/admin-view/admin-v6-history.t
 import { readGateHealth } from "@/lib/control-plane/admin-view/gate-health.ts";
 import { buildLearningTrends } from "@/lib/control-plane/admin-view/learning-trends.ts";
 import { weeklyAuditAccuracy } from "@/lib/control-plane/admin-view/v6-audit-read.ts";
-import { readAuditWeek, readLatestSpeedPass } from "@/lib/control-plane/live-audit-log.ts";
+import { readAuditWeek, readLatestSpeedPass, readRecentClaimPasses } from "@/lib/control-plane/live-audit-log.ts";
+import { reportAccuracy, weekOf } from "@/lib/control-plane/workers/claim-audit.ts";
 import { buildScoreboard, publicationCountsOf, v6LearningView, type ScoreboardReadings } from "@/lib/control-plane/admin-view/scoreboard-read.ts";
 import { captureWindow, readCaptureHealth } from "@/lib/control-plane/admin-view/v6-capture-health.ts";
 import { projectDoors } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
@@ -26,6 +27,7 @@ import { adminGet } from "@/lib/control-plane/gateway/admin-get.ts";
 import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
 import { readDoorNumbers } from "@/lib/control-plane/admin-view/door-numbers-read.ts";
+import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -46,7 +48,7 @@ export async function GET(request: NextRequest) {
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
     const doorList = opened ? await attempt(async () => (await listDoors(opened.doors)).doors) : null;
-    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed] = await Promise.all([
+    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
@@ -70,6 +72,10 @@ export async function GET(request: NextRequest) {
       attempt(async () => (opened ? weeklyAuditAccuracy({ ...(await readAuditWeek(opened, observedAt)), now: observedAt }) : null)),
       // FE-02: the latest worst-case speed pass on the live site (today's and yesterday's keys).
       attempt(async () => (opened ? readLatestSpeedPass(opened, observedAt) : null)),
+      // DP-26: where each reusable fix stands, from the config row.
+      attempt(async () => (opened ? provenFixesReading(config, observedAt) : null)),
+      // DP-33: the latest weekly claim check, this week's and last week's keys.
+      attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
@@ -84,6 +90,8 @@ export async function GET(request: NextRequest) {
       doorNumbers,
       audit,
       speed,
+      provenFixes,
+      reportAccuracy: claims,
       gates: opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null }),
       readiness: readinessCounts(recoveryWitnesses({
         bankEntriesInherited: learning?.doors.given ?? null, bankEntriesUsed: learning?.doors.used ?? null,

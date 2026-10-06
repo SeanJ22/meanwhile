@@ -371,6 +371,7 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS: readonly ManualProductionInve
   },
   {
     inventorySourceId: "az-governor-actions", contractId: "az-official-actions", contractSourceId: "az-official-actions",
+    additionalContracts: [{ contractId: "executive-actions", contractSourceId: "curated-reader-primary-sources" }],
     reason: "Owner-reviewed Arizona Governor/Legislature source bytes promote exact official-action records; the former tracked action snapshot is test/history evidence and has no production Reader or writer.",
   },
   {

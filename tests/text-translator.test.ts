@@ -12,6 +12,7 @@ import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kin
 import { translatedMeetingEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { readFieldManual } from "../lib/control-plane/field-manual.ts";
 await installRegistryRuntimeFirstSeeds();
 
 const now = "2026-10-05T18:00:00Z", stateDivision = "ocd-division/country:us/state:mi";
@@ -93,6 +94,12 @@ test("failed independent checks retain GOOD text and both calls' charges; unchan
   assert.equal((await run()).status, "REUSED"); assert.equal(calls, 2);
   const revised = capture(spec, " The board cannot set property tax rates."); supported = false;
   const held = await run(revised); assert.equal(held.status, "HELD"); assert.equal(held.usage.length, 2);
+  assert.equal(held.learning?.stage, "CHECKER"); assert.equal(held.learningError, null);
+  const lesson = (await readFieldManual(repos, { role: "SHARED" })).store.entries.find(row => row.kind === "TRANSLATION_LESSON");
+  assert.equal(lesson?.url, revised.evidence.canonicalUrl);
+  assert.deepEqual((lesson?.payload as { calls: unknown }).calls, held.usage);
+  assert.equal((lesson?.payload as { reason: string }).reason, held.detail);
+  assert.ok((lesson?.payload as { learned: string }).learned.includes(held.detail!));
   assert.deepEqual((await readTranslations([division], { store, now, bypassCache: true }))[0], first.record);
   supported = true; const rewritten = await run(revised); assert.equal(rewritten.status, "PUBLISHED", JSON.stringify(rewritten));
   assert.notEqual(rewritten.versionId, first.versionId);
@@ -114,4 +121,24 @@ test("unadmitted, conflicting, stale and partial text captures never spend; atte
   assert.equal(calls, 0);
   assert.equal((await runHeldTextTranslations(input)).outcomes[0]?.status, "HELD"); assert.equal(calls, 1);
   assert.equal((await runHeldTextTranslations(input)).deferred.length, 1); assert.equal(calls, 1);
+});
+
+test("paid writer failures retain their lesson and charges in the durable attempt when the Bank write fails, before any next subject", async () => {
+  const spec = specs[1], primary = capture(spec), repos = createMemoryRepositories(), store = new MemoryRoutineDataStore();
+  const attempts: TranslationAttempt[] = []; let calls = 0;
+  const result = await runHeldTextTranslations({ repos, store, now, divisions: [division],
+    subjects: [{ subject: subject(spec, primary), sourceUrl: primary.evidence.canonicalUrl },
+      { subject: { ...subject(spec, primary), subjectId: `body:${bodyId}-second` }, sourceUrl: primary.evidence.canonicalUrl }],
+    captures: [primary], attempts, saveAttempt: async row => { attempts.push(row); }, transportFor: () => async request => {
+      calls++;
+      repos.fieldManual.compareAndSet = async () => { throw new Error("Bank cannot save this result"); };
+      return response(request, { text: "The board may tax residents.", sentences: [{ field: "text", text: "The board may tax residents.", quote: "A passage the source does not contain" }] });
+    } });
+  assert.equal(calls, 1); assert.equal(result.outcomes.length, 1);
+  assert.match(result.persistenceError!, /Bank cannot save/);
+  const saved = attempts.at(-1)!;
+  assert.equal(saved.status, "HELD"); assert.equal(saved.usage.length, 1);
+  assert.equal(saved.learning?.stage, "WRITER"); assert.match(saved.learning!.learned, /unsupported source passages/);
+  assert.equal(saved.learningError, result.persistenceError);
+  assert.deepEqual(await readTranslations([division], { store, now, bypassCache: true }), []);
 });

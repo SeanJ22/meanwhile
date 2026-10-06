@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-06T05:28:29Z",
+  "origin": "https://meanwhileusa.com",
+  "paidModelCalls": 0,
+  "observations": [
+    {
+      "path": "/api/build",
+      "ms": 20,
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "path": "/api/warm?places=1",
+      "ms": 3,
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    }
+  ]
+}

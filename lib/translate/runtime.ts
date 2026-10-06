@@ -8,6 +8,7 @@ import { translateMeasure, type MeasureTranslationRepos } from "./worker.ts";
 import { publishMeasureTranslation, readTranslations } from "./publication.ts";
 import { priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
+import { recordTranslationHold, type TranslationLearning } from "./paid-result.ts";
 
 /** Called inside an admitted worker with that worker's Fleet/area transport. */
 export async function runMeasureTranslation(input: {
@@ -20,6 +21,7 @@ export async function runMeasureTranslation(input: {
   readonly now: string;
 }) {
   const usage: Awaited<ReturnType<typeof translateMeasure>>["usage"] = [];
+  let stage: TranslationLearning["stage"] = "WRITER";
   try {
     if (!captureIntact(input.primary)) throw new Error("Translation source capture is incomplete.");
     const evidence = input.primary.evidence;
@@ -37,16 +39,23 @@ export async function runMeasureTranslation(input: {
       transportFor: subject => {
         const send = input.transportFor(subject);
         return async request => {
+          stage = request.tools[0]?.name === "check_measure_translation" ? "CHECKER" : "WRITER";
           const response = await send(request);
           const metered = readMeteredUsage(response.usage, response.batch === true);
           usage.push({ model: response.model, usage: metered, usd: priceMeteredUsage(response.model, metered, "5m").usd });
           return response;
         };
       } });
+    stage = "PUBLICATION";
     const published = await publishMeasureTranslation(input.store, { record: translated.record, captures: input.captures, now: input.now });
     if (!published.promoted || published.readerReadback?.status !== "PASS") throw new Error(published.candidate.failureDetail ?? "Translation has not reached its typed reader.");
     return { status: "PUBLISHED" as const, record: translated.record, usage, versionId: published.promoted.versionId };
   } catch (error) {
-    return { status: "HELD" as const, detail: sanitizedErrorDiagnostic(error), record: null, usage, versionId: null };
+    const detail = sanitizedErrorDiagnostic(error);
+    const learned = await recordTranslationHold({ repos: input.repos, subjectId: input.subject.contestId,
+      ocdId: input.subject.ocdId, state: input.subject.state, sourceUrl: input.primary.evidence.canonicalUrl,
+      sourceHash: (input.primary.evidence.sourceDocument?.contentHash ?? input.primary.evidence.contentHash).replace(/^sha256-/, ""),
+      now: input.now, stage, reason: detail, calls: usage });
+    return { status: "HELD" as const, detail, record: null, usage, versionId: null, ...learned };
   }
 }

@@ -8,6 +8,7 @@ import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { translationHash, translationScope } from "./records.ts";
 import { runMeasureTranslation } from "./runtime.ts";
 import { runTextTranslation } from "./text-runtime.ts";
+import type { TranslationLearning } from "./paid-result.ts";
 
 type TranslationInput = Parameters<typeof runMeasureTranslation>[0];
 type TranslationResult = Awaited<ReturnType<typeof runMeasureTranslation>>;
@@ -22,6 +23,8 @@ export interface TranslationAttempt {
   readonly usage: TranslationResult["usage"];
   readonly versionId: string | null;
   readonly detail?: string;
+  readonly learning?: TranslationLearning | null;
+  readonly learningError?: string | null;
 }
 
 /** The parent leased worker names source-backed subjects; no global document sweep. */
@@ -75,10 +78,11 @@ export async function runHeldTextTranslations(input: Pick<Parameters<typeof runT
     await input.saveAttempt(attempt);
     const result = await runTextTranslation({ ...input, subject, preservedText, primary, captures: pages });
     const finished: TranslationAttempt = { ...attempt, status: result.status, usage: result.usage, versionId: result.versionId,
-      ...("detail" in result ? { detail: result.detail } : {}) };
+      ...("detail" in result ? { detail: result.detail, learning: result.learning, learningError: result.learningError } : {}) };
     outcomes.push(finished);
     try { await input.saveAttempt(finished); }
     catch (error) { return { outcomes, deferred, persistenceError: sanitizedErrorDiagnostic(error) }; }
+    if ("learningError" in result && result.learningError) return { outcomes, deferred, persistenceError: result.learningError };
   }
   return { outcomes, deferred, persistenceError: null };
 }
@@ -157,13 +161,14 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
         subject: { contestId: contest.id, title: contest.title, ocdId: contest.ocdId,
           state: jurisdictionFromOcdId(contest.ocdId)!.usps, prior: measure } });
       const finished: TranslationAttempt = { ...attempt, status: result.status, usage: result.usage,
-        versionId: result.versionId, ...("detail" in result ? { detail: result.detail } : {}) };
+        versionId: result.versionId, ...("detail" in result ? { detail: result.detail, learning: result.learning, learningError: result.learningError } : {}) };
       outcomes.push(finished);
       try { await input.saveAttempt(finished); }
       catch (error) {
         // Return charges even when saving fails, and stop before any more paid work.
         return { outcomes, deferred, persistenceError: sanitizedErrorDiagnostic(error) };
       }
+      if ("learningError" in result && result.learningError) return { outcomes, deferred, persistenceError: result.learningError };
     }
   }
   return { outcomes, deferred, persistenceError: null };

@@ -17,7 +17,12 @@ export function curatedMeasureFieldIssue(row: TextTranslation): string | null {
   const f = row.measureField;
   if (!f || !row.curatedOrigin || !f.contestId || row.subjectId !== `measure_text:${f.contestId}:${curatedMeasureFieldKey(f)}` ||
       row.curatedOrigin.recordKey !== row.subjectId || row.sourceUrl !== f.original?.sourceUrl || row.sourceHash !== f.original?.sourceHash ||
+      row.curatedOrigin.citation.url !== f.original?.sourceUrl || row.curatedOrigin.citation.basis !== (f.original?.citation ?? "measure-source") ||
+      row.curatedOrigin.citation.readOn !== null ||
+      f.original?.sourceHashKind !== undefined && !["CAPTURE_BYTES", "HELD_TEXT"].includes(f.original.sourceHashKind) ||
+      f.original?.citation !== undefined && !["azleg-analysis", "measure-source"].includes(f.original.citation) ||
       !Number.isFinite(Date.parse(f.original?.writtenAt)) || !Array.isArray(f.expectedFields) || !Array.isArray(f.partOrder) ||
+      f.expectedFields.some(key => typeof key !== "string") || f.partOrder.some(id => typeof id !== "string") ||
       new Set(f.expectedFields).size !== f.expectedFields.length || new Set(f.partOrder).size !== f.partOrder.length ||
       !f.expectedFields.includes("whatItDoes") || !f.expectedFields.includes(curatedMeasureFieldKey(f)) ||
       f.partOrder.some(id => !id.startsWith(`${f.contestId}#`) || !f.expectedFields.includes(`${id}.label`) || !f.expectedFields.includes(`${id}.what`))) return "Curated measure text lost its original subject, source or reaction inventory.";
@@ -27,4 +32,3 @@ export function curatedMeasureFieldIssue(row: TextTranslation): string | null {
     : !["whatItDoes", "yesMeans", "noMeans"].includes(f.field))) return "Curated reaction text cannot introduce official numbering or change its identity.";
   return null;
 }
-

@@ -8,7 +8,7 @@ import { curatedDefinitionEntries, curatedMeasureMigrationInventory, runCuratedD
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readTranslations } from "../lib/translate/publication.ts";
-import { translationHash } from "../lib/translate/records.ts";
+import { translationHash, type TextTranslation } from "../lib/translate/records.ts";
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import type { TranslationAttempt } from "../lib/translate/standing.ts";
@@ -135,6 +135,14 @@ test("CA-50: original measure text and unnumbered reaction groups migrate throug
   assert.deepEqual(withMeasureTranslations(ballot, held.slice(1)).measureRecords, [record], "Partial publication cannot drop old groups");
   assert.equal(curatedMeasureRecordFor(held, record.contestId, "ocd-division/country:us/state:nj"), null);
   assert.equal(curatedMeasureRecordFor(held.slice(1), record.contestId, ocdId), null);
+  const badNumber = structuredClone(held) as TextTranslation[];
+  const groupIndex = badNumber.findIndex(row => row.measureField?.reaction);
+  const group = badNumber[groupIndex];
+  badNumber[groupIndex] = { ...group, measureField: { ...group.measureField!, reaction: { ...group.measureField!.reaction!, number: "1" as unknown as null } } };
+  assert.equal(curatedMeasureRecordFor(badNumber, record.contestId, ocdId), null, "No official numbering can be invented by a preserved-text record");
+  const badCitation = structuredClone(held) as TextTranslation[];
+  badCitation[0] = { ...badCitation[0], curatedOrigin: { ...badCitation[0].curatedOrigin!, citation: { ...badCitation[0].curatedOrigin!.citation, url: "https://wrong.example.gov/source" } } };
+  assert.equal(curatedMeasureRecordFor(badCitation, record.contestId, ocdId), null);
   const replay = await run(); assert.ok(replay.outcomes.every(row => row.status === "REUSED")); assert.equal(calls, entries.length * 2);
   const changed = { ...capture, evidence: { ...capture.evidence, text: source + " Changed.", contentHash: `sha256-${translationHash(source + " Changed.")}` } };
   assert.equal((await run([changed])).outcomes.length, 0); assert.equal(calls, entries.length * 2, "A changed revision refuses before spending");

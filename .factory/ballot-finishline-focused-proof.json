@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-06T05:35:01Z",
+  "river": "8e47854b1",
+  "focused": {
+    "passed": 71,
+    "failed": 0,
+    "status": "PASS",
+    "durationMs": 105130.073144
+  },
+  "types": {
+    "exit": 0,
+    "status": "PASS"
+  },
+  "parserClosure": {
+    "passed": 1,
+    "status": "PASS"
+  },
+  "paidModelCalls": 0,
+  "liveChecks": "BLOCKED_EGRESS_NOT_RUN",
+  "archives": [
+    {
+      "file": ".factory/ballot-3663f6bc-failed-canonical.log.gz",
+      "rawSha256": "febbae0e71dae5a6801120ea46080f180212fe4e86921b987db7d5d5403c9cf6",
+      "rawBytes": 861656
+    },
+    {
+      "file": ".factory/ballot-3663f6bc-failed-focused.log.gz",
+      "rawSha256": "c59153b764c4c7cbed00c1288c06f665dc0de954518659f5eaa3a254a4e25473",
+      "rawBytes": 9750
+    },
+    {
+      "file": ".factory/ballot-3663f6bc-failed-gates.log.gz",
+      "rawSha256": "3403151ee721500aaaecda0af91c77c3a344e037b557a94370834abca6785f8f",
+      "rawBytes": 628
+    },
+    {
+      "file": ".factory/ballot-3663f6bc-terminated-test-shard-1-of-1.log.gz",
+      "rawSha256": "64ba2a472960fe0374535f05cf32be4d5854b502e6fa97f9e9e8d4f03ae2865d",
+      "rawBytes": 872503
+    },
+    {
+      "file": ".factory/ballot-finishline-final-focused.log.gz",
+      "rawSha256": "4fe06342de2abebf38fcebd84e945f64959478524c766341cea4dea0df8e0830",
+      "rawBytes": 8854
+    },
+    {
+      "file": ".factory/ballot-finishline-types.log.gz",
+      "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rawBytes": 0
+    },
+    {
+      "file": ".factory/ballot-finishline-parser.log.gz",
+      "rawSha256": "f5de6993cd67649e6f645d47da27fa14c81396e3710248f0eb368f0d9c255bc3",
+      "rawBytes": 249
+    }
+  ]
+}

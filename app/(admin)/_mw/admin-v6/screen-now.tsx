@@ -109,21 +109,18 @@ function LastHours() {
   ];
   return (
     <Card title="The last full hour" aside={<button type="button" className={s.btnLink} onClick={() => v.go("scoreboard")}>Open the scoreboard →</button>}>
-      {last === null && <Empty>{hours === null ? "—" : "The hour has not been recorded yet."}</Empty>}
-      {last !== null && (
-        <div className={s.stack}>
-          <p className={s.small}>{mst(last.hour)}{before !== null ? ` · the hour before: ${mst(before.hour)}` : ""}</p>
-          {rows.map((r) => {
-            const now = r.of(last), earlier = before === null ? null : r.of(before);
-            return (
-              <div key={r.name} className={s.row}>
-                <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.name}</strong><span className={cx(now.bad && s.textWarn)}>{now.text}{earlier !== null ? ` (before: ${earlier.text})` : ""}</span></span>
-                <span className={s.meta}>{r.says}</span>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <div className={s.stack}>
+        <p className={s.small}>{last !== null ? `${mst(last.hour)}${before !== null ? ` · the hour before: ${mst(before.hour)}` : ""}` : hours === null ? "Not measured yet." : "The hour has not been recorded yet."}</p>
+        {rows.map((r) => {
+          const now = last === null ? { text: "—" } : r.of(last), earlier = before === null ? null : r.of(before);
+          return (
+            <div key={r.name} className={s.row}>
+              <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.name}</strong><span className={cx(now.bad && s.textWarn)}>{now.text}{earlier !== null ? ` (before: ${earlier.text})` : ""}</span></span>
+              <span className={s.meta}>{r.says}</span>
+            </div>
+          );
+        })}
+      </div>
     </Card>
   );
 }

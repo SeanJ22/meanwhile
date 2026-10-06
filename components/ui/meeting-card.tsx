@@ -13,7 +13,7 @@ import { MeetingRow } from "./meeting-row";
 /** The shared reader Card owns all fetched and held meeting citations. */
 export function MeetingCard({ meeting, representation = [], sources = [], children, jurisdiction, onClose, onExpand, title, subtitle, compact = false }:
   { meeting: Meeting; representation?: SeatHolder[]; sources?: CardSource[]; children?: ReactNode; jurisdiction?: ReactNode; onClose?: () => void; onExpand?: () => void; title?: string; subtitle?: string | null; compact?: boolean }) {
-  return <Card title={title ?? meetingEntryTitle(meeting, { bodyShown: true })} eyebrow={<>{subtitle ?? meeting.jurisdiction} <LevelTag tier={tierForMeeting(meeting)} /></>} onClose={onClose} sources={[...meetingCardSources(meeting, representation), ...sources]}>
+  return <Card title={title ?? meetingEntryTitle(meeting, { bodyShown: true })} eyebrow={subtitle ?? meeting.jurisdiction} titleAfter={<LevelTag tier={tierForMeeting(meeting)} />} onClose={onClose} sources={[...meetingCardSources(meeting, representation), ...sources]}>
     <div data-meeting-card={meeting.id}>
       <MeetingRow meeting={meeting} title={meeting.bodyName} jurisdiction={jurisdiction} compact={compact} sourcesInParent />
       {children}

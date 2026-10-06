@@ -10,9 +10,11 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 
 /** Shared reader frame. Sources are required even when the list is empty. */
 export function Card({
-  title, eyebrow, onClose, children, sources, sourcesContent, className = "", independent = false, titleVisible = true, attrs,
+  title, eyebrow, onClose, children, sources, sourcesContent, className = "", independent = false, titleVisible = true, attrs, titleAfter,
 }: {
   title: string;
+  /** Inline identity tag; follows the last word and wraps with the title. */
+  titleAfter?: ReactNode;
   attrs?: Readonly<Record<`data-${string}`, string>>;
   eyebrow?: ReactNode;
   onClose?: () => void;
@@ -32,7 +34,7 @@ export function Card({
       <header className="reader-card-header">
         <div>
           {eyebrow && <div className="t-caption text-label">{eyebrow}</div>}
-          <h2 id={titleId} className={titleVisible ? "t-title font-semibold text-paper" : "sr-only"}>{title}</h2>
+          <h2 id={titleId} className={titleVisible ? "t-title font-semibold text-paper" : "sr-only"}>{title}{titleAfter && <> {titleAfter}</>}</h2>
         </div>
         {onClose && (
           <button type="button" className="reader-card-close" onClick={onClose} aria-label={`Close ${title}`}>

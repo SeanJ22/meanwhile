@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
+import { MeetingCard } from "../components/ui/meeting-card.tsx";
 import { MeetingRow } from "../components/ui/meeting-row.tsx";
 import type { Meeting } from "../lib/sources/types.ts";
 
@@ -33,4 +34,13 @@ test("a second-hand meeting retains its classification only within Sources", () 
   assert.doesNotMatch(html.slice(0, sourcesAt), /Second-hand listing/);
   assert.match(html.slice(sourcesAt), /Second-hand listing/);
   assert.doesNotMatch(render(base), /Second-hand listing/);
+});
+
+
+test("shared meeting card keeps its OCD-derived level after the title", () => {
+  const html = renderToStaticMarkup(<MeetingCard meeting={{ ...base, title: "Federal meeting by title only" }} title="Federal meeting by title only" />);
+  const heading = html.match(/<h2[^>]*>(.*?)<\/h2>/s)?.[1];
+  assert.ok(heading);
+  assert.match(heading, /Federal meeting by title only.*data-level-tag="local"/);
+  assert.doesNotMatch(heading, /data-level-tag="national"/);
 });

@@ -44,6 +44,7 @@ try {for(const width of [390,1280])for(const theme of ['dark','light']){
  const page=await browser.newPage({viewport:{width,height:900}});page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:3189');await page.locator('#meeting .reader-card').waitFor();await page.evaluate(theme=>document.documentElement.dataset.theme=theme,theme);
  await page.locator('#meeting [data-card-sources] [data-agenda-version="revision:old"]').waitFor({state:'attached'});
  assert.equal(await page.locator('#meeting [data-meeting-row]').count(),1);
+ assert.equal(await page.locator('#meeting h2 [data-level-tag=local]').count(),1);
  assert.equal(await page.locator('#meeting [data-agenda-version]').count(),2);
  assert.equal(await page.locator('#meeting [data-agenda-versions]').getAttribute('data-agenda-versions'),'2');
  assert.equal(await page.locator('#meeting [data-meeting-where]').getAttribute('data-meeting-where'),'online');

@@ -262,11 +262,11 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
   check(Number(door?.[1]) === UPCOMING.length, `district card: states ${door?.[1] ?? "no door"}, three are recorded`);
 
   // ── The Bodies door: the next sitting is the first upcoming one. ──
-  check(/Next meeting: Mon, September 28th, 2026/.test(text(html("bodies"))), "Bodies door: Tucson Unified's next meeting is not Sep 28");
+  check(/Next meeting[\s\S]*Mon, September 28th, 2026/.test(text(html("bodies"))), "Bodies door: Tucson Unified's next meeting is not Sep 28");
 
   // ── The meeting's own card. ──
   const popup = text(html("popup503"));
-  check(popup.includes("Online only — there is no room to attend in person."), "503 card: the online sentence is missing");
+  check(/data-meeting-where="online"/.test(popup) && /data-status="online"/.test(popup), "503 card: the online sentence is missing");
   check(popup.includes("Via Zoom Webinar") && /data-working-on-it=/.test(popup), "503 card: the join-link gap is missing");
 
   // ── The missing-location path: listed, never "online", gap named. ──

@@ -10,9 +10,10 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 
 /** Shared reader frame. Sources are required even when the list is empty. */
 export function Card({
-  title, eyebrow, onClose, children, sources, sourcesContent, className = "", independent = false, titleVisible = true,
+  title, eyebrow, onClose, children, sources, sourcesContent, className = "", independent = false, titleVisible = true, attrs,
 }: {
   title: string;
+  attrs?: Readonly<Record<`data-${string}`, string>>;
   eyebrow?: ReactNode;
   onClose?: () => void;
   children: ReactNode;
@@ -27,7 +28,7 @@ export function Card({
   const titleId = useId();
   const { register, sources: allSources } = useCardSourceRegistry(sources, title);
   return (
-    <CardSourceContext.Provider value={register}><article className={`reader-card ${className}`} aria-labelledby={titleId}>
+    <CardSourceContext.Provider value={register}><article {...attrs} className={`reader-card ${className}`} aria-labelledby={titleId}>
       <header className="reader-card-header">
         <div>
           {eyebrow && <div className="t-caption text-label">{eyebrow}</div>}

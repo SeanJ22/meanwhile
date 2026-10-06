@@ -1,3 +1,4 @@
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 /**
  * CAMPAIGN MONEY FOR STATE, COUNTY AND LOCAL CANDIDATES.
  *
@@ -71,25 +72,7 @@ function lastFilingDate(coveringPeriod: string | null): string | null {
 }
 
 function AgencyLine({ record }: { record: StateMoneyRecord }) {
-  return (
-    <p className="mt-2 t-detail text-muted-foreground">
-      Filed with the {record.agency}
-      {record.filingsUrl ? (
-        <>
-          {" — "}
-          <a
-            href={record.filingsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="underline underline-offset-2"
-          >
-            see this candidate&rsquo;s filings
-          </a>
-        </>
-      ) : null}
-      . Read {readableDate(record.checkedAt)}.
-    </p>
-  );
+  return <CardSourcesContribution id={`state-money:${record.targetKeys.join("|")}:${record.registeredName}`} sources={[{ what: "Candidate campaign filings", provenance: { sourceUrl: record.filingsUrl ?? "", sourceOrg: record.agency, collectedAt: record.checkedAt, verifiedAt: null } }]} />;
 }
 
 function FiledRecord({ record }: { record: StateMoneyRecord }) {
@@ -185,6 +168,7 @@ function RegisteredNoActivityRecord({ record }: { record: StateMoneyRecord }) {
 function AbsentRecord({ record }: { record: StateMoneyRecord }) {
   return (
     <div className="mt-3 first:mt-0">
+      <AgencyLine record={record} />
       {/*
         THE SENTENCE THIS WHOLE SECTION EXISTS FOR.
         It is a statement about the AGENCY'S RECORDS on a stated date — not
@@ -234,6 +218,7 @@ function OurGapRecord({ record }: { record: StateMoneyRecord }) {
   const gap = record.ourGap;
   return (
     <div className="mt-3 first:mt-0">
+      <AgencyLine record={record} />
       <WorkingOnIt />
       <p className="mt-1 t-detail text-muted-foreground">
         {gap?.whatIsMissing ??
@@ -248,7 +233,6 @@ function OurGapRecord({ record }: { record: StateMoneyRecord }) {
         {gap?.nextDue
           ? ` We check again after the agency’s next filing deadline, ${readableDate(gap.nextDue)}.`
           : ""}{" "}
-        Read {readableDate(record.checkedAt)}.
       </p>
       {record.filingsUrl ? (
         <p className="mt-2 t-detail text-muted-foreground">

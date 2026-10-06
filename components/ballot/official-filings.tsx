@@ -1,3 +1,4 @@
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import type { OfficialFiling } from "../../lib/civic-data/official-filings";
 
 const labels: Record<string, string> = { candidateName: "Candidate", office: "Office as filed", electionDate: "Election date",
@@ -15,7 +16,7 @@ export function OfficialFilings({ rows }: { rows: readonly OfficialFiling[] }) {
       <p className="t-body">{row.jurisdictionName}{" · "}{row.bodyName}</p>
       <dl>{Object.entries(row.facts).filter(([key]) => !["candidateName", "committeeName"].includes(key)).map(([key, value]) =>
         <div key={key}><dt className="inline text-voice">{labels[key]}: </dt><dd className="inline">{String(value)}</dd></div>)}</dl>
-      <p className="mt-2 t-body"><a href={row.documentUrl}>Read the official filing</a>{" · "}<a href={row.sourceUrl}>Source</a>{" · "}Read {row.collectedAt.slice(0, 10)}</p>
+      <CardSourcesContribution id={`official-filing:${row.id}`} sources={[row.documentUrl, row.sourceUrl].filter((url,index,urls) => urls.indexOf(url) === index).map(sourceUrl => ({ what: "Official filing", provenance: { sourceUrl, sourceOrg: row.bodyName, collectedAt: row.collectedAt, verifiedAt: row.verifiedAt } }))} />
     </article>)}
   </section>;
 }

@@ -45,7 +45,7 @@ import type { SeatHolder } from "./lookup.ts";
 
 export interface CardSource {
   /** Native document/listing identities remain inspectable inside Sources. */
-  dataAttrs?: Readonly<Record<`data-${string}`, string | number>>;
+  dataAttrs?: Readonly<Record<`data-${string}`, string | number | undefined>>;
   /** Which facts on this card this source is behind. */
   what: string;
   provenance: Provenance;
@@ -164,7 +164,7 @@ export function meetingCardSources(
   evidence: MeetingCardEvidence = {},
 ): CardSource[] {
   const entries: CardSource[] = [
-    { what: `This sitting — ${meeting.title}`, provenance: meeting.provenance },
+    { what: `This sitting — ${meeting.title}${meeting.venueGap ? ` · ${meeting.venueGap.kind === "NOT_STATED_BY_PUBLISHER" ? "Meeting place not stated by" : "Published meeting place from"} ${meeting.venueGap.publisher}` : ""}`, provenance: meeting.provenance },
   ];
   if (meeting.agendaUrl) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
   for (const [kind, label] of Object.entries(MEETING_SOURCE_LABELS)) {

@@ -1,3 +1,4 @@
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type {
   FundingAbsenceData,
@@ -68,7 +69,7 @@ export function FundingDisplay({
           : "mt-3 rounded-md border border-[var(--panel-border)] bg-[var(--surface,rgba(255,255,255,0.04))]/60 p-3"
       }
     >
-      {!bare && <p className={SECTION_LABEL_CLASS}>Campaign money · FEC</p>}
+      {!bare && <p className={SECTION_LABEL_CLASS}>Campaign money</p>}
       <MoneyOverview data={data} />
       {data.sentences.map((sentence) => (
         <p key={sentence} className="mt-1.5 t-body leading-relaxed text-paper-dim">
@@ -256,24 +257,7 @@ export function FundingDisplay({
         </details>
       )}
 
-      <p className="mt-2 t-caption text-muted">
-        {data.sourceUrl ? (
-          <a
-            href={data.sourceUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="underline decoration-dotted underline-offset-2 hover:text-link"
-          >
-            {data.sourceOrg}
-          </a>
-        ) : (
-          data.sourceOrg
-        )}
-        {data.reportedThrough && (
-          <> · reported through {formatDateMDY(data.reportedThrough)}</>
-        )}{" "}
-        · read {formatDateMDY(data.collectedAt)}
-      </p>
+      <CardSourcesContribution id={`funding:${data.fecCandidateId}`} sources={[{ what: "Campaign money", provenance: { sourceUrl: data.sourceUrl ?? "", sourceOrg: data.sourceOrg, collectedAt: data.collectedAt, verifiedAt: null } }]} />
     </div>
   );
 }
@@ -308,7 +292,6 @@ function MoneyOverview({ data }: { data: FundingDisplayData }) {
       <p className="mw-money-meta">
         Cycle {data.cycleLabel}
         {data.reportedThrough && <> · reported through {formatDateMDY(data.reportedThrough)}</>}
-        {" · "}read {formatDateMDY(data.collectedAt)}
       </p>
       {totals && (
         <div className="mw-money-tiles">
@@ -623,15 +606,9 @@ function ContributorRow({
           </summary>
           <p className="mt-1 t-caption leading-relaxed text-voice">
             {typeLabel.explainer}{" "}
-            <a
-              href={typeLabel.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-            >
-              the FEC&apos;s own definition
-            </a>
+
           </p>
+          <CardSourcesContribution id={`contributor-type:${typeLabel.sourceUrl}`} sources={[{ what: typeLabel.explainer, provenance: { sourceUrl: typeLabel.sourceUrl, sourceOrg: "Federal Election Commission", collectedAt: "", verifiedAt: null } }]} />
         </details>
       )}
 
@@ -791,17 +768,7 @@ function SecondHopPanel({
             </li>
           )}
         </ul>
-        <p className="mt-1.5 t-caption text-muted">
-          <a
-            href={hop.provenance.sourceUrl ?? undefined}
-            target="_blank"
-            rel="noreferrer"
-            className="underline decoration-dotted underline-offset-2 hover:text-link"
-          >
-            {hop.name} at the FEC
-          </a>{" "}
-          · read {formatDateMDY(hop.provenance.collectedAt)}
-        </p>
+        <CardSourcesContribution id={`funding-hop:${hop.provenance.sourceUrl}:${hop.name}`} sources={[{ what: `Contributions reported by ${hop.name}`, provenance: hop.provenance }]} />
       </div>
     </details>
   );
@@ -810,21 +777,11 @@ function SecondHopPanel({
 export function FundingAbsence({ data }: { data: FundingAbsenceData }) {
   return (
     <div className="mt-2">
-      <p className={SECTION_LABEL_CLASS}>Campaign money · FEC</p>
+      <p className={SECTION_LABEL_CLASS}>Campaign money</p>
       <p className="mt-1 t-detail leading-relaxed text-muted">
-        {data.statement}{" "}
-        {data.searchUrl && (
-          <a
-            href={data.searchUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="underline decoration-dotted"
-          >
-            FEC records
-          </a>
-        )}{" "}
-        <span>(checked {formatDateMDY(data.checkedAt)})</span>
+        {data.statement}
       </p>
+      <CardSourcesContribution id={`funding-absence:${data.searchUrl ?? "unknown"}`} sources={[{ what: "Campaign filing search", provenance: { sourceUrl: data.searchUrl ?? "", sourceOrg: "Federal Election Commission", collectedAt: data.checkedAt, verifiedAt: null } }]} />
     </div>
   );
 }

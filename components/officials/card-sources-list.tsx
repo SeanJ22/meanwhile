@@ -18,7 +18,7 @@ import { NoValue, PopupRow } from "@/components/map/popup/popup-row";
  */
 export function CardSourcesList({ sources }: { sources: CardSource[] }) {
   return (
-    <>
+    <div data-card-sources>
       {sources.map((entry, i) => (
         <div key={`${entry.what}-${i}`} className="account-modal-person" {...entry.dataAttrs}>
           <p className="t-body text-paper">{entry.what}</p>
@@ -53,7 +53,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
           <VerifiedRow provenance={entry.provenance} />
         </div>
       ))}
-    </>
+    </div>
   );
 }
 

@@ -1,11 +1,34 @@
 # River status
 
-build_state: release 12 LIVE on main (c814d4c); river = d89746b (adds hunters CH-23 parts 1–3 and CH-20, all behind switches off by default; gates 12/12; not yet released, next normal batch or first release after the runner restarts); runner still stopped (restart with Sean since 8:28 AM EDT)
+build_state: CLEANUP RELEASE (Sean, Oct 6 evening) — baseline started, BLOCKED on credentials and a local-database decision; nothing deleted yet. river = d89746b; main = c814d4c (release 12); runner stopped
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01EJWrnyFbffUajJtnCW6EWs-cleanup
-lock: river-cleanup-session_01EJWrnyFbffUajJtnCW6EWs
-heartbeat: 2026-10-06T23:16:35Z
+lock: none
+heartbeat: 2026-10-06T23:20:00Z
+
+## CLEANUP RELEASE — read first (Sean's instruction, Oct 6 evening; session_01EJWrnyFbffUajJtnCW6EWs)
+
+Sean's instruction, in short: work from the repo inventory on board/briefs (inventory/meanwhile-repo-inventory-2026-10-06.csv, one row per file on main c814d4c; do not re-decide it; apply the same rules to river's later files).
+1. Baseline in our own environment: tests, production build, reader pages, Ask and the API for ten random places, every Admin screen via `pnpm admin:walk` with a throwaway local session key (never Sean's Google account), one full runner cycle with --staging against a local database listing every job it starts. Server runner stays off. Missing credential: stop and name it.
+2. Delete every DELETE row timed "cleanup release", outright (no archive, tombstone, history).
+3. Fix everything that used them: FIX rows naming a missing file; every line of the references file; River's search (cleanup/river-search-bare-names-2026-10-06.csv); Sean's second list of built-up paths, bare names and package.json scripts (NOT RECEIVED; re-requested); keep searching past it; rows in both databases.
+4. Strip ruling citations, "(Sean, date)" notes and pilot-ZIP examples from comments; rewrite CLAUDE.md, AGENTS.md and README.md to point only to docs/rulings.md and the system guide. Every kept file read line by line; comments cut to what the code can't say; behavior unchanged.
+5. Baseline again; explain every difference.
+6. "with its replacement" rows untouched this release.
+Then rewrite lane briefs from the inventory (order: what stops free acquisition, then groups A–N, then the rest; each move one release: copy, switch, prove live, delete old; portraits and large reference files to wtp-assets behind the CDN, never Neon; assign line keeper, per-state and national queues, auditor flags, state profiles, "List on search engines" switch). Briefs point only to rulings.md and the inventory. rulings.md never goes in the repo. Fold only READY work that survives the inventory; return the rest. Deletions and fixes ship to main as ONE release. Give Sean the runner restart steps; for live Admin open admin.meanwhileusa.com and stop (Sean signs in).
+
+Done:
+- Inventory on board/briefs (41472b1e7); matches main c814d4c exactly: 7,601 files = 3,112 DELETE cleanup release, 101 DELETE with replacement, 2,417 FIX, 1,971 KEEP. river adds 6 files since.
+- Baseline gates on river d89746b: 12/12, 9,944 tests (9,933 pass, 0 fail, 11 skipped), production build PASS. cleanup/baseline/.
+- River's bare-name search: 1,303 lines in 289 kept files beyond the references file.
+
+BLOCKED (asked Sean):
+- Missing credentials: ANTHROPIC_API_KEY; CONGRESS_API_KEY, FEC_API_KEY, CENSUS_API_KEY, PLURAL_API_KEY, LEGISCAN_API_KEY, LDA_API_KEY, DATA_GOV_API_KEY, SOCRATA_APP_TOKEN, SAM_GOV_API_KEY, GOOGLE_CIVIC_API_KEY; BRAVE_SEARCH_API_KEY, EXA_API_KEY; NEXT_PUBLIC_MAPTILER_KEY.
+- Decision: copy production reader (we-the-people) and control-plane DBs once, read-only, into a local Postgres (about 3.3 GB read once), or use a staging DB Sean names.
+- WARNING: this environment's DATABASE_URL is production we-the-people as neondb_owner. Never run anything against it.
+
+Next session: when credentials exist and the DB question is answered, finish the baseline, then delete and fix in a worktree off river (`git reset --hard` is refused by the protected-files guard; use worktrees).
 
 ## This run (session_01VH6HDTQ3GQCWMZNKtTULak, claimed the free lock Oct 6, 3:57 PM EDT)
 

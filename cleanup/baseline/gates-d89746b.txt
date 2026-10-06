@@ -1,0 +1,17 @@
+  gate            CI job                        result
+  lint            gates (test · lint · tsc)     PASS (141s)
+  tsc             gates (test · lint · tsc)     PASS (117s)
+  control-plane:gate gates (test · lint · tsc)     PASS (4s)
+  state-holdings:check gates (test · lint · tsc)     PASS (7s)
+  state-manifest  gates (test · lint · tsc)     PASS (145s)
+  feedback:sweep  gates (test · lint · tsc)     PASS (1s)
+  assert:browser  gates (test · lint · tsc)     PASS (2s)
+  test            gates (test · lint · tsc)     PASS (2099s)
+  db:gate         gates (test · lint · tsc)     PASS (1s)
+  build           build (default)               PASS (159s)
+  test:bundle     build (default)               PASS (2s)
+  build:standalone build (standalone)            PASS (30s)
+
+12 of 12 gates green
+  suite denominator: 9944 tests registered (9933 pass, 0 fail, 11 skipped) — this run, this environment
+  gate run record: /home/user/base/data/ops/gate-runs/2026-10-06-01.json

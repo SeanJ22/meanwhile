@@ -13,6 +13,7 @@ import { LOOK_QUESTIONS, type LookReviewOutcome } from "../lib/frontend/look-rev
 import { resolveRollingCeiling } from "../lib/control-plane/fleet-safety.ts";
 import { lookModelCall, lookReviewBoundUsd, lookSpendDecision } from "../lib/frontend/look-spend.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
 
 const SHA = "0123456789abcdef0123456789abcdef01234567";
 const AT = "2026-10-06T02:00:00.000Z";
@@ -125,7 +126,7 @@ describe("FE-21: the reviewer's model call", () => {
       sent = JSON.parse(String(init.body));
       return new Response(JSON.stringify({ model: "claude-sonnet-5-5", usage: { input_tokens: 10, output_tokens: 5 }, content: [{ type: "text", text: "{\"screens\":[]}" }] }), { status: 200 });
     }) as unknown as typeof fetch;
-    const call = lookModelCall({} as ControlPlaneRepositories, "key", fake);
+    const call = lookModelCall({} as ControlPlaneRepositories, "key", fake, { env: { WTP_BACKGROUND_WORKER_BATCH: "0" } });
     const text = await call({ prompt: "p", schema: { type: "object", properties: { a: { type: "string", minLength: 1, maxLength: 9 } } }, images: [{ label: "ballot page, phone", mediaType: "image/png", base64: "AAAA" }] });
     assert.equal(text, "{\"screens\":[]}");
     const content = sent!.messages[0].content;
@@ -133,5 +134,51 @@ describe("FE-21: the reviewer's model call", () => {
     assert.equal(content[1].type, "image");
     assert.equal(content[1].source?.data, "AAAA");
     assert.ok(!JSON.stringify(sent!.output_config).includes("minLength"));
+  });
+
+  it("goes through the Batches API at half price when the audit batch lane is on (River, Oct 6)", async () => {
+    const urls: string[] = [];
+    let submitted: { requests: { custom_id: string; params: { model: string; messages: unknown[] } }[] } | null = null;
+    let polls = 0;
+    const fake = (async (url: string, init: RequestInit = {}) => {
+      urls.push(`${init.method ?? "GET"} ${url}`);
+      if (url.endsWith("/v1/messages/batches") && init.method === "POST") {
+        submitted = JSON.parse(String(init.body));
+        return Response.json({ id: "b1", processing_status: "in_progress", request_counts: {}, results_url: null });
+      }
+      if (url.endsWith("/batches/b1")) {
+        polls += 1;
+        return Response.json({ id: "b1", processing_status: polls > 1 ? "ended" : "in_progress", request_counts: {}, results_url: "https://api.anthropic.com/r/b1" });
+      }
+      if (url.endsWith("/r/b1")) {
+        const id = submitted!.requests[0].custom_id;
+        return new Response(`${JSON.stringify({ custom_id: id, result: { type: "succeeded", message: { model: "claude-sonnet-5-5", usage: { input_tokens: 1_000_000, output_tokens: 0 }, content: [{ type: "text", text: "{\"screens\":[]}" }] } } })}\n`);
+      }
+      throw new Error(`unexpected ${url}`);
+    }) as unknown as typeof fetch;
+    const costs: { cost: { usd: number | null }; resultKind?: string }[] = [];
+    const repos = { costs: { append: async (_w: string, _id: string, e: never) => { costs.push(e); } } } as unknown as ControlPlaneRepositories;
+    const call = lookModelCall(repos, "key", fake, { env: {}, sleep: async () => {}, pollIntervalMs: 0 });
+    const text = await call({ prompt: "p", schema: { type: "object" }, images: [{ label: "home, phone", mediaType: "image/png", base64: "AAAA" }] });
+    assert.equal(text, "{\"screens\":[]}");
+    assert.equal(submitted!.requests.length, 1);
+    assert.ok(submitted!.requests[0].custom_id.startsWith("look-review-"));
+    assert.ok(!urls.some((u) => u.endsWith("/v1/messages")), "no Messages request when batched");
+    const full = priceMeteredUsage("claude-sonnet-5-5", readMeteredUsage({ input_tokens: 1_000_000, output_tokens: 0 }), "5m").usd!;
+    assert.equal(costs.length, 1);
+    assert.equal(costs[0].resultKind, "BATCH_SUCCEEDED");
+    assert.ok(full > 0 && Math.abs(costs[0].cost.usd! - full / 2) < 1e-9, "the ledger keeps the batch price");
+  });
+
+  it("cancels a batch that outlasts its wait, so the screens stay not judged rather than paid for unread", async () => {
+    const urls: string[] = [];
+    const fake = (async (url: string, init: RequestInit = {}) => {
+      urls.push(`${init.method ?? "GET"} ${url}`);
+      if (url.endsWith("/cancel")) return Response.json({ id: "b2", processing_status: "canceling", request_counts: {}, results_url: null });
+      return Response.json({ id: "b2", processing_status: "in_progress", request_counts: {}, results_url: null });
+    }) as unknown as typeof fetch;
+    const call = lookModelCall({} as ControlPlaneRepositories, "key", fake, { env: { WTP_BACKGROUND_WORKER_BATCH: "on" }, sleep: async () => {}, batchWaitMs: -1 });
+    await assert.rejects(call({ prompt: "p", schema: {}, images: [{ label: "x", mediaType: "image/png", base64: "AAAA" }] }), /LOOK_REVIEW_BATCH_TIMEOUT b2/);
+    assert.ok(urls.includes("POST https://api.anthropic.com/v1/messages/batches/b2/cancel"));
   });
 });

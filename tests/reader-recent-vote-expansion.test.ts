@@ -56,8 +56,9 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
   await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
   const address = server.address();
   assert.ok(address && typeof address !== "string");
-  const browser = await launchGuarded({ label: "reader-vote-tail-plant" });
+  let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
   try {
+    browser = await launchGuarded({ label: "reader-vote-tail-plant" });
     const context = await browser.context({ viewport: { width: 900, height: 800 } });
     const page = await context.newPage();
     await page.goto(`http://127.0.0.1:${address.port}/`);
@@ -90,7 +91,7 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
     }
     await context.close();
   } finally {
-    await browser.close();
+    await browser?.close();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
   }
 });

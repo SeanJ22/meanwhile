@@ -352,6 +352,19 @@ const TOPIC_RULES: readonly TopicRule[] = [
       ["safe", "release"],
     ],
   },
+  {
+    topic: "SPEND_AND_FACTS",
+    phrasings: [
+      ["spend", "yesterday"],
+      ["spent", "yesterday"],
+      ["spend", "get"],
+      ["spent", "get"],
+      ["spend", "facts"],
+      ["cost", "per", "fact"],
+      ["cost", "fact"],
+      ["spend", "buy"],
+    ],
+  },
 ];
 
 /** Every rule's topic is a declared topic, and every declared topic has a rule. */

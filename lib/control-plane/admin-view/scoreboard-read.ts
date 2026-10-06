@@ -21,8 +21,11 @@ import type { CoreLive } from "../../coverage/time-to-core.ts";
 import type { ReadinessCount } from "../../coverage/readiness-counts.ts";
 import type { GateHealthRow } from "./gate-health.ts";
 import { summarizeGateHealth } from "./gate-health.ts";
+import type { FactoryLearning } from "./factory-learning.ts";
 import type { LearningSeries, LearningTrends } from "./learning-trends.ts";
 import { doorRows, type DoorNumberReadings } from "./door-numbers.ts";
+import { flowRows, flowStages } from "./flow-rows.ts";
+import type { FlowWeek } from "./flow-read.ts";
 import type { V6HistoryReceipt } from "./admin-v6-history.ts";
 import type { PipelineRead } from "./v6-results-read.ts";
 import type { AuditAccuracyReading } from "./v6-audit-read.ts";
@@ -82,7 +85,23 @@ function trend(trends: LearningTrends, input: {
   };
 }
 
-export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, bankWriteErrors?: number | null): LearningView {
+export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, bankWriteErrors?: number | null, factory?: FactoryLearning | null): LearningView {
+  if (factory) {
+    const readings: Reading[] = [
+      { question: "How often are detectives’ routes reused?", big: factory.detectiveReuse === null ? "—" : n(factory.detectiveReuse),
+        bigNote: "successful uses of detectives’ routes", body: "Counts successful inherited routes whose recorded finder is a detective.", method: [] },
+      { question: "How many targets does the head start solve?", big: factory.headStart.share === null ? "—" : `${Math.floor(factory.headStart.share * 100)}%`,
+        bigNote: `${n(factory.headStart.solved)} of ${n(factory.headStart.measured)} measured targets`, body: "Targets solved from inherited knowledge alone.", method: [] },
+      { question: "How long does the second coverage take?", big: factory.secondCoverage.ratio === null ? "—" : `${Math.round(factory.secondCoverage.ratio * 100)}%`,
+        bigNote: "of the first coverage time", body: `${n(factory.secondCoverage.pairs)} complete pairs for the same government and target set.`, method: [] },
+      ...factory.factsByWeek.map(week => ({ question: "How many facts reach readers per hour?", big: week.perHour.toFixed(2),
+        bigNote: `week of ${week.week.slice(0,10)}`, body: `${n(week.facts)} new or updated reader records over ${week.observedHours.toFixed(1)} measured hours.`, method: [] })),
+    ];
+    if (bankWriteErrors !== undefined) readings.push({ question: "Are lessons reaching the Bank?", big: bankWriteErrors === null ? "—" : n(bankWriteErrors),
+      bigNote: "Bank write errors", body: "Failed writes after their retry attempts.",
+      method: [{ k: "Counted", v: "Bank writes that could not be saved after retries. A count unavailable from the store shows —." }] });
+    return { trends: [], readings, notMeasured: [] };
+  }
   const s = trends.series;
   const trendList: Trend[] = [];
   if (s.handed.measuredWeeks > 0) {
@@ -202,9 +221,13 @@ export interface ScoreboardReadings {
   readonly returning: { readonly days: number; readonly readerDays: number; readonly returningDays: number } | null;
   readonly learning: LearningView;
   readonly doors: DoorFacts | null;
+  /** DB-52: unknown when the existing digest measurement cannot be read. */
+  readonly factoryLearning?: FactoryLearning | null;
   readonly gates: readonly GateHealthRow[] | null;
   /** BR-32: overdue doors, posting-to-live and the repair log; null when none could be read. */
   readonly doorNumbers?: Omit<DoorNumberReadings, "shutDoors"> | null;
+  /** BR-31: the last seven days of the flow from findings to live; null when it could not be read or none is recorded. Absent means not read. */
+  readonly flow?: FlowWeek | null;
   readonly readiness: readonly ReadinessCount[];
   /** The week's live audits of published facts (DP-18); null when the audit log could not be read. Absent means not read. */
   readonly audit?: AuditAccuracyReading | null;
@@ -405,14 +428,19 @@ function returnsRow(r: ScoreboardReadings["returning"]): ScoreboardRow {
   });
 }
 
-function headStartRow(d: DoorFacts | null): ScoreboardRow {
+function headStartRow(d: FactoryLearning | null | undefined): ScoreboardRow {
   const id = "Head-start hit rate", name = "Head-start hit rate";
-  if (d === null || d.walks === 0) return unmeasured(id, name, "No walk has recorded which handed ways in it used yet.");
-  return row(id, name, {
-    value: share(d.used, d.given),
-    counts: `${n(d.used)} of ${n(d.given)} handed ways in used, across ${n(d.walks)} walks since ${d.since ?? "the record began"}`,
-    says: "Counts use of the ways in the Bank handed over. Whether the Bank alone was enough is not recorded.",
-  });
+  if (!d || d.headStart.share === null) return unmeasured(id, name, "No target has recorded whether the Bank alone solved it yet.");
+  return row(id, name, { value: share(d.headStart.solved, d.headStart.measured),
+    counts: `${n(d.headStart.solved)} of ${n(d.headStart.measured)} measured targets solved from the head start alone`,
+    says: "Uses recorded target outcomes and acquisition activity. Handing over or using a known door alone does not count as solving a target." });
+}
+function secondCoverageRow(d: FactoryLearning | null | undefined): ScoreboardRow {
+  const id = "Second-time coverage", name = "Second-time coverage";
+  if (!d || d.secondCoverage.ratio === null) return unmeasured(id, name, "No government has two completed, comparable coverage runs yet.");
+  return row(id, name, { value: `${Math.round(d.secondCoverage.ratio * 100)}%`,
+    counts: `${n(d.secondCoverage.pairs)} comparable pairs · ${Math.round(d.secondCoverage.secondMs / 60000)} minutes second time, ${Math.round(d.secondCoverage.firstMs / 60000)} first time`,
+    says: "Compares complete runs for the same government and target set. Lower means less time the second time." });
 }
 
 const easternDay = (iso: string): string => new Date(iso).toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
@@ -565,8 +593,6 @@ export function lookRow(l: LookReading | null | undefined): ScoreboardRow {
 }
 
 const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
-  { id: "Facts live per hour", name: "Facts live per hour", why: "Counted in a later step, once each fact carries when it went live." },
-  { id: "Cost per fact", name: "Cost per fact", why: "Counted in a later step, from the same record as facts live per hour." },
 ];
 
 /** The Scoreboard in the design's order. Every number in the list has a row; one with no reading says "—" and why. */
@@ -581,17 +607,19 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Public delivery", deliveryRow(r.publication, r.places ?? [])],
     ["Freshness", freshnessRow(r.publication, r.places ?? [])],
     ["Return visits", returnsRow(r.returning)],
-    ["Head-start hit rate", headStartRow(r.doors)],
+    ["Head-start hit rate", headStartRow(r.factoryLearning)],
+    ["Second-time coverage", secondCoverageRow(r.factoryLearning)],
     ["Audit accuracy", auditRow(r.audit)],
     ["Look and feel", lookRow(r.look)],
     ["Site speed and reliability", speedRow(r.speed, r.deadLinks, r.speedLimits)],
-        ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
+    ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
+    ...flowRows(r.flow),
     ["Proven fixes", provenFixesRow(r.provenFixes)],
     ["Report accuracy", reportAccuracyRow(r.reportAccuracy)],
     ...GATE_ROWS.map((g): [string, ScoreboardRow] => [g.id, unmeasured(g.id, g.name, g.why)]),
   ]);
   const ORDER = ["Orders", "Mission progress", "Checklist completeness", "Coverage", "Public delivery", "People coverage", "Facts live per hour", "Cost per fact", "Audit accuracy",
-    "Freshness", "Shut doors", "Posted to live", "Overdue doors", "Time to core information live", "Look and feel", "Site speed and reliability", "Return visits", "Time to repair", "Repairs without code", "Proven fixes", "Report accuracy", "Head-start hit rate"];
+    "Freshness", "Shut doors", "Posted to live", "Overdue doors", "Time to core information live", "Look and feel", "Site speed and reliability", "Return visits", "Time to repair", "Repairs without code", "Proven fixes", "Report accuracy", "Head-start hit rate", "Second-time coverage"];
   const rows = ORDER.map((id) => byId.get(id)!);
   const gateRows: ScoreboardGateRow[] | null = r.gates === null ? null : r.gates.map((g) => ({ name: g.name, state: g.state, sentence: g.sentence }));
   const gateSummary = r.gates === null ? null : summarizeGateHealth(r.gates);
@@ -608,6 +636,7 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
   return {
     rows,
     byPlace, byFamily, missions,
+    flow: flowStages(r.flow),
     gates: gateRows === null || gateSummary === null ? null : { rows: gateRows, pass: gateSummary.pass, attention: gateSummary.attention, notMeasured: gateSummary.notMeasured },
     readiness,
     learning: r.learning,

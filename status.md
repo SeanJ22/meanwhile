@@ -16,6 +16,7 @@ heartbeat: 2026-10-06T15:07:17Z
 - Runner: still stopped at 10:58 AM EDT (last beat 07:12:49Z on a5fd753; cp_vital_signs absent). Neon control-plane total 1,857,008,881,367 at 14:57Z, unchanged since 12:57Z. Restart already with Sean; not re-pushed.
 - Folding on river-next 405a7f6 over river 0a0f744: hunters 76b84e3a4 (CH-22, behind WTP_CONTINUOUS_HUNTERS; Neon estimate about 1.0 MB written once, no new read); auditors 2830c4bfb (DP-06, no new reads). Firewall PASS (0 findings, 7601 files). `pnpm gates` running (history unshallowed first).
 - Not folded, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b DB-21 (runner door switches); admin 734ee9633 (returned).
+- Pushed to Sean 11:03 AM EDT: release 11 live; runner still stopped, restart steps unchanged and now install 0a0f744.
 
 ## Previous run (session_019dfFq5HGoipanBrVDSSrbK, claimed the free lock Oct 6, 8:57 AM EDT)
 

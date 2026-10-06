@@ -1,6 +1,6 @@
 # River status
 
-build_state: release 9 live (8fdeb4e, 6:37 AM EDT); release 10 (byte counter, v25, people CA-12) in gates; runner stopped until release 10 is live
+build_state: release 10 open (#716, auto-merge on; gates 12/12 on 211c48c); runner stopped until release 10 is live
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01EnWcsto9iudrVWwszS9urS
@@ -34,6 +34,8 @@ CI: the first run, 37448256510, was cancelled by the concurrency rule when the P
 
 **Release 9 live** at 6:37 AM EDT (8fdeb4e; post-deploy 37450769611 passed; releases/9-live.md; ledger updated). river = main 8fdeb4e.
 **Release 10 folding (river-next 211c48c6c over river 8fdeb4e), gates running:** hunters 6e4631295 (byte counter, firewall repaired; also CP-04 repair 966786dc1 and owner snapshot d78f967d2); people 64842457b (CA-11, CA-05, CA-14, CA-12, firewall and Hourihan repaired); river 69fc6b1ed (v25 cp_vital_signs). Fold repairs: the pilot-runner import union (hook 0 + receiveChildVitalSigns); OFFICIAL_PAGE_EVENTS_VERSION re-keyed to 3d7cbd75f850. Not folded: measures ffd003bc5 (duplicate counter and v25; returned); meetings 91f23e059 DB-29 (hook pending); registry a1aad625b; admin (returned).
+
+**Release 10: #716** (release/10 at 211c48c), opened 7:50 AM EDT, auto-merge on. **`pnpm gates` 12/12 on 211c48c** (9,907 tests, 9,896 pass, 0 fail). After merge: observe the deploy; push Sean the restart (`systemctl start meanwhile-runner.service` on the droplet; bootstrap applies v25); then measure the first hour from the heartbeat's neonBytes and Neon's project total, and write releases/10-live.md.
 
 **Next River run:**
 1. #715 merged? Observe the deploy by SHA (`river.mjs observe <merge sha>`). The runner is stopped, so adoption waits for the restart.

@@ -1,0 +1,17 @@
+# Frontend next check-in
+
+Read mission.md FIRST and the fresh board returns mission. This run ended Oct 6, 2026, 1:32 AM EDT: no executable frontend step remains; live access/release/capture prerequisites and CA-14 are outstanding. Work is NOT complete/live accepted. Codex remains assigned, lock is released.
+
+Resume stream/frontend, fresh assignment/returns before ANY write. If handed Claude, exit without writing; if another active run, skip. New unique lock and normal fast-forward push, never force. Fetch main/river/briefs/board/stream explicit refs. Current River 8e47854b1a507df4215ad42aa24eb8f7486d85de; board fd27d7279b6e454468f20e8ad1c43596903046b9; CA-14 and FE-35/36 integration absent at last fetch. Main release7 f545fcf94.
+
+Built historical READY16a36b422b6a87fc8d8e8cee64aa61687914e810 predates Sean's live-before-new-READY instruction. Preserve it and all batches, but don't treat it as live done or emit another READY without named live proof. River owns coordinating its release/live check. Current reader source uses verified CA-07 body/member offices, distinct pins, Directions via venueLink, and CA-37 public RecordCard inside actual place/body/district cards. Campaign-office reader transport still pending people/ballot.
+
+Mission finding: added directory/public-record reader calls can trigger existing Neon fallback, not automatically free because frontend adds no SQL. See read-cost.md conditional byte estimate and exact owner edge hooks; values/instance fan-out/project/hour still unmeasured. River must trace cold/warm bytes/caller and real phone latency; no new budget/gate/fallback policy was introduced.
+
+FE-19 capture-matrix.json enumerates all117 existing rubric items:40designrules and77sweepfindings, not accepted pairs. River request lists live phone/desktop scenes and durable evidence to return. Inspect returned REAL frames against source rules, update docs/look-standard.md with genuine good/bad pairs, then step's live check before READY. Missing candidate image bytes remain a real gap. Four release3 board PNGs were already inspected in batch05; do not reuse them as universal proof. Frontend live HEAD still CONNECT403 at Oct6,1:23AM EDT; no proxy bypass, no missing-credential invention.
+
+FE-33 waits people's CA-14 on River (CA-15/FE-42 integrated); once present, same person PositionsSection and ten chips for each candidate, no hide-when-empty, native targetKey and stored answer projection, no cold per-tap answer engine. Do every new return/ready step, never stop at checkpoints. Existing FE-28 Bank/FE-32 Admin hooks and campaign office transport requests remain. FE-22 look pass hook is connected. FE-39 earlier return repaired and live verified release3; do not resurrect pilot buttons.
+
+Latest check source 9a7bcde1d9ee79ed83594a4bb259fe20b81634e9:47/47 focused, no new application edits this run. It proves builds only; not live acceptance. Previous exact READY/full/build/browser logs preserved batch06 with explicit baseline failures and synthetic/substitute boundaries.
+
+90minute recurring check-in automation created successfully for this chat; first scheduled Oct6,2:53:30AM EDT. automation.json contains handle and recurrence. FIRST DELIVERY NOT YET OBSERVED: don't claim verified continuation before a run occurs. User requested repeat until cancellation, skip check-in while active, quiet unchanged state, questions only needs_River, no routine Sean notification. End run only when no executable ready work, record one EDT stop line and release lock.

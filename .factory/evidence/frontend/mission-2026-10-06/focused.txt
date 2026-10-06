@@ -1,0 +1,69 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 9/9 files; SHA 9a7bcde1d9ee79ed83594a4bb259fe20b81634e9
+tests/absence-defaults.test.ts
+tests/amber-remnant.test.ts
+tests/body-battlecard.test.ts
+tests/card-navigation.test.ts
+tests/office-locations.test.ts
+tests/office-pins.test.ts
+tests/reader-card.test.tsx
+tests/record-card.test.tsx
+tests/rhythm-tokens.test.ts
+✔ no unrecorded sentence-shaped render default exists (62.450932ms)
+✔ every baseline entry carries a reason, and none is a placeholder (0.283972ms)
+✔ the baseline only shrinks — a recorded entry that is gone must be removed (51.078908ms)
+✔ the shape catches every instance the class was named from (0.295592ms)
+✔ a single-token type default is not a claim and is not flagged (0.14831ms)
+✔ FE-31: every reader gap uses WorkingOnIt and disclaimers stay retired (44.877107ms)
+✔ FE-31: seeded inline gaps and each banned disclaimer fail the instrument (0.305556ms)
+✔ the interactive accent is azure everywhere — no rule reads the tier amber (6.84715ms)
+✔ the dead interactive brown is gone from every token, both themes (0.881821ms)
+✔ every tier toggle's fill is on the measured list (0.511853ms)
+✔ the toggle and the legend are one colour per tier — the coupling, literally (0.386939ms)
+✔ M136: the three named bodies each get a sourced role, not a generated one (1.96729ms)
+✔ M136: Tucson's own entry wins over the state-level one (0.200836ms)
+✔ M136: a body with no read statute gets the honest line, never a paraphrase (1.848408ms)
+✔ M136: every blurb carries a checkable basis — no unsourced prose anywhere (0.230139ms)
+✔ M136: the card renders the same SET of sections for every body (0.868064ms)
+✔ M136: the body card orders meetings upcoming-first from one clock (0.445552ms)
+✔ M136: a school district's superintendent is asked for and named when missing (1.243098ms)
+✔ M136: the contact section never invents a route (0.970474ms)
+✔ F01 2.4: the large surface is a stack, and closing pops one frame (1.226806ms)
+✔ F01 2.4: a card opened from INSIDE another pushes; one opened from outside replaces (0.648341ms)
+✔ F01 2.4: both large surfaces go back through the pop, not through a reset (0.556424ms)
+✔ F01 2.4: the stack is bounded, and it drops the OLDEST frame (0.376343ms)
+✔ a campaign address counts only when labeled an office or headquarters (2.273965ms)
+✔ a campaign address equal to the filed mailing address is refused (0.854192ms)
+✔ an office needs an address and an https source (0.199383ms)
+✔ member offices and body offices become the one shape (1.475728ms)
+✔ hours are read only when the page gives them (0.172802ms)
+✔ Ask's contact record carries the address and hours with the page as its source (0.586129ms)
+✔ a school office becomes a pin independently of any meetings, with its actual source (2.255086ms)
+✔ directory offices retain owner, office kind and saved provenance; mailing fields are not inputs (1.157158ms)
+✔ campaign pins accept the CA-07 office fact and refuse the filed home before projection (1.564476ms)
+✔ shared buildings keep all offices behind one reachable marker; dedup is by native owner (18.561085ms)
+✔ public-office geocoding shares in-flight reads, rejects missing/out-of-range points and retries misses (49.850055ms)
+✔ the shared frame names its card and always includes a Sources disclosure (9.750309ms)
+✔ identity can carry the visible name without losing the card's accessible title (5.111379ms)
+✔ plain records use the shared Card; read dates and URLs only occur in Sources (11.306135ms)
+✔ a place never shows another jurisdiction's record or claims another body's record (6.228515ms)
+✔ office directions use venueLink while the published address, hours and contacts stay native (4.000574ms)
+✔ the rhythm sweep catches an off-scale value — the instrument works (RULING 110) (2.069982ms)
+✔ the rhythm token scales are declared in app/globals.css (0.521858ms)
+✔ component sweep catches new tiny type, off-scale spacing and literal colours (0.773435ms)
+✔ component exceptions only shrink, per file and value (80.134444ms)
+✔ spacing: off-scale count does not exceed the baseline (it only shrinks) (50.896176ms)
+✔ radius: off-scale count does not exceed the baseline (it only shrinks) (2.824022ms)
+✔ fontSize: off-scale count does not exceed the baseline (it only shrinks) (26.141206ms)
+✔ elevation: off-scale count does not exceed the baseline (it only shrinks) (1.822868ms)
+ℹ tests 47
+ℹ suites 0
+ℹ pass 47
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2871.975539

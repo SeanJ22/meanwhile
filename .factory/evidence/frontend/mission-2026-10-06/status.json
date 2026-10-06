@@ -1,0 +1,19 @@
+{
+  "testedSha": "9a7bcde1d9ee79ed83594a4bb259fe20b81634e9",
+  "readerFocused": {
+    "pass": 47,
+    "fail": 0,
+    "files": 9
+  },
+  "applicationChangesThisRun": "none; merged River runtime updates, own edits only coordination/look-standard WIP",
+  "newReadySha": null,
+  "liveAcceptance": "blocked CONNECT403; no pass claim",
+  "CA-14Integrated": false,
+  "FE-35Integrated": false,
+  "FE-36Integrated": false,
+  "river": "8e47854b1a507df4215ad42aa24eb8f7486d85de",
+  "boardRiver": "fd27d7279b6e454468f20e8ad1c43596903046b9",
+  "endedAt": "2026-10-06T05:32:08.125051+00:00",
+  "endedEDT": "Oct 6, 2026, 1:32 AM EDT",
+  "runEndReason": "No executable frontend step remains: live access/release/captures and CA-14 are external prerequisites; requested through River."
+}

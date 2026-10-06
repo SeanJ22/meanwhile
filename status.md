@@ -1,6 +1,6 @@
 # River status
 
-build_state: release 11 LIVE (0a0f744, post-deploy 37483242295 passed); folding hunters CH-22 + auditors DP-06 on river-next, gates running; runner still stopped (restart with Sean since 8:28 AM EDT)
+build_state: release 12 open (#718, release/12 at 405a7f6, auto-merge on; gates 12/12); release 11 live; runner still stopped (restart with Sean since 8:28 AM EDT)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01PNZmtjma5s373mH41mVk6q
@@ -17,6 +17,8 @@ heartbeat: 2026-10-06T15:48:51Z
 - Folding on river-next 405a7f6 over river 0a0f744: hunters 76b84e3a4 (CH-22, behind WTP_CONTINUOUS_HUNTERS; Neon estimate about 1.0 MB written once, no new read); auditors 2830c4bfb (DP-06, no new reads). Firewall PASS (0 findings, 7601 files). `pnpm gates` running (history unshallowed first).
 - Not folded, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b DB-21 (runner door switches); admin 734ee9633 (returned).
 - Pushed to Sean 11:03 AM EDT: release 11 live; runner still stopped, restart steps unchanged and now install 0a0f744.
+- **`pnpm gates` 12/12 on 405a7f6** (9,921 tests, 9,910 pass, 0 fail, 11 skipped; tests 1,907 s with history unshallowed, no history-only failures). river promoted 0a0f744 → 405a7f6.
+- **Release 12: #718** opened 11:50 AM EDT, auto-merge on (enabled through the GitHub MCP tool; river.mjs's GraphQL call is refused from cloud sessions), with the read-cost statement. Shipped now so CH-22 and DP-06 are in the runner's first measured hour after restart.
 
 ## Previous run (session_019dfFq5HGoipanBrVDSSrbK, claimed the free lock Oct 6, 8:57 AM EDT)
 

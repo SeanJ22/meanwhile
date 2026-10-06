@@ -11,7 +11,7 @@
     "sha": "aa40b7ba3480de6bf3796da5d12f2af73fda0a11",
     "log": "/tmp/admin-mission-aa40-focus.log"
   },
-  "gates": "running",
+  "gates": "FINISHED; 10/12 PASS, browser assertion and FULL FAIL",
   "gates_log": "/tmp/admin-mission-aa40-gates.log",
   "production_observation": {
     "project": "withered-sunset-39821877",
@@ -165,5 +165,26 @@
     "result": "bounded termination; test/timing incomplete, not PASS"
   },
   "live_checklist": ".factory/admin-live-checks.md",
-  "builds": "running default, bundle and standalone through original gate run"
+  "builds": {
+    "source_sha": "aa40b7ba3480de6bf3796da5d12f2af73fda0a11",
+    "default": "PASS",
+    "bundle": "PASS",
+    "standalone": "PASS"
+  },
+  "gates_record": ".factory/admin-mission-gates-aa40.json",
+  "final_production_observation": {
+    "at": "2026-10-06T06:21:15.373Z",
+    "cp_vital_signs": null,
+    "cp_spend_holds": "present",
+    "schema_version": 24,
+    "heartbeat_at": "2026-10-06T06:21:01.951Z",
+    "heartbeat_tested_sha": "a5fd753b740f9e1f7620460ab3dd6d4250fd6a3c",
+    "has_spend_summary": false
+  },
+  "fresh_refs": {
+    "river": "8e47854b1a507df4215ad42aa24eb8f7486d85de",
+    "main": "a5fd753b740f9e1f7620460ab3dd6d4250fd6a3c",
+    "board_river": "562a203b9df320a809e84ae333e68e9eaf3e5f2b"
+  },
+  "end_state": "nothing independently ready; shared hourly/Money writer connections and live verification pending River"
 }

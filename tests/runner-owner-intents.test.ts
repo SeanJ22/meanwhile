@@ -349,6 +349,7 @@ test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on
     runtimeAdmissionsHeld: false, standingRuntimeTimer: null, ownerControlTimer: null, researchCycleActive: false,
     canary: false, activeControlRead: null, ownerWakePending: false, POLL_MS: 60_000, CONTROL_WAKE_POLL_MS,
     runStandingRuntimeTick: () => {}, startScheduledOrderClock: () => {}, console,
+    provider: "postgres", STAGING: false, auditPasses: { start: () => {} },
     setInterval: (callback: () => void) => { tick = callback; return 1; },
     ownerSays: () => { reads++; return new Promise<string>(resolve => { finishRead = resolve; }); },
   });

@@ -23,6 +23,7 @@ import { AZ_CAWCD_ROSTERS } from "./cawcd-rosters.ts";
 import { NJ_MORRIS_ROSTERS } from "./rosters-nj-morris.ts";
 
 export interface RosterMember {
+  fieldSources?: Record<string, Provenance>;
   /** An unresolved update must retain an older member on its actual source/date. */
   membershipSource?: { sourceUrl: string; sourceOrg: string; collectedAt: string };
   /** Optional facts kept from an earlier verified read when this update omits them. */
@@ -79,6 +80,7 @@ export type Partisanship =
   | "UNDETERMINED";
 
 export interface BodyRoster {
+  kind?: import("../control-plane/promotion/source-kinds.ts").SourceKind;
   /** Matches `BodySourceWiring.bodyId` exactly. */
   bodyId: string;
   bodyName: string;
@@ -2579,6 +2581,7 @@ export interface RosterHolder {
   phone: string | null;
   contactKind?: "PUBLIC_OFFICE" | "PERSONAL";
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
+  fieldSources?: RosterMember["fieldSources"];
   retainedFieldSources?: RosterMember["retainedFieldSources"];
   contactFormUrl: null;
   photoUrl: string | null;
@@ -2638,6 +2641,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     // with every member, so a card listing them can say who published the
     // claim rather than only where it lives.
     provenance: {
+      ...(member.fieldSources?.name?.kind ?? roster.kind ? { kind: member.fieldSources?.name?.kind ?? roster.kind } : {}),
       sourceUrl: member.membershipSource?.sourceUrl ?? roster.sourceUrl,
       sourceOrg: member.membershipSource?.sourceOrg ?? roster.sourceOrg,
       collectedAt: member.membershipSource?.collectedAt ?? roster.collectedAt,
@@ -2647,6 +2651,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     phone: member.phone,
     contactKind: member.contactKind,
     contactScope: member.contactScope,
+    fieldSources: member.fieldSources,
     retainedFieldSources: member.retainedFieldSources,
     contactFormUrl: null,
     photoUrl: photos[member.id] ?? null,

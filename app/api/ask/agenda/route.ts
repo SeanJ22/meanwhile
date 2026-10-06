@@ -1,6 +1,6 @@
 import { readMeetingsProjection } from "@/lib/meetings/snapshot";
 import type { CivicDataReadMetadata } from "@/lib/civic-data/read-model";
-import type { AgendaDocumentLike } from "@/lib/routing/agenda-search";
+import { readMeetingTranslation } from "@/lib/translate/reader";
 import { classifyAgendaPublication, type AgendaPublicationReading } from "@/lib/ask/agenda-publication";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { ripcordPulled } from "@/lib/ripcords";
@@ -41,16 +41,16 @@ import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
  * straight trade of the reader's bandwidth for our architectural convenience.
  * So the corpus stays on the server and the client asks it a question.
  *
- * ## It stores nothing, and it generates nothing
+ * ## It stores nothing and does not call a model
  *
  * No row, no log line, no device key, no IP kept — the same posture as the
  * classifier route, and for the same reason: there is no store here, so the
  * n-stores rule is not in play.
  *
  * And every string it returns is READ OFF a document a government published.
- * The item list is the clerk's items, verbatim. Nothing is summarised, because
- * a summary of a zoning agenda is a claim about what a government is about to
- * do, made by us.
+ * The item list is the clerk's items, verbatim. A previously published,
+ * independently checked translation travels separately and only when its
+ * source URL and raw document hash match this exact held revision.
  *
  * ## The answer states its denominator
  *
@@ -84,6 +84,7 @@ export interface AgendaMeetingReply {
   retrievedAt: string | null;
   /** The clerk's own items, verbatim. Empty is a state, never "no items". */
   items: string[];
+  summary: { text: string; sourceUrl: string; sourceHash: string; writtenAt: string } | null;
   documentsHeld: number;
   readable: number;
   publication: AgendaPublicationReading;
@@ -157,7 +158,7 @@ export async function POST(request: Request) {
   }
   const snapshot = read.value;
 
-  const documents = (snapshot.agendaDocuments ?? []) as AgendaDocumentLike[];
+  const documents = snapshot.agendaDocuments ?? [];
 
   // ── A05: one named meeting's own item list ────────────────────────────
   if (typeof body.meetingId === "string" && body.meetingId.length > 0) {
@@ -200,6 +201,9 @@ export async function POST(request: Request) {
       discoveredDocumentUrl: meeting.agendaUrl, now: Date.now() });
     const sharedAcrossGovernments = publication.documentSharedAcrossGovernments === true;
     const items = newest && !sharedAcrossGovernments ? [...publication.items] : [];
+    const translated = newest?.text && meeting.ocdId && meeting.bodyId && !sharedAcrossGovernments
+      ? await readMeetingTranslation({ kind: "AGENDA", meetingId, ocdId: meeting.ocdId,
+        bodyId: meeting.bodyId, documentUrl: newest.documentUrl, contentHash: newest.contentHash }).catch(() => null) : null;
     const reply: AgendaMeetingReply = {
       mode: "meeting",
       meetingId,
@@ -219,6 +223,8 @@ export async function POST(request: Request) {
       sourceOrg: sharedAcrossGovernments ? null : (newest?.sourceOrg ?? null),
       retrievedAt: newest?.retrievedAt ?? null,
       items,
+      summary: translated ? { text: translated.text, sourceUrl: translated.sourceUrl,
+        sourceHash: translated.sourceHash, writtenAt: translated.writtenAt } : null,
       // The denominators. `documentsHeld` 0 and `items` 0 mean different
       // things and the client says which.
       documentsHeld: forMeeting.length,

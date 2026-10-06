@@ -10,6 +10,9 @@
  * PURE: types and tiny helpers only. No fetch, no clock, no store.
  */
 import { EASTERN_ZONE } from "@/lib/control-plane/eastern-time.ts";
+import type { LookView } from "@/lib/frontend/look-pass.ts";
+
+export type { LookScreenView, LookView } from "@/lib/frontend/look-pass.ts";
 
 /* ------------------------------------------------------------ provenance */
 
@@ -700,6 +703,8 @@ export interface ScoreboardRow {
   readonly items?: readonly string[];
   /** Detail kept behind Technical details, e.g. the fixed facts' IDs. */
   readonly technical?: readonly string[];
+  /** Screenshots shown under the row (FE-23: the newest red screens). */
+  readonly images?: readonly { readonly label: string; readonly src: string }[];
 }
 
 export interface ScoreboardGateRow {
@@ -757,16 +762,6 @@ export interface ScoreboardView {
 
 export type FixTab = "attention" | "fixing" | "update" | "done" | "returned";
 
-export const LEARNING_STATUSES = [
-  "Fixed once",
-  "Prevention saved",
-  "Prevention tested",
-  "Reused successfully on another job",
-  "Problem returned",
-  "Not checked yet",
-] as const;
-export type LearningStatus = (typeof LEARNING_STATUSES)[number];
-
 export const TASK_STAGES = ["Task created", "Engineer accepted", "Implemented", "Tested", "Released", "Workers using it", "Checked on the public page"] as const;
 
 export interface OpenFix {
@@ -784,7 +779,11 @@ export interface OpenFix {
   readonly linkedStuck: readonly string[];
   readonly origin: "engineering" | "automatic";
   readonly technical: string;
+  /** FE-21: the screenshot a look-check red flag points at. */
+  readonly shots?: readonly FixShot[];
 }
+
+export interface FixShot { readonly label: string; readonly image: string }
 
 export interface ClosedFix {
   readonly id: string;
@@ -793,7 +792,6 @@ export interface ClosedFix {
   readonly places: string;
   readonly fixedAt: string;
   readonly origin: "Engineering fix" | "Automatic repair";
-  readonly learning: LearningStatus;
   readonly whatChanged: string;
   readonly readerRecheck: string;
   readonly since: string;
@@ -803,12 +801,32 @@ export interface ClosedFix {
   /** DP-30: every time it broke, how it was fixed and how long each fix held, oldest first. */
   readonly history?: string;
   readonly technical: string;
+  /** FE-21: the screenshot a look-check red flag points at. */
+  readonly shots?: readonly FixShot[];
+}
+
+/** DP-26: a reusable fix still proving itself across places. It is a Queue row until it is proven, then it goes quiet. */
+export interface TestingFix {
+  readonly id: string;
+  readonly title: string;
+  readonly works: number;
+  readonly tried: number;
+  /** Places it must work in to be proven (the bar in Settings). */
+  readonly needPlaces: number;
+  readonly next: string;
+  readonly since: string;
+  /** DP-34: "Proven, broke since" this day (Eastern), when it was proven and no longer holds. */
+  readonly brokeSince?: string | null;
 }
 
 export interface FixView {
   readonly open: readonly OpenFix[];
   readonly closed: readonly ClosedFix[];
   readonly returned: readonly ClosedFix[];
+  /** DP-26: fixes in Testing. Absent when not read. */
+  readonly testing?: readonly TestingFix[];
+  /** FE-21: the latest deploy's look check on the live site. Absent when not read; null when none has run. */
+  readonly look?: LookView | null;
 }
 
 /* --------------------------------------------------------------- actions */

@@ -2,10 +2,9 @@
  * **PROVIDER SIX — MEETINGS DISCOVERY, WHERE THE OWNER SENT THE FLEET.**
  * (MW-028, 2026-09-23. RULING 248, RULING 249, RULING 251.)
  *
- * Every enumerated government's meetings are owed to the reader. The committed
- * gap ledger (`data/derived/gap-ledger.json`, `meetingsDiscovery.needs`)
- * records where they have not been found: a government whose own site is known
- * and unwalked (`SOURCE_DISCOVERY_OWED`), or one with no site recorded at all
+ * Every enumerated government's meetings are owed to the reader. Its registry
+ * records where they have not been found: its own site is known and unwalked
+ * (`SOURCE_DISCOVERY_OWED`), or no site is recorded at all
  * (`NO_MEETINGS_SOURCE_RECORDED`). `lib/hunt/meetings-discovery.ts` derives
  * that list from the promoted jurisdiction registries, and this provider uses
  * the same derivation — the same shapes, never a second list.
@@ -14,7 +13,7 @@
  *
  * Only the needs the owner's dispatch MATERIALIZED (`dispatch-work.ts`): one
  * obligation per government in a geography the owner sent the fleet to, in
- * the gap ledger's shape. The rest of the ledger stays recorded there and owed;
+ * the registry derivation's shape. The rest stay owed; the mission map's calendar blanks are walked free (CH-21);
  * a dispatch or a selected scope is what turns a need into scheduled work.
  *
  * ```
@@ -23,7 +22,7 @@
  *                                   government's recorded own site
  *               find-own-site       basis NO_MEETINGS_SOURCE_RECORDED: no site
  *                                   is recorded, so finding it is the first step
- *   subject     the jurisdiction id, as in the gap ledger
+ *   subject     the jurisdiction id, as in the registry
  *   class       BOUNDED_MODEL_WORKER with a NOT_MACHINE_EXECUTABLE opening:
  *               discovery, never acquisition
  * ```
@@ -81,7 +80,7 @@ export function parseMeetingsDiscoveryId(id: string): { readonly jurisdictionId:
   return { jurisdictionId: rest.slice(0, hash), routeId: rest.slice(hash + 1) };
 }
 
-/** The need one registry records for one government, in the gap ledger's shape, or null. */
+/** The need one registry records for one government, or null. */
 export function meetingsDiscoveryNeedFor(reg: JurisdictionRegistry, jurisdictionId: string): MeetingsDiscoveryNeed | null {
   return meetingsDiscoveryNeeds([reg]).find((n) => n.jurisdictionId === jurisdictionId) ?? null;
 }
@@ -111,7 +110,7 @@ export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: Meetings
     citation:
       source?.citation ??
       (reg.registration === undefined
-        ? `the promoted ${need.stateCode} jurisdiction registry names this government and records no MEETINGS source for it (gap ledger basis NO_MEETINGS_SOURCE_RECORDED)`
+        ? `the promoted ${need.stateCode} jurisdiction registry names this government and records no MEETINGS source for it (basis NO_MEETINGS_SOURCE_RECORDED)`
         : `${need.stateCode.toUpperCase()}'s registration names this government (promoted version ${reg.registration.versionId}), and the Census records no web address for it, so none is invented (basis NO_MEETINGS_SOURCE_RECORDED)`),
     awaitingAdapter: "the meetings discovery executor",
   };
@@ -123,7 +122,7 @@ export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: Meetings
  * A meetings-discovery obligation is model-class, so it would otherwise go to
  * the paid Scout lane whenever that lane is open. The unpaid discovery
  * executor walks the same governments first — the ones the owner's dispatch
- * materialized, then the gap ledger's backlog — and the paid lane may never
+ * materialized, then the mission map's calendar blanks (CH-21) — and the paid lane may never
  * re-walk an already confirmed route. An unattempted free walk is not a paid
  * admission prerequisite: the owner permits an appropriate paid route early,
  * within the existing authorization and token reservations. An unread log holds,
@@ -219,7 +218,7 @@ export function meetingsDiscoveryProvider(input: MeetingsDiscoveryInput = {}): O
     id: MEETINGS_DISCOVERY_PROVIDER_ID,
     describe:
       "meetings discovery the owner's dispatch materialized, one per government in a geography the fleet was sent " +
-      "to, in the gap ledger's shape; the rest of the ledger stays recorded and owed",
+      "to; the mission map's calendar blanks are walked free without a dispatch (CH-21)",
 
     /* The template `meetingsDiscoveryObligationId` restates; the assignment view's prefix table reads it here. */
     scheduledId: (record, route) => `freshness:meetings-discovery:${record.subjectId}#${route.routeId}`,
@@ -252,8 +251,8 @@ export function meetingsDiscoveryProvider(input: MeetingsDiscoveryInput = {}): O
         readFailure: failures.length === 0 ? null : failures.join("; "),
         emptyReason:
           records.length === 0 && failures.length === 0
-            ? "the owner's dispatch has materialized no meetings discovery yet. Every need is recorded in the gap " +
-              "ledger (data/derived/gap-ledger.json, meetingsDiscovery.needs); sending the fleet to a geography creates them here"
+            ? "the owner's dispatch has materialized no meetings discovery yet. A Send's calendar blanks are walked free " +
+              "from its mission map; sending the fleet to a geography creates them here"
             : null,
       };
     },

@@ -12,7 +12,8 @@ import { readV6History } from "@/lib/control-plane/admin-view/admin-v6-history.t
 import { readGateHealth } from "@/lib/control-plane/admin-view/gate-health.ts";
 import { buildLearningTrends } from "@/lib/control-plane/admin-view/learning-trends.ts";
 import { weeklyAuditAccuracy } from "@/lib/control-plane/admin-view/v6-audit-read.ts";
-import { readAuditWeek, readLatestSpeedPass } from "@/lib/control-plane/live-audit-log.ts";
+import { readAuditWeek, readLatestSpeedPass, readRecentClaimPasses } from "@/lib/control-plane/live-audit-log.ts";
+import { reportAccuracy, weekOf } from "@/lib/control-plane/workers/claim-audit.ts";
 import { buildScoreboard, publicationCountsOf, v6LearningView, type ScoreboardReadings } from "@/lib/control-plane/admin-view/scoreboard-read.ts";
 import { captureWindow, readCaptureHealth } from "@/lib/control-plane/admin-view/v6-capture-health.ts";
 import { projectDoors } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
@@ -25,7 +26,13 @@ import { readSwitchConfig } from "@/lib/control-plane/data-business/switches.ts"
 import { adminGet } from "@/lib/control-plane/gateway/admin-get.ts";
 import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
+import { fixItems } from "@/lib/control-plane/fix-list.ts";
+import { readLatestLookPasses } from "@/lib/control-plane/live-audit-log.ts";
 import { deadLinkReadings, DEAD_LINKS_SURFACE_DEFAULT, DEAD_LINKS_SURFACE_SETTING, SLOW_SURFACE_SHARE_DEFAULT, SLOW_SURFACE_SHARE_SETTING } from "@/lib/health/surface-speed.ts";
+import { readDoorNumbers } from "@/lib/control-plane/admin-view/door-numbers-read.ts";
+import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
+
+const shotUrl = (key: string): string => `/api/admin/v6/resident-tasks/shot/${key.replace(/^resident-tasks\//, "")}`;
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -45,11 +52,13 @@ export async function GET(request: NextRequest) {
     const configRow = opened ? await attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID)) : null;
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
-    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture, sentPlaces, audit, speed, deadLinks] = await Promise.all([
+    const doorList = opened ? await attempt(async () => (await listDoors(opened.doors)).doors) : null;
+    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, deadLinks, looks] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
       attempt(async () => (opened ? (await opened.runnerHeartbeat.read(RUNNER_ID))?.value ?? null : null)),
+      attempt(() => readDoorNumbers({ now: observedAt, doors: doorList, config })),
       attempt(async () => { if (!url) return null; const r = await readPipeline(neon(url), observedAt); return r.state === "READ" ? r : null; }),
       attempt(async () => { const r = await readRoutinePublicationStatus(); if (r.kind !== "HELD") return null; const v = publicationView(r.view); return { readBack: v.counts.find((c) => c.verdict === "READER_VISIBLE")?.count ?? 0, total: v.total }; }),
       attempt(async () => {
@@ -68,8 +77,14 @@ export async function GET(request: NextRequest) {
       attempt(async () => (opened ? weeklyAuditAccuracy({ ...(await readAuditWeek(opened, observedAt)), now: observedAt }) : null)),
       // FE-02: the latest worst-case speed pass on the live site (today's and yesterday's keys).
       attempt(async () => (opened ? readLatestSpeedPass(opened, observedAt) : null)),
+      // DP-26: where each reusable fix stands, from the config row.
+      attempt(async () => (opened ? provenFixesReading(config, observedAt) : null)),
+      // DP-33: the latest weekly claim check, this week's and last week's keys.
+      attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
       // FE-26: the link sweep's dead links per surface, kept beside door health.
-      attempt(async () => (opened ? deadLinkReadings((await listDoors(opened.doors)).doors) : null)),
+      attempt(async () => (doorList === null ? null : deadLinkReadings(doorList))),
+      // FE-23: the last deploys' look passes (a week's worth), for the look row.
+      attempt(async () => (opened ? readLatestLookPasses(opened, 20) : null)),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
@@ -81,10 +96,14 @@ export async function GET(request: NextRequest) {
       returning: capture === null ? null : { days: capture.length, readerDays: capture.reduce((a, d) => a + d.readers, 0), returningDays: capture.reduce((a, d) => a + d.returning, 0) },
       learning: v6LearningView(learning?.trends ?? buildLearningTrends([], observedAt), learning?.doors ?? null, learning === null ? null : learning.bankWriteErrors),
       doors: learning?.doors ?? null,
+      doorNumbers,
       audit,
       speed,
       deadLinks,
+      look: looks === null ? null : { now: observedAt, passes: looks, fixStates: new Map((config ? fixItems(config) : []).map((i) => [i.id, i.state] as const)), imageUrl: shotUrl },
       speedLimits: { share: readSetting(config, SLOW_SURFACE_SHARE_SETTING, SLOW_SURFACE_SHARE_DEFAULT), deadLinks: readSetting(config, DEAD_LINKS_SURFACE_SETTING, DEAD_LINKS_SURFACE_DEFAULT) },
+      provenFixes,
+      reportAccuracy: claims,
       gates: opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null }),
       readiness: readinessCounts(recoveryWitnesses({
         bankEntriesInherited: learning?.doors.given ?? null, bankEntriesUsed: learning?.doors.used ?? null,

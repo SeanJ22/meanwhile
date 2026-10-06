@@ -70,7 +70,7 @@ export type SittingShape = "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME" | 
  * the module that composes its answer. `CONTACT` is how to reach a named
  * person or body.
  */
-export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD" | "CONTACT" | "MONEY" | "GROUP_MONEY" | "PERSON_VOTES";
+export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "GOVERNMENT_MONEY" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD" | "CONTACT" | "MONEY" | "GROUP_MONEY" | "PERSON_VOTES";
 
 export type SubjectKind = "BODY" | "MEASURE" | "CONTEST" | "PERSON";
 
@@ -126,6 +126,8 @@ const SHAPES: readonly ShapePattern[] = [
   { shape: "BODY_ROSTER", kind: "BODY", pattern: /^who (?:sits|serves) on (?:the )?(.+?)$/ },
   { shape: "BODY_ROSTER", kind: "BODY", pattern: /^who (?:is|s|are) on (?:the )?(.+?)$/ },
   { shape: "BODY_ROSTER", kind: "BODY", pattern: /^who are the members of (?:the )?(.+?)$/ },
+  { shape: "GOVERNMENT_MONEY", kind: "BODY", pattern: /^(?:what is|what s|show) (?:the )?(.+?)(?: s)? (?:adopted )?budget$/ },
+  { shape: "GOVERNMENT_MONEY", kind: "BODY", pattern: /^what is (?:the )?(?:adopted )?budget (?:of|for) (?:the )?(.+?)$/ },
   /* BODY_CIVICS — what a named body does. */
   { shape: "BODY_CIVICS", kind: "BODY", pattern: /^what does (?:the )?(.+?) do$/ },
   /* MEASURE_EXPLAIN — what a named ballot measure means. */
@@ -167,6 +169,7 @@ const SITTING_SHAPES: ReadonlySet<LexicalShape> = new Set<LexicalShape>(["MEETIN
 const SHAPE_INTENT: Readonly<Record<Exclude<LexicalShape, SittingShape>, AskIntent>> = {
   BODY_ROSTER: "PERSON_RECORD",
   BODY_CIVICS: "CIVICS",
+  GOVERNMENT_MONEY: "CIVICS",
   MEASURE_EXPLAIN: "MEASURE",
   CONTEST_FIELD: "PERSON_RECORD",
   PERSON_RECORD: "PERSON_RECORD",
@@ -560,6 +563,18 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
   if (group !== undefined) return group;
   const votes = personVotesReading(input);
   if (votes) return votes;
+  // The body's open card supplies context only for this fully referential shape.
+  if (/^(?:what is|what s|show) (?:this|that) government s (?:adopted )?budget$/.test(normalizeName(input.question))) {
+    const temporal = { kind: "NONE" as const };
+    const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
+      activeSubjects: input.activeSubjects ?? [], priorSubjects: input.priorSubjects ?? [],
+    });
+    if (resolved.binding.kind === "BOUND" && kindOf(resolved.binding.entity) === "BODY" &&
+        (resolved.basis === "PAGE_CONTEXT" || resolved.basis === "PRIOR_TURN")) {
+      return { shape: "GOVERNMENT_MONEY", interpretation: { ...unavailableInterpretation(), intent: "CIVICS", temporal }, subjectId: resolved.binding.entity.id };
+    }
+    return null;
+  }
   const matches = shapeMatches(input.question);
   if (matches.length === 0) return null;
 

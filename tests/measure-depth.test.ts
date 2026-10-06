@@ -15,7 +15,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
-  bothSidesShip,
+  moneyCoverageSymmetry,
   fieldSatisfied,
   isStale,
   MEASURE_FIELDS,
@@ -65,14 +65,14 @@ test("a complete measure is DONE, and a missing field is OWED with the field nam
   assert.ok(thin.owed.includes("plainLanguage"), "a count is not a name — the owed field is named");
 });
 
-test("BOTH SIDES SHIP OR NEITHER DOES — and it REFUSES rather than reporting", () => {
+test("CP-17: uneven money coverage is a scoreboard reading, not a publication refusal", () => {
   /* THE LOAD-BEARING CASE. Support hunted, opposition untouched: everything
-   * else about this measure is complete, and it must still not ship. */
+   * else about this measure is complete; its remaining research is still visible. */
   const lopsided = full({ moneyAgainst: { state: "NOT_HUNTED", at: null } });
   const v = scoreMeasure(lopsided, TODAY);
   assert.equal(
     v.verdict,
-    "BLOCKED_ASYMMETRIC",
+    "ASYMMETRIC_COVERAGE",
     "six of seven fields complete and one-sided money must BLOCK — showing who funded the yes and not the no " +
       "is taking a side by omission",
   );
@@ -80,15 +80,15 @@ test("BOTH SIDES SHIP OR NEITHER DOES — and it REFUSES rather than reporting",
   assert.match(v.symmetry.reason, /opposition/, "the reason names WHICH side was not hunted");
 
   /* And blocked is NOT the same instruction as owed. */
-  assert.notEqual(v.verdict, "OWED", "a thin measure needs more hunting; a lopsided one must not ship. Different.");
+  assert.notEqual(v.verdict, "OWED", "the scoreboard separately names uneven coverage; both remain open work.");
 
   /* The mirror: opposition hunted, support not. Same refusal. */
   const otherWay = scoreMeasure(full({ moneyFor: { state: "NOT_HUNTED", at: null } }), TODAY);
-  assert.equal(otherWay.verdict, "BLOCKED_ASYMMETRIC");
+  assert.equal(otherWay.verdict, "ASYMMETRIC_COVERAGE");
   assert.match(otherWay.symmetry.reason, /support/);
 });
 
-test("neither side hunted is SYMMETRIC — and still does not ship", () => {
+test("neither side hunted is symmetric and still owed", () => {
   const neither = full({
     moneyFor: { state: "NOT_HUNTED", at: null },
     moneyAgainst: { state: "NOT_HUNTED", at: null },
@@ -111,7 +111,7 @@ test("NONE_REGISTERED is a finding and needs its filing officer; NOT_HUNTED is o
   const unsourced = full({ moneyAgainst: { state: "NONE_REGISTERED" } });
   assert.equal(
     scoreMeasure(unsourced, TODAY).verdict,
-    "BLOCKED_ASYMMETRIC",
+    "ASYMMETRIC_COVERAGE",
     "an unsourced finding is an assertion — the thing this product exists not to make",
   );
 });
@@ -146,7 +146,7 @@ test("a stale money reading on one side re-opens the asymmetry", () => {
   const stale = full({ moneyAgainst: { at: "2026-08-01" } });
   assert.equal(
     scoreMeasure(stale, TODAY).verdict,
-    "BLOCKED_ASYMMETRIC",
+    "ASYMMETRIC_COVERAGE",
     "an absence expires, and so does a presence — one side going stale is one side unshown",
   );
 });

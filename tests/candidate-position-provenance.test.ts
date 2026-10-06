@@ -28,7 +28,8 @@ test("Ask keeps source version, exact passage locator and source-stated date wit
 
 test("ballot card labels source versions and keeps source publication and read dates distinct", () => {
   const component = readFileSync(join(process.cwd(), "components", "ballot", "candidate-positions.tsx"), "utf8");
-  assert.match(component, /From campaign and official pages/);
+  assert.match(component, /CardSourcesContribution/);
+  assert.doesNotMatch(component, /new URL\(passage.documentUrl\).hostname/);
   assert.match(component, /earlier captured version/);
   assert.match(component, /latest captured version/);
   assert.match(component, /source-stated publication date/);

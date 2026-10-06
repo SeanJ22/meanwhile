@@ -157,7 +157,6 @@ export const MIRRORED_DOCS = [
   { mirrorName: "tracker.xlsx", repoPath: "docs/tracker.xlsx", binary: true },
   { mirrorName: "tracker.md", repoPath: "docs/tracker.md" },
   { mirrorName: "log.md", repoPath: "docs/log.md" },
-  { mirrorName: "gap-ledger.md", repoPath: "docs/gap-ledger.md" },
   /*
    * **JOINED 2026-08-30 (Session A, Work Item 7).**
    * The generated repo inventory: `pnpm repo-map` renders the tree, the

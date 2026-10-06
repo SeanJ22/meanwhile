@@ -1,0 +1,254 @@
+{
+  "division": [
+    {
+      "key": "county",
+      "label": "county",
+      "tier": "local"
+    },
+    {
+      "key": "place",
+      "label": "place",
+      "tier": "local"
+    },
+    {
+      "key": "school_district",
+      "label": "school district",
+      "tier": "local"
+    },
+    {
+      "key": "sldu",
+      "label": "sldu",
+      "tier": "state"
+    },
+    {
+      "key": "sldl",
+      "label": "sldl",
+      "tier": "state"
+    },
+    {
+      "key": "cd",
+      "label": "cd",
+      "tier": "national"
+    },
+    {
+      "key": "special_district",
+      "label": "special district",
+      "tier": "local"
+    },
+    {
+      "key": "fire_district",
+      "label": "fire district",
+      "tier": "local"
+    },
+    {
+      "key": "water_district",
+      "label": "water district",
+      "tier": "local"
+    },
+    {
+      "key": "sanitation_district",
+      "label": "sanitation district",
+      "tier": "local"
+    }
+  ],
+  "body": [
+    {
+      "key": "GOVERNING",
+      "label": "governing"
+    },
+    {
+      "key": "ADVISORY",
+      "label": "advisory"
+    },
+    {
+      "key": "COMMISSION",
+      "label": "commission"
+    },
+    {
+      "key": "REGIONAL",
+      "label": "regional"
+    },
+    {
+      "key": "PRIVATE_ASSOCIATION",
+      "label": "private association"
+    },
+    {
+      "key": "EXECUTIVE_AGENCY",
+      "label": "executive agency"
+    },
+    {
+      "key": "SOVEREIGN_TRIBAL",
+      "label": "sovereign tribal"
+    },
+    {
+      "key": "SPECIAL_DISTRICT",
+      "label": "Special district body"
+    }
+  ],
+  "office": [
+    {
+      "key": "us-senator",
+      "label": "us senator"
+    },
+    {
+      "key": "us-representative",
+      "label": "us representative"
+    },
+    {
+      "key": "state-senator",
+      "label": "state senator"
+    },
+    {
+      "key": "state-representative",
+      "label": "state representative"
+    },
+    {
+      "key": "county-commissioner",
+      "label": "county commissioner"
+    },
+    {
+      "key": "school-board",
+      "label": "school board"
+    },
+    {
+      "key": "superintendent",
+      "label": "superintendent"
+    },
+    {
+      "key": "mayor",
+      "label": "mayor"
+    },
+    {
+      "key": "city-council",
+      "label": "city council"
+    },
+    {
+      "key": "select-board",
+      "label": "select board"
+    },
+    {
+      "key": "nj-municipal-governing-body",
+      "label": "nj municipal governing body"
+    },
+    {
+      "key": "governor",
+      "label": "governor"
+    },
+    {
+      "key": "executive-councilor",
+      "label": "executive councilor"
+    },
+    {
+      "key": "secretary-of-state",
+      "label": "secretary of state"
+    },
+    {
+      "key": "attorney-general",
+      "label": "attorney general"
+    },
+    {
+      "key": "state-treasurer",
+      "label": "state treasurer"
+    },
+    {
+      "key": "superintendent-public-instruction",
+      "label": "superintendent public instruction"
+    },
+    {
+      "key": "mine-inspector",
+      "label": "mine inspector"
+    },
+    {
+      "key": "corporation-commissioner",
+      "label": "corporation commissioner"
+    },
+    {
+      "key": "county-sheriff",
+      "label": "county sheriff"
+    },
+    {
+      "key": "county-attorney",
+      "label": "county attorney"
+    },
+    {
+      "key": "county-treasurer",
+      "label": "county treasurer"
+    },
+    {
+      "key": "register-of-deeds",
+      "label": "register of deeds"
+    },
+    {
+      "key": "register-of-probate",
+      "label": "register of probate"
+    },
+    {
+      "key": "county-surrogate",
+      "label": "county surrogate"
+    },
+    {
+      "key": "county-clerk",
+      "label": "county clerk"
+    }
+  ],
+  "statement": [
+    {
+      "key": "OFFICIAL_PAGE",
+      "label": "official page"
+    },
+    {
+      "key": "CAMPAIGN_SITE",
+      "label": "campaign site"
+    },
+    {
+      "key": "FILING",
+      "label": "filing"
+    },
+    {
+      "key": "VOTER_GUIDE",
+      "label": "voter guide"
+    },
+    {
+      "key": "NEWS",
+      "label": "news"
+    },
+    {
+      "key": "SOCIAL_POST",
+      "label": "social post"
+    },
+    {
+      "key": "FORUM_OR_QUESTIONNAIRE",
+      "label": "forum or questionnaire"
+    },
+    {
+      "key": "MINUTES",
+      "label": "minutes"
+    },
+    {
+      "key": "ENDORSEMENT",
+      "label": "endorsement"
+    }
+  ],
+  "measurePart": [
+    {
+      "key": "FUNDING",
+      "label": "funding"
+    },
+    {
+      "key": "PROGRAM",
+      "label": "program"
+    },
+    {
+      "key": "OVERSIGHT",
+      "label": "oversight"
+    },
+    {
+      "key": "SUNSET",
+      "label": "sunset"
+    },
+    {
+      "key": "START",
+      "label": "start"
+    }
+  ]
+}

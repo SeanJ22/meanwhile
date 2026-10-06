@@ -8,6 +8,7 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
+import { PlacePublicRecords } from "../public-records";
 import { MeetingCard } from "@/components/ui/meeting-card";
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -212,6 +213,7 @@ export interface PlaceCardData {
 
 /** Everything the modal renders, whichever entity opened it. */
 export interface ModalSubject {
+  publicRecordsDivisionId?: string | null;
   title: string;
   subtitle: string;
   tier: Tier;
@@ -434,8 +436,17 @@ function PlaceSections({
           ))}
         </ul>
       )}
+      <PublicRecordSection subject={subject} />
     </div>
   );
+}
+
+function PublicRecordSection({ subject }: { subject: ModalSubject }) {
+  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
+  if (subject.subjectKind === "MEETING" || !divisionId) return null;
+  return <CardSection title="Public records">
+    <PlacePublicRecords key={divisionId} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
+  </CardSection>;
 }
 
 function BodySections({
@@ -646,6 +657,7 @@ function BodySections({
               control was the thing that let the tabbed card ship a clipped one
               while the body card's was fine.
             */}
+            {section.id === "sources" && <PublicRecordSection subject={subject} />}
             <CardSection title={section.title} meta={section.meta} keepMounted={section.id === "sources"}>
               <div data-card-sources={section.id === "sources" ? "" : undefined}>{section.content ?? <WorkingOnIt subject={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null} />}</div>
             </CardSection>
@@ -906,6 +918,7 @@ export function EntityModal({
                 onOpenHolder={onOpenHolder} showTopOffices={runsSomething(subject.divisionKind)} />
             </CardSection>
             {subject.subjectKind !== "MEETING" && <CardSection title={listingCount.heading}><Meetings meetings={subject.meetings} /></CardSection>}
+            <PublicRecordSection subject={subject} />
             <CardSection title="Sources" meta={sourceCount}><Sources sources={allSources} /></CardSection>
           </CardSectionGroup>
         </div>

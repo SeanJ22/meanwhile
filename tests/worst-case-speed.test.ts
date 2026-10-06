@@ -51,6 +51,8 @@ test("a recorded pass reaches the Scoreboard row with each surface's verdict; wi
   const row = buildScoreboard({ places: null, placesUnread: 0, orders: null, publication: null, shutDoors: null, returning: null, doors: null, gates: null, readiness: [],
     learning: v6LearningView(buildLearningTrends([], NOW), null), speed: pass }).rows.find((r) => r.id === "Site speed and reliability")!;
   assert.equal(row.value, "1 of 2");
-  assert.equal(row.items?.[0], 'Too slow: Ask "Who gives money to my member of Congress?" at 00001 on a phone: slowest of 1 visit took 4.1 seconds, over the 3.0 seconds limit.');
-  assert.match(row.items?.[1] ?? "", /^Within the limit: The ballot page at 00001 on a phone/);
+  assert.equal(row.items?.[0], "Ask: 1 of 1 visits over 3 seconds");
+  assert.equal(row.items?.[1], "The ballot page: 0 of 1 visits over 3 seconds");
+  assert.equal(row.items?.[2], 'Too slow: Ask "Who gives money to my member of Congress?" at 00001 on a phone: slowest of 1 visit took 4.1 seconds, over the 3.0 seconds limit.');
+  assert.match(row.items?.[3] ?? "", /^Within the limit: The ballot page at 00001 on a phone/);
 });

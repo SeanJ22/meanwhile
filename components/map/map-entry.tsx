@@ -2,6 +2,9 @@
 
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 
+import { OfficeCard } from "./popup/office-card";
+import { useOfficePins } from "@/hooks/use-office-pins";
+import { groupOfficePins, type OfficeSite } from "@/lib/map/office-pins";
 import { useBodyOfficeLocations } from "@/hooks/use-body-office-locations";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { forgetCamera } from "@/lib/map/camera-memory";
@@ -325,6 +328,7 @@ function MapEntryInner() {
    * a Back gesture is about — always survives.
    */
   type LargeSurface =
+    | { kind: "office"; site: OfficeSite }
     | { kind: "entity"; subject: ModalSubject }
     | {
         kind: "official";
@@ -650,6 +654,8 @@ function MapEntryInner() {
     [pinned, ui, view],
   );
 
+  const officePins = useOfficePins(pinned?.coverage ?? null);
+  const officeSites = useMemo(() => groupOfficePins(officePins), [officePins]);
   const officeLocations = useBodyOfficeLocations(pinned?.coverage?.bodies ?? EMPTY_COVERED_BODIES, pinned?.meetings ?? EMPTY_MEETINGS);
   const venues = useMemo<Venue[]>(() => groupByVenue(meetings, pinned?.listingIdentity, officeLocations), [meetings, pinned?.listingIdentity, officeLocations]);
 
@@ -748,7 +754,9 @@ function MapEntryInner() {
   const openLarge = useCallback(
     (next: LargeSurface) => {
       captureEvent(
-        next.kind === "official"
+        next.kind === "office"
+          ? { type: "CARD_OPEN", cardId: `BODY:${next.site.offices[0].ownerId}`, cardKind: "BODY" }
+          : next.kind === "official"
           ? { type: "CARD_OPEN", cardId: `OFFICIAL:${next.holder.id}`, cardKind: "OFFICIAL" }
           : { type: "CARD_OPEN", cardId: `${next.subject.subjectKind}:${next.subject.subjectId}`, cardKind: next.subject.subjectKind },
       );
@@ -1693,7 +1701,9 @@ function MapEntryInner() {
   const cardKey = cardView
     ? cardView.kind === "large"
       ? `large:${largeStack.length}:${
-          cardView.surface.kind === "entity"
+          cardView.surface.kind === "office"
+            ? cardView.surface.site.id
+            : cardView.surface.kind === "entity"
             ? cardView.surface.subject.subjectId
             : cardView.surface.holder.id
         }`
@@ -2084,6 +2094,7 @@ function MapEntryInner() {
         );
       case "large": {
         const surface = cardView.surface;
+        if (surface.kind === "office") return <OfficeCard site={officeSites.find(site => site.id === surface.site.id) ?? surface.site} />;
         if (surface.kind === "entity") {
           const subject =
             surface.subject.divisionOcdId &&
@@ -2182,13 +2193,17 @@ function MapEntryInner() {
 
   const cardTone =
     cardView?.kind === "large"
-      ? cardView.surface.kind === "entity"
+      ? cardView.surface.kind === "office"
+        ? "var(--accent-local)"
+        : cardView.surface.kind === "entity"
         ? `var(--accent-${cardView.surface.subject.tier})`
         : `var(--accent-${cardView.surface.tier})`
       : undefined;
   const cardKicker =
     cardView?.kind === "large"
-      ? cardView.surface.kind === "official"
+      ? cardView.surface.kind === "office"
+        ? "Office"
+        : cardView.surface.kind === "official"
         ? "Battlecard"
         : cardView.surface.subject.subjectKind === "MEETING"
           ? "Meeting"
@@ -2250,6 +2265,15 @@ function MapEntryInner() {
             onViewportSettle={onViewportSettle}
             allowAutoFrame={view?.kind !== "settled"}
             focusStateOcdId={focusState.activeOcdId}
+            officeSites={officeSites}
+            selectedOfficeId={large?.kind === "office" ? large.site.id : null}
+            onSelectOffice={id => {
+              const site = officeSites.find(value => value.id === id);
+              if (!site) return;
+              dispatch({ type: "select/venue", key: null });
+              dispatch({ type: "select/district", ocdId: null, districtType: null });
+              openLarge({ kind: "office", site });
+            }}
             votingSites={votingPins}
             votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
@@ -2435,7 +2459,9 @@ function MapEntryInner() {
             kickerTone={cardTone}
             zip={clusterZip}
             recordId={cardView.kind === "large"
-              ? cardView.surface.kind === "entity"
+              ? cardView.surface.kind === "office"
+                ? cardView.surface.site.id
+                : cardView.surface.kind === "entity"
                 ? cardView.surface.subject.subjectId
                 : cardView.surface.holder.id
               : cardView.kind === "venue" ? cardView.venue.key : null}
@@ -2483,7 +2509,7 @@ function MapEntryInner() {
 /** The card's name for a view; also the "← Back to …" label. */
 function cardViewLabel(
   view:
-    | { kind: "large"; surface: { kind: "entity"; subject: ModalSubject } | { kind: "official"; holder: SeatHolder } }
+    | { kind: "large"; surface: { kind: "office"; site: OfficeSite } | { kind: "entity"; subject: ModalSubject } | { kind: "official"; holder: SeatHolder } }
     | { kind: "venue"; venue: Venue }
     | { kind: "door"; door: "bodies" | "districts" | "officials" }
     | { kind: "list" }
@@ -2491,7 +2517,9 @@ function cardViewLabel(
 ): string {
   switch (view.kind) {
     case "large":
-      return view.surface.kind === "entity"
+      return view.surface.kind === "office"
+        ? view.surface.site.name
+        : view.surface.kind === "entity"
         ? view.surface.subject.title
         : view.surface.holder.name;
     case "venue":
@@ -2756,6 +2784,7 @@ function bodySubject(
     // BC-11: the body id, never the display title — nine Morris County
     // governments answer to "Township Council".
     subjectId: body.bodyId,
+    publicRecordsDivisionId: body.ocdId,
     subjectKind: "BODY" as const,
     title: bodyDisplayName(body),
     subtitle: readerGovernmentName(body.divisionLabel, body.divisionType),
@@ -2946,6 +2975,7 @@ function placeSubject(
   return {
     // BC-11: a PLACE is not a body and not a person; the ocd-id is what it is.
     subjectId: ocdId,
+    publicRecordsDivisionId: ocdId,
     subjectKind: "BODY" as const,
     title: label,
     subtitle: divisionTypeLabel(divisionType),

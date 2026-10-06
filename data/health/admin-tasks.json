@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "about": "Plain-word tasks Sean does in Admin. Each starts on one view, has a success condition in plain words, and budgets for taps, words on screen and time to the first decision. FE-37 runs them with a minted session, using the same measurements and look reviewer as the resident tasks. No task names a particular place.",
+  "tasks": [
+    { "id": "start-a-mission", "title": "Start a mission", "start": "now", "success": "Sean can see where to start a mission, say what it is for, and see that it was accepted.", "tapBudget": 4, "wordBudget": 250, "decisionBudgetMs": 30000 },
+    { "id": "shift-focus", "title": "Shift focus to a different place or kind of work", "start": "now", "success": "Sean can change what the team works on first and see the change take effect in the queue.", "tapBudget": 4, "wordBudget": 250, "decisionBudgetMs": 30000 },
+    { "id": "schedule-an-order", "title": "Schedule an order for later", "start": "queue", "success": "Sean can give an order a time and see it waiting on the list with that time.", "tapBudget": 5, "wordBudget": 300, "decisionBudgetMs": 45000 },
+    { "id": "why-is-it-slow", "title": "Find out why something is slow", "start": "scoreboard", "success": "Sean can see which part is slow and the reason in a sentence, without reading a log.", "tapBudget": 3, "wordBudget": 250, "decisionBudgetMs": 30000 },
+    { "id": "what-was-fixed-today", "title": "Read what the team fixed today", "start": "changes", "success": "Sean can read today's fixes in plain words, newest first, each with what it changes for a reader.", "tapBudget": 2, "wordBudget": 300, "decisionBudgetMs": 20000 },
+    { "id": "decide-on-an-expense", "title": "Decide on a new expense", "start": "money", "success": "Sean can see what a new expense is for and what it costs against the budget, and approve or refuse it.", "tapBudget": 3, "wordBudget": 250, "decisionBudgetMs": 30000 }
+  ]
+}

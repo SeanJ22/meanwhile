@@ -1,3 +1,4 @@
+import { executiveActionKind, executiveActionFactIssue, type ExecutiveActionFact } from "../lib/officials/executive-action-contract.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { actionText, executiveActionStore } from "../lib/officials/executive-actions.ts";
@@ -54,4 +55,16 @@ test("a reused officeholder slot preserves unresolved identity on both official 
       assert.equal(answer.count, 0);
     }
   } finally { holder.name = originalName; }
+});
+
+
+test("CA-19: negative and proposed source kinds never become completed actions, and enactment does not imply signing", () => {
+  for (const words of ["not signed", "hasn't signed", "not vetoed", "proposed executive order", "draft proclamation", "veto override"]) assert.equal(executiveActionKind(words), null, words);
+  assert.equal(executiveActionKind("enacted without signature"), "BILL_ENACTED");
+  const row: ExecutiveActionFact = { id: "fixture-action", bodyId: "ocd-division/country:us/state:nh", ocdId: "ocd-division/country:us/state:nh",
+    officeholderId: "fixture-governor", officeholderName: "Source Governor", officeTitle: "Governor", kind: "BILL_SIGNED", kindLabel: "signed", designation: "HB 9",
+    title: null, occurredAt: null, sourceSentence: "Source Governor has not signed HB 9.", sourceUrl: "https://governor.example.gov/actions", documentUrl: null,
+    sourceOrg: "Governor", collectedAt: "2026-09-08T12:00:00Z", sourceHash: "a".repeat(64), sourceKind: "OFFICIAL" };
+  assert.match(executiveActionFactIssue(row) ?? "", /does not state.*signed/);
+  assert.equal(executiveActionFactIssue({ ...row, kind: "BILL_ENACTED", kindLabel: "enacted without signature", sourceSentence: "Source Governor: HB 9 was enacted without signature." }), null);
 });

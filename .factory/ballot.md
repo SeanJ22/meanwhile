@@ -3,7 +3,7 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-052086658733454ba3af891d884d700b
 lock: codex-ballot-052086658733454ba3af891d884d700b
-heartbeat: 2026-10-06T04:58:07Z
+heartbeat: 2026-10-06T05:07:02Z
 on_river: CA-20 CA-24 CA-30 CA-44 CA-45 CA-51 integrated through release ecf402600401783b094837c29e0c515eadbdb843; returned CA-30/51 repairs retained at 8760257.
 ready: none new; exact0fc6 20step batch integrated/tested by River458f0a196f52347b0c879a673c2f03069260922b; hooks/live acceptance retain separate status.
 checks: Exact0fc6: canonical FULL PASS 9631 registered/9620 pass/11 skip/0 failure/0 cancelled,1126 files,two workers,clean start,complete timings. Requested pnpm gates original10PASS/2build ENVFAIL (external dependency symlink rejected before compilation); both exact failed build commands retried PASS after local hard links to identical installed bytes, source unchanged. Default warm399/430,largestapp407/430; standalone PASS within unchanged ceilings; no offending reference/PRL/voting/bootstrap traces. Original gate record preserved unchanged. SystemChromium151 substitute, pinned1234 not executed. Certificate .factory/ballot-certificate-0fc6ef6d.json + full logs/manifests. Additional normal publication/card/Ask/inventory5/5PASS.
@@ -130,3 +130,5 @@ needs_hook: CA19 registry lib/doors/registry.ts registers admitted governor/legi
 resume_no_candidacy: Existing registry already supports NO_APPLICABLE_CANDIDACY; no registry/identity policy change. State action API now selects exact held executive directly, preserving exact candidacy bridges only for ballot targets. Actual worker/publication/cardAPI/Ask test with no applicable candidacy passes. Local f420 check was interrupted/superseded before full completion, NEVER published READY, all original/terminated manifests and logs retained. New frozen revision required.
 
 resume_optional_outage_repair: Local6569445e canonical FULL found own Ask regression: new optional executive-actions STORE_UNREACHABLE hid verified legacyAZ records. Interrupted/incomplete/failed attempt archived, NEVER published READY. New Ask fallback preserves independently held AZ facts plus availability gap; actual cardAPI likewise retains valid old42 while unavailable nonAZ family remains503. Original failed Ask control + normal nonAZ worker/Card/Ask2/2PASS; actual source-isolation/card API6/6PASS. No assertion weakened, no bootstrap/outage policy change. New exact revision required.
+
+resume_source_kind_repair: Literal not signed probe wrongly returned BILL_SIGNED; fixed classifier refuses negative/draft/proposed/pending/override labels and signed-kind source with explicit no signature. Enacted without signature stays BILL_ENACTED. Actual normal worker/Card/Ask, legacy source outage retention, original failing Ask and parser5/5PASS. Local2a81819e superseded/incomplete, original logs/manifests preserved, NEVER published READY. Final combined source verification next.

@@ -18,6 +18,7 @@ export interface ExecutiveActionFact {
   readonly sourceKind: string;
 }
 export function executiveActionKind(words: string): ExecutiveActionFactKind | null {
+  if (/\b(?:not|never|draft|proposed|pending|override|overridden)\b|n['’]t\b/i.test(words)) return null;
   const kinds = (Object.keys(EXECUTIVE_ACTION_KINDS) as ExecutiveActionFactKind[]).filter(kind => EXECUTIVE_ACTION_KINDS[kind].test(words));
   return kinds.length === 1 ? kinds[0] : null;
 }
@@ -32,6 +33,7 @@ export function executiveActionFactIssue(value: unknown): string | null {
   if (executiveActionKind(row.kindLabel) !== row.kind || !EXECUTIVE_ACTION_KINDS[row.kind]?.test(row.sourceSentence) ||
       ![row.officeholderName, row.designation].every(word => row.sourceSentence.includes(word)) ||
       !(row.title === null || row.title.trim() && row.sourceSentence.includes(row.title))) return "Executive action is not stated in its saved source words.";
+  if (row.kind === "BILL_SIGNED" && /\b(?:not|never|hasn['’]t|hadn['’]t|wasn['’]t)\s+(?:yet\s+)?(?:signed|approved)\b|\bunsigned\b/i.test(row.sourceSentence)) return "The source does not state that this bill was signed.";
   if (row.occurredAt !== null && (!/^\d{4}-\d{2}-\d{2}$/.test(row.occurredAt) || !Number.isFinite(Date.parse(row.occurredAt)) ||
       new Date(row.occurredAt).toISOString().slice(0, 10) !== row.occurredAt || !row.sourceSentence.includes(row.occurredAt))) return "Executive action date is not the valid date stated by its source.";
   return null;

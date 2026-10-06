@@ -13,7 +13,9 @@ import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-pol
 import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
-import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, scoutTransientDenial, unchangedScoutFailure } from "./scout-scheduling.ts";
+import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, scoutTransientDenial, scoutWalkedToNothing, unchangedScoutFailure } from "./scout-scheduling.ts";
+import { absenceExpiry, absenceUnlockFrom, isArguedAbsence } from "../scheduler/absence.ts";
+import { recordArguedAbsence } from "../scheduler/durable.ts";
 import { selectStandingLineages } from "./standing-lineage.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
@@ -22,7 +24,7 @@ import { isScheduled } from "../scheduler/obligation.ts";
 import type { FreshnessObligation } from "../scheduler/obligation.ts";
 import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
-import type { ScoutResult } from "../scheduler/scout-result.ts";
+import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkerResultRecord } from "./types.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
 import { needsSecondSource } from "../promotion/section3.ts";
@@ -269,6 +271,19 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       ...(runtime.authorizedSiblingHeldArtifactIdsFor?.(item) ?? [])])];
     let recoveryTaskId: string | null = null;
     let latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
+    /* CH-23 (DP-04, DP-06): a detective's argued absence holds the item on the owning obligation's absence clock, and is
+       walked again when it lapses or a new capability clears it; any other walk that found nothing goes to a detective. */
+    if (scoutWalkedToNothing(latest)) {
+      const walked=scoutHistory.find(result=>result.attemptId===latest!.id);
+      if (walked && isArguedAbsence(walked,MIN_DISTINCT_RUNGS)) {
+        const owner=await owningObligation(repos,item.id,task.id);
+        const until=owner ? owner.value.absentUntil ?? null : absenceExpiry(walked.recordedAt);
+        if (until && Date.parse(until)>Date.parse(now)) {
+          const unlock=owner?.value.absenceUnlock?.text;
+          return decision("BLOCKED",`A detective argued this record absent; it is walked again at ${until}${unlock ? `, or sooner if this appears: ${unlock}` : ""}.`,task);
+        }
+      }
+    }
     if (unchangedScoutFailure(latest)) return decision("BLOCKED", "The unchanged Scout request already failed; changed inputs or a repaired method must create its successor.", task);
     while(task.state==="DISPOSED" && latest?.outcome==="COMPLETED") {
       const lastScout=scoutHistory.find(result=>result.attemptId===latest!.id);
@@ -476,16 +491,43 @@ export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRunti
         // Charge the exact standing obligation that opened this WorkItem. A
         // synthetic Scout obligation without its Send marks would reserve the
         // hunt's dollars yet leave the append-only charge unattributed.
-        const owningOccurrences = await runtime.repos.occurrences.listWhere(["workItemId"], item.id);
-        const occurrence = owningOccurrences.find(row => row.value.routeTaskId === task.id)
-          ?? (owningOccurrences.length === 1 ? owningOccurrences[0] : null);
-        const owner = occurrence === null ? null : await runtime.repos.obligations.read(occurrence.value.obligationId);
+        const owner = await owningObligation(runtime.repos, item.id, task.id);
         const assignments = owner?.value.assignments ?? [];
-        return dispatchOne(runtime.repos,{obligation:{obligation:{id:task.id,subjectId:item.subject,recordClass:plan.contract.recordClass,
+        const dispatched = await dispatchOne(runtime.repos,{obligation:{obligation:{id:task.id,subjectId:item.subject,recordClass:plan.contract.recordClass,
           routeId:task.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null,assignments},nextDueAt:task.createdAt,cadenceHours:24,
           cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Canonical obligation needs source discovery"},routeTaskId:task.id,holder:`autonomous:SCOUT:${randomUUID()}`,
           now:now(),clock:now,leaseTtlMs:300_000,bound:{maxAttempts:3,maxWallMs:hunterWallLimitMs(),maxCostUnits:0},
           maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION,...proofChargeOf(item.project)});
+        if (owner && dispatched.attemptId) await recordCoordinatorAbsence(runtime.repos, { standInId: task.id, ownerId: owner.id, attemptId: dispatched.attemptId, now: now() });
+        return dispatched;
+}
+
+/** The standing obligation whose occurrence opened this work item, when one did. */
+async function owningObligation(repos: ControlPlaneRepositories, workItemId: string, routeTaskId: string) {
+  const owningOccurrences = await repos.occurrences.listWhere(["workItemId"], workItemId);
+  const occurrence = owningOccurrences.find(row => row.value.routeTaskId === routeTaskId)
+    ?? (owningOccurrences.length === 1 ? owningOccurrences[0] : null);
+  return occurrence === null ? null : await repos.obligations.read(occurrence.value.obligationId);
+}
+
+/**
+ * CH-23 (RULING 52/53, DP-04, DP-06): a coordinator Scout runs on a stand-in obligation keyed by its task, so a
+ * detective walk that argues the record absent is recorded here on the real obligation, with what would reopen it,
+ * exactly as the round records its own. Best effort: an absence that cannot be written leaves the record to re-walk.
+ */
+async function recordCoordinatorAbsence(repos: ControlPlaneRepositories,
+  input: { readonly standInId: string; readonly ownerId: string; readonly attemptId: string; readonly now: string }): Promise<void> {
+  try {
+    const attempt = await repos.attempts.read(input.attemptId);
+    if (!scoutWalkedToNothing(attempt?.value)) return;
+    const walked = (await repos.scoutResults.readWhere(input.standInId, ["attemptId"], input.attemptId)).at(-1);
+    if (!walked || !isArguedAbsence(walked, MIN_DISTINCT_RUNGS)) return;
+    const until = absenceExpiry(input.now);
+    await recordArguedAbsence(repos, { obligationId: input.ownerId, absentUntil: until, now: input.now, unlockWhen: absenceUnlockFrom(walked, until) });
+    console.log(`  argued absence recorded for ${input.ownerId} until ${until} (coordinator detective walk ${input.attemptId})`);
+  } catch (error) {
+    console.error(`  argued absence not recorded for ${input.ownerId} (${error instanceof Error ? error.message : String(error)}); it re-walks after its backoff`);
+  }
 }
 
 export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRuntime, options:{

@@ -10,16 +10,21 @@ import { readPlaceHistory } from "@/lib/control-plane/admin-view/place-history-r
 import type { PlaceHistoryPoint } from "@/lib/coverage/place-history.ts";
 import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
 import { neon } from "@neondatabase/serverless";
+import { missionStartOf } from "@/lib/control-plane/admin-view/mission-start.ts";
+import { owedKindUpdates } from "@/lib/control-plane/admin-view/updates-read.ts";
+import { addUpdates } from "@/lib/control-plane/updates.ts";
+import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 
-/** The target Sean set for this place, from the saved owner config. A config that cannot be read is no target, never a made-up one. */
-async function targetFor(placeKey: string): Promise<{ goalPercent: number; setAt: string } | null> {
+/** The saved owner config and what the place's own settings say: its target and when its mission started. A config that cannot be read is no target and no start, never a made-up one. */
+async function configFor(placeKey: string): Promise<{ target: { goalPercent: number; setAt: string } | null; missionStart: string | null; repos: ControlPlaneRepositories | null }> {
   try {
     const opened = await openControlPlane();
-    if (!opened.ok) return null;
+    if (!opened.ok) return { target: null, missionStart: null, repos: null };
     const row = await opened.repos.adminConfig.read(ADMIN_CONFIG_ID);
-    const t = row !== null && isAdminConfig(row.value) ? placeTargetOf(row.value, placeKey) : null;
-    return t ? { goalPercent: t.goalPercent, setAt: t.setAt } : null;
-  } catch { return null; }
+    const config = row !== null && isAdminConfig(row.value) ? row.value : null;
+    const t = config ? placeTargetOf(config, placeKey) : null;
+    return { target: t ? { goalPercent: t.goalPercent, setAt: t.setAt } : null, missionStart: missionStartOf(config, placeKey), repos: opened.repos };
+  } catch { return { target: null, missionStart: null, repos: null }; }
 }
 
 /** The place's daily points from the published snapshot. A history that cannot be read is no trend, never an invented one. */
@@ -65,5 +70,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (read.code === "NOT_A_PLACE" || read.code === "UNSUPPORTED_PLACE") return NextResponse.json(v6PlaceNotMeasured(params.get("scope")!, read.says, new Date().toISOString()), { headers: NO_STORE });
     return NextResponse.json({ code: read.code, says: read.says }, { status: 503, headers: NO_STORE });
   }
-  return NextResponse.json(v6PlaceSection(read, { group, states: status === null ? null : owedStatesOf(status), q, offset, limit }, await targetFor(read.placeKey), await historyFor(read.placeKey)), { headers: NO_STORE });
+  const { target, missionStart, repos } = await configFor(read.placeKey);
+  // New kinds of things found for a sent place join the updates feed, once each. A feed that cannot be written never fails the read.
+  if (repos !== null) {
+    try { await addUpdates(repos, owedKindUpdates({ placeKey: read.placeKey, placeLabel: read.label, rows: read.rows, missionStart }), read.observedAt); } catch { /* the feed is retried on the next read */ }
+  }
+  return NextResponse.json(v6PlaceSection(read, { group, states: status === null ? null : owedStatesOf(status), q, offset, limit }, target, await historyFor(read.placeKey), missionStart), { headers: NO_STORE });
 }

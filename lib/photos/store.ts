@@ -19,6 +19,16 @@ const runtime: PortraitRuntime = {
   },
 };
 
+/**
+ * FE-18: a resident-task screenshot goes in the same blob store, under its own
+ * `resident-tasks/` prefix, which the public portrait route never serves; only
+ * Admin's image route reads it.
+ */
+export async function storeRunScreenshot(key: string, bytes: Uint8Array, io: Pick<PortraitRuntime, "put"> = runtime): Promise<void> {
+  if (!key.startsWith("resident-tasks/")) throw Error("SCREENSHOT_KEY_OUTSIDE_PREFIX");
+  await io.put(key, bytes);
+}
+
 /** Reuse the existing portrait blob store and same-origin reader endpoint. */
 export async function storeVerifiedPortrait(name: string, sources: PortraitSources, now: string, io: PortraitRuntime = runtime): Promise<OfficeholderPhoto> {
   const sourceCheck = verifyPortraitSources(name, sources, now);

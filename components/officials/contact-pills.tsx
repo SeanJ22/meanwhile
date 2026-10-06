@@ -4,22 +4,21 @@ import { CheckedLink } from "@/components/ui/checked-link";
 import { useState } from "react";
 
 import { isFederalMember, useMemberDirectory } from "@/hooks/use-member-directory";
+import { useSocialPlatforms } from "@/hooks/use-social-platforms";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { campaignLinkKind, campaignLinkLabel } from "@/lib/officials/campaign-link-label";
 import { phoneChoicesFor, telHref } from "@/lib/officials/phone-numbers";
+import { accountLabel, PRIMARY_SOCIAL_PLATFORM_ID } from "@/lib/officials/social-platforms";
 
 import { PhoneChoiceModal } from "./phone-choice-modal";
 import {
   FacebookMark,
   FormMark,
   GlobeMark,
-  InstagramMark,
   MailMark,
-  MastodonMark,
   OfficialMark,
   PhoneMark,
-  XMark,
-  YouTubeMark,
+  SocialMark,
 } from "./channel-marks";
 
 /**
@@ -44,16 +43,18 @@ import {
  * - **They wrap, they never shrink.** Below a tap target a pill is a defect,
  *   so the row wraps at 390px rather than squeezing. `.contact-pill` has no
  *   flex-shrink and a 44px minimum.
- * - **Official accounts only.** The social pills come from the
- *   congress-legislators directory, whose own policy is offices' accounts
- *   rather than campaign accounts — which is the entire reason a social pill
- *   belongs on an officeholder's card. Nothing is backfilled from a campaign
- *   account.
+ * - **Every account says whose it is.** The social pills map over the
+ *   platform list (a setting) and the person's held accounts. The
+ *   congress-legislators directory supplies the office's own accounts; a
+ *   campaign or personal account, when one is held, says so on its pill.
  * - **The campaign site is labeled as one.** Always; it is never the primary
  *   link, and a social page serving as a campaign site says which platform it
  *   is (the Facebook-as-campaign-site rule) rather than being dressed as a
  *   website.
  */
+
+/** What a pill says when the account is not the office's own. */
+const KIND_NOTE: Record<string, string | undefined> = { OFFICIAL: undefined, CAMPAIGN: "campaign", PERSONAL_PUBLIC: "personal" };
 
 interface PillProps {
   href: string;
@@ -123,7 +124,7 @@ export function ContactPills({
   /**
    * `"primary"` is the small popup's set: phone, email, contact form,
    * official page, campaign site, and X. **The rest of the social row —
-   * Facebook, YouTube, Instagram, Mastodon — is large-card only**, because
+   * every other platform in the list — is large-card only**, because
    * a glance card answers "how do I reach them", and five
    * more accounts is the scatter it was sent back for. Nothing is padded
    * either way; an absent channel is still an absent pill.
@@ -135,7 +136,8 @@ export function ContactPills({
   layout?: "row" | "column";
   scope?: "all" | "primary";
 }) {
-  const social = holder.social ?? {};
+  const social = holder.social ?? [];
+  const platforms = useSocialPlatforms();
   const pills: React.ReactNode[] = [];
   const full = scope === "all";
   /**
@@ -299,65 +301,22 @@ export function ContactPills({
     );
   }
 
-  if (social.twitter) {
-    pills.push(
-      <Pill
-        key="x"
-        // The stored field is the source's `twitter`; it renders as X.
-        href={`https://x.com/${social.twitter}`}
-        label={`@${social.twitter}`}
-        mark={<XMark />}
-      />,
-    );
-  }
-
-  if (full && social.facebook) {
-    pills.push(
-      <Pill
-        key="facebook"
-        href={`https://facebook.com/${social.facebook}`}
-        label="Facebook"
-        mark={<FacebookMark />}
-      />,
-    );
-  }
-
-  if (full && (social.youtube || social.youtubeId)) {
-    pills.push(
-      <Pill
-        key="youtube"
-        href={
-          social.youtubeId
-            ? `https://youtube.com/channel/${social.youtubeId}`
-            : `https://youtube.com/${social.youtube}`
-        }
-        label="YouTube"
-        mark={<YouTubeMark />}
-      />,
-    );
-  }
-
-  if (full && social.instagram) {
-    pills.push(
-      <Pill
-        key="instagram"
-        href={`https://instagram.com/${social.instagram}`}
-        label="Instagram"
-        mark={<InstagramMark />}
-      />,
-    );
-  }
-
-  if (full && social.mastodon) {
-    pills.push(
-      <Pill
-        key="mastodon"
-        // The directory stores a full handle including the instance.
-        href={mastodonUrl(social.mastodon)}
-        label="Mastodon"
-        mark={<MastodonMark />}
-      />,
-    );
+  // One pill per held account, in the platform list's order. A platform not in
+  // the list shows no pill; an account of another kind says so on its pill.
+  for (const platform of platforms) {
+    if (!full && platform.id !== PRIMARY_SOCIAL_PLATFORM_ID) continue;
+    for (const account of social) {
+      if (account.platform !== platform.id) continue;
+      const kind = KIND_NOTE[account.accountKind];
+      pills.push(
+        <Pill
+          key={`${platform.id}:${account.url}`}
+          href={account.url}
+          label={kind ? `${accountLabel(platform, account)} (${kind})` : accountLabel(platform, account)}
+          mark={<SocialMark iconKey={platform.iconKey} />}
+        />,
+      );
+    }
   }
 
   if (pills.length === 0) {
@@ -399,9 +358,3 @@ function hostOf(url: string): string {
   }
 }
 
-/** `@name@instance.tld` → the instance's own profile URL. */
-function mastodonUrl(handle: string): string {
-  const parts = handle.replace(/^@/, "").split("@");
-  if (parts.length === 2) return `https://${parts[1]}/@${parts[0]}`;
-  return handle.startsWith("http") ? handle : `https://mastodon.social/@${parts[0]}`;
-}

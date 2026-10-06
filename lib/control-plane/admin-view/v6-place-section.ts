@@ -6,6 +6,7 @@ import type { PlaceOwedRead } from "./place-owed-read.ts";
 import type { RowStatuses } from "../../coverage/place-statuses.ts";
 import { trendOf, type PlaceHistoryPoint, type PlaceTrend } from "../../coverage/place-history.ts";
 import type { NotCaptured, PlaceMeasures } from "../../coverage/place-measures.ts";
+import { onStartingList, placeGrowth, type PlaceGrowth } from "../../coverage/place-growth.ts";
 import { peopleCoverage, peopleCoverageWords, type PeopleCoverage } from "../../coverage/people-coverage.ts";
 import { coverageWords, placeCoverage, type PlaceCoverage } from "../../coverage/place-coverage.ts";
 import { US_STATES } from "../readiness/catalog.ts";
@@ -62,6 +63,8 @@ export interface AdminV6PlaceScore {
   readonly profiles: { readonly words: string; readonly figures: PeopleCoverage };
   /** Governments, bodies, seats and people accounted for against what is expected; "total unknown" where it cannot be known. */
   readonly coverage: { readonly words: readonly string[]; readonly figures: PlaceCoverage };
+  /** Completeness on the starting list and on the grown list, side by side; null until the place has a mission start. */
+  readonly growth: PlaceGrowth | null;
 }
 export interface AdminV6PlaceItem {
   readonly key: string;
@@ -80,7 +83,9 @@ export interface AdminV6PlaceItem {
   readonly statuses: RowStatuses | null;
   /** When the next check is due for a blank awaiting publication or due for a refresh. */
   readonly nextCheckAt: string | null;
-  readonly actions: readonly { readonly kind: "send-agents"; readonly target: string; readonly label: string; readonly payload: { readonly words: string } }[];
+  /** When this blank started being owed, shown only when it was added after the mission started; null otherwise. */
+  readonly addedAt: string | null;
+  readonly actions: readonly { readonly kind: "send-agents" | "owed-decline"; readonly target: string; readonly label: string; readonly payload: Readonly<Record<string, string>> }[];
 }
 export interface AdminV6PlaceChecklistView {
   readonly profileVersion: string;
@@ -112,7 +117,7 @@ export function placeSendWords(placeKey: string, label: string, divisions: reado
   return sendWordsFor({ stateNames: [state], zip: term, subject: null, label: null });
 }
 
-function itemOf(item: OwedListItem, placeKey: string, words: string | null): AdminV6PlaceItem {
+function itemOf(item: OwedListItem, placeKey: string, words: string | null, missionStart: string | null): AdminV6PlaceItem {
   const status = STATUS_NAME[item.state];
   const open = item.state === "missing" || item.state === "stale";
   return {
@@ -131,13 +136,19 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
       proof: item.sourceUrl ? `Saved from ${item.sourceUrl}${item.checkedAt ? `, checked ${item.checkedAt}` : ""}.` : "—" }],
     sourceUrl: item.sourceUrl,
     statuses: item.statuses, nextCheckAt: item.statuses?.nextCheck ?? null,
-    actions: open && words !== null ? [{ kind: "send-agents", target: placeKey, label: "Send agents", payload: { words } }] : [],
+    addedAt: item.owedSince !== null && missionStart !== null && !onStartingList(item, missionStart) ? item.owedSince : null,
+    actions: [
+      ...(open && words !== null ? [{ kind: "send-agents" as const, target: placeKey, label: "Send agents", payload: { words } }] : []),
+      // A blank added after the mission started can be declined, with a reason; the starting list's own blanks cannot.
+      ...(item.owedSince !== null && missionStart !== null && !onStartingList(item, missionStart)
+        ? [{ kind: "owed-decline" as const, target: placeKey, label: "Decline", payload: { rows: JSON.stringify([{ rowId: item.key, subjectLabel: item.subject, requirement: item.requirement }]), what: item.requirement.split(" — ")[0] ?? item.requirement } }] : []),
+    ],
   };
 }
 
 export interface PlaceSectionQuery { readonly group: string | null; readonly states: readonly OwedState[] | null; readonly q: string | null; readonly offset: number; readonly limit: number }
 
-export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, target: { readonly goalPercent: number; readonly setAt: string } | null = null, history: readonly PlaceHistoryPoint[] = []): {
+export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, target: { readonly goalPercent: number; readonly setAt: string } | null = null, history: readonly PlaceHistoryPoint[] = [], missionStart: string | null = null): {
   readonly contract: typeof ADMIN_V6_CHECKLIST_CONTRACT; readonly scope: string; readonly revision: string; readonly asOf: string;
   readonly data: AdminV6PlaceChecklistView; readonly missingParts: readonly string[];
   readonly page: { readonly total: number; readonly nextCursor: string | null; readonly prevCursor: string | null };
@@ -159,10 +170,11 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
     asOf: read.observedAt,
     data: {
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
-      groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
+      groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions), missionStart)), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
         divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary, measures: score.measures, familyMeasures: score.familyMeasures, trend: trendOf(history, score.measures.completeness.percent, read.observedAt.slice(0, 10)), notCaptured: score.notCaptured, familyNotCaptured: score.familyNotCaptured,
           coverage: { words: coverageWords(coverage), figures: coverage },
+          growth: placeGrowth(rows, missionStart),
           profiles: { words: peopleCoverageWords(profiles), figures: profiles } },
     },
     missingParts: [

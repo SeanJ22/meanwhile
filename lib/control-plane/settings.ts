@@ -82,6 +82,19 @@ registerSetting({
 });
 
 /**
+ * SC-19's core information: the checklist items a county's residents most need, whose arrival the Scoreboard times from a mission's start.
+ * The starting value is the governments and their governing bodies (GOV-01, GOV-02), every seat's current holder (OFF-04) and each
+ * meeting's date (MTG-06). Changing it changes what the "time to core information live" figure waits for.
+ */
+export const CORE_ITEMS_SETTING = "scorecard.coreItems";
+export const CORE_ITEMS_DEFAULT: readonly string[] = ["GOV-01", "GOV-02", "OFF-04", "MTG-06"];
+registerSetting({
+  key: CORE_ITEMS_SETTING, label: "Core resident information", defaultValue: CORE_ITEMS_DEFAULT, readerFacing: false, control: "json",
+  validate: (value): value is readonly string[] => Array.isArray(value) && value.length > 0 && value.length <= 100
+    && value.every((id) => typeof id === "string" && /^[A-Z]{2,4}-[A-Za-z0-9]{1,6}$/.test(id)),
+});
+
+/**
  * Controls that existed before the settings map keep their own field and action,
  * and log into the same history so the Settings view shows their changes and undo.
  */

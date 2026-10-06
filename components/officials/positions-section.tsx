@@ -4,10 +4,8 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { CardSection } from "@/components/officials/card-section";
-import {
-  POSITION_TOPICS,
-  type PositionAnswer,
-} from "@/lib/corpus/positions";
+import { useStanceTopics } from "@/hooks/use-stance-topics";
+import type { PositionAnswer } from "@/lib/corpus/positions";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { sourceKindLabel } from "@/lib/corpus/source-kinds";
 
@@ -47,6 +45,7 @@ export function PositionsSection({
   /** The ballot already owns the Positions disclosure. */
   contentOnly?: boolean;
 }) {
+  const stanceTopics = useStanceTopics();
   const [topic, setTopic] = useState("");
   const [answer, setAnswer] = useState<
     (PositionAnswer & {
@@ -127,7 +126,7 @@ export function PositionsSection({
           className="mt-1.5 w-full rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 t-body placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
         />
         <div className="mt-1.5 flex flex-wrap gap-1.5">
-          {POSITION_TOPICS.map((t) => (
+          {stanceTopics.map((t) => (
             <button
               key={t}
               type="button"

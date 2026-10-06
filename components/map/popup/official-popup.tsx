@@ -23,6 +23,8 @@ import {
   KeyVotesSection,
   type KeyVoteRow,
 } from "@/components/officials/key-votes-section";
+import { PickedKeyVotesSection } from "@/components/officials/picked-key-votes";
+import type { PickedKeyVote } from "@/lib/votes/key-vote-picks";
 import { votedCount } from "@/lib/votes/participation";
 import { explainVoteQuestion } from "@/lib/votes/vote-explainers";
 import type { BillSummary } from "@/lib/votes/bill-summaries";
@@ -194,6 +196,7 @@ function RecentVotesInner({
   const [attribution, setAttribution] = useState<VoteAttribution | null>(null);
   const [chamber, setChamber] = useState<"house" | "senate" | null>(null);
   const [keyVotes, setKeyVotes] = useState<KeyVoteRow[]>([]);
+  const [pickedKeyVotes, setPickedKeyVotes] = useState<PickedKeyVote[]>([]);
   const [historicalVotes, setHistoricalVotes] = useState<MemberRollCall[]>([]);
   const [historyStatus, setHistoryStatus] = useState<"LOADING" | "COMPLETE" | "MORE" | "UNAVAILABLE">("LOADING");
   const [historyCursor, setHistoryCursor] = useState<string | null>(null);
@@ -221,11 +224,13 @@ function RecentVotesInner({
           attribution?: VoteAttribution;
           chamber?: "house" | "senate" | null;
           keyVotes?: KeyVoteRow[];
+          pickedKeyVotes?: PickedKeyVote[];
         };
         setVotes(payload.votes);
         setAttribution(payload.attribution ?? null);
         setChamber(payload.chamber ?? null);
         setKeyVotes(payload.keyVotes ?? []);
+        setPickedKeyVotes(payload.pickedKeyVotes ?? []);
       } catch {
         if (controller.signal.aborted) return;
         // An official state legislator whose promoted STATE_ROLL_CALL record is
@@ -363,8 +368,11 @@ function RecentVotesInner({
         recent={recent}
         recentMeta={votes ? `${showAll ? "all" : "last"} ${visibleVotes!.length}` : null}
         keyVotes={
-          chamber && keyVotes.length > 0 ? (
-            <KeyVotesSection chamber={chamber} rows={keyVotes} />
+          chamber && (keyVotes.length > 0 || pickedKeyVotes.length > 0) ? (
+            <>
+              {keyVotes.length > 0 && <KeyVotesSection chamber={chamber} rows={keyVotes} />}
+              <PickedKeyVotesSection picks={pickedKeyVotes} />
+            </>
           ) : null
         }
         /* F01 5.1 (2026-08-19): this used to be `keyVotes.length` — every

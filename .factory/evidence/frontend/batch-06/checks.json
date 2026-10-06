@@ -65,9 +65,10 @@
       "tests/admin-readiness-cell-state.test.ts",
       "tests/admin-v6-ui/mounted-live-transition.test.ts",
       "tests/beacon-guard.test.ts",
-      "tests/chromium-pin.test.ts"
+      "tests/chromium-pin.test.ts",
+      "tests/maptiler-barrier.test.ts"
     ],
-    "failures": 11,
+    "failures": 15,
     "result": "same failures as running FULL; pinned build1234 unavailable; legacy Admin style tests baseline on River"
   },
   "readySha": null

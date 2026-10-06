@@ -1,0 +1,60 @@
+
+> we-the-people@0.1.0 test /tmp/frontend-baseline
+> node scripts/ci-tests.mjs
+
+Affected tests: 1/1 files; SHA f545fcf9493def91294bccf219ed65071b2093b1
+tests/maptiler-barrier.test.ts
+  THIS RUN SPENDS EXTERNAL MAPTILER QUOTA. Both gates are open (WTP_PROVIDER_ACCESS=maptiler and the launch asked for it). At most 25 request(s) will be allowed to leave, and asking for one more fails the run.
+  This run asked to spend maptiler quota and WTP_PROVIDER_ACCESS does not say maptiler, so it is BLOCKED. Opting in is deliberate and both halves are required: set WTP_PROVIDER_ACCESS=maptiler for the one command that means to spend.
+  THIS RUN SPENDS EXTERNAL MAPTILER QUOTA. Both gates are open (WTP_PROVIDER_ACCESS=maptiler and the launch asked for it). At most 2 request(s) will be allowed to leave, and asking for one more fails the run.
+✖ THE PLANT: a guarded synthetic browser with a configured key does reach MapTiler (25.23195ms)
+✖ THE BARRIER: the same page, the same key, and nothing reaches the provider (4.346933ms)
+✖ the environment alone cannot open the barrier, and neither can the option alone (5.473796ms)
+✖ the ceiling is hard, and a run that blows it fails rather than reporting a result (4.080747ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3148.530929
+
+✖ failing tests:
+
+test at tests/maptiler-barrier.test.ts:149:1
+✖ THE PLANT: a guarded synthetic browser with a configured key does reach MapTiler (25.23195ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/maptiler-barrier.test.ts:164:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at tests/maptiler-barrier.test.ts:195:1
+✖ THE BARRIER: the same page, the same key, and nothing reaches the provider (4.346933ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/maptiler-barrier.test.ts:210:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests/maptiler-barrier.test.ts:236:1
+✖ the environment alone cannot open the barrier, and neither can the option alone (5.473796ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/maptiler-barrier.test.ts:245:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests/maptiler-barrier.test.ts:261:1
+✖ the ceiling is hard, and a run that blows it fails rather than reporting a result (4.080747ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/maptiler-barrier.test.ts:271:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+ ELIFECYCLE  Test failed. See above for more details.

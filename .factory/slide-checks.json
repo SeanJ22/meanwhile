@@ -1103,7 +1103,7 @@
   },
   "returned55fff18a": {
     "return": "fix:55fff18a",
-    "state": "firewall repaired; required FULL running",
+    "state": "READY, return repaired locally; River integration/live verification pending",
     "source": "b894d3fd2e3d00e979d18b8e263a8e988d71940f",
     "base": "6af6f8a504a7224131ad567f62f7b6f63cb52f08",
     "selector": {
@@ -1216,38 +1216,61 @@
     },
     "before": {
       "firewall": "FAIL, MEETING_PARTITION_AUTHORITY_GATE_MISSING",
-      "log": "/tmp/slide-return-firewall-before.log"
+      "log": "/tmp/slide-return-firewall-before.log",
+      "logSha256": "1179c56eaff12700ec465181e09051dcd48098baf487622dce62b190f7d925cf"
     },
     "repair": "Restore composite exact-sitting collapse with field reconciliation before day reconciliation; preserve source ancestry, aliases, losing evidence and carried accounting. Firewall unchanged.",
     "focused": {
       "tests": 24,
       "passed": 24,
       "failed": 0,
-      "log": "/tmp/slide-return-focused.log"
+      "log": "/tmp/slide-return-focused.log",
+      "logSha256": "72d33f2bd9bc68779564377178653f428cb614f774e1eb7992d76547bb79f95c"
     },
     "firewall": {
       "exitCode": 0,
       "findings": 0,
       "files": 7419,
       "productionContracts": 284,
-      "log": "/tmp/slide-return-firewall-after.log"
+      "log": "/tmp/slide-return-firewall-after.log",
+      "logSha256": "f9718460d5a318d7eef42b76d5e76f6b536c09fa51db250ab87aa7e51025629d"
     },
     "types": {
       "exitCode": 0,
       "log": "/tmp/slide-return-exact-types.log",
-      "sourceNote": "HEAD differs from source only in .factory coordination"
+      "sourceNote": "HEAD differs from source only in .factory coordination",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "lint": {
       "exitCode": 0,
       "errors": 0,
       "warnings": 68,
-      "log": "/tmp/slide-return-lint.log"
+      "log": "/tmp/slide-return-lint.log",
+      "logSha256": "2c3aaf0ff10dd8600564cad3ca4d0751b4242dc1443e2776a3ec9823f9acd4ad"
     },
     "full": {
-      "state": "running",
-      "manifestRoot": "/workspace/slide-validation/.scratch/ci",
+      "source": "b894d3fd2e3d00e979d18b8e263a8e988d71940f",
+      "manifest": ".factory/slide-return55fff18a-tests.json",
+      "summary": {
+        "schemaVersion": 1,
+        "kind": "run",
+        "durationMs": 1107678.97427,
+        "success": true,
+        "counts": {
+          "tests": 9491,
+          "failed": 0,
+          "passed": 9480,
+          "cancelled": 0,
+          "skipped": 11,
+          "todo": 0,
+          "topLevel": 9342,
+          "suites": 46
+        }
+      },
+      "files": 1097,
+      "exitCode": 0,
       "log": "/tmp/slide-return-full.log",
-      "source": "b894d3fd2e3d00e979d18b8e263a8e988d71940f"
+      "logSha256": "f7af98f89cc230d7405ec6b369fb4704b769a096738cf022edef4847b99c1116"
     },
     "limitations": [
       "Chromium151 substitute for unavailable pinned1234",

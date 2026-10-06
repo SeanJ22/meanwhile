@@ -711,10 +711,10 @@ test("a meetings route with a known address is carried by what the partition wir
   assert.equal(jurisdictionRequirements(REGISTRIES.az, REGISTRIES.az.jurisdictions.find((x) => x.id === "az:city:city-of-tucson")!).some((r) => r.source.recordClass === "MEETINGS"), false, "a DISCOVERY_OWED meetings source is discovery, not a route here");
 });
 
-test("the meetings-discovery provider emits exactly the materialized needs, in the gap ledger's shape", () => {
+test("the meetings-discovery provider emits exactly the materialized needs, in the registry derivation's shape", () => {
   const empty = meetingsDiscoveryProvider().enumerate({ root: ROOT, nowIso: T0 });
   assert.equal(empty.obligations.length, 0);
-  assert.match(empty.emptyReason ?? "", /gap ledger/);
+  assert.match(empty.emptyReason ?? "", /mission map/);
 
   const unreadable = meetingsDiscoveryProvider({ materialized: () => ({ unreadable: "store down" }) }).enumerate({ root: ROOT, nowIso: T0 });
   assert.match(unreadable.readFailure ?? "", /could not be read \(store down\)/);

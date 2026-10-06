@@ -166,7 +166,10 @@
  * built online (`CREATE INDEX CONCURRENTLY`), as versions 18 and 20 are.
  * Additive: no table, column or statement moved.
  */
-export const BOOTSTRAP_VERSION = 22;
+// Version 23 adds the RouteTask indexes for Attempts and leases: `listWhere(["routeTaskId"])` (the
+// coordinator's attempt lookup, model batches, cycle selection) scanned the whole table on every call
+// (2026-10-06: 130,945 full scans of cp_attempts). Built online. Additive.
+export const BOOTSTRAP_VERSION = 23;
 
 /**
  * The tables, and the shape each one carries.
@@ -601,9 +604,15 @@ export const CHANGED_AT_INDEXES: readonly OnlineIndex[] = [
   "cp_log_artifacts", "cp_log_scout_results", "cp_log_worker_results", "cp_log_costs",
 ].map(table => onlineIndex(`${table}_changed_at`, `${table} (changed_at)`));
 
+/** Version 23: the RouteTask lookups, on the exact expression `listWhere(["routeTaskId"])` sends. */
+export const ROUTE_TASK_INDEXES: readonly OnlineIndex[] = [
+  onlineIndex("cp_attempts_route_task", "cp_attempts ((value #>> '{routeTaskId}'))"),
+  onlineIndex("cp_leases_route_task", "cp_leases ((value #>> '{routeTaskId}'))"),
+];
+
 /** Every index the bootstrap builds online, by its DDL statement. */
 export const ONLINE_INDEXES: ReadonlyMap<string, OnlineIndex> = new Map(
-  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES].map(index => [index.ddl, index] as const));
+  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES, ...ROUTE_TASK_INDEXES].map(index => [index.ddl, index] as const));
 
 export const BOOTSTRAP_DDL: readonly string[] = [
   `CREATE TABLE IF NOT EXISTS cp_schema_version (
@@ -848,6 +857,8 @@ END $$;`,
   CHANGED_AT_TOUCH_FUNCTION_DDL,
   ...CHANGED_AT_TABLES.map(changedAtColumnDdl),
   ...CHANGED_AT_INDEXES.map(index => index.ddl),
+  // Version 23: the RouteTask lookups for Attempts and leases.
+  ...ROUTE_TASK_INDEXES.map(index => index.ddl),
 ];
 
 /**

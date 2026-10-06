@@ -13,7 +13,7 @@ import { CardSourcesList } from "@/components/officials/card-sources-list";
  * it, and it does not say whether it is true.
  */
 export const TAGLINE_SOURCE_NOTE =
-  "The line beside this candidate's name on the ballot page is quoted from the campaign's own website, and is labelled there with the site it came from and the date we read it.";
+  "The line beside this candidate's name on the ballot page is quoted from the campaign's own website, with its published source retained under Sources.";
 
 export function CandidateContact({
   card,

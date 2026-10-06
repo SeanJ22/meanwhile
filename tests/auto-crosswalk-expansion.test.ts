@@ -68,7 +68,7 @@ import {
   paidDiscoveryHold,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
-import { recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
+import { meetingsDiscoveryNeeds } from "../lib/hunt/meetings-discovery.ts";
 import { readMeetingsProjection } from "../lib/meetings/snapshot.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS, registrationTarget } from "../lib/registration/publication.ts";
@@ -181,18 +181,18 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     `${MEETINGS_DISCOVERY_NAMESPACE}${COUNTY}#own-site-meetings`,
   ], `the Send wrote ${applied.written.length} row(s)`);
 
-  /* 2. The free walk goes first. The committed ledger holds no Ohio government; the dispatched needs are walked anyway. */
+  /* 2. The free walk goes first on the dispatched needs, ahead of any mission's blanks. */
   const materialized = materializedDiscoveryNeeds(ids, (state) => {
     if (state !== "oh") throw new Error(`OPERATIONAL_REFERENCE_STATE_NOT_REGISTERED:${state}`);
     return OH;
   });
   assert.deepEqual(materialized.failures, []);
   const dispatched = materialized.entries.map((e) => ({ ...e.need, addressSource: { source: "OPERATIONAL_REFERENCE" as const, versionId: "ref-oh-1" } }));
-  const ledger = recordedMeetingsDiscovery(JSON.parse(readFileSync(join(ROOT, "data/derived/gap-ledger.json"), "utf8")));
-  assert.ok(!("unreadable" in ledger));
-  if ("unreadable" in ledger) return;
-  assert.equal(ledger.needs.some((n) => n.stateCode.toUpperCase() === "OH"), false, "the committed ledger holds no Ohio government");
-  const needs = discoveryNeedsToWalk(ledger.needs, dispatched);
+  /* Another Send's mission blanks, in another state, walk after the dispatched needs (CH-21). */
+  const azRegistry = JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")) as JurisdictionRegistry;
+  const mission = meetingsDiscoveryNeeds([azRegistry]);
+  assert.equal(mission.some((n) => n.stateCode.toUpperCase() === "OH"), false, "the other mission holds no Ohio government");
+  const needs = discoveryNeedsToWalk(mission, dispatched);
   const subjects = dispatched.map((n) => ({ jurisdictionId: n.jurisdictionId, walkable: walkableByFreeWalk(n) }));
   const before = await readFreeDiscoveryWalks(repos, subjects);
   for (const id of ids) assert.equal(paidDiscoveryHold(id, before), null, "an unattempted free walk is no paid-admission prerequisite");

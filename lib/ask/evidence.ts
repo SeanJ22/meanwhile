@@ -1,5 +1,6 @@
 import type { AskGapCode, AskGapRecordClass } from "./gap-codes.ts";
 import type { AskIntent, AskTemporal } from "./intent.ts";
+import type { GovernmentBudgetFact } from "../civic-data/government-budget-contract.ts";
 
 /**
  * **THE EVIDENCE PACK — everything the synthesis rung is allowed to know.**
@@ -26,11 +27,13 @@ import type { AskIntent, AskTemporal } from "./intent.ts";
  */
 
 export interface EvidenceRecord {
+  governmentFinance?: GovernmentBudgetFact;
   /** Native meeting/document identity survives the Ask path unchanged. */
   meetingId?: string;
   documentId?: string;
   agendaDocument?: { contentHash: string; title: string | null; publicationIndex: boolean };
   kind:
+    | "GOVERNMENT_FINANCE"
     | "MEETING"
     | "AGENDA_ITEM"
     | "AGENDA_DOCUMENT"
@@ -195,10 +198,13 @@ export interface EvidenceRecord {
    */
   /** A roll call's own fields, beside its sentence (2026-09-29): what a composed vote answer states without re-reading the text. */
   rollCall?: { position: string; what: string; when: string; result: string };
+  stateDetailSource?: import("../funding/finance-detail-source.ts").FinanceDoorDetailSource;
+  fecDetailSource?: import("./fetch-through-key.ts").FinanceDetailSource;
   finance?: {
     jurisdiction: string; filingState: string;
     totals: { receipts: number | null; expenditures: number | null; cashOnHand: number | null; reportCount: number | null; coveringPeriod: string | null };
     registeredName?: string; agency?: string; electionYear?: number; checkedAt?: string;
+    funding?: import("../funding/state-money-funding.ts").StateMoneyFunding;
   };
   /**
    * **WHOSE RECORD THIS IS — the canonical body id.** (2026-08-29.)

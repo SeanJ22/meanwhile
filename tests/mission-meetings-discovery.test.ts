@@ -1,26 +1,26 @@
 /**
- * **A JURISDICTION'S MEETINGS DISCOVERY MOVES TO THE GAP LEDGER BEFORE ITS OLD
- * CLOCK RETIRES.** (2026-09-23.)
+ * **MEETINGS DISCOVERY FOLLOWS THE MISSION MAP; THE GAP LEDGER IS RETIRED.** (CH-21, 2026-10-05.)
  *
  * Since 902f5c50 no freshness obligation carries a jurisdiction's meetings
  * discovery: the local-jurisdictions provider opens no MEETINGS source. The
- * old `freshness:jurisdiction:<id>#meetings-N` rows sat outside the corpus,
- * 484 of them active on 2026-09-23, and the superseded planner's bound held
- * them all. The need did not end. The committed gap ledger now records it
- * (`data/derived/gap-ledger.json`, `meetingsDiscovery.needs`).
+ * old `freshness:jurisdiction:<id>#meetings-N` rows sit outside the corpus.
+ * Until CH-21 they retired against the committed gap ledger, and the free walk
+ * walked that ledger. Both now read the mission map (the owed rows).
  *
  * What these tests hold:
  *
- * - **The record.** The ledger lists a jurisdiction when every MEETINGS source
- *   its registry row carries is DISCOVERY_OWED, or it carries none. A ledger
- *   that is malformed, empty, duplicated or self-contradicting is UNREADABLE,
- *   never an empty list. The committed ledger reads.
- * - **Recorded first.** A meetings row retires only when the ledger lists its
- *   jurisdiction, with a reason naming the entry. An unlisted jurisdiction, an
- *   unreadable ledger or a provider that did not read cleanly holds it back by
- *   name, and it stays active.
- * - **Owned once.** The superseded planner never sees a meetings row, so the
- *   bound it keeps for sudden drops is not tripped by a need that moved.
+ * - **The derivation.** A jurisdiction is owed meetings discovery when every
+ *   MEETINGS source its registry row carries is DISCOVERY_OWED, or it carries none.
+ * - **A held route.** A body holds a calendar route when its calendar row (MTG-01)
+ *   or a meeting captured from it (MTG-12) holds a source; a government's statement
+ *   that it publishes nothing is not one.
+ * - **Mission blanks.** Every government in a mission place whose exact body holds
+ *   no route is owed discovery, in any state, with no dispatch; one whose body holds
+ *   a route is not; a state whose registry cannot be read is named.
+ * - **Evidence first.** An old meetings row retires only when its government's exact
+ *   body holds a calendar route, with a reason naming the body. No body join, no held
+ *   route, unread owed rows or a provider that did not read cleanly hold it back by name.
+ * - **Owned once.** The superseded planner never sees a meetings row.
  * - **Nothing else is written.** The occurrence closes unresolved, never with
  *   a disposition; the RouteTask, its lease, Attempts, commits and artifacts
  *   are not written, and nothing is deleted.
@@ -30,16 +30,14 @@
  */
 
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import {
   jurisdictionMeetingsSubject,
-  movedToGapLedgerReason,
+  heldCalendarRouteReason,
   openOccurrence,
-  planMovedToGapLedger,
+  planHeldRouteRetirement,
   planSupersededRetirement,
   settleRetirements,
   syncObligations,
@@ -47,23 +45,26 @@ import {
   type StandingObligation,
 } from "../lib/control-plane/scheduler/durable.ts";
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
-import {
-  GAP_LEDGER_PATH,
-  OWN_SITE_MEETINGS_SOURCE,
-  meetingsDiscoveryNeeds,
-  recordedMeetingsDiscovery,
-  type JurisdictionRegistryFile,
-} from "../lib/hunt/meetings-discovery.ts";
+import { OWN_SITE_MEETINGS_SOURCE, meetingsDiscoveryNeeds, type JurisdictionRegistryFile } from "../lib/hunt/meetings-discovery.ts";
+import { heldCalendarRouteBodies, missionMeetingsDiscoveryNeeds } from "../lib/hunt/mission-meetings-discovery.ts";
+import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import { buildPlaceOwedList, type HeldPlaceField, type PlaceSubject } from "../lib/coverage/place-owed.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
 const T0 = "2026-09-09T12:00:00.000Z"; // a cycle before 902f5c50 that opened a meetings occurrence and never reached it
-const T1 = "2026-09-23T19:00:00.000Z"; // the first cycle that reads the ledger
+const T1 = "2026-10-05T19:00:00.000Z"; // a cycle that reads the owed rows
 const AVONDALE = "az:city:city-of-avondale";
 const BENSON = "az:city:city-of-benson";
-const UNLISTED = "az:town:town-nowhere";
+const UNLISTED = "az:town:town-nowhere"; // its body holds no calendar route
+const NOBODY = "az:town:town-unjoined"; // no exact body join
 const meetingsRow = (jurisdictionId: string, n = 1) => `freshness:jurisdiction:${jurisdictionId}#meetings-${n}`;
 const CLERK = `freshness:jurisdiction:${AVONDALE}#candidate-filings-1`;
-const LEDGER = { path: GAP_LEDGER_PATH, recorded: { jurisdictionIds: new Set([AVONDALE, BENSON]) } } as const;
+const bodyOf = (jurisdictionId: string) => `ocd-division/country:us/state:az/place:${jurisdictionId.split(":")[2]}#governing`;
+const routesHeldFor = (held: readonly string[]) => ({
+  bodyIdFor: (id: string) => (id === NOBODY ? null : bodyOf(id)),
+  held: new Set(held.map(bodyOf)),
+});
+const ROUTES = routesHeldFor([AVONDALE, BENSON]);
 const CLEAN: ProviderReading = { providerId: "local-jurisdictions", units: 2, readFailure: null, emptyReason: null };
 
 function obligation(id: string): FreshnessObligation {
@@ -132,40 +133,89 @@ test("RECORD: a jurisdiction is owed meetings discovery until a MEETINGS source 
   );
 });
 
-test("RECORD: anything short of a well-formed ledger is unreadable, never an empty list", () => {
-  const need = (jurisdictionId: string) => ({
-    jurisdictionId, stateCode: "AZ", name: jurisdictionId.toUpperCase(), govClass: "CITY_OR_TOWN",
-    ownWebAddress: null, basis: "NO_MEETINGS_SOURCE_RECORDED", sources: [],
-  });
-  const readable = recordedMeetingsDiscovery({ meetingsDiscovery: { counts: { enumerated: 2 }, needs: [need(AVONDALE), need(BENSON)] } });
-  assert.ok("jurisdictionIds" in readable);
-  assert.deepEqual([...readable.jurisdictionIds], [AVONDALE, BENSON]);
+const NOW = "2026-10-05T18:00:00.000Z";
+const DIVISION = "ocd-division/country:us/state:oh/place:3918000";
+const OH_BODY = `${DIVISION}#governing`;
 
-  const unreadable: [unknown, RegExp][] = [
-    [null, /no meetingsDiscovery section/],
-    [{}, /no meetingsDiscovery section/],
-    [{ meetingsDiscovery: { counts: { enumerated: 0 }, needs: [] } }, /records no meetingsDiscovery\.needs/],
-    [{ meetingsDiscovery: { counts: { enumerated: 1 }, needs: [{ name: "x" }] } }, /a need with no jurisdictionId/],
-    [{ meetingsDiscovery: { counts: { enumerated: 2 }, needs: [need(BENSON), need(BENSON)] } }, /lists az:city:city-of-benson twice/],
-    [{ meetingsDiscovery: { counts: { enumerated: 3 }, needs: [need(AVONDALE), need(BENSON)] } }, /counts 3 needs and lists 2/],
-    [{ meetingsDiscovery: { counts: { enumerated: 1 }, needs: [{ ...need(AVONDALE), basis: "WIRED" }] } }, /malformed need for az:city:city-of-avondale/],
-    [{ meetingsDiscovery: { counts: { enumerated: 1 }, needs: [{ ...need(AVONDALE), ownWebAddress: 7 }] } }, /malformed need/],
-  ];
-  for (const [ledger, why] of unreadable) {
-    const answer = recordedMeetingsDiscovery(ledger);
-    assert.ok("unreadable" in answer, JSON.stringify(ledger));
-    assert.match(answer.unreadable, why);
+/** One mission place's owed rows: a body, and whatever was captured for it. */
+function owedRows(held: readonly HeldPlaceField[], subjects: readonly PlaceSubject[] = []) {
+  return buildPlaceOwedList({
+    divisions: [{ id: DIVISION, label: "Columbus" }],
+    subjects: [{ id: OH_BODY, kind: "body", captureKind: "registry-body", divisionIds: [DIVISION], label: "Columbus City Council" }, ...subjects],
+    held,
+    now: NOW,
+  });
+}
+
+test("HELD ROUTE: a body holds a calendar route when its calendar row or a meeting captured from it holds a source", () => {
+  const blank = owedRows([]);
+  assert.ok(blank.some((r) => r.subject.id === `${OH_BODY}#calendar` && r.checklistId === "MTG-01" && r.state === "missing"),
+    "the mission map owes the body a calendar route");
+  assert.deepEqual([...heldCalendarRouteBodies(blank)], [], "an open calendar blank is no route");
+
+  const field = (subjectId: string, checklistId: string, state: HeldPlaceField["state"] = "published"): HeldPlaceField =>
+    ({ subjectId, checklistId, state, sourceUrl: "https://columbus.example.gov/calendar", checkedAt: "2026-10-01T00:00:00.000Z", freshUntil: "2026-10-02T00:00:00.000Z" });
+  assert.deepEqual([...heldCalendarRouteBodies(owedRows([field(`${OH_BODY}#calendar`, "MTG-01")]))], [OH_BODY],
+    "the calendar row holds its route; a route due a refresh is still held");
+
+  const meeting: PlaceSubject = { id: "mtg-1", kind: "calendar", captureKind: "meeting", calendarBodyId: OH_BODY, divisionIds: [DIVISION], label: "Council", startsAt: "2026-10-06T22:00:00.000Z" };
+  assert.deepEqual([...heldCalendarRouteBodies(owedRows([field("mtg-1", "MTG-12")], [meeting]))], [OH_BODY],
+    "a meeting captured from the body's source shows its route is held");
+
+  assert.deepEqual([...heldCalendarRouteBodies(owedRows([field(`${OH_BODY}#calendar`, "MTG-01", "unpublished")]))], [],
+    "a statement that the government publishes nothing is not a route");
+});
+
+test("MISSION BLANKS: every government in a mission place whose body holds no route is owed discovery, in a state never worked before", () => {
+  const OH_CITY = "oh:city:columbus";
+  const OH_WIRED = "oh:county:franklin";
+  const OH_HELD = "oh:school:columbus-city";
+  const oh = {
+    stateCode: "OH",
+    registration: { kind: "REGISTRATION", versionId: "reg-oh-1", referenceSha256: "a".repeat(64), webAddresses: "x" },
+    sourceCatalog: {
+      [OWN_SITE_MEETINGS_SOURCE]: { recordClass: "MEETINGS", state: "DISCOVERY_OWED" },
+      "MEETINGS:COUNTY:legistar": { recordClass: "MEETINGS", state: "ADAPTED" },
+    },
+    jurisdictions: [
+      { id: OH_CITY, stateCode: "OH", name: "CITY OF COLUMBUS", govClass: "CITY_OR_TOWN", ownWebAddress: "https://columbus.example.gov", sourceIds: [OWN_SITE_MEETINGS_SOURCE], bodyId: OH_BODY },
+      { id: OH_WIRED, stateCode: "OH", name: "FRANKLIN COUNTY", govClass: "COUNTY", ownWebAddress: "https://franklin.example.gov", sourceIds: ["MEETINGS:COUNTY:legistar"] },
+      { id: OH_HELD, stateCode: "OH", name: "COLUMBUS CITY SCHOOLS", govClass: "SCHOOL_DISTRICT", ownWebAddress: "https://ccs.example.org", sourceIds: [OWN_SITE_MEETINGS_SOURCE] },
+    ],
+  } as unknown as JurisdictionRegistry;
+  const bodies: Record<string, string> = { [OH_CITY]: OH_BODY, [OH_HELD]: `${DIVISION}#board` };
+  const read = missionMeetingsDiscoveryNeeds({
+    jurisdictionIds: [DIVISION, OH_CITY, OH_WIRED, OH_HELD, "nv:city:las-vegas", `${OH_BODY}#calendar`],
+    registryFor: (state) => {
+      if (state === "oh") return oh;
+      throw new Error(`REGISTRATION_NOT_READ:${state}`);
+    },
+    bodyIdFor: (id) => bodies[id] ?? null,
+    heldRoutes: new Set([`${DIVISION}#board`]),
+  });
+  assert.deepEqual(read.entries.map((e) => e.need.jurisdictionId), [OH_CITY], "the city's calendar blank is owed; a wired county has no need");
+  assert.equal(read.entries[0]!.need.ownWebAddress, "https://columbus.example.gov");
+  assert.deepEqual(read.heldRoute, [OH_HELD], "a government whose body holds a route is not walked again");
+  assert.equal(read.failures.length, 1);
+  assert.match(read.failures[0]!, /the NV jurisdiction registry could not be read/);
+
+  const unjoined = missionMeetingsDiscoveryNeeds({ jurisdictionIds: [OH_CITY], registryFor: () => oh, bodyIdFor: () => null, heldRoutes: new Set([OH_BODY]) });
+  assert.deepEqual(unjoined.entries.map((e) => e.need.jurisdictionId), [OH_CITY], "with no exact body join nothing shows a route, so the blank stays open");
+});
+
+test("THE RUNNER IS WIRED: the walk takes the mission's blanks, retirement reads held routes, and the gap ledger is gone", async () => {
+  const { readFileSync, existsSync } = await import("node:fs");
+  const runner = readFileSync("scripts/freshness-shadow.mts", "utf8");
+  assert.match(runner, /const mission = missionMeetingsDiscoveryNeeds\(\{\n\s+jurisdictionIds: scopes\.flatMap\(scope => \[\.\.\.scope\.members\]\),/, "each wave reads every Send's places");
+  assert.match(runner, /heldRoutes: heldCalendarRouteBodies\(places\.flatMap\(place => place\.items\)\),/, "from the same owed rows the place order reads");
+  assert.match(runner, /: planHeldRouteRetirement\(\{/, "old meetings rows retire on held routes");
+  assert.doesNotMatch(runner, /gapLedger|GAP_LEDGER|gap-ledger/, "the runner no longer reads the ledger");
+  for (const path of ["scripts/build-gap-ledger.mts", "docs/gap-ledger.md", "data/derived/gap-ledger.json"]) {
+    assert.equal(existsSync(path), false, `${path} is retired`);
   }
 });
 
-test("RECORD: the committed ledger reads, and lists the jurisdictions the runner will retire against", () => {
-  const committed = recordedMeetingsDiscovery(JSON.parse(readFileSync(join(process.cwd(), GAP_LEDGER_PATH), "utf8")));
-  assert.ok("jurisdictionIds" in committed, "unreadable" in committed ? committed.unreadable : "");
-  assert.ok(committed.jurisdictionIds.has(AVONDALE));
-  assert.ok(committed.jurisdictionIds.has(BENSON));
-});
-
-test("PLAN: a meetings row retires only when the ledger lists its jurisdiction; every other one is held back by name", () => {
+test("PLAN: a meetings row retires only when its government's exact body holds a calendar route; every other one is held back by name", () => {
   assert.equal(jurisdictionMeetingsSubject(meetingsRow(AVONDALE, 2)), AVONDALE);
   assert.equal(jurisdictionMeetingsSubject(CLERK), null);
   assert.equal(jurisdictionMeetingsSubject("freshness:meetings:legacy-body"), null);
@@ -174,58 +224,62 @@ test("PLAN: a meetings row retires only when the ledger lists its jurisdiction; 
     stored(meetingsRow(AVONDALE)),
     stored(meetingsRow(BENSON, 2)),
     stored(meetingsRow(UNLISTED)),
+    stored(meetingsRow(NOBODY)),
     stored(meetingsRow("az:city:already-retired"), { active: false }),
     stored(`freshness:jurisdiction:${BENSON}#clerk-1`),
   ];
-  const plan = planMovedToGapLedger({ outside, corpus, providers: [CLEAN], ledger: LEDGER });
+  const plan = planHeldRouteRetirement({ outside, corpus, providers: [CLEAN], routes: ROUTES });
   assert.deepEqual(plan.retire, [
-    { obligationId: meetingsRow(AVONDALE), reason: movedToGapLedgerReason(GAP_LEDGER_PATH, AVONDALE) },
-    { obligationId: meetingsRow(BENSON, 2), reason: movedToGapLedgerReason(GAP_LEDGER_PATH, BENSON) },
+    { obligationId: meetingsRow(AVONDALE), reason: heldCalendarRouteReason(AVONDALE, bodyOf(AVONDALE)) },
+    { obligationId: meetingsRow(BENSON, 2), reason: heldCalendarRouteReason(BENSON, bodyOf(BENSON)) },
   ]);
-  assert.match(plan.retire[0].reason, /^MOVED TO THE GAP LEDGER: .*still owed\. data\/derived\/gap-ledger\.json records it \(meetingsDiscovery\.needs, az:city:city-of-avondale\).*Nothing was discovered$/);
-  assert.deepEqual(plan.heldBack.map((h) => [h.obligationId, h.code]), [[meetingsRow(UNLISTED), "NOT_RECORDED_IN_LEDGER"]]);
-  assert.match(plan.heldBack[0].why, /does not list az:town:town-nowhere/);
+  assert.match(plan.retire[0].reason, /^CALENDAR ROUTE HELD: az:city:city-of-avondale's body ocd-division\/country:us\/state:az\/place:city-of-avondale#governing has a held calendar route/);
+  assert.deepEqual(plan.heldBack.map((h) => [h.obligationId, h.code]), [
+    [meetingsRow(UNLISTED), "NO_HELD_CALENDAR_ROUTE"],
+    [meetingsRow(NOBODY), "NO_EXACT_BODY"],
+  ]);
+  assert.match(plan.heldBack[0].why, /place:town-nowhere#governing holds no calendar route/);
   assert.deepEqual(
     [...plan.owned].sort(),
-    [meetingsRow("az:city:already-retired"), meetingsRow(AVONDALE), meetingsRow(BENSON, 2), meetingsRow(UNLISTED)].sort(),
+    [meetingsRow("az:city:already-retired"), meetingsRow(AVONDALE), meetingsRow(BENSON, 2), meetingsRow(UNLISTED), meetingsRow(NOBODY)].sort(),
     "every meetings row is owned here, retired or not; a non-meetings row is not",
   );
 
-  const inCorpus = planMovedToGapLedger({
+  const inCorpus = planHeldRouteRetirement({
     outside: [stored(meetingsRow(AVONDALE))],
     corpus: [...corpus, { providerId: "local-jurisdictions", obligationId: meetingsRow(AVONDALE) }],
     providers: [CLEAN],
-    ledger: LEDGER,
+    routes: ROUTES,
   });
   assert.deepEqual([inCorpus.retire, inCorpus.heldBack, [...inCorpus.owned]], [[], [], []], "a row a provider emits again is not retired");
 });
 
-test("PLAN: an unreadable ledger or a provider that did not read cleanly retires nothing", () => {
+test("PLAN: unread owed rows or a provider that did not read cleanly retire nothing", () => {
   const outside = [stored(meetingsRow(AVONDALE)), stored(meetingsRow(BENSON))];
-  const unreadable = planMovedToGapLedger({
+  const unreadable = planHeldRouteRetirement({
     outside,
     corpus,
     providers: [CLEAN],
-    ledger: { path: GAP_LEDGER_PATH, recorded: { unreadable: "data/derived/gap-ledger.json records no meetingsDiscovery.needs" } },
+    routes: { unreadable: "the held place capture could not be read (STORE_UNREACHABLE)" },
   });
   assert.deepEqual(unreadable.retire, []);
-  assert.deepEqual(unreadable.heldBack.map((h) => h.code), ["LEDGER_UNREADABLE", "LEDGER_UNREADABLE"]);
-  assert.match(unreadable.heldBack[0].why, /records no meetingsDiscovery\.needs/);
+  assert.deepEqual(unreadable.heldBack.map((h) => h.code), ["ROUTES_UNREAD", "ROUTES_UNREAD"]);
+  assert.match(unreadable.heldBack[0].why, /STORE_UNREACHABLE/);
 
-  const failing = planMovedToGapLedger({
+  const failing = planHeldRouteRetirement({
     outside,
     corpus,
     providers: [{ ...CLEAN, readFailure: "az jurisdictions projection read rejected" }],
-    ledger: LEDGER,
+    routes: ROUTES,
   });
   assert.deepEqual(failing.retire, []);
   assert.deepEqual(failing.heldBack.map((h) => h.code), ["PROVIDER_NOT_READ_CLEANLY", "PROVIDER_NOT_READ_CLEANLY"]);
 
-  const unowned = planMovedToGapLedger({ outside, corpus: [], providers: [CLEAN], ledger: LEDGER });
+  const unowned = planHeldRouteRetirement({ outside, corpus: [], providers: [CLEAN], routes: ROUTES });
   assert.deepEqual(unowned.heldBack.map((h) => h.code), ["NO_PROVIDER_NAMESPACE", "NO_PROVIDER_NAMESPACE"]);
 });
 
-test("PLAN: the superseded planner never sees a meetings row, so a moved need does not trip the bound", () => {
+test("PLAN: the superseded planner never sees a meetings row, so a met need does not trip the bound", () => {
   /* The production shape: the provider's meetings rows are 41% of its standing set. */
   const meetings = Array.from({ length: 4 }, (_, i) => stored(meetingsRow(i % 2 === 0 ? AVONDALE : BENSON, i + 1)));
   const stale = stored(`freshness:jurisdiction:${BENSON}#clerk-9`);
@@ -235,7 +289,7 @@ test("PLAN: the superseded planner never sees a meetings row, so a moved need do
   const alone = planSupersededRetirement({ outside, corpus: wide, providers: [CLEAN] });
   assert.deepEqual(alone.retire, [], "without the moved planner, 5 of 11 is over the bound");
 
-  const moved = planMovedToGapLedger({ outside, corpus: wide, providers: [CLEAN], ledger: LEDGER });
+  const moved = planHeldRouteRetirement({ outside, corpus: wide, providers: [CLEAN], routes: ROUTES });
   assert.equal(moved.retire.length, 4);
   const rest = planSupersededRetirement({ outside: outside.filter((row) => !moved.owned.has(row.id)), corpus: wide, providers: [CLEAN] });
   assert.deepEqual(rest.retire.map((r) => r.obligationId), [stale.id], "1 of 7 standing is inside the bound");
@@ -262,7 +316,7 @@ async function untouched(repos: ControlPlaneRepositories, routeTaskId: string, w
   };
 }
 
-test("SEEDED: a recorded jurisdiction's meetings row retires naming the ledger, its occurrence closes unresolved, and nothing else is written", async () => {
+test("SEEDED: a meetings row whose body holds a calendar route retires naming the body, its occurrence closes unresolved, and nothing else is written", async () => {
   for (const [label, repos] of await eachStore("wtp-moved-")) {
     const listed = await meetingsShape(repos, AVONDALE);
     const unlisted = await meetingsShape(repos, UNLISTED);
@@ -271,8 +325,8 @@ test("SEEDED: a recorded jurisdiction's meetings row retires naming the ledger, 
     /* After 902f5c50 the provider emits no MEETINGS route. */
     const sync = await syncObligations(repos, [obligation(CLERK)], T1);
     assert.deepEqual(sync.outside?.map((o) => o.id).sort(), [listed.id, unlisted.id].sort(), `${label}: sync names both rows it no longer walks`);
-    const plan = planMovedToGapLedger({ outside: sync.outside ?? [], corpus, providers: [CLEAN], ledger: LEDGER });
-    assert.deepEqual(plan.heldBack.map((h) => [h.obligationId, h.code]), [[unlisted.id, "NOT_RECORDED_IN_LEDGER"]]);
+    const plan = planHeldRouteRetirement({ outside: sync.outside ?? [], corpus, providers: [CLEAN], routes: ROUTES });
+    assert.deepEqual(plan.heldBack.map((h) => [h.obligationId, h.code]), [[unlisted.id, "NO_HELD_CALENDAR_ROUTE"]]);
     const applied = await settleRetirements(repos, { items: plan.retire, now: T1 });
     assert.deepEqual(applied, { retired: [listed.id], occurrencesClosed: [listed.occurrenceId], failed: [], deferred: [] });
 
@@ -281,35 +335,35 @@ test("SEEDED: a recorded jurisdiction's meetings row retires naming the ledger, 
     assert.equal(row.nextDueAt, null);
     assert.equal(row.openOccurrenceId, null);
     assert.equal(row.retiredAt, T1);
-    assert.equal(row.retirementReason, movedToGapLedgerReason(GAP_LEDGER_PATH, AVONDALE));
+    assert.equal(row.retirementReason, heldCalendarRouteReason(AVONDALE, bodyOf(AVONDALE)));
 
     const occurrence = (await repos.occurrences.mustRead(listed.occurrenceId)).value;
     assert.equal(occurrence.closedAt, T1);
-    assert.equal(occurrence.disposition, null, `${label}: a moved need is not a reading`);
-    assert.match(occurrence.unresolvedReason ?? "", /^MOVED TO THE GAP LEDGER: .*nothing was read and nothing was refreshed$/);
+    assert.equal(occurrence.disposition, null, `${label}: a retirement is not a reading`);
+    assert.match(occurrence.unresolvedReason ?? "", /^CALENDAR ROUTE HELD: .*nothing was read and nothing was refreshed$/);
 
     assert.deepEqual(await untouched(repos, listed.routeTaskId, listed.workItemId), before, `${label}: RouteTask, lease, Attempts, commits, artifacts and WorkItem unchanged`);
 
     const kept = (await repos.obligations.mustRead(unlisted.id)).value;
-    assert.equal(kept.active, true, `${label}: a need the ledger does not record stays live`);
+    assert.equal(kept.active, true, `${label}: a need with no held route stays live`);
     assert.equal((await repos.occurrences.mustRead(unlisted.occurrenceId)).value.closedAt, null, `${label}: and its occurrence stays open`);
     assert.equal((await repos.obligations.mustRead(CLERK)).value.active, true, `${label}: a row the corpus names is untouched`);
 
     const again = await syncObligations(repos, [obligation(CLERK)], T1);
-    const replan = planMovedToGapLedger({ outside: again.outside ?? [], corpus, providers: [CLEAN], ledger: LEDGER });
+    const replan = planHeldRouteRetirement({ outside: again.outside ?? [], corpus, providers: [CLEAN], routes: ROUTES });
     assert.deepEqual(replan.retire, [], `${label}: a retired row is history, never planned twice`);
   }
 });
 
-test("SEEDED: while the ledger cannot be read, no meetings row retires and its occurrence stays open", async () => {
+test("SEEDED: while the owed rows cannot be read, no meetings row retires and its occurrence stays open", async () => {
   for (const [label, repos] of await eachStore("wtp-moved-")) {
     const listed = await meetingsShape(repos, AVONDALE);
     const sync = await syncObligations(repos, [obligation(CLERK)], T1);
-    const plan = planMovedToGapLedger({
+    const plan = planHeldRouteRetirement({
       outside: sync.outside ?? [],
       corpus,
       providers: [CLEAN],
-      ledger: { path: GAP_LEDGER_PATH, recorded: { unreadable: "data/derived/gap-ledger.json could not be read (ENOENT)" } },
+      routes: { unreadable: "the held place capture could not be read (ENOENT)" },
     });
     const applied = await settleRetirements(repos, { items: plan.retire, now: T1 });
     assert.deepEqual(applied, { retired: [], occurrencesClosed: [], failed: [], deferred: [] });
@@ -323,9 +377,9 @@ test("SEEDED: a spent budget defers the rest untouched, in order, and the next c
     const rows = [AVONDALE, BENSON, "az:city:city-of-chandler"];
     const shapes = [];
     for (const id of rows) shapes.push(await meetingsShape(repos, id));
-    const ledger = { path: GAP_LEDGER_PATH, recorded: { jurisdictionIds: new Set(rows) } };
+    const routes = routesHeldFor(rows);
     const sync = await syncObligations(repos, [obligation(CLERK)], T1);
-    const plan = planMovedToGapLedger({ outside: sync.outside ?? [], corpus, providers: [CLEAN], ledger });
+    const plan = planHeldRouteRetirement({ outside: sync.outside ?? [], corpus, providers: [CLEAN], routes });
     assert.equal(plan.retire.length, 3);
 
     /* The budget is asked before each row: this one allows the first row only. */
@@ -340,7 +394,7 @@ test("SEEDED: a spent budget defers the rest untouched, in order, and the next c
     }
 
     const next = await syncObligations(repos, [obligation(CLERK)], T1);
-    const replan = planMovedToGapLedger({ outside: next.outside ?? [], corpus, providers: [CLEAN], ledger });
+    const replan = planHeldRouteRetirement({ outside: next.outside ?? [], corpus, providers: [CLEAN], routes });
     assert.deepEqual(replan.retire.map((r) => r.obligationId), [shapes[1].id, shapes[2].id], `${label}: planned again next cycle`);
     const finished = await settleRetirements(repos, { items: replan.retire, now: T1 });
     assert.deepEqual(finished.retired, [shapes[1].id, shapes[2].id]);

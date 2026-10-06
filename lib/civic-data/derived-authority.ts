@@ -127,9 +127,9 @@ export type HostAttestation =
       readonly kind: "RECORDED_ADDRESS";
       /**
        * Where the walked address was recorded: the promoted operational
-       * reference (dispatched needs) or the committed gap ledger (most walks),
-       * whose versionId is data/derived/gap-ledger.json's sha256 at the
-       * runtime's commit, or — for a state with no reviewed registry — its
+       * reference (dispatched and mission needs), the gap ledger CH-21 retired
+       * (walks recorded before it; versionId is that file's sha256 at the
+       * runtime's commit), or — for a state with no reviewed registry — its
        * promoted registration (2026-09-25).
        */
       readonly source: "OPERATIONAL_REFERENCE" | "GAP_LEDGER" | "REGISTRATION";

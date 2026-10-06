@@ -44,13 +44,7 @@ export interface BodyBlurb {
 }
 
 /** The division kinds a covered body can sit on. Mirrors `CoveredBody`. */
-export type BodyDivisionType =
-  | "county"
-  | "place"
-  | "school_district"
-  | "cd"
-  | "sldu"
-  | "sldl";
+export type BodyDivisionType = string;
 
 interface BodyBlurbRow {
   /** Two-letter state, lowercased, as it appears in an OCD-ID. */

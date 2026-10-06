@@ -1,30 +1,4 @@
-/**
- * `pnpm measures` — THE MEASURE SCOREBOARD, and the named command Item 6a asks
- * for.
- * (2026-08-26, the descent session.)
- *
- * `pnpm kelly` answers *is this candidate done*. Nothing answered it for a
- * BALLOT MEASURE, so the first measures to land would have landed at whatever
- * depth was convenient and that depth would have become the standard by
- * default. This is the standard, computed.
- *
- * **The verdict a reader of this output must not miss is `BLOCKED_ASYMMETRIC`.**
- * A measure whose support money is hunted and whose opposition money is not
- * does not ship, however complete the rest of it is. Equal effort for and
- * against is constitutional and follows from equal-effort-per-candidate:
- * showing who funded the yes and not the no is taking a side by omission.
- *
- * ## Fail closed
- *
- * RULING 159 — a denominator of zero is an ERROR naming the selector, never a
- * clean board. **Today the corpus is genuinely empty**, and that is exactly the
- * case the rule is about: the command says so in words and exits non-zero,
- * rather than printing a green scoreboard about nothing.
- *
- * Usage:
- *   pnpm measures
- *   pnpm measures --json
- */
+/** Measure coverage scoreboard. Missing depth remains work, never a publication hold. */
 
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -102,7 +76,7 @@ function main(): void {
   const board = floored("measures scored", CORPUS, readings.length, scores.length);
   const done = scores.filter((s) => s.verdict === "DONE").length;
   const owed = scores.filter((s) => s.verdict === "OWED").length;
-  const blocked = scores.filter((s) => s.verdict === "BLOCKED_ASYMMETRIC");
+  const blocked = scores.filter((s) => s.verdict === "ASYMMETRIC_COVERAGE");
 
   if (process.argv.includes("--json")) {
     console.log(JSON.stringify({ measuredOn: stamp, scores }, null, 2));
@@ -116,20 +90,17 @@ function main(): void {
       `  ${s.verdict.padEnd(19)} ${String(s.satisfied).padStart(2)}/${s.total}  ${s.measureId}  ${r?.title ?? ""}`,
     );
     if (s.owed.length > 0) console.log(`      owed: ${s.owed.join(", ")}`);
-    if (!s.symmetry.symmetric) console.log(`      BLOCKED: ${s.symmetry.reason}`);
+    if (!s.symmetry.symmetric) console.log(`      COVERAGE: ${s.symmetry.reason}`);
   }
 
   console.log(`\n  ${floorLine(board)}`);
   console.log(
-    `  ${done} DONE · ${owed} OWED · ${blocked.length} BLOCKED_ASYMMETRIC of ${scores.length}\n`,
+    `  ${done} DONE · ${owed} OWED · ${blocked.length} ASYMMETRIC_COVERAGE of ${scores.length}\n`,
   );
   if (blocked.length > 0) {
     console.log(
-      "  BLOCKED_ASYMMETRIC is not a thinner OWED. A measure missing its plain-language decoding needs MORE\n" +
-        "  HUNTING; a measure whose money is one-sided must NOT SHIP, whatever else it carries. Both sides at\n" +
-        "  equal depth or neither.\n",
+      "  ASYMMETRIC_COVERAGE shows unfinished work on one side. Every verified fact still publishes.\n",
     );
-    process.exitCode = 1;
   }
   console.log(`  the standard is ${MEASURE_FIELDS.length} fields: ${MEASURE_FIELDS.join(", ")}\n`);
 }

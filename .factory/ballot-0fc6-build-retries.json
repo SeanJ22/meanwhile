@@ -1,0 +1,30 @@
+{
+  "commit": "0fc6ef6d21a6aa90af928ff082d2ea0c073d445e",
+  "initialFailure": "Turbopack rejected node_modules symlink outside its project root before compilation.",
+  "dependencyRepair": "Local hard links to the same installed dependency bytes; no application source or dependency version change.",
+  "default": {
+    "command": "pnpm build",
+    "cwd": "/workspace/meanwhile-ballot-combined20-check",
+    "exitCode": 0,
+    "status": "PASS",
+    "log": "/tmp/ballot-0fc6-build-default-retry.log",
+    "logSha256": "a4f8931da4176897a9d3aff434aea5a3acc6cb88e04d9ade90e0677acdc4cf95"
+  },
+  "standalone": {
+    "command": "NEXT_PRIVATE_STANDALONE=true pnpm build",
+    "status": "PASS",
+    "log": "/tmp/ballot-0fc6-build-standalone-retry.log",
+    "exitCode": 0,
+    "warmFiles": 399,
+    "largestAppTrace": 407,
+    "returnedDataFiles": [],
+    "logSha256": "e9bb76602ac361613d05833a2562b98fe77e66c92d18e3fe5d871fd031073d1d"
+  },
+  "sameSourceTree": "c10f387233f0ef81225684f150bcc1e9b3dec33b",
+  "dependencyBytesIdentical": {
+    "next": true,
+    "react": true,
+    "typescript": true,
+    "esbuild": true
+  }
+}

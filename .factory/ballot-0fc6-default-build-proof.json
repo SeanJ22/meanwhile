@@ -1,0 +1,9 @@
+{
+  "commit": "0fc6ef6d21a6aa90af928ff082d2ea0c073d445e",
+  "warmFiles": 399,
+  "ceiling": 430,
+  "returnedDataFiles": [],
+  "defaultBuildExitCode": 0,
+  "log": "/tmp/ballot-0fc6-build-default-retry.log",
+  "logSha256": "a4f8931da4176897a9d3aff434aea5a3acc6cb88e04d9ade90e0677acdc4cf95"
+}

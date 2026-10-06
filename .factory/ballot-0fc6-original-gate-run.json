@@ -1,0 +1,182 @@
+{
+  "runId": "gates@2026-10-06T01:46:27.908Z",
+  "testedSha": "0fc6ef6d21a6aa90af928ff082d2ea0c073d445e",
+  "finishedAt": "2026-10-06T01:46:27.908Z",
+  "gates": [
+    {
+      "id": "lint",
+      "ciJob": "gates (test · lint · tsc)",
+      "command": "pnpm lint",
+      "status": "PASS",
+      "seconds": 62,
+      "failureKind": null,
+      "failingTests": [],
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "tsc",
+      "ciJob": "gates (test · lint · tsc)",
+      "command": "pnpm exec tsc --noEmit",
+      "status": "PASS",
+      "seconds": 54,
+      "failureKind": null,
+      "failingTests": [],
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "control-plane:gate",
+      "ciJob": "gates (test · lint · tsc)",
+      "command": "pnpm control-plane:gate",
+      "status": "PASS",
+      "seconds": 2,
+      "failureKind": null,
+      "failingTests": [],
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "state-holdings:check",
+      "ciJob": "gates (test · lint · tsc)",
+      "command": "pnpm state-holdings:check",
+      "status": "PASS",
+      "seconds": 4,
+      "failureKind": null,
+      "failingTests": [],
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "state-manifest",
+      "ciJob": "gates (test · lint · tsc)",
+      "command": "pnpm state-manifest --check",
+      "status": "PASS",
+      "seconds": 73,
+      "failureKind": null,
+      "failingTests": [],
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "feedback:sweep",
+      "ciJob": "gates (test · lint · tsc)",
+      "command": "pnpm feedback:sweep --check",
+      "status": "PASS",
+      "seconds": 1,
+      "failureKind": null,
+      "failingTests": [],
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "assert:browser",
+      "ciJob": "gates (test · lint · tsc)",
+      "command": "pnpm run assert:browser",
+      "status": "PASS",
+      "seconds": 1,
+      "failureKind": null,
+      "failingTests": [],
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "test",
+      "ciJob": "gates (test · lint · tsc)",
+      "command": "pnpm test",
+      "status": "PASS",
+      "seconds": 1342,
+      "failureKind": null,
+      "failingTests": [],
+      "suiteTotals": {
+        "tests": 9631,
+        "pass": 9620,
+        "fail": 0,
+        "suites": 47,
+        "skipped": 11,
+        "todo": 0,
+        "cancelled": 0
+      },
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "db:gate",
+      "ciJob": "gates (test · lint · tsc)",
+      "command": "pnpm exec tsx scripts/db-shipping-gate.mts",
+      "status": "PASS",
+      "seconds": 1,
+      "failureKind": null,
+      "failingTests": [],
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "build",
+      "ciJob": "build (default)",
+      "command": "pnpm run build",
+      "status": "FAIL",
+      "seconds": 2,
+      "failureKind": "UNATTRIBUTED",
+      "failingTests": [],
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "test:bundle",
+      "ciJob": "build (default)",
+      "command": "pnpm run test:bundle",
+      "status": "PASS",
+      "seconds": 1,
+      "failureKind": null,
+      "failingTests": [],
+      "suiteTotals": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "suites": 0,
+        "skipped": 0,
+        "todo": 0,
+        "cancelled": 0
+      },
+      "nodeProcessesAtStart": 0
+    },
+    {
+      "id": "build:standalone",
+      "ciJob": "build (standalone)",
+      "command": "pnpm run build",
+      "status": "FAIL",
+      "seconds": 2,
+      "failureKind": "UNATTRIBUTED",
+      "failingTests": [],
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 0
+    }
+  ],
+  "provenance": {
+    "runClass": "LOCAL_SESSION",
+    "workingTreeClean": true,
+    "integratedAtRunTime": false,
+    "integrationRef": "origin/main"
+  },
+  "suiteDenominator": {
+    "gate": "test",
+    "read": true,
+    "tests": 9631,
+    "pass": 9620,
+    "fail": 0,
+    "suites": 47,
+    "skipped": 11,
+    "todo": 0,
+    "cancelled": 0
+  },
+  "suiteLaneEnv": {
+    "WTP_CONTROL_PLANE_TEST_DATABASE_URL": {
+      "present": false,
+      "gates": "the MUTABLE postgres arm of tests/control-plane-conformance.test.ts — runs ONLY against this isolated test database, never the production control plane"
+    },
+    "WTP_CONTROL_PLANE_DATABASE_URL": {
+      "present": false,
+      "gates": "the PRODUCTION control plane — its presence is recorded but it NEVER enables the mutable conformance lane (the test-database variable above gates that lane)"
+    }
+  }
+}

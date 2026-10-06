@@ -9,10 +9,20 @@ const at = "2026-10-06T05:00:00.000Z";
 const sample = (id: string): PublishedFactSample => ({ recordId: id, url: `${PUBLIC_SITE_ORIGIN}/?zip=10001`,
   selector: `[data-record-id="${id}"]`, fields: [{ selector: ".title", text: "Council meeting" }, { selector: ".date", text: "October 6" }] });
 
+test("a long job credits its publication hour, not its frozen source-receipt clock", async () => {
+  const repos = createMemoryRepositories();
+  const vitals = new PublicationVitals(at);
+  observePublicationVitals(repos.ownerDigests, () => vitals, () => at);
+  await recordPublicationFlow(repos, "long-job", { workerResultId: "result", stage: "LIVE", records: 1, changedRecords: 1, versionId: "version" }, "2026-10-06T04:59:00Z");
+  assert.equal(vitals.reading().hour, at);
+  assert.equal(vitals.reading().facts_live, 1);
+  assert.equal(publicationVitalsIssue(repos.ownerDigests, at), null);
+});
+
 test("publisher counts only newly appended LIVE changes; concurrent replays and provenance rechecks earn nothing", async () => {
   const repos = createMemoryRepositories();
   const vitals = new PublicationVitals(at);
-  const stop = observePublicationVitals(repos.ownerDigests, () => vitals);
+  const stop = observePublicationVitals(repos.ownerDigests, () => vitals, () => at);
   const receipt = { workerResultId: "result", stage: "CHECKED" as const, records: 5, changedRecords: 2, versionId: null };
   await recordPublicationFlow(repos, "candidate", receipt, at);
   assert.equal(vitals.reading().facts_live, 0);
@@ -65,7 +75,7 @@ test("Admin/API responses, redirected pages and failed public reads cannot estab
 test("a measurement failure does not hold publication and cannot silently report complete totals", async () => {
   const repos = createMemoryRepositories();
   const wrongHour = new PublicationVitals("2026-10-06T04:00:00Z");
-  observePublicationVitals(repos.ownerDigests, () => wrongHour);
+  observePublicationVitals(repos.ownerDigests, () => wrongHour, () => at);
   await recordPublicationFlow(repos, "candidate", { workerResultId: "result", stage: "LIVE", records: 1, changedRecords: 1, versionId: "version" }, at);
   assert.match(publicationVitalsIssue(repos.ownerDigests, at)!, /incomplete/);
   assert.equal(publicationVitalsIssue(repos.ownerDigests, "2026-10-06T06:00:00Z"), null, "one incomplete hour does not poison later hours");

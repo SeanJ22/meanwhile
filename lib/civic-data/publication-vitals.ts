@@ -124,20 +124,30 @@ export class PublicationVitals {
 // Attach to the existing append-only flow log identity, shared by publication
 // jobs in one parent. Counts use newly appended LIVE receipts, not rechecks.
 type FlowLog = object;
-const collectors = new WeakMap<FlowLog, (at: string) => PublicationVitals>();
+const collectors = new WeakMap<FlowLog, { forHour: (at: string) => PublicationVitals; now: () => string }>();
 const issues = new WeakMap<FlowLog, Map<string, string>>();
 /** Writer must report unknown publication totals when this is non-null. */
 export const publicationVitalsIssue = (log: FlowLog, at: string): string | null =>
   issues.get(log)?.get(hourOf(at)) ?? issues.get(log)?.get("UNKNOWN") ?? null;
-export function observePublicationVitals(log: FlowLog, forHour: (at: string) => PublicationVitals): () => void {
-  collectors.set(log, forHour);
-  return () => { if (collectors.get(log) === forHour) collectors.delete(log); };
+export function observePublicationVitals(log: FlowLog, forHour: (at: string) => PublicationVitals,
+  now: () => string = () => new Date().toISOString()): () => void {
+  const observer = { forHour, now };
+  collectors.set(log, observer);
+  return () => { if (collectors.get(log) === observer) collectors.delete(log); };
 }
 export function notePublishedRecords(log: FlowLog, event: Parameters<PublicationVitals["published"]>[0]): void {
-  try { collectors.get(log)?.(event.at).published(event); }
+  const observer = collectors.get(log);
+  if (!observer) return;
+  let observedAt = event.at;
+  try {
+    // The source receipt's clock can be the frozen job start. Hourly delivery
+    // belongs to the wall clock at publication, even when that job ran long.
+    observedAt = observer.now();
+    observer.forHour(observedAt).published({ ...event, at: observedAt });
+  }
   catch {
     const history = issues.get(log) ?? new Map<string, string>();
-    history.set(Number.isFinite(Date.parse(event.at)) ? hourOf(event.at) : "UNKNOWN", "Publication observation failed; hourly totals are incomplete");
+    history.set(Number.isFinite(Date.parse(observedAt)) ? hourOf(observedAt) : "UNKNOWN", "Publication observation failed; hourly totals are incomplete");
     for (const key of [...history.keys()].sort().slice(0, Math.max(0, history.size - 48))) history.delete(key);
     issues.set(log, history);
   }

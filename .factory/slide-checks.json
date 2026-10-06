@@ -1507,7 +1507,7 @@
     "lockReleasedAt": "2026-10-06T04:21:46.236075+00:00"
   },
   "publicationParent": {
-    "state": "FULL running; not READY",
+    "state": "READY: BX-03/BX-12 shared-repository publication follow-up; parent scheduler hook pending",
     "source": "7311335deaa958f171c3a40aa5753129efc7888b",
     "base": "f545fcf9493def91294bccf219ed65071b2093b1",
     "selector": "FULL: own .factory SQL outside import graph",
@@ -1559,9 +1559,44 @@
       "repairLog": {
         "path": "/tmp/slide-publication-place-repair.log",
         "sha256": "88229d2845c240b437090fbaafb4b34539f1cbae29440cda9fdd7366694deff8"
-      }
+      },
+      "repairManifest": ".factory/slide-publication-place-repair-tests.json"
     },
     "sharedHook": "hunters/meetings parent scheduler, deadlines, settlement and live rollout pending; exact API in slide-hooks.md",
-    "production": "No production run, DB write, schema change, budget change or measured egress reduction claimed."
+    "production": "No production run, DB write, schema change, budget change or measured egress reduction claimed.",
+    "full": {
+      "manifest": ".factory/slide-publication-full-tests.json",
+      "exitCode": 1,
+      "summary": {
+        "schemaVersion": 1,
+        "kind": "run",
+        "durationMs": 1253073.256426,
+        "success": false,
+        "counts": {
+          "tests": 9764,
+          "failed": 17,
+          "passed": 9736,
+          "cancelled": 0,
+          "skipped": 11,
+          "todo": 0,
+          "topLevel": 9596,
+          "suites": 54
+        }
+      },
+      "files": 1149,
+      "log": "/tmp/slide-publication-full.log",
+      "logSha256": "82bc7634734f8e6bfe4eee4a3c6caf0a1925ff3f899e6e1e235ca666e9b91f8f",
+      "rawFailures": ".factory/slide-publication-full-failures.txt"
+    },
+    "combinedVerification": {
+      "passed": 9753,
+      "failed": 0,
+      "skipped": 11,
+      "files": 1149,
+      "method": "Raw FULL9736pass17fail11skip; replace only the four missing-postinstall-data files with their complete48/48passing rerun on identical source. Raw FULL still failed; no second FULL run or raw success claimed."
+    },
+    "browser": "Chromium151 substituted for unavailable pinned1234; 11skips retained. Synthetic maptiler browser fixture routed to loopback as in prior checks.",
+    "command": "env -u CI_TEST_FILES -u DATABASE_URL -u WTP_ASSET_STORE -u WTP_DB_ROLE -u WTP_CONTROL_PLANE_DATABASE_URL WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium COREPACK_HOME=/workspace/.setup-tools/corepack corepack pnpm test (additional execution permission; local-only synthetic maptiler proxy exclusion)",
+    "finalBoard": "594f0691811fe823d7afb7cd03053ef98b8118d3"
   }
 }

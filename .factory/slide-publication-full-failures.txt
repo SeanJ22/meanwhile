@@ -1,0 +1,333 @@
+✖ failing tests:
+
+test at tests/dispatch-work.test.ts:248:1
+✖ sending the fleet to Pima County creates what the registry defines there and no clock carries, in the shape syncObligations registers (51.004216ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at territory (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:170:20)
+      at cycleWorld (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:221:16)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:250:21)
+      at async Test.run (node:internal/test_runner/test:1389:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/dispatch-work.test.ts:299:1
+✖ created work joins the corpus through its providers next cycle: scheduled, never re-registered, never retired (40.149734ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at territory (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:170:20)
+      at cycleWorld (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:221:16)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:301:17)
+      at async Test.run (node:internal/test_runner/test:1389:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/dispatch-work.test.ts:331:1
+✖ sending the same scope twice creates nothing new, and overlapping geographies share one row per requirement (53.304232ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at territory (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:170:20)
+      at cycleWorld (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:221:16)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:334:17)
+      at async Test.run (node:internal/test_runner/test:1389:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/dispatch-work.test.ts:363:1
+✖ all missing requirements are created in one pass without a cycle window (43.042798ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at territory (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:170:20)
+      at cycleWorld (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:221:16)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:366:17)
+      at async Test.run (node:internal/test_runner/test:1389:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/dispatch-work.test.ts:383:1
+✖ a geography in a state with no promoted registry is blocked by name, and nothing is invented for it (0.570986ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:385:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/dispatch-work.test.ts:433:1
+✖ a promoted registry the runtime's reader refuses is named as that, never used and never called missing (58.412983ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at territory (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:170:20)
+      at cycleWorld (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:221:16)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:441:21)
+      at async Test.run (node:internal/test_runner/test:1389:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/dispatch-work.test.ts:513:1
+✖ creating work opens no paid lane: the owner's PAUSE stands, nothing but obligations is written, and paid discovery waits for the free walk (37.480809ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at territory (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:170:20)
+      at cycleWorld (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:221:16)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:519:21)
+      at async Test.run (node:internal/test_runner/test:1389:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/dispatch-work.test.ts:575:1
+✖ a cycle that may not write plans, counts and writes nothing (31.809127ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at territory (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:170:20)
+      at cycleWorld (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:221:16)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:577:21)
+      at async Test.run (node:internal/test_runner/test:1389:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/dispatch-work.test.ts:591:1
+✖ a DISPATCH naming a registered state creates there, counts it on the owner's record, and carries its remainder forward (34.191717ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at territory (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:170:20)
+      at cycleWorld (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:221:16)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:593:21)
+      at async Test.run (node:internal/test_runner/test:1389:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/dispatch-work.test.ts:759:1
+✖ Admin reads the creation receipt for the decision it belongs to, with every number carrying its denominator (36.049317ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at territory (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:170:20)
+      at cycleWorld (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:221:16)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/dispatch-work.test.ts:776:21)
+      at async Test.run (node:internal/test_runner/test:1389:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/district-territory.test.ts:64:1
+✖ full Census school intersections reach both Admin scope and actual dispatch, including small slivers (17.273846ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at index (file:///workspace/slide-publication-validation/tests/district-territory.test.ts:60:21)
+      at TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/district-territory.test.ts:65:15)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/district-territory.test.ts:93:1
+✖ A SEND IN 85635 OR COCHISE COUNTY PLACES THE COLLEGE DISTRICT AND THE TECHNOLOGY DISTRICT; SANTA CRUZ COUNTY DOES NOT GET THE COLLEGE (14.80793ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at index (file:///workspace/slide-publication-validation/tests/district-territory.test.ts:60:21)
+      at TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/district-territory.test.ts:94:15)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/district-territory.test.ts:121:1
+✖ THE FIRE DISTRICTS ARE PLACED FOR SENDS BY THEIR APPROXIMATE BOUNDARY: FRY IN 85635, PALOMINAS IN THE COUNTY BUT NOT 85635 (15.70217ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at index (file:///workspace/slide-publication-validation/tests/district-territory.test.ts:60:21)
+      at TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/district-territory.test.ts:122:15)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/district-territory.test.ts:165:1
+✖ THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule (0.892668ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/district-territory.test.ts:184:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+
+test at tests/expansion-any-state.test.ts:293:1
+✖ A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner creates, from registration, and Columbus's calendar reaches the Reader (2338.083592ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   "oh: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/oh.json'",
+  +   "the expansion territory index could not be built (ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'); no work is placed in a scope this cycle"
+  + ]
+  - []
+  
+      at runnerCycle (file:///workspace/slide-publication-validation/tests/expansion-any-state.test.ts:239:10)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/expansion-any-state.test.ts:322:16)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ "oh: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/oh.json'", "the expansion territory index could not be built (ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'); no work is placed in a scope this cycle" ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/expansion-any-state.test.ts:524:1
+✖ A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from registration, honestly find-own-site: no address is recorded, and none is invented (500.184185ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   "pr: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/pr.json'",
+  +   "the expansion territory index could not be built (ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'); no work is placed in a scope this cycle"
+  + ]
+  - []
+  
+      at runnerCycle (file:///workspace/slide-publication-validation/tests/expansion-any-state.test.ts:239:10)
+      at async TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/expansion-any-state.test.ts:545:23)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ "pr: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/pr.json'", "the expansion territory index could not be built (ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'); no work is placed in a scope this cycle" ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/expansion-scopes.test.ts:346:1
+✖ on the committed data, Pima County holds Pima and Tucson and none of its neighbours; CD 6 holds the counties it spans (19.853749ms)
+  Error: ENOENT: no such file or directory, open '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+      at readFileSync (node:fs:484:20)
+      at readStateReference (file:///workspace/slide-publication-validation/lib/control-plane/expansion/state-references.ts:42:28)
+      at file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:149:12
+      at Array.flatMap (<anonymous>)
+      at readCensusUnitTerritories (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:148:31)
+      at readTerritoryIndex (file:///workspace/slide-publication-validation/lib/control-plane/expansion/runner-load.ts:102:17)
+      at TestContext.<anonymous> (file:///workspace/slide-publication-validation/tests/expansion-scopes.test.ts:351:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/slide-publication-validation/data/derived/place-reference/az.json'
+  }
+ ELIFECYCLE  Test failed. See above for more details.

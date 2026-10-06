@@ -228,7 +228,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
 });
 
 test("CH-26: schema version 20 builds the scoped indexes online, on the exact expressions the reads send", async () => {
-  assert.equal(BOOTSTRAP_VERSION, 20);
+  assert.ok(BOOTSTRAP_VERSION >= 20, "v20 added the scoped indexes; later versions (v21 live audits) keep them");
   for (const index of SCOPED_HISTORY_INDEXES) {
     assert.match(index.ddl, /^CREATE INDEX CONCURRENTLY IF NOT EXISTS /);
     assert.ok(BOOTSTRAP_DDL.includes(index.ddl));

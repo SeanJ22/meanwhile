@@ -2,10 +2,11 @@ import { isJurisdictionSegment } from "../ocd/fips.ts";
 import type { Provenance } from "../sources/types.ts";
 
 import { campaignSiteFor } from "./campaign-sites.ts";
+import { socialAccountsOf } from "./social-platforms.ts";
 import type {
   Officeholder,
   OfficeholderSet,
-  SocialAccounts,
+  SocialAccount,
 } from "./types.ts";
 
 /**
@@ -100,7 +101,7 @@ export interface SeatHolder {
    * cards render the pills they do have rather than an emptier row dressed
    * up as a complete one.
    */
-  social?: SocialAccounts;
+  social?: readonly SocialAccount[];
   /**
    * The state and chamber the member's OWN current term states (item 7).
    * Federal only — a curated local roster publishes neither, and the
@@ -141,7 +142,7 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     contactFormUrl: person.contactFormUrl,
     photoUrl: photos?.get(person.id) ?? null,
     campaignUrl: campaignSiteFor(person.id)?.url ?? null,
-    social: person.social,
+    social: person.social === undefined ? undefined : socialAccountsOf(person.social),
     state: person.state,
     chamber: person.chamber,
   };

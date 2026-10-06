@@ -113,6 +113,7 @@ import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discover
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
+import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 
 /** ------------------------------------------------------------- envelopes */
@@ -825,6 +826,8 @@ export interface ControlPlaneRepositories {
    * unpaid meetings-discovery executor; a walk is a reading taken at a time.
    */
   readonly discoveryAttempts: AppendOnlyRepository<MeetingsDiscoveryAttempt>;
+  /** Live-audit results by UTC day, the corrections red flags led to, and the pulls by work item (DP-13, schema v21; `lib/control-plane/live-audit-log.ts`). */
+  readonly liveAudits: AppendOnlyRepository<LiveAuditLogRow>;
   readonly adminConfig: AggregateRepository<AdminConfig>;
   /**
    * What readers were told Ask does not hold (v13, 2026-09-25; the owner's

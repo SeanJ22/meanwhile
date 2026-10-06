@@ -6,6 +6,13 @@ import { scheduleObligation, type FreshnessObligation } from "../scheduler/oblig
 import type { AcquirerResult } from "./research-types.ts";
 import type { Jurisdiction, JurisdictionSource } from "../../hunt/jurisdiction-universe.ts";
 import type { WorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
+import { missionPartOf } from "../expansion/mission-parts.ts";
+
+/** The mission part a plan's record class starts in (CH-15's starting parts). Omitted when no part takes it. */
+function partFor(recordClass: string): { readonly missionPart?: string } {
+  const part = missionPartOf({ recordClass });
+  return part ? { missionPart: part } : {};
+}
 
 /** Initial instructions for an owner-requested family. Registry addresses are
  * leads, never invented observations. An evidence-backed repair supplies the
@@ -30,6 +37,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
   return {
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
     sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
+    ...partFor(spec.recordClass),
     ...(bodyId && workerDoorForRecord(spec.recordClass) ? { publication: { contractId: workerDoorForRecord(spec.recordClass)!, bodyId } } : {}),
     contract: {
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
@@ -57,7 +65,7 @@ export function publicCommentDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
     routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED", owed: "Find the body's published public-comment rules, including signup, written comments, attendance and speaking limits. Take each from the body's own official page; do not infer permission to speak from an open meeting.",
     citation: `Registered government ${jurisdiction.id}, body ${bodyId}.` }, routeId, bodyId)!;
   if (base.contract.schemaVersion !== 2) throw new Error("PUBLIC_COMMENT_TEMPLATE_INVALID");
-  return { ...base, capability: "meetings/public-comment", publication: { contractId: "comment-access", bodyId },
+  return { ...base, capability: "meetings/public-comment", publication: { contractId: "comment-access", bodyId }, ...partFor("PUBLIC_COMMENT_RULE"),
     sourceRegistryReferences: [...base.sourceRegistryReferences, bodyId],
     contract: { ...base.contract, recordClass: "PUBLIC_COMMENT_RULE", requiredFields: ["bodyName", "commentPeriod", "commentPeriodDetail"],
       identity: { namespace: `${jurisdiction.id}:public-comment`, keyFields: ["bodyName"] },
@@ -76,7 +84,7 @@ export function bodyDirectoryDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
   if (base.contract.schemaVersion !== 2) throw new Error("DIRECTORY_TEMPLATE_INVALID");
   const { publication: _old, ...plan } = base;
   const divisionId = jurisdiction.ocdId ?? bodyId?.split("#")[0] ?? null;
-  return { ...plan, capability: "governments/body-directory",
+  return { ...plan, capability: "governments/body-directory", ...partFor("OFFICIAL_BOARD_DIRECTORY"),
     directorySubject: { jurisdiction, divisionId },
     publication: { contractId: "registry-runtime-bindings", bodyId: bodyId ?? `unresolved:${jurisdiction.id}` },
     contract: { ...base.contract, recordClass: "OFFICIAL_BOARD_DIRECTORY",
@@ -105,6 +113,8 @@ export function isRetiredRoutineMeetingAcquisition(
 
 /** Work instructions, never evidence or a readiness label. Stored with the owed WorkItem. */
 export interface AutonomousWorkPlan {
+  /** The mission part this work belongs to (CH-16), set where the plan is built. Read it with `missionPartOfPlan`. */
+  readonly missionPart?: string;
   readonly directorySubject?: { readonly jurisdiction: Jurisdiction; readonly divisionId: string | null };
   readonly ownerInstructions?: readonly string[];
   /** Existing reader door selected by the system's exact body join, never by a model. */

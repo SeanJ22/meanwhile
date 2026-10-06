@@ -65,18 +65,18 @@ export function CandidatePositions({
 
   return (
     <div className="mt-3" data-candidate-positions>
-      <p className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+      <p className="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em] text-muted">
         From campaign and official pages
       </p>
       {/* Provenance, not arithmetic: where these passages came from. */}
-      <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+      <p className="mt-1 t-detail leading-relaxed text-paper-dim">
         {headline}
       </p>
 
       <ul className="mt-2 space-y-3">
         {matched.map((position) => (
           <li key={position.issue.id}>
-            <p className="text-[0.75rem] font-medium text-paper">
+            <p className="t-detail font-medium text-paper">
               {position.issue.label}
             </p>
             {position.answer.kind === "MATCHED" &&
@@ -88,10 +88,10 @@ export function CandidatePositions({
                   {/* Source words. Never rewritten, never trimmed of
                       meaning — only of length, and then it says so with
                       the ellipses the corpus put there. */}
-                  <p className="t-record text-[0.75rem] leading-relaxed text-paper-dim">
+                  <p className="t-record t-detail leading-relaxed text-paper-dim">
                     &ldquo;{passage.quote}&rdquo;
                   </p>
-                  <p className="mt-0.5 text-[0.6875rem] text-muted">
+                  <p className="mt-0.5 t-caption text-muted">
                     {sourceKindLabel(passage.sourceClass)}
                     {" · "}
                     <a

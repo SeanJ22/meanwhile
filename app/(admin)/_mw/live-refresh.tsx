@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PULSE_ACTIVE_INTERVAL_MS, PULSE_INTERVAL_MS, PULSE_STALE_MS, type LivePulse } from "@/lib/control-plane/live-pulse.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
-import s from "./mw.module.css";
+import { s } from "./legacy-styles";
 
 /** One visible-tab subscription shared by every page in the Admin shell. */
 export function LiveRefresh() {

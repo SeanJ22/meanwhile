@@ -30,7 +30,7 @@ test("a scope on an old link is kept, and a path that never moved is left alone"
   assert.equal(movedAdminPage("/admin/sources", null), "/admin?view=workers", "publication status moved to Workers");
   assert.equal(movedAdminPage("/admin/money", "az.zcta.85635"), "/admin?view=money&scope=az.zcta.85635");
   assert.equal(movedAdminPage("/readiness/cost", null), "/admin?view=money");
-  assert.equal(movedAdminPage("/readiness/work", null), "/admin?view=work");
+  assert.equal(movedAdminPage("/readiness/work", null), "/admin?view=queue");
   assert.equal(movedAdminPage("/readiness", null), "/admin?view=checklist");
   assert.equal(movedAdminPage("/readiness/done", null), "/admin?view=checklist");
   assert.equal(movedAdminPage("/readiness/az", null), "/admin?view=checklist&scope=az", "a state's readiness page is the Checklist at that state");

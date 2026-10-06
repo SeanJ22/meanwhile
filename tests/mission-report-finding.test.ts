@@ -52,7 +52,7 @@ test("the mission's lines stay inside their share of the brief and the rest stay
 
 test("only open, due blanks not already being worked reach the brief, once each", () => {
   const item = (id: string, state: PlaceOwedItem["state"], found: string, due = "due"): PlaceOwedItem => ({
-    id, subject: { id: COUNTY, kind: "county", divisionIds: [COUNTY], label: "Alpha County" }, checklistId: "OFF-01", requirement: "", state,
+    id, subject: { id: COUNTY, kind: "division", divisionIds: [COUNTY], label: "Alpha County" }, checklistId: "OFF-01", requirement: "", state,
     held: [], label: id, statuses: { due, found } as unknown as PlaceOwedItem["statuses"], owedSince: null });
   const blanks = missionBlanksFrom([item("open", "missing", "not-found"), item("open", "missing", "not-found"), item("working", "missing", "in-progress"),
     item("later", "missing", "not-found", "not-yet-due"), item("held", "published" as PlaceOwedItem["state"], "found")]);

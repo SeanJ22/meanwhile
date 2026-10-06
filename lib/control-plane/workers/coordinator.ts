@@ -360,7 +360,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       }
       continue;
     }
-    const unresolvedBefore = unresolved;
+    const unresolvedBefore: boolean = unresolved;
     unresolved = true;
     // A result blocked by robots.txt alone (PERMISSION_DENIED / PERMISSION_UNKNOWN, only ever recorded before the owner
     // decision of 2026-09-25) is not a failure of the route: robots.txt is recorded and never blocks a public page, so

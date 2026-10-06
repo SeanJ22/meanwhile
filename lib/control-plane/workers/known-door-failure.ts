@@ -36,9 +36,10 @@ export function knownDoorRetry(input: { readonly debt: FreshnessDebt | null; rea
   readonly shutThreshold: number; readonly oneHunterPath: boolean }): KnownDoorRetry {
   const { debt, now } = input;
   if (!debt) return { kind: "INVESTIGATE" };
-  const due = Date.parse(debt.retryAt) <= Date.parse(now);
+  const { retryAt } = debt;
+  const due = Date.parse(retryAt) <= Date.parse(now);
   if (!input.oneHunterPath) return due && input.scoutTriedAfterFailure ? { kind: "PLAIN_RETRY" } : { kind: "INVESTIGATE" };
-  if (!needsSourceInvestigation(debt, input.shutThreshold)) return due ? { kind: "PLAIN_RETRY" } : { kind: "OUTAGE_WAIT", retryAt: debt.retryAt };
+  if (!needsSourceInvestigation(debt, input.shutThreshold)) return due ? { kind: "PLAIN_RETRY" } : { kind: "OUTAGE_WAIT", retryAt };
   return due && (input.scoutTriedAfterFailure || plainRereadSlot(debt, Date.parse(now), input.shutThreshold))
     ? { kind: "PLAIN_RETRY" } : { kind: "INVESTIGATE" };
 }

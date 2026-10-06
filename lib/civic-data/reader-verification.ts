@@ -101,6 +101,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "official-filings":
     case "comment-access":
     case "ballot-navigation":
+    case "stances":
     case "campaign-sites":
     case "member-offices":
     case "venue-resolutions":
@@ -300,6 +301,7 @@ export async function verifyRoutineReaderProjection(
       case "official-filings":
     case "comment-access":
       case "ballot-navigation":
+      case "stances":
       case "campaign-sites":
       case "member-offices":
       case "venue-resolutions":

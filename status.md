@@ -1,6 +1,6 @@
 # River status
 
-build_state: release 11 LIVE (0a0f744, post-deploy 37483242295 passed); folding hunters CH-22 + auditors DP-06 on river-next, gates running; runner still stopped (restart with Sean since 8:28 AM EDT)
+build_state: release 11 live (0a0f744, 10:59 AM EDT); runner still stopped at 10:57 AM EDT (restart with Sean since 8:28 AM EDT; now installs 0a0f744)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01PNZmtjma5s373mH41mVk6q
@@ -25,6 +25,7 @@ heartbeat: 2026-10-06T15:07:17Z
 - First gates on 9863a25 failed 6 tests. Five were this clone's shallow history: the state-holdings frozen-base tests read commits fc67e8cd, eb31f84a, 3f9a138f; they pass once those are fetched. The sixth was real: VS-01 broke BR-25's now-screen test, and with no hour recorded the card dropped each number's sentence. River fold repair 92102c8b8; noted in returns/measures.md.
 - **`pnpm gates` 12/12 on 92102c8** (9,915 tests, 9,904 pass, 0 fail, 11 skipped). river promoted d79f179 → 92102c8. **Release 11: #717** opened 10:17 AM EDT, auto-merge on, with the read-cost statement. Trial kept at stream/salvage-river-next-r11.
 - CI: the first run, 37477754183, was cancelled by the concurrency rule when the PR body edit started run 37477989965 (preflight step 'cancelled'; the builds then failed 'Require successful admission'). Same as releases 8 and 9; not a failure.
+- **Release 11 live:** #717 merged 10:56 AM EDT as 0a0f744 (tree = tested 92102c8); `/api/build` 0a0f744; post-deploy 37483242295 HELD; river fast-forwarded to 0a0f744. releases/11-live.md; ledger +2 rows (269); admin-checks.md has VS-01.
 - Pushed to Sean 10:19 AM EDT: release 11 open, with its contents; runner restart still his.
 - Engineering lesson (River): in a fresh cloud clone, fetch the state-holdings frozen-base commits before `river.mjs test`, or full gates loses about 25 minutes to five history-only failures.
 - Not folded, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b (runner door switches); admin 734ee9633 (returned).

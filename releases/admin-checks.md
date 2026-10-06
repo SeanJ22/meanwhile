@@ -151,3 +151,6 @@ Checks marked "after the runner restart" need the runner to have run at least on
 | 139 | FE-25 | Admin > Scoreboard, Look and feel (after a look pass) | Comparison verdicts with both screenshots (ours beside the reference page). | |
 | 140 | FE-26 | Admin > Scoreboard, speed and reliability row; then Queue > Needs me / stuck list | The row shows real values; the first surface over three seconds is at the top of the stuck list. | |
 | 141 | FE-37 | Admin > Scoreboard, Admin review row (after the runner restart) | Red and green flags from Admin reviews, each with a screenshot. | |
+
+## Release 11 (added Oct 6, 11:05 AM EDT)
+- **VS-01, Admin Now:** sign in, open Now. Look for a card titled "The last full hour" under Needs me / Mission progress, with five rows: Facts live, Cost per fact, Data read from the database (target under 0.7 GB), Research rounds, Paid jobs that ended with nothing. Each row has one sentence. Before the runner's first full hour every value is "—". After it, values and "(before: …)" appear, and on a phone the card fits above the fold.

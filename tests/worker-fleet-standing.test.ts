@@ -17,7 +17,7 @@ import { createRouteTask, denyByPolicy, type RouteTask } from "../lib/control-pl
 import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
 import { dispatchWorkerTask, drainWorkerQueue, enqueueWorkerTask, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { workerTaskAdmission } from "../lib/control-plane/workers/scheduling.ts";
-import { advanceHeldWorkerFleet, planHeldWorkerFleet, heldEventContract, HELD_AUDIT_CONTEXT_MAX_BYTES, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
+import { advanceHeldWorkerFleet, legacyHeldWorkOwed, planHeldWorkerFleet, heldEventContract, HELD_AUDIT_CONTEXT_MAX_BYTES, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import {
   installOperationalReferenceBundle,
   operationalReferenceBundle,
@@ -47,6 +47,19 @@ test("held planning enqueues every captured document without running a computati
   assert.equal((await h.repos.attempts.list()).length, before);
   assert.equal((await h.repos.workerResults.readAll()).length, 0);
   assert.equal((await planHeldWorkerFleet(ROOT, h.runtime, true)).length, 20);
+});
+
+test("the round's legacy held plan runs only when a registered event capture still has its chain to run", async t => {
+  const h = await harness(t);
+  assert.equal(await legacyHeldWorkOwed(ROOT, h.runtime), false, "nothing held: no schema-1 work exists");
+  await h.hold("<html>Meeting Agendas and Minutes</html>", WP);
+  assert.equal(await legacyHeldWorkOwed(ROOT, h.runtime), false, "a capture outside the registered event APIs makes no schema-1 work");
+  await h.hold(feed(1));
+  assert.equal(await legacyHeldWorkOwed(ROOT, h.runtime), true, "a registered event capture with no Parser result is owed");
+  const round = readFileSync(path.join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
+  assert.match(round, /await legacyHeldWorkOwed\(ROOT, fleet\) \? await planHeldWorkerFleet\(ROOT, fleet, true\) : \[\]/,
+    "the round plans legacy held work only when it is owed, with no switch");
+  assert.doesNotMatch(round, /WTP_HELD_FLEET_PLAN/);
 });
 
 function feed(id: number, wrongDate = false) {

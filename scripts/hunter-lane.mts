@@ -25,8 +25,8 @@ import { durableSearchBudget } from "../lib/control-plane/discovery/search-runti
 import { scoutEscalationReservation } from "../lib/control-plane/fleet-safety.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneWorkerTransport, type ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
-import { hunterLane, hunterQueuePath, readHunterQueue } from "../lib/control-plane/workers/hunter-lane.ts";
-import { RUNTIME_NO_PROGRESS_MS } from "./pilot-runtime-child.mts";
+import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, hunterQueuePath, readHunterQueue,
+  stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
 
 const ROOT = process.cwd();
 /** Every line this process prints; the counts it reports are the lane loop's (hunter-lane.ts). */
@@ -82,7 +82,7 @@ const lane = hunterLane({
     if (armed.fleetSafety !== null) lastFleet = armed.fleetSafety;
     return armed;
   },
-  runWave: async ({ queue, paidOpen, deadlineMs }) => {
+  runWave: async ({ queue, paidOpen, deadlineMs, absorb }) => {
     const armed = lane.current();
     const plain = new Set(queue.plainTaskIds);
     const funded = new Set(armed.arming?.lifetimeHuntSubjects ?? []);
@@ -102,12 +102,25 @@ const lane = hunterLane({
       { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !drain && Date.now() < deadlineMs }));
     const taskIds = paidOpen ? queue.taskIds : queue.taskIds.filter(id => plain.has(id));
     const order = new Map(queue.taskIds.map((id, index) => [id, index] as const));
+    /* A queue the round writes while this wave runs joins it: its tasks go to fresh workers, in its order, and nothing waits for the slowest worker. */
+    const moreTasks = (): readonly string[] => {
+      const next = absorb();
+      if (next === null) return [];
+      for (const id of next.plainTaskIds) plain.add(id);
+      order.clear();
+      next.taskIds.forEach((id, index) => order.set(id, index));
+      return paidOpen ? next.taskIds : next.taskIds.filter(id => plain.has(id));
+    };
+    const progress = hunterLaneProgress({ log: say });
     /* No dispatch deadline: a worker is never ended mid-task by the lane's life. At the end of its life, or on a release drain,
        the lane starts no worker and hands out no further task; each worker finishes the task it holds. */
     const handingOut = (): boolean => !drain && Date.now() < deadlineMs;
     return runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
-      /* A hung worker is ended, and says so, before the runner's no-progress limit could end the lane. */
-      childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000,
+      /* Each worker has its own progress clock: a stuck one is ended alone, and says so, before the runner's no-progress
+         limit could end the lane; a working one runs on, task after task, retiring at its age and walled beyond that. */
+      childTimeoutMs: HUNTER_WORKER_WALL_MS,
+      standing: { moreTasks, quietMs: HUNTER_JOB_QUIET_MS, retireAfterMs: HUNTER_WORKER_RETIRE_MS, onMoved: progress.step,
+        onStuck: worker => { progress.stuck(); say(stuckWorkerLine(worker)); } },
       slots,
       config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidOpen, searchEnabled: search !== null,
         get ceilingUsd() { return lane.current().ceilingUsd; }, fundedSubjects: [...funded] },
@@ -126,13 +139,15 @@ const lane = hunterLane({
       orderPending: async ids => !handingOut() ? [] : ids.filter(id => lane.current().closed === null || plain.has(id))
         .sort((a, b) => (order.get(a) ?? Number.MAX_SAFE_INTEGER) - (order.get(b) ?? Number.MAX_SAFE_INTEGER)),
       onDispatched: result => {
+        progress.taskDone();
         if (result.worker?.role !== "SCOUT") { say(`hunter lane: task done: ${result.routeTaskId ?? result.obligationId}; ${result.outcome ?? "NOT_RUN"}`); return; }
         const outcome = result.disposition === "INGESTED" ? "CAPTURED"
           : result.disposition === "WALKED_NO_YIELD" || result.disposition === "DISCOVERED" ? "NOTHING_FOUND" : "REFUSED";
         say(`hunter lane: Scout done: ${result.obligationId}; ${outcome}; code ${result.disposition ?? result.outcome ?? "NOT_RUN"}; usd ${result.cost?.usd === null || result.cost?.usd === undefined ? "unmeasured" : result.cost.usd.toFixed(6)}`);
       },
-      onStarted: pid => say(`hunter lane: lease worker process: pid ${pid}; pulls queued RouteTasks`),
-      onExited: (pid, why) => say(`hunter lane: lease worker process ended: pid ${pid}; ${why}`) });
+      onStarted: pid => { progress.started(); say(`hunter lane: lease worker process: pid ${pid}; pulls queued RouteTasks`); },
+      onExited: (pid, why) => { progress.ended(); say(`hunter lane: lease worker process ended: pid ${pid}; ${why}`); } })
+      .finally(progress.stop);
   },
 });
 

@@ -57,9 +57,12 @@ export function liveCycleHeartbeat(previous: RunnerHeartbeat | null, input: {
   readonly at: string; readonly startedAt: string; readonly testedSha: string | null; readonly host: string;
   readonly finishedAt?: string; readonly exitCode?: number | null; readonly signal?: string | null;
   readonly lastError?: string | null;
+  /** The host's memory at this beat; a beat that could not read it keeps the last reading, which carries its own time. */
+  readonly memory?: import("./workers/worker-slots.ts").HostMemoryReading | null;
 }): CycleHeartbeat {
   return {
     ...previous,
+    memory: input.memory ?? previous?.memory ?? null,
     formatVersion: previous?.formatVersion ?? 1,
     beatAt: input.at, lastCycleStartedAt: input.startedAt,
     lastCycleFinishedAt: input.finishedAt ?? previous?.lastCycleFinishedAt ?? null,

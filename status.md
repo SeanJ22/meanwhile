@@ -4,8 +4,8 @@ build_state: integrating (release 4 #710 open, auto-merge on; slide, ballot, adm
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01VxkjQwRW6tEj8XDPVSGkKU
-lock: river-20261005T225818Z-15877
-heartbeat: 2026-10-06T00:40:00Z
+lock: none
+heartbeat: 2026-10-06T00:36:07Z
 
 ## Next River run
 

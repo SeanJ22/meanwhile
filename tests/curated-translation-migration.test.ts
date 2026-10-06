@@ -8,7 +8,7 @@ import { translationHash } from "../lib/translate/records.ts";
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import type { TranslationAttempt } from "../lib/translate/standing.ts";
-import { readCuratedBodyDefinitions } from "../lib/officials/curated-definition-reader.ts";
+import { readCuratedBodyDefinitions, readCuratedContestOfficeBlurbs } from "../lib/officials/curated-definition-reader.ts";
 import { MINUTES_SUMMARIES } from "../lib/meetings/minutes-summaries.ts";
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 import { definitionsForBody } from "../lib/officials/body-definitions.ts";
@@ -79,4 +79,17 @@ test("original minutes migrate only with the exact held sitting/body/document an
  const held=(await readTranslations([county],{store,now,bypassCache:true}))[0];
  assert.equal(held.kind,"MINUTES");assert.equal(held.text,row.summary);assert.equal(held.curatedOrigin?.citation.url,row.minutesUrl);
  assert.equal(held.curatedOrigin?.citation.readOn,row.readAt);assert.equal(held.meeting?.documentHash,hash);
+});
+
+test("the normal ballot office reader shares one scoped held translation and preserves its original text/citation",async()=>{
+ const entry=curatedDefinitionEntries("AZ").find(row=>row.key==="office:az:us-senator")!;
+ const source=`Senator office\n${entry.preservedText.text}`;
+ const capture:WorkerPublicationCapture={evidence:{artifactId:"office-law",acquiredByAttemptId:"fixture",canonicalUrl:entry.preservedText.origin.citation.url!,
+  contentHash:`sha256-${translationHash(source)}`,text:source,retrievedAt:now,sourceId:"Constitution",methodRouteId:"held-office"},observedAt:now,httpStatus:200,transport:"REACHABLE",partial:false};
+ const repos=createMemoryRepositories(),store=new MemoryRoutineDataStore(),sentences=entry.preservedText.text.split(/(?<=[.!?])\s+(?=[A-Z])/u).map(text=>({field:"text",text,quote:text}));
+ const result=await runCuratedDefinitionMigrations({repos,store,now,divisions:[ocdId],entries:[entry],bindings:[{key:entry.key,label:"Senator office",sourceUrl:capture.evidence.canonicalUrl}],captures:[capture],attempts:[],saveAttempt:async()=>{},
+  transportFor:()=>async request=>response(request,request.tools[0].name==="write_text_translation" ? {text:entry.preservedText.text,sentences} : {checked:sentences.map(({field,text})=>({field,text,supported:true}))})});
+ assert.equal(result.outcomes[0]?.status,"PUBLISHED",JSON.stringify(result));
+ const blurbs=await readCuratedContestOfficeBlurbs([{id:"held-race",title:"United States Senator",ocdId}],{store,now,bypassCache:true});
+ assert.equal(blurbs.get("held-race")?.text,entry.preservedText.text);assert.equal(blurbs.get("held-race")?.basisUrl,entry.preservedText.origin.citation.url);
 });

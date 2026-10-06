@@ -32,7 +32,8 @@ import {
   linksForNominee,
   type CandidateLinks,
 } from "@/lib/ballot/candidate-sites";
-import { blurbForContestTitle } from "@/lib/officials/office-blurbs";
+import type { OfficeBlurb } from "@/lib/officials/office-blurbs";
+import { readCuratedContestOfficeBlurbs } from "@/lib/officials/curated-definition-reader";
 import { surnameDisplayCase } from "@/lib/ballot/name-case";
 import {
   cardForCandidacy,
@@ -509,6 +510,7 @@ async function BallotBattlecard({
   targetKey,
   contestTitle,
   contestOcdId,
+  officeBlurb,
   federal,
   contestCandidates,
   contestId,
@@ -538,6 +540,7 @@ async function BallotBattlecard({
   contestTitle: string;
   /** The contest's division, so a state-scoped office explainer can resolve. */
   contestOcdId: string;
+  officeBlurb: OfficeBlurb | null;
   /** Whether the contest is federal, which decides whether FEC money applies. */
   federal: boolean;
   /**
@@ -629,7 +632,6 @@ async function BallotBattlecard({
    */
   const recordHolder = holder ?? resolvedStanding?.holderFor.get(targetKey) ?? null;
 
-  const officeBlurb = blurbForContestTitle(contestTitle, contestOcdId);
   let positions: ReturnType<typeof positionsFor> = [];
   let positionsUnavailable = !authorityAvailability.candidatePublications;
   if (!positionsUnavailable) {
@@ -1367,6 +1369,8 @@ export default async function BallotPage({
       ? { shared: false, marker: null, anchor: null }
       : { shared: true, marker: sharedSources[index].marker, anchor: `source-note-${index}` };
   };
+
+  const officeBlurbs = await readCuratedContestOfficeBlurbs(matched?.contests ?? []);
 
   const filingProjection = await filingRead;
   const filingRows = filingProjection?.kind === "PROMOTED"
@@ -2193,7 +2197,7 @@ export default async function BallotPage({
                   register, at the top of the contest. Describes the office,
                   never the people running for it. Voice register. */}
               {(() => {
-                const blurb = blurbForContestTitle(contest.title, contest.ocdId);
+                const blurb = officeBlurbs.get(contest.id) ?? null;
                 return blurb ? (
                   <p className="mt-2 text-[0.75rem] leading-relaxed text-voice">
                     {blurb.text}
@@ -2312,6 +2316,7 @@ export default async function BallotPage({
                             targetKey={`${contest.id}|${nominee.name}`}
                             contestTitle={contest.title}
                             contestOcdId={contest.ocdId}
+                            officeBlurb={officeBlurbs.get(contest.id) ?? null}
                             federal={isFederalContest(contest)}
                             contestId={contest.id}
                             contestVoteFor={contest.voteFor}
@@ -2486,6 +2491,7 @@ export default async function BallotPage({
                               targetKey={cand.id}
                               contestTitle={contest.title}
                               contestOcdId={contest.ocdId}
+                              officeBlurb={officeBlurbs.get(contest.id) ?? null}
                               federal={isFederalContest(contest)}
                               contestId={contest.id}
                               contestVoteFor={contest.voteFor}

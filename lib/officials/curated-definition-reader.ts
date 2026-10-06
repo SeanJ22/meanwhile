@@ -1,6 +1,6 @@
 import { formFor } from "./body-form.ts";
 import { definitionsForBody } from "./body-definitions.ts";
-import { blurbForTitle, officeTypeForTitle } from "./office-blurbs.ts";
+import { blurbForTitle, officeTypeForTitle, blurbForContestTitle, officeTypeForContestTitle } from "./office-blurbs.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readTranslations } from "../translate/publication.ts";
 import { textTranslationFor } from "../translate/reader.ts";
@@ -37,4 +37,23 @@ export async function readCuratedOfficeBlurb(title: string, divisionOcdId: strin
   const general=textTranslationFor(records,{kind:"OFFICE",subjectId:`office:${jurisdiction.usps}:${key}`,ocdId:stateOcd});
   const held=originalDefinition(specific ?? general);
   return held ? {text:held.text,basis:held.basis,basisUrl:held.basisUrl} : legacy;
+}
+
+/** One scoped translation read supplies a whole ballot; async cards receive
+ * the selected value and never reopen a store outside the page's edge. */
+export async function readCuratedContestOfficeBlurbs(contests: readonly { id: string; title: string; ocdId: string }[], options: PromotedCivicDataReadOptions = {}) {
+  const scopes=contests.flatMap(contest=>{
+    const jurisdiction=jurisdictionFromOcdId(contest.ocdId);
+    return jurisdiction ? [`ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`,contest.ocdId] : [];
+  });
+  const records=await readTranslations(scopes,options);
+  return new Map(contests.map(contest=>{
+    const legacy=blurbForContestTitle(contest.title,contest.ocdId),jurisdiction=jurisdictionFromOcdId(contest.ocdId),key=officeTypeForContestTitle(contest.title);
+    if(!jurisdiction || !key)return [contest.id,legacy] as const;
+    const stateOcd=`ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
+    const specific=textTranslationFor(records,{kind:"OFFICE",subjectId:`office:${jurisdiction.usps}:${key}:division:${contest.ocdId}`,ocdId:contest.ocdId});
+    const general=textTranslationFor(records,{kind:"OFFICE",subjectId:`office:${jurisdiction.usps}:${key}`,ocdId:stateOcd});
+    const held=originalDefinition(specific ?? general);
+    return [contest.id,held ? {text:held.text,basis:held.basis,basisUrl:held.basisUrl} : legacy] as const;
+  }));
 }

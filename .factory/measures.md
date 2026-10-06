@@ -1,10 +1,10 @@
 build_state: active
 worker: measures
 provider: Claude
-run_id: scheduled-2026-10-06T00Z
+run_id: scheduled-2026-10-06T01Z
 lock: none
-heartbeat: 2026-10-06T00:45:00Z
-on_river: SC-01, SC-02, SC-03, SC-04, SC-05, SC-06, SC-07, SC-08, SC-09 (build), SC-11, SC-12, SC-13, SC-16, SC-20, BR-08, BR-21 (River folds through a88a0726c; BR-23 was named in the 940b11c58 fold but scoreboard-read.ts is not on river, so BR-23 is not built)
+heartbeat: 2026-10-06T01:00:00Z
+on_river: (2026-10-06 01:00Z check: BR-23, BR-14, BR-25, SC-10, SC-14, BR-33, BR-34, BR-30, SC-19 READY commits are now ancestors of river) SC-01, SC-02, SC-03, SC-04, SC-05, SC-06, SC-07, SC-08, SC-09 (build), SC-11, SC-12, SC-13, SC-16, SC-20, BR-08, BR-21 (River folds through a88a0726c; BR-23 was named in the 940b11c58 fold but scoreboard-read.ts is not on river, so BR-23 is not built)
 ready: BR-32 at df6f5e2f110304b4b0315f1577d1e7fc5ef37e69; BR-23 at 3753c6c126352d642c4426a3baa9577ed1932ed7; BR-14 at 033dd9abf0ea76644b4d100281141f342195fc51; BR-25 at e47bf4a5f4f22ec7d7b69a2a5b7d17a3e385fed6; SC-10 at 8640184bd1746e2d89e8ab55b46ade117f05222f; SC-14, BR-33 at fa1299e1d8bc78cf6d31d313e3b021498824dc30; BR-34 at dd3b552a4b5004dcd4e707779dfceddb7f266e0f; BR-30, SC-19 at 3ebea50717bb05a9de1a85fdf82efaade0d7444c
 checks: BR-32 on the river 6af6f8a50 base: full suite (env -u DATABASE_URL -u WTP_ASSET_STORE): 9485 tests, 9474 pass, 0 fail, 11 skipped; tsc clean; eslint clean on changed files; tests/door-numbers.test.ts added. Not viewed live (no Admin sign-in). | earlier: BR-30 and SC-19 on the BR-34 base: full suite as CI runs it (env -u DATABASE_URL -u WTP_ASSET_STORE): 9384 tests, 9373 pass, 0 fail, 11 skipped. tsc --noEmit clean; eslint clean on changed files. New tests in tests/admin-v6-scoreboard.test.ts (now 10). Not viewed live (no Admin sign-in here); the Scoreboard reads up to 8 sent places live, so its load time on production is unmeasured.
 working_on: nothing buildable; all other steps are waiting (see waiting_on)

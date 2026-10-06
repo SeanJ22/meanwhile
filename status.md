@@ -4,13 +4,21 @@ build_state: release 12 LIVE on main (c814d4c); river = c83c04d (adds hunters CH
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_0143FbQt9iKZUszoLdVyVdQv
-lock: river-session_0143FbQt9iKZUszoLdVyVdQv-1791309444
-heartbeat: 2026-10-06T17:57:24Z
+lock: none
+heartbeat: 2026-10-06T17:58:21Z
 
 
 
 
-## This run (session_0123HcBRvYjpHDb1FwB9LTVg, claimed the free lock Oct 6, 12:58 PM EDT)
+## This run (session_0143FbQt9iKZUszoLdVyVdQv, claimed the free lock Oct 6, 1:57 PM EDT)
+
+- No change; no fold, no gates, no release. Runner still stopped at 1:58 PM EDT (cp_runner_heartbeat last beat 07:12:49Z on a5fd753; cp_vital_signs absent). Restart already with Sean; not re-pushed.
+- Scan: no new READY on any lane. Held, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b DB-21 (runner door switches); admin 734ee9633 (returned). Codex lanes still with their paired Claude workers (no handback recorded).
+- river c83c04d (CH-23, off by default) still waits for the next normal batch or the first release after the runner restarts.
+- Open PRs #704, #701, #599 unchanged. No push to Sean.
+- Next River run: same list as below.
+
+## Previous run (session_0123HcBRvYjpHDb1FwB9LTVg, claimed the free lock Oct 6, 12:58 PM EDT)
 
 - Runner: still stopped at 12:58 PM EDT (cp_runner_heartbeat last beat 07:12:49Z on a5fd753; cp_vital_signs absent). Restart already with Sean; not re-pushed.
 - **Folded hunters cbb51190e (CH-23 parts 1 and 2; behind WTP_ONE_HUNTER_PATH, off by default)** on river-next c83c04d over river c814d4c. No conflicts; no migrations. Firewall PASS (0 findings, 7,604 files). History unshallowed first.

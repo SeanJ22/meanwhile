@@ -44,3 +44,20 @@ Order: the post-cutoff deferral return above (01:10Z) comes first. CH-24 part 2 
 ## River note, 2026-10-06 ~03:50Z
 
 Batch API (Sean, 2026-10-06): after CH-24 Proposal A, unattended Scouts send each step through River's shared step batcher (model-batch.ts, coming from River): the job pauses between steps, its conversation is saved so it survives a restart, and it picks up again on the batch result. Ask and Sean's direct orders stay on Messages. Also count the round's cache pre-warm (attemptId scout-prewarm:*) as its own result kind, not a Scout with no result (Sean's no-empty-paid-endings rule, decisions.md).
+
+## River, 2026-10-06 ~04:00Z: no paid worker ends with nothing (Sean's rule, decisions.md)
+
+River's investigation (read-only, production) reproduced Sean's $85.36 Scout and Detective spend over 14 days, of which $40.40 left nothing (cost rows whose resultKind is missing, NO_DISPOSITION, DISPOSITION_REFUSED or REQUIRES_NEW_ADAPTER). Causes in your code, in order of spend:
+1. **Route candidates are almost never followed.** 176 paid ROUTE_CANDIDATE jobs ($36.36) had no later disposition on their work item. 321 of 331 Scout ROUTE_CANDIDATE items never got past SCOUTED, because CONFIRMED needs an ACQUIRER artifact at that URL (promotion/pipeline.ts confirmationFromArtifacts) and nothing queues one. DISCOVERED becomes debt AWAITING_ROUTINE_READ (debt.ts:79), which nothing reads. 25 jobs paid for another Scout on the same obligation; 33 ($10.02) got no follow-up at all. **Fix: an opened candidate URL queues an ACQUIRER task for it.** Also, freshness-shadow.mts:3238 prints DISCOVERED as "NOTHING_FOUND"; say what it found.
+2. **NO_PROGRESS** (17 jobs, about $3): dispositionForScout returns null (scout-executor.ts:1171-1173, 2200-2207; dispatch.ts:982), so the attempt is ABORTED. The next rungs survive only on the scout result. Record a disposition so the rungs tried count as a result, and write an "exhausted on these rungs" lesson to the field manual (bank owns field-manual.ts; ask under needs_hook).
+3. **SCOUT_RESULT_REFUSED** (5 jobs, $0.49; scout-executor.ts:2190): keep the rungs as tried and ask the model for a repaired finish instead of discarding the walk.
+4. **DISPOSITION_REFUSED** (45 jobs, $1.56, all on 09-28): EVIDENCE_FOUND cited artifacts already logged by other attempts, the new-artifact list was empty, and INGESTED was refused (route-task.ts:281; dispatch.ts:906-930, 1040). Example: at-0406fa3f6592ed9b6b2fdeb5. Pass the cited, already-logged artifacts into the disposition. It has not been seen since 09-28; confirm whether fecc5f262 fixed it.
+5. **REQUIRES_NEW_ADAPTER** (dispatch.ts; debt.ts:78; shadow-loop.ts:533): no engineering task is ever created. autonomous-plan.ts:53 hard-codes engineering: [], and one ENGINEERING task has existed, in total. Queue the adapter task from the disposition.
+6. **Spend that never reaches cp_log_costs:**
+   - The thrown-worker path writes cost: null (dispatch.ts:804-830). Three Scouts on 09-28 threw "r.nextRungs.join is not a function".
+   - LEASE_EXPIRED attempts write no cost row: at-f9f2400a, at-4a193a32, at-0b2a7caa, at-02718cf3.
+   - Cost is written only after executor.run returns, so a SIGKILLed round loses all in-flight spend.
+   
+   Price spend from usage saved as it accrues, and write it on throw and on lease expiry. River adds the repository side (CostEntry.endingKind, see below).
+7. **The cache pre-warm** (freshness-shadow.mts:2608-2661; 31 rows over 14 days) is labelled CACHE_WARMUP, not left blank.
+Result kind: River is adding `endingKind` to CostEntry (lib/control-plane/cost.ts). It is a closed set: FINDING, INGEST, ROUTE_FOUND, BLOCKED_WITH_TRIES, UNPUBLISHED_WITH_TRIES, ADAPTER_REQUESTED, LESSON_SAVED, CACHE_WARMUP, NOTHING, UNKNOWN_LEGACY. Each kind except the last three carries the id of its disposition, task or field-manual entry. Set it at every ledgerCost/recordCost call in dispatch.ts (which already stamps resultKind at :734-760 and :1054-1070).

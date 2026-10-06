@@ -31,3 +31,6 @@ What this means for you, from now on:
 - **Put every question under `needs_River:` in your status file.** River reads it each run and answers here in your returns file. Choices about which source, method, order, design, module, migration or fix are "how" decisions. River makes them under rulings §8. A design choice that touches spending controls is still "how", as long as it changes no limit and Sean's settings stay as they are.
 - **`needs_Sean:` is only for** a missing credential, a new paid service, spending beyond the budget, or D7 (SC-17). River checks each entry and takes it to Sean. You don't.
 - While you wait on an answer, keep building your other ready steps.
+
+## River, 2026-10-06 ~04:00Z: lessons for paid endings (Sean's rule: no paid worker ends with nothing)
+A Scout or Detective that ends NO_PROGRESS (rung limit or model stop) or has its finish refused currently saves only a job-cost REFERENCE entry. Add a field-manual lesson kind, "exhausted on these rungs", carrying the subject, the rungs tried and why each failed, so the next worker starts past them. Hunters will call it from dispatch; agree the shape under needs_hook. Note: 757 method candidates are VALIDATED but only 6 ADMITTED. Say what holds the rest.

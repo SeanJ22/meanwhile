@@ -3,9 +3,9 @@
 build_state: release 12 LIVE on main (c814d4c); river = d89746b (adds hunters CH-23 parts 1–3 and CH-20, all behind switches off by default; gates 12/12; not yet released, next normal batch or first release after the runner restarts); runner still stopped (restart with Sean since 8:28 AM EDT)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
-run_id: session_01EJWrnyFbffUajJtnCW6EWs
-lock: none
-heartbeat: 2026-10-06T19:45:00Z
+run_id: session_01VH6HDTQ3GQCWMZNKtTULak
+lock: river-20261006T1957-26410
+heartbeat: 2026-10-06T19:57:59Z
 
 ## This run (session_01EJWrnyFbffUajJtnCW6EWs, claimed the free lock Oct 6, 2:57 PM EDT)
 

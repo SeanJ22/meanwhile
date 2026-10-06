@@ -2,6 +2,7 @@
 
 // VOT-1: the ring is drawn at the radius the panel sorts by, so the picture
 // and the list can never disagree about what "near" means.
+import { readDesignToken } from "@/lib/design/read-token";
 import { NEARBY_RADIUS_MILES } from "@/lib/ballot/voting-sites";
 
 // MapLibre 6 dropped its default export; everything is named now.
@@ -1081,14 +1082,14 @@ export function MapCanvas({
         id: FILL,
         type: "fill",
         source: SOURCE,
-        paint: { "fill-color": "#7c5cff", "fill-opacity": 0.06 },
+        paint: { "fill-color": readDesignToken("--ask"), "fill-opacity": 0.06 },
       });
       map.addLayer({
         id: LINE,
         type: "line",
         source: SOURCE,
         paint: {
-          "line-color": "#7c5cff",
+          "line-color": readDesignToken("--ask"),
           "line-width": 1.25,
           "line-opacity": 0.5,
           "line-dasharray": [3, 3],

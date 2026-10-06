@@ -138,6 +138,8 @@ export async function runLeaseWorkerProcesses(input: {
   readonly searchFor?: (subjectId: string) => ScoutToolContext["search"];
   readonly reserveEscalation?: ScoutExecutorDeps["reserveEscalation"];
   readonly onStarted?: (pid: number) => void;
+  /** A worker process ended: how, in a few words (its exit, or why it was ended). */
+  readonly onExited?: (pid: number, why: string) => void;
   /** Read current place priority before the next existing lease is claimed. */
   readonly orderPending?: (ids: readonly string[]) => Promise<readonly string[]>;
   readonly onDispatched?: (result: DispatchResult) => void | Promise<void>;
@@ -298,6 +300,7 @@ export async function runLeaseWorkerProcesses(input: {
     });
     child.once("exit", code => {
       clearTimeout(killTimer);
+      if (child.pid) input.onExited?.(child.pid, terminationError ? (terminationError as Error).message : `exit ${code}`);
       const finish = () => {
         if (input.config.nationalZips) for (const id of ids) { assigned.delete(id); pending.delete(id); }
         for (const reserved of reservations.values()) if (reserved.admit) reserved.release();

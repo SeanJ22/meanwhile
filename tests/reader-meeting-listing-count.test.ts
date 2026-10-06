@@ -50,7 +50,7 @@ test("all current ambiguous listing pairs survive scope filtering without becomi
 });
 
 test("actual badge, stats, overlay and venue panel render every ambiguous listing source and honest units", () => {
-  const output = execFileSync(process.execPath, ["--import", "data:text/javascript,process.geteuid=()=>0", "--import", "tsx", "--input-type=module", "-e", `
+  const output = execFileSync(process.execPath, ["--import", "data:text/javascript,process.geteuid=()=>0", "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", `
     import { createElement as h } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
     import { DataProvider } from './lib/state/data.tsx';

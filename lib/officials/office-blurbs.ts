@@ -19,33 +19,8 @@
  * drift apart.
  */
 
-export type OfficeType =
-  | "us-senator"
-  | "us-representative"
-  | "state-senator"
-  | "state-representative"
-  | "county-commissioner"
-  | "school-board"
-  | "superintendent"
-  | "mayor"
-  | "city-council"
-  | "select-board"
-  | "nj-municipal-governing-body"
-  | "governor"
-  | "executive-councilor"
-  | "secretary-of-state"
-  | "attorney-general"
-  | "state-treasurer"
-  | "superintendent-public-instruction"
-  | "mine-inspector"
-  | "corporation-commissioner"
-  | "county-sheriff"
-  | "county-attorney"
-  | "county-treasurer"
-  | "register-of-deeds"
-  | "register-of-probate"
-  | "county-surrogate"
-  | "county-clerk";
+/** Runtime kinds validate source-backed office records; legacy blurbs remain the way back. */
+export type OfficeType = string;
 
 export interface OfficeBlurb {
   /** The plain-words explanation. The author's register, checked. */

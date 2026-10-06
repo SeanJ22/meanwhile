@@ -360,3 +360,20 @@ test("tracked statement and candidate-universe writer doors stay deleted", () =>
   const pilot = readFileSync(join(ROOT, "scripts", "pilot-runner.mts"), "utf8");
   assert.match(pilot, /scripts\/freshness-shadow\.mts/);
 });
+
+
+test("general ballots add candidate inventory outside the legacy states and never infer an unknown election cycle",()=>{
+  const provenance={sourceUrl:"https://elections.example.gov/candidates",sourceOrg:"Election authority",collectedAt:T0,verifiedAt:T0};
+  const common={az:null,nh:null,nj:null,profiles:{cards:{curatedAt:T0,note:"Held empty",cards:{},hunts:[]},links:{curatedAt:T0,note:"Held empty",links:{},hunts:[]}},corpus:{formatVersion:1 as const,fetchedAt:T0,attempted:0,documents:[],failures:[]},failures:[]};
+  const division="ocd-division/country:us/state:oh/county:alder";
+  const ballot={election:{id:"fixture-election",state:"OH",name:"General election",date:"2026-11-03"},contests:[{id:"fixture-contest",electionId:"fixture-election",ocdId:division,divisionVintage:"fixture",title:"County Council",type:"CANDIDACY" as const,voteFor:null,termYears:null,scopeNote:null,provenance}],candidacies:[{id:"fixture-candidate",contestId:"fixture-contest",familyName:"Example",givenName:"Avery",partyLabel:null,slogan:null,incumbent:null,websiteUrl:null,provenance}],measures:[],absences:[]};
+  const general={kind:"ballot-contests" as const,ballots:{"OH:fixture-election":ballot}};
+  const read=candidateEnrichmentUniversesFromHoldings({...common,general},T0);
+  assert.equal(read.universes.oh?.candidacies.length,1);
+  assert.deepEqual(read.universes.oh!.candidacies[0].pilotIds,["fixture-candidate"]);
+  assert.equal(read.universes.az,undefined);
+  assert.deepEqual(read.failures,[]);
+  const unknown=candidateEnrichmentUniversesFromHoldings({...common,general:{...general,ballots:{"OH:fixture-election":{...ballot,election:{...ballot.election,date:""}}}}},T0);
+  assert.equal(unknown.universes.oh,undefined);
+  assert.match(unknown.failures.join(" "),/election year is not held/);
+});

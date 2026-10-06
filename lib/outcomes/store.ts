@@ -81,6 +81,7 @@ import {
   PIMA_LEGISTAR_OUTCOMES_CONTRACT,
 } from "./data-plane.ts";
 import { currentMeetingOutcomesEdge, settleEdgeFirst } from "../registry/runtime-edge.ts";
+import { DOOR_OUTCOME_POINTERS, doorOutcomeScopeIssue, type DoorOutcomePointer } from "./door-outcome-pointers.ts";
 
 /** Where the committed store lives, relative to the repo root. */
 export const OUTCOME_SNAPSHOT_PATH = ["data", "states", "az", "outcomes", "legistar-outcomes.json"];
@@ -115,6 +116,24 @@ const MESA = MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT;
 const mesaNotInitialized = (): CivicDataReadResult<OutcomeSnapshot> =>
   civicDataReadNotInitialized(MESA.recordClass, MESA.scope, "The Mesa minutes outcome pointer has not been read for this process.");
 let mesaReadState: CivicDataReadResult<OutcomeSnapshot> = mesaNotInitialized();
+
+/**
+ * **EVERY DOOR'S POINTER, HELD BESIDE THEM** (DB-22). A door that collects outcomes has its own scope and pointer, so
+ * its refusal never moves another door's facts. Each is read into its own state; a failed read is recorded there and
+ * never costs a reader the others' answers. Empty unless a process read the registry's doors
+ * (`door-outcome-pointers.ts`), and then the Reader combines these exactly as it combines Mesa's.
+ */
+const doorReadStates = new Map<string, { readonly pointer: DoorOutcomePointer; readonly state: CivicDataReadResult<OutcomeSnapshot> }>();
+/**
+ * What an edge artifact carried for the doors: every sitting that is neither Pima's nor Mesa's, with the pointers it
+ * names. An edge process has no door list of its own, so the artifact is the list.
+ */
+let edgeDoorPart: { readonly value: OutcomeSnapshot; readonly pointers: readonly OutcomePointerRef[] } | null = null;
+
+/** One or more doors' promoted sittings, with the pointers (version per door) they were read at. */
+export interface DoorOutcomePart { readonly value: OutcomeSnapshot; readonly pointers: readonly OutcomePointerRef[] }
+
+export interface OutcomePointerRef { readonly contractId: string; readonly tenant: string; readonly versionId: string }
 
 /**
  * The committed store, read once per process.
@@ -164,6 +183,8 @@ export function useOutcomeSnapshotForTests(snapshot: OutcomeSnapshot | null): vo
     "The Pima Legistar outcome pointer has not been read for this process.",
   );
   mesaReadState = mesaNotInitialized();
+  doorReadStates.clear();
+  edgeDoorPart = null;
 }
 
 function testSeed(): OutcomeSnapshot | null {
@@ -256,12 +277,68 @@ export async function refreshOutcomeSnapshotFromPromoted(
 ): Promise<string | null> {
   const [pima] = await Promise.all([
     readOutcomeProjection(options),
+    readDoorOutcomeProjections(options),
     readMesaOutcomeProjection(options).catch((error: unknown) => {
       mesaReadState = civicDataReadNotInitialized(MESA.recordClass, MESA.scope, `The Mesa minutes outcome read failed: ${error instanceof Error ? error.message : String(error)}`);
       return mesaReadState;
     }),
   ]);
   return promotedVersionOrThrow(pima);
+}
+
+/**
+ * Read every door's exact GOOD pointer into its own state. A read that fails is recorded in that door's state and is
+ * never thrown: one door's store failure cannot cost a reader Pima's, Mesa's or another door's answers.
+ */
+async function readOneDoorOutcome(pointer: DoorOutcomePointer, options: PromotedCivicDataReadOptions): Promise<CivicDataReadResult<OutcomeSnapshot>> {
+  const read = await readPromotedCivicData<OutcomeSnapshot>(pointer.recordClass, pointer.scope, options);
+  if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
+    const issue = !Array.isArray(read.value.sittings) || !Array.isArray(read.value.tenants)
+      ? `${pointer.contractId} is malformed.`
+      : doorOutcomeScopeIssue(pointer, read.value);
+    if (issue !== null) throw new Error(`Door outcome projection ${read.metadata.versionId ?? "unknown"}: ${issue}`);
+  }
+  return read;
+}
+
+/** One door's exact GOOD pointer by scope, for its own reader verification and proof. */
+export async function readDoorOutcomeProjection(
+  scope: string,
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<OutcomeSnapshot>> {
+  const pointer = DOOR_OUTCOME_POINTERS.find((candidate) => candidate.scope === scope);
+  if (pointer === undefined) throw new Error(`DOOR_OUTCOME_POINTER_UNKNOWN:${scope}`);
+  return readOneDoorOutcome(pointer, options);
+}
+
+export async function readDoorOutcomeProjections(options: PromotedCivicDataReadOptions = {}): Promise<void> {
+  const pointers = [...DOOR_OUTCOME_POINTERS];
+  for (const key of [...doorReadStates.keys()]) if (!pointers.some((pointer) => pointer.contractId === key)) doorReadStates.delete(key);
+  await Promise.all(pointers.map(async (pointer) => {
+    try {
+      doorReadStates.set(pointer.contractId, { pointer, state: await readOneDoorOutcome(pointer, options) });
+    } catch (error) {
+      doorReadStates.set(pointer.contractId, {
+        pointer,
+        state: civicDataReadNotInitialized(pointer.recordClass, pointer.scope, `The ${pointer.contractId} outcome read failed: ${error instanceof Error ? error.message : String(error)}`),
+      });
+    }
+  }));
+}
+
+/** The doors whose read failed (neither promoted nor honestly not recorded yet); a publisher leaves these out whole. */
+export function doorOutcomesUnreadable(): readonly string[] {
+  return [...doorReadStates.values()]
+    .filter(({ state }) => state.kind !== "PROMOTED" && state.kind !== "NOT_RECORDED" && state.kind !== "BOOTSTRAP")
+    .map(({ pointer }) => pointer.contractId);
+}
+
+/** Each door's promoted part, for the combined view and the edge publisher. */
+export function doorOutcomeParts(): readonly { readonly pointer: DoorOutcomePointer; readonly value: OutcomeSnapshot; readonly versionId: string }[] {
+  return [...doorReadStates.values()].flatMap(({ pointer, state }) =>
+    (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") && state.metadata.versionId
+      ? [{ pointer, value: state.value, versionId: state.metadata.versionId }]
+      : []);
 }
 
 /** Mesa's version alone, for its own reader verification and proof. */
@@ -291,12 +368,30 @@ function edgeMetadata(contract: { readonly recordClass: typeof PIMA_LEGISTAR_OUT
 }
 
 /** One tenant's part of a combined snapshot. */
-function tenantPart(value: OutcomeSnapshot, tenant: string): OutcomeSnapshot {
+function tenantPart(value: OutcomeSnapshot, tenant: string, meetingPrefix: string): OutcomeSnapshot {
   return {
     generatedOn: value.generatedOn,
     generatedAt: value.generatedAt,
     tenants: value.tenants.filter((slug) => slug === tenant),
-    sittings: value.sittings.filter((sitting) => sitting.slug === tenant),
+    sittings: value.sittings.filter((sitting) => sitting.slug === tenant && sitting.meetingId.startsWith(meetingPrefix)),
+  };
+}
+
+/** What an edge artifact carries beyond Pima's and Mesa's: every door's sittings, still named by their pointers. */
+function doorPartOf(value: OutcomeSnapshot): { readonly value: OutcomeSnapshot; readonly pointers: readonly OutcomePointerRef[] } | null {
+  const named = new Set<string>([PIMA_LEGISTAR_OUTCOMES_CONTRACT.contractId, MESA.contractId]);
+  const pointers = (value.pointers ?? []).filter((pointer) => !named.has(pointer.contractId));
+  if (pointers.length === 0) return null;
+  const sittings = value.sittings.filter((sitting) =>
+    !sitting.meetingId.startsWith("legistar:pima:") && !sitting.meetingId.startsWith(`legistar-insite:${MESA.slug}:`));
+  return {
+    value: {
+      generatedOn: value.generatedOn,
+      generatedAt: value.generatedAt,
+      tenants: [...new Set(sittings.map((sitting) => sitting.slug))].sort(),
+      sittings,
+    },
+    pointers,
   };
 }
 
@@ -305,9 +400,15 @@ function tenantPart(value: OutcomeSnapshot, tenant: string): OutcomeSnapshot {
  * Mesa has no pointer (so the artifact carried before this change stays
  * current), and both, named, once it does.
  */
-export function combinedOutcomeVersionId(pimaVersionId: string | null, mesaVersionId: string | null): string | null {
-  if (mesaVersionId === null) return pimaVersionId;
-  return [pimaVersionId, `${MESA.contractId}=${mesaVersionId}`].filter((part): part is string => part !== null).join("|");
+export function combinedOutcomeVersionId(
+  pimaVersionId: string | null,
+  mesaVersionId: string | null,
+  doors: readonly { readonly contractId: string; readonly versionId: string }[] = [],
+): string | null {
+  if (mesaVersionId === null && doors.length === 0) return pimaVersionId;
+  const named = [...doors].sort((a, b) => a.contractId.localeCompare(b.contractId)).map((door) => `${door.contractId}=${door.versionId}`);
+  const parts = [pimaVersionId, mesaVersionId === null ? null : `${MESA.contractId}=${mesaVersionId}`, ...named].filter((part): part is string => part !== null);
+  return parts.length === 0 ? null : parts.join("|");
 }
 
 /**
@@ -318,11 +419,12 @@ export function combinedOutcomeVersionId(pimaVersionId: string | null, mesaVersi
 export function combineOutcomeProjections(
   pima: { readonly value: OutcomeSnapshot; readonly versionId: string } | null,
   mesa: { readonly value: OutcomeSnapshot; readonly versionId: string } | null,
+  doors: readonly DoorOutcomePart[] = [],
 ): { readonly value: OutcomeSnapshot; readonly versionId: string } | null {
-  const versionId = combinedOutcomeVersionId(pima?.versionId ?? null, mesa?.versionId ?? null);
+  const versionId = combinedOutcomeVersionId(pima?.versionId ?? null, mesa?.versionId ?? null, doors.flatMap((door) => door.pointers));
   if (versionId === null) return null;
-  if (mesa === null) return { value: pima!.value, versionId };
-  const parts = [pima, mesa].filter((part): part is { value: OutcomeSnapshot; versionId: string } => part !== null);
+  if (mesa === null && doors.length === 0) return { value: pima!.value, versionId };
+  const parts: { readonly value: OutcomeSnapshot }[] = [...(pima ? [pima] : []), ...(mesa ? [mesa] : []), ...doors];
   const stamp = (key: "generatedOn" | "generatedAt") =>
     parts.map(({ value }) => value[key]).filter((stamped) => stamped !== "UNKNOWN").sort().at(-1) ?? "UNKNOWN";
   return {
@@ -334,7 +436,8 @@ export function combineOutcomeProjections(
       sittings: parts.flatMap(({ value }) => value.sittings).sort((a, b) => a.meetingId.localeCompare(b.meetingId)),
       pointers: [
         ...(pima ? [{ contractId: PIMA_LEGISTAR_OUTCOMES_CONTRACT.contractId, tenant: "pima", versionId: pima.versionId }] : []),
-        { contractId: MESA.contractId, tenant: MESA.slug, versionId: mesa.versionId },
+        ...(mesa ? [{ contractId: MESA.contractId, tenant: MESA.slug, versionId: mesa.versionId }] : []),
+        ...doors.flatMap((door) => door.pointers).sort((a, b) => a.contractId.localeCompare(b.contractId)),
       ],
     },
   };
@@ -355,7 +458,7 @@ export function primeOutcomeProjection(value: OutcomeSnapshot, versionId: string
   const pointers = value.pointers;
   const pimaPointer = pointers?.find((pointer) => pointer.contractId === PIMA_LEGISTAR_OUTCOMES_CONTRACT.contractId) ?? null;
   const mesaPointer = pointers?.find((pointer) => pointer.contractId === MESA.contractId) ?? null;
-  const pimaValue = pointers ? tenantPart(value, "pima") : value;
+  const pimaValue = pointers ? tenantPart(value, "pima", "legistar:pima:") : value;
   const pimaVersion = pointers ? pimaPointer?.versionId ?? null : versionId;
   if (pimaVersion !== null) {
     validateOutcomeProjection(pimaValue, pimaVersion);
@@ -374,7 +477,7 @@ export function primeOutcomeProjection(value: OutcomeSnapshot, versionId: string
     };
   }
   if (mesaPointer !== null) {
-    const mesaValue = tenantPart(value, MESA.slug);
+    const mesaValue = tenantPart(value, MESA.slug, `legistar-insite:${MESA.slug}:`);
     validateMesaOutcomeProjection(mesaValue, mesaPointer.versionId);
     mesaReadState = {
       kind: "BOOTSTRAP",
@@ -392,6 +495,7 @@ export function primeOutcomeProjection(value: OutcomeSnapshot, versionId: string
       detail: `The meeting-outcomes edge artifact (version ${versionId}) carries no Mesa pointer.`,
     };
   }
+  edgeDoorPart = doorPartOf(value);
   edgePrimedVersion = versionId;
 }
 
@@ -414,24 +518,37 @@ function pimaSnapshot(): OutcomeSnapshot {
     : EMPTY;
 }
 
-let combinedMemo: { pima: OutcomeSnapshot; mesa: OutcomeSnapshot; value: OutcomeSnapshot } | null = null;
+let combinedMemo: { pima: OutcomeSnapshot; mesa: OutcomeSnapshot | null; doors: readonly OutcomeSnapshot[]; value: OutcomeSnapshot } | null = null;
+
+/** The doors' parts in force: the ones this process read, else what the edge artifact carried. */
+function doorPartsInForce(): readonly DoorOutcomePart[] {
+  const read = doorOutcomeParts();
+  if (read.length > 0) {
+    return read.map((part) => ({ value: part.value, pointers: [{ contractId: part.pointer.contractId, tenant: part.pointer.slug, versionId: part.versionId }] }));
+  }
+  return edgeDoorPart === null ? [] : [edgeDoorPart];
+}
 
 /**
- * The snapshot every Reader consumer reads: Pima's projection, plus Mesa's
- * once it has one. Pima alone is returned as the very object it was read as.
+ * The snapshot every Reader consumer reads: Pima's projection, plus Mesa's and each door's once they have one. Pima
+ * alone is returned as the very object it was read as.
  */
 export function getOutcomeSnapshot(): OutcomeSnapshot {
   if (injected !== null) return injected;
   const pima = pimaSnapshot();
-  const mesa = mesaReadState.kind === "PROMOTED" || mesaReadState.kind === "BOOTSTRAP" ? mesaReadState.value : null;
-  if (mesa === null || mesa.sittings.length === 0) return pima;
-  if (combinedMemo?.pima === pima && combinedMemo.mesa === mesa) return combinedMemo.value;
+  const mesaRead = mesaReadState.kind === "PROMOTED" || mesaReadState.kind === "BOOTSTRAP" ? mesaReadState.value : null;
+  const mesa = mesaRead !== null && mesaRead.sittings.length > 0 ? mesaRead : null;
+  const doors = doorPartsInForce().filter((part) => part.value.sittings.length > 0);
+  if (mesa === null && doors.length === 0) return pima;
+  if (combinedMemo?.pima === pima && combinedMemo.mesa === mesa && combinedMemo.doors.length === doors.length &&
+      combinedMemo.doors.every((part, at) => part === doors[at].value)) return combinedMemo.value;
   const pimaVersion = outcomeReadState.metadata.versionId;
   const combined = combineOutcomeProjections(
     pima.sittings.length > 0 || pimaVersion ? { value: pima, versionId: pimaVersion ?? "unversioned" } : null,
-    { value: mesa, versionId: mesaReadState.metadata.versionId ?? "unversioned" },
+    mesa === null ? null : { value: mesa, versionId: mesaReadState.metadata.versionId ?? "unversioned" },
+    doors,
   )!.value;
-  combinedMemo = { pima, mesa, value: combined };
+  combinedMemo = { pima, mesa, doors: doors.map((part) => part.value), value: combined };
   return combined;
 }
 
@@ -444,13 +561,15 @@ export function resetOutcomeSnapshotCache(): void {
     "The Pima Legistar outcome pointer has not been read for this process.",
   );
   mesaReadState = mesaNotInitialized();
+  doorReadStates.clear();
+  edgeDoorPart = null;
   combinedMemo = null;
 }
 
 /** Did a real file back the current snapshot, or is this the empty store? */
 export function loadedFrom(): "DATA_PLANE" | "TEST_FIXTURE" | "EMPTY_STORE" {
   if (injected !== null) return injected.sittings.length === 0 && injected.generatedAt === "UNKNOWN" ? "EMPTY_STORE" : "TEST_FIXTURE";
-  if (outcomeReadState.kind === "PROMOTED" || mesaReadState.kind === "PROMOTED") return "DATA_PLANE";
+  if (outcomeReadState.kind === "PROMOTED" || mesaReadState.kind === "PROMOTED" || doorOutcomeParts().length > 0) return "DATA_PLANE";
   // An edge-primed state is the promoted data plane's own validated value.
   if ((outcomeReadState.kind === "BOOTSTRAP" || mesaReadState.kind === "BOOTSTRAP") && edgePrimedVersion !== null) return "DATA_PLANE";
   if (outcomeReadState.kind === "BOOTSTRAP" || mesaReadState.kind === "BOOTSTRAP") return "TEST_FIXTURE";

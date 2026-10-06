@@ -267,7 +267,7 @@ test("P-001 · map-entry hands the map ALL venues and the visible keys separatel
 
   assert.match(
     entry,
-    /const allVenues = useMemo<Venue\[\]>\(\s*\(\) => \(pinned \? groupByVenue\(pinned\.meetings, pinned\.listingIdentity\)/,
+    /const allVenues = useMemo<Venue\[\]>\(\s*\(\) => \(pinned \? groupByVenue\(pinned\.meetings, pinned\.listingIdentity, officeLocations\)/,
     "allVenues is no longer grouped from the UNFILTERED result",
   );
   assert.match(entry, /venues=\{allVenues\}/, "the map is being handed the filtered list again");

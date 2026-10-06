@@ -204,5 +204,6 @@ test("BAL-34: every surface deciding these sections asks the ONE scope predicate
 test("BAL-34: the ballot card still renders the whole fixed set, unconditionally", () => {
   /* The surface the map card is being brought into line WITH. If this ever
      becomes conditional, the guard above is measuring against a moved target. */
-  assert.match(BALLOT_CARD, /\{BATTLECARD_SECTIONS\.map\(\(spec\) => \{/);
+  assert.match(BALLOT_CARD, /<PersonCard/);
+  assert.match(readFileSync("components/ui/person-card.tsx", "utf8"), /PERSON_CARD_SECTIONS\.filter[\s\S]*?\.map/);
 });

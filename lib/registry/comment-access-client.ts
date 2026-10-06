@@ -16,7 +16,7 @@ export interface CommentAccess {
   verifiedAt: string | null;
   /** Field attribution when complementary verified captures are combined. */
   fieldSources?: Partial<Record<"commentPeriod" | "commentPeriodDetail" | "signup" | "writtenComment" | "attend" | "timeLimit", {
-    sourceUrl: string; collectedAt: string; verifiedAt: string | null; retainedFromVersion?: string;
+    quote?: string; sourceUrl: string; collectedAt: string; verifiedAt: string | null; retainedFromVersion?: string;
   }>>;
 }
 

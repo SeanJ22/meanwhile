@@ -1,3 +1,4 @@
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 /**
  * CAMPAIGN MONEY FOR STATE, COUNTY AND LOCAL CANDIDATES.
  *
@@ -36,13 +37,15 @@
  * no agency acronym without its full name at least once.
  */
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { StateMoneyRecord } from "@/lib/funding/state-money";
 import { stateMoneyRecordsForDisplay } from "@/lib/funding/state-money-reader";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { formatDateLong } from "@/lib/text/format-date";
+import { filedOrganizations, stateSmallDonorSentence, stateMoneyFundingIssue } from "@/lib/funding/state-money-funding";
 
-const SECTION_LABEL_CLASS = "text-xs font-medium uppercase tracking-wide text-muted-foreground";
+const SECTION_LABEL_CLASS = "t-detail font-medium uppercase tracking-wide text-muted-foreground";
 
 /** Money as a reader reads it. Whole dollars — cents are noise at this scale. */
 function dollars(n: number): string {
@@ -70,33 +73,18 @@ function lastFilingDate(coveringPeriod: string | null): string | null {
 }
 
 function AgencyLine({ record }: { record: StateMoneyRecord }) {
-  return (
-    <p className="mt-2 text-xs text-muted-foreground">
-      Filed with the {record.agency}
-      {record.filingsUrl ? (
-        <>
-          {" — "}
-          <a
-            href={record.filingsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="underline underline-offset-2"
-          >
-            see this candidate&rsquo;s filings
-          </a>
-        </>
-      ) : null}
-      . Read {readableDate(record.checkedAt)}.
-    </p>
-  );
+  return <CardSourcesContribution id={`state-money:${record.targetKeys.join("|")}:${record.registeredName}`} sources={[{ what: "Candidate campaign filings", provenance: { sourceUrl: record.filingsUrl ?? "", sourceOrg: record.agency, collectedAt: record.checkedAt, verifiedAt: null } }]} />;
 }
 
 function FiledRecord({ record }: { record: StateMoneyRecord }) {
   const { totals } = record;
+  const funding = totals.coveringPeriod?.trim() && record.funding && !stateMoneyFundingIssue(record.funding) ? record.funding : undefined;
+  const organizations = filedOrganizations(funding);
+  const smallDonors = stateSmallDonorSentence(funding);
   return (
     <div className="mt-3 first:mt-0">
-      <p className="text-sm font-medium">{record.registeredName}</p>
-      <dl className="mt-1 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+      <p className="t-body font-medium">{record.registeredName}</p>
+      <dl className="mt-1 grid grid-cols-2 gap-x-4 gap-y-1 t-body">
         {/*
           A null renders as its NAMED GAP, never as zero. `cashOnHand` is null
           for every New Jersey record because ELEC does not publish it on either
@@ -122,6 +110,19 @@ function FiledRecord({ record }: { record: StateMoneyRecord }) {
           </>
         )}
       </dl>
+      {organizations.length > 0 && <section className="mt-2" aria-label="PACs, committees and organizations">
+        <p className="text-sm font-medium">PACs, committees and organizations</p>
+        <dl className="mt-1 text-sm">{organizations.map((org, index) => <div key={`${org.filedName}:${index}`} className="flex justify-between gap-4">
+          <dt>{org.filedName}{org.filedType ? <span className="ml-1 text-muted-foreground">({org.filedType})</span> : null}</dt>
+          <dd className="tabular-nums">{dollars(org.amount)}</dd>
+        </div>)}</dl>
+      </section>}
+      {funding && <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+        {([ ["Individual giving", funding.individualTotal], ["Itemized individual giving", funding.individualItemized],
+          ["Unitemized individual giving", funding.individualUnitemized] ] as const).filter(([, value]) => value !== null).map(([label, value]) =>
+          <div key={label} className="contents"><dt className="text-muted-foreground">{label}</dt><dd className="text-right tabular-nums">{dollars(value!)}</dd></div>)}
+      </dl>}
+      {smallDonors && <p className="mt-1 text-sm">{smallDonors}</p>}
       {/*
         PLAIN LANGUAGE, and this line is where it nearly went wrong.
         The first version printed the agency's own form codes and a raw ISO
@@ -133,7 +134,7 @@ function FiledRecord({ record }: { record: StateMoneyRecord }) {
         reader needs is how many reports and how recent.
       */}
       {totals.reportCount !== null && (
-        <p className="mt-1 text-xs text-muted-foreground">
+        <p className="mt-1 t-detail text-muted-foreground">
           {totals.reportCount === 1 ? "1 report" : `${totals.reportCount} reports`} on file
           {lastFilingDate(totals.coveringPeriod)
             ? `, most recently ${readableDate(lastFilingDate(totals.coveringPeriod)!)}`
@@ -171,8 +172,8 @@ function FiledRecord({ record }: { record: StateMoneyRecord }) {
 function RegisteredNoActivityRecord({ record }: { record: StateMoneyRecord }) {
   return (
     <div className="mt-3 first:mt-0">
-      <p className="text-sm font-medium">{record.registeredName}</p>
-      <p className="mt-1 text-sm">
+      <p className="t-body font-medium">{record.registeredName}</p>
+      <p className="mt-1 t-body">
         Registered committee. No money raised and none spent has been reported to the{" "}
         {record.agency} as of {readableDate(record.checkedAt)}.
       </p>
@@ -184,6 +185,7 @@ function RegisteredNoActivityRecord({ record }: { record: StateMoneyRecord }) {
 function AbsentRecord({ record }: { record: StateMoneyRecord }) {
   return (
     <div className="mt-3 first:mt-0">
+      <AgencyLine record={record} />
       {/*
         THE SENTENCE THIS WHOLE SECTION EXISTS FOR.
         It is a statement about the AGENCY'S RECORDS on a stated date — not
@@ -191,12 +193,12 @@ function AbsentRecord({ record }: { record: StateMoneyRecord }) {
         reader can tell whose gap it is, which is the render-default rule's
         actual requirement.
       */}
-      <p className="text-sm">
+      <p className="t-body">
         No reports on file with the {record.agency} as of{" "}
         {readableDate(record.checkedAt)}.
       </p>
       {record.filingsUrl ? (
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="mt-2 t-detail text-muted-foreground">
           <a
             href={record.filingsUrl}
             target="_blank"
@@ -233,10 +235,9 @@ function OurGapRecord({ record }: { record: StateMoneyRecord }) {
   const gap = record.ourGap;
   return (
     <div className="mt-3 first:mt-0">
-      <p className="text-sm">
-        We&rsquo;re working on getting this info.
-      </p>
-      <p className="mt-1 text-xs text-muted-foreground">
+      <AgencyLine record={record} />
+      <WorkingOnIt />
+      <p className="mt-1 t-detail text-muted-foreground">
         {gap?.whatIsMissing ??
           "The agency holds a record we could not confirm belongs to this candidacy."}{" "}
        
@@ -249,10 +250,9 @@ function OurGapRecord({ record }: { record: StateMoneyRecord }) {
         {gap?.nextDue
           ? ` We check again after the agency’s next filing deadline, ${readableDate(gap.nextDue)}.`
           : ""}{" "}
-        Read {readableDate(record.checkedAt)}.
       </p>
       {record.filingsUrl ? (
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="mt-2 t-detail text-muted-foreground">
           <a
             href={record.filingsUrl}
             target="_blank"
@@ -310,7 +310,7 @@ export function StateMoneySection({
       )}
       {shown.map((record, i) => {
         const heading = (
-          <p className="mt-3 text-xs text-muted-foreground">
+          <p className="mt-3 t-detail text-muted-foreground">
             {record.match.officeOnBallot ?? record.officeSought ?? "Campaign"} · {record.electionYear} election
           </p>
         );
@@ -334,7 +334,7 @@ export function StateMoneySection({
         />
       )}
       {shown.length > 1 && (
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="mt-2 t-detail text-muted-foreground">
           This candidate has more than one committee registered. Every one the
           agency holds is shown.
         </p>

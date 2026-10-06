@@ -189,9 +189,9 @@ test("the list, the body's pin panel and the meeting card show the stated place 
     check(!/data-meeting-where="unrecorded"/.test(row), `list: ${e.id} says the place is not recorded`);
   }
   const chollaRow = text(rowMarkup(r.list, cholla.id));
-  check(/data-meeting-where="stated"/.test(chollaRow) && chollaRow.includes(` · ${CHOLLA}`), `list: the Cholla row does not show "${CHOLLA}"`);
+  check(/data-meeting-where="stated"/.test(chollaRow) && chollaRow.includes(CHOLLA), `list: the Cholla row does not show "${CHOLLA}"`);
   const jointRow = text(rowMarkup(r.list, joint.id));
-  check(/data-meeting-where="not-stated"/.test(jointRow) && jointRow.includes("place not stated by the publisher"), "list: the Joint Committee row does not name the publisher's gap");
+  check(/data-meeting-where="not-stated"/.test(jointRow) && jointRow.includes('data-working-on-it="not-published"'), "list: the Joint Committee row does not name the publisher's gap");
 
   // ── The body's pin panel: listed, the place as text, stated N = rows. ──
   check(!r.duffyPins?.includes(cholla.id), "Duffy pin: a venue-gap sitting was given the building's pin");
@@ -200,10 +200,10 @@ test("the list, the body's pin panel and the meeting card show the stated place 
   check(duffyIds.includes(cholla.id) && duffyIds.includes(joint.id), "Duffy panel: a venue-gap sitting is not rendered");
   const chollaPanel = text(rowMarkup(r.duffy, cholla.id));
   check(/data-meeting-where="stated"/.test(chollaPanel) && chollaPanel.includes(CHOLLA), `Duffy panel: the Cholla row does not show "${CHOLLA}"`);
-  check(!chollaPanel.includes(PLACE_UNRECORDED_LINE), "Duffy panel: the Cholla row says we have not recorded a place");
+  check(!/data-meeting-where="unrecorded"/.test(chollaPanel), "Duffy panel: the Cholla row says we have not recorded a place");
   check(!/data-status="online"/.test(chollaPanel), "Duffy panel: the Cholla row is marked online");
   const jointPanel = text(rowMarkup(r.duffy, joint.id));
-  check(/data-meeting-where="not-stated"/.test(jointPanel) && jointPanel.includes(NOT_STATED), "Duffy panel: the Joint Committee row does not name the publisher's gap");
+  check(/data-meeting-where="not-stated"/.test(jointPanel) && jointPanel.includes('data-working-on-it="not-published"'), "Duffy panel: the Joint Committee row does not name the publisher's gap");
   const eyebrow = /class="notice-eyebrow[^"]*"[^>]*>([^<]*)</.exec(r.duffy)?.[1] ?? "";
   const eyebrowText = text(eyebrow);
   const stated = Number(/^(\d+) public meetings/.exec(eyebrowText)?.[1]);
@@ -215,11 +215,11 @@ test("the list, the body's pin panel and the meeting card show the stated place 
   // ── The meeting's own card. ──
   const chollaCard = text(r.popups[cholla.id] ?? "");
   check(chollaCard.includes(CHOLLA), `card: the Cholla session does not show "${CHOLLA}"`);
-  check(!chollaCard.includes(PLACE_UNRECORDED_LINE), "card: the Cholla session says we have not recorded a place");
+  check(!/data-meeting-where="unrecorded"/.test(chollaCard), "card: the Cholla session says we have not recorded a place");
   check(!chollaCard.includes("Online only"), "card: the Cholla session is called online");
   const jointCard = text(r.popups[joint.id] ?? "");
-  check(jointCard.includes(NOT_STATED), "card: the Joint Committee meeting does not name the publisher's gap");
-  check(!jointCard.includes(PLACE_UNRECORDED_LINE) && !jointCard.includes("Online only"), "card: the Joint Committee meeting says 'not recorded' or 'online'");
+  check(/data-meeting-where="not-stated"/.test(jointCard) && jointCard.includes('data-working-on-it="not-published"') && jointCard.includes("Meeting place not stated by Tucson Unified School District"), "card: the Joint Committee meeting does not name the publisher's gap");
+  check(!jointCard.includes("Online only"), "card: the Joint Committee meeting says 'not recorded' or 'online'");
 
   assert.deepEqual(fails, [], `\n  ${fails.join("\n  ")}`);
 });

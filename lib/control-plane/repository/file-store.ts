@@ -1,7 +1,9 @@
+import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
 /**
@@ -797,6 +799,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
+    boxFindings: fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings"),
     scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
     /* The nightly door (RULING 242, schema v5). */
@@ -810,6 +813,8 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     adminReceipts: fileAppendOnlyRepository<ActionReceipt>(resolved, "admin-receipts"),
     agentJobs: fileAppendOnlyRepository<AgentJobRecord>(resolved, "agent-jobs"),
     discoveryAttempts: fileAppendOnlyRepository<MeetingsDiscoveryAttempt>(resolved, "discovery-attempts"),
+    /* Live-audit results, corrections and pulls (DP-13, schema v21). */
+    liveAudits: fileAppendOnlyRepository<LiveAuditLogRow>(resolved, "live-audits"),
     adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
     /* What readers were told Ask does not hold (schema v13). */
     askGapObservations: fileAggregateRepository<AskGapObservation>(resolved, "AskGapObservation", "ask-gap-observations"),

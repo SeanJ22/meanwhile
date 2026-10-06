@@ -1,3 +1,4 @@
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import type { IssuePosition } from "@/lib/candidates/positions";
 import { sourceKindLabel } from "@/lib/corpus/source-kinds";
 
@@ -65,18 +66,11 @@ export function CandidatePositions({
 
   return (
     <div className="mt-3" data-candidate-positions>
-      <p className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
-        From campaign and official pages
-      </p>
-      {/* Provenance, not arithmetic: where these passages came from. */}
-      <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
-        {headline}
-      </p>
-
+      <CardSourcesContribution id="candidate-positions" sources={matched.flatMap(position => position.answer.kind === "MATCHED" ? position.answer.passages.map(passage => ({ what: [position.issue.label, sourceKindLabel(passage.sourceClass), passage.revisionStatus === "HISTORICAL" ? "earlier captured version" : passage.revisionStatus === "CURRENT" ? "latest captured version" : "", passage.publicationDate ? `source-stated publication date ${passage.publicationDate.date}` : ""].filter(Boolean).join(" · "), provenance: { sourceUrl: passage.documentUrl, sourceOrg: "", collectedAt: passage.retrievedAt, verifiedAt: null } })) : [])} />
       <ul className="mt-2 space-y-3">
         {matched.map((position) => (
           <li key={position.issue.id}>
-            <p className="text-[0.75rem] font-medium text-paper">
+            <p className="t-detail font-medium text-paper">
               {position.issue.label}
             </p>
             {position.answer.kind === "MATCHED" &&
@@ -88,26 +82,10 @@ export function CandidatePositions({
                   {/* Source words. Never rewritten, never trimmed of
                       meaning — only of length, and then it says so with
                       the ellipses the corpus put there. */}
-                  <p className="t-record text-[0.75rem] leading-relaxed text-paper-dim">
+                  <p className="t-record t-detail leading-relaxed text-paper-dim">
                     &ldquo;{passage.quote}&rdquo;
                   </p>
-                  <p className="mt-0.5 text-[0.6875rem] text-muted">
-                    {sourceKindLabel(passage.sourceClass)}
-                    {" · "}
-                    <a
-                      href={passage.documentUrl}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="underline decoration-dotted underline-offset-2 hover:text-link"
-                    >
-                    {new URL(passage.documentUrl).hostname}
-                    </a>
-                    {passage.revisionStatus === "HISTORICAL" ? " · earlier captured version" :
-                      passage.revisionStatus === "CURRENT" ? " · latest captured version" : ""}
-                    {passage.publicationDate && ` · source-stated publication date ${passage.publicationDate.date}`}
-                    {" · read "}
-                    {passage.retrievedAt.slice(0, 10)}
-                  </p>
+
                 </div>
               ))}
           </li>

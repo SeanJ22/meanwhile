@@ -11,6 +11,11 @@
 /* Design tokens, ported from EdiaStratMap's src/styles/main.css — docs/globals-css-notes.md#design-tokens-ported-from-ediastratmap-s-src-styles-main-css-1 */
 
 :root {
+  /* State extrusion colours preserve the existing silhouette material. */
+  --state-focus-white: #ffffff;
+  --state-focus-black: #000000;
+  --state-focus-mute-light: #ffffff;
+  --state-focus-mute-dark: #0b0d12;
   --bg: #0f1117;
   --panel: #181a20;
   --panel-border: #2a2d37;
@@ -263,6 +268,10 @@
 }
 
 [data-theme="light"] {
+  --state-focus-white: #ffffff;
+  --state-focus-black: #000000;
+  --state-focus-mute-light: #ffffff;
+  --state-focus-mute-dark: #0b0d12;
   --bg: #f0f2f5;
   --panel: #ffffff;
   --panel-border: #dde0e6;

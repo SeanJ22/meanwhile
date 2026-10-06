@@ -8,10 +8,10 @@ import type { ReactNode } from "react";
 
 import { STATUS_COLOR, STATUS_LABEL, Swatch } from "./charts.tsx";
 import { useV6, type Detail } from "./context.tsx";
-import { mst, STAGE_NAMES, type ActionRef, type SavedDoc } from "./model.ts";
+import { mst, STAGE_NAMES, type ActionRef, type FixShot, type SavedDoc } from "./model.ts";
 import { relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
-import { TaskStages } from "./screen-fix.tsx";
+import { TaskStages } from "./task-stages.tsx";
 import { EvidenceTrail } from "./trail-view.tsx";
 import { LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
 import { Actions, Card, cx, Empty, Facts, markWords, Pill, Technical } from "./ui.tsx";
@@ -34,6 +34,27 @@ function Panel(props: { readonly eyebrow: string; readonly title: string; readon
         <div className={s.stack}>{receipts.map((r) => <ReceiptCard key={r.key} receipt={r} />)}</div>
       </Card>
     </>
+  );
+}
+
+/** A signed-in screenshot, served private and as shot; the image optimizer never sees it. */
+function ShotImage(props: { readonly image: string; readonly label: string }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={props.image} alt={`Screenshot: ${props.label}`} loading="lazy" style={{ display: "block", maxWidth: "100%", maxHeight: 420, objectFit: "contain", borderRadius: 8, border: "1px solid var(--panel-border)" }} />;
+}
+
+/** FE-21: the screenshot a look-check red flag points at, opened full size in a new tab. */
+function Shots(props: { readonly shots: readonly FixShot[] | undefined }) {
+  if (!props.shots?.length) return null;
+  return (
+    <Card title="Screenshot">
+      <div className={s.stack}>{props.shots.map((x) => (
+        <a key={x.image} href={x.image} target="_blank" rel="noreferrer noopener" className={s.small}>
+          <ShotImage image={x.image} label={x.label} />
+          {x.label}
+        </a>
+      ))}</div>
+    </Card>
   );
 }
 
@@ -164,6 +185,27 @@ export function DetailPanel(props: { readonly detail: Detail }) {
 
   if (d.type === "fix") {
     const f = v.data.fixes.data?.open.find((x) => x.id === d.id);
+    const c = f ? undefined : [...(v.data.fixes.data?.returned ?? []), ...(v.data.fixes.data?.closed ?? [])].find((x) => x.id === d.id);
+    if (c) {
+      return (
+        <Panel eyebrow={`Fix list · ${c.origin}`} title={c.title} summary={c.changed} targets={[c.id]}>
+          <Card title="What happened">
+            <Facts rows={[
+              ["Where", c.places],
+              ["What changed", c.whatChanged],
+              ["Checked on the reader page", c.readerRecheck],
+              ["Since the fix", c.since],
+              ...(c.returnedDetail ? [["When it came back", c.returnedDetail] as const] : []),
+              ...(c.history ? [["History", c.history] as const] : []),
+              ["Saved to prevent it", c.saved],
+              ["Used by", c.usedBy],
+            ]} />
+            <Technical lines={[c.technical]} />
+          </Card>
+          <Shots shots={c.shots} />
+        </Panel>
+      );
+    }
     if (!f) return <Empty>This fix isn’t available.</Empty>;
     return (
       <Panel eyebrow={`Fix list · ${f.owner}`} title={f.title} summary={f.problem} badge={<Pill>{({ attention: "Needs attention", fixing: "Being fixed", update: "Waiting for update" })[f.tab]}</Pill>}
@@ -174,6 +216,29 @@ export function DetailPanel(props: { readonly detail: Detail }) {
           {!!f.linkedStuck.length && <div className={s.stack}>{f.linkedStuck.map((id) => { const i = v.data.stuck.data?.find((x) => x.id === id); return i ? <StuckRow key={id} item={i} /> : null; })}</div>}
           <Technical lines={[f.technical]} />
         </Card>
+        <Shots shots={f.shots} />
+      </Panel>
+    );
+  }
+
+  if (d.type === "look") {
+    const l = v.data.fixes.data?.look;
+    if (!l || l.sha !== d.id) return <Empty>This look check isn’t available.</Empty>;
+    return (
+      <Panel eyebrow={`Look check · ${mst(l.ran)}`} title="Look check of the latest deploy" summary={l.summary}
+        badge={<Pill>{l.verdict === "Green" ? "Looks right" : l.verdict === "Red" ? "Looks wrong" : "Not judged"}</Pill>} targets={[`look:${l.sha}`]}>
+        {l.screens.map((x) => (
+          <Card key={x.label} title={`${x.label} · ${x.verdict}`}>
+            {x.image ? (
+              <a href={x.image} target="_blank" rel="noreferrer noopener">
+                <ShotImage image={x.image} label={x.label} />
+              </a>
+            ) : <Empty>No screenshot.</Empty>}
+            <Facts rows={[["What the reviewer said", x.says], ["Page measurements", x.measured], ...(x.fixId ? [["Fix list", "Added to the fix list"] as const] : [])]} />
+            {x.fixId && <button type="button" className={s.btnLink} onClick={() => v.open({ type: "fix", id: x.fixId! })}>Open the fix</button>}
+          </Card>
+        ))}
+        <Technical lines={[`Commit ${l.sha}`]} />
       </Panel>
     );
   }

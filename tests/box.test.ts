@@ -3,16 +3,16 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { backfillBox, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, indexBoxFinding, takeBoxFinding, type BoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
-import { memoryAggregateRepository } from "../lib/control-plane/repository/memory.ts";
-import { fileAggregateRepository } from "../lib/control-plane/repository/file-store.ts";
+import { backfillBox, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, indexBoxFinding, takeBoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 
 const NOW = "2026-10-04T08:00:00Z", LATER = "2026-10-04T08:01:00Z", END = "2026-10-04T08:02:00Z";
 const input: BoxInput = { subjectId: "person:alice", exactQuote: "Alice Adams is Clerk", sourceUrl: "https://example.gov/roster",
   origin: { kind: "SCOUT", resultId: "attempt-1", workItemId: "send-1", findingIndex: 0, artifactIds: ["artifact-1"], recordedAt: NOW } };
 
 test("Box deduplicates quote/page/subject and retains every source result without reopening built work", async () => {
-  const repo = memoryAggregateRepository<BoxFinding>("box_findings");
+  const repo = createMemoryRepositories().boxFindings;
   const [a, b] = await Promise.all([indexBoxFinding(repo, input, NOW), indexBoxFinding(repo, { ...input, origin: { ...input.origin, resultId: "attempt-2" } }, NOW)]);
   assert.equal(a.id, b.id);
   assert.equal((await repo.mustRead(a.id)).value.origins.length, 2);
@@ -25,7 +25,7 @@ test("Box deduplicates quote/page/subject and retains every source result withou
 });
 
 test("only one concurrent builder wins; expired and failed claims retry with stale completion fenced out", async () => {
-  const repo = memoryAggregateRepository<BoxFinding>("box_findings");
+  const repo = createMemoryRepositories().boxFindings;
   const finding = await indexBoxFinding(repo, input, NOW);
   const claims = await Promise.all([takeBoxFinding(repo, finding.id, "a", NOW, LATER), takeBoxFinding(repo, finding.id, "b", NOW, LATER)]);
   assert.equal(claims.filter(Boolean).length, 1);
@@ -41,18 +41,18 @@ test("only one concurrent builder wins; expired and failed claims retry with sta
 test("a restarted file store keeps claims and built receipts; replayed history cannot duplicate a finding", async t => {
   const root = await mkdtemp(join(tmpdir(), "box-restart-"));
   t.after(() => rm(root, { recursive: true, force: true }));
-  const open = () => fileAggregateRepository<BoxFinding>(root, "box_findings", "box-findings");
-  const first = await indexBoxFinding(open(), input, NOW);
-  const claim = (await takeBoxFinding(open(), first.id, "builder", NOW, END))!;
-  assert.equal(await takeBoxFinding(open(), first.id, "another", LATER, END), null);
-  assert.equal(await finishBoxFinding(open(), first.id, claim.token, { state: "built", publicationId: first.id }, LATER), true);
-  await indexBoxFinding(open(), input, END);
-  assert.equal((await open().list()).length, 1);
-  assert.equal((await open().mustRead(first.id)).value.publicationId, first.id);
+  const open = async () => (await createFileRepositories(root)).boxFindings;
+  const first = await indexBoxFinding(await open(), input, NOW);
+  const claim = (await takeBoxFinding(await open(), first.id, "builder", NOW, END))!;
+  assert.equal(await takeBoxFinding(await open(), first.id, "another", LATER, END), null);
+  assert.equal(await finishBoxFinding(await open(), first.id, claim.token, { state: "built", publicationId: first.id }, LATER), true);
+  await indexBoxFinding(await open(), input, END);
+  assert.equal((await (await open()).list()).length, 1);
+  assert.equal((await (await open()).mustRead(first.id)).value.publicationId, first.id);
 });
 
 test("legacy findings without a quote stay distinct, and a broken read never reports zero", async () => {
-  const repo = memoryAggregateRepository<BoxFinding>("box_findings");
+  const repo = createMemoryRepositories().boxFindings;
   await indexBoxFinding(repo, { ...input, exactQuote: null }, NOW);
   await indexBoxFinding(repo, { ...input, exactQuote: null, origin: { ...input.origin, findingIndex: 1 } }, NOW);
   assert.equal((await boxCounts(repo)).waiting, 2);
@@ -60,7 +60,7 @@ test("legacy findings without a quote stay distinct, and a broken read never rep
 });
 
 test("historical Scout and detective findings share the index, including missing old quotes and another target", async () => {
-  const repo = memoryAggregateRepository<BoxFinding>("box_findings");
+  const repo = createMemoryRepositories().boxFindings;
   const history = {
     scouts: [{ subjectId: "place:start", attemptId: "scout-1", workItemId: "send-1", recordedAt: NOW, findings: [
       { subjectId: "person:alice", missionPart: "roster", kind: "RECORD" as const, summary: "Clerk", exactQuote: input.exactQuote!, sourceUrl: input.sourceUrl!, artifactIds: ["artifact-1"] },

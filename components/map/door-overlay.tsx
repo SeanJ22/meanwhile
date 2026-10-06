@@ -1,5 +1,6 @@
 "use client";
 
+import { MeetingRow } from "@/components/ui/meeting-row";
 import { X } from "lucide-react";
 import { createContext, useContext } from "react";
 
@@ -20,10 +21,10 @@ import {
   TIER_GROUP_LABELS,
   type TierGroup,
 } from "@/lib/officials/tier-grouping";
-import { formatMeetingDate } from "@/lib/map/format";
+
 import { bodyDisplayName } from "@/lib/text/reader-names";
-import { isOnlineOnly } from "@/lib/meetings/online";
-import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
+
+
 
 /**
  * The sidebar-count doors (8a, 2026-08-17): tapping a stat number opens the
@@ -144,7 +145,7 @@ export function DoorOverlay({
         onClick={(e) => e.stopPropagation()}
       >
         <div className={embedded ? "sr-only" : "flex items-center justify-between"}>
-          <h2 className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
+          <h2 className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             {title}
           </h2>
           <button
@@ -172,7 +173,7 @@ export function DoorOverlay({
           />
           </ShowDistrictContext.Provider>
         ) : !coverage ? (
-          <p className="mt-3 text-[0.8125rem] text-muted">
+          <p className="mt-3 t-body text-muted">
             We couldn&apos;t resolve who governs this point — enter a zip
             first, or the search may have failed.
           </p>
@@ -204,7 +205,7 @@ function BodiesDoor({
 }) {
   if (coverage.bodies.length === 0) {
     return (
-      <p className="mt-3 text-[0.8125rem] text-muted">
+      <p className="mt-3 t-body text-muted">
         No mapped bodies at this point yet.
       </p>
     );
@@ -260,11 +261,11 @@ function BodiesDoor({
                 type="button"
                 onClick={() => onOpenBody(body)}
                 title={`More about ${label}`}
-                className="cursor-pointer text-left text-[0.8125rem] leading-snug hover:text-link hover:underline"
+                className="cursor-pointer text-left t-body leading-snug hover:text-link hover:underline"
               >
                 {label}
               </button>
-              <span className="trailing-space-trimmed shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
+              <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
                 {/*
                   **THIS WAS A BINARY, AND THAT WAS THE DEFECT** (RULING 118 /
                   RULING 119, 2026-08-24). `GOVERNING ? "Governing" :
@@ -277,33 +278,7 @@ function BodiesDoor({
                 {bodyClassShort(body.bodyClass)}
               </span>
             </div>
-            {next && (
-              <button
-                type="button"
-                onClick={() => onOpenMeeting(next)}
-                className="mt-0.5 cursor-pointer text-left text-[0.75rem] text-signal underline decoration-dotted"
-              >
-                Next meeting: {formatMeetingDate(next)} →
-                {/*
-                  **MTG-14 (2026-08-28): THIS DOOR NEVER SAID SO.** The list
-                  overlay has marked an online sitting since D18; this line —
-                  one of the two other places a reader first meets a meeting —
-                  showed a body and a date and nothing else. A reader who found
-                  the sitting here learned there was no room to attend only if
-                  they happened to open the card.
-
-                  It is inside the button on purpose: the mark's screen-reader
-                  qualifier then reaches the button's accessible name, so the
-                  fact is spoken with the thing it is about rather than beside
-                  it.
-                */}
-                {isOnlineOnly(next) && (
-                  <span className="ml-1.5 inline-block no-underline">
-                    <MeetingStatusPill status="online" />
-                  </span>
-                )}
-              </button>
-            )}
+            {next && <MeetingRow meeting={next} compact title="Next meeting" onOpen={onOpenMeeting} /> }
           </li>
         );
       })}
@@ -394,7 +369,7 @@ function DistrictsDoor({
       >
         {governingRows ? (
           <>
-            <p className="mt-2 text-[0.8125rem] text-muted">
+            <p className="mt-2 t-body text-muted">
               Every district your address sits inside.
             </p>
             <DistrictRows rows={governingRows} coverage={coverage} onOpenOfficial={onOpenOfficial} />
@@ -402,7 +377,7 @@ function DistrictsDoor({
         ) : (
           // The named gap, in the gap's own register: a fact about the limits
           // of a zip, not a claim that the reader is in nothing.
-          <p className="mt-2 text-[0.8125rem] text-muted">
+          <p className="mt-2 t-body text-muted">
             A zip code crosses city, county and school district lines, so it
             can&apos;t say which districts you&apos;re in. Adding your street
             address answers this section.
@@ -422,20 +397,20 @@ function DistrictsDoor({
           // MAP-5: and this branch is reached only when the layer is off AND
           // nothing is painted — the one state in which the sentence is true.
           <div className="mt-2">
-            <p className="text-[0.8125rem] text-muted">
+            <p className="t-body text-muted">
               District boundaries are switched off, so none are drawn and there
               is nothing to count.
             </p>
             <button
               type="button"
               onClick={onShowDistricts}
-              className="mt-2 cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1.5 text-[0.8125rem] text-paper hover:border-paper"
+              className="mt-2 cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1.5 t-body text-paper hover:border-paper"
             >
               Show district boundaries
             </button>
           </div>
         ) : (
-          <p className="mt-2 text-[0.8125rem] text-muted">
+          <p className="mt-2 t-body text-muted">
             No district boundaries are drawn in this view yet.
           </p>
         )}
@@ -466,11 +441,11 @@ function DoorSection({
   return (
     <section className="mt-3">
       <div className="flex items-baseline gap-2">
-        <h3 className="trailing-space-trimmed-16 font-mono text-[0.625rem] uppercase tracking-[0.16em] text-paper-dim">
+        <h3 className="trailing-space-trimmed-16 font-mono t-caption uppercase tracking-[0.16em] text-paper-dim">
           {heading}
         </h3>
         {count !== null && (
-          <span className="font-mono text-[0.625rem] text-muted">{count}</span>
+          <span className="font-mono t-caption text-muted">{count}</span>
         )}
       </div>
       {children}
@@ -507,8 +482,8 @@ function DistrictRows({
           className="border-b border-[var(--panel-border)] pb-2 last:border-0"
         >
           <div className="flex items-baseline justify-between gap-3">
-            <p className="text-[0.8125rem]">{row.label}</p>
-            <span className="trailing-space-trimmed shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
+            <p className="t-body">{row.label}</p>
+            <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
               {row.typeLabel}
             </span>
           </div>
@@ -532,7 +507,7 @@ function DistrictRows({
                   row.tier === "local" ? "local" : row.tier,
                 )
               }
-              className="mt-0.5 mr-3 cursor-pointer text-[0.75rem] text-signal underline decoration-dotted"
+              className="mt-0.5 mr-3 cursor-pointer t-detail text-signal underline decoration-dotted"
             >
               {holder.name} →
             </button>
@@ -563,7 +538,7 @@ function OfficialsDoor({
   const total = groups.local.length + groups.state.length + groups.federal.length;
   if (total === 0) {
     return (
-      <p className="mt-3 text-[0.8125rem] text-muted">
+      <p className="mt-3 t-body text-muted">
         No sourced officeholders resolved at this point yet.
       </p>
     );
@@ -591,11 +566,11 @@ function OfficialsDoor({
                   <button
                     type="button"
                     onClick={() => onOpenOfficial(holder, seatLabel, tier)}
-                    className="cursor-pointer text-[0.8125rem] text-signal underline decoration-dotted"
+                    className="cursor-pointer t-body text-signal underline decoration-dotted"
                   >
                     {holder.name} →
                   </button>
-                  <span className="shrink-0 text-right text-[0.6875rem] text-muted">
+                  <span className="shrink-0 text-right t-caption text-muted">
                     {seatLabel}
                   </span>
                 </li>

@@ -9,14 +9,27 @@
  * The weekly Scout series that made up "Is it learning" live on in `learning`.
  */
 import type {
-  LearningView, NotMeasured, Reading, ScoreboardGateRow, ScoreboardReadinessRow, ScoreboardRow, ScoreboardView, Trend, TrendWeek,
+  LearningView, NotMeasured, Reading, ScoreboardFamilyRow, ScoreboardGateRow, ScoreboardMissionRow, ScoreboardPlaceRow, ScoreboardReadinessRow, ScoreboardRow, ScoreboardView, Trend, TrendWeek,
 } from "../../../app/(admin)/_mw/admin-v6/model.ts";
+import { GROUP_NAMES } from "../../coverage/group-names.ts";
+import type { PeopleCoverage } from "../../coverage/people-coverage.ts";
+import type { PlaceCoverage } from "../../coverage/place-coverage.ts";
+import type { PlaceGrowth } from "../../coverage/place-growth.ts";
+import type { PlaceHistoryPoint } from "../../coverage/place-history.ts";
+import type { PlaceMeasures } from "../../coverage/place-measures.ts";
+import type { CoreLive } from "../../coverage/time-to-core.ts";
 import type { ReadinessCount } from "../../coverage/readiness-counts.ts";
 import type { GateHealthRow } from "./gate-health.ts";
 import { summarizeGateHealth } from "./gate-health.ts";
 import type { LearningSeries, LearningTrends } from "./learning-trends.ts";
+import { doorRows, type DoorNumberReadings } from "./door-numbers.ts";
 import type { V6HistoryReceipt } from "./admin-v6-history.ts";
 import type { PipelineRead } from "./v6-results-read.ts";
+import type { AuditAccuracyReading } from "./v6-audit-read.ts";
+import { formatEastern } from "../eastern-time.ts";
+import type { SpeedPass } from "../../health/worst-case-speed.ts";
+import type { ProvenFixesReading } from "../fix-standing.ts";
+import type { ReportAccuracyReading } from "../workers/claim-audit.ts";
 
 export interface DoorFacts {
   readonly walks: number;
@@ -159,7 +172,25 @@ export interface PublicationCounts {
   readonly contracts: number | null;
 }
 
+/** What the Scorecard measures for one sent place (SC-03 to SC-11, SC-19); the Scoreboard adds these up and never averages them. */
+export interface ScoreboardPlace {
+  readonly label: string;
+  readonly measures: PlaceMeasures;
+  readonly familyMeasures: readonly { readonly group: string; readonly measures: PlaceMeasures }[];
+  readonly coverage: PlaceCoverage;
+  readonly profiles: PeopleCoverage;
+  readonly growth: PlaceGrowth | null;
+  /** The last daily point kept from an earlier day, for the trend; null with no earlier day. */
+  readonly earlier: PlaceHistoryPoint | null;
+  /** Time from the mission's start to its core information live; null when the place has no mission start or no core item is owed yet. */
+  readonly core: CoreLive | null;
+}
+
 export interface ScoreboardReadings {
+  /** The sent places the Scorecard measured; an empty list is "no place has been sent", null is "could not be read". */
+  readonly places: readonly ScoreboardPlace[] | null;
+  /** Sent places whose owed list could not be read in time; they are named, never counted as zero. */
+  readonly placesUnread: number;
   /** The newest orders, newest first; `window` is how many were looked at. */
   readonly orders: readonly V6HistoryReceipt[] | null;
   readonly publication: PublicationCounts | null;
@@ -169,7 +200,17 @@ export interface ScoreboardReadings {
   readonly learning: LearningView;
   readonly doors: DoorFacts | null;
   readonly gates: readonly GateHealthRow[] | null;
+  /** BR-32: overdue doors, posting-to-live and the repair log; null when none could be read. */
+  readonly doorNumbers?: Omit<DoorNumberReadings, "shutDoors"> | null;
   readonly readiness: readonly ReadinessCount[];
+  /** The week's live audits of published facts (DP-18); null when the audit log could not be read. Absent means not read. */
+  readonly audit?: AuditAccuracyReading | null;
+  /** The latest worst-case speed pass on the live site (FE-02); null when unreadable or none ran. Absent means not read. */
+  readonly speed?: SpeedPass | null;
+  /** Where reusable fixes stand (DP-26); null when unreadable. Absent means not read. */
+  readonly provenFixes?: ProvenFixesReading | null;
+  /** The latest weekly check of the team's claimed wins (DP-33); null when none in two weeks or unreadable. Absent means not read. */
+  readonly reportAccuracy?: ReportAccuracyReading | null;
 }
 
 /** Approved records by what the public page showed, from the published pipeline read; every state is counted, none is dropped. */
@@ -211,39 +252,137 @@ function ordersRow(orders: ScoreboardReadings["orders"]): ScoreboardRow {
   });
 }
 
-function deliveryRow(p: PublicationCounts | null): ScoreboardRow {
+/* ------------------------------------------------- the Scorecard's rows */
+
+type Frac = { readonly n: number; readonly of: number };
+const total = (places: readonly ScoreboardPlace[], pick: (p: ScoreboardPlace) => Frac): Frac => places.reduce((a, p) => ({ n: a.n + pick(p).n, of: a.of + pick(p).of }), { n: 0, of: 0 });
+const dayWords = (day: string): string => new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric" }).format(new Date(`${day}T00:00:00Z`));
+const pctOf = (f: Frac): number | null => (f.of > 0 ? Math.floor((f.n * 100) / f.of) : null);
+
+/** Direction against the last earlier day, summed over the places that have one: "Up from 31% on Oct 4 · good". */
+function trendWords(points: readonly { readonly now: Frac; readonly earlier: PlaceHistoryPoint | null }[]): string {
+  const have = points.filter((p) => p.earlier !== null && p.earlier.completeness.of > 0);
+  if (have.length === 0) return "No earlier day to compare yet.";
+  const now = pctOf(have.reduce((a, p) => ({ n: a.n + p.now.n, of: a.of + p.now.of }), { n: 0, of: 0 }));
+  const before = pctOf(have.reduce((a, p) => ({ n: a.n + p.earlier!.completeness.n, of: a.of + p.earlier!.completeness.of }), { n: 0, of: 0 }));
+  const day = have.map((p) => p.earlier!.day).sort().at(-1)!;
+  if (now === null || before === null) return "No earlier day to compare yet.";
+  return now > before ? `Up from ${before}% on ${dayWords(day)} · good` : now < before ? `Down from ${before}% on ${dayWords(day)} · not good` : `Unchanged at ${now}% since ${dayWords(day)}`;
+}
+
+const NO_PLACES = "No place has been sent yet, so there is nothing to count.";
+const noPlaces = (id: string, name: string, r: ScoreboardReadings): ScoreboardRow =>
+  unmeasured(id, name, r.places === null ? "The owed lists of the sent places could not be read just now." : NO_PLACES);
+const unreadNote = (r: ScoreboardReadings): string => (r.placesUnread > 0 ? ` ${n(r.placesUnread)} sent ${r.placesUnread === 1 ? "place was" : "places were"} not read in time and are left out.` : "");
+
+function completenessRow(r: ScoreboardReadings): ScoreboardRow {
+  const id = "Checklist completeness", name = "Checklist completeness";
+  if (r.places === null || r.places.length === 0) return noPlaces(id, name, r);
+  const t = total(r.places, (p) => p.measures.completeness);
+  if (t.of === 0) return unmeasured(id, name, "No sent place owes an item that is due yet.");
+  return row(id, name, {
+    value: share(t.n, t.of),
+    counts: `${n(t.n)} of ${n(t.of)} owed items held across ${n(r.places.length)} sent ${r.places.length === 1 ? "place" : "places"}`,
+    says: `${trendWords(r.places.map((p) => ({ now: p.measures.completeness, earlier: p.earlier })))}.${unreadNote(r)}`,
+  });
+}
+
+function missionProgressRow(r: ScoreboardReadings): ScoreboardRow {
+  const id = "Mission progress", name = "Mission progress";
+  if (r.places === null || r.places.length === 0) return noPlaces(id, name, r);
+  const grown = r.places.filter((p) => p.growth !== null);
+  if (grown.length === 0) return unmeasured(id, name, "No sent place has a mission start yet, so there is no starting list to count against.");
+  const start = grown.reduce((a, p) => ({ n: a.n + p.growth!.starting.n, of: a.of + p.growth!.starting.of }), { n: 0, of: 0 });
+  const now = grown.reduce((a, p) => ({ n: a.n + p.growth!.grown.n, of: a.of + p.growth!.grown.of }), { n: 0, of: 0 });
+  const added = grown.reduce((a, p) => a + p.growth!.added, 0);
+  return row(id, name, {
+    value: share(now.n, now.of),
+    counts: `Starting list ${n(start.n)} of ${n(start.of)} · grown list ${n(now.n)} of ${n(now.of)}${added > 0 ? ` · ${n(added)} added since` : ""} · ${n(grown.length)} ${grown.length === 1 ? "mission" : "missions"}`,
+    says: `Completeness on what was owed when each mission started, beside what is owed now; a new find adds to the grown list only.${unreadNote(r)}`,
+  });
+}
+
+function coverageRow(r: ScoreboardReadings): ScoreboardRow {
+  const id = "Coverage", name = "Coverage";
+  if (r.places === null || r.places.length === 0) return noPlaces(id, name, r);
+  const gov = r.places.reduce((a, p) => ({ n: a.n + p.coverage.governments.accounted, of: a.of + (p.coverage.governments.expected ?? 0) }), { n: 0, of: 0 });
+  const bodies = r.places.reduce((a, p) => a + p.coverage.bodies.found, 0);
+  const seatsKnown = r.places.every((p) => p.coverage.seats.expected !== null);
+  const seats = r.places.reduce((a, p) => ({ n: a.n + p.coverage.seats.accounted, of: a.of + (p.coverage.seats.expected ?? 0) }), { n: 0, of: 0 });
+  const people = r.places.reduce((a, p) => a + p.coverage.people.accounted, 0);
+  return row(id, name, {
+    value: share(gov.n, gov.of),
+    counts: `Governments ${n(gov.n)} of ${n(gov.of)} accounted for · bodies ${n(bodies)} found, total unknown · seats ${n(seats.n)}${seatsKnown ? ` of ${n(seats.of)}` : " accounted for, total unknown"} · people ${n(people)} accounted for`,
+    says: `Governments are counted against what each place is expected to have; bodies have no expected total, so only what was found is shown.${unreadNote(r)}`,
+  });
+}
+
+function peopleRow(r: ScoreboardReadings): ScoreboardRow {
+  const id = "People coverage", name = "People coverage";
+  if (r.places === null || r.places.length === 0) return noPlaces(id, name, r);
+  const people = r.places.reduce((a, p) => a + p.profiles.people, 0);
+  if (people === 0) return unmeasured(id, name, "No official or candidate is known in the sent places yet.");
+  const full = r.places.reduce((a, p) => a + p.profiles.full, 0);
+  const fields = new Map<string, { label: string; applies: number; held: number }>();
+  for (const p of r.places) for (const f of p.profiles.fields) {
+    if (f.held === null) continue;
+    const seen = fields.get(f.key) ?? { label: f.label, applies: 0, held: 0 };
+    fields.set(f.key, { label: f.label, applies: seen.applies + f.applies, held: seen.held + f.held });
+  }
+  return row(id, name, {
+    value: share(full, people),
+    counts: `${n(full)} of ${n(people)} officials and candidates have a full profile`,
+    says: `${[...fields.values()].map((f) => `${f.label} ${n(f.held)} of ${n(f.applies)}`).join(" · ")}. A field counts only for the people it applies to.${unreadNote(r)}`,
+  });
+}
+
+const HOUR_MINUTES = 60;
+const coreWords = (c: CoreLive): string => c.minutes === null ? `Not yet: ${n(c.n)} of ${n(c.of)} core items held`
+  : c.alreadyHeld ? "Already held when the mission started"
+  : c.minutes === 1 ? "1 minute" : `${n(c.minutes)} minutes`;
+const withinHour = (c: CoreLive): boolean | null => (c.minutes === null ? null : c.minutes <= HOUR_MINUTES);
+
+function coreRow(r: ScoreboardReadings): ScoreboardRow {
+  const id = "Time to core information live", name = "Time to core information live";
+  if (r.places === null || r.places.length === 0) return noPlaces(id, name, r);
+  const cores = r.places.map((p) => p.core).filter((c): c is CoreLive => c !== null);
+  if (cores.length === 0) return unmeasured(id, name, "No sent place has a mission start and a core item owed yet.");
+  const live = cores.filter((c) => c.minutes !== null);
+  const within = live.filter((c) => c.minutes! <= HOUR_MINUTES).length;
+  return row(id, name, {
+    value: share(within, cores.length),
+    counts: `${n(within)} of ${n(cores.length)} ${cores.length === 1 ? "mission" : "missions"} had core information live within an hour${cores.length - live.length > 0 ? ` · ${n(cores.length - live.length)} not yet` : ""}`,
+    says: `The target is an hour. Core information is the governments, their bodies, every seat's holder and each meeting's date, as set in Settings.${unreadNote(r)}`,
+  });
+}
+
+const pipelineDelivery = (p: PublicationCounts): string => `${n(p.seen)} of ${n(p.seen + p.stale + p.notFound + p.unread)} accepted records seen on the public page${p.notFound > 0 ? ` · ${n(p.notFound)} not found there` : ""}${p.unread > 0 ? ` · ${n(p.unread)} not checked` : ""}`;
+
+function deliveryRow(p: PublicationCounts | null, places: readonly ScoreboardPlace[]): ScoreboardRow {
   const id = "Public delivery", name = "Public delivery";
+  const contracts = p !== null && p.contracts !== null && p.contractsReadBack !== null ? ` ${n(p.contractsReadBack)} of ${n(p.contracts)} kinds of record are published and read back.` : "";
+  if (places.length > 0) {
+    const t = total(places, (x) => x.measures.delivery);
+    const all = p !== null && p.seen + p.stale + p.notFound + p.unread > 0 ? ` Across all places: ${pipelineDelivery(p)}.` : "";
+    if (t.of > 0) return row(id, name, { value: share(t.n, t.of), counts: `${n(t.n)} of ${n(t.of)} published facts in sent places seen on the public page`, says: `Counts facts that are published and were checked on the page.${all}${contracts}` });
+  }
   if (p === null) return unmeasured(id, name, "The published records and their public page checks could not be read just now.");
-  const total = p.seen + p.stale + p.notFound + p.unread;
-  const contracts = p.contracts !== null && p.contractsReadBack !== null ? ` ${n(p.contractsReadBack)} of ${n(p.contracts)} kinds of record are published and read back.` : "";
-  if (total === 0) return row(id, name, { says: `No accepted record is waiting to show.${contracts}`, notMeasured: "No accepted record has been counted yet." });
-  return row(id, name, {
-    value: share(p.seen, total),
-    counts: `${n(p.seen)} of ${n(total)} accepted records seen on the public page${p.notFound > 0 ? ` · ${n(p.notFound)} not found there` : ""}${p.unread > 0 ? ` · ${n(p.unread)} not checked` : ""}`,
-    says: `Counts accepted records the page was checked for.${contracts}`,
-  });
+  const whole = p.seen + p.stale + p.notFound + p.unread;
+  if (whole === 0) return row(id, name, { says: `No accepted record is waiting to show.${contracts}`, notMeasured: "No accepted record has been counted yet." });
+  return row(id, name, { value: share(p.seen, whole), counts: pipelineDelivery(p), says: `Counts accepted records the page was checked for.${contracts}` });
 }
 
-function freshnessRow(p: PublicationCounts | null): ScoreboardRow {
+function freshnessRow(p: PublicationCounts | null, places: readonly ScoreboardPlace[]): ScoreboardRow {
   const id = "Freshness", name = "Freshness";
+  const checked = p === null ? 0 : p.seen + p.stale;
+  const all = p !== null && checked > 0 ? ` Across all places: ${n(p.seen)} of ${n(checked)} accepted records seen on the page recently, ${n(p.stale)} overdue.` : "";
+  if (places.length > 0) {
+    const t = total(places, (x) => x.measures.freshness);
+    if (t.of > 0) return row(id, name, { value: share(t.n, t.of), counts: `${n(t.n)} of ${n(t.of)} held items in sent places are current · ${n(t.of - t.n)} due for a refresh`, says: `Counts what we hold that is still within its freshness window.${all}` });
+  }
   if (p === null) return unmeasured(id, name, "The published records and their public page checks could not be read just now.");
-  const checked = p.seen + p.stale;
   if (checked === 0) return unmeasured(id, name, "No accepted record has been seen on the page yet, so nothing can be called on schedule or overdue.");
-  return row(id, name, {
-    value: share(p.seen, checked),
-    counts: `${n(p.seen)} of ${n(checked)} seen on the page recently · ${n(p.stale)} overdue`,
-    says: "Counts records last seen on the public page within the allowed time; records never seen there are counted under Public delivery.",
-  });
-}
-
-function shutDoorsRow(d: ScoreboardReadings["shutDoors"]): ScoreboardRow {
-  const id = "Shut doors", name = "Shut doors";
-  if (d === null) return unmeasured(id, name, "The door registry could not be read just now, so no door is called shut.");
-  return row(id, name, {
-    value: n(d.shut),
-    counts: `${n(d.shut)} shut · ${n(d.open)} open · ${n(d.setAside)} set aside${d.unreadable > 0 ? ` · ${n(d.unreadable)} unreadable` : ""}`,
-    says: "How many ways in are shut right now. How long each took to reopen is not recorded yet.",
-  });
+  return row(id, name, { value: share(p.seen, checked), counts: `${n(p.seen)} of ${n(checked)} seen on the page recently · ${n(p.stale)} overdue`, says: "Counts records last seen on the public page within the allowed time; records never seen there are counted under Public delivery." });
 }
 
 function returnsRow(r: ScoreboardReadings["returning"]): ScoreboardRow {
@@ -267,42 +406,118 @@ function headStartRow(d: DoorFacts | null): ScoreboardRow {
   });
 }
 
+const easternDay = (iso: string): string => new Date(iso).toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
+
+/** DP-18: "Of N facts audited this week, X% are still accurate. Here are the K we fixed." "—" when nothing was judged. */
+export function auditRow(a: AuditAccuracyReading | null | undefined): ScoreboardRow {
+  const id = "Audit accuracy", name = "Audit accuracy";
+  if (a === undefined) return unmeasured(id, name, "The auditors' green and red flags are not recorded here yet.");
+  if (a === null) return unmeasured(id, name, "The auditors' record could not be read just now.");
+  const counts = [
+    `${n(a.stillRight)} still right`, `${n(a.wrong)} wrong`,
+    ...(a.couldNotJudge > 0 ? [`${n(a.couldNotJudge)} could not be checked`] : []),
+    `${n(a.fixed)} fixed`, `${n(a.pulled)} taken off the page`,
+  ].join(" · ");
+  const items = a.fixedFacts.map((f) => `${f.action === "PULLED" ? "Taken off the page" : "Fixed"} ${easternDay(f.at)}: ${f.summary}`);
+  const technical = a.fixedFacts.map((f) => `${f.factId} · ${f.family} · ${f.area} · ${f.action} · ${f.at}`);
+  const second = a.coverageLine === null ? "" : ` ${a.coverageLine}`;
+  if (a.accuratePercent === null) {
+    return row(id, name, { counts: a.couldNotJudge > 0 || a.fixedFacts.length > 0 ? counts : null, says: `No published fact was judged this week.${second}`,
+      notMeasured: a.notMeasured ?? "No published fact has been audited this week.", items, technical });
+  }
+  return row(id, name, { value: `${a.accuratePercent}%`, counts, says: `${a.sentence}${second}`, items, technical });
+}
+
+/** FE-02: each surface and sampled ZIP, phone and desktop, judged by its slowest visit against three seconds. */
+export function speedRow(p: SpeedPass | null | undefined): ScoreboardRow {
+  const id = "Site speed and reliability", name = "Site speed and reliability";
+  if (p === undefined) return unmeasured(id, name, "Page load times and errors are not recorded here yet.");
+  if (p === null) return unmeasured(id, name, "No speed check of the live site has been recorded in the last two days.");
+  const total = p.passed + p.failed;
+  if (total === 0) return unmeasured(id, name, "The last speed check measured nothing.");
+  const failing = p.rows.filter((r) => r.verdict === "FAIL");
+  return row(id, name, {
+    value: `${n(p.passed)} of ${n(total)}`,
+    counts: `${n(p.passed)} within ${p.budgetMs / 1000} seconds · ${n(p.failed)} too slow or never finished · ${n(p.zips.length)} ZIP codes`,
+    says: `Every page and Ask question, judged by its slowest visit on a phone and a desktop. Checked ${formatEastern(p.at)}.`,
+    items: [...failing, ...p.rows.filter((r) => r.verdict === "PASS")].map((r) => `${r.verdict === "PASS" ? "Within the limit" : "Too slow"}: ${r.says}`),
+  });
+}
+
+/** DP-26: how many fixes proved out across places, and any proven fix that broke. */
+export function provenFixesRow(p: ProvenFixesReading | null | undefined): ScoreboardRow {
+  const id = "Proven fixes", name = "Proven fixes";
+  if (p === undefined) return unmeasured(id, name, "Fixes proved across places are not recorded here yet.");
+  if (p === null) return unmeasured(id, name, "Where each fix stands could not be read just now.");
+  if (p.proven + p.testing === 0) return unmeasured(id, name, "No reusable fix has been tried in a place yet.");
+  const broke = p.broke.length;
+  return row(id, name, {
+    value: n(p.proven),
+    counts: `${n(p.proven)} proven · ${n(p.testing)} testing${broke > 0 ? ` · ${n(broke)} broke in the last 30 days` : ""}`,
+    says: broke > 0 ? `${n(broke)} proven fix${broke === 1 ? "" : "es"} broke in the last 30 days.` : "A proven fix worked in enough places across more than one district or state. None broke in the last 30 days.",
+    items: p.broke.map((b) => `Broke ${easternDay(b.at)}: ${b.title}${b.stillProven ? " (still proven)" : " (back in testing)"}`),
+  });
+}
+
+/** DP-33: "X of K claimed wins confirmed", recomputed from source records by the claim auditors. */
+export function reportAccuracyRow(a: ReportAccuracyReading | null | undefined): ScoreboardRow {
+  const id = "Report accuracy", name = "Report accuracy";
+  if (a === undefined) return unmeasured(id, name, "Auditor confirmation of the team's claimed wins is not recorded here yet.");
+  if (a === null) return unmeasured(id, name, "No weekly check of the team's claimed wins in the last two weeks.");
+  const judged = a.confirmed + a.wrong;
+  if (judged === 0) return unmeasured(id, name, a.couldNotCheck > 0 ? `${n(a.couldNotCheck)} claimed wins were sampled, but none could be checked against its records.` : "No claimed win was sampled in the last check.");
+  return row(id, name, {
+    value: `${n(a.confirmed)} of ${n(judged)}`,
+    counts: `${n(a.confirmed)} confirmed · ${n(a.wrong)} wrong${a.couldNotCheck > 0 ? ` · ${n(a.couldNotCheck)} could not be checked` : ""}`,
+    says: `Report accuracy: ${n(a.confirmed)} of ${n(judged)} claimed wins confirmed from their source records. Checked ${formatEastern(a.at)}.`,
+    items: a.wrongClaims.map((w) => `Wrong: ${w.claimed} ${w.cause}`.trim()),
+  });
+}
+
 const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
-  { id: "Mission progress", name: "Mission progress", why: "The mission map is built in a later step." },
-  { id: "Checklist completeness", name: "Checklist completeness", why: "Counted place by place; the Scoreboard reads those counts in a later step." },
-  { id: "Coverage", name: "Coverage", why: "Counted against what a place is expected to have, in a later step." },
-  { id: "People coverage", name: "People coverage", why: "The full-profile count is built in a later step." },
   { id: "Facts live per hour", name: "Facts live per hour", why: "Counted in a later step, once each fact carries when it went live." },
   { id: "Cost per fact", name: "Cost per fact", why: "Counted in a later step, from the same record as facts live per hour." },
-  { id: "Audit accuracy", name: "Audit accuracy", why: "The auditors' green and red flags are not recorded here yet." },
-  { id: "Posted to live", name: "Posted to live", why: "The time from a body posting to our page showing it is not recorded yet." },
   { id: "Look and feel", name: "Look and feel", why: "The front-end flags are not recorded here yet." },
-  { id: "Site speed and reliability", name: "Site speed and reliability", why: "Page load times and errors are not recorded here yet." },
-  { id: "Time to repair", name: "Time to repair", why: "The time from breaking to working again is not recorded yet." },
-  { id: "Repairs without code", name: "Repairs without code", why: "Which repairs needed no code change is not recorded yet." },
-  { id: "Proven fixes", name: "Proven fixes", why: "Fixes proved across places are not recorded yet." },
-  { id: "Report accuracy", name: "Report accuracy", why: "Auditor confirmation of the team's claimed wins is not recorded yet." },
 ];
 
 /** The Scoreboard in the design's order. Every number in the list has a row; one with no reading says "—" and why. */
 export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
   const byId = new Map<string, ScoreboardRow>([
     ["Orders", ordersRow(r.orders)],
-    ["Public delivery", deliveryRow(r.publication)],
-    ["Freshness", freshnessRow(r.publication)],
-    ["Shut doors", shutDoorsRow(r.shutDoors)],
+    ["Mission progress", missionProgressRow(r)],
+    ["Checklist completeness", completenessRow(r)],
+    ["Coverage", coverageRow(r)],
+    ["People coverage", peopleRow(r)],
+    ["Time to core information live", coreRow(r)],
+    ["Public delivery", deliveryRow(r.publication, r.places ?? [])],
+    ["Freshness", freshnessRow(r.publication, r.places ?? [])],
     ["Return visits", returnsRow(r.returning)],
     ["Head-start hit rate", headStartRow(r.doors)],
+    ["Audit accuracy", auditRow(r.audit)],
+    ["Site speed and reliability", speedRow(r.speed)],
+    ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
+    ["Proven fixes", provenFixesRow(r.provenFixes)],
+    ["Report accuracy", reportAccuracyRow(r.reportAccuracy)],
     ...GATE_ROWS.map((g): [string, ScoreboardRow] => [g.id, unmeasured(g.id, g.name, g.why)]),
   ]);
   const ORDER = ["Orders", "Mission progress", "Checklist completeness", "Coverage", "Public delivery", "People coverage", "Facts live per hour", "Cost per fact", "Audit accuracy",
-    "Freshness", "Shut doors", "Posted to live", "Look and feel", "Site speed and reliability", "Return visits", "Time to repair", "Repairs without code", "Proven fixes", "Report accuracy", "Head-start hit rate"];
+    "Freshness", "Shut doors", "Posted to live", "Overdue doors", "Time to core information live", "Look and feel", "Site speed and reliability", "Return visits", "Time to repair", "Repairs without code", "Proven fixes", "Report accuracy", "Head-start hit rate"];
   const rows = ORDER.map((id) => byId.get(id)!);
   const gateRows: ScoreboardGateRow[] | null = r.gates === null ? null : r.gates.map((g) => ({ name: g.name, state: g.state, sentence: g.sentence }));
   const gateSummary = r.gates === null ? null : summarizeGateHealth(r.gates);
   const readiness: ScoreboardReadinessRow[] = r.readiness.map((c) => ({ name: c.name, witnessed: c.witnessed, failing: c.failing, notMeasured: c.notMeasured, of: c.of }));
+  const places = r.places ?? [];
+  const byPlace: ScoreboardPlaceRow[] = places.map((p) => ({ label: p.label, completeness: p.measures.completeness, freshness: p.measures.freshness, delivery: p.measures.delivery, trend: trendWords([{ now: p.measures.completeness, earlier: p.earlier }]) }));
+  const families = new Map<string, { n: number; of: number }>();
+  for (const p of places) for (const f of p.familyMeasures) {
+    const seen = families.get(f.group) ?? { n: 0, of: 0 };
+    families.set(f.group, { n: seen.n + f.measures.completeness.n, of: seen.of + f.measures.completeness.of });
+  }
+  const byFamily: ScoreboardFamilyRow[] = [...families].filter(([, f]) => f.of > 0).map(([group, f]) => ({ name: GROUP_NAMES[group] ?? group, completeness: f })).sort((a, b) => a.name.localeCompare(b.name));
+  const missions: ScoreboardMissionRow[] = places.flatMap((p) => (p.core === null ? [] : [{ label: p.label, startedAt: p.core.missionStart, coreLive: coreWords(p.core), withinHour: withinHour(p.core) }]));
   return {
     rows,
+    byPlace, byFamily, missions,
     gates: gateRows === null || gateSummary === null ? null : { rows: gateRows, pass: gateSummary.pass, attention: gateSummary.attention, notMeasured: gateSummary.notMeasured },
     readiness,
     learning: r.learning,

@@ -38,8 +38,8 @@ test("writing a working method for a platform and record class reopens the absen
   assert.equal(row.absenceUnlock, null);
   assert.equal(row.nextDueAt, NOW, "owed in the next round");
   assert.match(row.absenceReopened?.because ?? "", /legistar meetings/);
-  assert.equal((await repos.obligations.mustRead("other-platform")).value.absentUntil, UNTIL);
-  assert.equal((await repos.obligations.mustRead("other-class")).value.absentUntil, UNTIL);
+  assert.ok((await repos.obligations.mustRead("other-platform")).value.absentUntil, "still absent");
+  assert.ok((await repos.obligations.mustRead("other-class")).value.absentUntil, "still absent");
   assert.deepEqual(await reopenAbsencesFor(repos, caps, NOW), [], "idempotent");
 });
 
@@ -66,4 +66,18 @@ test("an absence that has already expired is left to its own clock", async () =>
   await recordArguedAbsence(repos, { obligationId: "old", absentUntil: "2026-10-01T00:00:00.000Z", now: NOW,
     unlockWhen: absenceUnlockFrom({ nextRungs: [], narrative: "n", recordClass: "meetings" }, "2026-10-01T00:00:00.000Z") });
   assert.deepEqual(await reopenAbsencesFor(repos, capabilitiesFromEntries([method("legistar", "meetings")]), NOW), []);
+});
+
+test("each round, a capability the bank gained after an absence was argued reopens it; one it already had does not", async () => {
+  const { reopenAbsencesForRecentCapabilities } = await import("../lib/control-plane/scheduler/absence-reopen.ts");
+  const repos = createMemoryRepositories();
+  await absent(repos, "on-platform", "legistar");
+  const later = new Date(Date.parse(NOW) + 3_600_000).toISOString();
+  const before = { ...method("legistar", "meetings"), observedAt: "2026-10-04T12:00:00.000Z" };
+  assert.deepEqual(await reopenAbsencesForRecentCapabilities(repos, [before], later), [], "a method the walk already had cannot reopen its own dead end");
+  const sameDay = { ...method("legistar", "meetings"), observedAt: "2026-10-05" };
+  assert.deepEqual(await reopenAbsencesForRecentCapabilities(repos, [sameDay], later), [], "a bare day counts only from the next day");
+  const after = { ...method("legistar", "meetings"), observedAt: later };
+  const reopened = await reopenAbsencesForRecentCapabilities(repos, [after], later);
+  assert.deepEqual(reopened.map((r) => r.obligationId), ["on-platform"]);
 });

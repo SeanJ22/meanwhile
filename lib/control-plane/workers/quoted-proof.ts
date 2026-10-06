@@ -17,6 +17,7 @@ import { personNameField, recordBlockAt } from "./record-block.ts";
 import { escapePointer, recordIdentity, RecordEvidenceRefusal } from "./record-evidence.ts";
 import type { EvidenceSpan, ExtractedRecord, FieldValue, GeneralizedCivicExtractionContract, ParserResult, ParserWorkerInput, WorkerEvidence, WorkerFinding } from "./types.ts";
 
+export const BOX_PARSER_IMPLEMENTATION = "box-quoted-extraction";
 export const MODEL_PARSER_IMPLEMENTATION = "model-quoted-extraction";
 export const MAX_QUOTE_CHARS = 600;
 
@@ -122,7 +123,7 @@ export function confirmQuotedRecords(
       kept.push({ field: claim.name, start: at, end: at + claim.quote.length, quote: claim.quote });
     }
     if (kept.length) recordFrom.set(proposal.windowStart, Math.min(...kept.map((k) => k.start)) + 1);
-    const missing = required.filter((f) => fields[f] === undefined || fields[f] === "");
+    const missing = required.filter((f) => !f.split("|").some(key => fields[key] !== undefined && fields[key] !== ""));
     if (missing.length) { for (const f of missing) rejections.push({ code: "REQUIRED_FIELD_UNCONFIRMED", recordIndex, field: f }); return; }
     let id: string;
     try { id = recordIdentity(fields, contract.identity); }
@@ -185,7 +186,8 @@ export function quotesHoldAgainst(result: Pick<ParserResult, "records" | "spans"
 
 /** Whether a parser result is a model-quoted extraction of a contract with no parsing rule. */
 export function isQuotedExtraction(contract: GeneralizedCivicExtractionContract, candidate: Pick<ParserResult, "implementation">): boolean {
-  return contract.extraction.format === "UNSUPPORTED" && candidate.implementation === MODEL_PARSER_IMPLEMENTATION;
+  return candidate.implementation === BOX_PARSER_IMPLEMENTATION ||
+    (contract.extraction.format === "UNSUPPORTED" && candidate.implementation === MODEL_PARSER_IMPLEMENTATION);
 }
 
 const blocking = (code: string, detail: string, recordId?: string): WorkerFinding => ({ code, detail, severity: "BLOCKING", ...(recordId ? { recordId } : {}) });
@@ -199,6 +201,17 @@ const blocking = (code: string, detail: string, recordId?: string): WorkerFindin
  */
 export function quotedSourceFindings(candidate: ParserResult, contract: GeneralizedCivicExtractionContract, evidence: WorkerEvidence): WorkerFinding[] {
   const out: WorkerFinding[] = [];
+  if (candidate.implementation === BOX_PARSER_IMPLEMENTATION) {
+    const metadata = candidate.contractMetadata;
+    if (candidate.subjectId !== contract.subjectId || candidate.recordClass !== contract.recordClass ||
+        candidate.acquiredByAttemptId !== evidence.acquiredByAttemptId || !metadata ||
+        metadata.methodVersion !== contract.methodVersion || metadata.identity.namespace !== contract.identity.namespace ||
+        JSON.stringify(metadata.identity.keyFields) !== JSON.stringify(contract.identity.keyFields) ||
+        ["country", "state", "canonicalId"].some(key => metadata.jurisdiction[key as keyof typeof metadata.jurisdiction] !== contract.jurisdiction[key as keyof typeof contract.jurisdiction]) ||
+        candidate.records.some(record => record.subjectId !== contract.subjectId)) {
+      out.push(blocking("QUOTED_SCOPE_MISMATCH", "The Box extraction must name this subject, jurisdiction, record class, identity, method and acquisition."));
+    }
+  }
   if (candidate.artifactId !== evidence.artifactId || candidate.contentHash !== evidence.contentHash) {
     out.push(blocking("SPAN_ARTIFACT_MISMATCH", "The extraction names a different artifact or content hash than the immutable evidence."));
   }
@@ -210,7 +223,7 @@ export function quotedSourceFindings(candidate: ParserResult, contract: Generali
   const required = [...new Set([...contract.requiredFields, ...contract.identity.keyFields])];
   for (const record of candidate.records) {
     for (const field of required) {
-      if (record.fields[field] === undefined || record.fields[field] === "") out.push(blocking("REQUIRED_FIELD_MISSING", `Record lacks required ${field}.`, record.id));
+      if (!field.split("|").some(key => record.fields[key] !== undefined && record.fields[key] !== "")) out.push(blocking("REQUIRED_FIELD_MISSING", `Record lacks required ${field}.`, record.id));
     }
     try {
       if (recordIdentity(record.fields, contract.identity) !== record.id) out.push(blocking("SOURCE_RECORD_IDENTITY_MISMATCH", "The record id is not the identity its own fields give.", record.id));

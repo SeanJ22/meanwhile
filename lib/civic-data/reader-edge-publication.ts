@@ -25,7 +25,10 @@ import { REGISTRATION_SCOPES, registrationEdgePlan } from "../registration/edge.
 import { readRegistrationProjection } from "../registration/reader.ts";
 import { readFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
 import { readOfficialStateLegislatorsProjection } from "../state-rollcalls/legislators.ts";
-import { combinedOutcomeVersionId, combineOutcomeProjections, readMesaOutcomeProjection, readOutcomeProjection } from "../outcomes/store.ts";
+import { combinedOutcomeVersionId, combineOutcomeProjections, doorOutcomeParts, doorOutcomesUnreadable, readDoorOutcomeProjections, readMesaOutcomeProjection, readOutcomeProjection } from "../outcomes/store.ts";
+import { DOOR_OUTCOME_POINTERS } from "../outcomes/door-outcome-pointers.ts";
+import { outcomePartitionsAreCurrent } from "./outcome-partitions.ts";
+import { doorReadModeFromEnv } from "../doors/install.ts";
 import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../outcomes/data-plane.ts";
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../state-rollcalls/authority.ts";
 import type { OfficialStateLegislatorReadModel } from "./candidate-builders.ts";
@@ -59,6 +62,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
   let failed = false;
   let destination: ReaderEdgePublicationOutcome["store"] = "not configured";
   let sequence: number | null = null;
+  let supersededMeetingFields: number | undefined;
   let status = "FAILED";
   let detail: string | null = null;
   const owns = (recordClass: RoutineRecordClass, scope: string) => selected === null || selected.some(pointer => pointer.recordClass === recordClass && pointer.scope === scope);
@@ -69,7 +73,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
     "federal-directory": [manual("congress-bulk-roster")],
     "campaign-sites": [manual("campaign-sites")],
     "state-legislators": OFFICIAL_STATE_LEGISLATOR_TARGETS.map(target => ({ recordClass: "STATE_LEGISLATOR" as const, scope: target.jurisdiction })),
-    "meeting-outcomes": [PIMA_LEGISTAR_OUTCOMES_CONTRACT, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT],
+    "meeting-outcomes": [PIMA_LEGISTAR_OUTCOMES_CONTRACT, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, ...DOOR_OUTCOME_POINTERS],
     "comment-access": [manual("comment-access")],
   };
   const refreshes = (family: keyof typeof specialPointers) => specialPointers[family].some(pointer => owns(pointer.recordClass, pointer.scope));
@@ -271,27 +275,48 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       // version, and read whole only when it moved.
       if (refreshes("meeting-outcomes")) try {
         delete authority["meeting-outcomes"];
-        // Pima's and Mesa's pointers, combined (NH332): the artifact is Pima's
-        // alone while Mesa has no pointer, and names both versions once it does.
-        const carried = await servedIfCurrent("meeting-outcomes", async () => combinedOutcomeVersionId(
-          await pointerVersion(PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass, PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope)(),
-          await pointerVersion(MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.recordClass, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.scope)(),
-        ));
-        if (carried !== null) authority["meeting-outcomes"] = { versionId: carried, carried: true };
-        else {
-          const oc = await readOutcomeProjection({ store, now: observedAt, bypassCache: true });
-          const mesa = await readMesaOutcomeProjection({ store, now: observedAt, bypassCache: true });
-          // Complete or left out: a Mesa read that failed must not publish Pima
-          // alone as if Mesa had nothing; the reader then reads both from the database.
-          if (mesa.kind !== "PROMOTED" && mesa.kind !== "NOT_RECORDED") throw new Error(`mesa minutes outcomes read ${mesa.kind}`);
-          const combined = oc.kind === "PROMOTED" && oc.metadata.versionId
-            ? combineOutcomeProjections(
-                { value: oc.value, versionId: oc.metadata.versionId },
-                mesa.kind === "PROMOTED" && mesa.metadata.versionId ? { value: mesa.value, versionId: mesa.metadata.versionId } : null,
-              )
-            : null;
-          if (combined !== null) authority["meeting-outcomes"] = combined;
-          else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes kind=${oc.kind}\n`);
+        // Pima's, Mesa's and each door's pointers, combined (NH332, DB-22): the artifact is Pima's alone while no
+        // other pointer exists, and names every version once they do.
+        const doorPointers = [...DOOR_OUTCOME_POINTERS];
+        if (doorReadModeFromEnv() === "registry" && !outcomePartitionsAreCurrent()) {
+          // The doors were not read this pass, so the door list is unknown, not empty: keep serving the last artifact
+          // rather than publish one that silently drops every door's outcomes.
+          const served = servedAuthorityVersion(servedManifest, "meeting-outcomes");
+          if (served !== null) authority["meeting-outcomes"] = { versionId: served, carried: true };
+          process.stderr.write("READER_EDGE_AUTHORITY_CARRIED: meeting-outcomes (the door registry was not read this pass)\n");
+        } else {
+          const carried = await servedIfCurrent("meeting-outcomes", async () => {
+            const doorVersions = await Promise.all(doorPointers.map(async (pointer) => ({
+              contractId: pointer.contractId,
+              versionId: await pointerVersion(pointer.recordClass, pointer.scope)(),
+            })));
+            return combinedOutcomeVersionId(
+              await pointerVersion(PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass, PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope)(),
+              await pointerVersion(MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.recordClass, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.scope)(),
+              doorVersions.filter((door): door is { contractId: string; versionId: string } => door.versionId !== null),
+            );
+          });
+          if (carried !== null) authority["meeting-outcomes"] = { versionId: carried, carried: true };
+          else {
+            const oc = await readOutcomeProjection({ store, now: observedAt, bypassCache: true });
+            const mesa = await readMesaOutcomeProjection({ store, now: observedAt, bypassCache: true });
+            // Complete or left out: a Mesa or door read that failed must not publish the rest alone as if it had
+            // nothing; the reader then reads them from the database.
+            if (mesa.kind !== "PROMOTED" && mesa.kind !== "NOT_RECORDED") throw new Error(`mesa minutes outcomes read ${mesa.kind}`);
+            await readDoorOutcomeProjections({ store, now: observedAt, bypassCache: true });
+            const doorParts = doorOutcomeParts();
+            const unreadable = doorOutcomesUnreadable();
+            if (unreadable.length > 0) throw new Error(`door outcomes read failed for ${unreadable.join(", ")}`);
+            const combined = oc.kind === "PROMOTED" && oc.metadata.versionId
+              ? combineOutcomeProjections(
+                  { value: oc.value, versionId: oc.metadata.versionId },
+                  mesa.kind === "PROMOTED" && mesa.metadata.versionId ? { value: mesa.value, versionId: mesa.metadata.versionId } : null,
+                  doorParts.map((part) => ({ value: part.value, pointers: [{ contractId: part.pointer.contractId, tenant: part.pointer.slug, versionId: part.versionId }] })),
+                )
+              : null;
+            if (combined !== null) authority["meeting-outcomes"] = combined;
+            else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes kind=${oc.kind}\n`);
+          }
         }
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
@@ -357,6 +382,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       }
       let meetingBodies: RegistryRuntimeReadModel["registry"]["bodies"] | undefined;
       if (meetingRead?.kind === "PROMOTED") {
+        supersededMeetingFields = meetingRead.value.meetings.reduce((count, meeting) => count + (meeting.publicationConflicts?.length ?? 0), 0);
         const registry = authority["registry-runtime"];
         if (meetingRead.value.meetings.length === 0) {
           meetingBodies = [];
@@ -391,7 +417,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
     process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${detail}\n`);
   }
   const outcome: ReaderEdgePublicationOutcome = { ok: !failed, readerEdge: failed && status !== "SKIPPED_NO_STORE" ? "FAILED" : status,
-    store: destination, sequence, detail: failed ? detail ?? "Reader pages could not be fully updated. The earlier serving copies remain available." : null };
+    store: destination, sequence, ...(supersededMeetingFields !== undefined ? { supersededMeetingFields } : {}), detail: failed ? detail ?? "Reader pages could not be fully updated. The earlier serving copies remain available." : null };
   console.log(JSON.stringify(outcome));
   return outcome;
 }

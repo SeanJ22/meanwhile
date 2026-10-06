@@ -1,11 +1,15 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+
+import { CheckedLink } from "@/components/ui/checked-link";
 import { useEffect, useState } from "react";
 import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 import type { AgendaPublicationReading } from "@/lib/ask/agenda-publication";
 
 import { noticeSummaryFor } from "@/lib/meetings/notice-summary";
-import { formatDateMDY } from "@/lib/map/format";
+
 import { agendaItems } from "@/lib/routing/agenda-search";
 import type { MeetingReaderRecords } from "@/lib/meetings/reader-records";
 import { MeetingRecords } from "./meeting-records";
@@ -138,19 +142,19 @@ function AgendaForMeeting({
   if (failed) {
     // Couldn't check ≠ none — the standing rule, here too.
     return (
-      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+      <p className="mt-1.5 t-detail leading-relaxed text-muted">
         Couldn&apos;t check for the agenda just now.
         {agendaUrl && (
           <>
             {" "}
-            <a
+            <CheckedLink
               href={agendaUrl}
               target="_blank"
               rel="noreferrer"
               className="text-signal hover:underline"
             >
               Read it at the source
-            </a>
+            </CheckedLink>
             .
           </>
         )}
@@ -160,19 +164,19 @@ function AgendaForMeeting({
 
   if (documents === null) {
     return (
-      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+      <p className="mt-1.5 t-detail leading-relaxed text-muted">
         Looking for the agenda…
       </p>
     );
   }
 
   return <>
-    {unavailableAuthorities.length > 0 && <p className="mb-2 text-[0.6875rem] leading-relaxed text-muted" data-agenda-supporting-holding="PARTIAL">
+    {unavailableAuthorities.length > 0 && <p className="mb-2 t-caption leading-relaxed text-muted" data-agenda-supporting-holding="PARTIAL">
       The meeting and agenda remain available, but these supporting records could not be checked: {unavailableAuthorities.join(", ")}.
     </p>}
     <MinutesRecord meetingId={meetingId} />
     <MeetingRecords records={records} />
-    {holdingUnavailable ? <p className="mt-1.5 text-[0.75rem] text-muted">The stored document is unavailable here.{agendaUrl && <> <a className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</a>.</>}</p>
+    {holdingUnavailable ? <p className="mt-1.5 t-detail text-muted">The stored document is unavailable here.{agendaUrl && <> <CheckedLink className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</CheckedLink>.</>}</p>
       : <AgendaDocuments documents={documents} meetingId={meetingId} agendaUrl={agendaUrl} agendaSentence={agendaState.sentence} publication={publication} />}
   </>;
 }
@@ -180,10 +184,10 @@ function AgendaForMeeting({
 function MinutesRecord({ meetingId }: { meetingId: string }) {
   const summary = minutesSummaryForMeeting(meetingId);
   if (!summary) return null;
-  return <details className="mb-3 text-[0.75rem] leading-relaxed" open data-minutes-summary={meetingId}>
+  return <details className="mb-3 t-detail leading-relaxed" open data-minutes-summary={meetingId}>
     <summary className="cursor-pointer text-signal">What happened — plain language</summary>
     <p className="mt-2 font-semibold">{summary.summary}</p>
-    <p className="mt-1 text-muted">Our paraphrase of <a href={summary.minutesUrl} target="_blank" rel="noreferrer" className="text-signal underline">the {summary.sourceOrg} minutes</a> · read {formatDateMDY(summary.readAt)}.</p>
+    <CardSourcesContribution id={`minutes:${meetingId}`} sources={[{ what: "Meeting minutes; plain-language paraphrase is ours", provenance: { sourceUrl: summary.minutesUrl, sourceOrg: summary.sourceOrg, collectedAt: summary.readAt, verifiedAt: null } }]} />
   </details>;
 }
 
@@ -202,32 +206,21 @@ function MinutesRecord({ meetingId }: { meetingId: string }) {
  * serves the newer content, and a link would hand the reader the wrong
  * version. Every distinct address is linked exactly where its version is.
  */
-function VersionsOnFile({ documents, publication }: {
-  documents: readonly AgendaDocumentView[]; publication?: AgendaPublicationReading | null;
+export function AgendaDocuments(props: {
+  documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
+  publication?: AgendaPublicationReading | null;
 }) {
-  if (documents.length < 2) return null;
-  const latestUrl = documents[0].documentUrl;
-  const linked = new Set([latestUrl]);
-  const revised = publication?.revised !== false;
-  return <span data-agenda-versions={documents.length}>
-    {revised
-      ? ` · ${documents.length} versions on file — a revised agenda is itself news: `
-      : ` · ${documents.length} documents on file: `}
-    {documents.map((document, index) => {
-      const label = `${index === 0 ? "current" : "earlier"} version read ${formatDateMDY(document.retrievedAt.slice(0, 10))}`;
-      const link = !linked.has(document.documentUrl);
-      if (link) linked.add(document.documentUrl);
-      return <span key={document.id ?? `${document.contentHash}:${document.retrievedAt}`} data-agenda-version={document.id ?? document.contentHash}>
-        {index > 0 && ", "}
-        {link
-          ? <a href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">{label}</a>
-          : label}
-      </span>;
-    })}
-  </span>;
+  const { documents, meetingId, publication } = props;
+  const indexPages = publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX";
+  const sourceRows = documents.map((document, index) => ({
+    what: `${indexPages ? index === 0 ? "Current listing page" : "another listing page" : index === 0 ? "Current agenda document" : "earlier version read"}${index === 0 && documents.length > 1 && !indexPages ? ` · ${documents.length} ${publication?.revised !== false ? "versions on file — a revised agenda is itself news" : "documents on file"}` : ""}${document.extractionNote ? ` · ${document.extractionNote}` : ""}`,
+    dataAttrs: indexPages ? { "data-agenda-listing-page": document.id ?? document.documentUrl } : { "data-agenda-version": document.id ?? document.contentHash, ...(index === 0 && documents.length > 1 ? { "data-agenda-versions": documents.length } : {}) },
+    provenance: { sourceUrl: index > 0 && documents.slice(0,index).some(prior => prior.documentUrl === document.documentUrl) ? "" : document.documentUrl, sourceOrg: document.sourceOrg, collectedAt: document.retrievedAt, verifiedAt: null },
+  }));
+  return <><CardSourcesContribution id={`agenda-documents:${meetingId}`} sources={sourceRows} /><AgendaDocumentContents {...props} /></>;
 }
 
-export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentence, publication }: {
+function AgendaDocumentContents({ documents, meetingId, agendaUrl, agendaSentence, publication }: {
   documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
   publication?: AgendaPublicationReading | null;
 }) {
@@ -237,67 +230,20 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
     // Only publication-index pages are held for this sitting. They are shown
     // for what they are — listing pages, never versions of its agenda — and a
     // second distinct listing page is linked rather than counted as a revision.
-    const otherListingPages = documents.filter((document, index, all) =>
-      document.documentUrl !== latest.documentUrl &&
-      all.findIndex((candidate) => candidate.documentUrl === document.documentUrl) === index);
-    return <div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-      <p>{publication.gap?.statement} <a href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</a>.</p>
-      <p className="mt-1 text-[0.625rem]">{publication.documentSharedAcrossGovernments ? "Unresolved source link" : `From ${latest.sourceOrg}`} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}.
-        {otherListingPages.map((document) => <span key={document.documentUrl} data-agenda-listing-page={document.id ?? document.documentUrl}>
-          {" "}Also held: <a href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">another listing page, read {formatDateMDY(document.retrievedAt.slice(0, 10))}</a>.
-        </span>)}
-      </p>
+    return <div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 t-detail leading-relaxed text-muted">
+      <p>{publication.gap?.statement} <CheckedLink href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</CheckedLink>.</p>
+
     </div>;
   }
 
-  if (!latest) {
-    return (
-      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-        {agendaUrl ? (
-          <>
-            We haven&apos;t stored this agenda&apos;s text yet —{" "}
-            <a
-              href={agendaUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-signal hover:underline"
-            >
-              read it at the source
-            </a>
-            .
-          </>
-        ) : (
-          `${agendaSentence}.`
-        )}
-      </p>
-    );
-  }
+  if (!latest) return <p className="mt-1.5 t-detail text-muted">
+    <WorkingOnIt inline state={/not posted yet/i.test(agendaSentence) ? { kind: "not-published", item: "Agenda" } : undefined} />
+    {agendaUrl && <> · <CheckedLink href={agendaUrl} target="_blank" rel="noreferrer" className="text-link underline">Read the agenda</CheckedLink></>}
+  </p>;
 
-  if (!latest.text || publication?.acquisition === "ACQUIRED_NOT_READABLE") {
-    return (
-      <p data-agenda-publication="ACQUIRED_NOT_READABLE" className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-        We fetched this meeting&apos;s document but couldn&apos;t read its
-        {/*
-          **A REASON WE DO NOT HOLD IS NOT "extraction failed"**
-          (2026-08-23, item 3). The branch is already inside "we could not
-          read it", so restating that as the REASON says nothing while
-          looking like an explanation. Where no note was recorded, the gap is
-          named as ours.
-        */}
-        text ({latest.extractionNote ?? (latest.text ? "the stored extraction contains document bytes rather than readable text" : "we haven't recorded why")}).{" "}
-        <a
-          href={latest.documentUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="text-signal hover:underline"
-        >
-          Open the document
-        </a>
-        . From {latest.sourceOrg} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}
-        <VersionsOnFile documents={documents} publication={publication} />.
-      </p>
-    );
-  }
+  if (!latest.text || publication?.acquisition === "ACQUIRED_NOT_READABLE") return <p data-agenda-publication="ACQUIRED_NOT_READABLE" className="mt-1.5 t-detail text-muted">
+    <WorkingOnIt inline /> · <CheckedLink href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-link underline">Open the document</CheckedLink>
+  </p>;
 
   const summary = noticeSummaryFor(meetingId, latest.contentHash);
   /*
@@ -331,20 +277,20 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
     <div className="mt-1.5">
       {items.length > 0 && (
         <div className="mb-2">
-          <p className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+          <p className="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em] text-muted">
             On the docket — the agenda&apos;s own items, in its words
           </p>
           <ol className="mt-1.5 space-y-1">
             {items.map((item) => (
               <li
                 key={item}
-                className="text-[0.75rem] leading-relaxed text-paper-dim"
+                className="t-detail leading-relaxed text-paper-dim"
               >
                 {item}
               </li>
             ))}
           </ol>
-          <p className="mt-1 text-[0.625rem] text-muted">
+          <p className="mt-1 t-caption text-muted">
             Read straight off the document below — nothing here is
             summarised, and the full text is the record.
           </p>
@@ -354,11 +300,11 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
         // Curated from this exact document version (4d): labeled, above,
         // never replacing the official text below.
         <div className="mb-2 rounded bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
-          <p className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+          <p className="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em] text-muted">
             Plain-language summary — read the official text below
           </p>
           {/* 3b: the product's voice renders BOLD. */}
-          <p className="mt-1.5 text-[0.75rem] font-semibold leading-relaxed">
+          <p className="mt-1.5 t-detail font-semibold leading-relaxed">
             {summary.summary}
           </p>
         </div>
@@ -366,27 +312,15 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
       {hasPublicHearing(latest.text) && (
         // The thing a reader most needs called out: the meeting takes
         // public input on something specific.
-        <p className="mb-2 rounded border border-[var(--signal)] px-3 py-2 text-[0.75rem] font-semibold text-signal">
+        <p className="mb-2 rounded border border-[var(--signal)] px-3 py-2 t-detail font-semibold text-signal">
           This meeting includes a public hearing — a set time when members of
           the public can speak on a listed item.
         </p>
       )}
-      <p className="max-h-56 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
+      <p className="max-h-56 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 t-detail leading-relaxed text-paper-dim">
         {sanitizeStoredText(latest.text)}
       </p>
-      <p className="mt-1 text-[0.625rem] text-muted">
-        From{" "}
-        <a
-          href={latest.documentUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="underline decoration-dotted hover:text-signal"
-        >
-          the {latest.sourceOrg} document
-        </a>{" "}
-        · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}
-        <VersionsOnFile documents={documents} publication={publication} />
-      </p>
+
     </div>
   );
 }

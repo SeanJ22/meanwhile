@@ -119,3 +119,11 @@ test("collectPageObservation is self-contained (serialisable to a page)", () => 
   const src = collectPageObservation.toString();
   assert.doesNotMatch(src, /\b(contrastRatio|SPACE_PX|TYPE_SCALE_PX)\b/);
 });
+
+// A persisted browser observation must replay the same source leak finding.
+test("card source leaks join the existing look report with exact elements", () => {
+  const leaks = [{ selector: "article.reader-card > p.credit", text: "example.gov · read 2026-10-06", reason: "A source read date is visible outside Sources." }];
+  const report = measurePage(page([], { sourceLeaks: leaks }));
+  assert.deepEqual(report.issues, [{ kind: "source-outside-sources", element: leaks[0].selector, text: leaks[0].text, detail: leaks[0].reason }]);
+  assert.deepEqual(measurePage(page([], { sourceLeaks: [] })).issues, []);
+});

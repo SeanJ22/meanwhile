@@ -109,11 +109,13 @@ test("LIVE: independent profiles and verified campaign bytes reach the door as a
   const report = await replayResearchFindings({ subjects: committedSubjects(), findings, held: [...held, ...profiles], marginalia, prior, gate: readActivationGate("."), now,
     live: { runtime, vaultRoot, methodVersion: 1 } });
   assert.equal(report.mode, "LIVE");
-  assert.deepEqual(report.chain!.approved.map((a) => a.campaignSite.candidacyId).sort(), [CHIPPERSON, DUARTE].sort());
-  assert.equal(report.chain!.byStage.VERIFIED, 1, "the Marginalia pointer waits at VERIFIED for an independent source");
+  assert.deepEqual(report.chain!.approved.map((a) => a.campaignSite.candidacyId).sort(), [CHIPPERSON, DUARTE, TANG_WILLIAMS].sort());
+  assert.equal(report.chain!.byStage.APPROVED_FOR_PROMOTION, 3, "CP-12: the campaign page proves identity without a second source");
   assert.ok(report.leads.some((l) => l.url === KAPNER_ROOT && l.codes.includes("CYCLE_NOT_EVIDENCED")));
   assert.ok(runtime.requests.every((url, i) => !url.endsWith("robots.txt") || runtime.requests.indexOf(url) === i), "each origin's robots.txt is read once");
-  assert.deepEqual(report.wouldPublish.map((w) => w.key).sort(), [CHIPPERSON_KEY, DUARTE_KEY].sort());
+  const lily = report.wouldPublish.find(w => w.candidacyId === TANG_WILLIAMS)!;
+  assert.equal(lily.url, LILY);
+  assert.deepEqual(report.wouldPublish.map((w) => w.key).sort(), [CHIPPERSON_KEY, DUARTE_KEY, lily.key].sort());
 
   const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(report.plan!.package!, store, now);
   const outcome = await processRegisteredManualCandidate(store, "candidate-profiles", candidate, now, expectedBaseVersionId);
@@ -122,7 +124,8 @@ test("LIVE: independent profiles and verified campaign bytes reach the door as a
   assert.equal(payload.links.links[DUARTE_KEY]?.campaign?.url, MEET);
   assert.equal(payload.links.links[CHIPPERSON_KEY]?.campaign?.url, CHIP);
   assert.equal(payload.links.links[MAYES_KEY]?.campaign?.url, "https://www.krismayes.com", "the prior version is carried forward");
-  assert.deepEqual(outcome.candidate.candidate.changeSet?.added.map((r) => r.key).sort(), [`links:${CHIPPERSON_KEY}`, `links:${DUARTE_KEY}`].sort());
+  assert.equal(payload.links.links[lily.key]?.campaign?.url, LILY);
+  assert.deepEqual(outcome.candidate.candidate.changeSet?.added.map((r) => r.key).sort(), [`links:${CHIPPERSON_KEY}`, `links:${DUARTE_KEY}`, `links:${lily.key}`].sort());
 });
 
 /* Owner decision 2026-09-25: "Robots.txt alone must not block acquisition." A robots verdict held with a read is evidence, never a refusal. */

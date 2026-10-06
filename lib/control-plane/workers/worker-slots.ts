@@ -266,3 +266,42 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
   return { acquire: (entry = "lease-worker.ts", deadlineMs = Date.now() + (memory.waitMs ?? 120_000)) =>
     new Promise<WorkerMemoryRelease>((resolve, reject) => { waiting.push({ entry, deadline: deadlineMs, resolve, reject }); requestDrain(); }) };
 }
+
+/** How often a wait for host memory says it is still waiting. */
+export const MEMORY_WAIT_REPORT_EVERY_MS = 60_000;
+
+/**
+ * A wait for host memory says, once a minute, that it is still waiting.
+ * (Returned live failure, 2026-10-05.) The runner ends a research round after
+ * ten minutes with no changed output, and a memory wait may run until the
+ * round's dispatch deadline, which can be later. A silent wait was ended as a
+ * crash, losing the round, before it could end as the deferral the design
+ * gives it. Each line names the wait and its minute, so it is new output; the
+ * wait itself stays bounded by its own deadline, and quick admissions print
+ * nothing.
+ */
+export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
+  readonly write?: (line: string) => void;
+  readonly everyMs?: number;
+  /** The length of a reported minute; tests shorten it. */
+  readonly minuteMs?: number;
+} = {}): WorkerProcessSlots {
+  const write = options.write ?? (line => console.log(line));
+  const everyMs = options.everyMs ?? MEMORY_WAIT_REPORT_EVERY_MS;
+  const minuteMs = options.minuteMs ?? 60_000;
+  let waits = 0;
+  return { acquire: (entry, deadlineMs) => {
+    const wait = ++waits;
+    const started = Date.now();
+    const kind = (entry ?? "lease-worker.ts").split(/[\\/]/).at(-1);
+    const limit = deadlineMs === undefined || !Number.isFinite(deadlineMs) ? null : Math.max(1, Math.ceil((deadlineMs - started) / minuteMs));
+    const timer = setInterval(() => {
+      const minutes = Math.max(1, Math.round((Date.now() - started) / minuteMs));
+      write(`  waiting for memory: wait ${wait} (${kind}) ${minutes}${limit === null ? "" : ` of ${limit}`} min; the work stays owed`);
+    }, everyMs);
+    timer.unref?.();
+    const settled = slots.acquire(entry, deadlineMs);
+    void settled.then(() => clearInterval(timer), () => clearInterval(timer));
+    return settled;
+  } };
+}

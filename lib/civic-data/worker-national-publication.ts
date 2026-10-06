@@ -21,7 +21,6 @@
 import type { RoutineDataStore } from "./store.ts";
 import type { OfficialLinkingPage } from "./source-authority.ts";
 import type { Body, Division, SourceDataset } from "../registry/types.ts";
-import type { Tier } from "../ocd/tiers.ts";
 import { bodiesFor } from "../registry/derive.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
@@ -36,6 +35,8 @@ import { createHash } from "node:crypto";
 import { storeVerifiedPortrait, type PortraitRuntime } from "../photos/store.ts";
 import type { PortraitSources } from "../photos/evidence.ts";
 import { isOfficialSource } from "./source-authority.ts";
+import { openStatesSeatHolders } from "../sources/plural/place.ts";
+import { DEFAULT_KINDS, registeredKind, type KindTable } from "../registry/kinds.ts";
 
 /** One Census division as the place hunt resolved it. `sourceUrl` is the saved Census response it came from. */
 export interface NationalDivisionInput {
@@ -62,6 +63,10 @@ export interface NationalOfficialInput {
   readonly document: { readonly url: string; readonly capture?: WorkerPublicationCapture };
   readonly linkingPage?: OfficialLinkingPage | null;
   readonly portrait?: PortraitSources;
+  /** CA-02: the row is the Open States row for the seat (own page failed the check); `document.capture` is the saved CSV. */
+  readonly basis?: "OPEN_STATES_ROW";
+  /** CA-02: the saved Open States CSV this person's row is in, the fallback when the own page fails the seat check at publication. */
+  readonly openStatesCapture?: WorkerPublicationCapture;
 }
 
 export interface NationalPlacePublicationInput {
@@ -71,6 +76,8 @@ export interface NationalPlacePublicationInput {
   readonly geographyCaptures: readonly WorkerPublicationCapture[];
   readonly sources: { readonly officials: readonly NationalOfficialInput[] };
   readonly portraitRuntime?: PortraitRuntime;
+  /** Freshly read existing Admin setting; caller must not cache across passes. */
+  readonly kinds?: KindTable;
 }
 
 export interface NationalPlacePublication {
@@ -97,7 +104,6 @@ const DIVISION_TYPES: Readonly<Record<string, Division["divisionType"]>> = {
 const SCOPE_DIVISIONS = new Set(["country", "state"]);
 /** Census functional statuses of a government (active, partially consolidated, consolidated, subordinate). */
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
-const TIERS: Readonly<Record<Division["divisionType"], Tier>> = { cd: "national", sldu: "state", sldl: "state", county: "local", place: "local", school_district: "local" };
 const LEGISLATIVE = new Set<Division["divisionType"]>(["cd", "sldu", "sldl"]);
 const STATE_DIVISION = /^ocd-division\/country:us\/state:[a-z]{2}$/;
 const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -125,12 +131,14 @@ export function nationalBodyId(division: Pick<Division, "ocdId" | "divisionType"
 }
 
 /** The registry row for a division, when its saved Census response supports it (§3). */
-function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPublicationCapture[], now: string): Division | string | null {
+function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPublicationCapture[], now: string, kinds: KindTable): Division | string | null {
   if (SCOPE_DIVISIONS.has(input.divisionType)) return null;
   // A statistical or fictitious subdivision is not a government; Census has said so, and the place layer holds the one that is.
   if (["cousub", "county_subdivision"].includes(input.divisionType) && !GOVERNING_FUNCSTAT.has((input.funcstat ?? "").toUpperCase())) return null;
-  const divisionType = DIVISION_TYPES[input.divisionType];
+  const divisionType = registeredKind(kinds, "division", DIVISION_TYPES[input.divisionType] ?? input.divisionType);
   if (!divisionType) return `DIVISION_TYPE_NOT_A_REGISTRY_DIVISION:${input.divisionType}`;
+  const tier = kinds.division.find(row => row.key === divisionType)?.tier;
+  if (!tier) return `DIVISION_TIER_NOT_REGISTERED:${input.divisionType}`;
   const state = /\/state:([a-z]{2})\b/.exec(input.id)?.[1]?.toUpperCase();
   if (!state) return "DIVISION_STATE_UNRESOLVED";
   const capture = captures.find(c => c.evidence.canonicalUrl === input.sourceUrl);
@@ -139,7 +147,7 @@ function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPubl
   const verdict = section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt }, "CENSUS_GEOGRAPHY", now);
   if (!verdict.ok) return verdict.reason!;
   if (!valueOnPage(input.label, capture.evidence.text) || (input.geoid !== null && !capture.evidence.text.includes(input.geoid))) return "DIVISION_NOT_ON_SAVED_SOURCE";
-  return { ocdId: input.id, divisionType, tier: TIERS[divisionType], state, label: input.label, parentOcdId: input.id.replace(/\/[^/]+$/, ""),
+  return { ocdId: input.id, divisionType, tier, state, label: input.label, parentOcdId: input.id.replace(/\/[^/]+$/, ""),
     lsad: input.lsad ?? null, funcstat: input.funcstat ?? null, classfp: input.classfp ?? null, geoid: input.geoid,
     canonicalOcdId: input.id, canonicalMatch: "exact", sourceDataset: input.sourceDataset,
     provenance: { sourceUrl: input.sourceUrl, sourceOrg: "U.S. Census Bureau", collectedAt: capture.observedAt, verifiedAt: now } } as Division;
@@ -181,7 +189,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   const officialDivisions = new Set(input.sources.officials.map(o => o.divisionId));
   for (const row of input.divisions) {
     const held = heldDivisions.get(row.id);
-    let division = held ?? divisionRow(row, input.geographyCaptures, input.now);
+    let division = held ?? divisionRow(row, input.geographyCaptures, input.now, input.kinds ?? DEFAULT_KINDS);
     if (division === null) continue;
     if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
     if (!heldDivisions.has(row.id)) { divisions.push(division); used.add(row.sourceUrl); }
@@ -192,7 +200,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
       // Held registry provenance may name an older download, while this hunt
       // saved a current query. Bind a new body to the bytes checked here;
       // retaining the division never makes its old URL a current capture.
-      division = divisionRow(row, input.geographyCaptures, input.now);
+      division = divisionRow(row, input.geographyCaptures, input.now, input.kinds ?? DEFAULT_KINDS);
       if (division === null) continue;
       if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
       if (division.divisionType !== held.divisionType || division.geoid !== held.geoid) {
@@ -287,18 +295,39 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     // One saved page per reading: the §3 check reads each official's own page.
     for (const official of officials) {
       const capture = official.document.capture!;
-      const reading: RosterReading = { id: `national:${official.discoveryId}`, capture, linkingPage: official.linkingPage ?? null, complete: false,
+      const ownReading: RosterReading = { id: `national:${official.discoveryId}`, capture, linkingPage: official.linkingPage ?? null, complete: false,
         method: "Place-first national lead; official profile page read",
         members: [{ recordId: `national:${official.discoveryId}`, fields: { name: official.name, office: official.officeTitle, websiteUrl: official.officialUrl } }] };
+      // CA-02: the Open States row for this seat, when its name and district are on the saved CSV.
+      const referenceReading = (csv: WorkerPublicationCapture): RosterReading | null => {
+        if (captureProblem(csv)) return null;
+        const state = official.divisionId.match(/\/state:([a-z]{2})\b/)?.[1] ?? "";
+        const held = openStatesSeatHolders(csv.evidence.text, state, [...registered.values()], csv.observedAt)
+          .find(row => row.id === official.discoveryId && row.divisionId === official.divisionId && row.name === official.name);
+        if (!held) return null;
+        const office = held.officeTitle;
+        return { id: `national:${official.discoveryId}`, capture: csv, linkingPage: null, complete: false, reference: "OPEN_STATES",
+          method: "Place-first national lead; Open States row for the seat (own page did not show the seat)",
+          members: [{ recordId: `national:${official.discoveryId}`, fields: { name: official.name, office } }] };
+      };
+      const reading = official.basis === "OPEN_STATES_ROW" ? referenceReading(capture) : ownReading;
+      let publishedTitle = official.officeTitle;
+      if (!reading) { gaps.push({ key: `official:${official.discoveryId}`, detail: "OPEN_STATES_ROW_NOT_ON_SAVED_FILE" }); continue; }
       try {
         const published = await publishRosterReading({ store: input.store, bodyId, reading, now: input.now,
-          prior, onPublished: next => { prior = next; } });
+          prior, onPublished: next => { prior = next; } }).catch(async (error: unknown) => {
+          // Only a failed own-page seat check falls back; a held gate or a stale base is not that.
+          const fallback = official.basis !== "OPEN_STATES_ROW" && official.openStatesCapture ? referenceReading(official.openStatesCapture) : null;
+          if (!fallback || !/^ROSTER_(PAGE_UNVERIFIED|PAGE_NOT_THIS_BODY|NO_MEMBER_MEETS_MINIMUMS)/.test(error instanceof Error ? error.message : String(error))) throw error;
+          publishedTitle = String(fallback.members[0].fields.office);
+          return publishRosterReading({ store: input.store, bodyId, reading: fallback, now: input.now, prior: prior ?? undefined, onPublished: next => { prior = next; } });
+        });
         if (!published.confirmed) promotedVersionId = published.versionId;
         members.push({ bodyId, versionId: published.versionId, discoveryIds: [official.discoveryId] });
         if (official.portrait) {
           try {
             const holder = prior!.payload.bodyRosters.find(row => row.bodyId === bodyId)?.members
-              .find(row => row.name === official.name && row.officeTitle === official.officeTitle);
+              .find(row => row.name === official.name && row.officeTitle === (official.basis === "OPEN_STATES_ROW" ? String(reading.members[0].fields.office) : publishedTitle));
             if (!holder) throw Error("PORTRAIT_HOLDER_NOT_PUBLISHED");
             const existing = prior!.payload.officialPhotos.photos.find(row => row.officeholderId === holder.id);
             if (existing?.sourceUrl === official.portrait.imageUrl && existing.verification) continue;

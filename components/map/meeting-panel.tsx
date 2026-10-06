@@ -1,22 +1,20 @@
 "use client";
 
+import { MeetingRow } from "@/components/ui/meeting-row";
+import { CheckedLink } from "@/components/ui/checked-link";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { meetingCardSources, type CardSource } from "@/lib/officials/card-sources";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
+
 import { ExternalLink, X } from "lucide-react";
 import { useState } from "react";
 
-import {
-  formatMeetingDate,
-  formatMeetingTime,
-  formatRelativeDay,
-  locationLine,
-  meetingEntryTitle,
-  meetingSubline,
-  venueBodyTitle,
-} from "@/lib/map/format";
+import { locationLine, venueBodyTitle } from "@/lib/map/format";
 import {
   sourceCreditFor,
   type SourceCredit,
 } from "@/lib/meetings/list-attribution";
-import { carriedRowClause, relativeAge } from "@/lib/meetings/freshness";
+
 import { groupMeetingsForReading } from "@/lib/meetings/ordering";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { useMeetingBadge } from "@/hooks/use-meeting-badge";
@@ -29,21 +27,10 @@ import type { Venue } from "@/lib/meetings/venues";
 import { projectedCommentAccessFor } from "@/lib/registry/comment-access-client";
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
-import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
-import {
-  hasPhysicalLocation,
-  isOnlineOnly,
-  isPlaceUnrecorded,
-  joinLine,
-  onlineAccessFor,
-  PLACE_UNRECORDED_LINE,
-  statedVenueText,
-  venueGapLine,
-  venueGapOf,
-} from "@/lib/meetings/online";
+import { isOnlineOnly, isPlaceUnrecorded, statedVenueText, venueGapOf } from "@/lib/meetings/online";
 
 import { MeetingStatusPill } from "./meeting-status-pill";
-import { CalendarLinks } from "./popup/calendar-links";
+
 
 /**
  * What sits behind a pin.
@@ -85,6 +72,8 @@ export function MeetingPanel({
   // read in a render body would let a meeting crossing the 30-day line
   // reshuffle the list under a reader mid-scroll.
   const [now] = useState(() => Date.now());
+  const { location } = useShellData();
+  const { badgeOf, bodyClassOf } = useMeetingBadge();
   // Every row this panel renders: the building's sittings, then the same
   // bodies' sittings with no building. The groups below order them together,
   // so an upcoming online sitting leads a card whose room saw only past ones.
@@ -115,12 +104,8 @@ export function MeetingPanel({
     groups.flatMap((group) => group.meetings),
   );
 
-  // A venue is a group of meetings at one building, so any of them carries the
-  // building's coordinates. `groupByVenue` keys on them, so they agree.
-  // A venue is a group of meetings at one building, so any of them carries
-  // the building's coordinates — and a venue never holds an online meeting,
-  // because `groupByVenue` keys on coordinates and skips the ones with none
-  // (D18). The null check is the type being honest, not a case that occurs.
+  // An ONLINE_ONLY venue orients the reader at the body's office. It has
+  // no physical directions action; joining online is the primary action.
   const first = venue.meetings[0];
   const directions = first?.location ? venueLink(first.location) : null;
   // MTG-6/MTG-7/MTG-8: one descent, read once, and the rows below read its
@@ -173,7 +158,7 @@ export function MeetingPanel({
               its note in `lib/map/format.ts` for why a distinct-`bodyName`
               count was the wrong question, and for the rung MTG-9 added when a
               shared `bodyName` turned out to name a sitting. */}
-          <h2 className="font-display text-lg font-semibold leading-snug tracking-tight text-paper">
+          <h2 className="font-display t-title font-semibold leading-snug tracking-tight text-paper">
             {cardTitle.title}
             {/* MTG-15 (2026-09-02): the level tag right after the body name, so
                 a reader knows whether this is a local, state or federal body
@@ -189,7 +174,8 @@ export function MeetingPanel({
               Recreation pattern, used as the reference. Where the
               building IS the title there is nothing left to repeat under it,
               so the address stands alone rather than printing twice. */}
-          <p className="mt-1 text-[0.8125rem] leading-snug text-muted">
+          <p className="mt-1 t-body leading-snug text-muted">
+            {venue.kind === "ONLINE_ONLY" && <><MeetingStatusPill status="online" /> Body’s office: </>}
             {cardTitle.basis === "venue"
               ? (venue.address ?? "")
               : locationLine(venue.name, venue.address)}
@@ -205,7 +191,7 @@ export function MeetingPanel({
           {embedded ? (
             <div className="mw-action-row">
               {directions && (
-                <a
+                <CheckedLink
                   href={directions.url}
                   target="_blank"
                   rel="noreferrer"
@@ -213,7 +199,7 @@ export function MeetingPanel({
                   className="mw-directions"
                 >
                   <span aria-hidden="true">➚</span> Directions
-                </a>
+                </CheckedLink>
               )}
               {onShowOnMap && (
                 <button type="button" className="mw-pill-btn" onClick={onShowOnMap}>
@@ -222,7 +208,7 @@ export function MeetingPanel({
               )}
             </div>
           ) : directions && (
-            <a
+            <CheckedLink
               href={directions.url}
               target="_blank"
               rel="noreferrer"
@@ -231,7 +217,7 @@ export function MeetingPanel({
             >
               Directions
               <ExternalLink className="size-3 translate-y-0.5" />
-            </a>
+            </CheckedLink>
           )}
         </div>
 
@@ -281,7 +267,7 @@ export function MeetingPanel({
                 objection, same answer. */}
             <div>
               {group.meetings.map((meeting) => (
-                <MeetingEntry
+                <MeetingRow
                   key={meeting.id}
                   meeting={meeting}
                   onOpen={onOpenMeeting}
@@ -289,13 +275,17 @@ export function MeetingPanel({
                      carries the sitting. False everywhere the card titled
                      itself with the building instead. */
                   bodyShown={cardTitle.basis !== "venue"}
-                />
+                  sourcesInParent
+                  jurisdiction={<JurisdictionPill badge={badgeOf(meeting)} bodyClass={bodyClassOf(meeting)} zip={location?.zip ?? null} detail={false} />}
+                >
+                  {meeting.status !== "CONCLUDED" && <HowToBeHeard ocdId={meeting.ocdId} bodyName={meeting.bodyName} bodyId={meeting.bodyId} />}
+                </MeetingRow>
               ))}
             </div>
           </section>
         ))}
 
-        <MeetingSourceCredit credit={credit} />
+        <MeetingSourceCredit credit={credit} sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])), ...(venue.officeAddressSource ? [{ what: "Online-only pin at the body’s published office address", provenance: venue.officeAddressSource }] : [])]} />
       </div>
     </aside>
   );
@@ -308,319 +298,9 @@ export function MeetingPanel({
  * organisation render verbatim, exactly as they did on every row before; what
  * changed is how many times.
  */
-export function MeetingSourceCredit({
-  credit,
-  className = "border-t border-rule-soft px-5 py-3",
-}: {
-  credit: SourceCredit;
-  className?: string;
-}) {
-  // SRC-1: nothing to credit renders NOTHING — no heading, no placeholder.
-  if (credit.kind === "none") return null;
-  return (
-    <div className={className}>
-      <p className="text-[0.6875rem] leading-relaxed text-muted">
-        {credit.lead}
-      </p>
-      {/* The multi-source list, still at the bottom, each source verbatim.
-          Empty for the single form, which already names its source in the
-          sentence above — printing it twice is the repetition SRC-1 removes. */}
-      {credit.sources.length > 0 && (
-        <ul className="mt-1">
-          {credit.sources.map((note) => (
-            <li
-              key={`${note.jurisdiction} ${note.sourceOrg}`}
-              className="text-[0.6875rem] leading-relaxed text-muted"
-            >
-              <span className="text-paper-dim">{note.jurisdiction}</span>
-              {" — "}
-              {note.sourceOrg}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-function MeetingEntry({
-  meeting,
-  onOpen,
-  bodyShown = false,
-}: {
-  meeting: Meeting;
-  onOpen?: (meeting: Meeting) => void;
-  /**
-   * **MTG-7 (2026-08-24).** The card above this row already names the body, so
-   * the row names the SITTING. Default false, because a row that assumed its
-   * context had introduced it would drop the body's name on every surface that
-   * has no such context.
-   */
-  bodyShown?: boolean;
-}) {
-  const concluded = meeting.status === "CONCLUDED";
-  /*
-   * SWEEP-01 (2026-08-31). This row rendered "No agenda posted yet" whenever
-   * `meeting.agendaUrl` was null — a sentence about a GOVERNMENT derived from
-   * a measurement of US. `agendaSentenceFor` is the single decider, shared
-   * with the popup's agenda section so the two surfaces cannot disagree about
-   * what a null means, and it attributes the gap to the publisher ONLY where a
-   * fresh first-party observation measured the publisher's own empty slot.
-   */
-  const agendaState = agendaSentenceFor(meeting);
-  // The carried row's reason, decided once for both surfaces that state it.
-  const carriedClause = carriedRowClause(meeting.carried);
-  const { location } = useShellData();
-  const { badgeOf, bodyClassOf } = useMeetingBadge();
-  const jurisdiction = badgeOf(meeting);
-
-  return (
-    <article className="px-5 py-4" data-meeting-id={meeting.id}>
-      <div className="flex items-baseline gap-2.5">
-        <span
-          aria-hidden="true"
-          className={`mt-1 size-1.5 shrink-0 rounded-full ${
-            concluded ? "bg-concluded" : "bg-signal"
-          }`}
-        />
-        {onOpen ? (
-          // The body name is the control, because that is where a reader
-          // aiming at "tell me more about this" will click.
-          <h3>
-            <button
-              type="button"
-              onClick={() => onOpen(meeting)}
-              className="text-left font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper hover:text-signal"
-            >
-              {meetingEntryTitle(meeting, { bodyShown })}
-            </button>
-          </h3>
-        ) : (
-          <h3 className="font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper">
-            {meetingEntryTitle(meeting, { bodyShown })}
-          </h3>
-        )}
-      </div>
-
-      {/* Some sources title a sitting with the body's own name — one line
-          then, not the same words twice.
-
-          MTG-2 (2026-08-23): the guard was `title !== bodyName`, which is
-          true for "Board of County Commissioners – Work Session" and printed
-          the body's name straight back under a headline that already said it.
-          `meetingSubline` asks the question that matters — what does the
-          headline NOT already say — and answers "Work Session". */}
-      {meetingSubline(meeting) && (
-        <p className="mt-1 pl-[1rem] text-sm leading-snug text-paper-dim">
-          {meetingSubline(meeting)}
-        </p>
-      )}
-
-      {/* M81. Every meeting card and list row says which it is — this is the
-          third such surface, and all three read the SAME resolved division
-          set, so they cannot disagree with each other.
-
-          JUR-2 (2026-08-23): and all three now read the same PILL, so the
-          claim and the way out of it cannot drift apart on one of them. The
-          detail sentence is off here — this is a dense list of sittings, and
-          the row already carries the body's name above it. */}
-      <p className="mt-2 pl-4">
-        <JurisdictionPill
-          badge={jurisdiction}
-          bodyClass={bodyClassOf(meeting)}
-          zip={location?.zip ?? null}
-          detail={false}
-        />
-      </p>
-
-      {/*
-        2026-09-23: a row with no building says where it is instead — this
-        panel's header names a building, and a sitting listed under it without
-        a word would read as held there. Online: the mark and what the body
-        published. Place not recorded: our own named gap, never "online".
-      */}
-      {!hasPhysicalLocation(meeting) && <PlacelessWhere meeting={meeting} />}
-
-      <dl className="mt-3 pl-4 font-mono text-[0.8125rem] tabular-nums">
-        <div className="flex gap-2">
-          <dt className="sr-only">Date</dt>
-          <dd className={concluded ? "text-concluded" : "text-signal"}>
-            {formatMeetingDate(meeting)}
-          </dd>
-          <dt className="sr-only">Time</dt>
-          <dd className="text-paper-dim">{formatMeetingTime(meeting)}</dd>
-        </div>
-        <div className="mt-0.5 text-muted">
-          <dt className="sr-only">Relative</dt>
-          <dd>
-            {concluded ? "Concluded " : ""}
-            {formatRelativeDay(meeting.startsAt)}
-          </dd>
-        </div>
-      </dl>
-
-      <div className="mt-3.5 pl-4">
-        {meeting.agendaUrl ? (
-          <a
-            href={meeting.agendaUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="trailing-space-trimmed-14 inline-flex items-center gap-1.5 border-b border-signal-dim pb-0.5 font-mono t-detail uppercase tracking-[0.14em] text-signal transition-colors hover:border-signal"
-          >
-            Read the agenda
-            <ExternalLink className="size-3" aria-hidden="true" />
-          </a>
-        ) : (
-          <p className="trailing-space-trimmed-14 font-mono t-detail uppercase tracking-[0.14em] text-muted">
-            {agendaState.sentence}
-          </p>
-        )}
-        {/* BX-10: a concluded sitting links the recording its publisher's own record gives; its source is the card's Sources. */}
-        {concluded && meeting.videoUrl ? (
-          <a
-            href={meeting.videoUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="trailing-space-trimmed-14 mt-2 flex w-fit items-center gap-1.5 border-b border-signal-dim pb-0.5 font-mono t-detail uppercase tracking-[0.14em] text-signal transition-colors hover:border-signal"
-          >
-            Watch the recording
-            <ExternalLink className="size-3" aria-hidden="true" />
-          </a>
-        ) : null}
-      </div>
-
-      {/* 3i (2026-08-19): the calendar links ride on EVERY upcoming-meeting
-          surface — they shipped 08-17 on the compact card alone, and a
-          reader working from this list never saw them. */}
-      {meeting.status === "SCHEDULED" && (
-        <div className="pl-4">
-          <CalendarLinks meeting={meeting} />
-        </div>
-      )}
-
-      {/* 6a: nothing left to be heard at once the meeting has concluded. */}
-      {meeting.status !== "CONCLUDED" && (
-        <HowToBeHeard ocdId={meeting.ocdId} bodyName={meeting.bodyName} bodyId={meeting.bodyId} />
-      )}
-
-      <footer className="mt-4 border-t border-rule-soft pl-4 pt-3">
-        {/* No identifier here: internal keys never render to readers (4a).
-            Jurisdiction and source org are the reader-facing provenance.
-
-            SRC-1 (2026-08-24): those two strings live in ONE credit line at
-            the foot of the card, and the footnote marker that used to point
-            at them is gone from the row — it was a bare asterisk floating
-            between two meetings. What stays on the row is
-            the provenance that is genuinely PER ROW — second-hand sourcing and
-            the carry-forward stamp — which varies from meeting to meeting and
-            would be a lie if collapsed. */}
-        <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
-          {/*
-            6f2 (2026-08-15): "Not independently
-            verified" is RETIRED where the source is the body's own site or
-            feed — which is nearly everything here.
-
-            The line was self-undermining noise. When Newbury's own Planning
-            Board page is where a sitting came from, there is no independent
-            party who could verify it and none is wanted: the body IS the
-            authority on its own calendar, and the SOURCE link above is the
-            verification. Telling a reader that a town's own published agenda
-            is unverified teaches them to distrust the most reliable record
-            this product has.
-
-            It renders only where the data genuinely came from somewhere
-            OTHER than the body's own publication — `secondHand` on the
-            provenance, which no adapter sets today and which exists so the
-            line is available the day one does. The provenance data
-            underneath is untouched; this is about what a reader is told.
-          */}
-          {meeting.provenance.secondHand && !meeting.provenance.verifiedAt && (
-            <>
-              <br />
-              <span className="text-signal-dim">Not independently verified</span>
-            </>
-          )}
-          {/*
-            hotfix-0817 (2026-08-17): this row was NOT retrieved by the run behind the
-            map's "last checked" line, and it is here because a failed or thin
-            fetch may never silently empty a previously-full surface. It does
-            not inherit that line's freshness: it states its own, on the row,
-            where the reader deciding whether to trust it is actually looking.
-
-            2026-09-23: and it states WHY in the words its recorded reason
-            earns. The clause after the date used to be one fixed sentence
-            about an unreachable calendar, rendered for every carried row —
-            including a calendar that answered and simply no longer held this
-            listing, which on 2026-09-23 was every carried row in production.
-            `carriedRowClause` (lib/meetings/freshness.ts) decides it for this
-            row and the popup alike; a reasonless mark gets the date alone.
-          */}
-          {meeting.carried && (
-            <>
-              <br />
-              Last reached{" "}
-              <time
-                dateTime={meeting.carried.lastFreshAt}
-                title={new Date(
-                  Date.parse(meeting.carried.lastFreshAt),
-                ).toLocaleString()}
-              >
-                {relativeAge(meeting.carried.lastFreshAt)}
-              </time>
-              {carriedClause && ` — ${carriedClause}`}
-            </>
-          )}
-        </p>
-      </footer>
-    </article>
-  );
-}
-
-/**
- * Where a sitting with no building is held, on a panel whose header names one.
- *
- * Every string comes from `lib/meetings/online.ts`: the online mark and the
- * body's own published label (with the join-link gap when there is no link);
- * for a named venue gap, the place the publisher stated, verbatim, or the
- * publisher's own gap when its page states none; or `PLACE_UNRECORDED_LINE`
- * when the body published neither a room nor an online access.
- */
-function PlacelessWhere({ meeting }: { meeting: Meeting }) {
-  const access = onlineAccessFor(meeting);
-  const gap = access ? null : venueGapOf(meeting);
-  const where = access
-    ? "online"
-    : gap
-      ? statedVenueText(gap) !== null ? "stated" : "not-stated"
-      : "unrecorded";
-  return (
-    <p
-      className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 pl-4 t-detail leading-snug text-muted"
-      data-meeting-where={where}
-    >
-      {access ? (
-        <>
-          <MeetingStatusPill status="online" />
-          {access.joinUrl ? (
-            <a
-              href={access.joinUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border-b border-signal-dim text-signal hover:border-signal"
-            >
-              {access.label}
-            </a>
-          ) : (
-            <span>{joinLine(access)}</span>
-          )}
-        </>
-      ) : gap ? (
-        <span>{venueGapLine(gap)}</span>
-      ) : (
-        <span>{PLACE_UNRECORDED_LINE}</span>
-      )}
-    </p>
-  );
+export function MeetingSourceCredit({ credit, sources = [], className = "border-t border-rule-soft px-5 py-3" }: { credit: SourceCredit; sources?: readonly CardSource[]; className?: string }) {
+  if (credit.kind === "none" && sources.length === 0) return null;
+  return <div className={className}><CardSourcesContribution id="meeting-calendar" sources={sources} /></div>;
 }
 
 /**
@@ -649,30 +329,9 @@ export function HowToBeHeard({
   );
   if (!access) return null;
 
-  if (access.commentPeriod === "UNKNOWN") {
-    return (
-      <div className="mt-3 pl-4">
-        <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
-          {/* Item 4 (2026-08-14 second session): renamed to a call to
-              action — the tester's words, verbatim. */}
-          <span className="trailing-space-trimmed-14 uppercase tracking-[0.14em] text-paper-dim">
-            Make your voice heard
-          </span>
-          <br />
-          We don&apos;t know this body&apos;s public-comment rules yet —{" "}
-          <a
-            href={access.sourceUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="border-b border-signal-dim text-signal hover:border-signal"
-          >
-            check its own page
-          </a>
-          .
-        </p>
-      </div>
-    );
-  }
+  const sources: CardSource[] = [{ what: "Public-comment rules", provenance: { sourceUrl: access.sourceUrl, sourceOrg: bodyName, collectedAt: access.collectedAt, verifiedAt: access.verifiedAt } },
+    ...Object.entries(access.fieldSources ?? {}).map(([field, source]) => ({ what: `Public-comment ${field}`, provenance: { sourceUrl: source!.sourceUrl, sourceOrg: bodyName, collectedAt: source!.collectedAt, verifiedAt: source!.verifiedAt } }))];
+  if (access.commentPeriod === "UNKNOWN") return <div className="mt-3 pl-4"><WorkingOnIt subject={bodyId ? { type: "BODY", id: bodyId } : null} /><CardSourcesContribution id={`comment-rules:${bodyId ?? ocdId}`} sources={sources} /></div>;
 
   const lines = [
     access.commentPeriodDetail,
@@ -710,7 +369,7 @@ export function HowToBeHeard({
    */
   return (
     <details className="how-to-be-heard mt-3 pl-4">
-      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
+      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono t-caption uppercase tracking-[0.14em] text-paper-dim">
         Make your voice heard
       </summary>
       <ul className="mt-1 space-y-1 t-detail leading-relaxed text-paper-dim">
@@ -718,14 +377,7 @@ export function HowToBeHeard({
           <li key={line}>{line}</li>
         ))}
       </ul>
-      <a
-        href={access.sourceUrl}
-        target="_blank"
-        rel="noreferrer noopener"
-        className="trailing-space-trimmed-14 mt-1 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
-      >
-        source
-      </a>
+      <CardSourcesContribution id={`comment-rules:${bodyId ?? ocdId}`} sources={sources} />
     </details>
   );
 }

@@ -1,18 +1,20 @@
+import { MeetingRow } from "@/components/ui/meeting-row";
 import type { EvidenceRecord } from "@/lib/ask/evidence";
 import { hostOf } from "@/lib/ask/host";
 import { formatDateMDY } from "@/lib/map/format";
 
 function RecordContents({ record }: { record: EvidenceRecord }) {
+  if (["MEETING", "AGENDA_ITEM", "AGENDA_DOCUMENT", "MEETING_NOTICE_SUMMARY", "AGENDA_MENTION"].includes(record.kind)) return <MeetingRow record={record} compact />;
   return (
     <>
       <p>{record.text}</p>
       {record.sourceUrl ? (
         <a href={record.sourceUrl} target="_blank" rel="noreferrer noopener"
-          className="text-[0.6875rem] text-link underline decoration-dotted underline-offset-2">
+          className="t-caption text-link underline decoration-dotted underline-offset-2">
           {record.sourceOrg ?? hostOf(record.sourceUrl)}
         </a>
-      ) : record.sourceOrg ? <span className="text-[0.6875rem] text-muted">{record.sourceOrg}</span> : null}
-      {record.retrievedAt && <span className="text-[0.625rem] text-muted"> · Read {formatDateMDY(record.retrievedAt.slice(0, 10))}</span>}
+      ) : record.sourceOrg ? <span className="t-caption text-muted">{record.sourceOrg}</span> : null}
+      {record.retrievedAt && <span className="t-caption text-muted"> · Read {formatDateMDY(record.retrievedAt.slice(0, 10))}</span>}
     </>
   );
 }
@@ -33,13 +35,13 @@ export function AskAnswerRecords({ records, initiallyOpen, agendaLead = false, p
     <details className="mt-2" open={initiallyOpen && summaries.length === 0}
       data-ask-record-count={summaries.length ? undefined : visible.length}
       data-ask-detail-count={summaries.length ? detailRecords.length : undefined}>
-      <summary className="cursor-pointer text-[0.6875rem] text-link">
+      <summary className="cursor-pointer t-caption text-link">
         {summaries.length ? "Further records" : "Records"} ({detailRecords.length})
       </summary>
       <ul className="mt-1.5 max-h-80 space-y-2 overflow-y-auto overscroll-contain">
         {detailRecords.map((record, index) => (
           <li key={`${record.kind}:${record.id}:${index}`} data-ask-record-id={record.id}
-            className="border-l-2 border-[var(--panel-border)] pl-3 text-[0.75rem] leading-relaxed text-paper-dim">
+            className="border-l-2 border-[var(--panel-border)] pl-3 t-detail leading-relaxed text-paper-dim">
             <RecordContents record={record} />
           </li>
         ))}
@@ -54,12 +56,12 @@ export function AskAnswerRecords({ records, initiallyOpen, agendaLead = false, p
         {agenda.map((record, index) => <li key={`${record.kind}:${record.id}:${index}`} data-ask-record-id={record.id}
           data-ask-meeting-id={record.meetingId ?? (record.kind === "MEETING" ? record.id : undefined)}
           data-ask-document-id={record.documentId}
-          className="border-l-2 border-[var(--panel-border)] pl-3 text-[0.8125rem] leading-relaxed text-paper">
+          className="border-l-2 border-[var(--panel-border)] pl-3 t-body leading-relaxed text-paper">
           <RecordContents record={record} />
         </li>)}
       </ul>
     </section>}
-    {prose && <p className="mt-2 text-[0.8125rem] leading-relaxed text-paper-dim">{prose}</p>}
+    {prose && <p className="mt-2 t-body leading-relaxed text-paper-dim">{prose}</p>}
     {disclosure}
   </div>;
   if (!summaries.length) return disclosure;
@@ -68,7 +70,7 @@ export function AskAnswerRecords({ records, initiallyOpen, agendaLead = false, p
       <ul className="mt-2 space-y-2" data-ask-measure-summary>
         {summaries.map((record, index) => (
           <li key={`${record.kind}:${record.id}:${index}`} data-ask-record-id={record.id}
-            className="rounded-md bg-[var(--surface)] p-3 text-[0.8125rem] leading-relaxed text-paper">
+            className="rounded-md bg-[var(--surface)] p-3 t-body leading-relaxed text-paper">
             <p className="t-eyebrow mb-1.5 text-muted">Plain-language summary</p>
             <RecordContents record={record} />
           </li>

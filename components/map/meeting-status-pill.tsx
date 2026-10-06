@@ -32,7 +32,7 @@ import {
 export function MeetingStatusPill({ status }: { status: MeetingPillStatus }) {
   return (
     <span className="meeting-status-pill" data-status={status}>
-      <span aria-hidden="true" className="mr-[0.3em] inline-block">
+      <span aria-hidden="true" className="mr-1 inline-block">
         {STATUS_MARK[status]}
       </span>
       {STATUS_WORD[status]}

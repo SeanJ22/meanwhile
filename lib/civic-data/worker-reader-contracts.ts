@@ -1,5 +1,9 @@
+import checklist from "../coverage/checklist-map.json" with { type: "json" };
 /** Existing publication doors and their executable worker record contracts. */
 export const WORKER_READER_CLASSES = {
+  "voting-sites": "VOTING_SITE",
+  "government-budgets": "ADOPTED_BUDGET",
+  "public-records": "PUBLIC_RECORD",
   "ballot-contests": "BALLOT_CONTEST",
   "comment-access": "PUBLIC_COMMENT_RULE",
   "everyday-routing": "SERVICE_CONTACT",
@@ -8,7 +12,9 @@ export const WORKER_READER_CLASSES = {
 } as const;
 export type WorkerReaderContract = keyof typeof WORKER_READER_CLASSES;
 export function workerReaderClassMatches(id: WorkerReaderContract, recordClass: string): boolean {
-  return recordClass === WORKER_READER_CLASSES[id] || id === "official-filings" && recordClass === "CAMPAIGN_FINANCE_FILING";
+  return recordClass === WORKER_READER_CLASSES[id] || id === "official-filings" && recordClass === "CAMPAIGN_FINANCE_FILING" ||
+    id === "ballot-contests" && recordClass === "BALLOT_MEASURE" ||
+    id === "government-budgets" && ["BUDGET_RESPONSIBILITY", "BUDGET_AMENDMENT", "PUBLIC_RECORD"].includes(recordClass);
 }
 export function isWorkerReaderContract(id: string): id is WorkerReaderContract {
   return Object.hasOwn(WORKER_READER_CLASSES, id);
@@ -16,3 +22,15 @@ export function isWorkerReaderContract(id: string): id is WorkerReaderContract {
 
 /** The publication passes the runner can be asked for by id (`--only=`): the registry door and each reader door. */
 export const WORKER_PUBLICATION_TASK_IDS: readonly string[] = ["registry-runtime-bindings", ...Object.keys(WORKER_READER_CLASSES)];
+
+/** Data, shared by work creation, Box builders and the Admin checklist. */
+export const CHECKLIST_PUBLICATION_DOORS = checklist.publicationDoors as readonly {
+  readonly family: string; readonly fields: readonly string[]; readonly recordClasses: readonly string[];
+  readonly contractId: "registry-runtime-bindings" | WorkerReaderContract;
+}[];
+export function workerDoorForRecord(recordClass: string) {
+  return CHECKLIST_PUBLICATION_DOORS.find(row => row.recordClasses.includes(recordClass))?.contractId ?? null;
+}
+export function checklistPublicationDoors(family: string, field?: string) {
+  return CHECKLIST_PUBLICATION_DOORS.filter(row => row.family === family && (field === undefined || row.fields.includes(field)));
+}

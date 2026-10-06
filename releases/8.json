@@ -17,5 +17,11 @@
     "number": 714,
     "url": "https://github.com/SeanJ22/meanwhile/pull/714"
   },
-  "at": "2026-10-06T05:11:19Z"
+  "at": "2026-10-06T05:11:19Z",
+  "merged": {
+    "sha": "a5fd753b740f9e1f7620460ab3dd6d4250fd6a3c",
+    "at": "2026-10-06T05:33:59Z",
+    "ci_run": 37417309917,
+    "post_deploy_run": 37419174889
+  }
 }

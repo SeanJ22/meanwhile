@@ -77,6 +77,28 @@ Build these in this order. Each is a fix at the cause, not a cap or a counter.
 4. **A killed round keeps its findings:** what jobs found before a kill (evidence vaulted, rungs walked, candidates) is saved as it happens, not only after executor.run returns, and the next round resumes from it. Cost is written as usage accrues (River's repository side is coming).
 The earlier item list above stands as the detail behind these four (cache pre-warm label, refused finishes, the 09-28 disposition refusal, adapter tasks).
 
+
+## NEXT, Oct 6, 1:30 AM EDT (Sean): fix the campaign-sites CAUSE. The deferral is a stop line, not a fix.
+
+Sean: "a time limit with a named deferral is a stop line, not a fix." Release 8 ships your bound (the lane ends at the cutoff plus 3 minutes as a named deferral). That stops the kill, but the lane can still spend the whole round reading and be deferred every round. River checked river 8e47854:
+- `lib/control-plane/promotion/campaign-publication-cycle.ts:56` starts every pass with four whole-table reads: `readPipelineStates(repos)`, `repos.attempts.list()`, `repos.routeTasks.list()` and `repos.workItems.list()`. Production cp_attempts alone has 43,022 rows (66.7 MB) and has been read whole about 131,000 times (pg_stat_user_tables, 1:23 AM EDT).
+- No deadline inside the lane: those reads, `recorder.heldPage`, the link inventory and the capture reads have no deadline. Only page fetches respect `deadlineMs`.
+- Fixed already: the per-URL capture read now has a limit (CAPTURES_PER_URL = 100).
+
+The fix, ahead of everything else on your list:
+1. Read only what the eligible candidacies need, by index:
+   - route tasks whose routeId starts with `CANDIDATE_PUBLICATION_READ_ROUTE:`;
+   - their work items (subject `candidate-publication:*`) and the attempts those tasks name;
+   - pipeline states for the eligible candidacy ids only.
+   
+   Add repository methods if needed. If a method touches the schema, ask River for the version number.
+2. Carry the round's deadline into every await in the lane. Each step saves its progress, so the next round resumes where this one stopped rather than starting over.
+3. Test it on a large store: rows read scale with the eligible candidacies, not with the table size, and the pass finishes inside its window with no deferral.
+4. In your READY status, state the estimated Neon bytes per pass before and after (Sean's rule: every change that adds or changes reads states its cost).
+5. Do the same check on `runCampaignSitesPass` (readRoundVault, heldMarginaliaFromManifest, readStagingManifest, runCampaignSiteCycle). Find each whole-table or whole-log read and scope it.
+
+After this: the hourly vital-signs writer and the per-query byte counter (see status.md handoff, "Order after release 8"). Then CH-24 Proposal A on the isolation basis.
+
 ## TOP ITEM, Oct 6, 12:07 AM EDT (Sean): bound the campaign-sites lane so the round finishes
 Confirmed by the stall probe on release 6's first cycle, killed at 12:01 AM EDT after 43 minutes: "pending: campaign-sites; last phase: occurrence-and-debt-commit". Every killed round also kills its running Scouts (two tonight, mid-work), which is money spent for nothing.
 - runCampaignSitesPass (freshness-shadow.mts ~3391) has no deadline. Inside it, readRoundVault, heldMarginaliaFromManifest, readStagingManifest and runCampaignSiteCycle (lib/control-plane/promotion/campaign-site-cycle.ts) run unbounded. Find which one hangs (the probe says the lane was pending after the occurrence-and-debt commit phase finished), bound it to the round's dispatch deadline, and end it as a deferral naming what remains owed, never a kill.

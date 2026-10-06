@@ -138,3 +138,9 @@ One line per batch folded into river.
 - 2026-10-05T21:41:06Z · ballot · CA-30, CA-51 · ready 8760257b3400 · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8
 - 2026-10-05T21:41:06Z · bank · DB-44, DB-46, DP-23, DB-57 · ready cf0df0cb0acb · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8
 - 2026-10-05T21:41:06Z · frontend · FE-05, FE-06, FE-07, FE-10, FE-39, FE-43, FE-44 · ready a5e7197a1855 · river 13d29c572dc8 · pnpm gates pass on 13d29c572dc8
+- 2026-10-06T00:34:24Z · measures · SC-10, SC-14, BR-33, BR-34, BR-30, SC-19 · ready 3ebea50717bb · river 186f747a8769 · pnpm gates pass on 186f747a8769
+- 2026-10-06T00:34:24Z · registry · FE-20, FE-21 · ready a302a9393304 · river 186f747a8769 · pnpm gates pass on 186f747a8769
+- 2026-10-06T00:34:24Z · hunters · CH-15, CH-16, CH-17, CH-19 · ready 671b0b567a7b · river 186f747a8769 · pnpm gates pass on 186f747a8769
+- 2026-10-06T00:34:24Z · people · CA-01, CA-46 · ready 0fa3d0c1b0fb · river 186f747a8769 · pnpm gates pass on 186f747a8769
+- 2026-10-06T00:34:24Z · auditors · DP-02, DP-10, DP-11, DP-13, DP-14, DP-16, DP-17, DP-18, DP-30, DP-31, DP-32, FE-02, FE-18 · ready 498a4140cb52 · river 186f747a8769 · pnpm gates pass on 186f747a8769
+- 2026-10-06T00:34:24Z · frontend · FE-08, FE-09, FE-11, FE-13, FE-15, FE-28, FE-29, FE-30, FE-31, FE-32, FE-34, FE-38, FE-41, FE-42, FE-45 · ready de644b38c2bf · river 186f747a8769 · pnpm gates pass on 186f747a8769

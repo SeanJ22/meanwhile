@@ -1057,5 +1057,113 @@
     "tested_sha": "13d29c572dc8da6a1dbe2646d4845416e94bfc64",
     "gates": "pass",
     "at": "2026-10-05T21:41:06Z"
+  },
+  {
+    "lane": "measures",
+    "steps": [
+      "SC-10",
+      "SC-14",
+      "BR-33",
+      "BR-34",
+      "BR-30",
+      "SC-19"
+    ],
+    "ready_sha": "3ebea50717bb05a9de1a85fdf82efaade0d7444c",
+    "merge_sha": "bbf8853932d14388a2774227a4799dd4c4e8eb1d",
+    "river_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "tested_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "gates": "pass",
+    "at": "2026-10-06T00:34:24Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "FE-20",
+      "FE-21"
+    ],
+    "ready_sha": "a302a939330402ad016ef0082dbf54510d68b1f9",
+    "merge_sha": "d30a469b0e26275dafcda7cca63d7afc9135f349",
+    "river_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "tested_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "gates": "pass",
+    "at": "2026-10-06T00:34:24Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CH-15",
+      "CH-16",
+      "CH-17",
+      "CH-19"
+    ],
+    "ready_sha": "671b0b567a7beb962c3f18fba60298325befdcc4",
+    "merge_sha": "cd486dd2896c7339bb171af83c01c446831ab0a4",
+    "river_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "tested_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "gates": "pass",
+    "at": "2026-10-06T00:34:24Z"
+  },
+  {
+    "lane": "people",
+    "steps": [
+      "CA-01",
+      "CA-46"
+    ],
+    "ready_sha": "0fa3d0c1b0fb29ff063c21407259798502a76f4d",
+    "merge_sha": "d3cd1b68f0849dac6caeca60f8c038b62be2e531",
+    "river_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "tested_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "gates": "pass",
+    "at": "2026-10-06T00:34:24Z"
+  },
+  {
+    "lane": "auditors",
+    "steps": [
+      "DP-02",
+      "DP-10",
+      "DP-11",
+      "DP-13",
+      "DP-14",
+      "DP-16",
+      "DP-17",
+      "DP-18",
+      "DP-30",
+      "DP-31",
+      "DP-32",
+      "FE-02",
+      "FE-18"
+    ],
+    "ready_sha": "498a4140cb52ccc6f7a5f993e979feefa095ac67",
+    "merge_sha": "7806fe299cc15f2148af2274e76c1c54f90c987b",
+    "river_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "tested_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "gates": "pass",
+    "at": "2026-10-06T00:34:24Z"
+  },
+  {
+    "lane": "frontend",
+    "steps": [
+      "FE-08",
+      "FE-09",
+      "FE-11",
+      "FE-13",
+      "FE-15",
+      "FE-28",
+      "FE-29",
+      "FE-30",
+      "FE-31",
+      "FE-32",
+      "FE-34",
+      "FE-38",
+      "FE-41",
+      "FE-42",
+      "FE-45"
+    ],
+    "ready_sha": "de644b38c2bf3e4c8f33fe97c220f6c5976a83b5",
+    "merge_sha": "dc53c1efd8b0714be81803504b3edc8604fcf4e5",
+    "river_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "tested_sha": "186f747a8769709e05f24c0fc452f950d92d5f4c",
+    "gates": "pass",
+    "at": "2026-10-06T00:34:24Z"
   }
 ]

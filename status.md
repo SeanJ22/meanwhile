@@ -1,16 +1,34 @@
 # River status
 
-build_state: releases 11 and 12 LIVE (c814d4c); river = main c814d4c; nothing ready to fold except held items; runner still stopped (restart with Sean since 8:28 AM EDT)
+build_state: release 12 LIVE on main (c814d4c); river = c83c04d (adds hunters CH-23, gates 12/12, not yet released; next normal batch); runner still stopped (restart with Sean since 8:28 AM EDT)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_0123HcBRvYjpHDb1FwB9LTVg
-lock: river-session_0123HcBRvYjpHDb1FwB9LTVg-1791305878
-heartbeat: 2026-10-06T17:33:54Z
+lock: none
+heartbeat: 2026-10-06T17:38:36Z
 
 
 
 
-## This run (session_01PNZmtjma5s373mH41mVk6q, claimed the stale lock Oct 6, 10:58 AM EDT)
+## This run (session_0123HcBRvYjpHDb1FwB9LTVg, claimed the free lock Oct 6, 12:58 PM EDT)
+
+- Runner: still stopped at 12:58 PM EDT (cp_runner_heartbeat last beat 07:12:49Z on a5fd753; cp_vital_signs absent). Restart already with Sean; not re-pushed.
+- **Folded hunters cbb51190e (CH-23 parts 1 and 2; behind WTP_ONE_HUNTER_PATH, off by default)** on river-next c83c04d over river c814d4c. No conflicts; no migrations. Firewall PASS (0 findings, 7,604 files). History unshallowed first.
+- **`pnpm gates` 12/12 on c83c04d** (9,931 tests, 9,920 pass, 0 fail, 11 skipped; tests 1,394 s). river promoted c814d4c → c83c04d. Trial kept at stream/salvage-river-next-r13 (remote river-next is not an ancestor; not force-pushed).
+- **No release opened:** release 12 merged 12:32 PM EDT; CH-23 is switched off and the runner is stopped, so nothing reader-facing is waiting. CH-23 rides the next normal batch, or the first release after the runner restarts.
+- Not folded, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b DB-21 (runner door switches); admin 734ee9633 (returned).
+- Open PRs #704, #701, #599 unchanged since the Oct 4 RL-02 pass.
+- No push to Sean (no new owner action; runner restart already with him).
+- Lock released at a safe checkpoint.
+
+### Next River run
+1. Runner restart (Sean's): when cp_runner_heartbeat testedSha matches main, confirm `to_regclass('cp_vital_signs')`, measure the first hour, check releases 9–12 runner-side steps against the ledger.
+2. river c83c04d is ahead of main by CH-23: include it in the next release batch.
+3. Held READYs as above; firewall first on any fold; unshallow history before `river.mjs test`.
+4. Auto-merge: use the GitHub MCP tool (enable_pr_auto_merge); river.mjs's GraphQL call is refused from cloud sessions.
+5. Engineering note: in the board worktree, catch up with `git merge --ff-only`; the protected-files guard refuses `git reset --hard`.
+
+## Previous run (session_01PNZmtjma5s373mH41mVk6q, claimed the stale lock Oct 6, 10:58 AM EDT)
 
 - **Release 11 live:** #717 merged 10:56 AM EDT as 0a0f744; /api/build reports it; post-deploy 37483242295 passed (reused). releases/11-live.md. river = main 0a0f744.
 - Runner: still stopped at 10:58 AM EDT (last beat 07:12:49Z on a5fd753; cp_vital_signs absent). Neon control-plane total 1,857,008,881,367 at 14:57Z, unchanged since 12:57Z. Restart already with Sean; not re-pushed.

@@ -25,7 +25,7 @@ import type { Meeting } from "@/lib/sources/types";
 
 
 
-import { PopupRow, PopupSectionLabel, type PopupBadge } from "./popup-card";
+import { PopupRow, PopupSectionLabel } from "./popup-card";
 
 /**
  * One sitting of one body.

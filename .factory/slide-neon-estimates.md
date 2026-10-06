@@ -1,0 +1,24 @@
+# Slide publication read costs — Oct6 production observation
+
+Scope: reduce time and transfer between held evidence and the reader. Read-only observation used connected Neon project withered-sunset-39821877, production br-tiny-frog-aeufpjeq. No production write, schema change, stats reset, job launch or budget increase.
+
+Server-side aggregate at approximately05:45Z (a10-second statement timeout, only three scalar rows crossed the wire):
+
+| Whole JSON payload | Rows | Bytes |
+|---|---:|---:|
+| artifacts | 22,154 | 124,841,010 |
+| attempts | 43,022 | 45,677,663 |
+| workItems | 21,445 | 33,972,095 |
+
+These are PostgreSQL JSON text lengths, an estimate of uncompressed application payload. They exclude envelopes, transport compression, request bytes and compute. They are **not Neon's billed transfer**, and a sequential-scan count is not a count of full-result downloads. Do not multiply Sean's158 observed scans into a measured bill. The initial100-row samples were biased and are superseded by these whole-payload aggregates; raw observations are retained.
+
+## Each change's estimate
+
+1. **Pipeline context:** all owned production callers provide the job's artifact universe. Point/batched Attempt reads replace45.68MB of whole-table data with the actual named observers/results/reobservations; WorkItem point reads replace33.97MB with worker-result owners. Cost formula: sum of those named Attempt and WorkItem JSON lengths, plus unchanged exact per-item completion evidence. An empty mapping costs0bytes for artifacts/Attempts/WorkItems/workerResults. Legacy unscoped diagnostic/test callers preserve arbitrary lookups. No cross-job snapshot is retained.
+2. **Mapping:** before, two whole artifact reads (about249.68MB) plus broad context aggregates. After River's SQL hook, select pending offers' artifact ids/URLs, then close over all observations of those content ids to preserve last-observation semantics. Cost is selected source JSON bytes + all matching id-observation JSON bytes, typically about twice the relevant metadata,0when all confirmations are already held. Scout/method/pipeline report inventories remain; no claim that their global totals vanished. Before River's hook, one whole artifact snapshot (124.84MB) replaces two.
+3. **Fact chain:** before, context and collection read artifacts twice (about249.68MB), Attempts twice (91.36MB), WorkItems once (33.97MB), plus repeated worker results. Current production parser evidence has18ids across7URLs,18observations totaling8,969bytes. The id lookup, URL selection and id-closure lookup therefore estimate**26,907bytes** instead of249.68MB for artifact metadata (conservative: this includes every Parser result, before filtering meeting contracts). Worker results remain83 records, once per collection; audit failures are never cut off. Acquisition membership returns only completed ACQUIRER reobservations, without a work-item restriction. Its EXPLAIN still shows a server sequential scan of43,022Attempts: lower transfer is proven by query shape, lower compute is not claimed. Before the River hook, one whole artifact snapshot and role-filtered acquisitions are the explicit fallback.
+4. **Fleet/campaign context:** fleet uses worker input artifact ids; campaign reuses its existing artifact snapshot rather than reading it again for context, saving one124.84MB artifact copy per pass at this snapshot. Both point-read result-owner work items. The campaign's own broad inventory/refresh remains hunters' separate cause fix; this change does not claim that pass is fully scoped.
+5. **Settlement repair:** no added read. One roughly1–2KB immutable progress event per memory deferral replaces an append collision and its error copied into the supervisor digest. At582deferrals that is roughly0.6–1.2MB of event writes for a round, not new task admissions or spending. Exact billing effect remains unmeasured.
+6. **Publication vital counters/sampler:**0new Neon queries or writes in slide's helper. Counts observe existing append outcomes. Reservoir stores at most3page bindings/hour; parent persists its checkpoint with the existing planned partial vital row. Three supervised public-page reads/hour; their existing serving DB/edge cost must be measured, not assumed zero. River's writer/schema, adapter callbacks, reader bindings and real samples remain pending. Uninstrumented publishers do not count as zero facts.
+
+No account tariff was available, so no fabricated dollar estimate is supplied. Multiply the measured billed-byte delta by River's actual tariff to obtain dollars. Next live check: after River connects and deploys the helpers and restarts under its release8 procedure, compare the tagged query byte totals and Neon's project total over one full hour, including facts delivered and cost/fact. Target remains under0.7GB/hour, zero paid empty jobs, falling cost/fact. Nothing here raises that budget.

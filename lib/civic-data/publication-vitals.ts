@@ -9,7 +9,7 @@ export interface PublishedFactSample {
   /** Selector for this record's rendered container, supplied by its reader. */
   readonly selector: string;
   /** Visible values from this exact accepted record, not the source document. */
-  readonly expectedText: readonly string[];
+  readonly fields: readonly { selector: string; text: string }[];
 }
 interface Sample extends PublishedFactSample { readonly priority: number }
 export interface PublicationHour {
@@ -69,10 +69,11 @@ export class PublicationVitals {
       const url = new URL(sample.url);
       if (url.protocol !== "https:" || url.hostname !== "meanwhileusa.com" || url.username || url.password || url.port ||
           url.pathname.startsWith("/api/") || url.pathname.startsWith("/admin") || !sample.recordId || !sample.selector ||
-          !sample.expectedText.length || sample.expectedText.some(text => !normalize(text))) throw Error("PUBLICATION_VITAL_PUBLIC_PAGE_REQUIRED");
+          !sample.fields.length || new Set(sample.fields.map(field => field.selector)).size !== sample.fields.length ||
+          sample.fields.some(field => !field.selector || !normalize(field.text))) throw Error("PUBLICATION_VITAL_PUBLIC_PAGE_REQUIRED");
       const priority = this.random();
       if (!Number.isFinite(priority) || priority < 0 || priority >= 1) throw Error("PUBLICATION_VITAL_RANDOM_INVALID");
-      return { ...sample, expectedText: [...sample.expectedText], priority };
+      return { ...sample, fields: structuredClone([...sample.fields]), priority };
     });
     this.seen.add(event.id); this.facts += event.changedRecords;
     this.unbound += event.changedRecords - samples.length;
@@ -90,7 +91,11 @@ export class PublicationVitals {
    * browser read: final URL, HTTP status and the one matching visible container.
    * Promise reuse prevents concurrent ten-minute flushes repeating the probes.
    */
-  sample(readPage: (sample: PublishedFactSample) => Promise<{ url: string; status: number; matches: readonly string[] }>): Promise<PublicationHour> {
+  sample(readPage: (sample: PublishedFactSample) => Promise<{
+    url: string; status: number;
+    /** Each record container, with visible text matches for each relative field selector. */
+    matches: readonly { fields: Readonly<Record<string, readonly string[]>> }[];
+  }>): Promise<PublicationHour> {
     if (this.results) return Promise.resolve(this.reading());
     if (this.sampling) return this.sampling;
     this.sampling = (async () => {
@@ -98,9 +103,11 @@ export class PublicationVitals {
       for (const sample of this.samples) {
         try {
           const page = await readPage(sample);
-          const text = page.matches.length === 1 ? normalize(page.matches[0]) : "";
           const confirmed = page.status === 200 && page.url === sample.url && page.matches.length === 1 &&
-            sample.expectedText.every(value => text.includes(normalize(value)));
+            sample.fields.every(field => {
+              const values = page.matches[0].fields[field.selector] ?? [];
+              return values.length === 1 && normalize(values[0]) === normalize(field.text);
+            });
           results.push({ recordId: sample.recordId, confirmed, detail: confirmed ? "Exact record values found on its public reader page" : "Public page did not show the exact record and values" });
         } catch {
           results.push({ recordId: sample.recordId, confirmed: false, detail: "Public reader page could not be checked" });
@@ -117,14 +124,20 @@ export class PublicationVitals {
 // jobs in one parent. Counts use newly appended LIVE receipts, not rechecks.
 type FlowLog = object;
 const collectors = new WeakMap<FlowLog, (at: string) => PublicationVitals>();
-const issues = new WeakMap<FlowLog, string>();
+const issues = new WeakMap<FlowLog, Map<string, string>>();
 /** Writer must report unknown publication totals when this is non-null. */
-export const publicationVitalsIssue = (log: FlowLog): string | null => issues.get(log) ?? null;
+export const publicationVitalsIssue = (log: FlowLog, at: string): string | null =>
+  issues.get(log)?.get(hourOf(at)) ?? issues.get(log)?.get("UNKNOWN") ?? null;
 export function observePublicationVitals(log: FlowLog, forHour: (at: string) => PublicationVitals): () => void {
   collectors.set(log, forHour);
   return () => { if (collectors.get(log) === forHour) collectors.delete(log); };
 }
 export function notePublishedRecords(log: FlowLog, event: Parameters<PublicationVitals["published"]>[0]): void {
   try { collectors.get(log)?.(event.at).published(event); }
-  catch { issues.set(log, "Publication observation failed; hourly totals are incomplete"); }
+  catch {
+    const history = issues.get(log) ?? new Map<string, string>();
+    history.set(Number.isFinite(Date.parse(event.at)) ? hourOf(event.at) : "UNKNOWN", "Publication observation failed; hourly totals are incomplete");
+    for (const key of [...history.keys()].sort().slice(0, Math.max(0, history.size - 48))) history.delete(key);
+    issues.set(log, history);
+  }
 }

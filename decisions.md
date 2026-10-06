@@ -49,3 +49,28 @@ Sean's directions, in his message to River:
 - **Money page:** returned to admin (returns/admin.md).
 - **Spend alerts:** Sean should not have to find spikes. Push him when any vendor's daily spend runs well above its normal level, naming the vendor and the likely cause. How River applies it: no product channel can reach Sean's phone, so River checks on every hourly run and uses its own push. It compares Anthropic (cp_log_costs) and Neon transfer (the project's data-transfer reading) per day against the median of the previous 7 days. It pushes once per vendor per day when today's pace is at least 2x that median and at least $5 or 50 GB above it. Other vendors are added when admin's per-vendor read exists. These alerts are added to the notification rule above.
 - **Verify live:** Money "Left today" above $0, Anthropic spend resumes, a research cycle completes, and Neon transfer per hour drops sharply.
+
+## 2026-10-06 ~01:15Z: Sean stopped the runner; restart only on a release with both fixes
+
+Sean stopped the production runner at 00:51Z (systemctl stop) because Neon transfer cost about $2.50 an hour. With it stopped the control plane shows no traffic, so the runner is the whole Neon bill. He also cleaned the ledger at 00:50Z in the Neon SQL editor: 19,747 holds became 3,727, the row went from 38 MB to 8.5 MB, and unsettled holds are now $36. His snapshot branch is before-hold-cleanup-2026-10-06T0041Z. River's own cleanup at ~00:42Z (snapshot snapshot-before-spendhold-cleanup-20261006) ran first; the two do not conflict.
+- The runner stays off until a release carries (1) the hold-leak fix and (2) scoped reads on the hot paths: CH-26's scoped task reads on, plus worker-completion.ts:95 and the other full-table list() calls on per-job paths. That is release 5.
+- When it is deployed, River gives Sean the exact restart command and any env lines. After the restart, River measures Neon transfer for one hour. Target: under 0.7 GB an hour. If it is above that, River says what is still reading and asks Sean to stop the runner again.
+
+## 2026-10-06 ~01:30Z: Sean's long-term database direction
+
+Sean, word for word in substance: the runner's database traffic must fit easily inside Neon's included 500 GB a month per project, with a target under 1 GB a day. His Neon budget is compute only, about $40-60 a month. Build in this order after the urgent hold-leak and scoped-read release:
+1. Scoped reads on every hot path: no full-table list() on any per-job, per-cycle or Admin-refresh path. The database filters; the runner never downloads a table to find a few rows.
+2. Split the giant single-row records into real tables, one row per item: the spend ledger (holds), the research state, the prepared meeting snapshot and owner snapshots. Settled holds are cleared or moved out, never accumulated.
+3. Runner-side cache with incremental reads: working tables held in memory, fetching only rows changed since the last read (updated_at or revision greater than the last seen).
+4. Admin reads small precomputed summaries the runner maintains, not raw tables on each refresh.
+5. The same audit on the we-the-people data project (119 GB this month so far, on pace to exceed its 500 GB).
+Report Neon transfer per day on Admin's Money page beside the other vendors, with plain-English cause lines when it rises.
+
+How River carries it (engineering choices): River owns the repository layer and schema (shared-file table), so River builds 1 (repository-level scoped reads and the per-call-site moves), 2 (new tables with step-named migrations) and 3, and runs 5. Admin builds 4's screens and the Money page's Neon-per-day line (added to returns/admin.md). Known remaining hot reads after release 5:
+- The research planner's selection (lib/control-plane/workers/coordinator.ts ~491-518) lists work items, Attempts, route tasks, Scout and worker results, occurrences and every artifact on each worker wave.
+- The unscoped runtime in standing-runtime.ts 75-130.
+- admin-data.ts:299 readFleetInputs on each Admin live refresh.
+- publish-owner-snapshot.mts (costs.readAll, attempts listNarrowed).
+- routine-civic-data-runner.mts:411.
+- readPlaceWorkItems and readPlaceArtifacts miss their indexes.
+- cp_attempts has no routeTaskId index, so coordinator.ts:448 and model-batch.ts:191/197 do full scans.

@@ -38,3 +38,5 @@ Sean's direction, in plain English on the Admin Money screen (app/(admin)/_mw/ad
 4. Plain English, Eastern time, no codes or IDs outside Technical details.
 Also expose one read-only per-vendor daily figure that River can read from its hourly run. River uses it to push Sean when a vendor's day runs well above its normal level (Sean's spend-alert direction). Put the shape under needs_River when it exists.
 This comes after your open fold return above (BR-07 on measures' screens), or together with it if you are already in those files.
+
+Addendum 2026-10-06 ~01:30Z (Sean): the Money page also shows Neon transfer per day for each Neon project (control plane and we-the-people) beside the other vendors, with a plain-English cause line when it rises (for example "Research planning read every work item on each wave"). Admin pages must read small summaries the runner maintains, not raw tables on each refresh (Sean's long-term step 4). River supplies the per-day transfer reading and its cause attribution; put the shape you need under needs_River.

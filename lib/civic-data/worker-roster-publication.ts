@@ -24,6 +24,7 @@ import { localHeldCaptureReader } from "./worker-publication-context.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "./source-authority.ts";
 import { linkingPageFrom, pageWords, section3Page, section3Record, valueOnPage } from "../control-plane/promotion/section3.ts";
 import { isoTermDate, isoTermDateOnPage } from "./term-dates.ts";
+import { accountKindForPage, verifiedSocialAccounts } from "./social-accounts.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
 import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
 import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
@@ -206,10 +207,16 @@ export function workerRosterPublication(input: {
       return retained;
     };
     const termStart = termDate("termStart"), termEnd = termDate("termEnd");
+    // CA-05: a profile link in this member's own block of the saved page, kept only when §3 found it there. An official
+    // roster or profile page makes it an OFFICIAL account; a reference reading collects none.
+    const accountKind = reference ? null : accountKindForPage({ official: isOfficialSource(capture.evidence.canonicalUrl, reading.linkingPage), campaign: false });
+    const fresh = accountKind ? verifiedSocialAccounts({ fields: member.fields, verified: member.verified, accountKind, sourceUrl: source.sourceUrl, collectedAt: capture.observedAt }) : [];
+    const social = fresh.length ? fresh : old?.social ?? [];
     const phone = value("phone", publicContact), email = value("email", publicContact);
     const freshContact = publicContact && (verifiedValue(member, "phone") !== null || verifiedValue(member, "email") !== null);
     accepted.push({ recordId: member.recordId, memberId: identity.id });
     return { ...identity, name, officeTitle, termNote: value("termNote"), ...(termStart ? { termStart } : {}), ...(termEnd ? { termEnd } : {}), email, phone, websiteUrl: value("websiteUrl"),
+      ...(social.length ? { social } : {}),
       ...(freshContact ? { contactKind: "PUBLIC_OFFICE" as const } : old?.contactKind ? { contactKind: old.contactKind } : {}),
       ...(phone && freshContact ? { contactScope: (phones.get(phone) ?? 0) > 1 ? "SHARED_OFFICE" as const : old?.contactScope ?? "INDIVIDUAL_OFFICE" as const }
         : old?.contactScope ? { contactScope: old.contactScope } : {}),
@@ -318,7 +325,7 @@ export async function heldRosterReading(input: {
     if (!roster?.rows.length) continue;
     return { id: `held:${capture.evidence.artifactId}`, capture, linkingPage: null, complete: roster.complete, method: `Saved page ${capture.evidence.artifactId} read in code`,
       members: roster.rows.map(row => ({ recordId: `held:${digest(`${row.nameAsWritten}\n${row.office}`).slice(0, 16)}`,
-        fields: Object.fromEntries(Object.entries(row).filter(([, v]) => v !== null)) })) };
+        fields: { ...Object.fromEntries(Object.entries(row).filter(([k, v]) => k !== "socials" && v !== null)), ...row.socials } })) };
   }
   return null;
 }

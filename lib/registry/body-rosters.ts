@@ -27,6 +27,8 @@ export interface RosterMember {
   membershipSource?: { sourceUrl: string; sourceOrg: string; collectedAt: string };
   /** Optional facts kept from an earlier verified read when this update omits them. */
   retainedFieldSources?: Partial<Record<"termNote" | "termStart" | "termEnd" | "email" | "phone" | "websiteUrl", { sourceUrl: string; sourceOrg: string; collectedAt: string }>>;
+  /** CA-05: profile links read from the member's own block of a saved page, each with the page it was read from. */
+  social?: readonly import("../officials/types.ts").SocialAccount[];
   /** A shared public office line is not a person's private contact route. */
   contactKind?: "PUBLIC_OFFICE" | "PERSONAL";
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
@@ -2577,6 +2579,8 @@ export interface RosterHolder {
   provenance: Provenance;
   email: string | null;
   phone: string | null;
+  /** CA-05: the member's profile links, each with its kind and the saved page it was read from. */
+  social?: readonly import("../officials/types.ts").SocialAccount[];
   contactKind?: "PUBLIC_OFFICE" | "PERSONAL";
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
   retainedFieldSources?: RosterMember["retainedFieldSources"];
@@ -2647,6 +2651,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     phone: member.phone,
     contactKind: member.contactKind,
     contactScope: member.contactScope,
+    ...(member.social?.length ? { social: member.social } : {}),
     retainedFieldSources: member.retainedFieldSources,
     contactFormUrl: null,
     photoUrl: photos[member.id] ?? null,

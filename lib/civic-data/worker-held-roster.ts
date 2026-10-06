@@ -6,6 +6,8 @@
  * written; the §3 check then confirms each one is on the page.
  */
 
+import { socialFieldsIn } from "./social-accounts.ts";
+
 export interface HeldRosterRow {
   /** Display name. "Last, First" becomes "First Last"; `nameAsWritten` keeps the page's form. */
   readonly name: string;
@@ -14,6 +16,8 @@ export interface HeldRosterRow {
   readonly phone: string | null;
   readonly email: string | null;
   readonly websiteUrl: string | null;
+  /** CA-05: `socials.<platform>` links found in this member's own row, for §3 to confirm on the page. */
+  readonly socials: Readonly<Record<string, string>>;
 }
 
 export interface HeldRoster {
@@ -75,7 +79,7 @@ export function readHeldRoster(html: string, pageUrl: string): HeldRoster | null
         ?? (/[^\s@]+@[^\s@]+\.[a-z]{2,}/i.exec(visible(values[email]))?.[0] ?? null);
       const link = hrefs(values[person]).map((h) => absolute(h, pageUrl)).find((h): h is string => h !== null) ?? null;
       const parsed: HeldRosterRow = { name: displayName(nameAsWritten), nameAsWritten, office,
-        phone: /\d{3}.*\d{4}/.test(phoneText) ? phoneText : null, email: mail, websiteUrl: link };
+        phone: /\d{3}.*\d{4}/.test(phoneText) ? phoneText : null, email: mail, websiteUrl: link, socials: socialFieldsIn(row, pageUrl) };
       seen.set(`${parsed.name}\n${parsed.office}`, parsed);
     }
   }

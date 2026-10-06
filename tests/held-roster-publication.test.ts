@@ -141,3 +141,21 @@ test("a departure publishes through the registry door: the holder's rows leave w
   assert.equal(after.payload.officialCandidacies.rows.some(row => row.holder.id === faye.id), false);
   assert.equal(after.payload.rosterReaderDispositions.some(row => row.sourceId === faye.id), false);
 });
+
+test("CA-05: a profile link in a member's own row publishes as an OFFICIAL account with its page; share links, footer links and unlisted platforms do not", async () => {
+  const base = await prior();
+  const withLinks = ROWS.replace('</td></tr>', '<a href="https://www.facebook.com/MayorMcCaa">Facebook</a> <a href="https://www.facebook.com/sharer/sharer.php?u=x">Share</a> <a href="https://mastodon.social/@mccaa">Fediverse</a></td></tr>');
+  const html = page("Contact the Mayor & Council", withLinks).replace("</body>", '<footer><a href="https://x.com/CityOfBenson">City</a></footer></body>');
+  const held = capture(html);
+  const reading = await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, readHeld: async () => held,
+    artifacts: [{ artifactId: held.evidence.artifactId, workItemId: "wi-directory", routeTaskId: null, attemptId: "at-scout", tier: "RAW", contentHash: held.evidence.contentHash,
+      byteLength: html.length, contentType: "text/html; charset=utf-8", canonicalUrl: URL_, partial: false, recordedAt: held.observedAt } as ArtifactRecord] });
+  const published = workerRosterPublication({ bodyId: BODY, reading: reading!, prior: base, now: NOW });
+  const social = (name: string) => published.payload.bodyRosters[0].members.find(m => m.name === name)?.social;
+  assert.deepEqual(social("Clea McCaa II"), [{ platform: "facebook", url: "https://www.facebook.com/MayorMcCaa", accountKind: "OFFICIAL", sourceUrl: URL_, collectedAt: held.observedAt }]);
+  assert.equal(social("Carolyn Flowers"), undefined, "the footer's city account is not a member's account");
+  // The reader card carries the pill's source.
+  const unverified = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, reading: { ...reading!, members: reading!.members.map(m => ({ ...m,
+    fields: { ...m.fields, "socials.x": "https://x.com/not-on-the-page" } })) } });
+  assert.equal(unverified.payload.bodyRosters[0].members.some(m => m.social?.some(a => a.platform === "x")), false, "a link that is not on the saved page is never published");
+});

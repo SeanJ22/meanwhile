@@ -128,3 +128,21 @@ Design (engineering choice): batch per step.
   - No-result spend by role: **admin** on the Money page, from CostEntry.endingKind (**River** adds the field; **hunters** sets it at dispatch).
   - Batch versus full-price: **admin** on the Money page, from each cost row's batch flag; BX-13's done-when.
 - **Admin in Eastern time:** the Money page shows MST. Every Admin time is Eastern (EDT now). Admin fixes it first.
+
+## 2026-10-06 ~04:20Z: Sean, paid work is designed so it cannot end with nothing (REPLACES the no-result tracking lines above)
+
+Sean, in substance: no "spend with no result" tracking on the Money page or in the digest. He doesn't want to watch waste; he wants it designed out. Build it so a paid job cannot end with nothing:
+1. **Before any paid job dispatches**, skip anything already held, anything already being worked, a known dead end whose unlock hasn't changed, and a failed route being repeated with nothing new.
+2. **Every route candidate a Scout produces goes straight to a builder** and ends as a working door or a recorded dead end. A lead that sits unfollowed is a defect.
+3. **Every paid ending writes what it tried and learned into the field manual**, so the next worker starts ahead. A "no progress" ending is a bug: find the stall and fix the cause.
+4. **A killed round saves whatever its jobs found before the kill.**
+The proof is **cost per fact** in Admin: what each dollar bought. Any dollar that bought nothing is raised and fixed at its cause, like a broken door.
+
+This replaces:
+- the 03:35Z rule's "show no-result spend by role on Admin's Money page and in the daily brief";
+- the 04:10Z "no-result spend by role" Money item.
+
+The rest of 03:35Z (every paid ending has a result; fix causes, not a cap) stands, and is now enforced by design. How River carries it (engineering choices):
+- CostEntry.endingKind stays, as the internal signal, not a display. An ending that bought nothing opens a fix item at its cause (the existing fix list), the way a broken door does.
+- Owners: 1, 2 and 4 hunters (dispatch admission, route-candidate to builder, saving found work before a kill); 3 hunters with bank (field-manual lessons); the fix-item hook admin (fix-list.ts owner); the cost-on-throw, lease-expiry and kill repository side River.
+- Cost per fact (BR-31, admin) stays first in Admin's order.

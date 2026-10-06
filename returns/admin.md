@@ -41,3 +41,11 @@ Addendum 2026-10-06 ~04:00Z, no-result spend (Sean's rule): the Money page's Sco
 3. **Cost per hunt** on the Hunts and Money views, from billing attribution's per-hunt spend.
 4. **No-result spend by role** and **batch versus full-price spend by role** on the Money page (see the earlier addenda).
 Then your fold return (BR-07 on measures' screens) and the rest of your batch.
+
+## Correction, 2026-10-06 ~04:20Z (Sean): no "spend with no result" display
+Drop the no-result spend line from the Money page and the digest (the earlier addenda's no-result items are withdrawn). Instead:
+1. Money times in Eastern.
+2. **BR-31: cost per fact and facts live per hour.** This is the proof of what each dollar bought.
+3. Cost per hunt.
+4. Batch versus full-price spend.
+5. A fix-list hook (fix-list.ts is yours): when a paid ending bought nothing (CostEntry.endingKind NOTHING, from River and hunters), open a fix item at its cause, the way a broken door does.

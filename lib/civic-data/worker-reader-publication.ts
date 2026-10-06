@@ -31,8 +31,9 @@ import { publicationCaptureReaders } from "./worker-publication-context.ts";
 import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
 import { workerBallotContestsPackage, publishWorkerBallotContestsResults } from "./worker-ballot-contests.ts";
 import { stanceRowFrom } from "./stance-rows.ts";
-import { DEFAULT_STANCE_TOPICS } from "../stances/topics.ts";
-import { readStanceTopics } from "../stances/read.ts";
+import { DEFAULT_STANCE_TOPICS, STANCE_TOPICS_SETTING, validStanceTopics } from "../stances/topics.ts";
+import { readSetting, type SettingValue } from "../control-plane/settings.ts";
+import { ADMIN_CONFIG_ID, type AdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { campaignSiteFor } from "../officials/campaign-sites.ts";
 import { currentDerivedCampaignSiteRecords } from "./derived-campaign-sites.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
@@ -262,6 +263,16 @@ export async function publishWorkerReaderResults(input: {
   // The Validator reads what earlier passes learned before it checks anything, and writes back once at the end.
   const manual = await readValidatorManual(input.repos);
   const learned: ValidatorObservation[] = [];
+  // The stance topics in force come from the control plane's own settings row (the setting the reader copy
+  // is published from), read once per pass; the reader edge store stays out of the publication path.
+  let stanceTopicIds: readonly string[] | null = null;
+  const readStanceTopicIds = async (): Promise<readonly string[]> => {
+    if (stanceTopicIds) return stanceTopicIds;
+    const config = ((await input.repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null) as AdminConfig | null;
+    const topics = readSetting<SettingValue>(config, STANCE_TOPICS_SETTING, DEFAULT_STANCE_TOPICS as unknown as SettingValue);
+    stanceTopicIds = (validStanceTopics(topics) ? topics : DEFAULT_STANCE_TOPICS).map(topic => topic.id);
+    return stanceTopicIds;
+  };
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
     const plan: AutonomousWorkPlan | undefined = item.autonomousPlan;
@@ -280,7 +291,7 @@ export async function publishWorkerReaderResults(input: {
       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
       const registry = await readRegistryRuntimePrior(input.store, input.now);
       const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results,
-        ...(input.contractId === "stances" ? { stanceTopicIds: (await readStanceTopics()).map(topic => topic.id) } : {}) });
+        ...(input.contractId === "stances" ? { stanceTopicIds: await readStanceTopicIds() } : {}) });
       const checked = built.package;
       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now,
         manualPayloadScope(input.contractId, requiredManualProductionContract(input.contractId).scope, checked.payload));

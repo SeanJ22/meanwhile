@@ -1,11 +1,128 @@
 # River status
 
-build_state: integrating (release 4 #710 open, auto-merge on; slide, ballot, admin held on returns)
+build_state: releasing (release 8 #714 open, CI running; runner STOPPED until release 8 is live; see HANDOFF below)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
-run_id: session_01VxkjQwRW6tEj8XDPVSGkKU
-lock: river-20261006T004626Z-3384
-heartbeat: 2026-10-06T05:11:32Z
+run_id: session_01GomLhSQqS2qk8vHjjkBzbT
+lock: river-20261006T052241Z-31638
+heartbeat: 2026-10-06T05:22:41Z
+
+
+## HANDOFF FOR THE NEXT RIVER RUN (written Oct 6, 1:25 AM EDT)
+
+Read this section first. It replaces "Next River run (12:35 AM EDT)" below wherever they differ. Sean's full message is in decisions.md under "Oct 6, about 1:20 AM EDT". It is the plan.
+
+**Who wrote this.** Scheduled River session session_01GomLhSQqS2qk8vHjjkBzbT, on Sean's live instruction. The board lock above still belongs to session_01VxkjQwRW6tEj8XDPVSGkKU (heartbeat 1:11 AM EDT). This run did not take it. Once that heartbeat is 45 minutes stale, the next River run claims the lock under the normal rules and carries on from here.
+
+### The mission (Sean, Oct 6)
+A verified fact reaches a reader within minutes, at a known and falling cost, and the system proves it every hour. Targets: **control-plane Neon under 0.7 GB an hour; no paid job ends with nothing; cost per fact measured and falling.** Work is done only when the live vital signs show it, never because tests pass.
+
+### Release 8: state
+- **PR #714** (release/8 at 8e47854, base main f545fcf), "campaign-sites bounded; spend holds in their own table (schema v24)". Steps CH-24 and MW-021. River tested this exact SHA with `pnpm gates`: 12/12 passed (9,782 pass, 0 fail, 11 skipped). Record: releases/8.json.
+- **CI on GitHub at 1:20 AM EDT:**
+  - The first run, 37417292731 (started 1:11 AM EDT), shows "gates" and both "build" jobs as failure, with the rest cancelled.
+  - The second run, 37417309917, has passed admission and both builds; verify was still running.
+  - Next River: read run 37417292731's gates log. If it only lost a concurrency cancel to the second run, ignore it. If the failure is real, root-cause and fix it on release/8.
+- **Merging:** the PR is `blocked` (required checks pending). Confirm auto-merge is on. Sean said: ship it when gates pass.
+- **What's folded on river 8e47854:**
+  - release 7 (f545fcf);
+  - hunters READY e1c4a1903 (campaign-sites bound with a post-cutoff deferral; CH-24 part 2 standing lane, switch off by default);
+  - river READY 7981365 (MW-021: cp_spend_holds, cp_admit_spend_hold(), a one-time move of the ledger row's holds, and the switch `WTP_SPEND_HOLDS_TABLE=0` to go back).
+  - The trial fold is kept at stream/salvage-river-next-r8.
+- **Runner: STOPPED. Keep it stopped until release 8 is live**, because the one-time ledger move needs it off.
+- **After the merge:**
+  1. Observe the deploy by SHA (`river.mjs observe`, reusing the post-deploy-integrity run).
+  2. Confirm schema v24 is applied through the release path. v23 was waiting for the runner to adopt release 7.
+  3. Then push Sean the restart steps. Use the same restart he ran at 11:17 PM EDT, on release 8's merge SHA. List the exact commands from deploy/runner (read them from the repo; do not guess).
+- **Release 8's first hour is measured by hand** until vital signs exist. Read-only, with the Neon MCP:
+  - the control-plane project's data-transfer total at restart and one hour later (project withered-sunset-39821877);
+  - cp_spend_holds row count and its growth;
+  - cp_ledger row size (it should stay near zero after the move);
+  - pg_stat_user_tables seq_scan and tup_read deltas on cp_ledger, the artifact log, attempts and work items.
+  - Compare against release 6's first hour: **7.8 GB from 11:23 PM to 12:29 AM EDT, about 5.5 GB of it ledger reads.** Target: under 0.7 GB.
+  - Write the result to releases/8-live.md and push it to Sean.
+
+### Campaign-sites: answer for Sean (River checked river 8e47854)
+**Not fixed at the cause.** Release 8 adds the stop line Sean named: the lane ends at the dispatch cutoff plus 3 minutes as a named deferral (lib/control-plane/scheduler/post-cutoff-bound.ts; scripts/freshness-shadow.mts runCampaignSitesPass about line 3507).
+- lib/control-plane/promotion/campaign-publication-cycle.ts:56 still starts each pass with four whole-table reads: `readPipelineStates(repos)`, `repos.attempts.list()`, `repos.routeTasks.list()` and `repos.workItems.list()`. Only the per-URL capture read got a limit (CAPTURES_PER_URL = 100, replacing MAX_SAFE_INTEGER).
+- Those reads, the held-page reads and the link inventory have **no deadline inside the lane**. Only page fetches respect `deadlineMs`.
+- So the lane can still spend the whole round reading, and then be deferred every round.
+- **Hunters fixes the cause next** (returns/hunters.md, TOP ITEM, replaced):
+  - read only the candidate-publication route tasks, their work items and their attempts, by index (route-id prefix and subject), not whole tables;
+  - read pipeline states only for the eligible candidacy ids;
+  - carry the round deadline into every await inside the lane, saving progress as it goes;
+  - test that a pass on a large store reads rows in proportion to the eligible candidacies, and finishes rather than defers;
+  - state the estimated Neon bytes per pass before and after.
+
+### Order after release 8 (Sean)
+1. **The campaign-sites cause:** hunters, above.
+2. **Vital signs every hour.** The runner writes one small row per hour:
+   - facts that reached readers (counted at publish, plus a random few confirmed on the live site);
+   - money spent, and cost per fact;
+   - Neon bytes the runner itself read, counted per query and tagged with the calling code;
+   - rounds finished versus killed;
+   - paid jobs that ended without a result (must be zero).
+
+   Neon's project total is the cross-check. Admin Now and the daily brief show the row, without reading raw tables.
+
+   Proposed split (River's engineering choice; adjust if a lane is idle):
+   - River: the schema (`cp_vital_signs`, hourly, one row);
+   - hunters: the runner writer and the per-query byte counter in the repository layer;
+   - slide: the facts-published count and the live-site sampler;
+   - admin: Now and the brief.
+3. **The rest of the runtime core,** finished when one hour on the droplet shows hunts completing and transfer under 0.7 GB:
+   - research-state split;
+   - Bank split: DB-39 now, unconditionally (cp_field_manual is one 6.6 MB record rewritten on every write; lane bank);
+   - CH-24 Proposal A on the recorded isolation basis (hunters);
+   - scoped reads everywhere (each lane, for the reads it owns).
+
+### Standing rules from this message
+- **New release gate (Sean approved it):** a release is done only after one hour on the droplet with vital signs at or better than before and inside the targets. Clearly worse means rollback (DB-47) and a return with the numbers.
+  - **Before any rollback,** show Sean how "clearly worse" is decided, on real hours.
+  - River's draft to show him: compare the release's first full hour with the median of the last three comparable hours before it. Clearly worse means any of:
+    - transfer is up 25% or more, and over 0.7 GB;
+    - any paid job ended without a result;
+    - rounds killed went up;
+    - cost per fact is up 25% or more on at least 20 facts.
+  - Use release 6 versus release 7 hours as the worked example. Not adopted until Sean sees it.
+- **Every change that adds database reads states its estimated Neon cost** in its READY status and in the release PR. The measured hour checks it. Add this line to the release PR body template in river.mjs.
+- **One owner for the running system,** measured on facts delivered per dollar, separate from merging code. River's proposal: the hunters lane owns the runtime (it already owns pilot-runner, freshness-shadow and runtime handoff), with River measuring. Put this to Sean in the morning summary as a proposal; it is not settled until he names it.
+- **EVERY LANE:** the mission block goes at the top of every returns/<lane>.md. Done in this run, together with this handoff.
+- **Overnight:**
+  - Stopped Codex lane → its paired Claude worker per assignments.md (admin→measures, slide→hunters, bank→registry, ballot→meetings, frontend→auditors), with a handoff line. Back to Codex when Sean is up.
+  - Only credentials, new spending or D7 wait for Sean.
+  - Push releases and promotions with the Codex Continue line, and record each push below under "Pushes to Sean".
+  - All times in EDT.
+- **Morning summary** to Sean: what's built, what's live, what's blocked, release 8's first measured hour if it has run, and the runtime-owner proposal.
+
+### Pending READY work not yet on river (check integration.json before folding)
+- measures BR-31 (f9d6dde, 12:50 AM EDT)
+- meetings FE-23 (3f0ef37, 12:23 AM EDT)
+- registry FE-40 (6c31b82, 12:28 AM EDT)
+- auditors e51a93c6c (FE-21 batch; FE-04 to River, 12:29 AM EDT)
+- Codex lanes with live WIP at 12:45–12:55 AM EDT: admin, ballot, bank, frontend, slide.
+
+Fold these after release 8 merges, as release 9. Keep the release-8 diff small.
+
+### Open returns (returns/<lane>.md)
+- **admin:** READY 3d99e4120 (BR-04, 07, 11, 12, 13, 16, 17, 18, 20, 26, 27, 28, 29, 35, 36, 39) was held out. It conflicts in 13 places with river; returned at 10:31 PM EDT Oct 5. Sean's priorities in that file: cost tracking first; no "spend with no result" display.
+- **auditors:** newer READY e1e995fd6 merged an untested river-next carrying people's CA-01. Returned at 4:08 PM EDT Oct 5. Its newer e51a93c6c may supersede it; check.
+- **ballot:** f984126 build-output refused. The /api/warm trace grew from 397 to 448 files (data/reference/, voting-sites.json, prl-profiles.json, bootstrap-az.json). Trial fold at stream/salvage-river-next-ballot.
+- **bank:** live failure after release 1. Plus River's 12:00 AM EDT note on paid endings. Now also DB-39 unconditionally, per Sean.
+- **frontend:** FE-39 failed live at release 1. It was checked live as fixed at release 3; close it if the stream agrees.
+- **hunters:**
+  - second cause of RESEARCH_CHILD_NO_PROGRESS (the post-cutoff tail; partly addressed by the release 8 deferral);
+  - CH-24 Proposal A on the isolation basis;
+  - design-out of paid jobs that end with nothing;
+  - now the campaign-sites cause on top.
+- **measures:** release-1 live failure (older; confirm whether it is still open).
+- **meetings:** DB-55 failed live at release 1.
+- **people:** CA-01 READY 71a308afe turns two gates red (stale state manifests; official-page-events version key). Held.
+- **registry:** release-1 live failure (older; confirm).
+- **slide:** 7168232, release firewall MEETING_PARTITION_AUTHORITY_GATE_MISSING (snapshot.ts swapped collapseDuplicateSittings for mergeReaderSittings). Trial fold at stream/salvage-river-next-slide. Also open: the store logging and the Admin failure for a local-folder publish.
+
+### Pushes to Sean (record every one here, EDT)
+- (none from this run yet)
 
 ## Next River run (written Oct 6, 12:35 AM EDT)
 

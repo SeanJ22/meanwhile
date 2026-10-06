@@ -176,3 +176,37 @@ Owner: hunters. Order:
 3. The rest.
 
 River measures Neon transfer before and after, and computes the fit at the margin from the host memory hunters records (the heartbeat does not carry it today) and the measured peaks in worker-slots.ts (research parent 2,928 MiB, Scout 248, lease worker 342, route 285, national 1,258).
+
+## Oct 6, about 1:20 AM EDT: Sean's mission, release 8, the permanent fix and the new release gate
+
+Sean, live in River session session_01GomLhSQqS2qk8vHjjkBzbT (a scheduled River run; the board lock was then held by session_01VxkjQwRW6tEj8XDPVSGkKU), word for word:
+
+> THE MISSION. Anyone in the United States enters a ZIP and right away understands everything their government does that touches them: complete, correct, current, fast, and a pleasure to use. The finish line for all work is a verified fact reaching a reader within minutes, at a known and falling cost, with the system proving it every hour. Start at that finish line and work backward: what must be true right before a reader sees the fact, and before that, until you reach a step already working live. Work forward from today at the same time and meet in the middle. Never fix a symptom alone; find the cause the finish line exposes and fix that. Work is done only when the live system's vital signs show it, never because tests pass. Targets: control-plane Neon under 0.7 GB an hour, no paid job ending with nothing, cost per fact measured and falling.
+>
+> FIRST, BEFORE ANYTHING ELSE. Your session is near the end of its context. Record this whole message in decisions.md, then write a complete handoff in status.md so the next scheduled River run can carry on without this conversation: release 8's state, what's folded, what's pending, every open return, and this plan.
+>
+> WHAT HAPPENED. Seven releases each passed about 9,500 tests while the running system failed: research rounds have died since Oct 3, Neon reached $150 this month, paid Scouts were killed mid-work. Release 6's first hour (11:23 PM to 12:29 AM EDT) moved 7.8 GB, ten times target, about 5.5 GB of it ledger reads. The runner is now stopped. Keep it stopped until release 8 is live; its one-time ledger move needs it off.
+>
+> RELEASE 8. Ship it when gates pass. Then send me the restart steps. Its first hour is measured by hand (Neon project totals and the holds table) until the vital signs exist.
+> Campaign-sites: a time limit with a named deferral is a stop line, not a fix. Tell me whether the cause, the unbounded read at campaign-publication-cycle.ts:56 and the missing deadline inside the lane, is fixed. If not, hunters fixes the cause next, so campaign-sites work actually finishes instead of being deferred every round.
+>
+> THE PERMANENT FIX.
+> 1. Vital signs every hour. The runner writes one small row per hour: facts that reached readers (counted when published, with a random few confirmed on the live site), money spent, cost per fact, Neon bytes the runner itself read (counted per query and tagged with the calling code), rounds finished versus killed, and paid jobs that ended without a result (must be zero). Neon's project total is the cross-check against my bill. Admin's Now screen and the daily brief show this row, built without reading raw tables.
+> 2. New gate, approved by me. A release is done only after an hour on the droplet with vital signs at or better than before and inside my targets. Clearly worse means it rolls back (DB-47) and returns to its lane with the numbers. Before anything rolls back, show me how "clearly worse" is decided, using real hours.
+> 3. Every change that adds database reads states its estimated Neon cost before it ships. The measured hour checks it.
+> 4. Name one owner for the running system, measured on facts delivered per dollar, separate from merging code.
+> 5. The runtime core is one rebuild, finished when an hour on the droplet shows hunts completing and transfer under 0.7 GB: the ledger split (release 8); the research-state split; the Bank split (cp_field_manual is one 6.6 MB record rewritten on every write; DB-39 splits now, no "only if writes fail" trigger); one lane never killing another (CH-24 Proposal A on the isolation basis already recorded); and scoped reads everywhere.
+> Order after release 8: the campaign-sites cause, then the vital signs, then the rest of the core.
+>
+> EVERY LANE. Put the mission block at the top of every returns file, so every Claude and Codex worker reads it first and works backward from the finish line for its own part.
+>
+> OVERNIGHT. Keep working without me. If a Codex lane stops with unfinished work, hand it to its paired Claude worker per assignments.md and back to Codex when I'm up. Only credentials, new spending or D7 wait for me. Push me releases and promotions with the Codex Continue line, and record each push in status.md. All times in EDT. Morning summary: what's built, what's live, what's blocked, and release 8's first measured hour if it's run.
+
+What it settles (River's reading, not new policy):
+- **Mission and targets:** control-plane Neon under 0.7 GB an hour; no paid job ends with nothing; cost per fact measured and falling. Work is done when the live vital signs show it, not when tests pass.
+- **New release gate (Sean approved it himself, so §0's no-new-gates rule is satisfied):** a release is done only after one hour on the droplet with vital signs at or better than the previous hour and inside the targets. Clearly worse means rollback through DB-47 and a return to the lane with the numbers. **No rollback happens until Sean has seen how "clearly worse" is decided, shown on real hours.**
+- **Read-cost statement:** every change that adds database reads states its estimated Neon cost before it ships (in its READY status and the release PR). The measured hour checks it.
+- **Runtime owner:** one named owner for the running system, judged on facts delivered per dollar, separate from merging code. River's proposal is in status.md. The owner is not settled until it is named there.
+- **Runner:** stays stopped until release 8 is live. The one-time ledger move needs it off.
+- **Order after release 8:** (1) the campaign-sites cause; (2) hourly vital signs; (3) the rest of the runtime core: research-state split, Bank split (DB-39 now, unconditionally), CH-24 Proposal A on the isolation basis, scoped reads everywhere.
+- **Overnight:** a stopped Codex lane goes to its paired Claude worker (assignments.md) and back to Codex when Sean is up. Every push to Sean is recorded in status.md. All times are EDT.

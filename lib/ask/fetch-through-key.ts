@@ -80,7 +80,7 @@ export async function fetchThroughKey(input: {
       if (Date.now() >= input.deadlineMs || result.status !== 200 || result.bytes <= 0 || !result.text) break;
       const receivedAt = new Date().toISOString();
       const body = object(JSON.parse(result.text, (key: string, value: unknown, context?: { source?: string }) =>
-        key === "sub_id" && typeof value === "number" && context?.source && /^\d+$/.test(context.source) ? context.source : value)), pagination = object(body?.pagination);
+        (key === "sub_id" || key === "last_index") && typeof value === "number" && context?.source && /^\d+$/.test(context.source) ? context.source : value)), pagination = object(body?.pagination);
       if (!Array.isArray(body?.results)) break;
       const count = pagination?.count;
       const countValid = typeof count === "number" && Number.isSafeInteger(count) && count >= 0;
@@ -109,7 +109,7 @@ export async function fetchThroughKey(input: {
       if (!countValid) break;
       if (visited === expected) { complete = !owedRows; break; }
       const next = object(pagination?.last_indexes);
-      const index = typeof next?.last_index === "string" || typeof next?.last_index === "number" ? String(next.last_index) : null;
+      const index = typeof next?.last_index === "string" || typeof next?.last_index === "number" && Number.isSafeInteger(next.last_index) ? String(next.last_index) : null;
       const amount = typeof next?.last_contribution_receipt_amount === "string" || typeof next?.last_contribution_receipt_amount === "number" ? String(next.last_contribution_receipt_amount) : null;
       const cursor = `${index}:${amount}`;
       if (!body.results.length || !index || amount === null || cursors.has(cursor)) break;

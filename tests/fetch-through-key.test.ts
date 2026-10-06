@@ -70,3 +70,21 @@ test("FEC's large numeric filing IDs retain their exact source digits and incomp
       text: JSON.stringify({ results: [row("known"), unknown], pagination: { count: 2 } }), requests: 1, bytes: 100 }) });
   assert.equal(partial?.status, "PARTIAL"); assert.equal(partial.records.length, 1);
 });
+
+test("large numeric FEC keyset cursors retain their original digits on the next registered request", async () => {
+  const cursor="20260901987654321";let calls=0;
+  const result=await fetchThroughKey({question,subject,records:[summary],deadlineMs:Date.now()+1000,
+    readApi:async (_tool,request)=>{
+      calls++;
+      if(calls===2) {
+        assert.ok(request && typeof request === "object" && "params" in request);
+        const params = request.params as Record<string, unknown>;
+        assert.equal(params.last_index,cursor,"no rounded cursor can be sent to the source");
+      }
+      const results=JSON.stringify([row(String(calls))]);
+      const raw=calls===1 ? `{"results":${results},"pagination":{"count":2,"last_indexes":{"last_index":${cursor},"last_contribution_receipt_amount":50.25}}}` :
+        `{"results":${results},"pagination":{"count":2}}`;
+      return {sourceUrl:"https://api.open.fec.gov/v1/schedules/schedule_a/",status:200,text:raw,requests:1,bytes:raw.length};
+    }});
+  assert.equal(calls,2);assert.equal(result?.status,"COMPLETE");assert.equal(result?.records.length,2);
+});

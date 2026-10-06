@@ -13,6 +13,9 @@ export interface PortraitSources {
   readonly campaign?: NonNullable<Section3Page["campaign"]> & { readonly url: string };
 }
 
+/** Stored portraits live under one prefix per kind of subject; the public route serves both. */
+export type PortraitKeyPrefix = "officials" | "candidates";
+
 /** Source references ride on the existing portrait binding, not an approval file. */
 export interface PortraitVerification {
   readonly basis?: "OWN_PAGE" | "TWO_SOURCES";
@@ -95,9 +98,10 @@ export function portraitVerificationMatches(name: string, verification?: Portrai
 }
 
 /** Bind corroboration to the published image bytes and the exact source image. */
-export function portraitBindingMatches(name: string, photo: {url: string; sourceUrl?: string | null; verification?: PortraitVerification}): boolean {
+export function portraitBindingMatches(name: string, photo: {url: string; sourceUrl?: string | null; verification?: PortraitVerification},
+  prefix: PortraitKeyPrefix = "officials"): boolean {
   return portraitVerificationMatches(name, photo.verification) && photo.sourceUrl === photo.verification!.imageUrl &&
-    new RegExp(`^/api/portraits/officials/${photo.verification!.imageHash.slice(7)}\\.(jpg|png|webp|gif)$`).test(photo.url);
+    new RegExp(`^/api/portraits/${prefix}/${photo.verification!.imageHash.slice(7)}\\.(jpg|png|webp|gif)$`).test(photo.url);
 }
 
 export const portraitHash = (bytes: Uint8Array) => `sha256-${createHash("sha256").update(bytes).digest("hex")}`;

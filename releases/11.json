@@ -1,0 +1,22 @@
+{
+  "n": 11,
+  "branch": "release/11",
+  "river_sha": "92102c8b81bea9c8fde078a9e4cbc4743607407e",
+  "tested_sha": "92102c8b81bea9c8fde078a9e4cbc4743607407e",
+  "steps": [
+    "VS-01",
+    "BX-13",
+    "CP-10"
+  ],
+  "lanes": [
+    "measures",
+    "hunters"
+  ],
+  "integration_from": 112,
+  "integration_count": 114,
+  "pr": {
+    "number": 717,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/717"
+  },
+  "at": "2026-10-06T14:17:36Z"
+}

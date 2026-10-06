@@ -1,0 +1,12 @@
+{
+  "commit": "4de9b07adf63f3355924137345e10a9e7328023f",
+  "status": "failed",
+  "exitCode": 1,
+  "preflight": "MANUAL_DATA_PATH_WRITES_REPOSITORY lib/meetings/edge-store.ts reachable from scripts/promote-registry-runtime.mts",
+  "elapsedPreflightMs": 178810,
+  "expensiveGatesRan": false,
+  "canonicalFullRan": false,
+  "log": "/tmp/ballot-return-exact-gates.log",
+  "sha256": "db65ff04e677f8cf6fc8d799b14bcbce739b3a26c5d464b5a800c5576f899c48",
+  "repair": "Worker runtimeKinds import now separate from reader-settings publication module; no firewall/guard changes."
+}

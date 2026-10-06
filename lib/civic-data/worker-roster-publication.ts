@@ -15,7 +15,7 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { heldDirectoryReading, materializeBodyDirectoryWork, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
-import { runtimeKinds } from "../registry/kinds-settings.ts";
+import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { auditPull, capturesForPublication, captureIntact, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";

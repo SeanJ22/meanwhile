@@ -8,7 +8,7 @@ import { scoutThinkingOptions, type ModelRequest, type ModelResponse, type Model
 import type { WorkerEvidence } from "../control-plane/workers/types.ts";
 import { readMeteredUsage, priceMeteredUsage } from "../control-plane/model-cost.ts";
 import { measureRecordIssue, type MeasureRecord } from "../ballot/measure-records.ts";
-import { runtimeKinds } from "../registry/kinds-settings.ts";
+import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { registeredKind } from "../registry/kinds.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 export type MeasureTranslationRepos = FieldManualRepos & Pick<ControlPlaneRepositories, "adminConfig">;

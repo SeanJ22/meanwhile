@@ -121,6 +121,25 @@ Fold these after release 8 merges, as release 9. Keep the release-8 diff small.
 - **registry:** release-1 live failure (older; confirm).
 - **slide:** 7168232, release firewall MEETING_PARTITION_AUTHORITY_GATE_MISSING (snapshot.ts swapped collapseDuplicateSittings for mergeReaderSittings). Trial fold at stream/salvage-river-next-slide. Also open: the store logging and the Admin failure for a local-folder publish.
 
+### Progress since the handoff (this session, Oct 6, 2:00 AM EDT)
+- **Release 8 #714:**
+  - The red first CI run (37417292731) was cancelled by CI's concurrency rule when run 37417309917 started. Its "gates" is the aggregator reporting cancelled upstream jobs, not a test failure.
+  - Run 37417309917: admission, both builds and verify passed; the four test shards are running.
+  - Auto-merge is on (MERGE). This session is subscribed to the PR.
+- **Restart steps for Sean (once release 8 is deployed and the post-deploy check passes):**
+  - On the droplet: `systemctl start meanwhile-runner.service`.
+  - On start, `pilot-runtime-launch.mjs` runs the release handoff. It installs the newest production main deploy with green checks, which is release 8.
+  - Bootstrap then applies schema v24 and the one-time move of the ledger's holds.
+  - Watch it with `journalctl -u meanwhile-runner.service -n 60 --no-pager`.
+  - River confirms from Neon: cp_runner_heartbeat `testedSha` equals the merge SHA, schema version 24, the cp_spend_holds row count, and the ledger row's spendHolds empty.
+- **Baseline with the runner stopped:** in releases/8-live.md.
+- **Release 9 fold (river-next, local, gates running):**
+  - folded: measures BR-31; registry FE-24, 21, 37, 25, 40; meetings DB-32, DB-34, FE-26, FE-27, FE-23 (with a scoreboard union repair); auditors FE-21; slide BX-03, BX-12; bank DB-37, DP-08, DB-45, DB-52; frontend FE-35, FE-36.
+  - held out and returned: people (CA-11, CA-05; conflicts with river); admin (overlaps BR-31).
+  - tsc is clean.
+- **vital-signs.md:** the spec and owners for the hourly row. Returns written for hunters, slide, admin, and bank (DB-39 now).
+- **hunters:** the campaign-sites cause is the next item (returns/hunters.md).
+
 ### Pushes to Sean (record every one here, EDT)
 - (none from this run yet)
 

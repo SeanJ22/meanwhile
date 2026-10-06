@@ -18,9 +18,10 @@
  * Nothing is logged per query and nothing is written to a database.
  *
  * The runner is several processes (the parent, the research child, its lease
- * workers, routine and publication children). When `WTP_NEON_BYTES_DIR` is set,
+ * workers, routine and publication children). When `WTP_VITAL_SIGNS_DIR` is set,
  * which the standing runner does for itself and every child it starts, each
- * process writes its own hour totals to one small file there once a minute and
+ * process writes its own hour totals, with its other hour counters
+ * (`countVitalSign`: rounds finished, killed or deferred; facts published), to one small file there once a minute and
  * when it exits, and the parent sums the hour's files. A process killed without
  * warning loses at most its last minute. Outside the runner (the site, Admin,
  * tests) the counts stay in memory.
@@ -29,7 +30,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import { mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
-export const NEON_BYTES_DIR_ENV = "WTP_NEON_BYTES_DIR";
+export const VITAL_SIGNS_DIR_ENV = "WTP_VITAL_SIGNS_DIR";
 
 export type NeonDatabase = "reader" | "control-plane";
 
@@ -43,6 +44,8 @@ export interface NeonBytesHour {
   readonly byCaller: Readonly<Record<string, number>>;
   /** Which processes contributed: script name and pid. */
   readonly processes: readonly string[];
+  /** Other hour counts (`countVitalSign`), e.g. rounds_finished. Absent on files that counted none. */
+  readonly counters?: Readonly<Record<string, number>>;
 }
 
 export interface NeonBytesSummary {
@@ -55,7 +58,7 @@ export interface NeonBytesSummary {
   readonly processCount: number;
 }
 
-interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; byCaller: Map<string, number>; dirty: boolean }
+interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; byCaller: Map<string, number>; counters: Map<string, number>; dirty: boolean }
 
 const scope = new AsyncLocalStorage<string>();
 const buckets = new Map<string, Bucket>();
@@ -106,17 +109,32 @@ export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: num
   try {
     const caller = scope.getStore() ?? `query ← ${callSite()}`;
     const key = database === "reader" ? `reader: ${caller}` : caller;
-    const hour = hourStart(nowMs);
-    let bucket = buckets.get(hour);
-    if (!bucket) {
-      bucket = { requests: 0, bytes: { reader: 0, "control-plane": 0 }, byCaller: new Map(), dirty: false };
-      buckets.set(hour, bucket);
-    }
+    const bucket = bucketFor(nowMs);
     bucket.requests += 1;
     bucket.bytes[database] += bytes;
     bucket.byCaller.set(key, (bucket.byCaller.get(key) ?? 0) + bytes);
     bucket.dirty = true;
   } catch { /* accounting never breaks a read */ }
+}
+
+function bucketFor(nowMs: number): Bucket {
+  const hour = hourStart(nowMs);
+  let bucket = buckets.get(hour);
+  if (!bucket) {
+    bucket = { requests: 0, bytes: { reader: 0, "control-plane": 0 }, byCaller: new Map(), counters: new Map(), dirty: false };
+    buckets.set(hour, bucket);
+  }
+  return bucket;
+}
+
+/** Add to one of this hour's vital-sign counts in this process (rounds, facts). Never throws. */
+export function countVitalSign(name: string, by = 1, nowMs: number = Date.now()): void {
+  try {
+    if (!Number.isFinite(by)) return;
+    const bucket = bucketFor(nowMs);
+    bucket.counters.set(name, (bucket.counters.get(name) ?? 0) + by);
+    bucket.dirty = true;
+  } catch { /* accounting never breaks work */ }
 }
 
 function processLabel(): string {
@@ -125,7 +143,8 @@ function processLabel(): string {
 
 function snapshot(hour: string, bucket: Bucket): NeonBytesHour {
   return { hour, requests: bucket.requests, bytes: { ...bucket.bytes },
-    byCaller: Object.fromEntries(bucket.byCaller), processes: [processLabel()] };
+    byCaller: Object.fromEntries(bucket.byCaller), processes: [processLabel()],
+    ...(bucket.counters.size > 0 ? { counters: Object.fromEntries(bucket.counters) } : {}) };
 }
 
 /** This process's own counts, in memory. */
@@ -137,7 +156,7 @@ export function processNeonBytes(): readonly NeonBytesHour[] {
  * Write this process's hour files (atomically, one per hour it has counts for)
  * and forget finished hours once written. Synchronous so it can run at exit.
  */
-export function flushNeonBytes(dir: string | undefined = process.env[NEON_BYTES_DIR_ENV], nowMs: number = Date.now()): boolean {
+export function flushNeonBytes(dir: string | undefined = process.env[VITAL_SIGNS_DIR_ENV], nowMs: number = Date.now()): boolean {
   if (!dir) return false;
   const current = hourStart(nowMs);
   try {
@@ -167,7 +186,7 @@ export function installNeonBytesFlush(): void {
 /** Sum every process's file for one hour. Unreadable files are skipped, not fatal. */
 export function readNeonBytesHour(dir: string, hour: string): NeonBytesHour {
   const sum = { requests: 0, bytes: { reader: 0, "control-plane": 0 } as Record<NeonDatabase, number>,
-    byCaller: {} as Record<string, number>, processes: [] as string[] };
+    byCaller: {} as Record<string, number>, processes: [] as string[], counters: {} as Record<string, number> };
   let names: string[] = [];
   try { names = readdirSync(dir); } catch { /* no runner files yet */ }
   const prefix = `${hour.slice(0, 13)}--`;
@@ -181,6 +200,7 @@ export function readNeonBytesHour(dir: string, hour: string): NeonBytesHour {
       sum.bytes["control-plane"] += part.bytes["control-plane"] ?? 0;
       for (const [caller, bytes] of Object.entries(part.byCaller)) sum.byCaller[caller] = (sum.byCaller[caller] ?? 0) + bytes;
       sum.processes.push(...part.processes);
+      for (const [name, count] of Object.entries(part.counters ?? {})) sum.counters[name] = (sum.counters[name] ?? 0) + count;
     } catch { /* a half-written or foreign file */ }
   }
   return { hour, ...sum };

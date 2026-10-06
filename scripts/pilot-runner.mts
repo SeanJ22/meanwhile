@@ -134,8 +134,11 @@ import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "..
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { hostMemoryReading } from "../lib/control-plane/workers/worker-slots.ts";
-import { NEON_BYTES_DIR_ENV, flushNeonBytes, formatNeonBytesLine, hourStart, pruneNeonBytes, readNeonBytesHour,
-  summarizeNeonBytes } from "../lib/db/transfer-by-caller.ts";
+import { VITAL_SIGNS_DIR_ENV, countVitalSign, flushNeonBytes, formatNeonBytesLine, hourStart, pruneNeonBytes,
+  readNeonBytesHour, summarizeNeonBytes } from "../lib/db/transfer-by-caller.ts";
+import { VITAL_COUNTERS, composeVitalSignsRow, formatVitalSignsLine, readHourCosts, writeVitalSignsRow,
+  type HourCosts } from "../lib/control-plane/vital-signs.ts";
+import { neon } from "@neondatabase/serverless";
 import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
@@ -202,9 +205,9 @@ const STDERR_TAIL_LINES = 40;
 
 const ROOT = process.cwd();
 /* Vital signs (Sean, Oct 6): every runner process, this one and each child it starts,
-   writes its Neon bytes by calling code here, and this parent sums the hour. */
-const NEON_BYTES_DIR = join(ROOT, ".runtime", "neon-bytes");
-process.env[NEON_BYTES_DIR_ENV] = NEON_BYTES_DIR;
+   writes its hour counts (Neon bytes by calling code, rounds, facts) here, and this parent sums the hour. */
+const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
+process.env[VITAL_SIGNS_DIR_ENV] = VITAL_SIGNS_DIR;
 // Keep the exact launch path, but do not pass reporting secrets to workers.
 // The owner-snapshot collector reloads only those keys from this private file.
 if (!process.env.WTP_BILLING_ENV_FILE) {
@@ -448,6 +451,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
   let supervisorRecordPath: string | null = null;
   if (run.termination === "TIMED_OUT") {
     const reason = run.errorMessage ?? "RESEARCH_CHILD_NO_PROGRESS";
+    countVitalSign(VITAL_COUNTERS.roundsKilled);
     const outcome = await recordFailedCycle({
       repos: await ownerRepositories(), error: new Error(reason),
       cycleId: `research-supervisor:${hostname()}:${before}`, startedAt: before,
@@ -1147,36 +1151,57 @@ async function requestQueuedReleaseDrain(): Promise<void> {
 }
 /** The last full UTC hour and the hour so far, summed over every runner process's file. */
 function neonBytesReading(nowMs = Date.now()): NonNullable<RunnerHeartbeat["neonBytes"]> {
-  flushNeonBytes(NEON_BYTES_DIR, nowMs);
+  flushNeonBytes(VITAL_SIGNS_DIR, nowMs);
   const current = hourStart(nowMs);
   return {
-    lastFullHour: summarizeNeonBytes(readNeonBytesHour(NEON_BYTES_DIR, hourStart(nowMs - 3_600_000)), 20),
-    currentHour: summarizeNeonBytes(readNeonBytesHour(NEON_BYTES_DIR, current), 10),
+    lastFullHour: summarizeNeonBytes(readNeonBytesHour(VITAL_SIGNS_DIR, hourStart(nowMs - 3_600_000)), 20),
+    currentHour: summarizeNeonBytes(readNeonBytesHour(VITAL_SIGNS_DIR, current), 10),
   };
 }
 
-/* One journal line every 10 minutes for the hour so far, and one for each finished
-   hour once its processes have flushed (2 minutes in). In memory and on local disk only. */
-let neonBytesFullHourReported = "";
-let neonBytesPartialAt = 0;
-const neonBytesTimer = setInterval(() => {
-  try {
-    const nowMs = Date.now();
-    const previous = hourStart(nowMs - 3_600_000);
-    if (nowMs - Date.parse(hourStart(nowMs)) >= 120_000 && neonBytesFullHourReported !== previous) {
-      neonBytesFullHourReported = previous;
-      console.log(`  ${formatNeonBytesLine(summarizeNeonBytes(readNeonBytesHour(NEON_BYTES_DIR, previous), 20), "last full hour", 20)}`);
-      pruneNeonBytes(NEON_BYTES_DIR, nowMs);
-    }
-    if (nowMs - neonBytesPartialAt >= 600_000) {
-      neonBytesPartialAt = nowMs;
-      console.log(`  ${formatNeonBytesLine(neonBytesReading(nowMs).currentHour!, "so far this hour")}`);
-    }
-  } catch (error) {
-    console.error(`  neon bytes could not be summed (${error instanceof Error ? error.name : "error"}); work continues`);
+/* Every 10 minutes: the hour so far, as a journal line and a partial cp_vital_signs row, so a crash
+   keeps most of the hour. Each finished hour once its processes have flushed (2 minutes in): its
+   final row and line. Bytes, rounds and facts come from the local hour files; the database is read
+   once per row, for the hour's cost aggregate. */
+let vitalSignsFinalHour = "";
+let vitalSignsPartialAt = 0;
+let vitalSignsWork: Promise<void> | null = null;
+async function writeVitalSigns(hour: string, label: string, nowMs: number): Promise<void> {
+  const accounting = readNeonBytesHour(VITAL_SIGNS_DIR, hour);
+  console.log(`  ${formatNeonBytesLine(summarizeNeonBytes(accounting, 20), label, label === "last full hour" ? 20 : 10)}`);
+  const url = provider === "postgres" ? controlPlaneUrlFromEnv() : null;
+  let costs: HourCosts | null = null;
+  const sql = url ? neon(url) : null;
+  if (sql) {
+    try { costs = await readHourCosts(sql, hour); }
+    catch (error) { console.error(`  vital signs: the hour's spend could not be read (${error instanceof Error ? error.name : "error"}); spend stays unknown`); }
   }
+  const row = composeVitalSignsRow({ accounting, costs, releaseSha: RUNNING_CODE_SHA, writtenAt: new Date(nowMs).toISOString() });
+  console.log(`  ${formatVitalSignsLine(row, label)}`);
+  if (sql && (await writeVitalSignsRow(sql, row)) === "TABLE_NOT_INSTALLED") {
+    console.error("  vital signs: the hourly table is not installed yet; the row is in this journal only");
+  }
+}
+const vitalSignsTimer = setInterval(() => {
+  if (vitalSignsWork) return;
+  vitalSignsWork = (async () => {
+    const nowMs = Date.now();
+    flushNeonBytes(VITAL_SIGNS_DIR, nowMs);
+    const previous = hourStart(nowMs - 3_600_000);
+    if (nowMs - Date.parse(hourStart(nowMs)) >= 120_000 && vitalSignsFinalHour !== previous) {
+      vitalSignsFinalHour = previous;
+      await writeVitalSigns(previous, "last full hour", nowMs);
+      pruneNeonBytes(VITAL_SIGNS_DIR, nowMs);
+    }
+    if (nowMs - vitalSignsPartialAt >= 600_000) {
+      vitalSignsPartialAt = nowMs;
+      await writeVitalSigns(hourStart(nowMs), "so far this hour", nowMs);
+    }
+  })().catch(error => {
+    console.error(`  vital signs could not be written (${error instanceof Error ? error.name : "error"}); work continues`);
+  }).finally(() => { vitalSignsWork = null; });
 }, 60_000);
-neonBytesTimer.unref();
+vitalSignsTimer.unref();
 
 async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | null; signal: string | null }): Promise<void> {
   if (provider !== "postgres") return;

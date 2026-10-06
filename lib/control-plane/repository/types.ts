@@ -87,6 +87,7 @@ import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { BudgetLedger } from "../budget.ts";
+import type { SpendHoldStore } from "../expansion/spend-holds.ts";
 import type { CostEntry } from "../cost.ts";
 import type { ArtifactTier } from "../evidence/artifact.ts";
 import type { RouteDisposition, RouteTask } from "../route-task.ts";
@@ -607,6 +608,13 @@ export interface BudgetRepository {
 }
 
 /**
+ * The Send and area spend holds, one row per hold (schema v24,
+ * `cp_spend_holds`). The rule and the stores live in
+ * `lib/control-plane/expansion/spend-holds.ts`.
+ */
+export type SpendHoldRepository = SpendHoldStore;
+
+/**
  * Exclusive sections for read-modify-write sequences.
  *
  * JavaScript in one process is single-threaded, so an `await` chain inside one
@@ -885,6 +893,12 @@ export interface ControlPlaneRepositories {
   /** The Door Registry (DB-09, schema v19): one aggregate per door, id = door id. Written only through the `door.save` gateway action, and by derive steps that never overwrite a newer manual edit. */
   readonly doors: AggregateRepository<DoorRecord>;
   readonly budget: BudgetRepository;
+  /**
+   * The spend holds, one row per hold (schema v24). Absent (the file store),
+   * the holds stay on the budget ledger row, as they do behind the
+   * `WTP_SPEND_HOLDS_TABLE=0` switch.
+   */
+  readonly spendHolds?: SpendHoldRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */
   readonly describe: () => string;

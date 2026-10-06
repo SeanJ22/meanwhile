@@ -68,6 +68,31 @@ test("isolation: a stuck worker is ended alone, its state recorded, and its sibl
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
+test("isolation: a stuck task keeps its deferral when a sibling's finished list reached the lane before the task was announced", async () => {
+  /* A real worker reads its task before it announces it; a sibling that ends in that window lists every id as finished. */
+  const root = await fixture("late-start", `${TAKES_FIRST}
+    process.once('message', config => {
+      const id = claim(config.taskIds);
+      if (id === 'ok') { done(config, id); return; }
+      setTimeout(() => {
+        process.send({ kind: 'task-start', id: '', taskId: id, body: id });
+        process.send({ kind: 'model', id: 'q1', taskId: id, jurisdiction: { subjectId: 's', state: null }, body: {} });
+        setInterval(() => {}, 1000);
+      }, 300);
+    });`);
+  try {
+    const stuck: StuckWorker[] = [];
+    const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", childTimeoutMs: 60_000, config: config(root, ["stuck", "ok"]),
+      capacity: () => 2, transportFor: () => () => new Promise(() => {}), standing: { quietMs: 1_000, onStuck: worker => stuck.push(worker) } });
+    assert.equal(stuck.length, 1);
+    const byTask = new Map(results.map(r => [r.routeTaskId, r]));
+    assert.equal(byTask.get("ok")?.outcome, "WORKED");
+    assert.equal(byTask.get("stuck")?.outcome, "FAILED", "the ended worker's task is recorded as owed, not dropped");
+    assert.match(byTask.get("stuck")!.detail, /WORKER_STUCK:\d+: .*work remains owed/);
+    assert.equal(results.length, 2);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
 test("isolation: a worker that keeps talking to the lane is never ended by the quiet clock", async () => {
   const root = await fixture("talking", `${TAKES_FIRST}
     process.once('message', config => {

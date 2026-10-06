@@ -1137,3 +1137,29 @@ test("filter counts say which half is missing, so an unpublished view or an unre
   assert.ok(combinedCountNumbers(whole).length > 0);
   assert.deepEqual(combinedCounts(view, [], "Error").missing, ["routine contracts could not be read (Error)"]);
 });
+
+test("DP-06: a detective's argued absence says in Admin what would unlock it, from the condition stored with it", async () => {
+  const { stuckViews } = await import("../lib/control-plane/admin-view/v6-stuck-read.ts");
+  const c = worldC();
+  const id = c.obligations![0]!.id;
+  const unlock = { text: "a records request to the county clerk; the filing portal once it opens.", recordedAt: PAST,
+    triggers: [{ kind: "DATE" as const, at: FUTURE }] };
+  const argued = { ...c, obligations: [obligation(id, { nextDueAt: FUTURE, absentUntil: FUTURE, absenceUnlock: unlock })] };
+  const row = rowOf(buildAssignments(merge(argued)), "poe-pat");
+  assert.equal(row.waiting.nextAction,
+    "Recorded as not published; it is looked for again by September 23, 8:00 AM ET. Would unlock: a records request to the county clerk; the filing portal once it opens.");
+
+  // The published index carries it, and the stuck list's box shows it as the next step.
+  const indexed = buildAssignmentView(merge(argued)).allRowsIndex!.find((r) => r.id.includes("poe-pat"))!;
+  assert.match(indexed.nextAction ?? "", /^Recorded as not published.*Would unlock: a records request/);
+  const views = stuckViews([{ id: indexed.id, state: "FAILED", lane: indexed.lane, owner: null, blocker: null, label: indexed.label,
+    subjectName: indexed.subjectName, stateCode: indexed.stateCode, overdue: true, band: null, waitingSince: null, eligibleAt: null,
+    lastActivityAt: null, nextAction: indexed.nextAction ?? null, assignmentKeys: [] }], "us", NOW);
+  assert.match(views.items[0]!.next, /Would unlock: a records request to the county clerk/);
+
+  // Without a stored condition the recheck is still said; once the absence lapses, the ordinary next step returns.
+  const bare = rowOf(buildAssignments(merge({ ...c, obligations: [obligation(id, { nextDueAt: FUTURE, absentUntil: FUTURE })] })), "poe-pat");
+  assert.equal(bare.waiting.nextAction, "Recorded as not published; it is looked for again by September 23, 8:00 AM ET.");
+  const lapsed = rowOf(buildAssignments(merge({ ...c, obligations: [obligation(id, { absentUntil: PAST, absenceUnlock: unlock })] })), "poe-pat");
+  assert.doesNotMatch(lapsed.waiting.nextAction, /Would unlock|Recorded as not published/);
+});

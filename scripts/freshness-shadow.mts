@@ -113,6 +113,7 @@ import {
   CONTROL_PLANE_QUERY_CONCURRENCY,
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { incrementalReadsEnabled, INCREMENTAL_READS_ENV, withIncrementalReads } from "../lib/control-plane/repository/incremental-reads.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import {
   closeCycleOccurrences,
@@ -581,6 +582,16 @@ if (wantsPostgres) {
     process.exit(1);
   }
   repos = await pending.step("control-plane:open", () => createPgRepositories(url, NOW));
+  /* One in-memory copy of the tables every wave re-reads (planner, standing
+     runtime, round start, promotion tail, campaign chain); each later read
+     fetches only rows changed since (schema v22). The lease-worker children
+     open their own repositories and are not wrapped. WTP_INCREMENTAL_READS=0
+     is the way back to whole reads. */
+  if (incrementalReadsEnabled()) {
+    repos = withIncrementalReads(repos, { log: (line) => console.warn(`freshness:shadow · ${line}`) });
+  } else {
+    console.log(`freshness:shadow · ${INCREMENTAL_READS_ENV}=0: control-plane tables are read whole on every wave`);
+  }
 } else {
   mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
   repos = await createFileRepositories(CONTROL_PLANE_ROOT);

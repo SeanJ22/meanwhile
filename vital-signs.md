@@ -6,12 +6,12 @@ The runner writes one small row per hour, and everything else reads that row. Ad
 
 | Column | Meaning | Counted where | Owner |
 |---|---|---|---|
-| `hour` (pk, timestamptz) | start of the hour | n/a | River (schema) |
+| `hour` (pk, timestamptz) | start of the hour | n/a | measures builds the table (MW-VS-01); River numbers the migration |
 | `facts_live` | new or changed reader records published this hour, counted at publish time (BR-31's unit) | the publisher, at the moment a record goes live | slide |
 | `facts_confirmed` / `facts_sampled` | a random few of this hour's facts fetched from the live site and found there | a small sampler after publish (3 a hour, public pages only) | slide |
 | `spend_usd` / `unpriced_charges` | money settled this hour (cp_log_costs) | at settle | hunters |
 | `cost_per_fact_usd` | spend over facts_live; null when either is unknown or facts_live is 0 | computed in the writer | hunters |
-| `neon_bytes_read` | bytes the runner itself received from Postgres this hour | the per-query counter (below) | hunters |
+| `neon_bytes_read` | bytes the runner itself received from Postgres this hour | the per-query counter (below) | measures (counter), hunters (writer) |
 | `neon_bytes_by_caller` (jsonb) | the same bytes split by calling code, top 20 plus "other" | the per-query counter | hunters |
 | `rounds_finished` / `rounds_killed` / `rounds_deferred` | research rounds that ended normally, were killed by the watchdog, or ended with a named deferral | the round end and the watchdog | hunters |
 | `paid_jobs_ended_empty` | paid jobs (Scout, Detective, model calls on budgeted work) that ended with no saved result. **Must be 0.** | the job end | hunters |
@@ -22,7 +22,7 @@ The runner writes one small row per hour, and everything else reads that row. Ad
 
 The row is written once at the end of each hour (upsert by `hour`), plus a running partial row every 10 minutes so a crash keeps most of the hour. The writer reads only its own in-memory counters and one `cp_log_costs` sum over the hour by index. It never scans a whole table.
 
-## The per-query byte counter (hunters, repository layer)
+## The per-query byte counter (measures, repository layer; moved from hunters Oct 6, 3:55 AM EDT)
 
 - Wrap the Postgres client used by the runner (`lib/control-plane/repository/pg-store.ts`) so each query adds its result size (the sum of the row payload lengths as received) to a counter keyed by caller.
 - The caller is a short tag passed with the query, or else the first frame outside `repository/` in the stack, cached per call site.

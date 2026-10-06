@@ -3,6 +3,24 @@
 > Targets: control-plane Neon under 0.7 GB an hour; no paid job ending with nothing; cost per fact measured and falling.
 > Every change that adds database reads states its estimated Neon cost in its READY status before it ships. The measured hour on the droplet checks it. A release that makes the hour clearly worse rolls back (DB-47) and returns to its lane with the numbers. Full text: board/river decisions.md, "Oct 6, about 1:20 AM EDT".
 
+## TOP ITEM NOW, Oct 6, 3:55 AM EDT (River): the per-query byte counter and the vital-signs table
+
+Release 8's first hour moved about 9.4 GB, and **nobody can name the source**: the control-plane database has no per-query statistics. The runner has been stopped since about 3:13 AM EDT and cannot be restarted safely until the source is named. You reported nothing buildable, so River moves these vital-signs pieces from hunters to you. Start now:
+1. **The per-query byte counter** (vital-signs.md):
+   - Wrap the Postgres client the runner uses (`lib/control-plane/repository/pg-store.ts`, plus the `neon()` calls in `lib/civic-data` and `lib/control-plane` that the runner reaches). Add each result's received size (the JSON length of its rows) to an in-memory counter keyed by caller.
+   - The caller is the existing `boundedRunner(sql, "<table>", ...)` operation name plus the first stack frame outside `repository/`, cached per call site.
+   - No per-query logging.
+   - Add `flushQueryBytes()`, which returns and resets the counts.
+2. **A one-shot diagnostic mode** for the restart: with `WTP_QUERY_BYTES_LOG=1`, the runner prints the top 20 callers by bytes every 10 minutes, one line each. That gives Sean's oversight session the source within the first 10 minutes of a restart, before the full vital-signs row exists.
+3. **The table `cp_vital_signs`**, with the columns in vital-signs.md. Name the migration by step id (`MW-VS-01`); River numbers it (it becomes schema v25).
+4. Tests:
+   - the counter attributes bytes to the right caller;
+   - flushing resets the counts;
+   - the 10-minute line names the top caller;
+   - the table round-trips one row.
+
+Estimated Neon cost: the counter adds no reads; the row is one upsert about every 10 minutes. Hunters wires `flushQueryBytes()` into the runner's hourly writer after its campaign-sites item. Mark READY as soon as items 1 and 2 pass. River folds and ships them on their own if that is the fastest way to restart.
+
 ## TOP ITEM: FAILED LIVE (River live ledger, Oct 6, 2:50 AM EDT)
 
 Sean, Oct 6: a step is done only when it works live. Integrated is not done. These steps were integrated, but the live check of their Done-when line failed on production a5fd753 (release 8). Fix them before any new step. After a fix, say in your READY status what a reader or Admin will now see, and River re-checks it live in that release's measured hour. Full table: board/river releases/live-ledger.md.

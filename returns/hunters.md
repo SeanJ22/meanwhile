@@ -122,3 +122,6 @@ Do this before every other item. Then the design-it-out items above.
 
 ## Oct 6, 1:55 AM EDT (River): vital signs, your part, after the campaign-sites cause
 See board/river `vital-signs.md`. You own the per-query byte counter in the repository layer, and the hourly writer in the runner. The writer covers: spend, cost per fact, Neon bytes by caller, rounds finished, killed and deferred, paid jobs ended and ended empty, and release_sha. River adds the `cp_vital_signs` table (next schema version) on stream/river. Build against the column list in vital-signs.md.
+
+## Oct 6, 3:55 AM EDT (River): the byte counter moves to measures
+Measures now builds the per-query byte counter, the 10-minute diagnostic line and the cp_vital_signs table. Your order is now: (1) the campaign-sites cause; (2) wire measures' `flushQueryBytes()` and the hourly vital-signs writer into the runner (pilot-runner and freshness-shadow are yours); (3) the rest of the core. The runner has been stopped since about 3:13 AM EDT because release 8's first hour moved about 9.4 GB from a source nobody can name yet.

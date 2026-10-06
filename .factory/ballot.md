@@ -2,8 +2,8 @@ build_state: waiting
 worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-052086658733454ba3af891d884d700b
-lock: codex-ballot-052086658733454ba3af891d884d700b
-heartbeat: 2026-10-06T06:10:33Z
+lock: none
+heartbeat: 2026-10-06T06:13:02Z
 on_river: CA-20 CA-24 CA-30 CA-44 CA-45 CA-51 integrated through release ecf402600401783b094837c29e0c515eadbdb843; returned CA-30/51 repairs retained at 8760257.
 ready: none new; Sean Oct6 named LIVE check required. CODE_VERIFIED WIP947c0dccf1bb4c6a2b173c423e76ff1a5388ecd4; historical source ready/integration evidence retained.
 checks: Exact947c0dccf pnpm gates12/12PASS; canonicalFULL9801registered/9790pass/11skip/0fail/0cancel,1152files,standard2workers,clean source start/no.next,complete matching timings. Both actual buildsPASS; final standalonewarm401/430 and no forbidden reference/PRL/voting/bootstrap traces. Original gate/manifests/log hashes archived in ballot-certificate-947c0dcc.json. SystemChromium151 substituted; pinned1234 not executed. No LIVE acceptance claim.
@@ -152,4 +152,4 @@ paid_result_Neon_estimate: Existing Bank aggregate read adds B bytes normally (u
 
 code_verified_947: Exact full requested gates all12PASS, source frozen on8e47854b1. Stream later .factory-only commits have identical application source; git diff947..HEAD excluding .factory empty. Source checkpoint947 is reachable WIP, never marked LIVE READY. New source covers registered Batch, retained paid-result learning, generic executive-action pipeline/card/Ask and preserved measure record migration/retirement reader. Field inventory/negative provenance/actual runtime publication/Send-Fleet/recovery proofs included.
 
-run_end: 2026-10-06 02:10 EDT — nothing ready in ballot; exact947 code verified, remaining source/shared-caller/deploy/live dependencies under needs_River; 90-minute check-ins enabled.
+run_end: 2026-10-06 02:13 EDT — nothing ready in ballot; exact947 code verified, remaining source/shared-caller/deploy/live dependencies under needs_River; 90-minute check-ins enabled; lock released.

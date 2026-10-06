@@ -4,5 +4,10 @@
   "enabled": true,
   "schedule": "BEGIN:VEVENT\nDTSTART:20261006T065614Z\nRRULE:FREQ=MINUTELY;INTERVAL=90\nEND:VEVENT",
   "registeredAt": "2026-10-06T05:27:47Z",
-  "futureExecutionObserved": false
+  "futureExecutionObserved": false,
+  "lastVerifiedEnabledAt": "2026-10-06T06:13:02Z",
+  "lastRunEndEDT": "2026-10-06 02:13 EDT",
+  "lastRunEndReason": "No executable ready ballot work; source/shared/deploy/live dependencies recorded.",
+  "codeVerifiedSha": "947c0dccf1bb4c6a2b173c423e76ff1a5388ecd4",
+  "liveReady": false
 }

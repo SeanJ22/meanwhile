@@ -92,7 +92,7 @@ export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, 
       format: "pct",
       limits: "A weekly series is a measurement over time, not proof of improvement: each week's walks hunted different records. Whether a learned way in is then walked by plain code, for free, is not recorded, so the saving cannot be shown.",
       method: [
-        { k: "Counts", v: "Paid Scout walks by the UTC week they started." },
+        { k: "Counts", v: "Paid research grouped by its recorded week." },
         { k: "Handed", v: "Of walks that record the field-manual pair, the share handed at least one way in." },
         { k: "Used", v: "Of walks handed ways in that record which they used, the share that used at least one." },
         { k: "A week with no record", v: "Shown as a gap, never zero." },

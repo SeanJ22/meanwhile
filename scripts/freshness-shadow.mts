@@ -6,7 +6,7 @@ import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-p
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
-import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
+import { legacyHeldWorkOwed, planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
 import { costEntryWithModel } from "../lib/control-plane/cost.ts";
 import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
@@ -3120,9 +3120,9 @@ async function runAutonomousWave() {
   placeOrderDirty = true;
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
-  /* The legacy held-evidence plan read every artifact, Attempt, work item and route task on every wave, and has found no
-     work since 2026-10-04 (no schema-1 work items remain). Off by default (2026-10-06, Neon transfer); WTP_HELD_FLEET_PLAN=1 runs it. */
-  const held = process.env.WTP_HELD_FLEET_PLAN === "1" ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
+  /* The legacy held-evidence plan runs only when schema-1 held work is owed (Sean, 2026-10-06): a registered event
+     capture whose Parser, Validator, Auditor chain has a step left. Both reads come from the round's incremental copy. */
+  const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },

@@ -1116,7 +1116,9 @@ export async function bootstrap(
 const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
 
 /** Reconcile all subjects in one place against one indexed query, rather
- * than opening a serverless connection for every field's subject. */
+ * than opening a serverless connection for every field's subject. The filter is
+ * the exact expression of `cp_work_items_subject` (`#>> '{subject}'`): `->>`
+ * does not match that index and scanned the whole table. */
 export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
   if (!subjects.length) return [];
   const ids = [...new Set(subjects)];
@@ -1128,20 +1130,22 @@ export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjec
   }
   const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = await run("placeSubjects", "PAGE", `SELECT id, revision, updated_at, value
-    FROM cp_work_items WHERE value->>'subject'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
+    FROM cp_work_items WHERE value #>> '{subject}'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
   return rows.map(row => ({ id: String(row.id), revision: Number(row.revision),
     updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<WorkItem>(row.value, `place work item ${String(row.id)}`) }));
 }
 
 /** Exact source observations from any job; unrelated vault metadata stays in
- * Postgres instead of being copied into every place worker. */
+ * Postgres instead of being copied into every place worker. The md5 filter is
+ * what `cp_log_artifacts_source_url` (v18) indexes; the plain equality alone
+ * scanned the whole log. */
 export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {
   const sql = placeReadConnections.get(repos);
   if (!sql) return (await repos.artifacts.readAll()).filter(row => row.canonicalUrl === url && !row.partial &&
     row.tier !== "RESTRICTED_RAW" && row.recordedAt >= cutoff && row.recordedAt <= now);
   const run = boundedRunner(sql, "cp_log_artifacts", CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = await run("placeSource", "PAGE", `SELECT record FROM cp_log_artifacts
-    WHERE record->>'canonicalUrl'=$1 AND record->>'partial'='false' AND record->>'tier'<>'RESTRICTED_RAW'
+    WHERE md5(record->>'canonicalUrl')=md5($1) AND record->>'canonicalUrl'=$1 AND record->>'partial'='false' AND record->>'tier'<>'RESTRICTED_RAW'
       AND record->>'recordedAt'>=$2 AND record->>'recordedAt'<=$3 ORDER BY record->>'recordedAt' DESC`, [url, cutoff, now]) as Record<string, unknown>[];
   return rows.map(row => parseValue<ArtifactRecord>(row.record, "place source artifact"));
 }

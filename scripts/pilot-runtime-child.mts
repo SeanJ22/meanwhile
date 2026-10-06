@@ -1,7 +1,6 @@
 import { spawn, type ChildProcess } from "node:child_process";
-import { createHash } from "node:crypto";
 import type { BoundedChildCommand, BoundedChildResult } from "../lib/civic-data/bounded-child-pass.ts";
-import { RESEARCH_STALL_PROBE, STALL_REPORT_PREFIX } from "../lib/control-plane/scheduler/round-progress.ts";
+import { RESEARCH_STALL_PROBE, progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
 
 export const RUNTIME_NO_PROGRESS_MS = 10 * 60_000;
 /** How long before the no-progress limit the child is asked what it is waiting on; its answer is not progress. */
@@ -88,8 +87,7 @@ export async function runRuntimeChildren(
     let stopped = false;
     let idle: ReturnType<typeof setTimeout> | undefined;
     let probe: ReturnType<typeof setTimeout> | undefined;
-    const partial = { stdout: "", stderr: "" };
-    const observed = new Set<string>();
+    const progress = { stdout: progressLines(), stderr: progressLines() };
     const child = spawn(command.executable, [...command.args], {
       cwd: options.cwd,
       env: command.env ?? options.env,
@@ -131,14 +129,7 @@ export async function runRuntimeChildren(
       const saved = bytes[stream] > options.maxBufferBytes ? Buffer.from(chunk).subarray(0, remaining).toString("utf8") : chunk;
       if (stream === "stdout") { stdout += saved; options.onStdout?.(command.id, chunk); }
       else { stderr += saved; options.onStderr?.(command.id, chunk); }
-      partial[stream] += chunk;
-      const lines = partial[stream].split(/\r?\n/);
-      partial[stream] = lines.pop() ?? "";
-      for (const line of lines) {
-        if (!line.trim() || line.includes(STALL_REPORT_PREFIX) || /heartbeat|\bbeatAt\b|runtime release|release (?:drain|handoff)|RUNTIME_RELEASE_DRAIN/i.test(line)) continue;
-        const key = createHash("sha256").update(`${stream}:${line}`).digest("hex");
-        if (!observed.has(key)) { observed.add(key); renew(); }
-      }
+      if (progress[stream](chunk) > 0) renew();
       if (bytes[stream] > options.maxBufferBytes && !overflow) {
         overflow = true;
         void owned.stop("OUTPUT_LIMIT_EXCEEDED").catch(() => child.kill("SIGKILL"));

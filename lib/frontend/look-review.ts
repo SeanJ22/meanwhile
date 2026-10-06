@@ -58,6 +58,7 @@ export function lookReviewPrompt(input: Pick<LookReviewInput, "task" | "standard
     "beautiful? easy? instant? would they come back? would they show a friend?",
     "Then give a verdict: red or green. A red verdict must name the element at fault (for example a 9px label or a cramped card).",
     "Do not assume anything a screen does not show. Do not praise to be polite.",
+    "If a screen resembles a \"Bad live example (Sean, ...)\" in the standard, say which one and make the verdict red.",
     "",
     "The task the screen was built for:",
     input.task,

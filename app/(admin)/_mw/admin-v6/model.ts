@@ -401,6 +401,8 @@ export interface ChecklistItem {
   readonly sourceUrl?: string | null;
   /** When the next check is due, for an item awaiting publication or due for a refresh. */
   readonly nextCheckAt?: string | null;
+  /** When it started being owed, for a blank added after the mission started (SC-10). */
+  readonly addedAt?: string | null;
   readonly actions: readonly ActionRef[];
 }
 
@@ -459,6 +461,8 @@ export interface PlaceScoreView {
   /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
   readonly notCaptured?: { readonly huntedNotFound: number; readonly nothingHunts: number };
   readonly familyNotCaptured?: readonly { readonly group: string; readonly huntedNotFound: number; readonly nothingHunts: number }[];
+  /** Completeness on the starting list and the grown list, side by side. Null until the place has a mission start. */
+  readonly growth?: { readonly missionStart: string; readonly starting: { readonly n: number; readonly of: number; readonly percent: number | null }; readonly grown: { readonly n: number; readonly of: number; readonly percent: number | null }; readonly added: number } | null;
   /** Officials and candidates with a full profile, with the count behind each field. */
   readonly profiles?: { readonly words: string; readonly figures: { readonly fields: readonly { readonly key: string; readonly label: string; readonly applies: number; readonly held: number | null }[]; readonly notMeasured: readonly string[] } };
 }
@@ -693,6 +697,10 @@ export interface ScoreboardRow {
   readonly counts: string | null;
   readonly says: string;
   readonly notMeasured: string | null;
+  /** A short plain list under the row, e.g. the facts an audit led us to fix. */
+  readonly items?: readonly string[];
+  /** Detail kept behind Technical details, e.g. the fixed facts' IDs. */
+  readonly technical?: readonly string[];
 }
 
 export interface ScoreboardGateRow {
@@ -709,8 +717,35 @@ export interface ScoreboardReadinessRow {
   readonly of: number;
 }
 
+/** A count behind a share, for a table row: "3 of 4". */
+export interface ScoreboardFraction { readonly n: number; readonly of: number }
+
+export interface ScoreboardPlaceRow {
+  readonly label: string;
+  readonly completeness: ScoreboardFraction;
+  readonly freshness: ScoreboardFraction;
+  readonly delivery: ScoreboardFraction;
+  /** "Up from 31% on Oct 4 · good", or why there is no trend. */
+  readonly trend: string;
+}
+
+export interface ScoreboardFamilyRow { readonly name: string; readonly completeness: ScoreboardFraction }
+
+export interface ScoreboardMissionRow {
+  readonly label: string;
+  readonly startedAt: string;
+  /** "42 minutes", "Already held when it started", or "Not yet: 3 of 5 core items held". */
+  readonly coreLive: string;
+  readonly withinHour: boolean | null;
+}
+
 export interface ScoreboardView {
   readonly rows: readonly ScoreboardRow[];
+  /** Completeness by place and by family, with the counts behind each; empty until a place has been sent. */
+  readonly byPlace: readonly ScoreboardPlaceRow[];
+  readonly byFamily: readonly ScoreboardFamilyRow[];
+  /** Time from each recent mission's start to its core information live (SC-19). */
+  readonly missions: readonly ScoreboardMissionRow[];
   /** Launch gates as health checks; they never hold anything back. Null when the readings could not be taken. */
   readonly gates: { readonly rows: readonly ScoreboardGateRow[]; readonly pass: number; readonly attention: number; readonly notMeasured: number } | null;
   /** Operational readiness, counted apart from what any place is owed. */
@@ -766,6 +801,8 @@ export interface ClosedFix {
   readonly saved: string;
   readonly usedBy: string;
   readonly returnedDetail?: string;
+  /** DP-30: every time it broke, how it was fixed and how long each fix held, oldest first. */
+  readonly history?: string;
   readonly technical: string;
 }
 
@@ -778,7 +815,7 @@ export interface FixView {
 /* --------------------------------------------------------------- actions */
 
 export type ActionKind =
-  "decide" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
+  "decide" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo" | "owed-add" | "owed-decline" | "owed-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];

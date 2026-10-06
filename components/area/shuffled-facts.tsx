@@ -2,6 +2,7 @@
 
 import { useState, useSyncExternalStore } from "react";
 
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import type { AreaFact } from "@/lib/area/facts";
 
 /**
@@ -83,20 +84,11 @@ export function ShuffledFacts({ facts }: { facts: AreaFact[] }) {
           key={fact.topic}
           className="mt-4 rounded border border-[var(--panel-border)] p-4"
         >
-          <h2 className="text-[0.875rem] font-semibold">{fact.question}</h2>
-          <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+          <h2 className="t-body font-semibold">{fact.question}</h2>
+          <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
             {fact.answer}
           </p>
-          <p className="mt-2 text-[0.6875rem]">
-            <a
-              href={fact.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="underline decoration-dotted"
-            >
-              {fact.sourceOrg}
-            </a>
-          </p>
+          <CardSourcesContribution id={`area-fact:${fact.topic}`} sources={[{ what: fact.question, provenance: { sourceUrl: fact.sourceUrl, sourceOrg: fact.sourceOrg, collectedAt: fact.verification.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? "", verifiedAt: null } }]} />
         </section>
       ))}
     </>

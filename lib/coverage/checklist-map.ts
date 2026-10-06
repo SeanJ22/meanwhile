@@ -1,4 +1,5 @@
 import map from "./checklist-map.json" with { type: "json" };
+import { activeOwedOverlay } from "./owed-overlay-slot.ts";
 
 /** The rules of the State Run Checklist v1.1 as data. The loader only reads
  * the overlay; it holds no rule of its own and never gates publication. */
@@ -52,8 +53,9 @@ export const LIFECYCLE = map.lifecycle;
 export const PRODUCERS = map.producers as unknown as Readonly<Record<string, { readonly file: string; readonly label: string } | string>>;
 export const REPLACED_BY_ADMIN = map.replacedByAdmin as Readonly<Record<string, string>>;
 
+/** The rule for an item: the checklist's own, or the rule of an item Sean added to what is owed. */
 export function checklistItem(id: string): ChecklistItemRule | undefined {
-  return CHECKLIST_ITEMS[id];
+  return CHECKLIST_ITEMS[id] ?? activeOwedOverlay().rules[id];
 }
 
 /** The squad that takes this item's family, from the starting setting unless Admin has set another. */
@@ -64,24 +66,24 @@ export function squadOf(id: string, settings: Readonly<Record<string, string>> =
 
 /** Whether any producer can fill this item today. */
 export function hasProducer(id: string): boolean {
-  return (CHECKLIST_ITEMS[id]?.filledBy?.length ?? 0) > 0;
+  return (checklistItem(id)?.filledBy?.length ?? 0) > 0;
 }
 
 export const NO_PRODUCER_REASON = "No squad or door covers this item yet";
 
 export function isCoreItem(id: string): boolean {
-  return CHECKLIST_ITEMS[id]?.scoreAs === "core";
+  return checklistItem(id)?.scoreAs === "core";
 }
 
 /** Applies now, applies only where a condition holds, or cannot be told. An unknown or unlisted trigger is unresolved, never dropped. */
 export function applicabilityOf(id: string): "applies" | "conditional" | "unresolved" {
-  const trigger = CHECKLIST_ITEMS[id]?.trigger ?? "unknown";
+  const trigger = checklistItem(id)?.trigger ?? "unknown";
   return trigger === "always" ? "applies" : trigger === "unknown" ? "unresolved" : "conditional";
 }
 
 /** The ID an item is counted under: a shared predicate counts once, under its canonical item. */
 export function canonicalItemId(id: string): string {
-  const item = CHECKLIST_ITEMS[id];
+  const item = checklistItem(id);
   return item?.countsAs === "shared" && item.into ? item.into : id;
 }
 
@@ -98,7 +100,7 @@ const UNIT_SUBJECT_KIND: Readonly<Record<ChecklistUnit, string | null>> = {
   funding: "funding", deadline: "deadline", system: null,
 };
 export function subjectKindOfUnit(id: string): string | null {
-  const item = CHECKLIST_ITEMS[id];
+  const item = checklistItem(id);
   return item ? UNIT_SUBJECT_KIND[item.unit] : null;
 }
 

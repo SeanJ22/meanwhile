@@ -143,21 +143,21 @@ export function MyPicks({
           data-pick-tally
           data-picked={tally.picked}
           data-pickable={tally.pickable}
-          className="mt-1 text-[0.75rem] leading-relaxed text-voice"
+          className="mt-1 t-detail leading-relaxed text-voice"
         >
           You&apos;ve picked in {tallyLine(tally)}.
         </p>
       )}
       <ul className="mt-2 space-y-1.5">
         {tally.rows.map((row) => (
-          <li key={row.contestId} className="text-[0.8125rem] leading-relaxed">
+          <li key={row.contestId} className="t-body leading-relaxed">
             <span className="text-muted">{row.contestTitle}:</span>{" "}
             {row.chosen.join(", ")}
             {/* Where it came from, when the reader did not tap it here. The
                 same reason the control says it: a mark somebody does not
                 remember making is worse than none. */}
             {row.basis === "DERIVED" && (
-              <span className="ml-1.5 whitespace-nowrap text-[0.6875rem] text-voice">
+              <span className="ml-1.5 whitespace-nowrap t-caption text-voice">
                 · from your answer above
               </span>
             )}
@@ -167,14 +167,14 @@ export function MyPicks({
           const foreign = isForeignPick(pick.contestId, currentJurisdictionKey);
           const where = foreign ? pickJurisdictionLabel(pick.contestId) : null;
           return (
-            <li key={pick.contestId} className="text-[0.8125rem] leading-relaxed">
+            <li key={pick.contestId} className="t-body leading-relaxed">
               <span className="text-muted">{pick.contestTitle}:</span>{" "}
               {pick.choiceIds.map((id) => pick.labels[id] ?? id).join(", ")}
               {/* The sign. Rendered only when the ballot on screen is a
                   different one, and only when we have a reader-facing name
                   for it — an internal key never reaches this line. */}
               {where && (
-                <span className="ml-1.5 whitespace-nowrap text-[0.6875rem] text-voice">
+                <span className="ml-1.5 whitespace-nowrap t-caption text-voice">
                   · {where}
                 </span>
               )}
@@ -192,7 +192,7 @@ export function MyPicks({
       />
       {/* 3e: the full disclosure lives once at the page bottom; the header
           above already labels this box device-only. */}
-      <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">
+      <p className="mt-2 t-caption leading-relaxed text-muted">
         Clearing your browser&apos;s storage clears this list.
       </p>
     </section>

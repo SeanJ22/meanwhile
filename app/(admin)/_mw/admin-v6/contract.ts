@@ -206,6 +206,12 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return JSON.parse(s.payload?.scheduledInput??"{}") as Readonly<Record<string,unknown>>;
     case "order-unschedule":
       return { id: s.target };
+    case "owed-add":
+      return { group: s.option ?? "", requirement: s.amount.trim(), why: s.words.trim() };
+    case "owed-decline":
+      return { placeKey: s.target, rows: JSON.parse(s.payload?.rows ?? "[]") as unknown, why: s.words.trim() };
+    case "owed-undo":
+      return { undoChangeId: s.target };
     case "setting-set":
       // config.setSetting: the target is the setting's key; the payload says how its value is typed.
       return { key: s.target, value: s.target==="brief.time" && s.amount.trim()==="" ? "" : settingValueFromInput(s.payload?.control ?? "text", s.amount, s.option) ?? null, why: s.words.trim() };

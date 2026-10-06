@@ -161,7 +161,7 @@ export async function warmAfterDeploy(deploy: DeployToWarm, options: PostDeployW
 }
 
 /** One place per published county, from the live site's own reader edge manifest. */
-async function publishedPlaces(origin: string, fetchImpl: typeof fetch, timeoutMs: number): Promise<readonly WarmPlace[]> {
+export async function publishedPlaces(origin: string, fetchImpl: typeof fetch, timeoutMs: number): Promise<readonly WarmPlace[]> {
   const response = await fetchImpl(`${origin}/api/warm?places=1`, {
     headers: { "x-wtp-synthetic-run": "keep-warm", accept: "application/json" }, signal: AbortSignal.timeout(timeoutMs),
   });

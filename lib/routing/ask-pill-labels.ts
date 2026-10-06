@@ -30,6 +30,7 @@
  *   size, and the pill is likewise alone on its row.
  */
 
+import { copy } from "../design/copy.ts";
 import type { AskPillPlacement } from "../map/cluster-placement.ts";
 
 export type { AskPillPlacement };
@@ -50,24 +51,24 @@ export const ASK_PILL_LABELS: Readonly<Record<AskPillPlacement, AskPillLabel>> =
   {
     map: {
       placement: "map",
-      label: "Ask: a meeting?",
-      ariaLabel: "Ask about your area — a meeting, your school board, your ballot",
+      label: copy("copy.askMap"),
+      ariaLabel: copy("copy.askAccessible"),
       maxPx: 150,
       note:
         "Shares map-top-row with the ballot pill and clears MapLibre's zoom column (pr-14). At 390px the two pills split ~330px, so the full example string overflows and the shortest form that still names an example is used.",
     },
     sidebar: {
       placement: "sidebar",
-      label: "Ask about a meeting, a school…",
-      ariaLabel: "Ask about your area — a meeting, your school board, your ballot",
+      label: copy("copy.askSidebar"),
+      ariaLabel: copy("copy.askAccessible"),
       maxPx: 316,
       note:
         "The 340px rail less its 12px horizontal padding on each side. The pill is alone on its row, so the full example string fits.",
     },
     wgh: {
       placement: "wgh",
-      label: "Ask about a meeting, a school…",
-      ariaLabel: "Ask about your area — a meeting, your school board, your ballot",
+      label: copy("copy.askWgh"),
+      ariaLabel: copy("copy.askAccessible"),
       maxPx: 316,
       note:
         "The who-governs card at phone width is the same 340px envelope as the rail, and the pill is alone on its row.",

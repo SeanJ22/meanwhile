@@ -16,7 +16,6 @@ import { SECTION_DEP } from "./dependencies.ts";
 import { count, mst, usd, WORKER_STAGE_WORDS, type AdminV6Data, type AgentRun, type WorkerJob, type WorkerStage, type WorkersRunning, type WorkerStatus } from "./model.ts";
 import { relation } from "./places.ts";
 import { runnerStateWords } from "./pulse-view.ts";
-import { ReceiptCard } from "./receipt-view.tsx";
 import { EvidenceCopyControl } from "../evidence-copy-control.tsx";
 import { Actions, Card, cx, Empty, Pill, Technical, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -401,10 +400,6 @@ export function WorkersScreen() {
         </Card>
       </div>
 
-      <Card title="Your instructions, and what the workers did with them" aside={<button type="button" className={s.btnLink} onClick={() => v.go("work")}>All history →</button>}>
-        {!v.receipts.length && <Empty>No instructions</Empty>}
-        <div className={s.stack}>{v.receipts.filter((r) => relation(v.index, [r.scopeKey], v.scopeKey) !== null || r.level === "global").slice(0, 8).map((r) => <ReceiptCard key={r.key} receipt={r} />)}</div>
-      </Card>
     </>
   );
 }

@@ -33,7 +33,7 @@ export interface BriefReading { readonly fresh:BriefSnapshot; readonly latest:Br
 export function readerProblemRows(reports:ReportsReading):readonly QueueRow[] {
   return reports.sites.flatMap(site=>site.kind==="READ"?site.rows.filter(r=>r.origin==="reader"&&!r.suspectReason).map(r=>({
     key:`reader-report:${site.site}:${r.id}`,kind:"reader-report" as const,what:plainWords(r.message),chip:"Needs review",tone:"warn" as const,filter:"waiting" as const,
-    owner:"Auditors",due:null,next:"The auditors need to review this reader's problem.",progress:null,actions:[],open:null,at:r.receivedAt,
+    owner:"Auditors",due:null,next:"The auditors need to review this reader's problem.",progress:null,actions:[],open:null,at:r.receivedAt,receipt:null,sendId:null,
   })):[]);
 }
 export function easternBriefClock(at:string):{day:string;time:string} {

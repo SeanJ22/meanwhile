@@ -35,6 +35,7 @@ import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
 import { addFixItem, completeFixItem, fixItems, fixDispatchNote, recordFixDispatch } from "../fix-list.ts";
 import { addUpdate } from "../updates.ts";
+import { OWED_ACTIONS } from "./owed-actions.ts";
 import { parseWhen, scheduledOrders, withScheduled, withoutScheduled, type ScheduledOrder } from "./scheduled-orders.ts";
 import {
   ANSWERED_IN_OWN_WORDS,
@@ -434,11 +435,11 @@ const REGISTRY: readonly RegisteredAction[] = [
       // BR-24: a completed fix is an update on Now, once. It is Testing until it has been proven.
       try {
         await addUpdate(deps.repos, { id: `fix:${id}:${context.at}`, what: `Fixed: ${String(input.whatChanged)}`, at: context.at,
-          label: input.label === "PROVEN" ? "PROVEN" : "TESTING", evidenceHref: `/admin?view=fix`,
+          label: input.label === "PROVEN" ? "PROVEN" : "TESTING", evidenceHref: `/admin?view=queue`,
           before: String(input.before), after: String(input.after) });
       } catch (error) { return storeRefusal("the updates feed", error); }
       return { ok: true, outcome: "DONE", subject: id, says: "It is on the fix list as Fixed and checked, with its before and after.",
-        openedWork: [], readBackAt: "/admin?view=fixes", undo: null };
+        openedWork: [], readBackAt: "/admin?view=queue", undo: null };
     },
   },
 
@@ -505,7 +506,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         }
       } catch (error) { return storeRefusal("your scheduled order", error); }
       return { ok: true, outcome: "DONE", subject: order.id, says: `${order.label} is scheduled.`, openedWork: [],
-        readBackAt: "/admin?view=work", undo: "Unschedule it and it will not be sent." };
+        readBackAt: "/admin?view=queue", undo: "Unschedule it and it will not be sent." };
     },
   },
   /* ---------------------------------------------------- orders.unschedule */
@@ -535,7 +536,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           catch (error) { if (attempt >= 1) throw error; }
         }
       } catch (error) { return storeRefusal("your scheduled order", error); }
-      return { ok: true, outcome: "DONE", subject: id, says: "It is unscheduled and will not be sent.", openedWork: [], readBackAt: "/admin?view=work", undo: null };
+      return { ok: true, outcome: "DONE", subject: id, says: "It is unscheduled and will not be sent.", openedWork: [], readBackAt: "/admin?view=queue", undo: null };
     },
   },
 
@@ -1400,6 +1401,7 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
+  ...OWED_ACTIONS,
 ];
 
 /**

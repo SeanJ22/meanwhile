@@ -8,6 +8,8 @@
 import { useState } from "react";
 
 import { useV6 } from "./context.tsx";
+import { ReceiptCard } from "./receipt-view.tsx";
+import { WorkReached } from "./trail-view.tsx";
 import { QUEUE_FILTERS, QUEUE_FILTER_WORDS, queueCounts, type QueueFilter, type QueueRow } from "./queue.ts";
 import { Actions, Empty, Pill, Tabs, Technical, usePager } from "./ui.tsx";
 import { useQueueRows } from "./use-queue.ts";
@@ -62,7 +64,14 @@ function QueueCard(props: { readonly row: QueueRow }) {
           <span className={s.meta}>{r.progress.words}</span>
         </div>
       )}
+      {r.sendId && <WorkReached sendId={r.sendId} />}
       <Actions actions={r.actions} />
+      {r.receipt && (
+        <details className={s.details}>
+          <summary>Show details</summary>
+          <ReceiptCard receipt={r.receipt} />
+        </details>
+      )}
       <Technical lines={[r.key,...(r.technical ?? [])]} />
     </article>
   );

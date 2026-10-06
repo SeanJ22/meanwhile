@@ -586,6 +586,7 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
         { id: "Shut doors", name: "Shut doors", value: "3", counts: "3 shut · 41 open · 2 set aside", says: "How many ways in are shut right now.", notMeasured: null },
         { id: "Facts live per hour", name: "Facts live per hour", value: null, counts: null, says: "Not measured yet.", notMeasured: "Counted in a later step." },
       ],
+      byPlace: [], byFamily: [], missions: [],
       gates: null,
       readiness: [],
       learning: {
@@ -666,6 +667,10 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
       return { final: "done", statusWords: "Requested", says: "Your request to take it back is saved. It stays a request until the runner records it." };
     case "order-schedule":
       return {final:"done",statusWords:"Scheduled",says:"Sample preview: the order is scheduled. Nothing real was sent."};
+    case "owed-add":
+    case "owed-decline":
+    case "owed-undo":
+      return { final: "done", statusWords: "Saved", says: "Sample preview: the change to what is owed is saved with its reason." };
     case "order-unschedule":
       return { final: "done", statusWords: "Cancelled", says: "Sample preview: the scheduled order is cancelled and will not be sent." };
     case "target-set":

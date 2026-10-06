@@ -16,7 +16,6 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { easternMonth, isPeriod, periodGroups } from "@/lib/control-plane/admin-view/periods.ts";
 
-import { DecisionOrdersPanel } from "./decision-orders-panel.tsx";
 import { ActionDialog, type DialogSend } from "./action-dialog.tsx";
 import { ChangesView } from "./changes-view.tsx";
 import { ChatView } from "./chat-view.tsx";
@@ -31,18 +30,16 @@ import { mst, type ActionKind, type ActionRef, type AdminV6Data, type Place, typ
 import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches } from "./places.ts";
 import { newActionKey, startReceipt } from "./receipts.ts";
 import { ChecklistScreen } from "./screen-checklist.tsx";
-import { FixScreen } from "./screen-fix.tsx";
 import { QueueScreen } from "./screen-queue.tsx";
 import { ScoreboardScreen } from "./screen-scoreboard.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
 import { DataBusinessScreen } from "./screen-data.tsx";
 import { NowScreen, Readers } from "./screen-now.tsx";
 import { ReportsView, DailyBrief, AlertStrip } from "./reports-view.tsx";
+import { OwedPanel } from "./owed-panel.tsx";
 import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
 import { DoorsPanel } from "./doors-panel.tsx";
 import { UpdatesPanel } from "./updates-panel.tsx";
-import { ScheduledPanel } from "./scheduled-panel.tsx";
-import { WorkScreen } from "./screen-work.tsx";
 import { WorkersScreen } from "./screen-workers.tsx";
 import { cx } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -79,7 +76,7 @@ const CONN_WORDS: Readonly<Record<Connection, string>> = {
 
 export function CommandCenter(props: CommandCenterProps) {
   const { data } = props;
-  const [view, setView] = useState<View>(props.initialView ?? "now");
+  const [view, setView] = useState<View>(props.initialView === "work" ? "queue" : props.initialView ?? "now");
   const [stack, setStack] = useState<readonly { readonly view: View; readonly detail: Detail | null }[]>([]);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -211,7 +208,8 @@ export function CommandCenter(props: CommandCenterProps) {
     requestAnimationFrame(() => { window.scrollTo(0, 0); mainRef.current?.focus(); });
   };
 
-  const goView = (v: View) => {
+  const goView = (requested: View) => {
+    const v = requested === "work" ? "queue" : requested;
     setStack((st) => (v === view && !detail ? st : [...st, { view, detail }].slice(-20)));
     setView(v);
     setDetail(null);
@@ -371,13 +369,11 @@ export function CommandCenter(props: CommandCenterProps) {
               {view === "now" && <>{props.mode==="live"&&<DailyBrief/>}<NowScreen key={scopeKey} /><UpdatesPanel /></>}
               {view === "data" && <DataBusinessScreen />}
               {view === "workers" && <><WorkersScreen /><RunnerSettingsPanel /><DoorsPanel /></>}
-              {view === "work" && <><DecisionOrdersPanel /><ScheduledPanel /><WorkScreen /></>}
               {view === "checklist" && <><ChecklistScreen /><Readers /></>}
               {view === "money" && <MoneyScreen />}
               {view === "queue" && <QueueScreen />}
               {view === "scoreboard" && <ScoreboardScreen />}
-              {view === "fix" && <FixScreen />}
-              {view === "settings" && <SettingsScreen />}
+              {view === "settings" && <><SettingsScreen /><OwedPanel /></>}
               {view === "reports" && <ReportsView />}
               {view === "changes" && <ChangesView />}
               {view === "chat" && <ChatView controls={props.chatControls ?? []} />}

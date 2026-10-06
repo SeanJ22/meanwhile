@@ -1,5 +1,6 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useEffect, useState } from "react";
 import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { PRL_CATEGORIES } from "@/lib/sources/prl/types";
@@ -61,9 +62,7 @@ function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onPro
       return (
         <CardSection title="Public statements">
           <p className="mw-feed-gap" data-statement-feed="not-held">
-            {load.kind === "none"
-              ? "We’re working on getting this info."
-              : "We’re working on getting this info."}
+            <WorkingOnIt inline />
           </p>
         </CardSection>
       );
@@ -76,7 +75,7 @@ function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onPro
     case "failed":
       return (
         <CardSection title="Public statements" defaultOpen>
-          <p className="text-sm">We couldn’t check for a public-statements profile just now.</p>
+          <p className="t-body">We couldn’t check for a public-statements profile just now.</p>
           <button
             type="button"
             className="mw-pill-btn mt-2"
@@ -135,7 +134,7 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
   const definition = chosen ? PRL_CATEGORIES.find((c) => c.key === chosen.id) : null;
 
   return (
-      <div className="space-y-3 text-sm">
+      <div className="space-y-3 t-body">
         {numeric ? (
           <>
             {/*
@@ -225,10 +224,10 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
             See PRL&apos;s data ↗
           </a>
         </p>
-        <p className="text-xs text-muted-foreground">
+        <p className="t-detail text-muted-foreground">
           {profile.statementCount.toLocaleString("en-US")} statements tracked. Measured {formatDateLong(profile.measuredAt)}. Read {formatDateLong(profile.readAt.slice(0, 10))}.
         </p>
-        <p className="break-words text-xs text-muted-foreground">
+        <p className="break-words t-detail text-muted-foreground">
           <a className="underline underline-offset-2" href={profile.attribution.url} target="_blank" rel="noreferrer">{profile.attribution.citation}</a>
           {" · "}<a className="underline underline-offset-2" href={profile.attribution.licenceUrl} target="_blank" rel="noreferrer">{profile.attribution.licence}</a>
         </p>

@@ -15,6 +15,7 @@ heartbeat: 2026-10-06T14:10:38Z
 - Folding on river-next 9863a25 over river d79f179: measures 551ee41dc (VS-01: Admin Now reads the last two cp_vital_signs rows; one bounded read of at most two rows); hunters 9a7965c67 (BX-13 hook a9ef516dc, CP-10 repair 1b49f3fd6, campaign-site chain scope; Neon estimate none, disk/CPU only). Release firewall PASS (0 findings). `pnpm gates` running.
 - First gates on 9863a25 failed 6 tests. Five were this clone's shallow history: the state-holdings frozen-base tests read commits fc67e8cd, eb31f84a, 3f9a138f; they pass once those are fetched. The sixth was real: VS-01 broke BR-25's now-screen test, and with no hour recorded the card dropped each number's sentence. River fold repair 92102c8b8; noted in returns/measures.md.
 - **`pnpm gates` 12/12 on 92102c8** (9,915 tests, 9,904 pass, 0 fail, 11 skipped). river promoted d79f179 → 92102c8. **Release 11: #717** opened 10:17 AM EDT, auto-merge on, with the read-cost statement. Trial kept at stream/salvage-river-next-r11.
+- Pushed to Sean 10:19 AM EDT: release 11 open, with its contents; runner restart still his.
 - Engineering lesson (River): in a fresh cloud clone, fetch the state-holdings frozen-base commits before `river.mjs test`, or full gates loses about 25 minutes to five history-only failures.
 - Not folded, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b (runner door switches); admin 734ee9633 (returned).
 

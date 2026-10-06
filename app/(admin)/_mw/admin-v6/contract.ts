@@ -202,6 +202,8 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { enabled: false };
     case "cancel-send":
       return { intentId: s.target };
+    case "order-schedule":
+      return JSON.parse(s.payload?.scheduledInput??"{}") as Readonly<Record<string,unknown>>;
     case "order-unschedule":
       return { id: s.target };
     case "setting-set":

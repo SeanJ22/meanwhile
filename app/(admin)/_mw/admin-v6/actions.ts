@@ -486,6 +486,11 @@ const defs: ActionDef[] = [
     dependency: null,
   },
   {
+    kind:"order-schedule",label:"Schedule an order",needs:"owner",doneWords:"Scheduled.",
+    preview:ctx=>({title:"Schedule an order",level:"global",rows:[["Order",ctx.payload?.name??ctx.targetName]],note:true,invalid:()=>ctx.payload?.scheduledInput?null:"Choose When on the order you want to schedule."}),
+    gateway:{type:"orders.schedule"},dependency:null,
+  },
+  {
     kind: "order-unschedule",
     label: "Cancel this scheduled order",
     needs: "owner",

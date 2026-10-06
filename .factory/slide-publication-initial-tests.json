@@ -1,0 +1,191 @@
+{
+  "commit": "23ab19d13443fe4d0e9e4a92a6e372becb796832",
+  "tree": "37b76d34b59a7ac6abd84f5223f8f795b04e3ae9",
+  "workingTreeStatus": "M lib/civic-data/worker-publication-context.ts\n M lib/civic-data/worker-publication-tasks.ts\n M scripts/promote-manual-civic-projection.mts\n M scripts/promote-registry-runtime.mts\n M tests/control-plane-worker-vault-resolver.test.ts\n M tests/worker-reader-publication.test.ts\n?? lib/civic-data/publication-vault.ts\n?? lib/civic-data/worker-publication-job.ts",
+  "runner": {
+    "platform": "linux",
+    "arch": "x64",
+    "totalMemoryBytes": 18882699264
+  },
+  "node": "v24.19.0",
+  "configInputs": [
+    "package.json",
+    "pnpm-lock.yaml",
+    "tsconfig.json",
+    "scripts/register-test-loader.mjs",
+    "scripts/test-alias-loader.mjs",
+    "scripts/ci-tests.mjs",
+    "scripts/ci-test-timing-reporter.mjs",
+    "scripts/ci-test-scheduling-hints.mjs"
+  ],
+  "configHash": "b7ea314bdcde435ba0a376ed053e4a4dc74431a91a123ccd4de9160d6f3a780c",
+  "suiteHash": "fb87392c39ae6d9067a8edb043b7136811352c11e058184df5a98c73b8ec88a6",
+  "command": "node scripts/ci-tests.mjs",
+  "mode": "explicit",
+  "shard": {
+    "index": 1,
+    "count": 1
+  },
+  "assignments": [
+    {
+      "file": "tests/control-plane-worker-vault-resolver.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 1
+    },
+    {
+      "file": "tests/publication-receipt.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 1
+    },
+    {
+      "file": "tests/worker-reader-publication.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 1
+    }
+  ],
+  "scheduling": {
+    "algorithm": "lexical-model-fallback-with-bounded-swaps-v1",
+    "hintsValid": true,
+    "source": "Complete successful local canonical suite at f3e18b585c86735355e4405f2a6a457de7b84fb9; tree c1326824efff1a50536e51018bbb7ebb7ee5e007; v24.19.0 win32/x64; concurrency 2; NODE_OPTIONS=--max-old-space-size=4096; 682 exact-once file summaries. File-harness duration hints only, never verification reuse or hosted savings. Full identity and input hashes: local.weights.json and run.json.",
+    "hintedFiles": 0,
+    "unknownFiles": 3,
+    "unknownEstimate": 1,
+    "estimateBasis": "equal-positive-unit-cost",
+    "model": {
+      "label": "ESTIMATE",
+      "model": "lexical-greedy-worker-dispatch-v1",
+      "workers": 2,
+      "initialPlan": "round-robin",
+      "roundRobinMakespanCost": 2,
+      "longestFirstMakespanCost": 2,
+      "selectedMakespanCost": 2,
+      "shardMakespanCosts": [
+        2
+      ],
+      "swapsAccepted": 0,
+      "evaluatedSwaps": 0,
+      "passLimit": 8,
+      "candidatesPerEnd": 16,
+      "limitation": "Scheduling estimate from historical file-harness hints; excludes startup, shared-resource contention, queues and billing. Not an actual runtime measurement.",
+      "costUnit": "relative-unit"
+    },
+    "note": "Hints change scheduling only; unknown files always run with an explicitly estimated cost, never a measured duration."
+  },
+  "concurrency": {
+    "available": 4,
+    "effective": 2
+  },
+  "selected": [
+    "tests/control-plane-worker-vault-resolver.test.ts",
+    "tests/publication-receipt.test.ts",
+    "tests/worker-reader-publication.test.ts"
+  ],
+  "args": [
+    "--test",
+    "--experimental-strip-types",
+    "--import",
+    "./scripts/register-test-loader.mjs",
+    "tests/control-plane-worker-vault-resolver.test.ts",
+    "tests/publication-receipt.test.ts",
+    "tests/worker-reader-publication.test.ts"
+  ],
+  "invocationArgs": [
+    "--test",
+    "--experimental-strip-types",
+    "--import",
+    "./scripts/register-test-loader.mjs",
+    "--test-concurrency=2",
+    "--test-reporter=spec",
+    "--test-reporter-destination=stdout",
+    "--test-reporter=file:///workspace/meanwhile/scripts/ci-test-timing-reporter.mjs",
+    "--test-reporter-destination=/workspace/meanwhile/.scratch/ci/test-affected.timings.jsonl",
+    "tests/control-plane-worker-vault-resolver.test.ts",
+    "tests/publication-receipt.test.ts",
+    "tests/worker-reader-publication.test.ts"
+  ],
+  "startedAt": "2026-10-06T04:38:17.055Z",
+  "status": "failed",
+  "exitCode": 1,
+  "signal": null,
+  "elapsedMs": 106327,
+  "timing": {
+    "complete": true,
+    "issues": [],
+    "missingFiles": [],
+    "files": [
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/control-plane-worker-vault-resolver.test.ts",
+        "durationMs": 144.054806,
+        "success": true,
+        "counts": {
+          "tests": 11,
+          "failed": 0,
+          "passed": 11,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 11,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/publication-receipt.test.ts",
+        "durationMs": 16.198523,
+        "success": true,
+        "counts": {
+          "tests": 6,
+          "failed": 0,
+          "passed": 6,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 6,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/worker-reader-publication.test.ts",
+        "durationMs": 103897.657256,
+        "success": false,
+        "counts": {
+          "tests": 19,
+          "failed": 1,
+          "passed": 18,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 19,
+          "suites": 0
+        }
+      }
+    ],
+    "run": {
+      "schemaVersion": 1,
+      "kind": "run",
+      "durationMs": 106214.932742,
+      "success": false,
+      "counts": {
+        "tests": 36,
+        "failed": 1,
+        "passed": 35,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 36,
+        "suites": 0
+      }
+    },
+    "usableForScheduling": false,
+    "file": "test-affected.timings.jsonl",
+    "measurement": "Node file harness duration; excludes some process startup/exit time and is not billed runner usage."
+  }
+}

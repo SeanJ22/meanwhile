@@ -15,7 +15,7 @@
 import type { WorkerRole } from "../attempt.ts";
 import { INDEPENDENT_BASES } from "../audit.ts";
 import { fingerprint } from "../ids.ts";
-import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
+import { canonicalJson, jsonTextAtPath, readByKeys, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { MethodCandidate } from "../../method/candidate.ts";
 import { loadWorkerCompletionEvidence } from "../repository/worker-completion.ts";
@@ -420,6 +420,32 @@ export async function readPipelineStates(repos: ControlPlaneRepositories): Promi
     const itemRecords = byItem.get(key);
     if (itemRecords === undefined || itemRecords.length === 0) continue;
     out.push(deriveItemState(key, itemRecords));
+  }
+  return out;
+}
+
+/**
+ * The derived states of the items holding a record whose value at `path` equals
+ * `value` (for example every item of one record class), by item id order: the
+ * same states `readPipelineStates` derives for those items, read by key in
+ * batches instead of the whole log. Only the matching keys and their own
+ * records cross the wire. A store with no filtered key read reads the log whole
+ * and filters, as before.
+ */
+export async function readPipelineStatesWhere(repos: ControlPlaneRepositories,
+  matches: readonly { readonly path: readonly string[]; readonly value: string }[]): Promise<PipelineItemState[]> {
+  const log = repos.promotionPipeline;
+  if (!log.keysWhere) {
+    return (await readPipelineStates(repos)).filter(state => state.records.some(record =>
+      matches.some(match => jsonTextAtPath(record, match.path) === match.value)));
+  }
+  const keys = new Set<string>();
+  for (const match of matches) for (const key of await log.keysWhere(match.path, match.value)) keys.add(key);
+  const held = await readByKeys(log, [...keys].sort());
+  const out: PipelineItemState[] = [];
+  for (const key of [...held.keys()].sort()) {
+    const records = held.get(key)!.filter(isPipelineRecord);
+    if (records.length > 0) out.push(deriveItemState(key, records));
   }
   return out;
 }

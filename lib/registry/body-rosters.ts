@@ -2482,7 +2482,8 @@ export function projectReaderRoster(roster: BodyRoster): { roster: BodyRoster; d
   const exactRows = new Map<string, string>();
   for (const member of roster.members) {
     const label = member.name.trim().toLowerCase().replace(/\s+/g, " ");
-    const navigation = ["contact us", "contact information", "staff directory", "email us", "town hall", "member name"].includes(label)
+    // A single word ("Actions", "Menu") is a page label, never a US officeholder's name.
+    const navigation = !/\s/.test(label) || ["contact us", "contact information", "staff directory", "email us", "town hall", "member name"].includes(label)
       || (/^members\S/i.test(member.name) && /agendas.*minutes/i.test(member.officeTitle));
     if (!label || navigation) {
       dispositions.push({ sourceId: member.id, canonicalId: null, state: "IDENTITY_UNRESOLVED", reason: "The held extraction contains navigation text instead of an established person identity. Its contact fields are not attached to another person." });

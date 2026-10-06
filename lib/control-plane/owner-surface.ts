@@ -428,6 +428,23 @@ export interface RunnerHeartbeat {
    * the field existed.
    */
   readonly settings?: import("./settings.ts").RunnerSettingsApplied | null;
+  /**
+   * The host's memory as the runner read it at this beat (Sean, Oct 6): total,
+   * available, the runner's process tree, the parents' and workers'
+   * reservations, and how many more lease workers fit at the 0.75 GiB margin
+   * (worker-slots.ts `hostMemoryReading`). Absent on beats written before the
+   * field existed.
+   */
+  readonly memory?: import("./workers/worker-slots.ts").HostMemoryReading | null;
+  /**
+   * Neon bytes the runner's own processes received, by calling code (vital
+   * signs, Sean, Oct 6; lib/db/transfer-by-caller.ts): the last full UTC hour
+   * and the hour so far. Absent on beats written before the field existed.
+   */
+  readonly neonBytes?: {
+    readonly lastFullHour: import("../db/transfer-by-caller.ts").NeonBytesSummary | null;
+    readonly currentHour: import("../db/transfer-by-caller.ts").NeonBytesSummary | null;
+  } | null;
 }
 
 /** The runner's acknowledgement of the paid discovery search switch, written into its heartbeat each cycle. */

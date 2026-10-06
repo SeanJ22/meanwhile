@@ -66,3 +66,19 @@ export function childFatalLine(output: string, maxChars: number = FATAL_QUOTE_MA
     .at(-1);
   return fatal ? redactDiagnosticText(fatal).slice(0, maxChars) : null;
 }
+
+/**
+ * The line of a dead child's stderr that says why, for a parent that prints
+ * one. Node ends an uncaught error with a stack and then "Node.js v22…", so
+ * the last line alone named the Node version and never the cause; an import
+ * that could not resolve hid that way for two days. Prefer the last line that
+ * names an error, else the last line that is not a stack frame, brace or the
+ * version banner. Redacted and clipped like a fatal line.
+ */
+export function childStderrCause(stderr: string, maxChars: number = FATAL_QUOTE_MAX_CHARS): string | null {
+  const lines = stderr.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const named = lines.filter((line) => /^(?:[A-Za-z]*Error\b|Error\b|\[?[A-Z][A-Z0-9_]{3,}\]?:)/.test(line)).at(-1);
+  const plain = lines.filter((line) => !/^(?:at |Node\.js v\d|[{}\[\]()]+$|\^+$)/.test(line)).at(-1);
+  const pick = named ?? plain;
+  return pick ? redactDiagnosticText(pick).slice(0, maxChars) : null;
+}

@@ -104,9 +104,28 @@ import {
   BOOTSTRAP_DDL,
   BOOTSTRAP_VERSION,
   ONLINE_INDEXES,
+  SPEND_HOLDS_MOVE_DDL,
   recordVersionStatement,
+  spendHoldDeadSql,
+  spendHoldJsonSql,
+  spendHoldLiveSql,
   type OnlineIndex,
 } from "./pg-schema.ts";
+import type { SpendHold } from "../budget.ts";
+import {
+  SETTLED_HOLD_RETENTION_MS,
+  SPEND_HOLD_STALE_MS,
+  SPEND_HOLD_SWEEP_LIMIT,
+  SPEND_HOLD_WINDOW_MS,
+  areaRefusal,
+  everyLineMustFit,
+  invalidAmountRefusal,
+  sendRefusal,
+  spendHoldsTableEnabled,
+  type BudgetLine,
+  type HoldDecision,
+  type SpendHoldStore,
+} from "../expansion/spend-holds.ts";
 import {
   CONTROL_PLANE_CONNECT_MAX_ATTEMPTS,
   withControlPlaneConnectRetry,
@@ -1099,11 +1118,96 @@ export async function bootstrap(
 ): Promise<void> {
   const run = boundedRunner(sql, "cp_schema", bounds);
   for (const statement of BOOTSTRAP_DDL) {
+    /* The way back (`WTP_SPEND_HOLDS_TABLE=0`) keeps the holds on the ledger row, so they are not moved off it. */
+    if (statement === SPEND_HOLDS_MOVE_DDL && !spendHoldsTableEnabled()) continue;
     const online = ONLINE_INDEXES.get(statement);
     if (online) await pgEnsureOnlineIndex(sql, online, bounds);
     else await run("bootstrap", "POINT", statement);
   }
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
+}
+
+/**
+ * **THE SPEND HOLDS, ONE ROW EACH.** (Schema v24, 2026-10-06.)
+ *
+ * Every call is one statement over the HTTP driver, so one implicit
+ * transaction. An admission is `cp_admit_spend_hold` (pg-schema.ts): it locks
+ * the lines it names, deletes what no longer counts on them, and decides as
+ * `decideHold` does; the refusal is worded here by the same functions. A
+ * settle is one UPDATE by job, a release one DELETE by id, a live read one
+ * indexed SELECT, and a sweep one bounded DELETE. Nothing reads the table
+ * whole: the only unfiltered read (`liveAll`) is of holds that still count.
+ */
+export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS): SpendHoldStore {
+  const run = boundedRunner(sql, "cp_spend_holds", bounds);
+  const since = (now: string) => {
+    const ms = Date.parse(now);
+    if (!Number.isFinite(ms)) throw new Error(`cp_spend_holds: ${JSON.stringify(now)} is not an instant`);
+    const at = (back: number) => new Date(ms - back).toISOString();
+    return [at(SPEND_HOLD_WINDOW_MS), at(SPEND_HOLD_STALE_MS), at(SETTLED_HOLD_RETENTION_MS)] as const;
+  };
+  const holdsOf = (rows: unknown, where: string): Record<string, SpendHold> => {
+    const out: Record<string, SpendHold> = {};
+    for (const row of rows as Record<string, unknown>[]) {
+      const hold = parseValue<SpendHold>(row.hold, where);
+      out[hold.holdId] = hold;
+    }
+    return out;
+  };
+  const liveSelect = (where: string) =>
+    `SELECT ${spendHoldJsonSql("h")} AS hold FROM cp_spend_holds h WHERE ${where}${where ? " AND " : ""}${spendHoldLiveSql("h", "$1::timestamptz", "$2::timestamptz", "$3::timestamptz")} ORDER BY h.hold_id`;
+  const sweep = async (now: string): Promise<number> => {
+    const rows = await run("sweep", "POINT", `DELETE FROM cp_spend_holds x WHERE x.hold_id IN (SELECT h.hold_id FROM cp_spend_holds h
+      WHERE ${spendHoldDeadSql("h", "$1::timestamptz", "$2::timestamptz", "$3::timestamptz")} LIMIT $4::integer) RETURNING x.hold_id`,
+      [...since(now), SPEND_HOLD_SWEEP_LIMIT]) as unknown[];
+    return rows.length;
+  };
+  const lineOf = (l: BudgetLine) => ({ key: l.key, budgetUsd: l.budgetUsd, historicalUsd: l.historicalUsd, historyReadAt: l.historyReadAt, lifetime: l.lifetime === true });
+  return {
+    async admit(input, now): Promise<HoldDecision> {
+      since(now);
+      const measured = Number.isFinite(input.usd) && input.usd >= 0;
+      const rows = await run("admit", "POINT",
+        "SELECT cp_admit_spend_hold($1::jsonb, $2::jsonb, $3::timestamptz, $4::bigint, $5::bigint, $6::bigint, $7::integer) AS decision",
+        [JSON.stringify({ holdId: input.holdId, jobId: input.jobId, obligationId: input.obligationId, usd: measured ? input.usd : null, what: input.what }),
+          JSON.stringify({ sends: input.lines.sends.map(lineOf), areas: input.lines.areas.map(lineOf) }),
+          now, SPEND_HOLD_WINDOW_MS, SPEND_HOLD_STALE_MS, SETTLED_HOLD_RETENTION_MS, SPEND_HOLD_SWEEP_LIMIT]) as Record<string, unknown>[];
+      const decision = parseValue<{ admit: boolean; hold?: SpendHold | null; refusal?: string; left?: number | string; position?: number }>(rows[0]?.decision, "cp_admit_spend_hold");
+      if (decision === null || typeof decision !== "object") throw new CorruptPersistedState("cp_admit_spend_hold", "returned no decision");
+      if (decision.admit === true) return { admit: true, hold: decision.hold ?? null };
+      const left = Number(decision.left ?? 0);
+      if (decision.refusal === "AMOUNT") return invalidAmountRefusal(input);
+      if (decision.refusal === "SEND" && input.lines.sends.length > 0) return sendRefusal(input, left);
+      const line = everyLineMustFit(input.lines)[Number(decision.position)];
+      if (decision.refusal === "AREA" && line !== undefined) return areaRefusal(input, line, left);
+      throw new CorruptPersistedState("cp_admit_spend_hold", `an unreadable refusal ${JSON.stringify(decision)}`);
+    },
+    async settle(input, now) {
+      if (input.usd !== null && Number.isFinite(input.usd)) {
+        await run("settle", "POINT", `WITH mine AS (
+            SELECT h.hold_id, row_number() OVER (ORDER BY h.held_at, h.hold_id COLLATE "C") AS n FROM cp_spend_holds h
+            WHERE h.job_id = $4 AND h.cost_recorded_at IS NULL AND ${spendHoldLiveSql("h", "$1::timestamptz", "$2::timestamptz", "$3::timestamptz")})
+          UPDATE cp_spend_holds s SET settled_usd = CASE WHEN mine.n = 1 THEN greatest(0, $5::numeric) ELSE 0 END,
+            cost_recorded_at = $6::timestamptz, changed_at = now()
+          FROM mine WHERE s.hold_id = mine.hold_id RETURNING s.hold_id`,
+        [...since(now), input.jobId, input.usd, input.costRecordedAt]);
+      }
+      /* Settled holds leave once their cost is in every reader's history; the sweep is bounded, the next one takes the rest. */
+      await sweep(now);
+    },
+    async release(holdId, now) {
+      since(now);
+      await run("release", "POINT", "DELETE FROM cp_spend_holds WHERE hold_id = $1 RETURNING hold_id", [holdId]);
+    },
+    async liveFor(keys, now) {
+      if (keys.length === 0) return {};
+      return holdsOf(await run("liveFor", "PAGE", liveSelect("h.keys && $4::text[]"), [...since(now), [...new Set(keys)]]), "cp_spend_holds live on lines");
+    },
+    async liveAll(now) {
+      return holdsOf(await run("liveAll", "PAGE", liveSelect(""), [...since(now)]), "cp_spend_holds live");
+    },
+    sweep,
+  };
 }
 
 /**
@@ -1347,6 +1451,8 @@ export async function createPgRepositories(
     /* The Door Registry (DB-09, schema v19). */
     doors: pgAggregateRepository<DoorRecord>(sql, "Door", "cp_doors", bounded),
     budget,
+    /* The spend holds, one row each (schema v24). */
+    spendHolds: pgSpendHoldRepository(sql, bounds),
     locks,
     describe: () =>
       `Postgres control-plane repositories (schema v${BOOTSTRAP_VERSION}, connection named by ` +

@@ -12,7 +12,7 @@ import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-pe
 import { useV6 } from "./context.tsx";
 import { mst, usd, type Hunt } from "./model.ts";
 import { huntAt, huntsWithin } from "./places.ts";
-import { Card, cx } from "./ui.tsx";
+import { Card, cx, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
 const DASH = "—";
@@ -63,8 +63,6 @@ export function MoneyScreen() {
   });
 
   const spendData = v.data.spend.data;
-  const hunters = spendData?.huntersNow ?? null;
-  const dialWords = hunters === null || sum.dailyLimitUsd === null ? DASH : `${usd(sum.dailyLimitUsd)} a day → about ${hunters} hunter${hunters === 1 ? "" : "s"} at once now`;
   const worstCase = spendData?.worstCaseCharges ?? 0;
 
   const days = v.data.spend.data ? dailyRows(v.data.spend.data, v.period, new Date()) : [];
@@ -86,6 +84,15 @@ export function MoneyScreen() {
         <h1 className={s.h1}>Money</h1>
       </header>
 
+      <Card title="Spend by vendor" aside={<span className={s.meta}>{spendData?.vendors ? `Today (${spendData.vendors.day}) · month (${spendData.vendors.month}) · read ${mst(spendData.vendors.readAt)}` : DASH}</span>}>
+        <div className={s.tableWrap}><table className={s.table}>
+          <thead><tr><th>Vendor</th><th>Today</th><th>Daily limit</th><th>Month to date</th><th>Monthly limit</th></tr></thead>
+          <tbody>{(spendData?.vendors?.vendors ?? ["Anthropic","Neon","DigitalOcean","Netlify","GitHub"].map(vendor=>({vendor,todayUsd:null,monthUsd:null,dailyLimitUsd:null,monthlyLimitUsd:null,todayBytes:null,monthBytes:null,detail:"The vendor reading is not available yet."}))).map(r=><tr key={r.vendor}>
+            <th scope="row">{r.vendor}<Technical lines={[r.detail]}/></th><td>{money(r.todayUsd)}{r.todayBytes!==null&&<div className={s.small}>{gigabytes(r.todayBytes)} transferred</div>}</td><td>{money(r.dailyLimitUsd)}</td><td>{money(r.monthUsd)}{r.monthBytes!==null&&<div className={s.small}>{gigabytes(r.monthBytes)} transferred</div>}</td><td>{money(r.monthlyLimitUsd)}</td>
+          </tr>)}</tbody>
+        </table></div>
+      </Card>
+
       <Card title="Summary" aside={<span className={s.meta}>{v.data.spend.data?.readAt ? `Read ${mst(v.data.spend.data.readAt)}` : DASH}</span>}>
         <div className={s.gridTiles}>
           <div className={s.row}><span className={s.eyebrow}>Spent</span><span className={s.big}>{money(sum.spentUsd)}</span></div>
@@ -93,13 +100,12 @@ export function MoneyScreen() {
           <div className={s.row}><span className={s.eyebrow}>Search</span><span className={s.big}>{money(sum.searchUsd)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Database sent</span><span className={s.big}>{gigabytes(sum.neonBytes)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Hosting</span><span className={s.big}>{money(hosting)}</span></div>
-          <div className={s.row}><span className={s.eyebrow}>Set aside</span><span className={s.big}>{money(sum.setAsideUsd)}</span></div>
+          <div className={s.row}><span className={s.eyebrow}>Set aside for running jobs</span><span className={s.big}>{money(sum.setAsideUsd)}</span>{sum.setAsideUsd===null&&<Technical lines={["Running-job reservations have not been read. Historical or crashed reservations are not counted as running jobs."]}/>}</div>
           <div className={s.row}>
             <span className={s.eyebrow}>Today against the daily limit</span>
             <span className={s.big}>{money(sum.todayUsd)} <span className={s.dim}>of {money(sum.dailyLimitUsd)}</span></span>
           </div>
           <div className={s.row}><span className={s.eyebrow}>Left today</span><span className={s.big}>{money(sum.leftUsd)}</span></div>
-          <div className={s.row}><span className={s.eyebrow}>What the daily limit buys</span><span className={s.big}>{dialWords}</span></div>
           <div className={s.row}>
             <span className={s.eyebrow}>By model tier</span>
             {sum.tiers === null ? <span className={s.big}>{DASH}</span> : sum.tiers.map((t) => <span key={t.name} className={s.small}>{t.name} <span className={s.mono}>{usd(t.usd)}</span></span>)}

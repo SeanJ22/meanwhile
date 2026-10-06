@@ -6,7 +6,7 @@ import { guardAdminRequest } from "../gateway/admin-guard.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { openControlPlane } from "../admin-data.ts";
 import { resolveRollingCeiling } from "../fleet-safety.ts";
-import { huntersTheDialBuys } from "../scheduler/research-policy.ts";
+import { readVendorSpend } from "./vendor-spend.ts";
 import { fleetSpendCeilingOverrideUsd, type AdminConfig } from "../gateway/admin-config.ts";
 import { ADMIN_V6_SPEND_CONTRACT, SPEND_DAYS, readSpend, type AdminV6SpendView } from "./v6-spend-read.ts";
 import { readV6Sources } from "./v6-money-hunts-route.ts";
@@ -25,14 +25,15 @@ async function limitsAndHolds(readAt: string): Promise<Pick<AdminV6SpendView, "s
     const opened = await openControlPlane();
     if (!opened.ok) return UNREAD;
     const sources = await readV6Sources(opened.repos, readAt, true);
-    const hunts = sources.attribution?.hunts ?? null;
-    const held = hunts === null || hunts.some((h) => h.reservedUsd === null) ? null : hunts.reduce((n, h) => n + (h.reservedUsd ?? 0), 0);
+    // The old attribution includes crashed holds and counts a shared hold once per hunt.
+    // River's release-5 liveSpendHolds read must supply the exact running-job sum.
+    const held: number | null = null;
     const dailyLimitUsd = sources.adminConfig === null ? null : resolveRollingCeiling(fleetSpendCeilingOverrideUsd(sources.adminConfig as AdminConfig)).rollingCeilingUsd;
     const rolling = sources.fleetSafety?.rolling24Hours ?? null;
     return {
       setAsideUsd: held === null ? null : Math.round(held * 10_000) / 10_000,
       dailyLimitUsd,
-      huntersNow: huntersTheDialBuys({ dailyLimitUsd, spentLast24hUsd: rolling?.modelUsd ?? null }),
+      huntersNow: null,
       worstCaseCharges: rolling === null ? null : rolling.worstCaseCharges ?? 0,
     };
   } catch { return UNREAD; }
@@ -54,7 +55,10 @@ export async function v6SpendGet(request: NextRequest): Promise<NextResponse> {
       let transfer: DailyDatabaseTransferRead | null = null;
       try { transfer = await readDailyDatabaseTransfer(SPEND_DAYS); } catch { transfer = null; }
       const [spend, held] = await Promise.all([readSpend(neon(url), transfer), limitsAndHolds(now)]);
-      memo = { at: Date.now(), data: { ...spend, ...held } };
+      const opened = await openControlPlane();
+      const sources = opened.ok ? await readV6Sources(opened.repos, now, false) : null;
+      const vendors = await readVendorSpend({ now, sql: neon(url), billing: sources?.providerBilling, dailyLimitUsd: held.dailyLimitUsd ?? null, transfer: spend.neon });
+      memo = { at: Date.now(), data: { ...spend, ...held, vendors } };
     }
     const data = memo.data;
     return NextResponse.json({ contract: ADMIN_V6_SPEND_CONTRACT, scope: query.scopeKey, revision: `spend:${now.slice(0, 16)}`, asOf: now, data,

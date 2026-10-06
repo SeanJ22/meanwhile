@@ -616,6 +616,7 @@ export interface ReachedView {
 
 /** What the agents cost by model tier and day, and what the database sent (server: v6-spend-read.ts). Whole-system. */
 export interface SpendView {
+  readonly vendors?: import("../../../../lib/control-plane/admin-view/vendor-spend.ts").VendorSpendReading;
   readonly windowDays: number;
   readonly byTier: readonly { readonly key: string; readonly tier: "haiku" | "sonnet" | "opus" | "older" | "unrecorded"; readonly name: string; readonly usd: number; readonly requests: number }[];
   readonly byDay: readonly { readonly day: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];

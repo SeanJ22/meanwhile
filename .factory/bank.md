@@ -1,13 +1,13 @@
-build_state: waiting
+build_state: active
 worker: codex-bank
 provider: Codex
-run_id: codex-bank-3ec99bc10050401589617dc5a2c6fff5
-lock: none
-heartbeat: 2026-10-05T20:51:24.057094Z
+run_id: codex-bank-b5575f5372fa456486b5a92a890e1463
+lock: codex-bank-b5575f5372fa456486b5a92a890e1463
+heartbeat: 2026-10-06T00:11:26.231187Z
 on_river: 21 steps: DB-37, DB-38, DB-40, DB-41, DB-42, DB-43, DB-49, DB-51, DP-07, DP-08, DP-09, DP-19 @ d67aa5e29; DP-20 @ 616f91a1c; DB-57, DP-21, DP-22, DP-27 @ 8bbe9eeb5; DB-50, DP-24 @ 3690498b5; DP-28 @ bbe97c72a. These are integrated code, not a claim of live acceptance. Caught up with river ecf402600.
 ready: DB-44, DB-46, DP-23, DB-57 @ cf0df0cb0acb4d79218593ac1aa5083d41ade841. READY (hook pending: Admin registry/Settings, Ballot Ask, hunters per-pass settings, method-status reads, River CI planner); see continuation table. DP-19 migration proposal remains WIP.
 checks: FULL at e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee: 9360 pass, 0 fail, 11 skipped (9371 tests, 1068 files). Types pass at the same SHA. Lint 23 changed source files pass at 620be3496 (identical .ts/.tsx/.mjs code). Corrected original write-alarm file: 18/18 pass at e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee. Raw logs and structured evidence: .factory/bank-evidence/. Earlier 620be3496 FULL failed only for the step-ID migration; proposal isolated and the complete FULL rerun passed. Cancelled runs and default-sandbox EPERM exits are rejected evidence. Exact READY cf0df0cb0acb4d79218593ac1aa5083d41ade841 focused: 26/26 pass, 0 fail, 0 skipped (six files). FULL-to-READY application-tree diff is empty; fingerprint 85934afecc2308af12bf597f5c420fcc7933aecc53bd009f95b7e4f798d0f16c.
-working_on: No further Bank step ready after authorized resume: river ecf402600401783b094837c29e0c515eadbdb843 and board/river bd996ac82e237a403a86de52bb96ca35cecdbfc2 re-fetched; Bank remains Codex, no new Bank return. BR-14 is in River batch 3 gates, not integrated. No untested river-next was merged. Prior READY code unchanged. Lock released.
+working_on: Catch up with integrated river release 3; BR-14 now unblocks DB-47. Read returns and implement authorized rollback with observed compatibility and token availability.
 waiting_on: DB-26 (meetings) before DB-45; BR-14 (measures) before DB-47; BX-06 (slide) before DB-52. DB-39 is conditional on an observed nonzero Bank write-error count, which this run has not observed. Other runtime connections are listed below and in .factory/bank-continuation.md.
 returned: DB-57 is now connected in workAdapterQueue (scoped bytes, adapter code and own test sources, path enforcement, isolated credential-free checks); DB-49 still needs River's CI planner hook. DP-19 has a step-ID expand SQL proposal preserved as .factory/bank-DP-19_fix_map.sql (also at WIP 620be3496:lib/db/migrations/DP-19_fix_map.sql); River must copy it into its correctly targeted migration path, number/journal/apply it and expose the repository. DP-20, DP-24, DP-27, DP-28 and DB-51 remain built with owning-lane runtime hooks pending; no live repair claimed.
 needs_hook: See .factory/bank-continuation.md for exact per-owner connections, including the existing returned hooks. Admin: import bank-settings.ts at gateway/settings publisher startup; register playbookUpdateAction; connect the prepared editor to the Settings view's normal preview/Send. Ballot: wrap Ask POST paths in withReaderFeatures. Hunters: per-pass withFeatures/readFeature. River/auditors: readFixProofBar and fixStatus in method status reads; retire the old hard-coded proof labels there.

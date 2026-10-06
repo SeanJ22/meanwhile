@@ -108,7 +108,7 @@ test("BAL-30: a null statement renders as a NAMED gap, never as the rich branch"
   const src = code(PAGE);
 
   const present = src.indexOf('data-measure-statement="PRESENT"');
-  const gap = src.indexOf('data-measure-statement="GAP_OURS"');
+  const gap = src.indexOf('"data-measure-statement": "GAP_OURS"');
   assert.ok(present > 0, "the statement-present branch is marked");
   assert.ok(gap > present, "the gap branch is marked, and it is a DIFFERENT branch");
 
@@ -117,11 +117,8 @@ test("BAL-30: a null statement renders as a NAMED gap, never as the rich branch"
    * anything reading as "the authority published nothing" would be a claim
    * about a school district made out of a document we did not open.
    */
-  assert.match(
-    src,
-    /We have not recorded an official statement for this\s+question/,
-    "the gap sentence must attribute the gap to us",
-  );
+  assert.match(src, /<WorkingOnIt[^\n]+"data-measure-statement": "GAP_OURS"/,
+    "FE-30: the missing statement uses the shared Reader hunt state");
   assert.ok(
     !/nothing was published|the district published no/i.test(src),
     "a gap of ours may never render as a claim about the authority",

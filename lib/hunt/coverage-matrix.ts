@@ -50,6 +50,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { ballotPath } from "../holdings/files.ts";
 import { join } from "node:path";
+import { DEFAULT_SOCIAL_PLATFORMS } from "../officials/social-platforms.ts";
 
 import {
   KELLY_FIELDS,
@@ -254,8 +255,8 @@ export interface Cell {
 }
 
 /** The social platforms a campaign presence is looked for on (RULING 145). */
-export const SOCIAL_PLATFORMS = ["x", "instagram", "facebook", "other"] as const;
-export type SocialPlatform = (typeof SOCIAL_PLATFORMS)[number];
+export const SOCIAL_PLATFORMS = [...DEFAULT_SOCIAL_PLATFORMS.map((p) => p.id), "other"] as const;
+export type SocialPlatform = string;
 
 export interface MatrixRow {
   /* identity */

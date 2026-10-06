@@ -400,6 +400,8 @@ export interface ChecklistItem {
   readonly sourceUrl?: string | null;
   /** When the next check is due, for an item awaiting publication or due for a refresh. */
   readonly nextCheckAt?: string | null;
+  /** When it started being owed, for a blank added after the mission started (SC-10). */
+  readonly addedAt?: string | null;
   readonly actions: readonly ActionRef[];
 }
 
@@ -458,6 +460,8 @@ export interface PlaceScoreView {
   /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
   readonly notCaptured?: { readonly huntedNotFound: number; readonly nothingHunts: number };
   readonly familyNotCaptured?: readonly { readonly group: string; readonly huntedNotFound: number; readonly nothingHunts: number }[];
+  /** Completeness on the starting list and the grown list, side by side. Null until the place has a mission start. */
+  readonly growth?: { readonly missionStart: string; readonly starting: { readonly n: number; readonly of: number; readonly percent: number | null }; readonly grown: { readonly n: number; readonly of: number; readonly percent: number | null }; readonly added: number } | null;
   /** Officials and candidates with a full profile, with the count behind each field. */
   readonly profiles?: { readonly words: string; readonly figures: { readonly fields: readonly { readonly key: string; readonly label: string; readonly applies: number; readonly held: number | null }[]; readonly notMeasured: readonly string[] } };
 }
@@ -712,8 +716,35 @@ export interface ScoreboardReadinessRow {
   readonly of: number;
 }
 
+/** A count behind a share, for a table row: "3 of 4". */
+export interface ScoreboardFraction { readonly n: number; readonly of: number }
+
+export interface ScoreboardPlaceRow {
+  readonly label: string;
+  readonly completeness: ScoreboardFraction;
+  readonly freshness: ScoreboardFraction;
+  readonly delivery: ScoreboardFraction;
+  /** "Up from 31% on Oct 4 · good", or why there is no trend. */
+  readonly trend: string;
+}
+
+export interface ScoreboardFamilyRow { readonly name: string; readonly completeness: ScoreboardFraction }
+
+export interface ScoreboardMissionRow {
+  readonly label: string;
+  readonly startedAt: string;
+  /** "42 minutes", "Already held when it started", or "Not yet: 3 of 5 core items held". */
+  readonly coreLive: string;
+  readonly withinHour: boolean | null;
+}
+
 export interface ScoreboardView {
   readonly rows: readonly ScoreboardRow[];
+  /** Completeness by place and by family, with the counts behind each; empty until a place has been sent. */
+  readonly byPlace: readonly ScoreboardPlaceRow[];
+  readonly byFamily: readonly ScoreboardFamilyRow[];
+  /** Time from each recent mission's start to its core information live (SC-19). */
+  readonly missions: readonly ScoreboardMissionRow[];
   /** Launch gates as health checks; they never hold anything back. Null when the readings could not be taken. */
   readonly gates: { readonly rows: readonly ScoreboardGateRow[]; readonly pass: number; readonly attention: number; readonly notMeasured: number } | null;
   /** Operational readiness, counted apart from what any place is owed. */
@@ -793,7 +824,7 @@ export type ActionKind =
   | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume"
   | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
-  | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send" | "order-unschedule" | "target-set" | "target-clear"
+  | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send" | "order-unschedule" | "owed-add" | "owed-decline" | "owed-undo" | "target-set" | "target-clear"
   | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";

@@ -88,7 +88,7 @@ test("the sample is fixed per week, skips setbacks and expected items, and the S
   assert.equal(claims.length, 2);
   assert.deepEqual(sampleClaims(claims, "2026-09-07", 1), sampleClaims([...claims].reverse(), "2026-09-07", 1));
   const empty = { trends: [], readings: [], notMeasured: [] };
-  const base: ScoreboardReadings = { orders: null, publication: null, shutDoors: null, returning: null, learning: empty, doors: null, gates: null, readiness: [] };
+  const base: ScoreboardReadings = { places: null, placesUnread: 0, orders: null, publication: null, shutDoors: null, returning: null, learning: empty, doors: null, gates: null, readiness: [] };
   const row = buildScoreboard({ ...base, reportAccuracy: { confirmed: 9, wrong: 1, couldNotCheck: 2, at: T, wrongClaims: [{ claimed: "Proven: x.", cause: "It was not." }] } }).rows.find((r) => r.id === "Report accuracy")!;
   assert.equal(row.value, "9 of 10");
   assert.match(row.says, /^Report accuracy: 9 of 10 claimed wins confirmed from their source records\./);

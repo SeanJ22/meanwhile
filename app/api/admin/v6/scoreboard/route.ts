@@ -3,6 +3,11 @@ import type { NextRequest } from "next/server";
 
 import { loadLearningTrends } from "@/app/(admin)/_mw/data/learning-trends.ts";
 import { openControlPlane, RUNNER_ID } from "@/lib/control-plane/admin-data.ts";
+import { readPlaceOwed } from "@/lib/control-plane/admin-view/place-owed-read.ts";
+import { readPlaceHistory } from "@/lib/control-plane/admin-view/place-history-read.ts";
+import { readScoreboardPlaces } from "@/lib/control-plane/admin-view/scoreboard-places.ts";
+import { CORE_ITEMS_DEFAULT, CORE_ITEMS_SETTING, readSetting } from "@/lib/control-plane/settings.ts";
+import { ADMIN_CONFIG_ID, isAdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
 import { readV6History } from "@/lib/control-plane/admin-view/admin-v6-history.ts";
 import { readGateHealth } from "@/lib/control-plane/admin-view/gate-health.ts";
 import { buildLearningTrends } from "@/lib/control-plane/admin-view/learning-trends.ts";
@@ -22,7 +27,6 @@ import { adminGet } from "@/lib/control-plane/gateway/admin-get.ts";
 import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
 import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
-import { ADMIN_CONFIG_ID, isAdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -39,7 +43,10 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
     const url = controlPlaneUrlFromEnv();
-    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture, audit, speed, provenFixes, claims] = await Promise.all([
+    const configRow = opened ? await attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID)) : null;
+    const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
+    const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
+    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
@@ -52,21 +59,25 @@ export async function GET(request: NextRequest) {
         const view = await readCaptureHealth({ sources: liveSources(), switchOn: () => true }, config, failures, now);
         return view.readers.kind === "READ" ? view.readers.rows : null;
       }),
+      // The sent places' owed lists and history, as Admin's place view reads them; places not read in time are counted, not zeroed.
+      attempt(async () => (config === null ? { places: [], unread: 0 } : readScoreboardPlaces(config, coreIds, {
+        readOwed: (placeKey) => readPlaceOwed(placeKey),
+        readHistory: async (placeKey) => (url ? readPlaceHistory(neon(url), placeKey) : []),
+        budgetMs: 10_000,
+      }))),
       // DP-18: the week's live audits, read by day key (seven keys), never the whole log.
       attempt(async () => (opened ? weeklyAuditAccuracy({ ...(await readAuditWeek(opened, observedAt)), now: observedAt }) : null)),
       // FE-02: the latest worst-case speed pass on the live site (today's and yesterday's keys).
       attempt(async () => (opened ? readLatestSpeedPass(opened, observedAt) : null)),
       // DP-26: where each reusable fix stands, from the config row.
-      attempt(async () => {
-        if (!opened) return null;
-        const held = await opened.adminConfig.read(ADMIN_CONFIG_ID);
-        return provenFixesReading(held && isAdminConfig(held.value) ? held.value : null, observedAt);
-      }),
+      attempt(async () => (opened ? provenFixesReading(config, observedAt) : null)),
       // DP-33: the latest weekly claim check, this week's and last week's keys.
       attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
+      places: sentPlaces === null ? null : sentPlaces.places,
+      placesUnread: sentPlaces === null ? 0 : sentPlaces.unread,
       orders: history,
       publication: pipeline === null ? null : publicationCountsOf(pipeline, contracts),
       shutDoors: doors === null ? null : { shut: doors.shut, open: doors.open, setAside: doors.setAside, unreadable: doors.unreadable },

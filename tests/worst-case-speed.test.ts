@@ -48,7 +48,7 @@ test("a recorded pass reaches the Scoreboard row with each surface's verdict; wi
   assert.match(speedRow(null).notMeasured!, /No speed check/);
   await recordSpeedPass(repos, judgeSpeed([run("ballot", 900), run("ask", 4100, { question: "Who gives money to my member of Congress?" })], "2026-10-05T11:00:00.000Z"));
   const pass = await readLatestSpeedPass(repos, NOW);
-  const row = buildScoreboard({ orders: null, publication: null, shutDoors: null, returning: null, doors: null, gates: null, readiness: [],
+  const row = buildScoreboard({ places: null, placesUnread: 0, orders: null, publication: null, shutDoors: null, returning: null, doors: null, gates: null, readiness: [],
     learning: v6LearningView(buildLearningTrends([], NOW), null), speed: pass }).rows.find((r) => r.id === "Site speed and reliability")!;
   assert.equal(row.value, "1 of 2");
   assert.equal(row.items?.[0], 'Too slow: Ask "Who gives money to my member of Congress?" at 00001 on a phone: slowest of 1 visit took 4.1 seconds, over the 3.0 seconds limit.');

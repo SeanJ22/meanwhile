@@ -1,6 +1,21 @@
 {
   "entries": [
     {
+      "file": "app/(admin)/status-ui.tsx",
+      "text": "Technical details",
+      "reason": "Not an absence. This is the LABEL on the disclosure that holds the machine's own words, and the `??` chooses between a caller's own label and the console's standard one. It asserts nothing about any record; a card with nothing to disclose renders no disclosure at all, because the component takes `detail` and returns null when it is absent. The words are the ones §9A.2 names for this slot on every surface."
+    },
+    {
+      "file": "app/(admin)/status-ui.tsx",
+      "text": "a decision from you",
+      "reason": "Not an absence. `needsYou.needed` is already TRUE at this point — the caller has asserted the card needs the owner — and the `??` only chooses wording when the caller named no specific action. So it stands in front of a known YES, never in front of an unknown, and 'Needs you: Yes — a decision from you' is the least specific TRUE sentence rather than a guess about a record. Appears twice: once in NeedsYouLine, once in DefinedTile, which render the same fact in two shapes."
+    },
+    {
+      "file": "app/(admin)/status-ui.tsx",
+      "text": "a decision from you",
+      "reason": "Not an absence. `needsYou.needed` is already TRUE at this point — the caller has asserted the card needs the owner — and the `??` only chooses wording when the caller named no specific action. So it stands in front of a known YES, never in front of an unknown, and 'Needs you: Yes — a decision from you' is the least specific TRUE sentence rather than a guess about a record. Appears twice: once in NeedsYouLine, once in DefinedTile, which render the same fact in two shapes."
+    },
+    {
       "file": "components/ballot/candidate-card.tsx",
       "text": "official site",
       "reason": "Not an absence. The default fires when a link carries no LABEL, and a link with no label is one on the candidate's own domain — where \"official site\" and \"campaign site\" describe exactly the thing that IS present. The label exists for the two cases where those words would be false: RULING 122's page a party publishes about a candidate, and RULING 145's campaign presence on a platform, both of which name their host instead. So the ?? is choosing between two true descriptions of a link that is there, never standing in front of one that is missing — and when there is no link, neither branch renders at all."
@@ -16,34 +31,9 @@
       "reason": "Not a claim about any government. The zip is unknown, so the sentence names the MAP VIEW instead of naming a place we have not established — which is the opposite of the defect: it refuses to put a place name where we have none."
     },
     {
-      "file": "components/map/popup/meeting-records.tsx",
-      "text": "Member name unavailable",
-      "reason": "Names only a missing member-name field in our held roll-call projection. It never claims the clerk omitted the name, never substitutes another person, and preserves the recorded vote value independently. This is an OURS field gap under R254."
-    },
-    {
-      "file": "components/map/popup/meeting-records.tsx",
-      "text": "Vote value unavailable",
-      "reason": "Names only a missing value in our held roll-call projection. It never infers an abstention, nonattendance, a failed motion or a publisher absence from null, preserving the separate member identity under R254."
-    },
-    {
       "file": "components/map/zip-switcher.tsx",
       "text": "zip code",
       "reason": "An input PLACEHOLDER, not rendered prose about a subject. It tells the reader what to type; it asserts nothing about anything we hold."
-    },
-    {
-      "file": "components/officials/official-term-note.tsx",
-      "text": "Published roster",
-      "reason": "Labels an existing roster-source link only when the holder already carries a verbatim sourced term note and sourceUrl. It does not supply a missing note, organization, read date or civic finding. When sourceOrg is absent the link keeps its exact held URL with this record-class label; when the note or URL is absent the fallback never renders. Actual leaf controls in reader-roster-term-note.test.ts prove those boundaries."
-    },
-    {
-      "file": "app/(admin)/status-ui.tsx",
-      "text": "Technical details",
-      "reason": "Not an absence. This is the LABEL on the disclosure that holds the machine's own words, and the `??` chooses between a caller's own label and the console's standard one. It asserts nothing about any record; a card with nothing to disclose renders no disclosure at all, because the component takes `detail` and returns null when it is absent. The words are the ones §9A.2 names for this slot on every surface."
-    },
-    {
-      "file": "app/(admin)/status-ui.tsx",
-      "text": "a decision from you",
-      "reason": "Not an absence. `needsYou.needed` is already TRUE at this point — the caller has asserted the card needs the owner — and the `??` only chooses wording when the caller named no specific action. So it stands in front of a known YES, never in front of an unknown, and 'Needs you: Yes — a decision from you' is the least specific TRUE sentence rather than a guess about a record. Appears twice: once in NeedsYouLine, once in DefinedTile, which render the same fact in two shapes."
     }
   ]
 }

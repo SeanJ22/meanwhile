@@ -82,6 +82,8 @@ export interface AdminConfig {
   /** Orders scheduled for later (BR-15). */
   readonly scheduledOrders?: readonly import("./scheduled-orders.ts").ScheduledOrder[];
   readonly settingHistory?: readonly import("../settings.ts").SettingChange[];
+  /** What Sean added to, or declined from, what a place is owed, with its log (SC-14, BR-33). */
+  readonly owedOverlay?: import("../../coverage/owed-overlay.ts").OwedOverlayRecord;
   readonly routineRefreshRequests?: readonly import("../../civic-data/owner-refresh.ts").RoutineRefreshRequest[];
   /**
    * Scoped, expiring requests that bring one meeting partition's next read

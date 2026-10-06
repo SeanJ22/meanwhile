@@ -105,7 +105,7 @@ test("pure transitions: no change, no update", () => {
 
 test("the Scoreboard's Proven fixes row is wired, not a placeholder", () => {
   const empty = { trends: [], readings: [], notMeasured: [] };
-  const base: ScoreboardReadings = { orders: null, publication: null, shutDoors: null, returning: null, learning: empty, doors: null, gates: null, readiness: [] };
+  const base: ScoreboardReadings = { places: null, placesUnread: 0, orders: null, publication: null, shutDoors: null, returning: null, learning: empty, doors: null, gates: null, readiness: [] };
   const rowOf = (r: ScoreboardReadings) => buildScoreboard(r).rows.find((x) => x.id === "Proven fixes")!;
   assert.equal(rowOf(base).value, null);
   assert.equal(rowOf({ ...base, provenFixes: { proven: 3, testing: 2, broke: [] } }).value, "3");

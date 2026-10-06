@@ -10,7 +10,7 @@ import { useState } from "react";
 
 import { STATUS_COLOR, STATUS_LABEL, StatusBar, StatusLegend, StatusTable, Swatch } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
-import { count, ITEM_STATUS_ORDER, mst, type ItemStatus, type MeasureView, type PlaceScoreView, type ScoreGroup } from "./model.ts";
+import { count, ITEM_STATUS_ORDER, mst, mstDay, type ItemStatus, type MeasureView, type PlaceScoreView, type ScoreGroup } from "./model.ts";
 
 import { Actions, Card, cx, Empty, Loading, useListView, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -79,6 +79,13 @@ function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group:
             <span className={s.mono} style={{ fontSize: 34, fontWeight: 600 }} aria-label={`Held: ${percentWords(o)}`}>{percentWords(o)}</span>
             <span className={cx(s.p, s.small)}>{count(o.captured)} of {count(o.total)} held</span>
           </div>
+        )}
+        {score.growth && (
+          <p className={cx(s.p, s.small)} aria-label="Starting list and grown list">
+            Starting list (owed when the mission started, {mst(score.growth.missionStart)}): <strong>{score.growth.starting.percent === null ? "—" : `${score.growth.starting.percent.toFixed(1)}%`}</strong> · {count(score.growth.starting.n)} of {count(score.growth.starting.of)}
+            {" · "}Grown list (owed now): <strong>{score.growth.grown.percent === null ? "—" : `${score.growth.grown.percent.toFixed(1)}%`}</strong> · {count(score.growth.grown.n)} of {count(score.growth.grown.of)}
+            {score.growth.added > 0 ? ` · ${count(score.growth.added)} added since` : ""}
+          </p>
         )}
         <ScoreBar g={o} label="Everything this place is owed" tall />
         <div className={s.legend}>{SCORE_PARTS.map((p) => <span key={p.key} className={s.legendItem}><Swatch cls={p.cls} />{p.words} · {count(o[p.key])}</span>)}</div>
@@ -162,7 +169,7 @@ export function ChecklistScreen() {
           {page.map((i) => (
             <button key={i.key} type="button" className={cx(s.row, s.rowButton)} onClick={() => v.open({ type: "item", key: i.key })}>
               <span className={s.spread}><strong style={{ fontSize: 13 }}>{i.definitionId} {i.name} · {i.subject}</strong><span className={s.legendItem}><Swatch cls={STATUS_COLOR[i.status]} /><span className={s.small}>{STATUS_LABEL[i.status]}</span></span></span>
-              <span className={s.meta}>{i.missing}{i.nextCheckAt ? ` · next check ${mst(i.nextCheckAt)}` : ""}</span>
+              <span className={s.meta}>{i.missing}{i.nextCheckAt ? ` · next check ${mst(i.nextCheckAt)}` : ""}{i.addedAt ? ` · added ${mstDay(i.addedAt)}` : ""}</span>
             </button>
           ))}
         </div>

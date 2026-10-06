@@ -2,7 +2,7 @@ import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash } from "node:crypto";
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
-import { RESEARCH_PARENT_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
+import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
@@ -192,6 +192,7 @@ import {
 } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansion/mission-parts.ts";
 import { liveFamiliesByGovernment } from "../lib/control-plane/expansion/live-families.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
@@ -369,7 +370,7 @@ import {
   budgetGuardedTransport,
   hasBudgetLines,
 } from "../lib/control-plane/expansion/spend-holds.ts";
-import { evaluateAssignmentFromRecords, memberRecordsForSend } from "../lib/control-plane/assignment-completion.ts";
+import { evaluateAssignmentFromRecords, evaluateMissionDone, memberRecordsForSend, missionMapCount, type MissionMapCount } from "../lib/control-plane/assignment-completion.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { runIndependentRuntimePass, type IndependentRuntimeOutcome } from "../lib/ops/independent-runtime-pass.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
@@ -379,9 +380,12 @@ import {
 } from "../lib/control-plane/repository/request-bounds.ts";
 import {
   PendingOperations,
+  describePending,
   trackStoreCalls,
   type CycleStallDiagnostic,
 } from "../lib/control-plane/scheduler/cycle-stall.ts";
+import { answerStallProbes, roundProgressReporter } from "../lib/control-plane/scheduler/round-progress.ts";
+import { RUNTIME_NO_PROGRESS_MS } from "./pilot-runtime-child.mts";
 import { recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import { CYCLE_DRAIN_GRACE_MS, chosenExitCode, exitAfterDrainGrace } from "../lib/control-plane/scheduler/cycle-exit.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
@@ -420,6 +424,10 @@ const RUN_PROVENANCE = readRunProvenance(RUNNING_CODE_SHA, ROOT);
 const CYCLE_ID = `freshness-cycle:${HOST}:${NOW}`;
 const RUN_RECORD_PATH = nextRunRecordPath(RUNS_DIR, today());
 const pending = new PendingOperations();
+/* The runner asks what the round waits on shortly before its no-progress limit; the answer names the phase (round-progress.ts). */
+answerStallProbes({ describe: () => describePending(pending.snapshot()) });
+/* Finished tasks of the long phases (dispatch, worker wave, meetings walks) are progress the runner can see. */
+const roundProgress = roundProgressReporter();
 const stallDiagnostic: CycleStallDiagnostic | null = null;
 /** True once the cycle wrote its own record; a later failure must not overwrite it. */
 let finalRecordWritten = false;
@@ -1271,6 +1279,11 @@ const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.ha
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
 let placeOrder: readonly string[] = [];
+/* CH-17: each Send's open blanks by mission part, read with the place order every wave. */
+let squadReading: { open: ReadonlyMap<string, ReadonlyMap<string, number>>; parts: ReturnType<typeof missionPartsOf> } | null = null;
+/* CH-19: each Send's mission map count, read with the place order; `before` is filled from the prior reading when Done is decided. */
+let missionMaps = new Map<string, Omit<MissionMapCount, "before">>();
+let missionMapUnread: string | null = "the owed list has not been read this round";
 let placeOrderDirty = true;
 let placeOrderRead: Promise<void> | null = null;
 async function refreshPlaceOrder(): Promise<void> {
@@ -1287,14 +1300,21 @@ async function refreshPlaceOrder(): Promise<void> {
       readHeldPlaceCapture(divisionIds, { now: nowIso(), bypassCache: true })]);
     const shortType: Readonly<Record<string, string>> = { zcta: "zcta", county: "county", congressional_district: "cd",
       cbsa: "cbsa", state_leg_upper: "sldu", state_leg_lower: "sldl", state: "state" };
-    placeOrder = orderPlaceWork(row?.value, scopes.map(scope => ({
+    const places = scopes.map(scope => ({
       key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${shortType[scope.decision.geography.type] ?? scope.decision.geography.type}.${scope.decision.geography.geoid.toLowerCase()}`,
       receiptId: scope.decision.receiptId,
       items: buildPlaceOwedList({ divisions: (divisionsByReceipt.get(scope.decision.receiptId) ?? []).map(id => ({ id, label: id })),
         subjects: capture.subjects, held: capture.held, now: nowIso() }),
-    })));
+    }));
+    placeOrder = orderPlaceWork(row?.value, places);
+    const parts = missionPartsOf(row !== null && isAdminConfig(row.value) ? row.value : null);
+    squadReading = { parts, open: new Map(places.map(place => [place.receiptId,
+      new Map(missionPartCounts(place.items, parts).map(count => [count.part, count.open] as const))] as const)) };
+    missionMaps = new Map(places.map(place => [place.receiptId, missionMapCount(place.items, null)] as const));
+    missionMapUnread = null;
   })().catch(error => {
     const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
+    if (missionMaps.size === 0) missionMapUnread = detail;
     runtimeConditions.push(detail);
     console.warn(`  ${detail}`);
   }).finally(() => { placeOrderRead = null; });
@@ -2056,8 +2076,10 @@ process.on("message", message => {
 // Paid admission happens before handing out a Scout. Held evidence and ordinary
 // code can still use the existing memory slots while the paid lane is closed.
 const dispatchDeadlineMs = Date.now() + 15 * 60_000;
+/* A memory wait can outlast the runner's no-progress limit; it says each minute that it is still waiting, so it ends as a deferral, not a crash. */
+const reportedHostSlots = reportingWorkerSlots(hostWorkerSlots);
 const workerSlots = { acquire: (entry?: string, deadlineMs = dispatchDeadlineMs) =>
-  hostWorkerSlots.acquire(entry, Math.min(deadlineMs, dispatchDeadlineMs)) };
+  reportedHostSlots.acquire(entry, Math.min(deadlineMs, dispatchDeadlineMs)) };
 const paidScoutSlots = paidWorkerSlots(workerSlots, paidWorkerCapacity);
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
@@ -2088,13 +2110,25 @@ const nextDuePersistence = runPool(nextDueWrites, Math.max(1, workerCapacity), a
    read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
 const debtByObligation = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
 const assignmentObligations = [...sync.all, ...(sync.outside ?? [])];
-const assignmentCompletion = (key: string) =>
-  evaluateAssignmentFromRecords({
-    assignmentKey: key,
-    obligations: memberRecordsForSend(key, assignmentMembers, assignmentObligations, assignmentSpecs.find(spec=>spec.key===key)?.ref),
-    debtFor: (id) => debtByObligation.get(id) ?? null,
-    now: NOW,
-  });
+/* CH-19: a Send over resolved places is Done by its mission map: no unfilled row and every door it opened has a next read. */
+const resolvedReceipts = new Set((expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED").map(scope => scope.decision.receiptId));
+const priorMapBefore = (key: string, ref: string): number | null => {
+  const rows = (priorResearchState?.assignments as { assignments?: readonly { key?: unknown; ref?: unknown; completion?: { map?: { before?: unknown } } | null }[] } | null | undefined)?.assignments ?? [];
+  const before = rows.find(row => row.key === key && row.ref === ref)?.completion?.map?.before;
+  return typeof before === "number" && Number.isSafeInteger(before) && before >= 0 ? before : null;
+};
+const assignmentCompletion = (key: string) => {
+  const ref = assignmentSpecs.find(spec=>spec.key===key)?.ref;
+  const obligations = memberRecordsForSend(key, assignmentMembers, assignmentObligations, ref);
+  const debtFor = (id: string) => debtByObligation.get(id) ?? null;
+  if (ref !== undefined && resolvedReceipts.has(ref)) {
+    const counted = missionMaps.get(ref);
+    return evaluateMissionDone({ assignmentKey: key, obligations, debtFor,
+      map: counted ? { ...counted, before: priorMapBefore(key, ref) ?? counted.unfilled }
+        : { unreadable: missionMapUnread ?? "this Send's places were not in the owed-list read" } });
+  }
+  return evaluateAssignmentFromRecords({ assignmentKey: key, obligations, debtFor, now: NOW });
+};
 const assignmentsReading = (): AssignmentCycleReading | null =>
   assignmentSpecs.length === 0 && assignmentMembers.byKey.size === 0
     ? null
@@ -2950,6 +2984,7 @@ const cycle = await runCycle({
     ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
     onDispatched: async (result: DispatchResult, lane) => {
       placeOrderDirty = true;
+      roundProgress.note("dispatch");
       startedThisCycle.add(result.obligationId);
       if (result.outcome === "WORKED") fleetSafety.recordSuccessfulActivity(nowIso());
       if (lane === "BOUNDED_MODEL_WORKER") {
@@ -3063,7 +3098,8 @@ async function runAutonomousWave() {
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },
-    prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })) });
+    prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })),
+    ...(squadReading ? { squads: squadReading } : {}) });
   const plannedTasks = planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
     (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!);
   const taskIds = [...new Set([...held.map(task => task.id),
@@ -3074,6 +3110,12 @@ async function runAutonomousWave() {
   const plainTaskIds = new Set([...held.filter(task => !["SCOUT", "DETECTIVE"].includes(task.workerTask?.role ?? "")).map(task => task.id),
     ...planned.decisions.filter(row => row.task && row.action === "WORKER" &&
       !["SCOUT", "DETECTIVE"].includes(row.task.workerTask?.role ?? "")).map(row => row.task!.id)]);
+  if (planned.squadWeights.length > 0) {
+    console.log(`  squads: ${planned.squadWeights.filter(row => row.send !== "standing").map(row =>
+      `${row.send} ${row.part} open ${row.open ?? "unread"} detective ${row.detectiveTurns} debts ${row.openDebts} weight ${row.weight.toFixed(2)}`).join("; ")}`);
+  }
+  /* CH-17: the coordinator's (Send, part) order breaks ties among a Send's pending tasks. */
+  const plannedOrder = new Map(planned.decisions.filter(row => row.task).map((row, index) => [row.task!.id, index] as const));
   const failedTaskIds = new Set<string>();
   const queueFailures: DispatchResult[] = [];
   const failedQueueRead = (id: string, error: unknown) => {
@@ -3101,6 +3143,8 @@ async function runAutonomousWave() {
   let taskQueue: ReturnType<typeof readTaskQueue> | null = null;
   const workerDispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
     deadlineMs: dispatchDeadlineMs,
+    /* A hung worker is ended, and says so, before the runner's no-progress limit could end the whole round. */
+    childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000,
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
       searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, fundedSubjects: [...lifetimeHuntSubjects] },
@@ -3121,17 +3165,20 @@ async function runAutonomousWave() {
       }));
       return ids.filter((id, index) => !failedTaskIds.has(id) &&
         (paidOpen || !["SCOUT", "DETECTIVE"].includes(tasks[index]?.value.workerTask?.role ?? "")))
-        .sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b));
+        .sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b) ||
+          (plannedOrder.get(a) ?? Number.MAX_SAFE_INTEGER) - (plannedOrder.get(b) ?? Number.MAX_SAFE_INTEGER));
     },
     onDispatched: result => {
       placeOrderDirty = true;
+      roundProgress.note("worker wave");
       if (typeof result.repositoryCalls === "number") leaseTaskCalls.push(result.repositoryCalls);
       if (result.worker?.role !== "SCOUT") return;
       const outcome = result.disposition === "INGESTED" ? "CAPTURED"
         : result.disposition === "WALKED_NO_YIELD" || result.disposition === "DISCOVERED" ? "NOTHING_FOUND" : "REFUSED";
       console.log(`  Scout done: ${result.obligationId}; ${outcome}; code ${result.disposition ?? result.outcome ?? "NOT_RUN"}; usd ${result.cost?.usd === null || result.cost?.usd === undefined ? "unmeasured" : result.cost.usd.toFixed(6)}`);
     },
-    onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`) });
+    onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`),
+    onExited: (pid, why) => console.log(`  lease worker process ended: pid ${pid}; ${why}`) });
   const dispatches = [...queueFailures, ...workerDispatches];
   const scouts = dispatches.filter(row => row.attemptId && row.worker?.role === "SCOUT").length;
   return { ...planned, dispatches, scoutsAdmitted: scouts, scoutsLimitedAdmitted: scouts };
@@ -3258,6 +3305,7 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
         maxWalks, rotationStep: MEETINGS_DISCOVERY_MAX_WALKS, noProgressLimit: DISCOVERY_NO_PROGRESS_LIMIT,
         /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
         firstIds: new Set(sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:")).map((o) => o.subjectId)),
+        onWalk: () => roundProgress.note("meetings walks"),
         skipIds: new Set(
           sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
         ),

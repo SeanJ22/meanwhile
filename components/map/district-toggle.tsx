@@ -43,7 +43,7 @@ export function DistrictToggle({
           disabled={disabled}
           onChange={(event) => onChange(event.target.checked)}
         />
-        <span className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-paper-dim">
+        <span className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-paper-dim">
           Show districts
         </span>
       </label>
@@ -51,7 +51,7 @@ export function DistrictToggle({
       <BoundaryLegend />
 
       {failed && (
-        <p className="mt-1.5 max-w-[15rem] text-[0.75rem] leading-relaxed text-muted">
+        <p className="mt-1.5 max-w-[15rem] t-detail leading-relaxed text-muted">
           District boundaries didn&apos;t load. Run{" "}
           <code className="font-mono text-paper-dim">pnpm districts:fetch</code> to
           rebuild them.

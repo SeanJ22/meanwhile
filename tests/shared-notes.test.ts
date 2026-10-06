@@ -103,7 +103,7 @@ test("F01 11.2 / 11.3: the ballot page drops the contradiction and the false cla
     !/listed alphabetically by surname —/.test(page),
     "the page claims plain alphabetical order again",
   );
-  // 11.4 — and it says the true thing, including the recommendation line.
-  assert.match(page, /Nothing on this page is a recommendation/);
-  assert.match(page, /Candidates with a photo are listed first/);
+  // FE-30 retires the old neutral-copy paragraph under the current plan.
+  // The privacy link and truthful absence of an alphabetical-order claim remain.
+  assert.doesNotMatch(page, /const NEUTRAL_NOTE|\{NEUTRAL_NOTE\}/);
 });

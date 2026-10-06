@@ -469,7 +469,7 @@ export function StateFocusOverlay({
                   y={-FILTER_PAD}
                   width={drawing.width + FILTER_PAD * 2}
                   height={drawing.height + FILTER_PAD * 2}
-                  fill="#ffffff"
+                  fill="var(--state-focus-white)"
                 />
                 {/* Omitted, not emptied, when no part of the state is in
                     view: the mask is then its white rect alone and the mute
@@ -479,7 +479,7 @@ export function StateFocusOverlay({
                   <path
                     d={drawing.statePath}
                     fillRule="evenodd"
-                    fill="#000000"
+                    fill="var(--state-focus-black)"
                     filter={`url(#${featherId})`}
                   />
                 )}
@@ -513,7 +513,7 @@ export function StateFocusOverlay({
                 y={-FILTER_PAD}
                 width={drawing.width + FILTER_PAD * 2}
                 height={drawing.height + FILTER_PAD * 2}
-                fill={theme === "light" ? "#ffffff" : "#0b0d12"}
+                fill={`var(--state-focus-mute-${theme})`}
                 fillOpacity={theme === "light" ? 0.2 : 0.26}
               />
               {/* Light source at top-left. The lit silhouette is displaced
@@ -526,7 +526,7 @@ export function StateFocusOverlay({
                   <path
                     d={drawing.statePath}
                     fillRule="evenodd"
-                    fill="#ffffff"
+                    fill="var(--state-focus-white)"
                     fillOpacity={alphas.light}
                     filter={`url(#${softId})`}
                     transform={`translate(${-drawing.spec.offsetPx} ${-drawing.spec.offsetPx})`}
@@ -534,7 +534,7 @@ export function StateFocusOverlay({
                   <path
                     d={drawing.statePath}
                     fillRule="evenodd"
-                    fill="#000000"
+                    fill="var(--state-focus-black)"
                     fillOpacity={alphas.dark}
                     filter={`url(#${softId})`}
                     transform={`translate(${drawing.spec.offsetPx} ${drawing.spec.offsetPx})`}

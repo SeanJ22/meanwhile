@@ -172,7 +172,7 @@ export function PickControl({
         // the product had guessed.
         <p
           data-derived-pick
-          className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice"
+          className="mt-0.5 t-caption leading-relaxed text-voice"
         >
           {DERIVED_PICK_LINE}
         </p>
@@ -182,7 +182,7 @@ export function PickControl({
         // has been changed and the sentence says so.
         <p
           data-pick-conflict
-          className="mt-0.5 text-[0.6875rem] leading-relaxed text-signal"
+          className="mt-0.5 t-caption leading-relaxed text-signal"
         >
           {conflictLine(
             resolution.chosen.map(labelOf),
@@ -246,7 +246,7 @@ export function PickControl({
           type="button"
           aria-pressed={unsureHere}
           onClick={() => markUnsure(contestId)}
-          className="min-h-8 cursor-pointer px-1.5 text-[0.6875rem] text-muted underline decoration-dotted"
+          className="min-h-8 cursor-pointer px-1.5 t-caption text-muted underline decoration-dotted"
         >
           {unsureHere ? "not sure yet ✓" : "not sure"}
         </button>
@@ -254,7 +254,7 @@ export function PickControl({
           <button
             type="button"
             onClick={() => clearPick(contestId)}
-            className="min-h-8 cursor-pointer px-1.5 text-[0.6875rem] text-muted underline decoration-dotted"
+            className="min-h-8 cursor-pointer px-1.5 t-caption text-muted underline decoration-dotted"
           >
             clear
           </button>

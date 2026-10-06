@@ -1127,6 +1127,8 @@ export async function runMeetingsDiscovery(
     readonly firstIds?: ReadonlySet<string>;
     /** Jurisdictions another executor is working now (an open occurrence): never walked by this one too. */
     readonly skipIds?: ReadonlySet<string>;
+    /** Each walk that ended, however it ended: the round counts it as progress. */
+    readonly onWalk?: (jurisdictionId: string) => void;
   },
 ): Promise<MeetingsDiscoveryPass> {
   const skip = input.skipIds ?? new Set<string>();
@@ -1182,6 +1184,7 @@ export async function runMeetingsDiscovery(
     try {
       attempt = await walkMeetingsDiscoveryNeed(need, { ...input.runtime, priorAttempts });
     } catch (error) {
+      input.onWalk?.(need.jurisdictionId);
       if (error instanceof DiscoveryTimeSpent) {
         deferred.push(need.jurisdictionId);
         cutShort.push({ jurisdictionId: need.jurisdictionId, requests: error.requestCount, search: error.search });
@@ -1197,6 +1200,7 @@ export async function runMeetingsDiscovery(
       continue;
     }
     stalledInARow = 0;
+    input.onWalk?.(need.jurisdictionId);
     walked.push(attempt);
     try {
       await repos.discoveryAttempts.append(need.jurisdictionId, attempt.attemptId, attempt, attempt.finishedAt);

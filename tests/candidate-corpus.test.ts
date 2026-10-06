@@ -10,7 +10,7 @@ import {
   type CandidateCorpus,
   type CandidateDocument,
 } from "../lib/candidates/corpus.ts";
-import { CANDIDATE_ISSUES } from "../lib/candidates/issues.ts";
+import { DEFAULT_STANCE_TOPICS } from "../lib/stances/topics.ts";
 import {
   getCandidateCorpus,
   positionsFor,
@@ -65,8 +65,7 @@ test("D05: the three answers are three, and none of them is a blank", () => {
   // 1. Nothing collected — a fact about US.
   const none = answerFor([], ["housing"], "https://example.org");
   assert.equal(none.kind, "NOTHING_COLLECTED");
-  assert.match(answerSentence(none, "housing"), /we haven’t collected|we haven't collected/i);
-  assert.match(answerSentence(none, "housing"), /not a statement about them/i);
+  assert.equal(answerSentence(none, "housing"), "We’re working on getting this info");
 
   // 2. Searched and nothing matched — a fact about THEIR pages, with the
   //    pages and dates named so the two cannot read alike.
@@ -163,7 +162,6 @@ test("P02: no composite score exists — not a number, not an order, not a compa
   const source = [
     readFileSync(join(ROOT, "lib", "candidates", "positions.ts"), "utf8"),
     readFileSync(join(ROOT, "lib", "candidates", "corpus.ts"), "utf8"),
-    readFileSync(join(ROOT, "lib", "candidates", "issues.ts"), "utf8"),
     readFileSync(join(ROOT, "components", "ballot", "candidate-positions.tsx"), "utf8"),
   ].join("\n");
   // Prose that names the ban is fine; a key or a field is not.
@@ -194,13 +192,13 @@ test("P02: equal effort — the same issue list for every candidate, no exceptio
 
   // Every candidate is searched for exactly the same issues. A build where
   // one candidate got fewer would produce a ranking by accident.
-  const expected = CANDIDATE_ISSUES.length;
+  const expected = DEFAULT_STANCE_TOPICS.length;
   for (const key of keys) {
     const positions = positionsFor(key);
     assert.equal(positions.length, expected, `${key} was searched for ${positions.length}`);
     assert.deepEqual(
       positions.map((p) => p.issue.id),
-      CANDIDATE_ISSUES.map((i) => i.id),
+      DEFAULT_STANCE_TOPICS.map((i) => i.id),
       `${key} was searched in a different order`,
     );
   }
@@ -331,7 +329,7 @@ test("P02: no issue phrase is a single loose word that turns a search into noise
   // "public housing authority" footer, and one loose word makes the reader
   // filter our noise for us.
   const singles: string[] = [];
-  for (const issue of CANDIDATE_ISSUES) {
+  for (const issue of DEFAULT_STANCE_TOPICS) {
     for (const phrase of issue.phrases) {
       if (!phrase.includes(" ") && phrase.length < 9) singles.push(`${issue.id}:${phrase}`);
     }

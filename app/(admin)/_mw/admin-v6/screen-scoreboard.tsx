@@ -8,7 +8,8 @@
 import { WeeklyColumns } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
 import type { ScoreboardGateRow } from "./model.ts";
-import { Card, cx, Technical } from "./ui.tsx";
+import { mst } from "./model.ts";
+import { Card, cx, Empty, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
 const GATE_WORDS: Readonly<Record<ScoreboardGateRow["state"], { readonly words: string; readonly tone: string }>> = {
@@ -40,6 +41,39 @@ export function ScoreboardScreen() {
               </Card>
             ))}
           </section>
+          {b.byPlace.length > 0 && (
+            <Card title="Completeness, by sent place">
+              <div className={s.tableWrap}>
+                <table className={s.table}>
+                  <thead><tr><th scope="col">Place</th><th scope="col">Held of owed</th><th scope="col">Current of held</th><th scope="col">Published and seen</th><th scope="col">Against an earlier day</th></tr></thead>
+                  <tbody>{b.byPlace.map((p) => (
+                    <tr key={p.label}><td>{p.label}</td><td>{p.completeness.n} of {p.completeness.of}</td><td>{p.freshness.n} of {p.freshness.of}</td><td>{p.delivery.n} of {p.delivery.of}</td><td>{p.trend}</td></tr>
+                  ))}</tbody>
+                </table>
+              </div>
+            </Card>
+          )}
+          {b.byFamily.length > 0 && (
+            <Card title="Completeness, by kind of information">
+              <div className={s.tableWrap}>
+                <table className={s.table}>
+                  <thead><tr><th scope="col">Kind</th><th scope="col">Held of owed, across the sent places</th></tr></thead>
+                  <tbody>{b.byFamily.map((f) => <tr key={f.name}><td>{f.name}</td><td>{f.completeness.n} of {f.completeness.of}</td></tr>)}</tbody>
+                </table>
+              </div>
+            </Card>
+          )}
+          <Card title="Time to core information live, by mission">
+            {b.missions.length === 0 && <Empty>—</Empty>}
+            {b.missions.length > 0 && (
+              <div className={s.tableWrap}>
+                <table className={s.table}>
+                  <thead><tr><th scope="col">Mission</th><th scope="col">Started</th><th scope="col">Core information live</th><th scope="col">Within an hour</th></tr></thead>
+                  <tbody>{b.missions.map((m) => <tr key={m.label}><td>{m.label}</td><td>{mst(m.startedAt)}</td><td>{m.coreLive}</td><td>{m.withinHour === null ? "—" : m.withinHour ? "Yes" : "No"}</td></tr>)}</tbody>
+                </table>
+              </div>
+            )}
+          </Card>
           <Card title="Launch checks" aside={b.gates ? <span className={s.pill}>{`${b.gates.pass} fine · ${b.gates.attention} need a look · ${b.gates.notMeasured} not measured`}</span> : undefined}>
             {!b.gates && <span className={s.big}>—</span>}
             {b.gates && (

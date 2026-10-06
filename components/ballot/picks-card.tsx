@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { formatDateLong } from "@/lib/text/format-date";
 import { createPortal } from "react-dom";
 
+import { readDesignToken } from "@/lib/design/read-token";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { clearAllPicks, type StoredPick } from "@/lib/ballot/picks";
 import {
@@ -74,24 +75,14 @@ type CardPalette = {
   accent: string;
 };
 
-const PALETTES: Record<"dark" | "light", CardPalette> = {
-  dark: {
-    bg: "#101418",
-    rule: "#2a3138",
-    muted: "#8a949e",
-    paper: "#f2f4f6",
-    accent: "#ffb000",
-  },
-  light: {
-    bg: "#fbfaf7",
-    rule: "#dcd8d0",
-    muted: "#6b7280",
-    paper: "#14181c",
-    // Darkened from the dark palette's amber: #ffb000 on near-white fails
-    // contrast outright, and the label above it is the card's own name.
-    accent: "#8a5a00",
-  },
-};
+function cardPalette(): CardPalette {
+  return { bg: readDesignToken("--bg"), rule: readDesignToken("--panel-border"),
+    muted: readDesignToken("--text-muted"), paper: readDesignToken("--text"), accent: readDesignToken("--signal") };
+}
+
+function cardFont(rung: "caption" | "heading", weight = ""): string {
+  return `${weight} ${readDesignToken(`--text-${rung}`)} system-ui, sans-serif`.trim();
+}
 
 function wrapLines(
   ctx: CanvasRenderingContext2D,
@@ -127,11 +118,11 @@ function drawCard(
 
   // Measure pass: same fonts as the draw pass.
   type Block = { title: string[]; choices: string[] };
-  ctx.font = "11px ui-monospace, monospace";
+  ctx.font = cardFont("caption");
   const blocks: Block[] = picks.map((pick) => {
-    ctx.font = "11px ui-monospace, monospace";
+    ctx.font = cardFont("caption");
     const title = wrapLines(ctx, pick.contestTitle, inner);
-    ctx.font = "600 15px system-ui, sans-serif";
+    ctx.font = cardFont("heading", "600");
     const choices = wrapLines(
       ctx,
       pick.choiceIds.map((id) => pick.labels[id] ?? id).join(", "),
@@ -156,10 +147,10 @@ function drawCard(
 
   // Header.
   ctx.fillStyle = colors.accent;
-  ctx.font = "600 11px ui-monospace, monospace";
+  ctx.font = cardFont("caption", "600");
   ctx.fillText("MY PICKS", PAD, PAD + 10);
   ctx.fillStyle = colors.muted;
-  ctx.font = "10px ui-monospace, monospace";
+  ctx.font = cardFont("caption");
   ctx.fillText("This is my own list — written by me, not the app.", PAD, PAD + 26);
   ctx.strokeStyle = colors.rule;
   ctx.beginPath();
@@ -171,13 +162,13 @@ function drawCard(
   let y = headerH + 22;
   for (const block of blocks) {
     ctx.fillStyle = colors.muted;
-    ctx.font = "11px ui-monospace, monospace";
+    ctx.font = cardFont("caption");
     for (const line of block.title) {
       ctx.fillText(line, PAD, y);
       y += 15;
     }
     ctx.fillStyle = colors.paper;
-    ctx.font = "600 15px system-ui, sans-serif";
+    ctx.font = cardFont("heading", "600");
     for (const line of block.choices) {
       ctx.fillText(line, PAD, y + 3);
       y += 20;
@@ -192,7 +183,7 @@ function drawCard(
   ctx.lineTo(WIDTH - PAD, y - 4);
   ctx.stroke();
   ctx.fillStyle = colors.muted;
-  ctx.font = "10px ui-monospace, monospace";
+  ctx.font = cardFont("caption");
   ctx.fillText(`My picks — made with ${PRODUCT_NAME}, ${madeOn}`, PAD, y + 14);
 
   return canvas.toDataURL("image/png");
@@ -246,13 +237,13 @@ export function PicksCardControls({
      * one formatter takes.
      */
     const today = new Date().toLocaleDateString("en-CA");
-    return drawCard(picks, formatDateLong(today) ?? today, PALETTES[theme]);
+    return drawCard(picks, formatDateLong(today) ?? today, cardPalette());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCard, picksKey, theme]);
 
   return (
     <div className="mt-2.5">
-      <p className="flex flex-wrap gap-x-3 gap-y-1 text-[0.75rem]">
+      <p className="flex flex-wrap gap-x-3 gap-y-1 t-detail">
         <button
           type="button"
           onClick={() => setShowCard(true)}
@@ -306,7 +297,7 @@ export function PicksCardControls({
               a half-truth is worse than a link.
             */}
             <div className="panel relative w-full max-w-sm p-5">
-              <p className="text-[0.9375rem] font-semibold leading-snug text-paper">
+              <p className="t-heading font-semibold leading-snug text-paper">
                 Really clear every pick?
               </p>
               <div className="mt-4 grid grid-cols-2 gap-2">
@@ -331,7 +322,7 @@ export function PicksCardControls({
                     setConfirmingClear(false);
                     setShowCard(false);
                   }}
-                  className="cursor-pointer rounded-md border border-[var(--danger)] px-4 py-2 text-[0.8125rem] font-semibold text-danger transition-colors hover:bg-[var(--danger)]/10"
+                  className="cursor-pointer rounded-md border border-[var(--danger)] px-4 py-2 t-body font-semibold text-danger transition-colors hover:bg-[var(--danger)]/10"
                 >
                   Clear
                 </button>
@@ -339,7 +330,7 @@ export function PicksCardControls({
                   type="button"
                   autoFocus
                   onClick={() => setConfirmingClear(false)}
-                  className="cursor-pointer rounded-md border border-[var(--panel-border)] px-4 py-2 text-[0.8125rem] font-semibold text-paper transition-colors hover:border-paper"
+                  className="cursor-pointer rounded-md border border-[var(--panel-border)] px-4 py-2 t-body font-semibold text-paper transition-colors hover:border-paper"
                 >
                   Keep
                 </button>
@@ -401,7 +392,7 @@ export function PicksCardControls({
                 />
               </div>
 
-              <p className="mt-3 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center text-[0.75rem]">
+              <p className="mt-3 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center t-detail">
                 <a
                   href={cardUrl}
                   download="my-picks.png"
@@ -417,7 +408,7 @@ export function PicksCardControls({
                   Close
                 </button>
               </p>
-              <p className="mt-1 text-center text-[0.6875rem] leading-relaxed text-muted">
+              <p className="mt-1 text-center t-caption leading-relaxed text-muted">
                 Or just screenshot it.
               </p>
             </div>

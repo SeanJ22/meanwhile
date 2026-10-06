@@ -131,12 +131,15 @@ export function CardSection({
    * chevron and its tap target so it still says "a new thing to click".
    */
   level = "top",
+  keepMounted = false,
   children,
 }: {
   title: string;
   meta?: string | null;
   defaultOpen?: boolean;
   level?: "top" | "sub";
+  /** Sources retain their observed rows while the disclosure is closed. */
+  keepMounted?: boolean;
   children: React.ReactNode;
 }) {
   const id = useId();
@@ -191,8 +194,8 @@ export function CardSection({
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
-      {open && (
-        <div id={id} className="card-section-body">
+      {(open || keepMounted) && (
+        <div id={id} className="card-section-body" hidden={!open}>
           {children}
         </div>
       )}

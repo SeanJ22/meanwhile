@@ -105,6 +105,38 @@ async function ask(question: string, state: keyof typeof divisions = "AZ", extra
   return body;
 }
 
+test("returned county-board question names the same held candidates as the ballot", async () => {
+  const ballot = await loadBallotForDivisions(divisions.NJ);
+  const contest = ballot.contests.find(row => /Board of County Commissioners/i.test(row.title))!;
+  const candidates = ballot.set!.candidacies.filter(row => row.contestId === contest.id);
+  assert.ok(candidates.length > 0);
+  const answer = await ask("Who is running for Morris County Board of County Commissioners?", "NJ");
+  for (const candidate of candidates) assert.ok(answer.answer?.includes(`${candidate.givenName} ${candidate.familyName}`), answer.answer ?? "no answer");
+  assert.equal(answer.trace.synthesis.ran, false);
+});
+
+test("returned NO-vote question quotes its own official ballot sentence with no model reconstruction", async () => {
+  const ballot = await loadBallotForDivisions(divisions.AZ);
+  const meaning = ballot.measureSummary("ballot-az-pima:prop-425")!.noMeans!;
+  assert.ok(meaning);
+  const answer = await ask("What does a NO vote on Proposition 425 mean?");
+  assert.equal(answer.answer, `NO: ${meaning}`);
+  assert.equal(answer.trace.synthesis.ran, false);
+});
+
+test("a held measure without a NO meaning reports the blank instead of asking a model to invent it", async () => {
+  resetGroundedState();
+  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+    method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-last-mile-ask" },
+    body: JSON.stringify({ question: "What does a NO vote on Proposition 141 mean?", surface: "BALLOT", ocdIds: divisions.AZ }),
+  }));
+  assert.equal(response.status, 200);
+  const answer = await response.json() as AskAnswerPayload;
+  assert.equal(answer.answer, "We're working on getting this info");
+  assert.equal(answer.trace.synthesis.ran, false);
+  assert.equal(answer.trace.synthesis.why, "measure-vote-meaning-not-held");
+});
+
 for (const row of [
   { state: "AZ" as const, name: "Katie Hobbs", key: "ballot-az-pima:governor:hobbs-katie", contest: "ballot-az-pima:governor", receipts: 11109719.95, expenditures: 14355612.69 },
   { state: "NJ" as const, name: "Tayfun Selen", key: "ballot-nj-morris:county-commissioner:selen", contest: "ballot-nj-morris:county-commissioner", receipts: 225025.5, expenditures: 229525.5 },

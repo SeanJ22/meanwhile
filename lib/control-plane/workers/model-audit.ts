@@ -13,6 +13,7 @@ import type { FleetRuntime } from "./runtime.ts";
 import type { IndependentAuditContext, WorkerEvidence, WorkerResultRecord, RecordExtractionShape } from "./types.ts";
 import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
 import { inventoryRecordEvidence } from "./record-evidence.ts";
+import { readSpendWindowCosts } from "./scoped-history.ts";
 
 export const AUDIT_RESPONSE_MAX_BYTES = 16_384;
 export const AUDIT_CONTEXT_MAX_BYTES = 32_000;
@@ -227,6 +228,8 @@ function validateAnswer(response: ModelResponse, expectedModel: string, context:
 export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: ModelTransport, now: () => string,
   options: {
     readonly ceilingUsd?: number;
+    /** CH-26: read only the cost rows the rolling window can count. */
+    readonly scopedReads?: boolean;
     /** MW-021 (2026-09-25): the transport for the jurisdiction a record is about, so the review is held on the area budget covering it. */
     readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
     /** A durable lifetime hunt hold, rather than the discretionary rolling ceiling, governs this exact subject. */
@@ -237,7 +240,7 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
   if (!Number.isFinite(ceilingUsd) || ceilingUsd <= 0) throw new Error("AUDIT_CEILING_INVALID");
   return { workerProvider: "anthropic", workerVersion: initial.model, review: async (context, attemptId, escalation) => {
     const started = performance.now();
-    const spend = researchSpendInWindow(await repos.costs.readAll(), now());
+    const spend = researchSpendInWindow(await readSpendWindowCosts(repos, now(), options.scopedReads === true), now());
     if (!options.lifetimeHuntSubject?.(context.subjectId)) {
       const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
       if (!admission.permits) throw new Error(`DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; ${admission.why}`);

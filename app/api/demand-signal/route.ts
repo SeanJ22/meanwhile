@@ -1,3 +1,4 @@
+import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { writeDemandSignal } from "@/lib/db/demand-signal";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { markerFromRequest } from "@/lib/db/run-marker";
@@ -71,7 +72,7 @@ function isPlausibleSubjectId(value: unknown): value is string {
   return typeof value === "string" && value.length > 0 && value.length <= 200;
 }
 
-export async function POST(request: Request) {
+async function postWithSettings(request: Request) {
   /*
    * The demand pill rides the reaction intake ripcord. It is a reader write on
    * a reader surface, and a ripcord that closed reaction capture while leaving
@@ -192,4 +193,8 @@ export async function POST(request: Request) {
     await raiseWriteAlarm("demand_signals", error);
     return Response.json({ error: "could not store the signal" }, { status: 500 });
   }
+}
+
+export async function POST(request: Request) {
+  return withReaderFeatures(() => postWithSettings(request));
 }

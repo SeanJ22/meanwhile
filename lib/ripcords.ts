@@ -16,6 +16,8 @@
  * demonstrate both positions of each flag (D34's gate).
  */
 
+import { registerFeature, readFeature } from "./control-plane/features.ts";
+
 export interface Ripcord {
   /** Committed state. `true` = pulled (the feature's data is filtered). */
   pulled: boolean;
@@ -133,11 +135,20 @@ export type RipcordName = keyof typeof RIPCORDS;
 
 export const RIPCORD_NAMES = Object.keys(RIPCORDS) as RipcordName[];
 
+const FEATURE_LABELS: Record<RipcordName, string> = {
+  "ripcord.fecContributorDisplay": "Campaign funding display",
+  "ripcord.rateLimits": "Request limits",
+  "ripcord.askClassifier": "Question topic matching",
+  "ripcord.askGrounded": "Answers from saved facts",
+  "ripcord.reactionIntake": "Reader responses",
+};
+for (const name of RIPCORD_NAMES) registerFeature(name.slice("ripcord.".length), FEATURE_LABELS[name], !RIPCORDS[name].pulled, true);
+
 /** Is this ripcord pulled? Env override first, committed state otherwise. */
 export function ripcordPulled(name: RipcordName): boolean {
   const ripcord = RIPCORDS[name];
   const env = process.env[ripcord.envVar];
   if (env === "pulled") return true;
   if (env === "live") return false;
-  return ripcord.pulled;
+  return !readFeature(name.slice("ripcord.".length), !ripcord.pulled);
 }

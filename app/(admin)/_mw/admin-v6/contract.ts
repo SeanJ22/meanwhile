@@ -52,7 +52,7 @@ export const V6_CAPABILITY_VERSION = 1;
 
 export type SectionId = keyof AdminV6Data;
 export const SECTION_IDS: readonly SectionId[] = [
-  "places", "hunts", "national", "results", "stuck", "sameCause", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "learning", "fixes",
+  "places", "hunts", "national", "results", "stuck", "sameCause", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "scoreboard", "fixes",
 ];
 
 export function sectionContract(id: SectionId): string {
@@ -202,6 +202,8 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { enabled: false };
     case "cancel-send":
       return { intentId: s.target };
+    case "order-unschedule":
+      return { id: s.target };
     case "setting-set":
       // config.setSetting: the target is the setting's key; the payload says how its value is typed.
       return { key: s.target, value: settingValueFromInput(s.payload?.control ?? "text", s.amount, s.option) ?? null, why: s.words.trim() };

@@ -348,7 +348,7 @@ test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on
   const context = createContext({
     runtimeAdmissionsHeld: false, standingRuntimeTimer: null, ownerControlTimer: null, researchCycleActive: false,
     canary: false, activeControlRead: null, ownerWakePending: false, POLL_MS: 60_000, CONTROL_WAKE_POLL_MS,
-    runStandingRuntimeTick: () => {}, console,
+    runStandingRuntimeTick: () => {}, startScheduledOrderClock: () => {}, console,
     setInterval: (callback: () => void) => { tick = callback; return 1; },
     ownerSays: () => { reads++; return new Promise<string>(resolve => { finishRead = resolve; }); },
   });

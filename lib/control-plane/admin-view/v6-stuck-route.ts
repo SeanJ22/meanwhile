@@ -7,6 +7,7 @@ import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { ADMIN_V6_SAME_CAUSE_CONTRACT, ADMIN_V6_STUCK_CONTRACT, STUCK_ITEM_LIMIT, readStuckPopulation, stuckViews, type StuckPopulation } from "./v6-stuck-read.ts";
+import { readShutDoorRecords, shutDoorItems } from "./v6-stuck-doors.ts";
 import { validateV6Query } from "./v6-hunts-read.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
@@ -41,11 +42,14 @@ export async function v6StuckGet(request: NextRequest, which: "stuck" | "sameCau
   catch { return NextResponse.json({ state: "UNREAD", says: "The published work index could not be read just now, so stuck items are unknown, not zero." }, { status: 503, headers: NO_STORE }); }
   if (read === null) return NextResponse.json({ state: "UNREAD", says: "The control-plane database is not configured here, so stuck items were not read." }, { status: 503, headers: NO_STORE });
   const now = new Date().toISOString();
-  const views = stuckViews(read.rows, query.scopeKey, now);
+  let doorsUnread = false;
+  const shut = await (async () => { const url = controlPlaneUrlFromEnv(); try { return url ? shutDoorItems(await readShutDoorRecords(neon(url)), now) : []; } catch { doorsUnread = true; return []; } })();
+  const views = stuckViews(read.rows, query.scopeKey, now, shut);
   const base = { scope: query.scopeKey, revision: `${which}:${read.publishedAt ?? "unpublished"}:${query.scopeKey}`, asOf: read.publishedAt ?? now };
   const capped = views.total > STUCK_ITEM_LIMIT;
   const missingParts = [
     "These counts come from the work index the runner last published, not from a live read of every worker.",
+    ...(doorsUnread ? ["The door list could not be read just now, so shut doors are not shown here; that is unknown, not zero."] : []),
     ...(capped && which === "stuck" ? [`Only the ${STUCK_ITEM_LIMIT} most urgent of ${views.total} stuck items are listed; the cause groups count all ${views.total}.`] : []),
   ];
   return NextResponse.json(which === "stuck"

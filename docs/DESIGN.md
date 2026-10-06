@@ -28,6 +28,11 @@ components actually use:
 
 Structural rungs, shared as CLASSES (never re-typed as utility strings):
 
+The six content rungs use `.t-display`, `.t-title`, `.t-heading`, `.t-body`,
+`.t-detail` and `.t-caption`. Each reads its `--text-*` size and matching
+`--text-*-lh` line height from `app/globals.css`. Weight, register and numeral
+font remain the caller's choice. Use these classes instead of arbitrary sizes.
+
 - `.t-structure` — tier/section headers (LOCAL / STATE / FEDERAL, "Statewide
   measures", door groups). Mono, 0.6875rem, 700, 0.16em tracking, uppercase,
   with a hairline "shelf" rule after the text (`.t-structure--bare` drops the

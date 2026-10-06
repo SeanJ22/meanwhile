@@ -4,6 +4,8 @@ Each check needs Sean's Admin sign-in (https://admin.meanwhileusa.com). Work thr
 
 Checks marked "after the runner restart" need the runner to have run at least one round on release 8 (it restarted at 2:02 AM EDT).
 
+**Order of work:** first do every check that only looks at a screen. Checks that change something (pause the runner, change a limit or threshold, schedule or send an order or hunt, add or complete a fix item) wait until release 8's measured hour has ended, after **3:05 AM EDT**, so they don't distort the hour. Undo each change afterwards (each setting row has Undo). A hunt sent for a check spends real money: use the smallest budget the screen allows, and only for a place that is already being worked.
+
 | # | Step | Screen and clicks | What to look for | Verdict |
 |---|---|---|---|---|
 | 1 | BR-01 | admin.meanwhileusa.com/admin?view=queue. Make a hunt (Now > Start a hunt), raise the daily limit (Settings), and press Send agents to fill the blanks on a place's Checklist; then reload the page. Check the Queue tabs at United States, then use Change place to open each order's own place. | All three orders are still listed after the reload, each with its current state, both at the country and at its own place, and the Queue appears within about three seconds of the reload. | |

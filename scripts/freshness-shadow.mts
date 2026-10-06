@@ -1696,7 +1696,7 @@ const unreadableControls: string[] = [
    could not be read (2026-09-25). */
 /* CH-24 part 2 (Proposal A): with the switch on, the standing hunter lane is the one process that admits paid work; this round plans and queues. */
 const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
-const laneClosure = modelLaneClosure({
+const laneClosureInput = {
   dry,
   noModel,
   credentialConfigured,
@@ -1709,7 +1709,11 @@ const laneClosure = modelLaneClosure({
   spendHold: paidSpendHold,
   paidWorkInHunterLane: CONTINUOUS_HUNTERS,
   unreadableControls,
-});
+};
+const laneClosure = modelLaneClosure(laneClosureInput);
+/* CH-22: the lane is closed only because paid work runs in the standing hunter lane (no pause, hold or unread control). */
+const queuesForHunterLane = laneClosure !== null && CONTINUOUS_HUNTERS &&
+  modelLaneClosure({ ...laneClosureInput, paidWorkInHunterLane: false }) === null;
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
 const modelLaneEnabled = laneClosure === null;
@@ -2987,9 +2991,16 @@ const cycle = await runCycle({
     plainBesideDetective: (row) => plainDecisionBeforeDetective.get(row.obligation.id) ?? null,
     /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */
     compareModelRows: compareScoutRows,
-    admitScout: (row) => {
+    admitScout: async (row) => {
       if (scoutFor(row).lane === "DETERMINISTIC") return { admit: true };
-      if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
+      if (!modelLaneEnabled) {
+        /* CH-22: a due row with a plan is opened here (plain-code work, no spend), so its work item joins this round's
+           coordinator wave and the one hunter queue, and the hunter lane admits its Scout. A row with no plan waits. */
+        if (queuesForHunterLane && row.obligation.autonomousPlan && await openOccurrenceInStep(row) === true) {
+          return { admit: false, code: "QUEUED_FOR_HUNTER_LANE", why: "its work item is queued for the standing hunter lane, which admits its Scout" };
+        }
+        return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
+      }
       if (paidWorkerCapacity() === 0) return { admit: false, code: "CEILING", why: "paid model capacity is closed; held and plain-code work continue" };
       /* MW-028: a materialized meetings-discovery row goes to a paid Scout only after the free walk read the site and found nothing. */
       const freeWalkFirst = paidDiscoveryHold(row.obligation.id, freeWalks);

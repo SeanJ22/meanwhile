@@ -32,7 +32,7 @@ import {
   type StateLegislatorCoverageAuthority,
 } from "./coverage.ts";
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
-import type { Division, Registry } from "./types.ts";
+import type { Body, Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
 import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentReaderAuthorityEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted, refreshCommentAccessFromPromoted } from "../civic-data/curated-reader-read-model.ts";
@@ -560,6 +560,18 @@ export async function knownBodySubjectIds(forSubjectId?: string): Promise<Set<st
     }
   }
   return out;
+}
+
+/** One body by its id, from the reviewed registry or its state's registered governments; null when none is held. */
+export async function bodyById(bodyId: string): Promise<Body | null> {
+  const { registry } = await registryLoaded();
+  const found = registry.bodies.find((body) => body.id === bodyId);
+  if (found) return found;
+  for (const r of await registrationsFor([bodyId])) {
+    const registered = r.layer.bodies.find((body) => body.id === bodyId);
+    if (registered) return registered;
+  }
+  return null;
 }
 
 /** The divisions containing a point, from the committed geometry. */

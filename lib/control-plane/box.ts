@@ -8,6 +8,8 @@ import type { DetectiveResult } from "./workers/research-types.ts";
 export interface BoxOrigin {
   readonly kind: "SCOUT" | "DETECTIVE";
   readonly resultId: string;
+  /** Existing Scout log partition; old origins are upgraded by backfill. */
+  readonly resultKey?: string;
   readonly workItemId: string;
   readonly findingIndex: number;
   readonly collection?: "findings" | "spans";
@@ -39,6 +41,8 @@ export interface BoxFinding {
   readonly attempts: readonly (BoxClaim & { readonly outcome: "failed" | "expired" | "built" | "refused"; readonly endedAt: string; readonly detail: string })[];
   readonly generation: number;
   readonly publicationId: string | null;
+  /** Durable extraction; built is not a claim of reader delivery. */
+  readonly buildResultId?: string;
   readonly refusal: string | null;
 }
 
@@ -69,8 +73,11 @@ export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, inp
       try { return (await repo.put(id, next, now)).persisted.value; }
       catch (error) { if (error instanceof IdentityCollision) continue; throw error; }
     }
-    if (held.value.origins.some(origin => originId(origin) === originId(input.origin))) return held.value;
-    const next = { ...held.value, origins: [...held.value.origins, input.origin].sort((a, b) => originId(a).localeCompare(originId(b))) };
+    const prior = held.value.origins.find(origin => originId(origin) === originId(input.origin));
+    if (prior && (!input.origin.resultKey || prior.resultKey === input.origin.resultKey)) return held.value;
+    const origins = prior ? held.value.origins.map(origin => origin === prior ? { ...origin, resultKey: input.origin.resultKey } : origin)
+      : [...held.value.origins, input.origin];
+    const next = { ...held.value, origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))) };
     try { return (await repo.compareAndSet(id, held.revision, next, now)).value; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
   }
@@ -94,18 +101,20 @@ export async function takeBoxFinding(repo: AggregateRepository<BoxFinding>, id: 
 }
 
 export type BoxOutcome = { readonly state: "built"; readonly publicationId: string } |
+  { readonly state: "built"; readonly buildResultId: string } |
   { readonly state: "refused"; readonly reason: string } | { readonly state: "failed"; readonly reason: string };
 
-/** BX-02 must publish with finding.id as its idempotency key before recording built. */
+/** Record the durable extraction or publication before finishing its fenced claim. */
 export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id: string, token: string, outcome: BoxOutcome, now: string): Promise<boolean> {
   instant(now);
-  const detail = outcome.state === "built" ? outcome.publicationId : outcome.reason;
+  const detail = outcome.state === "built" ? ("buildResultId" in outcome ? outcome.buildResultId : outcome.publicationId) : outcome.reason;
   if (!detail.trim()) throw new Error("BOX_OUTCOME_DETAIL_REQUIRED");
   for (;;) {
     const held = await repo.mustRead(id), value = held.value;
     if (value.state !== "taken" || value.claim?.token !== token || instant(value.claim.expiresAt) <= instant(now)) return false;
     const next: BoxFinding = { ...value, state: outcome.state === "failed" ? "waiting" : outcome.state, claim: null,
-      publicationId: outcome.state === "built" ? outcome.publicationId : null,
+      publicationId: outcome.state === "built" && "publicationId" in outcome ? outcome.publicationId : null,
+      ...(outcome.state === "built" && "buildResultId" in outcome ? { buildResultId: outcome.buildResultId } : {}),
       refusal: outcome.state === "refused" ? outcome.reason : null,
       attempts: [...value.attempts, { ...value.claim, outcome: outcome.state, endedAt: now, detail }] };
     try { await repo.compareAndSet(id, held.revision, next, now); return true; }
@@ -114,12 +123,12 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
 }
 
 /** Used by both Scout writers and the historical-result backfill. No finding is filtered out. */
-export type BoxScoutResult = Pick<ScoutResult, "findings" | "subjectId" | "attemptId" | "workItemId" | "recordedAt">;
+export type BoxScoutResult = Pick<ScoutResult, "findings" | "subjectId" | "attemptId" | "workItemId" | "recordedAt"> & Partial<Pick<ScoutResult, "obligationId">>;
 export async function indexScoutFindings(repo: AggregateRepository<BoxFinding>, result: BoxScoutResult, now: string): Promise<readonly BoxFinding[]> {
   const indexed: BoxFinding[] = [];
   for (const [findingIndex, finding] of result.findings.entries()) indexed.push(await indexBoxFinding(repo, {
     subjectId: finding.subjectId ?? result.subjectId, exactQuote: finding.exactQuote ?? null, sourceUrl: finding.sourceUrl ?? null,
-    origin: { kind: "SCOUT", resultId: result.attemptId, workItemId: result.workItemId, findingIndex,
+    origin: { kind: "SCOUT", resultId: result.attemptId, ...(result.obligationId ? { resultKey: result.obligationId } : {}), workItemId: result.workItemId, findingIndex,
       artifactIds: finding.artifactIds, recordedAt: result.recordedAt, ...(finding.missionPart ? { missionPart: finding.missionPart } : {}) },
   }, now));
   return indexed;
@@ -173,4 +182,10 @@ export async function boxCounts(repo: AggregateRepository<BoxFinding>): Promise<
   const counts = { waiting: 0, taken: 0, built: 0, refused: 0 };
   for (const row of await repo.list()) counts[row.value.state]++;
   return counts;
+}
+
+/** Rollout switch: the existing runner path remains available until River has
+ * applied cp_box_findings and checked the connected index live. Not a fact gate. */
+export function boxIndexEnabled(environment: Readonly<NodeJS.ProcessEnv> = process.env): boolean {
+  return environment.WTP_BOX_ENABLED === "1";
 }

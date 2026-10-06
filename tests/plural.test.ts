@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
@@ -803,4 +804,19 @@ test('Plural keeps its portrait URL as an unverified lead, never as a hotlinked 
   assert.equal(result.officeholders[0].photo,null);
   assert.equal(result.officeholders[0].portraitCandidate?.imageUrl,'https://images.example/jane.jpg');
   assert.equal(result.officeholders[0].portraitCandidate?.sourceUrl,'https://data.openstates.org/people/current/oh.csv');
+});
+
+test("CA-02: a legislator whose own page cannot be read is offered as the Open States row for the seat, with the saved CSV as its document", async () => {
+  const now = "2026-09-30T00:00:00Z";
+  const csvUrl = bulkUrl("mo");
+  const text = "id,name,current_party,current_district,current_chamber,links\nocd-person/9,Jane Roe,Democratic,5,lower,https://house.example.gov/roe\n";
+  const hash = `sha256-${createHash("sha256").update(text).digest("hex")}`;
+  const capture = { evidence: { artifactId: "ar-csv", contentHash: hash, text, canonicalUrl: csvUrl, retrievedAt: now, sourceId: "data.openstates.org", acquiredByAttemptId: "at", methodRouteId: "r" },
+    observedAt: now, httpStatus: 200, transport: "REACHABLE", partial: false };
+  const result = await collectNationalPlaceSources({ now, families: { officials: true, elections: false },
+    divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" },
+      { id: "ocd-division/country:us/state:mo/sldl:5", label: "State House District 5", divisionType: "sldl", geoid: "29005", sourceUrl: "https://census.gov" }],
+    read: async url => { if (url === csvUrl) return { url, text, collectedAt: now, capture }; throw Error("Source unavailable"); } });
+  const roe = result.officials.find(row => row.name === "Jane Roe");
+  assert.deepEqual([roe?.basis, roe?.divisionId, roe?.officeTitle, roe?.document.url], ["OPEN_STATES_ROW", "ocd-division/country:us/state:mo/sldl:5", "State Representative", csvUrl]);
 });

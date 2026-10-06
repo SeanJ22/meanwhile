@@ -35,6 +35,7 @@ import {
 } from "./trusted-lkg-import.ts";
 import { assertWriteAllowed } from "../db/write-guard.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
+import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
 import { MEETING_HISTORY_SOURCE_ID, MEETING_PARTITION_CONTRACTS, meetingHistoryContract, meetingPartitionForHistoryScope } from "./meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import {
@@ -281,7 +282,7 @@ function registeredMutationContract(
       ? null
       : { id: partition.id, kind: "routine", readerProjectionId: meetingHistoryContract(partition).readerProjection!.id };
   }
-  const routine = [...ROUTINE_SOURCE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS]
+  const routine = [...ROUTINE_SOURCE_CONTRACTS, ...RUNTIME_ROUTINE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS]
     .filter((contract) =>
       contract.sourceId === candidate.sourceId &&
       contract.recordClass === candidate.recordClass &&

@@ -39,6 +39,7 @@ export type Detail =
   | { readonly type: "item"; readonly key: string }
   | { readonly type: "system"; readonly group: string }
   | { readonly type: "fix"; readonly id: string }
+  | { readonly type: "look"; readonly id: string }
   | { readonly type: "work"; readonly id: string }
   | { readonly type: "search"; readonly query: string };
 

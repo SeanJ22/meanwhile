@@ -3,7 +3,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { isOfficialHost, verificationOf } from "../lib/officials/verification.ts";
+import { provenanceKind, verificationOf } from "../lib/officials/verification.ts";
 
 /**
  * The sources vocabulary — g3 item 5 (2026-08-16).
@@ -21,11 +21,10 @@ const OFFICIAL = [
   "www.congress.gov",
   "clerk.house.gov",
   "sos.nh.gov",
-  "warner.nh.us",
-  "ci.tucson.az.us",
 ];
 
 const NOT_OFFICIAL = [
+  "warner.nh.us", "ci.tucson.az.us",
   "ballotpedia.org",
   "facebook.com",
   "x.com",
@@ -36,12 +35,12 @@ const NOT_OFFICIAL = [
 test("an official host is recognized, and a third party is not", () => {
   for (const host of OFFICIAL) {
     assert.ok(
-      isOfficialHost(host.replace(/^www\./, "")),
+      provenanceKind({ sourceUrl: `https://${host}` }) === "OFFICIAL",
       `${host} should be an official publisher`,
     );
   }
   for (const host of NOT_OFFICIAL) {
-    assert.ok(!isOfficialHost(host), `${host} must not be treated as official`);
+    assert.ok(provenanceKind({ sourceUrl: `https://${host}` }) !== "OFFICIAL", `${host} must not be treated as official`);
   }
 });
 
@@ -49,8 +48,8 @@ test("a body's own page is official even off a .gov, because the wiring types it
   // kearsarge.org is a public school district publishing its own board's
   // sittings on its own site — a SCHEDULEPAGE row, which the adapter defines
   // as "no portal in the path". Derived from the wiring, not hand-listed.
-  assert.ok(isOfficialHost("kearsarge.org"));
-  assert.ok(isOfficialHost("newbury.nh.gov"));
+  assert.equal(provenanceKind({ sourceUrl: "https://kearsarge.org", kind: "OFFICIAL" }), "OFFICIAL");
+  assert.equal(provenanceKind({ sourceUrl: "https://newbury.nh.gov" }), "OFFICIAL");
 });
 
 test("the Hobbs row: an official read renders as verified, by its source, on the read date", () => {
@@ -131,4 +130,11 @@ test("only the sources list renders the not-yet sentence", () => {
     "a surface other than the sources list is rendering 'not yet' — route it " +
       "through verificationOf() so an official read is never called unverified",
   );
+});
+
+
+test("CP-04: the saved official kind verifies a government-linked vendor portal", () => {
+  assert.deepEqual(verificationOf({ kind: "OFFICIAL", sourceUrl: "https://council.legistar.com/calendar", collectedAt: "2026-10-05", verifiedAt: null }),
+    { kind: "official", date: "2026-10-05", by: "council.legistar.com" });
+  assert.equal(provenanceKind({ kind: "CAMPAIGN", sourceUrl: "https://candidate.example" }), "CAMPAIGN");
 });

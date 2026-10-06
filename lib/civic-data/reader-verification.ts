@@ -117,6 +117,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "everyday-routing": return "lib/routing/everyday-data-plane.ts#readEverydayRoutingProjection";
     default:
       if (contract.recordClass === "REGISTRATION") return "lib/registration/reader.ts#readRegistrationProjection";
+      if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") return "lib/outcomes/store.ts#readDoorOutcomeProjection";
       return contract.recordClass === "MEETING"
         ? "lib/meetings/snapshot.ts#readMeetingsProjection"
         : `unavailable:${contract.id}`;
@@ -379,6 +380,11 @@ export async function verifyRoutineReaderProjection(
             return fail(verifierId, `Expected meeting partition ${contract.id}:${options.expectedVersionId}; typed meetings Reader returned ${result.kind}:${partition?.kind ?? "missing"}:${partition?.versionId ?? "none"}.`);
           }
           return pass(verifierId, `The typed meetings Reader composed partition ${contract.id} at canonical version ${options.expectedVersionId}.`);
+        }
+        if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") {
+          // DB-22: a door's own scope, read as the Reader reads it (its tenant and meeting-id namespace checked).
+          const { readDoorOutcomeProjection } = await import("../outcomes/store.ts");
+          return verifyExactVersion(verifierId, await readDoorOutcomeProjection(options.scope ?? contract.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${contract.id} door outcomes`);
         }
         throw new Error(`NO_TYPED_READER_VERIFIER:${contract.id}`);
       }

@@ -22,7 +22,6 @@
  */
 import { accessControlIn } from "../lib/hunt/access-control.ts";
 import { memoryInProcess, nodeResearchGet, researchFetch, type ResearchRuntime } from "../lib/hunt/robots-first-fetch.ts";
-import { recordedMeetingsDiscovery, GAP_LEDGER_PATH } from "../lib/hunt/meetings-discovery.ts";
 import {
   DOTGOV_REGISTRY_URL,
   registryRowFor,
@@ -41,11 +40,18 @@ if (!jurisdictionId || !candidate || !/^https:\/\/[^/]+$/.test(candidate) || arg
   process.exit(1);
 }
 
+/* The address on record: the committed jurisdiction registry's Census address, before any correction (CH-21 retired the gap ledger). */
 const recorded = (() => {
-  const read = recordedMeetingsDiscovery(JSON.parse(readFileSync(GAP_LEDGER_PATH, "utf8")));
-  if ("unreadable" in read) return null;
-  const need = read.needs.find((n) => n.jurisdictionId === jurisdictionId);
-  return need?.addressCorrection?.recorded ?? need?.ownWebAddress ?? null;
+  const state = jurisdictionId.split(":")[0] ?? "";
+  try {
+    const file = JSON.parse(readFileSync(`data/states/${state}/jurisdictions/${state}.json`, "utf8")) as {
+      jurisdictions?: { id: string; ownWebAddress: string | null; ownWebAddressCorrection?: { recorded?: string } }[];
+    };
+    const row = file.jurisdictions?.find((j) => j.id === jurisdictionId);
+    return row?.ownWebAddressCorrection?.recorded ?? row?.ownWebAddress ?? null;
+  } catch {
+    return null;
+  }
 })();
 
 const runtime: ResearchRuntime = {

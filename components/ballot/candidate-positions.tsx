@@ -1,3 +1,4 @@
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import type { IssuePosition } from "@/lib/candidates/positions";
 import { sourceKindLabel } from "@/lib/corpus/source-kinds";
 
@@ -65,14 +66,7 @@ export function CandidatePositions({
 
   return (
     <div className="mt-3" data-candidate-positions>
-      <p className="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em] text-muted">
-        From campaign and official pages
-      </p>
-      {/* Provenance, not arithmetic: where these passages came from. */}
-      <p className="mt-1 t-detail leading-relaxed text-paper-dim">
-        {headline}
-      </p>
-
+      <CardSourcesContribution id="candidate-positions" sources={matched.flatMap(position => position.answer.kind === "MATCHED" ? position.answer.passages.map(passage => ({ what: [position.issue.label, sourceKindLabel(passage.sourceClass), passage.revisionStatus === "HISTORICAL" ? "earlier captured version" : passage.revisionStatus === "CURRENT" ? "latest captured version" : "", passage.publicationDate ? `source-stated publication date ${passage.publicationDate.date}` : ""].filter(Boolean).join(" · "), provenance: { sourceUrl: passage.documentUrl, sourceOrg: "", collectedAt: passage.retrievedAt, verifiedAt: null } })) : [])} />
       <ul className="mt-2 space-y-3">
         {matched.map((position) => (
           <li key={position.issue.id}>
@@ -91,23 +85,7 @@ export function CandidatePositions({
                   <p className="t-record t-detail leading-relaxed text-paper-dim">
                     &ldquo;{passage.quote}&rdquo;
                   </p>
-                  <p className="mt-0.5 t-caption text-muted">
-                    {sourceKindLabel(passage.sourceClass)}
-                    {" · "}
-                    <a
-                      href={passage.documentUrl}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="underline decoration-dotted underline-offset-2 hover:text-link"
-                    >
-                    {new URL(passage.documentUrl).hostname}
-                    </a>
-                    {passage.revisionStatus === "HISTORICAL" ? " · earlier captured version" :
-                      passage.revisionStatus === "CURRENT" ? " · latest captured version" : ""}
-                    {passage.publicationDate && ` · source-stated publication date ${passage.publicationDate.date}`}
-                    {" · read "}
-                    {passage.retrievedAt.slice(0, 10)}
-                  </p>
+
                 </div>
               ))}
           </li>

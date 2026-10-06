@@ -1,3 +1,5 @@
+import { receiptSourceKind } from "./source-conflicts.ts";
+import { parserFieldSources } from "./field-sources.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { createWorkItem, type WorkItem } from "../control-plane/work-item.ts";
 import { registerWorkItem } from "../control-plane/repository/coordinator.ts";
@@ -104,7 +106,11 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
         homepageUrl: url?.href ?? prior?.homepageUrl ?? null, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
         ...(typeof f.meetingCadence === "string" ? { meetingCadence: f.meetingCadence } : {}),
         ...(address ? { officeAddress: address } : {}), ...(phone ? { officePhone: phone } : {}),
-        provenance: { sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
+        ...("held" in input ? {} : { fieldSources: parserFieldSources(record.id, f,
+          input.parser.result.role === "PARSER" ? input.parser.result.spans : [], input.captures, input.now) }),
+        provenance: { kind: checked.sourceReceipt.sources.find(source => source.finalUrl === (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl)
+          ? receiptSourceKind(checked.sourceReceipt.sources.find(source => source.finalUrl === (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl)!.sourceClass) : undefined,
+          sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
           collectedAt: (checked.sourceOf?.get(record.id) ?? checked.primary).observedAt, verifiedAt: input.now } });
     } catch (error) {
       unresolved.push(`${record.id}: ${error instanceof Error ? error.message : "DIRECTORY_ROW_REQUIRES_REPAIR"}`);
@@ -149,7 +155,7 @@ export async function heldDirectoryReading(input: {
     if (readUrls.has(artifact.canonicalUrl)) continue;
     const capture = await input.readHeld(artifact);
     if (!capture || !captureIntact(capture)) continue;
-    const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt };
+    const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
     const pageVerdict = section3Page(page, contract.recordClass, input.now);
     // The right place: the government's own page names that government.
     if (!pageVerdict.ok || !pageWords(capture.evidence.text).includes(division.label.toLowerCase())) continue;

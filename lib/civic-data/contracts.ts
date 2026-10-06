@@ -1,5 +1,6 @@
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
+import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
 import {
   OFFICIAL_STATE_LEGISLATOR_TARGETS,
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
@@ -629,7 +630,8 @@ export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, no
 }
 
 export function routineContract(id: string): RoutineSourceContract | null {
-  return ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === id) ?? null;
+  return ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === id) ??
+    RUNTIME_ROUTINE_CONTRACTS.find((contract) => contract.id === id) ?? null;
 }
 
 export function requiredRoutineContract(id: string): RoutineSourceContract {

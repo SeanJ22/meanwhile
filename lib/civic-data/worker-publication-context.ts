@@ -7,16 +7,17 @@ import { researchVaultResolver } from "../control-plane/workers/vault-object.ts"
 import { workerVaultResolver } from "../control-plane/workers/vault.ts";
 import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import type { ArtifactRecord } from "../control-plane/repository/types.ts";
-import { datePath, type EvidenceStore } from "../control-plane/evidence/store.ts";
+import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import type { Artifact } from "../control-plane/evidence/artifact.ts";
+import { datePath, readForParser, type EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { CapturedFinanceResponse } from "../funding/campaign-finance.ts";
 
 /** Server-side publisher reads the same durable evidence used by the workers. */
-export async function workerPublicationContext(now: string) {
+export async function workerPublicationContext(now: string, existingRepos?: ControlPlaneRepositories) {
   const connection = controlPlaneUrlFromEnv();
-  if (!connection) throw new Error("WORKER_PUBLICATION_CONTROL_PLANE_UNAVAILABLE");
-  const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
+  if (!existingRepos && !connection) throw new Error("WORKER_PUBLICATION_CONTROL_PLANE_UNAVAILABLE");
+  const repos = existingRepos ?? await createPgRepositories(connection!, now, { skipBootstrap: true });
   const sourcePolicy = publicationSourcePolicy((await repos.adminConfig.read("current"))?.value ?? null);
   const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
   const readObject = researchVaultResolver(repos, vault, "freshness");
@@ -61,10 +62,20 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
       const object = await store.get(key);
       const m = object?.meta.custom;
       if (!object || !m || object.meta.contentHash !== record.contentHash) return null;
-      const text = new TextDecoder().decode(object.bytes);
-      return { evidence: { artifactId: record.artifactId, contentHash: record.contentHash, text, acquiredByAttemptId: record.attemptId,
-        canonicalUrl: record.canonicalUrl, retrievedAt: m.retrievedAt ?? record.recordedAt, sourceId: m.sourceId ?? host, methodRouteId: m.methodRouteId ?? "held" },
-        observedAt: m.retrievedAt ?? record.recordedAt, httpStatus: Number(m.httpStatus ?? 0) || null, transport: m.transport ?? "UNKNOWN", partial: record.partial };
+      if (m.tier !== record.tier || m.canonicalUrl !== record.canonicalUrl || record.partial) return null;
+      const artifact: Artifact = { id: record.artifactId, tier: record.tier, contentHash: record.contentHash, byteLength: record.byteLength,
+        contentType: record.contentType, canonicalUrl: record.canonicalUrl, retrievalUrl: m.retrievalUrl ?? record.canonicalUrl,
+        retrievedAt: m.retrievedAt ?? record.recordedAt, httpStatus: Number(m.httpStatus), headers: {}, sourceId: m.sourceId,
+        methodRouteId: m.methodRouteId, workItemId: m.workItemId, attemptId: m.attemptId,
+        permission: m.permission as Artifact["permission"], transport: m.transport as Artifact["transport"],
+        retentionPolicy: m.retentionPolicy as Artifact["retentionPolicy"],
+        ...(m.extraction ? { extraction: JSON.parse(m.extraction) as Artifact["extraction"] } : {}) };
+      try {
+        const { input } = await readForParser(store, project, artifact);
+        return { evidence: evidenceProjection(input), observedAt: artifact.retrievedAt,
+          httpStatus: artifact.httpStatus, transport: artifact.transport,
+          partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
+      } catch { return null; }
     }
     return null;
   };
@@ -73,4 +84,15 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
 /** The default held-page reader over this checkout's vault. */
 export function localHeldCaptureReader() {
   return heldCaptureReader(new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)));
+}
+
+/** The same current source policy applies to parser and held-page publication. */
+export async function publicationCaptureReaders(repos: Pick<import("../control-plane/repository/types.ts").ControlPlaneRepositories, "adminConfig">,
+  readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>,
+  readHeld: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null> = localHeldCaptureReader()) {
+  const sourcePolicy = publicationSourcePolicy((await repos.adminConfig.read("current"))?.value ?? null);
+  return {
+    readCapture: async (id: string, results: readonly WorkerResultRecord[]) => ({ ...await readCapture(id, results), sourcePolicy }),
+    readHeld: async (record: ArtifactRecord) => { const capture = await readHeld(record); return capture ? { ...capture, sourcePolicy } : null; },
+  };
 }

@@ -11,9 +11,9 @@
  *   on already-disposed RouteTasks.
  * - 484 jurisdiction MEETINGS routes, left behind by the PDC transfer. They
  *   are 41% of that provider's standing set, so the bound held them. They are
- *   not superseded: the need moved to the gap ledger, and
- *   `planMovedToGapLedger` owns them
- *   (tests/meetings-discovery-gap-ledger.test.ts).
+ *   not superseded: the need ends when the body holds a calendar route, and
+ *   `planHeldRouteRetirement` owns them
+ *   (tests/mission-meetings-discovery.test.ts).
  * - 80 rows the legacy prefix retirement had retired with 20 occurrences still
  *   open.
  *

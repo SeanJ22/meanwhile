@@ -1,3 +1,4 @@
+import { workerDoorForRecord } from "../../civic-data/worker-reader-contracts.ts";
 import type { CivicExtractionContract } from "./types.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute } from "./research-types.ts";
 import type { EngineeringTaskSpec } from "./engineering-types.ts";
@@ -51,6 +52,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
     sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
     ...partFor(spec.recordClass),
+    ...(bodyId && workerDoorForRecord(spec.recordClass) ? { publication: { contractId: workerDoorForRecord(spec.recordClass)!, bodyId } } : {}),
     ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
     ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
     ...(source.recordClass === "POLLING_PLACES" && bodyId ? { publication: { contractId: "voting-sites" as const, bodyId } } : {}),

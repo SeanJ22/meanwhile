@@ -21,6 +21,8 @@
 
 import { refreshCuratedBodyStatus } from "../registry/curated-bodies.ts";
 import { refreshMeetingPartitions, type MeetingPartitionRefresh } from "../civic-data/meeting-partitions.ts";
+import { refreshOutcomePartitions, type OutcomePartitionRefresh } from "../civic-data/outcome-partitions.ts";
+import type { DoorRecord } from "./registry.ts";
 import { SOURCE_WIRING, installRegistryWiring, type BodySourceWiring } from "../registry/source-wiring.ts";
 import { listDoors, type DoorRepository } from "./registry.ts";
 import { installDoorHosts } from "../civic-data/source-authority.ts";
@@ -42,6 +44,8 @@ export interface DoorInstallResult {
   /** Why the registry was not used, in a sentence; null when it was or the switch is off. */
   readonly reason: string | null;
   readonly differences: readonly string[];
+  /** The doors the registry held when it was used, for what a pass builds from them; absent when the code's list is in use. */
+  readonly doors?: readonly DoorRecord[];
 }
 
 export async function installDoorWiringFromRegistry(
@@ -57,8 +61,10 @@ export async function installDoorWiringFromRegistry(
   }
   let rows: BodySourceWiring[];
   let hosts: string[];
+  let listed: readonly DoorRecord[];
   try {
     const doors = (await listDoors(repo)).doors;
+    listed = doors;
     rows = wiringRowsFromDoors(doors);
     hosts = meetingDoorHosts(doors);
   } catch {
@@ -84,11 +90,13 @@ export async function installDoorWiringFromRegistry(
   }
   installRegistryWiring(rows);
   installDoorHosts(hosts);
-  return { mode, reading: "registry", rows: rows.length, reason: null, differences };
+  return { mode, reading: "registry", rows: rows.length, reason: null, differences, doors: listed };
 }
 
 export interface DoorPassResult extends DoorInstallResult {
   readonly partitions: MeetingPartitionRefresh | null;
+  /** DB-22: the doors that collect outcomes, built into their own work; null with the switch off or the code's list in use. */
+  readonly outcomes: OutcomePartitionRefresh | null;
 }
 
 /**
@@ -100,8 +108,10 @@ export async function refreshDoorsForPass(
   options: Parameters<typeof installDoorWiringFromRegistry>[1] = {},
 ): Promise<DoorPassResult> {
   const installed = await installDoorWiringFromRegistry(repo, options);
-  if (installed.mode !== "registry") return { ...installed, partitions: null };
+  if (installed.mode !== "registry") return { ...installed, partitions: null, outcomes: null };
   const partitions = refreshMeetingPartitions();
   refreshCuratedBodyStatus();
-  return { ...installed, partitions };
+  // The registry's own doors only: while the code's list is in use no door is known to hold outcomes.
+  const outcomes = installed.reading === "registry" && installed.doors !== undefined ? refreshOutcomePartitions(installed.doors) : null;
+  return { ...installed, partitions, outcomes };
 }

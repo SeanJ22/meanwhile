@@ -17,12 +17,8 @@
  * refuses the DOM shortcut mechanically rather than by review.
  */
 
-import { createWorkItem, type WorkItem } from "../control-plane/work-item.ts";
-
 import {
-  isFailureClass,
   type ApplicabilityWindow,
-  type FailureClass,
   type InstanceStatus,
 } from "./reader-question.ts";
 
@@ -122,39 +118,3 @@ export function assertValidVisualAcceptanceCheck(check: VisualAcceptanceCheck): 
   }
 }
 
-/* ------------------------------------------------------------- diagnostics */
-
-/**
- * A visual failure produces a typed diagnostic WorkItem against the CLASS of
- * regression, not an instance patch: the obligation names the check and its
- * failure class, and the why says the fix is class-wide — one clipped card is
- * every card that clips under that condition.
- *
- * `failureClass` is required and validated for the same reason
- * `diagnosticWorkItemFor` requires it: red is diagnosed before it is worked.
- */
-export function visualDiagnosticWorkItemFor(
-  check: VisualAcceptanceCheck,
-  failureClass: FailureClass,
-  now: string,
-): WorkItem {
-  if (!isFailureClass(failureClass)) {
-    throw new Error(
-      `visualDiagnosticWorkItemFor requires one of the twelve failure classes; got ` +
-        `${JSON.stringify(failureClass)}. There is no default class.`,
-    );
-  }
-  return createWorkItem({
-    project: "pilot-health",
-    subject: check.surface,
-    obligation: `visual-diagnostic:${failureClass}:${check.id}`,
-    why:
-      `Visual acceptance check ${check.id} on ${check.surface} (zip ${check.zip}, ` +
-      `${check.viewport.width}x${check.viewport.height}) failed with class ` +
-      `"${failureClass}". The fix is class-wide — the regression class, not this one ` +
-      "instance — and the completion contract is the check passing on a fresh capture " +
-      "evaluated with the evidence kind its property requires.",
-    priority: "P1",
-    now,
-  });
-}

@@ -1,6 +1,6 @@
 # River status
 
-build_state: release 9 folding and testing (River session_01EnWcsto9iudrVWwszS9urS, Oct 6, 3:57 AM EDT); runner stopped since about 3:13 AM EDT
+build_state: release 9 open (#715, auto-merge on, CI running); runner stopped since about 3:13 AM EDT until the byte counter is live
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01EnWcsto9iudrVWwszS9urS
@@ -10,15 +10,32 @@ heartbeat: 2026-10-06T10:08:43Z
 
 
 ## This run (session_01EnWcsto9iudrVWwszS9urS, claimed the free lock Oct 6, 3:57 AM EDT)
-- Instead of testing 8061e21 alone and folding again, release 9 now carries the new READYs too, in one gates run:
-  - hunters f34b81aaa: campaign-sites cause (scoped reads; Neon estimate in its READY) and isolation part 1;
-  - meetings 375d7afb1: BX-08, BX-10 Failed-live repairs;
-  - auditors 78aa3f5ed: DP-13, DP-16, DP-17, FE-18, FE-21, **with hook 0 connected by River in the same fold** (scripts/pilot-runner.mts runs the auditors' passes; `WTP_AUDIT_PASSES=off` leaves them out; auditors' estimate under 20 MB an hour);
-  - people 48ef946cd: CA-11, CA-05, CA-14, CA-12 repair (folded cleanly this time).
-- river-next 12dc8cd + hook commit; `pnpm gates` running.
-- Held: registry a1aad625b (DB-21 Doors card; its Done-when needs WTP_DOORS_SEED/READ on the runner, not in this fold); admin 734ee9633 (measures has not reconciled it yet).
-- Byte counter: not READY on any stream yet (measures has the return since 3:50 AM EDT).
-- Runner heartbeat (Neon, read-only): last beat 07:12:49Z on a5fd753, so it is still stopped.
+
+**Release 9: #715** (release/9 at 4fabb66), opened at 6:12 AM EDT with auto-merge on. **`pnpm gates` 12/12 on 4fabb66**: 9,872 tests, 9,861 pass, 0 fail, 11 skipped; firewall 0 findings. It contains:
+- the tested 3 AM fold (fb10f50: BR-31; FE-24, 21, 37, 25, 40; DB-32, DB-34, FE-26, FE-27, FE-23; BX-03, BX-12; DB-37, DP-08, DB-45, DB-52; FE-35, FE-36);
+- hunters READY f34b81aaa: the campaign-sites cause (scoped reads) and isolation part 1;
+- meetings 375d7afb1: BX-08, BX-10 Failed-live repairs;
+- auditors 78aa3f5ed: DP-13, DP-16, DP-17, FE-18, FE-21, **with hook 0 connected by River** (the runner runs the auditors' passes; `WTP_AUDIT_PASSES=off` is the way back).
+
+CI: the first run, 37448256510, was cancelled by the concurrency rule when the PR body edit started run 37448274594. Same as release 8; not a failure.
+
+**Held out and returned (returns/<lane>.md, top items):**
+- **hunters 5e3b7f55e, the per-query byte counter and the hourly writer.** It fails the release firewall: lib/db/transfer-by-caller.ts writes per-process hour files and sits on every data path (MANUAL_DATA_PATH_WRITES_REPOSITORY, ROUTINE_PATH_WRITES_REPOSITORY). River proposed a shape (children report over stdout; only pilot-runner keeps the totals). **The runner stays stopped until this is live.** Fold it as its own small release the moment it is READY and the firewall passes.
+- **people 48ef946cd (CA-11, CA-05, CA-14, CA-12 repair):**
+  - The firewall problem is repaired by River in f226308d4 (stance topics from adminConfig). The trial is at stream/salvage-river-next-r9-people.
+  - The remaining failure is people's: tests/reader-last-mile-ask-ambiguous-context "Hourihan" now answers with a mashed run of page text quoted as her words.
+- admin 734ee9633: not reconciled by measures yet.
+- registry a1aad625b (DB-21): needs the runner's door switches (WTP_DOORS_SEED, WTP_DOORS_READ).
+
+**River's own READY:** stream/river 69fc6b1ed, cp_vital_signs (schema v25), the table hunters' writer upserts. Not run: the DDL on a real Postgres. Fold it with the byte counter.
+
+**Engineering lesson (River):** run `node --experimental-strip-types scripts/civic-data-firewall.mts` (about 3.5 minutes) on every lane's READY before a full gates run. Two of three gates runs this session stopped at the firewall within 4 minutes. Builders' own checks skip it.
+
+**Next River run:**
+1. #715 merged? Observe the deploy by SHA (`river.mjs observe <merge sha>`). The runner is stopped, so adoption waits for the restart.
+2. Check release 9's steps live (reader-facing first) into releases/live-ledger.md.
+3. Fold hunters' byte counter plus stream/river v25 the moment it is READY, run the firewall first, then gates, then release 10. Then push Sean the restart with `WTP_QUERY_BYTES_LOG=1`, if the counter still uses that switch (read hunters' status for the exact name).
+4. Send the morning summary if this run did not (see Pushes to Sean).
 
 ## HANDOFF FOR THE NEXT RIVER RUN (written Oct 6, 1:25 AM EDT)
 
@@ -187,6 +204,7 @@ Fold these after release 8 merges, as release 9. Keep the release-8 diff small.
 - **Held out and returned:** people (CA-11, CA-05 conflict with river); admin (overlap with BR-31).
 
 ### Pushes to Sean (record every one here, EDT)
+- 6:15 AM EDT: release 9 opened (#715, 25 steps, gates green); runner stays stopped (byte counter failed the firewall, returned to hunters); held-out lanes; Codex Continue line (the five lanes are on their paired Claude workers overnight; hand back when up); morning summary to follow once release 9 is live.
 - 3:20 AM EDT: correction. The spend holds are not the cause (their scans run inside Postgres). The cause is unidentified until the per-query byte counter exists. No fix on a guess, no rollback.
 - 3:10 AM EDT: release 8's first hour was about 9.4 GB (worse than release 6's 7.8 GB; over the 1.5 GB stop line). Cause: budget checks fetch every counting spend hold as rows. River is building the fix. No rollback done. Release 9 tested, not shipped.
 - 1:37 AM EDT: release 8 live, with the restart steps (ssh, `systemctl start meanwhile-runner.service`, journalctl), the campaign-sites answer (cause not fixed; hunters next), and the Codex Continue line (admin return).

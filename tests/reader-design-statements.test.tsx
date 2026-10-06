@@ -97,6 +97,21 @@ test("held numeric shares draw five bars on one 0–100 scale, never counts", ()
   assert.ok(markup.includes('data-statement-feed="not-held"'), "the missing feed is stated, not faked");
 });
 
+test("FE-15: PRL's dates, citation and licence sit in Sources, never on the card face", () => {
+  const markup = renderToStaticMarkup(
+    createElement(PublicStatementsProfileContent, { profile: fixtureProfile(true) }),
+  );
+  const at = markup.indexOf("data-card-sources");
+  assert.ok(at > 0, "the PRL citation reaches a Sources section");
+  const face = markup.slice(0, at);
+  assert.doesNotMatch(face, /Measured|\bRead\b/, "no measured or read date on the face");
+  assert.doesNotMatch(face, /americaspoliticalpulse\.com|creativecommons\.org|CC BY/, "no citation host or licence on the face");
+  assert.match(face, /statements tracked\./, "the tracked count stays with the facts");
+  const sources = markup.slice(at);
+  assert.match(sources, /Measured /);
+  assert.match(sources, /CC BY/);
+});
+
 test("without numeric shares the section falls back to the held sentences", () => {
   const markup = renderToStaticMarkup(
     createElement(PublicStatementsProfileContent, { profile: fixtureProfile(false) }),

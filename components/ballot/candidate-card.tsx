@@ -1,4 +1,5 @@
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { sourceLabelReadDate, splitLabelReadStamp } from "@/lib/ballot/label-read-stamp";
 import { hostOf } from "@/lib/officials/verification";
 import { VisibleCard } from "@/components/ballot/visible-card";
 import { personInitials } from "@/lib/officials/person-name";
@@ -173,7 +174,7 @@ export function CandidateCard({
             &ldquo;{card.bio}&rdquo;{" "}
 
           </p>
-          <CardSourcesContribution id="candidate-bio" sources={[{ what: "Biography in the candidate's own words", provenance: { sourceUrl: card.bioSourceUrl ?? "", sourceOrg: card.bioSourceLabel ?? (card.bioSourceUrl ? hostOf(card.bioSourceUrl) ?? "" : ""), collectedAt: "", verifiedAt: null } }]} /></>
+          <CardSourcesContribution id="candidate-bio" sources={[{ what: "Biography in the candidate's own words", provenance: { sourceUrl: card.bioSourceUrl ?? "", sourceOrg: sourceLabelReadDate(card.bioSourceLabel).org || (card.bioSourceUrl ? hostOf(card.bioSourceUrl) ?? "" : ""), collectedAt: sourceLabelReadDate(card.bioSourceLabel).readAt, verifiedAt: null } }]} /></>
         )}
 
         {!card?.bio && derivedBlurb && (
@@ -186,7 +187,7 @@ export function CandidateCard({
             &ldquo;{derivedBlurb.text}&rdquo;{" "}
 
           </p>
-          <CardSourcesContribution id="candidate-derived-bio" sources={[{ what: "Biography in the candidate's own words", provenance: { sourceUrl: derivedBlurb.sourceUrl, sourceOrg: derivedBlurb.sourceLabel, collectedAt: "", verifiedAt: null } }]} /></>
+          <CardSourcesContribution id="candidate-derived-bio" sources={[{ what: "Biography in the candidate's own words", provenance: { sourceUrl: derivedBlurb.sourceUrl, sourceOrg: sourceLabelReadDate(derivedBlurb.sourceLabel).org, collectedAt: sourceLabelReadDate(derivedBlurb.sourceLabel).readAt, verifiedAt: null } }]} /></>
         )}
 
         {(hasLinks || card?.email || card?.phone) && (
@@ -258,9 +259,22 @@ export function CandidateCard({
           surface, so the register is level and the string is the office's own
           name — never a hedge, and never hunt vocabulary.
         */}
-        {card?.phone && card?.phoneLabel && (
-          <p className="mt-1 t-detail text-muted">{card.phoneLabel}</p>
-        )}
+        {card?.phone && card?.phoneLabel && (() => {
+          // FE-14: the label stays here; its inline read date and host move
+          // to the card's Sources section.
+          const label = splitLabelReadStamp(card.phoneLabel);
+          return (
+            <>
+              <p className="mt-1 t-detail text-muted">{label.text}</p>
+              {label.readAt && (
+                <CardSourcesContribution
+                  id="candidate-phone-label"
+                  sources={[{ what: "The office phone line and address", provenance: { sourceUrl: label.host ? `https://${label.host}` : "", sourceOrg: label.host ?? "", collectedAt: label.readAt, verifiedAt: null } }]}
+                />
+              )}
+            </>
+          );
+        })()}
 
         {/*
           RULING 54 (2026-08-21): the address the candidate filed with the

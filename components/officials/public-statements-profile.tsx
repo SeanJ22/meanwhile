@@ -4,7 +4,8 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useEffect, useState } from "react";
 import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { PRL_CATEGORIES } from "@/lib/sources/prl/types";
-import { formatDateLong } from "@/lib/text/format-date";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { prlCardSource } from "@/lib/officials/card-sources";
 import { CardSection } from "./card-section";
 
 /** Shared map and ballot presentation; the source's measurement stays attributed. */
@@ -219,18 +220,17 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
         */}
         <p className="mw-feed-gap" data-statement-feed="not-held">
           Individual statements aren&apos;t held here yet — only PRL&apos;s category
-          shares.{" "}
-          <a className="underline underline-offset-2" href={profile.attribution.url} target="_blank" rel="noreferrer">
-            See PRL&apos;s data ↗
-          </a>
+          shares.
         </p>
         <p className="t-detail text-muted-foreground">
-          {profile.statementCount.toLocaleString("en-US")} statements tracked. Measured {formatDateLong(profile.measuredAt)}. Read {formatDateLong(profile.readAt.slice(0, 10))}.
+          {profile.statementCount.toLocaleString("en-US")} statements tracked.
         </p>
-        <p className="break-words t-detail text-muted-foreground">
-          <a className="underline underline-offset-2" href={profile.attribution.url} target="_blank" rel="noreferrer">{profile.attribution.citation}</a>
-          {" · "}<a className="underline underline-offset-2" href={profile.attribution.licenceUrl} target="_blank" rel="noreferrer">{profile.attribution.licence}</a>
-        </p>
+        {/*
+          FE-15: the measurement and read dates, PRL's citation and its licence
+          belong to the card's Sources section, never on the face. The card
+          (official or candidate) lists them there through this contribution.
+        */}
+        <CardSourcesContribution id={`prl:${profile.subjectId}`} sources={[prlCardSource(profile)]} />
       </div>
   );
 }

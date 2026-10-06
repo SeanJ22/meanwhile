@@ -17,7 +17,7 @@
  *
  * The note still renders, in full, verbatim, on the same page — once, at the
  * foot, with a marker on each contest it applies to. This is the same trade
- * `components/ballot/filing-note.tsx` makes for candidate-filing provenance
+ * the contest Sources section (formerly `components/ballot/filing-note.tsx`) makes for candidate-filing provenance
  * and `lib/meetings/list-attribution.ts` makes for meeting attribution. What
  * may collapse is the REPETITION, never the record.
  *

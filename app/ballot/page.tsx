@@ -49,7 +49,6 @@ import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
 import { jurisdictionNameFromOcdId } from "@/lib/ballot/could-govern";
 import { photosFirst } from "@/lib/ballot/photo-order";
-import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
 import { StateMoneySection } from "@/components/funding/state-money-section";
 import { stateMoneyForCard } from "@/lib/funding/nominee-money";
@@ -2203,41 +2202,17 @@ export default async function BallotPage({
                 honest standing alone; the panel carries the link and the read
                 date, verbatim and complete, in the app.
               */}
+              {/*
+                FE-14 (Failed live, Oct 6): the summary still names whose list
+                this is, but the record's link and read date live only in the
+                contest's own Sources section, at the foot of this card.
+              */}
               {!sourceRef.shared && (
-                <FilingNote
-                  summary={
-                    lineup && canvass
-                      ? `Nominees per the certified primary canvass (${canvass.issuedBy})`
-                      : `Candidates as filed with ${contest.provenance.sourceOrg}`
-                  }
-                >
-                  {lineup && canvass ? (
-                    <>
-                      Nominees per the{" "}
-                      <a
-                        href={canvass.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline decoration-dotted underline-offset-2 hover:text-link"
-                      >
-                        certified primary canvass
-                      </a>{" "}
-                      ({canvass.issuedBy}) · read {formatDateMDY(canvass.readAt)}
-                    </>
-                  ) : (
-                    <>
-                      <a
-                        href={contest.provenance.sourceUrl ?? undefined}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline decoration-dotted underline-offset-2 hover:text-link"
-                      >
-                        {contest.provenance.sourceOrg} filing
-                      </a>{" "}
-                      · read {formatDateMDY(contest.provenance.collectedAt)}
-                    </>
-                  )}
-                </FilingNote>
+                <p className="mt-1 t-caption leading-snug text-muted" data-filing-summary>
+                  {lineup && canvass
+                    ? `Nominees per the certified primary canvass (${canvass.issuedBy})`
+                    : `Candidates as filed with ${contest.provenance.sourceOrg}`}
+                </p>
               )}
 
               <FilingChanges removals={(set.removals ?? []).filter((record) => record.contestId === contest.id)} />
@@ -2527,6 +2502,14 @@ export default async function BallotPage({
                   />
                 </>
               )}
+              <CardSourcesContribution
+                id={`contest-record:${contest.id}`}
+                sources={[
+                  lineup && canvass
+                    ? { what: "Nominees per the certified primary canvass", provenance: { sourceUrl: canvass.url, sourceOrg: canvass.issuedBy, collectedAt: canvass.readAt, verifiedAt: null } }
+                    : { what: "The candidates filed for this office", provenance: contest.provenance },
+                ]}
+              />
             </section>
           );
         })}

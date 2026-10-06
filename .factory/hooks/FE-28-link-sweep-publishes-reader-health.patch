@@ -1,0 +1,24 @@
+diff --git a/scripts/link-sweep.mts b/scripts/link-sweep.mts
+index 4b4ece9c0..3d6275f6f 100644
+--- a/scripts/link-sweep.mts
++++ b/scripts/link-sweep.mts
+@@ -12,6 +12,7 @@ import { resolveReaderArtifactStore } from "../lib/meetings/edge-store.ts";
+ import { collectOutboundLinks, readEdgeForSweep, recordSweep, sweepLinks, type SweepFetch } from "../lib/doors/link-sweep.ts";
+ import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
+ import { sourceUserAgent } from "../lib/sources/http.ts";
++import { publishReaderLinkHealth } from "../lib/civic-data/reader-link-health-publication.ts";
+ 
+ const FLAGS = new Map<string, string>(
+   process.argv.slice(2).filter((a) => a.startsWith("--")).map((a) => {
+@@ -59,5 +60,10 @@ if (!opened.ok) {
+   say(`REFUSED — ${opened.detail}`);
+   process.exit(1);
+ }
+-const summaries = await recordSweep(opened.repos.doors, results, new Date().toISOString());
++const sweptAt = new Date().toISOString();
++const summaries = await recordSweep(opened.repos.doors, results, sweptAt);
++// FE-28: the reader page shows a dead link as plain text only once the sweep
++// publishes its dead addresses to the reader edge.
++const published = await publishReaderLinkHealth(results, sweptAt).catch((error: unknown) => { say(`reader link health not published: ${error instanceof Error ? error.message : String(error)}`); return false; });
++say(published ? "reader link health published." : "reader link health unchanged (a newer sweep is already published, or the write did not land).");
+ for (const s of summaries) say(`${s.surface}: ${s.dead} dead, ${s.ok} answering, ${s.later} to retry, ${s.waiting} waiting, of ${s.links}.`);

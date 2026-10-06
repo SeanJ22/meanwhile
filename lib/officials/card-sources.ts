@@ -4,6 +4,7 @@ import type { Meeting, Provenance } from "../sources/types.ts";
 import type { RollCallVote } from "../votes/types.ts";
 import type { ExecutiveAction } from "./executive-actions.ts";
 import type { SeatHolder } from "./lookup.ts";
+import { formatDateLong } from "../text/format-date.ts";
 
 /**
  * **What a battlecard actually drew on — assembled once, for every card
@@ -230,9 +231,17 @@ export function personCardSources(
  * card's Sources. Meanwhile names the measurement and its maker and never
  * scores, rates or labels the person itself.
  */
-export function prlCardSource(profile: { attribution: { text: string; url: string }; sourceUrl: string; readAt: string }): CardSource {
+export function prlCardSource(profile: { attribution: { text: string; url: string; citation?: string; licence?: string; licenceUrl?: string }; sourceUrl: string; readAt: string; measuredAt?: string }): CardSource {
+  // The measurement date and licence are part of the citation, so they sit
+  // here in Sources rather than on the Public statements face (FE-15).
+  const measuredOn = formatDateLong(profile.measuredAt);
+  const measured = measuredOn ? ` Measured ${measuredOn}.` : "";
+  const citation = profile.attribution.citation ? ` Cite as: ${profile.attribution.citation}.` : "";
+  const licence = profile.attribution.licence
+    ? ` Shared under ${profile.attribution.licence}${profile.attribution.licenceUrl ? ` (${profile.attribution.licenceUrl})` : ""}.`
+    : "";
   return {
-    what: "The shares of their public statements about policy, criticism and more — measured by the Polarization Research Lab, not by Meanwhile",
+    what: `The shares of their public statements about policy, criticism and more — measured by the Polarization Research Lab, not by Meanwhile.${measured}${citation}${licence}`,
     provenance: {
       sourceUrl: profile.sourceUrl || profile.attribution.url,
       sourceOrg: profile.attribution.text,

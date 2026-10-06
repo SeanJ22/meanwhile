@@ -259,24 +259,14 @@ test("M119: a question never narrows the map, and a name still does", () => {
   );
 });
 
-// ── 4h: the filing provenance, behind an annotation that is still honest ──
+// ── 4h, superseded by FE-14: the filing record lives in the contest's Sources ──
 
-test("4h: the pointer is always visible, names its source, and opens in the app", () => {
-  const note = readFileSync(
-    join(ROOT, "components", "ballot", "filing-note.tsx"),
-    "utf8",
-  );
-  // Keyboard-reachable by construction: a real button, with its state
-  // announced. Not a link (which would leave) and not a div with a handler.
-  assert.match(note, /<button\b/);
-  assert.match(note, /aria-expanded=\{open\}/);
-  assert.match(note, /aria-controls=\{panelId\}/);
-  assert.ok(!/target="_blank"/.test(note), "the annotation must open in the app");
-
+test("FE-14: the contest names whose list it is, and its link and read date sit only in Sources", () => {
   const page = readFileSync(join(ROOT, "app", "ballot", "page.tsx"), "utf8");
-  assert.match(page, /<FilingNote/, "the ballot page must use the annotation");
-  // The summary NAMES the source organisation. An unlabelled icon would be
-  // de-sourcing wearing a tidy face.
+  // The summary still NAMES the source organisation on the face.
   assert.match(page, /Candidates as filed with \$\{contest\.provenance\.sourceOrg\}/);
   assert.match(page, /Nominees per the certified primary canvass/);
+  // The record itself goes to the contest's Sources section.
+  assert.match(page, /<CardSourcesContribution\s+id=\{`contest-record:\$\{contest\.id\}`\}/);
+  assert.doesNotMatch(page, /<FilingNote/, "no in-place source panel on the card face");
 });

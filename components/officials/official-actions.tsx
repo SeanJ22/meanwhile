@@ -21,8 +21,10 @@ function ActionsForIdentity({ subjectId }: { subjectId: string }) {
       .catch(() => { if (!controller.signal.aborted) setFailed(true); });
     return () => controller.abort();
   }, [subjectId]);
-  if (failed) return <CardSection title="Official actions"><WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} /></CardSection>;
-  if (!answer || (!answer.count && answer.status !== "IDENTITY_UNRESOLVED")) return null;
+  // FE-42: the section is always there, so a challenger's card has the same
+  // reading order as an incumbent's; a gap says we're working on it.
+  if (failed || (answer && !answer.count && answer.status !== "IDENTITY_UNRESOLVED")) return <CardSection title="Official actions"><WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} /></CardSection>;
+  if (!answer) return <CardSection title="Official actions"><p className="mw-loading-inline" role="status">Loading official actions…</p></CardSection>;
   return <CardSection title="Official actions"><OfficialActionsContent answer={answer} /></CardSection>;
 }
 

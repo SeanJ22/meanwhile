@@ -80,3 +80,18 @@ test("the cost read is one bounded aggregate over the hour by its index; the wri
   const broken = { query: async () => { throw Object.assign(new Error("permission denied"), { code: "42501" }); } };
   await assert.rejects(writeVitalSignsRow(broken, row), /permission denied/);
 });
+
+test("facts live count once per published version, in BR-31's unit, and a check counts none", async () => {
+  const { recordPublicationFlow } = await import("../lib/civic-data/publication-flow.ts");
+  const { createMemoryRepositories } = await import("../lib/control-plane/repository/memory.ts");
+  const { processNeonBytes, hourStart } = await import("../lib/db/transfer-by-caller.ts");
+  const facts = () => processNeonBytes().find(hour => hour.hour === hourStart(Date.now()))?.counters?.facts_live ?? 0;
+  const repos = createMemoryRepositories();
+  const before = facts();
+  const at = new Date().toISOString();
+  await recordPublicationFlow(repos, "cand-1", { workerResultId: "wr-1", stage: "CHECKED", records: 9, changedRecords: 4, versionId: null }, at);
+  await recordPublicationFlow(repos, "cand-1", { workerResultId: "wr-1", stage: "LIVE", records: 9, changedRecords: 4, versionId: "v1" }, at);
+  await recordPublicationFlow(repos, "cand-1", { workerResultId: "wr-1", stage: "LIVE", records: 9, changedRecords: 4, versionId: "v1" }, at);
+  await recordPublicationFlow(repos, "cand-2", { workerResultId: "wr-2", stage: "LIVE", records: 3, changedRecords: 0, versionId: "v2" }, at);
+  assert.equal(facts() - before, 4);
+});

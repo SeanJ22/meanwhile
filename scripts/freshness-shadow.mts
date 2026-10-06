@@ -369,6 +369,9 @@ import {
   SendBudgetRefusal,
   budgetGuardedTransport,
   hasBudgetLines,
+  liveSpendHolds,
+  releaseOpenJobs,
+  SPEND_HOLD_STALE_MS,
 } from "../lib/control-plane/expansion/spend-holds.ts";
 import { evaluateAssignmentFromRecords, evaluateMissionDone, memberRecordsForSend, missionMapCount, type MissionMapCount } from "../lib/control-plane/assignment-completion.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -459,6 +462,11 @@ function writeCycleRecord(record: Readonly<Record<string, unknown>>): string {
  */
 let crashRecorded = false;
 let crashRepos: ControlPlaneRepositories | null = null;
+/** Set once the round's paid jobs exist: settles every job the round never settled, so a failed round leaves no hold behind. */
+let releaseRoundHolds: (() => Promise<readonly string[]>) | null = null;
+const SPEND_HOLD_STALE_HOURS = SPEND_HOLD_STALE_MS / 3_600_000;
+/** How long a failing round waits on that release before it records its outcome anyway. */
+const CRASH_HOLD_RELEASE_MS = 5_000;
 async function recordCrash(error: unknown): Promise<void> {
   if (crashRecorded) return;
   crashRecorded = true;
@@ -466,6 +474,12 @@ async function recordCrash(error: unknown): Promise<void> {
   const headline = message.split("\n")[0];
   /* What the cycle was waiting on when it failed, taken before the crash's own label is entered. */
   const pendingAtCrash = pending.snapshot();
+  /* MW-021: a hold the failed round never settled must not outlive it. Bounded: the outcome is recorded either way. */
+  if (releaseRoundHolds !== null) {
+    const release = releaseRoundHolds;
+    await Promise.race([release().then((failed) => { if (failed.length) console.error(`  budget holds not released: ${failed.join("; ")}`); }, () => undefined),
+      new Promise<void>((done) => setTimeout(done, CRASH_HOLD_RELEASE_MS).unref())]);
+  }
   const result = await pending.step("crash:record", () => recordFailedCycle({
     repos: crashRepos,
     error,
@@ -1588,7 +1602,7 @@ try {
     () => null, startupReadRetry)];
   if (researchSpendInWindow(costLedger, NOW).windowUsd === null) {
     const heldBudget = await retryStartupRead(() => repos.budget.read(), () => null, startupReadRetry);
-    historicalSpendHolds = Object.values(heldBudget.value.spendHolds ?? {});
+    historicalSpendHolds = Object.values(liveSpendHolds(heldBudget.value.spendHolds, NOW));
   }
 } catch (error) {
   ledgerUnreadable = error instanceof Error ? error.message : String(error);
@@ -2056,6 +2070,7 @@ const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as 
 const spendHolds = new DurableSpendHolds({ budget: repos.budget, now: nowIso });
 /** The admitted Scout job on each obligation this cycle, with what it holds. */
 const jobSpend = new Map<string, JobSpend>();
+releaseRoundHolds = () => { const open = [...jobSpend.values()]; jobSpend.clear(); return releaseOpenJobs(spendHolds, open, nowIso()); };
 /** Each held job's subject, so a pre-warm charged to it names the same jurisdiction. */
 const jobSubject = new Map<string, string>();
 let scoutJobSeq = 0;
@@ -3094,7 +3109,9 @@ async function runAutonomousWave() {
   placeOrderDirty = true;
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
-  const held = await planHeldWorkerFleet(ROOT, fleet, true);
+  /* The legacy held-evidence plan read every artifact, Attempt, work item and route task on every wave, and has found no
+     work since 2026-10-04 (no schema-1 work items remain). Off by default (2026-10-06, Neon transfer); WTP_HELD_FLEET_PLAN=1 runs it. */
+  const held = process.env.WTP_HELD_FLEET_PLAN === "1" ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },
@@ -4011,6 +4028,12 @@ console.log();
 for (const line of lines) console.log(line);
 
 /* ------------------------------------------------------ canonical outcome --- */
+
+/* MW-021: every Scout job this round admitted and never settled releases its hold (a job that sent books what it committed). */
+{
+  const notReleased = await releaseRoundHolds!();
+  if (notReleased.length) runtimeConditions.push(`budget holds this round could not release (${notReleased.join("; ")}); each leaves the ledger after ${SPEND_HOLD_STALE_HOURS} hours`);
+}
 
 const runRecord = {
       startedAt: cycle.startedAt,

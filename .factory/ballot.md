@@ -3,7 +3,7 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
 lock: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
-heartbeat: 2026-10-06T01:18:49Z
+heartbeat: 2026-10-06T01:30:00Z
 on_river: CA-20 CA-24 CA-30 CA-44 CA-45 CA-51 integrated through release ecf402600401783b094837c29e0c515eadbdb843; returned CA-30/51 repairs retained at 8760257.
 ready: none new. Exact597d failed/incomplete (4 assertions in2files) never fold; earlierf984 returned build. Combined20step replacement includes owned wayback restoration and generic inventory/normal source fixes.
 checks: CA39 normal exact-place/date/retry proof PASS; CA54 normal worker publication→typed reader→API→actual grounded POST PASS; national finance/card/Ask3/3, focused budget lexical1/1; whole types0 and focused lint0. Original parser12/12 current digestc2c32a193bd2. Full exact gates next, no new canonical PASS yet. Older certificates preserved below.
@@ -113,3 +113,5 @@ CA31_CA32_follow_on: Normalcompletecandidate JSON worker proof discovered struct
 CA31_CA32_hooks: River to slide: preserve saved PDF text/CSV capture and raw document hashes in worker-publication-evidence.ts, invoke existing publishWorkerBallotContestsResults from normal completed BALLOT_CONTEST/MEASURE work, publish BALLOT_CANDIDACY scopeUS:state-election-ballots on edge. Registry register ballot-contests door with exactsource fieldmaps. Hunters campaign-site-cycle.ts#campaignSiteSubjectsFromHoldings must include held general ballot candidacies' filed website channels alongside legacy filings; current canonical subjects/universes now already include these candidate IDs. Live comparison must precede removal of legacy BALLOT_SOURCES/three-state/manual paths; they remain wayback, no false retirementclaim.
 
 combined20_active: Exact0fc6ef6d21a6aa90af928ff082d2ea0c073d445e /workspace/meanwhile-ballot-combined20-check; selectorFULL/browsertrue explicitRiverae075; clean source no.next/noDB/store/filter standard2workers/systemChromium151. Gating1606. New exactcertificate scriptupdated; preserve gate-run+complete manifest/timings/allselectedfiles and loghashes beforeREADY. Latestreturns e8918c6e unchanged, CP03notintegrated.
+
+combined20_progress: Preflight/firewall0findings across257routine32owner, lint0/types0/control-plane0/stateholdings0/statemanifest56PASS/feedback0/browser0. Exact0fc6 canonicalFULL1126files/two workers/cleanstart active, first271files2415tests0fail, CI selfchecks ongoing. No newREADY; no source changes sincefreeze.

@@ -65,7 +65,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
   const directory = contractId === "registry-runtime-bindings";
   const body = prior.payload.registry.bodies.find(row => row.name && (!(directory || contractId === "official-filings" || contractId === "public-records" || contractId === "government-budgets" || contractId === "ballot-contests" || contractId === "voting-sites") || prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId &&
-    (contractId !== "official-filings" || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1))))!;
+    (!["official-filings", "ballot-contests"].includes(contractId) || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1))))!;
   const publisherDivisionId = body.ocdId;
   const division = prior.payload.registry.divisions.find(row => row.ocdId === publisherDivisionId)!;
   const recordClass = classOverride ?? (directory ? "OFFICIAL_BOARD_DIRECTORY" : WORKER_READER_CLASSES[contractId]);
@@ -459,7 +459,8 @@ test("local government finance runs through the existing worker publisher and sc
 test("completed polling workers publish every registered site through the existing task dispatch and retain their exact work outcome", async () => {
   const f = await workerFixture("voting-sites", (prior, bodyId) => {
     const body = prior.payload.registry.bodies.find(row => row.id === bodyId)!;
-    const division = prior.payload.registry.divisions.find(row => row.ocdId === body.ocdId)!;
+    const publishingDivisionId = body.ocdId;
+    const division = prior.payload.registry.divisions.find(row => row.ocdId === publishingDivisionId)!;
     return [{ jurisdictionName: division.label, model: "Vote centers", name: "Public Library", address: "1 Public Road", kind: "Election day" }];
   });
   const doorId = "fixture:registered-polling", item = await f.h.repos.workItems.mustRead(f.h.item.id);

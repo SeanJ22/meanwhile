@@ -42,9 +42,10 @@ export function workerBallotContestsPackage(input: {
   for (const row of source) groups.set(groupKey(row), [...groups.get(groupKey(row)) ?? [], row]);
   const state = checked.contract.jurisdiction.state.toUpperCase();
   const ballots: Record<string, BallotSet> = {}, heldContests: string[] = [];
-  // CSV delimiters are not word boundaries in section3Contest. Use the exact
-  // replayed source cells as visible text, preserving names (including commas).
-  const pageText = checked.contract.extraction.format === "DELIMITED_TEXT"
+  // Structured delimiters are not visible word boundaries in section3Contest.
+  // Use the exact replayed source cells, preserving names (including commas);
+  // the original capture and its raw hash remain the publication evidence.
+  const pageText = ["DELIMITED_TEXT", "JSON_RECORDS", "XML_RECORDS"].includes(checked.contract.extraction.format)
     ? source.map(row => Object.values(row).join("\n")).join("\n") : checked.primary.evidence.text;
   const page = { url: checked.primary.evidence.canonicalUrl, text: pageText,
     retrievedAt: checked.primary.observedAt, linkingPage: linkingPageFrom(checked.primary.evidence.canonicalUrl,

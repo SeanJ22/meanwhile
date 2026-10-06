@@ -594,8 +594,8 @@ export function candidateUniverseFromPromoted(
 export function candidateEnrichmentUniversesFromHoldings(
   holdings: CandidateEnrichmentAuthorityHoldings,
   nowIso: string,
-): { readonly universes: Partial<Record<string, CandidateUniverse>>; readonly failures: string[] } {
-  const universes: Partial<Record<string, CandidateUniverse>> = {};
+): { readonly universes: Record<string, CandidateUniverse>; readonly failures: string[] } {
+  const universes: Record<string, CandidateUniverse> = {};
   const failures = [...holdings.failures];
   if (!holdings.profiles || !holdings.corpus) return { universes, failures };
   for (const stateCode of LEGACY_BALLOT_AUTHORITY_STATES) {

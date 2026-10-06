@@ -1,0 +1,30 @@
+{
+  "commit": "597d9c8fa246824e9cb6d4bf8e45cf996b163d03",
+  "neverReady": true,
+  "reason": "Own CA35 voting-sites invocation changed to worker-only prematurely disabling legacy automatic pass; own test fixture division lookup hit architectural meeting-body guard. Both reproduced on597d and all12/12 pass on plainRiver186f. Stop failed canonical/gates; preserve full failed/incomplete artifacts; restore DIRECT_SOURCE wayback and use explicit publishingDivisionId in registry lookup. New20step candidate includes CA31/32 additional source.",
+  "status": "failed",
+  "exitCode": 1,
+  "timingComplete": false,
+  "artifacts": {
+    ".factory/ballot-597d-failure-test-shard-1-of-1.json.gz": {
+      "bytes": 611205,
+      "sha256": "a703ea9acb675665856ee04d454abb5ef8639d06ca0f0d42194c71889f2f0e59"
+    },
+    ".factory/ballot-597d-failure-test-shard-1-of-1.timings.jsonl.gz": {
+      "bytes": 148202,
+      "sha256": "5eb2fc4c7ce1f1009aa29493dbabf4835d56aaef505b003b5365d110edbf860b"
+    },
+    ".factory/ballot-597d-failure-ballot-combined18-exact-gates.log.gz": {
+      "bytes": 694,
+      "sha256": "e2e398c7a533529a736d59697ce35f284d53dbbc8d7f24929fbe34d0779b50f8"
+    },
+    ".factory/ballot-597d-failure-ballot-597d-two-failures.log.gz": {
+      "bytes": 5573,
+      "sha256": "1faffa3c36f68836f2b341989517246bbacb78e4760fc57355b9527517a129bf"
+    },
+    ".factory/ballot-597d-failure-ballot-river186f-two-failures.log.gz": {
+      "bytes": 1406,
+      "sha256": "fc92e8ad7ce497ac0b90a2aa35ae4a6507da91b347c2432753dad273d55acc98"
+    }
+  }
+}

@@ -3219,7 +3219,7 @@ console.log(
 // finalization, alongside the independent discovery/publication passes.
 async function makeAutonomousFleet() {
   const fleetTransport = modelLaneEnabled ? workerMessages : null;
-  return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
+  const runtime = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
     spaceOut: spacer, browse: browseWithPlaywright,
@@ -3229,6 +3229,8 @@ async function makeAutonomousFleet() {
       transportFor: autonomousTransportFor(fleetTransport), reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),
     auditCeilingUsd: effectiveCeilingUsd,
     lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject), missionBlanksFor });
+  /* CH-23 part 3 (DP-02): the coordinator's known doors use Admin's shut threshold from this round, as the round's own doors do. */
+  return { ...runtime, shutThreshold };
 }
 async function runAutonomousWave() {
   placeOrderDirty = true;

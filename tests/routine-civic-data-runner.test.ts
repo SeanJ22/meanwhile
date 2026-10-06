@@ -334,6 +334,8 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "plural-openstates",
     // DB-06: a partition's durable history promotes under its partition's own contract (`meetingHistoryContract`), so it has no contract of its own to list.
     "meetings-history",
+    // DB-22: door-built outcome contracts exist only at runtime, one per door that holds outcomes.
+    "door-outcomes",
   ];
   const expectedAuthorities = new Set([
     ...observableRoutineContracts().map((contract) => contract.sourceId),

@@ -1,3 +1,4 @@
+import { boxIndexEnabled, indexDetectiveFindings } from "../box.ts";
 import { endAttempt, isExpired, release, type Attempt } from "../attempt.ts";
 import type { AuditFinding, ValidationRecord } from "../audit.ts";
 import type { RouteTask } from "../route-task.ts";
@@ -32,10 +33,14 @@ export async function completeWorkerTask(repos: ControlPlaneRepositories, result
   };
   await repos.workerResults.append(result.workItemId, result.id, committed, result.endedAt);
   await applyWorkerCompletion(repos, committed);
+  if (boxIndexEnabled() && committed.result.role === "DETECTIVE") {
+    await indexDetectiveFindings(repos.boxFindings, { ...committed, result: committed.result },
+      new Map((await repos.artifacts.readAll()).map(artifact => [artifact.artifactId, artifact])), committed.endedAt);
+  }
   return committed;
 }
 
-async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: WorkerResultRecord, costAlreadyApplied = false): Promise<void> {
+export async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: WorkerResultRecord, costAlreadyApplied = false): Promise<void> {
   const { completion: c, endedAt: now } = record;
   const attempt = await repos.attempts.mustRead(record.attemptId);
   if (canonicalJson(attempt.value) !== canonicalJson(c.closedAttempt)) {
@@ -85,19 +90,54 @@ async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: Wo
   }
 }
 
+/** How far before a process's last pass its next pass re-reads appended results, so a writer's clock running ahead loses none. */
+export const RECONCILE_APPEND_SLACK_MS = 10 * 60_000;
+
+/**
+ * Per process and store: when the last pass started, and the results it has
+ * not yet seen fully applied. The first pass in a process reads every result;
+ * later passes read only what was appended since (with slack) plus those still
+ * pending, so a quiet pass is one empty query instead of six whole tables
+ * (2026-10-06: this ran on every worker drain and lease sweep and listed all of
+ * cp_attempts, cp_route_tasks, cp_leases, cp_work_items and the cost log).
+ */
+const reconcileState = new WeakMap<ControlPlaneRepositories, { since: string; pending: Map<string, WorkerResultRecord> }>();
+
+async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<readonly { id: string; value: T }[]>; read(id: string): Promise<{ id: string; value: T } | null> },
+  ids: readonly string[]): Promise<Map<string, T>> {
+  const unique = [...new Set(ids)];
+  const rows = repo.readMany ? await repo.readMany(unique)
+    : (await Promise.all(unique.map(id => repo.read(id)))).filter((row): row is { id: string; value: T } => row !== null);
+  return new Map(rows.map(row => [row.id, row.value]));
+}
+
 export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories): Promise<void> {
-  const records = await repos.workerResults.readAll();
-  if (records.length === 0) return;
+  const passStartedAt = new Date().toISOString();
+  const state = reconcileState.get(repos);
+  const appended = state === undefined ? await repos.workerResults.readAll()
+    : await repos.workerResults.readSince(new Date(Date.parse(state.since) - RECONCILE_APPEND_SLACK_MS).toISOString());
+  const candidates = new Map(state?.pending ?? []);
+  for (const record of appended) candidates.set(record.id, record);
+  const records = [...candidates.values()];
+  if (records.length === 0) { reconcileState.set(repos, { since: passStartedAt, pending: new Map() }); return; }
   // Recovery must not pay several network round trips for every historical
   // success before admitting today's work. Only exact, fully applied commits
   // can skip replay; incomplete projections still use the guarded writer.
-  const [attemptRows, taskRows, leaseRows, costs, itemRows] = await Promise.all([
-    repos.attempts.list(), repos.routeTasks.list(), repos.leases.list(), repos.costs.readAll(), repos.workItems.list(),
+  // Only the rows these results name are read: their Attempts, RouteTasks,
+  // leases (keyed by RouteTask), WorkItems and the cost rows of those items.
+  const itemIds = [...new Set(records.map(record => record.workItemId))];
+  const needsDependents = records.some(record => record.result.role === "ADVERSARIAL_AUDITOR" && record.result.verdict === "BROKE");
+  const [attempts, tasks, leases, costs, items, dependentRows] = await Promise.all([
+    readByIds(repos.attempts, records.map(record => record.attemptId)),
+    readByIds(repos.routeTasks, records.map(record => record.routeTaskId)),
+    readByIds(repos.leases, records.map(record => record.routeTaskId)),
+    Promise.all(itemIds.map(id => repos.costs.read(id))).then(rows => rows.flat()),
+    readByIds(repos.workItems, itemIds),
+    /* Dependents of a broken audit have no index to find them by; only that rare case lists the work items. */
+    needsDependents ? repos.workItems.list() : Promise.resolve([]),
   ]);
-  const attempts = new Map(attemptRows.map(row => [row.id, row.value]));
-  const tasks = new Map(taskRows.map(row => [row.id, row.value]));
-  const leases = new Map(leaseRows.map(row => [row.id, row.value]));
-  const items = new Map(itemRows.map(row => [row.id, row.value]));
+  const itemRows = dependentRows;
+  const stillPending = new Map<string, WorkerResultRecord>();
   const costsByAttempt = new Map<string, CostEntry[]>();
   for (const cost of costs) {
     const rows = costsByAttempt.get(cost.attemptId) ?? [];
@@ -129,8 +169,11 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
         canonicalJson(attempts.get(record.attemptId) ?? null) === canonicalJson(record.completion.closedAttempt) &&
         (!lease || lease.released || lease.id !== record.completion.closedAttempt.leaseId) &&
         costApplied && transitioned && dependentsApplied) continue;
+    /* Applied now; checked again next pass, so a failed apply is retried and never dropped. */
+    stillPending.set(record.id, record);
     await applyWorkerCompletion(repos, record, costApplied);
   }
+  reconcileState.set(repos, { since: passStartedAt, pending: stillPending });
 }
 
 /** Result consumers never accept output from an uncommitted, dead, or mismatched producer. */
@@ -147,15 +190,31 @@ function assertCompletedWorkerResult(record: WorkerResultRecord, attempt: Attemp
   assertFleetResult(record.result, record.completion.completedTask.workerTask!.role, attempt.id);
 }
 
+/** Reads the named Attempts by id (batched where the store can); ids with no row are left out. */
+async function readAttemptsById(repos: ControlPlaneRepositories, ids: readonly string[]) {
+  const unique = [...new Set(ids)];
+  if (repos.attempts.readMany) return repos.attempts.readMany(unique);
+  const rows: { readonly id: string; readonly value: Attempt }[] = [];
+  for (let at = 0; at < unique.length; at += 16) {
+    for (const row of await Promise.all(unique.slice(at, at + 16).map(id => repos.attempts.read(id)))) if (row) rows.push(row);
+  }
+  return rows;
+}
+
 /** Same exact producer validation as a point read, with bounded repository reads for inherited history. */
 export async function readCompletedWorkerResults(repos: ControlPlaneRepositories, workItemId?: string): Promise<readonly WorkerResultRecord[]> {
   /* One item's results can only have been produced by that item's Attempts
      (`completeWorkerTask` refuses a result whose Attempt belongs to another
      item), so an item-scoped read lists only those Attempts. */
-  const [records, attemptRows] = await Promise.all([
+  /* The unscoped read checks every result against its own Attempt only, so it
+     point-reads those Attempts by id. Listing all of cp_attempts (42,400 rows,
+     ~42 MB on 2026-10-06) to check 83 results was the control plane's largest
+     read, repeated by every publication child of the routine pass. */
+  const [records, scopedAttempts] = await Promise.all([
     workItemId === undefined ? repos.workerResults.readAll() : repos.workerResults.read(workItemId),
-    workItemId === undefined ? repos.attempts.list() : repos.attempts.listWhere(["workItemId"], workItemId),
+    workItemId === undefined ? Promise.resolve(null) : repos.attempts.listWhere(["workItemId"], workItemId),
   ]);
+  const attemptRows = scopedAttempts ?? await readAttemptsById(repos, records.map(record => record.attemptId));
   const attempts = new Map(attemptRows.map(row => [row.id, row.value]));
   return records.filter(record => {
     const attempt = attempts.get(record.attemptId);

@@ -1,3 +1,4 @@
+import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
@@ -798,6 +799,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
+    boxFindings: fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings"),
     scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
     /* The nightly door (RULING 242, schema v5). */

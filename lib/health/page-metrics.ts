@@ -82,6 +82,8 @@ export interface PageObservation {
   /** Layout-shift entries, or null when the browser reports none to read. */
   layoutShifts: { value: number; hadRecentInput: boolean }[] | null;
   elements: ObservedElement[];
+  /** Visible card citations outside their Sources disclosure (FE-22). */
+  sourceLeaks?: { selector: string; text: string; reason: string }[];
 }
 
 export type PageIssueKind =
@@ -91,7 +93,8 @@ export type PageIssueKind =
   | "small-tap-target"
   | "off-scale-font-size"
   | "off-scale-spacing"
-  | "low-contrast";
+  | "low-contrast"
+  | "source-outside-sources";
 
 export interface PageIssue {
   kind: PageIssueKind;
@@ -317,6 +320,7 @@ export function measurePage(obs: PageObservation): PageReport {
       ...measureFontSizes(obs),
       ...measureSpacing(obs),
       ...contrast.issues,
+      ...(obs.sourceLeaks ?? []).map(leak => ({ kind: "source-outside-sources" as const, element: leak.selector, text: leak.text, detail: leak.reason })),
     ],
     notMeasured,
   };
@@ -414,6 +418,12 @@ export function collectPageObservation(): PageObservation {
     "columnGap",
   ] as const;
 
+  const sourceLeaks: NonNullable<PageObservation["sourceLeaks"]> = [];
+  // Do not confuse the meeting's date or a reporting period with a read stamp.
+  const readStamp = /\b(?:read|checked|retrieved|collected)(?:\s+on)?\s+(?:\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}\/\d{2,4}|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:st|nd|rd|th)?\b)/i;
+  const hostname = /(?<![@\w.-])\b(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:gov|com|org|net|edu|us|io)\b/i;
+  const sourceHosts = new WeakMap<Element, string[]>();
+  const cards = '.reader-card, [data-card-id], .candidate-row, .account-modal, .popup-card, [data-official-filing], [data-contest-id], [data-meeting-card], [data-ask-panel], [data-ballot-ask]';
   const elements: ObservedElement[] = [];
   const all = document.body ? Array.from(document.body.querySelectorAll("*")) : [];
   for (const el of all) {
@@ -428,6 +438,18 @@ export function collectPageObservation(): PageObservation {
       .map((n) => (n.textContent || "").replace(/\s+/g, " ").trim())
       .join(" ")
       .trim();
+    const inSources = el.closest('[data-card-sources]');
+    if (ownText && rect.width > 0 && rect.height > 0 && el.closest(cards) && !inSources) {
+      const card = el.closest(cards)!;
+      let hosts = sourceHosts.get(card);
+      if (!hosts) {
+        hosts = Array.from(card.querySelectorAll('[data-card-sources] a[href]')).flatMap(link => { try { return [new URL(link.getAttribute('href')!, location.href).host.toLowerCase()]; } catch { return []; } });
+        sourceHosts.set(card, hosts);
+      }
+      const sourceText = el.matches("p, a, span, dt, dd") ? (el.textContent ?? ownText) : ownText;
+      const reason = readStamp.test(sourceText) ? "A source read date is visible outside Sources." : hostname.test(sourceText) || hosts.some(host => new RegExp(`(?<![@\\w.-])${host.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w.-])`, "i").test(sourceText)) ? "A source hostname is visible outside Sources." : null;
+      if (reason) sourceLeaks.push({ selector: selectorOf(el), text: sourceText.trim(), reason });
+    }
     const interactive = el.matches(INTERACTIVE);
     const spacing: { property: string; value: number }[] = [];
     for (const p of SPACING_PROPS) {
@@ -472,5 +494,6 @@ export function collectPageObservation(): PageObservation {
     documentScrollWidth: document.documentElement.scrollWidth,
     layoutShifts: shifts,
     elements,
+    sourceLeaks,
   };
 }

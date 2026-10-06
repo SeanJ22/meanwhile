@@ -215,7 +215,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   const method = { version: 56, updatedOn: "2026-09-03", routes: [] };
   await writeFieldManual(h.repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
   counter.reset();
-  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true });
+  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test", WTP_BOX_ENABLED: "1" } });
   assert.deepEqual(counter.whole(), [], "the build reads no whole table");
   for (const row of (await h.repos.routeTasks.listWhere(["workItemId"], h.item.id))) {
     counter.reset();
@@ -259,7 +259,7 @@ test("CH-26: each lease task reports its repository calls, and the round records
   assert.match(worker, /const observer = observeCyclePhases\(stores\);\s*const repos = observer\.repos;/);
   assert.match(worker, /observer\.finish\("runtime"\);\s*await runtime\.beginTask\?\.\(task\);/, "the runtime build is not charged to the task");
   assert.match(worker, /repositoryCalls: observer\.finish\("task"\)\.repositoryCalls/);
-  assert.match(worker, /WTP_SCOPED_TASK_READS === "1"/, "the scoped path is behind its runner switch");
+  assert.match(worker, /WTP_SCOPED_TASK_READS !== "0"/, "the scoped path is the default; the whole-table path stays behind its runner switch");
   const round = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(round, /if \(typeof result\.repositoryCalls === "number"\) leaseTaskCalls\.push\(result\.repositoryCalls\);/);
   assert.match(round, /cyclePhases: \[\.\.\.cycleObservation\.phases, \.\.\.leaseTaskReadsPhase\(\)\]/);

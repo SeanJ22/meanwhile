@@ -29,6 +29,9 @@ export type OcdId = string;
  * never inferred.
  */
 export interface Provenance {
+  kind?: import("../control-plane/promotion/source-kinds.ts").SourceKind;
+  /** Exact saved source span supporting this field. */
+  quote?: string;
   /**
    * The exact page or endpoint this record was read from.
    *
@@ -220,6 +223,11 @@ export type MeetingStatus = "SCHEDULED" | "CONCLUDED" | "CANCELED";
  * school board meeting.
  */
 export interface Meeting {
+  /** Source and exact quote for each composed field, when available. */
+  fieldSources?: Readonly<Record<string, Provenance>>;
+  /** Original partition ids retained so agenda links and evidence can follow a merge. */
+  mergedMeetingIds?: readonly string[];
+  publicationConflicts?: readonly import("../civic-data/manual-source-isolation.ts").SourceScopedHeldFact[];
   /** Stable within a source. Namespaced by source to stay unique across them. */
   id: string;
   /**

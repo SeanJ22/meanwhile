@@ -1,5 +1,7 @@
 import { normalizeName } from "../routing/exact-name.ts";
 import type { EvidenceRecord } from "./evidence.ts";
+import type { LocalVoteRecord } from "../outcomes/local-votes.ts";
+import { formatDateLong } from "../text/format-date.ts";
 
 /**
  * **HOW A NAMED PERSON VOTED IS A LIST WE HOLD, NOT A PARAGRAPH TO WRITE.**
@@ -100,4 +102,30 @@ export function composePersonVotes(input: {
   const more = matching.length - shown.length;
   if (more > 0) sentences.push(`We hold ${matching.length} ${terms.length === 0 ? "recorded votes" : "matching recorded votes"} for ${input.name}; the rest are listed below`);
   return { answer: `${sentences.join(". ")}.`, citedUrls: [...new Set(shown.map((record) => record.sourceUrl!))] };
+}
+
+/**
+ * A local official's votes, composed from the records the outcome store links to
+ * them by roster member (BX-11). The position is the publisher's own word, the
+ * item is the agenda's own title, and the sitting page is the citation. Null
+ * when none is held, a topic is named that no item title carries, or nothing
+ * shown would carry a date we can state.
+ */
+export function composeLocalMemberVotes(input: {
+  name: string;
+  topic: string | null;
+  votes: readonly LocalVoteRecord[];
+}): { answer: string; citedUrls: string[] } | null {
+  const terms = input.topic ? topicTerms(input.topic) : [];
+  if (input.topic && terms.length === 0) return null;
+  const matching = terms.length === 0 ? input.votes : input.votes.filter((vote) => terms.some((term) => vote.subject.toLowerCase().includes(term)));
+  const shown = [...matching].filter((vote) => formatDateLong(vote.date)).sort((a, b) => b.date.localeCompare(a.date)).slice(0, MOST_RECENT_SHOWN);
+  if (shown.length === 0) return null;
+  const items = shown.map((vote) => `${vote.position} on ${vote.subject} (${formatDateLong(vote.date)}${vote.result ? `; ${vote.result}` : ""})`);
+  const list = items.length <= 2 ? items.join(" and ") : `${items.slice(0, -1).join("; ")}; and ${items.at(-1)}`;
+  const lead = terms.length === 0 ? `${input.name}'s most recent recorded votes: ` : `${input.name}'s recorded votes that match the question, newest first: `;
+  const sentences = [`${lead}${list}`];
+  const more = matching.length - shown.length;
+  if (more > 0) sentences.push(`We hold ${matching.length} ${terms.length === 0 ? "recorded votes" : "matching recorded votes"} for ${input.name}; the rest are listed below`);
+  return { answer: `${sentences.join(". ")}.`, citedUrls: [...new Set(shown.map((vote) => vote.sourceUrl))] };
 }

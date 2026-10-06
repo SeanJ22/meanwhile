@@ -3,9 +3,9 @@
 build_state: release 10 live (d79f179, 8:26 AM EDT); restart steps pushed to Sean 8:28 AM EDT; runner still stopped at last check
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
-run_id: session_01EnWcsto9iudrVWwszS9urS
-lock: none
-heartbeat: 2026-10-06T12:29:10Z
+run_id: session_019dfFq5HGoipanBrVDSSrbK
+lock: river-20261006T125707Z-6525
+heartbeat: 2026-10-06T12:57:07Z
 
 
 

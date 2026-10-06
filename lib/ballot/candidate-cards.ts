@@ -1,4 +1,5 @@
 import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
+import type { PortraitVerification } from "../photos/evidence.ts";
 import { officialPhotoForPerson } from "../photos/person.ts";
 
 /**
@@ -21,6 +22,8 @@ export interface CandidateCardData {
   photoUrl: string | null;
   /** The photo's source, labeled — rendered with the image, never dropped. */
   photoSource: string | null;
+  /** CA-08: the saved sources behind a portrait stored under `/api/portraits/candidates/`; read-time binding drops it without them. */
+  photoVerification?: PortraitVerification;
   /** The candidate's own site's words. Rendered attributed, in quotes. */
   bio: string | null;
   bioSourceUrl: string | null;

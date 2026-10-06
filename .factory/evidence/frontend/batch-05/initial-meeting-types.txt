@@ -1,0 +1,4 @@
+components/map/list-overlay.tsx(439,81): error TS2339: Property 'label' does not exist on type '{ key: string; items: Meeting[]; }'.
+components/map/popup/meeting-popup.tsx(94,175): error TS2339: Property 'collectedAt' does not exist on type '{ phone: string; sourceUrl: string; sourceOrg: string; }'.
+components/ui/meeting-row.tsx(44,57): error TS2322: Type 'boolean | undefined' is not assignable to type 'boolean'.
+  Type 'undefined' is not assignable to type 'boolean'.

@@ -1,0 +1,188 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 8/8 files; SHA 071a9b813fb10e3c845e617c62a165d7c9362985
+tests/absence-defaults.test.ts
+tests/agenda-version-projection.test.ts
+tests/body-battlecard.test.ts
+tests/card-sources.test.ts
+tests/reader-last-mile-meetings.test.ts
+tests/reader-upcoming-meetings.test.ts
+tests/reader-venue-gap-surfaces.test.ts
+tests/rhythm-tokens.test.ts
+✔ no unrecorded sentence-shaped render default exists (62.008434ms)
+✔ every baseline entry carries a reason, and none is a placeholder (0.193325ms)
+✔ the baseline only shrinks — a recorded entry that is gone must be removed (61.594743ms)
+✔ the shape catches every instance the class was named from (0.157611ms)
+✔ a single-token type default is not a claim and is not flagged (0.113302ms)
+✔ FE-31: every reader gap uses WorkingOnIt and disclaimers stay retired (40.154514ms)
+✔ FE-31: seeded inline gaps and each banned disclaimer fail the instrument (0.346064ms)
+✖ Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version (29.702287ms)
+✖ a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording (6.034008ms)
+✖ a revision at the same address is still two versions, and the old address is not offered as the old text (2.86969ms)
+✔ a sitting holding only publication-index pages is rendered as what it holds, with no version count and no revision (2.453347ms)
+✔ the real agenda route over the committed holding returns one row per distinct content and reconciles every held row (16496.010368ms)
+✔ M136: the three named bodies each get a sourced role, not a generated one (1.807971ms)
+✔ M136: Tucson's own entry wins over the state-level one (0.306156ms)
+✔ M136: a body with no read statute gets the honest line, never a paraphrase (3.108666ms)
+✔ M136: every blurb carries a checkable basis — no unsourced prose anywhere (0.288752ms)
+✔ M136: the card renders the same SET of sections for every body (1.094176ms)
+✔ M136: the body card orders meetings upcoming-first from one clock (0.508833ms)
+✔ M136: a school district's superintendent is asked for and named when missing (1.443469ms)
+✔ M136: the contact section never invents a route (0.951118ms)
+✔ the committed Tucson Unified roster resolves — the card under the defect (2.067608ms)
+✔ a district card with a roster and meetings is never sourceless (0.868922ms)
+✔ a district card with NO roster and NO meetings still cites its boundary (0.215654ms)
+✔ a meeting card lists the sitting and the body's roster (0.565253ms)
+✔ a person card cites the record its identity came from (0.934682ms)
+✔ same-source rows merge, and the merged row states the count (0.396599ms)
+✔ distinct publishers never merge (0.273992ms)
+✔ a holder with no record at all contributes no row, and says so by absence (0.280756ms)
+✔ every held sitting reaches the real agenda route with the same class-filtered records as Ask (2037.793793ms)
+✔ vendor/event ambiguity and a different body cannot inherit recorded actions (0.394167ms)
+✔ an agenda never supplies a decision or inferred per-member vote (0.272094ms)
+✔ a reused publisher portal is classified identically by the real route and agenda renderer (17673.028389ms)
+✔ the recorded rows are the owner's case: scheduled, no agenda, no building (3.813967ms)
+✔ the district card's door opens exactly the rows its count counted, never a Body scope (4.534045ms)
+✖ every reader surface that lists meetings renders the upcoming sittings, with honest gaps and matching counts (3773.292307ms)
+✔ a named venue gap is its own state: never online, never 'place not recorded', its words are the Where line (47.70561ms)
+✔ the card's calendar entry carries the stated place as its LOCATION, and invents none where the page states none (15.809644ms)
+✖ the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap (2361.464802ms)
+✔ the rhythm sweep catches an off-scale value — the instrument works (RULING 110) (2.910556ms)
+✔ the rhythm token scales are declared in app/globals.css (0.755559ms)
+✔ component sweep catches new tiny type, off-scale spacing and literal colours (1.178466ms)
+✔ component exceptions only shrink, per file and value (95.688781ms)
+✔ spacing: off-scale count does not exceed the baseline (it only shrinks) (59.249195ms)
+✔ radius: off-scale count does not exceed the baseline (it only shrinks) (4.378308ms)
+✔ fontSize: off-scale count does not exceed the baseline (it only shrinks) (42.130424ms)
+✔ elevation: off-scale count does not exceed the baseline (it only shrinks) (2.507663ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 41
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26541.0283
+
+✖ failing tests:
+
+test at tests/agenda-version-projection.test.ts:85:1
+✖ Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version (29.702287ms)
+  AssertionError [ERR_ASSERTION]: <div data-card-sources="true"><section class="card-section"><button type="button" class="card-section-header" aria-expanded="false" aria-controls="_R_1_"><span class="card-section-title">Sources</span><svg class="card-section-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="_R_1_" class="card-section-body" hidden=""><div class="account-modal-person" data-agenda-version="diligent:tusd1:499@60e6d65ddadd152ee42a7d398ce43698b7836e9a687b40ee7a3f223b74693b9a" data-agenda-versions="2" data-agenda-listing-page="diligent:tusd1:499@60e6d65ddadd152ee42a7d398ce43698b7836e9a687b40ee7a3f223b74693b9a"><p class="t-body text-paper">Current listing page · 2 documents on file</p><div class="popup-row"><span class="pk">Published by</span><span class="pv">Tucson Unified School District</span></div><div class="popup-row"><span class="pk">Read from</span><span class="pv"><a href="https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&amp;Id=499" class="text-link hover:underline" target="_blank" rel="noreferrer">tusd1-schooldesk.community.diligentoneplatform.com</a></span></div><div class="popup-row"><span class="pk">Last checked</span><span class="pv mono">2026-09-22</span></div><div class="popup-row"><span class="pk">Verified</span><span class="pv mono"><span data-working-on-it="not-searched"><span class="t-body leading-relaxed text-voice">We’re working on getting this info.</span></span></span></div></div><div class="account-modal-person" data-agenda-version="diligent:tusd1:499@e3415318f688bba037fe4afe5d12610a4eade4966c905a97cebfe266cd9a271a" data-agenda-versions="2" data-agenda-listing-page="diligent:tusd1:499@e3415318f688bba037fe4afe5d12610a4eade4966c905a97cebfe266cd9a271a"><p class="t-body text-paper">Earlier listing page · 2 documents on file</p><div class="popup-row"><span class="pk">Published by</span><span class="pv">Tucson Unified School District</span></div><div class="popup-row"><span class="pk">Read from</span><span class="pv"><a href="https://govboard.tusd1.org/" class="text-link hover:underline" target="_blank" rel="noreferrer">govboard.tusd1.org</a></span></div><div class="popup-row"><span class="pk">Last checked</span><span class="pv mono">2026-08-21</span></div><div class="popup-row"><span class="pk">Verified</span><span class="pv mono"><span data-working-on-it="not-searched"><span class="t-body leading-relaxed text-voice">We’re working on getting this info.</span></span></span></div></div></div></section></div><div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" class="mt-1.5 t-detail leading-relaxed text-muted"><p>The link we hold for that meeting is Governing Board&#x27;s agenda portal rather than the agenda itself. <a href="https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&amp;Id=499" class="text-signal underline" target="_blank" rel="noreferrer">Open the publisher&#x27;s agenda portal</a>.</p></div>
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/agenda-version-projection.test.ts:120:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/agenda-version-projection.test.ts:126:1
+✖ a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording (6.034008ms)
+  AssertionError [ERR_ASSERTION]: <div data-card-sources="true"><section class="card-section"><button type="button" class="card-section-header" aria-expanded="false" aria-controls="_R_1_"><span class="card-section-title">Sources</span><svg class="card-section-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="_R_1_" class="card-section-body" hidden=""><div class="account-modal-person" data-agenda-version="legistar:example:4410@e2eec96ca02bec1f593a3431be67569eba10cc6ae9b1573a4e0aaa8ef1f12afd" data-agenda-versions="2"><p class="t-body text-paper">Current agenda document · 2 versions on file</p><div class="popup-row"><span class="pk">Published by</span><span class="pv">Tucson Unified School District</span></div><div class="popup-row"><span class="pk">Read from</span><span class="pv"><a href="https://example.legistar.com/View.ashx?M=A&amp;ID=4410&amp;GUID=B" class="text-link hover:underline" target="_blank" rel="noreferrer">example.legistar.com</a></span></div><div class="popup-row"><span class="pk">Last checked</span><span class="pv mono">2026-09-10</span></div><div class="popup-row"><span class="pk">Verified</span><span class="pv mono"><span data-working-on-it="not-searched"><span class="t-body leading-relaxed text-voice">We’re working on getting this info.</span></span></span></div></div><div class="account-modal-person" data-agenda-version="legistar:example:4410@410ca6eed04ba1f5b1cce498e87ec8423c7e48faaa6664c77e56b826211d71a0" data-agenda-versions="2"><p class="t-body text-paper">Earlier agenda document · 2 versions on file</p><div class="popup-row"><span class="pk">Published by</span><span class="pv">Tucson Unified School District</span></div><div class="popup-row"><span class="pk">Read from</span><span class="pv"><a href="https://example.legistar.com/View.ashx?M=A&amp;ID=4410&amp;GUID=A" class="text-link hover:underline" target="_blank" rel="noreferrer">example.legistar.com</a></span></div><div class="popup-row"><span class="pk">Last checked</span><span class="pv mono">2026-09-02</span></div><div class="popup-row"><span class="pk">Verified</span><span class="pv mono"><span data-working-on-it="not-searched"><span class="t-body leading-relaxed text-voice">We’re working on getting this info.</span></span></span></div></div></div></section></div><div class="mt-1.5"><div class="mb-2"><p class="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em] text-muted">On the docket — the agenda&#x27;s own items, in its words</p><ol class="mt-1.5 space-y-1"><li class="t-detail leading-relaxed text-paper-dim">1. Call to order.</li><li class="t-detail leading-relaxed text-paper-dim">2. Public hearing on the fiscal year budget.</li><li class="t-detail leading-relaxed text-paper-dim">3. Rezoning of 12 Main Street.</li><li class="t-detail leading-relaxed text-paper-dim">4. Adjournment.</li></ol><p class="mt-1 t-caption text-muted">Read straight off the document below — nothing here is summarised, and the full text is the record.</p></div><p class="mb-2 rounded border border-[var(--signal)] px-3 py-2 t-detail font-semibold text-signal">This meeting includes a public hearing — a set time when members of the public can speak on a listed item.</p><p class="max-h-56 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 t-detail leading-relaxed text-paper-dim">1. Call to order. 2. Public hearing on the fiscal year budget. 3. Rezoning of 12 Main Street. 4. Adjournment.</p></div>
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/agenda-version-projection.test.ts:152:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/agenda-version-projection.test.ts:157:1
+✖ a revision at the same address is still two versions, and the old address is not offered as the old text (2.86969ms)
+  AssertionError [ERR_ASSERTION]: false == true
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/agenda-version-projection.test.ts:170:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/reader-upcoming-meetings.test.ts:137:1
+✖ every reader surface that lists meetings renders the upcoming sittings, with honest gaps and matching counts (3773.292307ms)
+  AssertionError [ERR_ASSERTION]: 
+    meeting list: states 51, renders 102 rows
+    Bodies door: Tucson Unified's next meeting is not Sep 28
+    503 card: the online sentence is missing
+    no-place sitting: the list row names no gap
+  + actual - expected
+  
+  + [
+  +   'meeting list: states 51, renders 102 rows',
+  +   "Bodies door: Tucson Unified's next meeting is not Sep 28",
+  +   '503 card: the online sentence is missing',
+  +   'no-place sitting: the list row names no gap'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/reader-upcoming-meetings.test.ts:284:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'meeting list: states 51, renders 102 rows', "Bodies door: Tucson Unified's next meeting is not Sep 28", '503 card: the online sentence is missing', 'no-place sitting: the list row names no gap' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/reader-venue-gap-surfaces.test.ts:113:1
+✖ the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap (2361.464802ms)
+  AssertionError [ERR_ASSERTION]: 
+    list: the Cholla row does not show "Cholla High School South Gym"
+    list: the Joint Committee row does not name the publisher's gap
+    Duffy panel: the Joint Committee row does not name the publisher's gap
+    card: the Cholla session says we have not recorded a place
+    card: the Joint Committee meeting does not name the publisher's gap
+  + actual - expected
+  
+  + [
+  +   'list: the Cholla row does not show "Cholla High School South Gym"',
+  +   "list: the Joint Committee row does not name the publisher's gap",
+  +   "Duffy panel: the Joint Committee row does not name the publisher's gap",
+  +   'card: the Cholla session says we have not recorded a place',
+  +   "card: the Joint Committee meeting does not name the publisher's gap"
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/reader-venue-gap-surfaces.test.ts:224:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'list: the Cholla row does not show "Cholla High School South Gym"', "list: the Joint Committee row does not name the publisher's gap", "Duffy panel: the Joint Committee row does not name the publisher's gap", 'card: the Cholla session says we have not recorded a place', "card: the Joint Committee meeting does not name the publisher's gap" ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+ ELIFECYCLE  Test failed. See above for more details.

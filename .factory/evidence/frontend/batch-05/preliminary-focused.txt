@@ -1,0 +1,182 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 13/13 files; SHA 3fa21f903ada1e9c9569ddb0808897e23021c7ee
+tests/agenda-version-projection.test.ts
+tests/candidate-cards.test.ts
+tests/card-sources.test.ts
+tests/extended-card-sources.test.ts
+tests/funding-display-totals.test.ts
+tests/held-filing-subjects.test.ts
+tests/page-metrics.test.ts
+tests/positions.test.ts
+tests/reader-upcoming-meetings.test.ts
+tests/reader-venue-gap-surfaces.test.ts
+tests/state-money-az.test.ts
+tests/state-money-nh-absence.test.ts
+tests/state-money-nh.test.ts
+✔ Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version (20.325264ms)
+✔ a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording (6.241566ms)
+✔ a revision at the same address is still two versions, and the old address is not offered as the old text (2.613921ms)
+✔ a sitting holding only publication-index pages is rendered as what it holds, with no version count and no revision (2.23062ms)
+✔ the real agenda route over the committed holding returns one row per distinct content and reconciles every held row (17994.990329ms)
+✔ every card key resolves against the ballot data or lineup keys (15.11573ms)
+✔ every photo carries a labeled source and https URL; every bio its citation (4.663335ms)
+✔ 2b: every shipped photo appears in docs/photo-report.md with its judgment (97.349951ms)
+✔ 2b: a card photo is a portrait judgment, never a banner/logo file left behind (3.806905ms)
+✔ no ranking vocabulary anywhere in the cards file (7.907981ms)
+✔ RULING 42: no per-card completeness marker survives in the card library (1.186207ms)
+✔ RULING 42: the card component renders no completeness marker (0.628842ms)
+✔ FE-30 retires the ballot and battlecard completeness disclosure (1.629057ms)
+✔ the committed Tucson Unified roster resolves — the card under the defect (1.263587ms)
+✔ a district card with a roster and meetings is never sourceless (0.867583ms)
+✔ a district card with NO roster and NO meetings still cites its boundary (0.126302ms)
+✔ a meeting card lists the sitting and the body's roster (0.385113ms)
+✔ a person card cites the record its identity came from (0.814046ms)
+✔ same-source rows merge, and the merged row states the count (0.26789ms)
+✔ distinct publishers never merge (0.156825ms)
+✔ a holder with no record at all contributes no row, and says so by absence (0.208775ms)
+✔ CP-16: meeting Sources include every supplied family with the captured time (1.468901ms)
+✔ CP-16: money, votes and actions retain their actual filing and document URLs (1.672627ms)
+✔ numeric funding totals copy the exact five held committee values for every target (36.953397ms)
+✔ an absent small-donor share stays null in the numeric payload (1.771791ms)
+ask · model claude-opus-5-5 · effort medium · reader claude-haiku-4-5 · fast writer claude-haiku-4-5 · classifier claude-haiku-4-5 · unsourced claude-haiku-4-5
+✔ published source-filing profiles retain exact identities outside the mapped ballot without duplicating joined people (14.833488ms)
+✔ the real Ask route binds published source IDs even when the mapped ballot does not carry them (4581.54556ms)
+✔ a clean page lists nothing (3.221991ms)
+✔ layout shift over the bar is listed; input-caused shifts do not count (0.280115ms)
+✔ no recorder is 'not measured', never a pass (0.150731ms)
+✔ horizontal overflow names the page and the element (0.239159ms)
+✔ a scroller is not overflow (0.202032ms)
+✔ cut-off text: hidden or ellipsised content wider than its box (0.471681ms)
+✔ tap targets: 44 normally, 40 compact (0.39117ms)
+✔ font size and spacing off the token scales (0.241807ms)
+✔ contrast under the bar is listed; large text gets the lower bar; image backdrops are not measured (0.373651ms)
+✔ collectPageObservation is self-contained (serialisable to a page) (0.427481ms)
+✔ card source leaks join the existing look report with exact elements (0.331895ms)
+
+  D35  "housing" across 22 subjects in the committed corpus: SEARCHED_NOTHING_MATCHED 17, MATCHED 5
+
+✔ D35 type 1 — MATCHED: verbatim passages, with the source and the read date (3.890188ms)
+✔ D35 type 1 — MATCHED: the change marker carries dates and never an interpretation (8.871332ms)
+✔ D35 type 2 — SEARCHED_NOTHING_MATCHED: a bounded search, with its denominator (0.327386ms)
+✔ D35 type 3 — NOT_YET_COLLECTED: a fact about our collection, not about them (0.177682ms)
+✔ D35: the three answers are distinguishable in data, and none of them says 'no position' (0.167365ms)
+✔ D35: the surface renders three different sentences, in the gap's own register (0.742007ms)
+✔ D35: nothing in this path generates, and nothing reads party (0.965502ms)
+✔ D35: a late answer for an abandoned query never lands (0.319579ms)
+✔ D35: the machinery answers against the committed corpus, and states its size (9.70296ms)
+✔ D35: the topic list is curated, and the search strips the question around the topic (0.420977ms)
+✔ reader last mile: every eligible matched passage reaches the shared answer (0.801644ms)
+✔ the recorded rows are the owner's case: scheduled, no agenda, no building (4.099994ms)
+✔ the district card's door opens exactly the rows its count counted, never a Body scope (5.812741ms)
+✖ every reader surface that lists meetings renders the upcoming sittings, with honest gaps and matching counts (3837.726738ms)
+✔ a named venue gap is its own state: never online, never 'place not recorded', its words are the Where line (57.618028ms)
+✔ the card's calendar entry carries the stated place as its LOCATION, and invents none where the page states none (18.564654ms)
+✖ the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap (3699.908346ms)
+✔ a 200 that is not a DataTables result is refused, never read as empty (10.792884ms)
+✔ the detail query refuses to be built without entityId (3.108782ms)
+✔ the universe is the union of all three of the portal's filter settings (3.243384ms)
+✔ both vocabularies key to the same Arizona seat, and unlike seats never collide (1.651643ms)
+✔ the Arizona statewide offices added to the shared classifier cannot swallow a county office (9.6098ms)
+✔ a quoted segment in a name is an alternate name, on either end (6.84323ms)
+✔ the five real ballot names whose quoting used to manufacture an absence now match (4.091757ms)
+✔ a diminutive is NOT a quoted alternate, and is not guessed at (0.208365ms)
+✔ the entity name is parsed off the portal's own markup (0.510812ms)
+✔ the several rows of one entity fold into one committee (1.547889ms)
+✔ CashBalance is an entity attribute, not a partition, and is never published as this cycle (7.059351ms)
+✔ a committee whose totals do not reproduce its own itemised ledger cannot render (0.750219ms)
+✔ an absence needs the portal AND the register to agree (10.160329ms)
+✔ the filing calendar supplies a real next-due date, never an invented one (51.536967ms)
+✔ the AZ snapshot exists and is the shape the loader names (2.878781ms)
+✔ every published figure is backed by a reconciliation row that agreed (6.357356ms)
+✔ a registered committee reporting nothing renders as that, never as $0 (0.957935ms)
+✔ the reconciliation artifact carries no itemised transaction (2.667577ms)
+✔ an OURS GAP renders, carries no money at all, and names a real next filing deadline (1.417489ms)
+✔ every candidacy the Secretary of State is the filing officer for ends in exactly one state (5.018114ms)
+✔ the stated split equals the rendered rows (1.802612ms)
+✔ DEFECT 1: a route that could not be read may not empty a card that already had money (4.096649ms)
+✔ DEFECT 1: an unread route with nothing to retain is our gap, and it does not render (0.909758ms)
+✔ DEFECT 2: a filer on page two is still a filer (2.363699ms)
+✔ DEFECT 2: a read that cannot prove it got everything may not produce an absence (0.307843ms)
+✔ DEFECT 3: a registered committee reporting zero is not a candidate the state has never heard of (3.380292ms)
+✔ DEFECT 4: a same-year filer who may be this person forbids an absence claim (3.014659ms)
+✔ every absence in a full run is backed by a proven denominator and no candidate-shaped row (44.924347ms)
+✔ the NH snapshot exists and is the shape the loader names (1.50698ms)
+✔ an absence is never a zero, and a filing always carries a figure (0.564271ms)
+✔ a LEAD never reaches a reader, and only a confirmed match carries a target (1.785151ms)
+✔ every claimed target is a real candidacy, and no federal seat is claimed (2.106778ms)
+ℹ tests 87
+ℹ suites 0
+ℹ pass 85
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 22626.890278
+
+✖ failing tests:
+
+test at tests/reader-upcoming-meetings.test.ts:137:1
+✖ every reader surface that lists meetings renders the upcoming sittings, with honest gaps and matching counts (3837.726738ms)
+  AssertionError [ERR_ASSERTION]: 
+    Bodies door: Tucson Unified's next meeting is not Sep 28
+    503 card: the online sentence is missing
+  + actual - expected
+  
+  + [
+  +   "Bodies door: Tucson Unified's next meeting is not Sep 28",
+  +   '503 card: the online sentence is missing'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/reader-upcoming-meetings.test.ts:284:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ "Bodies door: Tucson Unified's next meeting is not Sep 28", '503 card: the online sentence is missing' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/reader-venue-gap-surfaces.test.ts:113:1
+✖ the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap (3699.908346ms)
+  AssertionError [ERR_ASSERTION]: 
+    list: the Cholla row does not show "Cholla High School South Gym"
+    list: the Joint Committee row does not name the publisher's gap
+    Duffy panel: the Joint Committee row does not name the publisher's gap
+    card: the Cholla session says we have not recorded a place
+    card: the Joint Committee meeting does not name the publisher's gap
+  + actual - expected
+  
+  + [
+  +   'list: the Cholla row does not show "Cholla High School South Gym"',
+  +   "list: the Joint Committee row does not name the publisher's gap",
+  +   "Duffy panel: the Joint Committee row does not name the publisher's gap",
+  +   'card: the Cholla session says we have not recorded a place',
+  +   "card: the Joint Committee meeting does not name the publisher's gap"
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/reader-venue-gap-surfaces.test.ts:224:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'list: the Cholla row does not show "Cholla High School South Gym"', "list: the Joint Committee row does not name the publisher's gap", "Duffy panel: the Joint Committee row does not name the publisher's gap", 'card: the Cholla session says we have not recorded a place', "card: the Joint Committee meeting does not name the publisher's gap" ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+ ELIFECYCLE  Test failed. See above for more details.

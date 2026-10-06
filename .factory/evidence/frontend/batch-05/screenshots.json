@@ -1,0 +1,26 @@
+[
+  {
+    "file": "/tmp/frontend-meeting-money-proof/1280-dark.png",
+    "sha256": "1c6e68ad70a5bd656c4b58839cff83c236b08ea2e25bc42d80f8c09a315dc28f",
+    "capture": "synthetic actual client components; explicit system Chromium",
+    "read_as_image": true
+  },
+  {
+    "file": "/tmp/frontend-meeting-money-proof/1280-light.png",
+    "sha256": "ad744eccec3c6cc4ff6e8c6110d4d21fabcc912c2fb2524630d42ca2d2dc196e",
+    "capture": "synthetic actual client components; explicit system Chromium",
+    "read_as_image": true
+  },
+  {
+    "file": "/tmp/frontend-meeting-money-proof/390-dark.png",
+    "sha256": "f600ee46f7879f4b846599bcc29c7e4f3046229bc54343941f13bcf075d2f234",
+    "capture": "synthetic actual client components; explicit system Chromium",
+    "read_as_image": true
+  },
+  {
+    "file": "/tmp/frontend-meeting-money-proof/390-light.png",
+    "sha256": "63f7507693b5e8fa6c3dd1b391a31060ee1cbb9c9ca6355b05a7c275b73da13f",
+    "capture": "synthetic actual client components; explicit system Chromium",
+    "read_as_image": true
+  }
+]

@@ -1,0 +1,2 @@
+ci-affected-tests · FULL — selection failed, so the whole suite runs: spawnSync git EPERM
+scope=code needs_browser=true

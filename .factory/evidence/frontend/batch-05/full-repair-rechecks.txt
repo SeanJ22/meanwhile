@@ -1,0 +1,47 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 4/4 files; SHA 83793508af5073ed1d6f25039bd2fdae0e412312
+tests/generated-artifacts.test.ts
+tests/meeting-list-attribution.test.ts
+tests/meeting-online-marker.test.ts
+tests/meeting-video-link.test.ts
+✔ RULING 92: every registered generated artifact exists and names its generator (2.966545ms)
+✔ promoted manual civic-data fixtures are immutable bootstrap evidence, not generated runtime outputs (1.759241ms)
+✔ RULING 92: a file declaring itself GENERATED is registered here (4200.399233ms)
+✔ RULING 92: a PURE generator's artifact is byte-identical to what it produces now (154231.557197ms)
+✔ SRC-1: identical rows credit ONE source, and it is named verbatim (1.676744ms)
+✔ SRC-1: one sitting reads 'This was', never 'These were' (0.302809ms)
+✔ SRC-2: more than one source is the author's sentence plus the list (0.70491ms)
+✔ SRC-2: the author's own example wording — 'these three sources' (1.861941ms)
+✔ SRC-1: nothing to credit renders NOTHING, never a placeholder (0.373274ms)
+✔ small counts read as words in the sentence, large ones as digits (0.165949ms)
+✔ F01 3.1: every meetings list renders the three groups, not a raw array (2.008199ms)
+✔ SRC-1: no meeting surface prints a footnote marker on a row (0.66377ms)
+✔ F01 3.2: the venue row no longer prints the jurisdiction on every meeting (0.66638ms)
+✔ MTG-14: every routed surface asks the helper rather than re-deriving the predicate (5.657318ms)
+✔ MTG-14: the reader-facing sentence exists in exactly ONE place (1.174758ms)
+✔ MTG-14: the shared files are in ONE of the two honest states, never half-way (1.670462ms)
+✔ MTG-14: both discovery surfaces this session owns render the online mark (0.831008ms)
+✔ MTG-14: stripped of colour, every status is still told apart by its MARK (0.27352ms)
+✔ MTG-14: stripped of colour, every status is still told apart by its WORD (0.556791ms)
+✔ MTG-14: the mark is decorative and the word carries the meaning (0.499969ms)
+✔ MTG-14: no marker prints a body's published label as a badge (0.3448ms)
+✔ MTG-14: the named case and the unnamed control both read as online-only (0.855079ms)
+✔ MTG-14: a physical sitting is untouched by any of it (0.599813ms)
+✔ MTG-14: an online sitting never becomes a map pin, and a physical one always does (0.429219ms)
+✔ MTG-14: location === null and online !== undefined agree, both sides computed (47.284554ms)
+✔ MTG-14: the snapshot still contains online sittings for the marker to be about (13.259299ms)
+✔ BX-10: a public recording on the publisher's record becomes the meeting's videoUrl (58.544361ms)
+✔ BX-10: no video, a video that is not public, or an unsafe address yields no videoUrl (2.105584ms)
+✔ BX-10: the meeting card's Sources names the publisher record the recording is linked from (31.483419ms)
+✔ BX-10: the map's meeting row shows the recording link only on a concluded sitting that has one (0.463473ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 159404.638714

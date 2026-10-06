@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.isVisible: Error: strict mode violation: locator('#meeting').getByText('Second-hand listing', { exact: true }) resolved to 2 elements:
+    1) <p class="t-caption text-muted">Second-hand listing</p> aka getByText('Second-hand listing').first()
+    2) <p class="t-caption text-muted">Second-hand listing</p> aka getByText('Second-hand listing').nth(1)
+
+Call log:
+[2m    - checking visibility of locator('#meeting').getByText('Second-hand listing', { exact: true })[22m
+
+    at /workspace/meanwhile/.factory/evidence/frontend/batch-05/browser-proof.mjs:56:92 {
+  log: [
+    "    - checking visibility of locator('#meeting').getByText('Second-hand listing', { exact: true })"
+  ]
+}
+
+Node.js v24.19.0

@@ -1,0 +1,23 @@
+
+> we-the-people@0.1.0 test /tmp/frontend-repairs
+> node scripts/ci-tests.mjs
+
+Affected tests: 1/1 files; SHA 921787c656928a67d79a3e15c3fc56a391fdd460
+tests/carried-row-reason.test.ts
+partition LKG base: meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing has no promoted pointer yet
+RCD_MEETING_PARTITION_RECEIPT={"source":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","partitionId":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","meetingSource":"civicplus","bodyId":"ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing","scope":"source:civicplus:body:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","candidateId":"cv-634c22f07f3ae905c98474213cb0fe7f","acquisitionSucceeded":true,"state":"PROMOTED","decision":"GOOD","promotedVersion":"cv-634c22f07f3ae905c98474213cb0fe7f","lastKnownGoodVersion":"cv-634c22f07f3ae905c98474213cb0fe7f","failureDetail":null,"structuralReleaseContract":{"testSitePromotions":0,"gitDataCommits":0,"pullRequests":0,"githubActionsRuns":0,"netlifyDeploys":0,"nextBuilds":0,"fullSiteBrowserWalks":0}}
+partition LKG base: meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing at cv-634c22f07f3ae905c98474213cb0fe7f
+RCD_MEETING_PARTITION_RECEIPT={"source":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","partitionId":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","meetingSource":"civicplus","bodyId":"ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing","scope":"source:civicplus:body:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","candidateId":"cv-75da0a99b7f117bf5a7d20eceb43df28","acquisitionSucceeded":true,"state":"PROMOTED","decision":"GOOD","promotedVersion":"cv-75da0a99b7f117bf5a7d20eceb43df28","lastKnownGoodVersion":"cv-75da0a99b7f117bf5a7d20eceb43df28","failureDetail":null,"structuralReleaseContract":{"testSitePromotions":0,"gitDataCommits":0,"pullRequests":0,"githubActionsRuns":0,"netlifyDeploys":0,"nextBuilds":0,"fullSiteBrowserWalks":0}}
+✔ each recorded carry reason earns its own plain clause, and a mark without one earns none (3.375468ms)
+✔ a calendar that answered is never called unreachable, and its answer is never read as the body's act (0.689033ms)
+✔ the reason survives its writer, the Reader composition, the edge artifacts, the wire and the route's search (51.989421ms)
+✔ both surfaces render the decided clause for every reason, and neither calls an answering calendar unreachable (3252.867707ms)
+✔ no reader surface writes a carried-row sentence of its own; both go through the one decider (48.825714ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5470.409882

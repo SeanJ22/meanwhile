@@ -1,0 +1,203 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 26/26 files; SHA 4959720ecb34964a95b6714583c5c7c60a579066
+tests/absence-defaults.test.ts
+tests/agenda-claim-guard.test.ts
+tests/agenda-version-projection.test.ts
+tests/ballot-desktop-composition.test.ts
+tests/candidate-cards.test.ts
+tests/candidate-position-provenance.test.ts
+tests/card-sources.test.ts
+tests/carried-row-reason.test.ts
+tests/extended-card-sources.test.ts
+tests/frontend-link-health.test.ts
+tests/frontend-meeting-scope.test.ts
+tests/funding-display-totals.test.ts
+tests/held-filing-subjects.test.ts
+tests/meeting-list-attribution.test.ts
+tests/meeting-online-marker.test.ts
+tests/meeting-row-sources.test.tsx
+tests/meeting-video-link.test.ts
+tests/page-metrics.test.ts
+tests/positions.test.ts
+tests/reader-gap-states.test.tsx
+tests/reader-upcoming-meetings.test.ts
+tests/reader-venue-gap-surfaces.test.ts
+tests/rhythm-tokens.test.ts
+tests/state-money-az.test.ts
+tests/state-money-nh-absence.test.ts
+tests/state-money-nh.test.ts
+✔ no unrecorded sentence-shaped render default exists (204.810298ms)
+✔ every baseline entry carries a reason, and none is a placeholder (34.198498ms)
+✔ the baseline only shrinks — a recorded entry that is gone must be removed (359.51896ms)
+✔ the shape catches every instance the class was named from (0.347921ms)
+✔ a single-token type default is not a claim and is not flagged (0.23126ms)
+✔ FE-31: every reader gap uses WorkingOnIt and disclaimers stay retired (199.451359ms)
+✔ FE-31: seeded inline gaps and each banned disclaimer fail the instrument (0.405938ms)
+✔ SWEEP-01: no reader surface asserts a publication state of its own (566.359046ms)
+✔ SWEEP-01: both agenda surfaces go through the ONE decider (0.393224ms)
+✔ Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version (221.104808ms)
+✔ a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording (92.061353ms)
+✔ a revision at the same address is still two versions, and the old address is not offered as the old text (58.099525ms)
+✔ a sitting holding only publication-index pages is rendered as what it holds, with no version count and no revision (54.311866ms)
+✔ the real agenda route over the committed holding returns one row per distinct content and reconciles every held row (39696.054829ms)
+✔ BAL-25: the ballot surface has responsive utilities at all (13.91593ms)
+✔ BAL-25: the container widens on desktop and the reading measure does not (9.295759ms)
+✔ BAL-25: the loading skeleton hands over without moving the heading (18.903486ms)
+✔ BAL-43: offices read top to bottom; both candidate paths share the desktop columns (8.463811ms)
+✔ BAL-43: measure cards keep their prior independent two-column flow (7.694776ms)
+✔ BAL-25: no ballot surface answers the desktop with a label/value column pair (13.791061ms)
+✔ every card key resolves against the ballot data or lineup keys (32.414881ms)
+✔ every photo carries a labeled source and https URL; every bio its citation (8.709317ms)
+✔ 2b: every shipped photo appears in docs/photo-report.md with its judgment (248.131708ms)
+✔ 2b: a card photo is a portrait judgment, never a banner/logo file left behind (14.49259ms)
+✔ no ranking vocabulary anywhere in the cards file (7.277721ms)
+✔ RULING 42: no per-card completeness marker survives in the card library (6.839814ms)
+✔ RULING 42: the card component renders no completeness marker (0.849322ms)
+✔ FE-30 retires the ballot and battlecard completeness disclosure (3.225783ms)
+✔ Ask keeps source version, exact passage locator and source-stated date without claiming a personal stance (6.071318ms)
+✔ ballot card labels source versions and keeps source publication and read dates distinct (0.419521ms)
+✔ the committed Tucson Unified roster resolves — the card under the defect (2.191922ms)
+✔ a district card with a roster and meetings is never sourceless (1.023428ms)
+✔ a district card with NO roster and NO meetings still cites its boundary (0.286551ms)
+✔ a meeting card lists the sitting and the body's roster (0.530081ms)
+✔ a person card cites the record its identity came from (1.331624ms)
+✔ same-source rows merge, and the merged row states the count (0.70282ms)
+✔ distinct publishers never merge (0.25005ms)
+✔ a holder with no record at all contributes no row, and says so by absence (0.577879ms)
+✔ shared meeting card retains agenda, minutes, decisions and comment sources with their exact read dates (1.495876ms)
+✔ carried sitting metadata cannot disappear into its calendar's ordinary source row (1.389314ms)
+partition LKG base: meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing has no promoted pointer yet
+RCD_MEETING_PARTITION_RECEIPT={"source":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","partitionId":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","meetingSource":"civicplus","bodyId":"ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing","scope":"source:civicplus:body:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","candidateId":"cv-634c22f07f3ae905c98474213cb0fe7f","acquisitionSucceeded":true,"state":"PROMOTED","decision":"GOOD","promotedVersion":"cv-634c22f07f3ae905c98474213cb0fe7f","lastKnownGoodVersion":"cv-634c22f07f3ae905c98474213cb0fe7f","failureDetail":null,"structuralReleaseContract":{"testSitePromotions":0,"gitDataCommits":0,"pullRequests":0,"githubActionsRuns":0,"netlifyDeploys":0,"nextBuilds":0,"fullSiteBrowserWalks":0}}
+partition LKG base: meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing at cv-634c22f07f3ae905c98474213cb0fe7f
+RCD_MEETING_PARTITION_RECEIPT={"source":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","partitionId":"meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","meetingSource":"civicplus","bodyId":"ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing","scope":"source:civicplus:body:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing","candidateId":"cv-75da0a99b7f117bf5a7d20eceb43df28","acquisitionSucceeded":true,"state":"PROMOTED","decision":"GOOD","promotedVersion":"cv-75da0a99b7f117bf5a7d20eceb43df28","lastKnownGoodVersion":"cv-75da0a99b7f117bf5a7d20eceb43df28","failureDetail":null,"structuralReleaseContract":{"testSitePromotions":0,"gitDataCommits":0,"pullRequests":0,"githubActionsRuns":0,"netlifyDeploys":0,"nextBuilds":0,"fullSiteBrowserWalks":0}}
+✔ each recorded carry reason earns its own plain clause, and a mark without one earns none (3.014214ms)
+✔ a calendar that answered is never called unreachable, and its answer is never read as the body's act (0.664937ms)
+✔ the reason survives its writer, the Reader composition, the edge artifacts, the wire and the route's search (110.002021ms)
+✔ both surfaces render the decided clause for every reason, and neither calls an answering calendar unreachable (9387.633511ms)
+✔ no reader surface writes a carried-row sentence of its own; both go through the one decider (223.863108ms)
+✔ CP-16: meeting Sources include every supplied family with the captured time (2.205166ms)
+✔ CP-16: money, votes and actions retain their actual filing and document URLs (2.516101ms)
+✔ only recorded DEAD verdicts disable a destination, and recovery enables it (2.462183ms)
+✔ a concurrent and then stale sweep cannot erase a newer Reader finding (1.465741ms)
+✔ online-only venues use only the exact body's published office, without changing the meeting (4.725438ms)
+✔ a widened search counts each own government's held calendar apart from nearby results and agendas (19.802982ms)
+✔ numeric funding totals copy the exact five held committee values for every target (46.54737ms)
+✔ an absent small-donor share stays null in the numeric payload (2.399419ms)
+ask · model claude-opus-5-5 · effort medium · reader claude-haiku-4-5 · fast writer claude-haiku-4-5 · classifier claude-haiku-4-5 · unsourced claude-haiku-4-5
+✔ published source-filing profiles retain exact identities outside the mapped ballot without duplicating joined people (11.362348ms)
+✔ the real Ask route binds published source IDs even when the mapped ballot does not carry them (2755.452838ms)
+✔ SRC-1: identical rows credit ONE source, and it is named verbatim (7.719691ms)
+✔ SRC-1: one sitting reads 'This was', never 'These were' (6.120851ms)
+✔ SRC-2: more than one source is the author's sentence plus the list (0.444927ms)
+✔ SRC-2: the author's own example wording — 'these three sources' (0.391964ms)
+✔ SRC-1: nothing to credit renders NOTHING, never a placeholder (0.622927ms)
+✔ small counts read as words in the sentence, large ones as digits (3.269639ms)
+✔ F01 3.1: every meetings list renders the three groups, not a raw array (1.383375ms)
+✔ SRC-1: no meeting surface prints a footnote marker on a row (0.683916ms)
+✔ F01 3.2: the venue row no longer prints the jurisdiction on every meeting (0.715528ms)
+✔ MTG-14: every routed surface asks the helper rather than re-deriving the predicate (2.099819ms)
+✔ MTG-14: the reader-facing sentence exists in exactly ONE place (0.743268ms)
+✔ MTG-14: the shared files are in ONE of the two honest states, never half-way (2.109084ms)
+✔ MTG-14: both discovery surfaces this session owns render the online mark (0.503817ms)
+✔ MTG-14: stripped of colour, every status is still told apart by its MARK (1.550439ms)
+✔ MTG-14: stripped of colour, every status is still told apart by its WORD (0.247837ms)
+✔ MTG-14: the mark is decorative and the word carries the meaning (0.293199ms)
+✔ MTG-14: no marker prints a body's published label as a badge (0.615508ms)
+✔ MTG-14: the named case and the unnamed control both read as online-only (0.302908ms)
+✔ MTG-14: a physical sitting is untouched by any of it (0.200341ms)
+✔ MTG-14: an online sitting never becomes a map pin, and a physical one always does (0.516206ms)
+✔ MTG-14: location === null and online !== undefined agree, both sides computed (17.323557ms)
+✔ MTG-14: the snapshot still contains online sittings for the marker to be about (16.250981ms)
+✔ shared meeting row keeps its native identity and published online action (87.574098ms)
+✔ only a fresh first-party empty-slot observation earns Agenda not posted yet (47.652032ms)
+✔ a second-hand meeting retains its classification only within Sources (8.353308ms)
+✔ BX-10: a public recording on the publisher's record becomes the meeting's videoUrl (58.120612ms)
+✔ BX-10: no video, a video that is not public, or an unsafe address yields no videoUrl (8.090594ms)
+✔ BX-10: the meeting card's Sources names the publisher record the recording is linked from (2.900308ms)
+✔ BX-10: the map's meeting row shows the recording link only on a concluded sitting that has one (0.394242ms)
+✔ a clean page lists nothing (21.056891ms)
+✔ layout shift over the bar is listed; input-caused shifts do not count (0.326723ms)
+✔ no recorder is 'not measured', never a pass (0.12098ms)
+✔ horizontal overflow names the page and the element (0.296351ms)
+✔ a scroller is not overflow (0.17385ms)
+✔ cut-off text: hidden or ellipsised content wider than its box (10.702179ms)
+✔ tap targets: 44 normally, 40 compact (0.416687ms)
+✔ font size and spacing off the token scales (0.722606ms)
+✔ contrast under the bar is listed; large text gets the lower bar; image backdrops are not measured (12.8265ms)
+✔ collectPageObservation is self-contained (serialisable to a page) (0.284511ms)
+✔ card source leaks join the existing look report with exact elements (0.330462ms)
+
+  D35  "housing" across 22 subjects in the committed corpus: SEARCHED_NOTHING_MATCHED 17, MATCHED 5
+
+✔ D35 type 1 — MATCHED: verbatim passages, with the source and the read date (15.697614ms)
+✔ D35 type 1 — MATCHED: the change marker carries dates and never an interpretation (49.618443ms)
+✔ D35 type 2 — SEARCHED_NOTHING_MATCHED: a bounded search, with its denominator (0.410513ms)
+✔ D35 type 3 — NOT_YET_COLLECTED: a fact about our collection, not about them (0.260497ms)
+✔ D35: the three answers are distinguishable in data, and none of them says 'no position' (0.37826ms)
+✔ D35: the surface renders three different sentences, in the gap's own register (1.134523ms)
+✔ D35: nothing in this path generates, and nothing reads party (4.931055ms)
+✔ D35: a late answer for an abandoned query never lands (0.456283ms)
+✔ D35: the machinery answers against the committed corpus, and states its size (39.693817ms)
+✔ D35: the topic list is curated, and the search strips the question around the topic (1.418048ms)
+✔ reader last mile: every eligible matched passage reaches the shared answer (0.752074ms)
+✔ a gap cannot turn into a searched absence without an equal-effort topic record (1.050547ms)
+✔ gap rows retain their valid inline HTML and published copy overrides (44.993547ms)
+✔ an official and a thin candidate share every section header and contact position (11.232001ms)
+✔ the recorded rows are the owner's case: scheduled, no agenda, no building (11.167776ms)
+✔ the district card's door opens exactly the rows its count counted, never a Body scope (33.627608ms)
+✔ every reader surface that lists meetings renders the upcoming sittings, with honest gaps and matching counts (8324.226924ms)
+✔ a named venue gap is its own state: never online, never 'place not recorded', its words are the Where line (208.869878ms)
+✔ the card's calendar entry carries the stated place as its LOCATION, and invents none where the page states none (82.953252ms)
+✔ the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap (7885.119603ms)
+✔ the rhythm sweep catches an off-scale value — the instrument works (RULING 110) (6.005017ms)
+✔ the rhythm token scales are declared in app/globals.css (0.674739ms)
+✔ component sweep catches new tiny type, off-scale spacing and literal colours (0.69138ms)
+✔ component exceptions only shrink, per file and value (149.465433ms)
+✔ spacing: off-scale count does not exceed the baseline (it only shrinks) (57.511701ms)
+✔ radius: off-scale count does not exceed the baseline (it only shrinks) (3.005707ms)
+✔ fontSize: off-scale count does not exceed the baseline (it only shrinks) (42.861669ms)
+✔ elevation: off-scale count does not exceed the baseline (it only shrinks) (1.469809ms)
+✔ a 200 that is not a DataTables result is refused, never read as empty (13.740763ms)
+✔ the detail query refuses to be built without entityId (10.460419ms)
+✔ the universe is the union of all three of the portal's filter settings (0.434362ms)
+✔ both vocabularies key to the same Arizona seat, and unlike seats never collide (1.377984ms)
+✔ the Arizona statewide offices added to the shared classifier cannot swallow a county office (1.165756ms)
+✔ a quoted segment in a name is an alternate name, on either end (1.801309ms)
+✔ the five real ballot names whose quoting used to manufacture an absence now match (1.334935ms)
+✔ a diminutive is NOT a quoted alternate, and is not guessed at (0.473985ms)
+✔ the entity name is parsed off the portal's own markup (2.989101ms)
+✔ the several rows of one entity fold into one committee (1.342685ms)
+✔ CashBalance is an entity attribute, not a partition, and is never published as this cycle (8.557415ms)
+✔ a committee whose totals do not reproduce its own itemised ledger cannot render (21.438479ms)
+✔ an absence needs the portal AND the register to agree (1.138314ms)
+✔ the filing calendar supplies a real next-due date, never an invented one (122.389069ms)
+✔ the AZ snapshot exists and is the shape the loader names (6.838515ms)
+✔ every published figure is backed by a reconciliation row that agreed (17.060669ms)
+✔ a registered committee reporting nothing renders as that, never as $0 (1.396057ms)
+✔ the reconciliation artifact carries no itemised transaction (11.132498ms)
+✔ an OURS GAP renders, carries no money at all, and names a real next filing deadline (1.584252ms)
+✔ every candidacy the Secretary of State is the filing officer for ends in exactly one state (11.31804ms)
+✔ the stated split equals the rendered rows (4.933004ms)
+✔ DEFECT 1: a route that could not be read may not empty a card that already had money (16.661519ms)
+✔ DEFECT 1: an unread route with nothing to retain is our gap, and it does not render (1.485138ms)
+✔ DEFECT 2: a filer on page two is still a filer (28.095583ms)
+✔ DEFECT 2: a read that cannot prove it got everything may not produce an absence (1.776099ms)
+✔ DEFECT 3: a registered committee reporting zero is not a candidate the state has never heard of (26.17192ms)
+✔ DEFECT 4: a same-year filer who may be this person forbids an absence claim (20.209917ms)
+✔ every absence in a full run is backed by a proven denominator and no candidate-shaped row (189.548774ms)
+✔ the NH snapshot exists and is the shape the loader names (6.13311ms)
+✔ an absence is never a zero, and a filing always carries a figure (0.750526ms)
+✔ a LEAD never reaches a reader, and only a confirmed match carries a target (2.485696ms)
+✔ every claimed target is a real candidacy, and no federal seat is claimed (1.583472ms)
+ℹ tests 155
+ℹ suites 0
+ℹ pass 155
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73783.504628
+Timing evidence incomplete; unusable for scheduling hints: Timing line 1 is not valid JSON. Stream-end counts do not match the summaries. Missing file summaries: tests/absence-defaults.test.ts, tests/agenda-claim-guard.test.ts, tests/agenda-version-projection.test.ts, tests/ballot-desktop-composition.test.ts, tests/candidate-cards.test.ts, tests/candidate-position-provenance.test.ts, tests/card-sources.test.ts, tests/carried-row-reason.test.ts, tests/extended-card-sources.test.ts, tests/frontend-link-health.test.ts, tests/frontend-meeting-scope.test.ts, tests/funding-display-totals.test.ts, tests/held-filing-subjects.test.ts, tests/meeting-list-attribution.test.ts, tests/meeting-online-marker.test.ts, tests/meeting-row-sources.test.tsx, tests/meeting-video-link.test.ts, tests/page-metrics.test.ts, tests/positions.test.ts, tests/reader-gap-states.test.tsx, tests/reader-upcoming-meetings.test.ts, tests/reader-venue-gap-surfaces.test.ts.

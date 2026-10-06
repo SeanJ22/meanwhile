@@ -1,0 +1,62 @@
+
+> we-the-people@0.1.0 test /workspace/meanwhile
+> node scripts/ci-tests.mjs
+
+Affected tests: 1/1 files; SHA 83793508af5073ed1d6f25039bd2fdae0e412312
+tests/generated-artifacts.test.ts
+✔ RULING 92: every registered generated artifact exists and names its generator (10.477685ms)
+✔ promoted manual civic-data fixtures are immutable bootstrap evidence, not generated runtime outputs (1.200543ms)
+✔ RULING 92: a file declaring itself GENERATED is registered here (3859.559684ms)
+✖ RULING 92: a PURE generator's artifact is byte-identical to what it produces now (926.185602ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5709.727946
+
+✖ failing tests:
+
+test at tests/generated-artifacts.test.ts:166:1
+✖ RULING 92: a PURE generator's artifact is byte-identical to what it produces now (926.185602ms)
+  Error: Command failed: corepack pnpm state-manifest --check
+  node:fs:1411
+    const result = binding.mkdir(
+                           ^
+  
+  Error: ENOENT: no such file or directory, mkdir '/home/agent/.cache/node/corepack/v1'
+      at mkdirSync (node:fs:1411:26)
+      at getTemporaryFolder (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:21953:27)
+      at download (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:22288:21)
+      at installVersion (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:22386:61)
+      at async Engine.ensurePackageManager (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:22899:32)
+      at async Engine.executePackageManagerRequest (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:23010:25)
+      at async Object.runMain (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:23710:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'mkdir',
+    path: '/home/agent/.cache/node/corepack/v1'
+  }
+  
+  Node.js v24.19.0
+  
+      at genericNodeError (node:internal/errors:985:15)
+      at wrappedFn (node:internal/errors:539:14)
+      at checkExecSyncError (node:child_process:942:11)
+      at execSync (node:child_process:1014:15)
+      at file:///workspace/meanwhile/tests/generated-artifacts.test.ts:172:7
+      at proveGeneratedArtifacts (file:///workspace/meanwhile/tests/helpers/generated-artifact-proof.ts:32:7)
+      at file:///workspace/meanwhile/tests/generated-artifacts.test.ts:171:5
+      at withTreeLock (file:///workspace/meanwhile/tests/tree-lock.ts:64:12)
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/generated-artifacts.test.ts:166:96)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    status: 1,
+    signal: null,
+    output: [ null, '', "node:fs:1411\n  const result = binding.mkdir(\n                         ^\n\nError: ENOENT: no such file or directory, mkdir '/home/agent/.cache/node/corepack/v1'\n    at mkdirSync (node:fs:1411:26)\n    at getTemporaryFolder (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:21953:27)\n    at download (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:22288:21)\n    at installVersion (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:22386:61)\n    at async Engine.ensurePackageManager (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:22899:32)\n    at async Engine.executePackageManagerRequest (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:23010:25)\n    at async Object.runMain (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:23710:7) {\n  errno: -2,\n  code: 'ENOENT',\n  syscall: 'mkdir',\n  path: '/home/agent/.cache/node/corepack/v1'\n}\n\nNode.js v24.19.0\n" ],
+    pid: 95413,
+    stdout: '',
+    stderr: "node:fs:1411\n  const result = binding.mkdir(\n                         ^\n\nError: ENOENT: no such file or directory, mkdir '/home/agent/.cache/node/corepack/v1'\n    at mkdirSync (node:fs:1411:26)\n    at getTemporaryFolder (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:21953:27)\n    at download (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:22288:21)\n    at installVersion (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:22386:61)\n    at async Engine.ensurePackageManager (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:22899:32)\n    at async Engine.executePackageManagerRequest (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:23010:25)\n    at async Object.runMain (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/lib/node_modules/corepack/dist/lib/corepack.cjs:23710:7) {\n  errno: -2,\n  code: 'ENOENT',\n  syscall: 'mkdir',\n  path: '/home/agent/.cache/node/corepack/v1'\n}\n\nNode.js v24.19.0\n"
+  }
+ ELIFECYCLE  Test failed. See above for more details.

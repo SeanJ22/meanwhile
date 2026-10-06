@@ -12,7 +12,9 @@
  */
 import { randomUUID } from "node:crypto";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { attemptBatchJournal, batchEnabledFor, batchRequestHash, type backgroundBatchTransport } from "../model-batch.ts";
+import { attemptBatchJournal, batchEnabledFor, batchEnabledForJob, batchRequestHash, type BatchJob, type BatchLane,
+  type backgroundBatchTransport } from "../model-batch.ts";
+import type { RouteTask } from "../route-task.ts";
 import { FleetPreSendRefusal, modelRequestWorstCaseUsd, modelResponseUsd, type FleetSafetyController } from "../fleet-safety.ts";
 import type { armExpansionBudget } from "../expansion/membership.ts";
 import type { AssignmentBudgetGate } from "../expansion/assignment-budget.ts";
@@ -125,18 +127,21 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
    */
   const workerTransportFor = (jurisdiction: AutonomousJurisdiction, taskId: string): ModelTransport => async request => {
     const task = (await repos.routeTasks.mustRead(taskId)).value;
-    const batching = task.workerTask?.role === "ADVERSARIAL_AUDITOR" ? batchEnabledFor("background-worker-audit")
-      : task.workerTask?.role === "PARSER" && batchEnabledFor("background-worker-parse");
+    const routing = workerBatchRouting(task);
+    const batching = routing.lane !== null && batchEnabledForJob(routing.lane, routing.job);
     const journal = attemptBatchJournal(repos, taskId, deps.now);
-    const requestJobId = `worker-request:${taskId}:${batching ? batchRequestHash(request) : randomUUID()}`;
-    if (batching && await journal.read(batchRequestHash(request))) {
+    // BX-13: a request already sent to the batch service under earlier routing is collected, never sent twice,
+    // whatever its job now says. The journal is read for the same tasks as before (a batch lane that is on).
+    const recoverable = routing.lane !== null && batchEnabledFor(routing.lane);
+    if (recoverable && await journal.read(batchRequestHash(request))) {
       // Recovery reads an already submitted request, so it neither reserves
       // nor spends a second request allowance. Settle its original hold.
       const response = await deps.batch.withJournal(journal)(request);
       const measured = modelResponseUsd(response);
-      if (measured !== null) await spendHolds.settle(requestJobId, measured, deps.now());
+      if (measured !== null) await spendHolds.settle(`worker-request:${taskId}:${batchRequestHash(request)}`, measured, deps.now());
       return response;
     }
+    const requestJobId = `worker-request:${taskId}:${batching ? batchRequestHash(request) : randomUUID()}`;
     const occurrences = await repos.occurrences.listWhere(["workItemId"], task.workItemId);
     const owner = occurrences.find(row => row.value.routeTaskId === task.id) ?? (occurrences.length === 1 ? occurrences[0] : null);
     await deps.beforeObligation?.(owner?.value.obligationId ?? task.id);
@@ -169,4 +174,17 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
   const capacityNoticeReset = (): void => { paidCapacityHoldSaid = false; };
   return { budgetLinesFor, guardedMessagesFor, autonomousTransportFor, paidWorkerCapacity, workerTransportFor, capacityNoticeReset,
     openJobs: (): readonly JobSpend[] => [...openJobs] };
+}
+
+/**
+ * BX-13: which batch lane a lease worker's request belongs to, and what job it serves. Only work no reader
+ * waits on takes the slow discount service: an audit sample after publishing, or a diagnostic replay of
+ * saved results (a backfill). Every other parse (a live fact's refresh, a mission's first fill, anything
+ * unclassified) goes straight to the model. Roles outside the two lanes never batch.
+ */
+export function workerBatchRouting(task: Pick<RouteTask, "workerTask">): { readonly lane: BatchLane | null; readonly job: BatchJob | undefined } {
+  const spec = task.workerTask;
+  if (spec?.role === "ADVERSARIAL_AUDITOR") return { lane: "background-worker-audit", job: spec.purpose === "DIAGNOSTIC_REPLAY" ? "BACKFILL" : "AUDIT_SAMPLE" };
+  if (spec?.role === "PARSER") return { lane: "background-worker-parse", job: spec.purpose === "DIAGNOSTIC_REPLAY" ? "BACKFILL" : undefined };
+  return { lane: null, job: undefined };
 }

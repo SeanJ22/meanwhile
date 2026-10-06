@@ -3,6 +3,7 @@ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
 /**
@@ -531,6 +532,29 @@ export function pgAggregateRepository<T>(
         // downloading its identical value again adds no readback information.
         value: parseValue<T>(submitted, `${where} id ${id}`),
       };
+    },
+
+    async readMany(ids) {
+      /* Primary-key batches of one page each, so no response nears the driver cap. */
+      const unique = [...new Set(ids)].sort();
+      const out: Persisted<T>[] = [];
+      for (let at = 0; at < unique.length; at += AGGREGATE_LIST_READ_PAGE) {
+        const rows = (await run(
+          "readMany",
+          "PAGE",
+          `SELECT id, revision, updated_at, value FROM ${table} WHERE id = ANY($1::text[]) ORDER BY id ASC`,
+          [unique.slice(at, at + AGGREGATE_LIST_READ_PAGE)],
+        )) as Record<string, unknown>[];
+        for (const row of rows) {
+          out.push({
+            id: String(row.id),
+            revision: Number(row.revision),
+            updatedAt: new Date(row.updated_at as string).toISOString(),
+            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
+          });
+        }
+      }
+      return out;
     },
 
     list: () => list(),
@@ -1239,6 +1263,8 @@ export async function createPgRepositories(
     adminReceipts,
     agentJobs: pgAppendOnlyRepository<AgentJobRecord>(sql, "agent_jobs", bounded),
     discoveryAttempts: pgAppendOnlyRepository<MeetingsDiscoveryAttempt>(sql, "discovery_attempts", bounded),
+    /* Live-audit results, corrections and pulls (DP-13, schema v21). */
+    liveAudits: pgAppendOnlyRepository<LiveAuditLogRow>(sql, "live_audits", bounded),
     adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),
     /* What readers were told Ask does not hold (schema v13). Ask's route adds through `pgAskGapObservationSink`, one atomic upsert per row. */
     askGapObservations: pgAggregateRepository<AskGapObservation>(sql, "AskGapObservation", "cp_ask_gap_observations", bounded),

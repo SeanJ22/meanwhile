@@ -356,7 +356,7 @@ export function FiltersArea({
               );
             })}
             {overlayOff && (
-              <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+              <p className="mt-1 t-caption leading-relaxed text-muted">
                 The overlay is off — checking a type turns it on.
               </p>
             )}

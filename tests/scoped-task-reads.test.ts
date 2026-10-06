@@ -228,7 +228,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
 });
 
 test("CH-26: schema version 20 builds the scoped indexes online, on the exact expressions the reads send", async () => {
-  assert.equal(BOOTSTRAP_VERSION, 20);
+  assert.ok(BOOTSTRAP_VERSION >= 20, "v20 added the scoped indexes; later versions (v21 live audits) keep them");
   for (const index of SCOPED_HISTORY_INDEXES) {
     assert.match(index.ddl, /^CREATE INDEX CONCURRENTLY IF NOT EXISTS /);
     assert.ok(BOOTSTRAP_DDL.includes(index.ddl));
@@ -259,7 +259,7 @@ test("CH-26: each lease task reports its repository calls, and the round records
   assert.match(worker, /const observer = observeCyclePhases\(stores\);\s*const repos = observer\.repos;/);
   assert.match(worker, /observer\.finish\("runtime"\);\s*await runtime\.beginTask\?\.\(task\);/, "the runtime build is not charged to the task");
   assert.match(worker, /repositoryCalls: observer\.finish\("task"\)\.repositoryCalls/);
-  assert.match(worker, /WTP_SCOPED_TASK_READS === "1"/, "the scoped path is behind its runner switch");
+  assert.match(worker, /WTP_SCOPED_TASK_READS !== "0"/, "the scoped path is the default; the whole-table path stays behind its runner switch");
   const round = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(round, /if \(typeof result\.repositoryCalls === "number"\) leaseTaskCalls\.push\(result\.repositoryCalls\);/);
   assert.match(round, /cyclePhases: \[\.\.\.cycleObservation\.phases, \.\.\.leaseTaskReadsPhase\(\)\]/);

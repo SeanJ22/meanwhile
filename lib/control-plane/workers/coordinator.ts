@@ -25,6 +25,7 @@ import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkerResultRecord } from "./types.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
 import { needsSecondSource } from "../promotion/section3.ts";
+import { interleaveByWeight, partOfItem, sendOf, squadKey, squadWeights, type SquadReading, type SquadWeight } from "./squad-weights.ts";
 
 /**
  * Blocker codes an acquisition recorded for robots.txt alone, before the owner decision of 2026-09-25. Historical:
@@ -416,13 +417,13 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
 
 /** Serve one item per hunt in each round; priority orders a round, never drains a whole hunt first. */
 export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: ReadonlyMap<string, string>,
-  priorities: readonly { receiptId: string; priority: number }[] = []): string[] {
+  priorities: readonly { receiptId: string; priority: number }[] = [],
+  /* CH-17: each Send's turns go round-robin over its mission parts, weighted by open blanks and difficulty. */
+  squads?: { readonly partOf: (item: WorkItem) => string; readonly weightOf: (send: string, part: string) => number }): string[] {
   const priority = new Map(priorities.map(row => [row.receiptId, row.priority] as const));
   const groups = new Map<string, { priority: number; lastServed: string; items: WorkItem[] }>();
   for (const item of items) {
-    const refs = [...(item.autonomousPlan?.ownerInstructions ?? [])]
-      .sort((a, b) => (priority.get(a) ?? Infinity) - (priority.get(b) ?? Infinity) || a.localeCompare(b));
-    const key = refs[0] ?? "standing";
+    const key = sendOf(item, priority);
     const group = groups.get(key) ?? { priority: priority.get(key) ?? Infinity, lastServed: "", items: [] };
     group.items.push(item);
     if ((lastServed.get(item.id) ?? "") > group.lastServed) group.lastServed = lastServed.get(item.id)!;
@@ -430,12 +431,22 @@ export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: Re
   }
   const ordered = [...groups].sort(([ak, a], [bk, b]) =>
     a.priority - b.priority || a.lastServed.localeCompare(b.lastServed) || ak.localeCompare(bk));
-  for (const [, group] of ordered) group.items.sort((a, b) =>
-    (lastServed.get(a.id) ?? "").localeCompare(lastServed.get(b.id) ?? "") ||
-    a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
+  const partOf = squads?.partOf ?? ((item: WorkItem) => partOfItem(item));
+  const sequences = ordered.map(([send, group]) => {
+    group.items.sort((a, b) =>
+      (lastServed.get(a.id) ?? "").localeCompare(lastServed.get(b.id) ?? "") ||
+      a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
+    const byPart = new Map<string, WorkItem[]>();
+    for (const item of group.items) {
+      const part = partOf(item);
+      byPart.set(part, [...(byPart.get(part) ?? []), item]);
+    }
+    return interleaveByWeight([...byPart].sort(([a], [b]) => a.localeCompare(b))
+      .map(([part, rows]) => ({ weight: squads ? squads.weightOf(send, part) : 1, items: rows })));
+  });
   const ids: string[] = [];
   for (let round = 0; ids.length < items.length; round++) {
-    for (const [, group] of ordered) if (group.items[round]) ids.push(group.items[round].id);
+    for (const sequence of sequences) if (sequence[round]) ids.push(sequence[round].id);
   }
   return ids;
 }
@@ -473,6 +484,8 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   acceptsWorkItem?:(item:WorkItem)=>boolean;
   prioritizedInstructions?:readonly {receiptId:string;priority:number}[];
   admitDispatch?:(work:string)=>{admit:true}|{admit:false;code:string;why:string};
+  /** CH-17: this wave's open blanks by Send and part; each Send's turns are weighted by them and by difficulty. */
+  squads?:SquadReading;
 }={}) {
   const now = runtime.now ?? (()=>new Date().toISOString());
   const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
@@ -500,7 +513,8 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   for(const attempt of attempts) {
     const rows=attemptsByWork.get(attempt.workItemId)??[]; rows.push(attempt); attemptsByWork.set(attempt.workItemId,rows);
   }
-  const lineages=selectStandingLineages({occurrences:(await runtime.repos.occurrences.list()).map(row=>row.value),
+  const occurrenceRows=(await runtime.repos.occurrences.list()).map(row=>row.value);
+  const lineages=selectStandingLineages({occurrences:occurrenceRows,
     workItems:allItems,artifacts:await runtime.repos.artifacts.readAll(),attempts,
     workerResults:workerRecords});
   const selectedRoot=new Map(lineages.flatMap(lineage=>lineage.siblingRootIds.map(id=>[id,lineage.rootWorkItemId] as const)));
@@ -533,14 +547,26 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   for (const attempt of attempts) {
     if (attempt.startedAt>(lastServed.get(attempt.workItemId)??"")) lastServed.set(attempt.workItemId,attempt.startedAt);
   }
-  const ids=fairAutonomousWorkIds(items.map(row => row.value), lastServed, options.prioritizedInstructions);
+  // CH-17: weights read this wave from the open blanks handed in, the recent detective turns and the open failure debts.
+  let weights:ReadonlyMap<string,SquadWeight>|null=null;
+  if(options.squads) {
+    const workByObligation=new Map(occurrenceRows.filter(row=>row.workItemId).map(row=>[row.obligationId,row.workItemId!] as const));
+    weights=squadWeights({items:knownItems,priority:new Map((options.prioritizedInstructions??[]).map(row=>[row.receiptId,row.priority] as const)),
+      reading:options.squads,routeTasks:routeTaskRows.map(row=>row.value),now:now(),
+      debts:(await runtime.repos.debts.list()).map(row=>({debt:row.value,workItemId:workByObligation.get(row.value.obligationId)??null}))});
+  }
+  const squadParts=options.squads?.parts;
+  const ids=fairAutonomousWorkIds(items.map(row => row.value), lastServed, options.prioritizedInstructions,
+    weights?{partOf:item=>partOfItem(item,squadParts),weightOf:(send,part)=>weights!.get(squadKey(send,part))?.weight??1}:undefined);
   // Validate this invocation's already loaded history through the same shared
   // completion path. Independent calls still read current repository state;
   // leases, capabilities and budget admission are never frozen by this join.
   const candidateIds=new Set(ids);
+  const attemptById=new Map(attemptRows.map(row=>[row.id,row] as const));
   const completedRecords=await readCompletedWorkerResults({...runtime.repos,
     workerResults:{...runtime.repos.workerResults,readAll:async()=>workerRecords.filter(record=>candidateIds.has(record.workItemId))},
-    attempts:{...runtime.repos.attempts,list:async()=>attemptRows},
+    attempts:{...runtime.repos.attempts,list:async()=>attemptRows,read:async id=>attemptById.get(id)??null,
+      readMany:async wanted=>[...new Set(wanted)].sort().flatMap(id=>attemptById.get(id)??[])},
   });
   const recordsByWork=new Map<string,WorkerResultRecord[]>();
   for(const record of completedRecords) {
@@ -623,5 +649,6 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
     ? {workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
     : {workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});
   // `considered` lets a reader check the pass: every item is dispatched, deferred, or decided not to run (MW-014).
-  return {recovery,decisions,dispatches,scoutsAdmitted,scoutsLimitedAdmitted,deferred,considered:candidates.length};
+  return {recovery,decisions,dispatches,scoutsAdmitted,scoutsLimitedAdmitted,deferred,considered:candidates.length,
+    squadWeights:weights===null?[]:[...weights.values()]};
 }

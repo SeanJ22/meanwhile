@@ -5,13 +5,13 @@ import { formatDateMDY } from "@/lib/map/format";
 export function FilingChanges({ removals }: { removals: readonly CandidacyRemoval[] }) {
   if (!removals.length) return null;
   return (
-    <details className="mt-3 text-[0.75rem] leading-relaxed text-paper-dim" data-filing-change-count={removals.length}>
+    <details className="mt-3 t-detail leading-relaxed text-paper-dim" data-filing-change-count={removals.length}>
       <summary className="cursor-pointer text-link">Filing changes ({removals.length})</summary>
       <ul className="mt-2 space-y-2">
         {removals.map((record) => (
           <li key={record.id} data-filing-change-id={record.id}>
             <p>{record.statement}</p>
-            <p className="mt-1 text-[0.6875rem] text-muted">
+            <p className="mt-1 t-caption text-muted">
               {record.lastListed.sourceUrl && <a className="text-link underline" href={record.lastListed.sourceUrl} target="_blank" rel="noreferrer">Earlier filing</a>}
               {" · Read "}{formatDateMDY(record.lastListed.collectedAt)}
               {record.absentFrom.sourceUrl && <> · <a className="text-link underline" href={record.absentFrom.sourceUrl} target="_blank" rel="noreferrer">Revised filing</a></>}

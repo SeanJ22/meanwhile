@@ -33,6 +33,8 @@ export interface OwedRowLike {
   readonly held: readonly { readonly sourceUrl: string; readonly checkedAt: string; readonly state: string }[];
   /** The six statuses, when the owed list carries them. */
   readonly statuses?: RowStatuses;
+  /** When the blank started being owed (SC-10); null or absent when it was owed from the start or no record dates it. */
+  readonly owedSince?: string | null;
 }
 
 export interface ScoreCounts {
@@ -134,6 +136,8 @@ export interface OwedListItem {
   readonly sourceUrl: string | null;
   readonly checkedAt: string | null;
   readonly statuses: RowStatuses | null;
+  /** When it started being owed; null when owed from the start or undated. */
+  readonly owedSince: string | null;
 }
 
 export function owedListItem(row: OwedRowLike): OwedListItem {
@@ -150,6 +154,7 @@ export function owedListItem(row: OwedRowLike): OwedListItem {
     sourceUrl: held?.sourceUrl ?? null,
     checkedAt: held?.checkedAt ?? null,
     statuses: row.statuses ?? null,
+    owedSince: row.owedSince ?? null,
   };
 }
 

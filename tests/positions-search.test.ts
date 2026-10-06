@@ -167,16 +167,9 @@ test("13: a failed search and an empty search are different sentences", () => {
     "utf8",
   );
   assert.match(section, /setFailed\(true\)/, "the failure state is gone");
-  assert.match(
-    section,
-    /That is a\s+failure on our side — it is not a statement about what they have\s+said/,
-    "the failure sentence must stay a statement about US",
-  );
-  assert.match(
-    section,
-    /data-positions-answer="SEARCHED_NOTHING_MATCHED"/,
-    "a genuine zero needs its own marked branch",
-  );
+  assert.match(section, /failed && <WorkingOnIt/);
+  assert.match(section, /answer.kind === "SEARCHED_NOTHING_MATCHED" && <WorkingOnIt/,
+    "a search without an equal-effort record keeps the open hunt state");
 });
 
 /**
@@ -208,14 +201,6 @@ test("13: a term we hold but will not quote is not reported as their silence", (
     join(ROOT, "components", "officials", "positions-section.tsx"),
     "utf8",
   );
-  assert.match(
-    section,
-    /answer\.searched\.presentButUnquotable > 0 \? \(/,
-    "the surface must branch on it",
-  );
-  assert.match(
-    section,
-    /only inside a block we\s*\n?\s*won&apos;t quote from/,
-    "the surface must say whose rule produced the silence",
-  );
+  assert.match(section, /answer.kind === "SEARCHED_NOTHING_MATCHED" && <WorkingOnIt/);
+  assert.doesNotMatch(section, /none of\s+them mentions/, "an unquotable hit cannot become a claim of silence");
 });

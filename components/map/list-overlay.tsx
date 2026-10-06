@@ -560,6 +560,7 @@ export function ListOverlay({
                           it is — is carried by the mark and the word instead.
                           See components/map/meeting-status-pill.tsx.
                         */}
+                        {result?.readerScope?.nearbyMeetingIds.includes(meeting.id) && <span className="t-detail text-muted" data-meeting-nearby>Nearby</span>}
                         {isOnlineOnly(meeting) && <MeetingStatusPill status="online" />}
                         {/*
                           M81. Impact is jurisdiction MEMBERSHIP, not distance

@@ -26,7 +26,7 @@
  *
  *   pnpm admin:walk                                  # localhost:3100, dark
  *   ADMIN_WALK_BASE=http://localhost:3000 pnpm admin:walk
- *   ADMIN_WALK_PAGES=admin,readiness/az pnpm admin:walk
+ *   ADMIN_WALK_PAGES=admin,admin?view=checklist,admin?view=work pnpm admin:walk
  *   ADMIN_WALK_THEMES=dark,light ADMIN_WALK_WIDTH=1024 pnpm admin:walk
  *
  * Writes a PNG and the page's rendered text per page per theme into
@@ -46,7 +46,7 @@ import { launchGuarded } from "./browser.mts";
 const ADMIN_HOST = new URL(ADMIN_ORIGIN).host;
 const BASE = process.env.ADMIN_WALK_BASE ?? "http://localhost:3100";
 const OUT = process.env.ADMIN_WALK_OUT ?? join(".scratch", "admin-walk");
-const PAGES = (process.env.ADMIN_WALK_PAGES ?? "admin,readiness/az").split(",").map((p) => p.trim()).filter(Boolean);
+const PAGES = (process.env.ADMIN_WALK_PAGES ?? "admin,admin?view=checklist,admin?view=work").split(",").map((p) => p.trim()).filter(Boolean);
 const THEMES = (process.env.ADMIN_WALK_THEMES ?? "dark").split(",").map((t) => t.trim()).filter(Boolean);
 const WIDTH = Number(process.env.ADMIN_WALK_WIDTH ?? 1440);
 const SETTLE_MS = Number(process.env.ADMIN_WALK_SETTLE_MS ?? 0);

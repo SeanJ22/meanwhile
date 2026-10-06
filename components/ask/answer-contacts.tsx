@@ -6,12 +6,12 @@ export function AskAnswerContacts({ contacts }: { contacts: readonly AskContact[
   if (!contacts.length) return null;
   return (
     <details className="mt-2" data-ask-contacts={contacts.length}>
-      <summary className="cursor-pointer text-[0.6875rem] text-link">
+      <summary className="cursor-pointer t-caption text-link">
         Who this is ({contacts.length})
       </summary>
       <ul className="mt-0.5 space-y-2">
         {contacts.map((c) => (
-          <li key={c.id} data-ask-contact-id={c.id} data-ask-contact-basis={c.basis} className="text-[0.75rem] leading-relaxed text-paper-dim">
+          <li key={c.id} data-ask-contact-id={c.id} data-ask-contact-basis={c.basis} className="t-detail leading-relaxed text-paper-dim">
             <p><span className="text-paper">{c.name}</span> — {c.relationship}</p>
             {c.officeTitle && !c.relationship.includes(c.officeTitle) ? <p className="text-muted">{c.officeTitle}</p> : null}
             <div className="flex flex-wrap gap-x-3 gap-y-0.5 break-words">

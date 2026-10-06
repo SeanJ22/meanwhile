@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { scheduleObligation, isScheduled, type FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
-import { ABSENCE_EXPIRY_DAYS, absenceExpiry, isArguedAbsence } from "../lib/control-plane/scheduler/absence.ts";
+import { absenceExpiry, isArguedAbsence } from "../lib/control-plane/scheduler/absence.ts";
 import { recordArguedAbsence, standing } from "../lib/control-plane/scheduler/durable.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 
@@ -62,17 +62,19 @@ test("isArguedAbsence: only a finished, floor-clearing NO_PROGRESS is an absence
 test("recordArguedAbsence sets absentUntil and advances the stored next-due to the expiry", async () => {
   const repos = createMemoryRepositories();
   await repos.obligations.put(BASE.id, standing(BASE, NOW), NOW);
-  const until = absenceExpiry(NOW);
-  await recordArguedAbsence(repos, { obligationId: BASE.id, absentUntil: until, now: NOW });
+  /* DP-11: the hold is the owner's setting tied to the source's pace (5 days at most by default), never the old 30. */
+  const until = absenceHold(standing(BASE, NOW), NOW, null).until;
+  assert.ok(until < absenceExpiry(NOW));
+  await recordArguedAbsence(repos, { obligationId: BASE.id, absentUntil: absenceExpiry(NOW), now: NOW });
   const row = await repos.obligations.mustRead(BASE.id);
   assert.equal(row.value.absentUntil, until);
   assert.equal(row.value.nextDueAt, until, "the stored next-due matches the absence expiry so the durable due-query agrees");
   const scheduled = scheduleObligation(row.value, NOW_MS);
   assert.ok(isScheduled(scheduled) && scheduled.nextDueAt === until && scheduled.cadenceSource === "ARGUED_ABSENT");
-  assert.equal(ABSENCE_EXPIRY_DAYS, 30);
 });
 
 import { absenceUnlockFrom } from "../lib/control-plane/scheduler/absence.ts";
+import { absenceHold } from "../lib/control-plane/scheduler/absence-hold.ts";
 import { scoutDeadEnd } from "../lib/control-plane/admin-view/dead-ends.ts";
 
 test("an absence stores what would unlock it, built from the detective's next steps (DP-06)", () => {

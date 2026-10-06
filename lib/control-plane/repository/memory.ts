@@ -2,6 +2,7 @@ import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
 /**
@@ -98,6 +99,10 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
 
   return {
     read,
+
+    /* `AggregateRepository.readMany`: the named rows that exist, in id order, as Postgres answers it. */
+    readMany: async (ids: readonly string[]): Promise<readonly Persisted<T>[]> =>
+      [...new Set(ids)].sort().flatMap((id) => { const row = rows.get(id); return row === undefined ? [] : [{ ...row, value: jsonCopy(row.value) }]; }),
 
     readNarrowed: async (id: string, projection: RecordProjection): Promise<Persisted<unknown> | null> => {
       const row = await read(id);
@@ -347,6 +352,8 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     adminReceipts,
     agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
     discoveryAttempts: memoryAppendOnlyRepository<MeetingsDiscoveryAttempt>("discovery_attempts"),
+    /* Live-audit results, corrections and pulls (DP-13, schema v21). */
+    liveAudits: memoryAppendOnlyRepository<LiveAuditLogRow>("live_audits"),
     adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
     /* What readers were told Ask does not hold (schema v13). */
     askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),

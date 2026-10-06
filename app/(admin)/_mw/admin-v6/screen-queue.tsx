@@ -8,6 +8,8 @@
 import { useState } from "react";
 
 import { useV6 } from "./context.tsx";
+import { ReceiptCard } from "./receipt-view.tsx";
+import { WorkReached } from "./trail-view.tsx";
 import { QUEUE_FILTERS, QUEUE_FILTER_WORDS, queueCounts, type QueueFilter, type QueueRow } from "./queue.ts";
 import { Actions, Empty, Pill, Tabs, Technical, usePager } from "./ui.tsx";
 import { useQueueRows } from "./use-queue.ts";
@@ -30,6 +32,10 @@ export function QueueScreen() {
         <div className={s.spread}>
           <span className={s.small}>Pause or restart all scheduled work</span>
           <Actions actions={[{ kind: "global-runner-pause", target: "us" }, { kind: "global-runner-resume", target: "us" }]} />
+        </div>
+        <div className={s.spread}>
+          <span className={s.small}>Send everything waiting on the fix list</span>
+          <Actions actions={[{ kind: "fix-go", target: "fix-queue" }]} primaryFirst />
         </div>
       </div>
       {unread.length > 0 && <p className={s.why}>Not read yet, so not shown here: {unread.join(", ")}.</p>}
@@ -62,7 +68,14 @@ function QueueCard(props: { readonly row: QueueRow }) {
           <span className={s.meta}>{r.progress.words}</span>
         </div>
       )}
+      {r.sendId && <WorkReached sendId={r.sendId} />}
       <Actions actions={r.actions} />
+      {r.receipt && (
+        <details className={s.details}>
+          <summary>Show details</summary>
+          <ReceiptCard receipt={r.receipt} />
+        </details>
+      )}
       <Technical lines={[r.key]} />
     </article>
   );

@@ -1,7 +1,8 @@
+import { CheckedLink } from "@/components/ui/checked-link";
 import type { CardSource } from "@/lib/officials/card-sources";
 import { verificationOf } from "@/lib/officials/verification";
 
-import { NoValue, PopupRow } from "@/components/map/popup/popup-card";
+import { NoValue, PopupRow } from "@/components/map/popup/popup-row";
 
 /**
  * The rendered form of a card's source list — ONE component, for the
@@ -20,7 +21,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
     <>
       {sources.map((entry, i) => (
         <div key={`${entry.what}-${i}`} className="account-modal-person">
-          <p className="text-[0.8125rem] text-paper">{entry.what}</p>
+          <p className="t-body text-paper">{entry.what}</p>
 
           <PopupRow label="Published by">
             {entry.provenance.sourceOrg || <NoValue />}
@@ -28,20 +29,20 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
 
           <PopupRow label="Read from">
             {entry.provenance.sourceUrl ? (
-              <a
+              <CheckedLink
                 href={entry.provenance.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="text-link hover:underline"
               >
                 {hostOf(entry.provenance.sourceUrl)}
-              </a>
+              </CheckedLink>
             ) : (
               <NoValue>no published page</NoValue>
             )}
           </PopupRow>
 
-          <PopupRow label="Collected" mono>
+          <PopupRow label="Last checked" mono>
             {entry.provenance.collectedAt ? (
               entry.provenance.collectedAt.slice(0, 10)
             ) : (
@@ -82,13 +83,13 @@ function VerifiedRow({ provenance }: { provenance: CardSource["provenance"] }) {
   return (
     <PopupRow label="Verified" mono>
       {verification.kind === "confirmed" && verification.date}
-      {verification.kind === "official" && (
+      {verification.kind === "official" && verification.date && (
         <>
           {verification.date}
           <span className="text-muted"> by {verification.by}</span>
         </>
       )}
-      {verification.kind === "unverified" && <NoValue>not yet</NoValue>}
+      {(verification.kind === "unverified" || !verification.date) && <NoValue>not yet</NoValue>}
     </PopupRow>
   );
 }

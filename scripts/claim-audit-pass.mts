@@ -62,6 +62,11 @@ if (!out.ran || out.pass === null) {
   console.log("claim audit: this week is already checked, or there is no config row; nothing to do");
   process.exit(0);
 }
+/* RULING 159: a count over nothing is not a result. A pass that checked no claims says so and fails. */
+if (out.pass.checks.length === 0) {
+  console.error(`claim audit: the pass for the week of ${out.pass.week} checked 0 claims; nothing was measured`);
+  process.exit(1);
+}
 const count = (v: string) => out.pass!.checks.filter((c) => c.verdict === v).length;
 console.log(`claim audit: ${out.pass.checks.length} claims checked for the week of ${out.pass.week}; ${count("CONFIRMED")} confirmed, ${count("WRONG")} wrong, ${count("COULD_NOT_CHECK")} could not be checked` +
   (out.lessonErrors.length ? `; lessons not saved: ${out.lessonErrors.join("; ")}` : ""));

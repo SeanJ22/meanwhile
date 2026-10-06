@@ -50,6 +50,8 @@ export interface CardSource {
   /** Which facts on this card this source is behind. */
   what: string;
   provenance: Provenance;
+  /** A status line about the listing (e.g. when a carried row was last reached), not a source: shown without a source-kind label. */
+  status?: true;
 }
 
 /**
@@ -171,7 +173,7 @@ export function meetingCardSources(
   for (const [field, provenance] of Object.entries(meeting.fieldSources ?? {})) entries.push({ what: `This sitting — ${field}`, provenance });
   if (meeting.carried) {
     const clause = carriedRowClause(meeting.carried);
-    entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } });
+    entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, status: true, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } });
   }
   if (meeting.agendaUrl) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
   for (const [kind, label] of Object.entries(MEETING_SOURCE_LABELS)) {

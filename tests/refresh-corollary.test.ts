@@ -493,8 +493,7 @@ test("every surface that states a meeting's freshness reads the row's own stamp"
   // must actually be rendering behind.
   const surfaces = [
     ["components/map/data-freshness.tsx", /\{carried && carried\.count > 0 && \(/],
-    ["components/map/meeting-panel.tsx", /\{meeting\.carried && \(/],
-    ["components/map/popup/meeting-popup.tsx", /\{meeting\.carried && \(/],
+    ["lib/officials/card-sources.ts", /if \(meeting\.carried\)/],
   ] as const;
   for (const [file, gate] of surfaces) {
     const source = readFileSync(join(ROOT, file), "utf8");
@@ -517,9 +516,14 @@ test("every surface that states a meeting's freshness reads the row's own stamp"
 
   // The footer must not be the only place it is said: a reader who opens a
   // card and never looks at the footer is the case that started this.
-  const panel = readFileSync(join(ROOT, "components/map/meeting-panel.tsx"), "utf8");
+  for (const surface of ["components/map/meeting-panel.tsx", "components/map/popup/meeting-popup.tsx"]) {
+    assert.match(readFileSync(join(ROOT, surface), "utf8"), /<Meeting(Row|Card)/);
+  }
+  assert.match(readFileSync(join(ROOT, "components/ui/meeting-row.tsx"), "utf8"), /meetingCardSources\(meeting/);
+  assert.match(readFileSync(join(ROOT, "components/ui/meeting-card.tsx"), "utf8"), /meetingCardSources\(meeting/);
+  const sources = readFileSync(join(ROOT, "lib/officials/card-sources.ts"), "utf8");
   assert.ok(
-    /Last reached/.test(panel),
+    /Last reached/.test(sources),
     "the card dropped its last-reached line",
   );
 });

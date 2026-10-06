@@ -94,7 +94,11 @@ test("the producer preserves source-isolated omitted members across every indepe
     const outcome = await processRegisteredManualCandidate(store, contractId, candidate, T1, expectedBaseVersionId);
     assert.ok(outcome.promoted, `${contractId}: ${JSON.stringify(outcome.candidate.receipt)}`);
     assert.deepEqual((candidate.readModel as CuratedReaderProjection).records[1], (base.candidate.candidate.readModel as CuratedReaderProjection).records[1]);
-    assert.equal(candidate.retrieval.manualSourceReceipt?.sources.length, 1);
+    const sources = candidate.retrieval.manualSourceReceipt!.sources;
+    assert.equal(sources.filter(source => source.retrievedAt === T1).length, 1, "only the current publisher is freshly reviewed");
+    for (const retained of sources.filter(source => source.retrievedAt !== T1)) {
+      assert.ok(base.candidate.candidate.retrieval.manualSourceReceipt!.sources.some(source => JSON.stringify(source) === JSON.stringify(retained)), "conflict receipts retain the actual earlier source, never a new read date");
+    }
   }
 });
 

@@ -1,3 +1,7 @@
+import { recordPublicationFlow } from "./publication-flow.ts";
+import { resolveRecordConflicts } from "./source-conflicts.ts";
+import { parserFieldSources } from "./field-sources.ts";
+import { publishWorkerPollingResults } from "./worker-polling-publication.ts";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord, FieldValue } from "../control-plane/workers/types.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -14,7 +18,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
-import { auditPull, capturesForPublication, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
+import { auditPull, captureIntact, capturesForPublication, section3SourceReceipt, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { createHash } from "node:crypto";
@@ -23,7 +27,7 @@ import { publicationRecordChanges } from "./publication-record-changes.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import { publishHeldElectionOffices } from "./worker-held-elections.ts";
-import { localHeldCaptureReader } from "./worker-publication-context.ts";
+import { publicationCaptureReaders } from "./worker-publication-context.ts";
 import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
 import { workerBallotContestsPackage, publishWorkerBallotContestsResults } from "./worker-ballot-contests.ts";
 import { stanceRowFrom } from "./stance-rows.ts";
@@ -32,6 +36,12 @@ import { readStanceTopics } from "../stances/read.ts";
 import { campaignSiteFor } from "../officials/campaign-sites.ts";
 import { currentDerivedCampaignSiteRecords } from "./derived-campaign-sites.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
+import { publicRecordIssue, recordNewPublicKinds } from "./public-records.ts";
+import type { PublicRecord } from "./types.ts";
+import { manualPayloadScope } from "./scoped-manual-contracts.ts";
+import { governmentBudgetIssue, governmentBudgetRecordId, budgetResponsibilityRole, budgetAuthorityKind } from "./government-budgets.ts";
+import { GOVERNMENT_FINANCE_FIELDS, governmentFinanceKind, governmentFinanceFact, type GovernmentFinanceField } from "./government-finance.ts";
+import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const hostOf = (url: string) => { try { return new URL(url).hostname.toLowerCase().replace(/^www\./, ""); } catch { return null; } };
@@ -63,11 +73,11 @@ export function inheritVerifiedCommentDetails(input: ManualProjectionPackage, pr
         requirePublication(prior?.sourceReceipt.sources.some(source => source.reviewOutcome !== "BLOCKED" &&
           [source.requestedUrl, source.finalUrl].includes(sourceUrl)), "PRIOR_FIELD_AUTHORITY_MISSING");
         fields[field] = old[field];
-        fieldSources[field] = { sourceUrl, collectedAt: priorField?.collectedAt ?? String(old.collectedAt),
+        fieldSources[field] = { ...priorField, sourceUrl, collectedAt: priorField?.collectedAt ?? String(old.collectedAt),
           verifiedAt: priorField?.verifiedAt ?? (typeof old.verifiedAt === "string" ? old.verifiedAt : null), retainedFromVersion: prior!.versionId };
         retainedUrls.add(sourceUrl);
       } else if (row[field] !== null && row[field] !== undefined) {
-        fieldSources[field] = { sourceUrl: String(row.sourceUrl), collectedAt: String(row.collectedAt), verifiedAt: String(row.verifiedAt) };
+        fieldSources[field] = { ...(row.fieldSources as CommentAccess["fieldSources"])?.[field], sourceUrl: String(row.sourceUrl), collectedAt: String(row.collectedAt), verifiedAt: String(row.verifiedAt) };
       }
     }
     return { ...fields, id: String(fields.id), fieldSources };
@@ -96,19 +106,75 @@ export function workerReaderPackageWithPulls(input: StancesInput & Parameters<ty
   if (input.plan.publication?.contractId === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };
   const target = input.plan.publication;
   requirePublication(target && isWorkerReaderContract(target.contractId), "READER_CONTRACT_UNRESOLVED");
-  const contractId = target.contractId as Exclude<WorkerReaderContract, "ballot-contests">;
+  requirePublication(target.contractId !== "voting-sites", "POLLING_USES_REGISTERED_DOOR_PUBLICATION");
+  const contractId = target.contractId as Exclude<WorkerReaderContract, "ballot-contests" | "voting-sites">;
   const checked = verifiedWorkerRecords({ ...input, pullRemoves: true });
   requirePublication(workerReaderClassMatches(contractId, checked.contract.recordClass), "READER_CLASS_MISMATCH");
   const body = input.registry?.payload.registry.bodies.find(body => body.id === target.bodyId);
+  const place = contractId === "public-records" ? input.registry?.payload.registry.divisions.find(row => row.ocdId === target.bodyId) : null;
   // A stance belongs to a person, not to the body whose page it sits on.
-  if (contractId !== "stances") requirePublication(body?.name, "CANONICAL_BODY_MISSING");
+  if (contractId !== "stances") requirePublication(body?.name || place?.label, "CANONICAL_BODY_MISSING");
   const rowFor = (record: (typeof checked.extraction.records)[number]) => {
     const f = record.fields;
     if (contractId === "stances") {
       return stanceRowFrom({ fields: f, pageUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, now: input.now,
         topicIds: input.stanceTopicIds ?? DEFAULT_STANCE_TOPICS.map(topic => topic.id), ownSiteHosts: input.ownSiteHosts ?? ownSiteHostsFromHeld });
     }
-    requirePublication(words(text(f.bodyName)) === words(body!.name!), "CANONICAL_BODY_MISMATCH");
+    requirePublication(words(text(f.bodyName)) === words(body?.name ?? place!.label), "CANONICAL_BODY_MISMATCH");
+    if (contractId === "public-records") {
+      const allowed = new Set(["bodyName", "title", "kindLabel", "sourceSentence"]);
+      requirePublication(Object.keys(f).every(field => allowed.has(field)), "PUBLIC_RECORD_FIELD_UNSUPPORTED");
+      const ocdId = body?.ocdId ?? place?.ocdId;
+      const row = { id: `public-record:${createHash("sha256").update(canonicalJson([body?.id ?? ocdId, f.title, f.kindLabel, checked.primary.evidence.canonicalUrl])).digest("hex")}`,
+        kind: "PUBLIC_RECORD" as const, bodyId: body?.id ?? null, ocdId: ocdId!, title: text(f.title), kindLabel: text(f.kindLabel),
+        sourceSentence: text(f.sourceSentence), sourceUrl: checked.primary.evidence.canonicalUrl, capturedAt: checked.primary.observedAt };
+      requirePublication(publicRecordIssue(row) === null, `PUBLIC_RECORD_SOURCE_UNVERIFIED:${publicRecordIssue(row)}`);
+      requirePublication([row.sourceSentence, row.kindLabel, row.title].every(value => checked.primary.evidence.text.includes(value)), "PUBLIC_RECORD_SENTENCE_NOT_HELD");
+      return row;
+    }
+    requirePublication(body?.name, "CANONICAL_BODY_MISSING");
+    if (contractId === "government-budgets") {
+      const kind = checked.contract.recordClass;
+      if (kind === "PUBLIC_RECORD") {
+        requirePublication(Object.keys(f).every(field => ["bodyName", "title", "kindLabel", "sourceSentence", ...GOVERNMENT_FINANCE_FIELDS].includes(field)), "GOVERNMENT_FINANCE_FIELD_UNSUPPORTED");
+        const detailKind = governmentFinanceKind(text(f.kindLabel));
+        requirePublication(detailKind, "GOVERNMENT_FINANCE_KIND_UNRESOLVED");
+        requirePublication([f.title, f.kindLabel, f.sourceSentence].every(value => typeof value === "string" && checked.primary.evidence.text.includes(value)), "GOVERNMENT_FINANCE_WORDS_NOT_HELD");
+        const details: Partial<Record<GovernmentFinanceField, string | number | null>> = {};
+        for (const key of GOVERNMENT_FINANCE_FIELDS) {
+          const value = f[key];
+          if (value === undefined) continue;
+          requirePublication(value === null || typeof value === "string" || typeof value === "number", "GOVERNMENT_FINANCE_DETAIL_UNREADABLE");
+          details[key] = value;
+        }
+        return governmentFinanceFact({ bodyId: body.id, ocdId: body.ocdId!, government: body.name,
+          detailKind, title: text(f.title), sourceSentence: text(f.sourceSentence), sourceUrl: checked.primary.evidence.canonicalUrl,
+          sourceHash: (checked.primary.evidence.sourceDocument?.contentHash ?? checked.primary.evidence.contentHash).replace(/^sha256-/, ""),
+          capturedAt: checked.primary.observedAt, details });
+      }
+      const allowed = new Set(["bodyName", "sourceSentence", ...(kind === "BUDGET_RESPONSIBILITY" ? ["role", "responsible", "authorityKind"] :
+        ["title", "fiscalYear", "fiscalStart", "fiscalEnd", "version", "budgetVersion", "documentUrl"])]);
+      requirePublication(Object.keys(f).every(field => allowed.has(field)), "BUDGET_FIELD_UNSUPPORTED");
+      const common = { id: governmentBudgetRecordId([body.id, kind, text(f.fiscalYear), text(f.title), text(f.role), text(f.version), text(f.budgetVersion)]),
+        bodyId: body.id, ocdId: body.ocdId, government: body.name, kind, sourceSentence: text(f.sourceSentence),
+        sourceUrl: checked.primary.evidence.canonicalUrl, capturedAt: checked.primary.observedAt };
+      let row;
+      if (kind === "BUDGET_RESPONSIBILITY") row = { ...common, role: budgetResponsibilityRole(text(f.role)), responsible: text(f.responsible), authorityKind: budgetAuthorityKind(text(f.authorityKind)) };
+      else {
+        const document = input.captures.find(capture => capture.evidence.canonicalUrl === f.documentUrl && captureIntact(capture));
+        requirePublication(document && document.evidence.text.trim(), "BUDGET_DOCUMENT_NOT_HELD");
+        const linkingPage = linkingPageFrom(document.evidence.canonicalUrl, input.captures.filter(captureIntact).map(capture => capture.evidence));
+        requirePublication(section3Page({ url: document.evidence.canonicalUrl, text: document.evidence.text,
+          retrievedAt: document.observedAt, linkingPage, sourcePolicy: document.sourcePolicy }, kind, input.now).ok, "BUDGET_DOCUMENT_SOURCE_UNVERIFIED");
+        row = { ...common, title: text(f.title), fiscalYear: text(f.fiscalYear), documentUrl: text(f.documentUrl),
+          documentHash: (document.evidence.sourceDocument?.contentHash ?? document.evidence.contentHash).replace(/^sha256-/, ""),
+          ...(kind === "BUDGET_AMENDMENT" ? { budgetVersion: text(f.budgetVersion) } : {
+            version: text(f.version), fiscalStart: text(f.fiscalStart) || null, fiscalEnd: text(f.fiscalEnd) || null }) };
+      }
+      requirePublication(checked.primary.evidence.text.includes(common.sourceSentence) && governmentBudgetIssue(row) === null,
+        `BUDGET_SOURCE_UNVERIFIED:${governmentBudgetIssue(row) ?? "saved sentence is missing"}`);
+      return row;
+    }
     if (contractId === "official-filings") {
       const publisherDivisionId = body!.ocdId;
       requirePublication(publisherDivisionId && input.registry?.payload.registry.divisions.some(row => row.ocdId === publisherDivisionId), "FILING_TERRITORY_UNRESOLVED");
@@ -161,12 +227,18 @@ export function workerReaderPackageWithPulls(input: StancesInput & Parameters<ty
         signup: f.signup ?? null, writtenComment: f.writtenComment ?? null, attend: f.attend ?? null, timeLimit: f.timeLimit ?? null,
         sourceUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now };
   };
-  const records = checked.extraction.records.map(rowFor);
+  const records = checked.extraction.records.map(record => ({ ...rowFor(record),
+    fieldSources: parserFieldSources(record.id, record.fields, checked.extraction.spans, input.captures, input.now) }));
   requirePublication(records.length === checked.extraction.records.length && new Set(records.map(r => r.id)).size === records.length, "READER_IDENTITY_COLLISION");
   // A pulled record that cannot be turned into a row never reached the version, so it has nothing to remove.
   const pulledMemberIds = new Set(checked.pulledRecords.flatMap(record => { try { return [String(rowFor(record).id)]; } catch { return []; } }));
+  const documentUrls = new Set(records.flatMap(row => "documentUrl" in row ? [String(row.documentUrl)] : []));
+  const budgetCaptures = input.captures.filter(capture => captureIntact(capture) &&
+    (documentUrls.has(capture.evidence.canonicalUrl) || checked.sourceReceipt.sources.some(source => source.finalUrl === capture.evidence.canonicalUrl)));
   return { pulledMemberIds, package: { contractId, version: `worker:${input.parser.id}`, sourceThrough: input.now,
-    sourceReceipt: checked.sourceReceipt, payload: contractId === "everyday-routing"
+    sourceReceipt: contractId === "government-budgets" ? section3SourceReceipt(budgetCaptures, input.now, `section3-validator:${input.parser.id}`,
+      "Each government budget or finance fact keeps its independently verified source, category and government; adopted budget and amendment documents have complete saved captures.") : checked.sourceReceipt,
+    payload: contractId === "everyday-routing"
       ? everydayRoutingProjectionFromRecords(records as unknown as EverydayRoutingRecord[]) : { kind: contractId, records } } };
 }
 
@@ -177,13 +249,15 @@ export async function publishWorkerReaderResults(input: {
   readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }) {
   if (input.contractId === "ballot-contests") return publishWorkerBallotContestsResults(input);
+  if (input.contractId === "voting-sites") return publishWorkerPollingResults(input);
+  const { readHeld, readCapture } = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const results = await readCompletedWorkerResults(input.repos);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   // Owed election work with no extraction yet: the government's saved election pages are read in code.
   if (input.contractId === "ballot-navigation") {
     const held = input.workItemIds.filter(id => !latestParserResult(results, id));
     if (held.length) report.push(...await publishHeldElectionOffices({ repos: input.repos, store: input.store, workItemIds: held, now: input.now,
-      readHeld: input.readHeld ?? localHeldCaptureReader() }));
+      readHeld }));
   }
   // The Validator reads what earlier passes learned before it checks anything, and writes back once at the end.
   const manual = await readValidatorManual(input.repos);
@@ -203,22 +277,32 @@ export async function publishWorkerReaderResults(input: {
     let workerChecksComplete = false, captures: WorkerPublicationCapture[] = [], wentLive = 0;
     try {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
-      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture: input.readCapture, officialLinks: manual.officialLinks });
+      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
       const registry = await readRegistryRuntimePrior(input.store, input.now);
       const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results,
         ...(input.contractId === "stances" ? { stanceTopicIds: (await readStanceTopics()).map(topic => topic.id) } : {}) });
       const checked = built.package;
-      const prior = await readManualProjectionPrior(input.contractId, input.store, input.now);
+      const prior = await readManualProjectionPrior(input.contractId, input.store, input.now,
+        manualPayloadScope(input.contractId, requiredManualProductionContract(input.contractId).scope, checked.payload));
       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
       const prepared = input.contractId === "comment-access" ? inheritVerifiedCommentDetails(checked, prior) : checked;
-      const delivered = (prepared.payload as CuratedReaderProjection).records;
+      const requested = (prepared.payload as CuratedReaderProjection).records;
+      const delivered = requested.map(record => {
+        const old = before.find(row => row.id === record.id);
+        return old && prior ? resolveRecordConflicts(record, old, prepared.sourceReceipt, prior.sourceReceipt).record : record;
+      });
       const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(prepared, input.store, input.now, built.pulledMemberIds);
       const composed = candidate.readModel as CuratedReaderProjection;
       requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))),
         `READER_FACTS_HELD:${candidate.excludedFacts?.map(row => `${row.code}: ${row.detail}`).join("; ") ?? "typed record was withheld"}`);
       candidateId = candidate.id;
+      const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
+        accepted: delivered.map(row => ({ recordId: row.id, readerId: row.id, value: row, previous: before.find(old => old.id === row.id) })) });
       workerChecksComplete = true;
       const published = await processRegisteredManualCandidate(input.store, input.contractId, candidate, input.now, expectedBaseVersionId);
+      if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, published.candidate.candidate.id,
+        { workerResultId: parser.id, stage: "CHECKED", records: changes.recordChanges.length,
+          changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       if (!published.promoted) {
         if (published.candidate.failureCode !== "PROMOTION_BASE_CHANGED") workerChecksComplete = false;
         throw new Error(`WORKER_PUBLICATION_READER_GATE_HELD:${published.candidate.failureDetail ?? published.candidate.state}`);
@@ -227,12 +311,15 @@ export async function publishWorkerReaderResults(input: {
       const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
         requiredManualProductionContract(input.contractId), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`WORKER_PUBLICATION_READER_READBACK_FAILED:${readback?.detail ?? "missing receipt"}`);
-      const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
-        accepted: delivered.map(row => ({ recordId: row.id, readerId: row.id, value: row, previous: before.find(old => old.id === row.id) })) });
+
+      await recordPublicationFlow(input.repos, published.candidate.candidate.id,
+        { workerResultId: parser.id, stage: "LIVE", records: changes.recordChanges.length,
+          changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       outcome = { at: input.now, workerResultId: parser.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
         detail: `${input.contractId}: ${delivered.length} record(s) passed §3 on the saved official page, promotion completed and the typed Reader readback passed.`, candidateId, versionId,
         ...changes, acceptedRecordIds: delivered.map(row => row.id) };
       wentLive = delivered.length;
+      if (input.contractId === "public-records") await recordNewPublicKinds(input.repos, delivered as unknown as readonly PublicRecord[], input.now);
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);
       const recovery = workerChecksComplete || !detail.startsWith("WORKER_PUBLICATION_") ? "PUBLISHER" : "WORKER";

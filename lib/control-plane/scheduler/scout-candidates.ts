@@ -5,10 +5,11 @@
  *
  * Models handle novelty; code handles learned procedure. The bridge is the
  * EXISTING candidate lifecycle in `lib/method/candidate.ts` —
- * `PROPOSED -> VALIDATED -> ADMITTED | REJECTED`. The first Attempt validates
- * a route. When another Attempt independently offers it, the whole route is
- * written to the field manual and both candidates are admitted automatically.
- * Replaying the same Attempt cannot graduate its own proposal.
+ * `PROPOSED -> VALIDATED -> ADMITTED | REJECTED`. A route that validates on
+ * the Attempt that opened it is written to the field manual and admitted at
+ * once, so it is used the moment it works (DP-25). Two Attempts offering the
+ * same route id prove nothing: whether a method is Proven comes only from the
+ * fix map and the bar.
  *
  * Only a candidate whose URL the Attempt actually OPENED (an artifact with
  * that canonical URL) is proposed: a route the method store learns carries an
@@ -185,7 +186,8 @@ export async function proposeScoutCandidates(input: {
       observedMethodVersion: knowledge.version,
     });
     store = offered.store;
-    if (offered.already && !(prior && offered.candidate.lifecycle === "VALIDATED")) {
+    // DP-25: an offer already admitted is done; one validated but not yet written (a failed manual write) finishes admission below.
+    if (offered.already && offered.candidate.lifecycle !== "VALIDATED") {
       proposed.push({ routeId: c.routeId, candidateId: offered.candidate.id, lifecycle: offered.candidate.lifecycle, issues: [], already: true });
       continue;
     }
@@ -234,12 +236,17 @@ export async function proposeScoutCandidates(input: {
       store = r.store;
       proposed.push({ routeId: c.routeId, candidateId: r.candidate.id, lifecycle: r.candidate.lifecycle, issues: [r.candidate.rejection?.reason ?? "malformed"], already: false });
     }
-    if (prior && store.candidates.find((candidate) => candidate.id === offered.candidate.id)?.lifecycle === "VALIDATED") {
-      const learned = learnBatch(knowledge, [prior.proposal, proposal], input.stamp);
+    /*
+     * DP-25: a validated route is used the moment it works once, as this place's door entry. Whether the method is
+     * proven comes only from the fix map and the bar (lib/method/fix-status.ts), never from two Attempts offering the
+     * same route id.
+     */
+    if (store.candidates.find((candidate) => candidate.id === offered.candidate.id)?.lifecycle === "VALIDATED") {
+      const learned = learnBatch(knowledge, prior ? [prior.proposal, proposal] : [proposal], input.stamp);
       const route = learned.knowledge.routes.find((route) => route.id === c.routeId)!;
       const written = await writeFieldManual(input.repos, [newFieldManualEntry("scout-candidate", route.id, {
         role: "SHARED", kind: "ROUTE", title: route.title,
-        summary: `Independently reached by Attempts ${prior.attemptId} and ${input.result.attemptId}. ${c.procedure}`,
+        summary: `Worked in Attempt ${input.result.attemptId}. ${c.procedure}`,
         outcome: "YIELDED", url: c.url, recordClasses: route.fields,
         states: scoutStateHint(input.result.subjectId, input.result.obligationId),
         foundBy: input.result.researchRole === "DETECTIVE" ? "DETECTIVE" : "SCOUT",
@@ -253,7 +260,7 @@ export async function proposeScoutCandidates(input: {
           effect: learned.learned > 0 ? "LEARNED" as const : "ALREADY_KNOWN" as const,
           methodVersionAfter: (await readMethodKnowledge(input.repos)).version,
         };
-        store = markAdmitted(store, prior.id, admission).store;
+        if (prior) store = markAdmitted(store, prior.id, admission).store;
         const admitted = markAdmitted(store, offered.candidate.id, admission);
         store = admitted.store;
         proposed[proposed.length - 1] = { ...proposed[proposed.length - 1], lifecycle: admitted.candidate.lifecycle };

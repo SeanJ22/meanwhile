@@ -1,3 +1,4 @@
+import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
@@ -5,6 +6,7 @@ import type { DoorRecord } from "../../doors/registry.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
+import { inProcessSpendHoldStore } from "../expansion/spend-holds.ts";
 /**
  * THE IN-PROCESS DOUBLE.
  *
@@ -75,9 +77,21 @@ import {
   type RecordProjection,
 } from "./types.ts";
 
+/**
+ * The double's stand-in for the database clock behind `changed_at` (schema
+ * v22): a process-wide counter, one millisecond per change, so it is monotonic
+ * and never reads the wall clock. Only `listChangedSince` / `readChangedSince`
+ * see it.
+ */
+let changeClockMs = Date.parse("2000-01-01T00:00:00.000Z");
+const changeClock = { tick: (): number => (changeClockMs += 1), now: (): number => changeClockMs };
+const changeIso = (ms: number): string => new Date(ms).toISOString();
+
 /** One in-memory aggregate store with the full CAS contract. */
 export function memoryAggregateRepository<T>(kind: string): AggregateRepository<T> {
   const rows = new Map<string, Persisted<T>>();
+  /** Each row's `changed_at`, moved on every put that creates and every compare-and-set. */
+  const changedAt = new Map<string, number>();
   /**
    * The revision-1 value of every aggregate, kept because `put` compares against
    * the CREATION rather than the latest state — the same rule the file store
@@ -127,6 +141,7 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
       }
       const persisted: Persisted<T> = { id, revision: 1, updatedAt: now, value: jsonCopy(value) };
       rows.set(id, persisted);
+      changedAt.set(id, changeClock.tick());
       origins.set(id, jsonCopy(value));
       return { created: true, persisted: { ...persisted, value: jsonCopy(persisted.value) } };
     },
@@ -151,6 +166,7 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
         value: jsonCopy(next),
       };
       rows.set(id, persisted);
+      changedAt.set(id, changeClock.tick());
       return { ...persisted, value: jsonCopy(persisted.value) };
     },
 
@@ -161,6 +177,13 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
     /* `list()` filtered, so the two can never disagree on rows or order. */
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
+
+    /* `list()` narrowed to rows changed at or after `since`, as Postgres answers it (schema v22). */
+    listChangedSince: async (since: string | null) => {
+      const through = changeIso(changeClock.now());
+      const from = since === null ? null : Date.parse(since);
+      return { through, rows: (await list()).filter((row) => from === null || (changedAt.get(row.id) ?? 0) >= from) };
+    },
   };
 }
 
@@ -168,6 +191,8 @@ interface LoggedRecord<T> {
   readonly at: string;
   readonly recordId: string;
   readonly record: T;
+  /** The double's `changed_at` (schema v22). */
+  readonly changedAt: number;
 }
 
 /** One in-memory append-only log, partitioned by key. */
@@ -194,7 +219,7 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
           position: partition.indexOf(existing),
         };
       }
-      partition.push({ recordId, record: jsonCopy(record), at: now });
+      partition.push({ recordId, record: jsonCopy(record), at: now, changedAt: changeClock.tick() });
       partitions.set(key, partition);
       return {
         appended: true,
@@ -264,6 +289,20 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
         .flatMap(([, entries]) => entries.map((entry) => jsonCopy(entry.record))),
 
     keys: async (): Promise<readonly string[]> => [...partitions.keys()].sort(),
+
+    /* `readAll()` narrowed to records changed at or after `since`, with their coordinates (schema v22). */
+    readChangedSince: async (since: string | null) => {
+      const through = changeIso(changeClock.now());
+      const from = since === null ? null : Date.parse(since);
+      return {
+        through,
+        records: [...partitions.entries()]
+          .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+          .flatMap(([key, entries]) => entries.flatMap((entry, position) =>
+            from !== null && entry.changedAt < from ? []
+              : [{ key, recordId: entry.recordId, position, record: jsonCopy(entry.record) }])),
+      };
+    },
 
     keysWhere: async (jsonPath: readonly string[], value: string): Promise<readonly string[]> =>
       [...partitions.entries()].filter(([, entries]) => entries.some((entry) => jsonTextAtPath(entry.record, jsonPath) === value))
@@ -339,6 +378,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
     methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
+    boxFindings: memoryAggregateRepository<BoxFinding>("BoxFinding"),
     scoutResults: memoryAppendOnlyRepository<ScoutResult>("scout_results"),
     workerResults: memoryAppendOnlyRepository<WorkerResultRecord>("worker_results"),
     /* The nightly door (RULING 242, schema v5). */
@@ -360,6 +400,8 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     /* The Door Registry (DB-09, schema v19). */
     doors: memoryAggregateRepository<DoorRecord>("Door"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
+    /* The spend holds, one per row (schema v24), by the same pure rules. */
+    spendHolds: inProcessSpendHoldStore(),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",
     durable: false,

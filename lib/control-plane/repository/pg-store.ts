@@ -1,3 +1,4 @@
+import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
@@ -103,9 +104,28 @@ import {
   BOOTSTRAP_DDL,
   BOOTSTRAP_VERSION,
   ONLINE_INDEXES,
+  SPEND_HOLDS_MOVE_DDL,
   recordVersionStatement,
+  spendHoldDeadSql,
+  spendHoldJsonSql,
+  spendHoldLiveSql,
   type OnlineIndex,
 } from "./pg-schema.ts";
+import type { SpendHold } from "../budget.ts";
+import {
+  SETTLED_HOLD_RETENTION_MS,
+  SPEND_HOLD_STALE_MS,
+  SPEND_HOLD_SWEEP_LIMIT,
+  SPEND_HOLD_WINDOW_MS,
+  areaRefusal,
+  everyLineMustFit,
+  invalidAmountRefusal,
+  sendRefusal,
+  spendHoldsTableEnabled,
+  type BudgetLine,
+  type HoldDecision,
+  type SpendHoldStore,
+} from "../expansion/spend-holds.ts";
 import {
   CONTROL_PLANE_CONNECT_MAX_ATTEMPTS,
   withControlPlaneConnectRetry,
@@ -504,7 +524,7 @@ export function pgAggregateRepository<T>(
         "compareAndSet",
         rowClass,
         `UPDATE ${table}
-            SET revision = revision + 1, updated_at = $1, value = $2::jsonb
+            SET revision = revision + 1, updated_at = $1, value = $2::jsonb, changed_at = now()
           WHERE id = $3 AND revision = $4
        RETURNING id, revision, updated_at`,
         [now, submitted, id, expectedRevision],
@@ -559,6 +579,42 @@ export function pgAggregateRepository<T>(
 
     list: () => list(),
     listNarrowed: projection => list(projection),
+
+    async listChangedSince(since) {
+      /* `list()` narrowed to rows the DATABASE stamped at or after `since`
+         (schema v22), the same id keyset pages. `through` is the database clock
+         taken before the first page, so a change committed while the pages are
+         read is caught by the next read rather than straddled. */
+      const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+      const through = new Date(clock[0]?.read_at as string).toISOString();
+      const changed = since === null ? "" : "changed_at >= $1::timestamptz";
+      const out: Persisted<T>[] = [];
+      let afterId: string | null = null;
+      for (;;) {
+        const filters = [changed, afterId === null ? "" : `id > $${since === null ? 1 : 2}`].filter(Boolean);
+        const params = [...(since === null ? [] : [since]), ...(afterId === null ? [] : [afterId])];
+        const rows = (await run(
+          "listChangedSince",
+          "PAGE",
+          `SELECT id, revision, updated_at, value FROM ${table}
+           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+           ORDER BY id ASC
+           LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+          params,
+        )) as Record<string, unknown>[];
+        for (const row of rows) {
+          out.push({
+            id: String(row.id),
+            revision: Number(row.revision),
+            updatedAt: new Date(row.updated_at as string).toISOString(),
+            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
+          });
+        }
+        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
+        afterId = String(rows[rows.length - 1].id);
+      }
+      return { rows: out, through };
+    },
 
     async listWhere(path, value) {
       /* `list()` filtered IN THE DATABASE: the same ORDER BY id and keyset
@@ -863,6 +919,40 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
+    async readChangedSince(since) {
+      /* `readAll()` narrowed to records the DATABASE stamped at or after
+         `since` (schema v22), the same (log_key, position) keyset pages, each
+         with its coordinates. `through` is the database clock before the first
+         page, as in the aggregate read. */
+      const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+      const through = new Date(clock[0]?.read_at as string).toISOString();
+      const out: { key: string; recordId: string; position: number; record: T }[] = [];
+      let cursor: { readonly key: string; readonly position: number } | null = null;
+      for (;;) {
+        const at = since === null ? 1 : 2;
+        const filters = [since === null ? "" : "changed_at >= $1::timestamptz",
+          cursor === null ? "" : `(log_key, position) > ($${at}, $${at + 1})`].filter(Boolean);
+        const params = [...(since === null ? [] : [since]), ...(cursor === null ? [] : [cursor.key, cursor.position])];
+        const rows = (await run(
+          "readChangedSince",
+          "PAGE",
+          `SELECT log_key, record_id, position, record FROM ${table}
+           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+           ORDER BY log_key ASC, position ASC
+           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+          params,
+        )) as Record<string, unknown>[];
+        for (const r of rows) {
+          out.push({ key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
+            record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`) });
+        }
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        const last = rows[rows.length - 1];
+        cursor = { key: String(last.log_key), position: Number(last.position) };
+      }
+      return { records: out, through };
+    },
+
     async readRecent(key, limit) {
       /* Newest `limit`, newest first. `limit` bounds the response, so this needs
          no paging — callers pass a small tail (e.g. a digest-history window). */
@@ -1028,11 +1118,96 @@ export async function bootstrap(
 ): Promise<void> {
   const run = boundedRunner(sql, "cp_schema", bounds);
   for (const statement of BOOTSTRAP_DDL) {
+    /* The way back (`WTP_SPEND_HOLDS_TABLE=0`) keeps the holds on the ledger row, so they are not moved off it. */
+    if (statement === SPEND_HOLDS_MOVE_DDL && !spendHoldsTableEnabled()) continue;
     const online = ONLINE_INDEXES.get(statement);
     if (online) await pgEnsureOnlineIndex(sql, online, bounds);
     else await run("bootstrap", "POINT", statement);
   }
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
+}
+
+/**
+ * **THE SPEND HOLDS, ONE ROW EACH.** (Schema v24, 2026-10-06.)
+ *
+ * Every call is one statement over the HTTP driver, so one implicit
+ * transaction. An admission is `cp_admit_spend_hold` (pg-schema.ts): it locks
+ * the lines it names, deletes what no longer counts on them, and decides as
+ * `decideHold` does; the refusal is worded here by the same functions. A
+ * settle is one UPDATE by job, a release one DELETE by id, a live read one
+ * indexed SELECT, and a sweep one bounded DELETE. Nothing reads the table
+ * whole: the only unfiltered read (`liveAll`) is of holds that still count.
+ */
+export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS): SpendHoldStore {
+  const run = boundedRunner(sql, "cp_spend_holds", bounds);
+  const since = (now: string) => {
+    const ms = Date.parse(now);
+    if (!Number.isFinite(ms)) throw new Error(`cp_spend_holds: ${JSON.stringify(now)} is not an instant`);
+    const at = (back: number) => new Date(ms - back).toISOString();
+    return [at(SPEND_HOLD_WINDOW_MS), at(SPEND_HOLD_STALE_MS), at(SETTLED_HOLD_RETENTION_MS)] as const;
+  };
+  const holdsOf = (rows: unknown, where: string): Record<string, SpendHold> => {
+    const out: Record<string, SpendHold> = {};
+    for (const row of rows as Record<string, unknown>[]) {
+      const hold = parseValue<SpendHold>(row.hold, where);
+      out[hold.holdId] = hold;
+    }
+    return out;
+  };
+  const liveSelect = (where: string) =>
+    `SELECT ${spendHoldJsonSql("h")} AS hold FROM cp_spend_holds h WHERE ${where}${where ? " AND " : ""}${spendHoldLiveSql("h", "$1::timestamptz", "$2::timestamptz", "$3::timestamptz")} ORDER BY h.hold_id`;
+  const sweep = async (now: string): Promise<number> => {
+    const rows = await run("sweep", "POINT", `DELETE FROM cp_spend_holds x WHERE x.hold_id IN (SELECT h.hold_id FROM cp_spend_holds h
+      WHERE ${spendHoldDeadSql("h", "$1::timestamptz", "$2::timestamptz", "$3::timestamptz")} LIMIT $4::integer) RETURNING x.hold_id`,
+      [...since(now), SPEND_HOLD_SWEEP_LIMIT]) as unknown[];
+    return rows.length;
+  };
+  const lineOf = (l: BudgetLine) => ({ key: l.key, budgetUsd: l.budgetUsd, historicalUsd: l.historicalUsd, historyReadAt: l.historyReadAt, lifetime: l.lifetime === true });
+  return {
+    async admit(input, now): Promise<HoldDecision> {
+      since(now);
+      const measured = Number.isFinite(input.usd) && input.usd >= 0;
+      const rows = await run("admit", "POINT",
+        "SELECT cp_admit_spend_hold($1::jsonb, $2::jsonb, $3::timestamptz, $4::bigint, $5::bigint, $6::bigint, $7::integer) AS decision",
+        [JSON.stringify({ holdId: input.holdId, jobId: input.jobId, obligationId: input.obligationId, usd: measured ? input.usd : null, what: input.what }),
+          JSON.stringify({ sends: input.lines.sends.map(lineOf), areas: input.lines.areas.map(lineOf) }),
+          now, SPEND_HOLD_WINDOW_MS, SPEND_HOLD_STALE_MS, SETTLED_HOLD_RETENTION_MS, SPEND_HOLD_SWEEP_LIMIT]) as Record<string, unknown>[];
+      const decision = parseValue<{ admit: boolean; hold?: SpendHold | null; refusal?: string; left?: number | string; position?: number }>(rows[0]?.decision, "cp_admit_spend_hold");
+      if (decision === null || typeof decision !== "object") throw new CorruptPersistedState("cp_admit_spend_hold", "returned no decision");
+      if (decision.admit === true) return { admit: true, hold: decision.hold ?? null };
+      const left = Number(decision.left ?? 0);
+      if (decision.refusal === "AMOUNT") return invalidAmountRefusal(input);
+      if (decision.refusal === "SEND" && input.lines.sends.length > 0) return sendRefusal(input, left);
+      const line = everyLineMustFit(input.lines)[Number(decision.position)];
+      if (decision.refusal === "AREA" && line !== undefined) return areaRefusal(input, line, left);
+      throw new CorruptPersistedState("cp_admit_spend_hold", `an unreadable refusal ${JSON.stringify(decision)}`);
+    },
+    async settle(input, now) {
+      if (input.usd !== null && Number.isFinite(input.usd)) {
+        await run("settle", "POINT", `WITH mine AS (
+            SELECT h.hold_id, row_number() OVER (ORDER BY h.held_at, h.hold_id COLLATE "C") AS n FROM cp_spend_holds h
+            WHERE h.job_id = $4 AND h.cost_recorded_at IS NULL AND ${spendHoldLiveSql("h", "$1::timestamptz", "$2::timestamptz", "$3::timestamptz")})
+          UPDATE cp_spend_holds s SET settled_usd = CASE WHEN mine.n = 1 THEN greatest(0, $5::numeric) ELSE 0 END,
+            cost_recorded_at = $6::timestamptz, changed_at = now()
+          FROM mine WHERE s.hold_id = mine.hold_id RETURNING s.hold_id`,
+        [...since(now), input.jobId, input.usd, input.costRecordedAt]);
+      }
+      /* Settled holds leave once their cost is in every reader's history; the sweep is bounded, the next one takes the rest. */
+      await sweep(now);
+    },
+    async release(holdId, now) {
+      since(now);
+      await run("release", "POINT", "DELETE FROM cp_spend_holds WHERE hold_id = $1 RETURNING hold_id", [holdId]);
+    },
+    async liveFor(keys, now) {
+      if (keys.length === 0) return {};
+      return holdsOf(await run("liveFor", "PAGE", liveSelect("h.keys && $4::text[]"), [...since(now), [...new Set(keys)]]), "cp_spend_holds live on lines");
+    },
+    async liveAll(now) {
+      return holdsOf(await run("liveAll", "PAGE", liveSelect(""), [...since(now)]), "cp_spend_holds live");
+    },
+    sweep,
+  };
 }
 
 /**
@@ -1046,7 +1221,9 @@ export async function bootstrap(
 const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
 
 /** Reconcile all subjects in one place against one indexed query, rather
- * than opening a serverless connection for every field's subject. */
+ * than opening a serverless connection for every field's subject. The filter is
+ * the exact expression of `cp_work_items_subject` (`#>> '{subject}'`): `->>`
+ * does not match that index and scanned the whole table. */
 export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
   if (!subjects.length) return [];
   const ids = [...new Set(subjects)];
@@ -1058,20 +1235,22 @@ export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjec
   }
   const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = await run("placeSubjects", "PAGE", `SELECT id, revision, updated_at, value
-    FROM cp_work_items WHERE value->>'subject'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
+    FROM cp_work_items WHERE value #>> '{subject}'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
   return rows.map(row => ({ id: String(row.id), revision: Number(row.revision),
     updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<WorkItem>(row.value, `place work item ${String(row.id)}`) }));
 }
 
 /** Exact source observations from any job; unrelated vault metadata stays in
- * Postgres instead of being copied into every place worker. */
+ * Postgres instead of being copied into every place worker. The md5 filter is
+ * what `cp_log_artifacts_source_url` (v18) indexes; the plain equality alone
+ * scanned the whole log. */
 export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {
   const sql = placeReadConnections.get(repos);
   if (!sql) return (await repos.artifacts.readAll()).filter(row => row.canonicalUrl === url && !row.partial &&
     row.tier !== "RESTRICTED_RAW" && row.recordedAt >= cutoff && row.recordedAt <= now);
   const run = boundedRunner(sql, "cp_log_artifacts", CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = await run("placeSource", "PAGE", `SELECT record FROM cp_log_artifacts
-    WHERE record->>'canonicalUrl'=$1 AND record->>'partial'='false' AND record->>'tier'<>'RESTRICTED_RAW'
+    WHERE md5(record->>'canonicalUrl')=md5($1) AND record->>'canonicalUrl'=$1 AND record->>'partial'='false' AND record->>'tier'<>'RESTRICTED_RAW'
       AND record->>'recordedAt'>=$2 AND record->>'recordedAt'<=$3 ORDER BY record->>'recordedAt' DESC`, [url, cutoff, now]) as Record<string, unknown>[];
   return rows.map(row => parseValue<ArtifactRecord>(row.record, "place source artifact"));
 }
@@ -1250,6 +1429,7 @@ export async function createPgRepositories(
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state", bounded),
     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
+    boxFindings: pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", bounded),
     scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results", bounded),
     workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql, "worker_results", bounded),
     /* The nightly door (RULING 242, schema v5). */
@@ -1271,6 +1451,8 @@ export async function createPgRepositories(
     /* The Door Registry (DB-09, schema v19). */
     doors: pgAggregateRepository<DoorRecord>(sql, "Door", "cp_doors", bounded),
     budget,
+    /* The spend holds, one row each (schema v24). */
+    spendHolds: pgSpendHoldRepository(sql, bounds),
     locks,
     describe: () =>
       `Postgres control-plane repositories (schema v${BOOTSTRAP_VERSION}, connection named by ` +

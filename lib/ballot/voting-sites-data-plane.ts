@@ -158,7 +158,7 @@ export function votingSitesCandidate(input: {
         carriedFromVersionId: input.carriedFromVersionId ?? null, carriedJurisdictionIds }
     : readModel;
   return {
-    id: `cv-${sha256(`${VOTING_SITES_CONTRACT.sourceId}\u001f${VOTING_SITES_CONTRACT.scope}\u001f${rawHash}\u001f${input.retrievedAt}`).slice(0, 32)}`,
+    id: `cv-${sha256(`${VOTING_SITES_CONTRACT.sourceId}\u001f${VOTING_SITES_CONTRACT.scope}\u001f${rawHash}\u001f${input.retrievedAt}\u001f${input.finalUrl}\u001f${normalizedHash(readModel)}`).slice(0, 32)}`,
     sourceId: VOTING_SITES_CONTRACT.sourceId,
     recordClass: VOTING_SITES_CONTRACT.recordClass,
     scope: VOTING_SITES_CONTRACT.scope,

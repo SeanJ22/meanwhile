@@ -5,6 +5,7 @@ import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
 import { headSha } from "../ops/git-facts.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import {
   normalizeReaderCodeSha,
   parseReaderProjectionReadback,
@@ -82,6 +83,11 @@ function verifierIdFor(contract: ReaderContract): string {
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
     case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
+    case "plain-english-translations": return "lib/translate/projection-reader.ts#readTranslationProjection";
+    case "special-district-boundaries": return "lib/registry/special-district-boundary-reader.ts#readSpecialDistrictBoundaries";
+    case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
+    case "campaign-finance": return "lib/funding/campaign-finance-reader.ts#readCampaignFinance";
+    case "government-budgets": return "lib/civic-data/government-budgets.ts#readGovernmentBudgets";
     case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
     case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
     case "candidate-profiles": return "lib/civic-data/manual-read-models.ts#readCandidateProfilesProjection";
@@ -112,6 +118,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "everyday-routing": return "lib/routing/everyday-data-plane.ts#readEverydayRoutingProjection";
     default:
       if (contract.recordClass === "REGISTRATION") return "lib/registration/reader.ts#readRegistrationProjection";
+      if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") return "lib/outcomes/store.ts#readDoorOutcomeProjection";
       return contract.recordClass === "MEETING"
         ? "lib/meetings/snapshot.ts#readMeetingsProjection"
         : `unavailable:${contract.id}`;
@@ -235,6 +242,34 @@ export async function verifyRoutineReaderProjection(
         const { readGenericBallotProjection } = await import("../ballot/generic-projection.ts");
         return verifyExactVersion(verifierId, await readGenericBallotProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "state-election-ballots");
       }
+      case "plain-english-translations": {
+        const { readTranslationProjection } = await import("../translate/projection-reader.ts");
+        return verifyExactVersion(verifierId, await readTranslationProjection({ store: options.store, now: options.now, bypassCache: true, scope: options.scope }), options.expectedVersionId, "plain-English translation");
+      }
+      case "special-district-boundaries": {
+        const { readSpecialDistrictBoundaries } = await import("../registry/special-district-boundary-reader.ts");
+        const prefix = "US:special-district-boundaries:";
+        if (!options.scope?.startsWith(prefix)) return fail(verifierId, "District-boundary readback requires its exact county jurisdiction.");
+        return verifyExactVersion(verifierId, await readSpecialDistrictBoundaries(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+      }
+      case "public-records": {
+        const { readPublicRecords } = await import("./public-records.ts");
+        const prefix = "US:public-records:";
+        if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Public-record readback requires its exact jurisdiction.");
+        return verifyExactVersion(verifierId, await readPublicRecords(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+      }
+      case "campaign-finance": {
+        const { readCampaignFinance } = await import("../funding/campaign-finance-reader.ts");
+        const prefix = "US:campaign-finance:";
+        if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Campaign-finance readback requires its exact jurisdiction.");
+        return verifyExactVersion(verifierId, await readCampaignFinance(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+      }
+      case "government-budgets": {
+        const { readGovernmentBudgets } = await import("./government-budgets.ts");
+        const prefix = "US:government-budgets:";
+        if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Budget readback requires its exact jurisdiction.");
+        return verifyExactVersion(verifierId, await readGovernmentBudgets(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+      }
       case "az-sos-ballot":
       case "nh-curated-ballot":
       case "candidate-profiles":
@@ -347,6 +382,11 @@ export async function verifyRoutineReaderProjection(
             return fail(verifierId, `Expected meeting partition ${contract.id}:${options.expectedVersionId}; typed meetings Reader returned ${result.kind}:${partition?.kind ?? "missing"}:${partition?.versionId ?? "none"}.`);
           }
           return pass(verifierId, `The typed meetings Reader composed partition ${contract.id} at canonical version ${options.expectedVersionId}.`);
+        }
+        if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") {
+          // DB-22: a door's own scope, read as the Reader reads it (its tenant and meeting-id namespace checked).
+          const { readDoorOutcomeProjection } = await import("../outcomes/store.ts");
+          return verifyExactVersion(verifierId, await readDoorOutcomeProjection(options.scope ?? contract.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${contract.id} door outcomes`);
         }
         throw new Error(`NO_TYPED_READER_VERIFIER:${contract.id}`);
       }
@@ -566,12 +606,13 @@ async function attestReaderProjectionReadback(
 }
 
 function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedPointerIdentity): string | null {
-  const expectedKey = `${contract.recordClass}:${contract.scope}`;
+  const scope = isScopedManualContractScope(contract.id, promotion.scope) ? promotion.scope : contract.scope;
+  const expectedKey = `${contract.recordClass}:${scope}`;
   if (
     promotion.key !== expectedKey ||
     promotion.sourceId !== contract.sourceId ||
     promotion.recordClass !== contract.recordClass ||
-    promotion.scope !== contract.scope ||
+    promotion.scope !== scope ||
     typeof promotion.versionId !== "string" || promotion.versionId.trim() === "" ||
     promotion.lastKnownGoodVersionId !== promotion.versionId
   ) return `READER_PROMOTION_IDENTITY_INVALID:${contract.id}`;
@@ -594,7 +635,7 @@ function inspectReaderReadbackEvents(
     latest.contractId === contract.id &&
     latest.sourceId === contract.sourceId &&
     latest.recordClass === contract.recordClass &&
-    latest.scope === contract.scope &&
+    latest.scope === promotion.scope &&
     latest.projectionId === contract.readerProjection?.id &&
     latest.versionId === promotion.versionId &&
     latest.pointerKey === promotion.key;

@@ -66,3 +66,13 @@ test("incomplete pages never claim completeness, and changing counts or repeated
   assert.throws(() => readFinanceDoor(api, [{ ...response(JSON.stringify({ count: 1, results: [row] })), url: "https://unrelated.example/export" }]), /outside/);
   assert.throws(() => readFinanceDoor(door("campaign-finance-csv"), [response("<html>Sign in to continue</html>")]), /lacks/);
 });
+
+test("an unknown or Boolean publisher count never becomes a complete zero-result read", () => {
+  const api = door("campaign-finance-search-api");
+  for (const count of [null, false, true, "", " ", [], {}, -1, 0.5]) {
+    assert.throws(() => readFinanceDoor(api, [response(JSON.stringify({ count, results: [] }))]), /count changed or is unreadable/);
+  }
+  for (const count of [0, "0"]) {
+    assert.equal(readFinanceDoor(api, [response(JSON.stringify({ count, results: [] }))]).paginationComplete, true);
+  }
+});

@@ -7,6 +7,11 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } f
 export type ManualProducerMode = "DIRECT_SOURCE" | "VERIFIED_WORKER_RESULT" | "EXISTING_DERIVED" | "REVIEWED_INPUT" | "SCOPED_ADAPTER_OWED";
 interface Rule { readonly mode: ManualProducerMode; readonly state?: string; readonly reason: string }
 const RULES = {
+  "campaign-finance": { mode: "VERIFIED_WORKER_RESULT", reason: "Complete saved door bytes and filed candidate/office/cycle/jurisdiction identities publish through normal Slide; unmatched rows remain work." },
+  "government-budgets": { mode: "VERIFIED_WORKER_RESULT", reason: "Official adopted budgets, amendments and government-specific legal responsibility use the normal saved-evidence worker and Slide." },
+  "special-district-boundaries": { mode: "VERIFIED_WORKER_RESULT", reason: "Registered saved GIS polygons bind to the held government key and exact body, without a model or guessed territory." },
+  "public-records": { mode: "VERIFIED_WORKER_RESULT", reason: "Source-worded kind and title publish with their exact jurisdiction and saved source sentence." },
+  "plain-english-translations": { mode: "VERIFIED_WORKER_RESULT", reason: "Every sentence is supported by the original official text and checked independently under the existing budget dial." },
   "ballot-contests": { mode: "VERIFIED_WORKER_RESULT", reason: "The saved official candidate list passes section 3 and each complete contest publishes with all of its candidates." },
   "congress-bulk-roster": { mode: "DIRECT_SOURCE", reason: "National congressional directory acquired from its registered public source." },
   "registry-runtime-bindings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker roster publication runs once it meets the section 3 standard; the audit follows and repairs what it finds." },
@@ -23,7 +28,7 @@ const RULES = {
   "nh-sos-campaign-finance": { mode: "SCOPED_ADAPTER_OWED", state: "NH", reason: "The current projection requires promoted New Hampshire ballot identity and narrows to Merrimack; bind the selected area before invocation." },
   "nj-elec-campaign-finance": { mode: "SCOPED_ADAPTER_OWED", state: "NJ", reason: "The current projection requires promoted New Jersey ballot identity and narrows to Morris; bind the selected area before invocation." },
   "az-pima-local-finance": { mode: "SCOPED_ADAPTER_OWED", state: "AZ", reason: "The adapter covers Pima County only; Arizona state membership alone does not establish Pima applicability." },
-  "voting-sites": { mode: "DIRECT_SOURCE", reason: "One automatic pass acquires every voting-site source we can read; a place no source covers stays an open blank for hunters." },
+  "voting-sites": { mode: "DIRECT_SOURCE", reason: "The existing automatic pass stays active until live replacement is verified. Registered election-authority polling doors also publish their complete saved rows through the normal worker Slide." },
   "prl": { mode: "DIRECT_SOURCE", reason: "The licensed national PRL archive is acquired and attributed for every Send, like any national source (the licence covers every place)." },
   "az-official-actions": { mode: "REVIEWED_INPUT", state: "AZ", reason: "Promotion requires a reviewed action projection, exact source-set receipt and source-through argument." },
   "official-filings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },

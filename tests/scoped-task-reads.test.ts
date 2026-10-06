@@ -215,7 +215,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   const method = { version: 56, updatedOn: "2026-09-03", routes: [] };
   await writeFieldManual(h.repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
   counter.reset();
-  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true });
+  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test", WTP_BOX_ENABLED: "1" } });
   assert.deepEqual(counter.whole(), [], "the build reads no whole table");
   for (const row of (await h.repos.routeTasks.listWhere(["workItemId"], h.item.id))) {
     counter.reset();

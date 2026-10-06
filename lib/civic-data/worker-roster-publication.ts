@@ -1,3 +1,8 @@
+import { recordPublicationFlow } from "./publication-flow.ts";
+import { SECTION3_MINIMUMS } from "../control-plane/promotion/section3.ts";
+import { isQuotedExtraction, quotedSourceFindings } from "../control-plane/workers/quoted-proof.ts";
+import { preferCurrentSource, receiptSourceKind } from "./source-conflicts.ts";
+import { parserFieldSources } from "./field-sources.ts";
 import { createHash } from "node:crypto";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -15,13 +20,14 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { heldDirectoryReading, materializeBodyDirectoryWork, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
+import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { auditPull, capturesForPublication, captureIntact, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { readHeldRoster } from "./worker-held-roster.ts";
 import { heldBodySchedule, type HeldBodySchedule } from "./worker-held-meetings.ts";
-import { localHeldCaptureReader } from "./worker-publication-context.ts";
-import { isOfficialSource, type OfficialLinkingPage } from "./source-authority.ts";
+import { publicationCaptureReaders } from "./worker-publication-context.ts";
+import { type OfficialLinkingPage } from "./source-authority.ts";
 import { linkingPageFrom, pageWords, section3Page, section3Record, valueOnPage } from "../control-plane/promotion/section3.ts";
 import { isoTermDate, isoTermDateOnPage } from "./term-dates.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
@@ -29,6 +35,7 @@ import { compareCandidateWithSource } from "../control-plane/workers/record-veri
 import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
 
 export interface WorkerPublicationCapture {
+  readonly campaign?: import("../control-plane/promotion/section3.ts").Section3Page["campaign"];
   readonly sourcePolicy?: import("../control-plane/promotion/source-kinds.ts").SourcePolicy;
   readonly evidence: WorkerEvidence;
   /** Latest successful network observation, not the time an old blob was replayed. */
@@ -44,7 +51,7 @@ export interface RosterReading {
   readonly id: string;
   readonly capture: WorkerPublicationCapture;
   readonly linkingPage: OfficialLinkingPage | null;
-  readonly members: readonly { readonly recordId: string; readonly fields: Readonly<Record<string, unknown>> }[];
+  readonly members: readonly { readonly recordId: string; readonly fields: Readonly<Record<string, unknown>>; readonly fieldSources?: Record<string, import("../sources/types.ts").Provenance> }[];
   /** Every member row on the page was read, so a prior member absent from it has left. */
   readonly complete: boolean;
   readonly method: string;
@@ -132,7 +139,7 @@ export function workerRosterPublication(input: {
   const { reading, prior, now } = input;
   const capture = reading.capture;
   requireThat(captureIntact(capture), "ROSTER_CAPTURE_INCOMPLETE");
-  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage, sourcePolicy: capture.sourcePolicy };
+  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
   const reference = reading.reference === "OPEN_STATES";
   if (reference) requireThat(isOpenStatesRosterUrl(page.url), "ROSTER_REFERENCE_NOT_OPEN_STATES");
   const age = Date.parse(now) - Date.parse(page.retrievedAt);
@@ -151,7 +158,7 @@ export function workerRosterPublication(input: {
   const previous = prior.payload.bodyRosters.find(roster => roster.bodyId === body.id);
   const bodyName = body.name ?? previous?.bodyName ?? (division ? bodyNameFromPage(capture.evidence.text, division.label) : null);
   if (!bodyName) throw new Error("ROSTER_BODY_NAME_UNVERIFIED");
-  const live: { recordId: string; fields: Readonly<Record<string, unknown>>; verified: readonly string[] }[] = [];
+  const live: (RosterReading["members"][number] & { verified: readonly string[] })[] = [];
   const unresolved: string[] = [];
   for (const member of reading.members) {
     if (reference) {
@@ -176,7 +183,8 @@ export function workerRosterPublication(input: {
     const value = member.fields[field];
     return member.verified.includes(field) && typeof value === "string" && value.trim() ? value.trim() : null;
   };
-  const source = { sourceUrl: capture.evidence.canonicalUrl, sourceOrg: capture.evidence.sourceId, collectedAt: capture.observedAt.slice(0, 10) };
+  const source = { kind: pageVerdict.kind, sourceUrl: capture.evidence.canonicalUrl, sourceOrg: capture.evidence.sourceId, collectedAt: capture.observedAt.slice(0, 10) };
+  const conflicts: import("./manual-source-isolation.ts").SourceScopedHeldFact[] = [];
   const accepted: { recordId: string; memberId: string }[] = [];
   const members: BodyRoster["members"] = live.map(member => {
     const name = verifiedValue(member, "name")!, officeTitle = verifiedValue(member, "office")!;
@@ -188,34 +196,53 @@ export function workerRosterPublication(input: {
       { id: `roster:${body.id}#${digest(member.recordId).slice(0, 16)}`, termNote: null, email: null, phone: null, websiteUrl: null };
     const priorSource = old?.membershipSource ?? (previous ? { sourceUrl: previous.sourceUrl, sourceOrg: previous.sourceOrg, collectedAt: previous.collectedAt } : null);
     const retainedFieldSources: NonNullable<BodyRoster["members"][number]["retainedFieldSources"]> = {};
+    const nextFieldSources = { ...(old?.fieldSources ?? {}), ...Object.fromEntries(Object.entries(member.fieldSources ?? {}).filter(([field]) => member.verified.includes(field))) };
+    const choose = (field: "termNote" | "email" | "phone" | "websiteUrl" | "termStart" | "termEnd", fresh: string | null): string | null => {
+      const previousValue = old?.[field] ?? null;
+      if (fresh === null || previousValue === null || fresh === previousValue || !priorSource) return fresh;
+      const oldProof = old?.fieldSources?.[field];
+      const oldReceipt = prior.sourceReceipt.sources.find(row => [row.requestedUrl, row.finalUrl].includes(oldProof?.sourceUrl ?? priorSource.sourceUrl));
+      const beforeSource = { ...priorSource, verifiedAt: null, ...(oldReceipt ? { kind: receiptSourceKind(oldReceipt.sourceClass) } : {}), ...oldProof };
+      const currentSource = { ...source, collectedAt: capture.observedAt, verifiedAt: now, kind: pageVerdict.kind, ...member.fieldSources?.[field] };
+      const currentWins = preferCurrentSource(currentSource, beforeSource);
+      conflicts.push({ key: `${identity.id}:${field}`, code: "CONFLICT_SUPERSEDED", detail: `${field}: kept the higher source kind, then the newer read.`,
+        record: { memberId: identity.id, field, value: currentWins ? previousValue : fresh, source: currentWins ? beforeSource : currentSource } });
+      if (!currentWins) {
+        retainedFieldSources[field] = old?.retainedFieldSources?.[field] ?? priorSource;
+        nextFieldSources[field] = beforeSource;
+      }
+      return currentWins ? fresh : previousValue;
+    };
     // A public office line only: a field the page marks personal never reaches the card.
     const publicContact = member.fields.contactKind !== "PERSONAL";
     const value = (field: "termNote" | "email" | "phone" | "websiteUrl", allowed = true): string | null => {
       const fresh = allowed ? verifiedValue(member, field) : null;
-      if (fresh !== null) return fresh;
+      if (fresh !== null) return choose(field, fresh);
       const retained = old?.[field] ?? null;
       if (retained !== null && priorSource) retainedFieldSources[field] = old?.retainedFieldSources?.[field] ?? priorSource;
       return retained;
     };
     const pageText = pageWords(capture.evidence.text);
     const termDate = (field: "termStart" | "termEnd"): string | null => {
-      const fresh = isoTermDate(member.fields[field]);
-      if (fresh !== null && isoTermDateOnPage(fresh, pageText)) return fresh;
+      const fresh = member.verified.includes(field) ? isoTermDate(member.fields[field]) : null;
+      if (fresh !== null && isoTermDateOnPage(fresh, pageText)) return choose(field, fresh);
       const retained = isoTermDate(old?.[field]);
       if (retained !== null && priorSource) retainedFieldSources[field] = old?.retainedFieldSources?.[field] ?? priorSource;
       return retained;
     };
     const termStart = termDate("termStart"), termEnd = termDate("termEnd");
     const phone = value("phone", publicContact), email = value("email", publicContact);
+    const termNote = value("termNote"), websiteUrl = value("websiteUrl");
     const freshContact = publicContact && (verifiedValue(member, "phone") !== null || verifiedValue(member, "email") !== null);
     accepted.push({ recordId: member.recordId, memberId: identity.id });
-    return { ...identity, name, officeTitle, termNote: value("termNote"), ...(termStart ? { termStart } : {}), ...(termEnd ? { termEnd } : {}), email, phone, websiteUrl: value("websiteUrl"),
+    return { ...identity, name, officeTitle,
+      fieldSources: Object.fromEntries(Object.entries(nextFieldSources).filter(([field]) => (!["phone", "email"].includes(field) || publicContact))), termNote, ...(termStart ? { termStart } : {}), ...(termEnd ? { termEnd } : {}), email, phone, websiteUrl,
       ...(freshContact ? { contactKind: "PUBLIC_OFFICE" as const } : old?.contactKind ? { contactKind: old.contactKind } : {}),
       ...(phone && freshContact ? { contactScope: (phones.get(phone) ?? 0) > 1 ? "SHARED_OFFICE" as const : old?.contactScope ?? "INDIVIDUAL_OFFICE" as const }
         : old?.contactScope ? { contactScope: old.contactScope } : {}),
       ...(Object.keys(retainedFieldSources).length ? { retainedFieldSources } : {}) };
   });
-  const proposed: BodyRoster = { bodyId: body.id, bodyName, sourceUrl: source.sourceUrl, sourceOrg: source.sourceOrg, collectedAt: source.collectedAt,
+  const proposed: BodyRoster = { bodyId: body.id, bodyName, kind: pageVerdict.kind, sourceUrl: source.sourceUrl, sourceOrg: source.sourceOrg, collectedAt: source.collectedAt,
     partisanship: previous?.partisanship ?? "UNDETERMINED", ...(previous?.partisanshipSourceUrl ? { partisanshipSourceUrl: previous.partisanshipSourceUrl } : {}), members };
   const rendered = projectReaderRoster(proposed);
   requireThat(rendered.roster.members.length > 0, "ROSTER_NO_READER_ELIGIBLE_MEMBERS");
@@ -232,7 +259,7 @@ export function workerRosterPublication(input: {
     for (const member of previous.members.filter(old => !rendered.roster.members.some(current => current.id === old.id))) {
       // A complete official roster that no longer lists someone is the departure's evidence:
       // the member leaves the reader with their disposition, candidacy and photo rows.
-      if (reading.complete && unresolved.length === 0) {
+      if (reading.complete && unresolved.length === 0 && pageVerdict.kind === "OFFICIAL" && capture.observedAt >= previous.collectedAt) {
         departed.push(`${member.name} (${member.officeTitle})`);
         departures.push({ bodyId: body.id, holderId: member.id, sourceUrl: source.sourceUrl });
         continue;
@@ -261,7 +288,7 @@ export function workerRosterPublication(input: {
     ...(schedule?.agendaUrl ? { agendaSourceRef: schedule.agendaUrl } : {}) };
   const bodies = canonicalJson(updated) === canonicalJson(body) ? [] : [updated];
   const pages = bodies.length && input.schedule && input.schedule.capture.evidence.artifactId !== capture.evidence.artifactId ? [capture, input.schedule.capture] : [capture];
-  return { contractId: "registry-runtime-bindings", scope: "MEMBERS", ...(departures.length ? { departures } : {}), version: registryEdition(`section3-roster:${reading.id}${bodies.length ? `:${digest(canonicalJson(updated)).slice(0, 12)}` : ""}`), sourceThrough: now,
+  return { contractId: "registry-runtime-bindings", scope: "MEMBERS", ...(conflicts.length ? { excludedFacts: conflicts } : {}), ...(departures.length ? { departures } : {}), version: registryEdition(`section3-roster:${reading.id}${bodies.length ? `:${digest(canonicalJson(updated)).slice(0, 12)}` : ""}`), sourceThrough: now,
     sourceReceipt: reference
       ? (() => { const receipt = section3SourceReceipt(pages, now, `section3-validator:${reading.id}`,
           `${reading.method}: ${members.length} member(s) whose name is on the saved Open States file and whose row sits in this seat's district; an Open States row is a Reference source, and an official roster value replaces it.`);
@@ -283,11 +310,14 @@ function parserReading(parser: WorkerResultRecord, contract: NonNullable<WorkIte
   const extraction = parser.result;
   const capture = captures.find(c => c.evidence.artifactId === extraction.artifactId);
   if (!capture) return null;
-  const replay = compareCandidateWithSource(extraction, contract, capture.evidence, inventoryRecordEvidence(capture.evidence, contract.extraction));
+  const replay = isQuotedExtraction(contract, extraction)
+    ? quotedSourceFindings(extraction, { ...contract, requiredFields: SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields }, capture.evidence)
+    : compareCandidateWithSource(extraction, contract, capture.evidence, inventoryRecordEvidence(capture.evidence, contract.extraction));
+  if (replay.some(f => !f.recordId && !f.code.startsWith("COMPLETENESS_") && f.code !== "DECLARED_COUNT_MISMATCH")) return null;
   return { id: parser.id, capture, linkingPage: linkingPageFrom(capture.evidence.canonicalUrl, captures.map(c => c.evidence)),
     members: extraction.records.filter(record => !replay.some(f => f.recordId === record.id && (!f.field || ["name", "office"].includes(f.field))))
-      .map(record => ({ recordId: record.id, fields: record.fields })),
-    complete: !replay.some(f => f.code.startsWith("COMPLETENESS_") || f.code === "DECLARED_COUNT_MISMATCH"), method: `Parser result ${parser.id}` };
+      .map(record => ({ recordId: record.id, fields: record.fields, fieldSources: parserFieldSources(record.id, record.fields, extraction.spans, captures, parser.endedAt) })),
+    complete: !isQuotedExtraction(contract, extraction) && !replay.some(f => f.code.startsWith("COMPLETENESS_") || f.code === "DECLARED_COUNT_MISMATCH"), method: `Parser result ${parser.id}` };
 }
 
 /**
@@ -305,14 +335,14 @@ export async function heldRosterReading(input: {
   if (!body) return null;
   const division = governmentOf(input.prior.payload.registry.divisions, body);
   const seen = new Set<string>();
-  const candidates = [...input.artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl))
+  const candidates = [...input.artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && a.canonicalUrl.startsWith("https://"))
     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
     .filter(a => !seen.has(a.contentHash) && Boolean(seen.add(a.contentHash)))
     .slice(0, input.limit ?? 40);
   for (const record of candidates) {
     const capture = await input.readHeld(record);
     if (!capture || !captureIntact(capture)) continue;
-    const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt };
+    const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
     if (!section3Page(page, "OFFICIAL_ROSTER", input.now).ok || !pageIsAboutBody(capture.evidence.text, body, division?.label ?? null)) continue;
     const roster = readHeldRoster(capture.evidence.text, capture.evidence.canonicalUrl);
     if (!roster?.rows.length) continue;
@@ -336,8 +366,9 @@ export async function publishWorkerRosterResults(input: {
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   if (!input.workItemIds.length) return [];
+  const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
   const records = await readCompletedWorkerResults(input.repos);
-  const readHeld = input.readHeld ?? localHeldCaptureReader();
+  const { readHeld, readCapture } = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const allItems = (await input.repos.workItems.list()).map(row => row.value);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   // Carry accepted snapshots through the pass; reload only after an external base change.
@@ -367,7 +398,7 @@ export async function publishWorkerRosterResults(input: {
       const parser = latestParserResult(records, id);
       parserId = parser?.id ?? null;
       const directory = plan.contract.recordClass === "OFFICIAL_BOARD_DIRECTORY";
-      captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture: input.readCapture, officialLinks: manual.officialLinks }) : [];
+      captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture, officialLinks: manual.officialLinks }) : [];
       if (directory && !parser) {
         // No extraction yet: read the government's saved directory pages in code, once per government per pass.
         const government = plan.directorySubject?.jurisdiction.id ?? id;
@@ -413,8 +444,8 @@ export async function publishWorkerRosterResults(input: {
       const already = publishedByBody.get(`${bodyId}
 ${readingId}`);
       if (already) throw Object.assign(new Error("REUSED"), { reused: already });
-      const directoryPackage = !directory ? null : parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now, results: records })
-        : workerBodyDirectoryPackage({ plan, held: heldDirectory!, prior, now: input.now });
+      const directoryPackage = !directory ? null : parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now, results: records, kinds })
+        : workerBodyDirectoryPackage({ plan, held: heldDirectory!, prior, now: input.now, kinds });
       const prepared: RegistryRuntimePackage = directoryPackage?.prepared ?? roster!;
       const unresolved = directoryPackage?.unresolved ?? roster!.unresolved;
       const before = prior.payload.bodyRosters.find(r => r.bodyId === bodyId)?.members ?? [];
@@ -434,12 +465,18 @@ ${readingId}`);
         canonicalJson(prepared.payload.bodyRosters[0]), "ROSTER_READER_FACTS_HELD");
       candidateId = candidate.id;
       const published = await processRegisteredManualCandidate(input.store, "registry-runtime-bindings", candidate, input.now, prior.versionId);
+      if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, published.candidate.candidate.id,
+        { workerResultId: readingId, stage: "CHECKED", records: changes.recordChanges.length,
+          changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       if (!published.promoted) { if (published.candidate.failureCode === "PROMOTION_BASE_CHANGED") registry = undefined; throw new Error(`${published.candidate.failureCode === "PROMOTION_BASE_CHANGED" ? "PROMOTION_BASE_CHANGED" : "ROSTER_READER_GATE_HELD"}:${published.candidate.failureDetail ?? published.candidate.state}`); }
       versionId = published.promoted.versionId;
       registry = undefined;
       const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
         requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
+      await recordPublicationFlow(input.repos, published.candidate.candidate.id,
+        { workerResultId: readingId, stage: "LIVE", records: changes.recordChanges.length,
+          changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       registry = acceptedRegistryPrior(published);
       const count = directoryPackage ? prepared.payload.registry.bodies.length : prepared.payload.bodyRosters[0].members.length;
       outcome = { at: input.now, workerResultId: readingId, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",

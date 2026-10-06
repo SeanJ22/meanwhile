@@ -1,3 +1,4 @@
+import { campaignFinanceForTarget, settleCampaignFinanceReads } from "./campaign-finance-reader.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -144,11 +145,13 @@ export function settleStateMoneyRead(state: StateCampaignFinanceJurisdiction): P
  */
 export async function settleStateMoneyReads(): Promise<string | null> {
   const states = Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[];
-  const reads = await Promise.allSettled(states.map((state) => settleStateMoneyRead(state)));
+  const [reads, general] = await Promise.all([
+    Promise.allSettled(states.map((state) => settleStateMoneyRead(state))), settleCampaignFinanceReads(),
+  ]);
   const versions = reads
     .flatMap((read) => read.status === "fulfilled" && read.value.kind === "PROMOTED" ? [read.value.metadata.versionId] : [])
     .filter((version): version is string => version !== null);
-  return versions.length ? versions.join(",") : null;
+  return [...versions, ...general].length ? [...versions, ...general].join(",") : null;
 }
 
 /** Read all independent state pointers; one unavailable state cannot erase another. */
@@ -276,12 +279,13 @@ export function stateMoneyProofInventory(): StateMoneyProofInventory {
   return { targetKeys: [...new Set(targetKeys)].sort(), readbacks };
 }
 
-function snapshotForTarget(targetKey: string): StateMoneySnapshot | null {
+function snapshotForTarget(targetKey: string, hasScopedFiling = false): StateMoneySnapshot | null {
   ensureTestFixtures();
   const state = /^ballot-([a-z]{2})-/.exec(targetKey)?.[1]?.toUpperCase() as StateCampaignFinanceJurisdiction | undefined;
   if (!state || !Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, state)) return null;
   const snapshot = cache.get(state);
   if (snapshot) return snapshot;
+  if (hasScopedFiling) return null;
   const read = readStates.get(state);
   throw new Error(
     `Canonical state-money holding unavailable for ${state} (${read?.kind ?? "READ_NOT_INITIALIZED"}); ` +
@@ -290,9 +294,13 @@ function snapshotForTarget(targetKey: string): StateMoneySnapshot | null {
 }
 
 export function stateMoneyForTarget(targetKey: string): StateMoneyRecord[] {
-  const snapshot = snapshotForTarget(targetKey);
-  if (!snapshot) return [];
-  return snapshot.records.filter((record) => record.targetKeys.includes(targetKey) && isRenderable(record));
+  const general = campaignFinanceForTarget(targetKey);
+  const snapshot = snapshotForTarget(targetKey, general.length > 0);
+  if (!snapshot) return general;
+  const held = snapshot.records.filter((record) => record.targetKeys.includes(targetKey) && isRenderable(record));
+  return [...general, ...held.filter(record => !general.some(current =>
+    [current.totals.receipts, current.totals.expenditures, current.totals.cashOnHand].some(amount => amount !== null) &&
+    current.committeeId === record.committeeId && current.electionYear === record.electionYear && current.totals.coveringPeriod === record.totals.coveringPeriod))];
 }
 
 export function stateMoneyWasAsked(targetKey: string): boolean {

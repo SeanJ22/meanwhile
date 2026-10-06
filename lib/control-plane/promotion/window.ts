@@ -308,16 +308,15 @@ export async function withNightlyWindowLease<R>(
 /* ------------------------------------------------------------ evaluation */
 
 /**
- * Decide every item against the gate. PROMOTE_WOULD needs APPROVED and an
- * open class; anything short of that is REFUSE_WOULD with the failing stage
- * or the closed class named; DEFER carries the window-level reason.
+ * Describe each verified item for the publication window. DEFER retains the
+ * window-level execution reason; class and field activation lists are retired.
  */
 export function evaluateItems(
   states: readonly PipelineItemState[],
   gate: Pick<ActivationGateReading, "openRecordClasses" | "openFields">,
   deferAll: string | null = null,
 ): { readonly verdicts: readonly ItemVerdict[]; readonly byRecordClass: readonly RecordClassTally[] } {
-  const open = new Set(gate.openRecordClasses);
+  void gate; // Compatibility argument for saved window callers; never publication authority.
   const verdicts: ItemVerdict[] = states.map((s) => {
     const recordClass = s.recordClass ?? "unknown";
     const base = { itemId: s.itemId, recordClass, stage: s.stage };
@@ -327,17 +326,8 @@ export function evaluateItems(
     if (s.stage !== "APPROVED_FOR_PROMOTION") {
       return { ...base, verdict: "REFUSE_WOULD", reason: `at ${s.stage ?? "no accepted stage"}; APPROVED_FOR_PROMOTION is required${lastRefusal}` };
     }
-    if (s.recordClass === null) return { ...base, verdict: "DEFER", reason: "the item names no record class, so the gate cannot be read for it" };
-    if (!open.has(s.recordClass)) {
-      return { ...base, verdict: "REFUSE_WOULD", reason: `record class ${s.recordClass} is not open at the activation gate` };
-    }
-    /* A class opened by field (2026-09-25: candidate-enrichment, campaign sites only) is open for those fields alone. */
-    const fields = gate.openFields?.[s.recordClass];
-    const field = s.byStage.APPROVED_FOR_PROMOTION?.field;
-    if (fields !== undefined && (field === undefined || !fields.includes(field))) {
-      return { ...base, verdict: "REFUSE_WOULD", reason: `record class ${s.recordClass} is open only for ${fields.join(", ")}; this approval names ${field ?? "no field"}` };
-    }
-    return { ...base, verdict: "PROMOTE_WOULD", reason: `APPROVED_FOR_PROMOTION and record class ${s.recordClass} is open` };
+    if (s.recordClass === null) return { ...base, verdict: "DEFER", reason: "the item names no record class or reader door" };
+    return { ...base, verdict: "PROMOTE_WOULD", reason: "Verified fact is approved for its reader door" };
   });
   const tallies = new Map<string, { items: number; promoteWould: number; refuseWould: number; deferred: number }>();
   for (const v of verdicts) {
@@ -449,9 +439,7 @@ export function buildWindowDigest(run: WindowRunRecord): string {
   out.push("");
   out.push("## ACTIVATION GATE");
   out.push("");
-  out.push(`- ${run.activationGate.reason}`);
-  out.push(`- read from: ${run.activationGate.readFrom ?? "nothing readable"}`);
-  out.push(`- open record classes: ${run.activationGate.openRecordClasses.length === 0 ? "NONE" : run.activationGate.openRecordClasses.join(", ")}`);
+  out.push("- Verified facts publish through their reader doors without a class activation gate.");
   out.push("");
   out.push("## STAGES");
   out.push("");

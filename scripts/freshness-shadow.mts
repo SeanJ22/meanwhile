@@ -1,18 +1,19 @@
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
-import { createHash } from "node:crypto";
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
 import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
-import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
+import { legacyHeldWorkOwed, planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
 import { costEntryWithModel } from "../lib/control-plane/cost.ts";
 import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
 import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { MODELS } from "../lib/models.ts";
 import { paidWorkGuards } from "../lib/control-plane/workers/paid-work-guards.ts";
+import { hunterLaneArmingPath, laneArmingOf, writeLaneArming } from "../lib/control-plane/workers/hunter-lane-arming.ts";
+import { hunterQueuePath, writeHunterQueue } from "../lib/control-plane/workers/hunter-lane.ts";
 import { paidWorkerSlots, researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
@@ -113,6 +114,7 @@ import {
   CONTROL_PLANE_QUERY_CONCURRENCY,
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { incrementalReadsEnabled, INCREMENTAL_READS_ENV, withIncrementalReads } from "../lib/control-plane/repository/incremental-reads.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import {
   closeCycleOccurrences,
@@ -145,6 +147,7 @@ import {
   campaignSiteSubjectsFromHoldings,
   heldMarginaliaFromManifest,
   runCampaignSiteCycle,
+  withinWallTime,
   type CampaignSiteCycleReport,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { runCandidatePublicationCycle,
@@ -199,9 +202,10 @@ import { evidenceProjection } from "../lib/control-plane/workers/evidence-projec
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
-import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
+import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle, requiredJurisdictionRegistry } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
-import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
+import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
+import { heldCalendarRouteBodies, missionMeetingsDiscoveryNeeds } from "../lib/hunt/mission-meetings-discovery.ts";
 import {
   discoveryNeedsToWalk,
   runMeetingsDiscovery,
@@ -217,7 +221,8 @@ import { huntSearchScope } from "../lib/control-plane/discovery/hunt-search-scop
 import { fingerprint } from "../lib/control-plane/ids.ts";
 import {
   closeAbandonedOccurrences,
-  planMovedToGapLedger,
+  jurisdictionMeetingsSubject,
+  planHeldRouteRetirement,
   scanOccurrences,
   planRetiredResidue,
   planSupersededRetirement,
@@ -369,7 +374,7 @@ import {
   SendBudgetRefusal,
   budgetGuardedTransport,
   hasBudgetLines,
-  liveSpendHolds,
+  readLiveSpendHolds,
   releaseOpenJobs,
   SPEND_HOLD_STALE_MS,
 } from "../lib/control-plane/expansion/spend-holds.ts";
@@ -389,6 +394,7 @@ import {
 } from "../lib/control-plane/scheduler/cycle-stall.ts";
 import { answerStallProbes, roundProgressReporter } from "../lib/control-plane/scheduler/round-progress.ts";
 import { RUNTIME_NO_PROGRESS_MS } from "./pilot-runtime-child.mts";
+import { POST_CUTOFF_QUIET_LEAD_MS, untilQuietLimit, watchOutputClock } from "../lib/control-plane/scheduler/post-cutoff-bound.ts";
 import { recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import { CYCLE_DRAIN_GRACE_MS, chosenExitCode, exitAfterDrainGrace } from "../lib/control-plane/scheduler/cycle-exit.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
@@ -431,6 +437,14 @@ const pending = new PendingOperations();
 answerStallProbes({ describe: () => describePending(pending.snapshot()) });
 /* Finished tasks of the long phases (dispatch, worker wave, meetings walks) are progress the runner can see. */
 const roundProgress = roundProgressReporter();
+/*
+ * Waits after the dispatch cutoff (the discovery-lane join, the promotion tail's reads) end once the child has printed
+ * nothing for this long, three minutes inside the runner's no-progress limit and before its stall probe; what was still
+ * running is named as deferred and its work stays owed (post-cutoff-bound.ts).
+ */
+const outputClock = watchOutputClock();
+const POST_CUTOFF_QUIET_MS = RUNTIME_NO_PROGRESS_MS - POST_CUTOFF_QUIET_LEAD_MS;
+const boundedAfterCutoff = <T,>(work: Promise<T>) => untilQuietLimit(work, { clock: outputClock, quietMs: POST_CUTOFF_QUIET_MS });
 const stallDiagnostic: CycleStallDiagnostic | null = null;
 /** True once the cycle wrote its own record; a later failure must not overwrite it. */
 let finalRecordWritten = false;
@@ -581,6 +595,16 @@ if (wantsPostgres) {
     process.exit(1);
   }
   repos = await pending.step("control-plane:open", () => createPgRepositories(url, NOW));
+  /* One in-memory copy of the tables every wave re-reads (planner, standing
+     runtime, round start, promotion tail, campaign chain); each later read
+     fetches only rows changed since (schema v22). The lease-worker children
+     open their own repositories and are not wrapped. WTP_INCREMENTAL_READS=0
+     is the way back to whole reads. */
+  if (incrementalReadsEnabled()) {
+    repos = withIncrementalReads(repos, { log: (line) => console.warn(`freshness:shadow · ${line}`) });
+  } else {
+    console.log(`freshness:shadow · ${INCREMENTAL_READS_ENV}=0: control-plane tables are read whole on every wave`);
+  }
 } else {
   mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
   repos = await createFileRepositories(CONTROL_PLANE_ROOT);
@@ -863,9 +887,9 @@ if (canonicalCandidateCounts === null) {
  * one apply (`settleRetirements`):
  *
  * - **A jurisdiction meetings row** (`freshness:jurisdiction:<id>#meetings-N`)
- *   is retired only when the committed gap ledger lists its jurisdiction as
- *   owed meetings discovery, and its reason names that entry
- *   (`planMovedToGapLedger`). The superseded planner never sees one.
+ *   is retired only when its government's exact body holds a calendar route on
+ *   the owed rows, and its reason names that body (`planHeldRouteRetirement`,
+ *   CH-21). The superseded planner never sees one.
  * - **A row the registry stopped emitting** is retired only when its provider
  *   read cleanly and the drop stays inside the bound
  *   (`planSupersededRetirement`). Otherwise it is held back by name.
@@ -885,23 +909,6 @@ const retirementOutside = sync.outside !== null && ONLY === null && IDS === null
 const residueItems = retirementOutside === null ? [] : planRetiredResidue(retirementOutside);
 const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id }));
 /*
- * The committed gap ledger, read once. It is the only evidence on which a
- * jurisdiction meetings row retires (an unreadable ledger retires none), and
- * the only list the meetings-discovery phase walks.
- */
-const gapLedgerRead = (() => {
-  try {
-    const text = readFileSync(join(ROOT, GAP_LEDGER_PATH), "utf8");
-    const read = recordedMeetingsDiscovery(JSON.parse(text));
-    if ("unreadable" in read) return read;
-    /* Each need carries the ledger it was read from, so a route found from its address can be attested later (NH330). */
-    const addressSource = { source: "GAP_LEDGER" as const, versionId: createHash("sha256").update(text).digest("hex") };
-    return { ...read, needs: read.needs.map((need) => ({ ...need, addressSource })) };
-  } catch (error) {
-    return { unreadable: `${GAP_LEDGER_PATH} could not be read (${error instanceof Error ? error.message : String(error)})` };
-  }
-})();
-/*
  * The meetings discovery the owner's dispatch materialized (MW-028). Each
  * government's need is derived from its promoted registry, as the provider
  * derives it. The free walk goes first on these even where the committed ledger
@@ -911,11 +918,18 @@ const gapLedgerRead = (() => {
  */
 const dispatchedDiscoveryIds = sync.all.map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
 const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
-/* A dispatched need's address comes from the promoted jurisdiction reference, or its state's registration; it carries that version (NH330). */
-const dispatchedNeeds = new Map(
-  dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, { ...e.need, addressSource: dispatchedAddressSource(e.reg,
-    (e.reg.stateCode.toLowerCase() === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null) }]),
-);
+/* A dispatched or mission need's address comes from the promoted jurisdiction reference, or its state's registration; it carries that version (NH330). */
+const withAddressSource = (e: { readonly need: MeetingsDiscoveryNeed; readonly reg: Parameters<typeof dispatchedAddressSource>[0] }): MeetingsDiscoveryNeed =>
+  ({ ...e.need, addressSource: dispatchedAddressSource(e.reg,
+    (e.reg.stateCode.toLowerCase() === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null) });
+const dispatchedNeeds = new Map(dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, withAddressSource(e)]));
+/*
+ * CH-21: the calendar blanks of every Send's mission map, read with the place order each wave
+ * (`refreshPlaceOrder`): each government in a mission place whose body holds no calendar route. The free walk
+ * takes them after the dispatched needs, in any state, with no dispatch.
+ */
+let missionDiscoveryNeeds = new Map<string, MeetingsDiscoveryNeed>();
+let missionDiscoveryHeld = 0;
 const freeWalkSubjects: readonly FreeWalkSubject[] = [
   ...new Set(dispatchedDiscoveryIds.flatMap((id) => parseMeetingsDiscoveryId(id)?.jurisdictionId ?? [])),
 ].map((jurisdictionId) => {
@@ -923,15 +937,38 @@ const freeWalkSubjects: readonly FreeWalkSubject[] = [
   return { jurisdictionId, walkable: need === undefined ? null : walkableByFreeWalk(need) };
 });
 let freeWalks: FreeDiscoveryWalks = UNREAD_FREE_DISCOVERY_WALKS;
-const gapLedger = retirementOutside === null ? null : gapLedgerRead;
+/*
+ * CH-21: the evidence an old jurisdiction meetings row retires on. Only the governments with an active row outside
+ * the corpus are read: each one's exact body, and that body's division's owed rows for a held calendar route.
+ */
+const corpusIds = new Set(corpusUnits.map((u) => u.obligationId));
+const heldRouteCandidates = retirementOutside === null ? [] : [...new Set(retirementOutside
+  .filter((row) => row.active && !corpusIds.has(row.id))
+  .flatMap((row) => jurisdictionMeetingsSubject(row.id) ?? []))];
+const heldRouteRead = retirementOutside === null ? null : await (async () => {
+  try {
+    if (heldRouteCandidates.length === 0) return { bodyIdFor: () => null, held: new Set<string>() };
+    await meetingPartitions.readStates(heldRouteCandidates.map((id) => id.split(":")[0] ?? ""));
+    const bodyIdFor = (id: string): string | null => meetingPartitions.bodyIdFor?.(id) ?? null;
+    const divisions = [...new Set(heldRouteCandidates.flatMap((id) => bodyIdFor(id)?.split("#")[0] ?? []))];
+    if (divisions.length === 0) return { bodyIdFor, held: new Set<string>() };
+    const capture = await readHeldPlaceCapture(divisions, { now: NOW, bypassCache: true });
+    const rows = buildPlaceOwedList({ divisions: divisions.map((id) => ({ id, label: id })), subjects: capture.subjects, held: capture.held, now: NOW });
+    const held = heldCalendarRouteBodies(rows);
+    console.log(`  retirement evidence: ${heldRouteCandidates.length} government(s) with an old meetings row, ${held.size} body(ies) with a held calendar route`);
+    return { bodyIdFor, held };
+  } catch (error) {
+    return { unreadable: error instanceof Error ? error.message : String(error) };
+  }
+})();
 const movedPlan =
-  retirementOutside === null || gapLedger === null
+  retirementOutside === null || heldRouteRead === null
     ? null
-    : planMovedToGapLedger({
+    : planHeldRouteRetirement({
         outside: retirementOutside,
         corpus: corpusUnits,
         providers: registry.byProvider,
-        ledger: { path: GAP_LEDGER_PATH, recorded: gapLedger },
+        routes: heldRouteRead,
       });
 const supersededPlan =
   retirementOutside === null || movedPlan === null
@@ -960,7 +997,7 @@ const retiredDebtReasons = new Map<string, string>();
 if (movedPlan !== null && supersededPlan !== null && retirementOutside !== null) {
   const items = [...residueItems, ...supersededPlan.retire, ...movedPlan.retire];
   console.log(
-    `  retirement: ${movedPlan.retire.length} moved to the gap ledger, ${supersededPlan.retire.length} superseded, ` +
+    `  retirement: ${movedPlan.retire.length} with a held calendar route, ${supersededPlan.retire.length} superseded, ` +
       `${residueItems.length} retired row(s) still holding an occurrence` +
       (retirementHeldBack.length > 0 ? `; held back ${JSON.stringify(retirementHolds)}` : "") +
       (retirementWrites ? "" : " (plan only: this cycle writes nothing)"),
@@ -998,7 +1035,7 @@ const movedIds = new Set((movedPlan?.retire ?? []).map((item) => item.obligation
 const movedThisCycle = (retirementApplied?.retired ?? []).filter((id) => movedIds.has(id)).length;
 const movedRemaining = movedIds.size - movedThisCycle;
 if (movedIds.size > 0) {
-  console.log(`  retirement: moved to the gap ledger ${movedThisCycle} this cycle, ${movedRemaining} remain`);
+  console.log(`  retirement: ${movedThisCycle} row(s) with a held calendar route retired this cycle, ${movedRemaining} remain`);
 }
 finishPhase("retirement");
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
@@ -1326,6 +1363,16 @@ async function refreshPlaceOrder(): Promise<void> {
       new Map(missionPartCounts(place.items, parts).map(count => [count.part, count.open] as const))] as const)) };
     missionMaps = new Map(places.map(place => [place.receiptId, missionMapCount(place.items, null)] as const));
     missionMapUnread = null;
+    /* CH-21: every government in a mission place whose body holds no calendar route is owed discovery. */
+    const mission = missionMeetingsDiscoveryNeeds({
+      jurisdictionIds: scopes.flatMap(scope => [...scope.members]),
+      registryFor: requiredJurisdictionRegistry,
+      bodyIdFor: (id) => meetingPartitions.bodyIdFor?.(id) ?? null,
+      heldRoutes: heldCalendarRouteBodies(places.flatMap(place => place.items)),
+    });
+    missionDiscoveryNeeds = new Map(mission.entries.map(e => [e.need.jurisdictionId, withAddressSource(e)] as const));
+    missionDiscoveryHeld = mission.heldRoute.length;
+    for (const failure of mission.failures) if (!runtimeConditions.includes(failure)) runtimeConditions.push(failure);
   })().catch(error => {
     const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
     if (missionMaps.size === 0) missionMapUnread = detail;
@@ -1601,8 +1648,8 @@ try {
     () => repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
     () => null, startupReadRetry)];
   if (researchSpendInWindow(costLedger, NOW).windowUsd === null) {
-    const heldBudget = await retryStartupRead(() => repos.budget.read(), () => null, startupReadRetry);
-    historicalSpendHolds = Object.values(liveSpendHolds(heldBudget.value.spendHolds, NOW));
+    /* The holds that count now, one row each (schema v24; the ledger row behind WTP_SPEND_HOLDS_TABLE=0). */
+    historicalSpendHolds = Object.values(await retryStartupRead(() => readLiveSpendHolds(repos, NOW), () => null, startupReadRetry));
   }
 } catch (error) {
   ledgerUnreadable = error instanceof Error ? error.message : String(error);
@@ -1634,6 +1681,8 @@ const unreadableControls: string[] = [
    Either owner pause closes it — the research-lane PAUSE and the runner-level
    PAUSE_RUNNER Admin's runner card issues — and so does any control above that
    could not be read (2026-09-25). */
+/* CH-24 part 2 (Proposal A): with the switch on, the standing hunter lane is the one process that admits paid work; this round plans and queues. */
+const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
 const laneClosure = modelLaneClosure({
   dry,
   noModel,
@@ -1645,6 +1694,7 @@ const laneClosure = modelLaneClosure({
   runnerPaused: intents.runnerPause.paused,
   runnerPauseIntentId: intents.runnerPause.intent?.intentId ?? null,
   spendHold: paidSpendHold,
+  paidWorkInHunterLane: CONTINUOUS_HUNTERS,
   unreadableControls,
 });
 const laneDisabledCode = laneClosure?.code ?? null;
@@ -2067,10 +2117,16 @@ const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as 
  * settled job books what it measured; an unmeasured job or a crash leaves the
  * whole hold counting for the rolling 24 hours.
  */
-const spendHolds = new DurableSpendHolds({ budget: repos.budget, now: nowIso });
+const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: nowIso });
 /** The admitted Scout job on each obligation this cycle, with what it holds. */
 const jobSpend = new Map<string, JobSpend>();
-releaseRoundHolds = () => { const open = [...jobSpend.values()]; jobSpend.clear(); return releaseOpenJobs(spendHolds, open, nowIso()); };
+/* A round's end settles what it never settled, then deletes the holds that no longer count (bounded; never accumulated). */
+releaseRoundHolds = async () => {
+  const open = [...jobSpend.values()]; jobSpend.clear();
+  const failed = await releaseOpenJobs(spendHolds, open, nowIso());
+  await spendHolds.sweep();
+  return failed;
+};
 /** Each held job's subject, so a pre-warm charged to it names the same jurisdiction. */
 const jobSubject = new Map<string, string>();
 let scoutJobSeq = 0;
@@ -2080,6 +2136,21 @@ const guards = paidWorkGuards({ repos, now: nowIso, armedAt: NOW, fleetSafety, p
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}),
   onCondition: sentence => { runtimeConditions.push(sentence); } });
 const { budgetLinesFor, guardedMessagesFor, autonomousTransportFor, paidWorkerCapacity } = guards;
+/* CH-24 part 2: the round's Send and area reading, for the standing hunter lane, which cannot read the whole corpus itself. Host-local; never a reader-facing write. */
+const writeHunterLaneReading = (): void => {
+  if (dry || canary) return;
+  try {
+    const sends = assignmentBudget.armedReading();
+    writeLaneArming(hunterLaneArmingPath(ROOT), laneArmingOf({ readAt: NOW, specs: sends.specs, historical: sends.historical,
+      knownKeys: assignmentMembers.byKey.keys(), reached: sends.reached,
+      areas: expansionBudget === null ? null : expansionBudget.gate.armedReading(),
+      lifetimeHuntSubjects: lifetimeHuntSubjects, placeOrder, circuits: fleetSafety.snapshot(nowIso()).providerCircuits,
+      worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY }));
+  } catch (error) {
+    runtimeConditions.push(`the hunter lane's budget reading could not be written (${error instanceof Error ? error.message : String(error)}); the lane holds paid work until a round writes it`);
+  }
+};
+writeHunterLaneReading();
 const spacer = serializeHostSpacing(hostSpacer());
 let releaseDrainRequested = false;
 process.on("message", message => {
@@ -3109,16 +3180,17 @@ async function runAutonomousWave() {
   placeOrderDirty = true;
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
-  /* The legacy held-evidence plan read every artifact, Attempt, work item and route task on every wave, and has found no
-     work since 2026-10-04 (no schema-1 work items remain). Off by default (2026-10-06, Neon transfer); WTP_HELD_FLEET_PLAN=1 runs it. */
-  const held = process.env.WTP_HELD_FLEET_PLAN === "1" ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
+  /* The legacy held-evidence plan runs only when schema-1 held work is owed (Sean, 2026-10-06): a registered event
+     capture whose Parser, Validator, Auditor chain has a step left. Both reads come from the round's incremental copy. */
+  const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })),
     ...(squadReading ? { squads: squadReading } : {}) });
+  /* Under the hunter lane the lane decides paid admission, so every planned Scout is queued. */
   const plannedTasks = planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
-    (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!);
+    (row.action === "SCOUT" && (CONTINUOUS_HUNTERS || paidWorkerCapacity() > 0)))).map(row => row.task!);
   const taskIds = [...new Set([...held.map(task => task.id),
     ...plannedTasks.map(task => task.id)])];
   const taskWorkIds = new Map([...held, ...plannedTasks].map(task => [task.id, task.workItemId]));
@@ -3158,6 +3230,21 @@ async function runAutonomousWave() {
     return { rank, compareRound };
   };
   let taskQueue: ReturnType<typeof readTaskQueue> | null = null;
+  if (CONTINUOUS_HUNTERS) {
+    /* CH-24 part 2: the round's order, written for the standing hunter lane; no lease worker starts here. */
+    const queue = taskQueue ??= readTaskQueue();
+    const ordered = taskIds.filter(id => !failedTaskIds.has(id)).sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b) ||
+      (plannedOrder.get(a) ?? Number.MAX_SAFE_INTEGER) - (plannedOrder.get(b) ?? Number.MAX_SAFE_INTEGER));
+    if (!dry && !canary) {
+      try {
+        writeHunterQueue(hunterQueuePath(hunterLaneArmingPath(ROOT)), { writtenAt: nowIso(), taskIds: ordered, plainTaskIds: ordered.filter(id => plainTaskIds.has(id)) });
+        console.log(`  hunter lane queue: ${ordered.length} task(s) written for the standing hunter lane (${ordered.filter(id => plainTaskIds.has(id)).length} plain-code)`);
+      } catch (error) {
+        runtimeConditions.push(`the hunter lane's queue could not be written (${error instanceof Error ? error.message : String(error)}); the planned tasks remain owed`);
+      }
+    }
+    return { ...planned, dispatches: [...queueFailures], scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 };
+  }
   const workerDispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
     deadlineMs: dispatchDeadlineMs,
     /* A hung worker is ended, and says so, before the runner's no-progress limit could end the whole round. */
@@ -3222,6 +3309,8 @@ let meetingsDiscoveryByOutcome: Record<string, number> = {};
 let roundVaultIndex: VaultIndex | undefined;
 let roundVaultRead: Promise<VaultIndex> | undefined;
 let discoveryLaneRun: Promise<readonly IndependentRuntimeOutcome[]> | null = null;
+let discoveryLaneIds: readonly string[] = [];
+const discoveryLanesFinished = new Set<string>();
 /* One full listing per round; later captures join it through includeVaultCapture. The step is timed once in the round's phases. */
 const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= (async () => {
   const startedMs = Date.now();
@@ -3236,7 +3325,7 @@ try {
 /*
  * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR.** (2026-09-23.)
  *
- * Walks the gap ledger's meetings-discovery needs: robots first on every host,
+ * Walks the dispatched and mission-map meetings-discovery needs (CH-21): robots first on every host,
  * no model, a find confirmed by content and recorded as a candidate
  * (`lib/control-plane/discovery/meetings-discovery-executor.ts`). OFF unless
  * WTP_MEETINGS_DISCOVERY is "on": it is a new production writer and new
@@ -3264,12 +3353,17 @@ const DISCOVERY_NO_PROGRESS_LIMIT = 5;
  * raise them within 0..1000.
  */
 const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: number): Promise<void> => {
+  /* CH-21: the owner's dispatch first, then every Send's mission map's calendar blanks, as read this wave. */
+  const discoveryToWalk = discoveryNeedsToWalk([...missionDiscoveryNeeds.values()], [...dispatchedNeeds.values()], need => {
+    const id = meetingsDiscoveryObligationId(need);
+    return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
+  });
   if (!MEETINGS_DISCOVERY_ENABLED) {
     meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
   } else if (dry || canary) {
     meetingsDiscoveryState = "not run: a dry or canary cycle walks nothing";
-  } else if ("unreadable" in gapLedgerRead) {
-    meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
+  } else if (discoveryToWalk.length === 0) {
+    meetingsDiscoveryState = `not run: no government is owed meetings discovery (${missionMapUnread ?? "no mission place has a calendar blank and no dispatch is open"})`;
   } else {
     /* The caller sets the deadline: 60 s on the serial path, the time left in the round on its own lane. */
     const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
@@ -3314,10 +3408,7 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
         return pages;
       })();
       meetingsDiscovery = await runMeetingsDiscovery(repos, {
-        needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()], need => {
-          const id = meetingsDiscoveryObligationId(need);
-          return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
-        }),
+        needs: discoveryToWalk,
         cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
         maxWalks, rotationStep: MEETINGS_DISCOVERY_MAX_WALKS, noProgressLimit: DISCOVERY_NO_PROGRESS_LIMIT,
         /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
@@ -3405,6 +3496,14 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
  * its approvals publish through the derived routine contract
  * `candidate-campaign-sites-derived`, with no owner step.
  */
+/*
+ * The lane's own bound (Sean, 2026-10-06 12:07 AM EDT: release 6's first round was killed after 43 minutes with
+ * "pending: campaign-sites"). No lead read starts after the dispatch cutoff and a read in flight answers within one
+ * request timeout, so past the cutoff plus this settle time the lane is waiting on something that has not answered. It
+ * then ends as a deferral naming the step it was waiting on, and its leads and sites stay owed. The settle time ends well
+ * inside the round's post-cutoff quiet limit, so the round's join never waits on this lane.
+ */
+const CAMPAIGN_SITES_SETTLE_MS = 3 * 60_000;
 const runCampaignSitesPass = async (): Promise<void> => {
   if (dry || canary || ONLY !== null || IDS !== null) {
     campaignSitesState = "not run: a dry, canary, filtered cycle reads nothing";
@@ -3414,12 +3513,18 @@ const runCampaignSitesPass = async (): Promise<void> => {
     const leaveCampaignSites = pending.enter("campaign-sites");
     /* Loading is included in elapsed-time reporting. */
     const campaignStartedMs = Date.now();
+    /* Each wait inside the lane is labelled, so a stall answer and a deferral name the step. */
+    let waitingOn = "the canonical candidacies";
+    const step = <T,>(label: string, run: () => Promise<T> | T): Promise<T> => {
+      waitingOn = label;
+      return pending.step(`campaign-sites:${label}`, run);
+    };
     try {
-      const pass = await (async () => {
+      const bounded = await withinWallTime((async () => {
         const holdings = candidateEnrichmentHoldings();
         if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
         const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
-        const vaultIndex = await readRoundVault();
+        const vaultIndex = await step("the saved-page index", () => readRoundVault());
         /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
         let stagingManifest: ReturnType<typeof readStagingManifest> = null;
         try {
@@ -3427,9 +3532,10 @@ const runCampaignSitesPass = async (): Promise<void> => {
         } catch (error) {
           runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
         }
-        const held = await heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso());
+        const held = await step("the held Marginalia answers", () => heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso()));
+        const methodVersion = (await step("the method version", () => readMethodKnowledge(repos))).version;
         const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
-        const report = await runCampaignSiteCycle({
+        const report = await step("the campaign-site chain", () => runCampaignSiteCycle({
           startedAtMs: campaignStartedMs,
           repos,
           subjects,
@@ -3447,17 +3553,23 @@ const runCampaignSitesPass = async (): Promise<void> => {
           spaceOut: spacer,
           vaultRoot: join(ROOT, ...VAULT_DIR),
           heldVault: vaultIndex,
-          methodVersion: (await readMethodKnowledge(repos)).version,
-        });
+          methodVersion,
+          deadlineMs: dispatchDeadlineMs,
+        }));
         return {
           report,
           state:
             `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
             (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
         };
-      })();
-        campaignSites = pass.report;
-        campaignSitesState = pass.state;
+      })(), dispatchDeadlineMs + CAMPAIGN_SITES_SETTLE_MS - Date.now());
+      if (bounded.done) {
+        campaignSites = bounded.value.report;
+        campaignSitesState = bounded.value.state;
+      } else {
+        campaignSitesState = `deferred: still waiting on ${waitingOn} ${Math.round((Date.now() - dispatchDeadlineMs) / 60_000)} min after the round's dispatch cutoff; its unread leads and unverified sites remain owed`;
+        runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
+      }
     } catch (error) {
       campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
       runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
@@ -3488,6 +3600,7 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
         heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
         methodVersion: (await readMethodKnowledge(repos)).version,
         clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
+        deadlineMs: dispatchDeadlineMs,
         openFor: candidacyId => {
           const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
           return async ({ url, headers, timeoutMs }) => {
@@ -3524,13 +3637,14 @@ if (DISCOVERY_SERIAL) {
 } else {
   const lanesStartedMs = Date.now();
   const timed = (id: string, run: () => Promise<void>) => ({ id, run: async () => {
-    try { await run(); } finally { console.log(`  lane ${id}: ${Date.now() - lanesStartedMs}ms`); }
+    try { await run(); } finally { discoveryLanesFinished.add(id); console.log(`  lane ${id}: ${Date.now() - lanesStartedMs}ms`); }
   } });
   discoveryLaneRun = runIndependentRuntimePass([
     timed("meetings-discovery", () => runMeetingsDiscoveryPass(dispatchDeadlineMs, Number.MAX_SAFE_INTEGER)),
     timed("campaign-sites", runCampaignSitesPass),
     timed("candidate-publications", runCandidatePublicationsPass),
   ]);
+  discoveryLaneIds = ["meetings-discovery", "campaign-sites", "candidate-publications"];
 }
 
 
@@ -3574,7 +3688,22 @@ if (!dry && !canary) {
 // admitted earlier still has time to finish and settle. This is a technical
 // slice boundary, not a count or spend cap: undispatched work remains owed.
 } finally {
-  earlyAutonomous = earlyOriginal === null ? null : await earlyOriginal;
+  /*
+   * The early worker wave's processes end at the cutoff, but its settling reads do not, and this wait was the one
+   * unlabelled await between the lanes' start and their join: a stall answer named only the lane still running beside
+   * it. It is labelled and ends like every other post-cutoff wait: a named deferral, its unsettled tasks still owed.
+   */
+  if (earlyOriginal !== null) {
+    const leaveEarlyWave = pending.enter("autonomous-workers:early-wave");
+    const early = await boundedAfterCutoff(earlyOriginal);
+    leaveEarlyWave();
+    if (early.done) earlyAutonomous = early.value;
+    else {
+      const line = `early worker wave deferred: still settling ${Math.round(early.quietMs / 60_000)} min after the round's last output; its unsettled tasks remain owed`;
+      runtimeConditions.push(line);
+      console.log(`  ${line}`);
+    }
+  }
 }
 let autonomousWorked = false;
 if (earlyAutonomous !== null) {
@@ -3590,21 +3719,42 @@ if (earlyAutonomous !== null) {
 if (autonomousCycleOpen) {
   const leaveAutonomous = pending.enter("autonomous-workers");
   try {
-    const autonomous = await runAutonomousProcesses();
-    for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
-    if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(autonomous) };
-    scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
-    scoutsAdmittedOutsideLifetime += autonomous.scoutsLimitedAdmitted;
-    autonomousDispatchedThisCycle += autonomous.dispatches.filter(row => row.attemptId !== null).length;
-    if (autonomous.dispatches.some(row => row.outcome === "WORKED")) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
-    for (const row of autonomous.dispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
+    const wave = await boundedAfterCutoff(runAutonomousProcesses());
+    if (!wave.done) {
+      const line = `worker wave deferred: still settling ${Math.round(wave.quietMs / 60_000)} min after the round's last output; its unsettled tasks remain owed`;
+      runtimeConditions.push(line);
+      console.log(`  ${line}`);
+    } else {
+      const autonomous = wave.value;
+      for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
+      if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(autonomous) };
+      scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
+      scoutsAdmittedOutsideLifetime += autonomous.scoutsLimitedAdmitted;
+      autonomousDispatchedThisCycle += autonomous.dispatches.filter(row => row.attemptId !== null).length;
+      if (autonomous.dispatches.some(row => row.outcome === "WORKED")) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
+      for (const row of autonomous.dispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
+    }
   } catch (error) {
     runtimeConditions.push(`worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
   } finally { leaveAutonomous(); }
 }
 if (discoveryLaneRun !== null) {
-  for (const outcome of await discoveryLaneRun) {
-    if (outcome.state === "FAILED") runtimeConditions.push(`${outcome.id} lane failed: ${outcome.error}`);
+  const leaveLaneJoin = pending.enter("discovery-lanes:join");
+  const joined = await boundedAfterCutoff(discoveryLaneRun);
+  leaveLaneJoin();
+  if (joined.done) {
+    for (const outcome of joined.value) {
+      if (outcome.state === "FAILED") runtimeConditions.push(`${outcome.id} lane failed: ${outcome.error}`);
+    }
+  } else {
+    /* The lanes stop starting reads at the cutoff; one still running here is waiting on a read that has not answered. */
+    for (const id of discoveryLaneIds.filter(lane => !discoveryLanesFinished.has(lane))) {
+      const line = `${id} lane deferred: still running ${Math.round(joined.quietMs / 60_000)} min after the round's last output, past the dispatch cutoff; its work remains owed`;
+      runtimeConditions.push(line);
+      console.log(`  ${line}`);
+      if (id === "campaign-sites") campaignSitesState = `deferred: ${line}`;
+      if (id === "candidate-publications") candidatePublicationsState = `deferred: ${line}`;
+    }
   }
   finishPhase("discovery-lanes");
 }
@@ -3623,10 +3773,19 @@ for (const result of cycle.dispatched) {
   const unit = units.find((u) => u.obligation.id === result.obligationId);
   if (unit === undefined) continue;
   let body: string | null = null;
+  let detail = result.detail;
   for (const artifactId of result.artifactIds) {
     const entry = vault.ledger.get(artifactId);
     if (entry === undefined) continue;
-    body = await vault.readBack(entry.key);
+    const read = await boundedAfterCutoff(vault.readBack(entry.key));
+    if (!read.done) {
+      const line = `promotion tail: ${result.obligationId}'s vaulted bytes did not read back within ${Math.round(read.quietMs / 60_000)} min of the round's last output; it is staged as still owed`;
+      runtimeConditions.push(line);
+      console.log(`  ${line}`);
+      detail = `${detail}; its vaulted bytes did not read back this round, so it is staged as still owed`;
+      break;
+    }
+    body = read.value;
     if (body !== null) break;
   }
 
@@ -3642,7 +3801,7 @@ for (const result of cycle.dispatched) {
       artifactIds: result.artifactIds,
       body,
       nextDueAt: nextDueByObligation.get(result.obligationId) ?? null,
-      detail: result.detail,
+      detail,
       stagedOn: today(),
     }),
   );
@@ -3659,12 +3818,22 @@ for (const recovered of cycle.recovered) {
   const { disposition } = recovered;
   let body: string | null = null;
   try {
-    const held = disposition.artifactIds.length === 0 ? [] : await repos.artifacts.read(recovered.workItemId);
-    for (const artifactId of disposition.artifactIds) {
-      const record = held.find((a) => a.artifactId === artifactId);
-      if (record === undefined) continue;
-      body = await vault.readHeld(record);
-      if (body !== null) break;
+    const readHeldBody = async (): Promise<string | null> => {
+      const held = disposition.artifactIds.length === 0 ? [] : await repos.artifacts.read(recovered.workItemId);
+      for (const artifactId of disposition.artifactIds) {
+        const record = held.find((a) => a.artifactId === artifactId);
+        if (record === undefined) continue;
+        const bytes = await vault.readHeld(record);
+        if (bytes !== null) return bytes;
+      }
+      return null;
+    };
+    const read = await boundedAfterCutoff(readHeldBody());
+    if (read.done) body = read.value;
+    else {
+      const line = `recovered ${recovered.obligationId}: its held bytes did not read back within ${Math.round(read.quietMs / 60_000)} min of the round's last output; it is staged as still owed`;
+      runtimeConditions.push(line);
+      console.log(`  ${line}`);
     }
   } catch (error) {
     runtimeConditions.push(
@@ -3987,7 +4156,7 @@ const lines = [
     ? []
     : [
         `  retired            ${retirementApplied?.retired.length ?? 0} of ${movedPlan.retire.length + supersededPlan.retire.length} planned obligation(s) · ` +
-          `moved to the gap ledger ${movedThisCycle} this cycle, ${movedRemaining} remain · ` +
+          `${movedThisCycle} with a held calendar route this cycle, ${movedRemaining} remain · ` +
           `${supersededPlan.retire.length} planned that the registry no longer emits · ` +
           `${retirementApplied?.occurrencesClosed.length ?? 0} open occurrence(s) closed unresolved · ` +
           `${persisted.clearedAsRetired.length} debt(s) tombstoned as retired` +
@@ -3998,7 +4167,7 @@ const lines = [
       ]),
   `  discovery          meetings: ${meetingsDiscoveryState}` +
     (meetingsDiscovery === null
-      ? ` · ${"unreadable" in gapLedgerRead ? "the gap ledger could not be read" : `${gapLedgerRead.needs.filter((n) => n.basis === "SOURCE_DISCOVERY_OWED").length} site(s) owed discovery in the gap ledger`}`
+      ? ` · ${missionDiscoveryNeeds.size} mission government(s) owed discovery, ${missionDiscoveryHeld} with a held calendar route, ${dispatchedNeeds.size} dispatched`
       : ` · ${meetingsDiscovery.walked.length} walked (${meetingsDiscoveryByOutcome.FOUND ?? 0} found, ${meetingsDiscoveryByOutcome.LEAD ?? 0} lead, ` +
         `${meetingsDiscoveryByOutcome.NOTHING_DETECTED ?? 0} nothing detected, ${meetingsDiscoveryByOutcome.BLOCKED ?? 0} blocked, ` +
         `${meetingsDiscoveryByOutcome.COULD_NOT_READ ?? 0} could not read) · ${meetingsDiscovery.notDue.length} not yet due · ` +
@@ -4110,6 +4279,8 @@ const runRecord = {
       meetingsDiscovery: {
         enabled: MEETINGS_DISCOVERY_ENABLED,
         state: meetingsDiscoveryState,
+        /* CH-21: the governments in mission places owed discovery, and those whose body holds a calendar route. */
+        mission: { owed: [...missionDiscoveryNeeds.keys()], heldCalendarRoute: missionDiscoveryHeld },
         walked: (meetingsDiscovery?.walked ?? []).map((a) => ({
           jurisdictionId: a.jurisdictionId,
           attemptId: a.attemptId,
@@ -4162,16 +4333,16 @@ const runRecord = {
       candidatePublications: { state: candidatePublicationsState, report: candidatePublications },
       /* Rows outside the corpus: what was planned, held back by code, and actually written (2026-09-23). */
       retirement:
-        movedPlan === null || supersededPlan === null || gapLedger === null
+        movedPlan === null || supersededPlan === null || heldRouteRead === null
           ? null
           : {
-              movedToGapLedger: movedPlan.retire.map((item) => item.obligationId),
+              heldCalendarRoute: movedPlan.retire.map((item) => item.obligationId),
               movedThisCycle,
               movedRemaining,
-              gapLedger:
-                "unreadable" in gapLedger
-                  ? { path: GAP_LEDGER_PATH, unreadable: gapLedger.unreadable }
-                  : { path: GAP_LEDGER_PATH, jurisdictionsRecorded: gapLedger.jurisdictionIds.size },
+              heldRouteEvidence:
+                "unreadable" in heldRouteRead
+                  ? { unreadable: heldRouteRead.unreadable }
+                  : { governmentsRead: heldRouteCandidates.length, bodiesWithHeldRoute: heldRouteRead.held.size },
               superseded: supersededPlan.retire.map((item) => item.obligationId),
               residue: residueItems.map((item) => item.obligationId),
               heldBackByCode: retirementHolds,

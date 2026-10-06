@@ -1,3 +1,5 @@
+import { receiptSourceKind } from "./source-conflicts.ts";
+import { parserFieldSources } from "./field-sources.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { createWorkItem, type WorkItem } from "../control-plane/work-item.ts";
 import { registerWorkItem } from "../control-plane/repository/coordinator.ts";
@@ -15,6 +17,7 @@ import { createHash } from "node:crypto";
 import { subBodyId } from "./meeting-body-crosswalk.ts";
 import type { JurisdictionRouteHints } from "../hunt/meetings-route-hints.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import { DEFAULT_KINDS, kindFromSource, type KindTable } from "../registry/kinds.ts";
 
 /** Published bodies' agenda and home pages (from a directory or a roster, read
  * by any job) feed the existing meeting walk. They remain leads until that
@@ -41,13 +44,11 @@ export function directoryMeetingHints(items: readonly WorkItem[], registry: Regi
 }
 
 const words = (value: unknown) => typeof value === "string" ? value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim() : "";
-const bodyClasses: Record<string, BodyClass> = { governing: "GOVERNING", advisory: "ADVISORY", commission: "COMMISSION", regional: "REGIONAL",
-  "private association": "PRIVATE_ASSOCIATION", "executive agency": "EXECUTIVE_AGENCY", "sovereign tribal": "SOVEREIGN_TRIBAL" };
 
 /** Directory facts enter the existing registry door when a body's name and type
  * pass §3 on the government's own official page; its territory is that
  * government unless the page names other divisions. Unresolved rows stay owed. */
-export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWorkerRecords>[0] | { plan: AutonomousWorkPlan; now: string; held: DirectoryReading }) & { prior: RegistryRuntimePrior }): {
+export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWorkerRecords>[0] | { plan: AutonomousWorkPlan; now: string; held: DirectoryReading }) & { prior: RegistryRuntimePrior; kinds?: KindTable }): {
   prepared: RegistryRuntimePackage; unresolved: readonly string[];
 } {
   const checked: DirectoryChecked = "held" in input ? input.held.checked : verifiedWorkerRecords(input);
@@ -67,7 +68,7 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
       const phone = typeof f.officePhone === "string" ? f.officePhone.replace(/\s+/g, " ").trim() : "";
       requirePublication(f.officeAddress === undefined || (address.length >= 8 && address.length <= 200 && /\d/.test(address)), "DIRECTORY_OFFICE_ADDRESS_INVALID");
       requirePublication(f.officePhone === undefined || (phone.length <= 40 && (phone.match(/\d/g) ?? []).length >= 7), "DIRECTORY_OFFICE_PHONE_INVALID");
-      const classification = bodyClasses[words(f.bodyClass)];
+      const classification = kindFromSource(input.kinds ?? DEFAULT_KINDS, "body", f.bodyClass) as BodyClass | null;
       requirePublication(classification && words(f.bodyName), "DIRECTORY_BODY_IDENTITY_MISSING");
       // A home page attaches when verified; its absence is an open blank, not a hold.
       const url = typeof f.homepageUrl === "string" ? new URL(f.homepageUrl) : null;
@@ -105,7 +106,11 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
         homepageUrl: url?.href ?? prior?.homepageUrl ?? null, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
         ...(typeof f.meetingCadence === "string" ? { meetingCadence: f.meetingCadence } : {}),
         ...(address ? { officeAddress: address } : {}), ...(phone ? { officePhone: phone } : {}),
-        provenance: { sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
+        ...("held" in input ? {} : { fieldSources: parserFieldSources(record.id, f,
+          input.parser.result.role === "PARSER" ? input.parser.result.spans : [], input.captures, input.now) }),
+        provenance: { kind: checked.sourceReceipt.sources.find(source => source.finalUrl === (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl)
+          ? receiptSourceKind(checked.sourceReceipt.sources.find(source => source.finalUrl === (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl)!.sourceClass) : undefined,
+          sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
           collectedAt: (checked.sourceOf?.get(record.id) ?? checked.primary).observedAt, verifiedAt: input.now } });
     } catch (error) {
       unresolved.push(`${record.id}: ${error instanceof Error ? error.message : "DIRECTORY_ROW_REQUIRES_REPAIR"}`);
@@ -150,7 +155,7 @@ export async function heldDirectoryReading(input: {
     if (readUrls.has(artifact.canonicalUrl)) continue;
     const capture = await input.readHeld(artifact);
     if (!capture || !captureIntact(capture)) continue;
-    const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt };
+    const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
     const pageVerdict = section3Page(page, contract.recordClass, input.now);
     // The right place: the government's own page names that government.
     if (!pageVerdict.ok || !pageWords(capture.evidence.text).includes(division.label.toLowerCase())) continue;

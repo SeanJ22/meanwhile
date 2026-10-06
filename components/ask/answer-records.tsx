@@ -1,8 +1,10 @@
+import { MeetingRow } from "@/components/ui/meeting-row";
 import type { EvidenceRecord } from "@/lib/ask/evidence";
 import { hostOf } from "@/lib/ask/host";
 import { formatDateMDY } from "@/lib/map/format";
 
 function RecordContents({ record }: { record: EvidenceRecord }) {
+  if (["MEETING", "AGENDA_ITEM", "AGENDA_DOCUMENT", "MEETING_NOTICE_SUMMARY", "AGENDA_MENTION"].includes(record.kind)) return <MeetingRow record={record} compact />;
   return (
     <>
       <p>{record.text}</p>

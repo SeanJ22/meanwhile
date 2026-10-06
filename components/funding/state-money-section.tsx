@@ -1,3 +1,4 @@
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 /**
  * CAMPAIGN MONEY FOR STATE, COUNTY AND LOCAL CANDIDATES.
  *
@@ -42,6 +43,7 @@ import { stateMoneyRecordsForDisplay } from "@/lib/funding/state-money-reader";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { formatDateLong } from "@/lib/text/format-date";
+import { filedOrganizations, stateSmallDonorSentence, stateMoneyFundingIssue } from "@/lib/funding/state-money-funding";
 
 const SECTION_LABEL_CLASS = "t-detail font-medium uppercase tracking-wide text-muted-foreground";
 
@@ -71,29 +73,14 @@ function lastFilingDate(coveringPeriod: string | null): string | null {
 }
 
 function AgencyLine({ record }: { record: StateMoneyRecord }) {
-  return (
-    <p className="mt-2 t-detail text-muted-foreground">
-      Filed with the {record.agency}
-      {record.filingsUrl ? (
-        <>
-          {" — "}
-          <a
-            href={record.filingsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="underline underline-offset-2"
-          >
-            see this candidate&rsquo;s filings
-          </a>
-        </>
-      ) : null}
-      . Read {readableDate(record.checkedAt)}.
-    </p>
-  );
+  return <CardSourcesContribution id={`state-money:${record.targetKeys.join("|")}:${record.registeredName}`} sources={[{ what: "Candidate campaign filings", provenance: { sourceUrl: record.filingsUrl ?? "", sourceOrg: record.agency, collectedAt: record.checkedAt, verifiedAt: null } }]} />;
 }
 
 function FiledRecord({ record }: { record: StateMoneyRecord }) {
   const { totals } = record;
+  const funding = totals.coveringPeriod?.trim() && record.funding && !stateMoneyFundingIssue(record.funding) ? record.funding : undefined;
+  const organizations = filedOrganizations(funding);
+  const smallDonors = stateSmallDonorSentence(funding);
   return (
     <div className="mt-3 first:mt-0">
       <p className="t-body font-medium">{record.registeredName}</p>
@@ -123,6 +110,19 @@ function FiledRecord({ record }: { record: StateMoneyRecord }) {
           </>
         )}
       </dl>
+      {organizations.length > 0 && <section className="mt-2" aria-label="PACs, committees and organizations">
+        <p className="text-sm font-medium">PACs, committees and organizations</p>
+        <dl className="mt-1 text-sm">{organizations.map((org, index) => <div key={`${org.filedName}:${index}`} className="flex justify-between gap-4">
+          <dt>{org.filedName}{org.filedType ? <span className="ml-1 text-muted-foreground">({org.filedType})</span> : null}</dt>
+          <dd className="tabular-nums">{dollars(org.amount)}</dd>
+        </div>)}</dl>
+      </section>}
+      {funding && <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+        {([ ["Individual giving", funding.individualTotal], ["Itemized individual giving", funding.individualItemized],
+          ["Unitemized individual giving", funding.individualUnitemized] ] as const).filter(([, value]) => value !== null).map(([label, value]) =>
+          <div key={label} className="contents"><dt className="text-muted-foreground">{label}</dt><dd className="text-right tabular-nums">{dollars(value!)}</dd></div>)}
+      </dl>}
+      {smallDonors && <p className="mt-1 text-sm">{smallDonors}</p>}
       {/*
         PLAIN LANGUAGE, and this line is where it nearly went wrong.
         The first version printed the agency's own form codes and a raw ISO
@@ -185,6 +185,7 @@ function RegisteredNoActivityRecord({ record }: { record: StateMoneyRecord }) {
 function AbsentRecord({ record }: { record: StateMoneyRecord }) {
   return (
     <div className="mt-3 first:mt-0">
+      <AgencyLine record={record} />
       {/*
         THE SENTENCE THIS WHOLE SECTION EXISTS FOR.
         It is a statement about the AGENCY'S RECORDS on a stated date — not
@@ -234,6 +235,7 @@ function OurGapRecord({ record }: { record: StateMoneyRecord }) {
   const gap = record.ourGap;
   return (
     <div className="mt-3 first:mt-0">
+      <AgencyLine record={record} />
       <WorkingOnIt />
       <p className="mt-1 t-detail text-muted-foreground">
         {gap?.whatIsMissing ??
@@ -248,7 +250,6 @@ function OurGapRecord({ record }: { record: StateMoneyRecord }) {
         {gap?.nextDue
           ? ` We check again after the agency’s next filing deadline, ${readableDate(gap.nextDue)}.`
           : ""}{" "}
-        Read {readableDate(record.checkedAt)}.
       </p>
       {record.filingsUrl ? (
         <p className="mt-2 t-detail text-muted-foreground">

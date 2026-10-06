@@ -79,6 +79,7 @@ export interface RegistryRuntimeReadModel {
 }
 
 export interface RegistryRuntimePackage {
+  readonly excludedFacts?: readonly SourceScopedHeldFact[];
   readonly contractId: "registry-runtime-bindings";
   readonly version: string;
   readonly sourceThrough: string;
@@ -922,7 +923,7 @@ export function registryRuntimeCandidate(
     normalizedPayload,
     readModel: payload,
     civicRecords: records,
-    excludedFacts: isolated.excludedFacts,
+    excludedFacts: [...isolated.excludedFacts, ...(input.excludedFacts ?? [])],
     ...(removalEvidence.length > 0 ? { removalEvidence } : {}),
     ...(options.prior && (inherited.size > 0 || retainedRosterSources.length > 0)
       ? {

@@ -99,6 +99,7 @@ import {
   type MeetingPartitionOwnership,
   type TrackedStatesSource,
 } from "../provider-inputs.ts";
+import { bodyDirectoryDiscoveryPlan, jurisdictionDiscoveryPlan, publicCommentDiscoveryPlan, type AutonomousWorkPlan } from "../../workers/autonomous-plan.ts";
 import type {
   ObligationProvider,
   ProvidedObligation,
@@ -311,6 +312,24 @@ export function jurisdictionRequirements(
   return out;
 }
 
+/** The exact registered body a government's reader door publishes to, or null when none is joined. */
+export function requirementBodyId(j: Jurisdiction, meetingPartitions: MeetingPartitionOwnership): string | null {
+  return meetingPartitions.bodyIdFor ? meetingPartitions.bodyIdFor(j.id) : j.bodyId ?? null;
+}
+
+/**
+ * The work plan one requirement's paid work carries (CH-22), or null. Discovery the owner's Send
+ * materialized always gets one; a registry route gets one when it reaches the paid model path, so a
+ * tracked government's findings go through the coordinator and the builders to a reader door the
+ * way a Send's do, instead of staying staged. Meetings keep their own discovery and publishing.
+ */
+export function requirementPlan(j: Jurisdiction, r: JurisdictionRequirement, bodyId: string | null, discoverMissingFamilies: boolean): AutonomousWorkPlan | null {
+  if (!discoverMissingFamilies && (r.carriage !== "HERE" || r.route.executorClass !== "BOUNDED_MODEL_WORKER")) return null;
+  if (r.route.routeId === "coverage-discovery:body-directory") return bodyDirectoryDiscoveryPlan(j, bodyId);
+  if (r.source.recordClass === "PUBLIC_COMMENT") return publicCommentDiscoveryPlan(j, bodyId);
+  return jurisdictionDiscoveryPlan(j, r.source, r.route.routeId, bodyId);
+}
+
 /**
  * Which enumerated governments get an individually scheduled row in a tracked
  * state.
@@ -352,10 +371,14 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
     enumerate(_ctx: ProviderContext): ProviderYield {
       const failures: string[] = [];
       const routesBySubject = new Map<string, RouteDescriptor[]>();
-      const add = (subjectId: string, route: RouteDescriptor): void => {
-        const list = routesBySubject.get(subjectId) ?? [];
-        if (!list.some((r) => r.routeId === route.routeId)) list.push(route);
-        routesBySubject.set(subjectId, list);
+      const plansBySubject = new Map<string, Record<string, AutonomousWorkPlan>>();
+      const add = (j: Jurisdiction, r: JurisdictionRequirement, discoverMissingFamilies: boolean): void => {
+        const list = routesBySubject.get(j.id) ?? [];
+        if (list.some((x) => x.routeId === r.route.routeId)) return;
+        list.push(r.route);
+        routesBySubject.set(j.id, list);
+        const plan = requirementPlan(j, r, requirementBodyId(j, meetingPartitions), discoverMissingFamilies);
+        if (plan !== null) plansBySubject.set(j.id, { ...plansBySubject.get(j.id), [r.route.routeId]: plan });
       };
       const registries = new Map<string, JurisdictionRegistry | null>();
       const registryFor = (stateCode: string): JurisdictionRegistry | null => {
@@ -391,7 +414,7 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
           for (const j of reg.jurisdictions) {
             const requirements = jurisdictionRequirements(reg, j, meetingPartitions);
             if (!isScheduledHere(j, requirements)) continue;
-            for (const r of requirements) if (r.carriage === "HERE") add(j.id, r.route);
+            for (const r of requirements) if (r.carriage === "HERE") add(j, r, false);
           }
         }
       }
@@ -416,7 +439,7 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
           const j = rows.get(jurisdictionId);
           if (j === undefined) continue;
           const r = jurisdictionRequirements(reg, j, meetingPartitions, true).find((x) => x.obligationId === id);
-          if (r !== undefined && r.carriage === "HERE") add(j.id, r.route);
+          if (r !== undefined && r.carriage === "HERE") add(j, r, true);
           if (r?.carriage === "HELD_UNREAD_WIRING") failures.push(r.heldReason ?? `${id}: meeting partition ownership unread; retain the owner's existing work`);
         }
       }
@@ -436,6 +459,7 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
         observedChangeRateHours: null,
         lastWorkedAt: null,
         routes: routesBySubject.get(subjectId) ?? [],
+        ...(plansBySubject.has(subjectId) ? { autonomousPlans: plansBySubject.get(subjectId)! } : {}),
       }));
 
       return {

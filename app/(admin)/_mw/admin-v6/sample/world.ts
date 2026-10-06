@@ -665,7 +665,7 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
     case "cancel-send":
       return { final: "done", statusWords: "Requested", says: "Your request to take it back is saved. It stays a request until the runner records it." };
     case "order-schedule":
-      return {final:"queued",statusWords:"Scheduled",says:"Sample preview: the order is scheduled. Nothing real was sent."};
+      return {final:"done",statusWords:"Scheduled",says:"Sample preview: the order is scheduled. Nothing real was sent."};
     case "order-unschedule":
       return { final: "done", statusWords: "Cancelled", says: "Sample preview: the scheduled order is cancelled and will not be sent." };
     case "target-set":

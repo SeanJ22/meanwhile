@@ -2,7 +2,7 @@
 
 Resume stream/frontend, fetch explicit origin/main, origin/river, origin/board/briefs and origin/board/river, and read assignments plus returns before claiming the free lock. Primary logical lane frontend; Codex currently assigned. If assigned Claude, exit without writing. Push only stream/frontend; never force or push main/river/boards. All checkpoints and prior READY boundaries remain in history; keep them. No routine questions/notifications to Sean; route through River status. No new budget/service/production write was used.
 
-Latest source: application5d39b8482064dfa0d039a026732351899b1bc15d, READY b3a24040e8b3035e9a3f5d2a85037238d15e9de0 (FE-12 FE-14; FE-22 READY hook pending). Exact recheck results follow in checks.json/status. Prior READY a5e7197a1855aae9d7aeafc537f417e29bb09fe6 and de644b38c2bf3e4c8f33fe97c220f6c5976a83b5 are integrated; second batch River186f747 and release4 main/river ae07521f8 have identical application trees. Do not report deployed/live acceptance for this new batch before River does its readback.
+Latest source: application5d39b8482064dfa0d039a026732351899b1bc15d, READY b3a24040e8b3035e9a3f5d2a85037238d15e9de0 (FE-12 FE-14; FE-22 READY hook pending). Exact READY202/202 checks in31 files, types and both-theme390/1280 browser pass; checks.json/status retain exact SHA and logs. Prior READY a5e7197a1855aae9d7aeafc537f417e29bb09fe6 and de644b38c2bf3e4c8f33fe97c220f6c5976a83b5 are integrated; second batch River186f747 and release4 main/river ae07521f8 have identical application trees. Do not report deployed/live acceptance for this new batch before River does its readback.
 
 ## What is connected
 
@@ -14,7 +14,7 @@ FE-22 collects source host/read-date leaks outside retained Sources, including b
 
 ## Still waiting; take a ready step immediately when integrated
 
-- FE-19: docs/look-standard.md WIP has all40 DESIGN rules and77 sweep findings; required inspected live good/bad pairs are missing. CONNECT403 on actual request2026-10-06T00:11:45Z. All four River release3 captures inspected (welcome, ballot header, two Ask answers); they cannot fill the whole rubric. River captures / accessible existing authorized route only; no synthetic-as-live claim, no new credential request.
+- FE-19: docs/look-standard.md WIP has all40 DESIGN rules and77 sweep findings; required inspected live good/bad pairs are missing. CONNECT403 on actual request2026-10-06T00:11:45Z. All four River release3 captures inspected (welcome, ballot header, two Ask answers); they cannot fill the whole rubric. L23 now has one inspected live bad example (archived release3 welcome amber focus/orange location control), pinned to board evidence. Matching good and all remaining live pairs still pending. River captures / accessible existing authorized route only; no synthetic-as-live claim, no new credential request.
 - FE-35 waits people CA-07 (BX-08 integrated).
 - FE-36 waits ballot CA-37 (FE-10 integrated).
 - FE-33 waits people CA-14 (CA-15 and FE-42 integrated).

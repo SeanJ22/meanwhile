@@ -1,0 +1,50 @@
+[
+  {
+    "repositoryPath": "releases/3-live/fe39-home.png",
+    "boardSha": "83df898007dc3af85bc2fc07771ec4edfbb74ecb",
+    "servedSha": "6af6f8a50",
+    "url": "https://github.com/SeanJ22/meanwhile/blob/83df898007dc3af85bc2fc07771ec4edfbb74ecb/releases/3-live/fe39-home.png",
+    "sha256": "af2b891563f6e6967291f23ac86eaa638e3b9e99f29e772bfe121ffe979febc8",
+    "width": 1280,
+    "height": 900,
+    "theme": "dark",
+    "live": true,
+    "readAsImage": true
+  },
+  {
+    "repositoryPath": "releases/3-live/ballot-85701.png",
+    "boardSha": "83df898007dc3af85bc2fc07771ec4edfbb74ecb",
+    "servedSha": "6af6f8a50",
+    "url": "https://github.com/SeanJ22/meanwhile/blob/83df898007dc3af85bc2fc07771ec4edfbb74ecb/releases/3-live/ballot-85701.png",
+    "sha256": "028414386690a73b8cfe8884b55a2e84e7f953b53d493fe9a0f665b269151f9e",
+    "width": 1280,
+    "height": 720,
+    "theme": "dark",
+    "live": true,
+    "readAsImage": true
+  },
+  {
+    "repositoryPath": "releases/3-live/ca30.png",
+    "boardSha": "83df898007dc3af85bc2fc07771ec4edfbb74ecb",
+    "servedSha": "6af6f8a50",
+    "url": "https://github.com/SeanJ22/meanwhile/blob/83df898007dc3af85bc2fc07771ec4edfbb74ecb/releases/3-live/ca30.png",
+    "sha256": "59cccc08d5f3e7c996f97cf900bde6119c0a7337ee5aad22a3405139ae29fcb0",
+    "width": 1280,
+    "height": 900,
+    "theme": "dark",
+    "live": true,
+    "readAsImage": true
+  },
+  {
+    "repositoryPath": "releases/3-live/ca51.png",
+    "boardSha": "83df898007dc3af85bc2fc07771ec4edfbb74ecb",
+    "servedSha": "6af6f8a50",
+    "url": "https://github.com/SeanJ22/meanwhile/blob/83df898007dc3af85bc2fc07771ec4edfbb74ecb/releases/3-live/ca51.png",
+    "sha256": "dd706a233f88700d64c456b9a85e16dcae5e54b0c0a9232ad7991e63f737e434",
+    "width": 1280,
+    "height": 900,
+    "theme": "dark",
+    "live": true,
+    "readAsImage": true
+  }
+]

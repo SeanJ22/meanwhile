@@ -1,6 +1,6 @@
 # Admin WIP check evidence
 
-No ready SHA. No step is claimed complete, integrated, deployed or checked live.
+Historical checkpoint evidence follows; each result applies only to its named SHA. Current READY and check evidence are recorded in the latest sections and admin.md. No deployed/live acceptance is claimed.
 
 Application checkpoint: `916e446c73f8a2787fc7147cd48d9c01245c23aa`. The subsequent handoff commit changes coordination evidence only.
 
@@ -104,3 +104,9 @@ No main/river push, PR, auto-merge, production data action, budget change or not
 - Required FULL of final-summary source `2438cea5f699d1cc56022970aa0e5c16d0644a2d` still running. A new label used the retired product name; own failure fixed at `d23827b48997fa7a2d058ebcfae6086c04b18443` by changing only that display label to Civic database. Exact repaired source: types PASS, focused191 PASS (28 files, actual newline CI_TEST_FILES including brand and summary reader), repaired-file lint 0 errors/warnings. Whole changed source lint (excluding deleted files): 0 errors, 25 existing warnings. Final FULL summary and READY SHA will be appended when finished.
 
 Logs preserved locally under /tmp/meanwhile-admin-: oct6-ready-full.log, oct6-final-full.log, oct6-native-focused.log, river4-full.log, money-final-full.log, river4-baseline-browser.log, river4-baseline-vote.log, river4-vote-terminations.log, summary-all-changed-lint.log, brand-fixed-focused.log, brand-fixed-types.log, brand-fixed-lint.log. Frozen test worktrees preserve the exact source SHAs. No production write, budget/policy change, PR or main/river push.
+
+## Final-summary FULL completed — 2026-10-06 01:37Z
+
+Exact frozen source `2438cea5f699d1cc56022970aa0e5c16d0644a2d`: **9,619 total; 9,592 PASS; 17 FAIL; 10 SKIP**. Sixteen are the six absent-pinned-Chromium files independently reproduced on plain river186f747 (identical application tree to current river ae07521f89627dd3a20e46f34c23489e6c83a01f). The seventeenth is `tests/brand.test.ts` old-name literal in the new project label. Fixed only that literal at `d23827b48997fa7a2d058ebcfae6086c04b18443`: exact types PASS, 191 focused PASS including all brand gates, repaired-file lint clean. All changed-source lint: 0 errors, 25 existing warnings. No further application delta from that FULL. Actual selector with full merge-base SHA `ae07521f89627dd3a20e46f34c23489e6c83a01f`: FULL because coordination Markdown is outside the code graph. No empty/invalid affected selection was used as passing evidence.
+
+Final-summary FULL confirmed leaked recent-vote workerPID164563 terminated alone after124s; parent reporter proved the frozen worktree and its test blob matches the failed baseline. BaselinePID140686 after166s; prior merge FULL PID150626 after96s. All timing artifacts incomplete/unusable. FULL is completed with these limitations, not called a clean PASS; browser/deployed acceptance belongs to River. Ready evidence follows with exact READY SHA. No active full-test worker remains.

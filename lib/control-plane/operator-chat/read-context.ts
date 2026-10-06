@@ -28,6 +28,8 @@
 
 import {
   openControlPlane,
+  unreachable,
+  type ReadOutcome,
   readDecisions,
   readDigests,
   readFleetInputs,
@@ -39,6 +41,9 @@ import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import { readPlaceStuck } from "./place-stuck.ts";
 import { readResearchIntents } from "../research-view.ts";
 import { readPulse } from "../gateway/pulse-read.ts";
+import { neon } from "@neondatabase/serverless";
+import { readFlowWeek, type FlowWeek } from "../admin-view/flow-read.ts";
+import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import type { ContextRead, OperatorContext } from "./context.ts";
 
 export interface ContextRequest {
@@ -92,44 +97,4 @@ export async function readOperatorContext(request: ContextRequest): Promise<Cont
    * one instant, and a serial read chain lets the runner beat between the
    * heartbeat and the work it is supposed to explain.
    */
-  const [snapshot, heartbeat, digests, decisions, intents, fleet, research, pulse, config, spendSummary] = await Promise.all([
-    wanted.has("snapshot") ? readSnapshot(repos) : Promise.resolve(undefined),
-    wanted.has("heartbeat") ? readHeartbeat(repos) : Promise.resolve(undefined),
-    wanted.has("digests") ? readDigests(repos) : Promise.resolve(undefined),
-    wanted.has("decisions") ? readDecisions(repos) : Promise.resolve(undefined),
-    wanted.has("intents") ? readResearchIntents(repos) : Promise.resolve(undefined),
-    wanted.has("fleet") ? readFleetInputs(repos) : Promise.resolve(undefined),
-    wanted.has("research") ? readFleetSafety(repos) : Promise.resolve(undefined),
-    wanted.has("pulse") ? readPulse(repos, request.nowIso) : Promise.resolve(undefined),
-    wanted.has("config") ? repos.adminConfig.read(ADMIN_CONFIG_ID).catch(() => null) : Promise.resolve(undefined),
-    wanted.has("spendSummary") ? import("../admin-view/spend-summary.ts").then(m => m.readSpendSummary(repos)).catch(() => null) : Promise.resolve(undefined),
-  ]);
-
-  /*
-   * The pulse revision, or nothing. There is deliberately no fallback to some
-   * other timestamp: an action that requires a state version and cannot get the
-   * one the gateway compares against is refused, and a substitute value would
-   * make every such action stale forever while looking like it worked.
-   */
-  const stateVersion = pulse === undefined ? null : pulse.revision;
-  const placeStuck = wanted.has("placeStuck") ? await readPlaceStuck(request.asked ?? "", request.from, request.nowIso).catch(() => null) : undefined;
-
-  return {
-    context: {
-      nowIso: request.nowIso,
-      from: request.from,
-      stateVersion,
-      ...(spendSummary === undefined ? {} : { spendSummary }),
-      ...(config === undefined ? {} : { adminConfig: config && isAdminConfig(config.value) ? config.value : null }),
-      ...(placeStuck === undefined ? {} : { placeStuck: placeStuck === null ? { kind: "NOT_RECORDED" as const, detail: "Choose a place, or try again when its live score and stuck work can be read." } : { kind: "HELD" as const, value: placeStuck } }),
-      snapshot,
-      heartbeat,
-      digests,
-      decisions,
-      intents,
-      fleet,
-      research,
-    },
-    storeRefusedBecause: null,
-  };
-}
+  const [snapshot, heartbeat, digests, decisions, intents, fleet, research, pulse, config, flow] = await Promise.all([

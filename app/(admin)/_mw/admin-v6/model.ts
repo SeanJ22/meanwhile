@@ -168,6 +168,15 @@ export interface TrailStage {
   readonly technical?: readonly string[];
 }
 
+/** One day of the flow, stage by stage (BR-31). Null counts are days nothing was recorded for. */
+export interface ScoreboardFlowDay {
+  readonly label: string;
+  readonly findings: number | null;
+  readonly built: number | null;
+  readonly checked: number | null;
+  readonly live: number | null;
+}
+
 export interface ReaderResult {
   readonly id: string;
   readonly title: string;
@@ -709,6 +718,8 @@ export interface ScoreboardRow {
   readonly items?: readonly string[];
   /** Detail kept behind Technical details, e.g. the fixed facts' IDs. */
   readonly technical?: readonly string[];
+  /** A short run of days, oldest first, drawn under the number; a null value is a day nothing was recorded, not a zero. */
+  readonly trend?: readonly { readonly label: string; readonly value: number | null }[];
 }
 
 export interface ScoreboardGateRow {
@@ -755,6 +766,8 @@ export interface ScoreboardView {
   readonly byFamily: readonly ScoreboardFamilyRow[];
   /** Time from each recent mission's start to its core information live (SC-19). */
   readonly missions: readonly ScoreboardMissionRow[];
+  /** Where the flow of facts stops, day by day, for "find out why something is slow" (BR-31); null when nothing could be read. */
+  readonly flow: readonly ScoreboardFlowDay[] | null;
   /** Launch gates as health checks; they never hold anything back. Null when the readings could not be taken. */
   readonly gates: { readonly rows: readonly ScoreboardGateRow[]; readonly pass: number; readonly attention: number; readonly notMeasured: number } | null;
   /** Operational readiness, counted apart from what any place is owed. */

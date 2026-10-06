@@ -35,6 +35,7 @@ import type { Attempt } from "../attempt.ts";
 import type { RouteTask } from "../route-task.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
+import type { FlowWeek } from "../admin-view/flow-read.ts";
 import type { ChatTopic } from "./contract.ts";
 
 /* --------------------------------------------------------- environments */
@@ -91,6 +92,8 @@ export const CONTEXT_READS = [
   "fleet",
   "research",
   "environments",
+  /** The last seven days of hourly flow counts, from findings to live, with settled spend (BR-31). */
+  "flow",
   /**
    * Not a record but a reading: the console's current revision, which is what a
    * proposed action quotes so the gateway can tell it apart from one drawn
@@ -126,6 +129,7 @@ export interface OperatorContext {
   readonly fleet?: ReadOutcome<FleetInputs>;
   readonly research?: ReadOutcome<ResearchState>;
   readonly environments?: ReadOutcome<EnvironmentIdentities>;
+  readonly flow?: ReadOutcome<FlowWeek>;
 }
 
 /**
@@ -155,6 +159,8 @@ export function requiredReads(topic: ChatTopic): readonly ContextRead[] {
       return ["heartbeat", "environments"];
     case "INTEGRATION_STATUS":
       return ["heartbeat", "environments"];
+    case "SPEND_AND_FACTS":
+      return ["flow"];
     default:
       return [];
   }

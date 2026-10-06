@@ -70,6 +70,8 @@ export const CHAT_TOPICS = [
   "COMPARE_ENVIRONMENTS",
   /** "Why is this PR not integrated?" */
   "INTEGRATION_STATUS",
+  /** "What did we spend yesterday and what did it get us?" */
+  "SPEND_AND_FACTS",
 ] as const;
 export type ChatTopic = (typeof CHAT_TOPICS)[number];
 
@@ -128,6 +130,12 @@ export const TOPIC_DEFINITIONS: readonly TopicDefinition[] = [
     asks: "Why is this PR not integrated?",
     reads: "production's build identity, and the code identity the runner recorded",
     readBackAt: "/admin",
+  },
+  {
+    topic: "SPEND_AND_FACTS",
+    asks: "What did we spend yesterday and what did it get us?",
+    reads: "the last day's settled spend and the new or changed reader records that went live in the same hours",
+    readBackAt: "/admin?view=scoreboard",
   },
 ];
 

@@ -282,15 +282,19 @@ function fullContext(overrides: Partial<OperatorContext> = {}): OperatorContext 
 /* THE ROUTER                                                                 */
 /* ========================================================================== */
 
-test("the seven questions the brief names each route to their own topic, and the set is closed", () => {
+test("the eight questions (the brief's seven and BR-31's spend question) each route to their own topic, and the set is closed", () => {
   assert.ok(topicRulesAreComplete(), "every declared topic has a matching rule and no rule names an undeclared topic");
   assert.equal(TOPIC_DEFINITIONS.length, CHAT_TOPICS.length, "every topic carries a definition");
 
-  // The denominator, stated: seven questions, each routed to its own topic.
+  // The denominator, stated: eight questions, each routed to its own topic.
   const routed = TOPIC_DEFINITIONS.map((t) => ({ asks: t.asks, got: topicOf(t.asks), want: t.topic }));
   const wrong = routed.filter((r) => r.got !== r.want);
   assert.deepEqual(wrong, [], "each canonical question must route to its own topic");
+<<<<<<< HEAD
   assert.equal(new Set(routed.map((r) => r.got)).size, CHAT_TOPICS.length, "every declared topic");
+=======
+  assert.equal(new Set(routed.map((r) => r.got)).size, 8, "eight distinct topics");
+>>>>>>> 30922c2e1
 });
 
 test("the owner's own phrasings route, not only the canonical ones", () => {

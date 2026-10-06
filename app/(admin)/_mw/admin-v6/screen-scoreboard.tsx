@@ -36,6 +36,9 @@ export function ScoreboardScreen() {
                 <div><span className={s.big}>{r.value ?? "—"}</span></div>
                 {r.counts && <p className={s.meta}>{r.counts}</p>}
                 <p className={s.meta}>{r.notMeasured ?? r.says}</p>
+                {r.trend && r.trend.some((t) => t.value !== null) && (
+                  <p className={s.meta}>Last seven days: {r.trend.map((t) => `${t.label} ${t.value === null ? "—" : Math.round(t.value * 100) / 100}`).join(" · ")}</p>
+                )}
                 {r.items && r.items.length > 0 && <ul className={s.meta}>{r.items.map((item, i) => <li key={i}>{item}</li>)}</ul>}
                 <Technical lines={[r.id, ...(r.notMeasured ? [r.says] : []), ...(r.technical ?? [])]} />
               </Card>
@@ -80,6 +83,17 @@ export function ScoreboardScreen() {
               </div>
             )}
           </Card>
+          {b.flow && (
+            <Card title="Where the flow stopped">
+              <p className={s.meta}>Each day, how many findings came in, were built, passed the check and went live. A drop at one stage shows where something is slow. A dash is a day nothing was recorded.</p>
+              <div className={s.tableWrap}>
+                <table className={s.table}>
+                  <thead><tr><th scope="col">Day</th><th scope="col">Findings in</th><th scope="col">Built</th><th scope="col">Passed the check</th><th scope="col">Live</th></tr></thead>
+                  <tbody>{b.flow.map((d) => <tr key={d.label}><td>{d.label}</td><td>{d.findings ?? "—"}</td><td>{d.built ?? "—"}</td><td>{d.checked ?? "—"}</td><td>{d.live ?? "—"}</td></tr>)}</tbody>
+                </table>
+              </div>
+            </Card>
+          )}
           <Card title="Launch checks" aside={b.gates ? <span className={s.pill}>{`${b.gates.pass} fine · ${b.gates.attention} need a look · ${b.gates.notMeasured} not measured`}</span> : undefined}>
             {!b.gates && <span className={s.big}>—</span>}
             {b.gates && (

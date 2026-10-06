@@ -45,6 +45,7 @@ import { decisionCardKind, measured, type Gap, type Held } from "../owner-surfac
 import { readIntents } from "../scheduler/research-policy.ts";
 import { runnerStanding } from "../runner-standing.ts";
 import type { Attempt } from "../attempt.ts";
+import { spendAnswer } from "../admin-view/flow-rows.ts";
 import { holding, type OperatorContext } from "./context.ts";
 import {
   topicDefinition,
@@ -744,6 +745,7 @@ export function integrationStatus(ctx: OperatorContext, subject: string | null):
   });
 }
 
+<<<<<<< HEAD
 export function placeStuck(ctx: OperatorContext): ChatAnswer {
   const read = holding(ctx.placeStuck, "this place’s live score and stuck work");
   if (!read.held) return assemble("PLACE_STUCK", { says: [read.gap.says], denominator: noNumber(read.gap), sources: [], needsYou: NOTHING_NEEDED, gaps: [read.gap], detail: [] });
@@ -754,6 +756,56 @@ export function placeStuck(ctx: OperatorContext): ChatAnswer {
     sources: [source("the place’s capture score and published stuck work", r.observedAt, r.key)], needsYou: NOTHING_NEEDED, gaps: [], detail: [],
   });
   return { ...answer, readBackAt: `/admin?view=work&scope=${encodeURIComponent(r.key)}` };
+=======
+/* ------------------------------------------------------------------ topic 8 */
+
+/** "What did we spend yesterday and what did it get us?" One line from the last day's settled spend and facts live. */
+export function spendAndFacts(ctx: OperatorContext): ChatAnswer {
+  const ours = (says: string): Gap => ({ whose: "OURS", says });
+  const flow = holding(ctx.flow, "the hourly flow of facts and settled spend");
+  if (!flow.held) {
+    return assemble("SPEND_AND_FACTS", {
+      says: ["The hourly record of spend and facts going live could not be read, so nothing is being said about what was spent or what it got."],
+      denominator: noNumber(flow.gap),
+      sources: [],
+      needsYou: NOTHING_NEEDED,
+      gaps: [flow.gap],
+      detail: [],
+    });
+  }
+  const week = flow.value;
+  const line = spendAnswer(week);
+  const last = week.days[week.days.length - 1];
+  if (line === null || last === undefined || last.read === null) {
+    const g = ours("No spend or facts-live record covers the last day yet.");
+    return assemble("SPEND_AND_FACTS", {
+      says: ["Nothing has been recorded for the last day yet, so there is no spend or fact count to give."],
+      denominator: noNumber(g),
+      sources: [],
+      needsYou: NOTHING_NEEDED,
+      gaps: [g],
+      detail: [],
+    });
+  }
+  const unpriced = line.spendUsd === null;
+  const number = unpriced
+    ? noNumber(ours("Some charges in the last day have no price, so the spend is not known and no cost per fact is given."))
+    : denominator(
+        `${count(line.facts)} facts went live for $${line.spendUsd!.toFixed(2)} of settled spend over the last day`,
+        line.facts,
+        line.facts,
+        "How many new or changed reader records went live in the last 24 hours, next to the settled spend over the same hours. Rechecks that changed nothing earn no credit.",
+        "the hourly publication-flow record and the cost log, over the last 24 hours",
+      );
+  return assemble("SPEND_AND_FACTS", {
+    says: [line.says, "The Scoreboard shows both numbers with their seven-day trend: /admin?view=scoreboard."],
+    denominator: number,
+    sources: [source("the hourly flow of facts going live, and the settled spend in the cost log", last.through, "cp_log_owner_digests publication-flow; cp_log_costs")],
+    needsYou: NOTHING_NEEDED,
+    gaps: unpriced ? [ours("Some charges in the last day have no price.")] : [],
+    detail: [`facts live ${line.facts}`, `settled spend ${line.spendUsd ?? "not known"}`],
+  });
+>>>>>>> 30922c2e1
 }
 
 /* --------------------------------------------------------------- the switch */
@@ -788,5 +840,7 @@ export function answerFor(topic: ChatTopic, ctx: OperatorContext, asked: string,
       return compareEnvironments(ctx);
     case "INTEGRATION_STATUS":
       return integrationStatus(ctx, subject);
+    case "SPEND_AND_FACTS":
+      return spendAndFacts(ctx);
   }
 }

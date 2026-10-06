@@ -1,3 +1,4 @@
+import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 import type { GuardedBrowser } from "../../scripts/browser.mts";
 import type { PublishedFactSample, PublicationVitals } from "./publication-vitals.ts";
 
@@ -10,7 +11,7 @@ export async function readPublishedFactPage(browser: Pick<GuardedBrowser, "page"
   Awaited<ReturnType<Parameters<PublicationVitals["sample"]>[0]>>
 > {
   const url = new URL(sample.url);
-  if (url.protocol !== "https:" || url.hostname !== "meanwhileusa.com" || url.username || url.password || url.port ||
+  if (url.origin !== PUBLIC_SITE_ORIGIN || url.username || url.password || url.port ||
       url.pathname.startsWith("/api/") || url.pathname.startsWith("/admin")) throw Error("PUBLICATION_VITAL_PUBLIC_PAGE_REQUIRED");
   const page = await browser.page();
   try {

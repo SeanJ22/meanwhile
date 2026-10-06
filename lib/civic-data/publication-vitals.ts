@@ -1,3 +1,4 @@
+import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 /** Publisher-side portion of River's hourly vital signs. No database reads,
  * timers, browser processes or writes: the long-lived parent owns those.
  * A sample is an exact record on a public reader page, never an Admin view or
@@ -67,7 +68,7 @@ export class PublicationVitals {
         new Set(samples.map(s => s.recordId)).size !== samples.length) throw Error("PUBLICATION_VITAL_COUNT_INVALID");
     const prepared = samples.map(sample => {
       const url = new URL(sample.url);
-      if (url.protocol !== "https:" || url.hostname !== "meanwhileusa.com" || url.username || url.password || url.port ||
+      if (url.origin !== PUBLIC_SITE_ORIGIN || url.username || url.password || url.port ||
           url.pathname.startsWith("/api/") || url.pathname.startsWith("/admin") || !sample.recordId || !sample.selector ||
           !sample.fields.length || new Set(sample.fields.map(field => field.selector)).size !== sample.fields.length ||
           sample.fields.some(field => !field.selector || !normalize(field.text))) throw Error("PUBLICATION_VITAL_PUBLIC_PAGE_REQUIRED");

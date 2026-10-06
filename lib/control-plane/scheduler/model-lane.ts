@@ -44,6 +44,12 @@ export interface DeliveryGate {
 }
 
 export interface ModelLaneFacts {
+  /**
+   * CH-24 part 2 (Proposal A): the standing hunter lane admits paid work, so
+   * this process (the research round) does not. Read last: an owner pause or
+   * an unreadable control still closes the lane under its own name.
+   */
+  readonly paidWorkInHunterLane?: boolean;
   readonly dry: boolean;
   readonly noModel: boolean;
   readonly credentialConfigured: boolean;
@@ -125,6 +131,9 @@ export function modelLaneClosure(f: ModelLaneFacts): ModelLaneClosure | null {
   }
   if (f.spendHold != null) {
     return { code: "LANE_DISABLED", reason: `${f.spendHold}; paid model work waits while held and plain-code work continue` };
+  }
+  if (f.paidWorkInHunterLane) {
+    return { code: "LANE_DISABLED", reason: "paid model work runs in the standing hunter lane (WTP_CONTINUOUS_HUNTERS=1); this round plans and queues it, and plain-code work continues" };
   }
   return null;
 }

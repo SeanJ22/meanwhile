@@ -15,7 +15,7 @@
  * elsewhere is still ended by the unchanged watchdog. Nothing here prints on
  * a timer: a wait that ends prints once, because it ended.
  */
-import { STALL_REPORT_PREFIX } from "./round-progress.ts";
+import { progressLines } from "./round-progress.ts";
 
 /** How far inside the runner's no-progress limit a post-cutoff wait ends: before the runner's stall probe (one minute inside). */
 export const POST_CUTOFF_QUIET_LEAD_MS = 3 * 60_000;
@@ -29,8 +29,11 @@ type Writable = { write: (chunk: unknown, ...rest: unknown[]) => boolean };
 
 /**
  * Track the child's last progress output by watching its own stdout and
- * stderr. Stall-report answers are not progress to the runner, so they are not
- * progress here either.
+ * stderr, by the runner's own rule (`progressLines`): a line counts once, the
+ * first time it is printed, and stall answers, beats and release notices never
+ * count. A line the runner would not count must not hold a bound open either,
+ * or the runner's kill comes first (release 6's first round, killed after 43
+ * minutes on 2026-10-06).
  */
 export function watchOutputClock(options: {
   readonly streams?: readonly Writable[];
@@ -41,9 +44,10 @@ export function watchOutputClock(options: {
   let last = now();
   for (const stream of streams) {
     const write = stream.write.bind(stream);
+    const renews = progressLines();
     stream.write = (chunk: unknown, ...rest: unknown[]) => {
       const text = typeof chunk === "string" ? chunk : chunk instanceof Uint8Array ? Buffer.from(chunk).toString("utf8") : "";
-      if (text.trim() !== "" && !text.includes(STALL_REPORT_PREFIX)) last = now();
+      if (renews(text) > 0) last = now();
       return write(chunk, ...rest);
     };
   }

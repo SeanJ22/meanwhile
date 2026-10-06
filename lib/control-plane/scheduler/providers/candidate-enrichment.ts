@@ -1,3 +1,4 @@
+import { readGenericBallotProjection, type GenericBallotProjection } from "../../../ballot/generic-projection.ts";
 /**
  * **PROVIDER FIVE — CANDIDATE ENRICHMENT, FOR THE WHOLE STATE.**
  * (Session C3, lane C, 2026-09-01. RULING 229, RULING 87, RULING 182,
@@ -129,7 +130,9 @@ export const CANDIDATE_ENRICHMENT_PROVIDER_ID = "candidate-enrichment";
  * named as a dataset gap every cycle — its ballot authority is not registered —
  * and never skipped quietly or read as an election with no candidates.
  */
-export const BALLOT_AUTHORITY_STATES = ["az", "nh", "nj"] as const;
+const LEGACY_BALLOT_AUTHORITY_STATES = ["az", "nh", "nj"] as const;
+/** Legacy path retained until the generic authority is checked live. */
+export const BALLOT_AUTHORITY_STATES = LEGACY_BALLOT_AUTHORITY_STATES;
 type BallotAuthorityState = (typeof BALLOT_AUTHORITY_STATES)[number];
 const hasBallotAuthority = (state: string): state is BallotAuthorityState =>
   (BALLOT_AUTHORITY_STATES as readonly string[]).includes(state);
@@ -401,6 +404,7 @@ export interface CandidateEnrichmentAuthorityHoldings {
   readonly profiles: CandidateProfilesProjection | null;
   readonly corpus: CandidateCorpus | null;
   readonly failures: readonly string[];
+  readonly general?: GenericBallotProjection | null;
 }
 
 let loadedAuthorities: CandidateEnrichmentAuthorityHoldings | null = null;
@@ -435,6 +439,7 @@ export async function preloadCandidateEnrichmentAuthorities(
     readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, options),
     readPromotedCivicData<CandidateCorpus>(PUBLICATIONS.recordClass, PUBLICATIONS.scope, options),
     readDerivedCampaignSites(options),
+    readGenericBallotProjection(options),
   ]);
   const failures: string[] = [];
   const held = <T>(result: PromiseSettledResult<{ readonly kind: string; readonly value: T | null }>, name: string): T | null => {
@@ -455,7 +460,12 @@ export async function preloadCandidateEnrichmentAuthorities(
     profiles: held(results[3]!, "Candidate profile"),
     corpus: held(results[4]!, "Candidate publication"),
     failures,
+    general: results[6]?.status === "fulfilled" && results[6].value.kind === "PROMOTED" ? results[6].value.value : null,
   };
+  const general = results[6];
+  if (general?.status === "rejected" || general?.status === "fulfilled" && general.value.kind === "STORE_UNREACHABLE") {
+    failures.push("General ballot records could not be read; retained legacy authorities remain usable.");
+  }
   // The worker must inherit the same automatically delivered links and page
   // text the Reader sees. Reading only the original profile/corpus pointers
   // made a later cycle rediscover information its own publisher had delivered.
@@ -584,17 +594,45 @@ export function candidateUniverseFromPromoted(
 export function candidateEnrichmentUniversesFromHoldings(
   holdings: CandidateEnrichmentAuthorityHoldings,
   nowIso: string,
-): { readonly universes: Partial<Record<BallotAuthorityState, CandidateUniverse>>; readonly failures: string[] } {
-  const universes: Partial<Record<BallotAuthorityState, CandidateUniverse>> = {};
+): { readonly universes: Partial<Record<string, CandidateUniverse>>; readonly failures: string[] } {
+  const universes: Partial<Record<string, CandidateUniverse>> = {};
   const failures = [...holdings.failures];
   if (!holdings.profiles || !holdings.corpus) return { universes, failures };
-  for (const stateCode of BALLOT_AUTHORITY_STATES) {
+  for (const stateCode of LEGACY_BALLOT_AUTHORITY_STATES) {
     const ballot = holdings[stateCode];
     if (!ballot) continue;
     try {
       universes[stateCode] = candidateUniverseFromPromoted(stateCode, ballot, holdings.profiles, holdings.corpus, nowIso);
     } catch (error) {
       failures.push(`${stateCode.toUpperCase()} candidate enrichment derivation failed (${error instanceof Error ? error.message : String(error)})`);
+    }
+  }
+  if (holdings.general) {
+    const documents = new Map<string, BallotDocument[]>();
+    for (const [key, ballot] of Object.entries(holdings.general.ballots)) {
+      if (!ballot.candidacies.length) continue;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(ballot.election.date ?? "")) {
+        failures.push(`${ballot.election.name}: the election year is not held, so candidate work cannot be placed in a cycle.`);
+        continue;
+      }
+      if (Number(ballot.election.date.slice(0,4)) !== CYCLE) continue;
+      const state = ballot.election.state.toLowerCase();
+      documents.set(state,[...documents.get(state) ?? [],ballotDocument(`civic-data:BALLOT_CANDIDACY:general:${key}`,ballot)]);
+    }
+    for (const [state, held] of documents) {
+      try {
+        // Include a retained legacy projection only when it belongs to this
+        // state's same existing cycle. The canonical derivation joins IDs.
+        const legacy = hasBallotAuthority(state) ? holdings[state] : null;
+        const legacyDocuments = legacy ? [ballotDocument(`civic-data:legacy-ballot:${state}`,legacy.ballot)] : [];
+        if (state === "az" && holdings.az?.candidateFilings) {
+          const filings = holdings.az.candidateFilings as Partial<BallotDocument>;
+          if (Array.isArray(filings.contests) && Array.isArray(filings.candidacies)) legacyDocuments.push({path:"civic-data:legacy-ballot:az:filings",contests:filings.contests,candidacies:filings.candidacies});
+        }
+        universes[state] = deriveCandidateUniverse({stateCode:state.toUpperCase(),cycle:CYCLE,generatedBy:"canonical civic-data general ballot/profile projections",generatedOn:nowIso.slice(0,10),documents:[...held,...legacyDocuments],stores:profileStores(holdings.profiles,holdings.corpus)});
+      } catch {
+        failures.push(`${state.toUpperCase()} general candidate records could not be derived; retained legacy records remain usable.`);
+      }
     }
   }
   return { universes, failures };
@@ -635,12 +673,12 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
 
       /* THE TRACKED STATES, read as data (2026-09-23). A tracked state with no registered ballot authority is named, never skipped. */
       const tracked = trackedStates.read();
-      const enumerated: BallotAuthorityState[] = [];
+      const enumerated: string[] = [];
       if ("unreadable" in tracked) {
         failures.push(`the tracked states could not be read from ${tracked.source} (${tracked.unreadable})`);
       } else {
         for (const stateCode of tracked.states) {
-          if (hasBallotAuthority(stateCode)) enumerated.push(stateCode);
+          if (settled.universes[stateCode.toLowerCase()] || hasBallotAuthority(stateCode)) enumerated.push(stateCode.toLowerCase());
           else {
             failures.push(
               `${stateCode.toUpperCase()} is tracked (${tracked.source}) and no canonical candidate ballot authority is registered ` +

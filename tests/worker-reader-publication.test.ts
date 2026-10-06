@@ -1,3 +1,6 @@
+import {readGenericBallotProjection} from "../lib/ballot/generic-projection.ts";
+import {readerBallotSourcesForDivisions} from "../lib/ballot/reader-sources.ts";
+import {candidateEnrichmentUniversesFromHoldings} from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { scopedManualContractScope } from "../lib/civic-data/scoped-manual-contracts.ts";
@@ -61,13 +64,13 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   }
   const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
   const directory = contractId === "registry-runtime-bindings";
-  const body = prior.payload.registry.bodies.find(row => row.name && (!(directory || contractId === "official-filings" || contractId === "public-records" || contractId === "government-budgets" || contractId === "voting-sites") || prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId &&
+  const body = prior.payload.registry.bodies.find(row => row.name && (!(directory || contractId === "official-filings" || contractId === "public-records" || contractId === "government-budgets" || contractId === "ballot-contests" || contractId === "voting-sites") || prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId &&
     (contractId !== "official-filings" || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1))))!;
   const publisherDivisionId = body.ocdId;
   const division = prior.payload.registry.divisions.find(row => row.ocdId === publisherDivisionId)!;
   const recordClass = classOverride ?? (directory ? "OFFICIAL_BOARD_DIRECTORY" : WORKER_READER_CLASSES[contractId]);
   const supplied = typeof facts === "function" ? facts(prior, body.id) : facts;
-  const rows: Record<string, string | number>[] = (Array.isArray(supplied) ? supplied : [supplied]).map(fact => ({ bodyName: body.name!, ...(contractId === "official-filings" ? { jurisdictionName: division.label } : {}), ...(directory ? {
+  const rows: Record<string, string | number>[] = (Array.isArray(supplied) ? supplied : [supplied]).map(fact => ({ bodyName: body.name!, ...(["official-filings","ballot-contests"].includes(contractId) ? { jurisdictionName: division.label } : {}), ...(directory ? {
     jurisdictionName: division.label, coverage: "entire jurisdiction", coverageEvidence: `This body serves all of ${division.label}.` } : {}), ...fact }));
   const text = JSON.stringify(rows);
   const fields = Object.fromEntries(Object.keys(rows[0]).map(field => [field, { source: `/${field}`, type: typeof rows[0][field] === "number" ? "NUMBER" as const : "STRING" as const }]));
@@ -78,7 +81,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
       stateCode: "NH", name: division.label, govClass: "COUNTY" as const, countyName: null, enumeratedFrom: "offline-fixture", ownWebAddress: FIXTURE_URL,
       sourceIds: [], ocdId: body.ocdId, bodyId: body.id } } } : {}),
     sources: plan.sources.map(route => ({ ...route, recordClass })),
-    contract: { ...plan.contract, ...(contractId === "official-filings" ? { jurisdiction: { country: "US", state: division.state, canonicalId: plan.contract.subjectId } } : {}), schemaVersion: 2, recordClass, identity: { namespace: contractId, keyFields: ["bodyName"] },
+    contract: { ...plan.contract, ...(["official-filings","ballot-contests"].includes(contractId) ? { jurisdiction: { country: "US", state: division.state, canonicalId: contractId === "ballot-contests" ? body.ocdId : plan.contract.subjectId } } : {}), schemaVersion: 2, recordClass, identity: { namespace: contractId, keyFields: contractId === "ballot-contests" ? ["candidateName"] : ["bodyName"] },
       requiredFields: Object.keys(fields), extraction, verification: { required: true, authorities: [] } } as never }) });
   const task = createRouteTask({ workItemId: h.item.id, routeId: "independent-rule", routeLabel: "Offline independent rule record", target: "https://register.example.gov/rules.json", inherited: false, now: h.now() });
   await registerRouteTask(h.repos, task, h.now());
@@ -103,7 +106,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const ready = { ...plan, contract: { ...plan.contract, verification: { required: true, authorities: [{ id: "rules", type: "STATUTORY_RECORD" as const,
     publisher: "Independent Register", sourceId: artifact.sourceId, canonicalUrls: [artifact.canonicalUrl], artifactIds: [artifact.id], authorityEvidenceArtifactIds: [artifact.id],
     independenceBasis: "DISTINCT_AUTHORITY" as const, independenceExplanation: "Separately retained official rules confirm every published detail.",
-    extraction: { ...extraction, rowsPointer: "/records" }, comparison: { kind: "RECORD_VALUES" as const, keyFields: ["bodyName"], fields: Object.keys(fields) } }] } } };
+    extraction: { ...extraction, rowsPointer: "/records" }, comparison: { kind: "RECORD_VALUES" as const, keyFields: contractId === "ballot-contests" ? ["candidateName"] : ["bodyName"], fields: Object.keys(fields) } }] } } };
   await h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value, autonomousPlan: ready }, h.now());
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
   const runtime = { ...h.runtime, independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({
@@ -479,4 +482,26 @@ test("completed polling workers publish every registered site through the existi
     assert.equal(sites[0].lat, null); assert.equal(sites[0].serves, null);
   }
   assert.deepEqual((await f.h.repos.workItems.mustRead(item.id)).value.publicationOutcome, report[0].outcome);
+});
+
+
+test("normal complete candidate workers publish their whole contest into general readers and the candidate work inventory",async()=>{
+  const facts=["Avery Example","Jordan Sample"].map(candidateName=>({election:"2026 General election",electionDate:"2026-11-03",office:"County Council",candidateName,givenName:candidateName.split(" ")[0],familyName:candidateName.split(" ")[1]}));
+  const f=await workerFixture("ballot-contests",facts);
+  const published=await publishWorkerReaderResults(f.input);
+  assert.equal(published[0].outcome.status,"PUBLISHED",JSON.stringify(published));
+  const read=await readGenericBallotProjection({store:f.store,now:f.h.now(),bypassCache:true});
+  assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")throw new Error("General ballot missing");
+  const ballot=Object.values(read.value.ballots)[0];
+  assert.equal(ballot.candidacies.length,2);
+  assert.equal(ballot.contests.length,1);
+  const sources=await readerBallotSourcesForDivisions([f.body.ocdId!],{store:f.store,now:f.h.now()});
+  const general=sources.find(row=>row.source.name.startsWith("ballot-contests:"));
+  assert.ok(general);
+  assert.equal(general.source.normalize(await general.source.fetch()).candidacies.length,2);
+  const curatedAt=f.h.now();
+  const inventory=candidateEnrichmentUniversesFromHoldings({az:null,nh:null,nj:null,general:read.value,profiles:{cards:{curatedAt,note:"Offline empty enrichment",cards:{},hunts:[]},links:{curatedAt,note:"Offline empty enrichment",links:{},hunts:[]}},corpus:{formatVersion:1,fetchedAt:curatedAt,attempted:0,documents:[],failures:[]},failures:[]},f.h.now());
+  const universe=inventory.universes[ballot.election.state.toLowerCase()];
+  assert.equal(universe?.candidacies.length,2);
+  assert.deepEqual(new Set(universe!.candidacies.flatMap(row=>row.pilotIds)),new Set(ballot.candidacies.map(row=>row.id)));
 });

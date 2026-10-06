@@ -3,7 +3,7 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
 lock: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
-heartbeat: 2026-10-06T00:55:26Z
+heartbeat: 2026-10-06T01:08:13Z
 on_river: CA-20 CA-24 CA-30 CA-44 CA-45 CA-51 integrated through release ecf402600401783b094837c29e0c515eadbdb843; returned CA-30/51 repairs retained at 8760257.
 ready: none new; returned f984 and superseded4de9/b4/4196 never fold. New18step combined source ready for frozen requested pnpm gates, no live acceptance.
 checks: CA39 normal exact-place/date/retry proof PASS; CA54 normal worker publication→typed reader→API→actual grounded POST PASS; national finance/card/Ask3/3, focused budget lexical1/1; whole types0 and focused lint0. Original parser12/12 current digestc2c32a193bd2. Full exact gates next, no new canonical PASS yet. Older certificates preserved below.
@@ -105,3 +105,5 @@ CA54_WIP: pure contract readers keep client Money view out of Node/reference loa
 CA54_hooks: River to frontend components/map/popup/entity-modal.tsx#BodySections: fetch /api/government-finance?division=<actual body OCD>&body=<canonical body id> and mount components/funding/government-money-section.tsx#GovernmentMoneySection in Money section inside existing Card source context. Inputs only matching exact body+division; empty shows WorkingOnIt. River to slide: publish existing scoped CURATED_READER_RECORD government-budgets family on reader edge and load it into request promoted map, same scope lib/civic-data/scoped-manual-contracts.ts computes. No API call/model/source acquisition added by card/Ask. Shared callers remain hook pending, not live acceptance.
 
 combined18_active: exact597d9c8fa246824e9cb6d4bf8e45cf996b163d03; worktree /workspace/meanwhile-ballot-combined18-check; gates65701 log /tmp/ballot-combined18-exact-gates.log; no newREADY until all checks pass. Prior4196/b4/4de9/source failures preserved.
+
+additional_CA31_CA32_WIP: Independent remaining CA32 hard-coded candidate-enrichment state loop found during frozen18 certification. Root WIP now preloads typed generic ballot family, derives candidate universes from source-stated same-cycle general ballots in any held state/territory, normal tracked-state loop enumerates those universes. Existing legacy enum/read path retained until live replacement; unknown election date refuses invented cycle. Candidate IDs stay joined by existing canonical derivation. New normal complete-contest worker→Slide→general Reader→reader source→candidate inventory proof and nonlegacy/unknown-year proof drafted, not run while canonical FULL consumes standard workers. These changes EXCLUDED from exact597d9c8fa. Finish focused/types/lint after18 gates, then selector+fresh exactcert additional batch; do not end at first checkpoint.

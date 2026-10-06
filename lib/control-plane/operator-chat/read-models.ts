@@ -34,7 +34,6 @@
  */
 
 import { formatEastern } from "../eastern-time.ts";
-import { yesterdayWindow } from "../admin-view/cost-reporting-view.ts";
 import { ageWords, count, plainCode, plainText, usdCents } from "../plain-words.ts";
 import { codeIdentityLine } from "../code-identity.ts";
 import { collapseDecisionLog } from "../decision-log.ts";

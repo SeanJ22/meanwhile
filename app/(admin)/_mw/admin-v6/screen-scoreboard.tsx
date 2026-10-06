@@ -8,7 +8,6 @@
 import { WeeklyColumns } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
 import type { ScoreboardGateRow } from "./model.ts";
-import { mst } from "./model.ts";
 import { Card, cx, Empty, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
@@ -44,12 +43,6 @@ export function ScoreboardScreen() {
               </Card>
             ))}
           </section>
-          <Card title="Where the flow stopped">
-            {b.flow ? <details><summary className={s.btnLink}>Show measured stages by hour</summary><div className={s.tableWrap}><table className={s.table}>
-              <thead><tr><th>Hour (Eastern)</th><th>Findings</th><th>Built</th><th>Checked</th><th>Live</th></tr></thead>
-              <tbody>{[...b.flow.hours].reverse().map(h => <tr key={h.hour}><th scope="row">{mst(h.hour)}</th><td>{h.findings}</td><td>{h.builtFindings}</td><td>{h.checkedRecords}</td><td>{h.liveRecords}</td></tr>)}</tbody>
-            </table></div></details> : <span className={s.big}>—</span>}
-          </Card>
           {b.byPlace.length > 0 && (
             <Card title="Completeness, by sent place">
               <div className={s.tableWrap}>

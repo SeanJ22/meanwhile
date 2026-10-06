@@ -42,6 +42,7 @@ import { readPlaceStuck } from "./place-stuck.ts";
 import { readResearchIntents } from "../research-view.ts";
 import { readPulse } from "../gateway/pulse-read.ts";
 import { neon } from "@neondatabase/serverless";
+import { yesterdayWindow } from "../admin-view/cost-reporting-view.ts";
 import { readFlowWeek, type FlowWeek } from "../admin-view/flow-read.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import type { ContextRead, OperatorContext } from "./context.ts";
@@ -144,7 +145,8 @@ async function readFlow(nowIso: string): Promise<ReadOutcome<FlowWeek>> {
   const url = controlPlaneUrlFromEnv();
   if (!url) return { kind: "STORE_UNREACHABLE", detail: "The place that keeps the hourly flow record could not be reached." };
   try {
-    const week = await readFlowWeek({ control: neon(url), through: nowIso });
+    const yesterday = yesterdayWindow(nowIso);
+    const week = await readFlowWeek({ control: neon(url), through: yesterday.through, lastDay:yesterday });
     return week === null ? { kind: "NOT_RECORDED", detail: "No fact has been recorded going live yet, so there is nothing to count." } : { kind: "HELD", value: week };
   } catch (error) {
     return unreachable("the hourly flow record", error);

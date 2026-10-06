@@ -132,12 +132,14 @@ export async function readFlowRecordingSince(control: Sql): Promise<string | nul
 }
 
 /** The last seven 24-hour windows ending at `through`. A window wholly before recording began is null, never zeros. */
-export async function readFlowWeek(input: { control: Sql; through: string }): Promise<FlowWeek | null> {
+export async function readFlowWeek(input: { control: Sql; through: string; lastDay?: {readonly from:string;readonly through:string} }): Promise<FlowWeek | null> {
+  if (input.lastDay && (Date.parse(input.lastDay.through) !== Date.parse(input.through) || Date.parse(input.lastDay.from) >= Date.parse(input.through))) throw new Error("Invalid last-day window");
   const since = await readFlowRecordingSince(input.control);
   if (since === null) return null;
   const end = Date.parse(input.through);
   const days = await Promise.all(Array.from({ length: FLOW_WEEK_DAYS }, async (_, i): Promise<FlowDay> => {
-    const through = new Date(end - (FLOW_WEEK_DAYS - 1 - i) * DAY).toISOString(), from = new Date(end - (FLOW_WEEK_DAYS - i) * DAY).toISOString();
+    const through = new Date(end - (FLOW_WEEK_DAYS - 1 - i) * DAY).toISOString();
+    const from = i === FLOW_WEEK_DAYS - 1 && input.lastDay ? input.lastDay.from : new Date(end - (FLOW_WEEK_DAYS - i) * DAY).toISOString();
     if (Date.parse(through) <= Date.parse(since)) return { from, through, read: null };
     return { from, through, read: await readFlow({ control: input.control, from, through, recordingSince: since }) };
   }));

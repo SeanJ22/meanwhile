@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { neon, neonConfig } from "@neondatabase/serverless";
+import { countNeonBytes, installNeonBytesFlush } from "./transfer-by-caller.ts";
 
 type FetchLike = typeof fetch;
 export interface DatabaseTransfer {
@@ -87,8 +88,10 @@ function accumulate(row: DatabaseTransfer): void {
 export function installDatabaseTransferCounter(): void {
   if (installed) return;
   installed = true;
+  installNeonBytesFlush();
   neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, (row) => {
     accumulate(row);
+    countNeonBytes(row.database, row.responseBytes);
     // An answered query must not wait on the accounting write to the reader database.
     if (Date.now() - lastFlush >= 60_000) void flushDatabaseTransfer();
   });

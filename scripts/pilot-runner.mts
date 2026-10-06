@@ -134,6 +134,8 @@ import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "..
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { hostMemoryReading } from "../lib/control-plane/workers/worker-slots.ts";
+import { NEON_BYTES_DIR_ENV, flushNeonBytes, formatNeonBytesLine, hourStart, pruneNeonBytes, readNeonBytesHour,
+  summarizeNeonBytes } from "../lib/db/transfer-by-caller.ts";
 import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
@@ -199,6 +201,10 @@ installConnectAttemptWindow();
 const STDERR_TAIL_LINES = 40;
 
 const ROOT = process.cwd();
+/* Vital signs (Sean, Oct 6): every runner process, this one and each child it starts,
+   writes its Neon bytes by calling code here, and this parent sums the hour. */
+const NEON_BYTES_DIR = join(ROOT, ".runtime", "neon-bytes");
+process.env[NEON_BYTES_DIR_ENV] = NEON_BYTES_DIR;
 // Keep the exact launch path, but do not pass reporting secrets to workers.
 // The owner-snapshot collector reloads only those keys from this private file.
 if (!process.env.WTP_BILLING_ENV_FILE) {
@@ -1139,6 +1145,39 @@ async function requestQueuedReleaseDrain(): Promise<void> {
     if (error) console.error("  runtime release drain message could not be delivered; existing cycle continues");
   });
 }
+/** The last full UTC hour and the hour so far, summed over every runner process's file. */
+function neonBytesReading(nowMs = Date.now()): NonNullable<RunnerHeartbeat["neonBytes"]> {
+  flushNeonBytes(NEON_BYTES_DIR, nowMs);
+  const current = hourStart(nowMs);
+  return {
+    lastFullHour: summarizeNeonBytes(readNeonBytesHour(NEON_BYTES_DIR, hourStart(nowMs - 3_600_000)), 20),
+    currentHour: summarizeNeonBytes(readNeonBytesHour(NEON_BYTES_DIR, current), 10),
+  };
+}
+
+/* One journal line every 10 minutes for the hour so far, and one for each finished
+   hour once its processes have flushed (2 minutes in). In memory and on local disk only. */
+let neonBytesFullHourReported = "";
+let neonBytesPartialAt = 0;
+const neonBytesTimer = setInterval(() => {
+  try {
+    const nowMs = Date.now();
+    const previous = hourStart(nowMs - 3_600_000);
+    if (nowMs - Date.parse(hourStart(nowMs)) >= 120_000 && neonBytesFullHourReported !== previous) {
+      neonBytesFullHourReported = previous;
+      console.log(`  ${formatNeonBytesLine(summarizeNeonBytes(readNeonBytesHour(NEON_BYTES_DIR, previous), 20), "last full hour", 20)}`);
+      pruneNeonBytes(NEON_BYTES_DIR, nowMs);
+    }
+    if (nowMs - neonBytesPartialAt >= 600_000) {
+      neonBytesPartialAt = nowMs;
+      console.log(`  ${formatNeonBytesLine(neonBytesReading(nowMs).currentHour!, "so far this hour")}`);
+    }
+  } catch (error) {
+    console.error(`  neon bytes could not be summed (${error instanceof Error ? error.name : "error"}); work continues`);
+  }
+}, 60_000);
+neonBytesTimer.unref();
+
 async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | null; signal: string | null }): Promise<void> {
   if (provider !== "postgres") return;
   let lastError = currentCycleErrors.split("\n").filter(Boolean).slice(-8).join("\n").slice(-2000) || null;
@@ -1153,11 +1192,13 @@ async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | nul
     if (!repos) return;
     /* Sean, Oct 6: the host's memory, the runner's process tree and the reservations, so River can say how many jobs fit. */
     const memory = await hostMemoryReading().catch(() => null);
+    let neonBytes: RunnerHeartbeat["neonBytes"] = null;
+    try { neonBytes = neonBytesReading(); } catch { /* the last beat's reading stays */ }
     for (let attempt = 0; attempt < 3; attempt++) {
       const at = new Date().toISOString();
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
       const next = liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
-        testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory,
+        testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes,
         ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
       try {
         if (current) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, at);

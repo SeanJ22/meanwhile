@@ -13,8 +13,8 @@
  */
 import type { ActionKind, DecisionSpec, Dependency, Hunt } from "./model.ts";
 import { usd } from "./model.ts";
-import { RECIPES } from "@/lib/control-plane/data-business/recipes.ts";
-import { audienceWords } from "@/lib/control-plane/data-business/types.ts";
+import { RECIPES } from "../../../../lib/control-plane/data-business/recipes.ts";
+import { audienceWords } from "../../../../lib/control-plane/data-business/types.ts";
 
 /** A data switch's target is `<recipe>@<audience>`: the number's label and who it is for, in words. */
 function switchWords(target: string): { readonly label: string; readonly who: string } {

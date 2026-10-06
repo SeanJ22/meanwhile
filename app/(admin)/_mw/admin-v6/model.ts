@@ -9,7 +9,7 @@
  *
  * PURE: types and tiny helpers only. No fetch, no clock, no store.
  */
-import { EASTERN_ZONE } from "@/lib/control-plane/eastern-time.ts";
+import { EASTERN_ZONE } from "../../../../lib/control-plane/eastern-time.ts";
 
 /* ------------------------------------------------------------ provenance */
 
@@ -840,8 +840,8 @@ export interface UiReceipt {
   readonly scheduledParentId?: string;
   /** BR-13: before and after, shown beside Done. */
   readonly change?: { readonly before: string; readonly after: string };
-  readonly plan?: import("@/lib/control-plane/gateway/confirmation.ts").OrderPlan;
-  readonly progress?: import("@/lib/control-plane/gateway/confirmation.ts").OrderProgress;
+  readonly plan?: import("../../../../lib/control-plane/gateway/confirmation.ts").OrderPlan;
+  readonly progress?: import("../../../../lib/control-plane/gateway/confirmation.ts").OrderProgress;
   readonly replayed: boolean;
   readonly sentAt: string;
   readonly words?: string;

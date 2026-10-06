@@ -1,4 +1,4 @@
-import { plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
+import { plainWords } from "../../../../lib/control-plane/admin-view/plain-words.ts";
 /**
  * **WHAT HAPPENED TO EACH INSTRUCTION, WITHOUT OVERCLAIMING.**
  *
@@ -21,8 +21,8 @@ import { plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
  *
  * PURE except `newActionKey`, which reads the platform's random source.
  */
-import type { Confirmation } from "@/lib/control-plane/gateway/confirmation.ts";
-import type { ActionOutcome } from "@/lib/control-plane/gateway/contract.ts";
+import type { Confirmation } from "../../../../lib/control-plane/gateway/confirmation.ts";
+import type { ActionOutcome } from "../../../../lib/control-plane/gateway/contract.ts";
 import type { ActionDef } from "./actions.ts";
 import type { Lifecycle, ReceiptStatus, UiReceipt } from "./model.ts";
 

@@ -5,9 +5,9 @@
  * stops or pauses that kind of thing. PURE: the loaded sections in, rows out; a section that could not be read is null and adds no
  * rows (the screen says it could not be read, never "nothing in motion").
  */
-import type { DecisionOrderCard } from "@/lib/control-plane/decision-cards.ts";
+import type { DecisionOrderCard } from "../../../../lib/control-plane/decision-cards.ts";
 import { decisionOrderAction } from "./decision-order-action.ts";
-import { plainWords, hasTechnicalText } from "@/lib/control-plane/admin-view/plain-words.ts";
+import { plainWords, hasTechnicalText } from "../../../../lib/control-plane/admin-view/plain-words.ts";
 import type { ActionRef, ClosedFix, FixView, Hunt, Lane, OpenFix, SentInstruction, StuckItem, UiReceipt } from "./model.ts";
 import { orderStepsReached, ORDER_STEPS } from "./receipts.ts";
 import { mst, TASK_STAGES } from "./model.ts";

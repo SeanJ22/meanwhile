@@ -1,33 +1,15 @@
-import { openControlPlane } from "../admin-data.ts";
-import { recordUndescribedCauses } from "./undescribed-causes.ts";
-import { causeOf } from "./blocker-causes.ts";
 import { neon } from "@neondatabase/serverless";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
-import { ADMIN_V6_SAME_CAUSE_CONTRACT, ADMIN_V6_STUCK_CONTRACT, STUCK_ITEM_LIMIT, readStuckPopulation, stuckViews, type StuckPopulation } from "./v6-stuck-read.ts";
+import { ADMIN_V6_SAME_CAUSE_CONTRACT, ADMIN_V6_STUCK_CONTRACT, STUCK_ITEM_LIMIT, stuckViews } from "./v6-stuck-read.ts";
 import { readShutDoorRecords, shutDoorItems } from "./v6-stuck-doors.ts";
 import { validateV6Query } from "./v6-hunts-read.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
-const MEMO_MS = 60_000;
-let memo: { at: number; population: StuckPopulation } | null = null;
-
-/** One unpack of the published index serves both sections, and the national read, for a minute. */
-export async function population(): Promise<StuckPopulation | null> {
-  if (memo && Date.now() - memo.at < MEMO_MS) return memo.population;
-  const url = controlPlaneUrlFromEnv();
-  if (!url) return null;
-  const read = await readStuckPopulation(neon(url));
-  const unknown = new Map(read.rows.filter(row => causeOf(row).undescribed).map(row => [causeOf(row).key, row]));
-  if (unknown.size) {
-    const opened = await openControlPlane();
-    if (opened.ok) await recordUndescribedCauses(opened.repos, read.rows, new Date().toISOString()).catch(() => undefined);
-  }
-  memo = { at: Date.now(), population: read };
-  return read;
-}
+import { population } from "./v6-stuck-population.ts";
+export { population } from "./v6-stuck-population.ts";
 
 /** Read-only. `stuck` lists the most urgent items; `sameCause` counts every stuck row by cause. */
 export async function v6StuckGet(request: NextRequest, which: "stuck" | "sameCause"): Promise<NextResponse> {
@@ -37,7 +19,7 @@ export async function v6StuckGet(request: NextRequest, which: "stuck" | "sameCau
     : NextResponse.json({ says: guard.says }, { status: guard.status, headers: NO_STORE });
   const query = validateV6Query(request.nextUrl.searchParams);
   if (!query.ok) return NextResponse.json({ code: query.code }, { status: 400, headers: NO_STORE });
-  let read: StuckPopulation | null;
+  let read: Awaited<ReturnType<typeof population>>;
   try { read = await population(); }
   catch { return NextResponse.json({ state: "UNREAD", says: "The published work index could not be read just now, so stuck items are unknown, not zero." }, { status: 503, headers: NO_STORE }); }
   if (read === null) return NextResponse.json({ state: "UNREAD", says: "The control-plane database is not configured here, so stuck items were not read." }, { status: 503, headers: NO_STORE });

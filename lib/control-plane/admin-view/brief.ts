@@ -5,7 +5,7 @@ import { decisionOrders, type DecisionOrderCard } from "../decision-cards.ts";
 import { updateRecords } from "../updates.ts";
 import { updatesView, type UpdateLine } from "./updates-read.ts";
 import { readV6History } from "./admin-v6-history.ts";
-import { population } from "./v6-stuck-route.ts";
+import { population } from "./v6-stuck-population.ts";
 import { stuckViews } from "./v6-stuck-read.ts";
 import { readReports, type ReportsReading } from "../reports/read-reports.ts";
 import { fixItems } from "../fix-list.ts";

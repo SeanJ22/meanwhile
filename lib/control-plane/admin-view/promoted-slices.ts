@@ -27,10 +27,10 @@
  * Pure over an injected query (`ReadOnlyQuery`): the Admin data layer passes
  * the reader store's (`app/(admin)/_mw/data/reader-query.ts`), tests pass rows.
  */
-import type { CbsaClass, GeographyRef, GeographyType } from "@/lib/census-geography/contract.ts";
-import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "@/lib/census-geography/publication.ts";
-import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "@/lib/registration/publication.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "@/lib/registry/runtime-data-plane.ts";
+import type { CbsaClass, GeographyRef, GeographyType } from "../../census-geography/contract.ts";
+import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../../census-geography/publication.ts";
+import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "../../registration/publication.ts";
+import { REGISTRY_RUNTIME_SCOPE } from "../../registry/runtime-data-plane.ts";
 
 export type Row = Readonly<Record<string, unknown>>;
 

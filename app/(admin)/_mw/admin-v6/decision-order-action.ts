@@ -1,4 +1,4 @@
-import type { DecisionOrderCard } from "@/lib/control-plane/decision-cards.ts";
+import type { DecisionOrderCard } from "../../../../lib/control-plane/decision-cards.ts";
 import type { ActionRef } from "./model.ts";
 /** The preview carries the exact card version. The server re-reads it before sending. */
 export function decisionOrderAction(card:DecisionOrderCard):ActionRef {

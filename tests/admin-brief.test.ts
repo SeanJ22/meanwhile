@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { spawnSync } from "node:child_process";
 import { NextRequest } from "next/server";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
@@ -61,4 +62,16 @@ test("an older tick finishing after midnight cannot replace the newer day's brie
  const older=writeDailyBrief(repos,oldAt,read);await reading;
  assert.equal(await writeDailyBrief(repos,newAt,read),true);finish();
  assert.equal(await older,false,"the stale older day must not save over the new day");assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value.latestBrief?.day,"2026-10-06");
+});
+
+test("the installed plain-Node timer loads and writes a configured brief without app loaders",()=>{
+ const code=`const {createMemoryRepositories}=await import("./lib/control-plane/repository/memory.ts");
+ const {ADMIN_CONFIG_ID,defaultAdminConfig}=await import("./lib/control-plane/gateway/admin-config.ts");
+ const {fireDueOrders}=await import("./lib/control-plane/gateway/scheduled-fire.ts");
+ const repos=createMemoryRepositories(),at="2026-10-06T13:00:00Z";
+ await repos.adminConfig.put(ADMIN_CONFIG_ID,{...defaultAdminConfig(at),settings:{"brief.time":"09:00"}},at);
+ await fireDueOrders({repos,now:()=>at,currentStateVersion:null,codeSha:null},at);
+ if((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value.latestBrief?.day!=="2026-10-06")throw new Error("No brief was written");`;
+ const result=spawnSync(process.execPath,["--experimental-strip-types","--input-type=module","-e",code],{cwd:process.cwd(),env:{...process.env,DATABASE_URL:"",FEEDBACK_DATABASE_URL:"",WTP_CONTROL_PLANE_DATABASE_URL:"",WTP_ASSET_STORE:""},encoding:"utf8",timeout:15_000});
+ assert.equal(result.status,0,result.stderr);
 });

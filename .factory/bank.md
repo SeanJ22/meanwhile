@@ -3,10 +3,10 @@ worker: codex-bank
 provider: Codex
 run_id: codex-bank-19fecffa4a5a441fa9f5bf3e4dce7152
 lock: codex-bank-19fecffa4a5a441fa9f5bf3e4dce7152
-heartbeat: 2026-10-06T04:30:07.467323Z
+heartbeat: 2026-10-06T04:31:38.649338Z
 on_river: 23 unique Bank steps: DP-07, DB-42, DB-38, DB-49, DP-09, DB-37, DB-40, DB-41, DP-08, DP-19, DB-51, DB-43, DB-46, DB-57, DP-20, DB-44, DB-50, DP-21, DP-27, DP-23, DP-24, DP-22, DP-28. Prior bank batch folded at 13d29c572; release 3 main 6af6f8a50. Built code, with live/shared-hook gaps as recorded. Latest integrated river inspected: 186f747a8769709e05f24c0fc452f950d92d5f4c. DB-47 also integrated at 458f0a196f52347b0c879a673c2f03069260922b and released on main f545fcf9493def91294bccf219ed65071b2093b1; 24 unique Bank steps integrated.
 ready: No new READY yet: paid-ending return, DB-45 and DB-52 are WIP while FULL runs. Prior DB-47 exact READY is integrated.
-checks: At 916321c388e8e82d192d563c8dbe55191a1dea5e: tsc --noEmit exit 0; eslint 15 files exit 0 with one pre-existing unused knownRouteIds import warning; 30 focused tests pass, 0 failures/skips. Selector FULL (restored .factory SQL/evidence is outside import graph); complete suite running with DATABASE_URL/WTP_ASSET_STORE unset, Chromium /usr/bin/chromium and regenerated place references.
+checks: Types/lint/focused checks are being rerun on the corrected DB-52 projection. Earlier 30 focused checks passed. The first FULL at 916321c388e8e82d192d563c8dbe55191a1dea5e was deliberately interrupted before completion to retire the replaced weekly panel; it is not passing evidence. Corrected source is checkpointed at 46e80e20f. Raw interrupted output retained.
 working_on: Paid-ending lessons return, DB-45 and DB-52 implemented; focused checks pass, final types/lint/affected selector then complete FULL verification.
 waiting_on: DB-39 conditional on actual write-errors count (River read required). DB-26 and BX-06 are integrated at 458f0a196f52347b0c879a673c2f03069260922b, unblocking DB-45 and DB-52.
 returned: DB-57 is now connected in workAdapterQueue (scoped bytes, adapter code and own test sources, path enforcement, isolated credential-free checks); DB-49 still needs River's CI planner hook. DP-19 has a step-ID expand SQL proposal preserved as .factory/bank-DP-19_fix_map.sql (also at WIP 620be3496:lib/db/migrations/DP-19_fix_map.sql); River must copy it into its correctly targeted migration path, number/journal/apply it and expose the repository. DP-20, DP-24, DP-27, DP-28 and DB-51 remain built with owning-lane runtime hooks pending; no live repair claimed.

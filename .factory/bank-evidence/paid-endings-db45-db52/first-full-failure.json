@@ -1,0 +1,10 @@
+{
+  "tested_sha": "dac66b491d3641ea0c9af5e0e47b4dabfa8ddf91",
+  "tests": 9773,
+  "pass": 9761,
+  "fail": 1,
+  "skipped": 11,
+  "exit_code": 1,
+  "cause": "exhaustedRungEntries treated legacy refusal: [] as a refused finish and mapped absent rungs",
+  "timing_evidence": "incomplete and unusable; interrupted child runner overlapped part of this run; scripts/ci-tests.mjs uses a fixed per-shard .scratch/ci timing path; the older interrupted full writer overlapped this path. Its entire test process tree is stopped before the corrected full run"
+}

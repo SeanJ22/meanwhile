@@ -187,3 +187,13 @@ test("successful transport without progress stays a resumable observation, not a
   assert.equal(lesson.outcome, "REFERENCE");
   assert.equal(scoutDiscoveryEntries(result(), ["nj"]).some(e => e.kind === "EXHAUSTED_RUNGS"), false);
 });
+
+test("legacy empty refusal lists do not invent a failed finish or require missing rungs", () => {
+  const legacy = { subjectId: "synthetic-government", recordClass: "meetings", attemptId: "legacy", recordedAt: "2026-10-05T00:00:00Z",
+    candidates: [], refusal: [], sourceDeadEnds: [] } as unknown as ScoutResult;
+  assert.deepEqual(scoutDiscoveryEntries(legacy, []), []);
+  const stopped = scoutDiscoveryEntries({ ...legacy, outcome: "NO_PROGRESS" }, []);
+  const lesson = stopped.find(e => e.kind === "EXHAUSTED_RUNGS")!;
+  assert.deepEqual((lesson.payload as { rungs: unknown[] }).rungs, []);
+  assert.equal(lesson.outcome, "REFERENCE");
+});

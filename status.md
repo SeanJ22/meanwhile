@@ -37,11 +37,21 @@ CI: the first run, 37448256510, was cancelled by the concurrency rule when the P
 
 **Release 10: #716** (release/10 at 211c48c), opened 7:50 AM EDT, auto-merge on. **`pnpm gates` 12/12 on 211c48c** (9,907 tests, 9,896 pass, 0 fail). After merge: observe the deploy; push Sean the restart (`systemctl start meanwhile-runner.service` on the droplet; bootstrap applies v25); then measure the first hour from the heartbeat's neonBytes and Neon's project total, and write releases/10-live.md.
 
-**Next River run:**
-1. #715 merged? Observe the deploy by SHA (`river.mjs observe <merge sha>`). The runner is stopped, so adoption waits for the restart.
-2. Check release 9's steps live (reader-facing first) into releases/live-ledger.md.
-3. Fold hunters' byte counter plus stream/river v25 the moment it is READY, run the firewall first, then gates, then release 10. Then push Sean the restart with `WTP_QUERY_BYTES_LOG=1`, if the counter still uses that switch (read hunters' status for the exact name).
-4. Send the morning summary if this run did not (see Pushes to Sean).
+**Next River run (written Oct 6, 8:45 AM EDT; this session's lock released):**
+1. **Runner restart.**
+   - Read `cp_runner_heartbeat` (pilot-runner). At 8:40 AM EDT it was still stopped (last beat 07:12:49Z on a5fd753).
+   - Once `testedSha` = d79f17975297c09fa81a542d6c735fbf30523fe1, confirm `to_regclass('cp_vital_signs')` is set (v25 applied).
+   - Then read `value->'neonBytes'->'lastFullHour'->'byCaller'`. **Name the top Neon readers by code line** and push that to Sean with the hour's total.
+   - Cross-check against Neon's project total: describe_project withered-sunset-39821877 data_transfer_bytes, baseline 1,857,008,371,257 at 12:27Z with the runner stopped.
+   - Write it into releases/10-live.md, then return the top caller's cause to its owning lane as its top item.
+2. **Release 9 and 10 runner-side steps:** check each against the ledger's "When" lines once the runner has run for an hour (releases/live-ledger.md).
+3. **Pending READY, not folded:**
+   - meetings 91f23e059 DB-29 (hook pending);
+   - registry a1aad625b DB-21 (runner door switches);
+   - admin (returned, not reconciled);
+   - measures ffd003bc5 (superseded; returned).
+   - Run the release firewall first on any fold (`node --experimental-strip-types scripts/civic-data-firewall.mts`).
+4. Codex lanes: stay with their paired Claude workers until Sean hands them back (asked in the morning summary).
 
 ## HANDOFF FOR THE NEXT RIVER RUN (written Oct 6, 1:25 AM EDT)
 

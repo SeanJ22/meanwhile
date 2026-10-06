@@ -1,0 +1,7 @@
+{
+  "sha": "3663f6bc0d7a122757f22dc0c34b4e516c2c7029",
+  "status": "FAILED_INCOMPLETE",
+  "publishedReady": false,
+  "reason": "Own executive-actions contract lacked existing frozen inventory binding; two non-routine-dispositions assertions fail. Original exact run stopped, never PASS.",
+  "at": "2026-10-06T05:29:09.560250+00:00"
+}

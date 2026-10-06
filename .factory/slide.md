@@ -3,11 +3,11 @@ worker: codex-slide
 provider: Codex
 run_id: codex-slide-8bbed9f4bfb24f5ea645e5ac9ff33609
 lock: codex-slide-8bbed9f4bfb24f5ea645e5ac9ff33609
-heartbeat: 2026-10-06T04:42:47.319142+00:00
+heartbeat: 2026-10-06T04:55:16.925787+00:00
 on_river: 23/28 built steps integrated, shared hooks pending. Latest 12-step repaired READY66f6ed84a8ce3c6ca1c5e099d2a1394475592263 folded at ce7fc11bc692708469fb6a11c54735d50a076da9, released in main/river f545fcf9493def91294bccf219ed65071b2093b1. Prior 11 steps and exact checks preserved in continuation.
 ready: none new; READY66f6ed84a8ce already integrated, do not fold again.
 working_on: FULL running on exact application7311335deaa958f171c3a40aa5753129efc7888b in /workspace/slide-publication-validation. Logs /tmp/slide-publication-full.log. Parent hookup request saved.
-checks: Prior checkpoints retained. Current focused35pass/1invalid new fixture; fixture corrected and targeted job1/1pass. FULL7311335de in progress; no READY yet. Types/lint verification logs saved.
+checks: Application7311335de: typesPASS, lint0errors68warnings, firewall0findings7605files289contracts. FULL running; four files failed missing generated postinstall data, canonical generation restored56stateindexes and all48tests in those complete files pass. Raw failures retained; no FULL-pass claim.
 waiting_on: CP-14 hunters/Admin activation callers; CP-15 hunters/meetings fact-chain callers; CP-17 next curated scope contract version with legacy-pointer fallback; BX-04 CH-20 and BX-05 CH-23 not integrated. River Box schema/enable/live and measures BR-31 flow caller remain hooks.
 returned: fix:55fff18a repaired and integrated at ce7fc11bc692708469fb6a11c54735d50a076da9; board return still names obsolete READY7168232. Live supervisor investigation still needs production failure arrays.
 needs_hook: hunters/meetings via River: route saved-result tasks to runWorkerPublicationJob with parent repos/store under per-job isolation; pure receipt returned, no process globals. Other hooks preserved in slide-hooks.md.

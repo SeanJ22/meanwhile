@@ -1505,5 +1505,63 @@
     },
     "finalBoard": "71db4cb1c01781b19fa462578753cb4f6b4f17db",
     "lockReleasedAt": "2026-10-06T04:21:46.236075+00:00"
+  },
+  "publicationParent": {
+    "state": "FULL running; not READY",
+    "source": "7311335deaa958f171c3a40aa5753129efc7888b",
+    "base": "f545fcf9493def91294bccf219ed65071b2093b1",
+    "selector": "FULL: own .factory SQL outside import graph",
+    "types": {
+      "exitCode": 0,
+      "path": "/tmp/slide-publication-final-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lint": {
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 68,
+      "path": "/tmp/slide-publication-final-lint.log",
+      "sha256": "957d0a9ca5b78cffe09f8700448e3f3e5e55521c648e2a7022e4dde3408f76cc"
+    },
+    "firewall": {
+      "exitCode": 0,
+      "findings": 0,
+      "files": 7605,
+      "contracts": 289,
+      "path": "/tmp/slide-publication-firewall.log",
+      "sha256": "348901b89a571686a5a86e53541dde6e63bb3a7233472c2f07c55335ae869f40"
+    },
+    "firstFocused": {
+      "passed": 35,
+      "failed": 1,
+      "manifest": ".factory/slide-publication-initial-tests.json",
+      "failure": "New test fixture lacked commentPeriodDetail required by existing publisher; test input repaired, application unchanged.",
+      "repairedTest": {
+        "path": "/tmp/slide-publication-job-repair.log",
+        "sha256": "6d75a8b1d5a07b4db76b7d88b9dc8fc5c2578a4b47506af86b17cbc14a62e8d9"
+      }
+    },
+    "environmentFailures": {
+      "defaultSandbox": "Scrubbed parser child spawnSync node returned EPERM; same probe under additional execution permission passed. No production isolation code changed.",
+      "freshValidationSetup": "Existing node_modules symlink skips postinstall. Four full-suite files could not read generated place-reference data; canonical project-place-references.mts generated all56indexes/datafiles. Source unchanged.",
+      "postinstall": {
+        "path": "/tmp/slide-publication-place-references.log",
+        "sha256": "721267a2dcf4417f63010e70822bb1a55f3e8d36fe6d5067fa17141382d82f8a"
+      },
+      "repairedFiles": [
+        "tests/dispatch-work.test.ts",
+        "tests/district-territory.test.ts",
+        "tests/expansion-any-state.test.ts",
+        "tests/expansion-scopes.test.ts"
+      ],
+      "repairedPassed": 48,
+      "repairedFailed": 0,
+      "repairLog": {
+        "path": "/tmp/slide-publication-place-repair.log",
+        "sha256": "88229d2845c240b437090fbaafb4b34539f1cbae29440cda9fdd7366694deff8"
+      }
+    },
+    "sharedHook": "hunters/meetings parent scheduler, deadlines, settlement and live rollout pending; exact API in slide-hooks.md",
+    "production": "No production run, DB write, schema change, budget change or measured egress reduction claimed."
   }
 }

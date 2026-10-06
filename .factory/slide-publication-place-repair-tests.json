@@ -1,0 +1,217 @@
+{
+  "commit": "7311335deaa958f171c3a40aa5753129efc7888b",
+  "tree": "3f76b88c3452b1c2dbdc57c4e6a6e8f19176b74c",
+  "workingTreeStatus": "",
+  "runner": {
+    "platform": "linux",
+    "arch": "x64",
+    "totalMemoryBytes": 18882699264
+  },
+  "node": "v24.19.0",
+  "configInputs": [
+    "package.json",
+    "pnpm-lock.yaml",
+    "tsconfig.json",
+    "scripts/register-test-loader.mjs",
+    "scripts/test-alias-loader.mjs",
+    "scripts/ci-tests.mjs",
+    "scripts/ci-test-timing-reporter.mjs",
+    "scripts/ci-test-scheduling-hints.mjs"
+  ],
+  "configHash": "b7ea314bdcde435ba0a376ed053e4a4dc74431a91a123ccd4de9160d6f3a780c",
+  "suiteHash": "941c34e778150a8a565b036bd548f657ebe73ad024019297a125bef718bf471a",
+  "command": "node scripts/ci-tests.mjs",
+  "mode": "explicit",
+  "shard": {
+    "index": 1,
+    "count": 1
+  },
+  "assignments": [
+    {
+      "file": "tests/dispatch-work.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 1
+    },
+    {
+      "file": "tests/district-territory.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 1
+    },
+    {
+      "file": "tests/expansion-any-state.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 1
+    },
+    {
+      "file": "tests/expansion-scopes.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 1
+    }
+  ],
+  "scheduling": {
+    "algorithm": "lexical-model-fallback-with-bounded-swaps-v1",
+    "hintsValid": true,
+    "source": "Complete successful local canonical suite at f3e18b585c86735355e4405f2a6a457de7b84fb9; tree c1326824efff1a50536e51018bbb7ebb7ee5e007; v24.19.0 win32/x64; concurrency 2; NODE_OPTIONS=--max-old-space-size=4096; 682 exact-once file summaries. File-harness duration hints only, never verification reuse or hosted savings. Full identity and input hashes: local.weights.json and run.json.",
+    "hintedFiles": 0,
+    "unknownFiles": 4,
+    "unknownEstimate": 1,
+    "estimateBasis": "equal-positive-unit-cost",
+    "model": {
+      "label": "ESTIMATE",
+      "model": "lexical-greedy-worker-dispatch-v1",
+      "workers": 2,
+      "initialPlan": "round-robin",
+      "roundRobinMakespanCost": 2,
+      "longestFirstMakespanCost": 2,
+      "selectedMakespanCost": 2,
+      "shardMakespanCosts": [
+        2
+      ],
+      "swapsAccepted": 0,
+      "evaluatedSwaps": 0,
+      "passLimit": 8,
+      "candidatesPerEnd": 16,
+      "limitation": "Scheduling estimate from historical file-harness hints; excludes startup, shared-resource contention, queues and billing. Not an actual runtime measurement.",
+      "costUnit": "relative-unit"
+    },
+    "note": "Hints change scheduling only; unknown files always run with an explicitly estimated cost, never a measured duration."
+  },
+  "concurrency": {
+    "available": 4,
+    "effective": 2
+  },
+  "selected": [
+    "tests/dispatch-work.test.ts",
+    "tests/district-territory.test.ts",
+    "tests/expansion-any-state.test.ts",
+    "tests/expansion-scopes.test.ts"
+  ],
+  "args": [
+    "--test",
+    "--experimental-strip-types",
+    "--import",
+    "./scripts/register-test-loader.mjs",
+    "tests/dispatch-work.test.ts",
+    "tests/district-territory.test.ts",
+    "tests/expansion-any-state.test.ts",
+    "tests/expansion-scopes.test.ts"
+  ],
+  "invocationArgs": [
+    "--test",
+    "--experimental-strip-types",
+    "--import",
+    "./scripts/register-test-loader.mjs",
+    "--test-concurrency=2",
+    "--test-reporter=spec",
+    "--test-reporter-destination=stdout",
+    "--test-reporter=file:///workspace/slide-publication-validation/scripts/ci-test-timing-reporter.mjs",
+    "--test-reporter-destination=/workspace/slide-publication-validation/.scratch/ci/test-affected.timings.jsonl",
+    "tests/dispatch-work.test.ts",
+    "tests/district-territory.test.ts",
+    "tests/expansion-any-state.test.ts",
+    "tests/expansion-scopes.test.ts"
+  ],
+  "startedAt": "2026-10-06T04:48:58.617Z",
+  "status": "passed",
+  "exitCode": 0,
+  "signal": null,
+  "elapsedMs": 7981,
+  "timing": {
+    "complete": true,
+    "issues": [],
+    "missingFiles": [],
+    "files": [
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/dispatch-work.test.ts",
+        "durationMs": 1015.633595,
+        "success": true,
+        "counts": {
+          "tests": 19,
+          "failed": 0,
+          "passed": 19,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 19,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/district-territory.test.ts",
+        "durationMs": 361.330772,
+        "success": true,
+        "counts": {
+          "tests": 6,
+          "failed": 0,
+          "passed": 6,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 6,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/expansion-any-state.test.ts",
+        "durationMs": 4465.214392,
+        "success": true,
+        "counts": {
+          "tests": 2,
+          "failed": 0,
+          "passed": 2,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 2,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/expansion-scopes.test.ts",
+        "durationMs": 543.005331,
+        "success": true,
+        "counts": {
+          "tests": 21,
+          "failed": 0,
+          "passed": 21,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 21,
+          "suites": 0
+        }
+      }
+    ],
+    "run": {
+      "schemaVersion": 1,
+      "kind": "run",
+      "durationMs": 7883.1251,
+      "success": true,
+      "counts": {
+        "tests": 48,
+        "failed": 0,
+        "passed": 48,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 48,
+        "suites": 0
+      }
+    },
+    "usableForScheduling": true,
+    "file": "test-affected.timings.jsonl",
+    "measurement": "Node file harness duration; excludes some process startup/exit time and is not billed runner usage."
+  }
+}

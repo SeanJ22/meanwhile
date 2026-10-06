@@ -2,15 +2,15 @@
 
 Sean, Oct 6: integrated is not done. A step is done only when it works live. River updates this table as verdicts change; every release's steps are added during its measured hour.
 
-Last updated Oct 6, 2:28 AM EDT. Production: a5fd753 (release 8). Order: reader-facing, then the factory behind the vital signs, then Admin.
+Last updated Oct 6, 2:39 AM EDT. Production: a5fd753 (release 8). Order: reader-facing, then the factory behind the vital signs, then Admin.
 
 | Verdict | Steps |
 |---|---|
-| Working live | 13 |
-| Failed live | 39 |
-| Needs time | 44 |
-| Can't check | 127 |
-| Not yet checked | 33 |
+| Working live | 27 |
+| Failed live | 50 |
+| Needs time | 45 |
+| Can't check | 134 |
+| Not yet checked | 0 |
 | **Total** | **256** |
 
 Can't check entries that need Sean's Admin sign-in are listed with exact clicks in releases/admin-checks.md. Every Failed live step is the top item in its lane's returns file.
@@ -81,39 +81,39 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | DB-49 | Reader | bank | 1–2 | **Can't check** | Needs an adapter-only pull request on GitHub and its test run. Builders open no PRs (only release PRs exist), so no adapter-only PR is available to measure from here. River can check this from Actions. |
 | DB-50 | Reader | bank | 1–2 | **Failed live** | No engineer-built-kind doors exist: the door registry holds 0 rows, and no meeting on the live site comes from an engineer-built kind (kinds seen: clerksboards, diligent, onbase, legistar, legistar-insite, pima-edu, boardbook, ical, schedulepage, iqm2, apptegy, civicplus, civicclerk, official-page-events). |
 | DB-51 | Reader | bank | 1–2 | **Can't check** | Admin counts need Sean's sign-in. The public /api/reader/link-health returns {"available":false,"deadAddresses":[]}, so no sweep result is published yet. |
-| DB-55 | Reader | meetings | 1–2 | **Not yet checked** |  |
-| DP-14 | Reader | auditors | 1–2 | **Not yet checked** |  |
-| DP-15 | Reader | auditors | 1–2 | **Not yet checked** |  |
-| FE-02 | Reader | auditors | 4 | **Not yet checked** |  |
-| FE-03 | Reader | auditors | 1–2 | **Not yet checked** |  |
-| FE-05 | Reader | frontend | 3 | **Not yet checked** |  |
-| FE-06 | Reader | frontend | 3 | **Not yet checked** |  |
-| FE-07 | Reader | frontend | 3 | **Not yet checked** |  |
-| FE-08 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-09 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-10 | Reader | frontend | 3 | **Not yet checked** |  |
-| FE-11 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-12 | Reader | frontend | 7 | **Not yet checked** |  |
-| FE-13 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-14 | Reader | frontend | 7 | **Not yet checked** |  |
-| FE-15 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-16 | Reader | auditors | 1–2 | **Not yet checked** |  |
-| FE-17 | Reader | auditors | 1–2 | **Not yet checked** |  |
-| FE-20 | Reader | registry | 4 | **Not yet checked** |  |
-| FE-22 | Reader | frontend | 7 | **Not yet checked** |  |
-| FE-28 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-29 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-30 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-31 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-32 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-34 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-39 | Reader | frontend | 1–2 | **Not yet checked** |  |
-| FE-41 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-42 | Reader | frontend | 4 | **Not yet checked** |  |
-| FE-43 | Reader | frontend | 3 | **Not yet checked** |  |
-| FE-44 | Reader | frontend | 3 | **Not yet checked** |  |
-| SC-02 | Reader | measures | 1–2 | **Not yet checked** |  |
-| SC-07 | Reader | measures | 1–2 | **Not yet checked** |  |
+| DB-55 | Reader | meetings | 1–2 | **Failed live** | Still not restored at 2:20 AM EDT. /api/meetings?zip=85701 starts at 2026-07-08. /api/agenda?meetingId=legistar:pima:{1700,1750,1780,1800,1815} returns records.status NOT_HELD with 0 agenda items and 0 documents. Ask at 85701, "What did the Pima County Board of Supervisors decide at its meetings in June 2026?", answered "I do not have information about what the board decided at meetings in June 2026". The restore runs only when WTP_MEETING_HISTORY_RESTORE=on is set for one runner pass (lib/civic-data/meeting-history-restore.ts), and nothing shows that pass has run. |
+| DP-14 | Reader | auditors | 1–2 | **Failed live** | The live auditor has never recorded a result: the control-plane table cp_log_live_audits has 0 rows. scripts/live-audit-pass.mts says "the runner starts it as a child each cycle", but nothing in a5fd753 starts it. pilot-runner.mts's CONSOLE_PUBLISHERS lists only the owner snapshot, and no other script refers to it. So no red flag can be found, fixed or pulled, and the Bank cannot show a lesson from one. |
+| DP-15 | Reader | auditors | 1–2 | **Failed live** | No audit pull has ever been recorded (cp_log_live_audits has 0 rows, including no PULL rows), because the live-audit pass is never started (see DP-14). Pulls are also off by default: WTP_LIVE_AUDIT_PULLS is unset, so a red flag goes to the fix list without being pulled. A pulled fact cannot leave the reader page. |
+| FE-02 | Reader | auditors | 4 | **Failed live** | Admin's speed row has no data to show: cp_log_live_audits has 0 rows, so no SPEED pass has ever been recorded. scripts/worst-case-speed-pass.mts is not started by the runner or by anything else in a5fd753. My own first loads were usable: ballot pages loaded in about 3 s and the Ask answer at 85701 took 3.4 s on the server (totalMs 3364), but that is not the Admin row the Done-when line names. |
+| FE-03 | Reader | auditors | 1–2 | **Needs time** | Deploy a5fd753 went live at 1:35 AM EDT, and the CDN entry lasts only 300 s (Netlify Durable ttl, 'hit; ttl=95' at 2:11 AM), so the warm from that deploy can no longer be seen. The manifest now publishes two non-pilot counties (Cochise AZ and Rockingham NH), which the warm list should pick up. Check: within 5 minutes of the next production deploy (release 9), make the first /api/meetings?lat&lng&zip request for the lowest ZIP in Cochise or Rockingham and look for cache-status 'Netlify Durable; hit'. **When:** the first 5 minutes after the next production deploy (release 9) |
+| FE-05 | Reader | frontend | 3 | **Can't check** | Proving this needs a throwaway pull request on GitHub that lowers a token pair, and I may not push or open PRs. The guard is wired: tests/contrast-audit.test.ts fails on a dimmed --text, and build-check.yml runs the suite on pull_request. Needed: River or the frontend lane opens a draft PR that drops a pair below the bar and confirms the build-check run fails. |
+| FE-06 | Reader | frontend | 3 | **Can't check** | Proving this needs a throwaway pull request on GitHub that adds a 9px label, and I may not push or open PRs. The guard is wired: tests/rhythm-tokens.test.ts ('component exceptions only shrink') scans app/ and components/, and ci-affected-tests always selects tests that scan directories. Needed: a draft PR adding text-[9px] to a component, then confirm build-check fails. |
+| FE-07 | Reader | frontend | 3 | **Working live** | I measured computed sizes on the live ballot (07866, 85701, 78701), the home page and an official card (60614) at 1280 px. All six classes render at their rung: t-display 24px (10 elements), t-title 18px (12), t-heading 15px (4), t-body 14px (209), t-detail 12px (103) and t-caption 11px (106). Some t-body and t-caption elements carry a different line height from a leading-* utility, but the sizes are right. |
+| FE-08 | Reader | frontend | 4 | **Working live** | Map and popup surfaces at 390 px (85701, 03255, 07866, 60614, 98101, 30303, 78701, 80202) have no sideways scroll (scrollWidth = 390), and the 1280 px map and meeting popups look clean. Guard baseline (tests/rhythm-tokens.baseline.json): components/map exceptions went from 172 at release 3 (6af6f8a) to 0 at a5fd753. I had no before-screenshots, so 'same or better' is judged by eye. |
+| FE-09 | Reader | frontend | 4 | **Working live** | The ballot at 1280 px (03255) and 390 px (85701, 03255, 07866) has no overflow and lays out cleanly. The Ask answer card at 390 px (07866) is clean. Guard baseline from release 3 to a5fd753: components/ask went from 57 to 0, and ballot (components/ballot plus app/ballot) from 117 to 34. |
+| FE-10 | Reader | frontend | 3 | **Working live** | At https://meanwhileusa.com/ballot?zip=85701 (390 px), each of the 12 proposition cards (e.g. 'Proposition 425: Permanent Base Adjustment') renders as the shared Card (article.reader-card) with its 'Sources' section. Meeting cards (Mayor & Council at 85701) use the same frame, with 'Sources 12'. |
+| FE-11 | Reader | frontend | 4 | **Working live** | At 390 px, official cards follow the one section table (PERSON_CARD_SECTIONS): What this office does > Positions > Committees > Offices near you > Campaign money > Voting record, then Public statements and Sources. I saw this on Rex Scott and Regina Romero (85701), Kristen Schultz (03255), Joseph Jackson (07866), and on federal members at 98101, 30303, 78701 and 80202. Every card had a Sources section, and no card was wider than the screen. |
+| FE-12 | Reader | frontend | 7 | **Working live** | With each section opened in turn on a 390 px phone, these meeting cards showed no source names, read dates or source hostnames outside 'Sources': Mayor & Council (85701), Board of County Commissioners (07866) and Selectboard (03255). The same leak measure as the look pass (lib/health/page-metrics.ts) found 0 leaks. Publisher, 'read from' host and 'last checked' appear only under 'Sources 12/10/6'. |
+| FE-13 | Reader | frontend | 4 | **Working live** | I opened 25 bodies from 'Bodies here' at 85701, 03255, 07866, 60614, 80202 and 98101: counties, cities, towns, school districts, a conservation district and city commissions. Every one opened the same card: What this body does > Who sits on it > Meetings > Contact > Where it governs > Sources. |
+| FE-14 | Reader | frontend | 7 | **Failed live** | On a 390 px phone, /ballot?zip=03255 shows sources on the card face. A contest line reads 'New Hampshire Secretary of State filing · read August 13th, 2026', and a candidate row reads 'Merrimack County Attorney’s Office — 4 Court Street, Concord NH 03301 (read 2026-08-22, merrimackcounty.net)'. At 85701 a '· read August 27th, 2026' line sits outside Sources. Candidate cards' Public statements section (Grijalva at 85701, members at 03255) shows 'Measured October 4th, 2026. Read October 5th, 2026.' and the dataset citation link 'https://americaspoliticalpulse.com/elites/data · CC BY' outside Sources. |
+| FE-15 | Reader | frontend | 4 | **Failed live** | Official cards show sources outside 'Sources'. On every federal member card I opened at 390 px, the Public statements section shows 'N statements tracked. Measured October 4th, 2026. Read October 5th, 2026.' plus the linked citation 'America's Political Pulse. (2024)… https://americaspoliticalpulse.com/elites/data · CC BY'. That includes Gallego (85701), Booker (07866), Quigley and Duckworth (60614), Jayapal and Murray (98101), Warnock (30303), Doggett and Cruz (78701), and DeGette and Bennet (80202). The leak measure found 0 leaks on the 6 body cards. |
+| FE-16 | Reader | auditors | 1–2 | **Working live** | I ran lib/health/page-metrics.ts (collectPageObservation, then measurePage) against https://meanwhileusa.com/ballot?zip=07866 at 390 px. It listed 640 issues, each naming its element: 76 small tap targets (e.g. '← Back to the map' 123×18px), 191 off-scale font sizes, 260 off-scale spacings and 113 low-contrast items (e.g. 'From the …, read August 13th, 2026' at 2.92:1). It also lists what it could not measure (layout shift, and 137 elements on gradients). |
+| FE-17 | Reader | auditors | 1–2 | **Failed live** | The file data/health/resident-tasks.json exists at a5fd753, but FE-18 has never run it on the live site: there are 0 TASKS rows in cp_log_live_audits. scripts/resident-tasks.mts is not started by the runner or by anything else in a5fd753. |
+| FE-20 | Reader | registry | 4 | **Can't check** | No controlled reviewer run is on record: there are no LOOK rows in cp_log_live_audits, and scripts/look-pass.mts is never started. The only proof is tests/frontend-look-review.test.ts, which supplies the model's answer ('red', '9px label') itself, so it does not show the real reviewer flags anything. Needed: the registry lane runs reviewLook with the real model on the fixture (9px label, cramped card) and records its verdict. Note: at 2:28 AM EDT the runner's Scouts were still refused with ROLLING_24_HOUR_MODEL_SPEND_CEILING ($25). |
+| FE-22 | Reader | frontend | 7 | **Failed live** | The live look pass has never run: there are 0 LOOK rows in cp_log_live_audits, and scripts/look-pass.mts is not started by anything. I ran its own leak measure (collectPageObservation's sourceLeaks) at 390 px across 8 ZIPs. It found leaks on every federal official card (3 each: the 'Measured … Read October 5th, 2026' line and the americaspoliticalpulse.com citation), 4 on /ballot?zip=85701 and 7 on /ballot?zip=03255. It would not report zero. |
+| FE-28 | Reader | frontend | 4 | **Failed live** | https://meanwhileusa.com/api/reader/link-health returns {"available":false,"deadAddresses":[]}. publishReaderLinkHealth (lib/civic-data/reader-link-health-publication.ts) is called only from tests/frontend-link-health.test.ts, never in production code. So a dead link the sweep finds can never reach the reader page to be shown as text. |
+| FE-29 | Reader | frontend | 4 | **Working live** | At thin places, on a 390 px phone with each section opened, every empty section shows 'We’re working on getting this info.' with 'Want us to get this info sooner?'. The Denver City (80202) and Cook County (60614) body cards do this for What this body does, Who sits on it, Meetings and Contact. On the Diana DeGette card (80202), Campaign money shows the same state and link. |
+| FE-30 | Reader | frontend | 4 | **Working live** | No ballot names a county list. /ballot?zip=60614, 30303, 78701, 80202 and 98101 each show only 'We’re working on getting this info.' for the empty ballot. /ballot?zip=85603 (Cochise) and 03801 (Rockingham) show 'COUNTY, CITY AND SCHOOL-BOARD RACES — We’re working on getting this info.' Side note: the Cochise ZIP 85603 attributes its statewide candidates to 'Pima County Elections Department, Official Canvass…'. |
+| FE-31 | Reader | frontend | 4 | **Can't check** | Proving this needs a throwaway pull request on GitHub that adds a disclaimer line, and I may not push or open PRs. The guard is wired: tests/absence-defaults.test.ts 'FE-31' scans reader components for banned disclaimers. Needed: a draft PR adding e.g. <p>not evidence that</p> to a component, then confirm build-check fails. Live, the ballot still carries footnote lines such as '* An incumbent is likely to have more information available here than the people running against them.' |
+| FE-32 | Reader | frontend | 4 | **Can't check** | The live label store has never been published: /api/reader/settings returns {"available":false,"values":{}}. It is published only when a reader-facing setting is saved in Admin, so this needs Sean to edit one label. |
+| FE-34 | Reader | frontend | 4 | **Failed live** | There are no 'Online only' pins. At 85701, 84 Tucson sittings are online-only (online label set, e.g. 'Microsoft Teams (Virtual)' or 'Zoom (Virtual)', location null), yet the map's 17 markers include 0 marked Online only. 03255 (13 markers) and 07866 (4 markers) also have 0. None of those 84 sittings carries a join link (joinUrl is null on all of them). |
+| FE-39 | Reader | frontend | 1–2 | **Working live** | https://meanwhileusa.com/ welcome card reads 'Start where you live … ZIP code · Show meetings · Any U.S. zip works. · Use my location' and names no place. |
+| FE-41 | Reader | frontend | 4 | **Working live** | Officials and shell surfaces at 390 px (official cards at 8 ZIPs, the header and the drawer) have no sideways scroll (scrollWidth 390) and look clean, and the 1280 px shell is clean. Guard baseline from release 3 (6af6f8a) to a5fd753: components/officials went from 45 to 0 and components/shell from 1 to 0. I had no before-screenshots, so 'same or better' is judged by eye. |
+| FE-42 | Reader | frontend | 4 | **Failed live** | At /ballot?zip=85701 (390 px), the Governor race shows different sections. Incumbent Katie Hobbs's card has '… Voting record > Public statements > Official actions > Sources', but challengers Andy Biggs and Risa Lombardo stop at 'Public statements > Sources'. Teri Ann Hourihan also gets 'Official actions'. Secretary of State (Fontes, Kolodin, Collier) and Attorney General (Mayes, Petersen) match. Also: Kris Mayes's card does not say Incumbent. |
+| FE-43 | Reader | frontend | 3 | **Working live** | With WebGL turned off (Chromium --disable-webgl --disable-3d-apis; a canvas WebGL context returned false), the live homepage at 03255, 80202 and 07866 shows 'The map can’t show on this device. You can still browse the meeting list.', the full navigation (Ballot, ZIP, Who governs here?, Where can I vote?, Ask, filters, stat tiles), and the Meetings list: 62 meetings at 07866 in 4 groups. |
+| FE-44 | Reader | frontend | 3 | **Working live** | Every live ballot that has a U.S. Senate race tags it FEDERAL: /ballot?zip=03255 'United States Senator FEDERAL' and /ballot?zip=07866 'Member of the United States Senate FEDERAL'. The other ballots (AZ: notes that no Senate seat is up; IL, GA, TX, CO, WA: no contests shown yet) show no Senate race to tag. |
+| SC-02 | Reader | measures | 1–2 | **Can't check** | This is an Admin screen and needs Sean's sign-in. |
+| SC-07 | Reader | measures | 1–2 | **Can't check** | This is an Admin screen and needs Sean's sign-in. |
 | BR-23 | Factory | measures | 1–2 | **Can't check** | The Scoreboard is Admin-only (GET /api/admin/v6/scoreboard returns 401 without sign-in). Live code a5fd753 builds 22 rows; rows with no reading say "Not measured yet" with a reason. |
 | BR-31 | Factory | measures | 1–2 | **Failed live** | Live a5fd753 hard-codes the Scoreboard's 'Facts live per hour' and 'Cost per fact' rows as not measured (scoreboard-read.ts:477-480), so both can only show '—'. The fix is measures' READY 30922c2, already folded into release 9 (gates rerunning), which replaces them with the hourly flow rows. Recheck after release 9 deploys. |
 | BR-32 | Factory | measures | 7 | **Can't check** | Admin-only screen. Data caveat: the door registry (cp_doors) has 0 rows in production at 2:09 AM EDT, so the door rows (shut doors, posted to live, overdue doors) have no doors to count. |

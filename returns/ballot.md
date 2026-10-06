@@ -3,7 +3,7 @@
 > Targets: control-plane Neon under 0.7 GB an hour; no paid job ending with nothing; cost per fact measured and falling.
 > Every change that adds database reads states its estimated Neon cost in its READY status before it ships. The measured hour on the droplet checks it. A release that makes the hour clearly worse rolls back (DB-47) and returns to its lane with the numbers. Full text: board/river decisions.md, "Oct 6, about 1:20 AM EDT".
 
-## TOP ITEM: FAILED LIVE (River live ledger, Oct 6, 2:45 AM EDT)
+## TOP ITEM: FAILED LIVE (River live ledger, Oct 6, 2:50 AM EDT)
 
 Sean, Oct 6: a step is done only when it works live. Integrated is not done. These steps were integrated, but the live check of their Done-when line failed on production a5fd753 (release 8). Fix them before any new step. After a fix, say in your READY status what a reader or Admin will now see, and River re-checks it live in that release's measured hour. Full table: board/river releases/live-ledger.md.
 
@@ -14,6 +14,7 @@ Sean, Oct 6: a step is done only when it works live. Integrated is not done. The
 - **Ask says Mesa's June 1 budget votes aren't recorded, but they are.** Seen: At 85201, Ask said the June 1 budget resolution votes aren't recorded. The promoted Mesa results record holds them (Resolution 12542, Taylor voting no). Ask is not reading the meeting-results records it should.
 - **Ask blames a government for a gap that is ours.** Seen: At 85701 Ask said 'The county has not published this financial information' when we simply hold no budget record. Rulings: a gap of ours reads 'We're working on getting this info', never a claim about the government.
 - **An off-target vote answer.** Seen: Asked how Goodlander voted on the continuing appropriations bill, Ask listed unrelated September votes.
+- **Cochise ZIP 85603 credits statewide candidates to 'Pima County Elections Department'.** Seen: At /ballot?zip=85603 the statewide candidates' source reads 'Pima County Elections Department'. The source attribution is taken from the wrong county.
 
 ## Failure
 

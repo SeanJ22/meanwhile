@@ -209,6 +209,7 @@ const SKIP_WORDS: Readonly<Record<string, string>> = {
   LANE_DISABLED: "the paid lane is closed",
   PAUSED: "you paused paid research",
   FREE_WALK_FIRST: "the free walk reads the site first",
+  HUNTER_PATH: "it runs as hunter work through its plan",
   RECOVERED: "an interrupted cycle had already settled it, so it was closed, not re-run",
   COORDINATOR_CYCLE_MAX: "the coordinator's per-cycle limit was reached",
   SCOUT_CYCLE_MAX: "the coordinator's Scout limit was reached",

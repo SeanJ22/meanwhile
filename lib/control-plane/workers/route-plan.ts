@@ -18,6 +18,21 @@ export function plannedForHunters(plan: AutonomousWorkPlan | undefined, env: Nod
   return plan !== undefined && (!isRoutePlan(plan) || oneHunterPath(env));
 }
 
+/** The research lane's code for a planned paid row it leaves to the coordinator (CH-23 part 4). */
+export const HUNTER_PATH = "HUNTER_PATH";
+
+/**
+ * CH-23 part 4, behind WTP_ONE_HUNTER_PATH: the round's registry-lane Scout (`scoutFor`) never walks a planned paid
+ * row. The round opens its occurrence, and the coordinator runs its Scout as a work item with a plan, through the same
+ * chain to the reader. Null with the switch off, or for a row with no plan, so the old path runs as before.
+ */
+export function hunterPathRefusal(plan: AutonomousWorkPlan | undefined, env: NodeJS.ProcessEnv = process.env):
+  { readonly admit: false; readonly code: typeof HUNTER_PATH; readonly why: string } | null {
+  if (!oneHunterPath(env) || !plannedForHunters(plan, env)) return null;
+  return { admit: false, code: HUNTER_PATH,
+    why: "it runs as hunter work: the round opened its occurrence, and the coordinator runs its Scout through its plan" };
+}
+
 function httpsUrl(value: string): string | null {
   try {
     const url = new URL(value);

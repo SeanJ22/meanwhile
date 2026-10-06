@@ -18,7 +18,7 @@ import { paidWorkerSlots, researchPaidWorkerCapacity } from "../lib/control-plan
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
-import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
+import { hunterPathRefusal, plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
 import { oneHunterPath } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
@@ -321,7 +321,7 @@ import type { SpendHold } from "../lib/control-plane/budget.ts";
 import type { AttemptCost } from "../lib/control-plane/attempt.ts";
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
-import type { PrewarmOutcome } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import type { PrewarmOutcome, ScoutAdmission } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { coordinatorLane, lanesAtCycleEnd, lanesInFlight, type QueueLanes } from "../lib/control-plane/scheduler/lane-reading.ts";
 import type { CacheHitRate } from "../lib/control-plane/research-metrics.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
@@ -1751,6 +1751,22 @@ if (queuesForHunterLane && !canary) {
   }
   console.log(`  planned paid rows queued for the hunter lane: ${queued} of ${dueModel.filter(row => plannedForHunters(row.obligation.autonomousPlan)).length} due`);
 }
+/*
+ * CH-23 part 4 (WTP_ONE_HUNTER_PATH): with the paid lane open, a due planned row is not walked by the round's
+ * registry-lane Scout. Its occurrence opens here, before the first coordinator wave, and the coordinator runs its Scout
+ * through its plan. A meetings-discovery row waits for the free walk's record: the research lane opens it after that
+ * read, unless the free walk already found the meetings (MW-028).
+ */
+if (oneHunterPath() && laneClosure === null && !canary) {
+  let opened = 0;
+  const planned = dueModel.filter(row => hunterPathRefusal(row.obligation.autonomousPlan) !== null);
+  for (const row of planned) {
+    if (parseMeetingsDiscoveryId(row.obligation.id) !== null) continue;
+    const scheduled = scheduleObligation(row.obligation, nowMs);
+    if (isScheduled(scheduled) && await openOccurrenceInStep({ ...scheduled, nextDueAt: row.nextDueAt }) === true) opened += 1;
+  }
+  console.log(`  one hunter path: ${opened} of ${planned.length} due planned paid row(s) opened for the coordinator before its first wave`);
+}
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
 const modelLaneEnabled = laneClosure === null;
@@ -3031,6 +3047,17 @@ const cycle = await runCycle({
     admitScout: (row) => {
       if (scoutFor(row).lane === "DETERMINISTIC") return { admit: true };
       if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
+      /* CH-23 part 4: under the one hunter path a planned row is coordinator work; this lane only opens its occurrence. */
+      const hunterPath = hunterPathRefusal(row.obligation.autonomousPlan);
+      if (hunterPath !== null) {
+        const walked = paidDiscoveryHold(row.obligation.id, freeWalks);
+        if (walked !== null) return { admit: false, code: walked.code, why: walked.why };
+        return openOccurrenceInStep(row).then((opened): ScoutAdmission => {
+          /* A settled occurrence is admitted only so the dispatcher closes it with its disposition; no Scout runs. */
+          if (opened !== true && opened !== false) return { admit: true };
+          return opened ? hunterPath : { admit: false, code: "NO_OPEN_OCCURRENCE", why: "its occurrence could not be opened for the coordinator; work remains due" };
+        });
+      }
       if (paidWorkerCapacity() === 0) return { admit: false, code: "CEILING", why: "paid model capacity is closed; held and plain-code work continue" };
       /* MW-028: a materialized meetings-discovery row goes to a paid Scout only after the free walk read the site and found nothing. */
       const freeWalkFirst = paidDiscoveryHold(row.obligation.id, freeWalks);

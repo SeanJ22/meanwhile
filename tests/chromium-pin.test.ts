@@ -13,6 +13,7 @@ import {
 
 const ROOT = join(import.meta.dirname, "..");
 
+
 /**
  * **`NH91`, item 7, 2026-08-23 — the harness and the image may not drift
  * apart silently.**

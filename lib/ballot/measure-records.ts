@@ -29,6 +29,17 @@ export interface MeasureRecord {
 /** Immutable migration evidence; production records override it, including []. */
 export const MEASURE_RECORD_FIRST_SEED = SEED as readonly MeasureRecord[];
 
+/** Keep an explicit vote sentence exactly as the publisher wrote it. */
+export function explicitVoteMeanings(text: string): { yesMeans: string | null; noMeans: string | null } {
+  const result: { yesMeans: string | null; noMeans: string | null } = { yesMeans: null, noMeans: null };
+  for (const vote of ["YES", "NO"] as const) {
+    const pattern = new RegExp(`\\b(?:A\\s+)?["“']?${vote}["”']?\\s+vote\\s+(?:shall|will|would|means?|has)\\b[\\s\\S]*?(?:\\.(?=\\s+[A-Z]|$)|[!?](?=\\s|$))`, "gi");
+    const sentences = [...text.matchAll(pattern)].map(match => match[0].trim());
+    if (sentences.length === 1) result[vote === "YES" ? "yesMeans" : "noMeans"] = sentences[0];
+  }
+  return result;
+}
+
 export function measureRecordIssue(record: MeasureRecord): string | null {
   if (!record || typeof record.contestId !== "string" || !record.contestId || typeof record.whatItDoes !== "string" || !record.whatItDoes.trim() ||
       !/^https:\/\//.test(record.sourceUrl) || !/^[a-f0-9]{64}$/.test(record.sourceHash) ||
@@ -58,6 +69,15 @@ export function measureRecordsForBallot(ballot: BallotSet): readonly MeasureReco
     if (!measures.has(record.contestId) || seen.has(record.contestId) || measureRecordIssue(record)) return false;
     seen.add(record.contestId);
     return true;
+  }).map(record => {
+    if (record.yesMeans && record.noMeans) return record;
+    const measure = ballot.measures.find(row => row.contestId === record.contestId);
+    // Only replay the exact text whose source identity the record carries.
+    // Other sources and translated meanings remain independent held facts.
+    if (!measure || record.sourceHashKind !== "HELD_TEXT" || measure.provenance.sourceUrl !== record.sourceUrl ||
+        createHash("sha256").update(`${measure.questionText}\n${measure.officialStatement ?? ""}`).digest("hex") !== record.sourceHash) return record;
+    const meanings = explicitVoteMeanings(measure.questionText);
+    return { ...record, yesMeans: record.yesMeans ?? meanings.yesMeans, noMeans: record.noMeans ?? meanings.noMeans };
   });
 }
 

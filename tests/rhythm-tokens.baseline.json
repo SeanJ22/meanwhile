@@ -155,5 +155,369 @@
       "0 6px 16px rgba(0, 0, 0, 0.3)",
       "0 6px 20px rgba(0, 0, 0, 0.18)"
     ]
+  },
+  "components": {
+    "app/(admin)/layout.tsx": {
+      "#1b1c22": 2,
+      "#0b151e": 1,
+      "#20222a": 1,
+      "#262932": 1,
+      "#47515c": 1,
+      "#2f3441": 1,
+      "#ffffff": 3,
+      "#a8aebb": 1,
+      "#cfd8e6": 1,
+      "#74c986": 1,
+      "#d99a3a": 11,
+      "#ef8a8a": 1,
+      "#ffb000": 1,
+      "#00b894": 1,
+      "#e84393": 1,
+      "#6c8fd4": 1,
+      "#eef0f3": 2,
+      "#d3d9e1": 1,
+      "#f7f8fa": 1,
+      "#c6ced8": 1,
+      "#d5d9e0": 1,
+      "#101318": 1,
+      "#4d5666": 1,
+      "#3d5f9e": 2,
+      "#2b3340": 1,
+      "#176f36": 1,
+      "#7f5400": 1,
+      "#b3261e": 3,
+      "#b8860b": 1,
+      "#00896e": 1,
+      "#c2185b": 1,
+      "#e17055": 2,
+      "#6fa8a5": 8,
+      "#4c9a5a": 10,
+      "#cc4b4b": 8,
+      "#8b7fd6": 1,
+      "#888": 2,
+      "#ff8a8a": 1,
+      "#6fcf8f": 2,
+      "#eec779": 1,
+      "#4fc9e8": 1
+    },
+    "app/about-area/compare/page.tsx": {
+      "text-[0.75rem]": 5,
+      "text-[0.8125rem]": 4,
+      "text-[0.6875rem]": 1,
+      "text-[0.625rem]": 3,
+      "text-[0.9375rem]": 1
+    },
+    "app/about-area/page.tsx": {
+      "text-[0.8125rem]": 3,
+      "text-[0.75rem]": 1
+    },
+    "app/ballot/error.tsx": {
+      "text-[0.8125rem]": 3
+    },
+    "app/ballot/loading.tsx": {
+      "text-[0.8125rem]": 3
+    },
+    "app/ballot/page.tsx": {
+      "text-[0.9375rem]": 2,
+      "text-[0.8125rem]": 20,
+      "text-[0.6875rem]": 12,
+      "text-[1.375rem]": 1,
+      "text-[0.875rem]": 1,
+      "text-[0.75rem]": 15,
+      "text-[1.0625rem]": 1
+    },
+    "app/error.tsx": {
+      "text-[0.8125rem]": 3
+    },
+    "app/feedback/page.tsx": {
+      "text-[0.9375rem]": 1,
+      "text-[0.6875rem]": 1,
+      "text-[0.875rem]": 1,
+      "text-[0.8125rem]": 1
+    },
+    "app/layout.tsx": {
+      "#0f1117": 1
+    },
+    "app/transparency/page.tsx": {
+      "text-[0.9375rem]": 1,
+      "text-[0.8125rem]": 1
+    },
+    "components/area/shuffled-facts.tsx": {
+      "text-[0.875rem]": 1,
+      "text-[0.8125rem]": 1,
+      "text-[0.6875rem]": 1
+    },
+    "components/ask/answer-contacts.tsx": {
+      "text-[0.6875rem]": 1,
+      "text-[0.75rem]": 1
+    },
+    "components/ask/answer-records.tsx": {
+      "text-[0.6875rem]": 3,
+      "text-[0.625rem]": 1,
+      "text-[0.75rem]": 1,
+      "text-[0.8125rem]": 3
+    },
+    "components/ask/ask-box.tsx": {
+      "text-[0.875rem]": 2,
+      "text-[0.75rem]": 11,
+      "text-[0.9375rem]": 6,
+      "text-[0.6875rem]": 9,
+      "text-[0.8125rem]": 14,
+      "text-[0.625rem]": 4
+    },
+    "components/ask/body-confirmation.tsx": {
+      "text-[0.8125rem]": 1
+    },
+    "components/ballot/candidate-battlecard.tsx": {
+      "text-[1rem]": 1,
+      "text-[0.75rem]": 2,
+      "text-[0.8125rem]": 1
+    },
+    "components/ballot/candidate-card.tsx": {
+      "text-[0.9375rem]": 1,
+      "text-[0.75rem]": 2,
+      "text-[0.8125rem]": 2
+    },
+    "components/ballot/candidate-contact.tsx": {
+      "text-[0.75rem]": 3,
+      "text-[0.6875rem]": 1
+    },
+    "components/ballot/candidate-positions.tsx": {
+      "text-[0.5625rem]": 1,
+      "text-[0.75rem]": 3,
+      "text-[0.6875rem]": 1
+    },
+    "components/ballot/filing-changes.tsx": {
+      "text-[0.75rem]": 1,
+      "text-[0.6875rem]": 1
+    },
+    "components/ballot/filing-note.tsx": {
+      "text-[0.6875rem]": 2
+    },
+    "components/ballot/incumbency-note.tsx": {
+      "text-[0.6875rem]": 2
+    },
+    "components/ballot/incumbent-record-link.tsx": {
+      "text-[0.6875rem]": 1,
+      "text-[0.75rem]": 1,
+      "text-[0.9375rem]": 1
+    },
+    "components/ballot/jurisdiction-note.tsx": {
+      "text-[0.625rem]": 1,
+      "text-[0.9375rem]": 1,
+      "text-[0.8125rem]": 2
+    },
+    "components/ballot/my-picks.tsx": {
+      "text-[0.75rem]": 1,
+      "text-[0.8125rem]": 2,
+      "text-[0.6875rem]": 2,
+      "text-[0.625rem]": 1
+    },
+    "components/ballot/pick-control.tsx": {
+      "text-[0.6875rem]": 4
+    },
+    "components/ballot/picks-card.tsx": {
+      "text-[0.75rem]": 2,
+      "text-[0.9375rem]": 1,
+      "text-[0.8125rem]": 2,
+      "text-[0.6875rem]": 1,
+      "#101418": 1,
+      "#2a3138": 1,
+      "#8a949e": 1,
+      "#f2f4f6": 1,
+      "#ffb000": 2,
+      "#fbfaf7": 1,
+      "#dcd8d0": 1,
+      "#6b7280": 1,
+      "#14181c": 1,
+      "#8a5a00": 1
+    },
+    "components/ballot/polling-lookup-fallback.tsx": {
+      "text-[0.75rem]": 1
+    },
+    "components/brand/google-g.tsx": {
+      "#EA4335": 1,
+      "#4285F4": 1,
+      "#FBBC05": 1,
+      "#34A853": 1
+    },
+    "components/calendar/add-to-calendar.tsx": {
+      "text-[0.75rem]": 2,
+      "text-[0.9375rem]": 1,
+      "text-[0.8125rem]": 1
+    },
+    "components/calendar/calendar-marks.tsx": {
+      "#ffffff": 3,
+      "#d8dae0": 2,
+      "#e8453c": 1,
+      "#1a1a2e": 1,
+      "#4285f4": 2,
+      "#ea4335": 1,
+      "#34a853": 1,
+      "#fbbc04": 1,
+      "#0f6cbd": 1
+    },
+    "components/demand/demand-pill.tsx": {
+      "text-[0.6875rem]": 2,
+      "text-[0.625rem]": 1
+    },
+    "components/demand/working-on-it.tsx": {
+      "text-[0.8125rem]": 1
+    },
+    "components/feedback/feedback-form.tsx": {
+      "text-[0.9375rem]": 3,
+      "text-[0.875rem]": 3,
+      "text-[0.8125rem]": 1,
+      "text-[0.6875rem]": 2,
+      "text-[0.75rem]": 3
+    },
+    "components/funding/funding-section.tsx": {
+      "text-[0.8125rem]": 1,
+      "text-[0.6875rem]": 9,
+      "text-[0.75rem]": 9,
+      "text-[0.625rem]": 5,
+      "text-[0.5625rem]": 1
+    },
+    "components/map/count-badge.tsx": {
+      "text-[0.625rem]": 1
+    },
+    "components/map/coverage-notice.tsx": {
+      "text-[0.6875rem]": 10,
+      "text-[0.625rem]": 2,
+      "text-[0.75rem]": 10,
+      "text-[0.8125rem]": 8,
+      "text-[0.5625rem]": 1
+    },
+    "components/map/data-freshness.tsx": {
+      "text-[0.625rem]": 1,
+      "text-[0.5625rem]": 1
+    },
+    "components/map/district-toggle.tsx": {
+      "text-[0.625rem]": 1,
+      "text-[0.75rem]": 1
+    },
+    "components/map/door-overlay.tsx": {
+      "text-[0.6875rem]": 2,
+      "text-[0.8125rem]": 11,
+      "text-[0.625rem]": 4,
+      "text-[0.75rem]": 2
+    },
+    "components/map/location-bar.tsx": {
+      "text-[0.625rem]": 2,
+      "text-[0.6875rem]": 2
+    },
+    "components/map/map-canvas.tsx": {
+      "#7c5cff": 2
+    },
+    "components/map/map-entry.tsx": {
+      "text-[0.625rem]": 3,
+      "text-[0.8125rem]": 2,
+      "text-[0.75rem]": 1
+    },
+    "components/map/meeting-listing-notice.tsx": {
+      "text-[0.6875rem]": 1
+    },
+    "components/map/meeting-panel.tsx": {
+      "text-[0.8125rem]": 2,
+      "text-[0.75rem]": 5,
+      "text-[0.6875rem]": 6,
+      "text-[0.95rem]": 2
+    },
+    "components/map/meeting-status-pill.tsx": {
+      "mr-[0.3em]": 1
+    },
+    "components/map/popup/agenda-section.tsx": {
+      "text-[0.75rem]": 11,
+      "text-[0.6875rem]": 1,
+      "text-[0.625rem]": 3,
+      "text-[0.5625rem]": 2
+    },
+    "components/map/popup/calendar-links.tsx": {
+      "text-[0.75rem]": 1
+    },
+    "components/map/popup/district-popup.tsx": {
+      "text-[0.6875rem]": 3
+    },
+    "components/map/popup/entity-modal.tsx": {
+      "text-[0.8125rem]": 4,
+      "text-[0.625rem]": 2,
+      "text-[0.75rem]": 2,
+      "text-[0.5625rem]": 2,
+      "text-[0.6875rem]": 6,
+      "text-[0.875rem]": 2
+    },
+    "components/map/popup/meeting-popup.tsx": {
+      "text-[0.6875rem]": 5,
+      "text-[0.5625rem]": 2,
+      "text-[0.8125rem]": 1
+    },
+    "components/map/popup/meeting-records.tsx": {
+      "text-[0.75rem]": 3
+    },
+    "components/map/popup/official-modal.tsx": {
+      "text-[0.75rem]": 1
+    },
+    "components/map/popup/official-popup.tsx": {
+      "text-[0.6875rem]": 14,
+      "text-[0.75rem]": 7,
+      "text-[0.5625rem]": 3,
+      "text-[0.625rem]": 4,
+      "text-[0.8125rem]": 1
+    },
+    "components/map/popup/popup-card.tsx": {
+      "text-[0.75rem]": 1
+    },
+    "components/map/site-footnote.tsx": {
+      "text-[0.625rem]": 1
+    },
+    "components/map/state-focus-overlay.tsx": {
+      "#ffffff": 3,
+      "#000000": 2,
+      "#0b0d12": 1
+    },
+    "components/officials/card-sources-list.tsx": {
+      "text-[0.8125rem]": 1
+    },
+    "components/officials/contact-pills.tsx": {
+      "text-[0.75rem]": 1
+    },
+    "components/officials/key-votes-section.tsx": {
+      "text-[0.6875rem]": 2,
+      "text-[0.75rem]": 3,
+      "text-[0.8125rem]": 1,
+      "text-[0.5625rem]": 2,
+      "text-[0.625rem]": 1
+    },
+    "components/officials/member-directory.tsx": {
+      "text-[0.75rem]": 12,
+      "text-[0.6875rem]": 3,
+      "text-[0.8125rem]": 2,
+      "text-[0.625rem]": 2
+    },
+    "components/officials/official-term-note.tsx": {
+      "text-[0.75rem]": 1,
+      "text-[0.625rem]": 1
+    },
+    "components/officials/positions-section.tsx": {
+      "text-[0.75rem]": 5,
+      "text-[0.875rem]": 1,
+      "text-[0.6875rem]": 2,
+      "text-[0.8125rem]": 1,
+      "text-[0.625rem]": 2
+    },
+    "components/officials/roster-completeness-gap.tsx": {
+      "text-[0.75rem]": 1,
+      "text-[0.625rem]": 1
+    },
+    "components/reactions/reaction-control.tsx": {
+      "text-[0.6875rem]": 6,
+      "text-[0.75rem]": 2
+    },
+    "components/shell/filters-area.tsx": {
+      "text-[0.6875rem]": 1
+    },
+    "components/ui/button.tsx": {
+      "#ffc23c": 1
+    }
   }
 }

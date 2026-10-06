@@ -12,7 +12,7 @@ heartbeat: 2026-10-06T05:22:41Z
 
 Read this section first. It replaces "Next River run (12:35 AM EDT)" below wherever they differ. Sean's full message is in decisions.md under "Oct 6, about 1:20 AM EDT". It is the plan.
 
-**Who wrote this.** Scheduled River session session_01GomLhSQqS2qk8vHjjkBzbT, on Sean's live instruction. The board lock above still belongs to session_01VxkjQwRW6tEj8XDPVSGkKU (heartbeat 1:11 AM EDT). This run did not take it. Once that heartbeat is 45 minutes stale, the next River run claims the lock under the normal rules and carries on from here.
+**Who wrote this.** River session session_01GomLhSQqS2qk8vHjjkBzbT, on Sean's live instruction. At about 1:30 AM EDT Sean said the previous River session (session_01VxkjQwRW6tEj8XDPVSGkKU) had ended and told this session to take over its lock, which it did. A later River run claims the lock under the normal rules once this session's heartbeat is 45 minutes stale.
 
 ### The mission (Sean, Oct 6)
 A verified fact reaches a reader within minutes, at a known and falling cost, and the system proves it every hour. Targets: **control-plane Neon under 0.7 GB an hour; no paid job ends with nothing; cost per fact measured and falling.** Work is done only when the live vital signs show it, never because tests pass.

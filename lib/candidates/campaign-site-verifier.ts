@@ -593,6 +593,33 @@ export interface CampaignSiteSupportingRead {
   readonly page: CampaignSitePageRead;
 }
 
+/** Every https anchor on a saved page that leaves the page's own host, in page order. */
+function* offSiteLinks(page: CampaignSitePageRead): Generator<{ url: URL; attributes: string; inner: string }> {
+  const html = page.body.replace(/<(script|style|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ");
+  for (const match of html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi)) {
+    const href = /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(match[1]!);
+    if (!href) continue;
+    let url: URL;
+    try { url = new URL((href[1] ?? href[2] ?? href[3]!).replace(/&amp;/g, "&"), page.finalUrl); } catch { continue; }
+    if (url.protocol !== "https:" || url.username || url.password || siteHost(url.href) === siteHost(page.finalUrl)) continue;
+    yield { url, attributes: match[1]!, inner: match[2]! };
+  }
+}
+
+/**
+ * The hosts a saved page links to. Every lead profileCampaignSiteLeads can find
+ * on the page, for any candidacy, is on one of these hosts, so a page whose
+ * hosts lack a campaign's host can never support that campaign.
+ */
+export function linkedSiteHosts(page: CampaignSitePageRead): Set<string> {
+  const hosts = new Set<string>();
+  for (const { url } of offSiteLinks(page)) {
+    const host = siteHost(url.href);
+    if (host !== null) hosts.add(host);
+  }
+  return hosts;
+}
+
 /** Observed campaign links on one candidate's captured profile, never guessed hosts. */
 export function profileCampaignSiteLeads(page: CampaignSitePageRead, subject: CampaignSiteIdentity, ref: string): CampaignSiteLead[] {
   const headings = pageHeadings(page.body).headings;
@@ -602,15 +629,10 @@ export function profileCampaignSiteLeads(page: CampaignSitePageRead, subject: Ca
   if (!headings.some(heading => titleBrandsCandidate(heading, forms) !== null) ||
     ![...officeForms(subject.officeTitle), ...districtForms(subject)].some(contains)) return [];
   const links: { url: string; label: string }[] = [];
-  const html = page.body.replace(/<(script|style|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ");
-  for (const match of html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi)) {
-    const href = /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(match[1]!);
-    if (!href) continue;
-    let url: URL;
-    try { url = new URL((href[1] ?? href[2] ?? href[3]!).replace(/&amp;/g, "&"), page.finalUrl); } catch { continue; }
-    if (url.protocol !== "https:" || url.username || url.password || siteHost(url.href) === siteHost(page.finalUrl) || campaignSiteHostRefusal(url.href)) continue;
-    const accessible = /\b(?:aria-label|title)\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(match[1]!);
-    links.push({ url: url.href, label: comparisonText(pageVisibleText(match[2]!) + " " + (accessible?.[1] ?? accessible?.[2] ?? "")) });
+  for (const { url, attributes, inner } of offSiteLinks(page)) {
+    if (campaignSiteHostRefusal(url.href)) continue;
+    const accessible = /\b(?:aria-label|title)\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(attributes);
+    links.push({ url: url.href, label: comparisonText(pageVisibleText(inner) + " " + (accessible?.[1] ?? accessible?.[2] ?? "")) });
   }
   const websites = links.filter(link => /^(?:(?:official|candidate|campaign|personal) )*(?:website|web site|campaign site|campaign page)$/.test(link.label));
   const hosts = new Set(websites.map(link => siteHost(link.url)));

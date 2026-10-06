@@ -1,9 +1,9 @@
-build_state: waiting
+build_state: active
 worker: auditors
 provider: Claude
-run_id: session_01KyfKAvUuXTB1LaVdiDGH5Q
-lock: none
-heartbeat: 2026-10-06T06:28:55Z
+run_id: session_01VusmogMs6a5s1fvotykgTM
+lock: auditors-20261006T081910Z-20433
+heartbeat: 2026-10-06T08:19:10Z
 on_river: DP-01, DP-02, DP-03, DP-04, DP-05, DP-06, DP-10, DP-11, DP-13, DP-14, DP-15, DP-16, DP-17, DP-18, DP-25, DP-26, DP-29, DP-30, DP-31, DP-32, DP-33, DP-34, FE-01, FE-02, FE-03, FE-16, FE-17, FE-18, FE-21 (c428dc394 folded as 6d6a993e; on main with release 7, f545fcf).
 ready: 78aa3f5edfce29cd67b4ca83096111a429504845 READY: DP-13, DP-16, DP-17, FE-18, FE-21 — answers release 8's Failed live verdicts (live-ledger: cp_log_live_audits has 0 rows because nothing runs the passes). scripts/audit-pass-clock.mts runs every auditors pass from the standing runner, one at a time; the runner wiring is hook 0 below. Built on river 8e47854 (catch-up merge, no conflicts) and contains READY e51a93c6c (FE-21 batch), which it supersedes.
 checks: Run 14: tests/audit-pass-clock.test.ts 5/5. With hook 0 applied: tsc --noEmit clean (no .next), eslint 0 problems on the four files, and every test file naming pilot-runner, pilot-runtime-child or audit-pass (36 files) 502 pass, 0 fail, 3 skipped (env -u DATABASE_URL -u WTP_ASSET_STORE, full history). Hook 0 applies cleanly (git apply --check) on river 8e47854 and on stream/hunters at 06:30Z. Smoke run with real children: loss study started, failed visibly ("the control plane is not configured") and kept its start; a running child was ended by stop() in 6 ms and its turn given back. Not run on the droplet: no runner here.

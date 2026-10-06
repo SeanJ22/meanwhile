@@ -504,7 +504,7 @@ export function pgAggregateRepository<T>(
         "compareAndSet",
         rowClass,
         `UPDATE ${table}
-            SET revision = revision + 1, updated_at = $1, value = $2::jsonb
+            SET revision = revision + 1, updated_at = $1, value = $2::jsonb, changed_at = now()
           WHERE id = $3 AND revision = $4
        RETURNING id, revision, updated_at`,
         [now, submitted, id, expectedRevision],
@@ -559,6 +559,42 @@ export function pgAggregateRepository<T>(
 
     list: () => list(),
     listNarrowed: projection => list(projection),
+
+    async listChangedSince(since) {
+      /* `list()` narrowed to rows the DATABASE stamped at or after `since`
+         (schema v22), the same id keyset pages. `through` is the database clock
+         taken before the first page, so a change committed while the pages are
+         read is caught by the next read rather than straddled. */
+      const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+      const through = new Date(clock[0]?.read_at as string).toISOString();
+      const changed = since === null ? "" : "changed_at >= $1::timestamptz";
+      const out: Persisted<T>[] = [];
+      let afterId: string | null = null;
+      for (;;) {
+        const filters = [changed, afterId === null ? "" : `id > $${since === null ? 1 : 2}`].filter(Boolean);
+        const params = [...(since === null ? [] : [since]), ...(afterId === null ? [] : [afterId])];
+        const rows = (await run(
+          "listChangedSince",
+          "PAGE",
+          `SELECT id, revision, updated_at, value FROM ${table}
+           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+           ORDER BY id ASC
+           LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+          params,
+        )) as Record<string, unknown>[];
+        for (const row of rows) {
+          out.push({
+            id: String(row.id),
+            revision: Number(row.revision),
+            updatedAt: new Date(row.updated_at as string).toISOString(),
+            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
+          });
+        }
+        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
+        afterId = String(rows[rows.length - 1].id);
+      }
+      return { rows: out, through };
+    },
 
     async listWhere(path, value) {
       /* `list()` filtered IN THE DATABASE: the same ORDER BY id and keyset
@@ -861,6 +897,40 @@ export function pgAppendOnlyRepository<T>(
         cursor = { key: String(last.log_key), position: Number(last.position) };
       }
       return out;
+    },
+
+    async readChangedSince(since) {
+      /* `readAll()` narrowed to records the DATABASE stamped at or after
+         `since` (schema v22), the same (log_key, position) keyset pages, each
+         with its coordinates. `through` is the database clock before the first
+         page, as in the aggregate read. */
+      const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+      const through = new Date(clock[0]?.read_at as string).toISOString();
+      const out: { key: string; recordId: string; position: number; record: T }[] = [];
+      let cursor: { readonly key: string; readonly position: number } | null = null;
+      for (;;) {
+        const at = since === null ? 1 : 2;
+        const filters = [since === null ? "" : "changed_at >= $1::timestamptz",
+          cursor === null ? "" : `(log_key, position) > ($${at}, $${at + 1})`].filter(Boolean);
+        const params = [...(since === null ? [] : [since]), ...(cursor === null ? [] : [cursor.key, cursor.position])];
+        const rows = (await run(
+          "readChangedSince",
+          "PAGE",
+          `SELECT log_key, record_id, position, record FROM ${table}
+           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+           ORDER BY log_key ASC, position ASC
+           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+          params,
+        )) as Record<string, unknown>[];
+        for (const r of rows) {
+          out.push({ key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
+            record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`) });
+        }
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        const last = rows[rows.length - 1];
+        cursor = { key: String(last.log_key), position: Number(last.position) };
+      }
+      return { records: out, through };
     },
 
     async readRecent(key, limit) {

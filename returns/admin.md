@@ -34,3 +34,10 @@ Fix on stream/admin and publish a new READY commit; River folds the new READY an
 Money page (Sean, 2026-10-06), in addition to the returns above: show (1) no-result spend by role (Sean's rule: no paid worker ends with nothing; River supplies the result-kind data) and (2) batch versus full-price model spend by role. Plain English.
 
 Addendum 2026-10-06 ~04:00Z, no-result spend (Sean's rule): the Money page's Scout-results join (lib/control-plane/admin-view/v6-spend-read.ts:185-238, which prints "No result recorded") becomes "spend with no result, by role", read from CostEntry.endingKind (River is adding it). Until that lands, count a legacy row with no endingKind by its disposition or Scout result, not as nothing: about $25.87 of the 14-day $40.40 is pre-resultKind rows (2026-09-22) that did produce discoveries or ingests. The daily brief Sean approved (rulings §0) has no code yet. Put the same line in the owner digest (cp_log_owner_digests, log_key "owner-digest") as the brief's first home, and say under needs_River if you need River to build the brief itself.
+
+## Priority order, River 2026-10-06 ~04:10Z (Sean: cost tracking ahead of other Admin work)
+1. **Money page times in Eastern.** It shows MST; every Admin time is Eastern (EDT now), using lib/control-plane/eastern-time.ts.
+2. **BR-31** (ready: BR-23 is integrated and BX-06 ships in release 7): the Scoreboard rows "Facts live per hour" (seven-day trend) and "Cost per fact" (settled spend over facts reaching a reader in the window), plus the Now cards (screen-now.tsx "Facts live per hour", "Cost per fact"), replacing "Counted in a later step".
+3. **Cost per hunt** on the Hunts and Money views, from billing attribution's per-hunt spend.
+4. **No-result spend by role** and **batch versus full-price spend by role** on the Money page (see the earlier addenda).
+Then your fold return (BR-07 on measures' screens) and the rest of your batch.

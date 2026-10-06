@@ -61,3 +61,5 @@ River's investigation (read-only, production) reproduced Sean's $85.36 Scout and
    Price spend from usage saved as it accrues, and write it on throw and on lease expiry. River adds the repository side (CostEntry.endingKind, see below).
 7. **The cache pre-warm** (freshness-shadow.mts:2608-2661; 31 rows over 14 days) is labelled CACHE_WARMUP, not left blank.
 Result kind: River is adding `endingKind` to CostEntry (lib/control-plane/cost.ts). It is a closed set: FINDING, INGEST, ROUTE_FOUND, BLOCKED_WITH_TRIES, UNPUBLISHED_WITH_TRIES, ADAPTER_REQUESTED, LESSON_SAVED, CACHE_WARMUP, NOTHING, UNKNOWN_LEGACY. Each kind except the last three carries the id of its disposition, task or field-manual entry. Set it at every ledgerCost/recordCost call in dispatch.ts (which already stamps resultKind at :734-760 and :1054-1070).
+
+Update 2026-10-06 ~04:10Z (Sean): **hold per-step batching of Scouts.** Hunts stay on Messages, fast, provided their findings are promoted rapidly and readers see them. River will show the speed versus cost trade first. The route-candidate follow-up (ACQUIRER task) above is the way hunts reach readers quickly: do it first.

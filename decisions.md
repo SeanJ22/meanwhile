@@ -111,3 +111,20 @@ Design (engineering choice): batch per step.
   - Plain-English summaries: ballot.
   - Money page batch versus full-price spend by role: admin.
 - Kept on Messages: Ask (lib/ask, app/api/ask) and anything a person waits on, including Sean's direct Admin orders.
+
+## 2026-10-06 ~04:10Z: Sean amends the batch plan; cost metrics first; Admin in Eastern time
+
+- **Batch now, single-request work only:** plain-English summaries (ballot, CA-25) and audit and re-verification samples (auditors' live-audit sampler and model audit samples; BX-13's audit-sample route). **Hold per-step batching of Scouts and Detectives.** It turns a minutes-long hunt into hours, and Sean wants hunts fast, as long as they are promoted rapidly and readers see them. Before building it, River shows the per-step speed versus cost trade, from measured batch turnaround (the single-request batches give real latency) and recorded Scout and Detective step counts, durations and prices.
+- **Cost tracking ahead of other Admin work.** These must be measured, not "—":
+  - cost per hunt;
+  - cost per fact reaching a reader;
+  - facts live per hour;
+  - no-result spend by role;
+  - batch versus full-price spend.
+  
+  Owners:
+  - Facts live per hour and cost per fact: **BR-31 (admin)**, on BX-06's flow counts (slide, in release 7) and BR-23 (integrated). Its dependencies are met, so it is ready now.
+  - Cost per hunt: **admin**, as part of BR-31. Billing attribution already carries per-hunt Anthropic and other spend; show it per hunt.
+  - No-result spend by role: **admin** on the Money page, from CostEntry.endingKind (**River** adds the field; **hunters** sets it at dispatch).
+  - Batch versus full-price: **admin** on the Money page, from each cost row's batch flag; BX-13's done-when.
+- **Admin in Eastern time:** the Money page shows MST. Every Admin time is Eastern (EDT now). Admin fixes it first.

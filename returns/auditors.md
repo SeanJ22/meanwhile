@@ -24,3 +24,5 @@ Fix on stream/auditors and publish a new READY commit; River folds the new READY
 ## River note, 2026-10-06 ~03:50Z
 
 Batch API (Sean, 2026-10-06): the Detective and the live-audit model sampler send their steps through River's shared step batcher (model-batch.ts, coming from River) when no person is waiting. Ask and Sean's direct orders stay on Messages.
+
+Update 2026-10-06 ~04:10Z (Sean): batch the single-request work now: the live-audit and re-verification samples (model audit samples). **Hold the Detective's per-step batching.**

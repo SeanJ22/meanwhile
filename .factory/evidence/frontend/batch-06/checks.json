@@ -1,0 +1,74 @@
+{
+  "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+  "full": {
+    "testedSha": "791958e2e97450bf2c0a51e7bb5a375cad96ec7c",
+    "result": "running",
+    "claim": "No full-green claim; isolate original source, recheck repairs on final application, baseline failures on River."
+  },
+  "focused": {
+    "pass": 47,
+    "fail": 0,
+    "files": 9
+  },
+  "types": "pass",
+  "changedLint": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "contrast": "all pairs clear their bar",
+  "build": {
+    "result": "pass",
+    "appTrace": [
+      408,
+      430
+    ],
+    "frameworkTrace": [
+      981,
+      1050
+    ],
+    "homeRawBytes": 1996865,
+    "homeGzipBytes": 571058,
+    "ceilingsUnchanged": [
+      3100000,
+      940000
+    ],
+    "readerTraceFiles": 127,
+    "readerTraceFailures": 0
+  },
+  "browser": {
+    "synthetic": true,
+    "live": false,
+    "browser": "explicit /usr/bin/chromium substitute",
+    "widths": [
+      390,
+      1280
+    ],
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "sourceLeaks": 0,
+    "actualMapEntryOfficeHandler": true,
+    "actualReaderCardPlaceCaller": true,
+    "stalePlaceRejected": true,
+    "unavailableDistinctFromNotHeld": true,
+    "canvasBoundary": "DOM marker adapter for handler replay; actual MapLibre6.3.0 blank local style/software WebGL in separate native replay",
+    "nativeMarkerTouchTarget": [
+      48,
+      48
+    ],
+    "nativeMarkerKeyboardMovementRenameRemoval": "pass"
+  },
+  "baseline": {
+    "riverSha": "f545fcf94",
+    "files": [
+      "tests/admin-readiness-cell-state.test.ts",
+      "tests/admin-v6-ui/mounted-live-transition.test.ts",
+      "tests/beacon-guard.test.ts",
+      "tests/chromium-pin.test.ts"
+    ],
+    "failures": 11,
+    "result": "same failures as running FULL; pinned build1234 unavailable; legacy Admin style tests baseline on River"
+  },
+  "readySha": null
+}

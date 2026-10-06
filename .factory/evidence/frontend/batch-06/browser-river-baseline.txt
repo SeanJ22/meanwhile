@@ -1,0 +1,99 @@
+
+> we-the-people@0.1.0 test /tmp/frontend-baseline
+> node scripts/ci-tests.mjs
+
+Affected tests: 2/2 files; SHA f545fcf9493def91294bccf219ed65071b2093b1
+tests/beacon-guard.test.ts
+tests/chromium-pin.test.ts
+✖ a context from the shared site cannot write an undeclared row (14.148702ms)
+✖ an unguarded context leaks — the plant that proves the test can fail (3.743334ms)
+✔ the transport this guards is still the one lib/log/client.ts prefers (16.679869ms)
+✖ an UNLOAD beacon carrying no header is still recorded as synthetic (3.131312ms)
+✔ the shared site plants the declaration, and the client sends it (13.99198ms)
+✔ playwright is pinned to an exact version, not a range (4.722629ms)
+✔ the committed revision is the one playwright actually wants (1.305635ms)
+✖ the browser resolution is stated, never silent (2.588209ms)
+ℹ NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+✔ an absent browser refuses rather than reads as a pass (0.408971ms)
+✔ the browsers root honours the environment's override (0.747615ms)
+✖ what this repo resolves is the file playwright would actually launch (0.747019ms)
+✔ a chrome-for-testing layout is found on every platform, not just the legacy one (1.552427ms)
+✔ a build directory with no binary in it blames the reader, not the installer (0.588691ms)
+✔ the browsers root default is per platform, and windows has no HOME (0.280447ms)
+✔ an explicit system browser is a stated substitution, never an installed pinned build (2.789745ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 10
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 947.59209
+
+✖ failing tests:
+
+test at tests/beacon-guard.test.ts:140:1
+✖ a context from the shared site cannot write an undeclared row (14.148702ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/beacon-guard.test.ts:147:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at tests/beacon-guard.test.ts:180:1
+✖ an unguarded context leaks — the plant that proves the test can fail (3.743334ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at rawLaunchOptions (file:///tmp/frontend-baseline/tests/beacon-guard.test.ts:28:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/beacon-guard.test.ts:209:37)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests/beacon-guard.test.ts:330:1
+✖ an UNLOAD beacon carrying no header is still recorded as synthetic (3.131312ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at rawLaunchOptions (file:///tmp/frontend-baseline/tests/beacon-guard.test.ts:28:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/beacon-guard.test.ts:335:37)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests/chromium-pin.test.ts:78:1
+✖ the browser resolution is stated, never silent (2.588209ms)
+  AssertionError [ERR_ASSERTION]: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+  Nothing that needs a browser can run on this machine.
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/chromium-pin.test.ts:85:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/chromium-pin.test.ts:123:1
+✖ what this repo resolves is the file playwright would actually launch (0.747019ms)
+  AssertionError [ERR_ASSERTION]: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+  Nothing that needs a browser can run on this machine.
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/chromium-pin.test.ts:126:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'fail',
+    diff: 'simple'
+  }
+ ELIFECYCLE  Test failed. See above for more details.

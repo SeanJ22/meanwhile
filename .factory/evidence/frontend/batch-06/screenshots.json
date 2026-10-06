@@ -1,0 +1,75 @@
+[
+  {
+    "path": "/tmp/frontend-office-record-proof/1280-dark-office.png",
+    "sha256": "9d7c0734c95ada1c4e468489fecf2ee4b8c99fd81a249d9cfe9f1db735126589",
+    "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+    "synthetic": true,
+    "live": false,
+    "inspected": true
+  },
+  {
+    "path": "/tmp/frontend-office-record-proof/1280-dark-record.png",
+    "sha256": "24d060ac14cb72b400fe2aaf8ce5dbb77d91674a67a0de1f2bfcd4927608adfc",
+    "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+    "synthetic": true,
+    "live": false,
+    "inspected": true
+  },
+  {
+    "path": "/tmp/frontend-office-record-proof/1280-light-office.png",
+    "sha256": "cdf6e0bf3846392832fa9ba42b38d0b9d5894e995b92878ee19f98a4008d7e38",
+    "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+    "synthetic": true,
+    "live": false,
+    "inspected": true
+  },
+  {
+    "path": "/tmp/frontend-office-record-proof/1280-light-record.png",
+    "sha256": "4a9dce9388d6882afe994844acf55739082676676503957de96d8a62db7323fe",
+    "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+    "synthetic": true,
+    "live": false,
+    "inspected": true
+  },
+  {
+    "path": "/tmp/frontend-office-record-proof/390-dark-office.png",
+    "sha256": "478ed9f142ed866dcd49780debc0ece3d202d4dc38644894b56cbfc2bfa3f5d4",
+    "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+    "synthetic": true,
+    "live": false,
+    "inspected": true
+  },
+  {
+    "path": "/tmp/frontend-office-record-proof/390-dark-record.png",
+    "sha256": "3dc9248c7b8378ac5048520b6e80b9ad2968e1ba13dfbd06c0b073592648b30b",
+    "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+    "synthetic": true,
+    "live": false,
+    "inspected": true
+  },
+  {
+    "path": "/tmp/frontend-office-record-proof/390-light-office.png",
+    "sha256": "9befb77aa51da0509d9a01889bfc6bc1b91d149f0cf11815332ba832641a4daf",
+    "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+    "synthetic": true,
+    "live": false,
+    "inspected": true
+  },
+  {
+    "path": "/tmp/frontend-office-record-proof/390-light-record.png",
+    "sha256": "82f5df6065cf53135d0f9564369286ceaee5d952bddc80dca97d93080cda01ff",
+    "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+    "synthetic": true,
+    "live": false,
+    "inspected": true
+  },
+  {
+    "path": "/tmp/frontend-native-office-markers/390-dark.png",
+    "sha256": "6c6829b9330f2c40491ad73ab29fbd451f605ff1e4b6c39f0cac80be2c78f630",
+    "applicationSha": "b6f6bbedd8a9aac9fd8f2bf7e3fb3b89646ef26c",
+    "synthetic": true,
+    "live": false,
+    "inspected": true,
+    "actualMapLibre": true
+  }
+]

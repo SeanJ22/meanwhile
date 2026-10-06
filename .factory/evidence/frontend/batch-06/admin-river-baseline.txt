@@ -1,0 +1,103 @@
+
+> we-the-people@0.1.0 test /tmp/frontend-baseline
+> node scripts/ci-tests.mjs
+
+Affected tests: 2/2 files; SHA f545fcf9493def91294bccf219ed65071b2093b1
+tests/admin-readiness-cell-state.test.ts
+tests/admin-v6-ui/mounted-live-transition.test.ts
+✖ every generic control reset lives in the recipe layer; the state classes never do (0.75911ms)
+✖ POSITIVE CONTROL: re-appending the #281 reset makes the structural check fail (0.140376ms)
+✖ class-wide: every focusable console control shows a keyboard focus indicator (0.063874ms)
+✖ POSITIVE CONTROL: a shell control whose focus indicator is taken away is caught (0.070057ms)
+✖ class-wide: the runner card's grade band keeps its colour on hover and while focus is inside it (0.112418ms)
+✖ an already-mounted v6 adapter picks up readiness, scoped changes and a brief disconnect without reload or mutation (435.154943ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 0
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2059.593063
+
+✖ failing tests:
+
+test at tests/admin-readiness-cell-state.test.ts:138:1
+✖ every generic control reset lives in the recipe layer; the state classes never do (0.75911ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/admin-readiness-cell-state.test.ts:161:19)
+      at TestHook.runInAsyncScope (node:async_hooks:227:14)
+      at TestHook.run (node:internal/test_runner/test:1382:25)
+      at TestHook.run (node:internal/test_runner/test:1726:18)
+      at TestHook.run (node:internal/util:581:20)
+      at Test.createHook (node:internal/test_runner/test:1103:33)
+      at node:internal/test_runner/harness:426:12
+      at file:///tmp/frontend-baseline/tests/admin-readiness-cell-state.test.ts:160:1
+      at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+
+test at tests/admin-readiness-cell-state.test.ts:152:1
+✖ POSITIVE CONTROL: re-appending the #281 reset makes the structural check fail (0.140376ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/admin-readiness-cell-state.test.ts:161:19)
+      at TestHook.runInAsyncScope (node:async_hooks:227:14)
+      at TestHook.run (node:internal/test_runner/test:1382:25)
+      at TestHook.run (node:internal/test_runner/test:1726:18)
+      at TestHook.run (node:internal/util:581:20)
+      at Test.createHook (node:internal/test_runner/test:1103:33)
+      at node:internal/test_runner/harness:426:12
+      at file:///tmp/frontend-baseline/tests/admin-readiness-cell-state.test.ts:160:1
+      at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+
+test at tests/admin-readiness-cell-state.test.ts:232:1
+✖ class-wide: every focusable console control shows a keyboard focus indicator (0.063874ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/admin-readiness-cell-state.test.ts:161:19)
+      at TestHook.runInAsyncScope (node:async_hooks:227:14)
+      at TestHook.run (node:internal/test_runner/test:1382:25)
+      at TestHook.run (node:internal/test_runner/test:1726:18)
+      at TestHook.run (node:internal/util:581:20)
+      at Test.createHook (node:internal/test_runner/test:1103:33)
+      at node:internal/test_runner/harness:426:12
+      at file:///tmp/frontend-baseline/tests/admin-readiness-cell-state.test.ts:160:1
+      at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+
+test at tests/admin-readiness-cell-state.test.ts:249:1
+✖ POSITIVE CONTROL: a shell control whose focus indicator is taken away is caught (0.070057ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/admin-readiness-cell-state.test.ts:161:19)
+      at TestHook.runInAsyncScope (node:async_hooks:227:14)
+      at TestHook.run (node:internal/test_runner/test:1382:25)
+      at TestHook.run (node:internal/test_runner/test:1726:18)
+      at TestHook.run (node:internal/util:581:20)
+      at Test.createHook (node:internal/test_runner/test:1103:33)
+      at node:internal/test_runner/harness:426:12
+      at file:///tmp/frontend-baseline/tests/admin-readiness-cell-state.test.ts:160:1
+      at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+
+test at tests/admin-readiness-cell-state.test.ts:262:1
+✖ class-wide: the runner card's grade band keeps its colour on hover and while focus is inside it (0.112418ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/admin-readiness-cell-state.test.ts:161:19)
+      at TestHook.runInAsyncScope (node:async_hooks:227:14)
+      at TestHook.run (node:internal/test_runner/test:1382:25)
+      at TestHook.run (node:internal/test_runner/test:1726:18)
+      at TestHook.run (node:internal/util:581:20)
+      at Test.createHook (node:internal/test_runner/test:1103:33)
+      at node:internal/test_runner/harness:426:12
+      at file:///tmp/frontend-baseline/tests/admin-readiness-cell-state.test.ts:160:1
+      at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+
+test at tests/admin-v6-ui/mounted-live-transition.test.ts:36:1
+✖ an already-mounted v6 adapter picks up readiness, scoped changes and a brief disconnect without reload or mutation (435.154943ms)
+  Error: NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/agent/.cache/ms-playwright. The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`. Nothing that needs a browser can run, and nothing here may report a pass.
+      at launchGuarded (file:///tmp/frontend-baseline/scripts/browser.mts:249:41)
+      at TestContext.<anonymous> (file:///tmp/frontend-baseline/tests/admin-v6-ui/mounted-live-transition.test.ts:39:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+ ELIFECYCLE  Test failed. See above for more details.

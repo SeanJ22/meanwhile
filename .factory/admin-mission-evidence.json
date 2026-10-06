@@ -2,7 +2,15 @@
   "source_sha": "aa40b7ba3480de6bf3796da5d12f2af73fda0a11",
   "state": "WIP; no new READY or live PASS",
   "types": "PASS",
-  "focus": "running 43 files",
+  "focus": {
+    "result": "PASS",
+    "tests": 330,
+    "fail": 0,
+    "skip": 0,
+    "files": 43,
+    "sha": "aa40b7ba3480de6bf3796da5d12f2af73fda0a11",
+    "log": "/tmp/admin-mission-aa40-focus.log"
+  },
   "gates": "running",
   "gates_log": "/tmp/admin-mission-aa40-gates.log",
   "production_observation": {
@@ -13,11 +21,24 @@
     "cp_vital_signs": null,
     "cp_spend_holds": null,
     "heartbeat_at": "2026-10-06T05:08:44.850Z",
-    "heartbeat_tested_sha": "f545fcf9493def91294bccf219ed65071b2093b1"
+    "heartbeat_tested_sha": "f545fcf9493def91294bccf219ed65071b2093b1",
+    "schema_version": 23,
+    "snapshot_updated_at": "2026-10-04T13:38:24.377Z",
+    "has_spend_summary": false,
+    "snapshot_observed_at": "2026-10-06T05:56:17.031Z"
   },
   "browser": "not live verified; egress CONNECT403, no signed-in session",
   "hourly_source": "cp_vital_signs only",
   "read_estimate_gb_per_hour_per_open_tab": 0.0032,
   "estimate_excludes": "request overhead",
-  "automation": "enabled every90min for current chat"
+  "automation": "enabled every90min for current chat",
+  "gates_source_sha": "aa40b7ba3480de6bf3796da5d12f2af73fda0a11",
+  "latest_application_sha": "9857aa778361a2aa4cb5df4ced1bcc82f4bc8373",
+  "application_delta_since_gates": "vital-signs.tsx only: red empty-paid flag, plain unread-status text; exact types/lint/three hourly tests running",
+  "deployment_observation": {
+    "github_run": 37419174889,
+    "job": "observe",
+    "conclusion": "success",
+    "scope": "release8 public post-deploy observation; does not prove Admin or runner"
+  }
 }

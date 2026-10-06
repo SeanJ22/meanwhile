@@ -534,6 +534,29 @@ export function pgAggregateRepository<T>(
       };
     },
 
+    async readMany(ids) {
+      /* Primary-key batches of one page each, so no response nears the driver cap. */
+      const unique = [...new Set(ids)].sort();
+      const out: Persisted<T>[] = [];
+      for (let at = 0; at < unique.length; at += AGGREGATE_LIST_READ_PAGE) {
+        const rows = (await run(
+          "readMany",
+          "PAGE",
+          `SELECT id, revision, updated_at, value FROM ${table} WHERE id = ANY($1::text[]) ORDER BY id ASC`,
+          [unique.slice(at, at + AGGREGATE_LIST_READ_PAGE)],
+        )) as Record<string, unknown>[];
+        for (const row of rows) {
+          out.push({
+            id: String(row.id),
+            revision: Number(row.revision),
+            updatedAt: new Date(row.updated_at as string).toISOString(),
+            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
+          });
+        }
+      }
+      return out;
+    },
+
     list: () => list(),
     listNarrowed: projection => list(projection),
 

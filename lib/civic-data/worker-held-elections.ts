@@ -126,8 +126,15 @@ export async function publishHeldElectionOffices(input: {
   readonly limit?: number;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   const registry = await readRegistryRuntimePrior(input.store, input.now);
-  const all = (await input.repos.workItems.list()).map(row => row.value);
-  const owed = input.workItemIds.map(id => all.find(item => item.id === id)).filter((item): item is WorkItem => Boolean(item?.autonomousPlan?.publication));
+  /* Only the owed items and their governments' sibling work are read: point reads by id, and the indexed
+     subject filter (a plan's contract subject is its item's subject; the coordinator refuses any other). */
+  const owed = (await Promise.all(input.workItemIds.map(id => input.repos.workItems.read(id))))
+    .map(row => row?.value).filter((item): item is WorkItem => Boolean(item?.autonomousPlan?.publication));
+  const siblings = new Map<string, Promise<readonly WorkItem[]>>();
+  const subjectWork = (subjectId: string) => {
+    if (!siblings.has(subjectId)) siblings.set(subjectId, input.repos.workItems.listWhere(["subject"], subjectId).then(rows => rows.map(row => row.value)));
+    return siblings.get(subjectId)!;
+  };
   const fields: ElectionFieldInput[] = [], fieldsByItem = new Map<string, number>(), read = new Map<string, Promise<readonly ElectionFieldInput[]>>();
   let nationalFields: readonly ElectionFieldInput[] = [], nationalFailure: string | null = null;
   try {
@@ -151,7 +158,7 @@ export async function publishHeldElectionOffices(input: {
     if (!division) { fieldsByItem.set(item.id, -1); continue; }
     const key = `${plan.contract.subjectId}\n${division.ocdId}`;
     if (!read.has(key)) read.set(key, (async () => {
-      const place = all.filter(other => other.autonomousPlan?.contract.subjectId === plan.contract.subjectId);
+      const place = (await subjectWork(plan.contract.subjectId)).filter(other => other.autonomousPlan?.contract.subjectId === plan.contract.subjectId);
       const artifacts = (await Promise.all(place.map(other => input.repos.artifacts.read(other.id)))).flat();
       const candidates = heldPageCopies(artifacts, input.limit ?? 60);
       const found: ElectionFieldInput[] = [];

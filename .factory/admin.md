@@ -1,14 +1,14 @@
-build_state: waiting
+build_state: active
 worker: codex-admin
 provider: Codex
-run_id: codex-admin-5f35abb26ccd4da1bc943c3b604c7b19
-lock: none
-heartbeat: 2026-10-05T20:52:11Z
+run_id: codex-admin-210f8cd213384f2b836e9c27f07ab5c8
+lock: codex-admin-210f8cd213384f2b836e9c27f07ab5c8
+heartbeat: 2026-10-06T00:11:20Z
 on_river: BR-01 BR-02 BR-03 BR-05 BR-06 BR-09 BR-10 BR-12 BR-15 BR-16 BR-24 BR-37 CH-12 CH-14 @ 85a0ad660c36 (BR-05/16/37 hooks pending)
 ready: none currently foldable — River returned 5f83a8c646140309545da256ed704cc654254d76 and f2ca419ef23849c4c941fc7f6b78752ed9727e97 for conflicts with incoming measures BR-14/23/25. Preserve those tested historical checkpoints; repair after the new batch is promoted to river.
 checks: exact corrected source 94d8f817fc5082a922ce45fa70777665b7aa2cb9 types PASS; focused including repaired absence/select gates 148 PASS; new changed lint 0 errors/warnings (full changed set 0 errors/29 existing warnings). Actual selector FULL. FULL exact 904ca03062e87f87b8580ad8f9f270d24099489a: 9384 tests, 9356 PASS, 16 could-not-run browser failures identical to plain river, 10 SKIP, plus two own UI gates both fixed at 94d8f817f. FULL not called passing. Known leaked recent-vote PID 86042 bounded termination after 64s; timing incomplete/unusable. Prior exact READY checks preserved in admin-checks.md. Upcoming promoted-base merge needs new checks.
-working_on: none ready. Returned-fold preparation complete against read-only measures READY e47bf4a5f. Application remains exact tested 94d8f817fc5082a922ce45fa70777665b7aa2cb9. No application edits or repeated checks this resumed run.
-waiting_on: River promotion of batch 3 (measures BR-14/23/25 plus hunters BR-05/16/37 hooks). Latest resumed-run fetch: river/main still ecf402600401783b094837c29e0c515eadbdb843, board/river bd996ac82e237a403a86de52bb96ca35cecdbfc2; River heartbeat 20:49:33Z says batch is in gates. Return requires merge promoted river, never river-next. Then repair fold and continue BR-17/27/29/28 in dependency order.
+working_on: Returned fold repair on promoted river 6af6f8a504a7224131ad567f62f7b6f63cb52f08, then every newly ready Admin step.
+waiting_on: none — BR-14/23/25 integrated in release 3; merge repair first.
 returned: 2026-10-05T20:08:25Z fold failure fix:fc3f3f9a. After promotion merge river, preserve measures BR-14 Queue / BR-23 Scoreboard / BR-25 Now, reconnect BR-07 sendable controls in command-center.tsx, contract.ts, model.ts, screen-now.tsx and tests/admin-v6-ui/v6-ui.test.tsx. Re-run checks and publish fresh READY. Earlier BR-08 state hook and DB-09 DoorsPanel already built.
 needs_hook:
   - BR-20 (hunters/team): raiseDecisionOrder(repos, {need,happening,recommends,cost,gets,order:{type,subject,input},fields:[{key,label,kind}],raisedAt}) from lib/control-plane/decision-cards.ts only for an actual BR-09 reason. It validates the existing action and stores an open card; it does not submit it. Approval submits through the owner gateway. Supply the actual recommendation and cost, never invent a new limit.

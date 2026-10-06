@@ -241,7 +241,8 @@ function checkRunnerPublishesConsole(src: string): void {
   const body = children[0];
   assert.match(body, /for \(const publisher of CONSOLE_PUBLISHERS\)/, "changed inputs do not run every listed publisher");
   assert.match(body, /await runRuntimeChildren\(/, "each publisher is an asynchronous child process");
-  assert.match(body, /args: \["--experimental-strip-types", \.\.\.publisher\.args\]/, "a publisher is not run through inherited parent environment");
+  // TS_CHILD carries the `@/` resolver; without it the owner snapshot died at import from Oct 4 (runner-child-loader.test.ts).
+  assert.match(body, /args: \[\.\.\.TS_CHILD, \.\.\.publisher\.args\]/, "a publisher does not start the way every runner child starts");
   assert.doesNotMatch(src, /--env-file=\.env\.local/, "a standing child reopens cwd-relative environment state instead of inheriting the validated parent environment");
   assert.match(body, /env: process\.env/, "the child does not inherit the validated parent environment");
   assert.match(body, /console publish: \$\{publisher\.name\} OK/, "no OK line");

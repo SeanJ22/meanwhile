@@ -1,0 +1,32 @@
+{
+  "commit": "b4b7e7c21ac2bc2a58c69f308ef2f0df62142b05",
+  "neverReady": true,
+  "gatesExit": 143,
+  "stateManifestGate": "FAIL (79s): settings default table counted as government-data holding",
+  "fullStatus": "stopped incomplete, no assertion failure observed",
+  "canonicalStatus": "failed",
+  "canonicalExit": 1,
+  "canonicalSignal": "SIGTERM",
+  "canonicalElapsedMs": 280671,
+  "completedFiles": 268,
+  "selectedFiles": 1103,
+  "timingComplete": false,
+  "savedEvidence": [
+    {
+      "path": ".factory/ballot-b4b7-incomplete-test-manifest.json.gz",
+      "sourcePath": "/workspace/meanwhile-ballot-final-gates-check/.scratch/ci/test-shard-1-of-1.json",
+      "uncompressedSha256": "9becb1dcaab5146211600b6417c037e6658bf9aa59fee633139d8e944a98fd85"
+    },
+    {
+      "path": ".factory/ballot-b4b7-incomplete-timings.jsonl.gz",
+      "sourcePath": "/workspace/meanwhile-ballot-final-gates-check/.scratch/ci/test-shard-1-of-1.timings.jsonl",
+      "uncompressedSha256": "e0d907831ba223abef87a1eca464474877255413eaa175f68434596d1b5fb335"
+    },
+    {
+      "path": ".factory/ballot-b4b7-incomplete-gates.log.gz",
+      "sourcePath": "/tmp/ballot-final-exact-gates.log",
+      "uncompressedSha256": "31b4cdd1c555f0cd41ca94c6c54621985a86839e954a36a503a149312a44cece"
+    }
+  ],
+  "repair": "Move pure label/settings defaults JSON to lib/registry/kinds/defaults.json, outside government holding root; no inventory/check changes and no external timestamps modified."
+}

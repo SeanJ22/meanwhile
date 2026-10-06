@@ -1,4 +1,4 @@
-import defaults from "./kinds-default.json" with { type: "json" };
+import defaults from "./kinds/defaults.json" with { type: "json" };
 
 /** Data read for this pass/request. It describes kinds, never legal powers or
  * territorial membership. The existing Admin setting owns changes and undo. */

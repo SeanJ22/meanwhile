@@ -81,7 +81,7 @@ test("an opened local row is planned work: the coordinator queues its Scout for 
 test("with paid work in the hunter lane the round opens a due planned row instead of only deferring it", () => {
   const round = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
   assert.match(round, /const queuesForHunterLane = laneClosure\?\.hunterLane === true;/);
-  assert.match(round, /if \(queuesForHunterLane && !canary\) \{[\s\S]*?if \(!row\.obligation\.autonomousPlan\) continue;\s*[\s\S]*?await openOccurrenceInStep\(\{ \.\.\.scheduled, nextDueAt: row\.nextDueAt \}\) === true\) queued \+= 1;/,
+  assert.match(round, /if \(queuesForHunterLane && !canary\) \{[\s\S]*?if \(!plannedForHunters\(row\.obligation\.autonomousPlan\)\) continue;\s*[\s\S]*?await openOccurrenceInStep\(\{ \.\.\.scheduled, nextDueAt: row\.nextDueAt \}\) === true\) queued \+= 1;/,
     "each due planned row is opened for the hunter lane; a row with no plan is left to the lane");
   assert.ok(round.indexOf("planned paid rows queued for the hunter lane") < round.indexOf("const cycle = await runCycle({"), "opened before the round dispatches");
   assert.match(round, /local research rows: \$\{local\.length\} paid; \$\{planned\.length\} carry a work plan/);

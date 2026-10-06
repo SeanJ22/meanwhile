@@ -1,3 +1,7 @@
+## UPDATE — Oct6, 2:04 AM EDT
+
+Final WIP source 2414a228caa3e72e7fe9aafcb0acfbd7cb9011de: types and341 focused PASS (44files), final changed lint clean. Full gates aa40 still running. Eight old cadence expectations changed ET->EDT (no instant/cadence change),11 cadence checks PASS. Final hourly rendering red paid-empty/unread reason checked. Inactive clean own baseline/decisions/heartbeat trees removed; all commits remain, .scratch evidence archived /tmp/admin-evidence-archive, prior cost-gates record archived before inactive .next/node_modules removal. Recreate from exact SHA when needed. Do not repeat full tests because browser is missing; finish this one run and record all genuine failures. Latest active state in admin.md supersedes older notes.
+
 ## CURRENT — Oct 6 mission, 1:55 AM EDT (supersedes older instructions below)
 
 Read the full mission in board/river decisions.md and current user prompt. Work backward from verified live reader delivery, known/falling cost, hourly proof. User priority: Eastern times; cp_vital_signs Now/brief; existing Money Hunts real cost; batch/full-price; screen compatibility return; every remaining ready step. No new READY without named live check. Old READY 734ee9633 is returned; do not advertise it as foldable. No raw-table fallback or fake zero.

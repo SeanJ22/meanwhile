@@ -33,12 +33,48 @@
   "estimate_excludes": "request overhead",
   "automation": "enabled every90min for current chat",
   "gates_source_sha": "aa40b7ba3480de6bf3796da5d12f2af73fda0a11",
-  "latest_application_sha": "9857aa778361a2aa4cb5df4ced1bcc82f4bc8373",
-  "application_delta_since_gates": "vital-signs.tsx only: red empty-paid flag, plain unread-status text; exact types/lint/three hourly tests running",
+  "latest_application_sha": "2414a228caa3e72e7fe9aafcb0acfbd7cb9011de",
+  "application_delta_since_gates": "vital-signs.tsx render-only red flag/unread text; admin-meeting-cadence.test.ts eight expected ET->EDT corrections (actual instants unchanged)",
   "deployment_observation": {
     "github_run": 37419174889,
     "job": "observe",
     "conclusion": "success",
     "scope": "release8 public post-deploy observation; does not prove Admin or runner"
+  },
+  "final_types": {
+    "sha": "2414a228caa3e72e7fe9aafcb0acfbd7cb9011de",
+    "result": "PASS",
+    "log": "/tmp/admin-mission-2414-types.log"
+  },
+  "final_focus": {
+    "sha": "2414a228caa3e72e7fe9aafcb0acfbd7cb9011de",
+    "result": "PASS",
+    "files": 44,
+    "tests": 341,
+    "fail": 0,
+    "skip": 0,
+    "log": "/tmp/admin-mission-2414-focus.log"
+  },
+  "final_changed_lint": {
+    "sha": "2414a228caa3e72e7fe9aafcb0acfbd7cb9011de",
+    "result": "PASS",
+    "files": 2,
+    "log": "/tmp/admin-mission-2414-lint.log"
+  },
+  "browser_assertion": {
+    "result": "CANNOT_RUN",
+    "reason": "Chromium1234 absent",
+    "exact_log": "/tmp/admin-mission-browser-assert-network.log"
+  },
+  "scratch_cleanup": {
+    "archived_logs": "/tmp/admin-evidence-archive",
+    "preserved_commits": [
+      "ecf402600401783b094837c29e0c515eadbdb843",
+      "94d8f817fc5082a922ce45fa70777665b7aa2cb9",
+      "7da0adafec7c6ddfd059091f89cf28a3e80f00aa",
+      "ef9d902e9b0f27b6e4dfe39fb23d29d4bc7f74ad"
+    ],
+    "removed": "three clean inactive own worktrees, inactive cost-gates build/dependency copies only",
+    "scratch_space_after": "3GB free"
   }
 }

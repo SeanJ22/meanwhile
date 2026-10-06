@@ -205,11 +205,18 @@ export class LaneOwnSpend {
     const at = this.requests.indexOf(entry);
     if (at >= 0) this.requests.splice(at, 1);
   }
-  /** Drops what has left the window, and returns the tasks the book stands for. */
-  tasks(now: string): ReadonlySet<string> {
+  /**
+   * Drops what has left the window, and returns each task the book stands
+   * for with when this lane first sent for it. Only ledger rows from then on
+   * are this lane's: a row recorded earlier is an earlier lane's or round's
+   * work on the same task, and keeps counting.
+   */
+  tasks(now: string): ReadonlyMap<string, number> {
     const since = Date.parse(now) - this.windowMs;
     for (let i = this.requests.length - 1; i >= 0; i -= 1) if (Date.parse(this.requests[i].at) < since && !this.requests[i].pending) this.requests.splice(i, 1);
-    return new Set(this.requests.map(r => r.taskId));
+    const first = new Map<string, number>();
+    for (const r of this.requests) first.set(r.taskId, Math.min(first.get(r.taskId) ?? Infinity, Date.parse(r.at)));
+    return first;
   }
   /** The book as ledger rows, so a new controller counts them the way it counts the ledger. */
   asCostEntries(): CostEntry[] {
@@ -290,7 +297,8 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
   try {
     const costs = await deps.repos.costs.readSince(new Date(Date.parse(now) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString());
     /* The lane's own requests count from its book, never twice. */
-    counted = [...costs.filter(row => row.routeTaskId === null || !ownTasks.has(row.routeTaskId)), ...deps.ownSpend.asCostEntries()];
+    counted = [...costs.filter(row => row.routeTaskId === null || !(Date.parse(row.recordedAt) >= (ownTasks.get(row.routeTaskId) ?? Infinity))),
+      ...deps.ownSpend.asCostEntries()];
     window = researchSpendInWindow(counted, now, RESEARCH_BOUNDS.windowHours);
     if (window.windowUsd === null) {
       holdsCounted = Object.values(liveSpendHolds((await deps.repos.budget.read()).value.spendHolds, now));

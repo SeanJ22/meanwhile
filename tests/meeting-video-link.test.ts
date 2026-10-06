@@ -47,7 +47,7 @@ test("BX-10: the meeting card's Sources names the publisher record the recording
 });
 
 test("BX-10: the map's meeting row shows the recording link only on a concluded sitting that has one", () => {
-  const source = readFileSync(new URL("../components/map/meeting-panel.tsx", import.meta.url), "utf8");
-  assert.match(source, /concluded && meeting\.videoUrl \?[\s\S]{0,200}href=\{meeting\.videoUrl\}/);
+  const source = readFileSync(new URL("../components/ui/meeting-row.tsx", import.meta.url), "utf8");
+  assert.match(source, /meeting\.status === "CONCLUDED" && meeting\.videoUrl[\s\S]{0,200}href=\{meeting\.videoUrl\}/);
   assert.match(source, /Watch the recording/);
 });

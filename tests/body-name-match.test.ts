@@ -127,45 +127,12 @@ test("looseName survives punctuation, case and doubled spaces", () => {
   assert.equal(looseName(null), "");
 });
 
-test("both instruments call the shared matcher, neither rolls its own", () => {
-  for (const path of ["scripts/twig-pair.mts", "scripts/build-gap-ledger.mts"]) {
-    const src = readFileSync(path, "utf8");
-    assert.ok(
-      src.includes("bodyAccountingFor"),
-      `${path} must ask the shared matcher`,
-    );
-    assert.ok(
-      !/BOARD OF SUPERVISORS\|BOARD OF DIRECTORS/.test(src),
-      `${path} has its own copy of the suffix list again. Two copies is how ` +
-        "twig:pair and the gap ledger came to disagree about Lake Todd.",
-    );
-  }
-});
-
-test("the ledger states its held/dark split as a reconciling pair", () => {
-  const src = readFileSync("scripts/build-gap-ledger.mts", "utf8");
-  // The emitted STRING, not the doc block above it — the headstone in that
-  // file quotes the deleted sentence verbatim, which is the point of a
-  // headstone, and a check that could not tell the two apart would fail on
-  // its own explanation.
-  const emitted = src
-    .split("\n")
-    .filter((l) => {
-      const t = l.trim();
-      return !t.startsWith("*") && !t.startsWith("//") && !t.startsWith("/*");
-    })
-    .join("\n");
+test("twig:pair calls the shared matcher and does not roll its own (the gap ledger retired with CH-21)", () => {
+  const src = readFileSync("scripts/twig-pair.mts", "utf8");
+  assert.ok(src.includes("bodyAccountingFor"), "scripts/twig-pair.mts must ask the shared matcher");
   assert.ok(
-    !emitted.includes("of these govern part of this zip and are not in"),
-    "the unconditional 'are not in the registry' sentence is back. It " +
-      "asserts an absence without looking, which is the defect.",
-  );
-  assert.ok(
-    emitted.includes("bodyAccountingFor(d.name, REGISTRY_BODY_NAMES)"),
-    "the split must be computed from the registry, not assumed",
-  );
-  assert.ok(
-    src.includes("IN THE REGISTRY:") && src.includes("NOT IN THE REGISTRY:"),
-    "both halves must be NAMED, not counted — RULING 57: a count is not a name",
+    !/BOARD OF SUPERVISORS\|BOARD OF DIRECTORS/.test(src),
+    "scripts/twig-pair.mts has its own copy of the suffix list again. Two copies is how " +
+      "twig:pair and the gap ledger came to disagree about Lake Todd.",
   );
 });

@@ -20,6 +20,7 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { heldDirectoryReading, materializeBodyDirectoryWork, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
+import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { auditPull, capturesForPublication, captureIntact, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
@@ -27,7 +28,7 @@ import { readHeldRoster } from "./worker-held-roster.ts";
 import { heldBodySchedule, type HeldBodySchedule } from "./worker-held-meetings.ts";
 import { publicationCaptureReaders } from "./worker-publication-context.ts";
 import { type OfficialLinkingPage } from "./source-authority.ts";
-import { linkingPageFrom, pageWords, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
+import { linkingPageFrom, pageWords, section3Page, section3Record, valueOnPage } from "../control-plane/promotion/section3.ts";
 import { isoTermDate, isoTermDateOnPage } from "./term-dates.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
 import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
@@ -54,7 +55,17 @@ export interface RosterReading {
   /** Every member row on the page was read, so a prior member absent from it has left. */
   readonly complete: boolean;
   readonly method: string;
+  /**
+   * CA-02: the capture is the saved Open States CSV, not an official page. The
+   * member is published as an Open States (Reference) row for the seat; an
+   * official roster value replaces it later. Only name and seat are taken.
+   */
+  readonly reference?: "OPEN_STATES";
 }
+
+const isOpenStatesSource = (url: string): boolean => isOpenStatesRosterUrl(url);
+/** The one Open States bulk file a reference reading may cite. */
+export const isOpenStatesRosterUrl = (url: string): boolean => /^https:\/\/data\.openstates\.org\/people\/current\/[a-z]{2}\.csv$/.test(url);
 
 const requireThat = (value: unknown, reason: string): void => { if (!value) throw new Error(reason); };
 const digest = (text: string) => createHash("sha256").update(text).digest("hex");
@@ -129,21 +140,34 @@ export function workerRosterPublication(input: {
   const capture = reading.capture;
   requireThat(captureIntact(capture), "ROSTER_CAPTURE_INCOMPLETE");
   const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
-  const pageVerdict = section3Page(page, "OFFICIAL_ROSTER", now);
+  const reference = reading.reference === "OPEN_STATES";
+  if (reference) requireThat(isOpenStatesRosterUrl(page.url), "ROSTER_REFERENCE_NOT_OPEN_STATES");
+  const age = Date.parse(now) - Date.parse(page.retrievedAt);
+  const pageVerdict = reference
+    ? (Number.isFinite(age) && age >= 0 && age <= 7 * 86_400_000 ? { ok: true as const, kind: "OTHER" as const, reason: null } : { ok: false as const, kind: "OTHER" as const, reason: "OUTSIDE_FRESHNESS_WINDOW" })
+    : section3Page(page, "OFFICIAL_ROSTER", now);
   requireThat(pageVerdict.ok, `ROSTER_PAGE_UNVERIFIED:${pageVerdict.reason}`);
   const body = prior.payload.registry.bodies.find(row => row.id === input.bodyId);
   requireThat(body, "ROSTER_BODY_UNREGISTERED");
   if (!body) throw new Error("ROSTER_BODY_UNREGISTERED");
   const division = governmentOf(prior.payload.registry.divisions, body);
   // The right place: the page is about this body, and names its government when the body is not yet named.
-  requireThat((body.name !== null || division === null || pageWords(capture.evidence.text).includes(division.label.toLowerCase())) &&
-    pageIsAboutBody(capture.evidence.text, body, division?.label ?? null, reading.id.startsWith("held:")), "ROSTER_PAGE_NOT_THIS_BODY");
+  // A reference reading names its seat by district membership on the saved CSV, checked by the caller.
+  requireThat(reference || ((body.name !== null || division === null || pageWords(capture.evidence.text).includes(division.label.toLowerCase())) &&
+    pageIsAboutBody(capture.evidence.text, body, division?.label ?? null, reading.id.startsWith("held:"))), "ROSTER_PAGE_NOT_THIS_BODY");
   const previous = prior.payload.bodyRosters.find(roster => roster.bodyId === body.id);
   const bodyName = body.name ?? previous?.bodyName ?? (division ? bodyNameFromPage(capture.evidence.text, division.label) : null);
   if (!bodyName) throw new Error("ROSTER_BODY_NAME_UNVERIFIED");
   const live: (RosterReading["members"][number] & { verified: readonly string[] })[] = [];
   const unresolved: string[] = [];
   for (const member of reading.members) {
+    if (reference) {
+      // The name is on the saved CSV; the seat is the row's own district, checked by the caller. Nothing else is taken.
+      const named = typeof member.fields.name === "string" && valueOnPage(member.fields.name, page.text);
+      if (named && typeof member.fields.office === "string") live.push({ recordId: member.recordId, fields: { name: member.fields.name, office: member.fields.office }, verified: ["name", "office"] });
+      else unresolved.push(member.recordId);
+      continue;
+    }
     const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: member.fields, page, now, pageVerdict,
       ...(typeof member.fields.nameAsWritten === "string" ? { derived: { name: "nameAsWritten" } } : {}) });
     if (verdict.live) live.push({ ...member, verified: verdict.verifiedFields });
@@ -164,7 +188,8 @@ export function workerRosterPublication(input: {
   const accepted: { recordId: string; memberId: string }[] = [];
   const members: BodyRoster["members"] = live.map(member => {
     const name = verifiedValue(member, "name")!, officeTitle = verifiedValue(member, "office")!;
-    const matching = previous?.members.filter(old => old.name === name && old.officeTitle === officeTitle) ?? [];
+    // An official value replaces an Open States reference row for the same person, whatever title each source writes.
+    const matching = previous?.members.filter(old => old.name === name && (old.officeTitle === officeTitle || (!reference && isOpenStatesSource(old.membershipSource?.sourceUrl ?? previous.sourceUrl)))) ?? [];
     requireThat(matching.length <= 1, "ROSTER_PRIOR_PERSON_IDENTITY_CONFLICT");
     const old = matching[0];
     const { membershipSource: _oldMembership, retainedFieldSources: _oldRetained, ...identity } = old ??
@@ -264,7 +289,11 @@ export function workerRosterPublication(input: {
   const bodies = canonicalJson(updated) === canonicalJson(body) ? [] : [updated];
   const pages = bodies.length && input.schedule && input.schedule.capture.evidence.artifactId !== capture.evidence.artifactId ? [capture, input.schedule.capture] : [capture];
   return { contractId: "registry-runtime-bindings", scope: "MEMBERS", ...(conflicts.length ? { excludedFacts: conflicts } : {}), ...(departures.length ? { departures } : {}), version: registryEdition(`section3-roster:${reading.id}${bodies.length ? `:${digest(canonicalJson(updated)).slice(0, 12)}` : ""}`), sourceThrough: now,
-    sourceReceipt: section3SourceReceipt(pages, now, `section3-validator:${reading.id}`,
+    sourceReceipt: reference
+      ? (() => { const receipt = section3SourceReceipt(pages, now, `section3-validator:${reading.id}`,
+          `${reading.method}: ${members.length} member(s) whose name is on the saved Open States file and whose row sits in this seat's district; an Open States row is a Reference source, and an official roster value replaces it.`);
+        return { ...receipt, sources: receipt.sources.map(source => ({ ...source, sourceClass: "REFERENCE_PUBLISHER" as const })) }; })()
+      : section3SourceReceipt(pages, now, `section3-validator:${reading.id}`,
       `${reading.method}: ${members.length} member(s) with seat and name on the saved official page inside its freshness window (§3).` +
       (schedule?.cadence || schedule?.agendaUrl ? ` The body's regular schedule and agenda link were read in code from ${input.schedule!.capture.evidence.canonicalUrl}.` : "")),
     // The source-scoped door carries unchanged bodies on their prior authority; this supplies only the verified roster.
@@ -337,6 +366,7 @@ export async function publishWorkerRosterResults(input: {
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   if (!input.workItemIds.length) return [];
+  const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
   const records = await readCompletedWorkerResults(input.repos);
   const { readHeld, readCapture } = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const allItems = (await input.repos.workItems.list()).map(row => row.value);
@@ -414,8 +444,8 @@ export async function publishWorkerRosterResults(input: {
       const already = publishedByBody.get(`${bodyId}
 ${readingId}`);
       if (already) throw Object.assign(new Error("REUSED"), { reused: already });
-      const directoryPackage = !directory ? null : parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now, results: records })
-        : workerBodyDirectoryPackage({ plan, held: heldDirectory!, prior, now: input.now });
+      const directoryPackage = !directory ? null : parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now, results: records, kinds })
+        : workerBodyDirectoryPackage({ plan, held: heldDirectory!, prior, now: input.now, kinds });
       const prepared: RegistryRuntimePackage = directoryPackage?.prepared ?? roster!;
       const unresolved = directoryPackage?.unresolved ?? roster!.unresolved;
       const before = prior.payload.bodyRosters.find(r => r.bodyId === bodyId)?.members ?? [];

@@ -58,6 +58,7 @@ import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts
 import { collectProviderBilling } from "../lib/control-plane/provider-billing-collector.ts";
 import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
+import { liveSpendHolds } from "../lib/control-plane/expansion/spend-holds.ts";
 import { exactScopeMembers } from "../lib/control-plane/provider-billing-scope-members.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
@@ -439,7 +440,8 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
   const runnerHeartbeat = await repos.runnerHeartbeat.read(RUNNER_ID).then(row=>row?.value??null).catch(()=>null);
   const [billingScopes, billingHolds] = await Promise.all([
     repos.adminConfig.read(ADMIN_CONFIG_ID).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
-    repos.budget.read().then(r => r.value.spendHolds ?? {}).catch(() => null),
+    /* Only live holds are Set aside: a hold its ended round never released is not money waiting on a job (MW-021). */
+    repos.budget.read().then(r => liveSpendHolds(r.value.spendHolds, new Date().toISOString())).catch(() => null),
   ]);
   const [costs, attempts, obligations, research] = await Promise.all([
     repos.costs.readAll(),

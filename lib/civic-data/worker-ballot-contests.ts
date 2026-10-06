@@ -21,6 +21,7 @@ import { readManualProjectionPrior, manualProjectionCandidate } from "./manual-p
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { auditPull, capturesForPublication, latestParserResult } from "./worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import { workerBallotMeasuresPackage } from "./worker-ballot-measures.ts";
 
 const words = (value: unknown) => String(value ?? "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const text = (value: unknown) => typeof value === "string" ? value : "";
@@ -33,6 +34,7 @@ export function workerBallotContestsPackage(input: {
   registry: RegistryRuntimePrior | null; now: string; results?: readonly WorkerResultRecord[];
 }): { package: ManualProjectionPackage; heldContests: readonly string[] } {
   requirePublication(input.plan.publication?.contractId === "ballot-contests" && input.plan.contract.schemaVersion === 2, "BALLOT_CONTRACT_UNRESOLVED");
+  if (input.plan.contract.recordClass === "BALLOT_MEASURE") return workerBallotMeasuresPackage(input);
   requirePublication(input.plan.contract.recordClass === "BALLOT_CONTEST", "BALLOT_CLASS_MISMATCH");
   const checked = verifiedWorkerRecords(input);
   const inventory = inventoryRecordEvidence(checked.primary.evidence, checked.contract.extraction);
@@ -42,13 +44,14 @@ export function workerBallotContestsPackage(input: {
   for (const row of source) groups.set(groupKey(row), [...groups.get(groupKey(row)) ?? [], row]);
   const state = checked.contract.jurisdiction.state.toUpperCase();
   const ballots: Record<string, BallotSet> = {}, heldContests: string[] = [];
-  // CSV delimiters are not word boundaries in section3Contest. Use the exact
-  // replayed source cells as visible text, preserving names (including commas).
-  const pageText = checked.contract.extraction.format === "DELIMITED_TEXT"
+  // Structured delimiters are not visible word boundaries in section3Contest.
+  // Use the exact replayed source cells, preserving names (including commas);
+  // the original capture and its raw hash remain the publication evidence.
+  const pageText = ["DELIMITED_TEXT", "JSON_RECORDS", "XML_RECORDS"].includes(checked.contract.extraction.format)
     ? source.map(row => Object.values(row).join("\n")).join("\n") : checked.primary.evidence.text;
   const page = { url: checked.primary.evidence.canonicalUrl, text: pageText,
     retrievedAt: checked.primary.observedAt, linkingPage: linkingPageFrom(checked.primary.evidence.canonicalUrl,
-      input.captures.filter(captureIntact).map(c => c.evidence)) };
+      input.captures.filter(captureIntact).map(c => c.evidence)), sourcePolicy: checked.primary.sourcePolicy };
   const pageOffices = [...new Set(source.map(row => text(row.office)))];
   for (const [key, listed] of groups) {
     const rows = checked.extraction.records.filter(row => groupKey(row.fields) === key);
@@ -95,9 +98,15 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   for (const ballot of Object.values(fresh.ballots)) {
     const key = ballotElectionKey(ballot), before = ballots[key];
     const ids = new Set(ballot.contests.map(row => row.id));
-    ballots[key] = before ? { ...before, election: ballot.election,
+    const keepsMeasure = (contestId: string, sourceUrl: string | null) => !ids.has(contestId) ||
+      !ballot.measures.some(row => row.contestId === contestId) && ballot.contests.some(row => row.id === contestId && row.measureTextUrl === sourceUrl);
+    requirePublication(!before?.election.date || !ballot.election.date || before.election.date === ballot.election.date, "BALLOT_ELECTION_DATE_CONFLICT");
+    ballots[key] = before ? { ...before, election: { ...ballot.election, date: ballot.election.date || before.election.date },
       contests: [...before.contests.filter(row => !ids.has(row.id)), ...ballot.contests],
-      candidacies: [...before.candidacies.filter(row => !ids.has(row.contestId)), ...ballot.candidacies] } : ballot;
+      candidacies: [...before.candidacies.filter(row => !ids.has(row.contestId)), ...ballot.candidacies],
+      measures: [...before.measures.filter(row => keepsMeasure(row.contestId, row.provenance.sourceUrl)), ...ballot.measures],
+      ...(before.measureRecords !== undefined || ballot.measureRecords !== undefined ? {
+        measureRecords: [...before.measureRecords ?? []].filter(row => keepsMeasure(row.contestId, row.sourceUrl)).concat([...ballot.measureRecords ?? []]) } : {}) } : ballot;
   }
   const urls = new Set(Object.values(ballots).flatMap(ballot => [...ballot.contests, ...ballot.candidacies, ...ballot.measures].map(row => row.provenance.sourceUrl)));
   const sources = [...input.sourceReceipt.sources, ...prior?.sourceReceipt.sources ?? []].filter(row => urls.has(row.finalUrl) || urls.has(row.requestedUrl));
@@ -118,12 +127,21 @@ export async function publishWorkerBallotContestsResults(input: {
     if (!parser || plan?.publication?.contractId !== "ballot-contests") continue;
     const pull = auditPull(results, parser);
     if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.recovery !== "PUBLISHER" &&
+      !(plan.contract.recordClass === "BALLOT_MEASURE" && item.publicationOutcome.status === "PARTIALLY_PUBLISHED") &&
       !(pull && pull.at > item.publicationOutcome.at)) { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let candidateId: string | null = null, versionId: string | null = null, verified = false;
     try {
       requirePublication(parser.result.role === "PARSER", "PARSER_RESULT_UNRESOLVED");
       const captures = await capturesForPublication({ ...input, workItemId: id, primaryId: parser.result.artifactId, results });
+      if (plan.contract.schemaVersion === 2 && plan.contract.recordClass === "BALLOT_MEASURE") {
+        const urls = new Set(parser.result.records.map(row => row.fields.textUrl).filter((url): url is string => typeof url === "string" && url.startsWith("https://")));
+        const held = (await input.repos.artifacts.read(id)).filter(row => urls.has(row.canonicalUrl) && !row.partial)
+          .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
+        const fetched = await Promise.all(held.filter(row => !captures.some(capture => capture.evidence.artifactId === row.artifactId))
+          .map(row => input.readCapture(row.artifactId, results).catch(() => null)));
+        captures.push(...fetched.filter((capture): capture is WorkerPublicationCapture => capture !== null));
+      }
       const checked = workerBallotContestsPackage({ plan, parser, captures, now: input.now, results,
         registry: await readRegistryRuntimePrior(input.store, input.now) });
       const prior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
@@ -142,7 +160,7 @@ export async function publishWorkerBallotContestsResults(input: {
         { workerResultId: parser.id, stage: "LIVE", records: contests.length, changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       outcome = { at: input.now, workerResultId: parser.id, status: checked.heldContests.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "COMPLETE_BALLOT_CONTESTS_PUBLISHED", candidateId, versionId,
-        detail: `${contests.length} complete official contest(s) published together with every listed candidate; ${checked.heldContests.length} incomplete contest(s) remain owed: ${checked.heldContests.join("; ")}.`,
+        detail: `${contests.length} official contest(s) published with ${plan.contract.recordClass === "BALLOT_MEASURE" ? "each independently verified measure fact" : "every listed candidate"}; ${checked.heldContests.length} source or text gap(s) remain owed: ${checked.heldContests.join("; ")}.`,
         ...changes, acceptedRecordIds: contests.map(contest => contest.id), ...(checked.heldContests.length ? { recovery: "WORKER" as const } : {}) };
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);

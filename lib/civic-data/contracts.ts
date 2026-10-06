@@ -1,5 +1,6 @@
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
+import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
 import {
   OFFICIAL_STATE_LEGISLATOR_TARGETS,
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
@@ -53,6 +54,18 @@ export const MEETING_SITTING_WINDOW = {
 
 /** Polling admission is not acquisition; source contracts retain their own cadence. */
 export const ROUTINE_DATA_ADMISSION_MS = 5 * 60_000;
+
+/** Paid derived work stays inside an admitted worker's existing Fleet/area transport. */
+export const PLAIN_ENGLISH_TRANSLATION_ROUTINE = {
+  id: "plain-english-translations",
+  inputRecordClass: "BALLOT_MEASURE",
+  heldInputKinds: ["MEASURE", "BODY_CLASS", "BODY", "OFFICE", "AGENDA", "MINUTES"],
+  publicationRecordClass: "CURATED_READER_RECORD",
+  execution: "EXISTING_GUARDED_WORKER",
+  trigger: "HELD_SOURCE_CHANGED",
+  retryAfterMs: 15 * 60_000,
+  readerConsumers: ["/ballot", "body and office cards", "meeting cards", "Ask"],
+} as const;
 
 /**
  * Whether a body has a sitting within the window of `nowMs`, from its
@@ -617,7 +630,8 @@ export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, no
 }
 
 export function routineContract(id: string): RoutineSourceContract | null {
-  return ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === id) ?? null;
+  return ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === id) ??
+    RUNTIME_ROUTINE_CONTRACTS.find((contract) => contract.id === id) ?? null;
 }
 
 export function requiredRoutineContract(id: string): RoutineSourceContract {

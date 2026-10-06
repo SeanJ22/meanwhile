@@ -3,6 +3,7 @@ import { normalizeName } from "../routing/exact-name.ts";
 import { formatDateLong, spellOutDates } from "../text/format-date.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import { overLengthBudget } from "./length-contract.ts";
+import { filedOrganizations, stateSmallDonorSentence } from "../funding/state-money-funding.ts";
 
 /**
  * **HOW MUCH A CAMPAIGN RAISED IS A FIGURE WE HOLD, NOT A PARAGRAPH TO WRITE.**
@@ -400,6 +401,19 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
   };
 
   if (input.ask.kind === "WHO_GAVE") {
+    const organizationRows = shown.flatMap(entry => filedOrganizations(entry.finance.funding).map(org => ({ org, entry })));
+    if (organizationRows.length) {
+      const amounts = organizationRows.map(({ org, entry }) => `${org.filedName}${org.filedType ? ` (${org.filedType})` : ""}, ${dollars(org.amount)} ${periodPhrase(entry.finance)}`);
+      const individuals = shown.flatMap(entry => {
+        const funding = entry.finance.funding;
+        const total = funding?.individualTotal;
+        return [typeof total === "number" ? `Individual giving was ${dollars(total)} ${periodPhrase(entry.finance)}` : null,
+          stateSmallDonorSentence(funding)].filter((text): text is string => Boolean(text));
+      });
+      const answer = assemble([...(input.lead ? [input.lead] : []), `${person.name}'s filings report these organization amounts: ${amounts.join("; ")}`,
+        ...individuals, ...(source ? [source] : [])], caveat ? [caveat] : []);
+      return answer ? { answer, citedUrls: cited } : null;
+    }
     const count = floorLine(floored("money records we hold for this candidate that name a donor", where, held.length, 0));
     const lead = filed.length
       ? `Our records for ${person.name} hold campaign totals, not the identities of donors (${count})`
@@ -631,6 +645,7 @@ export function composeGroupMoneyAnswer(input: GroupMoneyContestInput): { answer
   const race = `the ${input.contest.title} race`;
   const sentences: string[] = [];
   if (input.ask.kind === "WHO_GAVE") {
+    if (all.some(entry => filedOrganizations(entry.finance.funding).length > 0)) return null;
     const donors = floorLine(floored("money records naming a donor", where, all.length, 0));
     sentences.push(`Our records for ${race} hold campaign totals, not the identities of donors (${donors}; ${count})`);
     sentences.push(`What we hold for each${shared ? `, filed ${shared}` : ""}: ${list}`);

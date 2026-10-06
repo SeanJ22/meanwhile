@@ -851,6 +851,34 @@ test("slow loading and store work complete before the pass reports, without a pa
   assert.doesNotMatch(campaignSiteCycleLine(report), /STOPPED|time budget/);
 });
 
+test("at the round's dispatch cutoff both candidate lanes stop starting reads; every unread lead and page stays owed", async (t) => {
+  const p = await plane(t);
+  await captureProfile(p);
+  const { pages } = await backlog(p);
+  const before = p.requests.length;
+  const { report } = await cycle(p, T1, { deadlineMs: Date.parse(T1) }, pages);
+  assert.equal(p.requests.length, before, "no lead read starts after the cutoff");
+  assert.equal(report.chain.readsUsed, 0);
+  const deferred = report.chain.leads.filter((l) => l.outcome === "DEFERRED");
+  assert.ok(deferred.length > 0 && deferred.every((l) => l.refusals[0]?.code === "NOT_READ"), "deferred, never refused");
+  assert.ok(deferred.some((l) => /dispatch time ended/.test(l.refusals[0]?.detail ?? "")));
+
+  await cycle(p, T1, {}, pages);
+  await cycle(p, T2, {}, pages);
+  let ms = Date.parse(PUBLISH);
+  const opened: string[] = [];
+  const web = servedRuntime(served(), PUBLISH);
+  const late = await runCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
+    heldVault: await indexVault(p.vaultRoot), vaultRoot: p.vaultRoot, methodVersion: 1,
+    clock: () => (ms += 5), sleep: async wait => { ms += wait; },
+    openFor: () => async request => { opened.push(request.url); return web.get(request); }, maxReads: 100, deadlineMs: ms });
+  assert.equal(opened.length, 0, "no linked page read starts after the cutoff");
+  assert.equal(late.acquired + late.failed, 0);
+  assert.ok(late.due > 0, "the approved site offers linked pages");
+  assert.equal(late.deferred, late.due);
+  assert.ok(late.outcomes.filter(row => row.code === "NOT_READ_DEADLINE").length === late.due);
+});
+
 test("withinWallTime ends a promise that never settles and clears its timer when one does", async () => {
   const started = Date.now();
   assert.deepEqual(await withinWallTime(HANG<number>(), 50), { done: false });

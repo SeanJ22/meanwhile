@@ -42,6 +42,8 @@ export interface Contest {
   /** The office or question title, as the filing titles it. */
   title: string;
   type: ContestType;
+  /** The official measure text link can publish before the document is acquired. */
+  measureTextUrl?: string;
   /** Seats to vote for — mandatory, not an edge case (NH multi-member). */
   voteFor: number | null;
   /** Term in years, where the filing states it. */
@@ -78,6 +80,8 @@ export interface Candidacy {
 export interface Measure {
   id: string;
   contestId: string;
+  /** The publisher's designation, when held; never generated from list order. */
+  officialNumber?: string;
   /** The official question text, verbatim. Never paraphrased. */
   questionText: string;
   /** The official interpretive statement or analysis, verbatim, if any. */

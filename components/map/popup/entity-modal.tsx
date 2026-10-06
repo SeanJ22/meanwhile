@@ -8,6 +8,7 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
+import { MeetingCard } from "@/components/ui/meeting-card";
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 
 import { useCardVisibility } from "@/hooks/use-card-visibility";
@@ -695,7 +696,7 @@ export function EntityModal({
   const overview = (
               <>
                 {subject.agenda && <MeetingListingNotice groups={listingCount.groups} />}
-                {subject.facts.map((fact) => (
+                {subject.subjectKind !== "MEETING" && subject.facts.map((fact) => (
                   <PopupRow key={fact.label} label={fact.label} mono={fact.mono}>
                     {fact.value}
                   </PopupRow>
@@ -759,7 +760,7 @@ export function EntityModal({
                   The Location row above is the Directions link. This is the
                   other half.
                 */}
-                {subject.agenda &&
+                {subject.subjectKind !== "MEETING" && subject.agenda &&
                   subject.meetings.length === 1 &&
                   subject.meetings[0].status === "SCHEDULED" && (
                     <CalendarLinks meeting={subject.meetings[0]} />
@@ -815,6 +816,17 @@ export function EntityModal({
         )}
       </div>
     ) : null;
+
+  if (subject.subjectKind === "MEETING" && subject.meetings[0]) return <div ref={cardRef}
+    className={embedded ? "mw-embedded" : "account-modal-overlay"} role={embedded ? undefined : "dialog"} aria-modal={embedded ? undefined : "true"} aria-label={subject.title}
+    onClick={event => { if (!embedded && event.target === event.currentTarget) onClose(); }}>
+    <MeetingCard meeting={subject.meetings[0]} title={subject.title} subtitle={subject.subtitle} representation={subject.representation} sources={subject.sources} onClose={embedded ? undefined : onClose}>
+      {meetingLinks}
+      <CardSection title="What this meeting is about" defaultOpen>{overview}</CardSection>
+      <CardSection title="Who sits on it"><Representation holders={subject.representation} note={subject.representationNote} gaps={subject.rosterGaps} onOpenHolder={onOpenHolder} /></CardSection>
+      <SpeakYourMind subjectType="MEETING" subjectId={subject.subjectId} subject={subject.title} />
+    </MeetingCard>
+  </div>;
 
   return (
     <CardSubjectContext.Provider value={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null}><CardSourceContext.Provider value={register}><div

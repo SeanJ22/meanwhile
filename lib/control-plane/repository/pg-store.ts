@@ -505,7 +505,7 @@ export function pgAggregateRepository<T>(
         "compareAndSet",
         rowClass,
         `UPDATE ${table}
-            SET revision = revision + 1, updated_at = $1, value = $2::jsonb
+            SET revision = revision + 1, updated_at = $1, value = $2::jsonb, changed_at = now()
           WHERE id = $3 AND revision = $4
        RETURNING id, revision, updated_at`,
         [now, submitted, id, expectedRevision],
@@ -535,8 +535,67 @@ export function pgAggregateRepository<T>(
       };
     },
 
+    async readMany(ids) {
+      /* Primary-key batches of one page each, so no response nears the driver cap. */
+      const unique = [...new Set(ids)].sort();
+      const out: Persisted<T>[] = [];
+      for (let at = 0; at < unique.length; at += AGGREGATE_LIST_READ_PAGE) {
+        const rows = (await run(
+          "readMany",
+          "PAGE",
+          `SELECT id, revision, updated_at, value FROM ${table} WHERE id = ANY($1::text[]) ORDER BY id ASC`,
+          [unique.slice(at, at + AGGREGATE_LIST_READ_PAGE)],
+        )) as Record<string, unknown>[];
+        for (const row of rows) {
+          out.push({
+            id: String(row.id),
+            revision: Number(row.revision),
+            updatedAt: new Date(row.updated_at as string).toISOString(),
+            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
+          });
+        }
+      }
+      return out;
+    },
+
     list: () => list(),
     listNarrowed: projection => list(projection),
+
+    async listChangedSince(since) {
+      /* `list()` narrowed to rows the DATABASE stamped at or after `since`
+         (schema v22), the same id keyset pages. `through` is the database clock
+         taken before the first page, so a change committed while the pages are
+         read is caught by the next read rather than straddled. */
+      const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+      const through = new Date(clock[0]?.read_at as string).toISOString();
+      const changed = since === null ? "" : "changed_at >= $1::timestamptz";
+      const out: Persisted<T>[] = [];
+      let afterId: string | null = null;
+      for (;;) {
+        const filters = [changed, afterId === null ? "" : `id > $${since === null ? 1 : 2}`].filter(Boolean);
+        const params = [...(since === null ? [] : [since]), ...(afterId === null ? [] : [afterId])];
+        const rows = (await run(
+          "listChangedSince",
+          "PAGE",
+          `SELECT id, revision, updated_at, value FROM ${table}
+           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+           ORDER BY id ASC
+           LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+          params,
+        )) as Record<string, unknown>[];
+        for (const row of rows) {
+          out.push({
+            id: String(row.id),
+            revision: Number(row.revision),
+            updatedAt: new Date(row.updated_at as string).toISOString(),
+            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
+          });
+        }
+        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
+        afterId = String(rows[rows.length - 1].id);
+      }
+      return { rows: out, through };
+    },
 
     async listWhere(path, value) {
       /* `list()` filtered IN THE DATABASE: the same ORDER BY id and keyset
@@ -841,6 +900,40 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
+    async readChangedSince(since) {
+      /* `readAll()` narrowed to records the DATABASE stamped at or after
+         `since` (schema v22), the same (log_key, position) keyset pages, each
+         with its coordinates. `through` is the database clock before the first
+         page, as in the aggregate read. */
+      const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+      const through = new Date(clock[0]?.read_at as string).toISOString();
+      const out: { key: string; recordId: string; position: number; record: T }[] = [];
+      let cursor: { readonly key: string; readonly position: number } | null = null;
+      for (;;) {
+        const at = since === null ? 1 : 2;
+        const filters = [since === null ? "" : "changed_at >= $1::timestamptz",
+          cursor === null ? "" : `(log_key, position) > ($${at}, $${at + 1})`].filter(Boolean);
+        const params = [...(since === null ? [] : [since]), ...(cursor === null ? [] : [cursor.key, cursor.position])];
+        const rows = (await run(
+          "readChangedSince",
+          "PAGE",
+          `SELECT log_key, record_id, position, record FROM ${table}
+           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+           ORDER BY log_key ASC, position ASC
+           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+          params,
+        )) as Record<string, unknown>[];
+        for (const r of rows) {
+          out.push({ key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
+            record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`) });
+        }
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        const last = rows[rows.length - 1];
+        cursor = { key: String(last.log_key), position: Number(last.position) };
+      }
+      return { records: out, through };
+    },
+
     async readRecent(key, limit) {
       /* Newest `limit`, newest first. `limit` bounds the response, so this needs
          no paging — callers pass a small tail (e.g. a digest-history window). */
@@ -1024,7 +1117,9 @@ export async function bootstrap(
 const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
 
 /** Reconcile all subjects in one place against one indexed query, rather
- * than opening a serverless connection for every field's subject. */
+ * than opening a serverless connection for every field's subject. The filter is
+ * the exact expression of `cp_work_items_subject` (`#>> '{subject}'`): `->>`
+ * does not match that index and scanned the whole table. */
 export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
   if (!subjects.length) return [];
   const ids = [...new Set(subjects)];
@@ -1036,20 +1131,22 @@ export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjec
   }
   const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = await run("placeSubjects", "PAGE", `SELECT id, revision, updated_at, value
-    FROM cp_work_items WHERE value->>'subject'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
+    FROM cp_work_items WHERE value #>> '{subject}'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
   return rows.map(row => ({ id: String(row.id), revision: Number(row.revision),
     updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<WorkItem>(row.value, `place work item ${String(row.id)}`) }));
 }
 
 /** Exact source observations from any job; unrelated vault metadata stays in
- * Postgres instead of being copied into every place worker. */
+ * Postgres instead of being copied into every place worker. The md5 filter is
+ * what `cp_log_artifacts_source_url` (v18) indexes; the plain equality alone
+ * scanned the whole log. */
 export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {
   const sql = placeReadConnections.get(repos);
   if (!sql) return (await repos.artifacts.readAll()).filter(row => row.canonicalUrl === url && !row.partial &&
     row.tier !== "RESTRICTED_RAW" && row.recordedAt >= cutoff && row.recordedAt <= now);
   const run = boundedRunner(sql, "cp_log_artifacts", CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = await run("placeSource", "PAGE", `SELECT record FROM cp_log_artifacts
-    WHERE record->>'canonicalUrl'=$1 AND record->>'partial'='false' AND record->>'tier'<>'RESTRICTED_RAW'
+    WHERE md5(record->>'canonicalUrl')=md5($1) AND record->>'canonicalUrl'=$1 AND record->>'partial'='false' AND record->>'tier'<>'RESTRICTED_RAW'
       AND record->>'recordedAt'>=$2 AND record->>'recordedAt'<=$3 ORDER BY record->>'recordedAt' DESC`, [url, cutoff, now]) as Record<string, unknown>[];
   return rows.map(row => parseValue<ArtifactRecord>(row.record, "place source artifact"));
 }

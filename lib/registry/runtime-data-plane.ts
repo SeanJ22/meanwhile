@@ -778,14 +778,19 @@ export function registryRuntimeCandidate(
     throw new Error(`REGISTRY_RUNTIME_SOURCE_RECEIPT_CLASS_NOT_AUTHORIZED:${unauthorizedSource.sourceClass}`);
   }
 
-  // The added reference class corroborates verified portraits only; it cannot
-  // authorize a new body, roster, or another fact in the same package.
+  // The added reference class corroborates verified portraits, and fills a legislative
+  // seat from the Open States file (CA-02); it cannot authorize a new body or another fact.
   const currentMembers = registryIsolationMembers(input.payload, input.sourceReceipt);
   for (const source of input.sourceReceipt.sources.filter(source => source.sourceClass === "REFERENCE_PUBLISHER")) {
     const cited = currentMembers.filter(member => member.record.kind !== "PROJECTION_METADATA" &&
       registryIsolationUrls(member).some(url => url === source.requestedUrl || url === source.finalUrl));
-    if (!cited.length || cited.some(member => member.record.kind !== "OFFICIAL_PHOTO" || !member.record.value.photo ||
-      !portraitBindingMatches(member.record.value.photo.name, member.record.value.photo))) {
+    // CA-02: an Open States row may also fill a legislative seat, on that file alone; an official roster value replaces it.
+    // The seat's roster, its reader disposition and its owed candidacy check all cite the one file.
+    const openStatesSeat = (member: typeof cited[number]) => member.record.kind === "BODY_ROSTER" &&
+      /^https:\/\/data\.openstates\.org\/people\/current\/[a-z]{2}\.csv$/.test(member.record.value.sourceUrl) && /#seat$/.test(member.record.value.bodyId);
+    const seatDependent = (member: typeof cited[number]) => ["ROSTER_DISPOSITION", "OFFICIAL_CANDIDACY"].includes(member.record.kind) && cited.some(openStatesSeat);
+    if (!cited.length || cited.some(member => !openStatesSeat(member) && !seatDependent(member) && (member.record.kind !== "OFFICIAL_PHOTO" || !member.record.value.photo ||
+      !portraitBindingMatches(member.record.value.photo.name, member.record.value.photo)))) {
       throw new Error("REGISTRY_RUNTIME_REFERENCE_SOURCE_NOT_VERIFIED_PORTRAIT");
     }
   }

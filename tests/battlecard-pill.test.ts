@@ -85,10 +85,12 @@ test("BC-1: every card carries the same seven sections, always", () => {
    * thin one's — a layout asymmetry tracking incumbency rather than anything
    * about the people.
    */
-  const card = read("components", "ballot", "candidate-battlecard.tsx");
+  const candidate = read("components", "ballot", "candidate-battlecard.tsx");
+  assert.match(candidate, /<PersonCard/);
+  const card = read("components", "ui", "person-card.tsx");
   assert.match(
     card,
-    /BATTLECARD_SECTIONS\.map/,
+    /PERSON_CARD_SECTIONS\.filter[\s\S]*?\.map/,
     "the card must render the fixed set, not whatever it was handed",
   );
   assert.equal(BATTLECARD_SECTIONS.length, 7, "the seven the author named");
@@ -112,43 +114,12 @@ test("BC-1: every card carries the same seven sections, always", () => {
   );
 });
 
-test("BC-2: the two empty states exist and are distinguishable", () => {
-  /*
-   * An empty Voting record on someone who has never held the office and an
-   * empty one on an incumbent whose record we have not collected are different
-   * facts. Rendering them as one sentence is a null becoming an assertion —
-   * and it makes a challenger's card read as thinner than an incumbent's
-   * because of COPY rather than data.
-   */
-  const held = votingRecordEmptyLine(true);
-  const never = votingRecordEmptyLine(false);
-  assert.notEqual(held, never, "one sentence cannot carry two different facts");
-
-  /*
-   * **THIS GUARD IS REWRITTEN, EXPLICITLY, IN THE SAME COMMIT AS THE COPY IT
-   * GUARDS.** (2026-08-26, Item 13.)
-   *
-   * It used to REQUIRE the defect. It asserted `never` matched
-   * `/have not held this office/` and that it did NOT say "we haven't" —
-   * so a guard written to protect BC-2's distinction was, by construction,
-   * pressure to keep a sentence that asserts a fact about a named person.
-   * On 2026-08-26 the product was making that assertion on the card of Karen
-   * Ebel, the sitting Deputy Speaker of the New Hampshire House.
-   *
-   * **BC-2's distinction survives and is still asserted**, one line up: the
-   * two sentences must differ, because a record IN THIS OFFICE and a record at
-   * all are different gaps. What is gone is the requirement that the second one
-   * explain itself by describing the candidate's life.
-   */
-  assert.match(held, /^We haven't sourced this person's voting record in this office/);
-  assert.match(never, /^We haven't sourced a voting record for this person/);
-  assert.doesNotMatch(
-    never,
-    /have not held|has not held|never held/i,
-    "an absence describes our sourcing and never asserts a fact about a person",
-  );
-  assert.deepEqual(claimsInText(held), [], "the incumbent line makes no claim about the person either");
-  assert.deepEqual(claimsInText(never), []);
+test("FE-30: all missing voting records use the same collection state", () => {
+  for (const held of [true, false]) {
+    const line = votingRecordEmptyLine(held);
+    assert.equal(line, "We’re working on getting this info");
+    assert.deepEqual(claimsInText(line), []);
+  }
 });
 
 test("BC-2: an empty section is never a per-card completeness statement", () => {

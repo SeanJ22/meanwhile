@@ -89,7 +89,7 @@ export function ZipComb({
               key={index}
               className={cn(
                 "relative flex h-13 items-center justify-center rounded-md border transition-colors",
-                "bg-bg font-mono text-2xl tabular-nums text-text",
+                "bg-bg font-mono t-display tabular-nums text-text",
                 invalid
                   ? "border-danger"
                   : isActive

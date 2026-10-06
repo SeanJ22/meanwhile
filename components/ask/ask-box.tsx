@@ -217,17 +217,17 @@ function RoutedContactCards({ contacts }: { contacts: AskAnswer["contacts"] }) {
           key={`${contact.body}|${contact.service}`}
           className="rounded-md border border-[var(--signal)]/35 bg-[var(--signal)]/5 p-3"
         >
-          <p className="text-[0.875rem] font-semibold text-paper">
+          <p className="t-body font-semibold text-paper">
             {contact.body}
           </p>
-          <p className="text-[0.75rem] leading-relaxed text-voice">
+          <p className="t-detail leading-relaxed text-voice">
             {contact.service}
           </p>
           <p className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             {contact.phone && (
               <a
                 href={telHref(contact.phone)}
-                className="font-mono text-[0.9375rem] font-semibold text-link"
+                className="font-mono t-heading font-semibold text-link"
               >
                 {contact.phone}
               </a>
@@ -235,7 +235,7 @@ function RoutedContactCards({ contacts }: { contacts: AskAnswer["contacts"] }) {
             {contact.email && (
               <a
                 href={`mailto:${contact.email}`}
-                className="text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
+                className="t-detail text-link underline decoration-dotted underline-offset-2"
               >
                 {contact.email}
               </a>
@@ -245,20 +245,20 @@ function RoutedContactCards({ contacts }: { contacts: AskAnswer["contacts"] }) {
                 href={contact.requestUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
+                className="t-detail text-link underline decoration-dotted underline-offset-2"
               >
                 online request
               </a>
             )}
           </p>
           {contact.note && (
-            <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
+            <p className="mt-1 t-caption leading-relaxed text-voice">
               {contact.note}
             </p>
           )}
           {/* SRC-3: one source line, at the bottom, in the level register —
               the publisher named in full, never a competing click target. */}
-          <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+          <p className="mt-1.5 t-caption leading-relaxed text-muted">
             This was sourced from {citedContactUrl(contact.sourceUrl)
               ? <a href={contact.sourceUrl} target="_blank" rel="noreferrer noopener" className="underline decoration-dotted underline-offset-2 hover:text-link">{contact.sourceOrg}</a>
               : contact.sourceOrg}.
@@ -868,7 +868,7 @@ export function AskBox({
     >
       <label
         htmlFor={inputId}
-        className="block text-[0.9375rem] font-semibold leading-snug text-paper"
+        className="block t-heading font-semibold leading-snug text-paper"
       >
         Ask, or find a thing by name
       </label>
@@ -880,7 +880,7 @@ export function AskBox({
         its promise in the same edit. The topic half of the sentence keeps
         its concrete examples, which is what actually teaches the box.
       */}
-      <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
+      <p className="mt-0.5 t-caption leading-relaxed text-voice">
         {/* F01 8.3 (2026-08-19): a pothole is a poor example to lead
             with. It reads as "report a pothole", and
             this box does not file service requests — it NAMES the office that
@@ -932,7 +932,7 @@ export function AskBox({
                 ? "my kid's school, a meeting, Planning Commission…"
                 : "the library, my kid's school, a meeting…"
             }
-            className="w-full min-w-0 rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 text-[0.875rem] placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
+            className="w-full min-w-0 rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 t-body placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
           />
 
           {onSearchPick && (
@@ -989,7 +989,7 @@ export function AskBox({
         <button
           type="button"
           onClick={() => ask()}
-          className="shrink-0 cursor-pointer rounded-md border border-[var(--action)] bg-[var(--action)] px-3.5 text-[0.8125rem] font-semibold text-[var(--action-on)] transition-opacity hover:opacity-90"
+          className="shrink-0 cursor-pointer rounded-md border border-[var(--action)] bg-[var(--action)] px-3.5 t-body font-semibold text-[var(--action-on)] transition-opacity hover:opacity-90"
         >
           Ask
         </button>
@@ -1001,7 +1001,7 @@ export function AskBox({
         // reader announces; the cycling dots are visual, which is why the
         // pool's trailing ellipsis is stripped from the stem.
         <p
-          className="mt-2.5 text-[0.8125rem] italic leading-relaxed text-voice"
+          className="mt-2.5 t-body italic leading-relaxed text-voice"
           aria-live="polite"
           data-ask-beat
         >
@@ -1035,10 +1035,10 @@ export function AskBox({
           className="mt-3 rounded-md border border-[var(--signal)]/35 bg-[var(--signal)]/5 p-3"
         >
           <p className="t-eyebrow text-signal">Where to look</p>
-          <p className="mt-1 text-[0.9375rem] font-semibold leading-snug text-paper">
+          <p className="mt-1 t-heading font-semibold leading-snug text-paper">
             {asked.destination.destination.label}
           </p>
-          <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
+          <p className="mt-1 t-detail leading-relaxed text-voice">
             {asked.destination.destination.statement}
           </p>
           {/*
@@ -1058,7 +1058,7 @@ export function AskBox({
             <a
               href={asked.destination.destination.href}
               data-ask-destination-go
-              className="mt-2 inline-flex min-h-11 items-center rounded-md border border-[var(--signal)]/45 bg-[var(--signal)]/10 px-3 text-[0.8125rem] font-semibold text-link no-underline"
+              className="mt-2 inline-flex min-h-11 items-center rounded-md border border-[var(--signal)]/45 bg-[var(--signal)]/10 px-3 t-body font-semibold text-link no-underline"
             >
               {asked.destination.destination.label}
             </a>
@@ -1099,7 +1099,7 @@ export function AskBox({
                     dispatch({ type: "door/open", door: action.door });
                   }
                 }}
-                className="mt-2 inline-flex min-h-11 items-center rounded-md border border-[var(--signal)]/45 bg-[var(--signal)]/10 px-3 text-[0.8125rem] font-semibold text-link"
+                className="mt-2 inline-flex min-h-11 items-center rounded-md border border-[var(--signal)]/45 bg-[var(--signal)]/10 px-3 t-body font-semibold text-link"
               >
                 {asked.destination.destination.label}
               </button>
@@ -1163,7 +1163,7 @@ export function AskBox({
           */}
           <div className="flex items-start justify-between gap-2">
             {grounded.subject ? (
-              <p className="min-w-0 flex-1 text-[0.8125rem] font-semibold leading-snug text-paper">
+              <p className="min-w-0 flex-1 t-body font-semibold leading-snug text-paper">
                 {grounded.subject.name}
                 {grounded.subject.office ? (
                   <span className="font-normal text-muted"> · {grounded.subject.office}</span>
@@ -1177,7 +1177,7 @@ export function AskBox({
               data-ask-dismiss
               aria-label="Close this answer"
               onClick={() => { setGrounded(null); setAsked(null); setDigest(null); }}
-              className="shrink-0 cursor-pointer rounded px-1.5 py-0.5 text-[0.75rem] leading-none text-muted hover:text-paper"
+              className="shrink-0 cursor-pointer rounded px-1.5 py-0.5 t-detail leading-none text-muted hover:text-paper"
             >
               Close
             </button>
@@ -1193,7 +1193,7 @@ export function AskBox({
           {grounded.mode === "CLARIFY" && !grounded.confirmation && !grounded.clarification && (
             <p
               data-ask-grounded-state="CLARIFY"
-              className="text-[0.8125rem] leading-relaxed text-voice"
+              className="t-body leading-relaxed text-voice"
             >
               More than one goes by &ldquo;{grounded.mention}&rdquo;
               {grounded.candidates?.length ? `: ${grounded.candidates.join(", ")}` : ""}.
@@ -1211,7 +1211,7 @@ export function AskBox({
           {grounded.mode === "UNRESOLVED" && (
             <p
               data-ask-grounded-state="UNRESOLVED"
-              className="text-[0.8125rem] leading-relaxed text-voice"
+              className="t-body leading-relaxed text-voice"
             >
               {unresolvedReadLine(grounded)}
             </p>
@@ -1248,7 +1248,7 @@ export function AskBox({
           {grounded.mode === "TRANSPORT_FAILED" && (
             <p
               data-ask-state="TRANSPORT_FAILED"
-              className="text-[0.8125rem] leading-relaxed text-voice"
+              className="t-body leading-relaxed text-voice"
             >
               That didn&rsquo;t reach us. Try again in a moment.
             </p>
@@ -1256,7 +1256,7 @@ export function AskBox({
 
           {/* The validated sentence, where one survived checking. */}
           {grounded.answer && !grounded.agendaLead && (
-            <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+            <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
               {grounded.answer}
             </p>
           )}
@@ -1349,7 +1349,7 @@ export function AskBox({
             <p
               key={g.statement}
               data-ask-gap={g.whose}
-              className="mt-1.5 text-[0.75rem] leading-relaxed text-muted"
+              className="mt-1.5 t-detail leading-relaxed text-muted"
             >
               {g.statement}
             </p>
@@ -1394,7 +1394,7 @@ export function AskBox({
           {preservedRoutedContact && asked && (
             <div className="mt-3" data-ask-preserved-contact>
               <p className="t-eyebrow text-signal">Who handles this</p>
-              <p className="mt-1 text-[0.9375rem] font-semibold text-paper">
+              <p className="mt-1 t-heading font-semibold text-paper">
                 {asked.answer.topic?.label}
               </p>
               <RoutedContactCards contacts={asked.contacts} />
@@ -1449,7 +1449,7 @@ export function AskBox({
                  The reader-contract evaluator requires a visible source record
                  before any answer may be green (A.1 WI1), and counting anchors
                  inside the panel would count contact `mailto:` links too. */
-              <p className="mt-2 text-[0.6875rem] text-muted" data-ask-sources={links.length}>
+              <p className="mt-2 t-caption text-muted" data-ask-sources={links.length}>
                 Source{links.length > 1 ? "s" : ""}:{" "}
                 {links.map((l, i) => (
                   <span key={l.label}>
@@ -1530,7 +1530,7 @@ export function AskBox({
           {asked.binding.kind === "AMBIGUOUS" && !grounded?.subject && (
             <p
               data-ask-entity-state="AMBIGUOUS"
-              className="text-[0.8125rem] leading-relaxed text-voice"
+              className="t-body leading-relaxed text-voice"
             >
               {/* NOT "choose one" — nothing here is choosable, and asking a
                   reader to do something the product has not built is a claim
@@ -1542,7 +1542,7 @@ export function AskBox({
               &ldquo;town&rdquo; — and we&apos;ll answer for that one.
             </p>
           )}
-          <p className="text-[0.8125rem] leading-relaxed text-voice">
+          <p className="t-body leading-relaxed text-voice">
             {asked.answer.statement}
           </p>
           {/*
@@ -1552,7 +1552,7 @@ export function AskBox({
             surfaces, named, so a refusal still leaves the reader somewhere to
             go. It claims nothing about their question.
           */}
-          <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+          <p className="mt-1.5 t-caption leading-relaxed text-muted">
             You can still head straight to{" "}
             {ROUTABLE_CATEGORIES.map((category, i) => (
               <span key={category}>
@@ -1598,7 +1598,7 @@ export function AskBox({
               topic as the heading. Same data as before, dressed to be
               read as the authoritative answer it is. */}
           <p className="t-eyebrow text-signal">The answer</p>
-          <p className="mt-1 text-[0.9375rem] font-semibold leading-snug text-paper">
+          <p className="mt-1 t-heading font-semibold leading-snug text-paper">
             {asked.answer.topic.label}
           </p>
           {asked.contacts.length > 0 && (
@@ -1610,7 +1610,7 @@ export function AskBox({
           )}
           <ol className="mt-2 space-y-2.5">
             {asked.answer.steps.map((step, i) => (
-              <li key={i} className="text-[0.75rem] leading-relaxed">
+              <li key={i} className="t-detail leading-relaxed">
                 <p className="text-voice">{step.why}</p>
                 {step.bodies.length > 0 && (
                   /*
@@ -1635,7 +1635,7 @@ export function AskBox({
                     reader out of the product instead would be re-introducing
                     the defect on the one surface nobody looks at.
                   */
-                  <p className="mt-0.5 text-[0.8125rem]">
+                  <p className="mt-0.5 t-body">
                     {step.bodies.map((body, j) => (
                       <span key={body.label}>
                         {j > 0 && <span className="text-muted"> · </span>}
@@ -1673,7 +1673,7 @@ export function AskBox({
                     is a false claim about a real person, and the reader
                     finds out by being ignored.
                   */
-                  <ul className="mt-0.5 space-y-1 text-[0.8125rem]">
+                  <ul className="mt-0.5 space-y-1 t-body">
                     {step.people.map((person) => (
                       <li key={person.id}>
                         {/*
@@ -1709,7 +1709,7 @@ export function AskBox({
                         )}
                         <span className="text-muted"> · {readerOfficeTitle(person.officeTitle)}</span>
                         {(person.phone || person.email || person.contactFormUrl) && (
-                          <span className="ml-1 text-[0.75rem]">
+                          <span className="ml-1 t-detail">
                             {person.phone && (
                               <a
                                 href={`tel:${person.phone.replace(/[^\d+]/g, "")}`}
@@ -1769,7 +1769,7 @@ export function AskBox({
                 */}
                 {step.gap &&
                   asked.answer.steps.findIndex((s) => s.gap === step.gap) === i && (
-                    <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
+                    <p className="mt-0.5 t-caption leading-relaxed text-voice">
                       {step.gap}
                     </p>
                   )}
@@ -1777,7 +1777,7 @@ export function AskBox({
             ))}
           </ol>
           {/* The denominator, always stated — never implied completeness. */}
-          <p className="mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted">
+          <p className="mt-2 border-t border-[var(--panel-border)] pt-1.5 t-caption leading-relaxed text-muted">
             Based on what we track here
             {zip ? ` around ${zip}` : ""} — {asked.answer.grounding.stepsWithSomeone}{" "}
             of {asked.answer.grounding.totalSteps} steps point at a body or
@@ -1849,7 +1849,7 @@ function AnswerBodies({
   if (rows.length === 0) return null;
 
   return (
-    <p data-ask-answer-bodies className="mt-2 text-[0.8125rem] leading-relaxed">
+    <p data-ask-answer-bodies className="mt-2 t-body leading-relaxed">
       {rows.map((body, i) => (
         <span key={body.bodyId}>
           {i > 0 && <span className="text-muted"> · </span>}
@@ -1928,10 +1928,10 @@ function DigestAnswer({
   return (
     <div data-ask-digest className="mt-3">
       <p className="t-eyebrow text-signal">Where you live</p>
-      <p className="mt-1 text-[0.9375rem] font-semibold leading-snug text-paper">
+      <p className="mt-1 t-heading font-semibold leading-snug text-paper">
         What&apos;s going on
       </p>
-      <p className="mt-0.5 text-[0.625rem] leading-relaxed text-muted">
+      <p className="mt-0.5 t-caption leading-relaxed text-muted">
         Scoped to the {digest.divisionLabels.length} division
         {digest.divisionLabels.length === 1 ? "" : "s"} your point sits in.
       </p>
@@ -1943,7 +1943,7 @@ function DigestAnswer({
         gap={digest.upcoming.gap}
       >
         {digest.upcoming.rows.map((row) => (
-          <li key={row.id} className="text-[0.75rem] leading-relaxed">
+          <li key={row.id} className="t-detail leading-relaxed">
             <span className="font-medium text-paper">
               <BodyName
                 label={row.bodyName}
@@ -1965,7 +1965,7 @@ function DigestAnswer({
                   href={row.agendaUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-[0.6875rem] text-link underline decoration-dotted underline-offset-2"
+                  className="t-caption text-link underline decoration-dotted underline-offset-2"
                 >
                   agenda
                 </a>
@@ -1982,7 +1982,7 @@ function DigestAnswer({
         gap={digest.recent.gap}
       >
         {digest.recent.rows.map((row) => (
-          <li key={row.id} className="text-[0.75rem] leading-relaxed">
+          <li key={row.id} className="t-detail leading-relaxed">
             <span className="font-medium text-paper">
               <BodyName
                 label={row.bodyName}
@@ -2002,7 +2002,7 @@ function DigestAnswer({
                   href={row.agendaUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-[0.6875rem] text-link underline decoration-dotted underline-offset-2"
+                  className="t-caption text-link underline decoration-dotted underline-offset-2"
                 >
                   agenda
                 </a>
@@ -2019,7 +2019,7 @@ function DigestAnswer({
         gap={digest.representation.gap}
       >
         {digest.representation.rows.map(({ seatLabel, holder }) => (
-          <li key={`${seatLabel}|${holder.id}`} className="text-[0.75rem] leading-relaxed">
+          <li key={`${seatLabel}|${holder.id}`} className="t-detail leading-relaxed">
             {/* ASK-3: the name is the door. SRC-4: the inline source tag is
                 gone — the record travels on the row and renders inside the
                 battlecard this name opens. */}
@@ -2043,7 +2043,7 @@ function DigestAnswer({
         // Never dropped: Census enumerates no boundary for these governments,
         // so they cannot be scoped to a point — which is a fact about the
         // boundary file, not evidence that they are not the reader's.
-        <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">
+        <p className="mt-2 t-caption leading-relaxed text-muted">
           {digest.unscopedMeetingCount} meeting
           {digest.unscopedMeetingCount === 1 ? "" : "s"} we hold belong to
           bodies with no Census division, so they cannot be matched to your
@@ -2073,13 +2073,13 @@ function DigestSection({
       {gap ? (
         // The named gap, in the gap's own register — never an empty section
         // and never a sentence borrowed from another block.
-        <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">{gap}</p>
+        <p className="mt-1 t-caption leading-relaxed text-voice">{gap}</p>
       ) : (
         <>
           <ul className="mt-1 space-y-1">{children}</ul>
           {/* Stated N equals rendered rows, and the denominator is always
               said — a clip must never read as the whole of what we hold. */}
-          <p className="mt-1 text-[0.625rem] text-muted">
+          <p className="mt-1 t-caption text-muted">
             Showing {shown} of {total}.
           </p>
         </>

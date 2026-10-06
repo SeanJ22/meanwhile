@@ -1,5 +1,7 @@
 "use client";
 
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { MapPin, X } from "lucide-react";
 
@@ -216,7 +218,7 @@ export function VotingSitesPanel({
           <p className="voting-panel-status">
             {/* BAL-7 (2026-08-24): what is known, then the non-claim, and
                 nothing about how we feel about the shortfall. */}
-            We’re working on getting this info for that address.
+            <WorkingOnIt inline />
           </p>
         )}
 
@@ -313,13 +315,7 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
               </ul>
             )}
 
-            <p className="voting-source">
-              From {j.sourceOrg}.{" "}
-              <a href={j.sourceUrl} target="_blank" rel="noreferrer noopener">
-                Their page
-              </a>
-              , read {j.collectedAt}.
-            </p>
+            <CardSourcesContribution id={`voting-sites:${j.name}`} sources={[{ what: "Published voting locations", provenance: { sourceUrl: j.sourceUrl, sourceOrg: j.sourceOrg, collectedAt: j.collectedAt, verifiedAt: null } }]} />
           </article>
         ))}
   </>;

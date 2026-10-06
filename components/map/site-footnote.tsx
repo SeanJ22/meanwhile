@@ -32,7 +32,7 @@ export function SiteFootnote({
   return (
     <div className="site-footnote pointer-events-auto max-w-md">
       {snapshot && <DataFreshness snapshot={snapshot} />}
-      <p className="text-[0.625rem] leading-relaxed text-muted">
+      <p className="t-caption leading-relaxed text-muted">
         <a
           href="/transparency"
           className="underline decoration-dotted underline-offset-2 hover:text-signal"

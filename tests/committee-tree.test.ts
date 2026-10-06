@@ -126,6 +126,6 @@ test("F01 4.2: a row with no jurisdiction renders a NAMED GAP, never silence", (
     join(process.cwd(), "components", "officials", "member-directory.tsx"),
     "utf8",
   );
-  // CLAUDE.md: a null renders as its named gap, and the name says whose.
-  assert.match(surface, /We’re working on getting this info./);
+  // FE-30: a missing jurisdiction uses the shared Reader gap component.
+  assert.match(surface, /<WorkingOnIt\s*\/>/);
 });

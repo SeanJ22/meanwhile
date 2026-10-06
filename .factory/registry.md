@@ -1,9 +1,9 @@
-build_state: waiting
+build_state: active
 worker: registry
 provider: Claude
-run_id: scheduled-registry-2026-10-06-run10 (Claude Sonnet 5.5)
-lock: none
-heartbeat: 2026-10-06T07:04:10Z
+run_id: scheduled-registry-2026-10-06-run11 (Claude Sonnet 5.5)
+lock: registry-20261006T130104-run11
+heartbeat: 2026-10-06T13:01:04Z
 on_river: DB-09..DB-18 (less DB-19), DB-21, DB-23, DB-25, DB-32, DB-33 (River folds through b48a68610)
 ready: DB-10, DB-11, DB-21 Doors card part (hook pending: WTP_DOORS_SEED=on and WTP_DOORS_READ=registry in runner.env, River), exact ready commit a1aad625b66776707e91070c356c83433572155e. Admin Doors card now lists EVERY door (shut first), with kind in words, body, state, why, since, last worked and last failed, and "Showing N of M" past 400. Reader sees nothing new until the registry is seeded. Neon: no new reads. Cumulative with FE-24/25/37/40 (c6dbda0a3).
 checks: READY a1aad625b: tests/admin-doors-panel + 66 door-registry tests pass (67/67), tsc 0, eslint clean on changed files; selector scope = 3 files, not FULL; env -u DATABASE_URL -u WTP_ASSET_STORE. Nothing live.

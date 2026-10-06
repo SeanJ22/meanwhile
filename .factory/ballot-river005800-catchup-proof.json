@@ -1,0 +1,43 @@
+{
+  "commit": "22b1916bf361290b090b6a5f6832b49d22b1c58f",
+  "river": "005800718335f250a1e93bfc039482f0cd59e467",
+  "readyUnchanged": "0fc6ef6d21a6aa90af928ff082d2ea0c073d445e",
+  "focused": {
+    "status": "PASS",
+    "files": [
+      "tests/worker-reader-publication.test.ts",
+      "tests/worker-ballot-contests.test.ts",
+      "tests/held-election-offices.test.ts",
+      "tests/meetings-official-page.test.ts",
+      "tests/scoped-task-reads.test.ts",
+      "tests/spend-hold-leaks.test.ts"
+    ],
+    "tests": 49,
+    "passed": 49,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 117304.385657
+  },
+  "types": {
+    "command": "env -u DATABASE_URL -u WTP_ASSET_STORE corepack pnpm exec tsc --noEmit",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "logs": {
+    "focused": {
+      "saved": ".factory/ballot-river005800-catchup-focused.log.gz",
+      "sha256": "0220ab6d08ee23554a1ce2020576a532295a80b4eaf2f588b87873bd2f35d6ee",
+      "bytes": 6900,
+      "exitCode": 0
+    },
+    "types": {
+      "saved": ".factory/ballot-river005800-catchup-types.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "exitCode": 0
+    }
+  },
+  "sourceWorkingTreeClean": true,
+  "notes": "Post-READY River-only catch-up; not a new READY/full certificate. Exact0fc6 FULL and two actual build retry records preserved separately. No new own implementation or integrated CP03; preserve held-source and live-proof waits. No live claim."
+}

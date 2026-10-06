@@ -1,0 +1,23 @@
+{
+  "source_sha": "aa40b7ba3480de6bf3796da5d12f2af73fda0a11",
+  "state": "WIP; no new READY or live PASS",
+  "types": "PASS",
+  "focus": "running 43 files",
+  "gates": "running",
+  "gates_log": "/tmp/admin-mission-aa40-gates.log",
+  "production_observation": {
+    "project": "withered-sunset-39821877",
+    "branch": "br-tiny-frog-aeufpjeq",
+    "database": "neondb",
+    "at": "2026-10-06T05:53:26.561Z",
+    "cp_vital_signs": null,
+    "cp_spend_holds": null,
+    "heartbeat_at": "2026-10-06T05:08:44.850Z",
+    "heartbeat_tested_sha": "f545fcf9493def91294bccf219ed65071b2093b1"
+  },
+  "browser": "not live verified; egress CONNECT403, no signed-in session",
+  "hourly_source": "cp_vital_signs only",
+  "read_estimate_gb_per_hour_per_open_tab": 0.0032,
+  "estimate_excludes": "request overhead",
+  "automation": "enabled every90min for current chat"
+}

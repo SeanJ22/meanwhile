@@ -1,3 +1,15 @@
+## CURRENT — Oct 6 mission, 1:55 AM EDT (supersedes older instructions below)
+
+Read the full mission in board/river decisions.md and current user prompt. Work backward from verified live reader delivery, known/falling cost, hourly proof. User priority: Eastern times; cp_vital_signs Now/brief; existing Money Hunts real cost; batch/full-price; screen compatibility return; every remaining ready step. No new READY without named live check. Old READY 734ee9633 is returned; do not advertise it as foldable. No raw-table fallback or fake zero.
+
+Current WIP aa40b7ba3480de6bf3796da5d12f2af73fda0a11; exact types PASS; focused43 and full gates running. Frozen tree /tmp/meanwhile-admin-mission-gates, gates session16940, log /tmp/admin-mission-aa40-gates.log; focus81824 /tmp/admin-mission-aa40-focus.log. Preserve checkpoints; do not mutate frozen tree. Earlier f008 gates intentionally stopped for missing mst import; exact corrected types PASS. Compatibility18 controls are gateway-null disabled definitions only, not restored executors/private-copy access. Work screen is conditional on an actual supplied reader. Look/Testing/Queue/auditors/measures features retained. BR-31 uses measures30922c2e1 authoritative flow reader/topic; Money no longer repeats flow reads; spendAndFacts yesterday is actual Eastern 23/24/25h day with contiguous earlier windows. No policy/budget/dispatch change.
+
+Follow current cp_vital_signs contract, not earlier OwnerSnapshot proposal. Two completed hourly rows on Now, 24 in brief, a single bounded indexed read. Daily brief vitalSigns is ephemeral data read from that table, never persisted as a second metric home. Missing/unpriced values show —. Named live check and read estimate in admin.md. Neon read-only connector works: production cp_vital_signs and cp_spend_holds absent at 1:53 AM EDT, heartbeat last1:08 AM EDT release7. Web release8 being live does not prove runner/schema. River owns migration/deployment/restart; no production write/start here.
+
+Assignment Codex and lock codex-admin-0a20c74f8d1a49a49f492bf94bfe2e71; recheck remote assignment+same token before every push, keep heartbeat <=15min, push only stream/admin. Release only after all ready work/checks finished or ending. Native automation scheduled90min on this exact chat until canceled; skips active run, quiet unchanged, Claude handoff exit-without-writing. Genuine questions under needs_River. Final one-line run_end in EDT when nothing ready.
+
+Next: finish full gates, repair own failures, inspect new River/returns, merge only promoted release9 (remote river-next2b83037 is old untested trial). Keep exact proof and WIP status; do not claim READY simply because tests pass. Shared dependencies/live proof remain listed in admin.md. Old notes are history and may name retired contracts or policy superseded by today's instruction.
+
 ## Latest continuation: new returned fold, pending River promotion
 
 Supersedes older continuation sections below. Admin remains assigned Codex; the current run released its ownership lock after all ready work and preparation were exhausted. No Sean decision or credential is needed for this repair.

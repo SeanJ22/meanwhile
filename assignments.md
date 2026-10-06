@@ -10,11 +10,11 @@ The authoritative assignment table. River writes it. Workers read it every run.
 | meetings | meetings | Claude | yes | — |
 | auditors | auditors | Claude | yes | — |
 | people | people | Claude | yes | — |
-| admin | **codex-admin** (handed back by Sean 2026-10-05 ~17:00Z) | Codex | yes | measures (only after a new recorded handoff below) |
-| slide | **codex-slide** (handed back by Sean 2026-10-05 ~17:00Z) | Codex | yes | hunters (only after a new recorded handoff below) |
-| ballot | **codex-ballot** (handed back by Sean 2026-10-05 ~16:50Z) | Codex | yes | meetings (only after a new recorded handoff below) |
-| bank | **codex-bank** (handed back by Sean 2026-10-05 ~17:00Z) | Codex | yes | registry (only after a new recorded handoff below) |
-| frontend | **codex-frontend** (handed back by Sean 2026-10-05 ~16:50Z) | Codex | yes | auditors (only after a new recorded handoff below) |
+| admin | **measures** (continuing admin, River handoff Oct 6, 2:40 AM EDT; back to codex-admin when Sean is up) | Claude | yes | measures |
+| slide | **hunters** (continuing slide, River handoff Oct 6, 2:40 AM EDT; back to codex-slide when Sean is up) | Claude | yes | hunters |
+| ballot | **meetings** (continuing ballot, River handoff Oct 6, 2:40 AM EDT; back to codex-ballot when Sean is up) | Claude | yes | meetings |
+| bank | **registry** (continuing bank, River handoff Oct 6, 2:40 AM EDT; back to codex-bank when Sean is up) | Claude | yes | registry |
+| frontend | **auditors** (continuing frontend, River handoff Oct 6, 2:40 AM EDT; back to codex-frontend when Sean is up) | Claude | yes | auditors |
 
 ## Handback to Codex (2026-10-05 16:50Z, Sean's instruction)
 
@@ -23,6 +23,13 @@ The authoritative assignment table. River writes it. Workers read it every run.
 - If either Codex task stops again with unfinished work, River hands the lane back to its paired Claude worker (meetings, auditors) the same way as before, with a new line in the table below.
 - **Update 2026-10-05 17:00Z (Sean):** admin, slide and bank go back to Codex too. **All five Codex lanes (admin, slide, ballot, bank, frontend) are Codex.** overflow-1 and overflow-2 are stopped; their last runs ended at 16:48Z with `lock: none`. **registry: release stream/bank and stop claiming it.** measures and hunters never claim admin or slide.
 - If any of the five Codex tasks stops again with unfinished work, River hands it back to its paired Claude worker (admin to measures, slide to hunters, bank to registry, ballot to meetings, frontend to auditors) with a new line below.
+
+## Overnight handoff, Oct 6, 2:40 AM EDT (Sean's overnight plan)
+
+All five Codex lanes stopped with unfinished work, so each goes to its paired Claude worker: admin to measures, slide to hunters, ballot to meetings, bank to registry, frontend to auditors.
+- Each Claude worker alternates ready batches between its own lane and the continued lane. Returned Failed live items come first.
+- **hunters:** your own top item stays first: the campaign-sites cause, then the vital-signs writer. Take slide's returns after those.
+- When Sean is up he hands the five lanes back to Codex. A returning Codex run reads this table and exits until River records the handback.
 
 ## Handoffs
 
@@ -38,6 +45,11 @@ The authoritative assignment table. River writes it. Workers read it every run.
 | 2026-10-05 17:00Z | admin | overflow-1 | codex-admin | Sean, River session, 2026-10-05 ~17:00Z: "hand admin, slide and bank back to Codex as well, the same way. Stop overflow-1 and overflow-2, and tell registry to release bank." | stream/admin @ 2bfbea34c |
 | 2026-10-05 17:00Z | slide | overflow-2 | codex-slide | Same instruction from Sean, ~17:00Z | stream/slide @ db17dc16e |
 | 2026-10-05 17:00Z | bank | registry | codex-bank | Same instruction from Sean, ~17:00Z | stream/bank @ cdeb09cd9 |
+| 2026-10-06 06:40Z (2:40 AM EDT) | admin | codex-admin | measures | Sean, Oct 6 ~1:45 AM EDT: "If a Codex lane stops with unfinished work, hand it to its paired Claude worker per assignments.md and back to Codex when I'm up." codex-admin released its lock (last heartbeat 6:22:00 UTC) with build_state waiting, and its returns now carry Failed live items from the live ledger | stream/admin @ 1ca087938 |
+| 2026-10-06 06:40Z (2:40 AM EDT) | slide | codex-slide | hunters | Sean, Oct 6 ~1:45 AM EDT: "If a Codex lane stops with unfinished work, hand it to its paired Claude worker per assignments.md and back to Codex when I'm up." codex-slide released its lock (last heartbeat 6:20:00 UTC) with build_state waiting, and its returns now carry Failed live items from the live ledger | stream/slide @ 3e43de4be |
+| 2026-10-06 06:40Z (2:40 AM EDT) | ballot | codex-ballot | meetings | Sean, Oct 6 ~1:45 AM EDT: "If a Codex lane stops with unfinished work, hand it to its paired Claude worker per assignments.md and back to Codex when I'm up." codex-ballot released its lock (last heartbeat 6:13:00 UTC) with build_state waiting, and its returns now carry Failed live items from the live ledger | stream/ballot @ 11873169d |
+| 2026-10-06 06:40Z (2:40 AM EDT) | bank | codex-bank | registry | Sean, Oct 6 ~1:45 AM EDT: "If a Codex lane stops with unfinished work, hand it to its paired Claude worker per assignments.md and back to Codex when I'm up." codex-bank released its lock (last heartbeat 6:33:00 UTC) with build_state waiting, and its returns now carry Failed live items from the live ledger | stream/bank @ 7fbf57e9e |
+| 2026-10-06 06:40Z (2:40 AM EDT) | frontend | codex-frontend | auditors | Sean, Oct 6 ~1:45 AM EDT: "If a Codex lane stops with unfinished work, hand it to its paired Claude worker per assignments.md and back to Codex when I'm up." codex-frontend released its lock (last heartbeat 5:32:00 UTC) with build_state waiting, and its returns now carry Failed live items from the live ledger | stream/frontend @ ab109934d |
 
 The continuation worker reads the lane's brief and its saved continuation file, claims `.factory/<lane>.md` with its own token (the previous lock is `none`), and alternates ready batches with its primary lane. Do returned failures and unblocking work first, and never starve either lane. If a Codex run comes back, it sees this table and exits without writing. Ballot was handed to meetings at 11:05Z.
 

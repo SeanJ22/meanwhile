@@ -267,8 +267,12 @@ export async function syncObligations(
 
     alreadyDurable.push(o.id);
     const held = existing.value;
+    /* CH-22: a provider can connect a plan (or a reader door) to a row that lacks one; the held plan,
+       with any repair it carries, is never replaced. */
+    const plan = inheritPublicationConnection(held.autonomousPlan, o.autonomousPlan);
+    const { autonomousPlan: _provided, ...signals } = o;
     const next: StandingObligation = {
-      ...o,
+      ...signals,
       nextDueAt: held.nextDueAt,
       occurrenceCount: held.occurrenceCount,
       openOccurrenceId: held.openOccurrenceId,
@@ -278,11 +282,12 @@ export async function syncObligations(
       ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
       ...(held.assignments !== undefined ? { assignments: held.assignments } : {}),
       ...(held.materializedFrom !== undefined ? { materializedFrom: held.materializedFrom } : {}),
-      ...(held.autonomousPlan !== undefined ? { autonomousPlan: held.autonomousPlan } : {}),
+      ...(plan !== undefined ? { autonomousPlan: plan } : {}),
       updatedAt: now,
     };
 
     const changed: string[] = [];
+    if (plan !== held.autonomousPlan) changed.push("autonomousPlan");
     for (const key of new Set([...Object.keys(o), "scopeDivisions"] as (keyof FreshnessObligation)[])) {
       if ((RUNTIME_OWNED as readonly string[]).includes(key)) continue;
       if (key === "scopeDivisions") {

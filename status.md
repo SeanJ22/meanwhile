@@ -1,6 +1,6 @@
 # River status
 
-build_state: release 10 open (#716, auto-merge on; gates 12/12 on 211c48c); runner stopped until release 10 is live
+build_state: release 10 live (d79f179, 8:26 AM EDT); restart steps pushed to Sean 8:28 AM EDT; runner still stopped at last check
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01EnWcsto9iudrVWwszS9urS
@@ -210,6 +210,7 @@ Fold these after release 8 merges, as release 9. Keep the release-8 diff small.
 - **Held out and returned:** people (CA-11, CA-05 conflict with river); admin (overlap with BR-31).
 
 ### Pushes to Sean (record every one here, EDT)
+- 8:28 AM EDT: release 10 live; restart steps (systemctl start meanwhile-runner.service; journalctl -f); what to watch; Neon baseline 1,857.008 GB.
 - 7:12 AM EDT: morning summary (release 8's 9.4 GB hour; release 9 live; release 10 in gates with the byte counter; ledger 27/42/62/136; hooks pattern; needs: Codex handback, $25 ceiling check, runtime owner).
 - 6:15 AM EDT: release 9 opened (#715, 25 steps, gates green); runner stays stopped (byte counter failed the firewall, returned to hunters); held-out lanes; Codex Continue line (the five lanes are on their paired Claude workers overnight; hand back when up); morning summary to follow once release 9 is live.
 - 3:20 AM EDT: correction. The spend holds are not the cause (their scans run inside Postgres). The cause is unidentified until the per-query byte counter exists. No fix on a guess, no rollback.

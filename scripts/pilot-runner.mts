@@ -133,6 +133,13 @@ import {
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
+import { hostMemoryReading } from "../lib/control-plane/workers/worker-slots.ts";
+import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
+  summarizeNeonBytes, takeNeonBytesHours } from "../lib/db/transfer-by-caller.ts";
+import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
+import { VITAL_COUNTERS, composeVitalSignsRow, formatVitalSignsLine, readHourCosts, writeVitalSignsRow,
+  type HourCosts } from "../lib/control-plane/vital-signs.ts";
+import { neon } from "@neondatabase/serverless";
 import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
@@ -140,7 +147,8 @@ import {
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
 import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
-import { runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
+import { receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
+import { auditPassClock } from "./audit-pass-clock.mts";
 import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
@@ -150,7 +158,7 @@ import {
 import {
   routineSupervisorOuterEvidence,
 } from "../lib/civic-data/runner-receipt.ts";
-import { childFatalLine } from "../lib/ops/fatal-line.ts";
+import { childFatalLine, childStderrCause } from "../lib/ops/fatal-line.ts";
 import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import {
@@ -194,10 +202,30 @@ import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts
    for this process and, through NODE_OPTIONS, every child (connect-attempt-window.ts). */
 installConnectAttemptWindow();
 
+/**
+ * Every TypeScript child the runner starts loads the same way: type stripping
+ * plus the `@/` alias resolver. The owner-snapshot publisher was started
+ * without the resolver; from Oct 4 an import chain under it used `@/`, every
+ * publish died at import, and the Admin money and cost screens read a snapshot
+ * that stopped moving. One prefix for every child keeps them from diverging.
+ */
+const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"] as const;
+
 /** How much of a failed cycle's stderr the digest carries (see runOneCycle). */
 const STDERR_TAIL_LINES = 40;
 
 const ROOT = process.cwd();
+/* Vital signs (Sean, Oct 6): each child this parent starts, and theirs, prints its hour counts (Neon bytes
+   by calling code, rounds, facts) as report lines; this parent alone keeps them here, with its own, and sums the hour. */
+const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
+process.env[VITAL_SIGNS_REPORT_ENV] = "1";
+keepNeonBytesInProcess();
+receiveChildVitalSigns(part => { keepNeonBytesPart(VITAL_SIGNS_DIR, part); });
+/** This process's own hour counts, kept beside its children's. */
+function keepOwnNeonBytes(nowMs: number): void {
+  for (const part of takeNeonBytesHours(nowMs)) keepNeonBytesPart(VITAL_SIGNS_DIR, part);
+}
+process.once("exit", () => { keepOwnNeonBytes(Date.now()); });
 // Keep the exact launch path, but do not pass reporting secrets to workers.
 // The owner-snapshot collector reloads only those keys from this private file.
 if (!process.env.WTP_BILLING_ENV_FILE) {
@@ -404,9 +432,8 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     return { ok: false, recordPath: null, stdout: "", stderrTail: `${latched.provider}: ${latched.condition}; no automated retry before ${latched.eligibleAt}`, signal: null, exitCode: null, circuit: latched };
   }
   const args = [
-    "--experimental-strip-types",
     /* PRDY-3: the fact bridge reaches the Reader's own renderer, which imports by the `@/` alias the loader resolves. */
-    "--import", "./scripts/register-test-loader.mjs",
+    ...TS_CHILD,
     "scripts/freshness-shadow.mts",
     `--provider=${provider}`,
     /* So the child's heartbeat can state when the next cycle is due. */
@@ -441,6 +468,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
   let supervisorRecordPath: string | null = null;
   if (run.termination === "TIMED_OUT") {
     const reason = run.errorMessage ?? "RESEARCH_CHILD_NO_PROGRESS";
+    countVitalSign(VITAL_COUNTERS.roundsKilled);
     const outcome = await recordFailedCycle({
       repos: await ownerRepositories(), error: new Error(reason),
       cycleId: `research-supervisor:${hostname()}:${before}`, startedAt: before,
@@ -740,6 +768,13 @@ async function publishConsole(): Promise<void> {
     console.log("  console publish: skipped — the file provider is a local proof with no deployed console to publish to");
     return;
   }
+  /* The publisher still reads the whole cost log and every assignment source
+   * (River's scoped-read list); it ran in no measured hour from Oct 4 to Oct 6.
+   * If its bytes put the hour over target, this turns it off without a release. */
+  if (process.env.WTP_OWNER_SNAPSHOT_PUBLISH === "off") {
+    console.log("  console publish: owner snapshot switched off (WTP_OWNER_SNAPSHOT_PUBLISH=off); Admin keeps the last snapshot");
+    return;
+  }
   if (await publishChangedConsole() === "UNCHANGED") {
     console.log("  console publish: unchanged inputs; owner snapshot retained");
   }
@@ -754,7 +789,7 @@ async function publishConsoleChildren(): Promise<boolean> {
       executable: process.execPath,
       /* Workers inherit the launch environment. Only the owner snapshot reloads
        * five billing keys from the same absolute private file, never cwd-relative. */
-      args: ["--experimental-strip-types", ...publisher.args],
+      args: [...TS_CHILD, ...publisher.args],
       env: standingChildEnvironment("CONSOLE_PUBLISHER", process.env, publisher.name === "owner snapshot"),
     }], {
       cwd: CODE_ROOT,
@@ -773,9 +808,8 @@ async function publishConsoleChildren(): Promise<boolean> {
       console.log(`  console publish: ${publisher.name} OK (${seconds}s)`);
       continue;
     }
-    const stderrLines = (run.stderr ?? "").split("\n").map((l) => l.trimEnd()).filter((l) => l.trim() !== "");
     succeeded = false;
-    const last = stderrLines.at(-1) ?? run.errorMessage ?? "(nothing on stderr)";
+    const last = childStderrCause(run.stderr ?? "") ?? run.errorMessage ?? "(nothing on stderr)";
     const exit = run.status === null ? `signal ${run.signal ?? "none"}` : String(run.status);
     console.error(`  console publish: ${publisher.name} FAILED exit ${exit} — ${last}`);
   }
@@ -803,7 +837,7 @@ async function runRoutineCivicData(): Promise<void> {
   const [run] = await runRuntimeChildren([{
     id: "routine-civic-data",
     executable: process.execPath,
-    args: ["--experimental-strip-types", "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
+    args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
     env: childEnvironment,
   }], {
     cwd: CODE_ROOT,
@@ -929,7 +963,7 @@ async function runIntakeRuntime(): Promise<void> {
   const [run] = await runRuntimeChildren([{
     id: "intake-runtime",
     executable: process.execPath,
-    args: ["--experimental-strip-types", "scripts/intake-tripwire.mts"],
+    args: [...TS_CHILD, "scripts/intake-tripwire.mts"],
     env: standingChildEnvironment("INTAKE_RUNTIME"),
   }], {
     cwd: CODE_ROOT,
@@ -1138,6 +1172,60 @@ async function requestQueuedReleaseDrain(): Promise<void> {
     if (error) console.error("  runtime release drain message could not be delivered; existing cycle continues");
   });
 }
+/** The last full UTC hour and the hour so far, summed over every runner process's file. */
+function neonBytesReading(nowMs = Date.now()): NonNullable<RunnerHeartbeat["neonBytes"]> {
+  keepOwnNeonBytes(nowMs);
+  const current = hourStart(nowMs);
+  return {
+    lastFullHour: summarizeNeonBytes(readNeonBytesHour(VITAL_SIGNS_DIR, hourStart(nowMs - 3_600_000)), 20),
+    currentHour: summarizeNeonBytes(readNeonBytesHour(VITAL_SIGNS_DIR, current), 10),
+  };
+}
+
+/* Every 10 minutes: the hour so far, as a journal line and a partial cp_vital_signs row, so a crash
+   keeps most of the hour. Each finished hour once its processes have flushed (2 minutes in): its
+   final row and line. Bytes, rounds and facts come from the local hour files; the database is read
+   once per row, for the hour's cost aggregate. */
+let vitalSignsFinalHour = "";
+let vitalSignsPartialAt = 0;
+let vitalSignsWork: Promise<void> | null = null;
+async function writeVitalSigns(hour: string, label: string, nowMs: number): Promise<void> {
+  const accounting = readNeonBytesHour(VITAL_SIGNS_DIR, hour);
+  console.log(`  ${formatNeonBytesLine(summarizeNeonBytes(accounting, 20), label, label === "last full hour" ? 20 : 10)}`);
+  const url = provider === "postgres" ? controlPlaneUrlFromEnv() : null;
+  let costs: HourCosts | null = null;
+  const sql = url ? neon(url) : null;
+  if (sql) {
+    try { costs = await readHourCosts(sql, hour); }
+    catch (error) { console.error(`  vital signs: the hour's spend could not be read (${error instanceof Error ? error.name : "error"}); spend stays unknown`); }
+  }
+  const row = composeVitalSignsRow({ accounting, costs, releaseSha: RUNNING_CODE_SHA, writtenAt: new Date(nowMs).toISOString() });
+  console.log(`  ${formatVitalSignsLine(row, label)}`);
+  if (sql && (await writeVitalSignsRow(sql, row)) === "TABLE_NOT_INSTALLED") {
+    console.error("  vital signs: the hourly table is not installed yet; the row is in this journal only");
+  }
+}
+const vitalSignsTimer = setInterval(() => {
+  if (vitalSignsWork) return;
+  vitalSignsWork = (async () => {
+    const nowMs = Date.now();
+    keepOwnNeonBytes(nowMs);
+    const previous = hourStart(nowMs - 3_600_000);
+    if (nowMs - Date.parse(hourStart(nowMs)) >= 120_000 && vitalSignsFinalHour !== previous) {
+      vitalSignsFinalHour = previous;
+      await writeVitalSigns(previous, "last full hour", nowMs);
+      pruneNeonBytes(VITAL_SIGNS_DIR, nowMs);
+    }
+    if (nowMs - vitalSignsPartialAt >= 600_000) {
+      vitalSignsPartialAt = nowMs;
+      await writeVitalSigns(hourStart(nowMs), "so far this hour", nowMs);
+    }
+  })().catch(error => {
+    console.error(`  vital signs could not be written (${error instanceof Error ? error.name : "error"}); work continues`);
+  }).finally(() => { vitalSignsWork = null; });
+}, 60_000);
+vitalSignsTimer.unref();
+
 async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | null; signal: string | null }): Promise<void> {
   if (provider !== "postgres") return;
   let lastError = currentCycleErrors.split("\n").filter(Boolean).slice(-8).join("\n").slice(-2000) || null;
@@ -1150,11 +1238,15 @@ async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | nul
   try {
     const repos = await ownerRepositories();
     if (!repos) return;
+    /* Sean, Oct 6: the host's memory, the runner's process tree and the reservations, so River can say how many jobs fit. */
+    const memory = await hostMemoryReading().catch(() => null);
+    let neonBytes: RunnerHeartbeat["neonBytes"] = null;
+    try { neonBytes = neonBytesReading(); } catch { /* the last beat's reading stays */ }
     for (let attempt = 0; attempt < 3; attempt++) {
       const at = new Date().toISOString();
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
       const next = liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
-        testedSha: RUNNING_CODE_SHA, host: hostname(), lastError,
+        testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes,
         ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
       try {
         if (current) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, at);
@@ -1253,7 +1345,7 @@ async function runHunterLane(): Promise<void> {
   const [run] = await runRuntimeChildren([{
     id: "hunter-lane",
     executable: process.execPath,
-    args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/hunter-lane.mts", `--provider=${provider}`],
+    args: [...TS_CHILD, "scripts/hunter-lane.mts", `--provider=${provider}`],
     env: standingChildEnvironment("RESEARCH_CYCLE"),
   }], {
     cwd: CODE_ROOT,
@@ -1275,6 +1367,13 @@ function drainHunterLane(): void {
     if (error) console.error("  hunter lane drain message could not be delivered; the lane ends at the end of its life");
   });
 }
+
+/* One auditors' pass at a time, outside the standing lanes: a look check can wait an hour on its batch, and a drain ends it. */
+const auditPasses = auditPassClock({
+  statePath: join(ROOT, ".mirror", "audit-pass-clock.json"),
+  codeRoot: () => CODE_ROOT,
+  env: () => standingChildEnvironment("CONSOLE_PUBLISHER"),
+});
 
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData },
@@ -1391,6 +1490,8 @@ function runStandingRuntimeTick(reason: string, force = false): void {
 function startStandingRuntimeClock(): void {
   if (runtimeAdmissionsHeld || standingRuntimeTimer !== null) return;
   startScheduledOrderClock();
+  // The auditors' passes (live audit, resident tasks, look check, speed, claim audit, loss study, break patterns).
+  if (provider === "postgres" && !canary && !STAGING) auditPasses.start();
   runStandingRuntimeTick("independent standing clock startup", true);
   standingRuntimeTimer = setInterval(
     () => {
@@ -1427,6 +1528,7 @@ async function holdStandingRuntimeAtQuiescence(): Promise<void> {
       await stopScheduledOrderClock();
       await activeControlRead;
       await standingRuntimeScheduler.waitForIdle();
+      await auditPasses.stop();
     }, { reason: "release handoff quiescence" });
   } catch (error) {
     standingDrainFailed = true;
@@ -1609,7 +1711,7 @@ const runtimeContractsApplied = new Set<string>();
 async function applyRuntimeContracts(sha: string | null, cwd: string = CODE_ROOT): Promise<boolean> {
   if (sha === null || runtimeContractsApplied.has(sha)) return sha !== null;
   const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", executable: process.execPath,
-    args: ["--experimental-strip-types", "scripts/db-apply.mts", "--target=production", "--phase=contract",
+    args: [...TS_CHILD, "scripts/db-apply.mts", "--target=production", "--phase=contract",
       "--production-runtime", `--runtime-commit=${sha}`] }], {
     cwd, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
     onStdout: (_id, output) => process.stdout.write(output),
@@ -1914,7 +2016,7 @@ async function runNightlyWindow(trigger: string): Promise<void> {
   const [run] = await runRuntimeChildren([{
     id: "nightly-research-window",
     executable: process.execPath,
-    args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/nightly-window.mts", "--shadow", trigger === "WAKEUP" ? "--force" : "", `--trigger=${trigger}`].filter((a) => a !== ""),
+    args: [...TS_CHILD, "scripts/nightly-window.mts", "--shadow", trigger === "WAKEUP" ? "--force" : "", `--trigger=${trigger}`].filter((a) => a !== ""),
     env: standingChildEnvironment("NIGHTLY_RESEARCH"),
   }], {
     cwd: CODE_ROOT,
@@ -2255,6 +2357,7 @@ if (!standingDrainFailed) {
       await stopScheduledOrderClock();
       await activeControlRead;
       await standingRuntimeScheduler.waitForIdle();
+      await auditPasses.stop();
     }, { reason: "runner shutdown" });
   } catch (error) {
     standingDrainFailed = true;

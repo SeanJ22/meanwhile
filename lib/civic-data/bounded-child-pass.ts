@@ -1,6 +1,7 @@
 import { execFile } from "node:child_process";
 
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import { VITAL_SIGNS_LINE_PREFIX } from "../db/transfer-by-caller.ts";
 
 /** Maximum quiet interval; each new source publication renews it. Never a child wall. */
 export const ROUTINE_CHILD_TIMEOUT_MS = 30 * 60_000;
@@ -163,6 +164,8 @@ function runOneBoundedChild(
       const complete = lines.split(/\r?\n/);
       lines = complete.pop() ?? "";
       for (const line of complete) {
+        /* Vital signs: a child's hour totals reach the runner through this process's own output (transfer-by-caller.ts). */
+        if (line.startsWith(VITAL_SIGNS_LINE_PREFIX)) { process.stdout.write(`${line}\n`); continue; }
         if (!line.startsWith("RCD_PROGRESS=")) continue;
         try {
           const progress = JSON.parse(line.slice("RCD_PROGRESS=".length)) as { key?: unknown; records?: unknown };

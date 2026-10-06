@@ -208,8 +208,20 @@
  * Additive: no existing table, column or statement moved; the ledger row's
  * other fields are untouched.
  */
-// Version 25 (MW-VS-01) adds cp_vital_signs: one small row per UTC hour, written by the runner and read by Admin Now and the
-// daily brief instead of raw tables (vital-signs.md). A new table; nothing existing moves. Additive.
+/*
+ * ## What version 25 adds, and why (the hourly vital signs, 2026-10-06)
+ *
+ * Sean, Oct 6: "The runner writes one small row per hour: facts that reached
+ * readers, money spent, cost per fact, Neon bytes the runner itself read
+ * (counted per query and tagged with the calling code), rounds finished versus
+ * killed, and paid jobs that ended without a result." `cp_vital_signs` is that
+ * row, one per UTC hour, upserted by the runner (`lib/control-plane/vital-signs.ts`
+ * VITAL_SIGNS_UPSERT, partial every 10 minutes, final each hour). Admin's Now
+ * screen and the daily brief read it instead of raw tables. Nullable counts
+ * mean "not recorded", never zero. `neon_project_bytes` is River's cross-check
+ * against Neon's own project total; the runner never writes it. Additive: a new
+ * small table (24 rows a day), nothing existing moved.
+ */
 export const BOOTSTRAP_VERSION = 25;
 
 /**
@@ -489,7 +501,7 @@ export const DECLARED_TABLES: readonly string[] = [
   "cp_checklist_instance_projections",
   /* Version 24: one row per spend hold. */
   "cp_spend_holds",
-  /* Version 25: one row per UTC hour of vital signs. */
+  /* Version 25: one row per hour of vital signs. */
   "cp_vital_signs",
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
@@ -655,6 +667,29 @@ export const ROUTE_TASK_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_leases_route_task", "cp_leases ((value #>> '{routeTaskId}'))"),
 ];
 
+/* ------------------------------------------------------------ version 25: vital signs */
+
+/** Version 25: the hourly vital signs row the runner upserts (`vital-signs.ts` VITAL_SIGNS_UPSERT). */
+export const VITAL_SIGNS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_vital_signs (
+     hour                  timestamptz PRIMARY KEY,
+     facts_live            integer,
+     facts_confirmed       integer,
+     facts_sampled         integer,
+     spend_usd             numeric,
+     unpriced_charges      integer,
+     cost_per_fact_usd     numeric,
+     neon_bytes_read       bigint,
+     neon_bytes_by_caller  jsonb,
+     rounds_finished       integer,
+     rounds_killed         integer,
+     rounds_deferred       integer,
+     paid_jobs_ended_empty integer,
+     paid_jobs_ended       integer,
+     neon_project_bytes    bigint,
+     release_sha           text,
+     written_at            timestamptz NOT NULL
+   );`;
+
 /* ------------------------------------------------------------ version 24: spend holds */
 
 /** Version 24: one row per spend hold. `cost_recorded_at` is null until the hold's job is settled. */
@@ -692,29 +727,6 @@ ${SPEND_HOLDS_INDEXES.map(i => `  IF to_regclass('${i.name}') IS NULL THEN
     CREATE INDEX IF NOT EXISTS ${i.name} ON ${i.on};
   END IF;`).join("\n")}
 END $do$;`;
-
-/* ------------------------------------------------------------ version 25: vital signs (MW-VS-01) */
-
-/** One row per UTC hour. Every measure but the hour is nullable: a number not recorded stays null and Admin shows "—". */
-export const VITAL_SIGNS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_vital_signs (
-     hour                   timestamptz PRIMARY KEY,
-     facts_live             integer,
-     facts_confirmed        integer,
-     facts_sampled          integer,
-     spend_usd              numeric,
-     unpriced_charges       integer,
-     cost_per_fact_usd      numeric,
-     neon_bytes_read        bigint,
-     neon_bytes_by_caller   jsonb,
-     rounds_finished        integer,
-     rounds_killed          integer,
-     rounds_deferred        integer,
-     paid_jobs_ended_empty  integer,
-     paid_jobs_ended        integer,
-     neon_project_bytes     bigint,
-     release_sha            text,
-     written_at             timestamptz NOT NULL DEFAULT now()
-   );`;
 
 /** A hold row as the `SpendHold` JSON every reader takes, instants as `toISOString()` writes them. */
 export function spendHoldJsonSql(alias: string): string {
@@ -1130,7 +1142,7 @@ END $$;`,
   SPEND_HOLDS_INDEXES_DDL,
   ADMIT_SPEND_HOLD_FUNCTION_DDL,
   SPEND_HOLDS_MOVE_DDL,
-  // Version 25 (MW-VS-01): the hourly vital-signs row.
+  // Version 25: the hourly vital signs row.
   VITAL_SIGNS_TABLE_DDL,
 ];
 

@@ -64,6 +64,7 @@
  * own timer, so a transport that ignores the signal cannot hold it either.
  */
 import { AsyncLocalStorage } from "node:async_hooks";
+import { withQueryCaller } from "../../db/transfer-by-caller.ts";
 
 export const CONTROL_PLANE_CALL_CLASSES = ["POINT", "DOCUMENT", "PAGE"] as const;
 export type ControlPlaneCallClass = (typeof CONTROL_PLANE_CALL_CLASSES)[number];
@@ -243,10 +244,11 @@ export async function boundedQuery(
     }, timeoutMs);
   });
   try {
-    return await Promise.race([
+    /* The response's bytes count under this operation and its caller (vital signs, transfer-by-caller.ts). */
+    return await withQueryCaller(call.operation, () => Promise.race([
       sql.query(text, params, { fetchOptions: { signal: controller.signal } }),
       expired,
-    ]);
+    ]));
   } catch (error) {
     /* The driver may reject first with its own wrapper of our abort; the name is ours. */
     if (controller.signal.aborted && isControlPlaneRequestTimeout(controller.signal.reason)) {

@@ -50,6 +50,7 @@ import type {
   RoutineCandidate,
 } from "./types.ts";
 import { sourceProjectionEvidence } from "./types.ts";
+import { stanceRowIssue } from "./stance-rows.ts";
 
 export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "plain-english-translations",
@@ -66,6 +67,7 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "official-filings",
   "comment-access",
   "ballot-navigation",
+  "stances",
   "campaign-sites",
   "member-offices",
   "venue-resolutions",
@@ -105,7 +107,7 @@ export interface CandidateProfilesProjection {
 }
 
 export interface CuratedReaderProjection {
-  readonly kind: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance";
+  readonly kind: "official-filings" | "comment-access" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance";
   /** Stable exact members. Each family has its own contract, pointer, and LKG. */
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
   /** Present on denominator-governed Reader families such as everyday routing. */
@@ -211,6 +213,7 @@ const SOURCE_ISOLATED_MANUAL_CONTRACTS = new Set<ManualProjectionContractId>([
   "official-filings",
   "comment-access",
   "ballot-navigation",
+  "stances",
   "campaign-sites",
   "member-offices",
   "venue-resolutions",
@@ -232,7 +235,7 @@ interface IsolatedManualProjection {
 }
 
 function curatedRecordIssue(
-  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance",
+  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance",
   row: Record<string, unknown>,
 ): string | null {
   if (!string(row.id)) return `A ${contractId} row has no stable id.`;
@@ -272,6 +275,7 @@ function curatedRecordIssue(
       ? `${string(row.id)} lacks its exact body, source, collection time, or rule verdict.`
       : null;
   }
+  if (contractId === "stances") return stanceRowIssue(row);
   if (contractId === "ballot-navigation") {
     if (row.kind === "ELECTION_FIELD") return electionFieldIssue(row);
     const value = object(row.value);
@@ -352,7 +356,7 @@ function sourceScopedMembers(
   if (contractId === "candidate-corpus") return corpusMembers(payload);
   if (contractId === "officeholder-statements") return statementMembers(payload);
   if (contractId === "official-filings" || contractId === "comment-access" || contractId === "ballot-navigation" ||
-      contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
+      contractId === "stances" || contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
       contractId === "everyday-routing" || contractId === "meeting-body-crosswalk" || contractId === "special-district-boundaries" || contractId === "public-records" || contractId === "government-budgets" || contractId === "campaign-finance") {
     return curatedMembers(payload);
   }
@@ -433,7 +437,7 @@ function sourceScopedMemberIssue(
     return null;
   }
   if (contractId === "official-filings" || contractId === "comment-access" || contractId === "ballot-navigation" ||
-      contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
+      contractId === "stances" || contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
       contractId === "everyday-routing" || contractId === "meeting-body-crosswalk" || contractId === "special-district-boundaries" || contractId === "public-records" || contractId === "government-budgets" || contractId === "campaign-finance") {
     const row = object(member.record);
     if (!row) return `${member.key} is not a curated Reader record.`;
@@ -887,7 +891,7 @@ function officeholderStatementProjection(
 }
 
 function curatedReaderProjection(
-  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance",
+  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance",
   payload: ManualProjectionPayload,
   sourceReceipt: ManualSourceSetReceipt,
 ): BuiltProjection {
@@ -934,7 +938,9 @@ function curatedReaderProjection(
     const value = object(row.value);
     const subjectId = (contractId === "official-filings" || contractId === "campaign-finance") ? string(row.id) : contractId === "comment-access" || contractId === "meeting-body-crosswalk" || contractId === "special-district-boundaries" || contractId === "public-records" || contractId === "government-budgets"
       ? string(row.bodyId)
-      : contractId === "campaign-sites" || contractId === "member-offices"
+      : contractId === "stances"
+        ? string(row.personId)
+        : contractId === "campaign-sites" || contractId === "member-offices"
         ? string(row.officeholderId)
         : contractId === "venue-resolutions"
           ? `${string(row.sourceId)}:${string(row.bodyOcdId) || string(row.tenant)}:${string(row.match)}`
@@ -962,6 +968,8 @@ function curatedReaderProjection(
     consumerChecks: [{
       consumer: contractId === "official-filings" ? "/ballot official filing records" : contractId === "comment-access"
         ? "meeting/map/Ask public-comment projection"
+        : contractId === "stances"
+          ? "person card and Ask exact stance quotes"
         : contractId === "ballot-navigation"
           ? "ballot and where-to-vote official navigation"
           : contractId === "campaign-sites"

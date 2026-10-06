@@ -25,8 +25,8 @@ export const ROUND_PROGRESS_EVERY_MS = 30_000;
 export const RESEARCH_STALL_PROBE = "RESEARCH_STALL_PROBE";
 /** The runner never counts a line with this prefix as progress. */
 export const STALL_REPORT_PREFIX = "research stall report:";
-/** Beats and release notices are not the round's own progress either. */
-const NOT_PROGRESS = /heartbeat|\bbeatAt\b|runtime release|release (?:drain|handoff)|RUNTIME_RELEASE_DRAIN/i;
+/** Beats, release notices and vital-signs report lines (transfer-by-caller.ts) are not the round's own progress either. */
+const NOT_PROGRESS = /^vital-signs-bytes |heartbeat|\bbeatAt\b|runtime release|release (?:drain|handoff)|RUNTIME_RELEASE_DRAIN/i;
 
 /**
  * Whether the runner can count `line` as progress at all: not blank, not a stall

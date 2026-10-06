@@ -2,7 +2,6 @@ import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
-import { queryCallerTag, withQueryCaller } from "../../db/query-bytes.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
@@ -244,8 +243,6 @@ const queryWaiters: Array<() => void> = [];
 
 function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBounds) {
   return async (operation: string, callClass: ControlPlaneCallClass, text: string, params?: readonly unknown[]) => {
-    /* The caller, from the stack before the first await, so the bytes this query receives are counted against it. */
-    const caller = queryCallerTag(`${prefix}.${operation}`);
     await new Promise<void>((resolve, reject) => {
       if (activeQueries < CONTROL_PLANE_QUERY_CONCURRENCY) { activeQueries++; resolve(); }
       else {
@@ -264,8 +261,7 @@ function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBoun
       }
     });
     try {
-      return await withQueryCaller(caller, () =>
-        boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds }));
+      return await boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds });
     } finally {
       const next = queryWaiters.shift();
       if (next) next();
@@ -988,6 +984,38 @@ export function pgAppendOnlyRepository<T>(
           [unique.slice(at, at + APPEND_ONLY_LOG_READ_PAGE)],
         )) as Record<string, unknown>[];
         for (const r of rows) out.set(String(r.log_key), parseValue<unknown>(r.record, `${table} ${String(r.log_key)}`));
+      }
+      return out;
+    },
+
+    async readKeys(keys) {
+      /* Keyset-paged on `(log_key, position)` (the log's unique order index), so a response stays under the 64 MiB cap
+         however many records the keys hold, and the keys cost a few statements, not one each. */
+      const unique = [...new Set(keys)];
+      const out = new Map<string, T[]>();
+      if (unique.length === 0) return out;
+      let afterKey = "";
+      let afterPosition = -1;
+      for (;;) {
+        const rows = (await run(
+          "readKeys",
+          "PAGE",
+          `SELECT log_key, position, record FROM ${table}
+           WHERE log_key = ANY($1::text[]) AND (log_key, position) > ($2, $3)
+           ORDER BY log_key ASC, position ASC
+           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+          [unique, afterKey, afterPosition],
+        )) as Record<string, unknown>[];
+        for (const r of rows) {
+          const key = String(r.log_key);
+          const held = out.get(key);
+          const record = parseValue<T>(r.record, `${table} ${key}`);
+          if (held) held.push(record);
+          else out.set(key, [record]);
+        }
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        afterKey = String(rows[rows.length - 1].log_key);
+        afterPosition = Number(rows[rows.length - 1].position);
       }
       return out;
     },

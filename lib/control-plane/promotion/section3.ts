@@ -55,7 +55,7 @@ export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
  * a YES/NO/UNKNOWN rule). They describe a verified record rather than quote the
  * page, so they ride with it; each reader door still checks its allowed values.
  */
-export const SECTION3_LABEL_FIELDS: readonly string[] = ["bodyClass", "coverage", "kind", "contactKind", "topicId", "commentPeriod", "state"];
+export const SECTION3_LABEL_FIELDS: readonly string[] = ["bodyClass", "coverage", "kind", "contactKind", "topicId", "commentPeriod", "state", "sourceKind"];
 
 /** Judgment calls: the only fields that need a second, independent source. */
 export const SECOND_SOURCE_FIELDS: readonly string[] = ["photoUrl", "portrait", "statementSummary", "positionSummary"];

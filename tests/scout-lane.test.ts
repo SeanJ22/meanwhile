@@ -67,6 +67,9 @@ import {
   assertStepMayInvokeModel,
   fitRepresentation,
 } from "../lib/control-plane/scheduler/model-routing.ts";
+import type { InProcessSpendHoldStore } from "../lib/control-plane/expansion/spend-holds.ts";
+/** The holds table's rows (schema v24), live or not yet deleted: the memory store's view of `cp_spend_holds`. */
+const heldRows = (r: { readonly spendHolds?: unknown }) => (r.spendHolds as InProcessSpendHoldStore).rows();
 
 const NOW = "2026-09-01T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
@@ -217,7 +220,7 @@ async function ordinaryWorkerProcesses() {
     try {
       const repos = await createFileRepositories(root);
       const { task } = await registered(repos);
-      const job = new JobSpend(new DurableSpendHolds({ budget: repos.budget, now: () => NOW }),
+      const job = new JobSpend(new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW }),
         `ordinary-held:${scenario}`, OBLIGATION.id, { sends: [], areas: [{ key: "area:ordinary", label: "ordinary budget",
           budgetUsd: 20, historicalUsd: 0, historyReadAt: NOW }] });
       assert.equal((await job.admit(2, "ordinary Scout maximum")).admit, true);
@@ -462,7 +465,7 @@ function executorWith(
 test("the runner's exact Scout hold reaches disposed and aborted cost rows without changing unknown dollars", async () => {
   for (const mode of ["disposed", "aborted", "unmetered", "no-hold"] as const) {
     const { repos, task } = await registered();
-    const holds = new DurableSpendHolds({ budget: repos.budget, now: () => NOW });
+    const holds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW });
     const job = new JobSpend(holds, `actual-scout-job:${mode}`, OBLIGATION.id, { sends: [], areas: [{
       key: "area:existing", label: "existing budget", budgetUsd: 20, historicalUsd: 0, historyReadAt: NOW,
     }] });
@@ -496,8 +499,7 @@ test("the runner's exact Scout hold reaches disposed and aborted cost rows witho
     if (mode === "unmetered") {
       assert.equal(result.cost?.usd, null);
       assert.equal(costs[0].cost.usd, null, "the hold never becomes an invented measured charge");
-      const persistedBudget = await repos.budget.read();
-      assert.equal(aggregateModelSpend(costs, NOW, NOW, Object.values(persistedBudget.value.spendHolds ?? {})).usd, 2);
+      assert.equal(aggregateModelSpend(costs, NOW, NOW, Object.values(heldRows(repos))).usd, 2);
     }
   }
 });
@@ -1194,7 +1196,7 @@ test("only recognized request rejections establish zero, not timeout or arbitrar
 test("proven pre-send Scout refusals settle unused holds without erasing earlier measured turns", async () => {
   for (const mode of ["fleet-before-first", "budget-before-first", "fleet-after-metered", "unpriced-after-response"] as const) {
     const { repos, task } = await registered();
-    const holds = new DurableSpendHolds({ budget: repos.budget, now: () => NOW, sleep: async () => undefined });
+    const holds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
     const line = { key: "area:zcta:2020/85635@2026-09-27T22:17:50.236Z", label: "original", budgetUsd: 50, historicalUsd: 0, historyReadAt: new Date(NOW_MS - 1_000).toISOString() };
     const job = new JobSpend(holds, mode, OBLIGATION.id, { sends: [], areas: [line] });
     assert.equal((await job.admit(2, "Scout")).admit, true);
@@ -1234,7 +1236,7 @@ test("proven pre-send Scout refusals settle unused holds without erasing earlier
 
 test("an unknown sent Scout request cannot settle away its original lifetime reservation", async () => {
   const { repos, task } = await registered();
-  const holds = new DurableSpendHolds({ budget: repos.budget, now: () => NOW, sleep: async () => undefined });
+  const holds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
   const line = { key: "area:zcta:2020/85635@2026-09-27T22:17:50.236Z", label: "original lifetime hunt", budgetUsd: 50, historicalUsd: 0, historyReadAt: NOW };
   const job = new JobSpend(holds, "unknown-response-job", OBLIGATION.id, { sends: [], areas: [line] });
   assert.equal((await job.admit(2, "Scout attempt")).admit, true);

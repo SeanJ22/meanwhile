@@ -393,6 +393,11 @@ export class AssignmentBudgetGate {
     return { lines };
   }
 
+  /** What this gate was armed with, for the standing hunter lane's reading (CH-24): the Sends and their spend at the read. */
+  armedReading(): { readonly specs: readonly AssignmentBudgetSpec[]; readonly historical: ReadonlyMap<string, AssignmentSpend> | null; readonly reached: ReadonlyMap<string, readonly string[]> } {
+    return { specs: [...this.specs.values()], historical: this.costsReadable ? this.historical : null, reached: this.reachedThisCycle };
+  }
+
   /** The budgeted Sends an obligation belongs to, most recent first. */
   budgetedFor(obligationId: string): AssignmentBudgetSpec[] {
     return (this.keysOf.get(obligationId) ?? [])

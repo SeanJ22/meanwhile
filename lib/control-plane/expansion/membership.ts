@@ -483,7 +483,11 @@ export class ScopeBudgetGate {
     this.historyReadAt = input.historyReadAt ?? new Date(0).toISOString();
   }
 
-  /** The scopes a subject is bound by. */
+  /** What this gate was armed with, for the standing hunter lane's reading (CH-24). */
+  armedReading(): { readonly scopes: readonly BudgetScope[]; readonly malformedScopes: number } {
+    return { scopes: this.scopes, malformedScopes: this.heldForMalformed };
+  }
+
   /**
    * The scopes a subject is bound by. `stateHint` (2026-09-25, for autonomous
    * work that carries its state beside its subject) is read only when the

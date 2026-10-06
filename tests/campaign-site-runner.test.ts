@@ -927,8 +927,12 @@ test("the paid lane stays closed under the owner's pause, and the pass is plain 
   const block = runner.slice(start, end);
   assert.doesNotMatch(block, /modelLaneEnabled|laneClosure|guardedModelTransport|scoutFor|workerKey/);
   assert.match(block, /intents\.runnerPause\.paused/);
-  /* The pass starts only with its whole budget and the cycle's backstop left, and the backstop bounds it in wall time (2026-09-25). */
-  assert.doesNotMatch(block, /withinWallTime|DISPATCH_DEADLINE_MS|CAMPAIGN_SITE_BUDGET_MS|scheduledBlackout/, "plain-code work has no clock limit");
+  /* No budget or blackout keeps the pass from starting. Sean, 2026-10-06 12:07 AM EDT: a lane still waiting past the
+   * dispatch cutoff ends as a named deferral, its work owed, so it cannot hold the round to the runner's kill. */
+  assert.doesNotMatch(block, /DISPATCH_DEADLINE_MS|CAMPAIGN_SITE_BUDGET_MS|scheduledBlackout/, "nothing but the round's own cutoff bounds plain-code work");
+  assert.match(block, /withinWallTime\(/);
+  assert.match(block, /dispatchDeadlineMs \+ CAMPAIGN_SITES_SETTLE_MS - Date\.now\(\)/);
+  assert.match(block, /deferred: still waiting on \$\{waitingOn\}/);
   assert.match(block, /guardedOpenBytes\("discovery-web", "campaign-site-chain", fetch, \{ followRedirects: false \}\)/);
   assert.match(block, /spaceOut: spacer/);
   assert.match(runner, /campaignSiteCycleLine\(campaignSites\)/, "the pass reaches the cycle's digest");

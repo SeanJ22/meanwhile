@@ -1,5 +1,5 @@
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { hostOf } from "@/lib/officials/verification";
+import { candidateOwnKind, hostOf } from "@/lib/officials/verification";
 import { VisibleCard } from "@/components/ballot/visible-card";
 import { personInitials } from "@/lib/officials/person-name";
 import { type CandidateCardData } from "@/lib/ballot/candidate-cards";
@@ -173,7 +173,7 @@ export function CandidateCard({
             &ldquo;{card.bio}&rdquo;{" "}
 
           </p>
-          <CardSourcesContribution id="candidate-bio" sources={[{ what: "Biography in the candidate's own words", provenance: { sourceUrl: card.bioSourceUrl ?? "", sourceOrg: card.bioSourceLabel ?? (card.bioSourceUrl ? hostOf(card.bioSourceUrl) ?? "" : ""), collectedAt: "", verifiedAt: null } }]} /></>
+          <CardSourcesContribution id="candidate-bio" sources={[{ what: "Biography in the candidate's own words", provenance: { kind: candidateOwnKind(card.bioSourceUrl ?? null), sourceUrl: card.bioSourceUrl ?? "", sourceOrg: card.bioSourceLabel ?? (card.bioSourceUrl ? hostOf(card.bioSourceUrl) ?? "" : ""), collectedAt: "", verifiedAt: null } }]} /></>
         )}
 
         {!card?.bio && derivedBlurb && (
@@ -186,7 +186,7 @@ export function CandidateCard({
             &ldquo;{derivedBlurb.text}&rdquo;{" "}
 
           </p>
-          <CardSourcesContribution id="candidate-derived-bio" sources={[{ what: "Biography in the candidate's own words", provenance: { sourceUrl: derivedBlurb.sourceUrl, sourceOrg: derivedBlurb.sourceLabel, collectedAt: "", verifiedAt: null } }]} /></>
+          <CardSourcesContribution id="candidate-derived-bio" sources={[{ what: "Biography in the candidate's own words", provenance: { kind: candidateOwnKind(derivedBlurb.sourceUrl), sourceUrl: derivedBlurb.sourceUrl, sourceOrg: derivedBlurb.sourceLabel, collectedAt: "", verifiedAt: null } }]} /></>
         )}
 
         {(hasLinks || card?.email || card?.phone) && (

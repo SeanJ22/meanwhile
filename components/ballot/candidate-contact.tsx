@@ -4,6 +4,7 @@ import type { CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 import type { CandidateContact as FilingContact } from "@/lib/ballot/candidate-contacts";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
+import { candidateOwnKind } from "@/lib/officials/verification";
 
 /**
  * What the Sources section says about the line a reader saw on the ballot.
@@ -66,7 +67,7 @@ export function CandidateContact({
 /** Campaign and filing attribution belongs to the person card's Sources section. */
 export function CandidateContactSources({ links, filing }: { links: CandidateLinks | null; filing?: FilingContact | null }) {
   const sources = [
-    ...(links?.campaign ? [{ what: "Campaign contacts and website", provenance: { sourceOrg: links.campaign.label ?? "Campaign", sourceUrl: links.campaign.url, collectedAt: links.campaign.attemptedAt, verifiedAt: links.campaign.attemptedAt } }] : []),
+    ...(links?.campaign ? [{ what: "Campaign contacts and website", provenance: { kind: candidateOwnKind(links.campaign.url), sourceOrg: links.campaign.label ?? "Campaign", sourceUrl: links.campaign.url, collectedAt: links.campaign.attemptedAt, verifiedAt: links.campaign.attemptedAt } }] : []),
     ...(filing ? [{ what: "Published filing contact", provenance: { sourceOrg: filing.sourceOrg, sourceUrl: filing.sourceUrl, collectedAt: filing.collectedAt, verifiedAt: null } }] : []),
   ];
   return sources.length ? <CardSourcesList sources={sources} /> : null;

@@ -404,6 +404,8 @@ import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { countVitalSign } from "../lib/db/transfer-by-caller.ts";
+import { VITAL_COUNTERS } from "../lib/control-plane/vital-signs.ts";
 
 const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
   { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
@@ -4519,6 +4521,8 @@ await finalStep("digest:append", () =>
       ),
   }));
 console.log(`\n  canonical outcome: ${cycleId}`);
+/* Vital signs: a round that named a post-cutoff deferral counts as deferred, else finished (the watchdog's kills are counted by the parent). */
+countVitalSign(runtimeConditions.some(line => /\bdeferred: /.test(line)) ? VITAL_COUNTERS.roundsDeferred : VITAL_COUNTERS.roundsFinished);
 
 const path = pending.sync("local-record:write", () => writeCycleRecord(runRecord));
 console.log(`  local diagnostic: ${path}`);

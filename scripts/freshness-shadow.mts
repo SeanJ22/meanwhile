@@ -387,6 +387,7 @@ import {
 } from "../lib/control-plane/scheduler/cycle-stall.ts";
 import { answerStallProbes, roundProgressReporter } from "../lib/control-plane/scheduler/round-progress.ts";
 import { RUNTIME_NO_PROGRESS_MS } from "./pilot-runtime-child.mts";
+import { POST_CUTOFF_QUIET_LEAD_MS, untilQuietLimit, watchOutputClock } from "../lib/control-plane/scheduler/post-cutoff-bound.ts";
 import { recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import { CYCLE_DRAIN_GRACE_MS, chosenExitCode, exitAfterDrainGrace } from "../lib/control-plane/scheduler/cycle-exit.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
@@ -429,6 +430,14 @@ const pending = new PendingOperations();
 answerStallProbes({ describe: () => describePending(pending.snapshot()) });
 /* Finished tasks of the long phases (dispatch, worker wave, meetings walks) are progress the runner can see. */
 const roundProgress = roundProgressReporter();
+/*
+ * Waits after the dispatch cutoff (the discovery-lane join, the promotion tail's reads) end once the child has printed
+ * nothing for this long, three minutes inside the runner's no-progress limit and before its stall probe; what was still
+ * running is named as deferred and its work stays owed (post-cutoff-bound.ts).
+ */
+const outputClock = watchOutputClock();
+const POST_CUTOFF_QUIET_MS = RUNTIME_NO_PROGRESS_MS - POST_CUTOFF_QUIET_LEAD_MS;
+const boundedAfterCutoff = <T,>(work: Promise<T>) => untilQuietLimit(work, { clock: outputClock, quietMs: POST_CUTOFF_QUIET_MS });
 const stallDiagnostic: CycleStallDiagnostic | null = null;
 /** True once the cycle wrote its own record; a later failure must not overwrite it. */
 let finalRecordWritten = false;
@@ -3229,6 +3238,8 @@ let meetingsDiscoveryByOutcome: Record<string, number> = {};
 let roundVaultIndex: VaultIndex | undefined;
 let roundVaultRead: Promise<VaultIndex> | undefined;
 let discoveryLaneRun: Promise<readonly IndependentRuntimeOutcome[]> | null = null;
+let discoveryLaneIds: readonly string[] = [];
+const discoveryLanesFinished = new Set<string>();
 /* One full listing per round; later captures join it through includeVaultCapture. The step is timed once in the round's phases. */
 const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= (async () => {
   const startedMs = Date.now();
@@ -3457,6 +3468,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
           vaultRoot: join(ROOT, ...VAULT_DIR),
           heldVault: vaultIndex,
           methodVersion: (await readMethodKnowledge(repos)).version,
+          deadlineMs: dispatchDeadlineMs,
         });
         return {
           report,
@@ -3497,6 +3509,7 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
         heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
         methodVersion: (await readMethodKnowledge(repos)).version,
         clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
+        deadlineMs: dispatchDeadlineMs,
         openFor: candidacyId => {
           const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
           return async ({ url, headers, timeoutMs }) => {
@@ -3533,13 +3546,14 @@ if (DISCOVERY_SERIAL) {
 } else {
   const lanesStartedMs = Date.now();
   const timed = (id: string, run: () => Promise<void>) => ({ id, run: async () => {
-    try { await run(); } finally { console.log(`  lane ${id}: ${Date.now() - lanesStartedMs}ms`); }
+    try { await run(); } finally { discoveryLanesFinished.add(id); console.log(`  lane ${id}: ${Date.now() - lanesStartedMs}ms`); }
   } });
   discoveryLaneRun = runIndependentRuntimePass([
     timed("meetings-discovery", () => runMeetingsDiscoveryPass(dispatchDeadlineMs, Number.MAX_SAFE_INTEGER)),
     timed("campaign-sites", runCampaignSitesPass),
     timed("candidate-publications", runCandidatePublicationsPass),
   ]);
+  discoveryLaneIds = ["meetings-discovery", "campaign-sites", "candidate-publications"];
 }
 
 
@@ -3612,8 +3626,22 @@ if (autonomousCycleOpen) {
   } finally { leaveAutonomous(); }
 }
 if (discoveryLaneRun !== null) {
-  for (const outcome of await discoveryLaneRun) {
-    if (outcome.state === "FAILED") runtimeConditions.push(`${outcome.id} lane failed: ${outcome.error}`);
+  const leaveLaneJoin = pending.enter("discovery-lanes:join");
+  const joined = await boundedAfterCutoff(discoveryLaneRun);
+  leaveLaneJoin();
+  if (joined.done) {
+    for (const outcome of joined.value) {
+      if (outcome.state === "FAILED") runtimeConditions.push(`${outcome.id} lane failed: ${outcome.error}`);
+    }
+  } else {
+    /* The lanes stop starting reads at the cutoff; one still running here is waiting on a read that has not answered. */
+    for (const id of discoveryLaneIds.filter(lane => !discoveryLanesFinished.has(lane))) {
+      const line = `${id} lane deferred: still running ${Math.round(joined.quietMs / 60_000)} min after the round's last output, past the dispatch cutoff; its work remains owed`;
+      runtimeConditions.push(line);
+      console.log(`  ${line}`);
+      if (id === "campaign-sites") campaignSitesState = `deferred: ${line}`;
+      if (id === "candidate-publications") candidatePublicationsState = `deferred: ${line}`;
+    }
   }
   finishPhase("discovery-lanes");
 }
@@ -3632,10 +3660,19 @@ for (const result of cycle.dispatched) {
   const unit = units.find((u) => u.obligation.id === result.obligationId);
   if (unit === undefined) continue;
   let body: string | null = null;
+  let detail = result.detail;
   for (const artifactId of result.artifactIds) {
     const entry = vault.ledger.get(artifactId);
     if (entry === undefined) continue;
-    body = await vault.readBack(entry.key);
+    const read = await boundedAfterCutoff(vault.readBack(entry.key));
+    if (!read.done) {
+      const line = `promotion tail: ${result.obligationId}'s vaulted bytes did not read back within ${Math.round(read.quietMs / 60_000)} min of the round's last output; it is staged as still owed`;
+      runtimeConditions.push(line);
+      console.log(`  ${line}`);
+      detail = `${detail}; its vaulted bytes did not read back this round, so it is staged as still owed`;
+      break;
+    }
+    body = read.value;
     if (body !== null) break;
   }
 
@@ -3651,7 +3688,7 @@ for (const result of cycle.dispatched) {
       artifactIds: result.artifactIds,
       body,
       nextDueAt: nextDueByObligation.get(result.obligationId) ?? null,
-      detail: result.detail,
+      detail,
       stagedOn: today(),
     }),
   );
@@ -3668,12 +3705,22 @@ for (const recovered of cycle.recovered) {
   const { disposition } = recovered;
   let body: string | null = null;
   try {
-    const held = disposition.artifactIds.length === 0 ? [] : await repos.artifacts.read(recovered.workItemId);
-    for (const artifactId of disposition.artifactIds) {
-      const record = held.find((a) => a.artifactId === artifactId);
-      if (record === undefined) continue;
-      body = await vault.readHeld(record);
-      if (body !== null) break;
+    const readHeldBody = async (): Promise<string | null> => {
+      const held = disposition.artifactIds.length === 0 ? [] : await repos.artifacts.read(recovered.workItemId);
+      for (const artifactId of disposition.artifactIds) {
+        const record = held.find((a) => a.artifactId === artifactId);
+        if (record === undefined) continue;
+        const bytes = await vault.readHeld(record);
+        if (bytes !== null) return bytes;
+      }
+      return null;
+    };
+    const read = await boundedAfterCutoff(readHeldBody());
+    if (read.done) body = read.value;
+    else {
+      const line = `recovered ${recovered.obligationId}: its held bytes did not read back within ${Math.round(read.quietMs / 60_000)} min of the round's last output; it is staged as still owed`;
+      runtimeConditions.push(line);
+      console.log(`  ${line}`);
     }
   } catch (error) {
     runtimeConditions.push(

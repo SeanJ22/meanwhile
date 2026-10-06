@@ -1,0 +1,12 @@
+{
+  "id": "6ac485d227e48191956e51253cf23665",
+  "title": "Continue Meanwhile frontend",
+  "threadId": "01a10d4c-060a-7206-b377-88b45da55037",
+  "enabled": true,
+  "schedule": "BEGIN:VEVENT\nDTSTART:20261006T065330Z\nRRULE:FREQ=MINUTELY;INTERVAL=90\nEND:VEVENT",
+  "timezone": "America/New_York",
+  "createdResult": "success",
+  "firstScheduledEDT": "Oct 6, 2026, 2:53:30 AM EDT",
+  "deliveryObserved": false,
+  "semantics": "Reread full mission; skip while active; check assignment before writes; preserve lock discipline; work every ready step/return; questions via River; quiet unchanged state; repeat until cancelled."
+}

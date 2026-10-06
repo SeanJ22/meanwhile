@@ -1,8 +1,32 @@
+diff --git a/lib/civic-data/publish-now.ts b/lib/civic-data/publish-now.ts
+index 605b340d..8759e10b 100644
+--- a/lib/civic-data/publish-now.ts
++++ b/lib/civic-data/publish-now.ts
+@@ -3,6 +3,7 @@ import type { RoutineSourceTask } from "./runner.ts";
+ import type { WorkItem } from "../control-plane/work-item.ts";
+ import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
+ import type { DoorRecord } from "../doors/registry.ts";
++import type { LiveAuditPull } from "../control-plane/live-audit-log.ts";
+ import { doorPartitionIds } from "../doors/mission-refresh.ts";
+ import { workerPublicationTasks } from "./worker-publication-tasks.ts";
+ import { latestParserResult } from "./worker-publication-evidence.ts";
+@@ -17,8 +18,9 @@ export function publishNowLane(run: () => Promise<void>): IndependentRuntimeLane
+ /** Parser results are already a durable, non-expiring outbox. Their exact ids
+  * are acknowledged by publicationOutcome.workerResultId; a crash cannot eat a
+  * request. The hourly held-page scan stays on the routine lane. */
+-export function publishNowWorkerTasks(items: readonly WorkItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
+-  return workerPublicationTasks(items.filter(item => latestParserResult(results, item.id) !== undefined), results, now);
++export function publishNowWorkerTasks(items: readonly WorkItem[], results: readonly WorkerResultRecord[], now: string,
++  livePulls: readonly LiveAuditPull[] = []): RoutineSourceTask[] {
++  return workerPublicationTasks(items.filter(item => latestParserResult(results, item.id) !== undefined), results, now, livePulls);
+ }
+ 
+ /** Probe changes stay pending until a successful read; no due-request expiry
 diff --git a/lib/civic-data/worker-publication-evidence.ts b/lib/civic-data/worker-publication-evidence.ts
-index e05bca558..004573c8f 100644
+index 7102f203..4794b317 100644
 --- a/lib/civic-data/worker-publication-evidence.ts
 +++ b/lib/civic-data/worker-publication-evidence.ts
-@@ -9,6 +9,7 @@ import type { ManualSourceSetReceipt } from "./types.ts";
+@@ -11,6 +11,7 @@ import type { ManualSourceSetReceipt } from "./types.ts";
  import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
  import { isOfficialSource } from "./source-authority.ts";
  import { hostOfUrl, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
@@ -10,7 +34,7 @@ index e05bca558..004573c8f 100644
  
  export function requirePublication(value: unknown, reason: string): asserts value {
    if (!value) throw new Error(`WORKER_PUBLICATION_${reason}`);
-@@ -71,6 +72,8 @@ export function verifiedWorkerRecords(input: {
+@@ -74,6 +75,8 @@ export function verifiedWorkerRecords(input: {
     * result may then publish fewer records, or none, and `pulledRecords` names what the audit took out.
     */
    pullRemoves?: boolean;
@@ -19,7 +43,7 @@ index e05bca558..004573c8f 100644
  }) {
    const { plan, parser, now } = input;
    const contract = plan.contract;
-@@ -79,7 +82,7 @@ export function verifiedWorkerRecords(input: {
+@@ -82,7 +85,7 @@ export function verifiedWorkerRecords(input: {
    if (contract.schemaVersion !== 2) throw new Error("WORKER_PUBLICATION_CONTRACT_UNRESOLVED");
    requirePublication(extraction.role === "PARSER" && extraction.verdict === "EXTRACTED", "PARSER_RESULT_UNRESOLVED");
    if (extraction.role !== "PARSER") throw new Error("WORKER_PUBLICATION_PARSER_RESULT_UNRESOLVED");
@@ -28,7 +52,7 @@ index e05bca558..004573c8f 100644
    requirePublication(!pulled?.all || input.pullRemoves, "AUDIT_BROKE:the Auditor broke this extraction; a new extraction is owed");
    const primary = input.captures.find(c => c.evidence.artifactId === extraction.artifactId);
    requirePublication(primary && captureIntact(primary), "PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE");
-@@ -176,13 +179,16 @@ export function registryEdition(label: string): string {
+@@ -188,13 +191,16 @@ export function registryEdition(label: string): string {
   * no audit broke it. `at` is the newest such audit, so the publisher re-checks
   * once after it.
   */
@@ -50,7 +74,7 @@ index e05bca558..004573c8f 100644
 +    at: [...broke.map(r => r.endedAt), ...live.map(p => p.at)].sort().at(-1)! };
  }
 diff --git a/lib/civic-data/worker-publication-tasks.ts b/lib/civic-data/worker-publication-tasks.ts
-index 399728c35..3aa1ff091 100644
+index d0d94c3e..0a0d8b54 100644
 --- a/lib/civic-data/worker-publication-tasks.ts
 +++ b/lib/civic-data/worker-publication-tasks.ts
 @@ -4,6 +4,7 @@ import type { WorkItem } from "../control-plane/work-item.ts";
@@ -81,18 +105,18 @@ index 399728c35..3aa1ff091 100644
        const published = outcome?.workerResultId === parser.id || outcome?.workerResultId.startsWith(`${parser.id}+`);
        if (outcome && published && (outcome.status !== "HELD" || outcome.recovery === "WORKER") && !(pull && pull.at > outcome.at)) return [];
 diff --git a/lib/civic-data/worker-reader-publication.ts b/lib/civic-data/worker-reader-publication.ts
-index b2ff96887..4ef7691b9 100644
+index 08ea40dd..f3c4e779 100644
 --- a/lib/civic-data/worker-reader-publication.ts
 +++ b/lib/civic-data/worker-reader-publication.ts
-@@ -14,6 +14,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
+@@ -18,6 +18,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
  import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
  import { requiredManualProductionContract } from "./manual-contracts.ts";
  import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 +import { readLiveAuditPulls } from "../control-plane/live-audit-log.ts";
- import { auditPull, capturesForPublication, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
+ import { auditPull, captureIntact, capturesForPublication, section3SourceReceipt, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
  import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
  import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
-@@ -169,7 +170,8 @@ export async function publishWorkerReaderResults(input: {
+@@ -247,7 +248,8 @@ export async function publishWorkerReaderResults(input: {
      const parser = latestParserResult(results, id);
      if (!parser || plan?.publication?.contractId !== input.contractId) continue;
      // A BROKE audit after this publication is re-checked once; otherwise a published or worker-owed result waits for a newer extraction.
@@ -102,20 +126,20 @@ index b2ff96887..4ef7691b9 100644
      if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.recovery !== "PUBLISHER" && !(pull && pull.at > item.publicationOutcome.at)) {
        report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;
      }
-@@ -179,7 +181,7 @@ export async function publishWorkerReaderResults(input: {
+@@ -257,7 +259,7 @@ export async function publishWorkerReaderResults(input: {
        requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
-       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture: input.readCapture, officialLinks: manual.officialLinks });
+       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
        const registry = await readRegistryRuntimePrior(input.store, input.now);
 -      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results });
 +      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results, livePulls });
        const checked = built.package;
-       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now);
-       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
+       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now,
+         manualPayloadScope(input.contractId, requiredManualProductionContract(input.contractId).scope, checked.payload));
 diff --git a/scripts/routine-civic-data-runner.mts b/scripts/routine-civic-data-runner.mts
-index 0a62ea24f..3eee98c31 100644
+index 9d3d4a5b..d7068345 100644
 --- a/scripts/routine-civic-data-runner.mts
 +++ b/scripts/routine-civic-data-runner.mts
-@@ -8,6 +8,7 @@
+@@ -11,6 +11,7 @@ import { workerPublicationContext } from "../lib/civic-data/worker-publication-c
   * candidate/promotion history; a child-process failure is operational evidence
   * and never replaces a candidate's own source-through or retrieved-at facts.
   */
@@ -123,18 +147,19 @@ index 0a62ea24f..3eee98c31 100644
  import { hostname } from "node:os";
  import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
  import { neon } from "@neondatabase/serverless";
-@@ -404,7 +405,8 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
-   if (intents.runnerPause.paused) return [];
-   const items = (await repos.workItems.list()).map(row => row.value);
+@@ -439,7 +440,9 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
+     await buildBoxFindings({ repos, items, now: () => new Date().toISOString(), leaseMs: 120_000, readCapture: context.readCapture });
+   }
    const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
--  const publication = workerPublicationTasks(items, workers, RUN_STARTED_AT);
+-  const publication = PUBLISH_NOW ? publishNowWorkerTasks(items, workers, RUN_STARTED_AT) : workerPublicationTasks(items, workers, RUN_STARTED_AT);
 +  /* A live-audit red flag (DP-14) re-checks the publication it pulled from, as a BROKE audit does. */
-+  const publication = workerPublicationTasks(items, workers, RUN_STARTED_AT, workers.length ? await readAllLiveAuditPulls(repos) : []);
-   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-   if (row === null) return publication;
-   if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");
++  const livePulls = workers.length ? await readAllLiveAuditPulls(repos) : [];
++  const publication = PUBLISH_NOW ? publishNowWorkerTasks(items, workers, RUN_STARTED_AT, livePulls) : workerPublicationTasks(items, workers, RUN_STARTED_AT, livePulls);
+   if (PUBLISH_NOW) {
+     // DB-26: the hourly first look. Each hot door's page or feed is looked at once an hour; a change is stored on the
+     // door and read below at once. A look that cannot be made never stops the read of a door already known to have changed.
 diff --git a/tests/audit-pull.test.ts b/tests/audit-pull.test.ts
-index 56a20827a..1ebdbc51d 100644
+index 56a20827..1ebdbc51 100644
 --- a/tests/audit-pull.test.ts
 +++ b/tests/audit-pull.test.ts
 @@ -15,3 +15,13 @@ test("a BROKE audit of an extraction pulls the records it names, or all of it wh

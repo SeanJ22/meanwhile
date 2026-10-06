@@ -101,7 +101,7 @@ export function MoneyScreen() {
         </tbody></table></div> : <><p className={s.p}>{DASH}</p><Technical lines={["The runner has not published measured daily transfer and cause attribution by database project."]}/></>}
       </Card>
 
-      <Card title="Batch and full-price spend by role" aside={<span className={s.meta}>Last 24 hours</span>}>
+      <Card title="Batch and full-price spend by role" aside={<span className={s.meta}>Whole factory · last 24 hours</span>}>
         {spendData?.batchSpend ? <div className={s.tableWrap}><table className={s.table}>
           <thead><tr><th>Role</th><th>Request pricing</th><th>Settled spend</th><th>Charges</th></tr></thead>
           <tbody>{spendData.batchSpend.rows.map(r => <tr key={`${r.role}:${r.mode}`}><th scope="row">{roleWords(r.role)}<Technical lines={[r.role]} /></th><td>{r.mode === "batch" ? "Batch" : r.mode === "standard" ? "Full-price" : "—"}</td><td>{money(r.usd)}{r.unpriced > 0 && <Technical lines={[`${r.unpriced} charges have no reported price.`]} />}</td><td>{r.charges}</td></tr>)}</tbody>

@@ -21,6 +21,7 @@ test("the seven-day rates count deliveries rather than rechecks and retain unkno
   assert.equal(weekly.factsLivePerHour, 4 / 168);
   assert.equal(weekly.costPerFactUsd, .5);
   assert.equal(flowRows(weekly)[1][1].value, "$0.50");
+  assert.match(flowRows(weekly)[0][1].counts!, /across the factory/);
   const unknown = projectFlow({ stages: [{ hour: from, stage: "liveRecords", count: 4 }], spend: [{ hour: from, usd: 2, unpriced: 1 }] }, from, through);
   assert.equal(flowRows(unknown)[1][1].value, null);
   assert.equal(flowRows(undefined)[0][1].value, null);

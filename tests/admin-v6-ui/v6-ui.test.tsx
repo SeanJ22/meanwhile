@@ -339,5 +339,6 @@ test("Money renders the measured cost in its existing Hunts table and keeps date
   assert.doesNotMatch(huntTables[0],/\$38\.00/);
   assert.match(html,/Oct 5.*10:00 PM EDT/);
   assert.match(html,/Batch and full-price spend by role/);
+  assert.match(html,/Whole factory · last 24 hours/);
   assert.doesNotMatch(html,/spend with no result|No result recorded| UTC| MST/);
 });

@@ -496,8 +496,8 @@ export function flowRows(flow: FlowRead | null | undefined): readonly (readonly 
   const rate = (v: number) => v.toLocaleString("en-US", { maximumFractionDigits: 2 });
   const period = `${moneyTime(flow.from)} to ${moneyTime(flow.through)}`;
   return [
-    ["Facts live per hour", row("Facts live per hour", "Facts live per hour", { value: rate(flow.factsLivePerHour), counts: `${n(facts)} new or updated reader records`, says: `Measured ${period}.`, items: [...days].map(([day,d]) => `${day}: ${rate(d.facts / d.hours)} per hour (${n(d.facts)} records)`) })],
-    ["Cost per fact", row("Cost per fact", "Cost per fact", { value: flow.costPerFactUsd === null ? null : `$${flow.costPerFactUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 8 })}`, counts: flow.settledSpendUsd === null ? null : `$${flow.settledSpendUsd.toFixed(2)} settled over ${n(facts)} reader records`, says: `Measured ${period}.`, notMeasured: flow.costPerFactUsd === null ? facts === 0 ? "No new or updated record reached a reader in this window." : "A charge has no reported price." : null })],
+    ["Facts live per hour", row("Facts live per hour", "Facts live per hour", { value: rate(flow.factsLivePerHour), counts: `${n(facts)} new or updated reader records across the factory`, says: `Whole factory · measured ${period}.`, items: [...days].map(([day,d]) => `${day}: ${rate(d.facts / d.hours)} per hour (${n(d.facts)} records)`) })],
+    ["Cost per fact", row("Cost per fact", "Cost per fact", { value: flow.costPerFactUsd === null ? null : `$${flow.costPerFactUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 8 })}`, counts: flow.settledSpendUsd === null ? null : `$${flow.settledSpendUsd.toFixed(2)} settled over ${n(facts)} reader records`, says: `Whole factory · measured ${period}.`, notMeasured: flow.costPerFactUsd === null ? facts === 0 ? "No new or updated record reached a reader in this window." : "A charge has no reported price." : null })],
   ];
 }
 

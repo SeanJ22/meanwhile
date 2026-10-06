@@ -52,6 +52,7 @@ import {
   MEETING_PARTITION_CONTRACTS,
   observableRoutineContracts,
 } from "../lib/civic-data/meeting-partitions.ts";
+import { OUTCOME_PARTITION_CONTRACTS } from "../lib/civic-data/outcome-partitions.ts";
 import { recordDoorOutcome, type DoorOutcome } from "../lib/doors/outcome.ts";
 import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
 import { isDoorRecord } from "../lib/doors/registry.ts";
@@ -178,6 +179,11 @@ if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlan
       const doorPass = await refreshDoorsForPass(doorRepos.doors);
       console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from ${doorPass.reading} (${doorPass.partitions?.partitions ?? doorPass.rows} partitions)` +
         `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}`);
+      if (doorPass.outcomes !== null) {
+        console.log(`RCD_TASK routine-civic-data-runner: outcome doors — ${doorPass.outcomes.partitions} door(s) collect outcomes` +
+          `${doorPass.outcomes.reason ? ` — ${doorPass.outcomes.reason}` : ""}` +
+          `${doorPass.outcomes.skipped.length > 0 ? `; ${doorPass.outcomes.skipped.length} left out (${doorPass.outcomes.skipped.map((skip) => `${skip.doorId}: ${skip.why}`).join("; ")})` : ""}`);
+      }
     }
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, the code's meeting list stays in use — ${error instanceof Error ? error.message : String(error)}`);
@@ -186,6 +192,7 @@ if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlan
 const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([
   ...ROUTINE_SOURCE_TASKS.filter((task) => !CODE_MEETING_PARTITION_IDS.has(task.id)),
   ...MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract),
+  ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract),
   ...AUTOMATIC_REFRESH_TASKS,
 ], process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);

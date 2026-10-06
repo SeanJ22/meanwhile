@@ -15,6 +15,7 @@ import {
 } from "./contracts.ts";
 
 import { MEETING_HISTORY_SCOPE_SUFFIX } from "./meeting-history-scope.ts";
+import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 
 export const LEGACY_MEETINGS_AGGREGATE_SCOPE = "supported-bodies";
@@ -360,7 +361,18 @@ export function refreshMeetingPartitions(wirings: readonly BodySourceWiring[] = 
 
 /** The partition ids whose sittings decide whether a task is hot; empty when the task has no sitting window. */
 export function sittingWindowSourceIds(taskId: string): readonly string[] {
-  return SITTING_WINDOW_SOURCES.get(taskId) ?? [];
+  return SITTING_WINDOW_SOURCES.get(taskId) ?? EXTRA_SITTING_WINDOW_SOURCES.get(taskId) ?? [];
+}
+
+/**
+ * Sitting windows of tasks built at runtime from the door registry (DB-22's per-door outcomes): the task id mapped to
+ * the meeting partitions whose sittings decide whether it is hot. Replaced whole on each registry read.
+ */
+const EXTRA_SITTING_WINDOW_SOURCES = new Map<string, readonly string[]>();
+
+export function setExtraSittingWindowSources(sources: ReadonlyMap<string, readonly string[]>): void {
+  EXTRA_SITTING_WINDOW_SOURCES.clear();
+  for (const [id, ids] of sources) EXTRA_SITTING_WINDOW_SOURCES.set(id, ids);
 }
 
 export function meetingPartitionContract(id: string): MeetingPartitionContract | null {
@@ -388,6 +400,7 @@ export function meetingPartitionForRow(sourceName: string, bodyId: string): Meet
 export function observableRoutineContracts(): readonly RoutineSourceContract[] {
   return [
     ...ROUTINE_SOURCE_CONTRACTS,
+    ...RUNTIME_ROUTINE_CONTRACTS,
     ...MEETING_PARTITION_CONTRACTS,
   ];
 }

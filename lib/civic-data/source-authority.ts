@@ -778,6 +778,28 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
+  /*
+   * Outcomes of any Legistar door that holds `outcomes` (DB-22): agenda actions, decisions, roll calls and minutes read
+   * from the body's own Legistar tenant. The hosts are the doors' own (installDoorHosts, like the meeting doors), so a
+   * body added as a door is read with no change here; the per-place contracts above stay until a live read matches.
+   */
+  "door-outcomes": {
+    id: "door-outcomes",
+    publisher: "Public bodies on Legistar, each read on the host its own door names",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: [],
+    jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
+    recordClasses: ["MEETING_OUTCOME"],
+    competentFacts: ["agenda item", "recorded body action", "recorded disposition", "exact per-person roll call", "publisher document status", "minutes document standing"],
+    expectedIdentifierKeys: ["meeting_id", "event_id"],
+    expectedTemporalFields: ["event_last_modified_utc", "observed_at", "source_through"],
+    horizonSemantics: "Each door bounds its own date window; each changed sitting is an independent acquisition. A failed item, vote or minutes retrieval produces a refused durable candidate and cannot replace another sitting's, or another door's, LKG facts.",
+    parserVersion: "legistar-outcomes/2",
+    freshnessExpectation: "The standing routine runner's clock under the door's outcome contract, following the body's sittings; each pass re-walks only sittings whose publisher stamp or minutes link moved. No owner or GitHub clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
   "az-legislature": {
     id: "az-legislature",
     publisher: "Arizona State Legislature",
@@ -996,7 +1018,7 @@ export function authorityForManualReceipt(
  * and is unchanged.
  */
 let doorHosts: ReadonlySet<string> | null = null;
-const DOOR_HOST_SOURCE = "meetings-public-bodies";
+const DOOR_HOST_SOURCES: ReadonlySet<string> = new Set(["meetings-public-bodies", "door-outcomes"]);
 
 export function installDoorHosts(hosts: Iterable<string> | null): void {
   doorHosts = hosts === null ? null : new Set([...hosts].map((host) => host.trim().toLowerCase()).filter((host) => host !== ""));
@@ -1016,7 +1038,7 @@ export function authorityFor(
   try { url = new URL(finalUrl); }
   catch { return { ok: false, code: "FINAL_URL_INVALID", detail: `Final URL is not parseable: ${JSON.stringify(finalUrl)}.` }; }
   if (url.protocol !== "https:") return { ok: false, code: "FINAL_URL_NOT_HTTPS", detail: `${url.href} is not HTTPS.` };
-  const onDoorHost = sourceId === DOOR_HOST_SOURCE && doorHosts !== null && doorHosts.has(url.hostname.toLowerCase());
+  const onDoorHost = DOOR_HOST_SOURCES.has(sourceId) && doorHosts !== null && doorHosts.has(url.hostname.toLowerCase());
   if (!onDoorHost && !contract.routePrefixes.some((prefix) => url.href.startsWith(prefix))) {
     return { ok: false, code: "FINAL_ROUTE_NOT_REGISTERED", detail: `${url.href} is outside ${sourceId}'s registered publication routes.` };
   }

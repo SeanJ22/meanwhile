@@ -1,5 +1,6 @@
 import { bulkUrl, indexDivisions, normalize, pluralRosterIssue, rowsToPeople } from "./index.ts";
 import { cellText, decodeEntities, extractRoster, looksLikeNameCell } from "../../hunt/roster-page.ts";
+import { imagesIn, pickPortraits } from "../../hunt/portrait-pick.ts";
 import type { PlaceDivision } from "../../control-plane/expansion/national-geography.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 import { electionPageFields, type ElectionFieldCandidate } from "../../hunt/election-page.ts";
@@ -104,6 +105,18 @@ export function electionDirectorySelection(page: HeldSourcePage, stateName: stri
 /** National sources are acquisition inputs. The ordinary §3 publisher checks
  * the saved official document and correct seat before they enter the reader.
  * The caller supplies the shared held-first source reader/vault; no per-ZIP files. */
+/**
+ * CP-10: which image to offer as an official's portrait. The page is read with the same base the portrait check uses
+ * (the saved copy's canonical URL), so the check sees exactly this image on it. One name-matched image on the person's
+ * own saved page wins over a roster image the page does not show; several name-matched images leave the roster's lead.
+ */
+export function ownPagePortrait(name: string, document: HeldSourcePage, rosterImageUrl: string | undefined): string | undefined {
+  if (!document.capture) return rosterImageUrl;
+  const named = pickPortraits(name, imagesIn(document.capture.evidence.text, document.capture.evidence.canonicalUrl));
+  if (rosterImageUrl && named.some(image => image.src === rosterImageUrl)) return rosterImageUrl;
+  return named.length === 1 ? named[0].src : rosterImageUrl;
+}
+
 export async function collectNationalPlaceSources(input: {
   readonly divisions: readonly PlaceDivision[];
   readonly now: string;
@@ -196,9 +209,13 @@ export async function collectNationalPlaceSources(input: {
             : /\b(?:State\s+)?(?:Representative|Delegate|Assembly\s*member|Assemblyman|Assemblywoman)\b/i;
           const office = officePattern.exec(text)?.[0];
           if (!office) { fallback(`The official profile needs source seat words for ${name}`, document.url); await flush(); return; }
+          // CP-10: the portrait the person's own official page shows under their name goes live on that page alone.
+          // The roster's image URL is used when the page shows that same image; when the page names a different one
+          // (another size or path for the same person), the page's own image is the portrait, not a second-source gap.
+          const imageUrl = ownPagePortrait(name, document, person.portraitCandidate?.imageUrl);
           officials.push({ discoveryId: person.id, divisionId, name,
             officeTitle: office, seatLabel: person.officeTitle, officialUrl: person.websiteUrl, document, ...(csv.capture ? { openStatesCapture: csv.capture } : {}),
-            ...(person.portraitCandidate ? {portrait: {imageUrl:person.portraitCandidate.imageUrl,
+            ...(imageUrl ? {portrait: {imageUrl,
               captures:[csv.capture,document.capture].filter((c): c is WorkerPublicationCapture => c !== undefined)}} : {}),
             quote: text.slice(Math.max(0, at - 100), at + name.length + 160) });
           await flush();

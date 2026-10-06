@@ -13,8 +13,8 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { DurableSpendHolds, SendBudgetRefusal, committedUsd, type BudgetLine } from "../lib/control-plane/expansion/spend-holds.ts";
 import { FleetPreSendRefusal, FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
-import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
-import { paidWorkGuards, type PaidWorkGuardDeps } from "../lib/control-plane/workers/paid-work-guards.ts";
+import { backgroundBatchTransport, batchRequestHash } from "../lib/control-plane/model-batch.ts";
+import { paidWorkGuards, workerBatchRouting, type PaidWorkGuardDeps } from "../lib/control-plane/workers/paid-work-guards.ts";
 import type { AssignmentBudgetGate } from "../lib/control-plane/expansion/assignment-budget.ts";
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
@@ -31,9 +31,11 @@ async function harness(options: {
   sends?: ReturnType<AssignmentBudgetGate["linesFor"]>;
   areas?: { lines: readonly BudgetLine[] } | { refusal: { code: string; why: string } };
   modelHold?: string | null; costs?: readonly CostEntry[]; ceilingUsd?: number; modelLaneEnabled?: boolean;
+  workerTask?: Record<string, unknown>; batch?: PaidWorkGuardDeps["batch"];
 } = {}) {
   const repos = createMemoryRepositories();
-  const task = createRouteTask({ workItemId: "wi-1", routeId: "autonomous:scout:x", routeLabel: "Discover", target: "https://x.example.gov/", inherited: false, now: NOW });
+  const routeTask = createRouteTask({ workItemId: "wi-1", routeId: "autonomous:scout:x", routeLabel: "Discover", target: "https://x.example.gov/", inherited: false, now: NOW });
+  const task = options.workerTask ? { ...routeTask, workerTask: options.workerTask as never } : routeTask;
   await repos.routeTasks.put(task.id, task, NOW);
   await repos.occurrences.put("occ-1", { id: "occ-1", obligationId: "ob-1", sequence: 1, dueAt: NOW, workItemId: "wi-1", routeTaskId: task.id,
     openedAt: NOW, closedAt: null, disposition: null, unresolvedReason: null } as never, NOW);
@@ -50,11 +52,11 @@ async function harness(options: {
   const deps: PaidWorkGuardDeps = { repos, now: () => NOW, armedAt: NOW, fleetSafety, providerQueue: new ModelProviderQueue(), spendHolds,
     assignmentBudget: { linesFor: () => options.sends ?? { lines: [] } } as unknown as AssignmentBudgetGate,
     expansionBudget: { gate: { linesFor: () => options.areas ?? { lines: [] } } } as never,
-    messages, batch: backgroundBatchTransport({ apiKey: "" }), modelLaneEnabled: options.modelLaneEnabled ?? true,
+    messages, batch: options.batch ?? backgroundBatchTransport({ apiKey: "" }), modelLaneEnabled: options.modelLaneEnabled ?? true,
     ceilingUsd: () => options.ceilingUsd ?? 50, onCondition: sentence => { conditions.push(sentence); } };
   const guards = paidWorkGuards(deps);
   const ledger = async () => ({ spendHolds: heldRows(repos) });
-  return { guards, sent, conditions, task, ledger, jurisdiction: { subjectId: "ocd-division/country:us/state:nh/county:x", state: "NH" } };
+  return { guards, sent, conditions, task, ledger, repos, jurisdiction: { subjectId: "ocd-division/country:us/state:nh/county:x", state: "NH" } };
 }
 
 test("CH-24: a request with room is sent once, held against its Send, and settled at what it measured", async () => {
@@ -119,4 +121,47 @@ test("CH-24: the round builds its guards from this module, with no inline copy l
   for (const inline of ["const budgetLinesFor = (", "const guardedMessagesFor = (", "const paidWorkerCapacity = (", "let autonomousHoldSeq", "new JobSpend(spendHolds, requestJobId"]) {
     assert.ok(!round.includes(inline), `no inline ${inline}`);
   }
+});
+
+/** A batch transport that records what it was handed instead of calling the service. */
+function fakeBatch() {
+  const batched: ModelRequest[] = [];
+  const send = async (r: ModelRequest): Promise<ModelResponse> => {
+    batched.push(r);
+    return { id: "batch-msg", model: r.model, role: "assistant", content: [{ type: "text", text: "ok" }], stop_reason: "end_turn", batch: true,
+      usage: { input_tokens: 100, output_tokens: 100, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } } as unknown as ModelResponse;
+  };
+  return { batched, batch: Object.assign(send, { withJournal: () => send }) as unknown as PaidWorkGuardDeps["batch"] };
+}
+
+test("BX-13: work routes by job: audits and replays may batch, every other parse and every other role goes straight to the model", () => {
+  assert.deepEqual(workerBatchRouting({ workerTask: { role: "ADVERSARIAL_AUDITOR" } as never }), { lane: "background-worker-audit", job: "AUDIT_SAMPLE" });
+  assert.deepEqual(workerBatchRouting({ workerTask: { role: "PARSER" } as never }), { lane: "background-worker-parse", job: undefined });
+  assert.deepEqual(workerBatchRouting({ workerTask: { role: "PARSER", purpose: "DIAGNOSTIC_REPLAY" } as never }), { lane: "background-worker-parse", job: "BACKFILL" });
+  assert.deepEqual(workerBatchRouting({ workerTask: { role: "PARSER", purpose: "OBLIGATION" } as never }), { lane: "background-worker-parse", job: undefined });
+  assert.deepEqual(workerBatchRouting({}), { lane: null, job: undefined });
+});
+
+test("BX-13: with the batch lane on, a parse a reader waits on is sent at once, and an audit sample takes the batch", async () => {
+  const parse = fakeBatch();
+  const p = await harness({ sends: { lines: [line("send:a", 5)] }, workerTask: { role: "PARSER", purpose: "OBLIGATION" }, batch: parse.batch });
+  await p.guards.workerTransportFor(p.jurisdiction, p.task.id)(request);
+  assert.equal(p.sent.length, 1, "the parse went straight to the model");
+  assert.equal(parse.batched.length, 0, "nothing waited on the batch service");
+
+  const audit = fakeBatch();
+  const a = await harness({ sends: { lines: [line("send:a", 5)] }, workerTask: { role: "ADVERSARIAL_AUDITOR" }, batch: audit.batch });
+  await a.guards.workerTransportFor(a.jurisdiction, a.task.id)(request);
+  assert.equal(a.sent.length, 0);
+  assert.equal(audit.batched.length, 1, "the audit sample kept the discount");
+});
+
+test("BX-13: a parse already submitted to the batch service under the old routing is collected from it, never sent a second time", async () => {
+  const recovery = fakeBatch();
+  const h = await harness({ sends: { lines: [line("send:a", 5)] }, workerTask: { role: "PARSER" }, batch: recovery.batch });
+  await h.repos.attempts.put("att-1", { id: "att-1", routeTaskId: h.task.id, outcome: null, leaseId: "lease-1",
+    providerBatches: [{ requestHash: batchRequestHash(request), customId: "c-1", batchId: "msgbatch_1", submittedAt: NOW }] } as never, NOW);
+  await h.guards.workerTransportFor(h.jurisdiction, h.task.id)(request);
+  assert.equal(h.sent.length, 0, "no second paid request");
+  assert.equal(recovery.batched.length, 1, "the outstanding batch answer was collected");
 });

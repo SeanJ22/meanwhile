@@ -74,7 +74,8 @@ export type SkipReason =
   | "unknown-funcstat"
   | "legislative-seat-not-a-meeting-body"
   /** TIGER's "no district here" placeholder (LEA 99997): geography, never a board. */
-  | "census-placeholder-not-a-government";
+  | "census-placeholder-not-a-government"
+  | "body-structure-not-yet-sourced";
 
 export interface DerivedSlot {
   bodyClass: BodyClass;
@@ -160,6 +161,10 @@ export function slotsFor(division: Division): DerivationOutcome {
       // districts elect one senator and two representatives, so the district is
       // not even one seat.
       return { slots: [], skipped: "legislative-seat-not-a-meeting-body" };
+    default:
+      // An Admin-added kind is admissible geography, not permission to infer
+      // its board, powers or territorial relationship. The directory supplies those.
+      return { slots: [], skipped: "body-structure-not-yet-sourced" };
   }
 }
 

@@ -1,3 +1,4 @@
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { hostOf } from "@/lib/officials/verification";
 import { VisibleCard } from "@/components/ballot/visible-card";
 import { personInitials } from "@/lib/officials/person-name";
@@ -168,28 +169,11 @@ export function CandidateCard({
         </div>
 
         {card?.bio && (
-          <p className="mt-1 t-body leading-relaxed text-paper-dim">
+          <> <p className="mt-1 t-body leading-relaxed text-paper-dim">
             &ldquo;{card.bio}&rdquo;{" "}
-            {card.bioSourceUrl && (
-              <a
-                href={card.bioSourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-muted underline decoration-dotted underline-offset-2 hover:text-link"
-              >
-                {/*
-                  **THE LINK NAMES WHERE IT CAME FROM** (2026-08-23, item 3).
-                  This read `?? "source"`, which is the shape of a source class
-                  without being one — the blurb rule requires prose about a
-                  real person to NAME where it came from, and the word
-                  "source" names nothing. The host is read off the URL that is
-                  already on the row, so it is derived from the evidence
-                  rather than supplied in place of it.
-                */}
-                {card.bioSourceLabel ?? hostOf(card.bioSourceUrl)}
-              </a>
-            )}
+
           </p>
+          <CardSourcesContribution id="candidate-bio" sources={[{ what: "Biography in the candidate's own words", provenance: { sourceUrl: card.bioSourceUrl ?? "", sourceOrg: card.bioSourceLabel ?? (card.bioSourceUrl ? hostOf(card.bioSourceUrl) ?? "" : ""), collectedAt: "", verifiedAt: null } }]} /></>
         )}
 
         {!card?.bio && derivedBlurb && (
@@ -198,17 +182,11 @@ export function CandidateCard({
           // campaign's own words, quoted, with the page and the read date.
           // Rendered only where no curated bio exists — the gap is where the
           // information asymmetry lives, and filling it is the whole row.
-          <p className="mt-1 t-body leading-relaxed text-paper-dim">
+          <> <p className="mt-1 t-body leading-relaxed text-paper-dim">
             &ldquo;{derivedBlurb.text}&rdquo;{" "}
-            <a
-              href={derivedBlurb.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-muted underline decoration-dotted underline-offset-2 hover:text-link"
-            >
-              {derivedBlurb.sourceLabel}
-            </a>
+
           </p>
+          <CardSourcesContribution id="candidate-derived-bio" sources={[{ what: "Biography in the candidate's own words", provenance: { sourceUrl: derivedBlurb.sourceUrl, sourceOrg: derivedBlurb.sourceLabel, collectedAt: "", verifiedAt: null } }]} /></>
         )}
 
         {(hasLinks || card?.email || card?.phone) && (

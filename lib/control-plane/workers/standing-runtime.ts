@@ -1,3 +1,7 @@
+import { buildBoxFindings } from "./scout-extraction.ts";
+import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../scheduler/research-policy.ts";
+import { publicationSourcePolicy } from "../promotion/source-settings.ts";
+import { backfillBox, boxIndexEnabled, indexScoutFindings } from "../box.ts";
 import { workAdapterQueue } from "./engineering-adapter.ts";
 import { detectiveExecutor, heldRecoveryBrief, investigationRole, subjectScoutHistory } from "./detective.ts";
 import { outsideRecordBlockBriefs } from "./record-block.ts";
@@ -75,6 +79,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const [prior, initialWorkers] = scoped ? [[] as ScoutResult[], [] as Awaited<ReturnType<typeof readCompletedWorkerResults>>] : await Promise.all([
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
+  const indexFindings = boxIndexEnabled(input.environment ?? process.env);
   // One worker process builds this runtime once and runs many tasks through it; `beginTask` keeps one task's
   // worker history current without re-reading everyone's.
   let priorWorkers = initialWorkers;
@@ -90,12 +95,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
   const heldRuntime = standingFleetRuntime({...input,method:knowledge,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
-  // Held data and plain adapters first; generated adapters use the same guarded area transport as research.
-  if (!scoped) await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
-    ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
-  const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
-  let fieldManual: FieldManualStore = fmRead.store;
-  let fieldManualRevision = fmRead.revision ?? 0;
+
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
   const installed = promotedRegistries();
   const registeredPublisherAddressFor = (subjectId:string):string|null => {
@@ -106,6 +106,35 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     try { const url = new URL(address ?? ""); return ["http:","https:"].includes(url.protocol) && !url.username && !url.password ? address : null; }
     catch { return null; }
   };
+  // The round owns Box replay/build upkeep. Lease runtimes retain CH-26 scoped reads.
+  if (!scoped && indexFindings) {
+    const [allWorkRows, allArtifactRows] = await Promise.all([
+      input.repos.workItems.list(), input.repos.artifacts.readAll(),
+    ]);
+    if (indexFindings) {
+      await backfillBox(input.repos.boxFindings, { scouts: prior,
+        detectives: initialWorkers.filter(record => record.result.role === "DETECTIVE") as import("../box.ts").BoxDetectiveRecord[],
+        artifacts: new Map(allArtifactRows.map(artifact => [artifact.artifactId, artifact])) }, now());
+    }
+    if (indexFindings && !readIntents([...(await input.repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused) {
+      const sourcePolicy = publicationSourcePolicy((await input.repos.adminConfig.read("current"))?.value ?? null);
+      const built = await buildBoxFindings({ repos: input.repos, items: allWorkRows.map(row => row.value), now, leaseMs: 120_000,
+        readCapture: async id => {
+          const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
+          return { evidence: evidenceProjection(evidence), sourcePolicy, observedAt: artifact.retrievedAt,
+            httpStatus: artifact.httpStatus, transport: artifact.transport,
+            partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
+        } });
+      if (built.built.length) priorWorkers = await readCompletedWorkerResults(input.repos);
+    }
+  }
+  // Build saved findings before any paid adapter work; include freshly installed routes in the Scout brief.
+  if (!scoped) await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
+    ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
+  const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
+  let fieldManual: FieldManualStore = fmRead.store;
+  let fieldManualRevision = fmRead.revision ?? 0;
+
   // The lineage broker: which sibling's captures each lineage root may reuse. Whole-store when unscoped; one task's lineage when scoped.
   let lineages: ReturnType<typeof selectStandingLineages> = [];
   let sharedHeldByRoot=new Map<string,string[]>();
@@ -133,6 +162,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value),workerResults:workers,scouts});
   };
   if (!scoped) await brokerWholeStore();
+
   siblingHeldRootFor=held=>{
     const lineage=lineages.find(row=>row.siblingRootIds.includes(held.originWorkItemId) &&
       row.rootWorkItemId!==held.originWorkItemId &&
@@ -271,6 +301,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           recordClasses:[recorded.recordClass],observedAt:recorded.recordedAt,
           payload:{subjectId:recorded.subjectId,recordClass:recorded.recordClass,facts:recorded.findings,routes:recorded.candidates,tried:recorded.rungs,nextRungs:recorded.nextRungs}})],recorded.recordedAt);
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
+        if (indexFindings) await indexScoutFindings(input.repos.boxFindings, recorded, now());
         return recorded;
       }
     })}:{})};

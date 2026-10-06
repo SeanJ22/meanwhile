@@ -271,7 +271,7 @@ export interface ApprovedRecord extends RecordBase {
     readonly scouted: string;
     readonly confirmed: string;
     readonly verified: string;
-    readonly audited: string;
+    readonly audited?: string;
   };
   readonly recordClass: string;
   /** PRDY-3/5: measured at offer time; absent on approvals written before the burdens existed. */

@@ -3,61 +3,23 @@ import SEED from "../../data/ballot/measure-records-first-seed.json" with { type
 import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
 import type { BallotSet } from "./types.ts";
 
-export type ProvisionKind = "FUNDING" | "PROGRAM" | "OVERSIGHT" | "SUNSET" | "START";
-
-/** Stored inside the ballot's civic-data projection, with stable reaction keys. */
-export interface MeasureRecord {
-  readonly contestId: string;
-  readonly whatItDoes: string;
-  readonly yesMeans: string | null;
-  readonly noMeans: string | null;
-  readonly parts: readonly {
-    readonly id: string;
-    /** The source's own number; null when the held row does not record it. */
-    readonly number: string | null;
-    readonly kind: ProvisionKind;
-    readonly label: string;
-    readonly what: string;
-  }[];
-  readonly sourceUrl: string;
-  readonly sourceHash: string;
-  readonly sourceHashKind?: "CAPTURE_BYTES" | "HELD_TEXT";
-  readonly writtenAt: string;
-  readonly citation?: "azleg-analysis" | "measure-source";
-}
+import { measureRecordIssue, type MeasureRecord } from "./measure-record-contract.ts";
+export { measureRecordIssue } from "./measure-record-contract.ts";
+export type { MeasureRecord, ProvisionKind } from "./measure-record-contract.ts";
 
 /** Immutable migration evidence; production records override it, including []. */
 export const MEASURE_RECORD_FIRST_SEED = SEED as readonly MeasureRecord[];
 
 /** Keep an explicit vote sentence exactly as the publisher wrote it. */
 export function explicitVoteMeanings(text: string): { yesMeans: string | null; noMeans: string | null } {
+  text = text.trim();
   const result: { yesMeans: string | null; noMeans: string | null } = { yesMeans: null, noMeans: null };
   for (const vote of ["YES", "NO"] as const) {
-    const pattern = new RegExp(`\\b(?:A\\s+)?["“']?${vote}["”']?\\s+vote\\s+(?:shall|will|would|means?|has)\\b[\\s\\S]*?(?:\\.(?=\\s+[A-Z]|$)|[!?](?=\\s|$))`, "gi");
+    const pattern = new RegExp(`\\b(?:A\\s+)?["“']?${vote}["”']?\\s+vote\\s+(?:shall|will|would|means?|has|adopts?|approves?|pass(?:es)?|keeps?|retains?|rejects?|leaves?|continues?)\\b[\\s\\S]*?(?:\\.(?=\\s+[A-Z]|$)|[!?](?=\\s|$))`, "gi");
     const sentences = [...text.matchAll(pattern)].map(match => match[0].trim());
     if (sentences.length === 1) result[vote === "YES" ? "yesMeans" : "noMeans"] = sentences[0];
   }
   return result;
-}
-
-export function measureRecordIssue(record: MeasureRecord): string | null {
-  if (!record || typeof record.contestId !== "string" || !record.contestId || typeof record.whatItDoes !== "string" || !record.whatItDoes.trim() ||
-      !/^https:\/\//.test(record.sourceUrl) || !/^[a-f0-9]{64}$/.test(record.sourceHash) ||
-      !Number.isFinite(Date.parse(record.writtenAt)) || !Array.isArray(record.parts) ||
-      ![record.yesMeans, record.noMeans].every(value => value === null || typeof value === "string")) {
-    return "Measure record lacks its text or source identity.";
-  }
-  const ids = new Set<string>();
-  for (const part of record.parts) {
-    if (!part || typeof part.id !== "string" || !part.id.startsWith(`${record.contestId}#`) || ids.has(part.id) ||
-        !["FUNDING", "PROGRAM", "OVERSIGHT", "SUNSET", "START"].includes(part.kind) ||
-        typeof part.label !== "string" || !part.label.trim() || typeof part.what !== "string" || !part.what.trim() ||
-        !(part.number === null || typeof part.number === "string" && part.number.trim())) {
-      return "Measure part lacks its stable identity or source text.";
-    }
-    ids.add(part.id);
-  }
-  return null;
 }
 
 /** Filter records through the exact ballot the reader loaded, never a country-wide list. */

@@ -387,7 +387,7 @@ test("aggregate output can never carry a contributor name", () => {
   }
 });
 
-// ── The key stays in the fetch script ────────────────────────────────────
+// ── Credential values stay behind the registered server transport ─────────
 
 /**
  * The subject is a READ that yields the VALUE — never the variable's NAME.
@@ -402,10 +402,12 @@ test("aggregate output can never carry a contributor name", () => {
  * Naming a variable is not reading one. So the predicate is now the read
  * SHAPES — `process.env.FEC_API_KEY` and `process.env["FEC_API_KEY"]`, the two
  * forms that hand you the value — and a positive control proves the instrument
- * still catches the thing it exists for. The protection is unchanged: nothing
- * under these directories can call the FEC.
+ * still catches direct key access. CA-36 now permits on-demand detail through
+ * the registered readSourceApi transport; cards, evidence and route code
+ * never read the credential themselves. Tests/fetch-through-key exercises
+ * actual transport injection and proves credentials do not enter evidence.
  */
-test("no runtime code reads FEC_API_KEY — fetch script only", () => {
+test("runtime routes and cards do not directly read FEC_API_KEY", () => {
   const READ_SHAPES = [/process\s*\.\s*env\s*\.\s*FEC_API_KEY/, /process\s*\.\s*env\s*\[\s*["'`]FEC_API_KEY["'`]\s*\]/];
   const reads = (source: string): boolean => READ_SHAPES.some((shape) => shape.test(source));
 

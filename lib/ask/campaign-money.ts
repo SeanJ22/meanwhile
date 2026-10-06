@@ -3,6 +3,7 @@ import { formatDateLong } from "../text/format-date.ts";
 import type { StateMoneyRecord } from "../funding/state-money.ts";
 import { stateMoneyRecordsForDisplay } from "../funding/state-money-reader.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
+import { filedOrganizations, stateSmallDonorSentence } from "../funding/state-money-funding.ts";
 
 const dollars = (amount: number) => `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -15,6 +16,9 @@ function stateText(record: StateMoneyRecord): string {
     record.totals.receipts === null ? null : `raised ${dollars(record.totals.receipts)}`,
     record.totals.expenditures === null ? null : `spent ${dollars(record.totals.expenditures)}`,
     record.totals.cashOnHand === null ? null : `cash on hand ${dollars(record.totals.cashOnHand)}`,
+    ...filedOrganizations(record.funding).map(org => `${org.filedName}${org.filedType ? ` (${org.filedType})` : ""}: ${dollars(org.amount)}`),
+    record.funding?.individualTotal === null || record.funding?.individualTotal === undefined ? null : `individual giving ${dollars(record.funding.individualTotal)}`,
+    stateSmallDonorSentence(record.funding),
   ].filter(Boolean);
   return `${record.registeredName}, ${record.electionYear} election cycle: ${facts.join("; ")}. Filed with the ${record.agency}; read ${asOf}.`;
 }
@@ -52,9 +56,11 @@ export function campaignMoneyEvidenceFor(
       subjectId: subject.id, canonicalSubjectId: money.state.resolvedTargetKey ?? targetKey,
       text: stateText(record), sourceUrl: record.filingsUrl ?? record.provenance.sourceUrl,
       sourceOrg: record.provenance.sourceOrg, retrievedAt: record.checkedAt,
+      ...(record.detailSource ? { stateDetailSource: record.detailSource } : {}),
       finance: {
         jurisdiction: record.jurisdiction, filingState: record.filingState, totals: record.totals,
         registeredName: record.registeredName.trim(), agency: record.agency, electionYear: record.electionYear, checkedAt: record.checkedAt,
+        ...(record.funding ? { funding: record.funding } : {}),
       },
     });
   }
@@ -63,7 +69,8 @@ export function campaignMoneyEvidenceFor(
     const record = money.federal.data;
     records.push({ kind: "FINANCE_SUMMARY", id: `fec:${record.fecCandidateId}`, subjectId: subject.id,
       canonicalSubjectId: record.fecCandidateId, text: record.sentences.join(" "),
-      sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, retrievedAt: record.collectedAt });
+      sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, retrievedAt: record.collectedAt,
+      ...(record.detailSource ? { fecDetailSource: record.detailSource } : {}) });
     denominators.federalFinanceRecordsReturned = 1;
   } else if (money.federal.kind === "absence") {
     const absence = money.federal.data;

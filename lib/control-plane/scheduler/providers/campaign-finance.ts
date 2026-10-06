@@ -83,6 +83,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { arizonaLocalObligation } from "../../campaign-finance/obligations.ts";
+import { ballotFinanceObligations, ballotFinanceScheduledId, type BallotFinanceInputs } from "../../campaign-finance/obligations.ts";
 
 import type {
   ObligationProvider,
@@ -577,10 +578,10 @@ export function readDescriptorFiles(root: string): {
   return { bySubject, failures, files };
 }
 
-export function campaignFinanceProvider(): ObligationProvider {
+export function campaignFinanceProvider(readBallotInputs?: () => BallotFinanceInputs): ObligationProvider {
   return {
     id: CAMPAIGN_FINANCE_PROVIDER_ID,
-    describe:
+    describe: readBallotInputs ? "campaign finance owed for admitted held ballot candidates, from registered source doors and recorded methods" :
       "state and county campaign-finance record universes (AZ SOS, NH SOS), each with its whole " +
       "route portfolio scheduled independently so no one 200 retires the others",
 
@@ -591,9 +592,14 @@ export function campaignFinanceProvider(): ObligationProvider {
      * rather than as a sentence in a report.
      */
     scheduledId: (record, route) =>
-      `freshness:campaign-finance:${record.subjectId}#${route.routeId}`,
+      readBallotInputs ? ballotFinanceScheduledId(record, route) : `freshness:campaign-finance:${record.subjectId}#${route.routeId}`,
 
     enumerate(ctx: ProviderContext): ProviderYield {
+      if (readBallotInputs) {
+        try { return ballotFinanceObligations(readBallotInputs()); }
+        catch { return { obligations: [], readFailure: "The admitted held ballot finance inputs could not be read.", emptyReason: null }; }
+      }
+      // Preserved way back until River checks the connected generic path live.
       const dropped = readDescriptorFiles(ctx.root);
       const records = [...builtInRecords(), ...modelledRecords(ctx.nowIso)].map(
         (r) => dropped.bySubject.get(r.subjectId) ?? r,

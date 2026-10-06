@@ -141,3 +141,47 @@ test("a departure publishes through the registry door: the holder's rows leave w
   assert.equal(after.payload.officialCandidacies.rows.some(row => row.holder.id === faye.id), false);
   assert.equal(after.payload.rosterReaderDispositions.some(row => row.sourceId === faye.id), false);
 });
+
+test("CP-08: a newer news phone cannot replace the official phone, and its losing value is kept", async () => {
+  const base = await prior();
+  const first = capture(page("Contact the Mayor & Council"));
+  const reading = (saved: WorkerPublicationCapture) => ({ id: `held:${saved.evidence.artifactId}`, capture: saved, linkingPage: null, complete: true, method: "fixture",
+    members: readHeldRoster(saved.evidence.text, saved.evidence.canonicalUrl)!.rows.map((member, i) => ({ recordId: `r${i}`, fields: { ...member } })) });
+  const official = workerRosterPublication({ bodyId: BODY, reading: reading(first), prior: base, now: NOW });
+  const held = { ...base, sourceReceipt: { ...base.sourceReceipt, sources: [...base.sourceReceipt.sources, ...official.sourceReceipt.sources] },
+    payload: { ...base.payload, bodyRosters: official.payload.bodyRosters, registry: { ...base.payload.registry,
+      bodies: base.payload.registry.bodies.map(body => official.payload.registry.bodies.find(row => row.id === body.id) ?? body) } } };
+  const news = { ...capture(page("Contact the Mayor & Council").replaceAll("5205551000", "5205552000").replaceAll("555-1000", "555-2000"), "https://news.example/council", NOW),
+    sourcePolicy: { hosts: { "news.example": "NEWS" as const }, enabled: { OFFICIAL: true, CAMPAIGN: true, FILING: true, VOTER_GUIDE: true, FORUM: true, NEWS: true, REFERENCE: true, OTHER: true } } };
+  const result = workerRosterPublication({ bodyId: BODY, reading: reading(news), prior: held, now: NOW });
+  assert.ok(result.payload.bodyRosters[0].members.every(member => member.phone === "(520) 555-1000"));
+  assert.equal(result.payload.bodyRosters[0].members[0].websiteUrl, official.payload.bodyRosters[0].members[0].websiteUrl);
+  assert.equal(result.payload.bodyRosters[0].members[0].fieldSources?.websiteUrl.sourceUrl, URL_);
+  assert.ok(result.excludedFacts?.some(fact => fact.code === "CONFLICT_SUPERSEDED" && (fact.record as { value: string }).value === "(520) 555-2000"));
+});
+
+
+test("CP-19/CP-05: another roster row's term cannot supply a date or a published quote", async () => {
+  const base = await prior();
+  const held = capture(page("Contact the Mayor & Council", member(1, "McCaa II, Clea", "Mayor") + member(2, "Flowers, Carolyn", "Vice Mayor").replace("</tr>", "<td>2030-12-31</td></tr>")));
+  const first = readHeldRoster(held.evidence.text, URL_)!.rows[0];
+  const result = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, reading: { id: "held:wrong-term", capture: held, linkingPage: null, complete: false, method: "fixture",
+    members: [{ recordId: "person", fields: { ...first, termEnd: "2030-12-31" }, fieldSources: { termEnd: { sourceUrl: URL_, sourceOrg: "Clerk", collectedAt: held.observedAt, verifiedAt: NOW, quote: "2030-12-31", kind: "OFFICIAL" } } }] } });
+  assert.equal(result.payload.bodyRosters[0].members[0].termEnd, undefined);
+  assert.equal(result.payload.bodyRosters[0].members[0].fieldSources?.termEnd, undefined);
+});
+
+
+test("CP-03: a labeled voter-guide roster is considered from held evidence and keeps its kind", async () => {
+  const base = await prior();
+  const saved = { ...capture(page("Contact the Mayor & Council"), "https://vote411.org/council"), sourcePolicy: { hosts: { "vote411.org": "VOTER_GUIDE" as const }, enabled: { OFFICIAL: true, CAMPAIGN: true, FILING: true, VOTER_GUIDE: true, FORUM: true, NEWS: true, REFERENCE: true, OTHER: true } } };
+  const artifacts = [{ artifactId: saved.evidence.artifactId, contentHash: saved.evidence.contentHash, contentType: "text/html", canonicalUrl: saved.evidence.canonicalUrl, recordedAt: saved.observedAt, partial: false } as ArtifactRecord];
+  const reading = await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, artifacts, readHeld: async () => saved });
+  assert.ok(reading);
+  const published = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, reading });
+  assert.equal(published.sourceReceipt.sources[0].sourceClass, "VOTER_GUIDE");
+  assert.equal(published.payload.bodyRosters[0].kind, "VOTER_GUIDE");
+  assert.equal(published.payload.bodyRosters[0].members.length, 3);
+  const disabled = { ...saved, sourcePolicy: { ...saved.sourcePolicy, enabled: { ...saved.sourcePolicy.enabled, VOTER_GUIDE: false } } };
+  assert.equal(await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, artifacts, readHeld: async () => disabled }), null);
+});

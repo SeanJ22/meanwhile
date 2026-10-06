@@ -132,7 +132,7 @@ export const SOURCE_AUTHORITIES = {
     freshnessExpectation: "Explicit owner invocation after a reviewed source package changes; no standing clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
-    manualReceiptPromotion: { allowedSourceClasses: ["OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY", "REFERENCE_PUBLISHER"] },
+    manualReceiptPromotion: { allowedSourceClasses: MANUAL_SOURCE_CLASSES },
   },
   "curated-reader-primary-sources": {
     id: "curated-reader-primary-sources",
@@ -144,6 +144,10 @@ export const SOURCE_AUTHORITIES = {
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "published public-comment rule",
+      "official GIS/service-area district polygons bound to held government identities (CA-55)",
+      "source-worded public-record kind, title and sentence about an exact jurisdiction or body (CA-37)",
+      "official adopted government budgets, fiscal year dates, version-specific amendments and legal budget responsibilities (CA-52)",
+      "neutral official measure translations checked sentence by sentence by an independent model (CA-25)",
       "independently verified official candidate-filing and committee-report facts, without an inferred ballot or financial identity join",
       "official voter-registration lookup route",
       "official polling-place lookup route",
@@ -162,7 +166,7 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
     manualReceiptPromotion: {
-      allowedSourceClasses: ["ELECTION_AUTHORITY", "CANDIDATE_CONTROLLED", "OFFICIAL_PUBLISHER", "REFERENCE_PUBLISHER"],
+      allowedSourceClasses: MANUAL_SOURCE_CLASSES,
     },
   },
   "voting-sites": {
@@ -173,8 +177,7 @@ export const SOURCE_AUTHORITIES = {
     // Transport routes are data. The candidate applies §3 to each site's
     // publisher URL and saves the official linking page for non-.gov sources.
     routePrefixes: ["https://"],
-    jurisdictions: REGISTRATION_TARGETS.filter(target => FIPS_TO_STATE[target.fips].prefix !== "territory")
-      .map(target => target.jurisdiction),
+    jurisdictions: REGISTRATION_TARGETS.map(target => target.jurisdiction),
     recordClasses: ["VOTING_SITE"],
     competentFacts: [
       "official voting-site identity and address",
@@ -778,6 +781,29 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
+  /*
+   * Outcomes of any Legistar door that holds `outcomes` (DB-22): agenda actions, decisions, roll calls and minutes read
+   * from the body's own Legistar tenant. The hosts are the doors' own (installDoorHosts, like the meeting doors), so a
+   * body added as a door is read with no change here; the per-place contracts above stay until a live read matches.
+   */
+  "door-outcomes": {
+    id: "door-outcomes",
+    publisher: "Public bodies on Legistar, each read on the host its own door names",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    // The vendor's public Web API; a body's own portal host comes from its door (installDoorHosts).
+    routePrefixes: ["https://webapi.legistar.com/v1/"],
+    jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
+    recordClasses: ["MEETING_OUTCOME"],
+    competentFacts: ["agenda item", "recorded body action", "recorded disposition", "exact per-person roll call", "publisher document status", "minutes document standing"],
+    expectedIdentifierKeys: ["meeting_id", "event_id"],
+    expectedTemporalFields: ["event_last_modified_utc", "observed_at", "source_through"],
+    horizonSemantics: "Each door bounds its own date window; each changed sitting is an independent acquisition. A failed item, vote or minutes retrieval produces a refused durable candidate and cannot replace another sitting's, or another door's, LKG facts.",
+    parserVersion: "legistar-outcomes/2",
+    freshnessExpectation: "The standing routine runner's clock under the door's outcome contract, following the body's sittings; each pass re-walks only sittings whose publisher stamp or minutes link moved. No owner or GitHub clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
   "az-legislature": {
     id: "az-legislature",
     publisher: "Arizona State Legislature",
@@ -996,7 +1022,7 @@ export function authorityForManualReceipt(
  * and is unchanged.
  */
 let doorHosts: ReadonlySet<string> | null = null;
-const DOOR_HOST_SOURCE = "meetings-public-bodies";
+const DOOR_HOST_SOURCES: ReadonlySet<string> = new Set(["meetings-public-bodies", "door-outcomes"]);
 
 export function installDoorHosts(hosts: Iterable<string> | null): void {
   doorHosts = hosts === null ? null : new Set([...hosts].map((host) => host.trim().toLowerCase()).filter((host) => host !== ""));
@@ -1016,7 +1042,7 @@ export function authorityFor(
   try { url = new URL(finalUrl); }
   catch { return { ok: false, code: "FINAL_URL_INVALID", detail: `Final URL is not parseable: ${JSON.stringify(finalUrl)}.` }; }
   if (url.protocol !== "https:") return { ok: false, code: "FINAL_URL_NOT_HTTPS", detail: `${url.href} is not HTTPS.` };
-  const onDoorHost = sourceId === DOOR_HOST_SOURCE && doorHosts !== null && doorHosts.has(url.hostname.toLowerCase());
+  const onDoorHost = DOOR_HOST_SOURCES.has(sourceId) && doorHosts !== null && doorHosts.has(url.hostname.toLowerCase());
   if (!onDoorHost && !contract.routePrefixes.some((prefix) => url.href.startsWith(prefix))) {
     return { ok: false, code: "FINAL_ROUTE_NOT_REGISTERED", detail: `${url.href} is outside ${sourceId}'s registered publication routes.` };
   }

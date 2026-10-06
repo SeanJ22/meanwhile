@@ -3,9 +3,9 @@
 build_state: release 12 LIVE on main (c814d4c); river = c83c04d (adds hunters CH-23, gates 12/12, not yet released; next normal batch); runner still stopped (restart with Sean since 8:28 AM EDT)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
-run_id: session_0123HcBRvYjpHDb1FwB9LTVg
-lock: none
-heartbeat: 2026-10-06T17:38:36Z
+run_id: session_0143FbQt9iKZUszoLdVyVdQv
+lock: river-session_0143FbQt9iKZUszoLdVyVdQv-1791309444
+heartbeat: 2026-10-06T17:57:24Z
 
 
 

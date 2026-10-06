@@ -562,9 +562,11 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   // completion path. Independent calls still read current repository state;
   // leases, capabilities and budget admission are never frozen by this join.
   const candidateIds=new Set(ids);
+  const attemptById=new Map(attemptRows.map(row=>[row.id,row] as const));
   const completedRecords=await readCompletedWorkerResults({...runtime.repos,
     workerResults:{...runtime.repos.workerResults,readAll:async()=>workerRecords.filter(record=>candidateIds.has(record.workItemId))},
-    attempts:{...runtime.repos.attempts,list:async()=>attemptRows},
+    attempts:{...runtime.repos.attempts,list:async()=>attemptRows,read:async id=>attemptById.get(id)??null,
+      readMany:async wanted=>[...new Set(wanted)].sort().flatMap(id=>attemptById.get(id)??[])},
   });
   const recordsByWork=new Map<string,WorkerResultRecord[]>();
   for(const record of completedRecords) {

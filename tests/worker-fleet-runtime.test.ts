@@ -238,7 +238,7 @@ test("completed worker history recovers with bulk reads and no per-result replay
   assert.equal((await h.repos.attempts.mustRead(parser.attemptId)).value.outcome, "COMPLETED");
 });
 
-test("inherited worker history uses two reads for 1500 results and rejects missing or divergent producers", async () => {
+test("inherited worker history reads only its producers' Attempts for 1500 results and rejects missing or divergent producers", async () => {
   const h = await harness();
   const artifact = await h.hold(CAPTURE);
   const parser = await run(h, artifact, "PARSER");
@@ -252,7 +252,9 @@ test("inherited worker history uses two reads for 1500 results and rejects missi
         { ...parser, id: "divergent-producer", completion: { ...parser.completion,
           closedAttempt: { ...parser.completion.closedAttempt, endedAt: "2026-09-15T00:00:00.000Z" } } }];
     } },
-    attempts: { ...h.repos.attempts, list: async () => { calls += 1; return attempts; },
+    attempts: { ...h.repos.attempts, list: async () => { throw new Error("whole cp_attempts listed"); },
+      readMany: async (ids: readonly string[]) => { calls += 1; return attempts.filter(row => ids.includes(row.id)); },
+      read: async () => { throw new Error("N+1 point read"); },
       mustRead: async () => { throw new Error("N+1 point read"); } },
   };
   const inherited = await readCompletedWorkerResults(observed);

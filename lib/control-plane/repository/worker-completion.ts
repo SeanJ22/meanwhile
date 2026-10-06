@@ -147,15 +147,31 @@ function assertCompletedWorkerResult(record: WorkerResultRecord, attempt: Attemp
   assertFleetResult(record.result, record.completion.completedTask.workerTask!.role, attempt.id);
 }
 
+/** Reads the named Attempts by id (batched where the store can); ids with no row are left out. */
+async function readAttemptsById(repos: ControlPlaneRepositories, ids: readonly string[]) {
+  const unique = [...new Set(ids)];
+  if (repos.attempts.readMany) return repos.attempts.readMany(unique);
+  const rows: { readonly id: string; readonly value: Attempt }[] = [];
+  for (let at = 0; at < unique.length; at += 16) {
+    for (const row of await Promise.all(unique.slice(at, at + 16).map(id => repos.attempts.read(id)))) if (row) rows.push(row);
+  }
+  return rows;
+}
+
 /** Same exact producer validation as a point read, with bounded repository reads for inherited history. */
 export async function readCompletedWorkerResults(repos: ControlPlaneRepositories, workItemId?: string): Promise<readonly WorkerResultRecord[]> {
   /* One item's results can only have been produced by that item's Attempts
      (`completeWorkerTask` refuses a result whose Attempt belongs to another
      item), so an item-scoped read lists only those Attempts. */
-  const [records, attemptRows] = await Promise.all([
+  /* The unscoped read checks every result against its own Attempt only, so it
+     point-reads those Attempts by id. Listing all of cp_attempts (42,400 rows,
+     ~42 MB on 2026-10-06) to check 83 results was the control plane's largest
+     read, repeated by every publication child of the routine pass. */
+  const [records, scopedAttempts] = await Promise.all([
     workItemId === undefined ? repos.workerResults.readAll() : repos.workerResults.read(workItemId),
-    workItemId === undefined ? repos.attempts.list() : repos.attempts.listWhere(["workItemId"], workItemId),
+    workItemId === undefined ? Promise.resolve(null) : repos.attempts.listWhere(["workItemId"], workItemId),
   ]);
+  const attemptRows = scopedAttempts ?? await readAttemptsById(repos, records.map(record => record.attemptId));
   const attempts = new Map(attemptRows.map(row => [row.id, row.value]));
   return records.filter(record => {
     const attempt = attempts.get(record.attemptId);

@@ -1,9 +1,9 @@
-build_state: waiting
+build_state: active
 worker: auditors
 provider: Claude
-run_id: session_011aDyTFbHHSGSQZ7opG2Rnn
-lock: none
-heartbeat: 2026-10-06T04:29:41Z
+run_id: session_01NVR9xPqjCnpScU311VCZdg
+lock: auditors-20261006T052143Z-14149
+heartbeat: 2026-10-06T05:21:43Z
 on_river: DP-01, DP-02, DP-03, DP-04, DP-05, DP-06, DP-10, DP-11, DP-13, DP-14, DP-15, DP-16, DP-17, DP-18, DP-25, DP-26, DP-29, DP-30, DP-31, DP-32, DP-33, DP-34, FE-01, FE-02, FE-03, FE-16, FE-17, FE-18, FE-21 (c428dc394 folded as 6d6a993e; on main with release 7, f545fcf).
 ready: e51a93c6c4f1e0f55db5b46bbeef93471b7aeee6 READY: FE-21 — River's batch note (Oct 6): the look reviewer's one request per deploy goes through the Message Batches API at half price. Built on river f545fcf (release 7) by a catch-up merge that takes river's tree whole (no held river-next work).
 checks: Run 12: catch-up = river f545fcf tree + .factory. pnpm install --frozen-lockfile; tsc --noEmit clean (no .next); eslint 0 problems on lib/frontend/look-spend.ts and tests/look-pass.test.ts; tests/look-pass.test.ts + tests/frontend-look-review.test.ts 14/14. Affected selection (CI_TIER=yes, pull_request, base river f545fcf, code-only tree without .factory): 132 files, 1470 tests, 1466 pass, 0 fail, 4 skipped (env -u DATABASE_URL -u WTP_ASSET_STORE, full history). Not run live: no API key and no runner here.

@@ -60,3 +60,11 @@ test("same names with different fields never become row aliases; unrelated bodie
   assert.equal(first.dispositions.find(row => row.sourceId === "navigation")?.state, "IDENTITY_UNRESOLVED");
   assert.equal(projectReaderRoster({ ...source, bodyId: "another-body", members: [{ ...member, id: "another-body-person" }] }).roster.members[0].id, "another-body-person");
 });
+
+test("a single page word such as Actions never becomes an officeholder's name", () => {
+  const source = HELD_BODY_ROSTERS[0];
+  const member = source.members[0];
+  const out = projectReaderRoster({ ...source, members: [member, { ...member, id: "label", name: "Actions" }] });
+  assert.deepEqual(out.roster.members.map(row => row.id), [member.id]);
+  assert.equal(out.dispositions.find(row => row.sourceId === "label")?.state, "IDENTITY_UNRESOLVED");
+});

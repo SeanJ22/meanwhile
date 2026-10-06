@@ -3,7 +3,7 @@ worker: codex-bank
 provider: Codex
 run_id: codex-bank-b5575f5372fa456486b5a92a890e1463
 lock: codex-bank-b5575f5372fa456486b5a92a890e1463
-heartbeat: 2026-10-06T00:11:26.231187Z
+heartbeat: 2026-10-06T00:15:43.451356Z
 on_river: 21 steps: DB-37, DB-38, DB-40, DB-41, DB-42, DB-43, DB-49, DB-51, DP-07, DP-08, DP-09, DP-19 @ d67aa5e29; DP-20 @ 616f91a1c; DB-57, DP-21, DP-22, DP-27 @ 8bbe9eeb5; DB-50, DP-24 @ 3690498b5; DP-28 @ bbe97c72a. These are integrated code, not a claim of live acceptance. Caught up with river ecf402600.
 ready: DB-44, DB-46, DP-23, DB-57 @ cf0df0cb0acb4d79218593ac1aa5083d41ade841. READY (hook pending: Admin registry/Settings, Ballot Ask, hunters per-pass settings, method-status reads, River CI planner); see continuation table. DP-19 migration proposal remains WIP.
 checks: FULL at e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee: 9360 pass, 0 fail, 11 skipped (9371 tests, 1068 files). Types pass at the same SHA. Lint 23 changed source files pass at 620be3496 (identical .ts/.tsx/.mjs code). Corrected original write-alarm file: 18/18 pass at e41dd51b8f85f20e6c2f93c7f6eff6572e59f9ee. Raw logs and structured evidence: .factory/bank-evidence/. Earlier 620be3496 FULL failed only for the step-ID migration; proposal isolated and the complete FULL rerun passed. Cancelled runs and default-sandbox EPERM exits are rejected evidence. Exact READY cf0df0cb0acb4d79218593ac1aa5083d41ade841 focused: 26/26 pass, 0 fail, 0 skipped (six files). FULL-to-READY application-tree diff is empty; fingerprint 85934afecc2308af12bf597f5c420fcc7933aecc53bd009f95b7e4f798d0f16c.

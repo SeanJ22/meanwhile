@@ -36,6 +36,32 @@ export function playbookEditView(entries: readonly FieldManualEntry[], role: Edi
 export async function updateRolePlaybook(repos: FieldManualRepos, edit: PlaybookEdit): Promise<{ version: string; changed: boolean }> {
   if (!isEditablePlaybookRole(edit.role) || !edit.text.trim() || edit.text.length > 100_000 || !edit.id.trim() ||
       !Number.isFinite(Date.parse(edit.at))) throw new Error("Invalid playbook change");
+  if (repos.bankEntries) {
+    let result: { version: string; changed: boolean } | undefined;
+    await repos.bankEntries.mutateRolePlaybook(edit.role, entries => {
+    const book = rolePlaybook(entries, edit.role);
+    const history = playbookHistory(entries, edit.role);
+    const replay = history.find(e => e.id === edit.id);
+    if (replay) {
+      if (replay.after !== edit.text || replay.undoOf !== edit.undoOf) throw new Error("Conflicting playbook change id");
+      result = { version: book.version, changed: false };
+      return null;
+    }
+    if (book.version !== edit.expectedVersion || (edit.undoOf && history.at(-1)?.id !== edit.undoOf)) {
+      throw new Error("These instructions changed again; refresh before editing them");
+    }
+    if (edit.undoOf && edit.text !== history.at(-1)?.before) throw new Error("Undo must restore the previous instructions");
+    const change: PlaybookChange = { id: edit.id, at: edit.at, before: book.text, after: edit.text, why: edit.why,
+      ...(edit.factory ? { factory: edit.factory } : {}), ...(edit.undoOf ? { undoOf: edit.undoOf } : {}) };
+    const entry = newFieldManualEntry("role-playbook", edit.role, { role: edit.role, kind: "PLAYBOOK",
+      title: `${edit.role.toLowerCase()} playbook`, summary: "Current written instructions for this role", outcome: "REFERENCE",
+      observedAt: edit.at, payload: { text: edit.text, history: [...history, change], edited: true } satisfies EditPayload });
+      result = { version: createHash("sha256").update(edit.text).digest("hex"), changed: true };
+      return entry;
+    }, edit.at);
+    if (!result) throw new Error("Playbook edit did not return a result");
+    return result;
+  }
   for (let attempt = 0; attempt < 4; attempt++) {
     const held = await repos.fieldManual.read(FIELD_MANUAL_ID);
     const store = held?.value ?? emptyFieldManual();

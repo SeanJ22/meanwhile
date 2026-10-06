@@ -13,7 +13,7 @@ test("SQL scopes roles, states, place boundaries, kinds and exact exhausted subj
 test("normal read/write signatures use entry storage and never read or rewrite the legacy live row", async () => {
  const repos=createMemoryRepositories(); repos.fieldManual.read=async id=>{ assert.equal(id,"write-errors");return null; };
  repos.fieldManual.put=async()=>{ throw Error("aggregate must not be written"); };
- let writes=0;const bankEntries={readEntries:async()=>({store:{formatVersion:1 as const,updatedOn:stamp,entries:[entry]},total:5000}),mergeEntries:async()=>{writes++;}};
+ let writes=0;const bankEntries={importEntries:async()=>{},mutateRolePlaybook:async()=>{},scanEntries:async()=>[],readEntries:async()=>({store:{formatVersion:1 as const,updatedOn:stamp,entries:[entry]},total:5000}),mergeEntries:async()=>{writes++;}};
  const read=await readFieldManual({...repos,bankEntries},{state:"az"}); assert.equal(read.projection.total,5000); assert.equal(read.projection.entryIds[0],entry.id);
  assert.deepEqual(await writeFieldManual({...repos,bankEntries},[entry],stamp),{written:1});assert.equal(writes,1);
 });

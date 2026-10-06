@@ -25,7 +25,7 @@ export function rolePlaybook(entries: readonly FieldManualEntry[], role: FieldMa
 }
 
 export async function readRolePlaybook(repos: FieldManualRepos, role: FieldManualRole): Promise<WorkerPlaybook> {
-  const read = await readFieldManual(repos, { role });
+  const read = await readFieldManual(repos, { role, kinds: ["PLAYBOOK"] });
   return { ...rolePlaybook(read.store.entries, role), ...(read.error ? { error: read.error } : {}) };
 }
 

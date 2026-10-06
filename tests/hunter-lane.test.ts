@@ -13,6 +13,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { hunterLane, hunterQueuePath, readHunterQueue, writeHunterQueue, HUNTER_LANE_IDLE_SAY_MS, type HunterQueue } from "../lib/control-plane/workers/hunter-lane.ts";
 import type { ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
+import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
 
 const T0 = Date.parse("2026-10-06T03:00:00.000Z");
 
@@ -115,7 +116,7 @@ test("CH-24 lane: on exit every request hold any of its guards left open is rele
 test("CH-24 lane: the round under the switch closes its own model lane after any owner closure, queues every planned Scout, and starts no lease worker", () => {
   const round = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(round, /const CONTINUOUS_HUNTERS = process\.env\.WTP_CONTINUOUS_HUNTERS === "1";/);
-  assert.match(round, /const laneClosure: ModelLaneClosure \| null = ownerLaneClosure \?\? \(CONTINUOUS_HUNTERS/);
+  assert.match(round, /const laneClosure = modelLaneClosure\(\{[\s\S]{0,800}?paidWorkInHunterLane: CONTINUOUS_HUNTERS,\n  unreadableControls,\n\}\);/);
   assert.match(round, /row\.action === "SCOUT" && \(CONTINUOUS_HUNTERS \|\| paidWorkerCapacity\(\) > 0\)/);
   const wave = round.slice(round.indexOf("if (CONTINUOUS_HUNTERS) {\n    /* CH-24 part 2"), round.indexOf("const workerDispatches = await runLeaseWorkerProcesses({"));
   assert.match(wave, /writeHunterQueue\(hunterQueuePath\(hunterLaneArmingPath\(ROOT\)\)/);
@@ -132,4 +133,12 @@ test("CH-24 lane: the runner starts the lane only under the switch, names one re
   const lane = readFileSync(new URL("../scripts/hunter-lane.mts", import.meta.url), "utf8");
   assert.ok(!/deadlineMs,\n/.test(lane.slice(lane.indexOf("runLeaseWorkerProcesses({"))), "no worker is ended mid-task by the lane's life");
   assert.match(lane, /orderPending: async ids => !handingOut\(\) \? \[\] :/);
+});
+
+test("CH-24 lane: under the switch the round's model lane closes last, so an owner pause is still named as the pause", () => {
+  const facts = { dry: false, noModel: false, credentialConfigured: true, credentialVar: "K", activation: { promotionEnabled: true, openRecordClasses: ["MEETING"] } as never,
+    paused: false, pauseIntentId: null, runnerPaused: false, runnerPauseIntentId: null, spendHold: null, unreadableControls: [] };
+  assert.equal(modelLaneClosure(facts), null);
+  assert.match(modelLaneClosure({ ...facts, paidWorkInHunterLane: true })!.reason, /runs in the standing hunter lane/);
+  assert.equal(modelLaneClosure({ ...facts, paidWorkInHunterLane: true, runnerPaused: true, runnerPauseIntentId: "i-1" })!.code, "PAUSED");
 });

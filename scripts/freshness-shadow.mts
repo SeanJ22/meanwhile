@@ -348,7 +348,7 @@ import {
 import { DETECTIVE_SHUT_THRESHOLD_SETTING, readSetting, runnerSettingsEcho } from "../lib/control-plane/settings.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
-import { modelLaneClosure, pendingResearchLaneAcknowledgment, type ModelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
+import { modelLaneClosure, pendingResearchLaneAcknowledgment } from "../lib/control-plane/scheduler/model-lane.ts";
 import {
   armExpansionBudget,
   countByScope,
@@ -1671,7 +1671,7 @@ const unreadableControls: string[] = [
    could not be read (2026-09-25). */
 /* CH-24 part 2 (Proposal A): with the switch on, the standing hunter lane is the one process that admits paid work; this round plans and queues. */
 const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
-const ownerLaneClosure = modelLaneClosure({
+const laneClosure = modelLaneClosure({
   dry,
   noModel,
   credentialConfigured,
@@ -1682,12 +1682,9 @@ const ownerLaneClosure = modelLaneClosure({
   runnerPaused: intents.runnerPause.paused,
   runnerPauseIntentId: intents.runnerPause.intent?.intentId ?? null,
   spendHold: paidSpendHold,
+  paidWorkInHunterLane: CONTINUOUS_HUNTERS,
   unreadableControls,
 });
-/* An owner pause or an unreadable control still closes the lane under its own name first; the lane's acknowledgment says so. */
-const laneClosure: ModelLaneClosure | null = ownerLaneClosure ?? (CONTINUOUS_HUNTERS
-  ? { code: "LANE_DISABLED", reason: "paid model work runs in the standing hunter lane (WTP_CONTINUOUS_HUNTERS=1); this round plans and queues it, and plain-code work continues" }
-  : null);
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
 const modelLaneEnabled = laneClosure === null;

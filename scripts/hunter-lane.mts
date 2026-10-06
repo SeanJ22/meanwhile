@@ -29,13 +29,15 @@ import { hunterLane, hunterQueuePath, readHunterQueue } from "../lib/control-pla
 import { RUNTIME_NO_PROGRESS_MS } from "./pilot-runtime-child.mts";
 
 const ROOT = process.cwd();
+/** Every line this process prints; the counts it reports are the lane loop's (hunter-lane.ts). */
+const say = (line: string): void => { console.log(line); };
 const nowIso = (): string => new Date().toISOString();
 const wantsPostgres = process.argv.includes("--provider=postgres");
 let drain = false;
 process.on("message", message => {
   if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") {
     drain = true;
-    console.log("hunter lane: runtime release requested; the current wave finishes and the lane ends");
+    say("hunter lane: runtime release requested; the current wave finishes and the lane ends");
   }
 });
 process.on("SIGTERM", () => { drain = true; });
@@ -68,7 +70,7 @@ const lane = hunterLane({
   clock: Date.now,
   sleep: ms => new Promise(done => setTimeout(done, ms)),
   stopRequested: () => drain,
-  log: line => console.log(line),
+  log: say,
   readQueue: () => readHunterQueue(queuePath),
   arm: async () => {
     const armed = await armHunterLane({ repos, now: nowIso, armingPath, messages, batch, credentialConfigured: workerKey.length > 0,
@@ -76,7 +78,7 @@ const lane = hunterLane({
       /* The lane's own latches outlive a refresh: it is the one process sending paid requests. */
       circuits: lastFleet === null ? null : lastFleet.snapshot(nowIso()).providerCircuits,
       ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}),
-      onCondition: sentence => console.log(`hunter lane: ${sentence}`) });
+      onCondition: sentence => say(`hunter lane: ${sentence}`) });
     if (armed.fleetSafety !== null) lastFleet = armed.fleetSafety;
     return armed;
   },
@@ -124,13 +126,13 @@ const lane = hunterLane({
       orderPending: async ids => !handingOut() ? [] : ids.filter(id => lane.current().closed === null || plain.has(id))
         .sort((a, b) => (order.get(a) ?? Number.MAX_SAFE_INTEGER) - (order.get(b) ?? Number.MAX_SAFE_INTEGER)),
       onDispatched: result => {
-        if (result.worker?.role !== "SCOUT") { console.log(`hunter lane: task done: ${result.routeTaskId ?? result.obligationId}; ${result.outcome ?? "NOT_RUN"}`); return; }
+        if (result.worker?.role !== "SCOUT") { say(`hunter lane: task done: ${result.routeTaskId ?? result.obligationId}; ${result.outcome ?? "NOT_RUN"}`); return; }
         const outcome = result.disposition === "INGESTED" ? "CAPTURED"
           : result.disposition === "WALKED_NO_YIELD" || result.disposition === "DISCOVERED" ? "NOTHING_FOUND" : "REFUSED";
-        console.log(`hunter lane: Scout done: ${result.obligationId}; ${outcome}; code ${result.disposition ?? result.outcome ?? "NOT_RUN"}; usd ${result.cost?.usd === null || result.cost?.usd === undefined ? "unmeasured" : result.cost.usd.toFixed(6)}`);
+        say(`hunter lane: Scout done: ${result.obligationId}; ${outcome}; code ${result.disposition ?? result.outcome ?? "NOT_RUN"}; usd ${result.cost?.usd === null || result.cost?.usd === undefined ? "unmeasured" : result.cost.usd.toFixed(6)}`);
       },
-      onStarted: pid => console.log(`hunter lane: lease worker process: pid ${pid}; pulls queued RouteTasks`),
-      onExited: (pid, why) => console.log(`hunter lane: lease worker process ended: pid ${pid}; ${why}`) });
+      onStarted: pid => say(`hunter lane: lease worker process: pid ${pid}; pulls queued RouteTasks`),
+      onExited: (pid, why) => say(`hunter lane: lease worker process ended: pid ${pid}; ${why}`) });
   },
 });
 

@@ -1,15 +1,23 @@
 # River status
 
-build_state: release 11 open (#717, release/11 at 92102c8, auto-merge on; gates 12/12); runner still stopped at 8:57 AM EDT (restart with Sean since 8:28 AM EDT)
+build_state: release 11 LIVE (0a0f744, post-deploy 37483242295 passed); folding hunters CH-22 + auditors DP-06 on river-next, gates running; runner still stopped (restart with Sean since 8:28 AM EDT)
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01PNZmtjma5s373mH41mVk6q
 lock: river-20261006T145827Z-27345
-heartbeat: 2026-10-06T14:58:27Z
+heartbeat: 2026-10-06T15:07:17Z
 
 
 
-## This run (session_019dfFq5HGoipanBrVDSSrbK, claimed the free lock Oct 6, 8:57 AM EDT)
+
+## This run (session_01PNZmtjma5s373mH41mVk6q, claimed the stale lock Oct 6, 10:58 AM EDT)
+
+- **Release 11 live:** #717 merged 10:56 AM EDT as 0a0f744; /api/build reports it; post-deploy 37483242295 passed (reused). releases/11-live.md. river = main 0a0f744.
+- Runner: still stopped at 10:58 AM EDT (last beat 07:12:49Z on a5fd753; cp_vital_signs absent). Neon control-plane total 1,857,008,881,367 at 14:57Z, unchanged since 12:57Z. Restart already with Sean; not re-pushed.
+- Folding on river-next 405a7f6 over river 0a0f744: hunters 76b84e3a4 (CH-22, behind WTP_CONTINUOUS_HUNTERS; Neon estimate about 1.0 MB written once, no new read); auditors 2830c4bfb (DP-06, no new reads). Firewall PASS (0 findings, 7601 files). `pnpm gates` running (history unshallowed first).
+- Not folded, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b DB-21 (runner door switches); admin 734ee9633 (returned).
+
+## Previous run (session_019dfFq5HGoipanBrVDSSrbK, claimed the free lock Oct 6, 8:57 AM EDT)
 
 - Runner: still stopped at 8:57 AM EDT (cp_runner_heartbeat updated 07:12:49Z, testedSha a5fd753; cp_vital_signs not yet created, so v25 waits on the restart). Neon control-plane total 1,857,008,881,367 at 12:57Z (about 0.5 MB since 12:27Z with the runner off). Restart steps already with Sean; not re-pushed.
 - Folding on river-next 9863a25 over river d79f179: measures 551ee41dc (VS-01: Admin Now reads the last two cp_vital_signs rows; one bounded read of at most two rows); hunters 9a7965c67 (BX-13 hook a9ef516dc, CP-10 repair 1b49f3fd6, campaign-site chain scope; Neon estimate none, disk/CPU only). Release firewall PASS (0 findings). `pnpm gates` running.

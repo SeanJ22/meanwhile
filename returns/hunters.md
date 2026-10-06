@@ -71,3 +71,11 @@ Build these in this order. Each is a fix at the cause, not a cap or a counter.
 3. **Every paid ending writes to the field manual:** what it tried and what it learned, through bank's lesson (returns/bank.md), so the next worker starts past it. **NO_PROGRESS is a bug:** take each recent NO_PROGRESS (rung limit or model stop; scout-executor.ts:1171-1173, 2200-2207) to its stall, fix that cause, and add a test reproducing it.
 4. **A killed round keeps its findings:** what jobs found before a kill (evidence vaulted, rungs walked, candidates) is saved as it happens, not only after executor.run returns, and the next round resumes from it. Cost is written as usage accrues (River's repository side is coming).
 The earlier item list above stands as the detail behind these four (cache pre-warm label, refused finishes, the 09-28 disposition refusal, adapter tasks).
+
+## TOP ITEM, Oct 6, 12:25 AM EDT (Sean): bound the campaign-sites lane so the round finishes
+Confirmed by the stall probe on release 6's first cycle, killed at 12:01 AM EDT after 43 minutes: "pending: campaign-sites; last phase: occurrence-and-debt-commit". Every killed round also kills its running Scouts (two tonight, mid-work), which is money spent for nothing.
+- runCampaignSitesPass (freshness-shadow.mts ~3391) has no deadline. Inside it, readRoundVault, heldMarginaliaFromManifest, readStagingManifest and runCampaignSiteCycle (lib/control-plane/promotion/campaign-site-cycle.ts) run unbounded. Find which one hangs (the probe says the lane was pending after the occurrence-and-debt commit phase finished), bound it to the round's dispatch deadline, and end it as a deferral naming what remains owed, never a kill.
+- campaign-publication-cycle.ts:56 `artifactsByCanonicalUrl(url, Number.MAX_SAFE_INTEGER)`: give it a real limit.
+- The discovery-lane join in the round (`await discoveryLaneRun`) and the promotion tail must also end before the no-progress window, as a deferral (the 01:10 return above).
+- Test: a campaign-sites lane that never returns ends the round as a deferral with the lane named, within the window.
+Do this before every other item. Then the design-it-out items above.

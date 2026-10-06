@@ -146,3 +146,11 @@ The rest of 03:35Z (every paid ending has a result; fix causes, not a cap) stand
 - CostEntry.endingKind stays, as the internal signal, not a display. An ending that bought nothing opens a fix item at its cause (the existing fix list), the way a broken door does.
 - Owners: 1, 2 and 4 hunters (dispatch admission, route-candidate to builder, saving found work before a kill); 3 hunters with bank (field-manual lessons); the fix-item hook admin (fix-list.ts owner); the cost-on-throw, lease-expiry and kill repository side River.
 - Cost per fact (BR-31, admin) stays first in Admin's order.
+
+## Oct 6, 12:25 AM EDT: Sean, all times in EDT
+
+Every time given to Sean, written on the board, or shown in Admin is in Eastern time (EDT now), with no Z and no UTC. This applies to status.md, returns, decisions, release notes, notifications and every Admin screen. Machine fields (JSON records, commit metadata) keep their ISO timestamps; what a person reads is Eastern.
+
+## Oct 6, 12:25 AM EDT: Sean, the stall probe confirms the research crash's second cause
+
+Release 6's first research cycle was killed at 12:01 AM EDT after 43 minutes. The stall probe reported "pending: campaign-sites; last phase: occurrence-and-debt-commit". Every killed round also kills its running Scouts (two tonight, mid-work), so this is money spent for nothing until it is fixed. It is now hunters' top item (returns/hunters.md). Cost per hunt: fix the Money page's existing Hunts table (spent, set aside, limit per place); do not build a second one.

@@ -32,3 +32,11 @@ Fix asked:
 ## Repair
 
 Fix on stream/hunters and publish a new READY commit; River folds the new READY and clears this return when it integrates.
+
+## River answer, 2026-10-06 ~01:30Z: CH-24 part 2 is Proposal A
+
+Sean's direction (2026-10-06, River session): research runs continuously, without timed rounds. **Take Proposal A.** With WTP_CONTINUOUS_HUNTERS=1 the round plans and queues only: no lease workers, and its paid standing Scouts are queued as route tasks. The parent pilot-runner's standing lane is the one process that admits paid work. It arms its guards from the durable stores on its 5-minute refresh (intent log, Admin config, cost ledger, budget, research-state circuits, expansion plan). The round keeps its free work. Not B: two controllers re-reading holds keeps two admitters and the in-memory Fleet reservation race. No limit changes. Keep the old path behind the switch until it is checked live (common rule).
+
+Spend holds under A (River's MW-021 follow-up, on stream/river c51d19d and in release 5): spend-holds.ts now has releaseOpenJobs(holds, jobs, now), and every reader of the ledger goes through liveSpendHolds. The standing lane must call releaseOpenJobs on its shutdown and crash paths for jobs it never settled. A hold older than SPEND_HOLD_STALE_MS (2 h) stops counting, so no job may hold longer than that. Bound the lane's jobs below it.
+
+Order: the post-cutoff deferral return above (01:10Z) comes first. CH-24 part 2 replaces timed rounds, but a round that still exists must not crash in the meantime.

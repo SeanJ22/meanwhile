@@ -23,3 +23,18 @@ Once River promotes this batch, catch up with `river` (not river-next), keep mea
 ## Repair
 
 Fix on stream/admin and publish a new READY commit; River folds the new READY and clears this return when it integrates.
+
+## New return, 2026-10-06 ~01:30Z: Money page (Sean's direction)
+
+lane: admin
+check: owner
+state: returned
+fix: Money page shows real spend by vendor, live set-aside only, and drops "what the daily limit buys".
+
+Sean's direction, in plain English on the Admin Money screen (app/(admin)/_mw/admin-v6/screen-money.tsx and its reads in lib/control-plane/admin-view/v6-spend-*.ts):
+1. Real spend by vendor: Anthropic, Neon, DigitalOcean, Netlify and GitHub, for today and for the month, each against its limit. Use the vendor's own billing or usage reading where we have one (Anthropic from the cost ledger; Neon from its consumption or transfer reading, which lib/db/transfer.ts already reads; Netlify, GitHub Actions and DigitalOcean from their usage APIs where credentials exist). A vendor we cannot read shows "—" with the reason under Technical details. Never show an estimate as a measurement.
+2. Set aside counts only money held for jobs that are actually running. River's fix (release 5) makes the ledger and the owner snapshot carry only live holds (liveSpendHolds in lib/control-plane/expansion/spend-holds.ts). Make sure the screen reads that and labels it "Set aside for running jobs".
+3. Remove "what the daily limit buys" (huntersTheDialBuys / huntersNow) from the screen.
+4. Plain English, Eastern time, no codes or IDs outside Technical details.
+Also expose one read-only per-vendor daily figure that River can read from its hourly run. River uses it to push Sean when a vendor's day runs well above its normal level (Sean's spend-alert direction). Put the shape under needs_River when it exists.
+This comes after your open fold return above (BR-07 on measures' screens), or together with it if you are already in those files.

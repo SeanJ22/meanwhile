@@ -38,3 +38,14 @@ How River applies it, every run:
 - After each `river promote` (river fast-forwards to a tested batch), send exactly one push notification. Its one line names the Codex lanes that now have something to do: a new or open return in `returns/<lane>.md` addressed since the last notification, or a newly integrated batch to catch up on and continue from. Example: "River moved to <sha>: Codex Continue → admin (return), slide (return), ballot, bank, frontend." If none, say "no Codex lane needs Continue."
 - The only other notifications are a release (PR opened, merged or failed live) and a real owner decision. No status, no-change or progress pushes.
 - This replaces the per-event reporting in the river brief for Sean's phone. Board status files still record everything.
+
+## 2026-10-06 ~01:20Z: Sean, spend holds, Neon transfer, research and spend alerts (River session)
+
+Sean's directions, in his message to River:
+- **Leaked spend holds:** build and ship the fix (release 5, or in the urgent release if that would not hold it back). Sean approved a one-time cleanup of unsettled holds older than 2 hours. **Done 2026-10-06 ~00:42Z:** snapshot branch `snapshot-before-spendhold-cleanup-20261006` (br-still-dew-aeeyy53o, parent LSN D/609B33F8) on meanwhile-control-plane. Before: 19,749 holds, 16,901 unsettled, 16,463 of them older than 2 h ($683.49), row 38.4 MB as text, revision 29995. After: 3,288 holds, 440 unsettled (all under 2 h), row 7.8 MB, revision 29998. One atomic UPDATE bumped the revision, so the runner's compare-and-set retried on top of it.
+- **Neon transfer:** keep the ledger row small; scope the heavy reads of cp_attempts, cp_work_items and cp_log_artifacts.
+- **Research crash:** ship the stall probe and memory-wait fix in release 4; hunters bounds the side lanes and campaign-publication-cycle.ts:56.
+- **CH-24 part 2:** research runs continuously, without timed rounds. River chose Proposal A (returns/hunters.md).
+- **Money page:** returned to admin (returns/admin.md).
+- **Spend alerts:** Sean should not have to find spikes. Push him when any vendor's daily spend runs well above its normal level, naming the vendor and the likely cause. How River applies it: no product channel can reach Sean's phone, so River checks on every hourly run and uses its own push. It compares Anthropic (cp_log_costs) and Neon transfer (the project's data-transfer reading) per day against the median of the previous 7 days. It pushes once per vendor per day when today's pace is at least 2x that median and at least $5 or 50 GB above it. Other vendors are added when admin's per-vendor read exists. These alerts are added to the notification rule above.
+- **Verify live:** Money "Left today" above $0, Anthropic spend resumes, a research cycle completes, and Neon transfer per hour drops sharply.

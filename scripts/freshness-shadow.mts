@@ -18,6 +18,8 @@ import { paidWorkerSlots, researchPaidWorkerCapacity } from "../lib/control-plan
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
+import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
+import { oneHunterPath } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
@@ -761,7 +763,8 @@ const registryProviders = [
       (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, observations: repos.askGapObservations })),
   ),
 ];
-const registryContext = { root: ROOT, nowIso: NOW };
+/* CH-23 part 2: with WTP_ONE_HUNTER_PATH on, every paid route no provider planned carries a route plan, so its Scout is hunter work. */
+const registryContext = { root: ROOT, nowIso: NOW, planEveryPaidRoute: oneHunterPath() };
 let registry = buildRegistry(registryProviders, registryContext);
 const trackedReading = trackedStates.read();
 const trackedStateCodes: readonly string[] = "states" in trackedReading ? trackedReading.states : [];
@@ -1128,11 +1131,11 @@ for (const o of sync.all) {
 // verification or publication. Continue the same recorded source period instead
 // of opening another paid root every cycle while its actual work remains owed.
 const continuedStandingLineages: { obligationId: string; rootWorkItemId: string }[] = [];
-if (dueThisCycle.some(row => row.obligation.autonomousPlan && row.obligation.openOccurrenceId === null)) {
+if (dueThisCycle.some(row => plannedForHunters(row.obligation.autonomousPlan) && row.obligation.openOccurrenceId === null)) {
   for (let i = dueThisCycle.length - 1; i >= 0; i--) {
     const row = dueThisCycle[i]!;
     const o = row.obligation;
-    if (!o.autonomousPlan || o.openOccurrenceId !== null) continue;
+    if (!plannedForHunters(o.autonomousPlan) || o.openOccurrenceId !== null) continue;
     const key = standingLineageKeyFor({ obligationId: o.id, dueAt: row.nextDueAt, project: FRESHNESS_PROJECT,
       subject: o.subjectId, plan: o.autonomousPlan, instructionReceipts: (o.assignments ?? []).map(mark => mark.ref) });
     if (!key) continue;
@@ -1509,7 +1512,7 @@ if (!dry && !canary && !intents.runnerPause.paused) {
 }
 const recoveryRepos = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
 const allPlannedWork = canary ? [] : (await recoveryRepos.workItems.list()).filter(item =>
-  item.value.autonomousPlan && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
+  plannedForHunters(item.value.autonomousPlan) && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
 );
 for (const item of allPlannedWork) if (lifetimeHuntSubjects.has(item.value.subject)) lifetimeHuntWorkIds.add(item.id);
 const [settledTaskIds, neverClaimedTaskIds] = await (async () => {
@@ -1726,11 +1729,11 @@ const queuesForHunterLane = laneClosure?.hunterLane === true;
 if (queuesForHunterLane && !canary) {
   let queued = 0;
   for (const row of dueModel) {
-    if (!row.obligation.autonomousPlan) continue;
+    if (!plannedForHunters(row.obligation.autonomousPlan)) continue;
     const scheduled = scheduleObligation(row.obligation, nowMs);
     if (isScheduled(scheduled) && await openOccurrenceInStep({ ...scheduled, nextDueAt: row.nextDueAt }) === true) queued += 1;
   }
-  console.log(`  planned paid rows queued for the hunter lane: ${queued} of ${dueModel.filter(row => row.obligation.autonomousPlan).length} due`);
+  console.log(`  planned paid rows queued for the hunter lane: ${queued} of ${dueModel.filter(row => plannedForHunters(row.obligation.autonomousPlan)).length} due`);
 }
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
@@ -3219,7 +3222,7 @@ async function runAutonomousWave() {
      capture whose Parser, Validator, Auditor chain has a step left. Both reads come from the round's incremental copy. */
   const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
-  const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
+  const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan),
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })),
     ...(squadReading ? { squads: squadReading } : {}) });

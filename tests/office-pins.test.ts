@@ -36,6 +36,10 @@ test("shared buildings keep all offices behind one reachable marker; dedup is by
   assert.equal(sites.length, 1);
   assert.equal(sites[0].offices.length, 2);
   assert.equal(sites[0].address, office.address);
+  const suites = groupOfficePins([pin, { ...pin, id: "fixture:suite", address: "400 Example Street, Suite 2, Example, AZ 85001" }]);
+  assert.equal(suites.length, 1, "same-point offices stay reachable when the source includes a suite");
+  assert.equal(suites[0].address, null);
+  assert.ok(suites[0].offices.some(row => row.address.includes("Suite 2")));
 });
 test("public-office geocoding shares in-flight reads, rejects missing/out-of-range points and retries misses", async () => {
   const original = globalThis.fetch;

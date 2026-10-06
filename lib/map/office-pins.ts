@@ -33,14 +33,14 @@ export const OFFICE_KIND_LABEL = {
 } as const;
 
 export interface OfficeSite {
-  readonly id: string; readonly name: string; readonly address: string;
+  readonly id: string; readonly name: string; readonly address: string | null;
   readonly lat: number; readonly lng: number; readonly offices: readonly OfficePin[];
 }
 /** Shared buildings get one reachable pin, preserving every owner's office. */
 export function groupOfficePins(pins: readonly OfficePin[]): OfficeSite[] {
   const sites = new Map<string, OfficePin[]>();
   for (const pin of pins) {
-    const id = `${addressKey(pin.address)}:${pin.lat}:${pin.lng}`;
+    const id = `${pin.lat}:${pin.lng}`;
     const rows = sites.get(id) ?? [];
     if (!rows.some(row => row.id === pin.id)) rows.push(pin);
     sites.set(id, rows);
@@ -48,7 +48,8 @@ export function groupOfficePins(pins: readonly OfficePin[]): OfficeSite[] {
   return [...sites].map(([id, offices]) => {
     offices.sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id));
     const first = offices[0];
-    return { id, name: offices.length === 1 ? first.name : `Offices at ${first.address}`,
-      address: first.address, lat: first.lat, lng: first.lng, offices };
+    const sameAddress = offices.every(office => addressKey(office.address) === addressKey(first.address));
+    return { id, name: offices.length === 1 ? first.name : sameAddress ? `Offices at ${first.address}` : "Offices",
+      address: sameAddress ? first.address : null, lat: first.lat, lng: first.lng, offices };
   });
 }

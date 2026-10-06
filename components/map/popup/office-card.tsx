@@ -11,9 +11,10 @@ export function OfficeCard({ site }: { site: OfficeSite }) {
       what: `${office.name}: office address and contact`, provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg ?? "",
         collectedAt: office.collectedAt ?? "", verifiedAt: null },
     }))}>
-    <p>{site.address}</p>
+    {site.address && <p>{site.address}</p>}
     {site.offices.map(office => <div key={office.id} className="mt-3">
       {site.offices.length > 1 && <p>{office.name} · {OFFICE_KIND_LABEL[office.kind]}</p>}
+      {!site.address && <p>{office.address}</p>}
       {office.hours && <p>Hours: {office.hours}</p>}
       {office.phone && <p><a href={`tel:${office.phone.replace(/[^+0-9]/g, "")}`}>{office.phone}</a></p>}
     </div>)}

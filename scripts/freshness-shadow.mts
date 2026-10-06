@@ -146,6 +146,7 @@ import {
   campaignSiteSubjectsFromHoldings,
   heldMarginaliaFromManifest,
   runCampaignSiteCycle,
+  withinWallTime,
   type CampaignSiteCycleReport,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { runCandidatePublicationCycle,
@@ -3478,6 +3479,14 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
  * its approvals publish through the derived routine contract
  * `candidate-campaign-sites-derived`, with no owner step.
  */
+/*
+ * The lane's own bound (Sean, 2026-10-06 12:07 AM EDT: release 6's first round was killed after 43 minutes with
+ * "pending: campaign-sites"). No lead read starts after the dispatch cutoff and a read in flight answers within one
+ * request timeout, so past the cutoff plus this settle time the lane is waiting on something that has not answered. It
+ * then ends as a deferral naming the step it was waiting on, and its leads and sites stay owed. The settle time ends well
+ * inside the round's post-cutoff quiet limit, so the round's join never waits on this lane.
+ */
+const CAMPAIGN_SITES_SETTLE_MS = 3 * 60_000;
 const runCampaignSitesPass = async (): Promise<void> => {
   if (dry || canary || ONLY !== null || IDS !== null) {
     campaignSitesState = "not run: a dry, canary, filtered cycle reads nothing";
@@ -3487,12 +3496,18 @@ const runCampaignSitesPass = async (): Promise<void> => {
     const leaveCampaignSites = pending.enter("campaign-sites");
     /* Loading is included in elapsed-time reporting. */
     const campaignStartedMs = Date.now();
+    /* Each wait inside the lane is labelled, so a stall answer and a deferral name the step. */
+    let waitingOn = "the canonical candidacies";
+    const step = <T,>(label: string, run: () => Promise<T> | T): Promise<T> => {
+      waitingOn = label;
+      return pending.step(`campaign-sites:${label}`, run);
+    };
     try {
-      const pass = await (async () => {
+      const bounded = await withinWallTime((async () => {
         const holdings = candidateEnrichmentHoldings();
         if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
         const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
-        const vaultIndex = await readRoundVault();
+        const vaultIndex = await step("the saved-page index", () => readRoundVault());
         /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
         let stagingManifest: ReturnType<typeof readStagingManifest> = null;
         try {
@@ -3500,9 +3515,10 @@ const runCampaignSitesPass = async (): Promise<void> => {
         } catch (error) {
           runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
         }
-        const held = await heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso());
+        const held = await step("the held Marginalia answers", () => heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso()));
+        const methodVersion = (await step("the method version", () => readMethodKnowledge(repos))).version;
         const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
-        const report = await runCampaignSiteCycle({
+        const report = await step("the campaign-site chain", () => runCampaignSiteCycle({
           startedAtMs: campaignStartedMs,
           repos,
           subjects,
@@ -3520,18 +3536,23 @@ const runCampaignSitesPass = async (): Promise<void> => {
           spaceOut: spacer,
           vaultRoot: join(ROOT, ...VAULT_DIR),
           heldVault: vaultIndex,
-          methodVersion: (await readMethodKnowledge(repos)).version,
+          methodVersion,
           deadlineMs: dispatchDeadlineMs,
-        });
+        }));
         return {
           report,
           state:
             `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
             (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
         };
-      })();
-        campaignSites = pass.report;
-        campaignSitesState = pass.state;
+      })(), dispatchDeadlineMs + CAMPAIGN_SITES_SETTLE_MS - Date.now());
+      if (bounded.done) {
+        campaignSites = bounded.value.report;
+        campaignSitesState = bounded.value.state;
+      } else {
+        campaignSitesState = `deferred: still waiting on ${waitingOn} ${Math.round((Date.now() - dispatchDeadlineMs) / 60_000)} min after the round's dispatch cutoff; its unread leads and unverified sites remain owed`;
+        runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
+      }
     } catch (error) {
       campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
       runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
@@ -3650,7 +3671,22 @@ if (!dry && !canary) {
 // admitted earlier still has time to finish and settle. This is a technical
 // slice boundary, not a count or spend cap: undispatched work remains owed.
 } finally {
-  earlyAutonomous = earlyOriginal === null ? null : await earlyOriginal;
+  /*
+   * The early worker wave's processes end at the cutoff, but its settling reads do not, and this wait was the one
+   * unlabelled await between the lanes' start and their join: a stall answer named only the lane still running beside
+   * it. It is labelled and ends like every other post-cutoff wait: a named deferral, its unsettled tasks still owed.
+   */
+  if (earlyOriginal !== null) {
+    const leaveEarlyWave = pending.enter("autonomous-workers:early-wave");
+    const early = await boundedAfterCutoff(earlyOriginal);
+    leaveEarlyWave();
+    if (early.done) earlyAutonomous = early.value;
+    else {
+      const line = `early worker wave deferred: still settling ${Math.round(early.quietMs / 60_000)} min after the round's last output; its unsettled tasks remain owed`;
+      runtimeConditions.push(line);
+      console.log(`  ${line}`);
+    }
+  }
 }
 let autonomousWorked = false;
 if (earlyAutonomous !== null) {
@@ -3666,14 +3702,21 @@ if (earlyAutonomous !== null) {
 if (autonomousCycleOpen) {
   const leaveAutonomous = pending.enter("autonomous-workers");
   try {
-    const autonomous = await runAutonomousProcesses();
-    for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
-    if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(autonomous) };
-    scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
-    scoutsAdmittedOutsideLifetime += autonomous.scoutsLimitedAdmitted;
-    autonomousDispatchedThisCycle += autonomous.dispatches.filter(row => row.attemptId !== null).length;
-    if (autonomous.dispatches.some(row => row.outcome === "WORKED")) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
-    for (const row of autonomous.dispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
+    const wave = await boundedAfterCutoff(runAutonomousProcesses());
+    if (!wave.done) {
+      const line = `worker wave deferred: still settling ${Math.round(wave.quietMs / 60_000)} min after the round's last output; its unsettled tasks remain owed`;
+      runtimeConditions.push(line);
+      console.log(`  ${line}`);
+    } else {
+      const autonomous = wave.value;
+      for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
+      if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(autonomous) };
+      scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
+      scoutsAdmittedOutsideLifetime += autonomous.scoutsLimitedAdmitted;
+      autonomousDispatchedThisCycle += autonomous.dispatches.filter(row => row.attemptId !== null).length;
+      if (autonomous.dispatches.some(row => row.outcome === "WORKED")) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
+      for (const row of autonomous.dispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
+    }
   } catch (error) {
     runtimeConditions.push(`worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
   } finally { leaveAutonomous(); }

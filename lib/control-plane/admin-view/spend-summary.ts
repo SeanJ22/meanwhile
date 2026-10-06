@@ -18,8 +18,6 @@ export interface SpendSummary { readonly readAt: string; readonly spend: AdminV6
 export async function buildSpendSummary(input: {
   now: string; sql: Sql; transfer: DailyDatabaseTransferRead | null; billing: ProviderBillingSnapshot | null;
   dailyLimitUsd: number | null; liveSetAsideUsd: number | null; neonProjects: readonly NeonProjectTransfer[] | null;
-  /** Actual deployment time of publication-flow instrumentation, supplied by the runner. */
-  flowRecordingSince?: string | null;
   env?: Readonly<Record<string,string|undefined>>; fetcher?: typeof fetch;
 }): Promise<SpendSummary> {
   const spend=await readSpend(input.sql,input.transfer);

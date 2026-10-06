@@ -138,8 +138,11 @@ export async function readFlowWeek(input: { control: Sql; through: string; lastD
   if (since === null) return null;
   const end = Date.parse(input.through);
   const days = await Promise.all(Array.from({ length: FLOW_WEEK_DAYS }, async (_, i): Promise<FlowDay> => {
-    const through = new Date(end - (FLOW_WEEK_DAYS - 1 - i) * DAY).toISOString();
-    const from = i === FLOW_WEEK_DAYS - 1 && input.lastDay ? input.lastDay.from : new Date(end - (FLOW_WEEK_DAYS - i) * DAY).toISOString();
+    // A 23/25-hour Eastern yesterday must not overlap or leave a gap beside the earlier windows.
+    const earlierEnd = input.lastDay ? Date.parse(input.lastDay.from) : end;
+    const last = input.lastDay && i === FLOW_WEEK_DAYS - 1;
+    const through = last ? input.lastDay!.through : new Date(earlierEnd - (FLOW_WEEK_DAYS - (input.lastDay ? 2 : 1) - i) * DAY).toISOString();
+    const from = last ? input.lastDay!.from : new Date(earlierEnd - (FLOW_WEEK_DAYS - (input.lastDay ? 1 : 0) - i) * DAY).toISOString();
     if (Date.parse(through) <= Date.parse(since)) return { from, through, read: null };
     return { from, through, read: await readFlow({ control: input.control, from, through, recordingSince: since }) };
   }));

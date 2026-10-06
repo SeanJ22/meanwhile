@@ -141,7 +141,7 @@ import {
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
 import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
 import { runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
-import { recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
+import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
@@ -427,8 +427,12 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     env: process.env,
     maxBufferBytes: 64 * 1024 * 1024,
     noProgressMs: RUNTIME_NO_PROGRESS_MS,
-    onStdout: (_id, output) => { process.stdout.write(output); },
-    onStderr: (_id, output) => { process.stderr.write(output); currentCycleErrors = `${currentCycleErrors}${output}`.slice(-8000); },
+    onStdout: (_id, output) => { process.stdout.write(output); currentCycleOutput = `${currentCycleOutput}${output}`.slice(-8000); },
+    onStderr: (_id, output) => {
+      process.stderr.write(output);
+      currentCycleErrors = `${currentCycleErrors}${output}`.slice(-8000);
+      currentCycleOutput = `${currentCycleOutput}${output}`.slice(-8000);
+    },
     onStarted: (_id, child) => { researchCycleChild = child; },
   });
   if (!run) throw new Error("RESEARCH_CYCLE_CHILD_RESULT_MISSING");
@@ -440,6 +444,8 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
       repos: await ownerRepositories(), error: new Error(reason),
       cycleId: `research-supervisor:${hostname()}:${before}`, startedAt: before,
       finishedAt: new Date(failedAtMs).toISOString(), testedSha: RUNNING_CODE_SHA, host: hostname(), pending: null,
+      /* The child's own account is out of reach here; its last lines say what was running when it went quiet. */
+      lastOutput: lastChildLines(currentCycleOutput),
       writeLocalRecord: record => {
         mkdirSync(RUNS_DIR, { recursive: true });
         const path = join(RUNS_DIR, `supervisor-${failedAtMs}.json`);
@@ -1057,6 +1063,8 @@ async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
 }
 
 let currentCycleErrors = "";
+/** The research child's stdout and stderr together, in arrival order, for a crash record. */
+let currentCycleOutput = "";
 let researchCycleChild: ChildProcess | null = null;
 const RELEASE_DRAIN_FIRST = process.env.WTP_RELEASE_DRAIN_FIRST === "1";
 /*
@@ -2045,6 +2053,7 @@ while (cycle < CYCLES) {
   const leaseRecovered = await recoverExitedWindowHolder("research cycle");
   researchCycleActive = true;
   currentCycleErrors = "";
+  currentCycleOutput = "";
   await writeLiveCycleBeat(startedAt);
   let cycleBeat = Promise.resolve();
   const cycleBeatTimer = setInterval(() => {

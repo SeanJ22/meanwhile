@@ -222,7 +222,7 @@
 [g10] 85701: every online meeting says how it is held
 [g10] 85701: meetings held online are reachable at all
 [g10] 85701: no acting body was read off a layout marker
-[g10] 85701: no online meeting was given a place
+[g10] 85701: every online-only meeting with a published body address has an online-only pin with its join link
 [g11] /feedback ships the optional reply field
 [g11] /transparency discloses the optional reply address
 [g11] the message body is still promised the T09 scrub

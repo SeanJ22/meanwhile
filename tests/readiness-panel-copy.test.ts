@@ -29,7 +29,7 @@ import { codeOf, sourceFilesUnder } from "./read-code.ts";
  */
 
 const ROOT = process.cwd();
-const SHELL_CSS = "app/(admin)/_mw/mw.module.css";
+const SHELL_CSS = "app/(admin)/_mw/admin-v6/v6.module.css";
 
 function src(rel: string): string {
   return readFileSync(join(ROOT, rel), "utf8").replace(/\r\n/g, "\n");
@@ -59,10 +59,10 @@ test("the page's stylesheet carries the classes its markup uses", () => {
   const declared = new Set([...css.matchAll(/\.([a-zA-Z_][\w-]*)/g)].map((m) => m[1]));
   const users = sourceFilesUnder([".tsx"], "app", "(admin)")
     .map((abs) => relative(ROOT, abs).split(sep).join("/"))
-    .filter((rel) => /from "[./]*(_mw\/)?mw\.module\.css"|\bmw as s\b/.test(src(rel)));
+    .filter((rel) => /from "[./]*(?:admin-v6\/)?v6\.module\.css"/.test(src(rel)));
   const missing: string[] = [];
   for (const rel of users) {
-    for (const m of codeOf(rel).matchAll(/\bs\.([a-zA-Z_]\w*)\b/g)) if (!declared.has(m[1])) missing.push(`${rel}: s.${m[1]}`);
+    for (const m of codeOf(rel).matchAll(/\bs\.([a-zA-Z_]\w*)\b/g)) if (!declared.has(m[1]) && !declared.has("legacy" + m[1][0].toUpperCase() + m[1].slice(1))) missing.push(`${rel}: s.${m[1]}`);
   }
   assert.deepEqual([...new Set(missing)], [], "these classes are rendered with no rule to style them");
 });

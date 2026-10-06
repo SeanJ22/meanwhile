@@ -1,6 +1,7 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
+import { PersonCard } from "@/components/ui/person-card";
 import { useEffect, useRef, useState } from "react";
 
 import { useCardVisibility } from "@/hooks/use-card-visibility";
@@ -18,15 +19,12 @@ import { FundingBlock } from "@/components/funding/funding-block";
 import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
 import { OfficialActions } from "@/components/officials/official-actions";
-import {
-  CardSection,
-} from "@/components/officials/card-section";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 
 import { identityChipsFor } from "@/lib/officials/identity-chips";
 import { ContactPills } from "@/components/officials/contact-pills";
 import { OfficialTermNote } from "@/components/officials/official-term-note";
-import { MemberDirectory } from "@/components/officials/member-directory";
+import { MemberCommitteesContent, MemberOfficesContent } from "@/components/officials/member-directory";
 import { useMemberDirectory } from "@/hooks/use-member-directory";
 import { PersonIdentity } from "@/components/officials/person-identity";
 import { PositionsSection } from "@/components/officials/positions-section";
@@ -133,123 +131,31 @@ export function OfficialModal({
         if (!embedded && event.target === event.currentTarget) onClose();
       }}
     >
-      <Card
+      <PersonCard
         title={holder.name}
-        titleVisible={false}
+        identityKey={holder.id}
+        subject={{ type: "CANDIDATE", id: holder.id }}
         eyebrow={<span style={{ color: `var(--accent-${tier})` }}>{TIER_LABEL[tier]}</span>}
         onClose={embedded ? undefined : onClose}
         className={embedded ? "account-modal mw-entity mw-person" : "account-modal"}
         independent={embedded}
         sources={sources}
-      >
-          {/*
-            Item 3 (2026-08-16). Circle portrait with a
-            NEUTRAL ring, name as the dominant type, one chip row where party
-            FILLS and state / chamber / incumbent are outlined neutrals.
-            Fill-versus-outline carries the emphasis; every chip is one
-            height. The test is under one second to "who is this person".
-          */}
-          <PersonIdentity
-            holder={holder}
-            seatLabel={seatLabel}
-            large
-            chips={identityChipsFor(holder, tier, "INCUMBENT")}
-          />
-
-          {/*
-            Item 8 (2026-08-16): the full contact row, directly under the
-            identity chips, per the reference. Officeholder cards only — the
-            social handles come from the directory's OFFICIAL-accounts-only
-            policy, which is the entire reason a social pill belongs on an
-            officeholder's card. Render what is held, only what is held.
-          */}
-          <ContactPills holder={holder} />
-          <OfficialTermNote holder={holder} />
-
-          <CardSection title="What this office does">
-            <OfficeBlurb holder={holder} bare />
-          </CardSection>
-
-          {/*
-            D35 (2026-08-17): the Positions section, in the large popup, as the
-            row specifies — topic-searchable against THIS PERSON'S corpus only,
-            never the routing chat. Three answers, each its own sentence and
-            its own register: what they published (quoted, linked, dated), what
-            our bounded search did not find, or that we have not collected
-            anything of theirs yet. Nothing here characterises anybody.
-          */}
-          <PositionsSection subjectId={holder.id} subjectName={holder.name} />
-
-          {/*
-            g3 item 9 (2026-08-16): the "How to reach them" accordion is GONE.
-            The pill row above it is the contact surface.
-
-            **Audited before deleting, field by field.** `ReachThem` rendered
-            phone, email, contact form, official page and campaign site;
-            `ContactPills` renders every one of those plus the official social
-            accounts, and carries the same honest-absence line ("No published
-            contact on record yet.") when a person has none. So the accordion
-            held nothing the pills do not — it was the identical facts, one
-            tap further away, under a header that promised something new.
-            The one thing that WAS unique to it, the office addresses, moved
-            to `MemberDirectory` before this session and is untouched below.
-
-            The section set is still identical per office class — the rule
-            6b4 set — because the section is gone for everyone, not gone for
-            the people we happen to know less about.
-          */}
-
-          {/* Item 7: the member's LOCAL offices — the door near the reader —
-              and their committee seats. Federal members only; the source's
-              scope is the section's scope, and the section is identical for
-              all 537. */}
-          <MemberDirectory holder={holder} />
-
-          {/* D34: campaign money — FUNDING tier, its own section, never
-              blended with the votes. */}
-          <CardSection title="Campaign money" defaultOpen={embedded}>
-            <FundingBlock holder={holder} reactionContext={reactionContext} bare />
-          </CardSection>
+        identity={<PersonIdentity holder={holder} seatLabel={seatLabel} large chips={identityChipsFor(holder, tier, "INCUMBENT")} />}
+        contact={<><ContactPills holder={holder} /><OfficialTermNote holder={holder} /></>}
+        sections={{
+          office: <OfficeBlurb holder={holder} bare />,
+          positions: <PositionsSection subjectId={holder.id} subjectName={holder.name} contentOnly />,
+          committees: memberDirectoryReaches(holder.id, "committees") ? <MemberCommitteesContent holder={holder} /> : null,
+          offices: memberDirectoryReaches(holder.id, "offices") ? <MemberOfficesContent holder={holder} /> : null,
+          money: <FundingBlock holder={holder} reactionContext={reactionContext} bare />,
+          record: <RecentVotes holder={holder} reactionContext={reactionContext} columns contentOnly />,
+        }}
+        afterSections={<>
           <PublicStatementsProfile subjectId={holder.id} onProfile={setPrlProfile} />
           <OfficialActions subjectId={holder.id} />
-
-          {/* Item 6b: two columns inside, each its own collapsed section. */}
-          <RecentVotes
-            holder={holder}
-            reactionContext={reactionContext}
-            columns
-          />
-
-          {/*
-            **BC-11 (2026-08-24) — SPEAK YOUR MIND, above Sources, below
-            Voting record.**
-
-            The placement is the argument. A reader arrives at this card, reads
-            what the person has actually DONE — their money, then their votes —
-            and the invitation to say something lands at the moment they have
-            just formed the opinion. Above the citations, because Sources is
-            where a reader goes to check us rather than to speak.
-
-            `subject` is the person's own name, so the framing asks what you
-            would say if THEY were standing in front of you rather than "this
-            person" — the words are the instrument and a placeholder in the
-            middle of them would blunt it.
-          */}
-          <SpeakYourMind
-            /*
-              `key` on the person (RO04, 2026-08-25) — see the note in
-              speak-your-mind.tsx. This card has no tab, so the holder is the
-              key: moving from one official to another must never leave what
-              a reader typed about the first sitting under the second's name.
-            */
-            key={holder.id}
-            subjectType="OFFICIAL"
-            subjectId={holder.id}
-            subject={holder.name}
-            context={reactionContext ?? undefined}
-          />
-
-      </Card>
+          <SpeakYourMind key={holder.id} context={reactionContext ?? undefined} subjectType="OFFICIAL" subjectId={holder.id} subject={holder.name} />
+        </>}
+      />
     </div>
   );
 }

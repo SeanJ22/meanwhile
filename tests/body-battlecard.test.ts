@@ -121,8 +121,8 @@ test("M136: the card renders the same SET of sections for every body", () => {
   // conditional on having content.
   assert.match(
     source,
-    /\{section\.content \?\? <Empty>\{section\.absence\}<\/Empty>\}/,
-    "a section stopped falling back to its own absence line",
+    /section\.content \?\? <WorkingOnIt/,
+    "a section stopped using the shared gap state (FE-29)",
   );
   assert.ok(
     !/sections\s*\.filter\(/.test(source),

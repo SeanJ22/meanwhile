@@ -1,6 +1,7 @@
 import type { Meeting } from "@/lib/sources/types";
 
-import { hasPhysicalLocation } from "./online.ts";
+import type { RegistryProvenance } from "../registry/types.ts";
+import { hasPhysicalLocation, isOnlineOnly } from "./online.ts";
 import type { MeetingListingIdentityReadback } from "./listing-identity.ts";
 
 /**
@@ -19,31 +20,37 @@ export interface Venue {
   /** Chronological, in whatever direction the caller's list arrived. */
   meetings: Meeting[];
   listingIdentity?: MeetingListingIdentityReadback;
+  kind?: "PHYSICAL" | "ONLINE_ONLY";
+  officeAddressSource?: RegistryProvenance;
+}
+
+/** A coordinate resolved from the body's published office address. */
+export interface BodyOfficeLocation {
+  bodyId: string;
+  name: string;
+  address: string;
+  lat: number;
+  lng: number;
+  provenance: RegistryProvenance;
 }
 
 /** ~11 meters. Two rooms in one building are one pin. */
 const COORD_PRECISION = 4;
 
-export function groupByVenue(meetings: Meeting[], listingIdentity?: MeetingListingIdentityReadback): Venue[] {
+export function groupByVenue(meetings: Meeting[], listingIdentity?: MeetingListingIdentityReadback, offices: readonly BodyOfficeLocation[] = []): Venue[] {
   const venues = new Map<string, Venue>();
 
   for (const meeting of meetings) {
-    /*
-     * A meeting held online has no place, so it is not a venue and never a
-     * pin (D18). This is the ONE gate that decides that: everything upstream
-     * keeps such a meeting so the reader can see it, and giving it a
-     * coordinate here — the body's home, the map centre, anything — would put
-     * a marker on a building nobody is going to.
-     *
-     * MTG-14 (2026-08-28) routes it through the one predicate and changes
-     * nothing about it. **The gate is CORRECT and stays** — a helper that made
-     * it easy to give an online sitting a coordinate would be a worse module
-     * than none.
-     */
-    if (!hasPhysicalLocation(meeting)) continue;
-
-    const { lat, lng, name, address } = meeting.location;
-    const key = `${lat.toFixed(COORD_PRECISION)},${lng.toFixed(COORD_PRECISION)}`;
+    const office = isOnlineOnly(meeting) ? offices.find(value => value.bodyId === meeting.bodyId) : undefined;
+    if (!hasPhysicalLocation(meeting) && !office) continue;
+    const kind = office ? "ONLINE_ONLY" : "PHYSICAL";
+    const location = office ?? meeting.location;
+    if (!location) continue;
+    const { lat, lng, name, address } = location;
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+    // An online pin at an office is separate from a physical meeting there.
+    const coordinate = `${lat.toFixed(COORD_PRECISION)},${lng.toFixed(COORD_PRECISION)}`;
+    const key = office ? `online:${office.bodyId}:${coordinate}` : coordinate;
 
     const existing = venues.get(key);
     if (existing) {
@@ -51,7 +58,7 @@ export function groupByVenue(meetings: Meeting[], listingIdentity?: MeetingListi
       continue;
     }
 
-    venues.set(key, { key, name, address, lat, lng, meetings: [meeting], listingIdentity });
+    venues.set(key, { key, name, address, lat, lng, meetings: [meeting], listingIdentity, kind, ...(office ? { officeAddressSource: office.provenance } : {}) });
   }
 
   return [...venues.values()];
@@ -83,8 +90,9 @@ export function placelessSittingsOfVenueBodies(
   const bodies = new Set<string>();
   for (const meeting of venue.meetings) if (meeting.bodyId) bodies.add(meeting.bodyId);
   if (bodies.size === 0) return [];
+  const alreadyShown = new Set(venue.meetings.map(meeting => meeting.id));
   return meetings.filter(
     (meeting) =>
-      !hasPhysicalLocation(meeting) && meeting.bodyId !== undefined && bodies.has(meeting.bodyId),
+      !alreadyShown.has(meeting.id) && !hasPhysicalLocation(meeting) && meeting.bodyId !== undefined && bodies.has(meeting.bodyId),
   );
 }

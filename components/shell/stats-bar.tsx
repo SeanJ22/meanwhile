@@ -1,5 +1,6 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useMemo } from "react";
 
 import { formatMiles } from "@/lib/map/format";
@@ -194,7 +195,7 @@ function Card({
    * sentinel, so this is the one place it is turned into words.
    */
   const missing = value === "—";
-  const note = missing && !loading ? "We're working on getting this info" : sub;
+  const note = missing && !loading ? <WorkingOnIt inline /> : sub;
   return (
     <button
       type="button"

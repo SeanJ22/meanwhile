@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, type ReactNode } from "react";
+import { CardSourceContext, useCardSourceRegistry } from "./card-source-context";
 import { X } from "lucide-react";
 import type { CardSource } from "@/lib/officials/card-sources";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
@@ -9,21 +10,24 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 
 /** Shared reader frame. Sources are required even when the list is empty. */
 export function Card({
-  title, eyebrow, onClose, children, sources, className = "", independent = false, titleVisible = true,
+  title, eyebrow, onClose, children, sources, sourcesContent, className = "", independent = false, titleVisible = true,
 }: {
   title: string;
   eyebrow?: ReactNode;
   onClose?: () => void;
   children: ReactNode;
   sources: CardSource[];
+  /** Server-rendered Sources rows use the same disclosure as fetched rows. */
+  sourcesContent?: ReactNode;
   className?: string;
   independent?: boolean;
   /** Identity blocks already carry the person's visible name. */
   titleVisible?: boolean;
 }) {
   const titleId = useId();
+  const { register, sources: allSources } = useCardSourceRegistry(sources, title);
   return (
-    <article className={`reader-card ${className}`} aria-labelledby={titleId}>
+    <CardSourceContext.Provider value={register}><article className={`reader-card ${className}`} aria-labelledby={titleId}>
       <header className="reader-card-header">
         <div>
           {eyebrow && <div className="t-caption text-label">{eyebrow}</div>}
@@ -39,12 +43,14 @@ export function Card({
         <CardSectionGroup independent={independent}>
           {children}
           <div data-card-sources="">
-            <CardSection title="Sources" meta={sources.length ? String(sources.length) : null}>
-              {sources.length ? <CardSourcesList sources={sources} /> : <WorkingOnIt />}
+            <CardSection title="Sources" keepMounted meta={allSources.length ? String(allSources.length) : null}>
+              {allSources.length > 0 && <CardSourcesList sources={allSources} />}
+              {sourcesContent}
+              {!allSources.length && !sourcesContent && <WorkingOnIt />}
             </CardSection>
           </div>
         </CardSectionGroup>
       </div>
-    </article>
+    </article></CardSourceContext.Provider>
   );
 }

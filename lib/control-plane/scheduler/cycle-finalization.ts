@@ -15,6 +15,11 @@ export interface FailedCycleInput {
   /** What the cycle was waiting on when it failed, from the main thread's own account. */
   readonly pending: PendingSnapshot | null;
   /**
+   * The child's last output lines, when another process (the runner) ended
+   * it and cannot read its pending snapshot. They say what was running.
+   */
+  readonly lastOutput?: readonly string[];
+  /**
    * Write the local record and return its path. The writer owns the record
    * path, and carries forward the stall diagnostic's block if it fired first.
    */
@@ -37,11 +42,15 @@ export async function recordFailedCycle(input: FailedCycleInput): Promise<Failed
   const message = input.error instanceof Error ? (input.error.stack ?? input.error.message) : String(input.error);
   const headline = message.split("\n")[0] ?? "the cycle failed";
   const pendingLine = input.pending === null ? null : describePending(input.pending);
+  const lastOutput = (input.lastOutput ?? []).map(line => line.trim()).filter(Boolean);
+  const lastOutputBlock = lastOutput.length === 0 ? null : `last output before it stopped:\n${lastOutput.join("\n")}`;
+  const detail = [message, pendingLine, lastOutputBlock].filter((part): part is string => part !== null).join("\n");
   const lines = [
     "PILOT HEALTH",
     "  the cycle CRASHED before completing — a failed cycle, never an idle one",
     `      ${headline}`,
     ...(pendingLine === null ? [] : [`      ${pendingLine}`]),
+    ...(lastOutput.length === 0 ? [] : ["      last output before it stopped:", ...lastOutput.map(line => `        ${line}`)]),
     "  ROLLUP    NOT GREEN — the cycle did not finish",
   ];
 
@@ -79,7 +88,7 @@ export async function recordFailedCycle(input: FailedCycleInput): Promise<Failed
         risk: null,
         health: null,
         promotedToReaderTruth: false,
-        failure: { code: "CYCLE_CRASHED", detail: pendingLine === null ? message : `${message}\n${pendingLine}` },
+        failure: { code: "CYCLE_CRASHED", detail },
       };
       try {
         await appendFreshnessCycleDigest(repos, { outcome, lines });
@@ -104,6 +113,7 @@ export async function recordFailedCycle(input: FailedCycleInput): Promise<Failed
       error: message,
       canonicalOutcome: canonical,
       pending: input.pending,
+      ...(lastOutput.length === 0 ? {} : { lastOutput }),
       digest: lines,
     });
   } catch (writeError) {
@@ -112,4 +122,14 @@ export async function recordFailedCycle(input: FailedCycleInput): Promise<Failed
     );
   }
   return { canonical, recordPath, lines };
+}
+
+/** How many of the child's last lines a crash record keeps. */
+export const LAST_OUTPUT_LINES = 12;
+
+/** The child's last non-empty lines, without the runner's own ending line, each cut to a readable length. */
+export function lastChildLines(output: string, count = LAST_OUTPUT_LINES): string[] {
+  return output.split(/\r?\n/).map(line => line.trim())
+    .filter(line => line !== "" && !/ending owned child .* process tree pid/.test(line))
+    .slice(-count).map(line => line.length > 300 ? `${line.slice(0, 297)}...` : line);
 }

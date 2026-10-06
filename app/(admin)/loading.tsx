@@ -21,7 +21,7 @@
  */
 import { Logo } from "@/components/brand/logo";
 
-import s from "./_mw/mw.module.css";
+import { s } from "./_mw/legacy-styles";
 
 export default function ConsoleLoading() {
   return (

@@ -79,7 +79,18 @@
     "secondHandLabelsOnlyInsideSources": "pass",
     "ocdLevelTagAfterTitle": "pass"
   },
-  "exactReady": "pending commit and exact recheck",
+  "exactReady": {
+    "sha": "b3a24040e8b3035e9a3f5d2a85037238d15e9de0",
+    "result": "pass",
+    "tests": 202,
+    "pass": 202,
+    "fail": 0,
+    "skipped": 0,
+    "files": 31,
+    "types": "pass",
+    "browser": "pass",
+    "durationMs": 132200.095845
+  },
   "environment": {
     "DATABASE_URL": "unset",
     "WTP_ASSET_STORE": "unset",

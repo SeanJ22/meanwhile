@@ -66,7 +66,7 @@ export function CandidatePositions({
 
   return (
     <div className="mt-3" data-candidate-positions>
-      <CardSourcesContribution id="candidate-positions" sources={matched.flatMap(position => position.answer.kind === "MATCHED" ? position.answer.passages.map(passage => ({ what: `${position.issue.label} · ${sourceKindLabel(passage.sourceClass)}${passage.revisionStatus === "HISTORICAL" ? " · earlier captured version" : passage.revisionStatus === "CURRENT" ? " · latest captured version" : ""}${passage.publicationDate ? ` · source-stated publication date ${passage.publicationDate.date}` : ""}`, provenance: { sourceUrl: passage.documentUrl, sourceOrg: "", collectedAt: passage.retrievedAt, verifiedAt: null } })) : [])} />
+      <CardSourcesContribution id="candidate-positions" sources={matched.flatMap(position => position.answer.kind === "MATCHED" ? position.answer.passages.map(passage => ({ what: [position.issue.label, sourceKindLabel(passage.sourceClass), passage.revisionStatus === "HISTORICAL" ? "earlier captured version" : passage.revisionStatus === "CURRENT" ? "latest captured version" : "", passage.publicationDate ? `source-stated publication date ${passage.publicationDate.date}` : ""].filter(Boolean).join(" · "), provenance: { sourceUrl: passage.documentUrl, sourceOrg: "", collectedAt: passage.retrievedAt, verifiedAt: null } })) : [])} />
       <ul className="mt-2 space-y-3">
         {matched.map((position) => (
           <li key={position.issue.id}>

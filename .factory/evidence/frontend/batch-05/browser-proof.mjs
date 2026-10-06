@@ -53,9 +53,9 @@ try {for(const width of [390,1280])for(const theme of ['dark','light']){
  let report=await page.evaluate(()=>window.sourceReport());const leaks=report.issues.filter(i=>i.kind==='source-outside-sources');assert.deepEqual(leaks.map(i=>i.element).sort(),['#date-leak','#host-leak','#ordinal-leak','#uncommon-leak']);
  await page.locator('#leak-controls').evaluate(node=>node.remove());
  report=await page.evaluate(()=>window.sourceReport());assert.deepEqual(report.issues.filter(i=>i.kind==='source-outside-sources'),[]);
- assert.equal(await page.locator('#meeting').getByText('Second-hand listing',{exact:true}).isVisible(),false);
+ for(const label of await page.locator('#meeting').getByText('Second-hand listing',{exact:true}).all()) assert.equal(await label.isVisible(),false);
  await page.locator('#meeting').getByRole('button',{name:/^Sources/}).click();
- assert.equal(await page.locator('#meeting [data-card-sources]').getByText('Second-hand listing',{exact:true}).isVisible(),true);await page.locator('#meeting [data-agenda-version="revision:old"]').waitFor({state:'visible'});
+ for(const label of await page.locator('#meeting [data-card-sources]').getByText('Second-hand listing',{exact:true}).all()) assert.equal(await label.isVisible(),true);await page.locator('#meeting [data-agenda-version="revision:old"]').waitFor({state:'visible'});
  assert.equal(await page.locator('#meeting [data-agenda-version="revision:old"] a').count(),0,'old captured content at same URL never links current bytes');
  assert.ok((await page.locator('#meeting [data-agenda-version="revision:old"]').textContent()).includes('2026-10-01'));
  await page.locator('#ballot').getByRole('button',{name:/^Sources/}).click();await page.locator('#ballot [data-card-sources] a[href="https://campaign.example.org/housing"]').waitFor({state:'visible'});

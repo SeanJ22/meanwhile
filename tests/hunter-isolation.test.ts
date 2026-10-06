@@ -87,6 +87,24 @@ test("isolation: a worker that keeps talking to the lane is never ended by the q
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
+test("isolation: a worker ended by its wall leaves one deferral for the task it held", async () => {
+  const root = await fixture("wall", `${TAKES_FIRST}
+    process.once('message', config => {
+      const id = claim(config.taskIds);
+      process.send({ kind: 'task-start', id: '', taskId: id, body: id });
+      let n = 0;
+      setInterval(() => process.send({ kind: 'pending-order', id: 'p' + (++n), taskId: id, body: [] }), 100);
+    });`);
+  try {
+    const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", childTimeoutMs: 600, config: config(root, ["long"]),
+      capacity: () => 1, transportFor: noModel, standing: { quietMs: 10_000 } });
+    assert.equal(results.length, 1);
+    assert.equal(results[0]!.routeTaskId, "long");
+    assert.equal(results[0]!.outcome, "FAILED");
+    assert.match(results[0]!.detail, /WORKER_CHILD_TIMEOUT/);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
 test("isolation: a queue written mid-wave joins the running workers instead of waiting for the slowest", async () => {
   const root = await fixture("join", `${TAKES_FIRST}
     process.once('message', config => {

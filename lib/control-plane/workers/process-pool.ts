@@ -261,15 +261,7 @@ export async function runLeaseWorkerProcesses(input: {
       const record: StuckWorker = { pid, taskId: current, waitingOn, startedAt: new Date(startedAt).toISOString(),
         lastMovedAt: new Date(lastMovedAt).toISOString(), quietMs: standing.quietMs, tasksDone };
       standing.onStuck?.(record);
-      const error = new Error(`WORKER_STUCK:${pid}: no progress for ${Math.round(standing.quietMs / 60_000)} min while waiting on ${waitingOn}; work remains owed`);
-      if (current !== null && pending.delete(current)) {
-        const failed = workerDispatchFailure(current, error);
-        results.push(failed);
-        void input.onDispatched?.(failed);
-      }
-      if (current !== null) inFlight.delete(current);
-      current = null;
-      terminate(error);
+      terminate(new Error(`WORKER_STUCK:${pid}: no progress for ${Math.round(standing.quietMs / 60_000)} min while waiting on ${waitingOn}; work remains owed`));
     };
     const moved = (): void => {
       if (standing === null) return;
@@ -402,6 +394,12 @@ export async function runLeaseWorkerProcesses(input: {
       clearTimeout(quietTimer);
       /* Standing: workers that keep failing before their first task close admission instead of restarting every second. */
       if (standing !== null) startupFailures = code !== 0 && tasksDone === 0 && !terminationError ? startupFailures + 1 : 0;
+      /* Standing: the task a worker held when it was ended (stuck, its wall) or crashed gets its own deferral; its siblings' tasks are theirs. */
+      if (standing !== null && current !== null && (terminationError || code !== 0) && pending.delete(current)) {
+        const failed = workerDispatchFailure(current, terminationError ?? new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
+        results.push(failed);
+        void input.onDispatched?.(failed);
+      }
       for (const [id, pid] of inFlight) if (pid === child.pid) inFlight.delete(id);
       if (child.pid) input.onExited?.(child.pid, terminationError ? (terminationError as Error).message : `exit ${code}`);
       const finish = () => {

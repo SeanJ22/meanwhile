@@ -1,0 +1,44 @@
+{
+  "readySha": "734ee9633567651c94a6bb12a0628c7b965a4102",
+  "sourceBeforeReady": "d276f66bf2530b5d9ac75980d474e0b188118381",
+  "riverBase": "f545fcf9493def91294bccf219ed65071b2093b1",
+  "focused": {
+    "files": 41,
+    "tests": 322,
+    "pass": 322,
+    "fail": 0,
+    "skip": 0,
+    "testedSha": "734ee9633567651c94a6bb12a0628c7b965a4102"
+  },
+  "types": {
+    "testedSha": "734ee9633567651c94a6bb12a0628c7b965a4102",
+    "exitCode": 0
+  },
+  "full": {
+    "testedSha": "ef9d902e9b0f27b6e4dfe39fb23d29d4bc7f74ad",
+    "tests": 9810,
+    "pass": 9778,
+    "fail": 22,
+    "skip": 10,
+    "cancelled": 0,
+    "repairedTestOnlyFailures": 6,
+    "browserBaselineFailures": 16,
+    "timingUsable": false,
+    "gateRecord": "admin-cost-gate-run.json"
+  },
+  "builds": {
+    "testedSha": "ef9d902e9b0f27b6e4dfe39fb23d29d4bc7f74ad",
+    "default": "PASS",
+    "bundle": "PASS",
+    "standalone": "PASS"
+  },
+  "applicationDeltaSinceFull": "Only three whole-factory display captions in screen-money.tsx and scoreboard-read.ts; no import, SQL or aggregation change. Exact READY focused/types pass; final caption lint clean.",
+  "hookPending": [
+    "BR-31/Money: River publisher + OwnerSnapshot and actual flow recording start/measured transfer",
+    "Paid NOTHING: River/Hunters actual ending producer/cause",
+    "BR-20: Hunters actual recommendation raiser",
+    "BR-36: River writer/bootstrap/numbered migration"
+  ],
+  "remainingDependency": "BR-19 exact kind preservation and runtime filtering (BR-22)",
+  "noCleanFullOrBrowserOrLiveClaim": true
+}

@@ -1,6 +1,6 @@
 # River status
 
-build_state: release 8 merged (a5fd753, 1:33 AM EDT); post-deploy check running; runner STOPPED until deploy is confirmed; release 9 gates running
+build_state: release 8 LIVE (a5fd753, deployed 1:35 AM EDT, post-deploy run 37419174889 passed); waiting on Sean to restart the runner; release 9 gates running
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01GomLhSQqS2qk8vHjjkBzbT
@@ -141,7 +141,7 @@ Fold these after release 8 merges, as release 9. Keep the release-8 diff small.
 - **hunters:** the campaign-sites cause is the next item (returns/hunters.md).
 
 ### Pushes to Sean (record every one here, EDT)
-- (none from this run yet)
+- 1:37 AM EDT: release 8 live, with the restart steps (ssh, `systemctl start meanwhile-runner.service`, journalctl), the campaign-sites answer (cause not fixed; hunters next), and the Codex Continue line (admin return).
 
 ## Next River run (written Oct 6, 12:35 AM EDT)
 

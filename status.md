@@ -1,12 +1,24 @@
 # River status
 
-build_state: release 8 live but its first hour was clearly worse (about 9.4 GB); runner stopped since about 3:13 AM EDT; release 9 tested, not released; lock free for the next River run
+build_state: release 9 folding and testing (River session_01EnWcsto9iudrVWwszS9urS, Oct 6, 3:57 AM EDT); runner stopped since about 3:13 AM EDT
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01EnWcsto9iudrVWwszS9urS
 lock: river-20261006T075753Z-4037
 heartbeat: 2026-10-06T07:57:54Z
 
+
+
+## This run (session_01EnWcsto9iudrVWwszS9urS, claimed the free lock Oct 6, 3:57 AM EDT)
+- Instead of testing 8061e21 alone and folding again, release 9 now carries the new READYs too, in one gates run:
+  - hunters f34b81aaa: campaign-sites cause (scoped reads; Neon estimate in its READY) and isolation part 1;
+  - meetings 375d7afb1: BX-08, BX-10 Failed-live repairs;
+  - auditors 78aa3f5ed: DP-13, DP-16, DP-17, FE-18, FE-21, **with hook 0 connected by River in the same fold** (scripts/pilot-runner.mts runs the auditors' passes; `WTP_AUDIT_PASSES=off` leaves them out; auditors' estimate under 20 MB an hour);
+  - people 48ef946cd: CA-11, CA-05, CA-14, CA-12 repair (folded cleanly this time).
+- river-next 12dc8cd + hook commit; `pnpm gates` running.
+- Held: registry a1aad625b (DB-21 Doors card; its Done-when needs WTP_DOORS_SEED/READ on the runner, not in this fold); admin 734ee9633 (measures has not reconciled it yet).
+- Byte counter: not READY on any stream yet (measures has the return since 3:50 AM EDT).
+- Runner heartbeat (Neon, read-only): last beat 07:12:49Z on a5fd753, so it is still stopped.
 
 ## HANDOFF FOR THE NEXT RIVER RUN (written Oct 6, 1:25 AM EDT)
 

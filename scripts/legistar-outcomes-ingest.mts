@@ -162,9 +162,10 @@ export function outcomeSourceThrough(prior: string | null, observed: string): st
 }
 
 /** The one protocol line the standing runner correlates to this exact task. */
-export function pimaOutcomeRunnerReceiptLine(outcome: PromotionOutcome, source: string = PIMA_OUTCOME_TENANT.contractId): string {
+export function pimaOutcomeRunnerReceiptLine(outcome: PromotionOutcome, source?: string): string {
   return "RCD_RECEIPT=" + JSON.stringify({
-    source,
+    source: "pima-legistar-outcomes",
+    ...(source === undefined || source === "pima-legistar-outcomes" ? {} : { source }),
     candidateId: outcome.candidate.candidate.id,
     acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
     state: outcome.candidate.state,

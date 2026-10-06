@@ -788,7 +788,8 @@ export const SOURCE_AUTHORITIES = {
     publisher: "Public bodies on Legistar, each read on the host its own door names",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "OFFICIAL_PLATFORM",
-    routePrefixes: [],
+    // The vendor's public Web API; a body's own portal host comes from its door (installDoorHosts).
+    routePrefixes: ["https://webapi.legistar.com/v1/"],
     jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING_OUTCOME"],
     competentFacts: ["agenda item", "recorded body action", "recorded disposition", "exact per-person roll call", "publisher document status", "minutes document standing"],

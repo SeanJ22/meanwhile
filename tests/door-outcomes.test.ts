@@ -13,7 +13,6 @@ import {
   stateJurisdictionOf,
 } from "../lib/civic-data/outcome-partitions.ts";
 import { sittingWindowSourceIds, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { authorityFor, installDoorHosts } from "../lib/civic-data/source-authority.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { applyManualEdit, checkDoorDraft, type DoorDraft, type DoorRecord } from "../lib/doors/registry.ts";
@@ -157,11 +156,12 @@ describe("DB-22: outcome contracts are built from doors", () => {
     assert.equal(routineContract(contract.id), null);
   });
 
-  it("the promotion door accepts the door's host only once its doors are installed", () => {
-    const url = "https://webapi.legistar.com/v1/demo/events";
-    assert.equal(authorityFor(DOOR_OUTCOMES_SOURCE_ID, "MEETING_OUTCOME", url).ok, false);
-    installDoorHosts(["webapi.legistar.com"]);
-    assert.equal(authorityFor(DOOR_OUTCOMES_SOURCE_ID, "MEETING_OUTCOME", url).ok, true);
+  it("the promotion door accepts a body's portal host only once its doors are installed, and never an arbitrary host", () => {
+    const portal = "https://portal.legistar.com/Calendar.aspx";
+    assert.equal(authorityFor(DOOR_OUTCOMES_SOURCE_ID, "MEETING_OUTCOME", "https://webapi.legistar.com/v1/demo/events").ok, true);
+    assert.equal(authorityFor(DOOR_OUTCOMES_SOURCE_ID, "MEETING_OUTCOME", portal).ok, false);
+    installDoorHosts(["portal.legistar.com"]);
+    assert.equal(authorityFor(DOOR_OUTCOMES_SOURCE_ID, "MEETING_OUTCOME", portal).ok, true);
     assert.equal(authorityFor(DOOR_OUTCOMES_SOURCE_ID, "MEETING_OUTCOME", "https://evil.example/v1/demo/events").ok, false);
   });
 });

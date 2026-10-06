@@ -146,9 +146,10 @@ export function minutesSourceThrough(prior: string | null, observed: string): st
   return laterInstant && observed > prior ? observed : prior;
 }
 
-export function minutesRunnerReceiptLine(outcome: PromotionOutcome, source: string = MESA_OUTCOME_TENANT.contractId): string {
+export function minutesRunnerReceiptLine(outcome: PromotionOutcome, source?: string): string {
   return "RCD_RECEIPT=" + JSON.stringify({
-    source,
+    source: "mesa-legistar-minutes-outcomes",
+    ...(source === undefined || source === "mesa-legistar-minutes-outcomes" ? {} : { source }),
     candidateId: outcome.candidate.candidate.id,
     acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
     state: outcome.candidate.state,

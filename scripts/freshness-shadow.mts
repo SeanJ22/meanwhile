@@ -136,7 +136,7 @@ import { ABSENCE_EXPIRY_DAYS, absenceExpiry, absenceUnlockFrom, isArguedAbsence 
 import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/registry.ts";
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
-import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
+import { LOCAL_JURISDICTION_NAMESPACE, localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import {
   candidateEnrichmentHoldings,
   candidateEnrichmentProvider,
@@ -826,6 +826,12 @@ console.log(
 
 let sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle });
 finishPhase("references-and-registration");
+{
+  /* CH-22: the tracked governments' paid rows and how many reach a reader door; a row with no door waits on its body join. */
+  const local = sync.all.filter(o => o.active && o.id.startsWith(LOCAL_JURISDICTION_NAMESPACE) && registry.routeFor(o.id)?.executorClass === "BOUNDED_MODEL_WORKER");
+  const planned = local.filter(o => o.autonomousPlan);
+  console.log(`  local research rows: ${local.length} paid; ${planned.length} carry a work plan; ${planned.filter(o => o.autonomousPlan?.publication).length} with a reader door`);
+}
 console.log(
   `  ${floorLine(
     floored(

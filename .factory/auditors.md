@@ -1,13 +1,13 @@
-build_state: waiting
+build_state: active
 worker: auditors
 provider: Claude
-run_id: session_01FiqEdSwvHAK6MVjZu2SDUK
-lock: none
-heartbeat: 2026-10-06T03:05:00Z
+run_id: session_01HnXW2EdAgPTFbXkGp8toVF
+lock: auditors-20261006T031846Z-29254
+heartbeat: 2026-10-06T03:18:46Z
 on_river: DP-01, DP-02, DP-03, DP-04, DP-05, DP-06, DP-10, DP-11, DP-13, DP-14, DP-15, DP-16, DP-17, DP-18, DP-30, DP-31, DP-32, FE-01, FE-02, FE-03, FE-16, FE-17, FE-18 (498a4140c folded as 7806fe29, release 4 on main ae07521).
 ready: c428dc394e42422704c8f9ced5282d9a9648e3dd (READY: DP-25, DP-26, DP-33, DP-34, FE-21, DP-29). Built on river 186f747 (release 4). DP-25/26/33/34 are carried as their own diff (3b82416d..ba53aa4a applied over river, no held river-next 92fda9c work); supersedes ba53aa4a5. FE-21 and DP-29: READY (hook pending: scripts/pilot-runner.mts, hunters; needs_hook 17 and 18). Still unfolded at 03:00Z; it merges cleanly onto river 0058007 (release 5): no file in common with river 186f747..0058007.
 checks: Run 10 (03:00Z): c428dc394 merged onto river 0058007 (merge 109dd27, clean). tsc --noEmit clean; affected selection over that merge (base d029ff03) 631 files, 5945 tests, 5939 pass, 0 fail, 6 skipped (env -u DATABASE_URL -u WTP_ASSET_STORE, full history, projection rebuilt, no .next). Earlier: all with env -u DATABASE_URL -u WTP_ASSET_STORE, full history, place-reference projection rebuilt, no .next. Batch on tree 4bb16326 (river 186f747 + DP-25/26/33/34): affected selection 615 files, 5740 tests, 5734 pass, 0 fail, 6 skipped. FE-21 on 583f5976: selection over 4bb16326...HEAD 170 files, 1763 tests, 1759 pass, 0 fail, 4 skipped. DP-29 on a551ac3f: selection 132 files, 1464 tests, 1460 pass, 0 fail, 4 skipped. tsc --noEmit clean on the final tree; eslint 0 problems on every changed file. FE-21 live dry run on production (read-only, 01:35Z, deploy ae07521f): all 8 screens shot and measured (4 surfaces x phone and desktop at one sampled ZIP); reviewer not run (no API key here). DP-29 pass not run live: no control-plane URL in this environment.
-working_on: none (lock released).
+working_on: run 11: re-checking READY c428dc394 on river 8b6322c (release 6).
 waiting_on: FE-04 waits on ballot CA-32: READY on stream/ballot 0fc6ef6d2 but ballot is held on returns, so it is not on river. Every other auditors step is built.
 returned: fold return 20:08Z (fix:5c560d82) answered: this READY sits on river 186f747 only.
 needs_hook:

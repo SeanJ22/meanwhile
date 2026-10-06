@@ -41,8 +41,10 @@ export interface PaidWorkGuardDeps {
   readonly fleetSafety: FleetSafetyController;
   readonly providerQueue: ModelProviderQueue;
   readonly spendHolds: DurableSpendHolds;
-  readonly assignmentBudget: AssignmentBudgetGate;
-  readonly expansionBudget: ReturnType<typeof armExpansionBudget> | null;
+  readonly assignmentBudget: Pick<AssignmentBudgetGate, "linesFor">;
+  readonly expansionBudget: { readonly gate: Pick<ReturnType<typeof armExpansionBudget>["gate"], "linesFor"> } | null;
+  /** Read what a lease worker's obligation needs before its lines are built (the standing lane reads each task's own Send marks). */
+  readonly beforeObligation?: (obligationId: string) => Promise<void>;
   /** The provider transport for one request at a time, and the background batch transport. */
   readonly messages: ModelTransport;
   readonly batch: ReturnType<typeof backgroundBatchTransport>;
@@ -73,6 +75,8 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
    * rule — never another Send's budget (`areaGuardedTransport`). An area that
    * cannot be read, or the ledger, refuses.
    */
+  /** Request holds taken and not yet settled: a sent request whose bill did not come back keeps its hold, and shutdown releases it (releaseOpenJobs). */
+  const openJobs = new Set<JobSpend>();
   let autonomousHoldSeq = 0;
   const guardedMessagesFor = (work: string, transport: ModelTransport = deps.messages): ModelTransport =>
     providerQueue.transport(fleetSafety.guardedModelTransport("anthropic", work, transport));
@@ -136,9 +140,11 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
     }
     const occurrences = await repos.occurrences.listWhere(["workItemId"], task.workItemId);
     const owner = occurrences.find(row => row.value.routeTaskId === task.id) ?? (occurrences.length === 1 ? occurrences[0] : null);
+    await deps.beforeObligation?.(owner?.value.obligationId ?? task.id);
     const found = budgetLinesFor(owner?.value.obligationId ?? task.id, jurisdiction.subjectId);
     if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
     const job = new JobSpend(spendHolds, requestJobId, owner?.value.obligationId ?? task.id, found.lines);
+    openJobs.add(job);
     const transport = budgetGuardedTransport({ job: () => job,
       transport: batching ? fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
         deps.batch.withJournal(journal)) : guardedMessagesFor(jurisdiction.subjectId),
@@ -147,16 +153,21 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
     try { response = await transport(request); }
     catch (error) {
       if (error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal) {
+        openJobs.delete(job);
         const failed = await spendHolds.settle(job.jobId, 0, deps.now());
         if (failed !== null) deps.onCondition(`unsent request hold ${job.jobId} release failed: ${failed}`);
       }
       throw error;
     }
     const measured = modelResponseUsd(response);
-    if (measured !== null) await spendHolds.settle(job.jobId, measured, deps.now());
+    if (measured !== null) {
+      openJobs.delete(job);
+      await spendHolds.settle(job.jobId, measured, deps.now());
+    }
     return response;
   };
   /** A changed ceiling may close capacity for a new reason; say it again. */
   const capacityNoticeReset = (): void => { paidCapacityHoldSaid = false; };
-  return { budgetLinesFor, guardedMessagesFor, autonomousTransportFor, paidWorkerCapacity, workerTransportFor, capacityNoticeReset };
+  return { budgetLinesFor, guardedMessagesFor, autonomousTransportFor, paidWorkerCapacity, workerTransportFor, capacityNoticeReset,
+    openJobs: (): readonly JobSpend[] => [...openJobs] };
 }

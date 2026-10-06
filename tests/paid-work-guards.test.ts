@@ -20,6 +20,9 @@ import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { MODELS } from "../lib/models.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
+import type { InProcessSpendHoldStore } from "../lib/control-plane/expansion/spend-holds.ts";
+/** The holds table's rows (schema v24), live or not yet deleted: the memory store's view of `cp_spend_holds`. */
+const heldRows = (r: { readonly spendHolds?: unknown }) => (r.spendHolds as InProcessSpendHoldStore).rows();
 
 const NOW = "2026-10-05T18:00:00.000Z";
 const line = (key: string, budgetUsd: number, historicalUsd = 0): BudgetLine => ({ key, label: key, budgetUsd, historicalUsd, historyReadAt: NOW });
@@ -43,7 +46,7 @@ async function harness(options: {
       usage: { input_tokens: 100, output_tokens: 100, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } } as unknown as ModelResponse;
   };
   const conditions: string[] = [];
-  const spendHolds = new DurableSpendHolds({ budget: repos.budget, now: () => NOW, sleep: async () => undefined });
+  const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
   const fleetSafety = new FleetSafetyController({ now: NOW, costs: options.costs ?? [], modelHold: options.modelHold ?? null,
     rollingCeilingUsd: options.ceilingUsd ?? 50, clock: () => Date.parse(NOW) });
   const deps: PaidWorkGuardDeps = { repos, now: () => NOW, armedAt: NOW, fleetSafety, providerQueue: new ModelProviderQueue(), spendHolds,
@@ -52,7 +55,7 @@ async function harness(options: {
     messages, batch: backgroundBatchTransport({ apiKey: "test", ...(options.batchFetch ? { fetchImpl: options.batchFetch } : {}) }), modelLaneEnabled: options.modelLaneEnabled ?? true,
     ceilingUsd: () => options.ceilingUsd ?? 50, onCondition: sentence => { conditions.push(sentence); } };
   const guards = paidWorkGuards(deps);
-  const ledger = async () => (await repos.budget.read()).value;
+  const ledger = async () => ({ spendHolds: heldRows(repos) });
   return { guards, repos, sent, conditions, task, ledger, jurisdiction: { subjectId: "ocd-division/country:us/state:nh/county:x", state: "NH" } };
 }
 

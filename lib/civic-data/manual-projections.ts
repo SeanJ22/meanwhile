@@ -7,7 +7,7 @@ import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { manualPayloadScope } from "./scoped-manual-contracts.ts";
 import { specialDistrictBoundaryIssue } from "../registry/special-district-boundary.ts";
 import { publicRecordIssue } from "./public-record-contract.ts";
-import { governmentBudgetIssue } from "./government-budgets.ts";
+import { governmentBudgetIssue } from "./government-budget-contract.ts";
 
 import { genericBallotProblems, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { BallotSet } from "../ballot/types.ts";

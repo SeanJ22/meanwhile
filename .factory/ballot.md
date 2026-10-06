@@ -3,12 +3,12 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
 lock: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
-heartbeat: 2026-10-06T00:35:20Z
+heartbeat: 2026-10-06T00:45:22Z
 on_river: CA-20 CA-24 CA-30 CA-44 CA-45 CA-51 integrated through release ecf402600401783b094837c29e0c515eadbdb843; returned CA-30/51 repairs retained at 8760257.
 ready: none new. Prior f984126b/6c874b3e test certificates preserved; f984 returned production build. Replacement b4b7e7c21ac2bc2a58c69f308ef2f0df62142b05 is unpublished until requested gates pass.
 checks: Exact f984126b canonical FULL PASS: 9495 tests, 9484 pass, 0 fail, 11 skip, 46 suites; all 1096 files, standard two file workers, clean start/end, complete timings, runner exit 0. Types exit 0; whole lint exit 0 (68 warnings, no errors); selector FULL/needs_browser=true. Explicit system Chromium 151 substitute, pinned 1234 did not run. Exact tree 4a354c13578d8c49b7f25d7faff86dbf3a1528b9; certificate ballot-certificate-f984126b.json. No deployed/live acceptance claimed.
-working_on: Final certify combined16step returned-build repair after pure runtime setting split and defaults configuration placement; prior b4 gates state-manifest failed, stopped incomplete, NEVER READY.
-waiting_on: CA-19 CP-03 (slide); CA-39 SC-10 (measures); CA-54 FE-13 (frontend). CP-09 integrated on River 13d29c572dc8 and CA-33 is now being built. DB-11, DB-42, BR-24, BX-02 integrated.
+working_on: CA39 dated per-place publication owes adapter and CA54 source-backed Money/card/Ask; River186f integrates SC10/FE13. No active canonical run; final single requested gates after source completes.
+waiting_on: CA19 CP03 slide; shared exact caller hooks via River; CA39/54 now ready in lane, active implementation.
 returned: New River e8918c6e: f984 READY folds/types/lint/firewall pass but warm trace448 exceeds430, needs source import repair and gates. Prior CA30/51 repairs preserved at8760257.
 needs_hook: Existing f984/6c874 collector and translator hooks remain. New combined batch needs registry registered finance/polling/boundary doors; slide admitted budget-guarded callbacks + scoped edge publication; hunters fresh campaign-finance provider inputs/runtimeKinds; admin kinds-settings registration; people source-kind admission; frontend migrated body/office consumers; measures FIN06..16 capture. Exact file/function requests in follow_on_hooks, CA55_hooks and curated_migration_hooks below. No hook implies live completion.
 needs_Sean: none

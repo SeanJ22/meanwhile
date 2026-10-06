@@ -28,8 +28,24 @@ export async function recordNewPublicKinds(repos: Pick<ControlPlaneRepositories,
     }));
   const known = new Set(manual.store.entries.filter(entry => entry.kind === "PUBLIC_RECORD_KIND").map(entry => entry.id));
   const fresh = entries.filter(entry => !known.has(entry.id));
+  const places = new Map<string, PublicRecord>();
+  for (const row of records) {
+    if (publicRecordIssue(row)) throw new Error("Unverified public kind cannot create owed work.");
+    const key = JSON.stringify([row.ocdId, row.kindLabel.normalize("NFKC").toLowerCase().trim()]);
+    if (!places.has(key)) places.set(key, row);
+  }
+  const knownPlaces = new Set(manual.store.entries.filter(entry => entry.kind === "PUBLIC_RECORD_PLACE_KIND").map(entry => {
+    const value = entry.payload as { divisionId?: string; kindLabel?: string };
+    return JSON.stringify([value.divisionId, value.kindLabel?.normalize("NFKC").toLowerCase().trim()]);
+  }));
+  const placeEntries = [...places].filter(([key]) => !knownPlaces.has(key)).map(([key,row]) => newFieldManualEntry("public-place-kinds",
+    createHash("sha256").update(JSON.stringify([key,now])).digest("hex"), {
+      role:"SHARED",kind:"PUBLIC_RECORD_PLACE_KIND",title:row.kindLabel,summary:`Keep ${row.kindLabel} current`,outcome:"YIELDED",
+      url:row.sourceUrl,observedAt:now,recordClasses:["PUBLIC_RECORD"],ocdIds:[row.ocdId],
+      payload:{divisionId:row.ocdId,kindLabel:row.kindLabel,owedSince:now,sourceUrl:row.sourceUrl,firstRecordId:row.id},
+    }));
   await addUpdates(repos, fresh.map(entry => ({ id: `public-kind:${entry.id}`, what: `New kind found: ${entry.title}`,
     at: now, label: "TESTING", evidenceHref: entry.url, after: records.find(row => row.kindLabel === entry.title)?.title })), now);
-  const saved = await writeFieldManual(repos, fresh, now);
+  const saved = await writeFieldManual(repos, [...fresh,...placeEntries], now);
   if (saved.error) throw new Error(saved.error);
 }

@@ -1,5 +1,6 @@
 import type { AskGapCode, AskGapRecordClass } from "./gap-codes.ts";
 import type { AskIntent, AskTemporal } from "./intent.ts";
+import type { GovernmentBudgetFact } from "../civic-data/government-budget-contract.ts";
 
 /**
  * **THE EVIDENCE PACK — everything the synthesis rung is allowed to know.**
@@ -26,11 +27,13 @@ import type { AskIntent, AskTemporal } from "./intent.ts";
  */
 
 export interface EvidenceRecord {
+  governmentFinance?: GovernmentBudgetFact;
   /** Native meeting/document identity survives the Ask path unchanged. */
   meetingId?: string;
   documentId?: string;
   agendaDocument?: { contentHash: string; title: string | null; publicationIndex: boolean };
   kind:
+    | "GOVERNMENT_FINANCE"
     | "MEETING"
     | "AGENDA_ITEM"
     | "AGENDA_DOCUMENT"

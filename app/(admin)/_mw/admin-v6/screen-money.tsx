@@ -96,7 +96,7 @@ export function MoneyScreen() {
 
       <Card title="Database transfer by project and day">
         {spendData?.neonProjects ? <div className={s.tableWrap}><table className={s.table}><thead><tr><th>Project</th><th>Day (Eastern)</th><th>Sent and received</th><th>Why it rose</th></tr></thead><tbody>
-          {spendData.neonProjects.map(r=><tr key={`${r.project}:${r.day}`}><th scope="row">{r.project==="control-plane"?"Control plane":"We the People"}</th><td>{dayWords(r.day)}</td><td>{gigabytes(r.requestBytes+r.responseBytes)}</td><td>{r.cause===null?DASH:plainWords(r.cause)}{r.cause!==null&&<Technical lines={[r.cause]}/>}</td></tr>)}
+          {spendData.neonProjects.map(r=><tr key={`${r.project}:${r.day}`}><th scope="row">{r.project==="control-plane"?"Control plane":"Civic database"}</th><td>{dayWords(r.day)}</td><td>{gigabytes(r.requestBytes+r.responseBytes)}</td><td>{r.cause===null?DASH:plainWords(r.cause)}{r.cause!==null&&<Technical lines={[r.cause]}/>}</td></tr>)}
         </tbody></table></div> : <><p className={s.p}>{DASH}</p><Technical lines={["The runner has not published measured daily transfer and cause attribution by database project."]}/></>}
       </Card>
 

@@ -3,11 +3,11 @@ worker: codex-admin
 provider: Codex
 run_id: codex-admin-210f8cd213384f2b836e9c27f07ab5c8
 lock: codex-admin-210f8cd213384f2b836e9c27f07ab5c8
-heartbeat: 2026-10-06T00:28:46Z
+heartbeat: 2026-10-06T00:36:29Z
 on_river: BR-01 BR-02 BR-03 BR-05 BR-06 BR-09 BR-10 BR-12 BR-15 BR-16 BR-24 BR-37 CH-12 CH-14 @ 85a0ad660c36 (BR-05/16/37 hooks pending)
 ready: none currently foldable — River returned 5f83a8c646140309545da256ed704cc654254d76 and f2ca419ef23849c4c941fc7f6b78752ed9727e97 for conflicts with incoming measures BR-14/23/25. Preserve those tested historical checkpoints; repair after the new batch is promoted to river.
 checks: exact corrected source 94d8f817fc5082a922ce45fa70777665b7aa2cb9 types PASS; focused including repaired absence/select gates 148 PASS; new changed lint 0 errors/warnings (full changed set 0 errors/29 existing warnings). Actual selector FULL. FULL exact 904ca03062e87f87b8580ad8f9f270d24099489a: 9384 tests, 9356 PASS, 16 could-not-run browser failures identical to plain river, 10 SKIP, plus two own UI gates both fixed at 94d8f817f. FULL not called passing. Known leaked recent-vote PID 86042 bounded termination after 64s; timing incomplete/unusable. Prior exact READY checks preserved in admin-checks.md. Upcoming promoted-base merge needs new checks.
-working_on: Returned merge repaired; BR-17 When and BR-27/29/28 connected to owner gateway, live brief reads, Queue and integrated runner timer. Focused 170 PASS before final receipt/schedule join correction. Final types/lint/focused and required FULL next; not READY yet.
+working_on: Required FULL running frozen at 0212ba41a6c26103ffe971fb19f1aa2f086bcd27. Seven-file correction saved through c4b70f7ee (types PASS; 180 focused PASS before isolated preview type correction). Scheduled history mapping and pending ceiling fixture repaired. Full final summary pending; no READY yet.
 waiting_on: none — BR-14/23/25 integrated in release 3; merge repair first.
 returned: 2026-10-05T20:08:25Z fold failure fix:fc3f3f9a. After promotion merge river, preserve measures BR-14 Queue / BR-23 Scoreboard / BR-25 Now, reconnect BR-07 sendable controls in command-center.tsx, contract.ts, model.ts, screen-now.tsx and tests/admin-v6-ui/v6-ui.test.tsx. Re-run checks and publish fresh READY. Earlier BR-08 state hook and DB-09 DoorsPanel already built.
 needs_hook:

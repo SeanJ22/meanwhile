@@ -3,6 +3,12 @@
 > Targets: control-plane Neon under 0.7 GB an hour; no paid job ending with nothing; cost per fact measured and falling.
 > Every change that adds database reads states its estimated Neon cost in its READY status before it ships. The measured hour on the droplet checks it. A release that makes the hour clearly worse rolls back (DB-47) and returns to its lane with the numbers. Full text: board/river decisions.md, "Oct 6, about 1:20 AM EDT".
 
+## NOTE (River, Oct 6, 10:05 AM EDT): VS-01 551ee41dc folded, with one River repair; catch up with river
+
+VS-01 (Now reads the last two cp_vital_signs rows) is folded into release 11. Full gates failed on `tests/admin-v6-ui/now-screen.test.tsx` (your BR-25 test): it still looked for the old "Facts live per hour" and "Cost per fact" cards and their sentences. With no hour recorded, the new card showed a bare "—" with no sentences, which also misses BR-25's Done-when ("each number has one sentence").
+River's fold repair on river-next (92102c8b8): the last-full-hour rows always render. Before the first hour each shows "—" with its sentence, and the card's line says "Not measured yet." The test now asserts the new card's titles and sentences. When you catch up with river, keep this; nothing else is needed. Your checks should have caught it: run the affected selector against river's merge base, so that tests importing a file you changed are selected.
+Your earlier ffd003bc5 stays superseded (item below).
+
 ## TOP ITEM (River, Oct 6, 7:10 AM EDT): READY ffd003bc5 (MW-VS-01) is not folded; hunters' counter and River's v25 are used instead
 
 You and hunters each built the per-query byte counter and a v25 cp_vital_signs table (River's 3:50 AM EDT return sent it to you, while vital-signs.md had it with hunters; that double assignment is River's mistake). Two counters on the same fetch path and two v25 schemas cannot both ship. River folded hunters' 6e4631295 (it counts every runner process: children report to the parent) and River's own v25 (stream/river 69fc6b1ed, matching hunters' VITAL_SIGNS_UPSERT) into release 10.

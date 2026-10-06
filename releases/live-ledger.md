@@ -2,85 +2,85 @@
 
 Sean, Oct 6: integrated is not done. A step is done only when it works live. River updates this table as verdicts change; every release's steps are added during its measured hour.
 
-Last updated Oct 6, 2:08 AM EDT. Production: a5fd753 (release 8). Order: reader-facing, then the factory behind the vital signs, then Admin.
+Last updated Oct 6, 2:27 AM EDT. Production: a5fd753 (release 8). Order: reader-facing, then the factory behind the vital signs, then Admin.
 
 | Verdict | Steps |
 |---|---|
-| Working live | 0 |
-| Failed live | 15 |
-| Needs time | 1 |
-| Can't check | 107 |
-| Not yet checked | 133 |
+| Working live | 13 |
+| Failed live | 39 |
+| Needs time | 44 |
+| Can't check | 127 |
+| Not yet checked | 33 |
 | **Total** | **256** |
 
 Can't check entries that need Sean's Admin sign-in are listed with exact clicks in releases/admin-checks.md. Every Failed live step is the top item in its lane's returns file.
 
 | Step | Area | Lane | Release | Verdict | What was seen |
 |---|---|---|---|---|---|
-| BR-30 | Reader | measures | 4 | **Not yet checked** |  |
-| BX-02 | Reader | pr-677 | 1–2 | **Not yet checked** |  |
-| BX-03 | Reader | slide | 3 | **Not yet checked** |  |
-| BX-07 | Reader | slide | 7 | **Not yet checked** |  |
-| BX-08 | Reader | meetings | 1–2 | **Not yet checked** |  |
-| BX-10 | Reader | meetings | 1–2 | **Not yet checked** |  |
-| BX-11 | Reader | meetings | 7 | **Not yet checked** |  |
-| CA-01 | Reader | people | 4 | **Not yet checked** |  |
-| CA-02 | Reader | people | 7 | **Not yet checked** |  |
-| CA-03 | Reader | people | 1–2 | **Not yet checked** |  |
-| CA-06 | Reader | people | 1–2 | **Not yet checked** |  |
-| CA-07 | Reader | people | 7 | **Not yet checked** |  |
-| CA-08 | Reader | people | 7 | **Not yet checked** |  |
-| CA-09 | Reader | people | 1–2 | **Not yet checked** |  |
-| CA-12 | Reader | people | 1–2 | **Not yet checked** |  |
-| CA-13 | Reader | people | 1–2 | **Not yet checked** |  |
-| CA-16 | Reader | people | 7 | **Not yet checked** |  |
-| CA-20 | Reader | ballot | 1–2 | **Not yet checked** |  |
-| CA-21 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-22 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-24 | Reader | ballot | 1–2 | **Not yet checked** |  |
-| CA-25 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-26 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-28 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-29 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-30 | Reader | ballot | 1–2 | **Not yet checked** |  |
-| CA-31 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-32 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-33 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-35 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-36 | Reader | ballot | 7 | **Not yet checked** |  |
-| CA-40 | Reader | people | 1–2 | **Not yet checked** |  |
-| CA-41 | Reader | people | 1–2 | **Not yet checked** |  |
-| CA-42 | Reader | people | 1–2 | **Not yet checked** |  |
-| CA-44 | Reader | ballot | 1–2 | **Not yet checked** |  |
-| CA-51 | Reader | ballot | 1–2 | **Not yet checked** |  |
-| CA-54 | Reader | ballot | 7 | **Not yet checked** |  |
-| CH-07 | Reader | hunters | 1–2 | **Not yet checked** |  |
-| CP-01 | Reader | slide | 1–2 | **Not yet checked** |  |
-| CP-02 | Reader | slide | 3 | **Not yet checked** |  |
-| CP-03 | Reader | slide | 7 | **Not yet checked** |  |
-| CP-04 | Reader | slide | 7 | **Not yet checked** |  |
-| CP-05 | Reader | pr-677 | 1–2 | **Not yet checked** |  |
-| CP-06 | Reader | slide | 3 | **Not yet checked** |  |
-| CP-07 | Reader | slide | 7 | **Not yet checked** |  |
-| CP-09 | Reader | slide | 3 | **Not yet checked** |  |
-| CP-10 | Reader | slide | 3 | **Not yet checked** |  |
-| CP-11 | Reader | slide | 7 | **Not yet checked** |  |
-| CP-12 | Reader | slide | 7 | **Not yet checked** |  |
-| CP-13 | Reader | slide | 3 | **Not yet checked** |  |
-| CP-16 | Reader | slide | 3 | **Not yet checked** |  |
-| DB-01 | Reader | meetings | 1–2 | **Not yet checked** |  |
-| DB-03 | Reader | meetings | 1–2 | **Not yet checked** |  |
-| DB-08 | Reader | meetings | 1–2 | **Not yet checked** |  |
-| DB-12 | Reader | registry | 1–2 | **Not yet checked** |  |
-| DB-15 | Reader | registry | 1–2 | **Not yet checked** |  |
-| DB-17 | Reader | registry | 1–2 | **Not yet checked** |  |
-| DB-18 | Reader | registry | 1–2 | **Not yet checked** |  |
-| DB-22 | Reader | meetings | 7 | **Not yet checked** |  |
-| DB-25 | Reader | registry | 1–2 | **Not yet checked** |  |
-| DB-32 | Reader | registry | 1–2 | **Not yet checked** |  |
-| DB-49 | Reader | bank | 1–2 | **Not yet checked** |  |
-| DB-50 | Reader | bank | 1–2 | **Not yet checked** |  |
-| DB-51 | Reader | bank | 1–2 | **Not yet checked** |  |
+| BR-30 | Reader | measures | 4 | **Can't check** | The Scoreboard is an Admin screen behind Sean's Google sign-in; nothing public shows it. |
+| BX-02 | Reader | pr-677 | 1–2 | **Needs time** | Needs a hunter to find a board member's email on a body's official page after the restart. No new member emails are on the live cards checked (Tucson council, Newbury selectboard, Morris County commissioners show the same contacts as Aug 13–14 reads). The runner restarted on release 8 at 2:02 AM EDT. **When:** After the first hunt pass on release 8 that returns a board-member email. Recheck about 4:00 AM EDT. |
+| BX-03 | Reader | slide | 3 | **Can't check** | The proof is the publish-now lane's timing in Admin, behind Sean's sign-in. It also needs a parser result written after the runner restarted at 2:02 AM EDT. |
+| BX-07 | Reader | slide | 7 | **Can't check** | The checklist card is an Admin screen behind Sean's sign-in. |
+| BX-08 | Reader | meetings | 1–2 | **Failed live** | In the 04:40Z snapshot (composed by release-6 runner code, which includes BX-08), meetings at full street addresses are still unpinned with venueGap STATED_NOT_PLACED: '55 West Joppa Rd. Warner, NH 03278' (Warner Village Water District, 12 meetings from Jul 8 on, at 03255) and 'B-1 MPR 220 W. 6th Street Tucson, Arizona 85701' (TUSD, Sep 16, at 85701). Both have house number, street, city and ZIP, so the automatic Census match should have pinned them. 35 meetings at 03255 and 13 at 85701 carry venue gaps. I couldn't run the Census geocoder from here (blocked). |
+| BX-10 | Reader | meetings | 1–2 | **Failed live** | 0 of 391 concluded meetings served at 85701, 03255 and 07866 (snapshot 04:40Z) carry a video link, including 15 concluded Pima Board of Supervisors Legistar sittings (Jul 14 to Sep 22). 0 of 260 MEETING candidates written in the last 12 h contain videoUrl. The lane should confirm whether Pima's Legistar events set EventVideoStatus=Public (webapi.legistar.com is blocked here) and wire another adapter's video field if not. |
+| BX-11 | Reader | meetings | 7 | **Needs time** | Code is live, but the local-votes door (release 7) has not published. Mayor Regina Romero's card at 85701 shows Voting record 'We're working on getting this info', and /api/official-actions/roster:tucson-mc#1 returns NOT_HELD with 0 records. MEETING_OUTCOME has only 2 promotions, the last at 03:51Z (before release 7 code ran). **When:** After the first local-votes door run on release 8 (runner restarted 2:02 AM EDT). Recheck about 3:30 AM EDT. |
+| CA-01 | Reader | people | 4 | **Needs time** | No Open States legislator row has ever been written. civic_data_candidates has STATE_LEGISLATOR only from az-legislature, nj-legislature and nh-general-court, none from plural-openstates. ZIPs in IL (60614), WA (98101), GA (30303), TX (78701) and CO (80202) show 0 state legislators, and AZ still serves the Sep 25 official read (its later reads fail SOURCE_RETRIEVAL_FAILED). **When:** After the first Open States legislator routine on release 8 (runner restarted 2:02 AM EDT). If no plural-openstates STATE_LEGISLATOR row exists by about 4:00 AM EDT, treat it as failed. |
+| CA-02 | Reader | people | 7 | **Needs time** | Release-7 national place publisher code has not yet run a pass with a Send state whose legislator page fails the check. No plural-openstates STATE_LEGISLATOR candidates exist, and non-pilot ZIPs (60614, 98101, 30303, 78701, 80202) show no state legislators. **When:** After a Send in a new state publishes on release 8 (runner restarted 2:02 AM EDT); first pass about 3:00 AM EDT if a Send is queued. |
+| CA-03 | Reader | people | 1–2 | **Needs time** | No local roster member has a structured termStart or termEnd: 0 in 85701, 03255 and 07866; only federal and state legislators carry termEnd. The only 'Term ends' line on a council-type card is the old free-text roster note (Newbury selectboard, Scott Wheeler: 'Term ends March 2027' with an Official 'Roster term or appointment note' Sources row), not the new dated field. No roster/registry promotion since Oct 2 (REGISTRY_RUNTIME_BINDING last 10-02). **When:** After the first roster publication pass on release 8 (runner restarted 2:02 AM EDT). Recheck about 3:30 AM EDT; if Tucson or Rockaway council still show no 'In seat until', return it. |
+| CA-06 | Reader | people | 1–2 | **Needs time** | No body in 85701, 03255, 07866, 60614 or 98101 carries officeContact (0 in every /api/meetings payload), so no county board card can show an office address or phone yet. The body-directory door has to find them on the body's own page. **When:** After body-directory hunts run on release 8 (runner restarted 2:02 AM EDT; the AI spend cap is lifted). Recheck about 4:00 AM EDT. |
+| CA-07 | Reader | people | 7 | **Needs time** | Ask at 85701 'Where is the Tucson Unified School District office and what are its hours?' answered 'The records do not contain the address or hours… call (520) 225-6000'. At 07866 it fell to a model answer about the wrong district (Rockaway Borough). The Ask code for office locations is live, but no office-location records are published yet (release 7 feeds them from the runner). **When:** After the first office-location publication on release 8 (runner restarted 2:02 AM EDT). Recheck about 3:30 AM EDT. |
+| CA-08 | Reader | people | 7 | **Needs time** | Every candidate photo on /ballot at 85701, 03255 and 07866 still comes from committed /candidates/ files (73 images), and none from the verified portrait store. The release-7 own-page portrait path has not run yet. **When:** After the candidate-portrait pass on release 8 (runner restarted 2:02 AM EDT); it also needs the proof bar of 5+ places. Recheck about 4:00 AM EDT. |
+| CA-09 | Reader | people | 1–2 | **Working live** | 85701, Adelita S. Grijalva card → Positions → water: 2 passages show, each with a Sources row reading 'Official · Published passages mentioning water — Published by Adelita S. Grijalva · official page, read from grijalva.house.gov, last checked 2026-08-20'. The API passage kind is OFFICIAL_PAGE. |
+| CA-12 | Reader | people | 1–2 | **Failed live** | Ask at 85701 'What has Adelita Grijalva said about water?' returns "Adelita Grijalva's own words, exactly as published. On August 20th, 2026, we read this on a page of theirs: 'Grijalva Statement on Newly Announced Federal Proposal for Colorado River Water Cuts July 31, 2026 Read More Press Release Rep.'" That is a press-list headline with navigation text, not her sentence. At 03255 'What has Maggie Goodlander said about water?' returns no answer text (mode STRUCTURED_GROUNDED, answer null), only records. |
+| CA-13 | Reader | people | 1–2 | **Working live** | 30 of 30 first calls to /api/positions/<official>/<water/housing> answered 200 (0.2–1.8 s) for officials in AZ, NJ, NH, IL, WA, GA, TX and CO (e.g. G000606, az-legislature:2312, roster:tucson-mc#1, nj-legislature:428, roster:newbury#2, Q000023, D000197). In the browser, clicking the water chip on Grijalva's card fired one 200 and rendered passages. |
+| CA-16 | Reader | people | 7 | **Needs time** | The release-7 statement sweep has not run yet. No county voter-guide quotes are served (OFFICEHOLDER_STATEMENT and CANDIDATE_PUBLICATION last promoted Sep 14). **When:** After the first statement sweep on release 8 (runner restarted 2:02 AM EDT). Recheck about 4:00 AM EDT. |
+| CA-20 | Reader | ballot | 1–2 | **Needs time** | All 16 members of Congress checked in IL, WA, GA, TX and CO answer /api/funding kind 'none'. Quigley (60614) and DeGette (80202) cards show Campaign money 'We're working on getting this info.' The last FEC_FUNDING fetch was 2026-10-05 08:25Z, before release 2, so the widened target list has never run. That 21-hour gap is longer than the earlier 6–16 h spacing. **When:** After the first FEC funding fetch on release 8 (runner restarted 2:02 AM EDT). If none has run by about 8:00 AM EDT, the schedule itself needs a look. |
+| CA-21 | Reader | ballot | 7 | **Needs time** | State money doors have not been added: the control-plane cp_doors table has 0 rows. STATE_CAMPAIGN_FINANCE was last promoted Sep 28, and Alma Hernandez's card (85701) shows Campaign money 'We're working on getting this info.' **When:** After state campaign-finance door records are added and a pass runs (cp_doors empty at 2:15 AM EDT). |
+| CA-22 | Reader | ballot | 7 | **Needs time** | Depends on CA-21's state money doors, which do not exist yet (cp_doors 0 rows). Alma Hernandez (AZ State House 20) shows Campaign money 'We're working on getting this info' on her card, and no state candidate on /ballot?zip=85701 lists PACs. **When:** After state finance door records are added and their first pass publishes. |
+| CA-24 | Reader | ballot | 1–2 | **Needs time** | The render half holds: /ballot?zip=85701 shows the AZ propositions and Prop 425 with summary, YES/NO lines, official text and Sources, and 03255 shows NH Question 1. The 'record added as data shows with no release' half has not happened: no measure record has been added since the deploy. **When:** When the first measure record is added as data (the CA-33 measures door or the translator) after the release-8 restart. |
+| CA-25 | Reader | ballot | 7 | **Needs time** | Measures show summary, YES and NO lines (e.g. Prop 425 'PLAIN-LANGUAGE SUMMARY'), but these are the existing hand-written records. The plain-english-translations contract has never promoted, so nothing written and checked by the translator is live. **When:** After the translator's first run on release 8, at 5+ places (runner restarted 2:02 AM EDT). |
+| CA-26 | Reader | ballot | 7 | **Needs time** | Board cards show the existing static 'What this office does' and 'Powers defined in' text (e.g. Newbury: 'New Hampshire RSA 41'). No translator-written body-class or body-specific definition is published (no plain-english-translations promotion). **When:** After the translator's first run on release 8, at 5+ places. |
+| CA-28 | Reader | ballot | 7 | **Needs time** | No translator output has been promoted (the plain-english-translations contract has never published), so no agenda card can show a plain-English summary yet. **When:** After the translator's first agenda run on release 8, at 5+ places. |
+| CA-29 | Reader | ballot | 7 | **Failed live** | The static files are still in the live commit a5fd753: lib/officials/body-definitions.ts, form-definitions.ts, office-blurbs.ts, data/states/az/reference/body-blurbs.json and body-description.ts. lib/officials/curated-definition-reader.ts keeps them as 'the way back until River checks the replacement'. Cards still render that legacy text, and no translation records have been promoted to replace them. |
+| CA-30 | Reader | ballot | 1–2 | **Working live** | Ask at 85701 (release 8), 'What does a NO vote on Proposition 425 mean?': the answer quotes the stored line "NO: A 'NO' vote shall have the effect of not allowing Pima County to adjust its 1979-80 base expenditure limit." with Sources: Pima County, Permanent Base Adjustment — Ballot Language. |
+| CA-31 | Reader | ballot | 7 | **Needs time** | No ballot-contests door records exist (cp_doors 0 rows), and no new-county BALLOT_CONTEST candidates exist. Ask at 60614 'What's on my ballot?' and at 98101 'Who is running for U.S. House in my district?' return NO_EVIDENCE model answers. **When:** After ballot-contests doors are added for new counties and their first pass publishes on release 8. |
+| CA-32 | Reader | ballot | 7 | **Needs time** | /ballot at 60614, 98101, 30303, 78701 and 80202 shows only 'We're working on getting this info.' Ask at 60614 and 98101 gives no contests. The page and Ask code is live, but the generic projection (CA-31) has nothing for these places yet. **When:** After CA-31's ballot-contests door publishes for a place with no hand-built ballot. |
+| CA-33 | Reader | ballot | 7 | **Needs time** | No ballot-measures door records (cp_doors 0 rows) and no new measure records. Only the existing Pima Prop 425 and the state measures show. **When:** After ballot-measures doors are added in sent places and publish, at 5+ places. |
+| CA-35 | Reader | ballot | 7 | **Needs time** | No polling-place door records (cp_doors 0 rows). VOTING_SITE was last promoted Oct 1 for AZ/NH/NJ only, and no ballot page for 60614, 98101, 30303, 78701 or 80202 shows polling places. **When:** After county polling-place doors are added and publish, at 5+ places. |
+| CA-36 | Reader | ballot | 7 | **Failed live** | Ask at 85701 'List every PAC that gave to Adelita Grijalva this year' (asked twice) and at 03255 'List every PAC that gave to Jeanne Shaheen this year' each answered in about 4.5 s with 'The full filing detail could not be read before the answer deadline.' plus the stored cycle summary. No rows were fetched and no per-row filing links shown; Records list only county/state/federal filing notes. The live FEC fetch through the key never completes before its deadline. |
+| CA-40 | Reader | people | 1–2 | **Needs time** | Ask at 85701 'How did Mayor Regina Romero vote on the budget a year ago, and what did she say then?' answers 'We have not recorded a voting record for Regina Romero… no readable published statement'. Local votes from minutes (BX-11, release 7) have not published, and served meeting history starts 2026-07-08, so October 2025 minutes are not held. **When:** After the local-votes door publishes on release 8 and year-old minutes are held. Recheck about 4:00 AM EDT for the votes half. |
+| CA-41 | Reader | people | 1–2 | **Working live** | Ask at https://meanwhileusa.com/?zip=85701, 'How did the Pima County Board of Supervisors vote on May 12, 2026?' (147 days ago), answered with recorded votes: unanimous on the Sheriff's report, Sheriff oversight, Rio Nuevo funding and a memorial highway, with Steve Christy recusing on the two Sheriff votes. Side finding: at 85201, Mesa's June 1 budget resolution (Resolution 12542, Taylor voting no, held in the promoted Mesa outcomes record) got 'we have not yet recorded how individual council members voted'. |
+| CA-42 | Reader | people | 1–2 | **Failed live** | Ask at 85701, 'How did Raúl Grijalva vote in Congress?', bound to Adelita Grijalva and said 'I have no records about Raúl Grijalva's congressional votes'. In a5fd753 the departed-member resolver (lib/votes/departed-seat.ts, departedFederalVoteSeat) has no caller anywhere in app/ or lib/, so Ask can't reach it. The READY commit says the Ask connection was left as a hook. |
+| CA-44 | Reader | ballot | 1–2 | **Working live** | The Grijalva card (85701) and the Goodlander card (03255) show Raised, Spent and Cash on hand, the small-donor share, and contributions as filed with categories (LEADERSHIP PAC, PAC CONNECTED TO A MEMBERSHIP ORGANIZATION). No disclaimer lines appear (screenshot r2/card_grij.png). |
+| CA-51 | Reader | ballot | 1–2 | **Working live** | At 03255, Ask 'Who is running for Merrimack County Sheriff?' listed Shephard, Cassidy, Gerhard and Weir, the same four as /ballot?zip=03255. At 07866, 'Who is running for the Morris Hills Regional Board of Education?' listed Maher, Serafin and Roach, the same three as /ballot?zip=07866. |
+| CA-54 | Reader | ballot | 7 | **Failed live** | GovernmentMoneySection (components/funding/government-money-section.tsx) isn't mounted on any card in a5fd753, so no body card can show a Money section. /api/government-finance returns NOT_HELD for Pima, Tucson, Morris, Chicago and Seattle, and no government-budgets record has ever been promoted. Ask at 85701, 'What is Pima County's budget?', said 'The county has not published this financial information', which wrongly puts our gap on the county. |
+| CH-07 | Reader | hunters | 1–2 | **Can't check** | Needs a controlled hunter run against a test site and Sean's Admin sign-in. Neither is available from here. |
+| CP-01 | Reader | slide | 1–2 | **Working live** | Ballot pages for 03255, 03101, 07866, 07960, 85701, 85641 and 6 other-state ZIPs (page text plus server payload): the only street addresses are published offices (Merrimack County Attorney's Office, 4 Court Street; a school district office cited in a note; a fire-station venue quoted from a town page). Ask at 07866, 'How do I contact Christopher Russo?', gave only info@morrisdems.org, with no address. |
+| CP-02 | Reader | slide | 3 | **Working live** | Every campaign-site source on ballot cards across 6 ZIPs (about 50 rows, e.g. kellyfornh.com on Ayotte, adelitaforcongress.com on Grijalva, teriann4azgov.org on Hourihan) is on its own candidate's card. No row from one campaign's page appears on an opponent. |
+| CP-03 | Reader | slide | 7 | **Needs time** | No source labeled voter guide appears on any ballot page checked (11 ZIPs). No promoted record anywhere carries a voter-guide source kind. **When:** The first candidate publication after the runner restart that includes a voter-guide-only fact. The runner resumed on a5fd753 at 2:02 AM EDT; recheck after its first publication, about 3:00 AM EDT. |
+| CP-04 | Reader | slide | 7 | **Failed live** | Ballot Sources rows read 'Other · Biography in the candidate's own words' for campaign sites (Ayotte's kellyfornh.com at 03255: 25 'Other' vs 2 'Official'; 14 'Other' at 85701; 6 at 07866), and 'Official measure filing' reads 'Other' at 85701. A Legistar meeting card (Pima BOS July 14, 85701) shows 'Other · This sitting' from pima.legistar.com with Verified 'We're working on getting this info.' The promoted campaign-site records carry no CAMPAIGN source kind. |
+| CP-05 | Reader | pr-677 | 1–2 | **Needs time** | Across 9 ZIPs, none of the 18 comment-access rows in /api/meetings carries a quote. The comment-rule record was last promoted 2026-09-14, so no quote can show until a new comment-access worker result publishes. **When:** The first comment-access publication after the runner restart (runner resumed 2:02 AM EDT). It depends on a comment-rule worker result, so check again at the end of today's first research rounds, about 6:00 AM EDT. |
+| CP-06 | Reader | slide | 3 | **Can't check** | First half holds: 759 meetings across 85701, 85201, 03255 and 07866 include no past-dated sitting still shown as upcoming (all past ones are CONCLUDED or CANCELED). Second half can't be exercised: no live official is currently past a term end (roster term ends are null or in the future), so the 'stays on their card' case doesn't exist yet. |
+| CP-07 | Reader | slide | 7 | **Can't check** | No live card has a news-sourced phone being replaced by an official one, and receipts with the superseded value are only in Admin. |
+| CP-09 | Reader | slide | 3 | **Needs time** | No 'Official filing records' section appears on any of 11 ballot pages, and no official-filings record is promoted. The state legislator and county supervisor cards (Alma Hernandez, Jennifer Allen) show Campaign money as 'We're working on getting this info'. **When:** The first official-filings publication after the runner restart (resumed 2:02 AM EDT). Check after today's first research rounds, about 6:00 AM EDT. |
+| CP-10 | Reader | slide | 3 | **Failed live** | After about 6 hours of runner passes on release 3+ code (Oct 5 6:39 PM to Oct 6 12:40 AM EDT), local and state officials whose official profiles carry photos (Pima supervisors on pima.gov, AZ legislators on azleg.gov, e.g. Alma Hernandez shows initials 'AH') still show initials. No card's Sources section has a portrait row. The READY commit marks CP-10 'hooks pending'. |
+| CP-11 | Reader | slide | 7 | **Needs time** | All 21 campaign sites in the live campaign-site record were approved before release 7 (newest 2026-10-03 03:07Z), and each still carries an audit record. No site found on a5fd753 exists yet. **When:** The first campaign site found after the runner restart (resumed 2:02 AM EDT). Check the next campaign-site publication, about 6:00 AM EDT. |
+| CP-12 | Reader | slide | 7 | **Needs time** | All 21 live campaign sites were approved before release 7 with a second signal (e.g. Clara Pratte's via a BallotReady profile). None has been found under the new rule yet. **When:** The first campaign site found after the runner restart (resumed 2:02 AM EDT). Check the next campaign-site publication, about 6:00 AM EDT. |
+| CP-13 | Reader | slide | 3 | **Needs time** | No ballot card across 11 ZIPs shows a 'Campaign contacts and website' source. Candidate contacts seen come from filings (e.g. Russo's email is from the Morris County Clerk). **When:** The first candidate enrichment publication after the runner restart (resumed 2:02 AM EDT), about 6:00 AM EDT. |
+| CP-16 | Reader | slide | 3 | **Working live** | At 85701, the Pima BOS meeting card's Sources lists 8 rows, including 'Meeting outcome records' and 'Meeting record: ACTION_SUMMARY'. Grijalva's money rows ('Official · Campaign money', 'Contributions reported by …') appear in Sources. Mark Kelly's card lists 20 'Official · Roll call: …' rows. Side finding: House members' Voting record shows 'Recent last 0' (Goodlander, 03255) because the live federal roll-call window holds only one House roll call. |
+| DB-01 | Reader | meetings | 1–2 | **Can't check** | Reader half holds. Ask at 85701 about the Pima BOS meeting of June 9, 2026 (119 days ago) described both sittings and their agenda and actions. The map's earliest meeting is 2026-07-08 (90 days back) in all 4 ZIPs with meetings, and 'When does it meet next?' gave Oct 13. Merrimack history (Feb–Jun 2026) is still held but has no minutes text. The Admin half can't be seen from here. |
+| DB-03 | Reader | meetings | 1–2 | **Needs time** | Calendar feeds hold sittings beyond 90 days (29 ical sittings, e.g. Bradford NH Conservation Commission 2027-01-05 7 PM). Legistar and InSite partitions hold none beyond 90 days (Pima Legistar ends 2026-09-22; InSite Pima/Mesa end 2026-12-15), so those kinds can't show it until their publishers post sittings that far ahead. The map currently ends 2026-12-30. **When:** About 8 PM EDT Oct 7: the Bradford NH Conservation Commission sitting of Jan 5, 2027 should appear on the map at 03221 with no new read. |
+| DB-08 | Reader | meetings | 1–2 | **Can't check** | Ask half holds: at 85701, 'How did Mark Kelly vote on the Continuing Appropriations and Extensions Act in August 2026?' answered YES from earlier roll calls outside today's 20-roll Senate window. The live House window holds only roll 1 (Jan 6 'Call of the House, Passed 0–0'), so House cards show 'Recent last 0'; Ask still finds Goodlander's 39 votes from history. The daily promotion with no Send is visible only in Admin. |
+| DB-12 | Reader | registry | 1–2 | **Failed live** | The door registry table on the production control plane holds 0 rows, so no adapter can be reading doors from it. Meetings still show (252 at 85701, 397 at 03255, 62 at 07866, 49 at 85201), but from the code's own list. DB-12 also ships behind WTP_DOORS_READ, off by default. |
+| DB-15 | Reader | registry | 1–2 | **Failed live** | With the door registry empty (0 rows), coverage and curated-body status can't be reading doors; they come from the code list. The surfaces render unchanged (85701: 65 bodies, 8 govern here), but the 'code list unused' condition doesn't hold. |
+| DB-17 | Reader | registry | 1–2 | **Failed live** | No door rows have been saved (door registry: 0 rows), so no newly added kind has doors and none shows meetings on the map. |
+| DB-18 | Reader | registry | 1–2 | **Failed live** | Tucson board-portal meetings still show (145 clerksboards meetings at 85701, e.g. Tucson-Pima County Historical Commission 2026-07-08). The door registry holds 0 rows, so they're read through the code's 27 Tucson rows, not door records. |
+| DB-22 | Reader | meetings | 7 | **Failed live** | Concluded-meeting results exist only for the two original Legistar bodies: the outcome records are Pima (24 sittings) and Mesa (29 sittings). No other Legistar body exists on the live site, and the door registry has 0 rows to supply outcome doors. |
+| DB-25 | Reader | registry | 1–2 | **Can't check** | Needs a controlled run and Sean's Admin sign-in. The door registry table holds 0 rows on production, so Admin's door list is likely empty and first looks can't be shown per door. |
+| DB-32 | Reader | registry | 1–2 | **Can't check** | Needs a controlled run and Sean's Admin sign-in. Admin's shut-door view reads the door registry, which holds 0 rows on production, so no real door can show SHUT yet. |
+| DB-49 | Reader | bank | 1–2 | **Can't check** | Needs an adapter-only pull request on GitHub and its test run. Builders open no PRs (only release PRs exist), so no adapter-only PR is available to measure from here. River can check this from Actions. |
+| DB-50 | Reader | bank | 1–2 | **Failed live** | No engineer-built-kind doors exist: the door registry holds 0 rows, and no meeting on the live site comes from an engineer-built kind (kinds seen: clerksboards, diligent, onbase, legistar, legistar-insite, pima-edu, boardbook, ical, schedulepage, iqm2, apptegy, civicplus, civicclerk, official-page-events). |
+| DB-51 | Reader | bank | 1–2 | **Can't check** | Admin counts need Sean's sign-in. The public /api/reader/link-health returns {"available":false,"deadAddresses":[]}, so no sweep result is published yet. |
 | DB-55 | Reader | meetings | 1–2 | **Not yet checked** |  |
 | DP-14 | Reader | auditors | 1–2 | **Not yet checked** |  |
 | DP-15 | Reader | auditors | 1–2 | **Not yet checked** |  |
@@ -114,42 +114,42 @@ Can't check entries that need Sean's Admin sign-in are listed with exact clicks 
 | FE-44 | Reader | frontend | 3 | **Not yet checked** |  |
 | SC-02 | Reader | measures | 1–2 | **Not yet checked** |  |
 | SC-07 | Reader | measures | 1–2 | **Not yet checked** |  |
-| BR-23 | Factory | measures | 1–2 | **Not yet checked** |  |
-| BR-31 | Factory | pr-703 | 1–2 | **Not yet checked** |  |
-| BR-32 | Factory | measures | 7 | **Not yet checked** |  |
-| CA-27 | Factory | ballot | 7 | **Not yet checked** |  |
-| CA-45 | Factory | ballot | 1–2 | **Not yet checked** |  |
-| CA-55 | Factory | ballot | 7 | **Not yet checked** |  |
-| CH-05 | Factory | hunters | 1–2 | **Not yet checked** |  |
-| DB-04 | Factory | meetings | 1–2 | **Not yet checked** |  |
-| DB-05 | Factory | meetings | 1–2 | **Not yet checked** |  |
-| DB-16 | Factory | registry | 1–2 | **Not yet checked** |  |
-| DB-23 | Factory | registry | 1–2 | **Not yet checked** |  |
-| DB-35 | Factory | registry | 3 | **Not yet checked** |  |
-| DB-37 | Factory | bank | 1–2 | **Not yet checked** |  |
-| DB-40 | Factory | bank | 1–2 | **Not yet checked** |  |
-| DB-41 | Factory | bank | 1–2 | **Not yet checked** |  |
-| DB-42 | Factory | bank | 1–2 | **Not yet checked** |  |
-| DB-43 | Factory | bank | 1–2 | **Not yet checked** |  |
-| DB-57 | Factory | bank | 1–2 | **Not yet checked** |  |
-| DP-08 | Factory | bank | 1–2 | **Not yet checked** |  |
-| DP-10 | Factory | auditors | 1–2 | **Not yet checked** |  |
-| DP-12 | Factory | registry | 3 | **Not yet checked** |  |
-| DP-18 | Factory | auditors | 1–2 | **Not yet checked** |  |
-| DP-21 | Factory | bank | 1–2 | **Not yet checked** |  |
-| DP-31 | Factory | auditors | 4 | **Not yet checked** |  |
-| DP-33 | Factory | auditors | 7 | **Not yet checked** |  |
-| DP-34 | Factory | auditors | 7 | **Not yet checked** |  |
-| FE-45 | Factory | frontend | 4 | **Not yet checked** |  |
-| MW-021 | Factory | river | 8 | **Not yet checked** |  |
-| RL-01 | Factory | river | 1–2 | **Not yet checked** |  |
-| RL-03 | Factory | river | 1–2 | **Not yet checked** |  |
-| RL-06 | Factory | river | 1–2 | **Not yet checked** |  |
-| RL-07 | Factory | river | 1–2 | **Not yet checked** |  |
-| SC-13 | Factory | measures | 1–2 | **Not yet checked** |  |
-| SC-16 | Factory | measures | 1–2 | **Not yet checked** |  |
-| SC-19 | Factory | measures | 4 | **Not yet checked** |  |
-| SC-20 | Factory | measures | 1–2 | **Not yet checked** |  |
+| BR-23 | Factory | measures | 1–2 | **Can't check** | The Scoreboard is Admin-only (GET /api/admin/v6/scoreboard returns 401 without sign-in). Live code a5fd753 builds 22 rows; rows with no reading say "Not measured yet" with a reason. |
+| BR-31 | Factory | pr-703 | 1–2 | **Failed live** | Live a5fd753 hard-codes the Scoreboard's 'Facts live per hour' and 'Cost per fact' rows as not measured (scoreboard-read.ts:477-480), so both can only show '—'. The fix is measures' READY 30922c2, already folded into release 9 (gates rerunning), which replaces them with the hourly flow rows. Recheck after release 9 deploys. |
+| BR-32 | Factory | measures | 7 | **Can't check** | Admin-only screen. Data caveat: the door registry (cp_doors) has 0 rows in production at 2:09 AM EDT, so the door rows (shut doors, posted to live, overdue doors) have no doors to count. |
+| CA-27 | Factory | ballot | 7 | **Failed live** | Office cards show the older hand-written blurbs, not translator definitions written from each state's law. Examples: /ballot?zip=07866, county commissioner card: "(Powers defined in: State statutes on county government.)"; 03255, sheriff: "State statutes on county officers". Those texts were already in lib/officials/office-blurbs.ts at release 2. In live code, readOfficeTranslation (lib/translate/reader.ts) is called by no app or component file, and no translation record is published (the commit says "hooks pending"). |
+| CA-45 | Factory | ballot | 1–2 | **Working live** | Re-rendered on a5fd753 at about 2:15 AM EDT. /ballot?zip=85701, Grijalva card, Campaign money: raised $2.3M, spent $1.9M, $428,000 on hand; "$1,015,921.45 (55%) of individual money came from donors giving $200 or less"; contributions listed as filed with filed categories (e.g. "LEADERSHIP PAC"). 03255 Goodlander shows the same layout ("$275,917.47 (9%)..."). No other percentage or interpretive sentence was seen. |
+| CA-55 | Factory | ballot | 7 | **Needs time** | No special-district boundary is held yet: none of the promoted CURATED_READER_RECORD or REGISTRATION records carries a district polygon or service area. Special districts still show county-wide; for example, Central Arizona Water Conservation District appears at both 85701 and 85008. **When:** After the runner (restarted on a5fd753 at 2:02 AM EDT) acquires and publishes the first district boundaries; no date can be given. |
+| CH-05 | Factory | hunters | 1–2 | **Needs time** | This needs a new Send. The runner restarted on release 8 at 2:02 AM EDT and is in its first cycle; no Send has been made since then. The order's track is an Admin screen. **When:** The first round after Sean's next Send (any time after 2:02 AM EDT). |
+| DB-04 | Factory | meetings | 1–2 | **Needs time** | Fetch windows reach about 120 days (Diligent to 2027-02-03, CivicClerk to 2027-02-02, IQM2 to 2/1/2027). Only Diligent holds sittings past 90 days (3, all in AZ). BoardBook, CivicClerk, CivicPlus and IQM2 hold none past 90 days, and each kind is held for only 1-4 bodies in 1-2 states, short of the 5-place proof bar. The map at 85701, 03255 and 07866 shows nothing past 86 days, as it should. **When:** When each kind has 5+ held bodies with postings 91-120 days out; the first Diligent sitting crosses 90 days in about two weeks. |
+| DB-05 | Factory | meetings | 1–2 | **Needs time** | Held partitions hold sittings 91-120 days out for clerksboards (Tucson), schedulepage (NJ and NH), apptegy (Rockaway NJ), ical and derived (NH and NJ). OnBase, Revize, SuiteOne, document-listing and official-page-events hold none, at 1 body each. clerksboards:133:2027-01-04 crosses 90 days at 5:30 PM EDT today and schedulepage:mhrd:2027-01-04 at 7:30 PM EDT, with no new read needed. **When:** After 5:30 PM EDT Oct 6: check /api/meetings for 85701 (clerksboards:133:2027-01-04) and 07866 (schedulepage:mhrd:2027-01-04). The proof bar needs 5+ places per kind, which will take longer. |
+| DB-16 | Factory | registry | 1–2 | **Failed live** | The door registry is empty: cp_doors had 0 rows at 2:09 AM EDT, after the runner restarted on a5fd753 at 2:02 AM EDT. The runner seeds doors only when WTP_DOORS_SEED=on (lib/doors/seed-all.ts), so no door exists whose hosts[] could allow a new host. The release 1 check found the same 0 rows. |
+| DB-23 | Factory | registry | 1–2 | **Failed live** | The route-hints file is not gone. In live code (a5fd753), lib/hunt/meetings-route-hints.ts is still 691 lines and is imported by 7 modules (derived-authority, worker-body-directory, meetings-discovery-executor, doors/route-hints, doors/seed-all, meetings-site-discovery, freshness-shadow). No route-hints door exists either, because cp_doors has 0 rows. |
+| DB-35 | Factory | registry | 3 | **Failed live** | Production holds no doors (cp_doors had 0 rows at 2:09 AM EDT, with WTP_DOORS_SEED not on), so no door record exists to edit: neither the synthetic door nor any real moved door. The edit, publish and Undo steps are Admin actions. |
+| DB-37 | Factory | bank | 1–2 | **Needs time** | None of the 3,970 Bank entries carries ocdIds yet; 3,972 carry states. The 3 Scout briefs on release 8 so far (2:07-2:08 AM EDT) were AZ candidate-enrichment jobs, not county hunts, so no county brief can show its own doors first. cp_doors also has 0 rows. **When:** The first county hunt on release 8 (the runner restarted at 2:02 AM EDT), likely within its first research rounds after about 2:30 AM EDT. |
+| DB-40 | Factory | bank | 1–2 | **Needs time** | The Bank holds 0 JOB_COST entries. None of the 6 Scout results since 2 PM EDT Oct 5 (3 of them on release 8) has a "typically N requests, $X" inherited line. Those entries are written only when a Scout touches a fingerprinted platform; today's Scouts were candidate campaign-site jobs. **When:** After the first Scout on a known platform (Legistar, CivicPlus and so on) under release 8, which restarted at 2:02 AM EDT; its next same-platform Scout should show the line. |
+| DB-41 | Factory | bank | 1–2 | **Can't check** | The Bank holds 15 PLATFORM_FINGERPRINT entries, and live code reads fingerprints from those entries when given them (lib/hunt/platform-tenancy.ts). Testing it means adding a new fingerprint as data, which is a Bank write that this read-only check can't make. |
+| DB-42 | Factory | bank | 1–2 | **Can't check** | Live code builds the Scout and detective prompts from a role PLAYBOOK entry, falling back to lib/control-plane/playbooks/<role>.md when there is none. The Bank has no role-text playbook entry yet (only 3 document-pointer PLAYBOOK entries). The test needs a playbook edit in Admin. |
+| DB-43 | Factory | bank | 1–2 | **Can't check** | Same mechanism as DB-42, for the parser, validator, auditor and engineer roles. No role playbook entry has been edited, and the test needs an Admin edit followed by a parser request. |
+| DB-57 | Factory | bank | 1–2 | **Needs time** | No engineer repair has run yet. The repository has no engineer-adapter or adapter-repair branch or PR, and every "Merge engineer adapters" Actions run on Oct 5-6 was skipped. **When:** The next engineer repair on the live runner (release 8 since 2:02 AM EDT); no date can be given. |
+| DP-08 | Factory | bank | 1–2 | **Needs time** | The 3 Scout briefs on release 8 (all AZ) carry 93 inherited lines, none tagged with another state, and none is an investigation line. The Bank has only 2 INVESTIGATION_RESULT entries (NH and AZ), and both are stored with states [] (scope is derived from subjectId when entries are normalized), so a non-AZ/NH Scout is needed to show they stay out. **When:** The first Scout on release 8 outside AZ and NH, likely in the research rounds after about 2:30 AM EDT. |
+| DP-10 | Factory | auditors | 1–2 | **Needs time** | This needs a method or route to be written for a platform with an absent obligation, and then a live round. Nothing has been written since the 2:02 AM EDT restart: cp_method_candidates has 1 row. **When:** The round after the next method write on release 8; no date can be given. |
+| DP-12 | Factory | registry | 3 | **Failed live** | A detective's find can't become a door record because production has no doors: cp_doors had 0 rows at 2:09 AM EDT, after the release 8 restart, with WTP_DOORS_SEED not on. So no changed door can be read by plain code or labeled Testing. |
+| DP-18 | Factory | auditors | 1–2 | **Failed live** | cp_log_live_audits has 0 rows ever, so the Audit accuracy row can only show "—". The audit pass (scripts/live-audit-pass.mts) says the runner starts it every cycle, but scripts/pilot-runner.mts at a5fd753 never starts it; its only console publisher is the owner snapshot. Not seen on screen: Admin needs sign-in. |
+| DP-21 | Factory | bank | 1–2 | **Needs time** | None of the 93 inherited lines in the 3 release 8 Scout briefs (2:07-2:08 AM EDT) carries a works/untried/fails-here mark, and none of those places had a recorded failed method. **When:** The first Scout on release 8 for a place with a recorded failed method, in research rounds after about 2:30 AM EDT. |
+| DP-31 | Factory | auditors | 4 | **Needs time** | This needs a door that breaks a second time on release 8. None has broken since the 2:02 AM EDT restart, and there are no door records (cp_doors has 0 rows). **When:** The next repeat break on the live runner; no date can be given. |
+| DP-33 | Factory | auditors | 7 | **Failed live** | No claim-audit pass has ever been recorded: cp_log_live_audits has 0 rows. scripts/claim-audit-pass.mts is not started by the pilot runner or any workflow at a5fd753, so the Report accuracy row can only say "No weekly check of the team's claimed wins in the last two weeks." The controlled false-claim test has not been run. |
+| DP-34 | Factory | auditors | 7 | **Needs time** | This needs a Proven fix that breaks on the live runner. None has broken since the 2:02 AM EDT restart. **When:** The next break of a Proven fix; no date can be given. |
+| FE-45 | Factory | frontend | 4 | **Working live** | Widened results are labeled "Nearby results: N meetings within 37 miles of <ZIP>" at 08540 NJ, 03246 NH, 07102 NJ and 03060 NH. The "Governments at this place" list shows each government with "We're working on getting this info" at 08540 (Princeton, Princeton Public Schools), 03246, 85281 Tempe AZ (Maricopa, Tempe, the school districts), 07102 and 03060: 5+ places in 3 states. Gap: at 60614 Chicago (and 98101, 30303, 78701, 80202, 86001) readerScope.governments is empty, so these places only get the general "3 bodies govern... working on it" card. |
+| MW-021 | Factory | river | 8 | **Needs time** | The one-time move ran at the 2:02 AM EDT restart. Schema is v24 (applied 06:02:08Z). The ledger row now carries 0 spendHolds (1,088 bytes, down from 2,117 holds and 422,619 bytes at 1:00 AM EDT), and cp_spend_holds holds 2,797 rows. The transfer drop needs a full measured hour. **When:** After about 3:05 AM EDT: compare control-plane transfer for 2:05-3:05 AM EDT against an hour before 1:08 AM EDT. |
+| RL-01 | Factory | river | 1–2 | **Working live** | The scheduled full check on main passed (Build check run 37356716437, schedule, Oct 5 2:32 PM EDT, success). Every release PR's full Build check, gates included, passed (release/8 run 37417309917 success). |
+| RL-03 | Factory | river | 1–2 | **Working live** | Releases 2-8 (#708-#714) each landed on main as one river PR carrying several lanes (e.g. #713 "nine lanes' batches"), each with one Build check push run plus Post-deploy integrity. On Oct 5-6 the only Actions events were release/* pull requests, pushes to main, one schedule run, and "Merge engineer adapters" workflow_run triggers that were all skipped. Each release PR also has one cancelled duplicate PR run (concurrency group). |
+| RL-06 | Factory | river | 1–2 | **Needs time** | Six river merges landed on Oct 5-6 (releases 3-8 all landed on Oct 5 EDT), but this can't show whether a hand-started session drove them. No runner-made adapter repair has reached main: there is no engineer-adapter or adapter branch, and every merge-engineer run was skipped. **When:** The first runner-made adapter repair folded by River into a release; no date can be given. |
+| RL-07 | Factory | river | 1–2 | **Needs time** | No documents-only pull request has been opened since RL-07 shipped (release 1, Oct 4). The last one was #705 (rulings edit, Oct 3 10:24 PM EDT), before that release. **When:** The next documents-only pull request into main; none is scheduled. |
+| SC-13 | Factory | measures | 1–2 | **Can't check** | Admin-only screen. The live scoreboard route reads gate health (readGateHealth) on each request. |
+| SC-16 | Factory | measures | 1–2 | **Can't check** | Admin-only screen. The route computes readiness counts (readinessCounts, recoveryWitnesses) on each request. |
+| SC-19 | Factory | measures | 4 | **Can't check** | Admin-only screen. The Missions table lists each sent place's mission start and when its core information went live. |
+| SC-20 | Factory | measures | 1–2 | **Failed live** | Live coverage shows no body attempts at all: publicationAttempts is {} on every body in /api/meetings for 18 ZIPs (85701, 03255, 07866, 60614, 98101, 30303, 78701, 80202 and others). The public read comes from cp_owner_snapshots 'current', which was last written Oct 4 9:38 AM EDT. All 503 of its bodyAttempts have family null, and attemptsByFamily drops them. The snapshot has not been republished since release 1, even though the runner lists publish-owner-snapshot.mts as a console publisher every cycle. |
 | BR-01 | Admin | admin | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | BR-02 | Admin | admin | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |
 | BR-03 | Admin | admin | 1–2 | **Can't check** | Admin screen; needs Sean's sign-in. |

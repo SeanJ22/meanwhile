@@ -81,3 +81,64 @@ export async function readFlow(input: { control: Sql; from: string; through: str
   ]) as [FlowRows["stages"], FlowRows["stages"], FlowRows["spend"]];
   return projectFlow({ stages: [...box, ...publication], spend }, from, input.through);
 }
+
+/* ---------------------------------------------------------------- the week (BR-31) */
+
+const DAY = 24 * HOUR;
+export const FLOW_WEEK_DAYS = 7;
+
+/** One trailing 24-hour window of the week; null when nothing was recorded for any of it yet. */
+export interface FlowDay {
+  readonly from: string;
+  readonly through: string;
+  readonly read: FlowRead | null;
+}
+export interface FlowWeek {
+  readonly days: readonly FlowDay[];
+  /** Hours actually recorded across the week; uninstrumented hours are not counted. */
+  readonly hoursRecorded: number;
+  readonly liveRecords: number;
+  readonly factsLivePerHour: number | null;
+  readonly settledSpendUsd: number | null;
+  readonly costPerFactUsd: number | null;
+  /** Hours in the week whose spend had a charge with no price; the cost is then unknown, not low. */
+  readonly unpricedHours: number;
+}
+
+const hoursOf = (r: FlowRead): number => (Date.parse(r.through) - Date.parse(r.from)) / HOUR;
+
+/** PURE: the week's totals from its days. Cost per fact is spend over facts across the same recorded hours. */
+export function summarizeFlowWeek(days: readonly FlowDay[]): FlowWeek {
+  const reads = days.flatMap((d) => (d.read === null ? [] : [d.read]));
+  const hoursRecorded = reads.reduce((n, r) => n + hoursOf(r), 0);
+  const liveRecords = reads.reduce((n, r) => n + r.hours.reduce((m, h) => m + h.liveRecords, 0), 0);
+  const unpricedHours = reads.reduce((n, r) => n + r.hours.filter((h) => h.settledSpendUsd === null).length, 0);
+  const settledSpendUsd = reads.length === 0 || unpricedHours > 0 ? null : reads.reduce((n, r) => n + (r.settledSpendUsd ?? 0), 0);
+  return {
+    days, hoursRecorded, liveRecords, unpricedHours, settledSpendUsd,
+    factsLivePerHour: hoursRecorded > 0 ? liveRecords / hoursRecorded : null,
+    costPerFactUsd: liveRecords > 0 && settledSpendUsd !== null ? settledSpendUsd / liveRecords : null,
+  };
+}
+
+export const FLOW_RECORDING_SINCE_SQL = `SELECT min(recorded_at) AS since FROM cp_log_owner_digests WHERE log_key = 'publication-flow'`;
+
+/** When the live-record counts began: the first publication-flow record. Null when none has been written. */
+export async function readFlowRecordingSince(control: Sql): Promise<string | null> {
+  const rows = await boundedQuery(control, { operation: "publication.flow_since", callClass: "PAGE" }, FLOW_RECORDING_SINCE_SQL, []) as { since: string | Date | null }[];
+  const since = rows[0]?.since;
+  return since === null || since === undefined ? null : new Date(since).toISOString();
+}
+
+/** The last seven 24-hour windows ending at `through`. A window wholly before recording began is null, never zeros. */
+export async function readFlowWeek(input: { control: Sql; through: string }): Promise<FlowWeek | null> {
+  const since = await readFlowRecordingSince(input.control);
+  if (since === null) return null;
+  const end = Date.parse(input.through);
+  const days = await Promise.all(Array.from({ length: FLOW_WEEK_DAYS }, async (_, i): Promise<FlowDay> => {
+    const through = new Date(end - (FLOW_WEEK_DAYS - 1 - i) * DAY).toISOString(), from = new Date(end - (FLOW_WEEK_DAYS - i) * DAY).toISOString();
+    if (Date.parse(through) <= Date.parse(since)) return { from, through, read: null };
+    return { from, through, read: await readFlow({ control: input.control, from, through, recordingSince: since }) };
+  }));
+  return summarizeFlowWeek(days);
+}

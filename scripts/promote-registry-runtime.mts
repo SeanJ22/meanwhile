@@ -5,6 +5,8 @@
  * through the exact-byte source receipt embedded in the package.
  */
 import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
+import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
+import { publicationVaultReaders } from "../lib/civic-data/publication-vault.ts";
 import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 
@@ -22,8 +24,6 @@ import { publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publ
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
-import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
-import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
 import { runNationalPlaceWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
 import { orderNationalPlaceWork } from "../lib/control-plane/expansion/dispatch-work.ts";
@@ -45,6 +45,18 @@ async function main(): Promise<void> {
     const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
     const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
     const store = new PostgresRoutineDataStore();
+    if (workerRosters && !nationalZips) {
+      const { report, receipt, exitCode } = await runWorkerPublicationJob({ repos, store,
+        contractId: "registry-runtime-bindings", workItemIds: workerRosters.split(",").filter(Boolean), now });
+      const published = report.filter(row => row.outcome.status === "PUBLISHED" || row.outcome.status === "PARTIALLY_PUBLISHED");
+      console.log(JSON.stringify({ contractId: "registry-runtime-bindings",
+        candidateId: published.at(-1)?.outcome.candidateId ?? null,
+        promotedVersionId: published.at(-1)?.outcome.versionId ?? null,
+        workerPublications: report, nationalPlaces: [], nationalPublications: [], failures: [] }, null, 2));
+      if (receipt) console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
+      if (exitCode) process.exitCode = exitCode;
+      return;
+    }
     const nationalPublications: NationalPlacePublication[] = [];
     const nationalPlaces: ({ zip: string; officials: number; publishedFields: number; owedFields: number; sourceGaps: unknown;
       inherited: unknown; electionPublications: unknown } | { zip: string; deferred: string })[] = [];
@@ -68,8 +80,7 @@ async function main(): Promise<void> {
         });
       } catch (error) { failures.push(error instanceof Error ? error.message : String(error)); }
     }
-    const readObject = researchVaultResolver(repos, vault, "freshness", { snapshot: true });
-    const readEvidence = workerVaultResolver(repos, vault, "freshness", { snapshot: true });
+    const { readObject, readEvidence } = publicationVaultReaders(repos, vault);
     const report = await publishWorkerRosterResults({ repos, store,
       workItemIds: workerRosters?.split(",").filter(Boolean) ?? [], now: new Date().toISOString(), readCapture: async (id, records) => {
         const [{ artifact }, input] = await Promise.all([readObject(id), readEvidence(id)]);

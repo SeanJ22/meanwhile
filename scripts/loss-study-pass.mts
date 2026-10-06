@@ -47,6 +47,11 @@ const audits = await read("auditors' red flags", async () => (await readAuditWee
 const looks = await read("front-end red flags", () => readLatestLookPasses(repos, 7), []);
 
 const readings = [...doorReadings(doors), ...absenceReadings(obligations, now), ...holdReadings(items), ...auditReadings(audits), ...lookReadings(looks)];
+/* RULING 159: with nothing read there is no population to study; "0 lessons from 0 losses" would be a false all-clear. */
+if (readings.length === 0) {
+  console.error(`loss study: no doors, hunts, holds or red flags were read${unread.length ? ` (not read: ${unread.join(", ")})` : ""}; nothing was measured`);
+  process.exit(1);
+}
 const traits = placeTraitsFrom({ doors, items, places: readings.map((r) => r.placeId) });
 const lessons = studyAllLosses(readings, traits, now);
 

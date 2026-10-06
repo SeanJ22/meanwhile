@@ -110,6 +110,7 @@ import { decodePng, patchStats, regionChange } from "./png.mts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
 
 /**
  * THE TARGET IS LOCAL, AND PRODUCTION IS REFUSED — RULING 125 (2026-08-24).
@@ -175,14 +176,23 @@ const BASE = (process.env.SHOOT_BASE_URL ?? DEFAULT_BASE).replace(/\/$/, "");
   }
 }
 
-/** The four zips that are the product (state.md §9), plus the refusal zip. */
+/**
+ * The places the pinned regressions below were recorded at. They are fixtures
+ * of those checks, not the set of places walked: FE-18 retired the four fixed
+ * walk ZIPs, so every per-ZIP walk runs at the places the server under test
+ * publishes, and the resident tasks run at sampled published places live.
+ */
 const ZIPS = {
   tucson: { zip: "85701", lat: 32.21696, lng: -110.971 },
   vail: { zip: "85641", lat: 32.04903, lng: -110.62291 },
   rockaway: { zip: "07866", lat: 40.95499, lng: -74.48801 },
   newbury: { zip: "03255", lat: 43.31403, lng: -72.02455 },
 } as const;
-const FOUR = [ZIPS.tucson, ZIPS.vail, ZIPS.rockaway, ZIPS.newbury];
+const WALK_PLACES = (await publishedPlaces(BASE, fetch, 15_000).catch(() => [])).map(({ zip }) => ({ zip }));
+if (WALK_PLACES.length === 0) {
+  console.error(`walk:all · ${BASE} publishes no place (/api/warm?places=1); there is nothing to walk`);
+  process.exit(1);
+}
 
 const PHONE = { width: 390, height: 844 };
 
@@ -1020,7 +1030,7 @@ section("A. Top-level doors (0817, 0818, g3)");
 }
 
 
-for (const { zip } of FOUR) {
+for (const { zip } of WALK_PLACES) {
   const area = await get(`/about-area?zip=${zip}`);
   check(
     "0817",
@@ -1517,7 +1527,7 @@ if (books.length >= 2) {
 
 section("C. The map, who-governs, and the footnotes (0814c, 0815, e, g3)");
 
-for (const { zip } of FOUR) {
+for (const { zip } of WALK_PLACES) {
   const page = await openAt(browser, zip);
   /*
    * **THE WHO-GOVERNS CARD IS OPENED RATHER THAN ASSUMED (WGH-8, 2026-08-25).**
@@ -2714,7 +2724,7 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
 // ═══════════════════════════════════════════════════════════════════════════
 section("G. The meetings count agrees with itself (g6 item 1d)");
 
-for (const { zip } of FOUR) {
+for (const { zip } of WALK_PLACES) {
  for (const wide of [false, true]) {
   // The chip lives at `sm:` and up, so the phone pass legitimately cannot see
   // it and the desktop pass is where the FOURTH number comes from. Both run:
@@ -3287,7 +3297,7 @@ section("K. Reader surfaces speak plain language (g8)");
  */
 {
   const ids = internalSourceIds();
-  for (const { zip } of FOUR) {
+  for (const { zip } of WALK_PLACES) {
     for (const [surface, path] of [
       ["the map's server HTML", `/?zip=${zip}`],
       ["/about-area", `/about-area?zip=${zip}`],
@@ -3858,28 +3868,13 @@ section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)")
 
 section("G10. Online meetings, and agenda attribution");
 
-/**
- * D18 — a meeting held online is REACHABLE and is NEVER A PIN.
- *
- * The defect these pin: twelve real public meetings were dropped at normalize
- * because the map could not carry them, and the drop was counted honestly in
- * a log nobody reads. What has to stay true is a conjunction, and it is
- * checked as one — a build that kept them and pinned them would be worse than
- * the drop, because a pin on a building nobody is going to sends a reader
- * across town.
- *
- * Tucson, where the twelve live: three Pima County Board of Supervisors
- * sittings, six TUSD committee meetings, three Pima Community College Finance
- * and Audit Committee meetings. The floor is 1 rather than 12 on purpose —
- * these are real calendars and a body may simply not meet online this
- * fortnight, so pinning the exact number would fail for a reason that is not
- * a regression. Zero is the regression.
- */
+/** FE-34: online sittings stay reachable, with distinct pins at published body offices. */
 {
   const payload = await getJson<{
     meetings: {
       id: string;
       location: unknown;
+      bodyId?: string;
       online?: { label: string; joinUrl: string | null };
     }[];
   }>("/api/meetings?lat=32.2226&lng=-110.9747&radiusKm=25");
@@ -3887,7 +3882,7 @@ section("G10. Online meetings, and agenda attribution");
   if (!payload) {
     cannotRun("g10", "85701: meetings held online are reachable", "/api/meetings did not answer");
   } else {
-    const online = payload.meetings.filter((m) => m.location === null);
+    const online = payload.meetings.filter((m) => m.location === null && m.online != null);
     check(
       "g10",
       "85701: meetings held online are reachable at all",
@@ -3908,19 +3903,22 @@ section("G10. Online meetings, and agenda attribution");
         : `${mute.length} carry no label: ${mute.map((m) => m.id).join(", ")}`,
     );
 
-    // And the other half of the conjunction: no coordinates were invented for
-    // them anywhere on the way through.
-    const placed = online.filter(
-      (m) => m.location !== null && m.location !== undefined,
-    );
-    check(
-      "g10",
-      "85701: no online meeting was given a place",
-      placed.length === 0,
-      placed.length === 0
-        ? "none of them carry a location"
-        : `${placed.length} were placed: ${placed.map((m) => m.id).join(", ")}`,
-    );
+    const addressPayload = await getJson<{ coverage?: { bodies: { bodyId: string; officeContact?: { address: string | null } }[] } }>("/api/meetings?lat=32.2226&lng=-110.9747&radiusKm=25");
+    const officeIds = new Set((addressPayload?.coverage?.bodies ?? []).filter(body => body.officeContact?.address).map(body => body.bodyId));
+    const expected = online.filter(meeting => meeting.online && meeting.bodyId && officeIds.has(meeting.bodyId));
+    if (expected.length === 0) {
+      cannotRun("g10", "85701: every online-only meeting with a published body address has an online-only pin with its join link", "no online-only meeting with a published body office address is held for this walk");
+    } else {
+      const page = await openAt(browser, "85701");
+      try {
+        await page.waitForFunction(() => document.querySelector('[data-venue-kind="ONLINE_ONLY"]'), undefined, { timeout: 30_000 });
+        const pins = await page.locator('[data-venue-kind="ONLINE_ONLY"]').evaluateAll(elements => elements.map(element => ({ ids: JSON.parse((element as HTMLElement).dataset.meetingIds ?? "[]") as string[], links: JSON.parse((element as HTMLElement).dataset.joinUrls ?? "[]") as (string | null)[], label: element.getAttribute("aria-label") ?? "" })));
+        const missing = expected.filter(meeting => !pins.some(pin => pin.ids.includes(meeting.id) && pin.label.includes("Online only") && pin.links.includes(meeting.online!.joinUrl)));
+        check("g10", "85701: every online-only meeting with a published body address has an online-only pin with its join link", missing.length === 0, missing.length ? `missing pins or published join links: ${missing.map(meeting => meeting.id).join(", ")}` : `${expected.length} meetings represented by distinct online-only office pins; null published links remain named gaps`);
+      } catch (error) {
+        cannotRun("g10", "85701: every online-only meeting with a published body address has an online-only pin with its join link", error instanceof Error ? error.message : "online pin readback failed");
+      } finally { await page.close(); }
+    }
   }
 }
 
@@ -4043,7 +4041,7 @@ async function clusterCensus(page: Page) {
   }));
 }
 
-for (const { zip } of FOUR) {
+for (const { zip } of WALK_PLACES) {
   for (const wide of [false, true]) {
     const label = wide ? "desktop" : "390px";
     const page = wide ? await openWideAt(browser, zip) : await openAt(browser, zip);

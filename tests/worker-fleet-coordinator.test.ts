@@ -592,7 +592,7 @@ test("the autonomous wave loop stops at its dispatch slice even while waves keep
   let orderingReads = 0;
   const unreadable = () => { orderingReads++; throw new Error("ordering must reuse the selected metadata"); };
   const selected = await new Function("held", "fleet", "runAutonomousCoordinator", "placeOrder", "paidWorkerCapacity",
-    "placeRankFor", "huntRoundComparator", "repos", ordering)(held, {},
+    "placeRankFor", "huntRoundComparator", "repos", "squadReading", ordering)(held, {},
     async (_fleet: unknown, options: { onSelectionSnapshot: (items: readonly WorkItem[]) => void }) => {
       options.onSelectionSnapshot([legacy, current]);
       return { decisions: [{ action: "WORKER", task: plannedTask }] };

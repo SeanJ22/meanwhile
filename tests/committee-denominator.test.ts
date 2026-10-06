@@ -181,14 +181,11 @@ test("F02: every parent seat with jurisdiction can render it, and every one with
   );
   assert.match(
     src,
-    /We.{1,3}re working on getting this info/,
+    /<WorkingOnIt\s*\/>/,
     "a parent seat with no jurisdiction renders OUR gap, in our own register",
   );
-  assert.match(
-    src,
-    /We haven.{1,3}t sourced what this subcommittee handles yet/,
-    "and a subcommittee's gap says subcommittee — the two are different facts",
-  );
+  assert.doesNotMatch(src.replace(/\/\*[\s\S]*?\*\//g, ""), /We haven.{1,3}t sourced what this subcommittee handles yet/,
+    "FE-30 routes missing jurisdictions through the shared Reader gap copy");
 });
 
 test("F02: no source file hardcodes seven as a committee denominator", () => {

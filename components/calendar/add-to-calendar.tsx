@@ -70,7 +70,7 @@ export function AddToCalendar({
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="cursor-pointer text-[0.75rem] text-link underline decoration-dotted hover:no-underline"
+        className="cursor-pointer t-detail text-link underline decoration-dotted hover:no-underline"
       >
         Add to calendar
       </button>
@@ -97,11 +97,11 @@ export function AddToCalendar({
               onClick={() => setOpen(false)}
             />
             <div className="panel calendar-chooser relative w-full max-w-xs p-5">
-              <p className="text-[0.9375rem] font-semibold leading-snug text-paper">
+              <p className="t-heading font-semibold leading-snug text-paper">
                 Add to which calendar?
               </p>
               {event.endEstimated && (
-                <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim" data-end-estimated>
+                <p className="mt-1.5 t-detail leading-relaxed text-paper-dim" data-end-estimated>
                   The end time was not published, so the entry blocks 90
                   minutes as a placeholder and says so in its notes.
                 </p>
@@ -143,7 +143,7 @@ export function AddToCalendar({
                 type="button"
                 autoFocus
                 onClick={() => setOpen(false)}
-                className="mt-3.5 w-full cursor-pointer rounded-md border border-[var(--panel-border)] px-4 py-2 text-[0.8125rem] font-semibold text-paper transition-colors hover:border-paper"
+                className="mt-3.5 w-full cursor-pointer rounded-md border border-[var(--panel-border)] px-4 py-2 t-body font-semibold text-paper transition-colors hover:border-paper"
               >
                 Cancel
               </button>

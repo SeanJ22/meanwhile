@@ -56,35 +56,8 @@ export interface LiveFactCatalog {
   factsInArea(area: string, limit: number): Promise<readonly LiveFact[]>;
 }
 
-export interface LiveAuditPolicy {
-  /** Facts audited per area per pass. */
-  readonly perAreaPerPass: number;
-  /** Areas looked at per pass, so one pass stays small however many areas exist. */
-  readonly areasPerPass: number;
-  /** A fact audited more recently than this is passed over. */
-  readonly minHoursBetweenAudits: number;
-  /** The most facts one area hands the sampler to choose from. */
-  readonly poolPerArea: number;
-  /** A routine refresh newer than this, and unchanged, stands in for a re-read. */
-  readonly refreshMaxAgeHours: number;
-  /** The most new fetches one pass makes. */
-  readonly maxFetchesPerPass: number;
-  /** Extra facts an area gets when it holds past-refresh or high-demand facts (DP-16). */
-  readonly boostExtraPerArea: number;
-  /** A boosted fact may be audited again after this long, sooner than an ordinary one. */
-  readonly boostedMinHoursBetweenAudits: number;
-}
-
-export const LIVE_AUDIT_DEFAULT_POLICY: LiveAuditPolicy = {
-  perAreaPerPass: 1,
-  areasPerPass: 40,
-  minHoursBetweenAudits: 7 * 24,
-  poolPerArea: 50,
-  refreshMaxAgeHours: 36,
-  maxFetchesPerPass: 60,
-  boostExtraPerArea: 1,
-  boostedMinHoursBetweenAudits: 48,
-};
+export { LIVE_AUDIT_DEFAULT_POLICY, type LiveAuditPolicy } from "../audit-policy.ts";
+import { LIVE_AUDIT_DEFAULT_POLICY, type LiveAuditPolicy } from "../audit-policy.ts";
 
 export type LiveAuditVerdict = "GREEN" | "RED" | "INCONCLUSIVE";
 

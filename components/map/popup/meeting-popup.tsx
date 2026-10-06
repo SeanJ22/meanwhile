@@ -1,5 +1,7 @@
 "use client";
 
+import { CheckedLink } from "@/components/ui/checked-link";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { PublicBodyAttempt } from "@/lib/registry/body-attempt-read";
 import { ExternalLink } from "lucide-react";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
@@ -17,7 +19,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
 import { carriedRowClause, relativeAge } from "@/lib/meetings/freshness";
-import { joinLine, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
+import { isPlaceUnrecorded, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { useMeetingBadge } from "@/hooks/use-meeting-badge";
@@ -195,21 +197,21 @@ export function MeetingPopup({
               for one claim about a government's meeting. 2026-09-23: the
               online sentence only where the body published an online access;
               otherwise our own named gap for a place we do not hold. */}
-          {placelessWhereLine(meeting)}
+          {isPlaceUnrecorded(meeting) ? <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> : placelessWhereLine(meeting)}
         </PopupRow>
       )}
 
       {onlineAccess && (
         <PopupRow label="How to join">
           {onlineAccess.joinUrl ? (
-            <a
+            <CheckedLink
               href={onlineAccess.joinUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
             >
               {onlineAccess.label}
-            </a>
+            </CheckedLink>
           ) : (
             /*
              * The render-default rule, exactly. The body published a location
@@ -218,7 +220,7 @@ export function MeetingPopup({
              * — the body's homepage, the portal, the agenda — would look like
              * a way in and not be one.
              */
-            <span className="text-muted">{joinLine(onlineAccess)}</span>
+            <>{onlineAccess.label}{" · "}<WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /></>
           )}
         </PopupRow>
       )}
@@ -265,42 +267,38 @@ export function MeetingPopup({
           <PopupSectionLabel>What happened</PopupSectionLabel>
           {minutes ? (
             <details className="mt-1" open>
-              <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-signal">
+              <summary className="cursor-pointer t-caption text-paper-dim underline decoration-dotted hover:text-signal">
                 What happened — plain language
               </summary>
               {/* 3b: the product's voice renders BOLD. */}
-              <p className="mt-1 text-[0.6875rem] font-semibold leading-relaxed text-paper-dim">
+              <p className="mt-1 t-caption font-semibold leading-relaxed text-paper-dim">
                 {minutes.summary}
               </p>
-              <p className="mt-0.5 text-[0.5625rem] leading-relaxed text-muted">
+              <p className="mt-0.5 t-caption leading-relaxed text-muted">
                 Our paraphrase of{" "}
-                <a
+                <CheckedLink
                   href={minutes.minutesUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="underline decoration-dotted"
                 >
                   the {minutes.sourceOrg} minutes
-                </a>{" "}
+                </CheckedLink>{" "}
                 — read {minutes.readAt}.
               </p>
             </details>
           ) : (
-            <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
-              Minutes not posted yet, or not yet read by us — what happened
-              here isn&apos;t summarized. The links below go to the body&apos;s
-              own records.
-            </p>
+            <WorkingOnIt subject={body ? { type: "BODY", id: body.bodyId } : null} />
           )}
           {officePhone && (
             <PopupRow label="Office">
-              <a
+              <CheckedLink
                 href={`tel:${officePhone.phone.replace(/[^\d+]/g, "")}`}
                 title={`Published on the ${officePhone.sourceOrg} page`}
                 className="text-signal hover:underline"
               >
                 {officePhone.phone}
-              </a>
+              </CheckedLink>
             </PopupRow>
           )}
         </>
@@ -317,7 +315,7 @@ export function MeetingPopup({
           </PopupRow>
         ))
       ) : (
-        <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mt-1.5 t-caption leading-relaxed text-muted">
           We haven&apos;t sourced who sits on this body yet. The people we hold
           for this area represent it in Congress and the state legislature, which
           is a different thing — they are on the district card, not here.
@@ -357,7 +355,7 @@ function LinkLadder({
 }) {
   if (links.length === 0) {
     return (
-      <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+      <p className="mt-1.5 t-caption leading-relaxed text-muted">
         {publicationAttempt
           ? `A source publication attempt for this body was ${publicationAttempt.status === "HELD" ? "held" : publicationAttempt.status === "PARTIALLY_PUBLISHED" ? "partly published" : "published"} on ${publicationAttempt.at.slice(0, 10)}. No agenda link is held here; this attempt does not establish whether the body posts one.`
           : lookedAt
@@ -371,23 +369,23 @@ function LinkLadder({
     <ul className="mt-1.5 space-y-1">
       {links.map((link) => (
         <li key={link.rung} className="flex items-baseline justify-between gap-3">
-          <a
+          <CheckedLink
             href={link.url}
             target="_blank"
             rel="noreferrer"
             title={link.hint}
-            className="inline-flex min-w-0 items-baseline gap-1 truncate text-[0.8125rem] text-signal hover:underline"
+            className="inline-flex min-w-0 items-baseline gap-1 truncate t-body text-signal hover:underline"
           >
             <span className="truncate">{link.label}</span>
             <ExternalLink className="size-3 shrink-0 translate-y-0.5" />
-          </a>
+          </CheckedLink>
           {link.kind === "DERIVED" && (
             // A derived link is a convenience built from coordinates we hold,
             // not evidence about the meeting. It is marked so it can never be
             // read as a citation sitting in a list of sourced links.
             <span
               title="Built from coordinates we hold — not a source"
-              className="trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted"
+              className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted"
             >
               derived
             </span>

@@ -518,13 +518,13 @@ test("schema v5 declares the four nightly-door logs, and every provider bundle c
     "../lib/control-plane/repository/pg-schema.ts"
   );
   assert.ok(BOOTSTRAP_VERSION >= 14, "the Admin original-copy request aggregate follows Ask-gap observations");
-  for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents", "worker_results", "software_release_reviews"]) {
+  for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents", "worker_results", "software_release_reviews", "live_audits"]) {
     assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes(log), `${log} is not declared`);
     assert.ok(DECLARED_TABLES.includes(`cp_log_${log}`), `cp_log_${log} is not a declared table`);
   }
   for (const provider of providers) {
     const repos = await provider.open();
-    for (const field of ["promotionPipeline", "windowRuns", "windowIncidents", "windowIntents", "workerResults", "softwareReleaseReviews"] as const) {
+    for (const field of ["promotionPipeline", "windowRuns", "windowIncidents", "windowIntents", "workerResults", "softwareReleaseReviews", "liveAudits"] as const) {
       assert.equal(typeof repos[field]?.append, "function", `${provider.name} bundle lacks ${field}`);
     }
   }

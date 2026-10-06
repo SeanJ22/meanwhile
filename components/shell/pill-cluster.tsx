@@ -1,5 +1,6 @@
 "use client";
 
+import { useReaderCopy } from "@/hooks/use-reader-copy";
 import Link from "next/link";
 
 import type { CoverageSummary } from "@/lib/registry/coverage";
@@ -52,7 +53,8 @@ export function PillCluster({
   const validZip = zip && /^\d{5}$/.test(zip) ? zip : null;
   // The design gives Ask its full example label at every placement: the pill
   // is always alone on its row (300–380px), never beside the ballot pill.
-  const pill = ASK_PILL_LABELS.sidebar;
+  const readerCopy = useReaderCopy();
+  const pill = { ...ASK_PILL_LABELS.sidebar, label: readerCopy("copy.askSidebar"), ariaLabel: readerCopy("copy.askAccessible") };
 
   return (
     <div className="mw-nav-wrap" data-pill-cluster={placement}>

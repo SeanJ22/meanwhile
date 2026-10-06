@@ -4,7 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { sourceFilesUnder } from "../lib/ops/repo-files.ts";
-import { RENDER_ROOTS, absenceDefaultsIn } from "../lib/text/absence-defaults.ts";
+import { RENDER_ROOTS, absenceDefaultsIn, readerCopyViolations } from "../lib/text/absence-defaults.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const BASELINE = join(ROOT, "tests", "absence-defaults.json");
@@ -99,4 +99,22 @@ test("a single-token type default is not a claim and is not flagged", () => {
   for (const line of ['const t = tier ?? "local";', 'const c = commit ?? "unknown";']) {
     assert.deepEqual(absenceDefaultsIn(line), []);
   }
+});
+
+
+test("FE-31: every reader gap uses WorkingOnIt and disclaimers stay retired", () => {
+  const violations: string[] = [];
+  for (const file of sourceFilesUnder(ROOT, RENDER_ROOTS)) {
+    if (!/\.tsx?$/.test(file) || file.startsWith("app/api/") || file.startsWith("app/(admin)/") || file === "components/demand/working-on-it.tsx") continue;
+    for (const text of readerCopyViolations(readFileSync(join(ROOT, file), "utf8"))) violations.push(`${file}: ${text}`);
+  }
+  assert.deepEqual(violations, []);
+});
+
+test("FE-31: seeded inline gaps and each banned disclaimer fail the instrument", () => {
+  for (const text of ["We’re working on getting this info", "not a statement that", "not evidence that", "We don't hold"]) {
+    assert.equal(readerCopyViolations(`<p>${text}</p>`).length, 1);
+    assert.deepEqual(readerCopyViolations(`/* ${text} */`), []);
+  }
+  assert.deepEqual(readerCopyViolations("<WorkingOnIt />"), []);
 });

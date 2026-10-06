@@ -134,7 +134,8 @@
  * version 18's source-URL index is, so captures and leases continue while it
  * builds. Additive: no table, column or statement moved.
  */
-export const BOOTSTRAP_VERSION = 20;
+// Version 21 adds the live-audit log (DP-13): results, corrections and pulls. Additive.
+export const BOOTSTRAP_VERSION = 21;
 
 /**
  * The tables, and the shape each one carries.
@@ -389,6 +390,17 @@ export const APPEND_ONLY_LOGS = [
   "admin_receipts",
   "agent_jobs",
   "discovery_attempts",
+  /*
+   * THE LIVE AUDIT. (DP-13 — version 21.)
+   *
+   *   live_audits  published facts re-read on their own pages after they
+   *                publish: one RESULT per fact checked (keyed by UTC day),
+   *                the CORRECTION each red flag led to (keyed "corrections"),
+   *                and the PULL a red flag takes off the live page (keyed by
+   *                work item). Append-only: an audit is a reading taken at a
+   *                time. Additive: no existing table or statement moved.
+   */
+  "live_audits",
 ] as const;
 
 /** Every table this schema declares, for the drift check. */

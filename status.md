@@ -4,10 +4,17 @@ build_state: release 12 LIVE on main (c814d4c); river = d89746b (adds hunters CH
 worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01VH6HDTQ3GQCWMZNKtTULak
-lock: river-20261006T1957-26410
-heartbeat: 2026-10-06T19:57:59Z
+lock: none
+heartbeat: 2026-10-06T20:02:00Z
 
-## This run (session_01EJWrnyFbffUajJtnCW6EWs, claimed the free lock Oct 6, 2:57 PM EDT)
+## This run (session_01VH6HDTQ3GQCWMZNKtTULak, claimed the free lock Oct 6, 3:57 PM EDT)
+
+- No change; no fold, no gates, no release. Runner still stopped at 3:58 PM EDT (cp_runner_heartbeat last beat 07:12:49Z on a5fd753; cp_vital_signs absent). Restart already with Sean; not re-pushed.
+- Scan: no new READY. Held, unchanged: meetings 91f23e059 DB-29 (hook pending); registry a1aad625b DB-21 (runner door switches); admin 734ee9633 (returned). hunters active (heartbeat 5 min); measures, meetings, auditors, people within an hour. Codex lanes still with their paired Claude workers.
+- river d89746b (CH-23 parts 1–3, CH-20, off by default) still waits for the next normal batch or the first release after the runner restarts.
+- No push to Sean. Lock released. Next River run: same list as below.
+
+## Previous run (session_01EJWrnyFbffUajJtnCW6EWs, claimed the free lock Oct 6, 2:57 PM EDT)
 
 - Runner: still stopped at 2:59 PM EDT (cp_runner_heartbeat last beat 07:12:49Z on a5fd753; cp_vital_signs absent). Restart already with Sean; not re-pushed.
 - **Folded hunters 544e20323 (CH-23 part 3, CH-20 re-ready; behind WTP_ONE_HUNTER_PATH and WTP_BOX_ENABLED)** on river-next d89746b over river c83c04d. No conflicts; no migrations. Firewall PASS (0 findings, 7,608 files). History unshallowed first.

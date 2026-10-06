@@ -16,6 +16,22 @@ state: returned
 fix_subject: fix:57653541
 fix: River · stream/hunters — live failed for hunters: SECOND CAUSE of RESEARCH_CHILD_NO_PROGRESS (River, 2026-10-06 ~01:10Z, from Sean's runner journal for the 23:13:58Z cycle on 6af6f8a, killed 23:40:50Z). Your memory-wait fix (READY 671b0b567) is integrated and ships in release 4, but it doe
 
+## TOP ITEM (River, Oct 6, 5:35 AM EDT): READY 5e3b7f55e (vital signs, the per-query byte counter) fails the release firewall; held out of release 9
+
+The runner stays stopped until this counter is live, so this is the fastest way to a restart. What River saw on river-next (river 8061e21 + your 5e3b7f55e + meetings + auditors), `pnpm gates`, step civic-data-release-firewall:
+
+```
+civic-data-release-firewall … FAIL — 2 release-coupling finding(s).
+  MANUAL_DATA_PATH_WRITES_REPOSITORY · lib/db/transfer-by-caller.ts · A filesystem writer reachable from scripts/promote-manual-civic-projection.mts can bypass the canonical production data plane.
+  ROUTINE_PATH_WRITES_REPOSITORY · lib/db/transfer-by-caller.ts · A filesystem writer reachable from scripts/fetch-fec.mts can bypass the canonical production data plane.
+```
+
+Cause: lib/db/transfer.ts imports transfer-by-caller.ts and calls installNeonBytesFlush(), so flushNeonBytes's mkdirSync/writeFileSync/renameSync (and pruneNeonBytes's unlinkSync) are in every data command's closure. The firewall only accepts writes to paths it can prove temporary (os.tmpdir() joined with literal names only), so a per-pid file under WTP_VITAL_SIGNS_DIR cannot pass, and River will not weaken the firewall or route around it (no computed import specifiers).
+
+A shape that should pass (your call): keep transfer-by-caller.ts pure (count in memory; no fs import). Children report their hour totals to the process that started them over output they already send (one `vital-signs-bytes {json}` line a minute and at exit, written with process.stdout.write), and only the standing parent (scripts/pilot-runner.mts, which is outside the data closures; audit-pass-clock already writes .mirror there) sums and keeps them. Check: `node --experimental-strip-types scripts/civic-data-firewall.mts` must say PASS before READY; it takes about 3.5 minutes.
+
+Release 9 carries your READY f34b81aaa (campaign-sites cause, isolation part 1) instead. Mark the counter READY again on top of your stream and River folds it as its own small release.
+
 ## Failure
 
 ```

@@ -208,7 +208,21 @@
  * Additive: no existing table, column or statement moved; the ledger row's
  * other fields are untouched.
  */
-export const BOOTSTRAP_VERSION = 24;
+/*
+ * ## What version 25 adds, and why (the hourly vital signs, 2026-10-06)
+ *
+ * Sean, Oct 6: "The runner writes one small row per hour: facts that reached
+ * readers, money spent, cost per fact, Neon bytes the runner itself read
+ * (counted per query and tagged with the calling code), rounds finished versus
+ * killed, and paid jobs that ended without a result." `cp_vital_signs` is that
+ * row, one per UTC hour, upserted by the runner (`lib/control-plane/vital-signs.ts`
+ * VITAL_SIGNS_UPSERT, partial every 10 minutes, final each hour). Admin's Now
+ * screen and the daily brief read it instead of raw tables. Nullable counts
+ * mean "not recorded", never zero. `neon_project_bytes` is River's cross-check
+ * against Neon's own project total; the runner never writes it. Additive: a new
+ * small table (24 rows a day), nothing existing moved.
+ */
+export const BOOTSTRAP_VERSION = 25;
 
 /**
  * The tables, and the shape each one carries.
@@ -487,6 +501,8 @@ export const DECLARED_TABLES: readonly string[] = [
   "cp_checklist_instance_projections",
   /* Version 24: one row per spend hold. */
   "cp_spend_holds",
+  /* Version 25: one row per hour of vital signs. */
+  "cp_vital_signs",
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
 ];
@@ -650,6 +666,29 @@ export const ROUTE_TASK_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_attempts_route_task", "cp_attempts ((value #>> '{routeTaskId}'))"),
   onlineIndex("cp_leases_route_task", "cp_leases ((value #>> '{routeTaskId}'))"),
 ];
+
+/* ------------------------------------------------------------ version 25: vital signs */
+
+/** Version 25: the hourly vital signs row the runner upserts (`vital-signs.ts` VITAL_SIGNS_UPSERT). */
+export const VITAL_SIGNS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_vital_signs (
+     hour                  timestamptz PRIMARY KEY,
+     facts_live            integer,
+     facts_confirmed       integer,
+     facts_sampled         integer,
+     spend_usd             numeric,
+     unpriced_charges      integer,
+     cost_per_fact_usd     numeric,
+     neon_bytes_read       bigint,
+     neon_bytes_by_caller  jsonb,
+     rounds_finished       integer,
+     rounds_killed         integer,
+     rounds_deferred       integer,
+     paid_jobs_ended_empty integer,
+     paid_jobs_ended       integer,
+     neon_project_bytes    bigint,
+     release_sha           text,
+     written_at            timestamptz NOT NULL
+   );`;
 
 /* ------------------------------------------------------------ version 24: spend holds */
 
@@ -1103,6 +1142,8 @@ END $$;`,
   SPEND_HOLDS_INDEXES_DDL,
   ADMIT_SPEND_HOLD_FUNCTION_DDL,
   SPEND_HOLDS_MOVE_DDL,
+  // Version 25: the hourly vital signs row.
+  VITAL_SIGNS_TABLE_DDL,
 ];
 
 /**

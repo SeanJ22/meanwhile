@@ -38,6 +38,9 @@ export function readsAsSpokenSentence(quote: string): boolean {
   if (!/^[“"'A-Z0-9]/.test(text) || !/[.!?][”"')]*$/.test(text)) return false;
   if (TITLE_ABBREVIATION_END.test(text.replace(/[”"')]+$/, ""))) return false;
   if (PAGE_FURNITURE.test(text) || MONTH_DATE.test(text)) return false;
+  // A signature line, a trailing ellipsis or a quotation that closes before the run ends means page text was glued
+  // onto the sentence (CA-12, live: a quote plus "—Name" plus the next headline).
+  if (/[”"]\s*[—–]\s*\S/.test(text) || /…|\.\.\./.test(text) || /”\s+\S/.test(text)) return false;
   // A headline capitalises nearly every word; a sentence does not.
   const capitalised = words.filter((w) => /^[“"'(]?[A-Z]/.test(w)).length;
   if (capitalised / words.length > 0.6) return false;
@@ -51,18 +54,19 @@ export interface OwnWordsPassage {
 }
 
 /** Clean own-page quotations (the same quote on the same page, captured twice, is one), and how many passage records were not clean. */
-export function ownWordsPassages(records: readonly EvidenceRecord[], subjectId: string): { passages: OwnWordsPassage[]; unclean: number } {
+export function ownWordsPassages(records: readonly EvidenceRecord[], subjectId: string): { passages: OwnWordsPassage[]; unclean: number; garbled: number } {
   const passages: OwnWordsPassage[] = [];
   let unclean = 0;
+  let garbled = 0;
   for (const record of records) {
     if (record.kind !== "SOURCE_PASSAGE") continue;
     const quote = record.subjectId === subjectId ? OWN_PAGE.exec(record.text)?.[1]?.trim() : undefined;
     if (!quote || !record.sourceUrl || !record.retrievedAt || !formatDateLong(record.retrievedAt.slice(0, 10))) { unclean += 1; continue; }
-    if (!readsAsSpokenSentence(quote)) { unclean += 1; continue; }
+    if (!readsAsSpokenSentence(quote)) { unclean += 1; garbled += 1; continue; }
     if (passages.some((p) => p.quote === quote && p.url === record.sourceUrl)) continue;
     passages.push({ quote, url: record.sourceUrl, retrievedAt: record.retrievedAt });
   }
-  return { passages, unclean };
+  return { passages, unclean, garbled };
 }
 
 export function composeOwnWordsAnswer(input: {
@@ -72,10 +76,10 @@ export function composeOwnWordsAnswer(input: {
 }): { answer: string; citedUrls: string[] } | null {
   const { subject } = input;
   if (!subject || subject.kind !== "PERSON" || !asksForPersonalStance(input.question)) return null;
-  const { passages, unclean } = ownWordsPassages(input.records, subject.id);
-  // Only clean own-page sentences are quoted; other records in the pack are never claimed as the person's words.
-  void unclean;
-  if (passages.length === 0) return null;
+  const { passages, garbled } = ownWordsPassages(input.records, subject.id);
+  // A pack that holds a passage from their own page that is glued page text goes to the existing path: a clean
+  // sentence beside it is not trusted to be the whole picture. Records that are not own-page quotations are ignored.
+  if (passages.length === 0 || garbled > 0) return null;
   const shown = passages.slice(0, MAX_PASSAGES);
   const lines = shown.map((p) =>
     `On ${formatDateLong(p.retrievedAt.slice(0, 10))}, we read this on a page of theirs: “${p.quote}”`);

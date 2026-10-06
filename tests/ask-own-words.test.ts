@@ -47,6 +47,7 @@ test("a press-list headline with page furniture is never quoted as a person's wo
   const headline = passage({ id: "page:3", text: 'Searching a held official page linked to Casey Example for water found this passage: "Statement on Newly Announced Federal Proposal for Colorado River Water Cuts July 31, 2026 Read More Press Release Rep.". Latest captured version. Read 2026-08-20T00:00:00.000Z.' });
   assert.equal(composeOwnWordsAnswer({ subject: person, question: "What has Casey Example said about water?", records: [headline] }), null);
   assert.equal(readsAsSpokenSentence("We must protect our water supply for every family in this district."), true);
+  assert.equal(readsAsSpokenSentence("As Governor, my loyalty will be to the people of Arizona, not to special interests or big donors.” —Teri Ann Hourihan My Heart is For Arizona I rejected the No Labels Party endorsement and every other offer."), false);
   assert.equal(readsAsSpokenSentence("Water Policy Update From Our Office Today."), false);
 });
 
@@ -63,10 +64,10 @@ test("real held passages compose to the exact quotation Positions returns", () =
     const { records } = statementEvidenceFor(subject, question, [snapshot.subjectId]);
     if (!records.length) continue;
     // Held pages carry headline and menu runs; only a sentence is quoted, and what is quoted is exactly what Positions returns.
-    const { passages } = ownWordsPassages(records, subject.id);
+    const { passages, garbled } = ownWordsPassages(records, subject.id);
     for (const p of passages) assert.ok(readsAsSpokenSentence(p.quote), p.quote);
     const out = composeOwnWordsAnswer({ subject, question, records });
-    if (!passages.length) { assert.equal(out, null, snapshot.subjectId); continue; }
+    if (!passages.length || garbled > 0) { assert.equal(out, null, snapshot.subjectId); continue; }
     assert.ok(out, snapshot.subjectId);
     assert.ok(out.citedUrls.length > 0);
     if (++tested >= 25) break;

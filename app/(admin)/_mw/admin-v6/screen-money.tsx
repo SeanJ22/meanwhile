@@ -7,6 +7,7 @@
  */
 import { useMemo, useState } from "react";
 
+import { plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
 
 import { useV6 } from "./context.tsx";
@@ -91,6 +92,12 @@ export function MoneyScreen() {
             <th scope="row">{r.vendor}<Technical lines={[r.detail]}/></th><td>{money(r.todayUsd)}{r.todayPeriodStart&&r.todayPeriodEnd&&<div className={s.small}>Provider day: {mst(r.todayPeriodStart)} to {mst(r.todayPeriodEnd)}</div>}{r.todayBytes!==null&&<div className={s.small}>{gigabytes(r.todayBytes)} transferred</div>}</td><td>{money(r.dailyLimitUsd)}</td><td>{money(r.monthUsd)}{r.monthBytes!==null&&<div className={s.small}>{gigabytes(r.monthBytes)} transferred</div>}</td><td>{money(r.monthlyLimitUsd)}</td>
           </tr>)}</tbody>
         </table></div>
+      </Card>
+
+      <Card title="Database transfer by project and day">
+        {spendData?.neonProjects ? <div className={s.tableWrap}><table className={s.table}><thead><tr><th>Project</th><th>Day (Eastern)</th><th>Sent and received</th><th>Why it rose</th></tr></thead><tbody>
+          {spendData.neonProjects.map(r=><tr key={`${r.project}:${r.day}`}><th scope="row">{r.project==="control-plane"?"Control plane":"We the People"}</th><td>{dayWords(r.day)}</td><td>{gigabytes(r.requestBytes+r.responseBytes)}</td><td>{r.cause===null?DASH:plainWords(r.cause)}{r.cause!==null&&<Technical lines={[r.cause]}/>}</td></tr>)}
+        </tbody></table></div> : <><p className={s.p}>{DASH}</p><Technical lines={["The runner has not published measured daily transfer and cause attribution by database project."]}/></>}
       </Card>
 
       <Card title="Summary" aside={<span className={s.meta}>{v.data.spend.data?.readAt ? `Read ${mst(v.data.spend.data.readAt)}` : DASH}</span>}>

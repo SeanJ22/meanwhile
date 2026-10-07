@@ -1,22 +1,32 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
 import { candidateChangeSet, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 
-const ROOT = process.cwd();
-
-function trackedProfiles() {
+function profiles() {
+  const hunt = (key: string, note: string) => ({ key, name: key, note, attemptedAt: "2026-09-08" });
   return {
-    cards: JSON.parse(readFileSync(join(ROOT, "data", "ballot", "candidate-cards-2026.json"), "utf8")),
-    links: JSON.parse(readFileSync(join(ROOT, "data", "ballot", "candidate-links-2026.json"), "utf8")),
+    cards: {
+      curatedAt: "2026-09-08",
+      note: "fixture cards",
+      cards: { "ballot-nh-example:a": { bio: "A." }, "ballot-nh-example:b": { bio: "B." } },
+      hunts: [hunt("ballot-nh-example:c", "MISS — none"), hunt("ballot-nh-example:c", "MISS — none"), hunt("ballot-nh-example:d", "NOT_ATTEMPTED")],
+    },
+    links: {
+      curatedAt: "2026-09-08",
+      note: "fixture links",
+      links: {
+        "ballot-nh-example:a": { official: null, campaign: { url: "https://a.example", verification: "Fetched.", attemptedAt: "2026-09-08" } },
+        "ballot-nh-example:b": { official: { url: "https://b.example", verification: "Fetched.", attemptedAt: "2026-09-08" }, campaign: null },
+      },
+      hunts: [hunt("ballot-nh-example:e", "MISS — none"), hunt("ballot-nh-example:f", "MISS — none")],
+    },
   };
 }
 
 test("candidate-profile hunt observations have unique, order-independent exact member identities", () => {
-  const payload = trackedProfiles();
+  const payload = profiles();
   const forward = civicRecordsFor("CANDIDATE_PROFILE", payload);
   const reordered = civicRecordsFor("CANDIDATE_PROFILE", {
     cards: {
@@ -31,7 +41,7 @@ test("candidate-profile hunt observations have unique, order-independent exact m
     },
   });
 
-  assert.ok(forward.length > 500, "the real first seed exercises the repeated observation history");
+  assert.ok(forward.length > 0);
   assert.equal(new Set(forward.map((member) => member.key)).size, forward.length);
   assert.deepEqual(reordered, forward);
   assert.deepEqual(

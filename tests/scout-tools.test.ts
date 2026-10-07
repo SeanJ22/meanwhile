@@ -41,7 +41,7 @@ import { evidenceProjection } from "../lib/control-plane/workers/evidence-projec
  * the exact refusal. A positive control proves each detector can fail.
  *
  * robots.txt is READ FIRST AND RECORDED, never a refusal of a public page
- * (owner decision 2026-09-25, ROBOTS_BLOCKS_ACQUISITION = false): the seeded
+ * (ROBOTS_BLOCKS_ACQUISITION = false): the seeded
  * robots cases below assert the document is read and vaulted, the verdict
  * travels on the rung and the artifact, and the page GET happens. An access
  * control (a 403, a bot challenge) is a WALL: vaulted DIAGNOSTIC, never shown,
@@ -433,7 +433,7 @@ test("the toolkit exposes exactly the research tools with their required locator
   }
 });
 
-/* ============================================= the search tool (2026-09-19) */
+/* ============================================= the search tool */
 
 const fakeSearch = (hits: { url: string; title: string; provider: "brave" | "exa" }[], extra: Partial<Awaited<ReturnType<ScoutSearch>>> = {}): ScoutSearch =>
   async () => ({ hits, requestCount: 2, bytesFetched: 1234, providersUsed: ["brave", "exa"], errors: [], ...extra });
@@ -547,7 +547,7 @@ test("POSITIVE CONTROL for (a): with an accepting vault the same body DOES reach
   assert.ok(r.forModel.includes(pagePut.artifact.id), "the envelope names the artifact");
 });
 
-/* ============== SEEDED (b): DISALLOWED is RECORDED, never a refusal (owner decision 2026-09-25) */
+/* ============== SEEDED (b): DISALLOWED is RECORDED, never a refusal */
 
 test("SEEDED (b): a DISALLOWED path is read, not refused — robots.txt is read FIRST and vaulted, the verdict is recorded on the rung and the artifact, and the GET succeeds", async () => {
   const { open, seen } = fakeTransport({

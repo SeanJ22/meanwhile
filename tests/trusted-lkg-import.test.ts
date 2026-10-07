@@ -568,7 +568,6 @@ test("retired trusted-LKG doors refuse new imports while retained history remain
     await assert.rejects(processRoutineCandidate(new MemoryRoutineDataStore(), malformed, FIRST), /TRUSTED_LKG_ADMISSION_RETIRED/);
   }
 
-
   const { store, outcome } = retainedHistoricalLkg();
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.equal(outcome.promoted?.versionId, outcome.candidate.candidate.id);

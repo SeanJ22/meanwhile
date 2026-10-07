@@ -168,7 +168,7 @@ export function workItemStateAfterReopening(
     why: wasTerminal
       ? `${from} was earned under method version ${reopening.conclusion.earnedAtVersion}; ` +
         `${reopening.route.id} entered project knowledge at v${reopening.route.learnedAtVersion} and ` +
-        "applies here, so the finding no longer covers every eligible avenue"
+        "applies here, so the finding no longer covers every eligible avenue (RULING 179)"
       : `still open; ${reopening.route.id} adds an avenue that was not available when the ` +
         `${reopening.conclusion.kind} was earned at v${reopening.conclusion.earnedAtVersion}`,
   };

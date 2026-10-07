@@ -6,32 +6,17 @@ import { relative } from "node:path";
 import { ROOT, sourceFilesUnder } from "./read-code.ts";
 
 /**
- * **THE `WGH-22` CLASS, SWEPT OVER THE WHOLE TREE.** (2026-08-31.)
+ * Every store subscriber in the tree hears its store. Two shapes are refused:
  *
- * `WGH-22` was ONE store that moved without telling its subscribers, and
- * `tests/session-address-publish.test.ts` holds that instance and the
- * orphan-listener-set half of the class. This file is the rest of the class,
- * and it exists because the audit that followed found two more shapes the
- * orphan sweep cannot see:
+ * 1. **An INERT SUBSCRIBE.** A `useSyncExternalStore` reader of a moving store
+ *    handed a no-op subscribe cannot hear the same-tab event OR the cross-tab
+ *    `storage` event.
+ * 2. **THE PUBLISH INSIDE THE `try`.** A same-tab change event dispatched in the
+ *    same `try` as `setItem` is skipped when the write is refused.
  *
- * 1. **An INERT SUBSCRIBE.** `components/reactions/reaction-control.tsx` read
- *    `wtp.reactions` through `useSyncExternalStore` and handed it a local
- *    `emptySubscribe = () => () => {}`. The store has a publisher and two other
- *    readers subscribe to it; this one — the store's primary reader — could not
- *    hear the same-tab event OR the cross-tab `storage` event. There is no
- *    orphan set to find, because there is no set at all.
- * 2. **THE PUBLISH INSIDE THE `try`.** `lib/ballot/picks.ts` dispatched its
- *    same-tab change event on the line after `setItem`, in the same `try`, so a
- *    refused write skipped the announcement with it.
- *
- * ## Why a source sweep and not a render test
- *
- * A render test proves one component notices one change. The defect is that a
- * surface NOBODY THOUGHT ABOUT is the one left stale, so what has to be checked
- * is every subscriber in the tree — including the next one, written by somebody
- * who never read this file. Both assertions below state a denominator and fail
- * if the denominator collapses, because a sweep that looked at nothing reports
- * green.
+ * A source sweep, not a render test: the surface left stale is the one nobody
+ * thought about. Both assertions state a denominator and fail if it collapses,
+ * because a sweep that looked at nothing reports green.
  */
 
 /** The shipped client graph. `scripts/` drives browsers; `tests/` stubs them. */
@@ -108,7 +93,7 @@ test("no browser-storage write publishes from inside its own try block", () => {
    * The ordering defect, stated as a rule about text: a `setItem`/`removeItem`
    * and a publication in the SAME `try` means a refused store silences the
    * announcement. `commitStorageWrite` in `lib/state/subscribe-to-storage.ts`
-   * owns the ordering now, and this is what stops a call site taking it back.
+   * owns the ordering.
    *
    * Blocks are cut at the `try {` and matched to their closing brace by depth
    * rather than by a regex, because a regex cannot count braces and would

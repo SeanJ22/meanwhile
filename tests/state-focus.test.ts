@@ -18,13 +18,9 @@ import {
 import { DISTRICT_TYPES, DISTRICT_LAYERS } from "../lib/map/districts.ts";
 
 /**
- * The state extrusion and the per-state map (g4 items 1, 2 and 3).
- *
- * These are the parts of those items that are DECIDABLE without a browser.
- * The pixels are the job of `pnpm measure:extrusion`, which subtracts the
- * effect from its own frame and reports gradients and lobe positions; this
- * file holds the rules underneath it — which state is raised, what gets
- * fetched, and the geometry that keeps the silhouette from sawing.
+ * The state extrusion and the per-state map: the rules decidable without a
+ * browser — which state is raised, what gets fetched, and the geometry that
+ * keeps the silhouette from sawing. The pixels are `pnpm measure:extrusion`'s job.
  */
 
 /** A square state and a triangular one, in the shape the real file ships. */
@@ -73,7 +69,6 @@ const OUTLINES: StateOutlines = {
   ],
 };
 
-/* ---------------------------------------------- item 1: whose mask is it --- */
 
 test("a point resolves to the state it is actually in", () => {
   assert.equal(stateOcdIdAt(OUTLINES, 0, 0), "ocd-division/country:us/state:az");
@@ -82,19 +77,13 @@ test("a point resolves to the state it is actually in", () => {
 
 test("a point in no covered state resolves to NULL, never to the last one", () => {
   /*
-   * The whole of g4 item 1 in one assertion.
-   *
-   * The shipped `activateAt` read this as "if I cannot identify a state,
-   * change nothing", so an unresolvable point left the previous state raised
-   * and the reader looked at Arizona through New Hampshire's mask. A null
-   * here has to stay a null all the way to the map: no state raised, and
-   * nothing muted.
+   * An unresolvable point raises no state and mutes nothing: a null stays a
+   * null all the way to the map.
    */
   assert.equal(stateOcdIdAt(OUTLINES, 0, 200), null);
   assert.equal(stateOcdIdAt(null, 0, 0), null);
 });
 
-/* --------------------------------------- item 3: only the active state --- */
 
 test("the state code comes off the OCD-ID, never off a name string", () => {
   assert.equal(stateAbbrFromOcdId("ocd-division/country:us/state:az"), "AZ");
@@ -119,7 +108,6 @@ test("the layer filter pins a layer to one state, and reads back", () => {
   assert.equal(filterStateAbbr(undefined), null);
 });
 
-/* ------------------------------------------------ item 2: the geometry --- */
 
 test("simplification drops collinear noise and keeps the silhouette", () => {
   // A straight run of points with one real corner in it.
@@ -166,10 +154,8 @@ test("the rise scales with zoom and never reaches zero", () => {
   assert.ok(near.blurPx > far.blurPx);
 
   /*
-   * The rule, as an assertion: the effect NEVER releases. e's 6b2
-   * surrendered focus on zoom-out and g4 retired that rule, so a spec that
-   * interpolated to zero would be the release arriving through the back door
-   * — invisible in review, because the code would still say it draws.
+   * The effect NEVER releases: a spec that interpolated to zero would be a
+   * release arriving through the back door.
    */
   for (const zoom of [0, 1, 2, 3, 4, 6, 8, 10, 14, 18]) {
     const spec = extrusionSpecForZoom(zoom);
@@ -181,11 +167,8 @@ test("the rise scales with zoom and never reaches zero", () => {
 
 test("the offset stays comparable to the blur at every zoom", () => {
   /*
-   * The rejected build's actual arithmetic: two opposed strokes 4 px apart
-   * and 7 px wide overlapped over most of their width and composited to the
-   * grey band that was rejected. The same thing happens to two silhouettes
-   * whose offset is small against their blur, so the ratio is pinned here
-   * rather than left to whoever next retunes the look.
+   * Two silhouettes whose offset is small against their blur composite to a
+   * grey band, so the ratio is pinned rather than left to the next retune.
    */
   for (const zoom of [1, 4, 7, 10, 16]) {
     const spec = extrusionSpecForZoom(zoom);
@@ -200,11 +183,8 @@ test("the offset stays comparable to the blur at every zoom", () => {
 
 test("the light is brighter than the shade on a light ground", () => {
   /*
-   * Measured, then pinned. A white silhouette at half opacity over a pale
-   * basemap is almost invisible while the same black one is not, so one pair
-   * of alphas for both themes produced a rim and no light in light mode —
-   * `pnpm measure:extrusion` failed the one-light-source test at both zooms
-   * in light and passed both in dark.
+   * A white silhouette at half opacity over a pale basemap is almost invisible
+   * while the same black one is not, so the two themes carry their own alphas.
    */
   const light = riseAlphasFor("light");
   const dark = riseAlphasFor("dark");
@@ -219,14 +199,13 @@ test("the light is brighter than the shade on a light ground", () => {
   }
 });
 
-/* ------------------------------------------- the viewport clip (g5 #1) --- */
 
 /**
- * The defect these pin, stated once: the scrim's `clip-path` was fed the
- * active state's rings at full projected extent, which at city zoom is tens
+ * The scrim's `clip-path` must not be fed the active state's rings at full
+ * projected extent, which at city zoom is tens
  * of thousands of pixels across. Chromium DROPS a clip that large instead of
  * applying it, and a dropped clip on a `backdrop-filter` scrim mutes the
- * whole map — the reader standing inside Arizona saw no crisp pixel anywhere.
+ * whole map.
  *
  * Cutting each ring to the filter region fixes it, and the two cases that
  * look identical in the code and opposite on screen are the ones worth
@@ -251,7 +230,7 @@ const bboxOf = (points: readonly ScreenPoint[]) => {
 };
 
 test("a ring far larger than the viewport comes back no larger than the box", () => {
-  // Arizona at z11, near enough: roughly 16,800 x 20,000 CSS pixels.
+  // A large state at city zoom, near enough: roughly 16,800 x 20,000 CSS pixels.
   const huge: ScreenPoint[] = [
     { x: -10869, y: -16547 },
     { x: 5940, y: -16547 },
@@ -345,13 +324,9 @@ test("the clip runs before simplification and leaves a ring the simplifier can h
 
 test("the rise is capped by the size of the state it is marking", () => {
   /*
-   * Found by pnpm measure:focus, not by eye: at 03255 and continental zoom in
-   * LIGHT theme, the state's own middle moved 4.63 luminance units against the
-   * effect-disabled frame. New Hampshire is about 25 screen pixels across
-   * there and the FAR spec feathers over 12 from each side, so the two
-   * feathers met in the middle and the mask never reached full strength
-   * anywhere inside the state — the mute bled into the one place the effect
-   * exists to keep clear.
+   * A small state is a few screen pixels across at continental zoom; feathers
+   * from each side must not meet in the middle and keep the mask from full
+   * strength anywhere inside the state.
    */
   const far = extrusionSpecForZoom(4);
   const tiny = capSpecToSpan(far, 25);
@@ -369,8 +344,7 @@ test("the rise is capped by the size of the state it is marking", () => {
     assert.ok(capped.blurPx > 0, `blur vanished at span ${span}`);
   }
 
-  // A state larger than its own rise is untouched: Arizona at any zoom, and
-  // anything filling the viewport.
+  // A state larger than its own rise is untouched, as is anything filling the viewport.
   assert.deepEqual(capSpecToSpan(far, 4000), far);
   assert.deepEqual(capSpecToSpan(far, Number.POSITIVE_INFINITY), far);
   // No shape on screen at all leaves the spec alone rather than collapsing it.

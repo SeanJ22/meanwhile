@@ -127,7 +127,7 @@ function recordedPortal(options: {
       const status = options.documents?.[id];
       if (status !== undefined) return new Response("refused", { status });
       const bytes = options.bytes?.[id] ?? new Uint8Array(readFileSync(`${DIR}/minutes-${id}.pdf`));
-      // Mesa's portal answers HEAD with the length and type and no ETag or Last-Modified (measured 2026-09-25).
+      // Mesa's portal answers HEAD with the length and type and no ETag or Last-Modified.
       if (method === "HEAD") {
         if (options.headStatus) return new Response(null, { status: options.headStatus });
         return new Response(null, { status: 200, headers: { "content-type": "application/pdf", "content-length": String(bytes.byteLength) } });

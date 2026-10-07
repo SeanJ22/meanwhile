@@ -1,13 +1,5 @@
 /**
- * **THE CANONICAL FRESHNESS LIFECYCLE.** (Session B resume, W3.A/B/C.)
- *
- * Every test here is written against a defect that was live on `main` at
- * 68a70354 and that the existing suite could not see, because the existing
- * suite's executor stub returned `{ ok: true }` — which the old seam read as a
- * completed walk. A suite whose double cannot express "I did nothing" cannot
- * fail a scheduler that treats doing nothing as success.
- *
- * The four the audit found, restated as things that must now be false:
+ * Each of these must be false:
  *
  * ```
  *   a no-op executor counts as WORKED
@@ -15,12 +7,6 @@
  *   a WORKED result exists with no Attempt and no disposition
  *   two occurrences of one obligation share a RouteTask
  * ```
- *
- * These are unit-level. The LIVE proofs — two-process contention, a real
- * `process.exit` kill, concurrent append positions, cross-process debt
- * inheritance, a dump/wipe/restore — are preserved in the immutable cutover
- * evidence. The destructive live proof executable was retired after cutover;
- * none of those claims can be performed honestly inside one process.
  */
 
 import assert from "node:assert/strict";
@@ -189,8 +175,6 @@ test("a future executor end cannot put a completed disposition or charge ahead o
   assert.equal((await repos.costs.readAll())[0]?.recordedAt,at(45000));
 });
 
-/* ==================================================== the no-op executor === */
-
 test("SEEDED W3.A: a no-op executor is SIMULATED — never WORKED, and it discharges nothing", async () => {
   const { repos, task } = await fixture();
   const result = await dispatchOne(repos, {
@@ -226,8 +210,6 @@ test("SEEDED W3.A: a no-op executor is SIMULATED — never WORKED, and it discha
   assert.equal(settled.value.state, "RECLAIMABLE");
 });
 
-/* ================================================== WORKED means something === */
-
 test("W3.A: a WORKED result carries an Attempt, a committed disposition and a released lease", async () => {
   const { repos, task } = await fixture();
   const result = await dispatchOne(repos, {
@@ -245,11 +227,6 @@ test("W3.A: a WORKED result carries an Attempt, a committed disposition and a re
   assert.equal(result.disposition, "WALKED_NO_YIELD");
   assert.ok(dischargesObligation(result));
 
-  /*
-   * The four things the old dispatchOne never did. Asserted against the STORE
-   * rather than against the returned object, because the returned object is
-   * what the old version got right.
-   */
   assert.ok(result.attemptId, "an Attempt was opened");
   const attempts = await attemptsForRouteTask(repos, task.id);
   assert.equal(attempts.length, 1);
@@ -265,8 +242,6 @@ test("W3.A: a WORKED result carries an Attempt, a committed disposition and a re
   const commits = await repos.dispositions.read(task.id);
   assert.equal(commits.length, 1, "and the disposition is in the replayable log");
 });
-
-/* ============================================ a wall is not a fresh reading === */
 
 test("SEEDED W3.A: a BLOCKED_CURRENTLY disposition closes the route and discharges NOTHING", async () => {
   const { repos, task } = await fixture();
@@ -304,8 +279,6 @@ test("SEEDED W3.A: a BLOCKED_CURRENTLY disposition closes the route and discharg
   assert.ok(!DISCHARGING_DISPOSITIONS.includes("BLOCKED_CURRENTLY"));
 });
 
-/* ================================================= a thrown worker aborts === */
-
 test("W3.A: a worker that throws leaves NO disposition and the route stays owed", async () => {
   const { repos, task } = await fixture();
   const result = await dispatchOne(repos, {
@@ -331,8 +304,6 @@ test("W3.A: a worker that throws leaves NO disposition and the route stays owed"
   const settled = await repos.routeTasks.mustRead(task.id);
   assert.equal(settled.value.disposition, null, "our failure describes no government");
 });
-
-/* ================================================= recurrence, W3.B ======== */
 
 test("SEEDED W3.B: two occurrences of one obligation NEVER share a RouteTask", async () => {
   const repos = createMemoryRepositories();
@@ -390,8 +361,6 @@ test("W3.B: an occurrence that closes UNRESOLVED does not move the freshness anc
   );
 });
 
-/* ================================================= durable debt, W3.C ====== */
-
 test("SEEDED W3.C: freshness debt survives a store round-trip and keeps its ORIGINAL age", async () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-debt-"));
   const repos = await createFileRepositories(root);
@@ -406,9 +375,7 @@ test("SEEDED W3.C: freshness debt survives a store round-trip and keeps its ORIG
   await persistDebts(repos, [debt], NOW);
 
   /* A DIFFERENT repository handle over the same root, holding NO reference to
-     the first — the closest a single process gets to "a fresh process". The
-     genuine two-process proof is the preserved cutover P6 evidence, where one
-     OS process wrote the debt, exited, and another read it back. */
+     the first — the closest a single process gets to "a fresh process". */
   const reopened = await createFileRepositories(root);
   const loaded = await loadDebts(reopened);
   const mine = loaded.filter((d) => d.obligationId === "ob-1");
@@ -435,8 +402,6 @@ test("W3.C: a discharged obligation's debt is CLEARED rather than left to age fo
   const after = await loadDebts(repos);
   assert.equal(after[0].consecutiveFailures, 0, "a tombstone, so the recovery stays replayable");
 });
-
-/* ================================================= the http executor ======= */
 
 function response(over: Partial<FetchOutcome> = {}): FetchOutcome {
   return {

@@ -15,9 +15,12 @@ const NOT_DISTRICT_GEOMETRY: Record<string, string> = {
   "state-outlines.geojson":
     "a generalized state outline for the focus effect — never a governance boundary",
   "body-territories.geojson":
-    "BODY territories, not DIVISION boundaries — recorded plats belonging to governments " +
-    "the Census enumerates no division for. lib/registry/body-territory.ts point-tests them; " +
-    "they have no ocdId, so including them would make the division resolver answer with a body id.",
+    "BODY territories, not DIVISION boundaries (NH233) — recorded plats belonging to governments " +
+    "the Census enumerates no division for, such as the Rocking K South Community Facilities " +
+    "District. It is loaded and point-tested by lib/registry/body-territory.ts on the same sweep, " +
+    "and it is excluded HERE because every feature in this manifest is keyed by ocdId and these " +
+    "features deliberately have none. Including it would make the division resolver answer with a " +
+    "body id, which is the join confusion this session spent its day removing.",
 };
 
 /** `cd119.geojson` → `cd119`; `cd119-NN.geojson` → `cd119` + state FIPS `NN`. */

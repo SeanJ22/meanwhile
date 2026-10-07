@@ -3,12 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
-/**
- * 1a (2026-08-17): the welcome overlay's mission text is the author's,
- * verbatim. This test pins every sentence so an edit — however
- * well-intentioned — fails the build instead of shipping. The zip entry and
- * the reader's ZIP entry stays beneath it.
- */
+/** The welcome overlay's mission text, pinned sentence by sentence. */
 
 const MISSION_SENTENCES = [
   "Whether you care about politics or not, politics cares about you.",

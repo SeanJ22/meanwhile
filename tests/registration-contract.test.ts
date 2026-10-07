@@ -294,7 +294,7 @@ test("the reader composes a state's registration beside the reviewed registry it
   assert.equal(after.bodies.length, oh.bodies.length - 2);
 });
 
-test("a territory registers a body only where TIGER/Line records a governing status, never from geography (2026-09-25)", async () => {
+test("a territory registers a body only where TIGER/Line records a governing status, never from geography", async () => {
   const reviewed = reviewedFromFirstSeed();
   const target = registrationTarget("PR");
   const reference = loadRegistrationReference(ROOT, "PR");
@@ -361,7 +361,7 @@ test("Guam and the Virgin Islands register with the Census's own record of no lo
   assert.match(hollow.semantics.violations.join(" "), /lists no government in OH: a failed extraction, never a state with no government/);
 });
 
-test("every county subdivision's parent is its county, read off its GEOID, and no committed id moves (2026-09-25)", () => {
+test("every county subdivision's parent is its county, read off its GEOID, and no committed id moves", () => {
   const reviewed = reviewedFromFirstSeed();
   let cousubs = 0;
   for (const target of REGISTRATION_TARGETS) {

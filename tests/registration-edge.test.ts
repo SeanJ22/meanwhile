@@ -143,7 +143,7 @@ test("the reader composes a state's registration from the edge, and a state the 
   assert.equal(found[0]!.label, county.label);
 });
 
-test("a DC division and a Puerto Rico division reach their registrations on the reader (2026-09-25)", async () => {
+test("a DC division and a Puerto Rico division reach their registrations on the reader", async () => {
   await installRegistryRuntimeFirstSeeds();
   const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");
   const dc = model("DC");

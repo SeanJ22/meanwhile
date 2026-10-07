@@ -87,7 +87,7 @@ async function main(): Promise<void> {
   const mainSha = git("rev-parse", "origin/main");
   const observedAt = new Date().toISOString();
 
-  console.log("PRODUCTION INTEGRITY READING");
+  console.log("PRODUCTION INTEGRITY READING (NH273)");
   console.log(`  about commit   ${deployedSha ?? "UNKNOWN"}`);
   console.log(`  origin/main    ${mainSha ?? "UNKNOWN"}`);
   console.log("  moment         post-deploy (both phases owed)");

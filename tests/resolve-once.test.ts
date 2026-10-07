@@ -139,7 +139,7 @@ test("one /api/meetings request runs exactly one point-in-polygon sweep", async 
     swept,
     1,
     `the request ran ${swept} point-in-polygon sweep(s) over the committed geometry.\n` +
-      "  Exactly one is the AUD-04 condition: the route resolves the point for its\n" +
+      "  Exactly one is the condition: the route resolves the point for its\n" +
       "  online-meeting filter and hands that same answer to coverageAt. Two means a\n" +
       "  caller stopped passing its resolved divisions and is paying for the identical\n" +
       "  sweep again; zero means this request answered without consulting the geometry\n" +
@@ -159,7 +159,7 @@ test("the counter can read two, so a one is a measurement and not a constant", (
   assert.equal(
     sweepsRun() - before,
     2,
-    "the pre-AUD-04 call shape no longer costs two sweeps — the counter is not measuring",
+    "the old call shape no longer costs two sweeps — the counter is not measuring",
   );
 
   const withPre = sweepsRun();

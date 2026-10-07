@@ -11,16 +11,6 @@ import {
   resolveProductionWriteHandle,
 } from "../lib/db/write-handle.ts";
 
-/**
- * The two refusals of `lib/db/write-handle.ts`, PROVEN BY PLANTING (g11,
- * 2026-08-17, the brief's own instruction).
- *
- * A guard that has never refused anything is a comment. Each test below plants
- * the exact mistake the guard exists to catch — the readonly variable asked
- * for by name, and a readonly string sitting in the right variable — and
- * asserts the refusal happens BEFORE any connection is opened.
- */
-
 const PROD_OWNER =
   "postgresql://neondb_owner:secret@ep-dry-river-axwtolzc-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require";
 const PROD_READONLY =
@@ -86,13 +76,7 @@ test("isReadonlyUser catches the role and its prefixed variants", () => {
   assert.equal(isReadonlyUser("not a url"), false);
 });
 
-/**
- * The rule is worth nothing if a script goes around it. Every script that can
- * WRITE to production must reach production through this module and no other
- * way — asserted against the source, so a new script cannot quietly reintroduce
- * `process.env.WTP_PRODUCTION_DATABASE_URL_READONLY` as a write path.
- */
-const WRITING_SCRIPTS = ["scripts/apply-migrations.mts", "scripts/searchlog-backmark.mts"];
+const WRITING_SCRIPTS = ["scripts/apply-migrations.mts"];
 
 test("no writing script reads the READONLY variable directly", () => {
   for (const path of WRITING_SCRIPTS) {

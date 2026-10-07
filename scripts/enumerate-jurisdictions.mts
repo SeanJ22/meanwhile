@@ -590,7 +590,7 @@ function build(plan: StatePlan): JurisdictionRegistry {
       "it may never be read as one. A government absent from every enumeration read here is absent from",
       "THIS FILE. That is a fact about this file and never a fact about the state.",
       "",
-      "A jurisdiction is enumerated so that it can be an OPEN OBLIGATION with a clock BEFORE",
+      "RULING 229: a jurisdiction is enumerated so that it can be an OPEN OBLIGATION with a clock BEFORE",
       "a reader needs it. Activating a ZIP inside one of these governments must be applicability work,",
       "never a fresh external hunt for a record the authority already owed.",
       "",

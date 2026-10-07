@@ -11,14 +11,8 @@ import {
 } from "../lib/map/spiderfy.ts";
 
 /**
- * **M19 — overlapping pins fan out.** 2026-08-17, option A: spiderfy.
- *
- * The defect, found 2026-08-12: two venues a block apart collide on screen at
- * metro zoom and the top one intercepts the clicks meant for the other. The
- * fix's whole claim is that after the fan, EVERY member of the group is
- * individually reachable — and "it looks about right" is exactly the standard
- * that lets a fan ship still overlapping, which is indistinguishable from no
- * fix at all. So the separation is asserted, at every group size.
+ * Overlapping pins fan out. After the fan EVERY member of the group is
+ * individually reachable, so the separation is asserted at every group size.
  */
 
 test("pins that do not overlap are not a group — a fan of one moves for no reason", () => {
@@ -174,7 +168,7 @@ test("a fanned pin says it moved, and not in a colour that already means somethi
 });
 
 /**
- * F01 9.3 (2026-08-19) — the fan has to READ as a spider.
+ * The fan has to READ as a spider.
  *
  * Without legs, a spidered pin just looks like it is moving. The halo the test above guards says a pin moved; it
  * cannot say where from, and without a visible origin the fan is

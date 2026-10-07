@@ -1,6 +1,6 @@
 /**
- * **THE SCOUT'S MODEL LADDER — CHEAPEST SUITABLE CLASS FIRST, THE FRONTIER
- * ONLY FOR A RECORDED REASON.** (MW-031, MW-033, MW-035, 2026-09-25.)
+ * The Scout's model ladder: cheapest suitable class first, the frontier only
+ * for a recorded reason.
  *
  * Offline: a fake transport scripted per model stands in for the provider and a
  * fake toolkit for the network. Nothing here reaches a model or a host.
@@ -252,7 +252,6 @@ test('a long Scout walks beyond the former turn, tool, token and wall limits unt
  }finally{Date.now=actualNow;}
 });
 
-/* --------------------------------------------------------------------- L1 */
 
 test("L1: acquisition starts with Haiku and omits unsupported effort and adaptive thinking", async () => {
   assert.equal(SCOUT_MODEL, HAIKU);
@@ -278,7 +277,6 @@ test("L1: acquisition starts with Haiku and omits unsupported effort and adaptiv
   assert.equal(result.escalatedFrom, null);
 });
 
-/* --------------------------------------------------------------------- L2 */
 
 test("Haiku then Sonnet then Opus records both justified escalations and all costs without repeating discovery", async () => {
   const transport = perModelTransport({
@@ -323,7 +321,6 @@ test("L2: a Sonnet attempt that produces an accepted typed result is the whole A
   assert.equal(outcome.costByModel, undefined, "one model ran: the Attempt's worker model is the whole charge, no split written");
 });
 
-/* --------------------------------------------------------------------- L3 */
 
 interface ReasonCase {
   readonly reason: ModelEscalationReason;
@@ -419,7 +416,7 @@ for (const c of REASON_CASES) {
     const opusUsd = turnUsd(OPUS, FRONTIER_FIRST) + (opusTurns - 1) * turnUsd(OPUS, FRONTIER_LATER);
     assert.ok(close(attempts[1].usd, opusUsd), "the frontier attempt priced at Opus 5.5's rate");
     assert.ok(close(result.usd, (attempts[0].usd ?? Number.NaN) + (attempts[1].usd ?? Number.NaN)), "usd is the combined cost of both attempts");
-    /* MW-031: the one charge goes to the ledger with each attempt's part, so cost-by-model attributes each to its own model. */
+    /* The one charge goes to the ledger with each attempt's part, so cost-by-model attributes each to its own model. */
     const split = outcome.costByModel ?? [];
     assert.deepEqual(split.map((s) => [s.model, s.requestCount]), [[SONNET, transport.requests.filter(r => r.model === SONNET).length], [OPUS, opusTurns]], "rejected requests count as sent even when they produced no billable completion");
     assert.ok(close(split[0].usd, attempts[0].usd ?? 0) && close(split[1].usd, opusUsd), "each part at its own model's rate");
@@ -432,7 +429,6 @@ for (const c of REASON_CASES) {
   });
 }
 
-/* --------------------------------------------------------------------- L4 */
 
 test("L4: a provider overload (HTTP 529) is not the model's failing and never escalates — a dearer model is not a retry", async () => {
   const reservation = recordingReservation();
@@ -447,7 +443,6 @@ test("L4: a provider overload (HTTP 529) is not the model's failing and never es
   assert.equal(result.modelClass, "sonnet");
 });
 
-/* --------------------------------------------------------------------- L5 */
 
 const LOOPING_SONNET = { [SONNET]: [[text("thinking")]] as readonly (readonly ContentBlock[])[], [OPUS]: [[text("never")]] as readonly (readonly ContentBlock[])[] };
 
@@ -521,7 +516,6 @@ test("L5 UNMEASURED_SPEND / NOT_RESERVED: each refusal is named, recorded, and s
   assert.equal(refusing.asked.length, 1);
 });
 
-/* --------------------------------------------------------------------- L6 */
 
 test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to the loop's first request — and is skipped by name when the prefix cannot be shown to cache", async () => {
   const plan = scoutPrewarmPlan({ model: SONNET, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
@@ -570,7 +564,6 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
   assert.doesNotMatch(skipped, /wrote/);
 });
 
-/* --------------------------------------------------------------------- L7 */
 
 test("L7: Opus 5.5 remains the maximum, a Fable is refused, and cheaper-first audit escalation needs a reason", async () => {
   const up = escalationTargetFor("scout-research-loop", "sonnet");

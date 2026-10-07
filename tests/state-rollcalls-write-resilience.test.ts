@@ -10,20 +10,9 @@ import { officialStateRollCallTargetByState } from "../lib/state-rollcalls/autho
 import type { RoutineDataStore } from "../lib/civic-data/store.ts";
 
 /**
- * Part 1 of building state roll calls for the largest state we will ever load:
- * NO uncaught crash on a write failure, for ANY state.
- *
- * Before this, New Hampshire's ~26 MiB roll-call candidate (419 rolls × 420
- * members = 131,199 positions) went to the durable store as one Neon HTTP
- * statement, which exceeds that driver's write limit. The transport error threw
- * in the promotion path — outside the acquisition try/catch — and the child died
- * with zero receipts, which the supervisor could only read as a process/protocol
- * failure with a bare Node stack. A runner that is alive and failing every cycle
- * looks healthier from a distance than one that is stopped.
- *
- * The persistence seam now catches any durable write/transport error and returns
- * an honest, source-neutral held failure. Making the largest state actually
- * promote is Part 2 (capacity); this is the safety net that must hold first.
+ * NO uncaught crash on a write failure, for ANY state: the persistence seam
+ * catches any durable write/transport error and returns an honest,
+ * source-neutral held failure.
  */
 
 const AZ = officialStateRollCallTargetByState("AZ")!;

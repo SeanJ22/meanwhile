@@ -1,4 +1,4 @@
-/** FE-27: speed comes from our own scheduled test visits; nothing about real readers' timing or errors is collected. */
+/** Speed comes from our own scheduled test visits; nothing about real readers' timing or errors is collected. */
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";

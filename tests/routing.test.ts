@@ -9,11 +9,6 @@ import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { resolveRouting } from "../lib/routing/resolve.ts";
 import { TOPIC_ROUTES } from "../lib/routing/topics.ts";
 
-/**
- * The routing knowledge base (6) — the refusals as tests, then the golden
- * cases against the real Tucson registry. Built before any UI, on purpose.
- */
-
 const TUCSON: [number, number] = [32.21696, -110.971];
 
 test("every route is cited and party appears nowhere in the map", () => {
@@ -39,20 +34,7 @@ test("an unmapped topic returns the honest refusal, never a guess", async () => 
   assert.equal(answer.steps.length, 0);
 });
 
-/**
- * The 85723 shape (item 2d, 2026-08-14 second session), pinned as a
- * fixture: "pothole in front of my house" at a zip OUTSIDE the curated
- * everyday map answered "Streets and roads" with "Tucson · Public
- * Housing Authority Board of Commissioners" — the PHA, a curated
- * GOVERNING body attached to place:tucson, swept into the
- * municipal-government answer by the class-based filter. The rule is
- * tie-or-zero REFUSES: a step names a division's OWN governing body
- * (the #governing / #board slot) or renders its honest gap — never the
- * nearest lookalike.
- */
 test("85723: no routed step ever names a body that isn't the division's own government", async () => {
-  // ZCTA internal point for 85723 — inside Tucson, outside the four
-  // curated everyday zips.
   const coverage = await coverageAt(32.18023, -110.96515, 1);
 
   // The division's own governments at this point — the only bodies any
@@ -66,13 +48,12 @@ test("85723: no routed step ever names a body that isn't the division's own gove
       )
       .map((b) => b.name ?? b.divisionLabel),
   );
-  // The PHA is attached to place:tucson and classed GOVERNING — the trap.
+  // The housing authority is attached to the city and classed GOVERNING — the trap.
   assert.ok(
     coverage.bodies.some((b) => b.name?.includes("Public Housing Authority")),
     "the fixture requires the PHA present at this point — if it moved, re-pin",
   );
 
-  // The reported shape verbatim: the pothole route.
   const pothole = resolveRouting("roads-local", coverage);
   assert.equal(pothole.kind, "ROUTED");
   for (const step of pothole.steps) {
@@ -88,8 +69,6 @@ test("85723: no routed step ever names a body that isn't the division's own gove
     }
   }
 
-  // The audit half: EVERY route at this uncovered zip obeys the same
-  // rule — no topic falls through to a lookalike body.
   for (const route of TOPIC_ROUTES) {
     const answer = resolveRouting(route.id, coverage);
     for (const step of answer.steps) {
@@ -104,10 +83,6 @@ test("85723: no routed step ever names a body that isn't the division's own gove
 });
 
 test("golden case: the stopped library, at Tucson", async () => {
-  // The golden question: "they stopped building the library down the road
-  // — who should I talk to?" The route must land on the city council's body
-  // (Tucson) and the county board (Pima — which sits as the Library
-  // District board, D19), each with its denominator.
   const coverage = await coverageAt(...TUCSON, 1);
   const answer = resolveRouting("libraries", coverage);
   assert.equal(answer.kind, "ROUTED");
@@ -122,20 +97,6 @@ test("golden case: the stopped library, at Tucson", async () => {
     countyStep.bodies.some((b) => b.label === "Pima"),
     `county step must name Pima, got ${JSON.stringify(countyStep.bodies)}`,
   );
-  /*
-   * **AMENDED 2026-08-24 (ASK-5), and the amendment is the point of the fix.**
-   *
-   * This asserted `cityStep.gap?.includes("who sits on this body")` on the
-   * comment *"Local rosters don't exist yet."* That was true the day it was
-   * written and stopped being true when the curated local rosters landed — so
-   * the guard had become a pin on the SIZE OF A GAP, which RULING 116 forbids
-   * precisely because it goes red on the day somebody closes it, and the
-   * cheapest way to green is to put the gap back.
-   *
-   * What is worth holding still is the INVARIANT: the half-gap fires when, and
-   * only when, no roster is sourced for the body the step names. Asserted in
-   * both directions below so neither half can be lost.
-   */
   for (const step of answer.steps) {
     const rostered = step.bodies.some(
       (b) => rosterHoldersForBody(b.body.bodyId).length > 0,
@@ -145,26 +106,6 @@ test("golden case: the stopped library, at Tucson", async () => {
         step.gap === null || !step.gap.includes("who sits on this body"),
         `a step naming a rostered body still claims nobody is sourced: ${JSON.stringify(step.bodies.map((b) => b.label))}`,
       );
-      /*
-       * **THE "SOMEBODY IS NAMED" HALF IS REMOVED HERE (2026-08-25, ASK-9 /
-       * ASK-10), DELIBERATELY AND WITH ITS REASON.**
-       *
-       * It asserted that a step naming a rostered body must name at least one
-       * PERSON. Ask no longer prints body rosters — Ask names
-       * bodies and the people live on the card — so an
-       * empty `people` beside a rostered body is now the CORRECT answer for a
-       * council, and for several school districts it is the required one.
-       *
-       * What the removal must not cost is the thing this guard exists for, so
-       * that half is not merely kept, it is kept BOTH WAYS above and below:
-       * a rostered body may never claim nobody is sourced, and an unrostered
-       * one must say which half is missing. The false-absence ASK-5 was
-       * opened over is still impossible; what is no longer asserted is a
-       * RENDER decision that has since been made the other way.
-       *
-       * RULING 62: this leaves the guard census in the same commit, so the
-       * removal is a diff rather than a silence.
-       */
     } else if (step.bodies.length > 0 && step.people.length === 0) {
       assert.ok(
         step.gap?.includes("who sits on this body"),
@@ -195,7 +136,6 @@ test("a state-law topic grounds on the actual state legislators", async () => {
   const answer = resolveRouting("state-law", coverage);
   assert.equal(answer.kind, "ROUTED");
   const [repStep, senStep] = answer.steps;
-  // 85701 sits in LD-20: two representatives, one senator, all sourced.
   assert.ok(repStep.people.length >= 2, `expected the LD-20 reps, got ${repStep.people.length}`);
   assert.ok(senStep.people.length >= 1);
   for (const person of [...repStep.people, ...senStep.people]) {
@@ -234,18 +174,6 @@ test("a thin area routes honestly: gaps stated, nothing guessed", async () => {
   assert.equal(answer.grounding.stepsWithSomeone, 0);
 });
 
-/* --------------------------------------------------------------------------
- * ASK-9 / ASK-10 (2026-08-25) — ASK NAMES BODIES, NOT THEIR MEMBERS.
- *
- * Capture `08-58-52` boxed six names at Tucson, and on `09-22-18` at
- * 07866 the answer named four school districts correctly and then printed ONE
- * of their rosters underneath — seven `@rocktwp.net` addresses standing in for
- * all four.
- *
- * The one named exception is the person who RUNS the body, and
- * only where there is exactly one body to run.
- * ------------------------------------------------------------------------ */
-
 const ROCKAWAY: [number, number] = [40.9187, -74.5143];
 
 test("ASK-9: one district names the superintendent and no board member", async () => {
@@ -257,8 +185,8 @@ test("ASK-9: one district names the superintendent and no board member", async (
   const bodies = answer.steps.flatMap((s) => s.bodies.map((b) => b.label));
   assert.ok(bodies.length > 0, "the answer must still name the district");
 
-  // Whoever runs it is named, described as running it rather than governing
-  // (RULING 118 — an appointed official never carries the govern verb).
+  // Whoever runs it is named, described as running it rather than governing:
+  // an appointed official never carries the govern verb.
   const roster = answer.steps
     .flatMap((s) => s.bodies)
     .flatMap((b) => rosterHoldersForBody(b.body.bodyId));

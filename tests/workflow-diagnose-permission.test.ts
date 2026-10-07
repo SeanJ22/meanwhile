@@ -1,41 +1,3 @@
-/**
- * **A JOB THAT DIAGNOSES ITSELF NEEDS PERMISSION TO READ ITSELF.**
- * (2026-08-28, found in intake tripwire run 33211710028.)
- *
- * ## The defect, measured
- *
- * `scripts/diagnose-failure.mts` is the last step of eight workflows: on the
- * failure path it reads the job's own Actions log and names the failure class,
- * so `Error: Process completed with exit code 1` is never the whole story.
- *
- * In run 33211710028 it printed this instead:
- *
- * ```
- * gh: Resource not accessible by integration (HTTP 403)
- * failed to get run: HTTP 403: Resource not accessible by integration
- *   (https://api.github.com/repos/SeanJ22/We-The-People/actions/runs/33211710028)
- * diagnose: CANNOT RUN — the run log could not be read
- * ```
- *
- * The workflow declared `permissions: contents: write` and nothing else.
- * **Declaring `permissions:` at all switches the token from the repository
- * default to EXACTLY what is listed** — so every scope not named becomes
- * `none`, `actions` included, and the Actions API refuses the read. The
- * diagnoser behaved correctly: it printed CANNOT RUN and exited 0 rather than
- * turning a red run into a differently-red one. It simply could never work.
- *
- * `job-watch.yml` already carried `actions: read` — it reads other workflows'
- * run history, so somebody hit this once and fixed the one workflow rather than
- * the class. This is the class.
- *
- * ## The rule
- *
- * Derived from what each workflow RUNS, not from a list (RULING 147). A
- * workflow added tomorrow that ends with `pnpm diagnose` is covered by
- * existing. Nothing here widens any other scope: `actions: read` is the minimum
- * the Actions API needs for `GET /actions/runs/{id}` and its logs.
- */
-
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -80,12 +42,7 @@ test("every workflow that runs `pnpm diagnose` grants actions: read", () => {
 });
 
 test("granting actions: read did not weaken anything else", () => {
-  /*
-   * The direction of the change, pinned. `permissions:` is exact — everything
-   * unlisted is `none` — so the failure mode of an edit here is a scope
-   * QUIETLY REMOVED, not one added. Every pusher must still declare
-   * `contents: write`; `build-check.yml` must still be read-only.
-   */
+  // `permissions:` is exact: every scope it does not list is `none`.
   for (const w of workflows()) {
     if (/push-main\.mjs/.test(w.text)) {
       assert.match(
@@ -98,20 +55,7 @@ test("granting actions: read did not weaken anything else", () => {
 
   const buildCheck = workflows().find((w) => w.name === "build-check.yml")!;
   const permissions = (parse(buildCheck.text) as { permissions?: Record<string, string> }).permissions;
-  /*
-   * `checks: read` joined this on 2026-09-07 (RULING 281). The tree-equivalence
-   * step asks what the required contexts reported at the candidate head, and
-   * that endpoint needs it — with `contents: read` alone GitHub answers 403,
-   * `scripts/certified-tree.mjs` reads that as CANNOT_TELL and takes the full
-   * proof. Safe, and permanently useless, because a token that cannot see a
-   * certification looks exactly like a head that did not qualify.
-   *
-   * THE ASSERTION STAYS EXACT, and that is the point of it. The property this
-   * guards is that `build-check.yml` stays READ-ONLY: it deploys nothing and
-   * pushes nothing, so no `write` scope may ever appear here. An exact map is
-   * what makes adding one a diff somebody has to defend rather than a line
-   * nobody notices.
-   */
+  // `checks: read` lets the tree-equivalence step read the required contexts at the candidate head.
   assert.deepEqual(
     permissions,
     // The final retry guard reads the current PR head/base/tier; no write scope.
@@ -124,7 +68,6 @@ test("granting actions: read did not weaken anything else", () => {
 });
 
 test("THE PLANT: the guard catches a diagnoser with no Actions read", () => {
-  // The defect exactly as run 33211710028 carried it.
   const planted = [
     "name: A daily job",
     "permissions:",

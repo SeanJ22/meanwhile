@@ -27,7 +27,7 @@ test("the starting value is the three §8.1 parts, with families from the overla
   assert.deepEqual(DEFAULT_MISSION_PARTS.families, SQUAD_START);
   assert.ok(validMissionParts(DEFAULT_MISSION_PARTS));
   assert.equal(settingDefinition(MISSION_PARTS_SETTING)?.control, "json");
-  // §8.1 families, and the ones the design leaves unassigned, start where the plan puts them.
+  // Checklist families, and the ones the design leaves unassigned, start where the plan puts them.
   const part = (family: string) => missionPartOf({ family });
   for (const family of ["GOV", "MTG", "DOC", "GEO", "REF", "FIN", "PAR"]) assert.equal(part(family), "governments-meetings", family);
   for (const family of ["OFF", "CAN", "CAM", "LEG", "EXE", "PRL"]) assert.equal(part(family), "people-money", family);

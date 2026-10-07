@@ -25,7 +25,7 @@ const GATES = [
     id: "lint",
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm lint",
-    why: "lint, which CI requires",
+    why: "the gate that was missing — it is why RO04 exists",
   },
   {
     id: "tsc",
@@ -37,7 +37,7 @@ const GATES = [
     id: "assert:browser",
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm run assert:browser",
-    why: "observe the step's product at the step",
+    why: "RULING 113 — observe the step's product at the step",
   },
   {
     id: "test",

@@ -156,7 +156,7 @@ test("a changed member re-promotes to a new version; unchanged votes confirm tha
   assert.equal(changed.candidate.state, "PROMOTED");
   assert.notEqual(changed.promoted?.versionId, first.promoted?.versionId);
 
-  // §0/§5/§7 and Sean's S6 instruction retire a new version for unchanged facts.
+  // Unchanged facts never mint a new version.
   const recheck = member("nh-general-court:1", [pos(1), pos(2)], "2026-09-15T12:20:00.000Z");
   const again = await processRegisteredFanOutCandidate(store, CONTRACT_ID, recheck, "2026-09-15T12:20:00.000Z");
   assert.equal(again.candidate.state, "PROMOTED");

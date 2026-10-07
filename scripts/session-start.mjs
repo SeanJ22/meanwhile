@@ -59,7 +59,8 @@ if (!hasOriginMain || !hasLocalMain) {
   } else if (behind > 0 && ahead === 0) {
     fail("main", `local main is ${behind} commit(s) behind origin/main`);
     notes.push(
-      "  Local main is stale. It holds nothing unique, so fast-forward it:",
+      "  Local main is stale — this is R07, and it is why the repo once opened",
+      "  looking empty. It holds nothing unique, so fast-forward it:",
       "",
       "    git merge --ff-only origin/main",
       "",

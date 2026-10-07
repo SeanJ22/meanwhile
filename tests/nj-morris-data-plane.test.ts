@@ -5,7 +5,6 @@ import { candidateContactCensus } from "../lib/ballot/candidate-contacts.ts";
 import { VALIDATION_CHECKS, sourceProjectionEvidence, type CandidateVersionRecord, type PromotedProjection, type ValidationReceipt } from "../lib/civic-data/types.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import {
-  ballotNjMorrisSource,
   readNjMorrisFiling,
   type NjMorrisReadModel,
 } from "../lib/sources/ballot-nj-morris/index.ts";
@@ -163,7 +162,7 @@ const READ_MODEL = {
     absences: [],
     removals: [],
   },
-  contacts: { contacts: [{ candidacyId: "candidacy:a", email: "a@example.test" }] },
+  contacts: { contacts: [{ candidacyId: "candidacy:a", email: "a@example.test", sourceUrl: PROVENANCE.sourceUrl, sourceOrg: PROVENANCE.sourceOrg, collectedAt: PROVENANCE.collectedAt }] },
 } as unknown as NjMorrisReadModel;
 
 test("an answered missing NJ pointer is NOT_RECORDED, never a bundled ballot", async () => {

@@ -81,7 +81,7 @@ test("an obligation with NO signal takes the daily default and SAYS so", () => {
   assert.match(row.basis, /DEFAULT and not a derivation/);
   const meeting = scheduleObligation(obligation({ recordClass: "meetings" }), NOW_MS);
   assert.ok(isScheduled(meeting));
-  assert.equal(meeting.cadenceHours, 12, "meeting sources follow §4 even without another signal");
+  assert.equal(meeting.cadenceHours, 12, "meeting sources keep their 12-hour cadence even without another signal");
 });
 
 test("a reader deadline places the check BEFORE it, not on it", () => {

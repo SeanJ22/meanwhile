@@ -4,26 +4,8 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 /**
- * The server/client boundary guard (g3 item 2, 2026-08-16).
- *
- * ## What shipped to production
- *
- * `/about-area?zip=…` answered **HTTP 500 at every zip**, and `?state=…` with
- * it, for as long as the shuffled-facts component had been live. The cause is
- * one line of React law: a Server Component may pass a Client Component only
- * SERIALIZABLE props, and a render prop is a function.
- *
- *     <ShuffledFacts facts={…}>{(fact) => <section>…</section>}</ShuffledFacts>
- *
- * React refuses that outright — "Functions are not valid as a child of Client
- * Components" — and in a Server Component the refusal is a 500 rather than a
- * warning. Nothing in the type system catches it: the prop's TypeScript type
- * (`(fact: AreaFact) => React.ReactNode`) is perfectly well formed. Nothing in
- * `pnpm build` catches it either; the page compiles and the error is thrown at
- * request time. It took a production probe to find, which is precisely the
- * class of defect a cheap static guard should own instead.
- *
- * ## What this asserts
+ * A Server Component may pass a Client Component only SERIALIZABLE props, and a
+ * function prop fails at request time (HTTP 500), not in the type system or the build.
  *
  * For every Client Component in the tree — a file carrying the `"use client"`
  * directive — no exported component declares a prop typed as a function.
@@ -37,8 +19,7 @@ import { join } from "node:path";
  * cannot be given up.
  *
  * A component that genuinely needs a caller-supplied render must take a
- * discriminated VALUE and switch on it, the way `ShuffledFacts` now carries
- * its own card markup.
+ * discriminated VALUE and switch on it.
  */
 
 const ROOTS = ["components", "app"];

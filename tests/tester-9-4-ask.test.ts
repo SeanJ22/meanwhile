@@ -6,23 +6,16 @@ import { tsImport } from "tsx/esm/api";
 import { decideNamedBody, applyNamedBodyDecision, type BodyConfirmation } from "../lib/ask/body-confirmation.ts";
 import { readAskAnswer, type AskAnswerPayload } from "../lib/ask/answer.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
-import { canonicalBodyIdentity, type CanonicalBodyIdentity } from "../lib/ask/body-identity.ts";
-import type { Meeting } from "../lib/sources/types.ts";
-import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
-import type { EvidenceRecord } from "../lib/ask/evidence.ts";
-import { synthesisPrompt } from "../lib/ask/synthesize.ts";
-import { classifyAgendaPublication } from "../lib/ask/agenda-publication.ts";
-import { nameAReaderCanSay } from "../lib/routing/named-entity.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 // The canonical native runner strips TypeScript but does not compile TSX.
 // Compile only these actual reader leaves through the existing tsx runtime.
-const { AskAnswerRecords } = await tsImport("../components/ask/answer-records.tsx", import.meta.url) as typeof import("../components/ask/answer-records.tsx");
 const { AskBodyConfirmation } = await tsImport("../components/ask/body-confirmation.tsx", import.meta.url) as typeof import("../components/ask/body-confirmation.tsx");
 
 // Offline actual handler, with no model, database, acquisition or signal writes.
 for (const key of ["ANTHROPIC_API_KEY", "DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
+await installRegistryRuntimeFirstSeeds();
 const { POST } = await import("../app/api/ask/grounded/route.ts");
 const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
-const { GET: agendaGET } = await import("../app/api/agenda/route.ts");
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district#board";
 const nearby = "ocd-division/country:us/state:az/school_district:sunnyside_unified_district";
 async function ask(question: string, confirmation?: BodyConfirmation): Promise<AskAnswerPayload> {

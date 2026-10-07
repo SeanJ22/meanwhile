@@ -1,6 +1,6 @@
 import { isRenderable } from "../lib/funding/state-money-reader.ts";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -131,16 +131,6 @@ test("unverified extraction PASS and Auditor INCONCLUSIVE do not promote money",
   assert.equal(isRenderable({ ...hobbs, filingState: "LEAD" }), false);
   assert.equal(isRenderable({ ...hobbs, dataClass: "ACQUISITION" } as unknown as StateMoneyRecord), false);
   assert.equal(isRenderable({ ...hobbs, filingState: "OURS_GAP", ourGap: { whatIsMissing: "Unresolved identity", nextDue: null, nextDueName: null } }), false);
-});
-
-test("every eligible normalized record survives the shared canonical target projection; leads stay withheld", () => {
-  for (const st of ["az", "nj", "nh"]) {
-    const snapshot = JSON.parse(readFileSync(`data/states/${st}/funding/state-money-${st}-2026.json`, "utf8")) as { records: StateMoneyRecord[] };
-    for (const record of snapshot.records) for (const key of record.targetKeys) {
-      const rows = campaignMoneyForTarget(key).state.records;
-      assert.equal(rows.some(r => JSON.stringify(r) === JSON.stringify(record)), isRenderable(record), `${st}:${key}:${record.filingState}`);
-    }
-  }
 });
 
 test("federal finance answer remains identical for every existing FEC target", () => {

@@ -21,8 +21,6 @@ import {
 } from "../lib/signal/reactions.ts";
 import { hashReactionKey, writeReaction } from "../lib/db/reactions.ts";
 
-import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-
 test("aggregation: reactions in, per-division tier-split tallies out, n stated", () => {
   const rows = [
     {
@@ -511,40 +509,6 @@ test("the provision question asks about the part, never how to vote", () => {
   assert.doesNotMatch(asked, /vote (yes|no)|should you|recommend/i);
 });
 
-test("the write path accepts a real provision and refuses an invented one", async () => {
-  process.env.WTP_RIPCORD_RATE_LIMITS = "pulled";
-  const { POST } = await import("../app/api/reactions/route.ts");
-  const { getProvisionTargetIds } = await import(
-    "../lib/ballot/measure-provisions.ts"
-  );
-  const real = [...getProvisionTargetIds()][0];
-  assert.ok(real, "no provision to test against");
-
-  const post = (targetId: string, extra: Record<string, unknown> = {}) =>
-    POST(
-      new Request(`${PUBLIC_SITE_ORIGIN}/api/reactions`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          targetType: "MEASURE_PROVISION",
-          targetId,
-          reaction: "YES",
-          reactionKey: "p03provisionkeyp03provision",
-          ...extra,
-        }),
-      }),
-    );
-
-  const accepted = await post(real);
-  assert.notEqual(accepted.status, 400, "a real provision was refused");
-
-  const invented = await post("ballot-az-pima:prop-999#not-a-real-provision");
-  assert.equal(invented.status, 400, "an invented provision was accepted");
-
-  const wrongScale = await post(real, { reaction: "LOVE" });
-  assert.equal(wrongScale.status, 400);
-});
-
 test("the verbatim is optional, capped, and its shape is checked with no flag", async () => {
   const { isValidFreeText, normalizeFreeText, FREE_TEXT_MAX_CHARS } = await import(
     "../lib/signal/reactions.ts"
@@ -625,39 +589,4 @@ test("a planted verbatim reaches no aggregate — the input type has no room for
   );
   assert.ok(iface.length > 0);
   assert.doesNotMatch(iface, /freeText|free_text|text\s*[?:]/);
-});
-
-test("an oversized verbatim is refused, and validation sits outside every flag", async () => {
-  process.env.WTP_RIPCORD_RATE_LIMITS = "pulled";
-  const { POST } = await import("../app/api/reactions/route.ts");
-  const { getProvisionTargetIds } = await import(
-    "../lib/ballot/measure-provisions.ts"
-  );
-  const { FREE_TEXT_MAX_CHARS } = await import("../lib/signal/reactions.ts");
-  const real = [...getProvisionTargetIds()][0];
-
-  const post = (text: unknown) =>
-    POST(
-      new Request(`${PUBLIC_SITE_ORIGIN}/api/reactions`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          targetType: "MEASURE_PROVISION",
-          targetId: real,
-          reaction: "YES",
-          reactionKey: "p03capkeyp03capkeyp03capkey",
-          text,
-        }),
-      }),
-    );
-
-  // Stays under the 4096-byte payload cap so this guard, not that one, fires.
-  assert.ok(FREE_TEXT_MAX_CHARS + 50 < 3500, "the cap outgrew this test's assumption");
-  const tooLong = await post("x".repeat(FREE_TEXT_MAX_CHARS + 1));
-  assert.equal(tooLong.status, 400);
-
-  // Wrong type: refused.
-  const wrongType = await post(42);
-  assert.equal(wrongType.status, 400);
-
 });

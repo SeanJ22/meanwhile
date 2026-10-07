@@ -53,13 +53,6 @@ import {
   type ValidationReceipt,
 } from "../lib/civic-data/types.ts";
 
-/*
- * The routine clock runs for every routine task on every 5-minute pass. It
- * once read whole rows: 52.7 MB of promoted payloads and candidates received
- * per pass against production (2026-09-22), about 15 GB/day of billed
- * transfer, to produce two timestamps. These guards keep it a due-ness check.
- */
-
 const ROOT = resolve(import.meta.dirname, "..");
 const HASH = "a".repeat(64);
 /** Anything that carries a promoted dataset; none of it may cross the wire for the clock. */
@@ -285,7 +278,7 @@ test("a MEETING clock reports its sitting starts, and the pointed success as its
   const receipt = { ...receiptFor(value), validatedAt: observedAt };
   await store.transition(value.id, "VALIDATED", observedAt, "persisted validation", receipt);
   // Before any promotion the store reports no sitting list; the runner reads
-  // that as never published and retries on the base cadence (R20).
+  // that as never published and retries on the base cadence.
   assert.equal("sittingStarts" in await store.clock(value.sourceId, value.recordClass, value.scope), false);
   await store.promote(value.id, receipt, "2026-09-08T12:01:00.000Z");
   assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), {

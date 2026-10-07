@@ -59,9 +59,13 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
   const divisions = new Set([...ocdIds, ...stateDivisionsOf(ocdIds)]);
   for (const ocdId of divisions) {
     try {
-      for (const seat of await seatHoldersForDivision(ocdId)) {
+      const held = await seatHoldersForDivision(ocdId);
+      for (const seat of held) {
         seats.set(seat.id, seat);
         at(seat).divisionIds.add(ocdId);
+      }
+      if (/\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
+        loaderFailures += 1;
       }
     } catch {
       loaderFailures += 1;

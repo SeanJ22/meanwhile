@@ -1,28 +1,3 @@
-/**
- * A WORKFLOW REPORTS EVERY FAILURE, NOT JUST THE FIRST.
- * (2026-08-26, the unblock-pushers session. RULING 164.)
- *
- * Three failures were once stacked in run order in this repo, each invisible
- * until the one before it was fixed. A workflow that reports only its first
- * failure makes the number of REMAINING defects unbounded: nobody can know how
- * many lie between the current failure and the end, so every fix is followed by
- * another round trip through CI to find out.
- *
- * It is the same family as every instrument defect this repo has named — a
- * mechanism reporting less than it knows.
- *
- * TWO CLASSES ARE GUARDED HERE, and the second is the general one:
- *
- *   1. Named independent steps carry a non-cancelling guard, so a failure in
- *      one does not hide the verdict of the others.
- *   2. **Any step marked `continue-on-error` must have its outcome READ.** That
- *      flag converts a failure into a silent pass — the step goes amber, the
- *      job goes green, and unless something downstream reads
- *      `steps.<id>.outcome`, the failure is swallowed whole. This is the
- *      class-wide rule; `refresh-nj-filing`'s clerk-count check was the
- *      instance that exposed it (RULING 136 — a fix closes the class).
- */
-
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -54,16 +29,12 @@ function stepsOf(doc: Record<string, unknown>): { job: string; step: Step }[] {
   return Object.entries(jobs).flatMap(([job, body]) => (body?.steps ?? []).map((step) => ({ job, step })));
 }
 
-/* ---- 1. the named independent steps ---------------------------------------- */
-
 test("PDC terminal boundary: the retired intake workflow cannot swallow or report runtime checks", () => {
   assert.equal(
     workflows().find((workflow) => workflow.file === "intake-tripwire.yml"),
     undefined,
   );
 });
-
-/* ---- 2. the class-wide rule ------------------------------------------------ */
 
 test("RULING 164: a continue-on-error step must have its outcome READ somewhere", () => {
   const offenders: string[] = [];
@@ -89,11 +60,7 @@ test("RULING 164: a continue-on-error step must have its outcome READ somewhere"
   assert.deepEqual(offenders, [], "every continue-on-error failure must be reported by something downstream");
 });
 
-/* ---- 3. the instrument is shown catching the real thing (RULING 110) ------- */
-
 test("RULING 164: the swallowed-failure reader catches a planted one", () => {
-  // A workflow that did not exist when the rule was written, so the instrument
-  // is proved against a case it was not derived from (RULING 157).
   const planted = parse(
     [
       "name: Planted",

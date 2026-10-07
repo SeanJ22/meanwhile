@@ -11,7 +11,7 @@ import {
   withReaderNames,
 } from "../lib/text/reader-names.ts";
 
-test("S2.4: a portal's sitting words are not part of the body's name", () => {
+test("a portal's sitting words are not part of the body's name", () => {
   // The Body filter must not list meeting titles as bodies.
   assert.equal(readerBodyName("GOVERNING BOARD AGENDA REGULAR MEETING"), "Governing Board");
   assert.equal(readerBodyName("GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING"), "Governing Board");
@@ -27,7 +27,7 @@ test("S2.4: a portal's sitting words are not part of the body's name", () => {
   assert.equal(readerBodyName("Regular Public Meeting"), "Regular Public Meeting");
 });
 
-test("S2.4: the shared formatter fixes case, small words and abbreviations", () => {
+test("the shared formatter fixes case, small words and abbreviations", () => {
   assert.equal(readerBodyName("Board Of Supervisors"), "Board of Supervisors");
   assert.equal(readerBodyName("New York City Department Of Education"), "New York City Department of Education");
   assert.equal(readerBodyName("Redistricting Advisory Committee (RAC)"), "Redistricting Advisory Committee");
@@ -37,7 +37,7 @@ test("S2.4: the shared formatter fixes case, small words and abbreviations", () 
   assert.equal(readerBodyName("Planning Board (Downtown)"), "Planning Board (Downtown)");
 });
 
-test("S2.4: a derived body is named for the government it is", () => {
+test("a derived body is named for the government it is", () => {
   assert.equal(readerGovernmentName("Pima", "county"), "Pima County");
   assert.equal(readerGovernmentName("Cochise County", "county"), "Cochise County");
   assert.equal(readerGovernmentName("New York city", "place"), "New York City");
@@ -50,7 +50,7 @@ test("S2.4: a derived body is named for the government it is", () => {
   );
 });
 
-test("S2.4: one party, one label", () => {
+test("one party, one label", () => {
   for (const raw of ["Democrat", "Democratic", "DEMOCRATIC", "Democratic Party", "DEM", "D"]) {
     assert.equal(readerPartyLabel(raw), "Democratic", raw);
   }
@@ -66,7 +66,7 @@ test("S2.4: one party, one label", () => {
   assert.equal(readerPartyLabel("  "), null);
 });
 
-test("S2.4: the Body filter makes one option per body, not per sitting title", () => {
+test("the Body filter makes one option per body, not per sitting title", () => {
   const tusd = "ocd-division/country:us/state:az/school_district:tucson_unified_district";
   const keys = new Set(
     [
@@ -82,7 +82,7 @@ test("S2.4: the Body filter makes one option per body, not per sitting title", (
   assert.notEqual(bodyScopeKey({ ocdId: vail, bodyName: "Governing Board" }), [...keys][0]);
 });
 
-test("S2.4: a search answer is formatted once, names only", () => {
+test("a search answer is formatted once, names only", () => {
   const answer = withReaderNames({
     meetings: [{ id: "a", bodyName: "BOARD OF SUPERVISORS REGULAR MEETING" }],
     coverage: { bodies: [{ name: "Redistricting Advisory Committee (RAC)", bodyId: "x" }, { name: null, bodyId: "y" }] },
@@ -93,7 +93,7 @@ test("S2.4: a search answer is formatted once, names only", () => {
   assert.equal(withReaderNames({ meetings: [], coverage: null }).coverage, null);
 });
 
-test("S2.4: the carried-listings note describes what is in view", () => {
+test("the carried-listings note describes what is in view", () => {
   const snapshot = {
     generatedAt: "2026-10-01T10:00:00.000Z",
     failed: [],

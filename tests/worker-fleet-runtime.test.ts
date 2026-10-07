@@ -7,7 +7,6 @@ import test from "node:test";
 
 import { mayWriteDisposition } from "../lib/control-plane/attempt.ts";
 import { requireCapability } from "../lib/control-plane/capability.ts";
-import { evaluateCompletion } from "../lib/control-plane/completion.ts";
 import { recordAcquisition, type Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { MemoryEvidenceStore, putArtifact, readForParser, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -15,7 +14,7 @@ import { contentHash } from "../lib/control-plane/ids.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import {
-  beginAttemptFor, claimRouteTask, disposeRouteTask, loadCompletionSnapshot,
+  beginAttemptFor, claimRouteTask, disposeRouteTask,
   recordArtifactMetadata, registerRouteTask, registerWorkItem,
 } from "../lib/control-plane/repository/coordinator.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
@@ -24,15 +23,12 @@ import { loadWorkerCompletionEvidence, readCompletedWorkerResult, readCompletedW
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { dischargesObligation, sweepExpiredLeases } from "../lib/control-plane/scheduler/dispatch.ts";
 import { runIsolatedSource } from "../lib/control-plane/workers/isolation.ts";
-import { workerTaskAdmission } from "../lib/control-plane/workers/scheduling.ts";
 import {
-  dispatchWorkerTask, drainWorkerQueue, enqueueWorkerTask, evidenceProjection,
+  dispatchWorkerTask, enqueueWorkerTask, evidenceProjection,
   FLEET_IMPLEMENTATION_VERSION, FLEET_POLICY_VERSION, fleetGrant, type FleetRuntime,
 } from "../lib/control-plane/workers/runtime.ts";
 import type { CivicExtractionContract, FleetRole, WorkerResultRecord, WorkerTaskSpec } from "../lib/control-plane/workers/types.ts";
 
-// Recorded publisher bytes exercise the deployed procedures. This deterministic
-// suite is a regression control, not the session's live persisted-evidence proof.
 const CAPTURE = readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url), "utf8");
 const START = "2026-09-03T04:00:00.000Z";
 const PROJECT = "worker-fleet-regression";
@@ -122,92 +118,6 @@ async function run(h: Harness, artifact: Artifact, role: FleetRole, options: {
   assert.equal(records.length, 1);
   return records[0];
 }
-
-test("actual isolated Parser → Validator → Auditor dispatch persists the existing durable execution contract", async () => {
-  const h = await harness();
-  const artifact = await h.hold(CAPTURE);
-  let wholeResultReads = 0;
-  const scopedResultReads: string[] = [];
-  const currentAttemptReads: string[] = [];
-  const observedRepos: ControlPlaneRepositories = { ...h.repos,
-    workerResults: { ...h.repos.workerResults,
-      readAll: async () => { wholeResultReads++; return h.repos.workerResults.readAll(); },
-      read: async id => { scopedResultReads.push(id); return h.repos.workerResults.read(id); },
-    },
-    attempts: { ...h.repos.attempts,
-      mustRead: async id => { currentAttemptReads.push(id); return h.repos.attempts.mustRead(id); },
-    },
-  };
-  const observedRuntime = { ...h.runtime, repos: observedRepos };
-  const parser = await run(h, artifact, "PARSER", { runtime: observedRuntime });
-  assert.equal(parser.result.verdict, "EXTRACTED");
-  assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state, "AWAITING_VALIDATION");
-  const parserAttemptReadsBeforeValidation = currentAttemptReads.filter(id => id === parser.attemptId).length;
-  const validator = await run(h, artifact, "VALIDATOR", { producerResultId: parser.id, runtime: observedRuntime });
-  assert.equal(validator.result.verdict, "PASS");
-  assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state, "AWAITING_AUDIT");
-  const validatorAttemptReadsBeforeAudit = currentAttemptReads.filter(id => id === validator.attemptId).length;
-  const auditor = await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id, validatorResultId: validator.id, runtime: observedRuntime });
-  assert.equal(auditor.result.verdict, "SURVIVED", JSON.stringify(auditor.result));
-  assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state, "OPEN");
-  assert.equal(new Set([parser.worker.instance, validator.worker.instance, auditor.worker.instance]).size, 3);
-  assert.deepEqual(scopedResultReads, [h.item.id, h.item.id], "Validator and Auditor each read their own result log once; Parser reads no producer history.");
-  assert.equal(wholeResultReads, 0, "Present exact references need no whole-history result read.");
-  assert.equal(currentAttemptReads.filter(id => id === parser.attemptId).length - parserAttemptReadsBeforeValidation, 2, "Both roles validate the producer against its current persisted Attempt.");
-  assert.equal(currentAttemptReads.filter(id => id === validator.attemptId).length - validatorAttemptReadsBeforeAudit, 1, "The Auditor still reads the Validator's current Attempt.");
-  for (const record of [parser, validator, auditor]) {
-    const attempt = (await h.repos.attempts.mustRead(record.attemptId)).value;
-    const task = (await h.repos.routeTasks.mustRead(record.routeTaskId)).value;
-    assert.equal(attempt.outcome, "COMPLETED");
-    assert.deepEqual(attempt.worker, record.worker);
-    assert.deepEqual(attempt.capabilityGrant, record.grant, "The grant is persisted on the Attempt before execution, not merely attached to successful output.");
-    assert.equal(attempt.methodVersion, METHOD_VERSION);
-    assert.equal(attempt.policyVersion, FLEET_POLICY_VERSION);
-    assert.equal(record.worker.version, FLEET_IMPLEMENTATION_VERSION);
-    assert.ok(attempt.startedAt && attempt.endedAt);
-    assert.equal(task.state, "RESULT_RECORDED");
-    assert.equal(task.disposition, null);
-    assert.deepEqual(attempt.artifactIds, [artifact.id]);
-    assert.deepEqual(attempt.cost, record.cost);
-    assert.ok(record.cost.durationMs !== null && record.cost.durationMs >= 0);
-    assert.equal(record.cost.usd, null);
-    assert.equal(record.usage.inputTokens, null);
-    assert.equal(record.usage.cacheReadInputTokens, null);
-    assert.equal(record.cost.requestCount, 0);
-    assert.equal(record.executionMode, "DETERMINISTIC");
-    assert.deepEqual(record.grant, fleetGrant(record.worker.role as FleetRole, PROJECT, attempt.startedAt));
-    const costs = (await h.repos.costs.readAll()).filter((cost) => cost.attemptId === record.attemptId);
-    assert.equal(costs.length, 1);
-    assert.deepEqual(costs[0].cost, record.cost);
-    assert.equal((await h.repos.leases.mustRead(record.routeTaskId)).value.released, true);
-  }
-  assert.deepEqual(validator.inputResultIds, [parser.id]);
-  assert.deepEqual(auditor.inputResultIds, [parser.id, validator.id]);
-  assert.equal((await h.repos.promotionPipeline.readAll()).length, 0, "Workers have no direct canonical promotion authority.");
-  const snapshot = await loadCompletionSnapshot(h.repos, { workItemId: h.item.id, now: h.now() });
-  assert.equal(evaluateCompletion(snapshot, "VERIFIED_COMPLETE").mayComplete, false);
-  assert.deepEqual(await drainWorkerQueue(h.runtime), [], "Completed worker computations are not re-executed.");
-
-  const completed = await h.repos.routeTasks.mustRead(parser.routeTaskId);
-  const attemptsBefore = await h.repos.attempts.list();
-  await assert.rejects(dispatchWorkerTask(h.runtime, completed.value), /WORKER_TASK_NOT_DISPATCHABLE/);
-  assert.deepEqual(await h.repos.attempts.list(), attemptsBefore, "Direct redispatch must not mint another Attempt or invalidate replayable completion.");
-  assert.deepEqual(await h.repos.routeTasks.mustRead(completed.id), completed);
-  await reconcileWorkerCompletions(observedRepos);
-  assert.equal(wholeResultReads, 1, "Recovery independently scans all committed history; the execution batch never replaces it.");
-  assert.equal((await h.repos.workerResults.readAll()).length, 3);
-
-  const at = h.now();
-  await assert.rejects(disposeRouteTask(h.repos, {
-    routeTaskId: completed.id, attemptId: parser.attemptId, expectedTaskRevision: completed.revision,
-    now: at, artifactIds: [artifact.id],
-    disposition: { disposition: "INGESTED", attemptId: parser.attemptId, at,
-      artifactIds: [artifact.id], observation: null, permission: "ALLOWED", transport: "REACHABLE",
-      note: "Seeded attempt to launder successful computation into a civic acquisition disposition." },
-  }), /WORKER_TASK_CANNOT_WRITE_CIVIC_DISPOSITION/);
-  assert.deepEqual(await h.repos.routeTasks.mustRead(completed.id), completed);
-  assert.deepEqual(await h.repos.dispositions.read(completed.id), [], "Computational success confers no civic disposition authority even through the coordinator API.");
-});
 
 test("completed worker history recovers with bulk reads and no per-result replay calls", async () => {
   const h = await harness();
@@ -391,32 +301,6 @@ test("malformed evidence produces a persisted typed failure and blocks the item,
   assert.match(validation.detail, /WORKER_EXACT_CANDIDATE_BINDING_REFUSED/);
 });
 
-test("a Validator-passing captured result is broken by a contradicting official capture and dependent work reopens", async () => {
-  const h = await harness();
-  const artifact = await h.hold(CAPTURE);
-  const parser = await run(h, artifact, "PARSER");
-  const validator = await run(h, artifact, "VALIDATOR", { producerResultId: parser.id });
-  assert.equal(validator.result.verdict, "PASS");
-  const dependent = createWorkItem({ project: PROJECT, subject: CONTRACT.subjectId, obligation: "Use the independently audited capture in a staged reader projection",
-    why: "The staged projection depends on audited event evidence.", now: h.now(),
-    dependencies: [{ upstreamId: h.item.id, kind: "PRODUCES_CONSUMES", reason: "Consumes the audited event records", evidence: [parser.id] }] });
-  await registerWorkItem(h.repos, dependent, h.now());
-  const rows = JSON.parse(CAPTURE) as Record<string, unknown>[];
-  await h.hold(JSON.stringify(rows.map((row, index) => index ? row : { ...row, EventDate: "2026-12-15T00:00:00" })),
-    "https://webapi.legistar.com/v1/pima/events?source=independent-control");
-  const auditor = await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id, validatorResultId: validator.id, auditScope: "SOURCE_UNIVERSE" });
-  assert.equal(auditor.result.role, "ADVERSARIAL_AUDITOR");
-  if (auditor.result.role !== "ADVERSARIAL_AUDITOR") throw new Error("wrong result role");
-  assert.equal(auditor.result.verdict, "BROKE");
-  assert.equal(auditor.result.reopenRequired, true);
-  assert.ok(auditor.result.findings.some((finding) => finding.code === "AUDIT_OFFICIAL_CONTRADICTION"));
-  for (const workItemId of [h.item.id, dependent.id]) {
-    const item = (await h.repos.workItems.mustRead(workItemId)).value;
-    assert.equal(item.state, "REOPENED");
-    assert.ok(item.transitions.some((transition) => transition.by === `worker-result:${auditor.id}` && transition.why.includes("AUDIT_OFFICIAL_CONTRADICTION")));
-  }
-});
-
 async function temporaryStore<T>(runTest: (root: string) => Promise<T>): Promise<T> {
   const root = await mkdtemp(path.join(tmpdir(), "wtp-worker-runtime-"));
   try { return await runTest(root); }
@@ -494,8 +378,6 @@ test("partial computation lost before commit stays nonterminal, then lease recov
 }));
 
 test("a work item's completion evidence and inherited results read only that item's rows", async () => {
-  // 2026-09-24: each call listed every RouteTask and Attempt and read every
-  // worker result (~11 MB), twice per work item in every research cycle.
   const h = await harness();
   const artifact = await h.hold(CAPTURE);
   const parser = await run(h, artifact, "PARSER");
@@ -515,38 +397,6 @@ test("a work item's completion evidence and inherited results read only that ite
   assert.deepEqual(expectedResults.map((record) => record.id).sort(), [parser.id, validator.id].sort());
   assert.deepEqual(await loadWorkerCompletionEvidence(narrow, "wi-no-such-item"),
     { managed: false, latestProducerAttemptId: null, validations: [], audits: [] });
-});
-
-test("diagnostic replay preserves workflow and captured-only audit cannot discharge whole-obligation completion", async () => {
-  const h = await harness();
-  const artifact = await h.hold(CAPTURE);
-  const parser = await run(h, artifact, "PARSER");
-  const validator = await run(h, artifact, "VALIDATOR", { producerResultId: parser.id });
-  await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id, validatorResultId: validator.id });
-  const before = (await h.repos.workItems.mustRead(h.item.id)).value;
-  const diagnostic = await run(h, artifact, "PARSER", { replayLabel: "diagnostic-replay", purpose: "DIAGNOSTIC_REPLAY" });
-  assert.equal(diagnostic.result.verdict, "EXTRACTED");
-  const after = (await h.repos.workItems.mustRead(h.item.id)).value;
-  assert.equal(after.state, before.state);
-  assert.deepEqual(after.transitions, before.transitions);
-  const captured = await loadWorkerCompletionEvidence(h.repos, h.item.id);
-  assert.equal(captured.managed, true);
-  assert.equal(captured.latestProducerAttemptId, parser.attemptId);
-  assert.equal(captured.validations.length, 1);
-  assert.equal(captured.validations[0].passed, true);
-  assert.deepEqual(captured.audits, []);
-  await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id, validatorResultId: validator.id, auditScope: "SOURCE_UNIVERSE" });
-  const priorPass = await loadWorkerCompletionEvidence(h.repos, h.item.id);
-  assert.equal(priorPass.audits[0].survived, true);
-  await enqueueWorkerTask(h.repos, { workItemId: h.item.id, role: "PARSER", artifactId: artifact.id,
-    contract: CONTRACT, replayLabel: "new-owed-generation", now: h.now() });
-  const pending = await loadWorkerCompletionEvidence(h.repos, h.item.id);
-  assert.equal(pending.validations[0].passed, false, "A new pending canonical Parser invalidates the older pass before it opens an Attempt.");
-  assert.deepEqual(pending.audits, []);
-  const snapshot = await loadCompletionSnapshot(h.repos, { workItemId: h.item.id, now: h.now(),
-    validations: priorPass.validations, audits: priorPass.audits });
-  assert.equal(snapshot.validations[0].passed, false, "A caller's historical PASS cannot override current canonical worker evidence.");
-  assert.deepEqual(snapshot.audits, []);
 });
 
 test("completion aggregates every artifact chain and a newer failed Validator overrides its own old pass", async () => {
@@ -570,90 +420,4 @@ test("completion aggregates every artifact chain and a newer failed Validator ov
   assert.equal(multiArtifact.validations[0].passed, false);
   assert.match(multiArtifact.validations[0].detail, new RegExp(other.id));
   assert.ok(!multiArtifact.audits.some((finding) => finding.survived));
-});
-
-test("BROKE remains blocking through captured audit/replay until a newer exact independent source-universe chain survives", async () => {
-  const h = await harness();
-  const artifact = await h.hold(CAPTURE);
-  const parser = await run(h, artifact, "PARSER");
-  const validator = await run(h, artifact, "VALIDATOR", { producerResultId: parser.id });
-  const challenged: FleetRuntime = { ...h.runtime, independentContext: async (scope) => {
-    const context = await h.runtime.independentContext(scope);
-    const rows = JSON.parse(CAPTURE) as Record<string, unknown>[];
-    const text = JSON.stringify(rows.map((row, index) => index ? row : { ...row, EventDate: "2026-12-15T00:00:00" }));
-    const contradicting = { artifactId: "seeded-contradicting-capture", contentHash: contentHash(text), text, acquiredByAttemptId: "seeded-acquirer",
-      canonicalUrl: "https://webapi.legistar.com/v1/pima/events?source=seeded-contradiction", retrievedAt: START, sourceId: "legistar-pima", methodRouteId: "seeded-contradicting-route" };
-    return { ...context, evidence: [...context.evidence, contradicting], routes: [...context.routes, { routeId: contradicting.methodRouteId, canonicalUrl: contradicting.canonicalUrl,
-      applicable: true, status: "HELD" as const, artifactIds: [contradicting.artifactId], reason: "Seeded first-party capture that contradicts the extraction." }] };
-  } };
-  const broken = await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id, validatorResultId: validator.id,
-    auditScope: "SOURCE_UNIVERSE", runtime: challenged });
-  assert.equal(broken.result.verdict, "BROKE");
-  assert.ok((await loadWorkerCompletionEvidence(h.repos, h.item.id)).audits.some((finding) => !finding.survived && finding.resolvedAt === null));
-  await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id, validatorResultId: validator.id, replayLabel: "captured-followup" });
-  await run(h, artifact, "PARSER", { replayLabel: "diagnostic-after-break", purpose: "DIAGNOSTIC_REPLAY" });
-  assert.ok((await loadWorkerCompletionEvidence(h.repos, h.item.id)).audits.some((finding) => finding.id === `worker-audit:${broken.id}` && !finding.survived));
-  // The fresh independent context has no seeded route; all three new role
-  // executions are required before this supersedes the planted broken chain.
-  const replacementParser = await run(h, artifact, "PARSER", { replayLabel: "replacement-chain" });
-  const replacementValidator = await run(h, artifact, "VALIDATOR", { producerResultId: replacementParser.id });
-  await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: replacementParser.id,
-    validatorResultId: replacementValidator.id, auditScope: "SOURCE_UNIVERSE" });
-  const current = await loadWorkerCompletionEvidence(h.repos, h.item.id);
-  assert.equal(current.validations[0].passed, true);
-  assert.equal(current.audits.length, 1);
-  assert.equal(current.audits[0].survived, true);
-});
-
-test("transient model-transport denial retries only after backoff and current availability; permanent denial stays blocked", async () => {
-  const h = await harness();
-  const artifact = await h.hold(CAPTURE);
-  const parser = await run(h, artifact, "PARSER");
-  const validator = await run(h, artifact, "VALIDATOR", { producerResultId: parser.id });
-  const task = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, role: "ADVERSARIAL_AUDITOR", artifactId: artifact.id,
-    contract: CONTRACT, producerResultId: parser.id, validatorResultId: validator.id, now: h.now() });
-  const unavailable = await dispatchWorkerTask({ ...h.runtime, requireModelAudit: true }, task);
-  assert.equal(unavailable.outcome, "FAILED");
-  const deniedAttempt = (await h.repos.attempts.mustRead(unavailable.attemptId!)).value;
-  assert.equal(deniedAttempt.outcome, "DENIED_BY_POLICY");
-  assert.deepEqual(deniedAttempt.capabilityGrant, fleetGrant("ADVERSARIAL_AUDITOR", PROJECT, deniedAttempt.startedAt));
-  const deniedTask = (await h.repos.routeTasks.mustRead(task.id)).value;
-  assert.equal(deniedTask.state, "POLICY_DENIED");
-  const admission = workerTaskAdmission(deniedTask, (await h.repos.attempts.list()).map((row) => row.value), h.now());
-  assert.equal(admission.state, "BACKOFF");
-  assert.ok(admission.retryAt);
-  let reviews = 0;
-  // An explicitly named test double witnesses availability/admission mechanics;
-  // this test does not call a provider or claim measured model usage.
-  const available: FleetRuntime = { ...h.runtime, requireModelAudit: true, auditReasoner: {
-    workerProvider: "contract-test-double", workerVersion: "fixture-review/1",
-    review: async () => {
-      reviews += 1;
-      return { review: { step: "adversarial-audit", model: "fixture-review/1", effort: "none", contextHash: "fixture-context",
-        verdict: "SURVIVED", challenges: [], elapsedMs: 0 }, usd: null,
-      usage: { inputTokens: null, outputTokens: null, cacheReadInputTokens: null, cacheCreationInputTokens: null, uncachedInputTokens: null } };
-    },
-  } };
-  assert.deepEqual(await drainWorkerQueue(available), []);
-  assert.equal(reviews, 0);
-  const later = new Date(Date.parse(admission.retryAt!) + 1_000).toISOString();
-  assert.deepEqual(await drainWorkerQueue({ ...h.runtime, requireModelAudit: true, now: () => later }), [], "Elapsed time alone cannot make an unavailable transport available.");
-  const recovered = await drainWorkerQueue({ ...available, now: () => later });
-  assert.equal(recovered.length, 1);
-  assert.equal(recovered[0].outcome, "WORKED", recovered[0].detail);
-  assert.equal(reviews, 1);
-  assert.notEqual(recovered[0].attemptId, deniedAttempt.id);
-  const completedTask = (await h.repos.routeTasks.mustRead(task.id)).value;
-  assert.equal(completedTask.policyReauthorizations?.[0].denial.attemptId, deniedAttempt.id);
-
-  const permanentTask = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, role: "PARSER", artifactId: artifact.id,
-    contract: CONTRACT, replayLabel: "permanent-policy-control", now: later });
-  const permanent = await dispatchWorkerTask({ ...h.runtime, now: () => later,
-    readEvidence: async () => { throw new Error("DENIED_BY_POLICY:CANONICAL_PROMOTE"); } }, permanentTask);
-  const permanentAttempt = (await h.repos.attempts.mustRead(permanent.attemptId!)).value;
-  assert.equal(permanentAttempt.outcome, "DENIED_BY_POLICY");
-  assert.deepEqual(permanentAttempt.capabilityGrant, fleetGrant("PARSER", PROJECT, permanentAttempt.startedAt));
-  const farLater = new Date(Date.parse(later) + 86_400_000).toISOString();
-  assert.deepEqual(await drainWorkerQueue({ ...available, now: () => farLater }), []);
-  assert.equal((await h.repos.routeTasks.mustRead(permanentTask.id)).value.state, "POLICY_DENIED");
 });

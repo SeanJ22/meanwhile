@@ -14,15 +14,6 @@ import { SOURCE_WIRING, type BodySourceWiring } from "../lib/registry/source-wir
 import { agendaItems } from "../lib/routing/agenda-search.ts";
 import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
 
-/**
- * Tucson Unified's own Governing Board site — the board calendar's month
- * fragments and the Board Actions record — recorded 2026-09-23
- * (tests/fixtures/tusd-govboard/retrieval.json). Built and NOT wired: the
- * permitted calendar lacks one in-window committee sitting and one cancellation
- * the district's disallowed Diligent tenant carries, so cutting over would lose
- * facts. This file proves exactly what the route carries.
- */
-
 const FIXTURES = join(import.meta.dirname, "fixtures", "tusd-govboard");
 const read = (name: string) => readFileSync(join(FIXTURES, name), "utf8");
 const RETRIEVAL = JSON.parse(read("retrieval.json")) as Record<string, { url: string }>;
@@ -56,8 +47,6 @@ const RAW = [{
 }];
 
 test("the WIRED Diligent row links a concluded board sitting's own Board Actions record, not the portal page", () => {
-  // The live wiring row, the recorded MeetingsService rows (tests/fixtures/
-  // diligent-tusd-meetings.json) and the recorded Board Actions index.
   const wiring = SOURCE_WIRING.find((row) => row.bodyId === WIRING.bodyId)!;
   assert.equal(wiring.config.agendaRecordsUrl, "https://govboard.tusd1.org/Actions");
   const rows = JSON.parse(readFileSync(join(import.meta.dirname, "fixtures", "diligent-tusd-meetings.json"), "utf8"));
@@ -142,19 +131,13 @@ test("normalize: places only what the district's sentence places, carries Board 
   assert.equal(byDay("2026-08-04", /Governing Board/)!.online!.label, "Via Zoom");
 
   // Jul 15: the district's own sentence moves the Audit Committee to a Zoom
-  // webinar and publishes the link — while its agenda platform's record kept
-  // the old Morrow Education Center room. The sitting's own statement governs.
+  // webinar while its agenda platform kept the old room. The sitting's own statement governs.
   const jul15 = byDay("2026-07-15", /Audit/)!;
   assert.equal(jul15.location, null);
   assert.match(jul15.online!.joinUrl!, /^https:\/\/tusd1\.zoom\.us\/j\/\d+/);
 
   // "Committee meeting location TBD" (Sep 16) is counted and never placed.
-  // CHANGED ON PURPOSE (the venue-gap class, 2026-09-23): it used to be
-  // DROPPED as well, and the owner's rule is that a missing place never
-  // suppresses a meeting the district's own calendar verifies. It is now
-  // published with no pin and our own place-not-recorded gap (the details
-  // sentence is prose, not a place field to quote) — exactly as the wired
-  // union publishes the same calendar row.
+  // It is published with no pin and our own place-not-recorded gap.
   const sep16 = byDay("2026-09-16", /Audit/)!;
   assert.ok(sep16, "the TBD sitting is published");
   assert.equal(sep16.location, null);

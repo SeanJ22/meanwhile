@@ -5,7 +5,7 @@ import { test } from "node:test";
 
 import { sharedNotesFor } from "../lib/ballot/shared-notes.ts";
 
-/** F01 11.1 — a note that is the same on every contest is a page note. */
+/** A note that is the same on every contest is a page note. */
 
 const note = (id: string, scopeNote: string | null) => ({ id, scopeNote });
 
@@ -68,7 +68,7 @@ test("F01 11.1: contests with no note contribute nothing and break nothing", () 
 });
 
 test("F01 11.1: the Arizona measures actually collapse — eleven into one", () => {
-  // The author's instance, against the shipped data rather than a fixture.
+  // Against the shipped data rather than a fixture.
   const ballot = JSON.parse(
     readFileSync(join(process.cwd(), "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
   ) as { contests: { id: string; scopeNote: string | null }[] };
@@ -92,18 +92,17 @@ test("F01 11.1: the Arizona measures actually collapse — eleven into one", () 
 
 test("F01 11.2 / 11.3: the ballot page drops the contradiction and the false claim", () => {
   const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
-  // 11.2 — the self-contradicting privacy paragraph is gone. The link stays.
+  // The self-contradicting privacy paragraph is gone. The link stays.
   assert.ok(
     !/we\s*\n?\s*never see them/.test(page),
     "the self-contradicting picks paragraph is back",
   );
   assert.match(page, /How we handle data/);
-  // 11.3 — the page no longer claims an order it does not use.
+  // The page no longer claims an order it does not use.
   assert.ok(
     !/listed alphabetically by surname —/.test(page),
     "the page claims plain alphabetical order again",
   );
-  // FE-30 retires the old neutral-copy paragraph under the current plan.
   // The privacy link and truthful absence of an alphabetical-order claim remain.
   assert.doesNotMatch(page, /const NEUTRAL_NOTE|\{NEUTRAL_NOTE\}/);
 });

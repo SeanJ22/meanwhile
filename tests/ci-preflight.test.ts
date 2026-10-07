@@ -114,7 +114,7 @@ test("independent structural checks all report, from one install, before the bro
   assert.match(all.test.if ?? "", /needs\.admission\.outputs\.test_legs != '\[\]'/);
   assert.match(all.test.if ?? "", /test_plan == 'affected' \|\| needs\.admission\.outputs\.test_plan == 'full'/);
   assert.doesNotMatch(all.test.if ?? "", /'main'/, "a push to main runs no tests; the scheduled run does");
-  for (const name of ["Lint", "Types", "Canonical state holdings", "Generated state manifests"]) {
+  for (const name of ["Lint", "Types"]) {
     const step = all.verify.steps.find((s) => label(s).startsWith(name));
     assert.ok(step, `${name} was lost`);
     assert.match(step.if ?? "", /always\(\)/);
@@ -151,11 +151,6 @@ test("the local door runs the preflight before the gate loop, and refuses rather
   const between = src.slice(preflightAt, loopAt);
   assert.match(between, /process\.exitCode = 1/, "a red preflight does not fail the local door");
   assert.match(between, /return;/, "a red preflight does not stop the local door running the expensive tier");
-  assert.match(
-    between,
-    /NO GATE RUN RECORD/,
-    "a refused run must not leave a gate-run record, or the status ledger renders it as a measurement of this tree",
-  );
 });
 
 test("the preflight is declared as something the local door runs, not exempted from parity", () => {

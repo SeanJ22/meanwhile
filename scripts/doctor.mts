@@ -177,7 +177,7 @@ if (pnpmVersion) {
     "pnpm on PATH",
     "FAIL",
     pnpmError,
-    "install pnpm and put it on PATH. Do NOT route the gate commands through corepack: corepack breaks their child processes.",
+    "install pnpm and put it on PATH.",
   );
 }
 
@@ -219,17 +219,17 @@ const REQUIRED_ARTIFACTS: { path: string; what: string; how: string }[] = [
   {
     path: "lib/registry/registry.json",
     what: "the body and division registry",
-    how: "recover it from git.",
+    how: "run `pnpm registry:build`. It merges the boundary derivation, the curated overlay and lib/registry/promoted-bodies.json.",
   },
   {
     path: "lib/registry/promoted-bodies.json",
     what: "the canonical promoted-body INPUT store",
-    how: "this is an INPUT, not a generated file — it cannot be rebuilt. Recover it from git.",
+    how: "this is an INPUT, not a generated file — it cannot be rebuilt. Recover it from git; without it a registry build silently drops every lead-promoted body (NH232).",
   },
   {
     path: "data/states/az/geo/body-territories.geojson",
     what: "territories for governments with no Census division",
-    how: "recover it from git. Without it, districts smaller than any division reach no reader.",
+    how: "recover it from git. Without it, districts smaller than any division reach no reader (NH233).",
   },
   {
     path: "data/derived/resolver-geometry.json",

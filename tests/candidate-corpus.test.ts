@@ -15,6 +15,10 @@ import {
   positionsHeadline,
   positionsSummary,
 } from "../lib/candidates/positions.ts";
+import { installCandidateCorpus, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
+await installCandidateCorpus();
 
 const ROOT = process.cwd();
 

@@ -16,6 +16,9 @@ import {
   OFFICE_BLURBS,
   blurbForTitle,
 } from "../lib/officials/office-blurbs.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 /**
  * No curated official's rendered content may reference a jurisdiction outside their own, checked with per-state

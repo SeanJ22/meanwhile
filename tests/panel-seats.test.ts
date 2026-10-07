@@ -10,6 +10,9 @@ import type { ResolvedLocation } from "../lib/state/resolved-location.ts";
 import type { CoverageSummary } from "../lib/registry/coverage.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import type { Division } from "../lib/registry/types.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 const SLDL_17 = "ocd-division/country:us/state:az/sldl:17";
 const SLDL_19 = "ocd-division/country:us/state:az/sldl:19";
 const SLDU_17 = "ocd-division/country:us/state:az/sldu:17";

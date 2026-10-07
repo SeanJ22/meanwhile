@@ -19,6 +19,9 @@ import {
   weakTopicMatch,
 } from "../lib/routing/match.ts";
 import { coverageAt } from "../lib/registry/server.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 const TUCSON: [number, number] = [32.2226, -110.9747];
 

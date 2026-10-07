@@ -114,8 +114,8 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
     import { DistrictPopup } from './components/map/popup/district-popup.tsx';
     import { DoorOverlay } from './components/map/door-overlay.tsx';
     import * as venuesModule from './lib/meetings/venues.ts';
-    import { installRegistryRuntimeFirstSeeds } from './tests/helpers/registry-runtime-first-seed.ts';
-    await installRegistryRuntimeFirstSeeds();
+    import { installRegistryAuthority } from './tests/helpers/promoted-fixtures.ts';
+    await installRegistryAuthority();
 
     const fixture = JSON.parse(readFileSync(${JSON.stringify(FIXTURE)}, 'utf8'));
     const NOW = ${RECORDED_NOW};

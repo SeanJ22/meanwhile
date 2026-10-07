@@ -26,6 +26,9 @@ import { claimRouteTask, registerRouteTask } from "../lib/control-plane/reposito
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { huntRoundComparator } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { withPromotedFixturesInChildren } from "./helpers/promoted-fixtures.ts";
+
+
 
 async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
   const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
@@ -521,12 +524,12 @@ test("coordinator selection hands out canonical tasks without running tools or o
     await registerRouteTask(repos, second, h.now());
     const pids: number[] = [];
     let pulls = 0;
-    const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+    const results = await withPromotedFixturesInChildren(() => runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
       config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [selected.task!.id, second.id],
         modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
       capacity: () => 2, onStarted: pid => pids.push(pid),
       orderPending: async ids => { pulls++; return [...ids].reverse(); },
-      transportFor: () => async () => { throw new Error("unexpected paid call"); } });
+      transportFor: () => async () => { throw new Error("unexpected paid call"); } }));
     assert.equal(pids.length, 2);
     assert.ok(pulls >= 2, "each worker asks the parent for current priority before claiming a lease");
     assert.ok(pids.every(pid => pid !== process.pid));
@@ -679,11 +682,11 @@ test("one work-item read failure costs one task and the same lease child reaches
       routeLabel: "Unreadable work item", target: "https://example.gov/", inherited: false, now: h.now() });
     await repos.routeTasks.put(unreadable.id, unreadable, h.now());
     let forks = 0;
-    const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+    const results = await withPromotedFixturesInChildren(() => runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
       config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [unreadable.id, selected.task!.id],
         modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
       capacity: () => 1, onStarted: () => { forks++; }, orderPending: async ids => ids,
-      transportFor: () => async () => { throw new Error("unexpected paid call"); } });
+      transportFor: () => async () => { throw new Error("unexpected paid call"); } }));
     const failedRead = results.find(row => row.routeTaskId === unreadable.id)!;
     assert.equal(failedRead.outcome, "FAILED");
     assert.equal(failedRead.attemptId, null);

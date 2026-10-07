@@ -4,13 +4,16 @@ import test from "node:test";
 
 import { minutesSummaryEvidenceFor, commentAccessEvidenceFor, noticeSummaryEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
 
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
-
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+import { recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
+
+await installRegistryAuthority();
+
+/** The recorded 85701 meetings and the notice document versions their summaries cite. */
+const readSnapshot = () => recordedMeetingsSnapshot();
 
 test("notice summaries require the current exact content hash and cannot answer an outcome question", () => {
   const snapshot = readSnapshot()!;

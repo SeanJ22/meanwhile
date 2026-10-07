@@ -12,12 +12,12 @@ import {
 } from "../lib/meetings/edge-serving.ts";
 import {
   primeRegistryRuntimeFromValue,
-  registryRuntimeFirstSeed,
   registryRuntimeReadState,
   getRegistryRuntimeReadModel,
 } from "../lib/registry/runtime-read-model.ts";
 import { currentRegistryRuntimeEdge, enterReaderAuthorityEdge, ReaderEdgeOnlyRefusal, settleEdgeFirst } from "../lib/registry/runtime-edge.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
 
 function emptySnapshot(): MeetingsSnapshot {
   return {
@@ -33,7 +33,7 @@ const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
 
 test("the runner publishes registry-runtime as a compressed artifact the reader reads back losslessly", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "rt-edge-")));
-  const value = registryRuntimeFirstSeed().value;
+  const value = registryTransferImport().projection.payload;
   const versionId = "test-registry-runtime-v-lossless";
 
   const published = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId } } });
@@ -54,7 +54,7 @@ test("the runner publishes registry-runtime as a compressed artifact the reader 
 
 test("republishing the same authority version is idempotent; a new version advances the pointer", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "rt-edge-")));
-  const value = registryRuntimeFirstSeed().value;
+  const value = registryTransferImport().projection.payload;
   const first = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
   assert.equal(first.status, "PUBLISHED");
   const same = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
@@ -64,7 +64,7 @@ test("republishing the same authority version is idempotent; a new version advan
 });
 
 test("primeRegistryRuntimeFromValue serves the value synchronously with its version, no DB", () => {
-  const value = registryRuntimeFirstSeed().value;
+  const value = registryTransferImport().projection.payload;
   primeRegistryRuntimeFromValue(value, "rt-prime-v9");
   assert.equal(getRegistryRuntimeReadModel().bodyRosters.length, value.bodyRosters.length);
   const state = registryRuntimeReadState();
@@ -100,7 +100,7 @@ test("the registry-runtime edge value is request-scoped: absent by default (runn
 
 test("an unchanged authority version carries its served artifact forward; the runner never re-reads it", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "rt-edge-")));
-  const value = registryRuntimeFirstSeed().value;
+  const value = registryTransferImport().projection.payload;
   const first = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
   assert.equal(first.status, "PUBLISHED");
   const servedManifest = (await store.readManifest())!.manifest;

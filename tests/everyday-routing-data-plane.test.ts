@@ -7,6 +7,9 @@ import { directPositiveSourceUrls } from "../lib/civic-data/manual-source-isolat
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareManualProjectionSuccessor } from "../lib/civic-data/manual-successor.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { installPromotedValue, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import type { ManualSourceReview, ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import {
   EVERYDAY_ROUTING_CONTRACT_ID,
@@ -285,6 +288,26 @@ test("a newly proven contact closes only its exact CONTACT_OWED cell", async () 
 });
 
 test("the meeting server preload carries the full projection to the Reader shell", async () => {
+  // The meetings route reads the registry and Tucson's promoted meeting partition (the Pima County Board
+  // of Supervisors' Legistar calendar, one sitting) from the process edge, as a reader request does.
+  await installRegistryAuthority();
+  const pima = MEETING_PARTITION_CONTRACTS.find((p) => p.id === "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing")!;
+  const now = new Date().toISOString();
+  const pimaMeetings: MeetingsSnapshot = {
+    formatVersion: 1, generatedAt: now, counts: { fresh: 1, carried: 0, total: 1 },
+    sources: [{ source: pima.meetingSource, ok: true, error: null, fetched: 1, normalized: 1,
+      drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } }],
+    meetings: [{
+      id: `${pima.meetingSource}:pima:test-sitting`, ocdId: pima.ocdId, bodyId: pima.bodyId, bodyName: pima.wiring!.publishingOrg,
+      title: "Regular Meeting", startsAt: new Date(Date.now() + 7 * 86_400_000).toISOString(), timeZone: pima.wiring!.timeZone,
+      location: null, online: { label: "Zoom Webinar", joinUrl: null }, agendaUrl: null, jurisdiction: pima.wiring!.jurisdiction,
+      status: "SCHEDULED",
+      provenance: { sourceUrl: "https://webapi.legistar.com/v1/pima/events", sourceOrg: pima.wiring!.publishingOrg, collectedAt: now, verifiedAt: null },
+    }],
+    agendaDocuments: [],
+  };
+  installPromotedValue({ recordClass: "MEETING", scope: pima.scope, sourceId: pima.sourceId, versionId: "test:pima-meetings", retrievedAt: now, value: pimaMeetings });
+
   const response = await meetingsGET(new Request(
     "https://example.test/api/meetings?lat=32.21696&lng=-110.971&zip=85701",
   ));

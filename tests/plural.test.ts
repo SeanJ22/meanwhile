@@ -44,6 +44,10 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { beginAttemptFor, claimRouteTask, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
+import { installRegistryAuthority, installStateLegislators } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
+for (const scope of ["US-AZ", "US-NH", "US-NJ"] as const) installStateLegislators(scope);
 
 test("a 20-place Send offers independent jobs instead of one joined ZIP command", () => {
   const zips = Array.from({ length: 20 }, (_, index) => String(3000 + index).padStart(5, "0"));
@@ -374,7 +378,8 @@ test("a national API completes its geography walk beyond ten requests and reuses
   const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
   const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
     publish: async () => { assert.fail("incomplete geography cannot publish"); } };
-  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:REGISTRY_RUNTIME_BINDING/);
+  // The injected store holds no promoted registry, so the walk ends at the first held-family read it refuses.
+  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:/);
   assert.ok(heartbeatWrites > 0, "the national acquisition exercised its canonical lease heartbeat");
   assert.ok(requests > RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost, "Census is a national API, not a small local publisher");
   assert.ok((await repos.obligations.list()).every(row => row.value.lastWorkedAt === null));
@@ -384,7 +389,7 @@ test("a national API completes its geography walk beyond ten requests and reuses
   const before = requests;
   // The saved geography now completes within the same request bound. This
   // fixture has no registry runtime, so reaching its next read is the boundary.
-  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:REGISTRY_RUNTIME_BINDING/);
+  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:/);
   assert.equal(requests, before, "the second pass reads saved Census responses without repeating API calls");
   const next = await repos.artifacts.readAll();
   assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");

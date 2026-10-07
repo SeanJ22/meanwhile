@@ -104,8 +104,8 @@ test("the list, the body's pin panel and the meeting card show the stated place 
     import { groupByVenue, placelessSittingsOfVenueBodies } from './lib/meetings/venues.ts';
     import { wiringForMeetingSource } from './lib/registry/source-wiring.ts';
     import { makeOfficialPageEventsSource } from './lib/sources/official-page-events/index.ts';
-    import { installRegistryRuntimeFirstSeeds } from './tests/helpers/registry-runtime-first-seed.ts';
-    await installRegistryRuntimeFirstSeeds();
+    import { installRegistryAuthority } from './tests/helpers/promoted-fixtures.ts';
+    await installRegistryAuthority();
 
     const fixture = JSON.parse(readFileSync(${JSON.stringify(FIXTURE)}, 'utf8'));
     const rows = wiringForMeetingSource('official-page-events');

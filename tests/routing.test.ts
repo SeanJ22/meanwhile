@@ -1,8 +1,60 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
+import { installPromotedValue, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+
+// Arizona's promoted state roster, as the azleg.gov MemberRoster import holds
+// it: two representatives and one senator for Legislative District 20.
+const AZ_ROSTER = "https://www.azleg.gov/MemberRoster/";
+const azLegislator = (id: string, name: string, chamber: "lower" | "upper", ocdId: string) => ({
+  officeholder: {
+    id: `az-legislature:${id}`,
+    name,
+    officeTitle: chamber === "lower" ? "State Representative" : "State Senator",
+    level: "STATE" as const,
+    termStart: "2025-01-13",
+    termEnd: "2027-01-11",
+    birthDate: null,
+    partyLabel: null,
+    websiteUrl: AZ_ROSTER,
+    contactFormUrl: null,
+    phone: null,
+    email: null,
+    campaignUrl: null,
+    photo: null,
+    state: "AZ",
+    chamber,
+    provenance: { sourceUrl: AZ_ROSTER, sourceOrg: "Arizona State Legislature", collectedAt: "2026-09-25T12:00:00.000Z", verifiedAt: null },
+  },
+  division: { officeholderId: `az-legislature:${id}`, ocdId, bodyId: null },
+});
+const ld20 = [
+  azLegislator("rep-a", "Representative A", "lower", "ocd-division/country:us/state:az/sldl:20"),
+  azLegislator("rep-b", "Representative B", "lower", "ocd-division/country:us/state:az/sldl:20"),
+  azLegislator("sen-a", "Senator A", "upper", "ocd-division/country:us/state:az/sldu:20"),
+];
+installPromotedValue<OfficialStateLegislatorReadModel>({
+  recordClass: "STATE_LEGISLATOR",
+  scope: "US-AZ",
+  sourceId: "az-legislature",
+  versionId: "test:az-state-legislators",
+  value: {
+    formatVersion: 1,
+    sourceId: "az-legislature",
+    jurisdiction: "US-AZ",
+    term: "2025-2026",
+    generatedAt: "2026-09-25T12:00:00.000Z",
+    roster: {
+      scope: "AZ",
+      generatedAt: "2026-09-25T12:00:00.000Z",
+      officeholders: ld20.map(({ officeholder }) => officeholder),
+      divisions: ld20.map(({ division }) => division),
+      unmatched: [],
+    },
+  } as OfficialStateLegislatorReadModel,
+});
 
 import { coverageAt } from "../lib/registry/server.ts";
 import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";

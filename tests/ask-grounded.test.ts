@@ -14,6 +14,9 @@ import { synthesizeAnswer, synthesisPrompt, synthesisDateBlock } from "../lib/as
 import { validateAnswer } from "../lib/ask/validate.ts";
 import { statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district";
 

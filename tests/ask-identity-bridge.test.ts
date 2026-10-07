@@ -6,6 +6,9 @@ import { partyConflictCardForFiling, partyConflictFilingForCard, reconciledCandi
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import { bindNamedEntity, type BindableEntity } from "../lib/routing/named-entity.ts";
+import { AZ_TEST_CANVASS_URL, AZ_TEST_FILINGS_URL, installAzBallot, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 const person = (id: string, name: string): BindableEntity => ({ id, name, nameClass: "person", divisionType: "person" });
 
@@ -16,53 +19,69 @@ function aliased(officials: readonly BindableEntity[], ballot: readonly { entity
   return [...officials.map((entity) => ({ ...entity, id: officialToBallot.get(entity.id) ?? entity.id })), ...ballot.map(({ entity }) => entity)];
 }
 
-test("Amalia DUARTE: the Mendham Township Committee roster row and her 2026 Township Committee candidacy are one committed person", () => {
-  const officialId = "roster:nj-morris-mendham_township#2";
-  const candidacyId = "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia";
-  assert.deepEqual(resolvedCandidacyForOfficial(officialId), {
-    candidacyId,
-    contestId: "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township",
-  });
+/* A committed roster-to-candidacy row the held registry carries (the first RESOLVED body-roster row). */
+const committed = getRegistryRuntimeReadModel().officialCandidacies.rows
+  .find((row) => row.status === "RESOLVED" && row.holder.authority === "REGISTRY_BODY_ROSTER" && row.candidacy)!;
+
+test("a body-roster row and its committed candidacy are one person: the reverse join, the person keys, and the binding", () => {
+  assert.ok(committed, "the held registry carries a committed body-roster candidacy");
+  const officialId = committed.holder.id;
+  const { candidacyId, contestId } = committed.candidacy!;
+  assert.deepEqual(resolvedCandidacyForOfficial(officialId), { candidacyId, contestId });
   assert.deepEqual(officialIdsForCandidacy(candidacyId), [officialId]);
   assert.deepEqual(readerPersonKeys(officialId).keys, [candidacyId, officialId]);
 
   const row = getRegistryRuntimeReadModel().officialCandidacies.rows.find((candidate) => candidate.holder.id === officialId)!;
-  assert.equal(row.holder.sourceUrl, "https://www.mendhamtownship.org/266/Township-Committee");
+  assert.equal(row.holder.sourceUrl, committed.holder.sourceUrl);
 
-  const question = "How much has Amalia DUARTE raised?";
-  const official = person(officialId, "Amalia Duarte, Member");
-  const ballot = [{ entity: person(candidacyId, "Amalia DUARTE"), candidacyId }];
+  const question = `How much has ${committed.holder.name} raised?`;
+  const official = person(officialId, committed.holder.name);
+  // The ballot row under the same name the question uses, as a second record of the same person.
+  const ballot = [{ entity: person(candidacyId, committed.holder.name), candidacyId }];
   assert.equal(bindNamedEntity(question, [official, ...ballot.map(({ entity }) => entity)]).kind, "AMBIGUOUS", "control: unjoined, the two records are two candidates");
   const binding = bindNamedEntity(question, aliased([official], ballot));
   assert.equal(binding.kind, "BOUND");
   assert.equal(binding.kind === "BOUND" && binding.entity.id, candidacyId);
 });
 
-test("Teri Ann Hourihan: the certified card and her filing are the committed party-conflict pair, one subject with both parties and sources", () => {
-  const card = "ballot-az-pima:governor|Teri Ann Hourihan";
-  const filingId = "ballot-az-pima:governor:hourihan-teri-ann";
+test("a party-conflict card and its filing are the committed pair, one subject with both parties and sources", async () => {
+  const contestId = "ballot-az-test:synthetic-office";
+  const filingId = `${contestId}:sample-jordan`;
+  await installAzBallot(syntheticAzBallot([{
+    id: contestId,
+    title: "Synthetic Office",
+    candidacies: [
+      { id: filingId, givenName: "Jordan", familyName: "Sample", partyLabel: "Party B" },
+      { id: `${contestId}:example-casey`, givenName: "Casey", familyName: "Example", partyLabel: "Party A" },
+    ],
+    lineup: [
+      { name: "Jordan Sample", partyLabel: "Party A", outcome: "PARTY_CONFLICT", candidacyId: filingId, filingParty: "Party B" },
+      { name: "Casey Example", partyLabel: "Party A", outcome: "RECONCILED", candidacyId: `${contestId}:example-casey` },
+    ],
+  }]));
+  const card = `${contestId}|Jordan Sample`;
   const pair = partyConflictFilingForCard(card);
   assert.deepEqual(pair, {
     cardKey: card,
-    contestId: "ballot-az-pima:governor",
+    contestId,
     filingCandidacyId: filingId,
-    name: "Teri Ann Hourihan",
-    canvassParty: "No Labels",
-    canvassSourceUrl: "https://apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf",
-    filingParty: "Arizona Independent Party",
-    filingSourceUrl: "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
-    readerGapSentence: "Arizona's certified canvass and the Secretary of State's candidate-filing list state different parties for the only matching name, so we have not established that they are the same candidacy.",
+    name: "Jordan Sample",
+    canvassParty: "Party A",
+    canvassSourceUrl: AZ_TEST_CANVASS_URL,
+    filingParty: "Party B",
+    filingSourceUrl: AZ_TEST_FILINGS_URL,
+    readerGapSentence: "We have not established that this nominee is the same candidacy as a filing.",
   });
   assert.deepEqual(partyConflictCardForFiling(filingId), pair);
   // The honest conflict stands: the card never acquires the filing as its candidacy.
   assert.equal(reconciledCandidacyIdForCard(card), null);
   assert.deepEqual(readerPersonKeys(card).keys, [card]);
   // Only the conflicting pair is returned; a reconciled card or an unrelated filing is not.
-  assert.equal(partyConflictFilingForCard("ballot-az-pima:governor|Katie Hobbs"), null);
-  assert.equal(partyConflictCardForFiling("ballot-az-pima:governor:hobbs-katie"), null);
+  assert.equal(partyConflictFilingForCard(`${contestId}|Casey Example`), null);
+  assert.equal(partyConflictCardForFiling(`${contestId}:example-casey`), null);
 
-  const question = "How much has Teri Ann Hourihan raised?";
-  const entities = [person(card, "Teri Ann Hourihan"), person(filingId, "Teri Ann Hourihan")];
+  const question = "How much has Jordan Sample raised?";
+  const entities = [person(card, "Jordan Sample"), person(filingId, "Jordan Sample")];
   assert.equal(bindNamedEntity(question, entities).kind, "AMBIGUOUS", "control: unpaired, the two rows are two candidates");
   const paired = entities.map((entity) => ({ ...entity, id: partyConflictCardForFiling(entity.id)?.cardKey ?? entity.id }));
   const binding = bindNamedEntity(question, paired);

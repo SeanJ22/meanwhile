@@ -20,7 +20,6 @@
     "db:gate": "tsx scripts/db-shipping-gate.mts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "demo:sweep": "tsx scripts/demo-sweep.mts",
     "deploy:live": "node scripts/deploy-live.mjs",
     "deploy:sha": "node scripts/deploy-live.mjs --sha",
     "dev": "node scripts/dev.mjs",

@@ -36,20 +36,20 @@ import {
   type RegistryRuntimePackage,
   type RegistryRuntimeReadModel,
 } from "../lib/registry/runtime-data-plane.ts";
-import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, readRegistryRuntimeProjection, registryRuntimeFirstSeed } from "../lib/registry/runtime-read-model.ts";
+import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE, isCensusPlaceholderDivision, withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { slotsFor } from "../lib/registry/derive.ts";
 import type { Registry } from "../lib/registry/types.ts";
+import { registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 
+/** The synthetic federal directory over the registry's own districts (the bundled first seed is gone). */
 async function federalSeed() {
-  const read = await readFederalDirectoryProjection({ store: new MemoryRoutineDataStore(), bypassCache: true });
-  if (read.kind !== "BOOTSTRAP") throw new Error(`expected federal bootstrap, received ${read.kind}`);
-  return structuredClone(read.value);
+  return structuredClone(syntheticFederalDirectory());
 }
 
 function federalAcquisitions(sourceSha: string, suffix: string): FederalDirectoryAcquisition[] {
@@ -88,10 +88,18 @@ function receipt(value: RegistryRuntimeReadModel, at: string, salt: string): Man
   };
 }
 
+/**
+ * The registry a current package carries: the recorded transfer-time import (the bundled first seed is
+ * gone) without the two boards once minted on Census placeholder divisions, which every promotion drops.
+ */
+function servedRegistry(): RegistryRuntimeReadModel {
+  const imported = registryTransferImport().projection.payload;
+  const placeholders = frozenPlaceholders().ids;
+  return { ...imported, registry: { ...imported.registry, bodies: imported.registry.bodies.filter((body) => body.ocdId === null || !placeholders.has(body.ocdId)) } };
+}
+
 async function registryPackage(at: string, salt: string): Promise<RegistryRuntimePackage> {
-  const read = await readRegistryRuntimeProjection({ store: new MemoryRoutineDataStore(), bypassCache: true });
-  if (read.kind !== "BOOTSTRAP") throw new Error(`expected registry bootstrap, received ${read.kind}`);
-  const payload = structuredClone(read.value);
+  const payload = structuredClone(servedRegistry());
   return { contractId: "registry-runtime-bindings", version: at, sourceThrough: at, sourceReceipt: receipt(payload, at, salt), payload };
 }
 
@@ -401,7 +409,7 @@ test("a Census placeholder division is geography: no body is derived on it and n
   }
   // Known by the Census's own code whatever its slug or label says, the slug
   // standing in only where no code is held; never a division of another layer.
-  const seed = registryRuntimeFirstSeed().value;
+  const seed = servedRegistry();
   const real = seed.registry.divisions.find((division) => division.divisionType === "school_district" && !isCensusPlaceholderDivision(division));
   assert.ok(real);
   assert.deepEqual(slotsFor(real), { slots: [{ bodyClass: "GOVERNING", slot: "board" }], skipped: null });
@@ -409,19 +417,16 @@ test("a Census placeholder division is geography: no body is derived on it and n
   assert.equal(isCensusPlaceholderDivision({ ocdId: placeholders.divisions[0]!.ocdId }), true);
   assert.equal(isCensusPlaceholderDivision({ ...placeholders.divisions[0]!, divisionType: "place" }), false);
 
-  // The composed first seed leaves both bodies out and keeps both places.
-  assert.equal(seed.registry.bodies.some((body) => body.ocdId !== null && placeholders.ids.has(body.ocdId)), false);
+  // The served registry keeps both places as geography.
   assert.equal(seed.registry.divisions.filter((division) => placeholders.ids.has(division.ocdId)).length, 2);
 
-  // One view of the frozen file for everything that counts its bodies: it drops exactly the two boards,
-  // keeps every place, and serves nothing the first seed does not.
+  // One view of the frozen file for everything that counts its bodies: it drops exactly the two boards
+  // and keeps every place.
   const frozen = JSON.parse(readFileSync("lib/registry/registry.json", "utf8")) as Registry;
   const counted = withoutPlaceholderBodies(frozen);
   assert.equal(counted.divisions.length, frozen.divisions.length);
   const kept = new Set(counted.bodies.map((body) => body.id));
   assert.deepEqual(frozen.bodies.filter((body) => !kept.has(body.id)).map((body) => body.id).sort(), placeholders.bodies.map((body) => body.id).sort());
-  const served = new Set(seed.registry.bodies.map((body) => body.id));
-  assert.ok(counted.bodies.every((body) => served.has(body.id)));
   assert.equal(registryRuntimeProjectionIssues(seed).some((issue) => issue.startsWith(CENSUS_PLACEHOLDER_BODY_ISSUE)), false);
   const carrying: RegistryRuntimeReadModel = { ...seed, registry: { ...seed.registry, bodies: [...seed.registry.bodies, ...placeholders.bodies] } };
   assert.deepEqual(
@@ -650,7 +655,7 @@ test("the plane refuses what the registry door does not prove: a changed carried
 
 test("the version production serves keeps reading until its correction promotes; no other defect is tolerated", async () => {
   const placeholders = frozenPlaceholders();
-  const seed = registryRuntimeFirstSeed().value;
+  const seed = servedRegistry();
   const legacy: RegistryRuntimeReadModel = { ...seed, registry: { ...seed.registry, bodies: [...seed.registry.bodies, ...placeholders.bodies] } };
   try {
     primeRegistryRuntimeFromValue(legacy, "legacy-with-placeholder-bodies");
@@ -658,8 +663,8 @@ test("the version production serves keeps reading until its correction promotes;
     const duplicated: RegistryRuntimeReadModel = { ...legacy, registry: { ...legacy.registry, bodies: [...legacy.registry.bodies, legacy.registry.bodies[0]!] } };
     assert.throws(() => primeRegistryRuntimeFromValue(duplicated, "duplicate-body"), /BODY_ID_INVALID_OR_DUPLICATED/);
   } finally {
-    const restored = await readRegistryRuntimeProjection({ store: new MemoryRoutineDataStore(), bypassCache: true });
-    assert.equal(restored.kind, "BOOTSTRAP");
+    primeRegistryRuntimeFromValue(seed, "corrected");
+    assert.equal(getRegistryRuntimeReadModel().registry.bodies.length, seed.registry.bodies.length);
   }
 });
 

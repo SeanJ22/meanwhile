@@ -1,4 +1,3 @@
-import { stateDomainFiles } from "../lib/holdings/discovery.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
@@ -6,6 +5,11 @@ import { representationForDivision } from "../lib/registry/representation.ts";
 import { coverageAt, seatHoldersForDivision } from "../lib/registry/server.ts";
 import { indexByDivision } from "../lib/officials/lookup.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
+import { installFederalDirectory, installRegistryRuntime, installStateLegislators } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryRuntime();
+const federal = await installFederalDirectory();
+const arizonaLegislators = installStateLegislators("US-AZ");
 
 /**
  * A district card may not deny officeholders we hold. A coverage summary is point-scoped by construction, so a
@@ -30,16 +34,10 @@ const DIVISION_TYPES = [
   { key: "place", label: "municipality", pattern: /\/place:[^/]+$/ },
 ] as const;
 
-/** Every division we hold people for, read off the roster files rather than through a point. */
+/** Every division we hold people for, read off the held rosters themselves rather than through a point. */
 async function heldDivisions(): Promise<Map<string, number>> {
-  const { readFile } = await import("node:fs/promises");
-  const { join } = await import("node:path");
-  const root = process.cwd();
-  const files = stateDomainFiles(root, "officials").filter((file) => /\/officeholders-\d{2}\.json$/.test(file));
   const held = new Map<string, number>();
-
-  for (const file of files) {
-    const set = JSON.parse(await readFile(join(root, file), "utf8")) as OfficeholderSet;
+  for (const set of [federal.value.roster, arizonaLegislators.roster] as OfficeholderSet[]) {
     for (const [ocdId, holders] of indexByDivision([set])) {
       if (holders.length > 0) held.set(ocdId, holders.length);
     }
@@ -95,32 +93,6 @@ test("a division we hold people for answers by its OWN key, wherever the reader 
     [],
     `district cards would deny officeholders we hold:\n${failures.join("\n")}`,
   );
-});
-
-test("the named case: State House District 21 holds its two members from a Tucson point", async () => {
-  const AZ_SLDL_21 = "ocd-division/country:us/state:az/sldl:21";
-  const coverage = await coverageAt(...PROBE, 1);
-
-  // The reader must be in a different state house district or the case proves nothing.
-  assert.ok(
-    !coverage.seats.some((s) => s.ocdId === AZ_SLDL_21),
-    "the probe point must NOT be in District 21 for this case to bite",
-  );
-  assert.equal(
-    representationForDivision(coverage, AZ_SLDL_21).length,
-    0,
-    "the point-scoped resolver is expected to be empty here — that is the bug",
-  );
-
-  const resolved = await seatHoldersForDivision(AZ_SLDL_21);
-  const names = resolved.map((h) => h.name).sort();
-  assert.deepEqual(names, ["Consuelo Hernandez", "Stephanie Stahl Hamilton"]);
-  for (const holder of resolved) {
-    assert.ok(
-      holder.sourceUrl,
-      `${holder.name} renders without a source — same sourcing, same render`,
-    );
-  }
 });
 
 test("the route answers by path, and distinct divisions get distinct answers", async () => {

@@ -4,6 +4,9 @@ import { EVERYDAY_CONTACTS, readerEligibleEverydayContact, everydayContactsFor }
 import { answerQuestion, showGroundedAnswer } from "../lib/routing/ask.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import { readAskAnswer } from "../lib/ask/answer.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 test("reader civic contacts exclude a planted unverified acquisition", () => {
   const held = EVERYDAY_CONTACTS[0];

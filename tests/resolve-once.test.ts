@@ -11,9 +11,11 @@ import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import { divisionsAt, sweepsRun, type GeoFeature } from "../lib/registry/resolve.ts";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installMeetings, recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+installMeetings(recordedMeetings85701());
 
 /**
  * `/api/meetings` resolves the governing geography once per request and hands the resolved divisions to

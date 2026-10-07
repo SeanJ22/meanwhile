@@ -13,7 +13,7 @@ import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/e
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, registrationTarget } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { enterReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 
 /**
  * The reader never wakes the database for registration on an ordinary visit:
@@ -123,12 +123,12 @@ test("unchanged states carry forward, a moved state re-publishes alone, and a st
 });
 
 test("the reader composes a state's registration from the edge, and a state the complete section omits costs no read at all", async () => {
-  await installRegistryRuntimeFirstSeeds();
+  await installRegistryAuthority();
   const { divisionsByOcdIds } = await import("../lib/registry/server.ts");
   const oh = model("OH");
   const county = oh.divisions.find((d) => d.divisionType === "county")!;
   const loads: string[] = [];
-  enterReaderAuthorityEdge({
+  enterReaderAuthorityEdge(promotedFixtureBundle({
     registrations: {
       states: new Set(["oh"]),
       load: async (state) => {
@@ -136,7 +136,7 @@ test("the reader composes a state's registration from the edge, and a state the 
         return state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null;
       },
     },
-  });
+  }));
   const found = await divisionsByOcdIds([county.ocdId, "ocd-division/country:us/state:wy/county:laramie"]);
   assert.deepEqual(found.map((d) => d.ocdId), [county.ocdId], "Ohio's county composes; Wyoming, absent from the complete section, is dropped");
   assert.deepEqual(loads, ["oh"], "only the named, registered state is fetched");
@@ -144,12 +144,12 @@ test("the reader composes a state's registration from the edge, and a state the 
 });
 
 test("a DC division and a Puerto Rico division reach their registrations on the reader", async () => {
-  await installRegistryRuntimeFirstSeeds();
+  await installRegistryAuthority();
   const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");
   const dc = model("DC");
   const pr = model("PR");
   const loads: string[] = [];
-  const edge = {
+  const edge = promotedFixtureBundle({
     registrations: {
       states: new Set(["dc", "pr"]),
       load: async (state: string) => {
@@ -157,7 +157,7 @@ test("a DC division and a Puerto Rico division reach their registrations on the 
         return state === "dc" ? { value: dc, versionId: "reg-dc-1" } : state === "pr" ? { value: pr, versionId: "reg-pr-1" } : null;
       },
     },
-  };
+  });
   enterReaderAuthorityEdge(edge);
   // DC's ids root at `district:dc`, Puerto Rico's at `territory:pr`: until both were read as jurisdictions, neither was ever asked for.
   const washington = "ocd-division/country:us/district:dc/place:washington";
@@ -175,13 +175,13 @@ test("a DC division and a Puerto Rico division reach their registrations on the 
 });
 
 test("a registered body reaches the coverage card titled by its division, never as a nameless, labelless row", async () => {
-  await installRegistryRuntimeFirstSeeds();
+  await installRegistryAuthority();
   const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");
   const oh = model("OH");
   const body = oh.bodies.find((b) => b.bodyOrigin === "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS" && oh.divisions.some((d) => d.ocdId === b.ocdId && d.divisionType === "county"))!;
   const bodyDivisionId = body.ocdId;
   const division = oh.divisions.find((d) => d.ocdId === bodyDivisionId)!;
-  enterReaderAuthorityEdge({ registrations: { states: new Set(["oh"]), load: async (state) => (state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null) } });
+  enterReaderAuthorityEdge(promotedFixtureBundle({ registrations: { states: new Set(["oh"]), load: async (state) => (state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null) } }));
   // The ZIP widening hands coverage the registered divisions, exactly as /api/meetings does.
   const resolved = await divisionsByOcdIds([division.ocdId]);
   const coverage = await coverageAt(39.96, -83.0, 0, resolved);

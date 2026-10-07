@@ -13,6 +13,9 @@ import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.
 import { statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 const TUSD = "ocd-division/country:us/state:az/school_district:tucson_unified_district";
 

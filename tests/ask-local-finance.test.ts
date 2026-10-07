@@ -3,6 +3,46 @@ import test from "node:test";
 
 delete process.env.ANTHROPIC_API_KEY;
 
+import { installPimaLocalFinance, installRegistryAuthority, syntheticPimaLocalFinance } from "./helpers/promoted-fixtures.ts";
+
+/*
+ * A synthetic county register and transaction holding. Four committees name the Vail board's office in the
+ * register (one with money rows); one names an office the crosswalk does not link; one names a supervisor
+ * seat. Committee, donor and payee names are invented.
+ */
+const VAIL_OFFICE = "School Governing Board - Vail";
+const register = (portalFilerId: string, registeredName: string, officeName: string | null, filingCount = 2) =>
+  ({ portalFilerId, registeredName, filerType: "Candidate", status: "Active", officeName, filingCount, source: `https://example.test/county-register/${portalFilerId}` });
+const contribution = (committee: string, amount: number, date: string, first: string, last: string) => ({
+  DocumentFilingId: `f-${committee}-${date}`, DocumentType: "CCFR", ItemizedListType: "Contribution", RecipientCommitteeName: committee, OfficeName: null,
+  ContributorFullName: null, ContributorFirstName: first, ContributorMiddleName: null, ContributorLastName: last, ContributorOrganizationName: null,
+  ContributionDate: date, ContributionAmount: amount });
+const spending = (committee: string, amount: number, date: string, payee: string) => ({
+  DocumentFilingId: `d-${committee}-${date}`, DocumentType: "CCFR", ItemizedListType: "Disbursments", CandidateCommitteeName: committee, OfficeName: null,
+  PayeeOrganizationName: payee, PayeeFirstName: null, PayeeLastName: null, DistributionDate: date, DistributionAmount: amount });
+await installRegistryAuthority();
+await installPimaLocalFinance(syntheticPimaLocalFinance({
+  held: { committeeRegisterCountyPortal: [
+    register("101", "Candidate One for VUSD Board", VAIL_OFFICE, 3),
+    register("102", "Candidate Two for VUSD Board", VAIL_OFFICE),
+    register("103", "Candidate Three for Vail School Board", VAIL_OFFICE),
+    register("104", "Candidate Four Vail Committee", VAIL_OFFICE),
+    register("105", "Citizens for Synthetic Schools", "School Governing Board - Elsewhere"),
+    register("106", "SYNTHETIC SUPERVISOR CAMPAIGN", null),
+  ] },
+  transactions: {
+    acquisition: { contributionsUrl: "https://example.test/county-contributions", distributionsUrl: "https://example.test/county-distributions", retrievedOn: "2026-08-29" },
+    contributions: [
+      contribution("Candidate One for VUSD Board", 297.86, "2025-02-27", "Pat", "Donor"),
+      contribution("Citizens for Synthetic Schools", 5000, "2025-03-01", "Lee", "Giver"),
+    ],
+    distributions: [
+      spending("Candidate One for VUSD Board", 16, "2025-03-05", "Synthetic Bank"),
+      spending("Citizens for Synthetic Schools", 5000, "2025-03-02", "Synthetic Contracting Co"),
+    ],
+  },
+}));
+
 const { financeQuestionAsked, localFinanceEvidenceFor } =
   await import("@/lib/ask/local-finance");
 const { POST } = await import("@/app/api/ask/grounded/route");
@@ -50,10 +90,10 @@ test("the Vail board gets its register-linked committees as sourced records", ()
   const committees = vail!.records.filter((r) => r.kind === "FINANCE_COMMITTEE");
   assert.equal(committees.length, 4);
   const names = committees.map((r) => r.text).join("\n");
-  assert.match(names, /Ed Buster for VUSD Board/);
-  assert.match(names, /Jen Anderson for VUSD Board/);
-  assert.match(names, /Leroy Smith for Vail School Board/);
-  assert.match(names, /Anastasia 4 Vail Committee/);
+  assert.match(names, /Candidate One for VUSD Board/);
+  assert.match(names, /Candidate Two for VUSD Board/);
+  assert.match(names, /Candidate Three for Vail School Board/);
+  assert.match(names, /Candidate Four Vail Committee/);
   for (const record of committees) {
     assert.ok(record.sourceUrl, "every register record carries the source it was read from");
     assert.equal(record.bodyId, VAIL_BOARD, "the record states whose it is, for the validator");
@@ -62,16 +102,16 @@ test("the Vail board gets its register-linked committees as sourced records", ()
 
 test("the filed money rows travel as records with amounts and dates in plain language", () => {
   const tx = vail!.records.filter((r) => r.kind === "FINANCE_TRANSACTION");
-  assert.ok(tx.length > 0, "the Ed Buster committee's filed rows must reach the pack");
+  assert.ok(tx.length > 0, "the first committee's filed rows must reach the pack");
 
   const buster = tx.find((r) => /\$297\.86/.test(r.text));
   assert.ok(buster, "the committee's reported contribution is a record");
-  assert.doesNotMatch(buster!.text, /Edward Buster/, "R255: an individual donor's name never reaches the reader");
+  assert.doesNotMatch(buster!.text, /Pat Donor/, "R255: an individual donor's name never reaches the reader");
   assert.match(buster!.text, /February 27th, 2025/, "dates spell out on reader surfaces");
   assert.match(buster!.text, /contribution/, "money in says it is money in");
   assert.ok(buster!.sourceUrl, "provenance travels on the record itself");
 
-  const bank = tx.find((r) => /Bank of America/.test(r.text));
+  const bank = tx.find((r) => /Synthetic Bank/.test(r.text));
   assert.ok(bank, "the committee's reported spending is a record");
   assert.match(bank!.text, /reported spending \$16\.00/, "money out says it is money out");
 
@@ -94,8 +134,8 @@ test("transaction records are ordered by date, newest first — never by amount"
 
 test("a committee the register does not link to the body NEVER appears for it", () => {
   const everything = [...vail!.records.map((r) => r.text), ...vail!.gaps.map((g) => g.statement)].join("\n");
-  assert.ok(!/Citizens of Vail for Education/.test(everything), "an unlinked committee must not leak");
-  assert.ok(!/Concord General Contracting/.test(everything), "nor its transactions");
+  assert.ok(!/Citizens for Synthetic Schools/.test(everything), "an unlinked committee must not leak");
+  assert.ok(!/Synthetic Contracting Co/.test(everything), "nor its transactions");
   assert.ok(!/\$5,000\.00/.test(everything));
 });
 
@@ -115,7 +155,7 @@ test("the independent-expenditure class is a NAMED gap, never collapsed into fil
 });
 
 test("register-linked committees with no readable money rows are a named gap, with denominators", () => {
-  const gap = vail!.gaps.find((g) => /Jen Anderson for VUSD Board/.test(g.statement));
+  const gap = vail!.gaps.find((g) => /Candidate Two for VUSD Board/.test(g.statement));
   assert.ok(gap, "the committees whose reports we cannot read yet are named");
   assert.equal(gap!.whose, "OURS");
   assert.match(gap!.statement, /cannot say what they raised or spent/);
@@ -147,7 +187,7 @@ test("a body with no linked committee gets the honest OURS gap, not silence — 
   assert.match(gap!.statement, /says nothing about whether such a committee exists/);
 
   const everything = board!.gaps.map((g) => g.statement).join("\n");
-  assert.ok(!/ANDRES/i.test(everything), "a register-less committee never leaks in by name");
+  assert.ok(!/SYNTHETIC SUPERVISOR/i.test(everything), "a register-less committee never leaks in by name");
 });
 
 test("a person NOT on a covered body gets null — never a false 'nothing recorded'", () => {
@@ -224,7 +264,7 @@ test("ROUTE: a funding question about the Vail board returns finance records wit
   assert.equal(committees.length, 4);
   assert.ok(tx.length > 0, "the filed money rows reach the delivered pack");
   assert.ok(tx.some((r) => /\$297\.86/.test(r.text)));
-  assert.ok(tx.every((r) => !/Edward Buster/.test(r.text)), "individual donor identity is withheld under R255");
+  assert.ok(tx.every((r) => !/Pat Donor/.test(r.text)), "individual donor identity is withheld under R255");
 
   const ie = body.gaps?.find((g) => /Independent-expenditure reports/.test(g.statement));
   assert.ok(ie, "the reader is told outside spending is a different, not-held record class");
@@ -254,7 +294,7 @@ test("ROUTE: a funding question about a body with no linked committee gets the O
     ...(body.records ?? []).map((r) => r.text),
     ...(body.gaps ?? []).map((g) => g.statement),
   ].join("\n");
-  assert.ok(!/ANDRES/i.test(everything), "register-less supervisor committees never leak in");
+  assert.ok(!/SYNTHETIC SUPERVISOR/i.test(everything), "register-less supervisor committees never leak in");
 });
 
 test("ROUTE: an FEC-covered federal candidate question gets NO Pima local finance records", async () => {

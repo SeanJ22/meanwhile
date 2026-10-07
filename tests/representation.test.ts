@@ -3,9 +3,12 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority, installStateLegislators } from "./helpers/promoted-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+// Official state rosters are their own promoted families; a synthetic one per pilot state.
+installStateLegislators("US-AZ");
+installStateLegislators("US-NJ");
 
 import { coverageAt } from "../lib/registry/server.ts";
 import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";

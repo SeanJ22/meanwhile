@@ -15,6 +15,9 @@ import { buildPlaceOwedList, missingPlaceWork, type PlaceSubject } from "../lib/
 import { runPlaceSource } from "../lib/hunt/place-source.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { loadStateDistrictBoundaries } from "../lib/control-plane/expansion/national-geography.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 test("national district provenance identifies its saved query rather than layer metadata", async () => {
   const captures = new Map<string, string>();

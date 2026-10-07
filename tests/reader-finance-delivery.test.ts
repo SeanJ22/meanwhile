@@ -13,10 +13,53 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resetStateMoneyCache, stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
 import { resetAzIdentityCache } from "../lib/identity/az-2026.ts";
+import { readAzBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import type { StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
+import { installAzBallot, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticAzBallot, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+
+/*
+ * The canonical candidacy keys the registry's official-candidacy bridge names (Hobbs and two federal members
+ * for Governor, Yee for Superintendent, Ayotte for NH Governor, Selen for Morris County), each with one
+ * synthetic FILED committee in its state's finance holding, and an Arizona ballot whose certified lineup
+ * reconciles "Katie Hobbs" to her candidacy.
+ */
+const HOBBS_RECEIPTS = 2_000_000;
+function filed(state: StateCampaignFinanceJurisdiction, key: string, office: string, receipts = 1000): StateMoneyRecord {
+  const record = syntheticFiledStateMoneyRecord(state, key, receipts);
+  return { ...record, officeSought: office, match: { ...record.match, officeAsFiled: office, officeOnBallot: office } };
+}
+function withRecords(state: StateCampaignFinanceJurisdiction, records: StateMoneyRecord[]) {
+  const fixture = stateMoneyFixture(state);
+  return { ...fixture, records: [...fixture.records, ...records] };
+}
+await installAzBallot(syntheticAzBallot([
+  {
+    id: "ballot-az-pima:governor",
+    title: "Governor",
+    candidacies: [
+      { id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" },
+      { id: "ballot-az-pima:governor:biggs-andy", givenName: "Andy", familyName: "Biggs" },
+      { id: "ballot-az-pima:governor:schweikert-david", givenName: "David", familyName: "Schweikert" },
+    ],
+    lineup: [{ name: "Katie Hobbs", partyLabel: "Democratic", outcome: "RECONCILED", candidacyId: "ballot-az-pima:governor:hobbs-katie" }],
+  },
+  {
+    id: "ballot-az-pima:superintendent",
+    title: "Superintendent of Public Instruction",
+    candidacies: [{ id: "ballot-az-pima:superintendent:yee-kimberly", givenName: "Kimberly", familyName: "Yee" }],
+  },
+]));
+await installStateMoney("AZ", withRecords("AZ", [
+  filed("AZ", "ballot-az-pima:governor:hobbs-katie", "Governor", HOBBS_RECEIPTS),
+  filed("AZ", "ballot-az-pima:governor:biggs-andy", "Governor"),
+  filed("AZ", "ballot-az-pima:governor:schweikert-david", "Governor"),
+  filed("AZ", "ballot-az-pima:superintendent:yee-kimberly", "Superintendent of Public Instruction"),
+]));
+await installStateMoney("NH", withRecords("NH", [filed("NH", "ballot-nh-merrimack:governor:ayotte-kelly", "Governor")]));
+await installStateMoney("NJ");
 await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
 const bridge = getRegistryRuntimeReadModel().officialCandidacies;
 
@@ -68,8 +111,8 @@ test("Katie Hobbs ballot, official API, and shared Ask selector use one canonica
   assert.equal(official.state.resolvedTargetKey, hobbsKey);
   assert.deepEqual(official.state.records, ballot.records);
   assert.deepEqual(campaignMoneyForTarget(hobbsKey).state.records, ballot.records);
-  assert.equal(hobbs.totals.receipts, 11_109_719.95);
-  assert.equal(hobbs.totals.expenditures, 14_355_612.69);
+  assert.equal(hobbs.totals.receipts, HOBBS_RECEIPTS);
+  assert.equal(hobbs.totals.expenditures, HOBBS_RECEIPTS / 2);
   const api = campaignMoneyApiAnswer("statewide:az/governor");
   assert.equal(api.kind, "state");
   if (api.kind === "state") assert.deepEqual(api.data.records, ballot.records);
@@ -162,19 +205,24 @@ test("a missing deployed normalized holding raises a failed read even if staged 
   }
 });
 
-test("a missing canonical ballot identity projection cannot become a display-key funding absence", () => {
-  const root = process.cwd();
-  const isolated = mkdtempSync(join(tmpdir(), "reader-finance-identity-"));
+test("a missing canonical ballot identity projection cannot become a display-key funding absence", async () => {
+  const failedStore = {
+    async readPromotion() { throw new Error("planted ballot authority failure"); },
+    async readCandidate() { throw new Error("a failed pointer must not read a candidate"); },
+  };
+  const env = process.env as Record<string, string | undefined>;
+  const previous = env.NODE_ENV;
+  env.NODE_ENV = "production";
   try {
-    process.chdir(isolated);
+    assert.equal((await readAzBallotProjection({ store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
     resetAzIdentityCache();
     assert.throws(
       () => stateMoneyForCard("ballot-az-pima:governor|Katie Hobbs", "ballot-az-pima:governor"),
-      /ENOENT.*az-pima-2026\.json|identity holding unavailable/,
+      /Arizona ballot projection is STORE_UNREACHABLE|identity holding unavailable/,
     );
   } finally {
-    process.chdir(root);
+    if (previous === undefined) delete env.NODE_ENV;
+    else env.NODE_ENV = previous;
     resetAzIdentityCache();
-    rmSync(isolated, { recursive: true, force: true });
   }
 });

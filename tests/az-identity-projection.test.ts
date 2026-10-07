@@ -3,16 +3,49 @@ import test from "node:test";
 
 import { stateMoneyForCard } from "../lib/funding/nominee-money.ts";
 import { isRenderable } from "../lib/funding/state-money.ts";
+import { installAzBallot, installStateMoney, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+
+/*
+ * The held state-money fixture (tests/fixtures/state-money-2026.json) carries one FILED Attorney General
+ * record and one OURS-gap Mine Inspector record. The ballot projection is synthetic: those two contests
+ * with their certified-lineup cards bridged to the fixture's candidacies, and a synthetic contest whose
+ * two nominees the bridge could not resolve.
+ */
+await installAzBallot(syntheticAzBallot([
+  {
+    id: "ballot-az-pima:attorney-general",
+    title: "Attorney General",
+    candidacies: [{ id: "ballot-az-pima:attorney-general:glassman-rodney", givenName: "Rodney", familyName: "Glassman" }],
+    lineup: [{ name: "Rodney Glassman", partyLabel: "Party A", outcome: "RECONCILED", candidacyId: "ballot-az-pima:attorney-general:glassman-rodney" }],
+  },
+  {
+    id: "ballot-az-pima:mine-inspector",
+    title: "State Mine Inspector",
+    candidacies: [{ id: "ballot-az-pima:mine-inspector:presmyk-walter", givenName: "Walter", familyName: "Presmyk" }],
+    lineup: [{ name: 'Walter "Les" Presmyk', partyLabel: "Party A", outcome: "RECONCILED", candidacyId: "ballot-az-pima:mine-inspector:presmyk-walter" }],
+  },
+  {
+    id: "ballot-az-test:synthetic-office",
+    title: "Synthetic Office",
+    candidacies: [{ id: "ballot-az-test:synthetic-office:sample-jordan", givenName: "Jordan", familyName: "Sample", partyLabel: "Party B" }],
+    lineup: [
+      { name: "Jordan Sample", partyLabel: "Party A", outcome: "PARTY_CONFLICT", candidacyId: "ballot-az-test:synthetic-office:sample-jordan", filingParty: "Party B" },
+      { name: "Robin Nomatch", partyLabel: "Party A", outcome: "NO_CANDIDATE_MATCH" },
+    ],
+  },
+]));
+await installStateMoney("AZ");
+await installStateMoney("NH");
 
 test("a reconciled nominee's card is answered with the CANDIDACY id, not the name", () => {
-  const key = "ballot-az-pima:governor|Katie Hobbs";
-  const out = stateMoneyForCard(key, "ballot-az-pima:governor");
+  const key = "ballot-az-pima:attorney-general|Rodney Glassman";
+  const out = stateMoneyForCard(key, "ballot-az-pima:attorney-general");
   assert.equal(out.resolution, "RECONCILED_NOMINEE");
-  assert.equal(out.resolvedTargetKey, "ballot-az-pima:governor:hobbs-katie");
+  assert.equal(out.resolvedTargetKey, "ballot-az-pima:attorney-general:glassman-rodney");
   assert.notEqual(out.resolvedTargetKey, key);
   const filed = out.records.filter((r) => r.filingState === "FILED");
   assert.equal(filed.length, 1);
-  assert.equal(filed[0].totals.receipts, 11109719.95);
+  assert.equal(filed[0].totals.receipts, 3775589.91);
 });
 
 test("the nickname control resolves too, and it resolves to an OURS gap with no figure", () => {
@@ -30,8 +63,8 @@ test("the nickname control resolves too, and it resolves to an OURS gap with no 
 
 test("an unresolved nominee renders an OURS gap rather than silence", () => {
   for (const [key, contestId] of [
-    ["ballot-az-pima:governor|Teri Ann Hourihan", "ballot-az-pima:governor"],
-    ["ballot-az-pima:state-senate-19|Bob Karp", "ballot-az-pima:state-senate-19"],
+    ["ballot-az-test:synthetic-office|Jordan Sample", "ballot-az-test:synthetic-office"],
+    ["ballot-az-test:synthetic-office|Robin Nomatch", "ballot-az-test:synthetic-office"],
   ] as const) {
     const out = stateMoneyForCard(key, contestId);
     assert.equal(out.resolution, "UNRECONCILED_NOMINEE", key);
@@ -47,7 +80,7 @@ test("an unresolved nominee renders an OURS gap rather than silence", () => {
 });
 
 test("an OURS gap carries no money of any kind — the prohibition, asserted", () => {
-  const out = stateMoneyForCard("ballot-az-pima:governor|Teri Ann Hourihan", "ballot-az-pima:governor");
+  const out = stateMoneyForCard("ballot-az-test:synthetic-office|Jordan Sample", "ballot-az-test:synthetic-office");
   const record = out.records[0];
   assert.equal(record.totals.receipts, null);
   assert.equal(record.totals.expenditures, null);
@@ -60,11 +93,11 @@ test("an OURS gap carries no money of any kind — the prohibition, asserted", (
 
 test("a card keyed on a candidacy id passes straight through, unchanged", () => {
   const out = stateMoneyForCard(
-    "ballot-az-pima:corporation-commissioner:thompson",
-    "ballot-az-pima:corporation-commissioner",
+    "ballot-az-pima:attorney-general:glassman-rodney",
+    "ballot-az-pima:attorney-general",
   );
   assert.equal(out.resolution, "DIRECT_CANDIDACY_KEY");
-  assert.equal(out.resolvedTargetKey, "ballot-az-pima:corporation-commissioner:thompson");
+  assert.equal(out.resolvedTargetKey, "ballot-az-pima:attorney-general:glassman-rodney");
   assert.equal(out.records.filter((r) => r.filingState === "FILED").length, 1);
 });
 

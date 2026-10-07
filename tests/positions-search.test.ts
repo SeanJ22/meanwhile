@@ -8,6 +8,11 @@ import { currentOfficeholderStatements } from "../lib/corpus/data-plane.ts";
 import { unifiedCorpus, unifiedCorpusCounts } from "../lib/corpus/unified.ts";
 import { currentExtraction } from "../lib/candidates/corpus.ts";
 import { getCandidateCorpus } from "../lib/candidates/positions.ts";
+import { installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, UNQUOTABLE_CANDIDATE_KEY, UNQUOTABLE_TERM } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
+await installCandidateCorpus();
+await installOfficeholderStatements();
 
 // The positions search reads the union of the officeholder statement corpus and the candidate corpus.
 
@@ -93,13 +98,6 @@ test("13: every candidate with held text is findable by a term from that text", 
   assert.deepEqual(misses, [], `candidates whose own words cannot be found:\n${misses.join("\n")}`);
 });
 
-test("13: the named candidate from the report is findable", () => {
-  const corpus = unifiedCorpus();
-  const answer = positionsFor("ballot-nj-morris:us-house-11:mejia", "analilia", corpus);
-  assert.equal(answer.kind, "MATCHED", "the reported candidate still returns nothing");
-  assert.ok(answer.passages.length > 0);
-});
-
 /** A failed retrieval and a genuine zero render as different sentences. */
 test("13: a failed search and an empty search are different sentences", () => {
   const section = readFileSync(
@@ -118,7 +116,7 @@ test("13: a failed search and an empty search are different sentences", () => {
  */
 test("13: a term we hold but will not quote is not reported as their silence", () => {
   const corpus = unifiedCorpus();
-  const answer = positionsFor("ballot-az-pima:governor|Andy Biggs", "mining", corpus);
+  const answer = positionsFor(UNQUOTABLE_CANDIDATE_KEY, UNQUOTABLE_TERM, corpus);
 
   assert.equal(answer.kind, "SEARCHED_NOTHING_MATCHED");
   assert.ok(

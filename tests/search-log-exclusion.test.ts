@@ -141,8 +141,6 @@ test("no module reads search_log without the organic filter", async () => {
       "scripts/walk-all.mts",
       "scripts/verify-readonly.mts",
       "scripts/verify-write-handle.mts",
-      // A deletion by occurred_at: it must not spare non-ORGANIC rows, and it emits no aggregate.
-      "scripts/demo-sweep.mts",
       // Paths are repo-relative POSIX, produced by posixRelative below.
     ],
   );

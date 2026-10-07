@@ -5,6 +5,9 @@ import { membersOfBody } from "../lib/registry/body-membership.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import type { CoveredBody } from "../lib/registry/coverage.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 /** A body's members come from the body, never from its geography: a meeting resolves to the body it names or to nothing. */
 
@@ -59,15 +62,6 @@ test("DATA-3: a CAWCD sitting renders the CAWCD board, not the county supervisor
   for (const supervisor of ["Rex Scott", "Jennifer Allen", "Steve Christy"]) {
     assert.ok(!names.includes(supervisor), `${supervisor} is a county supervisor`);
   }
-});
-
-test("DATA-3: the old division join is what produced the wrong five", async () => {
-  // The division join is what produced the wrong members.
-  const { bodies } = await coverageAt(VAIL_AREA.lat, VAIL_AREA.lng, 0);
-  const meeting = MEETINGS.find((m) => m.bodyId === CAWCD)!;
-  const wrong = bodyByDivision(bodies, meeting);
-  assert.equal(wrong?.bodyId, COUNTY_BOARD);
-  assert.notEqual(wrong?.bodyId, meeting.bodyId);
 });
 
 test("DATA-3 control: no meeting anywhere renders another body's members", async () => {

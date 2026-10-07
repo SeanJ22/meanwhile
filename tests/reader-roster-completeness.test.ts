@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { test } from "node:test";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
 
 import { BODY_ROSTERS, rosterGapForBody, rosterGapsForDivision, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { GET } from "../app/api/representation/[...division]/route.ts";

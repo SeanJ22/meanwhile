@@ -11,6 +11,9 @@ import {
 import { governingRosterHoldersForDivision, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import type { Registry } from "../lib/registry/types.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 /** A body does not inherit members from its geography: an inherited roster requires a recorded, cited authority, and an unsourced body renders nobody. These guards live outside the resolver so a defect in it cannot disable them. */
 

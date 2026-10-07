@@ -22,19 +22,17 @@ import { stateOfOcdId, type ReaderManifest } from "../lib/meetings/edge-artifact
 
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
 
 import { edgeValidationsRun } from "../lib/civic-data/validated-once.ts";
 
 import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 
-import { federalDirectoryFirstSeed } from "../lib/officials/federal-directory-read-model.ts";
 
-import { outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
+import { getOutcomeSnapshot, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
 
 import { currentCommentAccess } from "../lib/registry/comment-access.ts";
 
-import { primeRegistryRuntimeFromValue, registryRuntimeFirstSeed, registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
+import { primeRegistryRuntimeFromValue, registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 
 import { currentEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
 
@@ -46,13 +44,15 @@ import { GET as representationGET } from "../app/api/representation/[...division
 
 import { primeReaderEdge } from "../app/api/warm/route.ts";
 
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+
+import { installPimaOutcomes, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
 
 const dirs: string[] = [];
 
@@ -63,6 +63,8 @@ after(() => {
   else process.env.WTP_READER_EDGE_DIR = previousEdgeDir;
   for (const dir of dirs) rmSync(dir, { recursive: true, force: true });
 });
+
+await installPimaOutcomes();
 
 await refreshOutcomeSnapshotFromPromoted();
 
@@ -84,15 +86,35 @@ const stateLegislators = Object.fromEntries(OFFICIAL_STATE_LEGISLATOR_TARGETS.ma
   roster: { scope: target.state.toLowerCase(), generatedAt: "2026-09-25", officeholders: [], divisions: [], unmatched: [] },
 }]));
 
+/**
+ * The recorded 85701 meetings plus one synthetic sitting each for a New Jersey and a New Hampshire county
+ * government, so the edge publishes meeting scopes for three states.
+ */
+function multiStateSnapshot() {
+  const recorded = recordedMeetingsSnapshot().meetings;
+  const template = recorded.find((row) => row.id.startsWith("legistar:") && row.location)!;
+  const elsewhere = (state: string, county: string, lat: number, lng: number) => ({
+    ...template,
+    id: `test-calendar:${state}-${county}`,
+    ocdId: `ocd-division/country:us/state:${state}/county:${county}`,
+    bodyId: `ocd-division/country:us/state:${state}/county:${county}#governing`,
+    bodyName: `Synthetic ${county} county board`,
+    jurisdiction: `${county} County, ${state.toUpperCase()}`,
+    location: { lat, lng, name: "Synthetic test venue", address: "Synthetic test address" },
+    actingBodies: undefined,
+  });
+  return recordedMeetingsSnapshot([...recorded, elsewhere("nj", "morris", 40.7968, -74.4815), elsewhere("nh", "merrimack", 43.2081, -71.5376)]);
+}
+
 async function publishEdge(tag: string, options: { readonly legislators?: boolean } = {}): Promise<{ dir: string; manifest: ReaderManifest }> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-c21-edge-"));
   dirs.push(dir);
-  const snapshot = readSnapshot();
-  assert.ok(snapshot, "the bundled meetings snapshot publishes the edge's meeting scopes");
+  const snapshot = multiStateSnapshot();
+  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
   const authority: PublishAuthority = {
-    "registry-runtime": { value: registryRuntimeFirstSeed().value, versionId: `${tag}:registry` },
-    "federal-directory": { value: federalDirectoryFirstSeed().value, versionId: `${tag}:federal` },
-    "meeting-outcomes": { value: (outcomes as { value: unknown }).value, versionId: `${tag}:outcomes` },
+    "registry-runtime": { value: registryTransferImport().projection.payload, versionId: `${tag}:registry` },
+    "federal-directory": { value: syntheticFederalDirectory(), versionId: `${tag}:federal` },
+    "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: `${tag}:outcomes` },
     "comment-access": { value: commentAccessProjection, versionId: `${tag}:comment-access` },
     ...(options.legislators ? { "state-legislators": { value: stateLegislators, versionId: `${tag}:legislators` } } : {}),
   };
@@ -191,7 +213,7 @@ test("the Blobs manifest is held fifteen seconds per instance, shared in flight,
 });
 
 test("an edge value is validated once per object and version, and an invalid one fails every prime", () => {
-  const value = registryRuntimeFirstSeed().value;
+  const value = registryTransferImport().projection.payload;
   const before = edgeValidationsRun();
   primeRegistryRuntimeFromValue(value, "c21-validate:1");
   primeRegistryRuntimeFromValue(value, "c21-validate:1");

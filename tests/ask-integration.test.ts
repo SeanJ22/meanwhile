@@ -22,6 +22,9 @@ import {
 } from "../lib/db/ask-signal.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
+import { installAzBallot, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 const ROOT = process.cwd();
 
@@ -372,6 +375,26 @@ const GOVERNOR_NOMINEES = [
   { name: "Teri Ann Hourihan", partyLabel: "No Labels" },
 ];
 const nominees = (contestId: string) => (contestId === "ballot-az-pima:governor" ? GOVERNOR_NOMINEES : []);
+
+/* The committed ballot file as the promoted ballot rows, with the certified governor lineup bridged: the two
+   nominees who filed under the same name reconcile to their filings, the other two are left unresolved. */
+await installAzBallot({
+  ...syntheticAzBallot([{
+    id: "ballot-az-pima:governor",
+    title: "Governor",
+    candidacies: [
+      { id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" },
+      { id: "ballot-az-pima:governor:biggs-andy", givenName: "Andy", familyName: "Biggs" },
+    ],
+    lineup: GOVERNOR_NOMINEES.map((nominee) => ({
+      ...nominee,
+      outcome: nominee.name === "Katie Hobbs" || nominee.name === "Andy Biggs" ? "RECONCILED" as const : "NO_CANDIDATE_MATCH" as const,
+      ...(nominee.name === "Katie Hobbs" ? { candidacyId: "ballot-az-pima:governor:hobbs-katie" } : {}),
+      ...(nominee.name === "Andy Biggs" ? { candidacyId: "ballot-az-pima:governor:biggs-andy" } : {}),
+    })),
+  }]),
+  ballot: AZ_BALLOT,
+});
 
 test("BLOCKER 4: a non-statewide CHALLENGER on the reader's ballot is a resolvable entity", () => {
   const inventory = ballotAskInventory(AZ_BALLOT, AZ_BALLOT.contests, nominees);

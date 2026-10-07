@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
+import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await initializeFederalVoteFirstSeed();
+await installRegistryAuthority();
+await installFederalVotes();
 
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "../lib/ask/speculative-reading.ts";
 import { synthesizeWithLadder } from "../lib/ask/synthesize.ts";

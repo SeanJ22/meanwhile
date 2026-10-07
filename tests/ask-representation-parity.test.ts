@@ -4,6 +4,9 @@ import test from "node:test";
 import { coverageAt } from "../lib/registry/server.ts";
 import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { resolveRouting } from "../lib/routing/resolve.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 const TUCSON: [number, number] = [32.21696, -110.971];
 

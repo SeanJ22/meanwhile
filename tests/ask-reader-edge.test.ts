@@ -7,69 +7,75 @@ import { after, test } from "node:test";
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
-import {
-  readAzBallotProjection,
-  readCandidateCorpusProjection,
-  readCandidateProfilesProjection,
-} from "../lib/civic-data/manual-read-models.ts";
 import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE } from "../lib/civic-data/derived-campaign-sites.ts";
 import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
-import { federalRollCallsReadState, readFederalRollCallsProjection } from "../lib/votes/snapshot.ts";
-import { readFederalKeyVotesProjection } from "../lib/votes/key-votes-projection.ts";
+import { PIMA_LOCAL_FINANCE_CONTRACT, STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
+import { federalRollCallsReadState } from "../lib/votes/snapshot.ts";
 import { FEDERAL_KEY_VOTE_SCOPE, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_SOURCE_ID } from "../lib/votes/data-plane.ts";
-import { readOfficeholderStatementsProjection } from "../lib/corpus/data-plane.ts";
-import { readExecutiveActionsProjection } from "../lib/officials/executive-actions.ts";
 import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../lib/outcomes/data-plane.ts";
-import { outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
-import { registryRuntimeFirstSeed } from "../lib/registry/runtime-read-model.ts";
-import { federalDirectoryFirstSeed } from "../lib/officials/federal-directory-read-model.ts";
+import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import {
   absentEdgeEntry,
   manualEdgeEntry,
   promotedFamily,
   provenEdgeEntry,
   servedValue,
-  stateMoneyFixtureEntries,
 } from "./helpers/promoted-edge-entry.ts";
+import {
+  registryTransferImport,
+  stateMoneyFixture,
+  syntheticAzBallot,
+  syntheticCandidateCorpus,
+  syntheticCandidateProfiles,
+  syntheticFederalDirectory,
+  syntheticFederalKeyVotes,
+  syntheticFederalRollCalls,
+  syntheticOfficeholderStatements,
+  syntheticPimaLocalFinance,
+} from "./helpers/promoted-fixtures.ts";
+import { recordedMeetingsSnapshot, syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
 
 /** The real Ask route is asked with no database: every Neon HTTP request is answered here with no rows and counted by record class. */
 
 delete process.env.ANTHROPIC_API_KEY;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
-// The values the edge carries: the first seeds and fixtures this test process serves, read before the fake database.
+// The values the edge carries: the recorded registry import, the recorded 85701 meetings, and small synthetic
+// values for every other family, built before the fake database. FEC funding is still read through its seed.
 const seedStore = new MemoryRoutineDataStore();
 const served = servedValue;
-await refreshOutcomeSnapshotFromPromoted();
-const outcomes = served(outcomeProjectionReadState());
+const outcomes: OutcomeSnapshot = { generatedOn: "2026-09-25", generatedAt: "2026-09-25T12:00:00.000Z", tenants: [], sittings: [] };
+const federal = syntheticFederalDirectory();
 const manual = manualEdgeEntry;
 const family = promotedFamily;
 const fec = requiredRoutineContract("fec-funding");
 const federalVotes = { sourceId: FEDERAL_VOTES_SOURCE_ID };
 const EDGE = { funding: "edge-test:ask:fec", federalVotes: "edge-test:ask:federal-votes" };
+const stateMoneyEntries = (version: (state: string) => string) => (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) =>
+  provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope, sourceId: STATE_CAMPAIGN_FINANCE_SOURCES[state].sourceId, versionId: version(state), value: stateMoneyFixture(state) }));
 const PROMOTED: Partial<Record<PromotedAuthorityFamily, { value: PromotedFamilyArtifactValue; versionId: string }>> = {
   "ballot-contests": family([absentEdgeEntry("BALLOT_CANDIDACY", "US:state-election-ballots")], "edge-test:general-ballot-absent"),
-  "ballot-az": family([manual("az-sos-ballot", served(await readAzBallotProjection({ store: seedStore, bypassCache: true })), "edge-test:ask:az")], "edge-test:ask:az"),
+  "ballot-az": family([manual("az-sos-ballot", syntheticAzBallot(), "edge-test:ask:az")], "edge-test:ask:az"),
   "candidate-profiles": family([
-    manual("candidate-profiles", served(await readCandidateProfilesProjection({ store: seedStore, bypassCache: true })), "edge-test:ask:profiles"),
+    manual("candidate-profiles", syntheticCandidateProfiles(), "edge-test:ask:profiles"),
     absentEdgeEntry(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE),
   ], "edge-test:ask:profiles"),
-  "candidate-publications": family([manual("candidate-corpus", served(await readCandidateCorpusProjection({ store: seedStore, bypassCache: true })), "edge-test:ask:corpus")], "edge-test:ask:corpus"),
+  "candidate-publications": family([manual("candidate-corpus", syntheticCandidateCorpus(), "edge-test:ask:corpus")], "edge-test:ask:corpus"),
   "federal-funding": family([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: served(await readFundingSnapshot({ store: seedStore, bypassCache: true })) })], EDGE.funding),
-  "state-money": family(stateMoneyFixtureEntries((state) => `edge-test:ask:money:${state}`), "edge-test:ask:money"),
-  "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: EDGE.federalVotes, value: served(await readFederalRollCallsProjection({ store: seedStore, bypassCache: true })) })], EDGE.federalVotes),
-  "federal-key-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, sourceId: federalVotes.sourceId, versionId: "edge-test:ask:key-votes", value: served(await readFederalKeyVotesProjection({ store: seedStore, bypassCache: true })) })], "edge-test:ask:key-votes"),
-  "officeholder-statements": family([manual("officeholder-statements", served(await readOfficeholderStatementsProjection({ store: seedStore, bypassCache: true })), "edge-test:ask:statements")], "edge-test:ask:statements"),
+  "state-money": family(stateMoneyEntries((state) => `edge-test:ask:money:${state}`), "edge-test:ask:money"),
+  "pima-finance": family([provenEdgeEntry({ recordClass: "LOCAL_CAMPAIGN_FINANCE", scope: PIMA_LOCAL_FINANCE_CONTRACT.scope, sourceId: PIMA_LOCAL_FINANCE_CONTRACT.sourceId, versionId: "edge-test:ask:pima-finance", value: syntheticPimaLocalFinance() })], "edge-test:ask:pima-finance"),
+  "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: EDGE.federalVotes, value: syntheticFederalRollCalls(federal) })], EDGE.federalVotes),
+  "federal-key-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, sourceId: federalVotes.sourceId, versionId: "edge-test:ask:key-votes", value: syntheticFederalKeyVotes(federal) })], "edge-test:ask:key-votes"),
+  "officeholder-statements": family([manual("officeholder-statements", syntheticOfficeholderStatements(), "edge-test:ask:statements")], "edge-test:ask:statements"),
   "executive-actions": family([provenEdgeEntry({
     recordClass: AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
     scope: AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
     sourceId: AZ_OFFICIAL_ACTIONS_CONTRACT.sourceId,
     versionId: "edge-test:ask:actions",
-    value: served(await readExecutiveActionsProjection({ store: seedStore, bypassCache: true })),
+    value: syntheticExecutiveActions("Katie Hobbs"),
   })], "edge-test:ask:actions"),
 };
 
@@ -77,11 +83,11 @@ const PROMOTED: Partial<Record<PromotedAuthorityFamily, { value: PromotedFamilyA
 async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {}): Promise<string> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-ask-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
-  const snapshot = readSnapshot();
-  assert.ok(snapshot, "the bundled meetings snapshot publishes the edge's meeting scopes");
+  const snapshot = recordedMeetingsSnapshot();
+  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
   const authority: PublishAuthority = {
-    "registry-runtime": { value: registryRuntimeFirstSeed().value, versionId: "edge-test:ask:registry" },
-    "federal-directory": { value: federalDirectoryFirstSeed().value, versionId: "edge-test:ask:federal" },
+    "registry-runtime": { value: registryTransferImport().projection.payload, versionId: "edge-test:ask:registry" },
+    "federal-directory": { value: federal, versionId: "edge-test:ask:federal" },
     "meeting-outcomes": { value: outcomes, versionId: "edge-test:ask:outcomes" },
     ...(withPromoted ? { ...PROMOTED, ...overrides } : {}),
   };
@@ -201,7 +207,7 @@ test("a marked warm call loads the Ask's code and every Ask source from the edge
   const WARM = { funding: "edge-test:ask:warm:fec", federalVotes: "edge-test:ask:warm:federal-votes" };
   process.env.WTP_READER_EDGE_DIR = await publishEdge(true, {
     "federal-funding": family([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: WARM.funding, value: served(await readFundingSnapshot({ store: seedStore, bypassCache: true })) })], WARM.funding),
-    "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: WARM.federalVotes, value: served(await readFederalRollCallsProjection({ store: seedStore, bypassCache: true })) })], WARM.federalVotes),
+    "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: WARM.federalVotes, value: syntheticFederalRollCalls(federal) })], WARM.federalVotes),
   });
   clearPromotedReadModelCache();
   databaseReads.length = 0;

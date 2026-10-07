@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
-await initializeFederalVoteFirstSeed();
+import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+await installRegistryAuthority();
+await installFederalVotes();
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";

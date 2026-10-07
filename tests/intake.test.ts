@@ -20,15 +20,21 @@ process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "5";
 // the authoritative counters answer "unavailable" — both paths asserted.
 delete process.env.DATABASE_URL;
 
-await readFederalRollCallsProjection({ edge: provenEdgeEntry({
+// The promoted federal roll calls, carried as the Reader edge carries a proven
+// pointer: the route's own refresh reads this copy (no database in tests).
+const promotedVotes = provenEdgeEntry({
   recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "cv-intake-votes",
   value: { formatVersion: 1, snapshot: { congress: 119, session: 1, votes: [{ id: "house:119-1:1" }], positions: [] }, billSummaries: { summaries: {}, pending: [] } },
-}) });
+});
+const votesEdge = { promoted: new Map([[`FEDERAL_ROLL_CALL:${FEDERAL_ROLLCALL_SCOPE}`, promotedVotes]]) };
+await readFederalRollCallsProjection({ edge: promotedVotes });
 
 const { classifySubmission, intakeLimits, isSameOriginSubmission } = await import(
   "../lib/signal/intake-limits.ts"
 );
-const { POST: postReaction } = await import("../app/api/reactions/route.ts");
+const { POST: postPromotedReaction } = await import("../app/api/reactions/route.ts");
+const { withReaderAuthorityEdge } = await import("../lib/registry/runtime-edge.ts");
+const postReaction = (request: Request) => withReaderAuthorityEdge(votesEdge, () => postPromotedReaction(request));
 const { POST: postLog } = await import("../app/api/log/route.ts");
 const { getVoteIds } = await import("../lib/votes/snapshot.ts");
 const { analyzeStore } = await import(

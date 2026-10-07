@@ -64,6 +64,10 @@ import { allCandidateLinks, campaignLinkIsDerived, linksForCandidacy } from "../
 import { candidateProfileEvidenceFor } from "../lib/ask/candidate-profile.ts";
 import { preloadCandidateEnrichmentAuthorities, candidateEnrichmentHoldings } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { DUARTE, KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
+import { installAzBallot, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
+await installAzBallot();
 
 const ROOT = process.cwd();
 /* Past instants: the store refuses a candidate event later than its own clock. */
@@ -77,7 +81,6 @@ const KAPNER_ROOT = "https://www.kapner4mendhamtwp.com/";
 const MARGINALIA_URL = "https://api.marginalia.nu/public/search/Lily%20Tang%20Williams";
 const MAYES_KEY = "ballot-az-pima:attorney-general:mayes-kris";
 
-const GATE = { promotionEnabled: true, openRecordClasses: ["candidate-enrichment"], openFields: {} };
 
 function scoutedSite(f: { attemptId: string; obligationId: string; subjectId: string; outcome: "ROUTE_CANDIDATE"; routeId: string;
   canonicalUrl: string; artifactIds: string[]; recordedAt: string; summary: string }): ScoutedRecord {
@@ -261,7 +264,7 @@ async function cycle(p: Plane, now: string, extra: Partial<CampaignSiteCycleInpu
   const vault = await indexVault(p.vaultRoot);
   const held = await heldMarginaliaFromManifest(p.vaultRoot, p.manifest, vault, now);
   const report = await runCampaignSiteCycle({
-    repos: p.repos, subjects: committedSubjects(), marginalia: held.responses, gate: GATE, now,
+    repos: p.repos, subjects: committedSubjects(), marginalia: held.responses, now,
     clock: () => (ms += 5), sleep: async (wait) => { ms += wait; },
     open: async (request) => { p.requests.push(request.url); return runtime.get(request); },
     vaultRoot: p.vaultRoot, heldVault: vault, methodVersion: 1,
@@ -308,6 +311,21 @@ async function profilesStore() {
   return { store, profiles: { input, links: read.value.links.links } };
 }
 
+/** The prior GOOD candidate-publication corpus the derived door adds to: one retained publication. */
+async function promotePriorCorpus(store: MemoryRoutineDataStore): Promise<string> {
+  const oldText = "Kris Mayes is the Attorney General.";
+  const oldHash = sha256(oldText);
+  const corpus = manualProjectionCandidate({ contractId: "candidate-corpus", version: T0, sourceThrough: T0,
+    sourceReceipt: { contractVersion: 1, reviewedAt: T0, reviewedBy: "fixture-review", sources: [{
+      requestedUrl: "https://www.krismayes.com", finalUrl: "https://www.krismayes.com", publisher: "Kris Mayes campaign",
+      sourceClass: "CANDIDATE_CONTROLLED", retrievedAt: T0, httpStatus: 200, rawHash: oldHash, reviewedEvidence: "Retained prior publication fixture" }] },
+    payload: { formatVersion: 1, fetchedAt: T0, attempted: 1, failures: [], documents: [{ id: `${MAYES_KEY}@${oldHash}`, candidateKey: MAYES_KEY,
+      sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED", metaDescription: null, documentUrl: "https://www.krismayes.com", contentHash: oldHash,
+      retrievedAt: T0, contentType: "text/html", text: oldText, extraction: "html", extractionNote: null }] } });
+  assert.ok((await processRegisteredManualCandidate(store, "candidate-corpus", corpus, T0, null)).promoted);
+  return oldHash;
+}
+
 test("a runner cycle over held results publishes a verified site through the derived door with no owner step, and /ballot and Ask show it", async (t) => {
   const p = await plane(t);
   await captureProfile(p);
@@ -343,16 +361,7 @@ test("a runner cycle over held results publishes a verified site through the der
   assert.equal(outcome.candidate.state, "PROMOTED", `${outcome.candidate.failureCode ?? ""} ${outcome.candidate.failureDetail ?? ""} ${JSON.stringify(outcome.candidate.receipt?.checks.filter((c) => c.verdict !== "PASS"))}`);
   assert.equal(outcome.candidate.receipt?.decision, "GOOD");
   assert.equal(outcome.readerReadback?.status, "PASS");
-  const oldText = "Kris Mayes is the Attorney General.";
-  const oldHash = sha256(oldText);
-  const corpus = manualProjectionCandidate({ contractId: "candidate-corpus", version: T0, sourceThrough: T0,
-    sourceReceipt: { contractVersion: 1, reviewedAt: T0, reviewedBy: "fixture-review", sources: [{
-      requestedUrl: "https://www.krismayes.com", finalUrl: "https://www.krismayes.com", publisher: "Kris Mayes campaign",
-      sourceClass: "CANDIDATE_CONTROLLED", retrievedAt: T0, httpStatus: 200, rawHash: oldHash, reviewedEvidence: "Retained prior publication fixture" }] },
-    payload: { formatVersion: 1, fetchedAt: T0, attempted: 1, failures: [], documents: [{ id: `${MAYES_KEY}@${oldHash}`, candidateKey: MAYES_KEY,
-      sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED", metaDescription: null, documentUrl: "https://www.krismayes.com", contentHash: oldHash,
-      retrievedAt: T0, contentType: "text/html", text: oldText, extraction: "html", extractionNote: null }] } });
-  assert.ok((await processRegisteredManualCandidate(store, "candidate-corpus", corpus, T0, null)).promoted);
+  const oldHash = await promotePriorCorpus(store);
   await refreshCandidateCorpusFromPromoted({ store, bypassCache: true, now: PUBLISH });
   assert.ok(documentsFor(tangKeys[0]).some(doc => doc.documentUrl === LILY && doc.text?.length && doc.sourceContentHash), "normal candidate Reader receives verified page text");
   assert.ok(documentsFor(MAYES_KEY).some(doc => doc.contentHash === oldHash), "prior GOOD publications survive");
@@ -442,6 +451,7 @@ test("a bounded linked publication capture reaches the existing derived corpus w
   const promoted = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", pass.candidate,
     new Date(clock.ms + 1000).toISOString());
   assert.equal(promoted.candidate.state, "PROMOTED", JSON.stringify(promoted.candidate.receipt?.checks.filter(row => row.verdict !== "PASS")));
+  await promotePriorCorpus(store);
   await refreshCandidateCorpusFromPromoted({ store, bypassCache: true, now: new Date(clock.ms + 2000).toISOString() });
   assert.ok(documentsFor(key).some(row => row.documentUrl === articleUrl && row.text?.includes("accessible health care")));
   const firstDocument = documentsFor(key).find(row => row.documentUrl === articleUrl)!;
@@ -555,6 +565,7 @@ test("already captured linked pages from another job reach the corpus without a 
   assert.deepEqual(pass.candidate.semantics.violations, []);
   const promoted = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", pass.candidate, PUBLISH);
   assert.equal(promoted.candidate.state, "PROMOTED", promoted.candidate.failureDetail ?? undefined);
+  await promotePriorCorpus(store);
   await refreshCandidateCorpusFromPromoted({ store, bypassCache: true, now: PUBLISH });
   const key = subject(TANG_WILLIAMS).readerKeys[0]!;
   for (const capture of captures) {
@@ -719,7 +730,7 @@ async function createSlow(t: { after: (fn: () => void) => void }, pages: Record<
   const runtime = servedRuntime(pages, T1);
   const vault = await indexVault(p.vaultRoot);
   const report = await runCampaignSiteCycle({
-    repos: p.repos, subjects: committedSubjects(), marginalia: [], gate: GATE, now: T1,
+    repos: p.repos, subjects: committedSubjects(), marginalia: [], now: T1,
     clock: () => ms, sleep: async (wait) => { ms += wait; },
     open: async (request) => { requests += 1; ms += 61_000; return runtime.get(request); },
     vaultRoot: p.vaultRoot, heldVault: vault, methodVersion: 1,
@@ -781,7 +792,7 @@ test("held independent evidence advances before new leads and slow backlog reads
   const held = await heldMarginaliaFromManifest(p.vaultRoot, p.manifest, vault, T2);
   const requests: string[] = [];
   const report = await runCampaignSiteCycle({
-    repos: p.repos, subjects: committedSubjects(), marginalia: held.responses, gate: GATE, now: T2,
+    repos: p.repos, subjects: committedSubjects(), marginalia: held.responses, now: T2,
     clock: () => ms, sleep: async (wait) => { ms += wait; },
     open: async (request) => { requests.push(request.url); ms += 5_000; return runtime.get(request); },
     vaultRoot: p.vaultRoot, heldVault: vault, methodVersion: 1,

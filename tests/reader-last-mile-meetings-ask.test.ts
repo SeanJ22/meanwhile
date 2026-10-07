@@ -8,9 +8,11 @@ import { selectSitting } from "../lib/ask/select.ts";
 
 import { meetingOutcomeEvidenceFor } from "../lib/ask/meeting-outcomes.ts";
 
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installPimaOutcomes } from "./helpers/reader-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+const outcomes = await installPimaOutcomes();
 
 test("invalid, multiple and unheld dates never select a different sitting", () => {
   for (const text of ["February 31, 2026", "2026-02-31", "2026-08-01 and 2026-08-02"]) assert.equal(meetingDateInQuestion(text)?.date, null);
@@ -25,7 +27,8 @@ test("a structured agenda never supplies an action or member vote, and no struct
   const absent = meetingOutcomeEvidenceFor({ bodyId: "unheld-body", meetingId: "unheld-meeting", startsAt: "2026-09-04T12:00:00Z", question: "What was on the agenda?" });
   assert.deepEqual(absent.records, []);
   assert.deepEqual(absent.gaps, []);
-  const held = meetingOutcomeEvidenceFor({ bodyId: "ocd-division/country:us/state:az/county:pima#governing", meetingId: "legistar:pima:1825", startsAt: "2026-07-07T09:00:00-07:00", question: "What was on the agenda?" });
+  const sitting = outcomes.sittings.find((row) => row.agenda.length > 0 && row.outcomes.length > 0)!;
+  const held = meetingOutcomeEvidenceFor({ bodyId: "ocd-division/country:us/state:az/county:pima#governing", meetingId: sitting.meetingId, startsAt: sitting.startsAt, question: "What was on the agenda?" });
   assert.ok(held.records.length > 0);
   assert.ok(held.records.every((record) => record.kind === "AGENDA_ITEM" && record.id.endsWith("#agenda")));
   assert.equal(held.denominators.structuredAgendaItemsForThatMeeting, held.records.length);

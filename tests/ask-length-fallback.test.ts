@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
+import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await initializeFederalVoteFirstSeed();
+await installRegistryAuthority();
+await installFederalVotes();
 import { lengthOnlyRejection, settleRejectedModelAnswer } from "../lib/ask/length-fallback.ts";
 import type { ValidationVerdict } from "../lib/ask/validate.ts";
 

@@ -14,6 +14,9 @@ import { resolveRouting } from "../lib/routing/resolve.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { snapshotEntities } from "../lib/ask/inventory.ts";
 import { resolveInterpretation } from "../lib/ask/resolve.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 const SUNNYSIDE_ZIP_POINT: [number, number] = [32.15102, -110.94461];
 const VAIL_POINT: [number, number] = [32.00932, -110.66108];

@@ -23,6 +23,9 @@ import { refreshNhSeatHolders } from "../lib/ballot/seat-holders.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { claimsInText } from "../lib/text/absence-claims.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 const ROOT = join(import.meta.dirname, "..");
 
@@ -54,7 +57,7 @@ const CONTEST = {
 
 /** The sitting Mayor, and she is one of the three people on the ballot. */
 const SITTING_MAYOR: SeatHolder = {
-  id: "plural:fixture-dana-okonkwo",
+  id: "roster:fixture-dana-okonkwo",
   name: "Dana Okonkwo",
   officeTitle: "Mayor",
   partyLabel: null,

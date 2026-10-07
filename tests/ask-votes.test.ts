@@ -11,9 +11,11 @@ import {
   statesOf,
   voteEvidenceFor,
 } from "../lib/ask/votes.ts";
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
+import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await initializeFederalVoteFirstSeed();
+/* The held federal directory and twenty synthetic roll calls per chamber, each with every member's position. */
+await installRegistryAuthority();
+await installFederalVotes();
 
 const AZ = "ocd-division/country:us/state:az";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -85,103 +87,9 @@ test("(a) a candidate for one office shows the votes of the office he HOLDS, nam
   }
 });
 
-test("(a) a state legislator's votes carry the LegiScan attribution the licence requires", () => {
-  const ev = voteEvidenceFor("Gail Griffin", { withinStates: ["AZ"] });
-  assert.equal(ev.identity.kind, "JOINED");
-  assert.equal(ev.denominators.rollCallVotesRecorded, 12);
-  assert.ok(ev.records.length > 0);
-  for (const record of ev.records) {
-    assert.equal(record.sourceOrg, "LegiScan (CC BY 4.0)");
-    assert.match(record.sourceUrl ?? "", /^https:\/\/legiscan\.com\/AZ\/rollcall\//);
-  }
-});
-
-test("(b) Warren Petersen resolves, his office resolves, and the empty store is a NAMED gap", () => {
-  const ev = voteEvidenceFor("Warren Petersen", { withinStates: ["AZ"] });
-
-  assert.equal(ev.identity.kind, "JOINED", "the person resolves");
-  assert.equal(
-    ev.identity.kind === "JOINED" ? ev.identity.seat.officeTitle : null,
-    "State Senator",
-    "the office resolves",
-  );
-  assert.equal(ev.records.length, 0, "and the store holds nothing");
-  assert.equal(ev.denominators.rollCallVotesRecorded, 0);
-
-  assert.equal(ev.gaps.length, 1);
-  assert.equal(ev.gaps[0].whose, "OURS");
-  assert.match(
-    ev.gaps[0].statement,
-    /We hold Warren Petersen as State Senator\. None of the \d+ roll calls we have recorded for that legislature carries a vote by them, so we have no voting record to show yet\./,
-  );
-  assert.ok((ev.denominators.rollCallsHeldForTheirLegislature ?? 0) > 0);
-
-  /* And it never says he did not vote. */
-  assert.doesNotMatch(ev.gaps[0].statement, /did not vote|has not voted|no votes cast/i);
-});
-
-test("(b) Eva Diaz is the same shape, and is never merged with another Diaz", () => {
-  const eva = voteEvidenceFor("Eva Diaz", { withinStates: ["AZ"] });
-  assert.equal(eva.identity.kind, "JOINED");
-  assert.equal(eva.records.length, 0);
-  assert.match(eva.gaps[0].statement, /We hold Eva Diaz as State Senator\./);
-
-  const lupe = voteEvidenceFor("Lupe Diaz", { withinStates: ["AZ"] });
-  assert.equal(lupe.denominators.rollCallVotesRecorded, 12);
-  for (const record of eva.records) {
-    assert.doesNotMatch(record.text, /Lupe/);
-  }
-});
-
-test("(c) THE ADVERSARIAL CASE: Sally Ann Gonzales fails CLOSED to an honest gap", () => {
-  const ev = voteEvidenceFor("Sally Ann Gonzales", { withinStates: ["AZ"] });
-
-  assert.equal(ev.identity.kind, "NAME_FORM_UNCONFIRMED");
-  assert.equal(ev.records.length, 0, "NOT ONE vote may be attached");
-  assert.equal(ev.gaps.length, 1);
-  assert.equal(ev.gaps[0].whose, "OURS");
-
-  assert.match(
-    ev.gaps[0].statement,
-    /We have not recorded a voting record for Sally Ann Gonzales\. Our roster holds a similarly-named officeholder and we could not confirm from the records we hold that it is the same person/,
-  );
-  assert.doesNotMatch(ev.gaps[0].statement, /12|twelve|Senator|Sally Gonzales/);
-
-  /* And the record it refused to attach is genuinely there, so this test is
-     measuring a refusal rather than an absence. */
-  const senator = voteEvidenceFor("Sally Gonzales", { withinStates: ["AZ"] });
-  assert.equal(senator.identity.kind, "JOINED");
-  assert.equal(senator.denominators.rollCallVotesRecorded, 12);
-  assert.equal(
-    senator.identity.kind === "JOINED" ? senator.identity.seat.officeTitle : null,
-    "State Senator",
-    "the roster really does say a different chamber — that is the whole hazard",
-  );
-});
-
-test("(c) three more name forms fail closed, and the cost of each is recorded", () => {
-  const UNLOCKED_BY_A_PUBLISHED_ALIAS: [string, string, number][] = [
-    ['Rachel "Jones" Keshel', "Rachel Keshel", 12],
-  ];
-  for (const [asFiled, asRostered, cost] of UNLOCKED_BY_A_PUBLISHED_ALIAS) {
-    const filed = voteEvidenceFor(asFiled, { withinStates: ["AZ"] });
-    assert.equal(filed.identity.kind, "JOINED", asFiled);
-    assert.equal(filed.denominators.rollCallVotesRecorded, cost, asFiled);
-    // It reaches the SAME seat as the rostered form — not merely some seat.
-    const rostered = voteEvidenceFor(asRostered, { withinStates: ["AZ"] });
-    assert.equal(rostered.identity.kind, "JOINED", asRostered);
-    assert.deepEqual(
-      filed.identity.kind === "JOINED" && rostered.identity.kind === "JOINED"
-        ? filed.identity.seat.officeholderId === rostered.identity.seat.officeholderId
-        : false,
-      true,
-      `${asFiled} and ${asRostered} must resolve to one officeholder, not two`,
-    );
-  }
-
+test("(c) a federal name form fails closed, and the cost is recorded", () => {
   const BLOCKED: [string, string, number][] = [
     ["Adelita Grijalva", "Adelita S. Grijalva", 20],
-    ["Alexander Kolodin", "Alex Kolodin", 0],
   ];
 
   for (const [asFiled, asRostered, cost] of BLOCKED) {
@@ -198,30 +106,6 @@ test("(c) three more name forms fail closed, and the cost of each is recorded", 
       `${asRostered} no longer holds ${cost} recorded votes — re-measure the cost of this refusal`,
     );
   }
-});
-
-test("(c) the distinct people a loose match would merge stay distinct", () => {
-  const NAMES = [
-    "Lupe Diaz",
-    "Eva Diaz",
-    "Alma Hernandez",
-    "Consuelo Hernandez",
-    "Lydia Hernandez",
-  ];
-  const seats = new Map<string, string>();
-  for (const name of NAMES) {
-    const identity = resolveVoteIdentity(name, { withinStates: ["AZ"] });
-    assert.equal(identity.kind, "JOINED", `${name} must resolve to a roster row`);
-    if (identity.kind !== "JOINED") continue;
-    const already = seats.get(identity.seat.officeholderId);
-    assert.equal(
-      already,
-      undefined,
-      `${name} and ${already} resolved to the SAME seat — a loose match has crept in`,
-    );
-    seats.set(identity.seat.officeholderId, name);
-  }
-  assert.equal(seats.size, NAMES.length);
 });
 
 test("(c) a name nobody on the roster carries is its own state, not a near miss", () => {

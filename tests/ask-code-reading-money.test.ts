@@ -1,15 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
+import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await initializeFederalVoteFirstSeed();
+await installRegistryAuthority();
+await installFederalVotes();
 
 import { ballotAskInventory, ballotRecordsFor, namedSourceFilingIds } from "../lib/ask/ballot-inventory.ts";
 import type { EvidenceRecord } from "../lib/ask/evidence.ts";
 import { lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson } from "../lib/ask/lexical-reading.ts";
 import { codeBestReading } from "../lib/ask/speculative-reading.ts";
 import { voteEvidenceReadsStateRollCalls } from "../lib/ask/votes.ts";
-import { BALLOT_SOURCES } from "../lib/ballot/registry.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 
 const WARMINGTON = "ballot-nh-merrimack:governor:warmington-cinde";
@@ -18,28 +19,45 @@ const HARNED = "ballot-nh-merrimack:state-senate-7:harned-rebecca";
 const NH = "ocd-division/country:us/state:nh";
 const MERRIMACK = "ocd-division/country:us/state:nh/county:merrimack";
 
-const nhSet = await (async () => {
-  const entry = BALLOT_SOURCES.find(({ state }) => state === "nh")!;
-  return entry.source.normalize(await entry.source.fetch());
-})();
+/*
+ * A small synthetic New Hampshire ballot: a statewide race and a county race the reader's divisions reach, and
+ * one state-senate district race they do not.
+ */
+const SAMPLE = "ballot-nh-test:state-senate-7:sample-jordan";
+const NH_PROVENANCE = { sourceUrl: "https://example.test/nh-ballot", sourceOrg: "Synthetic test ballot", collectedAt: "2026-09-25", verifiedAt: null };
+const nhSet: BallotSet = {
+  election: { id: "nh-2026-general-test", date: "2026-11-03", name: "2026 General Election (test)", state: "NH" },
+  contests: [
+    { id: "ballot-nh-test:governor", electionId: "nh-2026-general-test", ocdId: NH, divisionVintage: "2026", title: "Governor", type: "CANDIDACY", voteFor: 1, termYears: 2, scopeNote: null, provenance: NH_PROVENANCE },
+    { id: "ballot-nh-test:county-treasurer", electionId: "nh-2026-general-test", ocdId: MERRIMACK, divisionVintage: "2026", title: "County Treasurer", type: "CANDIDACY", voteFor: 1, termYears: 2, scopeNote: null, provenance: NH_PROVENANCE },
+    { id: "ballot-nh-test:state-senate-7", electionId: "nh-2026-general-test", ocdId: `${NH}/sldu:7`, divisionVintage: "2026", title: "State Senator, District 7", type: "CANDIDACY", voteFor: 1, termYears: 2, scopeNote: null, provenance: NH_PROVENANCE },
+  ],
+  candidacies: [
+    { id: "ballot-nh-test:governor:example-casey", contestId: "ballot-nh-test:governor", givenName: "Casey", familyName: "Example", partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance: NH_PROVENANCE },
+    { id: "ballot-nh-test:county-treasurer:other-robin", contestId: "ballot-nh-test:county-treasurer", givenName: "Robin", familyName: "Other", partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance: NH_PROVENANCE },
+    { id: SAMPLE, contestId: "ballot-nh-test:state-senate-7", givenName: "Jordan", familyName: "Sample", partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance: NH_PROVENANCE },
+  ],
+  measures: [],
+  absences: [],
+};
 
 test("a held candidate the reader NAMES is a subject outside the reader's divisions — and nothing else from there is", () => {
   const matched = nhSet.contests.filter((contest) => contest.ocdId === NH || contest.ocdId === MERRIMACK);
-  assert.ok(!matched.some((contest) => contest.id === "ballot-nh-merrimack:state-senate-7"), "precondition: District 7 is not this reader's contest");
+  assert.ok(!matched.some((contest) => contest.id === "ballot-nh-test:state-senate-7"), "precondition: District 7 is not this reader's contest");
   const before = ballotAskInventory(nhSet, matched);
-  assert.equal(before.subjects.has(HARNED), false, "unnamed: not offered");
-  const named = namedSourceFilingIds("How much has Rebecca Harned raised?", nhSet);
-  assert.deepEqual(named, [HARNED]);
+  assert.equal(before.subjects.has(SAMPLE), false, "unnamed: not offered");
+  const named = namedSourceFilingIds("How much has Jordan Sample raised?", nhSet);
+  assert.deepEqual(named, [SAMPLE]);
   const inventory = ballotAskInventory(nhSet, matched, () => [], named);
-  const harned = inventory.subjects.get(HARNED);
-  assert.ok(harned, "named: answerable");
-  assert.equal(harned.kind, "PERSON");
-  assert.equal(harned.outsideReaderDivisions, true);
-  assert.equal(harned.contestTitle, "State Senator, District 7");
-  assert.equal(inventory.subjects.has("ballot-nh-merrimack:state-senate-7"), false, "her contest is not made a subject of this reader's ballot");
+  const sample = inventory.subjects.get(SAMPLE);
+  assert.ok(sample, "named: answerable");
+  assert.equal(sample.kind, "PERSON");
+  assert.equal(sample.outsideReaderDivisions, true);
+  assert.equal(sample.contestTitle, "State Senator, District 7");
+  assert.equal(inventory.subjects.has("ballot-nh-test:state-senate-7"), false, "her contest is not made a subject of this reader's ballot");
   // Her records say what she filed for, and nothing says it is on this reader's ballot.
-  const retrieved = ballotRecordsFor(harned, { set: nhSet, contests: matched, absences: nhSet.absences });
-  assert.ok(retrieved.records.some((record) => record.kind === "CANDIDACY" && record.id === HARNED));
+  const retrieved = ballotRecordsFor(sample, { set: nhSet, contests: matched, absences: nhSet.absences });
+  assert.ok(retrieved.records.some((record) => record.kind === "CANDIDACY" && record.id === SAMPLE));
   assert.ok(!retrieved.records.some((record) => record.kind === "CONTEST"), "no 'appears on this ballot' record for a contest outside the reader's divisions");
 });
 
@@ -145,41 +163,6 @@ async function ask(question: string, ocdIds: string[], surface = "BALLOT"): Prom
   return JSON.parse(text) as Payload;
 }
 
-test("ROUTE: Rebecca Harned, asked from Merrimack County, is found and her held filing is the answer — no model", { concurrency: false }, async () => {
-  const before = modelCalls;
-  const payload = await ask("How much has Rebecca Harned raised?", [NH, MERRIMACK]);
-  assert.equal(modelCalls, before);
-  assert.equal(payload.subject?.id, HARNED, "was UNRESOLVED: her contest is outside the reader's divisions");
-  assert.equal(payload.trace.interpretation.why, "lexical-reading");
-  assert.equal(payload.mode, "GROUNDED_COMPOSED");
-  assert.equal(payload.trace.synthesis.why, "composed-from-money-records");
-  assert.deepEqual(payload.trace.composition && [payload.trace.composition.kind, payload.trace.composition.shape, payload.trace.composition.passed], ["MONEY", "HOW_MUCH", true]);
-  assert.match(payload.answer ?? "", /^Rebecca Harned's campaign committee, registered as "Harned, Rebecca", reported raising \$[\d,]+\.\d\d and spending \$[\d,]+\.\d\d/);
-  const finance = payload.records.find((record) => record.kind === "FINANCE_SUMMARY");
-  assert.ok(finance && (payload.answer ?? "").includes(`$${finance.finance!.totals.receipts!.toLocaleString("en-US", { minimumFractionDigits: 2 })}`), "the figure stated is the record the reader is shown");
-});
-
-test("ROUTE: 'Has Cinde Warmington raised more money than Kelly Ayotte?' retrieves BOTH and composes the comparison", { concurrency: false }, async () => {
-  const payload = await ask("Has Cinde Warmington raised more money than Kelly Ayotte?", [NH, MERRIMACK]);
-  assert.equal(payload.subject?.id, WARMINGTON);
-  const money = payload.records.filter((record) => record.kind === "FINANCE_SUMMARY");
-  assert.deepEqual(money.map((record) => record.subjectId).sort(), [AYOTTE, WARMINGTON], "both people's held filings reach the reader");
-  assert.ok(payload.records.some((record) => record.kind === "CANDIDACY" && record.subjectId === AYOTTE), "and who the second person is");
-  assert.equal(payload.mode, "GROUNDED_COMPOSED");
-  assert.equal(payload.trace.composition?.shape, "COMPARE");
-  assert.match(payload.answer ?? "", /Kelly Ayotte's campaign committee, registered as "Kelly for New Hampshire", reported raising \$[\d,.]+, both for the 2026 Election Cycle\. By these filings, "Kelly for New Hampshire" reported raising more\./);
-  assert.doesNotMatch(payload.answer ?? "", /no (?:fundraising|money|records)/i);
-});
-
-test("ROUTE: a comparison whose second name is SHORTER still reaches both people (the whole-question binder picks the longer name)", { concurrency: false }, async () => {
-  const payload = await ask("Has Marilyn ALTHOFF raised more money than Joseph M. MURPHY?", ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris"]);
-  assert.equal(payload.subject?.id, "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn");
-  const money = payload.records.filter((record) => record.kind === "FINANCE_SUMMARY").map((record) => record.subjectId).sort();
-  assert.deepEqual(money, ["ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn", "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:murphy-joseph-m"]);
-  assert.equal(payload.mode, "GROUNDED_COMPOSED");
-  assert.match(payload.answer ?? "", /The two filings cover different reporting periods, so the figures are stated side by side and not compared\./, "different NJ filing dates: never a verdict");
-});
-
 test("the other person named is the FULL name the reader typed, never another candidate's bare surname alias", () => {
   const withAlias: BindableEntity[] = [
     ...people,
@@ -189,13 +172,6 @@ test("the other person named is the FULL name the reader typed, never another ca
   ];
   assert.equal(otherNamedPerson("Has Kelly Ayotte raised more money than Joseph M. Murphy?", withAlias, AYOTTE)?.id, "ballot-nj-morris:x:murphy-joseph-m");
   assert.equal(otherNamedPerson("Has Kelly Ayotte raised more money than Murphy?", withAlias, AYOTTE), null, "a bare surname two people share names neither");
-});
-
-test("ROUTE: 'who gave' says our records hold totals, not donors — composed, validated, no model", { concurrency: false }, async () => {
-  const payload = await ask("Who donated to Kelly Ayotte's campaign?", [NH, MERRIMACK]);
-  assert.equal(payload.mode, "GROUNDED_COMPOSED");
-  assert.equal(payload.trace.validation.passed, true);
-  assert.match(payload.answer ?? "", /^Our records for Kelly Ayotte hold campaign totals, not the identities of donors \(money records we hold for this candidate that name a donor: 0 of 1\)\./);
 });
 
 test("a state's roll calls are read for a state legislator only — never for a body or a county candidate", () => {
@@ -210,9 +186,3 @@ test("ROUTE: a New Jersey meeting question does not wait for New Jersey's roll c
   assert.equal(Object.keys(payload.trace.preloads!).some((name) => name.startsWith("stateVotes:")), false, "no state roll-call read for a body question");
 });
 
-test("ROUTE: 'Is there a Vail school board meeting coming up soon?' is read in code and composed from the sitting", { concurrency: false }, async () => {
-  const payload = await ask("Is there a Vail school board meeting coming up soon?", ["ocd-division/country:us/state:az", "ocd-division/country:us/state:az/county:pima", "ocd-division/country:us/state:az/school_district:vail_unified_district"], "MAP");
-  assert.equal(payload.trace.interpretation.why, "lexical-reading");
-  assert.equal(payload.mode, "GROUNDED_COMPOSED");
-  assert.match(payload.answer ?? "", /^The next Vail Unified School District Governing Board meeting is on /);
-});

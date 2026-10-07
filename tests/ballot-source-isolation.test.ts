@@ -18,6 +18,36 @@ import {
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "../lib/ballot/auxiliary-preloads.ts";
+import { readNhBallotProjection } from "../lib/civic-data/manual-read-models.ts";
+import type { NhBallotProjection } from "../lib/civic-data/manual-projections.ts";
+import { installAzBallot, installManualValue, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+
+// The AZ and NH ballots' promoted pointers, each a small synthetic ballot
+// holding one statewide governor contest with one candidacy.
+const azBallot = syntheticAzBallot([{
+  id: "ballot-az-pima:governor",
+  title: "Governor",
+  candidacies: [{ id: "ballot-az-pima:governor:candidate-a", givenName: "Alex", familyName: "Candidate" }],
+}]);
+await installAzBallot({ ...azBallot, ballot: { ...azBallot.ballot, formatVersion: 1 } });
+const NH_PROVENANCE = { sourceUrl: "https://example.test/nh-ballot", sourceOrg: "Synthetic test ballot", collectedAt: "2026-09-25", verifiedAt: null };
+installManualValue<NhBallotProjection>("nh-curated-ballot", {
+  ballot: {
+    formatVersion: 1,
+    election: { id: "nh-2026-general-test", date: "2026-11-03", name: "2026 General Election (test)", state: "NH" },
+    contests: [{
+      id: "ballot-nh-merrimack:governor", electionId: "nh-2026-general-test", ocdId: "ocd-division/country:us/state:nh",
+      divisionVintage: "2026", title: "Governor", type: "CANDIDACY", voteFor: 1, termYears: 2, scopeNote: null, provenance: NH_PROVENANCE,
+    }],
+    candidacies: [{
+      id: "ballot-nh-merrimack:governor:candidate-b", contestId: "ballot-nh-merrimack:governor", familyName: "Candidate", givenName: "Blair",
+      partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance: NH_PROVENANCE,
+    }],
+    measures: [],
+    absences: [],
+  },
+});
+await readNhBallotProjection();
 
 const DIVISIONS = {
   az: ["ocd-division/country:us/state:az"],
@@ -26,8 +56,8 @@ const DIVISIONS = {
 } as const;
 
 const TARGETS = {
-  az: "ballot-az-pima:governor:hobbs-katie",
-  nh: "ballot-nh-merrimack:governor:ayotte-kelly",
+  az: "ballot-az-pima:governor:candidate-a",
+  nh: "ballot-nh-merrimack:governor:candidate-b",
   nj: "ballot-nj-morris:us-senate:booker",
 } as const;
 

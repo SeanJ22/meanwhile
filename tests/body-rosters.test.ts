@@ -12,6 +12,9 @@ import {
 } from "../lib/registry/body-rosters.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 import { normalizeName } from "../lib/routing/exact-name.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 /** Rosters are sourced, dated, keyed to real registry bodies, and actually rendered. */
 

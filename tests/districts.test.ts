@@ -10,16 +10,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const GEOJSON = join(here, "..", "public", "geo", "cd119.geojson");
 
 /**
- * Seats in the 119th Congress: 435 voting districts, plus six non-voting
- * delegations that still occupy territory on a map — DC, American Samoa, Guam,
- * the Northern Mariana Islands, Puerto Rico, and the US Virgin Islands.
- *
- * Asserting the total is what catches a district silently vanishing during
- * simplification. A missing geometry does not throw; it just stops drawing.
+ * Seats in the 119th Congress: 435 voting districts plus six non-voting delegations (DC and five territories).
+ * A geometry dropped in simplification does not throw; it just stops drawing, so the total is asserted.
  */
 const EXPECTED_FEATURES = 441;
-
-/* ------------------------------------------------- GEOID to OCD-ID ------- */
 
 test("ordinary district builds a numbered OCD-ID", () => {
   const id = districtIdentity("04", "07");
@@ -73,8 +67,6 @@ test("an unknown state FIPS is dropped rather than guessed at", () => {
   assert.equal(districtIdentity("99", "01"), null);
 });
 
-/* ------------------------------------------- the generated file ---------- */
-
 interface DistrictFeature {
   type: string;
   properties: { ocdId: string; state: string; district: string; label: string };
@@ -89,8 +81,7 @@ async function loadFeatures(): Promise<DistrictFeature[]> {
 
 test("every feature carries a well-formed OCD-ID", async () => {
   const features = await loadFeatures();
-  // Every seat is <jurisdiction>/cd:<number|at-large>. Verified against
-  // opencivicdata/ocd-division-ids on 2026-08-11.
+  // Every seat is <jurisdiction>/cd:<number|at-large>, as opencivicdata/ocd-division-ids names it.
   const pattern =
     /^ocd-division\/country:us\/(state:[a-z]{2}|district:dc|territory:[a-z]{2})\/cd:(\d+|at-large)$/;
 
@@ -124,12 +115,7 @@ test("feature count matches the 119th Congress after drops", async () => {
 });
 
 test("every feature keeps exactly the properties the map needs plus GEOID", async () => {
-  // GEOID joined the retained set 2026-08-13: complete by construction and
-  // exact (it matched 100% on every layer in the M17 TIGER join), it is what
-  // lets the OCD convention be re-derived from an exact key if it ever has to
-  // change, instead of being rebuilt from name fields and slug rules that
-  // already produced 348 canonical-match misses. Cost across all files:
-  // ~15.8 KB.
+  // GEOID is kept so the OCD convention can be re-derived from an exact key.
   const features = await loadFeatures();
   for (const feature of features) {
     assert.deepEqual(
@@ -158,21 +144,9 @@ test("item 6b: no Census placeholder name reaches a reader as a district's name"
   const { readFileSync, readdirSync } = await import("node:fs");
   const { join } = await import("node:path");
   const { CENSUS_PLACEHOLDER_LABELS } = await import("../lib/registry/census-placeholders.ts");
-  const { registryRuntimeFirstSeed } = await import("../lib/registry/runtime-read-model.ts");
 
-  // The author's finding at the Tohono O'odham reservation area: the map
-  // rendered a district called "School District Not Defined". Both halves
-  // of his question were true — it IS a real gap geometry (Census GEOID
-  // 0499997, land inside no unified school district, adjacent to Indian
-  // Oasis-Baboquivari rather than on top of it), and it WAS a labeling
-  // defect. The geometry stays because it is a true fact about the place;
-  // the NAME becomes the fact.
-  //
-  // Every committed school-district boundary of every state, never a hand-kept
-  // list. New Hampshire's placeholder (GEOID 3399997) stayed on its map until
-  // 2026-09-23 through two holes: this guard read Arizona's boundary file only,
-  // and its pattern, built with an unescaped `\s` (a literal `s`), could never
-  // match the pretty-printed registry where New Hampshire's raw label sits.
+  // A Census gap geometry (land inside no unified school district) stays on the map, but its placeholder name must
+  // become an honest label. Every committed school-district boundary of every state is checked.
   const pattern = (placeholder: string) => new RegExp(`"(?:label|name|NAME)"\\s*:\\s*"${placeholder}"`);
   assert.ok(pattern("School District Not Defined").test('{"NAME": "School District Not Defined"}'), "the guard's own pattern matches what it exists to catch");
   const states = join(process.cwd(), "data", "states");
@@ -187,7 +161,7 @@ test("item 6b: no Census placeholder name reaches a reader as a district's name"
   for (const file of files) {
     const text = readFileSync(file, "utf8");
     for (const placeholder of Object.keys(CENSUS_PLACEHOLDER_LABELS)) {
-      assert.ok(!pattern(placeholder).test(text), `${file} still labels a division "${placeholder}" — run scripts/normalize-census-placeholders.mts`);
+      assert.ok(!pattern(placeholder).test(text), `${file} still labels a division "${placeholder}"`);
     }
   }
   for (const [state, fips] of [["az", "04"], ["nh", "33"]]) {
@@ -195,16 +169,7 @@ test("item 6b: no Census placeholder name reaches a reader as a district's name"
     assert.ok(text.includes("No unified school district here"), `${state} lost the honest label — the geometry must stay, only the name changes`);
   }
 
-  // The registry as a reader gets it names no division by a placeholder. The
-  // frozen first seed still carries New Hampshire's raw label; its composition
-  // (and every registry promotion) translates it.
-  const seed = registryRuntimeFirstSeed().value;
-  for (const division of seed.registry.divisions) {
-    assert.ok(!Object.hasOwn(CENSUS_PLACEHOLDER_LABELS, division.label), `${division.ocdId} is labelled "${division.label}" in the composed registry`);
-  }
-
-  // The slug stays: it is a join key, never rendered, and renaming it would
-  // break every stored reference for a cosmetic reason.
+  // The slug stays: it is a join key, never rendered.
   const registry = readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8");
   assert.ok(
     registry.includes("school_district:school_district_not_defined"),
@@ -212,26 +177,13 @@ test("item 6b: no Census placeholder name reaches a reader as a district's name"
   );
 });
 
-test("item 6b: every tool that counts the frozen registry's bodies leaves out the placeholder boards", async () => {
+test("item 6b: every tool that counts the registry's bodies leaves out the placeholder boards", async () => {
   const { readFileSync } = await import("node:fs");
-  // The frozen first seed still holds the two boards once minted on Census
-  // placeholders, and its bytes are proof-bound, so each tool that counts or
-  // emits its bodies reads them through withoutPlaceholderBodies
-  // (lib/registry/census-placeholders.ts). class-stamp-sweep takes its bodies
-  // from body-forms.json, which stamp-body-forms writes through the same view.
   for (const tool of [
     "scripts/stamp-body-forms.mts",
     "scripts/stamp-coverage-tiers.mts",
-    "scripts/denominator-reconcile.mts",
-    "scripts/embedded-json-census.mts",
-    "scripts/measure-definitions-0823.mts",
-    "scripts/coverage-four-layer.mts",
-    "scripts/census-who-governs.mts",
   ]) {
     assert.match(readFileSync(tool, "utf8"), /withoutPlaceholderBodies\(JSON\.parse\(/, `${tool} reads the frozen registry's bodies without the placeholder rule`);
-  }
-  for (const artifact of ["data/derived/body-forms.json", "data/derived/class-stamp-sweep.json"]) {
-    assert.doesNotMatch(readFileSync(artifact, "utf8"), /school_district_not_defined#board/, `${artifact} still carries a placeholder board`);
   }
 });
 

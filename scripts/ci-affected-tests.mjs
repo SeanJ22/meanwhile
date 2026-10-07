@@ -20,7 +20,7 @@
  *     `import(...)` this reader cannot name.
  *   - A change made only of documents (anything under docs/, and Markdown
  *     anywhere outside the code roots: CLAUDE.md, AGENTS.md, README.md, state
- *     notes) selects only the tests that read those documents (RL-07): a test
+ *     notes) selects only the tests that read those documents: a test
  *     whose code names one; a test reaching, through test files only, a module
  *     or script that names one (one hop, so a citation in a widely imported
  *     module does not pull in its whole import tree); a test reaching a module
@@ -106,7 +106,7 @@ export function isDocsMarkdown(path) {
 }
 
 /**
- * A document for RL-07's documents-only selection: anything under docs/, or
+ * A document for the documents-only selection: anything under docs/, or
  * Markdown outside the code roots and public/ (CLAUDE.md, AGENTS.md,
  * README.md, state notes). Markdown under a code root may be a runtime input
  * (a prompt template read by computed path), so it keeps the code rules.
@@ -271,8 +271,8 @@ export function moduleReferences(source) {
   }
   return { specs: [...new Set(specs.filter((spec) => typeof spec === "string" && spec.length > 0))], computed, named: named.join("") };
 }
-
-// Git's file-listing subcommand, spelled in pieces so tests/gate-ordering.test.ts
+// Git's file-listing subcommand, spelled in pieces so this file does not match
+// its own detector.
 // does not read this detector as a gate that lists only tracked files.
 const GIT_LISTING = new RegExp(`["'\`]ls-${"files"}["'\`\\s]|git ls-${"files"}`);
 
@@ -464,7 +464,7 @@ function listsRepository(text) {
 }
 
 /**
- * RL-07: the tests that read a documents-only change, and nothing else. See
+ * The tests that read a documents-only change, and nothing else. See
  * the header. `graph`, `importers` and `basenameCounts` are selectTests'.
  * @returns {TestPlan}
  */

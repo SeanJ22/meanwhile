@@ -15,9 +15,8 @@ export async function readTranslationProjection(options: PromotedCivicDataReadOp
 export async function readTranslations(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<readonly TranslationRecord[]> {
   const divisionsToRead = [...new Set(divisions)].filter(division => /^ocd-division\/country:us\/(state|district|territory):/.test(division));
   const edgeContext = options.store === undefined && currentReaderAuthorityEdge() !== null;
-  // The translator's edge publication hook is part of its rollout. Existing
-  // request bundles do not name this new family; they keep their held ballot
-  // records without adding optional database reads on every cold visit.
+  // Request bundles that do not name this family keep their held ballot records
+  // without adding optional database reads on every cold visit.
   const results = await Promise.all(divisionsToRead.flatMap(division => {
     const scope = translationScope(division), served = edgeContext ? currentPromotedEdge("CURATED_READER_RECORD", scope) : null;
     if (edgeContext && !served) return [];

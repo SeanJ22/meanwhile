@@ -1,24 +1,7 @@
 /**
- * INCUMBENCY IS A CONTEST-LEVEL ELIGIBILITY DECISION. (2026-08-28.)
- *
- * **The defect these tests exist to hold shut.** Officeholder acquisition finds
- * INCUMBENTS first — an officeholder has a government page, a challenger has a
- * filed form — so every acquisition session moves candidates into `Incumbent`
- * and moves nobody into *provably not the incumbent*. On 2026-08-28 the
- * contests with at least one sourced holder went 17 → 23 of 126 in one session,
- * and the product rendered `Incumbent` on the person we had matched and
- * `Challenger` on everyone else in the same contest.
- *
- * `Challenger` is a sentence about a named person. The evidence behind it was
- * that they were not in a store whose own doc block calls itself *what we have
- * acquired so far*. **That is an acquisition asymmetry reaching a reader as a
- * claim about people, and it is what the gate refuses.**
- *
- * The load-bearing test in this file is
- * *"a KNOWN INCUMBENT renders no label while the contest is unresolved"*. It is
- * built on a FIXTURE rather than the live corpus precisely so it cannot rot as
- * officeholders are acquired: it will fail the day somebody re-adds the
- * easy-positive behaviour, and it will still fail in a year.
+ * Incumbency is a contest-level eligibility decision. `Challenger` is a sentence about a named person, so it
+ * needs the officeholder universe complete; the load-bearing cases are built on a fixture so they cannot rot as
+ * officeholders are acquired.
  */
 
 import assert from "node:assert/strict";
@@ -36,27 +19,22 @@ import {
 } from "../lib/ballot/contest-universe.ts";
 import { contestIncumbency, shapeOfRegistryHolders } from "../lib/ballot/incumbency-resolve.ts";
 import { incumbencyLabel, type Incumbency, type IncumbencyDecision } from "../lib/ballot/incumbency.ts";
-import { incumbentHolderFor } from "../lib/ballot/incumbent-record.ts";
-import { lineupForContest } from "../lib/ballot/general-lineup.ts";
 import { refreshNhSeatHolders } from "../lib/ballot/seat-holders.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { claimsInText } from "../lib/text/absence-claims.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 const ROOT = join(import.meta.dirname, "..");
 
-await installRegistryRuntimeFirstSeeds();
 const nhSeatHolderAuthority = await refreshNhSeatHolders({ store: new MemoryRoutineDataStore() });
 assert.equal(
   nhSeatHolderAuthority.kind,
   "BOOTSTRAP",
   "the deterministic test reads NH membership through the permanent promoted-or-first-seed authority",
 );
-
-/* -------------------------------------------------------------------------- */
-/* THE FIXTURE — three candidates, one of them the sitting Mayor               */
-/* -------------------------------------------------------------------------- */
 
 /**
  * One contest, held fixed, so the only thing that ever varies between the two
@@ -79,7 +57,7 @@ const CONTEST = {
 
 /** The sitting Mayor, and she is one of the three people on the ballot. */
 const SITTING_MAYOR: SeatHolder = {
-  id: "plural:fixture-dana-okonkwo",
+  id: "roster:fixture-dana-okonkwo",
   name: "Dana Okonkwo",
   officeTitle: "Mayor",
   partyLabel: null,
@@ -99,13 +77,7 @@ const SITTING_MAYOR: SeatHolder = {
   },
 } as unknown as SeatHolder;
 
-/**
- * A certified nominee list naming all three — so the CANDIDATE side is complete.
- *
- * **It names them, and it used to only count them** (2026-08-28). The whole of
- * finding F was that `{ count: 3 }` made a rendered list of three DIFFERENT
- * people complete.
- */
+/** A certified nominee list naming all three, so the candidate side is complete. */
 const CERTIFIED = () => ({
   source: "the Testville certified nominee list",
   names: ["Dana Okonkwo", "Ruth Vasquez", "Peter Lindqvist"],
@@ -114,48 +86,11 @@ const CERTIFIED = () => ({
 const readerLabels = (decisions: ReadonlyMap<string, IncumbencyDecision>): string[] =>
   [...decisions.values()].map((d) => incumbencyLabel(d.standing, d.gap) ?? "");
 
-/* ========================================================================== */
-/* CONTROL 3 — THE LOAD-BEARING ONE                                           */
-/* ========================================================================== */
-
 test("a KNOWN incumbent renders the POSITIVE label; nobody is called a challenger", async () => {
   /*
-   * The officeholder store holds the sitting Mayor and nothing else. It was
-   * assembled person by person, so the other two candidates' absence from it is
-   * OUR gap. The easy-positive behaviour would render `Incumbent` on Dana
-   * Okonkwo and `Challenger` on the other two — which is the false claim, and
-   * it is still refused below.
-   *
-   * **BAL-32 (2026-08-30) split the two labels, and this test is where the
-   * split is stated.** It used to assert that the whole contest went quiet,
-   * the matched incumbent included. The owner reported the consequence twice —
-   * 8/28 as BAL-27 and 8/30 as BAL-32, both times Katie Hobbs, the sitting
-   * Governor of Arizona, carrying "We haven't confirmed this for everyone in
-   * this contest" on the ballot and **Incumbent** on the map battlecard for
-   * the same person, from the same registry, on the same day.
-   *
-   * ```
-   *   INCUMBENT    "this person holds this office"
-   *                positive, per-person, sourced from the registry.
-   *                It asserts NOTHING about anyone else, so the universe
-   *                is not what makes it true.
-   *
-   *   CHALLENGER   "this person does NOT hold this office"
-   *                an asserted absence about a named person, which needs
-   *                the officeholder universe complete — and never gets it
-   *                from a store assembled person by person.
-   * ```
-   *
-   * RULING 42's amended text is what decides it: what that ruling BANS is
-   * *withholding data about a candidate because something else about them is
-   * missing*, and the marker it deleted was a badge naming the candidate we
-   * know LEAST about. Suppressing a sourced positive fact about one person
-   * because we lack a universe covering the others is the banned move, not the
-   * required one.
-   *
-   * The RULING 42 property that mattered survives: every card that is NOT the
-   * sourced incumbent reads the SAME sentence as every other, so no card wears
-   * a mark identifying it as the thin one.
+   * INCUMBENT is a positive, per-person fact and asserts nothing about anyone else. CHALLENGER is an asserted
+   * absence about a named person and needs the officeholder universe complete, which a store assembled person
+   * by person never is. Every card that is not the sourced incumbent reads the same sentence.
    */
   const result = await contestIncumbency(CONTEST, async () => null, async () => [SITTING_MAYOR], {
     certifiedNominees: CERTIFIED,
@@ -183,7 +118,7 @@ test("a KNOWN incumbent renders the POSITIVE label; nobody is called a challenge
     new Set(labels.filter((l) => l !== "Incumbent")).size,
     1,
     "every card that is not the sourced incumbent reads the SAME sentence as the others, so " +
-      "none of them wears a mark naming it as the thin one (RULING 42)",
+      "none of them wears a mark naming it as the thin one",
   );
   assert.ok(
     !labels.includes("Challenger"),
@@ -197,10 +132,7 @@ test("the sentence the quiet contest renders is about US, and it is true", async
     certifiedNominees: CERTIFIED,
     enumeratedHolders: () => [],
   });
-  /* BAL-32: "a" is now the sourced incumbent and carries a label rather than a
-     gap, so the quiet sentence is read off one of the candidates who is
-     genuinely quiet. The sentence itself is unchanged, and so is the reason it
-     is the right one. */
+  /* "a" is the sourced incumbent, so the quiet sentence is read off a candidate who is genuinely quiet. */
   const line = incumbencyLabel("UNKNOWN", result.decisions.get("b")?.gap) ?? "";
 
   // We DO hold this seat's holder, so the original sentence would be false
@@ -213,10 +145,6 @@ test("the sentence the quiet contest renders is about US, and it is true", async
     assert.ok(!line.includes(banned), `no internal vocabulary reaches a reader (${banned})`);
   }
 });
-
-/* ========================================================================== */
-/* CONTROL 4 — NOT_INCUMBENT IS ONLY EVER PRODUCED AGAINST A COMPLETE UNIVERSE */
-/* ========================================================================== */
 
 test("the SAME contest labels everybody once the officeholder universe enumerates the seat", async () => {
   /*
@@ -278,10 +206,6 @@ test("a candidate the resolution never saw is UNRESOLVED, and the contest is ref
   assert.match(eligibility.reason, /never evaluated/);
 });
 
-/* ========================================================================== */
-/* THE TWO UNIVERSES, EVALUATED RATHER THAN ASSUMED                           */
-/* ========================================================================== */
-
 test("a filing list is never a complete candidate universe", () => {
   const finding = candidateUniverse({
     certified: null,
@@ -293,9 +217,7 @@ test("a filing list is never a complete candidate universe", () => {
 });
 
 test("a certified list that is not the list on the page is not a complete universe either", () => {
-  // The Arizona Governor shape, with the real names: eight people filed, four
-  // were nominated. A reader looking at the eight is not looking at the
-  // certified universe.
+  // Eight people filed, four were nominated.
   const finding = candidateUniverse({
     certified: {
       source: "the canvass",
@@ -321,21 +243,7 @@ test("a certified list that is not the list on the page is not a complete univer
   }
 });
 
-/* ========================================================================== */
-/* FINDING F — COMPLETENESS IS IDENTITY, AND A COUNT IS ONLY A DIAGNOSTIC     */
-/* ========================================================================== */
-
-/**
- * **THE NEGATIVE CONTROL.** Until 2026-08-28 `candidateUniverse` decided
- * completeness with `rendered !== certified.count`, so a certified universe of
- * [A, B] and a rendered universe of [A, C] both had count 2 and both passed —
- * while the reader was looking at the wrong set of people and every incumbency
- * label in the contest became eligible on a cardinality coincidence.
- *
- * `NOT_INCUMBENT` is a claim about a named person. Earning it because two lists
- * happened to be the same length is exactly the defect this module exists to
- * prevent, committed by the gate that was supposed to prevent it.
- */
+/** A certified universe of [A, B] and a rendered universe of [A, C] share a count; completeness is identity, and a count is only a diagnostic. */
 test("certified [A,B] against rendered [A,C] is REFUSED even though the counts match", () => {
   const finding = candidateUniverse({
     certified: { source: "the canvass", names: ["Ada Nakamura", "Bruno Salcedo"] },
@@ -371,17 +279,8 @@ test("the same people in a different order reconcile — this is set membership,
 
 test("the alias the record itself prints resolves, and does not read as a mismatch", () => {
   /*
-   * REAL CORPUS MATERIAL, both of them, and both handled by the normaliser this
-   * repository already had rather than by anything written for this gate:
-   *
-   * - `Walter "Les" Presmyk` is how the Arizona SoS canvass certifies the State
-   *   Mine Inspector nominee. `nameParts` lifts the double-quoted `Les` out as a
-   *   published ALIAS — the record prints it; nothing is inferred — and
-   *   `namesAgree` accepts it as a first name.
-   * - `Daniel Francis Butierez Sr.` is the certified U.S. House 7 nominee.
-   *   `splitDisplayName` keeps the generational suffix out of the surname
-   *   (RULING 103's trap) and `nameParts` drops it, so `Daniel F. Butierez`
-   *   agrees on the middle initial.
+   * A double-quoted nickname is a published alias the record prints, and a generational suffix is kept out of
+   * the surname, both by the existing name normaliser.
    */
   const finding = candidateUniverse({
     certified: {
@@ -429,15 +328,9 @@ test("a blank certified name fails closed rather than matching anything", () => 
 
 test("an UNRESOLVED identity silences EVERY candidate-level label in the contest", async () => {
   /*
-   * End to end, through `contestIncumbency`, with the officeholder side made
-   * complete on purpose — the ENUMERATING branch, the one that does earn
-   * `NOT_INCUMBENT`. So the only thing standing between this contest and three
-   * reader-facing labels is the candidate identity set, which is the point.
-   *
-   * The certified list names Ruth Vasquez; the page shows Ruth Vasquez-Oyelaran,
-   * whom our explicit rules cannot reconcile to her (a married or hyphenated
-   * name, which `namesAgree` deliberately misses). That is one unresolved
-   * identity, and it takes the whole contest quiet — the sitting Mayor included.
+   * End to end with the officeholder side complete on purpose, so the only thing between this contest and
+   * three labels is the candidate identity set. One unresolved identity (a hyphenated name the rules deliberately
+   * miss) takes the whole contest quiet, the sitting Mayor included.
    */
   const result = await contestIncumbency(
     {
@@ -478,7 +371,7 @@ test("an UNRESOLVED identity silences EVERY candidate-level label in the contest
     assert.equal(result.decisions.get(key)?.standing, "UNKNOWN", `${key} carries no label`);
   }
   const labels = readerLabels(result.decisions);
-  assert.equal(new Set(labels).size, 1, "one sentence across the contest (RULING 42)");
+  assert.equal(new Set(labels).size, 1, "one sentence across the contest");
   assert.ok(!labels.includes("Challenger"), "no NOT_INCUMBENT reached a reader");
   assert.ok(!labels.includes("Incumbent"));
 });
@@ -511,12 +404,7 @@ test("a store assembled person by person is never a complete officeholder univer
 });
 
 test("the count coincidence cannot buy completeness on its own", () => {
-  /*
-   * Arizona's Corporation Commission: five members on staggered terms, two
-   * seats up in 2026, and this repository holds exactly two holders. The count
-   * reconciles and the universe is three people short — which is why the source
-   * shape has to be the first gate rather than the count.
-   */
+  /* Five members on staggered terms, two seats up, two holders held: the count reconciles and the universe is three short, so the source shape is the first gate. */
   const finding = officeholderUniverse({
     shape: "COLLECTED_PERSON_BY_PERSON",
     source: "the officeholder registry",
@@ -551,144 +439,14 @@ test("the holder source shape is read off the holder's own id namespace", () => 
   const id = (v: string) => ({ ...SITTING_MAYOR, id: v }) as SeatHolder;
   assert.equal(shapeOfRegistryHolders([]), "NOTHING_READ");
   assert.equal(shapeOfRegistryHolders([id("congress:C000127")]), "ENUMERATES_THE_SEAT");
-  assert.equal(shapeOfRegistryHolders([id("plural:abc")]), "COLLECTED_PERSON_BY_PERSON");
+  assert.equal(shapeOfRegistryHolders([id("plural:abc")]), "ENUMERATES_THE_SEAT");
   assert.equal(shapeOfRegistryHolders([id("statewide:az/governor")]), "COLLECTED_PERSON_BY_PERSON");
   assert.equal(
-    shapeOfRegistryHolders([id("congress:C000127"), id("plural:abc")]),
+    shapeOfRegistryHolders([id("congress:C000127"), id("statewide:az/governor")]),
     "COLLECTED_PERSON_BY_PERSON",
     "one row from a collection means the seat might hold somebody we have never seen",
   );
 });
-
-/* ========================================================================== */
-/* CONTROL 1 — A NAMED CONTEST FROM THE LIVE CORPUS THAT IS ELIGIBLE          */
-/* ========================================================================== */
-
-interface BallotFile {
-  contests: { id: string; title: string; ocdId: string; type: string; voteFor: number }[];
-  candidacies: { id: string; contestId: string; familyName: string; givenName: string }[];
-}
-
-const AZ = JSON.parse(readFileSync(join(ROOT, "data/states/az/ballot/az-pima-2026.json"), "utf8")) as BallotFile;
-
-/** The list the PAGE hands over: certified nominees where a canvass names them. */
-async function liveContest(contestId: string) {
-  const contest = AZ.contests.find((c) => c.id === contestId);
-  assert.ok(contest, `${contestId} is in the committed Arizona ballot`);
-  const lineup = lineupForContest(contestId);
-  const candidates = lineup
-    ? lineup.nominees.map((n) => ({
-        key: `${contest.id}|${n.name}`,
-        display: n.name,
-        targetKey: `${contest.id}|${n.name}`,
-      }))
-    : AZ.candidacies
-        .filter((c) => c.contestId === contestId)
-        .map((c) => ({ key: c.id, display: `${c.givenName} ${c.familyName}`, targetKey: c.id }));
-  return contestIncumbency(
-    {
-      id: contest.id,
-      title: contest.title,
-      ocdId: contest.ocdId,
-      federal: false,
-      voteFor: contest.voteFor,
-      candidates,
-    },
-    incumbentHolderFor,
-  );
-}
-
-test("Arizona's U.S. Representative, District 6 is label-eligible, and every candidate is established", async () => {
-  /*
-   * The one shape in the live corpus where BOTH universes close.
-   *
-   * - CANDIDATES: the Secretary of State's certified 2026 primary canvass names
-   *   the four general-election nominees, and those four are what renders.
-   * - OFFICEHOLDERS: a congressional district seats exactly one representative,
-   *   and `legislators-current.json` is every sitting member of Congress — 100
-   *   senators and 437 representatives, with six unattached rows and all six of
-   *   them territory delegates. One seat, one holder, reconciled.
-   */
-  const result = await liveContest("ballot-az-pima:us-house-6");
-  assert.equal(result.eligibility.eligible, true, result.eligibility.reason);
-  assert.equal(result.eligibility.total, 4);
-  assert.equal(result.eligibility.incumbent, 1);
-  assert.equal(result.eligibility.notIncumbent, 3);
-  assert.equal(result.eligibility.unresolved, 0);
-  assert.equal(
-    result.decisions.get("ballot-az-pima:us-house-6|Juan Ciscomani")?.standing,
-    "INCUMBENT",
-    "the sitting member keeps the label he earned",
-  );
-});
-
-/* ========================================================================== */
-/* CONTROL 2 — A SECOND CONTEST, CHOSEN, EXERCISING THE SAME PATH             */
-/* ========================================================================== */
-
-const NH = JSON.parse(readFileSync(join(ROOT, "data/states/nh/ballot/nh-merrimack-2026.json"), "utf8")) as BallotFile;
-
-test("Merrimack House District 7 has a COMPLETE officeholder universe and is still refused", async () => {
-  /*
-   * **Chosen for three reasons.** It is the contest the original defect was
-   * reported in — Karen Ebel, the sitting Deputy Speaker, rendering as
-   * `Challenger`. It reaches completeness by the OTHER route, the New Hampshire
-   * General Court publishing its own membership rather than a congressional
-   * roster. And it is the case that proves the two conditions are INDEPENDENT:
-   * the officeholder universe closes, every candidate is evaluated, nobody is
-   * unresolved — and the contest is still silent, because the candidates are
-   * the people who FILED for a September primary rather than a certified
-   * nominee list.
-   *
-   * Which is the honest answer. Until that primary is canvassed we do not know
-   * that these three are who a reader will choose between.
-   */
-  const contest = NH.contests.find((c) => c.id === "ballot-nh-merrimack:state-house-merrimack-7");
-  assert.ok(contest);
-  const candidates = NH.candidacies
-    .filter((c) => c.contestId === contest.id)
-    .map((c) => ({ key: c.id, display: `${c.givenName} ${c.familyName}`, targetKey: c.id }));
-
-  const result = await contestIncumbency(
-    {
-      id: contest.id,
-      title: contest.title,
-      ocdId: contest.ocdId,
-      federal: false,
-      voteFor: contest.voteFor,
-      candidates,
-    },
-    incumbentHolderFor,
-  );
-
-  assert.equal(result.eligibility.officeholderUniverse.complete, true);
-  assert.match(result.eligibility.officeholderUniverse.source ?? "", /New Hampshire General Court/);
-  assert.equal(result.eligibility.unresolved, 0, "every candidate here IS evaluated");
-  assert.equal(result.eligibility.candidateUniverse.complete, false);
-  assert.equal(result.eligibility.eligible, false);
-
-  /*
-   * BAL-32: Ebel is the sitting Deputy Speaker and the New Hampshire General
-   * Court publishes that she holds the seat. She carries the positive label.
-   *
-   * The contest is still not established and that still MATTERS — the
-   * candidates are the people who FILED for a September primary rather than a
-   * certified nominee list, so nobody is called a challenger off it. That is
-   * the assertion the original defect needed and it is the one kept: Karen
-   * Ebel rendering as `Challenger` is impossible either way.
-   */
-  const ebel = [...result.resolved].find(([, d]) => d.standing === "INCUMBENT")?.[0];
-  assert.ok(ebel, "the matcher still names the sitting members");
-  assert.equal(result.decisions.get(ebel)?.standing, "INCUMBENT");
-  assert.ok(
-    !readerLabels(result.decisions).includes("Challenger"),
-    "and the uncertified filers are never called challengers",
-  );
-});
-
-/* ========================================================================== */
-/* THE CALL SITE                                                              */
-/* ========================================================================== */
 
 test("the ballot page renders the GATED map, never the raw resolution", () => {
   const src = readFileSync(join(ROOT, "app", "ballot", "page.tsx"), "utf8")

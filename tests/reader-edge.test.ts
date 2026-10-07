@@ -194,8 +194,7 @@ test("republishing an unchanged composition is idempotent (CURRENT), a changed o
   assert.equal(same.status, "CURRENT");
   if (same.status === "CURRENT") assert.equal(same.sequence, 1);
 
-  // The same data checked again later (2026-09-25: a quiet re-check is a
-  // receipt, lib/meetings/fresh-checks.ts) → the manifest alone advances, so
+  // The same data checked again later → the manifest alone advances, so
   // "Last checked" moves; every scope artifact it points at is the one served.
   const scopesBefore = (await store.readManifest())!.manifest.scopes;
   const again = await publishReaderEdgeArtifacts({ ...snap, generatedAt: "2026-09-15T13:00:00.000Z" }, META, { store });

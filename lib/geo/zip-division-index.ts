@@ -1,41 +1,16 @@
 /**
- * **THE ZIP INDEX, READ ONE SHARD AT A TIME.** (2026-09-23.)
+ * Divisions reaching each ZIP, built by `scripts/build-zip-division-shards.mts`
+ * into one shard per two-digit ZIP prefix. A request reads only its ZIP's shard
+ * and keeps a few recent ones in memory. A shard that cannot be read answers
+ * null and is not cached.
  *
- * Every division whose territory reaches each ZIP code in the country, built by
- * `scripts/build-zip-division-shards.mts` into one shard per two-digit ZIP
- * prefix under `data/derived/zip-divisions/`. A request reads only the shard
- * its ZIP sits in — about a hundred kilobytes — and keeps the last few in
- * memory; a script that needs every ZIP reads them all with
- * `readAllZipDivisions`.
- *
- * It replaces the three-state index (kept as the frozen baseline
- * `tests/fixtures/zip-division-ids-three-state.json`), which named a government
- * only where this repository had committed its polygon and so held 279 ZIPs.
- * The meanings are unchanged: `ids` is every division whose territory reaches
- * inside the ZIP (never a claim that a reader there is governed by all of
- * them), `partial` is those covering only part of its sampled area (RULING 71),
- * `samples` the lattice points inside the ZCTA.
- *
- * **Every request-path read names the folder in literal segments** (R23). A
- * path the bundler cannot scope — a spread constant, a variable root — makes
- * Turbopack trace the whole project into every route that imports this; with
- * the folder spelled out it traces exactly the shards into each of them, and
- * the postbuild reader-trace check fails the build if a reader route lacks
- * one. The folder is ~100 files, not one per ZIP3, so the traced file count
- * stays near the bundle budget's.
- *
- * A shard that cannot be read is OUR gap: it answers null and is not cached, so
- * a transient failure never becomes permanent for the process.
- *
- * Congressional and legislative membership also reads the same narrow
- * promoted Census slice Admin uses. Those layers were absent from the sample
- * shards; the current published whole/partial overlap supplies their evidence.
- * An unavailable or conflicting Census plan preserves the existing index.
+ * Request-path reads spell the folder as literal path segments so Turbopack
+ * traces only the shard files; a variable or spread path makes it trace the
+ * whole project.
  */
 import { readFileSync, readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { withCensusSchoolDivisions } from "../control-plane/expansion/census-scope-observations.ts";
 
 export interface ZipDivisionEntry {
   /** Every division whose territory reaches inside this ZIP. */
@@ -99,7 +74,7 @@ export async function zipDivisionEntry(zip: string | null): Promise<ZipDivisionE
   const { publishedZipDistricts, withCensusDistricts } = await import("./zip-census-districts.ts");
   const [shard, districts] = await Promise.all([shardFor(zipShardOf(zip)), publishedZipDistricts(zip)]);
   const entry = shard === null ? null : entryOf(shard, zip);
-  return entry === null ? null : withCensusSchoolDivisions(withCensusDistricts(entry, districts, zip), zip);
+  return entry === null ? null : withCensusDistricts(entry, districts, zip);
 }
 
 const lowestByState = new Map<string, Promise<ReadonlyMap<string, string> | null>>();

@@ -7,49 +7,13 @@ import type { Page } from "playwright";
 import { launchGuarded, type GuardedBrowser } from "../scripts/browser.mts";
 
 /**
- * **A STATE SWATCH KEEPS ITS BOX; EVERY CONTROL SHOWS ITS FOCUS.** (Admin Pass
- * A, ADM-A1..A4, 2026-09-06; re-pointed for the Admin redesign, 2026-09-23.)
- *
- * ## What broke
- *
- * The State Readiness grid rendered one `button.rq-cell` per capability × gate,
- * carrying one of six state classes. The #281 restyle (Lumen Edge) added a
- * generic button recipe for the whole console and, to keep the cell out of it,
- * a reset that also cleared the cell's background and shadow. That selector
- * outranked the state class on specificity, so the grid rendered every state as
- * an empty box while the legend swatches — not buttons — kept theirs.
- *
- * ## The fix, and why it is a cascade fix rather than six overrides
- *
- * Every generic control recipe in the console (buttons, selects, inputs, cards,
- * element-level text rules) lives in `@layer ce-recipe`. Cascade layers are
- * ordered BEFORE specificity: an unlayered rule beats a layered one whatever its
- * selector. The state classes and the swatch geometry stay unlayered, so no
- * future recipe — however specific — can outrank them without moving them into
- * the layer, which the structural guard below refuses.
- *
- * ## Admin redesign, 2026-09-23
- *
- * The per-state readiness panel — its capability grid of button cells, its
- * legend, its violation ring and its own stylesheet — was removed; the
- * redesigned readiness page draws its readings with the shell's primitives.
- * The rendered checks on those cells are retired with it. What still holds:
- *
- *   1  every generic control reset in the console stylesheet (which the pages
- *      that kept their content still wear) is inside the recipe layer, and the
- *      swatch classes still drawn — a health grade beside its word — are not;
- *      a POSITIVE CONTROL re-appends the #281 reset and the check must fail
- *   2  class-wide: every focusable console control shows a keyboard focus
- *      indicator — on the kept pages, AND in the redesigned shell every Fleet
- *      and Readiness screen renders in
- *   3  class-wide: the runner card's grade band survives hover and
- *      focus-within (the health cards that shared the rule were removed)
- *
- * The harness is each stylesheet exactly as the page gets it (the console's
- * template literal; the shell's CSS module text, whose class names the harness
- * uses unhashed), around the markup shapes the pages render. It carries no
- * `globals.css`: the user-agent styles a control gets without preflight are
- * the harder case, not the easier one.
+ * Console stylesheet guards:
+ *   1  every generic control reset is inside the `ce-recipe` cascade layer, and the swatch classes
+ *      are not (layers beat specificity, so no recipe can outrank a state class); a positive
+ *      control re-appends an unlayered reset and the check must fail
+ *   2  every focusable console control shows a keyboard focus indicator
+ *   3  the runner card's grade band survives hover and focus-within
+ * The harness is each stylesheet exactly as the page gets it, with no `globals.css`.
  */
 
 const ROOT = process.cwd();
@@ -57,7 +21,7 @@ const LAYOUT = "app/(admin)/layout.tsx";
 const SHELL_CSS = "app/(admin)/_mw/admin-v6/v6.module.css";
 /** The layer every generic recipe lives in. Named once here and once in the stylesheet. */
 const RECIPE_LAYER = "ce-recipe";
-/** The #281 reset, verbatim from `git show dc2294b0:app/(admin)/layout.tsx`. */
+/** An unlayered reset that would outrank the state classes. */
 const THE_281_RESET = ".admin button.rq-cell { padding: 0; border-radius: .25rem; background: none; box-shadow: none; }";
 
 function read(rel: string): string {
@@ -230,7 +194,6 @@ async function focusBlindControls(page: Page): Promise<{ unreached: string[]; bl
 }
 
 test("class-wide: every focusable console control shows a keyboard focus indicator", async () => {
-  // Admin redesign, 2026-09-23: the old header's View / State selects and theme switch, the health cards, the decision queue's option forms, the deploy control and the readiness panel's selects, cells, sort and drawer were removed; the harness draws the controls that remain, and the redesigned shell's.
   for (const [name, html] of [
     ["the pages that kept their content", keptPagesHarness(styleLiteral(LAYOUT, "STYLES"))],
     ["the redesigned shell", shellHarness(read(SHELL_CSS))],
@@ -260,7 +223,6 @@ test("POSITIVE CONTROL: a shell control whose focus indicator is taken away is c
 /* ------------------------------------------------------------- 3 */
 
 test("class-wide: the runner card's grade band keeps its colour on hover and while focus is inside it", async () => {
-  // Admin redesign, 2026-09-23: the Pilot health cards that shared this rule were removed; the research page's runner card still carries a grade band.
   const page = await openHarness(keptPagesHarness(styleLiteral(LAYOUT, "STYLES")));
   try {
     const band = (sel: string) => page.evaluate(`getComputedStyle(document.querySelector('${sel}'), "::after").backgroundImage`) as Promise<string>;
@@ -274,5 +236,3 @@ test("class-wide: the runner card's grade band keeps its colour on hover and whi
     await page.close();
   }
 });
-
-// Admin redesign, 2026-09-23: the readiness grid's button cells, their six state boxes against the legend (dark and light), the violation ring and the cells' keyboard operation were removed with the per-state panel; the redesigned readiness page has no clickable state cell.

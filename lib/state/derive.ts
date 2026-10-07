@@ -1,6 +1,5 @@
 // Relative, extension-bearing imports rather than the `@/` alias: this module
-// is pure and belongs under `node --test`, which cannot resolve the alias. The
-// rest of lib/ is already written this way.
+// is pure and runs under `node --test`, which cannot resolve the alias.
 import { haversineKm } from "../geo/distance.ts";
 import {
   districtsSwitchedOffAndEmpty,
@@ -17,33 +16,20 @@ import { ALL_DISTRICT_TYPES } from "./reducer.ts";
 import type { BodyType, UiState } from "./types.ts";
 
 /**
- * Turning the shared state into the list everything renders.
- *
- * One function, so the map, the stats, the legend, the count badge and the list
- * overlay cannot disagree about what is currently showing. Pure, so it is
- * testable without React.
+ * Turning the shared state into the list everything renders: one pure
+ * function, so the map, stats, legend, count badge and list cannot disagree.
  */
 
 /**
- * Classify a body for the body-type chips.
- *
- * Derived from the OCD-ID for the tier and from the body's own name for the
- * kind. Names are display-only as a join key — this is not a join, it is a
- * coarse bucket for a filter chip, and it degrades to null rather than
- * guessing. A meeting that classifies as null is never hidden by a chip filter
- * it could not be matched against.
+ * Classify a body for the body-type chips: tier from the OCD-ID, kind from the
+ * body's own name. A coarse filter bucket, not a join; it degrades to null
+ * rather than guessing, and a null is never hidden by a chip filter.
  */
 /**
- * The tier a meeting files under.
- *
- * A meeting with a division files where its division does — `tierForOcdId`,
- * which deliberately refuses to guess an unknown segment. A meeting with a
- * **null** division is different: null is not an unknown segment, it is the
- * stated fact that no Census division exists for this body (D28 — Pima
- * Community College, special districts, regional councils), and every such
- * body in this product is a local government. So null files as `local` by
- * construction, not by inference — the alternative hides every wired
- * division-less meeting behind the tier filter forever.
+ * The tier a meeting files under: its division's tier (`tierForOcdId`). A
+ * null division is the stated fact that no Census division exists for the body
+ * (a community college or special district), and every such body is a local
+ * government, so it files as `local`.
  */
 export function tierForMeeting(meeting: Meeting): Tier | null {
   if (meeting.ocdId === null) return "local";
@@ -51,15 +37,10 @@ export function tierForMeeting(meeting: Meeting): Tier | null {
 }
 
 /**
- * The government level a meeting belongs to, for the colored map dots (2g).
- *
- * Four levels, not three: the author's spec separates school government from
- * the rest of Local, because a school-board meeting and a congressional town
- * hall at the same address must be distinguishable without clicking. School
- * is decided structurally where possible — a `school_district` segment in the
- * OCD-ID — and by the same name bucket the chips use otherwise (a
- * division-less school body has no segment to read). This colors dots; it is
- * NOT the filter axis, which stays `tierForMeeting`.
+ * The government level a meeting belongs to, for the colored map dots. Four
+ * levels: school is separated from the rest of Local, decided by a
+ * `school_district` segment in the OCD-ID or else by the chips' name bucket.
+ * This colors dots; it is NOT the filter axis, which stays `tierForMeeting`.
  */
 export type GovernmentLevel = "school" | "local" | "state" | "federal";
 
@@ -127,12 +108,7 @@ export interface FilterInput {
   now?: number;
 }
 
-/**
- * Apply every active filter.
- *
- * Order is cheapest-first, but the result is the same either way — these are
- * all conjunctive.
- */
+/** Apply every active filter. All are conjunctive; order is cheapest-first. */
 export function applyFilters({
   meetings,
   ui,
@@ -148,10 +124,8 @@ export function applyFilters({
     if (tier === null || !ui.tiers.includes(tier)) return false;
 
     // Scope. Jurisdiction is an OCD-ID; `body` is the division plus the body
-    // name, made only by `bodyScopeKey` — the same constructor the Body
-    // dropdown uses, so the key offered and the key matched cannot diverge
-    // (2026-09-23: a bare OCD-ID dispatched here matched nothing and emptied
-    // every surface).
+    // name, made only by `bodyScopeKey`, the same constructor the Body
+    // dropdown uses.
     if (ui.jurisdiction && meeting.ocdId !== ui.jurisdiction) return false;
     if (ui.body && bodyScopeKey(meeting) !== ui.body) return false;
 
@@ -171,10 +145,7 @@ export function applyFilters({
 
     /*
      * An online meeting has no distance to the centre, so the radius filter
-     * cannot speak to it (D18). It is kept: the server already decided it is
-     * in view — either its division contains the centre or its body's
-     * in-person sittings are in radius — and re-deciding that here with a
-     * measurement that does not exist would drop it after all.
+     * cannot speak to it; the server already decided it is in view.
      */
     if (center && meeting.location) {
       const km = haversineKm(
@@ -202,19 +173,9 @@ export interface ShellStats {
   meetings: number;
   bodies: number;
   /**
-   * **How many of `bodies` are GOVERNING bodies.** (Item 6, 2026-08-23.)
-   *
-   * The 07866 tile read `12 Bodies` while the panel two inches to its right
-   * read *"4 of the 8 bodies that govern the area around 07866"*. Both were
-   * right and neither said which unit it was counting: the tile counts every
-   * body covering the point and the panel counts the governing ones, and the
-   * remaining 4 are the boards and committees the panel names in its own next
-   * sentence. Two numbers standing beside each other with no stated
-   * relationship is how "1,079" happened.
-   *
-   * Null when no coverage answered, for the same reason `bodies` becomes
-   * "—" there: a counter whose surface cannot say who governs may not state
-   * a number, and 0 is a number.
+   * How many of `bodies` are GOVERNING bodies (the rest are boards and
+   * committees). Null when no coverage answered: a counter whose surface
+   * cannot say who governs may not state a number, and 0 is a number.
    */
   governingBodies: number | null;
   /** Null when the overlay is off: nothing is drawn, so there is no count. */
@@ -231,32 +192,12 @@ export interface ShellStats {
 }
 
 /**
- * The four stat cards, each computed from the SAME set the surface behind
- * it renders (M57, 2026-08-15 — the denominator disease, third sighting).
+ * The four stat cards, each computed from the SAME collection the surface
+ * behind it renders, never a re-derivation that happens to agree today:
+ * officials from `allOfficialRows()`, bodies from `coverage.bodies`.
  *
- * The author caught the sidebar reading "6 OFFICIALS" beside an officials
- * door listing twenty-four people. Two counters had drifted onto their own
- * private universes while their doors grew:
- *
- *   OFFICIALS — counted `seats[].representatives` + `senators`, the
- *     pre-roster derivation. It never learned about the curated local
- *     rosters (M05) or the statewide executives (B11), so a mayor, six
- *     council members, a governing board and five supervisors were
- *     rendered by the door and counted by nobody. Now it is
- *     `allOfficialRows()` — literally the door's own derivation.
- *   BODIES — counted DISTINCT BODIES WITH MEETINGS in the filtered set
- *     (13 at 85701) while the bodies door lists every body covering the
- *     point (60). Now it is `coverage.bodies.length`, the door's list.
- *
- * The rule that stops the fourth sighting: a counter takes the rendered
- * collection itself, never a re-derivation that happens to agree today.
- * Guarded at all four zips against real committed registry data in
- * tests/representation.test.ts.
- *
- * `districts` stays the drawn set — the districts door already renders
- * exactly it (3g) — but is now `null` rather than 0 when the overlay is
- * off, because "nothing is drawn because you turned it off" is a
- * different fact from "none are drawn here".
+ * `districts` is the drawn set, and `null` rather than 0 when the overlay is
+ * off: "turned off" is a different fact from "none drawn here".
  */
 export function computeStats(input: {
   /** The filtered meetings — what the list overlay renders. */
@@ -291,14 +232,10 @@ export function activeDistrictTypes(ui: UiState) {
 }
 
 /**
- * The popup trigger rule (3h, 2026-08-19), pure so the test can hold it:
- * the who-governs card re-expands ONLY for a typed-zip view of a new area —
- * initial launch and a zip change from the sidebar are both typed-zip
- * views. A settled viewport (free scrolling) NEVER re-expands it, even
- * when the pan crosses into a different ZCTA — the settle still refreshes
- * the data under the bubble, silently. Explicit reader gestures (a click
- * into a new district, a bubble tap) expand it elsewhere — a gesture is
- * the reader asking; a pan is not.
+ * The popup trigger rule: the who-governs card re-expands ONLY for a typed-zip
+ * view of a new area (initial launch, a zip change). A settled viewport never
+ * re-expands it, even across a ZCTA boundary; the data under it still
+ * refreshes silently. Explicit reader gestures expand it elsewhere.
  */
 export function noticeShouldExpand(
   viewKind: "zip" | "settled",
@@ -320,11 +257,7 @@ export interface DistrictDoorRow {
 
 /**
  * The reader-facing name of a division type — the same words the map legend
- * uses, so the two modes of the districts door read alike.
- *
- * Identifiers never render (CLAUDE.md's plain-language rule): a type this map
- * has no word for falls back to "District" rather than leaking
- * `school_district` onto a card.
+ * uses. A type with no word falls back to "District"; identifiers never render.
  */
 const DIVISION_TYPE_LABEL: Record<string, string> = {
   cd: "Congressional",
@@ -341,12 +274,8 @@ export function divisionTypeLabel(divisionType: string): string {
 
 /**
  * The GOVERNING mode's rows — one per division whose boundary contains the
- * reader's resolved address (2026-08-15).
- *
- * Same stated-N contract as the in-view mode below: the length of this list
- * is the number the card states, and the guard test holds both modes.
- * Holders come from the shared resolver, so a county row names its board and
- * a congressional row names its member.
+ * reader's resolved address. The list's length is the number the card states.
+ * Holders come from the shared resolver.
  */
 export function governingDoorRows(
   coverage: CoverageSummary,
@@ -362,13 +291,9 @@ export function governingDoorRows(
 }
 
 /**
- * The districts door's rows (3g, 2026-08-19): EXACTLY one row per drawn
- * district — the same list whose length the stat card states, so the
- * stated N and the rendered rows cannot diverge (the guard test in
- * tests/representation.test.ts holds `rows.length === drawn.length` and
- * the card derivation against the same input). Holders join by ocdId from
- * the coverage seats; a drawn district without a seat row renders with an
- * empty holder list, never disappears.
+ * The districts door's rows: EXACTLY one per drawn district, so the stated N
+ * and the rendered rows cannot diverge. Holders join by ocdId from the
+ * coverage seats; a district without a seat row renders with no holders.
  */
 export function districtDoorRows(
   drawn: readonly DrawnDistrict[],
@@ -386,10 +311,8 @@ export function districtDoorRows(
 
 /**
  * The Bodies pair, in the reader's words, or null when there is no pair.
- *
- * **Stated N equals rendered rows** applies to both halves: `bodies` is the
- * length of the list the Bodies door renders, and `governingBodies` is the
- * count the Who Governs Here panel speaks about. Neither is re-derived here.
+ * `bodies` is the Bodies door's list length and `governingBodies` the count the
+ * Who Governs Here panel speaks about; neither is re-derived here.
  */
 function bodiesSecondary(stats: ShellStats): string | null {
   if (!stats.coverageAnswered) return null;
@@ -415,12 +338,8 @@ export interface StatsView {
   districts: number | "—" | "Off";
   officials: number | "—";
   /**
-   * What the districts card is counting, in the reader's words.
-   *
-   * The number never travels without it. "179 DISTRICTS" read as a claim that
-   * the reader is governed by 179 governments — the door said "in view" and
-   * the tile said nothing, so the tile was the one the author believed. Two
-   * modes, and the label is what distinguishes them:
+   * What the districts card is counting, in the reader's words; the number
+   * never travels without it:
    *
    *   "In view"        — the drawn set. A fact about the camera.
    *   "You're in"      — the governing set: divisions whose boundary contains
@@ -439,38 +358,17 @@ export interface StatsView {
 
 /**
  * What the stat cards may claim, given whether the fetch that feeds them
- * actually answered.
+ * answered. A failed operation may not render as an empty success: on failure
+ * every count that depends on the server renders "—" with the note, never 0.
+ * Districts stay numeric, because the overlay draws from files on the client.
  *
- * The standing rule (ninth sighting, docs/state.md §8): **a failed operation
- * may not render as an empty success.** "Couldn't check" and "none" are
- * different facts — a sidebar reading 0 meetings / 0 bodies / 0 officials
- * beside a failed request is three false claims about a government. So on
- * failure every count that depends on the server's answer renders "—" with
- * the note, never 0. Districts stay numeric: the overlay draws from
- * committed files on the client and is genuinely intact when the meetings
- * service is not — the author's failure screenshot showed exactly that
- * split, and it was the one honest number on the card.
+ * An overlay the reader turned off reads "Off", not "—" (a dash means "we
+ * could not check").
  *
- * The districts card no longer renders "—" for an overlay the reader turned
- * off (M57). A dash is this product's word for "we could not check", and
- * spending it on "you switched this off" made the one intact number on the
- * card read as the broken one — the author reported it as blank. Off says
- * off, and its door offers the switch.
- *
- * **The districts number now says what it is counting** (2026-08-15). It read
- * a bare "179 DISTRICTS" beside a door headed "Districts in view" — so the
- * tile made a claim about the reader's government that the door quietly
- * withdrew, and the tile is the one on screen. Two modes:
- *
- *   *In view* — the drawn set, which is a fact about where the camera is
- *   pointed and is labelled as one.
- *
- *   *You're in* — once the reader has given a street address and it has
- *   resolved, the count of divisions whose boundary CONTAINS that point. That
- *   is the governing set, it is the number they actually came for, and it
- *   leads with the in-view count kept underneath rather than thrown away. A
- *   zip centroid never qualifies: a ZCTA crosses city, county and school
- *   lines, so a centroid can sit in a different town than the reader.
+ * The districts number says what it counts: *In view* (the drawn set) or, once
+ * a street address has resolved, *You're in* (divisions whose boundary
+ * contains that point), with the in-view count kept underneath. A zip
+ * centroid never qualifies.
  */
 export function deriveStatsView(
   stats: ShellStats,
@@ -478,34 +376,12 @@ export function deriveStatsView(
   searchFailed: boolean,
 ): StatsView {
   /*
-   * F01 9.2 (2026-08-19, the author): *"districts in view right now is listed
-   * as off... obviously that's not the case, there ARE districts in view on
-   * this screen."* Reproduced at 85701.
-   *
-   * The tile said "Off" because it answered from the master SWITCH, and the
-   * switch is a mirror: `use-district-layer` owns the persisted preference,
-   * the map reads it directly, and `ui.showDistricts` is a copy kept in step
-   * by an effect. A mirror can lag or diverge from the thing it mirrors, and
-   * when it does, this tile — whose label is a claim about THE VIEW — reports
-   * the state of a checkbox instead.
-   *
-   * So the drawn set wins when there is one. `stats.districts` is counted off
-   * the live map AFTER rendering settles (`drawnDistrictsOn`, called on `idle`
-   * and `sourcedata`), which makes it the only value here that is evidence
-   * rather than intent. If the map drew districts, "Districts in view" says
-   * how many, whatever any switch believes.
-   *
-   * "Off" survives for the case it was written for and is still honest there:
-   * nothing drawn AND the switch off is a state the reader created and can
-   * undo, and a dash — this product's word for "we could not check" — would
-   * make the one number that was never broken read as the broken one (M57).
+   * The drawn set wins when there is one: `stats.districts` is counted off the
+   * live map after rendering settles, so it is evidence, while the switch is a
+   * mirror of the persisted preference that can lag. "Off" is only for nothing
+   * drawn AND the switch off; the rule is `districtsSwitchedOffAndEmpty` in
+   * lib/map/districts.ts, shared with the door this tile opens.
    */
-  /* MAP-5 (2026-08-30): the rule is now `districtsSwitchedOffAndEmpty` in
-     lib/map/districts.ts, shared with the door this tile opens. The tile was
-     repaired for this on 2026-08-19 and the door was not, so a reader met
-     "33 Districts in view" and "boundaries are switched off" on one screen.
-     One predicate, both surfaces — the divergence is what has to be impossible,
-     not just currently absent. */
   const drawn: StatsView["districts"] = districtsSwitchedOffAndEmpty(
     stats.districts,
     showDistricts,
@@ -544,7 +420,7 @@ export function deriveStatsView(
   return {
     meetings: stats.meetings,
     // A counter whose surface says "we couldn't resolve who governs here"
-    // may not state a number, and 0 is a number (the failed-operation rule).
+    // may not state a number, and 0 is a number.
     bodies: stats.coverageAnswered ? stats.bodies : "—",
     bodiesSecondary: bodiesSecondary(stats),
     officials: stats.coverageAnswered ? stats.officials : "—",

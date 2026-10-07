@@ -4,53 +4,20 @@ import { extracted, zeroRows, cannotRun } from "./types.ts";
 import type { ExtractResult } from "./types.ts";
 
 /**
- * **LAYER 5 — THE ROSTER TABLE** (NH Hunt, 2026-08-20).
+ * Layer 5: who sits on a board, read off the body's own roster table.
  *
- * Who sits on a board, read off the body's own page.
+ * Reads Drupal Views tables by their cell classes (`views-field-title` for the
+ * person, `views-field-field-job-title` for office and term,
+ * `views-field-field-staff-phone`), so the class names, not the column order,
+ * are the contract. A table with no recognisable field classes falls back to
+ * its `<thead>` labels (`Name` / `Title` / `Phone`).
  *
- * ## Why this had to be built rather than hunted around
+ * - It never infers a role: no title cell is `title: null`.
+ * - It never parses a term into a date: the term is carried verbatim in
+ *   `title`, and `termText` only when literally printed.
+ * - It reads only the page it is given.
  *
- * `CLAUDE.md`: *where a tool does not exist to reach a public record, BUILD
- * IT.* The wall was not access — Newbury's Selectboard page answers 200 to a
- * plain fetch with an identified `User-Agent`. The wall was that the three
- * members, their titles and their term-expiry years sit inside a `views-table`
- * whose only distinguishing marks are CSS class names, and this repository had
- * no layer that could turn one of those into rows. Layer 4 reads an embedded
- * JSON payload; there is none here. The text layer reads a PDF. So the roster
- * was reachable and unreadable, which is difficulty, and difficulty is
- * friction rather than refusal.
- *
- * ## What it reads, and how wide the class is
- *
- * Drupal 7 **Views** tables, which is what a very large number of New England
- * municipal sites are built on — Newbury runs `Drupal 7` (its own `generator`
- * meta tag) and renders every board page as `Staff Contacts` and
- * `Board Members` sections, each a `<table class="views-table">` whose cells
- * carry `views-field-<machine-name>` classes: `views-field-title` for the
- * person, `views-field-field-job-title` for the office and term,
- * `views-field-field-staff-phone` for the number.
- *
- * **The class names are the contract, not the column order**, which is what
- * makes this survive a site adding a column. A table with no recognisable
- * field classes falls back to the `<thead>` labels, so a hand-built roster
- * table with `Name` / `Title` / `Phone` headers reads too — that is the second
- * shape, and it is common on the same sites for committees the Views module
- * was never wired for.
- *
- * ## What it deliberately does not do
- *
- * - **It never infers a role.** A person with no title cell gets `title: null`
- *   and the caller renders the gap; "Member" is not assumed.
- * - **It never parses a term into a date.** `Member (March 2027)` is carried
- *   verbatim in `title` and the year is offered separately in `termText` only
- *   when it is literally printed. A term inferred from a cycle would be a
- *   generated fact about a named person.
- * - **It reads the page it is given.** Following a `/user/NNNN/contact` link
- *   to an email form is a separate rung and a separate call.
- *
- * A zero-row extraction is a FAILED extraction: a board page with no roster
- * table reports `ZERO_ROWS` naming the tables it saw and rejected, never "this
- * board has no members".
+ * Zero rows is a failed extraction (`ZERO_ROWS`), never "no members".
  */
 
 export interface RosterRow {
@@ -65,10 +32,8 @@ export interface RosterRow {
   /** Email exactly as published. Null when the row carries none. */
   email: string | null;
   /**
-   * The contact route the page links for this person — usually a site contact
-   * form at `/user/NNNN/contact`, absolutised against the page URL when one is
-   * given. A form is a working contact; it is not an email address and is
-   * never rendered as one.
+   * The contact route the page links for this person, usually a site contact
+   * form, absolutised against the page URL. A form is not an email address.
    */
   contactUrl: string | null;
   /** The bracketed term text, when the title literally prints one. */
@@ -125,12 +90,9 @@ function mailtoIn(html: string): string | null {
 }
 
 /**
- * The nearest heading ABOVE an offset — the section a table sits under.
- *
- * Read backwards from the table rather than forwards from the heading, because
- * these pages nest the table two `<div>`s deep inside a `<section>` and a
- * forward scan would attribute a table to whichever heading happened to be
- * closest in document order rather than to the one that governs it.
+ * The nearest heading above an offset: the section a table sits under. Read
+ * backwards, because tables nest inside sections and a forward scan would pick
+ * the wrong heading.
  */
 function sectionAbove(html: string, at: number): string {
   const before = html.slice(0, at);
@@ -217,18 +179,9 @@ export function extractRosterTables(
         }
       });
 
-      // A row with no mapped name is a layout row, a spacer, or a table this
-      // layer has no business reading. Counted, never guessed at.
+      // A row with no mapped name is a layout or spacer row.
       if (!row.name || mapped < 2) continue;
-      /*
-       * A HEADER ROW INSIDE `<tbody>` is not a person, and Kearsarge's
-       * district-office table has exactly one — `Name | Position | Phone` as
-       * an ordinary `<tr>` under `<tbody>`, with the same cell classes as the
-       * fourteen real rows below it. The first run of this layer carried
-       * "Name" into the roster as the district's fifteenth staff member, which
-       * is a fabricated person on a public body's page and the one thing this
-       * whole toolkit exists to refuse.
-       */
+      // A header row inside `<tbody>` is not a person.
       if (HEADER_LABEL.some(([re]) => re.test(row.name))) continue;
       row.email ??= mailtoIn(tr[1]);
       const term = row.title ? TERM.exec(row.title) : null;
@@ -250,17 +203,8 @@ export function extractRosterTables(
     );
   }
   /*
-   * **RULING 100 — what does the PAGE say is there?** A body's own page
-   * usually says, in prose above the table: *the nine-member Board of
-   * Education*, *the Council is composed of five members*. Where it does, that
-   * sentence is the only denominator worth having, and a table read that comes
-   * back with four people against it is a failed extraction whatever the row
-   * count looks like.
-   *
-   * Read out of the page TEXT rather than out of the table structure on
-   * purpose. A `<tr>` count is not a claim by the source — spacer rows, header
-   * rows inside `<tbody>` and layout rows are all legitimately skipped, and
-   * asserting against them would fail correct extractions.
+   * Check against the count the page's own prose states, not the `<tr>` count:
+   * spacer, header and layout rows are legitimately skipped.
    */
   const stated = statedCountIn(textOf(html));
   return extracted<RosterRow>(

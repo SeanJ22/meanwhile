@@ -16,7 +16,6 @@ export const ROUTINE_READER_MEETING_TIMEOUT_MS = 5 * 60_000;
 
 export type ReaderRepairContract = RoutineSourceContract | ManualProductionSourceContract;
 
-/** A scoped source pass repairs only the reader contracts for those same pointers. */
 export function selectedReaderRepairContracts(
   contracts: readonly ReaderRepairContract[],
   tasks: readonly Pick<ReaderRepairContract, "recordClass" | "scope">[] | null,
@@ -33,7 +32,6 @@ export interface RoutineReaderRepairDomain {
   readonly timeoutMs: number;
 }
 
-/** One process per independent Reader, with all meeting partitions in their actual shared aggregate. */
 export function routineReaderRepairDomains(
   contracts: readonly ReaderRepairContract[] = [
     ...observableRoutineContracts(),
@@ -254,7 +252,6 @@ export interface RoutineReaderRepairSupervisorFailure {
   readonly detail: string;
 }
 
-/** Preserve every exact child result; a killed or malformed domain marks only missing contracts unknown. */
 export function reconcileRoutineReaderRepairDomain(
   domain: RoutineReaderRepairDomain,
   output: string,

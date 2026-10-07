@@ -1,25 +1,9 @@
 /**
- * **THE MOTION SCALE IS THE ONLY SOURCE OF DURATION AND EASING.**
- * (The visual-polish session, 2026-09-03. WORK ITEM 1.)
- *
- * Every transition and animation in the app moves on one duration scale
- * (`--dur-fast|base|slow`, plus `--dur-pulse` for the one ambient loop) and one
- * easing family (`--ease-enter|exit|move`), all declared in `app/globals.css`.
- * A raw millisecond or second literal in a `transition`/`animation` declaration
- * is the defect this catches: it is a value nobody named, off the scale, that
- * makes one surface move differently from every other for no stated reason.
- *
- * Two things are asserted, and they are the WORK ITEM 1 seeded checks:
- *
- *   1. No `transition`/`animation` (shorthand OR the `-duration` longhand)
- *      carries a raw time literal. The single allowed literal is `0.01ms`, the
- *      reduced-motion instant — motion that has been switched off, not timed.
- *   2. The global reduced-motion floor is present, so a reader who asks the OS
- *      for less motion gets it everywhere without a rule opting in.
- *
- * The logic lives here, pure, so `tests/motion-tokens.test.ts` can feed it a
- * planted raw duration and prove the instrument catches the real shape
- * (RULING 110) rather than reporting green about nothing.
+ * Motion checks: every transition and animation uses the duration scale
+ * (`--dur-*`) and easing family (`--ease-*`) in `app/globals.css`.
+ *   1. No `transition`/`animation` declaration (shorthand or `-duration`
+ *      longhand) carries a raw time literal, except the reduced-motion instant.
+ *   2. The global reduced-motion floor is present.
  */
 
 /** The reduced-motion instant. A duration this small is motion turned OFF, not
@@ -48,9 +32,7 @@ const TIME_LITERAL = /(?<![\w.])\d*\.?\d+m?s(?![\w])/g;
  */
 export function rawMotionInCss(css: string): MotionOffender[] {
   const out: MotionOffender[] = [];
-  // Property → end of its declaration. `[^;{}]*` keeps a match inside one
-  // declaration and lets a multi-line `transition:` value match via the `s`
-  // flag not being needed (newlines are within `[^;{}]`).
+  // `[^;{}]*` keeps a match inside one declaration, across newlines.
   const decl = /(?<![\w-])(?:transition|animation)(?:-duration)?\s*:[^;{}]*/g;
   for (const m of css.matchAll(decl)) {
     const body = m[0];

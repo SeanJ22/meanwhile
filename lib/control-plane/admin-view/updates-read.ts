@@ -1,7 +1,4 @@
-/**
- * **`admin-view/updates` — the updates Now shows once.** Plain words, Eastern time, labels honest: an EXPECTED
- * item is listed as expected and is never counted as a win. PURE: records in, view out.
- */
+/** An EXPECTED item is listed as expected and never counted as a win. PURE. */
 import { formatEastern } from "../eastern-time.ts";
 import type { ChangeRow } from "../changes/model.ts";
 import type { NewUpdate, UpdateLabel, UpdateRecord } from "../updates.ts";
@@ -21,7 +18,6 @@ export interface UpdateLine {
   readonly before: string | null;
   readonly after: string | null;
   readonly evidenceHref: string | null;
-  /** The Decline control for an update about items added to a place's owed list (BR-33); null for every other update. */
   readonly decline: { readonly placeKey: string; readonly what: string; readonly rows: readonly { readonly rowId: string; readonly subjectLabel: string; readonly requirement: string }[] } | null;
 }
 
@@ -36,7 +32,7 @@ export function updatesView(records: readonly UpdateRecord[], observedAt: string
   return {
     observedAt,
     updates: [...records].sort((a, b) => b.at.localeCompare(a.at)).map((u) => ({
-      // DP-34: a proven fix that broke reads "Proven, broke since", never a plain Testing or Proven.
+            // A proven fix that broke reads "Proven, broke since", never a plain Testing or Proven.
       id: u.id, what: u.what, when: formatEastern(u.at), label: u.setback === true ? `Proven, broke since ${easternDay(u.at)}` : UPDATE_LABEL_WORDS[u.label],
       isWin: u.label !== "EXPECTED" && u.setback !== true,
       before: u.before, after: u.after, evidenceHref: u.evidenceHref,
@@ -48,7 +44,6 @@ export function updatesView(records: readonly UpdateRecord[], observedAt: string
 const CHANGES_RECENT_MS = 2 * 24 * 60 * 60 * 1000;
 const CHANGES_MOST = 10;
 
-/** Merged-and-live changes are updates labeled Testing; changes passing checks but not yet live are Expected. */
 export function updatesFromChanges(rows: readonly ChangeRow[], nowMs: number): readonly NewUpdate[] {
   return rows
     .filter((r) => (r.status === "live" || r.status === "on-test" || r.status === "deploying") && nowMs - Date.parse(r.at) <= CHANGES_RECENT_MS)
@@ -65,10 +60,7 @@ const OWED_KIND_WORDS: Readonly<Record<string, string>> = {
   body: "government bodies", seat: "seats", contest: "elections", funding: "funding records", deadline: "filing deadlines", rollcall: "roll calls", calendar: "meeting calendars",
 };
 
-/**
- * One update for each new kind of thing a place started owing after its mission started (SC-10). It is added work, not a win, so it is
- * labeled Expected. Stable per place and kind, so a repeated read adds it once. PURE.
- */
+/** Added work, not a win, so labeled Expected; stable per place and kind, so a repeated read adds it once. */
 export function owedKindUpdates(input: {
   readonly placeKey: string;
   readonly placeLabel: string;

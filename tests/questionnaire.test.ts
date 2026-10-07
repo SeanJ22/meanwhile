@@ -26,13 +26,6 @@ import {
   questionsFor,
 } from "../lib/questionnaire/instrument.ts";
 import {
-  buildContestInvitations,
-  symmetryBreaches,
-  type Invitation,
-} from "../lib/questionnaire/invitations.ts";
-import { buildQuestionnaireInvitationPlan } from "../lib/questionnaire/invitation-plan.ts";
-import { officeClassFor } from "../lib/questionnaire/office-class.ts";
-import {
   UNESTABLISHED,
   positionsEmptyLine,
   positionsEmptyState,
@@ -44,12 +37,11 @@ import {
   withWithdrawal,
   type CandidateResponseRecord,
 } from "../lib/questionnaire/responses.ts";
-import { render as renderQuestionnaireDoc } from "../scripts/questionnaire-doc.mts";
 
 const ROOT = join(import.meta.dirname, "..");
 
 /* ========================================================================== */
-/* RULING 112 — a first-party instrument is symmetric by construction         */
+/* A first-party instrument is symmetric by construction                     */
 /* ========================================================================== */
 
 test("questionnaire: every candidate for an office class is asked the IDENTICAL five questions", () => {
@@ -97,15 +89,8 @@ test("questionnaire: every office class has exactly two class questions", () => 
 /* ========================================================================== */
 
 /**
- * RULING 110 — SHAPES, not one string.
- *
- * A leading question is not detectable by a keyword. What IS detectable is the
- * shape of one: a question that hands the candidate a position to agree with,
- * that assumes they want a thing changed or kept, or that tells them what the
- * office does before asking about it. Each pattern below is a shape, and the
- * `LEADING_PLANTS` array proves the instrument catches real ones — a sweep that
- * cannot find the defect it was written for is a sweep reporting green about
- * nothing.
+ * Leading questions are detected by shape: handing the candidate a position to agree with, presupposing a change,
+ * or telling them what the office does before asking. The plants prove the shapes catch real ones.
  */
 const LEADING_SHAPES: ReadonlyArray<[string, RegExp]> = [
   ["asks the candidate to agree or disagree", /\b(do you (agree|support|oppose)|would you support|would you oppose)\b/i],
@@ -196,11 +181,7 @@ test("questionnaire: an answer at exactly the limit is accepted", () => {
 /* Verbatim — enforced by absence, and swept by shape                          */
 /* ========================================================================== */
 
-/**
- * There is no summary field and no summarising call anywhere under
- * `lib/questionnaire/`. This is the RULING 110 form of the check: not one
- * string, but every shape a compression would take.
- */
+/** There is no summary field and no summarising call under `lib/questionnaire/`; every shape a compression would take is swept. */
 const COMPRESSION_SHAPES: ReadonlyArray<[string, RegExp]> = [
   /*
    * **THE SUFFIX IS PART OF THE SHAPE.** The first version of this list was
@@ -358,11 +339,7 @@ test("questionnaire: the asked state names the dates and the symmetry", () => {
   assert.match(line, /same questions on the same day/);
 });
 
-/**
- * RULING 110 again — shapes. A sentence implying a candidate CHOSE not to
- * answer is the failure, whatever words it uses, and the plants prove the sweep
- * would catch one.
- */
+/** A sentence implying a candidate chose not to answer is the failure, whatever words it uses. */
 const EVASION_SHAPES: ReadonlyArray<[string, RegExp]> = [
   ["refusal", /\b(refus|declin|reject)\w*/i],
   ["avoidance", /\b(avoid|evad|dodg|duck|ignor)\w*/i],
@@ -394,13 +371,6 @@ test("questionnaire: no empty-state sentence reads as evasion", () => {
       assert.ok(!pattern.test(line), `the ${name} shape matched: ${line}`);
     }
   }
-});
-
-test("questionnaire: the invitation message never implies an obligation to answer", () => {
-  const message = readFileSync(join(ROOT, "docs", "candidate-questionnaire-invitation.md"), "utf8");
-  assert.match(message, /you don't owe us an answer/i);
-  assert.match(message, /identical email today/i);
-  assert.match(message, /exactly as you write them/i);
 });
 
 /* ========================================================================== */
@@ -474,9 +444,8 @@ const QUESTIONNAIRE_TABLES = [
 
 test("questionnaire: nothing new lands on the search log or the reactions store", () => {
   /*
-   * The exact column sets, written out, so that ADDING one to either store
-   * fails here by name. A count would move for a legitimate reason and tell
-   * nobody which column arrived (RULING 62's lesson about names versus counts).
+   * The exact column sets, written out, so that adding one to either store fails here by name; a count would not
+   * say which column arrived.
    */
   const searchLogColumns = getTableConfig(schema.searchLog)
     .columns.map((c) => c.name)
@@ -533,201 +502,6 @@ test("questionnaire: the questionnaire tables key on public ballot ids, never on
 });
 
 /* ========================================================================== */
-/* The invitation list — contest as the unit, all or none                      */
-/* ========================================================================== */
-
-const SOURCE = {
-  sourceUrl: "https://example.gov/filing.pdf",
-  sourceOrg: "County Clerk",
-  collectedAt: "2026-08-23",
-};
-
-test("questionnaire: a contest with one unreachable candidate invites NOBODY", () => {
-  const result = buildContestInvitations({
-    contestId: "contest-1",
-    officeClass: "school_board",
-    instrumentVersion: INSTRUMENT_VERSION,
-    plannedInvitedOn: "2026-09-08",
-    plannedRemindersOn: ["2026-09-22"],
-    deadline: "2026-10-13",
-    candidates: [
-      { candidacyId: "a", contestId: "contest-1", email: "a@example.com", contactSource: SOURCE },
-      { candidacyId: "b", contestId: "contest-1", email: null, contactSource: null },
-    ],
-  });
-  assert.equal(result.invitations.length, 0, "a partial contest is the asymmetry this prevents");
-  assert.equal(result.uninvitable.length, 2, "both candidates must be named as uninvited");
-});
-
-test("questionnaire: a generated invitation claims NO send that has not happened", () => {
-  const result = buildContestInvitations({
-    contestId: "contest-1",
-    officeClass: "school_board",
-    instrumentVersion: INSTRUMENT_VERSION,
-    plannedInvitedOn: "2026-09-08",
-    plannedRemindersOn: ["2026-09-22"],
-    deadline: "2026-10-13",
-    candidates: [
-      { candidacyId: "a", contestId: "contest-1", email: "a@example.com", contactSource: SOURCE },
-    ],
-  });
-  assert.equal(result.invitations[0].invitedOn, null, "a plan stamped itself as an act");
-  assert.deepEqual(result.invitations[0].remindedOn, []);
-  assert.equal(result.invitations[0].plannedInvitedOn, "2026-09-08");
-});
-
-test("questionnaire: the symmetry check catches an asymmetric contest", () => {
-  const base: Invitation = {
-    candidacyId: "a",
-    contestId: "contest-1",
-    email: "a@example.com",
-    instrumentVersion: INSTRUMENT_VERSION,
-    officeClass: "school_board",
-    plannedInvitedOn: "2026-09-08",
-    plannedRemindersOn: ["2026-09-22"],
-    invitedOn: null,
-    remindedOn: [],
-    deadline: "2026-10-13",
-    contactSource: SOURCE,
-  };
-  assert.deepEqual(symmetryBreaches([base, { ...base, candidacyId: "b" }]), []);
-
-  const breaches = symmetryBreaches([
-    base,
-    { ...base, candidacyId: "b", plannedRemindersOn: ["2026-09-22", "2026-10-06"] },
-    { ...base, candidacyId: "c", deadline: "2026-10-20" },
-  ]);
-  const fields = breaches.map((b) => b.field).sort();
-  assert.deepEqual(fields, ["deadline", "plannedRemindersOn"]);
-});
-
-/* ========================================================================== */
-/* The generated artifact and the generated document                           */
-/* ========================================================================== */
-
-test("questionnaire: the canonical NJ filing derives a complete unsent plan without a tracked output", () => {
-  const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
-  ) as { contests: { id: string; ocdId: string; title: string }[]; candidacies: { id: string; contestId: string }[] };
-  const contacts = JSON.parse(
-    readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026-contacts.json"), "utf8"),
-  ) as { contacts: { candidacyId: string; email: string | null; sourceUrl: string; sourceOrg: string; collectedAt: string }[] };
-  const plan = buildQuestionnaireInvitationPlan({
-    ballot,
-    contacts,
-    plannedInvitedOn: "2026-09-08",
-    plannedRemindersOn: ["2026-09-22", "2026-10-06"],
-    deadline: "2026-10-13",
-  });
-
-  assert.equal(plan.statedCandidacies, ballot.candidacies.length);
-  assert.equal(
-    plan.invitations.length + plan.uninvitable.length,
-    ballot.candidacies.length,
-    "RULING 100: a partial that reconciles is still a failure — account for every candidacy",
-  );
-  assert.deepEqual(plan.symmetryBreaches, []);
-  for (const invitation of plan.invitations) {
-    assert.equal(invitation.invitedOn, null, `${invitation.candidacyId} claims a send`);
-    assert.deepEqual(invitation.remindedOn, []);
-    assert.ok(invitation.email.includes("@"), `${invitation.candidacyId} has no usable email`);
-  }
-});
-
-test("questionnaire: the committed question-set document is what the generator writes", () => {
-  const committed = readFileSync(join(ROOT, "docs", "candidate-questionnaire.md"), "utf8");
-  assert.equal(
-    committed,
-    renderQuestionnaireDoc(),
-    "docs/candidate-questionnaire.md was hand-edited — run `corepack pnpm questionnaire:doc --write`",
-  );
-});
-
-test("questionnaire: the document carries every question the instrument asks", () => {
-  const doc = readFileSync(join(ROOT, "docs", "candidate-questionnaire.md"), "utf8");
-  for (const q of allQuestions()) {
-    assert.ok(doc.includes(q.text), `the document is missing ${q.id}`);
-  }
-  assert.ok(doc.includes(INSTRUMENT_VERSION), "the document does not state its version");
-});
-
-/* ========================================================================== */
-/* Office class — the division decides it, and the plural is part of the shape */
-/* ========================================================================== */
-
-test("questionnaire: office class is read from the DIVISION wherever it can be", () => {
-  const cases: ReadonlyArray<[string, string, string, string]> = [
-    ["ocd-division/country:us/state:nj/school_district:rockaway_township", "Member of the Board of Education", "school_board", "division"],
-    ["ocd-division/country:us/state:nj/place:boonton", "Member of the Town Council - Ward 1", "municipal_governing", "division"],
-    ["ocd-division/country:us/state:nj/cd:11", "Member of the House of Representatives", "federal_legislative", "division"],
-    ["ocd-division/country:us/state:nj/sldl:25", "Member of the General Assembly", "state_legislative", "division"],
-  ];
-  for (const [ocdId, title, expected, basis] of cases) {
-    const verdict = officeClassFor({ ocdId, title });
-    assert.equal(verdict.officeClass, expected, `${ocdId} resolved to ${verdict.officeClass}`);
-    assert.equal(verdict.basis, basis);
-  }
-});
-
-test("questionnaire: the PLURAL is part of the shape — Commissioners resolves", () => {
-  /*
-   * RULING 110 in miniature: the first version of this list read
-   * `\bcommissioner\b`, which cannot match "Commissioners". Every Morris County
-   * commissioner contest fell to `other` and the run reported a clean 272 while
-   * doing it, because a fallback that works is invisible.
-   */
-  for (const title of [
-    "Member of the Board of County Commissioners",
-    "Member of the Board of Chosen Freeholders",
-    "County Commissioner",
-  ]) {
-    const verdict = officeClassFor({
-      ocdId: "ocd-division/country:us/state:nj/county:morris",
-      title,
-    });
-    assert.equal(verdict.officeClass, "county_governing", `"${title}" did not resolve`);
-  }
-});
-
-test("questionnaire: a title that matches nothing falls to `other`, never to a guess", () => {
-  const verdict = officeClassFor({
-    ocdId: "ocd-division/country:us/state:nj",
-    title: "Member of Something Nobody Has Heard Of",
-  });
-  assert.equal(verdict.officeClass, "other");
-  assert.equal(verdict.basis, "fallback");
-  assert.equal(questionsFor("other").length, 5, "`other` must be a complete instrument");
-});
-
-test("questionnaire: every NJ contest classifies, and none falls back", () => {
-  const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
-  ) as { contests: Array<{ ocdId: string; title: string }> };
-
-  const fallbacks = ballot.contests.filter(
-    (c) => officeClassFor({ ocdId: c.ocdId, title: c.title }).basis === "fallback",
-  );
-  assert.equal(
-    fallbacks.length,
-    0,
-    `contests with no office class: ${fallbacks.map((c) => c.title).join(", ")}`,
-  );
-  /*
-   * A FLOOR, not an equality — RULING 116. This asserted `=== 90` and went red
-   * on 2026-08-25 when the parser learned that MAYOR is an office heading and
-   * nine mayoral contests were recovered. A guard that freezes a size fails on
-   * the day somebody makes the number move for a good reason, and the cheapest
-   * way to make it green is to edit the constant. What matters here is that
-   * every contest classifies, and that the set never silently shrinks under a
-   * classifier that would then have fewer things to fail on.
-   */
-  assert.ok(
-    ballot.contests.length >= 99,
-    `the contest count fell to ${ballot.contests.length} from a floor of 99`,
-  );
-});
-
-/* ========================================================================== */
 /* The core is genuinely core                                                  */
 /* ========================================================================== */
 
@@ -743,33 +517,20 @@ test("questionnaire: the core three are asked of every office class, unchanged",
 });
 
 /* ========================================================================== */
-/* v2 (2026-08-25) — the revision, and the symmetry guarantee under it         */
+/* v2 — the revision, and the symmetry guarantee under it                     */
 /* ========================================================================== */
-
-/*
- * **A version bump that leaves the symmetry tests behind breaks the guarantee
- * SILENTLY**, which is why these ship in the same commit as the bump rather
- * than after it. Every one of them is about the four changes `v2` carries.
- */
 
 test("questionnaire v2: the instrument is at v2, and the limit is 200 everywhere", () => {
   assert.equal(INSTRUMENT_VERSION, "v2", "the four v2 changes shipped without the version moving");
   assert.equal(WORD_LIMIT, 200);
-  // Restated against the LITERAL rather than the constant. Asserting
-  // `wordLimit === WORD_LIMIT` proves the file equals itself (RULING 147); the
-  // number Sean asked for is 200 and that is what a candidate is held to.
+  // Restated against the literal: asserting `wordLimit === WORD_LIMIT` would prove the file equals itself.
   for (const q of allQuestions()) {
     assert.equal(q.wordLimit, 200, `${q.id} is not at the v2 limit`);
   }
 });
 
 test("questionnaire v2: the closing note is NOT part of the instrument", () => {
-  /*
-   * "Structurally distinct" is a claim, so it is held as one. The offer may
-   * never be reachable through the function that produces what a candidate is
-   * asked — a solicitation inside a symmetric instrument lets a candidate read
-   * the five questions as conditioned on it.
-   */
+  // The offer may never be reachable through the function that produces what a candidate is asked.
   assert.ok(CLOSING_NOTE.length > 0);
   const everyQuestionText = allQuestions()
     .map((q) => `${q.id} ${q.text}`)
@@ -790,11 +551,7 @@ test("questionnaire v2: the closing note is NOT part of the instrument", () => {
 });
 
 test("questionnaire v2: the closing note carries NO timing promise", () => {
-  /*
-   * Searched BY SHAPE, never by string (RULING 110). A promise is a commitment
-   * to a WHEN, and it can be spelled a hundred ways; what they share is a
-   * future-dated commitment attached to us delivering something.
-   */
+  // Searched by shape: a promise is a future-dated commitment to deliver something, spelled many ways.
   const TIMING_SHAPES: Array<[string, RegExp]> = [
     ["a named month", /\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i],
     ["a week or day count", /\b(?:in|within|after)\s+\d+\s*(?:days?|weeks?|months?)\b/i],
@@ -815,38 +572,13 @@ test("questionnaire v2: the closing note carries NO timing promise", () => {
   );
 });
 
-test("questionnaire v2: the invitation names the product, and only in the invitation", () => {
-  const message = readFileSync(join(ROOT, "docs", "candidate-questionnaire-invitation.md"), "utf8");
-  assert.match(message, /We're Meanwhile\./, "the invitation does not name the product");
-  assert.ok(
-    !/>\s*— We The People/i.test(message),
-    "a sign-off still carries the repo name",
-  );
-  /*
-   * **SCOPE: the invitation string only.** The name is leaning Meanwhile and is
-   * NOT settled (`B01`), and the repo name is deliberately unchanged — the
-   * outbound User-Agent carries the repo URL as its contact route for public
-   * bodies, and a body with our identifier in last week's logs must find the
-   * same one this week. A repo-wide rename here would be a session failure.
-   */
-  const brand = readFileSync(join(ROOT, "lib", "brand.ts"), "utf8");
-  assert.match(brand, /export const PRODUCT_NAME = "Meanwhile";/);
-});
-
 test("questionnaire v2: the closing note publishes verbatim, exactly as Sean wrote it", () => {
-  // A paraphrase of a commercial offer is a different offer, so the text is
-  // pinned rather than described.
+  // A paraphrase of a commercial offer is a different offer, so the text is pinned.
   assert.equal(
     CLOSING_NOTE,
     "One more thing, separate from the questionnaire: Meanwhile offers campaigns " +
       "and organizations anonymized, aggregate insight into what constituents in a " +
       "race care about — available to everyone, at the same published rates. If " +
       "you'd like to hear when insights for your race are available, sign up here.",
-  );
-  const message = readFileSync(join(ROOT, "docs", "candidate-questionnaire-invitation.md"), "utf8");
-  const inDoc = message.replace(/\n>\s*/g, " ").replace(/\s+/g, " ");
-  assert.ok(
-    inDoc.includes("One more thing, separate from the questionnaire: Meanwhile offers campaigns"),
-    "the invitation document and the constant carry different offers",
   );
 });

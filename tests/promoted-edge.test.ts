@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
@@ -28,17 +28,7 @@ import { VOTING_SITES_CONTRACT, votingSitesCandidate } from "../lib/ballot/votin
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 
-/**
- * **A PROVEN POINTER ON THE READER EDGE READS EXACTLY AS THE DATABASE READ OF
- * IT.** (2026-09-25.)
- *
- * The runner publishes the pointer row and the attestation of the candidate it
- * proved (`PromotedEdgeEntry`); a reader request answers the same typed read
- * from it. These tests promote a real Arizona state-money version in the
- * in-memory store (the same promotion door production uses), publish it the
- * way the runner does, and compare what the Reader answers from the database
- * with what it answers from the edge: kind, value, metadata, staleness.
- */
+// A proven pointer on the reader edge reads exactly as the database read of it: kind, value, metadata, staleness.
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID", "WTP_READER_EDGE_DIR"]) delete process.env[key];
 
@@ -48,11 +38,36 @@ const AZ_URL = "https://seethemoney.az.gov/Reporting/GetNEWTableData/";
 const AZ = STATE_CAMPAIGN_FINANCE_SOURCES.AZ;
 const NH = STATE_CAMPAIGN_FINANCE_SOURCES.NH;
 
+const AZ_RECORD = {
+  dataClass: "STATE_COMMITTEE", jurisdiction: "AZ", agency: "Arizona Secretary of State — See The Money",
+  filingsUrl: "https://seethemoney.az.gov/", committeeId: "100001", registeredName: "Example for Attorney General",
+  candidateNameAsFiled: "Avery Example", officeSought: "Attorney General", electionYear: 2026, filingState: "FILED",
+  totals: { receipts: 1000, expenditures: 500, cashOnHand: null, reportCount: null, coveringPeriod: "Arizona 2026 election cycle" },
+  targetKeys: ["ballot-az-example:attorney-general:example-avery"],
+  match: {
+    registeredName: "Example for Attorney General", officeAsFiled: "Attorney General", officeOnBallot: "Attorney General",
+    electionYearAsFiled: 2026, electionYearOnBallot: 2026, allThreeAgree: true,
+    note: "name, exact Arizona seat and election cycle all agree with the certified-ballot row",
+  },
+  checkedAt: "2026-09-01",
+  provenance: { sourceUrl: AZ_URL, sourceOrg: "Arizona Secretary of State — See The Money", collectedAt: "2026-09-01", verifiedAt: "2026-09-01" },
+} as unknown as StateMoneySnapshot["records"][number];
+
+const VOTING_SITES: VotingSitesFile = {
+  generatedAt: "2026-08-19",
+  jurisdictions: [{
+    ocdId: "ocd-division/country:us/state:az/county:pima", name: "Pima County", state: "AZ", model: "VOTE_CENTER",
+    election: "2026 General",
+    sites: [{ id: "az-pima-day-1", name: "Example Event Center", address: "1 Example Road, Tucson, AZ 85730", room: "Hall", lat: 32.18177403, lng: -110.85671097, kind: "ELECTION_DAY", election: "2026 General", serves: null }],
+    sourceOrg: "Pima County Recorder and Pima County Elections Department", sourceUrl: "https://www.pima.gov/3199/Pima-Votes",
+    collectedAt: "2026-08-19", refusal: null,
+  }],
+};
+
 function azCandidate() {
-  const source = JSON.parse(readFileSync(join(process.cwd(), "data", "states", "az", "funding", "state-money-az-2026.json"), "utf8")) as StateMoneySnapshot;
-  const record = structuredClone(source.records.find((row) => row.filingState === "FILED") ?? source.records[0]!);
+  const record = structuredClone(AZ_RECORD);
   const split = computeSplit([record], 1);
-  const snapshot: StateMoneySnapshot = { ...source, records: [record], split, byJurisdiction: { AZ: { inScope: 1, filed: split.filed, noReports: split.noReportsOnFile, lead: split.lead } } };
+  const snapshot: StateMoneySnapshot = { formatVersion: 1, collectedAt: "2026-09-01", cycle: 2026, records: [record], split, byJurisdiction: { AZ: { inScope: 1, filed: split.filed, noReports: split.noReportsOnFile, lead: split.lead } } } as StateMoneySnapshot;
   return stateCampaignFinanceCandidate({
     jurisdiction: "AZ",
     snapshot,
@@ -107,7 +122,7 @@ const comparable = <T,>(read: CivicDataReadResult<T> | { kind: string }) => {
 
 test("published voting sites serve the same jurisdictions and sites from the request edge without a database", async () => {
   const store = new MemoryRoutineDataStore();
-  const current = JSON.parse(readFileSync(join(process.cwd(), "data", "voting-sites.json"), "utf8")) as VotingSitesFile;
+  const current = structuredClone(VOTING_SITES);
   const candidate = votingSitesCandidate({
     current, prior: null, failures: [], rawBodies: ["official voting sites"],
     successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes",
@@ -260,7 +275,7 @@ test("published, fetched and entered: a reader request reads the family from the
 
 test("direct scoped runner publication skips unrelated contracts and every unchanged payload", async () => {
   const store = new MemoryRoutineDataStore();
-  const current = JSON.parse(readFileSync(join(process.cwd(), "data", "voting-sites.json"), "utf8")) as VotingSitesFile;
+  const current = structuredClone(VOTING_SITES);
   const candidate = votingSitesCandidate({ current, prior: null, failures: [], rawBodies: ["official voting sites"],
     successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes", finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0 });
   assert.ok((await processRegisteredManualCandidate(store, "voting-sites", candidate, T0)).promoted);

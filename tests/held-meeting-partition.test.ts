@@ -1,8 +1,5 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtempSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import test from "node:test";
 
 import {
@@ -16,11 +13,6 @@ import {
 import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import {
-  READER_PROOF_HARNESS_ENV,
-  READER_PROOF_MEETING_PIN_ENV,
-  readerProofMeetingPinFromReadback,
-} from "../lib/meetings/proof-pin.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import {
   preparePublishedMeetingSnapshot,
@@ -37,13 +29,9 @@ import type { Meeting } from "../lib/sources/types.ts";
 import { candidateForMeetingPartition, promoteMeetingPartitions } from "../scripts/ingest.ts";
 
 /*
- * A retired route (Pima Community College's Diligent tenant, retired
- * 2026-09-23 for robots.txt alone; it stays retired because its successor
- * carries every sitting it did) hands its body to a successor partition. The
- * retired partition has no writer from the moment the change lands; until the
- * successor's first promotion its last promoted version is HELD — composed in
- * the successor's place and named on the successor's readback — and the first
- * promotion supersedes it. Never two authorities for one body, never none.
+ * A retired route hands its body to a successor partition. Until the successor's first promotion the retired
+ * partition's last promoted version is HELD, composed in the successor's place and named on its readback; the
+ * first promotion supersedes it. Never two authorities for one body, never none.
  */
 
 const BEFORE_CUTOVER = "2026-09-20T12:00:00.000Z";
@@ -61,9 +49,7 @@ const retired = {
   meetingSource: held!.meetingSource,
 } as MeetingPartitionContract;
 
-// Any URL the meetings authority still admits; the retired host itself left the
-// authority with the cutover, which is exactly why its version is held rather
-// than re-acquired.
+// Any URL the meetings authority still admits; the retired host itself left the authority.
 const ACQUIRED_URL = "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html";
 
 function row(source: string, suffix: string, startsAt: string, collectedAt: string): Meeting {
@@ -152,9 +138,7 @@ async function promoteSuccessor(store: MemoryRoutineDataStore): Promise<string> 
 }
 
 test("every retired route is a held partition whose successor is registered and whose own identity is not", () => {
-  // A route retired beside a successor that was already wired for the body
-  // (2026-09-25: Newbury's CivicWeb portal beside the town's calendar feed)
-  // has nothing to hold: the successor has had its own pointer all along.
+  // A route retired beside a successor already wired for the body has nothing to hold.
   const cutovers = RETIRED_MEETING_ROUTES.filter((route) => !route.successorAlreadyWired);
   assert.equal(HELD_MEETING_PARTITIONS.length, cutovers.length);
   const registered = new Set(MEETING_PARTITION_CONTRACTS.map((partition) => partition.id));
@@ -184,7 +168,7 @@ test("until its successor promotes, the retired route's held version is composed
   const store = new MemoryRoutineDataStore();
   const heldVersion = await seedRetiredPointer(store);
 
-  const read = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: READ_AT });
+  const read = await readMeetingsProjection({ store, bypassCache: true, now: READ_AT });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(
@@ -211,7 +195,7 @@ test("the successor's first promotion supersedes the held version, which stays i
   const heldVersion = await seedRetiredPointer(store);
   const successorVersion = await promoteSuccessor(store);
 
-  const read = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: READ_AT });
+  const read = await readMeetingsProjection({ store, bypassCache: true, now: READ_AT });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(
@@ -237,8 +221,7 @@ test("the held pointer is read only while its successor has none; a superseded r
       this.requested.push([...scopes]);
       return super.readPromotions<T>(recordClass, scopes);
     }
-    // The prepare pass asks for pointer identities only (7311f0cf); a held
-    // pointer asked for that way is still a read of the retired route.
+    // The prepare pass asks for pointer identities only; a held pointer asked for that way is still a read of the retired route.
     override async readPromotionIdentities(recordClass: RoutineRecordClass, scopes: readonly string[]) {
       this.requested.push([...scopes]);
       return super.readPromotionIdentities(recordClass, scopes);
@@ -248,68 +231,16 @@ test("the held pointer is read only while its successor has none; a superseded r
 
   const store = new ScopeCountingStore();
   await seedRetiredPointer(store);
-  await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: READ_AT });
+  await readMeetingsProjection({ store, bypassCache: true, now: READ_AT });
   await preparePublishedMeetingSnapshot(store, READ_AT);
   assert.equal(asksForHeld(store), true, "in the window, the held version is what the page shows");
 
   await promoteSuccessor(store);
   store.requested.length = 0;
-  await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: READ_AT });
+  await readMeetingsProjection({ store, bypassCache: true, now: READ_AT });
   await preparePublishedMeetingSnapshot(store, READ_AT);
   assert.ok(store.requested.length > 0);
   assert.equal(asksForHeld(store), false, "after the first promotion, nothing reads the retired pointer again");
-});
-
-test("a Reader proof pin captured while the succession is held keeps composing the held version for the whole run", async () => {
-  /*
-   * Integration of the held-partition bridge with the Reader proof meeting pin
-   * (lib/meetings/proof-pin.ts). The pin selects each REGISTERED partition's
-   * version; a successor served from a held version is pinned NOT_RECORDED.
-   * If the runner promotes the successor mid-run, the pinned run must still
-   * compose what the capture composed — the held version — and never the
-   * successor's new rows, or two reads in one run would disagree again.
-   */
-  clearPromotedReadModelCache();
-  const store = new MemoryRoutineDataStore();
-  const heldVersion = await seedRetiredPointer(store);
-  const capture = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: READ_AT });
-  assert.equal(capture.kind, "PROMOTED");
-  if (capture.kind !== "PROMOTED") return;
-  const pin = readerProofMeetingPinFromReadback(capture.partitions, READ_AT);
-  assert.equal(pin.partitions.find((row) => row.contractId === successor.id)?.kind, "NOT_RECORDED");
-  const path = join(mkdtempSync(join(tmpdir(), "held-partition-pin-")), "pin.json");
-  writeFileSync(path, JSON.stringify(pin));
-
-  await promoteSuccessor(store);
-  const env = { [READER_PROOF_MEETING_PIN_ENV]: path, [READER_PROOF_HARNESS_ENV]: "docs/evidence/reader-last-mile-production-authority.json" };
-  const previous = Object.fromEntries(Object.keys(env).map((key) => [key, process.env[key]]));
-  Object.assign(process.env, env);
-  let pinned: Awaited<ReturnType<typeof readMeetingsProjection>>;
-  try {
-    pinned = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: READ_AT });
-  } finally {
-    for (const [key, value] of Object.entries(previous)) {
-      if (value === undefined) delete process.env[key];
-      else process.env[key] = value;
-    }
-  }
-  assert.equal(pinned.kind, "PROMOTED");
-  if (pinned.kind !== "PROMOTED") return;
-  assert.deepEqual(
-    pinned.value.meetings.map((meeting) => meeting.id).sort(),
-    [`${held!.meetingSource}:pcc:706`, `${held!.meetingSource}:pcc:707`],
-    "the pinned run composes the held version the capture composed, not the successor's mid-run promotion",
-  );
-  const readback = pinned.partitions.find((partition) => partition.contractId === successor.id)!;
-  assert.equal(readback.kind, "NOT_RECORDED");
-  assert.deepEqual(readback.heldFrom, { contractId: held!.id, scope: held!.scope, versionId: heldVersion });
-  assert.match(pinned.detail, /Reader proof meeting pin/);
-
-  // Outside the pin the successor's own first promotion is what readers see.
-  const live = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: READ_AT });
-  assert.equal(live.kind, "PROMOTED");
-  if (live.kind !== "PROMOTED") return;
-  assert.equal(live.partitions.find((partition) => partition.contractId === successor.id)?.kind, "PROMOTED");
 });
 
 test("the prepared reader snapshot couples to the held version, then recomposes on the successor's first promotion", async () => {

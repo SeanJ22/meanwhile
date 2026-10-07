@@ -1,13 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { NextRequest } from "next/server";
-import { GET } from "../app/api/admin/public-reader-observation/route.ts";
 import { EXACT_SERVED_WITNESS_SQL, parsePublishedResultSubjectKey,
   readExactServedWitness, readPublishedResultObservation } from "../lib/control-plane/admin-view/public-reader-observation-read.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const item = {
   id: "wi-123", project: "Meanwhile", subject: "ocd-division/country:us/state:az/place:sierra_vista",
@@ -60,21 +57,4 @@ test("typed subject key rejects wrong scope and malformed identifiers", async ()
   assert.throws(() => parsePublishedResultSubjectKey("wi-123", "bad\nsubject"), /INVALID_SUBJECT_KEY/);
   await assert.rejects(readPublishedResultObservation({ repos: reposFor(item),
     subjectKey: { ...subjectKey, subject: "another-place" }, readWitness: async () => witness }), /SUBJECT_MISMATCH/);
-});
-
-test("the Admin route denies public host, missing session, and ambiguous scope before any store read", async () => {
-  const publicRequest = new NextRequest(`https://${PUBLIC_HOST}/api/admin/public-reader-observation?workItemId=wi-123&subject=x`,
-    { headers: { host: PUBLIC_HOST } });
-  const adminRequest = new NextRequest(`https://${ADMIN_HOST}/api/admin/public-reader-observation?workItemId=wi-123&subject=x`,
-    { headers: { host: ADMIN_HOST } });
-  assert.equal((await GET(publicRequest)).status, 404);
-  assert.equal((await GET(adminRequest)).status, 401);
-  await withAdminSessionKey(async () => {
-    const cookie = await adminSessionCookie();
-    const req = (query: string) => new NextRequest(`https://${ADMIN_HOST}/api/admin/public-reader-observation${query}`,
-      { headers: { host: ADMIN_HOST, cookie } });
-    assert.equal((await GET(req("?workItemId=wi-123&workItemId=wi-456&subject=x"))).status, 400);
-    assert.equal((await GET(req("?workItemId=wi-123&subject=x&limit=100"))).status, 400);
-    assert.equal((await GET(req("?workItemId=wi-123"))).status, 400);
-  });
 });

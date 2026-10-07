@@ -1,8 +1,6 @@
 /**
- * The standing runner's clock for the auditors' passes (DP-13, DP-29, DP-32,
- * DP-33/DP-34, FE-02, FE-18, FE-21). Before this clock nothing ran them:
- * release 8's live ledger found cp_log_live_audits empty, so Admin could show
- * no audited fact, no resident task, no look at a deploy and no speed pass.
+ * The standing runner's clock for the auditors' passes (live audits, resident
+ * tasks, deploy looks, speed passes, the loss study).
  *
  * One pass runs at a time, the most overdue first, so two browser passes never
  * share the droplet's memory. Each pass is its own child process from the
@@ -12,14 +10,11 @@
  * next runner starts it again. A failure is printed and never stops the runner.
  * `WTP_AUDIT_PASSES=off` on the runner leaves every pass out.
  *
- * Control-plane reads (Neon), at most, per hour: the live audit reads one
- * Admin settings row and the week's audit rows (about 1 KB each, at most 60
- * a pass, so under 10 MB by the week's end); the look check and first-run
- * check read their small key rows (a few KB). Once a day the loss study reads
- * the hunts and the held and published work items (cp_work_items is 45 MB in
- * all), about 2-4 MB an hour spread over the day. Total well under 20 MB an
- * hour against the 0.7 GB target. Civic pages are read on the reader
- * database or the live site, not the control plane.
+ * Control-plane reads stay well under 20 MB an hour against the 0.7 GB target:
+ * the live audit reads one settings row and the week's audit rows; the look
+ * and first-run checks read small key rows; the daily loss study reads the
+ * hunts and work items (about 2-4 MB an hour over the day). Civic pages are
+ * read on the reader database or the live site, not the control plane.
  */
 import type { ChildProcess } from "node:child_process";
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";

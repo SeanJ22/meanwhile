@@ -34,11 +34,8 @@ import {
 } from "../lib/civic-data/runner.ts";
 
 /*
- * Owner decision, 2026-09-24: meeting sources are checked twice daily, and
- * hourly for any body with a meeting upcoming within seven days or concluded
- * within the past seven days. The window rolls automatically and covers
- * calendars, agendas, changes, cancellations, decisions and minutes. It does
- * not change any other data family's schedule.
+ * Meeting sources are checked twice daily, and hourly for any body with a meeting upcoming within seven days or
+ * concluded within the past seven days. The window rolls automatically and changes no other data family's schedule.
  */
 
 const HOUR = 3_600_000;
@@ -77,7 +74,7 @@ test("the policy is the owner's: seven days either side, hourly when hot, twice 
     assert.deepEqual(sittingWindowSourceIds(partition.id), [partition.id]);
   }
   assert.deepEqual(sittingWindowSourceIds(OUTCOMES), [PIMA_LEGISTAR, PIMA_INSITE]);
-  // Mesa's council decisions follow the council's one InSite partition (NH332).
+  // Mesa's council decisions follow the council's one InSite partition.
   assert.deepEqual(sittingWindowSourceIds(MESA_OUTCOMES), [MESA_INSITE]);
 });
 
@@ -86,7 +83,7 @@ test("no other data family's schedule is changed: only meeting partitions and me
   assert.deepEqual(windowed, [OUTCOMES, MESA_OUTCOMES]);
   const at = "2026-09-24T09:00:00.000Z";
   for (const row of ROUTINE_SOURCE_TASKS.filter((candidate) => candidate.contract.schedule === undefined)) {
-    // The retired-rule inputs: a success claimed seconds before its observed attempt.
+    // A success claimed seconds before its observed attempt.
     const clock: RoutineTaskClock = { lastAttemptedAt: at, lastSucceededAt: "2026-09-24T08:59:57.500Z" };
     const enriched: RoutineTaskClock = { ...clock, lastSucceededObservedAt: at, sittingStarts: [at] };
     for (const offset of [0, HOUR - 1, HOUR, 6 * HOUR - 1, 6 * HOUR, 30 * DAY]) {
@@ -159,9 +156,7 @@ test("the success is read in the attempt clock's own units, so a success is neve
   const partition = task(PIMA_LEGISTAR);
   const at = "2026-09-24T09:00:00.000Z";
   const base = Date.parse(at);
-  // The claimed retrieval precedes the first event by the acquisition's own
-  // duration; read against it, every success looked like a later failed attempt
-  // and the one-hour retry, not the schedule, decided the next read.
+  // The claimed retrieval precedes the first event by the acquisition's own duration; the success is read from the observed attempt.
   const clock = succeededAt(at);
   assert.ok(Date.parse(clock.lastSucceededAt!) < Date.parse(clock.lastAttemptedAt!));
   assert.equal(routineTaskDue(partition, clock, base + HOUR, false), false, "base: not re-read at the retry hour");

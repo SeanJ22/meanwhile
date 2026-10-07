@@ -1,49 +1,15 @@
 /**
- * **THE ONE DOOR, AS AN HTTP ENDPOINT.** (Admin Pass C, ADM-C6; §3.5.)
- *
- * A plain `<form method="post">` with no JavaScript and a `fetch` from a client
- * component and a chat tool call all arrive here, all reach the same
- * `submit()`, and all get the same validation, staleness rule, idempotency,
- * receipt and refusal. §3.5 forbids the alternative in as many words: *"Do not
- * create one action path for buttons, another privileged action path for chat."*
- *
- * ## What comes back depends on what was asked for, never on what happened
+ * Form posts, client fetches and chat tool calls all reach the same `submit()`.
  *
  * ```
- *   Accept: application/json   the ActionOutcome as JSON
+ *   Accept: application/json   the ActionOutcome as JSON, 200 even for a refusal (a refusal is a recorded decision)
  *   anything else              303 to a validated console path
  * ```
  *
- * A JSON answer is **200 even for a refusal**, and that is deliberate. §3.7
- * makes a refusal a first-class outcome with a receipt — the gateway looked at
- * the request, decided, and recorded the decision. That is a successful
- * exchange, and the body says `ok: false` with the receipt and the reason. The
- * non-200 statuses are reserved for the cases where the gateway never got to
- * decide at all: the wrong host, the wrong origin, no session, or no store.
- *
- * ## Two things this route works out for the caller
- *
- * **The current state version.** The gateway needs to know what the world is
- * now to tell a control drawn against a moving world from one drawn against
- * this one. The route takes the pulse — the same cheap read `/api/admin/live`
- * takes — rather than trusting the client to say what "current" is, because a
- * staleness check whose current value comes from the same request as the quoted
- * one checks nothing.
- *
- * **The idempotency key, when the caller has none.** A no-JS form cannot mint
- * one. So an absent key is DERIVED from the action, its subject, a digest of
- * its input and the version of the world it was aimed at. Two clicks on one
- * rendered page are then one action — which is what a double-click is — and the
- * same action deliberately repeated after the world has moved is a new one,
- * because the version it is aimed at has changed. A key supplied by the caller
- * always wins.
- *
- * ## What it will not say
- *
- * Never a connection string, and never an environment variable's name. The
- * store-open failure carries both in its own detail sentence, which is right
- * for a server log and wrong for a browser, so this route answers with a plain
- * sentence of its own.
+ * Non-200 statuses mean the gateway never decided: wrong host or origin, no session, or no store.
+ * The current state version comes from the pulse, never from the client. An absent idempotency key is derived
+ * from the action, subject, input digest and state version; a caller's key always wins.
+ * Never returns a connection string or an environment variable's name.
  */
 
 import { NextResponse, type NextRequest } from "next/server";
@@ -209,12 +175,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   });
 
   if (wantsJson(request)) {
-    /*
-     * A saved request is not a done request. The answer also says whether the
-     * runner has picked the action up, read from the runner's own records, so a
-     * replay of an old click comes back already confirmed and a fresh one comes
-     * back waiting. The screen keeps asking the receipt lookup until it is.
-     */
+    /* The answer also says whether the runner has picked the action up, from the runner's own records. */
     const confirmation = outcome.ok ? await confirmReceipt(opened.repos, outcome.receipt) : null;
     return NextResponse.json({ ...outcome, confirmation }, { status: 200 });
   }

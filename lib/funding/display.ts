@@ -19,11 +19,8 @@ import { smallDonorShare, smallDonorSentence } from "./small-donors.ts";
 import { plainMoney } from "./plain-money.ts";
 
 /**
- * The funding display payload — everything either surface (the ballot page,
- * the official modal via /api/funding) needs, serializable, contributor
- * rows already ripcord-filtered. Plain register throughout: the numbers
- * render in sentences a 15-year-old can read, the method for "small donors"
- * is stated in the words themselves, and nothing characterizes anyone.
+ * The funding display payload for both surfaces (the ballot page and the
+ * official modal), serializable, contributor rows already ripcord-filtered.
  */
 
 export interface FundingDisplayData {
@@ -41,37 +38,27 @@ export interface FundingDisplayData {
    *  `contributorsShown` says which. */
   contributors: ContributionRow[];
   /**
-   * The same rows, grouped by kind and sorted by amount descending, with
-   * repeated filings from one contributor folded (item 2). Built here so
-   * the ballot page and the official modal render the identical order —
-   * one sort, computed once, not two implementations that can drift.
+   * The same rows, grouped by kind, amount descending, with repeated filings
+   * from one contributor folded. Built once so both surfaces render the same order.
    */
   contributorGroups: ContributorGroups;
   contributorsShown: boolean;
   /**
-   * The second hop (item 3): the contributing committees' own books, keyed
-   * by FEC committee id, for the committee rows above. Only committees the
-   * hop was actually fetched for appear — a missing id renders no expander
-   * rather than an empty one.
+   * The contributing committees' own books, keyed by FEC committee id. Only
+   * committees actually fetched appear; a missing id renders no expander.
    */
   secondHop: Record<string, SecondHopCommittee>;
   reportedThrough: string | null;
   /**
-   * **Where the money came from, and how concentrated it is** (D06).
-   *
-   * Null when there is nothing to compute over — never a row of zeros,
-   * which would read as "no money came from anywhere". The sentences carry
-   * their own denominator, because these are computed over the LARGEST
-   * reported contributions and not the campaign's whole book.
+   * Where the money came from, and how concentrated it is. Null when there is
+   * nothing to compute over, never zeros. Computed over the largest reported
+   * contributions, not the whole book.
    */
   concentration: FundingConcentration | null;
   concentrationSentences: string[];
   /**
-   * **Concentration on the FEC's own axis** — D06's third feature, shipped
-   * g20. How the committee money divides across the categories the
-   * contributing committees filed for themselves. Empty when there is no
-   * committee money among the rows shown; never a zero row, which would
-   * read as a claim about the campaign rather than about our sample.
+   * How the committee money divides across the FEC's own committee
+   * categories. Empty when no committee money is among the rows shown.
    */
   typeConcentrationSentences: string[];
   sourceUrl: string | null;
@@ -112,14 +99,10 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
     if (smallDonor) sentences.push(smallDonor);
     const contributors = contributorRowsForDisplay(candidate);
     const contributorGroups = groupContributions(contributors);
-    // D06: computed over the rows the READER is shown, so the figure and
-    // the table below it can never disagree — and it is null, not zero,
-    // when the display is ripcorded off or nothing was fetched.
+    // Computed over the rows the reader is shown; null, not zero, when nothing is shown.
     const concentration = concentrationOf(contributors, candidate.state ?? null);
-    // D06's third feature (g20): the same rows, on the FEC's own committee
-    // categories. Committee side only — the two lists were sampled
-    // separately, so a band crossing them would be a share of a base we
-    // picked rather than of anything the campaign reported.
+    // Committee side only: the two lists were sampled separately, so a band
+    // across them would be a share of a base we picked.
     const typeConcentration = typeConcentrationOf(contributors);
 
     return {
@@ -176,9 +159,7 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
   return { kind: "none" };
 }
 
-// The 2a label mapper lives in ./labels.ts (client-safe — this module sits
-// on the node:fs snapshot graph and the client funding section needs the
-// labels); re-exported here so server callers keep one import surface.
+// Re-exported from the client-safe ./labels.ts so server callers keep one import surface.
 export { plainContributorLabel } from "./labels.ts";
 
 /** The honest line for offices the FEC does not cover. */

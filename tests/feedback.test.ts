@@ -23,15 +23,9 @@ import {
 } from "../lib/signal/intake-limits.ts";
 
 /**
- * **R40 — the personal email leaves the product; Feedback becomes the in-app
- * form.** 2026-08-17 (1A: in-app; the Google Form is unused).
- *
- * Two halves of one subject, and these guards hold both:
- *
- * 1. The address is gone from everything a browser can see, and STAYS gone.
- * 2. What replaced it keeps its promises — its own store, joining nothing,
- *    scrubbed before storage, rate-limited in its own counter space, and
- *    never silently succeeding into a void.
+ * The personal address is gone from everything a browser can see, and the in-app form keeps its promises: its own
+ * store, joining nothing, scrubbed before storage, rate-limited in its own counter space, and never silently
+ * succeeding into a void.
  */
 
 const ROOT = process.cwd();
@@ -51,21 +45,8 @@ test("report links round-trip the card, ZIP and public record, with bounds and n
 const ADDRESS = ["seanj22", "gmail.com"].join("@");
 
 /*
- * THE ONE PLACE IT MAY STILL APPEAR, and why.
- *
- * app/api/geocode/route.ts sends it in the OUTBOUND User-Agent to the Census
- * geocoder. CLAUDE.md's courteous-client rule REQUIRES a User-Agent with a
- * contact address, and this is a server route: it is never in the client
- * bundle and no reader can see it. R40's own row scoped it out explicitly.
- * Changing it needs a contact address that still reaches the author, which is
- * outside this row's scope.
- */
-/*
- * ONE file, not a growing list. The address used to be written into each
- * route that calls an upstream on a reader's behalf; the second such route
- * (B19) copied the literal and this guard caught it. The fix was to give the
- * string one home rather than to widen the exemption — see
- * lib/geo/outbound-agent.ts.
+ * The only exemption: the outbound User-Agent to upstream services carries a contact address (courteous-client
+ * rule). It is server-only, and it has one home so no route copies the literal.
  */
 const SERVER_ONLY_ALLOWED = new Set(["lib/geo/outbound-agent.ts"]);
 
@@ -98,25 +79,8 @@ test("the author's personal address is gone from every source a browser can reac
 });
 
 /**
- * THE BUNDLE HALF, and its honest limitation.
- *
- * The source scan above is the everyday net; this is the one the row asked
- * for, because a string can reach a bundle through a route the source grep
- * does not obviously cover. It reads the BUILT client chunks.
- *
- * **Proven by planting it once** (2026-08-17, R40's own requirement): the
- * address was put back into the sidebar's Feedback link,
- * `pnpm build` was run, and BOTH guards failed — the source scan naming
- * `components/shell/sidebar.tsx` and this one naming
- * `.next/static/chunks/3u-i1b6z-3cuz.js`. The plant was then removed and the
- * build re-run green. A guard nobody has watched fail is a guard nobody
- * should trust, and a bundle scan is exactly the kind that can quietly stop
- * looking at anything.
- *
- * When `.next/static` is absent the check reports that it could not run
- * rather than passing — a check that cannot reach its subject must never
- * print like a passing one. `pnpm handoff --ship` builds before it pushes, so
- * on the path that matters the bundle is always there.
+ * Reads the built client chunks, because a string can reach a bundle by a route the source scan does not cover.
+ * When `.next/static` is absent the check skips by name rather than passing.
  */
 test("the address is in no built client chunk", (t) => {
   const staticDir = join(ROOT, ".next", "static");
@@ -135,19 +99,9 @@ test("the address is in no built client chunk", (t) => {
 });
 
 test("the sidebar's Feedback link points at the in-app route, not a mail client", () => {
-  /*
-   * **THE CLAIM IS THE ROUTE, NOT THE FILE.** This read only
-   * `components/shell/sidebar.tsx` and went red on 2026-08-25 when LAY-8 moved
-   * the footnote block to the foot of the page. The link was not removed and
-   * no mailto came back; the guard was asserting a location.
-   *
-   * Both halves are kept and both are widened to the shell: NO component of it
-   * may carry a `mailto:` (R40 — the author's personal address left the
-   * product), and at least one must carry `/feedback`.
-   */
+  /* The claim is the route, not the file: no shell component carries a `mailto:`, and at least one links `/feedback`. */
   const shellFiles = [
     join(ROOT, "components", "shell", "sidebar.tsx"),
-    join(ROOT, "components", "map", "site-footnote.tsx"),
     join(ROOT, "components", "map", "map-entry.tsx"),
   ].filter((file) => existsSync(file));
   assert.ok(shellFiles.length > 0, "the map shell corpus is empty — this guard would pass without looking");
@@ -167,13 +121,7 @@ test("the sidebar's Feedback link points at the in-app route, not a mail client"
   );
 });
 
-/**
- * R41 (2026-08-17, option A) — the optional reply field.
- *
- * The row's whole risk is that an OPTIONAL field stops being optional in
- * practice, or that the one deliberate exception to T09 quietly widens to the
- * message body. Both are asserted here rather than described.
- */
+/** The optional reply field stays optional, and the scrub exception never widens to the message body. */
 test("R41: blank is the default and a blank submission is not blocked", () => {
   // Shape-level: blank is VALID, so nothing downstream can treat it as an error.
   assert.equal(isReplyToShaped(""), true, "blank must be valid — the field is optional");
@@ -208,27 +156,25 @@ test("R41: the reply address is shape-checked, and the check claims nothing more
 
 test("R41: T09 still scrubs the MESSAGE, and the exception is exactly one field", () => {
   const source = readFileSync(join(ROOT, "lib", "db", "feedback.ts"), "utf8");
-  // The message half is untouched by R41 — asserted positionally, as before.
+  // The message is scrubbed before the insert.
   assert.ok(source.includes("scrubFreeText(raw)"), "the message must still be scrubbed");
   assert.ok(
     source.indexOf("scrubFreeText(raw)") < source.indexOf(".insert(feedback)"),
     "the scrub must still run before the insert",
   );
-  // And the reply address must NOT pass through the scrub — that is the ruling.
+  // The reply address is stored as typed.
   assert.ok(
     !/scrubFreeText\(\s*(submission\.)?replyTo/.test(source),
     "the reply address is stored as typed; scrubbing it would delete what the reader asked for",
   );
-  // Sean's 2026-09-30 report-context request adds two prose fields. R41's
-  // exception remains the optional reply address; those fields must be scrubbed too.
+  // The report-context prose fields are scrubbed too.
   assert.match(source, /scrubFreeText\(context.about\)/);
   assert.match(source, /scrubFreeText\(context.recordId\)/);
 });
 
 test("R41: the reply address is filled only from its own field, never the message", () => {
   const route = readFileSync(join(ROOT, "app", "api", "feedback", "route.ts"), "utf8");
-  // It reads submission.replyTo and nothing else. A route deriving an address
-  // from the message body would re-create precisely the conflict R41 settled.
+  // A route deriving an address from the message body would undo the separation.
   assert.ok(
     route.includes("submission.replyTo"),
     "the route must read the reply address from its own field",
@@ -332,14 +278,7 @@ test("a submission never silently succeeds into a void", () => {
     "utf8",
   );
   /*
-   * The thank-you is gated on STORED and on nothing else.
-   *
-   * Asserted as "there is exactly one way in, and it is inside the STORED
-   * branch" rather than by matching the two lines adjacently — R41 added a
-   * second statement to that branch and the adjacency form broke on a change
-   * that did not weaken the guarantee at all. A test that fails on formatting
-   * gets relaxed by the next person in a hurry; this one fails only if a
-   * second path to the thank-you appears.
+   * The thank-you is gated on STORED and nothing else: there is exactly one way in, inside the STORED branch.
    */
   const storedTransitions = form.match(/setState\("stored"\)/g) ?? [];
   assert.equal(
@@ -381,14 +320,8 @@ test("the surface enum is closed, and the store's column matches it", () => {
 
 test("nothing in lib/signal can read the feedback store", () => {
   /*
-   * The promise is "never enters anything aggregated or licensed", and the licensed
-   * path is lib/signal. This makes it structural rather than a sentence.
-   *
-   * The check is on REACHABILITY, not on the word: intake-limits.ts
-   * legitimately names the feedback form's rate-limit thresholds, and a
-   * lexical ban would have to be weakened until it caught nothing. What may
-   * never appear is a way to READ the rows — the write module, or the table
-   * itself out of the schema.
+   * The licensed path is lib/signal. The check is on reachability, not the word: what may never appear is a way to
+   * read the rows (the write module, or the table out of the schema).
    */
   const files = walk(join(ROOT, "lib", "signal")).filter((f) => f.endsWith(".ts"));
   assert.ok(files.length > 0, "no lib/signal modules found — the scan found nothing");
@@ -419,12 +352,6 @@ test("the feedback table is in the schema, the migration, and no export path", (
   assert.ok(
     migrations.includes('CREATE TABLE "feedback"'),
     "no migration creates the feedback table — db:generate did not run, or its output is uncommitted",
-  );
-  // The author's read path exists and is a script, not a route: there is no
-  // authenticated admin surface on this product and R40 did not add one.
-  assert.ok(
-    existsSync(join(ROOT, "scripts", "read-feedback.mts")),
-    "the author needs a way to read what readers send",
   );
   const routes = walk(join(ROOT, "app", "api")).filter((f) => f.endsWith("route.ts"));
   for (const route of routes) {

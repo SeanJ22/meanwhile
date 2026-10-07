@@ -13,13 +13,6 @@ import { sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-e
 import { parseMeetingPartitionRunnerReceipts } from "../lib/civic-data/runner-receipt.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 
-/**
- * WALL versus JOB is decided from the thrown value (RULING 250: check whose
- * stopwatch ran out before naming a wall; RULING 283: an unclassified failure
- * escalates). 2026-09-24: our own VENUE_RESOLUTIONS_MISSING was filed as a
- * publisher wall on three Legistar partitions for ten days.
- */
-
 test("publisher-side failures are walls", () => {
   assert.equal(fetchFailureKind(new SourceHttpError("HTTP 403 for https://pima.legistar.com/Calendar.aspx", 403, "https://pima.legistar.com/Calendar.aspx", 3)), "WALL");
   assert.equal(fetchFailureKind(sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "pima: the publisher request did not complete (TypeError).")), "WALL");
@@ -39,10 +32,7 @@ test("our own code and configuration failures are jobs, and so is an unknown", (
   assert.equal(fetchFailureKind("something odd happened"), "JOB", "unknown escalates");
 });
 
-/*
- * Owner decision 2026-09-25: "Robots.txt alone must not block acquisition." No fetcher stops on a robots line, so a
- * failure that names only robots.txt is our code stopping where it should have read; an access control stays a wall.
- */
+// No fetcher stops on a robots line, so a failure naming only robots.txt is ours; an access control stays a wall.
 test("a robots.txt line is never the publisher's wall; an access control still is", () => {
   assert.equal(fetchFailureKind(new Error("robots.txt disallows /Calendar.aspx for we-the-people")), "JOB", "a robots refusal is ours: it alarms");
   assert.equal(fetchFailureKind("permission DISALLOWED: Disallow: / (no request sent)"), "JOB");
@@ -52,11 +42,7 @@ test("a robots.txt line is never the publisher's wall; an access control still i
   assert.equal(fetchFailureKind(new Error("robots.txt could not be read: fetch failed")), "WALL", "the transport's failure is still the transport's");
 });
 
-/*
- * 2026-09-25: Newbury's CivicWeb host stopped resolving on 2026-09-14 and
- * ~2,077 SOURCE_BLOCKED rows recorded only "fetch failed". Node's fetch puts
- * the resolver's answer on `cause.code`; the stored error keeps it.
- */
+// Node's fetch puts the resolver's answer on `cause.code`; the stored error keeps it.
 test("a child rejected by a host that no longer resolves keeps the transport's code", async () => {
   const gone = Object.assign(new TypeError("fetch failed"), {
     cause: Object.assign(new Error("getaddrinfo ENOTFOUND newburynh.civicweb.net"), { code: "ENOTFOUND" }),
@@ -68,7 +54,7 @@ test("a child rejected by a host that no longer resolves keeps the transport's c
     normalizeWithDrops: () => ({ meetings: [], drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } }),
   } as unknown as ConstructorParameters<typeof CompositeSource>[0][number];
   const composite = new CompositeSource([child]);
-  // Newbury, NH; the point only keys the composite cache.
+  // The point only keys the composite cache.
   const query = { lat: 43.32, lng: -72.03, radiusKm: 25 } as Parameters<CompositeSource["fetch"]>[0];
   composite.normalize(await composite.fetch(query), new Date("2026-09-25T17:00:00Z"));
   const report = composite.lastReport?.children.find((row) => row.source === "diligent");
@@ -106,23 +92,11 @@ test("meeting partition receipts parse with and without the additive failureKind
   if (tagged.ok) assert.equal(tagged.receipts[0]?.lastKnownGoodVersion, "v-lkg", "the partition keeps its last-known-good");
 });
 
-/*
- * **A REFUSED ROW IS THE PUBLISHER'S ANSWER, NOT OUR EMPTY EXTRACTION.**
- * (2026-09-24.) Sutton and Newbury, NH serve their calendars from one
- * CivicPlus host behind Cloudflare, which intermittently answers the feed
- * with a managed challenge. The fetch layer named it; the iCal row kept only
- * `{ refused: true }`; the composite's zero-row guard then counted that row as
- * a document in hand and filed the town's wall as our JOB — 13 partitions in
- * one hour on 2026-09-24, every one reading "our own code … not a publisher
- * wall". These run the REAL adapter inside the REAL composite on the recorded
- * challenge. An injected fetch never climbs the ladder, so nothing leaves the
- * process.
- */
 const SUTTON_CHALLENGE = readFileSync(
   join(process.cwd(), "tests", "fixtures", "sutton-cloudflare-challenge-head.html"),
   "utf8",
 );
-// Sutton Mills, NH. The iCal rows read their own wired feed; the point only keys the composite cache.
+// The iCal rows read their own wired feed; the point only keys the composite cache.
 const SUTTON_QUERY = { lat: 43.33, lng: -71.95, radiusKm: 25 } as Parameters<CompositeSource["fetch"]>[0];
 const AFTER_THE_CHALLENGE = new Date("2026-09-24T16:00:00Z");
 
@@ -185,10 +159,6 @@ test("a calendar envelope holding no events is refused as the publisher's answer
 });
 
 test("a real calendar we extract nothing from is still OUR zero-row JOB", async () => {
-  // The guard's other half: a document genuinely in hand and zero rows out of
-  // it, with nothing counted to say why, stays a failed extraction of ours
-  // (RULING 43/269). An adapter's own guard refuses that shape, so it reaches
-  // the composite only from an adapter that bypassed its guard: forged here.
   const forged = Object.assign(
     { meetings: [], drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } },
     {
@@ -212,12 +182,6 @@ test("a real calendar we extract nothing from is still OUR zero-row JOB", async 
 });
 
 test("a calendar whose every sitting falls outside the window is a counted clip, never our zero-row JOB (2026-09-25)", async () => {
-  // Tucson's Industrial Development Authority publishes a schedule whose every
-  // date had passed; the adapter counted each as outside the window, and the
-  // composite, reading only drops, called it our failed extraction on every
-  // read. The composite now reads the adapter's own out-of-window count, the
-  // term the adapter's guard already read. One row, so the event cannot be
-  // accounted as another board's notConfigured drop.
   const planningBoard = suttonRows().filter((row) => row.config.bodyName === "Planning Board");
   assert.equal(planningBoard.length, 1);
   const served: typeof fetch = async () =>

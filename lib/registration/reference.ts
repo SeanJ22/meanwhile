@@ -1,12 +1,7 @@
 /**
- * The committed registration reference, read for one state (2026-09-23).
- *
- * `scripts/build-registration-reference.mts` writes one file per state under
- * `data/derived/registration/`: the state's Census divisions and its
- * governments, each paired to a division by Census code or school name, or
- * carrying the reason it is not. Only the registration child script reads
- * these files (never a request path), so a plain read from the repository
- * root is the whole loader.
+ * The committed registration reference, read for one state. `scripts/build-registration-reference.mts`
+ * writes one file per state under `data/derived/registration/`. Only the registration child script reads
+ * these files (never a request path).
  */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -53,12 +48,9 @@ export function loadRegistrationReference(root: string, state: string): LoadedRe
 }
 
 /**
- * The governments a state's committed reference pairs to a division, with the
- * body id the registration writer mints for each (lib/registration/candidate.ts:
- * `<division>#governing`, `#board` for a school district). The runtime registry
- * is the reviewed registry plus these, so a check against the frozen
- * registry.json alone refuses a registered government (Holbrook and Winslow,
- * AZ, 2026-09-25). The state is upper-case, as the registry's divisions carry it.
+ * The governments a state's committed reference pairs to a division, with the body id the registration
+ * writer mints for each (`<division>#governing`, `#board` for a school district). The state is
+ * upper-case, as the registry's divisions carry it.
  */
 export function registeredGovernments(loaded: LoadedReference, state: string): {
   readonly bodies: readonly { readonly id: string; readonly ocdId: string }[];

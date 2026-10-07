@@ -1,10 +1,3 @@
-/**
- * Read adapter for the canonical permanent routine civic-data tables.
- *
- * Both Admin and the standing control-plane runner use this exact adapter and
- * the same pure projection. It creates no second ledger, performs no write,
- * and never turns a failed read into an empty production-data observation.
- */
 import { refreshDoorsForPass } from "../doors/install.ts";
 import type { DoorRepository } from "../doors/registry.ts";
 import { Pool } from "@neondatabase/serverless";
@@ -32,13 +25,6 @@ export const ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS = {
   accessMode: "read only",
 } as const;
 
-/**
- * A read that runs past its caller's statement limit ends with a named error.
- * (2026-09-23.) The unbounded selection below takes minutes of correlated
- * scans and returns 3.8 GB, which no request-scoped caller can wait for. The
- * projection reports the named error as a store that could not be read, never
- * as an empty or zero outcome.
- */
 export class RoutineObservabilityReadTimedOut extends Error {
   constructor(limitMs: number, cause: unknown) {
     super(`the routine civic-data read did not finish within its ${limitMs} ms statement limit`, { cause });
@@ -60,8 +46,7 @@ async function readRowsFromCanonicalTables(
   now: string,
   statementTimeoutMs: number | null,
 ): Promise<RoutineObservabilityRows> {
-  // HTTP batches cap responses at 64 MiB. Keep the complete evidence over
-  // one connection and one read-only MVCC snapshot, closing it on every exit.
+    // HTTP batches cap responses at 64 MiB: read over one connection and one read-only snapshot, closed on every exit.
   const pool = new Pool({ connectionString: connection, max: 1, connectionTimeoutMillis: 15000 });
   try { return await drizzle(pool, { schema }).transaction(async (db) => {
   // A caller's statement limit binds every statement in this snapshot.
@@ -102,10 +87,7 @@ async function readRowsFromCanonicalTables(
     .from(currentAuthorityCandidate)
     .where(inArray(currentAuthorityCandidate.id, currentPromotionIds));
 
-  // Admin needs more than the rolling 30-day window: the exact latest
-  // disposition, latest live-source success and latest validation can each be
-  // an older, different candidate. Use correlated maxima so every causal tie
-  // is returned; a UUID ordering must never silently choose a winner.
+    // Correlated maxima return every causal tie; a UUID ordering must never silently choose a winner.
   const laterCandidate = alias(civicDataCandidates, "later_civic_data_candidate");
   const laterSourceCandidate = alias(civicDataCandidates, "later_source_civic_data_candidate");
   const laterSuccessfulCandidate = alias(civicDataCandidates, "later_successful_civic_data_candidate");
@@ -155,8 +137,6 @@ async function readRowsFromCanonicalTables(
   )!;
   const sourceSuccess = and(
     eq(civicDataCandidates.acquisitionSucceeded, true),
-    // A future claimed acquisition is durable refusal evidence, never a
-    // success clock capable of hiding the prior real source acquisition.
     lte(civicDataCandidates.retrievedAt, now),
     sourceOrUnknownAuthority,
   )!;
@@ -181,12 +161,8 @@ async function readRowsFromCanonicalTables(
     ),
   )!;
   const hasValidation = sql`${civicDataCandidates.validationReceipt} is not null`;
-  // Compare canonical UTC receipt instants lexically so a malformed JSON value
-  // cannot throw a timestamptz cast and blank every contract in the shared
-  // Admin snapshot. Every non-canonical value is selected unconditionally;
-  // the projector then reports UNKNOWN because its causal position cannot be
-  // proven. February 29 is deliberately treated as non-canonical here (and
-  // therefore retained) so leap-year validation never requires a risky cast.
+    // Compare canonical UTC instants lexically so a malformed value cannot throw a timestamptz cast. Non-canonical
+    // values (February 29 included) are always selected and projected as UNKNOWN.
   const canonicalValidationTimePattern = "^(?:[0-9]{4}-(?:(?:01|03|05|07|08|10|12)-(?:0[1-9]|[12][0-9]|3[01])|(?:04|06|09|11)-(?:0[1-9]|[12][0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-8])))T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}Z$";
   const currentValidationIsCanonical = sql`coalesce((${civicDataCandidates.validationReceipt}->>'validatedAt') ~ ${canonicalValidationTimePattern}, false)`;
   const laterValidationIsCanonical = sql`coalesce((${laterValidatedCandidate.validationReceipt}->>'validatedAt') ~ ${canonicalValidationTimePattern}, false)`;
@@ -212,8 +188,6 @@ async function readRowsFromCanonicalTables(
   const selectedCandidate = or(
     inArray(civicDataCandidates.id, currentPromotionIds),
     inArray(civicDataCandidates.id, lkgPromotionIds),
-    // A re-attested pointer is permanently proved against its exact immutable
-    // predecessor, even when that source row is older than the history window.
     inArray(civicDataCandidates.id, currentReattestationPredecessorIds),
     inArray(civicDataCandidates.id, recentEventCandidateIds),
     latestCandidate,
@@ -241,8 +215,7 @@ async function readRowsFromCanonicalTables(
     }).from(civicDataPromotions);
   const candidates = await db.select(candidateSelection).from(civicDataCandidates).where(selectedCandidate);
   const events = await db.select(eventSelection).from(civicDataCandidateEvents).where(selectedEvent);
-  // The reader-serving copies (RULING 283), read in the SAME snapshot as the
-  // promotions above so publication lag compares two facts from one instant.
+    // Read in the same snapshot as the promotions, so publication lag compares two facts from one instant.
   const preparedProjections = await db.select({
       key: civicDataReaderProjections.key,
       recordClass: civicDataReaderProjections.recordClass,
@@ -261,19 +234,12 @@ async function readRowsFromCanonicalTables(
   } finally { await pool.end(); }
 }
 
-/**
- * Read the canonical outcome projection through an explicitly selected
- * connection. The standing runner passes the production read-only handle;
- * Admin passes its own runtime connection. No environment fallback exists.
- */
 export async function readRoutineDataObservabilityFromConnection(
   connection: string | null | undefined,
   options: {
     readonly now?: string;
     readonly currentReaderBuild?: CurrentReaderBuildIdentity;
-    /** A request-scoped caller's server-side limit; absent means none. */
     readonly statementTimeoutMs?: number;
-    /** DB-14: the door registry, so a door added as data is listed FRESH, DUE or STALE. */
     readonly doors?: DoorRepository;
   } = {},
 ): Promise<RoutineObservabilityRead> {

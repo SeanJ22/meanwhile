@@ -1,19 +1,13 @@
 /**
- * **PREVIEW A SEND OF MANY HUNTS, AND LIST WHAT CAN BE PICKED.** (S11.)
- *
  * ```
- *   GET  ?list=county|congressional_district|cbsa|state_leg_upper|state_leg_lower&state=AZ
+ *   GET  ?list=county|congressional_district|cbsa|state_leg_upper|state_leg_lower&state=<code>
  *                                                        what can be picked
  *   POST { text?, picks?, budget, priority? }            the ZIPs pasted or uploaded and one
- *                                                        mission for each pick (a state,
- *                                                        county, district or metro area,
- *                                                        never a pile of ZIPs), each with
- *                                                        its budget, and everything left out
+ *                                                        mission for each pick, each with its
+ *                                                        budget, and everything left out
  * ```
  *
- * It changes nothing. The send itself is the one gateway action
- * `expansion.scope.setMany`, posted to `/api/admin/action` with the `items` this
- * returns, so there is still one door for every change.
+ * It changes nothing. The send itself is `expansion.scope.setMany`, posted to `/api/admin/action` with the `items` this returns.
  */
 import { NextResponse, type NextRequest } from "next/server";
 

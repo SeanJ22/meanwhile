@@ -1,45 +1,21 @@
 /**
- * Reaction domain types and validation — shared by the client control, the
- * API route, and the aggregation layer. No Node imports here: the client
- * bundles this file.
- *
- * The rules this encodes (CLAUDE.md, reaction capture):
- * - a reaction attaches to a specific record (a roll-call vote today),
- *   never to a person as a whole;
- * - the store is identifier-free — the only continuity is a random
- *   browser-local key, stored hashed (see lib/db/schema.ts);
- * - every row is tier-stamped from day one so aggregates are tier-shaped
- *   before any verification exists.
+ * Reaction domain types and validation, shared by the client control, the API route and the
+ * aggregation layer. No Node imports: the client bundles this file.
+ * - A reaction attaches to a specific record, never to a person as a whole.
+ * - The store is identifier-free; the only continuity is a random browser-local key, stored hashed.
+ * - Every row is tier-stamped.
  */
 
 /**
- * CANDIDATE (3d, 2026-08-16) is the fourth reaction class beside votes and
- * the designed measure/agenda classes. The question is "Would you vote for
- * them?" — reader expression captured and stored, NEVER an input to any
- * ordering, ranking, or recommendation the product renders; the neutrality
- * guards extend over this class like every other.
- */
-/**
- * FUNDING_TOTAL_REACTION and CONTRIBUTOR_REACTION (D34, 2026-08-18) are the
- * funding classes — reactions to the committee-totals display and the
- * contributor display, keyed by FEC candidate id so a reader's answer on
- * the ballot card and the official popup lands on the same committee. Rows
- * of these two types count in aggregates and exports like every other
- * reaction; the filing records they react to never do (Sean, 2026-10-01 —
- * see lib/signal/aggregate.ts).
- */
-/**
- * MEASURE_PROVISION (P03, 2026-08-18) is the class CLAUDE.md's reaction
- * section describes first and which shipped last: **a measure is decomposed
- * into contested provisions and the reaction attaches to a PROVISION, never
- * to the measure as a whole.** The target id is the provision's own
- * `<contestId>#<slug>` key from lib/ballot/measure-provisions.ts, which was
- * built in that shape for exactly this and has been sitting unused since.
- *
- * All five provision kinds collect — FUNDING, PROGRAM, OVERSIGHT, SUNSET and
- * START. There is no kind that is asked about and no kind that is not: a
- * sensor that skipped a kind would report a measure's parts as more or less
- * contested than the reader found them.
+ * Reaction target classes.
+ * - CANDIDATE: "Would you vote for them?", reader expression only, never an input to any ordering,
+ *   ranking or recommendation.
+ * - FUNDING_TOTAL_REACTION and CONTRIBUTOR_REACTION: reactions to the committee-totals and contributor
+ *   displays, keyed by FEC candidate id. They count in aggregates like every other reaction; the filing
+ *   records they react to never do.
+ * - MEASURE_PROVISION: a measure is decomposed into contested provisions and the reaction attaches to a
+ *   provision (`<contestId>#<slug>`, lib/ballot/measure-provisions.ts), never to the measure as a
+ *   whole. All five provision kinds collect.
  */
 export type ReactionTargetType =
   | "FEDERAL_VOTE"
@@ -62,36 +38,11 @@ export const FUNDING_REACTION_TYPES: ReactionTargetType[] = [
 ];
 
 /**
- * SOMEONE_ELSE (M63, 2026-08-15) is the fourth answer, and it is accepted
- * ONLY on a candidate in a contest with exactly one candidate.
- *
- * The author's reasoning, which is the whole justification for a new enum
- * value: in an uncontested race the other three answers collect almost
- * nothing. Yes is what the ballot forces on you, No cannot distinguish
- * disliking this candidate from wanting a choice at all, and a reader who
- * simply wants somebody else has no way to say it. "Someone else" is the
- * only honest sentiment measure an uncontested race has.
- *
- * Context-restricted at the write path, not just hidden in the UI: offered
- * on a contested race the answer would mean something different, and mixing
- * the two meanings into one bucket is the sort of quiet corruption the
- * incumbent/challenger split exists to prevent. `getSingleCandidateTargetIds()`
- * derives the permitted set from the canonical promoted ballot data, so a contest
- * stops qualifying the moment a second candidate files.
- */
-/**
- * The five-point funding scale (2026-08-15, the author's design).
- *
- * "Would you vote for someone whose campaign is funded this way?" asked the
- * reader to convert a feeling about money into a voting intention, which is
- * two questions wearing one button row. The funding surfaces now ask the
- * question they are actually about — *how do you feel about how this campaign
- * is funded* — on a five-point scale with an explicit way to say the honest
- * fifth answer, which on a funding display is very often the true one.
- *
- * These five are accepted on FUNDING targets and refused everywhere else, the
- * same way `SOMEONE_ELSE` is refused outside a one-candidate contest. Votes
- * and candidates keep yes/no/unsure.
+ * Reaction values.
+ * - SOMEONE_ELSE is accepted only on a candidate in a contest with exactly one candidate, enforced at
+ *   the write path (`getSingleCandidateTargetIds()` derives the set from the promoted ballot data).
+ * - The five-point funding scale is accepted on funding targets and refused everywhere else. Votes and
+ *   candidates keep yes/no/unsure.
  */
 export type ReactionValue =
   | "YES"
@@ -116,19 +67,9 @@ export const REACTION_VALUES: ReactionValue[] = [
 ];
 
 /**
- * **Scale versions — the data-honesty mechanic** (2026-08-15).
- *
- * A reaction row means nothing without the instrument that produced it. The
- * funding surfaces asked a yes/no/unsure question until 2026-08-15 and ask a
- * five-point question after it: those are **different instruments**, and rows
- * from the two are not comparable in any direction. Averaging them, summing
- * them, or reporting them under one denominator would be a fabricated trend —
- * the numbers would move because the question changed and nothing else.
- *
- * So every row carries the version of the scale it was collected on, the
- * aggregator groups by it, and the break is dated below where a buyer reading
- * an export can find it. Nothing migrates: v1 funding rows stay exactly what
- * they were, answers to a question we no longer ask.
+ * Scale versions. A reaction row means nothing without the instrument that produced it; rows from
+ * different instruments are not comparable in any direction. Every row carries its scale version, the
+ * aggregator groups by it, and the break is dated in `SCALE_BREAKS`. Nothing migrates.
  */
 export type ScaleVersion = 1 | 2 | 3;
 
@@ -153,26 +94,8 @@ export const SCALE_V2_FUNDING: ReactionScale = {
 };
 
 /**
- * The contributions instrument — **v3, the author's ruling (g3 item 7,
- * 2026-08-16).**
- *
- * The values are identical to v2's and the wording changed by one clause, so
- * the previous session filed the change as a REWORDING and explicitly not as
- * a scale break. The author overruled that, and the ruling is the
- * conservative one: **the contributions prompt gets its own version so its
- * rows never pool with answers to the older wording.**
- *
- * The reason it matters more than the size of the edit suggests: until
- * 2026-08-16 this control asked "how do you feel about how this campaign is
- * FUNDED" while sitting over a table of named contributors. Some readers
- * answered about the campaign's finances and some about the donors in front
- * of them, and there is no way to tell which from the row. Pooling those with
- * answers to the current, unambiguous question would put two populations
- * under one denominator — and the export layer, which groups by version,
- * cannot catch what the registry says is one instrument.
- *
- * The wording lives on the scale, per the ruling: the version and the
- * question a buyer is told the number answers are now the same object.
+ * The contributions instrument, v3: same values as v2 with different wording, versioned separately so
+ * its rows never pool with answers to the older wording. The wording lives on the scale.
  */
 export const SCALE_V3_CONTRIBUTIONS: ReactionScale = {
   version: 3,
@@ -223,45 +146,11 @@ export function scaleForTargetType(targetType: ReactionTargetType): ReactionScal
 }
 
 /**
- * **The question a target type actually asks** (item 5, 2026-08-16).
- *
- * The scale and the question are not the same thing, and this session is
- * where they came apart. The two funding controls share the five-point scale
- * — same values, same version, genuinely one instrument's answer set — but
- * they now ask about two different civic objects: the totals ("how this
- * campaign is funded") and the contributions table ("these contributions").
- * They asked WORD FOR WORD the same thing until today, which read to a reader
- * as a nag and produced an annoyed second answer.
- *
- * `scale.question` would have labelled the contributions tally with the
- * totals' wording. An export whose question line does not match the question
- * asked is a false claim about how the number was collected, and the buyer
- * has no way to catch it. So the label is per TARGET TYPE.
- *
- * **The buckets do not change.** They never did: `aggregateReactions` has
- * always keyed on `targetType` alongside `targetId`, `ocdId` and the scale
- * version, and the store's unique index carries `targetType` too. This
- * corrects a LABEL, and it is the correction the reworded prompt requires.
- *
- * **g3 item 7 (2026-08-16) closed the gap the note above describes.** The two
- * funding controls are no longer one instrument: the contributions table
- * collects on `SCALE_V3_CONTRIBUTIONS`, whose question IS its wording, so the
- * version and the question a buyer is told the number answers can no longer
- * disagree. This override map is kept — empty — because the divergence it
- * guards against is real and cheap to re-open, and because deleting it would
- * take the reasoning with it.
+ * The question a target type actually asks, per target type (the scale and the question are not the
+ * same thing). Kept, currently empty, because the divergence it guards against is cheap to re-open.
  */
 const QUESTION_BY_TYPE: Partial<Record<ReactionTargetType, string>> = {
-  /**
-   * The provision question (P03, 2026-08-18). It shares the v1 scale with
-   * votes and candidates — the answer set is genuinely the same three — but
-   * it asks about a different civic object, so it gets its own wording here
-   * rather than inheriting "Do you like this vote?".
-   *
-   * It asks about the PART, not the ballot: this is a sensor, and the
-   * product never tells anyone how to vote. "Would you vote yes on this
-   * proposition" is a recommendation surface wearing a question mark.
-   */
+  /** The provision question: it asks about the part, never how to vote on the measure. */
   MEASURE_PROVISION: "Do you like this part?",
 };
 
@@ -270,31 +159,15 @@ export function questionForTargetType(targetType: ReactionTargetType): string {
 }
 
 /**
- * What the funding controls asked BEFORE the 2026-08-15 break.
- *
- * Named rather than inlined because it is the only wording in the system with
- * no live surface behind it: nothing asks it today, and the rows that answered
- * it are permanent. A retired question that lives as a string literal in the
- * aggregator is a fact about the data with nowhere to be read.
+ * What the funding controls asked before the v1 → v2 break. No live surface asks it; the rows that
+ * answered it are permanent.
  */
 export const RETIRED_V1_FUNDING_QUESTION =
   "Would you vote for someone whose campaign is funded this way?";
 
 /**
- * **The question a STORED ROW was asked** — by its target type and the scale
- * version stamped on it (g3 item 7, 2026-08-16).
- *
- * `questionForTargetType` answers for the instrument in use TODAY. A row
- * written months ago answered whatever was on screen then, and labelling it
- * with today's wording is how a scale break disappears — the export would
- * carry two populations under one sentence and the buyer could not tell.
- *
- * The aggregator used to hold one hardcoded fallback for "not the live
- * version", which was right while there was exactly one older version and
- * became wrong the moment a second target type moved to v3: a v2
- * CONTRIBUTOR_REACTION row would have been labelled with the v1 wording,
- * skipping a version. The lookup is by version now, so it stays right as
- * versions accumulate.
+ * The question a stored row was asked, by its target type and stamped scale version, so an older row is
+ * never labelled with today's wording.
  */
 export function questionForRow(
   targetType: ReactionTargetType,
@@ -314,19 +187,8 @@ export function questionForRow(
 }
 
 /**
- * **The contributions prompt's rewording — the history behind the v3 break.**
- *
- * Recorded on 2026-08-16 as a rewording INSIDE v2, with the version bump left
- * for the author because bucketing and export are on `CLAUDE.md`'s ask-before
- * list. **He ruled the same day: bump it** (g3 item 7). So the change is now
- * filed in `SCALE_BREAKS` as v2 → v3, and this entry stays as the record of
- * what the older rows were actually answering.
- *
- * That is the useful half of it. A break says "these two sets are not
- * comparable"; only this says WHY, in the words that were on the screen. A
- * buyer holding pre-break `CONTRIBUTOR_REACTION` rows can read here that they
- * answered the totals' sentence while looking at a contributions table, which
- * is the fact that makes them uninterpretable — not the version number.
+ * The wording that older contributions rows were actually answering, recorded beside the v2 → v3
+ * break in `SCALE_BREAKS`.
  */
 export const QUESTION_REWORDINGS: Array<{
   targetType: ReactionTargetType;
@@ -440,18 +302,9 @@ export function isPlausibleTargetId(value: unknown): value is string {
   return typeof value === "string" && value.length > 0 && value.length <= 128;
 }
 
-
-/* ── The optional verbatim (P03, 2026-08-18) ─────────────────────────────
- *
- * "Each reaction has a one-tap binary and an optional free-text field.
- * Binary carries volume; text carries color. Never require the text."
- * — CLAUDE.md, reaction capture.
- *
- * Unblocked by the author 2026-08-18, and captured without a switch since
- * October 1, 2026 (Sean: everything typed is captured).
- *
- * Everything here is validation: a malformed payload is refused.
- */
+// ── The optional verbatim ──────────────────────────────────────────────
+// Each reaction has a one-tap binary and an optional free-text field; the text is never required.
+// Everything here is validation: a malformed payload is refused.
 
 /**
  * The length cap. Long enough for a paragraph of real opinion, short enough
@@ -460,15 +313,7 @@ export function isPlausibleTargetId(value: unknown): value is string {
  */
 export const FREE_TEXT_MAX_CHARS = 1000;
 
-/**
- * **The threat notice, adjacent to the field** — CLAUDE.md requires it, and
- * requires the word "may" rather than "will": a stated commitment that is not
- * honoured on every instance is worse than a reserved right.
- *
- * Pinned in tests/reactions.test.ts so a reword cannot quietly turn the
- * reserved right into a promise. Level register — this is a claim surface,
- * about a real consequence for a real person.
- */
+/** The threat notice, adjacent to the field. Says "may", not "will". Pinned in tests/reactions.test.ts. */
 export const FREE_TEXT_THREAT_NOTICE =
   "Threats of violence are removed and may be reported to law enforcement.";
 

@@ -1,22 +1,3 @@
-/**
- * **THE FRESHNESS SCHEDULER AND ITS SHADOW LOOP.**
- * (Session B, W3.3–W3.5, 2026-08-30. RULING 212, RULING 216, RULING 218.)
- *
- * The invariant every test here circles:
- *
- * > **No active obligation may have an unknown next-due.**
- *
- * A scheduler satisfies that trivially by scheduling everything it can and
- * saying nothing about the rest, so the tests are written against the SECOND
- * list — the obligations it could not schedule — because that list is the only
- * evidence the invariant is real rather than definitional.
- *
- * The crash/reclaim case at the bottom is the seeded failure the brief names,
- * and it is written to fail against the design mistake rather than against a
- * bug: a worker killed mid-Attempt runs no cleanup, so anything that depended
- * on a `finally` would pass a simulated death and lose a real one.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync } from "node:fs";
@@ -55,19 +36,9 @@ import {
 } from "../lib/control-plane/repository/coordinator.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
-import type { ContractReading } from "../lib/health/contracts.ts";
 
 const NOW = "2026-08-30T12:00:00.000Z";
 
-/**
- * A stub that walks the route to a REAL terminal disposition.
- *
- * `WALKED_NO_YIELD` over a REACHABLE transport, which is the one disposition a
- * stub can honestly claim without inventing evidence: it says the route was
- * reached and returned nothing, and `disposeRoute` refuses it over any
- * transport but REACHABLE. An `INGESTED` stub would need artifact ids, and a
- * stub that manufactured artifact ids would be manufacturing evidence.
- */
 const disposes: RunWork = async () => ({
   ranAs: "DETERMINISTIC",
   kind: "DISPOSED",
@@ -81,7 +52,6 @@ const disposes: RunWork = async () => ({
   detail: "walked",
 });
 
-/** A stub that decides and deliberately does not retrieve. Never discharges. */
 const simulates: RunWork = async () => ({
   ranAs: "DETERMINISTIC",
   kind: "SIMULATED",
@@ -103,17 +73,7 @@ function obligation(over: Partial<FreshnessObligation> = {}): FreshnessObligatio
   };
 }
 
-/* ==========================================================================
- * W3.3 — CADENCE IS DERIVED, AND THE DEFAULT SAYS IT IS A DEFAULT
- * ======================================================================= */
-
-test("W3.3: an obligation with NO signal takes the daily default and SAYS so", () => {
-  /*
-   * RULING 212 retires the fixed daily floor as a REQUIREMENT and keeps it as
-   * a default. The distinction is only visible in `cadenceSource`: a scheduler
-   * whose rows all read DEFAULT_NO_SIGNAL is a daily cron wearing a
-   * derivation's name, and this field is what makes that arguable.
-   */
+test("an obligation with NO signal takes the daily default and SAYS so", () => {
   const row = scheduleObligation(obligation(), NOW_MS);
   assert.ok(isScheduled(row));
   assert.equal(row.cadenceHours, DEFAULT_CADENCE_HOURS);
@@ -121,12 +81,10 @@ test("W3.3: an obligation with NO signal takes the daily default and SAYS so", (
   assert.match(row.basis, /DEFAULT and not a derivation/);
   const meeting = scheduleObligation(obligation({ recordClass: "meetings" }), NOW_MS);
   assert.ok(isScheduled(meeting));
-  assert.equal(meeting.cadenceHours, 12, "meeting sources follow §4 even without another signal");
+  assert.equal(meeting.cadenceHours, 12, "meeting sources keep their 12-hour cadence even without another signal");
 });
 
-test("W3.3: a reader deadline places the check BEFORE it, not on it", () => {
-  /* A check that lands at the deadline arrives after the staleness has already
-     reached a reader. Half the remaining time always lands before. */
+test("a reader deadline places the check BEFORE it, not on it", () => {
   const row = scheduleObligation(
     obligation({ readerImpactAt: new Date(NOW_MS + 10 * 3_600_000).toISOString() }),
     NOW_MS,
@@ -142,8 +100,7 @@ test("W3.3: a reader deadline places the check BEFORE it, not on it", () => {
   }
 });
 
-test("W3.3: where both signals exist the SHORTER binds", () => {
-  /* Late for either reason is late. */
+test("where both signals exist the SHORTER binds", () => {
   const row = scheduleObligation(
     obligation({
       readerImpactAt: new Date(NOW_MS + 40 * 3_600_000).toISOString(),
@@ -156,7 +113,7 @@ test("W3.3: where both signals exist the SHORTER binds", () => {
   assert.equal(row.cadenceSource, "OBSERVED_CHANGE_RATE");
 });
 
-test("W3.3: a declared publisher cycle outranks a rate we inferred", () => {
+test("a declared publisher cycle outranks a rate we inferred", () => {
   const row = scheduleObligation(
     obligation({ observedChangeRateHours: 2, declaredCycleHours: 168 }),
     NOW_MS,
@@ -166,7 +123,7 @@ test("W3.3: a declared publisher cycle outranks a rate we inferred", () => {
   assert.equal(row.cadenceHours, 168);
 });
 
-test("W3.3: a passed deadline is due at the floor, never in the past forever", () => {
+test("a passed deadline is due at the floor, never in the past forever", () => {
   const row = scheduleObligation(
     obligation({ readerImpactAt: new Date(NOW_MS - 5 * 3_600_000).toISOString() }),
     NOW_MS,
@@ -175,29 +132,14 @@ test("W3.3: a passed deadline is due at the floor, never in the past forever", (
   assert.equal(row.cadenceHours, MIN_CADENCE_HOURS);
 });
 
-test("W3.3: the next-due anchors on the last WORK, not on every glance", () => {
-  /*
-   * Scheduling from `now` on each pass restarts the interval every time the
-   * scheduler looks, so a row examined often is never due — the starvation
-   * shape a due-time scheduler exists to avoid.
-   */
+test("the next-due anchors on the last WORK, not on every glance", () => {
   const lastWorkedAt = new Date(NOW_MS - 20 * 3_600_000).toISOString();
   const row = scheduleObligation(obligation({ lastWorkedAt }), NOW_MS);
   assert.ok(isScheduled(row));
   assert.equal(row.nextDueAt, new Date(Date.parse(lastWorkedAt) + 24 * 3_600_000).toISOString());
 });
 
-/* ==========================================================================
- * W3.3 — THE INVARIANT: NO ACTIVE OBLIGATION WITH AN UNKNOWN NEXT-DUE
- * ======================================================================= */
-
-test("SEEDED W3.3: an obligation with broken cadence data is NAMED, never defaulted", () => {
-  /*
-   * The whole invariant turns on this. "We have no signal, so daily" is a
-   * decision and is recorded as DEFAULT_NO_SIGNAL. "This row's data is broken"
-   * is a defect, and papering it over with a cadence would satisfy the
-   * invariant by construction while leaving a hole in the clock.
-   */
+test("an obligation with broken cadence data is NAMED, never defaulted", () => {
   const pass = scheduleAll(
     [
       obligation({ id: "good" }),
@@ -215,13 +157,13 @@ test("SEEDED W3.3: an obligation with broken cadence data is NAMED, never defaul
   }
 });
 
-test("W3.3: an INACTIVE obligation is not owed on a clock, and says that too", () => {
+test("an INACTIVE obligation is not owed on a clock, and says that too", () => {
   const pass = scheduleAll([obligation({ active: false })], NOW_MS);
   assert.equal(pass.scheduled.length, 0);
   assert.match(pass.unscheduled[0].reason, /not active/);
 });
 
-test("W3.3: due work comes back soonest-first, so nothing starves behind a priority", () => {
+test("due work comes back soonest-first, so nothing starves behind a priority", () => {
   const pass = scheduleAll(
     [
       obligation({ id: "late", lastWorkedAt: new Date(NOW_MS - 96 * 3_600_000).toISOString() }),
@@ -233,11 +175,7 @@ test("W3.3: due work comes back soonest-first, so nothing starves behind a prior
   assert.deepEqual(dueNow(pass, NOW_MS).map((r) => r.obligation.id), ["late", "later"]);
 });
 
-/* ==========================================================================
- * W3.3 — DEBT: DURABLE, SELF-RETRYING, AGGREGATED BY ROOT CAUSE
- * ======================================================================= */
-
-test("W3.3: a transient failure becomes DEBT with a backoff, never a notification", () => {
+test("a transient failure becomes DEBT with a backoff, never a notification", () => {
   const first = recordFailure(null, {
     obligationId: "ob-1",
     cause: "RATE_LIMITED",
@@ -268,7 +206,7 @@ test("W3.3: a transient failure becomes DEBT with a backoff, never a notificatio
   );
 });
 
-test("W3.3: backoff is CAPPED — uncapped doubling is abandonment on a schedule", () => {
+test("backoff is CAPPED — uncapped doubling is abandonment on a schedule", () => {
   let debt = recordFailure(null, {
     obligationId: "ob-1",
     cause: "UPSTREAM_ERROR",
@@ -292,11 +230,7 @@ test("W3.3: backoff is CAPPED — uncapped doubling is abandonment on a schedule
   assert.ok(retryable([debt], NOW_MS + MAX_BACKOFF_MINUTES * 60_000).length === 1);
 });
 
-test("W3.3: one outage is ONE incident, whatever it is behind", () => {
-  /*
-   * RULING 218's aggregation by root cause. Three hundred incident rows
-   * describing one host being down is three hundred ways to not see the outage.
-   */
+test("one outage is ONE incident, whatever it is behind", () => {
   const debts = Array.from({ length: 312 }, (_, i) =>
     recordFailure(null, {
       obligationId: `ob-${i}`,
@@ -314,11 +248,7 @@ test("W3.3: one outage is ONE incident, whatever it is behind", () => {
   assert.ok(incidents[0].oldestHours >= 2);
 });
 
-/* ==========================================================================
- * W3.4 — THE EXECUTOR RULE
- * ======================================================================= */
-
-test("W3.4: a graduated route runs deterministic code; anything else runs bounded", () => {
+test("a graduated route runs deterministic code; anything else runs bounded", () => {
   const graduated = chooseExecutor(
     scheduleObligation(obligation({ routeId: "legistar:events" }), NOW_MS) as never,
     () => "GRADUATED",
@@ -339,24 +269,7 @@ test("W3.4: a graduated route runs deterministic code; anything else runs bounde
   assert.match(noRoute.why, /names no route yet/);
 });
 
-/* ==========================================================================
- * W3.4 — THE SEEDED CRASH/RECLAIM FAILURE
- * ======================================================================= */
-
-test("SEEDED W3.4: a worker killed mid-Attempt leaves the RouteTask reclaimable", async () => {
-  /*
-   * The brief's seeded failure, verbatim: *a worker killed mid-Attempt leaves
-   * no terminal disposition and the RouteTask is reclaimed by the next worker.*
-   *
-   * "Killed" is modelled the only way it can be modelled honestly — the worker
-   * simply STOPS. No close, no release, no `finally`. A real kill runs no
-   * cleanup, so a design that recovered via cleanup would pass a simulated
-   * death and lose a real one. Death is observed from OUTSIDE, by a lease that
-   * stopped being renewed, which is exactly what `sweepExpiredLeases` reads.
-   *
-   * Against the DURABLE file store, because that is the one that proves the
-   * process may die.
-   */
+test("a worker killed mid-Attempt leaves the RouteTask reclaimable", async () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-sched-"));
   const repos = await createFileRepositories(root);
 
@@ -379,7 +292,7 @@ test("SEEDED W3.4: a worker killed mid-Attempt leaves the RouteTask reclaimable"
   });
   await registerRouteTask(repos, task, NOW);
 
-  /* Worker A claims, opens an Attempt — and dies. Nothing else runs. */
+  // A killed worker runs no cleanup: worker A claims, opens an Attempt and simply stops.
   const claimed = await claimRouteTask(repos, {
     routeTaskId: task.id,
     holder: "worker-a",
@@ -401,8 +314,6 @@ test("SEEDED W3.4: a worker killed mid-Attempt leaves the RouteTask reclaimable"
     policyVersion: "p1",
   });
 
-  /* Before the lease expires, the task is NOT reclaimable — "this process has
-     not heard from that worker" is not "that worker is dead". */
   const early = await sweepExpiredLeases(repos, {
     now: new Date(NOW_MS + 30_000).toISOString(),
     observedBy: "worker-b",
@@ -410,7 +321,6 @@ test("SEEDED W3.4: a worker killed mid-Attempt leaves the RouteTask reclaimable"
   assert.deepEqual(early.reclaimed, []);
   assert.deepEqual(early.stillLive, [task.id]);
 
-  /* The lease stops being renewed and expires. The next worker reclaims it. */
   const after = new Date(NOW_MS + 120_000).toISOString();
   const sweep = await sweepExpiredLeases(repos, { now: after, observedBy: "worker-b" });
   assert.deepEqual(sweep.reclaimed, [task.id], "the abandoned route is reclaimed");
@@ -429,13 +339,10 @@ test("SEEDED W3.4: a worker killed mid-Attempt leaves the RouteTask reclaimable"
       "one for a worker that died would be a disposition nobody reached",
   );
 
-  /* The dead worker's Attempt is closed, and the closure is attributed to the
-     worker that actually made it — never re-pointed at whoever finishes. */
   const attempts = await repos.attempts.list();
   assert.equal(attempts.length, 1);
   assert.equal(attempts[0].value.worker.instance, "worker-a");
 
-  /* Worker B can now claim what worker A abandoned. */
   const second = await claimRouteTask(repos, {
     routeTaskId: task.id,
     holder: "worker-b",
@@ -445,14 +352,7 @@ test("SEEDED W3.4: a worker killed mid-Attempt leaves the RouteTask reclaimable"
   assert.equal(second.lease.value.holder, "worker-b");
 });
 
-/* ==========================================================================
- * W3.5 — ONE UNATTENDED CYCLE, AND WHAT IT MAY NOT DO
- * ======================================================================= */
-
-const READER_GREEN: ContractReading = { contract: "READER", state: "GREEN", reason: "fixture" };
-const TRUTH_GREEN: ContractReading = { contract: "TRUTH", state: "GREEN", reason: "fixture" };
-
-test("W3.5: a full cycle runs unattended and NEVER promotes to reader truth", async () => {
+test("a full cycle runs unattended and NEVER promotes to reader truth", async () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-cycle-"));
   const repos = await createFileRepositories(root);
 
@@ -488,33 +388,17 @@ test("W3.5: a full cycle runs unattended and NEVER promotes to reader truth", as
     holder: "cycle-worker",
     now: NOW,
     leaseTtlMs: 60_000,
-    reader: READER_GREEN,
-    truth: TRUTH_GREEN,
   });
 
   assert.equal(cycle.promotedToReaderTruth, false);
   assert.equal(cycle.dispatched.filter((d) => d.outcome === "WORKED").length, 1);
   assert.equal(cycle.schedule.unscheduled.length, 1, "the broken row is named, not defaulted");
 
-  /* FRESHNESS carries a MEASUREMENT and still reports NOT_READY. */
-  const freshness = cycle.health.readings.find((r) => r.contract === "FRESHNESS")!;
-  assert.equal(freshness.state, "NOT_READY");
-  assert.match(freshness.reason, /SHADOW \/ NOT ACTIVATED/);
-  assert.match(freshness.reason, /could not be scheduled and are named/);
-  assert.equal(cycle.health.green, false, "and the rollup is blocked by it");
-
-  /* The digest leads with health, not with activity (RULING 217). */
   const lines = digestLines(cycle);
-  assert.equal(lines[0], "PILOT HEALTH");
-  assert.ok(lines.findIndex((l) => l.startsWith("ACTIVITY")) > 0);
-  assert.ok(
-    lines.findIndex((l) => l.startsWith("ACTIVITY")) >
-      lines.findIndex((l) => l.includes("FRESHNESS")),
-    "activity sits UNDER health, which is the order RULING 217 requires",
-  );
+  assert.ok(lines[0]!.startsWith("ACTIVITY"));
 });
 
-test("W3.5: an obligation with no RouteTask is COUNTED, not skipped", async () => {
+test("an obligation with no RouteTask is COUNTED, not skipped", async () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-cycle2-"));
   const repos = await createFileRepositories(root);
   const cycle = await runCycle({
@@ -527,20 +411,13 @@ test("W3.5: an obligation with no RouteTask is COUNTED, not skipped", async () =
     holder: "cycle-worker",
     now: NOW,
     leaseTtlMs: 60_000,
-    reader: READER_GREEN,
-    truth: TRUTH_GREEN,
   });
   assert.equal(cycle.dispatched[0].outcome, "NO_ROUTE_TASK");
   assert.equal(cycle.debts.length, 1, "and it becomes debt that retries itself");
   assert.equal(cycle.debts[0].cause, "NEVER_DISPATCHED");
 });
 
-test("W3.5: a losing claim is normal concurrency, never debt", async () => {
-  /*
-   * Two workers reaching for one route is the contention the lease arbitrates.
-   * Counting the loser as a failure would make ordinary concurrency read as a
-   * backlog, and a backlog that is not real is a number nobody can act on.
-   */
+test("a losing claim is normal concurrency, never debt", async () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-cycle3-"));
   const repos = await createFileRepositories(root);
   const item = createWorkItem({
@@ -578,14 +455,12 @@ test("W3.5: a losing claim is normal concurrency, never debt", async () => {
     holder: "this-worker",
     now: NOW,
     leaseTtlMs: 60_000,
-    reader: READER_GREEN,
-    truth: TRUTH_GREEN,
   });
   assert.equal(cycle.dispatched[0].outcome, "NOT_CLAIMED");
   assert.equal(cycle.debts.length, 0, "a lease conflict is the lease working");
 });
 
-test("W3.5: work beyond the cycle's stated ceiling is DEFERRED with a reason", async () => {
+test("work beyond the cycle's stated ceiling is DEFERRED with a reason", async () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-cycle4-"));
   const repos = await createFileRepositories(root);
   const overdue = new Date(NOW_MS - 48 * 3_600_000).toISOString();
@@ -604,8 +479,6 @@ test("W3.5: work beyond the cycle's stated ceiling is DEFERRED with a reason", a
     now: NOW,
     leaseTtlMs: 60_000,
     maxDispatches: 1,
-    reader: READER_GREEN,
-    truth: TRUTH_GREEN,
   });
   assert.equal(cycle.dispatched.length, 1);
   assert.equal(cycle.deferred.length, 2);
@@ -615,7 +488,6 @@ test("W3.5: work beyond the cycle's stated ceiling is DEFERRED with a reason", a
   let order = ["a", "b", "c"];
   await runPool(["a", "b", "c"], 1, async id => {
     pulled.push(id);
-    // Publishing a field changes completion before the next worker pull.
     if (id === "a") order = ["c", "b", "a"];
   }, async () => (a, b) => order.indexOf(a) - order.indexOf(b));
   assert.deepEqual(pulled, ["a", "c", "b"]);
@@ -636,8 +508,6 @@ test("hunt rounds survive changing place priority and completed tasks leaving th
   }, async () => (a, b) => priority.indexOf(huntFor(a)) - priority.indexOf(huntFor(b)), huntFor);
   assert.deepEqual(pulled, ["a1", "c1", "b1", "c2", "b2", "a2", "a3"]);
 
-  // Lease children present different pending subsets after successful claims.
-  // All pulls compare against the original wave, so a2 cannot reset to round0.
   const compareRound = huntRoundComparator(ids, huntFor);
   const rank = (a: string, b: string) => compareRound(a, b) || ["a", "b", "c"].indexOf(huntFor(a)) - ["a", "b", "c"].indexOf(huntFor(b));
   assert.deepEqual(["a2", "b1", "c1"].sort(rank), ["b1", "c1", "a2"]);
@@ -663,7 +533,7 @@ test("twenty concurrent pulls serve every hunt before one hunt takes its second 
   assert.deepEqual(pulled.slice(20), ["0:1", "0:2", "0:3"]);
 });
 
-test("NH328: canonical reader-impact priority reaches the Scout pool before an older band-2 row", async () => {
+test("canonical reader-impact priority reaches the Scout pool before an older band-2 row", async () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-cycle-reader-priority-"));
   const repos = await createFileRepositories(root);
   const oldestUniverse = obligation({
@@ -678,7 +548,6 @@ test("NH328: canonical reader-impact priority reaches the Scout pool before an o
     lastWorkedAt: new Date(NOW_MS - 10 * 24 * 3_600_000).toISOString(),
   });
 
-  /* Positive control: dueNow alone puts the much older universe row first. */
   assert.deepEqual(
     dueNow(scheduleAll([oldestUniverse, readerPriority], NOW_MS), NOW_MS).map((row) => row.obligation.id),
     [oldestUniverse.id, readerPriority.id],
@@ -704,8 +573,6 @@ test("NH328: canonical reader-impact priority reaches the Scout pool before an o
     holder: "reader-priority-worker",
     now: NOW,
     leaseTtlMs: 60_000,
-    reader: READER_GREEN,
-    truth: TRUTH_GREEN,
     research: {
       decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "ungraduated fixture", disagreement: null }),
       compareModelRows: (left, right) => compareReaderImpact(orderable(left), orderable(right), inputs),

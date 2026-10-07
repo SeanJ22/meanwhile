@@ -1,8 +1,5 @@
 /**
- * **VERIFIED CAMPAIGN SITES, PUBLISHED BY THE STANDING RUNNER WITH NO OWNER
- * STEP.** (2026-09-25; Sean, 2026-09-21: "You may enable automatic promotion
- * for qualifying results. Fix the gap, recover value already paid for."
- * RULING 292.)
+ * Verified campaign sites, published by the standing runner with no owner step.
  *
  *   node --experimental-strip-types scripts/derive-candidate-campaign-sites.mts --promote
  *
@@ -65,7 +62,7 @@ const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
 const PROFILES = requiredManualProductionContract("candidate-profiles");
 
-/* An unchanged pass (the same approvals, the same bytes, the same profiles) is receipted on the pointed version, never re-promoted (R23). */
+/* An unchanged pass (the same approvals, the same bytes, the same profiles) is receipted on the pointed version, never re-promoted. */
 async function finish(candidate: RoutineCandidate): Promise<void> {
   await promoteDerivedCandidate(store, DERIVED_CAMPAIGN_SITES_CONTRACT_ID, candidate, now);
 }
@@ -115,7 +112,7 @@ async function linkedPublicationReads(vault: VaultIndex, approvals: readonly Pub
       const attempt = (typeof row.attempt === "string" ? JSON.parse(row.attempt) : row.attempt) as HeldLinkedPublicationRead["attempt"];
       const workItem = (typeof row.work_item === "string" ? JSON.parse(row.work_item) : row.work_item) as { subject?: unknown };
       // One unreadable capture holds only its own publication (it stays unverified, owed work);
-      // it never blocks every other approved campaign link from reaching readers (§3).
+      // it never blocks every other approved campaign link from reaching readers.
       let capture;
       try { capture = await heldCandidatePublicationRead(record, attempt, vault,
         typeof workItem.subject === "string" ? workItem.subject : ""); }

@@ -1,39 +1,3 @@
-/**
- * **AN OBLIGATION THE REGISTRY NO LONGER EMITS IS RETIRED, AND A RETIRED ROW
- * HOLDS NOTHING OPEN.** (2026-09-23.)
- *
- * `syncObligations` walks only the corpus, so a durable row the registry
- * stopped emitting stayed `active` forever. Any occurrence it held open stayed
- * open, and its debt still counted. The production shapes on 2026-09-23:
- *
- * - 23 candidate rows the registry superseded, among them 10 whose sites were
- *   recorded (`#candidate-authored-awaits-site`). They held open occurrences
- *   on already-disposed RouteTasks.
- * - 484 jurisdiction MEETINGS routes, left behind by the PDC transfer. They
- *   are 41% of that provider's standing set, so the bound held them. They are
- *   not superseded: the need ends when the body holds a calendar route, and
- *   `planHeldRouteRetirement` owns them
- *   (tests/mission-meetings-discovery.test.ts).
- * - 80 rows the legacy prefix retirement had retired with 20 occurrences still
- *   open.
- *
- * What these tests hold:
- *
- * - **Retirement.** A row is retired as superseded only when its provider read
- *   cleanly and the drop is inside the bound. Any open occurrence closes
- *   unresolved, never with a disposition.
- * - **Debt.** A retired row's debt is tombstoned as retired, never as
- *   discharged.
- * - **Untouched.** The RouteTask, its Attempts, lease, commit and artifacts
- *   are not written, and nothing is deleted.
- * - **Held back by name.** A provider that could not read, read nothing, is
- *   ambiguous, or suddenly emits far less holds its rows back.
- * - **Reversible.** When the registry emits the id again, sync writes it live.
- *
- * Every test that writes runs on the in-memory double AND the durable file
- * store.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -107,7 +71,6 @@ const adapterWalk: RunWork = async () => ({
   detail: "walked to REQUIRES_NEW_ADAPTER",
 });
 
-/** The production shape: registered, walked to a committed disposition, occurrence left open, debt carried. */
 async function supersededShape(repos: ControlPlaneRepositories) {
   const awaits = obligation(AWAITS, "candidate-authored-awaits-site");
   const sync0 = await syncObligations(repos, [awaits, obligation(WIKI, "candidate-wikipedia-api")], T0);
@@ -143,7 +106,6 @@ async function supersededShape(repos: ControlPlaneRepositories) {
   return { occurrenceId: opened.occurrence.id, routeTaskId: opened.routeTask.id, workItemId: opened.workItem.id };
 }
 
-/** The cycle after the registry superseded the row: the corpus now names the recorded-site route instead. */
 function supersededCorpus(): FreshnessObligation[] {
   return [obligation(RECORDED, "candidate-site-recorded"), obligation(WIKI, "candidate-wikipedia-api")];
 }
@@ -186,14 +148,14 @@ test("PLAN: only an active row outside the corpus, owned by a cleanly-read provi
   const corpus = [
     ...unitsOf(supersededCorpus()),
     { providerId: "local-jurisdictions", obligationId: "freshness:jurisdiction:az-a#clerk" },
-    { providerId: "tracker-intake", obligationId: "freshness:tracker:nh-1#page" },
+    { providerId: "unschedulable-provider", obligationId: "freshness:unschedulable:a-1#page" },
     { providerId: "campaign-finance", obligationId: "freshness:shared:x#one" },
     { providerId: "candidate-enrichment", obligationId: "freshness:shared:y#two" },
   ];
   const providers: ProviderReading[] = [
     { providerId: "candidate-enrichment", units: 3, readFailure: null, emptyReason: null },
     { providerId: "local-jurisdictions", units: 1, readFailure: "az jurisdictions file failed to parse", emptyReason: null },
-    { providerId: "tracker-intake", units: 1, readFailure: null, emptyReason: "PRESENT_UNSCHEDULABLE: 7 input row(s)" },
+    { providerId: "unschedulable-provider", units: 1, readFailure: null, emptyReason: "PRESENT_UNSCHEDULABLE: 7 input row(s)" },
     { providerId: "campaign-finance", units: 1, readFailure: null, emptyReason: null },
   ];
   const plan = planSupersededRetirement({
@@ -202,7 +164,7 @@ test("PLAN: only an active row outside the corpus, owned by a cleanly-read provi
       stored("freshness:candidate-enrichment:gone#retired-already", { active: false }),
       stored(RECORDED),
       stored("freshness:jurisdiction:az-b#clerk"),
-      stored("freshness:tracker:nh-2#page"),
+      stored("freshness:unschedulable:a-2#page"),
       stored("freshness:meetings:legacy-body"),
       stored("proof-worker-19924"),
       stored("freshness:shared:z#three"),
@@ -218,7 +180,7 @@ test("PLAN: only an active row outside the corpus, owned by a cleanly-read provi
       ["freshness:jurisdiction:az-b#clerk", "PROVIDER_NOT_READ_CLEANLY"],
       ["freshness:meetings:legacy-body", "NO_PROVIDER_NAMESPACE"],
       ["freshness:shared:z#three", "AMBIGUOUS_NAMESPACE"],
-      ["freshness:tracker:nh-2#page", "PROVIDER_NOT_READ_CLEANLY"],
+      ["freshness:unschedulable:a-2#page", "PROVIDER_NOT_READ_CLEANLY"],
       ["proof-worker-19924", "NO_PROVIDER_NAMESPACE"],
     ],
     "an inactive row and a row the corpus still names are neither retired nor held",
@@ -276,7 +238,6 @@ test("SEEDED: a superseded row with an open occurrence on a settled RouteTask is
     assert.equal(row.retirementReason, supersededRetirementReason("candidate-enrichment"));
     assert.equal(row.lastWorkedAt, null, `${label}: the anchor does not move`);
 
-    /* The cycle keeps a retired row's debt out, and persistDebts tombstones it as retired. */
     const persisted = await persistDebts(repos, [], T1, null, new Map([[AWAITS, row.retirementReason ?? ""]]));
     assert.deepEqual(persisted, { written: 0, cleared: [], clearedAsRetired: [AWAITS] });
     const debt = (await repos.debts.mustRead(AWAITS)).value;
@@ -362,7 +323,6 @@ test("a retirement reverses itself: when the registry emits the id again, sync w
 test("SEEDED: an open occurrence the row's pointer lost is closed too; a retired row holds nothing open", async () => {
   for (const [label, repos] of await eachStore("wtp-superseded-")) {
     const shape = await supersededShape(repos);
-    /* The 2026-09-01 shape: occurrence 1 left open, its obligation's pointer cleared by a path that never closed it. */
     const row = await repos.obligations.mustRead(AWAITS);
     await repos.obligations.compareAndSet(row.id, row.revision, { ...row.value, openOccurrenceId: null }, T0);
     assert.equal((await repos.occurrences.mustRead(shape.occurrenceId)).value.closedAt, null);
@@ -383,7 +343,6 @@ test("SEEDED: an open occurrence the row's pointer lost is closed too; a retired
 test("an interrupted retirement completes on the next cycle: an occurrence already closed is not closed twice, and the pointer clears", async () => {
   for (const [label, repos] of await eachStore("wtp-superseded-")) {
     const shape = await supersededShape(repos);
-    /* A cycle closed the occurrence, then died before the obligation's own write. */
     const occurrence = await repos.occurrences.mustRead(shape.occurrenceId);
     await repos.occurrences.compareAndSet(
       occurrence.id,

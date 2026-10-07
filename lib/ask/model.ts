@@ -4,99 +4,37 @@ import { MODELS, activeModelOverrideId, activeModelTierFor, modelRefusal, type M
 export type AskThinkingMode = ModelThinkingMode;
 
 /**
- * **THE ASK MODELS: ONE TABLE OF ROLES, ONE MODULE, AND THIS IS IT.**
- * (ITEM K 2026-09-01; per-role since 2026-09-25, the Ask model-routing test.)
+ * The Ask model roles. Each role has one default compiled into the build, so
+ * local runs measure what production serves; the model that served each call
+ * is recorded. `ASK_MODEL_ROLES` is the one table: each role names its default
+ * tier, effort, thinking mode and environment overrides. What a model accepts
+ * is `MODELS[tier].capabilities` in `lib/models.ts`.
  *
- * ## Why the models are declared here and not per environment
- *
- * **The reason is measurement integrity, and it is the whole reason.**
- *
- * Reader-answerability is this product's top-line health contract, and Ask is
- * a surface it measures. That suite is run LOCALLY, against a local production
- * build. If local and production could hold different model ids — a
- * per-environment variable, a per-deploy setting, a literal at one call site
- * that drifted from another — then the suite run locally would stop measuring
- * what production serves, and a real regression in a reader's answer would be
- * indistinguishable from environment drift.
- *
- * So each ROLE has exactly one default, compiled into the build, and both
- * environments serve it. Ask may route by tier, cheapest first (Sean,
- * 2026-10-01: the one-model-for-all-Ask-traffic rule is removed); the model
- * that served each call is recorded, so every answer stays attributable.
- *
- * ## The roles (Sean, 2026-09-25 7:50 PM MST: "Changing a model should be easy")
- *
- * `ASK_MODEL_ROLES` below is the one table. Each role — reading the question,
- * the fast writer, the escalation writer, the topic classifier, the unsourced
- * fallback — names its default model, its effort, how it wants the model to
- * think, and its own environment override. Changing a role's model is a
- * config change (the override) or one edited line (the default); what the
- * model ACCEPTS is `MODELS[tier].capabilities` in `lib/models.ts`, and every request builds its
- * fields from there, so a change cannot send a field the new model rejects.
- *
- * ## The overrides, and the two conditions they are allowed under
- *
- * ```
- *   1. UNSET  -> the role's default. The default is the code, never the environment.
- *   2. The RESOLVED value — never the default — is what is recorded on every
- *      stored answer and every trace, and what is logged at startup. The trace
- *      also records the model the API says served the call.
- * ```
- *
- * An override naming a model that is not a tier, or a RETIRED model
- * (`claude-opus-5`, retired 2026-09-25 by Sean), is REFUSED by name and the
- * role keeps its default — a typo in a deploy variable must not take Ask down.
- * `WTP_ASK_MODEL` and `WTP_ASK_FAST_MODEL` keep working: the first is an alias
- * for every role that defaults to the frontier model, the second is the fast
- * writer's override (`off` turns that rung off).
+ * Overrides: unset means the role's default; the resolved value (never the
+ * default) is what is recorded and logged. An override naming an unknown or
+ * retired model is refused by name and the role keeps its default.
+ * `WTP_ASK_MODEL` aliases every role that defaults to the frontier model;
+ * `WTP_ASK_FAST_MODEL` overrides the fast writer (`off` turns it off).
  */
 
-/**
- * The slice of the environment these resolvers read. Deliberately NOT
- * `NodeJS.ProcessEnv`, which would force every test to build a whole
- * environment to ask about a few variables.
- */
+/** The slice of the environment these resolvers read. */
 export type AskModelEnv = Readonly<Record<string, string | undefined>>;
 
 /** The closed set the Claude API accepts. An unknown value is a 400. */
 export const ASK_EFFORT_LEVELS = ["low", "medium", "high", "xhigh", "max"] as const;
 export type AskEffort = (typeof ASK_EFFORT_LEVELS)[number];
 
-/**
- * **THE FRONTIER MODEL — `claude-opus-5-5`.** (2026-09-25.)
- *
- * Sean, 7:25 PM MST: Opus 5 must not be used any more, not as a test subject,
- * default or fallback; where Opus is used, it is Opus 5.5. This is the default
- * of every role that uses the frontier model (see `ASK_MODEL_ROLES`). The
- * history of the earlier `claude-opus-5` / `claude-sonnet-5` switch and revert
- * (RULINGs 234 and 236, the election-day weather question) is kept in
- * `lib/governance/adoptions.ts`; the weather question was re-measured on
- * 2026-09-25 on all three current models (Sonnet 5 still routes it to
- * elections; Haiku 4.5 and Opus 5.5 refuse it).
- */
+/** The frontier model, the default of every role that uses it. */
 export const ASK_SYNTHESIS_MODEL: string = MODELS.opus.model;
 
 /**
- * **THE ESCALATION WRITER'S EFFORT, AND IT WAS MEASURED RATHER THAN REASONED.**
- *
- * An omitted effort defaults server-side (to `medium` on Opus 5.5, `high` on
- * earlier models) and thinking bills at the OUTPUT rate, so the field is
- * always pinned. The 2026-09-01 sweep found `xhigh` and `max` truncate the
- * structured answer at `max_tokens: 2048` (thinking counts against it), and
- * `low`/`medium`/`high` held the same questions. `medium` stays; changing it
- * is a measurement.
+ * The escalation writer's effort, always pinned (an omitted effort defaults
+ * server-side and thinking bills at the output rate). `xhigh` and `max`
+ * truncate the structured answer at `max_tokens: 2048`.
  */
 export const ASK_SYNTHESIS_EFFORT: AskEffort = "medium";
 
-/**
- * **THE FAST WRITER — THE ANSWER-WRITING RUNG'S FIRST MODEL.** (2026-09-25.)
- *
- * The owner's bar (docs/rulings.md §6) is three seconds to a usable answer.
- * Measured 2026-09-25 on production read-only packs, streaming, the complete
- * model call: Haiku 4.5 median 2.0 s; Sonnet 5 (low) 2.8 s; Opus 5.5
- * (medium) 3.7 s. Only this model can write inside the bar.
- * Dateless alias; `claude-haiku-4-5-20251001` is the same model.
- */
+/** The fast writer: the first model to write an answer. */
 export const ASK_FAST_WRITER_MODEL: string = MODELS.haiku.model;
 
 /** The override names. Declared once so the log and the docs agree. */
@@ -130,34 +68,11 @@ export interface AskModelRoleSpec {
 const roleSpec = (spec: Omit<AskModelRoleSpec, "defaultModel">): AskModelRoleSpec => ({ ...spec, defaultModel: MODELS[spec.defaultTier].model });
 
 /**
- * **THE ONE TABLE.** Every Ask model call resolves its model here.
- *
- * Defaults as decided by the 2026-09-25 controlled comparison: Haiku 4.5,
- * Sonnet 5 and Opus 5.5 given identical inputs, built by the production route
- * over production read-only data (evidence, per-call ledger and grading in
- * meanwhile-evidence/admin-completion/2026-09-25/ask-model-test/):
- *
- * - READER → Haiku 4.5. Complete call median 1.6 s, slowest 2.5 s over 37
- *   calls (Opus 5.5: 1.9 s, slowest 3.5 s; Sonnet 5: 2.0 s, 3.1 s), about a
- *   fifth of Opus 5.5's cost. Its reading differed from Opus 5.5's on 6 of 27 questions; the
- *   answer written from each differing reading was checked against the
- *   records and none was wrong. Sonnet 5 was no faster than Opus 5.5 and read
- *   no better, so it has no role.
- * - FAST_WRITER → Haiku 4.5: the only writer inside three seconds (complete
- *   call median 2.0 s, 90th percentile 3.4 s; Sonnet 5 2.8 s / 5.0 s; Opus
- *   5.5 3.7 s / 5.9 s). It writes every question first, money and comparison
- *   questions included (Sean, 2026-09-29); the frontier writes only when its
- *   answer fails a check.
- * - ESCALATION_WRITER → Opus 5.5: 32 of 34 answers correct, none rejected for
- *   length (Sonnet 5: 28 of 34, including a miscounted list). It writes only
- *   when the fast writer's answer fails a check or cannot be had.
- * - CLASSIFIER → Haiku 4.5: 17 of 17 labels right, 0.7-1.7 s. Sonnet 5 sent
- *   the election-day weather question to "elections" 3 of 3 times; Opus 5.5
- *   took 1.3-6.2 s.
- * - UNSOURCED → Haiku 4.5 (2026-09-30, Sean's cheapest-first rule: the answer starts on the
- *   cheapest tier and nothing about an out-of-scope, labelled-unsourced reply needs more).
- *
- * `WTP_ASK_MODEL` is an alias only on roles whose default is the frontier.
+ * The one table; every Ask model call resolves its model here. READER,
+ * FAST_WRITER, CLASSIFIER and UNSOURCED start on the cheapest tier.
+ * ESCALATION_WRITER is the frontier model and writes when the fast answer
+ * fails a check. `WTP_ASK_MODEL` is an alias only on roles whose default is
+ * the frontier.
  */
 export const ASK_MODEL_ROLES: Readonly<Record<AskModelRole, AskModelRoleSpec>> = {
   READER: roleSpec({
@@ -216,11 +131,7 @@ export interface AskRoleResolution {
 
 const envValue = (env: AskModelEnv, name: string): string => (typeof env[name] === "string" ? env[name]!.trim() : "");
 
-/**
- * **RESOLVE ONE ROLE.** Read at CALL time, never bound at module load, so an
- * override reaches every rung (the 2026-09-01 repair: three rungs once bound
- * the constant at import and ignored the override).
- */
+/** Resolve one role, read at call time so an override reaches every call site. */
 export function resolveAskRole(role: AskModelRole, env: AskModelEnv = process.env): AskRoleResolution {
   const spec = ASK_MODEL_ROLES[role];
   const refused: string[] = [];
@@ -258,10 +169,7 @@ export function resolveAskFastWriter(env: AskModelEnv = process.env): string | n
   return resolveAskRole("FAST_WRITER", env).model;
 }
 
-/**
- * The frontier model: the escalation writer. Kept under its old name because
- * the comparison harness, the model economics and the cache keys read it.
- */
+/** The frontier model: the escalation writer. Read by the comparison harness, model economics and cache keys. */
 export function resolveAskModel(env: AskModelEnv = process.env): string {
   return resolveAskRoleModel("ESCALATION_WRITER", env);
 }

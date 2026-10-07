@@ -1,9 +1,4 @@
-/** Renderer classification and normalized performance floors remain valid.
- * The motion hold is scoped BACK to a positively-identified software
- * rasteriser (reversing V94's every-renderer hold, which blanked the district
- * lines, the pins and the who-governs card for every reader on a GPU); and the
- * data layer never waits for the camera. Runtime frame evidence is recorded
- * separately. */
+/** Renderer classification and normalized performance floors; the motion hold is scoped to a positively identified software rasteriser, and the data layer never waits for the camera. */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -24,13 +19,8 @@ import {
 const ROOT = join(import.meta.dirname, "..");
 const CANVAS = readFileSync(join(ROOT, "components", "map", "map-canvas.tsx"), "utf8");
 
-/* ---------------------------------------------------- 1: the classification --- */
-
 test("the renderer strings this was measured through classify as software", () => {
-  /* The exact string `WEBGL_debug_renderer_info` returned on the host every
-     number in this file was taken on. Not a paraphrase — a paraphrase that
-     stopped matching would leave the degradation dead on the one machine class
-     it exists for. */
+  /* The exact `WEBGL_debug_renderer_info` string from a software-rendering host. */
   assert.equal(
     classifyRenderer(
       "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
@@ -53,15 +43,7 @@ test("a real GPU classifies as hardware and is therefore left alone", () => {
 });
 
 test("an unreadable renderer is unknown, and unknown is NOT software", () => {
-  /*
-   * The asymmetry is the point and it is deliberate. A browser that withholds
-   * `WEBGL_debug_renderer_info` for fingerprinting reasons is overwhelmingly on
-   * a GPU, and degrading the author's design for everyone whose browser
-   * declines to identify itself would take it from readers who can afford it.
-   * The degradation requires a POSITIVE identification — never an inference
-   * from silence. Same rule the product applies to its own data: a failure to
-   * read something is a fact about the read.
-   */
+  /* Degradation requires a positive identification, never an inference from silence. */
   for (const value of [null, undefined, "", "   "]) {
     assert.equal(classifyRenderer(value), "unknown", JSON.stringify(value));
   }
@@ -72,12 +54,7 @@ const PRESENTATION = readFileSync(join(ROOT, "lib", "map", "flight-presentation.
 const MAP_ENTRY = readFileSync(join(ROOT, "components", "map", "map-entry.tsx"), "utf8");
 
 test("the motion hold is scoped to a software rasteriser, not every renderer", () => {
-  /*
-   * B (2026-09-14): V94 (8f37c059) made the motion hold unconditional on every
-   * renderer, which blanked the overlays on a wheel-zoom for readers on a GPU.
-   * The 2026-09-01 scoping (db727666) is restored: the hold runs ONLY on a
-   * positively-identified CPU rasteriser. Hardware and unknown hide nothing.
-   */
+  /* The motion hold runs only on a positively identified CPU rasteriser; hardware and unknown hide nothing. */
   assert.match(CANVAS, /const degradeInMotion = detectRaster\(\)\.kind === "software";/);
   const enter = CANVAS.slice(
     CANVAS.indexOf("const enterMotionDegrade"),
@@ -99,18 +76,12 @@ test("the motion hold is scoped to a software rasteriser, not every renderer", (
 });
 
 test("the data layer never waits for the camera: the meetings fetch is not gated on map readiness", () => {
-  /*
-   * A (2026-09-14): the meetings request fires the moment a `view` is known and
-   * is torn down only by a view/retry change — never by the map's first `idle`
-   * or by a motion that flips presentation readiness. Chaining it behind the
-   * camera is what sat the panel at "0 Meetings / — Bodies / — Officials".
-   */
+  /* The meetings request fires as soon as a `view` is known and is torn down only by a view or retry change. */
   assert.ok(MAP_ENTRY.includes("/api/meetings"), "map-entry owns the meetings fetch");
   // The fetch effect's only early return is on a missing view.
   assert.match(MAP_ENTRY, /if \(!view\) return;\n\n    const controller = new AbortController\(\);/);
   // Its dependency array is the view and the retry nonce — no readiness flag.
   assert.ok(MAP_ENTRY.includes("}, [view, retryNonce]);"), "fetch deps are [view, retryNonce]");
-  // The stale-closure readiness ref that used to gate the answer is gone.
   assert.ok(!MAP_ENTRY.includes("mapPresentationReadyRef"), "no readiness ref gates the fetch");
 });
 
@@ -123,16 +94,7 @@ test("holding keeps sources cached, hides application layers, and removes the DO
   assert.match(CANVAS, /shellRef\.current\?\.removeAttribute\("data-camera-moving"\)/);
 });
 
-/* ------------------------------------------- 4: the software verdict --- */
-
-/**
- * An arm built from one repeated frame interval, so the fps and the jank share
- * are both exactly what the caller asked for.
- *
- * Built through `summariseArm` rather than by hand: the verdict has to be
- * tested against the same reduction the walk and the instrument both use, or
- * this file would be asserting about a shape nothing produces.
- */
+/** An arm built from one repeated frame interval, through the same `summariseArm` reduction the walk uses. */
 function armAt(fps: number, longFrames: number, frames: number): ArmSummary {
   const fast = 1000 / fps;
   /* The long frames sit at the front and are always a minority here, so they
@@ -142,11 +104,6 @@ function armAt(fps: number, longFrames: number, frames: number): ArmSummary {
 }
 
 test("the software floor and the jank ceiling are the stated numbers", () => {
-  /*
-   * Asserted rather than merely used. A later session lowering the floor to
-   * turn a red run green would otherwise change the criterion silently, which
-   * is what the retired absolute 55 fps target was retired for.
-   */
   assert.equal(SOFTWARE_NORMALIZED_FLOOR, 0.75);
   assert.equal(SOFTWARE_JANK_CEILING, 0.2);
 });
@@ -160,12 +117,7 @@ test("the software verdict requires BOTH the ratio and the jank share", () => {
   assert.equal(good.jankPass, true);
   assert.equal(good.pass, true);
 
-  /*
-   * **THE CASE THE CEILING EXISTS FOR, AND IT IS NOT HYPOTHETICAL.** A build
-   * measured at 89% of bare with 57 of 231 frames past 33.4 ms — a ratio that
-   * clears the floor comfortably over a flight with a quarter of its frames
-   * visibly late. The ratio alone calls that finished.
-   */
+  /* A ratio over the floor with a quarter of its frames late still fails on the jank ceiling. */
   const janky = judgeSoftware(armAt(53, 50, 200), bare);
   assert.equal(janky.ratioPass, true);
   assert.equal(janky.jankPass, false);
@@ -180,12 +132,7 @@ test("the software verdict requires BOTH the ratio and the jank share", () => {
 });
 
 test("the software verdict refuses an arm that measured nothing", () => {
-  /*
-   * A ratio taken against a zero-rate bare arm is infinite, and an infinite
-   * ratio is a green check for a measurement that never happened — the worst
-   * result available here. `summariseArm` refuses an empty population first,
-   * which is the same rule one layer up.
-   */
+  /* A ratio against a zero-rate bare arm is infinite; `summariseArm` refuses an empty population first. */
   assert.throws(() => summariseArm("empty", []), /completed ZERO runs/);
   assert.throws(
     () => judgeSoftware(armAt(50, 0, 200), { ...armAt(60, 0, 200), medianFps: 0 }),

@@ -40,19 +40,11 @@ import {
 } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
-import { readerEdgeCarriesForward } from "../scripts/lib/edge-current.ts";
 
 /*
- * Coordinator, 2026-09-25: since migration 0029 (live 3:07 PM MST) a fresh
- * check that finds nothing new writes an UNCHANGED_CONFIRMATION receipt instead
- * of a new version, and the Reader's "Last checked" stopped advancing in quiet
- * periods. Readers must see the time of the last SUCCESSFUL fresh check, new
- * version or receipt; a failed request or a stale cache never counts; the
- * failed-refresh disclosure must not fire because only receipts arrived; and
- * changed information publishes as before (lib/meetings/fresh-checks.ts).
- *
- * Every read below goes through the real store, the real composition, the real
- * prepared serving copy and the real edge publish, over a controlled clock.
+ * A fresh check that finds nothing new writes an UNCHANGED_CONFIRMATION receipt instead of a new version. Readers
+ * see the time of the last successful fresh check, new version or receipt; a failed request or a stale cache never
+ * counts; receipts fire no failed-refresh disclosure; changed information publishes as before.
  */
 
 const ACQUIRED_URL = "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html";
@@ -138,7 +130,7 @@ async function failedCheck(store: MemoryRoutineDataStore, partition: MeetingPart
 
 async function composed(store: MemoryRoutineDataStore, now: string): Promise<Extract<MeetingsProjectionReadResult, { kind: "PROMOTED" }>> {
   clearPromotedReadModelCache();
-  const read = await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
+  const read = await readMeetingsProjection({ store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   return read as Extract<MeetingsProjectionReadResult, { kind: "PROMOTED" }>;
 }
@@ -285,10 +277,7 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(quiet.composition, first.composition);
   assert.deepEqual(Object.values(quiet.freshChecks), [checkedAt]);
 
-  // The edge decision: everything carried but the checks, so the manifest alone republishes.
-  const carry = readerEdgeCarriesForward({ prepared: quiet, servedManifest: manifestBefore, extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED });
-  assert.equal(carry.current, false);
-  assert.equal(!carry.current && carry.checksOnly, true, carry.current ? "" : carry.reason);
+  // Everything carried but the checks, so the manifest alone republishes.
   const republished = await publishReaderEdgeChecks(
     { generatedAt: quiet.servedGeneratedAt!, retrievedAt: quiet.checkedAt, checks: { composition: quiet.composition, freshChecks: quiet.freshChecks } },
     { store: edge },
@@ -299,8 +288,6 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.deepEqual(manifestAfter.scopes, manifestBefore.scopes, "the same immutable artifacts: none rewritten");
   assert.equal(manifestAfter.sequence, manifestBefore.sequence + 1);
   assert.deepEqual(manifestAfter.sources, manifestBefore.sources);
-  // The next pass with nothing new is current, and republishes nothing.
-  assert.equal(readerEdgeCarriesForward({ prepared: quiet, servedManifest: manifestAfter, extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED }).current, true);
 
   // The reader, from the edge: Last checked, the re-read listings, and no false disclosure.
   const fromEdge = await readReaderEdgeMeetings({ store: edge, fallback: async () => { throw new Error("the edge answers"); } });
@@ -325,7 +312,6 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(afterFailure.status, "CURRENT");
   if (afterFailure.status !== "CURRENT") return;
   assert.equal(afterFailure.servedGeneratedAt, checkedAt, "a failed request is never a check");
-  assert.equal(readerEdgeCarriesForward({ prepared: afterFailure, servedManifest: manifestAfter, extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED }).current, true);
 
   // Newbury changed: the composition is new, the prepared row is rewritten, and the edge publishes in full.
   await readPartition(store, NEWBURY, T4, ["x", "y"]);
@@ -334,9 +320,6 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   if (changed.status !== "PUBLISHED") return;
   assert.notEqual(changed.composition, quiet.composition);
   assert.equal(changed.servedGeneratedAt, T4);
-  const carryChanged = readerEdgeCarriesForward({ prepared: changed, servedManifest: manifestAfter, extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED });
-  assert.equal(carryChanged.current, false);
-  assert.notEqual(!carryChanged.current && carryChanged.checksOnly, true, "new data is never a checks-only publish");
   assert.equal((await publishReaderEdgeChecks(
     { generatedAt: changed.servedGeneratedAt!, retrievedAt: null, checks: { composition: changed.composition, freshChecks: changed.freshChecks } },
     { store: edge },

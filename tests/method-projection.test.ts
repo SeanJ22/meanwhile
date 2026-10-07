@@ -1,29 +1,8 @@
 /**
- * **WHAT A WORKER IS ALLOWED TO INHERIT.** (2026-08-28.)
- *
- * `tests/method-claims.test.ts` proves the claim layer corrects itself. These
- * prove the CONSUMER READ PATH actually reads the correction — which is a
- * separate property, and it was false when those controls were written.
- *
- * The store had the Pima coverage claim and the Pima derived conclusion
- * withdrawn, typed, dated and superseded. Every consumer of method inheritance
- * then called `inheritedRoutes()`, got raw `MethodRoute` objects back, and
- * handed a worker `applicability.note`, `origin`, `outcomes[].note` and
- * `subBranches[].reason` — four unclassified prose fields holding the withdrawn
- * sentences, which no retraction can reach because a retraction lives on a
- * claim. **A correction the read path does not read is not a correction.**
- *
- * Seven controls, each written so it can fail:
- *
- *   a. the withdrawn Pima conclusion CANNOT appear in a worker's projection,
- *      by claim id, against the REAL committed store;
- *   b. the Pima ROUTE it was drawn from still does — a false conclusion never
- *      deletes valid route knowledge;
- *   c. a current, validated coverage claim DOES appear;
- *   d. a CONTRADICTED claim leaves the current projection and stays in history;
- *   e. an UNCLASSIFIED legacy entry is inherited as a ROUTE with a NAMED GAP,
- *      and its prose is never emitted as a substantive assertion;
- *   f. the raw applicability primitive has no consumers outside its own layer.
+ * The consumer read path reads the correction: a withdrawn conclusion never reaches a worker's projection, the route
+ * it was drawn from still does, a contradicted claim leaves the projection and stays in history, an unclassified
+ * legacy entry is inherited as a route with a named gap and its prose is never emitted as an assertion, and the raw
+ * applicability primitive has no consumers outside its own layer.
  */
 
 import assert from "node:assert/strict";
@@ -72,12 +51,10 @@ function committedStore(): MethodKnowledge {
   ) as MethodKnowledge;
 }
 
-/* ------------------------------------------------------------------ (a) + (b) */
-
 test("the withdrawn Pima conclusion is NOT in a worker's projection, and its route still is", () => {
   const k = committedStore();
 
-  // The claim exists in the store — this control is worthless if the id is wrong.
+  // The claim exists in the store; this control is worthless if the id is wrong.
   assert.ok(
     allClaims(k).some((c) => c.claim.id === FALSE_CONCLUSION),
     `${FALSE_CONCLUSION} must exist in the committed store for this control to mean anything`,
@@ -87,7 +64,7 @@ test("the withdrawn Pima conclusion is NOT in a worker's projection, and its rou
   const p = projectMethodFor(k, AZ);
   const taught = substantiveAssertions(p);
 
-  // (a) NEITHER FALSE ASSERTION IS TAUGHT — by id, and by text.
+  // Neither false assertion is taught, by id or by text.
   for (const id of [FALSE_CONCLUSION, FALSE_COVERAGE]) {
     assert.ok(
       !taught.some((a) => a.id === id),
@@ -109,8 +86,7 @@ test("the withdrawn Pima conclusion is NOT in a worker's projection, and its rou
     "no inherited assertion may say Pima's September sittings were not individually published",
   );
 
-  // (b) AND THE ROUTES SURVIVE. A false conclusion never deletes valid route
-  //     knowledge — the whole reason claims are separable from routes.
+  // The routes survive: a false conclusion never deletes valid route knowledge.
   for (const id of [SCHEDULE, RECONCILE]) {
     assert.ok(projectionHasRoute(p, id), `${id} is still offered to a worker in Arizona`);
     const projected = p.routes.find((r) => r.identity.id === id)!;
@@ -131,8 +107,6 @@ test("an inherited id is answered with its CURRENT truth, never its withdrawn te
   assert.match(good.currentStatement ?? "", /INCOMPLETE view of a tenant's calendar/);
 });
 
-/* ------------------------------------------------------------------------ (c) */
-
 test("a current, validated COVERAGE_CLAIM is inherited", () => {
   const p = projectMethodFor(committedStore(), AZ);
   const taught = substantiveAssertions(p);
@@ -144,24 +118,20 @@ test("a current, validated COVERAGE_CLAIM is inherited", () => {
   assert.equal(coverage.validation?.state, "VALIDATED");
   assert.ok(coverage.provenance, "an inherited C carries the provenance that earned it");
 
-  // The corrected conclusion travels with it, and so does the lesson that was
-  // REVALIDATED after the claim it rests on was withdrawn.
+  // The corrected conclusion travels with it, and so does the lesson revalidated after its basis was withdrawn.
   assert.ok(taught.some((a) => a.id === CURRENT_CONCLUSION));
   assert.ok(
     taught.some((a) => a.id === `${NOT_COMPLETE}#reconciliation-answers-loss-not-sufficiency`),
     "a claim revalidated after its upstream was withdrawn is still inheritable, and says so",
   );
 
-  // Every inherited substantive assertion is evidenced. No exceptions, because
-  // the exception is how a belief becomes authority.
+  // Every inherited substantive assertion is evidenced.
   for (const a of taught) {
     assert.ok(a.provenance, `${a.id} is inherited and therefore carries provenance`);
     assert.ok(a.validation, `${a.id} is inherited and therefore states its validation`);
     assert.notEqual(a.validation!.state, "CONTRADICTED");
   }
 });
-
-/* ------------------------------------------------------------------------ (d) */
 
 function claim(id: string, over: Partial<MethodClaim> = {}): MethodClaim {
   return {
@@ -182,7 +152,7 @@ function claim(id: string, over: Partial<MethodClaim> = {}): MethodClaim {
   };
 }
 
-// Shared with `tests/method-claims.test.ts` — RULING 103. See tests/method-fixtures.ts.
+// Shared with `tests/method-claims.test.ts`; see tests/method-fixtures.ts.
 const route = testRoute;
 
 test("a CONTRADICTED claim leaves the current projection and REMAINS in history", () => {
@@ -203,14 +173,11 @@ test("a CONTRADICTED claim leaves the current projection and REMAINS in history"
   const p = projectMethodFor(k, AZ);
   const taught = substantiveAssertions(p);
 
-  // HALF ONE: gone from what is taught.
+  // Gone from what is taught.
   assert.deepEqual(taught.map((a) => a.id), ["standing#validated"]);
   assert.ok(!taught.some((a) => a.statement === "this window is complete"));
 
-  // HALF TWO: still there, in history, with the reason NAMED — and note that no
-  // retraction record was ever filed. Contradiction alone is enough to stop it
-  // teaching, because a contradicted assertion that keeps teaching until someone
-  // remembers to retract it is the Pima failure with an extra day in it.
+  // Still in history with the reason named, though no retraction was filed: contradiction alone stops it teaching.
   const w = p.withheld.find((x) => x.id === "standing#contradicted");
   assert.ok(w, "a contradicted claim is named as withheld, never silently dropped");
   assert.equal(w.reason, "CONTRADICTED");
@@ -221,8 +188,7 @@ test("a CONTRADICTED claim leaves the current projection and REMAINS in history"
   assert.ok(allClaims(k).some((c) => c.claim.id === "standing#contradicted"));
   assert.equal(currentTruthFor(k, "standing#contradicted").status, "CURRENT");
 
-  // The withheld text is NOT reachable as `.statement` anywhere in the
-  // projection — a consumer flattening statements cannot pick it up by shape.
+  // The withheld text is not reachable as `.statement` anywhere in the projection.
   const everyStatement = JSON.stringify(p).match(/"statement":"[^"]*"/g) ?? [];
   assert.ok(!everyStatement.some((s) => s.includes("this window is complete")));
 
@@ -288,8 +254,6 @@ test("a retired route's substantive claims are history, and the route is not off
   assert.equal(p.withheld[0].reason, "ROUTE_RETIRED");
 });
 
-/* ------------------------------------------------------------------------ (e) */
-
 test("an UNCLASSIFIED legacy entry inherits as a ROUTE with a NAMED GAP, never as a conclusion", () => {
   const k = committedStore();
   const p = projectMethodFor(k, AZ);
@@ -304,16 +268,16 @@ test("an UNCLASSIFIED legacy entry inherits as a ROUTE with a NAMED GAP, never a
   const serialized = JSON.stringify(p);
 
   for (const r of legacy) {
-    // IT IS STILL A ROUTE. Nothing here withholds the route itself.
+    // It is still a route.
     assert.ok(projectionHasRoute(p, r.id), `${r.id} is still inherited as a route`);
     const projected = p.routes.find((x) => x.identity.id === r.id)!;
 
-    // AND THE GAP IS NAMED, AS A TYPED STATE.
+    // The gap is named, as a typed state.
     assert.equal(projected.legacyUnclassified, true);
     assert.equal(projected.namedGap, LEGACY_UNCLASSIFIED_GAP);
     assert.equal(gaps.get(r.id), LEGACY_UNCLASSIFIED_GAP);
 
-    // AND ITS PROSE IS NOT AN ASSERTION.
+    // Its prose is not an assertion.
     assert.deepEqual(projected.substantive, [], `${r.id} declares nothing, so it asserts nothing`);
     assert.ok(
       !taught.some((a) => a.statement === r.applicability.note),
@@ -326,8 +290,7 @@ test("an UNCLASSIFIED legacy entry inherits as a ROUTE with a NAMED GAP, never a
     assert.ok(!serialized.includes(r.origin), `${r.id}'s origin prose must not reach a consumer either`);
   }
 
-  // The prose is REACHABLE — it is real knowledge somebody wrote — but only
-  // through the accessor whose name is the warning and whose value says so.
+  // The prose is reachable only through the accessor whose name is the warning.
   const prose = readNonAuthoritativeProse(k, legacy[0].id)!;
   assert.equal(prose.authoritative, false);
   assert.match(prose.warning, /NOT AUTHORITY/);
@@ -339,15 +302,7 @@ test("outcome NOTES never reach a worker — an observation inherits as a tuple"
   const p = projectMethodFor(k, AZ);
   const serialized = JSON.stringify(p);
 
-  /*
-   * The specific reason this control exists: `reconcile-the-adapter-before-
-   * suspecting-it` carries an outcome note asserting a window was complete
-   * rather than truncated. That is a class C coverage claim written into a class
-   * B slot, it was withdrawn on 2026-08-28 as `#pima-window-complete`, and the
-   * note it was ALSO written into carries no claim and no retraction. Projecting
-   * outcomes as tuples is what stops the withdrawn sentence riding out on the
-   * observation.
-   */
+  // A coverage claim written into an outcome note carries no claim and no retraction, so outcomes project as tuples.
   const reconcile = k.routes.find((r) => r.id === RECONCILE)!;
   const notes = reconcile.outcomes.map((o) => o.note ?? "").filter((n) => n.length > 0);
   assert.ok(notes.length > 0, "the control needs a real outcome note to be worth running");
@@ -355,7 +310,7 @@ test("outcome NOTES never reach a worker — an observation inherits as a tuple"
     assert.ok(!serialized.includes(n), "an outcome note is prose and is not projected");
   }
 
-  // What IS projected is the tuple, and all of it.
+  // What is projected is the tuple, and all of it.
   const projected = p.routes.find((r) => r.identity.id === RECONCILE)!;
   assert.equal(projected.observations.length, reconcile.outcomes.length);
   for (const o of projected.observations) {
@@ -363,8 +318,6 @@ test("outcome NOTES never reach a worker — an observation inherits as a tuple"
     assert.ok(!Object.prototype.hasOwnProperty.call(o, "note"));
   }
 });
-
-/* ------------------------------------------------------------------------ (f) */
 
 function sourceFiles(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {
@@ -377,16 +330,8 @@ function sourceFiles(dir: string, out: string[] = []): string[] {
 }
 
 test("the raw applicability primitive has no consumers outside the method layer", () => {
-  /*
-   * The rename is what stops an ACCIDENTAL caller. This sweep is what stops a
-   * deliberate one from landing: `applicableRoutesUnprojected` returns raw
-   * `MethodRoute` objects, prose fields and all, and the only legitimate callers
-   * are the projection that wraps it and the tests that unit-test it.
-   *
-   * The pattern requires a call or an import so that a doc block naming the
-   * function — this file, and knowledge.ts's own explanation of the rename — is
-   * not read as the defect it describes.
-   */
+  // Only the projection that wraps `applicableRoutesUnprojected` and its unit tests may call it. A call or an import is
+  // required, so a doc block naming the function is not read as the defect.
   const ALLOWED = new Set([
     "lib/method/knowledge.ts",
     "lib/method/projection.ts",

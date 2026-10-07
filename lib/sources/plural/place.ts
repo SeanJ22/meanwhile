@@ -30,9 +30,9 @@ export interface NationalOfficialCandidate {
   readonly linkingPage?: OfficialLinkingPage;
   readonly portrait?: import("../../photos/evidence.ts").PortraitSources;
   /**
-   * CA-02: set when the official's own page failed the name-and-seat check and
-   * the row is the Open States row for that seat. `document` is then the saved
-   * Open States CSV, and the publisher checks name and seat on it.
+   * Set when the official's own page failed the name-and-seat check and the
+   * row is the Open States row for that seat; `document` is then the saved
+   * Open States CSV.
    */
   readonly basis?: "OPEN_STATES_ROW";
   /** The saved Open States CSV the row came from, kept so the publisher can fall back to it if the own-page seat check fails there. */
@@ -102,13 +102,13 @@ export function electionDirectorySelection(page: HeldSourcePage, stateName: stri
   return null;
 }
 
-/** National sources are acquisition inputs. The ordinary §3 publisher checks
- * the saved official document and correct seat before they enter the reader.
- * The caller supplies the shared held-first source reader/vault; no per-ZIP files. */
+/* National sources are acquisition inputs: the publisher checks the saved
+ * official document and the seat before anything reaches the reader. */
 /**
- * CP-10: which image to offer as an official's portrait. The page is read with the same base the portrait check uses
- * (the saved copy's canonical URL), so the check sees exactly this image on it. One name-matched image on the person's
- * own saved page wins over a roster image the page does not show; several name-matched images leave the roster's lead.
+ * Which image to offer as an official's portrait. The page is read with the
+ * same base the portrait check uses (the saved copy's canonical URL). One
+ * name-matched image on the person's own saved page wins over a roster image
+ * the page does not show; several name-matched images leave the roster's lead.
  */
 export function ownPagePortrait(name: string, document: HeldSourcePage, rosterImageUrl: string | undefined): string | undefined {
   if (!document.capture) return rosterImageUrl;
@@ -183,7 +183,7 @@ export async function collectNationalPlaceSources(input: {
         const roster = normalize(rowsToPeople(csv.text, state), indexDivisions(input.divisions.map(d => ({ ...d, ocdId: d.id }))), csv.collectedAt, state);
         const memberships = new Map(roster.divisions.map(d => [d.officeholderId, d.ocdId]));
         await Promise.all(roster.officeholders.filter(person => memberships.has(person.id)).map(async person => {
-          // CA-02: when the own-page check fails, the Open States row fills the seat, marked as the Open States row.
+          // When the own-page check fails, the Open States row fills the seat, marked as such.
           const fallback = (reason: string, at?: string) => {
             const divisionId = memberships.get(person.id)!;
             if (at) gaps.push({ sourceUrl: at, detail: reason });
@@ -209,9 +209,8 @@ export async function collectNationalPlaceSources(input: {
             : /\b(?:State\s+)?(?:Representative|Delegate|Assembly\s*member|Assemblyman|Assemblywoman)\b/i;
           const office = officePattern.exec(text)?.[0];
           if (!office) { fallback(`The official profile needs source seat words for ${name}`, document.url); await flush(); return; }
-          // CP-10: the portrait the person's own official page shows under their name goes live on that page alone.
-          // The roster's image URL is used when the page shows that same image; when the page names a different one
-          // (another size or path for the same person), the page's own image is the portrait, not a second-source gap.
+          // The portrait the person's own page shows under their name wins over
+          // the roster's image URL when the two differ.
           const imageUrl = ownPagePortrait(name, document, person.portraitCandidate?.imageUrl);
           officials.push({ discoveryId: person.id, divisionId, name,
             officeTitle: office, seatLabel: person.officeTitle, officialUrl: person.websiteUrl, document, ...(csv.capture ? { openStatesCapture: csv.capture } : {}),

@@ -1,125 +1,24 @@
 /**
- * **ARIZONA STATE CAMPAIGN MONEY — THE STATEWIDE 2026 CORPUS.**
+ * Arizona state campaign money: acquires the complete SeeTheMoney cycle
+ * universe and the Secretary of State's committee register, reconciles each
+ * committee's summary totals against its own itemised ledger, and projects the
+ * promoted ballot's candidates from that statewide corpus.
  *
  * @freshness-reads-here — the candidate clock follows all official reads;
  * the catch-path clock is durable evidence of the failed acquisition attempt.
- * (Session C2, 2026-08-31. Decoupled from the pilot ballot Session C3,
- * 2026-09-01. RULING 205, RULING 207, RULING 224, RULING 229; filings never sold,
- * Sean 2026-10-01.)
  *
  * ```
- *   pnpm money:az                        walk, reconcile, write everything
- *   pnpm money:az --dry                  walk and report, write nothing
- *   pnpm money:az --ledger-budget=120    reconcile at most 120 NEW committees
+ *   pnpm money:az --promote
+ *   pnpm money:az --promote --ledger-budget=120    reconcile at most 120 NEW committees
  * ```
  *
- * ## THE THREE LAYERS, AND THEY ARE SEPARATE ON PURPOSE (RULING 229)
- *
- * ```
- * ACQUISITION   this file, top half. The COMPLETE applicable SeeTheMoney cycle
- *               universe and the Secretary of State's committee register.
- *               **It has no dependency on 85641, on 85701, or on any ballot.**
- * IDENTITY      data/states/az/identity/az-2026-candidate-registry.json, built by
- *               `pnpm identity:az`. Who exists, statewide, and which canonical
- *               candidacy each one is.
- * PROJECTION    this file, bottom half, plus lib/funding/nominee-money.ts. The
- *               reader snapshot holds only candidates a page can be about — and
- *               its SOURCE CORPUS is not generated from that page's list.
- * ```
- *
- * **What this file used to do, and why it was prohibited.** Its own header said
- * *"FOR THE 85701 AND 85641 BALLOT"*. It loaded `data/states/az/ballot/az-pima-2026.json`,
- * built `candidateOfInterest` by name-matching those candidacies against the
- * portal, and read the itemised ledger only for the committees that survived —
- * 58 of 732. So the ACQUISITION DENOMINATOR was the currently enabled reader
- * location, and activating a third ZIP would have meant hunting the same portal
- * again for candidates it already held. Under RULING 229 a ZIP may prioritise
- * acquisition ORDER and may never define the DENOMINATOR. It now does exactly
- * that: the registry-linked committees are walked FIRST so the reader surface
- * never regresses, and the walk continues through the whole statewide candidate
- * population afterwards.
- *
- * **The invariant is ZERO redundant internet hunt when a new ZIP is activated.**
- * `data/states/az/campaign-finance/az-2026-statewide-corpus.json` holds every entity in
- * the cycle universe with its aggregates, its office, its party, and its
- * reconciliation state. A newly activated ZIP's candidates are answered from
- * that committed file.
- *
- * ## What the record said before the first walk, and what was actually wrong
- *
- * `docs/arizona-source-enumeration.md` recorded the route as WORKING and the
- * money as UNPUBLISHABLE. A candidate returns several summary rows sharing one
- * `EntityID` with different `Income` and `Expense` and an identical
- * `CashBalance`, and which of them — or which aggregation — is the cycle total
- * was undetermined. Session C tested the obvious hypothesis over the whole
- * population: `sum(Income) - sum(Expense) == CashBalance` held for 134 entities
- * and BROKE for 121, including for single-row entities where there is nothing
- * to sum. It refused to ship a snapshot, and that refusal was right.
- *
- * **The hypothesis was not merely unproven; it was untestable that way.**
- * `CashBalance` is repeated identically on every row of an entity and does not
- * move when the query window moves. It is a balance carried forward from before
- * the cycle. Checking a within-window SUM against an across-window BALANCE
- * compares two different quantities, so the 134 agreements were the committees
- * that happened to begin from zero — which is exactly why one matching example
- * (Jayme Accalia, whose three rows sum to her balance to the cent) looked like
- * proof and was not.
- *
- * ## The source that CAN settle it, and the parameter that was hiding it
- *
- * The prior note named the itemised transaction ledger as the thing that would
- * settle the question, and could not reach it: `GetNEWDetailedTableData`
- * answered HTTP 200 with `recordsTotal: 0`.
- *
- * **The missing parameter is `entityId`.** `Name=1~<id>` — which is what the
- * page puts in its own location hash — is not sufficient on its own; the query
- * string must ALSO carry `entityId=<id>`. With it the endpoint returns the
- * committee's itemised income and expense transactions, which is the same
- * publisher listing the same money one line at a time.
- *
- * A zero-row extraction is a FAILED extraction, never an empty document. That
- * rule is what made this findable: the endpoint's honest-looking empty answer
- * was treated as a fact about the request, and the request is where the fault
- * was.
- *
- * ## THE MEASUREMENT, over the population, with its denominator
- *
- * Every committee this snapshot publishes is reconciled INDIVIDUALLY against
- * that ledger, and the population was measured too:
- *
- * ```
- * 2025-2026 cycle, JurisdictionId=0, 370 summary rows in 255 entities
- *   sum(summary Income)  == sum(itemised income)    HOLDS 255/255   BREAKS 0
- *   sum(summary Expense) == sum(itemised expense)   HOLDS 255/255   BREAKS 0
- *   sum(Income) - sum(Expense) == CashBalance       HOLDS 133/255   BREAKS 122
- * ```
- *
- * The rows are parts; their sum is the cycle total. `CashBalance` is not
- * published, because what it carries beyond the window is not established and a
- * number whose meaning is unknown does not go under a person's photograph.
- *
- * That 370-of-370 proof against the publisher's own declared total is asserted
- * on EVERY run below and is never restarted from zero: a committee already
- * reconciled at unchanged summary totals is carried forward from the held
- * corpus rather than re-read.
- *
- * ## THE FILTER DEFAULTS ARE THE OTHER HALF OF THE SAFETY BAR
- *
- * The portal's default view returns 255 entities. `IsLessActive=true` returns
- * 716 — 461 more. `ShowOfficeHolder=true` returns a further disjoint 16. A
- * candidate behind either flag, asked for with the defaults, comes back as
- * nothing, and recording that as *no reports on file* would be an absence
- * manufactured by our own query. So the universe walked here is the UNION of
- * all three, and a sourced absence means the union held nothing.
- *
- * ## PRIVACY, AND WHAT NEVER LANDS
- *
- * Every itemised row carries a contributor's name, occupation, employer, city
- * and zip (RULING 167). Those rows are streamed to compute a sum and are
- * DISCARDED. Nothing below persists a transaction, and the corpus file holds
- * aggregates, counts and provenance only.
+ * Summary rows are parts whose sum is the cycle total; `CashBalance` is a
+ * carried-forward balance of unknown meaning and is not published. The detail
+ * endpoint needs `entityId=<id>` in the query string as well as `Name=1~<id>`.
+ * The universe is the union of the portal's three filter settings, because the
+ * default view hides most of the register. Itemised rows carry contributor
+ * details; they are streamed to compute sums and never persisted.
  */
-import { join } from "node:path";
 import net from "node:net";
 
 import {
@@ -131,7 +30,6 @@ import {
   FTP_DIR,
   FTP_HOST,
   HEADERS,
-  PUBLIC_PAGE,
   SUMMARY_COLUMNS,
   SUMMARY_PATH,
   aggregateEntities,
@@ -162,7 +60,6 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readAzBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 
-const ROOT = process.cwd();
 const AS_OF = today();
 const YEAR = CYCLE_2026.cycle;
 if (!process.argv.includes("--promote")) {
@@ -175,17 +72,8 @@ const SPACING_MS = 250;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const officialRawBodies: string[] = [];
 let candidateSubmitted = false;
-
-const CORPUS_PATH = join(ROOT, "data", "states", "az", "campaign-finance", "az-2026-statewide-corpus.json");
-const SNAPSHOT_PATH = join(ROOT, "data", "states", "az", "funding", "state-money-az-2026.json");
-const RECONCILIATION_PATH = join(
-  ROOT,
-  "data", "states", "az", "campaign-finance", "az-seethemoney-2026-reconciliation.json",
-);
-
 /* -------------------------------------------------------------------------
- * TRANSPORT. Two of them, because the record and the register live behind
- * different protocols and neither retires the other.
+ * TRANSPORT. The record and the register live behind different protocols.
  * ------------------------------------------------------------------------- */
 
 async function postTable(path: string, query: string, body: string): Promise<string> {
@@ -204,19 +92,11 @@ async function postTable(path: string, query: string, body: string): Promise<str
       await sleep(1500 * (attempt + 1));
     }
   }
-  /*
-   * A TRANSPORT FAILURE IS NEVER A PERMISSION VERDICT AND NEVER AN ABSENCE
-   * (RULING 182). It is thrown so the walk stops, because a walk that
-   * continued past it would write "no reports on file" for a candidate whose
-   * records we simply failed to read.
-   */
+  // Thrown so the walk stops: continuing would record an absence for records we failed to read.
   throw new Error(`${url}: unreachable after 3 attempts — ${(lastError as Error)?.message}`);
 }
 
-/**
- * Anonymous FTP, which is the access method the Secretary of State's own Bulk
- * Filing Guide publishes. No credential is sent because none exists to send.
- */
+/** Anonymous FTP, the access method the Secretary of State's Bulk Filing Guide publishes. */
 function ftpGet(path: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
@@ -249,9 +129,7 @@ function ftpGet(path: string): Promise<string> {
         if (!m) continue;
         const code = Number(m[1]);
         if (stage === 0 && code === 220) ctl.write("USER anonymous\r\n"), (stage = 1);
-        // Anonymous FTP convention: the password IS a contact address, so the
-        // courteous-client rule is satisfied by the same string the rest of the
-        // product identifies with. Composed from its one home, never copied.
+        // Anonymous FTP convention: the password is a contact address.
         else if (stage === 1 && code === 331) ctl.write(`PASS ${OUTBOUND_CONTACT}\r\n`), (stage = 2);
         else if (stage === 2 && code === 230) ctl.write("TYPE I\r\n"), (stage = 3);
         else if (stage === 3 && code === 200) ctl.write("PASV\r\n"), (stage = 4);
@@ -276,7 +154,7 @@ function ftpGet(path: string): Promise<string> {
 }
 
 /* =========================================================================
- * LAYER 1 — ACQUISITION. STATEWIDE. NO BALLOT, NO ZIP, NO PILOT.
+ * LAYER 1 — ACQUISITION. Statewide.
  * ========================================================================= */
 
 async function main(): Promise<void> {
@@ -316,20 +194,7 @@ const nextDue = nextFilingDue(reportingPeriods, AS_OF);
 console.log(`  register: ${register.size} committees   calendar: ${reportingPeriods.length} reporting periods`);
 console.log(`  next filing deadline after ${AS_OF}: ${nextDue ? `${nextDue.reportName} (${nextDue.filingPeriodEndDate})` : "NONE STATED in the published calendar"}`);
 
-/**
- * **THE STATEWIDE CANDIDATE/COMMITTEE POPULATION — the acquisition denominator.**
- *
- * Derived from the PUBLISHER'S OWN entity classification, which is a fact about
- * Arizona's committee universe and not about anybody's ballot. Measured
- * 2026-09-01 over the union: 633 `Candidate (not participating in Clean
- * Elections)`, 83 `Candidate (participating in Clean Elections)`, 16
- * `Officeholder Expenses`.
- *
- * An officeholder-expense committee is not a candidate committee and its money
- * is not campaign money; it stays in the corpus as an identity — leaving it out
- * would make the corpus assert that the cycle held nothing there — and it is
- * not part of the candidate-reconciliation denominator.
- */
+/** Candidate committees by the publisher's own entity type; officeholder-expense committees are not campaign money. */
 const CANDIDATE_ENTITY_TYPE = /^candidate\b/i;
 const statewideCandidateEntities = [...entities.values()].filter((e) =>
   CANDIDATE_ENTITY_TYPE.test(e.entityTypeName ?? ""),
@@ -339,7 +204,7 @@ console.log(
 );
 
 /* =========================================================================
- * THE HELD CORPUS — so a completed hunt is never restarted (RULING 205).
+ * THE HELD CORPUS — reconciliations carried forward within this run.
  * ========================================================================= */
 
 interface HeldReconciliation {
@@ -362,16 +227,10 @@ interface StatewideCorpusFile {
   reconciliations?: HeldReconciliation[];
 }
 
-// Every production run acquires its own official evidence. Tracked corpus and
-// reconciliation JSON are historical/test first seeds, never mutable LKG.
+// Every production run acquires its own official evidence.
 const held = new Map<number, HeldReconciliation>();
 
-/**
- * A held reconciliation may be reused only while the committee's SUMMARY
- * TOTALS are unchanged. The moment the publisher reports new money the old
- * measurement stops describing this committee, and carrying it forward would
- * publish a figure nothing currently verifies.
- */
+/** A held reconciliation is reused only while the committee's summary totals are unchanged. */
 function heldStillDescribes(entity: EntityTotals): HeldReconciliation | null {
   const prior = held.get(entity.entityId);
   if (!prior) return null;
@@ -380,7 +239,7 @@ function heldStillDescribes(entity: EntityTotals): HeldReconciliation | null {
 }
 
 /* =========================================================================
- * LAYER 2 — IDENTITY. Who exists, statewide. Read, never derived from a ZIP.
+ * LAYER 2 — IDENTITY. Who exists, statewide.
  * ========================================================================= */
 
 interface ProjectionCandidacy {
@@ -425,15 +284,9 @@ console.log(
 );
 
 /* =========================================================================
- * THE LEDGER WALK — STATEWIDE POPULATION, READER-PRIORITISED ORDER.
- *
- * RULING 229 in one line: the reader's location may set the ORDER and may never
- * set the DENOMINATOR. The committees the identity layer has already linked to
- * a canonical candidacy go FIRST, so a budgeted run can never regress a card
- * that renders today; everything else in the acquired candidate population
- * follows — Arizona is PARTIAL_AUTHORITY_ACQUIRED, the Secretary's filing list
- * plus the held ballot, and not the whole state (R-C9) — and whatever a budget leaves is recorded as a ROUTE GAP with the
- * agency's own next filing deadline rather than as an absence.
+ * THE LEDGER WALK. Committees already linked to a canonical candidacy go
+ * first, so a budgeted run never regresses a card; whatever a budget leaves is
+ * a route gap, never an absence.
  * ========================================================================= */
 
 const linkedCommitteeIds = new Set<number>();
@@ -474,12 +327,7 @@ for (const entity of walkOrder) {
   }
 
   if (budgetLeft <= 0) {
-    /*
-     * A ROUTE GAP, NOT AN ABSENCE (RULING 184, RULING 205). The committee
-     * exists, we have its summary, and its ledger has not been read on this
-     * run. It carries the agency's own next filing deadline so a later run —
-     * and a reader — know when it is next worked.
-     */
+    // A route gap, not an absence: it carries the agency's next filing deadline.
     routeGaps.push({
       entityId: entity.entityId,
       committeeName: entity.committeeName,
@@ -515,8 +363,7 @@ for (const entity of walkOrder) {
       );
       if (total === null) total = parsed.recordsTotal;
       let sum = 0;
-      /* THE ONLY PLACE AN ITEMISED ROW IS SEEN. It contributes a number and is
-         dropped; nothing below this loop is ever handed a transaction. */
+      // Itemised rows carry contributor details: each contributes a number and is dropped.
       for (const row of parsed.data) sum += row.Amount ?? 0;
       per[kind].count += parsed.data.length;
       per[kind].sum = Math.round((per[kind].sum + sum) * 100) / 100;
@@ -561,8 +408,7 @@ console.log(
 );
 
 /* =========================================================================
- * LAYER 3 — PROJECTION. The reader snapshot: only candidates a page can be
- * about, built from the STATEWIDE corpus rather than from a page's list.
+ * LAYER 3 — PROJECTION. The reader snapshot, built from the statewide corpus.
  * ========================================================================= */
 
 const { records, states } = normalizeAz({
@@ -598,146 +444,6 @@ const snapshot: StateMoneySnapshot = {
   },
   records,
 };
-
-if (false) {
-  console.log("\n  --dry: nothing written.");
-  for (const s of states) console.log(`    ${s.state.padEnd(22)} ${s.ballotName.padEnd(28)} ${s.contestTitle}`);
-} else {
-  void snapshot;
-
-  /*
-   * THE STATEWIDE CORPUS. This is the artifact that makes the RULING 229
-   * invariant real: a newly activated ZIP's candidates are answered from here,
-   * with ZERO redundant internet hunt.
-   *
-   * NO ITEMISED TRANSACTION APPEARS IN IT. Contributor name, occupation,
-   * employer, city and zip (RULING 167) were streamed to compute a sum and were
-   * discarded; what is kept is aggregates, counts and provenance.
-   */
-  void ([
-    CORPUS_PATH,
-    JSON.stringify(
-      {
-        formatVersion: 1,
-        _note: [
-          "THE STATEWIDE ARIZONA 2026 CAMPAIGN-FINANCE CORPUS (RULING 229).",
-          "",
-          "The acquisition denominator is the complete applicable SeeTheMoney cycle universe and the",
-          "Secretary of State's committee register. It has NO dependency on 85701, 85641, or any ballot.",
-          "A newly activated ZIP's candidates are answered from this file rather than by hunting again.",
-          "",
-          "NO ITEMISED TRANSACTION APPEARS HERE. Those rows carry contributor name, occupation, employer,",
-          "city and zip (RULING 167). They were streamed to compute a sum and were never persisted.",
-        ],
-        collectedAt: AS_OF,
-        cycle: YEAR,
-        source: {
-          summary: `${BASE}${SUMMARY_PATH}`,
-          itemised: `${BASE}${DETAIL_PATH}`,
-          register: `ftp://${FTP_HOST}${FTP_DIR}/Committees.txt`,
-          calendar: `ftp://${FTP_HOST}${FTP_DIR}/ReportingPeriods.txt`,
-          publicPage: PUBLIC_PAGE,
-        },
-        denominators: {
-          perQuery,
-          unionRows: summaryRows.length,
-          unionEntities: entities.size,
-          statewideCandidateCommittees: walkOrder.length,
-          registerRows: register.size,
-          reconciledAgainstItemisedLedger: reconciledEntityIds.size,
-          reconciliationsHeld: reconciliationRows.length,
-          routeGaps: routeGaps.length,
-          identityRegistryCandidates: registry.candidates.length,
-          identityRegistryCandidaciesProjectable: candidacies.length,
-        },
-        nextFilingDeadline: nextDue,
-        routeGaps,
-        /* Every entity in the cycle universe, with its aggregates and its
-           office — the identity half of the corpus, so a new ZIP resolves its
-           candidates locally. */
-        entities: [...entities.values()].map((e) => ({
-          entityId: e.entityId,
-          committeeName: e.committeeName,
-          candidateDisplay: e.candidateDisplay,
-          entityTypeName: e.entityTypeName,
-          officeNames: e.officeNames,
-          officeKeys: e.officeKeys,
-          partyNames: e.partyNames,
-          income: e.income,
-          expense: e.expense,
-          rowCount: e.rowCount,
-          reconciledAgainstItemisedLedger: reconciledEntityIds.has(e.entityId),
-        })),
-        reconciliations: reconciliationRows,
-      },
-      null,
-      1,
-    ) + "\n",
-    "utf8"
-  ]);
-
-  void ([
-    RECONCILIATION_PATH,
-    JSON.stringify(
-      {
-        formatVersion: 1,
-        _note: [
-          "THE MEASUREMENT THAT LICENSES EVERY FIGURE IN data/states/az/funding/state-money-az-2026.json.",
-          "",
-          "SeeTheMoney returns a candidate as several summary rows partitioned by office and party.",
-          "Whether those rows are PARTS whose sum is the cycle total was undetermined until this walk,",
-          "and Session C correctly refused to ship a snapshot on the untested guess.",
-          "",
-          "The independent statement is the publisher's own ITEMISED TRANSACTION LEDGER, reachable at",
-          "/Reporting/GetNEWDetailedTableData with the entityId parameter the earlier walk was missing.",
-          "Each row below compares one committee's summary totals against the sum of its own itemised",
-          "transactions. A committee that does not agree does not render, whatever else about it matches.",
-          "",
-          "THE POPULATION IS STATEWIDE (RULING 229, 2026-09-01). It was the 58 committees a name test",
-          "linked to the 85701/85641 ballot; a reader's ZIP may prioritise acquisition ORDER and may",
-          "never define the DENOMINATOR.",
-          "",
-          "NO ITEMISED TRANSACTION APPEARS HERE. Those rows carry contributor name, occupation, employer,",
-          "city and zip (RULING 167). They were read to compute a sum and were never persisted.",
-        ],
-        collectedAt: AS_OF,
-        cycle: YEAR,
-        source: {
-          summary: `${BASE}${SUMMARY_PATH}`,
-          itemised: `${BASE}${DETAIL_PATH}`,
-          register: `ftp://${FTP_HOST}${FTP_DIR}/Committees.txt`,
-          calendar: `ftp://${FTP_HOST}${FTP_DIR}/ReportingPeriods.txt`,
-          publicPage: PUBLIC_PAGE,
-        },
-        universe: {
-          perQuery,
-          unionRows: summaryRows.length,
-          unionEntities: entities.size,
-          statewideCandidateCommittees: walkOrder.length,
-          registerRows: register.size,
-          note:
-            "The portal's DEFAULT view is IsLessActive=false and it hides most of the register. " +
-            "A sourced absence here means the union of all three settings held nothing.",
-        },
-        reconciliation: {
-          committeesTested: reconciliationRows.length,
-          agreed: reconciledEntityIds.size,
-          disagreed: reconciliationRows.length - reconciledEntityIds.size,
-          walkedThisRun: walked,
-          carriedForward: carried,
-          routeGaps,
-          rows: reconciliationRows,
-        },
-        readerStates: { inScope, tally, perCandidacy: states },
-        nextFilingDeadline: nextDue,
-      },
-      null,
-      1,
-    ) + "\n",
-    "utf8"
-  ]);
-  console.log("\n  normalized the Arizona projection and acquisition evidence in memory");
-}
 
 const candidate = stateCampaignFinanceCandidate({
   jurisdiction: "AZ",

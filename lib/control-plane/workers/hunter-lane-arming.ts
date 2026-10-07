@@ -1,37 +1,9 @@
 /**
- * **THE STANDING HUNTER LANE'S GUARDS (CH-24 part 2, Proposal A).**
- *
- * With WTP_CONTINUOUS_HUNTERS=1 the research round plans and queues work and
- * admits no paid work; one standing lane in the parent runner leases the
- * queued tasks and is the one process that admits paid model requests. It
- * holds every request to the same guards the round built (paid-work-guards.ts):
- *
- * - **Owner controls, read live on every refresh:** the intent log (research
- *   PAUSE, PAUSE_RUNNER, every DISPATCH budget), the Admin config row (the
- *   spend dial), the canonical cost ledger and the durable spend holds. Any of
- *   them unreadable closes paid work by name, exactly as the round does
- *   (`modelLaneClosure`); free work is not this lane's.
- * - **The round's budget reading, from a host-local file:** which Sends and
- *   areas exist, their spend at the round's read, and who belongs to each area.
- *   Reading those needs the whole corpus (every obligation, the territory), so
- *   the round writes them once per round (`laneArmingOf`) and the lane reads
- *   them. A reading older than `HUNTER_LANE_ARMING_MAX_AGE_MS`, or missing, or
- *   unreadable holds paid work by name. The Send and area lines carry the
- *   reading's time, so the durable holds add everything settled after it
- *   (`committedUsd`); the age bound keeps that inside the ledger's retention.
- * - **Each task's own marks:** the lane reads the obligation that opened the
- *   task and builds its Send lines from that record. A mark naming a Send the
- *   reading does not know (a Send newer than the reading) holds the work by
- *   name until the next round's reading, never runs it unbudgeted.
- * - **The Fleet ceiling across refreshes:** each refresh builds a new Fleet
- *   controller from the ledger. The lane's own requests are counted from its
- *   own book (`LaneOwnSpend`), not the ledger, until the book drops them a day
- *   later: an in-flight request at its worst case, a measured one at what it
- *   cost. So a request a worker has sent but not yet written to the ledger is
- *   never lost between two controllers, and nothing is counted twice.
- *
- * Nothing here changes a limit. The ceiling, the Send and area budgets and the
- * per-request worst cases are the round's own.
+ * The standing hunter lane's guards. One standing lane admits paid model requests and holds each to the round's
+ * own guards: the owner's controls read live every refresh (any unreadable one closes paid work by name), the
+ * round's budget reading from a host-local file (missing, stale or unreadable holds paid work), each task's own
+ * Send marks (an unknown Send waits for the next reading), and the Fleet ceiling, with the lane's own requests
+ * counted from its own book so none is lost or counted twice between controllers. Nothing here changes a limit.
  */
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -54,22 +26,15 @@ import { ScopeBudgetGate, type BudgetScope } from "../expansion/membership.ts";
 import { DurableSpendHolds, SendBudgetRefusal, liveSpendHolds, SETTLED_HOLD_RETENTION_MS, type BudgetLine } from "../expansion/spend-holds.ts";
 import { modelLaneClosure, type ModelProviderQueue } from "../scheduler/model-lane.ts";
 import { RESEARCH_BOUNDS, RESEARCH_INTENT_LOG_KEY, ceilingPermits, readIntents, researchSpendInWindow } from "../scheduler/research-policy.ts";
-import type { readActivationGate } from "../promotion/activation-gate.ts";
 import type { ModelTransport } from "../scheduler/scout-executor.ts";
 import type { backgroundBatchTransport } from "../model-batch.ts";
 import type { ResearchIntent } from "../scheduler/research-policy.ts";
 import { paidWorkGuards } from "./paid-work-guards.ts";
 
 export const HUNTER_LANE_ARMING_FORMAT = 1;
-/**
- * How old the round's budget reading may be. A settled hold stays on the
- * ledger for SETTLED_HOLD_RETENTION_MS after its cost was recorded, and a line
- * counts settled holds newer than its reading, so a reading must stay well
- * inside that retention. One hour: rounds run every few minutes, so a reading
- * this old means rounds have stopped, and paid work should wait for them.
- */
+/** How old the round's budget reading may be: well inside SETTLED_HOLD_RETENTION_MS, since a line counts settled holds newer than its reading. */
 export const HUNTER_LANE_ARMING_MAX_AGE_MS = 3_600_000;
-/** The lane re-reads the owner's controls and the round's reading this often (River, 2026-10-06). */
+/** The lane re-reads the owner's controls and the round's reading this often. */
 export const HUNTER_LANE_REFRESH_MS = 5 * 60_000;
 
 if (HUNTER_LANE_ARMING_MAX_AGE_MS >= SETTLED_HOLD_RETENTION_MS) throw new Error("the lane's reading must be younger than the settled-hold retention");
@@ -175,7 +140,6 @@ export function readLaneArming(path: string, now: string): LaneArmingRead {
   return { arming: a as HunterLaneArming };
 }
 
-/* ------------------------------------------------------------ own spend */
 
 interface OwnRequest { readonly taskId: string; readonly at: string; usd: number; pending: boolean }
 
@@ -231,7 +195,6 @@ export class LaneOwnSpend {
   usd(): number { return this.requests.reduce((n, r) => n + r.usd, 0); }
 }
 
-/* ------------------------------------------------------------ arming */
 
 export interface HunterLaneDeps {
   readonly repos: ControlPlaneRepositories;
@@ -241,7 +204,6 @@ export interface HunterLaneDeps {
   readonly batch: ReturnType<typeof backgroundBatchTransport>;
   readonly credentialConfigured: boolean;
   readonly credentialVar: string;
-  readonly activation: () => ReturnType<typeof readActivationGate>;
   readonly providerQueue: ModelProviderQueue;
   readonly ownSpend: LaneOwnSpend;
   /** The circuits the previous controller ended with; the lane's own latches outlive a refresh. */
@@ -317,7 +279,7 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
   const armingHold = "held" in read ? read.held : null;
   const closure = modelLaneClosure({
     dry: false, noModel: false, credentialConfigured: deps.credentialConfigured, credentialVar: deps.credentialVar,
-    activation: deps.activation(), paused: intents.paused, pauseIntentId: intents.pauseIntentId ?? null,
+    paused: intents.paused, pauseIntentId: intents.pauseIntentId ?? null,
     runnerPaused: intents.runnerPause.paused, runnerPauseIntentId: intents.runnerPause.intent?.intentId ?? null,
     spendHold: spendHold ?? armingHold, unreadableControls: unreadable,
   });

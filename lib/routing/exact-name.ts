@@ -1,31 +1,8 @@
 /**
- * THE EXACT-NAME RUNG (the author's matcher ruling, 2026-08-17).
- *
- * The ruling gives the keyword layer two strong classes and only two:
- * *"multiple distinct keyword hits, or an exact name match (a body, person,
- * district, or destination named as such)."* The first lives in `match.ts`
- * as `STRONG_MATCH_MIN_HITS`. This is the second.
- *
- * ## Why a name is strong at one hit when a keyword is not
- *
- * A keyword is a word a topic happens to use. "election" appears in a
- * question about the weather. A NAME is not like that: a reader who types
- * *Pima County Board of Supervisors* has not used a word that a body happens
- * to share — they have said the body's name, whole, and there is nothing else
- * that string could be asking for. Naming a thing IS the intent to be taken
- * to it, so it routes on one match where a keyword needs two.
- *
- * The strength comes entirely from being EXACT and WHOLE. A name that merely
- * appears inside a longer sentence is not this rung: "when does the Pima
- * County Board of Supervisors meet" is a question about meetings that happens
- * to name a body, and it belongs to the destination and topic layers, which
- * read the whole sentence. So this rung compares the WHOLE input against the
- * WHOLE name and nothing else — a substring is never enough.
- *
- * ## The classes honored, and where each comes from
- *
- * Five, all of them things the product already holds a record for, none of
- * them invented here:
+ * The exact-name rung: one of the keyword layer's two strong classes (the other is
+ * `STRONG_MATCH_MIN_HITS` in `match.ts`). A reader who types a body's whole name has said what they
+ * want, so it routes on one match. The strength comes from being exact and whole: the whole input is
+ * compared against the whole name, never a substring.
  *
  * | class         | source                                             |
  * |---------------|----------------------------------------------------|
@@ -35,24 +12,8 @@
  * | `place`       | the search index's `place` rows                    |
  * | `meeting`     | the search index's `meeting` rows                  |
  *
- * The ruling names body, person and district; `place` and `meeting` are the
- * remaining two kinds the same index already carries, and they are named
- * exactly as such by a reader typing them. The fourth class the ruling names
- * — a DESTINATION named as such — is not here: destinations are curated
- * phrases and `destinations.ts` already matches them whole. Two modules, one
- * rule.
- *
- * ## What it refuses
- *
- * Ambiguity, always. Two different rows sharing a normalized name means the
- * reader's string did not say which one, and this rung answers null rather
- * than picking the first — the same tie-or-zero discipline the topic matcher
- * and the destination matcher already run on. Two rows that are the SAME row
- * (the same id) are not a tie.
- *
- * It generates nothing, fetches nothing, and stores nothing. Given the same
- * input and the same index it returns the same answer, which is what lets a
- * test state exactly what routes.
+ * Destinations named as such are matched whole in `destinations.ts`. Two different rows sharing a
+ * normalized name refuse (null); the same row twice is not a tie. Pure and deterministic.
  */
 
 /** The kinds of thing a reader can name outright. Closed on purpose. */

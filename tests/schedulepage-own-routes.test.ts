@@ -10,20 +10,6 @@ import {
   parseNoticeFeed,
 } from "../lib/sources/schedulepage/index.ts";
 
-/**
- * **TWO NEWBURY BODIES, READ FROM THEIR OWN PAGES.** (C9, 2026-09-24.)
- *
- * The town's calendar never carries the Library Trustees or the Energy
- * Committee, so their `ICAL` rows have never matched a sitting. Sean's
- * direction on 2026-09-24: "No publisher emails now. Investigate every
- * practical route using available tools, feeds, APIs, documents, archives."
- * Each body publishes its own sittings on its own site, and both hosts
- * answered a robots-checked GET with no challenge.
- *
- * The fixtures are the exact bytes read that day: the library's WordPress
- * feed at 04:31Z and the Energy Committee's home page at 18:2xZ.
- */
-
 const fixture = (name: string) => readFileSync(join(import.meta.dirname, "fixtures", "schedulepage", name), "utf8");
 const FEED = fixture("newbury-library-feed-2026-09-24.xml");
 const ENERGY = fixture("newbury-energy-committee-home-2026-09-24.html");

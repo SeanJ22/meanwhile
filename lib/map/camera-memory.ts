@@ -1,50 +1,11 @@
 /**
- * **BAL-9 (2026-08-24, the author's walkthrough) — BACK RETURNS THE READER TO
- * WHERE THEY WERE, NOT TO THE CONTINENT.**
+ * Back returns the reader to where they were, not to the continent. The map
+ * mounts at the continental bounds, so the last camera (where the reader was
+ * looking) is kept in `sessionStorage`, apart from the stored zip: it is a
+ * fact about the reader, not a government. History state is not used because
+ * the Next router owns it and writing to it remounts the map.
  *
- * His capture `12-19-41` is the whole finding: after pressing back from the
- * ballot page, the map is drawn at the continental United States — Arizona a
- * small highlighted rectangle near the bottom-left — while the rail still says
- * *Meetings near 85701* and the districts counter reads **281 in view** against
- * the **33** it read a moment earlier.
- *
- * ## What was actually happening, which is not what it looks like
- *
- * Nothing lost the reader's zip. The zip survives in `sessionStorage` and every
- * panel on the page reads it correctly, which is why the rail is still right.
- * What is not remembered is the CAMERA: `map-canvas` constructs its map with
- * `bounds: CONUS_BOUNDS`, so **every mount starts at the continent** and then
- * flies to the zip's first-view altitude when a camera prop change fires. Come
- * back from another route and the map is a fresh mount: it opens at CONUS, and
- * a reader who had zoomed into their own neighbourhood does not get their
- * neighbourhood back — they get the country, and the pin-level view they built
- * is gone.
- *
- * ## Why this is its own store rather than a field on the zip
- *
- * `hooks/use-stored-zip.ts` deliberately stores ONLY the zip and re-resolves
- * its centroid, so a Census vintage update cannot leave a stale coordinate
- * behind. That decision is correct and untouched. This is a different fact:
- * not where a zip is, but **where the reader last put the camera** — which no
- * vintage update can invalidate, because it is a fact about the reader rather
- * than about a government. Two different facts, two different stores.
- *
- * ## Why `sessionStorage` and not history state
- *
- * The brief says the map position rides on history state. In this app it
- * cannot: the Next router owns the history entry, and writing to it from a map
- * island remounts the island — the failure that made overlays die on open
- * (`M52`). `sessionStorage` gives the reader the same thing they asked for, on
- * back, on forward, on a hardware back button and on a reopened tab within the
- * session, without contending with the router for the one object it owns.
- *
- * ## It is orientation, and it is discarded exactly like every other point
- *
- * Per-tab, cleared with the tab, never sent anywhere, never joined to
- * anything, and it holds a viewport centre — where the reader was LOOKING —
- * which is not a claim about where they are. The zip is still the only
- * location this product records, and the search log still records the zip the
- * server resolved and never a coordinate.
+ * Orientation only: per-tab, cleared with the tab, never sent anywhere.
  */
 
 const KEY = "wtp:map-camera";
@@ -70,9 +31,7 @@ function isUsable(value: unknown): value is RememberedCamera {
     camera.lng <= 180 &&
     typeof camera.zoom === "number" &&
     Number.isFinite(camera.zoom) &&
-    // A zoom at or below the continental view is not worth restoring: it is
-    // where the map opens anyway, and remembering it would make "back" feel
-    // like it did nothing.
+    // A zoom at or below the continental view is where the map opens anyway; not remembered.
     camera.zoom > 4 &&
     camera.zoom <= 22
   );
@@ -84,8 +43,7 @@ export function rememberCamera(camera: RememberedCamera): void {
   try {
     window.sessionStorage.setItem(KEY, JSON.stringify(camera));
   } catch {
-    // Not being able to remember where the reader was looking is survivable.
-    // Failing the map is not.
+    // Failing to remember is survivable; failing the map is not.
   }
 }
 

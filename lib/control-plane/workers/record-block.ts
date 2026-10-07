@@ -97,12 +97,7 @@ export function personRecordBlocks(text: string, name: string, contains?: (name:
 /** At most this many dropped fields are named in one detective brief. */
 const OUTSIDE_BLOCK_BRIEF_LIMIT = 20;
 
-/**
- * CP-19 → DP-03: a field found only outside its person's own row was dropped
- * and never publishes. The next investigation of that work item is a
- * detective with each dropped field in its brief. The valid record that was
- * kept is not held for this.
- */
+/** A field found only outside its person's own row was dropped and never publishes; the next investigation is a detective with each dropped field in its brief. The kept record is not held. */
 export function outsideRecordBlockBriefs(findings: readonly { readonly code: string; readonly detail: string; readonly field?: string }[]): string[] {
   const lines = new Set<string>();
   for (const finding of findings) {

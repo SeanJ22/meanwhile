@@ -1,12 +1,4 @@
-/**
- * Host-local emergency circuit for Neon.
- *
- * Normal Fleet safety state belongs in the operational control plane. Neon
- * cannot record its own billing/quota refusal, so this one circuit is kept on
- * the runner host. It carries no spend ledger and no shadow control-plane
- * data; it exists only to ensure a hard Neon refusal is not probed again by
- * the next query or the next hourly process.
- */
+/** Host-local circuit: Neon cannot record its own quota refusal, so a hard refusal is remembered here and not probed again. */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 

@@ -1,13 +1,6 @@
 import { rosterForBody } from "../registry/body-rosters.ts";
 
-/**
- * The body's office phone (6a): derived mechanically from the curated
- * roster — when the roster's members share one published base number (the
- * board or clerk office line, sometimes with per-member extensions), that
- * base number IS the office's published phone, cited to the same page the
- * roster cites. No number is ever minted; a body without a shared roster
- * number returns null and the card renders no phone.
- */
+/** A body's office phone: the base number its roster members share, cited to the roster page. Never minted. */
 
 export interface OfficePhone {
   phone: string;
@@ -16,7 +9,7 @@ export interface OfficePhone {
 }
 
 function baseNumber(phone: string): string {
-  // "973-627-7200 x2081" → "973-627-7200"
+  // "555-555-0100 x12" → "555-555-0100"
   return phone.replace(/\s*(x|ext\.?)\s*\d+\s*$/i, "").trim();
 }
 

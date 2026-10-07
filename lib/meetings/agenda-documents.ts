@@ -1,10 +1,7 @@
 /**
  * @freshness-reads-here
  *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * The clock stamps in this file are minted at the moment of the fetch.
  */
 import { createHash } from "node:crypto";
 
@@ -16,29 +13,18 @@ import { PUBLISHER_PAGE_SIGNAL, agendaReadableText, sameAgendaContent } from "./
 import { sourceUserAgent } from "../sources/http.ts";
 
 /**
- * Agenda documents as first-class records — item 1 of the reprioritization.
+ * Agenda documents as first-class records: the document itself is retrieved
+ * and stored, not only its URL.
  *
- * A link is not searchable. Every downstream feature — topic notification,
- * "what is on this agenda", agenda Q&A, local votes out of minutes (D04) —
- * needs the *text*, so the document itself is retrieved and stored, not only
- * its URL.
- *
- * **Append-only, never overwrite.** Agendas are revised, and a silently
- * revised agenda is itself news. A meeting can therefore hold several
- * documents over time; `contentHash` is what detects the silent revision. The
- * store refuses to duplicate an unchanged document and refuses to *replace*
- * a changed one — a new version is appended beside the old.
- *
- * This is written as the table it will become (the Phase 5 migration is a
- * transcription, like `MeetingBody` in attribution.ts). Until persistence
- * lands the store is in-memory and per-process, which is the same lifetime
- * the composite's meeting cache already has.
+ * Append-only, never overwrite: a revised agenda is appended beside the old
+ * version, and `contentHash` detects the silent revision. The store is
+ * in-memory and per-process.
  */
 export interface AgendaDocument {
   /** `<meetingId>@<contentHash>` — one row per distinct version. */
   id: string;
   meetingId: string;
-  /** Null for a division-less body's meeting (D28). */
+  /** Null for a division-less body's meeting. */
   ocdId: OcdId | null;
   /** Where the document was fetched from. Observed, never constructed. */
   documentUrl: string;
@@ -61,10 +47,8 @@ export interface AgendaDocument {
 
 /**
  * PostgreSQL JSONB cannot represent U+0000, and binary Office documents are
- * not Reader text. Older tracked snapshots accidentally decoded a DOCX ZIP as
- * UTF-8 and retained the resulting `PK\u0003\u0004...` byte soup in `text`.
- * Preserve the immutable URL/hash receipt while making the failed extraction
- * explicit; never silently scrub binary bytes into apparently readable prose.
+ * not Reader text. Keeps the URL/hash receipt and makes the failed extraction
+ * explicit; binary bytes are never scrubbed into apparently readable prose.
  */
 export function canonicalAgendaDocument(document: AgendaDocument): AgendaDocument {
   if (
@@ -91,16 +75,9 @@ export class AgendaDocumentStore {
 
   /**
    * Append a version unless the latest stored version, read from the same
-   * address, carries the same content (`sameAgendaContent`: identical bytes,
-   * or identical readable text whose bytes differ — a page that stamps each
-   * response anew is re-read, not revised). Returns whether anything was
-   * stored and whether it superseded a prior version — the second is the
-   * "silent revision" signal worth surfacing.
-   *
-   * (2026-09-22.) This compared bytes alone, and Tucson Unified's meeting page
-   * never answers with the same bytes twice: sitting 499 gained 88 stored
-   * "versions" in four days with one unchanged text. Rows already stored stay
-   * exactly as they are.
+   * address, carries the same content (`sameAgendaContent`). Returns whether
+   * anything was stored and whether it superseded a prior version (the
+   * silent-revision signal).
    */
   append(doc: AgendaDocument): { stored: boolean; revised: boolean } {
     const versions = this.byMeeting.get(doc.meetingId) ?? [];
@@ -129,16 +106,8 @@ export class AgendaDocumentStore {
   }
 
   /**
-   * Is this URL already stored against a DIFFERENT meeting? (2026-08-27.)
-   *
-   * The landing-page signal. A body's calendar or portal root gets retrieved
-   * once per sitting and stored as though it were each one's agenda — and
-   * measured across the committed snapshot, 56 of 198 documents share a URL
-   * this way and **not one of them yields a single agenda item**, while 47% of
-   * the documents on a URL of their own do.
-   *
-   * Exposed as a question rather than as `all()`, so the rule lives with the
-   * store instead of being re-expressed by every caller that wants it.
+   * Is this URL already stored against a different meeting? A calendar or
+   * portal root retrieved once per sitting is a landing page, not an agenda.
    */
   isUrlOnAnotherMeeting(documentUrl: string, meetingId: string): boolean {
     for (const [id, versions] of this.byMeeting) {
@@ -150,16 +119,8 @@ export class AgendaDocumentStore {
 
   /**
    * Another sitting's held HTML document, from the same publisher host, whose
-   * readable text is word for word this text. (2026-09-23.)
-   *
-   * The text-level form of the landing-page question above: two sittings'
-   * pages that say exactly the same words say nothing about either sitting,
-   * so the words are the publisher's page. Measured across the composed
-   * Reader snapshot before this was adopted: 14 texts on 10 hosts were held
-   * for more than one sitting, every one a portal page, a calendar, a board's
-   * front page or a skip link — Diligent's header-only rows, CivicClerk's
-   * "enable JavaScript" shell, Bradford's and Warner's calendars — and not
-   * one yielded an agenda item.
+   * readable text is word for word this text: the text-level form of the
+   * landing-page question.
    */
   publisherPageWitness(doc: {
     readonly meetingId: string;
@@ -202,24 +163,14 @@ export function contentHashOf(bytes: Uint8Array): string {
 }
 
 /**
- * Strip an HTML document to its readable text.
- *
- * The final `repairMojibake` is not defensive tidying (M60, 2026-08-15):
- * Diligent's BoardDocs portal serves DOUBLE-ENCODED bytes. Its pages declare
- * and send UTF-8, and the UTF-8 they send spells out U+00C2 U+00BB where the
- * breadcrumb should read a single U+00BB guillemet — verified against the raw
- * bytes of TUSD's MeetingInformation page, which carries two of the corrupt
- * pairs and not one clean separator.
- * Our decode is correct; the vendor's text is wrong, and a reader was seeing
- * it in the agenda excerpt. This is our custody boundary, so it is repaired
- * here on the way in rather than at render — a render-time patch would leave
- * every stored row and every later consumer holding the broken text.
+ * Strip an HTML document to its readable text. `repairMojibake` repairs
+ * double-encoded UTF-8 some vendors serve, at this custody boundary rather
+ * than at render.
  */
 
 /** Extract text from a PDF's bytes. Throws when the file cannot be read. */
 export async function extractPdfText(bytes: Uint8Array): Promise<string> {
-  // Imported lazily so nothing that merely types against this module pays for
-  // the PDF engine — only actual retrieval does.
+  // Imported lazily so only actual retrieval pays for the PDF engine.
   const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
   const doc = await getDocument({
     data: bytes,
@@ -249,10 +200,9 @@ export interface RetrieveOptions {
   /** Skip the fetch entirely when the stored hash is known-current. */
   knownHash?: string | null;
   /**
-   * Fetch this URL instead of the meeting's own agenda link — the curated
-   * notice channel (4c): a body that posts its meeting notice on its own
-   * page before the vendor portal publishes the agenda. The document is
-   * recorded against the notice URL it actually came from.
+   * Fetch this URL instead of the meeting's own agenda link: a body's own
+   * notice page that posts before the vendor portal. The document is recorded
+   * against the URL it came from.
    */
   urlOverride?: string;
   /**
@@ -264,26 +214,16 @@ export interface RetrieveOptions {
 }
 
 /**
- * **A READ THAT RETURNED NOTHING OF THE DOCUMENT IS A FAILED READ.**
- * (RULING 269, 2026-09-23.)
+ * A read that returned nothing of the document is a failed read. Two named
+ * signals, neither a length threshold (a one-line notice is a whole document):
  *
- * The retrieval used to store whatever text survived extraction as a
- * successful one: the empty string, and 54 to 69 characters of Diligent skip
- * links that 18 sittings then showed readers as their agenda. Two named
- * signals now record such a read as `failed`. Neither is a length threshold,
- * because a one-line notice ("This meeting is cancelled") is a whole
- * document:
+ * - No readable text: extraction produced no characters.
+ * - The publisher's page: an HTML page's text is word for word what the same
+ *   host served for a different sitting (`publisherPageWitness`) and holds no
+ *   agenda item. PDFs are not judged this way; two sittings sharing one PDF
+ *   share an agenda.
  *
- * - **No readable text.** Extraction produced no characters at all.
- * - **The publisher's page.** An HTML page's text is word for word what the
- *   same host served for a different sitting (`publisherPageWitness`) and
- *   holds no agenda item. A joint agenda two sittings share yields items and
- *   stays a document, exactly as the ingest's landing-page rule keeps one.
- *   PDFs are not judged this way: a PDF is a document, and two sittings
- *   holding the same one is a shared agenda, not a page.
- *
- * Each note opens with its signal's name, and the notes are written for the
- * reader who may be shown them.
+ * Each note opens with its signal's name and is written for readers.
  */
 const NO_READABLE_TEXT = "No readable text";
 

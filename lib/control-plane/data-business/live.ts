@@ -1,5 +1,5 @@
 /**
- * **THE LIVE SOURCES: the event store (S6.8, `lib/db/reader-events.ts`, tables from migration 0034) behind `Sources`.**
+ * The live sources: the event store (`lib/db/reader-events.ts`) behind `Sources`.
  *
  * Cheapest first. Counts come from `reader_event_totals` (exact, no reader in them) and new-vs-returning from
  * `reader_event_members` (counted in the database; no id comes back). Only a recipe that needs a card, the residency stamp or the

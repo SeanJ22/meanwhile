@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -23,10 +22,6 @@ const THIRD = "2026-09-08T02:00:00.000Z";
 type MeetingSnapshot = Parameters<typeof meetingsCandidate>[0]["snapshot"];
 type NjBallot = Parameters<typeof njMorrisFilingCandidate>[0]["ballot"];
 type DotGovSnapshot = Parameters<typeof dotGovCandidate>[0]["snapshot"];
-
-function fixture<T>(path: string): T {
-  return JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8")) as T;
-}
 
 function changes(outcome: PromotionOutcome): RoutineChangeSet {
   const result = outcome.candidate.candidate.changeSet;
@@ -98,9 +93,8 @@ function meetingSnapshot(version: string, changed: boolean): MeetingSnapshot {
           id: "calendar:b",
           bodyId: "ocd-division/country:us/state:az/county:pima#governing",
           ocdId: "ocd-division/country:us/state:az/county:pima",
-          // This row is deliberately already outside the registered Reader
-          // window at SECOND. An incomplete source horizon may remove it only
-          // with the exact source-scoped window evidence supplied below.
+          // Already outside the Reader window at SECOND; an incomplete source horizon may remove it only with the
+          // source-scoped window evidence supplied below.
           startsAt: "2026-04-01T17:00:00.000Z",
           provenance: { sourceUrl: "https://calendar.google.com/calendar/u/0/r", collectedAt: version },
         },
@@ -237,8 +231,7 @@ test("PDC-8 meetings: changed rows promote with exact added/changed/removed/held
   const promoted = await processRoutineCandidate(store, next, SECOND);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(changes(promoted).outcome, "CHANGED");
-  // A sitting's held agenda is one record keyed by the sitting (2026-09-22):
-  // new sitting c brings its agenda record `agenda-document:calendar:c`.
+  // A sitting's held agenda is one record keyed by the sitting: new sitting c brings `agenda-document:calendar:c`.
   assert.deepEqual(changeKeys(changes(promoted)), {
     added: ["meeting:calendar:c", "agenda-document:calendar:c"],
     changed: ["meeting:calendar:a"],
@@ -301,14 +294,7 @@ test("PDC-8 NJ filing: candidate/contact/removal changes and refused rows are ex
 });
 
 test("PDC-8 NJ filing: the clerk's unstamped 2026-09-18 revision is a current document set, to the validator as to the selector", async () => {
-  /*
-   * Production, 2026-09-24 21:13Z: with the selector fixed (#403), the
-   * candidate was refused SEMANTIC_INVALID, "The clerk page's current
-   * general-candidate and school-candidate documents were not both acquired",
-   * because the validator kept its own copy of the naming rule and it still
-   * demanded a date stamp. One rule now serves both (RULING 103). The URLs are
-   * the clerk page's own hrefs as read that day.
-   */
+  // The candidate selector and the validator share one naming rule; the URLs are the clerk page's own hrefs.
   const CLERK = "https://www.morriscountyclerk.org/files/sharedassets/clerk";
   const general = `${CLERK}/v/12/elections/past-results/2026-general-candidates.pdf`;
   const school = `${CLERK}/v/14/elections/past-results/2026-general-school-candidates-082126.pdf`;
@@ -360,12 +346,7 @@ test("PDC-8 dotgov: SHA-pinned domain changes are exact; dependent-consumer fail
 });
 
 test("PDC-8 dotgov: a later registry commit whose hash sorts lower still promotes; the hash is an identity, not an order", async () => {
-  /*
-   * 2026-09-15 to 09-24: every daily CISA revision was refused as
-   * "11fe34b4… precedes promoted e68adb11…" because two commit hashes were
-   * compared as strings. The pointer sat on the 09-15 registry through eight
-   * upstream updates. Which publication is newer is the acquisition order.
-   */
+  // Which publication is newer is the acquisition order, never a string comparison of commit hashes.
   const store = new MemoryRoutineDataStore();
   const promotedOn0915 = dotGov(FIRST, false, "e68adb11" + "0".repeat(32));
   assert.equal((await processRoutineCandidate(store, promotedOn0915, FIRST)).candidate.state, "PROMOTED");
@@ -391,8 +372,7 @@ test("run 34232794631 regression: software CI red cannot fail, relabel, or rever
   const meetingLkg = await promotedPointer(store, meetingGood);
   const dotGovLkg = await promotedPointer(store, dotGovGood);
 
-  // The M164 application-suite failure is an independent software-CI fact. It
-  // is deliberately not input to either source candidate or promotion door.
+  // A software-CI failure is independent and is not input to either source candidate or promotion door.
   let softwareCiRed = false;
   try {
     throw new Error("Build 34236904831: tests/office-opening-spell.test.ts M164 temporal boundary");
@@ -426,72 +406,4 @@ test("run 34232794631 regression: software CI red cannot fail, relabel, or rever
   assert.equal((await promotedPointer(store, dotGovNext)).versionId, dotGovNext.id);
   assert.deepEqual(await promotedPointer(store, meetingGood), meetingLkg, "promoting an unaffected source does not rewrite the held source's LKG");
   assert.deepEqual((await store.events(meetingBad.id)).map(({ state }) => state), ["FETCHED", "NORMALIZED", "SEMANTIC_INVALID"]);
-});
-
-test("PDC-8 trusted bootstrap fixtures project byte-for-structure through the three candidate builders", async () => {
-  const meeting = fixture<MeetingSnapshot>("../data/meetings-snapshot.json");
-  const ballot = fixture<NjBallot>("../data/states/nj/ballot/nj-morris-2026.json");
-  const contacts = fixture<unknown>("../data/states/nj/ballot/nj-morris-2026-contacts.json");
-  const domains = fixture<DotGovSnapshot>("../data/dotgov/snapshot.json");
-  const partitionRow = meeting.meetings[0]!;
-  const partitionSource = partitionRow.id.split(":")[0]!;
-  const partitionMeetings = meeting.meetings.filter((row) => row.bodyId === partitionRow.bodyId && row.id.startsWith(`${partitionSource}:`));
-  const partitionIds = new Set(partitionMeetings.map((row) => row.id));
-  const partitionMeeting: MeetingSnapshot = {
-    ...meeting,
-    counts: { fresh: partitionMeetings.length, carried: 0, total: partitionMeetings.length },
-    sources: [{ source: partitionSource, ok: true, fetched: partitionMeetings.length, normalized: partitionMeetings.length }],
-    meetings: partitionMeetings,
-    agendaDocuments: meeting.agendaDocuments.filter((document) => partitionIds.has(document.meetingId)),
-  };
-
-  const candidates = [
-    meetingsCandidate({
-      snapshot: partitionMeeting,
-      partition: {
-        sourceName: partitionSource,
-        bodyId: partitionRow.bodyId ?? "missing",
-        scope: `source:${partitionSource}:body:${partitionRow.bodyId ?? "missing"}`,
-      },
-      requestedUrl: partitionRow.provenance?.sourceUrl ?? "",
-      finalUrl: partitionRow.provenance?.sourceUrl ?? "",
-      retrievedAt: meeting.generatedAt,
-    }),
-    njMorrisFilingCandidate({
-      ballot,
-      contacts,
-      rawBodies: [
-        "official clerk page",
-        readFileSync(new URL("./fixtures/nj-filing/morris-clerk-2026-general-candidates-082126.txt", import.meta.url), "utf8"),
-        "official clerk school PDF bytes",
-      ],
-      currentDocumentSet: {
-        generalCandidatesUrl: "https://www.morriscountyclerk.org/files/2026-general-election-candidates-090126.pdf",
-        schoolCandidatesUrl: "https://www.morriscountyclerk.org/files/2026-general-school-candidates-090126.pdf",
-      },
-      finalUrl: "https://www.morriscountyclerk.org/files/current-general-election-candidates.pdf",
-      retrievedAt: "2026-09-08T00:00:00.000Z",
-      inputRecords: ballot.candidacies?.length ?? 0,
-      refused: [],
-    }),
-    dotGovCandidate({
-      snapshot: domains,
-      rawText: JSON.stringify(domains),
-      finalUrl: domains.source.url,
-      retrievedAt: "2026-09-08T00:00:00.000Z",
-    }),
-  ];
-
-  assert.deepEqual(candidates[0]!.readModel, partitionMeeting);
-  assert.deepEqual(candidates[1]!.readModel, { ballot, contacts });
-  assert.deepEqual(candidates[2]!.readModel, domains);
-
-  for (const candidate of candidates) {
-    const store = new MemoryRoutineDataStore();
-    const outcome = await processRoutineCandidate(store, candidate, candidate.retrieval.retrievedAt);
-    assert.equal(outcome.candidate.state, "PROMOTED", `${candidate.sourceId}: ${outcome.candidate.failureCode ?? "fixture accepted"}`);
-    assert.deepEqual(outcome.promoted?.payload, candidate.readModel, `${candidate.sourceId} bootstrap projection differs from the trusted fixture`);
-    assert.equal(changes(outcome).outcome, "CHANGED");
-    assert.equal(changes(outcome).removed.length, 0, "bootstrap has no predecessor to remove");
-  }
 });

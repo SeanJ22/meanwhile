@@ -1,10 +1,6 @@
 /**
- * **WHOSE GAP AN ABSENT AGENDA IS, ON THE SURFACES THAT RENDER IT.**
- * (Session B resume, W2 — ASK-18 and SWEEP-01, 2026-08-31.)
- *
- * The sweep found `components/map/meeting-panel.tsx` and
- * `components/map/popup/agenda-section.tsx` each rendering "No agenda posted
- * yet" on `!meeting.agendaUrl`. Every test here fails against that behaviour.
+ * Whose gap an absent agenda is, on the surfaces that render it: a null `agendaUrl` is never
+ * rendered as "No agenda posted yet".
  */
 
 import assert from "node:assert/strict";
@@ -54,8 +50,6 @@ test("ASK-18: a FRESH first-party observation of an empty slot is THEIR gap, and
 });
 
 test("SEEDED ASK-18: an EXPIRED observation falls back to OUR gap", () => {
-  /* Packets land in the last days before a sitting, so a stale negative is at
-     its most wrong exactly when a reader is most likely to be asking. */
   const wellPast = Date.parse("2026-09-03T12:00:00.000Z");
   const said = agendaSentenceFor(meeting(), wellPast);
   assert.equal(said.whose, "OURS");
@@ -107,11 +101,7 @@ test("W2: an agenda we HOLD is not an absence to observe at all", () => {
 });
 
 test("SWEEP-01: BOTH surfaces get the identical sentence from the identical input", () => {
-  /*
-   * The two components each decided independently what a null meant, which is
-   * how they came to disagree with each other and with the constitution. There
-   * is one decider now, and this is what pins it: same input, same sentence.
-   */
+  // One decider: same input, same sentence.
   const input = meeting();
   const a = agendaSentenceFor(input, NOW);
   const b = agendaSentenceFor({ ...input }, NOW);

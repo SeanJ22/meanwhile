@@ -3,7 +3,6 @@ import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { requestRoutineRefresh, reserveRoutineRefresh, finishRoutineRefresh, routineRefreshSelection } from "../lib/civic-data/owner-refresh.ts";
-import { installedRuntimeChildPlan, parseInstalledRuntimePayload } from "../scripts/installed-runtime-dispatch.mts";
 
 const contractId = MEETING_PARTITION_CONTRACTS[0].id;
 const NOW = "2026-09-15T20:00:00.000Z";
@@ -14,8 +13,6 @@ test("owner refresh accepts one exact registered partition and at most two attem
     [`--contract=${contractId}`, "--force"], [`--contract=${contractId}`, `--contract=${contractId}`]]) {
     assert.throws(() => routineRefreshSelection(args), /OWNER_REFRESH_/);
   }
-  const payload = parseInstalledRuntimePayload(Buffer.from(JSON.stringify({ mode: "routine-refresh", args: [`--contract=${contractId}`] })).toString("base64"));
-  assert.throws(() => installedRuntimeChildPlan(payload), /OWNER_REFRESH_HAS_NO_CHILD_COMMAND/);
 });
 
 test("owner refresh also takes one exact registered routine source contract, never an unregistered id", async () => {

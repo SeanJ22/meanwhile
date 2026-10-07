@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * **WHAT IS OWED — ON SETTINGS (SC-14, BR-33).** Add an item to what every place is owed, and see every addition and decline with
- * its reason and an Undo. A change takes effect on the next read of a place, with no release. It counts what is owed; it never
- * holds back publishing.
- */
 import type { OwedOverlayView } from "@/lib/control-plane/admin-view/owed-overlay-view.ts";
 
 import { Actions, Card, Empty, Loading, Pill } from "./ui.tsx";

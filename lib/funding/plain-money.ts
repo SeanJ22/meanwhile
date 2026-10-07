@@ -1,9 +1,6 @@
 /**
- * "$4.2 million", "$657,000", "$325" — rounded the way people say money.
- *
- * Its own module so the client money view (components/funding) and the
- * server display projection (lib/funding/display.ts) share ONE rounding rule
- * without the client importing the server data plane.
+ * "$4.2 million", "$657,000", "$325": rounded the way people say money. One
+ * rule shared by the client money view and the server display projection.
  */
 export function plainMoney(amount: number): string {
   const abs = Math.abs(amount);

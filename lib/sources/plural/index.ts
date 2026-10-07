@@ -9,16 +9,9 @@ import { shortTransfer } from "../bulk-completeness.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 
 /**
- * State legislators, from Plural Open (ex-Open States). Phase 5.2 tier 2,
- * tracker **D03**.
- *
- * **Reads the nightly bulk CSV, not the v3 API.** `data.openstates.org` publishes
- * one file per state, needs no key and no login, and 5.0a says to prefer bulk
- * where one exists. That also means the `PLURAL_API_KEY` in `.env.local` is not
- * required for the roster — it is there for the API, which this does not use.
- *
- * Data is CC-0. Attribution is requested rather than required, and is carried on
- * every row regardless because provenance rides on everything.
+ * State legislators from the Open States (Plural Open) nightly bulk CSV: one
+ * file per state, no key, no login. Data is CC-0; attribution is carried on
+ * every row.
  */
 
 const SOURCE_NAME = "plural";
@@ -37,13 +30,8 @@ export function bulkUrl(state: string): string {
 }
 
 /**
- * What a chamber's members are actually called, per state.
- *
- * **Not derivable, and not guessable.** New Jersey's lower chamber is the
- * General Assembly and its members are Assemblymembers, not Representatives.
- * This is the same problem the body registry has with supervisors against
- * commissioners against select boards, and it gets the same answer: state it
- * explicitly rather than mint a plausible wrong title and render it to somebody.
+ * What a chamber's members are called, per state. Not derivable: some lower
+ * chambers' members are Assemblymembers, not Representatives.
  */
 const CHAMBER_TITLE: Record<string, { upper: string; lower: string }> = {
   az: { upper: "State Senator", lower: "State Representative" },
@@ -64,7 +52,7 @@ export interface PluralPerson {
   id: string;
   name: string;
   current_party: string;
-  /** `"19"` in most states; `"Merrimack 8"` for the New Hampshire House. */
+  /** `"19"` in most states; `"<County> 8"` where districts are designated by county. */
   current_district: string;
   current_chamber: "upper" | "lower" | string;
   email: string;
@@ -84,18 +72,16 @@ export interface PluralPerson {
 }
 
 /**
- * Reduce a district designation to something two spellings agree on.
- *
- * Handles the only real variation across these three states: New Hampshire
- * House districts are designated by county and number — "Merrimack 8" — and the
- * two sides zero-pad differently. Everything else is a bare number.
+ * Reduces a district designation to something two spellings agree on. Some
+ * districts are designated by county and number ("<County> 8") and the two
+ * sides zero-pad differently; everything else is a bare number.
  */
 export function designationKey(value: string): string {
   return value
     .trim()
     .toUpperCase()
     .replace(/\s+/g, " ")
-    // Strip leading zeros from any number so "Merrimack 08" meets "Merrimack 8".
+    // Strip leading zeros so "<County> 08" meets "<County> 8".
     .replace(/\b0+(\d)/g, "$1");
 }
 
@@ -116,20 +102,10 @@ export interface RegistryDivisionLite {
 }
 
 /**
- * Index the registry's legislative divisions by state, chamber and designation.
- *
- * **This is not the name-string join `CLAUDE.md` forbids, and the distinction
- * matters.** That rule is about joining *geographic entities* on names that
- * collide across states and drift between sources. What is matched here is a
- * district's official *designation* — "Merrimack 8" is what that district is
- * called in statute, not a colloquial name — scoped to one state and one
- * chamber, matched exactly after normalization, with every miss reported rather
- * than resolved by similarity. The output is keyed on this repo's OCD-IDs.
- *
- * It is needed because the two sides genuinely disagree: the registry's
- * identifiers are Census numeric codes (`sldl:608`) and Plural uses the
- * statutory designation. The label is the only thing that bridges them, and it
- * is Census-sourced on both counts.
+ * Indexes the registry's legislative divisions by state, chamber and
+ * designation. The registry ids are Census codes (`sldl:608`) and Plural uses
+ * the statutory designation; the Census-sourced label bridges them. Matching
+ * is exact within one state and chamber, and every miss is reported.
  */
 export function indexDivisions(
   divisions: RegistryDivisionLite[],
@@ -223,18 +199,13 @@ export function rowsToPeople(csv: string, state: string): PluralPerson[] {
 }
 
 /**
- * What a build spent, so the quota is a printed number rather than a surprise.
- *
- * **The two counters are deliberately separate.** Plural's free tier allows
- * **500 GraphQL requests per day at 1 per second**; the bulk CSVs are ordinary
- * static files on `data.openstates.org` and are not metered against it. Adding
- * them together would invent pressure on a ceiling nothing is approaching, and
- * showing neither is how a ceiling gets discovered by hitting it.
+ * What a build spent. Bulk CSVs are static files not metered against the
+ * GraphQL quota, so the two counters are kept separate.
  */
 export interface PluralRequestCount {
   /** Static bulk-file downloads. Not counted against the API quota. */
   bulk: number;
-  /** Metered against the 500/day tier. Currently always zero — see below. */
+  /** Metered against the 500/day tier. Currently always zero. */
   graphql: number;
 }
 
@@ -252,19 +223,13 @@ export function resetRequestCount(): void {
 /** The columns `rowsToPeople` reads to build a legislator; a header without them is not the roster. */
 export const PLURAL_REQUIRED_COLUMNS = ["id", "name", "current_chamber", "current_district"] as const;
 
-/** Refuse an empty response; a pilot seat count is not a national admission rule. */
+/** Refuse an empty response. */
 export const PLURAL_ROSTER_FLOOR = 1;
 
 /**
  * Is this 200 body actually a Plural roster, and the whole of it? Returns the
- * reason it is not, or null.
- *
- * The `,` blank-check `fetchState` runs first cannot catch the real failure: an
- * HTML error page served at 200 contains commas, so it passes, and then parses
- * to a table whose header is not the roster's — `rowsToPeople` finds no `id`
- * column and returns ZERO people, a state's whole legislature reading as absent
- * with no error at all. The header check refuses that; the floor refuses a
- * file truncated to a handful of rows. Kept pure so it is tested directly.
+ * reason it is not, or null. An HTML error page passes the comma check and
+ * parses to zero people, so the header and the floor are checked here.
  */
 export function pluralRosterIssue(csv: string): string | null {
   const rows = parseCsv(csv);
@@ -293,11 +258,8 @@ async function fetchState(state: string): Promise<string> {
 
     if (response.ok) {
       const text = await response.text();
-      // A status is not a document (NH Hunt 3, 2026-08-21). This adapter hand-
-      // rolls its own backoff rather than using the shared client, so it gets
-      // the shared client's checks by hand — a 200 with a blank body, a
-      // transfer cut short of its declared length, or an error page that parses
-      // to zero people here is a state's whole legislature reading as empty.
+      // This adapter rolls its own backoff, so it applies the shared client's
+      // document checks by hand.
       const notDoc = notADocument(text, { label: "a bulk CSV", marker: "," });
       if (notDoc !== null) throw new Error(`${url} returned HTTP 200 with ${notDoc}`);
       const short = shortTransfer(response.headers, text);
@@ -315,15 +277,7 @@ async function fetchState(state: string): Promise<string> {
   throw new Error(`${url} returned HTTP ${lastStatus}`);
 }
 
-/**
- * Download every configured state, serialized.
- *
- * **One request per state, and nothing per legislator.** That is the whole
- * reason for the bulk route: 620 legislators across these three states would
- * cost most of a day's GraphQL quota under any per-person or per-district fetch
- * pattern, and would cost it again on every rerun. Three static files cost
- * three requests and are metered against nothing.
- */
+/** Downloads every configured state, serialized: one request per state, nothing per legislator. */
 export async function fetchAll(
   states: readonly string[] = PLURAL_STATES,
 ): Promise<PluralPerson[]> {
@@ -335,14 +289,9 @@ export async function fetchAll(
 }
 
 /**
- * Map people onto officeholders and division links.
- *
- * Everything that cannot be attached lands in `unmatched` with a reason.
- * **Most misses here are expected and are not errors**: the registry is clipped
- * to three counties, so the overwhelming majority of a state's legislators sit
- * in districts this repo holds no boundary for. That is a coverage fact, and it
- * must not be confused with an identifier mismatch — which is why the reason
- * distinguishes them.
+ * Maps people onto officeholders and division links. Everything unattached
+ * lands in `unmatched` with a reason that separates a missing boundary from an
+ * identifier mismatch.
  */
 export function normalize(
   raw: PluralPerson[],
@@ -365,9 +314,7 @@ export function normalize(
 
     const title = CHAMBER_TITLE[person.state]?.[chamber];
     if (!title) {
-      // No title table for this state means nobody decided what its members
-      // are called. Inventing "State Representative" for a chamber that calls
-      // them something else is a small fabrication rendered to a reader.
+      // No title table for this state: never invent a title for its members.
       unmatched.push({
         officeholderId: id,
         reason: `no chamber title recorded for ${person.state}`,
@@ -383,25 +330,20 @@ export function normalize(
       name: person.name,
       officeTitle: title,
       level: "STATE",
-      // The CSV carries no term dates. Null is not allowed by the type and a
-      // guessed date is worse than an empty string, so the field records what
-      // is known: nothing. Term dates need the API or the YAML repo — D03.
+      // The CSV carries no term dates; empty, never guessed.
       termStart: "",
       termEnd: "",
-      // State rosters publish no birth date; no sourced date, no age (6d).
+      // State rosters publish no birth date.
       birthDate: null,
       partyLabel: person.current_party || null,
       websiteUrl: person.links.split(";")[0] || null,
       contactFormUrl: null,
-      // Contact as the legislature publishes it, carried through the CC-0
-      // bulk file (3a). Capitol office first; the district office where the
-      // capitol number is not published. Empty strings are absences.
+      // Capitol office first; the district office where the capitol number is
+      // not published. Empty strings are absences.
       phone: person.capitol_voice || person.district_voice || null,
       email: person.email || null,
-      // Curated separately with per-entry verification (3e).
       campaignUrl: null,
-      // Keep the upstream lead for the shared portrait source check. It is
-      // not a reader image or a claim that Open States licenses the photo.
+      // A lead for the shared portrait source check, not a reader image.
       photo: null,
       ...(person.image ? { portraitCandidate: { imageUrl: person.image, sourceUrl: bulkUrl(person.state), collectedAt } } : {}),
       provenance: {

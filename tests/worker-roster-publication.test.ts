@@ -71,7 +71,7 @@ async function proveRosterPublication(partial = false, box = false) {
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
   const runtime = { ...h.runtime,
     independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({ ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
-  // §3: the Validator is the last stage for a roster; no auditor is dispatched.
+  // The Validator is the last stage for a roster; no auditor is dispatched.
   for (const role of (box ? ["ACQUIRER"] : ["ACQUIRER", "PARSER", "VALIDATOR"])) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));

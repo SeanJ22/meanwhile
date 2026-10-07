@@ -413,7 +413,7 @@ test("C6: catch-up reads reserve repair time without restoring the retired pilot
   const readerWorst = Math.ceil(domains.filter(({ mode }) => mode === "SINGLE").length / ROUTINE_READER_CHILD_CONCURRENCY) * ROUTINE_READER_SINGLE_TIMEOUT_MS +
     domains.filter(({ mode }) => mode === "MEETING_AGGREGATE").length * ROUTINE_READER_MEETING_TIMEOUT_MS;
   assert.equal(routinePassSourceCatchUpDeadlineMs(T0, domains), work - readerWorst);
-  // The parent launcher no longer imposes the retired whole-pass timeout.
+  // The parent launcher imposes no whole-pass timeout.
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(pilot, /await runRuntimeChildren\(/);
   const launcher = readFileSync("scripts/pilot-runtime-child.mts", "utf8");

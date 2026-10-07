@@ -1,20 +1,7 @@
 /**
- * THE COMPLETION EVALUATOR — one deterministic answer to "may this obligation
- * end?", and the only place in the system permitted to give it.
- *
- * A worker may say "my attempt is finished." Only the control plane may say the
- * obligation is complete. That sentence is the whole reason this file exists as
- * a single function rather than a convention each worker follows. Conventions
- * are what produced "the API returned zero, so there are no meetings."
- *
- * The evaluator is PURE and TOTAL. It takes a snapshot, returns a verdict, and
- * reads no clock, no disk, and no network. Every refusal it can issue is
- * enumerable, testable, and named — which is what lets the seeded-failure suite
- * plant a defect and assert the exact refusal that catches it.
- *
- * It refuses by DEFAULT. `mayComplete` is true only when every clause of the
- * contract is affirmatively satisfied; an input the evaluator was not given is
- * a reason to refuse, never a reason to proceed.
+ * The completion evaluator: the only place that decides whether an obligation
+ * may end. Pure and total; every refusal is enumerable and named. It refuses by
+ * default: an input it was not given is a reason to refuse.
  */
 
 import { OPEN_DISPOSITIONS } from "../workstate/types.ts";
@@ -64,29 +51,13 @@ export interface CompletionSnapshot {
   readonly validations: readonly ValidationRecord[];
   readonly audits: readonly AuditFinding[];
   readonly contradictions: readonly Contradiction[];
-  /**
-   * Terminal state of every upstream dependency, by WorkItem id. An id absent
-   * from this map is treated as UNRESOLVED — a dependency we failed to look up
-   * is not a dependency that is satisfied.
-   */
+  /** Terminal state of every upstream dependency, by WorkItem id. An absent id is UNRESOLVED. */
   readonly upstreamStates: ReadonlyMap<string, WorkItemState>;
-  /**
-   * Whether the coverage denominator for this subject is known to be complete.
-   * `null` means "not established", which refuses when the contract asks for
-   * it. Only an affirmative `true` satisfies the clause.
-   */
+  /** Whether the coverage denominator is known complete. Only an affirmative `true` satisfies the clause. */
   readonly denominatorComplete: boolean | null;
   /**
-   * Instance/check ids that a CANONICAL RUN RECORD has evaluated GREEN on a
-   * qualifying tree, supplied by the caller that read those records.
-   *
-   * It is a set of ids rather than a boolean because the question this answers
-   * is per-instance: "has THIS question turned green", never "did the suite
-   * pass". A suite can pass with the one instance that matters still red.
-   *
-   * An id absent from this set is UNSATISFIED. That direction is deliberate:
-   * a caller that forgot to read the run records refuses completion rather
-   * than granting it, which is the safe way to be wrong.
+   * Instance/check ids a canonical run record has evaluated green on a
+   * qualifying tree. Per instance, not per suite; an absent id is unsatisfied.
    */
   readonly instrumentGreens: ReadonlySet<string>;
   readonly now: string;
@@ -100,12 +71,7 @@ export interface CompletionVerdict {
   readonly satisfied: readonly string[];
 }
 
-/**
- * Evaluate whether a WorkItem may move to `proposedState`.
- *
- * `proposedState` must itself be terminal. Moving an item to OPEN or REOPENED
- * needs no contract — only ENDING an obligation does.
- */
+/** Evaluate whether a WorkItem may move to `proposedState`, which must itself be terminal. */
 export function evaluateCompletion(
   snapshot: CompletionSnapshot,
   proposedState: WorkItemState,
@@ -131,11 +97,7 @@ export function evaluateCompletion(
     };
   }
 
-  // ---- 1. The inherited route floor. The forgot-the-API refusal. ----------
-  //
-  // This is first because it is the failure the whole architecture was built
-  // around. A worker that never walked /EventDates cannot close Pima meetings,
-  // no matter how confident, complete, or internally consistent its report is.
+  // ---- 1. The inherited route floor ----------------------------------------
   const disposedRouteIds = new Set(
     routeTasks.filter((t) => t.disposition !== null).map((t) => t.routeId),
   );
@@ -158,19 +120,9 @@ export function evaluateCompletion(
 
   // ---- 1b. The contract's narrowed disposition set ------------------------
   //
-  // `acceptableDispositions` narrows the clause immediately above it, and until
-  // this block existed it narrowed nothing at all: the field was declared,
-  // populated by callers, and read by no one. A contract clause the evaluator
-  // ignores is worse than an absent one, because it reads as a guarantee.
-  //
-  // The reading is the narrow one, argued in full on `CompletionContract`: it
-  // applies to INHERITED route tasks that carry a disposition. The floor is
-  // what the contract is about; a route discovered mid-walk was never part of
-  // it, and penalising an honest disposition on a bonus route would punish the
-  // extra hunting this product exists to do.
-  //
-  // It only ever TIGHTENS. Naming an open disposition here does not make it
-  // terminal — clause 2 below still refuses it as outstanding.
+  // Applies to inherited route tasks that carry a disposition; a route found
+  // mid-walk is not part of the floor. It only tightens: naming an open
+  // disposition here does not make it terminal.
   const acceptable = item.contract.acceptableDispositions;
   if (acceptable !== null) {
     const governed = routeTasks.filter((t) => t.inherited && t.disposition !== null);
@@ -294,9 +246,8 @@ export function evaluateCompletion(
 
   // ---- 6. Adversarial audit ----------------------------------------------
   //
-  // Three distinct refusals, because "we audited it" hides three different
-  // failures: nobody audited, somebody audited our own summary, or somebody
-  // audited properly and broke it.
+  // Three refusals: nobody audited, the audit used our own summary, or the
+  // audit broke the claim.
   if (item.contract.requiresAudit) {
     const audits = snapshot.audits.filter((a) => a.workItemId === item.id);
     if (audits.length === 0) {
@@ -327,19 +278,8 @@ export function evaluateCompletion(
 
   // ---- 7. Owner escalations ----------------------------------------------
   //
-  // Only escalations that BLOCK terminal truth. An owner decision about, say, a
-  // vendor account does not prevent an unrelated record from being complete —
-  // that carve-out is `blocksCompletion: false`, decided in writing at the call
-  // site rather than inferred here.
-  //
-  // This clause used to read `openEscalations(item, now)`, which is the QUEUE
-  // view: it hides anything snoozed past `now`. So snoozing a genuinely
-  // blocking escalation into next week removed it from this loop and the
-  // obligation completed — an owner dismissing a notification had, without
-  // deciding anything, converted an unanswered question into a settled fact
-  // about a government. `completionBlockingEscalations` takes no clock, so
-  // there is no longer any moment you can move the evaluation to that changes
-  // its answer. Only `resolvedAt` clears one: somebody actually answered.
+  // Only escalations that block terminal truth (`blocksCompletion`). Snoozing
+  // does not clear one; only `resolvedAt` does, so this takes no clock.
   for (const e of completionBlockingEscalations(item)) {
     if (proposedState !== "AUTHOR_DECISION_REQUIRED" && proposedState !== "HUMAN_INTERACTION_REQUIRED") {
       refusals.push({
@@ -369,13 +309,11 @@ export function evaluateCompletion(
     }
   }
 
-  // ---- The named-instrument verdict. The reader-diagnostic clause. --------
+  // ---- The named-instrument verdict ---------------------------------------
   //
-  // A.1 WI3. An item created because a reader could not learn a fact closes
-  // only when the instrument that found the failure says, on a tree at or
-  // after the one the failure was observed on, that THAT question is green.
-  // Effort does not close it, a route disposition does not close it, and a
-  // validation record about something else certainly does not.
+  // An item created because a reader could not learn a fact closes only when
+  // the instrument that found the failure says, on a tree at or after the one
+  // it was observed on, that that question is green.
   const evidence = item.contract.instrumentEvidence;
   if (evidence !== null) {
     if (evidence.createdAtSha === null) {
@@ -414,13 +352,7 @@ export function evaluateCompletion(
   };
 }
 
-/**
- * Human-readable rendering of a refusal set.
- *
- * Deliberately states what is MISSING rather than pronouncing a verdict on the
- * session that ran. "Route /EventDates has no disposition" is actionable;
- * "the session failed" is not.
- */
+/** Renders a refusal set as what is missing, not a verdict on the session. */
 export function explainRefusals(verdict: CompletionVerdict): string {
   if (verdict.mayComplete) {
     return `MAY COMPLETE as ${verdict.proposedState}. Satisfied: ${verdict.satisfied.join("; ")}.`;

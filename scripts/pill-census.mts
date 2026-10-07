@@ -1,32 +1,16 @@
 /**
- * `pnpm pills` — **every pill the product renders, measured against the
- * others.** (`BAL-12`, 2026-08-25.)
+ * `pnpm pills` — every pill the product renders, measured against the others.
  *
- * ## Why a static census and not a browser sweep
+ * A static census of the stylesheet rather than a browser sweep: the stylesheet
+ * holds every pill, so the denominator is knowable and stated.
  *
- * A browser sweep measures the pills that happen to be ON SCREEN at the moment
- * it runs, which is a sample of unknown size — and a sample that missed a
- * surface would report uniformity it never measured, which is RULING 159's
- * failure with a camera attached. The stylesheet is the complete population:
- * every pill in the product is a rule in it, so the denominator is knowable and
- * is stated.
+ * Uniform means uniform in height-determining properties (`padding`,
+ * `font-size`, `min-height`), never in colour or width, which carry meaning.
+ * The reference is the voting pill; a pill that differs from it without a
+ * stated reason is reported.
  *
- * ## What "uniform" means here, and what it deliberately does NOT mean
- *
- * **Uniform in HEIGHT-DETERMINING properties, never in colour or width.** A
- * pill's fill says what kind of thing it is — party colours, the voting
- * accent, the Speak navy — and flattening those would delete meaning. What Sean
- * photographed is pills that sit at different HEIGHTS and read as different
- * kinds of object, which comes from `padding`, `font-size` and `min-height`.
- *
- * **The reference is the voting pill** (`BAL-22`). Where a pill differs from it
- * without a stated reason, this reports it.
- *
- * ## The floor
- *
- * RULING 159. If the stylesheet parse finds no pills at all, this throws rather
- * than printing `0 differ` — an unreadable stylesheet and a perfectly uniform
- * product produce the identical number.
+ * If the stylesheet parse finds no pills at all, this throws rather than
+ * printing `0 differ`.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -104,14 +88,9 @@ export interface PillReasons {
 }
 
 /**
- * The three-way split (RULING 105).
- *
- * A bare "23 declarations differ" says nothing about how many of those
- * differences somebody DECIDED on. Three numbers, each with its denominator:
- * uniform, different-with-a-reason, and different-with-no-reason. Only the
- * third is a defect — and `stale` is the other direction, a recorded reason
- * for a difference that no longer exists, which is a note claiming to explain
- * something that is not there any more.
+ * Three numbers, each with its denominator: uniform, different with a reason,
+ * and different with no reason (the only defect). `stale` is a recorded reason
+ * for a difference that no longer exists.
  */
 export function splitCensus(census: PillCensus, reasons: PillReasons) {
   const excused = new Set(

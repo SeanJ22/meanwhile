@@ -7,7 +7,7 @@
   candidate filings in that state.
 - **Columns:** jurisdiction, office, url, phone. 58 rows.
 
-## Why this repo holds it — RULING 69
+## Why this repo holds it
 
 The NJ Hunt measured that the variable deciding whether a candidate's contact is reachable is NOT the
 number of routes in the branch manifest. It is **what each state's filing authority publishes**. Morris

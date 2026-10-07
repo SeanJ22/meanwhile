@@ -1,10 +1,8 @@
 /**
  * @freshness-reads-here
  *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * The clock stamps in this file are minted by the code path that performs the read: the freshness date
+ * is taken at the moment of the fetch.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -31,32 +29,16 @@ import {
 } from "../normalize-account.ts";
 
 /**
- * Granicus IQM2 meeting source — the Morris County half of the 07866 hunt.
- *
- * The ladder recorded `/Services/RSS.aspx?Feed=Calendar` as the machine
- * channel, but that pseudo-feed lists *published documents* (mostly the recent
- * past). The better rung, found this session and written back to the ladder:
- * **`/Citizens/Calendar.aspx?From=&To=` is fully server-rendered**, future
- * meetings included, and each row's `title` tooltip carries the board, the
- * meeting type, the status, and the venue with its full street address —
- * which also resolved the venue-citation errand the county's Akamai-fronted
- * site had blocked. Verified live 2026-08-13 on morriscountynj.iqm2.com:
- * BOC work sessions and regular meetings through December, agenda links
- * (`FileOpen.aspx?Type=14`) present exactly where an agenda is published.
+ * Granicus IQM2 meeting source. `/Citizens/Calendar.aspx?From=&To=` is fully server-rendered, future
+ * meetings included, and each row's `title` tooltip carries the board, the meeting type, the status, and
+ * the venue with its full street address; agenda links (`FileOpen.aspx?Type=14`) appear where an agenda
+ * is published. The `/Services/RSS.aspx?Feed=Calendar` pseudo-feed lists only published documents and is
+ * not used.
  */
 
 const SOURCE_NAME = "iqm2";
 
-/**
- * The fetch window IS the served window (M76, 2026-08-15).
- *
- * These were literal 60 and 30 with a comment claiming they matched the
- * cascade. The served lookback moved 30 -> 90 and the adapters did not, so
- * every source quietly dropped sixty days of published, retrievable history
- * at the fetch — invisible to every count check, because each adapter
- * honestly reported what it had asked for. Deriving them is what makes the
- * drift impossible rather than merely noticed.
- */
+/** The fetch window is the served window, derived from the serving constants so the two cannot drift. */
 const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
@@ -182,8 +164,7 @@ export function makeIqm2Source(
     // A-002 · counted in the unit the disposition happens in. One raw row is
     // one calendar page and carries many rows.
     let considered = 0;
-    // A-002 · `placeless` and `unknownVenue` tally sittings that are then
-    // PRODUCED (D18; the venue-gap class, 2026-09-23), so neither is a drop.
+    // `placeless` and `unknownVenue` tally sittings that are then produced, so neither is a drop.
     let keptButPlaceless = 0;
 
     for (const { wiring, html, collectedAt } of raw) {
@@ -204,19 +185,11 @@ export function makeIqm2Source(
           continue;
         }
 
-        /*
-         * **NO PLACE NEVER SUPPRESSES THE SITTING** (the venue-gap class,
-         * 2026-09-23). Three cases used to `continue`, and each is now KEPT
-         * with no pin and counted as before:
-         *
-         * - a tooltip venue that names no building ("Virtual") is online
-         *   (D18), counted `placeless` — this adapter was the one that still
-         *   dropped an online sitting;
-         * - a venue with no reviewed row renders as the county's own words
-         *   (`STATED_NOT_PLACED`), counted `unknownVenue`;
-         * - a row whose tooltip states no venue is the county's own gap
-         *   (`NOT_STATED_BY_PUBLISHER`), counted `unknownVenue`.
-         */
+        // No place never suppresses the sitting; each case is kept with no pin and counted:
+        // - a tooltip venue naming no building is online, counted `placeless`;
+        // - a venue with no reviewed row renders as the county's own words (`STATED_NOT_PLACED`), counted
+        //   `unknownVenue`;
+        // - a row stating no venue is the county's own gap (`NOT_STATED_BY_PUBLISHER`), counted `unknownVenue`.
         const online = row.location && isPlacelessLocation(row.location)
           ? { label: row.location, joinUrl: null }
           : null;
@@ -276,10 +249,7 @@ export function makeIqm2Source(
 
     return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
       logicalInput: considered,
-      // Every `placeless` and `unknownVenue` here tallies a sitting that is
-      // then produced, as in boardbook, civicplus and diligent (A-002). Until
-      // the venue-gap class (2026-09-23) both had a `continue` behind them and
-      // were real drops.
+      // Every `placeless` and `unknownVenue` here tallies a sitting that is then produced.
       countedButProduced: keptButPlaceless,
     });
   };

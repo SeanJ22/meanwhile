@@ -12,25 +12,10 @@ import {
 } from "./snapshot.ts";
 
 /**
- * **The permanent reader serving model (PDC-9, 2026-09-15) — geographic edge artifacts.**
- *
- * PDC composes the promoted meeting partitions once (see prepared-snapshot.ts).
- * This module splits that one national composition into REUSABLE GEOGRAPHIC
- * artifacts — one per governing division, with agenda text in its own piece.
- * Every ZIP in a division shares those pieces; the map reads calendar pieces
- * for its divisions and nearby venues, and Ask and agenda read their area.
- *
- * The artifacts are immutable and content-addressed by the publication sequence;
- * a small manifest names the current sequence and the available scopes. The
- * reader looks up which scopes a ZIP needs, fetches those artifacts from the
- * edge, and merges them back into the exact `MeetingsSnapshot` shape the search
- * and freshness code already consume — so nothing downstream of the read
- * changes. The promoted partitions stay the sole authoritative civic truth
- * (RULING 282); these are serving copies of them (RULING 283).
- *
- * Nothing here is hardcoded to today's pilot ZIPs: the partition key is the
- * meeting's own OCD division, so adding a state is adding promoted data, never
- * editing this file.
+ * Splits the composed national meeting snapshot into immutable geographic
+ * serving artifacts, one per governing division with agenda text in its own
+ * piece, and merges fetched pieces back into the `MeetingsSnapshot` shape. The
+ * promoted partitions stay authoritative; these are serving copies.
  */
 export const READER_ARTIFACT_FORMAT_VERSION = 1 as const;
 
@@ -97,7 +82,6 @@ export function meetingAreaScope(ocdId: string | null | undefined): string {
     : NATIONAL_SCOPE;
 }
 
-/** Old state artifacts remain readable while the runner publishes area pieces. */
 export function readerScopeApplies(
   scope: Pick<ReaderManifestScope, "scope" | "ocdId" | "bounds" | "meetingIds" | "agendaOnly">,
   area: { readonly states?: readonly string[]; readonly ocdIds?: readonly string[];
@@ -153,59 +137,33 @@ export interface ReaderManifest {
   /** Pointer identities for the embedded serving copies; old manifests refresh once. */
   readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
   /**
-   * The large "authority" reader families — the map's division/coverage/roster
-   * bindings (registry-runtime, ~3.7 MB), the federal directory (~1.2 MB) and
-   * the campaign-site URLs. Each is too large to embed in the manifest (which
-   * the reader reads every request), so the manifest POINTS at a separate,
-   * gzip-compressed, immutable artifact per family; the reader fetches each once
-   * per version (module-cached) and primes it request-scoped, never waking the
-   * database for an ordinary visitor.
-   *
-   * 2026-09-24 (C20): the recorded meeting outcomes (~1.6 MB, the pole of a cold
-   * Ask at 2.0–2.3 s from the database) and the comment-access rules (0.6–0.8 s)
-   * are families too, so a cold topic question reads them in the same parallel
-   * edge fetch as the registry instead of as two cold database reads.
+   * Families too large to embed in the manifest, which is read every request.
+   * The manifest points at one gzip-compressed immutable artifact per family;
+   * the reader fetches each once per version.
    */
   readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
   /**
-   * **Each state's promoted REGISTRATION (`lib/registration/`), one artifact per
-   * state** (2026-09-24). Registration is per state by construction (82.6 MB for
-   * all 56, the largest about 5 MB), so it is never one national artifact: the
-   * reader fetches only the states a request's divisions name, once per version.
-   * The runner writes a state's artifact only after its registration pointer
-   * promotes, and carries every unchanged state's reference forward.
-   *
-   * Present, it is complete: a state it does not name has no promoted
-   * registration, and the reader composes nothing for it without waking the
-   * database. Absent (the family was never published), the reader reads the
-   * state from the database.
+   * Each state's promoted registration, one artifact per state. Present, it is
+   * complete: a state it does not name has no promoted registration. Absent,
+   * the reader reads registration from the database.
    */
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
   /**
-   * **Quiet re-checks, applied when served** (2026-09-25, lib/meetings/fresh-checks.ts).
    * Each route's (`<adapter>|<bodyId>`) newest successful fresh check that found
-   * nothing new since its rows were written. The reader restamps that route's
-   * fresh rows with it; carried rows never. `generatedAt` above already states
-   * the newest check as "Last checked". Absent: no check since the artifacts.
+   * nothing new. The reader restamps that route's fresh rows with it, never
+   * carried rows.
    */
   readonly freshChecks?: Readonly<Record<string, string>>;
   /**
    * The partition versions these scope artifacts were composed from
    * (`meetingCompositionId`): how the runner tells a quiet re-check, which
    * republishes this manifest alone, from new data, which republishes the
-   * scopes. Absent on manifests written before it.
+   * scopes.
    */
   readonly composition?: string;
 }
 
-/**
- * **THE PROVEN-POINTER FAMILIES** (2026-09-25). Each artifact carries one or
- * more proven pointers whole (`PromotedEdgeEntry`, lib/civic-data/read-model.ts)
- * and is read through each pointer's own typed Reader. A cold /ballot read the
- * first eight from the database, in two stages (the ballot, then the rest);
- * a cold Ask read all of them among its deferrable sources (14.8 s measured
- * on production for one cold Mesa question, 2026-09-25).
- */
+/** Each artifact carries one or more proven pointers whole, read through each pointer's own typed Reader. */
 export type PromotedAuthorityFamily =
   | "ballot-contests"
   | "ballot-az"
@@ -309,9 +267,8 @@ function countsFor(meetings: readonly Meeting[]): ReaderArtifactCounts {
  * Split one composed national snapshot into per-scope artifacts, deterministic
  * and order-stable. A meeting's scope is its governing division; an agenda
  * stays in its meeting's area, even when its own geography differs. Agenda
- * text is separate so a calendar read never fetches it. Counts
- * are honest for the subset (the strict cross-source write-boundary invariant
- * does not apply to a serving projection, and the reader never re-checks it).
+ * text is separate so a calendar read never fetches it. Counts are for the
+ * subset; the cross-source write-boundary invariant does not apply here.
  */
 export function partitionSnapshotByScope(
   snapshot: MeetingsSnapshot,

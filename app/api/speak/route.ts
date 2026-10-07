@@ -14,32 +14,9 @@ import { intakeWindows } from "@/lib/db/intake-windows";
 import { isPlausibleTargetId, isValidReactionKey } from "@/lib/signal/reactions";
 
 /**
- * POST /api/speak — the Speak Your Mind write path (BC-11, 2026-08-24).
- *
- * ## It reuses the reactions route's protections rather than inventing any
- *
- * Rule 4 says *the intake limiter's attestation applies to
- * submissions*, and this is what that means concretely: same-origin, the same
- * in-memory sliding windows, the same authoritative cross-instance counters,
- * the same quarantine-never-trust-through disposition. A second intake surface
- * with its own weaker protections would be the front door left open beside a
- * locked one.
- *
- * **The limiter's digest still cannot join this store.** It hashes
- * `"intake-limiter:" + key` and this store hashes `"speak-your-mind:" + key` —
- * n-stores-never-join under load, which is the whole reason `T08` gave the
- * limiter a prefix, now with a third party to keep apart.
- *
- * ## Validation fails closed and is never behind a flag
- *
- * A malformed key, an oversized payload, an unknown subject type — all 400,
- * nothing stored, nothing coerced. `CLAUDE.md`: validity checks are never
- * behind any flag.
- *
- * ## A missing database is a 202, not a 204
- *
- * Accepted-not-stored, so a demo without `DATABASE_URL` behaves honestly and
- * the surface can decline to thank a reader for something nothing kept.
+ * POST /api/speak. The same protections as the reactions route: same-origin, in-memory windows, the
+ * cross-instance counters and quarantine. Its digest prefix (`"speak-your-mind:"`) keeps it from joining the
+ * limiter's. Validation fails closed and is never behind a flag. A missing database is a 202.
  */
 
 export const runtime = "nodejs";
@@ -96,7 +73,6 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "text too long" }, { status: 400 });
   }
 
-  // ── The T08 protections, cheapest first — the ripcord.rateLimits family ──
   let suspectReason: "VELOCITY" | "LIMITER_UNAVAILABLE" | null = null;
   if (!ripcordPulled("ripcord.rateLimits")) {
     if (!isSameOriginSubmission(request)) {
@@ -129,13 +105,7 @@ async function postWithSettings(request: Request) {
     }
   }
 
-  /*
-   * RULE 1 — DISTRICT-STAMPED. Resolved SERVER-SIDE from the map view, the
-   * same approximate-location basis the search log and the reactions store
-   * use. A submission with no resolvable view stores with NO divisions rather
-   * than guessed ones, and `Number(null)` is 0 — so the guard requires an
-   * actual number on the wire rather than resolving the equator (item 1b).
-   */
+  /* Resolved server-side from the map view; no resolvable view stores no divisions. `Number(null)` is 0, so the guard requires an actual number. */
   const lat = typeof submission.lat === "number" ? submission.lat : Number.NaN;
   const lng = typeof submission.lng === "number" ? submission.lng : Number.NaN;
   let ocdIds: string[] = [];
@@ -169,16 +139,7 @@ async function postWithSettings(request: Request) {
       suspectReason,
       marker: markerFromRequest(request),
     });
-    /*
-     * **A HELD ROW IS STILL A 204, and the reader is not told it was held.**
-     *
-     * Deliberate, and it is the one decision here worth arguing. Telling a
-     * reader their words tripped a review would teach anybody probing the
-     * classifier exactly where its line sits, and it would accuse somebody who
-     * wrote "I'd kill for a bike lane" of something they did not do. The row
-     * is kept, excluded from everything, and a person looks at it — which is
-     * what `docs/abuse-policy.md` promises and what rule 4 asks for.
-     */
+    /* A held row is still a 204 and the reader is not told it was held: telling them would show a prober where the line sits. */
     return new Response(null, { status: stored.kind === "STORED" ? 204 : 202 });
   } catch (error) {
     console.error("speak-your-mind write failed", error);

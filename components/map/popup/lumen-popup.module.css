@@ -1,7 +1,4 @@
-/* DSN-2: assembled from the Lumen Edge Shading worksheet's six signals.
-   Only PopupCard (the compact district, official and meeting cards) imports
-   this module. App fonts, card radius, content bands and spacing stay intact.
-   The map-floating cards use the worksheet's raised elevation variant. */
+/* Imported only by PopupCard (the compact district, official and meeting cards). */
 .card:global(.popup-card) {
   --dur-lumen-slow: 1s;
   --ease-lumen-weighted: cubic-bezier(0.15, 0.83, 0.66, 1);
@@ -65,9 +62,7 @@
   --lumen-floor: color-mix(in srgb, var(--panel) 93%, black);
   --lumen-rim: rgba(0, 0, 0, 0.08);
   --lumen-rim-strong: rgba(0, 0, 0, 0.14);
-  /* Design handoff 2026-09-13: was color-mix(--online 60%) — a PURPLE horizon,
-     and --online means "online only" elsewhere. Now the interactive cyan --ring
-     (defined in globals.css), so both themes speak one language. */
+  /* Not --online, which means "online only" elsewhere. */
   --lumen-horizon: var(--ring);
   --shadow-lumen-raised:
     0 2px 4px rgba(0, 0, 0, 0.25),
@@ -82,13 +77,8 @@
   }
 }
 
-/* THE TIER RING (design handoff 2026-09-13). A card that is ABOUT a level of
-   government wears that tier's colour: a 1px inset at 62%, a 1px outer halo at
-   22%, over the raised elevation, and the horizon becomes the tier colour at
-   2px with a glow. `data-tier` is set on PopupCard from its real tier prop; the
-   colour is never set at the call site. `concluded` dims the horizon rather than
-   changing the shape — the same move as hollow-means-concluded. These rules sit
-   after the base + hover rules so the ring persists on hover of a tier card. */
+/* The tier ring, keyed on `data-tier` from PopupCard's tier prop. These rules
+   sit after the base and hover rules so the ring persists on hover. */
 .card:global(.popup-card)[data-tier="local"] {
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--accent-local) 62%, transparent),

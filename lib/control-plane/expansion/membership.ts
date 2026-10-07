@@ -1,61 +1,34 @@
 /**
- * **WHICH WORK IS IN WHICH SCOPE, IN WHAT ORDER, AND WHETHER ITS BUDGET ALLOWS
- * ONE MORE PAID SCOUT.** (Expansion controls, 2026-09-23.)
+ * Which work is in which scope, in what order, and whether its budget allows
+ * one more paid Scout.
  *
- * ## Membership is by CERTAIN overlap inside a shared ZCTA
- *
- * A scope is a set of ZCTAs (the Census geography lookup's `zctasForGrouping`:
- * every ZCTA wholly or partly inside it, each with its area share). A piece of
- * standing work is about one subject — the obligation's `subjectId`, which is
- * also the `jurisdiction` on every cost-ledger row it produced.
- *
- * Touching a common ZCTA is NOT enough: counties tile a state, so a county
- * shares every border ZCTA with its neighbours, and "Pima County" would
- * otherwise pull in Maricopa, Pinal, Cochise and Santa Cruz (measured on the
- * committed data). So a government is IN the scope only when the two must
- * overlap inside at least one ZCTA:
+ * A scope is a set of ZCTAs (`zctasForGrouping`, each with its area share).
+ * Touching a common ZCTA is not enough (counties tile a state and share border
+ * ZCTAs), so a government is in the scope only when the two must overlap:
  *
  * ```
- *   the government touches a ZCTA that lies WHOLLY inside the scope, or
+ *   the government touches a ZCTA that lies wholly inside the scope, or
  *   inside one ZCTA, the government's share + the scope's share > 1 + margin
- *   (two parts of one ZCTA whose shares sum past the whole cannot be disjoint;
- *   the margin absorbs the difference between sampled and exact area)
+ *   (the margin absorbs the difference between sampled and exact area)
  * ```
  *
- * A government's territory is the ZCTA set of the Census of Governments unit it
- * was enumerated from (`data/derived/census-unit-zips.json`), with its share of
- * each ZCTA from the same sampled overlap that built it
- * (`data/derived/zip-governments.json`, lattice samples per layer GEOID). The
- * registry ids are joined to those units by the registry generator's own id
- * rule (`scripts/enumerate-jurisdictions.mts`: `<state>:<class prefix>:<slug of
- * the Census name>`, `-<pid6>` on a name collision) — the same Census file, the
- * same derivation, never a fuzzy name match. A subject the join cannot place is
- * UNPLACED and counted as such; it is never guessed into a scope and never
- * reported as outside one.
+ * A government's territory is its Census of Governments unit's ZCTA set, with
+ * sampled shares. Registry ids join units by the registry generator's own id
+ * rule (`<state>:<class prefix>:<slug>`, `-<pid6>` on collision), never a fuzzy
+ * name match. A subject the join cannot place is UNPLACED, never guessed.
+ * ZCTAs are not USPS ZIP codes.
  *
- * ZCTAs are not USPS ZIP codes, and overlap by area share is not a statement
- * about which residents a government serves. The page says both.
+ * Order: the owner's DISPATCH first, then due rows in a selected scope by
+ * scope priority (a row in two scopes takes the better), each keeping its
+ * existing order.
  *
- * ## Order
+ * Budget: a paid Scout is admitted only if, for every scope the subject is in,
+ * attributed rolling-24h spend + this cycle's spend and reservations + one
+ * worst case fits the scope's budget. An unresolved or unmeasured scope binds
+ * every subject in its state (and unknown-state subjects). The budget only
+ * restricts; the Fleet ceiling is checked elsewhere.
  *
- * The owner's explicit DISPATCH still goes first. After it, due rows in a
- * selected scope go ahead of everything else, the scope with priority 1 first;
- * a row in two scopes takes the better of the two. Within a scope the
- * existing order (oldest-due, or the Scout lane's reader-impact bands) stands.
- *
- * ## Budget
- *
- * A paid Scout for a subject in a scope is admitted only if that scope's
- * attributed rolling-24h model spend, plus what this cycle already spent or
- * reserved there, plus one Scout's worst case, stays within the scope's
- * budget — for EVERY scope the subject is in. A scope that cannot be resolved,
- * or whose spend is unmeasured, refuses paid work it cannot rule out: an
- * unresolved scope binds every subject in its state (and every subject whose
- * state is unknown), because it cannot tell what is inside it. The budget only
- * ever refuses; the Fleet's rolling ceiling is still checked first, elsewhere,
- * and nothing here raises it.
- *
- * PURE. Every input is handed in; nothing here reads a file, a store or a clock.
+ * Pure. Every input is handed in.
  */
 
 import type { CostEntry } from "../cost.ts";
@@ -68,7 +41,7 @@ import {
   type ExpansionScopeReading,
   type ScopeCoverageReading,
 } from "./reading.ts";
-import { DISTRICT_TERRITORIES, ruledDistrictTerritory, type ApproximateDistrictExtract } from "./district-territory.ts";
+import { DISTRICT_TERRITORIES, ruledDistrictTerritory } from "./district-territory.ts";
 import { certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import { areaBudgetKey, type BudgetLine } from "./spend-holds.ts";
@@ -84,7 +57,7 @@ export interface CensusUnitTerritory {
   readonly type: string;
   readonly state: string;
   readonly zips: readonly string[];
-  /** How its ZCTAs were derived, e.g. `county GEOID 04019`, `place GEOID 0477000`. */
+  /** How its ZCTAs were derived, e.g. `county GEOID <ssccc>`, `place GEOID <sspppp>`. */
   readonly method?: string;
 }
 
@@ -103,10 +76,8 @@ export interface Territory {
 export { OVERLAP_CERTAINTY_MARGIN, certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 
 /**
- * The sampled-overlap key a unit's ZCTAs were derived from (`county:04019`,
- * `place:0477000`, `unsd:…`), or null when its method names no single layer
- * GEOID (a county subdivision without one, a special district TIGER does not
- * publish).
+ * The sampled-overlap key a unit's ZCTAs were derived from (`county:<geoid>`,
+ * `place:<geoid>`, `unsd:…`), or null when its method names no single layer GEOID.
  */
 export function unitShareKey(unit: Pick<CensusUnitTerritory, "method">): string | null {
   const m = /^(county|place|cousub|unsd|elsd|scsd) GEOID (\d+)/.exec(unit.method ?? "");
@@ -162,10 +133,9 @@ export interface TerritoryIndex {
   /** Census units in states NO registry covers, for the "not registered" count. Keyed by state (upper). */
   readonly unregisteredUnitsByState: ReadonlyMap<string, readonly CensusUnitTerritory[]>;
   /**
-   * Census units in a state a registry DOES cover that no registry row joined:
-   * a government the Census names and our registry does not carry (MW-028 names
-   * them as blocked, never as work). Keyed by state (upper). Optional so an
-   * index built before the field existed still reads.
+   * Census units in a covered state that no registry row joined: governments the
+   * registry does not carry, counted as blocked, never as work. Keyed by state
+   * (upper). Optional for older indexes.
    */
   readonly unjoinedUnitsByState?: ReadonlyMap<string, readonly CensusUnitTerritory[]>;
   /** A unit's share of each of its ZCTAs, where the sampled overlap was loaded for it. */
@@ -174,28 +144,19 @@ export interface TerritoryIndex {
 
 /**
  * Join the covered-jurisdiction registries to the Census unit territories.
+ * `units` covers every state, so a scope in an unregistered state can still say
+ * which governments it holds. A unit without shares can only be placed by a
+ * whole-inside ZCTA.
  *
- * `registries` are the promoted operational-reference registries the runner
- * already preloaded; `units` are every Census unit (any state), so a scope in
- * a state no registry covers can still say which governments it holds.
- * `sharesFor` answers a unit's per-ZCTA share by its `unitShareKey`; a unit
- * with none still joins, and can then only be placed by a whole-inside ZCTA.
- *
- * A registry read from a state's registration (2026-09-25) places each
- * government by the Census division registration minted its body on
- * (`divisionTerritory`: the same sampled overlap, read by the division's own
- * layer and GEOID, so it works for a territory the Census of Governments does
- * not enumerate), and still claims the Census unit its id joins, so no unit of
- * that state is named as missing from its registry. A government registration
- * pairs with no division is unplaced, by that name.
+ * A registration-read registry places each government by the Census division
+ * its body sits on (`divisionTerritory`), and still claims the Census unit its
+ * id joins. A government paired with no division is unplaced, by name.
  */
 export function buildTerritoryIndex(
   registries: readonly JurisdictionRegistry[],
   units: readonly CensusUnitTerritory[],
   sharesFor: (key: string) => ReadonlyMap<string, number> | undefined = () => undefined,
   divisionTerritory: (j: Jurisdiction) => DivisionTerritory | undefined = () => undefined,
-  /* An approximate boundary extract, for Send placement only (`district-territory.ts`); absent, none is read. */
-  approximate: ApproximateDistrictExtract | null = null,
 ): TerritoryIndex {
   const registeredStates = new Set(registries.map((r) => r.stateCode.toUpperCase()));
   const unitsByPid = new Map(units.map((u) => [`${u.state.toUpperCase()}:${u.pid6}`, u] as const));
@@ -265,7 +226,7 @@ export function buildTerritoryIndex(
       claimed.add(unit);
       if (unit.zips.length === 0) {
         /* A district TIGER draws no boundary for may still have one its own law gives (`district-territory.ts`). */
-        const ruled = ruledDistrictTerritory(unit, unitsByPid, sharesFor, unitShareKey, DISTRICT_TERRITORIES, approximate);
+        const ruled = ruledDistrictTerritory(unit, unitsByPid, sharesFor, unitShareKey, DISTRICT_TERRITORIES);
         if (ruled !== null && !("unplaced" in ruled)) {
           bySubject.set(j.id, { subjectId: j.id, name: j.name, govClass: j.govClass, stateCode: j.stateCode.toUpperCase(), zctas: ruled.zctas, shares: ruled.shares });
           continue;
@@ -441,13 +402,9 @@ export type BudgetAdmission =
   | { readonly admit: false; readonly code: typeof SCOPE_BUDGET_CODE; readonly why: string };
 
 /**
- * The per-scope admission gate for paid Scouts.
- *
- * Reservations close the race between concurrent Scouts exactly as the Fleet
- * controller's do: an admitted Scout holds its worst case against every scope
- * it is in until its measured cost is settled. An admission that is never
- * settled keeps its reservation for the rest of the cycle — conservative,
- * because a budget may only restrict.
+ * The per-scope admission gate for paid Scouts. An admitted Scout holds its
+ * worst case against every scope it is in until settled; an unsettled
+ * admission keeps its reservation for the rest of the cycle.
  */
 /** A state hint as a state: a bare postal code (`AZ`) or any id `stateOfSubject` reads; null when it says none. */
 function stateOfHint(hint: string | null | undefined): string | null {
@@ -483,16 +440,12 @@ export class ScopeBudgetGate {
     this.historyReadAt = input.historyReadAt ?? new Date(0).toISOString();
   }
 
-  /** What this gate was armed with, for the standing hunter lane's reading (CH-24). */
+  /** What this gate was armed with, for the standing hunter lane's reading. */
   armedReading(): { readonly scopes: readonly BudgetScope[]; readonly malformedScopes: number } {
     return { scopes: this.scopes, malformedScopes: this.heldForMalformed };
   }
 
-  /**
-   * The scopes a subject is bound by. `stateHint` (2026-09-25, for autonomous
-   * work that carries its state beside its subject) is read only when the
-   * subject's own id does not say its state; absent, the rule is unchanged.
-   */
+  /** The scopes a subject is bound by. `stateHint` is read only when the subject's own id does not say its state. */
   bindingScopes(subjectId: string, stateHint?: string | null): BudgetScope[] {
     const state = stateOfSubject(subjectId) ?? stateOfHint(stateHint);
     return this.scopes.filter((s) =>
@@ -516,11 +469,9 @@ export class ScopeBudgetGate {
   }
 
   /**
-   * The area budget lines a paid job on this subject is held against, for the
-   * durable holds (`spend-holds.ts`): EVERY binding scope must have room — or
-   * the refusal when a scope's budget cannot be checked at all. No lines: no
-   * area budget applies. The binding scopes are `bindingScopes`' — the one
-   * matching rule, for Scouts and autonomous work alike.
+   * The area budget lines a paid job on this subject is held against
+   * (`spend-holds.ts`): every binding scope must have room, or the refusal when
+   * a scope's budget cannot be checked. No lines: no area budget applies.
    */
   linesFor(subjectId: string, stateHint?: string | null): { readonly lines: readonly BudgetLine[] } | { readonly refusal: Extract<BudgetAdmission, { admit: false }> } {
     if (this.heldForMalformed > 0) {
@@ -650,11 +601,8 @@ function countBy<T>(items: Iterable<T>, keyOf: (item: T) => string): Record<stri
 
 /**
  * What the scope holds: the registered governments that certainly overlap it,
- * which of them carry standing work, the scope ZCTAs a government with work
- * touches, and the rest (the gap). Census units in a state no registry covers
- * are counted by the same certain-overlap rule, with their sampled shares where
- * the index loaded them (every unit's, since 2026-09-23) and by the
- * whole-inside rule alone where it did not.
+ * which carry standing work, the scope ZCTAs those touch, and the gap. Census
+ * units in unregistered states are counted by the same rule.
  */
 function coverageOf(
   scope: ScopeZctas,

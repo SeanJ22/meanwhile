@@ -1,36 +1,20 @@
 /**
- * **THE STATEWIDE ARIZONA 2026 CANDIDATE IDENTITY LAYER — THE TYPES.**
- * (Session C3, 2026-09-01. RULING 229, RULING 206, RULING 207.)
- *
- * ## Why an identity layer exists at all
- *
- * Three layers, and the whole point of RULING 229 is that they are three:
+ * The statewide Arizona 2026 candidate identity layer, between acquisition
+ * and projection:
  *
  * ```
- * ACQUISITION   the complete authoritative source universe — statewide,
- *               and with no dependency on any reader's ZIP
- * IDENTITY      THIS LAYER. one canonical statewide candidate/contest
- *               registry: candidate -> contest -> office/division -> party
+ * ACQUISITION   the complete authoritative source universe, statewide, with
+ *               no dependency on any reader's ZIP
+ * IDENTITY      one canonical statewide candidate/contest registry:
+ *               candidate -> contest -> office/division -> party
  *               -> filing authority -> committee(s)
  * PROJECTION    a reader surface asking the corpus about a candidate the
- *               registry named. `stateMoneyForTarget(candidacyId)`
+ *               registry named (`stateMoneyForTarget(candidacyId)`)
  * ```
  *
- * The measured defect this was built for: Arizona's certified general-election
- * lineup keys its cards `${contestId}|${nomineeName}`, the state campaign-money
- * snapshot keys its records to canonical CANDIDACY ids, and nothing joined the
- * two. `stateMoneyForTarget("ballot-az-pima:governor:hobbs-katie")` returned a
- * FILED record of $11,109,719.95; the card asked by NAME and got nothing, so
- * eighteen of twenty-two non-federal candidates at 85701 rendered the generic
- * *"We don't hold a campaign finance filing for this person"* — a sentence that
- * was false about us, over money we held.
- *
- * ## What may NOT be in here
- *
- * The registry is STATEWIDE. It is not named, keyed, scoped or filtered by
- * `az-pima`, by 85701, by 85641, or by any other reader location, and adding a
- * ZIP to it would be the exact collapse RULING 229 forbids. Reader location
- * decides applicability and DISPLAY; it never decides who exists.
+ * The registry is statewide: never named, keyed, scoped or filtered by a
+ * county or ZIP. Reader location decides applicability and display, never who
+ * exists.
  */
 
 import type { NameForm } from "./name-forms.ts";
@@ -47,10 +31,8 @@ export interface AzContestIdentity {
   ocdId: string;
   level: AzGovernmentLevel;
   /**
-   * Which authority holds the campaign-finance filings for this seat. Federal
-   * seats file with the FEC and are outside the Secretary of State's regime;
-   * saying so here is what keeps the projection layer from asking the wrong
-   * agency and reading its silence as an absence.
+   * Which authority holds the campaign-finance filings for this seat, so the
+   * projection never asks the wrong agency and reads its silence as absence.
    */
   financeFilingAuthority: string;
   /**
@@ -86,13 +68,8 @@ export interface AzCandidateIdentity {
   candidacySourceUrl: string | null;
   /**
    * The canonical candidacy id the reader surfaces and the finance snapshot
-   * both key on, or `null` where this candidate is named by an authority that
-   * the ballot set does not carry a candidacy row for.
-   *
-   * `null` is a real and honest value: Arizona's certified canvass stars
-   * write-in primary winners who never appear on the March candidate-filing
-   * list, and inventing a candidacy id for them would put a key into the
-   * projection layer that no authority ever published.
+   * both key on, or `null` where the ballot set carries no candidacy row for
+   * this candidate (e.g. a write-in primary winner). None is invented.
    */
   canonicalCandidacyId: string | null;
   committees: AzCommitteeLink[];
@@ -160,10 +137,7 @@ export interface LineupReconciliationRow {
     sharedNameFormRules: string[];
     note: string;
   };
-  /**
-   * ON AN UNRESOLVED ROW ONLY: one plain sentence about US, for the reader.
-   * It is never a characterization of the candidate and never a figure.
-   */
+  /** On an unresolved row only: one plain sentence about us, never about the candidate. */
   readerGapSentence: string | null;
 }
 
@@ -175,11 +149,8 @@ export interface LineupReconciliation {
   generatedBy: string;
   sources: { name: string; url: string | null; readAt: string; note: string }[];
   /**
-   * THE POPULATION PROOF, over the WHOLE lineup rather than over examples.
-   *
-   * `duplicateTargetCollisions` is an ERROR unless the election model proves
-   * why two nominees may resolve to one candidacy, and no such proof exists for
-   * Arizona 2026: one candidacy is one person in one contest.
+   * The population proof over the whole lineup. `duplicateTargetCollisions` is
+   * an error: one candidacy is one person in one contest.
    */
   proof: {
     lineupContests: number;

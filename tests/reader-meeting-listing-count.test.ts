@@ -5,14 +5,17 @@ import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { UPCOMING_HORIZON_DAYS } from "../lib/meetings/constants.ts";
 import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
 import { readerMeetingCount } from "../lib/meetings/reader-listing-count.ts";
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { groupByVenue } from "../lib/meetings/venues.ts";
 import { renderedSignature, updateMarkerIcon } from "../lib/map/marker-pool.ts";
 import { applyFilters } from "../lib/state/derive.ts";
 import { INITIAL_STATE } from "../lib/state/defaults.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { ambiguousListingPairs, dateOnlyListings, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+
+/** The recorded 85701 calendar, three of its sittings each listed a second time, and three date-only listings. */
+const readSnapshot = () => recordedMeetingsSnapshot([...ambiguousListingPairs(3).meetings, ...dateOnlyListings(3)]);
 
 test("all current ambiguous listing pairs survive scope filtering without becoming distinct-event counts", () => {
   const snapshot = readSnapshot(); assert.ok(snapshot);
@@ -60,13 +63,13 @@ test("actual badge, stats, overlay and venue panel render every ambiguous listin
     import { ListOverlay } from './components/map/list-overlay.tsx';
     import { MeetingPanel } from './components/map/meeting-panel.tsx';
     import { MeetingListingNotice } from './components/map/meeting-listing-notice.tsx';
-    import { readSnapshot } from './lib/meetings/snapshot.ts';
     import { canonicalBodyIdentity } from './lib/ask/body-identity.ts';
-    import { installRegistryRuntimeFirstSeeds } from './tests/helpers/registry-runtime-first-seed.ts';
+    import { installRegistryAuthority } from './tests/helpers/promoted-fixtures.ts';
+    import { ambiguousListingPairs, dateOnlyListings, recordedMeetingsSnapshot } from './tests/helpers/reader-fixtures.ts';
     import { meetingListingIdentity } from './lib/meetings/listing-identity.ts';
     import { groupByVenue } from './lib/meetings/venues.ts';
-    await installRegistryRuntimeFirstSeeds();
-    const snapshot=readSnapshot(), identity=meetingListingIdentity(snapshot.meetings,canonicalBodyIdentity), results=[];
+    await installRegistryAuthority();
+    const snapshot=recordedMeetingsSnapshot([...ambiguousListingPairs(3).meetings, ...dateOnlyListings(3)]), identity=meetingListingIdentity(snapshot.meetings,canonicalBodyIdentity), results=[];
     for(const group of identity.groups){
       const meetings=snapshot.meetings.filter(row=>group.sourceIds.includes(row.id)),venues=groupByVenue(meetings,identity);
       const data={allMeetings:meetings,meetings,venues,result:{meetings,listingIdentity:identity,coverage:null,tier:'exact',radiusKm:25,requestedRadiusKm:25,center:{lat:43.3,lng:-72}},location:null,drawnDistricts:[],dropped:0,searchFailed:false,atAddress:false,governing:null,zipPartial:null,basis:'ZIP'};
@@ -82,6 +85,8 @@ test("actual badge, stats, overlay and venue panel render every ambiguous listin
   `], { cwd: process.cwd(), encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
   const proof = JSON.parse(output.trim()) as { results: { group: { reason: string; sourceIds: string[]; sources: { id: string; sourceUrl: string }[] }; badge: string; stats: string; overlay: string; panel: string; carriedBadge:string; carriedOverlay:string; failedBadge:string; failedOverlay:string }[]; combinedNotice: string };
   const { results, combinedNotice } = proof;
+  // A URL as rendered markup carries it: an ampersand is escaped.
+  const attribute = (url: string) => url.replaceAll("&", "&amp;");
   assert.equal(results.length, 3);
   const sharedReason = results[0].group.reason;
   assert.ok(results.every((result) => result.group.reason === sharedReason));
@@ -91,7 +96,7 @@ test("actual badge, stats, overlay and venue panel render every ambiguous listin
     assert.ok(combinedNotice.includes(`data-meeting-listing-group="${result.group.sourceIds.join("|")}"`));
     for (const source of result.group.sources) {
       assert.ok(combinedNotice.includes(source.id));
-      assert.ok(combinedNotice.includes(source.sourceUrl));
+      assert.ok(combinedNotice.includes(attribute(source.sourceUrl)));
     }
   }
   for (const result of results) {
@@ -104,7 +109,7 @@ test("actual badge, stats, overlay and venue panel render every ambiguous listin
     assert.match(result.overlay, /2 calendar listings/); assert.match(result.panel, /2 calendar listings/);
     for (const markup of [result.overlay, result.panel, result.carriedOverlay, result.failedOverlay]) {
       assert.ok(markup.includes(result.group.reason));
-      for (const source of result.group.sources) { assert.ok(markup.includes(source.sourceUrl)); assert.ok(markup.includes(source.id)); }
+      for (const source of result.group.sources) { assert.ok(markup.includes(attribute(source.sourceUrl))); assert.ok(markup.includes(source.id)); }
     }
   }
 });

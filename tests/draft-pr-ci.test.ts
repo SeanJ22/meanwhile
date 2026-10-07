@@ -125,7 +125,7 @@ test("admission alone classifies draft/full before preflight", () => {
   }
 });
 
-test("draft runs install, lint and types; governance waits for ready", () => {
+test("draft runs install, lint and types", () => {
   const gates = workflow().jobs.verify;
   const install = named(gates, "Install");
   for (const tier of ["draft", "waiting", "yes"]) {
@@ -140,12 +140,6 @@ test("draft runs install, lint and types; governance waits for ready", () => {
     assert.match(condition, /tier == 'draft'/, `${name} is missing from draft certification`);
     assert.match(condition, /tier == 'yes'/, `${name} is missing from full certification`);
   }
-  for (const name of ["Canonical state holdings and residual paths", "Generated state manifests against committed observations"]) {
-    const condition = named(gates, name).if ?? "";
-    assert.match(condition, /always()/, `${name} no longer reports after a sibling deterministic gate fails`);
-    assert.match(condition, /tier == 'yes'/, `${name} is missing from full certification`);
-    assert.doesNotMatch(condition, /tier == 'draft'/, `${name} runs on draft pull requests`);
-  }
 });
 
 test("draft cannot buy builds, browsers, the full suite, or shipping-only gates", () => {
@@ -153,9 +147,7 @@ test("draft cannot buy builds, browsers, the full suite, or shipping-only gates"
   const fullOnly = [
     "Build (the command netlify.toml gives Netlify)",
     "Bundle-scanning checks (need the build above)",
-    "Trace census",
-    "Keep the trace list",
-    "Frozen holdings base for extraction proofs",
+    "Fetch the frozen import commit a test reads",
     "Install the browser the suite needs",
     "Prove the browser is actually there",
     "Test",

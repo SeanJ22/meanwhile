@@ -1,4 +1,4 @@
-import { geometryFiles } from "../lib/holdings/files.ts";
+import { geometryFiles } from "../lib/holdings/discovery.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
@@ -11,25 +11,15 @@ import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import { divisionsAt, sweepsRun, type GeoFeature } from "../lib/registry/resolve.ts";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installMeetings, recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+installMeetings(recordedMeetings85701());
 
 /**
- * AUD-04 — the governing geography is resolved ONCE per request (2026-08-18).
- *
- * `/api/meetings` ran the same point-in-polygon sweep twice: once as
- * `divisionsAt`, for the filter that keeps an online meeting visible, and again
- * inside `coverageAt` → `summarizeCoverage` → `bodiesAt` → `divisionsAt`. Two
- * identical sweeps over identical features to answer two questions about one
- * location. MEASURED with a counter on the resolver: 2 sweeps per request
- * before, 1 after.
- *
- * The route now keeps its resolved divisions and hands them to `coverageAt`.
- * This does not touch the stores-never-join rule — one geometry answer reused
- * inside one request joins nothing and is stored nowhere.
- *
- * Two properties are worth guarding, and the second is the dangerous one.
+ * `/api/meetings` resolves the governing geography once per request and hands the resolved divisions to
+ * `coverageAt`, instead of sweeping the same polygons twice.
  */
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -51,14 +41,11 @@ const registry = JSON.parse(
 ) as Registry;
 const byId = new Map<string, Division>(registry.divisions.map((d) => [d.ocdId, d]));
 
-/** The four pilot zips, plus a point outside coverage. */
+/** Test ZIPs, plus a point outside coverage. */
 const PROBES = ["85701", "85641", "07866", "03255", "06716"] as const;
 
 test("pre-resolving the divisions produces the identical coverage answer", () => {
-  // The equivalence the whole change rests on, asserted on the object rather
-  // than on a claim about it. `scripts/equivalence-meetings.mts` proves the
-  // same thing end to end at the HTTP body level; this proves it at the seam
-  // that was actually changed, so a break names the layer.
+  // Passing the pre-resolved divisions yields the same coverage object.
   let checked = 0;
   for (const zip of PROBES) {
     const resolved = resolveZip(zip);
@@ -82,22 +69,8 @@ test("pre-resolving the divisions produces the identical coverage answer", () =>
 });
 
 test("an EMPTY pre-resolved set is not silently treated as an answer", () => {
-  /*
-   * THE HAZARD, and it is not hypothetical — it was planted and observed.
-   *
-   * The route resolves divisions inside a try/catch that degrades to an empty
-   * result, because a failed lookup must not fail the whole request. If that
-   * empty result were passed through as though it were an answer, coverage
-   * would come back `bodies: [], seats: [], divisions: []` — and a retrieval
-   * failure would render as "no body governs here", which is a failed fetch
-   * written into the data as an absence.
-   *
-   * Planting exactly that (`resolvedDivisions ?? []`) moved all five probe
-   * points off byte-identity in the equivalence run, with Tucson's coverage
-   * collapsing to empty. So the difference between passing `undefined` and
-   * passing `[]` is the difference between a de-duplication and a false claim
-   * about a government, and this asserts they are NOT the same call.
-   */
+  // Passing `[]` would empty coverage and render a lookup failure as "no body governs here", so `undefined`
+  // (resolve again) and `[]` must not be the same call.
   const resolved = resolveZip("85701");
   assert.ok(resolved.ok);
   const point: [number, number] = [resolved.centroid.lng, resolved.centroid.lat];
@@ -123,13 +96,7 @@ test("an EMPTY pre-resolved set is not silently treated as an answer", () => {
 });
 
 test("the route passes its divisions only when the lookup succeeded", () => {
-  /*
-   * The source half of the rule above. The behavioural test proves `[]` empties
-   * coverage; this proves the route never hands `[]` over. A later edit
-   * replacing `?? undefined` with `?? []` — the tidier-looking of the two —
-   * turns a lookup failure into a confident claim that nothing governs the
-   * reader's address.
-   */
+  // The route must hand `undefined`, never `[]`, when its own lookup failed.
   const source = readFileSync(
     join(here, "..", "app", "api", "meetings", "route.ts"),
     "utf8",
@@ -154,19 +121,8 @@ test("the route passes its divisions only when the lookup succeeded", () => {
 /* -- the count itself, which is the only thing that can see a second sweep -- */
 
 /**
- * AUD-04's DONE CONDITION, built a session late (g17, 2026-08-18).
- *
- * The change shipped with an equivalence proof and a hazard guard, and both are
- * above. Neither can see the defect come back. A second sweep over the same
- * polygons returns the same divisions, so the responses stay byte-identical and
- * the empty-set guard stays green while the route quietly pays twice again —
- * which is precisely the state the row existed to end. The property is a COUNT,
- * and only a count can assert it.
- *
- * `sweepsRun()` in lib/registry/resolve.ts is the instrument: one integer
- * increment inside `divisionsAt`, the function that walks every committed
- * polygon. Deltas, never totals — the module is process-wide and other tests in
- * the same run move it.
+ * Only a count can see a second sweep: `sweepsRun()` in lib/registry/resolve.ts increments inside
+ * `divisionsAt`. Deltas, never totals; the counter is process-wide.
  */
 
 test("one /api/meetings request runs exactly one point-in-polygon sweep", async () => {
@@ -185,7 +141,7 @@ test("one /api/meetings request runs exactly one point-in-polygon sweep", async 
     swept,
     1,
     `the request ran ${swept} point-in-polygon sweep(s) over the committed geometry.\n` +
-      "  Exactly one is the AUD-04 condition: the route resolves the point for its\n" +
+      "  Exactly one is the condition: the route resolves the point for its\n" +
       "  online-meeting filter and hands that same answer to coverageAt. Two means a\n" +
       "  caller stopped passing its resolved divisions and is paying for the identical\n" +
       "  sweep again; zero means this request answered without consulting the geometry\n" +
@@ -194,18 +150,7 @@ test("one /api/meetings request runs exactly one point-in-polygon sweep", async 
 });
 
 test("the counter can read two, so a one is a measurement and not a constant", () => {
-  /*
-   * The control. An assertion of "exactly 1" is worthless if the instrument
-   * cannot produce anything else — a counter stuck at one is indistinguishable
-   * from a route that resolves once, and this repo has already shipped a guard
-   * that was green because it could not fail (the source-level synthetic-run
-   * check, green through two live leaks).
-   *
-   * So the pre-AUD-04 shape is reproduced deliberately: resolve the point, then
-   * ask summarizeCoverage to resolve it AGAIN by withholding the pre-resolved
-   * set. That is exactly what /api/meetings used to do, and the counter reads
-   * the 2 it used to cost.
-   */
+  // Control: withholding the pre-resolved set makes summarizeCoverage resolve again, and the counter reads 2.
   const resolved = resolveZip("85701");
   assert.ok(resolved.ok);
   const point: [number, number] = [resolved.centroid.lng, resolved.centroid.lat];
@@ -216,7 +161,7 @@ test("the counter can read two, so a one is a measurement and not a constant", (
   assert.equal(
     sweepsRun() - before,
     2,
-    "the pre-AUD-04 call shape no longer costs two sweeps — the counter is not measuring",
+    "the old call shape no longer costs two sweeps — the counter is not measuring",
   );
 
   const withPre = sweepsRun();

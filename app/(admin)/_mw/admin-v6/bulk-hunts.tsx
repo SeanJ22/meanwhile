@@ -1,27 +1,5 @@
 "use client";
 
-/**
- * **START MISSIONS AND HUNTS IN ONE GO.** (S11.)
- *
- * Three ways in, one list out:
- *
- * ```
- *   paste    ZIPs separated by spaces, commas or lines
- *   file     a spreadsheet saved as CSV (a column named zip; a district column
- *            groups them) — the Cook toss-up file reads as 21 groups
- *   pick     a whole state, counties, congressional or state legislative
- *            districts, or metro areas. Each pick is ONE mission, never a pile
- *            of ZIP hunts: the runner works out its ZIPs when it plans
- * ```
- *
- * and three ways to budget: one total for all (shared evenly), the same amount
- * for each, or a budget for each. "Check the list" asks the server to read it
- * and shows exactly what will be sent and what was left out and why; Send is
- * off until that check has been run on what is on screen now, so nothing is
- * sent that was not shown. The send itself is the one gateway action, through
- * the same executor every other control uses, and its receipt reads Done only
- * when the runner confirms.
- */
 import { useEffect, useId, useRef, useState } from "react";
 
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
@@ -73,7 +51,7 @@ interface Preview {
 type Mode = "split" | "same" | "each";
 type Source = "paste" | "file" | "pick";
 
-/** The pick a place key stands for (`st:az`, `geo:az.county.04019`), or null for a place a pick cannot carry. */
+/** The pick a place key stands for, or null for a place a pick cannot carry. */
 export function bulkPickOf(target: string, name: string): BulkPick | null {
   const st = /^st:([a-z]{2})$/.exec(target);
   if (st) return { kind: "state", state: st[1].toUpperCase(), label: `All of ${name}` };
@@ -89,7 +67,6 @@ const CHECK_FAILED = "Check failed";
 
 export function BulkHunts(props: {
   readonly initialPick?: BulkPick | null;
-  /** Why sending is off (the connection, or no spending permission), or null. */
   readonly blocked: string | null;
   readonly onSend: (send: { readonly items: readonly BulkItem[]; readonly missions: readonly BulkMission[]; readonly priority: number }) => void;
   readonly onClose: () => void;
@@ -119,7 +96,6 @@ export function BulkHunts(props: {
 
   useEffect(() => { dialogRef.current?.focus(); }, []);
 
-  // The districts or counties of the chosen state, when picking those. Each answer is kept under the question it answers.
   const listKey = source === "pick" && pickType !== "state" ? `${pickType}:${pickState}` : null;
   const held = listKey === null ? null : lists[listKey] ?? null;
   const choices = held?.items ?? null;

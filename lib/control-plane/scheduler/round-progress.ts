@@ -1,25 +1,9 @@
 import { createHash } from "node:crypto";
 
 /**
- * **A LONG PHASE OF THE RESEARCH ROUND SAYS IT IS STILL MOVING.**
- * (Returned live failure, 2026-10-05.)
- *
- * The runner ends the research child after ten minutes with no changed output
- * (`RESEARCH_CHILD_NO_PROGRESS`, scripts/pilot-runtime-child.mts). From
- * 2026-10-04 every round on the production runner ended that way: the worker
- * wave, the dispatch phase and the meetings-discovery lane each finish many
- * tasks but printed nothing until the whole phase ended, and the wave alone
- * runs up to its 15-minute slice. Finished work is progress, so each finished
- * task is counted here and the counts are printed at most every
- * `ROUND_PROGRESS_EVERY_MS`. A phase where nothing finishes still prints
- * nothing, so a real hang is still ended at the same limit.
- *
- * Shortly before that limit the runner asks the child what it is waiting on
- * (`RESEARCH_STALL_PROBE`). The child answers with one line naming its
- * labelled await, its store calls in flight and its last phase. That line does
- * not count as progress, and it stays in the stderr tail the failed round's
- * digest carries, so the next stall names its phase. No answer means the
- * child's event loop was blocked.
+ * Progress lines for long phases of the research round: each finished task is counted and the counts printed
+ * at most every `ROUND_PROGRESS_EVERY_MS`, so finished work renews the runner's no-progress limit while a real
+ * hang still prints nothing. The stall-probe answer names what the round waits on and never counts as progress.
  */
 export const ROUND_PROGRESS_EVERY_MS = 30_000;
 export const RESEARCH_STALL_PROBE = "RESEARCH_STALL_PROBE";
@@ -37,13 +21,7 @@ export function mayCountAsProgress(line: string): boolean {
   return line.trim() !== "" && !line.includes(STALL_REPORT_PREFIX) && !NOT_PROGRESS.test(line);
 }
 
-/**
- * The runner's progress rule over one output stream, chunk by chunk: the
- * complete lines in `chunk` that renew its no-progress limit (counted, first
- * seen, never seen before on this stream). The research child keeps the same
- * reading of its own output, so its post-cutoff bound and the runner's
- * watchdog agree on when the round last moved (post-cutoff-bound.ts).
- */
+/** The runner's progress rule over one output stream: the complete lines in `chunk` that renew its limit (counted, first seen on this stream). The child reads its own output the same way. */
 export function progressLines(): (chunk: string) => number {
   const seen = new Set<string>();
   let partial = "";

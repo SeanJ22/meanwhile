@@ -1,9 +1,5 @@
 "use client";
 
-/**
- * Detail panels. Every panel ends with "Instructions about this item, and what
- * happened". Technical identifiers live only under "Technical details".
- */
 import type { ReactNode } from "react";
 
 import { STATUS_COLOR, STATUS_LABEL, Swatch } from "./charts.tsx";
@@ -43,7 +39,6 @@ function ShotImage(props: { readonly image: string; readonly label: string }) {
   return <img src={props.image} alt={`Screenshot: ${props.label}`} loading="lazy" style={{ display: "block", maxWidth: "100%", maxHeight: 420, objectFit: "contain", borderRadius: 8, border: "1px solid var(--panel-border)" }} />;
 }
 
-/** FE-21: the screenshot a look-check red flag points at, opened full size in a new tab. */
 function Shots(props: { readonly shots: readonly FixShot[] | undefined }) {
   if (!props.shots?.length) return null;
   return (
@@ -253,7 +248,6 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     );
   }
 
-  // search
   const q = d.query.toLowerCase();
   const hits: { type: string; title: string; sub: string; go: () => void }[] = [
     ...(v.data.results.data ?? []).filter((r) => relation(v.index, r.applies, v.scopeKey)).map((r) => ({ type: "Reader result", title: r.title, sub: `${v.index.get(r.applies[0])?.name}${r.kind === null ? "" : ` · ${r.kind}`}`, go: () => v.open({ type: "result", id: r.id }) })),

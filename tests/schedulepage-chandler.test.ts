@@ -1,23 +1,3 @@
-/**
- * **CHANDLER'S CITY COUNCIL, FROM THE CITY'S OWN SCHEDULE TABLE.** (C14, 2026-09-24.)
- *
- * Against the City Clerk's page recorded from www.chandleraz.gov on 2026-09-24
- * (`pnpm research:fetch`, robots.txt read first). No live calls.
- *
- * Every Chandler agenda, result and minutes set is published only on
- * destinyhosted.com. Until 2026-09-25 it was never requested (its robots.txt
- * reads as disallow-all); since the owner's decision that robots.txt no longer
- * blocks public pages, the Council's Destiny month lists (recorded that day,
- * 22:3xZ) join each agenda, result and video to the sitting the city dated —
- * see the DESTINY tests at the end. The
- * city's own page publishes the year's sittings as the "2026 City Council
- * Meeting Dates" table (Resolution No. 5937, Exhibit A). What these tests
- * hold: the section scope reads the table's 33 dates and nothing else on a page
- * full of news and archive dates; no time is claimed, because the table
- * states none; and each served sitting is the Council's, on the city's own
- * host, cited to that page.
- */
-
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
@@ -26,6 +6,7 @@ import { wiringForTypes } from "../lib/registry/source-wiring.ts";
 import { makeSchedulePageSource, parseDatedList, parseDayEvents, parseStatedTime, scheduledOfDay, sliceSection } from "../lib/sources/schedulepage/index.ts";
 import { destinyMonthUrl, destinyMonthsBetween, joinDestinyRows, parseDestinyMonth } from "../lib/sources/schedulepage/destiny-agenda.ts";
 
+/** Recorded city pages; no live calls. The schedule table states no times, so none is claimed. */
 const PAGE = readFileSync(new URL("./fixtures/schedulepage/chandler-city-council-meetings.html", import.meta.url), "utf8");
 const NOW = new Date("2026-09-24T12:00:00-07:00");
 const DAY = (d: string) => readFileSync(new URL(`./fixtures/schedulepage/chandler-day-${d}.json`, import.meta.url), "utf8");
@@ -144,11 +125,6 @@ test("FETCH: one day file per scheduled date inside the window, and a refused da
   assert.deepEqual(raw.days?.map((d) => d.date), ["2026-09-14", "2026-10-12", "2026-10-15"], "the refused day is absent, so its sitting stays date-only");
 });
 
-/*
- * DESTINY — the Council's agendas, results and videos from its Destiny Agenda list (2026-09-25).
- * Recorded from public.destinyhosted.com on 2026-09-25 (~22:30Z): September 2026 (seven Council rows) and
- * October 2026 (the list's own "No agendas or minutes were found" sentence).
- */
 const DESTINY = (m: string) => readFileSync(new URL(`./fixtures/schedulepage/chandler-destiny-cc-${m}.html`, import.meta.url), "utf8");
 const DESTINY_BASE = "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC";
 const destinyMonth = (m: string) => {

@@ -1,26 +1,12 @@
 /**
- * "About this area" v1 (7, 2026-08-17) — the questions people ask before
- * moving, answered before asked, including the controversial ones.
- *
- * Register rules: one or two plain sentences per answer, each cited to the
- * official source — statute or state agency page — never advocacy, never
- * characterization ("high taxes", "strict laws" are the reader's judgments
- * to make, not ours). An unanswered topic renders the honest gap.
- *
- * Verification: every `sourceUrl` was fetched 2026-08-14 (wall clock;
- * the session ran under the 08-17 sequence label) unless its
- * `verification` note says otherwise. New Hampshire's state web hosts
- * (dhhs.nh.gov, revenue.nh.gov, dmv.nh.gov, sos.nh.gov) 403 every
- * non-browser client this pipeline has — those citations carry a
- * `verification` naming the wall and are queued for the browser-phase
- * check; a NH answer whose URL fails that check does not ship.
+ * Per-state answers to common mover questions. Each answer states the law in
+ * one or two plain sentences cited to an official source, never characterizing
+ * it.
  */
 
 export interface AreaFact {
   topic: string;
-  /** The question a mover actually asks. */
   question: string;
-  /** One or two register-plain sentences. Facts, never characterization. */
   answer: string;
   sourceUrl: string;
   sourceOrg: string;
@@ -32,17 +18,9 @@ export interface AreaFactSet {
   state: string;
   stateName: string;
   facts: AreaFact[];
-  /** Topics we haven't covered — the honest gap, rendered as such. */
 }
 
 const FETCHED = "fetched 2026-08-14";
-/**
- * The two `AZ-1` topics added 2026-08-23 carry their own date rather than
- * sharing `FETCHED`, because they were read on a different day from a
- * different session (RULING 107: a freshness date is written by the code path
- * that performed the read, and a shared constant would date them to a fetch
- * that never happened).
- */
 const AZ_FETCHED = "fetched 2026-08-23";
 const NH_WALL =
   "NH state hosts 403 non-browser clients; page title verified in a real browser 2026-08-14";
@@ -115,16 +93,6 @@ export const AREA_FACTS: AreaFactSet[] = [
         sourceOrg: "New Jersey Division of Taxation",
         verification: FETCHED,
       },
-      /*
-       * NH109, 2026-08-24. The two topics AZ-1 added, brought to the other two
-       * states so a reader who moves gets the same questions answered.
-       *
-       * Both are cited to the STATUTE rather than to an agency page, and that
-       * is a decision rather than a convenience: dep.nj.gov's licence page
-       * answers HTTP 200 and flattens to almost no prose, because it is
-       * JavaScript-rendered. A statute says the same thing, says it in the
-       * state's own words, and does not move when a department redesigns.
-       */
       {
         topic: "hunting-fishing",
         question: "Am I allowed to hunt or fish?",
@@ -220,16 +188,6 @@ export const AREA_FACTS: AreaFactSet[] = [
         sourceOrg: "New Hampshire Department of Revenue Administration",
         verification: NH_WALL,
       },
-      /*
-       * NH109, 2026-08-24.
-       *
-       * **wildlife.nh.gov refuses this client with HTTP 403** — measured
-       * 2026-08-24, on both the licence page and the site root. That is a wall
-       * around a known thing (RULING 90 item 4), and the other road to the same
-       * fact is the statute the department administers, on gencourt, which
-       * answers at rung 2. The wall is named here rather than becoming an
-       * absence.
-       */
       {
         topic: "hunting-fishing",
         question: "Am I allowed to hunt or fish?",
@@ -322,17 +280,6 @@ export const AREA_FACTS: AreaFactSet[] = [
         sourceOrg: "Arizona Department of Revenue",
         verification: FETCHED,
       },
-      /*
-       * `AZ-1` (2026-08-23). Two topics an outside reviewer asked for, and the
-       * second is the reason the register rule above is written the way it is.
-       *
-       * **Both are contentious, and that is the argument FOR carrying them
-       * rather than against.** A reader who has just moved states needs to know
-       * what the law IS. The rule is unchanged and it does all the work here:
-       * state the law, cite the official source, carry the fetch date, take no
-       * position, and use no word that presupposes a view. Nothing below says
-       * whether any of it is good.
-       */
       {
         topic: "hunting-fishing",
         question: "Am I allowed to hunt or fish?",
@@ -346,19 +293,6 @@ export const AREA_FACTS: AreaFactSet[] = [
         verification: AZ_FETCHED,
       },
       {
-        /*
-         * Read from the constitutional text itself rather than from any
-         * summary of it. `azleg.gov/const/2/8_1.htm` is the state legislature's
-         * own copy of Article 2 § 8.1.
-         *
-         * TWO WORDINGS WERE CHECKED AND ONE WAS DISCARDED. "Fetal viability"
-         * is the constitution's term and it is defined there — "a significant
-         * likelihood of the fetus's sustained survival outside the uterus" —
-         * but it fails the 15-year-old test as a bare phrase, and a reader who
-         * does not know it cannot tell what the sentence permits. It is
-         * therefore glossed in the constitution's own terms rather than either
-         * dropped or left standing.
-         */
         topic: "abortion",
         question: "What is the law on abortion?",
         answer:

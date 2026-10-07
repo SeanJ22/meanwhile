@@ -2,27 +2,10 @@ import { cannotRun, extracted, zeroRows } from "./types.ts";
 import type { ExtractResult } from "./types.ts";
 
 /**
- * LAYER 1 — the text layer of a born-digital PDF (F11, Prompt C item 12).
- *
- * `lib/meetings/agenda-documents.ts` already had `extractPdfText`, which
- * returns a string. This is that engine under the toolkit's contract, and the
- * difference is the whole point: a string cannot distinguish "this PDF has no
- * text layer, it is a scan, send it to OCR" from "this PDF says nothing".
- * A caller holding `""` has to guess, and the guess that costs is the one that
- * records a scanned document as a document that published nothing.
- *
- * PDFS ARE DATA. `CLAUDE.md`'s ladder rung 9: text-layer extraction first, OCR
- * when scanned. "Paper-only" and "not machine-readable" are honest ONLY when
- * the document does not exist online — never when a PDF is sitting on the
- * body's site unparsed.
- *
- * ## The interface
- *
- *   extractTextLayer(bytes, source) -> ExtractResult<PdfPage>
- *
- * One item per page that produced text. A page with no text contributes no
- * item and is counted in `counts.pagesEmpty`, so a mostly-scanned document
- * reports as a mostly-scanned document rather than as a short one.
+ * Layer 1: the text layer of a born-digital PDF, under the toolkit's result
+ * contract so "no text layer, it is a scan" is distinguishable from "this PDF
+ * says nothing". One item per page that produced text; empty pages are counted
+ * in `counts.pagesEmpty`.
  */
 
 export interface PdfPage {
@@ -41,10 +24,7 @@ export async function extractTextLayer(
     return cannotRun("TEXT_LAYER", source, "the input is zero bytes — nothing was fetched");
   }
 
-  // `%PDF` — checked before the engine, so a fetched HTML error page reports
-  // as the wrong TYPE rather than as a PDF that says nothing. That distinction
-  // is exactly the F20 shape: a challenge page served at 200 and parsed
-  // successfully into an empty document.
+  // `%PDF` is checked first, so a fetched HTML error page reports as the wrong type, not an empty PDF.
   const magic = new TextDecoder("latin1").decode(bytes.slice(0, 5));
   if (!magic.startsWith("%PDF")) {
     return cannotRun(
@@ -92,12 +72,7 @@ export async function extractTextLayer(
   const counts = { pages: doc.numPages, pagesWithText: pages.length, pagesEmpty };
 
   if (pages.length === 0) {
-    /*
-     * THE ANSWER THAT MATTERS, and the reason this layer returns a result
-     * rather than a string: every page rendered and none carried text. That is
-     * a SCAN, and the next rung is OCR — not a finding that the body published
-     * an empty document.
-     */
+    /* Every page rendered and none carried text: a scan, for OCR, not an empty document. */
     return zeroRows(
       "TEXT_LAYER",
       source,

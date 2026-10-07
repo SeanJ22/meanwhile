@@ -1,24 +1,7 @@
 /**
- * **AN OCCURRENCE ITS OBLIGATION MOVED PAST IS CLOSED, AND NOTHING LIVE IS
- * TOUCHED.** (2026-09-23.)
- *
- * Before `resumeOpenOccurrence` existed (24ff5cf2, 2026-09-01), a cycle that
- * opened an occurrence and never reached it was followed by one that opened
- * sequence N+1 and moved the pointer. The first stayed open forever. On
- * 2026-09-23, 20 of those occurrence 1s from 2026-09-01T14:30:45Z were still
- * open, each on a RouteTask that was never claimed.
- *
- * What these tests hold:
- *
- * - **The cause is closed.** `openOccurrence` refuses while its obligation
- *   points at an open occurrence.
- * - **Abandoned means all of these:** open, not pointed to, the obligation has
- *   opened a later sequence, and the RouteTask is PENDING (never claimed).
- * - **The close writes only the occurrence,** unresolved and never with a
- *   disposition. The obligation keeps its pointer and anchor, and the
- *   RouteTask, its WorkItem, Attempts and leases are untouched.
- *
- * Every test runs on the in-memory double AND the durable file store.
+ * Abandoned occurrences: open, not pointed to, the obligation has opened a later sequence, and
+ * the RouteTask is PENDING (never claimed). Closing one writes only the occurrence, unresolved
+ * and with no disposition. Every test runs on the in-memory double and the durable file store.
  */
 
 import assert from "node:assert/strict";
@@ -37,9 +20,9 @@ import {
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
-const T0 = "2026-09-01T14:30:45.411Z"; // the cycle that opened occurrence 1 and did not reach it
-const T1 = "2026-09-02T09:00:00.000Z"; // a later cycle, moving on
-const T2 = "2026-09-23T18:00:00.000Z"; // the cycle that closes what was abandoned
+const T0 = "2026-09-01T14:30:45.411Z";
+const T1 = "2026-09-02T09:00:00.000Z";
+const T2 = "2026-09-23T18:00:00.000Z";
 const ID = "freshness:candidate-enrichment:az:2026:state-az-cd-6:u-s-representative-district-6:bah-iman#candidate-marginalia-index";
 
 function obligation(): FreshnessObligation {
@@ -69,16 +52,11 @@ async function scanOf(repos: ControlPlaneRepositories) {
   });
 }
 
-/**
- * The production shape: occurrence 1 opened and never reached; the pre-resume
- * code moved on (the pointer left occurrence 1); a later occurrence was opened
- * and closed normally. Occurrence 1 is still open on a never-claimed RouteTask.
- */
+/** Occurrence 1 open on a never-claimed RouteTask, its pointer cleared, and occurrence 2 opened and closed. */
 async function abandonedShape(repos: ControlPlaneRepositories) {
   await repos.obligations.put(ID, standing(obligation(), T0), T0);
   const first = await openOccurrence(repos, { obligation: await fresh(repos), dueAt: T0, now: T0 });
   assert.ok(first);
-  /* What the pre-24ff5cf2 code did in effect: the next cycle took the pointer away from occurrence 1 without closing it. */
   const row = await repos.obligations.mustRead(ID);
   await repos.obligations.compareAndSet(ID, row.revision, { ...row.value, openOccurrenceId: null }, T0);
   const second = await openOccurrence(repos, { obligation: await fresh(repos), dueAt: T1, now: T1 });

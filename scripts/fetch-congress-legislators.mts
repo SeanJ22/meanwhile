@@ -1,54 +1,20 @@
 /**
- * @freshness-reads-here
- *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * @freshness-reads-here — each freshness date is taken at the moment of the fetch it describes.
  */
 /**
- * The congress-legislators snapshot — item 7, 2026-08-16.
+ * The congress-legislators snapshot. `unitedstates/congress-legislators` is the
+ * source of record for what it covers: roster, id crosswalk, birthdays, term
+ * dates, party, DC contact, district offices, committees and membership,
+ * official social accounts.
  *
- * ## The source ruling, recorded
- *
- * `unitedstates/congress-legislators` is the SOURCE OF RECORD for everything
- * it covers: roster, id crosswalk, birthdays, term dates, party, DC contact,
- * district offices, committees and membership, official social accounts.
- *
- * Two boundaries on that ruling, both load-bearing:
- *
- * 1. **It is a community-maintained aggregation of the official sources, and
- *    the provenance tag says the PROJECT** — never "official records". A
- *    reader who wants the government's own page still gets the government's
- *    own page; what the reader must never be told is that this file IS that
- *    page.
- * 2. **It is a DIRECTORY, not a ledger.** No votes, no money, no statements.
- *    B17 stays on the chambers, FEC stays FEC, PRL stays PRL. A directory
- *    answers "who is this and how do I reach them"; the moment it starts
- *    answering "what did they do", it is a claim surface and needs a claim
- *    surface's citations.
- *
- * ## SHA-pinned, never `main`
- *
- * Fetching `main` means the same command returns different data on different
- * days and nothing records which. Every file is fetched at a commit SHA,
- * recorded with the read date and the row count it produced, so the snapshot
- * can be reproduced exactly and a change between two runs is visible as a
- * diff rather than as a surprise.
- *
- * ## Thin-guard per file
- *
- * Each file declares the minimum row count that makes it plausible. A
- * truncated response, a redirect to an HTML error page, or a schema change
- * that empties a field all present as "fewer rows than there should be", and
- * every one of them would otherwise write a snapshot that reports success
- * while holding nothing. An operation that can return nothing is asked what
- * it returned.
- *
- * ## Licence
- *
- * CC0. Cited once on the sources page; nothing else is owed and nothing else
- * is claimed.
+ * - It is a community-maintained aggregation of official sources, so the
+ *   provenance tag names the project, never "official records".
+ * - It is a directory, not a ledger: no votes, money or statements.
+ * - Every file is fetched at a pinned commit SHA, never `main`, recorded with
+ *   the read date and row count.
+ * - Each file has a minimum plausible row count; a truncation, an HTML error
+ *   page or an emptied field refuses the run instead of writing an empty snapshot.
+ * - CC0.
  *
  *   pnpm congress:fetch
  */
@@ -160,7 +126,6 @@ async function fetchFile(name: string, sha: string): Promise<{ parsed: unknown; 
   }
   const text = await response.text();
   // A redirect to an HTML error page parses as a YAML string, not a list.
-  // Saying so here beats a downstream "0 rows" that reads like a real answer.
   if (text.trimStart().startsWith("<")) {
     throw new Error(`${name}: served HTML, not YAML, from ${url}`);
   }
@@ -170,14 +135,7 @@ async function fetchFile(name: string, sha: string): Promise<{ parsed: unknown; 
   };
 }
 
-/**
- * The thin-guard. Returns the row count, and refuses below the floor.
- *
- * A truncation, a redirect to an error page and a schema change that empties
- * a field all present the same way — fewer rows than there should be — and
- * every one of them would otherwise write a snapshot reporting success while
- * holding nothing.
- */
+/** Returns the row count, and refuses below the floor. */
 function guard(
   name: string,
   value: unknown,
@@ -358,12 +316,7 @@ async function main() {
       sha: SHA,
       licence: "CC0 1.0 Universal (public domain dedication)",
       licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
-      /*
-       * The provenance tag names the PROJECT. It is a
-       * community-maintained aggregation of official sources — accurate, and
-       * not itself an official record. Calling it one would be the first step
-       * toward citing it for something a directory cannot answer.
-       */
+      /* Names the project: an aggregation of official sources, not itself an official record. */
       sourceOrg: "unitedstates/congress-legislators (community project)",
       collectedAt,
     },

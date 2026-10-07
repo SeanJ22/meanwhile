@@ -44,6 +44,10 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { beginAttemptFor, claimRouteTask, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
+import { installRegistryAuthority, installStateLegislators } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
+for (const scope of ["US-AZ", "US-NH", "US-NJ"] as const) installStateLegislators(scope);
 
 test("a 20-place Send offers independent jobs instead of one joined ZIP command", () => {
   const zips = Array.from({ length: 20 }, (_, index) => String(3000 + index).padStart(5, "0"));
@@ -374,7 +378,8 @@ test("a national API completes its geography walk beyond ten requests and reuses
   const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
   const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
     publish: async () => { assert.fail("incomplete geography cannot publish"); } };
-  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:REGISTRY_RUNTIME_BINDING/);
+  // The injected store holds no promoted registry, so the walk ends at the first held-family read it refuses.
+  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:/);
   assert.ok(heartbeatWrites > 0, "the national acquisition exercised its canonical lease heartbeat");
   assert.ok(requests > RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost, "Census is a national API, not a small local publisher");
   assert.ok((await repos.obligations.list()).every(row => row.value.lastWorkedAt === null));
@@ -384,7 +389,7 @@ test("a national API completes its geography walk beyond ten requests and reuses
   const before = requests;
   // The saved geography now completes within the same request bound. This
   // fixture has no registry runtime, so reaching its next read is the boundary.
-  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:REGISTRY_RUNTIME_BINDING/);
+  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:/);
   assert.equal(requests, before, "the second pass reads saved Census responses without repeating API calls");
   const next = await repos.artifacts.readAll();
   assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");
@@ -547,12 +552,9 @@ test("redirected election pages keep their saved source identity and resolve lin
 });
 
 /**
- * State legislators, and the reconciliation that makes them attachable.
- *
- * The interesting failure is New Hampshire. Plural designates House districts
- * "Merrimack 8"; this repo's identifiers are Census numeric codes (`sldl:608`).
- * A direct join scores **0 of 201** and does so silently — the same shape as
- * the at-large trap in the federal roster, and the reason both are pinned here.
+ * State legislators and their district reconciliation. Some states designate House districts by name
+ * ("<County> 8") while this repo's identifiers are Census numeric codes (`sldl:608`); a direct join scores zero
+ * silently.
  */
 
 const DIVISIONS = (
@@ -602,21 +604,8 @@ test("a state beyond the original pilots normalizes without a local registry", (
 });
 
 test("a district outside the clipped coverage is reported, not dropped silently", () => {
-  /*
-   * **THE FIXTURE MOVED BECAUSE THE CLIP DID.** (RULING 80, NJ Hunt 4 item 4,
-   * 2026-08-22.)
-   *
-   * This used Arizona's district 2, which was outside the one-county clip and
-   * is inside the widened one — the registry now carries all thirty of
-   * Arizona's lower-house districts. That is the ruling working, and it left
-   * this test asserting the opposite of what is now true.
-   *
-   * The claim under test is unchanged and is not about any particular district:
-   * a legislator whose district this build cannot draw is KEPT and the miss is
-   * REPORTED, never silently dropped. District 31 does not exist in Arizona, so
-   * it is outside any clip this project could ever ship, and the assertion
-   * stops depending on where the clip happens to stop.
-   */
+  // A legislator whose district this build cannot draw is kept and the miss reported, never dropped. District 31
+  // does not exist in Arizona, so it is outside any clip.
   const index = indexDivisions(DIVISIONS);
   const set = normalize(
     [person({ id: "ocd-person/y", state: "az", current_district: "31" })],
@@ -736,10 +725,7 @@ test("all four target-zip seat types are now named", async () => {
 });
 
 test("the roster reads the unmetered bulk host, never the quota'd API", () => {
-  // The regression this exists for: someone moves the roster onto GraphQL for
-  // a field the CSV lacks — term dates are the likely reason — and 620
-  // legislators quietly eat most of a 500/day quota on every build. If that
-  // ever happens it should fail here rather than mid-run on a 429.
+  // Moving the roster onto GraphQL would spend the request quota on every build; fail here rather than on a 429.
   for (const state of ["az", "nj", "nh"]) {
     const url = bulkUrl(state);
     assert.match(url, /^https:\/\/data\.openstates\.org\/people\/current\//);
@@ -748,8 +734,7 @@ test("the roster reads the unmetered bulk host, never the quota'd API", () => {
 });
 
 test("the quota is stated where the build can print it", () => {
-  // Plural's documented free tier. Recorded as a constant so the build output
-  // shows the ceiling rather than the ceiling being discovered by hitting it.
+  // The documented free tier, recorded so the build output shows the ceiling.
   assert.equal(GRAPHQL_DAILY_QUOTA, 500);
   assert.equal(GRAPHQL_MIN_INTERVAL_MS, 1000);
 });

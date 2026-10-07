@@ -1,44 +1,4 @@
-/**
- * **RULING 122 — A PARTY-HOSTED CANDIDATE PAGE IS THE CANDIDATE'S PAGE, WITH
- * THE HOST LABELLED.** (Sean's decision of 2026-08-24, closing `NH11`.)
- *
- * ## The case it was decided on
- *
- * Shaun Fife is running for Governor of New Hampshire. He has no campaign
- * website and no campaign Facebook page. What he has is a candidate page on a
- * political party's own site carrying his name, the office, a sentence in his
- * own words and a contact address — read 2026-08-21 at rung 2, HTTP 200.
- *
- * Recording that as *no campaign site found* hides a real, findable thing from
- * a reader. **And it does it to the candidate with the fewest resources**,
- * which is precisely the information asymmetry the equal-effort rule exists to
- * catch. It is the same shape as the campaign that lives on Facebook, and that
- * rule already says such a presence renders — labelled honestly, never dressed
- * as a website.
- *
- * ## Why the label is the whole of the safety
- *
- * This product NEVER characterises an organization's politics. Rendering a
- * party's website under a bare "Campaign site" label would present a party's
- * site as the candidate's own, which is both untrue and close to the line the
- * organizations-render-as-filed rule draws.
- *
- * Saying *the page his party publishes about him* names the source plainly and
- * leaves the reader to judge it, which is what this product does with every
- * other source. It says nothing about what the party believes.
- *
- * ## THE HOST LIST IS A RECORD, NOT A PATTERN
- *
- * There is no way to look at a URL and know it is a political party's own site.
- * A guess would eventually mislabel somebody's personal domain as a party's, or
- * a party's as a personal domain, and both are false claims about a real
- * person.
- *
- * So a host appears here only when a session has READ it and recorded what it
- * is, with the date. That is the same standard every other claim in this
- * product meets, and it is why this is a list of confirmed hosts rather than a
- * regular expression over the word "party".
- */
+/** A candidate page on a party's own site is the candidate's page, labelled with its host. */
 
 /** What kind of thing the candidate's link actually is. */
 export type CampaignLinkKind = "SITE" | "FACEBOOK" | "PARTY_HOSTED";
@@ -54,10 +14,7 @@ export interface PartyHostedHost {
   evidence: string;
 }
 
-/**
- * Hosts confirmed to be a political party's own site. Grows only by a session
- * reading one; never by inference.
- */
+/** Hosts confirmed to be a political party's own site; grows only by reading one, never by inference. */
 export const PARTY_HOSTED_HOSTS: readonly PartyHostedHost[] = [
   {
     host: "majiparty.org",
@@ -93,12 +50,7 @@ export function campaignLinkKind(url: string): CampaignLinkKind {
   return "SITE";
 }
 
-/**
- * The reader-facing label for a candidate's link.
- *
- * Plain language, level register — this is a CLAIM surface, so it states what
- * the thing is and does not editorialise about it.
- */
+/** The reader-facing label for a candidate's link: states what it is, without editorialising. */
 export function campaignLinkLabel(url: string): string {
   const kind = campaignLinkKind(url);
   if (kind === "FACEBOOK") return "The campaign's Facebook page";

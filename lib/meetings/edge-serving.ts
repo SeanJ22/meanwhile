@@ -36,7 +36,6 @@ import {
 import {
   readPreparedMeetingsProjection,
 } from "./prepared-snapshot.ts";
-import { activeReaderProofMeetingPin } from "./proof-pin.ts";
 import { applyMeetingFreshChecks, laterCheck, sameMeetingFreshChecks } from "./fresh-checks.ts";
 import {
   MEETINGS_RECORD_CLASS,
@@ -49,28 +48,6 @@ import {
 import type { MeetingSettings } from "./settings.ts";
 import { readReaderMeetingSettings } from "./reader-settings.ts";
 
-/**
- * Publish + read for the geographic reader edge artifacts.
- *
- * PUBLISH (the standing runner, after it composes once): split the composition
- * into per-scope artifacts, write the immutable ones, then flip the manifest
- * pointer with a monotonic compare-and-set. Idempotent — an unchanged
- * composition republishes nothing. Last-valid-safe — a failed publish leaves
- * the previous manifest and artifacts serving.
- *
- * READ (the reader): read the manifest, fetch the artifacts for the ZIP's
- * scopes, merge. The reader never composes 124 partitions and never wakes the
- * database on this path; a CDN-cached Route Handler in front of it serves the
- * bytes from the edge. The fallback chain is edge → DB prepared row → live
- * compose, so the reader always answers.
- */
-
-/**
- * Purge Netlify CDN cache tags so a new publication switches over instantly
- * rather than waiting out the manifest's `s-maxage`. Off-Netlify (the runner)
- * this needs a site id + a Netlify token; absent either, it no-ops and the new
- * data still appears within the manifest TTL — never a failure.
- */
 export async function purgeReaderCacheTags(
   tags: readonly string[],
 ): Promise<{ readonly purged: boolean; readonly detail?: string }> {
@@ -105,24 +82,17 @@ export interface PublishMetadata {
   readonly promotedThrough: string | null;
 }
 
-/**
- * What a manifest says about quiet re-checks (lib/meetings/fresh-checks.ts):
- * the composition its scope artifacts were partitioned from, and each route's
- * newest successful fresh check that found nothing new.
- */
 export interface PublishReaderChecks {
   readonly composition: string;
   readonly freshChecks: Readonly<Record<string, string>>;
 }
 
-/** A manifest already states these checks and this "Last checked". */
 function manifestStatesChecks(manifest: ReaderManifest, generatedAt: string, checks: PublishReaderChecks | undefined): boolean {
   return manifest.generatedAt === generatedAt &&
     (manifest.composition ?? null) === (checks?.composition ?? null) &&
     sameMeetingFreshChecks(manifest.freshChecks, checks?.freshChecks);
 }
 
-/** The manifest with new checks and "Last checked", everything it points at unchanged. */
 function manifestWithChecks(
   manifest: ReaderManifest,
   sequence: number,
@@ -139,17 +109,6 @@ function manifestWithChecks(
   };
 }
 
-/**
- * **A QUIET RE-CHECK REPUBLISHES THE MANIFEST ALONE** (2026-09-25).
- *
- * When the served scope artifacts are exactly the composition the prepared
- * serving copy still holds (`composition`), and a partition was re-checked with
- * nothing new, only "Last checked" and the route checks move: one small manifest
- * write, compare-and-set like every publish, pointing at the same immutable
- * artifacts. No row is read from the database and no artifact is rewritten. A
- * manifest from another composition is refused (NOT_COMPOSABLE), and the caller
- * publishes in full.
- */
 export async function publishReaderEdgeChecks(
   update: { readonly generatedAt: string; readonly retrievedAt: string | null; readonly checks: PublishReaderChecks },
   options: { readonly store?: ReaderArtifactStore | null } = {},
@@ -182,35 +141,22 @@ export async function publishReaderEdgeChecks(
     : { status: "RACED", sequence };
 }
 
-/** The other ready-to-display reader families the runner embeds in the manifest. */
 export interface PublishReaderExtras {
   readonly commentAccess?: readonly unknown[];
   readonly everydayRouting?: unknown;
   readonly versionIds?: ReaderManifest["extrasVersionIds"];
 }
 
-/** One large "authority" family the runner publishes as its own compressed artifact. */
 export interface PublishAuthorityValue {
   readonly value: unknown;
   readonly versionId: string;
 }
-/**
- * A family whose promoted version is exactly the one the current manifest
- * already serves. Its artifact was written from a proven read of that same
- * immutable version, so publish reuses the manifest's reference instead of
- * the runner reading the whole value (24 MB for registry-runtime) every pass.
- */
 export interface PublishAuthorityCarried {
   readonly versionId: string;
   readonly carried: true;
 }
-/** The authority families the runner may publish, keyed by family id. */
 export type PublishAuthority = Partial<Record<AuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
-/**
- * Every state's promoted registration the runner publishes, keyed by lower-case state: a proven value, or the
- * version the manifest already serves. The set is COMPLETE, one entry per promoted registration pointer, because the
- * reader reads a state it does not name as having none (`ReaderManifest.registrations`).
- */
+/** Complete: one entry per promoted registration pointer, since the reader reads an unnamed state as having none. */
 export type PublishRegistrations = Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried>>;
 
 interface RegistrationArtifactEnvelope {
@@ -222,7 +168,6 @@ interface RegistrationArtifactEnvelope {
   readonly value: unknown;
 }
 
-/** The version a manifest serves for one authority family, or null when it serves none. */
 export function servedAuthorityVersion(
   manifest: Pick<ReaderManifest, "authorityArtifacts"> | null | undefined,
   family: AuthorityFamily,
@@ -230,7 +175,6 @@ export function servedAuthorityVersion(
   return manifest?.authorityArtifacts?.[family]?.version ?? null;
 }
 
-/** The compressed authority artifact envelope stored in the edge store. */
 interface AuthorityArtifactEnvelope {
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
   readonly family: AuthorityFamily;
@@ -247,29 +191,7 @@ function extrasFingerprint(extras: PublishReaderExtras | undefined): string {
   });
 }
 
-/**
- * **THE MANIFEST IS HELD FOR FIFTEEN SECONDS PER INSTANCE.** (C21, 2026-09-25.)
- *
- * Every `/api/meetings`, Ask and funding request read the ~140 KB manifest from
- * Netlify Blobs before anything else (~0.2 s measured on production), so a
- * reader's second request seconds after the first paid it again. Now one read
- * serves an instance for {@link READER_MANIFEST_MEMO_MS}, and concurrent
- * requests share the read in flight.
- *
- * Why fifteen seconds, and why that is no staler than before: the reader's
- * Blobs read is `eventual` (edge-store.ts), which Netlify allows to lag a write
- * by up to 60 s, so a request just after a publish could already be served the
- * previous manifest, and after the runner purges the `reader-manifest` tag the
- * CDN could already be refilled from such a read. Holding the manifest adds at
- * most fifteen seconds to that window: a new publication reaches every reader
- * within 60 s + 15 s + the CDN's 300 s `s-maxage` in the worst case, and
- * immediately in the usual one. Both are far inside the hourly refresh rule
- * (docs/rulings.md §4). A failed or absent read is never held.
- *
- * Only the Netlify Blobs store is held. The local-file store (dev, tests,
- * measurement) is a disk read and is always read fresh, so a test that
- * republishes sees its new manifest at once.
- */
+// Blobs reads are eventually consistent (up to 60 s behind a write); holding adds at most this much to that window.
 export const READER_MANIFEST_MEMO_MS = 15_000;
 let manifestMemo: { readonly at: number; readonly value: Promise<ReaderManifest | null> } | null = null;
 
@@ -282,8 +204,6 @@ async function readManifestFrom(store: ReaderArtifactStore): Promise<ReaderManif
   }
 }
 
-/** Read just the current manifest (or null). The reader uses this once per
- * request to serve meetings AND the embedded families from one edge read. */
 export async function readReaderManifest(
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
   now: () => number = Date.now,
@@ -300,18 +220,6 @@ export async function readReaderManifest(
   return memo.value;
 }
 
-/**
- * The authority families the map's own routes read (C21, 2026-09-25):
- * `/api/meetings` and `/api/representation` resolve divisions, coverage and
- * officeholders, and never read the recorded meeting outcomes (~1.6 MB, Ask's)
- * or the comment-access artifact (the meetings route takes those rules from the
- * manifest). Fetching and parsing those two on a cold instance sat on the
- * critical path of every first map request for nothing.
- *
- * `/ballot` reads the same four (R30, 2026-09-25): divisions, the federal
- * officeholders, the campaign-site URLs that key the officeholder graph, and
- * the state legislators incumbency asks about.
- */
 export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "census-districts",
   "registry-runtime",
@@ -320,56 +228,31 @@ export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "state-legislators",
 ];
 
-/**
- * What a cold `/ballot` reads (2026-09-25): the map's four, and the proven
- * pointers it read from the database in two stages until now — the ballots,
- * the candidate profiles (with the derived campaign sites) and publications,
- * the navigation links, the NH roster, FEC and state money. Never the
- * Ask-only records (Pima finance, votes, statements, executive actions).
- */
-/**
- * What a cold `/api/funding` reads (2026-09-25): the registry and the federal
- * directory that plan a target, and the money itself — FEC, state money, and
- * the AZ ballot that carries Arizona's candidacy identity. Nothing else: the
- * route used to fetch every family, Ask's records included.
- */
+const STATE_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = PROMOTED_AUTHORITY_FAMILIES.filter((family) => /^ballot-[a-z]{2}$/.test(family));
+
 export const READER_FUNDING_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "registry-runtime",
   "federal-directory",
   "federal-funding",
   "state-money",
-  "ballot-az",
+  ...STATE_BALLOT_AUTHORITY_FAMILIES,
 ];
+
+const ASK_ONLY_AUTHORITY_FAMILIES: ReadonlySet<AuthorityFamily> = new Set<AuthorityFamily>([
+  "pima-finance",
+  "federal-votes",
+  "federal-key-votes",
+  "officeholder-statements",
+  "executive-actions",
+]);
 
 export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   ...READER_MAP_AUTHORITY_FAMILIES,
-  "ballot-contests",
-  "ballot-az",
-  "ballot-nh",
-  "candidate-profiles",
-  "candidate-publications",
-  "ballot-navigation",
-  "voting-sites",
-  "official-filings",
-  // A sitting legislator's capitol and district offices.
-  "member-offices",
-  "nh-members",
-  "federal-funding",
-  "state-money",
+  ...PROMOTED_AUTHORITY_FAMILIES.filter((family) => !ASK_ONLY_AUTHORITY_FAMILIES.has(family)),
 ];
 
-// The reader fetches each large authority artifact from the edge at most once
-// per version per process; every request thereafter reuses the in-process value
-// (national artifacts, shared by all ZIPs — never per-ZIP). The PROMISE is held
-// (C21), so two reads on one instance share one fetch and one parse instead of
-// each fetching megabytes; a fetch that answers null is not held.
 const authorityEdgeCache = new Map<AuthorityFamily, { version: string; value: Promise<unknown | null> }>();
 
-/**
- * Hold a fetch per key and version while it runs and after it answers. One that
- * answers null or throws is forgotten, so the next read fetches again; whoever
- * is already waiting on it still sees its null or its error.
- */
 function heldFetch<K, V>(
   cache: Map<K, { version: string; value: Promise<V | null> }>,
   key: K,
@@ -405,17 +288,6 @@ async function fetchAuthorityValue(
   });
 }
 
-// Per-scope meeting artifacts are immutable, so the reader fetches each scope's
-// artifact at most once per published version per process and reuses it on every
-// request thereafter; only the small manifest is read from the store per request.
-// The cache holds one entry per scope (bounded ~50) but is gated by the manifest's
-// per-scope content hash: a changed scope has a new sha256, so the next read misses
-// and refreshes, replacing the prior version. Because the fresh manifest is the
-// single monotonic pointer and names the sha the reader must serve, a cached entry
-// can never serve data older than — or different from — what the manifest names.
-// The fetch is held while it runs (C21), so a prefetch started before the
-// request knows its exact states and the read that follows share one fetch.
-// A read that failed is not held; the next one fetches again, as before.
 const scopeArtifactCache = new Map<string, { version: string; value: Promise<ReaderGeoArtifact | null> }>();
 
 function fetchScopeArtifact(
@@ -425,7 +297,6 @@ function fetchScopeArtifact(
   return heldFetch(scopeArtifactCache, scope.scope, scope.sha256, () => store.readArtifact(scope.key));
 }
 
-// Each state's registration artifact, fetched only when a request names the state, at most once per version.
 const registrationEdgeCache = new Map<string, { version: string; value: Promise<RegistrationReadModel | null> }>();
 
 async function fetchRegistrationArtifact(
@@ -449,24 +320,13 @@ async function fetchRegistrationArtifact(
   return value === null ? null : { value, versionId: version };
 }
 
-/**
- * Start fetching, without waiting, what a request for these states will read
- * from the edge: their meeting scope artifacts and their registrations (C21,
- * 2026-09-25). `/api/meetings` learns its states exactly only after resolving
- * divisions, which waits on the authority families; a hint from the typed ZIP
- * (or the nearest one) lets these fetches run beside that instead of after it.
- * A hint is never an answer: the request still reads by the states its
- * divisions name, and a scope the hint missed is simply fetched then. Nothing
- * here reads the database or the request's edge context.
- */
 export function prefetchReaderEdgeStates(
   manifest: ReaderManifest | null,
   states: readonly string[],
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
 ): void {
-  if (!manifest || !store || states.length === 0 || activeReaderProofMeetingPin() !== null) return;
+  if (!manifest || !store || states.length === 0) return;
   const wanted = new Set(scopesForStates(states));
-  // A failed prefetch is not an answer: the real read sees the failure, or fetches again.
   for (const scope of manifest.scopes) if (wanted.has(scope.scope)) void fetchScopeArtifact(scope, store).catch(() => undefined);
   for (const state of states) {
     const ref = manifest.registrations?.[state];
@@ -474,17 +334,6 @@ export function prefetchReaderEdgeStates(
   }
 }
 
-/**
- * Fetch (and cache in-process) the reader-authority edge bundle the manifest
- * points at — registry-runtime, the federal directory, and campaign-site URLs —
- * decompressing each. Any family the manifest does not carry, or whose fetch
- * fails, is simply absent from the bundle; the reader then falls back to the DB
- * path for THAT family on THAT request only. Never reads Neon.
- *
- * `families` names the ones this caller reads (C21): a family left out is not
- * fetched and is absent from the bundle, exactly as an unpublished one is.
- * Omitted, every family is fetched (Ask, funding, the keep-warm call).
- */
 export async function ensureReaderAuthorityEdge(
   manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations">,
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
@@ -492,7 +341,6 @@ export async function ensureReaderAuthorityEdge(
 ): Promise<ReaderAuthorityEdgeBundle> {
   const refs = manifest.authorityArtifacts;
   const registrationRefs = manifest.registrations;
-  // Registration is loaded per state on demand, never with the bundle (lib/registry/runtime-edge.ts RegistrationsEdge).
   const registrations = registrationRefs && store
     ? { registrations: { states: new Set(Object.keys(registrationRefs)), load: (state: string) => fetchRegistrationArtifact(state, registrationRefs[state], store) } }
     : {};
@@ -506,13 +354,9 @@ export async function ensureReaderAuthorityEdge(
     meetingOutcomes?: { value: OutcomeSnapshot; versionId: string };
     commentAccess?: { value: CuratedReaderProjection; versionId: string };
   } = {};
-  // The families are independent artifacts, fetched together rather than one
-  // after another on a cold instance (2026-09-24, C20/C22). Each fetch answers
-  // null for its own failure, so one missing family never costs another.
   const wanted = new Set(families);
   const fetchWanted = (family: AuthorityFamily) =>
     wanted.has(family) ? fetchAuthorityValue(family, refs[family], store) : Promise.resolve(null);
-  // The proven-pointer families start with the others, never after them.
   const promotedFetch = Promise.all(PROMOTED_AUTHORITY_FAMILIES.map(fetchWanted));
   const [registry, federal, campaign, legislators, outcomes, commentAccess, censusDistricts] = await Promise.all([
     fetchWanted("registry-runtime"),
@@ -530,9 +374,6 @@ export async function ensureReaderAuthorityEdge(
   if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
   if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as CuratedReaderProjection, versionId: refs["comment-access"]!.version };
   if (censusDistricts !== null) bundle.censusDistricts = { value: censusDistricts as CensusDistrictEdge, versionId: refs["census-districts"]!.version };
-  // The proven-pointer families, fetched beside the others. A family whose
-  // artifact is missing, failed or malformed adds nothing, and each of its
-  // pointers is then read from the database by its own settle.
   const promoted = new Map<string, PromotedEdgeEntry>();
   const promotedFamilies = new Set<string>();
   const promotedValues = await promotedFetch;
@@ -549,17 +390,9 @@ export async function ensureReaderAuthorityEdge(
 }
 
 function scopeDataSha(artifact: ReaderGeoArtifact): string {
-  // Stable over re-runs: hashes the DATA, not the generatedAt stamp, so an
-  // unchanged composition produces the same sha and republishes nothing.
   return sha256OfJson({ meetings: artifact.meetings, agendaDocuments: artifact.agendaDocuments });
 }
 
-/**
- * Publish the composed snapshot as per-scope edge artifacts + a monotonic
- * manifest. `store` defaults to the runner write store (Netlify Blobs with
- * explicit creds, or a local dir); returns SKIPPED_NO_STORE when neither is
- * configured so the runner degrades to the DB prepared row rather than failing.
- */
 export async function publishReaderEdgeArtifacts(
   snapshot: MeetingsSnapshot | null,
   metadata: PublishMetadata,
@@ -571,7 +404,6 @@ export async function publishReaderEdgeArtifacts(
     readonly registrations?: PublishRegistrations;
     readonly meetingBodies?: Parameters<typeof partitionSnapshotByScope>[2];
     readonly meetingRegistryVersion?: string | null;
-    /** The composition and its quiet re-checks (lib/meetings/fresh-checks.ts), stated in the manifest. */
     readonly checks?: PublishReaderChecks;
   } = {},
 ): Promise<PublishReaderEdgeResult> {
@@ -605,9 +437,6 @@ export async function publishReaderEdgeArtifacts(
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
   }
 
-  // Idempotent: identical scope set AND per-scope data AND embedded families AND
-  // all authority-family versions → nothing to do. Any of them changing advances
-  // the pointer, because all of them are part of what serves.
   if (current) {
     const currentShas = new Map(current.manifest.scopes.map((s) => [s.scope, s.sha256]));
     const sameSet = snapshot === null || (currentShas.size === shaByScope.size &&
@@ -630,8 +459,6 @@ export async function publishReaderEdgeArtifacts(
       if (manifestStatesChecks(current.manifest, generatedAt, checks)) {
         return { status: "CURRENT", sequence: current.manifest.sequence, scopes: current.manifest.scopes.length };
       }
-      // The same data, re-checked: "Last checked" and the route checks move and
-      // nothing else, so the manifest points at the artifacts it already serves.
       const sequence = current.manifest.sequence + 1;
       let written;
       try {
@@ -652,8 +479,8 @@ export async function publishReaderEdgeArtifacts(
   const manifestScopes: ReaderManifestScope[] = snapshot === null ? [...(current?.manifest.scopes ?? [])] : [];
   const authorityArtifacts: Partial<Record<AuthorityFamily, AuthorityArtifactRef>> = {};
   const registrations: Record<string, AuthorityArtifactRef> = {};
-  // Complete or absent: one carried state the manifest no longer serves at that version drops the whole section this
-  // pass (the reader then reads registration from the database), so a registered state never reads as having none.
+  // Complete or absent: a carried state no longer served at that version drops the whole section, so a registered
+  // state never reads as having none.
   let registrationsComplete = options.registrations !== undefined;
   try {
     for (const artifact of artifacts) {
@@ -676,15 +503,10 @@ export async function publishReaderEdgeArtifacts(
         generatedAt: artifact.generatedAt,
       });
     }
-    // Each large authority family: one compressed, immutable, NATIONAL artifact
-    // (never per-ZIP), pointed at by the manifest.
     for (const family of AUTHORITY_FAMILIES) {
       const entry = options.authority?.[family];
       if (!entry) continue;
       if ("carried" in entry) {
-        // Only the exact version this manifest serves carries forward; if the
-        // manifest moved since the caller looked, the family is left out, as a
-        // failed read is, and the Reader falls back to the database for it.
         const served = current?.manifest.authorityArtifacts?.[family];
         if (served && served.version === entry.versionId) authorityArtifacts[family] = served;
         continue;
@@ -700,7 +522,6 @@ export async function publishReaderEdgeArtifacts(
       await store.writeBytes(key, gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")));
       authorityArtifacts[family] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
     }
-    // Each state's registration: one compressed, immutable artifact per state, written only when its version moved.
     for (const [state, entry] of Object.entries(options.registrations ?? {})) {
       if ("carried" in entry) {
         const served = current?.manifest.registrations?.[state];
@@ -721,8 +542,7 @@ export async function publishReaderEdgeArtifacts(
       registrations[state] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
     }
   } catch (error) {
-    // Artifacts are content-addressed by this new sequence; a partial write
-    // leaves the previous manifest untouched, so the last valid set keeps serving.
+    // Artifacts are keyed by this new sequence; a partial write leaves the previous manifest serving.
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
   }
 
@@ -756,31 +576,15 @@ export async function publishReaderEdgeArtifacts(
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
   }
-  // CAS miss → a newer publish won; the immutable artifacts we wrote are simply
-  // unreferenced. Never regress the pointer.
   return result.modified
     ? { status: "PUBLISHED", sequence, scopes: manifestScopes.length, meetings: snapshot?.meetings.length ?? manifestScopes.reduce((sum, scope) => sum + scope.meetingCount, 0) }
     : { status: "RACED", sequence };
 }
 
-// The reads `readReaderEdgeMeetings` answered whole from the published edge
-// artifacts (C21). The meetings route lets the CDN hold only an answer built
-// from one of these: the runner purges `reader-manifest` when it publishes, and
-// a database-fallback or partial answer is not the publication that purge
-// replaces.
+// Reads answered whole from published edge artifacts; only these may be held by the CDN.
 const completeEdgeReads = new WeakSet<object>();
-// Share a published area's merge, as well as its immutable artifacts. Every
-// manifest observation is part of the key, including quiet freshness updates.
 const areaReads = new Map<string, MeetingsProjectionReadResult>();
 
-/**
- * The reader's edge path: manifest → the ZIP's scope artifacts → merged
- * snapshot. `states` narrows to the geographic artifacts the ZIP needs (plus
- * the national `us` bucket); omitted, every published scope is loaded. Falls
- * back to the DB prepared row (then live compose) when no edge store is
- * configured, no manifest exists yet, or the store is unreachable — a safety
- * backstop, never the routine path.
- */
 export async function readReaderEdgeMeetings(
   options: ReaderEdgeMeetingsOptions = {},
 ): Promise<MeetingsProjectionReadResult> {
@@ -788,19 +592,11 @@ export async function readReaderEdgeMeetings(
   return applyServedWindow(read, options.window ?? "SHOWN", options.now, settings);
 }
 
-/**
- * Which part of what the partitions hold a read hands back (DB-01).
- *
- * `SHOWN` (the default): 90 days back and 90 ahead, for the map, "when does it
- * meet next" and agenda listings. `HELD`: every kept past meeting and the same
- * 90 ahead, for looking up a past meeting by body and date, since a promoted
- * partition keeps its concluded meetings with records for good.
- */
+/** `SHOWN`: the configured shown window. `HELD`: every kept past meeting plus the shown window ahead. */
 export type ReaderMeetingsWindow = "SHOWN" | "HELD";
 
 const servedWindows = new WeakMap<object, Map<string, MeetingsProjectionReadResult>>();
 
-/** Applies the served window once, on whichever path produced the read. */
 function applyServedWindow(
   read: MeetingsProjectionReadResult,
   window: ReaderMeetingsWindow,
@@ -811,7 +607,6 @@ function applyServedWindow(
   const now = nowOption ? Date.parse(nowOption) : Date.now();
   if (!Number.isFinite(now)) return read;
   const day = 86_400_000;
-  // Shared held reads need a fresh window for the exact clock and settings.
   const key = `${window}:${now}:${settings.shownBackDays}:${settings.shownAheadDays}`;
   const memo = servedWindows.get(read) ?? new Map<string, MeetingsProjectionReadResult>();
   const hit = memo.get(key);
@@ -850,26 +645,17 @@ type ReaderEdgeMeetingsOptions = {
     readonly includeAgenda?: boolean;
     readonly nearby?: { readonly lat: number; readonly lng: number; readonly radiusKm: number };
     readonly now?: string;
-    /** A manifest already read this request, so the reader reads the store once. */
     readonly manifest?: ReaderManifest | null;
-    /** Backstop when the edge has no answer; defaults to the DB prepared-row reader. */
     readonly fallback?: () => Promise<MeetingsProjectionReadResult>;
-    /** `SHOWN` (default) or `HELD`; see `ReaderMeetingsWindow`. */
     readonly window?: ReaderMeetingsWindow;
-    /** One request's published settings, when its caller already read them. */
     readonly settings?: MeetingSettings;
   };
 
 async function readReaderEdgeMeetingsHeld(
   options: ReaderEdgeMeetingsOptions,
 ): Promise<MeetingsProjectionReadResult> {
-  // The DB prepared-row / compose fallback takes only the clock — never the
-  // artifact store, which is a different store from the routine data store.
+  // The fallback takes only the clock, never the artifact store, which is a different store from the data store.
   const fallback = options.fallback ?? (() => readPreparedMeetingsProjection(options.now ? { now: options.now } : {}));
-  // Proof-only (lib/meetings/proof-pin.ts; null in every deployed build): an
-  // edge artifact names no partition versions, so it cannot be shown to be
-  // the pinned ones. The pinned run reads through the version-coupled fallback.
-  if (activeReaderProofMeetingPin() !== null) return fallback();
   const store = options.store ?? resolveReaderArtifactStore();
   if (!store) return fallback();
 
@@ -900,8 +686,6 @@ async function readReaderEdgeMeetingsHeld(
   }
   if (needed.length > 0 && artifacts.length === 0) return fallback();
 
-  // A quiet re-check since these artifacts were written restamps its route's
-  // fresh rows; "Last checked" is already the manifest's (lib/meetings/fresh-checks.ts).
   const value = applyMeetingFreshChecks(mergeScopeArtifacts(artifacts, manifest), { checkedAt: null, routes: manifest.freshChecks ?? {} });
   const complete = artifacts.length === needed.length;
   const read: MeetingsProjectionReadResult = {
@@ -931,7 +715,6 @@ async function readReaderEdgeMeetingsHeld(
   return read;
 }
 
-/** Whether this read was served whole from the reader edge artifacts (every scope it asked for). */
 export function servedWholeFromReaderEdge(read: MeetingsProjectionReadResult): boolean {
   return completeEdgeReads.has(read);
 }

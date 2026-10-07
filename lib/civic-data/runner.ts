@@ -18,18 +18,12 @@ import {
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
 
-/** An admission deadline before spawn leaves the original source work owed. */
 export function routinePreSpawnMemoryDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
   return !childStarted && run.termination === "SPAWN_FAILED" && run.status === null && run.signal === null &&
     run.stdout === "" && run.stderr === "" && run.errorMessage?.startsWith("WORKER_MEMORY_DEADLINE:")
     ? run.errorMessage : null;
 }
 
-/**
- * The standing parent supplies one exact start instant to the routine child so
- * either process can persist the same idempotent supervisor incident if the
- * child is killed outside its own catchable failure domain.
- */
 export const ROUTINE_SUPERVISOR_STARTED_AT_ENV = "WTP_ROUTINE_SUPERVISOR_STARTED_AT";
 
 export function routineSupervisorCycleId(host: string, startedAt: string): string {
@@ -43,8 +37,6 @@ export function routineSupervisorCycleId(host: string, startedAt: string): strin
 
 export interface RoutineSourceTask {
   readonly id: string;
-  /** When a source-scoped task has a distinct supervisor id, the child still
-   * receives the exact registered manual contract for its write authority. */
   readonly registeredContractId?: string;
   readonly sourceId: string;
   readonly acquisitionFailureDomain: string;
@@ -57,19 +49,13 @@ export interface RoutineSourceTask {
   readonly cadenceMs: number;
   readonly retryMs: number;
   readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection">;
-  /** Only a resolved owner Send can admit one of the existing explicit source commands. */
   readonly ownerInvocation?: {
-    /** The selector holds a completed worker result with no publication receipt. A different body's prior success cannot satisfy it. */
     readonly publicationPending?: true;
     readonly requestedAt: string;
     readonly instructions: readonly string[];
   };
 }
 
-/**
- * The standing machine's direct-promotion portfolio. Each command is a data
- * operation only: source bytes -> candidate -> validation -> atomic pointer.
- */
 export function routineTaskFromContract(contract: RoutineSourceContract): RoutineSourceTask {
   if (contract.authorityConstraint.registry !== "SOURCE_AUTHORITIES" || contract.authorityConstraint.sourceId !== contract.sourceId) {
     throw new Error(`ROUTINE_CONTRACT_AUTHORITY_MISMATCH:${contract.id}`);
@@ -83,7 +69,6 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
     ? authorityFor(contract.sourceId, contract.recordClass, contract.acquisitionAdapter.requestedUrl)
     : contract.acquisitionAdapter.authorityMode === "DERIVED"
     ? (() => {
-        /* A DERIVED authority has no route of its own; it must declare the inputs that authorize it. */
         const registered = sourceAuthority(contract.sourceId);
         return registered !== null && registered.derivedPromotion !== undefined &&
             (registered.recordClasses as readonly RoutineRecordClass[]).includes(contract.recordClass) &&
@@ -131,47 +116,17 @@ export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = [
   ...MEETING_PARTITION_CONTRACTS,
 ].map(routineTaskFromContract);
 
-/**
- * Admit at most one child from any shared upstream in one supervisor pass.
- * A provider that hangs at the outer child ceiling can therefore consume one
- * lane for one child, rather than extending the pass by every body hosted by
- * that provider. The next pass rotates to the least-recently-considered due
- * partition, using durable source attempts plus append-only supervisor faults.
- */
+/** At most one child from any shared upstream per pass; the next pass rotates to the least-recently-considered task. */
 export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;
-/**
- * **A MEETING LANE TAKES UP TO THREE READS A PASS (C6, 2026-09-25).** Every task
- * on a meeting lane owes its next read by a deadline (sitting-window-admission.ts),
- * and one read a pass, 12 an hour, is too few for the busiest lane: Tucson's
- * board site hosts 27 bodies, up to 16 of them hourly around 2026-10-14 by the
- * promoted sittings. Replaying 30 days of production's schedule against the 196
- * passes recorded on 2026-09-24, two a pass still left 49 hourly reads late on
- * that lane after long passes (up to 15:52), when a stalled lane has to catch
- * up; three a pass with the 25-minute lead left 13, none with passes of normal
- * length. The reads run one after another with the same-host gap between them
- * (bounded-child-pass.ts), so a host sees one request at a time. Other lanes
- * keep one a pass.
- */
+/** A sitting-window lane takes up to three reads a pass, run one after another with the same-host gap. Other lanes take one. */
 export const SITTING_WINDOW_LANE_SLOTS_PER_PASS = 3;
 export { ROUTINE_DATA_ADMISSION_MS };
-/** Canonical clock reads are independent HTTP queries, not one serial failure chain. */
 export const ROUTINE_CLOCK_READ_CONCURRENCY = 8;
-/** `PostgresRoutineDataStore.clock` performs one batch plus at most one candidate read. */
 export const ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK = 2;
 
 export interface RoutineTaskAdmissionCandidate {
   readonly task: RoutineSourceTask;
-  /**
-   * Newest durable source attempt or unreceipted supervisor attempt. `null`
-   * means this task has never been considered and therefore goes first.
-   */
   readonly lastConsideredAt: string | null;
-  /**
-   * When the task's next read is owed (`routineTaskDeadlineMs`); only
-   * sitting-window tasks have one. A lane of such tasks is read earliest
-   * deadline first, hourly and twice-daily bodies alike, so neither can starve
-   * the other while the lane has capacity for both.
-   */
   readonly deadlineMs?: number;
 }
 
@@ -185,9 +140,7 @@ function deadlineOrder(candidate: RoutineTaskAdmissionCandidate): number {
 function consideredAtMs(candidate: RoutineTaskAdmissionCandidate): number {
   if (candidate.lastConsideredAt === null) return Number.NEGATIVE_INFINITY;
   const parsed = Date.parse(candidate.lastConsideredAt);
-  // A corrupt clock must not silently omit work. Treat it as never considered
-  // so the source is attempted and its normal durable validation can expose
-  // the bad state rather than reporting a false cadence hold.
+    // A corrupt clock must not silently omit work: treat it as never considered so validation exposes it.
   return Number.isFinite(parsed) ? parsed : Number.NEGATIVE_INFINITY;
 }
 
@@ -237,21 +190,10 @@ export function routineFailureDomainFrontier(
       .slice(0, slots)
       .forEach(({ task }) => admitted.add(task.id));
   }
-  // Preserve registry order across providers so logs and deterministic tests
-  // never depend on Map iteration after the per-domain fairness decision.
   return candidates.filter(({ task }) => admitted.has(task.id));
 }
 
-/**
- * **A PASS STARTS THE READ OWED SOONEST FIRST (C6, 2026-09-25).** The pass's
- * pool of four children takes the first runnable read in this order. Every task
- * without a deadline keeps its registry position at the front, as before; the
- * sitting-window reads follow earliest deadline first. In registry order, a
- * backlog (after a runner outage, or twice-daily reads that fell due together)
- * of about a hundred reads took some 15 minutes to drain, and a read owed ten
- * minutes in could start last: the whole-registry replay in
- * tests/meeting-refresh-schedule-clock.test.ts read a twice-daily body at 12:00:57.
- */
+/** Tasks without a deadline keep registry order at the front; sitting-window reads follow earliest deadline first. */
 export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number }>(admitted: readonly T[]): T[] {
   const group = (candidate: T) => candidate.deadlineMs === undefined || Number.isNaN(candidate.deadlineMs) ? 0 : 1;
   return admitted
@@ -263,7 +205,6 @@ export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number 
     .map(({ candidate }) => candidate);
 }
 
-/** A restart in the same admission slot makes the same deterministic choice. */
 export function routineFailureDomainRotationSeed(startedAt: string): number {
   const parsed = Date.parse(startedAt);
   if (!Number.isFinite(parsed) || new Date(parsed).toISOString() !== startedAt) {
@@ -272,15 +213,7 @@ export function routineFailureDomainRotationSeed(startedAt: string): number {
   return Math.floor(parsed / ROUTINE_DATA_ADMISSION_MS);
 }
 
-/**
- * The most commands one pass can admit, and the most from one lane: what the
- * runner's outer time limit is sized for. A lane whose every task has a sitting
- * window takes `SITTING_WINDOW_LANE_SLOTS_PER_PASS`; every other lane one. A lane
- * never admits more tasks than it holds (`routineFailureDomainFrontier` slices
- * its own group), so a lane of one task counts one: a derived meeting family per
- * registered state (2026-09-25) is one task on its own lane, and counting it
- * three times would triple its share of the bound for commands that cannot run.
- */
+/** A lane never admits more tasks than it holds, so a one-task lane counts once toward the bound. */
 export function routineFrontierPassBound(
   tasks: readonly Pick<RoutineSourceTask, "acquisitionFailureDomain" | "contract">[] = ROUTINE_SOURCE_TASKS,
 ): { readonly commandCount: number; readonly largestFailureDomainSize: number } {
@@ -314,9 +247,7 @@ export interface RoutineSupervisorHistoryIssue {
 }
 
 export interface RoutineSupervisorAttemptHistory {
-  /** Latest valid supervisor-only attempt for each registered task. */
   readonly attempts: ReadonlyMap<string, string>;
-  /** Corrupt rows are explicit evidence; they never erase valid sibling rows. */
   readonly issues: readonly RoutineSupervisorHistoryIssue[];
 }
 
@@ -336,14 +267,7 @@ function historyText(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0 && !/[\r\n]/.test(value);
 }
 
-/**
- * Extract only supervisor attempts that lack an exact source-authored receipt.
- *
- * Owner history is durable input, not trusted TypeScript memory. Each relevant
- * row is therefore validated independently. A corrupt newer row is reported
- * but cannot reset clocks recovered from other valid rows, which would let the
- * first hung partition monopolize a shared provider forever.
- */
+/** Each row is validated independently: a corrupt newer row is reported but cannot reset clocks recovered from valid rows. */
 export function routineUnreceiptedSupervisorAttemptHistory(
   rows: readonly unknown[],
   registeredTaskIds: ReadonlySet<string>,
@@ -488,11 +412,7 @@ export type RoutineTaskSelection =
       readonly detail: string;
     };
 
-/**
- * Resolve every explicit selection before the runner opens its durable store.
- * A misspelled or retired task id must refuse the whole pass instead of
- * reporting an empty successful run (or partially running the known ids).
- */
+/** A misspelled or retired task id refuses the whole pass rather than running an empty or partial one. */
 export function routineTaskSelection(
   args: readonly string[],
   tasks: readonly Pick<RoutineSourceTask, "id">[] = [...ROUTINE_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))],
@@ -527,14 +447,7 @@ export function routineTaskSelection(
 export interface RoutineTaskClock {
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
-  /**
-   * The pointed candidate's store-observed first event, reported under the same
-   * pointer/receipt proof as `lastSucceededAt`: the success in the attempt
-   * clock's own units. Sitting-window tasks schedule from it; every other task
-   * keeps `lastSucceededAt` until its own schedule is decided.
-   */
   readonly lastSucceededObservedAt?: string;
-  /** MEETING partitions only: the start of every sitting in the current promoted payload. */
   readonly sittingStarts?: readonly string[];
 }
 
@@ -552,7 +465,6 @@ export type RoutineTaskClockRead =
       readonly error: string;
     };
 
-/** Ordered, source-isolated canonical clock reads for one frozen admission instant. */
 export async function readRoutineTaskClocks(
   tasks: readonly RoutineSourceTask[],
   readClock: (task: RoutineSourceTask) => Promise<RoutineTaskClock | undefined>,
@@ -564,12 +476,6 @@ export async function readRoutineTaskClocks(
     : { task: tasks[read.index]!, ok: false as const, clock: undefined, error: read.error });
 }
 
-/**
- * Every sitting-window task's hot signal for one admission instant, from the
- * same pass's clock reads. A failed or missing read counts as unknown. A
- * sitting concludes at its publisher-stated end where one is given, by task id
- * (`statedEnds`), and otherwise by the day bound (sitting-window-admission.ts).
- */
 export function sittingWindowSignals(
   reads: readonly { readonly task: RoutineSourceTask; readonly ok: boolean; readonly clock?: RoutineTaskClock }[],
   nowMs: number,
@@ -589,12 +495,9 @@ export function sittingWindowSignals(
 }
 
 /**
- * A sitting-window task owes its next read an hour (hot) or twelve hours after
- * its last success, and is eligible 15 minutes or 2 hours before that
- * (sitting-window-admission.ts). Both instants are store-observed first events,
- * so a success is never mistaken for a later failed attempt. A failed later
- * attempt owes a retry on the contract clock, never later than the hour while
- * hourly; a partition never published owes one twice daily.
+ * A sitting-window task owes its next read an hour (hot) or twelve hours after its last success, eligible 15 minutes
+ * or 2 hours before. A failed later attempt retries on the contract clock; a partition never published owes one
+ * twice daily.
  */
 function sittingWindowTaskDue(
   task: RoutineSourceTask,
@@ -617,11 +520,6 @@ function sittingWindowTaskDue(
   return nowMs >= eligibleAtMs;
 }
 
-/**
- * When a sitting-window task's next read is owed, for the frontier's ordering:
- * a task never run, or with an unreadable clock, is owed at once. Other tasks
- * have no deadline and keep the least-recently-considered order.
- */
 export function routineTaskDeadlineMs(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
@@ -641,18 +539,10 @@ export function routineTaskDeadlineMs(
   ).deadlineMs;
 }
 
-/**
- * Whether a sitting-window task's own scope holds a promotion. The store
- * reports a sitting list, empty or not, for every MEETING scope with a
- * promotion and none for a scope never promoted. It reports none for other
- * record classes, so those keep their contract's retry.
- */
 function sittingTaskPublished(task: RoutineSourceTask, clock: RoutineTaskClock): boolean {
   return task.recordClass !== "MEETING" || clock.sittingStarts !== undefined;
 }
 
-/** Use an unreceipted child outcome for retry admission only. Source clocks,
- * publication timestamps and successful observations remain unchanged. */
 export function routineAdmissionClock(
   clock: RoutineTaskClock | undefined,
   supervisorAttemptAt: string | undefined,
@@ -666,9 +556,6 @@ export function routineAdmissionClock(
   return { ...clock, lastAttemptedAt: supervisorAttemptAt! };
 }
 
-/** A missing receipt is a protocol defect. The existing per-job failure log
- * survives an unfinished round; retry only after code, Send or source progress
- * changes, rather than repeatedly launching the same child. */
 export function unchangedRoutineProtocolFailure(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
@@ -695,7 +582,7 @@ export function unchangedRoutineProtocolFailure(
     .some(at => Number.isFinite(Date.parse(at ?? "")) && Date.parse(at!) > failedAt && Date.parse(at!) <= nowMs);
 }
 
-/** Rulings §4's hourly floor: a door's observed change rate (DB-30) never makes its check faster than this. Same number as lib/doors/observed-rate.ts. */
+/** The hourly floor: an observed change rate never makes a door's check faster than this. Same number as lib/doors/observed-rate.ts. */
 const MIN_OBSERVED_CHECK_MS = 60 * 60_000;
 
 export function routineTaskDue(
@@ -703,7 +590,6 @@ export function routineTaskDue(
   clock: RoutineTaskClock | undefined,
   nowMs: number,
   sittingHot?: boolean,
-  /** DB-30: how often this task's door has been seen to change, in ms. The check is the faster of this and the policy. */
   observedEveryMs?: number,
 ): boolean {
   if (task.ownerInvocation) {
@@ -723,9 +609,7 @@ export function routineTaskDue(
   if (!Number.isFinite(attempted)) return true;
   if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return true;
   if (!Number.isFinite(succeeded)) return nowMs - attempted >= task.retryMs;
-  // Once a due read fails, the source's retry clock owns the next attempt.
-  // Measuring from the older success would make every pilot cycle retry at
-  // once merely because the ordinary cadence had already elapsed.
+    // Once a due read fails, the source's retry clock owns the next attempt.
   if (attempted > succeeded) return nowMs - attempted >= task.retryMs;
   const policyMs = cadenceMsAt(task.contract, nowMs);
   return nowMs - succeeded >= (observedEveryMs === undefined ? policyMs

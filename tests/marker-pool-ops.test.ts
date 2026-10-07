@@ -1,30 +1,6 @@
 /**
- * **P-001 / P-004 · THE MARKER POOL, MEASURED RATHER THAN LOOKED AT.**
- * (Performance audit of `336a3eb`, remediated 2026-08-24.)
- *
- * `lib/map/marker-pool.ts` has claimed since it was written that "a filter that
- * narrows 500 pins to 480 does 20 DOM writes, not 980". Nothing measured it,
- * and the wiring above it made it false: `map-entry` grouped its venues from
- * the FILTERED meetings and handed those to `MapCanvas`, whose `[venues]`
- * effect calls `rebuildMarkerPool` — so twenty filtered-out venues arrived as
- * twenty venues the data no longer had, and their markers were destroyed. Undo
- * the filter and twenty more were constructed.
- *
- * A documented optimisation that the wiring bypasses is the chromium-pin shape,
- * and it has the same answer: **observe the step's product at the step**
- * (RULING 113). Visual equivalence cannot tell a reused marker from a recreated
- * one — the map looks identical either way, which is exactly why this lasted as
- * long as it did. So the pool counts what it did, and these tests assert the
- * counts against the auditor's own 500→480 number.
- *
- * ## Why there is a factory rather than a DOM
- *
- * Every decision this module makes is already testable without a browser:
- * `reconcileKeys` is pure, the signature comparison is pure, and visibility and
- * selection touch nothing but `element.dataset`. CONSTRUCTION is the exception
- * — it needs `document` and a real MapLibre `Marker` — and the create/remove
- * counts are exactly the numbers this finding is about. `MarkerFactory` is that
- * one seam, defaulted to the real calls, passed by nothing in the app.
+ * The marker pool's create, remove and write counts. `MarkerFactory` is the one seam, defaulted to the real
+ * `document` and MapLibre `Marker` calls and passed by nothing in the app.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -49,12 +25,8 @@ const FACTORY: MarkerFactory = {
   createElement: () =>
     ({
       dataset: {} as Record<string, string | undefined>,
-      // The pool attaches the pin-click handler here. Recording nothing is
-      // enough: what the click DOES is spiderfy own concern, tested next door.
       addEventListener: () => {},
-      // updateMarkerIcon reaches for the dot and the count badge. Returning
-      // null is the honest stand-in: the icon pass handles a missing child
-      // already, and this test is counting the CALL, not the paint.
+      // updateMarkerIcon handles a missing child; this counts the call, not the paint.
       querySelector: () => null,
       setAttribute: () => {},
       style: { setProperty: () => {}, removeProperty: () => {} },
@@ -112,15 +84,10 @@ test("P-001 · the before line: building the pool creates 500 and shows 500", ()
   assert.equal(applyVisibility(pool, new Set(ALL.map((v) => v.key))), 500);
 });
 
-/* ==================================================================== *
- *  P-001
- * ==================================================================== */
-
 test("P-001 · a 500-to-480 filter creates and removes NOTHING", () => {
   const pool = pooledWithAll();
 
-  // What the fixed wiring does: the pool still sees every venue in the data,
-  // and only the visible KEY SET narrows.
+  // The pool sees every venue in the data; only the visible key set narrows.
   rebuildMarkerPool(pool, MAP, ALL, () => {}, FACTORY);
   applyVisibility(pool, new Set(KEPT.map((v) => v.key)));
 
@@ -149,12 +116,7 @@ test("P-001 · REVERSING the filter is another 20 writes, not 20 constructions",
 });
 
 test("P-001 · THE OLD WIRING, kept as a measurement rather than an argument", () => {
-  /*
-   * This is what `map-entry` used to do: group venues from the FILTERED
-   * meetings and hand that list to the pool. Keeping it as a test puts the
-   * cost in the record as a number, and means an edit that collapses the two
-   * lists back into one fails here with the reason attached.
-   */
+  // Handing the pool the filtered venue list destroys and recreates markers instead.
   const pool = pooledWithAll();
   rebuildMarkerPool(pool, MAP, KEPT, () => {}, FACTORY);
   assert.equal(pool.ops.removed, 20, "the old wiring removed twenty markers");
@@ -175,10 +137,6 @@ test("P-001 · a REAL data change still creates and removes, which is the whole 
   rebuildMarkerPool(pool, MAP, ALL.slice(0, 499), () => {}, FACTORY);
   assert.equal(pool.ops.removed, 3, "the two new venues plus one genuinely gone");
 });
-
-/* ==================================================================== *
- *  P-004
- * ==================================================================== */
 
 test("P-004 · selecting one pin writes TWO elements, not five hundred", () => {
   const pool = pooledWithAll();
@@ -233,8 +191,7 @@ test("P-004 · a venue that MOVES is repositioned, and only that one", () => {
 });
 
 test("P-004 · the signature covers every input the icon pass reads", () => {
-  // A signature that missed one would SKIP a real change, which is worse than
-  // the writes it saves. Each of these must come out different.
+  // A signature that missed a field would skip a real change.
   const base = venue(1);
   const signatures = new Set([
     renderedSignature(base),
@@ -245,19 +202,9 @@ test("P-004 · the signature covers every input the icon pass reads", () => {
   assert.equal(signatures.size, 4, "two distinguishable venues share a signature");
 });
 
-/* ==================================================================== *
- *  THE WIRING, WHICH IS WHERE P-001 ACTUALLY LIVED
- * ==================================================================== */
-
 /**
- * The counters above prove the POOL behaves. They cannot see the defect,
- * because the defect was one level up: the pool was correct and was being
- * handed the wrong list. So this reads the two components' source and asserts
- * the separation is still there.
- *
- * By SHAPE rather than by string (RULING 110): what matters is that the map
- * receives the UNFILTERED grouping and a separate key set, and that the
- * visibility effect does not depend on the venue objects.
+ * The map must receive the unfiltered venue grouping and a separate key set, and the visibility effect must not
+ * depend on the venue objects. Read from the components' source by shape.
  */
 test("P-001 · map-entry hands the map ALL venues and the visible keys separately", () => {
   const entry = readFileSync(
@@ -301,7 +248,7 @@ test("P-001 · the canvas rebuilds on DATA and applies visibility on KEYS, in se
   assert.match(canvas, /\}, \[venues, visibleVenueKeys, presentationReady\]\);/);
   assert.match(canvas.slice(canvas.lastIndexOf("useEffect(() =>", rebuildAt), rebuildAt), /mapPresentationHeld\(map\)/, "pool creation must remain deferred during camera motion");
 
-  // P-004: selection no longer re-runs on every data change.
+  // Selection does not re-run on every data change.
   assert.match(canvas, /\}, \[selectedVenueKey\]\);/);
   assert.doesNotMatch(
     canvas,
@@ -310,20 +257,7 @@ test("P-001 · the canvas rebuilds on DATA and applies visibility on KEYS, in se
   );
 });
 
-/**
- * **THE REGRESSION P-001 ITSELF INTRODUCED**, found by `pnpm walk:all` and
- * fixed before the session ended.
- *
- * Moving the pool from the filtered venues to ALL venues is the fix — and it
- * left a hole at the other end. `applyVisibility` writes only the keys whose
- * visibility CHANGED, so a marker created for a venue the current filter
- * EXCLUDES was in neither loop: never written, `data-hidden` unset, and
- * visible on the map. The pool was right and twenty pins were showing that
- * should not have been.
- *
- * The counters could not see it, which is the lesson worth keeping: they count
- * WRITES, and the defect was the absence of one.
- */
+/** `applyVisibility` writes only changed keys, so a marker created for an excluded venue must start hidden. */
 test("P-001 · a marker created for a FILTERED-OUT venue is hidden, not visible", () => {
   const pool = createMarkerPool();
   rebuildMarkerPool(pool, MAP, ALL, () => {}, FACTORY);
@@ -346,8 +280,7 @@ test("P-001 · a marker created for a FILTERED-OUT venue is hidden, not visible"
 });
 
 test("P-001 · a venue that arrives ALREADY filtered out never flashes visible", () => {
-  // The stricter case: the venue is created on a run where it is not visible.
-  // Nothing later hides it, so its initial state is the only thing that can.
+  // The venue is created on a run where it is not visible; nothing later hides it.
   const pool = createMarkerPool();
   rebuildMarkerPool(pool, MAP, ALL, () => {}, FACTORY);
   assert.equal(

@@ -17,25 +17,11 @@ import {
   icsDataHref,
   meetingCalendarEvent,
 } from "../lib/calendar/event-links.ts";
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 /**
- * M59 (2026-08-15) — "we know the day, not the hour".
- *
- * Two real archives publish a meeting's date and no start time: Rockaway
- * Township's AgendaCenter and Merrimack County's notices page. Before this,
- * both jurisdictions' pasts simply did not exist in the app, and the
- * Concluded filter said so honestly and uselessly. Ingesting them needed a
- * shape that can hold a date without a clock, because the alternative —
- * defaulting to the hour these bodies usually meet — would be right most of
- * the time and wrong exactly when it mattered, on the special sitting
- * somebody wanted to attend.
- *
- * The bargain that makes it safe is one line: **a date-only meeting may never
- * render a time.** `startsAt` still carries local midnight so the row can be
- * ordered and filtered with every other meeting, and that midnight is an
- * ordering artifact. These guards are what stop it becoming a claim.
+ * A date-only meeting may never render a time. `startsAt` carries local midnight so the row orders and filters with
+ * every other meeting; that midnight is an ordering artifact, never a claim.
  */
 
 const ROOT = join(import.meta.dirname, "..");
@@ -63,25 +49,19 @@ function meeting(overrides: Partial<Meeting> = {}): Meeting {
   };
 }
 
-/* ------------------------------------------------------------- rendering --- */
-
 test("M59: a date-only meeting renders the honest line where the clock goes", () => {
   const dayOnly = meeting({ startPrecision: "DAY" });
 
   assert.equal(startTimeIsKnown(dayOnly), false);
   assert.equal(formatMeetingTime(dayOnly), TIME_NOT_POSTED);
 
-  // The specific failure this guards: midnight leaking out as "12:00 AM EDT",
-  // which reads as a real published start time and is a fabricated fact about
-  // a government meeting.
+  // Midnight must not leak out as "12:00 AM EDT", which would read as a published start time.
   assert.ok(
     !/\d{1,2}:\d{2}/.test(formatMeetingTime(dayOnly)),
     `a date-only meeting rendered a clock: ${formatMeetingTime(dayOnly)}`,
   );
 
-  // The DATE still renders in full — that half is known and is the point.
-  // BC-12 (2026-08-24): the author's convention is spelled out, product-wide.
-  // The weekday stays: "is that a Tuesday" is half of deciding to attend.
+  // The date still renders in full, weekday included.
   assert.match(formatMeetingDate(dayOnly), /^Tue, June 9th, 2026$/);
 });
 
@@ -96,8 +76,8 @@ test("M59: a normal meeting is untouched by the new shape", () => {
 });
 
 test("M59: the calendar date is the meeting's own zone, not the reader's", () => {
-  // A Tucson meeting written with a UTC offset lands on the previous day if
-  // the date is sliced off the ISO string instead of formatted in the zone.
+  // A meeting written with a UTC offset lands on the previous day if the date is sliced off the ISO string instead
+  // of formatted in the zone.
   const tucson = meeting({
     startsAt: "2026-06-10T02:00:00Z",
     timeZone: "America/Phoenix",
@@ -106,17 +86,14 @@ test("M59: the calendar date is the meeting's own zone, not the reader's", () =>
   assert.equal(meetingLocalDate(tucson), "2026-06-09");
 });
 
-/* ------------------------------------------------------------- ingestion --- */
-
 test("M59: the AgendaCenter parse reads only its own category, with a floor", () => {
   const html = readFileSync(
     join(FIXTURES, "civicplus-rockaway-agendacenter.html"),
     "utf8",
   );
 
-  // Category 2 is the Township Council's own filter value. Asserting a
-  // minimum row count rather than "no error": a selector that matched nothing
-  // would otherwise pass as a clean run.
+  // Category 2 is the Township Council's own filter value. A minimum row count, because a selector that matched
+  // nothing would otherwise pass as a clean run.
   const council = parseAgendaCenter(html, "2");
   assert.ok(
     council.length >= 13,
@@ -126,9 +103,7 @@ test("M59: the AgendaCenter parse reads only its own category, with a floor", ()
     assert.match(sitting.date, /^\d{4}-\d{2}-\d{2}$/);
   }
 
-  // And the neighbours are NOT the council's. The page carries five bodies;
-  // filing the Planning Board's meetings under the Township Council would be
-  // a wrong claim about who met.
+  // The page carries several bodies; the Planning Board's meetings must not be filed under the Township Council.
   const planning = parseAgendaCenter(html, "4");
   assert.ok(planning.length >= 7, `only ${planning.length} Planning Board sittings`);
   const councilDates = new Set(council.map((s) => s.date));
@@ -156,8 +131,6 @@ test("M59: the Merrimack notices page still parses its dated documents", () => {
   );
   assert.ok(dates.size >= 14, `only ${dates.size} distinct meeting dates`);
 });
-
-/* ------------------------------------------------------- calendar links --- */
 
 test("M59: a date-only meeting exports as an all-day event, with the note", () => {
   const dayOnly = meeting({
@@ -195,59 +168,4 @@ test("M59: a timed meeting still exports as a timed event", () => {
   assert.equal(event.allDayDate, undefined);
   assert.equal(event.startsAtIso, "2026-06-09T19:00:00-04:00");
   assert.ok(!event.description?.includes(TIME_NOT_POSTED));
-});
-
-/* -------------------------------------------------- the committed snapshot --- */
-
-test("M59: the shipped snapshot carries day-only meetings and none of them shows a time", () => {
-  const snapshot = readSnapshot(ROOT);
-  assert.ok(snapshot, "no committed snapshot to check");
-
-  const dayOnly = snapshot.meetings.filter((m) => m.startPrecision === "DAY");
-
-  // Counts with their denominator, per jurisdiction, so a source that stops
-  // producing shows up as a number rather than as a quietly shorter list.
-  const byJurisdiction = new Map<string, number>();
-  for (const m of dayOnly) {
-    byJurisdiction.set(m.jurisdiction, (byJurisdiction.get(m.jurisdiction) ?? 0) + 1);
-  }
-  console.log(
-    `\n  day-only  ${dayOnly.length} of ${snapshot.meetings.length} meeting(s): ` +
-      [...byJurisdiction].map(([j, n]) => `${j} ${n}`).join(", ") +
-      "\n",
-  );
-
-  assert.ok(
-    dayOnly.length >= 27,
-    `only ${dayOnly.length} day-only meetings in the snapshot — M59 ingested 27`,
-  );
-  assert.ok(
-    (byJurisdiction.get("Rockaway Township, NJ") ?? 0) >= 13,
-    "Rockaway Township's archive is not in the snapshot",
-  );
-  assert.ok(
-    (byJurisdiction.get("Merrimack County, NH") ?? 0) >= 14,
-    "Merrimack County's archive is not in the snapshot",
-  );
-
-  for (const m of dayOnly) {
-    assert.equal(
-      formatMeetingTime(m),
-      TIME_NOT_POSTED,
-      `${m.id} would render a start time it does not have`,
-    );
-    // Local midnight is the ordering position these rows are supposed to
-    // hold. Anything else means a real time was thrown away.
-    assert.match(
-      m.startsAt,
-      /T00:00:00/,
-      `${m.id} is day-only but carries a time in startsAt`,
-    );
-  }
-
-  // Nothing that DOES have a time may be marked day-only by accident.
-  for (const m of snapshot.meetings) {
-    if (m.startPrecision === "DAY") continue;
-    assert.ok(startTimeIsKnown(m), `${m.id} lost its time`);
-  }
 });

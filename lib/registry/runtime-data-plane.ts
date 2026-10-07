@@ -92,7 +92,7 @@ export interface RegistryRuntimePackage {
    * excluded fact. Omitted, a package speaks for the whole registry.
    */
   readonly scope?: "MEMBERS";
-  /** Holders a complete official roster in this package no longer lists (rulings §3: complete rosters record departures). */
+  /** Holders a complete official roster in this package no longer lists; complete rosters record departures. */
   readonly departures?: readonly { readonly bodyId: string; readonly holderId: string; readonly sourceUrl: string }[];
 }
 
@@ -482,15 +482,10 @@ function sourceScopedRegistryProjection(
   });
   const metadataAccepted = input.sourceReceipt.sources.every((source) => (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED") &&
     registryIsolationIssue(currentMembers[0]!) === null;
-  /*
-   * A Census placeholder is never a government. This open family keeps a prior
-   * member unless something proves it gone, so the proof is named here: a body
-   * on a division whose own Census code is the "no district here" placeholder
-   * (LEA 99997) leaves the projection whichever side holds it, and the
-   * placeholder's Census name is translated as the committed geometry's is.
-   * Without it the two bodies the 2026-09-14 version carries could never leave,
-   * and the promotion check below would then refuse every future promotion.
-   */
+  // A Census placeholder is never a government. This open family keeps a prior member unless something
+  // proves it gone, so the proof is named here: a body on a division whose own Census code is the "no
+  // district here" placeholder (LEA 99997) leaves the projection whichever side holds it, and the
+  // placeholder's Census name is translated as the committed geometry's is.
   const placeholderDivisionIds = new Set(reconciled.members.flatMap((member) =>
     member.record.kind === "DIVISION" && isCensusPlaceholderDivision(member.record.value) ? [member.record.value.ocdId] : []));
   const removedKeys = new Set(reconciled.members.flatMap((member) =>
@@ -564,7 +559,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   if (!rosterReaderDispositions.length) issues.push("ROSTER_DISPOSITIONS_EMPTY");
   if (duplicate(dispositionIds)) issues.push("ROSTER_DISPOSITION_ID_INVALID_OR_DUPLICATED");
   const eligibleDispositions = rosterReaderDispositions.filter((row) => row.state === "READER_ELIGIBLE");
-  // Membership is asked of Sets, not arrays (C21): the same answers, without walking every member once per row.
+  // Membership is asked of Sets, not arrays.
   const memberIdSet = new Set(memberIds);
   const eligibleSourceIds = new Set(eligibleDispositions.map((row) => row.sourceId));
   if (eligibleDispositions.some((row) => row.canonicalId !== row.sourceId || !memberIdSet.has(row.sourceId))) issues.push("ROSTER_ELIGIBLE_DISPOSITION_UNRESOLVED");
@@ -638,13 +633,9 @@ function citedRuntimeUrlsByMember(value: RegistryRuntimeReadModel): Map<string, 
 }
 
 /**
- * The prior members this successor carries on the base's own authority rather
- * than a reviewed source (Sean, 2026-09-23): an exact, unchanged prior member
- * that cites a source this promotion's receipt does not cover. Over the
- * transfer-time trusted import that is every member no package has touched;
- * over later versions it is whatever is still carried from that import. The
- * plane re-proves each one against the exact GOOD base
- * (lib/civic-data/manual-prior-authority.ts).
+ * The prior members this successor carries on the base's own authority rather than a reviewed source:
+ * an exact, unchanged prior member that cites a source this promotion's receipt does not cover. The plane
+ * re-proves each one against the exact GOOD base (lib/civic-data/manual-prior-authority.ts).
  */
 function inheritedRegistryMembers(
   payload: RegistryRuntimeReadModel,
@@ -736,14 +727,9 @@ export async function readRegistryRuntimePrior(
 }
 
 /**
- * The receipt a GOOD base lends its successor. The version imported at the
- * 2026-09-14 authority transfer carries none: it was admitted, explicitly not
- * source-authenticated, to preserve the Reader's last known good. Sean's
- * decision (2026-09-23): the owner door builds on exactly that import, and the
- * members a package leaves untouched carry forward on the import's own
- * authority, recorded per member and re-proved against it by the plane.
- * Refusing it refused every registry correction, since it is the only version
- * production has held. Any other base without a GOOD receipt is still refused.
+ * The receipt a GOOD base lends its successor. The trusted-import base carries none; members a package
+ * leaves untouched carry forward on that import's authority, recorded per member and re-proved by the
+ * plane. Any other base without a GOOD receipt is refused.
  */
 export function registryBaseSourceReceipt(base: RoutineCandidate): ManualSourceSetReceipt {
   if (base.bootstrapImport?.kind === "TRUSTED_LKG_IMPORT" && base.retrieval.manualSourceReceipt === undefined) {
@@ -778,14 +764,14 @@ export function registryRuntimeCandidate(
     throw new Error(`REGISTRY_RUNTIME_SOURCE_RECEIPT_CLASS_NOT_AUTHORIZED:${unauthorizedSource.sourceClass}`);
   }
 
-  // The added reference class corroborates verified portraits, and fills a legislative
-  // seat from the Open States file (CA-02); it cannot authorize a new body or another fact.
+  // The added reference class corroborates verified portraits and fills a legislative seat from the Open
+  // States file; it cannot authorize a new body or another fact.
   const currentMembers = registryIsolationMembers(input.payload, input.sourceReceipt);
   for (const source of input.sourceReceipt.sources.filter(source => source.sourceClass === "REFERENCE_PUBLISHER")) {
     const cited = currentMembers.filter(member => member.record.kind !== "PROJECTION_METADATA" &&
       registryIsolationUrls(member).some(url => url === source.requestedUrl || url === source.finalUrl));
-    // CA-02: an Open States row may also fill a legislative seat, on that file alone; an official roster value replaces it.
-    // The seat's roster, its reader disposition and its owed candidacy check all cite the one file.
+    // An Open States row may fill a legislative seat on that file alone; an official roster value replaces
+    // it. The seat's roster, its reader disposition and its owed candidacy check all cite the one file.
     const openStatesSeat = (member: typeof cited[number]) => member.record.kind === "BODY_ROSTER" &&
       /^https:\/\/data\.openstates\.org\/people\/current\/[a-z]{2}\.csv$/.test(member.record.value.sourceUrl) && /#seat$/.test(member.record.value.bodyId);
     const seatDependent = (member: typeof cited[number]) => ["ROSTER_DISPOSITION", "OFFICIAL_CANDIDACY"].includes(member.record.kind) && cited.some(openStatesSeat);

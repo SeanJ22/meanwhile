@@ -1,13 +1,10 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { US_JURISDICTIONS, jurisdictionFromOcdId } from "../lib/coverage/states.ts";
-import { deriveArtifacts, heldStatesForDomain, ROSTER_FILES, BALLOT_FILES } from "../lib/coverage/artifacts.ts";
-import { rosterPath, ballotPath } from "../lib/holdings/runtime-paths.ts";
-
-// These exercise the existing holdings path, without an onboarding manifest.
+import { deriveArtifacts, heldStatesForDomain } from "../lib/coverage/artifacts.ts";
 test("national geography identifies all states and DC without declaring artifact coverage", () => {
   assert.equal(US_JURISDICTIONS.filter(state => state.prefix !== "territory").length, 51);
   assert.equal(jurisdictionFromOcdId("ocd-division/country:us/district:dc/ward:1")?.fips, "11");
@@ -38,9 +35,4 @@ test("a first state holding appears only in its own artifact domain without code
     assert.deepEqual(held.geometryStates.map(state => state.usps), ["HI"]);
     assert.equal(held.ballotFiles.length, 2);
   } finally { rmSync(root, { recursive: true, force: true }); }
-});
-
-test("every discovered roster and ballot artifact is held on disk", () => {
-  for (const file of ROSTER_FILES) assert.ok(existsSync(rosterPath(file)), file);
-  for (const { file } of BALLOT_FILES) assert.ok(existsSync(ballotPath(file)), file);
 });

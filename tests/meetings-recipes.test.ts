@@ -1,28 +1,7 @@
 /**
- * **A METHOD THAT WORKED IS SAVED, RETRIEVED FOR ANOTHER GOVERNMENT, AND USED
- * BY THE RUNNER; A FAILURE IS NOT PAID FOR TWICE.** (2026-09-23.)
- *
- * `lib/hunt/meetings-recipes.ts` and its use by the discovery executor. What
- * these tests hold:
- *
- * - **Substitution.** A template is filled from the government's identity; a
- *   slot the identity lacks leaves the query unsent, never half-filled.
- * - **Retrieval.** A recipe applies by body class and state; a state-specific
- *   one outranks a portable one, then successes, then recency. A recipe proven
- *   in another state does not apply here until it is portable.
- * - **The runner uses what it saved.** A walk applies a saved method only when
- *   the homepage shows its precondition, confirms the route by content, and
- *   writes the outcome back to the field manual. The next cycle reads that store
- *   and applies the method, with its counts, to a government in another state.
- * - **Failures are kept.** A failed application is recorded with its limit;
- *   while it stands, the same method is not tried on the same government again.
- * - **A corrected seed reaches the runner.** A stored copy of a seed keeps the
- *   runner's counts and failure memory; its method comes from the code.
- * - **The time ran out, not the method.** A saved method the walk did not reach
- *   before the phase's time ran out is neither credited nor charged.
- *
- * Every test that writes runs on the in-memory double AND the durable file
- * store.
+ * A method that worked is saved, retrieved for another government by body class and state, and used by the runner;
+ * a template slot the identity lacks leaves the query unsent, and a standing failure is not paid for twice. Every
+ * test that writes runs on the in-memory double and the durable file store.
  */
 
 import assert from "node:assert/strict";

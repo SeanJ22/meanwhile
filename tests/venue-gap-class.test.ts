@@ -37,30 +37,6 @@ import {
 import { inSiteTenantsFromWiring } from "../lib/sources/legistar-insite/tenant-registry.ts";
 import type { Meeting, MeetingLocation } from "../lib/sources/types.ts";
 
-/**
- * **THE VENUE-GAP CLASS, ON THE PARTITIONS IT TOOK DOWN.** (2026-09-23.)
- *
- * Production, measured by the owner: Pima County's Board of Supervisors (its
- * Legistar and Legistar InSite partitions) and Mesa's City Council (InSite)
- * failed every routine read from 2026-09-14 12:45Z with
- * `VENUE_RESOLUTIONS_MISSING`, because the promoted `venue-resolutions` table
- * left out the three Legistar rooms (their rows carry `verifiedAt: null`, and
- * the manual door admits only reviewed rows — a package holding them is
- * refused whole, so the table promoted without them). Readers were served the
- * 14 September listing throughout.
- *
- * The class: a missing or unreviewed venue never suppresses a meeting and never
- * fails a partition. These tests rebuild the production table through the real
- * promotion door and read it through the real canonical read, then run each
- * partition's adapter on recorded bytes (no live calls):
- *
- * - (a) with the three rooms left out, every sitting is published, each
- *   carrying the room exactly as the publisher wrote it, 0 dropped, no throw;
- * - (b) with the three rooms restored (the owner's fix), the same sittings are
- *   placed exactly as they were before this change — the placements are pinned
- *   literally, from the recorded fixtures' pre-change output.
- */
-
 const FIXTURES = join(import.meta.dirname, "fixtures");
 const fixture = (name: string) => readFileSync(join(FIXTURES, name), "utf8");
 
@@ -96,11 +72,7 @@ const MESA_CHAMBERS: MeetingLocation = {
   lng: -111.830942,
 };
 
-/**
- * Promote a venue table through the registered manual door, then read it
- * through the canonical read — the exact path production's acquisition uses.
- * The door itself leaves out any row with no review time.
- */
+/** Promote through the registered manual door, then read through the canonical read; the door leaves out any row with no review time. */
 async function promoteVenueTable(rows: readonly VenueEntry[]): Promise<readonly string[]> {
   const store = new MemoryRoutineDataStore();
   // Every row cites its address page and its geocoder call; the door admits a
@@ -148,18 +120,14 @@ async function promoteVenueTable(rows: readonly VenueEntry[]): Promise<readonly 
 
 /** Production's table: every reviewed row, and so not the three Legistar rooms. */
 const promoteProductionTable = () => promoteVenueTable(VENUE_CACHE.filter((row) => row.verifiedAt !== null));
-/** The owner's fix: the same table, the three rooms reviewed. */
+/** The same table with the three rooms reviewed. */
 const promoteRestoredTable = () =>
   promoteVenueTable(VENUE_CACHE.map((row) => (LEGISTAR_ROOMS.includes(row) ? { ...row, verifiedAt: "2026-09-23" } : row)));
 
 const EVENTS = JSON.parse(fixture("legistar-pima-events.json")) as LegistarEvent[];
 const LEGISTAR_NOW = new Date("2026-08-12T22:00:00.000Z");
 
-/**
- * The Pima County Legistar partition exactly as the runner builds it — the
- * composite for the one (legistar, Board of Supervisors) pair — acquiring the
- * recorded /events response through a stubbed transport.
- */
+/** The Legistar partition as the runner builds it, acquiring the recorded /events response through a stubbed transport. */
 async function pimaLegistarPartition(): Promise<{
   meetings: Meeting[];
   report: NonNullable<ReturnType<typeof buildCompositeSource>["lastReport"]>["children"][number];
@@ -245,8 +213,6 @@ function assertNamedGaps(meetings: Meeting[], publisher: string): Meeting[] {
   return unplaced;
 }
 
-// ── The production table ───────────────────────────────────────────────────
-
 test("production's table: the three Legistar rooms cannot pass the door, and an empty scope is a list, never a throw", async () => {
   // The door refuses a package that holds an unreviewed row, whole — which is
   // why production's table was promoted without the three rooms.
@@ -273,8 +239,6 @@ test("production's table: the three Legistar rooms cannot pass the door, and an 
     assert.equal(tenant.venues.length, 0, tenant.slug);
   }
 });
-
-// ── (a) the rooms left out: every sitting published, the words verbatim ───
 
 test("(a) Pima County Legistar, rooms left out: the partition reads, publishes every sitting with the county's words, drops none", async () => {
   await promoteProductionTable();
@@ -316,7 +280,7 @@ test("(a) Pima County Legistar InSite, rooms left out: every grid sitting is pub
   const result = insiteNormalize([PIMA_READING], INSITE_NOW, tenants);
   assert.equal(result.accounting.outcome, "CONSERVED");
   assert.equal(result.accounting.dropped, 0, "0 dropped");
-  // DB-03: the held 120-day window reaches four sittings more than the 90-day window's thirty.
+  // The forward window is 120 days.
   assert.equal(result.meetings.length, 34, "the thirty sittings the 90-day window published, and the four the held window adds");
   const unplaced = assertNamedGaps(result.meetings, PIMA_CLERK);
   assert.equal(unplaced.length, 29);
@@ -358,7 +322,7 @@ test("(a) Mesa InSite, rooms left out: every City Council sitting is published w
     "the only rows set aside are other bodies' on the shared grid",
   );
   assert.equal(result.drops.unplaceableInTime, 0);
-  // DB-03: the held 120-day window reaches nine sittings more than the 90-day window's thirty.
+  // The forward window is 120 days.
   assert.equal(result.meetings.length, 39, "the ten Council Chambers sittings and the twenty-nine held elsewhere");
   const unplaced = assertNamedGaps(result.meetings, MESA_CLERK);
   assert.equal(unplaced.length, 39);
@@ -369,8 +333,6 @@ test("(a) Mesa InSite, rooms left out: every City Council sitting is published w
     "the grid's own location cells, verbatim",
   );
 });
-
-// ── (b) the rooms restored: placed exactly as before ──────────────────────
 
 test("(b) Pima County Legistar, rooms restored: the same sittings are placed exactly as before", async () => {
   await promoteRestoredTable();
@@ -410,8 +372,7 @@ test("(b) Pima County and Mesa InSite, rooms restored: the same sittings are pla
     "the ten Council Chambers sittings the recorded grid placed before this change, and 1336063 and 1336064 the held window (DB-03) adds",
   );
   for (const m of mesaPlaced) assert.deepEqual(m.location, MESA_CHAMBERS, m.id);
-  // The twenty sittings held in rooms nobody has reviewed are still published,
-  // now with the grid's own words, where before this change they were dropped.
+  // The twenty sittings held in unreviewed rooms are still published, with the grid's own words.
   assert.equal(mesa.meetings.length - mesaPlaced.length, 27);
   assert.equal(mesa.drops.unknownVenue, 27);
 });

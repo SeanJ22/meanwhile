@@ -10,7 +10,6 @@ const PREFIXES: Readonly<Record<string, string>> = {
 const jurisdictionIsValid = (id: string, ocdId: string) => Boolean(jurisdictionFromOcdId(ocdId) ||
   !["plain-english-translations", "campaign-finance", "special-district-boundaries"].includes(id) && ocdId === "ocd-division/country:us");
 
-/** These families publish and read one exact jurisdiction, never a nationwide payload. */
 export function scopedManualContractScope(id: string, ocdId: string): string {
   if (!PREFIXES[id] || !jurisdictionIsValid(id, ocdId)) throw new Error("Scoped publication requires one US jurisdiction.");
   return `${PREFIXES[id]}:${ocdId}`;

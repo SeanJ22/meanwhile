@@ -45,12 +45,7 @@ export async function runInstalledAdapter(name: string, text: string, sourceUrl:
   if (name === 'dated-sitemap' && typeof adapterModule.inventoryStreamlineSitemap === 'function') return adapterModule.inventoryStreamlineSitemap({xml:text, publisherOrigin:new URL(sourceUrl).origin, subjectId:sourceUrl});
   throw new Error('ADAPTER_EXTRACTION_EXPORT_MISSING');
 }
-/**
- * DB-50: register the feed kinds the installed adapters declare (`export const feedKind`), the same way Scout
- * adapters are loaded, so composite wiring serves doors of those kinds. Call it once at the start of a pass. An adapter
- * that declares a bad kind, or a name a built-in adapter holds, is refused by name and the rest still install; with
- * none declared this changes nothing.
- */
+/** Register the feed kinds installed adapters declare (`export const feedKind`). A bad kind, or one a built-in holds, is refused by name and the rest still install. */
 export async function installFeedKindsFromAdapters(): Promise<{ readonly installed: readonly string[]; readonly refused: readonly string[] }> {
   const { installFeedKinds } = await import('../../sources/feed-kinds.ts');
   const { CAPABILITIES } = await import('../../sources/composite/wiring.ts');

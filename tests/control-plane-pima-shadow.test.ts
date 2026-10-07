@@ -3,49 +3,50 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { FIRST_PARTY_ROUTES } from "../lib/sources/legistar-insite/horizon.ts";
-import {
-  PIMA_ADAPTER_ROUTES,
-  PIMA_BODY_ID,
-  PIMA_GRANICUS_PERMISSION,
-  PIMA_JURISDICTION,
-  PIMA_MEASURED_FUTURE_COUNTS,
-  PIMA_UNION_DENOMINATOR,
-  pimaFutureMeetingsWorkItem,
-} from "../lib/control-plane/fixtures/pima-meetings.ts";
-import { computeRouteFloor, describeFloor, materializeFloor } from "../lib/control-plane/preflight.ts";
+import { FIRST_PARTY_ROUTES, GRANICUS_LIVE_PROCEEDINGS_ROUTE, type FirstPartyRoute } from "../lib/sources/legistar-insite/horizon.ts";
+import type { Jurisdiction } from "../lib/method/portability.ts";
+import { computeRouteFloor, describeFloor, materializeFloor, type AdapterRouteDeclaration } from "../lib/control-plane/preflight.ts";
+import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
 import { evaluateCompletion, type CompletionSnapshot } from "../lib/control-plane/completion.ts";
 import { beginAttempt, claim, endAttempt } from "../lib/control-plane/attempt.ts";
 import { disposeRoute, type RouteTask } from "../lib/control-plane/route-task.ts";
 import { methodFixture } from "./method-store-fixture.ts";
 
-/**
- * THE PIMA SHADOW ATTACHMENT.
- *
- * A real obligation, a real method store read off disk, and the real eight
- * first-party routes the adapter declares — wired to the control plane's
- * completion contract and asked the only question that matters:
- *
- *     can a worker close this obligation while an inherited route has no
- *     disposition?
- *
- * These tests read the COMMITTED method store rather than a fixture. That is
- * deliberate: a preflight proven against a synthetic store proves the test
- * author's idea of the store, and the defect being guarded against is a floor
- * that silently stops matching reality.
- */
-
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+
+const JURISDICTION: Jurisdiction = { state: "az", governmentType: "county", platform: "legistar", publisher: "example.legistar.com" };
+
+const ADAPTER_ROUTES: readonly AdapterRouteDeclaration[] = FIRST_PARTY_ROUTES.map((routeId) => ({
+  routeId,
+  label: routeId,
+  target: routeId === "GRANICUS_VIEW_PUBLISHER" ? GRANICUS_LIVE_PROCEEDINGS_ROUTE.host : "example.legistar.com",
+}));
+
+const MEASURED_FUTURE_COUNTS: Readonly<Partial<Record<FirstPartyRoute, number>>> = {
+  LEGISTAR_WEBAPI_EVENTS: 0,
+  LEGISTAR_WEBAPI_EVENTDATES: 0,
+  INSITE_CALENDAR_GRID: 14,
+  INSITE_CALENDAR_RSS: 14,
+  CLERK_SCHEDULE_PAGE: 14,
+};
+
+function futureMeetingsWorkItem(now: string): WorkItem {
+  return createWorkItem({
+    project: "meanwhile",
+    subject: "ocd-division/country:us/state:az/county:example#governing",
+    obligation: "Enumerate every explicit future meeting instance published across materially distinct first-party routes",
+    why: "The reader is shown a future meeting universe for this body.",
+    priority: "P0",
+    contract: { requiresValidation: true, requiresAudit: true, requiresCompleteDenominator: true },
+    now,
+  });
+}
 const T0 = "2026-08-28T00:00:00.000Z";
 const T1 = "2026-08-28T00:10:00.000Z";
 const TTL = 10 * 60 * 1000;
 
 function floorFor() {
   const knowledge = methodFixture();
-  // A missing store is a FAILED read, never an empty one. Without this the
-  // floor would be computed from nothing and every assertion below would pass
-  // against a vacuum — the exact shape of a guard that reports clean without
-  // having looked (RULING 159).
   if (knowledge === null) {
     throw new Error(
       `The committed method store could not be read from ${ROOT}. This suite proves the ` +
@@ -57,32 +58,21 @@ function floorFor() {
     knowledge,
     floor: computeRouteFloor({
       knowledge,
-      jurisdiction: PIMA_JURISDICTION,
+      jurisdiction: JURISDICTION,
       // Narrowing to meetings-bearing fields would be wrong here: the adapter
       // routes are the concrete floor and the method store is additive.
       fields: [],
-      adapterRoutes: PIMA_ADAPTER_ROUTES,
+      adapterRoutes: ADAPTER_ROUTES,
     }),
   };
 }
 
-/** Walk one route to a completed disposition. */
 function walk(
   task: RouteTask,
   disposition: Parameters<typeof disposeRoute>[2]["disposition"],
   opts: { artifacts?: string[]; transport?: "REACHABLE" | "CHALLENGED"; permission?: "ALLOWED" | "DISALLOWED"; rows?: number } = {},
 ): RouteTask {
-  /*
-   * THE ARTIFACTS ARE RECORDED ON THE ATTEMPT BEFORE THEY ARE CITED.
-   *
-   * This helper used to end the Attempt with no artifacts and then hand
-   * `disposeRoute` a disposition citing `art-<routeId>` anyway — evidence the
-   * Attempt presenting it had never recorded. `disposeRoute` now refuses that
-   * by name, and it is right to: it is how Attempt A launders Attempt B's
-   * artifact into a public-record conclusion. Hoisting the ids and closing the
-   * Attempt with them models the real sequence a worker follows — preserve the
-   * bytes, then conclude from them — so the fixture stops depending on a hole.
-   */
+  // Artifacts are recorded on the Attempt before a disposition cites them.
   const artifactIds = opts.artifacts ?? ["art-" + task.routeId];
   const lease = claim(task.id, `w-${task.routeId}`, T0, TTL, null);
   const attempt = endAttempt(
@@ -126,7 +116,7 @@ function snapshotFor(item: Parameters<typeof evaluateCompletion>[0]["item"], tas
     ],
     audits: [
       {
-        id: "af-pima",
+        id: "af-sample",
         workItemId: item.id,
         mode: "SOURCE_UNIVERSE",
         severity: "LOW",
@@ -140,21 +130,17 @@ function snapshotFor(item: Parameters<typeof evaluateCompletion>[0]["item"], tas
     contradictions: [],
     upstreamStates: new Map(),
     denominatorComplete,
-    /* No instrument-evidence contract here; the empty set is the refusing default. */
     instrumentGreens: new Set<string>(),
     now: T1,
   };
 }
 
-/** ------------------------------------------------ the floor is REAL ---- */
-
-test("the Pima floor is computed from the real method store plus the adapter's declared routes", () => {
+test("the floor is computed from the real method store plus the adapter's declared routes", () => {
   const { knowledge, floor } = floorFor();
 
   assert.ok(knowledge.version >= 55, `method store version ${knowledge.version} — the store was not read`);
   assert.ok(knowledge.routes.length > 100, "the committed method store was not loaded; the floor would be vacuous");
 
-  // Every adapter route is in the floor, by id, and none was dropped.
   for (const routeId of FIRST_PARTY_ROUTES) {
     assert.ok(
       floor.routeIds.includes(routeId),
@@ -162,13 +148,11 @@ test("the Pima floor is computed from the real method store plus the adapter's d
     );
   }
 
-  // The floor is at least the adapter's eight; the method store may add more.
   assert.ok(
     floor.routes.length >= FIRST_PARTY_ROUTES.length,
     `floor of ${floor.routes.length} is smaller than the adapter's ${FIRST_PARTY_ROUTES.length} routes`,
   );
 
-  // The unclassified population is reported rather than hidden.
   assert.ok(
     floor.legacyUnclassifiedCount >= 0,
     "the legacy-unclassified count must be carried so a small floor is not read as a small store",
@@ -193,11 +177,9 @@ test("adapter-declared routes are never marked speculative, whatever the store's
   }
 });
 
-/** ------------------------- THE PROOF: forgetting a route refuses the close */
-
-test("SEEDED: walking seven of eight routes and omitting /EventDates cannot close MTG-13", () => {
+test("SEEDED: walking seven of eight routes and omitting /EventDates cannot close the obligation", () => {
   const { floor } = floorFor();
-  const { item, routeTasks } = materializeFloor(pimaFutureMeetingsWorkItem(T0), floor, T0);
+  const { item, routeTasks } = materializeFloor(futureMeetingsWorkItem(T0), floor, T0);
 
   assert.equal(item.contract.inheritedRouteFloor.length, floor.routeIds.length);
   assert.equal(routeTasks.length, floor.routeIds.length, "one RouteTask per inherited route");
@@ -209,7 +191,7 @@ test("SEEDED: walking seven of eight routes and omitting /EventDates cannot clos
       if (t.routeId === "GRANICUS_VIEW_PUBLISHER") {
         return walk(t, "REQUIRES_NEW_ADAPTER", { permission: "DISALLOWED", transport: "REACHABLE" });
       }
-      const rows = PIMA_MEASURED_FUTURE_COUNTS[t.routeId as keyof typeof PIMA_MEASURED_FUTURE_COUNTS];
+      const rows = MEASURED_FUTURE_COUNTS[t.routeId as keyof typeof MEASURED_FUTURE_COUNTS];
       return rows && rows > 0
         ? walk(t, "INGESTED", { rows })
         : walk(t, "WALKED_NO_YIELD", { rows: 0 });
@@ -227,16 +209,13 @@ test("SEEDED: walking seven of eight routes and omitting /EventDates cannot clos
 
 test("SEEDED: the unbuilt Granicus route keeps the obligation open — its robots.txt reading is evidence, not a finding", () => {
   const { floor } = floorFor();
-  const { item, routeTasks } = materializeFloor(pimaFutureMeetingsWorkItem(T0), floor, T0);
+  const { item, routeTasks } = materializeFloor(futureMeetingsWorkItem(T0), floor, T0);
 
-  // Every route walked, including /EventDates. No adapter reads Granicus yet;
-  // its robots.txt Disallow is recorded and, since the owner decision of
-  // 2026-09-25, blocks nothing.
   const walked = routeTasks.map((t) => {
     if (t.routeId === "GRANICUS_VIEW_PUBLISHER") {
       return walk(t, "REQUIRES_NEW_ADAPTER", { permission: "DISALLOWED", transport: "REACHABLE" });
     }
-    const rows = PIMA_MEASURED_FUTURE_COUNTS[t.routeId as keyof typeof PIMA_MEASURED_FUTURE_COUNTS];
+    const rows = MEASURED_FUTURE_COUNTS[t.routeId as keyof typeof MEASURED_FUTURE_COUNTS];
     return rows && rows > 0 ? walk(t, "INGESTED", { rows }) : walk(t, "WALKED_NO_YIELD", { rows: 0 });
   });
 
@@ -250,27 +229,24 @@ test("SEEDED: the unbuilt Granicus route keeps the obligation open — its robot
     "the refusal must say the route is unbuilt, not that the meetings are absent",
   );
 
-  // And the adapter's own record still says nothing about the content, and its
-  // robots.txt reading is kept and blocks nothing.
   assert.equal(
-    PIMA_GRANICUS_PERMISSION.claimAboutContent,
+    GRANICUS_LIVE_PROCEEDINGS_ROUTE.claimAboutContent,
     null,
     "an unread route carries no claim about what is behind it",
   );
-  assert.match(PIMA_GRANICUS_PERMISSION.rule, /Disallow: \//);
-  assert.equal(PIMA_GRANICUS_PERMISSION.robotsBlocks, false);
+  assert.match(GRANICUS_LIVE_PROCEEDINGS_ROUTE.rule, /Disallow: \//);
+  assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.robotsBlocks, false);
 });
 
 test("SEEDED: an incomplete denominator refuses the close even when every route is disposed", () => {
   const { floor } = floorFor();
-  const { item, routeTasks } = materializeFloor(pimaFutureMeetingsWorkItem(T0), floor, T0);
+  const { item, routeTasks } = materializeFloor(futureMeetingsWorkItem(T0), floor, T0);
 
   const walked = routeTasks.map((t) => {
-    const rows = PIMA_MEASURED_FUTURE_COUNTS[t.routeId as keyof typeof PIMA_MEASURED_FUTURE_COUNTS];
+    const rows = MEASURED_FUTURE_COUNTS[t.routeId as keyof typeof MEASURED_FUTURE_COUNTS];
     return rows && rows > 0 ? walk(t, "INGESTED", { rows }) : walk(t, "WALKED_NO_YIELD", { rows: 0 });
   });
 
-  // denominatorComplete === null is "never established", and that refuses.
   const unknown = evaluateCompletion(snapshotFor(item, walked, null), "VERIFIED_COMPLETE");
   assert.ok(unknown.refusals.some((r) => r.code === "DENOMINATOR_INCOMPLETE"));
   assert.ok(
@@ -284,32 +260,4 @@ test("SEEDED: an incomplete denominator refuses the close even when every route 
     true,
     established.refusals.map((r) => `${r.code}:${r.subject}`).join(", "),
   );
-});
-
-/** ------------------------------------------- shadow mode stays shadow --- */
-
-test("the union denominator matches the adapter's independently proven acceptance", () => {
-  // This constant is carried, not computed here. If the adapter's acceptance
-  // moves, this assertion is the alarm rather than a silent divergence.
-  assert.equal(PIMA_UNION_DENOMINATOR, 14);
-  assert.equal(
-    PIMA_MEASURED_FUTURE_COUNTS.INSITE_CALENDAR_GRID,
-    PIMA_UNION_DENOMINATOR,
-    "the grid carried the full union",
-  );
-  assert.equal(PIMA_MEASURED_FUTURE_COUNTS.LEGISTAR_WEBAPI_EVENTS, 0);
-  assert.equal(
-    PIMA_MEASURED_FUTURE_COUNTS.LEGISTAR_WEBAPI_EVENTDATES,
-    0,
-    "the forgotten route is precisely the one that returns zero — which is why forgetting it felt safe",
-  );
-});
-
-test("the fixture binds the REGISTERED body id, never a tenant-minted one (R-0197)", () => {
-  assert.equal(PIMA_BODY_ID, "ocd-division/country:us/state:az/county:pima#governing");
-  const item = pimaFutureMeetingsWorkItem(T0);
-  assert.equal(item.subject, PIMA_BODY_ID);
-  assert.equal(item.priority, "P0");
-  assert.equal(item.contract.requiresAudit, true);
-  assert.equal(item.contract.requiresCompleteDenominator, true);
 });

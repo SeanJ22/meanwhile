@@ -1,5 +1,5 @@
 /**
- * BX-08: a hand-wired body's newly published address gets a map point from the
+ * A hand-wired body's newly published address gets a map point from the
  * Census geocoder in the same partition pass, with no reviewed row and no ZIP
  * required in the published text.
  */

@@ -1,16 +1,9 @@
 /**
- * **FE-26 · SITE SPEED AND RELIABILITY, PER SURFACE.**
- *
- * Reads the latest worst-case speed pass (FE-02) by surface: how many of its
- * visits (each already the slowest of its runs) went over three seconds,
- * how many never finished (an error a reader would have met), and how many
- * dead links the link sweep (DB-51) found on the surfaces readers follow.
- * A surface that crosses its setting threshold goes to the top of the stuck
- * list and opens one fix-list item. PURE: the reading and the verdicts; the
- * scripts and routes that call it do the reading and writing.
- *
- * Nothing about real readers' timing is collected (design D8): these are our
- * own test visits.
+ * Site speed and reliability per surface, from the latest worst-case speed
+ * pass: visits over three seconds, visits that never finished, and dead links
+ * from the link sweep. A surface past its threshold goes to the top of the
+ * stuck list and opens one fix-list item. Pure. These are our own test
+ * visits; nothing about real readers' timing is collected.
  */
 import { registerSetting } from "../control-plane/settings.ts";
 import type { AdminV6StuckItem } from "../control-plane/admin-view/v6-stuck-read.ts";

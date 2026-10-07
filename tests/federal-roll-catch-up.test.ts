@@ -5,7 +5,7 @@ import test from "node:test";
 import { ROLL_MAX_CATCH_UP, windowStart } from "../lib/votes/catch-up.ts";
 import { AUTOMATIC_REFRESH_CONTRACT_IDS, AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 
-/** DB-08: Congress refreshes itself daily, and no roll call falls in a gap between versions. */
+/** Congress refreshes itself daily, and no roll call falls in a gap between versions. */
 
 test("DB-08: the usual window is the latest twenty; a held version that ends earlier pulls the start back to the next roll", () => {
   assert.deepEqual(windowStart({ latest: 300, previousNewest: null }), { start: 281, unreached: 0 });

@@ -13,11 +13,8 @@ import { ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 
 /*
- * Repair and supervisor outcomes now record each error in the cause chain,
- * because the database wrapper's own message is only its statement text. The
- * causes are exactly where transport detail lives, so the diagnostic is
- * sanitized by construction. Every value below is synthetic but shaped like
- * the real thing.
+ * Outcomes record each error in the cause chain, because the database wrapper's own message is only its statement
+ * text. The diagnostic is sanitized by construction. Every value below is synthetic.
  */
 const USER = "neondb_owner";
 const PASSWORD = "npg_Zq7xR3kLm9TwYv2P";

@@ -1,6 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
 import {
@@ -10,27 +8,37 @@ import {
 } from "../lib/votes/party-breakdown.ts";
 import type { VotesSnapshot } from "../lib/votes/types.ts";
 
-/**
- * Item 3 (wall clock 2026-08-14 second session): the party breakdown on
- * every rendered roll call. The brief's own test: breakdown totals must
- * sum to the roll call's recorded totals — and the denominator is
- * stated, because a join that quietly nulled every vote would render
- * "unavailable" forty times while looking implemented.
- */
+// Breakdown totals must sum to the roll call's recorded totals.
 
-const ROOT = join(import.meta.dirname, "..");
+const position = (voteId: string, officeholderId: string, vote: "YES" | "NO") =>
+  ({ voteId, officeholderId, position: vote });
 
-const snapshot = JSON.parse(
-  readFileSync(join(ROOT, "data", "votes", "votes-snapshot.json"), "utf8"),
-) as VotesSnapshot;
+const snapshot = {
+  votes: [
+    { id: "house:119-2:1", result: "Passed 3–2" },
+    { id: "house:119-2:2", result: "Failed 1–4" },
+  ],
+  positions: [
+    position("house:119-2:1", "m1", "YES"),
+    position("house:119-2:1", "m2", "YES"),
+    position("house:119-2:1", "m3", "YES"),
+    position("house:119-2:1", "m4", "NO"),
+    position("house:119-2:1", "m5", "NO"),
+    position("house:119-2:2", "m1", "YES"),
+    position("house:119-2:2", "m2", "NO"),
+    position("house:119-2:2", "m3", "NO"),
+    position("house:119-2:2", "m4", "NO"),
+    position("house:119-2:2", "m5", "NO"),
+  ],
+} as unknown as VotesSnapshot;
 
-const roster = JSON.parse(
-  readFileSync(join(ROOT, "lib", "registry", "officeholders-us.json"), "utf8"),
-) as { officeholders: { id: string; partyLabel: string | null }[] };
-
-const partyById = new Map(
-  roster.officeholders.map((o) => [o.id, o.partyLabel]),
-);
+const partyById = new Map<string, string | null>([
+  ["m1", "Democratic"],
+  ["m2", "Democratic"],
+  ["m3", "Republican"],
+  ["m4", "Republican"],
+  ["m5", "Independent"],
+]);
 
 test("every breakdown sums exactly to the chamber's recorded tally", () => {
   let withBreakdown = 0;
@@ -50,11 +58,7 @@ test("every breakdown sums exactly to the chamber's recorded tally", () => {
     assert.equal(yes, expected.yes, `${vote.id}: yes sum ${yes} ≠ ${expected.yes}`);
     assert.equal(no, expected.no, `${vote.id}: no sum ${no} ≠ ${expected.no}`);
   }
-  // The denominator: measured 40/40 against the committed snapshot when
-  // this shipped. A refreshed snapshot may legitimately drop a vote or
-  // two (an unmatched member nulls that vote's breakdown honestly), but
-  // most votes carrying one is the working state — a majority nulled
-  // means the join broke, not the data.
+  // A majority of votes without a breakdown means the join broke, not the data.
   assert.ok(
     withBreakdown >= Math.ceil(snapshot.votes.length / 2),
     `only ${withBreakdown}/${snapshot.votes.length} votes carry a breakdown — the join is broken`,

@@ -1,69 +1,21 @@
 /**
- * **THE LEGISTAR ROUTE PORTFOLIO — WHAT THIS SOURCE CLASS CAN BE ASKED, AND
- * WHICH FACTS EACH ASKING CAN CARRY.**
- * (WS-LEGI, 2026-08-29.)
+ * The Legistar route portfolio: what this source class can be asked, and which facts each asking can
+ * carry. Legistar is a national source class, so the source is a graph of routes, each declaring the fact
+ * classes it can carry (`bears`). Nothing here fetches; `client.ts` and `outcomes.ts` are two of the
+ * vehicles.
  *
- * ## Why a portfolio rather than a fetch function
+ * One successful route never collapses the source universe. An HTTP 200 from the Web API does not
+ * discharge the accessible agenda, and a readable agenda PDF does not discharge the API: different
+ * representations carry different facts, and which route is preferred is tenant-dependent.
+ * {@link factClassesOwedAfter} answers what is still owed given what has succeeded.
+ * `tests/legistar-routes.test.ts` fails if the portfolio collapses toward one preferred representation.
  *
- * Legistar is a NATIONAL SOURCE CLASS. `data/reference/granicus_legistar_tenants.csv`
- * names 39 tenants and is explicitly not an enumeration; Pima is the tenant this
- * repository proved the method on, and it is not the scope. An adapter written as
- * "the function that gets a Legistar meeting" encodes one tenant's happy path as
- * the shape of the source, and the next tenant's different publishing habits then
- * read as that tenant having no data.
+ * robots.txt is recorded in a route's note and decides nothing: a route is walked or not built yet. Only
+ * an access control (a login, a 403, a challenge, a 429) stops a read, as a technical failure of that
+ * route.
  *
- * So the source is represented as a GRAPH OF ROUTES, each declaring the classes
- * of fact it is capable of carrying. Nothing here fetches. This module is the map;
- * `client.ts` and `outcomes.ts` are two of the vehicles.
- *
- * ## THE RULE THIS FILE EXISTS TO ENFORCE
- *
- * **One successful route never collapses the source universe.**
- *
- * An HTTP 200 from the Web API does not discharge the Accessible Agenda. A
- * readable agenda PDF does not discharge the API. Different representations of
- * one meeting carry DIFFERENT FACTS, and the temptation — always, in every
- * adapter — is to notice that the JSON route answered and stop asking. That
- * optimisation is invisible when it is wrong: the meeting still renders, the
- * fields we happened to collect are all populated, and the facts only the other
- * representation carried are simply never missed.
- *
- * `docs/sources.md` already records the measured proof, on this exact source, on
- * two tenants (2026-08-28):
- *
- * > On one Mesa "Next Month" filter the InSite grid published 15 sittings with 12
- * > `meeting_NotViewable` while `/v1/mesa/events` returned exactly the other 3.
- * > On Pima the InSite grid holds 14 future Board sittings the Web API returns
- * > zero of. **Only the UNION survives both tenants.**
- *
- * That is one fact class — MEETING_EXISTENCE — where the preferred route is
- * tenant-dependent and neither route dominates. This file generalises it: every
- * route declares `bears`, and {@link factClassesOwedAfter} answers what is STILL
- * owed given what has already succeeded. A route that succeeded discharges only
- * the facts it is capable of carrying, and never a fact it cannot see.
- *
- * `tests/legistar-routes.test.ts` fails if the portfolio collapses back toward a
- * single preferred representation.
- *
- * ## robots.txt is recorded on a route, and is never its disposition
- *
- * Every Pima and Mesa agenda and minutes URL the Web API names resolves to
- * `legistar.granicus.com`, which answers `User-agent: *` with `Disallow: /`
- * (read three ways by three clients, `docs/sources.md`, 2026-08-29). That
- * made the two document routes DISALLOWED, and from 2026-09-24 the ingest
- * refused the host. Since the owner decision of 2026-09-25 ("Robots.txt alone
- * must not block acquisition"), the reading is kept in each route's note as
- * evidence and decides nothing: a route is WALKED or not built yet. Only an
- * access control (a login, a 403, a challenge, a 429) stops a read, and it is
- * a technical failure of that route, never a disposition here.
- *
- * **An unwalked route may never become a missing fact.** Deleting a route from
- * this map because nothing reads it yet would silently convert "we have not
- * read the minutes" into "there are no minutes", which is the exact
- * substitution this product cannot make. So NARRATIVE_MINUTES stays owed on
- * every tenant until a route that carries it is walked there, and
- * {@link factClassesOwedAfter} keeps returning it however many JSON routes come
- * back 200.
+ * An unwalked route may never become a missing fact: NARRATIVE_MINUTES stays owed on every tenant until a
+ * route that carries it is walked there.
  */
 
 /**
@@ -144,14 +96,8 @@ export type LegistarRouteClass = (typeof LEGISTAR_ROUTE_CLASSES)[number];
 export type LegistarTransport = "JSON_API" | "HTML" | "PDF" | "XML" | "ICS";
 
 /**
- * Whether this repository has built and exercised the route. Neither value is
- * evidence about what the route holds.
- *
- * There is no permission value. Until 2026-09-25 a third member, `DISALLOWED`,
- * held the two `legistar.granicus.com` document routes out of reach because
- * that host's robots.txt reads `Disallow: /`. Since the owner decision of
- * 2026-09-25 robots.txt is recorded in a route's note and blocks nothing, so
- * the member is gone. Nothing outside this file stored it.
+ * Whether this repository has built and exercised the route. Neither value is evidence about what the
+ * route holds. There is no permission value: robots.txt is recorded in a route's note and blocks nothing.
  */
 export type LegistarRouteDisposition =
   /** Built and exercised against at least one tenant. */
@@ -181,11 +127,8 @@ export interface LegistarRoute {
 }
 
 /**
- * **THE PORTFOLIO. What the project knows about this source class NOW.**
- *
- * Not complete, and never will be — CLAUDE.md: no route list is ever complete,
- * each represents what the project knows now. Adding a route here is how a wall
- * that fell becomes a rung for every tenant at once.
+ * The portfolio: what the project knows about this source class now, never complete. Adding a route here
+ * makes it a rung for every tenant at once.
  */
 export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
   {
@@ -402,19 +345,10 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
 ];
 
 /**
- * **THE VENDOR'S DOCUMENT HOSTS: where a tenant's agenda and minutes FILES sit,
- * as opposed to its portal.** (2026-09-25.)
- *
- * Derived from the catalogue itself: the concrete host of every agenda-packet
- * or minutes route whose URL shape names one (today `legistar.granicus.com`).
- * A templated host (`{insiteHost}`) is a tenant's portal and never one of
- * these.
- *
- * This replaces `DISALLOWED_LEGISTAR_HOSTS` (2026-09-24), which the ingest used
- * to refuse these hosts because their robots.txt reads `Disallow: /`. Since the
- * owner decision of 2026-09-25 they are read: the ingest reads a sitting's
- * portal agenda link first and the vendor file as the fallback, and the minutes
- * routine follows a grid link onto these hosts as it does onto the portal.
+ * The vendor's document hosts: where a tenant's agenda and minutes files sit, as opposed to its portal.
+ * Derived from the catalogue: the concrete host of every agenda-packet or minutes route whose URL shape
+ * names one. A templated host (`{insiteHost}`) is a tenant's portal and never one of these. The ingest
+ * reads a sitting's portal agenda link first and the vendor file as the fallback.
  */
 export const LEGISTAR_DOCUMENT_HOSTS: readonly string[] = [
   ...new Set(
@@ -468,17 +402,8 @@ export function factsBorneBy(
 }
 
 /**
- * **WHAT IS STILL OWED AFTER THOSE ROUTES SUCCEEDED.**
- *
- * The anti-collapse primitive. A caller that has a 200 from the Web API asks
- * this and is told, in fact classes rather than in prose, that it still has no
- * item text, no supporting documents and no narrative minutes — so the
- * Accessible Agenda is not an optional extra it may skip because the JSON
- * parsed.
- *
- * A fact borne only by routes nobody has walked stays owed until one is, and
- * that is correct: we do not hold it, and the honest state is a named gap
- * rather than a quiet removal from the map.
+ * What is still owed after those routes succeeded, in fact classes. A fact borne only by routes nobody has
+ * walked stays owed until one is: a named gap, never a quiet removal.
  */
 export function factClassesOwedAfter(
   succeededRouteIds: readonly string[],
@@ -488,13 +413,8 @@ export function factClassesOwedAfter(
 }
 
 /**
- * Routes worth asking next for a fact, given what has already succeeded: every
- * route that can carry it and has not.
- *
- * A route's robots.txt reading is never a reason to leave it out. Until
- * 2026-09-25 this excluded the DISALLOWED `legistar.granicus.com` routes; since
- * the owner decision of that day robots.txt is recorded and blocks nothing, so
- * the vendor's minutes file is offered beside the portal's own copy.
+ * Routes worth asking next for a fact, given what has already succeeded: every route that can carry it
+ * and has not. A route's robots.txt reading is never a reason to leave it out.
  */
 export function routesStillWorthAsking(
   factClass: LegistarFactClass,
@@ -505,21 +425,9 @@ export function routesStillWorthAsking(
 }
 
 /**
- * A fact class this portfolio can reach TODAY through exactly one route.
- *
- * **Counted over WALKED routes only, and the choice matters.** An earlier
- * version counted every route that was not then `DISALLOWED`, which credited
- * `REQUIRES_NEW_ADAPTER` routes as live paths and reported PERSON_VOTE as
- * comfortably multiply-routed on the strength of an accessible-minutes parser
- * nobody had written. That is the same error class as an unread route reading
- * as an absence, pointed the other way: an unbuilt route is a gap in US, and a
- * gap in us cannot be counted as coverage.
- *
- * Not an error, but a thing a session should be able to SEE, because a singly
- * routed fact is one vendor change away from being an unexplained absence.
- * PERSON_VOTE was singly routed until the portal minutes route was walked for
- * Mesa (NH332, 2026-09-25); that route carries it as the clerk's AYES/NAYS text,
- * held verbatim and not yet turned into per-member records.
+ * A fact class this portfolio can reach today through exactly one route, counted over walked routes only
+ * (an unbuilt route is a gap in us, never coverage). A singly routed fact is one vendor change away from
+ * an unexplained absence.
  */
 export function singlyRoutedFacts(): readonly LegistarFactClass[] {
   return LEGISTAR_FACT_CLASSES.filter(

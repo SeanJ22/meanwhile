@@ -1,15 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
 
 import type { EvidenceRecord } from "../lib/ask/evidence.ts";
 import { composeOwnWordsAnswer, ownWordsPassages, readsAsSpokenSentence } from "../lib/ask/own-words.ts";
 import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { positionsFor } from "../lib/corpus/positions.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
+import { installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
+await installCandidateCorpus();
+await installOfficeholderStatements();
 
 const person = { kind: "PERSON" as const, id: "candidate:casey", name: "Casey Example" };
 const passage = (over: Partial<EvidenceRecord> = {}): EvidenceRecord => ({

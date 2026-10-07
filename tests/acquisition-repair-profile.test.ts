@@ -109,6 +109,4 @@ test("two already-held official profile captures have source-local name and offi
   const matched = new Set(comparisons.flatMap(check => check.verifiedRecordIds ?? []));
   assert.equal(matched.size, 2, "offline source comparison covers two held profile rows, never all seven roster members");
   assert.equal(candidate.records.filter(record => !matched.has(record.id)).length, 5);
-  // This comparison does not authorize cross-WorkItem capture reuse or make
-  // these old snapshots current. The normal broker and publisher remain owed.
 });

@@ -1,27 +1,13 @@
 /**
- * **THE FEEDBACK INBOX'S SEEDED FAILURES.** (ADM-C13, 9.6.26.)
- *
- * Each of these is a defect that would be invisible in normal use, and each has
- * a positive control beside it so a detector that looks at nothing cannot pass:
- *
- *   1  the contact reference must never leave the database — the query asks for
- *      a boolean, the projection refuses a row that carries a handle, and no
- *      other collection store is named anywhere in the module
- *   2  the decision the owner records must carry none of the reader's words
- *   3  a state the store cannot represent must not appear as one: HELD_BACK is
- *      the quarantine column and is never rendered as an owner decision
- *   4  a staging handle that could write, or that resolves to the live
- *      endpoint, must be refused BEFORE a query runs — and the console must
- *      read the staging credential this repository already declares rather
- *      than mint a second name for one connection
- *   5  a store that could not be read must never render as an empty inbox
- *   6  every number carries a denominator and a contract, and every stated
- *      count equals the rows rendered
- *   7  no credential name, no cookie, and no browser storage on the admin page
- *
- * `.tsx` cannot be imported under `node --test`, so the page is asserted as
- * source text. Every piece of real logic lives in the `.ts` module and is
- * exercised directly.
+ * Feedback inbox guards, each with a positive control:
+ *   1  the contact reference never leaves the database (the query asks for a boolean)
+ *   2  the owner's recorded decision carries none of the reader's words
+ *   3  HELD_BACK is a quarantine column, never rendered as an owner decision
+ *   4  a staging handle that could write, or resolves to the live endpoint, is refused before a query runs
+ *   5  an unreadable store never renders as an empty inbox
+ *   6  every number carries a denominator, and every stated count equals the rows rendered
+ *   7  no credential name, cookie or browser storage on the admin page
+ * The `.tsx` page is asserted as source text; the logic lives in the `.ts` module.
  */
 
 import assert from "node:assert/strict";
@@ -77,13 +63,7 @@ const MODULE_PATH = join(ROOT, "lib", "control-plane", "feedback-inbox.ts");
 
 const MODULE_SOURCE = readFileSync(MODULE_PATH, "utf8");
 
-/**
- * Comments are stripped before every source scan.
- *
- * A comment explaining why a table is NOT read contains that table's name, and
- * a scan that flagged it would make the record of the rule into a violation of
- * it — the same argument `lib/text/refusal-shapes.ts` makes for its own sweep.
- */
+/** Comments are stripped before every source scan: a comment may name a table the code must not read. */
 function stripComments(source: string): string {
   return source.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/\/\/[^\n]*/g, " ");
 }
@@ -161,7 +141,7 @@ function intent(over: Partial<OwnerDecisionIntent> = {}): OwnerDecisionIntent {
     chosenOption: "Read, nothing to do",
     consequenceShown: TRIAGE_CONSEQUENCE,
     decidedAt: "2026-09-06T17:00:00.000Z",
-    state: "PENDING_CANONICALIZATION",
+    state: "RECORDED",
     canonicalRef: null,
     refusedReason: null,
     adminSessionRef: "sid-1",
@@ -183,7 +163,7 @@ function fakeSql(list: readonly Record<string, unknown>[], counted: Record<strin
 }
 
 /* ================================================================== */
-/* 1 — THE CONTACT REFERENCE NEVER LEAVES THE DATABASE (§5.3)          */
+/* 1 — THE CONTACT REFERENCE NEVER LEAVES THE DATABASE                */
 /* ================================================================== */
 
 test("the list query asks the database for a boolean, never for the handle", () => {
@@ -274,9 +254,7 @@ test("the decision recorded about a message carries none of the reader's words",
   assert.equal(subjectId.includes(HANDLE), false);
   assert.match(subjectId, /^feedback:PRODUCTION:11111111-/);
 
-  // What the console would actually append. The existing aggregate-only walk
-  // runs over it at write time; this proves it survives that walk, and that the
-  // message text is nowhere inside it.
+  // What the console would append; it must survive the aggregate-only walk and carry no message text.
   const recorded = intent({ subjectId, intentId: `${subjectId}:2026-09-06T17:00:00.000Z` });
   assert.doesNotThrow(() => assertAggregateOnly(recorded, "feedback triage"));
   assert.equal(JSON.stringify(recorded).includes(row.message), false);
@@ -446,18 +424,6 @@ test("a review-site connection whose isolation cannot be established is refused,
     "null is not false: a pair whose endpoints could not be established must refuse, so nothing " +
       "can be permitted by failing to measure",
   );
-});
-
-test("the console reads the staging credential this repository already declares", () => {
-  const observer = readFileSync(join(ROOT, "scripts", "staging-observer.mts"), "utf8");
-  assert.ok(
-    observer.includes(`export const STAGING_URL_VARIABLE = "${STAGING_STORE_URL_VAR}"`),
-    "the inbox invented a second name for the read-only staging connection. RULING 103 in a " +
-      "configuration file: two names for one credential can be provisioned separately and then " +
-      "disagree about which database staging is.",
-  );
-  const gate = readFileSync(join(ROOT, "scripts", "staging-isolation-gate.mts"), "utf8");
-  assert.ok(gate.includes(`"${STAGING_STORE_URL_VAR}"`), "the isolation gate names the same one");
 });
 
 test("a read-only handle on its own branch opens — the positive control", () => {

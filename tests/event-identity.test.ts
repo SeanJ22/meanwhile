@@ -1,17 +1,6 @@
 /**
- * **A-005 · TWO BOARDS AT 7PM ON THE SAME NIGHT ARE TWO MEETINGS.**
- *
- * External correctness audit of `336a3eb`, remediated 2026-08-24.
- *
- * `ical` identified a UID-less event by its START INSTANT ALONE, so any two
- * events in one wiring row beginning at the same moment collapsed to one id and
- * the second vanished into the `seen` set — no drop counter, no duplicate
- * counter, nothing anywhere saying a public meeting had been discarded.
- *
- * Same-night, same-time sittings are the norm in the towns this product exists
- * for, and one calendar feed serving a whole town is exactly the shape this
- * adapter was written for. So the class of body most likely to lose a meeting
- * was the class nobody else covers.
+ * Two UID-less events at the same start in one calendar feed are two meetings. An id built from the start instant
+ * alone would collapse them and lose the second with no counter anywhere.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -21,23 +10,8 @@ import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 
 /**
- * ONE REAL WIRING ROW, AND A CORRECTION TO THE AUDITOR'S EXAMPLE.
- *
- * The finding described "two boards meeting at 7pm the same night". Read
- * against the code, that specific case does NOT collide: the id is
- * `ical:<slug>:<identity>` and each board is its own wiring row with its own
- * slug, so two boards produce two ids however they are timed.
- *
- * The defect is real and is one level in — WITHIN a wiring row. A town
- * publishing "Zoning Board of Adjustment" and "Zoning Board of Adjustment
- * Public Hearing" as two events at the same start, both matching the row's
- * `titleMatch` and neither carrying a `UID`, produced one id and lost the
- * second with no counter anywhere. Newbury publishes fifteen bodies through
- * ONE feed with title matching, which is exactly this shape.
- *
- * The correction is recorded rather than smoothed: the mechanism the auditor
- * named is right, the example is one slug too wide, and a fix built for the
- * example as written would have been a fix for nothing.
+ * Two boards are two wiring rows with their own slugs, so they never collide. The collision is within one wiring
+ * row: two events at the same start, both matching the row's `titleMatch` and neither carrying a `UID`.
  */
 const WIRING = {
   ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
@@ -174,8 +148,6 @@ test("A-005 · both counters are reported as ZEROES when nothing collapsed", () 
   );
   assert.deepEqual(result.duplicateIdentity, { exact: 0, weakIdCollision: 0, publisherRelisted: 0 });
 });
-
-/* -------------------------------------------------------- the helper ---- */
 
 test("A-005 · identity changes with every field the feed published", () => {
   const base = {

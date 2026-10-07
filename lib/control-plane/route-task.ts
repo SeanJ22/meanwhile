@@ -1,27 +1,3 @@
-/**
- * ROUTE TASKS — one route, walked for one obligation, disposed of atomically.
- *
- * The RouteTask is the join between two things this repository already has and
- * one thing it did not:
- *
- *   - `lib/method` knows WHICH routes exist and which are applicable. That is
- *     the inherited floor, and it is not re-derived here.
- *   - `lib/workstate/types.ts` knows what a disposition MEANS — the eleven-value
- *     `Disposition` vocabulary that RULING 184 argued into existence, where
- *     `BLOCKED_CURRENTLY` and `RECORDS_REQUEST_PENDING` are open states wearing
- *     a finished face. That vocabulary is authority and is imported, never
- *     re-declared.
- *   - What did not exist: a durable, leasable, retryable unit of ROUTE WORK
- *     that outlives the worker walking it. That is this file.
- *
- * The target architecture names five dispositions (YIELDED, ZERO, FAILED,
- * ROUTE_BLOCKED, NOT_APPLICABLE). The repository's vocabulary is strictly
- * richer and already governed, so the design document's names are treated as a
- * READING of the repo vocabulary rather than a replacement for it. The mapping
- * is written down in `DESIGN_DOC_DISPOSITION_READING` below so that nobody
- * later "reconciles" the two by inventing a second enum.
- */
-
 import {
   DISPOSITIONS,
   OPEN_DISPOSITIONS,
@@ -34,88 +10,39 @@ import { leavesReclaimable, mayWriteDisposition, type Attempt } from "./attempt.
 import { routeTaskId } from "./ids.ts";
 import type { WorkerTaskSpec } from "./workers/types.ts";
 
-/**
- * How the target architecture's five names read against the governed
- * vocabulary. Documentation, not a type — there is exactly one enum.
- */
 export const DESIGN_DOC_DISPOSITION_READING: Readonly<Record<string, Disposition>> = {
   YIELDED: "INGESTED",
   ZERO: "WALKED_NO_YIELD",
   ROUTE_BLOCKED: "BLOCKED_CURRENTLY",
   NOT_APPLICABLE: "NOT_APPLICABLE",
-  // "FAILED" deliberately has no single mapping. A failure is either a
-  // transport fact (the Attempt aborted — not a disposition at all), a
+  // "FAILED" has no single mapping: a transport fact (not a disposition), a
   // capability gap (REQUIRES_NEW_ADAPTER), or a wall (BLOCKED_CURRENTLY).
-  // Collapsing all three into one word is how a wall became an emptiness.
 };
 
 export const ROUTE_TASK_STATES = [
-  /** A computational worker finished. This is never a civic route disposition. */
   "RESULT_RECORDED",
-  /** Created from an applicable inherited route. No Attempt yet. */
   "PENDING",
-  /** Leased and being walked. */
   "CLAIMED",
-  /** A prior Attempt ended without reaching a boundary. Free to re-claim. */
   "RECLAIMABLE",
-  /**
-   * OUR policy engine refused a capability this route needs. The route was not
-   * walked, nothing was learned about the publisher, and an identical retry
-   * would be refused identically.
-   *
-   * This is deliberately NOT `RECLAIMABLE`, which is why it exists. A
-   * reclaimable task invites the next worker to pick it up and try again, and
-   * that is the right invitation after a crash or a timeout — the world may
-   * have changed. After a policy denial nothing about the world has changed;
-   * what must change is the POLICY or the GRANT, on our side. Sweeping this
-   * into `RECLAIMABLE` builds a retry loop that burns attempts against a
-   * decision we made about ourselves and never revisits.
-   *
-   * It is equally NOT a disposition. `DENIED_BY_POLICY` is absent from
-   * `RECLAIMABLE_OUTCOMES` and from `DISPOSITION_BEARING_OUTCOMES`, and both
-   * absences are correct: a refusal by our own policy is a fact about US, and
-   * a fact about us may never be written into the record as a fact about a
-   * government.
-   */
+  /** Our own policy refused a capability. Not reclaimable (an identical retry is refused identically) and not a disposition (a fact about us, never about a government). */
   "POLICY_DENIED",
-  /** A completed Attempt wrote a disposition. */
   "DISPOSED",
 ] as const;
 export type RouteTaskState = (typeof ROUTE_TASK_STATES)[number];
 
-/**
- * What our own policy refused, and what would have to change before a retry is
- * anything other than a repeat of the same refusal.
- *
- * `requiredChange` is mandatory prose because the alternative is a task that
- * sits in `POLICY_DENIED` forever with nobody able to say what would unstick
- * it. "Denied" is not actionable; "the ACQUIRER grant does not carry
- * THIRD_PARTY_CONTACT and this route needs it" is.
- */
+/** What our policy refused, and what must change before a retry is anything but a repeat. */
 export interface PolicyDenial {
-  /** The Attempt the policy engine refused. */
   readonly attemptId: string;
-  /** `attempt.endedAt`. No clock is read here; the Attempt already carries one. */
   readonly at: string;
-  /** The capability-grant version in force when the refusal happened. */
   readonly policyVersion: string;
-  /** The Attempt's named `abortReason`. Never "unknown" — `endAttempt` refuses that. */
   readonly reason: string;
-  /** WHAT MUST CHANGE. A grant, a policy version, an author decision. */
   readonly requiredChange: string;
 }
 
-/** What a completed walk actually observed. Counts, not adjectives. */
 export interface RouteObservation {
-  /** Raw rows/instances the route returned before normalisation. */
   readonly rawCount: number;
-  /** Unique subjects after normalisation. */
   readonly normalizedCount: number;
-  /**
-   * Subjects THIS route returned that no other disposed route for the same
-   * WorkItem returned. The number that makes denominator disagreement visible
-   * instead of averaging it away.
-   */
+  /** Subjects this route returned that no other disposed route for the same WorkItem returned. */
   readonly routeOnlyCount: number | null;
   readonly earliest: string | null;
   readonly latest: string | null;
@@ -123,46 +50,31 @@ export interface RouteObservation {
 
 export interface RouteDisposition {
   readonly disposition: Disposition;
-  /** The Attempt that earned it. A disposition with no Attempt is not evidence. */
   readonly attemptId: string;
   readonly at: string;
   /** Vault artifact ids. A YIELDED route with no artifact cannot be replayed. */
   readonly artifactIds: readonly string[];
   readonly observation: RouteObservation | null;
-  /** Orthogonal to each other and to the disposition (RULING 182). */
+  /** Orthogonal to each other and to the disposition. */
   readonly permission: PermissionState;
   readonly transport: TransportState;
-  /** Why, in one sentence a later session can act on. */
   readonly note: string;
 }
 
 export interface RouteTask {
-  /** A transient local policy condition changed; the original denied Attempt remains immutable history. */
   readonly policyReauthorizations?: readonly { at: string; denial: PolicyDenial; reason: string }[];
   readonly workerTask?: WorkerTaskSpec;
   readonly id: string;
   readonly workItemId: string;
-  /** The route id in the method store. The inherited floor references these. */
   readonly routeId: string;
-  /** Human-readable route label, e.g. "Legistar /EventDates". */
   readonly routeLabel: string;
-  /** What this route is being walked FOR — usually a host or endpoint family. */
   readonly target: string;
-  /**
-   * True when the route came from the inherited method floor rather than being
-   * discovered mid-walk. An inherited route with no disposition is the single
-   * most important completion refusal in the system.
-   */
   readonly inherited: boolean;
   readonly state: RouteTaskState;
   readonly disposition: RouteDisposition | null;
   readonly attemptIds: readonly string[];
   readonly createdAt: string;
-  /**
-   * Set only in `POLICY_DENIED`. Optional so that a RouteTask persisted before
-   * this state existed still loads; absent is read as "no policy denial", which
-   * is what it was.
-   */
+  /** Set only in `POLICY_DENIED`; absent on older rows means no denial. */
   readonly policyDenial?: PolicyDenial | null;
 }
 
@@ -197,43 +109,9 @@ export class DispositionRefused extends Error {
 }
 
 /**
- * Write the atomic terminal disposition for a completed route walk.
- *
- * Every refusal in this function is a failure mode the architecture named:
- *
- *   - An Attempt that did not reach a completion boundary cannot dispose of a
- *     route. This is partial-disposition poisoning, and it is the reason the
- *     control plane reads the Attempt rather than accepting a worker's word.
- *   - A route cannot be disposed of twice. The first disposition is the record;
- *     a second one is either a duplicate worker or a rewrite of history.
- *   - `INGESTED` with no artifact is refused. A yield we cannot replay is a
- *     claim about a government resting on nothing.
- *   - `WALKED_NO_YIELD` — the route ran and returned nothing — is the most
- *     dangerous value in the vocabulary, because it is one careless read away
- *     from "this is not published". It is admitted only with a reachable
- *     transport. A route that never actually got a response is not a zero; it
- *     is a transport failure, and it belongs to the Attempt.
- *
- * ## The disposition must be BOUND to the Attempt presenting it
- *
- * Three separate identity checks run before any of the value rules, because a
- * disposition is a claim about a government and the only thing entitling it to
- * be believed is the execution that earned it. Checking the RouteTask alone —
- * which is all this function used to do — left two laundering routes wide open:
- *
- *   - A COMPLETED Attempt A hands over a disposition stamped `attemptId: B`.
- *     The record then attributes the finding to an Attempt that never made it,
- *     and every later replay — which resolves the artifact set, the method
- *     version and the policy version THROUGH the named Attempt — reconstructs a
- *     walk that did not happen.
- *   - A disposition cites artifact ids its own Attempt never recorded. Evidence
- *     borrowed from a different execution is evidence for a different claim; a
- *     `INGESTED` backed by somebody else's capture is exactly the shape of an
- *     unreplayable yield that `artifactIds.length === 0` was already there to
- *     forbid.
- *
- * Both refusals name the offending id rather than reporting that something was
- * wrong, because the next session has to be able to act on it.
+ * Write the atomic terminal disposition for a completed route walk. Refuses an Attempt that did not
+ * complete, a second disposition, `INGESTED` with no artifact, `WALKED_NO_YIELD` without a reachable
+ * transport, a disposition stamped with another Attempt's id, and artifact ids its Attempt never recorded.
  */
 export function disposeRoute(
   task: RouteTask,
@@ -301,31 +179,9 @@ export function disposeRoute(
 }
 
 /**
- * Return the RouteTask to the pool after an Attempt DIED.
- *
- * The Attempt and its partial artifacts are kept. Only the CONCLUSION is
- * withheld, because there was never one to keep.
- *
- * ## Reclaiming is a claim about a specific corpse, and it is checked
- *
- * This function used to check only that the task was undisposed, which meant
- * ANY Attempt could reclaim ANY task. That is a state transition on the
- * strength of an assertion, and the assertion it rests on — "the previous
- * worker is dead" — is precisely the belief `LeaseConflict` exists to distrust.
- * Four things are proven instead:
- *
- *   - The Attempt belongs to THIS RouteTask. A foreign Attempt reopening a task
- *     is one worker resetting another worker's route.
- *   - The Attempt has ENDED. A still-open Attempt is not dead; it is running,
- *     possibly against a government server right now, and reclaiming underneath
- *     it produces the duplicate side effect the lease was built to prevent.
- *     "It looks stuck" is read from the LEASE, and an expired lease is closed
- *     as `LEASE_EXPIRED` before it is reclaimed.
- *   - A `COMPLETED` Attempt is not dead either. A completed Attempt with no
- *     disposition is a LOST DISPOSITION — a bug in our writer, not a crash —
- *     and quietly recycling it as debris destroys the one signal that would
- *     have surfaced it.
- *   - `DENIED_BY_POLICY` is routed to `denyByPolicy`, not swept in here.
+ * Return the RouteTask to the pool after its Attempt died. The Attempt must belong to this task and have
+ * ended; a COMPLETED Attempt with no disposition is a lost disposition and is refused, and
+ * `DENIED_BY_POLICY` goes to `denyByPolicy`.
  */
 export function reclaim(task: RouteTask, attempt: Attempt): RouteTask {
   if (task.disposition !== null) {
@@ -376,22 +232,7 @@ export function reclaim(task: RouteTask, attempt: Attempt): RouteTask {
   };
 }
 
-/**
- * Record that OUR policy engine refused this route, and what must change.
- *
- * Separate from `reclaim` because the two say opposite things to the next
- * worker. `RECLAIMABLE` means "pick this up and try again" — correct after a
- * crash, a timeout or an expired lease, where the world may since have moved.
- * `POLICY_DENIED` means "do not try this again until something on OUR side
- * changes", and it carries the sentence saying which thing.
- *
- * It writes no disposition, and that is not an oversight. `DENIED_BY_POLICY` is
- * absent from `DISPOSITION_BEARING_OUTCOMES`, the route was never walked, and
- * nothing whatever was learned about the publisher. The task stays OUTSTANDING
- * (`isOutstanding` is true of it) because a route we refused ourselves is not a
- * settled fact about a government, and `evaluateCompletion` refuses the
- * obligation by name while it stands.
- */
+/** Record that our policy refused this route and what must change. Writes no disposition; the task stays outstanding. */
 export function denyByPolicy(
   task: RouteTask,
   attempt: Attempt,
@@ -451,7 +292,6 @@ export function isOutstanding(task: RouteTask): boolean {
   return OPEN_DISPOSITIONS.includes(task.disposition.disposition);
 }
 
-/** A RouteTask whose disposition genuinely terminates it. */
 export function isTerminal(task: RouteTask): boolean {
   if (task.workerTask && task.state === "RESULT_RECORDED") return true;
   return (

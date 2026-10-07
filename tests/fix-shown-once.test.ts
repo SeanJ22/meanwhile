@@ -1,4 +1,4 @@
-/** DP-26: a fix in Testing is a Queue row; proving out, a lesson, and a proven fix breaking each write one update; then it goes quiet. */
+/** A fix in Testing is a Queue row; proving out, a lesson, and a proven fix breaking each write one update; then it goes quiet. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

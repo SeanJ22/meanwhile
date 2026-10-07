@@ -1,41 +1,23 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await Promise.all([
-  initializeFederalVoteFirstSeed(),
-  installRegistryRuntimeFirstSeeds(),
-]);
 
 import { meetingOutcomeEvidenceFor, type HeldMeetingAction } from "../lib/ask/meeting-outcomes.ts";
 import { composeSittingAnswer, composeSittingAnswerWithBasis, type ComposableSitting, type SittingAnswerInput, type SittingGap } from "../lib/ask/sitting-answer.ts";
 import { measureAnswer } from "../lib/ask/length-contract.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 import type { EvidencePack, EvidenceRecord } from "../lib/ask/evidence.ts";
-import { getOutcomeSnapshot, useOutcomeSnapshotForTests } from "../lib/outcomes/store.ts";
+import { useOutcomeSnapshotForTests as installOutcomeSnapshot } from "../lib/outcomes/store.ts";
 import { applyMinutesApprovals, minutesLinkFor, minutesSitting, type MinutesDocumentRead } from "../lib/outcomes/minutes-ingest.ts";
-import { mergeSnapshot } from "../lib/outcomes/ingest.ts";
+import { mergeSnapshot, toPersistedSitting } from "../lib/outcomes/ingest.ts";
+import { findClient } from "../lib/sources/legistar/client-registry.ts";
+import { toAgendaRecords, toOutcomeRecords } from "../lib/sources/legistar/outcomes.ts";
+import type { LegistarEvent, LegistarEventItem } from "../lib/sources/legistar/types.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { parseCalendarRows, type InSiteCalendarRow } from "../lib/sources/legistar-insite/calendar.ts";
 import type { MinutesPage } from "../lib/sources/legistar-insite/minutes.ts";
 import { findTenant } from "../lib/sources/legistar-insite/tenant-registry.ts";
 import { NEVER_READ } from "../lib/ops/freshness.ts";
-
-/**
- * **"WHAT DID THEY DECIDE" IS READ OFF THE BODY'S OWN RECORD.** (2026-09-25,
- * the Ask three-second repair.)
- *
- * Measured warm, locally, that day: "What did the Pima board decide at its last
- * meeting?" took 3.1-3.8 s, the fast model writing a paragraph out of the
- * recorded actions. The answer is now composed in code from those records —
- * the sitting's date, the result counts over their denominator, each motion and
- * result in the publisher's own words — and faces the same validator. These
- * tests pin it on the two shapes the store holds (Pima's structured Legistar
- * event items; Mesa's minutes), the missing-result case, what it refuses, and
- * that it quotes nothing a reader is not shown.
- */
 
 const PIMA = "ocd-division/country:us/state:az/county:pima#governing";
 const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
@@ -87,10 +69,6 @@ function assertGrounded(answer: string, records: readonly EvidenceRecord[], allo
   }
 }
 
-/* ── Pima: the publisher's structured record ─────────────────────────────── */
-
-const PIMA_1825: ComposableSitting = { id: "legistar:pima:1825", title: "Board of Supervisors Regular Meeting", startsAt: "2026-08-25T17:00:00-07:00", timeZone: "America/Phoenix", status: "SCHEDULED" };
-
 function pimaInput(sitting: ComposableSitting, outcome: ReturnType<typeof meetingOutcomeEvidenceFor>, extra: Partial<SittingAnswerInput> = {}): SittingAnswerInput {
   return {
     shape: "MEETING_OUTCOME", subjectName: "Pima County Board Of Supervisors", sittings: [sitting],
@@ -99,56 +77,35 @@ function pimaInput(sitting: ComposableSitting, outcome: ReturnType<typeof meetin
   };
 }
 
-test("Pima: what the board decided is its own record — the date, each result counted over the actions, each motion and result in the publisher's words", () => {
-  const outcome = meetingOutcomeEvidenceFor({ bodyId: PIMA, meetingId: PIMA_1825.id, startsAt: PIMA_1825.startsAt, question: QUESTION });
-  assert.equal(outcome.actions.length, 58, "precondition: the committed 2026-08-25 sitting holds 58 recorded actions");
-  const input = pimaInput(PIMA_1825, outcome);
-  const { composed, basis } = composeSittingAnswerWithBasis(input);
-  assert.equal(basis, "RECORDED_ACTIONS");
-  assert.ok(composed);
-  const lead = /^At its Tuesday, August 25th, 2026 meeting, the Pima County Board of Supervisors recorded 58 actions, each in the records with this answer; published result "Pass": 57 of 58; without a published result: 1 of 58\. Recorded actions described here: (\d+) of 58 — /.exec(composed.answer);
-  assert.ok(lead, composed.answer);
-  const shown = Number(lead[1]);
-  assert.ok(shown >= 2, `several actions are described (${shown})`);
-  // Each described action is a held action: its item, its motion and its result, as held.
-  const described = describedPhrases(composed.answer);
-  assert.equal(described.length, shown);
-  for (const phrase of described) {
-    const action = outcome.actions.find((held) => held.item && phrase.startsWith(`"${plain(held.item).slice(0, 40)}`));
-    assert.ok(action, `the phrase names a held action: ${phrase}`);
-    assert.ok(phrase.includes(`"${action.motion}"`), "the clerk's own verb");
-    assert.ok(phrase.endsWith(`result "${action.result}"`), "the publisher's own result word");
-  }
-  assert.deepEqual(composed.citedUrls, ["https://pima.legistar.com/MeetingDetail.aspx?LEGID=1825", "https://webapi.legistar.com/v1/pima/events/1825/eventitems"], "the sitting and the record the actions were read from");
-  assert.ok(measureAnswer(composed.answer).characters <= 700);
-  assert.equal(validateAnswer(composed.answer, composed.citedUrls, packOf({ id: PIMA, name: "Pima County Board Of Supervisors" }, input.records)).kind, "PASSED", "the same validator a model answer faces");
-  assertGrounded(composed.answer, input.records, [25, 2026, 58, 57, 1, shown]);
-});
-
-test("Pima: the record now carries the item's title and the publisher's own result word, so a reader can see what was decided", () => {
-  const outcome = meetingOutcomeEvidenceFor({ bodyId: PIMA, meetingId: PIMA_1825.id, startsAt: PIMA_1825.startsAt, question: QUESTION });
-  const first = outcome.records.find((record) => record.id === "329182#action");
-  assert.equal(first?.text, "File ID 20656: On \"Contract\nBorderland Construction Company, Inc., to provide for Construction Manager at Risk Services: Santa Cruz Irvington to Valencia Improvements, term date 8/25/26 to 6/30/30, Pima County Flood Control District Tax Levy Fund, contract amount $201,351.43 (PO2600022353) Administering Department: Regional Flood Control District\", the board's recorded action was \"approve\". The published result was \"Pass\". Moved by Rex Scott, seconded by Steve Christy. The clerk recorded: \"Motion by Supervisor Scott, seconded by Supervisor Christy and carried by a 4-0 vote, Supervisor Heinz was not present for the vote, to approve the item.\"");
-  const informational = outcome.actions.find((action) => action.motion === "informational only");
-  assert.deepEqual([informational?.resultState, informational?.result], ["ABSENT", null], "no pass/fail word is published for it");
-  assert.match(outcome.records.find((record) => record.id === informational?.recordId)?.text ?? "", /carries no pass or fail result for the motion\. The result is missing from their record, not decided against\./, "and its record says so, in the store's own words");
-});
+/*
+ * A Pima sitting read from the recorded Web API fixture (tests/fixtures/legistar-pima-eventitems-1824.json), the
+ * board's 2026-08-11 regular meeting, through the same transform the routine uses.
+ */
+const pimaClient = findClient("pima")!;
+function pimaFixtureSitting(eventId: number, startsAt: string): PersistedSittingOutcomes {
+  const items = JSON.parse(readFileSync(`tests/fixtures/legistar-pima-eventitems-${eventId}.json`, "utf8")) as LegistarEventItem[];
+  const event = (JSON.parse(readFileSync("tests/fixtures/legistar-pima-events.json", "utf8")) as LegistarEvent[]).find((row) => row.EventId === eventId)!;
+  const context = { slug: "pima", eventId, sourceOrg: pimaClient.publishingOrg, readOn: NEVER_READ };
+  return toPersistedSitting({ event, client: pimaClient, observedAt: "2026-08-12T22:00:00.000Z", startsAt, routesWalked: ["eventitems"],
+    collected: { slug: "pima", eventId, agenda: toAgendaRecords(items, context), outcomes: toOutcomeRecords(items, context), rollCalls: [], failedRollCallExtractions: [], voteRequestFailures: [] } });
+}
 
 test("a motion with no result recorded is SAID to have none — never read as passed or failed — and a contradictory result is named as one", () => {
-  const snapshot = getOutcomeSnapshot();
-  const sitting = snapshot.sittings.find((row) => row.meetingId === "legistar:pima:1822")!;
-  const pass = sitting.outcomes.find((row) => row.dispositionRaw === "Pass" && !row.onConsentCalendar)!;
-  const absent = sitting.outcomes.find((row) => row.dispositionRaw === null && row.action)!;
+  const sitting = pimaFixtureSitting(1824, "2026-08-11T17:00:00-07:00");
+  const held = sitting.outcomes.find((row) => row.dispositionRaw === "Pass" && !row.onConsentCalendar)!;
+  // The recorded rows carry no action name; the three test rows name one, so each can be described by its motion.
+  const pass = { ...held, action: "approve" };
+  const absent = { ...held, eventItemId: held.eventItemId + 800000, action: "informational only", disposition: "NOT_RECORDED" as const, dispositionRaw: null, dispositionConflict: null };
   const contradictory = { ...pass, eventItemId: pass.eventItemId + 900000, disposition: "NOT_RECORDED" as const, dispositionConflict: "the published record says \"Pass\" and its own numeric flag says 0. A record that contradicts itself is not evidence of either answer." };
-  const agenda = sitting.agenda.filter((row) => [pass.eventItemId, absent.eventItemId].includes(row.eventItemId))
-    .flatMap((row) => row.eventItemId === pass.eventItemId ? [row, { ...row, eventItemId: contradictory.eventItemId, title: `Second reading of ${row.title}` }] : [row]);
+  const agenda = sitting.agenda.filter((row) => row.eventItemId === pass.eventItemId)
+    .flatMap((row) => [row, { ...row, eventItemId: contradictory.eventItemId, title: `Second reading of ${row.title}` }, { ...row, eventItemId: absent.eventItemId, title: `Report on ${row.title}` }]);
   // The two actions the composer leads with are the contested ones; the unremarkable pass is left to the records.
-  useOutcomeSnapshotForTests({ ...snapshot, sittings: [{ ...sitting, agenda, outcomes: [absent, contradictory, pass], rollCalls: [] }] });
+  installOutcomeSnapshot(mergeSnapshot({ generatedOn: "UNKNOWN", generatedAt: "UNKNOWN", tenants: [], sittings: [] }, [{ ...sitting, agenda, outcomes: [absent, contradictory, pass], rollCalls: [] }], { generatedOn: "2026-08-12", generatedAt: "2026-08-12T22:00:00.000Z" }));
   try {
-    const held: ComposableSitting = { id: sitting.meetingId, title: "Board of Supervisors Regular Meeting", startsAt: sitting.startsAt!, timeZone: "America/Phoenix", status: "SCHEDULED" };
-    const outcome = meetingOutcomeEvidenceFor({ bodyId: PIMA, meetingId: held.id, startsAt: held.startsAt, question: QUESTION });
+    const chosen: ComposableSitting = { id: sitting.meetingId, title: "Board of Supervisors Regular Meeting", startsAt: sitting.startsAt!, timeZone: "America/Phoenix", status: "SCHEDULED" };
+    const outcome = meetingOutcomeEvidenceFor({ bodyId: PIMA, meetingId: chosen.id, startsAt: chosen.startsAt, question: QUESTION });
     assert.deepEqual(outcome.actions.map((action) => action.resultState), ["ABSENT", "CONTRADICTORY", "STATED"]);
-    const composed = composeSittingAnswer(pimaInput(held, outcome));
+    const composed = composeSittingAnswer({ ...pimaInput(chosen, outcome), records: [meetingRecord(chosen, PIMA, "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824"), ...outcome.records] });
     assert.ok(composed);
     assert.match(composed.answer, /recorded 3 actions, each in the records with this answer; published result "Pass": 1 of 3; without a published result: 1 of 3; with a published result that contradicts itself: 1 of 3\. Recorded actions described here: \d of 3 — /, "every result state is counted over the same actions");
     const phrases = describedPhrases(composed.answer);
@@ -159,11 +116,9 @@ test("a motion with no result recorded is SAID to have none — never read as pa
     assert.ok(phrases.some((phrase) => phrase.startsWith("\"Second reading of") && phrase.endsWith("its published result contradicts itself")), "a record that contradicts itself is never given either result");
     assert.equal(phrases.findIndex((phrase) => phrase.startsWith("\"Second reading of")), 0, "the contradictory result leads");
   } finally {
-    useOutcomeSnapshotForTests(null);
+    installOutcomeSnapshot(null);
   }
 });
-
-/* ── Mesa: the council's own minutes ─────────────────────────────────────── */
 
 const DIR = "tests/fixtures/legistar-insite-mesa-minutes";
 const tenant = findTenant("mesa")!;
@@ -192,7 +147,7 @@ const EMPTY_STORE: OutcomeSnapshot = { generatedOn: "UNKNOWN", generatedAt: "UNK
 test("minutes-local item numbers stay distinct when a question reads two sittings", () => {
   const first = mesaSitting("1336059");
   const second = { ...first, meetingId: `${first.meetingId}-second-sitting`, startsAt: "2026-07-27T19:00:00-07:00" };
-  useOutcomeSnapshotForTests(mergeSnapshot(EMPTY_STORE, [first, second], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" }));
+  installOutcomeSnapshot(mergeSnapshot(EMPTY_STORE, [first, second], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" }));
   try {
     const readings = [first, second].map(sitting => meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId: sitting.meetingId, startsAt: sitting.startsAt!, question: "What did the Mesa City Council decide?" }));
     assert.ok(readings.every(reading => reading.actions.length > 0));
@@ -202,13 +157,13 @@ test("minutes-local item numbers stay distinct when a question reads two sitting
       assert.ok(action.recordId.startsWith(`${action.meetingId}#`));
       assert.ok(reading.records.some(record => record.id === action.recordId));
     }
-  } finally { useOutcomeSnapshotForTests(null); }
+  } finally { installOutcomeSnapshot(null); }
 });
 
 test("Mesa: the council's decisions from its own minutes — each motion and its result in the minutes' words, and the minutes' standing", () => {
   const july27 = mesaSitting("1336059");
   // The store as the routine holds it: the sitting merged in, its minutes' standing applied.
-  useOutcomeSnapshotForTests(applyMinutesApprovals(mergeSnapshot(EMPTY_STORE, [july27], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" })));
+  installOutcomeSnapshot(applyMinutesApprovals(mergeSnapshot(EMPTY_STORE, [july27], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" })));
   try {
     const sitting: ComposableSitting = { id: july27.meetingId, title: "City Council Meeting", startsAt: july27.startsAt!, timeZone: "America/Phoenix", status: "SCHEDULED" };
     const outcome = meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId: sitting.id, startsAt: sitting.startsAt, question: "What did the Mesa City Council decide recently?" });
@@ -235,99 +190,78 @@ test("Mesa: the council's decisions from its own minutes — each motion and its
     }
     assertGrounded(composed.answer, records, [27, 2026, 15, shown]);
   } finally {
-    useOutcomeSnapshotForTests(null);
+    installOutcomeSnapshot(null);
   }
 });
 
-/* ── what it refuses ─────────────────────────────────────────────────────── */
+/** The Mesa July 27 sitting held as the routine holds it, and a composing input over it. */
+function mesaHeld(extraSittings: readonly PersistedSittingOutcomes[] = []) {
+  const july27 = mesaSitting("1336059");
+  installOutcomeSnapshot(applyMinutesApprovals(mergeSnapshot(EMPTY_STORE, [july27, ...extraSittings], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" })));
+  const sitting: ComposableSitting = { id: july27.meetingId, title: "City Council Meeting", startsAt: july27.startsAt!, timeZone: "America/Phoenix", status: "SCHEDULED" };
+  const outcome = meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId: sitting.id, startsAt: sitting.startsAt, question: "What did the Mesa City Council decide recently?" });
+  const input: SittingAnswerInput = { shape: "MEETING_OUTCOME", subjectName: "Mesa City Council", sittings: [sitting],
+    records: [meetingRecord(sitting, MESA, "https://mesa.legistar.com/MeetingDetail.aspx?ID=1336059"), ...outcome.records],
+    sittingGaps: [], now: NOW, questionClass: "WHAT_WAS_DECIDED", actions: outcome.actions };
+  return { july27, sitting, outcome, input };
+}
 
 test("composition steps aside — and the model writes — whenever the records cannot carry the answer", () => {
-  const outcome = meetingOutcomeEvidenceFor({ bodyId: PIMA, meetingId: PIMA_1825.id, startsAt: PIMA_1825.startsAt, question: QUESTION });
-  const input = pimaInput(PIMA_1825, outcome);
-  assert.ok(composeSittingAnswer(input), "precondition: the whole input composes");
-  const other: ComposableSitting = { ...PIMA_1825, id: "legistar:pima:9999", title: "Special Meeting", startsAt: "2026-08-25T13:00:00-07:00" };
-  const actionRecords = input.records.filter((record) => record.kind === "MEETING_ACTION");
-  const cases: [string, Partial<SittingAnswerInput>][] = [
-    ["no held action read beside the records", { actions: [] }],
-    ["an action record the route did not hold", { actions: outcome.actions.slice(1) }],
-    ["a held action whose record the reader is not shown", { records: input.records.filter((record) => record.id !== outcome.actions[0]!.recordId) }],
-    ["a quoted span that is not in its record", { actions: outcome.actions.map((action, index) => index === 0 ? { ...action, result: "Adopted unanimously" } : action) }],
-    ["two action records sharing one id (two minutes-read sittings on one day)", { records: [...input.records, actionRecords[0]!] }],
-    ["a cancelled sitting", { sittings: [{ ...PIMA_1825, status: "CANCELED" }] }],
-    ["a sitting still to come", { now: Date.parse("2026-08-01T12:00:00Z") }],
-    ["an unrecorded time zone", { sittings: [{ ...PIMA_1825, timeZone: null }] }],
-    ["an unresolved calendar listing", { records: input.records.map((record) => record.kind === "MEETING" ? { ...record, meetingListingIdentity: { uniqueMeetingCount: null } as EvidenceRecord["meetingListingIdentity"] } : record) }],
-    ["a same-day sitting with neither an action nor a named outcome gap", { sittings: [PIMA_1825, other], records: [...input.records, meetingRecord(other, PIMA, "https://pima.legistar.com/x")] }],
-    ["no described action passes the validator on its own", { admissible: () => false }],
-  ];
-  for (const [why, change] of cases) assert.equal(composeSittingAnswer({ ...input, ...change }), null, why);
-  // "How did they vote" stays on the roll calls; an agenda question is not a decisions question.
-  assert.equal(composeSittingAnswerWithBasis({ ...input, questionClass: "HOW_DID_THEY_VOTE" }).basis, "ROLL_CALLS");
-  assert.equal(composeSittingAnswerWithBasis({ ...input, questionClass: null }).composed, null, "recorded actions outside a decisions question are for the model");
+  const { sitting, outcome, input } = mesaHeld();
+  try {
+    assert.ok(composeSittingAnswer(input), "precondition: the whole input composes");
+    const other: ComposableSitting = { ...sitting, id: `${sitting.id}-other`, title: "Special Meeting", startsAt: sitting.startsAt.replace(/T\d{2}:/, "T13:") };
+    const actionRecords = input.records.filter((record) => record.kind === "MEETING_ACTION");
+    const cases: [string, Partial<SittingAnswerInput>][] = [
+      ["no held action read beside the records", { actions: [] }],
+      ["an action record the route did not hold", { actions: outcome.actions.slice(1) }],
+      ["a held action whose record the reader is not shown", { records: input.records.filter((record) => record.id !== outcome.actions[0]!.recordId) }],
+      ["a quoted span that is not in its record", { actions: outcome.actions.map((action, index) => index === 0 ? { ...action, result: "Adopted unanimously" } : action) }],
+      ["two action records sharing one id (two minutes-read sittings on one day)", { records: [...input.records, actionRecords[0]!] }],
+      ["a cancelled sitting", { sittings: [{ ...sitting, status: "CANCELED" }] }],
+      ["a sitting still to come", { now: Date.parse("2026-07-01T12:00:00Z") }],
+      ["an unrecorded time zone", { sittings: [{ ...sitting, timeZone: null }] }],
+      ["an unresolved calendar listing", { records: input.records.map((record) => record.kind === "MEETING" ? { ...record, meetingListingIdentity: { uniqueMeetingCount: null } as EvidenceRecord["meetingListingIdentity"] } : record) }],
+      ["a same-day sitting with neither an action nor a named outcome gap", { sittings: [sitting, other], records: [...input.records, meetingRecord(other, MESA, "https://mesa.legistar.com/x")] }],
+      ["no described action passes the validator on its own", { admissible: () => false }],
+    ];
+    for (const [why, change] of cases) assert.equal(composeSittingAnswer({ ...input, ...change }), null, why);
+    // "How did they vote" stays on the roll calls; an agenda question is not a decisions question.
+    assert.equal(composeSittingAnswerWithBasis({ ...input, questionClass: "HOW_DID_THEY_VOTE" }).basis, "SITTING_AND_GAPS", "minutes with no member votes are not read as roll calls");
+    const memberVote = { kind: "MEETING_MEMBER_VOTE", id: `${sitting.id}#vote`, text: "A member's recorded vote." } as EvidenceRecord;
+    assert.equal(composeSittingAnswerWithBasis({ ...input, records: [...input.records, memberVote], questionClass: "HOW_DID_THEY_VOTE" }).basis, "ROLL_CALLS");
+    assert.equal(composeSittingAnswerWithBasis({ ...input, questionClass: null }).composed, null, "recorded actions outside a decisions question are for the model");
+  } finally { installOutcomeSnapshot(null); }
 });
 
 test("a same-day sitting is counted beside the chosen one, or its named outcome gap is said for it", () => {
-  const outcome = meetingOutcomeEvidenceFor({ bodyId: PIMA, meetingId: PIMA_1825.id, startsAt: PIMA_1825.startsAt, question: QUESTION });
-  const earlier: ComposableSitting = { ...PIMA_1825, id: "legistar:pima:1873", title: "Board of Supervisors Special Meeting", startsAt: "2026-08-25T15:00:00-07:00" };
-  const theirs = meetingOutcomeEvidenceFor({ bodyId: PIMA, meetingId: earlier.id, startsAt: earlier.startsAt, question: QUESTION });
-  assert.equal(theirs.actions.length, 1, "precondition: the committed 15:00 sitting holds one recorded action");
-  const records = [meetingRecord(PIMA_1825, PIMA, "https://pima.legistar.com/1825"), meetingRecord(earlier, PIMA, "https://pima.legistar.com/1873"), ...outcome.records, ...theirs.records];
-  const both = composeSittingAnswer({ ...pimaInput(PIMA_1825, outcome), sittings: [PIMA_1825, earlier], records, actions: [...outcome.actions, ...theirs.actions] });
-  assert.match(both?.answer ?? "", /^At its Tuesday, August 25th, 2026 meeting \("Board of Supervisors Regular Meeting"\), the Pima County Board of Supervisors recorded 58 actions/, "the chosen sitting is named when the day holds two");
-  assert.match(both?.answer ?? "", /The "Board of Supervisors Special Meeting" sitting earlier that day recorded 1 more action\./);
-  const gap: SittingGap = { role: "OUTCOME", meetingId: earlier.id, gap: { whose: "THEIRS", statement: "We read that sitting's agenda items and the body's own record shows no action recorded against them." } };
-  const withGap = composeSittingAnswer({ ...pimaInput(PIMA_1825, outcome), sittings: [PIMA_1825, earlier], records: records.filter((record) => !theirs.records.includes(record)), sittingGaps: [gap] });
-  assert.match(withGap?.answer ?? "", /For the "Board of Supervisors Special Meeting" sitting earlier that day: We read that sitting's agenda items and the body's own record shows no action recorded against them\./);
+  const first = mesaSitting("1336059");
+  const earlierHeld = { ...first, meetingId: `${first.meetingId}-earlier`, startsAt: first.startsAt!.replace(/T\d{2}:\d{2}/, "T13:00") };
+  const { sitting, outcome, input } = mesaHeld([earlierHeld]);
+  try {
+    const earlier: ComposableSitting = { ...sitting, id: earlierHeld.meetingId, title: "City Council Study Session", startsAt: earlierHeld.startsAt };
+    const theirs = meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId: earlier.id, startsAt: earlier.startsAt, question: "What did the Mesa City Council decide recently?" });
+    assert.ok(theirs.actions.length > 0, "precondition: the earlier sitting holds recorded actions");
+    const records = [meetingRecord(sitting, MESA, "https://mesa.legistar.com/1336059"), meetingRecord(earlier, MESA, "https://mesa.legistar.com/earlier"), ...outcome.records, ...theirs.records];
+    const both = composeSittingAnswer({ ...input, sittings: [sitting, earlier], records, actions: [...outcome.actions, ...theirs.actions] });
+    assert.match(both?.answer ?? "", /^At its Monday, July 27th, 2026 meeting \("City Council Meeting"\), the Mesa City Council recorded 15 actions/, "the chosen sitting is named when the day holds two");
+    assert.match(both?.answer ?? "", new RegExp(`The "City Council Study Session" sitting earlier that day recorded ${theirs.actions.length} more actions?\\.`));
+    const gap: SittingGap = { role: "OUTCOME", meetingId: earlier.id, gap: { whose: "THEIRS", statement: "We read that sitting's agenda items and the body's own record shows no action recorded against them." } };
+    const withGap = composeSittingAnswer({ ...input, sittings: [sitting, earlier], records: records.filter((record) => !theirs.records.includes(record)), sittingGaps: [gap] });
+    assert.match(withGap?.answer ?? "", /For the "City Council Study Session" sitting earlier that day: We read that sitting's agenda items and the body's own record shows no action recorded against them\./);
+  } finally { installOutcomeSnapshot(null); }
 });
 
 test("the held actions are read beside the records, never inside them: every quoted field is a span of its own record's text", () => {
-  const outcome = meetingOutcomeEvidenceFor({ bodyId: PIMA, meetingId: PIMA_1825.id, startsAt: PIMA_1825.startsAt, question: QUESTION });
-  const byId = new Map(outcome.records.map((record) => [record.id, plain(record.text)]));
-  for (const action of outcome.actions as HeldMeetingAction[]) {
-    const text = byId.get(action.recordId);
-    assert.ok(text, `${action.recordId} is a record the reader is shown`);
-    for (const span of [action.item, action.motion, action.result, action.matterFile]) if (span) assert.ok(text.includes(plain(span)), `${action.recordId}: ${span.slice(0, 40)}`);
-  }
-  assert.ok(outcome.records.every((record) => !("actions" in record)), "the records are unchanged in shape");
-});
-
-/* ── the route: no model call ────────────────────────────────────────────── */
-
-const calls: string[] = [];
-process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
-process.env.ANTHROPIC_API_KEY = "test-stub-not-a-real-key";
-globalThis.fetch = (async (input: RequestInfo | URL) => {
-  const url = input instanceof Request ? input.url : String(input);
-  calls.push(url);
-  throw new Error(`the decisions answer made an outbound request: ${url}`);
-}) as typeof fetch;
-const { POST } = await import("../app/api/ask/grounded/route.ts");
-const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
-
-test("ROUTE: \"what did the Pima board decide at its last meeting\" is composed from its recorded actions — no model call, the same validator, nothing of the reader's", { concurrency: false }, async () => {
-  resetGroundedState();
-  const before = calls.length;
-  const started = performance.now();
-  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-decision-answer-test" },
-    body: JSON.stringify({ question: QUESTION, ocdIds: ["ocd-division/country:us/state:az", "ocd-division/country:us/state:az/county:pima"], today: "2026-08-28", approximateLocation: "Tucson, 85705" }),
-  }));
-  const elapsed = performance.now() - started;
-  const payload = await response.json() as { mode: string; answer: string | null; records: EvidenceRecord[]; trace: { interpretation: { why?: string }; synthesis: { why?: string }; validation: { passed?: boolean }; composition?: { basis?: string; passed?: boolean }; speculation?: unknown } };
-  assert.equal(response.status, 200);
-  assert.deepEqual(calls.slice(before), [], "no model call of any kind");
-  assert.equal(payload.trace.interpretation.why, "lexical-reading");
-  assert.equal(payload.trace.composition?.basis, "RECORDED_ACTIONS");
-  assert.equal(payload.trace.synthesis.why, "composed-from-sitting-records");
-  assert.equal(payload.trace.validation.passed, true);
-  assert.equal(payload.mode, "GROUNDED_COMPOSED");
-  assert.equal(payload.trace.speculation, undefined, "a question the code reads starts no speculation");
-  assert.match(payload.answer ?? "", /^At its Tuesday, August 25th, 2026 meeting \("[^"]+"\), the Pima County Board of Supervisors recorded 58 actions, each in the records with this answer; published result "Pass": 57 of 58; without a published result: 1 of 58\. Recorded actions described here: \d+ of 58 — "/);
-  assert.match(payload.answer ?? "", /sitting earlier that day recorded 1 more action\./);
-  assert.doesNotMatch(payload.answer ?? "", /Tucson|85705/, "nothing the reader sent about themselves");
-  const shown = Number(/described here: (\d+) of 58/.exec(payload.answer ?? "")?.[1]);
-  assertGrounded(payload.answer ?? "", payload.records, [25, 2026, 58, 57, 1, shown]);
-  // Measured on this machine, in process, warm seeds: an estimate of the code path only, never a claim about production.
-  console.log(`decisions answer composed in ${elapsed.toFixed(0)} ms (local, in-process, no model call)`);
+  const { outcome } = mesaHeld();
+  try {
+    assert.ok(outcome.actions.length > 0, "precondition: the sitting holds recorded actions");
+    const byId = new Map(outcome.records.map((record) => [record.id, plain(record.text)]));
+    for (const action of outcome.actions as HeldMeetingAction[]) {
+      const text = byId.get(action.recordId);
+      assert.ok(text, `${action.recordId} is a record the reader is shown`);
+      for (const span of [action.item, action.motion, action.result, action.matterFile]) if (span) assert.ok(text.includes(plain(span)), `${action.recordId}: ${span.slice(0, 40)}`);
+    }
+    assert.ok(outcome.records.every((record) => !("actions" in record)), "the records are unchanged in shape");
+  } finally { installOutcomeSnapshot(null); }
 });

@@ -1,19 +1,7 @@
 /**
- * A state legislator's capitol and district offices, for "Offices near you".
- *
- * Source rule (Sean, 2026-10-01): official sources are enough, never
- * required. Open States (Plural's CC-0 bulk file) publishes each member's
- * capitol and district office address and phone; those offices are carried
- * as Open States states them, linked to Open States as their source. Where
- * the legislature's own roster holds a value for the same office, the
- * official value wins. An office no official page has confirmed is marked
- * `official: false` and stays open as standing work.
- *
- * Each office is joined to the member the reader actually shows, the
- * legislature's own roster row, by the same seat (state, chamber, district)
- * and the same family name. A member Open States lists that no official
- * roster row matches gets no office: it is never attached to someone else.
- * Pure code; no model, no network.
+ * A state legislator's capitol and district offices. Open States offices are carried as it states them; where the
+ * legislature's own roster holds a value for the same office, the official value wins. An office no official page
+ * confirms is `official: false` and stays open as standing work.
  */
 import type { DirectoryOffice } from "./directory.ts";
 import type { Officeholder, OfficeholderDivision } from "./types.ts";
@@ -39,7 +27,7 @@ export interface MemberOfficeRecord {
 export const OPEN_STATES_ORG = "Open States (Plural, CC-0)";
 export const openStatesUrl = (state: string) => `https://data.openstates.org/people/current/${state.toLowerCase()}.csv`;
 
-/** "680 Broadway Suite 207, Paterson, NJ 07514" → street, city, state, ZIP. Unparsed text stays whole as the address. */
+/** "1 Main St Suite 2, Springfield, ST 00000" → street, city, state, ZIP. Unparsed text stays whole as the address. */
 export function parseOfficeAddress(text: string): Pick<DirectoryOffice, "address" | "city" | "state" | "zip"> {
   const clean = text.replace(/\s*;\s*/g, ", ").replace(/\s+/g, " ").trim();
   const match = /^(.*?),\s*([^,]+?),\s*([A-Z]{2})\.?\s+(\d{5}(?:-\d{4})?)$/.exec(clean);

@@ -1,8 +1,6 @@
 /**
- * Strip embedded metadata from portrait images before they are committed
- * and served (the photo sessions' EXIF rule): a portrait fetched from a
- * government site may carry camera serials, GPS coordinates, or editing
- * history in EXIF/XMP — none of which the reader asked us to serve.
+ * Strip embedded metadata (camera serials, GPS, editing history) from portrait
+ * images before they are committed and served.
  *
  * Pure byte transforms, no image decoding, so the pixels are untouched:
  * - JPEG: drops APP1 (EXIF + XMP) and COM segments. JFIF (APP0), ICC

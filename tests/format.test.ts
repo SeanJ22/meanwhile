@@ -8,13 +8,7 @@ import {
 } from "../lib/map/format.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
-/**
- * 3a (2026-08-16): the what-first headline and the address-once rule. The
- * author's Vail card is the pinned case — a source that titles the sitting
- * "Governing Board Meeting" with no body name and publishes the address AS
- * the venue name must render "Vail Unified School District — Governing Board
- * Meeting" over one address line, never the venue twice.
- */
+/** A source that titles the sitting without a body name and publishes the address as the venue name renders one what-first headline over one address line. */
 
 function meetingWith(fields: Partial<Meeting>): Meeting {
   return {
@@ -64,16 +58,7 @@ test("the address renders once when the source publishes it as the venue name", 
   assert.equal(locationLine("Hearing Room A", "33 N Stone Ave"), "Hearing Room A · 33 N Stone Ave");
 });
 
-/*
- * **BC-12 (2026-08-24) — the convention moved, and the guard moves with it.**
- *
- * The author: dates spell out everywhere, "in seat until January 3rd, 2029,"
- * never "01-03-2029." This asserted the mm/dd/yyyy form that 3h established on
- * 2026-08-16. Kept in place rather than deleted, because the RANGE half is the
- * part worth guarding either way: several callers hand in annotated strings,
- * and a formatter that only accepted a bare date would return them unconverted
- * without erroring.
- */
+/* Callers hand in annotated range strings; the formatter must convert those, not only a bare date. */
 test("BC-12: dates spell out, including inside ranges", () => {
   assert.equal(formatDateMDY("2026-11-03"), "November 3rd, 2026");
   assert.equal(

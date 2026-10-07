@@ -1,57 +1,12 @@
-# The automatic post-deploy reading of production. NH273, part 2.
-#
-# ## What was missing
-#
-# `scripts/production-integrity.mts` takes a reading and
-# `scripts/release-freeze-gate.mts` enforces it, and NOTHING RAN THE FIRST ONE.
-# The gate's own header said so: "It is dispatched by hand against the commit
-# that actually shipped. Nothing runs it automatically yet." A mechanism whose
-# trigger is a person remembering reports on the days somebody remembered; the
-# 2026-08-28 schema drift is what the other days look like.
-#
-# ## Why the trigger is `push: main` and NOT `deployment_status`
-#
-# Measured, not assumed: `gh api repos/:owner/:repo/deployments` returns **0**.
-# Netlify creates no GitHub Deployment object for this repository, so no
-# `deployment_status` event has ever fired here and a workflow listening for one
-# would never run. A gate that never executes reports nothing and reads as
-# covered — worse than no gate. So the trigger is the push that CAUSES the
-# deploy, and the deploy's arrival is OBSERVED: the job polls
-# `GET https://meanwhileusa.com/api/build` until the served commit is this
-# one, under a hard bound.
-#
-# ## The three outcomes, and none of them is a rollback
-#
-#   SERVING_EXPECTED   the reading is taken against the served commit through
-#                      the EXISTING gate and appended to the canonical
-#                      software-release outcome log. A red reading marks
-#                      integrity DEGRADED and turns this job red, as a signal;
-#                      it blocks nothing else. NOTHING IS ROLLED BACK, because
-#                      production's database may already have advanced and
-#                      rolling code back underneath an advanced schema
-#                      manufactures a second incompatibility.
-#   PRODUCTION_BEHIND  the bound elapsed and production still serves something
-#                      else. A fact about the BUILD PIPELINE, never about the
-#                      schema. It is annotated as a warning and does NOT fail
-#                      this job — see the step's own comment for why.
-#   COULD_NOT_TELL     production could not be asked at all. Not a pass
-#                      (RULING 24); the job goes red.
-#
-# ## It cannot start a Git/deploy/Build feedback loop
-#
-# It creates no commit. The exact outcome and readback are appended to the
-# existing `cp_log_software_release_reviews` control-plane log that Admin reads.
-# Therefore a deploy observation produces no Git push, no Netlify build and no
-# software Build check. `tests/post-deploy-integrity-data-plane.test.ts` holds
-# that boundary against the executable workflow.
+# After each push to main, waits until https://meanwhileusa.com/api/build serves that commit, then reads the
+# production schema through the existing gate and appends the outcome to the software-release log Admin reads.
+# Triggered by the push because Netlify creates no GitHub deployment events here. It never rolls back and never commits.
 
 name: Post-deploy integrity
 
 on:
   push:
     branches: [main]
-  # Dispatchable against any commit, which is how a missed or re-run deploy is
-  # read after the fact. `sha` defaults to the checked-out HEAD.
   workflow_dispatch:
     inputs:
       sha:
@@ -64,22 +19,9 @@ on:
         default: false
 
 permissions:
-  # Software release verification reads the exact checked-out commit and this
-  # run's diagnostics. It never mutates GitHub or the repository.
   contents: read
-  # ACTIONS READ — the diagnoser reads THIS run after a failure.
-  #
-  # Declaring `permissions:` at all switches the token from the repository
-  # default to exactly what is listed, so every scope not named here is `none`.
-  # Without `actions: read`, the `Name the cause` step below hits
-  # `gh: Resource not accessible by integration (HTTP 403)` on
-  # `GET /actions/runs/{id}` and prints `diagnose: CANNOT RUN` — correctly, and
-  # uselessly. `actions: read` is the minimum that endpoint needs; nothing else
-  # is widened.
   actions: read
 
-# A newer push to main cancels the older observation: Netlify serves the newest
-# commit anyway, so only its reading is worth the polling minutes.
 concurrency:
   group: post-deploy-integrity
   cancel-in-progress: true
@@ -87,24 +29,12 @@ concurrency:
 jobs:
   observe:
     runs-on: ubuntu-latest
-    # F25: the platform default is 360 minutes. The poll's own bound is ten
-    # minutes; twenty is that plus install and the reading, and it fails loudly
-    # and named rather than sitting until GitHub kills it.
+    # The poll's own bound is ten minutes.
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
         with:
-          # Bind every executable observer, classifier and schema read to the
-          # same commit named below. Checking out moving `main` could run a
-          # later release's contracts while attributing the outcome to this
-          # trigger, exactly the cross-subsystem evidence mix PDC forbids.
           ref: ${{ inputs.sha || github.sha }}
-          # Documentary merges can accumulate since the last deployed commit.
-          # Full history makes that complete ancestor range provable instead
-          # of repeatedly paying the ten-minute poll for a missing parent.
-          # Blobless history avoids downloading old file contents; --no-renames
-          # path proofs need commit/tree objects, plus the checked-out files.
-          # Missing/unknown ancestry still cannot authorize a skip.
           fetch-depth: 0
           filter: blob:none
 
@@ -113,10 +43,6 @@ jobs:
           node-version: 24
           package-manager-cache: false
 
-      # A documentary merge can include earlier software not yet observed.
-      # Prove the complete served-to-candidate range and its canonical receipt
-      # before cancelling observation. This read-only proof needs dependencies;
-      # a small install replaces the measured 580-second unnecessary poll.
       - name: Enable corepack (pnpm pinned by packageManager)
         run: corepack enable
 
@@ -137,29 +63,8 @@ jobs:
           echo "are non-shipping, and a fresh canonical HELD receipt covers the served commit."
           echo "No deploy poll or durable write is owed. No new receipt was fabricated."
 
-      # THE OBSERVATION AND THE READING, IN ONE STEP.
-      #
-      # `WTP_PRODUCTION_DATABASE_URL_READONLY` reads the serving schema through
-      # the existing gate. `WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL` is a
-      # separate, narrowly privileged role: append/readback on the existing
-      # software-release log and its position allocator only. It cannot write
-      # the serving database, Git, GitHub or another control-plane table.
-      # `NETLIFY_AUTH_TOKEN` is deliberately NOT used; `/api/build` answers the
-      # deployed-commit question without one.
-      #
-      # `WTP_RUN_ID` declares this run synthetic so no request it makes could be
-      # counted as reader signal in the sold store. `/api/build` writes nothing,
-      # which was confirmed by reading `app/api/build/route.ts`; the declaration
-      # is sent anyway, because an exception is how the rule erodes.
-      #
-      # THE EXIT CODES ARE KEPT APART, and this is the step's whole design.
-      # 3 is PRODUCTION_BEHIND — the deploy has not arrived — and it does NOT
-      # fail the job. NH281 is open on exactly that condition, its cause is in a
-      # build log behind the author's Netlify login, and a job that goes red
-      # every night for a known owner-blocked fact is the alarm nobody reads
-      # (RULING 115). It is annotated instead, so it is surfaced on the run
-      # without manufacturing a nightly false alarm. 1 and 2 DO fail: a refused
-      # reading and an unaskable production are both things a person must see.
+      # Exit 3 (production still serves an older commit) is a warning, not a failure; 1 and 2 fail the job.
+
       - name: Observe the deploy and take the post-deploy reading
         id: observe
         if: steps.deploy.outputs.deploy != 'cancel'
@@ -184,30 +89,14 @@ jobs:
               exit 1
               ;;
             3)
-              echo "::warning title=Production is behind::The deploy did not arrive within the observer's bound; production still serves an earlier commit. This is a fact about the BUILD PIPELINE (NH281), not about production's schema, and no integrity reading was recorded. This job is not failed for it — see the step comment."
+              echo "::warning title=Production is behind::The deploy did not arrive within the observer's bound; production still serves an earlier commit. This is a fact about the BUILD PIPELINE, not about production's schema, and no integrity reading was recorded. This job is not failed for it."
               ;;
             *)
-              echo "::error title=Could not tell::Production could not be asked what it serves, or the schema gate could not tell. An unreadable answer is never a passing one (RULING 24)."
+              echo "::error title=Could not tell::Production could not be asked what it serves, or the schema gate could not tell. An unreadable answer is never a passing one."
               exit "$code"
               ;;
           esac
 
-      # ITEM 8a (2026-08-26) — EVERY JOB NAMES ITS OWN CAUSE BEFORE IT DIES.
-      #
-      # `Error: Process completed with exit code 1` is not an error message; it
-      # is the absence of one. This reads the job's own log and prints the
-      # failure CLASS and its remedy in plain words, or says loudly that the
-      # failure is unrecognised and shows what it saw. It never fails the job it
-      # is diagnosing — the job is already red, and a diagnoser that could turn a
-      # red run into a differently-red run would hide the cause it exists to name.
-      #
-      # It matters more here than in most workflows. This job's failures are
-      # about PRODUCTION — a schema that disagrees with the deployed code, a
-      # credential that stopped resolving — and those are exactly the failures
-      # nobody should have to reconstruct from a bare exit code the next morning.
-      #
-      # `steps.observe.outcome != 'skipped'` (RULING 278): it diagnoses the
-      # observation, so it runs only when the observation was attempted.
       - name: Name the cause
         if: failure() && steps.observe.outcome != 'skipped'
         env:

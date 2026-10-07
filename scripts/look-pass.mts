@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * **ONE LOOK PASS ON THE LIVE SITE AFTER A DEPLOY.** (FE-21.)
+ * **ONE LOOK PASS ON THE LIVE SITE AFTER A DEPLOY.**
  *
  * Reads the commit the live site serves (/api/build). When no look pass has run
  * on it yet, shoots each reader surface at a published ZIP sampled for the day,
- * on a phone (390 by 844) and a desktop, runs the page measurements (FE-16) on
- * each screen, and asks the look reviewer (FE-20) for a verdict per screen from
+ * on a phone (390 by 844) and a desktop, runs the page measurements on
+ * each screen, and asks the look reviewer for a verdict per screen from
  * the screenshots, the task and the written look standard alone. Red flags
  * become fix-list items pointing at their screenshot; green flags are counted.
  * The pass goes to the live-audit log, and Admin shows it.

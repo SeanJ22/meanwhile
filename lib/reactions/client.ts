@@ -12,22 +12,12 @@ import type {
 } from "@/lib/signal/reactions";
 
 /**
- * The browser half of reaction capture.
- *
- * Two localStorage keys, both device-local and disclosed on /transparency:
- *
- * - `wtp.reaction_key` — a random key minted on the browser's FIRST
- *   reaction (never at page load: a reader who never reacts never gets
- *   one). Sent with each reaction and stored hashed server-side, it lets
- *   this browser change its own answers and nothing else. Clearing it
- *   orphans prior reactions as plain anonymous rows.
- * - `wtp.reactions` — this browser's own answers, kept locally so the
- *   control can show "you said Yes" across popups and visits. Display
- *   state only; never transmitted anywhere.
- *
- * When storage is unavailable (private mode, blocked), both fall back to
- * in-memory: reactions still work for the session, continuity just doesn't
- * survive the tab.
+ * The browser half of reaction capture. Two device-local localStorage keys, both disclosed on
+ * /transparency:
+ * - `wtp.reaction_key`: a random key minted on the first reaction (never at page load), sent with each
+ *   reaction and stored hashed server-side so this browser can change its own answers and nothing else.
+ * - `wtp.reactions`: this browser's own answers, display state only; never transmitted.
+ * When storage is unavailable both fall back to in-memory for the session.
  */
 
 const KEY_STORAGE = "wtp.reaction_key";
@@ -35,12 +25,9 @@ const SELECTION_STORAGE = "wtp.reactions";
 
 const memorySelections = new Map<string, ReactionValue>();
 
-
 /** Minted on first use — call only from a reaction tap, never on load. */
 export function getOrCreateReactionKey(): string {
-  // NH79: one audited implementation. The STORAGE KEY is what keeps this
-  // store apart from the other one — see lib/state/browser-key.ts, which
-  // carries why the in-memory fallback must not be shared.
+  // The storage key keeps this store apart from the others; see lib/state/browser-key.ts.
   return getOrCreateBrowserKey(KEY_STORAGE);
 }
 
@@ -67,11 +54,8 @@ export function getStoredReaction(
 }
 
 /**
- * M134: a cross-component change signal within this tab, the sibling of the
- * picks file's own. A Yes has to become a pick the moment it is tapped, and
- * the pick control is a different component in a different part of the tree —
- * `storage` fires only for OTHER tabs, so without this the two would agree
- * only after a reload.
+ * A same-tab change signal: `storage` fires only for other tabs, and a Yes must become a pick in a
+ * different component the moment it is tapped.
  */
 export const REACTIONS_EVENT = "wtp:reactions-changed";
 
@@ -81,11 +65,7 @@ function rememberReaction(
   reaction: ReactionValue,
 ): void {
   const key = selectionKey(targetType, targetId);
-  // The dispatch is guarded on `window` inside `publishStorageEvent`: the suite
-  // calls `submitReaction` in Node, where the write falls to the memory map and
-  // there is nothing to signal on. An unguarded dispatch turned three passing
-  // reaction tests red — the signal is a browser convenience, and in Node there
-  // is no subscriber to miss it.
+  // `publishStorageEvent` guards the dispatch on `window`, so this also runs in Node.
   commitStorageWrite(
     () => {
       const all = readSelections();
@@ -97,11 +77,7 @@ function rememberReaction(
   );
 }
 
-/**
- * Subscribe to this device's own answer record. Read-only, device-local, and
- * joined to nothing — the same store `getStoredReaction` already reads, with a
- * way to be told when it changes.
- */
+/** Subscribe to this device's own answer record. Read-only, device-local, joined to nothing. */
 export function subscribeReactions(callback: () => void): () => void {
   return subscribeToStorageEvent(REACTIONS_EVENT, callback);
 }
@@ -114,53 +90,28 @@ export interface ReactionViewContext {
 }
 
 /**
- * What actually happened to the reader's answer server-side. COUNTED is
- * earned by exactly one thing: the 204 that means a row landed in the
- * store. Everything else — a 500, a network failure, and the 202
- * accepted-not-stored state (a never-happens state now that DATABASE_URL
- * is live in production; if it ever reappears it renders as failure, not
- * success) — is NOT_COUNTED, and the control says so.
+ * COUNTED only for the 204 that means a row landed in the store. Anything else, including a 202, is
+ * NOT_COUNTED.
  */
 export type ReactionSubmitOutcome = "COUNTED" | "NOT_COUNTED";
 
 /**
- * The honest line for anything short of a 204. The device-local half of
- * the record still writes — the device's own memory is the reader's,
- * always — but "counted" is a claim about the shared totals and only the
- * store's own confirmation can make it.
+ * The line for anything short of a 204. The device-local record still writes, but "counted" is a claim
+ * about shared totals.
  */
 export const NOT_COUNTED_LINE =
   "Couldn't reach the totals — your answer is saved on this device and wasn't counted.";
 
 /**
- * Record the reader's answer: locally (so the control stays honest about
- * what this browser said) and to the server (where it joins the anonymous
- * store). The local record writes unconditionally; the returned outcome
- * reports the server half truthfully so the control can render success
- * only when a row actually landed.
- *
- * This is deliberately NOT fire-and-forget, unlike the search log
- * (`lib/log/client.ts`): a reaction is a promise made to the reader at the
- * capture point — "your answer joins anonymous local totals" — and a
- * promise needs its outcome. A log row is our bookkeeping; losing one
- * costs the reader nothing and is silently dropped by design.
+ * Record the reader's answer locally and to the server. The local record writes unconditionally; the
+ * returned outcome reports the server half truthfully. Not fire-and-forget, unlike the search log.
  */
 export async function submitReaction(
   targetType: ReactionTargetType,
   targetId: string,
   reaction: ReactionValue,
   context: ReactionViewContext | null,
-  /**
-   * The optional verbatim (P03). Never required, and a reader who never
-   * opens the box submits exactly the payload they always did.
-   *
-   * NOT remembered device-locally, unlike the binary. The binary is
-   * remembered so the control can render what this browser answered
-   * without asking the server; a verbatim has nothing to render back —
-   * reactions are write-only from the reader's side, text included — and
-   * keeping a person's typed words in their browser after they submitted
-   * them buys nothing and leaves them lying around.
-   */
+  /** The optional verbatim. Never required, and not remembered device-locally. */
   freeText?: string | null,
 ): Promise<ReactionSubmitOutcome> {
   rememberReaction(targetType, targetId, reaction);

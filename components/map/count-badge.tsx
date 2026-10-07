@@ -6,21 +6,14 @@ import { useUi, useUiDispatch } from "@/lib/state/provider";
 
 import { tierSetVars } from "../shell/tier-style";
 
-/**
- * The floating count, which opens the list overlay.
- *
- * Ports Edia's `.count-badge`, including the `.active` state while the overlay
- * it opens is showing, and the tier-coloured numeral.
- */
+/** The floating count, which opens the list overlay. */
 export function CountBadge() {
   const { meetings, venues, searchFailed } = useShellData();
   const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
   const ui = useUi();
   const dispatch = useUiDispatch();
 
-  // "0 meetings" beside a failed fetch is a false claim — the badge says
-  // couldn't-check instead (2a: a failed operation may not render as an
-  // empty success).
+  // A failed fetch shows couldn't-check, never "0 meetings".
   if (searchFailed) {
     return (
       <button

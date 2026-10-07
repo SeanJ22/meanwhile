@@ -3,16 +3,9 @@ import { getVotesSnapshot } from "./snapshot.ts";
 import type { VotesSnapshot } from "./types.ts";
 
 /**
- * CA-42 · A person's votes stay with them after they leave.
- *
- * A member who is no longer on the current roster still has recorded roll-call
- * positions in the vote store, keyed by their officeholder id. This derives the
- * seat from that record itself (the chamber is the one that published their
- * roll calls), so a departed federal member resolves the way a sitting one
- * does. It returns null when the store holds nothing for the id; the caller
- * keeps its own honest gap.
- *
- * State legislators already resolve this way in `officialStateVoteSeat`.
+ * The vote seat of a federal member no longer on the current roster, derived
+ * from their recorded roll-call positions (the chamber is the one that
+ * published them). Null when the store holds nothing for the id.
  */
 export function departedFederalVoteSeat(
   officeholderId: string,

@@ -12,7 +12,6 @@ import {
   type PhotoIndex,
   type SeatHolder,
 } from "../officials/lookup.ts";
-import { mayReadRetiredPluralRoster, officeholderIdentityMayEnterReader, officeholderRosterFiles } from "../officials/roster-authority.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
 import { readPublicBodyAttempts, type PublicBodyAttempt } from "./body-attempt-read.ts";
@@ -57,22 +56,15 @@ import {
 /**
  * Server-side access to the registry and the geometry it resolves against.
  *
- * The committed boundary files are the explicitly reviewed, immutable Census/
- * GIS source vintage classified by PDC as STATIC_VERSIONED_REFERENCE. Mutable
- * registry bindings are preloaded separately from their canonical data-plane
- * pointer. There is no second runtime geometry authority and no store-error
- * fallback that can silently switch between two competing geometries.
- *
- * **This does not scale, and it is not meant to.** 1.9 MB of GeoJSON parsed into
- * server memory is fine for three counties and untenable for the 90,837 local
- * governments Phase 4.7 targets. That phase replaces it with PMTiles plus a real
- * table. The seam is deliberately narrow — one `coverageAt()` call — so swapping
- * the backing store does not reach into the route or the UI.
+ * The committed boundary files are the reviewed, immutable Census/GIS source vintage
+ * (STATIC_VERSIONED_REFERENCE). Mutable registry bindings are preloaded separately from their canonical
+ * data-plane pointer. There is no second runtime geometry authority and no store-error fallback that
+ * can switch between competing geometries.
  */
 
 interface Loaded {
   features: GeoFeature[];
-  /** Body territories for governments with no Census division (NH233). */
+  /** Body territories for governments with no Census division. */
   territory: BodyTerritoryFile | null;
   divisionsById: Map<string, Division>;
   registry: Registry;
@@ -87,16 +79,6 @@ interface RegistryLoaded {
   registry: Registry;
 }
 
-/**
- * The officeholder rosters permitted to answer a Reader, by scope.
- *
- * Production admits the federal roster only. The old state files are
- * Plural/OpenStates intermediary projections, retained as historical research
- * and explicit node:test fixtures but never as a production fallback. State
- * legislators remain visibly unrecorded until an official-publisher promotion
- * is wired to this projection.
- */
-const ROSTERS = officeholderRosterFiles();
 
 export class RegistryHoldingReadError extends Error {
   readonly code = "REGISTRY_HOLDING_UNAVAILABLE";
@@ -111,20 +93,9 @@ export class RegistryHoldingReadError extends Error {
 let cache: { readonly authorityKey: string; readonly value: Promise<Loaded> } | null = null;
 let registryCache: { readonly authorityKey: string; readonly value: Promise<RegistryLoaded> } | null = null;
 
-/*
- * **THE COMMITTED GEOGRAPHY IS READ ONCE PER PROCESS, AND CAN BE STARTED
- * FIRST.** (C21, 2026-09-25.)
- *
- * The resolver geometry and the body territories are the reviewed static files
- * this deploy ships; they cannot change while the process runs. They used to be
- * read inside `loadRegistry` and `load`, which wait for the registry authority
- * to settle, so a cold `/api/meetings` fetched the edge families first and only
- * then began ~25 file reads and parses. Held as their own promises, a route can
- * start them on its first line (`prefetchReaderGeography`), beside the edge
- * fetch, and a new registry version reuses them instead of re-reading every
- * file. A failed read is never held: the next caller reads again, and the
- * failure still reaches whoever awaits it exactly as before.
- */
+// The committed geography is read once per process, and a route can start it first
+// (`prefetchReaderGeography`) beside the edge fetch. A new registry version reuses it. A failed read is
+// never held: the next caller reads again.
 let geometryRead: Promise<GeoFeature[]> | null = null;
 let territoryRead: Promise<BodyTerritoryFile> | null = null;
 
@@ -145,9 +116,8 @@ function bodyTerritories(): Promise<BodyTerritoryFile> {
 }
 
 /**
- * Start reading the committed geography now, without waiting for it. Reads no
- * edge or database state, so a route may call it before it has entered the
- * reader authority edge; the loaders below await the same reads.
+ * Start reading the committed geography now, without waiting for it. Reads no edge or database state,
+ * so a route may call it before entering the reader authority edge.
  */
 export function prefetchReaderGeography(): void {
   void resolverGeometry().catch(() => undefined);
@@ -170,45 +140,15 @@ async function readResolverGeometry(): Promise<GeoFeature[]> {
   const root = process.cwd();
   const stateCodes = new Set(Object.values(FIPS_TO_STATE).map((state) => state.postal.toLowerCase()));
 
-  /*
-   * **P-003 · THE RESOLVER READS A MANIFEST, NOT A DIRECTORY.**
-   * (Performance audit of `336a3eb`, remediated 2026-08-24.)
-   *
-   * This used to be `readdir` with one file excluded by name. The exclusion
-   * was right and the instrument was wrong: `public/geo` is what the CLIENT
-   * downloads, plus the INPUTS to the scripts that build it, and a directory
-   * listing cannot tell an input from a product.
-   *
-   * So the resolver loaded `cd119.geojson` — the 1.63 MB national
-   * congressional file, 441 features and 80,115 coordinates — alongside
-   * `cd119-04`, `cd119-33` and `cd119-34`, its own per-state derivatives,
-   * which `pnpm cd:split` writes and which the map has used since g4 item 3.
-   * Every feature in the national file that could match a covered point is
-   * byte-identical to one in a per-state file, by construction of the split.
-   * The resolver was paying for all 435 other districts on every sweep.
-   *
-   * Measured: 26 files, 2,291 features, 118,533 coordinates → 25 files,
-   * 1,850 features, 38,418 coordinates. 67.6% of the geometry gone with no
-   * change to any answer, which `pnpm resolver:identity` proves per zip.
-   *
-   * The old comment's worry is preserved rather than dropped: an allow-list
-   * rots the other way, a new district type silently absent. The manifest is
-   * GENERATED, states its rule as SUPERSESSION, and accounts for every
-   * canonical state or national `.geojson` on one list or the other —
-   * `tests/resolver-manifest.test.ts` fails the build on a file that is on
-   * neither.
-   */
+  // The resolver reads a generated manifest, not a directory: `public/geo` mixes client downloads with
+  // build inputs, and per-state derivatives supersede the national files. `tests/resolver-manifest.test.ts`
+  // fails on a canonical `.geojson` that is on neither list.
   const manifest = JSON.parse(
     await readFile(join(root, "data", "derived", "resolver-geometry.json"), "utf8"),
   ) as { files: string[] };
   const names = manifest.files;
-  // Read every geometry file CONCURRENTLY (E.1, 2026-09-14). The files are
-  // independent and a cold ballot spent most of its wall-clock awaiting these
-  // ~25 reads and parses one after another. `Promise.all` keeps each file's
-  // validation identical — a throw still rejects the whole load — and the
-  // feature ORDER does not matter: `divisionsById` keys on ocdId and the
-  // point-in-polygon scan is order-free. Literal roots keep dynamic reads
-  // bounded in the server deployment trace, exactly as the serial loop did.
+  // Read every geometry file concurrently; feature order does not matter. Literal roots keep dynamic
+  // reads bounded in the server deployment trace.
   const perFile = await Promise.all(
     names.map(async (name): Promise<GeoFeature[]> => {
       const stateFile = /^data\/states\/([a-z]{2})\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
@@ -235,19 +175,9 @@ async function readResolverGeometry(): Promise<GeoFeature[]> {
 
 async function readBodyTerritories(): Promise<BodyTerritoryFile> {
   const root = process.cwd();
-  /*
-   * LITERAL PATH SEGMENTS, not the imported constant.
-   *
-   * Next traces this route to decide what ships. Given `join(root, SOME_CONST)`
-   * it cannot resolve the path statically, and the first version of this line
-   * blew the app trace from 215 files to 4,073 — it swallowed screenshots/,
-   * docs/feedback/ and all 1,005 official portraits. `pnpm build`'s own
-   * cardinality budget caught it, which is exactly what that budget is for.
-   *
-   * BODY_TERRITORY_FILE stays exported for the generator and the guards, so
-   * there is still one spelling of the path; this is the one place that
-   * spells it in segments, because the tracer has to read it.
-   */
+  // Literal path segments, not the imported constant: Next traces this route to decide what ships and
+  // cannot resolve `join(root, SOME_CONST)` statically. BODY_TERRITORY_FILE stays the one spelling for
+  // everything else.
   return JSON.parse(
     await readFile(join(root, "data", "states", "az", "geo", "body-territories.geojson"), "utf8"),
   ) as BodyTerritoryFile;
@@ -258,52 +188,27 @@ async function load(base: RegistryLoaded): Promise<Loaded> {
   const runtimeRegistry = getRegistryRuntimeReadModel();
   const { features, divisionsById, registry } = base;
 
-  // A required roster failure is an OURS loading failure, never an empty roster.
-  // Do not cache a partial registry as if those officials were not held. Read
-  // concurrently (E.1) — same per-roster validation and error, `Promise.all`
-  // preserves ROSTERS order so `sets` is unchanged.
-  const sets: OfficeholderSet[] = await Promise.all(
-    ROSTERS.map(async (name) => {
-      const fips = /^officeholders-(\d{2})\.json$/.exec(name)?.[1];
-      const state = fips ? FIPS_TO_STATE[fips]?.postal.toLowerCase() : undefined;
-      if (name !== "officeholders-us.json" && !state) throw new Error(`Invalid canonical roster name: ${name}`);
-      try {
-        return name === "officeholders-us.json"
-          ? getFederalOfficeholderSet()
-          : (JSON.parse(await readFile(join(root, "data", "states", state!, "officials", name), "utf8")) as OfficeholderSet);
-      } catch (error) {
-        throw new RegistryHoldingReadError(name === "officeholders-us.json"
-          ? "lib/registry/officeholders-us.json"
-          : `data/states/${state}/officials/${name}`, error);
-      }
-    }),
-  );
+  // State legislators come from their official-publisher promotion; the federal directory is the one roster loaded here.
+  let federal: OfficeholderSet;
+  try {
+    federal = getFederalOfficeholderSet();
+  } catch (error) {
+    throw new RegistryHoldingReadError("federal directory", error);
+  }
+  const sets: OfficeholderSet[] = [federal];
 
-  // The photo manifest (D20): per-image source and license, images served
-  // from our origin. Missing or unreadable degrades to initials everywhere.
+  // The photo manifest: per-image source and license, images served from our origin. Missing or
+  // unreadable degrades to initials everywhere.
   const photos: PhotoIndex = new Map();
   try {
-    const manifest = runtimeRegistry.officialPhotos as {
-      photos: {
-        officeholderId: string;
-        name: string;
-        url: string;
-        license: string | null;
-      }[];
-    };
+    const manifest = runtimeRegistry.officialPhotos;
     const names = new Map<string, string>();
     for (const photo of manifest.photos) {
-      if (!officeholderIdentityMayEnterReader(photo.officeholderId)) continue;
-      // Unknown license is not clearable — such a photo never ships (D20).
-      if (!photo.license) continue;
       photos.set(photo.officeholderId, photo.url);
       names.set(photo.officeholderId, photo.name);
     }
-    // One person, one photo (item 6b, 2026-08-15). A person holding two
-    // seats has two officeholder ids and had two photo rows, so Consuelo
-    // Hernandez's school-board row and her legislative row rendered two
-    // different faces of the same woman. Collapsed by person here, once,
-    // rather than at each of the surfaces that reads this index.
+    // One person, one photo: a person holding two seats has two officeholder ids. Collapsed by person here,
+    // once, rather than at each surface.
     const collapsed = collapsePhotoIndexByPerson(photos, names);
     photos.clear();
     for (const [id, url] of collapsed) photos.set(id, url);
@@ -311,12 +216,8 @@ async function load(base: RegistryLoaded): Promise<Loaded> {
     // No manifest is a fine state: initials render instead.
   }
 
-  /*
-   * **NH233 — the territory file, loaded beside the boundary files.**
-   *
-   * This is a required held relationship. Its loading failure must remain
-   * distinguishable from a body having no applicable territorial relationship.
-   */
+  // A required held relationship: a loading failure stays distinguishable from a body having no
+  // territorial relationship.
   let territory: BodyTerritoryFile | null = null;
   try {
     // Read once per process (`bodyTerritories`), possibly already started by the route.
@@ -347,14 +248,9 @@ export interface RegistryAuthorityReaders {
   readonly federal: () => Promise<void>;
 }
 
-/*
- * **EDGE FIRST, DATABASE SECOND — EACH A BINDING OF `settleEdgeFirst`.** (R24,
- * 2026-09-25.) A reader request that entered the reader authority edge primes
- * the family from its edge value WITHOUT reading Neon; the standing runner and
- * the workers never enter one, so they read the authoritative database pointer
- * (`refresh*FromPromoted`, unchanged); an edge-only context (the keep-warm
- * call) refuses instead. The five settles were five copies of that shape.
- */
+// Edge first, database second, each a binding of `settleEdgeFirst`. A reader request that entered the
+// reader authority edge primes the family from its edge value without reading the database; the runner
+// and workers read the authoritative database pointer; an edge-only context refuses.
 
 /** The federal directory, edge first. */
 export const settleFederalDirectoryRead = (): Promise<void> =>
@@ -376,10 +272,7 @@ export async function settleRegistryAuthorityReads(
   if (scope === "OFFICIALS") await readers.federal();
 }
 
-/**
- * The comment-access rules, edge first (C20, 2026-09-24): from its
- * comment-access artifact without Neon (0.6–0.8 s from a cold database).
- */
+/** The comment-access rules, edge first. */
 export const settleCommentAccessRead = (): Promise<void> =>
   settleEdgeFirst(currentCommentAccessEdge, (value, versionId) => primeCuratedReaderProjection("comment-access", value, versionId), refreshCommentAccessFromPromoted, "The comment-access rules");
 
@@ -388,17 +281,9 @@ const settleCampaignSitesRead = (): Promise<void> =>
   settleEdgeFirst(currentCampaignSitesEdge, (value, versionId) => primeCuratedReaderProjection("campaign-sites", value, versionId), refreshCampaignSitesFromPromoted, "The campaign-site URLs");
 
 /**
- * **ONE VERSION, ONE KEY, WHICHEVER PATH SERVED IT.** (R30, 2026-09-25.)
- *
- * An edge prime records its family as BOOTSTRAP (the serving copy carries the
- * value and version, not the promotion receipt) and a database read of the
- * same promoted version records PROMOTED. The cache keys below used to include
- * that kind, so an instance serving one request from the edge and the next
- * from the database (a route that does not enter the edge, or a failed edge
- * fetch) saw two keys for one version and rebuilt the registry and the whole
- * officeholder graph each time it alternated. The edge copies exactly the
- * promoted version it names, so a served value is keyed by its version alone;
- * a first seed carries its own `bootstrap:` version id and stays distinct.
+ * One version, one key, whichever path served it. An edge prime records BOOTSTRAP and a database read of
+ * the same promoted version records PROMOTED; keying on that kind would rebuild the registry each time
+ * the two alternated. A first seed carries its own `bootstrap:` version id and stays distinct.
  */
 export function authorityVersionKey(state: { readonly kind: string; readonly metadata: { readonly versionId: string | null } }): string {
   const served = state.kind === "PROMOTED" || state.kind === "BOOTSTRAP";
@@ -421,9 +306,8 @@ async function currentAuthorityKey(registryKey: string): Promise<string> {
       await settleCampaignSitesRead();
       campaign = authorityVersionKey(curatedReaderReadState("campaign-sites"));
     } catch {
-      // Campaign URLs are an optional, separately promoted projection. A
-      // store failure withholds those URLs but cannot make the registry,
-      // representation, or roster authority unavailable.
+      // Campaign URLs are an optional, separately promoted projection. A store failure withholds them but
+      // cannot make the registry, representation or roster authority unavailable.
       campaign = "UNAVAILABLE";
     }
   }
@@ -445,17 +329,10 @@ async function registryLoaded(): Promise<RegistryLoaded> {
   return value;
 }
 
-/*
- * **REGISTRATION, COMPOSED ONE STATE AT A TIME.** (2026-09-23.)
- *
- * The runner registers every state's Census governments (`lib/registration/`).
- * A request reads only the states its own divisions name, through the shared
- * promoted read and its 30-second pointer check, and composes each beside the
- * reviewed registry held now (`composeRegistration`: reviewed wins). A state
- * with no promoted registration adds nothing. A registration the store could not
- * read is thrown like an unreadable registry, never returned as an emptiness:
- * "nobody governs here" may never stand in for "we could not read who does".
- */
+// Registration, composed one state at a time. A request reads only the states its own divisions name
+// and composes each beside the reviewed registry (`composeRegistration`: reviewed wins). A state with no
+// promoted registration adds nothing. A registration the store could not read is thrown, never returned
+// as emptiness: "nobody governs here" never stands in for "we could not read who does".
 const REGISTRATION_STATES = new Set(REGISTRATION_TARGETS.map((t) => t.state.toLowerCase()));
 interface ComposedRegistration {
   readonly key: string;
@@ -525,34 +402,15 @@ async function loaded(): Promise<Loaded> {
 }
 
 /**
- * Who governs this point, and how much of their calendar we actually have.
- *
- * `meetingCount` is the cascade's answer for the same point. It is what
- * separates "nothing is scheduled" from "we cannot see what is scheduled", and
- * those must never render the same way.
- */
-/**
- * **EVERY ID A `BODY` CARD CAN BE ABOUT.** (OWN-Q6, 2026-08-31.)
- *
- * The demand-signal route validates a `BODY` subject against this, for the
- * same reason the reaction route validates a target against the votes and
- * ballot snapshots: a row stored against a subject nothing can render is a row
- * no operational reader can act on, which is worse than no row. A missing or
- * unreadable registry fails CLOSED at the caller.
- *
- * **It is the UNION of two id spaces, because the surface is.** `BC-11` fixed
- * the subject id on the body card to *the body id, never the display title* —
- * and there are three constructors in `map-entry.tsx`, of which one uses a
- * registry `body.id` and two use a division's own OCD-ID, because a PLACE and
- * a DISTRICT are governments that are not registry body rows. Validating
- * against only the first would refuse two of the three body cards this product
- * renders, which reads as a broken pill rather than as a narrow allowlist.
+ * Every id a `BODY` card can be about. The demand-signal route validates a `BODY` subject against this;
+ * a missing or unreadable registry fails closed at the caller. It is the union of registry body ids and
+ * division OCD-IDs, because some body cards are about a place or district that is not a registry body.
  */
 export async function knownBodySubjectIds(forSubjectId?: string): Promise<Set<string>> {
   const { registry, divisionsById } = await registryLoaded();
   const out = new Set<string>(registry.bodies.map((b) => b.id));
   for (const ocdId of divisionsById.keys()) out.add(ocdId);
-  // A registered body or division is known through its own state's registration (2026-09-23).
+  // A registered body or division is known through its own state's registration.
   if (forSubjectId !== undefined && !out.has(forSubjectId)) {
     for (const r of await registrationsFor([forSubjectId])) {
       for (const body of r.layer.bodies) out.add(body.id);
@@ -581,29 +439,13 @@ export async function divisionsAt(lat: number, lng: number): Promise<Division[]>
 }
 
 /**
- * Divisions by OCD id, for a caller that has resolved an AREA rather than a
- * point. (NJ Hunt 3 item 3.1, 2026-08-22.)
- *
- * `NJ01` fixed the ballot page, which resolved a zip to its ZCTA centroid and
- * asked which divisions contain that ONE point. The map's **"Who governs
- * here"** card was the second instance of the same defect and it was still
- * live: production at 07866 read *"4 bodies govern the area around 07866"* and
- * listed Rockaway TOWNSHIP, with Rockaway BOROUGH — a separate municipality
- * inside the same zip, running a four-candidate council race — absent from a
- * card whose heading is the exact question it was getting wrong.
- *
- * The ballot's widening goes through `lib/ballot/zip-divisions.ts`, which
- * yields OCD ids. This turns those back into `Division` records so the coverage
- * summary can be built from the same area answer.
- *
- * **An id the registry does not hold is DROPPED, not invented.** The zip-area
- * index is built from TIGER polygons and the registry is built from its own
- * sources; the two are allowed to disagree, and a synthesised division would be
- * a government this product asserts exists on the strength of nothing.
+ * Divisions by OCD id, for a caller that has resolved an area rather than a point (e.g. the ZIP-area
+ * widening in `lib/ballot/zip-divisions.ts`). An id the registry does not hold is dropped, never
+ * invented.
  */
 export async function divisionsByOcdIds(ocdIds: readonly string[]): Promise<Division[]> {
   const { divisionsById } = await registryLoaded();
-  // An id the reviewed registry does not hold may be one its state registered (2026-09-23).
+  // An id the reviewed registry does not hold may be one its state registered.
   const registered = await registrationsFor(ocdIds.filter((id) => !divisionsById.has(id)));
   const out: Division[] = [];
   for (const id of ocdIds) {
@@ -614,16 +456,12 @@ export async function divisionsByOcdIds(ocdIds: readonly string[]): Promise<Divi
 }
 
 /**
- * One officeholder by roster id, in the render shape (4, 2026-08-19).
- * Serves the ballot page's incumbent-record link: the id arrives from an
- * exact-key join (never a name match), and an id the roster doesn't hold
- * returns null — no link rather than a wrong one.
+ * One officeholder by roster id, in the render shape. The id arrives from an exact-key join (never a
+ * name match); an id the roster does not hold returns null.
  */
 export async function seatHolderById(id: string): Promise<SeatHolder | null> {
-  // The publisher namespace establishes the one permitted state authority
-  // before any data-plane store is opened. A state identity never causes a
-  // federal/registry read and can never fall through to the retired Plural
-  // roster or a name join.
+  // The publisher namespace establishes the one permitted state authority before any store is opened. A
+  // state identity never causes a federal/registry read or a name join.
   const officialStateScope = officialStateVoteScopeForOfficeholderId(id);
   if (officialStateScope) {
     const held = await heldOfficialStateLegislators(officialStateScope);
@@ -633,7 +471,7 @@ export async function seatHolderById(id: string): Promise<SeatHolder | null> {
   const rosterIdentity = currentRosterMemberReaderDisposition(id);
   if (rosterIdentity?.state === "IDENTITY_UNRESOLVED") return null;
   const canonicalId = rosterIdentity?.canonicalId ?? id;
-  if (!canonicalId.startsWith("congress:") && !mayReadRetiredPluralRoster()) {
+  if (!canonicalId.startsWith("congress:")) {
     const statewide = statewideExecutivesFor(currentStatewideExecutives().map((row) => row.stateOcdId))
       .find((holder) => holder.id === canonicalId);
     if (statewide) return statewide;
@@ -652,10 +490,8 @@ export async function allSeatHolders(): Promise<SeatHolder[]> {
 }
 
 /**
- * officeholder id → partyLabel, across every loaded roster (item 3,
- * 2026-08-14 second session). Serves the party-breakdown join in
- * /api/votes — display data only; nothing downstream infers a position
- * from it.
+ * officeholder id → partyLabel, across every loaded roster. Display data only; nothing downstream
+ * infers a position from it.
  */
 export async function partyByOfficeholderId(): Promise<
   Map<string, string | null>
@@ -667,16 +503,8 @@ export async function partyByOfficeholderId(): Promise<
 }
 
 /**
- * Which chamber a federal member sits in (item 6b, 2026-08-15).
- *
- * Read off the roster's own `officeTitle`, which the congress-legislators
- * bulk file sets from the term's `type` — so it is the source's answer, not a
- * pattern match on a name. Null for anyone who is not a federal legislator,
- * and the key-votes column simply does not render for them: an entry is a
- * question each CHAMBER answered, and a mayor has no chamber.
- *
- * This exists so the chamber rule ("a House card shows House roll calls
- * only") has exactly one place it can be got wrong.
+ * Which chamber a federal member sits in, read off the roster's own `officeTitle`. Null for anyone who
+ * is not a federal legislator. The one place the chamber rule can be got wrong.
  */
 export async function chamberForOfficeholder(
   id: string,
@@ -723,22 +551,12 @@ export async function seatHoldersForDivision(
   }
   const officialStateScope = officialStateLegislatorScopeForDivision(ocdId);
   if (officialStateScope) {
-    try {
-      const held = await heldStateLegislatorsEdgeFirst(officialStateScope);
-      if (held) {
-        const ids = new Set(held.divisions.filter((row) => row.ocdId === ocdId).map((row) => row.officeholderId));
-        return held.seats.filter((holder) => ids.has(holder.id)).sort((a, b) => a.name.localeCompare(b.name));
-      }
-      if (!mayReadRetiredPluralRoster()) return [];
-    } catch (error) {
-      // The old state snapshots remain deterministic test evidence only. A
-      // production Reader must surface a canonical-store outage; Node's
-      // explicit test runner may continue through the already-loaded fixture
-      // so legacy UI contracts can be exercised without inventing a database.
-      if (!mayReadRetiredPluralRoster() || !(error instanceof CivicDataStoreUnavailableError)) throw error;
-    }
+    const held = await heldStateLegislatorsEdgeFirst(officialStateScope);
+    if (!held) return [];
+    const ids = new Set(held.divisions.filter((row) => row.ocdId === ocdId).map((row) => row.officeholderId));
+    return held.seats.filter((holder) => ids.has(holder.id)).sort((a, b) => a.name.localeCompare(b.name));
   }
-  if (!federalDirectoryAppliesToDivision(ocdId) && !mayReadRetiredPluralRoster()) {
+  if (!federalDirectoryAppliesToDivision(ocdId)) {
     // Production's federal directory has no rows for local or state-legislative
     // divisions. Confirm the canonical registry pointer, then return its honest
     // no-federal-row result without letting a federal outage take that scope down.
@@ -746,36 +564,15 @@ export async function seatHoldersForDivision(
     return [];
   }
   const { officials } = await loaded();
-  /*
-   * **The statewide executives, and ONLY on the state division itself.**
-   * (2026-08-27, Red Control 1.)
-   *
-   * `STATEWIDE_EXECUTIVES` held Katie Hobbs — her office, party, official
-   * phone, email, contact form and page — and only `lib/registry/coverage.ts`
-   * read it. So her map card said Incumbent and the ballot, asking this
-   * function, could not see her at all and called her a Challenger. Folding the
-   * store in here is what stops one verified person having two answers; the
-   * alternative, a ballot-specific incumbent table, is a second copy of an
-   * already-sourced fact, and second copies are how surfaces come to disagree.
-   *
-   * The `=== stateOcdIdFrom(ocdId)` guard is not incidental. `statewideExecutivesFor`
-   * takes the divisions covering a POINT and answers with the governor once,
-   * which is right for the map card and wrong here: passing it `.../state:az/cd:6`
-   * derives `state:az` and hands back the Governor, so she would have joined the
-   * officeholder list of every congressional, legislative, county and place
-   * division in Arizona. Caught by the seat census, which showed `cd:6` holding
-   * two people where the roster holds one.
-   */
+  // The statewide executives, and only on the state division itself. `statewideExecutivesFor` takes the
+  // divisions covering a point and would otherwise attach the governor to every division in the state.
   const statewide = stateOcdIdFrom(ocdId) === ocdId ? statewideExecutivesFor([ocdId]) : [];
   return [...holdersFor(officials, ocdId), ...statewide];
 }
 
 /**
- * `heldOfficialStateLegislators`, edge-first (C21, 2026-09-25): a request that
- * entered the reader edge reads a district's state legislators from the
- * state-legislators edge value, as the coverage card already does, so the
- * district battlecard (`/api/representation`) does not wake the database for
- * them. Without that scope on the edge it is the same database read as before.
+ * `heldOfficialStateLegislators`, edge first: a request that entered the reader edge reads a district's
+ * state legislators from the edge value instead of the database.
  */
 async function heldStateLegislatorsEdgeFirst(scope: OfficialStateVoteScope) {
   const read = await settleStateLegislatorsRead(scope);
@@ -850,8 +647,7 @@ export async function settleCoverageStateLegislators(
     .filter((scope): scope is OfficialStateVoteScope => scope !== null))];
   const authorities: StateLegislatorCoverageAuthority[] = [];
 
-  // Per-scope settlement is deliberate. No aggregate read can turn one
-  // state's missing or unavailable pointer into another state's disposition.
+  // Per-scope settlement, so one state's missing or unavailable pointer never becomes another's.
   for (const scope of scopes) {
     const read = await reader(scope);
     authorities.push(stateLegislatorCoverageAuthority(scope, read));
@@ -883,33 +679,10 @@ function officialStateLegislatorScopeForDivision(ocdId: string): OfficialStateVo
 }
 
 /**
- * **WHO HOLDS THIS EXACT OFFICE, ON THIS DIVISION.**
- * (2026-08-27, the coverage-truth session. Red Control 1.)
- *
- * `seatHoldersForDivision` answers *who holds something here*, and for a
- * division hosting one elected office those are the same question. **They are
- * not the same question anywhere else**, and the pilot ballots are full of
- * "anywhere else": seven statewide AZ offices share `.../state:az`, Governor
- * and U.S. Senator share `.../state:nh`, Mayor and Borough Council share
- * `.../place:butler`, five county row offices share `.../county:merrimack`.
- *
- * Asked for the AZ Governor contest, the division question returned **Mark
- * Kelly and Ruben Gallego**. Katie Hobbs matched neither, and the ballot
- * called the sitting Governor a Challenger while her own map card called her
- * Incumbent.
- *
- * So a ballot asks THIS, with the contest's own title. An office the vocabulary
- * cannot classify returns `[]`, which the resolver renders as UNKNOWN — never
- * as the division-wide list, and never as Challenger.
- *
- * **The statewide executives participate here rather than being duplicated.**
- * `STATEWIDE_EXECUTIVES` held Katie Hobbs, her office, her party, her official
- * phone, email, contact form and page all along; only `lib/registry/coverage.ts`
- * read it, so the map surface had her and the ballot surface could not see her.
- * Folding it into the officeholder lookup itself is what stops one verified
- * person having two different answers on two surfaces — the alternative, a
- * ballot-specific incumbent table, is a second copy of a fact that is already
- * sourced, and second copies are how surfaces come to disagree.
+ * Who holds this exact office on this division. Several offices often share one division (statewide
+ * offices on the state division, a mayor and council on a place), so a ballot asks with the contest's
+ * own title. An office the vocabulary cannot classify returns `[]`, rendered as UNKNOWN, never as the
+ * division-wide list. Statewide executives participate here rather than being duplicated.
  */
 export async function seatHoldersForOffice(
   ocdId: string,
@@ -918,8 +691,7 @@ export async function seatHoldersForOffice(
   const office = officeIdentity(officeTitle);
   if (office === null) return [];
   if (office !== "us_senator" && office !== "us_representative"
-    && /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId)
-    && !mayReadRetiredPluralRoster()) {
+    && /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId)) {
     await registryLoaded();
     return statewideExecutivesFor([ocdId]).filter((holder) => officeIdentity(holder.officeTitle) === office);
   }
@@ -928,12 +700,9 @@ export async function seatHoldersForOffice(
 }
 
 /**
- * Build the coverage graph (rosters, photos, officeholder indexes) for the
- * authority this request reads, so a later `coverageAt` finds it held (C21,
- * 2026-09-25). `/api/meetings` starts it beside its meetings read instead of
- * after it. Edge-aware like every read here: call it only after the handler
- * has entered the reader edge, or it settles the authority from the database.
- * A failure is not held; `coverageAt` then builds, and fails, on its own.
+ * Build the coverage graph for the authority this request reads, so a later `coverageAt` finds it
+ * held. Call only after the handler has entered the reader edge, or it settles the authority from the
+ * database. A failure is not held.
  */
 export async function prepareCoverage(): Promise<void> {
   await loaded();
@@ -944,17 +713,9 @@ export async function coverageAt(
   lng: number,
   meetingCount: number,
   /**
-   * The divisions covering this same point, when the caller already has them
-   * (AUD-04, 2026-08-18) — `/api/meetings` resolves them for its online-meeting
-   * filter and used to pay for the identical sweep a second time here.
-   *
-   * MUST be the result of resolving THIS lat/lng and nothing else: handing in
-   * another point's divisions would answer confidently about somewhere the
-   * reader is not. Omitted, this resolves them itself as it always did, which
-   * is also what a caller whose own resolution FAILED must do — passing an
-   * empty set from a failed lookup would turn a retrieval failure into a
-   * coverage answer of "nothing governs here", and a failed fetch may never be
-   * written into the data as an absence.
+   * The divisions covering this same point, when the caller already has them. Must be the result of
+   * resolving this lat/lng. A caller whose own resolution failed must omit it: an empty set would turn a
+   * retrieval failure into "nothing governs here".
    */
   resolvedDivisions?: Division[],
   heldMeetings: readonly Meeting[] = [],
@@ -965,7 +726,7 @@ export async function coverageAt(
     ? Promise.resolve({ kind: "UNREAD" as const }) : readPublicBodyAttempts();
   const { features, divisionsById, registry, officials, territory } = await loaded();
   const exactDivisions = resolvedDivisions ?? resolveDivisionsAt([lng, lat], features, divisionsById);
-  // The governments registered on these divisions' states, beside the reviewed bodies (2026-09-23).
+  // The governments registered on these divisions' states, beside the reviewed bodies.
   const registered = await registrationsFor(exactDivisions.map((d) => d.ocdId));
   const bodies = registered.length === 0 ? registry.bodies : [...registry.bodies, ...registered.flatMap((r) => r.layer.bodies)];
   // A registered body is titled by its division (its name is null until sourced), so the summary needs the

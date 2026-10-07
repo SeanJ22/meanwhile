@@ -4,9 +4,6 @@ import { canonicalJson, AppendOnlyViolation, type ControlPlaneRepositories } fro
 import { countVitalSign } from "../db/transfer-by-caller.ts";
 import { VITAL_COUNTERS } from "../control-plane/vital-signs.ts";
 
-/** Aggregate measurements in the existing operational activity log. No facts,
- * quotes or publisher payloads are copied. A check and typed-reader delivery
- * are separate observations of the existing publication receipt. */
 export const PUBLICATION_FLOW_LOG_KEY = "publication-flow";
 export interface PublicationFlowReceipt {
   readonly candidateId: string;
@@ -31,6 +28,6 @@ export async function recordPublicationFlow(repos: Pick<ControlPlaneRepositories
     if (!(error instanceof AppendOnlyViolation) || !(await prior()).length) throw error;
     return;
   }
-  /* Vital signs: facts live this hour, in BR-31's unit (new or changed records; a recheck earns none), counted once, when the receipt is first written. */
+    /* Counts new or changed records (a recheck earns none), once, when the receipt is first written. */
   if (receipt.stage === "LIVE") countVitalSign(VITAL_COUNTERS.factsLive, receipt.changedRecords);
 }

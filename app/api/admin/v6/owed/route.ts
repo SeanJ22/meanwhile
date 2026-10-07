@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const runtime = "nodejs";
 
-/** What Sean added to, or declined from, what places are owed, with the log and what can be undone. Read only; the same for every place. */
+/** What was added to, or declined from, what places are owed, with the log and what can be undone. Read only; the same for every place. */
 export async function GET(request: NextRequest) {
   return adminGet(request, async (observedAt) => {
     const opened = await openControlPlane();

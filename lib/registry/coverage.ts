@@ -36,26 +36,12 @@ import type { Meeting } from "../sources/types.ts";
 const DOCUMENTED_SEARCHES = indexAudits(COVERAGE_AUDIT_FILE);
 
 /**
- * What we can honestly say about who governs a point, and how much of it we
- * have.
+ * What can honestly be said about who governs a point, and how much of it we hold. Coverage silence
+ * must never read as "nothing is happening": say what is known and what is missing, and never let the
+ * second look like the first.
  *
- * The failure this exists to kill: the stat card reads `0`, the map is empty,
- * and a reader concludes nothing is happening. The truth is almost always *this
- * app has no source for the bodies that govern here* — a completely different
- * statement, and the one the product exists to never make.
- *
- * It is the same discipline the meeting cascade already applies. `query.ts`
- * always reports which rung produced its answer, because a silently widened
- * radius is a wrong answer. Coverage silence is the same bug one level up, so
- * it gets the same treatment: say what is known, say what is missing, and never
- * let the second one look like the first.
- *
- * **Never tell a reader they have no representation.** Every square foot of the
- * country is governed by something. Where no municipal government exists — Vail,
- * unincorporated county land, a New Hampshire grant — there is still a county
- * board, a school board, state legislators and a member of Congress. An absent
- * municipal tier is a fact to state plainly beside the tiers that do exist,
- * never a reason to show less.
+ * Never tell a reader they have no representation. Where no municipal government exists there is still
+ * a county board, a school board, state legislators and a member of Congress.
  */
 
 /**
@@ -111,62 +97,31 @@ export {
 } from "./coverage-client.ts";
 
 /**
- * A body covering the point.
- *
- * `divisionLabel` is the **division's** name, which is sourced — it comes off
- * the Census boundary file. The body's own name is deliberately absent, because
- * `Body.name` is null on every derived row and inventing one ("Vail Unified
- * School District Governing Board") is the fabricated-agenda-URL failure again,
- * except read aloud. What is known is that the division exists and that its type
- * implies a governing body; that is exactly what this carries and no more.
+ * A body covering the point. `divisionLabel` is the division's sourced name; the body's own name is
+ * never invented.
  */
 export interface CoveredBody {
   bodyId: string;
   ocdId: string | null;
   /**
-   * The body's own name — non-null only when it was read off a cited page
-   * (curated rows). Derived rows stay null and render their division's
-   * label; a curated Tucson board must render its own name, or five rows
-   * all read "Tucson".
+   * The body's own name, non-null only when read off a cited page. Derived rows render their division's
+   * label.
    */
   name: string | null;
   divisionLabel: string;
   /**
-   * **NULL WHERE THE BODY HAS NO DIVISION** (`NH94`, closed 2026-08-23).
-   *
-   * This was `DivisionType` and was filled with `"place"` for a body that has
-   * no division at all — the Southeast Regional Council case. That default was
-   * a PLACEHOLDER chosen for the type's convenience, and closing the class
-   * layer on 2026-08-23 made it a finding: `"place"` resolves to the
-   * municipality class, so such a body would have rendered *"This is a New
-   * Jersey municipality — the layer of government closest to a resident"*
-   * about a body nobody has established is a municipality.
-   *
-   * `definitionsForBody` guards the symptom by returning nothing for a null
-   * `ocdId`, and that guard stays. **This closes the cause**: a placeholder
-   * wearing a value's clothes, waiting for the next thing that reads it as a
-   * finding without a guard in place. The render-default rule, one layer below
-   * a component.
+   * Null where the body has no division; never a placeholder type, which would attach a class
+   * definition to a body nobody has classified.
    */
   divisionType: DivisionType | null;
   /**
-   * The Census legal/statistical area description, carried through from the
-   * division (DEF-1, 2026-08-22).
-   *
-   * It is what tells a New Jersey TOWNSHIP from a Town without matching on a
-   * name string, and the two are different claims about what kind of thing the
-   * body is. **LSAD 44 is `township` and LSAD 43 is `town`** — this comment
-   * said 43 was Township until 2026-08-23, which is the same wrong fact that
-   * put New Jersey's township definition on eleven Towns' cards. It was already
-   * on `Division` and was being dropped here.
+   * The Census LSAD, carried from the division. Tells a township (44) from a town (43) without matching
+   * on a name.
    */
   lsad: string | null;
   /**
-   * INDEPENDENT / DEPENDENT / UNCLASSIFIED school-system stamp (DEF-2), computed
-   * on the server from the Census classification. Carried on the body so the
-   * battlecard's class definition needs no client-side lookup — the 103 KB
-   * `school-district-dependency.json` used to ride into the first-load JS bundle
-   * through `map-entry.tsx` for exactly this one field (G, 2026-09-14).
+   * INDEPENDENT / DEPENDENT / UNCLASSIFIED school-system stamp, computed on the server so the client
+   * needs no lookup.
    */
   schoolDependency: SchoolDependency;
   bodyClass: BodyClass;
@@ -192,19 +147,9 @@ export interface CoveredBody {
   publicationAttempts?: BodyFamilyAttempts<PublicBodyAttempt>;
   tier: Tier;
   /**
-   * **RULING 71.** This body's territory covers only PART of the zip the reader
-   * typed, so whether it governs THEM is a fact about their street.
-   *
-   * Optional and absent by default, because it is only knowable when a reader
-   * NAMED a zip. A settled-viewport fetch carries none — the reader panned
-   * rather than named a place — and there is then no zip for a body to be
-   * partial about. Absent means "not applicable here", never "certain".
-   *
-   * **It is not a completeness statement and RULING 44 is not weakened by it.**
-   * A completeness marker says *we did not find this*, about our data. This
-   * says *this is a fact about your street that only you can settle*. We hold
-   * Rockaway Borough's government and Rockaway Township's, both in full; what
-   * is unsettled is which one is the reader's. See `lib/geo/zip-certainty.ts`.
+   * This body's territory covers only part of the ZIP the reader named, so whether it governs them
+   * depends on their street. Absent when no ZIP was named; absent means "not applicable", never "certain".
+   * Not a completeness statement. See `lib/geo/zip-certainty.ts`.
    */
   couldGovern?: boolean;
   /**
@@ -227,13 +172,8 @@ export interface CoveredBody {
 }
 
 /**
- * A legislative seat covering the point.
- *
- * Kept apart from `bodies` because a legislative district is not a body that
- * meets — it elects a seat in a chamber sitting elsewhere, and Arizona's
- * districts elect one senator and two representatives, so the district is not
- * even one seat. It is still representation, and the "you are not unrepresented"
- * statement is wrong without it.
+ * A legislative seat covering the point. Kept apart from `bodies`: a legislative district elects seats
+ * in a chamber that sits elsewhere, but it is still representation.
  */
 export interface Seat {
   ocdId: string;
@@ -241,13 +181,8 @@ export interface Seat {
   divisionType: "cd" | "sldu" | "sldl";
   tier: Tier;
   /**
-   * Who currently holds this seat, where a sourced record exists.
-   *
-   * **Empty is the normal case and must render as such.** Today only the
-   * federal roster is loaded, so `cd:` seats are filled and `sldu`/`sldl` are
-   * not — until Plural Open lands (D03). An empty array means we have no
-   * record, never that the seat is vacant, and the copy has to say the first
-   * rather than imply the second.
+   * Who currently holds this seat, where a sourced record exists. Empty means we have no record, never
+   * that the seat is vacant.
    */
   representatives: SeatHolder[];
 }
@@ -264,19 +199,9 @@ export interface CoverageSummary {
    */
   stateLegislatorAuthorities: StateLegislatorCoverageAuthority[];
   /**
-   * **Every division whose boundary CONTAINS this point** — the governing
-   * set (2026-08-15).
-   *
-   * Distinct from anything else on this summary: `bodies` is the governments
-   * we hold rows for and `seats` is the three legislative types, while this is
-   * the raw point-in-polygon answer, including a division with no body and a
-   * statistical place. It is what makes "you are in N districts" a sentence
-   * about the reader rather than about the viewport — the districts counter
-   * used to read "179 DISTRICTS" off what the map happened to be drawing,
-   * which is a fact about the camera.
-   *
-   * Same committed geometry the map draws from, resolved by the same
-   * `divisionsAt` the who-governs card uses. Never a second geometry source.
+   * Every division whose boundary contains this point: the raw point-in-polygon answer, including
+   * divisions with no body and statistical places. Resolved by the same `divisionsAt` the who-governs card
+   * uses.
    */
   divisions: Array<{
     ocdId: string;
@@ -305,12 +230,8 @@ export interface CoverageSummary {
    */
   senators: SeatHolder[];
   /**
-   * Statewide elected executives — the governor, today (item 2b,
-   * 2026-08-14 second session). Kept apart from `seats` for the same
-   * reason `senators` is: a statewide office is elected by no division on
-   * the map, so no district row can ever claim it — the blind spot that
-   * kept the most prominent officer in every state off the card. Governor
-   * only for now; the card's copy names that honestly.
+   * Statewide elected executives. Kept apart from `seats` for the same reason as `senators`: no division
+   * on the map elects them.
    */
   statewideExecutives: SeatHolder[];
   /**
@@ -324,31 +245,18 @@ export interface CoverageSummary {
     withoutSource: number;
     lookedAt: number;
     /**
-     * The GOVERNING-class subset. Split out because "N bodies govern here"
-     * became false the moment Tucson's 50-odd advisory boards, committees
-     * and commissions landed as curated rows (D29) — an advisory committee
-     * is representation-adjacent, not a government, and the lead sentence
-     * must not count it as one.
+     * The governing-class subset. Advisory boards, committees and commissions are not governments and are
+     * not counted here.
      */
     governing: { total: number; withSource: number };
   };
-  /**
-   * How many of the seats above we can actually name someone for.
-   *
-   * The footnote depends on this. "We haven't sourced their names" was true of
-   * every seat until the federal roster landed; saying it of AZ-6 now, with
-   * Juan Ciscomani sitting in the file, would be false.
-   */
+  /** How many of the seats above we can name someone for. */
   seatCounts: { total: number; named: number };
 }
 
 /**
- * Coverage statuses that mean a calendar is actually wired.
- *
- * Exported since item 1a (2026-08-17): the who-governs notice recomputes its
- * own wired count from the post-narrowing body list rather than reading the
- * server's, and it has to ask the SAME question this file asks. Two copies of
- * "what counts as wired" is how the counts drifted in the first place.
+ * Coverage statuses that mean a calendar is actually wired. Shared with the who-governs notice so both
+ * ask the same question.
  */
 const WIRED = WIRED_STATUSES;
 
@@ -359,19 +267,8 @@ const SEAT_TYPES: ReadonlySet<DivisionType> = new Set<DivisionType>([
 ]);
 
 /**
- * The place/cousub duplicate is resolved upstream, at build time.
- *
- * There used to be a `dedupeMunicipal()` here, and it was a stopgap. It guessed
- * which layer held the government from the identifier's shape, inferred from
- * three states — and it guessed wrong for cities: it kept
- * `county:merrimack/place:concord_city` and dropped `place:concord`, which is
- * the actual City of Concord. The count came out right and the identity did not.
- *
- * Census had already answered the question. `FUNCSTAT` marks the duplicate row
- * `F`, for a *fictitious* entity created only to fill the geographic hierarchy,
- * and `lib/registry/derive.ts` now reads it: 32 fictitious rows across the three
- * clip counties produce no body, leaving exactly the 74 general-purpose
- * governments the 2022 Census of Governments enumerates. See tracker M17.
+ * The place/cousub duplicate is resolved upstream: `lib/registry/derive.ts` reads Census FUNCSTAT, and
+ * a fictitious (`F`) row produces no body.
  */
 
 /**
@@ -389,19 +286,16 @@ export function summarizeCoverage(
   allBodies: Body[],
   meetingCount: number,
   /**
-   * Officeholders by division. Optional, and an empty index is a valid state —
-   * a roster that fails to load must degrade to the pre-roster copy rather than
-   * failing the coverage answer, exactly as a failed registry load degrades to
-   * the cascade's own answer.
+   * Officeholders by division. An empty index is valid: a roster that fails to load degrades the copy
+   * rather than failing the coverage answer.
    */
   officials: OfficeholderIndex = new Map(),
   /**
-   * The divisions covering this point, when the caller has already resolved
-   * them (AUD-04, 2026-08-18). Omitted, this resolves them itself exactly as it
-   * always did — every caller that does not pass it is unaffected.
+   * The divisions covering this point, when the caller has already resolved them; omitted, they are
+   * resolved here.
    */
   resolvedDivisions?: Division[],
-  /** Committed body-territory polygons for governments with no division (NH233). */
+  /** Committed body-territory polygons for governments with no division. */
   territory?: BodyTerritoryFile | null,
   /** Exact per-scope state-roster read dispositions settled by the caller. */
   stateLegislatorAuthorities: StateLegislatorCoverageAuthority[] = [],
@@ -423,11 +317,9 @@ export function summarizeCoverage(
       bodyId: body.id,
       ocdId: body.ocdId,
       name: body.name,
-      // A body with no division is the Southeast Regional Council case: real,
-      // hyperlocal, and not a division. Nothing populates that path yet.
+      // A body with no division: real, hyperlocal, and not a division.
       divisionLabel: division?.label ?? "",
-      // NH94: NULL, never a placeholder. A body with no division is the
-      // Southeast Regional Council case — real, hyperlocal, and not a division.
+      // Null, never a placeholder type.
       divisionType: division?.divisionType ?? null,
       lsad: division?.lsad ?? null,
       schoolDependency: schoolDependency(body.ocdId),
@@ -491,10 +383,8 @@ export function summarizeCoverage(
   const withoutSource = covered.length - withSource;
   const governing = covered.filter((b) => b.bodyClass === "GOVERNING");
 
-  // The state turns on the *governing* bodies: "nothing is scheduled" is a
-  // claim about government being quiet, and an unwired advisory committee
-  // (D29 added fifty of them in Tucson) must not convert it into a coverage
-  // confession — nor mask one where a government's calendar is missing.
+  // The state turns on the governing bodies: an unwired advisory committee must neither turn "nothing is
+  // scheduled" into a coverage gap nor mask a government's missing calendar.
   const governingUnwired = governing.some((b) => !WIRED.has(b.coverageStatus));
   const state: CoverageState =
     meetingCount > 0

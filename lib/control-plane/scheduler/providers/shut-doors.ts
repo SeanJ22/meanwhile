@@ -1,19 +1,4 @@
-/**
- * **PROVIDER — SHUT DOORS.** (DB-33.)
- *
- * A door that is SHUT (lib/doors/shut.ts) is already live, so it gets work at
- * once, whatever the current dispatch scope: this provider turns each one into
- * an obligation, ranked ahead of everything else by being owed since the moment
- * it shut. The existing detective path then applies unchanged: the route is
- * model-class, its address the door's own, and the evidence a detective starts
- * from is on the route: the door record's own words (what it reads, its hosts,
- * when it last worked, what broke and when) and the kind it is, so the kind's
- * Bank history is found by that kind.
- *
- * Nothing here is written for a place. The doors come in through `input`; this
- * file names none. A registry that cannot be read is a named read failure,
- * never an empty list.
- */
+/** Each SHUT door becomes an obligation owed since it shut, worked by the existing detective path from the door record's own words. A registry that cannot be read is a named read failure. */
 
 import { listDoors, type DoorRecord, type DoorRepository } from "../../../doors/registry.ts";
 import { probeUrlFor } from "../../../doors/probe.ts";

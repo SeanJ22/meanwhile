@@ -14,34 +14,7 @@ import {
   type FilerRow,
 } from "../scripts/state-money-nh.mts";
 
-/**
- * **THE FOUR WAYS THE NEW HAMPSHIRE COLLECTOR TOLD A READER SOMETHING FALSE
- * ABOUT A NAMED PERSON.** (Session C, 2026-08-31.)
- *
- * Every test in this file is about ONE sentence on a candidate's card:
- *
- *   "No reports on file with the New Hampshire Secretary of State."
- *
- * That sentence is a statement about a GOVERNMENT'S RECORDS. It is the most
- * dangerous string this collector can produce, because a reader cannot tell it
- * apart from the state actually holding nothing — and CLAUDE.md answers that
- * in one line: *a wall never renders as an emptiness*, and *absence is never
- * asserted*.
- *
- * These are not hypotheticals. Three of the four were shipped in PR #242 and
- * were live on production while this file was being written; the fourth is a
- * route failure that had not yet happened and would have been invisible when
- * it did. Each test is written against the recorded registry read at
- * `tests/fixtures/nh-cfs/filer-search-2026.json` or against a synthetic page
- * server. **No test here makes a live call.**
- *
- * The bar every one of them encodes, stated once: **an absence is a CLAIM, and
- * a claim needs evidence about the RECORD. Our own empty hands are never that
- * evidence.**
- */
-
 const FIXTURE = join(ROOT, "tests", "fixtures", "nh-cfs", "filer-search-2026.json");
-const BALLOT = join(ROOT, "data", "states", "nh", "ballot", "nh-merrimack-2026.json");
 
 /** The read stamp used throughout. A fixed value: this is a test, not a run. */
 const TODAY = "2026-08-31";
@@ -59,18 +32,20 @@ function recorded(): Recorded {
   return JSON.parse(readFileSync(FIXTURE, "utf8")) as Recorded;
 }
 
-function ballot(): Ballot {
-  return JSON.parse(readFileSync(BALLOT, "utf8")) as Ballot;
-}
+/** Ballot rows for the candidacies these tests examine, as the NH ballot source publishes them. */
+const BALLOT_ROWS: readonly { contest: Ballot["contests"][number]; candidacy: Ballot["candidacies"][number] }[] = [
+  { contest: { id: "ballot-nh-merrimack:governor", title: "Governor", ocdId: "ocd-division/country:us/state:nh" }, candidacy: { id: "ballot-nh-merrimack:governor:ayotte-kelly", contestId: "ballot-nh-merrimack:governor", familyName: "Ayotte", givenName: "Kelly" } },
+  { contest: { id: "ballot-nh-merrimack:state-senate-7", title: "State Senator, District 7", ocdId: "ocd-division/country:us/state:nh/sldu:7" }, candidacy: { id: "ballot-nh-merrimack:state-senate-7:harned-rebecca", contestId: "ballot-nh-merrimack:state-senate-7", familyName: "Harned", givenName: "Rebecca" } },
+  { contest: { id: "ballot-nh-merrimack:state-house-merrimack-7", title: "State Representative, Merrimack County District 7", ocdId: "ocd-division/country:us/state:nh/sldl:607" }, candidacy: { id: "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth", contestId: "ballot-nh-merrimack:state-house-merrimack-7", familyName: "Ebel", givenName: "Karen Elizabeth" } },
+  { contest: { id: "ballot-nh-merrimack:county-attorney", title: "Merrimack County Attorney", ocdId: "ocd-division/country:us/state:nh/county:merrimack" }, candidacy: { id: "ballot-nh-merrimack:county-attorney:raiche-jon", contestId: "ballot-nh-merrimack:county-attorney", familyName: "Raiche", givenName: "Jon" } },
+  { contest: { id: "ballot-nh-merrimack:county-treasurer", title: "Merrimack County Treasurer", ocdId: "ocd-division/country:us/state:nh/county:merrimack" }, candidacy: { id: "ballot-nh-merrimack:county-treasurer:donnelly-kathleen", contestId: "ballot-nh-merrimack:county-treasurer", familyName: "Donnelly", givenName: "Kathleen" } },
+];
 
-/** The real ballot cut down to one candidacy and its contest. */
+/** One candidacy and its contest. */
 function justOne(candidacyId: string): Ballot {
-  const full = ballot();
-  const cand = full.candidacies.find((c) => c.id === candidacyId);
-  assert.ok(cand, `${candidacyId} is not a candidacy on the NH ballot`);
-  const contest = full.contests.find((c) => c.id === cand.contestId);
-  assert.ok(contest, `${cand.contestId} is not a contest on the NH ballot`);
-  return { contests: [contest], candidacies: [cand] };
+  const row = BALLOT_ROWS.find((r) => r.candidacy.id === candidacyId);
+  assert.ok(row, `${candidacyId} is not a candidacy in this test's ballot`);
+  return { contests: [row.contest], candidacies: [row.candidacy] };
 }
 
 /** A page server backed by the recorded registry read. */
@@ -97,23 +72,7 @@ function recordsFor(all: StateMoneyRecord[], candidacyId: string): StateMoneyRec
   return all.filter((r) => r.targetKeys.includes(candidacyId));
 }
 
-/* ── DEFECT 1 — A TRANSPORT FAILURE BECAME AN ABSENCE ─────────────────────── */
-
 test("DEFECT 1: a route that could not be read may not empty a card that already had money", async () => {
-  /*
-   * `filersFor()` caught a non-200 and a thrown network error, printed
-   * "recorded as unread, never as absent", and then did the opposite: it
-   * cached `[]` and returned it, and the empty array fell straight into the
-   * `matched.length === 0` branch that writes a SOURCED DATED ABSENCE.
-   *
-   * The comment was right and the code was wrong, and the failure is silent by
-   * construction: the state is up, the run is green, and a candidate's real
-   * filed money is replaced by a sentence saying New Hampshire holds nothing
-   * for them.
-   *
-   * The bar: an unread route is OURS, it is not the agency's, and it may not
-   * overwrite last-good reader truth.
-   */
   const target = "ballot-nh-merrimack:governor:ayotte-kelly";
 
   // What the previous, successful run left on the card. A synthetic figure —
@@ -159,7 +118,6 @@ test("DEFECT 1: a route that could not be read may not empty a card that already
     ballot: justOne(target),
     asOf: TODAY,
     previous: [lastGood],
-    // The registry answers HTTP 500 on this refresh. Nothing else changed.
     filersFor: async (): Promise<FilerRead> => ({
       ok: false,
       reason: "HTTP 500 from cfsapi.sos.nh.gov",
@@ -180,16 +138,6 @@ test("DEFECT 1: a route that could not be read may not empty a card that already
   assert.equal(kept.totals.receipts, 1234.56, "and it survives unaltered");
   assert.equal(kept.totals.expenditures, 78.9);
 
-  /*
-   * THE FRESHNESS MARK. The reader is told when this was read, and the answer
-   * is the day it was actually read — not today, which is the day we failed to
-   * read it. The renderer already prints `checkedAt`, so an honest stamp here
-   * is an honest sentence there.
-   *
-   * `retainedFrom` records the failed attempt for an auditor. It is NOT an
-   * announcement to a reader: RULING 139 strikes a verdict on ourselves from a
-   * reader surface, and the attribution line is the whole of what is owed.
-   */
   assert.equal(kept.checkedAt, YESTERDAY, "a retained record may not claim it was read today");
   assert.ok(kept.retainedFrom, "a retained record says it was retained, and why");
   assert.equal(kept.retainedFrom?.attemptedAt, TODAY);
@@ -197,13 +145,6 @@ test("DEFECT 1: a route that could not be read may not empty a card that already
 });
 
 test("DEFECT 1: an unread route with nothing to retain is our gap, and it does not render", async () => {
-  /*
-   * The other half. A candidate we have never resolved, whose surname query
-   * then fails, has no last-good truth to keep — and the answer to that is
-   * still not an absence. It is a NAMED GAP that belongs to us, and it does
-   * not reach a reader at all: RULING 139 forbids the product announcing its
-   * own failure, so the card simply does not carry a money section.
-   */
   const target = "ballot-nh-merrimack:county-treasurer:donnelly-kathleen";
   const { records } = await buildRecords({
     ballot: justOne(target),
@@ -224,26 +165,10 @@ test("DEFECT 1: an unread route with nothing to retain is our gap, and it does n
   assert.equal(mine[0].filingState, "ROUTE_UNREAD");
 });
 
-/* ── DEFECT 2 — ONE PAGE WAS TREATED AS THE WHOLE REGISTRY ────────────────── */
-
 test("DEFECT 2: a filer on page two is still a filer", async () => {
-  /*
-   * The request body was `{ filerName, pageNumber: 1, pageSize: 100 }` and
-   * nothing ever asked for a second page — and the year filter ran LOCALLY,
-   * after the page came back. So a 2026 candidate whose row sorted 101st for
-   * their surname was invisible, and the invisible row became
-   * `NO_REPORTS_ON_FILE`: a sourced, dated claim about New Hampshire's
-   * records, generated by our own page size.
-   *
-   * The endpoint publishes `data.totalItems`, which is the count of every
-   * matching row and does not move with `pageSize`. That is an INDEPENDENTLY
-   * PROVEN DENOMINATOR, and having one means a short read can be detected
-   * rather than mistaken for an empty state.
-   */
   const rows: FilerRow[] = [];
   for (let i = 0; i < 129; i += 1) {
     rows.push({
-      // Same surname, a forename that is nobody's on this ballot.
       filerName: `Harned, Filler${i} `,
       firstnameLastname: `Filler${i} Harned`,
       officeSoughtName: "State Representative",
@@ -302,7 +227,6 @@ test("DEFECT 2: a filer on page two is still a filer", async () => {
     "the candidate on page two is in the result",
   );
 
-  // And end to end: the card carries her money rather than a claim about NH.
   const target = "ballot-nh-merrimack:state-senate-7:harned-rebecca";
   const { records } = await buildRecords({
     ballot: justOne(target),
@@ -317,12 +241,6 @@ test("DEFECT 2: a filer on page two is still a filer", async () => {
 });
 
 test("DEFECT 2: a read that cannot prove it got everything may not produce an absence", async () => {
-  /*
-   * The corollary, and the reason the denominator is carried rather than
-   * merely used. If the registry states 130 rows and 100 arrive, the correct
-   * report is that the read is INCOMPLETE. An incomplete read is an unread
-   * route, not an empty registry.
-   */
   const pages = async ({
     pageNumber,
     pageSize,
@@ -363,32 +281,7 @@ test("DEFECT 2: a read that cannot prove it got everything may not produce an ab
   assert.match(read.reason, /130/);
 });
 
-/* ── DEFECT 3 — A REGISTERED COMMITTEE WITH NOTHING REPORTED WAS RENDERED AS
-      A COMMITTEE THAT DOES NOT EXIST ────────────────────────────────────────*/
-
 test("DEFECT 3: a registered committee reporting zero is not a candidate the state has never heard of", async () => {
-  /*
-   * `const hasMoney = (raised ?? 0) > 0 || (spent ?? 0) > 0;` and then
-   * `filingState: hasMoney ? "FILED" : "NO_REPORTS_ON_FILE"`.
-   *
-   * So a MATCHED, REGISTERED, ACTIVE committee — with a committee id, a filed
-   * office, a registered name and an election cycle, all of it published by
-   * the state — was assigned the same state as a person the registry has no
-   * row for. The renderer then turned that into "No reports on file with the
-   * New Hampshire Secretary of State", which is false about six named people
-   * on this ballot.
-   *
-   * And the collector already knew better: it wrote the TRUE sentence into
-   * `coveringPeriod` — "registered for the 2026 Election Cycle, with no
-   * receipts or expenditures reported as of ..." — and then threw it away by
-   * choosing a `filingState` that means something else.
-   *
-   * The endpoint publishes no report count at all (`reportCount: null`), so it
-   * cannot support a REPORT-LEVEL absence claim in either direction. What it
-   * can support is what it actually says: this committee is registered and its
-   * published totals are zero. That is a different fact about a different
-   * thing, and it gets its own state and its own sentence.
-   */
   const target = "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth";
   const { records } = await buildRecords({
     ballot: justOne(target),
@@ -425,31 +318,7 @@ test("DEFECT 3: a registered committee reporting zero is not a candidate the sta
   assert.ok(r.registeredName, "and the committee renders under its own registered name");
 });
 
-/* ── DEFECT 4 — A NAME WE COULD NOT MATCH BECAME A RECORD THE STATE DOES NOT
-      HOLD ───────────────────────────────────────────────────────────────────*/
-
 test("DEFECT 4: a same-year filer who may be this person forbids an absence claim", async () => {
-  /*
-   * Found while measuring the three above, and it is the same class: our
-   * inability became the state's silence.
-   *
-   * The registry holds, for the 2026 cycle, `Raiche, Jonathan M. (Raiche, Jon )`
-   * — Merrimack County Attorney, with real money. The certified ballot carries
-   * `Jon Raiche` for Merrimack County Attorney. `namesAgree` is deliberately
-   * strict and refuses `Jonathan` against `Jon`, which is correct: a strict bar
-   * is what keeps a stranger's money off a card.
-   *
-   * What was NOT correct is what happened next. The row was dropped as
-   * somebody else's, the candidate fell into the empty branch, and the product
-   * published "No reports on file with the New Hampshire Secretary of State"
-   * about a person whose filing was in the answer we were holding.
-   *
-   * The repair does not lower the matching bar — it is still name AND office
-   * AND year, and this candidate still does not clear it. It raises the bar on
-   * the ABSENCE: a row that may be about this person is enough to forbid the
-   * claim that the state holds nothing about them. A weak test used only to
-   * WITHHOLD an assertion can only ever narrow what the product says.
-   */
   const target = "ballot-nh-merrimack:county-attorney:raiche-jon";
   const { records } = await buildRecords({
     ballot: justOne(target),
@@ -465,67 +334,7 @@ test("DEFECT 4: a same-year filer who may be this person forbids an absence clai
     "the registry answered with a 2026 County Attorney filer named Raiche; it did not answer that it holds nothing",
   );
 
-  // The finding is kept, reviewable, and does not render (RULING 118).
   const leads = records.filter((r) => r.filingState === "LEAD" && r.committeeId === "243729");
   assert.equal(leads.length, 1, "the row the state actually returned is recorded as a LEAD");
   assert.deepEqual(leads[0].targetKeys, [], "a LEAD may not claim a candidate");
-});
-
-/* ── AND THE RULE ITSELF, OVER THE POPULATION RATHER THAN THE EXAMPLE ─────── */
-
-test("every absence in a full run is backed by a proven denominator and no candidate-shaped row", async () => {
-  /*
-   * The population, not the example. Whatever the five tests above prove about
-   * five candidacies, the claim that matters is about all 28: **no record on
-   * this ballot says New Hampshire holds nothing unless the read completed
-   * against the registry's own count and returned no row that could be this
-   * person.**
-   */
-  const fixture = recorded();
-  const { records, inScope } = await buildRecords({
-    ballot: ballot(),
-    asOf: TODAY,
-    previous: [],
-    filersFor: async (surname: string) => readFilers(surname, recordedPages(), { year: 2026 }),
-  });
-
-  assert.equal(inScope, 28, "28 non-federal candidacies on the 03255 ballot — the denominator");
-
-  const full = ballot();
-  const candById = new Map(full.candidacies.map((c) => [c.id, c]));
-
-  let absences = 0;
-  for (const r of records) {
-    if (r.filingState !== "NO_REPORTS_ON_FILE") continue;
-    absences += 1;
-    for (const key of r.targetKeys) {
-      const cand = candById.get(key);
-      assert.ok(cand, `${key} is not a candidacy on this ballot`);
-      const hit = fixture.bySurname[cand.familyName];
-      assert.ok(hit, `no recorded read for "${cand.familyName}"`);
-      assert.equal(
-        hit.status,
-        200,
-        `${key}: an absence may not rest on a read that did not answer 200`,
-      );
-      assert.equal(
-        hit.items.length,
-        hit.totalItems,
-        `${key}: an absence may not rest on a read that did not retrieve the registry's stated count`,
-      );
-      const sameYear = hit.items.filter((i) => i.electionYear === 2026);
-      const candidateShaped = sameYear.filter((i) =>
-        (i.firstnameLastname ?? i.filerName).toLowerCase().includes(cand.familyName.toLowerCase()),
-      );
-      // A same-year row bearing this surname is not automatically this person —
-      // but where one exists, the record must be able to say why it is not.
-      if (candidateShaped.length > 0) {
-        assert.ok(
-          r.match.note.length > 0,
-          `${key}: a 2026 ${cand.familyName} filer exists and the absence states no reason it is not them`,
-        );
-      }
-    }
-  }
-  assert.ok(absences > 0, "a run that establishes no absence at all has not been argued either");
 });

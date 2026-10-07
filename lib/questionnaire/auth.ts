@@ -1,39 +1,9 @@
 /**
- * **THE AUTHENTICATION, AND IT ADDS NO IDENTIFIER TO THIS PRODUCT.**
- * (Built 2026-08-23, the questionnaire-and-corpora brief, item 1.)
+ * Candidate questionnaire authentication. A single-use expiring token is sent to the email on the
+ * candidate's certified filing; following the link proves control of that mailbox and nothing else.
+ * No account, no password, and no new identifier: the token is keyed to a public `candidacyId`.
  *
- * ## What it proves, and what it deliberately does not
- *
- * A single-use expiring token is sent to the email **already on the candidate's
- * certified filing** — a public record we hold for 272 of 272 Morris County
- * candidates. Following the link proves control of that mailbox on that day.
- * **It proves nothing else and is designed to prove nothing else.**
- *
- * - **No account.** Nothing is created that persists past the deadline.
- * - **No password.** There is nothing to store, leak, reset or reuse.
- * - **No new identifier.** The token is keyed to a `candidacyId`, which is
- *   already public ballot data — a row in the county clerk's filing, not
- *   anything about a reader or a device.
- *
- * ## Why this cannot touch the collection stores, stated rather than assumed
- *
- * `CLAUDE.md`'s n-stores rule governs the SEARCH LOG, the REACTIONS store and
- * the future subscription store — the three things that are sold or that
- * describe readers. **A candidate's answers are none of those.** They are
- * published civic content that a public candidate wrote for publication, in the
- * same class as a roll-call vote or a filing, and they live in the CONTENT
- * store beside the ballot itself.
- *
- * So: nothing here writes a column onto `search_log` or `reactions`, nothing
- * here reads one, and no key defined in this module appears in either. That is
- * asserted by name in `tests/questionnaire.test.ts` rather than left to be
- * noticed.
- *
- * ## The token is never stored
- *
- * Only `sha256(token)` is kept, in the same shape the reaction continuity key
- * uses. A leaked database therefore does not hand anybody a working link, and
- * we cannot ourselves impersonate a candidate with what we hold.
+ * Nothing here reads or writes the search log or reactions store. Only `sha256(token)` is kept.
  */
 
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
@@ -67,14 +37,7 @@ export function digestToken(token: string): string {
   return createHash("sha256").update(`questionnaire-token:${token}`).digest("hex");
 }
 
-/**
- * Mint a link for one candidacy.
- *
- * `issuedAt` is passed in rather than read from a clock so the caller owns the
- * stamp — a date this product writes comes from `pnpm stamp` or from the code
- * path that performed the act, never from an incidental `Date.now()` inside a
- * helper (RULING 107).
- */
+/** Mint a link for one candidacy. `issuedAt` is passed in so the caller owns the stamp. */
 export function mintToken(input: { candidacyId: string; issuedAt: Date }): MintedToken {
   const token = randomBytes(TOKEN_BYTES).toString("base64url");
   const expires = new Date(input.issuedAt.getTime() + TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000);
@@ -95,17 +58,8 @@ export type TokenVerdict =
   | { ok: false; reason: "UNKNOWN" | "EXPIRED" | "ALREADY_USED" };
 
 /**
- * Check a presented token against a stored record.
- *
- * The digest comparison is constant-time. That matters less here than for a
- * password — the tokens are single-use and high-entropy — but a variable-time
- * compare on a secret is the kind of thing that is correct to do once and
- * never think about again.
- *
- * **The three failure reasons are kept apart** rather than collapsed into one
- * "invalid link", because they need different sentences in front of a
- * candidate: an expired link can be reissued, an already-used one means their
- * answers are already in, and an unknown one means they should tell us.
+ * Check a presented token against a stored record. The digest comparison is constant-time. The three
+ * failure reasons stay apart because each needs a different sentence for the candidate.
  */
 export function verifyToken(input: {
   token: string;
@@ -132,10 +86,7 @@ export function markUsed(record: TokenRecord, usedAt: Date): TokenRecord {
   return { ...record, usedAt: usedAt.toISOString() };
 }
 
-/**
- * What a candidate is told when a link does not work. Plain language, level
- * register — this is a claim surface, not an interaction flourish.
- */
+/** What a candidate is told when a link does not work. */
 export function tokenRefusalLine(reason: Exclude<TokenVerdict, { ok: true }>["reason"]): string {
   switch (reason) {
     case "EXPIRED":

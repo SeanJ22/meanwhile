@@ -1,6 +1,6 @@
 /**
- * SC-10: a blank started being owed on a date. What a place owed when its mission started is the starting list; finds add to the
- * grown list only, so a new find never pulls the starting completeness down. One update per new kind of thing, once.
+ * What a place owed when its mission started is the starting list; finds add to the grown list only, so a new find
+ * never pulls the starting completeness down.
  */
 import assert from "node:assert/strict";
 import test from "node:test";

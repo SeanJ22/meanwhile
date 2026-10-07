@@ -1,21 +1,6 @@
 /**
- * **DP-29 — WHERE EACH KIND OF LOSS IS READ FROM.**
- *
- * Plain adapters from what the control plane already holds to the readings
- * `studyAllLosses` takes, and the place traits it compares on. Each takes only
- * the fields it needs, so a test can hand it records directly.
- *
- * ```
- *   shut doors           door registry: SHUT fails, OPEN works; by what the door holds; place = its division
- *   empty hunts          obligations: an argued absence fails, a worked obligation with none works; by record kind
- *   checker failures     work items: HELD fails, PUBLISHED works; by record kind; place = the item's subject
- *   auditors' red flags  the week's live audits: RED fails, GREEN works; by fact family; place = the audited area
- *   front-end red flags  recent look passes: a red screen fails at its ZIP; by screen and element at fault
- * ```
- *
- * Traits held today: the door's adapter as its platform, and the state named
- * in a division id or a work item's plan. Nothing is guessed for a place we
- * hold nothing about; it simply states no trait.
+ * Adapters from what the control plane holds to the readings `studyAllLosses` takes, and the place traits it compares
+ * on. A place we hold nothing about states no trait.
  */
 import type { LookPass } from "../frontend/look-pass.ts";
 import type { LossReading } from "./study-all-losses.ts";

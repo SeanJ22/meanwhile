@@ -1,27 +1,12 @@
 /**
- * **WHAT A RESEARCH CYCLE WAS WAITING ON, READABLE FROM ANOTHER THREAD.**
- * (Runner bounded store calls, 2026-09-23.)
+ * Shared layout and pure reporting for what a research cycle is waiting on, read by the stall worker
+ * thread. Imports only types so the worker can load it.
  *
- * The research child publishes what it is waiting on — the last phase it
- * finished, the labelled await it is inside, and the store calls in flight —
- * into a SharedArrayBuffer. The stall diagnostic's worker thread reads it near
- * the supervisor's wall. A worker has its own event loop, so it can still read
- * and write when the main thread is blocked in a synchronous call; a timer on
- * the main thread could not.
- *
- * This module is the shared layout and the pure reporting, imported by both
- * sides. It imports nothing but types, so the worker can load it directly.
- *
- * ```
  *   bytes 0-15   Int32 x4   [0] seqlock  [1] snapshot length  [2] record claim  [3] unused
  *   bytes 16-23  BigInt64   the main thread's last event-loop turn, epoch ms
  *   bytes 32-    Uint8      the snapshot as UTF-8 JSON
- * ```
  *
- * The record claim decides who writes the cycle's one local record at the
- * reserved path: ARMED, then either the cycle (FINALIZED) or the diagnostic
- * (STALL_WRITING, then STALL_WRITTEN). A cycle that finishes after the
- * diagnostic fired waits for STALL_WRITTEN and carries the stall block forward.
+ * Record claim: ARMED, then FINALIZED (the cycle) or STALL_WRITING then STALL_WRITTEN (the diagnostic).
  */
 
 export const STALL_SNAPSHOT_CAPACITY_BYTES = 32 * 1024;
@@ -36,13 +21,11 @@ export const RECORD_CLAIM = {
   STALL_WRITTEN: 3,
 } as const;
 
-/** One labelled await the cycle is inside, outermost first. */
 export interface PendingStep {
   readonly label: string;
   readonly since: string;
 }
 
-/** One store call in flight, named `<repository>.<method>`. */
 export interface PendingStoreCall {
   readonly call: string;
   readonly since: string;
@@ -57,7 +40,6 @@ export interface PendingSnapshot {
    * runs, the failing await has already been left; this keeps its name.
    */
   readonly lastFailed: PendingStep | null;
-  /** The oldest store calls in flight, at most STORE_CALLS_SHOWN of them. */
   readonly store: readonly PendingStoreCall[];
   readonly storeInFlight: number;
   readonly updatedAt: string;
@@ -166,7 +148,6 @@ export function waitWhileClaim(sab: SharedArrayBuffer, value: number, timeoutMs:
   waitOn(header(sab), 2, value, timeoutMs);
 }
 
-/* ----------------------------------------------------------- reporting --- */
 
 const seconds = (ms: number): string => {
   const s = Math.max(0, Math.round(ms / 1000));
@@ -182,11 +163,9 @@ export interface StallReading {
   readonly processStartedMs: number;
   readonly wallAtMs: number;
   readonly mainThreadPingMs: number | null;
-  /** Defaults to MAIN_THREAD_BLOCKED_AFTER_MS. */
   readonly blockedAfterMs?: number;
 }
 
-/** Whether the main thread's event loop looks blocked, from the last ping. Null when it never pinged. */
 export function mainThreadBlocked(
   reading: Pick<StallReading, "nowMs" | "mainThreadPingMs" | "blockedAfterMs">,
 ): boolean | null {
@@ -194,12 +173,10 @@ export function mainThreadBlocked(
   return reading.nowMs - reading.mainThreadPingMs > (reading.blockedAfterMs ?? MAIN_THREAD_BLOCKED_AFTER_MS);
 }
 
-/** The innermost labelled await, or null. */
 export function innermostStep(snapshot: PendingSnapshot | null): PendingStep | null {
   return snapshot?.steps.at(-1) ?? null;
 }
 
-/** The lines the diagnostic writes to stderr and into the record: what was pending, by name. */
 export function stallDiagnosticLines(reading: StallReading): string[] {
   const { snapshot, nowMs } = reading;
   const since = (iso: string): string => {
@@ -244,7 +221,6 @@ export function stallDiagnosticLines(reading: StallReading): string[] {
   return lines;
 }
 
-/** The block a stalled cycle's local record carries, and a finished cycle carries forward. */
 export interface StallDiagnosticBlock {
   readonly at: string;
   readonly secondsBeforeWall: number;
@@ -269,7 +245,6 @@ export function stallDiagnosticBlock(reading: StallReading): StallDiagnosticBloc
   };
 }
 
-/** The local run record the diagnostic writes; the crash-record shape, so every reader of those reads it. */
 export function stallRunRecord(input: {
   readonly startedAt: string;
   readonly testedSha: string | null;

@@ -1,17 +1,9 @@
 /**
- * MW-021 follow-up (2026-10-06): no budget hold outlives the round that took it.
- *
- * Before this, a Scout job's worst-case hold on a hunt's lifetime budget was
- * released only when its dispatch settled. A research round killed for no
- * progress never settled its open jobs, and lifetime holds never left the
- * window, so 15,025 holds ($615) stood on the one ledger row. Admin counted
- * them as Set aside, the paid lane read "Left today $0.00", and the row grew to
- * 38 MB, read on every admission.
- *
- * Now: a round that ends or fails releases every job it never settled; an
- * unsettled hold older than SPEND_HOLD_STALE_MS (a killed round's) stops
- * counting and leaves the row on the next write; a settled hold leaves once
- * its cost is older than any history a reader starts from.
+ * No budget hold outlives the round that took it: a round that ends or fails
+ * releases every job it never settled; an unsettled hold older than
+ * SPEND_HOLD_STALE_MS (a killed round's) stops counting and leaves the row on
+ * the next write; a settled hold leaves once its cost is older than any history
+ * a reader starts from.
  */
 import assert from "node:assert/strict";
 import test from "node:test";

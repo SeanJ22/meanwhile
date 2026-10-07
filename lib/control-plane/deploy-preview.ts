@@ -1,41 +1,15 @@
 /**
- * **WHAT "DEPLOY FLEET HERE" ACTUALLY DOES, BEFORE IT DOES IT.** (§9A.16.)
+ * The preview of what "Deploy fleet here" does, before it does it. Pure; every
+ * sentence is a fact about the canonical action or a named gap.
  *
- * The owner has a button on every readiness row and on the console home, and he
- * has deliberately never pressed either one:
- *
- * > *"The owner has intentionally not used `Deploy fleet here` because the
- * > current UI does not explain what it will do. This control must not remain
- * > an unexplained black box."*
- *
- * So this module is the preview. It is PURE, and every sentence in it is either
- * a fact about the canonical action or a named gap — because the one thing a
- * confirmation panel may not do is describe a different action from the one the
- * button performs.
- *
- * ## What the canonical action is, exactly
- *
- * `fleet.deployHere` appends a `DISPATCH` intent carrying the owner's own
- * words. On its next look the standing runner parses them into a target
- * (`scheduler/dispatch-target.ts`), moves every REGISTERED unit that matches to
- * the front of that cycle's queue, and records what matched — including
- * nothing, by name. Where the words name a state, the runner also creates what
- * that state's promoted registry defines and no clock carries yet (MW-028,
- * `expansion/dispatch-work.ts`), bounded per cycle and per instruction. It does
- * not open a record class, does not publish, and does not turn promotion on.
- * The preview says exactly that, in those words, because §9A.16 requires the
- * wording to match the action actually performed.
- *
- * ## The number it will not invent
- *
- * "How many work items will this create?" is answered by the RUNNER, which
- * holds the registries and the durable rows; the deployed console holds
- * neither, so the preview states the bound and says the count arrives with the
- * runner's acknowledgement. "How many will it move to the front?" is a real
- * question with a real answer — and the answer lives in the registry the RUNNER
- * enumerates at the start of a cycle, not in anything the deployed console
- * holds. The console can count the standing obligations that match, which is
- * the closest true figure, and it says which figure it is.
+ * `fleet.deployHere` appends a `DISPATCH` intent carrying the owner's words.
+ * The runner parses them into a target (`scheduler/dispatch-target.ts`), moves
+ * matching registered units to the front of the queue, and records what
+ * matched. Where the words name a state, it also creates the work that state's
+ * promoted registry defines (`expansion/dispatch-work.ts`), bounded per cycle
+ * and per instruction. The console cannot count what the runner will create,
+ * so the preview states the bound and counts the standing obligations it can
+ * see.
  */
 import { parseDispatchTarget, type DispatchTarget } from "./scheduler/dispatch-target.ts";
 import { stateCodeOf } from "./unit-state.ts";
@@ -92,11 +66,7 @@ export const DEPLOY_AFTER: readonly string[] = [
 export interface DeployPreviewInput {
   /** The owner's own words. */
   readonly note: string;
-  /**
-   * The standing obligations the console can see, as the id/subject pairs the
-   * matcher reads. Empty when the console could not read them, which the
-   * preview then says rather than reporting a zero.
-   */
+  /** Standing obligations the console can see, as id/subject pairs. Empty when unreadable, which the preview says. */
   readonly obligations: readonly { readonly id: string; readonly subjectId: string }[];
   readonly obligationsRead: boolean;
   /** The runner's own ceiling, so the preview quotes the real number. */

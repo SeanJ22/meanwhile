@@ -1,24 +1,11 @@
 /**
- * **WHAT HAPPENED TO EACH INSTRUCTION, WITHOUT OVERCLAIMING.**
+ * The gateway's saved receipt, not an HTTP 200 or a click, decides the state:
  *
- * A receipt walks Queued → Read by the workers → Running, then ends in exactly
- * one of Done, Partly done, Refused, Failed or Result unknown. The gateway's
- * saved receipt — not an HTTP 200 and not a click — decides the state.
- *
- * Mapping the deployed gateway (`ActionOutcome` in lib/control-plane/gateway/contract.ts):
- *
- *   DONE                  final, worded by the action's own `doneWords` (a saved
- *                         pause is "Pause saved", never "workers paused")
+ *   DONE                  final, worded by the action's own `doneWords`
  *   QUEUED / IN_PROGRESS  still pending
- *   REFUSED (ok:false)    Refused, with the gateway's plain reason
- *   401 / 403 / 400       Failed — the gateway never decided, so nothing was saved
- *   anything else         Result unknown — it may have been saved; check before retrying
- *
- * Only "Instruction saved" is filled from a DONE receipt. Workers received it,
- * work started/finished, facts checked, published and checked on the public
- * page stay empty until something reports each of them.
- *
- * PURE except `newActionKey`, which reads the platform's random source.
+ *   REFUSED (ok:false)    Refused, with the gateway's reason
+ *   401 / 403 / 400       Failed: the gateway never decided, so nothing was saved
+ *   anything else         Result unknown: it may have been saved
  */
 import type { Confirmation } from "@/lib/control-plane/gateway/confirmation.ts";
 import type { ActionOutcome } from "@/lib/control-plane/gateway/contract.ts";
@@ -111,7 +98,6 @@ function isOutcome(body: unknown): body is ActionOutcome {
     typeof (r as { outcome?: unknown }).outcome === "string";
 }
 
-/** The runner's answer, when the gateway or the receipt lookup sent one along. */
 export function confirmationOf(body: unknown): Confirmation | null {
   const c = body && typeof body === "object" ? (body as { confirmation?: unknown }).confirmation : null;
   if (!c || typeof c !== "object") return null;
@@ -152,7 +138,6 @@ export function isOpen(r: Pick<UiReceipt, "status">): boolean {
   return r.status === "queued" || r.status === "read" || r.status === "running";
 }
 
-/** Fold the gateway's answer into the receipt. */
 export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: number | null, body: unknown, at: string): UiReceipt {
   const step = (label: string) => [...prev.steps, { label, at }];
   if (httpStatus === 401 || httpStatus === 403) {
@@ -204,7 +189,6 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
   return { ...prev, status: "unknown", statusWords: STATUS_WORDS.unknown, steps: step("No clear answer"), says: UNKNOWN_SAYS };
 }
 
-/** Count receipts by the History filter groups. */
 export const HISTORY_FILTERS: readonly { readonly id: string; readonly label: string; readonly statuses: readonly ReceiptStatus[] | null }[] = [
   { id: "all", label: "All", statuses: null },
   { id: "open", label: "In progress", statuses: ["queued", "read", "running"] },
@@ -214,7 +198,6 @@ export const HISTORY_FILTERS: readonly { readonly id: string; readonly label: st
   { id: "unknown", label: "Result unknown", statuses: ["unknown"] },
 ];
 
-/** The five steps an order walks. Received is the saved receipt; the rest come from what the runner reported. */
 export const ORDER_STEPS = ["Received", "Accepted", "Scheduled", "In progress", "Done"] as const;
 
 /**
@@ -230,7 +213,6 @@ export function orderStepsReached(r: Pick<UiReceipt, "status" | "plan" | "lifecy
   return r.lifecycle.saved || r.status === "queued" || r.status === "read" ? 1 : 0;
 }
 
-/** The one-line acceptance: "Accepted · Runner · creates 4 items in Place · first results by <ET time>". Parts that are not known are left out. */
 export function acceptedLine(r: Pick<UiReceipt, "plan" | "scopeName" | "level">, format: (iso: string) => string): string | null {
   if (!r.plan) return null;
   const where = r.level === "local" && r.scopeName && r.scopeName !== "—" ? ` in ${r.scopeName}` : "";
@@ -238,7 +220,6 @@ export function acceptedLine(r: Pick<UiReceipt, "plan" | "scopeName" | "level">,
     ...(r.plan.resultsBy ? [`first results by ${format(r.plan.resultsBy)}`] : [])].join(" · ");
 }
 
-/** The action that takes an order back, for the orders that have an opposite. Null where nothing takes it back. */
 export const TAKE_BACK: Readonly<Partial<Record<UiReceipt["kind"], UiReceipt["kind"]>>> = {
   "global-runner-pause": "global-runner-resume",
   "global-runner-resume": "global-runner-pause",
@@ -246,14 +227,12 @@ export const TAKE_BACK: Readonly<Partial<Record<UiReceipt["kind"], UiReceipt["ki
   "global-paid-resume": "global-paid",
 };
 
-/** "Done · $50.00 → $80.00" for a finished order that changed a value; null otherwise. */
 export function doneWithChange(r: Pick<UiReceipt, "status" | "change">): string | null {
   return r.status === "done" && r.change ? `Done · ${r.change.before} → ${r.change.after}` : null;
 }
 
 const SENTENCE_MAX = 140;
 
-/** The first sentence of a receipt's words, cut to fit on one line. The full words stay behind "Show details". */
 export function oneSentence(text: string): string {
   const flat = text.replace(/\s+/g, " ").trim();
   const end = /[.!?](?=\s|$)/.exec(flat);

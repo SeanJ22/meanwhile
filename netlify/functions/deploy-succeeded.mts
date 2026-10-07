@@ -1,20 +1,16 @@
 /**
- * **WARM A PRODUCTION DEPLOY THE MOMENT IT SUCCEEDS (C21, 2026-09-25).**
- *
- * Netlify invokes a function named `deploy-succeeded` when a deploy finishes
- * (its event-triggered functions, docs.netlify.com/build/functions/trigger-on-events,
- * read 2026-09-25: the file-name form is still supported; the body is
- * `{ payload: <the deploy> }`). It fires for every deploy context, so only a
- * production deploy with a commit is acted on (`deployToWarm`).
+ * Warms a production deploy the moment it succeeds. Netlify invokes a function
+ * named `deploy-succeeded` for every deploy context with `{ payload: <the
+ * deploy> }`; only a production deploy with a commit is acted on
+ * (`deployToWarm`).
  *
  * The work is lib/ops/post-deploy-warm.ts: wait for `/api/build` to serve the
- * commit, make the keep-warm pinger's fourteen marked calls, fill the CDN with
- * the map answer for one ZIP per published county and read them back. Bounded to ~55 s by its own
- * deadlines, inside the 60 s synchronous limit; the result is one log line.
+ * commit, make the keep-warm pinger's marked calls, fill the CDN with the map
+ * answer for one ZIP per published county and read them back — bounded to
+ * ~55 s, inside the 60 s synchronous limit.
  *
- * Like every function it is reachable by URL. A forged event can make it do no
- * more than the pinger already does every five minutes, and only for the commit
- * production actually serves; each instance acts on a commit once.
+ * A forged event can do no more than the pinger already does, only for the
+ * commit production serves, and each instance acts on a commit once.
  */
 import { deployToWarm, warmAfterDeploy, type PostDeployWarmResult } from "../../lib/ops/post-deploy-warm.ts";
 import { pingWarm } from "./keep-warm.mts";

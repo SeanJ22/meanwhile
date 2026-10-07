@@ -1,5 +1,5 @@
 /**
- * **THE FIX VIEW STATES ONLY WHAT THE FIX QUEUE HOLDS.** Waiting and refused
+ * The fix view states only what the fix queue holds. Waiting and refused
  * items need attention; sent and opened ones are being fixed; no fixed history
  * is invented.
  */

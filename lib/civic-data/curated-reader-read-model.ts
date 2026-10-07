@@ -68,7 +68,6 @@ export async function readCuratedReaderProjection(
   return result;
 }
 
-/** The same proven navigation pointer, projected by exact served territory. */
 export async function readElectionFieldsForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}) {
   const read = await readCuratedReaderProjection("ballot-navigation", options);
   const fields = read.kind === "PROMOTED" ? read.value.records.filter(row => row.kind === "ELECTION_FIELD" && electionFieldIssue(row) === null)
@@ -87,18 +86,12 @@ export async function refreshCuratedReaderProjection(
   return version;
 }
 
-/**
- * Prime a curated-reader projection from a validated EDGE serving artifact, no
- * database read — the reader's normal path (request-scoped). Does NOT alter the
- * `refresh*` database readers the runner/workers use. BOOTSTRAP kind: the serving
- * copy carries the validated value + version, not the promotion receipt.
- */
+/** Primes from a validated edge serving copy, with no database read; its state is BOOTSTRAP. */
 export function primeCuratedReaderProjection(
   id: CuratedReaderContractId,
   value: CuratedReaderProjection,
   versionId: string,
 ): void {
-  // Once per edge object and version (C21): a request primes the same value repeatedly.
   validateOnce(id, value, versionId, () => validate(id, value, versionId));
   const contract = requiredManualProductionContract(id);
   states.set(id, {
@@ -130,7 +123,6 @@ export const readOfficialFilingsForReader = (): Promise<CivicDataReadResult<Cura
   return readPromotedEdgeFirst(contract.recordClass, contract.scope,
     options => readCuratedReaderProjection("official-filings", options), "Official filing records");
 };
-/** The ballot navigation links, edge first (2026-09-25): the reader edge's proven copy, else the database. */
 const BALLOT_NAVIGATION = requiredManualProductionContract("ballot-navigation");
 export const settleBallotNavigationRead = (): Promise<string> =>
   readPromotedEdgeFirst(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope, refreshBallotNavigationFromPromoted, "The ballot navigation links");
@@ -138,10 +130,6 @@ export const refreshCampaignSitesFromPromoted = (options: PromotedCivicDataReadO
   refreshCuratedReaderProjection("campaign-sites", options);
 export const refreshMemberOfficesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("member-offices", options);
-/**
- * State legislators' offices, edge first: the reader edge's proven copy of the pointer, else the database.
- * Answers the read (NOT_RECORDED before the first daily refresh promotes); the synchronous selector then serves it.
- */
 const MEMBER_OFFICES = requiredManualProductionContract("member-offices");
 export const settleMemberOfficesRead = (): Promise<CivicDataReadResult<CuratedReaderProjection>> =>
   readPromotedEdgeFirst(MEMBER_OFFICES.recordClass, MEMBER_OFFICES.scope,
@@ -153,20 +141,7 @@ export function curatedReaderReadState(id: CuratedReaderContractId): CivicDataRe
   return states.get(id) ?? initial(id);
 }
 
-/**
- * Synchronous selectors are allowed only after the canonical pointer was read.
- * The tracked value is deterministic first-seed/test evidence, never a
- * production fallback after NOT_RECORDED or a store failure.
- *
- * **AN EDGE COPY IS SERVED, NOT REFUSED** (2026-09-25). A curated reader
- * projection has no bundled first seed (`readCuratedReaderProjection` reads
- * the pointer only), so its one BOOTSTRAP state is the validated edge copy of a
- * promoted version (`primeCuratedReaderProjection`). This selector refused it
- * outside tests: since the campaign-site URLs and the comment-access rules
- * moved to the reader edge, an edge-served request withheld every campaign
- * link and every comment rule in production, while the test process returned
- * the tracked seed and hid it (tests/curated-reader-edge-selector.test.ts).
- */
+/** Only after the canonical pointer was read. A BOOTSTRAP state is a validated edge copy of a promoted version and is served; the seed is test evidence, never a production fallback. */
 export function currentCuratedReaderRecords<T>(
   id: CuratedReaderContractId,
   testSeed: readonly T[],

@@ -5,7 +5,6 @@ import { RESEARCH_STATE_ID, type ResearchState, type RunningScout } from "../sch
 import { pulseLanesOf } from "../scheduler/lane-reading.ts";
 import type { ControlPlaneRepositories, RecordProjection } from "../repository/types.ts";
 
-/** This read projects only the fields it uses in Postgres, before transport. */
 export const RUNNER_PROGRESS_HEARTBEAT_FIELDS = {
   beatAt: true, lastCycleStartedAt: true, lastCycleFinishedAt: true,
   lastCycleOk: true, nextCycleDueAt: true, testedSha: true,
@@ -91,7 +90,6 @@ const clock = (value: unknown): value is string => typeof value === "string" && 
 const count = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) >= 0;
 const sourceStages = new Set(["QUEUED", "COLLECTING_AND_VERIFYING", "PUBLISHED", "REUSED", "HELD", "FAILED"]);
 
-/** Bounded, authenticated-route input. This never lists the global work/attempt population. */
 export async function readAdminRunnerProgress(repos: ControlPlaneRepositories, observedAt: string): Promise<RunnerProgressRead> {
   if (!clock(observedAt)) throw new Error("RUNNER_PROGRESS_CLOCK_INVALID");
   const [beatRead, researchRead, sourceRead] = await Promise.allSettled([

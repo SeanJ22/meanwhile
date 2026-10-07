@@ -4,11 +4,7 @@ import { test } from "node:test";
 import { anchorInViewport } from "../lib/map/anchor-in-viewport.ts";
 
 /**
- * F01 9.1 — a popup opens WHOLE, wherever the reader clicked.
- *
- * The author's instance: a click south of Vail put "Five districts here" mostly
- * below the fold with one row visible. The header stated five and the box
- * rendered one, which is the stated-N defect arriving through CSS.
+ * A popup opens whole, wherever the reader clicked: a header stating five rows must show five.
  */
 
 const VIEWPORT = { containerWidth: 1440, containerHeight: 900 };
@@ -21,7 +17,7 @@ test("F01 9.1: a click with room keeps the old offset, so nothing common moves",
 });
 
 test("F01 9.1: a click near the bottom edge places the box ENTIRELY on screen", () => {
-  // The author's case: 60px from the bottom of a 900px viewport.
+  // 60px from the bottom of a 900px viewport.
   const at = anchorInViewport({ x: 700, y: 840, ...BOX, ...VIEWPORT });
   assert.ok(at.top + BOX.height <= VIEWPORT.containerHeight, "the box runs off the bottom");
   assert.equal(at.top, 900 - 320 - 12);

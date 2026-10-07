@@ -1,65 +1,8 @@
-# Git hooks are run by `sh`. A CRLF here makes the shebang line read
-# `#!/bin/sh\r`, which fails with a bare "no such file or directory" that
-# names nothing — keep them LF on every platform.
+# Git hooks run under sh; CRLF would break the shebang.
 .githooks/* text eol=lf
 
-# THE MIRRORED SET IS PINNED TO LF (R08, 2026-08-17).
-#
-# `core.autocrlf` is true here, so the working tree is CRLF while git stores
-# LF. The Drive mirror is written by copying the WORKING TREE, so a mirror copy
-# produced by anything that writes LF — a non-Windows checkout, a different
-# tool, an editor that normalizes on save — could never again compare equal to
-# the CRLF copy beside it. The comparison in scripts/handoff.mjs now normalizes
-# line endings, which fixes the symptom; this fixes the cause, so the two sides
-# agree by construction rather than by both remembering to normalize.
-#
-# The measured case: CLAUDE.md is 45417 bytes in the working tree and 45147 in
-# git, and the 270-byte gap is exactly its 270 CRLF line endings.
-#
-# This list is the text half of MIRRORED_DOCS in scripts/mirror-set.mjs. That
-# module stays authoritative for WHAT is mirrored; this only fixes HOW those
-# files are stored on disk. A file added there should be added here too.
-CLAUDE.md            text eol=lf
-docs/abuse-policy.md text eol=lf
-docs/vendor-review.md text eol=lf
-docs/source-ladder.md text eol=lf
-docs/defects.md      text eol=lf
-docs/state.md        text eol=lf
-docs/tracker.csv     text eol=lf
-docs/deferred.md     text eol=lf
-docs/deferred.csv    text eol=lf
-lib/sources/types.ts text eol=lf
-
-# The workbook is the one binary in the mirrored set. Marking it explicitly
-# keeps any future `text` wildcard from ever applying newline translation to
-# it, which would corrupt the file rather than merely mis-compare it.
-docs/deferred.xlsx   binary
-
-# ---------------------------------------------------------------------------
-# THE WHOLE TREE IS LF ON EVERY PLATFORM (Prompt C item 1b, 2026-08-20).
-#
-# Before this line the repo had no default, so what a text file looked like on
-# disk depended on which tool last wrote it. `core.autocrlf` is true here, so
-# git STORES LF and checks out CRLF — but anything a script wrote after
-# checkout stayed LF. Measured on 2026-08-20: of 970 tracked text files, 336
-# carried CRLF in the working tree and 634 carried LF. `data/reference/` was
-# the case that surfaced it — all seven data CSVs CRLF, all seven provenance
-# notes LF, and a reconciliation between two copies of the repo that differed
-# by nothing but line endings.
-#
-# Every consumer of that difference has to normalize or lie: the mirror
-# comparison in scripts/handoff.mjs, the reference reconciler, every byte-size
-# figure in a report, every hash. Fixing them one at a time is fixing symptoms.
-# This fixes the cause — the working tree matches what git stores, so Windows
-# and Linux hold identical bytes and there is nothing left to normalize.
-#
-# Content in git does not move: it was already LF. This changes only the
-# CHECKOUT, which is why adding it produced no staged diff.
 * text=auto eol=lf
 
-# The binaries, named rather than left to git's NUL sniffing. Auto-detection
-# is good and it is not a guarantee, and a text conversion applied to one of
-# these corrupts the file rather than merely mis-comparing it.
 *.jpg  binary
 *.png  binary
 *.ico  binary
@@ -67,23 +10,6 @@ docs/deferred.xlsx   binary
 *.woff binary
 *.woff2 binary
 
-# RECORDED EVIDENCE IS NEVER CONVERTED (Prompt C item 1b, 2026-08-20).
-#
-# A recorded fixture is the bytes a server actually sent, and the whole point
-# of committing it is that a parse test runs against the real thing. Applying
-# the tree-wide LF rule above to these would rewrite that evidence: it caught
-# `tests/fixtures/civicplus-rockaway-agendacenter.html`, stored with 2,555 CRLF
-# line endings because CivicPlus sent them, on the very first renormalization.
-# `-text` means no conversion in either direction — checkout and commit both
-# hand over the stored bytes unchanged.
-#
-# `data/reference/` is the same argument: those seven CSVs and their
-# provenance notes are the published federal files, and their reconciliation
-# is a byte comparison.
+# Recorded server responses and published reference files keep their exact bytes.
 tests/fixtures/**  -text
 data/reference/**  -text
-
-# Preserve the original bytes of provisional reader-proof receipts, including
-# their historical hashes. Current large receipts are already lossless gzip.
-docs/evidence/provisional-bde7497/*.json -text whitespace=cr-at-eol
-docs/evidence/provisional-e504/*.json -text whitespace=cr-at-eol

@@ -1,6 +1,5 @@
 /**
- * **AN OLD ADMIN LINK LANDS ON THE COMMAND-CENTER VIEW THAT TOOK OVER.** (rulings §0.)
- * Signed in, a retired page redirects (keeping a scope); signed out, it still
+ * An old Admin link lands on the command-center view that took over. Signed in, a retired page redirects (keeping a scope); signed out, it still
  * gets the login page and learns nothing about where the page went.
  */
 import assert from "node:assert/strict";

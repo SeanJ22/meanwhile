@@ -1,66 +1,9 @@
 /**
- * **KEEP A FEW SERVER INSTANCES BOOTED, AND READY FOR A COLD ASK (C21, C20;
- * 2026-09-24/25. The owner: a load over 3 s is not a win; he chose a keep-warm
- * pinger over more memory.)**
- *
- * Every route shares one Netlify server function, and a new instance of it
- * spends 2.7-3.7 s booting Next before it runs any page code (function logs,
- * 2026-09-24 9:17 PM EDT, M4). Traffic that lands on a booted instance does
- * not pay that.
- *
- * `netlify/functions/keep-warm.mts` calls this route fourteen times at once
- * every five minutes. A marked call holds for up to a second, so the calls
- * overlap and keep instances booted. Measured 2026-09-24 11:54 PM to 2026-09-25
- * 12:47 AM MST, overlapping calls reach fewer instances than calls (ten reached
- * 8-9, fourteen 10-11), and the calls sharing an instance wait for each other.
- *
- * A booted instance can still be cold for an Ask: on 38e2a643 (11:41 PM MST)
- * two of five concurrent Pima Asks spent 1.9-2.1 s in the server loading the
- * reader edge on their instance (the manifest ~0.2 s, the authority families
- * ~0.65 s, the meetings ~0.2-0.4 s), and a request queued behind one of them
- * reached 3.27 s end to end. So a marked call also loads, on its instance, what
- * a cold Ask reads first: the edge manifest, the authority families
- * (`ensureReaderAuthorityEdge`, cached per version per process) and the
- * published meeting artifacts (`readReaderEdgeMeetings`). It never reads the
- * database: without an edge store or manifest it loads nothing, and the
- * meetings read's database fallback is refused.
- *
- * **C21 (2026-09-25): AND READY FOR A COLD MAP.** Loading the bytes was not
- * enough for `/api/meetings`: on pool instances after the pinger it still took
- * a median ~1.0 s and up to 2.4 s, because the first request on an instance
- * still validated the registry, read ~25 geometry files, built the coverage
- * graph and fetched its state's registration. So a marked call now also
- * resolves one place in every state the edge publishes meetings for — the
- * divisions at that state's lowest indexed ZIP, the ZIP's area, its coverage —
- * which loads the geometry, the rosters, the registrations, the ZIP shards and
- * the ZIP table exactly as a reader's request would. Within
- * {@link PRIME_PLACES_BUDGET_MS}; what is unfinished then goes on in the
- * background and the call answers.
- *
- * Those reads run in an EDGE-ONLY context (`edgeOnly` in
- * lib/registry/runtime-edge.ts): anything the manifest does not carry is
- * refused rather than read from Neon, so a missing family costs this call that
- * place and never wakes the database fourteen times every five minutes. The
- * context is entered here, in the function whose own reads follow it
- * (AsyncLocalStorage.enterWith; tests/reader-edge-context.test.ts).
- *
- * **2026-09-25 (after batch E): AND READY FOR A COLD ASK, ITS CODE AND ITS
- * SOURCES.** Measured on production at bba8770b (9:57 PM MST, synthetic
- * "When does the Mesa City Council meet next?", answered in code with no
- * model): on a kept instance the edge was loaded (the Ask's `authorityEdge`
- * 3-5 ms), yet its first Ask took ~2.0 s end to end against ~0.4 s for the
- * next one. ~0.73 s was the Ask's own source preloads (`sourcePreloads`
- * 730-737 ms, 5-8 ms warm: the proven pointers read through their Readers
- * from the edge copy), and ~0.6 s was outside the handler (0.87 s against
- * 0.21-0.25 s warm): loading the Ask route's module graph, which no warm call
- * ever touched. So a marked call also loads that graph (a dynamic import of
- * the route module, which shares Turbopack's one module cache with the route
- * itself; nothing in it runs, so no handler, no model, no log and no write)
- * and settles the Ask's source preloads (`ASK_SOURCE_PRELOADS`) in the same
- * edge-only context, within {@link PRIME_ASK_BUDGET_MS}.
- *
- * An unmarked call, or a hold asked beyond the cap, is answered at once or
- * capped, loads nothing, and cannot hold an instance longer than that.
+ * Keeps server instances booted and ready for a cold Ask or map. `netlify/functions/keep-warm.mts` calls this
+ * route fourteen times at once every five minutes. A marked call holds for up to a second and loads, on its
+ * instance, the reader edge, one place per published state, and the Ask route's module graph and source
+ * preloads. All of it runs in an edge-only context (`edgeOnly`), so it never reads the database. An unmarked
+ * call loads nothing and answers at once.
  */
 import { numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
@@ -100,13 +43,8 @@ export const PRIME_PLACES_BUDGET_MS = 4000;
 export const PRIME_ASK_BUDGET_MS = 4000;
 
 /**
- * The Ask's own source preloads, under the names its trace times them by
- * (`essentialPreloads` and `deferrablePreloads` in
- * app/api/ask/grounded/route.ts; tests/ask-warm.test.ts holds the two lists
- * equal). Every one is edge first (`settleEdgeFirst` / `readPromotedEdgeFirst`),
- * so in this route's edge-only context a source the edge does not carry is
- * refused, never read from the database. The state roll calls are left out:
- * the Ask reads them from the database, per state, only for that state.
+ * The Ask's own source preloads, under the names its trace times them by (`essentialPreloads` and
+ * `deferrablePreloads` in app/api/ask/grounded/route.ts). The state roll calls are left out.
  */
 export const ASK_SOURCE_PRELOADS: Readonly<Record<string, () => Promise<unknown>>> = {
   registry: () => settleRegistryAuthorityReads("REGISTRY"),
@@ -158,12 +96,7 @@ const NOTHING_PRIMED: ReaderEdgePrimed = { manifest: false, authorityFamilies: 0
 /** How many of a state's lowest ZIPs are tried for a centroid that lies inside it. */
 const PLACE_CANDIDATES = 5;
 
-/**
- * One state's place: the lowest indexed ZIP whose centroid resolves to that
- * state's own divisions, with those divisions. The lowest ZIP alone is not
- * enough: AZ's is 84531, a Utah ZIP that reaches across the line, whose
- * centroid resolves to nothing in Arizona.
- */
+/** One state's place: the lowest indexed ZIP whose centroid resolves to that state's own divisions. The lowest ZIP alone can belong to a neighbouring state. */
 async function statePlace(state: string) {
   const lowest = await lowestZipByDivision(state);
   const prefix = `ocd-division/country:us/state:${state}/`;

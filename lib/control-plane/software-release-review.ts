@@ -1,18 +1,4 @@
-/**
- * **SOFTWARE RELEASE REVIEW RECORDS — the one additive table of Admin Pass B.**
- * (2026-09-06.)
- *
- * The owner reviews a SOFTWARE BUILD — the exact staging SHA Prompt 3's
- * release manifest names — section by section, and records what he decided.
- * The same canonical software-release log also holds the automatic
- * post-deploy integrity reading for an exact production SHA. Review decisions
- * are partitioned by staging SHA; integrity readings use the fixed
- * `production-integrity` partition. Nothing is updated or deleted.
- *
- * It joins nothing civic. No OCD id, no work item, no readiness cell and no
- * civic promotion record: every row is software-release evidence, bound to the
- * exact commit it concerns.
- */
+/** Software-release log rows: owner review decisions partitioned by staging SHA, and post-deploy integrity readings in the fixed `production-integrity` partition. Append-only; joins nothing civic. */
 
 import type { IntegrityRecord } from "../ops/production-integrity.ts";
 

@@ -1,30 +1,13 @@
 import type { ContributionRow } from "./types.ts";
 
 /**
- * The money's own order (item 2, 2026-08-15, the author's layout).
+ * The money's own order: rows grouped by kind (committees and organizations;
+ * individual itemized donors), each sorted by amount descending. Repeated
+ * filings from one contributor fold into one row with the summed amount and
+ * a count; the filings are kept. A joint-fundraising transfer stays a
+ * transfer: the count noun comes from the FEC form line, never a guess.
  *
- * The reader's natural question at a funding section is "who has spent the
- * most to get this person elected?" — and a list led by individuals, in
- * whatever order the API returned them, does not answer it. So the rows are
- * grouped by KIND (committees and organizations; individual itemized
- * donors) and each group is sorted by amount DESCENDING. Nothing here
- * ranks, scores or characterizes anybody: the sort key is a dollar figure
- * the FEC published, and the grouping is the FEC's own entity typing.
- *
- * Repeated filings from the same contributor collapse into ONE row carrying
- * the summed amount and a count — the five Booker Victory Fund lines become
- * "5 transfers", expandable to the filings as filed. The sum is mechanical
- * addition and the guard in tests/funding.test.ts asserts the parts equal
- * the whole; the individual filings are never destroyed, only folded.
- *
- * **Transfers stay transfers.** A joint-fundraising committee's transfer is
- * not a single gift — it is a share of a pooled raise, allocated by a filed
- * formula — so the count noun comes off the FEC's own form line (line 12 is
- * "Transfers From Other Authorized Committees") and never off a guess about
- * what the money means.
- *
- * Client-safe: types and arithmetic only, no `node:` imports. Both funding
- * surfaces render these groups, so both must be able to import it.
+ * Client-safe: types and arithmetic only.
  */
 
 /** FEC Form 3, line 12 — "Transfers From Other Authorized Committees". */
@@ -71,11 +54,7 @@ function identityKey(row: ContributionRow): string {
   return [row.kind, name, row.city ?? "", row.state ?? ""].join("|");
 }
 
-/**
- * Amount descending, with a deterministic tiebreak so the rendered order is
- * reproducible (a test asserting "rendered order matches the sort rule"
- * cannot depend on an unstable sort of equal amounts).
- */
+/** Amount descending, with a deterministic tiebreak so the rendered order is reproducible. */
 function byAmountDesc<T extends { amount: number; contributorName: string }>(
   a: T,
   b: T,

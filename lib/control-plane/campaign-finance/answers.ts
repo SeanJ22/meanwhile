@@ -1,75 +1,17 @@
 /**
- * THE READER'S THREE QUESTIONS, answered from held records or named as a gap.
+ * Three bounded campaign-finance questions, answered from held records or a
+ * named gap that says whose gap it is:
  *
- * ## Why this file exists
+ *   1. Who has contributed to this campaign?
+ *   2. How much has this committee reported spending?
+ *   3. Are there independent expenditures supporting or opposing this side?
  *
- * `filing-regime.ts` and `authority.ts` answer *which government holds this
- * money's records*. That is the discovery question, and it is not the product.
- * The product is that a reader can ask a bounded question —
+ * `FinanceAnswer` is a discriminated union keyed on the question, so an
+ * independent expenditure cannot be rendered as money a candidate received;
+ * `assertRecordKind` re-checks every row at runtime and throws on a cast.
+ * `HeldFilingUniverse.isCompleteFilingSet` is literal `false`.
  *
- *   1. **"Who has contributed to this campaign?"**
- *   2. **"How much has this committee reported spending?"**
- *   3. **"Are there independent expenditures supporting or opposing this side?"**
- *
- * — and get GROUNDED RECORDS with the limits of the held filing universe
- * stated, or a NAMED GAP that says WHOSE gap it is.
- *
- * ## The three questions are three different facts, and the types say so
- *
- * A contribution is money INTO a committee. An expenditure is money OUT of a
- * committee, spent by that committee. An independent expenditure is money spent
- * ABOUT a race by somebody who gave the campaign nothing. Collapsing any pair
- * misstates who is behind a candidate, and the third collapse is the dangerous
- * one: **an independent expenditure SUPPORTING a candidate is not money that
- * candidate received.**
- *
- * `model.ts` already made that unrepresentable in the aggregation
- * (`totalReceivedBy` throws rather than summing). This file closes the other
- * half — the RENDER. `FinanceAnswer` is a DISCRIMINATED UNION keyed on the
- * question, so:
- *
- *   - the `WHO_CONTRIBUTED` arm's `records` is `readonly Contribution[]`, and an
- *     `IndependentExpenditure` is not assignable to it;
- *   - the `INDEPENDENT_EXPENDITURES` arm has no `records` field a receipts
- *     reader could reach, carries `supporting` and `opposing` as SEPARATE
- *     numbers, and carries `notMoneyReceivedByTheCandidate` as the literal
- *     `true` so no caller reading that boolean can read the wrong answer;
- *   - `assertRecordKind` re-checks `recordKind` at runtime on every row, so a
- *     cast through `any` throws `RenderRefused` instead of quietly printing an
- *     outside group's ad buy under a candidate's name.
- *
- * ## Whose gap is it?
- *
- * `CLAUDE.md`: *a null renders as its NAMED GAP, on every surface, always — and
- * the name says WHOSE gap it is. "We haven't recorded this yet" is a fact about
- * us; "not in this chamber for this vote" is a fact about them. They may never
- * render as the same sentence.*
- *
- * This domain produces both, constantly, and they look identical at the call
- * site. Two real examples from the pilot, both live in this repository today:
- *
- *   - **Iman Bah's committee reported $0 in itemized individual contributions**
- *     for the 2026 cycle through 2026-03-31. Nobody is missing anything. That
- *     is `THE_FILER`'s filed fact.
- *   - **We hold no Pima County contribution rows at all**, because the filing
- *     bodies sit behind HTTP 401 on the route walked. That is `OURS`.
- *
- * Both would render as an empty list. `GapAttribution` is what makes them
- * different sentences, and `attributionsDiffer` is the test hook that proves
- * they never collapse.
- *
- * ## Never imply complete coverage
- *
- * `HeldFilingUniverse.isCompleteFilingSet` is the literal `false`. There is no
- * value of the type that claims to be the whole filing set, and every answer
- * carries the universe, so a rendered figure cannot become an implied total by
- * omission. `periodsExpected: null` is a further honesty: it means we have not
- * read the authority's calendar, so "filings held" has no denominator — which
- * is itself a gap and never a zero.
- *
- * ## Time
- *
- * Nothing here reads a clock. `asOf` is a caller-supplied parameter throughout.
+ * Nothing here reads a clock; `asOf` is caller-supplied.
  */
 
 import type {
@@ -94,13 +36,7 @@ export const FINANCE_QUESTIONS = [
 ] as const;
 export type FinanceQuestion = (typeof FINANCE_QUESTIONS)[number];
 
-/**
- * The record kind each question is answered WITH. One question, one kind.
- *
- * Exported so a caller can check the pairing without re-deriving it, and so the
- * test that proves the three questions cannot share a record kind has something
- * mechanical to read.
- */
+/** The record kind each question is answered with. One question, one kind. */
 export const RECORD_KIND_FOR_QUESTION: Readonly<Record<FinanceQuestion, string>> = {
   WHO_CONTRIBUTED: "CONTRIBUTION",
   WHAT_WAS_SPENT: "EXPENDITURE",
@@ -110,18 +46,12 @@ export const RECORD_KIND_FOR_QUESTION: Readonly<Record<FinanceQuestion, string>>
 /* ── Whose gap is it? ─────────────────────────────────────────────────────── */
 
 /**
- * WHO the missing thing is missing FROM. Never decorative.
+ * Who the missing thing is missing from.
  *
- *   - `OURS` — we have not retrieved it. A claim about this repository. It is
- *     the ONLY correct attribution for a wall, a blocked route, an unread
- *     calendar or an unwalked rung.
- *   - `THE_FILER` — the committee filed, and what it filed says none. A claim
- *     about the filer, supportable only from a filing we actually hold.
- *   - `THE_AUTHORITY` — the custodian does not publish this class of record, or
- *     does not publish it yet. A claim about a government, and therefore the
- *     one that needs the strongest evidence.
- *   - `THE_LAW` — a legal restriction we are subject to withholds it. Ours in
- *     origin, not the government's silence, and it must say so.
+ *   - `OURS`: we have not retrieved it (a wall, blocked route, unread calendar).
+ *   - `THE_FILER`: what the committee filed says none; only from a held filing.
+ *   - `THE_AUTHORITY`: the custodian does not publish it; needs the strongest evidence.
+ *   - `THE_LAW`: a legal restriction on us withholds it.
  */
 export const GAP_ATTRIBUTIONS = ["OURS", "THE_FILER", "THE_AUTHORITY", "THE_LAW"] as const;
 export type GapAttribution = (typeof GAP_ATTRIBUTIONS)[number];
@@ -134,22 +64,11 @@ export interface AttributedGap {
   readonly what: string;
   /** What would close it. A gap with no next move is a complaint. */
   readonly nextMove: string;
-  /**
-   * The sentence a READER sees. Plain language — no OCD-ID, no enum value, no
-   * `NO_SOURCE_FOUND`. It must be different for different attributions, which
-   * `attributionsDiffer` checks rather than trusting.
-   */
+  /** The sentence a reader sees: plain language, and different for different attributions. */
   readonly readerSentence: string;
 }
 
-/**
- * True when no two gaps in the set with DIFFERENT attributions share a reader
- * sentence.
- *
- * The rule it enforces is `CLAUDE.md`'s: "we haven't recorded this yet" and
- * "they filed none" may never render as the same sentence. A comment cannot
- * enforce that; a set comparison can.
- */
+/** True when no two gaps with different attributions share a reader sentence. */
 export function attributionsDiffer(gaps: readonly AttributedGap[]): boolean {
   const bySentence = new Map<string, Set<GapAttribution>>();
   for (const gap of gaps) {
@@ -163,28 +82,18 @@ export function attributionsDiffer(gaps: readonly AttributedGap[]): boolean {
 
 /* ── The held filing universe, and its limits ─────────────────────────────── */
 
-/**
- * WHAT WE HOLD, and — the part that matters — what we do not.
- *
- * Every answer carries one. A figure rendered without it is a figure a reader
- * will read as a total.
- */
+/** What we hold and what we do not. Every answer carries one. */
 export interface HeldFilingUniverse {
   /** The custodians whose records these are. Empty means unresolved, not none. */
   readonly authorityIds: readonly string[];
   /** The custodian's own name, for the reader sentence. */
   readonly authorityNames: readonly string[];
-  /** WHO SERVES the records — which may be neither the office nor the authority. */
+  /** Who serves the records, which may be neither the office nor the authority. */
   readonly publisherRoute: string | null;
   readonly recordClassesHeld: readonly FilingRecordClass[];
   /** Named, never counted. Three labels are three next actions; "3 missing" is not. */
   readonly recordClassesNotHeld: readonly FilingRecordClass[];
-  /**
-   * The authority's own labels for the periods it says are DUE.
-   *
-   * **Null means we have not read the calendar**, so "filings held" has no
-   * denominator. That is a gap in its own right and never a zero.
-   */
+  /** The authority's labels for the periods it says are due. Null means the calendar was not read: a gap, never a zero. */
   readonly periodsExpected: readonly string[] | null;
   readonly periodsHeld: readonly string[];
   readonly periodsNotHeld: readonly string[];
@@ -192,16 +101,9 @@ export interface HeldFilingUniverse {
   readonly coversThrough: string | null;
   /** What the figures actually came off — a filing, or an authority's arithmetic. */
   readonly evidenceBasis: EvidenceBasis | null;
-  /**
-   * How the held rows are cut, when they are cut. "The ten largest itemized
-   * receipts" is not "the contributors". Null only when nothing is held at all.
-   */
+  /** How the held rows are cut ("the ten largest itemized receipts"). Null only when nothing is held. */
   readonly itemizationLimit: string | null;
-  /**
-   * **Never true.** An answer cannot claim to rest on the complete filing set,
-   * because this product never states completeness it has not measured against
-   * the authority's own calendar.
-   */
+  /** Never true. */
   readonly isCompleteFilingSet: false;
   /** Repo paths or URLs. An answer with none is refused. */
   readonly sourceCitations: readonly string[];
@@ -210,11 +112,7 @@ export interface HeldFilingUniverse {
 /* ── Refusals ─────────────────────────────────────────────────────────────── */
 
 export class RenderRefused extends Error {
-  /**
-   * Explicit field declarations: this repository runs Node with
-   * `--experimental-strip-types`, under which a TypeScript parameter property
-   * (`constructor(readonly x: string)`) does not parse.
-   */
+  /** Declared explicitly: strip-types mode does not parse parameter properties. */
   readonly question: FinanceQuestion;
   readonly offendingKind: string;
 
@@ -226,13 +124,7 @@ export class RenderRefused extends Error {
   }
 }
 
-/**
- * Re-check `recordKind` on every row at runtime.
- *
- * The type system already prevents the honest mistake. This catches the cast —
- * and it THROWS rather than filtering, because a silently shorter list is the
- * failure this design exists to prevent and a silently longer one is worse.
- */
+/** Re-check `recordKind` on every row at runtime; throws rather than filtering. */
 function assertRecordKind(
   rows: readonly { recordKind: string }[],
   expected: string,
@@ -277,14 +169,7 @@ interface AnswerBase {
   readonly readerSentence: string;
 }
 
-/**
- * A total the AUTHORITY reported, kept separate from the rows we hold.
- *
- * The two answer different questions and the gap between them is the finding: a
- * committee that reported $6,172,866.72 in receipts while we hold ten itemized
- * rows has not had 6.1 million dollars explained to the reader, and saying so is
- * the honest render.
- */
+/** A total the authority reported, kept separate from the rows we hold. */
 export interface ReportedTotal {
   readonly amount: number;
   /** The authority's own name for the figure. */
@@ -316,11 +201,7 @@ export type FinanceAnswer =
       /** Reported SEPARATELY and never added to receipts. */
       readonly supporting: number;
       readonly opposing: number;
-      /**
-       * **Never true.** Present so a caller reading this boolean cannot read the
-       * wrong answer: an independent expenditure supporting a candidate is not
-       * money that candidate received, whatever the amount.
-       */
+      /** Never true: an independent expenditure supporting a candidate is not money that candidate received. */
       readonly isMoneyReceivedByTheSubject: false;
     });
 
@@ -341,13 +222,7 @@ export function answerWhoContributed(input: {
   const held = input.contributions.length;
   const total = input.reportedTotal ?? null;
 
-  /**
-   * THE GAP BETWEEN THE ROWS AND THE TOTAL, stated rather than left to arithmetic.
-   *
-   * A reader shown ten names beside a six-million-dollar figure will read the
-   * ten as the donors. They are the ten largest itemized receipts we hold, and
-   * the difference is not a rounding error — it is most of the money.
-   */
+  /** The gap between the rows held and the reported total, stated. */
   if (total !== null && held > 0) {
     const shown = input.contributions.reduce((n, c) => n + c.amountReceived, 0);
     if (shown < total.amount) {
@@ -418,14 +293,7 @@ export function answerWhatWasSpent(input: {
   const gaps = [...(input.gaps ?? [])];
   const total = input.reportedTotal ?? null;
 
-  /**
-   * A REPORTED TOTAL WITH NO ITEMIZED ROWS IS STILL AN ANSWER — and it is a
-   * different answer from an itemized one, so it says which it is.
-   *
-   * "How much has this committee reported spending" is answerable from the
-   * authority's own total. "What did it spend it on" is not, and conflating them
-   * would let a summary figure pass for a description of the spending.
-   */
+  /** A reported total with no itemized rows is still an answer, and says it is not itemized. */
   if (total !== null && input.expenditures.length === 0) {
     gaps.push({
       attribution: "OURS",
@@ -474,13 +342,8 @@ export function answerWhatWasSpent(input: {
 /* ── 3. Independent expenditures supporting or opposing this side ─────────── */
 
 /**
- * The third question, and the one whose wrong answer is worst.
- *
- * It takes `IndependentExpenditureReport`s — a container with no `contributions`
- * field — and returns `supporting` and `opposing` as two separate numbers. There
- * is no combined figure and no path from this function's output into a receipts
- * total, because `isMoneyReceivedByTheSubject` is the literal `false` and the
- * arm carries no `reportedTotal` a receipts renderer could pick up.
+ * Supporting and opposing are two separate numbers with no combined figure and
+ * no path into a receipts total.
  */
 export function answerIndependentExpenditures(input: {
   subjectId: string;
@@ -564,13 +427,7 @@ export interface FinanceAnswerSet {
   readonly attributionsDistinct: boolean;
 }
 
-/**
- * All three questions for one subject, checked as a SET.
- *
- * Asked one at a time, each answer looks fine. The set is where the two
- * cross-question failures live: a question that silently produced nothing at
- * all, and two gaps with different owners wearing the same sentence.
- */
+/** All three questions for one subject, checked as a set. */
 export function answerSetFor(answers: readonly FinanceAnswer[]): FinanceAnswerSet {
   const asked = new Set(answers.map((a) => a.question));
   const allGaps = answers.flatMap((a) => a.gaps);

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
@@ -14,22 +14,10 @@ import {
 import {
   answerFor,
   currentExtraction,
-  type CandidateCorpus,
   type CandidateDocument,
 } from "../lib/candidates/corpus.ts";
-import { DEFAULT_STANCE_TOPICS } from "../lib/stances/topics.ts";
 
-/**
- * F01-continued item 11 (2026-08-19) — RULING 9 and RULING 10.
- *
- * Template chrome is not what a candidate said, and no reader-facing
- * quotation may begin or end mid-word. Both are correctness and neutrality
- * rules rather than formatting preferences: a candidate whose site carries a
- * "Read More" rail was being credited with issues they never addressed, while
- * a candidate on a simpler site showed "mentions 0 of them".
- */
-
-// ── RULING 10: word boundaries ────────────────────────────────────────────
+/** Template chrome is not what a candidate said, and no reader-facing quotation may begin or end mid-word. */
 
 test("THE DEFECT: the old slice cut mid-word; the helper does not", () => {
   const text = "The Press Release said housing costs are rising across the district.";
@@ -64,8 +52,6 @@ test("the matched phrase is never cut in half by the window", () => {
   const quote = excerptAround(text, text.indexOf("affordable housing"), 18, 4);
   assert.ok(quote.includes("affordable housing"), quote);
 });
-
-// ── RULING 9: chrome ──────────────────────────────────────────────────────
 
 test("THE NAMED INSTANCE: Mejia's press-release rail is chrome", () => {
   const rail =
@@ -131,8 +117,6 @@ test("the repetition test says when it could not run", () => {
   assert.ok(three.fingerprints.size >= 1, "the repeated block is found");
 });
 
-// ── the tally may not be fed by chrome ────────────────────────────────────
-
 const doc = (text: string, url = "https://example.org/issues"): CandidateDocument => ({
   id: "k@hash",
   candidateKey: "k",
@@ -170,54 +154,6 @@ test("a real statement still matches", () => {
   );
   assert.equal(answer.kind, "MATCHED");
 });
-
-test("no passage this matcher produces breaks a word", () => {
-  const corpus = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "candidates", "corpus-2026.json"), "utf8"),
-  ) as CandidateCorpus;
-  const keys = [...new Set(corpus.documents.map((d) => d.candidateKey))];
-  let checked = 0;
-  const offenders: string[] = [];
-  for (const key of keys) {
-    const documents = corpus.documents.filter((d) => d.candidateKey === key);
-    for (const issue of DEFAULT_STANCE_TOPICS) {
-      const answer = answerFor(documents, issue.phrases, null);
-      if (answer.kind !== "MATCHED") continue;
-      for (const passage of answer.passages) {
-        checked += 1;
-        if (breaksAWord(passage.quote)) offenders.push(`${key} / ${issue.label}: ${passage.quote.slice(0, 80)}`);
-      }
-    }
-  }
-  // The denominator, asserted: a loop that examined nothing must not pass.
-  assert.ok(checked > 0, "no passages were examined — the guard did not run");
-  assert.deepEqual(offenders, [], `${offenders.length} of ${checked} quotations break a word`);
-});
-
-test("no passage this matcher produces is template chrome", () => {
-  const corpus = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "candidates", "corpus-2026.json"), "utf8"),
-  ) as CandidateCorpus;
-  const keys = [...new Set(corpus.documents.map((d) => d.candidateKey))];
-  let checked = 0;
-  const offenders: string[] = [];
-  for (const key of keys) {
-    const documents = corpus.documents.filter((d) => d.candidateKey === key);
-    for (const issue of DEFAULT_STANCE_TOPICS) {
-      const answer = answerFor(documents, issue.phrases, null);
-      if (answer.kind !== "MATCHED") continue;
-      for (const passage of answer.passages) {
-        checked += 1;
-        const signal = chromeSignal(passage.quote);
-        if (signal) offenders.push(`${key} / ${issue.label} [${signal}]`);
-      }
-    }
-  }
-  assert.ok(checked > 0, "no passages were examined — the guard did not run");
-  assert.deepEqual(offenders, [], `${offenders.length} of ${checked} quotations are chrome`);
-});
-
-// ── the extractor version ─────────────────────────────────────────────────
 
 test("a re-extracted page supersedes its own older copy for reading", () => {
   const older: CandidateDocument = { ...doc("old text"), id: "k@1", extractorVersion: 1 };

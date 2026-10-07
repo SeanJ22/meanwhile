@@ -1,10 +1,3 @@
-/**
- * **ADD TO, DECLINE FROM, AND UNDO CHANGES TO WHAT A PLACE IS OWED (SC-14, BR-33).** Three gateway actions on the one owed-overlay
- * record that lives on the Admin config row (`lib/coverage/owed-overlay.ts`). Each saves the change with its reason and time in a
- * log, so the log shows why, and any change can be undone. None gates publishing: they change what is counted as owed.
- *
- * Kept in its own file so the registry takes them as one list.
- */
 import { EMPTY_OWED_OVERLAY, withOwedAddition, withOwedDecline, withOwedUndo, type OwedOverlayRecord } from "../../coverage/owed-overlay.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } from "./admin-config.ts";
 import type { ActionResult, GatewayDeps, RegisteredAction, ValidatedInput } from "./registry.ts";
@@ -14,7 +7,6 @@ const text = (value: unknown): string => (typeof value === "string" ? value.trim
 const bad = (why: string) => ({ ok: false as const, why });
 const refuse = (says: string): ActionResult => ({ ok: false, refusal: "INVALID_INPUT", says });
 
-/** The admin session reference a change carries: the signed-in owner, never a person's name. */
 const OWNER = "admin";
 const ROW_ID = /^\["[^"]{1,300}","[A-Z]{2,4}-[A-Za-z0-9]{1,6}"\]$/;
 export const DECLINE_MOST_ROWS = 100;

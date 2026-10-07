@@ -1,30 +1,13 @@
 /**
- * **The whole of America's Political Pulse, as it publishes on 2026-09-17.**
+ * Every downloadable file of America's Political Pulse, one typed row each:
+ * URL, join key and incremental cursor.
  *
- * One typed row per downloadable file, read off the live Open Data page's two
- * elite tabs (federal and state) that day. This registry is the single source
- * of truth for the ingestion: every URL, every join key, and — the finding
- * that governs the refresh — every dataset's incremental cursor.
- *
- * ## The cursor is the whole game, and it was read off the files
- *
- * The federal `rhetoric-all*` and the state `state-rhetoric-all` files each
- * carry a `last_updated` timestamp that is DISTINCT from and years later than
- * the publication `date`: a statement published `2017-06-21` was last written
- * `2025-07-20`, and `last_updated` varies row to row. **PRL reclassifies old
- * statements.** A `date` cutoff would silently miss every correction, so the
- * cursor for those datasets is `last_updated`, never `date`. The primary and
- * full-text files carry no modification stamp; they append, keyed by a stable
- * row id, and their cursor is `date`. This is not a preference — it is what the
- * files say, and getting it wrong is exactly the quiet wrong answer this
- * product cannot afford.
- *
- * ## The aggregate profiles are recomputed whole
- *
- * The three profile files carry ONE `communication_last_update` value across
- * every row: PRL recomputes the aggregate wholesale each publish. So a profile
- * dataset has no per-row cursor — it is replaced in full each refresh, and the
- * file is small enough (≤ 844 KB) that this costs nothing.
+ * The federal `rhetoric-all*` and state `state-rhetoric-all` files carry a
+ * `last_updated` distinct from the publication `date`, because PRL reclassifies
+ * old statements; their cursor is `last_updated`, never `date`. The primary and
+ * full-text files only append, keyed by a stable row id, and their cursor is
+ * `date`. The aggregate profile files are recomputed wholesale each publish
+ * (one `communication_last_update` across every row) and are replaced whole.
  */
 
 export const PRL_DATA_BASE = "https://americaspoliticalpulse.com/data/elite/" as const;
@@ -70,7 +53,7 @@ export interface PrlDataset {
    * discussion, though `last_updated` is the cheaper instrument where present.
    */
   readonly revises: boolean;
-  /** Verbatim from the site on 2026-09-17, so drift is visible on the next read. */
+  /** Verbatim from the site, so drift is visible on the next read. */
   readonly declared: {
     readonly sizeLabel: string;
     readonly rows?: string;
@@ -91,12 +74,7 @@ export interface PrlDataset {
 
 const u = (file: string): string => `${PRL_DATA_BASE}${file}`;
 
-/**
- * The five data dictionaries. Small, committed under `data/prl/dictionaries/`,
- * and their field meanings encoded in `dictionaries.ts` — because wiring a
- * dataset without its dictionary is inferring what a column means, and an
- * inferred field meaning is the quiet wrong answer.
- */
+/** The five data dictionaries; their field meanings are encoded in `dictionaries.ts`. */
 export const PRL_DICTIONARIES: readonly PrlDataset[] = [
   { id: "dict-communication", tab: "meta", title: "Communication Data Dictionary (federal classified statements)", file: "communication-meta.csv", url: u("communication-meta.csv"), target: "reference", format: "csv", key: null, cursorField: null, dateField: null, revises: false, declared: { sizeLabel: "2 KB", from: null, through: null } },
   { id: "dict-profiles", tab: "meta", title: "Profiles Data Dictionary (federal legislator profiles)", file: "profiles-meta.csv", url: u("profiles-meta.csv"), target: "reference", format: "csv", key: null, cursorField: null, dateField: null, revises: false, declared: { sizeLabel: "2 KB", from: null, through: null } },
@@ -108,9 +86,8 @@ export const PRL_DICTIONARIES: readonly PrlDataset[] = [
 /**
  * The three aggregate profile files. PRL has already computed the per-official
  * shares; we read its means, refuse its ranks/percentiles/ideology, and promote
- * the small result. `profiles-all-national` keeps its existing `PRL_PROFILE`
- * path untouched (the shipped Reader authority); it is listed here only so the
- * inventory is complete, and carries no new record class.
+ * the small result. `profiles-all-national` is served through the separate
+ * `PRL_PROFILE` path and is listed here only so the inventory is complete.
  */
 export const PRL_PROFILES: readonly PrlDataset[] = [
   {
@@ -227,9 +204,8 @@ export function requiredPrlDataset(id: string): PrlDataset {
 }
 
 /**
- * The datasets this ingestion refreshes. The all-national profile keeps its
- * existing shipped `PRL_PROFILE` path (`snapshot.ts`), so it is excluded here;
- * the dictionaries are committed reference and are landed once, not refreshed.
+ * The datasets this ingestion refreshes. The all-national profile is served by
+ * `snapshot.ts` and excluded; the dictionaries are reference, landed once.
  */
 export function prlIngestibleDatasets(): readonly PrlDataset[] {
   return PRL_DATASETS.filter((dataset) => dataset.id !== "profiles-national");

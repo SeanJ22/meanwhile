@@ -1,15 +1,4 @@
 import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
-import { azContestRecord } from "./az-contest-record.ts";
-
-/**
- * The retrieved official measure analyses — the Legislative Council's
- * adopted (or, where the Legislature's own adopted link is broken, draft)
- * impartial analyses, verbatim. Written by scripts/fetch-measure-analyses.mts;
- * read here for the server-rendered ballot page.
- *
- * The 2b rule this store exists for: data in hand may never be displayed
- * as missing. If the analysis text is here, the surface renders it.
- */
 
 export interface MeasureAnalysis {
   contestId: string;
@@ -29,11 +18,17 @@ export interface AnalysesFile {
   readonly analyses: readonly MeasureAnalysis[];
 }
 
-/** The analysis set embedded in the exact promoted Arizona ballot projection. */
 export function getMeasureAnalyses(): AnalysesFile | null {
   return currentAzBallotProjection().measureAnalyses;
 }
 
+/** Null when the ballot projection holding it cannot be read in this process. */
 export function analysisForContest(contestId: string): MeasureAnalysis | null {
-  return azContestRecord(contestId, () => getMeasureAnalyses()?.analyses);
+  let records: readonly MeasureAnalysis[] | undefined;
+  try {
+    records = getMeasureAnalyses()?.analyses;
+  } catch {
+    return null;
+  }
+  return records?.find(record => record.contestId === contestId) ?? null;
 }

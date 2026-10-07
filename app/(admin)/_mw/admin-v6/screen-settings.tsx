@@ -1,14 +1,5 @@
 "use client";
 
-/**
- * **SETTINGS (BR-06), AND THE RUNNER'S SETTINGS ON WORKERS (BR-05).**
- *
- * Every registered setting with its value now and when it changed, a log of its
- * earlier values, and an Undo for its newest change. Change and Undo go through
- * the same preview and Send as every other control (`config.setSetting`; the
- * daily budget keeps its own control). A change names who made it only when the
- * factory made it.
- */
 import type { SettingRow, SettingsView } from "@/lib/control-plane/admin-view/v6-settings-read.ts";
 
 import type { ActionRef } from "./model.ts";
@@ -34,7 +25,6 @@ export function settingActions(row: SettingRow): readonly ActionRef[] {
   ];
 }
 
-/** Where a value takes effect, in one short phrase. */
 export function inForceWords(row: SettingRow): { readonly words: string; readonly tone: "good" | "neutral" | "warn" } {
   if (row.inForce.where === "next-read") return { words: "Used from the next round", tone: "neutral" };
   if (row.inForce.yes === null) return { words: row.inForce.where === "runner" ? "Runner hasn't reported it yet" : "—", tone: "neutral" };
@@ -96,7 +86,6 @@ export function SettingsScreen() {
   );
 }
 
-/** On Workers: the runner's settings and whether its last round used them. */
 export function RunnerSettingsPanel() {
   const { reading } = useReading<SettingsView>(SETTINGS_ROUTE, 30_000);
   const rows = reading.kind === "ready" ? reading.data.rows.filter((row) => row.inForce.where === "runner") : [];

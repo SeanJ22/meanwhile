@@ -5,7 +5,7 @@
     "Every canonical state geometry and national geometry file appears on exactly one list."
   ],
   "schemaVersion": 2,
-  "generatedAt": "2026-10-01",
+  "generatedAt": "2026-10-06",
   "coveredStateFips": [
     "10",
     "11",
@@ -213,19 +213,7 @@
   "excluded": [
     {
       "file": "data/states/az/geo/body-territories.geojson",
-      "reason": "BODY territories, not DIVISION boundaries (NH233) — recorded plats belonging to governments the Census enumerates no division for, such as the Rocking K South Community Facilities District. It is loaded and point-tested by lib/registry/body-territory.ts on the same sweep, and it is excluded HERE because every feature in this manifest is keyed by ocdId and these features deliberately have none. Including it would make the division resolver answer with a body id, which is the join confusion this session spent its day removing."
-    },
-    {
-      "file": "data/states/az/geo/cd119-04.geojson",
-      "reason": "already represented by the held national file, whose other divisions have no complete state derivatives"
-    },
-    {
-      "file": "data/states/nh/geo/cd119-33.geojson",
-      "reason": "already represented by the held national file, whose other divisions have no complete state derivatives"
-    },
-    {
-      "file": "data/states/nj/geo/cd119-34.geojson",
-      "reason": "already represented by the held national file, whose other divisions have no complete state derivatives"
+      "reason": "BODY territories, not DIVISION boundaries — recorded plats belonging to governments the Census enumerates no division for. lib/registry/body-territory.ts point-tests them; they have no ocdId, so including them would make the division resolver answer with a body id."
     },
     {
       "file": "public/geo/state-outlines.geojson",

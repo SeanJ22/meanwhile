@@ -1,25 +1,7 @@
 /**
- * **WHAT A DETECTIVE OR ENGINEER LEARNED, TURNED INTO A FIELD-MANUAL ENTRY.**
- * (Owner directive 2026-09-19.)
- *
- * A detective already emits a `learnedProcedure` and an engineer a set of
- * `proposedFiles`, and until now both went only into `cp_log_worker_results` —
- * a result log no worker reads. That is the same write-with-no-read gap the
- * scouts had, one role over. This module maps those emitted learnings onto the
- * common `FieldManualEntry` envelope so the research runtime can write them
- * straight into the one growing manual, live, with no human step. Pure and
- * deterministic so the mapping is tested without a scheduler or a database.
- *
- * Grain and keys:
- * - A DETECTIVE learning is keyed by its **question id**, so re-investigating
- *   the same bounded question refreshes one row rather than forking it. A
- *   SUPPORTED conclusion is a settled fact every role inherits, so it lands
- *   SHARED; an unresolved investigation's reusable procedure stays in the
- *   detective lane.
- * - An ENGINEERING learning is keyed by its **method route id**. The manual
- *   carries the POINTER — the candidate's paths, adoption gate, reproducibility
- *   and risks — never the proposed file bytes, which stay in the candidate
- *   store.
+ * What a detective learned, as a field-manual entry keyed by its question id, so re-investigating refreshes one
+ * row. A SUPPORTED conclusion lands SHARED; an unresolved investigation's procedure stays in the detective lane.
+ * Pure.
  */
 
 import {
@@ -31,7 +13,6 @@ import {
 import type { FleetResult } from "./types.ts";
 
 export const DETECTIVE_LEARNING_SOURCE = "detective-learning";
-export const ENGINEERING_CANDIDATE_SOURCE = "engineering-candidate";
 
 const OCD_STATE = /state:([a-z]{2})\b/i;
 
@@ -97,43 +78,6 @@ export function researchLearningEntries(result: FleetResult, now: string): Field
           identity: result.identity,
           nextAction: result.nextAction,
           learnedProcedure: result.learnedProcedure,
-        },
-      },
-    ];
-  }
-
-  if (result.role === "ENGINEERING") {
-    if (!result.methodRouteId) return [];
-    const proved = result.verdict === "CANDIDATE_PROVED";
-    return [
-      {
-        id: fieldManualEntryId(ENGINEERING_CANDIDATE_SOURCE, result.methodRouteId),
-        role: "ENGINEER",
-        kind: "ENGINEERING_CANDIDATE",
-        title: result.methodRouteId,
-        summary:
-          `${result.verdict}; ${result.adoption}; proposes ${result.affectedPaths.length} file(s) held in the candidate store; ` +
-          `${result.unresolvedRisks.length} unresolved risk(s)`,
-        states: [],
-        recordClasses: [],
-        platforms: [],
-        // A proved candidate is a REFERENCE pointer to code under review, never a live door; a
-        // failed or refused proof is a dead door, kept so it is not rebuilt.
-        outcome: proved ? "REFERENCE" : "FAILED",
-        url: null,
-        source: ENGINEERING_CANDIDATE_SOURCE,
-        observedAt,
-        tier: null,
-        payload: {
-          methodRouteId: result.methodRouteId,
-          methodVersion: result.methodVersion,
-          verdict: result.verdict,
-          adoption: result.adoption,
-          affectedPaths: result.affectedPaths,
-          reproducibility: result.reproducibility.verdict,
-          unresolvedRisks: result.unresolvedRisks,
-          learnedProcedure: result.learnedProcedure,
-          // The proposed file bytes stay in the candidate store; the manual holds the pointer.
         },
       },
     ];

@@ -34,24 +34,15 @@ export const FLEET_SAFETY_BOUNDS = {
   maxDownloadBytes: 24 * 1024 * 1024,
 } as const;
 
-/**
- * The largest ceiling the owner's console control accepts. Not a spend cap on
- * its own — the runtime bounds above still hold — but a typo guard, so a missing
- * decimal cannot turn $100 into an order of magnitude nobody meant.
- */
+/** The largest ceiling the console control accepts: a typo guard, not a spend cap. */
 export const FLEET_SPEND_CEILING_MAX_USD = 10_000;
 
 /**
  * The rolling 24-hour model-spend ceiling in force, given the owner's override
- * (or null when none stands).
- *
- * The fallback is the built-in {@link FLEET_SAFETY_BOUNDS} value, so a missing
- * override is still a real ceiling and never "no ceiling". The runner calls this
- * only for a row it read cleanly; an unreadable or malformed row holds paid work
- * rather than fall back (`adminConfigForPaidWork` in gateway/admin-config.ts). A
- * non-positive or non-finite override is treated as no override, for the same
- * reason — a corrupt row must not read as "spend nothing" or "spend without
- * limit". `source` lets a surface show a live override apart from the fallback.
+ * (or null). A missing, non-positive or non-finite override falls back to
+ * {@link FLEET_SAFETY_BOUNDS}, never "no ceiling". The runner calls this only
+ * for a cleanly read row; an unreadable row holds paid work instead
+ * (`adminConfigForPaidWork`).
  */
 export function resolveRollingCeiling(
   overrideUsd: number | null | undefined,
@@ -163,8 +154,8 @@ function recordedModelPrice(model: string | null | undefined, cost: CostEntry["c
     (cost.cacheCreationInputTokens === 0 || split.every(amount)) };
 }
 
-/** CH-02: a charge no price or request bound covers is counted at its worst
- * case, so spend stays a number and the budget dial keeps control. */
+/** A charge no price or request bound covers is counted at its worst case, so
+ * spend stays a number and the budget dial keeps control. */
 function entryModelPrice(entry: CostEntry): { usd: number; knownUsd: number; measured: boolean; worstCase: boolean } {
   const price = entryModelPriceOrNull(entry);
   return price.usd === null ? { ...price, usd: Math.max(price.knownUsd, costEntryWorstCaseUsd(entry)), worstCase: true }
@@ -335,11 +326,9 @@ export function parseContentRangeTotal(header: string | null): number | null {
 
 /**
  * The most one model request can cost: every UTF-8 byte of its body as an
- * input token at the cache-write rate (a conservative upper bound on input
- * tokens, and the multiplier even though only marked blocks can incur it),
- * plus its whole `max_tokens` at the output rate. Null for a model with no
- * stated rate. The per-request guard reserves exactly this against the rolling
- * ceiling, and the Send and area budgets against theirs (MW-021, 2026-09-25).
+ * input token at the cache-write rate, plus its whole `max_tokens` at the
+ * output rate. Null for a model with no stated rate. Reserved against the
+ * rolling ceiling and the Send and area budgets.
  */
 export function modelRequestWorstCaseUsd(request: ModelRequest): number | null {
   const rate = rateFor(request.model);
@@ -359,20 +348,17 @@ export function modelResponseUsd(response: ModelResponse): number | null {
 
 export class FleetSafetyController {
   /**
-   * The bounds THIS cycle runs under. `rolling24HourModelUsd` is the owner's
-   * console override when the caller passed one (read at cycle start from the
-   * control plane, not this module's import), and the fallback otherwise —
-   * assigned here rather than initialised to the constant so a live change
-   * governs the very next reservation with no deploy and no restart. Both the
-   * per-request guard (`reserveModelRequest`) and the pre-admission read
-   * (`rollingCeilingReached`) read it, so moving this one value moves both.
+   * The bounds this cycle runs under. `rolling24HourModelUsd` is the owner's
+   * override when passed, else the fallback; assigned here so a live change
+   * governs the very next reservation. Read by `reserveModelRequest` and
+   * `rollingCeilingReached`.
    */
   bounds: FleetSafetyBounds;
   readonly startedAt: string;
   private readonly startedMs: number;
   private readonly historicalNightUsd: number | null;
   private readonly historicalRollingUsd: number | null;
-  /** CH-02: charges in the rolling window counted at worst case because nothing priced them. */
+  /** Charges in the rolling window counted at worst case because nothing priced them. */
   private readonly worstCaseCharges: number;
   private readonly night: OperationalNight;
   private readonly paused: boolean;
@@ -408,12 +394,7 @@ export class FleetSafetyController {
     readonly circuits?: readonly ProviderCircuit[];
     readonly lastSuccessfulActivity?: string | null;
     readonly costLedgerReadable?: boolean;
-    /**
-     * The owner's rolling-24h ceiling override in USD, or undefined/null to run
-     * under the built-in fallback. A non-finite or non-positive value is
-     * defended here too and falls back — a disappeared ceiling is never no
-     * ceiling.
-     */
+    /** The owner's rolling-24h ceiling override in USD, or undefined/null for the fallback. Invalid values fall back. */
     readonly rollingCeilingUsd?: number | null;
     /** Exact work covered by a separately reserved lifetime hunt allowance. */
     readonly lifetimeHuntWork?: (work: string) => boolean;
@@ -449,9 +430,8 @@ export class FleetSafetyController {
   }
 
   /**
-   * CH-03: the owner's dial moved mid-round. The very next reservation and
-   * pre-admission read use the new value; the same defence as the constructor
-   * applies, so a disappeared or invalid value falls back and never means no ceiling.
+   * The owner's dial moved mid-round: the next reservation and pre-admission
+   * read use the new value. An invalid value falls back, never no ceiling.
    */
   setRollingCeilingUsd(rollingCeilingUsd: number | null | undefined): void {
     const ceiling = resolveRollingCeiling(rollingCeilingUsd);
@@ -530,25 +510,20 @@ export class FleetSafetyController {
       });
       this.refuse(work, "PROVIDER_CIRCUIT_BROKEN", `${provider} is latched until ${circuit.eligibleAt}: ${circuit.condition}`);
     }
-    // No per-cycle request or payload-total ceiling. The per-DOWNLOAD cap
-    // (`maxDownloadBytes`, enforced while streaming in `readBoundedResponse`) is
-    // the memory bound; requests and bytes are still counted for the admin panel.
+    // No per-cycle request or payload-total ceiling. `maxDownloadBytes`, enforced
+    // while streaming in `readBoundedResponse`, is the memory bound.
     this.requests += 1;
     this.bytes += outboundPayloadBytes;
     return this.bounds.maxDownloadBytes;
   }
 
   recordInboundBytes(_work: string, count: number): void {
-    // Accumulate the already-capped bytes for the admin panel. The per-download
-    // limit is enforced while streaming in `readBoundedResponse`; there is no
-    // per-cycle payload total to refuse against.
+    // Accumulate the already-capped bytes for the admin panel.
     if (Number.isFinite(count) && count > 0) this.bytes += count;
   }
 
   private reservePayloadRequest(provider: string, work: string, outboundPayloadBytes = 0): PayloadReservation {
-    // The per-download cap is a fixed memory bound, identical for every fetch —
-    // not a slice of a shared cycle budget — so there is no pool hold to reserve
-    // and no way for one in-flight fetch to starve a concurrent one.
+    // The per-download cap is a fixed memory bound per fetch, so there is no pool hold to reserve.
     const streamCapBytes = this.admitProviderRequest(provider, work, outboundPayloadBytes);
     return { streamCapBytes, work, released: false };
   }
@@ -569,9 +544,8 @@ export class FleetSafetyController {
     const bodyBytes = Buffer.byteLength(JSON.stringify(request));
     const reserve = modelRequestWorstCaseUsd(request);
     if (reserve === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", `model ${request.model} has no stated rate`);
-    // The rolling 24-hour ceiling is the only spend limit now — no per-cycle or
-    // operational-night model-spend cap. A model response's size is bounded by
-    // its own `max_tokens`, so it needs no per-cycle payload check.
+    // The rolling 24-hour ceiling is the only spend limit. A model response's
+    // size is bounded by its own `max_tokens`.
     const pending = this.cycleUsd + this.reservedUsd + reserve;
     if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
     if (this.historicalRollingUsd + pending > this.bounds.rolling24HourModelUsd) this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `worst-case request would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
@@ -664,14 +638,10 @@ export class FleetSafetyController {
   }
 
   /**
-   * Whether the rolling-24h ceiling is already reached for one more model
-   * dispatch — the CYCLE-START / PRE-ADMISSION read of the same inequality
-   * `reserveModelRequest` enforces (`historicalRollingUsd + cycleUsd +
-   * reservedUsd + reserve > ceiling`), with `worstCaseUsd` standing in for a
-   * dispatch's worst-case reserve. The lane header promises "paused over it";
-   * an admission gate that reads this pauses the whole lane instead of admitting
-   * dispatch after dispatch for the per-request guard to refuse in a busy-loop.
-   * Read-only: it reserves nothing and never refuses. Unmeasured spend returns
+   * Whether the rolling-24h ceiling is already reached for one more dispatch:
+   * the pre-admission read of the inequality `reserveModelRequest` enforces,
+   * with `worstCaseUsd` as the reserve, so an admission gate pauses the lane
+   * instead of busy-looping on refusals. Read-only. Unmeasured spend returns
    * `reached: false` (the caller's ledger-unreadable check owns that case).
    */
   rollingCeilingReached(
@@ -692,11 +662,9 @@ export class FleetSafetyController {
   }
 
   private async readBoundedResponse(response: Response, cap: number, work: string): Promise<Uint8Array> {
-    // FAIL LOUD ON TRUNCATION — never hand up a partial document, because a
-    // truncated CSV still parses. A server can answer 206 even without a
-    // requested range: accept it only when `Content-Range`
-    // proves the WHOLE resource fit within the cap. A larger resource, or a
-    // total the server would not state, is a truncation and throws.
+    // Never hand up a partial document: a truncated CSV still parses. A 206 is
+    // accepted only when `Content-Range` proves the whole resource fit within
+    // the cap; anything else throws.
     if (response.status === 206) {
       const total = parseContentRangeTotal(response.headers.get("content-range"));
       if (total === null || total > cap) {
@@ -852,10 +820,8 @@ export class FleetSafetyController {
   }
 
   /**
-   * `followRedirects: false` (2026-09-23) answers the first hop, with its
-   * `location`, instead of following it. A caller that must read permission
-   * again on every new host (the meetings-discovery executor) walks the chain
-   * itself; nothing else changes.
+   * `followRedirects: false` answers the first hop, with its `location`, so a
+   * caller that must read permission on every new host can walk the chain itself.
    */
   guardedOpenBytes(
     _provider: string,
@@ -994,15 +960,10 @@ export class FleetSafetyController {
   }
 
   /**
-   * **A HOLD FOR A MODEL ESCALATION, TAKEN BEFORE IT RUNS.** (MW-031, MW-033,
-   * 2026-09-25.) When a cheaper model attempt shows a recorded reason to move
-   * up a class, the second attempt's worst case is held against the SAME
-   * rolling-24h inequality `reserveModelRequest` enforces, before its first
-   * request — so the ceiling covers both attempts, and a concurrent Scout
-   * cannot spend the headroom the escalation was admitted on. Refuses (and
-   * defers the work by name) exactly as a request would. `draw` converts part
-   * of the hold into settled spend as each escalated turn is priced, so the
-   * hold and the spend are never counted twice; `release` returns the rest.
+   * A hold for a model escalation, taken before it runs, against the same
+   * rolling-24h inequality `reserveModelRequest` enforces, so a concurrent
+   * Scout cannot spend its headroom. `draw` converts part of the hold into
+   * settled spend as each escalated turn is priced; `release` returns the rest.
    * Each escalated request is still reserved on its own on top of the hold.
    */
   holdModelBudget(work: string, usd: number): { readonly usd: number; readonly draw: (spentUsd: number) => void; readonly release: () => void } {
@@ -1029,11 +990,9 @@ export class FleetSafetyController {
 }
 
 /**
- * The Scout executor's escalation seam (`ScoutExecutorDeps.reserveEscalation`),
- * backed by this controller's hold (MW-033, 2026-09-25): admitted with the hold,
- * or refused `CEILING` with the controller's own code and words. Any other
- * failure is not a ceiling reading and is thrown to the executor, which records
- * it as `NOT_RESERVED`.
+ * The Scout executor's escalation seam (`ScoutExecutorDeps.reserveEscalation`):
+ * admitted with the hold, or refused `CEILING` with the controller's code and
+ * words. Any other failure is thrown to the executor (`NOT_RESERVED`).
  */
 export function scoutEscalationReservation(controller: FleetSafetyController): (request: ScoutEscalationRequest) => ScoutEscalationAdmission {
   return (request) => {

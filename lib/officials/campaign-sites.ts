@@ -1,23 +1,12 @@
-import { officeholderIdentityMayEnterReader } from "./roster-authority.ts";
 import {
   currentCuratedReaderRecords,
   type CampaignSiteProjectionRecord,
 } from "../civic-data/curated-reader-read-model.ts";
 
 /**
- * Campaign and personal sites, curated per officeholder (3e).
- *
- * A campaign site is a *distinct, clearly labeled* second link — the primary
- * link on every surface is always the official page. Every entry here was
- * found and then verified by opening the site and confirming it names both
- * the person and the office; the verification sentence records what was
- * seen. **Never guessed, never constructed from a name** — a plausible URL
- * that turns out to be someone else's site is the fabricated-agenda-URL
- * failure pointed at a person.
- *
- * Keyed by roster officeholder id. An absent key means no verified site —
- * which may mean "none exists" or "not hunted yet"; `docs/source-ladder.md`
- * records which.
+ * Campaign sites, keyed by roster officeholder id. Always shown as a separate
+ * labeled link; the primary link is the official page. Only sites verified to
+ * name both the person and the office; never constructed from a name.
  */
 
 export interface CampaignSite {
@@ -29,13 +18,9 @@ export interface CampaignSite {
   attemptedAt: string;
 }
 
-/** Initial adoption/node:test evidence; production reads `campaign-sites`. */
+/** Seed records; production reads the `campaign-sites` projection. */
 export const CAMPAIGN_SITES: Readonly<Record<string, CampaignSite>> = {
-  // The 2026-08-14 hunt. Misses and not-yet-attempted are in
-  // docs/source-ladder.md — an absent key here is not a claim that no site
-  // exists. Three entries were verified through the site's own indexed page
-  // titles because the site serves 403 to plain clients (a bot wall is
-  // friction, not an answer); the verification text says so.
+  // An absent key means no verified site, not that none exists.
   "congress:C001133": {
     url: "https://juanciscomani.com",
     foundVia: "web search: Juan Ciscomani campaign website",
@@ -99,7 +84,6 @@ export const CAMPAIGN_SITES: Readonly<Record<string, CampaignSite>> = {
       'Site serves HTTP 403 to plain clients; its own indexed pages are titled "Maggie Hassan | U.S. Senator for New Hampshire". Verified from the site\'s indexed content, 2026-08-14.',
     attemptedAt: "2026-08-14",
   },
-  // The 2026-08-16 hunt (session 2a/2b) — the author's Diaz defect closed.
   "plural:bc52f516-a13b-4490-a12c-7b98fa3969e5": {
     url: "https://lupediazaz.com",
     foundVia: "the author's find (lupediazaz.com), independently verified",
@@ -142,14 +126,12 @@ export function campaignSiteFor(
   officeholderId: string,
   projection?: Readonly<Record<string, CampaignSite>>,
 ): CampaignSite | null {
-  if (!officeholderIdentityMayEnterReader(officeholderId)) return null;
   let records = projection;
   if (!records) {
     try {
       records = currentCampaignSites();
     } catch {
-      // Campaign links are an independent optional projection. Withhold the
-      // link on a store read failure; never block the canonical roster.
+      // Campaign links are optional; never block the roster on a read failure.
       records = {};
     }
   }

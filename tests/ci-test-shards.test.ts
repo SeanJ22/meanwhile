@@ -39,7 +39,6 @@ function fixture() {
 }
 
 test("canonical TS and TSX discovery is covered exactly once with balanced deterministic partitions", () => {
-  // Independently enumerate the suite rather than repeating the runner's glob.
   function discover(directory: string): string[] {
     return readdirSync(join(ROOT, directory), { withFileTypes: true }).flatMap((entry) => {
       const file = `${directory}/${entry.name}`;
@@ -83,7 +82,6 @@ test("measured longest-first hints balance file counts without omitting new or u
 });
 
 test("lexical dispatch modeling rejects an LPT regression and bounded swaps cannot worsen round-robin", () => {
-  // Independently simulate the exact lexical order, not the planner's sort.
   function simulate(assignments: { file: string; shard: number; schedulingCost: number }[], count: number, workers: number) {
     const load = Array.from({ length: count }, () => Array(workers).fill(0));
     for (const row of [...assignments].sort((a, b) => a.file < b.file ? -1 : 1)) {
@@ -226,7 +224,6 @@ test("an affected TSX assertion is selected, executed and propagates failure wit
     assert.equal(manifest.runner.arch, process.arch);
     assert.ok(manifest.runner.totalMemoryBytes > 0);
     assert.match(readFileSync(`${stem}.log`, "utf8"), /affected-contract-proof/);
-    // The same real command becomes green only after the failing assertion is fixed.
     writeFileSync(join(root, affected), `import test from 'node:test'; import assert from 'node:assert/strict'; test('affected-contract-proof', () => assert.equal(2 + 2, 4));\n`);
     const passed = spawnSync(process.execPath, [RUNNER], { cwd: root,
       env: runnerEnvironment(shard), encoding: "utf8", timeout: 120_000, windowsHide: true });

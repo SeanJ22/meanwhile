@@ -1,45 +1,18 @@
 /**
- * **A robots.txt EVALUATOR. Pure; no network.** (Level 1 activation, 2026-09-01.)
+ * A robots.txt evaluator. Pure; no network. A verdict is recorded evidence and never refuses a public page by
+ * itself (`ROBOTS_BLOCKS_ACQUISITION` is false); an access control on the page is what stops a request.
+ * `Crawl-delay` is still honoured as spacing.
  *
- * **ROBOTS.TXT IS READ AND RECORDED, NEVER A REFUSAL BY ITSELF.** Owner
- * decision, Sean, 2026-09-25: "Robots.txt alone must not block acquisition. I
- * explicitly authorize automated reading of publicly accessible pages even when
- * robots.txt requests otherwise." It does not extend to bypassing
- * authentication or other access controls, and existing spending limits and
- * the paid-research pause remain in force.
+ *   ALLOWED      a robots document was read and its rules permit the path
+ *   DISALLOWED   a robots document was read and its rules name the path (recorded; the page is still read)
+ *   NO_ROBOTS    the host serves no robots document (404/410)
+ *   CANNOT_TELL  the document could not be read as a robots document (a wall, timeout, 3xx, 5xx, or HTML)
  *
- * So every fetcher still reads the host's robots.txt, evaluates it here, and
- * records the verdict with what the document said and when it was read — but
- * `ROBOTS_BLOCKS_ACQUISITION` is `false`: no verdict below stops a request for a
- * public page. `Crawl-delay` is still honoured as spacing. What does stop a
- * request is an ACCESS CONTROL on the page itself (`lib/hunt/access-control.ts`):
- * a login, a paywall, a 403 or bot challenge, a rate limit. Those are technical
- * failures to investigate by other public routes, never something to defeat.
- *
- * Permission and transport stay orthogonal (RULING 182, historical), and the
- * verdict here never collapses them. Four verdicts, all of them evidence:
- *
- * ```
- *   ALLOWED      a robots document was READ and its rules permit the path
- *   DISALLOWED   a robots document was READ and its rules name the path —
- *                recorded with the matched rule; a public page is still read
- *   NO_ROBOTS    the host serves NO robots document (404/410)
- *   CANNOT_TELL  the document could not be read AS a robots document: a wall
- *                (401/403/429), a timeout, a 3xx, a 5xx, or a 200 that is an
- *                HTML page — recorded as unread, never as "no robots file";
- *                the page's own answer decides whether it can be read
- * ```
- *
- * Matching is Google/RFC 9309 semantics: the group for OUR product token if one
- * exists, else `*`; longest-match between Allow and Disallow, Allow winning a
- * tie; `*` wildcard and `$` end anchor in paths; an empty `Disallow:` is no rule.
+ * Matching follows Google/RFC 9309: our product token's group if one exists, else `*`; longest match between
+ * Allow and Disallow, Allow winning a tie; `*` and `$` in paths; an empty `Disallow:` is no rule.
  */
 
-/**
- * The owner decision of 2026-09-25 as a value every gate reads: a robots.txt
- * verdict is evidence to record, and never refuses a public page by itself.
- * `tests/robots-recorded-not-blocking.test.ts` holds every fetcher to it.
- */
+/** A robots.txt verdict is evidence to record and never refuses a public page by itself. */
 export const ROBOTS_BLOCKS_ACQUISITION = false as const;
 
 /** The citation a record carries when a public page was read over a robots.txt that names it. */
@@ -111,7 +84,6 @@ export interface RobotsRead {
 
 export const DEFAULT_ROBOTS_TOKEN = "we-the-people";
 
-/* --------------------------------------------------------------- parsing */
 
 function stripComment(line: string): string {
   const hash = line.indexOf("#");
@@ -185,7 +157,6 @@ export function parseRobots(text: string): RobotsDocument {
   return { groups, sitemaps, directiveCount };
 }
 
-/* -------------------------------------------------------------- matching */
 
 function patternToRegExp(pattern: string): RegExp {
   const anchored = pattern.endsWith("$");
@@ -258,7 +229,6 @@ function decide(
   };
 }
 
-/* -------------------------------------------------------------- verdict */
 
 const HTML_SHAPE = /^\s*(<!doctype\s+html|<html[\s>]|<head[\s>]|<body[\s>]|<\?xml)/i;
 

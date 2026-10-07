@@ -1,13 +1,4 @@
-/**
- * **THE AUTOMATIC CALENDAR-TO-BODY REVIEWER ACCEPTS ONLY WHAT EVERY C16 CHECK
- * PROVES ON SAVED BYTES, AND HOLDS EVERYTHING ELSE BY NAME.** (C16 option A,
- * 2026-09-25.)
- *
- * `lib/control-plane/discovery/auto-crosswalk.ts` reviews one discovery walk's
- * vaulted evidence; `lib/civic-data/derived-crosswalk.ts` keeps what it accepts.
- * Every walk here is the real free walk over a recorded site; no test reaches
- * the network.
- */
+/** The automatic calendar-to-body reviewer accepts only what every check proves on saved bytes, and holds everything else by name. No test reaches the network. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -255,7 +246,7 @@ test("HELD: robots not shown for a read, a UTC-stamped calendar, and a state who
   /* Robots.txt is read first and recorded, whatever it says: a walk that recorded no reading of it holds the row. */
   const unread = { ...attempt, steps: attempt.steps.filter((s) => s.purpose !== "robots") };
   assert.deepEqual(reasons(review(unread, bodies)), ["ROBOTS_NOT_READ:-"]);
-  /* A verdict other than ALLOWED is evidence, never a hold (owner decision 2026-09-25). */
+  /* A verdict other than ALLOWED is evidence, never a hold. */
   const cannotTell = { ...attempt, steps: attempt.steps.map((s) => (s.purpose === "robots" ? { ...s, permission: "CANNOT_TELL" as const } : s)) };
   assert.deepEqual(reasons(review(cannotTell, bodies)), reasons(review(attempt, bodies)));
 

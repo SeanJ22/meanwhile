@@ -1,60 +1,6 @@
 /**
- * **SIGN IN WITH GOOGLE, FOR EXACTLY ONE IDENTITY.** (RULING 245, 2026-09-02.)
- *
- * The owner proves WHO HE IS rather than WHAT HE KNOWS. Google authenticates
- * the account; this module verifies, server-side and by itself, that the
- * identity Google asserts is the one enrolled address and nothing else. Every
- * function here is pure of Next and of the network — the routes under
- * `app/(admin)/admin/auth/` hand in a clock, a fetch and a key resolver, and
- * the tests hand in fakes. There is no `jose` in this repository, so the JWT
- * verification is Web Crypto directly, which also runs on the Netlify Node
- * runtime the route handlers declare.
- *
- * ## The checks, in the order they run, and what each one refuses
- *
- * ```
- *   NOT_CONFIGURED         a variable is absent — BY NAME, never a 500 and never
- *                          an open door. The login page renders the names
- *   BAD_STATE              the callback did not come from a start this host
- *                          issued to this browser inside the last ten minutes:
- *                          no cookie, a forged or tampered cookie, an expired
- *                          one, or a `state` that does not match it
- *   GOOGLE_DENIED          Google answered with `error=` (the owner cancelled,
- *                          or consent was refused). The class only — the error
- *                          text Google sent is never echoed
- *   MALFORMED              a callback without a code, or a token that is not
- *                          three base64url segments of JSON
- *   TOKEN_EXCHANGE_FAILED  the code could not be turned into an ID token. The
- *                          HTTP status is kept; the body is never read as text
- *   BAD_SIGNATURE          RS256 by a Google key the `kid` names, or nothing.
- *                          `alg=none`, an unknown kid after ONE refetch, and a
- *                          signature that does not verify all land here
- *   BAD_ISSUER             `iss` is neither `accounts.google.com` nor its https form
- *   BAD_AUDIENCE           `aud` is not our client id
- *   EXPIRED                `exp` is past, allowing ≤ 60 s of skew
- *   NOT_YET_VALID          `iat` is in the future beyond the skew — a clock we
- *                          cannot trust is a token we cannot trust
- *   UNVERIFIED_EMAIL       `email_verified` is not literally `true`
- *   WRONG_EMAIL            the verified email, lower-cased, is not the enrolled
- *                          address. `hd` (the hosted domain) is a UX hint and
- *                          is NEVER sufficient: every account in the workspace
- *                          would otherwise be the owner
- * ```
- *
- * ## The one cookie that is `SameSite=Lax`, and why
- *
- * `__Host-wtp-oauth` carries the signed PKCE verifier, the `state` and the
- * `nonce` between the start and the callback. The callback is a TOP-LEVEL
- * cross-site navigation FROM Google; a `Strict` cookie is not sent on that
- * request, so a Strict state cookie would make every sign-in fail with
- * BAD_STATE. `Lax` is sent on top-level GET navigations and is the narrowest
- * attribute under which the callback can see its own state. The cookie carries
- * NO SECRET — the verifier is single-use and worthless without the code Google
- * issues to our registered redirect URI, and the envelope is HMAC-signed with
- * the session key so its contents cannot be forged. It lives ten minutes and
- * is cleared at the callback whatever the outcome. The session cookie that a
- * successful callback issues is the existing `Strict` one; nothing about it
- * changes.
+ * Verifies server-side that the identity Google asserts is exactly the enrolled address. Pure of Next and the network:
+ * routes hand in a clock, a fetch and a key resolver. `hd` is never sufficient for authorization.
  */
 
 import {
@@ -84,7 +30,6 @@ export const GOOGLE_SIGN_IN_VARS = [
 export const OAUTH_STATE_COOKIE = "__Host-wtp-oauth";
 export const OAUTH_STATE_LIFETIME_SECONDS = 10 * 60;
 
-/** The start route and the callback. The callback is the REGISTERED redirect URI's path. */
 export const OAUTH_START_PATH = "/admin/auth/google";
 export const OAUTH_CALLBACK_PATH = "/admin/auth/callback";
 
@@ -116,10 +61,6 @@ export type GoogleRejection = (typeof GOOGLE_REJECTIONS)[number];
 
 const encoder = new TextEncoder();
 
-/* ------------------------------------------------------------------ *
- * CONFIGURATION — named, never inlined
- * ------------------------------------------------------------------ */
-
 export interface GoogleSignInReadiness {
   readonly ready: boolean;
   /** Variable NAMES that are absent or blank. Never values. */
@@ -132,10 +73,6 @@ export function googleSignInReadiness(env: {
   const missing = GOOGLE_SIGN_IN_VARS.filter((name) => !env[name] || env[name]?.trim() === "");
   return { ready: missing.length === 0, missing };
 }
-
-/* ------------------------------------------------------------------ *
- * PKCE
- * ------------------------------------------------------------------ */
 
 /** 32 random bytes → 43 base64url characters, inside RFC 7636's 43–128. */
 export function mintPkceVerifier(): string {
@@ -151,10 +88,6 @@ export async function pkceChallenge(verifier: string): Promise<string> {
 export function mintOauthToken(): string {
   return randomBase64Url(16);
 }
-
-/* ------------------------------------------------------------------ *
- * THE STATE COOKIE
- * ------------------------------------------------------------------ */
 
 export interface OauthState {
   readonly state: string;
@@ -172,11 +105,7 @@ export type OauthStateVerdict =
   | { readonly ok: true; readonly state: OauthState }
   | { readonly ok: false; readonly rejection: "BAD_STATE" };
 
-/**
- * Open the state cookie. Every failure is BAD_STATE: which of "forged",
- * "expired" and "malformed" applied is not something the login page should
- * distinguish for a caller who was not the one that started the flow.
- */
+/** Every failure is BAD_STATE; which kind applied is not shown to a caller who did not start the flow. */
 export async function openOauthState(
   cookieValue: string | null | undefined,
   sessionKey: string,
@@ -204,12 +133,7 @@ export async function openOauthState(
   return { ok: true, state: s as OauthState };
 }
 
-/**
- * `SameSite=Lax` — the ONE cookie on the admin host that is not Strict. See the
- * module header: the callback is a cross-site top-level navigation from Google
- * and a Strict cookie would not accompany it. `__Host-` still forbids a Domain
- * attribute, so the public host never sees it.
- */
+/** `SameSite=Lax`, the one non-Strict cookie: the callback is a cross-site top-level navigation from Google. Carries no secret. */
 export function oauthCookieAttributes(maxAgeSeconds: number): string {
   return [`Path=/`, `Max-Age=${maxAgeSeconds}`, "HttpOnly", "Secure", "SameSite=Lax"].join("; ");
 }
@@ -219,10 +143,6 @@ export function stateMatches(fromQuery: string | null | undefined, fromCookie: s
   if (!fromQuery) return false;
   return timingSafeEqual(fromQuery, fromCookie);
 }
-
-/* ------------------------------------------------------------------ *
- * THE AUTHORIZATION URL
- * ------------------------------------------------------------------ */
 
 export function buildAuthorizationUrl(input: {
   readonly clientId: string;
@@ -240,15 +160,10 @@ export function buildAuthorizationUrl(input: {
   url.searchParams.set("nonce", input.nonce);
   url.searchParams.set("code_challenge", input.codeChallenge);
   url.searchParams.set("code_challenge_method", "S256");
-  // A chooser hint only. No login_hint: the enrolled address is not put in a
-  // query string, and the server-side email check is the authorization.
+    // A chooser hint only; the enrolled address never goes in a query string.
   url.searchParams.set("hd", OWNER_HOSTED_DOMAIN_HINT);
   return url.toString();
 }
-
-/* ------------------------------------------------------------------ *
- * GOOGLE'S KEYS
- * ------------------------------------------------------------------ */
 
 export interface GoogleJwk {
   readonly kty: string;
@@ -265,7 +180,6 @@ export interface Jwks {
 
 export type KeyResolver = (kid: string) => Promise<GoogleJwk | null>;
 
-/** `max-age` from a Cache-Control header, in seconds, or null when absent. */
 export function parseCacheControlMaxAge(header: string | null | undefined): number | null {
   if (!header) return null;
   const m = /(?:^|,)\s*max-age\s*=\s*(\d+)/i.exec(header);
@@ -289,14 +203,7 @@ export function emptyJwksCache(): JwksCache {
   return { jwks: null, expiresAtMs: 0, lastFetchAtMs: 0 };
 }
 
-/**
- * A resolver over a per-instance cache that honours Google's `max-age`.
- *
- * An unknown `kid` re-fetches once — Google rotates keys and a token signed by
- * a key newer than the cache is legitimate — but only once per
- * {@link JWKS_MIN_REFETCH_INTERVAL_MS}, so a flood of tokens naming made-up
- * kids cannot turn this host into a request generator against Google.
- */
+/** An unknown `kid` re-fetches at most once per {@link JWKS_MIN_REFETCH_INTERVAL_MS}, so made-up kids cannot flood Google. */
 export function createJwksResolver(input: {
   readonly fetchImpl: typeof fetch;
   readonly cache?: JwksCache;
@@ -347,10 +254,6 @@ export function createJwksResolver(input: {
   };
 }
 
-/* ------------------------------------------------------------------ *
- * THE ID TOKEN
- * ------------------------------------------------------------------ */
-
 export interface IdTokenClaims {
   readonly iss?: unknown;
   readonly aud?: unknown;
@@ -371,14 +274,7 @@ function decodeJsonSegment(segment: string): unknown {
   return JSON.parse(new TextDecoder().decode(base64UrlDecode(segment)));
 }
 
-/**
- * Verify an ID token's signature and standard claims. Authorization — WHO the
- * token is for — is {@link authorizeOwner}, kept separate so a test can prove
- * each refusal on its own.
- *
- * Header first (it names the key), signature second, payload only after the
- * signature verifies: a forged token never reaches the claims parser.
- */
+/** Header, then signature, then payload: a forged token never reaches the claims parser. */
 export async function verifyIdToken(
   idToken: string,
   input: {
@@ -462,13 +358,7 @@ export type OwnerVerdict =
   | { readonly ok: true; readonly email: string }
   | { readonly ok: false; readonly rejection: "UNVERIFIED_EMAIL" | "WRONG_EMAIL" };
 
-/**
- * Is this verified identity the enrolled owner?
- *
- * `email_verified` must be the boolean `true` — not the string, not truthy.
- * `hd` is deliberately not consulted: a hosted-domain match says the account is
- * in the workspace, and the workspace is not the owner.
- */
+/** `email_verified` must be the boolean `true`; `hd` is deliberately not consulted. */
 export function authorizeOwner(claims: IdTokenClaims): OwnerVerdict {
   if (claims.email_verified !== true) return { ok: false, rejection: "UNVERIFIED_EMAIL" };
   if (typeof claims.email !== "string") return { ok: false, rejection: "WRONG_EMAIL" };
@@ -477,21 +367,11 @@ export function authorizeOwner(claims: IdTokenClaims): OwnerVerdict {
   return { ok: true, email: OWNER_ADMIN_EMAIL };
 }
 
-/* ------------------------------------------------------------------ *
- * THE TOKEN EXCHANGE
- * ------------------------------------------------------------------ */
-
 export type ExchangeVerdict =
   | { readonly ok: true; readonly idToken: string }
   | { readonly ok: false; readonly rejection: "TOKEN_EXCHANGE_FAILED"; readonly httpStatus: number | null };
 
-/**
- * Turn the code into an ID token, server-side, with the client secret.
- *
- * The response body is parsed as JSON and only `id_token` is read from it. On
- * failure the STATUS is kept for the log line; the body — which on some errors
- * echoes the request — is never read as text and never travels.
- */
+/** Only `id_token` is read; on failure the status is kept and the body, which may echo the request, never travels. */
 export async function exchangeCodeForIdToken(input: {
   readonly code: string;
   readonly verifier: string;
@@ -532,10 +412,6 @@ export async function exchangeCodeForIdToken(input: {
   return { ok: true, idToken: parsed.id_token };
 }
 
-/* ------------------------------------------------------------------ *
- * THE WHOLE CALLBACK, PURE OF NEXT
- * ------------------------------------------------------------------ */
-
 export interface CallbackInput {
   readonly query: URLSearchParams;
   readonly stateCookie: string | null | undefined;
@@ -553,11 +429,7 @@ export type CallbackVerdict =
   | { readonly ok: true; readonly email: string }
   | { readonly ok: false; readonly rejection: GoogleRejection; readonly httpStatus?: number | null };
 
-/**
- * State before anything else: a callback that cannot be tied to a start this
- * host issued is refused before a single byte goes to Google, and before the
- * configuration is even consulted for the exchange.
- */
+/** State is checked before anything else, so an untied callback sends nothing to Google. */
 export async function completeGoogleCallback(input: CallbackInput): Promise<CallbackVerdict> {
   if (!input.sessionKey) return { ok: false, rejection: "NOT_CONFIGURED" };
 

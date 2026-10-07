@@ -1,5 +1,4 @@
-/** @freshness-reads-here The retrievedAt clock is recorded only after this
- * adapter receives the complete publisher body and verifies its byte hash. */
+/** `retrievedAt` is recorded only after the complete publisher body is received and its byte hash verified. */
 import { createHash } from "node:crypto";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { Attempt } from "../attempt.ts";
@@ -30,10 +29,7 @@ export interface CandidatePublicationCycleReport {
   readonly stoppedLoading?: string;
 }
 
-/**
- * `run` over `items`, a few at a time, starting no batch once `stop()` is true.
- * Null when it stopped before the end.
- */
+/** Null when it stopped before the end. */
 async function inBatches<T, R>(items: readonly T[], stop: () => boolean, run: (item: T) => Promise<R>): Promise<R[] | null> {
   const out: R[] = [];
   for (let at = 0; at < items.length; at += CANDIDATE_PUBLICATION_READ_CONCURRENCY) {
@@ -43,7 +39,6 @@ async function inBatches<T, R>(items: readonly T[], stop: () => boolean, run: (i
   return out;
 }
 
-/** The named aggregates that exist, by id: one primary-key batch where the store has one. */
 async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<readonly { id: string; value: T }[]>;
   read(id: string): Promise<{ id: string; value: T } | null> }, ids: readonly string[]): Promise<Map<string, T>> {
   const unique = [...new Set(ids)];
@@ -53,9 +48,7 @@ async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<r
   return new Map(rows.map(row => [row.id, row.value]));
 }
 
-/** The original instruction controls which canonical candidacies may acquire
- * deeper pages. Every other approved site remains available to the existing
- * campaign-link routine but receives no new work from this pass. */
+/** Only the original instruction's candidacies may acquire deeper pages; other approved sites get no new work from this pass. */
 export async function runCandidatePublicationCycle(input: {
   readonly repos: ControlPlaneRepositories;
   readonly eligibleCandidacyIds: ReadonlySet<string>;
@@ -78,12 +71,7 @@ export async function runCandidatePublicationCycle(input: {
   if (!Number.isFinite(recheckMs) || recheckMs < 0) throw new Error("CANDIDATE_PUBLICATION_RECHECK_INVALID");
   const recorder = campaignSiteReadRecorder({ repos: input.repos, vaultRoot: input.vaultRoot,
     methodVersion: input.methodVersion, now: () => new Date(input.clock()).toISOString(), heldVault: input.heldVault });
-  /*
-   * Rows read scale with the eligible candidacies, never with the tables (Sean, Oct 6: this pass began with four
-   * whole-table reads; production cp_attempts alone was 66.7 MB): the approved campaign sites by key (batched), then for candidacies with
-   * one approved host their own work items (indexed subject), those items' route tasks (indexed work item) and the
-   * Attempts those tasks name (primary key). No read starts after the round's dispatch cutoff.
-   */
+  /* Rows read scale with the eligible candidacies, never with whole tables. */
   const stop = () => input.deadlineMs !== undefined && input.clock() >= input.deadlineMs;
   const stopped = (step: string): CandidatePublicationCycleReport => ({ ...empty, stoppedLoading: step });
   if (stop()) return stopped("the approved campaign sites");
@@ -161,7 +149,6 @@ export async function runCandidatePublicationCycle(input: {
     }
     captures.push(...await sourceRecords(url));
   }
-  /* A capture another job made carries its own Attempt and work item: read just those. */
   for (const [id, attempt] of await readByIds(input.repos.attempts, captures.map(row => row.attemptId).filter(id => !attempts.has(id)))) attempts.set(id, attempt);
   for (const [id, item] of await readByIds(input.repos.workItems, captures.map(row => row.workItemId).filter(id => !workSubjects.has(id)))) workSubjects.set(id, item.subject);
   const due = [] as ReturnType<typeof candidatePublicationLinks>;

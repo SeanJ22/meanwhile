@@ -177,12 +177,7 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
   // Exhausting the supplied alternatives preserves the existing fail-closed
   // boundary: an integrity failure does not authorize another network fetch.
   if (blockers.length) return result("BLOCKED");
-  /*
-   * The route's recorded robots.txt verdict (DISALLOWED, CANNOT_TELL or any other) never blocks it: robots.txt is read
-   * and recorded, and a public page is read over it (owner decision 2026-09-25, ROBOTS_BLOCKS_ACQUISITION is false).
-   * What blocks a route is an access control on the page itself, judged from the retrieval's own answer below.
-   * PERMISSION_DENIED / PERMISSION_UNKNOWN remain in the blocker vocabulary only for results recorded before then.
-   */
+  /* The route's recorded robots.txt verdict never blocks it; an access control judged from the retrieval's own answer does. PERMISSION_DENIED and PERMISSION_UNKNOWN remain only for older results. */
   try {
     requireCapability(input.grant, "NETWORK_PUBLIC_READ"); requireCapability(input.grant, "VAULT_WRITE");
     if (route.retrieval === "browse") requireCapability(input.grant, "BROWSER_DRIVE");

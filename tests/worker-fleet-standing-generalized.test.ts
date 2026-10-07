@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
+import { gunzipSync } from "node:zlib";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -23,17 +24,20 @@ import {
   installOperationalReferenceBundle,
   operationalReferenceBundle,
 } from "../lib/civic-data/operational-references.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import { methodFixture } from "./method-store-fixture.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const METHOD = methodFixture();
-installOperationalReferenceBundle(operationalReferenceBundle({
-  az: JSON.parse(readFileSync(path.join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")),
-  nh: JSON.parse(readFileSync(path.join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")),
-  nj: JSON.parse(readFileSync(path.join(ROOT, "data/states/nj/jurisdictions/nj.json"), "utf8")),
-}));
-await installRegistryRuntimeFirstSeeds();
+installOperationalReferenceBundle(operationalReferenceBundle(
+  JSON.parse(readFileSync(path.join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")),
+));
+const registry = JSON.parse(gunzipSync(readFileSync(path.join(ROOT, "tests/fixtures/registry-transfer-import.json.gz"))).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+const registryStore = new MemoryRoutineDataStore();
+Object.assign(registryStore, { candidates: new Map([[registry.record.candidate.id, registry.record]]), promotions: new Map([[registry.projection.key, registry.projection]]) });
+assert.equal((await readRegistryRuntimeProjection({ store: registryStore, bypassCache: true })).kind, "PROMOTED");
 const SUBJECT = "curated:az/corona-de-tucson-fire-district#governing";
 const START = "2026-09-03T04:00:00.000Z";
 const PRIMARY = "https://www.coronafire.org/sitemap.xml";
@@ -49,7 +53,7 @@ function contract(observationArtifactIds: readonly string[]): GeneralizedCivicEx
 
 function plan(value: GeneralizedCivicExtractionContract): AutonomousWorkPlan {
   return { version: 1, contract: value, capability: "meetings", jurisdiction: "AZ", sourceRegistryReferences: ["lib/registry/registry.json"],
-    seedUrls: [], sources: [], acquisition: [], engineering: [], auditScope: "CAPTURED_ARTIFACT" };
+    seedUrls: [], sources: [], acquisition: [], auditScope: "CAPTURED_ARTIFACT" };
 }
 
 async function harness(t: TestContext) {

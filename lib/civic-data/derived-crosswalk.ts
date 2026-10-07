@@ -1,44 +1,3 @@
-/**
- * **THE AUTOMATIC CALENDAR-TO-BODY RECORDS: ROWS THE RUNNER'S OWN REVIEWER
- * ACCEPTED, KEPT LIKE THE REVIEWED ONES.** (C16 option A, 2026-09-25.)
- *
- * The authority is docs/rulings.md §3: a fact that passes verification on
- * saved evidence publishes through the verified publication process, with no
- * per-record owner review. "C16" is an earlier session's label, not Sean's
- * decision (Sean, 2026-10-01); it stays only as the stored citation text below.
- *
- * The manual crosswalk (`meeting-body-crosswalk`) is promoted by a reviewing
- * agent session, one package at a time. This store is the same record, made by
- * an agent-written deterministic reviewer that the standing runner applies to
- * every discovery walk that found a calendar
- * (`lib/control-plane/discovery/auto-crosswalk.ts`). Its routine contract
- * (`meeting-body-crosswalk-derived`, CURATED_READER_RECORD,
- * `US:meeting-body-crosswalk-derived`) is DERIVED: a version is authentic only
- * as the exact inputs it names (the previous version, each state's promoted
- * registration, the walks it reviewed and the vaulted bytes each row cites),
- * checked by the validator and at the door (`derived-door.ts`).
- *
- * What a version holds, and what it never does:
- *
- * - every row passes every C16 row check (`crosswalkRowIssue`), cites the
- *   reviewer's code version as its reviewer (never the owner), and no two
- *   active rows claim the same calendar under the same filter;
- * - a row once accepted is never dropped. An absent walk, an outage, a walk
- *   that did not reach the calendar, or a later review that holds it carries
- *   it exactly as it was: suspending a connection is the wiring's review
- *   triggers' job, and they apply to these rows exactly as to reviewed ones;
- * - a row changes only when a later review of a newer walk accepts it again,
- *   so its evidence and review time move forward (which is also what restores
- *   a suspended connection: a review later than its suspension);
- * - what the reviewer held is not in the version. It is each candidate's
- *   excluded facts, keyed stably, with what was ruled out, what would settle
- *   it and who moves next: Admin's held records show it.
- *
- * The wiring derive composes these rows with the manual crosswalk
- * (`composeCrosswalk`): a manually reviewed row wins over an automatic one for
- * the same body, kind and route (withdrawn or not), and over one claiming its
- * calendar and filter for another body.
- */
 import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -53,14 +12,17 @@ import {
 } from "./read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 
+/**
+ * Calendar-to-body rows the runner's deterministic reviewer accepted, kept like reviewed rows. An accepted row is
+ * never dropped: it is carried until a later review of a newer walk renews it. Holds are excluded facts, not rows,
+ * and a manually reviewed row wins over an automatic one (`composeCrosswalk`).
+ */
 export const DERIVED_CROSSWALK_CONTRACT_ID = "meeting-body-crosswalk-derived" as const;
-/** The authority it shares with the wiring store: the standing runner, from promoted and vaulted inputs only. */
 export const DERIVED_CROSSWALK_SOURCE_ID = "meeting-source-wiring" as const;
 export const DERIVED_CROSSWALK_RECORD_CLASS = "CURATED_READER_RECORD" as const;
 export const DERIVED_CROSSWALK_SCOPE = "US:meeting-body-crosswalk-derived" as const;
 const DERIVED_CROSSWALK_PARSER = "meeting-source-wiring/1" as const;
 
-/** Every automatic row's reviewer names the reviewer's code version: `auto-crosswalk-reviewer@<12 hex>`. */
 export const AUTO_CROSSWALK_REVIEWER_PREFIX = "auto-crosswalk-reviewer@" as const;
 const REVIEWER = /^auto-crosswalk-reviewer@[0-9a-f]{12}$/;
 
@@ -70,57 +32,32 @@ export interface DerivedCrosswalkProjection {
   readonly records: readonly MeetingBodyCrosswalkRow[];
 }
 
-/** Every reason the reviewer holds a proposal. A hold publishes nothing and never removes an accepted row. */
 export const AUTO_CROSSWALK_HOLD_REASONS = [
-  /** The find is of a kind no reviewed filter is defined for (a Legistar or AgendaCenter route). */
   "KIND_NOT_REVIEWABLE",
-  /** The walk's chain from the government's recorded site to the calendar cannot be recomputed. */
   "HOST_NOT_ATTESTED",
-  /** The calendar is not on the host the walk attested as the government's own. */
   "HOST_NOT_OWN",
-  /**
-   * Historical: before the owner decision of 2026-09-25 a read whose robots verdict was not ALLOWED or NO_ROBOTS held
-   * the row. A stored hold may still carry it; the reviewer never produces it now (robots.txt is recorded, never a hold).
-   */
   "PERMISSION_NOT_SHOWN",
-  /** The walk recorded no robots.txt reading for the calendar's host before reading it: robots is read first, whatever it says. */
   "ROBOTS_NOT_READ",
-  /** The calendar's or the naming page's bytes are not held in the vault. */
   "EVIDENCE_NOT_VAULTED",
-  /** The state's registration pairs this government with no body. */
   "BODY_NOT_REGISTERED",
-  /** A hand-wired route already serves the body. */
   "ALREADY_WIRED",
-  /** The held bytes are not a calendar of the find's kind, or hold no event. */
   "CALENDAR_UNREADABLE",
-  /** No event names the government's governing body by any governing-body name its kind of government uses. */
   "NO_EVENT_NAMES_BODY",
-  /** Events name the governing body two different ways; which is the government's is a review. */
   "GOVERNING_NAME_CONFLICT",
-  /** The printed name reads as another government's body (a county's, a school district's, an authority). */
   "SEPARATE_GOVERNMENT_NAME",
-  /** No page of the government's own host the walk saved prints the body's name. */
   "NAME_NOT_PRINTED_ON_OWN_PAGE",
-  /** An event the filter would select names another body too, and no exact exclusion separates them. */
   "AMBIGUOUS_TITLE",
-  /** The filter selects no event. */
   "SELECTS_NOTHING",
-  /** The calendar states no zone, and its state spans zones. */
   "TIME_ZONE_UNKNOWN",
-  /** The calendar's zone disagrees with itself or with its state's. */
   "TIME_ZONE_CONFLICT",
-  /** The selected events are stamped in UTC, which a small-town feed may use for local wall time (Holbrook, R21). */
+  // A small-town feed may stamp local wall time as UTC.
   "UTC_STAMPED_TIMES",
-  /** Two proposed bodies' filters select the same event. */
   "CONFLICTING_SELECTION",
-  /** More bodies than one calendar is read for in one pass. */
   "ROUTE_CAP",
-  /** The row the reviewer built fails a C16 row check (ours, never guessed around). */
   "ROW_CHECK_FAILED",
 ] as const;
 export type AutoCrosswalkHoldReason = (typeof AUTO_CROSSWALK_HOLD_REASONS)[number];
 
-/** One held proposal: a dead end with what was ruled out, what would settle it and who moves next. */
 export interface AutoCrosswalkHold {
   /** Stable pass to pass: `auto-crosswalk:<jurisdiction>|<route>|<reason>|<body slug or ->`. */
   readonly key: string;
@@ -135,16 +72,13 @@ export interface AutoCrosswalkHold {
   readonly whoMovesNext: string;
 }
 
-/** One accepted row, with the inputs it rests on. */
 export interface AutoCrosswalkAccepted {
   readonly row: MeetingBodyCrosswalkRow;
   readonly inputs: readonly DerivedInputRef[];
 }
 
-/** The reviewer's reading of one walk. */
 export interface AutoCrosswalkReview {
   readonly jurisdictionId: string;
-  /** The walk reviewed, and the registration the body rests on. */
   readonly inputs: readonly DerivedInputRef[];
   readonly accepted: readonly AutoCrosswalkAccepted[];
   readonly held: readonly AutoCrosswalkHold[];
@@ -152,7 +86,6 @@ export interface AutoCrosswalkReview {
 
 const text = (value: unknown): value is string => typeof value === "string" && value.trim() !== "";
 
-/** Why a projection is not an automatic crosswalk version, or null. Checked on every read: a malformed version is never served. */
 export function derivedCrosswalkProjectionIssue(value: unknown): string | null {
   const v = value as Partial<DerivedCrosswalkProjection> | null;
   if (typeof v !== "object" || v === null || v.kind !== "meeting-body-crosswalk-derived" || v.formatVersion !== 1 || !Array.isArray(v.records)) {
@@ -169,7 +102,6 @@ export function derivedCrosswalkProjectionIssue(value: unknown): string | null {
 
 let installed: CivicDataReadResult<DerivedCrosswalkProjection> | null = null;
 
-/** Read the promoted automatic crosswalk, refusing a malformed one. A store error stays an error, never "no rows". */
 export async function readDerivedMeetingBodyCrosswalk(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<DerivedCrosswalkProjection>> {
@@ -189,8 +121,6 @@ export function derivedMeetingBodyCrosswalkReadState(): CivicDataReadResult<Deri
   return installed ?? civicDataReadNotInitialized(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, "The automatic meeting-body crosswalk has not been read for this process.");
 }
 
-/* ------------------------------------------------------------------ plan */
-
 /** Everything that defines the connection, and nothing that moves with a re-read. */
 function substance(row: MeetingBodyCrosswalkRow): string {
   const { reviewedBy: _by, reviewedAt: _at, evidence: _evidence, ...rest } = row;
@@ -198,16 +128,11 @@ function substance(row: MeetingBodyCrosswalkRow): string {
 }
 
 export interface DerivedCrosswalkPlan {
-  /** The next version's rows, sorted by id. */
   readonly rows: readonly MeetingBodyCrosswalkRow[];
-  /** Rows first accepted this version. */
   readonly accepted: readonly string[];
-  /** Rows a later review of a newer walk accepted again, with its evidence and review time. */
   readonly renewed: readonly string[];
-  /** Rows kept exactly as they were. */
   readonly carried: readonly string[];
   readonly held: readonly AutoCrosswalkHold[];
-  /** Every input the version was computed from, deduplicated and sorted. */
   readonly inputs: readonly DerivedInputRef[];
 }
 
@@ -237,7 +162,6 @@ export function planDerivedCrosswalk(input: {
   const held = new Map<string, AutoCrosswalkHold>();
   for (const review of input.reviews) {
     for (const h of review.held) held.set(h.key, h);
-    /* A walk reviewed is an input whether it was accepted or held: the holds it produced are this version's too. */
     for (const i of review.inputs) inputs.set(inputKey(i), i);
     for (const { row: reviewed, inputs: rowInputs } of review.accepted) {
       for (const i of rowInputs) inputs.set(inputKey(i), i);
@@ -274,15 +198,12 @@ export function planDerivedCrosswalk(input: {
   };
 }
 
-/* ------------------------------------------------------------- candidate */
-
 const sha256Hex = (value: string): string => createHash("sha256").update(value).digest("hex");
 
 export function derivedCrosswalkProjection(plan: DerivedCrosswalkPlan): DerivedCrosswalkProjection {
   return { kind: "meeting-body-crosswalk-derived", formatVersion: 1, records: plan.rows };
 }
 
-/** A hold as the candidate's excluded fact: Admin's held records show the dead end and who moves next. */
 export function autoCrosswalkHeldFact(h: AutoCrosswalkHold): { key: string; code: string; detail: string; record: unknown } {
   return {
     key: h.key,
@@ -301,10 +222,6 @@ export function autoCrosswalkHeldFact(h: AutoCrosswalkHold): { key: string; code
   };
 }
 
-/**
- * The automatic crosswalk's candidate: authentic only as the inputs it was computed from (`retrieval.derived`). Its
- * semantic violations are every C16 row check and list check its rows fail, so a malformed version is never GOOD.
- */
 export function derivedCrosswalkCandidate(
   plan: DerivedCrosswalkPlan,
   extraInputs: readonly DerivedInputRef[],
@@ -382,7 +299,6 @@ export function derivedCrosswalkCandidate(
   };
 }
 
-/** A pass that cannot read its inputs records a refused candidate; the last known good rows stay live. */
 export function derivedCrosswalkFailedCandidate(attemptedAt: string, failureDetail: string): RoutineCandidate {
   return {
     id: `cv-${sha256Hex(`${DERIVED_CROSSWALK_CONTRACT_ID}\u001f${DERIVED_CROSSWALK_SCOPE}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
@@ -406,14 +322,9 @@ export function derivedCrosswalkFailedCandidate(attemptedAt: string, failureDeta
   };
 }
 
-/* ----------------------------------------------------------- composition */
-
 export interface ComposedCrosswalk {
-  /** The rows the wiring decides, manual first. */
   readonly rows: readonly MeetingBodyCrosswalkRow[];
-  /** The automatic rows kept: the wiring cites the automatic version for these. */
   readonly automaticIds: ReadonlySet<string>;
-  /** Automatic rows a manual row shadows, and why. */
   readonly shadowed: readonly { readonly id: string; readonly why: string }[];
 }
 
@@ -450,7 +361,6 @@ export function composeCrosswalk(
   return { rows: [...reviewed, ...kept], automaticIds: new Set(kept.map((row) => row.id)), shadowed };
 }
 
-/** A row the reviewer names as its own (for the wiring's conflict rule and for display). */
 export function isAutomaticCrosswalkRow(row: Pick<MeetingBodyCrosswalkRow, "reviewedBy">): boolean {
   return text(row.reviewedBy) && REVIEWER.test(row.reviewedBy);
 }

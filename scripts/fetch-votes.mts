@@ -1,13 +1,8 @@
 /**
- * @freshness-reads-here
- *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * @freshness-reads-here — each freshness date is taken at the moment of the fetch it describes.
  */
 /**
- * Acquire and promote the recent federal roll-call window (5).
+ * Acquire and promote the recent federal roll-call window.
  *
  * `pnpm votes:fetch -- --window 20`
  *
@@ -23,9 +18,8 @@
  *
  * The Senate keys members by LIS id, not bioguide, so the public-domain
  * legislators-current.json provides the lis→bioguide bridge — and the run
- * PRINTS the identifier match rates with denominators (the standing rule:
- * compare identifier sets before trusting an adapter; a zero-match join must
- * be loud).
+ * PRINTS the identifier match rates with denominators; a zero-match join must
+ * be loud.
  *
  * Serialized requests, identified User-Agent, bounded window. This explicit
  * owner operation writes only the candidate/event/promotion plane. It has no
@@ -153,7 +147,7 @@ const billNums = new Set<string>();
 let houseMatched = 0;
 let houseTotal = 0;
 
-// DB-08: each window reaches back to the roll after the previous version's newest, so none is skipped between versions.
+// Each window reaches back to the roll after the previous version's newest, so none is skipped between versions.
 const heldWindow = previous.kind === "PROMOTED" || previous.kind === "BOOTSTRAP" ? previous.value.snapshot.window : null;
 const newestHeld = (rolls: readonly number[] | undefined): number | null => rolls !== undefined && rolls.length > 0 ? Math.max(...rolls) : null;
 const latestHouse = await latestHouseRoll();
@@ -177,10 +171,7 @@ for (const n of houseRolls) {
   const date = tag(xml, "action-date") ?? "";
 
   // The chamber-wide tally is the LAST yea/nay pair: the XML lists per-party
-  // subtotals first and <totals-by-vote> last. The first pair is one party's
-  // count — shipping it as the result was caught in this session's first run
-  // (roll 264: "76–136" is the Republican subtotal; the House total is
-  // 76–350).
+  // subtotals first and <totals-by-vote> last.
   const totalPairs = [
     ...xml.matchAll(/<yea-total>(\d+)<\/yea-total>\s*<nay-total>(\d+)<\/nay-total>/g),
   ];
@@ -334,9 +325,8 @@ if (apiKey) {
       };
       const title = data.bill?.title;
       if (!title) continue;
-      // Every bill type has its own congress.gov path segment — collapsing
-      // them all to "-bill" sent readers to unrelated real bills (H Con Res
-      // 113's link landed on house-bill/113). Caught 2026-08-16.
+      // Every bill type has its own congress.gov path segment; collapsing them
+      // to "-bill" links unrelated real bills.
       const URL_SLUG: Record<string, string> = {
         hr: "house-bill",
         hres: "house-resolution",

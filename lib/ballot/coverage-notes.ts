@@ -1,12 +1,7 @@
 import { createHash } from "node:crypto";
 import type { BallotSet, ScopedBallotCoverageNote } from "./types.ts";
 
-/** Read-time migration of the three retained August 27 Pima notes. Exact
- * content hashes prevent a later, changed note from inheriting old scope.
- * The first two explicitly describe ZIP 85641; the third names Pima County.
- * The JTED note does not assert the rest of its cross-county territory is
- * known. That unresolved territory remains owed, not inferred from a county.
- * New curated notes should carry scopedCoverageNotes in their source payload. */
+/** Keyed by exact content hash, so a changed note never inherits a retained note's scope. */
 const LEGACY_PIMA_SCOPES: Readonly<Record<string, ScopedBallotCoverageNote["scope"]>> = {
   dc2d9402ab30720f3e5c26c4dfe3ea00ff51fa4774d73500b7be87da6a0adf00: { kind: "ZIPS", ids: ["85641"] },
   bf4c0c3025abb742da0e56c191100e1df7c32ed8f9eb379582f667d12c2750e8: { kind: "ZIPS", ids: ["85641"] },
@@ -23,8 +18,6 @@ export function curatedCoverageNotes(source: string, raw: { coverageNotes?: unkn
     const scope = source === "ballot-az-pima" ? LEGACY_PIMA_SCOPES[createHash("sha256").update(text).digest("hex")] : undefined;
     if (scope) scoped.push({ text, scope });
     else if (source === "ballot-az-pima") {
-      // Preserve the ballot and label the missing scope; a new unplaced note
-      // cannot become a claim about every Arizona ZIP by default.
       global.push("Some source coverage notes do not yet have a verified geographic scope. They do not establish that information is absent from this area's ballot.");
     } else global.push(text);
   }
@@ -40,8 +33,6 @@ export function curatedCoverageNotes(source: string, raw: { coverageNotes?: unkn
   return { coverageNotes: [...new Set(global)], scopedCoverageNotes: scoped };
 }
 
-/** Uses the same resolved divisions as the contests; a ZIP crossing a
- * boundary can see a named local note without claiming every voter is in it. */
 export function coverageNotesForScope(set: Pick<BallotSet, "coverageNotes" | "scopedCoverageNotes">, zip: string | null, divisions: readonly string[]): string[] {
   const ids = new Set(divisions);
   return [...new Set([...(set.coverageNotes ?? []), ...(set.scopedCoverageNotes ?? []).filter(note =>

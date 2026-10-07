@@ -5,16 +5,9 @@ import { verificationOf, provenanceKind, PROVENANCE_KIND_LABELS } from "@/lib/of
 import { NoValue, PopupRow } from "@/components/map/popup/popup-row";
 
 /**
- * The rendered form of a card's source list — ONE component, for the
- * division card's Sources tab and the person card's Sources section alike
- * (item 1, 2026-08-16).
- *
- * A null `sourceUrl` renders as such rather than being hidden: a source list
- * that quietly omits its unsourced rows is a worse lie than no source list,
- * because it implies everything shown was cited.
- *
- * The caller states the count from the SAME array it passes here, so the
- * stated N and the rendered rows are the same number by construction.
+ * A card's source list, for the division card's Sources tab and the person
+ * card's Sources section. A null `sourceUrl` renders as such. The caller
+ * states the count from the same array.
  */
 export function CardSourcesList({ sources }: { sources: CardSource[] }) {
   return (
@@ -61,25 +54,8 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
 }
 
 /**
- * The Verified row — g3 item 5 (2026-08-16).
- *
- * This row used to say "not yet" for everything a human had not personally
- * re-checked, which on production meant a fact read off the Governor of
- * Arizona's own website sat under the words "Verified: not yet" with the link
- * to that website two rows above it. The rule: **a read from the subject's
- * own official source IS the verification**, by that source, on the date we
- * read it.
- *
- * Three states, and each says exactly what it knows — never more:
- *
- * - a human confirmed it, and the row is that date;
- * - the subject's own official publisher served it, and the row is the read
- *   date and who served it, so the claim is checkable rather than asserted;
- * - nobody has stood behind it yet, and "not yet" is the honest word — now
- *   reserved for the aggregators and third-party pages it was written for.
- *
- * Level register throughout: this is a claim surface, and nothing here is
- * cute about where a fact came from.
+ * The Verified row: a human-confirmed date; or the read date and publisher
+ * when the subject's own official source served it; otherwise "not yet".
  */
 function VerifiedRow({ provenance }: { provenance: CardSource["provenance"] }) {
   const verification = verificationOf(provenance);

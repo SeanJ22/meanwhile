@@ -11,12 +11,7 @@ const DOOR = readFileSync(
 );
 
 test("M139: the districts door renders two sections, never one wearing both names", () => {
-  /*
-    Sub-item 3. The door used to be either/or — the governing set at an
-    address, the drawn set everywhere else — so two different claims shared
-    one heading depending on where the reader stood. They are now two
-    sections with a rule between them and a count each.
-  */
+  /* Two claims, two sections: the governing set at an address and the drawn set, each with its own count. */
   assert.match(DOOR, /heading="Districts you're in"/, "the governing section is gone");
   assert.match(DOOR, /heading="Districts in view"/, "the drawn section is gone");
   assert.match(
@@ -28,19 +23,8 @@ test("M139: the districts door renders two sections, never one wearing both name
 
 test("M139: a zip never claims to know which districts the reader is in", () => {
   /*
-    The row's own wording for the first section was "Districts in this zip",
-    and that is the one thing deliberately not built. A ZCTA crosses city,
-    county and school lines, so a centroid can sit in a different town than
-    the reader — `deriveStatsView` already settles this and CLAUDE.md's entry
-    rule settles it above that. The section is gated on a resolved ADDRESS and
-    renders a named gap otherwise.
-  */
-  /*
-    Scanned with COMMENTS STRIPPED. The component explains at length why this
-    phrasing was not built, quoting the row's own wording to do it — so a scan
-    of the raw file finds the phrase in the very paragraph forbidding it, and
-    the first run of this test failed against a correct file for exactly that
-    reason. What must not exist is the rendered string, not the discussion.
+    A ZCTA crosses city, county and school lines, so the first section is gated on a resolved address and renders a
+    named gap otherwise. Scanned with comments stripped: what must not exist is the rendered string.
   */
   const code = DOOR.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
 

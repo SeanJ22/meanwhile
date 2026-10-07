@@ -16,7 +16,6 @@ const types: Record<string, string> = { cd: "congressional_district", sldu: "sta
 const cache = new Map<string, { version: string; capture: HeldPlaceCapture }>();
 const injectedCaches = new WeakMap<ReadOnlyQuery, typeof cache>();
 
-/** The existing numeric Census identity joins, confined to the requested divisions. */
 export function geographyKeys(ids: readonly string[], divisions: readonly Division[]): Map<string, string[]> {
   const wanted = new Set(ids), keys = new Map<string, string[]>();
   const add = (key: string, id: string) => keys.set(key, [...new Set([...(keys.get(key) ?? []), id])]);

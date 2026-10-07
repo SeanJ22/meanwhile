@@ -1,40 +1,11 @@
 /**
- * **Overlapping pins fan out** — M19, 2026-08-17 (option A: spiderfy).
+ * Overlapping pins fan out. Different buildings close enough to collide on
+ * screen spread apart around their shared centre; every pin keeps its own
+ * colour and count. Not clustering (which hides pins behind a number) and not
+ * coarser grouping (which would merge two buildings into one pin).
  *
- * ## The defect
- *
- * Two venues a block apart collide on screen at metro zoom, and the top one
- * intercepts the clicks meant for the other. Playwright named it in Phase 6
- * screenshots — one marker "intercepts pointer events" for another, Pima
- * Association of Governments sitting over its neighbour in downtown Tucson.
- * It is NOT the 40px touch target: it reproduces with that rule scoped to
- * `pointer: coarse`, because the 14px dots themselves overlap.
- *
- * `lib/meetings/venues.ts` already groups meetings by rounded coordinate, so
- * one BUILDING is one pin. This is the other case: different buildings, too
- * close on screen to hit separately.
- *
- * ## Why fan-out rather than clustering
- *
- * This is the right behavior for this product. Clustering
- * replaces pins with a number, which means the reader has to open something
- * before they can see what is there — a click the map used to not need, and
- * reader friction is a defect with the standing of a wrong number. Raising
- * the grouping precision by zoom would MERGE two different governments' venues
- * into one pin, which is worse than either: a merged pin is a claim that two
- * buildings are one place.
- *
- * Fanning out adds nothing and hides nothing. Every pin that was there is
- * still there, still its own colour and its own count, just far enough apart
- * to hit.
- *
- * ## Geometry, and why it is here rather than in the component
- *
- * Screen points in, offsets out, no map and no DOM. The rule this encodes —
- * every member of a group ends up at least `minSeparation` from every other —
- * is the kind that decays silently into "it looks about right on my screen",
- * and a fan that still overlaps is indistinguishable from no fix at all.
- * `tests/spiderfy.test.ts` asserts the separation directly.
+ * Screen points in, offsets out, no map and no DOM: every member of a group
+ * ends at least `minSeparation` from every other.
  */
 
 export interface ScreenPoint {
@@ -45,12 +16,7 @@ export interface ScreenPoint {
 
 /**
  * Two dots collide when their centres are closer than this, in CSS pixels.
- *
- * The dot is 14px across, so 14 is the touching distance and anything under
- * it is an overlap. The value is larger on purpose: a pin whose EDGES merely
- * kiss is still a pin a thumb cannot pick between, and the tap target is
- * 40px at `pointer: coarse`. 28 is the diameter at which two dots have a
- * clear gap between them at every viewport.
+ * The dot is 14px; 28 leaves a clear gap at every viewport.
  */
 export const COLLISION_RADIUS = 28;
 
@@ -58,13 +24,8 @@ export const COLLISION_RADIUS = 28;
 export const FAN_RADIUS = 46;
 
 /**
- * Groups of keys that overlap each other on screen.
- *
- * Transitive by construction: A overlapping B and B overlapping C puts all
- * three in one group even when A and C are far apart, because fanning out
- * only two of them would leave the third sitting under one of the new
- * positions. Single pins are not groups and are not returned — a fan of one
- * is a pin that moved for no reason.
+ * Groups of keys that overlap each other on screen. Transitive: A over B and
+ * B over C puts all three in one group. Single pins are not returned.
  */
 export function findCollisionGroups(
   points: ScreenPoint[],
@@ -106,9 +67,7 @@ export function findCollisionGroups(
     else groups.set(root, [p.key]);
   }
 
-  // Stable order, so the same collision produces the same fan every time. A
-  // fan that reshuffles between renders is a reader losing the pin they were
-  // reaching for.
+  // Stable order, so the same collision produces the same fan every time.
   return [...groups.values()]
     .filter((g) => g.length > 1)
     .map((g) => [...g].sort())
@@ -123,16 +82,9 @@ export interface FanOffset {
 }
 
 /**
- * Fan `keys` out around their shared centre.
- *
- * A circle for small groups; a spiral once a circle of `FAN_RADIUS` cannot
- * hold them with a clear gap. The spiral is not decoration — at nine venues
- * in one building cluster, a fixed-radius circle puts adjacent pins closer
- * together than they were before the fan, which would be the defect
- * reintroduced by the fix.
- *
- * The first pin starts at the top and they run clockwise, so the order on
- * screen matches the sorted key order and is the same every time.
+ * Fan `keys` out around their shared centre: a circle for small groups, a
+ * spiral once a circle of `FAN_RADIUS` cannot hold them with a clear gap. The
+ * first pin starts at the top and they run clockwise in sorted key order.
  */
 export function fanOffsets(
   keys: string[],

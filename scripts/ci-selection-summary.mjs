@@ -9,7 +9,7 @@ const build = process.env.CI_DEPLOY_BUILD === 'no'
   ? 'no application build, because the deploy classification finds no shipping path (the build jobs report without building)'
   : 'the standalone build';
 const tests = (documents ? {
-  // RL-07: a change made only of documents.
+  // A change made only of documents.
   affected: 'only the tests that read the changed documents (by name, through a module or script that names them, or by listing the files where they live), in one job; source sweeps do not run for a documents-only change',
   none: 'no tests, because no test file reads the changed documents (documents only)',
 } : {

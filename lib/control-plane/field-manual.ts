@@ -1,47 +1,14 @@
 /**
- * **THE FIELD MANUAL — ONE GROWING STORE EVERY WORKER READS AND WRITES.**
- * (RULING 61: one living manifest that only grows. RULING 63: every run
- * inherits it and reports inherited-versus-newly-built. Owner directive
- * 2026-09-19: consolidate the scattered discovery knowledge into one store a
- * worker reads live and writes back live, with no human graduation step.)
+ * The field manual: one growing store of learned discovery knowledge that every
+ * worker reads and writes live, with no admission step.
  *
- * ## Why this store exists
- *
- * Learned discovery knowledge was scattered across ~20 stores in different
- * shapes — `data/method/knowledge.json` (frozen since Aug 31 because a human
- * had to run `method:learn` to admit anything), `cp_method_candidates` (scouts
- * wrote it and nobody read it), `lib/hunt/branch-manifest.ts`, the zip
- * playbook, the source ladder, the per-state dossiers, the vendor tenant
- * registries. A fleet whose knowledge does not carry forward is the same
- * worker run a thousand times. This store is the one place all of it lands so
- * that a worker born today is smarter than one born yesterday.
- *
- * ## Consolidation WITHOUT LOSS
- *
- * Every entry keeps its ORIGINAL SHAPE in `payload`, verbatim. `summary` is a
- * short projectable line a worker actually reads, and the typed hints
- * (`role`, `states`, `recordClasses`, `platforms`) are how the projection
- * narrows the store down to what applies — so a worker gets cents-of-cache
- * relevant lines rather than 70K tokens of the whole manifest. Two stores that
- * hold the same fact in different shapes become two entries; nothing is
- * dropped to look tidy.
- *
- * ## Grows only; live read, live write, no human step
- *
- * `upsertEntries` never removes an entry. A re-observation of the same id
- * refreshes its freshness/outcome and UNIONS its jurisdictions — it never
- * shrinks the store. A worker writes what it just learned straight in; the
- * next worker of any role reads it on its next walk. There is no admission
- * gate between the two.
- *
- * ## The two calls every role uses
+ * Every entry keeps its original record verbatim in `payload`; `summary` and
+ * the typed hints (`role`, `states`, `recordClasses`, `platforms`) let the
+ * projection narrow the store to what applies. `upsertEntries` never removes
+ * an entry: a re-observation refreshes it and unions its jurisdictions.
  *
  * `readFieldManual(repos, query)` and `writeFieldManual(repos, entries, now)`
- * are the whole interface: a role reads the projection that applies to it, and
- * writes what it learned straight back. Everything above them is pure (no db,
- * fs, clock, or source-type imports) so the projection and grow-only rules are
- * tested without a database; the two calls take the repositories as an
- * argument, so this module still imports nothing that touches a store.
+ * are the whole interface. Everything else is pure.
  */
 
 import type { FixMapRow } from "../method/fix-map.ts";
@@ -92,9 +59,9 @@ export interface FieldManualEntry {
   readonly ocdIds?: readonly string[];
   readonly bodyIds?: readonly string[];
   readonly foundBy?: "SCOUT" | "DETECTIVE";
-  /** The latest result anywhere, for display. What happened in each place is `placeResults` (DP-22). */
+  /** The latest result anywhere, for display. What happened in each place is `placeResults`. */
   readonly outcome: FieldManualOutcome;
-  /** One result per place, so a result in one place never overwrites another's. Absent on entries written before DP-22. */
+  /** One result per place, so a result in one place never overwrites another's. Absent on older entries. */
   readonly placeResults?: readonly PlaceResult[];
   /** The door itself, when the entry is one. */
   readonly url: string | null;
@@ -181,8 +148,7 @@ export function upsertEntries(
     const newerWins = nextAt >= priorAt;
     byId.set(entry.id, {
       ...(newerWins ? entry : prior),
-      // Union the reach either way: a fact proven in a second jurisdiction now
-      // applies to both, never only the latest (RULING 61 — applies retroactively).
+      // Union the reach either way: a fact proven in a second jurisdiction applies to both.
       states: lower([...prior.states, ...entry.states]),
       recordClasses: lower([...prior.recordClasses, ...entry.recordClasses]),
       platforms: lower([...prior.platforms, ...entry.platforms]),
@@ -226,8 +192,8 @@ export interface FieldManualQuery {
   /** Hard cap on projected lines so a walk's context stays a cache-cheap projection, never the whole store. */
   readonly limit?: number;
   /**
-   * The fix map's rows for the place this projection is for (DP-21). Given, each method line says whether it works
-   * here or is untried here, and a method that fails here is left out. Omitted, the projection is as it always was.
+   * The fix map's rows for the place this projection is for. Given, each method line says whether it works
+   * here or is untried here, and a method that fails here is left out.
    */
   readonly fixMapRows?: readonly FixMapRow[];
 }
@@ -235,9 +201,9 @@ export interface FieldManualQuery {
 export interface FieldManualProjection {
   /** The projectable lines, most-applicable first. What the worker reads. */
   readonly lines: readonly string[];
-  /** The entry ids offered — the "inherited branches" half of the RULING 63 pair. */
+  /** The entry ids offered: the inherited half of the inherited-versus-newly-built pair. */
   readonly entryIds: readonly string[];
-  /** Methods left out because they fail in this place (DP-21); 0 when no fix map rows were given. */
+  /** Methods left out because they fail in this place; 0 when no fix map rows were given. */
   readonly leftOutFailingHere?: number;
   /** How many entries matched before the limit; total how many the store holds. */
   readonly matched: number;
@@ -354,10 +320,9 @@ export function fieldManualForSource(read: FieldManualRead, url: string, state?:
 }
 
 /**
- * **THE ONE READ.** Every role reads the manual through this call: the current
- * stored manual, cut down to `query` (role, state, record class, platform). A
- * read failure comes back as `error` with an empty projection so the worker
- * walks without inherited knowledge rather than failing.
+ * The one read: the stored manual cut down to `query` (role, state, record
+ * class, platform). A read failure comes back as `error` with an empty
+ * projection.
  */
 export async function readFieldManual(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
   try {
@@ -403,10 +368,8 @@ export function newFieldManualEntry(
 }
 
 /**
- * **THE ONE WRITE.** Fold what a role just learned into the live manual, grow-only,
- * using the store's own compare-and-set to survive a concurrent writer. A write
- * failure is returned, never thrown: it must not lose the result that was
- * already learned.
+ * The one write: fold what a role learned into the live manual, grow-only,
+ * under the store's compare-and-set. A failure is returned, never thrown.
  */
 export async function writeFieldManual(
   repos: FieldManualRepos,

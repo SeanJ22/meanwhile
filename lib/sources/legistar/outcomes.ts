@@ -1,30 +1,6 @@
 /**
- * **WHAT THE BODY DID**, split from what the clerk noticed.
- *
- * Until 2026-08-29 this repository could tell a reader what was ON a Pima
- * County agenda and could not tell them what the Board DECIDED. The cause was
- * not a wall and not a missing source: `fetchEventItems()` already asked for
- * `/events/{id}/eventitems`, the reply already carried `EventItemActionName`,
- * `EventItemPassedFlagName`, `EventItemMover`, `EventItemSeconder` and
- * `EventItemActionText`, and `toAgendaItems()` mapped every row down to
- * `{ id, sequence, title, matterFile }` — a DISCARD, one line wide. The votes
- * route, which returns each named member's cast value, had never been asked
- * for at all.
- *
- * This module is the transform that stops the discard. It does not produce a
- * richer agenda item, and that refusal is the whole design.
- *
- * ---
- *
- * ## Why one API row becomes up to three records
- *
- * `lib/answerability/record-class.ts` (read here, never edited) says an
- * `AGENDA` answers `WHAT_WAS_NOTICED`, an `ACTION_SUMMARY` answers
- * `WHAT_WAS_DECIDED`, and only a `ROLL_CALL` answers `HOW_DID_THEY_VOTE`. One
- * wide object carrying a title AND an action AND a tally would satisfy all
- * three by construction, because whatever class you stamped on it would be a
- * claim about the WHOLE object. So the row is split, and the split is
- * mechanical rather than disciplinary:
+ * What the body did, split from what the clerk noticed. One `eventitems` row becomes up to three records
+ * of different classes (`lib/answerability/record-class.ts`):
  *
  * ```
  * LegistarEventItem  ->  LegistarAgendaRecord   AGENDA         always
@@ -32,26 +8,16 @@
  *                    ->  LegistarRollCallRecord ROLL_CALL      only if per-person rows came back
  * ```
  *
- * **The field sets are disjoint on purpose.**
+ * The field sets are disjoint on purpose:
+ * - The agenda record has no `action` and no `disposition`, so nothing that renders a decision can read
+ *   one off it.
+ * - The outcome record has no `title` and no `sequence`, so it cannot be printed as a docket.
+ * - The roll-call record has no `tallyText` and no `disposition`, so "carried by a 5-0 vote" can never be
+ *   expanded into member positions no government recorded.
+ * - The three arrays have different lengths, so there is no index correspondence to zip by mistake.
  *
- * - The agenda record has no `action` and no `disposition`, so nothing that
- *   renders a decision can read one off it.
- * - The outcome record has no `title` and no `sequence`, so it cannot be
- *   printed as a docket.
- * - The roll-call record has no `tallyText` and no `disposition`. `"carried by
- *   a 5-0 vote"` is physically absent from the only class allowed to answer
- *   "how did Supervisor X vote", so the tempting inference has no field to
- *   read from. Measured on 2026-08-29 across 20 Pima Board sittings: **42
- *   items say "carried by a N-N vote" and return ZERO per-person rows.**
- *   Expanding those sentences would have published roughly two hundred member
- *   positions that no government ever recorded.
- * - The three arrays have different lengths (135 / 58 / 1 on event 1825), so
- *   there is no index correspondence for a caller to zip by mistake.
- *
- * Every transform here is pure and offline — no clock, no disk, no network.
- * Retrieval is `client.ts`, sequenced by `collectEventOutcomes` at the bottom,
- * which is the one function that touches a clock and does so only to date a
- * read that has already returned rows (RULING 107).
+ * Every transform here is pure and offline. Retrieval is `client.ts`, sequenced by `collectEventOutcomes`,
+ * which only dates a read that has already returned rows.
  */
 
 import type { RecordClass } from "../../answerability/record-class.ts";
@@ -73,14 +39,8 @@ import type {
  * ------------------------------------------------------------------ */
 
 /**
- * What the body's own record says happened to the question.
- *
- * **`NOT_RECORDED` is not a third kind of defeat.** It is the named gap, and
- * `dispositionGap()` below says whose gap it is. Measured on the Pima Board
- * over 2026-05-01 .. 2026-08-29: 1360 items, 525 with a recorded action, 465
- * with a pass flag, and the flag reads `"Pass"` on all 465 — `"Fail"` was not
- * observed once. Reading the 895 unflagged items as failures would have
- * invented 895 defeats out of one county's four months.
+ * What the body's own record says happened to the question. `NOT_RECORDED` is the named gap (see
+ * `dispositionGap()`), never a defeat: an unflagged item is not a failed one.
  */
 export type OutcomeDisposition = "PASSED" | "FAILED" | "NOT_RECORDED";
 
@@ -136,9 +96,7 @@ export function readDisposition(item: LegistarEventItem): {
     return { disposition: "FAILED", raw, conflict: null };
   }
 
-  // Includes raw === null, and includes any word this adapter has not been
-  // taught. Both are NOT_RECORDED, and the raw text rides along so a later
-  // session can see what it would have had to guess at.
+  // Includes raw === null and any word this adapter has not been taught; the raw text rides along.
   return { disposition: "NOT_RECORDED", raw, conflict: null };
 }
 
@@ -173,25 +131,13 @@ export function dispositionGap(item: LegistarEventItem): string | null {
  * ------------------------------------------------------------------ */
 
 /**
- * What a votes retrieval actually established.
- *
- * A zero-row reply is FOUR different facts and they must never share a value:
- *
- * - `NO_QUESTION_PUT` — the item carries no recorded action. Nobody voted
- *   because nothing was put. A legitimate empty. (Pima item 329177.)
- * - `OUTCOME_WITHOUT_ROLL_CALL` — an action IS recorded, and the publisher
- *   published no per-person roll for it. **Their gap, not ours, and not an
- *   absence of a vote.** This is the common case: Pima's clerk writes
- *   "unanimously carried by a 5-0 vote" into `EventItemActionText` and enters
- *   no roll. Measured across 20 Board sittings, 465 pass-flagged items produce
- *   416 rolls and 49 of these. (Pima item 323718.)
- * - `ROLL_CALL_ASSERTED_BUT_ABSENT` — the item's own `EventItemRollCallFlag`
- *   says a roll call was taken and the roll came back empty. **A FAILED
- *   EXTRACTION**, reported as one. It is not licence to say no roll call
- *   exists; the record says one does and we did not get it. (Pima item
- *   329170 — and see the measured note on this state below.)
- * - `NOT_RETRIEVED` — nobody asked, or the ask failed. Same discipline as
- *   `items: null` on `LegistarEventWithClient`: absent is not empty.
+ * What a votes retrieval established. A zero-row reply is four different facts:
+ * - `NO_QUESTION_PUT`: no recorded action; nothing was put. A legitimate empty.
+ * - `OUTCOME_WITHOUT_ROLL_CALL`: an action is recorded and the publisher published no per-person roll
+ *   for it (e.g. the tally only in `EventItemActionText`). Their gap, not an absence of a vote.
+ * - `ROLL_CALL_ASSERTED_BUT_ABSENT`: the item's own `EventItemRollCallFlag` says a roll call was taken and
+ *   the roll came back empty. A failed extraction, reported as one.
+ * - `NOT_RETRIEVED`: nobody asked, or the ask failed. Absent is not empty.
  */
 export type RollCallState =
   | "RECORDED"
@@ -201,20 +147,9 @@ export type RollCallState =
   | "NOT_RETRIEVED";
 
 /**
- * Classify a votes reply against the item that produced it.
- *
- * `votes === null` means the retrieval did not happen or did not complete.
- *
- * **A measured caution on `ROLL_CALL_ASSERTED_BUT_ABSENT`, stated rather than
- * tuned away.** On the Pima tenant `EventItemRollCallFlag` is 1 on exactly one
- * item per sitting — the literal "ROLL CALL" attendance item, which carries no
- * action — and 0 on every item that DOES have a per-person roll. So this state
- * fires once per Pima sitting, 20 of 20, and each firing is a true statement:
- * the record says a roll call happened at that point in the meeting and the
- * votes route returns nothing for it. Narrowing the rule so those twenty stop
- * appearing would mean deciding, on our own authority, that the publisher's
- * roll-call flag means nothing — which is asserting an absence about a
- * government to make our own report look clean.
+ * Classify a votes reply against the item that produced it. `votes === null` means the retrieval did not
+ * happen or did not complete. `ROLL_CALL_ASSERTED_BUT_ABSENT` can fire on an attendance roll-call item
+ * that carries no action; that is still a true statement about the record and is not tuned away.
  */
 export function classifyRollCall(
   item: LegistarEventItem,
@@ -264,21 +199,9 @@ export interface LegistarRecordProvenance {
   /** The public body that published it. Never Granicus. */
   readonly sourceOrg: string;
   /**
-   * **The day the endpoint above was READ — RULING 107.**
-   *
-   * A {@link ReadStamp}, minted only by `stampFromRead` from a receipt that
-   * evidences a read returning something, or {@link NEVER_READ} when no such
-   * read is evidenced. It is deliberately not a clock reading: a run date in
-   * this field would tell a reader the roll call is current when the retrieval
-   * behind it might be a month old, and RULING 96 then uses that date to
-   * decide whether to re-walk — so a confident wrong date SUPPRESSES the
-   * re-walk that would have caught it.
-   *
-   * The two rules meet here. `stampFromRead` refuses a receipt with `bytes: 0`
-   * because a fetch that returned nothing is not a read; this adapter's own
-   * rule is that a zero-row extraction is a FAILED extraction. So a sitting
-   * whose `eventitems` reply came back empty mints `NEVER_READ` and reads as
-   * stale, rather than carrying today's date on a document nobody got.
+   * The day the endpoint above was read: a `ReadStamp` minted only by `stampFromRead` from a receipt that
+   * evidences a read returning something, or `NEVER_READ`. Never a clock reading. An empty `eventitems`
+   * reply mints `NEVER_READ` and reads as stale.
    */
   readonly readOn: ReadStamp | NeverRead;
 }
@@ -291,16 +214,7 @@ export interface LegistarRecordProvenance {
  * a caller who climbs over that refusal still has nothing to render.
  */
 export interface LegistarAgendaRecord {
-  /**
-   * The discriminant, as a LITERAL rather than as `RecordClass`.
-   *
-   * It was widened by an `as RecordClass` cast at the construction site, which
-   * made the union structurally undiscriminable while its own doc comment said
-   * it was discriminated by this field. A consumer narrowing on it got
-   * `Property 'votes' does not exist on type 'LegistarAgendaRecord'` and the
-   * only ways out were a cast or a bespoke type guard — both of which undo the
-   * class filter at exactly the boundary that exists to enforce it.
-   */
+  /** The discriminant, as a literal rather than `RecordClass`, so the union narrows on it. */
   readonly recordClass: "AGENDA";
   readonly eventItemId: number;
   readonly eventId: number | null;
@@ -321,16 +235,7 @@ export interface LegistarAgendaRecord {
  * here and only here for exactly that reason.
  */
 export interface LegistarOutcomeRecord {
-  /**
-   * The discriminant, as a LITERAL rather than as `RecordClass`.
-   *
-   * It was widened by an `as RecordClass` cast at the construction site, which
-   * made the union structurally undiscriminable while its own doc comment said
-   * it was discriminated by this field. A consumer narrowing on it got
-   * `Property 'votes' does not exist on type 'LegistarAgendaRecord'` and the
-   * only ways out were a cast or a bespoke type guard — both of which undo the
-   * class filter at exactly the boundary that exists to enforce it.
-   */
+  /** The discriminant, as a literal rather than `RecordClass`, so the union narrows on it. */
   readonly recordClass: "ACTION_SUMMARY";
   readonly eventItemId: number;
   readonly eventId: number | null;
@@ -358,13 +263,9 @@ export interface LegistarOutcomeRecord {
   readonly rollCall: RollCallState;
   readonly rollCallGap: string | null;
   readonly provenance: LegistarRecordProvenance;
-  /*
-   * The fields below are set only on records read off a sitting's MINUTES
-   * (lib/sources/legistar-insite/minutes.ts, NH332), where there is no
-   * EventItemId and the record's authority is a passage of the document.
-   * `eventItemId` is then the record's 1-based position among the actions the
-   * minutes record, and `provenance.endpoint` is the minutes document itself.
-   */
+  // The fields below are set only on records read off a sitting's minutes
+  // (lib/sources/legistar-insite/minutes.ts), where there is no EventItemId: `eventItemId` is then the
+  // record's 1-based position among the minutes' actions, and `provenance.endpoint` is the minutes document.
   /** The minutes' own item number(s): "5-c", "7-a, 7-b". */
   readonly itemReference?: string | null;
   /** The item as the minutes print it, verbatim (bounded, elision marked "…"). */
@@ -403,16 +304,7 @@ export interface LegistarRecordedVote {
  * item alone to a roll call.
  */
 export interface LegistarRollCallRecord {
-  /**
-   * The discriminant, as a LITERAL rather than as `RecordClass`.
-   *
-   * It was widened by an `as RecordClass` cast at the construction site, which
-   * made the union structurally undiscriminable while its own doc comment said
-   * it was discriminated by this field. A consumer narrowing on it got
-   * `Property 'votes' does not exist on type 'LegistarAgendaRecord'` and the
-   * only ways out were a cast or a bespoke type guard — both of which undo the
-   * class filter at exactly the boundary that exists to enforce it.
-   */
+  /** The discriminant, as a literal rather than `RecordClass`, so the union narrows on it. */
   readonly recordClass: "ROLL_CALL";
   readonly eventItemId: number;
   readonly votes: readonly LegistarRecordedVote[];
@@ -420,24 +312,13 @@ export interface LegistarRollCallRecord {
 }
 
 /**
- * A minutes document we know EXISTS and have never read.
- *
- * **It has no `recordClass`, and that is the mechanism.** `evidenceRecordsFor`
- * and `assertAnswerable` take `ClassedRecord`, so a pointer cannot be handed to
- * them — it fails to typecheck rather than being caught by review. A minutes
- * PDF nobody has opened is not a MINUTES record, and stamping it as one would
- * let "there is a minutes file" answer "what did they decide".
- *
- * Every Pima and Mesa `EventMinutesFile` resolves to `legistar.granicus.com`,
- * the vendor's document host. This is a discovery LEAD, recorded so the route
- * is known (GRANICUS_MINUTES_PDF, routes.ts), and no adapter reads it yet. The
- * host's robots.txt reads `Disallow: /` (docs/sources.md, 2026-08-29); since
- * the owner decision of 2026-09-25 that is recorded and blocks nothing, so
- * what is missing is a reader, not permission.
+ * A minutes document we know exists and have never read. It has no `recordClass`, so it cannot be handed
+ * to `evidenceRecordsFor` or `assertAnswerable`: an unopened minutes file never answers "what did they
+ * decide". A discovery lead (GRANICUS_MINUTES_PDF, routes.ts); no adapter reads it yet.
  */
 export interface LegistarMinutesPointer {
   readonly url: string | null;
-  /** "Final", "Draft", null. "Draft" on all 20 Pima Board sittings measured. */
+  /** "Final", "Draft", null: the publisher's label, verbatim. */
   readonly status: string | null;
   readonly host: string | null;
   /** Why nothing here fetched it. Always stated, never blank. */
@@ -470,12 +351,8 @@ export interface OutcomeContext {
 }
 
 /**
- * Turn a completed retrieval into a freshness stamp, or into `NEVER_READ`.
- *
- * `bytes` is forced to zero on a zero-row reply rather than measured, because
- * `JSON.stringify([]).length` is 2 and a two-byte "read" would mint a
- * confident date for a document nobody received. That is the zero-row rule and
- * RULING 107 agreeing: a fetch that returned nothing is not a read.
+ * Turn a completed retrieval into a freshness stamp, or into `NEVER_READ`. `bytes` is forced to zero on a
+ * zero-row reply (`JSON.stringify([]).length` is 2), because a fetch that returned nothing is not a read.
  */
 export function receiptFor(
   endpoint: string,
@@ -621,13 +498,8 @@ export function rollCallRecordFrom(
 }
 
 /**
- * The minutes lead for one sitting. Recorded; this adapter does not read it.
- *
- * Until 2026-09-25 the note said a `legistar.granicus.com` or
- * `pima.granicus.com` file was not retrieved because the host's robots.txt
- * reads `Disallow: /`. Since the owner decision of that day robots.txt blocks
- * nothing, and the true reason is ours: no minutes adapter reads the vendor's
- * file yet. Sittings stored before then keep the note they were written with.
+ * The minutes lead for one sitting. Recorded; this adapter does not read it. Sittings stored earlier keep
+ * the note they were written with.
  */
 export function minutesPointerFor(event: LegistarEvent): LegistarMinutesPointer {
   const url = event.EventMinutesFile?.trim() || null;
@@ -666,10 +538,7 @@ export interface EventOutcomes {
   readonly agenda: readonly LegistarAgendaRecord[];
   readonly outcomes: readonly LegistarOutcomeRecord[];
   readonly rollCalls: readonly LegistarRollCallRecord[];
-  /**
-   * Items whose own record asserts a roll call and whose roll came back empty.
-   * A count that must be REPORTED, never reconciled away (RULING 100).
-   */
+  /** Items whose own record asserts a roll call and whose roll came back empty. Reported, never reconciled. */
   readonly failedRollCallExtractions: readonly number[];
   /** Items we never asked about, because the votes request itself failed. */
   readonly voteRequestFailures: readonly { eventItemId: number; reason: string }[];
@@ -714,18 +583,9 @@ export async function collectEventOutcomes(
   const clock = options.now ?? (() => new Date());
 
   const items = await fetchItemsImpl(slug, eventId);
-  /*
-   * RULING 107 — the freshness date is MINTED FROM THE READ, not from the
-   * clock. `receiptFor` hands `stampFromRead` a receipt built out of the reply
-   * that just arrived, so a sitting whose `eventitems` route came back with
-   * zero rows carries NEVER_READ and reads as stale rather than carrying
-   * today's date on a document nobody received.
-   *
-   * `clock()` supplies only the DAY the read happened, which is what a receipt
-   * asks for. It cannot become the stamp on its own: `stampFromRead` refuses a
-   * receipt that does not evidence a read, and the value it returns is a
-   * branded `ReadStamp` that a clock call cannot be substituted for.
-   */
+  // The freshness date is minted from the read, not the clock: `receiptFor` builds the receipt from the reply
+  // that just arrived. `clock()` supplies only the day; `stampFromRead` refuses a receipt that does not
+  // evidence a read.
   const itemsReadStamp = receiptFor(
     itemsEndpoint(slug, eventId),
     items,

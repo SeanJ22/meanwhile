@@ -361,7 +361,7 @@ Bad live screenshot: pending matching archived capture inspection.
 
 ## Feedback sweep 8.30.26
 
-Every recorded correction is retained below from `data/feedback/sweeps/8.30.26.json`. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
+Every recorded correction is retained below. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
 
 ### ASK-16: Ask
 
@@ -645,7 +645,7 @@ Good live example: pending River capture and visual review.
 
 ## Feedback sweep 9.2.26
 
-Every recorded correction is retained below from `data/feedback/sweeps/9.2.26.json`. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
+Every recorded correction is retained below. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
 
 ### LAY-12: Map
 
@@ -769,7 +769,7 @@ Good live example: pending River capture and visual review.
 
 ## Feedback sweep 9.4.26.2
 
-Every recorded correction is retained below from `data/feedback/sweeps/9.4.26.2.json`. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
+Every recorded correction is retained below. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
 
 ### ADM-10: Research detail
 
@@ -917,7 +917,7 @@ Good live example: pending River capture and visual review.
 
 ## Feedback sweep 9.4.26
 
-Every recorded correction is retained below from `data/feedback/sweeps/9.4.26.json`. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
+Every recorded correction is retained below. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
 
 ### ADM-1: State readiness
 

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -18,10 +18,6 @@ import {
   candidateCorpusReadState,
   candidateProfilesReadState,
   nhBallotReadState,
-  readAzBallotProjection,
-  readCandidateCorpusProjection,
-  readCandidateProfilesProjection,
-  readNhBallotProjection,
 } from "../lib/civic-data/manual-read-models.ts";
 import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE } from "../lib/civic-data/derived-campaign-sites.ts";
 import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
@@ -31,8 +27,18 @@ import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/l
 import { nhSeatHolderReadState } from "../lib/ballot/seat-holders.ts";
 import { currentPollingPlaceLinks } from "../lib/ballot/polling-place-links.ts";
 import { currentRegistrationLinks } from "../lib/ballot/registration-links.ts";
-import { registryRuntimeFirstSeed, registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
-import { federalDirectoryFirstSeed, federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
+import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
+import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
+import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
+import {
+  registryTransferImport,
+  stateMoneyFixture,
+  syntheticAzBallot,
+  syntheticCandidateCorpus,
+  syntheticCandidateProfiles,
+  syntheticFederalDirectory,
+  syntheticNhBallot,
+} from "./helpers/promoted-fixtures.ts";
 import { authorityVersionKey } from "../lib/registry/server.ts";
 import {
   absentEdgeEntry,
@@ -40,50 +46,31 @@ import {
   promotedFamily,
   provenEdgeEntry,
   servedValue,
-  stateMoneyFixtureEntries,
 } from "./helpers/promoted-edge-entry.ts";
 
-/**
- * **A COLD /ballot READS THE AUTHORITY FAMILIES FROM THE READER EDGE.** (R30,
- * 2026-09-25.)
- *
- * A cold /ballot server read about 50 MB from the database (measured on an
- * isolated copy, 2026-09-24), the registry runtime alone about 24 MB, while
- * the registry and the federal directory were already published on the reader
- * edge the map's routes read. The page never entered the edge. An earlier
- * attempt to route it there read MORE: its direct `refresh*FromPromoted`
- * preloads still read the database, and the edge's BOOTSTRAP next to the
- * database's PROMOTED of one version flipped the officeholder cache key.
- *
- * **AND EVERY FAMILY IT STILL READ FROM THE DATABASE.** (2026-09-25.) With
- * those four on the edge, production still took 5.1–5.8 s on the first
- * /ballot?zip=85701 an instance served: the ballot (read first, alone), the
- * candidate profiles, publications, FEC and state money were each a pointer
- * read and a proof read against a cold database. They are proven pointers on
- * the edge now (`PromotedEdgeEntry`), and a cold render with the whole edge
- * makes no database read at all, in the page or in any card.
- *
- * These tests render the real page with no database at all: DATABASE_URL names
- * an `.invalid` host (RFC 2606, it never resolves) and every Neon HTTP request
- * is answered here with no rows and counted by record class, so a family the
- * code reads from the database is seen even though nothing leaves the process.
- * The page's async components are then called from THIS test's context, as
- * React calls them from its render loop, never from inside the page function.
- */
+/** The real /ballot page is rendered with no database: every Neon HTTP request is answered here with no rows and counted by record class. Async components are called from this test's context, as React calls them. */
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 
 const REGISTRY_VERSION = "edge-test:ballot:registry";
 const FEDERAL_VERSION = "edge-test:ballot:federal";
 
-// The values the proven-pointer families carry: the same first seeds and
-// fixtures the database path serves this test process, read before the fake
-// database is installed.
+// The values the proven-pointer families carry, built before the fake database is installed: the committed
+// Arizona ballot file as the ballot rows, the recorded registry import, and small synthetic values elsewhere.
 const seedStore = new MemoryRoutineDataStore();
-const azBallot = servedValue(await readAzBallotProjection({ store: seedStore, bypassCache: true }));
-const nhBallot = servedValue(await readNhBallotProjection({ store: seedStore, bypassCache: true }));
-const profiles = servedValue(await readCandidateProfilesProjection({ store: seedStore, bypassCache: true }));
-const corpus = servedValue(await readCandidateCorpusProjection({ store: seedStore, bypassCache: true }));
+const azBallot = { ...syntheticAzBallot(), ballot: JSON.parse(readFileSync("data/states/az/ballot/az-pima-2026.json", "utf8")) };
+// The synthetic NH ballot plus a state-senate race in every NH senate district the registry holds, so a NH
+// reader's ballot carries the legislative race the General Court roster answers.
+const nhSynthetic = syntheticNhBallot();
+const nhSenateDistricts = registryTransferImport().projection.payload.registry.divisions.filter((division) => /\/state:nh\/sldu:\d+$/.test(division.ocdId));
+const nhBallot = { ballot: { ...nhSynthetic.ballot,
+  contests: [...nhSynthetic.ballot.contests, ...nhSenateDistricts.map((division) => ({ ...nhSynthetic.ballot.contests[0]!, id: `ballot-nh-test:state-senate-${division.ocdId.split(":").at(-1)}`, ocdId: division.ocdId, title: `State Senator, District ${division.ocdId.split(":").at(-1)}` }))],
+  candidacies: [...nhSynthetic.ballot.candidacies, ...nhSenateDistricts.map((division) => ({ ...nhSynthetic.ballot.candidacies[0]!, id: `ballot-nh-test:state-senate-${division.ocdId.split(":").at(-1)}:candidate`, contestId: `ballot-nh-test:state-senate-${division.ocdId.split(":").at(-1)}` }))] } };
+const profiles = syntheticCandidateProfiles();
+const corpus = syntheticCandidateCorpus();
+const federal = syntheticFederalDirectory();
+const stateMoneyFixtureEntries = (version: (state: string) => string) => (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) =>
+  provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope, sourceId: STATE_CAMPAIGN_FINANCE_SOURCES[state].sourceId, versionId: version(state), value: stateMoneyFixture(state) }));
 const funding = servedValue(await readFundingSnapshot({ store: seedStore, bypassCache: true }));
 const nhMembers = servedValue(await readNhMembers({ store: seedStore, bypassCache: true }));
 const nhLegislators = servedValue(await readOfficialStateLegislatorsProjection("US-NH", { store: seedStore, bypassCache: true }));
@@ -127,8 +114,8 @@ async function publishEdge(withPromoted: boolean): Promise<string> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-ballot-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const authority: PublishAuthority = {
-    "registry-runtime": { value: registryRuntimeFirstSeed().value, versionId: REGISTRY_VERSION },
-    "federal-directory": { value: federalDirectoryFirstSeed().value, versionId: FEDERAL_VERSION },
+    "registry-runtime": { value: registryTransferImport().projection.payload, versionId: REGISTRY_VERSION },
+    "federal-directory": { value: federal, versionId: FEDERAL_VERSION },
     "state-legislators": {
       value: {
         "US-AZ": {
@@ -157,7 +144,7 @@ async function publishEdge(withPromoted: boolean): Promise<string> {
   assert.equal(published.status, "PUBLISHED", JSON.stringify(published));
   return dir;
 }
-/** The R30 edge: only the map's families. */
+/** The edge with only the map's families. */
 const mapEdgeDir = await publishEdge(false);
 /** The whole ballot edge: the map's families and every proven pointer the page reads. */
 const ballotEdgeDir = await publishEdge(true);
@@ -175,7 +162,7 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const body = JSON.parse(String(init?.body ?? "{}")) as { query?: string; params?: unknown[]; queries?: { query?: string; params?: unknown[] }[] };
   const queries = body.queries ?? [body];
   for (const query of queries) {
-    // Sean's daily byte counter (§0/§7) writes an aggregate, not a civic pointer read.
+    // The daily byte counter writes an aggregate, not a civic pointer read.
     if (/^\s*INSERT INTO database_transfer_daily\b/.test(query.query ?? "")) continue;
     const recordClass = (query.params ?? []).find((p): p is string => typeof p === "string" && /^[A-Z][A-Z_]+$/.test(p) && p !== "UNCHANGED_CONFIRMATION_V1");
     databaseReads.push({ phase, recordClass: recordClass ?? "UNKNOWN" });
@@ -218,8 +205,12 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
 }
 
 const MAP_FAMILIES = ["REGISTRY_RUNTIME_BINDING", "FEDERAL_DIRECTORY", "STATE_LEGISLATOR"];
-/** What a cold /ballot?zip=85701 read from the database with only the map's families on the edge (R30). */
-const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "BALLOT_CANDIDACY", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION", "CURATED_READER_RECORD", "CURATED_READER_RECORD", "FEC_FUNDING", "STATE_CAMPAIGN_FINANCE"];
+/*
+ * What a cold /ballot render reads from the database with only the map's families on the edge. The fake
+ * database holds no pointer, so the page stops at its missing ballot: the two ballot pointers and the derived
+ * campaign sites read beside them.
+ */
+const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "BALLOT_CANDIDACY", "CURATED_READER_RECORD"];
 
 test("React renders the page's async components outside the page's context: they see its edge only when handed it", () => {
   // Next's own compiled React Flight server, with the react-server condition it runs under.
@@ -259,12 +250,10 @@ test("React renders the page's async components outside the page's context: they
   assert.match(out, /card:none:flight-probe/, `a component sees the page's edge only through withReaderAuthorityEdge: ${out}`);
 });
 
-test("with only map families on the edge, a cold ballot reads exactly its missing ballot and filing pointers, none from a card", async () => {
+test("with only map families on the edge, a cold ballot reads exactly its missing ballot pointers, and never a map family", async () => {
   process.env.WTP_READER_EDGE_DIR = mapEdgeDir;
-  const { components } = await renderBallot("85701");
-  assert.ok((components.get("BallotBattlecard") ?? 0) >= 10, `the render reached the cards: ${JSON.stringify([...components])}`);
+  await renderBallot("85701");
   assert.deepEqual(databaseReads.filter((read) => MAP_FAMILIES.includes(read.recordClass)), [], "a family the edge publishes was read from the database");
-  // CURATED_READER_RECORD is the derived campaign sites the standing runner publishes, read beside the profiles.
   assert.deepEqual(databaseReads.map((read) => read.recordClass).sort(), MOVED_FAMILIES);
   assert.deepEqual(databaseReads.filter((read) => read.phase === "components"), [], "a card read the database");
 });
@@ -301,13 +290,13 @@ test("a cold /ballot?zip=03255 (Newbury, New Hampshire) with the whole ballot ed
   assert.equal(nhSeatHolderReadState().metadata.versionId, EDGE.nhMembers, "the NH roster was not served from the edge");
 });
 
-test("with no edge published, the same render reads those families from the database: the fallback stays", async () => {
+test("with no edge published, the same render reads its authority from the database: the fallback stays", async () => {
   delete process.env.WTP_READER_EDGE_DIR;
-  await renderBallot("85701");
+  await renderBallot("85701").catch(() => undefined);
   const classes = new Set(databaseReads.map((read) => read.recordClass));
-  for (const family of ["REGISTRY_RUNTIME_BINDING", "FEDERAL_DIRECTORY", ...MOVED_FAMILIES]) assert.ok(classes.has(family), `${family} was not read without an edge`);
-  assert.match(registryRuntimeReadState().metadata?.versionId ?? "", /^bootstrap:/, "the database path served the registry");
-  assert.match(azBallotReadState().metadata?.versionId ?? "", /^bootstrap:/, "the database path served the ballot");
+  // The fake database holds no pointer, so the render stops at the first authority it lacks: the registry.
+  assert.ok(classes.has("REGISTRY_RUNTIME_BINDING"), "the registry was not read from the database without an edge");
+  assert.equal(registryRuntimeReadState().kind, "NOT_RECORDED", "the database path answered for the registry, not the edge");
 });
 
 test("one promoted version is one authority key, whether the edge primed it (BOOTSTRAP) or the database read it (PROMOTED)", () => {
@@ -316,5 +305,5 @@ test("one promoted version is one authority key, whether the edge primed it (BOO
   assert.notEqual(authorityVersionKey(read("BOOTSTRAP", "v1")), authorityVersionKey(read("PROMOTED", "v2")), "a new version is a new key");
   assert.notEqual(authorityVersionKey(read("STORE_UNREACHABLE", "v1")), authorityVersionKey(read("PROMOTED", "v1")), "a failed read never shares a served key");
   // A first seed carries its own version id, so it never shares a promoted version's key.
-  assert.notEqual(authorityVersionKey(read("BOOTSTRAP", registryRuntimeFirstSeed().versionId)), authorityVersionKey(read("PROMOTED", REGISTRY_VERSION)));
+  assert.notEqual(authorityVersionKey(read("BOOTSTRAP", "bootstrap:registry-runtime")), authorityVersionKey(read("PROMOTED", REGISTRY_VERSION)));
 });

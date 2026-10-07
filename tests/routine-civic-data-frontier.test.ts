@@ -297,8 +297,7 @@ test("a malformed exact receipt cannot suppress a valid prior supervisor attempt
 
 /**
  * The provider frontier reads its supervisor history through the store's
- * narrowed, bounded read (ROUTINE_SUPERVISOR_HISTORY_FIELDS, _WINDOW): on
- * 2026-09-24 the whole-history read moved 428 MB a pass. These fixtures carry
+ * narrowed, bounded read (ROUTINE_SUPERVISOR_HISTORY_FIELDS, _WINDOW). These fixtures carry
  * every field a real outcome does, the Reader readback references included.
  */
 function wholeSupervisorOutcomes(): unknown[] {
@@ -502,23 +501,15 @@ async function simulateTucsonLane(withRecordedPasses: boolean, initialSeed = 202
   const HOUR = 3_600_000;
   const DAY = 24 * HOUR;
   const MIN = 60_000;
-  // Tucson's board site: 27 bodies on one host, the busiest meeting lane.
   const lane = ROUTINE_SOURCE_TASKS.filter((task) => task.acquisitionFailureDomain === TUCSON_BOARDS);
   assert.equal(lane.length, 27);
   for (const task of lane) assert.deepEqual(task.contract.schedule, MEETING_SITTING_WINDOW);
-  // The 196 passes production ran on 2026-09-24 (5:00 AM to 11:00 PM MST): each
-  // pass's source reads (every family's) and then its Reader repair, as recorded
-  // (p50 1:34, p99 10:58, max 15:52, of which 14:31 source reads and 1:21 repair).
   const recorded = recordedPasses();
   assert.equal(Math.max(...recorded.map(({ durationMs }) => durationMs)), 952_000);
   let seed = initialSeed;
   const rand = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 2 ** 32; };
   const start = Date.parse("2026-09-25T07:00:00.000Z");
   const end = start + 30 * DAY;
-  // 2 never published, 3 meeting twice a month (always hourly) and 22 monthly,
-  // meeting across 24 days of the month, so up to 19 are hourly at once: more
-  // than Tucson's projected peak of 16 (2026-10-14, counting conclusion as a day
-  // after start).
   type Body = { readonly task: RoutineSourceTask; readonly starts: readonly string[] | undefined };
   const bodies: Body[] = lane.map((task, index) => {
     if (index < 2) return { task, starts: undefined };
@@ -543,9 +534,6 @@ async function simulateTucsonLane(withRecordedPasses: boolean, initialSeed = 202
       : { lastAttemptedAt: iso, lastSucceededAt: new Date(at - 2_500).toISOString(), lastSucceededObservedAt: iso, sittingStarts: body.starts });
     reads.get(body.task.id)!.push(at);
   };
-  // Twice-daily bodies fall due over the first two hours, one every five
-  // minutes, as Tucson's did after the B3 switch; hourly ones were read within
-  // the last 40 minutes.
   bodies.forEach((body, index) => record(body, hot(body, start) === true ? start - (index % 8 + 1) * 5 * MIN : start - 12 * HOUR + 30 * MIN + index * 5 * MIN));
 
   // Each pass is admitted by the runner's own functions and run by
@@ -634,9 +622,6 @@ test("C6: 30 days on a lane shaped like Tucson's, passes of normal length, the s
 });
 
 test("C6: 30 days on Tucson's board lane under production's recorded passes (up to 15:52, drawn at random), with catch-up while a pass is held open: every hourly body is read within 60:00 and every other within 12:00:00", async () => {
-  // 20260925 is this replay's own draw. Under 10, catch-up only while Reader
-  // repair ran left 14 hourly reads late (up to 64.02 min): two passes in a row
-  // held open 14:31 by their source reads, in which no round ran.
   for (const seed of [20260925, 10]) {
     const { misses, maxHotGap, maxBaseGap, longestPassMs, reads, catchUpReads } = await simulateTucsonLane(true, seed);
     const detail = `seed ${seed}: longest hourly gap ${(maxHotGap / 60_000).toFixed(2)} min, longest gap ${(maxBaseGap / 3_600_000).toFixed(2)} h, ` +
@@ -648,7 +633,6 @@ test("C6: 30 days on Tucson's board lane under production's recorded passes (up 
   }
 });
 
-
 test("C6: the runner hands the frontier each due task's deadline from the same pass's clocks and sitting signals", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const call = runner.slice(runner.indexOf("const admitted = routineFailureDomainFrontier("));
@@ -659,7 +643,6 @@ test("C6: the runner hands the frontier each due task's deadline from the same p
   );
   assert.ok(runner.indexOf("const sittingSignals = sittingWindowSignals(") < runner.indexOf("const admitted = routineFailureDomainFrontier("));
 });
-
 
 test("an unreceipted child in a single-task pass waits its existing retry interval across restarts", () => {
   const task = ROUTINE_SOURCE_TASKS.find(task => task.contract?.schedule?.kind !== "SITTING_WINDOW")!;

@@ -35,7 +35,6 @@ function affected(jurisdiction: VotingJurisdiction, failure: VotingSiteAcquisiti
   return failure.jurisdictionId === jurisdiction.ocdId || failure.state === jurisdiction.state;
 }
 
-/** Preserve only the failed authority scope; healthy authorities may still advance. */
 export function retainFailedVotingSiteScopes(
   current: VotingSitesFile,
   prior: VotingSitesFile | null,
@@ -55,7 +54,6 @@ export function retainFailedVotingSiteScopes(
   };
 }
 
-/** Refresh one sourced jurisdiction and carry every other holding forward. */
 export function votingSitesScopedSuccessor(
   prior: VotingSitesFile | null,
   current: VotingJurisdiction,
@@ -141,9 +139,7 @@ export function votingSitesCandidate(input: {
   readonly requestedUrl: string;
   readonly finalUrl: string;
   readonly retrievedAt: string;
-  /** Exact prior candidate whose independently sourced jurisdictions are carried. */
   readonly carriedFromVersionId?: string | null;
-  /** Retain the bounded original response frames in the candidate, never Reader. */
   readonly retainRawBodies?: boolean;
 }): RoutineCandidate {
   const readModel = retainFailedVotingSiteScopes(input.current, input.prior, input.failures);

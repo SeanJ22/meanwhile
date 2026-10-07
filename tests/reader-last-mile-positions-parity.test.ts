@@ -8,9 +8,39 @@ import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { documentsFor, failuresFor } from "../lib/candidates/positions.ts";
 import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { answerFor, type CandidateCorpus, type CandidateDocument } from "../lib/candidates/corpus.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { createHash } from "node:crypto";
+import { installAzBallot, installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, registryTransferImport, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
+import { servableAzBallot } from "./helpers/reader-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+// The governor's certified card, reconciled to the governor's candidacy.
+await installAzBallot(servableAzBallot([{
+  id: "ballot-az-pima:governor",
+  title: "Governor",
+  candidacies: [{ id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" }],
+  lineup: [{ name: "Katie Hobbs", partyLabel: "Democratic", outcome: "RECONCILED", candidacyId: "ballot-az-pima:governor:hobbs-katie" }],
+}]));
+await installOfficeholderStatements();
+/*
+ * The synthetic publication corpus, plus one synthetic campaign page held under the governor's certified card
+ * and one under each of twelve candidacies the registry's official-candidacy bridge resolves to a current
+ * official, so each page is reachable from two identities.
+ */
+const page = (candidateKey: string, url: string, text: string): CandidateDocument => {
+  const contentHash = createHash("sha256").update(text).digest("hex");
+  return { id: `${candidateKey}@${contentHash}`, candidateKey, sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED", metaDescription: null,
+    documentUrl: url, contentHash, retrievedAt: "2026-09-20T00:00:00.000Z", contentType: "text/html", text, extraction: "html", extractionNote: null };
+};
+const bridged = registryTransferImport().projection.payload.officialCandidacies.rows
+  .filter((row) => row.status === "RESOLVED" && row.candidacy && !row.candidacy.candidacyId.startsWith("ballot-az-")).slice(0, 12);
+const base = syntheticCandidateCorpus();
+const extra = [
+  page("ballot-az-pima:governor|Katie Hobbs", "https://example.test/governor-card/",
+    "As Governor I will keep every promise made to working families. This synthetic test page states what the campaign says the Governor will do, in words long enough to be held as a readable publication by the reader."),
+  ...bridged.map((row, i) => page(row.candidacy!.candidacyId, `https://bridged-${i + 1}.example.test/`,
+    `Synthetic test page ${i + 1}. Our libraries need longer hours and every reader deserves a library within walking distance. This page was written for a test and describes no real campaign; it is long enough to be held as a readable publication.`)),
+];
+await installCandidateCorpus({ ...base, attempted: base.attempted + extra.length, documents: [...base.documents, ...extra] });
 
 test("every held statement identity bridge gives the Positions API the same complete answer from each current person/card identity", async () => {
   const corpus = unifiedCorpus();

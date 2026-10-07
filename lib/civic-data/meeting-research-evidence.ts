@@ -1,9 +1,4 @@
-/**
- * @freshness-reads-here
- * retainMeetingFetchBytes stamps only the actual successful fetch whose cloned
- * response bytes were just read and hashed. Replayed candidates carry that
- * original timestamp; approval lookup never mints a source freshness date.
- */
+/** @freshness-reads-here: stamps only the successful fetch whose bytes were just read; replays keep the original time. */
 import { createHash } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import type { RoutineCandidate } from "./types.ts";
@@ -31,7 +26,6 @@ export interface ApprovedResearchMeetingPartition {
   readonly activationReceipt: ResearchMeetingActivationReceipt;
 }
 
-/** Producer-only observation of existing fetches. Bytes never enter Reader payloads. */
 export async function retainMeetingFetchBytes<T>(operation: () => Promise<T>, source: string, acceptUrl: (url: string) => boolean) {
   const originalFetch = globalThis.fetch; const responses: RetainedSourceResponse[] = []; const refusals: string[] = [];
   let retainedBytes = 0;
@@ -80,15 +74,12 @@ interface WorkerWitness {
   readonly result: { readonly role: string; readonly verdict: string };
 }
 
-/** Recognize the exact durable approvals for this current, registered source response. */
 export function meetingResearchWitness(partition: MeetingPartitionContract, snapshot: MeetingsSnapshot,
   artifactIds: readonly string[], stages: readonly FactStage[], workers: readonly WorkerWitness[]): ResearchMeetingActivationReceipt | null {
   if (!snapshot.meetings.length || snapshot.meetings.some(meeting => meeting.carried) ||
       !["legistar", "civicclerk"].includes(partition.meetingSource)) return null;
   const byId = new Map(stages.map(stage => [stage.recordId, stage]));
-  // Events-only research certifies the event and agenda link. The routine
-  // adapter independently validates/preserves richer EventItems actingBodies;
-  // an Events capture neither certifies nor deletes that separate projection.
+    // An Events capture neither certifies nor deletes the adapter's separate actingBodies projection.
   const orderedFacts = (value: unknown): unknown => Array.isArray(value) ? value.map(orderedFacts)
     : value && typeof value === "object" ? Object.fromEntries(Object.entries(value).filter(([key]) =>
       !["collectedAt", "verifiedAt", "actingBodies"].includes(key)).sort(([a], [b]) => a.localeCompare(b)).map(([key, child]) => [key, orderedFacts(child)])) : value;
@@ -135,7 +126,6 @@ export function meetingResearchWitness(partition: MeetingPartitionContract, snap
   return null;
 }
 
-/** Narrow read-only control-plane seam: no Git, method writer, filesystem vault or second clock. */
 export async function readMeetingResearchWitness(partition: MeetingPartitionContract, snapshot: MeetingsSnapshot): Promise<ResearchMeetingActivationReceipt | null> {
   const url = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!url || partition.meetingSource !== "legistar") return null;

@@ -1,77 +1,21 @@
 /**
- * THE EVIDENCE PLANE, PART ONE — WHAT AN ARTIFACT IS.
+ * What an Artifact is: the durable, content-addressed record of one retrieval,
+ * the unit a replay re-runs and an audit points at.
  *
- * ## The gap this closes
- *
- * Today the project acquires bytes, hashes them, extracts what a parser wants,
- * stamps the rung and the attribution, and then **discards the bytes**. The only
- * durable publisher bytes anywhere in the repository are 73 sanitized test
- * fixtures. That means:
- *
- *   - a parse cannot be re-run against what was actually served, only against
- *     what someone happened to keep;
- *   - a disputed claim about a government cannot be answered with "here is the
- *     page we read", only with "here is a hash of a page we no longer have";
- *   - a parser bug found in September cannot be replayed over August's
- *     retrievals, so every fix silently re-opens every prior conclusion and
- *     nobody can tell which ones actually changed.
- *
- * An Artifact is the durable, content-addressed record of one retrieval. It is
- * the unit the replay gate re-runs and the unit an audit points at.
- *
- * ## WHY THERE ARE THREE TIERS AND NOT ONE
- *
- * PR #217 is the reason. `tests/fixtures/legistar-insite-pima-clerk-schedule.html`
- * was a byte-for-byte capture of a public county page, and the PUBLISHER's own
- * bootstrap JSON carried a live Google Maps browser key and a thirty-day bearer
- * token. Nobody pasted anything. Keeping the bytes made this repository a mirror
- * of a third party's live credential.
- *
- * The naive readings of that incident are both wrong:
- *
- *   - "keep nothing" throws away the evidence, which is the product;
- *   - "sanitize everything and keep only that" throws away the ability to prove
- *     what the server actually sent, and quietly makes every artifact a claim
- *     about our redactor rather than about the publisher.
- *
- * So the bytes are kept AND they are quarantined. A retrieval whose body carries
- * a CONFIRMED third-party credential is `RESTRICTED_RAW`: stored exactly, with a
- * restricted retention policy, readable only by roles that are allowed to see
- * credential material at all. Every consumer downstream — every parser, every
- * extractor, every summarizer, every log line — reads the `SANITIZED_DERIVED`
- * artifact instead, and the derivation record links the two by hash so the
- * substitution is provable rather than assumed.
- *
- * **A sanitized derivative is MANDATORY for a `RESTRICTED_RAW` artifact.** That
- * is not a convention; `deriveSanitized` is the only way to obtain a parseable
- * body from one, and `lib/control-plane/evidence/store.ts` refuses the raw to a
+ * A retrieval whose body carries a confirmed third-party credential is
+ * `RESTRICTED_RAW`: stored exactly, restricted retention, readable only by roles
+ * allowed to see credential material. Every downstream consumer reads the
+ * `SANITIZED_DERIVED` artifact instead, linked by hash. `deriveSanitized` is the
+ * only way to get a parseable body from one, and `store.ts` refuses the raw to a
  * parser by name.
  *
- * ## NO CREDENTIAL VALUE CROSSES THIS BOUNDARY
+ * No credential value crosses this boundary: only the class id, twelve-hex
+ * fingerprint, length, line and occurrence count.
  *
- * RULING 127. Nothing in an `Artifact`, an `ArtifactDerivation`, an error
- * message, or anything either of them is serialized into carries a matched
- * value. What is carried is the class id, the twelve-hex fingerprint, the
- * length, the line and the occurrence count — enough for a reader to confirm a
- * redaction happened and to compare two runs, and not enough to reconstruct
- * anything.
+ * Redaction is `sanitizeText` from `lib/ops/fixture-credentials.ts`; this file
+ * records which `SANITIZER_VERSION` produced each derivative.
  *
- * ## ONE SANITIZER, NOT TWO
- *
- * The redaction here is `sanitizeText` from `lib/ops/fixture-credentials.ts`,
- * imported and called. A second scanner living in the control plane would drift
- * from the first within a month and the divergence would show up as a fixture
- * that passes one gate and fails the other. The class list, the two-stage
- * confirm predicate and `SANITIZER_VERSION` are that module's to own; this file
- * records WHICH version produced a given derivative so a rule-set change is
- * visible as a version change rather than as a mysterious hash difference.
- *
- * ## TIME IS A PARAMETER
- *
- * No function here reads a clock. The reproducibility gate re-runs immutable
- * inputs and compares identities; a library that reaches for `Date.now()`
- * cannot be replayed, and a replay that fails for a reason unrelated to truth
- * teaches everyone to ignore the gate.
+ * No function here reads a clock.
  */
 
 import { createHash } from "node:crypto";
@@ -92,14 +36,7 @@ export const sha256Hex = (input: string): string =>
 
 /** ------------------------------------------------------------------ tiers */
 
-/**
- * WHAT A STORED BODY IS, AND THEREFORE WHO MAY READ IT.
- *
- * The tier is a fact about the BYTES, decided at acquisition by scanning them.
- * It is never a fact about the source's reputation, the route, or how careful
- * the retrieving session felt. A trusted publisher emits a live key exactly as
- * readily as an untrusted one — that is precisely what happened in PR #217.
- */
+/** What a stored body is, decided by scanning the bytes at acquisition, never by the source's reputation. */
 export const ARTIFACT_TIERS = [
   /** Exact retrieved bytes, carrying no known credential class. Freely readable. */
   "RAW",
@@ -115,13 +52,7 @@ export const ARTIFACT_TIERS = [
 ] as const;
 export type ArtifactTier = (typeof ARTIFACT_TIERS)[number];
 
-/**
- * How long the vault keeps a body, and why.
- *
- * Retention is stated per artifact rather than inferred from the tier, because
- * the two answer different questions and a licence can shorten a retention that
- * the tier would happily leave permanent.
- */
+/** How long the vault keeps a body. Stated per artifact: a licence can shorten what the tier would allow. */
 export const RETENTION_POLICIES = [
   /** Evidence for a published claim. Kept while the claim stands. */
   "EVIDENCE_PERMANENT",
@@ -142,18 +73,9 @@ export function defaultRetention(tier: ArtifactTier): RetentionPolicy {
 /** ------------------------------------------------------------- artifacts */
 
 /**
- * The link between a `RESTRICTED_RAW` (or `RAW`) artifact and the sanitized
- * derivative made from it.
- *
- * **Both hashes are recorded and they must differ**, which is the whole point:
- * a derivation whose output hashes to its input redacted nothing, and a record
- * that cannot tell those apart is a record that lets a leak through wearing a
- * "sanitized" label.
- *
- * **Nothing here is a credential value.** `fingerprints` are the twelve-hex
- * prefixes `lib/ops/fixture-credentials.ts` produces; `redactionsByClass` counts
- * occurrences per class id. Both are comparable across runs and neither is
- * invertible.
+ * Links a raw artifact to its sanitized derivative. Both hashes are recorded
+ * and must differ. `fingerprints` and `redactionsByClass` are comparable
+ * across runs and not invertible.
  */
 export interface ArtifactDerivation {
   readonly rawArtifactId: string;
@@ -172,29 +94,16 @@ export interface ArtifactDerivation {
   readonly rawHash: string;
   /** `sha256-…` of the output bytes. Differs from `rawHash` whenever anything was replaced. */
   readonly derivedHash: string;
-  /**
-   * Matches the scanner saw and deliberately did NOT treat as credentials, with
-   * the reason. Nothing is set aside silently — a scanner that quietly drops
-   * matches is indistinguishable from one that never looked.
-   */
+  /** Matches the scanner deliberately did not treat as credentials, with the reason. */
   readonly preserved: readonly CredentialFinding[];
   readonly derivedAt: string;
 }
 
 /**
- * ONE RETRIEVAL, DURABLY RECORDED.
- *
- * Provenance is not optional and is not a comment. `sourceId`, `methodRouteId`,
- * `workItemId` and `attemptId` are what let a claim be walked back to the
- * obligation it answers and the physical execution that produced it, and what
- * let a parser fix be replayed over exactly the retrievals it would have
- * changed.
- *
- * `permission` and `transport` are carried SEPARATELY and are imported from
- * `lib/workstate/types.ts` rather than re-declared. RULING 182: "could not fetch
- * robots.txt with this client" is never "robots disallows this host", and an
- * artifact that collapsed the two would launder a transport failure into a
- * permission verdict every time it was read back.
+ * One retrieval, durably recorded. `sourceId`, `methodRouteId`, `workItemId`
+ * and `attemptId` walk a claim back to its obligation and execution.
+ * `permission` and `transport` are separate: failing to fetch robots.txt is
+ * never "robots disallows this host".
  */
 export interface Artifact {
   readonly id: string;
@@ -234,14 +143,7 @@ export interface Artifact {
   };
 }
 
-/**
- * A derived, deterministic artifact id.
- *
- * Content address plus tier, and the tier belongs in it: the same bytes stored
- * as `RESTRICTED_RAW` and the sanitized body made from them are two different
- * objects with two different readerships, and an id that could not tell them
- * apart would let a store lookup hand a parser the quarantined body.
- */
+/** A derived artifact id: content address plus tier, so a raw and its sanitized body are different objects. */
 export function artifactId(tier: ArtifactTier, hash: string): string {
   return `ar-${fingerprint([tier, hash])}`;
 }
@@ -255,17 +157,9 @@ export class ArtifactContract extends Error {
 }
 
 /**
- * A quarantined body was requested by something that may not have it.
- *
- * Thrown BY NAME so a caller can distinguish "you may not read this" from "this
- * does not exist" — the second is a claim about the record and the first is a
- * claim about the reader, and collapsing them is how a policy refusal becomes a
- * missing document.
- *
- * The message names the artifact, the role and the derivative that IS readable.
- * It never names a credential, a class, or a fingerprint: an access refusal is
- * read by more eyes than a sanitization report and has no business hinting at
- * what the body contains.
+ * A quarantined body was requested by something that may not have it. Thrown
+ * by name so "you may not read this" is distinct from "this does not exist".
+ * The message never names a credential, class or fingerprint.
  */
 export class RestrictedArtifactRefused extends Error {
   readonly artifactId: string;
@@ -288,16 +182,7 @@ export class RestrictedArtifactRefused extends Error {
 
 /** --------------------------------------------------- acquisition triage */
 
-/**
- * What a scan of the acquired bytes decided, and everything it saw on the way.
- *
- * `findings` carries the UNCONFIRMED matches too. An unconfirmed finding is not
- * a non-event: it is the scanner saying "this is shaped like a credential and
- * here is why I concluded it is not one", and a reader who disagrees needs to
- * see it. See `lib/ops/fixture-credentials.ts` on the GovDelivery signed link
- * that decodes to a public justice.gov URL — redacting it would have destroyed
- * the provenance of a source link to protect nothing.
- */
+/** What a scan of the acquired bytes decided. `findings` carries unconfirmed matches too, with why. */
 export interface AcquisitionClassification {
   readonly tier: "RAW" | "RESTRICTED_RAW";
   /** True when a sanitized derivative must exist before any parser reads this. */
@@ -310,18 +195,8 @@ export interface AcquisitionClassification {
 }
 
 /**
- * DECIDE THE TIER FROM THE BYTES, using the shipped scanner.
- *
- * One CONFIRMED finding is enough. There is no threshold, no "only one key", no
- * allowance for a trusted publisher: PR #217's key came from a county
- * government's own page. The scanner's two-stage `confirm` predicate is what
- * keeps this from flagging meeting ids, GUIDs, dates and signed public links,
- * and it lives in `lib/ops/fixture-credentials.ts` where the fixture gate can
- * hold it to the same standard.
- *
- * **A `RAW` verdict is a claim about the KNOWN classes, never about the file.**
- * `CLASSES` is what the project knows now; it is a floor and never a completion
- * condition.
+ * Decide the tier from the bytes with the shipped scanner. One confirmed
+ * finding is enough. A `RAW` verdict is a claim about the known classes only.
  */
 export function classifyAcquisition(
   text: string,
@@ -356,13 +231,7 @@ export interface AcquisitionInput {
   readonly retentionPolicy?: RetentionPolicy;
 }
 
-/**
- * Build the RAW-side artifact for a retrieval, tier decided by scanning.
- *
- * The bytes are handed in as a string because the sanitizer works on text; a
- * binary body (a PDF, an image) is stored as `RAW` without a text scan and does
- * not come through this function.
- */
+/** Build the raw-side artifact for a text retrieval, tier decided by scanning. Binary bodies do not come through here. */
 export function recordAcquisition(
   input: AcquisitionInput,
   body: string,
@@ -395,27 +264,10 @@ export function recordAcquisition(
 /** --------------------------------------------------------- derivation */
 
 /**
- * PRODUCE THE SANITIZED DERIVATIVE, and the record that links it to its raw.
- *
- * Three refusals, each a failure this could otherwise commit silently:
- *
- *   1. **The bytes must hash to the artifact they claim to be.** A derivation
- *      built from a body that is not the recorded one produces a derivative
- *      whose provenance is a lie, and the hash chain is the only thing that
- *      would ever have caught it.
- *   2. **A derivative may not be derived from a derivative.** Sanitizing twice
- *      is harmless to the bytes and fatal to the record: the second derivation
- *      would name the first as its raw, and the chain back to what the server
- *      actually sent would be quietly one link short.
- *   3. **A `RESTRICTED_RAW` input must actually produce a different body.** If
- *      the sanitizer replaced nothing, the "sanitized" derivative is the
- *      quarantined bytes wearing a readable label, and every parser downstream
- *      would receive the credential while the record said otherwise. This is
- *      the exact shape of the PR #217 leak, one layer up.
- *
- * The derivative inherits the raw's provenance verbatim — same URL, same
- * retrieval moment, same route, same attempt — because it IS that retrieval.
- * What it does not inherit is the tier or the retention.
+ * Produce the sanitized derivative and its derivation record. Refuses when the
+ * bytes do not hash to the claimed artifact, when the input is itself a
+ * derivative, and when a `RESTRICTED_RAW` input produces an identical body.
+ * The derivative inherits the raw's provenance, not its tier or retention.
  */
 export function deriveSanitized(
   raw: Artifact,
@@ -482,13 +334,7 @@ export function deriveSanitized(
   return { artifact, derivation, text };
 }
 
-/**
- * The body a PARSER is entitled to for this artifact.
- *
- * `null` means "not this one" rather than "nothing exists", and the caller is
- * expected to look for the derivative. Stated as a function so no consumer
- * re-derives the rule from the tier list and gets it subtly wrong.
- */
+/** The body a parser is entitled to for this artifact; null means look for the derivative. */
 export function parserMayRead(artifact: Artifact): boolean {
   return artifact.tier !== "RESTRICTED_RAW";
 }

@@ -1,4 +1,3 @@
-/** Events a routine data-plane promotion is forbidden to create. */
 export const ZERO_RELEASE_EVENTS = Object.freeze({
   testSitePromotions: 0,
   gitDataCommits: 0,

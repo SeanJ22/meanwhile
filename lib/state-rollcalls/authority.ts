@@ -1,10 +1,7 @@
 /**
- * Permanent official-state roll-call authorities.
- *
- * The legacy projection combined three states behind one LegiScan file.  The
- * production plane instead owns one pointer, clock, retry stream and LKG per
- * legislature.  These identities are intentionally small and dependency-free
- * so acquisition, validation and every Reader use the same boundary.
+ * Official state roll-call authorities: one pointer, clock, retry stream and
+ * last-known-good per legislature. Dependency-free so acquisition, validation
+ * and every Reader use the same boundary.
  */
 
 export const OFFICIAL_STATE_ROLL_CALL_TARGETS = [
@@ -36,8 +33,7 @@ export const OFFICIAL_STATE_ROLL_CALL_TARGETS = [
 
 /**
  * Current-person authorities required before a roll position can reach a
- * Reader. NH reuses its existing Members.txt routine contract; AZ and NJ need
- * their own pointers so neither can borrow the retired Plural aggregate.
+ * Reader. NH reuses its Members.txt routine contract.
  */
 export const OFFICIAL_STATE_LEGISLATOR_TARGETS = [
   {

@@ -16,15 +16,9 @@ export function requirePublication(value: unknown, reason: string): asserts valu
   if (!value) throw new Error(`WORKER_PUBLICATION_${reason}`);
 }
 
-/** Source-wide shortfalls: blanks stay open as work, no captured record is wrong. */
 const COVERAGE_CODES = new Set(["COMPLETENESS_SOURCE_ROW_OMITTED", "DECLARED_COUNT_MISMATCH"]);
 
-/**
- * Any job's saved text pages, CSV and extracted PDF text to read in code, newest first: each
- * distinct content once, and at most `pages` distinct pages. Every saved copy
- * of a page is kept, so a reader can pass over a later "Access Denied" copy
- * to the good one saved before it.
- */
+/** Each distinct content once, newest first, at most `pages` distinct pages. Every copy is kept, so a reader can skip a later "Access Denied" copy. */
 export function heldPageCopies(artifacts: readonly ArtifactRecord[], pages: number): readonly ArtifactRecord[] {
   const hashes = new Set<string>(), urls = new Set<string>();
   // Only HTTPS copies: the publication door accepts no other source, and a page it would refuse must not hold the facts beside it.
@@ -34,12 +28,10 @@ export function heldPageCopies(artifacts: readonly ArtifactRecord[], pages: numb
     .filter(a => urls.has(a.canonicalUrl) || (urls.size < pages && Boolean(urls.add(a.canonicalUrl))));
 }
 
-/** The saved page is intact: fully read, a success status, and the bytes hash to their recorded identity. */
 export function captureIntact(capture: WorkerPublicationCapture): boolean {
   return captureProblem(capture) === null;
 }
 
-/** Why a saved page cannot carry §3, in words the gap keeps; null when it can. */
 export function captureProblem(capture: WorkerPublicationCapture): string | null {
   if (capture.transport !== "REACHABLE") return `TRANSPORT_${capture.transport}`;
   if (capture.partial) return "PARTIAL_CAPTURE";
@@ -49,7 +41,6 @@ export function captureProblem(capture: WorkerPublicationCapture): string | null
     : `CONTENT_HASH_MISMATCH: the page text hashes to ${hash.slice(0, 19)}…, not its recorded ${capture.evidence.contentHash.slice(0, 19)}… (pass the exact saved text)`;
 }
 
-/** One reader-facing source receipt for the saved pages a publication rests on. */
 export function section3SourceReceipt(captures: readonly WorkerPublicationCapture[], now: string, reviewedBy: string, reviewedEvidence: string, recordClass = ""): ManualSourceSetReceipt {
   return { contractVersion: 1, reviewedAt: now, reviewedBy,
     sources: captures.map(c => ({ requestedUrl: c.evidence.canonicalUrl, finalUrl: c.evidence.canonicalUrl, publisher: c.evidence.sourceId,
@@ -58,21 +49,9 @@ export function section3SourceReceipt(captures: readonly WorkerPublicationCaptur
       rawHash: (c.evidence.sourceDocument?.contentHash ?? c.evidence.contentHash).slice(7), reviewOutcome: "SUPPORTED", reviewedEvidence })) };
 }
 
-/**
- * §3 for a completed parser result (docs/rulings.md §3): the page is an
- * intact, official capture inside its freshness window, and code finds each
- * published value on it. Records whose minimum facts pass go live; other
- * fields attach only when verified; everything else stays open as work. No
- * auditor, external authority or control batch is involved.
- */
 export function verifiedWorkerRecords(input: {
   plan: AutonomousWorkPlan; parser: WorkerResultRecord; captures: readonly WorkerPublicationCapture[]; now: string;
-  /** Every worker result, so a BROKE audit of this extraction pulls what it broke. */
   results?: readonly WorkerResultRecord[];
-  /**
-   * A pulled record leaves the published version (DP-15) instead of holding the whole publication: the
-   * result may then publish fewer records, or none, and `pulledRecords` names what the audit took out.
-   */
   pullRemoves?: boolean;
 }) {
   const { plan, parser, now } = input;
@@ -109,8 +88,6 @@ ${f.field}`));
     const fields = Object.fromEntries(Object.entries(record.fields).filter(([field]) => !badFields.has(`${record.id}
 ${field}`)));
     let verdict = section3Record({ recordClass: contract.recordClass, fields, page, now, pageVerdict, minimums });
-    // An unverified amount leaves the filing document available; it cannot
-    // become a Money record. Recheck the independent document minimum.
     if (!verdict.live && contract.recordClass === "CAMPAIGN_FINANCE_FILING") {
       verdict = section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields, page, now, pageVerdict });
     }
@@ -126,19 +103,11 @@ ${field}`)));
   return { contract, extraction: { ...extraction, records }, primary, captures, sourceReceipt, heldRecordIds, pulledRecords };
 }
 
-/** The latest completed extraction for a work item: what the Validator checks and publishes. */
 export function latestParserResult(results: readonly WorkerResultRecord[], workItemId: string): WorkerResultRecord | undefined {
   return results.filter(r => r.workItemId === workItemId && r.result.role === "PARSER" && r.result.verdict === "EXTRACTED")
     .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id))[0];
 }
 
-/**
- * The saved pages a publication rests on: the extraction's own page, plus —
- * when that page is not `.gov` — saved `.gov` pages, one of which must link it
- * for it to count as official (`isOfficialSource`). Those are the work's own
- * pages and, from the field manual, pages any earlier job saved that link the
- * same host.
- */
 export async function capturesForPublication(input: {
   repos: Pick<ControlPlaneRepositories, "artifacts">; workItemId: string; primaryId: string; results: readonly WorkerResultRecord[];
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
@@ -153,11 +122,6 @@ export async function capturesForPublication(input: {
   return [primary, ...read.filter((c): c is WorkerPublicationCapture => c !== null)];
 }
 
-/**
- * One publication attempt as the Validator records it in the field manual:
- * the page read, the official page that linked it when it is not `.gov`, how
- * many records went live, and — for a source-side hold — why §3 refused it.
- */
 export function validatorObservation(input: {
   plan: AutonomousWorkPlan; workItemId: string; page: WorkerPublicationCapture | null | undefined; captures: readonly WorkerPublicationCapture[]; published: number;
   outcome: { readonly status: string; readonly code: string; readonly detail: string; readonly recovery?: string };
@@ -173,21 +137,11 @@ export function validatorObservation(input: {
     refusal: input.published === 0 && outcome.status === "HELD" && outcome.recovery === "WORKER" ? { code: outcome.code, detail: outcome.detail } : null };
 }
 
-/**
- * The registry edition a door publishes. Every door shares one registry
- * pointer, so its editions are ordered by when their sources were read
- * (source-through), not by a label; the opaque worker form says exactly that.
- */
+/** Every door shares one registry pointer, so editions are ordered by source-through, not by label. */
 export function registryEdition(label: string): string {
   return `worker-roster:wr-${createHash("sha256").update(label).digest("hex").slice(0, 24)}`;
 }
 
-/**
- * What a BROKE post-publication audit (S5's Auditor) pulls from an extraction:
- * the records it names, or the whole extraction when it names none. Null when
- * no audit broke it. `at` is the newest such audit, so the publisher re-checks
- * once after it.
- */
 export function auditPull(results: readonly WorkerResultRecord[], parser: WorkerResultRecord): { readonly all: boolean; readonly recordIds: ReadonlySet<string>; readonly at: string } | null {
   if (parser.result.role !== "PARSER") return null;
   const attemptId = parser.result.attemptId;

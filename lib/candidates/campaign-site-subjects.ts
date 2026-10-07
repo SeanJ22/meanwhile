@@ -1,22 +1,3 @@
-/**
- * **WHO A CAMPAIGN SITE MAY BE APPROVED FOR, JOINED EXACTLY.** (2026-09-25.)
- *
- * The chain approves a site for a CANONICAL candidacy
- * (`lib/hunt/candidate-universe.ts`: `nj:2026:<division>:<office>:<person>`),
- * and the Reader renders a link under the keys the ballot uses for that
- * person. This module is the join, and it never guesses:
- *
- * - every ballot candidacy id the canonical candidacy was seen under
- *   (`pilotIds`) is a Reader key — `linksForCandidacy(cand.id)`;
- * - a certified-lineup nominee key (`<contestId>|<Name>`, the key
- *   `linksForNominee` reads) is added only when the nominee's contest is one of
- *   those candidacies' contests AND the two names share an exact name form
- *   (`lib/identity/name-forms.ts` — string equality, no similarity);
- * - the filing's own domains — a stated website, or the domain of a filed
- *   contact address that is not a public mail service — are kept as DOMAINS
- *   only, for the audit's independent signal. No address or local part is
- *   read past this function, stored, or published.
- */
 import { sharedNameForm } from "../identity/name-forms.ts";
 import { registrableDomain } from "./campaign-site-verifier.ts";
 import type { CandidateUniverse } from "../hunt/candidate-universe.ts";
@@ -35,7 +16,6 @@ export interface LineupContest {
   readonly nominees: readonly { readonly name: string }[];
 }
 
-/** A filing row's candidate-stated channels, keyed by the ballot candidacy id. */
 export interface FilingChannels {
   readonly candidacyId: string;
   readonly websiteUrl?: string | null;
@@ -47,7 +27,6 @@ function contestOf(candidacyId: string): string {
   return cut > 0 ? candidacyId.slice(0, cut) : candidacyId;
 }
 
-/** The domains a filing names: its website's, and a non-public contact domain. Only domains leave this function. */
 export function filingDomains(row: FilingChannels): string[] {
   const out = new Set<string>();
   if (typeof row.websiteUrl === "string") {

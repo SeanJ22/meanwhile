@@ -1,48 +1,28 @@
 /**
- * **MW-021 — A BUDGET ON ONE ASSIGNMENT, AND THE RUNNER HONOURS IT.**
- * (2026-09-25; MW-001 is what makes it possible.)
- *
- * An assignment is one owner Send: a selected geography (`expansion.scope.set`,
- * keyed by its scope key) or a DISPATCH (`fleet.deployHere`, keyed
- * `dispatch:<intent id>`). What belongs to it is read from the obligations
- * themselves — every row whose `assignments` names it, CREATED or REORDERED
- * (`dispatch-work.ts`) — never re-joined by place.
+ * A budget on one assignment (owner Send), honoured by the runner. An
+ * assignment is a selected geography (keyed by its scope key) or a DISPATCH
+ * (`dispatch:<intent id>`); membership is read from the obligations' own
+ * `assignments`, never re-joined by place.
  *
  * ```
- *   budget     a geography's rolling 24-hour budget (the same dollars the
- *              owner set on it), or the budget a DISPATCH was sent with. A
- *              DISPATCH sent without one has none: only the Fleet ceiling
- *              bounds it. A geography no longer selected has none either
- *   spent      every model-backed charge in the rolling 24 hours on a member
- *              obligation, written at or after the obligation joined the
- *              assignment. A charge that names no obligation (written before
- *              charges named one) is counted against every assignment with work
- *              on its subject — an over-count that can only hold work back
- *   held       worst cases reserved for Scouts admitted this cycle and not
- *              yet settled: the Fleet controller's holdback, per assignment
+ *   budget     a geography's rolling 24-hour budget, or the budget a DISPATCH
+ *              was sent with; none otherwise (only the Fleet ceiling bounds it)
+ *   spent      every model-backed charge in the rolling window on a member
+ *              obligation, at or after it joined. A charge naming no obligation
+ *              counts against every assignment with work on its subject
+ *   held       worst cases reserved for Scouts admitted and not yet settled
  *   left       budget − spent − held
  * ```
  *
- * ## The rule when one obligation serves several Sends
+ * A charge counts toward every Send its obligation belongs to. A Scout is
+ * admitted while any budgeted Send it belongs to has room for one more worst
+ * case (running under the most recent such Send) and its worst case is held
+ * against all of them. Sends without a budget add no limit.
  *
- * A charge counts toward EVERY Send its obligation belongs to, so each shows
- * the whole of what its work cost and no charge is split or guessed between
- * them. A Scout for that obligation is admitted while ANY budgeted Send it
- * belongs to has room for one more worst case — it runs under the most recent
- * such Send, named in the reading — and it is refused only when none does. Its
- * worst case is held against every one of them until it settles. Sends with no
- * budget of their own add no limit and are never charged.
+ * Fail closed: an unreadable ledger, an unmeasured charge, or unreadable owner
+ * instructions for DISPATCH work hold the Scout, by name.
  *
- * ## Fail closed
- *
- * The ledger unreadable, a charge on the work that reported no dollar figure,
- * or — for work a DISPATCH reached — the owner's instructions unreadable: the
- * budget cannot be checked, so the Scout is held, by name. The reason is always
- * the assignment's own, never the Fleet ceiling's or a provider's cap.
- *
- * No second ledger: history is the canonical cost ledger; in-cycle state is
- * the reservation the Fleet controller already uses (`fleet-safety.ts`), per
- * assignment. PURE: no store, no clock, no environment.
+ * Pure: no store, no clock, no environment.
  */
 
 import type { AssignmentCompletion } from "../assignment-completion.ts";
@@ -82,11 +62,7 @@ export interface AssignmentBudgetSpec {
 /** The DISPATCH key a Send carries on the rows it reached (`dispatch-work.ts`). */
 export const dispatchAssignmentKey = (intentId: string): string => `dispatch:${intentId}`;
 
-/**
- * A DISPATCH that carries a budget field that is not a readable amount (not a
- * finite number at or above zero). Fail closed (2026-09-25): its work is held
- * by name, never run as if it had no budget.
- */
+/** A DISPATCH whose budget field is present but not a finite number ≥ 0. Its work is held, never run unbudgeted. */
 export interface MalformedAssignmentBudget {
   readonly key: string;
   readonly label: string;
@@ -304,12 +280,7 @@ export class AssignmentBudgetGate {
     readonly intentsReadable: boolean;
     /** DISPATCHes whose budget field is unreadable: the work they reach is held. */
     readonly malformed?: readonly MalformedAssignmentBudget[];
-    /**
-     * The Sends this cycle's own reading reached each obligation under (a
-     * pending DISPATCH's match), whether or not the row's record says so yet.
-     * A budgeted Send missing from the row's record is held, never run
-     * unbudgeted (2026-09-25).
-     */
+    /** The Sends this cycle's reading reached each obligation under. A budgeted Send missing from the row's record is held. */
     readonly reachedThisCycle?: ReadonlyMap<string, readonly string[]>;
     /** When `historical` was read (the cycle's instant). */
     readonly historyReadAt?: string;
@@ -361,11 +332,9 @@ export class AssignmentBudgetGate {
   }
 
   /**
-   * The budget lines a paid job on this obligation is held against, for the
-   * durable holds (`spend-holds.ts`): every budgeted Send it belongs to, most
-   * recent first (one with room suffices, the shared-work rule) — or the
-   * refusal when the budget cannot be checked at all. No lines: no Send budget
-   * applies.
+   * The budget lines a paid job on this obligation is held against
+   * (`spend-holds.ts`): every budgeted Send it belongs to, most recent first, or
+   * the refusal when the budget cannot be checked. No lines: no Send budget applies.
    */
   linesFor(obligationId: string): { readonly lines: readonly BudgetLine[] } | { readonly refusal: AssignmentRefusal } {
     const keys = this.keysOf.get(obligationId) ?? [];
@@ -393,7 +362,7 @@ export class AssignmentBudgetGate {
     return { lines };
   }
 
-  /** What this gate was armed with, for the standing hunter lane's reading (CH-24): the Sends and their spend at the read. */
+  /** What this gate was armed with: the Sends and their spend at the read. */
   armedReading(): { readonly specs: readonly AssignmentBudgetSpec[]; readonly historical: ReadonlyMap<string, AssignmentSpend> | null; readonly reached: ReadonlyMap<string, readonly string[]> } {
     return { specs: [...this.specs.values()], historical: this.costsReadable ? this.historical : null, reached: this.reachedThisCycle };
   }
@@ -506,9 +475,8 @@ export class AssignmentBudgetGate {
  * canonical ledger. `costs` null means the ledger could not be read.
  */
 function costsForInstruction(costs:readonly CostEntry[], spec:AssignmentBudgetSpec):readonly CostEntry[] {
-  // An exact different receipt is known not to belong here. Older ledger rows
-  // without receipt attribution remain conservatively counted by membership
-  // and time, so a migration cannot mint new allowance from unknown history.
+  // A charge with a different exact receipt does not belong here. Older rows
+  // without receipts are counted by membership and time.
   return costs.filter(cost=>cost.assignmentRefs===undefined ||
     cost.assignmentRefs.some(mark=>mark.key===spec.key&&mark.ref===spec.ref));
 }
@@ -577,7 +545,7 @@ export interface AssignmentReading {
   /** Null when no budget is in force for it; `budgetWhyNot` says why. */
   readonly budget: AssignmentBudgetReading | null;
   readonly budgetWhyNot: string | null;
-  /** MW-015: visited is not finished; evaluated from each member's own record. Absent on readings written before 2026-09-25. */
+  /** Visited is not finished; evaluated from each member's own record. Absent on older readings. */
   readonly completion?: AssignmentCompletion | null;
 }
 
@@ -607,7 +575,7 @@ export function assignmentCycleReading(input: {
   readonly intentsReadable: boolean;
   /** Labels for Sends with members and no budget in force (from this cycle's targets). */
   readonly labels?: ReadonlyMap<string, string>;
-  /** MW-015: the completion of one assignment, or null when it cannot be evaluated this cycle. */
+  /** The completion of one assignment, or null when it cannot be evaluated this cycle. */
   readonly completionFor?: (key: string) => AssignmentCompletion | null;
 }): AssignmentCycleReading {
   const since = new Date(Date.parse(input.now) - ASSIGNMENT_BUDGET_WINDOW_HOURS * 3_600_000).toISOString();

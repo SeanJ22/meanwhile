@@ -1,18 +1,8 @@
 /**
- * **DP-30 · EVERY DOOR AND FIX KEEPS ITS HISTORY.**
- *
- * History is the fix-list items for a door or method, in order: when it broke,
- * how it was fixed, how long the fix held, and when it broke again. There is
- * no separate history log. A fix-list item is one gap (same `where` and
- * `says`); each time it comes back after a fix, the finished episode is kept
- * on the item (`earlier`) before the item reopens, so a door that broke twice
- * reads as two episodes.
- *
- * Also here: the fix-list item a reusable method gets when it goes from
- * working to failing in a place (and its completion when it works again), so
- * a method's breaks are on the same list as a door's.
- *
- * Nothing here names a place; the place is the data.
+ * Every door and fix keeps its history: the fix-list items for a door or
+ * method, in order. Each time a fixed gap comes back, the finished episode is
+ * kept on the item (`earlier`) before it reopens. Also here: the item a
+ * reusable method gets when it goes from working to failing in a place.
  */
 import { addFixItem, completeFixItem, fixItems, type FixItem } from "./fix-list.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "./gateway/admin-config.ts";
@@ -160,13 +150,11 @@ export async function noteMethodTransition(repos: FixRepos, prior: FixMapRow | n
 }
 
 /**
- * `recordAttempts` that keeps history: each row is written to the fix map,
- * and a working-to-failing change (or the reverse) is put on the fix list.
- * Reads are scoped to the attempt's place, never the whole map. A failed write
- * is counted, never thrown into the attempt it describes.
- *
- * DP-26: then each touched method is measured against the proof bar, and a
- * status change (proven, or a proven fix broke) writes its one update.
+ * `recordAttempts` that keeps history: each row is written to the fix map, and
+ * a working-to-failing change (or the reverse) goes on the fix list. Reads are
+ * scoped to the attempt's place. A failed write is counted, never thrown. Then
+ * each touched method is measured against the proof bar and a status change
+ * writes its one update.
  */
 export async function recordAttemptsKeepingHistory(fixMap: Pick<FixMapRepository, "put" | "forPlace" | "forMethod">, repos: FixRepos,
   attempts: readonly MethodAttempt[], titleOf?: (methodId: string) => string | null,

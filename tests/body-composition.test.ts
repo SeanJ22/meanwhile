@@ -2,9 +2,6 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
 
 import {
   BODY_COMPOSITIONS,
@@ -14,32 +11,11 @@ import {
 import { governingRosterHoldersForDivision, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import type { Registry } from "../lib/registry/types.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-/**
- * **A BODY DOES NOT INHERIT MEMBERS FROM ITS GEOGRAPHY.**
- * (2026-08-27, the coverage-truth session. Red Controls 2 and 3.)
- *
- * The author's visual review on 2026-08-27 caught the Central Arizona Water
- * Conservation District card showing the five Pima County Supervisors under
- * *Who sits on it*, with "Jennifer Allen — Presides". CAWCD's own board page
- * says the board is *popularly elected, 15 members* — ten Maricopa, four Pima,
- * one Pinal — presided over by Terry Goddard.
- *
- * The cause was one line: a body with no roster of its own took
- * `governingRosterHoldersForDivision(body.ocdId)`. **74 of 1,998 registry
- * bodies rendered named members that way and through nothing else**, including
- * 58 appointed City of Tucson boards and commissions that each showed the Mayor
- * and Council.
- *
- * These guards hold the repaired shape:
- *
- * 1. The fallback is gone from every path that can make a MEMBERSHIP claim.
- * 2. An inherited roster requires a recorded, cited authority.
- * 3. An unsourced body renders nobody rather than plausible people.
- *
- * They live outside `lib/registry/body-membership.ts` so a defect in the
- * resolver cannot also disable the check on it.
- */
+await installRegistryAuthority();
+
+/** A body does not inherit members from its geography: an inherited roster requires a recorded, cited authority, and an unsourced body renders nobody. These guards live outside the resolver so a defect in it cannot disable them. */
 
 const ROOT = process.cwd();
 const PIMA_SUPERVISORS = "ocd-division/country:us/state:az/county:pima#governing";
@@ -53,15 +29,8 @@ function registry(): Registry {
   return JSON.parse(readFileSync(join(ROOT, "lib/registry/registry.json"), "utf8")) as Registry;
 }
 
-/* -------------------------------------------------- the three red controls */
-
 test("RED CONTROL: CAWCD cannot inherit the Pima County supervisors", () => {
-  /*
-   * The literal case the author caught. It is kept as a named control rather
-   * than folded into the sweep below because a regression here has a specific,
-   * checkable shape: five county supervisors standing in for a fifteen-member
-   * elected water board.
-   */
+  /* A named control: county supervisors standing in for an elected water board. */
   const supervisors = rosterHoldersForBody(PIMA_SUPERVISORS);
   assert.ok(
     supervisors.length > 0,
@@ -69,18 +38,7 @@ test("RED CONTROL: CAWCD cannot inherit the Pima County supervisors", () => {
   );
 
   const resolved = membersOfBody(CAWCD);
-  /*
-   * **AMENDED 2026-08-27, when the roster was wired.**
-   *
-   * This used to expect `UNKNOWN_COMPOSITION` and an EMPTY member list, which
-   * was true of the interim state — the wrong people had been removed and the
-   * right ones had not yet been collected — and is not the invariant. The
-   * invariant is the one this control's own name states: five county
-   * supervisors may never stand in for a fifteen-member elected water board.
-   *
-   * With the roster wired, "renders nothing" would be a WEAKER control than
-   * what is asserted now, and would fail for the good outcome.
-   */
+  /* The invariant: the county supervisors never stand in for the water board, whoever its own roster names. */
   assert.equal(
     resolved.kind,
     "DIRECT_BODY_ROSTER",
@@ -119,12 +77,7 @@ test("RED CONTROL: a Tucson advisory board cannot inherit the Mayor and Council"
 });
 
 test("RED CONTROL: the Tucson PHA reuses Mayor and Council ONLY through its sourced alias, and keeps the resident seat", () => {
-  /*
-   * The nuance that makes this a good control rather than a simple deletion:
-   * the Mayor and Council really ARE this board, and the app still could not
-   * prove it. The City's own agenda of 2026-02-18 says so — and says one more
-   * thing the seven-person roster dropped.
-   */
+  /* The council really is this board, and the city's own agenda is the authority that says so. */
   const resolved = membersOfBody(TUCSON_PHA);
   assert.equal(resolved.kind, "ALIAS_PLUS_ADDITIONAL_SEATS");
   assert.ok(resolved.authority, "an alias without a recorded authority is the fallback wearing a new name");
@@ -158,21 +111,13 @@ test("RED CONTROL: a statutory alias carries the statute that makes it lawful", 
   assert.match(resolved.authority?.sourceUrl ?? "", /azleg\.gov/);
   assert.match(resolved.authority?.quote ?? "", /board of supervisors shall be the board of directors/i);
 
-  /*
-   * **AND THE PAIR IS THE POINT.** The flood control district and CAWCD hang
-   * off the SAME county division. One legitimately is the supervisors and one
-   * emphatically is not, and no fallback keyed on geography can tell them
-   * apart. Asserting both in one file is what stops a later "simplification"
-   * restoring the fallback on the grounds that it was right for these three.
-   */
+  /* Two districts hang off the same county division: one is the supervisors and one is not, so no geography-keyed fallback can tell them apart. */
   assert.notEqual(
     membersOfBody(CAWCD).members.length,
     resolved.members.length,
     "two bodies on one division, two different answers — that is the whole reason for this module",
   );
 });
-
-/* ------------------------------------------------------------- the sweep */
 
 test("no registry body acquires members from a division it merely shares", () => {
   const reg = registry();
@@ -210,30 +155,15 @@ test("every recorded composition names a body the registry actually holds", () =
   assert.deepEqual(problems, [], problems.join("\n  "));
 });
 
-/* ------------------------------------------------------------ the guard */
-
 test("no reader surface reaches a body's members through a division roster", () => {
-  /*
-   * **THE ARCHITECTURAL HALF, and it is the one that lasts.**
-   *
-   * The rosters can be corrected today and re-inherited tomorrow by the next
-   * surface that reaches for the convenient helper. So the helper itself is
-   * banned from any module that renders a BODY.
-   *
-   * `governingRosterHoldersForDivision` is NOT banned outright — it answers a
-   * legitimate and different question, *who represents this division*, which
-   * is what `lib/registry/representation.ts` and the representation API route
-   * ask on a DIVISION card. Those two are the allowed callers, by name, and
-   * adding a third is a decision somebody has to make on purpose.
-   */
+  /* The roster helper is banned from any module that renders a body; only the division-representation path may call it. */
   const ALLOWED = new Set([
     /* Where it is defined. */
     "lib/registry/body-rosters.ts",
     /* The DIVISION question — "who represents this district" — and its route. */
     "lib/registry/representation.ts",
     "app/api/representation/[...division]/route.ts",
-    /* Tests OF those two, and of this rule. A test that may not name the thing
-     * it is testing is a rule with no way to prove it holds. */
+    /* Tests of those two, and of this rule. */
     "tests/body-composition.test.ts",
     "tests/body-rosters.test.ts",
     "tests/card-sources.test.ts",
@@ -253,8 +183,7 @@ test("no reader surface reaches a body's members through a division roster", () 
     } catch {
       continue;
     }
-    /* Comments stripped: this repo's guards read raw text, and the modules
-     * that DOCUMENT the removal quote the call they deleted. */
+    /* Comments stripped: modules that document the removal quote the call they deleted. */
     const code = text.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:])\/\/.*$/gm, "$1");
     if (code.includes("governingRosterHoldersForDivision")) offenders.push(file);
   }
@@ -270,12 +199,7 @@ test("no reader surface reaches a body's members through a division roster", () 
 });
 
 test("CONTROL: the removed fallback really would have inherited, on the bodies it was removed from", () => {
-  /*
-   * A guard that only ever passes proves nothing. This replays the deleted
-   * behaviour and requires it to still produce the wrong answer, so the two
-   * assertions above are demonstrably testing something live rather than
-   * agreeing with a world where no body shares a division with a government.
-   */
+  /* Replays the deleted behaviour and requires it to still produce the wrong answer, so the assertions above test something live. */
   const wouldHaveInherited = governingRosterHoldersForDivision(
     "ocd-division/country:us/state:az/county:pima",
   );
@@ -284,14 +208,7 @@ test("CONTROL: the removed fallback really would have inherited, on the bodies i
     "the old fallback must still return the supervisors — otherwise this control is vacuous",
   );
 
-  /*
-   * **AMENDED 2026-08-27.** This compared the new resolver's member COUNT to
-   * zero, which held only while CAWCD had no roster of its own. The live
-   * property is DISJOINTNESS: whoever the new resolver names, none of them may
-   * be a person the deleted fallback would have handed over. That is what the
-   * defect was, and unlike a count it keeps its meaning now the board has its
-   * own fifteen members — and would still catch the fallback coming back.
-   */
+  /* Disjointness: none of the resolver's members may be a person the deleted fallback would have handed over. */
   const inherited = new Set(wouldHaveInherited.map((h) => h.name));
   const resolved = membersOfBody(CAWCD).members.map((m) => m.name);
   assert.ok(resolved.length > 0, "CAWCD must name its own board for this comparison to mean anything");

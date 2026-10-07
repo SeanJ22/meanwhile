@@ -17,27 +17,12 @@ import { registeredHeldMeetingContract } from "./held-meeting-contract.ts";
 import { ZERO_COST } from "../attempt.ts";
 
 /**
- * Retain an actual routine response for independent work. No acquisition is scheduled here.
- *
- * **ONE CAPTURE TASK PER CANDIDATE RESPONSE, SETTLED ONCE** (2026-09-25).
- * Two refusals stopped every Pima capture after 2026-09-25T00:29Z:
- *
- * 1. The feed's request window rolls each UTC day, so an unchanged calendar
- *    arrives with the same bytes at a new URL. The artifact is content-derived,
- *    so the append-only artifact log refused the new URL as a rewrite of the
- *    held record, and the capture threw with its Attempt still open.
- * 2. The lease expired, the sweep made the task RECLAIMABLE, and the next pass
- *    re-derived the same task id (candidate version + raw hash) and offered a
- *    fresh PENDING value, which the store refused as "a DIFFERENT value".
- *    Migration 0029 made this permanent: an unchanged re-check confirms the
- *    pointed candidate instead of creating a new one, so the same candidate,
- *    and the same task id, returns every pass.
- *
- * So a byte-identical response at a new URL settles as a RE-OBSERVATION of the
- * held artifact: its URL and retrieval time go in the disposition, and the
- * artifact log keeps its first observation. An unsettled task is resumed under
- * its persisted value. A failure after the Attempt opens closes that Attempt
- * with the cause, so the route is owed again at once and says why.
+ * Retain an actual routine response for independent work. No acquisition is
+ * scheduled here. One capture task per candidate response, settled once: the
+ * same candidate (and task id) returns every pass. A byte-identical response at
+ * a new URL settles as a re-observation of the held artifact (the feed's request
+ * window changes its URL daily). A failure after the Attempt opens closes it
+ * with the cause.
  */
 export async function retainRoutineMeetingForWorkers(input: {
   readonly repos: ControlPlaneRepositories; readonly store: EvidenceStore;

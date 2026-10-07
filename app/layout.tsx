@@ -24,30 +24,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 /*
-  THE RECORD REGISTER, AND THE BRAND WORDMARK (ITEM J, 2026-09-01).
-
-  Weight 500 only. This face is not a body face here: it carries the wordmark
-  and the text this product quotes from a public record, and one weight is all
-  either of those needs.
-
-  **LOADED THROUGH `next/font/google`, NEVER THROUGH A STYLESHEET `<link>` OR
-  AN `@import` TO fonts.googleapis.com — AND THE REASON IS NOT PERFORMANCE.**
-  `next/font` downloads the font files at BUILD time and serves them from this
-  origin, so no reader's IP address is sent to Google when a page loads. A
-  `<link rel="stylesheet">` to Google's CSS, by contrast, hands Google the IP,
-  the User-Agent and the Referer of every single person who opens this site,
-  on every page view.
-
-  This site's whole claim is that it collects almost nothing about the people
-  who read it — `app/transparency/page.tsx` says so in plain words. A
-  third-party font request on every page view contradicts that claim, and it
-  is the first thing a privacy-minded reporter will check, because it is
-  visible in a network panel in about four seconds. The claim and the network
-  tab have to agree.
-
-  `tests/font-privacy.test.ts` refuses a Google font host anywhere in the app
-  tree, and `scripts/brand-shots-0901.mts` records every host a real page load
-  contacts.
+  Loaded through `next/font/google`, never a stylesheet `<link>` or `@import` to fonts.googleapis.com:
+  `next/font` serves the files from this origin, so no reader's IP reaches Google.
 */
 const ebGaramond = EB_Garamond({
   variable: "--font-eb-garamond",
@@ -57,16 +35,7 @@ const ebGaramond = EB_Garamond({
 });
 
 export const metadata: Metadata = {
-  /*
-    ITEM J (2026-09-01). `app/opengraph-image.png` and `app/apple-icon.png` are
-    metadata-file conventions: Next emits the tags for them automatically, but
-    an Open Graph URL has to be ABSOLUTE, and without a `metadataBase` Next
-    resolves it against localhost and says so in a build warning.
-
-    The origin comes from `lib/ops/origins.ts` and is never typed out here —
-    one constant, three named origins, and `tests/origins.test.ts` sweeps for
-    the literal.
-  */
+  /* An Open Graph URL must be absolute; the origin comes from `lib/ops/origins.ts`, never typed out here. */
   metadataBase: new URL(PUBLIC_SITE_ORIGIN),
   title: titleFor("Public meetings near you"),
   description:
@@ -91,16 +60,7 @@ export const viewport: Viewport = {
 */
 const THEME_SCRIPT = `try{if(localStorage.getItem("wtp.theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}`;
 
-/*
-  `LayoutProps<"/">` — the global Next generates into `.next/types` during a
-  build — used to be the annotation here, and `tsc --noEmit` therefore could
-  not run on a checkout that had never been built (Prompt C item 1a, 2026-08-20).
-  It passed on developer machines only because `.next` was lying around from
-  the previous build, which meant every "tsc clean" ever reported was measured
-  on a tree carrying generated files. The type it resolved to is this, so
-  writing it out costs nothing and makes the type check runnable on a fresh
-  clone. `tests/clean-typecheck.test.ts` fails if a generated global comes back.
-*/
+/* Written out rather than `LayoutProps<"/">`, which exists only after a build, so `tsc --noEmit` runs on a fresh clone. */
 export default function RootLayout({
   children,
   modal,

@@ -12,29 +12,10 @@ import { AskAnswerRecords } from "@/components/ask/answer-records";
 import type { StoredTopicAnswer } from "@/lib/corpus/topic-answers";
 
 /**
- * D35's THREE ANSWERS, ON SCREEN.
- *
- * The row's requirement is that the three are *"distinguishable in data and on
- * screen"*, and the second half is the one a component can get wrong. So the
- * three do not share a container, a colour or a sentence:
- *
- * * **MATCHED** renders the passages in their own words, each quoted, each
- *   with the page it came from and the date we read it. Filled treatment,
- *   because it is a present value.
- * * **SEARCHED_NOTHING_MATCHED** renders our search and its DENOMINATOR — "we
- *   read N pages and none of them mentioned it" — in the gap's register. It
- *   never says the person has no position, because we do not know that.
- * * **NOT_YET_COLLECTED** renders a different sentence entirely, about US, and
- *   offers their own page. It is a fact about our collection, and CLAUDE.md's
- *   named-gap rule is explicit that a fact about us and a fact about them may
- *   never render as the same sentence.
- *
- * Absence also never wears a present value's styling: both gaps render as
- * plain prose in the muted register, never as a quote block.
- *
- * **The search is this person's corpus only.** It is not the routing chat and
- * it never leaves this card — the row is explicit about that, and the route it
- * calls takes the subject in its path so it cannot answer for anyone else.
+ * Three answers kept visually distinct: MATCHED (quoted passages with page and
+ * read date), SEARCHED_NOTHING_MATCHED (our search and its denominator, never
+ * "no position"), and NOT_YET_COLLECTED (a sentence about our collection, with
+ * their own page). The search covers this person's corpus only.
  */
 export function PositionsSection({
   subjectId,
@@ -47,12 +28,7 @@ export function PositionsSection({
   subjectName: string;
   /** The ballot already owns the Positions disclosure. */
   contentOnly?: boolean;
-  /**
-   * CA-14: the answers published ahead of time for this person, keyed by chip
-   * label. A chip with a stored answer renders it at once with Ask's own
-   * components and makes no request. A chip without one, and anything typed,
-   * still goes through the positions route as before.
-   */
+  /** Answers published ahead of time, keyed by chip label; a chip with one renders it without a request. */
   topicAnswers?: Readonly<Record<string, StoredTopicAnswer>>;
 }) {
   const stanceTopics = useStanceTopics();
@@ -107,15 +83,12 @@ export function PositionsSection({
         holdingStatus?: "HELD" | "PARTIAL";
         unavailableAuthorities?: string[];
       };
-      // The card may have moved on. A late answer for an old query is a wrong
-      // answer, and the keyed-result rule says so in as many words.
+      // A late answer for an old query is dropped.
       if (ticket !== request.current) return;
       setAnswer(body);
     } catch {
       if (ticket !== request.current) return;
-      // A failed retrieval is reported as a failed retrieval. It is never
-      // rendered as "nothing found", which would be a claim about a person
-      // made because a request did not complete.
+      // A failed retrieval is never rendered as "nothing found".
       setAnswer(null);
       setFailed(true);
     } finally {
@@ -127,8 +100,6 @@ export function PositionsSection({
       <div data-positions-section>
         {answer?.kind === "MATCHED" && <CardSourcesContribution id={`positions:${subjectId}:${answer.topic}`} sources={answer.passages.map(passage => ({ what: `Published passages mentioning ${answer.topic}`, provenance: { sourceUrl: passage.url, sourceOrg: `${subjectName} · ${sourceKindLabel(passage.kind)}`, collectedAt: passage.retrievedAt, verifiedAt: null } }))} />}
 
-        {/* The register here is PLAYFUL — this is an interaction surface, and
-            everything it produces below is level. The seam is the rule. */}
         <label
           htmlFor={inputId}
           className="block t-detail leading-relaxed text-voice"
@@ -190,29 +161,14 @@ export function PositionsSection({
                     key={p.snapshotId + p.quote.slice(0, 24)}
                     className="mt-2 rounded-md border border-[var(--signal)]/35 bg-[var(--signal)]/5 p-3"
                   >
-                    {/* Verbatim, and marked as a quotation so a screen reader
-                        knows these are not our words either. */}
+                    {/* Verbatim, marked as a quotation. */}
                     <blockquote className="t-record t-body leading-relaxed text-paper">
                       &ldquo;{p.quote}&rdquo;
                     </blockquote>
 
                   </figure>
                 ))}
-                {/*
-                  THE OVERCLAIM THIS LINE EXISTS TO PREVENT, found by reading
-                  the real output rather than the code: a state legislator's
-                  official page is often a BILL LIST, so a passage matching
-                  "housing" can be a row of bill titles. It is genuinely
-                  verbatim and genuinely theirs — but under a header reading
-                  "Positions", a bill title could be read as a stance on the
-                  bill, which is a claim nobody here is entitled to make.
-
-                  The honest fix is not to filter (that would be us deciding
-                  which of their words count) and not to characterise. It is to
-                  say exactly what the match is: a mention on a page they
-                  publish. The reader draws the inference, with the link right
-                  there.
-                */}
+                {/* A match is a mention on a page they publish (often a bill list), never a stance. */}
                 <p className="mt-2 t-caption leading-relaxed text-muted">
                   {answer.holdingStatus === "PARTIAL" ? "Showing" : `Showing ${answer.passages.length} of`} {answer.totalMatches}{" "}
                   passage{answer.totalMatches === 1 ? "" : "s"} that{" "}

@@ -1,26 +1,11 @@
 /**
- * **THE ONE SCOPE BOTH AREAS OBEY.** (Admin redesign, 2026-09-23.)
+ * The scope travels in the URL (`?scope=`):
  *
- * The design has a single scope filter in the header, shared by Fleet and
- * Readiness: change it in one area, switch areas, and the scope holds. It
- * travels in the URL (`?scope=`) so every link, tab and area switch carries it,
- * a page can be bookmarked at a scope, and the server renders the scoped
- * reading directly (no client-side re-derivation of a number).
- *
- * Three kinds of scope, in the order the header lists them:
- *
- * ```
- *   all        everywhere the product has registered coverage
- *   state      one state or territory (lower-case USPS code, e.g. "az")
- *   geography  one selected Census geography, including a five-digit ZCTA,
- *              carried as its exact lookup address
- * ```
- *
- * PURE: no I/O, no clock. The pages decide what each panel can narrow to and
- * say so in words when a panel cannot.
+ *   all        everywhere (the absence of the parameter)
+ *   state      one state or territory, lower-case USPS code
+ *   geography  one Census geography, including a five-digit ZCTA, carried as its exact lookup address
  */
 
-/** A Census container type the scope filter can carry. */
 export type MwGeoType = "zcta" | "county" | "congressional_district" | "cbsa" | "state_leg_upper" | "state_leg_lower";
 
 const GEO_SHORT: Readonly<Record<MwGeoType, string>> = {
@@ -42,7 +27,6 @@ export type MwScope =
 
 export const SCOPE_ALL: MwScope = { kind: "all" };
 
-/** The URL value for a scope. `all` is the absence of the parameter. */
 export function scopeParam(scope: MwScope): string | null {
   switch (scope.kind) {
     case "all":
@@ -54,11 +38,7 @@ export function scopeParam(scope: MwScope): string | null {
   }
 }
 
-/**
- * Read a scope from the URL. Anything unreadable is `all` — never a guess at
- * what the owner meant — and the page's strip then says it is showing
- * everywhere.
- */
+/** Anything unreadable is `all`, never a guess. */
 export function parseScope(raw: string | string[] | undefined | null): MwScope {
   const value = (Array.isArray(raw) ? raw[0] : raw)?.trim().toLowerCase() ?? "";
   if (value === "" || value === "all") return SCOPE_ALL;
@@ -71,12 +51,10 @@ export function parseScope(raw: string | string[] | undefined | null): MwScope {
   return SCOPE_ALL;
 }
 
-/** The state a scope sits inside, or null for everywhere. */
 export function scopeState(scope: MwScope): string | null {
   return scope.kind === "all" ? null : scope.state;
 }
 
-/** Append the scope to a path, keeping any other query the link already has. */
 export function withScope(path: string, scope: MwScope, extra?: Readonly<Record<string, string | null | undefined>>): string {
   // A fragment belongs after the query, where the browser reads it: split it off first and put it back last.
   const hashAt = path.indexOf("#");
@@ -104,7 +82,7 @@ export const GEO_TYPE_WORDS: Readonly<Record<MwGeoType, string>> = {
   state_leg_lower: "State house district",
 };
 
-/** A Census container's label as the owner reads it: "Pima County", "CD 6". */
+/** A Census container's label as the owner reads it, e.g. "<Name> County", "CD 6". */
 export function geographyShortLabel(label: string): string {
   return label
     .replace(/^Arizona |^New Hampshire |^New Jersey |^[A-Z]{2} /, "")

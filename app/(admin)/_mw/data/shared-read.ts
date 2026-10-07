@@ -1,28 +1,11 @@
 /**
- * **ONE READ AT A TIME, AND NEVER PAST THE PAGE'S DEADLINE.** (Admin
- * redesign, 2026-09-23.)
+ * Admin pages run under a ten-second function limit. Three rules keep a page inside it:
  *
- * The Admin pages run as a Netlify function with a ten-second limit, and a
- * page cut off at the limit reaches the owner as "This page didn't load" —
- * measured on the deployed site the first time Work was opened on a cold
- * instance. The heavy reads behind the pages are the registry projection
- * (3.6 MB, ~4.5 s cold), the Census lookup (~5.6 s cold) and the watched
- * bodies (~4 s cold). Three rules keep a page inside the limit:
+ *   shared     callers that arrive while a read is in flight wait for that read
+ *   recent     a read younger than `staleMs` is served while a fresh one is fetched behind it
+ *   deadline   a read that misses `deadlineMs` is returned as not read, with its reason, and keeps running
  *
- * ```
- *   shared     callers that arrive while a read is in flight wait for that
- *              read rather than starting their own (All states read the
- *              lookup three times over, in parallel, before this)
- *   recent     a read younger than `staleMs` is served while a fresh one is
- *              fetched behind it; every page names the time its figures were
- *              read, so a recent read is never passed off as a new one
- *   deadline   a read that has not answered by `deadlineMs` is returned as
- *              not read this time, with its reason, and keeps running so the
- *              next page view has it — never a blank that reads as none
- * ```
- *
- * A read older than `staleMs` is never served: the page waits for a fresh
- * one, up to the deadline.
+ * A read older than `staleMs` is never served.
  */
 
 export interface SharedReadOptions<T> {
@@ -34,14 +17,11 @@ export interface SharedReadOptions<T> {
   readonly deadlineMs: number;
   /** Whether a result may be kept: a failed read is never cached. */
   readonly keep: (value: T) => boolean;
-  /** What the page shows when the read has not answered by the deadline. */
   readonly late: (deadlineMs: number) => T;
 }
 
 export interface SharedRead<T> {
-  /** The read, shared, recent or fresh, or `late` when it misses the deadline. */
   read(load: () => Promise<T>): Promise<T>;
-  /** For tests: forget what is held. */
   reset(): void;
 }
 
@@ -100,7 +80,6 @@ export function sharedRead<T>(options: SharedReadOptions<T>, now: () => number =
   };
 }
 
-/** The sentence a read that missed the page's deadline carries. */
 export function lateWords(what: string, deadlineMs: number): string {
   return `${what} did not answer within ${Math.round(deadlineMs / 1000)} seconds, so it is not shown this time. It is still being read; opening the page again shows it. That is not the same as there being none.`;
 }

@@ -1,4 +1,4 @@
-/** DP-23. A proof label is a measurement; it never holds back a verified fact. */
+/** A proof label is a measurement; it never holds back a verified fact. */
 import type { AdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { registerSetting, readSetting } from "../control-plane/settings.ts";
 import { applyFixResult, type FixMapRow } from "./fix-map.ts";
@@ -13,7 +13,7 @@ registerSetting({ key: FIX_PROOF_PLACES, label: "Places where a method must work
 registerSetting({ key: FIX_PROOF_AREAS, label: "Different districts or states needed to prove a method", defaultValue: 2, readerFacing: false, validate: positive });
 registerSetting({ key: FIX_PROOF_SHARE, label: "Share of tried places where a method must work", defaultValue: 0.9, readerFacing: false,
   validate: (v): v is number => typeof v === "number" && Number.isFinite(v) && v > 0 && v <= 1 });
-/** DP-34: how far back "still working today" looks. Older results still count toward the bar, but recent ones must hold it too. */
+/** How far back "still working today" looks. Older results still count toward the bar, but recent ones must hold it too. */
 export const FIX_PROOF_RECENT_DAYS = "methods.proofRecentDays";
 registerSetting({ key: FIX_PROOF_RECENT_DAYS, label: "Days of recent results a proven method must still pass", defaultValue: 30, unit: "days", readerFacing: false, validate: positive });
 export function readFixProofRecentDays(config: AdminConfig | null): number {
@@ -50,9 +50,8 @@ export function fixProof(map: readonly FixMapRow[], bar: FixProofBar = DEFAULT_F
     failingPlaces: failures.map(r => r.placeId).sort() };
 }
 /**
- * DP-34: a green "Proven" means still working today. The method must pass the bar on its whole map AND its results
- * from the last `recentDays` must still reach the bar's share; otherwise it is back in Testing. With no recent result
- * nothing says it stopped, so the whole map decides.
+ * "Proven" means still working today: the method passes the bar on its whole map and its recent results still reach
+ * the bar's share. With no recent result, the whole map decides.
  */
 export function currentFixProof(map: readonly FixMapRow[], bar: FixProofBar, now: string, recentDays: number, held: FixProofGeography = {}) {
   const proof = fixProof(map, bar, held);
@@ -69,8 +68,6 @@ export function currentFixProof(map: readonly FixMapRow[], bar: FixProofBar, now
 export function fixStatus(map: readonly FixMapRow[], bar: FixProofBar = DEFAULT_FIX_PROOF_BAR, held: FixProofGeography = {}): "TESTING" | "PROVEN" {
   return fixProof(map, bar, held).status;
 }
-
-/* ------------------------------------------- DP-26: shown once, then quiet */
 
 /**
  * Where a method stands, kept so each status change is told once. TESTING is a
@@ -101,7 +98,7 @@ export interface StandingUpdate {
   readonly label: "PROVEN" | "TESTING";
   /** A setback is never shown as a win. */
   readonly setback: boolean;
-  /** For a Proven update, the numbers it claims (DP-33 recomputes them). */
+  /** For a Proven update, the numbers it claims. */
   readonly claim?: { readonly kind: "FIX_PROVEN"; readonly methodId: string; readonly works: number; readonly failed: number };
 }
 

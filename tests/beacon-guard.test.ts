@@ -12,76 +12,18 @@ import {
   markerFromRequestWithBody,
 } from "../lib/db/run-marker.ts";
 
-/**
- * **`NH91`, item 7, 2026-08-23.** The two plants below launch Playwright
- * DIRECTLY, on purpose — they are the unguarded contexts that prove the guard
- * can fail. They therefore miss `scripts/browser.mts`'s build resolution, and
- * they were two of the three tests that could not run when the image shipped
- * Chromium 1194 against Playwright's expected 1234.
- *
- * A plant that cannot launch proves nothing and must never read as a skip, so
- * it resolves the same way the guarded path does and THROWS with the directory
- * it searched when nothing is installed.
- */
+/** The plants launch Playwright directly to prove the guard can fail; a plant that cannot launch throws with the directory it searched. */
 function rawLaunchOptions(): { executablePath?: string } {
   const resolved = resolveChromium();
   if (resolved.kind === "ABSENT") throw new Error(describeChromium(resolved));
   return resolved.kind === "SUBSTITUTED" ? { executablePath: resolved.executablePath } : {};
 }
 
-/**
- * R50: THE GUARD IS PROVEN BY RUNNING IT (2026-08-18, g16).
- *
- * ## Why the previous guard could not have caught either leak
- *
- * `tests/run-marker-coverage.test.ts` (deleted with this file's arrival) asserted that a browser script MENTIONED
- * `syntheticRunHeaders` in its source. Every script that leaked mentioned it.
- * The header was real and it was sent — on `fetch`. The leak was
- * `navigator.sendBeacon` AT UNLOAD, which Playwright's `extraHTTPHeaders` do
- * not reach, so the transport that carried our rows carried no declaration and
- * the store recorded seven rows (g14) and then forty-four (g15) as READER
- * signal. (R50 read this as "sendBeacon bypasses the header" full stop, which
- * is one step too broad — see the fixture's note below for the measurement.)
- *
- * A source-level assertion cannot see a transport. This one does not try:
- * it opens a real browser through the shared construction site, makes a page
- * fire the exact transport `lib/log/client.ts` prefers, and asks
- * `markerFromRequest` — the production function that decides a row's class —
- * what the request that arrived would be recorded as.
- *
- * ## Why it lands against a local server rather than production
- *
- * The row this proves is a row in `search_log`, and writing one to production
- * to prove it would add exactly the pollution the guard exists to prevent —
- * with no sanctioned write path to remove it afterwards (R43). So the request
- * lands here, and the CLASSIFICATION is computed by the same function the
- * route calls. What is asserted is the whole causal chain minus the INSERT:
- * transport → headers on the wire → `markerFromRequest` → run class.
- *
- * ## The plant
- *
- * A guard that returns "no leak" proves nothing until it has been shown
- * detecting one. So the same page is driven twice: once through
- * `launchGuarded`, and once through a context built the way every unguarded
- * script built one — `extraHTTPHeaders` and nothing else. The second is
- * asserted to leak. If it ever stops leaking, this test is measuring the wrong
- * thing and says so.
- */
+/** The guard is proven by running it: a real browser fires the client's transport and markerFromRequest classifies the request that arrived. A plant driven the unguarded way must leak. Requests land on a local server, never production. */
 
 const RUN_ID = "beacon-guard-test@2026-08-18T00:00:00.000Z";
 
-/**
- * What `lib/log/client.ts` does, in a page: beacon if there is one, else fetch.
- *
- * `fire()` is called directly, and the same call is also registered on
- * `pagehide` — because WHEN the beacon leaves is the whole mechanism. Measured
- * 2026-08-18 against Playwright's own network stack: a beacon fired while the
- * page is alive DOES carry `extraHTTPHeaders`; a beacon flushed during an
- * unload — a reload or a navigation — DOES NOT. That is why the production
- * leak surfaced only once g14's ask checks started reloading the page between
- * questions, and it sharpens R50's original reading: the transport is not
- * unconditionally header-less, the unload path is.
- */
+/** What lib/log/client.ts does in a page: beacon if there is one, else fetch. Fired directly and on pagehide, because an unload-time beacon does not carry extraHTTPHeaders. */
 const PAGE_HTML = `<!doctype html><meta charset="utf-8"><title>beacon</title>
 <script>
   window.fire = function () {
@@ -127,7 +69,7 @@ async function serve(landed: Landed[]): Promise<{ server: Server; origin: string
   return { server, origin: `http://127.0.0.1:${address.port}` };
 }
 
-/** Wait for the row to arrive rather than sleeping at it (R49). */
+/** Wait for the row to arrive rather than sleeping at it. */
 async function waitForRow(landed: Landed[], ms = 8000): Promise<boolean> {
   const deadline = Date.now() + ms;
   while (Date.now() < deadline) {
@@ -178,21 +120,7 @@ test("a context from the shared site cannot write an undeclared row", async (t) 
 });
 
 test("an unguarded context leaks — the plant that proves the test can fail", async (t) => {
-  /*
-   * **THE PLANT IS BUILD-SENSITIVE, and 2026-08-23 measured it.**
-   *
-   * Its claim is about ONE Chromium build's beacon transport: that an
-   * unload-time `sendBeacon` escapes `extraHTTPHeaders`. Run against the
-   * substituted build 1194, the beacon arrives DECLARED — Chromium 1194 does
-   * apply the headers to it. That is a real measurement and it says nothing
-   * about the pinned build, so asserting either way here would be a claim
-   * about a browser this machine does not have.
-   *
-   * So it reports CANNOT RUN with the substituted build NAMED, which is this
-   * repo's own convention for a check that cannot reach its subject
-   * (`tests/feedback.test.ts`, RULING 24). The drift itself is not silent —
-   * `tests/chromium-pin.test.ts` states the resolution on every run.
-   */
+  /* The plant is build-sensitive: with a substituted Chromium build it reports CANNOT RUN, naming the build. */
   const resolved = resolveChromium();
   if (resolved.kind === "SUBSTITUTED") {
     t.skip(`CANNOT RUN: ${describeChromium(resolved)} — the beacon transport differs by build`);
@@ -247,27 +175,7 @@ test("the transport this guards is still the one lib/log/client.ts prefers", asy
   );
 });
 
-/* -- item 4b: the unload beacon itself, fixed and proven ------------------- */
-
-/**
- * THE LEAKING PATH, DRIVEN AND ASKED (g17, 2026-08-18, item 4b).
- *
- * The two tests above prove the WORKAROUND: a guarded context has no
- * `sendBeacon` to prefer, so it falls back to `fetch` and the header arrives.
- * Neither of them exercises the transport that actually leaked. The plant
- * proves the leak is still there; nothing proved it could be closed.
- *
- * This does. The context here is built the unguarded way — no
- * `extraHTTPHeaders`, no `sendBeacon` override, so the beacon really fires and
- * really flushes at unload — with ONE addition: the run declaration planted on
- * `window` by `declareRun`, exactly as `scripts/browser.mts` plants it. The
- * page copies it into the request body the way `lib/log/client.ts` does, the
- * navigation flushes the beacon, and `markerFrom` — the production resolver —
- * is asked what the row would be recorded as.
- *
- * The header is deliberately absent. If it were sent too, a pass here would
- * prove nothing about the body.
- */
+/** The leaking path, driven: an unguarded context with the run declared on window; the beacon flushes at unload and markerFrom classifies its body. The header is deliberately absent. */
 
 /** The client's transport choice AND its body, including the declaration. */
 const PAGE_HTML_WITH_BODY_MARKER = `<!doctype html><meta charset="utf-8"><title>beacon</title>

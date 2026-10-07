@@ -9,8 +9,7 @@ import type { DistrictType, FilterState, UiState } from "./types.ts";
 
 /**
  * The store's default values, in their own module so both the reducer and
- * the reset registry (`reset.ts`) can read them without importing each
- * other. Moved out of reducer.ts with the M24 fix.
+ * the reset registry (`reset.ts`) can read them without importing each other.
  */
 
 /** Every district type the overlay registry knows about. */
@@ -19,9 +18,8 @@ export const ALL_DISTRICT_TYPES: readonly DistrictType[] = [
   "state-senate",
   "state-house",
   "county",
-  // M12 (2026-08-17): three school types where there was one. Order matters
-  // only for the checkbox list, and unified reads first because it is the
-  // one that covers everything.
+  // Order matters only for the checkbox list; unified reads first because it
+  // covers everything.
   "school-unified",
   "school-elementary",
   "school-secondary",
@@ -29,18 +27,9 @@ export const ALL_DISTRICT_TYPES: readonly DistrictType[] = [
 ] as const;
 
 /**
- * District types drawn when the overlay is on: ALL of them (the author's
- * order, session item 2, 2026-08-14 second session). The tester asked for
- * Kearsarge Regional School District by name and the map never showed it —
- * the school layer defaulted off, so a body the who-governs card counts
- * was unreachable on the map. What the card claims must be findable
- * without knowing which checkbox to tick.
- *
- * Rejected alternative (recorded): the previous one-type-per-tier default
- * (congressional / state-house / county), chosen 2026-08-12 because three
- * Local boundaries over the same ground read as noise. The 4.5.2
- * dash/weight separation is what makes all-on legible enough; legibility
- * tuning stays open, but hiding a claimed body loses to visual noise.
+ * District types drawn when the overlay is on: ALL of them, so every body the
+ * who-governs card counts is findable on the map without knowing which
+ * checkbox to tick.
  */
 export const DEFAULT_DISTRICT_TYPES: readonly DistrictType[] = [
   ...ALL_DISTRICT_TYPES,
@@ -51,22 +40,13 @@ export const INITIAL_FILTERS: FilterState = {
   statuses: [],
   districtTypes: [...DEFAULT_DISTRICT_TYPES],
   daysAhead: UPCOMING_HORIZON_DAYS,
-  /**
-   * 6f2 (2026-08-15, the author): 0 → 90. The served window has reached 90
-   * days back since M76, and the sidebar's own default was still `now`, so
-   * every concluded meeting the pipeline works to retrieve was filtered out
-   * before a reader could see one. The control said "now → 60d ahead" and
-   * was telling the truth about itself while hiding three months of what the
-   * app holds. The default now matches the window it filters.
-   */
+  /** Matches the served window's lookback, so concluded meetings are not filtered out by default. */
   daysBack: CONCLUDED_LOOKBACK_DAYS,
   hideUncovered: true,
 };
 
 export const INITIAL_STATE: UiState = {
-  // All three on by default: the reader has not told us what they care about
-  // yet, and hiding two thirds of their government on a guess is worse than
-  // showing all of it.
+  // All three on by default: the reader has not told us what they care about yet.
   tiers: [...TIERS],
   jurisdiction: null,
   body: null,
@@ -83,25 +63,17 @@ export const INITIAL_STATE: UiState = {
   showDistricts: false,
   listOverlayOpen: false,
   door: null,
-  /*
-   * COLLAPSED (g4 item 14, the author).
-   *
-   * Filters is machinery for narrowing what is already on screen, and it
-   * opened with six groups expanded above the fold on a rail whose first
-   * job is the ballot and the ask. A reader who has not asked to narrow
-   * anything was being shown every knob for doing it. Item 14 also moves
-   * "Limit radius" and "Show districts" INSIDE it, which makes an
-   * always-open panel longer still.
-   */
+  /* Collapsed: filters narrow what is already on screen, and a reader who has
+     not asked to narrow anything should not see every knob. */
   filtersPanelOpen: false,
-  /* ASK-22: an unfocused list is the default; a focus arrives only from an answer. */
+  /* An unfocused list is the default; a focus arrives only from an answer. */
   listFocusBodyId: null,
   listFocusBodyName: null,
-  /* 2026-09-23: a count-scoped focus arrives only from the district card's door. */
+  /* A count-scoped focus arrives only from the district card's door. */
   listFocusDivision: null,
   listSort: "date",
   listGroupBy: "jurisdiction",
-  // Every group starts CLOSED (g4 item 11). Empty means none is open.
+  // Every group starts CLOSED. Empty means none is open.
   expandedGroups: [],
   coverage: null,
   droppedCount: 0,

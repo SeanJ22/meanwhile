@@ -1,10 +1,7 @@
 /**
- * **TIME FROM MISSION START TO CORE INFORMATION LIVE (SC-19).** Design §3 sets a target: a county's core resident information is
- * live within an hour of the mission starting. "Core" is a setting that lists the core checklist items (starting value in
- * `core-items.ts`). For a sent place this measures the time from the mission's start until every core blank on its owed list is
- * satisfied, taking the moment each blank was first held and the latest of them as the moment the core was complete. A blank not yet
- * satisfied is counted and named, never assumed done; a place with no core blank owed yet has no figure. It only measures; it never
- * gates publishing. PURE.
+ * Minutes from a mission's start until every core blank on the place's owed
+ * list is satisfied (the latest first-held time). An unsatisfied blank is
+ * counted and named; a place with no core blank owed has no figure. Pure.
  */
 export interface CoreRow {
   readonly checklistId: string;

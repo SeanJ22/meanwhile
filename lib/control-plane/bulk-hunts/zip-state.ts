@@ -1,17 +1,9 @@
 /**
- * **WHICH STATE A ZIP IS IN, AND WHETHER THE NATIONAL ZIP INDEX KNOWS IT — FAST.** (S11.)
- *
- * The reader's index (`data/derived/zip-divisions/<NN>.json`, one shard per
- * two-digit ZIP prefix) answers both from one file read. `zipDivisionEntry`
- * answers more (it also asks the published Census slice for districts and
- * school divisions, one database read per ZIP), which is right for a reader
- * page and far too slow for checking two thousand pasted ZIPs: measured 47.9 s
- * for the 1,948 ZIPs of the Cook toss-up file. A state needs none of that, so
- * this reads the shard and nothing else. The folder is named in literal
- * segments so the bundler traces exactly the shards (R23).
- *
- * A shard that cannot be read answers "unknown" for its ZIPs and is not kept,
- * so a transient failure never becomes permanent for the process.
+ * A ZIP's state, and whether the national ZIP index knows it, from one shard
+ * read (`data/derived/zip-divisions/<NN>.json`). `zipDivisionEntry` is far too
+ * slow for thousands of pasted ZIPs. The folder is named in literal segments
+ * so the bundler traces exactly the shards. An unreadable shard answers
+ * "unknown" and is not cached.
  */
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";

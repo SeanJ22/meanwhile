@@ -1,4 +1,4 @@
-/** DB-45. Definitions live with the meeting readers; the shared settings registry loads this module. */
+/** Definitions live with the meeting readers; the shared settings registry loads this module. */
 import type { AdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { registerSetting, readSetting, type SettingValue } from "../control-plane/settings.ts";
 import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS, MEETING_HELD_HORIZON_DAYS } from "./constants.ts";

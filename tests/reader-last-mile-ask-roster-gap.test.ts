@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import { rosterGapForBody, rosterForBody } from "../lib/registry/body-rosters.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
 
 test("an incomplete sourced roster keeps four verified people and the same exact gap on body and linked-person Ask", async () => {
   delete process.env.ANTHROPIC_API_KEY;

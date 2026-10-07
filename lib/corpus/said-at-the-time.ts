@@ -4,27 +4,13 @@ import { sourceKindLabel } from "./source-kinds.ts";
 import type { SourceSnapshot, StatementCorpus } from "./types.ts";
 
 /**
- * **WHAT THEY SAID AT THE TIME OF A VOTE.** (CA-40.)
- *
- * For one person's recorded vote on one agenda item, this attaches the
- * statements they made around it, verbatim, from two held kinds of source:
- *
- * - the minutes of that same sitting: a passage that names the person and
- *   shares the item's content words;
- * - their own social posts, as PRL's collection holds the text (Sean, Oct 3),
- *   dated within a few days of the vote and sharing the item's content words.
- *   A post with no stated date is never tied to a vote: the day we read a page
- *   is not the day it was said.
- *
- * Statements and votes stay two corpora (see `types.ts`): the vote is not
- * changed or characterised, and a statement is a quotation, never a reading of
- * how the person felt. When nothing matches, the answer says which of the two
- * cases it is, as the positions search does: we hold none of their pages
- * (`NOT_YET_COLLECTED`, "we're working on getting this info"), or we read
- * `searched` pages and none carried a matching passage.
- *
- * Pure: the corpus is an argument. No paid platform is added; people PRL
- * does not cover have no posts here and are handled later.
+ * For one person's recorded vote on one agenda item, attaches their verbatim
+ * statements around it from two held sources: passages of that sitting's
+ * minutes that name them and share the item's content words, and their own
+ * dated social posts within SAID_AT_THE_TIME_DAYS of the vote sharing those
+ * words. An undated post is never tied to a vote. The vote is never
+ * characterised. An empty answer says which case it is: NOT_YET_COLLECTED, or
+ * `searched` pages with no matching passage. Pure.
  */
 
 export interface VoteMoment {

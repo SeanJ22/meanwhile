@@ -29,9 +29,7 @@ export async function officialStateRollIdentityAuthorityIssue(
   candidate: RoutineCandidate,
 ): Promise<string | null> {
   if (candidate.recordClass !== "STATE_ROLL_CALL") return null;
-  // No identity join can escape from a candidate already refused by its own
-  // completeness contract.  Preserve that exact source disposition instead of
-  // mislabelling it as an identity-authority failure.
+  // A candidate already refused by its own completeness contract keeps that disposition.
   if (candidateHasIntrinsicHorizonRefusal(candidate)) return null;
   const target = officialStateLegislatorTargetByScope(candidate.scope);
   if (!target) return `No official state-legislator authority is registered for ${candidate.scope}.`;

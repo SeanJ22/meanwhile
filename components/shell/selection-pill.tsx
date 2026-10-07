@@ -4,19 +4,10 @@ import type { Tier } from "@/lib/ocd/tiers";
 import type { Venue } from "@/lib/meetings/venues";
 
 /**
- * THE SELECTION PILL (approved reader design; INTERACTIONS §3).
- *
- * Centred over the unobstructed map. It says what the map is showing — a
- * whole boundary ("Viewing all of Tucson") or one room ("Focused on Tucson
- * City Hall") — and keeps the way back one tap away:
- *
- * - **Details ↗** reopens the parked card exactly as it was left;
- * - **← Whole area** leaves the room and returns to the area view;
- * - **Fit boundary / Recenter** puts the selection back in frame;
- * - **✕** clears the selection.
- *
- * Venue focus and jurisdiction are different facts and the pill never blurs
- * them: a room is "Focused on", a boundary is "Viewing all of".
+ * Centred over the unobstructed map, saying what the map shows: a whole
+ * boundary ("Viewing all of …") or one room ("Focused on …"). Details ↗
+ * reopens the parked card; ← Whole area leaves the room; Fit boundary /
+ * Recenter reframes; ✕ clears.
  */
 export function SelectionPill({
   venue,

@@ -34,7 +34,6 @@ export interface FixPreventionHistory {
   readonly knownEvents: number;
   readonly returnedEvents: number;
   readonly hasEarlierKnownEvents: boolean;
-  /** Complete only over the saved, explicitly linked successor graph. */
   readonly knownLinksReadComplete: boolean;
   readonly events: readonly FixHistoryEvent[];
   readonly diagnosis: { readonly confirmedCause: null; readonly observedRefusals: number };
@@ -74,7 +73,6 @@ async function batches<T, R>(items: readonly T[], fn: (value: T) => Promise<R>):
   return result;
 }
 
-/** The projection is useful even when no stage proves a durable fix. */
 export function projectFixPreventionHistory(input: {
   readonly requestedWorkItemId: string; readonly rootWorkItemId: string; readonly subjectId: string;
   readonly scope: FixPreventionHistory["scope"]; readonly observedAt: string;

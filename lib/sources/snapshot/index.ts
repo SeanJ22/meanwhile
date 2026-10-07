@@ -8,17 +8,12 @@ import { accountedNormalize } from "../normalize-account.ts";
 
 /**
  * The promoted-projection-backed meeting source — what production serves.
- *
- * Reads the durable promoted projection instead of fanning out to vendor portals per
- * request (see `lib/meetings/snapshot.ts` for why the fan-out cannot ship).
  * Everything above `lib/meetings/registry.ts` sees the same `Meeting` records
- * it would have seen live; the only observable difference is `generatedAt`,
- * which the UI renders as "last checked" rather than hiding.
+ * it would have seen live; `generatedAt` renders as "last checked".
  *
- * `normalize()` re-derives SCHEDULED/CONCLUDED from `now` rather than
- * trusting the statuses the snapshot froze: a snapshot generated Tuesday
- * still claims Wednesday's meeting is upcoming on Thursday. CANCELED is a
- * fact about the body's decision, not about the clock, so it survives.
+ * `normalize()` re-derives SCHEDULED/CONCLUDED from `now` rather than trusting
+ * the frozen statuses. CANCELED is the body's decision, not the clock's, so it
+ * survives.
  */
 
 const ZERO_DROPS: NormalizeDropCounts = {
@@ -36,10 +31,8 @@ export interface SnapshotSourceOptions {
 export function makeSnapshotSource(
   options: SnapshotSourceOptions = {},
 ): ReportingMeetingSource<Meeting> {
-  // The server reader is imported inside fetch(), not at module top: this
-  // module sits on the client-reachable graph (client components import
-  // RADIUS_LADDER_KM from query.ts, which imports the registry, which builds
-  // this source), and a static `node:fs` import here breaks the client build.
+  // Imported inside fetch(): this module is on the client-reachable graph, and
+  // a static `node:fs` import here breaks the client build.
   const load =
     options.load ??
     (async () => {
@@ -75,12 +68,8 @@ export function makeSnapshotSource(
     normalize,
 
     normalizeWithDrops(raw: Meeting[], now?: Date) {
-      // Drops were counted and recorded when the snapshot was generated; they
-      // live in its per-source reports. Nothing is dropped on the read path.
-      // A-002 · `normalize` is a `map`: every snapshot row becomes exactly one
-      // meeting, and nothing is dropped on the read path. So the conservation
-      // check here is a real assertion that the read path stays total, and it
-      // is the cheapest place in the product to notice if it ever stops being.
+      // Drops were counted when the snapshot was generated. `normalize` is a
+      // `map`, so the conservation check asserts the read path stays total.
       return accountedNormalize(
         "snapshot",
         raw,

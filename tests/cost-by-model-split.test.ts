@@ -1,13 +1,6 @@
 /**
- * **AN ESCALATED SCOUT'S ONE CHARGE, ATTRIBUTED TO EACH MODEL IT PAID — AND
- * COUNTED ONCE.** (MW-031, 2026-09-25.)
- *
- * A Scout that starts on Sonnet 5 and escalates to Opus 5.5 is ONE Attempt with
- * ONE ledger row, and the Attempt's worker is the model it started on. Before
- * this, Money's cost-by-model read the whole combined charge as Sonnet's. The
- * dispatcher now writes the worker's per-model split on the row (`byModel`),
- * and every by-model view reads it through `costPortionsByModel`: each model
- * carries its own part, and the parts sum to the charge.
+ * An escalated Scout is one Attempt with one ledger row whose worker is the model it started on. By-model views read
+ * the per-model split (`byModel`) through `costPortionsByModel`, and the parts sum to the charge.
  */
 
 import assert from "node:assert/strict";
@@ -135,8 +128,6 @@ test("a split that does not sum to the charge is not trusted: the row is read wh
   const parts = costPortionsByModel(row("at-escalated", COMBINED, SPLIT), SONNET);
   assert.deepEqual(parts.map((p) => [p.model, p.entry.cost.durationMs, p.entry.cost.bytesFetched]), [[SONNET, 90_000, 40_000], [OPUS, 0, 0]], "the Attempt's time and bytes stay on the model it started on, once");
 });
-
-/* ------------------------------------------------ the dispatcher writes the split */
 
 const OBLIGATION: FreshnessObligation = {
   id: "freshness:test:split#1", recordClass: "meetings", subjectId: "ocd-division/country:us/state:az/place:x", routeId: "novel",

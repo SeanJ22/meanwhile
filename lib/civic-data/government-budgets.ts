@@ -25,7 +25,6 @@ export function currentBudgetFacts(records: readonly GovernmentBudgetFact[], bod
     amendments: held.filter((row): row is BudgetAmendment => row.kind === "BUDGET_AMENDMENT" && row.fiscalYear === budget.fiscalYear && row.budgetVersion === budget.version) }));
 }
 
-/** Evidence for the existing checklist items, without changing scores or filling an unknown. */
 export function budgetChecklistEvidence(records: readonly GovernmentBudgetFact[], bodyId: string, today: string) {
   const current = currentBudgetFacts(records, bodyId, today);
   const unique = current.filter(({ budget }) => current.filter(other => other.budget.title === budget.title &&

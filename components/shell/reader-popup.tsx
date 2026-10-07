@@ -5,16 +5,9 @@ import { useEffect, useRef, type ReactNode } from "react";
 import type { ReaderPop } from "./pill-cluster";
 
 /**
- * A SMALL POPUP anchored to its control (approved reader design; INTERACTIONS
- * §1): **Show me a ZIP**, **Where can I vote?** and **Ask**. At most one is
- * open, and opening one closes the large card.
- *
- * Placement is CSS (`.mw-pop`): beside the sidebar when it is open, under the
- * collapsed header otherwise, full width on a phone.
- *
- * Dismissal: ✕, Escape, re-pressing its control, opening any other view, or —
- * the design's intended behaviour the prototype lacked — a press outside it
- * that is not on its own control.
+ * A small popup anchored to its control (ZIP, Where can I vote?, Ask). At most
+ * one is open. Placement is CSS (`.mw-pop`). A press outside it, other than on
+ * its own control, the sidebar or the header, dismisses it.
  */
 export function ReaderPopup({
   pop,

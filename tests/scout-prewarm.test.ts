@@ -1,14 +1,11 @@
 /**
- * **THE PRE-WARM, THE TTL ORDER, AND THE ONE-PER-CYCLE HOOK.** (Prompt-caching
- * session, 2026-09-06. Acceptance rows PC-6 and PC-7.)
- *
  * The pre-warm request carries the Attempts' exact static prefix with
  * `max_tokens: 0`, the breakpoint on the system block and none on the
  * placeholder; the cycle sends it once, before the first admitted Scout, and
  * every admitted Scout waits for it; and the order the API enforces on cache
  * TTLs — a 1-hour marker never after a 5-minute one, across tools → system →
  * messages — is refused before a byte is sent, with the API's own message
- * from 2026-09-06 recorded here.
+ * recorded here.
  */
 
 import { SOURCE_API_SPECS } from "../lib/control-plane/scheduler/scout-api.ts";
@@ -47,7 +44,7 @@ import {
 const NOW = "2026-09-06T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
 
-/** The API's answer to a 1h marker after a 5m one, measured 2026-09-06 (request req_011Cenvci1JKyvNv…). */
+/** The API's answer to a 1h marker after a 5m one. */
 const API_MESSAGE =
   "system.0.cache_control.ttl: a ttl='1h' cache_control block must not come after a ttl='5m' cache_control block. " +
   "Note that blocks are processed in the following order: `tools`, `system`, `messages`.";
@@ -119,7 +116,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5"), 1024);
   assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5-5"), 512);
   assert.equal(minimumCacheablePrefixTokensFor(MODELS.opus.model), 512);
-  /* Negative control: the list without search is a different prefix — the entry the old pre-warm wrote was never read. */
+  /* Negative control: the list without search is a different prefix. */
   const without = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
   assert.notEqual(without.kind === "SEND" ? JSON.stringify(without.request.tools) : "", JSON.stringify(first.tools));
 
@@ -160,7 +157,6 @@ test("PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 
   assert.match(cacheTtlOrderProblems(five).join(" "), /5 cache_control markers exceed the provider's limit of 4/);
 });
 
-/* ------------------------------------------------ the one-per-cycle hook */
 
 function obligation(id: string): FreshnessObligation {
   return { id, recordClass: "meetings", subjectId: `ocd-division/country:us/state:az/place:${id}`, routeId: id, active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: new Date(NOW_MS - 48 * 3_600_000).toISOString() };
@@ -204,8 +200,6 @@ async function cycleWith(input: { readonly rows: number; readonly admit: boolean
     holder: "t",
     now: NOW,
     leaseTtlMs: 60_000,
-    reader: { contract: "READER", state: "NOT_READY", reason: "test" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "test" },
     research: {
       decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "test", disagreement: null }),
       admitScout: () => (input.admit ? { admit: true } : { admit: false, code: "CEILING", why: "test" }),

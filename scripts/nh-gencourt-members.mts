@@ -1,31 +1,14 @@
 /**
- * THE NEW HAMPSHIRE GENERAL COURT'S OWN ROSTER, TAKEN AT RUNG ZERO.
- * (2026-08-26, the sources-and-incumbency session. RULING 166's first
- * application.)
+ * The New Hampshire General Court's own roster. `gc.nh.gov/downloads/Members.txt`
+ * is a tab-delimited file of every member of both chambers with district,
+ * party, phone, work email, committee assignments and `electedStatus`, the
+ * body's own statement of who currently sits.
  *
- * `gc.nh.gov/downloads/Members.txt` is a tab-delimited file the General Court
- * publishes so consumers do not have to scrape its site. It carries every
- * member of both chambers with district, party, phone, work email, committee
- * assignments — and **`electedStatus`**, which is the body's own statement of
- * who currently sits.
- *
- * Nobody in this project had ever opened it. New Hampshire's legislative data
- * reached the product through LegiScan, a third-party aggregator, and the
- * incumbency defect this file exists to fix was rendering **every** New
- * Hampshire candidate as `Challenger` while the answer sat in a text file.
- *
- * **THE LEADING SPACE IS NOT A CURIOSITY.** `electedStatus` reads
- * `" Incumbent"` — with a space — on all 279 sitting members. A parser written
- * against `=== "Incumbent"` matches zero rows and reports an empty roster, which
- * would be RULING 43's zero-row extraction arriving as a clean exit.
- *
- * RULING 100 — the count is asserted. The file states no count of its own, so
- * the outcome is `COULD_NOT_ASSERT` against a stated total and the extraction
- * still reports produced/dropped/total so a partial cannot pass as a whole.
- *
- * RULING 107 — the freshness stamp is a READ STAMP. It is the date this script
- * actually fetched, written by the code path that performed the read, and it is
- * carried forward unchanged when the artifact is regenerated from a cached copy.
+ * `electedStatus` reads `" Incumbent"`, with a leading space; compare trimmed.
+ * The file states no count of its own, so the outcome is `COULD_NOT_ASSERT`
+ * against a stated total, and the extraction reports produced/dropped/total.
+ * The freshness stamp is the date this script fetched, carried forward
+ * unchanged when regenerated from a cached copy.
  *
  * Usage:
  *   pnpm nh:members            # fetch, parse, report; writes nothing
@@ -96,7 +79,7 @@ export interface MembersExtraction {
     readonly logicalInput: number;
     readonly produced: number;
     readonly dropped: number;
-    /** RULING 100's second state: the source states no total of its own. */
+    /** The source states no total of its own. */
     readonly statedTotal: null;
     readonly verdict: "COULD_NOT_ASSERT";
   };
@@ -177,7 +160,7 @@ export function parseMembers(text: string): MembersExtraction {
     byChamber[m.chamber] = (byChamber[m.chamber] ?? 0) + 1;
   }
 
-  // RULING 128 — every logical record has one disposition, and the sum is exact.
+  // Every logical record has one disposition, and the sum is exact.
   if (members.length + dropped !== body.length) {
     throw sourceAcquisitionFailure(
       "PUBLISHER_DOCUMENT_INVALID",
@@ -243,9 +226,8 @@ async function main(): Promise<void> {
   try {
     if (local) {
       text = readFileSync(local, "utf8");
-      // RULING 107 — a local copy carries no evidence of WHEN it was read, so the
-      // read stamp is UNKNOWN rather than today's date. A clock call here would be
-      // a run stamp wearing a freshness field.
+      // A local copy carries no evidence of when it was read, so the read stamp
+      // is UNKNOWN rather than today's date.
       readOn = "UNKNOWN";
     } else {
       const acquired = await withPublisherAcquisitionDeadline(
@@ -294,7 +276,7 @@ async function main(): Promise<void> {
       }
       identityHistoryText = acquired[2]?.body ?? null;
       // @freshness-reads-here — this clock call sits in the reading path, so the
-      // stamp it produces names the day somebody actually looked (RULING 107).
+      // stamp it produces names the day somebody actually looked.
       readOn = runStamp();
     }
     extraction = parseMembers(text);

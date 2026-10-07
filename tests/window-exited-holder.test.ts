@@ -1,10 +1,3 @@
-/**
- * A window lease whose holder exited on this host is released before the next
- * cycle or window (2026-09-23). A cycle that dies in a native abort never runs
- * its `finally`, and a relaunched runner's first cycle was refused under the
- * dead cycle's lease (00:25Z on 2026-09-23). A live, foreign or nameless
- * holder keeps its lease.
- */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -79,15 +72,11 @@ test("an absent, released or expired lease needs nothing and probes no process",
   assert.equal((await releaseWindowLeaseOfExitedLocalHolder(repos, { host: "SeanLenovo", now: later, processExists: never })).state, "NOT_NEEDED");
 });
 
-test("the runner checks for an exited holder before every research cycle and every nightly window", () => {
+test("the runner checks for an exited holder before every research cycle", () => {
   const src = readFileSync("scripts/pilot-runner.mts", "utf8");
   const recover = src.indexOf('await recoverExitedWindowHolder("research cycle")');
   const cycle = src.indexOf("const result = await runOneCycle(owner)");
   assert.ok(recover > 0 && cycle > recover, "the check runs immediately before runOneCycle");
-  const windowFn = src.indexOf("async function runNightlyWindow(");
-  const windowCheck = src.indexOf('await recoverExitedWindowHolder("nightly window")');
-  const windowSpawn = src.indexOf("scripts/nightly-window.mts", windowFn);
-  assert.ok(windowFn > 0 && windowCheck > windowFn && windowSpawn > windowCheck, "the check runs before the window child is spawned");
   assert.match(src, /process\.kill\(pid, 0\)/);
   assert.match(src, /code !== "ESRCH"/, "only a definite ESRCH counts as exited");
   assert.match(src, /## BEFORE THE CYCLE/, "a release is carried in the cycle's digest");

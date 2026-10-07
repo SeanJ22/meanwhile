@@ -17,15 +17,7 @@ import {
   sliceSection,
 } from "../lib/sources/schedulepage/index.ts";
 
-/**
- * The published-annual-schedule shape — M78, 2026-08-15.
- *
- * Against pages recorded from mhrd.org on 2026-08-15. No live calls.
- *
- * `NOW` is fixed so SCHEDULED/CONCLUDED and the window clip are deterministic.
- * The window is [NOW − 90d, NOW + 60d] = [2026-05-17, 2026-10-14], which is
- * what makes the count assertions below meaningful rather than incidental.
- */
+/** Fixed so SCHEDULED/CONCLUDED and the window clip are deterministic; recorded pages, no live calls. */
 const NOW = new Date("2026-08-15T12:00:00-04:00");
 
 const fixture = (name: string) =>
@@ -52,8 +44,6 @@ test("the schedule page's whole year parses, and only the schedule", () => {
   assert.equal(sittings[0].date, "2026-01-26");
   assert.equal(sittings[11].date, "2027-01-04");
 
-  // Every date is well-formed and strictly ascending — no duplicates from the
-  // page's own repeated navigation.
   for (let i = 1; i < sittings.length; i++) {
     assert.match(sittings[i].date, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(sittings[i].date > sittings[i - 1].date, "dates out of order");
@@ -109,8 +99,6 @@ test("normalize windows the year, times it from the page, and cites its source",
     NOW,
   );
 
-  // Seven published sittings fall in the held 120-day window (DB-05; the four of 15 June to 26 October were the 90-day
-  // window's, and 27 April, 11 May and 16 November are the three between 90 and 120 days out); later dates stay out.
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
     ["2026-04-27", "2026-05-11", "2026-06-15", "2026-08-17", "2026-09-28", "2026-10-26", "2026-11-16"],
@@ -127,7 +115,6 @@ test("normalize windows the year, times it from the page, and cites its source",
     // 6:30 P.M. Eastern in June/August/September is UTC-4.
     // -05:00 once the wider window crosses November — the zone, not a drift.
     assert.match(m.startsAt, /T18:30:00-0[45]:00$/);
-    // The page it was read from, not a constructed permalink.
     assert.equal(
       m.provenance.sourceUrl,
       "https://www.mhrd.org/administration/board-of-education/boe-meetings",
@@ -136,15 +123,11 @@ test("normalize windows the year, times it from the page, and cites its source",
     assert.equal(m.startPrecision, undefined);
   }
 
-  // Aug 17 is two days AFTER NOW and its agenda is already published — the
-  // useful case, and the one a reader can still act on.
   const aug = meetings.find((m) => m.startsAt.startsWith("2026-08-17"));
   assert.ok(aug);
   assert.equal(aug.status, "SCHEDULED");
   assert.match(aug.agendaUrl ?? "", /08172026AGENDAFINAL\.pdf/);
 
-  // June 15 is inside the 90-day lookback, so the past half of the window is
-  // being exercised too and not merely assumed.
   const jun = meetings.find((m) => m.startsAt.startsWith("2026-06-15"));
   assert.ok(jun);
   assert.equal(jun.status, "CONCLUDED");
@@ -178,13 +161,6 @@ test("a page with dates but no stated time ships DAY precision, not a guess", ()
   }
 });
 
-/**
- * The browser rung's three new shapes — M79, 2026-08-15.
- *
- * Fixtures recorded from kearsarge.org and newbury.nh.gov on 2026-08-15,
- * through the browser profile in `lib/sources/http.ts` (both hosts answer 403
- * to the civic-index client). No live calls here either.
- */
 const KEARSARGE = fixture("kearsarge-school-board-schedule.html");
 const KEARSARGE_DOCS = fixture("kearsarge-school-board-agendas.html");
 const NEWBURY_PLANNING = fixture("newbury-planning-board.html");
@@ -203,10 +179,6 @@ test("the month table carries its year forward, and its own words with it", () =
 
   const { sittings, counts } = parseMonthTable(section);
 
-  // The board publishes 39 sittings, April 2026 through June 2027. Exact,
-  // not a minimum: a selector that matched three would pass a minimum and
-  // read as a clean run, which is the failure shape this repo has recorded
-  // four times.
   assert.equal(sittings.length, 39, JSON.stringify(sittings.map((s) => s.date)));
   assert.equal(sittings[0].date, "2026-04-02");
   assert.equal(sittings[38].date, "2027-06-17");
@@ -232,7 +204,6 @@ test("the month table carries its year forward, and its own words with it", () =
   assert.equal(counts.undated, 0, "the header row is not an undated sitting");
   assert.ok(!sittings.some((s) => s.date === "2027-03-09"), "election day");
 
-  // The board's own words survive the parse.
   const budget = sittings.find((s) => s.date === "2026-09-10");
   assert.match(budget?.note ?? "", /Budget Presentations/);
 
@@ -257,7 +228,6 @@ test("Kearsarge normalizes with the page's time, place and documents", () => {
     NOW,
   );
 
-  // Twenty-two sittings fall in the held 120-day window (DB-05; seventeen in the 90-day one). Three other rows are not meetings.
   assert.equal(meetings.length, 22, JSON.stringify(meetings.map((m) => m.startsAt)));
   assert.equal(meetings[0].startsAt.slice(0, 10), "2026-04-25");
   assert.equal(meetings[21].startsAt.slice(0, 10), "2026-12-10");
@@ -286,7 +256,6 @@ test("Kearsarge normalizes with the page's time, place and documents", () => {
   assert.equal(sittingTitle("(tentative)", "School Board"), "School Board");
   assert.equal(sittingTitle("(Saturday) Workshop", "School Board"), "Workshop");
 
-  // Documents join on the date the district wrote in its own link text.
   const aug6 = meetings.find((m) => m.startsAt.startsWith("2026-08-06"));
   assert.ok(aug6?.agendaUrl, "the August 6 agenda link is missing");
   assert.match(aug6.agendaUrl, /^https:\/\/www\.kearsarge\.org\//);
@@ -326,9 +295,6 @@ test("the Conservation Commission's two shapes union by date", () => {
   const section = sliceSection(NEWBURY_CONSERVATION, "field-name-field-description");
   const schedule = parseDatedList(section);
 
-  // The commission writes its whole year in its own block: twelve sittings,
-  // each with an hour. It also writes "June 9,2026" with no space and puts
-  // two dates in one paragraph, which is why the scan is per-match.
   assert.equal(schedule.sittings.length, 12, JSON.stringify(schedule.sittings));
   assert.ok(schedule.sittings.some((s) => s.date === "2026-06-09"));
   assert.ok(schedule.sittings.some((s) => s.date === "2026-11-10"));
@@ -352,7 +318,6 @@ test("the Conservation Commission's two shapes union by date", () => {
     NOW,
   );
 
-  // Eight sittings fall in the held 120-day window (DB-05; six in the 90-day one), from May 12 through December 8.
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
     ["2026-05-12", "2026-06-09", "2026-07-14", "2026-08-11", "2026-09-10", "2026-10-15", "2026-11-10", "2026-12-08"],
@@ -366,8 +331,6 @@ test("the Conservation Commission's two shapes union by date", () => {
     assert.match(m.startsAt, /T18:00:00-0[45]:00$/);
   }
 
-  // August 11 is the one date both shapes carry: the schedule block gives the
-  // hour, the agenda block gives the link. The union keeps both.
   const aug = meetings.find((m) => m.startsAt.startsWith("2026-08-11"));
   assert.match(aug?.agendaUrl ?? "", /^https:\/\/www\.newbury\.nh\.gov\//);
 });
@@ -382,7 +345,6 @@ test("the Planning Board normalizes to the venue its own agenda states", () => {
 
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
-    // DB-05: the held 120-day window adds 21 April.
     ["2026-04-21", "2026-05-19", "2026-06-16", "2026-07-21", "2026-08-18"],
   );
   assert.equal(drops.unknownVenue, 0);
@@ -395,19 +357,9 @@ test("the Planning Board normalizes to the venue its own agenda states", () => {
 });
 
 test("the Zoning Board is wired, on a venue the town publishes in markup", () => {
-  // This assertion used to say the opposite — the board stayed KNOWN_UNCOVERED
-  // because three rungs of prose said nothing about where it sits, and taking
-  // the Town Office from its two siblings would have been the guess the venue
-  // table exists to refuse. The venue arrived 2026-08-15 from the department
-  // page's own contact markup (a vCard address block behind a Google-map
-  // link), so wiring it is the deliberate act this test was written to force.
   const wired = wiringForTypes(["SCHEDULEPAGE"]).map((w) => w.config.slug);
   assert.ok(wired.includes("newbury-zoning-board-of-adjustment"));
 
-  // The denominator, stated: the page publishes SEVEN dated sittings across
-  // two calendar years, and the served window (90 back, 60 forward) admits
-  // exactly one of them from this NOW. A clip is not a failure and must not
-  // read as one, so both numbers are asserted.
   const parsed = parseAgendaList(NEWBURY_ZONING, "/zoning-board-adjustment/");
   assert.equal(parsed.sittings.length, 7);
 
@@ -420,7 +372,6 @@ test("the Zoning Board is wired, on a venue the town publishes in markup", () =>
 
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
-    // DB-05: the held 120-day window admits 13 May too.
     ["2026-05-13", "2026-08-13"],
   );
   // Zero, not "no error": the venue resolves, so nothing drops for want of a
@@ -431,8 +382,6 @@ test("the Zoning Board is wired, on a venue the town publishes in markup", () =>
   const aug = meetings.find((m) => m.startsAt.startsWith("2026-08-13"))!;
   assert.equal(aug.bodyName, "Zoning Board of Adjustment");
   assert.equal(aug.title, "Zoning Board of Adjustment", "never the document's label");
-  // The town's own label for the building, and its own address — neither
-  // borrowed from the sibling boards' rows.
   assert.equal(aug.location!.name, "Newbury Offices");
   assert.equal(aug.location!.address, "937 Route 103, Newbury, NH 03255");
   assert.match(aug.startsAt, /T19:00:00-04:00$/);
@@ -440,18 +389,11 @@ test("the Zoning Board is wired, on a venue the town publishes in markup", () =>
     aug.agendaUrl?.startsWith("https://www.newbury.nh.gov/zoning-board-adjustment/"),
   );
 
-  // The board's only cancellation signal is its own link text, and April's
-  // row carries it. Outside the window here, but the parse must still see it.
   assert.equal(
     parsed.sittings.find((s) => s.date === "2026-04-08")?.canceled,
     true,
   );
 });
-
-/* ---------------------------------------------------------------------- *
- * Shape 5 — `event-tip`, the month grid whose events state their own dates.
- * New London NH's GovOffice calendar, retrieved 2026-08-19 (M123, g21).
- * ---------------------------------------------------------------------- */
 
 const NEWLONDON = fixture("newlondon-calendar-2026-08.html");
 
@@ -464,9 +406,6 @@ test("event-tip: a board's own sittings come out of a town-wide calendar", () =>
     sittings.every((s) => /Board of Selectmen/.test(s.note ?? "")),
     "a sitting landed that the town did not file under this board",
   );
-  // The rest of the town's calendar is COUNTED, not silently skipped. A
-  // board with nothing this month and a parser that matched nothing must not
-  // look alike.
   assert.ok(counts.notSittings > 10, "the title filter did nothing at all");
 });
 
@@ -497,8 +436,6 @@ test("event-tip: an empty titleMatch matches NOTHING rather than everything", ()
 });
 
 test("event-tip: titleMatch is a list of the body's spellings, and apostrophes do not decide a match (2026-09-25)", () => {
-  // The Firewards row's "Firewards,Fire Wards" was read as one phrase and
-  // matched nothing, while this very fixture carries both spellings.
   const wired = (slug: string) => {
     const row = wiringForTypes(["SCHEDULEPAGE"]).find((r) => r.config.slug === `new-london-${slug}`);
     assert.ok(row, `new-london-${slug} is wired`);
@@ -560,18 +497,7 @@ test("event-tip: four New London boards are wired, each with its own match", () 
   );
 });
 
-/* ---------------------------------------------------------------------- *
- * The month walk covers the WHOLE serving window, behind as well as ahead.
- * (2026-09-02 — the scheduled refresh's first red run of September.)
- * ---------------------------------------------------------------------- */
-
 test("SEEDED: a one-month calendar is walked BEHIND the current month, to the window's back edge", () => {
-  /*
-   * The defect, reproduced. `monthsAhead` walked forward only, so on the 1st
-   * of every month a body's whole previous month rolled off every page this
-   * adapter read, and the snapshot carried the town with no concluded meeting
-   * at all. New London published August the entire time.
-   */
   const pages = monthPagesToWalk({
     now: new Date("2026-09-02T15:00:00Z"),
     startsAfter: "2026-06-04T15:00:00Z",
@@ -587,7 +513,6 @@ test("SEEDED: a one-month calendar is walked BEHIND the current month, to the wi
   ]);
   // September is the default view and is never fetched twice.
   assert.ok(!pages.some((p) => p.year === 2026 && p.month === 9));
-  // And the old behaviour is pinned as wrong: at least one page lies behind.
   assert.ok(
     pages.some((p) => p.year * 12 + p.month - 1 < 2026 * 12 + 8),
     "no month behind the current one was walked — the calendar's history rolls off again",
@@ -597,7 +522,7 @@ test("SEEDED: a one-month calendar is walked BEHIND the current month, to the wi
 test("without a window the walk still reaches the serving window's back edge, and the year boundary holds", () => {
   const pages = monthPagesToWalk({ now: new Date("2027-01-15T12:00:00Z"), monthsAhead: 2 });
   // MEETING_HELD_LOOKBACK_DAYS (120) back from 15 January is 17 September;
-  // MEETING_HELD_HORIZON_DAYS (120) ahead is 15 May (DB-05; the 90-day window began in October and ended in April).
+  // MEETING_HELD_HORIZON_DAYS (120) ahead is 15 May.
   assert.deepEqual(pages, [
     { year: 2026, month: 9 },
     { year: 2026, month: 10 },

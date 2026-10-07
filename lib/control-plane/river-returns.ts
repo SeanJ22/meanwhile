@@ -1,30 +1,11 @@
-/**
- * A stream that fails River's checks goes back to the lane that wrote it, and
- * onto the fix list (RL-06, BR-03).
- *
- * River runs as a script with no control-plane database connection, so this
- * module only BUILDS the record: the `returns/<lane>.md` file River writes on
- * `board/river`, and the fix-list entry in exactly the shape "Add this to the
- * queue" records today (`fix-queue.ts`: subject from where + what, the queue
- * option, the where — says consequence). The write into the control plane is
- * the BR-03 hook: once `fix-list.ts` exists, its `fix.add` takes `fix` as is.
- *
- * The same failure on the same stream and check gives the same subject id, so a
- * repeated return is one fix-list item, not a new one every River run.
- *
- * PURE: no store, no clock, no environment.
- */
+/** Builds the River return record and fix-list entry for a failed stream. Pure; the same stream, check and failure give the same subject id. */
 import { ADD_TO_QUEUE_OPTION, fixConsequence, fixSubjectId } from "./fix-queue.ts";
 
-/** Lines of failing output kept in the record: enough to act on, small enough to read. */
 export const RETURN_OUTPUT_LINES = 60;
 
 export interface RiverReturnInput {
-  /** `adapter-<kind>` or a builder lane, as in `stream/<lane>`. */
   readonly lane: string;
-  /** The River check that failed: `fold`, `gates`, `adapter-path`, … */
   readonly check: string;
-  /** The failing check's output, as printed. */
   readonly output: string;
   readonly readySha: string | null;
   readonly steps: readonly string[];
@@ -35,7 +16,6 @@ export interface RiverReturnInput {
 export interface RiverReturn {
   readonly lane: string;
   readonly branch: string;
-  /** Who repairs it: the lane that wrote the stream. */
   readonly owner: string;
   readonly writer: string;
   readonly check: string;
@@ -43,11 +23,8 @@ export interface RiverReturn {
   readonly steps: readonly string[];
   readonly riverSha: string | null;
   readonly at: string;
-  /** The first line that names the failure, used as the fix item's sentence. */
   readonly headline: string;
-  /** The last {@link RETURN_OUTPUT_LINES} lines of the output. */
   readonly output: string;
-  /** The fix-list entry: an "Add this to the queue" decision, ready for BR-03's `fix.add`. */
   readonly fix: {
     readonly subjectId: string;
     readonly chosenOption: string;
@@ -59,7 +36,6 @@ export interface RiverReturn {
 
 const FAILURE_LINE = /\b(?:fail(?:ed|ing|ure)?|error|not ok|conflict|refused|✖|AssertionError)\b/i;
 
-/** The adapter engineer writes `adapter-*` streams; every other stream belongs to its lane. */
 export function streamWriter(lane: string): string {
   return lane.startsWith("adapter-") ? "the runner's adapter engineer" : `the ${lane} lane`;
 }
@@ -94,7 +70,6 @@ export function riverReturn(input: RiverReturnInput): RiverReturn {
   };
 }
 
-/** `returns/<lane>.md` on `board/river`: status-style fields, then the output. */
 export function riverReturnMarkdown(record: RiverReturn): string {
   const fence = record.output.includes("```") ? "~~~~" : "```";
   return [

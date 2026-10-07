@@ -2,12 +2,8 @@ import type { PlaceMeasures } from "./place-measures.ts";
 import { percentOf } from "./place-percent.ts";
 
 /**
- * **A PLACE'S SCORES, KEPT AS DAILY POINTS SO TRENDS SHOW.** One point per day
- * per place holds the counts behind each figure, numerators and denominators by
- * family, never only a percentage. A fixed number of days is kept, newest last.
- * It is a record of counts and it never gates publishing.
- *
- * PURE.
+ * One point per day per place, holding the counts (numerators and denominators
+ * by family) behind each figure; the newest PLACE_HISTORY_DAYS are kept. Pure.
  */
 export const PLACE_HISTORY_DAYS = 30;
 

@@ -1,51 +1,7 @@
 /**
- * **THE PRIOR-CONCLUSION CORPUS — THE INPUT THE REOPENING MACHINERY NEVER HAD.**
- * (2026-08-29.)
- *
- * `findReopenings()` and `applyReopenings()` have existed in
- * `lib/method/knowledge.ts` since the store was built. They are the mechanical
- * form of RULING 178's last clause — *a newly learned route reopens the prior
- * conclusions it would have applied to* — and they are correct.
- *
- * They take a `PriorConclusion[]`. **Nothing in this repository ever wrote one.**
- * `pnpm method:check` reads `data/method/conclusions.json` if it exists, and it
- * did not exist, so the reopening sweep ran over an empty array on every session
- * and reported zero awaiting reopening. Zero was true, and it was true the way a
- * selector that matches nothing reports zero offenders (RULING 159): the
- * instrument was never pointed at a population.
- *
- * That is the exact failure mode the module note in `knowledge.ts` calls out —
- * *"a new route reopens old absences" has been true in principle since RULING 61
- * and has never once happened* — surviving one layer further down than the
- * repair went. The engine was built and never fuelled.
- *
- * ## The store is a BARE ARRAY, deliberately
- *
- * `scripts/method-check.mts` already reads this path and already parses it as
- * `PriorConclusion[]`. Wrapping the corpus in an envelope would have broken the
- * one consumer that existed, for tidiness. So a `ConclusionRecord` IS a
- * `PriorConclusion` with governed extras alongside it: `method:check` keeps
- * working, unchanged, and starts reporting a corpus the day one exists.
- *
- * ## What a record must never be
- *
- * **A conclusion is EARNED, never authored to make a mechanism demonstrable.**
- * A fabricated absence is a false claim about a government with a date on it,
- * and it would propagate exactly like a real one — that is what makes the
- * reopening machinery worth having in the first place. So a record carries an
- * explicit `fixture` flag, `validateConclusions` REFUSES a fixture record in the
- * canonical corpus by name, and the tests that exercise the loop mark their own
- * data as fixtures in the data rather than in a comment.
- *
- * ## Withdrawal never touches a route
- *
- * Nothing in this module returns a modified `MethodKnowledge`. A conclusion can
- * be withdrawn, invalidated, reopened or re-earned and the routes that produced
- * it are untouched by every one of those — the same rule `lib/method/claims.ts`
- * holds for assertions: a false conclusion must never cause a valid route to be
- * deleted.
- *
- * Time is a parameter throughout. Nothing here reads a clock.
+ * The prior-conclusion corpus `findReopenings()` reads, stored as a bare `PriorConclusion[]` so `method:check` reads it
+ * unchanged. A conclusion is earned, never authored: `validateConclusions` refuses a fixture record in the canonical
+ * corpus. Nothing here modifies a route, and nothing here reads a clock.
  */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -74,12 +30,7 @@ export interface ConclusionWithdrawal {
   on: string;
   /** Why, in evidence. A withdrawal that cannot say why is a deletion. */
   why: string;
-  /**
-   * **WHAT SURVIVES.** The same required field a claim retraction carries, for
-   * the same reason: the routes that produced this conclusion are still project
-   * knowledge, and a withdrawal that does not say so invites somebody to tidy
-   * them away with it.
-   */
+  /** What remains true: the routes that produced the conclusion stay project knowledge. */
   survives: string;
 }
 
@@ -93,42 +44,26 @@ export interface ConclusionEvidence {
   workItemId?: string;
 }
 
-/**
- * One earned conclusion, durable.
- *
- * It extends `PriorConclusion` rather than wrapping it so that the whole corpus
- * can be handed straight to `findReopenings` — one shape, no adapter, nothing to
- * forget to map.
- */
+/** One earned conclusion; extends `PriorConclusion` so the corpus goes straight to `findReopenings`. */
 export interface ConclusionRecord extends PriorConclusion {
   /** Required here, where `PriorConclusion` leaves it optional for the legacy shape. */
   status: ConclusionStatus;
   earnedBy: ConclusionEvidence;
   /** Why this is a conclusion and not a shrug. Stated, always. */
   why: string;
-  /**
-   * **TRUE ONLY FOR A TEST FIXTURE, AND IT LIVES IN THE DATA.** A comment saying
-   * "this is only a fixture" is invisible to the corpus a later session reads.
-   * `validateConclusions` refuses a record carrying this in the canonical store.
-   */
+  /** True only for a test fixture; refused in the canonical store. */
   fixture?: boolean;
   withdrawal?: ConclusionWithdrawal;
 }
 
-/** The store, on disk and in memory. A bare array — see the module note. */
+/** The store: a bare array. */
 export type ConclusionStore = ConclusionRecord[];
 
 export function emptyConclusionStore(): ConclusionStore {
   return [];
 }
 
-/**
- * The record's id, derived rather than assigned.
- *
- * `earnedAtVersion` is in the digest on purpose: re-earning a conclusion after a
- * reopening, under a later method version, is a NEW event about the same
- * subject, and collapsing the two would erase the fact that we went back.
- */
+/** Derived from the record; `earnedAtVersion` is in the digest so re-earning under a later version is a new record. */
 export function conclusionId(
   kind: PriorConclusion["kind"],
   field: string,
@@ -155,19 +90,7 @@ export function openConclusions(store: ConclusionStore): ConclusionRecord[] {
   return store.filter(isClosing);
 }
 
-/**
- * Record an earned conclusion, STAMPED WITH THE METHOD VERSION IT WAS EARNED
- * UNDER.
- *
- * The version is the whole mechanism. A conclusion that does not carry one can
- * never be reopened, because there is nothing to compare a later route's
- * `learnedAtVersion` against — which is why `validateKnowledge` has always
- * refused a versionless conclusion and why this function takes the store it was
- * earned against rather than a number somebody types.
- *
- * Idempotent by derived id: re-recording the same conclusion at the same version
- * returns what is already there.
- */
+/** Record an earned conclusion, stamped with the method version it was earned under. Idempotent by derived id. */
 export function recordConclusion(
   store: ConclusionStore,
   k: MethodKnowledge,
@@ -200,14 +123,7 @@ export function recordConclusion(
   return { store: [...store, record], record, already: false };
 }
 
-/**
- * Withdraw or invalidate a conclusion. **The record is kept.**
- *
- * A withdrawn conclusion stops closing an avenue — `findReopenings` skips it,
- * because there is nothing left to reopen — and stays in the corpus carrying why
- * it went. Deleting it would let a later session re-earn the same wrong
- * conclusion having never been told it was wrong.
- */
+/** Withdraw or invalidate a conclusion; the record is kept so a later session is told it was wrong. */
 export function withdrawConclusion(
   store: ConclusionStore,
   id: string,
@@ -225,8 +141,6 @@ export function withdrawConclusion(
   };
 }
 
-/* ------------------------------------------------- WHAT A REOPENING DOES TO A WORKITEM */
-
 /** The governed open state a reopened obligation re-enters. */
 export const REOPENED_WORK_ITEM_STATE: WorkItemState = "REOPENED";
 
@@ -239,17 +153,8 @@ export interface ReopenedWorkItem {
 }
 
 /**
- * What a reopening does to the WorkItem the conclusion closed.
- *
- * The state is the REAL one from `lib/control-plane/work-item.ts` — imported
- * rather than re-spelled, so a rename there breaks this loudly instead of
- * leaving two vocabularies that agree by coincidence.
- *
- * A terminal item is the case that matters. `VERIFIED_COMPLETE` was an
- * affirmative finding, honestly earned, under a method version that no longer
- * describes the avenues available. Taking it back is not an accusation; it is
- * RULING 179 — `CONVERGED_AS_OF` means every eligible avenue has a disposition
- * UNDER THE CURRENT METHOD VERSION, and the method version moved.
+ * What a reopening does to the WorkItem the conclusion closed. A terminal item is taken back because convergence holds
+ * only under the method version it was reached under.
  */
 export function workItemStateAfterReopening(
   from: WorkItemState,
@@ -269,17 +174,7 @@ export function workItemStateAfterReopening(
   };
 }
 
-/* ------------------------------------------------------------------- VALIDATION */
-
-/**
- * What the corpus refuses.
- *
- * `validateKnowledge` already refuses a versionless conclusion and a status off
- * the closed set, because those two break the reopening sweep itself. These are
- * the corpus's own rules, and the load-bearing one is the fixture refusal: a
- * manufactured conclusion is a false claim about a government that propagates
- * exactly like an earned one.
- */
+/** What the corpus refuses; the load-bearing rule is the fixture refusal. */
 export function validateConclusions(store: ConclusionStore, k: MethodKnowledge): MethodIssue[] {
   const out: MethodIssue[] = [];
   const bad = (id: string, rule: string, detail: string) => out.push({ id, rule, detail });
@@ -343,8 +238,6 @@ export function validateConclusions(store: ConclusionStore, k: MethodKnowledge):
   }
   return out;
 }
-
-/* --------------------------------------------------------------- THE DURABLE STORE */
 
 export function readConclusionStore(path: string): ConclusionStore {
   if (!existsSync(path)) return emptyConclusionStore();

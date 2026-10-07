@@ -39,22 +39,6 @@ import { classifyQuestion, resetClassifierState } from "../lib/routing/classifie
 import { askUnsourced } from "../lib/routing/unsourced-fallback.ts";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 
-/**
- * **THE ASK MODEL REGISTRY AND ITS ROLES.** (2026-09-25.)
- *
- * Sean, 7:25 PM MST: Opus 5 must not be used any more, not as a test subject,
- * default or fallback. 7:50 PM: changing a model should be easy. So:
- *
- * 1. no role resolves to `claude-opus-5`, by default or by override;
- * 2. every role resolves from one table, each with its own override, and the
- *    old `WTP_ASK_MODEL` / `WTP_ASK_FAST_MODEL` still work;
- * 3. an unknown or retired override is refused by name and the role keeps its
- *    default (a typo in a deploy variable must not take Ask down);
- * 4. every rung's request carries only fields its model accepts — checked for
- *    every role on every registry model;
- * 5. the model the API says served a call is recorded beside the id we sent.
- */
-
 const ROLE_ENV: Record<AskModelRole, string> = {
   READER: "WTP_ASK_READER_MODEL",
   FAST_WRITER: "WTP_ASK_FAST_MODEL",
@@ -102,8 +86,6 @@ function pack(): EvidencePack {
   } as unknown as EvidencePack;
 }
 
-/* ── 1. Opus 5 is out ────────────────────────────────────────────────────── */
-
 test("no role resolves to claude-opus-5 — not by default, not by override, not through an alias", () => {
   for (const role of ASK_MODEL_ROLE_NAMES) {
     assert.notEqual(resolveAskRole(role, {}).model, "claude-opus-5", `${role} defaults to the retired model`);
@@ -124,8 +106,6 @@ test("no Ask call site names claude-opus-5 as a literal", () => {
     assert.ok(!/["'`]claude-opus-5["'`]/.test(code), `${file} names claude-opus-5 in code`);
   }
 });
-
-/* ── 2. one table, per-role overrides, the old names still work ──────────── */
 
 test("every role's default is a registry model with a price and a cache minimum", () => {
   for (const role of ASK_MODEL_ROLE_NAMES) {
@@ -171,8 +151,6 @@ test("each role has its own override, and the specific one beats the WTP_ASK_MOD
   assert.equal(reader.refused.length, 1);
 });
 
-/* ── 2b. the routing the 2026-09-25 comparison decided ──────────────────── */
-
 test("the measured routing: Haiku 4.5 reads, writes first and labels; Opus 5.5 escalates", () => {
   assert.deepEqual(
     Object.fromEntries(ASK_MODEL_ROLE_NAMES.map((role) => [role, resolveAskRole(role, {}).model])),
@@ -184,8 +162,6 @@ test("every question, money and comparison questions included, is written by the
   assert.deepEqual(synthesisLadder({}).map((rung) => [rung.model, rung.role]), [[MODELS.haiku.model, "FAST"], [MODELS.opus.model, "FRONTIER"]]);
   assert.deepEqual(synthesisLadder({ WTP_ASK_FAST_MODEL: "off" }).map((rung) => rung.role), ["FRONTIER"], "the fast writer can still be switched off without a deploy");
 });
-
-/* ── 3. an unknown model fails safe ──────────────────────────────────────── */
 
 test("an unknown model override is REFUSED by name, the default stands, and the startup line says so", () => {
   const env = { WTP_ASK_CLASSIFIER_MODEL: "claude-opus-9-typo" };
@@ -201,8 +177,6 @@ test("an unknown model override is REFUSED by name, the default stands, and the 
   /* An unregistered id never gets a thinking or effort field it might reject. */
   assert.deepEqual(modelRequestFields("claude-unknown", { thinking: "ADAPTIVE", effort: "low" }), { minMaxTokens: 0 });
 });
-
-/* ── 4. every rung, every registry model: only accepted fields ───────────── */
 
 function assertAccepted(body: Record<string, unknown>, model: string, want: "ADAPTIVE" | "OFF", where: string) {
   const caps = capsOf(model);

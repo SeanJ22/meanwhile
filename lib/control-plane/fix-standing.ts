@@ -1,14 +1,8 @@
 /**
- * **DP-26 · A FIX SHOWS ONCE WHEN IT PROVES OUT, THEN GOES QUIET.**
- *
- * After fix-map writes, each touched method's map is read (scoped to that
- * method, never the whole map) and measured against the proof bar in Admin's
- * settings. A fix in Testing is a Queue row. Each status change writes one
- * update: "Proven: worked in X places, failed in Y", "a lesson changed it", or
- * "a proven fix broke". Then the fix drops out of Admin. The standing and its
- * update are written together, so a retried pass never tells it twice.
- *
- * Nothing here names a place; the place is the data.
+ * A fix shows once when it proves out, then goes quiet. After fix-map writes,
+ * each touched method is measured against the proof bar in Admin settings; a
+ * fix in Testing is a Queue row. Each status change writes one update together
+ * with the standing, so a retried pass never tells it twice.
  */
 import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } from "./gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
@@ -90,7 +84,7 @@ export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "forMet
   return written;
 }
 
-/** DP-28's loss study changed a method: it goes back into Testing and says so once. */
+/** A loss study changed a method: it goes back into Testing and says so once. */
 export async function noteMethodLesson(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, methodId: string, lesson: string, at: string,
   title: string | null = null): Promise<StandingUpdate | null> {
   const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
@@ -108,8 +102,8 @@ export async function noteMethodLesson(fixMap: Pick<FixMapRepository, "forMethod
 }
 
 /**
- * DP-34: before keeping each Proven label, re-measure it on today's results. One that no longer holds says
- * "Proven, broke since", writes its one update, and is back in the Queue. Run daily; a label that holds writes nothing.
+ * Re-measure each Proven label on today's results. One that no longer holds says "Proven, broke since", writes
+ * its one update, and is back in the Queue. Run daily.
  */
 export async function recheckProvenFixes(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, now: string): Promise<readonly StandingUpdate[]> {
   const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);

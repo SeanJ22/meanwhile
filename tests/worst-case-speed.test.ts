@@ -1,4 +1,4 @@
-/** FE-02: speed is judged by the worst visit, an unfinished visit fails, every surface and Ask question is covered on phone and desktop, and the Scoreboard shows each verdict. */
+/** Speed is judged by the worst visit, an unfinished visit fails, every surface and Ask question is covered on phone and desktop, and the Scoreboard shows each verdict. */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";

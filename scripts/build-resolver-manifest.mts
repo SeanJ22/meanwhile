@@ -1,25 +1,16 @@
-import { geometryFiles } from "../lib/holdings/files.ts";
-/** Build the resolver input from held geometry. National divisions remain available
- * until sourced derivatives replace every division; duplicate derivatives do not
- * make a pilot-state list the boundary of the national resolver. */
+/** Builds the resolver input from held geometry. A national file stays in until
+ * per-state derivatives cover every division it holds. */
 import { readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
 import { US_JURISDICTIONS, jurisdictionFromOcdId } from "../lib/coverage/states.ts";
+import { geometryFiles } from "../lib/holdings/discovery.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
 const OUT = join(process.cwd(), "data", "derived", "resolver-geometry.json");
 
-/**
- * Geometry that is not a district boundary at all.
- *
- * `state-outlines.geojson` is a GENERALIZED state boundary, drawn only to
- * decide which pixels the state-focus effect mutes. Its own header says it must
- * never answer a question about who governs a point, and a half-kilometre
- * accurate outline answering one is exactly what that forbids. Carried over
- * from `server.ts` verbatim, reason included.
- */
+/** Geometry that is not a division boundary and must never answer who governs a point. */
 const NOT_DISTRICT_GEOMETRY: Record<string, string> = {
   "state-outlines.geojson":
     "a generalized state outline for the focus effect — never a governance boundary",
@@ -32,7 +23,7 @@ const NOT_DISTRICT_GEOMETRY: Record<string, string> = {
     "body id, which is the join confusion this session spent its day removing.",
 };
 
-/** `cd119.geojson` → `cd119`; `cd119-04.geojson` → `cd119` + state `04`. */
+/** `cd119.geojson` → `cd119`; `cd119-NN.geojson` → `cd119` + state FIPS `NN`. */
 function parseName(file: string): { type: string; fips: string | null } {
   const stem = basename(file).replace(/\.geojson$/, "");
   const m = /^(.*)-(\d{2})$/.exec(stem);

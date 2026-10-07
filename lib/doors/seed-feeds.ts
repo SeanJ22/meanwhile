@@ -1,14 +1,8 @@
 /**
- * DB-11: the non-meeting feeds, as registry records.
- *
- * The daily automatic refresh tasks (voting sites, state money, member offices)
- * and every routine source contract (FEC, state legislators and roll calls,
- * Census, registration, outcomes, filing feeds) each get a door: a kind, a key
+ * The non-meeting feeds as registry records: the daily automatic refresh tasks
+ * and every routine source contract each get a door with a kind, a key
  * reference where the feed needs one, what it holds, and how often it is
- * checked. The registry records these doors; the runner still reads them from
- * their contracts until DB-12 and DB-14 move reading onto the registry.
- *
- * PURE: mapping only, no place names.
+ * checked. Pure mapping.
  */
 
 import { AUTOMATIC_REFRESH_CONTRACT_IDS } from "../civic-data/automatic-refresh.ts";

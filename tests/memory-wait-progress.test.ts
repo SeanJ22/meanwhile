@@ -9,11 +9,9 @@ import { lastChildLines, recordFailedCycle } from "../lib/control-plane/schedule
 const slotsModule = JSON.stringify(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url).href);
 
 /*
- * The returned live failure (2026-10-05): a round's worker waited for host
- * memory up to its 15-minute dispatch deadline, printing nothing, and the
- * runner ended the round after 10 quiet minutes as RESEARCH_CHILD_NO_PROGRESS
- * before the wait could end as a deferral. Here every time is the real one
- * scaled down by the same factor, so the relationship is the production one.
+ * A worker waiting for host memory must report progress so the runner does not end the round as
+ * RESEARCH_CHILD_NO_PROGRESS before the wait can end as a deferral. Every time is the real one scaled down by the
+ * same factor, so the relationship is the production one.
  */
 const QUIET_MS = 600;
 const scale = QUIET_MS / RUNTIME_NO_PROGRESS_MS;

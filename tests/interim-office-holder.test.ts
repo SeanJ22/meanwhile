@@ -1,37 +1,6 @@
 /**
- * OFF-7 — AN INTERIM HOLDS THE OFFICE. A DEPUTY HOLDS A DIFFERENT ONE.
- * (2026-08-25, the author's `17-51-51` and `17-53-26`. Second pass on OFF-4,
- * 2026-08-24.)
- *
- * **The reconciliation, because this is a second sighting and the brief asks
- * for the verdict before the fix.**
- *
- * OFF-4 shipped `topOfficesFor` and `rosterInReadingOrder` on 2026-08-24 and
- * **neither regressed** — Vail Unified still resolves John Carruth,
- * *Superintendent*, into the day-to-day slot and still leads its roster with
- * him, which is the card the author names as the reference pattern. The
- * verdict is **(b): the predicate is too narrow — or rather too WIDE, in the
- * one place it excludes.**
- *
- * `DEPUTY` read `/\b(vice|deputy|acting|assistant|interim)\b/i` and was used to
- * REFUSE. Kearsarge publishes **Michael Bessette, Interim Superintendent of
- * Schools**, so he was refused; the next executive pattern is
- * `administrator|manager`, which matched **Lawrence LeBoeuf, Business
- * Administrator**. A school district's card then said *runs it day to day ·
- * Business Administrator*, and the roster list led with him too.
- *
- * **The conflation is the defect.** A deputy or a vice chair holds a
- * DIFFERENT, JUNIOR office and is correctly refused. An interim or acting
- * holder holds THIS office, right now, and is exactly who a reader needs. The
- * feedback document says it in as many words: *the superintendent OR INTERIM
- * SUPERINTENDENT is always at the top.*
- *
- * **Why OFF-4's verification could not have caught it.** It was checked against
- * Tucson Unified and Vail, whose superintendents carry plain titles. No shipped
- * roster in that pass held a temporary holder of a top office, so the branch
- * that refuses one was never executed. This test drives the SHIPPED rosters
- * (RULING 147 — the anchor is data this session did not author) and asserts the
- * class rather than the instance.
+ * An interim or acting holder holds this office and is who a reader needs; a deputy or vice chair holds a
+ * different, junior office and is refused. Driven over the shipped rosters, asserting the class.
  */
 
 import test from "node:test";
@@ -42,10 +11,6 @@ import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
 
 const seat = (id: string, name: string, officeTitle: string) =>
   ({ id, name, officeTitle }) as never;
-
-/* -------------------------------------------------------------------------- */
-/* The reported instance, on the shipped roster                               */
-/* -------------------------------------------------------------------------- */
 
 function kearsargeBoard() {
   const body = BODY_ROSTERS.find((b) =>
@@ -103,10 +68,6 @@ test("OFF-7: the interim superintendent leads the roster, ahead of the administr
   }
 });
 
-/* -------------------------------------------------------------------------- */
-/* The class                                                                  */
-/* -------------------------------------------------------------------------- */
-
 test("OFF-7: an interim fills a slot the substantive holder has left empty", () => {
   const top = topOfficesFor([
     seat("a", "A Clerk", "District Clerk"),
@@ -146,10 +107,7 @@ test("OFF-7: a SUBSTANTIVE holder still outranks a temporary one for the same of
 });
 
 test("OFF-7: a deputy, a vice chair and an assistant are STILL refused", () => {
-  /*
-   * The half most easily lost. Pima publishes its vice chair ABOVE its chair,
-   * and a naive widening would have put the vice chair on every card.
-   */
+  /* A naive widening would put a vice chair published above the chair on every card. */
   const presiding = topOfficesFor([
     seat("a", "The Vice Chair", "County Supervisor, District 2 (Vice Chair)"),
     seat("b", "The Chair", "County Supervisor, District 3 (Chair)"),
@@ -178,11 +136,7 @@ test("OFF-7: a junior word still binds through a temporary qualifier", () => {
 });
 
 test("OFF-7: a superintendent outranks an administrator in the roster order", () => {
-  /*
-   * The second defect, which the eligibility fix alone would NOT have closed:
-   * the executive partition was flat, so once both were eligible the roster's
-   * own published order still put the administrator first.
-   */
+  /* Once both are eligible, the executive partition must still put the superintendent first. */
   const ordered = rosterInReadingOrder([
     { officeTitle: "Business Administrator", name: "Administrator" },
     { officeTitle: "School Board Chair", name: "Chair" },
@@ -230,29 +184,12 @@ test("OFF-7: no shipped roster puts a non-superintendent above a superintendent"
   assert.deepEqual(offenders, [], "a district holding a superintendent does not lead with one");
 });
 
-/* ========================================================================== */
-/* RULING 157 — the class, verified against cases the fix was NOT derived from */
-/* ========================================================================== */
-
 test("OFF-7: the CLASS — every body in the registry, with its denominator", async () => {
-  /*
-   * **RULING 136: the id names an instance, the defect is the class.**
-   * **RULING 157: a fix verified only against the case it was derived from has
-   * not closed anything** — the predicate was shaped by that case, so it is
-   * guaranteed to pass there.
-   *
-   * Kearsarge is the DERIVED case. The independent cases are **Tucson Unified**
-   * and **Vail Unified**, and they are named here rather than described,
-   * because "audited across the class" is a claim with no case in it.
-   *
-   * Reported as a three-way split (RULING 105): a bare "0 wrong" says nothing
-   * about how many bodies were even eligible to be wrong.
-   */
+  /* Verified against cases the fix was not derived from, reported as a three-way split. */
   const { auditTopOffices } = await import("../scripts/top-office-audit.mts");
   const rows = auditTopOffices();
 
-  // The floor (RULING 159). A registry that failed to load reports zero wrong
-  // slots and reads as a clean bill of health.
+  // A floor: a registry that failed to load would report zero wrong slots.
   assert.ok(rows.length >= 20, `the audit read only ${rows.length} roster(s) — it did not reach the registry`);
 
   const wrong = rows.filter((r) => r.verdict === "WRONG");

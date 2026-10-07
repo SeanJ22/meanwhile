@@ -1,50 +1,8 @@
 /**
- * Transient-connect resilience for the Postgres control plane.
- *
- * The Neon serverless driver is HTTP-per-query, so the FIRST query a process
- * issues is also its connect. Under host load that connect can fail
- * transiently: the driver throws `NeonDbError: Error connecting to database:
- * <transport>` — a message it emits ONLY when the underlying `fetch` itself
- * threw before any HTTP response arrived (its `sourceError` is the raw
- * `TypeError: fetch failed`, `ECONNRESET`, an aborted deadline, …). A SQL error
- * or an HTTP-status refusal is a different thing: it comes back as a parsed
- * response the driver turns into a `NeonDbError` carrying a SQLSTATE `code`, not
- * this transport message.
- *
- * Before this, that single transient throw at cycle START aborted a whole
- * standing-runner cycle. The per-cycle child crashed ~2s in having dispatched
- * nothing, the supervisor's 60-minute loop stayed up and relaunched, and the
- * failure presented as ~15-second cycles doing no work while civic-data
- * promotion and the scout lane went unrun. A ten-read manual probe of the same
- * endpoint succeeded every time: the endpoint was healthy, the connect blipped.
- *
- * So: retry that establishment-transient class a bounded number of times with
- * exponential backoff and jitter, and ONLY that class. Two things are never
- * retried here:
- *   - a latched host-local Neon circuit (`PROVIDER_CIRCUIT_BROKEN` from
- *     installNeonCircuitBreaker) — that is a HARD, billing/quota-class refusal
- *     whose own contract forbids an automated retry before its eligible time;
- *   - anything that is not a transport-establishment failure (a SQL error, an
- *     HTTP-status refusal, a 64 MiB over-cap read) — those are not blips and a
- *     retry would only fail again or, worse, re-issue non-idempotent work.
- *
- * And it is only ever wrapped around IDEMPOTENT connect work: the idempotent
- * schema `bootstrap`, or a read-only connectivity probe / read. It must never
- * wrap an arbitrary write: retrying a write whose RESPONSE was lost (the write
- * committed, the connection dropped on the way back) could double-apply it —
- * which the append-only and compare-and-set identities refuse, but should never
- * be asked to. The request-deadline (installNeonRequestDeadline) composes
- * cleanly: it bounds each attempt, so a HUNG connect aborts and becomes one
- * more retryable transient rather than stalling the cycle.
- *
- * The control plane's own class bounds (request-bounds.ts, 2026-09-23) name
- * their timeout: a `ControlPlaneRequestTimeout` of kind REQUEST is retried like
- * any transport transient, and one of kind DEADLINE — the caller's budget is
- * spent — is never retried, because another attempt would be refused at once.
- *
- * Shape mirrors the bounded compareAndSet retry in scout-candidates.ts (a fixed
- * attempt count, re-throw on the last), with added backoff because the
- * condition is a transient network blip, not a lost write race.
+ * Retries only transient failures to establish a Postgres connection (the driver's `Error connecting to
+ * database`, raw transport errors, a REQUEST-kind timeout). Never retries a latched Neon circuit, a
+ * DEADLINE-kind timeout, a SQL error or an HTTP-status refusal. Wrap only idempotent work: a retried
+ * write whose response was lost could double-apply.
  */
 import { isControlPlaneRequestTimeout } from "./request-bounds.ts";
 
@@ -55,12 +13,7 @@ export const CONTROL_PLANE_CONNECT_BASE_BACKOFF_MS = 250;
 /** No single backoff exceeds this, so the total stays bounded. */
 export const CONTROL_PLANE_CONNECT_MAX_BACKOFF_MS = 4_000;
 
-/**
- * The transport-establishment failure family, matched on message text. The
- * primary, unambiguous signal is the driver's own `Error connecting to
- * database` (see the file header); the rest are the raw Node transport errors
- * that can surface directly, plus the deadline's abort/timeout.
- */
+/** The transport-establishment failure family, matched on message text. */
 const TRANSIENT_TRANSPORT =
   /error connecting to database|fetch failed|econnreset|econnrefused|enotfound|eai_again|etimedout|socket hang up|network error|und_err|terminated|the operation was aborted|operation timed out|timed out|timeout/i;
 
@@ -84,13 +37,7 @@ function nameOf(value: unknown): string {
   return "";
 }
 
-/**
- * True when `error` is a transient failure to ESTABLISH the control-plane
- * connection — the narrow class it is safe and useful to retry. Walks the
- * `cause` / `sourceError` chain the driver populates, and refuses a latched
- * circuit outright. `DOMException` (the deadline's abort) is duck-typed rather
- * than `instanceof Error`, because in Node it does not extend `Error`.
- */
+/** Walks the `cause` / `sourceError` chain and refuses a latched circuit outright. */
 export function isTransientControlPlaneConnectError(error: unknown): boolean {
   if (HARD_CIRCUIT.test(messageOf(error))) return false;
 
@@ -100,15 +47,12 @@ export function isTransientControlPlaneConnectError(error: unknown): boolean {
     if (seen.has(cursor)) break;
     seen.add(cursor);
 
-    // A named control-plane timeout decides for itself: its message says
-    // TIMEOUT either way, so it is read before the broad message match.
+    // A named control-plane timeout decides for itself, before the broad message match.
     if (isControlPlaneRequestTimeout(cursor)) return cursor.retryable;
 
     const message = messageOf(cursor);
     if (HARD_CIRCUIT.test(message)) return false;
-    // The driver names a transport-establishment failure exactly; trust that
-    // before the broader message match, which is only a backstop for a raw
-    // transport error surfacing without the wrapper.
+    // The driver's exact transport-establishment message is trusted before the broader backstop match.
     if (nameOf(cursor) === "NeonDbError" && /error connecting to database/i.test(message)) {
       return true;
     }
@@ -139,24 +83,14 @@ export interface ControlPlaneConnectRetryOptions {
     readonly delayMs: number;
     readonly error: unknown;
   }) => void;
-  /**
-   * Replaces isTransientControlPlaneConnectError for a caller whose read names
-   * its own failure (startup-read-retry.ts). The attempt bound and backoff are
-   * unchanged, and the caller owns refusing a latched circuit.
-   */
+  /** Replaces isTransientControlPlaneConnectError for a caller whose read names its own failure; the caller then owns refusing a latched circuit. */
   readonly isRetryable?: (error: unknown) => boolean;
 }
 
 const defaultSleep = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-/**
- * Run `fn`, retrying ONLY transient connection-establishment failures (see
- * isTransientControlPlaneConnectError) up to `maxAttempts`, with capped
- * exponential backoff and full jitter between tries. Any other error — and the
- * transient one on the final attempt — throws unchanged, so a persistent
- * outage still fails loudly and is recorded; nothing is masked as success.
- */
+/** Capped exponential backoff with full jitter. Any other error, and the transient one on the final attempt, throws unchanged. */
 export async function withControlPlaneConnectRetry<T>(
   fn: () => Promise<T>,
   options: ControlPlaneConnectRetryOptions = {},

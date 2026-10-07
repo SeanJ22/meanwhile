@@ -9,15 +9,8 @@ import {
 } from "../lib/funding/pill-colors.ts";
 
 /**
- * The funding type pills (design pass item 2b, 2026-08-15).
- *
- * Two claims worth pinning:
- * 1. The assignment is COMPLETE — every label the funding surface may
- *    render has an explicit family, so no type silently falls to the
- *    fallback and drifts a different color than the author reviewed.
- * 2. The families stay inside the allowed palette — teals, cyans,
- *    ambers, golds, slates, stones. The party palette (blue, red,
- *    green, purple, gray) must never be reachable from a pill class.
+ * Every funding label has an explicit pill family, and every family stays inside the allowed palette; the party
+ * palette must never be reachable from a pill class.
  */
 
 const ALLOWED_FAMILIES = ["teal", "cyan", "amber", "gold", "slate", "stone"];
@@ -48,9 +41,7 @@ test("pillClassFor returns a stable class pair for every label", () => {
 });
 
 test("the pill tokens never reuse a party color value", () => {
-  // The party tokens and the pill tokens live in the same file; a pill
-  // family whose literal equals a party literal would be exactly the
-  // "reads as partisan" failure the author's spec forbids.
+  // A pill family whose literal equals a party literal would read as partisan.
   const css = readFileSync("app/globals.css", "utf8");
   const partyValues = [
     ...css.matchAll(/--party-[a-z]+:\s*([^;]+);/g),

@@ -1,16 +1,9 @@
 /**
- * DB-51: dead links are found before readers find them.
- *
- * A plain-code sweep (no AI, no model cost) visits the outbound links in the
- * published reader edge: sources, official sites, join links and agenda PDFs.
- * It follows the request rules of rulings §2: a known small local government
- * (under 10,000 people) or school district (under 5,000 students) gets at most
- * ten requests an hour from a pass; every other publisher is read at full
- * speed; Retry-After is honored and a 429 or 5xx is a "try again later", never a
- * dead link. Results are kept beside door health as one record per surface,
- * so Admin can show how many links are dead on each surface.
- *
- * Nothing here names a place.
+ * A plain-code sweep of the outbound links in the published reader edge:
+ * sources, official sites, join links and agenda PDFs. A known small publisher
+ * gets at most its hourly request limit; others are read at full speed.
+ * Retry-After is honored, and a 429 or 5xx means try later, never dead.
+ * Results are kept beside door health as one record per surface.
  */
 
 import type { WebsiteSize } from "../control-plane/scheduler/host-supervision.ts";
@@ -109,7 +102,7 @@ function retryAfterMs(value: string | null | undefined, now: number): number | n
 export interface SweepOptions {
   readonly fetchFn: SweepFetch;
   readonly now: () => number;
-  /** What is known of a link's publisher; unknown means full speed (rulings §2). */
+  /** What is known of a link's publisher; unknown means full speed. */
   readonly sizeFor?: (url: string) => WebsiteSize | null | undefined;
   /** Rotates which links a capped host gets this pass, so every link is reached over several passes. */
   readonly rotation?: number;

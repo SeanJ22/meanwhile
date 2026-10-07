@@ -1,18 +1,4 @@
-/**
- * **THE STATEWIDE-EXECUTIVE ACQUISITION** (2026-08-28, BAL-27 / BAL-28).
- *
- * The measured defect, on `a44559e`: Arizona's ballot ran seven statewide
- * contests and 29 candidates, and only the Governor's race could name who
- * holds the seat. Secretary of State, Attorney General, State Treasurer,
- * Superintendent of Public Instruction, State Mine Inspector and Corporation
- * Commissioner each returned ZERO holders, so 21 named people — Adrian Fontes
- * and Kris Mayes among them, standing for the offices they hold — read *we
- * haven't sourced who holds this seat*.
- *
- * **The join was never wrong. The corpus was empty.** These guards hold the
- * three mechanisms that were fixed while filling it, each of which is a class
- * rather than a row.
- */
+/** The statewide-executive acquisition: office identity, the corpus, the quoted alias, the key wire and portrait furniture. */
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
@@ -22,9 +8,12 @@ import { looksLikeFurniture, pickPortrait, pickPortraits } from "../lib/hunt/por
 import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { readFileSync } from "node:fs";
+import { gunzipSync } from "node:zlib";
+import { primeRegistryRuntimeFromValue } from "../lib/registry/runtime-read-model.ts";
 
-await installRegistryRuntimeFirstSeeds();
+const { projection: registry } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8"));
+primeRegistryRuntimeFromValue(registry.payload, registry.versionId);
 
 /* ------------------------------------------------------------------ office */
 
@@ -91,10 +80,8 @@ test("the alias is not a fuzzy match — the surname must still agree exactly", 
 
 test("REGRESSION: without the alias the whole Commission contest failed closed", () => {
   /*
-   * The surname-collision guard is correct and this is what it did before the
-   * alias was read: one sitting member who could not be matched to the
-   * identically-surnamed candidate took the ENTIRE contest to UNKNOWN, losing
-   * Kevin Thompson's true incumbency alongside Nick Myers's.
+   * One sitting member who cannot be matched to an identically-surnamed
+   * candidate must not take the ENTIRE contest to UNKNOWN.
    */
   const candidates = [
     { id: "thompson", givenName: "Kevin", familyName: "Thompson" },
@@ -143,24 +130,10 @@ test("the holder's own identifier reaches the resolution instead of a hard-coded
     async () => [holder],
   );
   /*
-   * `resolved` rather than `decisions`, and the distinction is the subject of
-   * this test rather than an inconvenience to it (2026-08-28). What is being
-   * asserted here is that the holder's own identifier reaches the MATCHING
-   * layer — which it does.
-   *
-   * **BAL-32 (2026-08-30) changes the second assertion, and the change is the
-   * point.** This used to require `decisions` to stay UNKNOWN "until the
-   * officeholder universe is shown complete". The owner reported the result
-   * twice — the sitting Governor of Arizona wearing *"We haven't confirmed
-   * this for everyone in this contest"* on the ballot and **Incumbent** on the
-   * map, same person, same registry, same day.
-   *
-   * RULING 42's amended text bans withholding data about a candidate because
-   * something else is missing. INCUMBENT is a positive per-person fact the
-   * registry sources and it asserts nothing about anyone else, so no universe
-   * is needed for it. CHALLENGER is an asserted absence about a named person
-   * and still needs the universe — which is the half of the gate that was
-   * ever load-bearing, and it is untouched.
+   * The holder's own identifier reaches the MATCHING layer. INCUMBENT is a
+   * positive per-person fact the registry sources and asserts nothing about
+   * anyone else, so no universe is needed for it; CHALLENGER is an asserted
+   * absence about a named person and still needs the universe.
    */
   assert.equal(result.resolved.get("k")?.standing, "INCUMBENT");
   assert.equal(
@@ -182,8 +155,8 @@ test("the holder's own identifier reaches the resolution instead of a hard-coded
 /* ----------------------------------------------------------- the furniture */
 
 test("an image the page's own words call a LOGO is never a face", () => {
-  // Measured 2026-08-28 on azsos.gov: the office masthead is named after the
-  // officeholder, so the surname-plus-extension clause matched it exactly.
+  // An office masthead named after the officeholder matches the
+  // surname-plus-extension clause exactly.
   const banner = {
     src: "https://azsos.gov/sites/default/files/fontes_banner01_small-white.png",
     alt: "Logo for Arizona Secretary of State",
@@ -210,8 +183,8 @@ test("a seal, a masthead and a favicon are refused the same way", () => {
 });
 
 test("every name-matching rendition is offered, because the first is not always big enough", () => {
-  // The Arizona Treasurer's own page carries her official photo at 85x120 and
-  // again at 326x468; MIN_PORTRAIT_EDGE is 96 and only the second clears it.
+  // An official photo at 85x120 and again at 326x468: MIN_PORTRAIT_EDGE is 96
+  // and only the second clears it.
   const small = { src: "https://x.gov/w_85,h_120/Kimberly%20Yee.jpg", alt: "Treasurer Kimberly Yee Official Photo" };
   const large = { src: "https://x.gov/w_326,h_468/KimberlyYee_2024_official.jpg", alt: "KimberlyYee_2024_official.jpg" };
   const all = pickPortraits("Kimberly Yee", [small, large]);

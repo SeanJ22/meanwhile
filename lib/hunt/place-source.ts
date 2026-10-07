@@ -18,7 +18,7 @@ export interface NationalPlacePublicationInput {
 }
 
 /** Shared composition for the ordinary source worker. The existing worker
- * supplies its saved-page reader, Census vault callback and §3 publisher.
+ * supplies its saved-page reader, Census vault callback and fact publisher.
  * Only the published read model fills capture rows; a discovery lead cannot
  * close work or make an Admin/reader label claim that a fact is live. */
 export async function runPlaceSource(input: {

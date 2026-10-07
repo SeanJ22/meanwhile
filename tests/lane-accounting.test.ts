@@ -1,5 +1,5 @@
 /**
- * MW-014 / MW-029 / MW-071 — every due row a lane holds is accounted for by
+ * Every due row a lane holds is accounted for by
  * reason, the reasons add up (or a MISMATCH line says they do not), the
  * coordinator's silent non-dispatches are counted, and the pulse carries the
  * lane gauges from the one research-state read it already makes.
@@ -71,8 +71,6 @@ async function heldEverywhereCycle() {
       maxDispatches: 0,
       executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("no plain-code row may start"); } },
       admitDispatch: () => ({ admit: false, code: "SCHEDULED_BLACKOUT", why: "fixture blackout" }),
-      reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-      truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
       research: {
         decide: (row) => ({ kind: row.obligation.id.startsWith("det-") ? "DETERMINISTIC" : "BOUNDED_MODEL_WORKER", why: "fixture", disagreement: null }),
         admitScout: (row) =>

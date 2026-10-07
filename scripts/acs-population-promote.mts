@@ -39,9 +39,7 @@ async function main(): Promise<void> {
       },
     );
     // A truncated-but-valid table parses cleanly and would promote a country
-    // with almost no ZCTAs. The adapter's own JSON.parse refuses an error page;
-    // this refuses a short table, the completeness half the adapter cannot see
-    // from one call. Kept here rather than in the reader-bound census adapter.
+    // with almost no ZCTAs; the adapter cannot see completeness from one call.
     for (const fetched of [zcta, state]) {
       const short = acsTableTooShort(fetched.scope, fetched.rows.length - 1);
       if (short !== null) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", short);

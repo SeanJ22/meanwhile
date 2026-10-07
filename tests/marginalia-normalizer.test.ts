@@ -1,7 +1,6 @@
 /**
- * The Marginalia route's held answers had no normalizer: 325 INGESTED records
- * staged as "NORMALIZER MISSING". They are POINTER leads — a URL and what the
- * index called it — and an empty answer is a named no-hit, never a failure.
+ * The Marginalia route's held answers are POINTER leads (a URL and what the index called it), and an empty answer is
+ * a named no-hit, never a failure.
  */
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";

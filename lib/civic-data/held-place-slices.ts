@@ -28,7 +28,6 @@ export async function readPlacePointerSlice<T>(recordClass: CivicDataReadMetadat
   return (await readPlacePointerSlices<T>(recordClass, [scope], ids, bodies, targets))[0];
 }
 
-/** Multiple existing partitions share one read-only connection. */
 export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetadata["recordClass"], scopes: readonly string[],
   ids: readonly string[], bodies: readonly string[] = [], targets: readonly string[] = [], injected?: ReadOnlyQuery): Promise<PlaceCaptureRead<T>[]> {
   if (!scopes.length) return [];

@@ -1,21 +1,9 @@
 /**
- * **THE PLAIN-CODE LANE: LONGEST WAIT FIRST, AND A STATED BOUND.** (2026-09-25.)
- *
- * Production, 2026-09-25 2:10 PM MST: the plain-code lane showed 966 rows
- * waiting, with the oldest owed since 2026-09-15. Before this fix, the lane
- * ordered rows by next-due alone. A row's next-due advances only on a reading,
- * so a row whose attempts keep failing kept its first next-due. It returned to
- * the head of the queue every time its backoff ended (at most six hours).
- * Because 133 such rows sat ahead of the 2026-09-15 tie, the lane ran 1,882
- * times in 81 cycles, 1,361 of them failures, while 144 rows due since
- * 2026-09-15 were never tried once.
- *
- * These tests replay the lane's rule cycle by cycle on a moving clock. The
- * replay uses the scheduler's own pure functions and matches `runCycle`'s
- * dispatch order exactly. Under the old order (`dueNow`, next-due only), a
- * never-tried row starves behind eight rows that keep failing. Under the new
- * order (`plainCodeQueueOrder`), the same row runs within ⌈(A + 1) / c⌉ cycles,
- * and no row ever waits longer than ⌈N / c⌉ − 1 cycles.
+ * The plain-code lane runs the longest-waiting row first with a stated bound. A row's next-due advances only on a
+ * reading, so ordering by next-due alone lets rows that keep failing return to the head of the queue after every
+ * backoff. These tests replay the lane cycle by cycle with the scheduler's own pure functions: under
+ * `plainCodeQueueOrder` a never-tried row runs within ⌈(A + 1) / c⌉ cycles and no row waits longer than
+ * ⌈N / c⌉ − 1 cycles.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -35,7 +23,7 @@ import { runCycle, type CycleResult } from "../lib/control-plane/scheduler/shado
 
 const START_MS = Date.parse("2026-09-25T00:00:00.000Z");
 const HOUR_MS = 3_600_000;
-/** The production tie: 1,360 due rows carried exactly this next-due on 2026-09-25. */
+/** A tie: many due rows carrying exactly this next-due. */
 const TIE = "2026-09-15T17:58:43.627Z";
 const WALLED_SINCE = "2026-09-01T00:00:00.000Z";
 
@@ -61,7 +49,7 @@ const NEVER_TRIED = row("never-tried", TIE);
 const LANE = [...WALLED, NEVER_TRIED];
 
 type Order = (due: readonly ScheduledObligation[], debtOf: (id: string) => FreshnessDebt | undefined) => readonly ScheduledObligation[];
-const OLD_ORDER: Order = (due) => due; // `dueNow`'s next-due order, which is what the lane dispatched before
+const OLD_ORDER: Order = (due) => due; // next-due order only
 const NEW_ORDER: Order = (due, debtOf) => plainCodeQueueOrder(due, debtOf);
 
 /**
@@ -117,8 +105,6 @@ async function dispatcherRun(input: { readonly cycles: number; readonly perCycle
       now: new Date(START_MS + c * HOUR_MS).toISOString(),
       leaseTtlMs: 60_000,
       maxDispatches: input.perCycle,
-      reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-      truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
       ...(input.placeFirst ? { placeFirst: input.placeFirst } : {}),
       research: {
         decide: () => ({ kind: "DETERMINISTIC", why: "fixture: a derived HTTP_GET shape", disagreement: null }),
@@ -158,11 +144,7 @@ test("SEEDED STARVATION: ordered by next-due alone, a never-tried row waits fore
   const runs = (id: string) => ran.filter((x) => x === id).length;
   assert.equal(runs(NEVER_TRIED.id), 0, "under the old order the never-tried row never runs in 720 cycles");
   assert.ok(old.eligibleAt.every((ids) => ids.has(NEVER_TRIED.id)), "and it was due and runnable in every one of them");
-  /*
-   * Six walled rows at the six-hour backoff cap return one an hour, each back
-   * at the head of the queue on its first next-due. They take all 720 turns.
-   * The two walled rows behind them in the tie starve too.
-   */
+  /* Walled rows at the six-hour backoff cap return to the head of the queue on their first next-due and take every turn. */
   assert.deepEqual(WALLED.map((w) => runs(w.id)), [124, 123, 122, 120, 117, 114, 0, 0]);
   /* And it is not a capacity shortfall: 720 dispatches are 80 turns for a 9-row lane. */
   assert.equal(ran.length, 720);

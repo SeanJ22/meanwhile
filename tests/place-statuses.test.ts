@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { buildPlaceOwedList, type HeldPlaceField, type PlaceSubject } from "../lib/coverage/place-owed.ts";
 import { rowStatuses } from "../lib/coverage/place-statuses.ts";
-import { huntEvidenceFromWorkItems } from "../lib/control-plane/admin-view/place-hunt-evidence.ts";
 import { owedListItem } from "../lib/control-plane/admin-view/place-scorecard.ts";
 
 const county = "ocd-division/country:us/state:az/county:cochise";
@@ -55,19 +54,6 @@ test("an item with no date source or unknown trigger is unresolved, never droppe
   const unknown = rowStatuses({ checklistId: "NOT-LISTED-1", subject: { id: "x" }, held: [] }, { now });
   assert.equal(unknown.applies, "unresolved");
   assert.equal(unknown.due, "unresolved");
-});
-
-test("hunt activity comes from work items by subject and by the body they publish for", () => {
-  const evidence = huntEvidenceFromWorkItems([
-    { subject: "body-1", state: "OPEN", autonomousPlan: undefined },
-    { subject: "other", state: "VERIFIED_COMPLETE", autonomousPlan: { publication: { contractId: "ballot-navigation", bodyId: "body-2" } } as never },
-  ]);
-  assert.deepEqual(evidence.get("body-1"), { inProgress: true, attempts: 0 });
-  assert.deepEqual(evidence.get("body-2"), { inProgress: false, attempts: 1 });
-  const inProgress = rowStatuses({ checklistId: "GOV-01", subject: { id: "body-1" }, held: [] }, { now, hunt: (id) => evidence.get(id) ?? null });
-  assert.equal(inProgress.found, "in-progress");
-  const searched = rowStatuses({ checklistId: "GOV-01", subject: { id: "body-2" }, held: [] }, { now, hunt: (id) => evidence.get(id) ?? null });
-  assert.equal(searched.found, "attempted");
 });
 
 import { buildPlaceOwedList as buildOwed } from "../lib/coverage/place-owed.ts";

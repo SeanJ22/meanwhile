@@ -1,13 +1,11 @@
 /**
- * **THE SCOUT'S REAL BROWSER.** (Level 1 activation, 2026-09-01.)
- *
- * `BrowseFn` for `scout-tools.ts`, opened through `launchGuarded` — the only
- * permitted construction site (R50; `tests/browser-construction.test.ts`).
- * Bytes are NOT vaulted here; the toolkit vaults what this observes.
+ * The scout's real browser: `BrowseFn` for `scout-tools.ts`, opened through
+ * `launchGuarded`, the only permitted construction site. Bytes are not vaulted
+ * here; the toolkit vaults what this observes.
  *
  * Invariants: the browser is always closed; `networkidle` is bounded and its
- * absence is not a failure (a chatty page still loaded); the page evaluate is a
- * string expression, because tsx's `__name` helper does not exist in the page.
+ * absence is not a failure; the page evaluate is a string expression, because
+ * tsx's `__name` helper does not exist in the page.
  */
 
 import { DEFAULT_USER_AGENT } from "../lib/control-plane/scheduler/route-executor.ts";

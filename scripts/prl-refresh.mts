@@ -2,16 +2,10 @@
  * PRL ingestion: acquire one dataset (or all), land its rows in object storage,
  * precompute the per-official percentages, and write the receipt beside them.
  *
- * The receipt's high-water mark is the durable, restartable cursor: a run reads
- * the prior receipt from the store, takes only rows newer than its mark (capped
- * at now, so a future-dated row never advances it), writes the new rows, and
- * writes the advanced receipt. A failure at one dataset leaves the others'
- * receipts untouched, so a retry skips what already landed.
- *
- * This writes to object storage only — no Postgres, no promotion plane. The
- * bucket is the Neon storage bucket when `PRL_ARCHIVE_S3_*` is set, else the
- * durable local store. Wiring the precomputed percentages into a reader
- * projection is a later presentation session's job.
+ * The receipt's high-water mark is the restartable cursor: a run takes only
+ * rows newer than its mark (capped at now, so a future-dated row never advances
+ * it). Writes to object storage only: the Neon storage bucket when
+ * `PRL_ARCHIVE_S3_*` is set, else the durable local store.
  *
  * @freshness-reads-here — the receipt's retrieval time is captured when the
  * archive body is decoded.
@@ -70,8 +64,7 @@ for (const dataset of datasets) {
   } catch (error) {
     failed += 1;
     console.error(`PRL ${dataset.id} FAILED: ${error instanceof Error ? error.message : String(error)}`);
-    // Continue to the next dataset: a failure at one never blocks the others,
-    // and each dataset's receipt is its own restart point.
+    // A failure at one dataset never blocks the others; each receipt is its own restart point.
   }
 }
 if (failed > 0) process.exitCode = 2;

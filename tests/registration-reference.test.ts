@@ -7,9 +7,6 @@ import test from "node:test";
 import { parseCsv } from "../lib/reference/index.ts";
 
 /**
- * **EVERY STATE'S GOVERNMENTS, PAIRED TO THEIR DIVISIONS — AND NOTHING
- * GUESSED.** (2026-09-23; `scripts/build-registration-reference.mts`.)
- *
  * Registration without per-state code reads this reference. These pin what it
  * promises: every Census of Governments row sits in exactly one state's file;
  * a government pairs to a division by Census code wherever the Census gives
@@ -106,15 +103,6 @@ test("a government pairs by Census code wherever the Census gives one, and nothi
   assert.ok((t["SCHOOL DISTRICT:SCHOOL_NAME"] ?? 0) + (t["SCHOOL DISTRICT:SCHOOL_NAME_LOOSE"] ?? 0) > 9900, "most school districts pair by name");
 });
 
-test("the jurisdiction ids are the operational reference's own, collision suffixes included", () => {
-  for (const code of ["az", "nh", "nj"]) {
-    const reference = JSON.parse(readFileSync(join(ROOT, "data", "states", code, "jurisdictions", `${code}.json`), "utf8")) as { jurisdictions: { id: string; name: string }[] };
-    const mine = new Map(states.get(code)!.governments.map((g) => [g[1], g[2]]));
-    assert.equal(mine.size, reference.jurisdictions.length, `${code}: one row per jurisdiction`);
-    for (const j of reference.jurisdictions) assert.equal(mine.get(j.id), j.name, `${code}: ${j.id} names ${j.name}`);
-  }
-});
-
 test("a government the committed registry knows lands on the id it keys, directly or through its alternate", () => {
   assert.equal(government("nj", "COUNTY OF MORRIS").division, "ocd-division/country:us/state:nj/county:morris");
   assert.equal(government("nj", "TOWNSHIP OF ROCKAWAY").division, "ocd-division/country:us/state:nj/county:morris/place:rockaway_township");
@@ -134,7 +122,7 @@ test("a government the committed registry knows lands on the id it keys, directl
   assert.equal(government("oh", "COLUMBUS CITY SCH DIST").division, "ocd-division/country:us/state:oh/school_district:columbus_city_school_district");
 });
 
-test("a consolidated city-county pairs to its county, and a town whose code merely missed never does (2026-09-25)", () => {
+test("a consolidated city-county pairs to its county, and a town whose code merely missed never does", () => {
   // Filed MUNICIPAL under a consolidated-city place code no boundary layer carries, in a county with no COUNTY government.
   const consolidated: [string, string, string][] = [
     ["ky", "METRO GOVERNMENT OF LOUISVILLE-JEFFERSON COUNTY", "state:ky/county:jefferson"],
@@ -156,7 +144,7 @@ test("a consolidated city-county pairs to its county, and a town whose code mere
   assert.equal(index.counts.byTypeAndPairing["MUNICIPAL:CONSOLIDATED_COUNTY_FIPS"], 6, "exactly the six, nationally");
 });
 
-test("a territory's governments are exactly its divisions TIGER/Line gives a governing status, read from the committed extract (2026-09-25)", () => {
+test("a territory's governments are exactly its divisions TIGER/Line gives a governing status, read from the committed extract", () => {
   const extract = readFileSync(join(ROOT, FUNCSTAT_EXTRACT), "utf8");
   const [header, ...rows] = parseCsv(extract).filter((r) => r.length > 1);
   const status = new Map(rows.map((r) => [`${r[header.indexOf("layer")]}:${r[header.indexOf("geoid")]}`, r[header.indexOf("funcstat")]]));

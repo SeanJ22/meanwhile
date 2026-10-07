@@ -1,29 +1,7 @@
 /**
- * The research cycle's startup authority reads, retried across a transient
- * store blip.
- *
- * Before a cycle can dispatch anything it reads two authorities: the method
- * candidate authority (control plane) and the operational reference bundle
- * (the production civic-data store). Both are idempotent reads, and both turn a
- * failed read into a named "store unreachable" result — a status, or a
- * CivicDataStoreUnavailableError that keeps only the cause's name — so
- * connect-retry's transport classifier never sees the transport failure. On
- * 2026-09-22 at 21:34:53Z, with the runner host's CPU saturated, one such read
- * failed and the hourly cycle crashed 18 s in having dispatched nothing; the
- * next chance was an hour away. Both endpoints answered 16 of 16 reads three
- * minutes later.
- *
- * So an unreachable startup read is re-read within connect-retry's bounds
- * (attempt count, capped jittered backoff), with two limits:
- *   - only a failed READ is retried — `STORE_READ_FAILED`, a transport
- *     transient, or the read's own unreachable status. A missing store
- *     configuration, a missing candidate or an invalid promotion proof is
- *     deterministic and fails on the first attempt, as before;
- *   - nothing is retried while the host-local Neon circuit is latched. That is
- *     a HARD refusal whose contract forbids an automated retry before its
- *     eligible time.
- * The last result or error is handed back unchanged, so a persistent outage
- * still fails the cycle through the read's own named-failure path.
+ * The research cycle's startup authority reads, re-read within connect-retry's bounds when the store could not
+ * be asked. Only a failed read is retried (never a deterministic failure), and nothing is retried while the
+ * host-local Neon circuit is latched. The last result or error is returned unchanged.
  */
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import {
@@ -79,8 +57,7 @@ export async function retryStartupRead<T>(
       isRetryable: (error) => !circuitLatched() && isRetryableStartupReadError(error),
     });
   } catch (error) {
-    // The final attempt was an unreachable RESULT: return it, so the caller's
-    // own named failure runs exactly as it did before this retry existed.
+    // The final attempt was an unreachable result: return it so the caller's own named failure runs.
     if (error instanceof UnreachableStartupRead && last.held) return last.value as T;
     throw error;
   }

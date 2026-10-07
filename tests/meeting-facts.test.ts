@@ -17,13 +17,9 @@ import {
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 
 /**
- * **PRDY-2 — THE FACT BRIDGE.** (Fleet Promotion Readiness, 2026-09-06.)
- *
- * Real held Pima Legistar bytes (18 rows, the same capture the parser suite
- * pins) run through the parser and then through the bridge, which hands them
- * to the canonical Legistar adapter and cross-checks every scalar against the
- * extraction. A CivicClerk tenant with no wiring row — the live Avondale
- * shape — yields no fact and a named refusal.
+ * Held Legistar bytes run through the parser and then the fact bridge, which hands them to the canonical Legistar
+ * adapter and cross-checks every scalar against the extraction. A CivicClerk tenant with no wiring row yields no
+ * fact and a named refusal.
  */
 
 const TEXT = PIMA_EVENTS_TEXT;
@@ -133,14 +129,7 @@ test("PRDY-2: a URL inventory class, an ambiguous extraction, and mismatched byt
   assert.equal(notClean.refusals[0].code, "EXTRACTION_NOT_CLEAN");
 });
 
-/*
- * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). The unknown-venue row
- * used to be DROPPED by the canonical adapter and so refused here. The owner's
- * rule is that a missing or unreviewed place never suppresses a meeting, so the
- * adapter now produces it with no place and the county's own words as its
- * named venue gap — a fact, still never one with a guessed venue. The row with
- * no usable time is still the adapter's drop, refused with its accounting.
- */
+/* An unknown venue never suppresses a meeting: the row is a fact with no place and the county's own words as its venue gap. */
 test("PRDY-2: a row the canonical adapter drops is a refusal with the adapter's own accounting, and an unknown venue is a fact with its gap named, never a guessed venue", () => {
   const rows = JSON.parse(TEXT) as Record<string, unknown>[];
   rows[0] = { ...rows[0], EventLocation: "Somewhere the venue table has never heard of" };
@@ -182,13 +171,7 @@ test("PRDY-2: a CivicClerk tenant with no wiring row (the live Avondale shape) y
   assert.match(bridge.refusals[0].detail, /avondaleaz/);
 });
 
-/*
- * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). "No venue on the row"
- * used to be a dropped row, refused here with NORMALIZER_DROPPED. The owner's
- * rule is that a missing place never suppresses a meeting, so the adapter now
- * produces it with no place and the portal's own silence as its named gap
- * (NOT_STATED_BY_PUBLISHER), which is a fact and not a guessed venue.
- */
+/* A row with no venue is a fact with the portal's own silence (NOT_STATED_BY_PUBLISHER) as its venue gap. */
 test("PRDY-2: with a wiring row the CivicClerk adapter decides — no venue on the row is a fact with the publisher's gap named, and a placed row is a fact whose agenda link is the adapter's own derivation", () => {
   const wiring: BodySourceWiring = {
     bodyId: "ocd-division/country:us/state:az/place:avondale#governing", ocdId: "ocd-division/country:us/state:az/place:avondale",

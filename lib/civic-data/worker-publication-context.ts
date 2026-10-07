@@ -12,7 +12,6 @@ import { datePath, readForParser, type EvidenceStore } from "../control-plane/ev
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { CapturedFinanceResponse } from "../funding/campaign-finance.ts";
 
-/** Server-side publisher reads the same durable evidence used by the workers. */
 export async function workerPublicationContext(now: string, existingRepos?: ControlPlaneRepositories) {
   const connection = controlPlaneUrlFromEnv();
   if (!existingRepos && !connection) throw new Error("WORKER_PUBLICATION_CONTROL_PLANE_UNAVAILABLE");
@@ -41,11 +40,6 @@ export async function workerPublicationContext(now: string, existingRepos?: Cont
   } };
 }
 
-/**
- * Read a saved page straight from the vault by its artifact record — any job's
- * capture — without listing the whole vault. The key is content-addressed
- * under the page's host, capture day and work item (`objectKey`).
- */
 export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
   const listed = new Map<string, Promise<string[]>>();
   return async (record: ArtifactRecord): Promise<WorkerPublicationCapture | null> => {
@@ -79,12 +73,10 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
   };
 }
 
-/** The default held-page reader over this checkout's vault. */
 export function localHeldCaptureReader() {
   return heldCaptureReader(new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)));
 }
 
-/** The same current source policy applies to parser and held-page publication. */
 export async function publicationCaptureReaders(repos: Pick<import("../control-plane/repository/types.ts").ControlPlaneRepositories, "adminConfig">,
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>,
   readHeld: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null> = localHeldCaptureReader()) {

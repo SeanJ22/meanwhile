@@ -1,10 +1,8 @@
 /**
- * Sean's isolation order (Oct 6, 12:14 AM EDT): one job must never end the
- * others. In the standing hunter lane each worker process has its own
- * progress clock; a stuck one is ended alone with what it held and what it
- * was waiting on, and the others keep running. A queue the round writes
- * mid-wave joins the running workers, so nothing waits for the slowest one.
- * The runner's heartbeat carries the host's memory and reservations.
+ * One job must never end the others. In the standing hunter lane each worker process has its own progress
+ * clock; a stuck one is ended alone with what it held and what it was waiting on, and the others keep running.
+ * A queue the round writes mid-wave joins the running workers. The runner's heartbeat carries the host's
+ * memory and reservations.
  */
 import assert from "node:assert/strict";
 import test from "node:test";

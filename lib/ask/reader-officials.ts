@@ -4,42 +4,10 @@ import type { SeatHolder } from "../officials/lookup.ts";
 import type { EvidenceGap } from "./evidence.ts";
 import { proseName } from "./sitting-answer.ts";
 
-/**
- * **"WHO IS MY STATE SENATOR?" IS A LOOKUP IN WHAT WE HOLD, NOT A QUESTION FOR A
- * MODEL.** (2026-09-29, S3.)
- *
- * Measured on staging 2026-09-29: *"Who is my state senator?"*, *"Who is my
- * congressman?"* and *"Who is my county supervisor?"* at 85635 and 85641 spent
- * about a second on a model reading, found no subject, and answered nothing —
- * while the registry held every one of those people for the reader's own
- * divisions. §0's first line is "who governs them"; this answers it.
- *
- * The question is read here from its words, against a CLOSED table of offices
- * (the same `officeIdentity` vocabulary the ballot uses to join a contest to its
- * seat). Anything the table does not recognise returns null and the model reads
- * the question exactly as before. The answer is composed from the officeholders
- * the route already loaded for the reader's divisions and bodies, and faces the
- * same validator a model answer does.
- *
- * Three honesty rules:
- *
- * - A ZIP code can reach more than one district. Every district's holders are
- *   named with their district, never one of them as "yours".
- * - A body's seats (county supervisors, a council, a school board) are named with
- *   the body, and where the reader's own seat within it depends on an address we
- *   do not hold, the answer says so as a gap of ours.
- * - An office we hold no one for is said plainly as a gap of ours — a blank never
- *   reads as "nobody holds it".
- */
-
 export interface ReaderOfficialsAsk {
-  /** The offices asked about, in the order they are answered. */
   readonly keys: readonly OfficeKey[];
-  /** The reader's own words for the office, for the trace only. */
   readonly phrase: string;
-  /** "How do I contact my state senator?": each person is named with the phone and email their office publishes. */
   readonly contact?: boolean;
-  /** "Who is the mayor of Sierra Vista?": the city named, as its division id spells it ("sierra_vista"); the answer is that city's holders alone. */
   readonly place?: string;
 }
 
@@ -48,11 +16,9 @@ interface OfficePhrase {
   readonly keys: readonly OfficeKey[];
 }
 
-/** Federal and state legislators and the governor: what "my elected officials" means when nothing narrower is said. */
 const ELECTED_OFFICIALS: readonly OfficeKey[] = ["us_senator", "us_representative", "governor", "state_senator", "state_lower_house"];
 const STATE_LEGISLATORS: readonly OfficeKey[] = ["state_senator", "state_lower_house"];
 
-/** Anchored over `normalizeName` of the office words alone. Closed: an unlisted office is the model's. */
 const OFFICE_PHRASES: readonly OfficePhrase[] = [
   { pattern: /^(?:u s |us |united states |federal )senators?$/, keys: ["us_senator"] },
   { pattern: /^state senators?$/, keys: ["state_senator"] },
@@ -81,7 +47,6 @@ const OFFICE_PHRASES: readonly OfficePhrase[] = [
   { pattern: /^(?:elected )?(?:officials?|leaders|representatives and senators|politicians|electeds|elected representatives)$/, keys: ELECTED_OFFICIALS },
 ];
 
-/** "who represents me in <chamber>": the chamber words, closed. */
 const REPRESENTS_IN: readonly OfficePhrase[] = [
   { pattern: /^(?:congress|washington|washington d ?c|the federal government)$/, keys: ["us_senator", "us_representative"] },
   { pattern: /^(?:the )?(?:u s |us |united states )?house(?: of representatives)?$/, keys: ["us_representative"] },
@@ -90,7 +55,6 @@ const REPRESENTS_IN: readonly OfficePhrase[] = [
   { pattern: /^(?:the )?state senate$/, keys: ["state_senator"] },
 ];
 
-/** "How do I contact my ...", "What is my ...'s phone number": the same offices, asked for the way to reach them. */
 const CONTACT_FORMS: readonly RegExp[] = [
   new RegExp("^how (?:do|can|could|would|should) (?:i|we) (?:contact|reach|get in touch with|email|call|phone|write to|talk to|speak to|speak with) (?:my|our) (.+)$"),
   new RegExp("^what (?:is|s) (?:my|our) (.+?) s (?:phone number|email address|email|contact information|contact info|number)$"),
@@ -103,7 +67,6 @@ const FORMS: readonly RegExp[] = [
   /^who (?:are|is) the (.+) (?:for|of|in) (?:my|our) (?:area|district|zip|zip code|neighborhood|town|city|county)$/,
 ];
 
-/** The states by name, lowercase, for "who is the governor of Arizona": two-letter code to name. */
 const STATE_NAMES: Readonly<Record<string, string>> = {
   al: "alabama", ak: "alaska", az: "arizona", ar: "arkansas", ca: "california", co: "colorado", ct: "connecticut", de: "delaware", dc: "district of columbia",
   fl: "florida", ga: "georgia", hi: "hawaii", id: "idaho", il: "illinois", in: "indiana", ia: "iowa", ks: "kansas", ky: "kentucky", la: "louisiana",
@@ -113,15 +76,8 @@ const STATE_NAMES: Readonly<Record<string, string>> = {
   ut: "utah", vt: "vermont", va: "virginia", wa: "washington", wv: "west virginia", wi: "wisconsin", wy: "wyoming",
 };
 
-/** The offices one person holds for a whole state: the ones "the governor of Arizona" can mean. */
 const STATEWIDE_OFFICES: ReadonlySet<OfficeKey> = new Set(["governor", "attorney_general", "secretary_of_state", "state_treasurer", "superintendent_of_public_instruction", "corporation_commissioner", "us_senator"]);
 
-/**
- * "Who is the governor of Arizona?", "Who are Arizona's senators?", and — when the
- * reader's divisions sit in exactly one state — "Who is the governor?": a statewide
- * office of the state the reader is in. A state the reader's divisions do not reach
- * is not this (the model reads it), so we never answer for a state we did not resolve.
- */
 function statewideOffice(normalized: string, readerStates: readonly string[]): ReaderOfficialsAsk | null {
   const officeOf = (phrase: string): readonly OfficeKey[] | null => {
     const words = phrase.replace(/^the /, "").trim();
@@ -144,11 +100,6 @@ function statewideOffice(normalized: string, readerStates: readonly string[]): R
   return null;
 }
 
-/**
- * "Who is the mayor of Sierra Vista?", "Who is Sierra Vista's mayor?": the mayor or
- * council of a city the reader's divisions reach, named by its own name. A city the
- * reader's divisions do not reach is the model's.
- */
 function namedPlaceOffice(normalized: string, readerPlaces: readonly string[]): ReaderOfficialsAsk | null {
   const officeOf = (phrase: string): readonly OfficeKey[] | null => {
     const found = OFFICE_PHRASES.find((entry) => entry.pattern.test(phrase.replace(/^the /, "").trim()));
@@ -164,12 +115,7 @@ function namedPlaceOffice(normalized: string, readerPlaces: readonly string[]): 
   return null;
 }
 
-/**
- * The offices a question about the reader's OWN officials asks for, or null.
- * The whole question must be one of the closed forms: a qualifier ("...and how
- * did she vote"), a second subject or an unlisted office is left to the model.
- * `readerStates` are the two-letter codes (lowercase) the reader's divisions sit in.
- */
+/** `readerStates` are lowercase two-letter codes for the states the reader's divisions sit in. */
 export function readerOfficialsQuestion(question: string, readerStates: readonly string[] = [], readerPlaces: readonly string[] = []): ReaderOfficialsAsk | null {
   const normalized = normalizeName(question);
   if (!normalized || normalized.length > 90) return null;
@@ -194,7 +140,6 @@ export function readerOfficialsQuestion(question: string, readerStates: readonly
   return null;
 }
 
-/** The names of the cities among these divisions ("place:sierra_vista" is "sierra vista"), in the words a question normalizes to. */
 export function placeNamesOf(ocdIds: readonly string[]): string[] {
   return [...new Set(ocdIds.flatMap((id) => {
     const match = /[/]place:([a-z_]+)$/.exec(id);
@@ -202,7 +147,6 @@ export function placeNamesOf(ocdIds: readonly string[]): string[] {
   }))];
 }
 
-/** The state division each of these divisions sits in: the U.S. Senators and statewide executives are held there, and a ZIP's own divisions never name it. */
 export function stateDivisionsOf(ocdIds: readonly string[]): string[] {
   return [...new Set(ocdIds.flatMap((id) => {
     const match = /^(ocd-division\/country:us\/state:[a-z]{2})(?:\/|$)/.exec(id);
@@ -210,22 +154,13 @@ export function stateDivisionsOf(ocdIds: readonly string[]): string[] {
   }))];
 }
 
-/** A held officeholder, with where the reader's area holds them. */
 export interface HeldOfficial {
   readonly seat: SeatHolder;
-  /** The division ids the seat was found under (a district, a county, the state). */
   readonly divisionIds: readonly string[];
-  /** The governing body the seat sits on, when it came from a body's roster. */
   readonly bodyId: string | null;
   readonly bodyName: string | null;
 }
 
-/**
- * The office a held seat is, in the ballot's own vocabulary. A trailing
- * parenthetical ("District 2 (Vice Chair)") is the seat's role in its body, not a
- * different office; a school board's seats are titled by the board ("Governing
- * Board Member") and are known by the body they sit on.
- */
 function officeKeyOf(held: HeldOfficial): OfficeKey | null {
   const title = held.seat.officeTitle.replace(/\s*\([^)]*\)\s*$/, "");
   const key = officeIdentity(title);
@@ -258,7 +193,6 @@ const LABELS: Readonly<Record<string, readonly [string, string]>> = {
   corporation_commissioner: ["Corporation Commissioner", "Corporation Commissioners"],
 };
 
-/** The chamber's district word, for the kinds a district decides. */
 const DISTRICT_PATTERN: Readonly<Record<string, RegExp>> = {
   us_representative: /\/cd:(\d+)$/,
   state_senator: /\/sldu:(\d+)$/,
@@ -269,7 +203,6 @@ const DISTRICT_NOUN: Readonly<Record<string, string>> = {
   state_senator: "state senate",
   state_lower_house: "state house",
 };
-/** Body seats whose place in the body depends on the reader's address, which we do not hold. */
 const ADDRESS_DECIDED: Readonly<Record<string, string>> = {
   county_supervisor: "county supervisor district",
   county_commissioner: "county commissioner district",
@@ -280,13 +213,11 @@ const list = (items: readonly string[]): string =>
   items.length <= 2 ? items.join(" and ") : `${items.slice(0, -1).join(", ")}, and ${items.at(-1)}`;
 
 const person = (seat: SeatHolder, detail?: string | null, channels = false): string => {
-  /* What the office itself publishes, as the roster holds it: never a guess, never a page. */
   const reach = channels ? [seat.phone ? `phone ${seat.phone}` : null, seat.email ? `email ${seat.email}` : null] : [];
   const inner = [seat.partyLabel, detail, ...reach].filter(Boolean).join(", ");
   return inner ? `${seat.name} (${inner})` : seat.name;
 };
 
-/** "District 1" or "Ward 3", when the seat's own title carries it. */
 const seatDetail = (seat: SeatHolder): string | null => {
   const match = /\b(district|ward|position|seat)\s*(\d+)\b/i.exec(seat.officeTitle);
   return match ? `${match[1]![0]!.toUpperCase()}${match[1]!.slice(1).toLowerCase()} ${match[2]}` : null;
@@ -302,32 +233,20 @@ const districtOf = (held: HeldOfficial, key: string): string | null => {
   return null;
 };
 
-/** A seat held under the named city's division or on its governing body. */
 const inPlace = (held: HeldOfficial, place: string): boolean =>
   [...held.divisionIds, ...(held.bodyId ? [held.bodyId] : [])].some((id) => new RegExp(`[/]place:${place}(?:#|$)`).test(id));
 
 export interface OfficialsComposition {
   answer: string;
   citedUrls: string[];
-  /** Gaps of ours the answer states, to sit beside its records in the pack. */
   gaps: EvidenceGap[];
-  /** Every held official the answer names, in the order named — the records the reader is shown. */
   named: HeldOfficial[];
 }
 
-/**
- * Compose the answer from the held officials: one clause per office asked, joined
- * so the whole stays one sentence (the length contract counts "U.S." as a
- * sentence end, so the federal offices are spelled out), then one sentence for
- * each thing about the reader's own seat that we do not hold. Null when no
- * office was asked.
- */
 export function composeReaderOfficials(input: {
   ask: ReaderOfficialsAsk;
   held: readonly HeldOfficial[];
-  /** Officeholder records could not be read for this answer: an absence is then a failure of ours, said so. */
   holdingFailed: boolean;
-  /** How many places (cities, towns, census places) the reader's ZIP code reaches: more than one, and a ZIP does not say which city is theirs. */
   placesReached?: number;
 }): OfficialsComposition | null {
   const contact = Boolean(input.ask.contact);
@@ -378,7 +297,6 @@ export function composeReaderOfficials(input: {
         districts.set(district, [...(districts.get(district) ?? []), held]);
       }
       if (districts.size > 1 && !districts.has("")) {
-        /* The ZIP reaches more than one district: every district's holders, each with its district. */
         const parts = [...districts].sort(([a], [b]) => Number(a) - Number(b)).map(([district, group]) =>
           `${list(group.map((held) => person(held.seat, null, contact)))} for District ${district}`);
         clauses.push(`your ZIP code reaches ${districts.size} ${DISTRICT_NOUN[key]} districts: ${list(parts)}`);
@@ -402,7 +320,6 @@ export function composeReaderOfficials(input: {
       gap(statement);
       sentences.push(statement);
     }
-    /* A ZIP code is an area, not a city: the mayor and the council named are those of a city the area reaches. */
     if ((key === "mayor" || key === "municipal_council") && !input.ask.place && (input.placesReached ?? 0) > 1) {
       const statement = `Your ZIP code reaches ${input.placesReached} places, so a ZIP code alone does not say which city's ${singular} is yours.`;
       gap(statement);
@@ -415,16 +332,6 @@ export function composeReaderOfficials(input: {
   return { answer, citedUrls: [...urls], gaps, named };
 }
 
-/**
- * **WHO SITS ON A NAMED BODY, FROM ITS ROSTER.** (2026-09-29, S3.) *"Who is on the
- * Vail school board?"* cost a model call (about 2.8 s on the fast writer) to
- * restate a sourced roster. The members and staff are the contacts the route
- * already read off that body's roster; the sentence names them, keeps a
- * chair/president/clerk title beside the name, and states each roster gap of ours
- * in its own words. Alphabetical, as the contacts are: any other order would rank.
- * A roster too large for the length contract fails the validator and the model
- * writes, as before.
- */
 export function composeBodyRoster(input: {
   bodyName: string;
   contacts: readonly { name: string; officeTitle: string; basis: string; sourceUrl: string | null }[];
@@ -432,7 +339,6 @@ export function composeBodyRoster(input: {
 }): { answer: string; citedUrls: string[] } | null {
   const members = input.contacts.filter((contact) => contact.basis === "BODY_MEMBER");
   const staff = input.contacts.filter((contact) => contact.basis === "BODY_STAFF");
-  /* A plain "Member" title says nothing the count does not; a role or a ward does. */
   const item = (contact: { name: string; officeTitle: string }) =>
     /\bmember\b/i.test(contact.officeTitle) && !/\d/.test(contact.officeTitle)
       ? contact.name

@@ -1,25 +1,4 @@
-/**
- * **A DEAD END EXPLAINS ITSELF — FROM WHAT THE WORK RECORDED.** (MW-016,
- * 2026-09-25.)
- *
- * A dead end has three fields: what it ruled out, what would settle it, and
- * who moves next. They were rendered from the wrong records — a debt's backoff
- * sentence stood in for "ruled out", a refused finish carried no "would
- * settle", and a routine read's box always said nothing was ruled out. The
- * records that answer them already exist:
- *
- * ```
- *   a Scout walk     rungs whose tool call failed (`ok === false`) are what it
- *                    ruled out; `nextRungs` is what it would try next; its
- *                    outcome says whose move it is
- *   a routine read   the run of failed reads, and the read before them that got
- *                    in, say whether this is a one-off or a standing failure
- * ```
- *
- * A field the records cannot answer stays null and carries its GAP — the
- * specific reason it is missing — so the box names the gap rather than
- * rendering as a finished answer. PURE.
- */
+/** A field the records cannot answer stays null and carries its gap, so the box never renders as a finished answer. */
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import { formatEastern } from "../eastern-time.ts";
 
@@ -45,7 +24,6 @@ function listed(items: readonly string[]): string {
   return `${shown.join("; ")}${more > 0 ? `; and ${more} more` : ""}`;
 }
 
-/** The newest result first; the attempt id breaks a tie so the pick is stable. */
 export function latestScout(results: readonly ScoutResult[]): ScoutResult | null {
   let best: ScoutResult | null = null;
   for (const r of results) {
@@ -63,12 +41,7 @@ const WHO_BY_OUTCOME: Readonly<Record<string, string>> = {
   EVIDENCE_FOUND: "The fleet's next worker (automatic): the walk found the record, which still has to be confirmed and verified",
 };
 
-/**
- * One walk's dead end: its failed rungs, its next rungs, and whose move its
- * outcome makes it. A refused finish keeps its rungs — they are machine-derived
- * from the tool calls that ran — but its outcome is not believed, so who moves
- * is the Scout lane retrying, never the outcome's claim.
- */
+/** A refused finish keeps its machine-derived rungs, but its outcome is not believed: the Scout lane moves next. */
 export function scoutDeadEnd(result: ScoutResult | null, opts: { readonly retryAt?: string | null; readonly unlockWhen?: { readonly text: string } | null } = {}): DerivedDeadEnd {
   if (result === null) {
     const none = "no Scout walk is on record for this work, so nothing here was read from one";
@@ -93,7 +66,7 @@ export function scoutDeadEnd(result: ScoutResult | null, opts: { readonly retryA
     gaps.ruledOut = `every rung the walk of ${when} tried succeeded, so it ruled nothing out`;
   }
 
-  /* The stored unlock condition (DP-06) wins; the walk's own next rungs are the fallback for rows without one. */
+    /* The stored unlock condition wins; the walk's own next rungs are the fallback for rows without one. */
   const wouldSettle = opts.unlockWhen && opts.unlockWhen.text !== "" ? `Would unlock: ${opts.unlockWhen.text}.` :
     result.nextRungs.length > 0 ? `The next ${result.nextRungs.length === 1 ? "rung" : "rungs"} the walk of ${when} named: ${listed(result.nextRungs)}.` : null;
   if (wouldSettle === null) gaps.wouldSettle = `the walk of ${when} named no next rung`;
@@ -110,24 +83,16 @@ export function scoutDeadEnd(result: ScoutResult | null, opts: { readonly retryA
   return { ruledOut, wouldSettle, whoMoves, gaps };
 }
 
-/** A routine read, as far as the dead end needs it: newest first. */
 export interface RoutineReadFact {
   readonly state: string;
   readonly failureCode: string | null;
   readonly acquisitionSucceeded: boolean;
   readonly attemptedAt: string;
-  /** Whether this read failed, by the caller's rule (a failed validation after getting in counts). */
   readonly failed: boolean;
   /** Our own code or configuration failed before the site was asked. */
   readonly jobFailure: boolean;
 }
 
-/**
- * What a run of routine reads ruled out. The reads are the body's last reads
- * in the window, newest first. Our own failure rules nothing out about the
- * site; a run of the same failure rules out a one-off; a single failure after
- * a read that got in rules out that the source is simply gone.
- */
 export function routineRuledOut(reads: readonly RoutineReadFact[], describe: (read: RoutineReadFact) => string): { readonly ruledOut: string | null; readonly gap: string | null } {
   const last = reads[0];
   if (last === undefined || !last.failed) return { ruledOut: null, gap: "the last read did not fail" };

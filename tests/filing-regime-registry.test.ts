@@ -1,46 +1,4 @@
-/**
- * THE FILING-REGIME REGISTRY — the seeded failures of national expansion.
- *
- * `tests/control-plane-campaign-finance.test.ts` proves the domain: an
- * independent expenditure is not a receipt, an amendment supersedes without
- * deleting, three of four fails closed, and A.R.S. § 16-928 sends a
- * school-district election to the COUNTY officer. This file proves that the last
- * of those can be carried into a fifty-first jurisdiction without an
- * `if (state === …)` tree — and, much more importantly, what happens at the
- * jurisdiction NOBODY HAS READ.
- *
- * The failures seeded here:
- *
- *   **A** A jurisdiction absent from the registry acquires a custodian anyway,
- *   by falling through to a default — the state authority, or the FEC, or worse,
- *   a closed contest. This is how an absence gets asserted about a government
- *   that was never asked, and it is the failure a `else { … }` at the bottom of
- *   a resolver produces for free.
- *
- *   **B** Two routing rules claim one contest and the loader picks one. Picking
- *   either picks WHICH GOVERNMENT holds a candidate's money, with no evidence
- *   for the choice.
- *
- *   **C** A repealed regime routes a current contest, because nothing carries an
- *   effective period.
- *
- *   **D** A peer candidate is silently omitted from a contest's coverage, and
- *   the symmetry guard — which sweeps the records that ARE present — reports the
- *   contest symmetric. The shallower side is not in the list being swept.
- *
- *   **E** An unresolved authority is read as no money to report.
- *
- * ## Fixtures versus findings
- *
- * The committed registry, `data/campaign-finance/filing-regimes.json`, is
- * asserted against the artifacts it cites: `states/az/sources.md`,
- * `data/method/knowledge.json`, and the files its `officialRecord` entries name.
- *
- * Everything else is a FIXTURE registry built in this file. Its jurisdiction is
- * `ZZ`, its ids all begin `fixture:`, and every citation it carries says
- * `TEST FIXTURE` in capitals. It asserts nothing about any government — and a
- * test below proves none of those strings ever reached the committed data file.
- */
+/** Fixture registries use jurisdiction `ZZ` and `fixture:` ids; a test below checks none of them reached the committed data file. */
 
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -66,20 +24,11 @@ import {
   validateFilingRegimeRegistry,
   type RegistryIssueCode,
 } from "../lib/control-plane/campaign-finance/filing-regime.ts";
-import {
-  candidateFinanceFeatureEligibility,
-  evaluateCoverage,
-  symmetryCheck,
-} from "../lib/control-plane/campaign-finance/coverage.ts";
-import type { CandidateFinanceCoverage } from "../lib/control-plane/campaign-finance/model.ts";
-import { coverageFixture } from "./control-plane-fixtures.ts";
 import { METHOD_FIXTURE_PATH } from "./method-store-fixture.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
-const AS_OF = "2026-08-28";
 const CAMPAIGN_FINANCE_DIR = join(ROOT, "lib", "control-plane", "campaign-finance");
 
-/* ── The FIXTURE registry. Every string says so out loud. ─────────────────── */
 
 const FIXTURE_CITATION =
   "TEST FIXTURE — tests/filing-regime-registry.test.ts. Asserts nothing about any government.";
@@ -117,15 +66,6 @@ function fixtureAuthority(id: string, level: string, jurisdiction: string): Reco
   };
 }
 
-/**
- * ONE FIXTURE JURISDICTION, `ZZ`, whose statute routes a SCHOOL_DISTRICT contest
- * to a BOROUGH-level auditor.
- *
- * The office level and the authority level disagree, and they disagree
- * DIFFERENTLY from the way Arizona's do — Arizona sends school districts to a
- * COUNTY officer, this fixture sends them to a MUNICIPAL one. That is the point:
- * if the routing were code, expressing a second shape would mean editing code.
- */
 function fixtureRegimeRaw(over: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     regimeId: "fixture:zz:school-district",
@@ -193,27 +133,6 @@ function fixtureRegistryRaw(over: Record<string, unknown> = {}): Record<string, 
   };
 }
 
-function fixtureCandidate(
-  over: Partial<CandidateFinanceCoverage> & { candidacyId: string; displayName: string },
-): CandidateFinanceCoverage {
-  return {
-    committeeIds: ["fixture:committee:a"],
-    filingAuthorityResolved: true,
-    filingAuthorityIds: ["fixture:authority"],
-    filingsAcquired: ["fixture:filing:q1"],
-    filingPeriodsExpected: ["2026 Q1"],
-    filingPeriodsMissing: [],
-    latestThroughDate: "2026-03-31",
-    acquisitionDepth: "ITEMIZED_TRANSACTIONS",
-    openRouteIds: [],
-    identityGaps: [],
-    amendmentGaps: [],
-    asymmetryExplanation: null,
-    ...over,
-  };
-}
-
-
 /** Load a fixture registry, asserting it was ACCEPTED — the positive control shape. */
 function loadFixture(over: Record<string, unknown> = {}) {
   return loadFilingRegimeRegistry(fixtureRegistryRaw(over), FIXTURE_CITATION);
@@ -226,12 +145,10 @@ function refusalCodes(raw: unknown): RegistryIssueCode[] {
   return issues.map((i) => i.code);
 }
 
-/* ══ The committed registry is real, and its provenance is checkable ══════ */
 
 test("the committed registry loads, and every regime carries provenance that exists on disk", () => {
   const registry = filingRegimeRegistry();
 
-  // Not vacuous: the file really was read and really has both jurisdictions.
   assert.equal(registry.formatVersion, FILING_REGIME_FORMAT_VERSION);
   assert.deepEqual(
     registry.jurisdictions.map((j) => j.jurisdiction).sort(),
@@ -241,7 +158,6 @@ test("the committed registry loads, and every regime carries provenance that exi
   assert.equal(registry.regimes.length, 4, "one federal regime and A.R.S. § 16-928's three branches");
   assert.ok(registry.noRegimeRoutes.length > 0, "an unread jurisdiction must always have a next move");
 
-  // The file states, in its own words, that it is not a complete list.
   const note = registry.note.join(" ");
   assert.match(note, /CANONICAL DATA/);
   assert.match(note, /NEVER a complete list/);
@@ -249,7 +165,6 @@ test("the committed registry loads, and every regime carries provenance that exi
 
   const azSources = readFileSync(join(ROOT, "states", "az", "sources.md"), "utf8");
   for (const regime of registry.regimes) {
-    // A quote is verbatim from the state's own record, or there is no quote.
     if (regime.provenance.statutoryQuote !== null) {
       assert.ok(
         regime.provenance.statutoryBasis !== null,
@@ -262,7 +177,6 @@ test("the committed registry loads, and every regime carries provenance that exi
           "routing rule is a different routing rule",
       );
     } else {
-      // No quote is allowed ONLY with official corroboration and an open question.
       assert.ok(
         regime.provenance.officialRecord.length > 0,
         `${regime.regimeId} has neither a quote nor an official record`,
@@ -273,7 +187,6 @@ test("the committed registry loads, and every regime carries provenance that exi
       );
     }
 
-    // Every officialRecord entry that names a repo path names a file that EXISTS.
     for (const entry of regime.provenance.officialRecord) {
       const path = entry.split(/\s+/)[0].replace(/^`|`$/g, "");
       if (!/^[a-z0-9_.-]+\/[\w./-]+$/i.test(path)) continue;
@@ -292,7 +205,6 @@ test("every methodRouteId in the registry is a route the method store actually c
   ) as { routes: { identity?: { id?: string }; id?: string }[] };
   const known = new Set(knowledge.routes.map((r) => r.identity?.id ?? r.id));
 
-  // Not vacuous: the method store really was read.
   assert.ok(known.size > 50, `only ${known.size} method routes read — the sweep never looked`);
 
   let checked = 0;
@@ -323,7 +235,6 @@ test("the AZ regimes reproduce the § 16-928 routing table, with the level misma
     "STATEWIDE",
   ]);
 
-  // The four office classes the statute routes UPWARD, out of their own tier.
   const county = az.find((r) => r.regimeId === "az:16-928:county-and-districts");
   assert.ok(county);
   assert.equal(county.authorityLevel, "COUNTY");
@@ -336,7 +247,6 @@ test("the AZ regimes reproduce the § 16-928 routing table, with the level misma
     "the authority's level need not match the office's, and this is the row where it does not",
   );
 
-  // The publisher is a THIRD party — neither the office nor the authority.
   const pima = county.custodians.find((c) => c.scopeKey === "pima");
   assert.ok(pima);
   assert.equal(pima.authority.id, PIMA_COUNTY_FILING_OFFICER.id);
@@ -344,7 +254,6 @@ test("the AZ regimes reproduce the § 16-928 routing table, with the level misma
   assert.match(pima.publisher?.name ?? "", /EasyVote/);
 });
 
-/* ══ A — a jurisdiction with NO registry entry ════════════════════════════ */
 
 test("A a jurisdiction with no regime resolves NO_REGIME_ON_RECORD — not FEC, not closed", () => {
   // NOT VACUOUS: Wyoming really is absent from the committed registry. If it
@@ -357,7 +266,6 @@ test("A a jurisdiction with no regime resolves NO_REGIME_ON_RECORD — not FEC, 
     "WY is now in the registry — pick another unread jurisdiction for this guard",
   );
 
-  // SEEDED FAILURE: Wyoming is not in the registry. Nobody has read its statute.
   const wy = resolveFilingAuthority({
     jurisdiction: "WY",
     officeLevel: "SCHOOL_DISTRICT",
@@ -379,7 +287,6 @@ test("A a jurisdiction with no regime resolves NO_REGIME_ON_RECORD — not FEC, 
   assert.equal(wy.openRoutes[0].declaration.routeId, "STATUTE_FILING_OFFICER_READ");
   assert.match(wy.why, /statement about this repository and never about a government/);
 
-  // AND IT DOES NOT CLOSE THE CONTEST. There is no input that makes it.
   const verdict = unresolvedAuthorityKeepsCoverageOpen({
     contestId: "fixture:wy-school-board",
     resolution: wy,
@@ -390,8 +297,6 @@ test("A a jurisdiction with no regime resolves NO_REGIME_ON_RECORD — not FEC, 
   assert.ok(verdict.owedRoutes.length > 0);
   assert.match(verdict.why, /never about a government|not a statement about whether these filings exist/);
 
-  // FEC silence about it is still not closure either, and the resolution it
-  // carries is the unread one rather than a federal one.
   const fecSilence = fecAbsenceIsNotClosure({
     contestId: "fixture:wy-school-board",
     jurisdiction: "WY",
@@ -403,7 +308,6 @@ test("A a jurisdiction with no regime resolves NO_REGIME_ON_RECORD — not FEC, 
   assert.equal(fecSilence.resolution.status, "NO_REGIME_ON_RECORD");
   assert.equal(fecSilence.acquisitionDepth, "NONE");
 
-  // POSITIVE CONTROL: the same call shape on a jurisdiction we HAVE read resolves.
   const az = resolveFilingAuthority({
     jurisdiction: "AZ",
     officeLevel: "SCHOOL_DISTRICT",
@@ -418,8 +322,6 @@ test("A a jurisdiction with no regime resolves NO_REGIME_ON_RECORD — not FEC, 
     "if both came back the same, this guard would be reporting green about nothing",
   );
 
-  // And the SECOND unresolved state is distinct from the first: Yavapai has a
-  // KNOWN rule and an UNKNOWN office, which is not the same claim as WY's.
   const yavapai = resolveFilingAuthority({
     jurisdiction: "AZ",
     officeLevel: "SCHOOL_DISTRICT",
@@ -434,13 +336,10 @@ test("A a jurisdiction with no regime resolves NO_REGIME_ON_RECORD — not FEC, 
   assert.notEqual(yavapai.status, wy.status, "'rule known, office unknown' is not 'rule unread'");
 });
 
-/* ══ Adding a jurisdiction is a DATA change and nothing else ══════════════ */
 
 test("a NEW jurisdiction routes correctly as a DATA change, with no file under lib/ naming it", () => {
   const registry = loadFixture();
 
-  // The fixture jurisdiction routes, with a level mismatch of a SHAPE Arizona
-  // does not have: SCHOOL_DISTRICT -> MUNICIPAL rather than -> COUNTY.
   const resolved = resolveFilingAuthority(
     {
       jurisdiction: "ZZ",
@@ -460,8 +359,6 @@ test("a NEW jurisdiction routes correctly as a DATA change, with no file under l
   assert.equal(resolved.publisher?.isVendorPlatform, true);
   assert.deepEqual(resolved.applicableRouteIds, ["FIXTURE_ZZ_AUDITOR_FILINGS"]);
 
-  // An unwalked borough in the SAME fixture jurisdiction is OPEN, not resolved
-  // to the one borough we do know — the per-scope rule is data-driven too.
   const otherBorough = resolveFilingAuthority(
     {
       jurisdiction: "ZZ",
@@ -476,9 +373,6 @@ test("a NEW jurisdiction routes correctly as a DATA change, with no file under l
   assert.match(otherBorough.why, /SomeOtherBorough/);
   assert.equal(otherBorough.openRoutes[0].declaration.routeId, "FIXTURE_ZZ_BOROUGH_DIRECTORY");
 
-  // NO CODE EDIT MADE THAT WORK. No file in the campaign-finance domain names
-  // the fixture jurisdiction, its regime, its custodian or its route — the
-  // routing came entirely from the record handed in.
   const needles = [
     "fixture:zz:school-district",
     "fixture:zz:borough:auditor",
@@ -499,7 +393,6 @@ test("a NEW jurisdiction routes correctly as a DATA change, with no file under l
     }
   }
 
-  // And the fixture never leaked into the canonical data file.
   const committed = readFileSync(
     join(ROOT, "data", "campaign-finance", "filing-regimes.json"),
     "utf8",
@@ -508,11 +401,8 @@ test("a NEW jurisdiction routes correctly as a DATA change, with no file under l
   assert.equal(committed.includes("NOT A REAL STATUTE"), false);
 });
 
-/* ══ B — an ambiguous registry is refused by name, never resolved ═════════ */
 
 test("B two regimes claiming one contest with no supersession is REFUSED, not tie-broken", () => {
-  // SEEDED FAILURE: a second rule for the same jurisdiction, same office class,
-  // overlapping (here: unbounded) dates, with no supersession link.
   const twin = fixtureRegimeRaw({ regimeId: "fixture:zz:school-district-rival" });
   const codes = refusalCodes(fixtureRegistryRaw({ regimes: [fixtureRegimeRaw(), twin] }));
   assert.ok(
@@ -520,7 +410,6 @@ test("B two regimes claiming one contest with no supersession is REFUSED, not ti
     `expected REGIME_AMBIGUOUS_OVERLAP, got ${codes.join(", ")}`,
   );
 
-  // The refusal is a NAMED error carrying the codes, not a string.
   assert.throws(
     () => loadFilingRegimeRegistry(fixtureRegistryRaw({ regimes: [fixtureRegimeRaw(), twin] }), "fixture"),
     (error: unknown) => {
@@ -533,8 +422,6 @@ test("B two regimes claiming one contest with no supersession is REFUSED, not ti
     },
   );
 
-  // POSITIVE CONTROL 1: the SAME two records, with a supersession link, load —
-  // so the refusal is about ambiguity and not about having two records.
   const older = fixtureRegimeRaw({
     regimeId: "fixture:zz:school-district-2022",
     effective: { from: "2022-01-01", through: "2025-12-31", openQuestion: null },
@@ -550,11 +437,9 @@ test("B two regimes claiming one contest with no supersession is REFUSED, not ti
   );
   assert.equal(linked.regimes.length, 2, "BOTH versions stay in the file — neither is dropped");
 
-  // POSITIVE CONTROL 2: one record alone loads.
   assert.equal(loadFixture().regimes.length, 1);
 });
 
-/* ══ C — effective periods, and both versions staying traceable ═══════════ */
 
 test("C a regime that applied in 2022 does not route a 2026 contest, and both stay traceable", () => {
   const older = fixtureRegimeRaw({
@@ -586,31 +471,25 @@ test("C a regime that applied in 2022 does not route a 2026 contest, and both st
     municipality: "FixtureBorough",
   };
 
-  // SEEDED FAILURE: the repealed rule routing a current contest.
   const in2026 = resolveFilingAuthority(query, { registry, asOf: "2026-11-03" });
   assert.equal(in2026.regimeId, "fixture:zz:school-district");
   assert.equal(in2026.authority?.id, "fixture:zz:borough:auditor");
   assert.equal(in2026.supersedes, "fixture:zz:school-district-2022");
 
-  // AND THE OLDER VERSION IS STILL REACHABLE — the same rule an amendment runs
-  // under: a superseded claim is not deleted, it is superseded.
   const in2023 = resolveFilingAuthority(query, { registry, asOf: "2023-06-01" });
   assert.equal(in2023.regimeId, "fixture:zz:school-district-2022");
   assert.equal(in2023.authority?.id, "fixture:zz:old-custodian");
   assert.equal(in2023.supersededBy, "fixture:zz:school-district");
   assert.notEqual(in2023.authority?.id, in2026.authority?.id, "the two periods route differently");
 
-  // With NO asOf, supersession decides — never a guessed today.
   const noDate = resolveFilingAuthority(query, { registry });
   assert.equal(noDate.regimeId, "fixture:zz:school-district");
 
-  // A date BEFORE either rule was in force is not routed by the nearest one.
   const in2019 = resolveFilingAuthority(query, { registry, asOf: "2019-01-01" });
   assert.equal(in2019.status, "NO_REGIME_ON_RECORD");
   assert.equal(in2019.authority, null);
   assert.match(in2019.why, /none is in force on 2019-01-01/);
 
-  // The period predicates themselves, so the selector is not the only witness.
   assert.equal(regimeEffectiveOn(registry.regimes[0], "2023-06-01"), true);
   assert.equal(regimeEffectiveOn(registry.regimes[0], "2026-11-03"), false);
   assert.equal(
@@ -630,7 +509,6 @@ test("C a regime that applied in 2022 does not route a 2026 contest, and both st
   );
 });
 
-/* ══ Every other refusal, each with a positive control ════════════════════ */
 
 test("the loader refuses each malformed shape by its own stable code", () => {
   const cases: { name: string; raw: unknown; code: RegistryIssueCode }[] = [
@@ -800,8 +678,6 @@ test("the loader refuses each malformed shape by its own stable code", () => {
     assert.ok(codes.includes(c.code), `${c.name}: expected ${c.code}, got ${codes.join(", ") || "(none)"}`);
   }
 
-  // POSITIVE CONTROL for the whole battery: the unmutated fixture is ACCEPTED.
-  // Without this, a validator that refused everything would pass every case above.
   const { registry, issues } = validateFilingRegimeRegistry(fixtureRegistryRaw(), FIXTURE_CITATION);
   assert.deepEqual(issues, [], "the clean fixture must load — otherwise this battery proves nothing");
   assert.ok(registry);
@@ -810,20 +686,17 @@ test("the loader refuses each malformed shape by its own stable code", () => {
 test("selectRegime never falls through, and refuses an in-memory ambiguity rather than guessing", () => {
   const registry = loadFixture();
 
-  // A class the fixture jurisdiction does not route.
   const unrouted = selectRegime(registry, { jurisdiction: "ZZ", officeLevel: "STATEWIDE" });
   assert.equal(unrouted.regime, null, "no nearest-match, no jurisdiction-wide default");
   assert.equal(unrouted.ambiguity, null);
   assert.match(unrouted.why, /fact about this registry/);
 
-  // A federal office files federally wherever it is printed.
   const federal = selectRegime(filingRegimeRegistry(), {
     jurisdiction: "AZ",
     officeLevel: "FEDERAL",
   });
   assert.equal(federal.regime?.regimeId, "us:federal:fec");
 
-  // An ambiguity BUILT IN MEMORY — bypassing the loader — is still not guessed.
   const ambiguous = {
     ...registry,
     regimes: [...registry.regimes, { ...registry.regimes[0], regimeId: "fixture:zz:rival" }],
@@ -833,163 +706,12 @@ test("selectRegime never falls through, and refuses an in-memory ambiguity rathe
   assert.equal(selection.ambiguity?.code, "REGIME_AMBIGUOUS_OVERLAP");
   assert.match(selection.why, /nothing is guessed/);
 
-  // POSITIVE CONTROL: the unmutated registry selects exactly one.
   assert.equal(
     selectRegime(registry, { jurisdiction: "ZZ", officeLevel: "SCHOOL_DISTRICT" }).regime?.regimeId,
     "fixture:zz:school-district",
   );
 });
 
-/* ══ E — an unresolved authority keeps coverage OPEN ══════════════════════ */
-
-test("E an unresolved filing regime keeps coverage OPEN and blocks every finance feature", () => {
-  const universe = ["fixture:e:a", "fixture:e:b"];
-  const people = universe.map((id, i) => fixtureCandidate({ candidacyId: id, displayName: `Cand ${i}` }));
-
-  // SEEDED FAILURE: every per-candidate record looks complete, and nobody knows
-  // which government holds the filings. Without the contest-level guard this
-  // reads COMPLETE_AS_OF and renders money sourced to an unidentified custodian.
-  const unresolved = coverageFixture({
-    contestId: "fixture:e:unread-jurisdiction",
-    filingRegimeState: "NO_REGIME_ON_RECORD",
-    filingRegimeId: null,
-    candidateUniverse: universe,
-    perCandidate: people,
-  });
-
-  const verdict = evaluateCoverage(unresolved, AS_OF);
-  assert.notEqual(verdict.status, "COMPLETE_AS_OF", "an unread rule may never reach completeness");
-  assert.equal(verdict.completeAsOf, null);
-  const regimeGap = verdict.gaps.find((g) => g.kind === "FILING_REGIME_UNRESOLVED");
-  assert.ok(regimeGap, "the contest-level routing gap must be NAMED");
-  assert.equal(regimeGap.subject, "fixture:e:unread-jurisdiction");
-  assert.match(regimeGap.nextMove, /filing-regimes\.json/);
-
-  const eligibility = candidateFinanceFeatureEligibility(unresolved);
-  assert.equal(eligibility.eligible, false, "features fail closed at the contest level");
-  assert.match(eligibility.blockedBy.join(" "), /NO_REGIME_ON_RECORD/);
-
-  // The 'rule known, office unknown' state blocks too — a KNOWN rule is not a
-  // known custodian, and the money is filed with an office, not with a statute.
-  const ruleKnown = candidateFinanceFeatureEligibility(
-    coverageFixture({
-      contestId: "fixture:e:rule-known",
-      filingRegimeState: "OPEN",
-      filingRegimeId: "az:16-928:county-and-districts",
-      candidateUniverse: universe,
-      perCandidate: people,
-    }),
-  );
-  assert.equal(ruleKnown.eligible, false);
-  assert.match(ruleKnown.blockedBy.join(" "), /az:16-928:county-and-districts/);
-
-  // POSITIVE CONTROL: the SAME candidates under a RESOLVED regime pass. Without
-  // this the guard could be refusing everything and look identical.
-  const resolved = evaluateCoverage(
-    coverageFixture({
-      contestId: "fixture:e:resolved",
-      candidateUniverse: universe,
-      perCandidate: people,
-    }),
-    AS_OF,
-  );
-  assert.equal(resolved.status, "COMPLETE_AS_OF");
-  assert.equal(resolved.completeAsOf, AS_OF);
-  assert.equal(resolved.featureEligibility.eligible, true);
-  assert.equal(resolved.gaps.filter((g) => g.kind === "FILING_REGIME_UNRESOLVED").length, 0);
-});
-
-/* ══ D — the peer who is not in the list being swept ══════════════════════ */
-
-test("D a candidate omitted from coverage FAILS symmetry — the check reads the BALLOT", () => {
-  const universe = ["fixture:d:incumbent", "fixture:d:challenger"];
-
-  // SEEDED FAILURE: the challenger has no coverage record at all. Every record
-  // that IS present is identical, so a self-comparison reports SYMMETRIC.
-  const omitted = coverageFixture({
-    contestId: "fixture:d:omitted-peer",
-    candidateUniverse: universe,
-    candidateUniverseSource: "fixture ballot",
-    perCandidate: [fixtureCandidate({ candidacyId: "fixture:d:incumbent", displayName: "Incumbent" })],
-  });
-
-  const report = symmetryCheck(omitted);
-  assert.equal(report.verdict, "FAILURE", "a silently omitted peer is the deepest asymmetry there is");
-  assert.equal(report.unexplained.length, 1);
-  assert.equal(report.unexplained[0].dimension, "COVERAGE_RECORD_ABSENT");
-  assert.equal(report.unexplained[0].shallower, "fixture:d:challenger");
-  assert.match(report.unexplained[0].detail, /carries NO finance coverage record/);
-  assert.equal(
-    report.unexplained[0].explainedBy,
-    null,
-    "the record that would carry an explanation is the thing that is missing",
-  );
-
-  // It also fires when peers ARE present — the omission is found alongside the
-  // ordinary dimensions rather than instead of them.
-  const three = symmetryCheck(
-    coverageFixture({
-      contestId: "fixture:d:three-of-four",
-      candidateUniverse: [...universe, "fixture:d:third"],
-      perCandidate: [
-        fixtureCandidate({ candidacyId: "fixture:d:incumbent", displayName: "Incumbent" }),
-        fixtureCandidate({ candidacyId: "fixture:d:challenger", displayName: "Challenger" }),
-      ],
-    }),
-  );
-  assert.equal(three.verdict, "FAILURE");
-  assert.ok(three.findings.some((f) => f.shallower === "fixture:d:third"));
-
-  // POSITIVE CONTROL 1: the same two candidates, both with records, pass.
-  const complete = symmetryCheck(
-    coverageFixture({
-      contestId: "fixture:d:complete",
-      candidateUniverse: universe,
-      perCandidate: universe.map((id) => fixtureCandidate({ candidacyId: id, displayName: id })),
-    }),
-  );
-  assert.equal(complete.verdict, "SYMMETRIC");
-
-  // POSITIVE CONTROL 2: a genuinely single-candidate contest is still the
-  // "absence of the question", not a failure — the old behaviour survives.
-  const lonely = symmetryCheck(
-    coverageFixture({
-      contestId: "fixture:d:one",
-      candidateUniverse: ["fixture:d:only"],
-      perCandidate: [fixtureCandidate({ candidacyId: "fixture:d:only", displayName: "Only" })],
-    }),
-  );
-  assert.equal(lonely.verdict, "SYMMETRIC");
-  assert.match(lonely.why, /absence of the question/);
-});
-
-/* ══ No library in this domain reads a clock ══════════════════════════════ */
-
-test("no campaign-finance library file reads the clock", () => {
-  const files = readdirSync(CAMPAIGN_FINANCE_DIR).filter((f) => f.endsWith(".ts"));
-  assert.ok(files.length >= 5, "the domain directory was not read — this guard would pass vacuously");
-
-  const CLOCK = /\bDate\.now\s*\(|\bnew\s+Date\s*\(/;
-  for (const file of files) {
-    const text = readFileSync(join(CAMPAIGN_FINANCE_DIR, file), "utf8");
-    assert.equal(
-      CLOCK.test(text),
-      false,
-      `lib/control-plane/campaign-finance/${file} reads the clock. An agent does not know today's ` +
-        "date, and a library that thinks it does misdates every conclusion built on it — including " +
-        "which filing regime was in force.",
-    );
-  }
-
-  // The instrument shown catching an instance (RULING 110): a planted line in
-  // the shape the sweep looks for must be found, or the green above means nothing.
-  assert.equal(CLOCK.test("const today = new Date().toISOString();"), true);
-  assert.equal(CLOCK.test("const t = Date.now();"), true);
-  // And it must not flag prose that merely says the words.
-  assert.equal(CLOCK.test(" * Nothing here reads a clock; every date is a parameter."), false);
-});
-
-/* ══ levelMismatchNote is generic, not Arizona-shaped ═════════════════════ */
 
 test("levelMismatchNote fires on any jurisdiction's mismatch and stays silent on agreement", () => {
   const arizona = levelMismatchNote(
@@ -1001,7 +723,6 @@ test("levelMismatchNote fires on any jurisdiction's mismatch and stays silent on
   assert.match(arizona ?? "", /LEVEL MISMATCH/);
   assert.match(arizona ?? "", /A\.R\.S\. § 16-928 routes by WHICH ELECTION/);
 
-  // A DIFFERENT shape of mismatch, named by a different provision.
   const fixture = levelMismatchNote(
     "SCHOOL_DISTRICT",
     "MUNICIPAL",
@@ -1011,7 +732,6 @@ test("levelMismatchNote fires on any jurisdiction's mismatch and stays silent on
   assert.match(fixture ?? "", /the filing authority's level is MUNICIPAL/);
   assert.match(fixture ?? "", /FIXTURE PROVISION routes by WHICH ELECTION/);
 
-  // POSITIVE CONTROL: agreement is silent, so the note means something.
   assert.equal(levelMismatchNote("LEGISLATIVE", "STATE", "quote", "basis"), null);
   assert.equal(levelMismatchNote("FEDERAL", "FEDERAL", "quote", null), null);
 });

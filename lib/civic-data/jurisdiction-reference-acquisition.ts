@@ -23,10 +23,7 @@ export const JURISDICTION_REFERENCE_HTTP_SOURCES = [
 
 export type JurisdictionReferenceHttpSourceId = (typeof JURISDICTION_REFERENCE_HTTP_SOURCES)[number]["id"];
 
-/**
- * A page read again to confirm a reviewed website correction (C15): the .gov registry file, or one correction's
- * homepage or other evidence (`lib/civic-data/website-correction-acquisition.ts`).
- */
+/** A page read again to confirm a reviewed website correction. */
 export type WebsiteCorrectionSourceId = `website-correction:${string}`;
 
 /** Exact response-byte receipt. The timestamp belongs to this response, not the batch. */
@@ -226,7 +223,6 @@ function crc32(bytes: Uint8Array): number {
   return (value ^ 0xffffffff) >>> 0;
 }
 
-/** Minimal, integrity-checking ZIP member reader for the two nested official archives. */
 export function jurisdictionReferenceZipMember(archive: Uint8Array, wanted: string): Uint8Array {
   const minimumEocd = 22;
   const searchStart = Math.max(0, archive.byteLength - (0xffff + minimumEocd));

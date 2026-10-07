@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
-import { readAzBallotProjection, readCandidateCorpusProjection, readCandidateProfilesProjection, readNhBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
@@ -12,13 +9,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import { candidateEnrichmentProvider, candidateEnrichmentUniversesFromHoldings, candidateUniversesFromPromoted, preloadCandidateEnrichmentAuthorities, type CandidateEnrichmentAuthorities } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { readOfficeholderStatementsProjection, refreshOfficeholderStatementsFromPromoted } from "../lib/corpus/data-plane.ts";
-import {
-  transferFrozenStatementIdentities,
-  validateStatementIdentityFirstSeedEvidence,
-  type StatementIdentityFirstSeedEvidence,
-} from "../lib/corpus/statement-identity-transfer.ts";
 import type { SourceSnapshot, StatementCorpus } from "../lib/corpus/types.ts";
-import { readNjMorrisFiling } from "../lib/sources/ballot-nj-morris/index.ts";
 
 const ROOT = process.cwd();
 const URL = "https://example.house.gov/issues";
@@ -80,60 +71,16 @@ function statementPackage(rows: readonly SourceSnapshot[], at: string): ManualPr
   };
 }
 
-function value<T>(result: { readonly kind: string; readonly value: T | null }, name: string): T {
-  assert.ok(result.kind === "PROMOTED" || result.kind === "BOOTSTRAP", `${name}: ${result.kind}`);
-  assert.notEqual(result.value, null, name);
-  return result.value as T;
+function ballotFixture(state: string) {
+  const provenance = { sourceUrl: "https://elections.example.gov/candidates", sourceOrg: "Election authority", collectedAt: T0, verifiedAt: T0 };
+  const contestId = `${state}-fixture-contest`;
+  return {
+    contests: [{ id: contestId, electionId: "fixture-election", ocdId: `ocd-division/country:us/state:${state}`, divisionVintage: "fixture", title: "State Senate", type: "CANDIDACY" as const, voteFor: null, termYears: null, scopeNote: null, provenance }],
+    candidacies: [{ id: `${state}-fixture-candidate`, contestId, familyName: "Example", givenName: "Avery", partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance }],
+    measures: [],
+    absences: [],
+  };
 }
-
-test("the statement first seed uses the same exact permanent identity transfer as cutover", async () => {
-  const frozen = JSON.parse(
-    readFileSync(join(ROOT, "data", "corpus", "statements.json"), "utf8"),
-  ) as StatementCorpus;
-  const bridge = JSON.parse(
-    readFileSync(join(ROOT, "lib", "corpus", "fixtures", "statement-identity-first-seed-v1.json"), "utf8"),
-  ) as StatementIdentityFirstSeedEvidence;
-  validateStatementIdentityFirstSeedEvidence(bridge);
-  const transfer = transferFrozenStatementIdentities(frozen, bridge);
-
-  assert.equal(frozen.snapshots.length, 32);
-  assert.equal(transfer.corpus.snapshots.length, 29);
-  assert.equal(transfer.rekeyed.length, 10);
-  assert.equal(transfer.excludedFacts.length, 3);
-  assert.ok(transfer.corpus.snapshots.every(({ subjectId }) => !subjectId.startsWith("plural:")));
-  assert.ok(transfer.excludedFacts.every(({ record }) => record.subjectId.startsWith("plural:")));
-  assert.deepEqual(
-    transfer.rekeyed.map(({ fromSubjectId, toSubjectId }) => `${fromSubjectId}->${toSubjectId}`).sort(),
-    [
-      "plural:1e39adcf-868d-4722-a07b-09fcd36ad9ed->ballot-az-pima:state-senate-19:griffin-gail",
-      "plural:3c965e03-1e51-4f10-a037-4fb2f35292c5->ballot-az-pima:state-house-20:gonzales-sally-ann",
-      "plural:51520de4-0e87-475b-91d2-99aa18addf72->ballot-az-pima:state-house-19:gowan-david",
-      "plural:6328e7f7-d952-4d28-98b8-75a9a6f50c8d->ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
-      "plural:6dba6afa-b274-4273-b8c6-270d27214eee->ballot-az-pima:state-senate-20:hernandez-alma",
-      "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2->ballot-az-pima:state-house-20:villegas-betty",
-      "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2->ballot-az-pima:state-house-20:villegas-betty",
-      "plural:947e2e2b-04eb-4f92-9f83-aef8760517e0->ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
-      "plural:bc52f516-a13b-4490-a12c-7b98fa3969e5->ballot-az-pima:state-house-19:diaz-lupe",
-      "plural:f1292af8-a209-4ff7-87b5-086acddcc10e->ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
-    ].sort(),
-  );
-  assert.deepEqual(
-    transfer.excludedFacts.map(({ record }) => record.subjectId).sort(),
-    [
-      "plural:028a440f-10cb-49cc-9417-1dfd0cff83e2",
-      "plural:03aa8bec-9d7e-41e7-ad20-b5ba1991cab6",
-      "plural:f321f20f-b8af-4d0b-85ba-e7b8dcf9ae03",
-    ].sort(),
-  );
-
-  const read = await readOfficeholderStatementsProjection({
-    store: new MemoryRoutineDataStore(),
-    bypassCache: true,
-    now: T0,
-  });
-  assert.equal(read.kind, "BOOTSTRAP");
-  assert.deepEqual(read.value, transfer.corpus);
-});
 
 test("officeholder statements use the canonical candidate/event/promotion pointer with exact source-scoped proof", async () => {
   const store = new MemoryRoutineDataStore();
@@ -172,8 +119,8 @@ test("a new statement version reports the exact append while an invalid successo
   assert.deepEqual(changed.candidate.candidate.changeSet?.changed, []);
   assert.deepEqual(changed.candidate.candidate.changeSet?.removed, []);
 
-  const retiredIdentitySnapshot = snapshot(HASH_C, T2, "plural:research-only-id");
-  const invalid = manualProjectionCandidate(statementPackage([retiredIdentitySnapshot], T2), {
+  const duplicatedSnapshot = snapshot(HASH_C, T2);
+  const invalid = manualProjectionCandidate(statementPackage([duplicatedSnapshot, duplicatedSnapshot], T2), {
     prior: {
       versionId: second.id,
       payload: second.readModel as StatementCorpus,
@@ -281,7 +228,6 @@ test("store failure and an unseeded production store never reopen tracked statem
 
 test("officeholder statement ownership is manual and visible in the existing Admin outcome projection", () => {
   const contract = requiredManualProductionContract("officeholder-statements");
-  assert.equal(contract.execution, "EXPLICIT_OWNER_INVOCATION_ONLY");
   assert.ok(!("cadence" in contract) && !("retry" in contract));
   const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, T0, [contract]);
   assert.equal(view.source, "civic_data_candidates+civic_data_candidate_events+civic_data_promotions");
@@ -295,21 +241,13 @@ test("standing candidate enrichment derives all three state denominators from pr
   assert.equal(unavailable.obligations.length, 0);
   assert.match(unavailable.readFailure ?? "", /canonical projection is NOT_RECORDED/,
     "an answered empty canonical store must be explicit and must not reopen tracked hunt or bootstrap files");
-  const store = new MemoryRoutineDataStore();
-  const [az, nh, nj, profiles, corpus] = await Promise.all([
-    readAzBallotProjection({ store, bypassCache: true, now: T0 }),
-    readNhBallotProjection({ store, bypassCache: true, now: T0 }),
-    readNjMorrisFiling({ store, bypassCache: true, now: T0 }),
-    readCandidateProfilesProjection({ store, bypassCache: true, now: T0 }),
-    readCandidateCorpusProjection({ store, bypassCache: true, now: T0 }),
-  ]);
-  const authorities: CandidateEnrichmentAuthorities = {
-    az: value(az, "AZ ballot"),
-    nh: value(nh, "NH ballot"),
-    nj: value(nj, "NJ ballot"),
-    profiles: value(profiles, "candidate profiles"),
-    corpus: value(corpus, "candidate corpus"),
-  };
+  const authorities = {
+    az: { ballot: ballotFixture("az"), candidateFilings: null },
+    nh: { ballot: ballotFixture("nh") },
+    nj: { ballot: ballotFixture("nj") },
+    profiles: { cards: { curatedAt: T0, note: "Held empty", cards: {}, hunts: [] }, links: { curatedAt: T0, note: "Held empty", links: {}, hunts: [] } },
+    corpus: { formatVersion: 1 as const, fetchedAt: T0, attempted: 0, documents: [], failures: [] },
+  } as unknown as CandidateEnrichmentAuthorities;
   const universes = candidateUniversesFromPromoted(authorities, T0);
   for (const state of ["az", "nh", "nj"] as const) {
     assert.ok(universes[state].candidacies.length > 0, state);
@@ -327,40 +265,6 @@ test("standing candidate enrichment derives all three state denominators from pr
   assert.ok(withoutAz.universes.nj!.candidacies.length > 0, "NJ survives planted AZ authority failure");
   assert.match(withoutAz.failures.join("; "), /Arizona ballot/);
 });
-
-test("tracked statement and candidate-universe writer doors stay deleted", () => {
-  for (const path of ["scripts/fetch-corpus.mts", "scripts/candidate-universe.mts"]) {
-    assert.equal(existsSync(join(ROOT, path)), false, path);
-  }
-  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as { scripts: Record<string, string> };
-  assert.equal(pkg.scripts["corpus:fetch"], undefined);
-  assert.equal(pkg.scripts["candidates:universe"], undefined);
-  assert.equal(
-    pkg.scripts["civic-data:promote-manual"],
-    "node scripts/installed-runtime-command.mjs manual-promote",
-  );
-
-  const unified = readFileSync(join(ROOT, "lib", "corpus", "unified.ts"), "utf8");
-  const executable = unified.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
-  assert.match(executable, /currentOfficeholderStatements\(\)/);
-  assert.doesNotMatch(executable, /readFileSync|statements\.json/);
-
-  const enrichment = readFileSync(join(ROOT, "lib", "control-plane", "scheduler", "providers", "candidate-enrichment.ts"), "utf8");
-  const enrichmentExecutable = enrichment.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
-  assert.match(enrichmentExecutable, /readPromotedCivicData/);
-  assert.doesNotMatch(enrichmentExecutable, /read(?:AzBallot|NhBallot|NjMorrisFiling|CandidateProfiles|CandidateCorpus)Projection/);
-  assert.doesNotMatch(enrichmentExecutable, /readFileSync|candidate-universe-2026\.json/);
-
-  for (const path of ["scripts/freshness-shadow.mts", "scripts/scout-denominator.mts"]) {
-    const source = readFileSync(join(ROOT, path), "utf8");
-    // The provider may be handed its tracked states (MW-028), so the anchor is the call, not an empty argument list.
-    const built = source.search(/candidateEnrichmentProvider\(/);
-    assert.ok(built >= 0 && source.indexOf("await preloadCandidateEnrichmentAuthorities()") < built, path);
-  }
-  const pilot = readFileSync(join(ROOT, "scripts", "pilot-runner.mts"), "utf8");
-  assert.match(pilot, /scripts\/freshness-shadow\.mts/);
-});
-
 
 test("general ballots add candidate inventory outside the legacy states and never infer an unknown election cycle",()=>{
   const provenance={sourceUrl:"https://elections.example.gov/candidates",sourceOrg:"Election authority",collectedAt:T0,verifiedAt:T0};

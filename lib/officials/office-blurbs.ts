@@ -1,29 +1,13 @@
 /**
- * What each office actually does, in plain words (3d).
- *
- * Written once per office *type*, never per person, and rendered wherever an
- * officeholder appears. The register is mandatory and benchmarked: common
- * spoken language, the way a neighbor would explain it, checked against
- * "would a 15-year-old understand this?" — the author's literal test. The
- * model sentence: "Your superintendent runs the district, but is bound by
- * the board." Second person, present tense; one or two sentences on power,
- * one on limits, one on when to call them.
- *
- * **Neutrality**: each blurb describes the office, never evaluates the
- * holder. Nothing here may praise, criticize, or rank. The `basis` names
- * where the office's powers are defined, so the plain words stay checkable
- * against the legal text they compress.
- *
- * This file is data, not JSX, on purpose: the routing knowledge base (Phase
- * 9) keys on the same office types, so the words and the routing can never
- * drift apart.
+ * What each office does, in plain words, written once per office type and never per person: second person, present
+ * tense, a fifteen-year-old's register. Neutral: the office, never the holder.
  */
 
 /** Runtime kinds validate source-backed office records; legacy blurbs remain the way back. */
 export type OfficeType = string;
 
 export interface OfficeBlurb {
-  /** The plain-words explanation. The author's register, checked. */
+  /** The plain-words explanation. */
   text: string;
   /** Where this office's powers are defined — the checkable source. */
   basis: string;
@@ -67,12 +51,7 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
     basisUrl: null,
   },
   mayor: {
-    // Jurisdiction-neutral by construction (item 1, 2026-08-14 second
-    // session): this text renders for EVERY mayor, so it may claim nothing
-    // that is only true in one city. The Tucson-specific council-manager
-    // sentence that used to live here rendered on Rockaway Township's
-    // mayor — one jurisdiction's content bound to another jurisdiction's
-    // key. City-specific truth lives in DIVISION_OFFICE_BLURBS below.
+    // Jurisdiction-neutral: this renders for every mayor. City-specific truth lives in DIVISION_OFFICE_BLURBS.
     text: "Your mayor is the city's elected leader — they speak for the city and lead its government. How much day-to-day power a mayor has depends on the city's own charter: in some cities the mayor runs city hall directly, and in others a hired manager runs the daily work while the mayor leads the council. Call them about city services and where the city is headed.",
     basis: "The city's charter and state municipal statutes",
     basisUrl: null,
@@ -82,28 +61,9 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
     basis: "The city's charter and state municipal statutes",
     basisUrl: null,
   },
-  // 2e (2026-08-17): the substitute-for-a-mayor case, explained rather than
-  // left as a gap. New England towns are run this way on purpose.
-  /*
-   * NEW JERSEY'S MUNICIPAL GOVERNING BODIES (NJ Hunt 2, 2026-08-22).
-   *
-   * Added when the Morris ballot stopped being six contests and became the
-   * county clerk's whole filing — borough councils, township committees,
-   * township councils and ward-based town councils, none of which any existing
-   * explainer resolved for.
-   *
-   * It is NOT mapped to , and that is deliberate. New Jersey
-   * municipalities run under several different forms of government, and a
-   * township committee is not a city council: the committee members are the
-   * governing body AND the heads of the town's departments, and the mayor is
-   * chosen from among them rather than elected separately. An explainer that
-   * described one form as though it were all of them would be a generated claim
-   * about how a reader's own town works.
-   *
-   * So the text says what is true across the forms and says plainly that the
-   * rest varies, which is the honest answer and is checkable against the town's
-   * own charter.
-   */
+  // The substitute-for-a-mayor case, explained rather than left as a gap.
+  // New Jersey's municipal governing bodies: not mapped to a city council, since a township committee is also the
+  // heads of the town's departments.
   "nj-municipal-governing-body": {
     text: "Your council or committee is the town's own elected lawmaking body. They pass local ordinances, adopt the municipal budget, set the local tax rate, decide zoning, and oversee the people who run town services. New Jersey towns use several different forms of government — borough, township committee, township council, town council — so how much sits with this body rather than with a mayor or an administrator depends on your town's charter. Call them about local roads, zoning, rubbish collection, the police budget, and anything else the town itself runs.",
     basis: "New Jersey Revised Statutes Title 40A, and the municipality's own charter",
@@ -114,7 +74,7 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
     basis: "New Hampshire RSA 41 (town officers)",
     basisUrl: "https://www.gencourt.state.nh.us/rsa/html/NHTOC/NHTOC-III-41.htm",
   },
-  // 4b (2026-08-17): every office type on a covered ballot gets its
+  // Every office type on a covered ballot gets its explainer.
   // explainer. Same register, same neutrality: the office, never the holder.
   governor: {
     text: "Your governor runs the state government — they propose the state budget, sign or veto laws the legislature passes, appoint agency heads and judges, and command the National Guard in a state emergency. They can't pass laws alone or change what your town does. Call their office when a state agency has failed you and nothing else has worked.",
@@ -194,16 +154,7 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
   },
 };
 
-/**
- * Jurisdiction-specific office blurbs (item 1, 2026-08-14 second session).
- *
- * A blurb here applies ONLY when the officeholder's own division matches
- * `divisionOcdId` exactly — verified content about how one named place's
- * charter actually works. The generic per-type blurb above is the fallback
- * for everyone else. This is the sibling of the uniqueness invariant: a
- * per-type key must never carry per-place content, because every holder of
- * the type wears it.
- */
+/** Jurisdiction-specific blurbs, applied only when the officeholder's own division matches `divisionOcdId` exactly. */
 export const DIVISION_OFFICE_BLURBS: ReadonlyArray<{
   officeType: OfficeType;
   divisionOcdId: string;
@@ -212,9 +163,7 @@ export const DIVISION_OFFICE_BLURBS: ReadonlyArray<{
   {
     officeType: "mayor",
     divisionOcdId: "ocd-division/country:us/state:az/place:tucson",
-    // Verified against the charter before writing (5b, 2026-08-15):
-    // Tucson is council-manager, so "runs the city day to day" would be
-    // false there.
+    // Verified against the charter: a council-manager city, so "runs the city day to day" would be false.
     blurb: {
       text: "Your mayor is the city's elected leader — they lead the city council, speak for the city, and vote on the big decisions. In Tucson, the day-to-day work of city government is run by a city manager the council hires, so most big decisions need the council's vote, not the mayor's alone. Call them about city services and where the city is headed.",
       basis:
@@ -225,41 +174,7 @@ export const DIVISION_OFFICE_BLURBS: ReadonlyArray<{
   },
 ];
 
-/**
- * STATE-scoped office blurbs — the layer between the per-type text everyone
- * wears and the per-place text only one charter earns.
- *
- * ## Why New Jersey's mayors needed one
- *
- * The generic `mayor` blurb opens *"Your mayor is the city's elected leader"*
- * and goes on to describe city hall and a hired manager. It was written for
- * Tucson's neighbours and it is not true of New Jersey, where the nine
- * municipalities electing a mayor in 2026 are eight boroughs and one Faulkner
- * Act township, none of them a city and none of them council-manager.
- *
- * That text was ALREADY rendering for New Jersey mayors before the mayoral
- * contests were recovered on 2026-08-25, because the committed rosters carry
- * `officeTitle: "Mayor"` — the mayor of Boonton was being described to readers
- * as a city's elected leader. Recovering nine mayoral CONTESTS would have put
- * the same sentence on nine more surfaces, which is RULING 114 exactly: closing
- * a layer converts every wrong entry in it from silence into a false claim.
- *
- * ## What the New Jersey text claims, and what it deliberately does not
- *
- * It names the variation rather than resolving it, the same way the New Jersey
- * municipal-body blurb beside it already does. Under the Borough form the mayor
- * presides over council and votes only to break a tie, and under a Faulkner Act
- * mayor-council charter the mayor runs the administration outright — those are
- * opposite answers to "does this person run the town", and this product does not
- * know which charter a reader's town uses at the point this renders. So the
- * blurb tells the reader that the answer depends on their town's charter, which
- * is true of every New Jersey mayor and is a fact a reader can act on, rather
- * than picking one and being wrong in the other places.
- *
- * A state entry applies only where the division's OCD id sits under that state.
- * The per-place list above still wins over it, and the per-type text below is
- * the fallback for everyone else.
- */
+/** State-scoped blurbs: between the per-type text everyone wears and the per-place text one charter earns. */
 export const STATE_OFFICE_BLURBS: ReadonlyArray<{
   officeType: OfficeType;
   state: string;
@@ -282,12 +197,7 @@ function stateOf(divisionOcdId: string | null | undefined): string | null {
   return divisionOcdId ? (/\/state:([a-z]{2})\b/.exec(divisionOcdId)?.[1] ?? null) : null;
 }
 
-/**
- * The blurb for a type in a place — place first, then state, then the generic.
- *
- * ONE resolution order, called by both entry points, because two orders is the
- * thing that can disagree (RULING 103).
- */
+/** The blurb for a type in a place: place first, then state, then the generic. One resolution order for both entry points. */
 function resolveBlurb(
   type: OfficeType,
   divisionOcdId?: string | null,
@@ -306,11 +216,7 @@ function resolveBlurb(
   return OFFICE_BLURBS[type];
 }
 
-/**
- * Map an officeholder's published title to a blurb key. Titles come from the
- * rosters ("U.S. Senator", "State Representative", "Assemblymember") — an
- * unmapped title gets no blurb rather than a guessed one.
- */
+/** Map an officeholder's published title to a blurb key; an unmapped title gets no blurb. */
 export function officeTypeForTitle(title: string): OfficeType | null {
   const t = title.toLowerCase();
   if (t === "u.s. senator") return "us-senator";
@@ -319,10 +225,7 @@ export function officeTypeForTitle(title: string): OfficeType | null {
   if (t === "state representative" || t === "assemblymember") {
     return "state-representative";
   }
-  // The tier-3 rosters (5a/5b): local elected offices, curated with
-  // citations in lib/registry/body-rosters.ts. Matches are exact-shaped on
-  // the titles those rosters use — a Selectboard member deliberately maps
-  // to nothing rather than to a school-board blurb.
+  // Local elected offices from the curated rosters, matched exactly on the titles those rosters use.
   if (t === "mayor") return "mayor";
   if (t.includes("council member") || t === "councilwoman" || t === "councilman") {
     return "city-council";
@@ -363,14 +266,7 @@ export function blurbForTitle(
   return type ? resolveBlurb(type, divisionOcdId) : null;
 }
 
-/**
- * Map a ballot contest's title — the filing's phrasing, which differs from
- * roster titles ("Member of the United States Senate", "Representative in
- * Congress, District 2") — to an office type (4b). County-specific offices
- * check before their state-level cousins so "Merrimack County Treasurer"
- * never reads as the state treasurer. An unmatched title gets no blurb
- * rather than a guessed one.
- */
+/** Map a ballot contest's title to an office type; county offices check before state-level cousins. Unmatched: no blurb. */
 export function officeTypeForContestTitle(title: string): OfficeType | null {
   const t = title.toLowerCase();
   if (t.includes("united states senate") || t.includes("united states senator")) {
@@ -415,15 +311,7 @@ export function officeTypeForContestTitle(title: string): OfficeType | null {
   if (t.includes("select board") || t.includes("selectboard")) {
     return "select-board";
   }
-  /*
-   * Last, and matched on the WHOLE title rather than as a substring.
-   *
-   * The clerk's heading for a mayoral race is the bare word, and it must not
-   * catch the titles above it: "Mayor and Council" and "Member of the Borough
-   * Council" both mention a mayor and neither is a mayoral contest. Placing it
-   * after the council branches and requiring an exact match are two independent
-   * reasons it cannot; either alone would be enough, and both are cheap.
-   */
+  // Last, and matched on the whole title: a bare "Mayor" heading must not catch council titles that mention a mayor.
   if (t.trim() === "mayor") return "mayor";
   return null;
 }

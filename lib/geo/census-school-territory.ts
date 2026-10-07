@@ -1,4 +1,4 @@
-/** The held Census-to-NCES bridge used by both territory generators. */
+/** Parses the Census-to-NCES crosswalk CSV into a map of Census id to 7-digit NCES LEAID. */
 export function censusSchoolLeaIds(csv: string): Map<string, string> {
   const out = new Map<string, string>();
   for (const line of csv.split(/\r?\n/).slice(1).filter(Boolean)) {

@@ -10,7 +10,6 @@ export type { MeasureRecord, ProvisionKind } from "./measure-record-contract.ts"
 /** Immutable migration evidence; production records override it, including []. */
 export const MEASURE_RECORD_FIRST_SEED = SEED as readonly MeasureRecord[];
 
-/** Keep an explicit vote sentence exactly as the publisher wrote it. */
 export function explicitVoteMeanings(text: string): { yesMeans: string | null; noMeans: string | null } {
   text = text.trim();
   const result: { yesMeans: string | null; noMeans: string | null } = { yesMeans: null, noMeans: null };
@@ -22,7 +21,6 @@ export function explicitVoteMeanings(text: string): { yesMeans: string | null; n
   return result;
 }
 
-/** Filter records through the exact ballot the reader loaded, never a country-wide list. */
 export function measureRecordsForBallot(ballot: BallotSet): readonly MeasureRecord[] {
   const measures = new Set(ballot.contests.filter(c => c.type === "MEASURE").map(c => c.id));
   const records = ballot.measureRecords ?? [];
@@ -43,7 +41,6 @@ export function measureRecordsForBallot(ballot: BallotSet): readonly MeasureReco
   });
 }
 
-/** Compatibility for already-promoted ballots, only while their exact source still matches. */
 export function seedMeasureRecords(ballot: BallotSet, analyses: readonly {
   readonly contestId: string; readonly analysisUrl: string; readonly contentHash: string;
 }[] = []): BallotSet {

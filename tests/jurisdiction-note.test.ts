@@ -1,35 +1,7 @@
 /**
- * **JUR-4 ON THE BALLOT PAGE** (`NH84`, 2026-08-23) — one deliberate annotation
- * instead of the pill repeated down the page, and the two uncertainty states
- * kept apart while it happens.
- *
- * ## The repetition
- *
- * Every affected contest heading carried the full RULING 71 pill, *"Could
- * govern you — add your address to confirm"*. The map surfaces had already been
- * fixed the same way — the who-governs panel from six sentences to six marks
- * and one pill, the meetings list from nineteen consecutive rows to one per
- * group — and the ballot page, which the author named the headline UX problem
- * of the New Jersey pass, was the one left untouched.
- *
- * ## The defect that only reading the rendered page showed, and it is the
- * important half of this file
- *
- * The block names the bodies that cover only part of the reader's zip. Built
- * on `needsPill`, it named the **11th Congressional District** at 07866 — and
- * 07866 sits entirely inside NJ-11.
- *
- * `needsPill` returns true for `AMBIGUOUS` **and** for `UNKNOWN`, and says in
- * its own header that it collapses two of three states on purpose. For the
- * INVITATION that is right: offering to narrow is safe under uncertainty. This
- * block makes a much stronger claim — it names a body as partial — and
- * `UNKNOWN` does not mean partial. It means we hold no boundary for that
- * division at all.
- *
- * Rendering it as partial is a render default converting an absence into an
- * assertion, about a named district, which is the failure `CLAUDE.md`'s
- * render-default rule exists to prevent. So `UNKNOWN` contests are **counted
- * and never named**, and the sentence that counts them says whose gap it is.
+ * One page-level annotation instead of a pill on every contest heading. `needsPill` is true for both
+ * `AMBIGUOUS` and `UNKNOWN`, but `UNKNOWN` means we hold no boundary, not that a body is partial, so `UNKNOWN`
+ * contests are counted and never named.
  */
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -42,14 +14,7 @@ import { needsPill } from "../lib/geo/zip-certainty.ts";
 const ROOT = process.cwd();
 
 test("JUR-4: the page-level block names bodies, never offices", () => {
-  /*
-   * The first version mapped `contest.title` and told the reader the
-   * governments covering part of their zip were "Member of the Borough
-   * Council, Member of the Board of Education, Member of the Board of
-   * Education — Unexpired Term": three job titles, two of them the same one,
-   * useless to a reader who knows their own town. Naming the jurisdictions is
-   * the entire purpose of the block.
-   */
+  /* The block names jurisdictions, not job titles. */
   assert.equal(
     jurisdictionNameFromOcdId("ocd-division/country:us/state:nj/county:morris/place:rockaway_township"),
     "Rockaway Township",
@@ -106,39 +71,15 @@ test("JUR-4: UNKNOWN is counted and never named as partial", () => {
 });
 
 /**
- * **AMENDED 2026-08-24 (BAL-7) — THE SENTENCE IS CUT, AND ITS OBLIGATION IS
- * ASSERTED INSTEAD OF ITS WORDING.**
- *
- * This asserted the literal strings *"That is a gap on our side, not a finding
- * about the district."* and its plural. The author red-boxed both on
- * `12-16-38` and ruled the class product-wide: **stop announcing that the site
- * is failing.**
- *
- * The render-default rule survives that cut unchanged, and this is what it
- * actually requires — it says in as many words that **the rule is the
- * ATTRIBUTION, never a particular sentence**, and that what may be rewritten
- * at any time is how it is said. So the guard now asserts the two things that
- * must remain true:
- *
- *  1. **No claim is made about any district.** The block may not say a
- *     district covers part of this zip on the strength of a polygon we do not
- *     hold — that is the assertion the deleted sentence was hedging, and
- *     deleting the hedge would be a defect if the assertion had stayed.
- *  2. **The limit is still attributed to US and to the zip.** The surviving
- *     paragraph carries it: *what we cannot tell from a zip code alone is
- *     which of them is yours.*
+ * The block makes no claim about any district on the strength of a polygon we do not hold, and still attributes
+ * the limit to us and to the zip, without announcing a failure.
  */
 test("BAL-7: the block attributes the limit to us without announcing a failure", () => {
   const note = readFileSync(
     join(ROOT, "components", "ballot", "jurisdiction-note.tsx"),
     "utf8",
   );
-  /*
-   * Comments stripped first. The component's own note QUOTES the sentence the
-   * author cut, so a sweep over the raw file would flag the record of the fix
-   * as the defect — an instrument that cannot tell shipped copy from a comment
-   * about shipped copy is reading the wrong thing (RULING 110).
-   */
+  /* Comments stripped first, so a note quoting cut copy is not read as shipped copy. */
   const code = note.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
 
   // The self-deprecating form is gone from what a reader sees.
@@ -148,8 +89,7 @@ test("BAL-7: the block attributes the limit to us without announcing a failure",
     "the failure-announcing sentence is back (BAL-7)",
   );
 
-  // The attribution it used to carry is still on the page, in the paragraph
-  // the author left unmarked.
+  // The attribution stays on the page.
   assert.match(
     note,
     /what we cannot tell from a zip code alone is\s*\n?\s*which of them is yours/,

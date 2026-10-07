@@ -1,25 +1,3 @@
-/**
- * **A CARRIED SITTING IS PLACED BY TODAY'S REVIEWED VENUES.** (C1, 2026-09-24.)
- *
- * The defect, measured in production at 2026-09-24T21:41Z (read-only): Tucson
- * Unified's Reconfiguration page stopped listing its 23 September community
- * engagement session once it was held, so the partition carried the row it
- * last read at 05:55Z. That row stated "Cholla High School South Gym" and had
- * no pin, because no reviewed venue carried those words at 05:55Z. The
- * reviewed venue was promoted at 19:30Z. The 26 September session, still
- * listed, was placed by its own venue on the next read; the carried
- * 23 September row was not. It was the only carried row of 13 with a stated,
- * unplaced place.
- *
- * The rule (`placeCarriedFromReviewedVenue` in scripts/ingest.ts, applied by
- * `reconcileSuccessfulMeetingPartition`): a carried row whose publisher stated
- * its place in words is placed by the reviewed venue those words resolve to
- * today, in the row's own division, through the adapter's own lookup. Nothing
- * else about the carried row changes.
- *
- * No live calls. The sitting is the production row as measured, and the venue
- * is the promoted row's name, address and coordinates.
- */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
@@ -42,14 +20,11 @@ const PARTITION = MEETING_PARTITION_CONTRACTS.find((partition) =>
 )!;
 const PAGE = "https://www.tusd1.org/Reconfiguration";
 
-/** The read that last listed the 23 September session. */
 const LAST_LISTED = "2026-09-24T05:55:08.378Z";
-/** A read after the reviewed venue's promotion (19:30:44Z) that no longer lists it. */
 const NEXT_READ = "2026-09-24T21:14:38.903Z";
 
 const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
 
-/** The promoted reviewed venue for the district's own words. */
 const CHOLLA: VenueEntry = {
   sourceId: "official-page-events",
   bodyOcdId: "ocd-division/country:us/state:az/school_district:tucson_unified_district",
@@ -64,7 +39,6 @@ const CHOLLA: VenueEntry = {
   verifiedAt: "2026-09-24",
 };
 
-/** The 23 September session exactly as its last listing produced it. */
 const SEPT_23: Meeting = {
   id: "official-page-events:tusd1-reconfiguration:2026-09-23T1600:community-engagement-session",
   ocdId: PARTITION.ocdId,
@@ -91,7 +65,6 @@ const SEPT_23: Meeting = {
   },
 };
 
-/** The 26 September session, still listed, as the next read places it. */
 const SEPT_26: Meeting = {
   ...SEPT_23,
   id: "official-page-events:tusd1-reconfiguration:2026-09-26T0900:community-engagement-session",
@@ -113,7 +86,6 @@ delete (SEPT_26 as { venueGap?: unknown }).venueGap;
 
 const venues = (...rows: VenueEntry[]) => () => rows;
 
-/** One authenticated answer from the district's page, with exact-byte evidence. */
 function answered(at: string, rows: number): ChildRunReport {
   const bytes = `official-page-events tusd1-reconfiguration page read at ${at}`;
   return {
@@ -166,7 +138,6 @@ test("CARRIED-PLACE · (a) the measured case: the carried 23 September session i
   assert.equal("venueGap" in row, false);
   assert.deepEqual(row.carried, { source: "official-page-events", lastFreshAt: LAST_LISTED, reason: "UNEXPLAINED_DISAPPEARANCE" });
   assert.deepEqual(reconciled.carriedMeetingIds, [SEPT_23.id]);
-  // The sitting's own facts are the carried ones, untouched.
   const { location: _l, venueGap: _g, carried: _c, ...facts } = SEPT_23;
   const { location: _l2, carried: _c2, ...carriedFacts } = row;
   assert.deepEqual(carriedFacts, facts);
@@ -206,7 +177,7 @@ test("CARRIED-PLACE · (d) the promotion door accepts the placed carried row, an
   const reconciled = reconcile(venues(CHOLLA));
   const accepted = await promoteMeetingPartition(store, PARTITION, partitionSnapshot(NEXT_READ, reconciled.meetings), [], reconciled.removalEvidence);
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
-  const read = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: NEXT_READ });
+  const read = await readMeetingsProjection({ store, bypassCache: true, now: NEXT_READ });
   assert.equal(read.kind, "PROMOTED");
   const served = (read as { value: MeetingsSnapshot }).value.meetings.find(({ id }) => id === SEPT_23.id)!;
   assert.deepEqual(served.location, { name: CHOLLA.name, address: CHOLLA.address, lat: CHOLLA.lat, lng: CHOLLA.lng });

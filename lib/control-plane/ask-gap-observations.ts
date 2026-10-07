@@ -1,55 +1,4 @@
-/**
- * **AN UNANSWERED ASK LEAVES A BODY, A GAP, A DAY AND A COUNT — NOTHING
- * ELSE.** (2026-09-25.)
- *
- * The owner's decision (Sean, 2026-09-25): "Recording the government body
- * behind an unanswered Ask question is approved. Record the body identifier
- * and necessary work metadata so the system can create targeted work to fill
- * the information gap. This does not approve new storage of personal
- * information, raw question histories, or tracking individual readers."
- *
- * ## One observation
- *
- * ```
- *   id      <body id>#<gap code>#<UTC day>                one row per body, gap and day
- *   value   { bodyId, code, recordClass, day, count }     exactly these five keys
- *   table   cp_ask_gap_observations (an aggregate, control-plane schema v13)
- *   updated_at   the day's start, never the instant of an ask
- * ```
- *
- * When Ask tells a reader a coded gap about a body (`lib/ask/gap-codes.ts`),
- * that body's count for that gap and that day goes up by one. A second ask the
- * same day raises the count; it never adds a row, and no row says which ask,
- * when within the day, or by whom.
- *
- * ## What is deliberately not here
- *
- * No question text, no answer text, no IP address, no session, cookie,
- * continuity key or user agent, no reader ZIP or division, no run id, and no
- * time finer than the day. The value's keys are an exact list
- * ({@link ASK_GAP_OBSERVATION_FIELDS}) checked at every write, and a body id
- * must be a canonical registry id (no spaces, no free text), so a question
- * cannot ride in through it.
- *
- * ## Who reads it
- *
- * The standing runner's `ask-gaps` provider folds the last
- * {@link ASK_GAP_OBSERVATION_WINDOW_DAYS} days ({@link foldAskGapObservations})
- * to raise the priority of the gaps readers were told about, and to create the
- * one gap the held reading cannot see on its own (`MEETINGS_NOT_HELD`). Admin's
- * Work page states the same fold in {@link askedWords}.
- *
- * ## The two writers, one contract
- *
- * {@link repositoryAskGapObservationSink} adds through any
- * `AggregateRepository` by read and compare-and-set (memory, file, tests).
- * {@link pgAskGapObservationSink} is what Ask's route uses: ONE atomic upsert
- * per observation against the same aggregate table — revision plus one per
- * accepted write, as the repository contract states — so concurrent asks
- * cannot lose a count to a compare-and-set race, and the reader's route does
- * not carry the whole repository layer. Both refuse a value that is not
- * exactly an observation.
- */
+/** `pgAskGapObservationSink` is one atomic upsert per observation, so concurrent asks cannot lose a count to a compare-and-set race. */
 import { neon } from "@neondatabase/serverless";
 
 import { ASK_GAP_RECORD_CLASS, isAskGapCode, type AskGapCode, type AskGapRecordClass } from "../ask/gap-codes.ts";
@@ -61,28 +10,21 @@ import {
   type ControlPlaneRequestBounds,
 } from "./repository/request-bounds.ts";
 
-/** Every key an observation holds, and the only ones it may hold. */
 export const ASK_GAP_OBSERVATION_FIELDS = ["bodyId", "code", "recordClass", "day", "count"] as const;
 
-/** The aggregate table (`pg-schema.ts` AGGREGATE_KINDS `ask_gap_observations`). */
 export const ASK_GAP_OBSERVATIONS_TABLE = "cp_ask_gap_observations";
 
-/** How far back a reader's ask raises or creates work. */
 export const ASK_GAP_OBSERVATION_WINDOW_DAYS = 30;
 
-/** At most this many (body, gap) pairs are counted from one answer; an area answer names many bodies. */
 export const MAX_ASK_GAP_OBSERVATIONS_PER_ANSWER = 12;
 
-/** The write's own bound, far inside the function's life after the response. */
 export const ASK_GAP_OBSERVATION_WRITE_BOUND_MS = 2_500;
 
 const DAY_MS = 86_400_000;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_BODY_ID_CHARS = 200;
-/** A canonical body id: an OCD division or a curated id, with an optional `#role`. No space, no `@`, nothing a sentence needs. */
 const BODY_ID = /^(?:ocd-division\/|curated:)[A-Za-z0-9_:/.~'-]+(?:#[A-Za-z0-9_.:-]+)?$/;
 
-/** One body, one gap, one UTC day, and how many answers told a reader that gap. */
 export interface AskGapObservation {
   readonly bodyId: string;
   readonly code: AskGapCode;
@@ -96,7 +38,6 @@ export function isCanonicalBodyId(value: unknown): value is string {
   return typeof value === "string" && value.length <= MAX_BODY_ID_CHARS && BODY_ID.test(value);
 }
 
-/** The UTC day of an instant. Throws on a clock that is not an instant. */
 export function observationDay(nowIso: string): string {
   const at = Date.parse(nowIso);
   if (!Number.isFinite(at)) throw new Error(`ASK_GAP_OBSERVATION_CLOCK_INVALID: ${JSON.stringify(nowIso)} is not an instant`);
@@ -123,7 +64,6 @@ export function parseAskGapObservationId(id: string): { readonly bodyId: string;
   return DAY.test(day) && isAskGapCode(code) && isCanonicalBodyId(bodyId) ? { bodyId, code, day } : null;
 }
 
-/** Why a value is not exactly an observation, or null when it is. */
 export function askGapObservationIssue(value: unknown): string | null {
   if (value === null || typeof value !== "object" || Array.isArray(value)) return "an observation is an object";
   const keys = Object.keys(value).sort();
@@ -145,7 +85,6 @@ export function assertAskGapObservation(value: unknown): asserts value is AskGap
   if (issue !== null) throw new Error(`ASK_GAP_OBSERVATION_REFUSED: ${issue}`);
 }
 
-/** One answer's observation of one gap it stated: a count of one, on the day of `nowIso`. */
 export function askGapObservation(stated: { readonly bodyId: string; readonly code: AskGapCode }, nowIso: string): AskGapObservation {
   const value: AskGapObservation = {
     bodyId: stated.bodyId,
@@ -158,9 +97,6 @@ export function askGapObservation(stated: { readonly bodyId: string; readonly co
   return value;
 }
 
-/* ------------------------------------------------------------------ writers --- */
-
-/** Where an answer's observations are added. Resolves with how many were added; rejects when the store refused or did not answer. */
 export interface AskGapObservationSink {
   readonly describe: string;
   record(observations: readonly AskGapObservation[]): Promise<number>;
@@ -168,7 +104,6 @@ export interface AskGapObservationSink {
 
 const CAS_ATTEMPTS = 4;
 
-/** Add one observation's count through an aggregate repository: read, then create or compare-and-set, retried on a lost race. */
 export async function addAskGapObservation(
   repo: Pick<AggregateRepository<AskGapObservation>, "read" | "put" | "compareAndSet">,
   observation: AskGapObservation,
@@ -197,7 +132,6 @@ export async function addAskGapObservation(
   throw new Error(`ASK_GAP_OBSERVATION_CONTENDED: ${id} lost ${CAS_ATTEMPTS} writes in a row (${lost})`);
 }
 
-/** A sink over any aggregate repository. */
 export function repositoryAskGapObservationSink(
   repo: Pick<AggregateRepository<AskGapObservation>, "read" | "put" | "compareAndSet">,
   describe = "the Ask-gap observation repository",
@@ -211,10 +145,6 @@ export function repositoryAskGapObservationSink(
   };
 }
 
-/**
- * The atomic add: create the day's row at revision 1, or add to its count and
- * move its revision by one. `updated_at` is the day's start.
- */
 export const ASK_GAP_OBSERVATION_UPSERT =
   `INSERT INTO ${ASK_GAP_OBSERVATIONS_TABLE} (id, revision, updated_at, value) ` +
   "VALUES ($1, 1, $2::timestamptz, $3::jsonb) " +
@@ -225,7 +155,6 @@ export const ASK_GAP_OBSERVATION_UPSERT =
   `to_jsonb((${ASK_GAP_OBSERVATIONS_TABLE}.value->>'count')::bigint + (EXCLUDED.value->>'count')::bigint)) ` +
   "RETURNING revision";
 
-/** The Postgres control plane's sink: one bounded atomic upsert per observation. */
 export function pgAskGapObservationSink(
   connectionString: string,
   options: { readonly sql?: BoundableSql; readonly boundMs?: number } = {},
@@ -249,16 +178,11 @@ export function pgAskGapObservationSink(
   };
 }
 
-/* ------------------------------------------------------------------ reading --- */
-
-/** What readers were told about one body's gap within the window. */
 export interface AskedGap {
   readonly bodyId: string;
   readonly code: AskGapCode;
   readonly recordClass: AskGapRecordClass;
-  /** Answers that stated it. */
   readonly asks: number;
-  /** Distinct days it was stated on. */
   readonly days: number;
   readonly firstDay: string;
   readonly lastDay: string;
@@ -268,16 +192,11 @@ export function askedGapKey(bodyId: string, code: AskGapCode): string {
   return `${bodyId}#${code}`;
 }
 
-/** The first day inside the window that ends on `nowIso`'s day. */
 export function observationWindowStart(nowIso: string, windowDays = ASK_GAP_OBSERVATION_WINDOW_DAYS): string {
   return new Date(Date.parse(observationDayStart(observationDay(nowIso))) - (windowDays - 1) * DAY_MS).toISOString().slice(0, 10);
 }
 
-/**
- * Every (body, gap) readers were told about in the window ending on `nowIso`'s
- * day, keyed by {@link askedGapKey}. A row that is not exactly an observation
- * is not counted and is named in `refused`, never silently dropped.
- */
+/** A row that is not exactly an observation is not counted and is named in `refused`, never silently dropped. */
 export function foldAskGapObservations(
   rows: readonly unknown[],
   nowIso: string,
@@ -309,19 +228,16 @@ export function foldAskGapObservations(
   return { asked, refused, fromDay, toDay };
 }
 
-/** One sentence the provider's evidence and Admin both state. */
 export function askedWords(asked: Pick<AskedGap, "asks" | "days" | "lastDay">, windowDays = ASK_GAP_OBSERVATION_WINDOW_DAYS): string {
   const times = `${asked.asks.toLocaleString("en-US")} time${asked.asks === 1 ? "" : "s"}`;
   const days = `${asked.days.toLocaleString("en-US")} day${asked.days === 1 ? "" : "s"}`;
   return `Readers were told this ${times} on ${days} in the last ${windowDays} days, most recently ${asked.lastDay}.`;
 }
 
-/** The provider's and the publisher's reading of the table, or why it could not be taken. */
 export type AskGapObservationReading =
   | { readonly rows: readonly AskGapObservation[]; readonly source: string }
   | { readonly unreadable: string };
 
-/** Read every observation through the repository layer. Never throws: a failed read is named. */
 export async function readAskGapObservations(
   repo: Pick<AggregateRepository<AskGapObservation>, "list">,
 ): Promise<AskGapObservationReading> {

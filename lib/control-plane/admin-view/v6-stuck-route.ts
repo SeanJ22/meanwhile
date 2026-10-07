@@ -12,7 +12,6 @@ const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 const MEMO_MS = 60_000;
 let memo: { at: number; population: StuckPopulation } | null = null;
 
-/** One unpack of the published index serves both sections, and the national read, for a minute. */
 export async function population(): Promise<StuckPopulation | null> {
   if (memo && Date.now() - memo.at < MEMO_MS) return memo.population;
   const url = controlPlaneUrlFromEnv();
@@ -22,7 +21,6 @@ export async function population(): Promise<StuckPopulation | null> {
   return read;
 }
 
-/** Read-only. `stuck` lists the most urgent items; `sameCause` counts every stuck row by cause. */
 export async function v6StuckGet(request: NextRequest, which: "stuck" | "sameCause"): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });
@@ -37,7 +35,6 @@ export async function v6StuckGet(request: NextRequest, which: "stuck" | "sameCau
   const now = new Date().toISOString();
   let doorsUnread = false;
   const shut = await (async () => { const url = controlPlaneUrlFromEnv(); try { return url ? shutDoorItems(await readShutDoorRecords(neon(url)), now) : []; } catch { doorsUnread = true; return []; } })();
-  // FE-26: a surface over its speed or dead-link limit sits at the top beside the shut doors.
   const surfaces = await readSurfaceItems(now);
   const views = stuckViews(read.rows, query.scopeKey, now, [...shut, ...surfaces.items]);
   const base = { scope: query.scopeKey, revision: `${which}:${read.publishedAt ?? "unpublished"}:${query.scopeKey}`, asOf: read.publishedAt ?? now };

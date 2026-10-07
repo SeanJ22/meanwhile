@@ -9,15 +9,7 @@ import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-re
 import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 import { isWorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
 
-/**
- * PRDY-3 (2026-09-06): a completed extraction under a meeting-fact contract
- * (LEGISTAR_EVENTS, CIVICCLERK_EVENTS) is projected as FACTS through
- * `projectFactChains`, where every check is measured, when the caller can
- * re-read immutable bytes from the vault. Every other Validator result is
- * offered as the §3 check it ran (docs/rulings.md §3): values on a saved
- * official page from the right place, inside the freshness window. No audit
- * stage is offered for these; §3 does not have one.
- */
+/** A completed extraction under a meeting-fact contract is projected as facts through `projectFactChains` when the caller can re-read the vaulted bytes; every other Validator result is offered as the check it ran. No audit stage is offered. */
 export type FleetPipelineOptions = Pick<FactChainOptions, "readArtifactText" | "now" | "root" | "registryBodyIds" | "wiring" | "freshness">;
 
 /** Offer exact worker outputs through the existing pipeline. */
@@ -43,7 +35,7 @@ export async function projectFleetPipeline(repos: ControlPlaneRepositories, opti
   for (const result of results) {
     if (result.result.role !== "VALIDATOR") continue;
     if (factPath && meetingFactContract(result) !== null) continue;
-    // This class publishes through its typed reader door, which runs §3 itself.
+    // This class publishes through its typed reader door, which runs its own checks.
     if (registryWork.has(result.workItemId)) continue;
     const state = states.find(s => s.byStage.SCOUTED?.artifactIds.some(id => result.inputArtifactIds.includes(id)));
     if (!state) continue;

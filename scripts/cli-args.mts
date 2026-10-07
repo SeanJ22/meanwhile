@@ -1,16 +1,4 @@
-/**
- * Command-line flags, read the same way by every script that needs them.
- * (2026-08-27, the descent-resume session. **RULING 103**.)
- *
- * Two scripts written in the same session grew a byte-identical
- * repeated-flag parser — `args()` in `ladder-monotonicity.mts` and `argAll()`
- * in `walk-government-directory.mts` — and `tests/duplicate-implementations.test.ts`
- * refused the commit, which is what it is for.
- *
- * `repeated` is the one worth having in a shared place: `--url a --url b` is
- * how a walk is pointed at more than one directory, and hand-rolling the loop
- * is how one copy quietly starts skipping the last value.
- */
+/** Command-line flags, read the same way by every script that needs them. */
 
 /** The value after `--name`, or undefined. */
 export function flag(argv: readonly string[], name: string): string | undefined {

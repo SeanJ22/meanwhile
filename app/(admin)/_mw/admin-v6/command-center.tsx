@@ -1,17 +1,7 @@
 "use client";
 // @server-boundary-exempt CommandCenter takes a live Executor object and callbacks; only client entry points (LiveCommandCenter, the dev preview harness) render it, never a Server Component.
 
-/**
- * **MEANWHILE ADMIN COMMAND CENTER (v6).** The seven screens in one shell.
- *
- * This component owns only interface state: which screen, which detail, the
- * picker, the search box, the open action preview, and the receipts of sends
- * made on this page. Data arrives as `AdminV6Data` (live: from LiveSync;
- * development preview: from ./sample/). Outcomes come only from the executor.
- *
- * Scope, filters, open detail and unsent input survive data refreshes because
- * refreshing replaces `data`, never this component's state.
- */
+/** Interface state only; refreshing replaces `data`, never this component's state, so scope, filters and unsent input survive. */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { easternMonth, isPeriod, periodGroups } from "@/lib/control-plane/admin-view/periods.ts";
@@ -56,15 +46,11 @@ export interface CommandCenterProps {
   readonly lastGoodAt: string | null;
   readonly recovered: boolean;
   readonly access: Access;
-  /** Item-state reason (eligibility rule 5), when the data source knows one. */
   readonly itemState?: (kind: ActionKind, target: string) => string | null;
   readonly initialView?: View;
-  /** The console's own controls, in words, for the Ask view to list. Read on the server. */
   readonly chatControls?: readonly string[];
   readonly onViewChange?: (view: View) => void;
-  /** Live paged sections: forward search, filters and cursors to the data source. */
   readonly onQuery?: (section: SectionId, params: Readonly<Record<string, string>>) => void;
-  /** Extra header content for the development preview's review controls. */
   readonly reviewPanel?: ReactNode;
 }
 
@@ -89,14 +75,12 @@ export function CommandCenter(props: CommandCenterProps) {
   const [dialog, setDialog] = useState<{ readonly ref: ActionRef; readonly key: string } | null>(null);
   const [announce, setAnnounce] = useState("");
   const [instructionDrafts, setInstructionDrafts] = useState<InstructionDrafts>({});
-  /** The many-hunts panel: closed (null), or open with the place it was opened from, if any. */
   const [bulk, setBulk] = useState<{ readonly pick: BulkPick | null } | null>(null);
   const sendingKeys = useRef(new Set<string>());
   const pickerInput = useRef<HTMLInputElement>(null);
   const pickerButton = useRef<HTMLButtonElement>(null);
   const mainRef = useRef<HTMLElement>(null);
 
-  /** ZIPs the owner typed into Change place that no hunt or visit had listed: the state comes from the national ZIP index. */
   const [typedZips, setTypedZips] = useState<readonly Place[]>([]);
   const places = useMemo(() => {
     const listed = data.places.data ?? [];
@@ -123,7 +107,6 @@ export function CommandCenter(props: CommandCenterProps) {
 
   const receipts = useMemo(() => {
     const keys = new Set(sent.map((r) => r.key));
-    // History rows carry the place key; the page names it from its own place list.
     return [...sent, ...(data.history.data ?? []).filter((r) => !keys.has(r.key)).map((r) => ({ ...r,
       scopeName: index.get(r.scopeKey)?.name ?? r.scopeName, targetName: index.get(r.target)?.name ?? r.targetName }))];
   }, [sent, data.history.data, index]);

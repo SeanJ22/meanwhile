@@ -1,9 +1,3 @@
-/**
- * The standing runner's connect window (2026-09-22): Node's default 250 ms per
- * address failed ~790 ms connects to Neon from the runner host with
- * `AggregateError: ETIMEDOUT` whenever all three IPv4 handshakes ran long.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 import { execFileSync } from "node:child_process";
@@ -55,12 +49,10 @@ test("a child started with that environment runs with the window before its own 
 });
 
 test("the window fits the measured handshake and stays inside the per-request deadline", () => {
-  // Measured from the runner host: IPv4 connects up to 457 ms; the request deadline is 30 s.
   assert.ok(CONNECT_ATTEMPT_WINDOW_MS >= 1_000);
   assert.ok(CONNECT_ATTEMPT_WINDOW_MS * 3 < 30_000);
 });
 
-/* WIRING TRIPWIRE, deliberately strict: the runner parent installs it before it opens anything. */
 test("pilot-runner installs the connect window before its singleton, handoff or any read", () => {
   const src = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "scripts/pilot-runner.mts"), "utf8");
   const install = src.indexOf("installConnectAttemptWindow();");

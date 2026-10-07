@@ -1,12 +1,3 @@
-/**
- * The unbounded routine observability read (2026-09-23): every candidate
- * version with its full payload, 3.8 GB, after minutes of correlated scans.
- * - The research cycle no longer makes it. It exhausted the cycle's 4 GB heap,
- *   and a failed bounded replacement remains UNAVAILABLE, which
- *   holds fact approval fail-closed.
- * - Admin's request-scoped read is bounded server-side and names the timeout;
- *   it never reports an empty or zero outcome.
- */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";

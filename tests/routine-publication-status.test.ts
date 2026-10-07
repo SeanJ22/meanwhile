@@ -1,5 +1,5 @@
 /**
- * Published versus reader-visible, from narrow evidence (2026-09-23): the
+ * Published versus reader-visible, from narrow evidence: the
  * promotion pointer and the typed Reader readback of exactly that version.
  * No payload is read. Unknown stays unknown: no pointer is NOT_PUBLISHED, and
  * no readback of the current version is PUBLISHED_NOT_READ_BACK.

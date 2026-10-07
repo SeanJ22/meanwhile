@@ -1,18 +1,7 @@
 /**
- * The questionnaire answer page and its store.
- *
- * Two things are guarded here and they are different in kind:
- *
- * 1. **The n-stores rule, asserted BY NAME.** A candidate's answer is published
- *    civic content, not reader data, so it lands in the content store — and the
- *    brief for this work asked for that to be asserted by name in a test rather
- *    than left to be noticed.
- * 2. **RULING 112's verbatim clause, swept BY SHAPE (RULING 110).** A search
- *    that returns nothing must show it looked in the right FORM. A shape is the
- *    pattern the thing takes, not the letters it is spelled with, so this sweeps
- *    for summarising and truncating in the forms they would actually appear in —
- *    and the sweep is shown catching a PLANT, because an instrument that cannot
- *    find the defect it was written for is one reporting green about nothing.
+ * The questionnaire answer page and its store. A candidate's answer is published civic content, so it lands in the
+ * content store, asserted by name. Verbatim display is swept by shape (summarising and truncating in the forms they
+ * would take), and each shape is shown catching a plant.
  */
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
@@ -59,12 +48,7 @@ function stripComments(text: string): string {
 const sources = questionnaireSources();
 
 describe("the questionnaire store touches no sold store — asserted BY NAME", () => {
-  /**
-   * The three stores `CLAUDE.md`'s n-stores rule governs, named individually.
-   *
-   * Named rather than counted, because "no sold store is touched" is unfalsifiable
-   * without the list, and the list is what a later reader checks against.
-   */
+  /** The stores, named individually rather than counted. */
   const SOLD_STORES = ["searchLog", "search_log", "reactions", "intakeLimiter", "intake_limiter"];
 
   it("names none of the sold stores anywhere on the questionnaire path", () => {
@@ -97,7 +81,7 @@ describe("the questionnaire store touches no sold store — asserted BY NAME", (
   });
 
   it("creates no new reader identifier", () => {
-    // RULING 112: no account, no password, no new identifier. Only sha256(token).
+    // No account, no password, no new identifier. Only sha256(token).
     const code = sources.map((s) => stripComments(s.text)).join("\n");
     for (const term of ["reactionKey", "deviceId", "fingerprint", "sessionKey", "subscriberId"]) {
       assert.ok(!new RegExp(`\\b${term}\\b`).test(code), `the questionnaire path mints ${term}`);
@@ -106,27 +90,16 @@ describe("the questionnaire store touches no sold store — asserted BY NAME", (
 });
 
 describe("RULING 112 — verbatim, swept by SHAPE", () => {
-  /**
-   * The shapes a truncation or a summarisation would actually take.
-   *
-   * Not the string "summarize". A shape: *a call that shortens text*, in the
-   * forms it appears in this codebase.
-   */
+  /** The shapes a truncation or a summarisation would take: a call that shortens text. */
   const SHAPES: [string, RegExp][] = [
     /*
-     * A slice to a POSITIVE length. The negative form is excluded deliberately.
-     *
-     * `parts.slice(0, -1)` in `positions-state.ts` drops the last element of a
-     * list of dates so the sentence can read "…, … and …". That is prose
-     * assembly, not truncation, and the first version of this pattern flagged
-     * it — an instrument that flags honest code becomes pressure to delete the
-     * honest code, which is RULING 110's other half and the more dangerous one.
+     * A slice to a positive length. The negative form is prose assembly (dropping the last list element to build
+     * "a, b and c"), not truncation.
      */
     [
       "a slice on answer text to a fixed length",
-      // The second argument must actually START with a digit or an identifier.
-      // A negative lookahead does not work here: `\s*` backtracks to empty, the
-      // lookahead then sees the SPACE before `-1`, and `slice(0, -1)` passes it.
+      // The second argument must start with a digit or an identifier. A negative lookahead does not work: `\s*`
+      // backtracks to empty and the lookahead sees the space before `-1`.
       /\.(slice|substring|substr)\s*\(\s*0\s*,\s*[\d$A-Za-z_]/,
     ],
     ["a maxLength cap on an answer field", /maxLength\s*[=:]/],
@@ -146,8 +119,7 @@ describe("RULING 112 — verbatim, swept by SHAPE", () => {
   });
 
   it("the sweep CATCHES a plant — otherwise it reports green about nothing", () => {
-    // RULING 110's second half, made real: each shape is shown finding an
-    // instance of the thing it was written for.
+    // Each shape is shown finding an instance of what it was written for.
     const plants: [RegExp, string][] = [
       [SHAPES[0][1], "const shown = answer.slice(0, 150);"],
       [SHAPES[1][1], '<textarea maxLength={900} />'],
@@ -162,16 +134,12 @@ describe("RULING 112 — verbatim, swept by SHAPE", () => {
   });
 
   it("does not flag the honest copy the page actually ships", () => {
-    // The half that is easy to get wrong would delete a rule rather than
-    // enforce one: the page SAYS it never shortens anything, and a sweep that
-    // flagged that sentence would become pressure to remove it.
+    // The page says it never shortens anything; that sentence must not be flagged.
     const honest = [
       "Your answers publish exactly as you write them — word for word, with nothing summarised, shortened or edited.",
       "Nothing has been saved and nothing has been cut — please shorten it and send again.",
       "Nothing will be cut for you.",
-      // Real code from `positions-state.ts`: dropping the last element of a
-      // list to build "a, b and c". Pinned here because the first version of
-      // the slice pattern flagged it.
+    // Dropping the last element of a list to build "a, b and c".
       'return `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`;',
     ];
     for (const line of honest) {
@@ -184,9 +152,7 @@ describe("RULING 112 — verbatim, swept by SHAPE", () => {
 
 describe("the answer page speaks plain language", () => {
   it("renders no candidacy id or contest id at a reader", () => {
-    // CLAUDE.md: identifiers and internal keys never render outside a
-    // technical-details disclosure. The first version of the page printed a
-    // candidacy slug at the candidate as their own name.
+    // Identifiers and internal keys never render outside a technical-details disclosure.
     const page = readFileSync(join(ROOT, "app", "questionnaire", "[token]", "page.tsx"), "utf8");
     const code = stripComments(page);
     assert.ok(
@@ -207,10 +173,7 @@ describe("the answer page speaks plain language", () => {
   });
 
   it("carries the verbatim promise on the page a candidate actually reads", () => {
-    // Whitespace-normalised before matching: JSX wraps prose across lines at
-    // whatever column the formatter chose, so a raw regex over the file tests
-    // the formatter rather than the copy — and would fail the moment somebody
-    // reflowed a paragraph that still said exactly the right thing.
+    // Whitespace-normalised: JSX wraps prose at the formatter's column.
     const form = readFileSync(
       join(ROOT, "components", "questionnaire", "answer-form.tsx"),
       "utf8",

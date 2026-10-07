@@ -1,11 +1,6 @@
 import { createServer, type Server } from "node:net";
 
-/**
- * Fixed loopback leases for the one standing host. A listening socket is an
- * operating-system-held mutex: it is acquired atomically and the kernel
- * releases it if the process crashes, so there is no stale pid file for the
- * owner to repair. These ports carry no network protocol and accept no data.
- */
+/** A listening loopback socket is an OS-held mutex: the kernel releases it if the process crashes. */
 export const PILOT_RUNNER_SINGLETON_PORT = 49_371;
 export const ROUTINE_DATA_RUNNER_SINGLETON_PORT = 49_372;
 
@@ -28,10 +23,7 @@ export interface ProcessSingletonLease {
   readonly release: () => Promise<void>;
 }
 
-/**
- * Acquire one process-lifetime execution door on this host. `port = 0` exists
- * only for deterministic tests; production callers use their fixed port.
- */
+/** `port = 0` is for tests only. */
 export async function acquireProcessSingleton(
   name: string,
   port: number,
@@ -57,8 +49,7 @@ export async function acquireProcessSingleton(
     server.listen({ host: "127.0.0.1", port, exclusive: true });
   });
 
-  // The runner's own timers/work keep it alive. This socket exists only to
-  // exclude a second writer and must never keep an otherwise finished process.
+    // The socket only excludes a second writer; it must never keep a finished process alive.
   server.unref();
   const address = server.address();
   if (address === null || typeof address === "string") {

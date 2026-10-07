@@ -1,4 +1,4 @@
-/** DP-18: the Scoreboard's audit row reads the week's live audits from the log: a real N, the share still accurate, the facts fixed or pulled, and "—" when nothing was judged. */
+/** The Scoreboard's audit row reads the week's live audits from the log: a real N, the share still accurate, the facts fixed or pulled, and "—" when nothing was judged. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

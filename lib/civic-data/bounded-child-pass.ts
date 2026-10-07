@@ -13,18 +13,9 @@ export const ROUTINE_CHILD_MAX_BUFFER_BYTES = 16 * 1024 * 1024;
  * still isolating independent source/body acquisitions in parallel.
  */
 export const ROUTINE_CHILD_CONCURRENCY = 4;
-/**
- * **TWO READS OF ONE HOST IN ONE PASS ARE AT LEAST A MINUTE APART (C6, 2026-09-25).**
- * A meeting lane may take two reads a pass. They never run together, and the
- * second starts no sooner than this after the first ends, so a host's own
- * Crawl-delay holds between them: the largest any meeting host publishes is 60
- * s (morriscountynj.iqm2.com; also www.kearsarge.org and www.newbury.nh.gov 10
- * s, www.mhrd.org 5 s, read 2026-09-25).
- */
+/** Two reads in one failure domain start at least a minute apart, so a host's published Crawl-delay holds. */
 export const ROUTINE_SAME_DOMAIN_CHILD_GAP_MS = 60_000;
-/** Clock reads, durable receipt readback, and the supervisor digest share this bounded allowance. */
 export const ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS = 10 * 60_000;
-/** Process shutdown and timer jitter beyond the explicit coordination allowance. */
 export const ROUTINE_RUNNER_OUTER_GRACE_MS = 60_000;
 
 export interface RoutineRunnerOuterBounds {
@@ -49,7 +40,6 @@ export type BoundedChildTermination =
 
 export interface BoundedChildCommand {
   readonly id: string;
-  /** Associate the live child tree with its already-acquired host memory slot. */
   readonly onStarted?: (pid: number) => void;
   /**
    * Commands in one upstream/provider failure domain never run concurrently.
@@ -58,11 +48,8 @@ export interface BoundedChildCommand {
   readonly failureDomain?: string;
   readonly executable: string;
   readonly args: readonly string[];
-  /** Narrow per-command authority/environment; never leak one sibling's envelope to another. */
   readonly env?: NodeJS.ProcessEnv;
-  /** Optional command-specific maximum interval without new facts. */
   readonly timeoutMs?: number;
-  /** Optional command-specific output ceiling. */
   readonly maxBufferBytes?: number;
 }
 
@@ -74,7 +61,6 @@ export interface BoundedChildResult {
   readonly stderr: string;
   readonly termination: BoundedChildTermination;
   readonly errorMessage: string | null;
-  /** A settlement/classification callback failure, contained to this child. */
   readonly settlementErrorMessage?: string | null;
 }
 
@@ -86,11 +72,8 @@ export interface BoundedChildPassOptions {
   readonly timeoutMs?: number;
   readonly maxBufferBytes?: number;
   readonly concurrency?: number;
-  /** Run once when the command wins a worker slot, before source access begins. */
   readonly onStarting?: (command: BoundedChildCommand, index: number) => Promise<void> | void;
-  /** Classify/persist a result as soon as its worker settles. */
   readonly onSettled?: (result: BoundedChildResult, index: number) => Promise<void> | void;
-  /** Drop stdout/stderr after onSettled so a large portfolio cannot accumulate it. */
   readonly discardOutputAfterSettlement?: boolean;
 }
 
@@ -117,7 +100,6 @@ function runOneBoundedChild(
       clearTimeout(idle);
       if (timeout > 0) idle = setTimeout(() => {
         paused = true;
-        // Stop this no-progress pass cooperatively; retained work remains due.
         child.kill("SIGTERM");
       }, timeout);
     };
@@ -164,7 +146,6 @@ function runOneBoundedChild(
       const complete = lines.split(/\r?\n/);
       lines = complete.pop() ?? "";
       for (const line of complete) {
-        /* Vital signs: a child's hour totals reach the runner through this process's own output (transfer-by-caller.ts). */
         if (line.startsWith(VITAL_SIGNS_LINE_PREFIX)) { process.stdout.write(`${line}\n`); continue; }
         if (!line.startsWith("RCD_PROGRESS=")) continue;
         try {
@@ -173,18 +154,13 @@ function runOneBoundedChild(
             Number.isSafeInteger(progress.records) && progress.records > 0 && !observed.has(progress.key)) {
             observed.add(progress.key); renew();
           }
-        } catch { /* Ordinary output never renews the progress clock. */ }
+        } catch {}
       }
     });
     renew();
   });
 }
 
-/**
- * Drain the complete due set through a fixed-size pool. Results retain registry
- * order, and every queued sibling is eventually launched even when an earlier
- * child times out, exceeds its output limit, or throws in the launcher.
- */
 export async function runBoundedChildPass(
   commands: readonly BoundedChildCommand[],
   options: BoundedChildPassOptions,
@@ -268,7 +244,6 @@ export async function runBoundedChildPass(
       activeRuns.set(index, activeRun);
     }
 
-    // A command held only by its domain's gap wakes the dispatcher when the gap ends.
     const gated = waiting().map((index) => domainFreeAt.get(failureDomains[index]!) ?? 0).filter((at) => at > Date.now());
     if (activeRuns.size === 0 && gated.length === 0) {
       throw new Error("BOUNDED_CHILD_DISPATCH_DEADLOCK");
@@ -346,7 +321,6 @@ function nonNegativeSafeInteger(value: number, code: string): void {
   if (!Number.isSafeInteger(value) || value < 0) throw new Error(`${code}:${value}`);
 }
 
-/** Exact worst-case sum of every killable/cancellable phase plus local margin. */
 export function routineRunnerBoundedWorkMs(
   commandCount: number,
   largestFailureDomainSize: number = commandCount === 0 ? 0 : 1,
@@ -381,7 +355,6 @@ export function routineRunnerBoundedWorkMs(
   ) throw new Error("ROUTINE_RUNNER_OUTER_BOUND_ZERO");
 
   const settlementMs = bounds.settlementRequestsPerCommand * bounds.neonRequestDeadlineMs;
-  // A domain's commands run one after another with a gap between them (C6).
   const acquisitionMs = routineChildPassWorstCaseMs(
     commandCount,
     ROUTINE_CHILD_TIMEOUT_MS + settlementMs,

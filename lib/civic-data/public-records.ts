@@ -17,7 +17,6 @@ export async function readPublicRecords(ocdId: string, options: PromotedCivicDat
   return read;
 }
 
-/** Stable by the source's kind words; retries and different places add it once. */
 export async function recordNewPublicKinds(repos: Pick<ControlPlaneRepositories, "adminConfig" | "fieldManual">, records: readonly PublicRecord[], now: string) {
   const manual = await readFieldManual(repos, { role: "SHARED", recordClass: "PUBLIC_RECORD" });
   if (manual.error) throw new Error(manual.error);

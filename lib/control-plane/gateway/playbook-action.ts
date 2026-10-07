@@ -1,4 +1,3 @@
-/** DB-44. River/admin connects this definition to the existing gateway registry. */
 import { isEditablePlaybookRole, updateRolePlaybook, type EditablePlaybookRole } from "../playbook-edit.ts";
 import type { RegisteredAction } from "./registry.ts";
 

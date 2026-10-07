@@ -14,11 +14,11 @@ import {
 } from "../lib/registry/server.ts";
 import type { Division } from "../lib/registry/types.ts";
 import type { OfficialStateVoteScope } from "../lib/state-rollcalls/authority.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 const NOW = "2026-09-09T12:00:00.000Z";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
 
 function metadata(
   scope: OfficialStateVoteScope,

@@ -1,12 +1,5 @@
 "use client";
 
-/**
- * **ONE READING A VIEW FETCHES FOR ITSELF.** Changes, Reports and the
- * Reader-demand panel read through their own guarded route rather than through
- * the live sections, so each loads when its view opens and re-reads on its own
- * slow clock. A failed read keeps the last good one on screen and says so; it
- * never turns into an empty list.
- */
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type Reading<T> =

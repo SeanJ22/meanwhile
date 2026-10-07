@@ -1,17 +1,15 @@
 /**
- * **A BODY'S AGENDAS, RESULTS AND MINUTES FROM ITS DESTINY AGENDA PUBLISHER LIST.** (2026-09-25.)
- *
- * Destiny Agenda (`public.destinyhosted.com/agenda_publish.cfm?id=<tenant>&mt=<type>`) is where some cities post
- * every agenda, result and minutes set. Chandler, AZ is one (tenant 24263, City Council type `CC`): the city's
- * own pages date and time the Council's sittings, and every agenda link on them leads here. The list is one
- * month per page (`&get_month=M&get_year=YYYY`); each row is one sitting, with
+ * A body's agendas, results and minutes from its Destiny Agenda publisher list
+ * (`public.destinyhosted.com/agenda_publish.cfm?id=<tenant>&mt=<type>`). The
+ * list is one month per page (`&get_month=M&get_year=YYYY`); each row is one
+ * sitting, with
  *
  * - the agenda link, whose text is the sitting's date as printed ("September 17, 2026") and whose title
  *   attribute names the meeting and repeats the date ("View Agenda for City Council Regular Meeting
  *   (09/17/2026)");
  * - the meeting's name ("City Council Regular Meeting");
  * - the minutes cell, whose link text is what the city calls the document ("Results", "Minutes");
- * - other links ("Video", on the city's Swagit archive).
+ * - other links ("Video").
  *
  * A month with nothing posted says so in the page's own words ("No agendas or minutes were found for the
  * meeting type 'City Council' in October 2026."): that is a read list with no row, and it is the only way
@@ -20,10 +18,6 @@
  *
  * This module never creates a sitting: the Destiny list states no time and no place. Rows join to sittings the
  * body's own schedule already dated, on the date and the meeting's name (`joinDestinyRows`).
- *
- * History: robots.txt on public.destinyhosted.com reads `User-agent: * Disallow: /` on one line, and the host
- * was never requested until the owner's 2026-09-25 decision that robots.txt no longer blocks reading public
- * pages. Measured that day: plain HTTP 200 from IIS to the project's own identified client, no challenge.
  */
 
 import { decodeEntities } from "../http.ts";
@@ -74,16 +68,14 @@ export function destinyMonthUrl(listUrl: string, year: number, month: number): s
 }
 
 /**
- * How far ahead a month's list is worth reading. Destiny lists a sitting only once its agenda is posted, and
- * Chandler posts about a week ahead (Arizona's open meeting law asks 24 hours), so the next month is read once
- * the window reaches toward it and later months, which cannot hold a posted agenda yet, are not asked for.
+ * How far ahead a month's list is worth reading. Destiny lists a sitting only once its agenda is posted, about
+ * a week ahead, so later months cannot hold a posted agenda yet and are not asked for.
  */
 export const DESTINY_AHEAD_DAYS = 35;
 
 /**
- * Every calendar month from `fromMs`'s to `toMs`'s (UTC), in order, once each. From the concluded lookback's
- * start to DESTINY_AHEAD_DAYS ahead that is five month pages a read (measured live 2026-09-25: June to October,
- * 22-31 KB each), so a concluded sitting keeps its results and minutes.
+ * Every calendar month from `fromMs`'s to `toMs`'s (UTC), in order, once each, so a concluded sitting keeps
+ * its results and minutes.
  */
 export function destinyMonthsBetween(fromMs: number, toMs: number): { year: number; month: number }[] {
   const out: { year: number; month: number }[] = [];

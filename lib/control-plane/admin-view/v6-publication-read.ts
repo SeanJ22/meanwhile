@@ -1,15 +1,7 @@
 import type { ContractPublication, PublicationStatusView, PublicationVerdict } from "../../civic-data/publication-status.ts";
 
-/**
- * **admin-v6/publication@1 — PUBLISHED VERSUS READER-VISIBLE, PER ROUTINE CONTRACT.**
- *
- * The narrow publication read (`readRoutinePublicationStatus`): each registered routine contract's promotion pointer,
- * and whether the typed Reader read back exactly that version. It trusts the pointer and the readback event as
- * recorded and re-verifies no payload. This is the publication status the retired Sources page showed, now beside
- * source reliability on Workers. A read that fails is an unread section, never zero counts.
- */
+/** Trusts the pointer and readback event as recorded and re-verifies no payload. A failed read is an unread section, never zero counts. */
 export const ADMIN_V6_PUBLICATION_CONTRACT = "admin-v6/publication@1" as const;
-/** The contracts a reader cannot see are listed in full up to this many; the counts above them always cover every contract. */
 export const PUBLICATION_EXCEPTION_LIMIT = 40;
 
 export const PUBLICATION_VERDICT_WORDS: Readonly<Record<PublicationVerdict, string>> = {
@@ -27,7 +19,6 @@ export interface AdminV6Publication {
   readonly total: number;
   readonly counts: readonly { readonly verdict: PublicationVerdict; readonly words: string; readonly count: number }[];
   readonly latestAttemptFailing: number;
-  /** Contracts a reader cannot see yet, most recently promoted first; `hidden` counts any beyond the limit. */
   readonly notVisible: readonly PublicationRow[];
   readonly notVisibleHidden: number;
 }

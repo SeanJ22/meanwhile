@@ -1,7 +1,7 @@
 /**
- * BR-01: every order keeps its row after a reload. A hunt, a ceiling change and a send-agents order sent through
+ * Every order keeps its row after a reload. A hunt, a ceiling change and a send-agents order sent through
  * the real gateway are listed by a fresh history read, with their current state, at the country and at their own place.
- * BR-08 returned hook: the gateway takes a whole-state mission through the same scope validation as every other kind.
+ * The gateway takes a whole-state mission through the same scope validation as every other kind.
  */
 import assert from "node:assert/strict";
 import test from "node:test";

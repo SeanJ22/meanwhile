@@ -1,32 +1,17 @@
 import { mayUseTestFixture } from "../civic-data/fixture-policy.ts";
 
 /**
- * The everyday-topics contact map (session brief 3, wall clock 2026-08-14):
- * the pothole standard. For each everyday topic × zip, the office that
- * actually owns the fix, with a REAL contact — phone, email, or request
- * URL — and the page that proves it. Where the true answer is a service
- * line rather than a person (Tucson's street-maintenance line), the
- * service line IS the answer: never route to a person who doesn't own the
- * topic.
+ * The everyday-topics contact map: for each everyday topic × ZIP, the office that actually owns the
+ * fix, with a real contact (phone, email or request URL) and the page that proves it. Where the true
+ * answer is a service line, the service line is the answer; never a person who doesn't own the topic.
  *
- * Curated and cited, never inferred. Every cell of the topics × zips grid
- * is accounted for: a row here, or a recorded miss in EVERYDAY_MISSES with
- * its reason — tests assert the accounting is complete (no cell silently
- * empty). The A07 rule carries through: a topic with no contact in a zip
- * renders the route's general steps and the honest gap, never a guessed
- * number.
+ * Curated and cited, never inferred. Every cell of the topics × ZIPs grid is a row here or a recorded
+ * miss in EVERYDAY_MISSES; tests assert the accounting is complete.
  *
- * Verification states, honest about the hunt (the standing rule: a URL
- * cited must have been fetched and verified):
- *  - "PAGE_FETCHED": the contact was read off the source page this
- *    session — by a plain client, or in a real browser where the host
- *    walls plain clients (tucsonaz.gov, newbury.nh.gov — rungs in
- *    docs/source-ladder.md).
- *  - "PENDING_BROWSER": the number comes from the official page via
- *    search snippets or a secondary source and has NOT yet been read off
- *    the page itself. A pending row must be verified or removed to a
- *    miss before ship — never shipped on faith. (No row ships in this
- *    state as of 2026-08-14; the state exists for future hunts.)
+ * Verification states:
+ *  - "PAGE_FETCHED": the contact was read off the source page itself.
+ *  - "PENDING_BROWSER": the contact comes from a snippet or secondary source and has not been read off
+ *    the page. A pending row must be verified or moved to a miss before it ships.
  */
 
 export type EverydayVerification = "PAGE_FETCHED" | "PENDING_BROWSER";
@@ -128,17 +113,13 @@ export const EVERYDAY_TOPIC_IDS = [
 export const EVERYDAY_ZIPS = ["85701", "85641", "07866", "03255"] as const;
 
 export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
-  // ── 85701 — City of Tucson ────────────────────────────────────────────
   {
     topicId: "roads-local",
     zips: ["85701"],
     body: "City of Tucson — Street Maintenance (Transportation & Mobility)",
     service:
       "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
-    // The city's own page, read in a real browser 2026-08-14: the current
-    // published channel is Tucson 311 (call 3-1-1, the app, or the web
-    // portal). The old direct TDOT line still circulates in 2015-era news
-    // stories; the city's page today says 311, so 311 is the answer.
+    // The city's own page names 311 as the current published channel.
     phone: "311",
     email: null,
     requestUrl: "https://www.tucsonaz.gov/Residents/311-Service-Request-Portal",
@@ -224,7 +205,6 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     note: null,
   },
 
-  // ── Pima County (serves 85701 and 85641) ──────────────────────────────
   {
     topicId: "animals",
     zips: ["85701", "85641"],
@@ -254,7 +234,6 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     note: null,
   },
 
-  // ── 85641 — unincorporated Pima County ────────────────────────────────
   {
     topicId: "roads-local",
     zips: ["85641"],
@@ -312,13 +291,8 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     note: "Zoning and building-code complaints: 520-724-9970.",
   },
 
-  // ── 07866 — TWO municipalities share this zip ─────────────────────────
-  // The borough-vs-township trap, honored rather than fallen into: zip
-  // 07866 covers both the Borough of Rockaway AND Rockaway Township (the
-  // municipality the registry's rosters and meeting wiring cover). They
-  // are different governments with different service lines. Both render,
-  // each named plainly — the reader knows which town they live in; a
-  // zip-keyed map cannot, and must not guess.
+  // Two municipalities share this ZIP, each with its own service lines. Both render, each named plainly;
+  // a ZIP-keyed map must not guess which one the reader lives in.
   {
     topicId: "roads-local",
     zips: ["07866"],
@@ -404,7 +378,6 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     note: "After 4:30 PM and weekends: Rockaway Township Police, 973-625-4000.",
   },
 
-  // ── 07866 — Borough of Rockaway ───────────────────────────────────────
   {
     topicId: "roads-local",
     zips: ["07866"],
@@ -533,7 +506,6 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     note: "Assessment questions: the Tax Assessor, 973-627-2000 ext 222. Rockaway Township addresses: the municipal complex routes tax questions, 973-627-7200.",
   },
 
-  // ── 03255 — Town of Newbury, NH ───────────────────────────────────────
   {
     topicId: "roads-local",
     zips: ["03255"],
@@ -717,9 +689,8 @@ function everydayContactOwedRecordId(topicId: string, zip: string): string {
 }
 
 /**
- * Convert the tracked adoption evidence into the exact first import package.
- * Production never reads these arrays directly: it reads this shape only
- * after the package has passed source receipts and canonical promotion.
+ * Convert the tracked adoption evidence into the exact first import package. Production reads this
+ * shape only after the package has passed source receipts and canonical promotion.
  */
 export function buildEverydayRoutingProjection(
   contacts: readonly EverydayContact[] = EVERYDAY_CONTACTS,

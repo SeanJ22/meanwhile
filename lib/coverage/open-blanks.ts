@@ -2,14 +2,9 @@ import { squadOf } from "./checklist-map.ts";
 import type { PlaceOwedItem } from "./place-owed.ts";
 
 /**
- * **THE MISSION MAP'S OPEN BLANKS.** The rows of a place that apply, are due, are
- * not satisfied and are not already being worked, grouped by squad and then by
- * subject. This is what the coach hands to the squads and what the national job
- * reads to skip families with nothing open. A blank whose applicability or due
- * date is unresolved stays open: it is never dropped for being unclear. It only
- * reads the owed list; it creates no work and never gates publishing.
- *
- * PURE.
+ * A place's open blanks (apply, due, unsatisfied, not being worked), grouped by
+ * squad then subject. A blank with unresolved applicability or due date stays
+ * open. Reads the owed list only; creates no work and never gates publishing. Pure.
  */
 export interface OpenBlanks {
   /** Every open blank, in the owed list's order. */

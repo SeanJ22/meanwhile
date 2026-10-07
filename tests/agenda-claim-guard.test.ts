@@ -1,20 +1,7 @@
 /**
- * **NO SURFACE MAY SAY A CLERK DID NOT POST, FROM OUR OWN EMPTY RECORD.**
- * (Session B resume, W2 — SWEEP-01, 2026-08-31.)
- *
- * `tests/agenda-sentence.test.ts` pins the DECIDER. This pins the SURFACES:
- * that no component renders a publication claim of its own, and that the two
- * that used to both go through one function.
- *
- * A guard over the source rather than over a rendered page, deliberately. The
- * claim is class-wide — *no surface, ever* — and a DOM walk samples whichever
- * surfaces it managed to open. This reads every component and cannot be
- * satisfied by a surface the walk did not reach.
- *
- * **Comments and test literals are stripped before matching**, because this
- * repository has been bitten by the opposite: a sweep that greps raw text
- * flags the doc block explaining the line you just deleted, and the fix
- * becomes deleting the explanation.
+ * No surface may say a clerk did not post, from our own empty record. `tests/agenda-sentence.test.ts`
+ * pins the decider; this sweeps every reader-facing component source so that none renders a
+ * publication claim of its own. Comments and test literals are stripped before matching.
  */
 
 import assert from "node:assert/strict";
@@ -37,14 +24,7 @@ function sourceFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-/**
- * Source with comments and string-literal prose removed.
- *
- * Block comments, line comments, and JSX text are handled; what survives is
- * close enough to "code and the strings it renders" for this question. It is
- * deliberately crude in the SAFE direction — over-stripping risks a false pass
- * on one file, and the decider's own tests cover the behaviour itself.
- */
+/** Source with block comments, line comments and JSX text removed. */
 function withoutComments(source: string): string {
   return source.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/^\s*\/\/.*$/gm, " ");
 }
@@ -92,10 +72,7 @@ test("SWEEP-01: no reader surface asserts a publication state of its own", () =>
     }
   }
 
-  /*
-   * A floor on the guard itself. A sweep whose roots stopped resolving finds
-   * nothing, and "0 offenders" is exactly what that looks like.
-   */
+  // A sweep whose roots stopped resolving would find nothing.
   assert.ok(
     scanned >= 50,
     `the sweep read only ${scanned} component file(s) — it did not reach the tree, and a guard ` +
@@ -111,11 +88,7 @@ test("SWEEP-01: no reader surface asserts a publication state of its own", () =>
 });
 
 test("SWEEP-01: both agenda surfaces go through the ONE decider", () => {
-  /*
-   * The defect was two components independently deciding what a null agenda
-   * link meant. Fixing the sentence in both without routing them through one
-   * function would leave the next author free to reintroduce the divergence.
-   */
+  // Both components route a null agenda link through the one decider.
   for (const rel of [
     "components/ui/meeting-row.tsx",
     "components/map/popup/agenda-section.tsx",

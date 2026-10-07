@@ -1,71 +1,23 @@
 /**
- * **THE FEEDBACK INBOX — what a reader wrote, and what you did about it.**
- * (ADM-C13, from the 9.6.26 owner feedback. §5.3 is the law it obeys.)
+ * The feedback inbox: what a reader wrote, and what the owner did about it.
  *
- * Until now the only way to read reader feedback was `pnpm feedback:read` on a
- * laptop. That script's own header argues why feedback was a CLI and not a
- * page: the reply address must be resolved against the delivery store, and a
- * page that resolved it would have put an address on a rendered surface. That
- * argument is still correct, and this module does not overturn it — it
- * satisfies it by never asking for the address at all.
+ * A feedback row's contact reference is never joined to any reader behaviour.
+ * It is kept unavailable rather than guarded: the query selects
+ * `(contact_ref IS NOT NULL)` as a boolean, the delivery store is never opened,
+ * only one table is read, {@link assertInboxRowIsSafe} refuses a row carrying a
+ * contact field under any spelling, and owner decisions are keyed by the
+ * message's own row id.
  *
- * ## The one privacy rule, and how it is kept mechanically
+ * Production and staging are separate stores, each opened read-only.
+ * {@link openFeedbackStore} refuses before any query: a staging handle resolving
+ * to the live endpoint, one whose isolation cannot be established, one whose
+ * role can write; an absent handle is a named gap, never an empty inbox.
  *
- * §5.3: a feedback row may carry a random contact reference for follow-up, and
- * that reference is **never joined to search behaviour, Ask activity, reaction
- * history, ZIP usage or any reader interaction trail.**
+ * The table has no status or notes column: NEW is the absence of a decision,
+ * HELD_BACK is the quarantine column, and the owner's statuses live in the
+ * append-only decision log.
  *
- * The strongest way to keep a rule is to make the value unavailable. So:
- *
- * - the query below selects `(contact_ref IS NOT NULL)`, a BOOLEAN computed in
- *   the database. The handle itself never crosses the wire, never reaches this
- *   process, never reaches a React tree and never reaches a log line. There is
- *   no code path that could leak it because there is no variable holding it;
- * - the delivery store is never opened here — no second query, no join, no
- *   import;
- * - no other collection store is read here at all. This module opens exactly
- *   one table, and {@link assertInboxRowIsSafe} refuses a projected row that
- *   carries a contact field name under any spelling;
- * - what the owner records about a message goes to the CONTROL PLANE, keyed by
- *   the message's own row id — never by the contact reference, and carrying
- *   none of the reader's words.
- *
- * ## Two environments, two connections, and no bridge between them
- *
- * The staging review surface (the origin `STAGING_RENDER_ORIGIN` names) runs this same
- * application against the Neon **staging** branch, so a reviewer who uses the
- * ordinary feedback panel there is already writing an ordinary feedback row —
- * through the existing route, the existing scrub, the existing store. Nothing
- * new has to be invented to CAPTURE staging feedback; the only thing missing
- * is a way for the Admin to READ that store.
- *
- * That gap is deliberately not closed by pointing staging at the production
- * database. A staging deploy writing production rows is the bypass §"no direct
- * staging → production DB bypass" forbids, and it would also destroy the one
- * fact that makes staging feedback useful — which build it was about. So the
- * environments stay separate stores, the Admin holds a **read-only** handle to
- * each, and a row's source environment is a property of the store it was read
- * from rather than a column somebody could get wrong.
- *
- * {@link openFeedbackStore} enforces that in four refusals, every one of them
- * before a query runs: a staging handle that resolves to the live endpoint is
- * refused as the bypass it would be; one whose isolation cannot be established
- * at all is refused too, because null is not false; one whose role can write is
- * refused because reading is all this ever needs; and an absent handle is
- * reported as a named gap, never as an empty inbox.
- *
- * ## What the store can and cannot say
- *
- * The `feedback` table has a message, a surface, a time, a run class, a
- * quarantine reason and a minted handle. It has **no status column and no
- * notes column**, and this module does not pretend otherwise: NEW is the
- * absence of a decision, HELD_BACK is the quarantine column, and the four
- * owner statuses are the owner's own decisions, recorded durably in the
- * append-only decision log the console already writes to. Nothing here invents
- * a state the data cannot support.
- *
- * Server-side only for the two `open*` functions; everything else is pure and
- * is unit-tested directly.
+ * The two `open*` functions are server-side; everything else is pure.
  */
 
 import { neon } from "@neondatabase/serverless";
@@ -91,22 +43,9 @@ export const FEEDBACK_ENVIRONMENTS = ["PRODUCTION", "STAGING"] as const;
 export type FeedbackEnvironment = (typeof FEEDBACK_ENVIRONMENTS)[number];
 
 /**
- * The variables that name each store.
- *
- * These names live in code and in the release notes. They are NEVER rendered:
- * the console tells the owner *what is not connected*, in words, and a variable
- * name on a browser page is a fact about configuration that the browser has no
- * business holding.
- *
- * **The staging name is not a new one.** `WTP_STAGING_DATABASE_URL_READONLY` is
- * already this repository's read-only handle to the staging application
- * database — `scripts/staging-observer.mts` names it, and
- * `scripts/staging-isolation-gate.mts` defaults to it. Minting a second
- * variable for the same connection would be RULING 103 in a configuration file:
- * two names for one credential, free to be provisioned separately and to
- * disagree about which database staging is. This reads the one that exists,
- * which is also the one the observer proves is not production before it is
- * used. It is not provisioned today; that fact is the owner gate, not a bug.
+ * The variables that name each store. Never rendered. The staging one is the
+ * existing read-only handle to the staging application database; it is not
+ * provisioned today.
  */
 export const PRODUCTION_FEEDBACK_URL_VAR = "DATABASE_URL";
 export const STAGING_STORE_URL_VAR = "WTP_STAGING_DATABASE_URL_READONLY";
@@ -137,29 +76,15 @@ export const ENVIRONMENT_WORDS: Readonly<
 /** How many messages the page lists. The census counts the whole table. */
 export const FEEDBACK_INBOX_LIMIT = 200;
 
-/**
- * The list query.
- *
- * `(contact_ref IS NOT NULL)` is the load-bearing line: the presence of a reply
- * handle is a fact the owner needs (someone asked to hear back), the handle
- * itself is a fact he does not, and computing the boolean in the database means
- * the value never leaves it. The delivery store is not named here and is not
- * opened anywhere in this module.
- */
+/** The list query. `(contact_ref IS NOT NULL)` is computed in the database so the handle never leaves it. */
 export const FEEDBACK_INBOX_SQL =
   "SELECT id, received_at, message, surface, run_class, run_id, suspect_reason, " +
   "(contact_ref IS NOT NULL) AS reply_requested " +
   "FROM feedback ORDER BY received_at DESC LIMIT $1";
 
 /**
- * The census over the WHOLE table, so the list's denominator is the store and
- * not the page size.
- *
- * Every run class is counted separately and `total` is counted independently,
- * so the four buckets can be reconciled against it rather than assumed to sum.
- * `run_class` has no CHECK constraint — the four values are a TypeScript union
- * — so a class that appears later shows up as a shortfall rather than being
- * silently folded into one of the four.
+ * The census over the whole table. Every run class and `total` are counted
+ * independently, so an unknown run class shows up as a shortfall.
  */
 export const FEEDBACK_CENSUS_SQL =
   "SELECT " +
@@ -208,14 +133,7 @@ export const EMPTY_CENSUS: FeedbackRunCensus = {
   total: 0,
 };
 
-/**
- * Field names a projected row may never carry.
- *
- * `assertAggregateOnly` already refuses `address` and `email` on control-plane
- * records; these four are the spellings specific to THIS store, and the check
- * is a flat key scan because the row is flat. A row shape that grew a nested
- * object would be a different row shape and would need a different argument.
- */
+/** Field names a projected row may never carry: this store's contact spellings, checked by a flat key scan. */
 export const CONTACT_FIELDS_REFUSED: readonly string[] = [
   "contactRef",
   "contact_ref",
@@ -243,12 +161,7 @@ function textOf(value: unknown): string {
 }
 
 /**
- * One database row as an inbox row, or null when it cannot be read.
- *
- * Null rather than a throw: one malformed row must not blank a page, and null
- * is counted and stated rather than dropped silently — `unreadable` travels on
- * the reading and is rendered.
- */
+/** One database row as an inbox row, or null (counted as `unreadable`) when it cannot be read. */
 export function projectFeedbackRow(
   raw: Record<string, unknown>,
   environment: FeedbackEnvironment,
@@ -310,13 +223,7 @@ function censusFrom(raw: Record<string, unknown> | undefined): FeedbackRunCensus
   };
 }
 
-/**
- * The denominator sentence any rendered feedback figure carries.
- *
- * The four run classes are reconciled against the independently counted total
- * rather than assumed to sum to it, and a shortfall is stated as a shortfall.
- * A census that quietly does not reconcile is worse than no census.
- */
+/** The denominator sentence any rendered feedback figure carries; run classes are reconciled against the total. */
 export function feedbackDenominatorSentence(census: FeedbackRunCensus): string {
   const classified = census.organic + census.synthetic + census.unknown + census.author;
   const excluded = census.total - census.organic;
@@ -360,12 +267,7 @@ export const STAGING_OWNER_ACTION =
   "console that read-only connection. Nothing else changes: the review site keeps its own " +
   "store, and the console only ever reads from it.";
 
-/**
- * Open one environment's feedback store, or say precisely why not.
- *
- * `env` is injected so every refusal can be planted in a test without a test
- * mutating the process it runs in — the same discipline as the write handle.
- */
+/** Open one environment's feedback store, or say precisely why not. `env` is injected for tests. */
 export function openFeedbackStore(
   environment: FeedbackEnvironment,
   env: Record<string, string | undefined> = process.env,
@@ -389,21 +291,9 @@ export function openFeedbackStore(
 
   if (environment === "STAGING") {
     /*
-     * THE BYPASS, REFUSED BY WHERE THE CONNECTION POINTS — NOT BY ITS NAME.
-     *
-     * If the review site's connection resolves to the live site's endpoint,
-     * then either the review build is writing live rows or the console is
-     * about to label live messages as review messages. Both are the same
-     * defect — one store wearing two names.
-     *
-     * String equality would not catch it: two connection strings can name one
-     * Neon endpoint through a pooler, a different role or a different option
-     * bag. `lib/ops/staging-isolation.ts` already answers this question for the
-     * staging deploy gate, and a second answer here would be free to disagree
-     * with the one branch protection trusts (RULING 103). Its rule about the
-     * unmeasured case is inherited whole: **null is not false.** A pair whose
-     * identities could not be established is refused, so there is no way to be
-     * permitted by failing to measure.
+     * Refused by where the connection points, not by its string: two connection
+     * strings can name one endpoint. Uses `lib/ops/staging-isolation.ts`; an
+     * identity that could not be established is refused (null is not false).
      */
     const live = (env[PRODUCTION_FEEDBACK_URL_VAR] ?? "").trim();
     const bypass = {
@@ -466,13 +356,7 @@ export function openFeedbackStore(
   }
 }
 
-/**
- * Read one environment: the newest messages, and the census behind them.
- *
- * Both queries are issued together — the list and its denominator describe one
- * instant, and a page that read them a second apart could state a count larger
- * than the store it counted from.
- */
+/** Read one environment: the newest messages and the census, queried together. */
 export async function readFeedbackStore(
   sql: Sql,
   environment: FeedbackEnvironment,
@@ -518,23 +402,17 @@ export async function readFeedbackStore(
  * ------------------------------------------------------------------ */
 
 /**
- * The states, and where each one comes from.
- *
  * ```
  *   NEW            no decision has been recorded about this message
- *   REVIEWED       he read it and it needs nothing
- *   NEEDS_ACTION   he read it and something has to change
+ *   REVIEWED       read; needs nothing
+ *   NEEDS_ACTION   read; something has to change
  *   RESOLVED       whatever it asked for has been done
- *   NOT_ACTIONABLE nothing to do — a duplicate, a mistake, or not about this
- *   HELD_BACK      the intake protections quarantined it; NOT his decision, and
- *                  never rendered as one
+ *   NOT_ACTIONABLE nothing to do: a duplicate, a mistake, or not about this
+ *   HELD_BACK      quarantined by intake protections; never an owner decision
  * ```
  *
- * The middle four are decisions, and a decision is a fact about a moment, so
- * they travel the path every console decision already travels: an append-only
- * intent in the control plane with the session, the option and the consequence
- * he was shown. There is no status column on the message and this does not
- * invent one — a later decision supersedes an earlier one, and both survive.
+ * The middle four are append-only decision-log intents; a later decision
+ * supersedes an earlier one and both survive.
  */
 export const TRIAGE_STATES = [
   "NEW",
@@ -567,12 +445,7 @@ export const TRIAGE_OPTIONS: readonly { readonly state: TriageState; readonly op
   { state: "NOT_ACTIONABLE", option: "Nothing to do" },
 ];
 
-/**
- * The consequence every triage button shows, captured on the record as read.
- *
- * It is the same sentence for all four because all four do the same thing, and
- * the second half is the part that matters: nothing here answers anybody.
- */
+/** The consequence every triage button shows, captured on the record as read. */
 export const TRIAGE_CONSEQUENCE =
   "Records this as your status for this message. It does not reply to anyone, it does not " +
   "change anything a reader sees, and you can change it again later.";
@@ -585,14 +458,8 @@ export function optionToState(option: string): TriageState | null {
 export const FEEDBACK_SUBJECT_PREFIX = "feedback:";
 
 /**
- * The decision-log subject for one message.
- *
- * The message's OWN row id, and the environment it lives in — never the contact
- * reference, which this module never holds, and never anything a reader typed.
- * The id is a random primary key that appears in no other collection store, so
- * it lines up against nothing: §5.3's prohibition is on joining the CONTACT
- * reference to reader behaviour, and this is not that value and cannot become
- * it.
+ * The decision-log subject for one message: its own random row id and its
+ * environment, never the contact reference or anything a reader typed.
  */
 export function feedbackSubjectId(environment: FeedbackEnvironment, rowId: string): string {
   return `${FEEDBACK_SUBJECT_PREFIX}${environment}:${rowId}`;
@@ -613,14 +480,9 @@ export interface TriageMark {
 }
 
 /**
- * Fold the decision log into one mark per message.
- *
- * The log is collapsed first — a resolution twin is folded into its original by
- * the shared fold, so this never counts one decision twice — and the newest
- * decision about a subject wins, because a later decision supersedes an
- * earlier one. A recorded option this module does not recognise is IGNORED
- * rather than guessed at: an unreadable status must leave the message looking
- * untouched, which is the safe direction.
+ * Fold the decision log into one mark per message: the newest decision about a
+ * subject wins. An unrecognised recorded option is ignored, leaving the message
+ * looking untouched.
  */
 export function triageBySubject(
   decisions: readonly OwnerDecisionIntent[],
@@ -688,11 +550,8 @@ export interface InboxInput {
 }
 
 /**
- * Build the whole view. PURE: readings in, one view out.
- *
- * Every count is derived from the SAME item list the page renders, so a stated
- * number and a rendered row count cannot drift — `countClaimsOf` proves it
- * against the rendered output rather than trusting this function.
+ * Build the whole view. Pure. Every count is derived from the same item list
+ * the page renders; `countClaimsOf` checks it against the rendered output.
  */
 export function buildFeedbackInboxView(input: InboxInput): FeedbackInboxView {
   const marks = triageBySubject(input.decisions);
@@ -749,10 +608,8 @@ export function buildFeedbackInboxView(input: InboxInput): FeedbackInboxView {
   };
 
   /*
-   * The denominator for the list is the store, not the page. `measured` refuses
-   * a value above its denominator, so a census that came back smaller than the
-   * page it describes — a store written between the two queries — is widened to
-   * the rows actually rendered rather than throwing the page away.
+   * The list's denominator is the store. A census smaller than the page (a
+   * write between the two queries) is widened to the rows actually rendered.
    */
   const listDenominator = Math.max(storeTotal, items.length);
 

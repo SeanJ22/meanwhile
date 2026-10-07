@@ -4,31 +4,9 @@ import { join } from "node:path";
 import test from "node:test";
 
 /**
- * M07 — the returning reader (2026-08-18).
- *
- * Three clauses, and the third is the load-bearing one:
- *
- *   1. the zip is remembered,
- *   2. the reader CONFIRMS it or RE-ENTERS it on return,
- *   3. a district is NEVER assumed from it.
- *
- * Clause 1: the current location is remembered between visits (Sean, October
- * 1, 2026, replacing the August per-tab rule), so reopening the site opens on
- * the reader's own area; the recents list keeps their other places.
- *
- * Clause 2 was the gap this session closed. The re-ask landed on a card
- * offering four zips belonging to somebody else, while the reader's own recent
- * places sat in `wtp.recent_zips` reachable only from the zip switcher — which
- * cannot open until a location already exists. The list built so a second visit
- * costs one tap was unreachable on the second visit, so the only route back to
- * your own town was to retype it.
- *
- * Clause 3 has never had a guard of its own, which is why one is written here.
- * It is the clause with real consequences: a zip is a ZCTA, a statistical shape
- * built from mail routes that runs straight through city, county, school and
- * legislative lines, so a district resolved from one is a false claim about
- * what is on somebody's ballot. The storage key is literally named
- * `approximate_location` to keep that in front of whoever reads the code next.
+ * The returning reader: the ZIP is remembered between visits, the reader confirms or re-enters it with their
+ * own recent places in reach, and a district is never assumed from it. A ZIP is a ZCTA that crosses city,
+ * county, school and legislative lines, so a district resolved from one would be a false claim.
  */
 
 const WELCOME = join(process.cwd(), "components", "map", "welcome-overlay.tsx");
@@ -54,16 +32,13 @@ test("the returning reader is offered their own recent places without a pilot sh
     "each recent zip is offered as its own one-tap button",
   );
 
-  assert.doesNotMatch(source, /QUICK_ZIPS/, "FE-39 removes the pilot showcase");
+  assert.doesNotMatch(source, /QUICK_ZIPS/, "the pilot showcase is removed");
 });
 
 test("the zip is remembered between visits, and a link still wins", () => {
   const stored = readFileSync(STORED_ZIP, "utf8");
 
-  // Sean, October 1, 2026: reopening the site opens on the reader's own area.
-  // This replaces the 6f rule (per-tab, asks on every fresh open). Asserted on
-  // the CALL, never on the word: a guard that reads comments passes or fails on
-  // someone's paragraph rather than on the code.
+  // Reopening the site opens on the reader's own area. Asserted on the call, not on comments.
   assert.match(
     stored,
     /window\.localStorage\.(get|set)Item\(STORAGE_KEY/,
@@ -96,12 +71,7 @@ test("a district is never assumed from a zip — the key says what the value is"
     "the stored key names the value as approximate, not as district truth",
   );
 
-  /*
-   * The entry card resolves a zip to a CENTROID and nothing else. If it ever
-   * grew a district lookup, the reader would be handed districts derived from a
-   * mail-route polygon — the exact inference CLAUDE.md's entry-experience rule
-   * forbids, and the one this product cannot notice is wrong on its own.
-   */
+  // The entry card resolves a ZIP to a centroid and nothing else, never to districts.
   const welcome = readFileSync(WELCOME, "utf8");
   const forbidden = [
     "divisionsAt",

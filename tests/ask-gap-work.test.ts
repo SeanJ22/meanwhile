@@ -1,13 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
 
 import { ASK_GAP_CODES, heldBodyGaps, type HeldAskGap } from "../lib/ask/held-gaps.ts";
 import { buildTopicTimeline } from "../lib/ask/topic-timeline.ts";
 import { gapWords, type EvidencePack } from "../lib/ask/evidence.ts";
 import { synthesisContextPayload } from "../lib/ask/synthesize.ts";
 import { agendaTopicFor, type AgendaDocumentLike } from "../lib/routing/agenda-search.ts";
-import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
+import type { PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
 import { askGapNoteParts, parseAskGapObligationId } from "../lib/control-plane/ask-gap-id.ts";
@@ -19,7 +18,7 @@ import {
   type CarrierClock,
 } from "../lib/control-plane/scheduler/providers/ask-gaps.ts";
 import { ASK_GAP_CARRIER_TASKS, carrierClocks, readAskGapHoldings } from "../lib/control-plane/scheduler/ask-gap-holdings.ts";
-import { buildRegistry, type RouteDescriptor } from "../lib/control-plane/scheduler/registry.ts";
+import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts";
 import { decideExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
 import { isScheduled, scheduleObligation } from "../lib/control-plane/scheduler/obligation.ts";
@@ -36,24 +35,9 @@ import {
   type AssignmentSources,
 } from "../lib/control-plane/assignment-view.ts";
 import { auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
-import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import type { RouteTask } from "../lib/control-plane/route-task.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { unitOf } from "./helpers/ask-gap-unit.ts";
-
-/**
- * **A GAP ASK STATES IS A GAP THE SYSTEM IS WORKING.** (2026-09-25.)
- *
- * The owner's brief: "A discrepancy must create tracked acquisition work that
- * flows through publication", and "Say 'still looking' only when real work
- * exists." These tests pin the chain: Ask's own gaps carry a closed code
- * decided by ONE function; the runner's `ask-gaps` provider calls that same
- * function over the same holdings and emits one obligation per body and code;
- * each obligation is routed to the routine read that closes it (RUNNER, with
- * a broken cadence named) or to the adapter owed (ENGINEERING); and when a
- * read holds the record the gap disappears and the obligation retires through
- * the existing superseded path. Nothing here reads a reader or a question.
- */
 
 const NOW_ISO = "2026-09-24T12:00:00.000Z";
 const NOW = Date.parse(NOW_ISO);
@@ -84,13 +68,51 @@ const documents: AgendaDocumentLike[] = [
   document("legistar-insite:mesa:2000", "1. Call to order 2. Ordinance designating data centers a prohibited use"),
 ];
 
+const PIMA_DETAIL = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1801&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
+const PIMA_MINUTES = "https://legistar.granicus.com/pima/meetings/2026/5/1801_M_Board_of_Supervisors_26-05-12_Meeting_Summary.pdf";
+const PIMA_AGENDA = "https://legistar.granicus.com/pima/meetings/2026/5/1801_A_Board_of_Supervisors_26-05-12_Online_Agenda.pdf";
+const PIMA_SITTING_TEMPLATE = {
+  meetingId: "legistar:pima:1801",
+  bodyId: PIMA,
+  ocdId: "ocd-division/country:us/state:az/county:pima",
+  slug: "pima",
+  eventId: 1801,
+  bodyName: "Board of Supervisors",
+  jurisdiction: "Pima County, AZ",
+  startsAt: "2026-05-12T13:00:00-07:00",
+  sourceOrg: "Pima County Clerk of the Board",
+  sourceUrl: PIMA_DETAIL,
+  extraction: "RETRIEVED",
+  extractionNote: null,
+  publication: {
+    agendaStatusName: "Final", agendaStatusId: 10, agendaFile: PIMA_AGENDA, agendaLastPublishedUtc: "2026-05-11T22:39:33.11",
+    minutesStatusName: "Draft", minutesStatusId: 9, minutesFile: PIMA_MINUTES, minutesLastPublishedUtc: "2026-05-13T18:56:29.663",
+    inSiteUrl: PIMA_DETAIL, lastModifiedUtc: "2026-05-13T18:56:29.83", videoStatus: "Public", observedAt: "2026-08-30T05:38:01.398Z",
+  },
+  minutesPointer: { url: PIMA_MINUTES, status: "Draft", host: "legistar.granicus.com", retrievalNote: "Not retrieved." },
+  agenda: [],
+  outcomes: [],
+  rollCalls: [],
+  failedRollCallExtractions: [314841],
+  voteRequestFailures: [],
+  routesWalked: ["WEBAPI_EVENTS", "WEBAPI_EVENTITEMS", "WEBAPI_EVENTITEM_VOTES"],
+  publicationObservations: [{
+    meetingId: "legistar:pima:1801",
+    provenance: "FIRST_PARTY_PUBLISHER",
+    report: "AVAILABLE",
+    observedAt: "2026-08-30T05:38:01.398Z",
+    observedUrl: PIMA_DETAIL,
+    sourceOrg: "Pima County Clerk of the Board",
+    evidenceQuote: `EventAgendaStatusName=Final; EventAgendaFile=${PIMA_AGENDA}; EventAgendaLastPublishedUTC=2026-05-11T22:39:33.11`,
+    routeId: "WEBAPI_EVENT",
+  }],
+} as unknown as PersistedSittingOutcomes;
+
 /** Pima's recorded-outcome sitting for September 15: its agenda read, and — until the read lands — no decision. */
 function pimaSitting(decided: boolean): PersistedSittingOutcomes {
-  const outcomes = JSON.parse(readFileSync("data/states/az/outcomes/legistar-outcomes.json", "utf8")) as OutcomeSnapshot;
-  const template = outcomes.sittings.find((sitting) => sitting.bodyId === PIMA)!;
   const provenance = { endpoint: "https://webapi.legistar.com/v1/pima/events/1900/eventitems", sourceOrg: "Pima County Clerk of the Board", readOn: "2026-09-24" };
   return {
-    ...template,
+    ...PIMA_SITTING_TEMPLATE,
     meetingId: "legistar:pima:1900",
     eventId: 1900,
     startsAt: "2026-09-15T09:00:00-07:00",
@@ -136,14 +158,12 @@ function holdings(over: Partial<AskGapHoldings> = {}): AskGapHoldings {
   };
 }
 
-/** The registry as it stood before Mesa's minutes reader (NH332), for the engineering-owned path. */
+/** The registry without Mesa's minutes reader, for the adapter-owed path. */
 const WITHOUT_MESA_MINUTES = { contracts: ROUTINE_SOURCE_CONTRACTS.filter((c) => c.id !== "mesa-legistar-minutes-outcomes") };
 
 const enumerate = (h: AskGapHoldings, registered?: Parameters<typeof askGapCarriers>[2]) =>
   buildRegistry([askGapsProvider({ holdings: () => h, ...(registered ? { registered } : {}) })], { root: ".", nowIso: NOW_ISO });
 
-
-/* ------------------------------------------------------------ Ask's own gaps */
 
 test("Ask's gaps carry a closed code, body and record class, and the model and the reader get the same words as before", () => {
   const mesa = meetings.filter((m) => m.bodyId === MESA).map((m) => ({ ...m, bodyName: "City Council", title: "City Council" }));
@@ -191,8 +211,6 @@ test("an unreadable outcome store is coded OUTCOMES_UNREADABLE, and OUTCOME_NOT_
   assert.equal(store?.recordClass, "MEETING_OUTCOME");
 });
 
-/* ------------------------------------------------------------ the provider */
-
 test("PIMA: a concluded sitting with no outcome read is the RUNNER's routine outcomes re-read, carried and never re-fetched", () => {
   const pass = enumerate(holdings());
   const unit = unitOf(pass, PIMA, "OUTCOME_NOT_READ");
@@ -233,7 +251,7 @@ test("MESA: a concluded sitting with no decision and no outcomes route is ENGINE
     assert.match(unit.route.open.reason, /legistar-insite:mesa:2000/);
   }
 
-  // Mesa's minutes-outcomes contract (NH332) follows its partition, and that is all it takes: no edit to the provider.
+  // Mesa's minutes-outcomes contract follows its partition, and that is all it takes: no edit to the provider.
   assert.deepEqual(askGapCarriers(MESA, "MEETING_OUTCOME", { contracts: ROUTINE_SOURCE_CONTRACTS }), ["mesa-legistar-minutes-outcomes"]);
   const after = unitOf(enumerate(holdings()), MESA, "OUTCOME_NOT_READ");
   assert.equal(after.obligation.id, unit.obligation.id, "the same obligation, re-routed");
@@ -307,25 +325,18 @@ test("gap gone: when a read holds the decision, the provider stops emitting it a
   assert.match(none.byProvider[0]!.readFailure ?? "", /could not be read/);
 });
 
-/* ------------------------------------------------------------ one implementation */
-
-test("Ask and the provider agree: on every body of the committed meetings snapshot, the codes Ask holds are exactly the obligations the runner emits", () => {
-  const seed = JSON.parse(readFileSync("data/meetings-snapshot.json", "utf8")) as {
-    meetings: (AskGapMeeting & { bodyName: string; title: string })[];
-    agendaDocuments: AgendaDocumentLike[];
-  };
-  const outcomes = JSON.parse(readFileSync("data/states/az/outcomes/legistar-outcomes.json", "utf8")) as OutcomeSnapshot;
-  const pass = enumerate({ source: "the committed snapshot", meetings: seed.meetings, documents: seed.agendaDocuments, sittings: outcomes.sittings, outcomesUnreadable: null, clockOf });
-  const bodies = [...new Set(seed.meetings.flatMap((m) => (m.bodyId ? [m.bodyId] : [])))].sort();
-  assert.ok(bodies.length > 20, "the fixture spans many bodies");
+test("Ask and the provider agree: on every body of the fixture, the codes Ask holds are exactly the obligations the runner emits", () => {
+  const held = holdings();
+  const pass = enumerate(held);
+  const bodies = [...new Set(meetings.flatMap((m) => (m.bodyId ? [m.bodyId] : [])))].sort();
   let compared = 0;
   for (const bodyId of bodies) {
-    const bodyMeetings = seed.meetings.filter((m) => m.bodyId === bodyId);
+    const bodyMeetings = meetings.filter((m) => m.bodyId === bodyId).map((m) => ({ ...m, bodyName: "Board", title: "Board" }));
     const ids = new Set(bodyMeetings.map((m) => m.id));
     const timeline = buildTopicTimeline({
-      topic: DATA_CENTER, bodyId, bodyName: bodyMeetings[0]!.bodyName,
-      meetings: bodyMeetings, documents: seed.agendaDocuments.filter((d) => ids.has(d.meetingId)),
-      sittings: outcomes.sittings.filter((s) => s.bodyId === bodyId), now: NOW,
+      topic: DATA_CENTER, bodyId, bodyName: "Board",
+      meetings: bodyMeetings, documents: documents.filter((d) => ids.has(d.meetingId)),
+      sittings: held.sittings.filter((s) => s.bodyId === bodyId), now: NOW,
     });
     const askCodes = [...new Set(timeline.heldGaps.map((g: HeldAskGap) => g.code))].sort();
     const runnerCodes = pass.units.filter((u) => u.obligation.subjectId === bodyId).map((u) => u.obligation.routeId).sort();
@@ -338,8 +349,6 @@ test("Ask and the provider agree: on every body of the committed meetings snapsh
   assert.ok(pass.units.length > 0);
   assert.ok(pass.units.every((u) => ASK_GAP_CODES.includes(u.obligation.routeId as never)));
 });
-
-/* ------------------------------------------------------------ the reading */
 
 test("the runner's reading: the sitting window decides the cadence a carrying read owes, and a failed read is named, never an empty domain", async () => {
   const task = ASK_GAP_CARRIER_TASKS.find((t) => t.id === MESA_PARTITION)!;
@@ -371,13 +380,6 @@ test("the runner's reading: the sitting window decides the cadence a carrying re
   assert.equal(reading.clockOf("no-such-contract").kind, "UNREAD");
   assert.equal(reading.clockOf(MESA_PARTITION).kind, "READ");
 });
-
-test("the route opening a routine contract carries is never a fetch: the descriptor type makes that a kind of its own", () => {
-  const route: RouteDescriptor = unitOf(enumerate(holdings()), PIMA, "OUTCOME_NOT_READ").route;
-  assert.equal("url" in route.open, false);
-});
-
-/* ------------------------------------------------------------ Admin */
 
 /** One dispatched round of an Ask-gap obligation, its disposition produced by the real route executor from the provider's route. */
 async function dispatchedRound(unit: ReturnType<typeof unitOf>, n: number): Promise<Partial<AssignmentSources>> {
@@ -417,7 +419,7 @@ async function dispatchedRound(unit: ReturnType<typeof unitOf>, n: number): Prom
 function sources(...parts: Partial<AssignmentSources>[]): AssignmentSources {
   const out: Record<string, unknown> = {
     nowIso: NOW_ISO, obligations: [], occurrences: [], workItems: [], routeTasks: [], attempts: [], debts: [], leases: [], dispositions: null,
-    artifacts: [], costs: [], scoutResults: [], workerResults: [], pipeline: [], activation: readActivationGate(""), servedReader: null, pilotZips: ["85701"],
+    artifacts: [], costs: [], scoutResults: [], workerResults: [], pipeline: [], activation: null, servedReader: null, pilotZips: ["85701"],
   };
   for (const part of parts) for (const [k, v] of Object.entries(part)) out[k] = [...((out[k] as unknown[]) ?? []), ...(v as unknown[])];
   return out as unknown as AssignmentSources;

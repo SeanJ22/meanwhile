@@ -3,41 +3,13 @@ import type { SeatHolder } from "../officials/lookup.ts";
 import type { Meeting } from "../sources/types.ts";
 
 /**
- * A02 — "WHAT'S GOING ON WHERE I LIVE?", built 2026-08-17.
+ * "What's going on where I live?": upcoming items, recent decisions, and who represents the reader,
+ * scoped to their own divisions. An assembly, not a summary: every row is collected data with its
+ * provenance and every sentence is curated copy here. No model, no network.
  *
- * ## What the row asks for
- *
- * *"Digest of upcoming items, recent decisions, and who represents them,
- * scoped to their districts."* Three blocks, in that order, about the reader's
- * own divisions and nothing else.
- *
- * ## What makes it safe to build
- *
- * Nothing here is written. A digest is an ASSEMBLY: every meeting row is a
- * row this product already collected with its provenance intact, every
- * officeholder is a sourced seat, and every sentence around them is curated
- * copy committed in this file. There is no summarizer, no model, no network,
- * and no place a generated sentence could enter — which is what lets A07
- * apply here in full rather than by promise.
- *
- * The three blocks are also deliberately three SEPARATE denominators. A digest
- * that said "here's what's going on" over one blended list would let a full
- * meetings section paper over an empty representation section, and the reader
- * would read completeness we do not have. So each block states its own count
- * against its own denominator, and each block that is empty says so in its
- * OWN words — "nothing upcoming that we hold" is a fact about our collection,
- * "no concluded meetings in the last N days" is a fact about the calendar, and
- * they may never render as the same sentence (CLAUDE.md's named-gap rule).
- *
- * ## Scoped to the reader's divisions, never to the viewport
- *
- * The scope is `coverage.divisions` — the point-in-polygon answer for where
- * the reader actually is — not the meetings the camera happens to be showing.
- * A digest built off the viewport is a fact about the map; this row asks for a
- * fact about the reader. Meetings with a null `ocdId` (a special district, a
- * regional council — Census enumerates no boundary for them) are counted in a
- * fourth, named line rather than dropped, because dropping them would be this
- * product asserting an absence it has evidence against.
+ * Each block states its own count against its own denominator and its own named gap. The scope is
+ * `coverage.divisions` (where the reader is), never the viewport. Meetings with a null `ocdId` are
+ * counted in a separate named line rather than dropped.
  */
 
 /** How many rows each block shows before it says how many more there are. */
@@ -109,11 +81,8 @@ export interface DigestMeetingRow {
   id: string;
   bodyName: string;
   /**
-   * ASK-4 (2026-08-24): the division this sitting belongs to, so the body
-   * name in a digest row can open that body's battlecard instead of sitting
-   * inert. An EXACT key — never the name string, which two governments can
-   * share (the distinct-keys rule). Null where the meeting has no division,
-   * and a null renders as plain text rather than a wrong door.
+   * The division this sitting belongs to, so the body name can open that body's card. An exact key,
+   * never the name string. Null renders as plain text.
    */
   ocdId: string | null;
   title: string;
@@ -168,13 +137,7 @@ function toRow(meeting: Meeting): DigestMeetingRow {
   };
 }
 
-/**
- * Assemble the digest. Pure: every input is an argument, so the identical
- * function runs in the tests against recorded fixtures.
- *
- * `now` is a parameter and not a `Date.now()` for the reason CLAUDE.md gives
- * about dates generally — a time a test cannot pin is a time nothing can check.
- */
+/** Assemble the digest. Pure; `now` is a parameter so tests can pin it. */
 export function buildDigest(
   coverage: CoverageSummary,
   meetings: readonly Meeting[],

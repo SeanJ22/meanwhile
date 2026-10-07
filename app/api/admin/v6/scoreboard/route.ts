@@ -75,21 +75,21 @@ export async function GET(request: NextRequest) {
         readHistory: async (placeKey) => (url ? readPlaceHistory(neon(url), placeKey) : []),
         budgetMs: 10_000,
       }))),
-      // DP-18: the week's live audits, read by day key (seven keys), never the whole log.
+      // The week's live audits, read by day key (seven keys), never the whole log.
       attempt(async () => (opened ? weeklyAuditAccuracy({ ...(await readAuditWeek(opened, observedAt)), now: observedAt }) : null)),
-      // FE-02: the latest worst-case speed pass on the live site (today's and yesterday's keys).
+      // The latest worst-case speed pass on the live site (today's and yesterday's keys).
       attempt(async () => (opened ? readLatestSpeedPass(opened, observedAt) : null)),
-      // DP-26: where each reusable fix stands, from the config row.
+      // Where each reusable fix stands, from the config row.
       attempt(async () => (opened ? provenFixesReading(config, observedAt) : null)),
-      // DP-33: the latest weekly claim check, this week's and last week's keys.
+      // The latest weekly claim check, this week's and last week's keys.
       attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
-      // BR-31: the last seven days of the flow from findings to live, from hourly counts; seven bounded reads.
+      // The last seven days of the flow from findings to live, from hourly counts; seven bounded reads.
       attempt(async () => (url ? readFlowWeek({ control: neon(url), through: observedAt }) : null)),
       // Now: the last two full hours of the runner's vital signs; one indexed read of at most two small rows.
       attempt(async () => (url ? readVitalNow(neon(url), observedAt) : null)),
-      // FE-26: the link sweep's dead links per surface, kept beside door health.
+      // The link sweep's dead links per surface, kept beside door health.
       attempt(async () => (doorList === null ? null : deadLinkReadings(doorList))),
-      // FE-23: the last deploys' look passes (a week's worth), for the look row.
+      // The last deploys' look passes (a week's worth), for the look row.
       attempt(async () => (opened ? readLatestLookPasses(opened, 20) : null)),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };

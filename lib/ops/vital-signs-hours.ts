@@ -1,13 +1,4 @@
-/**
- * **THE RUNNER'S HOUR FILES FOR VITAL SIGNS.** (Sean, Oct 6.)
- *
- * Only the standing runner parent (scripts/pilot-runner.mts) imports this. Its
- * children print their hour totals as report lines (lib/db/transfer-by-caller.ts);
- * the parent keeps the latest part from each process here, one small file per
- * process and hour, so a parent restart in the middle of an hour keeps what was
- * already reported, and sums the hour's files for the journal line, the
- * heartbeat and the cp_vital_signs row. No data command reaches this module.
- */
+/** The standing runner's per-process hour files for vital signs, so a parent restart mid-hour keeps what was already reported. */
 import { mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { hourStart, type NeonBytesHour, type NeonDatabase } from "../db/transfer-by-caller.ts";

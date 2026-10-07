@@ -7,50 +7,21 @@ import test from "node:test";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DIR = join(ROOT, ".github", "workflows");
 
-/**
- * R45 (2026-08-18) — the scheduled jobs ran on a runtime their actions were
- * not built for.
- *
- * Every run printed: "Node.js 20 is deprecated. The following actions target
- * Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4,
- * actions/setup-node@v4." The jobs worked, on a borrowed runtime. Both are
- * pinned at v7 now, which targets Node 24 natively.
- *
- * A source scan, like `handoff-gate.test.ts`: what rots here is the PIN, and
- * a pin is exactly what a scan can see. The runtime each major targets was
- * read off the actions' own `action.yml` at the time of the bump —
- * checkout@v4 and setup-node@v4 declare `using: node20`, v5 through v7
- * declare `using: node24` — so "major >= 5" is the checkable form of "does
- * not target Node 20".
- *
- * The `package-manager-cache: false` assertion is not tidiness. setup-node
- * v5 introduced automatic caching whenever `package.json` names a
- * `packageManager`, and this repo names `pnpm@10.33.0` — but pnpm does not
- * exist on the runner until the `corepack enable` step that runs AFTER
- * setup-node. v5 would have failed looking for it. v6 narrowed auto-caching
- * to npm only, so v7 is safe today; pinning it off keeps that true if a
- * later major widens the default again.
- */
-
+// actions/checkout and actions/setup-node majors from v5 declare `using: node24`.
 const FIRST_NODE24_MAJOR = 5;
 
-// Matches the step's own `uses:` line. Written as a literal so it cannot be
-// broken by string escaping, and anchored on `- uses:` so prose in a comment
-// that names a version can never be counted as a pin.
+// Anchored on `- uses:` so a version named in a comment is never counted as a pin.
 const ACTION_PIN = /-\s*uses:\s*actions\/(checkout|setup-node)@v(\d+)/g;
 
-// The STEP, not the word. The R45 comment above each setup-node step explains
-// why corepack's position matters, so a bare /corepack enable/ finds the
-// explanation rather than the step — which is how the first draft of this test
-// failed against a correct tree.
+// The step, not the word: a comment may mention corepack.
 const COREPACK_STEP = /run:\s*corepack enable/;
 
 const SETUP_NODE_STEP = /-\s*uses:\s*actions\/setup-node@/;
 
 const workflows = readdirSync(DIR).filter((f) => f.endsWith(".yml"));
 
-test("the workflow set covers CI, release observation and authorized adapter merges", () => {
-  assert.deepEqual(workflows.sort(), ["build-check.yml", "engineer-adapter-merge.yml", "post-deploy-integrity.yml"]);
+test("the workflow set covers CI and release observation", () => {
+  assert.deepEqual(workflows.sort(), ["build-check.yml", "post-deploy-integrity.yml"]);
 });
 
 test("R45: no workflow pins an action major that targets Node 20", () => {
@@ -69,8 +40,8 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    14, // five CI jobs, the post-deploy observer and adapter merger, two pins each
-    `expected 14 Node-runtime action pins across the active workflow set, found ${pins}`,
+    12, // five CI jobs and the post-deploy observer, two pins each
+    `expected 12 Node-runtime action pins across the active workflow set, found ${pins}`,
   );
   assert.deepEqual(
     stale,
@@ -90,9 +61,6 @@ test("R45: setup-node never tries to restore a cache before pnpm exists", () => 
     const setupNodeAt = source.search(SETUP_NODE_STEP);
     const corepackAt = source.search(COREPACK_STEP);
 
-    // The ordering is the whole reason the pin matters. If corepack ever moves
-    // ahead of setup-node, auto-caching stops being a hazard and this can be
-    // revisited — but it has to be revisited deliberately, not discovered.
     assert.ok(
       corepackAt > setupNodeAt,
       `${file}: corepack enable no longer follows setup-node — re-rule on package-manager-cache`,

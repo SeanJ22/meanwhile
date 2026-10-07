@@ -234,7 +234,7 @@ export async function divisionsForAddress(address: string, apiKey: string, optio
   return Object.entries(value.divisions ?? {}).map(([id, d]) => ({ id, label: d.name }));
 }
 
-/** S11 lookup: all ZIP areas a congressional district, county or state touches. */
+/** All ZIP areas a congressional district, county or state touches. */
 export async function zipsForPlace(place: { type: "congressional_district" | "county" | "state"; state: string; geoid: string }, options: GeographyReadOptions = {}): Promise<string[]> {
   const fips = stateFips(place.state);
   if (!fips || !/^\d+$/.test(place.geoid)) throw new Error("A Census state and GEOID are required");

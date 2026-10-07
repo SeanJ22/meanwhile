@@ -1,14 +1,13 @@
 /**
- * **A ROLL CALL IS NEVER SKIPPED BETWEEN ONE VERSION AND THE NEXT** (DB-08).
- *
- * The roll-call projection is a window of the latest rolls, replaced at each promotion; every earlier roll stays
- * answerable from the promoted versions that held it (`lib/votes/history.ts`). That is complete only if each window
- * reaches back to the roll after the last one the previous version held. A fixed 20-roll window fell short on a busy
- * day (the House can vote thirty times) or after a missed run, and the rolls in the gap were never acquired.
+ * A roll call is never skipped between one version and the next. The roll-call
+ * projection is a window of the latest rolls; earlier rolls stay answerable from
+ * the promoted versions that held them (`lib/votes/history.ts`), which is
+ * complete only if each window reaches back to the roll after the previous
+ * version's newest.
  *
  * `windowStart` is the first roll to read: the usual `latest - window + 1`, or the roll after the previous version's
  * newest if that is earlier, but never further back than `maxCatchUp` rolls from the latest. A gap larger than that is
- * reported, not silently shortened, so the next run (which starts from what this one holds) closes the rest.
+ * reported, not silently shortened, so the next run closes the rest.
  */
 export interface RollWindow {
   readonly start: number;

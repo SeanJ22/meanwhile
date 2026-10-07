@@ -1,22 +1,6 @@
 /**
- * **EVERY WIRED MEETING ROUTE INHERITS ITS PUBLISHER'S AUTHORITY.** (C9, 2026-09-24.)
- *
- * The defect, measured in production: #411 wired the Newbury Library
- * Trustees' notices feed (newburynhlibrary.net) and the Energy Committee's own
- * page (www.newburyenergynh.org), and every test beside them passed. The
- * meetings source authority (`meetings-public-bodies` in
- * lib/civic-data/source-authority.ts) is a hand-kept allowlist of hosts and
- * routes, and neither was on it. Each owner-requested run at 23:01Z and 23:06Z
- * fetched and normalized its sittings, then threw
- * `MEETING_PARTITION_CANDIDATE_MISMATCH … FINAL_HOST_NOT_AUTHORIZED` before
- * writing a candidate, so the runner saw only "0 receipts" and readers saw
- * nothing.
- *
- * The rule: every https URL a wiring row configures passes `authorityFor`
- * for the meetings source. A `…Base` key is a base the adapter composes
- * routes under (`siteBase + /api/calendars/…`), never fetched as written, so
- * only its host must inherit authority; its composed routes are registered
- * routes of their own.
+ * Every https URL a meeting wiring row configures passes `authorityFor` for the meetings source. A `…Base` key is a
+ * base the adapter composes routes under, never fetched as written, so only its host must inherit authority.
  */
 import assert from "node:assert/strict";
 import test from "node:test";

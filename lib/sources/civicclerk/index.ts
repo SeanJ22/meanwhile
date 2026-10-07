@@ -1,8 +1,8 @@
 /**
  * @freshness-reads-here
  *
- * RULING 107 — the clock stamps here are minted by the code path that performs
- * the read: `collectedAt` is taken at the moment of the fetch.
+ * The clock stamps here are minted by the code path that performs the read: `collectedAt` is taken at
+ * the moment of the fetch.
  */
 import {
   MEETING_HELD_HORIZON_DAYS,
@@ -29,46 +29,19 @@ import type {
 } from "../types.ts";
 
 /**
- * **CivicClerk** — the meeting portal behind an embed script, reached at its
- * own public OData API. (2026-08-27, the 85641 detective session.)
- *
- * ## How it was found, because the route is the reusable part
- *
- * The Central Arizona Water Conservation District taxes every parcel in Pima
- * County and so governs ZIP 85641. Its own meetings page renders no meeting:
- * 222,565 bytes of served markup carrying no dated link and no iCalendar feed.
- * What it does carry, in a `<script>` block, is
+ * CivicClerk: the meeting portal behind an embed script, read through its own public OData API. The
+ * host page carries the tenant slug in a script block:
  *
  * ```js
- * window.clerkEmbedProps = { "tenant": "capaz", "categoryIds": "26,27,…" };
+ * window.clerkEmbedProps = { "tenant": "<slug>", "categoryIds": "26,27,…" };
  * ```
  *
- * followed by CivicClerk's embed bundle. **The tenant slug is in the page.**
- * With it, the portal's own API answers a plain unauthenticated GET:
+ * With it the portal answers a plain unauthenticated GET at `https://<tenant>.api.civicclerk.com/v1/Events`
+ * (OData: `$filter`, `$orderby`, `$top`), returning date, start time, body name, category, venue with
+ * street address, and agenda/minutes flags. Any CivicClerk tenant is one `clerkEmbedProps` read away.
  *
- *   https://<tenant>.api.civicclerk.com/v1/Events
- *
- * It is OData, so `$filter`, `$orderby` and `$top` all work, and it returns
- * the date, start time, body name, category, venue with a street address, and
- * flags for whether an agenda and minutes are published.
- *
- * That is ladder rung 7 — the page's own calls — and the generalisation is the
- * point: **any CivicClerk tenant is one `clerkEmbedProps` read away**, and the
- * vendor serves councils, districts and boards well beyond this one.
- *
- * ## Why a new AgendaSourceType rather than reusing one
- *
- * CivicClerk is a distinct product to a clerk, and its wire format is neither
- * Diligent's WCF service nor IQM2's. `CIVICPLUS` is a different product from
- * the same corporate family and must not be conflated: a reader following a
- * CivicPlus agenda link would not arrive here.
- *
- * ## What it refuses to do
- *
- * The API returns the whole archive back to 2018, oldest first. This clips to
- * the SERVING window the app actually renders, derived from the constants
- * rather than written as literals — M76's defect was two adapters holding
- * their own copies of a window that then moved.
+ * Distinct from `CIVICPLUS`, a different product. Reads are clipped to the serving window derived from
+ * the serving constants.
  */
 
 const SOURCE_NAME = "civicclerk";
@@ -108,12 +81,8 @@ function statusOf(startsAt: string, now: Date): MeetingStatus {
 }
 
 /**
- * The venue string, assembled from the published address parts.
- *
- * Nothing is invented: a row whose location object carries no usable part
- * yields an empty string and is counted as an unknown venue — kept, with the
- * portal's own silence as its named gap, rather than pinned to a guess (the
- * venue-gap class, 2026-09-23).
+ * The venue string, assembled from the published address parts. A row with no usable part yields an
+ * empty string and is counted as an unknown venue: kept, with the portal's silence as its named gap.
  */
 function locationTextOf(e: CivicClerkEvent): string {
   const L = e.eventLocation;
@@ -126,15 +95,10 @@ function locationTextOf(e: CivicClerkEvent): string {
 }
 
 /**
- * The BODY this sitting belongs to.
- *
- * CivicClerk files every sitting under a category that IS the body — "Board
- * Meeting", "Finance, Audit and Power Committee", "Public Policy Committee" —
- * so the category is the body name and the event name is the sitting's title.
- * Where the tenant sends no category the event name stands in, and where it
- * sends neither the row is dropped rather than filed under the district at
- * large: a committee sitting rendered as a board meeting is a false claim
- * about which body met.
+ * The body this sitting belongs to. CivicClerk files every sitting under a category that is the body,
+ * so the category is the body name and the event name is the sitting's title. Where the tenant sends no
+ * category the event name stands in; where it sends neither the row is dropped rather than filed under
+ * the district at large.
  */
 function bodyNameFor(e: CivicClerkEvent): string {
   return (
@@ -213,13 +177,8 @@ export function makeCivicClerkSource(
         const venue = online || !location
           ? null
           : resolveVenue(SOURCE_NAME, wiring.ocdId, location, wiring.config.slug) ?? null;
-        /*
-         * No reviewed venue never suppresses the sitting (the venue-gap class,
-         * 2026-09-23): it is published with no pin and its gap named — the
-         * published address parts verbatim, or the portal's silence where the
-         * row carries none — and counted as `unknownVenue`, kept. Both cases
-         * used to `continue`.
-         */
+        // No reviewed venue never suppresses the sitting: it is published with no pin and its gap named (the
+        // published address parts verbatim, or the portal's silence), counted as `unknownVenue`.
         const venueGap = !online && !venue ? unplacedVenueGap(location, wiring.publishingOrg) : null;
         if (venueGap) {
           drops.unknownVenue++;
@@ -284,12 +243,8 @@ export function makeCivicClerkSource(
 
       const collected: CivicClerkRaw[] = [];
       for (const wiring of wiringRows) {
-        /*
-         * OData, clipped at the SERVER. The archive reaches back to 2018 and
-         * the default page is oldest-first, so an unfiltered read would spend
-         * its whole page on meetings from seven years ago and return nothing
-         * a reader can attend.
-         */
+        // OData, clipped at the server: the archive is oldest-first, so an unfiltered read would spend its page
+        // on years-old meetings.
         const query = new URLSearchParams({
           $filter: `eventDate ge ${from}Z and eventDate le ${to}Z`,
           $orderby: "eventDate asc",

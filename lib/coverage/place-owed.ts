@@ -152,7 +152,7 @@ export function buildPlaceOwedList(input: {
     if (subject.kind === "calendar") return firstSeen.get(subject.id.replace(/#calendar$/, "")) ?? null;
     return DISCOVERED_SUBJECT_KINDS.has(subject.kind) && !subject.id.includes("#inventory:") ? firstSeen.get(subject.id) ?? null : null;
   };
-  // What Sean added to what is owed joins the checklist's own definitions; what he declined is dropped below.
+  // Admin's added items join the checklist's definitions; declined rows are dropped below.
   const overlay = activeOwedOverlay();
   const allDefinitions = overlay.definitions.length === 0 ? checklist.definitions : [...checklist.definitions, ...overlay.definitions];
   return [...subjects.values()].sort((a, b) => a.id.localeCompare(b.id)).flatMap(subject => {

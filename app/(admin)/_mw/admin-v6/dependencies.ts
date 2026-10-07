@@ -1,11 +1,3 @@
-/**
- * **THE READS v6 NEEDS AND DOES NOT HAVE YET.** One entry per screen section.
- *
- * Each is shown on screen as "Not connected yet" with its owner, and listed in
- * ACCEPTANCE.md with the exact missing interface. None of these is invented
- * here: they come from the Codex boundary inventory (2026-09-28) and the v6
- * INTERACTIONS-AND-DATA "Data each screen needs" table.
- */
 import type { Dependency } from "./model.ts";
 
 export const SECTION_DEP = {

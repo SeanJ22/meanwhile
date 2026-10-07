@@ -59,20 +59,10 @@ import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 
 /**
- * Says which rung of the cascade produced what's on screen, and — when there is
- * nothing on screen — who governs here anyway.
- *
- * Two failures, one component. A search that quietly widened its radius, or
- * quietly reached into last month, looks exactly like one that found what you
- * asked for. And an empty map reads as "your government does nothing" when the
- * truth is "we have no source for the bodies that govern here". Both are the
- * same bug: an answer that does not say what kind of answer it is.
- *
- * **Nothing here presents a derived body as a sourced fact.** Division labels
- * come off the Census boundary files, so they are sourced and safe to print. The
- * bodies' own names, schedules and members are all unknown, and the copy is
- * written to claim only what the registry actually knows: that a division of
- * this type exists here, and that a division of this type has a governing body.
+ * Says which rung of the cascade produced what's on screen, and, when nothing
+ * is on screen, who governs here anyway. Division labels come from Census
+ * boundary files; the copy claims only that a division of each type exists
+ * here and has a governing body.
  */
 
 interface CoverageNoticeProps {
@@ -83,99 +73,45 @@ interface CoverageNoticeProps {
   count: number;
   listingCount?: ReturnType<typeof readerMeetingCount>;
   coverage: CoverageSummary | null;
-  /**
-   * Divisions whose calendar source failed at the last snapshot refresh. A
-   * body on this list showing nothing means "we couldn't reach their source
-   * this time", which is a different claim from "nothing is scheduled" and
-   * must never render the same way.
-   */
+  /** Divisions whose calendar source failed at the last refresh: "couldn't reach", never "nothing scheduled". */
   failedSourceOcdIds?: string[];
   /**
-   * **F01 7.2 (2026-08-19)** — which of those bodies nevertheless
-   * has meetings ON SCREEN right now.
-   *
-   * The finding: the New Hampshire card said it couldn’t reach Kearsarge’s and
-   * Newbury’s calendar sources “so their meetings may be missing here”, and
-   * clicking the maroon dot in New London showed Kearsarge meetings anyway.
-   *
-   * Diagnosed before fixing, and neither surface was lying — they were
-   * answering different questions. `carry-forward.ts` exists precisely so a
-   * refused source does not empty a previously-full surface, so the pins stay
-   * and each carried row states its own age. The WARNING never learned that:
-   * it fired on the REFUSAL alone and said “may be missing” about rows the
-   * reader could see.
-   *
-   * So the card is told what the map is showing, and the two sentences split:
-   * a body with rows on screen is one whose calendar we could not REFRESH; a
-   * body with none is one whose meetings may genuinely be missing. Both are
-   * true, they are different facts, and only one of them was ever being said.
+   * Which of those bodies still have meetings on screen (carried forward). For
+   * them the note says the calendar could not be refreshed; for the rest, that
+   * meetings may be missing.
    */
   ocdIdsWithMeetings?: string[];
-  /**
-   * When the meetings snapshot behind this card was last refreshed
-   * (`snapshot.generatedAt`, an ISO instant). The per-body source notes spell
-   * this out as the "last check" date through the product's one formatter. Null
-   * when unknown, in which case the note states the fact without a date rather
-   * than inventing one.
-   */
+  /** When the meetings snapshot was last refreshed (ISO instant); null states the fact without a date. */
   lastCheckedAt?: string | null;
   /** Each division's calendar read, from the rows on screen (lastReadByDivision). */
   lastReadByOcdId?: Readonly<Record<string, DivisionRead>>;
-  /**
-   * The answer under this card is the previous area's, and a fresher one is
-   * in flight (6f). The card DIMS rather than un-rendering — un-rendering is
-   * what made the bubble blink on every pan — and the dim is what keeps a
-   * held answer from reading as a settled one.
-   */
+  /** The answer shown is the previous area's while a fresher one loads; the card dims rather than unmounting. */
   refreshing?: boolean;
   onOpenOfficial?: OpenOfficial;
-  /**
-   * Opens a BODY's large battlecard (item 3, 2026-08-16). The click grammar on this surface is exactly two moves: a
-   * person's name opens their small card, a body's row opens the body's
-   * large one. Nothing on this list leaves the product — Pima and Tucson
-   * used to link straight out to their own websites from the row, and every
-   * external door now lives inside the card the row opens.
-   */
+  /** Opens a body's large battlecard. Nothing on this list links out of the product. */
   onOpenBody?: (body: CoveredBody) => void;
-  /** Shrinks the card to its corner bubble — the explicit control (3). */
+  /** Shrinks the card to its corner bubble. */
   onMinimize?: () => void;
-  /** Item 7: fires when the reader APPLIES a narrowing (street or picker)
-   *  — never on decline or undo. The map turns its boundary shading on. */
+  /** Fires when the reader applies a narrowing, never on decline or undo. */
   onNarrowApplied?: () => void;
-  /** D53: the narrowed street resolved to a point. Passed straight through. */
+  /** The narrowed street resolved to a point. */
   onStreetPoint?: (point: StreetPoint) => void;
-  /**
-   * WGH-5 (2026-08-22): the reader settled their address on ANY surface, so
-   * every jurisdiction on the page re-resolves and the hedges drop.
-   */
+  /** The reader settled their address on any surface. */
   onAddressResolved?: (scope: { divisionIds: string[]; contestIds: string[] }) => void;
   /** They asked for the whole area back. */
   onAddressCleared?: () => void;
-  /**
-   * 4e: the single pill cluster, when this card is the surface on screen.
-   * Null otherwise — this card never constructs one, because a second
-   * constructor is a second instance waiting to happen.
-   */
+  /** The single pill cluster, when this card is the surface on screen; this card never constructs one. */
   pillCluster?: ReactNode;
   /** Rendered as the body of the design card, which owns the frame. */
   embedded?: boolean;
-  /** A cluster painted SOMEWHERE. Same reason as the rail's copy. */
+  /** A cluster is painted elsewhere on screen. */
   clusterElsewhere?: boolean;
 }
 
-/*
- * `NAME_LIMIT = 5` lived here until item 1a (2026-08-17) and is deliberately
- * gone rather than left unused. It cut the body list at five while the lead
- * sentence counted the governing set, which is how one surface came to state
- * three different numbers for one list. The governing list is now rendered
- * whole; there is no cut left to configure, and re-introducing one re-opens
- * the defect.
- */
-
 /**
- * Opens the rep popup (3c). Seat label and tier ride along for the card;
- * the seat's division id rides along for the OFFICIAL_OPENED log event
- * (null where the holder has no single seat division, e.g. senators).
+ * Opens the rep popup. The seat's division id rides along for the
+ * OFFICIAL_OPENED log event (null where the holder has no single seat
+ * division, e.g. senators).
  */
 export type OpenOfficial = (
   holder: SeatHolder,
@@ -193,55 +129,22 @@ const DIVISION_NOUN: Record<NonNullable<CoveredBody["divisionType"]>, string> = 
   sldl: "State house",
 };
 
-/*
- * One source for these labels (RULING 118 / RULING 119, 2026-08-24). This was
- * one of THREE copies; the third was a binary that called anything not
- * GOVERNING "Advisory", which would have labelled a sovereign tribal nation
- * advisory the day one shipped.
- */
 const BODY_CLASS_NOUN = (bodyClass: CoveredBody["bodyClass"]): string =>
   bodyClassShort(bodyClass);
 
-/**
- * Item 5, the palette pass (2026-08-15). These were `text-local` /
- * `text-state` / `text-national` — the tier accents — on every TYPE label in
- * the list ("COUNTY", "MUNICIPAL", "SCHOOL DISTRICT", "COMMISSION") and on
- * every office title beside a name. That put a saturated accent on the
- * majority of the words in the card, and at 03255 or 85701 the result is a
- * screen where nothing stands out because everything does.
- *
- * A type label is a STRUCTURAL label: it organizes the rows, it is not the
- * record and it is not tappable. It renders neutral and confident — `--label`
- * carries the weight instead of the colour. The tier accent keeps the place
- * it actually earns: the LOCAL / STATE / FEDERAL section headers, and the
- * map legend and tier toggles that share its token family.
- */
+/** Type labels are structural and render neutral; tier accents belong to section headers. */
 const TYPE_LABEL_CLASS = "text-label";
 
 /**
- * **WGH-15 (2026-08-28) — THIS CARD SAYS WHOSE QUESTION IT IS ANSWERING.**
- *
- * The reported screen had two panels open at once, one reading *State House
- * District 17* and one reading *State House District 19*, and neither said what
- * it was about. A reader may live in House 17 and inspect House 21 for an hour
- * — that is the product working — but two unlabelled panels reading different
- * district numbers is a product contradicting itself.
- *
- * This card's subject is the ZIP THE READER TYPED, refined by the address they
- * gave if they gave one. The district popup's subject is whatever they last
- * tapped. Saying so, on both, is the entire repair: the facts were already
- * right and already disjoint.
- *
- * It is not a fourth reader-friction exception. It is not a prompt, it asks for
- * nothing, and it is one line of attribution on an answer — the same class of
- * thing as the coverage label above it.
+ * Says whose question the card answers: the ZIP typed, refined by the address
+ * if one was given. The district popup's subject is whatever was tapped.
  */
 function SubjectLine({
   zip,
   standing,
 }: {
   zip: string;
-  /** `ADDRESS_RESOLVED` on this card means the reader settled it themselves. */
+  /** `ADDRESS_RESOLVED` means the reader settled it themselves. */
   standing: LocationCertainty;
 }) {
   return (
@@ -258,49 +161,10 @@ function SubjectLine({
   );
 }
 
-/*
- * **RULING 222 (2026-08-31) — `ElsewhereMark` IS DELETED, NOT IMPROVED.**
- *
- * A component named `ElsewhereMark` stood here and rendered *"not yours —
- * covers another part of 85641"* beside a district the reader's address had
- * positively excluded. Three sessions improved that sentence, and it was
- * still wrong each time.
- *
- * The ruling ends the class rather than the wording: **after a confirmed
- * address the scope IS the address**, and an entity we have determined does
- * not govern this reader is OUT OF SCOPE, not annotated. There is no row left
- * for a mark to sit on — `scopedToAddress` drops it before it reaches any
- * list — so a mark would have nothing to label and a surface that could
- * re-introduce one would be re-introducing the defect.
- *
- * `tests/address-scope.test.ts` refuses the copy and the standing by name, so
- * this cannot come back as a fourth improvement.
- */
-
 /**
- * **WGH-16 (2026-08-28) — THE ROW THAT IS NOT RULED OUT, AND MUST NOT BE.**
- *
- * The deleted mark said *not yours*. That is a claim about a government, and
- * `standingOf` may reach `ELSEWHERE_IN_ZIP` only at levels measured to hold
- * ONE division per point — `sldl`, `sldu`, `cd`, `county`, `state`.
- *
- * The bodies on this card are not all at those levels. A school board and a
- * municipality sit at `school_district` and `place`, and both of those are
- * measured to OVERLAP: a reader is routinely inside an elementary district and
- * a regional high school district at once, and inside an incorporated place
- * and a county subdivision at once (`lib/state/division-levels.ts`). Before
- * WGH-16 those rows wore the deleted exclusion sentence on the strength of a
- * shared bucket name, which is precisely the manufactured claim `CLAUDE.md`
- * forbids.
- *
- * **The row is still marked, and it is still never removed — and RULING 222
- * does not reach it.** The ruling drops entities the system has DETERMINED do
- * not govern the reader. Nothing has been determined about these: their
- * address named a different one, and these can overlap, so this one may be
- * theirs too. Dropping a row we have not ruled out would be the same
- * manufactured claim in the other direction, and silence is not the safe
- * option either, because an unmarked row on this card reads as *this governs
- * you*.
+ * Marks a row at an overlapping level (`school_district`, `place`) where the
+ * reader's address named a different division. The row is never removed:
+ * overlapping levels can hold both.
  */
 function OverlapMark({ zip }: { zip: string }) {
   return (
@@ -313,32 +177,15 @@ function OverlapMark({ zip }: { zip: string }) {
   );
 }
 
-/**
- * Rows where something else at the same level is the reader's, at a level that
- * can hold both. Marked, weakly and honestly — never with the exclusion above.
- */
+/** Rows where something else at the same overlapping level is the reader's. */
 function marksOverlap(standing: BodyStanding | undefined): boolean {
   return standing === "OVERLAP_NOT_RULED_OUT";
 }
 
 /**
- * **ONE SEAT ROW, FOR THE STATE SECTION AND THE FEDERAL ONE.** (WGH-22,
- * 2026-08-31.)
- *
- * The two sections carried copies of this markup and the copies drifted: the
- * federal one silently lacked half the guards the state one had. They are one
- * component now, so a rule applied here is applied to both by construction.
- *
- * **Two nulls, and they are different facts, so they get different sentences.**
- *
- * - **No LABEL yet.** The row is one of the reader's own districts, asked for
- *   by key, and the name has not come back. A reader surface may never print
- *   an OCD-ID (`CLAUDE.md`), and *"District"* alone would be a claim about
- *   which district. It renders the named gap for the lookup's actual state.
- * - **No PEOPLE.** `representationNoteFor` already words the three ways that
- *   happens — still looking, we hold nobody, the lookup failed — and each is
- *   about US. `no record yet` is the `unsourced` case and it stays exactly as
- *   it was for every row that had it before.
+ * One seat row for the state and federal sections. A missing label renders
+ * the lookup's named gap (never an OCD-ID); missing people render
+ * `representationNoteFor`'s wording.
  */
 function SeatRow({
   seat,
@@ -352,9 +199,7 @@ function SeatRow({
   const noteState = noteStateFor(seat.sourcing);
   return (
     <li
-      /* WGH-15: the walk reads the standing off the row rather than inferring
-         it from a Tailwind class, so the next design pass cannot silently
-         disarm the guard. WGH-22 adds the sourcing for the same reason. */
+      /* Walks read the standing off the row, not from a class. */
       data-seat-standing={seat.standing}
       data-seat-sourcing={seat.sourcing}
       className="t-detail leading-snug"
@@ -368,12 +213,6 @@ function SeatRow({
           </span>
         )}
       </span>
-      {/*
-        RULING 222: no exclusion mark. A district the address ruled out is not
-        on this list to be marked. The overlap mark stays where it can fire —
-        these three levels are all measured exclusive, so it cannot fire here,
-        and a branch that cannot fire is a branch a later reader must disprove.
-      */}
       {marksOverlap(seat.standing) && <OverlapMark zip={zip} />}
       <span className="block person-under-heading">
         {seat.representatives.length > 0 ? (
@@ -385,13 +224,10 @@ function SeatRow({
             onOpenOfficial={onOpenOfficial}
           />
         ) : seat.sourcing === "unsourced" ? (
-          // Not "vacant" — we simply have no record. The two are completely
-          // different claims and only one is ours to make.
+          // Not "vacant": we simply have no record.
           <span className="text-muted">no record yet</span>
         ) : (
-          // Still asking, or the asking failed. Neither is an absence, and
-          // rendering either as one is the render-default rule broken by a
-          // timing gap instead of by a null.
+          // Still asking, or the asking failed; neither is an absence.
           <span className="text-muted">{representationNoteFor(seat.tier, noteState)}</span>
         )}
       </span>
@@ -401,21 +237,13 @@ function SeatRow({
 
 function seatPhrase(seats: Seat[]): string | null {
   if (seats.length === 0) return null;
-  // Census labels already read as seats — "State Senate District 18", "AZ-6" —
-  // so they need no noun bolted on, which also sidesteps naming a chamber whose
-  // title varies by state.
+  // Census labels already read as seats, so no chamber noun is added.
   const labels = seats.map((s) => s.label);
   if (labels.length === 1) return labels[0];
   return `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
 }
 
-/**
- * One person, with the record behind them one click away.
- *
- * The source link is not decoration. `CLAUDE.md` line 17 allows a name on
- * screen only when it carries a source record, and the transparency surface is
- * what makes that claim checkable rather than merely asserted.
- */
+/** One person, with their source record one click away. */
 function Holder({
   holder,
   onOpen,
@@ -424,26 +252,8 @@ function Holder({
   onOpen?: () => void;
 }) {
   /*
-   * ITEM 3 (2026-08-16): THE LIST GOES BACK TO CLEAN.
-   *
-   * The prior pass gave this row the battlecards' full element grammar — a
-   * filled party chip and a "Their site →" link beside every name — and the
-   * result was overcrowded, a forever scroll. This card can carry twenty-odd people, and twenty rows each
-   * carrying a chip, an outbound link and a source mark is a wall.
-   *
-   * So the register here is DENSITY, not completeness. Three things per row
-   * and nothing else:
-   *
-   *  • the name, which opens the person's SMALL battlecard;
-   *  • the party as PLAIN TEXT in its party colour — never a filled pill on
-   *    this surface. The pill belongs on the battlecards, small and large;
-   *  • the source mark, where the standing per-surface rules require one.
-   *
-   * "Their site →" is GONE from every row. External links do not live in the
-   * list — they live inside the card the name opens, which is the click
-   * grammar for this whole surface: a PERSON opens a person's
-   * card, a BODY opens a body's card, and every door out of the product is
-   * behind one of those two.
+   * Name (opens the small battlecard), party as plain text in its colour, and
+   * the source mark where required. External links live inside the card.
    */
   return (
     <div className="person-row">
@@ -462,9 +272,7 @@ function Holder({
       </span>
       <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
         {holder.partyLabel && (
-          // Display only. Nothing here or downstream infers a position from
-          // it. Plain text in the party colour — the pill is banned from
-          // this list and lives on the battlecards.
+          // Display only; nothing infers a position from it.
           <span
             className="person-row-party"
             style={
@@ -474,31 +282,6 @@ function Holder({
             {readerPartyLabel(holder.partyLabel)}
           </span>
         )}
-        {/*
-          **BC-14 (2026-08-25) — the same right-edge source link, on the same
-          class of surface, removed for the same reason.**
-
-          RULING 136: the author's id names an instance and the defect is the
-          class. The report boxed the small battlecard; this is the who-governs
-          card, which carries the identical `· SOURCE` run at the right edge of
-          every holder row. Fixing only the row photographed is what the last two
-          passes of BC-14 did.
-
-          Of the four `.source-tag` sites, THREE are removed: this one, the
-          district popup's, and `official-popup`'s. The first pass of this
-          sweep put `official-popup` in the large card on the strength of its
-          name and left it standing; it renders into `PopupCard`, so it is a
-          small card, and checking rather than assuming is what found it.
-
-          The fourth, `key-votes-section`, is DELIBERATELY LEFT and is a Needs
-          Sean row. A roster row is an identity; a vote is a CLAIM about how a
-          named person voted, and the no-claim-without-a-source rule attaches
-          the source to the claim. Removing that link needs a consolidated
-          source line for it to land in, which BC-14 does not specify for
-          votes — so it is his call rather than a session's.
-
-          `holder.sourceUrl` is untouched on the record (RULING 138).
-        */}
       </span>
     </div>
   );
@@ -517,9 +300,7 @@ function HolderList({
   tier: "local" | "state" | "national";
   onOpenOfficial?: OpenOfficial;
 }) {
-  // Stacked, not comma-joined. Two representatives for one Arizona state
-  // house district read as one hyphenated name when they were run together
-  // in a right-aligned column.
+  // Stacked, not comma-joined, so two names never read as one.
   return (
     <>
       {holders.map((holder) => (
@@ -538,11 +319,8 @@ function HolderList({
 }
 
 /**
- * The four states of 4.6.6, in the reader's words.
- *
- * The third row is the one that matters and the one that was missing: a body is
- * known to exist and nothing has its calendar. Saying "no meetings" there is
- * false — it describes us, not them.
+ * The coverage states, in the reader's words. A body known to exist with no
+ * calendar held must not read "no meetings".
  */
 function CoverageBody({
   zip,
@@ -559,14 +337,14 @@ function CoverageBody({
   zip: string;
   coverage: CoverageSummary;
   failedSourceOcdIds?: string[];
-  /** F01 7.2: which of those bodies has rows on screen anyway. */
+  /** Which of those bodies have rows on screen anyway. */
   ocdIdsWithMeetings?: string[];
   /** When the meetings snapshot was last refreshed, for the per-body notes. */
   lastCheckedAt?: string | null;
   lastReadByOcdId?: Readonly<Record<string, DivisionRead>>;
   onOpenOfficial?: OpenOfficial;
   onOpenBody?: (body: CoveredBody) => void;
-  /** WGH-5: the reader settled their address, on any surface. */
+  /** The reader settled their address, on any surface. */
   onAddressResolved?: (scope: { divisionIds: string[]; contestIds: string[] }) => void;
   /** They asked for the whole area back. */
   onAddressCleared?: () => void;
@@ -583,68 +361,16 @@ function CoverageBody({
   } = coverage;
 
   /*
-   * **WGH-12/13/14 (2026-08-28): THE ADDRESS THE READER ALREADY GAVE.**
-   *
-   * `lib/geo/session-address.ts` has stored the confirmed divisions since
-   * 2026-08-22 and, until that sweep, NOTHING read it back — the component that
-   * writes it was its only consumer, and `onNarrowApplied` in the map shell
-   * discards the same divisions a second time. So this card went on answering
-   * from the zip centroid while the prompt three lines above it displayed the
-   * address's own answer: "Set to ... State House District 17" over a STATE
-   * section reading District 19.
-   *
-   * It stays on the DEVICE — see the module note in
-   * `lib/state/resolved-location.ts` for why the repair is client-side and that
-   * is deliberate rather than expedient.
-   *
-   * **WGH-15 (2026-08-28): and it is now an EXPLICIT SUBJECT.** This card
-   * answers *who governs the place the reader told us about*. The district
-   * popup answers *what is this thing I tapped*. Both were true and neither
-   * said so, which is the whole of the reported contradiction. Declared here,
-   * once, so every list below reasons from one named subject rather than three
-   * of them reaching for the zip independently.
+   * The card's subject: the address the reader gave (device-local, see
+   * `lib/state/resolved-location.ts`), else the zip. Every list below reasons
+   * from it.
    */
   const resolvedLocation = useResolvedLocation(zip);
   const subject = homeSubject(resolvedLocation);
 
   /*
-   * **WGH-15 (2026-08-28) — THE STATE SECTION IS THE SURFACE IN THE BUG REPORT,
-   * AND IT NEVER WENT THROUGH `applyResolvedLocation` AT ALL.**
-   *
-   * `bodies` was annotated on 2026-08-28. `seats` was not, and the STATE
-   * section renders `seats` — so the exact rows the reader photographed, *State
-   * House District 19 · Gail Griffin, Lupe Diaz* sitting under a prompt reading
-   * *District 17*, were the one list on this card that never asked.
-   *
-   * `standingOf` would have returned `ELSEWHERE_IN_ZIP` for `sldl:19` against
-   * an `sldl:17` address from the day it shipped —
-   * `tests/resolved-location.test.ts` asserts exactly that pair. **No seat row
-   * ever asked it.** Same class as WGH-12/13/14 (*correct, and had zero
-   * consumers*), one level down, which is why the seats are routed here rather
-   * than the sldl case being special-cased.
-   *
-   * `Seat` satisfies `BodyLike` structurally — an `ocdId` and nothing else is
-   * required — so this is the SAME function over the SAME location, not a
-   * second implementation of the standing rule for a second row type.
-   *
-   * The 8/28 reading of that was *annotate, never drop*. RULING 222 settled it
-   * the other way on 2026-08-31 — see below.
-   */
-  /*
-   * **WGH-22 (2026-08-31) — THE READER'S OWN DISTRICTS, ASKED FOR BY KEY.**
-   *
-   * The 8/30 cut tried to add the reader's missing districts from
-   * `coverage.divisions`. It could not: `summarizeCoverage` derives
-   * `coverage.seats` from `coverage.divisions` by filtering to the seat types,
-   * so at those levels the two lists are one list. Measured against production
-   * at 85641 with a real address confirmed, the State section rendered
-   * EMPTY — District 19 correctly set aside, District 17 still absent.
-   *
-   * The only list that carries District 17 is the reader's own confirmed
-   * divisions, on their device. It carries ids and nothing else, so the name
-   * and the roster are asked for by division key —
-   * `hooks/use-confirmed-divisions.ts`, the same route the district battlecard
-   * has used since M112 — and injected into the pure splitter as rows.
+   * The reader's own confirmed districts carry ids only, so name and roster
+   * are fetched by division key and injected as rows.
    */
   const stateConfirmed = useConfirmedDivisions(coverage, subject.location, STATE_SEAT_TYPES);
   const federalConfirmed = useConfirmedDivisions(
@@ -653,17 +379,10 @@ function CoverageBody({
     FEDERAL_SEAT_TYPES,
   );
 
-  // Item 2c (2026-08-14 second session): officials group under three
-  // headers, closest-first — Local, State, Federal. The state seats and
-  // the federal seat split by division type (structure, never a label
-  // match); the governor (2b) rides under STATE after the legislators —
-  // order of scope, district before statewide.
   /*
-   * `panelSeatsFor` returns the reader's own rows and — separately, never
-   * rendered — the ones the address ruled out. Without an address it returns
-   * exactly what this line used to: the whole zip, one list. `UNSETTLED` is
-   * not `ELSEWHERE_IN_ZIP`, and a reader who gave only a zip gets no partition
-   * invented for them.
+   * Officials group Local, State, Federal, split by division type. Without an
+   * address `panelSeatsFor` returns the whole zip as one list; rows the
+   * address ruled out are returned separately and never rendered.
    */
   const statePanel = panelSeatsFor(
     coverage,
@@ -684,74 +403,27 @@ function CoverageBody({
     return text === null ? [] : [{ authority, text }];
   });
 
-  /*
-   * The reader's device-local narrowing (M26): where they picked their
-   * municipality or school district, bodies of that TYPE narrow to the
-   * choice; every other type stays fully listed. The choice never leaves
-   * the device — see hooks/use-narrowing.ts.
-   */
+  /* Device-local narrowing: bodies of the picked type narrow to the choice. */
   const narrowing = useNarrowing(zip);
   const selected = new Set(narrowing.divisions);
 
   /*
-   * The same subject the seats above were annotated against. One location, one
-   * question, every list on this card.
-   *
-   * **RULING 222**: `scopedToAddress`, not `applyResolvedLocation`. The LOCAL
-   * list is ZIP-scoped exactly as the seat lists are, and a municipality or a
-   * county the reader's own address has ruled out is out of scope here for the
-   * same reason District 19 is out of scope there. It drops only
-   * `ELSEWHERE_IN_ZIP`; the overlapping levels most of these rows sit at are
-   * untouched, and every count on this card is derived from THIS array, so the
-   * stated N and the rendered rows cannot disagree about it.
+   * Drops only `ELSEWHERE_IN_ZIP`; overlapping levels are untouched. Every
+   * count on this card derives from this array.
    */
   const bodiesHere = scopedToAddress(bodies, subject.location);
 
   /*
-   * ITEM 1a (2026-08-17): ONE DENOMINATOR.
-   *
-   * Production at 85701 read "4 bodies govern the area around 85701" above a
-   * disclosure reading "Why these 5?" above 5 rows. Three numbers, one list.
-   *
-   * The cause was two definitions on one surface, and the brief's named
-   * suspect was half right. The prose read the SERVER's `counts.governing`
-   * (bodies whose class is GOVERNING — 4 at 85701). The rows were the first
-   * `NAME_LIMIT` of ALL bodies, governing and not. The row that moved between
-   * them was NOT the Public Housing Authority board — that board IS classed
-   * GOVERNING and is inside the 4. It was the Board of Adjustment, a
-   * COMMISSION, sitting fifth in a list cut from the 60-body array.
-   *
-   * A second, latent instance of the same defect sat underneath it and would
-   * have survived any fix that only re-pointed the prose at a server count:
-   * the reader's device-local narrowing (M26) shrinks the RENDERED list on the
-   * client, while `counts.governing` is computed on the server and cannot see
-   * it. A reader who narrowed to one school district would have re-opened the
-   * gap by hand.
-   *
-   * So every number below is derived from ONE array, after narrowing, in the
-   * component that renders it. Prose N, disclosure N and rendered row count
-   * are the same expression — they cannot disagree, at any zip, for any
-   * reader, regardless of how many bodies the registry grows.
-   *
-   * Both definitions are real and both are needed — 50 Tucson advisory
-   * committees must never read as 50 governments (D29) — so BOTH are said on
-   * screen in plain language: the governments in the list, the boards and
-   * committees in their own sentence below it.
+   * Every number below derives from one array, after narrowing, so prose N,
+   * disclosure N and rendered rows always agree. Governments and advisory
+   * boards are stated separately.
    */
   const derived = deriveWhoGoverns(bodiesHere, selected);
   const shown = derived.rows;
-  // The per-body source notes spell out the snapshot's last-refresh date through
-  // the product's one formatter (RULING 258); "" when we cannot say, so the
-  // sentence stands without a date rather than inventing one.
+  // "" when unknown, so the sentence stands without a date.
   const lastCheckedLong = formatDateLong(lastCheckedAt);
   const lastCheckedClause = lastCheckedLong ? `, ${lastCheckedLong}` : "";
-  /*
-   * The governing list is NOT cut. A cut would put the prose count and the row
-   * count back into disagreement the moment a zip had more governments than the
-   * limit — an invariant that holds only because of today's data is not an
-   * invariant. A reader is governed by a handful of governments; the card
-   * scrolls (4f) if that is ever untrue.
-   */
+  /* The governing list is never cut, so prose and row counts agree. */
   const seatLine = seatPhrase(seats);
   const kind = leadKind(coverage);
   const g = { total: derived.governingCount, withSource: derived.governingWithSource };
@@ -770,9 +442,6 @@ function CoverageBody({
       </>
     ) : kind === "meetings-missing-calendars" ? (
       // Meetings are on screen, but not from every government's calendar.
-      // Leads with what we have (2j — the inversion rule): the failure frame
-      // "we're missing X" buried the fact that most calendars are watched.
-      // The numbers stay honest and computed; only the frame changed.
       g.withSource === 0 ? (
         // Zero tracked is not a lead-with-what-we-have case; say it straight.
         <>
@@ -810,9 +479,6 @@ function CoverageBody({
 
   // The advisory boards, committees and commissions, stated apart from the
   // governments — real bodies a reader can follow, not extra governments.
-  // Leads with what is tracked (2j): "56 more boards ... we watch 5" read as
-  // failure when it describes a live, growing watch list. Numbers stay
-  // honest and computed; only the frame changed.
   const othersLine =
     kind !== "unmapped" && others > 0 ? (
       othersWithSource > 0 ? (
@@ -836,8 +502,7 @@ function CoverageBody({
   return (
     <>
       {unincorporated && (
-        // The no-mayor case is a stated fact, not an empty slot (5b): say
-        // what this place has instead of what it lacks.
+        // The no-mayor case is a stated fact: say what this place has instead.
         <p className="mt-1.5 t-body leading-relaxed text-voice">
           <span className="text-signal">
             This area isn&apos;t a city or town
@@ -852,15 +517,11 @@ function CoverageBody({
         </p>
       )}
 
-      {/* The app's voice (design pass): coverage explanation is guidance,
-          not record — it renders in the voice register. */}
       <p className="mt-1.5 t-body leading-relaxed text-voice">
         {lead}
       </p>
 
-      {/* What Meanwhile holds for this ZIP, level by level, so a blank reads as
-          "not collected yet" and never as "nothing here". Counts come from the
-          same arrays the sections below render. */}
+      {/* Counts come from the same arrays the sections below render. */}
       <p className="mt-1 t-detail leading-relaxed text-voice" data-mw-covers>
         <strong className="font-semibold text-voice">What Meanwhile has for {zip}:</strong>{" "}
         {[
@@ -877,30 +538,7 @@ function CoverageBody({
         .
       </p>
 
-      {/* WGH-15: which question this card answers, said once, at the top. */}
       <SubjectLine zip={zip} standing={subject.location.certainty} />
-
-      {/*
-        **RULING 222 (2026-08-31) — THE COUNTING SENTENCE IS GONE WITH THE
-        ROWS IT COUNTED.**
-
-        A line stood here reading "N of these govern a different part of
-        85641 than your address, and they are marked below." It was written
-        for WGH-15 when those rows were rendered and annotated. They are not
-        rendered any more — scopedToAddress drops them before this list is
-        built — so the sentence would be describing rows that are not there,
-        which is a surface asserting something its own contents contradict:
-        the WGH-19 / WGH-21 / MAP-5 class, on a fourth surface.
-
-        Nothing replaces it. "We hold N more you cannot see" is a claim about
-        our collection dressed as a claim about the reader's government, and
-        the ZIP-scoped view is one tap away — clearing the address restores it
-        in full, which is where completeness is owed.
-
-        deriveWhoGoverns still COUNTS the excluded rows; it is a derivation
-        over an annotated list and tests/resolved-location.test.ts reads it.
-        What is gone is the render.
-      */}
 
       {othersLine && (
         <p className="mt-1 t-detail leading-relaxed text-voice">
@@ -908,24 +546,7 @@ function CoverageBody({
         </p>
       )}
 
-      {/*
-        **WGH-18 (2026-08-30) — "SEE THE REST", AND IT OPENS IN PLACE.**
-
-        The sentence above states how many boards, committees and commissions
-        we track here. Until now that was the end of it: reaching one meant
-        closing this panel, opening the sidebar, and clicking Bodies here.
-        A reader had no way to find out which ones they were.
-
-        A number a reader cannot open is a panel describing contents it does
-        not show — the same defect as WGH-19's completeness claim, one step
-        earlier. The count in the label is `derived.otherRows.length` and the
-        rows are `derived.otherRows`, so the label cannot state a number the
-        list does not contain.
-
-        Collapsed by default (the same rule for long content as MTG-5,
-        BAL-8, BAL-16, ASK-21), and each row opens the same battlecard the
-        governing rows open — a board is a real body a reader can follow.
-      */}
+      {/* Opens in place; the label's count is `derived.otherRows.length`. */}
       {derived.otherRows.length > 0 && (
         <details className="mt-1" data-other-bodies-disclosure="">
           <summary className="cursor-pointer t-caption text-link">
@@ -953,66 +574,14 @@ function CoverageBody({
       )}
 
       {shown.length > 0 && (
-        // Structural label (design pass): organizes, confident, with its
-        // shelf rule — never smaller than the names it organizes.
         <p className="t-structure mt-3 text-local">Local</p>
       )}
-      {/*
-        6g (2026-08-15): "Why these five?" — the top list surfaces
-        a Board of Adjustment beside a county, a city and a school district,
-        and nothing on the surface says why those and not others.
-
-        One honest sentence about the SELECTION, and deliberately not a new
-        ranking: the list is the bodies whose calendars this product watches
-        here, in the order the coverage summary returns them, cut at five with
-        the remainder counted below. There is no scoring, no importance
-        judgement, and no ordering by anything a reader could mistake for one.
-        Saying so is cheaper than being asked.
-      */}
-      {/*
-        ITEM 1a (2026-08-17): the disclosure renders whenever there are rows,
-        not only when something is hidden. Its number is `shown.length` — the
-        same expression the lead sentence counts and the same rows the list
-        renders — so the walk's three-way equality holds by construction.
-
-        The question it answers has changed with the list. It used to be "why
-        these five of sixty"; the list is now exactly the governments, so the
-        honest question is what makes something a government here and where the
-        boards and committees went.
-      */}
+      {/* The disclosure's number is `shown.length`, the same rows the list renders. */}
       {shown.length > 0 && (
         <details className="mt-1">
           <summary className="cursor-pointer t-caption text-link">
             Why these {shown.length}?
           </summary>
-          {/*
-            **WGH-19 (2026-08-30) — A TRUE SENTENCE THAT READS AS A FALSE ONE.**
-
-            This said *"All of them are listed; none is left out."* Read
-            against its own subject — the GOVERNMENTS — it was true, and the
-            following sentence separated boards and committees out explicitly.
-            Beside a sidebar reading 65 bodies here, it read as factually
-            wrong and grammatically poor, and that reading is fair: a claim of
-            completeness sitting above eight rows, on a panel that elsewhere
-            says twenty-seven more calendars are tracked and thirty more
-            bodies are being added, cannot be parsed as narrowly as it was
-            written.
-
-            So the completeness claim goes and the SCOPE claim stays. What is
-            on the list is now said by naming the criterion — boundaries cover
-            this area, and this is a government rather than a board — which is
-            the fact we can source, in place of a "nothing was omitted" that
-            invites the reader to check it against a bigger number on the same
-            screen and find it wanting.
-
-            The neutrality sentence changes with it. WGH-17 orders these rows
-            by governmental layer, so *"nothing here is ordered"* would become
-            the next false self-description. The order and its criterion are
-            stated instead: county, municipality, school district, then the
-            rest — a structural fact about governments, never a judgment about
-            them, which is what `CLAUDE.md`'s neutral-criterion rule requires
-            of any ordering that reaches a reader.
-          */}
           <p className="mt-1 t-caption leading-relaxed text-voice">
             {shown.length === 1
               ? "This is the government whose boundary covers this area"
@@ -1033,51 +602,11 @@ function CoverageBody({
           {shown.map((body) => (
             <li
               key={body.bodyId}
-              /*
-               * ITEM 1a (2026-08-17): an explicit hook for the permanent walk
-               * check that counts rendered government rows against the two
-               * numbers the card states. The check used to have to infer a
-               * row from a Tailwind class, and a class is a styling decision
-               * — the next design pass would have silently disarmed the guard
-               * that exists because this list once disagreed with itself.
-               */
+              /* Hook for the walk check that counts rendered government rows. */
               data-governing-row=""
               className="flex items-baseline justify-between gap-3 pb-1"
             >
-              {/*
-                ITEM 3 (2026-08-16): A BODY ROW OPENS ITS
-                LARGE BATTLECARD. It used to be an outbound link straight to
-                the body's own website — Pima and Tucson threw the reader out
-                of the product from the list, before they had been told
-                anything about the body at all. The official site is still
-                one tap away; it is inside the card now, with the roster, the
-                sittings and the sources, which is where every external door
-                on this surface lives.
-
-                Still the division label and never an invented name: Body.name
-                is null on derived rows, and the text is Census's.
-              */}
-              {/*
-                **WGH-11 (2026-08-25) — THE MARK SITS AGAINST THE WORD IT
-                ANNOTATES, so it is inside the NAME's flex item.**
-
-                It used to be the row's own second child. The row is
-                `justify-between` with three children, so the asterisk was
-                distributed into the dead space between the body name and the
-                right-aligned type label — screenshot `17-30-58` shows the
-                marks on `Rockaway township`, `Denville township` and
-                `Rockaway` floating a third of the way across the panel, nowhere
-                near the words they belong to.
-
-                **The asterisk itself is fine** — the defect is the
-                placement, not the mark, which is why this moves it rather than
-                taking the RULING 138 route and removing it. `.could-govern-mark`
-                already carried `display: inline; margin-left: 3px`, which was
-                doing exactly nothing while the element was a flex ITEM: flex
-                blows away `display: inline` on its children, and a 3px margin
-                is invisible against a `justify-between` gap. Wrapping is the
-                whole fix; the mark's own CSS was right all along.
-              */}
+              {/* The mark sits inside the name's flex item so it stays against the word. */}
               <span className="inline-flex items-baseline">
                 {onOpenBody ? (
                   <button
@@ -1093,96 +622,23 @@ function CoverageBody({
                     {bodyDisplayName(body)}
                   </span>
                 )}
-                {/*
-                  RULING 71 (NJ Hunt 3, 2026-08-22). This card's heading is "Who
-                  governs here", and at a zip that crosses a municipal line it had
-                  no way to say that two of eight bodies govern everyone and six
-                  govern some readers and not others. The pill says which.
-
-                  Only bodies whose territory covers PART of the zip carry it, and
-                  only when the reader TYPED a zip — a panned viewport names no
-                  place, so `couldGovern` is absent and nothing renders.
-
-                  It is an INVITATION, not a disclosure of our incompleteness: we
-                  hold Rockaway Borough's government and Rockaway Township's, both
-                  in full, and what is unsettled is which is the reader's. RULING
-                  44 is not weakened; see components/ballot/jurisdiction-note.tsx.
-                */}
+                {/* Only bodies covering part of a typed zip carry the pill. */}
                 {body.couldGovern && (
                   <CouldGovernMark jurisdiction={bodyDisplayName(body)} />
                 )}
-                {/*
-                  RULING 222: there is no exclusion mark here any more. A body
-                  the reader's own address settled AGAINST never reaches this
-                  list — `scopedToAddress` drops it upstream — so there is no
-                  row for a "not yours" sentence to sit on, which is the whole
-                  point of the ruling.
-                */}
-                {/*
-                  WGH-16: the weaker case, which is the COMMON one on this
-                  list. Municipal and school-district rows sit at levels that
-                  overlap, so the exclusion is unreachable for them and this is
-                  the mark they get instead. The seat lists further down
-                  carry only `sldl`, `sldu` and `cd` — all measured exclusive —
-                  so this mark is deliberately not repeated there: it could never
-                  fire, and a branch that cannot fire is a branch a later reader
-                  has to disprove.
-                */}
                 {marksOverlap(body.standing) && <OverlapMark zip={zip} />}
               </span>
               <span
                 className={`trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
               >
-                {/* A derived row is the division's government and tags by
-                    division type. A curated row tags by what it is — the PHA
-                    board tagged "Municipal" would claim a second city
-                    government, and a commission isn't a government at all. */}
-                {/* NH94: a body with NO division has no division noun, and
-                    "Municipal" was the placeholder that used to appear there —
-                    a claim about what kind of government it is, made by a
-                    default. It renders its body class instead, which is a fact
-                    about the body rather than a guess about its division. */}
+                {/* Derived rows tag by division type; curated rows by what they are; a body with no division renders its class. */}
                 {body.name === null && body.divisionType !== null
                   ? DIVISION_NOUN[body.divisionType]
                   : BODY_CLASS_NOUN(body.bodyClass)}
               </span>
             </li>
           ))}
-          {/*
-            ITEM 6 (2026-08-17): THE MAYOR ROW IS GONE
-            FROM THIS PANEL, everywhere it appeared, no exceptions.
-
-            3e (2026-08-16) put it here because 85701 showed Tucson's
-            government without its highest-profile office. But the placement
-            is awkward and the office already renders in
-            the battlecard's Representation tab, which it does.
-
-            **Reachability after removal, checked against the committed
-            rosters rather than assumed — no zip loses the office:**
-
-              85701  Mayor Regina Romero, on the City of Tucson roster.
-                     Reachable: the Tucson row opens its large battlecard →
-                     Representation tab. Also on Tucson meeting cards.
-              85641  No mayor EXISTS — Vail is unincorporated, and the card
-                     says so in its own first line ("This area isn't a city or
-                     town — it has no mayor or city council"). Nothing lost.
-              07866  Mayor Joseph Jackson, on the Rockaway township roster.
-                     Same path: the township row → Representation tab.
-              03255  No mayor exists; Newbury is run by a Selectboard.
-
-            **The no-mayor FACT is not this row and survives untouched.**
-            Newbury's select-board fact and explainer (M32) is the separate
-            block immediately below, keyed on the office title rather than on
-            "Mayor", so removing the Mayor filter does not reach it. It still
-            renders on the who-governs card at 03255, with the three
-            Selectboard members under it — which is the point: the statement
-            is about how the town IS governed, not about what it lacks.
-          */}
-          {/* 2e (2026-08-17): the no-mayor town, stated as what it HAS. A
-              New England town run by a Select Board gets the fact named and
-              its members shown — the people filling the substitute role
-              matter exactly as much as a mayor would. Same pattern anywhere
-              the expected office doesn't exist. */}
+          {/* A town with no mayor gets its substitute office named and its members shown. */}
           {shown.flatMap((body) => {
             const board = projectedBodyRoster(body).members.filter((holder) =>
               /select\s?board/i.test(holder.officeTitle),
@@ -1228,42 +684,10 @@ function CoverageBody({
               )),
             ];
           })}
-          {/*
-            ITEM 1a (2026-08-17): the "and N more" row is GONE, and the reason
-            matters more than the row.
-
-            It was a bare `<li>` of static text — no link, no button, no
-            handler. Once the list above became exactly the governments, that
-            row said "and 56 more boards and committees" directly beneath a
-            sentence that already reads "We also track 5 more board and
-            committee calendars here. 51 more bodies are being added." Same
-            set, same number, twice, four lines apart. A duplicate message is a
-            defect with the same standing as a wrong number.
-
-            **A note for item 4b, which is deferred (G05).** The g6 brief keeps
-            this row on the reasoning that "removing 'and 55 more' makes 55
-            bodies unreachable from the surface whose job is coverage." That
-            premise does not hold: the row was never an affordance and led
-            nowhere, so it made nothing reachable and removing it makes nothing
-            unreachable. The reachability concern is REAL and is now stated
-            plainly rather than answered by an element that only looked like an
-            answer — those bodies are counted in the sentence above and in the
-            "Why these N?" disclosure, and neither opens them either. Building
-            a way in is item 4b's to rule on, with the false premise removed.
-          */}
         </ul>
       )}
 
-      {/*
-        WGH-1 and WGH-2 (2026-08-22): ONE pill for the whole panel, between
-        the Local listing and the State listing. Every affected row above carries an asterisk and nothing more.
-
-        What was here before: the full sentence "Could govern — add your
-        address to confirm" on EVERY affected row. At 12 bodies that was
-        noise; the registry now holds 174, and the repetition is what made the
-        product look like it was ballparking. The old pill was also DEAD —
-        clicking it did nothing. This one opens the address prompt.
-      */}
+      {/* One pill for the whole panel; affected rows above carry only an asterisk. */}
       <CouldGovernNotice
         zip={zip}
         count={shown.filter((body) => body.couldGovern === true).length}
@@ -1272,51 +696,12 @@ function CoverageBody({
       />
 
       {/*
-        G05 RULE 4b (2026-08-17): three things left this position.
-
-        The rule: *"WGH contains exactly: the Ballot/zip+Ask pill cluster, the
-        explainer of the bodies that govern the area, then Local/State/Federal.
-        Remove What's on the ballot from the panel. The Who do I talk to about
-        box does not render by default."*
-
-        * The **ask box** is gone from here entirely. It is not hidden and it
-          is not duplicated: there is now exactly one ask input in the product
-          and it lives in the pill cluster's expansion, which renders at the
-          TOP of this card whenever this card is the open surface (4e). "Does
-          not render by default" is literally true — the pill is closed until
-          the reader taps it.
-        * The **narrowing prompt** and the **Moving here** link move to AFTER
-          Local/State/Federal, which is where G05's own preserve-and-report
-          clause puts the things this rule keeps. The narrowing prompt keeps
-          every property CLAUDE.md's second load-bearing friction requires:
-          declining stays the effortless default, and moving it changes only
-          where it sits, never how easy it is to ignore.
+        NH bodies: the statutory no-agenda sentence renders for every body; the
+        diligence sentence only for a hunt recorded as exhausted. A failed
+        calendar read is dated and split: listings on screen are older ones;
+        no listings means meetings may be missing. Neither reads as "nothing
+        is scheduled".
       */}
-
-      {/*
-        D17, split 2026-08-13. The statutory sentence — New Hampshire does not
-        require an agenda — is a fact about the law and renders for every NH
-        body here. The diligence sentence ("we searched high and low") is a
-        claim about our work and renders only for a hunt the audit records as
-        exhausted, so the statute can never explain away a body nobody has
-        searched.
-      */}
-      {/*
-        The snapshot's per-source failure, attributed to the bodies it serves.
-        Without this, a source that was unreachable this morning renders its
-        bodies exactly like bodies with nothing scheduled — a gap of ours
-        presented as a fact about their government.
-      */}
-      {/* F01 7.2 (2026-08-19), rewritten 2026-09-14 — TWO FACTS, in plain
-          language and dated, never "couldn't reach" and never an adapter id
-          (RULING 254: no verdict on ourselves; RULING 258: reader-plain, dated
-          through the one formatter).
-
-          A body whose calendar page did not answer at the last refresh is one of
-          two cases. If it has listings on screen, they were carried from before,
-          so the fact is "what's shown is older". If it has none, its meetings may
-          genuinely be missing here. Two different facts; each says its own, and
-          neither reads as "nothing is scheduled". */}
       {collapseFootnotes(
         shown.filter(
           (body) =>
@@ -1355,10 +740,7 @@ function CoverageBody({
         </p>
       ))}
 
-      {/* 2026-09-24 — the calendar READ date, per division, when it is old.
-          "Last checked" in the footer is the newest read anywhere; a division
-          whose own calendar has not been read for a day and a half says so,
-          dated, as a fact about our read and never as a verdict on the body. */}
+      {/* A division whose own calendar read is over a day and a half old says so, dated. */}
       {collapseFootnotes(
         shown.filter(
           (body) =>
@@ -1403,19 +785,14 @@ function CoverageBody({
         </p>
       ) : (
         <>
-          {/* Item 2c: STATE — legislators first (district scope), then the
-              governor (2b, statewide scope). Item 2b's honesty line: the
-              governor is the only statewide office listed, said rather
-              than implied complete. */}
+          {/* State: legislators first, then statewide executives. */}
           {(stateSeats.length > 0 || statewideExecutives.length > 0) && (
             <>
               <p className="t-structure mt-4 text-state">
                 State
               </p>
               <ul className="mt-1 space-y-1">
-                {/* THE REPORTED ROWS. After a confirmed address this list is
-                    the reader's own districts — District 17 at 85641 — and
-                    the ones their address ruled out are not on it. */}
+                {/* After a confirmed address, only the reader's own districts. */}
                 {stateSeats.map((seat) => (
                   <SeatRow
                     key={seat.ocdId}
@@ -1449,52 +826,16 @@ function CoverageBody({
                   </li>
                 ))}
               </ul>
-              {/*
-                * **WGH-21 (2026-08-30) — THE LINE THAT CONTRADICTED THE LIST
-                * DIRECTLY ABOVE IT.**
-                *
-                * This rendered *"The governor is the only statewide office
-                * listed so far"* whenever `statewideExecutives.length > 0`.
-                * It was written when the slate held one person and it was
-                * true then. It was never re-derived, so when the slate
-                * populated the panel printed nine statewide officeholders by
-                * name and party — Mayes, Yee, Horne, Presmyk and five
-                * corporation commissioners — and then said the governor was
-                * the only one.
-                *
-                * It is not stale. It is FALSE about content rendered inches
-                * above it, and the governor is not even the nearest entry.
-                *
-                * The line is gone rather than corrected: the contents are
-                * right, so the line is the thing that goes. Nothing replaces it, because the only
-                * replacement would be a completeness claim — *these are all
-                * the statewide offices* — and we hold no source for the
-                * denominator of statewide offices. Asserting it would be the
-                * manufactured claim `CLAUDE.md` forbids, and the product does
-                * not announce its own failure either (RULING 139). No claim
-                * beats a false one and beats an invented one.
-                *
-                * The CLASS, which is the part that matters: a surface
-                * asserting something about ITSELF from a hardcoded string
-                * that its own rendered contents can contradict. WGH-19 and
-                * MAP-5 in this same report are the same defect on other
-                * surfaces. `tests/self-description.test.ts` is the guard.
-                */}
             </>
           )}
 
-          {/* Item 2c: FEDERAL — the House member (district scope) before
-              the senators (statewide). "Federal", never "National": it
-              matches every ballot and source the app cites. */}
+          {/* Federal: the House member before the senators. "Federal", never "National". */}
           {(federalSeats.length > 0 || senators.length > 0) && (
             <>
               <p className="t-structure mt-4 text-national">
                 Federal
               </p>
               <ul className="mt-1 space-y-1">
-                {/* Same rule at the federal level. A zip that crosses a
-                    congressional line is rarer, not different — and it is the
-                    same component, so it cannot be treated differently. */}
                 {federalSeats.map((seat) => (
                   <SeatRow
                     key={seat.ocdId}
@@ -1503,22 +844,7 @@ function CoverageBody({
                     onOpenOfficial={onOpenOfficial}
                   />
                 ))}
-                {/*
-                  ALIGN-2 (2026-08-26, the 8/26 walkthrough). This
-                  used to map over PEOPLE and emit a heading per person, so
-                  every Arizona zip printed `U.S. Senator` twice — once above
-                  Mark Kelly and once above Ruben Gallego.
-
-                  RULING 136: the senators are the EXAMPLE. The grouping is in
-                  `lib/officials/seat-grouping.ts` so that every multi-seat
-                  body — a two-member state house district, five county
-                  supervisors, a multi-member school board — gets one heading
-                  and a list, rather than the Senate getting a special case.
-
-                  The callback still receives the SINGULAR office title. A
-                  person holds `U.S. Senator`; the plural is a heading over a
-                  list and is not anybody's job.
-                */}
+                {/* One heading per seat label (`lib/officials/seat-grouping.ts`); the callback gets the singular title. */}
                 {groupBySeatLabel(
                   senators.map((holder) => ({ label: "U.S. Senator", member: holder })),
                 ).map((group) => (
@@ -1547,22 +873,6 @@ function CoverageBody({
             </>
           )}
 
-          {/*
-            **RULING 222 (2026-08-31) — THE DISCLOSURE IS GONE.**
-
-            A collapsed <details> stood here listing the districts the
-            reader's address ruled out, under the reading that RULING 26/27
-            forbade dropping them. That reading is settled now: after a
-            confirmed address the scope IS the address, and an entity we have
-            determined does not govern this reader is out of scope rather than
-            disclosed. Show-everything guarantees completeness WITHIN the
-            correct scope; it never licensed carrying another district's
-            representatives on the panel a reader reads as theirs.
-
-            The rows are still computed — panelSeatsFor().excluded — so a
-            check can assert they were DROPPED rather than never found, and
-            tests/address-scope.test.ts asserts exactly that.
-          */}
         </>
       )}
 
@@ -1586,10 +896,7 @@ function CoverageBody({
           b.coverageStatus !== "MANUAL",
       ) ||
         seatCounts.named < seatCounts.total) && (
-        // The honest footnote, now narrowed to what is still unsourced. It used
-        // to claim we had sourced no names at all, which stopped being true the
-        // moment the federal roster landed — AZ-6 has a name on it. Claiming
-        // otherwise beside a rendered name is its own small lie.
+        // Narrowed to what is still unsourced.
         <p className="mt-2.5 t-caption leading-relaxed text-voice">
           {counts.withoutSource > 0 && (
             <>
@@ -1609,44 +916,7 @@ function CoverageBody({
         </p>
       )}
 
-      {/*
-        4b's preserve-and-report tail: the two affordances the rule KEEPS,
-        placed after Local/State/Federal exactly as G05 words it. Neither is a
-        new element and neither changed — only where they sit.
-
-        WGH-3 and WGH-4 (2026-08-22): "Narrow to this area?" used to expand into
-        a pitch — *"07866 covers 4 municipalities and 3 school districts. Do you
-        want to narrow it?"* — with a municipality picker and its own street
-        input, and it was the SECOND implementation of the address feature on a
-        screen that already had one. Both are gone. This is the same component
-        the pill above opens and the ballot page uses: street only, and a house
-        number only when the reader's own street crosses a line.
-      */}
-      {/*
-        **WGH-7 (2026-08-24) — DELETED, AND THIS IS WHAT
-        CLOSES WGH-3 AND WGH-4 RATHER THAN MERGING THEM.**
-
-        The "Narrow this area" link under the federal representatives is
-        deleted: the pill is the single entry point.
-
-        That pill is `CouldGovernNotice`, above the Local list, which
-        has opened this exact `AddressPrompt` since 2026-08-22. So the card was
-        carrying TWO doors onto one surface — the duplicate-entry friction
-        `CLAUDE.md` names — separated by the whole Local/State/Federal list, so
-        a reader who took the second one had scrolled past the first.
-
-        WGH-3 and WGH-4 removed a SECOND IMPLEMENTATION of the address feature
-        and left one component in two places. This removes the second PLACE. It
-        is a deletion rather than a merge because there is nothing here the pill
-        does not already do: same component, same zip, same handlers.
-
-        **What is NOT lost.** `onNarrowApplied` fired from here to tell the map
-        to shade its boundaries, and the pill's own `onAddressResolved` path
-        reaches the same handler in `map-entry` — the shading follows the
-        RESOLUTION, not the control that asked for it.
-      */}
-
-      {/* 7 (2026-08-17): the mover's page, one tap from who-governs. */}
+      {/* The mover's page, one tap from who-governs. */}
       {/^\d{5}$/.test(zip) && (
         <p className="mt-2 t-detail">
           <a
@@ -1684,22 +954,11 @@ export function CoverageNotice({
 }: CoverageNoticeProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const { result } = useShellData();
-  // Item 1 (2026-08-15): a press outside minimizes the card, the way a native
-  // sheet does. It MINIMIZES rather than closing — the card's collapsed form
-  // is its corner bubble, and there is no state in which it is gone, so the
-  // gesture lands the reader exactly where the explicit control does.
-  //
-  // Declared before the early return below so the hook order is stable; the
-  // hook itself no-ops when `onMinimize` is absent.
+  // A press outside minimizes the card to its bubble; declared before the
+  // early return so hook order is stable.
   useDismissOnOutside(rootRef, onMinimize ?? (() => {}), Boolean(onMinimize));
 
-  // The notice renders on every failure rung, and on the exact rung whenever
-  // there is representation to show. It used to return null on `exact`
-  // outright — and since this is the only surface that renders who governs
-  // and represents a point, the composite making every zip exact silently
-  // deleted the officials from the product. The gate now lives in
-  // lib/registry/representation.ts, where a test holds it against the
-  // committed rosters.
+  // The gate lives in lib/registry/representation.ts.
   if (!shouldRenderNotice(tier, coverage)) return null;
 
   const wide = formatMiles(radiusKm);
@@ -1707,8 +966,7 @@ export function CoverageNotice({
   const isEmpty = tier === "none";
   const label = noticeLabel(tier, coverage);
 
-  // Amber marks the rungs where something needs explaining. "Who governs
-  // here" on the exact rung is information, not an alert, so it stays quiet.
+  // Amber marks rungs that need explaining; the exact rung stays quiet.
   const accent =
     tier === "concluded"
       ? "text-concluded"
@@ -1716,8 +974,7 @@ export function CoverageNotice({
         ? "text-muted"
         : "text-signal";
 
-  // The ballot entry travels with the zip the card is already about, so the
-  // click never re-asks for something the app knows.
+  // The ballot entry carries the zip the card is about.
   const ballotZip = zip && /^\d{5}$/.test(zip) ? zip : null;
 
   return (
@@ -1731,8 +988,7 @@ export function CoverageNotice({
       }
     >
       {onMinimize && (
-        // The explicit way out (3) — engagement still collapses it, but the
-        // reader shouldn't have to know that.
+        // The explicit way out.
         <button
           type="button"
           onClick={onMinimize}
@@ -1752,8 +1008,7 @@ export function CoverageNotice({
           </svg>
         </button>
       )}
-      {/* Pinned: the header never scrolls with the body, so the ballot entry
-          below it cannot be scrolled away. */}
+      {/* Pinned: the header never scrolls, so the ballot entry stays reachable. */}
       <div className="coverage-notice-head">
         <p
           className={`font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] ${accent}`}
@@ -1761,25 +1016,7 @@ export function CoverageNotice({
           {label}
         </p>
 
-        {/*
-          G05 RULE 4b: *"Remove What's on the ballot from the panel."*
-
-          The tester's 2026-08-14 finding is the reason this entry existed and
-          it is NOT being reversed. Her words — the floater never appeared on
-          her phone, and "I don't think I would have found that without knowing
-          it existed" — were about REACHABILITY, and reachability is now better
-          than the link she was rescued with: the pill cluster renders at the
-          top of this card whenever this card is the open surface (4e), pinned
-          outside the scroll exactly as this link was, carrying the ballot pill
-          AND the zip it is about. What is removed is the DUPLICATE, not the
-          door. A reader who cannot reach the ballot does not have it, and this
-          card still reaches it in one tap at the same place on the screen.
-
-          The fallback below is not a second door. It renders only when the
-          cluster is somewhere else — the frame before the breakpoint is read,
-          or a card with no resolved zip — so the count on screen is always
-          exactly one.
-        */}
+        {/* The fallback renders only when the cluster is elsewhere, so exactly one ballot door shows. */}
         {pillCluster ??
           (clusterElsewhere ? null : (
             <a
@@ -1817,14 +1054,7 @@ export function CoverageNotice({
       )}
       {tier === "concluded" && <p className="mt-2 t-body text-paper-dim">Concluded meetings within {wide} miles of {zip}.</p>}
 
-      {/*
-        The coverage block rides *alongside* the cascade's explanation rather
-        than replacing it, because the widened rung is where it matters most: a
-        reader in Vail is shown fourteen meetings from thirty-seven miles away,
-        none of which are their government. Saying which bodies actually govern
-        there — and that we hold no calendar for them — is the difference
-        between a helpful answer and a misleading one.
-      */}
+      {/* Shown alongside the cascade's explanation; it matters most on a widened rung. */}
       {coverage && hasRepresentation(coverage) ? (
         <CoverageBody
           zip={zip}
@@ -1841,8 +1071,7 @@ export function CoverageNotice({
       ) : (
         !coverage &&
         isEmpty && (
-          // The registry could not be read. Fall back to what the cascade alone
-          // knows rather than inventing a coverage claim.
+          // The registry could not be read: say only what the cascade knows.
           <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
             No meetings on file near {zip} yet. We&apos;re still checking
             local calendars. A meeting may be listed before its agenda is posted.

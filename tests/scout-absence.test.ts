@@ -1,6 +1,5 @@
 /**
- * RULING 52/53 enforced for the scout scheduler: a proven absence is recorded
- * and expires on a clock, so a correct negative is not re-walked every cycle.
+ * A proven absence is recorded and expires on a clock, so a correct negative is not re-walked every cycle.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -62,7 +61,7 @@ test("isArguedAbsence: only a finished, floor-clearing NO_PROGRESS is an absence
 test("recordArguedAbsence sets absentUntil and advances the stored next-due to the expiry", async () => {
   const repos = createMemoryRepositories();
   await repos.obligations.put(BASE.id, standing(BASE, NOW), NOW);
-  /* DP-11: the hold is the owner's setting tied to the source's pace (5 days at most by default), never the old 30. */
+  /* The hold is the owner's setting tied to the source's pace (5 days at most by default). */
   const until = absenceHold(standing(BASE, NOW), NOW, null).until;
   assert.ok(until < absenceExpiry(NOW));
   await recordArguedAbsence(repos, { obligationId: BASE.id, absentUntil: absenceExpiry(NOW), now: NOW });

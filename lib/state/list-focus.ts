@@ -3,24 +3,17 @@ import type { Meeting } from "../sources/types.ts";
 import type { UiAction, UiState } from "./types.ts";
 
 /**
- * **A COUNT OPENS THE LIST IT COUNTS.** (2026-09-23, the Tucson Unified report.)
- *
- * The district card states "Upcoming 3" and the number is a door (BC-8). The
- * door used to dispatch a Body scope with a division id, which no meeting can
- * match — so it opened an empty list. It now opens the list FOCUSED on exactly
- * the rows the card counted, through the same predicate, so the stated number
- * and the rendered rows are one computation:
+ * A count opens the list it counts. The district card's "Upcoming N" door
+ * focuses the list on exactly the rows the card counted, through the same
+ * predicate:
  *
  * - `divisionUpcoming` is the card's count AND the list's rows;
- * - `showDivisionUpcoming` is the door's whole action — the component
- *   dispatches what it returns and nothing else;
+ * - `showDivisionUpcoming` is the door's whole action;
  * - `focusList` is what the list overlay renders from.
  *
- * The focus is the ASK-22 kind, not a filter: it belongs to one opening, the
- * reducer clears it when the list closes, the overlay names it in a chip the
- * reader can clear, and a focus that matches nothing falls back to every row
- * rather than an empty list. A persistent scope the reader cannot see is how
- * "0 meetings" came to stand under "Upcoming 3".
+ * A focus is not a filter: it belongs to one opening, the reducer clears it
+ * when the list closes, the overlay names it in a clearable chip, and a focus
+ * that matches nothing falls back to every row.
  */
 
 type Focusable = Pick<Meeting, "ocdId" | "status"> & { bodyId?: string };
@@ -33,7 +26,7 @@ export function divisionUpcoming<T extends Focusable>(meetings: readonly T[], oc
 /** Everything the "Upcoming N" door dispatches. */
 export function showDivisionUpcoming(division: { ocdId: string; label: string }): UiAction[] {
   return [
-    // BC-8: the card minimizes …
+    // The card minimizes …
     { type: "select/district", ocdId: null, districtType: null },
     // … and the list opens on exactly the rows the card counted.
     { type: "list/open", open: true, focusDivision: { ocdId: division.ocdId, name: division.label } },

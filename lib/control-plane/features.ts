@@ -1,4 +1,4 @@
-/** DB-46. Per-pass and per-request switches; concurrent readers never share mutable settings. */
+/** Per-pass and per-request switches; concurrent readers never share mutable settings. */
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { AdminConfig } from "./gateway/admin-config.ts";
 import { registerSetting, readSetting, type SettingValue } from "./settings.ts";

@@ -1,17 +1,7 @@
 /**
- * `pgAggregateRepository.list()` must not exceed the Neon HTTP driver's 64 MiB
- * response cap. Before this fix `list()` issued ONE unbounded
- * `SELECT ... ORDER BY id`, so once an aggregate table (cp_work_items,
- * cp_attempts, …) crossed 64 MiB the read threw `NeonDbError: response is too
- * large` — and `readAutonomousActivity` lists four of them on every
- * `/admin/fleet` render, so the whole operations report collapsed to
- * STORE_UNREACHABLE. This is the append-only log's 64 MiB failure one layer up;
- * the remedy is the same keyset paging.
- *
- * Deterministic and provider-independent over a fake `Sql`: the fake THROWS on
- * an unbounded scan, so a regression to a single unbounded `SELECT` fails here
- * rather than only against a >64 MiB production aggregate. The paged
- * concatenation must equal the whole table in id order.
+ * `pgAggregateRepository.list()` pages by key so it never exceeds the Neon HTTP driver's 64 MiB
+ * response cap. The fake `Sql` throws on any scan without a `LIMIT`, and the paged concatenation must
+ * equal the whole table in id order.
  */
 
 import assert from "node:assert/strict";
@@ -128,9 +118,7 @@ test("list() of exactly one full page still terminates on the short second page"
   assert.ok(calls.every((c) => /LIMIT/i.test(c)));
 });
 
-/* `listWhere()` (2026-09-22): the lease sweep's per-task Attempt read moved off
-   a full `list()` onto this, so it must be `list()` filtered, bounded, and
-   filtered by the DATABASE with the value as a parameter. */
+/* `listWhere()` is `list()` filtered by the database, bounded, with the value as a parameter. */
 const tagged = (n: number, wanted: (seq: number) => boolean) =>
   seq(n).map((r) => ({ ...r, value: { seq: r.value.seq, routeTaskId: wanted(r.value.seq) ? "rt-want" : "rt-other" } }));
 

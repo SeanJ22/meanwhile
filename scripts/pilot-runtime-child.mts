@@ -11,7 +11,7 @@ const progressListeners = new Set<() => void>();
 let vitalSignsSink: ((part: NeonBytesHour) => void) | null = null;
 
 /**
- * Vital signs (Sean, Oct 6): children print their hour totals as report lines
+ * Children print their hour totals as report lines
  * (lib/db/transfer-by-caller.ts). With a sink set, every child started here has
  * those lines taken out of its output (never shown, buffered or counted as
  * progress) and handed to the sink. The standing runner sets it once.

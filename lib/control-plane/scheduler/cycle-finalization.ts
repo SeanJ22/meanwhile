@@ -12,19 +12,13 @@ export interface FailedCycleInput {
   readonly finishedAt: string;
   readonly testedSha: string | null;
   readonly host: string;
-  /** What the cycle was waiting on when it failed, from the main thread's own account. */
   readonly pending: PendingSnapshot | null;
   /**
    * The child's last output lines, when another process (the runner) ended
    * it and cannot read its pending snapshot. They say what was running.
    */
   readonly lastOutput?: readonly string[];
-  /**
-   * Write the local record and return its path. The writer owns the record
-   * path, and carries forward the stall diagnostic's block if it fired first.
-   */
   readonly writeLocalRecord: (record: Record<string, unknown>) => string;
-  /** One stderr line. */
   readonly log: (line: string) => void;
 }
 
@@ -124,10 +118,8 @@ export async function recordFailedCycle(input: FailedCycleInput): Promise<Failed
   return { canonical, recordPath, lines };
 }
 
-/** How many of the child's last lines a crash record keeps. */
 export const LAST_OUTPUT_LINES = 12;
 
-/** The child's last non-empty lines, without the runner's own ending line, each cut to a readable length. */
 export function lastChildLines(output: string, count = LAST_OUTPUT_LINES): string[] {
   return output.split(/\r?\n/).map(line => line.trim())
     .filter(line => line !== "" && !/ending owned child .* process tree pid/.test(line))

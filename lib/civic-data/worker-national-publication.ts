@@ -1,23 +1,4 @@
-/**
- * The national place publisher (S4 for S9's place-first hunts). A place with
- * no hand-prepared registry — Columbus, Ohio, say — becomes readable in two
- * ordinary registry-door publications:
- *
- * 1. Its Census divisions, each checked against the saved Census response it
- *    came from (§3: official, fresh, the value on the page), and the bodies
- *    those divisions imply (`bodiesFor`: a municipality's council, a county's
- *    governing board, a school board; none for a statistical or fictitious
- *    Census row). A legislative district gets one seat body, named by its
- *    Census label, because the chamber sits elsewhere.
- * 2. Each statewide official (governor, attorney general) whose name and
- *    office are on their own saved official page, as a statewide executive.
- * 3. Each official whose name and seat are on their own saved official page,
- *    inside its freshness window, as a partial roster reading of that body.
- *    A one-person profile is never a complete roster, so no one departs.
- *
- * Anything that does not pass stays a gap with its reason; nothing is invented
- * and no state is registered by hand.
- */
+/** A one-person profile is never a complete roster, so a partial roster reading never departs anyone. */
 import type { RoutineDataStore } from "./store.ts";
 import type { OfficialLinkingPage } from "./source-authority.ts";
 import type { Body, Division, SourceDataset } from "../registry/types.ts";
@@ -38,34 +19,28 @@ import { isOfficialSource } from "./source-authority.ts";
 import { openStatesSeatHolders } from "../sources/plural/place.ts";
 import { DEFAULT_KINDS, registeredKind, type KindTable } from "../registry/kinds.ts";
 
-/** One Census division as the place hunt resolved it. `sourceUrl` is the saved Census response it came from. */
 export interface NationalDivisionInput {
   readonly id: string;
   readonly label: string;
   readonly divisionType: string;
   readonly geoid: string | null;
   readonly sourceUrl: string;
-  /** Which Census product the response is, stated by the caller that read it. */
   readonly sourceDataset: SourceDataset;
   readonly lsad?: string | null;
   readonly funcstat?: string | null;
   readonly classfp?: string | null;
 }
 
-/** One official found for a division, with the saved official page that names them. */
 export interface NationalOfficialInput {
   readonly discoveryId: string;
   readonly divisionId: string;
   readonly name: string;
-  /** The seat as the official page writes it ("Representative", "Council Member"). */
   readonly officeTitle: string;
   readonly officialUrl: string;
   readonly document: { readonly url: string; readonly capture?: WorkerPublicationCapture };
   readonly linkingPage?: OfficialLinkingPage | null;
   readonly portrait?: PortraitSources;
-  /** CA-02: the row is the Open States row for the seat (own page failed the check); `document.capture` is the saved CSV. */
   readonly basis?: "OPEN_STATES_ROW";
-  /** CA-02: the saved Open States CSV this person's row is in, the fallback when the own page fails the seat check at publication. */
   readonly openStatesCapture?: WorkerPublicationCapture;
 }
 
@@ -76,39 +51,28 @@ export interface NationalPlacePublicationInput {
   readonly geographyCaptures: readonly WorkerPublicationCapture[];
   readonly sources: { readonly officials: readonly NationalOfficialInput[] };
   readonly portraitRuntime?: PortraitRuntime;
-  /** Freshly read existing Admin setting; caller must not cache across passes. */
   readonly kinds?: KindTable;
 }
 
 export interface NationalPlacePublication {
-  /** The last candidate and promoted version this call produced (null when nothing new was published). */
   readonly candidateId: string | null;
   readonly promotedVersionId: string | null;
   readonly divisions: readonly string[];
   readonly bodies: readonly string[];
-  /** Reader member ids of officials now live, by body. */
   readonly members: readonly { readonly bodyId: string; readonly versionId: string; readonly discoveryIds: readonly string[] }[];
   readonly gaps: readonly { readonly key: string; readonly detail: string }[];
 }
 
-/**
- * A governing county subdivision (a township or town that governs) is a
- * `place` in the registry, as the registration layer already files it; its
- * body is that government's council or board.
- */
 const DIVISION_TYPES: Readonly<Record<string, Division["divisionType"]>> = {
   place: "place", county: "county", school: "school_district", school_district: "school_district", cd: "cd", sldu: "sldu", sldl: "sldl",
   cousub: "place", county_subdivision: "place",
 };
-/** The country and its states are the registry's scope, never its rows; statewide officials publish on their own. */
 const SCOPE_DIVISIONS = new Set(["country", "state"]);
-/** Census functional statuses of a government (active, partially consolidated, consolidated, subordinate). */
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 const LEGISLATIVE = new Set<Division["divisionType"]>(["cd", "sldu", "sldl"]);
 const STATE_DIVISION = /^ocd-division\/country:us\/state:[a-z]{2}$/;
 const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-/** A statewide officeholder's row, when their name and office are on their own saved official page (§3). */
 function statewideRow(official: NationalOfficialInput, capture: WorkerPublicationCapture, now: string, stateLabel: string | null): StatewideExecutive | string {
   const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: official.linkingPage ?? null };
   const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: official.name, office: official.officeTitle }, page, now });
@@ -124,13 +88,11 @@ function statewideRow(official: NationalOfficialInput, capture: WorkerPublicatio
     collectedAt: capture.observedAt.slice(0, 10), verification: "PAGE_FETCHED" } as StatewideExecutive;
 }
 
-/** The body an official of this division sits on. */
 export function nationalBodyId(division: Pick<Division, "ocdId" | "divisionType">): string {
   if (LEGISLATIVE.has(division.divisionType)) return `${division.ocdId}#seat`;
   return `${division.ocdId}#${division.divisionType === "school_district" ? "board" : "governing"}`;
 }
 
-/** The registry row for a division, when its saved Census response supports it (§3). */
 function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPublicationCapture[], now: string, kinds: KindTable): Division | string | null {
   if (SCOPE_DIVISIONS.has(input.divisionType)) return null;
   // A statistical or fictitious subdivision is not a government; Census has said so, and the place layer holds the one that is.
@@ -153,7 +115,6 @@ function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPubl
     provenance: { sourceUrl: input.sourceUrl, sourceOrg: "U.S. Census Bureau", collectedAt: capture.observedAt, verifiedAt: now } } as Division;
 }
 
-/** A legislative district's seat: one body per district, named by its Census label, so its holder has a place on the reader. */
 function seatBody(division: Division, now: string): Body {
   return { id: nationalBodyId(division), ocdId: division.ocdId, name: division.label, bodyClass: "GOVERNING", bodyOrigin: "DERIVED_FROM_DIVISION_TYPE",
     coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE", agendaSourceRef: null, meetingCadence: null, homepageUrl: null, demandCount: 0,
@@ -171,18 +132,12 @@ async function promote(store: RoutineDataStore, prepared: Parameters<typeof regi
     readModel: published.candidate.candidate.readModel as RegistryRuntimeReadModel, prior: acceptedRegistryPrior(published) };
 }
 
-/**
- * Publish a place's Census divisions, their bodies and its verified officials
- * through the ordinary registry door. Idempotent: a second call with the same
- * saved evidence confirms rather than duplicates.
- */
 export async function publishNationalPlaceSources(input: NationalPlacePublicationInput): Promise<NationalPlacePublication> {
   const gaps: { key: string; detail: string }[] = [];
   let prior = await readRegistryRuntimePrior(input.store, input.now);
   if (!prior) throw new Error("NATIONAL_REGISTRY_PRIOR_MISSING");
   let candidateId: string | null = null, promotedVersionId: string | null = null;
 
-  // 1. Divisions and the bodies they imply.
   const heldDivisions = new Map(prior.payload.registry.divisions.map(d => [d.ocdId, d]));
   const heldBodies = new Set(prior.payload.registry.bodies.map(b => b.id));
   const divisions: Division[] = [], bodies: Body[] = [], used = new Set<string>();
@@ -197,9 +152,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
       ? officialDivisions.has(division.ocdId) ? [seatBody(division, input.now)] : []
       : bodiesFor(division, input.now);
     if (held && impliedBy(held).some(body => !heldBodies.has(body.id))) {
-      // Held registry provenance may name an older download, while this hunt
-      // saved a current query. Bind a new body to the bytes checked here;
-      // retaining the division never makes its old URL a current capture.
+            // Bind a new body to the bytes checked here; held provenance may name an older download.
       division = divisionRow(row, input.geographyCaptures, input.now, input.kinds ?? DEFAULT_KINDS);
       if (division === null) continue;
       if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
@@ -236,7 +189,6 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     }
   }
 
-  // 2. Statewide officials (a governor, an attorney general): each on their own saved official page.
   const statewide: { official: NationalOfficialInput; row: StatewideExecutive; capture: WorkerPublicationCapture }[] = [];
   for (const official of input.sources.officials.filter(o => STATE_DIVISION.test(o.divisionId))) {
     const capture = official.document.capture;
@@ -245,8 +197,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     else statewide.push({ official, row, capture: capture! });
   }
   const statewideMembers: { bodyId: string; versionId: string; discoveryIds: string[] }[] = [];
-  // The office's holder already live under the same name and title is confirmed, never replaced:
-  // replacing would drop the contact, party and photo facts that row already carries.
+    // A holder already live under the same name and title is confirmed, never replaced, keeping its contact, party and photo facts.
   const live = (s: typeof statewide[number]) => prior!.payload.statewideExecutives.find(row => row.holder.id === s.row.holder.id);
   for (const s of statewide.filter(s => live(s)?.holder.name === s.row.holder.name && live(s)?.holder.officeTitle === s.row.holder.officeTitle)) {
     statewideMembers.push({ bodyId: s.row.stateOcdId, versionId: prior.versionId, discoveryIds: [s.official.discoveryId] });
@@ -260,8 +211,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
       const published = await promote(input.store, { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`national-statewide:${digest}`), sourceThrough: input.now, sourceReceipt,
         payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions: [], bodies: [] },
           bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: statewide.map(s => s.row), officialPhotos: { photos: [] }, rosterPhotos: {},
-          // Every holder this package states gets a bridge row stating the same facts: a new holder of an
-          // office keyed by its seat owes its candidacy check again, rather than inheriting the last holder's.
+                    // A new holder of an office keyed by its seat owes its candidacy check again rather than inheriting the last holder's.
           officialCandidacies: { ...prior.payload.officialCandidacies, rows: statewide
             .map(s => ({ holder: { id: s.row.holder.id, name: s.row.holder.name, officeTitle: s.row.holder.officeTitle, divisions: [s.row.stateOcdId],
               authority: "REGISTRY_STATEWIDE_EXECUTIVE" as const, sourceUrl: s.row.sourceUrl }, status: "NOT_CHECKED" as const, candidacy: null, unresolvedCandidacyIds: [],
@@ -276,7 +226,6 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     }
   }
 
-  // 3. Officials of a division, one partial roster reading per body.
   const byBody = new Map<string, NationalOfficialInput[]>();
   const registered = new Map(prior.payload.registry.divisions.map(d => [d.ocdId, d]));
   for (const official of input.sources.officials) {
@@ -292,13 +241,11 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   }
   const members: { bodyId: string; versionId: string; discoveryIds: string[] }[] = [...statewideMembers];
   for (const [bodyId, officials] of byBody) {
-    // One saved page per reading: the §3 check reads each official's own page.
     for (const official of officials) {
       const capture = official.document.capture!;
       const ownReading: RosterReading = { id: `national:${official.discoveryId}`, capture, linkingPage: official.linkingPage ?? null, complete: false,
         method: "Place-first national lead; official profile page read",
         members: [{ recordId: `national:${official.discoveryId}`, fields: { name: official.name, office: official.officeTitle, websiteUrl: official.officialUrl } }] };
-      // CA-02: the Open States row for this seat, when its name and district are on the saved CSV.
       const referenceReading = (csv: WorkerPublicationCapture): RosterReading | null => {
         if (captureProblem(csv)) return null;
         const state = official.divisionId.match(/\/state:([a-z]{2})\b/)?.[1] ?? "";
@@ -358,12 +305,8 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   return { candidateId, promotedVersionId, divisions: divisions.map(d => d.ocdId), bodies: bodies.map(b => b.id), members, gaps };
 }
 
-/** What national publications put live, for the pass's runner receipt (`printWorkerPublicationReceipt`'s `extra`). */
 export function nationalDelivery(publications: readonly NationalPlacePublication[]) {
   const last = publications.filter(p => p.promotedVersionId).at(-1) ?? null;
-  // An unchanged official names the version already held, with no new delivery.
-  // The final promoted version is its own durable candidate; an earlier geography
-  // candidate may precede several roster publications in this same call.
   const versionId = last?.promotedVersionId ?? publications.flatMap(p => p.members).at(-1)?.versionId ?? null;
   return { records: publications.reduce((sum, p) => sum + (p.promotedVersionId
     ? p.members.reduce((n, m) => n + m.discoveryIds.length, 0) : 0), 0),

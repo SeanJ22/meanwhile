@@ -3,17 +3,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 /**
- * The reader's layout arithmetic (approved design, DESIGN-SPEC §4–§5).
- *
- * Breakpoints: phone < 640, tablet 640–1023, desktop ≥ 1024, and the desktop
- * header goes to one row at ≥ 1180 ("wide"). The collapsed header's bottom
- * edge is MEASURED from the rendered header (the design's 66/118/169/223 are
- * only the fallback before it has painted), so a wrapped label can never put
- * the map's fit area under the header.
- *
- * `mapInsets` is the unobstructed part of the map — clear of the sidebar, the
- * header, the selection pill and the phone sheet. The camera uses it as its
- * padding, so fitting a boundary fits it where the reader can actually see.
+ * The reader's layout arithmetic. Breakpoints: phone < 640, tablet 640–1023,
+ * desktop ≥ 1024, wide ≥ 1180 (one-row header). The collapsed header's bottom
+ * edge is measured once painted (66/118/169/223 are fallbacks). `mapInsets`
+ * is the unobstructed map area, used as camera padding.
  */
 export type ReaderBreakpoint = "phone" | "tablet" | "desktop" | "wide";
 

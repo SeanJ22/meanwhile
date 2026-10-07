@@ -1,33 +1,20 @@
 /**
- * **A RECURRING SERIES, EXPANDED INTO THE SITTINGS ITS PUBLISHER STATED.**
- * (2026-09-23.)
+ * A recurring series, expanded into the sittings its publisher stated. A feed publishes a board that
+ * meets on, say, the third Tuesday as one event with an `RRULE` plus one override (`RECURRENCE-ID`) per
+ * edited sitting; the unedited sittings exist only as that rule.
  *
- * A Google Calendar feed publishes a board that meets on the third Tuesday as
- * ONE event with an `RRULE`, plus one override (`RECURRENCE-ID`) per sitting
- * the town edited. The sittings nobody edited exist only as that rule, so an
- * adapter that does not expand it publishes a series' first sitting and its
- * edits and nothing else: on 2026-09-23 dozens of in-window sittings of
- * Bradford and Warner boards were missing that way.
+ * Exactly these rule parts are expanded: `FREQ` (WEEKLY, MONTHLY), `INTERVAL`, `BYDAY` (with ordinals
+ * under MONTHLY), `UNTIL` (UTC date-time, or a date for an all-day series), `COUNT` and `WKST`. Any other
+ * part, value or combination is refused by name (`unsupported`), and no sitting is guessed. A rule whose
+ * `DTSTART` is not itself a sitting of the rule is refused (RFC 5545 leaves that set undefined).
  *
- * ## What is expanded, and what is refused
- *
- * Exactly the rule parts the recorded feeds use: `FREQ` (WEEKLY, MONTHLY),
- * `INTERVAL`, `BYDAY` (with ordinals under MONTHLY), `UNTIL` (UTC date-time,
- * or a date for an all-day series), `COUNT` and `WKST`. Any other part, value
- * or combination is refused by name (`unsupported`), and the caller publishes
- * no sitting it would have had to guess. A rule is also refused when its
- * `DTSTART` is not itself a sitting of the rule, because RFC 5545 leaves that
- * recurrence set undefined.
- *
- * Expansion runs on the series' own wall clock and calendar, in its own zone:
- * the third Tuesday at 7pm stays 7pm across a daylight-saving change. It is
- * bounded: instances are enumerated from `DTSTART` to the end of the serving
- * window and no further.
+ * Expansion runs on the series' own wall clock and calendar in its own zone, bounded from `DTSTART` to the
+ * end of the serving window.
  */
 
 const WEEKDAYS = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"] as const;
 
-/** The rule parts the recorded Bradford and Warner feeds use, 2026-09-23. */
+/** The rule parts this module expands. */
 export const SUPPORTED_RULE_PARTS = ["FREQ", "INTERVAL", "BYDAY", "UNTIL", "COUNT", "WKST"] as const;
 
 /** Enumeration stops here whatever the rule says; a rule needing more is refused. */

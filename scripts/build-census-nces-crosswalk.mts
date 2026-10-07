@@ -1,36 +1,18 @@
 /**
- * The Census ↔ NCES school-district crosswalk (Prompt B item 4, 2026-08-20).
+ * The Census ↔ NCES school-district crosswalk.
  *
- * THERE IS NO SHARED IDENTIFIER IN THE TWO FILES WE HOLD. The Census unit file
- * carries `census_id_pid6` (and the legacy `census_id_gidid`, banned as a join
- * key by item 3); the CCD LEA directory carries `nces_leaid` and `state_leaid`.
- * NCES publishes a Census ID on the F-33 fiscal survey, which is a THIRD file
- * this repo does not have and which item 9 gets a row for. So this crosswalk is
- * built on normalized name within state, and it is honest about what that costs.
+ * The two files share no identifier (Census `census_id_pid6`; CCD `nces_leaid`
+ * and `state_leaid`), so the crosswalk is built on normalized name within
+ * state. A name that resolves to more than one row on either side is
+ * AMBIGUOUS and recorded as unmatched: a crosswalk that overstates its
+ * coverage points a district card at the wrong district.
  *
- * THE RULE THAT SHAPES EVERYTHING BELOW: do not force matches. A normalized
- * name that resolves to more than one row on either side is AMBIGUOUS, and an
- * ambiguous match is recorded as unmatched. This is deliberately the
- * pessimistic direction — a crosswalk that overstates its coverage is worse
- * than one that understates it, because the overstatement lands downstream as
- * a district card confidently pointing at the wrong district.
- *
- * WHAT THE TWO FILES COUNT IS NOT THE SAME THING (RULING 9 in miniature).
- * Census counts school-district GOVERNMENTS: 12,546 independent districts,
- * with school systems that are an agency of another government held in a
- * separate file of 1,313 dependent systems. CCD counts LEAs: 19,711 records
- * including charter agencies, service agencies, supervisory unions and
- * state-operated agencies that are not governments at all. CCD does NOT
- * distinguish dependent from independent — Connecticut, Maine, Massachusetts
- * and Virginia school systems that Census files as dependent appear in CCD as
- * ordinary regular districts.
- *
- * So the crosswalk is run against the COMBINED Census school-system universe
- * of 13,859 (12,546 + 1,313), because matching CCD against the independent
- * file alone would report 1,313 real, correctly-recorded school systems as
- * NCES rows with no Census match — a fabricated gap. Item 4.2's unmatched
- * counts are then reported against BOTH denominators, so neither reading is
- * hidden by the other.
+ * Census counts school-district GOVERNMENTS (independent districts, with
+ * dependent school systems in a separate file); CCD counts LEAs, including
+ * charter, service and state-operated agencies, and does not distinguish
+ * dependent from independent. So CCD is matched against the COMBINED Census
+ * school-system universe, and unmatched counts are reported against both
+ * denominators.
  *
  * Run:  corepack pnpm crosswalk:build
  */
@@ -47,23 +29,11 @@ const OUT_CSV = join(OUT_DIR, "census-nces-crosswalk.csv");
 /* -------------------------------------------------------------------------- */
 /* Name normalization                                                         */
 /*                                                                            */
-/* Every suffix stripped here is a NAMING CONVENTION difference between the   */
-/* two agencies, not a difference between two districts. "AUTAUGA COUNTY      */
-/* SCHOOL DISTRICT" (Census) and "Autauga County" (CCD) are one government    */
-/* written twice. Anything that could distinguish two real districts —        */
-/* ordinals, numbers, directions — is KEPT, which is why "UNION SCHOOL        */
-/* DISTRICT 1" and "UNION SCHOOL DISTRICT 2" stay apart and land in the       */
-/* ambiguous bucket rather than being silently merged.                        */
+/* Every suffix stripped is a naming-convention difference between the two    */
+/* agencies; anything that could distinguish two real districts (ordinals,     */
+/* numbers, directions) is KEPT. The normalizer lives in                       */
+/* lib/registry/school-name-key.ts so lookups reproduce the same key.          */
 /* -------------------------------------------------------------------------- */
-
-/*
- * The normalizer and its three tables MOVED to lib/registry/school-name-key.ts
- * on 2026-08-22 (DEF-2, item 11), unchanged, comments and all. It moved because
- * a second caller needed to reproduce this exact key in order to look a district
- * up in the crosswalk this file writes — and two copies of a normalizer is two
- * copies that drift apart silently, which reads as a district that is simply not
- * in the data rather than as a bug.
- */
 const key = schoolNameKey;
 
 /* -------------------------------------------------------------------------- */
@@ -162,12 +132,11 @@ type Pair = { census: Side; nces: Side; key: string };
 const matched: Pair[] = [];
 const ambiguous: Array<{ key: string; censusRows: number; ncesRows: number }> = [];
 
-/* The normalizer deliberately removes HIGH/ELEMENTARY and therefore collapses
- * these two distinct Patagonia governments. The held official directories name
- * both uniquely: Census 2022 pid6 177987 (secondary only), 209974 (elementary
- * only); NCES 2025-26 0406030 (09–12), 0406000 (PK–08), both at PO Box 254,
- * Patagonia AZ. Preserve the type distinction instead of guessing a numeric
- * suffix match: the NCES parentheses are state LEA ids, not district numbers. */
+/* The normalizer removes HIGH/ELEMENTARY and so collapses some distinct
+ * elementary and secondary districts of one name. Where the held official
+ * directories name both uniquely, the type distinction is preserved here
+ * instead of guessing from a numeric suffix (the NCES parentheses are state LEA
+ * ids, not district numbers). */
 const patagonia = [
   ["177987", "PATAGONIA UNION HIGH SCHOOL DISTRICT 20", "0406030", "Patagonia Union High School District (4462)"],
   ["209974", "PATAGONIA ELEMENTARY SCHOOL DISTRICT 6", "0406000", "Patagonia Elementary District (4460)"],
@@ -196,12 +165,9 @@ for (const [k, censusRows] of censusBy) {
     continue;
   }
 
-  // ONE TIE-BREAK, and only where BOTH sides carry a district number. This is
-  // Illinois: `PAYSON COMMUNITY UNIT SCHOOL DISTRICT 1` and `Payson CUSD 1`
-  // share a core with district 2 next door, and the number is the real
-  // distinction both agencies recorded. Where only one side numbers its
-  // districts — Texas — the tie stands and the rows stay unmatched, because
-  // a number matched against nothing is not evidence.
+  // ONE TIE-BREAK, and only where BOTH sides carry a district number (e.g.
+  // `... UNIT SCHOOL DISTRICT 1` and `... CUSD 1`). Where only one side numbers
+  // its districts the tie stands and the rows stay unmatched.
   const censusNums = new Map<string, Side[]>();
   for (const c of censusRows) {
     const n = normalizeName(c.name).num;
@@ -252,9 +218,7 @@ const unmatchedNcesComparable = ncesComparable.filter((n) => !matchedNcesIds.has
 /* Report                                                                     */
 /* -------------------------------------------------------------------------- */
 
-const lines: string[] = [];
 const say = (s = "") => {
-  lines.push(s);
   console.log(s);
 };
 
@@ -355,9 +319,3 @@ writeFileSync(OUT_CSV, `${csv}\n`, "utf8");
 say("");
 say(`WROTE: data/derived/census-nces-crosswalk.csv — ${matched.length} rows`);
 say("Provenance: data/derived/census-nces-crosswalk.md");
-
-writeFileSync(
-  join(OUT_DIR, "census-nces-crosswalk.report.txt"),
-  `${lines.join("\n")}\n`,
-  "utf8",
-);

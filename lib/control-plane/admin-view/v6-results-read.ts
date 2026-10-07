@@ -7,25 +7,8 @@ import { groupOf, type OwedRowLike } from "./place-scorecard.ts";
 import { GROUP_NAMES, PLACE_GROUPS } from "./v6-checklist-section.ts";
 import type { V6PlaceScope } from "./v6-hunts-read.ts";
 
-/**
- * **admin-v6/results@1 — WHAT READERS CAN SEE, STAGE BY STAGE, AT ANY SCOPE.**
- *
- * One result per kind of record (country, state) or per group of what a place is owed (ZIP, county), each carrying the
- * six stages from source to reader. A stage is set only from what is recorded:
- *
- *   country / state   the published owner snapshot's promotion pipeline (`deliveryTrail`): every item's furthest stage
- *                     (SCOUTED, CONFIRMED, VERIFIED, AUDITED, APPROVED_FOR_PROMOTION), and the reader witnesses
- *                     (`servedReaderReadback`) for the approved ones. Unpacked inside the database and returned as a few
- *                     grouped rows, so a state or the country never reads a ZIP and never loads the multi-megabyte index.
- *   ZIP / county      the place's owed list (`readPlaceOwed`): each row is published, held, unpublished, stale or missing,
- *                     with the source page and time we hold. A ZIP's Elections and Candidates groups also read the
- *                     public ballot page witnesses recorded for that exact ZIP.
- *
- * A stage nothing records is `unreported`, never a guess; a stage behind one that has not happened is `waiting`; a
- * stage that is known not to have happened is `not-yet`. Nothing here starts work, decides publication or adds a gate.
- */
+/** A stage nothing records is `unreported`, never a guess; one behind an unmet stage is `waiting`; one known not to have happened is `not-yet`. */
 export const ADMIN_V6_RESULTS_CONTRACT = "admin-v6/results@1" as const;
-/** A reader witness older than this is no longer a current check of the public page (served-reader.ts). */
 export const RESULTS_WITNESS_MAX_AGE_HOURS = 3;
 
 export const RESULT_STAGE_NAMES = ["Found", "Saved", "Facts pulled out", "Facts checked against sources", "Published", "Checked on the public page"] as const;
@@ -37,7 +20,6 @@ export type ResultMark = "done" | "not-yet" | "wrong" | "partial" | "reported" |
 export interface AdminV6ResultStage {
   readonly name: string;
   readonly mark: ResultMark;
-  /** An ISO time, or "—" when nothing records one. */
   readonly when: string;
   readonly what: string;
   readonly publicLink?: { readonly url: string; readonly label: string; readonly seenAt: string | null };
@@ -58,8 +40,6 @@ export interface AdminV6Result {
 const NONE = "—";
 const STATE_CODES: ReadonlySet<string> = new Set(US_STATES.map((s) => s.code.toLowerCase()));
 
-/* ------------------------------------------------ the pipeline read (wide) */
-
 export const PIPELINE_STAGE_ORDER = ["SCOUTED", "CONFIRMED", "VERIFIED", "AUDITED", "APPROVED_FOR_PROMOTION"] as const;
 export type PipelineStageName = (typeof PIPELINE_STAGE_ORDER)[number];
 
@@ -68,17 +48,14 @@ const PENDING = "s.value->'deliveryTrail'->'pending'";
 const PROMOTIONS = "s.value->'deliveryTrail'->'promotions'";
 const WITNESSES = "s.value->'servedReaderReadback'->'witnesses'";
 
-/** The snapshot's own identity and whether the pipeline lists are present at all (an older snapshot has no `pending`). */
 export const PIPELINE_HEAD_SQL = `SELECT s.updated_at AS published_at, s.revision AS revision,
   jsonb_typeof(${PENDING}) AS pending_kind, jsonb_typeof(${PROMOTIONS}) AS promotions_kind,
   jsonb_typeof(s.value->'servedReaderReadback') AS readback_kind
   FROM cp_owner_snapshots s WHERE s.id = 'current'`;
-/** Items not yet approved, counted by kind of record, furthest stage and the first part of their subject id. */
 export const PIPELINE_PENDING_SQL = `SELECT x->>'recordClass' AS record_class, x->>'stage' AS stage,
   split_part(coalesce(x->>'subjectId', ''), ':', 1) AS prefix, count(*)::int AS n
   FROM cp_owner_snapshots s, jsonb_array_elements(${SNAPSHOT_ARRAY(PENDING)}) AS x
   WHERE s.id = 'current' AND x->>'recordClass' IS NOT NULL GROUP BY 1, 2, 3`;
-/** Approved items, each joined to the latest reader witness for exactly that approval, counted by what the witness says. */
 export const PIPELINE_APPROVED_SQL = `SELECT p->>'recordClass' AS record_class, split_part(coalesce(p->>'subjectId', ''), ':', 1) AS prefix,
   CASE WHEN w.state IS NULL THEN 'NONE'
     WHEN w.state = 'CONFIRMED' AND w.checked_at >= $1::timestamptz - interval '${RESULTS_WITNESS_MAX_AGE_HOURS} hours' THEN 'CONFIRMED_FRESH'
@@ -137,7 +114,6 @@ export async function readPipeline(sql: Sql, nowIso: string): Promise<PipelineRe
   };
 }
 
-/** The state a subject id belongs to: its first part is a state code, or a ballot key such as `ballot-az-pima`. Anything else is not tied to a state. */
 export function stateOfSubjectPrefix(prefix: string): string | null {
   const p = prefix.toLowerCase();
   if (STATE_CODES.has(p)) return p;
@@ -145,13 +121,11 @@ export function stateOfSubjectPrefix(prefix: string): string | null {
   return ballot !== null && STATE_CODES.has(ballot[1]) ? ballot[1] : null;
 }
 
-/** "candidate-enrichment" and "CANDIDATE_FILINGS" both read as plain words. */
 export function recordClassTitle(recordClass: string): string {
   const words = recordClass.replace(/[-_]+/g, " ").trim().toLowerCase();
   return words === "" ? recordClass : words[0].toUpperCase() + words.slice(1);
 }
 
-/** done when every one, partial when some, else the given mark. */
 function share(k: number, n: number, none: ResultMark): ResultMark {
   return n > 0 && k >= n ? "done" : k > 0 ? "partial" : none;
 }
@@ -166,13 +140,6 @@ interface ClassTally {
 const emptyTally = (): ClassTally => ({ n: 0, atScouted: 0, atConfirmed: 0, atVerified: 0, atAudited: 0, approved: 0, fresh: 0, stale: 0, notObserved: 0, unread: 0, approvedAt: null, checkedAt: null, url: null });
 const later = (a: string | null, b: string | null) => (a === null ? b : b === null ? a : a >= b ? a : b);
 
-/**
- * One result per kind of record in this scope, from the pipeline's furthest-stage counts.
- * Found: every item starts as a found source. Saved: only an item that reached CONFIRMED is known to have a saved copy
- * (a confirmation cites one); an item still at SCOUTED has none recorded here. Facts pulled out and Facts checked are
- * the items that reached VERIFIED (five checks, the first being that the claim resolves to its source span). Published:
- * approved for promotion. Checked on the public page: the reader witness for that exact approval.
- */
 export function pipelineResults(read: PipelineRead, scopeKey: string, scope: V6PlaceScope): readonly AdminV6Result[] {
   const inScope = (prefix: string) => scope.kind === "country" || (scope.kind === "state" && stateOfSubjectPrefix(prefix) === scope.state);
   const by = new Map<string, ClassTally>();
@@ -234,7 +201,6 @@ export function pipelineResults(read: PipelineRead, scopeKey: string, scope: V6P
 }
 
 const markRank = (m: ResultMark) => (m === "done" ? 2 : m === "partial" || m === "reported" ? 1 : 0);
-/** What readers already have (Published, then Checked on the public page) comes first, then how far the earlier stages got. */
 function readerRank(r: AdminV6Result): number {
   return markRank(r.stages[4]) * 10 + markRank(r.stages[5]);
 }
@@ -242,9 +208,6 @@ function stageRank(r: AdminV6Result): number {
   return r.stages.reduce((sum, m) => sum + markRank(m), 0);
 }
 
-/* ------------------------------------------- the owed list read (ZIP, county) */
-
-/** The reader witnesses for the public ballot page of exactly one ZIP, latest per candidate. */
 export const ZIP_WITNESS_SQL = `SELECT DISTINCT ON (e->>'readerKey') e->>'readerKey' AS reader_key, e->>'state' AS state,
   (e->>'checkedAt')::timestamptz AS checked_at, e->>'url' AS url
   FROM cp_owner_snapshots s, jsonb_array_elements(${SNAPSHOT_ARRAY(WITNESSES)}) AS e
@@ -264,21 +227,13 @@ export async function readZipWitnesses(sql: Sql, zip: string): Promise<readonly 
   });
 }
 
-/** What the owed rows carry that this read uses. `PlaceOwedItem` satisfies it. */
 export interface OwedResultRow extends OwedRowLike {
   readonly held: readonly { readonly sourceUrl: string; readonly checkedAt: string; readonly state: string; readonly value?: unknown }[];
 }
 
 const GROUP_ORDER: readonly string[] = [...new Set(CHECKLIST_PROFILE.definitions.map((d) => d.group))].filter((g) => PLACE_GROUPS.has(g));
-/** The groups whose public page is the ballot. */
 const BALLOT_GROUPS: ReadonlySet<string> = new Set(["ELE", "CAN"]);
 
-/**
- * One result per group of what this place is owed. Found: a source page is held. Saved: the owed list does not record a
- * saved copy, so it is not reported. Facts pulled out: a value is held. Facts checked and Published: the row is in the
- * published record (rows the government itself does not publish are left out of both). Checked on the public page: only
- * the ballot groups of a ZIP, from the witnesses for that ZIP's ballot page; `witnesses` null means they were not read.
- */
 export function owedResults(input: { readonly placeKey: string; readonly rows: readonly OwedResultRow[]; readonly zip: string | null; readonly witnesses: readonly ZipWitnessRow[] | null }): readonly AdminV6Result[] {
   const groups = new Map<string, OwedResultRow[]>();
   for (const row of input.rows) {
@@ -304,7 +259,6 @@ export function owedResults(input: { readonly placeKey: string; readonly rows: r
       owedPublic === 0 ? "unreported" : share(published, owedPublic, found === 0 ? "waiting" : "not-yet"),
       "waiting",
     ];
-    // The public page: only the ballot groups of a ZIP have a recorded check.
     const ballot = input.zip !== null && BALLOT_GROUPS.has(g);
     const w = ballot && input.witnesses !== null ? input.witnesses : [];
     const seen = w.filter((x) => x.state === "CONFIRMED").length;

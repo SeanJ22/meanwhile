@@ -10,14 +10,9 @@ import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 
 /**
- * **THE EXPANSION-SCOPE ACTIONS, THROUGH THE ONE GATEWAY DOOR.**
- * (Expansion controls, 2026-09-23.)
- *
- * `expansion.scope.set` and `expansion.scope.remove` are owner decisions on the
- * policy row, recorded exactly like the Fleet spend-ceiling dial: owner-only,
- * validated, compare-and-set, stamped with the session reference and the
- * receipt, and every other decision on the row carried through untouched.
- * In-memory repositories and a fixed clock; the production path, not a copy.
+ * `expansion.scope.set` and `expansion.scope.remove` are owner decisions on the policy row: owner-only, validated,
+ * compare-and-set, stamped with the session reference and the receipt, and every other decision on the row carried
+ * through untouched. In-memory repositories and a fixed clock; the production path, not a copy.
  */
 
 const NOW = "2026-09-23T04:00:00.000Z";

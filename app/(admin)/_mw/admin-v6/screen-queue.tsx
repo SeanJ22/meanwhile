@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * **QUEUE (BR-14).** Everything in motion in one list: orders, scheduled orders, instructions sent to the fleet, hunts, stuck cases,
- * doors shut now and fix-list items. Each row says what it is, where it stands, who has it, when it is due, what happens next and
- * how far along it is, and has its own stop or pause. A list that could not be read says so; it is never shown as empty.
- */
 import { useState } from "react";
 
 import { useV6 } from "./context.tsx";

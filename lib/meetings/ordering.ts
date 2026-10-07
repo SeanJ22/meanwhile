@@ -1,40 +1,8 @@
 import type { Meeting } from "../sources/types.ts";
 
 /**
- * **Upcoming first, then past** — g4 item 11.
- *
- * ## The rule, and why it is not just "sort by date"
- *
- * A plain ascending sort by start time is what shipped, and with a serving
- * window of ninety days back and sixty forward that puts three months of
- * finished meetings above everything a reader could still attend. The reader
- * who opens this panel is asking what is happening; what already happened is
- * the second question, and it deserves the second half of the list.
- *
- * So the order is two blocks:
- *
- * - **Upcoming, soonest first.** The next thing a reader can go to is the
- *   first row.
- * - **Past, most recent first.** Looking backwards, "what happened last" is
- *   the near end, not the far one — the same instinct that puts the newest
- *   entry at the top of a history.
- *
- * The two orderings run in OPPOSITE directions on purpose, and both point at
- * NOW: the list reads outward from the present in both directions.
- *
- * ## Where it applies
- *
- * Everywhere meetings are listed — the panel, the map pin's card, and a body
- * battlecard's sittings — which is why it is a pure function here rather than
- * a comparator inside one component. Three surfaces that each sort their own
- * way is how the Concluded chip came to match nothing at all four zips.
- *
- * ## The boundary
- *
- * `now` is passed in rather than read, so a test can pin it and so every
- * surface on one render agrees about where the line falls. A meeting starting
- * exactly at `now` counts as UPCOMING: a body that is sitting right now is
- * something a reader can still walk into.
+ * Upcoming first (soonest first), then past (most recent first): both blocks read outward from `now`. A meeting starting
+ * exactly at `now` counts as upcoming.
  */
 export function orderByUpcomingFirst<T extends Pick<Meeting, "startsAt">>(
   meetings: readonly T[],
@@ -58,11 +26,7 @@ export function orderByUpcomingFirst<T extends Pick<Meeting, "startsAt">>(
   return [...upcoming, ...past];
 }
 
-/**
- * Whether a meeting has already started, on the same boundary as the order
- * above — so the "Concluded" pill and the position in the list can never
- * disagree about which half a row is in.
- */
+/** Whether a meeting has started, on the same boundary as the order, so the pill and the position never disagree. */
 export function hasConcluded<T extends Pick<Meeting, "startsAt">>(
   meeting: T,
   now: number,
@@ -70,8 +34,6 @@ export function hasConcluded<T extends Pick<Meeting, "startsAt">>(
   const at = Date.parse(meeting.startsAt);
   return !Number.isNaN(at) && at < now;
 }
-
-/* ------------------------------------------- F01 3.1, the three groups --- */
 
 /** The window that separates "soon" from "later". */
 export const SOON_DAYS = 30;
@@ -93,46 +55,8 @@ const GROUP_LABEL: Record<MeetingGroupId, string> = {
 };
 
 /**
- * **The three blocks, in order** — F01 3.1, 2026-08-19: meetings within the
- * next 30 days, then upcoming meetings after that, then canceled or concluded
- * meetings.
- *
- * ## What was actually broken
- *
- * `orderByUpcomingFirst` above has put upcoming ahead of past since g4 item 11,
- * and it is not the thing that failed. What failed is that only TWO of the
- * meeting surfaces called it: the body battlecard's own sections, and the list
- * overlay. The DIVISION battlecard's Meetings tab rendered `subject.meetings`
- * raw, and the venue panel behind a map pin rendered `venue.meetings` raw —
- * so both showed June and July sittings above everything a reader could still
- * attend. A shared ordering that two of four callers use is not a shared
- * ordering; it is a convention, and a convention is what this function stops
- * being possible to skip, because the surfaces now render GROUPS and a group
- * cannot be produced by forgetting to sort.
- *
- * ## The boundaries
- *
- * - `soon` — scheduled, starting between `now` and `now + 30 days` inclusive.
- * - `later` — scheduled, starting after that.
- * - `closed` — **canceled OR concluded**, and canceled counts even when the
- *   date is still in the future: a meeting that will not happen is not
- *   something a reader can attend, so it belongs with what is over. Within the
- *   block, most recent first — looking backwards, "what happened last" is the
- *   near end.
- *
- * A meeting starting exactly at `now` is UPCOMING, matching
- * `orderByUpcomingFirst`: a body sitting right now is one a reader can still
- * walk into. An unparseable start time sorts into `soon`, where a reader will
- * see it, rather than into the tail of history where a broken row is never
- * found — also matching the older function, deliberately.
- *
- * ## Empty groups are dropped, and the count is the caller's to state
- *
- * A returned group always has at least one meeting, so a surface cannot render
- * a header over nothing. The total is `meetings.length` and every meeting lands
- * in exactly one group — `tests/meeting-ordering.test.ts` asserts the partition
- * rather than trusting it, because a grouping that silently loses a row is the
- * "operation that can return nothing" CLAUDE.md names.
+ * Three blocks: `soon` (within 30 days), `later`, and `closed` (canceled or concluded, canceled even when still
+ * future). Every meeting lands in exactly one group, and empty groups are dropped.
  */
 export function groupMeetingsForReading<
   T extends Pick<Meeting, "startsAt" | "status">,

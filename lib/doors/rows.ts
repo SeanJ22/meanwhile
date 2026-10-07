@@ -1,16 +1,8 @@
 /**
- * DB-12: adapters read their doors from the registry.
- *
- * `wiringRowsFromDoors` turns hand-wired meeting door records back into the
- * wiring rows the adapters already read; `doorRowsFor` is the accessor an
- * adapter uses instead of importing `SOURCE_WIRING`. A suspended door is not
- * read; an open or shut one still is (a shut door is retried, DB-32).
- *
- * Derived members stay in their state's family (read at runtime by the family
- * child), so they are not returned here unless asked for.
- *
- * PURE: no store. Row order is by body then source type; adapters key rows by
- * body and tenant, not by position.
+ * Turns hand-wired meeting door records back into the wiring rows adapters
+ * read. A suspended door is not read; an open or shut one still is. Derived
+ * family members are excluded unless asked for. Pure. Row order is by body
+ * then source type.
  */
 
 import type { BodySourceWiring } from "../registry/source-wiring.ts";
@@ -41,7 +33,7 @@ function rowOf(door: DoorRecord): BodySourceWiring | null {
   };
 }
 
-/** DB-16: every host the registry's meeting doors read, so a door with a new host needs no edit to a host list. */
+/** Every host the registry's meeting doors read, so a door with a new host needs no edit to a host list. */
 export function meetingDoorHosts(doors: readonly DoorRecord[]): string[] {
   const hosts = new Set<string>();
   for (const door of doors) {

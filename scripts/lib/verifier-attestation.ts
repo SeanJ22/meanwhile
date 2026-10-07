@@ -1,4 +1,6 @@
 import { spawnSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join, relative, resolve, sep } from "node:path";
 
 import type {
   ReaderVerifierClosureAttestation,
@@ -26,16 +28,59 @@ export interface ReaderVerifierAttestorOptions {
   readonly git?: (args: readonly string[]) => GitAnswer;
 }
 
+const IMPORT = /(?:^|\n)\s*(?:import|export)[\s\S]{0,400}?from\s*["']([^"']+)["']/g;
+const BARE_IMPORT = /(?:^|\n)\s*import\s*["']([^"']+)["']/g;
+const DYNAMIC = /\bimport\(\s*["']([^"']+)["']\s*\)/g;
+const EXTENSIONS = [".ts", ".mts", ".tsx", ".mjs", ".js", ".cjs", ".json"];
+
+/** A relative or `@/` import resolved to a repo file, or null for a package import. */
+function resolveLocal(fromFile: string, spec: string, root: string): string | null {
+  if (!spec.startsWith(".") && !spec.startsWith("@/")) return null;
+  const base = spec.startsWith("@/") ? join(root, spec.slice(2)) : resolve(dirname(fromFile), spec);
+  if (existsSync(base) && !existsSync(join(base, "index.ts")) && /\.[a-z]+$/.test(base)) return base;
+  for (const ext of EXTENSIONS) {
+    // `./x.ts` written as `./x.js`, and `./x` written bare.
+    const swapped = base.replace(/\.(?:js|mjs)$/, ext);
+    if (existsSync(swapped) && /\.[a-z]+$/.test(swapped)) return swapped;
+    if (existsSync(base + ext)) return base + ext;
+  }
+  for (const ext of EXTENSIONS) {
+    const index = join(base, `index${ext}`);
+    if (existsSync(index)) return index;
+  }
+  return existsSync(base) && /\.[a-z]+$/.test(base) ? base : null;
+}
+
+/** Every repo file the entry's static and dynamic imports reach, repo-relative with forward slashes, sorted. */
 async function verifierImportClosure(root: string): Promise<readonly string[]> {
-  // Loaded only when a receipt is on an older commit: the census module and the
-  // TypeScript parser it walks imports with are never loaded on a current pass.
-  const { sourceClosure } = await import("../../lib/ops/generator-digest.ts");
-  const { join } = await import("node:path");
-  return sourceClosure(root, join(root, READER_VERIFIER_ENTRY));
+  const seen = new Set<string>();
+  const queue = [join(root, READER_VERIFIER_ENTRY)];
+  while (queue.length > 0) {
+    const file = queue.pop()!;
+    const key = relative(root, file).split(sep).join("/");
+    if (seen.has(key)) continue;
+    seen.add(key);
+    let source: string;
+    try {
+      source = readFileSync(file, "utf8");
+    } catch {
+      continue;
+    }
+    if (file.endsWith(".json")) continue;
+    for (const re of [IMPORT, BARE_IMPORT, DYNAMIC]) {
+      re.lastIndex = 0;
+      let match: RegExpExecArray | null;
+      while ((match = re.exec(source)) !== null) {
+        const next = resolveLocal(file, match[1]!, root);
+        if (next !== null) queue.push(next);
+      }
+    }
+  }
+  return [...seen].sort();
 }
 
 /**
- * **The typed Reader code is the same bytes at two commits (R31, 2026-09-25).**
+ * **The typed Reader code is the same bytes at two commits.**
  *
  * The closure is the import graph `readerSourceFingerprint` walks from
  * `lib/civic-data/reader-verification.ts` (every verifier and each typed Reader

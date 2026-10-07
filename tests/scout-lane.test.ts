@@ -1,21 +1,3 @@
-/**
- * **THE SCOUT LANE'S SEEDED FAILURES.** (Level 1 activation, 2026-09-01.)
- *
- * Every test here plants a way the model lane could be wrong and asserts the
- * exact refusal. A fake transport stands in for the provider; a fake toolkit
- * stands in for the network. Nothing here reaches a model or a host.
- *
- *   1  a deterministic route never spends a model
- *   2  no tool used → refused; prose is not scouting
- *   3  a candidate citing an artifact nobody vaulted → refused
- *   4  an early NO_PROGRESS below the rung minimum → refused, and the Attempt
- *      ABORTS with its measured cost on the ledger
- *   5  the bound reached → the typed result carries rungs walked and next rungs
- *   6  the rolling ceiling defers, by name, and never disposes
- *   7  the derived Level 1 verdict ignores a stored ACTIVE flag
- *   8  provider identity, usage and cost land on the persisted Attempt
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -68,7 +50,6 @@ import {
   fitRepresentation,
 } from "../lib/control-plane/scheduler/model-routing.ts";
 import type { InProcessSpendHoldStore } from "../lib/control-plane/expansion/spend-holds.ts";
-/** The holds table's rows (schema v24), live or not yet deleted: the memory store's view of `cp_spend_holds`. */
 const heldRows = (r: { readonly spendHolds?: unknown }) => (r.spendHolds as InProcessSpendHoldStore).rows();
 
 const NOW = "2026-09-01T12:00:00.000Z";
@@ -99,7 +80,7 @@ test('a solved held route bypasses paid admission and prewarming and counts as d
     toolkitFor:()=>{throw Error('No tools');},contextFor:()=>{throw Error('No new research');},now:()=>NOW});
   const cycle=await runCycle({repos,obligations:[OBLIGATION],debts:[],routeTaskFor:()=>task.id,maturity:()=> 'UNGRADUATED',
     holder:'held-cycle',now:NOW,leaseTtlMs:60_000,executor:{lane:'DETERMINISTIC',run:async()=>{throw Error('Use the held executor');}},
-    reader:{contract:'READER',state:'NOT_READY',reason:'fixture'},truth:{contract:'TRUTH',state:'NOT_READY',reason:'fixture'},
+    
     research:{decide:()=>({kind:'BOUNDED_MODEL_WORKER',why:'old route classification',disagreement:null}),
       admitScout:()=>{admissions++;return {admit:false,code:'PAUSED',why:'Paid work paused'};},
       prewarm:async()=>{warms++;throw Error('No prewarm');},modelExecutor:()=>held,workerCapacity:1,scoutLeaseTtlMs:420_000}});
@@ -123,8 +104,6 @@ test("full-size due queue dispatches an opened Scout before its deadline and nev
     routeTaskFor: id => id === OBLIGATION.id ? task.id : null,
     maturity: () => "UNGRADUATED", holder: "scaled-cycle", now: NOW, leaseTtlMs: 60_000,
     executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("unopened deterministic dispatched"); } },
-    reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
     research: {
       decide: row => ({ kind: row.obligation.id.startsWith("det-") ? "DETERMINISTIC" : "BOUNDED_MODEL_WORKER", why: "fixture", disagreement: null }),
       admitScout: () => { admissions += 1; return { admit: true }; },
@@ -191,8 +170,6 @@ test("twenty ready Scouts for one place enter shared worker slots together", { t
   const cycle = await runCycle({ repos, obligations, debts: [], routeTaskFor: id => tasks.get(id) ?? null,
     maturity: () => "UNGRADUATED", holder: "one-place-parallel", now: NOW, leaseTtlMs: 60_000,
     executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("model job reached plain-code lane"); } },
-    reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
     research: { decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "ready work in one place", disagreement: null }),
       admitScout: () => ({ admit: true }), workerCapacity: researchWorkerCapacity({ ...funded, readyWork: obligations.length }),
       scoutLeaseTtlMs: 420_000, modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => {
@@ -252,7 +229,6 @@ async function ordinaryWorkerProcesses() {
       const cycle = await runCycle({ repos, obligations: [OBLIGATION], debts: [],
         routeTaskFor: () => task.id, maturity: () => "UNGRADUATED", holder: "ordinary-process-test",
         now: NOW, leaseTtlMs: 60_000, executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("wrong lane"); } },
-        reader: { contract: "READER", state: "NOT_READY", reason: "fixture" }, truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
         research: { decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "fixture", disagreement: null }),
           admitScout: () => ({ admit: true }), modelExecutor: executor, workerCapacity: 2, scoutLeaseTtlMs: 60_000 } });
       assert.equal(pids.length, 1);
@@ -294,8 +270,7 @@ async function ordinaryWorkerProcesses() {
     const cycle = await runCycle({ repos, obligations: [OBLIGATION], debts: [], routeTaskFor: () => task.id,
       maturity: () => "GRADUATED", holder: "ordinary-route-process-test", now: NOW, leaseTtlMs: 60_000,
       executor, workerCapacity: 2,
-      reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-      truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" } });
+      });
     assert.equal(pids.length, 1);
     assert.notEqual(pids[0], process.pid);
     assert.equal(opened, 1);
@@ -309,7 +284,6 @@ async function ordinaryWorkerProcesses() {
   } finally { await rm(root, { recursive: true, force: true }); }
 }
 
-/** A toolkit whose fetch_public vaults one artifact per call and returns a rung. */
 function fakeToolkit(): ScoutToolkit & { calls: string[] } {
   const vaulted = new Set<string>();
   const calls: string[] = [];
@@ -349,7 +323,6 @@ function fakeToolkit(): ScoutToolkit & { calls: string[] } {
             recordedAt: NOW,
           },
         ],
-        /* RULING 243: the machine's record of what was vaulted, from which provenance is derived. */
         provenance: [
           {
             artifactId: id,
@@ -368,7 +341,6 @@ function fakeToolkit(): ScoutToolkit & { calls: string[] } {
   };
 }
 
-/** A fresh, RELAUNCHED supervision reading: what a proven host carries on its research state (RULING 246). */
 function provenSupervision(over: Partial<HostSupervision> = {}): HostSupervision {
   return {
     host: "test",
@@ -386,12 +358,11 @@ function provenSupervision(over: Partial<HostSupervision> = {}): HostSupervision
       lastTaskResult: "0x00000000",
       verdict: "RELAUNCHED",
     },
-    proofPath: "data/ops/runner-relaunch-proof.json",
+    proofPath: ".runtime/ops/runner-relaunch-proof.json",
     ...over,
   };
 }
 
-/** A scripted model: each entry is the content the model returns on that turn. */
 function scriptedTransport(turns: readonly ModelResponse["content"][]): ModelTransport & { requests: ModelRequest[] } {
   const requests: ModelRequest[] = [];
   let i = 0;
@@ -400,7 +371,6 @@ function scriptedTransport(turns: readonly ModelResponse["content"][]): ModelTra
     const content = turns[i] ?? [{ type: "text" as const, text: "script complete" }];
     i += 1;
     return {
-      /* The provider reports the model it served: the one the request named. */
       model: request.model,
       stop_reason: content.some((b) => b.type === "tool_use") ? "tool_use" : "end_turn",
       content,
@@ -459,8 +429,6 @@ function executorWith(
   });
   return { exec, results };
 }
-
-/* ---------------------------------------------------------------------- 1 */
 
 test("the runner's exact Scout hold reaches disposed and aborted cost rows without changing unknown dollars", async () => {
   for (const mode of ["disposed", "aborted", "unmetered", "no-hold"] as const) {
@@ -597,7 +565,6 @@ test("1. SEEDED: a route declared DETERMINISTIC never consumes a model", async (
   assert.equal(graduated.kind, "DETERMINISTIC", "graduated with an opening runs deterministically");
   assert.match(graduated.disagreement ?? "", /GRADUATED_SINCE_DECLARED/);
 
-  /* And through the cycle: the model executor is never invoked for a deterministic row. */
   const { repos, task } = await registered();
   const transport = scriptedTransport([[finish("f", "NO_PROGRESS")]]);
   const { exec } = executorWith(transport, fakeToolkit());
@@ -615,8 +582,6 @@ test("1. SEEDED: a route declared DETERMINISTIC never consumes a model", async (
     holder: "t",
     now: NOW,
     leaseTtlMs: 60_000,
-    reader: { contract: "READER", state: "NOT_READY", reason: "test" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "test" },
     research: {
       decide: () => ({ kind: "DETERMINISTIC", why: "declared", disagreement: null }),
       admitScout: () => ({ admit: true }),
@@ -629,8 +594,6 @@ test("1. SEEDED: a route declared DETERMINISTIC never consumes a model", async (
   assert.equal(cycle.lanes?.deterministic.dispatched, 1);
   assert.equal(cycle.lanes?.model.dispatched, 0);
 });
-
-/* ---------------------------------------------------------------------- 2 */
 
 test("2. SEEDED: a model that called no tool and wrote prose is REFUSED", async () => {
   const { repos, task } = await registered();
@@ -657,8 +620,6 @@ test("2. SEEDED: a model that called no tool and wrote prose is REFUSED", async 
   const attempts = await attemptsForRouteTask(repos, task.id);
   assert.equal(attempts.at(-1)?.value.outcome, "ABORTED");
 });
-
-/* ---------------------------------------------------------------------- 3 */
 
 test("3. SEEDED: a candidate citing an artifact nobody vaulted is refused; a vaulted one is accepted", () => {
   const rungs = [
@@ -695,15 +656,12 @@ test("3. SEEDED: a candidate citing an artifact nobody vaulted is refused; a vau
   assert.ok(missingList.some((i) => i.code === "SCOUT_RUNG_LIST_MISSING"), "a walked rung not accounted for is refused");
 });
 
-/* ---------------------------------------------------------------------- 4 */
-
 test("4. SEEDED: an early NO_PROGRESS below the rung minimum is refused, ABORTS, and its cost reaches the ledger", async () => {
   const { repos, task } = await registered();
   const toolkit = fakeToolkit();
   const transport = scriptedTransport([
     [toolUse("u1", "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "start" })],
     [finish("f", "NO_PROGRESS", { rungsWalked: [{ index: 0, note: "nothing" }], nextRungs: ["site-search-or-sitemap"] })],
-    /* the model repeats the refused finish until the grace runs out */
     [finish("f2", "NO_PROGRESS", { rungsWalked: [{ index: 0, note: "nothing" }], nextRungs: ["site-search-or-sitemap"] })],
   ]);
   const { exec, results } = executorWith(transport, toolkit, { bound: {} });
@@ -729,8 +687,6 @@ test("4. SEEDED: an early NO_PROGRESS below the rung minimum is refused, ABORTS,
   assert.equal(ledger.length, 1, "the ledger holds the aborted Attempt's cost");
   assert.equal(ledger[0].role, "SCOUT");
 });
-
-/* ---------------------------------------------------------------------- 5 */
 
 test("5. a deliberate stop preserves next rungs without an artificial tool cap", async () => {
   const { repos, task } = await registered();
@@ -762,9 +718,7 @@ test("5. a deliberate stop preserves next rungs without an artificial tool cap",
   assert.deepEqual(last.tool_choice, { type: "auto" }, "the finish stays auto without a cache-invalidating forced-tool rewrite");
 });
 
-/* -------------------------------------------------------------- 5a (CH-07 wall clock) */
-
-test("CH-07: a hunter past its wall clock stops, saves the steps walked as a NO_PROGRESS case file, and is never an argued absence", async () => {
+test("a hunter past its wall clock stops, saves the steps walked as a NO_PROGRESS case file, and is never an argued absence", async () => {
   const { repos, task } = await registered();
   const toolkit = fakeToolkit();
   const scripted = scriptedTransport([
@@ -797,9 +751,7 @@ test("CH-07: a hunter past its wall clock stops, saves the steps walked as a NO_
   assert.equal(isArguedAbsence({ ...r, researchRole: "DETECTIVE" }, 1), false, "a timeout is never filed as a 30-day absence");
 });
 
-/* -------------------------------------------------------------- 5a-2 (CH-30 AI service outage) */
-
-test("CH-30: when the AI service stops answering mid-walk, the steps walked are kept as the case file", async () => {
+test("when the AI service stops answering mid-walk, the steps walked are kept as the case file", async () => {
   const { repos, task } = await registered();
   const scripted = scriptedTransport([
     [toolUse("u1", "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "start" })],
@@ -833,7 +785,7 @@ test("CH-30: when the AI service stops answering mid-walk, the steps walked are 
   assert.equal(consecutiveTransportFailures([r, { refusal: null }]), 0, "any other ending stops the count");
 });
 
-test("CH-30: after repeated AI service failures the next attempt starts a tier up, and a healthy history stays put", async () => {
+test("after repeated AI service failures the next attempt starts a tier up, and a healthy history stays put", async () => {
   const startModel = async (transportFailures: number | undefined) => {
     const { repos, task } = await registered();
     const scripted = scriptedTransport([[finish("f", "NO_PROGRESS", { rungsWalked: [], nextRungs: ["x"] })]]);
@@ -850,8 +802,6 @@ test("CH-30: after repeated AI service failures the next attempt starts a tier u
   assert.notEqual(moved.model, steady.model);
   assert.equal((await startModel(undefined)).klass, steady.klass);
 });
-
-/* -------------------------------------------------------------- 5b (early stop) */
 
 test("EARLY STOP: a walk that stalls past minRungs finishes early instead of running to the turn bound", async () => {
   const { repos, task } = await registered();
@@ -903,8 +853,6 @@ test("EARLY STOP: a walk that stalls past minRungs finishes early instead of run
   assert.deepEqual(transport.requests.at(-1)!.tool_choice, { type: "auto" }, "the finish turn is offered auto, not a forced-finish rewrite");
 });
 
-/* ---------------------------------------------------------------------- 6 */
-
 test("6. SEEDED: the rolling ceiling DEFERS model work by name and disposes nothing", async () => {
   const { repos, task } = await registered();
   const transport = scriptedTransport([[finish("f", "NO_PROGRESS")]]);
@@ -919,8 +867,6 @@ test("6. SEEDED: the rolling ceiling DEFERS model work by name and disposes noth
     holder: "t",
     now: NOW,
     leaseTtlMs: 60_000,
-    reader: { contract: "READER", state: "NOT_READY", reason: "test" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "test" },
     research: {
       decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "novel", disagreement: null }),
       admitScout: () => ({ admit: false, code: "CEILING", why: "the rolling daily research ceiling is reached: $25.0000 of $25" }),
@@ -953,8 +899,6 @@ test("6. SEEDED: the rolling ceiling DEFERS model work by name and disposes noth
   assert.equal(spend.windowUsd, 2, "only SCOUT entries inside the window count");
 });
 
-/* ---------------------------------------------------------------------- 7 */
-
 test("7. SEEDED: a manually asserted ACTIVE flag is ignored — the verdict is DERIVED", () => {
   const state = {
     formatVersion: 1,
@@ -976,7 +920,6 @@ test("7. SEEDED: a manually asserted ACTIVE flag is ignored — the verdict is D
     runtimeConditions: [],
     methodCandidates: null,
     hostSupervision: provenSupervision(),
-    /* the seeded lie */
     active: true,
     verdict: "ACTIVE",
   } as unknown as ResearchState;
@@ -1003,8 +946,6 @@ test("7. SEEDED: a manually asserted ACTIVE flag is ignored — the verdict is D
   assert.equal(capped.verdict, "ACTIVE", "cap-deferred is a legitimate ACTIVE state");
   assert.equal(capped.capDeferred, true);
 });
-
-/* ---------------------------------------------------------------------- 8 */
 
 test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with identity, usage and cost on the Attempt", async () => {
   const { repos, task } = await registered();
@@ -1044,7 +985,6 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   assert.equal(attempt.cost.inputTokens, 3 * 1500, "input tokens include cache reads, summed over turns");
   assert.equal(attempt.cost.outputTokens, 300);
   assert.ok((attempt.cost.usd ?? 0) > 0);
-  /* PC-9 (2026-09-06): the six metering fields land on the persisted Attempt and on the ledger row, read back. */
   assert.equal(attempt.cost.cacheReadInputTokens, 3 * 500);
   assert.equal(attempt.cost.cacheCreationInputTokens, 0);
   assert.equal(attempt.cost.uncachedInputTokens, 3 * 1000);
@@ -1075,11 +1015,8 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   assert.equal(dispositionForScout({ ...r, outcome: "NO_PROGRESS" }), null);
 });
 
-/* ---------------------------------------------------------------------- 9 */
-
 test("9. SEEDED (measured live): an artifact the log refuses does not leave the Attempt open", async () => {
   const { repos, task } = await registered();
-  /* Two hosts serve byte-identical robots.txt: one content id, two canonical URLs. */
   const vaulted = new Set<string>();
   let calls = 0;
   const colliding: ScoutToolkit = {
@@ -1135,8 +1072,6 @@ test("9. SEEDED (measured live): an artifact the log refuses does not leave the 
   assert.equal(lease?.value.released, true, "the lease is released");
 });
 
-/* --------------------------------------------------------------------- 10 */
-
 test("10. a lost or server-error response keeps unknown spending reserved, including after metered turns", async () => {
   const { repos, task } = await registered();
   const overloaded: ModelTransport = async () => {
@@ -1164,7 +1099,6 @@ test("10. a lost or server-error response keeps unknown spending reserved, inclu
   const ledger = (await repos.costs.readAll()).filter((c) => c.attemptId === attempt.id);
   assert.equal(ledger.length, 1);
   assert.equal(ledger[0].cost.usd, null);
-  /* Prior metered steps survive, but do not price the unknown later request. */
   let n = 0;
   const failsSecond: ModelTransport = async () => {
     n += 1;
@@ -1255,10 +1189,6 @@ test("an unknown sent Scout request cannot settle away its original lifetime res
   assert.equal((await contender.admit(49, "retry cannot consume unknown exposure")).admit, false);
 });
 
-/* ================================================================== *
- * RULING 243 — provenance is the machine's
- * ================================================================== */
-
 const candidateWith = (over: Record<string, unknown> = {}) => ({
   routeId: "a-gov-meetings",
   title: "meetings page",
@@ -1281,7 +1211,7 @@ async function dispatchScout(exec: DeclaredExecutor) {
   return { repos, task, result };
 }
 
-test("11. SEEDED (RULING 243): a finish whose observedOn disagrees with the artifact record is REFUSED; the corrected claim is accepted and the candidate carries machine-owned provenance", async () => {
+test("11. SEEDED: a finish whose observedOn disagrees with the artifact record is REFUSED; the corrected claim is accepted and the candidate carries machine-owned provenance", async () => {
   const toolkit = fakeToolkit();
   const transport = scriptedTransport([
     [toolUse("u1", "fetch_public", { url: "https://a.gov/meetings", rung: "primary-site-navigation", why: "w" })],
@@ -1305,7 +1235,7 @@ test("11. SEEDED (RULING 243): a finish whose observedOn disagrees with the arti
   assert.match(c.provenance?.rule ?? "", /earliest retrievedAt/);
 });
 
-test("12. SEEDED (RULING 243): a permission claim the record contradicts, a citation of robots documents only, and an absent claim are each refused by name", () => {
+test("12. SEEDED: a permission claim the record contradicts, a citation of robots documents only, and an absent claim are each refused by name", () => {
   const prov = new Map<string, ArtifactProvenance>([
     ["art-1", { artifactId: "art-1", canonicalUrl: "https://a.gov/meetings", retrievedAt: NOW, permission: "NOT_APPLICABLE", methodRouteId: "scout:fetch_public", httpStatus: 200 }],
     ["rob-1", { artifactId: "rob-1", canonicalUrl: "https://a.gov/robots.txt", retrievedAt: NOW, permission: "ALLOWED", methodRouteId: "scout:read_permission", httpStatus: 404 }],
@@ -1330,7 +1260,6 @@ test("12. SEEDED (RULING 243): a permission claim the record contradicts, a cita
   const wrongClass = validateScoutFinish({ ...base, finish: fin([candidateWith({ permission: "NOT_APPLICABLE", recordClass: "roster" })]) });
   assert.ok(wrongClass.some((i) => i.code === "SCOUT_PROVENANCE_DISAGREES" && /recordClass/.test(i.detail)));
 
-  /* Two hosts, two verdicts, neither at the candidate URL: no single verdict follows. */
   const conflict = validateScoutFinish({ ...base, finish: fin([candidateWith({ url: "https://c.gov/api", evidenceArtifactIds: ["art-1", "art-2"], permission: "ALLOWED" })]) });
   assert.ok(conflict.some((i) => i.code === "SCOUT_PROVENANCE_UNDERIVABLE" && /disagree on permission/.test(i.detail)));
 
@@ -1339,7 +1268,7 @@ test("12. SEEDED (RULING 243): a permission claim the record contradicts, a cita
   assert.deepEqual(earliest, []);
 });
 
-test("12b. robots.txt is RECORDED, never a refusal (owner decision 2026-09-25): a candidate citing a page retrieved under DISALLOWED or CANNOT_TELL is accepted, and the verdict is its machine-owned permission", () => {
+test("12b. robots.txt is RECORDED, never a refusal: a candidate citing a page retrieved under DISALLOWED or CANNOT_TELL is accepted, and the verdict is its machine-owned permission", () => {
   const prov = new Map<string, ArtifactProvenance>([
     ["art-d", { artifactId: "art-d", canonicalUrl: "https://a.gov/meetings", retrievedAt: NOW, permission: "DISALLOWED", methodRouteId: "scout:fetch_public", httpStatus: 200 }],
     ["art-c", { artifactId: "art-c", canonicalUrl: "https://c.gov/agendas", retrievedAt: NOW, permission: "CANNOT_TELL", methodRouteId: "scout:fetch_public", httpStatus: 200 }],
@@ -1352,15 +1281,10 @@ test("12b. robots.txt is RECORDED, never a refusal (owner decision 2026-09-25): 
   assert.deepEqual(disallowed, [], "a public page read over a robots.txt disallow substantiates its route");
   const cannotTell = validateScoutFinish({ ...base, finish: fin([candidateWith({ url: "https://c.gov/agendas", evidenceArtifactIds: ["art-c"], permission: "CANNOT_TELL" })]) });
   assert.deepEqual(cannotTell, [], "an unread robots.txt does not disqualify a route either");
-  /* The verdict is still the machine's record: a claim that hides the disallow is refused as a disagreement, not for robots. */
   const hidden = validateScoutFinish({ ...base, finish: fin([candidateWith({ evidenceArtifactIds: ["art-d"], permission: "ALLOWED" })]) });
   assert.ok(hidden.some((i) => i.code === "SCOUT_PROVENANCE_DISAGREES" && /retrieved under DISALLOWED/.test(i.detail)), JSON.stringify(hidden));
   assert.ok(!hidden.some((i) => i.code === "SCOUT_PROVENANCE_UNDERIVABLE"), "a DISALLOWED retrieval is never itself a refusal");
 });
-
-/* ================================================================== *
- * RULING 244 — the Worker Efficiency Law's five seeded failures
- * ================================================================== */
 
 test("13. SEEDED (v): a route the decision rule sent DETERMINISTIC reaching the model executor makes NO request and aborts by name; decideExecutor names the graduation", async () => {
   const transport = scriptedTransport([[finish("f", "NO_PROGRESS")]]);
@@ -1390,7 +1314,6 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   ];
   let i = 0;
   const requests: ModelRequest[] = [];
-  /* A growing loop whose turn 2 finds nothing in the cache and re-writes the prefix plus what it appended; the uncached tail stays tiny. */
   const coldOnTurnTwo: ModelTransport = async (request) => {
     requests.push(request);
     const content = turns[i] ?? [{ type: "text" as const, text: "script complete" }];
@@ -1411,7 +1334,6 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   assert.match(results[0].cacheDefect?.detail ?? "", /RULING 244/);
   assert.match(result.detail, /CACHE DEFECT on turn\(s\) 2/);
 
-  /* POSITIVE CONTROL: a healthy loop — reads grow, writes are the appended turn, the uncached tail is two tokens — records no defect. */
   let w = 0;
   const warm: ModelTransport = async () => {
     const content = turns[Math.min(w, turns.length - 1)];
@@ -1422,11 +1344,6 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   await dispatchScout(exec2);
   assert.equal(results2[0].cacheDefect, null);
 
-  /*
-   * THE STATIONARY SIGNATURE (2026-09-06): reads flat at the static prefix,
-   * uncached input growing by the whole conversation every turn — the shape
-   * every 2026-09-02 Attempt showed while the old detector reported clean.
-   */
   let k = 0;
   const stationary: ModelTransport = async () => {
     const content = turns[Math.min(k, turns.length - 1)];
@@ -1439,7 +1356,6 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   assert.deepEqual(results3[0].cacheDefect?.zeroReadTurns, [], "the static prefix was read every turn, which is exactly what hid the defect from the old detector");
   assert.match(results3[0].cacheDefect?.detail ?? "", /STATIONARY-BREAKPOINT/);
 
-  /* The request shape: tools-last, system, NO message-level marker, and the top-level moving breakpoint. */
   const third = requests[2];
   assert.deepEqual(third.tools.at(-1)?.cache_control, { type: "ephemeral" }, "the last tool definition is a breakpoint");
   assert.equal(third.tools[0].cache_control, undefined, "only the last tool carries the marker");
@@ -1452,14 +1368,12 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   assert.equal(third.output_config?.effort, undefined, "effort is the SCOUT role's, recorded per request");
   assert.equal(results[0].effort, null);
 
-  /* The LAST_BLOCK fallback (a platform that rejects the top-level field) marks only the newest user turn's last block. */
   const fallback = withCacheBreakpoints(third.messages, "LAST_BLOCK");
   const fallbackMarkers = fallback.flatMap((m, idx) => (Array.isArray(m.content) ? (m.content as { cache_control?: unknown }[]).map((b, j) => (b.cache_control ? `${idx}.${j}` : null)).filter((x) => x !== null) : []));
   const lastUser = fallback.reduce((at, m, idx) => (m.role === "user" ? idx : at), -1);
   const lastLen = (fallback[lastUser].content as unknown[]).length;
   assert.deepEqual(fallbackMarkers, [`${lastUser}.${lastLen - 1}`], "exactly one message marker, on the last block of the newest user turn");
 
-  /* The per-turn steps carry the cache-write split and the pricing basis (2026-09-06). */
   const step = (results[0].steps ?? []).find((s) => s.kind === "MODEL" && s.turn === 2);
   assert.deepEqual(step?.cacheWriteSplit, { ephemeral5m: null, ephemeral1h: null }, "a response with no cache_creation split records null, never zero");
   assert.equal(step?.cacheWritePricedFrom, "AGGREGATE", "the aggregate write was priced at the requested TTL because the response carried no split");
@@ -1596,7 +1510,6 @@ test("17c. a BLOCKED Scout means an access control: its disposition's permission
   assert.equal(blocked?.permission, "ALLOWED", "the walled rung ran under ALLOWED; a legacy DISALLOWED line no longer decides the record");
   assert.match(blocked?.note ?? "", /ACCESS CONTROL/);
   assert.doesNotMatch(blocked?.note ?? "", /DISALLOW/);
-  /* Evidence read over a disallow records DISALLOWED, never a blanket ALLOWED. */
   const evidence = dispositionForScout({
     ...base,
     rungs: [{ ...rungs[0], observed: "HTTP 200, 10 bytes", ok: true, permission: "DISALLOWED" as const }],

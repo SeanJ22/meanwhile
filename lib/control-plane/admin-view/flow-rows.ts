@@ -1,9 +1,4 @@
-/**
- * **FACTS PER HOUR, COST PER FACT, AND WHERE THE FLOW STOPPED (BR-31).** The two Scoreboard rows and the per-stage view,
- * from the week of hourly flow counts. PURE: a week in, rows out. A reading that could not be taken arrives as null and
- * says so; a day nothing was recorded for is a gap, never a zero, and spend with an unpriced charge is unknown, not low.
- * A fact here is a new or changed reader record that went live; rechecks earn no credit.
- */
+/** A day nothing was recorded for is a gap, never a zero; spend with an unpriced charge is unknown, not low. Rechecks earn no credit. */
 import type { ScoreboardFlowDay, ScoreboardRow } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { FlowDay, FlowRead, FlowWeek } from "./flow-read.ts";
 
@@ -47,7 +42,6 @@ export function flowRows(week: FlowWeek | null | undefined): readonly [string, S
   }]];
 }
 
-/** The stages, one row per day, for finding out where the flow stopped. Days with no record are nulls. */
 export function flowStages(week: FlowWeek | null | undefined): readonly ScoreboardFlowDay[] | null {
   if (week === null || week === undefined || week.hoursRecorded === 0) return null;
   return week.days.map((d): ScoreboardFlowDay => {
@@ -57,7 +51,6 @@ export function flowStages(week: FlowWeek | null | undefined): readonly Scoreboa
   });
 }
 
-/** One line for the spend question: yesterday's settled spend and what it got, from the last full day. */
 export function spendAnswer(week: FlowWeek | null | undefined): { readonly says: string; readonly spendUsd: number | null; readonly facts: number } | null {
   const last = week?.days[week.days.length - 1]?.read ?? null;
   if (last === null) return null;

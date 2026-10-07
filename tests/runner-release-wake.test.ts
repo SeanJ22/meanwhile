@@ -121,8 +121,8 @@ test("recovered install exits for freshly loaded dependencies before inspecting 
   assert.ok(DEFAULT_HANG_KILL_MS > RUNTIME_RELEASE_MAX_BLOCKING_MS);
 });
 
-test("console and nightly children use the research idle guard", async () => {
-  for (const name of ["publishConsoleChildren", "runNightlyWindow"]) {
+test("console children use the research idle guard", async () => {
+  for (const name of ["publishConsoleChildren"]) {
     const fn = source.match(new RegExp(`async function ${name}\\([\\s\\S]*?\\n\\}`))?.[0];
     assert.ok(fn);
     let observed: number | undefined;

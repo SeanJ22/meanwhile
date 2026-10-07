@@ -1,26 +1,12 @@
 import { createHash } from "node:crypto";
 
 /**
- * **ONE MODEL CALL PER DISTINCT EVIDENCE, NOT PER VISITOR.** (2026-09-24.)
- *
- * Every Ask request made two model calls, and a second reader asking the same
- * question a minute later paid for both again — ~9 s and two metered calls for
- * an answer the instance had just produced from byte-identical evidence.
- *
- * The key is the INPUT, not the question alone:
- *
- * - synthesis is keyed by the resolved model and effort plus the whole evidence
- *   pack (records, gaps, denominators, subject, intent, tense, today). When the
- *   underlying civic data changes, a record's text, date or source changes, the
- *   pack changes, and the key changes with it: invalidation is structural, not
- *   a timer somebody has to remember. The TTL only bounds memory.
- * - interpretation is keyed by the resolved model plus the question and the
- *   exact context the model is shown (inventory, today, surface, prior turns).
- *
- * Equivalent questions share an entry when they differ only in case, spacing
- * or trailing punctuation. Only a successful model result is kept; a failure
- * is never replayed. The cache is per server instance: it spares repeated
- * requests on a warm instance and never crosses a deploy.
+ * One model call per distinct input, per server instance. Synthesis is keyed
+ * by the resolved model and effort plus the whole evidence pack, so changed
+ * civic data changes the key; interpretation by the resolved model plus the
+ * question and the exact context shown. Questions differing only in case,
+ * spacing or trailing punctuation share an entry. Only successes are kept; the
+ * TTL only bounds memory.
  */
 
 const DEFAULT_MAX_ENTRIES = 256;

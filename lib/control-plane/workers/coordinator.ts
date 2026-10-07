@@ -1,5 +1,5 @@
 import { BOX_PARSER_IMPLEMENTATION } from "./quoted-proof.ts";
-import { adapterWaitReasonFromKnowledge, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
+import { adapterWaitReasonFromKnowledge, DETECTIVE_SHUT_THRESHOLD, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
 import { readScoutResultsForSubjects, readSpendWindowCosts, readSubjectScoutHistoryScoped } from "./scoped-history.ts";
 import { randomUUID } from "node:crypto";
 import type { WorkItem } from "../work-item.ts";
@@ -13,7 +13,9 @@ import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-pol
 import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
-import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, scoutTransientDenial, unchangedScoutFailure } from "./scout-scheduling.ts";
+import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, oneHunterPath, scoutTransientDenial, scoutWalkedToNothing, unchangedScoutFailure } from "./scout-scheduling.ts";
+import { absenceExpiry, absenceUnlockFrom, isArguedAbsence } from "../scheduler/absence.ts";
+import { recordArguedAbsence } from "../scheduler/durable.ts";
 import { selectStandingLineages } from "./standing-lineage.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
@@ -22,26 +24,26 @@ import { isScheduled } from "../scheduler/obligation.ts";
 import type { FreshnessObligation } from "../scheduler/obligation.ts";
 import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
-import type { ScoutResult } from "../scheduler/scout-result.ts";
+import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkerResultRecord } from "./types.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
 import { needsSecondSource } from "../promotion/section3.ts";
+import { acquirerFailureCause, knownDoorRetry } from "./known-door-failure.ts";
 import { interleaveByWeight, partOfItem, sendOf, squadKey, squadWeights, type SquadReading, type SquadWeight } from "./squad-weights.ts";
 
-/**
- * Blocker codes an acquisition recorded for robots.txt alone, before the owner decision of 2026-09-25. Historical:
- * the acquirer no longer produces them, and a result carrying only these is re-acquired, never left refused.
- */
+/** Blocker codes an acquisition once recorded for robots.txt alone. A result carrying only these is re-acquired, never left refused. */
 const ROBOTS_ONLY_BLOCKERS: ReadonlySet<string> = new Set(["PERMISSION_DENIED", "PERMISSION_UNKNOWN"]);
 
 export interface AutonomousCoordinatorRuntime extends FleetRuntime {
   /** Called before a task runs on a runtime built once for the whole process: refreshes only that task's own history. */
-  readonly beginTask?: (task: RouteTask) => Promise<void>;
+  readonly beginTask?: (task: RouteTask, item?: WorkItem) => Promise<void>;
   /** Existing Scout executor, configured with this canonical WorkItem and its inherited history. */
   readonly scoutFor?: (item: WorkItem, task: RouteTask, history?: readonly ScoutResult[]) => DeclaredExecutor;
   /** Only the standing lineage broker may hand complete, attributed sibling captures to this root.
    * Keep the scheduling recovery gate in sync with the Scout's actual inherited artifact IDs. */
   readonly authorizedSiblingHeldArtifactIdsFor?: (item: WorkItem) => readonly string[];
+  /** Admin's shut-door threshold for this round (`detective.shutThreshold`); the code default when absent. */
+  readonly shutThreshold?: number;
 }
 export interface AutonomousDecision {
   readonly workItemId: string;
@@ -227,8 +229,10 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     );
   }
   const now = (runtime.now ?? (()=>new Date().toISOString()))();
+  const switched = oneHunterPath();
+  const shutThreshold = runtime.shutThreshold ?? DETECTIVE_SHUT_THRESHOLD;
   const records = [...(knownHistory?.completedRecords ?? await readCompletedWorkerResults(repos, item.id))];
-  /* CH-26: the held-artifact set is read once per decision when scoped, not once per parsed artifact. */
+  /* The held-artifact set is read once per decision when scoped, not once per parsed artifact. */
   const readHeldArtifactIds = async () => new Set((await repos.artifacts.readAll()).map(artifact => artifact.artifactId));
   let heldArtifactIdsRead: Promise<Set<string>> | null = null;
   const heldArtifactIds = () => runtime.scopedReads ? (heldArtifactIdsRead ??= readHeldArtifactIds()) : readHeldArtifactIds();
@@ -269,6 +273,18 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       ...(runtime.authorizedSiblingHeldArtifactIdsFor?.(item) ?? [])])];
     let recoveryTaskId: string | null = null;
     let latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
+    /* A detective's argued absence holds the item on the owning obligation's absence clock; any other walk that found nothing goes to a detective. */
+    if (scoutWalkedToNothing(latest)) {
+      const walked=scoutHistory.find(result=>result.attemptId===latest!.id);
+      if (walked && isArguedAbsence(walked,MIN_DISTINCT_RUNGS)) {
+        const owner=await owningObligation(repos,item.id,task.id);
+        const until=owner ? owner.value.absentUntil ?? null : absenceExpiry(walked.recordedAt);
+        if (until && Date.parse(until)>Date.parse(now)) {
+          const unlock=owner?.value.absenceUnlock?.text;
+          return decision("BLOCKED",`A detective argued this record absent; it is walked again at ${until}${unlock ? `, or sooner if this appears: ${unlock}` : ""}.`,task);
+        }
+      }
+    }
     if (unchangedScoutFailure(latest)) return decision("BLOCKED", "The unchanged Scout request already failed; changed inputs or a repaired method must create its successor.", task);
     while(task.state==="DISPOSED" && latest?.outcome==="COMPLETED") {
       const lastScout=scoutHistory.find(result=>result.attemptId===latest!.id);
@@ -287,7 +303,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
     }
     const deniedCondition=latest?.outcome==="DENIED_BY_POLICY" ? scoutTransientDenial(latest.abortReason) : null;
-    /* CH-29: our own guard's refusal is paced from its own end and needs no debt; every other denial waits out its debt as before. */
+    /* Our own guard's refusal is paced from its own end and needs no debt; every other denial waits out its debt. */
     const guardRecheckAtIso=deniedCondition==="GUARD" ? guardRecheckAt(latest!) : null;
     const dueForRecheck=deniedCondition==="GUARD"
       ? (guardRecheckAtIso===null || Date.parse(guardRecheckAtIso)<=Date.parse(now))
@@ -313,6 +329,9 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     ? [r.result.artifactId] : []));
   const acquiredBoxPage = (record: WorkerResultRecord) => record.result.role === "ACQUIRER" &&
     record.result.artifacts.some(artifact => boxedArtifactIds.has(artifact.artifactId));
+  /* Known doors in a passing outage, each waiting for its free plain retry. */
+  const outageWaits = new Map<string, string>();
+  const doorKey = (acquisition: AcquirerTaskSpec) => `${acquisition.route.id}\u0000${acquisition.route.url}`;
   // Acquire the declared supporting authorities before scheduling their dependent validation.
   for (const acquisition of acquisitions) {
     const history = records.filter(r => r.result.role === "ACQUIRER" && (r.result.source.id === acquisition.route.id || acquiredBoxPage(r)) && r.result.source.url === acquisition.route.url);
@@ -337,11 +356,9 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       }
       continue;
     }
+    const unresolvedBefore: boolean = unresolved;
     unresolved = true;
-    // A result blocked by robots.txt alone (PERMISSION_DENIED / PERMISSION_UNKNOWN, only ever recorded before the owner
-    // decision of 2026-09-25) is not a failure of the route: robots.txt is recorded and never blocks a public page, so
-    // the route is acquired again at once, with no failure debt and no Scout turn owed first. Access controls and
-    // integrity failures keep their own retry rules below.
+    // A result blocked by robots.txt alone (PERMISSION_DENIED / PERMISSION_UNKNOWN, older results only) is acquired again at once with no failure debt; access controls and integrity failures keep their own retry rules.
     if (latest.result.blockers.length > 0 && latest.result.blockers.every(blocker => ROBOTS_ONLY_BLOCKERS.has(blocker.code))) {
       const next = await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition,replayLabel:`robots-recorded-after:${latest.id}`});
       if (next) return next;
@@ -351,14 +368,18 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     let debt: FreshnessDebt | null = null;
     for (const failed of [...history].reverse()) {
       if (failed.result.verdict === "ACQUIRED") { debt = null; continue; }
-      debt = recordFailure(debt,{obligationId:item.id,cause:"TRANSPORT_FAILED",detail:`ACQUIRER ${failed.result.verdict}`,target:acquisition.route.url,dueAt:failed.startedAt,now:failed.endedAt});
+      const cause = switched && failed.result.role === "ACQUIRER" ? acquirerFailureCause(failed.result) : "TRANSPORT_FAILED";
+      debt = recordFailure(debt,{obligationId:item.id,cause,detail:`ACQUIRER ${failed.result.verdict}`,target:acquisition.route.url,dueAt:failed.startedAt,now:failed.endedAt});
     }
-    // An hourly runner must not spend every pass retrying the same failed URL
-    // before the unresolved investigation ever gets a Scout turn.
+    // Switch off: the unresolved investigation gets a Scout turn before plain retries. Switch on: a passing outage keeps its free plain retry; a shut door goes to its investigation, with a plain re-read in alternate hourly slots.
     const scoutTriedAfterFailure = attempts.some(a => a.workItemId === item.id && (a.worker.role === "SCOUT" || a.worker.role === "DETECTIVE") && a.endedAt !== null && Date.parse(a.endedAt) >= Date.parse(latest.endedAt));
-    if (debt && Date.parse(debt.retryAt) <= Date.parse(now) && scoutTriedAfterFailure) {
+    const retry = knownDoorRetry({debt,now,scoutTriedAfterFailure,shutThreshold,oneHunterPath:switched});
+    if (retry.kind === "PLAIN_RETRY") {
       const next = await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition,replayLabel:`retry-after:${latest.id}`});
       if (next) return next;
+    } else if (retry.kind === "OUTAGE_WAIT") {
+      outageWaits.set(doorKey(acquisition), retry.retryAt);
+      unresolved = unresolvedBefore;
     }
   }
   for (const acquisition of acquisitions) {
@@ -366,6 +387,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     // A failed refresh does not erase the last trustworthy capture. The source
     // loop above keeps its freshness/recovery obligation unresolved separately.
     const acquired = records.find(r=>r.result.role==="ACQUIRER" && r.result.verdict==="ACQUIRED" && (r.result.source.id===acquisition.route.id || acquiredBoxPage(r)) && r.result.source.url===acquisition.route.url);
+    if (!acquired && outageWaits.has(doorKey(acquisition))) continue;
     if (!acquired) { const next = await taskFor({...common,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition}); if(next)return next; unresolved=true; continue; }
     if (acquired.result.role !== "ACQUIRER") continue;
     for (const artifact of acquired.result.artifacts.filter(a=>a.completeness==="COMPLETE")) {
@@ -394,7 +416,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       const validator=records.find(r=>r.routeTaskId===validatorTask.id && r.result.role==="VALIDATOR");
       if (!validator) { const next=await taskFor({...spec,role:"VALIDATOR",producerResultId:parser.id}); if(next)return next; unresolved=true; continue; }
       if (validator.result.role!=="VALIDATOR" || (validator.result.verdict!=="PASS" && validator.result.extractionVerdict!=="PASS")) { unresolved=true; continue; }
-      // §3: a fact that is not a judgment call is verified when the Validator passes; there is no audit stage.
+      // A fact that is not a judgment call is verified when the Validator passes; there is no audit stage.
       if (validator.result.verdict==="PASS" && !needsSecondSource(plan.contract)) { staged=true; continue; }
       let auditSpec: Parameters<typeof enqueueWorkerTask>[1] = {...spec,role:"ADVERSARIAL_AUDITOR",producerResultId:parser.id,validatorResultId:validator.id,auditScope:plan.auditScope};
       for (;;) {
@@ -412,18 +434,18 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       }
     }
   }
-  for (const engineering of plan.engineering) {
-    const next=await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ENGINEERING",artifactId:engineering.methodArtifactId,engineering});
-    if(next)return next;
-  }
   for (const refresh of pendingRefreshes) {
     const next = await taskFor(refresh);
     if (next) return next;
   }
-  if (staged && !unresolved && item.publicationOutcome?.recovery !== "WORKER" &&
+  if (staged && !unresolved && !outageWaits.size && item.publicationOutcome?.recovery !== "WORKER" &&
     (item.publicationOutcome?.status !== "HELD" || item.publicationOutcome.recovery === "PUBLISHER")) return decision("STAGED",
     item.publicationOutcome?.status === "PUBLISHED" ? `Verified records published in ${item.publicationOutcome.versionId}; other coverage obligations remain open.`
       : "Scoped reviewed results are retained. Reader/Ask and promotion gates remain independent.");
+  if (outageWaits.size && !unresolved) {
+    const at = [...outageWaits.values()].sort()[0];
+    return decision("BLOCKED", `A known source had a passing outage; it is read again with plain code at ${at}. No paid walk is owed for it.`);
+  }
   const novelty = await scoutOperation(true);
   return outsideExtractionScope ? {...novelty,reason:`EXTRACTION_SCOPE_UNESTABLISHED: the acquired representation needs a compatible extraction contract. ${novelty.reason}`} : novelty;
 }
@@ -431,7 +453,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
 /** Serve one item per hunt in each round; priority orders a round, never drains a whole hunt first. */
 export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: ReadonlyMap<string, string>,
   priorities: readonly { receiptId: string; priority: number }[] = [],
-  /* CH-17: each Send's turns go round-robin over its mission parts, weighted by open blanks and difficulty. */
+  /* Each Send's turns go round-robin over its mission parts, weighted by open blanks and difficulty. */
   squads?: { readonly partOf: (item: WorkItem) => string; readonly weightOf: (send: string, part: string) => number }): string[] {
   const priority = new Map(priorities.map(row => [row.receiptId, row.priority] as const));
   const groups = new Map<string, { priority: number; lastServed: string; items: WorkItem[] }>();
@@ -476,16 +498,39 @@ export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRunti
         // Charge the exact standing obligation that opened this WorkItem. A
         // synthetic Scout obligation without its Send marks would reserve the
         // hunt's dollars yet leave the append-only charge unattributed.
-        const owningOccurrences = await runtime.repos.occurrences.listWhere(["workItemId"], item.id);
-        const occurrence = owningOccurrences.find(row => row.value.routeTaskId === task.id)
-          ?? (owningOccurrences.length === 1 ? owningOccurrences[0] : null);
-        const owner = occurrence === null ? null : await runtime.repos.obligations.read(occurrence.value.obligationId);
+        const owner = await owningObligation(runtime.repos, item.id, task.id);
         const assignments = owner?.value.assignments ?? [];
-        return dispatchOne(runtime.repos,{obligation:{obligation:{id:task.id,subjectId:item.subject,recordClass:plan.contract.recordClass,
+        const dispatched = await dispatchOne(runtime.repos,{obligation:{obligation:{id:task.id,subjectId:item.subject,recordClass:plan.contract.recordClass,
           routeId:task.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null,assignments},nextDueAt:task.createdAt,cadenceHours:24,
           cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Canonical obligation needs source discovery"},routeTaskId:task.id,holder:`autonomous:SCOUT:${randomUUID()}`,
           now:now(),clock:now,leaseTtlMs:300_000,bound:{maxAttempts:3,maxWallMs:hunterWallLimitMs(),maxCostUnits:0},
           maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION,...proofChargeOf(item.project)});
+        if (owner && dispatched.attemptId) await recordCoordinatorAbsence(runtime.repos, { standInId: task.id, ownerId: owner.id, attemptId: dispatched.attemptId, now: now() });
+        return dispatched;
+}
+
+/** The standing obligation whose occurrence opened this work item, when one did. */
+async function owningObligation(repos: ControlPlaneRepositories, workItemId: string, routeTaskId: string) {
+  const owningOccurrences = await repos.occurrences.listWhere(["workItemId"], workItemId);
+  const occurrence = owningOccurrences.find(row => row.value.routeTaskId === routeTaskId)
+    ?? (owningOccurrences.length === 1 ? owningOccurrences[0] : null);
+  return occurrence === null ? null : await repos.obligations.read(occurrence.value.obligationId);
+}
+
+/** A detective walk on a coordinator Scout that argues the record absent is recorded on the real obligation, with what would reopen it. Best effort. */
+async function recordCoordinatorAbsence(repos: ControlPlaneRepositories,
+  input: { readonly standInId: string; readonly ownerId: string; readonly attemptId: string; readonly now: string }): Promise<void> {
+  try {
+    const attempt = await repos.attempts.read(input.attemptId);
+    if (!scoutWalkedToNothing(attempt?.value)) return;
+    const walked = (await repos.scoutResults.readWhere(input.standInId, ["attemptId"], input.attemptId)).at(-1);
+    if (!walked || !isArguedAbsence(walked, MIN_DISTINCT_RUNGS)) return;
+    const until = absenceExpiry(input.now);
+    await recordArguedAbsence(repos, { obligationId: input.ownerId, absentUntil: until, now: input.now, unlockWhen: absenceUnlockFrom(walked, until) });
+    console.log(`  argued absence recorded for ${input.ownerId} until ${until} (coordinator detective walk ${input.attemptId})`);
+  } catch (error) {
+    console.error(`  argued absence not recorded for ${input.ownerId} (${error instanceof Error ? error.message : String(error)}); it re-walks after its backoff`);
+  }
 }
 
 export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRuntime, options:{
@@ -497,7 +542,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   acceptsWorkItem?:(item:WorkItem)=>boolean;
   prioritizedInstructions?:readonly {receiptId:string;priority:number}[];
   admitDispatch?:(work:string)=>{admit:true}|{admit:false;code:string;why:string};
-  /** CH-17: this wave's open blanks by Send and part; each Send's turns are weighted by them and by difficulty. */
+  /** This wave's open blanks by Send and part, for weighting each Send's turns. */
   squads?:SquadReading;
 }={}) {
   const now = runtime.now ?? (()=>new Date().toISOString());
@@ -560,7 +605,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   for (const attempt of attempts) {
     if (attempt.startedAt>(lastServed.get(attempt.workItemId)??"")) lastServed.set(attempt.workItemId,attempt.startedAt);
   }
-  // CH-17: weights read this wave from the open blanks handed in, the recent detective turns and the open failure debts.
+  // Weights read this wave from the open blanks handed in, the recent detective turns and the open failure debts.
   let weights:ReadonlyMap<string,SquadWeight>|null=null;
   if(options.squads) {
     const workByObligation=new Map(occurrenceRows.filter(row=>row.workItemId).map(row=>[row.obligationId,row.workItemId!] as const));
@@ -661,7 +706,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   for (const id of ids.slice(cursor)) deferred.push(admitted>=maximum
     ? {workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
     : {workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});
-  // `considered` lets a reader check the pass: every item is dispatched, deferred, or decided not to run (MW-014).
+  // `considered` lets a reader check the pass: every item is dispatched, deferred, or decided not to run.
   return {recovery,decisions,dispatches,scoutsAdmitted,scoutsLimitedAdmitted,deferred,considered:candidates.length,
     squadWeights:weights===null?[]:[...weights.values()]};
 }

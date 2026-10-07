@@ -1,20 +1,5 @@
-/**
- * A minimal, dependency-free, in-memory reader for the one xlsx we consume: the
- * OMB CBSA delineation (`list1_2023.xlsx`). Census publishes the delineation ONLY
- * as xlsx — there is no CSV/TXT variant (verified against the source directory) —
- * so we parse it ourselves rather than add a spreadsheet dependency or force a
- * manual conversion into the pipeline.
- *
- * xlsx is a ZIP of XML parts. This reads the ZIP central directory, inflates the
- * parts we need with the Node builtin `zlib`, and pulls the first worksheet's
- * cells (resolving shared strings). No filesystem access: this runs on the
- * standing runner's routine acquisition path, where the civic-data firewall
- * forbids a reachable filesystem writer. It is deliberately just enough to read
- * a flat delineation table, not a general spreadsheet engine.
- */
 import { inflateRawSync } from "node:zlib";
 
-/** Read every entry of a ZIP archive into memory, keyed by entry name. */
 function readZipEntries(bytes: Buffer): Map<string, Buffer> {
   const EOCD_SIG = 0x06054b50;
   const CDIR_SIG = 0x02014b50;
@@ -68,7 +53,6 @@ function decodeEntities(s: string): string {
   });
 }
 
-/** Concatenate the decoded text of every <t> inside an <si>/<is> fragment. */
 function extractText(fragment: string): string {
   let out = "";
   const re = /<t\b[^>]*>([\s\S]*?)<\/t>/g;

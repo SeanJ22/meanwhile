@@ -225,11 +225,7 @@ test("adaptive budget keeps five complete events and every exploratory route wit
   }
 });
 
-/*
- * 2026-09-25: the auditor admitted against the static RESEARCH_BOUNDS default
- * ($100), so the owner's dial did not bind it. It now admits against the
- * ceiling in force, and the standing runtime carries that number to it.
- */
+/* The auditor admits against the ceiling in force, which the standing runtime carries to it. */
 async function reposWithAuditSpend(usd: number) {
   const repos = createMemoryRepositories();
   const cost: CostEntry = {

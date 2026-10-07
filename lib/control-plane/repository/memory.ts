@@ -7,24 +7,7 @@ import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
 import { inProcessSpendHoldStore } from "../expansion/spend-holds.ts";
-/**
- * THE IN-PROCESS DOUBLE.
- *
- * This exists to pin semantics, not to store anything. It holds the same rules
- * as `file-store.ts` — idempotent derived-identity puts, append-only histories,
- * compare-and-set with a named `ConcurrentModification`, exclusive locks that
- * REFUSE rather than wait — over a `Map`, so the rule suite can run without a
- * disk.
- *
- * WHAT IT DOES NOT DO, stated here rather than discovered later: it does not
- * survive the process. `durable` is false and `assertDurableRepositories` refuses
- * it wherever durability is the property under test. The crash-recovery
- * acceptance suite therefore runs against the FILE store; this double runs the
- * concurrency-rule suite, where what is being asserted is a refusal rather than
- * a survival.
- *
- * Nothing here reads a clock.
- */
+/** In-process double with the same rules as `file-store.ts`. Never durable. */
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
@@ -77,12 +60,7 @@ import {
   type RecordProjection,
 } from "./types.ts";
 
-/**
- * The double's stand-in for the database clock behind `changed_at` (schema
- * v22): a process-wide counter, one millisecond per change, so it is monotonic
- * and never reads the wall clock. Only `listChangedSince` / `readChangedSince`
- * see it.
- */
+/** Stand-in for the database clock behind `changed_at`: a process-wide counter, monotonic, never the wall clock. */
 let changeClockMs = Date.parse("2000-01-01T00:00:00.000Z");
 const changeClock = { tick: (): number => (changeClockMs += 1), now: (): number => changeClockMs };
 const changeIso = (ms: number): string => new Date(ms).toISOString();
@@ -92,13 +70,7 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
   const rows = new Map<string, Persisted<T>>();
   /** Each row's `changed_at`, moved on every put that creates and every compare-and-set. */
   const changedAt = new Map<string, number>();
-  /**
-   * The revision-1 value of every aggregate, kept because `put` compares against
-   * the CREATION rather than the latest state — the same rule the file store
-   * gets for free from keeping one file per revision. Without this the double
-   * would refuse a re-registration the durable store accepts, which is exactly
-   * the kind of drift that makes a double worse than nothing.
-   */
+  /** Revision-1 values: `put` compares against the creation, not the latest state. */
   const origins = new Map<string, T>();
 
   const read = async (id: string): Promise<Persisted<T> | null> => {
@@ -133,9 +105,7 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
       const existing = rows.get(id);
       const origin = origins.get(id);
       if (existing !== undefined && origin !== undefined) {
-        // Throws IdentityCollision when the CREATION values genuinely differ;
-        // returns false — a no-op success — when this id was created from
-        // exactly these inputs, however far the aggregate has moved since.
+        // Throws IdentityCollision when the creation values differ; a no-op when created from exactly these inputs.
         reconcileIdempotentPut(kind, id, origin, value);
         return { created: false, persisted: { ...existing, value: jsonCopy(existing.value) } };
       }
@@ -178,7 +148,6 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
 
-    /* `list()` narrowed to rows changed at or after `since`, as Postgres answers it (schema v22). */
     listChangedSince: async (since: string | null) => {
       const through = changeIso(changeClock.now());
       const from = since === null ? null : Date.parse(since);
@@ -191,7 +160,6 @@ interface LoggedRecord<T> {
   readonly at: string;
   readonly recordId: string;
   readonly record: T;
-  /** The double's `changed_at` (schema v22). */
   readonly changedAt: number;
 }
 
@@ -209,8 +177,7 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       const partition = partitions.get(key) ?? [];
       const existing = partition.find((entry) => entry.recordId === recordId);
       if (existing !== undefined) {
-        // Throws AppendOnlyViolation on a rewrite; a byte-identical retry after
-        // a partial failure is a no-op success rather than a duplicate entry.
+        // Throws AppendOnlyViolation on a rewrite; a byte-identical retry is a no-op success.
         reconcileIdempotentAppend(log, recordId, existing.record, record);
         return {
           appended: false,
@@ -290,7 +257,6 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
 
     keys: async (): Promise<readonly string[]> => [...partitions.keys()].sort(),
 
-    /* `readAll()` narrowed to records changed at or after `since`, with their coordinates (schema v22). */
     readChangedSince: async (since: string | null) => {
       const through = changeIso(changeClock.now());
       const from = since === null ? null : Date.parse(since);
@@ -319,13 +285,7 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
   };
 }
 
-/**
- * Exclusive sections over a `Set`.
- *
- * Refuses rather than waits, exactly as the file store does. The refusal is the
- * behaviour under test: a lock that silently queued would hide the contention
- * the suite is trying to observe.
- */
+/** Refuses rather than waits, like the file store. */
 export function memoryLockManager(): LockManager {
   const held = new Set<string>();
   return {
@@ -376,40 +336,31 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
         .slice(0, Math.max(0, Math.trunc(limit))),
     adminEvidenceCopyRequests: memoryAggregateRepository<AdminEvidenceCopyRequest>("AdminEvidenceCopyRequest"),
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
-    /* The owner control centre's data plane (ITEM H). */
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
     fieldManual: memoryAggregateRepository<FieldManualStore>("FieldManual"),
     runnerHeartbeat: memoryAggregateRepository<RunnerHeartbeat>("RunnerHeartbeat"),
     cacheObservations: memoryAggregateRepository<CacheObservationRecord>("CacheObservationRecord"),
     ownerDigests: memoryAppendOnlyRepository<OwnerDigestRecord>("owner_digests"),
     ownerDecisions: memoryAppendOnlyRepository<OwnerDecisionIntent>("owner_decisions"),
-    /* Level 1 — Research (schema v4). */
     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
     methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
     boxFindings: memoryAggregateRepository<BoxFinding>("BoxFinding"),
     scoutResults: memoryAppendOnlyRepository<ScoutResult>("scout_results"),
     workerResults: memoryAppendOnlyRepository<WorkerResultRecord>("worker_results"),
-    /* The nightly door (RULING 242, schema v5). */
     promotionPipeline: memoryAppendOnlyRepository<PromotionPipelineRecord>("promotion_pipeline"),
     windowRuns: memoryAppendOnlyRepository<WindowRunRecord>("window_runs"),
     windowIncidents: memoryAppendOnlyRepository<WindowIncident>("window_incidents"),
     windowIntents: memoryAppendOnlyRepository<WindowIntent>("window_intents"),
-    /* Software release review (Admin Pass B, schema v8). */
     softwareReleaseReviews: memoryAppendOnlyRepository<SoftwareReleaseReviewRecord>("software_release_reviews"),
-    /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
     adminReceipts,
     agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
     discoveryAttempts: memoryAppendOnlyRepository<MeetingsDiscoveryAttempt>("discovery_attempts"),
-    /* Live-audit results, corrections and pulls (DP-13, schema v21). */
     liveAudits: memoryAppendOnlyRepository<LiveAuditLogRow>("live_audits"),
     adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
-    /* What readers were told Ask does not hold (schema v13). */
     askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),
-    /* The Door Registry (DB-09, schema v19). */
     doors: memoryAggregateRepository<DoorRecord>("Door"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
-    /* The spend holds, one per row (schema v24), by the same pure rules. */
     spendHolds: inProcessSpendHoldStore(),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",

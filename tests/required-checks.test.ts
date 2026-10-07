@@ -1,18 +1,7 @@
 /**
- * A RENAME MAY NOT DISARM BRANCH PROTECTION SILENTLY.
- * (`NS20`/`NS21`, 2026-08-25. RULING 156.)
- *
- * `main` requires three status checks by NAME. GitHub matches a required
- * context against the check-run name the workflow reports, literally — so
- * renaming a job, or changing a matrix leg, produces a check under a new name
- * while the required one never arrives. GitHub does not treat a missing
- * required check as a failure to be surfaced; there is simply nothing to wait
- * for, and the merge button turns green.
- *
- * These assertions are anchored on `.github/workflows/build-check.yml` and not
- * on the constant they check (RULING 147). The workflow is the thing that would
- * be edited; a test that re-derived the expected set from the workflow it was
- * checking would agree with any rename, forever.
+ * `main` requires status checks by name, and GitHub matches the reported check-run name literally: a renamed
+ * job or matrix leg leaves the required check never arriving, and the merge button turns green. These
+ * assertions are anchored on `.github/workflows/build-check.yml`, the file that would be edited.
  */
 
 import test from "node:test";
@@ -64,12 +53,8 @@ test("every auxiliary context feeds the fail-closed required final status", () =
 });
 
 /**
- * THE INSTRUMENT IS SHOWN CATCHING A REAL RENAME (RULING 110).
- *
- * A sweep that cannot find the defect it was written for is a sweep reporting
- * green about nothing. These plant the two edits that would actually happen —
- * a tidied display name, and a matrix leg renamed — against the SHIPPED
- * workflow text, and prove the produced set moves out from under the branch.
+ * Planted renames (a tidied display name, a renamed matrix leg) against the shipped workflow text must move the
+ * produced set out from under the branch protection.
  */
 test("a renamed gates job is caught", () => {
   const renamed = source().replace(

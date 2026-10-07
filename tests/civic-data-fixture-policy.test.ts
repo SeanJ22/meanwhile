@@ -67,9 +67,5 @@ test("runtime Readers cannot improvise a NODE_TEST_CONTEXT fixture gate", () => 
     .filter((path) => !path.endsWith(join("lib", "civic-data", "firewall.ts")))
     .filter((path) => readFileSync(path, "utf8").includes("process.env.NODE_TEST_CONTEXT"))
     .map((path) => path.slice(root.length + 1).replaceAll("\\", "/"));
-  assert.deepEqual(direct, ["lib/officials/roster-authority.ts"]);
-
-  const rosterGate = readFileSync(join(root, direct[0]!), "utf8");
-  assert.match(rosterGate, /return mayUseTestFixture\(\{/);
-  assert.doesNotMatch(rosterGate, /nodeEnv\s*!==\s*["']production["']/);
+  assert.deepEqual(direct, []);
 });

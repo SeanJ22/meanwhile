@@ -1,10 +1,5 @@
 /**
- * @freshness-reads-here
- *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * @freshness-reads-here — each freshness date is taken at the moment of the fetch it describes.
  */
 /**
  * Fetch FEC campaign-finance data into the canonical routine civic-data store.
@@ -18,8 +13,7 @@
  * `.env.local` into THIS script's environment only and never reaches the client
  * (tests/funding.test.ts asserts no runtime file reads FEC_API_KEY).
  *
- * Identifier rule (the standing rule, and D34's spec verbatim): the run
- * PRINTS the FEC-candidate-id vs roster/ballot-id match rate with
+ * Identifier rule: the run PRINTS the FEC-candidate-id vs roster/ballot-id match rate with
  * denominators BEFORE any adapter fetch. `--match-only` stops there.
  *
  * Match routes, in order of confidence:
@@ -30,8 +24,7 @@
  *    district + 2026, then surname exact + given-name first-token prefix.
  *    Anything ambiguous or absent is a recorded miss, never a guess.
  *
- * Data classes, tagged on every record (the ripcord doctrine — a pull is a
- * filter, never a hunt):
+ * Data classes, tagged on every record:
  *  - FEC_COMMITTEE: committee-level totals (raised, spent, cash on hand,
  *    small-donor share, cycle-to-date). Not ripcorded.
  *  - FEC_CONTRIBUTOR: top itemized receipts as filed (Schedule A), display
@@ -119,7 +112,7 @@ const currentFec = store
   : null;
 const targetFloor = currentFec?.payload ?? bundledFec;
 // Keep the held target population as the way back until the expanded path
-// has been checked live (rulings §5). This changes targets, never budgets.
+// has been checked live. This changes targets, never budgets.
 const upgradeTargets = process.env.WTP_FEC_TARGET_UNIVERSE?.trim().toLowerCase() === "promoted";
 const canonicalCongress = store && upgradeTargets
   ? await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE, { store, bypassCache: true }) : null;
@@ -157,10 +150,10 @@ interface FecScheduleARow {
   /** Form 3 line number; 13A is loans from the candidate. */
   line_number?: string;
   /** The contributing COMMITTEE's own FEC id, when there is one. The join
-   *  key for the second hop (item 3) — never a name match. */
+   *  key for the second hop — never a name match. */
   contributor_id?: string | null;
   /** Present when the contributor is itself a registered committee — its
-   *  own filed typing (item 6). Absent for individuals. */
+   *  own filed typing. Absent for individuals. */
   contributor?: {
     committee_type?: string | null;
     organization_type?: string | null;
@@ -179,25 +172,14 @@ interface FecCommitteeTotalsRow {
   receipts?: number;
 }
 
+
 /**
- * Which Schedule A rows are CONTRIBUTIONS (2026-08-15, found by the item-3
- * line-number census, and it was a live defect).
- *
- * `/schedules/schedule_a/` returns every receipt a committee reports, not
- * every gift. The August snapshot's "Largest reported contributions" list
- * carried four line-14 rows (loan repayments coming BACK to the campaign)
- * and seven line-15 rows (offsets to operating expenditures — a vendor
- * refunding the campaign), and the second hop pulled eight line-17 rows —
- * ActBlue's investment income, which would have rendered as "FIDELITY gave
- * ActBlue $3.7 million". None of those is somebody funding a campaign, and
- * a surface headed "contributions" claiming otherwise is a false claim
- * about real money.
- *
- * Kept: line 11* (individuals, party committees, other political
- * committees, the candidate) and line 12 (transfers from other authorized
- * committees), plus 13A — a candidate's loan to their own campaign, which
- * IS money funding the campaign and already renders as exactly that (D41).
- * Everything else is money moving the other way or not a gift at all.
+ * Which Schedule A rows are contributions. `/schedules/schedule_a/` returns
+ * every receipt, including loan repayments (line 14), expenditure offsets
+ * (line 15) and investment income (line 17), none of which funds a campaign.
+ * Kept: line 11* (individuals, party committees, other political committees,
+ * the candidate), line 12 (transfers from other authorized committees) and 13A
+ * (a candidate's loan to their own campaign).
  */
 function isContributionLine(lineNumber: string | null): boolean {
   if (!lineNumber) return false;
@@ -258,12 +240,8 @@ async function fecGet<T>(
       await sourceAcquisitionSleep(wait, fecAcquisitionDomain.signal);
       continue;
     }
-    // A 5xx is the FEC timing out under its own load, not an answer.
-    // Mark Kelly's Schedule A returned 504 on 2026-08-15 and again at every
-    // page size minutes later returned 200 with the full book — so a single
-    // 5xx read as "no contributors" is the Kelly-504 shape arriving through
-    // a different door. Backed off and retried, politely, before it is
-    // allowed to become a claim about a campaign's donors.
+    // A 5xx is the FEC timing out under its own load, not an answer: back
+    // off and retry before it can read as "no contributors".
     if (response.status >= 500) {
       const wait = 2000 * (attempt + 1);
       console.warn(`  ${response.status} on ${path} — backing off ${wait / 1000}s and retrying`);
@@ -382,14 +360,7 @@ interface Match {
 }
 const matches: Match[] = [];
 const misses: FundingAbsence[] = [];
-// America/Phoenix, never UTC. `new Date().toISOString().slice(0, 10)` is the
-// obvious one-liner and it is wrong for seven hours out of every twenty-four
-// here — after 5pm Phoenix, UTC has already rolled over and every row this
-// run writes claims to have been read TOMORROW. Caught 2026-08-15 by the
-// walk, which rendered "read 08/16/2026" on the funding card at 6pm local:
-// a date nobody could have read, in a provenance field, which is the same
-// failure as a generated position wearing a smaller hat. `stamp()` is where
-// a script finds out what day it is.
+// America/Phoenix, never UTC: after 5pm Phoenix a UTC date reads tomorrow.
 const today = stamp();
 
 for (const target of targets.filter((row) => row.knownFecCandidateId !== null)) {
@@ -488,8 +459,7 @@ for (const target of targets.filter((row) => row.route !== "fec" && row.knownFec
     return familyPresent && givenPresent;
   });
   if (nameMatches.length > 1) {
-    // Old registrations ride along in scoped results (Scott Brown's 2014
-    // Senate id beside his 2026 one) — the id actually running THIS
+    // Old registrations ride along in scoped results; the id running THIS
     // election is the one whose election_years says so.
     const thisCycle = nameMatches.filter((r) =>
       Array.isArray(r.election_years) ? r.election_years.includes(CYCLE) : false,
@@ -517,7 +487,7 @@ for (const target of targets.filter((row) => row.route !== "fec" && row.knownFec
   }
 }
 
-// The match report — the D34 spec's required print, denominators attached.
+// The match report, denominators attached.
 const rosterTargets = targets.filter((t) => t.route === "roster").length;
 const ballotTargets = targets.filter((t) => t.route === "ballot").length;
 const rosterMatched = matches.filter((m) => m.target.route === "roster").length;
@@ -557,9 +527,8 @@ for (const [fecId, entry] of byFecId) {
 
   // Committee-level totals, cycle-to-date. /candidate/{id}/totals returns
   // one row per two-year period; ONLY the 2026 row is accepted. A dormant
-  // committee whose last report covered an earlier cycle (Fernandez's ran
-  // through 2020-11-27) is an absence with the stale coverage named —
-  // old money wearing this cycle's label is a false claim.
+  // committee whose last report covered an earlier cycle is an absence with
+  // the stale coverage named.
   let totalsRows: FecTotalsRow[] = [];
   try {
     totalsRows =
@@ -637,17 +606,13 @@ for (const [fecId, entry] of byFecId) {
               : null,
             city: row.contributor_city ? String(row.contributor_city) : null,
             state: row.contributor_state ? String(row.contributor_state) : null,
-            // The FEC's entity typing rides along verbatim — the display's
-            // plain labels (2a: "the candidate's own money") derive from
-            // these fields mechanically, never from the name.
+            // The FEC's entity typing rides along verbatim; the display's
+            // plain labels derive from these fields, never from the name.
             entityType: row.entity_type ? String(row.entity_type) : null,
             lineNumber: row.line_number ? String(row.line_number) : null,
-            // Item 6 (2026-08-14): the contributing committee's OWN filed
-            // typing, carried on the row's `contributor` object. These
-            // three fields are the entire mechanical basis for the plain
-            // "what kind of money" label (lib/funding/committee-types.ts).
-            // Absent on individuals, and absent rather than guessed
-            // whenever the FEC did not classify the committee.
+            // The contributing committee's own filed typing: the whole basis
+            // for the "what kind of money" label (lib/funding/committee-types.ts).
+            // Absent on individuals and wherever the FEC did not classify it.
             committeeType: row.contributor?.committee_type
               ? String(row.contributor.committee_type)
               : null,
@@ -657,8 +622,8 @@ for (const [fecId, entry] of byFecId) {
             designation: row.contributor?.designation
               ? String(row.contributor.designation)
               : null,
-            // Item 3 (2026-08-15): the contributing committee's own FEC id,
-            // the ONLY basis for the second hop. Absent on individuals.
+            // The contributing committee's own FEC id, the only basis for the
+            // second hop. Absent on individuals.
             contributorCommitteeId: row.contributor_id
               ? String(row.contributor_id)
               : null,
@@ -713,27 +678,12 @@ for (const [fecId, entry] of byFecId) {
 
 // ---- 3b. The second hop — each contributing committee's own books --------
 //
-// Item 3 (2026-08-15, the author's design). A joint fundraising committee is
-// itself an FEC filer: "who gives to the Booker Victory Fund" is answered by
-// the FUND's own Schedule A, one level down, never by inference from this
-// candidate's. Fetched once per distinct committee id — the same fund
-// appearing on three candidates costs one fetch and stores one record, and
-// the distinctness invariant (D40's family) means two ids must never carry
-// identical books.
-//
-// Three requests per committee: its registration (name and filed typing),
-// its cycle totals, and its own top itemized receipts.
-//
-// EVERY committee id on ANY row is fetched, including the conduit ids that
-// ride on INDIVIDUAL rows — an individual giving through ActBlue or a PAC's
-// earmark files with that committee's id attached. Those hops are stored
-// but never rendered: only committee-typed rows get an expander
-// (lib/funding/snapshot.ts, secondHopForGroups), because "who gives to the
-// committee this person's cheque passed through" is a different question
-// from the one the tea button asks. Fetching them anyway keeps the run's
-// denominator equal to the ids the data actually contains, which is what
-// the acquisition denominator equal to the ids the data actually contains;
-// the promotion path reconciles it with the durable per-record LKG.
+// A contributing committee is itself an FEC filer, so who gives to it is read
+// from its own Schedule A, fetched once per distinct committee id: its
+// registration, its cycle totals and its own top itemized receipts. Every
+// committee id on any row is fetched, including conduit ids on individual
+// rows; only committee-typed rows render an expander
+// (lib/funding/snapshot.ts, secondHopForGroups).
 
 const hopIds = new Set<string>();
 for (const candidate of candidates) {
@@ -790,9 +740,7 @@ for (const committeeId of hopIds) {
       if (hopRows.length >= TOP_N) break;
       const line = row.line_number ? String(row.line_number) : null;
       const amount = Number(row.contribution_receipt_amount ?? 0);
-      // The same contribution-line rule as the first hop. Without it,
-      // ActBlue's escrow interest (line 17, filed under "FIDELITY") would
-      // render as its three biggest donors.
+      // The same contribution-line rule as the first hop.
       if (!isContributionLine(line) || amount <= 0) {
         continue;
       }

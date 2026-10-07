@@ -1,34 +1,4 @@
-/**
- * **WHAT A MODEL WORKER'S TOKENS COST, AND WHERE THAT NUMBER CAME FROM.**
- * (Owner-authorized model-worker proof, 2026-08-31. Per-model rate table for
- * the Worker Efficiency Law, 2026-09-02, RULING 244.)
- *
- * `lib/control-plane/cost.ts` holds the ledger's own invariant — *cost informs
- * SCHEDULING; cost never informs TRUTH* — and this file inherits it entire.
- * Nothing here may answer, or help answer, whether a fact is right.
- *
- * ## The rate is DATA WITH A DATE, not a constant
- *
- * A price is a fact about a vendor's price list on a day, and a price hardcoded
- * with no provenance is indistinguishable from a price somebody remembered.
- * `statedOn` is what makes a later session able to ask whether it is still
- * true, and `source` is where to check.
- *
- * ## One row per model the lane may route a step to
- *
- * RULING 244 routes each step to the cheapest model class that meets the
- * step's standard, so every model a step may run on needs a rate row, or its
- * cost is UNMEASURED. A model with no row costs `null` — never a guess at a
- * neighbouring model's price.
- *
- * ## And an unmeasured usage is not a free one
- *
- * `usdForUsage` returns **null** when either count is absent. That is the
- * ledger's own rule, quoted from its header: *an unmeasured field is NOT zero.
- * Coercing those nulls to 0 produces a total that LOOKS complete and is not,
- * and a scheduler that believes a run was free will happily schedule a
- * thousand more of them.*
- */
+/** Cost informs scheduling, never truth. An unmeasured count yields null, never zero, and a model with no rate row costs null. */
 
 import { MODELS, MODEL_TIERS, MODEL_PRICE_SOURCE, MODEL_PRICES_STATED_ON, modelTierFor } from "../models.ts";
 
@@ -52,14 +22,7 @@ export const MODEL_RATES: readonly ModelRate[] = [
     statedOn: "2026-09-02", source: "Anthropic first-party API rates (legacy Sonnet 5)" },
 ];
 
-/**
- * RULING 244's text names the Haiku model as `claude-haiku-4-5-20251001`. The
- * claude-api reference lists the id WITHOUT a date suffix and says the ids in
- * its table are complete as-is. The ruling's spelling is resolved to the
- * reference's id here so a step routed under either spelling meets one rate
- * row; the discrepancy is recorded for the integration owner rather than
- * silently picking one.
- */
+/** The dated Haiku id resolves to the undated one so both meet one rate row. */
 export const MODEL_ID_ALIASES: Readonly<Record<string, string>> = {
   "claude-haiku-4-5-20251001": "claude-haiku-4-5",
 };
@@ -72,27 +35,11 @@ export function rateFor(model: string): ModelRate | null {
 }
 
 /**
- * **THE MINIMUM CACHEABLE PREFIX, PER MODEL — data with a date.**
- *
- * Below this many tokens the provider silently ignores a `cache_control`
- * breakpoint and nothing caches (no error, `cache_creation_input_tokens: 0`).
- * It is a per-model property and it is NON-MONOTONIC: Haiku 4.5's 4096 is the
- * HIGHEST of the three, above Sonnet 5's 1024 and Opus 5's 512. So a lane that
- * may route a step to a cheaper class cannot apply one scalar — an Opus-sized
- * 512 would read a legitimately-uncacheable cheaper-model prefix increment (up
- * to that model's higher minimum) as a STATIONARY-breakpoint cache defect. The
- * step must look this up by the model its ATTEMPT actually ran. Read from the
- * claude-api reference's prompt-caching page on the date stated; a model with
- * no row here has an UNKNOWN minimum, never a guessed neighbour's.
+ * Minimum cacheable prefix per model; below it a `cache_control` breakpoint is silently ignored.
+ * Non-monotonic across models, so look it up by the model the attempt actually ran. No row means unknown.
  */
 export const MODEL_CACHE_MINIMUMS = {
   values: {
-    /*
-     * Re-read 2026-09-25: the claude-api skill's prompt-caching table (cached
-     * 2026-06-24) has no Opus 5.5 row; its model-migration guide, "Migrating to
-     * Claude Opus 5.5", lists "prompt caching with the 512-token minimum" as
-     * carried over from Opus 5. The recorded value stands.
-     */
     ...Object.fromEntries(MODEL_TIERS.map((tier) => [MODELS[tier].model, MODELS[tier].minimumCacheablePrefixTokens])),
     "claude-opus-5": 512,
     "claude-sonnet-5": 1024,
@@ -101,14 +48,7 @@ export const MODEL_CACHE_MINIMUMS = {
   source: "Anthropic first-party prompt-caching reference (per-model minimum cacheable prefix)",
 } as const;
 
-/**
- * **THE CACHE-READ MULTIPLIER, PER MODEL — data with a date.** A cache hit
- * normally bills at 0.1x the base input rate (`CACHE_RATE_MULTIPLIERS.cacheRead`),
- * but Claude Opus 5.5 reads at 0.05x ($0.20/MTok on its $4 base). A model with
- * no row here uses the standard 0.1x. Read from platform.claude.com's pricing
- * page on the date stated; the WRITE multipliers (1.25x / 2x) are unchanged, so
- * only the read differs.
- */
+/** Cache-read multiplier overrides; a model with no row uses the standard 0.1x. */
 export const MODEL_CACHE_READ_MULTIPLIER: Readonly<Record<string, number>> = {
   ...Object.fromEntries(MODEL_TIERS.map((tier) => [MODELS[tier].model, MODELS[tier].cacheReadMultiplier])),
 };
@@ -120,22 +60,14 @@ export function minimumCacheablePrefixTokensFor(model: string): number | null {
   return MODEL_CACHE_MINIMUMS.values[id] ?? null;
 }
 
-/**
- * The prompt-cache rates, as multiples of the input rate. (Level 1 activation,
- * 2026-09-01.) A cache WRITE is billed at 1.25x input (5m) / 2x (1h) — the same
- * across current models. A cache READ is 0.1x for MOST models, but not all, so
- * `cacheRead` here is the DEFAULT and `cacheReadMultiplierFor` overrides it per
- * model (Opus 5.5 is 0.05x). Stated as data beside the base rate so a later
- * session can check both against the same price list.
- */
+/** Prompt-cache rates as multiples of the input rate. `cacheRead` is the default; `cacheReadMultiplierFor` overrides it per model. */
 export const CACHE_RATE_MULTIPLIERS = {
   /** A 5-minute cache write. */
   cacheCreation: 1.25,
-  /** A 1-hour cache write (2026-09-06; the reference's prompt-caching page: "2× for 1-hour TTL"). */
+  /** A 1-hour cache write. */
   cacheCreation1h: 2,
-  /** The DEFAULT cache-read multiplier; `cacheReadMultiplierFor` overrides it per model (e.g. Opus 5.5 = 0.05x). */
   cacheRead: 0.1,
-  /** The Message Batches API: 50% of standard prices on every token category (2026-09-06). */
+  /** The Message Batches API: 50% of standard prices on every token category. */
   batch: 0.5,
   statedOn: "2026-09-06",
   source: "Anthropic first-party API rates, read from the claude-api reference (prompt caching; Message Batches)",
@@ -148,19 +80,9 @@ export function cacheReadMultiplierFor(model: string): number {
   return MODEL_CACHE_READ_MULTIPLIER[id] ?? CACHE_RATE_MULTIPLIERS.cacheRead;
 }
 
-/* -------------------------------------------------- the metered usage (2026-09-06) */
-
 /**
- * **THE FIVE QUANTITIES THE PROVIDER BILLS, AS ONE RECORD.**
- *
- * `uncachedInputTokens` is the API's `input_tokens` — the remainder after
- * cache reads and writes, at the base price. `cacheCreationInputTokens` is
- * the AGGREGATE the API defines as `ephemeral_5m_input_tokens +
- * ephemeral_1h_input_tokens`; the split is carried beside it because the two
- * TTLs bill at different multipliers, and the aggregate is never priced on top
- * of its split. A response that carries the aggregate and no split leaves the
- * split null, and `priceMeteredUsage` then prices the aggregate at the TTL the
- * request asked for and says so on its result.
+ * `uncachedInputTokens` is the API's `input_tokens`. `cacheCreationInputTokens` is the aggregate of the
+ * 5m and 1h writes; the split is carried beside it, and the aggregate is never priced on top of its split.
  */
 export interface MeteredUsage {
   readonly uncachedInputTokens: number | null;
@@ -174,13 +96,7 @@ export interface MeteredUsage {
 
 export type CacheWriteTtl = "5m" | "1h";
 
-/**
- * Read the API's `usage` block. Every field is read from the response and
- * never inferred from the request: a missing base count is null (unmeasured),
- * a missing cache field beside a reported base count is a measured zero (a
- * provider that reported `input_tokens` and omitted the cache fields reported
- * no cache use), and a missing `cache_creation` split leaves the split null.
- */
+/** Read from the response, never inferred: a missing base count is null; a missing cache field beside a reported base count is a measured zero. */
 export function readMeteredUsage(usage: unknown, batch = false): MeteredUsage {
   const u = usage && typeof usage === "object" ? (usage as Record<string, unknown>) : {};
   const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
@@ -212,20 +128,13 @@ export interface PricedUsage {
 }
 
 /**
- * **THE PRICE, FROM EXACTLY FIVE TOKEN QUANTITIES AND THE OUTPUT.**
- * (2026-09-06. This replaces pricing the whole prompt at the base rate.)
- *
- *   uncached input                       × base input price
- *   5-minute cache writes                × base × 1.25
- *   1-hour cache writes                  × base × 2
- *   cache reads                          × base × 0.1
- *   output                               × output price
- *   then, once, × 0.5 when the request went through the Batches API
- *
- * The aggregate `cacheCreationInputTokens` contributes NOTHING on top of its
- * split; it is priced only when the split is absent, at `requestedTtl`.
- * Null when the model has no stated rate or the base counts are absent — a
- * number that looks measured and is not is worse than a named gap.
+ *   uncached input  x base input price
+ *   5m cache writes x base x 1.25
+ *   1h cache writes x base x 2
+ *   cache reads     x base x the model's read multiplier
+ *   output          x output price
+ *   then x 0.5 once for the Batches API
+ * The aggregate cache write is priced only when its split is absent, at `requestedTtl`.
  */
 export function priceMeteredUsage(
   model: string,
@@ -267,21 +176,7 @@ export function priceMeteredUsage(
   return { usd: usage.batch ? full * CACHE_RATE_MULTIPLIERS.batch : full, cacheWritePricedFrom: pricedFrom, aggregateTtl };
 }
 
-/**
- * **WHAT READING A TOKEN FROM THE CACHE SAVED, IN DOLLARS.** (§9A.23, the
- * monthly spend window, 2026-09-06.)
- *
- * A cache read bills at its model's read multiplier (0.1× for most, 0.05× on
- * Opus 5.5) of the base input rate, so every token read from the cache cost
- * (1 − that multiplier) of the base rate LESS than sending it uncached would
- * have. That is the whole arithmetic, and it is a counterfactual rather than a
- * measurement: it says what the alternative would have cost at the same list
- * price, not what any invoice says.
- *
- * Null when the model has no stated rate — a saving computed at a price nobody
- * read is a number that looks measured and is not, exactly as with
- * {@link priceMeteredUsage}.
- */
+/** A counterfactual, not a measurement: what the cached tokens would have cost uncached. */
 export function cacheSavingUsd(cacheReadInputTokens: number, model: string, rateOverride: ModelRate | null = null): number | null {
   const rate = rateOverride ?? rateFor(model);
   if (rate === null || !Number.isFinite(cacheReadInputTokens)) return null;
@@ -329,17 +224,7 @@ export function sumMeteredUsage(turns: readonly MeteredUsage[]): MeteredUsage {
   };
 }
 
-/**
- * The dollar cost of a run whose provider usage split cached from uncached
- * input. Null when the base counts are absent; cached counts default to zero
- * ONLY when the provider reported the base counts, because a provider that
- * reported `input_tokens` and omitted the cache fields reported no cache use.
- *
- * Since 2026-09-06 this is `priceMeteredUsage` over a usage with no TTL split:
- * the aggregate cache write is priced at the 5-minute multiplier, which is
- * every request this lane has ever sent. Callers that hold the split call
- * `priceMeteredUsage` directly.
- */
+/** Null when the base counts are absent. The aggregate cache write is priced at the 5-minute multiplier. */
 export function usdForUsageWithCache(
   usage: {
     readonly inputTokens: number | null;
@@ -365,11 +250,7 @@ export function usdForUsageWithCache(
   ).usd;
 }
 
-/**
- * The same cost, for a NAMED model. Null when the model has no stated rate:
- * a step billed at a rate nobody read is a number that looks measured and is
- * not, and the digest then reports the step's cost as UNMEASURED by name.
- */
+/** Null when the model has no stated rate, so the cost reads as unmeasured. */
 export function usdForModelUsage(
   model: string,
   usage: Parameters<typeof usdForUsageWithCache>[0],
@@ -379,13 +260,7 @@ export function usdForModelUsage(
   return usdForUsageWithCache(usage, rate);
 }
 
-/**
- * The dollar cost of one run, from the PROVIDER's own token counts.
- *
- * Null when either count is absent — see the header. There is deliberately no
- * default rate and no fallback model: a cost computed at a rate nobody chose
- * is a number that looks measured and is not.
- */
+/** Null when either count is absent. No default rate and no fallback model. */
 export function usdForUsage(
   inputTokens: number | null,
   outputTokens: number | null,

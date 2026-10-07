@@ -1,17 +1,12 @@
 /**
- * **FE-20 — a look reviewer separate from the builder.**
- *
- * The reviewer sees only what a reader would: screenshots, the task text and
- * the written look standard. Its input type has no room for anything else, so
- * a checklist, data counts, page text or session notes cannot reach it, and a
- * page that passes every data check can still be judged ugly.
- *
- * Paid work is never started here. The caller passes the model call and the
- * spend reservation (under the owner's budget dial); with either missing, or
- * with the reservation refused, the reviewer does not run and says why.
+ * A look reviewer separate from the builder. It sees only screenshots, the
+ * task text and the written look standard; its input type has no room for
+ * anything else. Paid work is never started here: the caller passes the model
+ * call and the spend reservation, and without either the reviewer does not
+ * run and says why.
  */
 
-/** The five questions (rulings §6.11), one line each. */
+/** The five questions, one line each. */
 export const LOOK_QUESTIONS = ["beautiful", "easy", "instant", "come_back", "show_a_friend"] as const;
 export type LookQuestion = (typeof LOOK_QUESTIONS)[number];
 
@@ -149,13 +144,9 @@ export async function reviewLook(input: LookReviewInput, deps: LookReviewDeps = 
 }
 
 /**
- * **FE-25 — pages are judged side by side with the best.**
- *
- * Comparison mode: the reviewer sees our screen next to one reference screen
- * and says which is better and why. A loss is a red flag that names what the
- * reference does better. The same rules as the single-screen review hold:
- * the input has no room for data counts or checklists, and nothing paid runs
- * without a model, spend authority and room under the owner's dial.
+ * Comparison mode: our screen next to one reference screen, judged for which
+ * is better and why. A loss is a red flag naming what the reference does
+ * better. The same input and spend rules hold.
  */
 export interface ComparePair {
   /** Our screenshot. */

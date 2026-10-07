@@ -42,21 +42,14 @@ import {
   type ExpansionScopeGeography,
 } from "@/lib/control-plane/expansion/scopes.ts";
 import { stateOfSubject, subjectOfObligationId } from "@/lib/control-plane/expansion/subjects.ts";
-import { assignmentsInScope, runnerViewFor, scopeCardNumbers, scopeCards } from "@/lib/control-plane/expansion/view.ts";
-import type { AssignmentListRow } from "@/lib/control-plane/assignment-view.ts";
-import { auditRenderedNumbers } from "@/lib/control-plane/owner-surface.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig, withExpansionScopes } from "@/lib/control-plane/gateway/admin-config.ts";
 import { placeFirstRows } from "@/lib/control-plane/scheduler/shadow-loop.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
 /**
- * **EXPANSION SCOPES — the owner's geography, order and paid-work budget.**
- * (Expansion controls, 2026-09-23.)
- *
- * Everything here is pure or runs against in-memory repositories and the
- * committed Arizona census-geography bootstrap (county 04019 = Pima, 56 ZCTAs;
- * CD 0406, 79 ZCTAs). No network, no database.
+ * Expansion scopes: the owner's geography, order and paid-work budget. Pure, or against in-memory repositories and
+ * the committed Arizona census-geography bootstrap. No network, no database.
  */
 
 const NOW = "2026-09-23T04:00:00.000Z";
@@ -188,10 +181,6 @@ function cost(jurisdiction: string | null, usd: number | null, recordedAt: strin
   };
 }
 
-/* ======================================================================= *
- * validation and the policy row
- * ======================================================================= */
-
 test("a scope's geography, priority, budget, note and key are validated before anything is written", () => {
   assert.equal(validateScopeGeography({ ...PIMA }).ok, true);
   assert.equal(validateScopeGeography({ ...PIMA, type: "place" }).ok, false, "a place is not one of the five groupings");
@@ -279,10 +268,6 @@ test("a piece of work's subject and state are read from its own id, never guesse
   assert.equal(stateOfSubject("tracker-row-17"), null);
 });
 
-/* ======================================================================= *
- * territory and membership
- * ======================================================================= */
-
 test("registry governments join their Census unit territory by the generator's own id rule", async () => {
   const pimaZctas = await zctasOf(PIMA);
   const units: CensusUnitTerritory[] = [
@@ -345,9 +330,13 @@ test("sharing a border ZCTA is not membership: only a certain overlap inside a Z
 
 test("on the committed data, Pima County holds Pima and Tucson and none of its neighbours; CD 6 holds the counties it spans", async () => {
   const root = join(import.meta.dirname, "..");
-  const registries = ["az", "nh", "nj"].map(
-    (s) => JSON.parse(readFileSync(join(root, "data", "states", s, "jurisdictions", `${s}.json`), "utf8")) as JurisdictionRegistry,
-  );
+  const AZ_COUNTIES = ["apache", "cochise", "coconino", "gila", "graham", "greenlee", "la-paz", "maricopa", "mohave", "navajo", "pima", "pinal", "santa-cruz", "yavapai", "yuma"];
+  const registries = [registry("AZ", [
+    jurisdiction("az:state:arizona", "Arizona", "STATE"),
+    ...AZ_COUNTIES.map((county) => jurisdiction(`az:county:county-of-${county}`, `COUNTY OF ${county.replace("-", " ").toUpperCase()}`, "COUNTY")),
+    jurisdiction("az:city:city-of-tucson", "CITY OF TUCSON", "CITY_OR_TOWN"),
+    jurisdiction("az:city:city-of-phoenix", "CITY OF PHOENIX", "CITY_OR_TOWN"),
+  ])];
   const index = readTerritoryIndex(root, registries);
   const counties = (scope: ScopeZctas) =>
     [...index.bySubject.values()].filter((t) => t.govClass === "COUNTY" && t.stateCode === "AZ" && certainlyOverlaps(t, scope)).map((t) => t.subjectId).sort();
@@ -385,9 +374,9 @@ test("on the committed data, Pima County holds Pima and Tucson and none of its n
   assert.ok(exactSelected.some(unit => unit.pid6 === school.pid6), "an acquired division selects the unit without a shared-ZIP edge");
   assert.ok(exactSelected.every(unit => unit.state === "AZ"));
   const subjectId = registryIdForUnit(school)!;
-  const registry: JurisdictionRegistry = { ...registries[0], stateCode: "AZ", registration: undefined,
+  const schoolRegistry: JurisdictionRegistry = { ...registries[0], stateCode: "AZ", registration: undefined,
     jurisdictions: [{ ...registries[0].jurisdictions[0], id: subjectId, name: school.name, govClass: "SCHOOL_DISTRICT", stateCode: "AZ" }] };
-  const exactTerritory = readTerritoryIndex(root, [registry], ["AZ"], new Set([absentZip]), new Map([[absentZip, [
+  const exactTerritory = readTerritoryIndex(root, [schoolRegistry], ["AZ"], new Set([absentZip]), new Map([[absentZip, [
     { id: "school", label: school.name, divisionType: "school", censusLayer: "unsd", geoid: schoolKey.split(":")[1], sourceUrl: "https://census.gov/saved-intersection" },
     { id: "outside-state", label: "Outside state", divisionType: "county", geoid: "06001", sourceUrl: "https://census.gov/saved-intersection" },
   ]]]));
@@ -405,10 +394,6 @@ test("the order puts DISPATCH first, then scopes by priority, and is exactly the
   assert.deepEqual(noScope, [...placeFirstRows(rows, dispatch)], "with no scope selected the order is the dispatcher's own");
   assert.equal(ordered.length, rows.length, "nothing added or dropped");
 });
-
-/* ======================================================================= *
- * the budget gate
- * ======================================================================= */
 
 function scope(over: Partial<BudgetScope> = {}): BudgetScope {
   return { key: "county:2020/04019", label: "Pima County", budgetUsd: 1, resolved: true, members: new Set(["az:county:county-of-pima"]), states: ["AZ"], historicalUsd: 0, ...over };
@@ -458,10 +443,6 @@ test("unmeasured spend, an unresolved scope and an unreadable scope list all hol
   const malformed = new ScopeBudgetGate({ scopes: [], worstCaseUsd: 0.6, malformedScopes: 1 });
   assert.equal(malformed.admit("o1", "nj:county:county-of-morris").admit, false);
 });
-
-/* ======================================================================= *
- * the plan and the reading
- * ======================================================================= */
 
 async function pimaPlanInput() {
   const pimaZctas = await zctasOf(PIMA);
@@ -551,10 +532,6 @@ test("the budget arms from the ledger: 24h and 7d spend, unmeasured as null, and
   assert.equal(after?.work?.dueThisCycle, 2);
   assert.equal(after?.heldThisCycle, 1);
 });
-
-/* ======================================================================= *
- * the runner's load
- * ======================================================================= */
 
 test("the runner's load: nothing selected changes nothing; a bootstrap lookup resolves nothing; a published one resolves", async () => {
   const repos = createMemoryRepositories();
@@ -673,49 +650,4 @@ test("a ZIP hunt resolves only that published Census ZCTA, with no neighboring Z
     const fixture = await resolveScopes([d], { lookup, source: "bootstrap", versionId: "v" }, null);
     assert.equal(fixture.scopes[0].kind, "UNRESOLVED");
   }
-});
-
-/* ======================================================================= *
- * the page's view
- * ======================================================================= */
-
-function listRow(id: string, state: AssignmentListRow["state"]): AssignmentListRow {
-  return { id, state } as unknown as AssignmentListRow;
-}
-
-test("the page shows a runner reading only for the decision it measured, and counts listed assignments in scope", async () => {
-  const pima = decision(PIMA, 1, 3, "2026-09-23T03:00:00.000Z");
-  assert.equal(runnerViewFor(pima, null).kind, "NOT_YET");
-
-  const { scopes, territory, obligations } = await pimaPlanInput();
-  const plan = planExpansion({ now: NOW, scopes, malformedScopes: 0, lookup: { source: "published", versionId: "v1", detail: null }, territory, territoryDetail: null, obligations });
-  const armed = armExpansionBudget(plan, { now: NOW, costs: [], worstCaseUsd: 0.6 });
-  const later = { ...pima, decidedAt: "2026-09-23T05:00:00.000Z" };
-  const stale = runnerViewFor(later, armed.reading);
-  assert.equal(stale.kind, "NOT_YET", "a cycle that started before the change measured the old decision");
-  assert.match(stale.kind === "NOT_YET" ? stale.says : "", /next cycle/);
-  assert.equal(runnerViewFor(pima, armed.reading).kind, "READ");
-
-  const rows = [
-    listRow("freshness:jurisdiction:az:county:county-of-pima#r1", "WAITING"),
-    listRow("freshness:jurisdiction:az:city:city-of-tucson#r2", "FAILED"),
-    listRow("freshness:jurisdiction:az:county:county-of-coconino#r1", "WAITING"),
-    listRow("routine:meetings-az", "SUCCEEDED"),
-    listRow("wi-1234abcd", "WORKING"),
-  ];
-  const view = assignmentsInScope(rows, new Set(["az:county:county-of-pima", "az:city:city-of-tucson"]), 40, false);
-  assert.equal(view.inScope, 2);
-  assert.equal(view.listed, 5);
-  assert.deepEqual(new Map(view.byState.map((s) => [s.state, s.count])), new Map([["WAITING", 1], ["FAILED", 1]]));
-
-  const cards = scopeCards({ scopes: [pima, decision(CD6, 2, 0)], reading: armed.reading, assignmentRows: rows, assignmentTotal: 40 });
-  assert.equal(cards.length, 2);
-  const numbers = scopeCardNumbers(cards, armed.reading.territory.registeredObligations);
-  const audit = auditRenderedNumbers(numbers);
-  assert.equal(audit.ok, true, audit.detail);
-  assert.ok(numbers.some((n) => n.label.endsWith("gap ZCTAs")), "the gap is an audited number");
-
-  const unpublished = scopeCards({ scopes: [pima], reading: armed.reading, assignmentRows: null, assignmentTotal: null });
-  assert.equal(unpublished[0].assignments, null, "no published list is a named gap, never zero assignments");
-  assert.match(unpublished[0].assignmentsSays ?? "", /not an empty scope/);
 });

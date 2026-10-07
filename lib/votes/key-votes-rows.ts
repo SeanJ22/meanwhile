@@ -3,16 +3,10 @@ import type { VotePosition } from "./types.ts";
 import { getFederalKeyVotesReadModel } from "./key-votes-projection.ts";
 
 /**
- * The chamber rule, in code (B15).
- *
- * **An entry is a QUESTION; each chamber answered it with its own roll
- * calls; a member's card shows only their own chamber's votes.** This is the
- * one place that rule lives, so a card cannot get it wrong by rendering the
- * wrong array — the component is handed rows that are already chamber-
- * correct and has no access to the other chamber's.
- *
- * Rows come only from the initialized canonical key-vote projection. The
- * bundled JSON is an explicit first seed, never a store-error fallback.
+ * The chamber rule: an entry is a QUESTION, each chamber answered it with its
+ * own roll calls, and a member's card shows only their own chamber's votes.
+ * The component is handed rows that are already chamber-correct. Rows come
+ * only from the initialized canonical key-vote projection.
  */
 
 export interface KeyVoteRowData {
@@ -20,13 +14,9 @@ export interface KeyVoteRowData {
   refs: KeyVoteEntry["house"];
   positions: (VotePosition | "DID_NOT_VOTE" | null)[];
   /**
-   * Whether the roll call itself is in hand, per ref (item 6b, 2026-08-15).
-   *
-   * With this, a null position has TWO honest sentences instead of one wrong
-   * one: "we hold this roll call and this member is not in it" (they were not
-   * in the chamber then) and "we have not recorded this roll call yet". The
-   * card used to default a null to `DID_NOT_VOTE`, which asserted a fact
-   * about a named member that nothing behind it supported.
+   * Whether the roll call itself is in hand, per ref, so a null position can
+   * say either "this member is not in this roll call" or "we have not recorded
+   * this roll call yet" — never `DID_NOT_VOTE`.
    */
   held: boolean[];
   breakdowns: (string | null)[];
@@ -66,9 +56,7 @@ export function keyVoteRowsFor(
 ): KeyVoteRowData[] {
   const snapshot = getKeyVotesSnapshot();
   return snapshot.entries.map((entry) => {
-    // The member's OWN chamber. The other array is never read here, which
-    // is what makes "a House card never shows a Senate-only entry as a
-    // vote" a structural property rather than a discipline.
+    // The member's OWN chamber only; the other array is never read here.
     const refs = chamber === "house" ? entry.house : entry.senate;
     const note = chamber === "house" ? entry.houseNote : entry.senateNote;
     const answers = refs.map((ref) =>

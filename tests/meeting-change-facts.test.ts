@@ -130,11 +130,10 @@ test("Rockaway: a fetch differing only in stamps, raw hashes and collectedAt is 
 
   const refetched = await fetchAndPromote(store, ROCKAWAY_BOA, second, rows(second));
   const before = seeded.outcome.candidate.candidate;
-  // The re-check was validated, then confirmed on the pointed version rather
-  // than stored: it is the evaluated candidate the confirmation carries.
+  // The re-check is confirmed on the pointed version rather than stored.
   assert.ok(refetched.outcome.confirmed, "a validated no-change is confirmed, not republished");
   const after = refetched.outcome.confirmed.recheck;
-  // Everything the production diff showed moving did move...
+  // Everything volatile moved...
   assert.notEqual(after.temporal.version, before.temporal.version);
   assert.notEqual(after.temporal.sourceThrough, before.temporal.sourceThrough);
   assert.notEqual(after.retrieval.rawHash, before.retrieval.rawHash);
@@ -148,8 +147,7 @@ test("Rockaway: a fetch differing only in stamps, raw hashes and collectedAt is 
   assert.deepEqual(after.changeSet?.removed, []);
   // The stamps stay on the stored record as provenance.
   assert.ok((after.readModel as MeetingsSnapshot).meetings.every((meeting) => meeting.provenance.collectedAt === second));
-  // RULING 283's receipted no-change: readers keep the pointed version, and
-  // the confirmation, not a new candidate, records the re-check.
+  // Readers keep the pointed version; the confirmation records the re-check.
   assert.equal(refetched.outcome.candidate.candidate.id, before.id);
   assert.equal(refetched.outcome.promoted?.versionId, before.id);
   assert.equal(await store.readCandidate(after.id), null);
@@ -198,8 +196,7 @@ test("Tucson Unified: the sitting's agenda is one record; re-fetches are no chan
   assert.ok(seeded.outcome.candidate.candidate.changeSet?.added.some((delta) => delta.key === key));
 
   const refetched = await fetchAndPromote(store, TUSD, t2, [meeting(t2)], [d1, d2]);
-  // Same words, new bytes: the re-check is a validated no-change, confirmed on
-  // the pointed version, so readers keep the one agenda row they had.
+  // Same words, new bytes: a validated no-change, so readers keep the one agenda row they had.
   assert.ok(refetched.outcome.confirmed, refetched.outcome.candidate.failureDetail ?? "");
   assert.equal(refetched.outcome.confirmed.recheck.changeSet?.outcome, "UNCHANGED");
   assert.equal((refetched.outcome.confirmed.recheck.readModel as MeetingsSnapshot).agendaDocuments.length, 2, "the re-check saw every stored row");
@@ -265,10 +262,7 @@ test("an aged-out sitting's agenda is removed by exactly one evidence row, howev
 });
 
 test("durable trusted-LKG transfers keep proving against the row-keyed contract they were written under", () => {
-  // The four production meeting pointers that still name a PDC-v2 transfer
-  // persisted one member per stored agenda row. Their proof re-derives those
-  // members and that first-pointer delta on every read, so the row-keyed
-  // contract is kept exactly for them; live deltas use the sitting-keyed one.
+  // Pointers written under the row-keyed contract keep proving against it; live deltas use the sitting-keyed one.
   const meeting = sitting(TUSD, "tusd1:498", "2026-09-14T04:24:00.000Z");
   const rows = [
     agendaRow(meeting, "2026-09-10T00:00:00.000Z", "1. Call to order.", "x"),

@@ -1,20 +1,3 @@
-/**
- * SEMANTICS SHARED BY EVERY REPOSITORY IMPLEMENTATION.
- *
- * The in-memory double and the filesystem store must behave IDENTICALLY on
- * every rule that a test asserts. The cheapest way to guarantee that is to stop
- * writing the rule twice: what lives here is the behaviour, and each provider
- * supplies only the primitive it actually differs in — a `Map` versus an atomic
- * `rename`.
- *
- * A double whose semantics have drifted from the real store is worse than no
- * double: it converts a green suite into positive evidence for a claim the
- * production path does not satisfy. Every rule this file holds is a rule that
- * would otherwise have two chances to drift.
- *
- * Nothing here reads a clock.
- */
-
 import type { BudgetLedger } from "../budget.ts";
 import {
   UnknownAggregate,
@@ -25,26 +8,10 @@ import {
   type PutOutcome,
 } from "./types.ts";
 
-/**
- * The shared budget is ONE aggregate under ONE id, forever.
- *
- * Not one per host, not one per worker, not one per session. `budget.ts` states
- * the invariant — twelve workers on one publisher contend on ONE HostBudget —
- * and a store that partitioned the ledger by anything would break that
- * invariant in the storage layer while every unit test above it still passed.
- */
+/** The shared budget is one aggregate under one id: every worker contends on the same ledger. */
 export const BUDGET_AGGREGATE_ID = "shared-budget-ledger";
 
-/**
- * Build the shared-budget repository over any aggregate store and lock manager.
- *
- * `mutate` is the only write path that a scheduler should ever use. It takes the
- * lock, reads, applies the caller's PURE decision function, and compare-and-sets
- * against the revision it just read. Read-decide-write as three separate public
- * calls would let two workers both read `inFlight: 2`, both decide they are
- * under a limit of 3, and both write `inFlight: 3` — which is the arithmetic of
- * fanning out producing exactly the over-fetch the budget exists to prevent.
- */
+/** `mutate` is the only write path a scheduler should use: lock, read, apply a pure decision, compare-and-set. */
 export function budgetRepositoryFrom(
   aggregate: AggregateRepository<BudgetLedger>,
   locks: LockManager,
@@ -90,27 +57,15 @@ export function budgetRepositoryFrom(
         );
         return { result: decided.result, persisted };
       };
-      // Postgres fences this write in one UPDATE ... WHERE revision statement.
-      // HTTP queries do not share a session, so a session advisory lock cannot
-      // protect their read/decision/write lifetime. A losing CAS throws before
-      // any admission is returned; the caller retries the pure decision.
+      // Postgres fences this write with one UPDATE ... WHERE revision; HTTP queries share no session for an advisory lock.
+      // A losing CAS throws before any admission is returned, and the caller retries the pure decision.
       return concurrency === "ATOMIC_COMPARE_AND_SET" ? decideAndCommit()
         : locks.withLock(`budget:${BUDGET_AGGREGATE_ID}`, decideAndCommit);
     },
   };
 }
 
-/**
- * A JSON round trip, used as the copy boundary in EVERY implementation.
- *
- * The filesystem store gets this for free — it serialises. The in-memory double
- * must do it deliberately, or a caller holding a reference into the store could
- * mutate persisted state without a revision bump, and the double would quietly
- * permit the one thing compare-and-set exists to forbid. Matching the file
- * store's exact lossiness (dropped `undefined`, no Dates, no Maps) is the point,
- * not a side effect: a value that cannot survive the durable store must not
- * survive the double either.
- */
+/** A JSON round trip, the copy boundary in every implementation, so no caller holds a reference into the store. */
 export function jsonCopy<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }

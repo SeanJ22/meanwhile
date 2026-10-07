@@ -5,17 +5,9 @@ import { DEFAULT_STANCE_TOPICS, type StanceTopic } from "../stances/topics.ts";
 import type { StatementCorpus } from "./types.ts";
 
 /**
- * **EACH STANCE TOPIC IS A READY-MADE ANSWER (CA-14).**
- *
- * When statements publish, the answer to "what does <person> say about
- * <topic>?" is built once, here, by the same two steps Ask runs: the statement
- * search (`statementEvidenceFor`) and the exact-words composer
- * (`composeOwnWordsAnswer`). Nothing in this file words an answer of its own,
- * so a chip and a typed question cannot drift apart. The card renders the
- * stored answer at once with Ask's components; no cold Ask runs per tap.
- *
- * Pure: the corpus and the people are arguments. Publication to the reader
- * edge belongs to the Slide; this file only builds what is published.
+ * Builds each stance topic's answer once, with the same statement search and
+ * exact-words composer Ask uses, so a chip and a typed question cannot drift
+ * apart. Pure: the corpus and the people are arguments.
  */
 
 export interface TopicAnswerPerson {

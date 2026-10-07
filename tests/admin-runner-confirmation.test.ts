@@ -17,12 +17,8 @@ import { followUpDelayMs, liveExecutor } from "../app/(admin)/_mw/admin-v6/execu
 import { V6_CAPABILITY_VERSION, RECEIPT_LOOKUP_CONTRACT } from "../app/(admin)/_mw/admin-v6/contract.ts";
 
 /**
- * **A CLICK IS NOT "DONE" UNTIL THE RUNNER SAYS SO.** (S11.)
- *
- * The whole loop, against the real gateway and the in-memory store: a pause is
- * saved (waiting), the runner writes its own honored record exactly as
- * `honorRunnerIntent` does, and only then does the same receipt read done. The
- * plant proves the check would fail on a pause the runner never saw.
+ * A click is not "done" until the runner says so: a pause is saved (waiting), the runner writes its
+ * own honored record as `honorRunnerIntent` does, and only then does the same receipt read done.
  */
 
 const T0 = "2026-09-30T18:00:00.000Z";
@@ -216,7 +212,7 @@ test("follow-up asks are quick at first and stop after about fifteen minutes", (
   assert.equal(followUpDelayMs(86), 60_000, "BR-02: no cutoff, the order keeps asking");
 });
 
-/* ------------------------------------------------------------------ S7's finding: a timed-out write is read back */
+/* ------------------------------------------------------------------ a timed-out write is read back */
 
 import { ControlPlaneRequestTimeout } from "@/lib/control-plane/repository/request-bounds.ts";
 import { ADMIN_CONFIG_ID } from "@/lib/control-plane/gateway/admin-config.ts";

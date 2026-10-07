@@ -3,9 +3,8 @@ import { fromBodyOffice } from "../officials/office-locations.ts";
 import { contactForOfficeLocation, type AskContact } from "./contacts.ts";
 
 /**
- * Where a body's office is, as the contact Ask answers with: the address and
- * phone its own page states (CA-06), with that page as the source. Empty when
- * no page has stated one; Ask then says so rather than guessing a city hall.
+ * Where a body's office is, as an Ask contact: the address and phone its own
+ * page states, with that page as the source. Empty when no page has stated one.
  */
 export async function officeContactsForBody(bodyId: string, bodyName: string): Promise<AskContact[]> {
   const body = await bodyById(bodyId);

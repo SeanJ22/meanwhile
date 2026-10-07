@@ -9,11 +9,6 @@ import type { PromotionOutcome } from "./promotion.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
-/**
- * The durable-receipt check's store: narrow doors for the candidate and the
- * pointer's identity, and the proven read model for the one success no Reader
- * readback re-proves (a contract without a Reader projection).
- */
 export type DurableReceiptStore = CivicDataReadStore & Pick<RoutineDataStore, "readCandidateSummary" | "readPromotionIdentity">;
 
 export interface RoutineRunnerReceipt {
@@ -25,20 +20,10 @@ export interface RoutineRunnerReceipt {
   readonly promotedVersion: string | null;
   readonly lastKnownGoodVersion: string | null;
   readonly structuralReleaseContract: ZeroReleaseEvents;
-  /**
-   * Present when the child confirmed the pointed version unchanged instead of
-   * promoting: the confirmation's observed instant. `candidateId` then names
-   * the pointed version, and the supervisor proves the receipt from the
-   * pointer's identity and its newest confirmation, never the dataset.
-   */
+    /** Set when the child confirmed the pointed version unchanged: `candidateId` then names the pointed version. */
   readonly confirmedAt?: string;
 }
 
-/**
- * The receipt fields a promotion outcome proves: the candidate it wrote, or,
- * for a confirmation, the pointed version it confirmed (no new candidate
- * exists then) and the confirmation's instant.
- */
 export function routineReceiptFields(
   candidate: { readonly id: string },
   outcome: PromotionOutcome,
@@ -54,12 +39,10 @@ export function routineReceiptFields(
   };
 }
 
-/** Exact existing candidate receipt, including holds; no source content or credentials. */
 export function printSourceRunnerReceipt(source: string, candidate: { readonly id: string }, outcome: PromotionOutcome): void {
   console.log("RCD_RECEIPT=" + JSON.stringify({ source, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
 }
 
-/** Candidate plus canonical pointer/LKG proof needs at most four Neon requests. */
 export const ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS = 4;
 
 export type RoutineRunnerReceiptParseCode =
@@ -102,12 +85,6 @@ export interface RoutineSupervisorOuterEvidence {
   readonly detail: string;
 }
 
-/**
- * Build a credential-free operational account from protocol lines already
- * classified by the routine child. This is used only when that child exits
- * nonzero: it never attributes a source disposition and never consumes raw
- * stderr, URLs, environment values, or publisher payloads.
- */
 export function routineSupervisorOuterEvidence(input: {
   readonly output: string;
   readonly termination: string;
@@ -133,7 +110,6 @@ export function routineSupervisorOuterEvidence(input: {
     successes.delete(id);
     failures.delete(id);
   }
-  // Meeting reads admitted while Reader repair ran (C6) add to the pass's plan.
   const catchUpLaunched = lines.reduce((sum, line) => {
     const match = /^RCD_PASS catch-up at \S+: launching (\d+) due meeting read\(s\)/.exec(line);
     const count = match ? Number(match[1]) : 0;
@@ -210,7 +186,6 @@ export function parseRoutineRunnerReceipt(output: string): RoutineRunnerReceiptP
   return { ok: true, receipt: row as unknown as RoutineRunnerReceipt, line: lines[0] };
 }
 
-/** Parse the independently durable receipts emitted by the meetings fan-out. */
 export function parseMeetingPartitionRunnerReceipts(output: string): RoutineRunnerReceiptBatchParse {
   const lines = output.split(/\r?\n/).filter((line) => line.startsWith("RCD_MEETING_PARTITION_RECEIPT="));
   if (lines.length === 0) {
@@ -228,14 +203,6 @@ export function parseMeetingPartitionRunnerReceipts(output: string): RoutineRunn
   return { ok: true, receipts, lines };
 }
 
-/**
- * Attribute an outcome only after the child's receipt agrees with durable
- * source state. Missing, malformed, or contradictory evidence is a supervisor
- * failure; it is never permission for the parent process to invent a source
- * attempt or candidate disposition. Process termination is orthogonal once
- * that proof exists: callers record a timeout/exit contradiction separately,
- * without erasing the already-durable source disposition.
- */
 export function classifyRoutineChildOutcome(input: {
   readonly parsed: RoutineRunnerReceiptParse;
   readonly durableIssue: string | null;
@@ -287,47 +254,17 @@ export interface ExpectedRoutineRunnerReceipt {
   readonly sourceId: string;
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
-  /**
-   * The registered contract, when the caller holds it (a `RoutineSourceTask`
-   * does). Only its Reader projection decides how a success is proved; without
-   * it a success keeps the full proven read.
-   */
   readonly contract?: Pick<RoutineSourceContract, "readerProjection">;
 }
 
-/**
- * Whether the pass's Reader-repair phase re-proves this contract's new version
- * through the full proven read (`verifyRoutineReaderProjection`, run by
- * scripts/routine-civic-data-reader-repair.mts after every source phase).
- */
 function readerRepairReprovesVersion(expected: ExpectedRoutineRunnerReceipt): boolean {
   return expected.contract !== undefined && expected.contract.readerProjection !== null;
 }
 
 /**
- * Prove a child summary against its durable candidate and canonical LKG.
- *
- * The reported candidate is read narrow (its own columns), and its durable
- * eight-check receipt must back the emitted decision. The pointer is then
- * proved by identity: the version, LKG and source it names. That is the whole
- * proof the database leaves open. `assert_civic_data_promotion_integrity`
- * (migration 0026) refuses every pointer write whose payload is not that
- * candidate's read model, whose receipt is not that candidate's receipt, whose
- * candidate is not PROMOTED, or whose LKG is not the current version, and the
- * pointer is never rewritten in place. So a pointer naming the candidate proved
- * above carries exactly its payload and receipt.
- *
- * A success on a contract WITHOUT a Reader projection (`readerProjection:
- * null`, the CISA dotgov registry) still reads the new version through the full
- * proven read: no Reader readback ever proves those versions, so this is their
- * only whole proof. Every other new version is re-proved by the pass's Reader
- * repair, which reads it through the typed Reader with the full proof.
- *
- * A held outcome moved nothing: the pointer must still name the LKG the
- * receipt reports, which was proved when it was promoted, and never the refused
- * candidate. The full reads this replaced moved the pointer's payload and its
- * candidate on every settle; the whole-row reads before them moved 66.9 MB for
- * one held NJ roll-call settle on 2026-09-23, against a 67.11 MB response cap.
+ * The pointer is proved by identity: the database refuses any pointer write whose payload or receipt is not that
+ * candidate's, so a pointer naming the proved candidate carries exactly its payload and receipt. A contract without a
+ * Reader projection is still re-read through the full proven read, its only whole proof.
  */
 export async function durableRoutineRunnerReceiptIssue(
   receipt: RoutineRunnerReceipt,
@@ -370,10 +307,7 @@ export async function durableRoutineRunnerReceiptIssue(
       const summaryIssue = successfulRoutineRunnerReceiptIssue(receipt);
       if (summaryIssue) return summaryIssue;
       if (receipt.confirmedAt !== undefined) {
-        // A confirmation moved nothing: the pointer still names the version the
-        // candidate summary above proved, and carries this run's confirmation.
-        // The database admits that confirmation only for the pointed version and
-        // its read-model hash (migration 0029), so the dataset is not re-read.
+                // The database admits a confirmation only for the pointed version and its read-model hash, so no re-read.
         const pointer = await store.readPromotionIdentity(expected.recordClass, expected.scope);
         if (
           pointer === null ||
@@ -395,9 +329,7 @@ export async function durableRoutineRunnerReceiptIssue(
         ) return `canonical ${expected.recordClass}:${expected.scope} does not prove the reported GOOD candidate`;
         return null;
       }
-      // This completed promotion keeps its durable outcome when another child
-      // publishes a newer version before settlement. Reader repair checks the
-      // version now serving; this branch checks its canonical identity/LKG.
+            // Keeps its durable outcome even when another child publishes a newer version before settlement.
       const pointer = await store.readPromotionIdentity(expected.recordClass, expected.scope);
       if (
         pointer === null ||

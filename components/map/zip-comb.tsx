@@ -5,10 +5,8 @@ import { useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * A five-cell comb field, the way a government form rules one box per
- * character. One real input carries the value, focus, and assistive-tech
- * semantics; the cells are painted underneath it and hidden from screen
- * readers.
+ * A five-cell comb field. One real input carries the value, focus and
+ * assistive-tech semantics; the painted cells are hidden from screen readers.
  */
 
 const CELLS = [0, 1, 2, 3, 4];

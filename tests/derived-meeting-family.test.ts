@@ -1,13 +1,6 @@
 /**
- * **A REVIEWED CALENDAR PUBLISHES THROUGH THE RUNNER'S DOORS WITH NO CODE
- * RELEASE, AND KEEPS ITS VERIFIED SITTINGS THROUGH A REVIEW.** (C16, 2026-09-24.)
- *
- * Rulings §3 ("C16" was a session label, not Sean's decision: Sean,
- * 2026-10-01): records connecting a calendar to its governing body publish
- * through the existing verified publication process, and previously verified
- * records are preserved through temporary outages.
- *
- * Every step here is the production door, on the in-memory store:
+ * A reviewed calendar publishes through the runner's doors with no code release, and keeps its verified sittings
+ * through temporary outages. Every step is the production door, on the in-memory store:
  *
  * 1. a reviewed crosswalk row is promoted through the manual door;
  * 2. the wiring store is derived from it, a validated walk and the vault, and
@@ -277,7 +270,7 @@ test("a promoted family's internal fresh duplicates reconcile in composition and
   }));
   assert.ok(family.outcome.promoted, family.outcome.candidate.failureDetail ?? "");
   assert.equal(family.build.snapshot.counts.duplicatesCollapsed, 3);
-  const read = await readMeetingsProjection({ store, bypassCache: true, now: T_FAMILY, allowUnconfiguredBootstrap: false });
+  const read = await readMeetingsProjection({ store, bypassCache: true, now: T_FAMILY });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(read.value.counts, { fresh: 1, carried: 0, total: 1, duplicatesCollapsed: 3 });

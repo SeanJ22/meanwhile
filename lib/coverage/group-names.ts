@@ -1,12 +1,6 @@
 import { CHECKLIST_FAMILIES, CHECKLIST_ITEMS } from "./checklist-map.ts";
 
-/**
- * The one set of plain-English names for the checklist's families, shared by
- * Admin's checklist view and the Admin screens. The names live in the overlay
- * (checklist-map.json); a place family is one that owes items to a place.
- *
- * PURE.
- */
+/** Plain-English names for the checklist's families; a place family owes items to a place. Pure. */
 const names = (keep: (group: string) => boolean): Readonly<Record<string, string>> =>
   Object.fromEntries(Object.entries(CHECKLIST_FAMILIES).filter(([group]) => keep(group)).map(([group, family]) => [group, family.name]));
 

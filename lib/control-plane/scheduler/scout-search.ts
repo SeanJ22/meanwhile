@@ -14,11 +14,7 @@ export type FetchLike = (url: string, init: {
   readonly text: () => Promise<string>;
 }>;
 
-/**
- * Admits one paid provider request, or says why not; `done` returns the slot.
- * Structurally the discovery walk's `SearchBudget` (discovery/search-runtime.ts),
- * so the runner hands both callers the one durable budget.
- */
+/** Admits one paid provider request, or says why not; `done` returns the slot. Shares the discovery walk's `SearchBudget` shape. */
 export interface ScoutSearchBudget {
   take(host: string): Promise<string | null>;
   done(host: string): Promise<void>;
@@ -27,13 +23,7 @@ export interface ScoutSearchBudget {
 export interface ScoutSearchOptions {
   readonly braveKey?: string | null;
   readonly exaKey?: string | null;
-  /**
-   * REQUIRED (2026-09-25). Every Brave or Exa request is paid, and the owner
-   * governs paid search with his Admin switch and its per-cycle and per-day
-   * caps. Before this the Scout tool was built from the env keys alone and
-   * spent outside both; now each provider request is admitted by this budget
-   * first, and a refused or unreadable budget sends nothing.
-   */
+  /** Required: every paid provider request is admitted by the owner's paid-search budget first; a refused or unreadable budget sends nothing. */
   readonly budget: ScoutSearchBudget;
   readonly fetchImpl?: FetchLike;
   readonly timeoutMs?: number;
@@ -133,15 +123,7 @@ export async function exaSearch(
   return { hits, bytes: body.length };
 }
 
-/**
- * Build the search seam, or null when no provider key is configured (the caller
- * then leaves the `search` tool out of the toolkit entirely — inert, never
- * offered). The runner also builds it only while the owner's paid-search switch
- * is on, and hands it that switch's budget. Both providers are queried when both keys are present; they are
- * complementary (Brave keyword-strong, Exa neural catches different sites), and
- * one erroring never fails the call — its error is named and the other's hits
- * still return.
- */
+/** Build the search seam, or null when no provider key is configured. Both providers are queried when both keys are present; one erroring never fails the call. */
 export function makeScoutSearch(options: ScoutSearchOptions): ScoutSearch | null {
   const braveKey = options.braveKey?.trim() || null;
   const exaKey = options.exaKey?.trim() || null;
@@ -162,9 +144,7 @@ export function makeScoutSearch(options: ScoutSearchOptions): ScoutSearch | null
 
     const providersUsed: string[] = [];
     const errors: string[] = [];
-    // Admission is taken one provider at a time, so two requests cannot both
-    // pass the last unit of the per-cycle cap. A budget that throws (its ledger
-    // could not be read) is a refusal: nothing is sent.
+    // Admission is taken one provider at a time so two requests cannot both pass the last unit of the cap; a budget that throws is a refusal.
     const jobs: (typeof candidates[number] & { pending: Promise<PromiseSettledResult<{ hits: SearchHit[]; bytes: number }>> })[] = [];
     for (const candidate of candidates) {
       let refused: string | null;

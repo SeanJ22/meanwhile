@@ -1,13 +1,8 @@
 #!/usr/bin/env tsx
 /**
- * `pnpm fixtures:credentials` — **the class sweep for third-party credentials
- * that rode in on a captured page.** (2026-08-28, the post-cleanroom shipping
- * hotfix.)
- *
- * The reasoning, and why this is not a second copy of `pnpm secrets:sweep`, is
- * in `lib/ops/fixture-credentials.ts`. In one line: that sweep looks for OUR
- * values, which we hold; this one looks for a publisher's values, which we
- * cannot hold because we never knew them.
+ * `pnpm fixtures:credentials` — finds third-party credentials that rode in on a
+ * captured page. Unlike `pnpm secrets:sweep`, which looks for our own values,
+ * this looks for a publisher's values (see `lib/ops/fixture-credentials.ts`).
  *
  * ```
  * pnpm fixtures:credentials              scan every committed text file, report, exit 1 on a finding
@@ -15,15 +10,8 @@
  * pnpm fixtures:credentials --all        make confirmed findings outside the fixture tree fail too
  * ```
  *
- * **THE SCAN IS ALWAYS REPO-WIDE. `--all` changes the VERDICT, not the look.**
- * A sweep whose denominator moves with a flag is a sweep that can be made quiet
- * by choosing arguments, so the file count and every finding are printed either
- * way and the flag only decides which findings are allowed to stand.
- *
- * **Exit 0 only when nothing was found AND something was actually read.** Zero
- * files read is `CANNOT RUN` and exits 2 — `secrets:sweep`'s rule, for the
- * reason this repository names most often: a sweep reporting nothing found
- * without having looked is the failure, not the result.
+ * The scan is always repo-wide; `--all` changes the verdict, not what is read.
+ * Zero files read is CANNOT RUN and exits 2.
  */
 
 import { createHash } from "node:crypto";
@@ -50,13 +38,7 @@ const failEverywhere = process.argv.includes("--all");
 
 const sha256 = (input: string | Buffer): string => createHash("sha256").update(input).digest("hex");
 
-/**
- * Text, or `null` for anything this scanner cannot honestly read.
- *
- * A binary file and an over-sized file are SKIPPED and COUNTED, never silently
- * folded into the clean total — RULING 24: a check that could not reach its
- * subject must not print like one that did.
- */
+/** Text, or `null` for a binary or over-sized file, which is skipped and counted, never folded into the clean total. */
 function readText(abs: string): string | null {
   try {
     if (statSync(abs).size > 64 * 1024 * 1024) return null;
@@ -128,7 +110,7 @@ const patternOnly = withConfirmed.filter(
 const preservedOnly = reports.filter((r) => credentials(r.findings).length === 0);
 
 function line(f: CredentialFinding): string {
-  // RULING 127 — the class, the fingerprint, the length, the line. Never the value.
+  // The class, the fingerprint, the length, the line. Never the value.
   return (
     `      line ${String(f.line).padEnd(6)} ${f.classId.padEnd(26)} ` +
     `fp=${f.fingerprint} len=${f.length} n=${f.occurrences}` +
@@ -158,13 +140,8 @@ if (patternOnly.length > 0) {
 }
 
 /*
- * THE UNCONFIRMED MATCHES ARE PRINTED, NOT DROPPED.
- *
- * These are strings of a credential SHAPE that stage two showed are not
- * credentials — a GovDelivery signed link whose payload is a public URL, a test
- * placeholder whose key body is one repeated character. Each carries its reason.
- * Setting them aside with no number would make this scanner indistinguishable
- * from one that never looked at them.
+ * Unconfirmed matches (credential-shaped strings stage two showed are not
+ * credentials) are printed with their reason, never dropped.
  */
 console.log(
   `\n  SHAPE-MATCHED AND EXCLUDED ON THE EVIDENCE — ${preservedOnly.length} file(s)`,
@@ -188,12 +165,8 @@ if (sanitize) {
   if (inFixtures.length === 0) console.log("    nothing to repair");
 
   /*
-   * EVERY DECLARATION IS CHECKED BEFORE ANY FILE IS WRITTEN.
-   *
-   * Validating inside the write loop would sanitize the first fixture and then
-   * refuse on the second, leaving the tree half-repaired and the generated
-   * record describing neither state. A refusal has to happen while refusing is
-   * still free.
+   * Every declaration is checked before any file is written, so a refusal never
+   * leaves the tree half-repaired.
    */
   const undeclared = inFixtures.filter((r) => captureFor(r.path) === null);
   if (undeclared.length > 0) {
@@ -213,12 +186,8 @@ if (sanitize) {
     const raw = readFileSync(abs);
 
     /*
-     * THE SAME DOOR A RECORDER USES (RULING 103 — one shared path).
-     *
-     * This could sanitize and write inline; it deliberately does not. A bare
-     * write here would be a second implementation of the boundary, and
-     * `tests/fixture-credentials.test.ts` refuses one by name — it caught this
-     * very line the first time it ran.
+     * The same sanitizing path a recorder uses; tests/fixture-credentials.test.ts
+     * refuses a second implementation.
      */
     const result = writeCapturedFixture(abs, raw.toString("utf8"));
 
@@ -227,29 +196,15 @@ if (sanitize) {
       byClass[f.classId] = (byClass[f.classId] ?? 0) + f.occurrences;
 
     /*
-     * PROVENANCE WITHOUT THE CREDENTIAL.
-     *
-     * `rawSha256` is the hash of the bytes as captured. It is what makes the
-     * sanitization reproducible and auditable — anyone can re-capture, hash,
-     * and see whether they are looking at the same page — WITHOUT this
-     * repository storing the page that carries the key. The raw bytes are not
-     * committed anywhere; the hash is the whole record of them.
-     *
-     * It is written ONCE and then carried forward. A second `--sanitize` run
-     * over an already-clean file would otherwise overwrite the capture's hash
-     * with the sanitized file's own, quietly erasing the only link back to what
-     * was actually retrieved.
+     * `rawSha256` is the hash of the bytes as captured, so the sanitization is
+     * auditable without storing the page. It is written once and carried
+     * forward; a re-run must not overwrite it with the sanitized file's hash.
      */
     const prior = existing[report.path] as { rawSha256?: string } | undefined;
 
     /*
-     * THE DECLARED HALF, COPIED IN RATHER THAN RE-STATED.
-     *
-     * Where the page came from and when it was read cannot be recovered from
-     * the bytes, so they are hand-authored in `lib/ops/fixture-captures.ts` and
-     * projected here. A missing declaration is a REFUSAL, not a blank field:
-     * a sanitized fixture with no provenance is exactly the un-re-derivable
-     * artifact this record exists to prevent.
+     * Where and when the page was read is declared in `lib/ops/fixture-captures.ts`
+     * and projected here; a missing declaration refuses.
      */
     const capture = captureFor(report.path)!;
 

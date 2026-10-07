@@ -34,48 +34,9 @@ import {
 } from "../lib/civic-data/types.ts";
 
 /*
- * **THE MEETING REFRESH SCHEDULE UNDER A CONTROLLED CLOCK (owner, 2026-09-25).**
- *
- * "Test refresh scheduling without an automatic 12-hour wait. Verify the hourly
- * and twice-daily rules with a controlled clock." The rule (docs/rulings.md §4):
- * a meeting source is checked twice daily, and within 60 minutes while its body
- * has a meeting in the next seven days or one that concluded in the previous
- * seven. Nothing here waits: every instant is a number the test moves.
- *
- * What was already proven before this file (and is not repeated here):
- *  - tests/meeting-sitting-window.test.ts: the policy constants; the window to
- *    the millisecond on both sides; the conclusion bound and stated ends; the
- *    success read in the attempt clock's units; R20 (never published: twice
- *    daily); a failed read's one-hour retry; the window rolling in at an instant.
- *  - tests/routine-civic-data-frontier.test.ts: earliest-deadline-first, three
- *    reads a meeting lane; 30 days on Tucson's board lane (27 bodies) with
- *    clean passes and with production's recorded passes, catch-up included
- *    (0 late in both).
- *  - tests/hot-read-catch-up.test.ts: reads started while a pass is held open,
- *    one a lane at a time, by its source reads or its Reader repair.
- *  - tests/helpers/routine-pass-replay.ts: how a replayed pass runs: the
- *    runner's pool and catch-up code under a controlled clock, beside the rest
- *    of a recorded production pass split into its measured phases.
- *  - tests/routine-clock-narrow-read.test.ts: an unchanged confirmation moves the
- *    store's clock without moving the pointer.
- *
- * What this file adds:
- *  1. The whole chain through the REAL store: every read is a store write
- *     (a changed version, an unchanged confirmation, a failed read) or a child
- *     that died without one, and every decision is the runner's own functions
- *     over `store.clock()` — across a body turning hourly for an upcoming
- *     meeting, staying hourly after it concludes, and cooling again.
- *  2. The whole registry at once: every sitting-window task on its real lane,
- *     sharing the runner's one pool of four children, the same-host gap, failed
- *     reads and a crash-looping partition, under clean passes and under the
- *     passes production actually ran. Prioritising hourly bodies must never
- *     push any body past 12 hours.
- *  3. The two defects that replay found, pinned: a published derived family's
- *     failed read waited its six-hour retry while hourly (340-minute gaps), and
- *     a backlog drained in registry order read a twice-daily body at 12:00:57.
- *  4. The accelerated production test (routine-due-request.ts), rehearsed on
- *     the real store: a request brings one cold partition forward, the ordinary
- *     pass reads it, and the next due is the normal rule's.
+ * The meeting refresh schedule under a controlled clock: a meeting source is checked twice daily, and within 60
+ * minutes while its body has a meeting in the next seven days or one that concluded in the previous seven. Every
+ * instant is a number the test moves; every decision is the runner's own functions over the real store's clock.
  */
 
 const MIN = 60_000;
@@ -102,10 +63,6 @@ function seeded(seed: number): () => number {
     return state / 2 ** 32;
   };
 }
-
-// ---------------------------------------------------------------------------
-// 1. One partition through the real store
-// ---------------------------------------------------------------------------
 
 type ReadOutcome = "CHANGED" | "UNCHANGED" | "FAILED" | "DIED_WITHOUT_RECEIPT";
 
@@ -238,7 +195,7 @@ test("controlled clock through the real store: a Pima-shaped body read across co
 
   // Every seventh read changes the version, every eleventh fails, every
   // thirteenth child dies before writing anything; the rest find nothing new.
-  // The partition starts never published and its first read fails (R20).
+  // The partition starts never published and its first read fails.
   const outcomeOf = (index: number): ReadOutcome =>
     index === 0 ? "FAILED"
       : index === 1 ? "CHANGED"
@@ -298,7 +255,7 @@ test("controlled clock through the real store: a Pima-shaped body read across co
     `outcomes: ${count("UNCHANGED")} unchanged, ${count("CHANGED")} changed, ${count("FAILED")} failed, ${died.length} died`);
   assert.equal((await store.readPromotion("MEETING", task.scope))!.versionId.startsWith("cv-"), true);
 
-  // Judge every gap by the owner's rule, minute by minute: while hourly, a
+  // Judge every gap by the refresh rule, minute by minute: while hourly, a
   // check is owed within 60 minutes of the later of the last check and the
   // minute the body turned hourly; every body is owed one within 12 hours.
   const late: string[] = [];
@@ -342,15 +299,11 @@ test("controlled clock through the real store: a Pima-shaped body read across co
   }
 });
 
-// ---------------------------------------------------------------------------
-// 2. The whole registry, one shared pool
-// ---------------------------------------------------------------------------
-
 interface SimBody {
   readonly task: RoutineSourceTask;
   /** Sitting starts; `undefined` for a partition never published. */
   readonly starts: readonly string[] | undefined;
-  /** Hot intervals by the owner's rule, for judging (checked against the real function). */
+  /** Hot intervals by the refresh rule, for judging (checked against the real function). */
   readonly hot: readonly (readonly [number, number])[];
 }
 
@@ -399,9 +352,8 @@ async function simulateRegistry(options: {
     (task.contract.schedule?.kind === "SITTING_WINDOW" ? task.contract.schedule.follows ?? [] : [])
       .map(({ meetingSource, bodyId }) => meetingPartitionId(meetingSource, bodyId))));
 
-  // Production on 2026-09-25: 100 of 185 meeting partitions published, 49 of
-  // them hourly. Each published body meets weekly, fortnightly, monthly or
-  // rarely (crossing into and out of the window during the run).
+  // About half the meeting partitions published, about half of those hourly; each published body meets weekly,
+  // fortnightly, monthly or rarely (crossing into and out of the window during the run).
   const bodies = new Map<string, SimBody>();
   const partitions = windowed.filter((task) => task.recordClass === "MEETING");
   for (const task of partitions) {
@@ -442,8 +394,7 @@ async function simulateRegistry(options: {
       : { lastAttemptedAt: iso(at), lastSucceededAt: iso(at - 2_500), lastSucceededObservedAt: iso(at), ...sittings });
     checks.get(body.task.id)!.push(at);
   };
-  // Hourly bodies were read in the last 40 minutes; twice-daily ones fall due
-  // over the first two hours, as after the B3 switch.
+  // Hourly bodies were read in the last 40 minutes; twice-daily ones fall due over the first two hours.
   [...bodies.values()].forEach((body, index) => {
     record(body, hotAt(body, start) ? start - (index % 8 + 1) * 5 * MIN : start - 12 * HOUR + 10 * MIN + (index % 24) * 5 * MIN, false);
   });
@@ -550,10 +501,7 @@ test("controlled clock, whole registry: every sitting-window task on its real la
 });
 
 test("controlled clock, whole registry under the passes production ran (2026-09-24, up to 15:52), with catch-up while a pass is held open: every hourly body is read within 60:00 and prioritising hourly bodies never pushes any body past 12 hours", async () => {
-  // 925 is this replay's own draw. Under 9, catch-up only while Reader repair
-  // ran left 11 hourly and 5 twice-daily reads late on Tucson's lane in the
-  // first hour (up to 69.56 min and 12.13 h): every body due at once kept the
-  // first pass open 28:29, and its one round held every lane until its last read.
+  // Two seeds; each must keep every hourly body within the hour.
   for (const seed of [925, 9]) {
     const result = await simulateRegistry({ recordedPasses: true, days: 14, seed });
     const detail = `seed ${seed}: longest hourly gap ${(result.maxHotGapMs / MIN).toFixed(2)} min, longest gap ${(result.maxGapMs / HOUR).toFixed(2)} h, ` +
@@ -565,10 +513,6 @@ test("controlled clock, whole registry under the passes production ran (2026-09-
     assert.ok(result.catchUpReads > 0, `the long passes admitted reads by catch-up (${detail})`);
   }
 });
-
-// ---------------------------------------------------------------------------
-// 3. The two scheduling fixes the whole-registry replay found
-// ---------------------------------------------------------------------------
 
 test("a failed read never waits longer than the schedule it failed: a published derived family retries within the hour while hourly", () => {
   const family = ROUTINE_SOURCE_TASKS.find((task) => task.id.startsWith("meetings:derived:"))!;
@@ -582,7 +526,7 @@ test("a failed read never waits longer than the schedule it failed: a published 
     lastSucceededObservedAt: iso(success),
     sittingStarts: [iso(at + 2 * DAY)],
   };
-  // Hourly: the retry is owed within the hour, not six hours later (the replay found 340-minute gaps).
+  // Hourly: the retry is owed within the hour, not six hours later.
   assert.equal(routineTaskDeadlineMs(family, failed, true), at + HOUR);
   assert.equal(routineTaskDeadlineMs(family, failed, undefined), at + HOUR, "unknown reads as hourly");
   // Twice daily: its own six-hour retry, which is sooner than twelve.
@@ -590,7 +534,7 @@ test("a failed read never waits longer than the schedule it failed: a published 
   // Published with no proven success: the same cap.
   const unproven: RoutineTaskClock = { lastAttemptedAt: iso(at), sittingStarts: [iso(at + 2 * DAY)] };
   assert.equal(routineTaskDeadlineMs(family, unproven, true), at + HOUR);
-  // Never published keeps R20, and a meeting partition's one-hour retry is unchanged.
+  // Never published keeps its twice-daily retry, and a meeting partition's one-hour retry is unchanged.
   assert.equal(routineTaskDeadlineMs(family, { lastAttemptedAt: iso(at) }, true), at + 12 * HOUR);
   assert.equal(routineTaskDeadlineMs(partition, failed, true), at + HOUR);
   assert.equal(routineTaskDeadlineMs(partition, failed, false), at + HOUR);
@@ -609,10 +553,6 @@ test("a pass starts the read owed soonest first; tasks without a deadline keep t
   assert.deepEqual(routinePassLaunchOrder(rows).map(({ id }) => id), ["census", "fec", "never-read", "soon", "tie-a", "tie-b", "late-deadline"]);
   assert.deepEqual(routinePassLaunchOrder([]), []);
 });
-
-// ---------------------------------------------------------------------------
-// 4. The accelerated production test, rehearsed on the real store
-// ---------------------------------------------------------------------------
 
 test("rehearsal of the accelerated production test: a due request brings a cold partition forward, the ordinary pass reads it, and the next due is the normal rule's", async () => {
   const partition = registered(NEWBURY_ENERGY);

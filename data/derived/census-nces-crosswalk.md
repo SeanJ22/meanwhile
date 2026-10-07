@@ -124,8 +124,8 @@ dissolve and rename.
 Worst ten states by unmatched Census systems: MO 431 · CA 314 · NY 236 ·
 IL 235 · NJ 229 · ME 218 · MA 207 · OH 201 · CO 159 · TX 143.
 
-**Montana is excluded from any state-level school-district coverage claim**
-under RULING 11: CCD reports 387 regular open districts, Census reports 311
+**Montana is excluded from any state-level school-district coverage claim**:
+CCD reports 387 regular open districts, Census reports 311
 independent school districts, and Montana has zero dependent school systems to
 explain the gap. That variance is a tracker row, not a crosswalk artifact.
 
@@ -135,6 +135,6 @@ explain the gap. That variance is a tracker row, not a crosswalk artifact.
   are the same body, for the 9,776 pairs it names.
 - It **may not** be used to claim a body count. Census counts governments; a
   school district is one government and holds one governing board, but
-  **RULING 9** stands: a body count is never sourced from a government count.
+  a body count is never sourced from a government count.
 - It **may not** be treated as complete. The unmatched rows are named by
   denominator above and are work items, not absences.

@@ -1,4 +1,4 @@
-/** Terminal PDC boundary: GitHub Actions certifies software, not runtime events. */
+/** GitHub Actions certifies software, not runtime events. */
 
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
@@ -67,18 +67,4 @@ test("post-deploy classifies complete software observation after installing its 
   assert.match(source, /steps\.deploy\.outputs\.deploy != 'cancel'/);
   assert.match(source, /contents:\s*read/);
   assert.doesNotMatch(source.replace(/^\s*#.*$/gm, ""), /contents:\s*write|git\s+(?:add|commit|push)|push-main\.mjs/);
-});
-
-test("the repository inventory does not project current operational health from retired Git state", () => {
-  const source = readFileSync(join(ROOT, "scripts", "repo-map.mts"), "utf8");
-  assert.doesNotMatch(source, /data\/ops\/production-integrity\.json|Production drift status/);
-  assert.doesNotMatch(source, /scheduler is GitHub Actions/);
-  assert.match(source, /Live production health and[\s\S]+canonical operations data plane and Admin/);
-  assert.match(source, /GitHub Actions is not a[\s\S]+routine civic-data or operational scheduler/);
-});
-
-test("the surviving software-staging promoter cannot advertise the retired runtime bypass", () => {
-  const source = readFileSync(join(ROOT, "scripts", "promote-staging.mts"), "utf8");
-  assert.match(source, /The bypass list is empty and write-enabled deploy keys are forbidden/);
-  assert.doesNotMatch(source, /bypass actor is a DeployKey|deploy key granted for scheduled data pushers|deploy-key bypass is never used here/);
 });

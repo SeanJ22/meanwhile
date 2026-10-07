@@ -19,9 +19,6 @@ import type { JurisdictionRouteHints } from "../hunt/meetings-route-hints.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { DEFAULT_KINDS, kindFromSource, type KindTable } from "../registry/kinds.ts";
 
-/** Published bodies' agenda and home pages (from a directory or a roster, read
- * by any job) feed the existing meeting walk. They remain leads until that
- * walk, crosswalk reviewer and meeting publisher verify them. */
 export function directoryMeetingHints(items: readonly WorkItem[], registry: RegistryRuntimeReadModel,
   baseline: readonly JurisdictionRouteHints[]): readonly JurisdictionRouteHints[] {
   const hints = new Map(baseline.map(hint => [hint.jurisdictionId, hint]));
@@ -45,9 +42,6 @@ export function directoryMeetingHints(items: readonly WorkItem[], registry: Regi
 
 const words = (value: unknown) => typeof value === "string" ? value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim() : "";
 
-/** Directory facts enter the existing registry door when a body's name and type
- * pass §3 on the government's own official page; its territory is that
- * government unless the page names other divisions. Unresolved rows stay owed. */
 export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWorkerRecords>[0] | { plan: AutonomousWorkPlan; now: string; held: DirectoryReading }) & { prior: RegistryRuntimePrior; kinds?: KindTable }): {
   prepared: RegistryRuntimePackage; unresolved: readonly string[];
 } {
@@ -70,14 +64,12 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
       requirePublication(f.officePhone === undefined || (phone.length <= 40 && (phone.match(/\d/g) ?? []).length >= 7), "DIRECTORY_OFFICE_PHONE_INVALID");
       const classification = kindFromSource(input.kinds ?? DEFAULT_KINDS, "body", f.bodyClass) as BodyClass | null;
       requirePublication(classification && words(f.bodyName), "DIRECTORY_BODY_IDENTITY_MISSING");
-      // A home page attaches when verified; its absence is an open blank, not a hold.
       const url = typeof f.homepageUrl === "string" ? new URL(f.homepageUrl) : null;
       requirePublication(url === null || (url.protocol === "https:" && !url.username && !url.password), "DIRECTORY_PUBLIC_URL_INVALID");
       requirePublication(f.jurisdictionName === undefined || [words(subject.jurisdiction.name), words(division.label)].includes(words(f.jurisdictionName)), "DIRECTORY_JURISDICTION_MISMATCH");
       const named = typeof f.territoryNames === "string" ? f.territoryNames.split(";").map(name => name.trim()).filter(Boolean) : [];
       const territory = named.length ? named.map(name => {
-        // These are independently captured legal coverage statements, not
-        // address geocoding. Ambiguous same-name divisions never become joins.
+                // Captured legal coverage statements, not geocoding; ambiguous same-name divisions never become joins.
         const matches = input.prior.payload.registry.divisions.filter(row => row.state === division.state && words(row.label) === words(name));
         requirePublication(matches.length === 1 && words(f.coverageEvidence).includes(words(name)), "DIRECTORY_NAMED_TERRITORY_UNRESOLVED");
         return matches[0];
@@ -90,15 +82,12 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
         words(body.name) === words(f.bodyName) && url !== null && body.homepageUrl === url.href) &&
         (words(body.name) === words(f.bodyName) || (body.id === input.plan.publication?.bodyId && !body.name && body.bodyClass === classification)));
       requirePublication(existing.length <= 1, "DIRECTORY_BODY_IDENTITY_AMBIGUOUS");
-      // Same name on another territory is a cross-territory identity question,
-      // not permission to duplicate a regional body under a second government.
       const prior = existing[0];
       requirePublication(!prior || [prior.ocdId, ...(prior.alsoServesOcdIds ?? [])].every(id => id !== null && territoryIds.includes(id)), "DIRECTORY_SHARED_BODY_TERRITORY_REQUIRES_REPAIR");
       const primaryDivision = prior?.ocdId ?? territoryIds[0];
       const id = prior?.id ?? subBodyId(primaryDivision, String(f.bodyName));
       requirePublication(!bodies.some(body => body.id === id), "DIRECTORY_DUPLICATE_BODY");
-      // The directory page's own statement of the schedule: its source is the body's provenance below, so an
-      // earlier separate schedule source leaves the row (never as an undefined key, which the door hashes).
+            // Never an undefined key, which the door hashes.
       const { meetingCadenceSource: _earlierSource, ...base } = prior ?? { id, ocdId: primaryDivision, coverageStatus: "NOT_ATTEMPTED" as const, agendaSourceType: "NONE" as const,
         agendaSourceRef: null, meetingCadence: null, demandCount: 0 };
       bodies.push({ ...(typeof f.meetingCadence === "string" ? base : prior ?? base), name: String(f.bodyName), bodyClass: classification,
@@ -126,18 +115,11 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
 
 type DirectoryChecked = Pick<ReturnType<typeof verifiedWorkerRecords>, "contract" | "primary" | "sourceReceipt"> & {
   readonly extraction: { readonly records: readonly { readonly id: string; readonly fields: Readonly<Record<string, unknown>> }[] };
-  /** The saved page each record was read from, when a reading spans several pages. */
   readonly sourceOf?: ReadonlyMap<string, WorkerPublicationCapture>;
 };
 
-/** A directory read in code from saved official pages, with no Parser result. */
 export interface DirectoryReading { readonly id: string; readonly checked: DirectoryChecked }
 
-/**
- * Read a government's saved "Boards" / "Commissions" pages in plain code (any
- * job's captures of that government) and keep each body whose name passes
- * §3 on its page. Null when no saved page is a readable directory.
- */
 export async function heldDirectoryReading(input: {
   plan: AutonomousWorkPlan; prior: RegistryRuntimePrior; now: string; artifacts: readonly ArtifactRecord[];
   readHeld: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>; limit?: number;
@@ -148,8 +130,8 @@ export async function heldDirectoryReading(input: {
   if (!division) return null;
   const candidates = heldPageCopies(input.artifacts, input.limit ?? 40);
   const records: { id: string; fields: Record<string, unknown> }[] = [], sourceOf = new Map<string, WorkerPublicationCapture>(), used: WorkerPublicationCapture[] = [];
-  // The newest usable copy of each page speaks for it: an older copy never re-adds a board the newer one dropped,
-  // and a later "Access Denied" capture never shadows a good one.
+    // The newest usable copy of each page speaks for it: an older copy never re-adds a board the newer one dropped,
+    // and a later "Access Denied" capture never shadows a good one.
   const readUrls = new Set<string>();
   for (const artifact of candidates) {
     if (readUrls.has(artifact.canonicalUrl)) continue;
@@ -157,7 +139,6 @@ export async function heldDirectoryReading(input: {
     if (!capture || !captureIntact(capture)) continue;
     const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
     const pageVerdict = section3Page(page, contract.recordClass, input.now);
-    // The right place: the government's own page names that government.
     if (!pageVerdict.ok || !pageWords(capture.evidence.text).includes(division.label.toLowerCase())) continue;
     readUrls.add(artifact.canonicalUrl);
     const rows = readHeldDirectory(capture.evidence.text) ?? [];
@@ -174,16 +155,12 @@ export async function heldDirectoryReading(input: {
     if (kept) used.push(capture);
   }
   if (!records.length) return null;
-  // The reading is the pages and what code read from them: a newly verified fact on the same pages is a new reading.
   const id = `held-directory:${createHash("sha256").update(used.map(c => c.evidence.contentHash).sort().join(" ") + canonicalJson(records)).digest("hex").slice(0, 16)}`;
   return { id, checked: { contract, primary: used[0], sourceOf, extraction: { records },
     sourceReceipt: section3SourceReceipt(used, input.now, `section3-validator:${id}`,
       `${records.length} body name(s) read in code from ${used.length} saved official directory page(s), each inside its freshness window (§3).`) } };
 }
 
-/** Idempotent normal-worker continuation. Same government subject preserves
- * scope-budget joins; bodies and record families have distinct work identities.
- * Election/finance remain on their existing shared custodian obligations. */
 export async function materializeBodyDirectoryWork(input: { repos: ControlPlaneRepositories; parent: WorkItem; bodies: readonly Body[]; now: string }): Promise<void> {
   const parent = input.parent, plan = parent.autonomousPlan, jurisdiction = plan?.directorySubject?.jurisdiction;
   requirePublication(plan?.ownerInstructions?.length && jurisdiction, "DIRECTORY_OWNER_INSTRUCTIONS_MISSING");

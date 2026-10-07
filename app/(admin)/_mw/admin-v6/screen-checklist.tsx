@@ -1,11 +1,5 @@
 "use client";
 
-/**
- * **CHECKLIST.** Facts about places (items by group, as stacked bars), the item
- * list with search, status filter and paging, every whole-system group with
- * its full definition list, and the complete register of all definitions.
- * The definitions are the real 325 (`CHECKLIST_PROFILE`).
- */
 import { useState } from "react";
 
 import { STATUS_COLOR, STATUS_LABEL, StatusBar, StatusLegend, StatusTable, Swatch } from "./charts.tsx";
@@ -18,7 +12,6 @@ import s from "./v6.module.css";
 const SYS_WORDS = ["Partly built", "Known gap", "Not checked yet", "Other"];
 const SYS_CLASS = ["c-blue", "c-coral", "c-hatch", "c-dark"];
 
-/** The five parts of a captured-or-owed fact, in the order Sean reads them. Colors reuse the checklist's own status colors. */
 const SCORE_PARTS = [
   { key: "published", words: "Published", cls: "c-blue" },
   { key: "held", words: "Captured, not published yet", cls: "c-amber" },
@@ -39,12 +32,6 @@ function ScoreBar(props: { readonly g: ScoreGroup; readonly label: string; reado
 
 const percentWords = (g: ScoreGroup) => (g.percent === null ? "—" : `${g.percent.toFixed(1)}%`);
 
-/**
- * **SEAN'S CHECKLIST SCORE FOR THIS PLACE.** How much of what the place is owed
- * is captured, overall and by group. It counts capture only: it never holds
- * back publishing, and a fact that passes verification is published whatever
- * this says.
- */
 const FOUND_WORDS: Readonly<Record<string, string>> = { "local-jurisdiction": "Local governments", "candidate-enrichment": "Candidates", "meetings-discovery": "Meetings" };
 
 /** Three figures, each "N of M", with the counts beside it. They are never added or averaged. */

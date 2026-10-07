@@ -1,7 +1,5 @@
 /**
- * @freshness-reads-here
- *
- * RULING 107 — `collectedAt` is taken at the moment of the fetch.
+ * @freshness-reads-here — `collectedAt` is taken at the moment of the fetch.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -23,45 +21,29 @@ import type {
 } from "../types.ts";
 
 /**
- * **Tucson Unified's own Governing Board site: the board calendar and the Board
- * Actions record.** (2026-09-23, the Pima school-agenda routes session. As a
- * standalone REPLACEMENT for the portal this adapter is built and held — see
- * the ledger in docs/detective/pima-school-agenda-routes-2026-09-23.md for why.
- * Its calendar parser IS wired: the TUSD partition unions the calendar's
- * forward-window sittings with the portal's list through
- * lib/sources/diligent/schedule-union.ts.)
+ * A school district's own Governing Board site: the board calendar and the
+ * Board Actions record. The calendar parser is also used by
+ * lib/sources/diligent/schedule-union.ts.
  *
- * ## The route
- *
- * `govboard.tusd1.org/Meeting-Calendar` renders nothing to a plain client; its
- * inline script loads the month from the site's own endpoint,
+ * The Meeting-Calendar page renders nothing to a plain client; its inline
+ * script loads the month from the site's own endpoint,
  *
  *   `/inflow/xti/inCal.aspx?PID=<page>&C=0&D=<YYYY-MM-DD>&V=12`
  *
  * which answers a server-rendered month fragment: one modal per sitting with
  * the title, `Date & Time: MM/DD/YYYY h:mmpm - h:mmpm`, and the district's own
- * details sentence ("Governing Board meetings are held at the Duffy Community
- * Center … in the Multipurpose Room", "Committee meetings are held via Zoom",
- * "Committee meeting location TBD"). Ladder rung 7 on a host whose robots.txt
- * names only GPTbot and PetalBot (read 2026-09-23) — no `*` group, so nothing
- * restricts this client. It carries the Governing Board AND its committees.
+ * details sentence ("… meetings are held at <building> … in the Multipurpose
+ * Room", "Committee meetings are held via Zoom", "Committee meeting location
+ * TBD"). It carries the Governing Board AND its committees.
  *
- * `/Actions` lists, per Governing Board sitting, a Board Actions PDF on the
- * same host (`/_theme/files/GovBoard/Docs/actions/<MM-DD-YYYY><R|S>.pdf`) whose
- * own first line is `GOVERNING BOARD AGENDA <KIND> MEETING – Board Actions`:
- * the agenda's numbered items with the action taken on each. For a CONCLUDED
- * Governing Board sitting it is carried as the agenda document.
+ * `/Actions` lists, per Governing Board sitting, a Board Actions PDF (see
+ * `board-actions.ts`), carried as a CONCLUDED sitting's agenda document.
  *
- * ## Place comes from the sitting's own details sentence or not at all
- *
- * `venueMatch:<phrase>` config keys map a phrase the district prints to a
- * reviewed venue spelling; "via Zoom" is kept placeless; a sentence no phrase
- * places ("location TBD", or a room with no reviewed spelling) is never
- * placed and never suppresses the sitting (the venue-gap class, 2026-09-23):
- * it is published with no pin and our own place-not-recorded gap — a details
- * sentence is prose, not a place field this adapter could quote — and counted
- * as `unknownVenue`, exactly as the wired union
- * (lib/sources/diligent/schedule-union.ts) publishes the same calendar.
+ * Place comes from the sitting's own details sentence or not at all:
+ * `venueMatch:<phrase>` config keys map a printed phrase to a reviewed venue
+ * spelling; "via Zoom" is kept placeless; a sentence no phrase places is
+ * published with no pin and our own place-not-recorded gap, counted as
+ * `unknownVenue`.
  */
 
 const SOURCE_NAME = "tusd-govboard";
@@ -183,8 +165,7 @@ export function makeTusdGovboardSource(
           }
           const statement = `${s.title} ${s.details}`;
           // The join link is carried only when the district's own sentence
-          // publishes one for THIS sitting (Jul 15's does); never a page that
-          // merely describes where links are posted.
+          // publishes one for THIS sitting.
           const joinUrl = /https:\/\/[a-z0-9.-]*zoom\.us\/j\/[^\s"<]+/i.exec(s.details)?.[0] ?? null;
           const online = /via zoom/i.test(statement) || isPlacelessLocation(s.details)
             ? { label: "Via Zoom", joinUrl }
@@ -196,8 +177,7 @@ export function makeTusdGovboardSource(
             ? resolveVenue(cfg.venueSourceId ?? SOURCE_NAME, wiring.ocdId, cfg[phrase], cfg.venueTenant ?? null)
             : undefined;
           if (!online && !venue) {
-            // Kept with no pin and our own place-not-recorded gap, counted
-            // (the venue-gap class, 2026-09-23). This used to `continue`.
+            // Kept with no pin and our own place-not-recorded gap, counted.
             drops.unknownVenue += 1;
             keptButPlaceless += 1;
           }

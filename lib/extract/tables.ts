@@ -2,40 +2,17 @@ import { cannotRun, extracted, zeroRows } from "./types.ts";
 import type { ExtractResult } from "./types.ts";
 
 /**
- * LAYER 2 — table extraction for agenda and budget grids (F11, Prompt C item
- * 12).
+ * Layer 2: tables in PDFs, recovered from text item positions (transform
+ * `[4]`/`[5]` are x and y), since PDFs carry no table structure.
  *
- * ## Why a grid is a different problem from text
+ *   1. Group items into rows by y, within a tolerance.
+ *   2. Within a row, sort by x and cut a cell wherever the gap exceeds a
+ *      multiple of the row's own median character width.
+ *   3. A run of at least three consecutive rows with the same cell count is a
+ *      table.
  *
- * `extractTextLayer` joins a page's text items with spaces, which is right for
- * prose and destroys a table: a budget line reading
- * `Police Department | 4,812,000 | 5,100,000` becomes
- * `Police Department 4,812,000 5,100,000`, and the column a number was in —
- * which is the whole meaning of a budget figure — is gone. An agenda grid
- * loses the same way: item number, subject, action, and who moved it collapse
- * into one line.
- *
- * PDFs carry no table structure. What they carry is POSITION: every text item
- * has a transform matrix, and its `[4]` and `[5]` are the x and y where the
- * item sits on the page. A table is recoverable from that, and only from that.
- *
- * ## The method, stated so its limits are visible
- *
- *   1. Group items into ROWS by y, within a tolerance — PDF baselines for one
- *      visual row differ by fractions of a point.
- *   2. Within a row, sort by x and cut a new CELL wherever the horizontal gap
- *      exceeds a threshold derived from the row's own median character width,
- *      never a fixed number of points. A fixed gap works on one document and
- *      on no other.
- *   3. A run of consecutive rows with the SAME cell count is a candidate
- *      table. One row is not a table; two are not either. Three is the floor.
- *
- * **WHAT THIS DOES NOT DO, stated rather than discovered later:** it does not
- * read ruling lines, so a borderless layout that is not aligned in columns
- * will not be found; it does not merge cells that span; and it does not join a
- * table that continues across a page break. Each of those is a real shape and
- * each is a rung this layer does not yet reach. A run that finds nothing says
- * so with these limits named.
+ * Not handled: borderless layouts not aligned in columns, spanning cells, and
+ * tables continuing across a page break.
  */
 
 export interface ExtractedTable {
@@ -76,11 +53,7 @@ export function rowsFromItems(items: PositionedItem[]): PositionedItem[][] {
 
 export function cellsFromRow(row: PositionedItem[]): string[] {
   if (row.length === 0) return [];
-  /*
-   * The threshold comes from the ROW, not from a constant. A 7pt footnote
-   * table and a 14pt agenda grid have different natural word gaps, and a fixed
-   * point value splits one of them wrongly whichever value is chosen.
-   */
+  /* The threshold comes from the row: different font sizes have different natural word gaps. */
   const widths = row
     .filter((i) => i.text.length > 0)
     .map((i) => i.width / Math.max(1, i.text.length))

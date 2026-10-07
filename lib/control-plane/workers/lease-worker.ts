@@ -5,6 +5,7 @@ import type { ModelResponse, ScoutEscalationAdmission } from "../scheduler/scout
 import { FleetSafetyController } from "../fleet-safety.ts";
 import { websiteSizeForObligation, type WebsiteSizeForUrl } from "../scheduler/host-supervision.ts";
 import { autonomousStandingRuntime } from "./standing-runtime.ts";
+import type { MissionBlank } from "./mission-brief.ts";
 import { observeCyclePhases } from "../scheduler/cycle-phases.ts";
 import { dispatchAutonomousTask } from "./coordinator.ts";
 import { browseWithPlaywright } from "../../../scripts/scout-browse.mts";
@@ -19,7 +20,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   if (config.postgres && !url) throw new Error("CONTROL_PLANE_DATABASE_UNCONFIGURED");
   const stores = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })
     : await createFileRepositories(config.fileStoreRoot ?? join(config.root, ".runtime/control-plane/freshness-shadow"));
-  // CH-26: each result carries the repository calls its task made, so the round can show them per task.
+  // Each result carries the repository calls its task made, so the round can show them per task.
   const observer = observeCyclePhases(stores);
   const repos = observer.repos;
   let websiteSize: WebsiteSizeForUrl = () => null;
@@ -29,8 +30,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   // (a process runs one lease at a time). `subject` is only set on the old per-task path.
   let current = "";
   const perTask = process.env.WTP_LEASE_RUNTIME_PER_TASK === "1";
-  // CH-26: each task reads only its own history. On by default since 2026-10-06 (Sean: the whole-table reads are
-  // most of the control plane's Neon transfer); WTP_SCOPED_TASK_READS=0 is the way back to the whole-table path.
+  // Each task reads only its own history by default; WTP_SCOPED_TASK_READS=0 restores the whole-table path.
   const scopedReads = process.env.WTP_SCOPED_TASK_READS !== "0";
   let shared: Awaited<ReturnType<typeof autonomousStandingRuntime>> | undefined;
   const buildRuntime = (subject: string | null) => autonomousStandingRuntime({ root: config.root, repos, environment: process.env,
@@ -44,7 +44,9 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         return response.admit ? { ...response, draw: usd => broker.send("draw", response.reservationId, usd), release: () => broker.send("release", response.reservationId, null) } : response;
       } } : {}),
     ...(config.searchEnabled ? { search: request => broker.call("search", request) } : {}),
-    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject), scopedReads });
+    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject), scopedReads,
+    // The parent holds the mission's owed list; ask it for this government's blanks as each task begins.
+    readMissionBlanks: subject => broker.call<readonly MissionBlank[]>("mission-blanks", subject) });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.
   // The first process to claim wins in the existing repository dispatcher.
@@ -71,7 +73,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         const runtime = perTask ? await buildRuntime(item.subject)
           : (shared ??= await buildRuntime(null));
         observer.finish("runtime");
-        await runtime.beginTask?.(task);
+        await runtime.beginTask?.(task, item);
         const result = await dispatchAutonomousTask(runtime, task);
         broker.send("result", "", { ...result, repositoryCalls: observer.finish("task").repositoryCalls });
         ran = true;

@@ -1,23 +1,13 @@
 import type { MemberVote } from "./types.ts";
 
 /**
- * Party breakdown on every rendered roll call (session item 3, wall
- * clock 2026-08-14 second session — the tester's cheapest, best ask).
+ * Party breakdown on every rendered roll call: pure arithmetic over the
+ * snapshot's member positions joined to the federal roster's `partyLabel`. No
+ * characterization ("party-line", "crossed the aisle").
  *
- * Pure arithmetic over data the product already holds: the snapshot's
- * member positions (all members, keyed `congress:<bioguide>`) joined to
- * the federal roster's `partyLabel`. No characterization — no
- * "party-line vote" labels, no "crossed the aisle". The numbers speak;
- * the reader concludes.
- *
- * **The sum check is the honesty gate.** A breakdown renders only when
- * its per-party totals sum exactly to the chamber's own recorded tally
- * (parsed off the result string). Anything else — an unmatched member,
- * a missing party label, a tally-less result — returns null, and the
- * surface says the breakdown is unavailable rather than showing numbers
- * that don't add up. Guarded in tests/party-breakdown.test.ts, which
- * also states the denominator: how many of the snapshot's votes carry a
- * breakdown.
+ * A breakdown renders only when its per-party totals sum exactly to the
+ * chamber's own recorded tally; otherwise it returns null and the surface says
+ * the breakdown is unavailable.
  */
 
 export interface PartyTally {

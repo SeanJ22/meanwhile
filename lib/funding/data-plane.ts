@@ -217,7 +217,7 @@ function pimaMembers(value: AzPimaFinanceReadModel): readonly CivicRecordMember[
   return members.sort((a, b) => a.key.localeCompare(b.key));
 }
 
-/** Candidate for Pima's public filing index plus public redacted transactions. */
+/** Candidate for a county's public filing index plus public redacted transactions. */
 export function pimaCampaignFinanceCandidate(input: {
   readonly held: AzPimaHeld;
   readonly transactions: AzPimaTransactions;

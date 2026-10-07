@@ -1,4 +1,4 @@
-/** DP-14: a red flag pulls the fact, reopens its work, lands on the fix list, and keeps a lesson that carries the platform. */
+/** A red flag pulls the fact, reopens its work, lands on the fix list, and keeps a lesson that carries the platform. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

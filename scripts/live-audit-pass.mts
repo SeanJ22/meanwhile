@@ -2,7 +2,7 @@
 /**
  * @freshness-reads-here
  *
- * **ONE LIVE-AUDIT PASS OVER WHAT READERS ARE SHOWN.** (DP-13, DP-14, DP-16.)
+ * **ONE LIVE-AUDIT PASS OVER WHAT READERS ARE SHOWN.**
  *
  * Reads each curated Reader family's promoted version, samples a few facts per
  * area (more where readers ask, where the refresh is overdue, or where one

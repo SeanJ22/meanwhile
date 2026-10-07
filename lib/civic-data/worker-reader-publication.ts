@@ -46,15 +46,12 @@ import { linkingPageFrom, section3Page } from "../control-plane/promotion/sectio
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const hostOf = (url: string) => { try { return new URL(url).hostname.toLowerCase().replace(/^www\./, ""); } catch { return null; } };
-/** The hosts of the verified sites held for a person: an officeholder's campaign site, or a candidacy's verified campaign link. */
 function ownSiteHostsFromHeld(personId: string): readonly string[] {
   const urls = [campaignSiteFor(personId)?.url, ...currentDerivedCampaignSiteRecords().filter(r => r.id === personId || r.candidacyId === personId).map(r => r.campaign.url)];
   return urls.flatMap(url => url ? [hostOf(url)].filter((h): h is string => h !== null) : []);
 }
 const COMMENT_FIELDS = ["commentPeriod", "commentPeriodDetail", "signup", "writtenComment", "attend", "timeLimit"] as const;
 
-/** Current independently checked fields advance; omitted details keep their
- * actual prior GOOD authority and date instead of blocking the whole rule. */
 export function inheritVerifiedCommentDetails(input: ManualProjectionPackage, prior: ManualProjectionPrior | null): ManualProjectionPackage {
   requirePublication(input.contractId === "comment-access", "COMMENT_CONTRACT_MISMATCH");
   const current = (input.payload as CuratedReaderProjection).records;
@@ -89,19 +86,16 @@ export function inheritVerifiedCommentDetails(input: ManualProjectionPackage, pr
     sources: sources.filter((source, index) => sources.findIndex(other => canonicalJson(other) === canonicalJson(source)) === index) } };
 }
 
-/** What the stances door needs beyond the page: the ten topic ids in force and the hosts of a person's own sites. */
 export interface StancesInput {
   readonly stanceTopicIds?: readonly string[];
   readonly ownSiteHosts?: (personId: string) => readonly string[];
 }
 
-/** Field-specific conversion to existing readers; no arbitrary model payloads.
- * Null fields mean unacquired, never an assertion that a service is absent. */
+/** Null fields mean unacquired, never an assertion that a service is absent. */
 export function workerReaderPackage(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }): ManualProjectionPackage {
   return workerReaderPackageWithPulls(input).package;
 }
 
-/** The package plus the published member ids an auditor's pull takes out of the next version (DP-15). */
 export function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
   { readonly package: ManualProjectionPackage; readonly pulledMemberIds: ReadonlySet<string> } {
   if (input.plan.publication?.contractId === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };
@@ -246,7 +240,6 @@ export function workerReaderPackageWithPulls(input: StancesInput & Parameters<ty
 export async function publishWorkerReaderResults(input: {
   repos: ControlPlaneRepositories; store: RoutineDataStore; contractId: WorkerReaderContract; workItemIds: readonly string[]; now: string;
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
-  /** Reads a held page straight from the vault by its artifact record; enables reuse of any job's saved evidence. */
   readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }) {
   if (input.contractId === "ballot-contests") return publishWorkerBallotContestsResults(input);
@@ -254,17 +247,13 @@ export async function publishWorkerReaderResults(input: {
   const { readHeld, readCapture } = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const results = await readCompletedWorkerResults(input.repos);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
-  // Owed election work with no extraction yet: the government's saved election pages are read in code.
   if (input.contractId === "ballot-navigation") {
     const held = input.workItemIds.filter(id => !latestParserResult(results, id));
     if (held.length) report.push(...await publishHeldElectionOffices({ repos: input.repos, store: input.store, workItemIds: held, now: input.now,
       readHeld }));
   }
-  // The Validator reads what earlier passes learned before it checks anything, and writes back once at the end.
   const manual = await readValidatorManual(input.repos);
   const learned: ValidatorObservation[] = [];
-  // The stance topics in force come from the control plane's own settings row (the setting the reader copy
-  // is published from), read once per pass; the reader edge store stays out of the publication path.
   let stanceTopicIds: readonly string[] | null = null;
   const readStanceTopicIds = async (): Promise<readonly string[]> => {
     if (stanceTopicIds) return stanceTopicIds;
@@ -276,10 +265,8 @@ export async function publishWorkerReaderResults(input: {
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
     const plan: AutonomousWorkPlan | undefined = item.autonomousPlan;
-    // The Validator's §3 check runs here on the latest extraction; no auditor or Send is needed.
     const parser = latestParserResult(results, id);
     if (!parser || plan?.publication?.contractId !== input.contractId) continue;
-    // A BROKE audit after this publication is re-checked once; otherwise a published or worker-owed result waits for a newer extraction.
     const pull = auditPull(results, parser);
     if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.recovery !== "PUBLISHER" && !(pull && pull.at > item.publicationOutcome.at)) {
       report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;

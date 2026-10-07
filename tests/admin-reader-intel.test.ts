@@ -1,6 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
 import { assertAggregateOnly, auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
@@ -32,46 +30,19 @@ import {
 } from "../lib/control-plane/reader-intel.ts";
 import { SEARCH_LOG_EVENT_TYPES } from "../lib/db/search-log.ts";
 import { organicDenominatorSentence } from "../lib/signal/search-log-reads.ts";
-import { stripComments } from "../lib/ops/duplicate-implementations.ts";
+import { codeOf } from "./read-code.ts";
 
 /**
- * **ADM-C12 — READER INTELLIGENCE, PROVEN RATHER THAN DESCRIBED.**
- * (Admin Pass C, from the 9.6.26 owner feedback.)
- *
- * The brief's acceptance is four claims, and each of them is a claim an
- * implementation can make in a comment while being false in the query:
- *
- * ```
- *   ORGANIC default excludes synthetic traffic
- *   sensitive identity is not joined
- *   denominators are exact
- *   empty data renders honestly
- * ```
- *
- * So the tests below do not read the module's intentions. They hand
- * `readReaderIntel` a recorded store, capture the SQL it actually issued, and
- * assert on the text of the statements and on the projection that came out —
- * a module that carried the filter in a comment and dropped it from the query
- * would fail here, which is the whole point.
- *
- * `.tsx` cannot be imported under `node --test`, so the page's own guarantees
- * are asserted against its source as text, the established admin-test idiom.
+ * Reader intelligence: the ORGANIC default excludes synthetic traffic, sensitive identity is not
+ * joined, denominators are exact, and empty data renders honestly. The tests hand
+ * `readReaderIntel` a recorded store and assert on the SQL it actually issued and on the projection.
  */
 
-const ROOT = process.cwd();
 const MODULE_PATH = "lib/control-plane/reader-intel.ts";
-const PAGE_PATH = "app/(admin)/admin/reader/page.tsx";
-const PANELS_PATH = "app/(admin)/admin/reader/panels.tsx";
-/** The whole surface: the shell and the cards it composes. */
-const SURFACE = [PAGE_PATH, PANELS_PATH];
-
-function source(rel: string): string {
-  return readFileSync(join(ROOT, rel), "utf8").replace(/\r\n/g, "\n");
-}
 
 /** The file's code with its comments blanked — an explanation of a rule is not a breach of it. */
 function code(rel: string): string {
-  return stripComments(source(rel));
+  return codeOf(rel);
 }
 
 const NOW = "2026-09-06T18:00:00.000Z";
@@ -85,14 +56,7 @@ interface Asked {
   readonly values: readonly unknown[];
 }
 
-/**
- * A store that answers from a plan and remembers every statement it was asked.
- *
- * The text is reassembled with `$n` where a bound value went, so an assertion
- * can tell a literal in the SQL apart from a parameter — which is exactly the
- * difference between "this query hard-codes ORGANIC" and "this query filters
- * by whatever class it was handed".
- */
+/** A store that answers from a plan and records every statement, with `$n` where a bound value went. */
 function recordedStore(answer: (text: string, values: readonly unknown[]) => Record<string, unknown>[] | Error): {
   sql: ReaderStoreQuery;
   asked: Asked[];
@@ -198,10 +162,7 @@ test("ADM-C12: every aggregate carries a run-class filter, and only the census d
   const unfiltered: string[] = [];
   for (const asked of store.asked) {
     const isCensus = asked.text.includes("FILTER (WHERE run_class = 'ORGANIC')");
-    // The Ask store's one read is a row count over the window in every class,
-    // whose job is to say whether the switched-off capture wrote anything at
-    // all. It emits no figure about readers, so there is nothing here for a
-    // class filter to be protecting.
+    // The Ask store's one read is an all-class row count that emits no figure about readers.
     const isAskExistence = asked.text.includes("FROM ask_interactions");
     if (isCensus || isAskExistence) continue;
     if (!/run_class = \$\d+/.test(asked.text)) unfiltered.push(asked.text.trim().slice(0, 120));
@@ -270,14 +231,7 @@ test("ADM-C12: the census is checked for reconciliation rather than assumed to s
  * 2. SENSITIVE IDENTITY IS NOT JOINED
  * ------------------------------------------------------------------ */
 
-/**
- * The columns and tables that would make this page a person-tracker.
- *
- * `feedback` and `feedback_contact` are here because §5.3 forbids joining a
- * feedback contact reference to search behaviour, Ask activity, reaction
- * history or ZIP usage BY NAME — and the cheapest way never to make that join
- * is never to hold both halves in one module.
- */
+/** Columns and tables that could key back to one reader; feedback contact must never be joined to behaviour. */
 const NEVER_READ = [
   "feedback_contact",
   "contact_ref",
@@ -297,9 +251,7 @@ test("ADM-C12: the read model never names a column that could key back to one re
   assert.ok(src.length > 4000, `expected the module, read ${src.length} characters`);
   const found = NEVER_READ.filter((name) => src.includes(name));
   assert.deepEqual(found, [], `the reader read model names: ${found.join(", ")}`);
-  // run_id is the one that looks harmless and is not: the search log holds a
-  // raw label while every other store holds a digest in its own namespace, so
-  // a rollup across them would be the session tracking this product refuses.
+  // A run_id rollup across stores would be session tracking.
   assert.ok(!/\brun_id\b/.test(src), "the read model selects run_id — there is no session in this product");
 });
 
@@ -325,8 +277,6 @@ test("ADM-C12: a missing handle names the variable and never a value", () => {
   assert.equal(refused.ok, false);
   if (refused.ok) return;
   assert.match(refused.detail, /DATABASE_URL is not set/);
-  // A failure that reads as an emptiness is the defect this wording exists to
-  // prevent: nothing has been counted and found missing — nothing was counted.
   assert.match(refused.detail, /nothing has been counted/i);
   assert.ok(!refused.detail.includes("postgres://"), "a refusal must never carry a connection string");
   assert.ok(!refused.detail.includes("@"), "a refusal must never carry a connection string");
@@ -350,9 +300,7 @@ test("ADM-C12: every number the page prints carries a denominator and a contract
     assert.equal(typeof number.denominator, "number", `${number.label} has no denominator`);
     assert.ok((number.contract ?? "").trim().length > 20, `${number.label} has no interpretation contract`);
   }
-  // A numerator larger than its denominator means the two came out of
-  // different populations, and the resulting rate would be a confident
-  // sentence about nothing.
+  // A numerator larger than its denominator means two different populations.
   assert.deepEqual(impossibleNumbersIn(numbers), []);
 });
 
@@ -387,8 +335,7 @@ test("ADM-C12: a rate states its exact denominator, and a zero denominator is a 
   assert.equal(none.gap.whose, "OURS");
   assert.match(none.gap.says, /nothing to be a share of/);
 
-  // And a numerator over its denominator refuses rather than clamping: a clamp
-  // would hide two populations being divided by each other.
+  // A numerator over its denominator refuses rather than clamping.
   const wrong = share(43, 42, "x is y", "the search log over this window");
   assert.equal(wrong.held, false);
   if (wrong.held) return;
@@ -403,8 +350,6 @@ test("ADM-C12: stated N equals the rows actually rendered, and a mismatch is cau
   const verdict = checkStatedEqualsRendered(claims);
   assert.equal(verdict.ok, true, verdict.detail);
 
-  // PLANT: a headline of seven over five rows is the page telling the owner
-  // that two things exist which he cannot see.
   assert.equal(checkStatedEqualsRendered([{ label: "Top ZIPs", stated: 7, rendered: 5 }]).ok, false);
 });
 
@@ -412,9 +357,7 @@ test("ADM-C12: PLANT — a list rendered short of what the database counted is c
   const store = recordedStore(fullPlan);
   const intel = await readReaderIntel(store.sql, WINDOW, "ORGANIC");
   if (intel.activity.kind !== "HELD") throw new Error("expected a held reading");
-  // Postgres counted two distinct districts; the projection draws one. The two
-  // halves of the claim come from different places, which is the only reason
-  // this can be caught at all.
+  // Postgres counted two distinct districts; the projection draws one.
   const list = intel.activity.value.topDivisions;
   assert.equal(list.distinct, 2);
   const cut = {
@@ -524,10 +467,7 @@ test("ADM-C12: a store that cannot be reached is not a store that holds nothing"
 });
 
 test("ADM-C12: zero in the selected class is HELD with a zero, not an empty store", async () => {
-  // The reaction, speak and demand stores default `run_class` to UNKNOWN, so an
-  // ORGANIC view of older rows is legitimately near-empty. Reporting that as
-  // NOT_RECORDED would tell the owner the store is empty when 550 rows are in
-  // it, which is a false claim about his own readers.
+  // Stores default `run_class` to UNKNOWN, so an ORGANIC view can be near-empty while the store holds rows.
   const plan = (text: string): Record<string, unknown>[] => {
     if (text.includes("FILTER (WHERE run_class = 'ORGANIC')")) {
       return [{ organic: 0, synthetic: 0, unknown: 550, author: 0, total: 550 }];
@@ -594,7 +534,3 @@ test("ADM-C12: the detail-key map and the SQL that reads it cannot drift apart",
     assert.ok(word.trim() === word && word.length > 0, "a dictionary key is malformed");
   }
 });
-
-/* ------------------------------------------------------------------ *
- * 6. THE PAGE'S OWN GUARANTEES, AS SOURCE TEXT
- * ------------------------------------------------------------------ */

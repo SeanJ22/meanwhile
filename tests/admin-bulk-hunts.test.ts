@@ -11,12 +11,8 @@ import { expansionScopesOf } from "@/lib/control-plane/expansion/scopes.ts";
 import type { GatewayDeps } from "@/lib/control-plane/gateway/registry.ts";
 
 /**
- * **SEND MANY HUNTS IN ONE ACTION.** (S11.)
- *
- * The parse is proven against the shape of Sean's Cook toss-up file (quoted
- * cells, a removed-in-2026 evidence column, inactive rows, a blank ZIP, a lost
- * leading zero). The budgets are proven never to add up to more than a total.
- * The action is proven to write every hunt in ONE config write.
+ * Many hunts in one action: the CSV parse (quoted cells, inactive rows, a blank ZIP, a lost leading
+ * zero), budgets that never add up past the total, and one config write for every hunt.
  */
 
 const COOK = [

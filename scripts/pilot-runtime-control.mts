@@ -9,7 +9,7 @@ type Query = (text: string, params: unknown[]) => Promise<Record<string, unknown
 
 export const CONTROL_WAKE_POLL_MS = 1_000;
 
-/** S11's optional hint carries no authority: controls still come from Postgres. */
+/** The optional hint carries no authority: controls still come from Postgres. */
 export function runnerWakeReaderFromEnv(env: Readonly<Record<string, string | undefined>> = process.env): (() => Promise<string | null>) | null {
   if (env.WTP_VAULT_PROVIDER !== "netlify" || !env.WTP_BLOBS_SITE_ID || !env.WTP_BLOBS_TOKEN) return null;
   const store = getStore({ name: env.WTP_VAULT_STORE ?? "meanwhile-evidence",

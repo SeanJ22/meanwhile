@@ -4,47 +4,12 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-/**
- * F01-continued session 2, item 0A (2026-08-19) — a source file that ripgrep
- * cannot see.
- *
- * A `.ts`/`.tsx` file containing a **literal NUL character** — a `\u0000`
- * separator written as the raw byte rather than the escape — is classified as
- * BINARY by ripgrep and by `git grep` without `-a`. The file is then SKIPPED,
- * silently. Every class sweep this repo has ever run used that instrument, so
- * every one of them reported "nothing else found" about a corpus it had not
- * finished reading.
- *
- * That is the exact failure this codebase's method cannot tolerate: a sweep
- * that could not look and a sweep that found nothing produce the same output,
- * and only one of them is a finding. Same family as the
- * operation-that-can-do-nothing rule in CLAUDE.md.
- *
- * Three files carried it. `components/ballot/pick-control.tsx` (2 bytes) was
- * found and fixed by session 1. `lib/meetings/list-attribution.ts` (1) and
- * `lib/signal/aggregate.ts` (3) were found by session 2's repo-wide byte scan
- * — which is to say session 1's own sweep of the class missed two thirds of
- * it, because it was run with the skipping tool.
- *
- * The fix in every case is the ESCAPE, `\u0000`, which produces a
- * byte-identical string at runtime and a file every tool can read.
- */
+// A literal NUL makes ripgrep and `git grep` treat a source file as binary and skip it silently.
+// Write `\u0000` instead.
 
 const ROOT = join(import.meta.dirname, "..");
 
-/**
- * Every tracked or newly-written file whose bytes are meant to be TEXT.
- *
- * `--others --exclude-standard` alongside `--cached` for the same reason
- * `tests/mojibake.test.ts` does it: an uncommitted file is exactly when this
- * check earns its keep, and plain `git ls-files` cannot see one.
- *
- * The extension filter is what makes this a check about SOURCE rather than
- * about binaries. 942 of the repo's tracked files contain NUL bytes and
- * every one of them is a PNG, a JPEG, an `.ico` or an `.xlsx` — files whose
- * whole point is to be bytes. Flagging those would be a check nobody could
- * leave switched on.
- */
+// Untracked files are included; the extension filter excludes binaries, which legitimately hold NUL.
 function textFiles(): string[] {
   return execFileSync(
     "git",
@@ -64,9 +29,7 @@ function textFiles(): string[] {
 test("0A: no tracked source file contains a literal NUL byte", () => {
   const files = textFiles();
 
-  // The denominator, stated. A scan whose corpus quietly emptied would pass
-  // forever, and this test exists precisely because a silent skip is the
-  // defect.
+  // An emptied corpus would pass forever.
   assert.ok(
     files.length > 700,
     `only ${files.length} source-class files matched — the scan lost its corpus`,
@@ -100,11 +63,7 @@ test("0A: no tracked source file contains a literal NUL byte", () => {
   );
 });
 
-/**
- * The detector must actually detect. Built from a codepoint, never typed as a
- * literal — a test that spelled the defect out would be a permanent offender
- * in the corpus the scan above reads. Same discipline as the mojibake test.
- */
+// Built from a codepoint so this file never contains the byte it scans for.
 test("0A: the byte check catches the shape it is guarding against", () => {
   const NUL = String.fromCharCode(0);
   const planted = Buffer.from(`const key = \`\${a}${NUL}\${b}\`;`, "utf8");
@@ -117,7 +76,6 @@ test("0A: the byte check catches the shape it is guarding against", () => {
     "the escape form must produce no NUL byte in the file",
   );
 
-  // …and the escape must still produce the SAME string at runtime, which is
-  // why this fix is behaviour-preserving rather than a change of separator.
+  // The escape produces the same string at runtime.
   assert.equal("\u0000", NUL);
 });

@@ -1,101 +1,28 @@
 /**
- * `pnpm integrity:observe` — the automatic post-deploy reading. NH273, part 2.
+ * `pnpm integrity:observe` — the automatic post-deploy reading.
  *
- * ## What was missing, in one sentence
+ * Triggered by the push to `main` that causes the deploy (Netlify creates no
+ * GitHub Deployment object, so `deployment_status` never fires here). It polls
+ * `GET /api/build`, which writes nothing, until production serves the expected
+ * commit, then spawns `scripts/production-integrity.mts --sha=<served> --write`,
+ * which runs the existing schema shipping gate. It never rolls anything back and
+ * creates no Git commit.
  *
- * `scripts/production-integrity.mts` takes a reading and `scripts/release-freeze-gate.mts`
- * enforces it, and NOTHING RAN THE FIRST ONE. The header of the gate says so in
- * as many words: "It is dispatched by hand against the commit that actually
- * shipped. Nothing runs it automatically yet." A mechanism whose trigger is a
- * person remembering is a mechanism that reports on the days somebody
- * remembered, and the 2026-08-28 drift is what the other days look like.
+ * A timeout while production serves another commit is PRODUCTION_BEHIND (a fact
+ * about the deploy pipeline), never DEGRADED (a fact about production's schema).
+ * If production cannot be asked at all, the outcome is COULD_NOT_TELL.
  *
- * ## Why this is not a `deployment_status` workflow, measured rather than assumed
- *
- * `gh api repos/:owner/:repo/deployments` returns **0**. Netlify creates no
- * GitHub Deployment object for this repository, so no `deployment_status` event
- * has ever fired here and a workflow listening for one would never run — a gate
- * that never executes reports nothing and reads as covered, which is worse than
- * no gate at all. The trigger is therefore the push to `main` that CAUSES the
- * deploy, and the deploy's arrival is OBSERVED rather than subscribed to.
- *
- * ## How the deployed commit is established, with no credential
- *
- * `GET /api/build` returns the commit the running deploy was built from:
- * `next.config.ts` inlines Netlify's build-time `COMMIT_REF` into
- * `WTP_BUILD_COMMIT` and `app/api/build/route.ts` hands it back. **That route
- * writes nothing.** It is a `Response.json` over five build-time constants —
- * no database handle, no `search_log` row, no store of any kind — so polling it
- * cannot put a probe row into the store this product sells. The synthetic-run
- * header travels with every request regardless, because every automated request
- * to production carries it and an exception is how the rule erodes.
- *
- * `NETLIFY_AUTH_TOKEN` is NOT a repository secret here (it lives only in the
- * author's `.env.local`), so the Netlify deploys API is unavailable to CI. This
- * route is the whole reason the observer can exist without one.
- *
- * ## THE BOUND, STATED, AND WHAT A TIMEOUT MEANS
- *
- * At most `POLL_BOUND.maxAttempts` (30) probes, `POLL_BOUND.intervalSeconds`
- * (20) apart, and never longer than `POLL_BOUND.maxTotalWaitSeconds` (600 — ten
- * minutes) in total, whichever comes first. A Netlify build of this repository
- * takes three to five minutes; ten is roughly double the observed worst case and
- * a twentieth of the platform's job ceiling.
- *
- * **A TIMEOUT IS NEVER A PASS AND NEVER A FAILED DEPLOY VERDICT.** If the bound
- * elapses while production still serves some other commit, the outcome is
- * `PRODUCTION_BEHIND` — a statement about our deploy pipeline — and it is
- * deliberately NOT `DEGRADED`, which is a statement about production's schema.
- * Collapsing the two would write a false failure class into a durable record
- * that then freezes releases for a reason that never happened. This matters
- * today rather than hypothetically: NH281 is open, production has failed to
- * deploy application-bearing commits with `exit code: 2`, and the build log is
- * behind the author's Netlify login. The observer must survive that condition
- * telling the truth about it.
- *
- * If production cannot be ASKED at all — a refusal, a non-200, an unparseable
- * body, an `unknown` commit — the outcome is `COULD_NOT_TELL` (RULING 24).
- *
- * ## It runs the EXISTING gate. There is no second implementation.
- *
- * Once the served commit is confirmed, this spawns
- * `scripts/production-integrity.mts --sha=<served> --write`, which itself spawns
- * `scripts/db-shipping-gate.mts` and then appends that exact outcome to the
- * existing control-plane software-release log.
- * `tests/migration-shipping-invariant.test.ts` holds the set of files permitted
- * to query `drizzle.__drizzle_migrations` closed to FOUR, and a fifth would
- * break it — correctly, because two implementations of "does production hold
- * the migrations this commit ships" are two verdicts free to disagree.
- *
- * ## IT NEVER ROLLS ANYTHING BACK, and will not be extended to.
- *
- * A red reading is recorded as integrity DEGRADED and the job goes red, as a
- * signal for a person to act on. Nothing is rolled back: production's database
- * may already have advanced, and rolling code back underneath an advanced schema
- * manufactures a second incompatibility on top of the first. There is no rollback
- * call anywhere in this file and `tests/production-integrity.test.ts` sweeps for
- * one.
- *
- * ## It cannot start a deploy or software-CI feedback loop
- *
- * The observer creates no Git commit. Its durable output is an append in the
- * production control plane, so it cannot trigger Netlify or Build Check at all.
- *
- *   --expect=<sha>       the commit that should become the served one.
- *                        Defaults to HEAD.
+ *   --expect=<sha>       the commit that should become the served one. Defaults to HEAD.
  *   --base-url=<url>     which origin to ask. Defaults to production.
- *   --write              persist the reading. Without it nothing is recorded,
- *                        so the observer is safe to explore.
- *   --attempts=<n>       tighten the poll below the bound. It may never loosen
- *                        it — POLL_BOUND is the ceiling, checked, not a default.
+ *   --write              persist the reading. Without it nothing is recorded.
+ *   --attempts=<n>       tighten the poll below the bound; it may never loosen it.
  *
- * Exit codes — distinct, because the four outcomes are four different facts:
+ * Exit codes:
  *   0  the served commit is the expected one and integrity HELD (or the commit
  *      is not production-changing, so no reading is owed)
  *   1  integrity REFUSED — production and the committed migrations disagree
  *   2  COULD NOT TELL — production could not be asked, or the gate could not
- *   3  PRODUCTION_BEHIND — the bound elapsed and production serves something
- *      else. A fact about the deploy, never about the schema.
+ *   3  PRODUCTION_BEHIND — the bound elapsed and production serves something else
  */
 
 import { spawnSync } from "node:child_process";
@@ -104,13 +31,6 @@ import { fileURLToPath } from "node:url";
 
 import { SYNTHETIC_RUN_HEADER } from "../lib/db/run-marker.ts";
 import { classifyDeploy } from "../lib/ops/deploy-paths.ts";
-// RULING 103 — ONE implementation of "do these two strings name the same
-// commit?". This file briefly carried a byte-identical private copy called
-// `same`, and `pnpm dupes` caught it. The duplicate was not harmless: the freeze
-// gate and the observer must agree about what "production serves the expected
-// commit" MEANS, and two copies are two things that can drift into disagreeing
-// about a seven-character prefix — which is precisely the comparison the whole
-// freshness rule turns on.
 import { sameCommit } from "../lib/ops/production-integrity.ts";
 import { git } from "./production-integrity.mts";
 import { isDocumentaryAdvance, observationScope } from "./deploy-observation-scope.mjs";
@@ -122,12 +42,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 /** The origin this repository deploys to. `scripts/deploy-live.mjs` names the same host. */
 export const PRODUCTION_BASE_URL = PUBLIC_SITE_ORIGIN;
 
-/**
- * The hard bound. A CEILING, not a default: `--attempts` may tighten it and
- * nothing may loosen it, because a bound that the caller can raise is not a
- * bound. Ten minutes is roughly double this repository's observed worst-case
- * Netlify build and a twentieth of the platform's job ceiling.
- */
+/** The hard bound: a ceiling `--attempts` may tighten and nothing may loosen. */
 export const POLL_BOUND = {
   maxAttempts: 30,
   intervalSeconds: 20,
@@ -143,12 +58,7 @@ export interface ServedCommit {
   readonly httpStatus: number | null;
 }
 
-/**
- * The four things the observation can find. Each is a different fact and none
- * of them is "the deploy failed" — that verdict needs the build log, which is
- * behind a login this process does not have, and asserting it from a timeout
- * would be inventing a cause.
- */
+/** The four things the observation can find. None of them is "the deploy failed", which needs the build log. */
 export const OBSERVER_OUTCOMES = [
   "SERVING_EXPECTED",
   "PRODUCTION_BEHIND",
@@ -165,16 +75,7 @@ export interface PollResult {
   readonly detail: string;
 }
 
-/**
- * Ask one origin which commit it serves.
- *
- * ONE IMPLEMENTATION, EXPORTED, because `scripts/release-freeze-gate.mts` asks
- * exactly the same question for rule 4's freshness clause and RULING 103
- * refuses the second copy. Two readers of `/api/build` would be two places for
- * the `"unknown"` handling to drift, and the whole mechanism turns on the
- * difference between "production serves another commit" and "production did not
- * answer".
- */
+/** Ask one origin which commit it serves. `scripts/release-freeze-gate.mts` imports this same reader. */
 export async function fetchServedCommit(
   baseUrl: string,
   options: {
@@ -203,19 +104,8 @@ export async function fetchServedCommit(
     }
     const body = (await res.json()) as { commit?: unknown };
     const commit = typeof body.commit === "string" ? body.commit : null;
-    /*
-     * `"unknown"` is what the route returns HONESTLY when the build carried no
-     * COMMIT_REF. It is an absence, and reading it as a sha would make every
-     * comparison below compare against a word.
-     */
-    /*
-     * SHAPE-CHECKED, and that is a security property rather than tidiness.
-     * This value arrives over the network and is later passed as a command
-     * argument to the reading. Anything that is not a git object id is refused
-     * as "no commit" rather than forwarded — the same failure the honest
-     * `"unknown"` produces, so there is one path for "production named no
-     * commit" and no path at all for "production named something else".
-     */
+    // `"unknown"` is the route's honest answer when the build carried no COMMIT_REF.
+    // Shape-checked because the value is later passed as a command argument; anything else is "no commit".
     if (commit === null || !/^[0-9a-f]{7,40}$/.test(commit)) {
       return {
         sha: null,
@@ -232,13 +122,7 @@ export async function fetchServedCommit(
 }
 
 
-/**
- * Poll until production serves the expected commit, or until the bound.
- *
- * `probe` and `sleep` are handed in, which is what makes every branch here
- * testable without a network or a wall clock — including the timeout, which is
- * the branch that will actually fire on this repository today.
- */
+/** Poll until production serves the expected commit, or until the bound. `probe` and `sleep` are injected for tests. */
 export async function pollUntilServed(input: {
   expectedSha: string;
   probe: (attempt: number) => Promise<ServedCommit>;
@@ -249,7 +133,6 @@ export async function pollUntilServed(input: {
   /** Production-only, bounded by the previously proved documentary range. */
   documentaryRange?: { root: string; originallyServedSha: string; candidateSha: string };
 }): Promise<PollResult> {
-  /* The bound is a CEILING. A caller asking for more gets the ceiling. */
   const maxAttempts = Math.max(1, Math.min(input.attempts ?? POLL_BOUND.maxAttempts, POLL_BOUND.maxAttempts));
   const interval = Math.min(input.intervalSeconds ?? POLL_BOUND.intervalSeconds, POLL_BOUND.intervalSeconds);
   const maxWait = Math.min(
@@ -283,15 +166,8 @@ export async function pollUntilServed(input: {
     waited += interval;
   }
 
-  /*
-   * TWO DIFFERENT ENDINGS, AND THEY MAY NEVER BE PRINTED ALIKE.
-   *
-   * Production ANSWERED, with another commit  -> PRODUCTION_BEHIND. A fact
-   * about our deploy pipeline, already tracked as NH281, and never a claim
-   * about production's schema.
-   *
-   * Production DID NOT ANSWER                 -> COULD_NOT_TELL. RULING 24.
-   */
+  // Production answered with another commit -> PRODUCTION_BEHIND (a deploy fact, never a schema claim).
+  // Production did not answer -> COULD_NOT_TELL.
   if (last.sha === null) {
     return {
       outcome: "COULD_NOT_TELL",
@@ -317,24 +193,13 @@ export async function pollUntilServed(input: {
 }
 
 /**
- * Is this commit one that could change what production serves?
- *
- * `classifyDeploy` is the authority — the same predicate `scripts/netlify-ignore.mjs`
- * gives Netlify — so the observer and the deploy filter cannot disagree about
- * what a release is. A docs-only close-out is not a release and is owed no
- * post-deploy reading; waiting ten minutes for a deploy Netlify was correctly
- * told to cancel would time out on every quiet day, and an alarm that is wrong
- * on every quiet day is an alarm nobody reads (RULING 115).
+ * Is this commit one that could change what production serves? `classifyDeploy`
+ * is the same predicate `scripts/netlify-ignore.mjs` gives Netlify.
  */
 export function isRelease(sha: string): { release: boolean; reason: string } {
   const files = git("show", "--name-only", "--format=", sha);
   if (files === null) {
-    /*
-     * The changed-path list could not be read — a shallow clone with no parent,
-     * or an unknown object. `classifyDeploy(null)` answers `cannot-tell`, which
-     * BUILDS, so the cautious answer is to observe rather than to skip. A skip
-     * we could not justify would be an unobserved deploy.
-     */
+    // The changed-path list could not be read; `classifyDeploy(null)` builds, so observe rather than skip.
     const d = classifyDeploy(null);
     return { release: d.verdict !== "cancel", reason: `${d.reason} (the changed-path list could not be read)` };
   }
@@ -342,7 +207,7 @@ export function isRelease(sha: string): { release: boolean; reason: string } {
   return { release: d.verdict !== "cancel", reason: d.reason };
 }
 
-/** ------------------------------------------------------------------ main */
+/* ------------------------------------------------------------------ main */
 
 function arg(name: string): string | undefined {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
@@ -373,11 +238,9 @@ async function main(): Promise<void> {
 
   const scope = await observationScope(ROOT, expected, {
     observe: () => fetchServedCommit(baseUrl),
-    // Load the production-only reader when a documentary range needs it.
-    // Staging imports the synchronous observer helpers without this adapter.
+    // Load the production-only reader only when a documentary range needs it.
     readAuthority: async () => (await import("./production-integrity-authority.mts")).readIntegrityAuthority(),
-    // A manual observer invocation is an explicit request for a new reading.
-    // Workflow dispatch keeps that behavior even for documentary commits.
+    // A manual invocation is an explicit request for a new reading, even for documentary commits.
     force: process.env.GITHUB_EVENT_NAME !== "push",
   });
   console.log(`  observation scope: ${scope.reason}`);
@@ -426,25 +289,11 @@ async function main(): Promise<void> {
     return;
   }
 
-  /*
-   * The reading is taken against the SERVED sha rather than against `--expect`.
-   * It matches the scoped observation target by construction. A documentary
-   * candidate can scope to the already-served software when the complete Git
-   * range proves identical software/schema inputs. The receipt still names
-   * what was measured, never a documentary commit that was not deployed.
-   */
+  // The reading is taken against the SERVED sha, which the receipt names.
   const sha = result.servedSha as string;
   console.log("");
   console.log(`Taking the post-deploy reading against ${sha} through the EXISTING gate.`);
-  /*
-   * SPAWNED THROUGH `node` AND tsx's CLI, WITH NO SHELL.
-   *
-   * `shell: true` would concatenate rather than escape its arguments, and one
-   * of those arguments is a value that arrived over the network. It is
-   * shape-checked to a git object id above, so both halves of the defence are
-   * present rather than one — and neither is load-bearing alone.
-   * `scripts/governance-check.mts` resolves tsx the same way.
-   */
+  // Spawned through node and tsx's CLI with no shell: one argument arrived over the network.
   const run = spawnSync(
     process.execPath,
     [
@@ -462,22 +311,7 @@ async function main(): Promise<void> {
   process.exitCode = exit === 0 || exit === 1 || exit === 2 ? exit : 2;
 }
 
-/*
- * `process.exitCode`, NEVER `process.exit()` — MEASURED, not stylistic.
- *
- * This script makes HTTP requests, and calling `process.exit()` while undici's
- * socket is still open aborts the process on Windows with
- * `Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), src\win\async.c:94`.
- * The abort DESTROYS THE EXIT CODE: measured on 2026-08-29 against the sibling
- * freeze gate, a frozen run and a permitted run both exited 127. Four distinct
- * outcomes that all report 127 are one outcome, and the whole point of the
- * codes here is that a timeout and a refusal are different facts.
- *
- * NOTHING ABOVE RUNS ON IMPORT. `tests/post-deploy-observer.test.ts` imports
- * the exported halves to drive the timeout branch with no network and no clock;
- * an import that started a ten-minute poll would hang the suite, and a suite
- * that hangs is discovered as a platform timeout with no step named.
- */
+/* Uses `process.exitCode`, never `process.exit()`: exiting with undici's socket open aborts on Windows and destroys the exit code. Nothing above runs on import. */
 if (process.argv[1]?.replace(/\\/g, "/").endsWith("scripts/post-deploy-observer.mts")) {
   await main();
 }

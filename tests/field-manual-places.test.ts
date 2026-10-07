@@ -54,7 +54,6 @@ test("a brief for a place marks what works there, what is untried there, and lea
   assert.doesNotMatch(here.lines.find((l) => l.includes("a plain note"))!, /\[/);
   assert.equal(here.leftOutFailingHere, 1);
   assert.equal(here.entryIds.includes("fails"), false);
-  // Without the fix map the projection is what it always was.
   const plain = projectFieldManual(store, {});
   assert.equal(plain.lines.length, 4);
   assert.equal(plain.leftOutFailingHere, undefined);

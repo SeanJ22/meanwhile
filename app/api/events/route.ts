@@ -6,19 +6,9 @@ import { isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 
 /**
- * POST /api/events — what readers did, in batches (S2.4, October 1, 2026).
- *
- * The browser batcher (`lib/events/client.ts`) sends the returning-reader ID
- * and up to 128 events per request; this route validates the shape, stamps each
- * ZIP view with the residency relation the way Ask does (a client never asserts
- * how sure we are of a location), and hands the batch to the event store
- * (`lib/db/reader-events.ts`), which archives it, deduplicates by batch id and
- * keeps exact day and week totals. Nothing here writes a row of its own.
- *
- * Automated runs declare themselves and count nothing: they are not readers.
- * A malformed batch is refused whole. A store that cannot be reached answers
- * 503 and the batcher retries the same batch id, which the store drops if it
- * was in fact counted.
+ * POST /api/events: batches of up to 128 reader events, validated and handed to the event store
+ * (`lib/db/reader-events.ts`), which deduplicates by batch id. Automated runs count nothing. A malformed batch
+ * is refused whole; an unreachable store answers 503 and the batcher retries the same batch id.
  */
 
 export const runtime = "nodejs";

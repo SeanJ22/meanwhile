@@ -12,27 +12,7 @@ import {
 import { bodiesAt } from "../lib/registry/resolve.ts";
 import type { Body, Registry } from "../lib/registry/types.ts";
 
-/**
- * **NH233 — A VERIFIED GOVERNMENT THAT COULD REACH NO READER.**
- * (2026-08-27, the coverage-truth session.)
- *
- * The Rocking K South Community Facilities District is a political taxing
- * subdivision of ZIP 85641 with its own board, its own resolution series and
- * its own levy. It rendered to nobody, and its card said **"Boundary not
- * published"** — a claim about the county recorder, who publishes the boundary
- * as a recorded plat.
- *
- * `bodiesAt` matched bodies on `ocdId`, and the smallest division containing
- * this district is `county:pima`: 9,200 square miles against 2,047 acres.
- * Attaching it there would have shown a district taxing 2,047 acres to every
- * reader in the county — a false claim in the direction that looks like
- * coverage. So `ocdId` stayed null, correctly, and the body was stranded.
- *
- * The geometry was being fetched the whole time and thrown away.
- * `pnpm cfd:territory --geojson` now emits the plat polygons and `bodiesAt`
- * point-tests them, which makes the answer EXACT in both directions — and the
- * second direction is the one these guards care about most.
- */
+/** A body with no division reaches a reader through its recorded plat polygon, point-tested exactly in both directions. */
 
 const ROOT = process.cwd();
 const ROCKING_K = "curated:az/pima-rocking-k-south-cfd#governing";
@@ -107,15 +87,7 @@ test("a reader inside a Rocking K plat is governed by the district", () => {
 });
 
 test("a reader elsewhere in 85641 is NOT governed by it", () => {
-  /*
-   * **THE HALF THAT MAKES THE FIRST ONE HONEST.**
-   *
-   * 10723 S Bear Table Tank Drive, Vail AZ 85641 — the address the tracker
-   * carries, two geocoders agreeing to 8 m. It is in the district's ZIP and it
-   * is NOT in the district, and a repair that showed Rocking K to every 85641
-   * reader would have been the over-claim the null `ocdId` was protecting
-   * against, arriving by a different door.
-   */
+  /* An address in the district's ZIP that is not in the district must not get it. */
   const outside: [number, number] = [-110.717866, 32.058723];
   const hits = bodyIdsAtPoint(outside, territory());
   assert.ok(
@@ -146,8 +118,7 @@ test("bodiesAt returns a territory-bound body with no division at all", () => {
     "the body must resolve from its own territory",
   );
 
-  /* CONTROL: without the territory it resolves to nobody — which is the exact
-   * state NH233 describes, replayed, so this guard cannot pass vacuously. */
+  /* Control: without the territory it resolves to nobody, so this guard cannot pass vacuously. */
   const withoutTerritory = bodiesAt(inside, [], new Map(), [body as Body], undefined, null);
   assert.deepEqual(
     withoutTerritory.bodies,

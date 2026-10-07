@@ -8,14 +8,6 @@ import {
   tierForOcdId,
 } from "../lib/ocd/tiers.ts";
 
-/**
- * The tier axis.
- *
- * Every one of these is a real identifier from the four target zips or from
- * opencivicdata/ocd-division-ids. The cases that matter are the ones where the
- * tier is *not* the shallowest segment.
- */
-
 test("tier comes from the deepest segment, not the first", () => {
   // Contains country and state, but it is a city.
   assert.equal(

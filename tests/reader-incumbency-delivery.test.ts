@@ -6,9 +6,9 @@ import { committedIncumbentHolderFor, contestIncumbency, sameSeatDiscriminators 
 
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
 
 const bridge = getRegistryRuntimeReadModel().officialCandidacies;
 

@@ -1,13 +1,3 @@
-/**
- * **HOW LONG A DEAD END WAITS.** (DP-11; checklist REC-20.)
- *
- * A proven absence used to wait a fixed 30 days. It now waits as long as its
- * source's own pace (the cadence the obligation is checked on), or a number of
- * days the owner sets for its record class, and never longer than the longest a
- * dead end may wait, which starts at 5 days while the factory is expanding
- * (Sean, Oct 3). Both are Admin settings, read when the absence is recorded, so
- * a change applies to the next absence with no deploy.
- */
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import { readSetting, registerSetting } from "../settings.ts";
 import { scheduleObligation, type FreshnessObligation } from "./obligation.ts";
@@ -33,7 +23,6 @@ registerSetting<{ readonly [recordClass: string]: number }>({
 
 export interface AbsenceHold {
   readonly until: string;
-  /** One plain line saying where the length came from. */
   readonly basis: string;
 }
 

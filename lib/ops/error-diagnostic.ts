@@ -1,18 +1,4 @@
-/**
- * A failure's diagnostic, safe to persist in an owner-visible outcome.
- *
- * Repair and supervisor outcomes recorded only `error.message`, and the
- * database wrapper's message is the statement text: every Reader readback
- * failure on 2026-09-22/23 read "Failed query: select ..." while the cause
- * that said whether it was a timeout, a refused connect or an oversized
- * response was dropped. This keeps each error in the cause chain as
- * `name(code, errno): message`, and it is sanitized by construction: the
- * causes are exactly the objects that carry transport detail (a Neon or
- * fetch error can embed its connection string or endpoint), so anything
- * shaped like a URL, a `postgres(ql):` target, a `host=`/`password=`/`user=`
- * setting, a `user@host`, a bare multi-label host name or an IPv4 address is
- * removed before the text is returned, and the result is capped.
- */
+/** A failure's diagnostic, safe to persist: each error in the cause chain as `name(code, errno): message`, sanitized. */
 
 export const ERROR_DIAGNOSTIC_MAX_CHARS = 1_200;
 const MAX_CAUSE_DEPTH = 5;

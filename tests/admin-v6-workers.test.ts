@@ -23,7 +23,7 @@ import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from
 
 const NOW = "2026-09-28T22:00:00.000Z";
 const Z85635 = "geo:az.zcta.85635";
-/** The one saved hunt in production at the 2026-09-28 21:58 UTC read-only probe (workers-probe-20260928T215807Z.json). */
+/** One saved hunt. */
 const ORIGINAL: ExpansionScopeDecision = {
   key: ORIGINAL_LIFETIME_HUNT.key,
   geography: { type: "zcta", geoid: "85635", version: "zcta:2020", label: "ZIP 85635 (Census ZCTA)", stateAbbr: "AZ" },
@@ -39,7 +39,7 @@ const NH: ExpansionScopeDecision = {
 
 const mark = (d: ExpansionScopeDecision, at = "2026-09-27T23:10:31.451Z") => ({ assignmentKey: d.key, ref: d.receiptId, relation: "REORDERED", at });
 
-/** The saved 21:06–21:56 UTC loop: QUEUED → COLLECTING_AND_VERIFYING → FAILED on the Cochise voting-sites source. */
+/** A repeating loop on one source: QUEUED → COLLECTING_AND_VERIFYING → FAILED. */
 function votingSitesLoop(n: number, lastAt = Date.parse("2026-09-28T21:56:48.000Z")): { id: string; p: HuntSourceProgress }[] {
   const stages: HuntSourceProgress["stage"][] = ["FAILED", "COLLECTING_AND_VERIFYING", "QUEUED"];
   return Array.from({ length: n }, (_, i) => {

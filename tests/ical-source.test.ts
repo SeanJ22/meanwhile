@@ -7,16 +7,7 @@ import { makeIcalSource, parseDtStart, parseIcs } from "../lib/sources/ical/inde
 import { wiringForTypes } from "../lib/registry/source-wiring.ts";
 import type { IcalRaw } from "../lib/sources/ical/index.ts";
 
-/**
- * The `ICAL` adapter — M123, 2026-08-19.
- *
- * No live calls. The fixture is Wilmot NH's real feed, retrieved 2026-08-19
- * from `https://www.wilmotnh.org/events/list/?ical=1`.
- *
- * The counts below are asserted as MINIMUMS against a recorded fixture rather
- * than as "no error was thrown", because a parser that returns nothing throws
- * nothing.
- */
+/** The `ICAL` adapter over a recorded town feed. Counts are asserted as minimums, because a parser that returns nothing throws nothing. */
 
 const FIXTURE = readFileSync(
   join(process.cwd(), "tests", "fixtures", "ical", "wilmot-2026-08-19.ics"),
@@ -31,17 +22,7 @@ const QUERY = { zip: "03255" } as unknown as Parameters<
 /** The middle of the fixture's window, so the same rows are in range always. */
 const NOW = new Date("2026-08-19T12:00:00Z");
 
-/**
- * The fixture is WILMOT's feed, and it goes only to Wilmot's rows.
- *
- * **Amended 2026-08-21 (NH Hunt 4).** This handed one town's calendar to every
- * ICAL wiring row in the repo, which was harmless while Wilmot was the only
- * town on the adapter and became a false failure the moment a second was
- * wired: Bradford's "Planning Board" and Warner's "Select Board" phrases match
- * Wilmot's event titles, and then Wilmot's rooms fail to resolve against a
- * Bradford body — eleven sittings "lost to an unresolved venue" in a test where
- * no such sitting existed. A fixture belongs to the feed it was recorded from.
- */
+/** The fixture is one town's feed, and it goes only to that town's rows. */
 function rawFor(): IcalRaw[] {
   return wiringForTypes(["ICAL"])
     .filter((wiring) => wiring.config.feedUrl?.includes("wilmotnh.org"))
@@ -66,8 +47,6 @@ test("ICAL: the Wilmot fixture reaches Wilmot's rows and only those", () => {
     "other towns are wired on this adapter; this test deliberately excludes them",
   );
 });
-
-/* ------------------------------------------------------------- parsing --- */
 
 test("ICAL: the fixture parses to the events it actually contains", () => {
   const events = parseIcs(FIXTURE);
@@ -106,8 +85,6 @@ test("ICAL: escaped commas come back as commas", () => {
   assert.ok(loc.includes(", "), "the address lost its separators");
 });
 
-/* --------------------------------------------------------------- time --- */
-
 test("ICAL: a wall-clock time resolves through its own TZID, across DST", () => {
   // 6:30 PM in New York is 22:30Z in August and 23:30Z in January. A fixed
   // offset is right for half the year, which is the half nobody tests.
@@ -132,22 +109,8 @@ test("ICAL: a Z suffix is already UTC", () => {
   );
 });
 
-/* ───────── an eventless calendar is a REFUSAL, not an empty calendar ────── */
-
 test("ICAL: a VCALENDAR with no VEVENT is refused, and does not empty the source", async () => {
-  /*
-   * The named cause of the meetings refresh failing 14 of 37 runs to
-   * 2026-08-21. The composite went red on "fetched 3 document(s) and extracted
-   * 0 meeting(s)" with EVERY DROP COUNTER AT ZERO — and zero drops is the tell:
-   * with three rows over one feed, any event at all would have produced
-   * notConfigured hits on the rows it did not belong to. The document that
-   * arrived carried no VEVENT.
-   *
-   * The transport cannot catch it: the envelope is a well-formed
-   * BEGIN:VCALENDAR and passes every check politeGetText can make. So the
-   * adapter refuses the row, which routes it into carry-forward instead of
-   * failing the whole source and taking every other town's calendar with it.
-   */
+  /* A document with no VEVENT is refused for its row, which routes it into carry-forward instead of failing the whole source. */
   const EMPTY_FEED =
     "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Test//EN\r\nEND:VCALENDAR\r\n";
   const wiring = wiringForTypes(["ICAL"]).filter((w) =>
@@ -186,8 +149,6 @@ test("ICAL: a calendar WITH events is not refused by the same check", async () =
   assert.equal(raw.filter((r) => r.refused).length, 0, "a real calendar is not a refusal");
   assert.ok(raw[0].ics.includes("BEGIN:VEVENT"), "and the document reaches normalize");
 });
-
-/* ---------------------------------------------------------- normalize --- */
 
 test("ICAL: the wired boards produce meetings, and the counts are stated", () => {
   const source = makeIcalSource(wiringForTypes(["ICAL"]));
@@ -239,8 +200,6 @@ test("ICAL: every meeting carries a placed venue and its provenance", () => {
   }
 });
 
-/* ------------------------------------------ a refusal is not an absence --- */
-
 test("ICAL: a refused row reports as unreachable and empties nothing else", () => {
   const rows = wiringForTypes(["ICAL"]);
   const source = makeIcalSource(rows);
@@ -264,28 +223,12 @@ test("ICAL: a refused row reports as unreachable and empties nothing else", () =
   );
 });
 
-/* ------------------------------------------------------- the 5x trap --- */
-
 test("ICAL: every wired feed names the LIST view, never the default view", () => {
   // `/events/?ical=1` returns the current VIEW. On this town that is the
   // month: four events, HTTP 200, well-formed, and nineteen public meetings
   // missing. The empty-success shape wearing a healthier face. A wiring row
   // that names the default URL is a five-fold silent clip.
-  /*
-   * **THE RULE IS THE FULL CALENDAR; `ical=1` WAS ONE VENDOR'S SPELLING OF IT.**
-   * (Widened 2026-08-20, NH Hunt.)
-   *
-   * The original assertion required `ical=1` in every feed URL, which is The
-   * Events Calendar's WordPress convention and nothing more. The Town of
-   * Newbury runs Drupal and publishes its whole calendar at
-   * `/calendar/ical/export.ics` — a perfectly ordinary iCalendar feed that this
-   * guard would have refused for not looking like WordPress. A guard written
-   * from one instance rejects the class.
-   *
-   * What is actually load-bearing is that the URL is a CALENDAR FEED and that
-   * it names the FULL calendar rather than a view of it, so the per-vendor
-   * full-view checks stay and are stated per vendor.
-   */
+  /* The rule is the full calendar, not one vendor's spelling of it: the URL is a calendar feed that names the full calendar rather than a view. */
   let checked = 0;
   for (const row of wiringForTypes(["ICAL"])) {
     const url = row.config.feedUrl ?? "";
@@ -320,27 +263,7 @@ test("ICAL: every wired feed names the LIST view, never the default view", () =>
   assert.ok(checked >= 13, `only ${checked} ICAL rows were checked`);
 });
 
-/* ======================================================================== *
- *  A-007 · A ZONE WE COULD NOT INTERPRET PRODUCES NO TIMESTAMP
- * ======================================================================== */
-
-/**
- * **`catch { return 0 }` TURNED AN UNREADABLE TIMEZONE INTO A UTC ASSERTION.**
- *
- * External correctness audit of `336a3eb`, remediated 2026-08-24. Measured
- * against the shipped code before it was touched:
- *
- *   TZID=Not/AZone:20260908T190000  →  2026-09-08T19:00:00.000Z
- *   TZID=America/New_York:…         →  2026-09-08T23:00:00.000Z
- *
- * Four hours early. And a 1am sitting on 8 September came out as
- * `2026-09-08T01:00:00.000Z`, which a reader in New York sees as **9pm on
- * Monday the 7th** — the wrong DAY, from a catch block.
- *
- * Zero is not a missing offset. It is UTC, stated with exactly the confidence
- * of a zone we actually read. This is the render-default rule in the time
- * domain: a default may never manufacture a claim.
- */
+/** A zone we could not interpret produces no timestamp: zero is not a missing offset, it is UTC. */
 
 test("A-007 · an uninterpretable TZID yields no timestamp at all", () => {
   assert.equal(
@@ -372,8 +295,7 @@ test("A-007 · a valid zone is unaffected, including across a DST boundary", () 
 });
 
 test("A-007 · the DATE-BOUNDARY case, which is the one that misleads a reader", () => {
-  // 1am on the 8th. Under the old code this became 2026-09-08T01:00:00Z, which
-  // renders in New York as 9pm on the 7th — a meeting moved to the day before.
+  // 1am on the 8th as UTC renders in New York as 9pm on the 7th.
   assert.equal(parseDtStart("TZID=Bad/Zone:20260908T010000", "America/New_York"), null);
   assert.equal(
     parseDtStart("TZID=America/New_York:20260908T010000", "America/New_York")?.iso,
@@ -414,16 +336,9 @@ test("A-007 · an unreadable zone is counted as unplaceableInTime, not dropped s
   assert.equal(result.accounting.outcome, "CONSERVED");
 });
 
-
 /*
- * WARNER, 2026-09-25: the river committee off the library's "Warner Events" calendar, and the
- * Village Water District's commissioners off the town's calendar.
- *
- * warner-events-2026-09-25-trimmed.ics is the library calendar as read at 22:25Z, kept to the
- * events whose titles are the river committee's and the ones that once stopped every rule in the
- * feed from being expanded (a book club split "this and following", a Zumba series entered
- * twice, a bible study split the same way). DESCRIPTION lines are removed: they carried private
- * contact details. Every other byte is as served.
+ * A library's events calendar and a town calendar, trimmed to the named bodies' events and the ones whose
+ * rules once stopped expansion. DESCRIPTION lines are removed (private contact details); every other byte is as served.
  */
 const WARNER_EVENTS = readFileSync(join(import.meta.dirname, "fixtures", "ical", "warner-events-2026-09-25-trimmed.ics"), "utf8");
 const WARNER_TOWN = readFileSync(join(import.meta.dirname, "fixtures", "ical", "warner-2026-09-23-full.ics"), "utf8");

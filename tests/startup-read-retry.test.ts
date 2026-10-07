@@ -1,7 +1,6 @@
 /**
  * A research cycle's startup authority reads must survive one transient store
- * blip (2026-09-22T21:34:53Z: the operational reference read failed under host
- * CPU saturation and the hourly cycle crashed 18 s in, dispatching nothing).
+ * blip.
  *
  * Deterministic and provider-independent: fake reads fail a bounded number of
  * times, then answer. The retry is asserted to re-read ONLY a failed read, to
@@ -21,7 +20,7 @@ import { isRetryableStartupReadError, retryStartupRead } from "../lib/control-pl
 
 type UnavailableCode = CivicDataStoreUnavailableError["result"]["code"];
 
-/** The exact error the 21:34:53Z cycle crashed on, with a chosen code. */
+/** A transient store error, with a chosen code. */
 function storeUnavailable(code: UnavailableCode = "STORE_READ_FAILED"): CivicDataStoreUnavailableError {
   return new CivicDataStoreUnavailableError({
     kind: "STORE_UNREACHABLE",

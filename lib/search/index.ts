@@ -5,14 +5,8 @@ import type { Meeting } from "@/lib/sources/types";
 import type { Venue } from "@/lib/meetings/venues";
 
 /**
- * The search index behind the sidebar autocomplete.
- *
- * Ports the shape of EdiaStratMap's `precomputeSearchFields` and
- * `getAutocompleteCache`: lowercase the searchable text once when the data
- * arrives rather than on every keystroke, and cache the built index until the
- * data actually changes. At 34 fixtures neither matters; both are the
- * difference between an autocomplete that keeps up with typing and one that
- * does not, once real ingestion lands.
+ * The search index behind the sidebar autocomplete. Searchable text is lowercased once when the data
+ * arrives, and the built index is cached until the data changes.
  */
 
 export type SearchKind = "meeting" | "body" | "district" | "place" | "officeholder";
@@ -62,29 +56,13 @@ export interface DistrictFeatureLike {
   district: string;
 }
 
-
-/**
- * Build the index.
- *
- * Bodies and places are derived from the meetings themselves rather than from
- * a separate table, because there is no bodies table yet — Phase 5 adds one and
- * this function grows a parameter. Officeholders are deliberately absent: there
- * are no officeholder records, and CLAUDE.md forbids rendering a person without
- * a source behind them. The kind exists so the grouping does not have to be
- * rebuilt when they arrive.
- */
+/** Build the index. Bodies and places are derived from the meetings themselves. */
 export function buildSearchIndex(
   venues: Venue[],
   districts: DistrictFeatureLike[] = [],
   /**
-   * Meetings held online (D18).
-   *
-   * They arrive separately because they are not in any venue — a meeting with
-   * no place cannot be grouped by one. Everything else about them is
-   * searchable exactly as a physical meeting is; only `lat`/`lng` are null,
-   * which `SearchItem` already describes as "the row still shows, it just
-   * does not fly". Leaving them out would hide a real public meeting behind a
-   * data-structure decision, which is the whole of what D18 is about.
+   * Meetings held online. Not in any venue, so passed separately; searchable like any other meeting, with
+   * null `lat`/`lng`.
    */
   onlineMeetings: Meeting[] = [],
 ): SearchItem[] {
@@ -102,10 +80,7 @@ export function buildSearchIndex(
       items.push({
         id: `meeting:${meeting.id}`,
         kind: "meeting",
-        // Body first, then the sitting. Half a dozen "Regular Meeting" rows are
-        // indistinguishable otherwise, and the term a reader typed is usually
-        // the body's name — so leading with it also puts the bold match where
-        // they can see why the row came back.
+        // Body first, then the sitting: many "Regular Meeting" rows are otherwise indistinguishable.
         label: `${meeting.bodyName} — ${meeting.title}`,
         meta: formatMeetingDate(meeting),
         tier: tierForMeeting(meeting),
@@ -192,11 +167,8 @@ export function buildSearchIndex(
 }
 
 /**
- * Cached index, invalidated when the inputs change.
- *
- * Edia calls this `getAutocompleteCache` / `invalidateCaches`. The token stands
- * in for its dirty flag: any caller that changes the underlying data passes a
- * different token and the index rebuilds.
+ * Cached index, invalidated when the inputs change: a caller that changes the underlying data passes a
+ * different token.
  */
 let cachedToken: string | null = null;
 let cachedIndex: SearchItem[] = [];
@@ -271,12 +243,7 @@ export function flattenGroups(groups: SearchGroup[]): SearchItem[] {
   return groups.flatMap((g) => g.items);
 }
 
-/**
- * Split a label around the matched span, for the `<b>` highlight.
- *
- * Returns the three pieces rather than HTML: Edia builds a string with
- * `escapeHtml`, which React makes unnecessary and unsafe to imitate.
- */
+/** Split a label around the matched span, for the `<b>` highlight. Returns the pieces rather than HTML. */
 export function highlightParts(
   label: string,
   rawQuery: string,

@@ -1,15 +1,9 @@
 /**
- * **READER-READY NAMES, FROM ONE FORMATTER.** (S2.4, 2026-10-01.)
- *
- * Names reach a reader from many hands: a portal publishes "GOVERNING BOARD
- * AGENDA REGULAR MEETING", a registry derives "New York city" from a Census
- * label, an adapter title-cases "Board Of Supervisors", a hunt reads
- * "Redistricting Advisory Committee (RAC)" off a page. Each surface printed
- * what it was handed, so the same body read four ways.
- *
- * Every surface that prints a body or a party now asks here. The rules are
- * about the SHAPE of a name, never about one body, so a calendar wired
- * tomorrow is formatted the same way as the ones measured today.
+ * Reader-ready names, from one formatter. Portals, registries and adapters
+ * hand over the same body in different shapes ("GOVERNING BOARD AGENDA REGULAR
+ * MEETING", "New York city", "Board Of Supervisors", "… (RAC)"); every surface
+ * that prints a body or a party asks here. The rules are about the SHAPE of a
+ * name, never about one body.
  *
  * Pure and client-safe: no registry, no geometry, no fetch.
  */
@@ -68,7 +62,7 @@ function titleCase(text: string): string {
       const first = parts.slice(0, index).every((p) => /^\s*$/.test(p));
       const lower = part.toLowerCase();
       if (!first && SMALL_WORDS.has(lower)) return lower;
-      // Hyphen and slash joined words capitalise each piece ("Tucson-Pima").
+      // Hyphen and slash joined words capitalise each piece ("Lake-Ridge").
       return part
         .split(/([-/])/)
         .map((piece) => (/^[-/]$/.test(piece) ? piece : titleCaseWord(piece)))
@@ -128,9 +122,9 @@ export function readerBodyName(raw: string): string {
 
 /**
  * The government a derived body stands for, when the registry holds no name for
- * the body itself: "Pima" (a county) reads "Pima County", "New York city" reads
- * "New York City", and a Census school district "Tucson Unified District" reads
- * "Tucson Unified School District".
+ * the body itself: a county ("<Name>" → "<Name> County"), "New York city" →
+ * "New York City", and a Census "<Name> Unified District" → "<Name> Unified
+ * School District".
  */
 export function readerGovernmentName(label: string, divisionType: string | null): string {
   let name = capitaliseSuffix(label.replace(/\s+/g, " ").trim());

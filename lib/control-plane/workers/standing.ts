@@ -223,7 +223,7 @@ async function generalizedIndependentContext(input: {
   const { contract } = input;
   // The method only grows, so a contract planned under an earlier version is still audited, against today's floor; one from a later version is not.
   if (contract.methodVersion > input.methodVersion) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
-  // CH-26: when scoped, only the rows this audit reads (`readAuditHistory`); otherwise every row as before.
+  // When scoped, only the rows this audit reads (`readAuditHistory`); otherwise every row.
   const scoped = input.scopedReads === true ? await readAuditHistory(input.repos, { workItemId: input.workItemId, subjectId: contract.subjectId,
     requiredArtifactIds: [input.artifactId, ...contract.sourceScope.observationArtifactIds,
       ...contract.verification.authorities.flatMap(authority => [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds])] }) : null;
@@ -307,10 +307,10 @@ async function generalizedIndependentContext(input: {
 /** `auditCeilingUsd`: the rolling ceiling in force, which the auditor admits against (model-audit.ts). */
 export function standingFleetRuntime(input: { root: string; /** The method knowledge, read from the field manual (`readMethodKnowledge`). */ method: MethodKnowledge; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
   lifetimeHuntSubject?: (subjectId: string) => boolean;
-  /** CH-26: scope each task's history reads (`scoped-history.ts`). */
+  /** Scope each task's history reads (`scoped-history.ts`). */
   scopedReads?: boolean;
   siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
-  /** MW-021 (2026-09-25): the auditor's transport for the jurisdiction a record is about, held on the area budget covering it. */
+  /** The auditor's transport for the jurisdiction a record is about, held on the area budget covering it. */
   transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport }): FleetRuntime {
   const now = input.now ?? (() => new Date().toISOString());
   const method = input.method;
@@ -473,11 +473,9 @@ export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime
 }
 
 /**
- * Whether any schema-1 held evidence still has a step of its Parser, Validator, Auditor chain to run: the
- * only work the round's legacy plan (`planHeldWorkerFleet(..., legacyOnly)`) can create. Its sources are the two
- * registered event APIs in `heldEventContract`; captures of them still arrive (2026-10-04). Sean, 2026-10-06:
- * the plan runs only when such work exists. A chain ends where `advanceHeldWorkerFleet` stops it: a Parser
- * that did not extract, a Validator that did not pass, or an Auditor result.
+ * Whether any schema-1 held evidence still has a Parser, Validator or Auditor
+ * step to run (the only work the legacy plan can create). A chain ends at a
+ * Parser that did not extract, a Validator that did not pass, or an Auditor result.
  */
 export async function legacyHeldWorkOwed(root: string, runtime: FleetRuntime): Promise<boolean> {
   const candidates = (await runtime.repos.artifacts.readAll()).filter(artifact => !artifact.partial && heldEventContract(root, artifact) !== null);

@@ -107,12 +107,12 @@ const DIVISION_TYPE: Readonly<Record<Exclude<ReferenceLayer, "state">, DivisionT
 };
 const SCHOOL_LAYERS = new Set<ReferenceLayer>(["unsd", "elsd", "scsd"]);
 const SCHOOL_TYPES = new Set(["SCHOOL DISTRICT", "DEPENDENT SCHOOL SYSTEM"]);
-/** The functional statuses that govern (docs/state.md §4.6 M17): active, partially consolidated, consolidated, subordinate. */
+/** The functional statuses that govern: active, partially consolidated, consolidated, subordinate. */
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 /** The layers a territory's functional status is read for. */
 const STATUS_LAYERS = new Set<ReferenceLayer>(["county", "cousub", "place"]);
 
-/** The 2023 cartographic boundary file a layer's divisions were read from (`scripts/fetch-tiger-national.mts`). */
+/** The 2023 cartographic boundary file a layer's divisions were read from. */
 function boundaryUrl(layer: Exclude<ReferenceLayer, "state">): string {
   return `https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_${layer}_500k.zip`;
 }
@@ -147,7 +147,7 @@ export function registrationCandidate(input: {
   readonly target: RegistrationTarget;
   readonly reference: LoadedReference;
   readonly receipt: RegistrationSourceReceipt;
-  /** Accepted for older callers; source-backed registration no longer omits reviewed ids. */
+  /** Accepted for older callers; registration does not use it. */
   readonly reviewed?: ReviewedRegistryIds;
 }): RoutineCandidate {
   const { target, reference: loaded, receipt } = input;

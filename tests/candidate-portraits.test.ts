@@ -20,7 +20,7 @@ const page = (html: string) => ({ name: NAME, office: "City Council", cycle: "20
 const runtime = () => { const stored = new Map<string, Uint8Array>();
   return { stored, io: { read: async () => PNG, put: async (key: string, bytes: Uint8Array) => { stored.set(key, bytes); } } }; };
 
-test("CA-08: a named portrait on the campaign's own page is stored under candidates/ and bound by OWN_PAGE", async () => {
+test("a named portrait on the campaign's own page is stored under candidates/ and bound by OWN_PAGE", async () => {
   const { stored, io } = runtime();
   const got = await candidatePortraitFromOwnSite(page(`<img alt="Jane Doe" src="${IMAGE}">`), NOW, io);
   assert.ok("patch" in got);
@@ -30,7 +30,6 @@ test("CA-08: a named portrait on the campaign's own page is stored under candida
   assert.match(patch.photoSource!, /janedoeforcouncil\.com/);
   assert.equal([...stored.keys()].length, 1);
   assert.ok([...stored.keys()][0].startsWith("candidates/"));
-  // The reader keeps the bound portrait and drops one whose binding is gone.
   const card = { ...patch, bio: null } as never;
   const projection = (c: unknown) => ({ cards: { cards: { "k": c }, note: "x", hunts: [] } }) as unknown as CandidateProfilesProjection;
   assert.equal(readerCandidateProfiles(projection(card)).cards.cards.k.photoUrl, patch.photoUrl);
@@ -40,7 +39,7 @@ test("CA-08: a named portrait on the campaign's own page is stored under candida
   assert.equal(swapped.photoUrl, null);
 });
 
-test("CA-08: an image that does not carry the candidate's name is never offered, and committed portraits stay visible", async () => {
+test("an image that does not carry the candidate's name is never offered, and committed portraits stay visible", async () => {
   const { stored, io } = runtime();
   const got = await candidatePortraitFromOwnSite(page(`<img alt="Campaign logo" src="https://janedoeforcouncil.com/logo.png">`), NOW, io);
   assert.deepEqual(got, { gap: "PORTRAIT_NOT_ON_OWN_PAGE" });

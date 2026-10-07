@@ -17,27 +17,12 @@ import type { EvidenceProvenance } from "../ask/evidence.ts";
 import type { LocationConfidence, ResidencyRelation } from "../ask/residency.ts";
 
 /**
- * **THE ASK INTERACTION WRITE PATH.** (ASK03, 2026-08-27.)
- *
- * Capture is on (Sean, 2026-10-01): every Ask is saved once the reader's device
- * carries the anonymous continuity key, which the Ask surfaces mint. The
- * former Ask-capture switch is removed; the one disclosure lives on
- * "What this site collects".
- *
- * `app/api/ask/grounded/route.ts` calls it after the delivered answer, mode and
- * evidence are known, so the row describes what the reader actually received.
- *
- * ## The continuity key has its own digest space, and that is the boundary
- *
- * Four stores now hash a browser-minted key. If they all digested the raw
- * value they would produce the SAME hash for the same browser — equality
- * joinable across stores the constitution says share no key, on a value nobody
- * would have to look up. The prefix is the whole boundary.
- *
- *   reactions       sha256(rawKey)                       (its own, unprefixed)
+ * The Ask interaction write path. Each store digests the browser key under its
+ * own prefix so no two reader stores share a joinable hash:
+ *   reactions       sha256(rawKey)
  *   speak your mind sha256("speak-your-mind:" + key)
  *   intake limiter  sha256("intake-limiter:" + key)
- *   ask             sha256("ask-interaction:" + key)     <- this file
+ *   ask             sha256("ask-interaction:" + key)
  */
 
 const ASK_KEY_PREFIX = "ask-interaction:";
@@ -48,37 +33,28 @@ export function askKeyHash(key: string): string {
   return createHash("sha256").update(`${ASK_KEY_PREFIX}${key}`).digest("hex");
 }
 
-/** Namespaced like every other run id, for the same reason. */
 export function askRunHash(runId: string): string {
   return createHash("sha256").update(`${ASK_RUN_PREFIX}${runId}`).digest("hex");
 }
 
 export interface AskInteractionInput {
-  /** RAW reader text. Scrubbed here, at the single write path, never before. */
+  /** Raw reader text; scrubbed only here, at the single write path. */
   question: string;
   intent: string;
   temporalKind: string;
   subjectIds: string[];
   resolutionState: "BOUND" | "AMBIGUOUS" | "UNRESOLVED" | "NONE";
   answerMode: AnswerMode;
-  /** RAW delivered answer. Scrubbed here too — see `prepareAskInteraction`. */
+  /** Raw delivered answer; scrubbed here too. */
   answerText: string | null;
   answerModel: string | null;
   validationPassed: boolean | null;
   evidenceRecordCount: number;
   evidenceSourceCount: number;
   namedGapCount: number;
-  /**
-   * WHICH records and WHICH sources, not just how many. The counts alone could
-   * never answer "what evidence supported the answer readers saw?", which is
-   * the only question this store exists to be audited against.
-   */
   evidenceProvenance: EvidenceProvenance;
   surface: "MAP" | "BALLOT" | "UNKNOWN";
-  /**
-   * COARSE ORIENTATION ONLY. Normalized on the way in — see
-   * `normalizeApproximateLocation`, and the reason it is not a passthrough.
-   */
+  /** Coarse orientation only; see normalizeApproximateLocation. */
   approximateLocation: string | null;
   ocdIds: string[];
   divisionVintage: string;
@@ -86,7 +62,7 @@ export interface AskInteractionInput {
   locationConfidence: LocationConfidence;
   coverageTier: "TIER_0" | "TIER_1" | "TIER_2" | "TIER_3" | "UNKNOWN";
   coverageTierDistribution: string;
-  /** The browser-minted continuity value, RAW. Digested here, never stored raw. */
+  /** Raw browser-minted key; digested here, never stored raw. */
   continuityKey: string;
   runClass?: "ORGANIC" | "SYNTHETIC" | "UNKNOWN" | "AUTHOR";
   runId?: string | null;
@@ -96,9 +72,9 @@ export interface AskInteractionInput {
 export interface AskInteractionRow {
   occurredAt: string;
   questionScrubbed: string;
-  /** The SCRUBBED delivered answer. Never the reader-visible copy. */
+  /** The scrubbed answer, never the reader-visible copy. */
   answerText: string | null;
-  /** Flags from the question AND the answer, merged. `exportsVerbatim` reads it. */
+  /** Flags from the question and the answer, merged. */
   selfDisclosure: string[];
   intent: string;
   temporalKind: string;
@@ -128,111 +104,30 @@ export interface AskInteractionRow {
   runId: string | null;
 }
 
-/** How long a stored question may be. The roadmap needs it, never a novel. */
 export const ASK_QUESTION_MAX_CHARS = 400;
-/** And the answer. Long enough to be the answer, short enough to be a row. */
 export const ASK_ANSWER_MAX_CHARS = 4000;
 
-/**
- * **WHAT `approximateLocation` IS ALLOWED TO MEAN.**
- *
- * The field is documented as coarse orientation and the request body is the
- * reader's browser, which means without this the column's contents are whatever
- * a client chose to send. A surface that one day passes a full street address
- * into a field an export path reads as "a ZIP, roughly" would not fail — it
- * would silently upgrade the precision of a column whose whole documented
- * value is that it is imprecise, and every aggregate built on it afterwards
- * would be wrong about what it was aggregating.
- *
- * So the meaning is ENFORCED rather than documented: a five-digit ZIP, or a
- * short place label with no digits in it. Anything else — an address, a
- * lat/long pair, a ZIP+4, a sentence — is refused and stored as null, which is
- * an honest "we did not record one" rather than a precise thing wearing a
- * coarse label.
- */
+/** A five-digit ZIP or a short place label with no digits; anything else is stored as null. */
 export function normalizeApproximateLocation(raw: string | null): string | null {
   if (!raw) return null;
   const value = raw.trim();
   if (!value) return null;
   if (/^\d{5}$/.test(value)) return value;
-  /* A place label: letters, spaces and the ordinary punctuation of a place
-     name. No digits at all, because every precision risk here arrives as a
-     number — a house number, a ZIP+4, a coordinate. */
   if (value.length <= 60 && /^[A-Za-z][A-Za-z\s.,'’-]*$/.test(value)) return value;
   return null;
 }
 
 /**
- * **THE STORED ANSWER IS SCRUBBED, NOT JUST TRUNCATED.**
- * (The defect this closes, 2026-08-28.)
- *
- * The first version scrubbed the question and merely `slice()`d the answer.
- * That is a redaction with a hole in it: a reader writes *"My name is Alma
- * Hernandez and my number is 520-555-0134, when does the board meet?"*, the
- * question column correctly keeps neither — and a synthesis model replying
- * *"Alma, the next meeting is …"* puts the name straight back into the row one
- * column over.
- *
- * Two passes, because there are two ways a value gets there:
- *
- * 1. **Shape.** Email-shaped tokens and long digit runs, anywhere in the
- *    answer, including ones the reader never typed.
- * 2. **Echo.** The exact values the question's own pass removed, struck by
- *    value, case-insensitively. This is the only thing that catches a NAME,
- *    because a name has no shape — and it is why `redactSelfDisclosure`
- *    returns what it took.
- *
- * ## Why this is not `scrubFreeText`
- *
- * Because the third shape that pass carries — *a number followed by
- * capitalised words* — is also the shape of every spelled-out date this
- * product deliberately prints. Run over an Ask answer, it turns *"the board
- * meets on 8 September 2026"* into *"the board meets on [#]"* and flags the row
- * as containing a street address. That is a redaction that destroys the field's
- * entire analytic value and files a false fact about the row while doing it,
- * and it was caught by `tests/ask-signal.test.ts` asserting that a clean
- * question discloses nothing.
- *
- * An address the READER typed is still removed — by the echo pass, which
- * matches the exact value rather than the shape. What survives is an address
- * that appears in an answer because a public record contains it, which is where
- * a public meeting is held and is not anybody's private information.
- *
- * The reader's answer on screen is untouched. This is the stored copy, and
- * quietly rewriting what a person read in order to make analytics tidy would be
- * a different and worse defect.
- */
-/**
- * One literal string, as a regex that matches exactly itself.
- *
- * A reader's self-introduced value is arbitrary text and can legitimately
- * contain regex metacharacters — a name with a dot in it, an address with
- * brackets. Interpolating it unescaped would either throw or, worse, match
- * something it should not, so the strike would silently miss the value it
- * exists to remove.
+ * The stored answer is scrubbed by shape (emails, long digit runs) and by echo
+ * (the exact values the question's pass removed, which is the only way a name
+ * is caught). It does not use scrubFreeText, whose number-plus-words shape
+ * would also strike every printed date. The on-screen answer is untouched.
  */
 function escapeLiteral(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, (m) => `\\${m}`);
 }
 
-/**
- * **THE VALUE, AND ITS PARTS — because an echo is rarely verbatim.**
- * (Found by the plant, 2026-08-28.)
- *
- * The question's pass captures *"Alma Hernandez"*. A model replying politely
- * writes *"Alma, the board meets on …"*. Striking only the whole captured
- * string leaves the given name in the stored answer, which is the exact defect
- * the echo pass exists to close — closed for the full name and open for the
- * form a person is actually called by.
- *
- * So each multi-word value contributes its words as well. Three characters is
- * the floor, for the reason `MIN_MENTION_CHARS` exists elsewhere in this
- * repository: shorter tokens are punctuation debris and ordinary words, and
- * striking those would redact the answer rather than the disclosure.
- *
- * Longest first, so *"Alma Hernandez"* is replaced as one mark rather than as
- * two adjacent ones.
- */
+/** Each value plus, for multi-word values, its words of 3+ characters; longest first. */
 function echoTargets(values: readonly string[]): string[] {
   const out = new Set<string>();
   for (const value of values) {
@@ -260,13 +155,10 @@ export function scrubStoredAnswer(
 
   for (const value of echoTargets(redactedValues)) {
     if (!value) continue;
-    /* Word-bounded, so striking "Alma" cannot cut "Almanac" in half and leave
-       a stored answer that reads as though we mangled our own prose. */
+    // Word-bounded, so a value cannot cut a longer word in half.
     const pattern = new RegExp(`\\b${escapeLiteral(value)}\\b`, "gi");
     if (pattern.test(text)) {
       text = text.replace(pattern, SCRUB_MARK);
-      /* An echoed self-introduced value is a self-disclosure ON THIS ROW,
-         whichever column it reached. The export gate reads the merged set. */
       flags.add("SELF_NAMED");
     }
   }
@@ -274,20 +166,7 @@ export function scrubStoredAnswer(
   return { text: text.trim(), flags: [...flags] };
 }
 
-/**
- * **THE COVERAGE STAMP IS TAKEN HERE, at the write path, and not in a route.**
- *
- * The per-government tier DISTRIBUTION is a stored field and
- * `tests/coverage-tier.test.ts` bans it from `app/` and `components/`
- * outright — the floor tier is the only tier a reader is ever told, and a
- * second coverage number on a reader surface is a number the reader has to
- * reconcile against the first. Deriving it inside the API route put it in the
- * reader's tree, and the guard caught that the moment it was written.
- *
- * The store owning its own stamp is also simply the better shape: the route
- * hands over the divisions it resolved, and what is made of them is this
- * module's business.
- */
+/** Stamped here, not in a route: the tier distribution must never enter app/ or components/. */
 export function askCoverageStamp(ocdIds: readonly string[]): {
   coverageTier: AskInteractionInput["coverageTier"];
   coverageTierDistribution: string;
@@ -298,29 +177,10 @@ export function askCoverageStamp(ocdIds: readonly string[]): {
   };
 }
 
-/**
- * Build the row. **Pure**, so the shape is testable without a database and
- * without the capability being live.
- *
- * The scrub happens HERE and only here, for BOTH free-text fields. There is no
- * second path that writes a question or an answer, so there is no way for raw
- * text to reach the store — which is the difference between a store that is
- * born safe and one that is promised to be.
- */
+/** Pure. The only place questions and answers are scrubbed before storage. */
 export function prepareAskInteraction(input: AskInteractionInput): AskInteractionRow {
   const raw = input.question.slice(0, ASK_QUESTION_MAX_CHARS);
-  /*
-   * **ORDER IS LOAD-BEARING AND IT IS NOT MINE TO CHOOSE.**
-   *
-   * `redactSelfDisclosure` runs FIRST because, as its own header says, the
-   * scrub replaces the very tokens that would have to be detected — asking
-   * afterwards reports nothing on every row, which is a pass that always
-   * passes. It also strips self-naming, which the scrub knows nothing about.
-   * Then the scrub blanks the email, phone and address shapes.
-   *
-   * This is the store's whole PII posture and it reuses the pass Speak Your
-   * Mind already proved rather than a second one written here.
-   */
+  // redactSelfDisclosure must run before the scrub, which replaces the tokens it detects.
   const disclosure = redactSelfDisclosure(raw);
   const answer = input.answerText
     ? scrubStoredAnswer(
@@ -335,9 +195,6 @@ export function prepareAskInteraction(input: AskInteractionInput): AskInteractio
     occurredAt: input.occurredAt,
     questionScrubbed: scrubFreeText(disclosure.text),
     answerText: answer ? answer.text : null,
-    /* The KINDS of thing the reader disclosed about themselves — never the
-       values. "they typed an email address" is a fact worth holding; the
-       address is the thing this store must never contain. */
     selfDisclosure: flags,
     intent: input.intent,
     temporalKind: input.temporalKind,
@@ -368,11 +225,7 @@ export function prepareAskInteraction(input: AskInteractionInput): AskInteractio
   };
 }
 
-/**
- * What a CALLER supplies. The coverage stamp is derived here rather than passed
- * in, so no route has to name a field the reader's tree is forbidden to hold —
- * a caller may still supply one, and an explicit value wins.
- */
+/** The coverage stamp is derived here; an explicit caller value wins. */
 export type AskCaptureInput = Omit<
   AskInteractionInput,
   "coverageTier" | "coverageTierDistribution"
@@ -391,25 +244,7 @@ export async function captureAskInteraction(
   input: AskCaptureInput,
   write?: (row: AskInteractionRow) => Promise<void>,
 ): Promise<AskCaptureOutcome> {
-  /*
-   * **NO CONTINUITY KEY, NO ROW — and this refusal is the point.**
-   * (PR #212 follow-up, 2026-08-28.)
-   *
-   * The Ask surfaces READ their continuity key and never mint one, because
-   * minting a new identifier onto a reader's device for a capability that is
-   * switched off is storage nobody asked for. So while the flag is down, no
-   * browser has one.
-   *
-   * The failure mode this closes is the quiet one. `askKeyHash("")` is a
-   * perfectly good sha256 — of the empty string — and it is the SAME hash for
-   * every reader. Enabling capture without also enabling minting would produce
-   * a full store of rows that all agree there has only ever been one reader,
-   * and the aggregate *"100 interactions from 61 distinct readers"* would read
-   * *"from 1"* with nothing anywhere reporting an error.
-   *
-   * Refusing makes the coupling structural: activation is the disclosure AND
-   * the minting AND the flag, and doing two of the three writes nothing.
-   */
+  // An empty key would hash identically for every reader, collapsing distinct readers to one.
   if (!input.continuityKey) {
     return { kind: "FAILED", why: "no continuity key — minting is part of activation" };
   }

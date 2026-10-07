@@ -1,25 +1,4 @@
-/**
- * **THE HOST-NORMALIZED FLY-IN CRITERION, TESTED WHERE IT CAN BE TESTED.**
- * (Amendment to W6 H3, 2026-08-31.)
- *
- * The measurement itself needs a GPU, a production build and a quiet-ish
- * machine, and it produces a different number every time it runs. None of that
- * is testable. What IS testable — and what carries the whole verdict — is the
- * arithmetic between the frames and the pass/fail, so it lives in a pure module
- * and is exercised here against PLANTED populations whose right answer is known
- * in advance.
- *
- * Two of these cases are the failure modes that would otherwise report a green
- * check for a measurement that never happened: a bare arm with no frames, and a
- * bare arm whose rate came back as zero. Both make the ratio meaningless, and
- * one of them makes it INFINITE — which is the worst available outcome, because
- * `Infinity >= 0.9` is true and the check would pass.
- *
- * The `constructor(readonly x)` and `enum` forms are absent on purpose: this
- * suite runs under `node --test --experimental-strip-types`, which refuses both
- * outright while `tsc` accepts them, so either one would kill this whole file
- * at parse while the type check stayed green.
- */
+/** `constructor(readonly x)` and `enum` are absent on purpose: `--experimental-strip-types` refuses both while `tsc` accepts them. */
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
@@ -62,20 +41,14 @@ describe("median", () => {
   });
 
   it("REFUSES an empty population rather than returning zero", () => {
-    /* RULING 159 applied to a rate: a median of nothing is not a median of
-       zero, and `0.0 fps` reads as a frozen fly-in. */
+    /* A median of nothing is not a median of zero. */
     assert.throws(() => median([]), /EMPTY population/);
   });
 });
 
 describe("summariseArm", () => {
   it("gives each RUN one vote rather than pooling every frame", () => {
-    /*
-     * Three runs at a steady 60 fps and one long run at 30. Pooling the gaps
-     * would let the long run's frame count outvote the others; per-run medians
-     * cannot, so the arm's median stays at 60 and the outlier is visible in
-     * `medianFpsPerRun` instead of hidden inside the headline.
-     */
+    /* Per-run medians keep one long run's frame count from outvoting the others. */
     const arm = summariseArm("planted", [
       run(10, 16.6667),
       run(10, 16.6667),
@@ -152,12 +125,7 @@ describe("judgeNormalized", () => {
   });
 
   it("A SLOW HOST DOES NOT WAIVE THE REQUIREMENT — it is reported beside it", () => {
-    /*
-     * If the bare map itself cannot reach smooth motion, that host limit is
-     * reported numerically; it does not waive the relative requirement.
-     * So a bare map at 25 fps still yields a real verdict, and
-     * the host limit changes the SENTENCE rather than the decision.
-     */
+    /* A bare map that cannot reach smooth motion still yields a real verdict; the host limit changes the sentence, not the decision. */
     const bare = summariseArm("bare", [run(100, 40)]);
     const slowApp = summariseArm("app", [run(100, 50)]);
     const slow = judgeNormalized(slowApp, bare);
@@ -172,11 +140,7 @@ describe("judgeNormalized", () => {
   });
 
   it("REFUSES a bare arm whose rate is zero rather than passing on Infinity", () => {
-    /*
-     * The worst available failure. A bare median of 0 makes the ratio Infinity,
-     * `Infinity >= 0.9` is true, and the check would report a confident PASS
-     * for an experiment in which the control never ran.
-     */
+    /* A bare median of 0 makes the ratio Infinity, and `Infinity >= 0.9` is true. */
     const bare = summariseArm("bare", [{ gaps: [Number.POSITIVE_INFINITY], hostBusyPct: null }]);
     const app = summariseArm("app", [run(100, 16.6667)]);
     assert.throws(() => judgeNormalized(app, bare), /refusing/i);

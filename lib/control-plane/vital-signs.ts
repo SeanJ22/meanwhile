@@ -1,25 +1,8 @@
 /**
- * **ONE SMALL ROW PER HOUR THAT SAYS WHETHER THE FACTORY WORKED.** (Vital
- * signs, Sean, Oct 6; board/river vital-signs.md.)
- *
- * The standing runner writes `cp_vital_signs` for each UTC hour: a running
- * partial row every 10 minutes, so a crash keeps most of the hour, and the
- * final row once the hour's processes have flushed. Admin Now and the daily
- * brief read only this row.
- *
- * Where each number comes from:
- *
- *   neon bytes, rounds, facts   the hour files every runner process writes
- *                               (lib/db/transfer-by-caller.ts), summed by the
- *                               parent: no database read
- *   spend, unpriced, paid jobs  one aggregate over the hour's cp_log_costs rows,
- *                               by the recorded_at index; it returns one row
- *   release_sha                 the code the runner ran
- *
- * A count nobody recorded is null, never 0: facts stay null until the
- * publisher counts them, and the spend fields stay null when the cost read
- * fails. `neon_project_bytes` is River's (Neon's own counter); the runner
- * never writes it.
+ * One row per UTC hour saying whether the factory worked: a running partial row every 10 minutes and a final row
+ * once the hour's processes flush. Neon bytes, rounds and facts come from the hour files every runner process
+ * writes; spend from one aggregate over the hour's cost rows. A count nobody recorded is null, never 0.
+ * `neon_project_bytes` is written by River, never the runner.
  */
 import type { NeonBytesHour } from "../db/transfer-by-caller.ts";
 import { boundedQuery, CONTROL_PLANE_REQUEST_BOUNDS_MS, type BoundableSql } from "./repository/request-bounds.ts";
@@ -31,7 +14,7 @@ export const VITAL_COUNTERS = {
   roundsFinished: "rounds_finished",
   roundsKilled: "rounds_killed",
   roundsDeferred: "rounds_deferred",
-  /** slide: a reader record going live (BR-31's unit). */
+  /** slide: a reader record going live. */
   factsLive: "facts_live",
   /** slide: the live-site sampler. */
   factsConfirmed: "facts_confirmed",
@@ -64,12 +47,7 @@ export interface VitalSignsRow {
   readonly writtenAt: string;
 }
 
-/**
- * Paid job: a model-priced or charged row of budgeted work. Ask answers and
- * proof runs are not jobs here; the cache pre-warm is its own kind.
- * Ended empty: its ending says NOTHING, or, on rows written before endingKind
- * existed, it committed no disposition (River's Oct 6 accounting of the $40.40).
- */
+/** Paid job: a model-priced or charged row of budgeted work (Ask answers and proof runs excluded; the pre-warm is its own kind). Ended empty: its ending says NOTHING, or on older rows it committed no disposition. */
 const PAID = `(record->>'role' IS DISTINCT FROM 'ASK' AND record->'nonProduction' IS NULL
   AND coalesce(record->>'attemptId', '') NOT LIKE 'scout-prewarm:%'
   AND (coalesce(record->>'model', '') <> '' OR (jsonb_typeof(record->'cost'->'usd') = 'number' AND (record->'cost'->>'usd')::numeric > 0)))`;

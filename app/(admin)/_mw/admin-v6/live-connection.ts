@@ -1,25 +1,6 @@
 "use client";
 
-/**
- * **IS THIS PAGE LIVE?** The v6 connection indicator, fed by the ONE existing
- * pulse poll.
- *
- * Codex (contract response, 2026-09-28 20:18 UTC): the real page consumes the
- * Admin shell's single `/api/admin/live` poll — `LiveRefresh` in
- * `app/(admin)/_mw/live-refresh.tsx` — through the `meanwhile:admin-pulse`
- * window event. This hook never fetches. It listens, and reports:
- *
- *   connecting    no pulse yet
- *   live          the last pulse is recent
- *   reconnecting  the next pulse is overdue (past RECONNECTING_AFTER_MS)
- *   stale         no pulse within PULSE_STALE_MS
- *   offline       the browser says it has no network
- *
- * It hands every pulse to `onPulse` (LiveSync reads what the pulse announces),
- * and calls `onReconnected` ONCE when a pulse arrives after the page was
- * overdue, stale or offline. Data is replaced, never appended, so catching up
- * cannot double count.
- */
+/** Never fetches: listens to the `meanwhile:admin-pulse` events of the shell's single `/api/admin/live` poll. */
 import { useEffect, useEffectEvent, useRef, useState, useSyncExternalStore } from "react";
 
 import { PULSE_INTERVAL_MS, PULSE_STALE_MS, type LivePulse } from "@/lib/control-plane/live-pulse.ts";
@@ -34,7 +15,6 @@ export interface LiveConnection {
   readonly connection: Connection;
   readonly pulse: LivePulse | null;
   readonly lastGoodAt: string | null;
-  /** True for a few seconds after a lost connection comes back. */
   readonly recovered: boolean;
 }
 

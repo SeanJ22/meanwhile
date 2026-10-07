@@ -150,9 +150,8 @@ test("preparing over an unchanged promoted set is idempotent and never recompose
     receipt: {} as never,
   }));
   const composedFrom = contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` }));
-  // The idempotent pass decides from identities and the serving copy's
-  // coupling alone: neither the partitions' payloads (7.8 MB per pass) nor
-  // the composed payload (7.5 MB) is read to learn that nothing changed.
+  // The idempotent pass decides from identities and the serving copy's coupling alone: no partition or composed
+  // payload is read to learn that nothing changed.
   const store = fakeStore({
     readPromotions: async () => { throw new Error("PARTITION_PAYLOADS_MUST_NOT_BE_READ_ON_IDEMPOTENT_PREPARE"); },
     readPromotionIdentities: async () => promotions.map(({ payload: _payload, receipt: _receipt, ...identity }) => identity),

@@ -1,80 +1,21 @@
 /**
- * **RULING 87 — WIKIPEDIA AS A TIER A DISCOVERY SOURCE.**
- * (Built 2026-08-22, NJ Hunt 5 item 3.)
- *
- * ## The route six hunt sessions never walked
- *
- * A person with a browser types *2026 New Jersey elections*, clicks the second
- * result, clicks through to Rockaway Township, and reads the mayor, all nine
- * council members with party and ward, all seven Morris County commissioners,
- * the three county constitutional officers, the state legislative district, the
- * congressional district, and links to the township site, the school district,
- * NCES and the fire department — every fact footnoted to a primary source.
- *
- * Six sessions of this project walked increasingly sophisticated routes past
- * increasingly determined walls and never opened that page. RULING 85 is the
- * rule that came out of it and this module is the instrument.
- *
- * ## What this module is, and the line it may never cross
- *
- * **A DISCOVERY source, never a source of record.** Nothing here is a fact this
- * product will render. What comes out is a NAME plus the FOOTNOTE the
- * encyclopedia attached to it, and the footnote is then fetched and read before
- * the name means anything — `confirmAgainstCitation` is that step. Wikipedia
- * names the person; the citation proves them. A name whose citation cannot be
- * confirmed is a `LEAD`, and a `LEAD` is a thing for a session to go and work,
+ * Wikipedia as a discovery source, never a source of record. What comes out
+ * is a name plus the footnote the encyclopedia attached to it; the footnote is
+ * fetched and read (`confirmAgainstCitation`) before the name means anything.
+ * A name whose citation cannot be confirmed is a `LEAD` for further work,
  * never a row in front of a reader.
  *
- * That is not caution about accuracy. It is the never-generate-a-position rule
- * and the transparency mandate's evidence standard, both of which require a
- * source record pointing at a specific statement, filing or roll-call — and *an
- * encyclopedia said so* is not one of those, however right it happens to be.
+ * US municipality articles are heavily templated: the Local government
+ * section carries a form-of-government sentence, a body-composition sentence
+ * and a roster sentence, in a small number of shapes. Member shapes vary in
+ * finite ways (seat before or after party, a bare year or a whole term clause,
+ * an expanded party wikilink on the first member, an office title glued to the
+ * name), each handled and named below.
  *
- * ## Why one parser reads roughly 19,000 articles
+ * The composition sentence ("nine members, six wards, three at-large") is a
+ * prediction about the registry, checkable against it (`parseGoverningBody`).
  *
- * US municipality articles are templated to a degree that is easy to
- * underestimate. The Local government section carries a form-of-government
- * sentence, a body-composition sentence and a roster sentence, in that order, in
- * a small number of shapes. Four Morris County municipalities, four different
- * forms of government, and the same three sentences:
- *
- * - *Rockaway Township is governed within the Faulkner Act … (Plan F) … The
- *   township council is comprised of nine members, with one member elected from
- *   each of six wards and three elected on an at-large basis … Members of the
- *   Township Council are Council President Howard Morrison (R, 2027;
- *   At-large), …*
- * - *Rockaway is governed under the borough form … The borough council includes
- *   six members … Members of the Rockaway Borough Council are Council President
- *   Melissa Burnside (R, 2026), …*
- * - *Boonton Township is governed under the Township form … The Township
- *   Committee is comprised of five members … members of the Boonton Township
- *   Committee are Mayor Brian Honan (R, term on committee ends December 31,
- *   2026; term as mayor ends 2024), …*
- * - *Dover operates using the Town form … Members of the Town Council are
- *   Christopher Almada (Ward 3; D, 2027), …*
- *
- * The member shape varies in ways that matter and are finite: the seat can come
- * before or after the party, the term can be a bare year or a whole clause, the
- * first member usually carries an expanded party wikilink the rest abbreviate,
- * and an office title may be glued to the front of the name. All four are
- * handled below and each is named where it is handled, because the next state
- * will bring a fifth and the person adding it needs to see the seams.
- *
- * ## The form-of-government line is the twig enumerator
- *
- * RULING 57 says a body is NAMED FIRST and hunted second, and the hardest part
- * of naming is knowing what exists. The form-of-government sentence answers it
- * outright — *nine members, six wards, three at-large* is a prediction about the
- * registry that can be checked against the registry, and a disagreement is a
- * finding either way. `parseGoverningBody` extracts that prediction.
- *
- * ## Facts, not prose
- *
- * Names, parties, term dates and districts are facts and are not copyrightable.
- * This module extracts facts and follows footnotes. It never copies a sentence
- * through to a reader surface, and `blurb` and `photo` are `forbiddenFor` on
- * both Wikipedia routes in the manifest so that no later session can quietly
- * start.
+ * Only facts are extracted; no sentence is copied through to a reader surface.
  */
 
 import {
@@ -86,71 +27,27 @@ import { OUTBOUND_CONTACT } from "../geo/outbound-agent.ts";
 
 /* ────────────────────────────── Retrieval ────────────────────────────────── */
 
-/**
- * Identified, per the public-records rule's rate discipline.
- *
- * The address is COMPOSED from `lib/geo/outbound-agent.ts` rather than written
- * here. R40 removed the author's personal address from everything a browser can
- * reach and `tests/feedback.test.ts` holds that with exactly ONE exemption; this
- * module copied the literal and the guard caught it, which is the same mistake
- * `/api/voting-sites` made and the same fix.
- */
+/** Identified User-Agent, with the contact composed from `lib/geo/outbound-agent.ts`. */
 export const WIKI_USER_AGENT = `we-the-people/1.0 (civic data for a public-records product; contact: ${OUTBOUND_CONTACT})`;
 
 /**
- * **`/w/api.php` IS DISALLOWED, AND THIS PROJECT WAS USING IT.** (2026-09-01.)
- *
- * `https://en.wikipedia.org/robots.txt`, read on 2026-09-01 under
- * `User-agent: *`, operative lines verbatim:
- *
- * ```
- *   Allow: /w/api.php?action=mobileview&
- *   Allow: /w/load.php?
- *   Disallow: /w/
- * ```
- *
- * The two `Allow` lines are the entire permitted surface under `/w/`, and
- * neither is a content query. **Every call this module made was disallowed**,
- * and so was `lib/hunt/wiki-graph.ts`'s `action=query&redirects=1`. The row in
- * `docs/sources.md` said Tier A, WIRED, and was never checked against the
- * host's own file — a permission claim standing on our own paperwork rather
- * than on the publisher's.
- *
- * Found because a lane registered a NEW Wikipedia route on the strength of that
- * same row, then read robots.txt before shipping it. Ten requests reached the
- * disallowed path first, and they are counted rather than glossed.
- *
- * **This is RULING 206, not a wall.** The record is the article; `/w/api.php`
- * was one representation of it. `/wiki/<Title>?action=raw` is another, it is
- * NOT under `Disallow: /w/`, and it returns the same bytes — measured on
- * `Tucson, Arizona`: `200 text/x-wiki`, 183,138 bytes, identical to what the
- * API's `rvslots=main` content field carried. Permission state and transport
- * state are orthogonal (RULING 182); this was never transport.
- *
- * **Since the owner decision of 2026-09-25 the Disallow is recorded, not
- * blocking** ("Robots.txt alone must not block acquisition"). `/w/api.php` is
- * no longer forbidden to this project; the `/wiki/` representation stays the
- * route in use because it works and returns the same bytes, not because the
- * other is refused. The constant stays EXPORTED as the recorded rule's path
- * (`tests/wikipedia-permission.test.ts`).
+ * `/w/api.php`, which robots.txt disallows under `User-agent: *`. Recorded,
+ * not blocking; the `/wiki/<Title>?action=raw` representation is used because
+ * it returns the same wikitext. Exported as the recorded rule's path.
  */
 export const WIKI_API_DISALLOWED = "https://en.wikipedia.org/w/api.php";
 
 /**
- * The allowed representation of the same record.
- *
- * `/wiki/` carries no blanket `Disallow` — only specific pages do
- * (`/wiki/Special:`, a list of German project pages, and others), none of which
- * is an article, a template or a category.
+ * The representation in use: `/wiki/` carries no blanket `Disallow`, only
+ * specific non-article pages do.
  */
 export const WIKI_RAW_BASE = "https://en.wikipedia.org/wiki/";
 
 /** The title as it appears in a `/wiki/` path. */
 export function wikiRawUrl(title: string): string {
   /*
-   * Underscores first, then component-encoding. `encodeURIComponent` escapes
-   * the colon in `Template:…` to `%3A`, which the host accepts — verified on
-   * `Template:NJ Morris County Commissioners`, HTTP 200.
+   * Underscores first, then component-encoding; the host accepts the encoded
+   * colon in `Template:…`.
    */
   return `${WIKI_RAW_BASE}${encodeURIComponent(title.replace(/ /g, "_"))}?action=raw`;
 }
@@ -173,17 +70,8 @@ export interface WikiPage {
 export type WikiFetcher = (url: string) => Promise<{ status: number; body: string }>;
 
 /**
- * **Fetch one page's raw wikitext.** Rung 2 — a plain identified GET.
- *
- * The API is used rather than the rendered HTML for one reason that matters: the
- * rendered page throws the footnote markers away into superscripts and link
- * targets, and the footnote is the whole point. Wikitext keeps `<ref>` attached
- * to the sentence it belongs to.
- *
- * `redirects=1` is not a convenience. `Template:NJ Morris County Commissioners`
- * is a redirect to `Template:NJ Morris County commissioners`, and a session that
- * did not follow it would record seven county commissioners as unreachable on
- * the strength of a capital letter.
+ * Fetch one page's raw wikitext with a plain identified GET. Wikitext rather
+ * than rendered HTML because it keeps each `<ref>` attached to its sentence.
  */
 export async function fetchWikitext(
   title: string,
@@ -208,10 +96,7 @@ export async function fetchWikitext(
   } catch (err) {
     return { ...base, missReason: `fetch threw: ${(err as Error).message}` };
   }
-  /*
-   * A missing article answers 404 on this route where the API answered 200 with
-   * `missing: true`. Both are "no such article"; only the shape moved.
-   */
+  /* A missing article answers 404. */
   if (res.status === 404) return { ...base, missReason: "no such article" };
   if (res.status !== 200) return { ...base, missReason: `HTTP ${res.status}` };
 
@@ -222,17 +107,8 @@ export async function fetchWikitext(
   }
 
   /*
-   * **REDIRECTS ARE FOLLOWED HERE BECAUSE THEY WERE LOAD-BEARING THERE.**
-   *
-   * The API call this replaces carried `redirects=1`, and the doc block above
-   * says exactly why: `Template:NJ Morris County Commissioners` is a redirect to
-   * `Template:NJ Morris County commissioners`, and a session that did not follow
-   * it would record seven county commissioners as unreachable on the strength of
-   * a capital letter. The raw route answers a redirect with its wikitext —
-   * `#REDIRECT [[Target]]` — so the follow is explicit rather than free.
-   *
-   * ONE hop, then stop. A redirect loop is a fact about the encyclopedia and
-   * must not become an unbounded walk here.
+   * Redirects (`#REDIRECT [[Target]]`) are followed explicitly, because
+   * template names often redirect on capitalisation. One hop, then stop.
    */
   const redirect = /^\s*#\s*REDIRECT\s*\[\[([^\]|#]+)/i.exec(body);
   if (redirect) {
@@ -247,11 +123,7 @@ export async function fetchWikitext(
   return {
     ...base,
     title,
-    /*
-     * The raw route does not carry a page id, and inventing one is worse than
-     * not having it. Nothing outside this module and `wiki-graph.ts` reads the
-     * field — checked before the route moved, not assumed.
-     */
+    /* The raw route carries no page id, and none is invented. */
     pageId: null,
     wikitext: body,
     missReason: null,
@@ -261,11 +133,8 @@ export async function fetchWikitext(
 /* ─────────────────────────── Wikitext primitives ─────────────────────────── */
 
 /**
- * One section's body, by heading text, at any heading depth.
- *
- * Headings are matched case-insensitively and tolerate the inconsistent
- * whitespace real articles carry — `== Government ==` and `==Government==` both
- * appear in Morris County, sometimes in the same article.
+ * One section's body, by heading text, at any heading depth. Matched
+ * case-insensitively, tolerating `== Government ==` and `==Government==`.
  */
 export function section(wikitext: string, heading: string): string | null {
   const escaped = heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -295,15 +164,10 @@ export interface WikiRef {
 }
 
 /**
- * **Pull the `<ref>` footnotes out of a run of wikitext.**
- *
- * Three shapes, all live in Morris County: a full `<ref>body</ref>`, a
- * self-closing back-reference `<ref name=X />`, and a `{{cite web|url=…}}`
- * template inside a full ref. A named back-reference carries no URL of its own,
- * so `resolveRefNames` puts the body back before the URLs are read — otherwise
- * the second and later uses of `<ref name=Mayor />` would each look like a
- * citation with no source, which is indistinguishable from a fact with no
- * citation and would drag the confirmation rate down for no reason.
+ * Pull the `<ref>` footnotes out of a run of wikitext: a full
+ * `<ref>body</ref>`, a self-closing back-reference `<ref name=X />`, and a
+ * `{{cite web|url=…}}` inside a full ref. `resolveRefNames` restores a
+ * back-reference's body so later uses carry their URLs.
  */
 export function refs(text: string): WikiRef[] {
   const out: WikiRef[] = [];
@@ -436,26 +300,18 @@ function num(token: string | undefined): number | null {
 }
 
 /**
- * **The form-of-government prediction — RULING 87's twig enumerator.**
+ * The form-of-government prediction, from shapes such as:
  *
- * What it reads, in the four shapes Morris County actually uses:
- *
- * - `governed within the [[Faulkner Act]] … under the … Mayor-Council system …
- *   (Plan F)` → form `Faulkner Act`, plan `F`
+ * - `governed within the [[Faulkner Act]] … (Plan F)` → form `Faulkner Act`, plan `F`
  * - `governed under the [[Borough (New Jersey)|borough]] form … used in 218
  *   municipalities of the 564 statewide` → form `borough`, 218 of 564
- * - `governed under the [[Township (New Jersey)|Township]] form … one of 141
- *   municipalities (of the 564) statewide` → form `Township`, 141 of 564
  * - `operates using the [[Town (New Jersey)|Town]] form … one of nine
  *   municipalities (of the 564)` → form `Town`, 9 of 564
  *
- * And the composition sentence, which is the part that predicts the registry:
- * *nine members, with one member elected from each of six wards and three
- * elected on an at-large basis* → 9 seats, 6 ward, 3 at-large.
- *
- * Every field is independently nullable on purpose. A partial read is worth
- * having and a missing clause is never guessed — the operation-count rule
- * applied to a parser: what it did not find, it says it did not find.
+ * and the composition sentence: *nine members, with one member elected from
+ * each of six wards and three elected on an at-large basis* → 9 seats, 6
+ * ward, 3 at-large. Every field is independently nullable; a missing clause
+ * is never guessed.
  */
 export function parseGoverningBody(localGovernment: string): GoverningBody {
   const text = plain(localGovernment);
@@ -488,15 +344,8 @@ export function parseGoverningBody(localGovernment: string): GoverningBody {
   let seats = comp === null ? null : num(comp[2]);
 
   /**
-   * **The hyphenated form — `the seven-member township council`** (NJ Hunt 6).
-   *
-   * The composition pattern above wants *The X is comprised of N members*.
-   * Denville writes *The governing body is comprised of the mayor and the
-   * seven-member township council*, and Dover, Boonton Township and others use
-   * the same construction. `seats` came back null for **eleven of thirty-nine**
-   * Morris municipalities, and a null seat count is not a small loss: it is the
-   * denominator the roster completeness gate checks against, so every one of
-   * those bodies was unwirable for want of a hyphen.
+   * The hyphenated form: `the seven-member township council`. Without it the
+   * seat count, the denominator the roster check uses, is null.
    */
   if (seats === null) {
     const hyphenated =
@@ -559,16 +408,9 @@ export interface WikiOfficial {
 }
 
 /**
- * Office titles that appear glued to the front of a name.
- *
- * **Longest-first is load-bearing** — `Deputy Director` must be tried before
- * `Director`, or Morris County's deputy director enters the record as a person
- * called *Director John Krickus*.
- *
- * The county row is the interesting half: a New Jersey county commissioners
- * template carries the seven commissioners AND the three constitutional
- * officers — Clerk, Sheriff, Surrogate — in one list, so stripping these titles
- * is what separates the county governing body from the row officers.
+ * Office titles that appear glued to the front of a name. Longest-first:
+ * `Deputy Director` before `Director`. Includes county row officers (Clerk,
+ * Sheriff, Surrogate), which share a list with the county governing body.
  */
 const GLUED_TITLES = [
   "Council President",
@@ -628,14 +470,8 @@ const PARTY_WORDS: Record<string, string> = {
 };
 
 /**
- * **Split a roster sentence into members.**
- *
- * The separators are `, ` and ` and `, and neither may be split inside a
- * parenthetical — `(R, 2029; Ward 5)` contains a comma that is not a separator,
- * and a naive split produces eighteen half-members from a nine-member council.
- * Quoted nicknames (`Emanuel "Manny" Friedlander`) contain neither, but are
- * respected anyway because `John "Jack, Jr." Quinn` is the shape that will
- * eventually appear.
+ * Split a roster sentence into members on `, ` and ` and `, never inside a
+ * parenthetical (`(R, 2029; Ward 5)`) or quotes (`Given "Nick" Surname`).
  */
 export function splitMembers(sentence: string): string[] {
   const parts: string[] = [];
@@ -650,21 +486,10 @@ export function splitMembers(sentence: string): string[] {
       else if (ch === ")") depth--;
       if (depth === 0) {
         /**
-         * **A closing parenthesis is a separator when nothing else is** (NJ
-         * Hunt 6). Boonton's roster sentence runs
-         * `Luisa F. Lopez (Ward 4; D, 2027) Kimberly Mazzei (Ward 3; D, 2027)
-         * John P. Meehan (Ward 1; R, 2027) and Cy Wekilsky (…)` — three
-         * members with no comma between them, in the article's own text. The
-         * comma-and-`and` split produced ONE entry carrying three people, so
-         * Mazzei and Meehan did not exist and Lopez inherited the wrong ward:
-         * two sitting council members deleted and one misdescribed, from a
-         * missing punctuation mark.
-         *
-         * A `)` that returns depth to zero, followed by whitespace and a
-         * capital letter that is not a connective, therefore ends the entry.
-         * Where the article DOES punctuate, the comma or ` and ` is consumed
-         * next and the empty buffer is filtered out, so this never
-         * double-splits a well-formed list.
+         * A `)` returning depth to zero, followed by whitespace and a capital
+         * that is not a connective, ends the entry: some articles list
+         * members with no comma between them. Where the article punctuates,
+         * the empty buffer is filtered out.
          */
         if (ch === ")") {
           const rest = sentence.slice(i + 1);
@@ -675,9 +500,7 @@ export function splitMembers(sentence: string): string[] {
           }
         }
         if (ch === ",") {
-          // `Marcos Tapia-Aguilar, Sr. (Ward 4; D, 2026)` — a generational
-          // suffix is part of the name, and splitting on its comma produced a
-          // council member called `Sr.` in Dover.
+          // A generational suffix (`Name, Sr. (Ward 4; D, 2026)`) is part of the name.
           if (/^,\s*(?:Sr|Jr|II|III|IV|V|Esq|Ph\.?D|M\.?D)\b\.?/i.test(sentence.slice(i))) {
             buf += ch;
             continue;
@@ -701,27 +524,17 @@ export function splitMembers(sentence: string): string[] {
 }
 
 /**
- * **Parse one member entry.**
+ * Parse one member entry. Live shapes:
  *
- * The four live shapes, and the seam each one exercises:
+ * | Shape | Exercises |
+ * | --- | --- |
+ * | `Name (R, 2027; At-large)` | party, year, seat |
+ * | `Name (R, 2026)` | no seat at all |
+ * | `Name (Ward 3; D, 2027)` | seat before party |
+ * | `Name (R, term on committee ends December 31, 2026; term as mayor ends 2024)` | a term clause, two of them |
  *
- * | Shape | From | Exercises |
- * | --- | --- | --- |
- * | `Howard Morrison (R, 2027; At-large)` | Rockaway Township | party, year, seat |
- * | `Melissa Burnside (R, 2026)` | Rockaway Borough | no seat at all |
- * | `Christopher Almada (Ward 3; D, 2027)` | Dover | seat BEFORE party |
- * | `Brian Honan (R, term on committee ends December 31, 2026; term as mayor ends 2024)` | Boonton Township | a term CLAUSE, and two of them |
- *
- * The party is read as a single letter wherever one appears as its own token,
- * and as a word where the article spells it out — the first member of a roster
- * usually carries `[[Republican Party (United States)|R]]`, which `plain` has
- * already reduced to `R`, but some articles expand it to `Republican` instead.
- *
- * The term year is the LAST four-digit year in the parenthetical that is not
- * part of a seat, which is what makes the Boonton shape work: *term on committee
- * ends December 31, 2026; term as mayor ends 2024* is two years, and the one
- * this product wants is the seat's, not the chairmanship's. That is a judgement
- * call and it is stated here rather than left implicit — where the two disagree
+ * The party is a single-letter token or a spelled-out word. The term year is
+ * the last four-digit year in the parenthetical that is not part of a seat;
  * the raw parenthetical is kept so a human can check.
  */
 export function parseMember(entry: string, body: string | null): WikiOfficial | null {
@@ -759,11 +572,8 @@ export function parseMember(entry: string, body: string | null): WikiOfficial | 
         }
       }
     }
-    // The seat's term, not a chairmanship's. Dover writes the seat first
-    // (`Ward 3; D, 2027`) and Boonton Township writes two term clauses
-    // (`term on committee ends December 31, 2026; term as mayor ends 2024`), so
-    // the clause is chosen for CARRYING A YEAR first, and among those the one
-    // that is not about holding an office.
+    // The seat's term, not a chairmanship's: the clause carrying a year and not
+    // about holding an office wins.
     const withYear = clauses.filter((c) => /\b(?:19|20)\d{2}\b/.test(c));
     const seatClause =
       withYear.find((c) => /\bterm\b/i.test(c) && !/\bas\b/i.test(c)) ??
@@ -793,21 +603,11 @@ const NOT_A_PERSON =
   /\b(?:council|committee|board|township|borough|town|city|county|manager|administrator|clerk|attorney|department|commission|authority|district|term|seat|election|meeting|office|position|member|members|vacancy|resident|residents)\b/i;
 
 /**
- * **Does this bare name look like a person?** (NJ Hunt 6.)
- *
- * Mount Olive's roster sentence ends `…John Mania (R, 2025), Mary Lalama, and
- * Raffaele Ruggiero.` — two sitting council members whom the article names
- * without a party or a term. The roster filter kept only entries carrying a
- * party, a year or a seat, so both were discarded as prose and a seven-member
- * council rendered as five.
- *
- * **The discarded ones are the members the encyclopedia says least about**,
- * which is the equal-effort failure exactly: a filter keyed on how much detail
- * an entry carries deletes the least-documented people first. So a bare entry
- * survives when it reads as a personal name — every token capitalised, an
- * initial, a particle or a suffix — and carries no word that names an office.
- * It is still only a NAME, and RULING 87 governs it from there: it is a `LEAD`
- * until its own citation is read, exactly like every other name on the page.
+ * Does this bare name look like a person? Some rosters name members without a
+ * party or term; a filter keyed on detail would delete the least-documented
+ * people first. A bare entry survives when every token is capitalised (or an
+ * initial, particle or suffix) and no word names an office. It is still only a
+ * name: a `LEAD` until its own citation is read.
  */
 export function looksLikePersonName(name: string): boolean {
   const trimmed = name.trim().replace(/\.$/, "");
@@ -836,27 +636,15 @@ export interface RosterParse {
   leadIn: string | null;
   citationUrls: string[];
   /**
-   * **What the ARTICLE says the body's size is, against what parsed** —
-   * RULING 100, 2026-08-23.
-   *
-   * This is the field that would have caught Rockaway Township. The article's
-   * composition sentence states *nine members*; a stray `<br id="isPasted">`
-   * ended the roster sentence after five; the parse returned five rows and
-   * every instrument in the repo read that as a success. Nothing was throwing
-   * and nothing was zero — which is precisely why the row count could not see
-   * it and the article's own denominator can.
-   *
-   * `NOT_ASSERTABLE` where the article states no size. That is the common case
-   * for smaller bodies and it is reported rather than passed.
+   * What the article says the body's size is, against what parsed.
+   * `NOT_ASSERTABLE` where the article states no size.
    */
   count: CountAssertion;
 }
 
 /**
- * The lead-in phrases that introduce a roster sentence. Ordered longest-first so
- * a specific one wins over a general one. **Append-only** — a phrase that stops
- * appearing costs nothing to keep, and deleting one is how the next state's
- * parse silently returns zero.
+ * The lead-in phrases that introduce a roster sentence, longest-first.
+ * Append-only.
  */
 export const ROSTER_LEAD_INS = [
   "members of the",
@@ -865,26 +653,16 @@ export const ROSTER_LEAD_INS = [
 ];
 
 /**
- * **Find and parse the roster sentence.**
- *
- * The sentence is located by lead-in, then taken to the end of the sentence —
- * which is *not* simply the next full stop, because `Thomas J. Haynes III` and
- * `Marcos Tapia-Aguilar, Sr.` both contain one. The end is a full stop followed
- * by whitespace and a capital letter or end-of-text, with initials and common
- * abbreviations excluded.
- *
- * Refs are pulled from the ORIGINAL wikitext of that span before `plain`
- * removes them, so the citation set travels with the roster it belongs to.
+ * Find and parse the roster sentence. A sentence ends at a full stop followed
+ * by whitespace and a capital or end-of-text, excluding initials and common
+ * abbreviations. Refs are pulled from the original wikitext of that span
+ * before `plain` removes them.
  */
 export function parseRoster(localGovernment: string, bodyName: string | null): RosterParse {
   /*
-   * **The denominator, read BEFORE the roster** — RULING 100.
-   *
-   * Two independent readings of the same claim, in order of specificity:
-   * `parseGoverningBody`'s composition sentence, which is the shape New Jersey
-   * articles use and is already tested; then the generic membership shapes in
-   * `lib/extract/count-assertion.ts`, which reach the states whose articles
-   * word it differently. Either may be null and neither is guessed at.
+   * The denominator, read before the roster: `parseGoverningBody`'s composition
+   * sentence, then the generic membership shapes in
+   * `lib/extract/count-assertion.ts`. Neither is guessed at.
    */
   const seats = parseGoverningBody(localGovernment).seats;
   const generic = statedCountIn(plain(localGovernment));
@@ -905,47 +683,22 @@ export function parseRoster(localGovernment: string, bodyName: string | null): R
   };
 
   /**
-   * **A lead-in is not enough, and this is the defect that taught it.** The
-   * composition sentence — *The members of the governing body are elected to
-   * staggered four-year terms…* — starts with the same three words as the
-   * roster sentence and contains no people at all. Matching the first lead-in
-   * returned six fragments of prose for a nine-member council, with every field
-   * null, and it looked like a successful parse.
-   *
-   * So every candidate sentence is PARSED and the best result wins, scored on
-   * how many entries came back looking like a person: a name plus a
-   * parenthetical carrying a party letter or a term year. Prose scores zero
-   * because prose has no parentheticals.
+   * The composition sentence starts like a roster sentence and names nobody,
+   * so every candidate sentence is parsed and the best wins, scored on entries
+   * carrying a party letter, term year or seat. Prose scores zero.
    */
   let best: RosterParse | null = null;
   let bestScore = 1; // a roster names at least two people
 
   for (const s of sentences(localGovernment)) {
     /**
-     * **The lead-in is REPORTED, never REQUIRED.** An earlier version gated on
-     * a phrase list and lost Montville, whose roster sentence is *Montville's
-     * Township Committee is comprised of Mayor Matthew S. Kayne (R, …)* — a
-     * possessive with no `members of` anywhere in it. Four of thirty-nine
-     * municipalities were lost the same way.
-     *
-     * Scoring makes the phrase list unnecessary: prose scores zero because
-     * prose has no `(R, 2027; Ward 4)` in it, so every sentence can be tried
-     * and the best one wins. The list survives only so the report can say which
-     * shape matched, and so a genuinely new shape is visible rather than
-     * silently absorbed.
+     * The lead-in is reported, never required: some rosters are introduced by
+     * a possessive (`<Place>'s Township Committee is comprised of …`).
      */
     const lower = s.text.toLowerCase();
     const leadIn = ROSTER_LEAD_INS.find((p) => lower.includes(p + " ")) ?? null;
 
-    /**
-     * **The past tense is a copula too** (NJ Hunt 6). Pequannock's roster
-     * sentence is *As of 2023, Pequannock's Township Council was composed of
-     * Mayor David G. Kohle (R, …)* — five sitting council members behind a
-     * `was` where the list only knew `is`. The whole municipality parsed to
-     * zero officials and reported as a body with no roster, which is the
-     * zero-row-extraction failure: the parser had told us about itself, not
-     * about the document. Append-only, like the lead-in list.
-     */
+    /** Past-tense copulas (`was composed of`) count too. Append-only. */
     const copula =
       /\b(?:are|were|is comprised of|was comprised of|is composed of|was composed of|consists of|consisted of|comprises|comprised|includes|included|is|was)\b/i.exec(
         s.text,
@@ -967,13 +720,9 @@ export function parseRoster(localGovernment: string, bodyName: string | null): R
     bestScore = score;
     best = {
       /**
-       * Keep the entries that look like people. An entry carrying a party, a
-       * term year or a seat is one; so is a bare personal name (NJ Hunt 6 —
-       * see `looksLikePersonName`, and the two Mount Olive members the
-       * stricter test deleted). A trailing clause is neither.
-       *
-       * The SCORE above stays on the strict test on purpose: a sentence full
-       * of capitalised prose must not out-score a real roster.
+       * Keep entries carrying a party, term year or seat, or a bare personal
+       * name (`looksLikePersonName`). The score above stays on the strict test
+       * so capitalised prose cannot out-score a real roster.
        */
       officials: officials
         .filter(
@@ -987,9 +736,7 @@ export function parseRoster(localGovernment: string, bodyName: string | null): R
       sentence: s.text,
       leadIn,
       citationUrls,
-      // Filled in below, once the winning sentence is known. A placeholder
-      // here rather than a partial assertion per candidate sentence: the
-      // assertion is about the parse that WON, not about each attempt.
+      // Placeholder; the assertion is made once for the winning parse.
       count: assertCount(0, stated, statedBy),
     };
   }
@@ -999,15 +746,8 @@ export function parseRoster(localGovernment: string, bodyName: string | null): R
 }
 
 /**
- * **Split a run of wikitext into sentences, keeping the RAW text of each.**
- *
- * This is what makes matching possible at all. The roster and mayor sentences
- * have to be located by their PLAIN text — `[[Mayor]] of Rockaway Township is`
- * does not match `mayor of` — while the footnotes have to be read out of the
- * RAW text, because `plain` deletes them. Splitting first and rendering each
- * sentence separately keeps both, and it is why an early version of this parser
- * read the composition sentence as a roster and returned six fragments of prose
- * where nine council members were sitting.
+ * Split a run of wikitext into sentences, keeping each one's raw text: sentences
+ * are matched on their plain text, while footnotes are read from the raw text.
  */
 export function sentences(raw: string): { raw: string; text: string }[] {
   const out: { raw: string; text: string }[] = [];
@@ -1026,21 +766,12 @@ export function sentences(raw: string): { raw: string; text: string }[] {
 }
 
 /**
- * **Where the sentence ends.**
+ * Where the sentence ends:
  *
- * Three things make this harder than finding the next full stop, and all three
- * cost real data before they were handled:
- *
- * 1. **A `<ref>` is full of sentences that are not this sentence.** *Mayor,
- *    Rockaway Township. Accessed April 27, 2023.* sits inside the footnote
- *    attached to the mayor sentence, so a naive split ended the sentence inside
- *    its own citation and every extracted person came back with zero citation
- *    URLs — which would have made the confirmation rate 0 of N for reasons that
- *    have nothing to do with Wikipedia.
- * 2. **The footnotes come AFTER the full stop and belong to the sentence.** So
- *    the end is pushed past any run of refs that immediately follows.
- * 3. **Names contain full stops.** `Thomas J. Haynes III`, `Marcos
- *    Tapia-Aguilar, Sr.`, `St. Clair`.
+ * 1. A `<ref>` contains sentences that are not this one, so ref bodies are masked.
+ * 2. Footnotes after the full stop belong to the sentence, so the end is pushed
+ *    past any run of refs that immediately follows.
+ * 3. Names contain full stops (`Name J. Surname III`, `Name, Sr.`, `St. Clair`).
  */
 function sentenceEnd(text: string): number {
   // Mask ref bodies so no period inside one can end the sentence, keeping the
@@ -1070,23 +801,13 @@ function sentenceEnd(text: string): number {
 }
 
 /**
- * **The mayor sentence.**
- *
- * *the Mayor of Rockaway Township is Republican Joseph Jackson, whose term
- * expires on December 31, 2027* and *the mayor of Rockaway is Republican Thomas
- * Mulligan, whose term of office ends December 31, 2027* are the same sentence
- * with different verbs, and both appear in one county.
- *
- * Where the mayor is chosen BY the governing body rather than elected — the
- * Township Committee form — there is no such sentence, and the mayor appears in
- * the roster with a glued title instead. That returns `null` here and is not a
- * miss: `parseMunicipality` looks for the glued title before it concludes the
- * mayor is unnamed.
+ * The mayor sentence (`the Mayor of <Place> is Republican <Name>, whose term
+ * expires …`). Where the governing body chooses the mayor there is no such
+ * sentence and this returns null; `parseMunicipality` then looks for the
+ * roster's glued title.
  */
 export function parseMayor(localGovernment: string): WikiOfficial | null {
-  // Located on the PLAIN text of each sentence — `[[Mayor]] of Rockaway
-  // Township is` does not match `mayor of` until the wikilink is rendered — and
-  // the footnotes are read off that same sentence's RAW text.
+  // Located on each sentence's plain text; footnotes read off its raw text.
   const hit = sentences(localGovernment).find((s) =>
     /\bmayor\s+of\s+[^.]{2,60}?\s+is\s+/i.test(s.text),
   );
@@ -1095,9 +816,7 @@ export function parseMayor(localGovernment: string): WikiOfficial | null {
   const citationUrls = [...new Set(spanRefs.flatMap((r) => r.urls))];
 
   const text = hit.text;
-  // The name may carry a middle initial — `Democrat James P. Dodd` — so the
-  // full stop cannot be excluded from it. The name runs to the comma or to
-  // `whose`, which is how every one of these sentences is built.
+  // The name may carry a middle initial, so it runs to the comma or `whose`.
   const m =
     /\bmayor\s+of\s+[^,]{2,60}?\s+is\s+(Republican|Democrat|Democratic|Independent)?\s*([A-Z][^,]{2,60}?)(?=,|\s+whose\b|\s*$)/i.exec(
       text,
@@ -1122,55 +841,10 @@ export function parseMayor(localGovernment: string): WikiOfficial | null {
 /* ─────────────────── Representation, links, citation hosts ───────────────── */
 
 /**
- * **WGH-16 (2026-08-28) — PLURAL, BECAUSE A MUNICIPALITY IS A POLYGON.**
- *
- * ## What this was, and why it could not be right
- *
- * ```ts
- * congressionalDistrict: string | null;   // ONE
- * legislativeDistrict:   string | null;   // ONE
- * ```
- *
- * hung off `MunicipalityParse`. **A municipality is a polygon**, and a polygon
- * crosses whatever it crosses: legislative districts are drawn to equal
- * population and municipal lines are drawn to history, so the two agree only by
- * coincidence. Measured on this repository's own instrument
- * (`data/states/az/hunt/85641-district-territory.json`, 44 probed points against 20
- * walked ArcGIS layers), **five of the seven territories at ZIP 85641 span two
- * legislative districts**, including Vail Unified and the Corona de Tucson Fire
- * District.
- *
- * The parser could not have caught it either, and that is the second half of
- * the defect: `.exec()` returns the FIRST match and nothing more, so a section
- * naming two districts produced one district and no signal that it had dropped
- * the other. **A single-capture parser and a singular field agree with each
- * other perfectly while both being wrong.**
- *
- * ## Why this is repaired rather than papered over
- *
- * Nothing reads these fields today. `lib/ops/generated-register.ts`,
- * `scripts/build-nj-rosters.mts`, `scripts/muni-site-index.mts` and
- * `scripts/nj-hunt5-ledger.mts` all consume `externalLinks`, `council` and
- * `mayor` — verified by grep across the repository, not assumed. So this is a
- * **latent trap, not a rendered wrong answer**, and it was reachable the moment
- * anyone wired `representation.legislativeDistrict` to a reader.
- *
- * A guard on the consumer side would have left the trap armed. The type is what
- * lies, so the type is what changes: `string[]` cannot express "the one
- * district" and therefore cannot be quietly used as though it did.
- *
- * ## What plural does NOT mean
- *
- * It does not mean the parser now claims completeness. A Wikipedia section that
- * names one district still yields one, and that is the honest reading of the
- * source — `["11"]` is *what the page said*, never *the only district this
- * municipality touches*. The authoritative answer to overlap is a boundary
- * walk, which is what the ArcGIS instrument is; this is a citation-bearing
- * secondary source, and it is labelled as one.
- *
- * An empty array is *the section named none*. It is not an assertion that the
- * municipality has no congressional district, and no consumer may read it as
- * one.
+ * Districts are plural because a municipality is a polygon and can span
+ * several. The arrays hold what the section names, in order, deduplicated; an
+ * empty array means the section named none, never that the municipality has
+ * no district. Boundary overlap is answered by a boundary walk, not here.
  */
 export interface Representation {
   /**
@@ -1189,9 +863,7 @@ export interface Representation {
 function allCaptures(text: string, patterns: RegExp[]): string[] {
   const out = new Set<string>();
   for (const pattern of patterns) {
-    // A fresh RegExp per call: a `g` flag carries `lastIndex` across calls, and
-    // a shared module-level literal would make the SECOND municipality parsed
-    // return different results from the first.
+    // A fresh RegExp per call: a shared `g` literal would carry `lastIndex` across calls.
     for (const m of text.matchAll(new RegExp(pattern.source, `${pattern.flags}g`))) {
       if (m[1] !== undefined) out.add(m[1]);
     }
@@ -1200,15 +872,9 @@ function allCaptures(text: string, patterns: RegExp[]): string[] {
 }
 
 /**
- * The Federal/state/county representation section: the district numbers and,
- * more valuably, the names of the templates that carry the actual officeholders.
- * `{{NJ Legislative 25}}` and `{{NJ Morris County Commissioners}}` are where the
- * senator, the two assembly members and the seven commissioners live, and they
- * are fetched as their own pages.
- *
- * **Multi-capture** since WGH-16 — see the note on {@link Representation} for
- * why a first-match-only read of a polygon's districts is a wrong answer that
- * looks like a right one.
+ * The Federal/state/county representation section: the district numbers and
+ * the names of the templates that carry the officeholders (fetched as their
+ * own pages). Every match is captured, not only the first.
  */
 export function parseRepresentation(sectionText: string): Representation {
   const text = plain(sectionText);
@@ -1222,10 +888,7 @@ export function parseRepresentation(sectionText: string): Representation {
     congressionalDistricts: allCaptures(text, [
       /(\d+)(?:st|nd|rd|th)\s+Congressional District/i,
     ]),
-    // Both spellings, both scanned in full. The `??` this replaced stopped at
-    // the first pattern that matched at all, so a section using both forms —
-    // which is how a municipality split across two districts tends to read —
-    // lost every district named in the other one.
+    // Both spellings, each scanned in full.
     legislativeDistricts: allCaptures(text, [
       /(\d+)(?:st|nd|rd|th)\s+state\s+legislative\s+district/i,
       /state\s+legislative\s+district\s+(\d+)/i,
@@ -1240,11 +903,7 @@ export interface ExternalLink {
   label: string | null;
 }
 
-/**
- * The External links block. This is where the township site, the school
- * district, the NCES data page and the fire department are written down — four
- * Tier B starting points per municipality, handed over in one read.
- */
+/** The External links block: the municipality's own site, school district and other starting points. */
 export function parseExternalLinks(wikitext: string): ExternalLink[] {
   const sec = section(wikitext, "External links");
   if (sec === null) return [];
@@ -1262,13 +921,8 @@ export function parseExternalLinks(wikitext: string): ExternalLink[] {
 }
 
 /**
- * **The citation host map — the `press-outlet-map` route's raw material.**
- *
- * An article's reference list is a curated bibliography of who actually
- * publishes about this place, assembled by people with no stake in our hunt.
- * Counting hosts across a state's articles produces a ranked list of the outlets
- * worth querying directly, which is strictly better than asking a general engine
- * and hoping.
+ * The citation host map: counting reference hosts across a state's articles
+ * gives a ranked list of outlets that publish about those places.
  */
 export function citationHosts(wikitext: string): Map<string, number> {
   const counts = new Map<string, number>();
@@ -1287,21 +941,9 @@ export function citationHosts(wikitext: string): Map<string, number> {
 /* ───────────────────────── Officeholder templates ────────────────────────── */
 
 /**
- * **Parse an officeholder template into named people.**
- *
- * These are prose templates, not tables: *the 25th legislative district … is
- * represented in the State Senate by Anthony M. Bucco (R, Boonton Township) and
- * in the General Assembly by Aura K. Dunn (R, Mendham Borough) and Marisa
- * Sweeney (D, Morristown).*
- *
- * The shape is `Name (P, Place)` — the same parenthetical grammar the roster
- * uses, with a place where the roster has a term and a seat, so `parseMember`
- * reads it correctly and simply returns `termEnds: null`. That is a real reuse
- * rather than a coincidence: both are the same house style.
- *
- * `<noinclude>` is cut first. It carries the template's own category links and
- * documentation, and its `{{PAGENAME}}` and category text otherwise parse as
- * people.
+ * Parse an officeholder template into named people. These are prose templates
+ * of the shape `Name (P, Place)`, the same parenthetical grammar as the roster.
+ * `<noinclude>` is cut first; its category text would otherwise parse as people.
  */
 export function parseOfficeholderTemplate(
   templateWikitext: string,
@@ -1338,9 +980,8 @@ export function parseOfficeholderTemplate(
     });
   }
 
-  // The Senate template spells the party once for both members: "represented in
-  // the United States Senate by Democrats Cory Booker (Newark, term ends 2027)
-  // and Andy Kim (Moorestown, term ends 2031)."
+  // A Senate template may spell the party once for both members
+  // ("by Democrats Name (Place, term ends 2027) and Name (…)").
   if (out.length === 0) {
     const shared = /\bby\s+(Republicans|Democrats|Independents)\s+/.exec(text);
     const party =
@@ -1385,13 +1026,9 @@ export interface MunicipalityParse {
 }
 
 /**
- * **One municipality article, read.**
- *
- * Every field is independently nullable and the headings are always returned:
- * an article whose Local government section is called something else produces a
- * null governing body AND the list of what it is actually called, which is a
- * work item rather than a mystery. A parser that returned nothing and said
- * nothing would be the zero-row extraction the constitution forbids.
+ * One municipality article, read. Every field is independently nullable and
+ * the headings are always returned, so a differently named section is
+ * diagnosable.
  */
 export function parseMunicipality(page: WikiPage): MunicipalityParse {
   const base: MunicipalityParse = {
@@ -1420,8 +1057,7 @@ export function parseMunicipality(page: WikiPage): MunicipalityParse {
   const gb = parseGoverningBody(lg);
   const roster = parseRoster(lg, gb.bodyName);
   let mayor = parseMayor(lg);
-  // The committee forms choose a mayor from among the members; the roster
-  // carries the title instead of a sentence of its own.
+  // Committee forms choose the mayor from the members; the roster carries the title.
   if (mayor === null) mayor = roster.officials.find((o) => o.title === "Mayor") ?? null;
 
   const repSection =
@@ -1453,21 +1089,13 @@ export interface CitationCheck {
 }
 
 /**
- * **RULING 87's second clause, made mechanical: Wikipedia names the person, the
- * citation proves them.**
+ * Wikipedia names the person; the citation proves them. Deliberately weak:
+ * the cited primary source is fetched and asked whether it mentions the
+ * person's surname.
  *
- * The test is deliberately weak and deliberately stated as weak: the cited
- * primary source is fetched and asked whether it mentions the person's SURNAME.
- * That is not proof the source says what the article says it says — a session
- * reading the page is what settles that — but it is a real and cheap
- * discriminator, and it catches the failure that actually matters here, which is
- * a name attached to a citation that has nothing to do with them.
- *
- * `CONFIRMED` means a cited source was reached and mentions them. `LEAD` means a
- * source was reached and does not. `UNREACHABLE` means no citation could be
- * fetched — which is a fact about the fetch, never about the person, and never
- * an absence. `NO_CITATION` means the article asserted it with no footnote at
- * all, and that is a finding about the article.
+ * `CONFIRMED`: a cited source was reached and mentions them. `LEAD`: reached
+ * and does not. `UNREACHABLE`: no citation could be fetched (a fact about the
+ * fetch, never the person). `NO_CITATION`: the article gave no footnote.
  */
 export async function confirmAgainstCitation(
   official: WikiOfficial,

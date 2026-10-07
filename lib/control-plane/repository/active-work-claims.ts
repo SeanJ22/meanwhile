@@ -1,9 +1,4 @@
-/** Bounded, read-only census of active RouteTask claims.
- *
- * This is an Attempt/lease universe, not the routine civic-data source-run
- * universe. The latter has no Attempt and must be counted separately before a
- * UI labels this a complete number of all worker jobs.
- */
+/** Read-only census of active RouteTask claims: the Attempt/lease universe, not routine civic-data source runs. */
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import { WINDOW_LEASE_ID } from "../promotion/window.ts";
 import type { RouteTask } from "../route-task.ts";

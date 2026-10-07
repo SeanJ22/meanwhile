@@ -8,25 +8,13 @@ import { ASK_PILL_LABELS } from "@/lib/routing/ask-pill-labels";
 import type { AskPillPlacement } from "@/lib/map/cluster-placement";
 import pearlStyles from "./ask-pearl.module.css";
 
-/** Which small popup is open. At most one, ever (INTERACTIONS §1). */
+/** Which small popup is open. At most one. */
 export type ReaderPop = "zip" | "vote" | "ask" | null;
 
 /**
- * The compound nav and the Ask pill (approved reader design, 2026-09-28).
- *
- * One rounded container with four segments — **Ballot**, the **ZIP**, **Who
- * governs here?** and **Where can I vote?** — separated by 1px dividers, and
- * the Ask pill directly below it, always separate from the nav. Inside the
- * sidebar the nav is always 2×2; in the collapsed header it is 2×2 below
- * 1024px and one row of four above.
- *
- * Each segment only asks `map-entry` to open its view. The ZIP, Where can I
- * vote? and Ask views are small popups anchored to this control; Who governs
- * here? is the large card. `map-entry` owns all of them, so opening one closes
- * every other — this component cannot open a second view on its own.
- *
- * There is exactly one of this component on screen: `map-entry` renders it
- * either in the sidebar or in the collapsed header, never both.
+ * The compound nav (Ballot, ZIP, Who governs here?, Where can I vote?) with
+ * the Ask pill below it. Each segment asks `map-entry` to open its view, so
+ * opening one closes every other. `map-entry` renders exactly one instance.
  */
 export function PillCluster({
   placement,
@@ -51,8 +39,7 @@ export function PillCluster({
   onOpenBallot?: () => void;
 }) {
   const validZip = zip && /^\d{5}$/.test(zip) ? zip : null;
-  // The design gives Ask its full example label at every placement: the pill
-  // is always alone on its row (300–380px), never beside the ballot pill.
+  // Ask's full example label at every placement; the pill is always alone on its row.
   const readerCopy = useReaderCopy();
   const pill = { ...ASK_PILL_LABELS.sidebar, label: readerCopy("copy.askSidebar"), ariaLabel: readerCopy("copy.askAccessible") };
 

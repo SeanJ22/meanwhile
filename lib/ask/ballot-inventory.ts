@@ -18,51 +18,16 @@ import type { CandidatePublicationDate, CandidateSourceClass } from "../candidat
 import type { EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
 /**
- * **THE BALLOT'S OWN ENTITIES, AS THINGS ASK CAN RESOLVE AND RETRIEVE FROM.**
- * (PR #212 follow-up, 2026-08-28.)
+ * The ballot's own entities as things Ask can resolve and retrieve from. Every
+ * id, name, party, question text and absence is read from the same committed
+ * `BallotSet` the page renders; nothing is duplicated. It yields
+ * `BindableEntity` rows for the binder and `EvidenceRecord` rows scoped to one
+ * canonical id.
  *
- * ## What was actually shipped, and why it looked like it worked
- *
- * `BallotAsk` sent the page's contest titles and candidate names as
- * `activeSubjects`. They reached the interpretation rung as prose and went no
- * further: the canonical inventory the binder resolves against was **meeting
- * bodies plus statewide executives derived from the reader's divisions**, and
- * nothing else. So the ballot contributed context to a model and zero entities
- * to the product.
- *
- * Katie Hobbs answered correctly on that surface, which is what made the gap
- * hard to see. She answered because she is a sitting statewide executive in
- * `lib/officials/statewide-executives.ts` — not because she is on the reader's
- * ballot. Ask the same surface about **Andy Biggs**, who is on the same
- * governor line, and the product held no such entity. Every challenger, every
- * non-statewide candidate, every contest and every one of the fifteen
- * propositions was unresolvable on the page that renders them.
- *
- * ## The rule this module follows
- *
- * **Ballot truth is not duplicated here.** Every id, name, party, question text
- * and absence below is READ from the committed ballot set the page itself
- * renders from — the same `BallotSet`, through the same source registry. This
- * module turns those records into two things Ask needs and the ballot store
- * does not provide:
- *
- * 1. `BindableEntity` rows, so the binder can resolve a name the reader typed.
- * 2. `EvidenceRecord` rows scoped to ONE canonical id, so retrieval selects
- *    exactly the records belonging to the subject that bound.
- *
- * ## Aliases exist because readers do not type filing titles
- *
- * The clerk files *"Proposition 141: Prohibit tax; monitoring; vehicle
- * mileage"*. A reader types *"Prop 141"*. The binder requires EVERY
- * distinctive token of a name to appear in the question, which is the
- * conservative property that keeps it from inventing matches — and it means
- * the filing title can never be bound by a person.
- *
- * So a measure contributes three entity rows sharing ONE canonical id: the
- * filing title, `Proposition 141`, and `Prop 141`. Sharing the id is what
- * makes this safe: `bindNamedEntity` treats a tie as ambiguous only across
- * DISTINCT ids, so three rows for one measure resolve to one measure rather
- * than to a clarification.
+ * A measure contributes three entity rows sharing one canonical id (the filing
+ * title, `Proposition N`, `Prop N`), because the binder requires every
+ * distinctive token of a name and readers do not type filing titles. Shared ids
+ * keep the rows from being read as ambiguous.
  */
 
 /** What a resolved ballot entity actually is, kept beside the binder row. */
@@ -76,14 +41,9 @@ export interface BallotSubjectRecord {
   contestTitle: string;
   ocdId: string;
   /**
-   * The FILING row behind a general-election nominee, where one exists.
-   *
-   * The two stores key the same human differently — the filing calls them
-   * `ballot-az-pima:governor:biggs-andy` and the general lineup keys them
-   * `ballot-az-pima:governor|Andy Biggs` — and `app/ballot/page.tsx` renders
-   * the LINEUP key wherever a lineup exists. Carrying both on one subject is
-   * what stops one person becoming two entities and a question about them
-   * becoming a clarification the reader cannot possibly answer.
+   * The filing row behind a general-election nominee, where one exists. The
+   * filing and the lineup key the same person differently; carrying both keeps
+   * one person one entity.
    */
   candidacyId?: string | null;
   /** A sourced former filing, never a currently listed candidate. */
@@ -101,13 +61,9 @@ export interface BallotAskInventory {
 }
 
 /**
- * A candidate's target key — the SAME key the ballot page uses for positions,
- * funding and incumbency.
- *
- * Filed candidacies carry their own id. General-lineup nominees, who have no
- * filing row, are keyed `<contestId>|<name>` — `app/ballot/page.tsx` builds
- * exactly that string in four places, and re-deriving it differently here
- * would produce an id that resolves to a person and retrieves nothing.
+ * A candidate's target key, the same key the ballot page uses. General-lineup
+ * nominees with no filing row are keyed `<contestId>|<name>`, as
+ * `app/ballot/page.tsx` builds it.
  */
 export function candidateTargetKey(contestId: string, name: string): string {
   return `${contestId}|${name}`;
@@ -119,14 +75,8 @@ export function candidacyDisplayName(candidacy: Candidacy): string {
 }
 
 /**
- * A surname worth offering as an alias.
- *
- * Short surnames and surnames that are ordinary question vocabulary are
- * skipped, for the reason `COMMON_QUESTION_NOUNS` exists: a one-token entity
- * whose token is a word people use to ASK captures questions it has nothing to
- * do with. This is the conservative direction — a skipped alias costs a reader
- * who typed only a surname one clarification, and a wrong alias costs them an
- * answer about the wrong person.
+ * A surname worth offering as an alias. Short surnames and ordinary question
+ * words are skipped (see `COMMON_QUESTION_NOUNS`).
  */
 function usableSurname(familyName: string): boolean {
   const token = familyName.trim().toLowerCase();
@@ -146,12 +96,8 @@ export function measureDesignations(title: string): string[] {
 }
 
 /**
- * Build the canonical Ask inventory for one reader's ballot.
- *
- * `contests` is the MATCHED subset — the contests this reader's divisions
- * actually reach — rather than the whole set, so a reader cannot resolve a
- * measure from a county they do not live in and then be handed its records as
- * though they were on their ballot.
+ * Build the canonical Ask inventory for one reader's ballot. `contests` is the
+ * matched subset for the reader's divisions.
  */
 export function ballotAskInventory(
   set: BallotSet | null,
@@ -226,24 +172,9 @@ export function ballotAskInventory(
     const nominees = nomineesFor(contest.id);
 
     /*
-     * **ONE PERSON, ONE ENTITY — and the general lineup decides which key.**
-     * (Found by the route-level red control, 2026-08-28.)
-     *
-     * Where a source publishes a general-election lineup, `app/ballot/page.tsx`
-     * renders THOSE people and keys them `<contestId>|<name>`. The filing list
-     * carries the same humans under `<contestId>:<surname>-<given>`. Adding
-     * both produced two entities for Andy Biggs with two distinct ids, so the
-     * binder — correctly, by its own rule — called a question about him
-     * AMBIGUOUS and the reader was asked which Andy Biggs they meant.
-     *
-     * A false clarification is worse than a missing one: it is the product
-     * telling a reader their question is unclear when it was not, about a
-     * distinction that exists only in our storage.
-     *
-     * So the lineup is canonical where it exists, the filing row rides along as
-     * `candidacyId` so retrieval still reaches it, and a filed candidate the
-     * lineup does not carry is not on this reader's general-election ballot and
-     * is not offered as a subject for it.
+     * Where a general lineup exists it is canonical (keyed `<contestId>|<name>`,
+     * as the page renders), and the filing row rides along as `candidacyId`. A
+     * filed candidate the lineup does not carry is not offered.
      */
     if (nominees.length > 0) {
       for (const nominee of nominees) {
@@ -291,19 +222,9 @@ export function ballotAskInventory(
   }
 
   /*
-   * Exact held filings remain answerable without becoming current ballot cards.
-   *
-   * **A PERSON THE READER NAMES IS ANSWERABLE WHEREVER THE READER STANDS.**
-   * (2026-09-25, the Ask model comparison.) *"How much has Rebecca Harned
-   * raised?"*, asked by a reader in Merrimack County, came back UNRESOLVED over
-   * a state holding that files her committee: her contest (State Senator,
-   * District 7) is not one of the reader's divisions, and this loop required
-   * that it be. The division scope exists so a MEASURE or a CONTEST from
-   * somewhere else is never handed to a reader as though it were on their
-   * ballot — and it still is not: only a filing the reader's own words named
-   * (`namedSourceFilingIds`) is admitted, as that one person, marked
+   * A held filing the reader's own words named (`namedSourceFilingIds`) is
+   * answerable wherever the reader stands, as that one person, marked
    * `outsideReaderDivisions` so no record says it is on this reader's ballot.
-   * The same rule `namedOfficeholders` follows for a held official.
    */
   const requested = new Set(requestedFilingIds);
   for (const candidacy of set.candidacies) {
@@ -385,15 +306,7 @@ function nomineeRecord(contestId: string, contestTitle: string, nominee: AskNomi
     sourceUrl: nominee.sourceUrl ?? null, sourceOrg: nominee.sourceOrg ?? null, retrievedAt: nominee.retrievedAt ?? null };
 }
 
-/**
- * The records belonging to ONE resolved ballot subject, and nothing else.
- *
- * Every branch selects on a canonical id — `contestId`, the candidate's target
- * key, the measure's contest id. Nothing here matches on a display name, which
- * is the whole difference between this and what shipped: a name-matched
- * retrieval would hand a reader asking about one Chris King the records of
- * another.
- */
+/** The records belonging to one resolved ballot subject, selected by canonical id, never by name. */
 export function ballotRecordsFor(
   record: BallotSubjectRecord,
   deps: BallotRetrievalDeps,
@@ -418,10 +331,7 @@ export function ballotRecordsFor(
     records.push({
       kind: "CONTEST",
       id: contest.id,
-      /* The date SPELLS OUT. This record renders verbatim to a reader whenever
-         synthesis is unavailable or rejected, and `2026-11-03` is an
-         identifier rather than something a person says — the product-wide
-         convention `formatDateLong` carries. */
+      /* The date spelled out: this record can render verbatim. */
       text:
         `${contest.title} appears on this ballot for ${deps.set.election.name}` +
         ` on ${formatDateLong(deps.set.election.date) ?? deps.set.election.date}.` +
@@ -471,15 +381,8 @@ export function ballotRecordsFor(
       });
     }
     /*
-     * **THE POSITIVE HALF OF THE RELEVANCE GATE.** (ASK-24, 2026-09-02.)
-     *
-     * Every record above is this measure's own evidence — its contest row, its
-     * official question and statement, its summary, its provisions — so each
-     * carries the measure's canonical id as the subject it is evidence FOR.
-     * `lib/ask/relevance.ts` reads that to keep them and to drop a record
-     * stamped for a different subject, at the id level. Without this a measure
-     * pack could carry another ballot item's record on nothing but a shared
-     * division, which is the U.S. Senate bullet the owner met under Prop 141.
+     * Each record is this measure's own evidence, so it carries the measure's id
+     * as its subject; `lib/ask/relevance.ts` keeps or drops records by it.
      */
     for (const created of records) created.subjectId = record.id;
     return { records, denominators };
@@ -502,9 +405,7 @@ export function ballotRecordsFor(
     return { records, denominators };
   }
 
-  /* PERSON — one candidate, selected by an exact canonical id. The filing row
-     is reached through `candidacyId` where the general-lineup key is the one
-     the page renders, and through the id itself otherwise. */
+  /* One candidate, by exact canonical id; the filing row through `candidacyId` where the lineup key is used. */
   const wantedCandidacy = record.candidacyId ?? record.id;
   const candidacy = deps.set.candidacies.find((c) => c.id === wantedCandidacy) ?? null;
   const nominee = deps.nominees?.(record.contestId).find((entry) => candidateTargetKey(record.contestId, entry.name) === record.id);
@@ -540,20 +441,8 @@ export function ballotRecordsFor(
       : "";
     records.push({
       /*
-       * **A SOURCE PASSAGE IS A QUOTE, NEVER A CHARACTERISATION — and the sentence
-       * around it states the MECHANISM rather than a stance.**
-       *
-       * This read *"On water, Katie Hobbs published: …"*, which asserts that she
-       * published something about water. What the corpus actually holds is a
-       * passage found by SEARCHING her published material for that issue's
-       * phrases, and the window around a match is often navigation furniture —
-       * the Hobbs passage a reader saw was a run of site headings. The quote is
-       * honest; the frame around it was not, and a frame is a claim.
-       *
-       * So the record says what was done and what came back. A paraphrase would
-       * be this product generating a position, which is the one thing it may
-       * never do; asserting a topic the passage does not discuss is the same
-       * thing one step quieter.
+       * A passage found by searching their published material for the issue's
+       * phrases, quoted; the sentence states that mechanism, never a stance.
        */
       kind: "SOURCE_PASSAGE",
       id: `${record.id}#position-${position.sourceRevisionId ?? index}`,
@@ -574,11 +463,7 @@ function candidacyRecord(candidacy: Candidacy, contestTitle: string): EvidenceRe
   const parts = [`${name} filed for ${contestTitle}`];
   if (candidacy.partyLabel) parts.push(`as ${candidacy.partyLabel}`);
   if (candidacy.slogan) parts.push(`under the filed slogan "${candidacy.slogan}"`);
-  /*
-   * **`incumbent === null` IS UNKNOWN AND SAYS SO.** The Morris filing does not
-   * state incumbency and every 2026 row there is null. Rendering null as "not
-   * an incumbent" would turn a gap in a filing into a claim about a person.
-   */
+  /* `incumbent === null` is unknown and says so, never "not an incumbent". */
   const incumbency =
     candidacy.incumbent === true
       ? " The filing records them as the incumbent."
@@ -600,10 +485,7 @@ function measureRecords(measure: Measure): EvidenceRecord[] {
     {
       kind: "MEASURE_QUESTION",
       id: measure.id,
-      /* VERBATIM. The official question text is never paraphrased into a
-         record — `lib/ballot/types.ts` states that as a property of the field,
-         and a record that summarised it would be the summary an answer then
-         summarises again. */
+      /* Verbatim: the official question text is never paraphrased. */
       text: measure.questionText,
       sourceUrl: measure.provenance?.sourceUrl ?? null,
       sourceOrg: measure.provenance?.sourceOrg ?? null,
@@ -624,12 +506,8 @@ function measureRecords(measure: Measure): EvidenceRecord[] {
 }
 
 /**
- * The authority's own statement that something is NOT on the ballot.
- *
- * These are evidence of the same standing as a contest — *"There is no Vail
- * Unified School District governing board race on the November 3, 2026
- * ballot"* is a fact a reader needs, in the authority's words, with a
- * citation. An empty contest list without one of these reads as our gap.
+ * The authority's own statement that something is not on the ballot,
+ * with its citation.
  */
 function absenceRecords(
   ocdId: string,

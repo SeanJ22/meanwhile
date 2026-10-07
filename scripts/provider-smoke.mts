@@ -1,44 +1,17 @@
 /**
- * **THE ONE COMMAND THAT MAY SPEND MAPTILER QUOTA** — `pnpm provider:smoke`
- * (MAPQ-2, 2026-09-07).
+ * The one command that may spend MapTiler quota — `pnpm provider:smoke`.
  *
- * ## What it is for
+ * A tiny opt-in that proves the real style URL, key and provider still answer:
+ * a style document and the first tile its own source names. Bounded:
  *
- * MAPQ-1 makes every ordinary synthetic browser run fail closed at MapTiler.
- * That is the right default and it has a cost, stated rather than hidden: no
- * ordinary run proves any more that the real style URL, the real key and the
- * real provider still work together. A basemap that quietly stopped resolving
- * would look exactly like a basemap we deliberately blocked.
- *
- * So there is exactly one opt-in, and this is it. It is deliberately TINY — a
- * style document and the first tile its own source names, not a Reader
- * regression suite — because the question is "does the provider path answer?",
- * and a hundred tiles do not answer it better than two.
- *
- * ## Everything about it is bounded, and it says so
- *
- * - **Two gates.** `WTP_PROVIDER_ACCESS=maptiler` in the process AND the
- *   `spendsProviderQuota` option at the launch. One alone is refused, so no
- *   sweep started in an opted-in shell can inherit the ability to spend.
- * - **A hard ceiling**, enforced in `scripts/browser.mts` for every context of
- *   the run, and a run that crosses it aborts the remaining requests and ends
- *   non-zero.
- * - **Its own key.** `WTP_MAPTILER_SMOKE_KEY`, never the production or staging
- *   browser key, and it REFUSES to run if the two values are equal — spending
- *   the production key here would put robot requests back inside production's
- *   number and undo the attribution this whole repair is for.
- * - **Its own origin.** The page is fabricated inside the browser at
- *   `http://maptiler-smoke.localhost`, so the smoke needs no server and its
- *   Origin header is a host nothing else uses. That is the narrow origin the
- *   smoke key is restricted to in `lib/map/key-matrix.ts`.
- * - **It prints what it spent**, by host, before it exits.
- *
- * ## What it deliberately does not do
- *
- * It does not render a map, walk the Reader, or touch production. It never
- * writes the key anywhere — not to stdout, not to a file, not into a
- * screenshot. And it is not on any schedule: a standing job that spends a
- * third party's allowance is the shape of the problem, not the fix.
+ * - Two gates: `WTP_PROVIDER_ACCESS=maptiler` in the process AND the
+ *   `spendsProviderQuota` launch option. One alone is refused.
+ * - A hard ceiling, enforced in `scripts/browser.mts` for every context.
+ * - Its own key, `WTP_MAPTILER_SMOKE_KEY`; it refuses to run if that equals the
+ *   production or staging browser key.
+ * - Its own origin, `http://maptiler-smoke.localhost`, fabricated in the browser
+ *   (the smoke key's restricted origin in `lib/map/key-matrix.ts`).
+ * - It prints what it spent, by host, and never writes the key anywhere.
  */
 
 import { launchGuarded } from "./browser.mts";
@@ -54,13 +27,7 @@ import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 /** The dark style the Reader asks for by default. One question, one style. */
 const STYLE = process.env.NEXT_PUBLIC_MAPTILER_STYLE?.trim() || "basic-v2-dark";
 
-/**
- * The smoke's ceiling, tighter than the shared default.
- *
- * A style document, the glyph or sprite requests a style pulls, and one tile.
- * Eight is generous for that and far too small for anything that could be
- * mistaken for a sweep.
- */
+/** The smoke's ceiling, tighter than the shared default: a style, its glyph or sprite requests, and one tile. */
 const SMOKE_CEILING = "8";
 
 interface Reading {
@@ -83,11 +50,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  /*
-   * The ceiling is set here, before the browser is opened, and only when the
-   * operator did not already choose a tighter one. A smoke that inherited the
-   * shared 25 would be a smoke with more headroom than it has business having.
-   */
+  // Set before the browser opens, and only when the operator did not choose a tighter ceiling.
   if (!process.env[PROVIDER_CEILING_VAR]) process.env[PROVIDER_CEILING_VAR] = SMOKE_CEILING;
 
   console.log("\nPROVIDER SMOKE — MapTiler\n");
@@ -121,14 +84,9 @@ async function main(): Promise<void> {
   try {
     const context = await browser.context();
     /*
-     * THE PAGE IS FABRICATED, NOT SERVED.
-     *
-     * Registered AFTER the shared guard's own `route("**\/*")`, and Playwright
-     * runs handlers last-registered-first, so this one sees the navigation
-     * first and answers it. Everything else — including every provider request
-     * the page then makes — falls through to the guard, which is where the
-     * barrier, the ceiling and the origin confinement all live. The smoke gets
-     * an origin without a server; it does not get its own network policy.
+     * The page is fabricated, not served. Registered after the shared guard's own
+     * `route("**\/*")`; Playwright runs handlers last-registered-first, so this one
+     * answers the navigation and every provider request falls through to the guard.
      */
     await context.route(`${SMOKE_ORIGIN}/**`, async (route) => {
       if (route.request().resourceType() !== "document") {
@@ -166,9 +124,7 @@ async function main(): Promise<void> {
           out.layers = Array.isArray(style.layers) ? style.layers.length : null;
           out.sources = style.sources ? Object.keys(style.sources).length : null;
 
-          /* One tile, from a source the style itself named — never a URL this
-           * script guessed. A guessed tile URL that 404s would look like a
-           * provider outage. */
+          /* One tile, from a source the style itself named; a guessed URL that 404s would look like an outage. */
           const first = Object.values(style.sources ?? {})[0];
           const tileUrl = first?.url ?? first?.tiles?.[0]?.replace(/\{[xyz]\}/g, "0");
           if (typeof tileUrl === "string" && tileUrl.startsWith("http")) {
@@ -194,12 +150,6 @@ async function main(): Promise<void> {
   console.log(`    vector sources      ${reading.sources ?? "not read"}`);
   console.log(`    one tile            ${reading.tileStatus ?? "not asked"}`);
   if (reading.threw) console.log(`    threw               ${reading.threw}`);
-  /*
-   * RULING 159: the spend is printed over the ceiling it was allowed, so a run
-   * that spent nothing is visibly a run that spent nothing OUT OF a real
-   * allowance — never a bare zero that could equally mean the browser never
-   * opened.
-   */
   console.log(
     `\n  ${floorLine(
       floored(

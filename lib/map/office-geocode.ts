@@ -1,5 +1,5 @@
-// FE-34/35 share one read per public office address. The reader's home never
-// enters this pool. Failed lookups do not invent a point or remain cached.
+// One read per public office address. The reader's home never enters this
+// pool. Failed lookups do not invent a point or remain cached.
 const points = new Map<string, Promise<{ lat: number; lng: number } | null>>();
 export function officePointFor(address: string): Promise<{ lat: number; lng: number } | null> {
   const held = points.get(address);

@@ -5,7 +5,6 @@ import type { BallotSet } from "./types.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { readTranslations, withMeasureTranslations } from "../translate/projection-reader.ts";
 
-/** Data, rather than a state allowlist, determines which authority answers. */
 export function genericSourcesForDivisions(value: GenericBallotProjection, divisions: readonly string[]): RegisteredBallotSource[] {
   const today = new Date().toISOString().slice(0, 10);
   const ballots = Object.values(value.ballots).filter(ballot => {
@@ -26,7 +25,6 @@ export function genericSourcesForDivisions(value: GenericBallotProjection, divis
   } }));
 }
 
-/** The legacy reader remains during migration until the new path is checked live. */
 export async function readerBallotSourcesForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<readonly RegisteredBallotSource[]> {
   if (!divisions.length) return [];
   const legacy = ballotSourcesForDivisions(divisions);
@@ -52,7 +50,6 @@ export async function readerBallotSourcesForDivisions(divisions: readonly string
   }
 }
 
-/** Intake resolves exact published IDs, including IDs a worker minted after deployment. */
 export async function readerBallotSourceForTargetId(targetId: string, options: PromotedCivicDataReadOptions = {}): Promise<RegisteredBallotSource | null> {
   const legacy = ballotSourceForTargetId(targetId);
   if (legacy) return legacy;

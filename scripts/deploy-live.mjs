@@ -1,34 +1,16 @@
 #!/usr/bin/env node
 /**
- * WHICH SHA IS LIVE — the one remaining question about production.
+ * Which SHA is live, answered from Netlify's deploy record with zero requests
+ * to the site (a request to the site writes a search-log row).
  *
- * RULING 125 (2026-08-24, Sean's ruling). Every walk, screenshot and card check
- * now runs against a LOCAL production build. This is the single fact a local
- * build cannot answer, and it is answered from **Netlify's deploy record**,
- * with **zero requests to the site** — because a request to the site writes a
- * search-log row, and that store is sold.
+ * It compares against the newest deploy-eligible commit on `main`
+ * (`lib/ops/deploy-paths.ts`), not the tip: a docs-only tip is never built.
  *
- * ## IT COMPARES AGAINST THE LAST DEPLOY-ELIGIBLE COMMIT, NOT THE TIP
- *
- * This is the whole design and it is easy to get wrong. Since RULING 124 a
- * commit touching only `docs/` never builds — so `main`'s tip is routinely a
- * commit Netlify was correctly told to ignore. A check comparing the live SHA
- * against the tip would therefore report "production is behind" every time a
- * close-out lands, forever, and an alarm that is wrong on every quiet day is an
- * alarm nobody reads (RULING 115).
- *
- * So the comparison walks BACK from the tip to the newest commit that
- * `lib/ops/deploy-paths.ts` says is deploy-eligible, and compares THAT.
- *
- * ## FOUR VERDICTS, AND `CANNOT-TELL` IS NOT A PASS
- *
- * `current` · `behind` · `ahead` (the deploy record names a commit not on main)
- * · `cannot-tell`. RULING 24: a check that cannot reach its subject must never
- * print like a passing one. **No Netlify credential means `cannot-tell`**, and
- * this exits 3 for it rather than 0.
+ * Verdicts: current, behind, ahead, cannot-tell. No Netlify credential is
+ * cannot-tell and exits 3, never 0.
  *
  * Reads `NETLIFY_AUTH_TOKEN` (or `NETLIFY_TOKEN`) and `NETLIFY_SITE_ID`
- * (default: the site name below). A token is a Personal Access Token from
+ * (default: the site domain below). A token is a Personal Access Token from
  * Netlify → User settings → Applications.
  */
 
@@ -40,33 +22,11 @@ import { gitFor } from "./git-lite.mjs";
 import { loadEnvLocal } from "./load-env-local.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-/**
- * THE SITE, AS THE DEPLOYS API WILL ACCEPT IT — and it was wrong all along.
- *
- * This read `"sparkwtp"`, the site's NAME, and the deploys endpoint answers
- * **HTTP 404** for a bare name. `pnpm deploy:live` had therefore been printing
- * `CANNOT-TELL` on every run since it was written, which is honest and is
- * exactly as useful as not having the check — the one production fact the
- * close-out reads was unreachable, and the message said so quietly enough that
- * nobody chased it.
- *
- * Measured 2026-08-25 against the same token, which works:
- *
- *   /sites                                            200, 2 sites
- *   /sites/sparkwtp/deploys                           404
- *   /sites/sparkwtp.netlify.app/deploys               200, 3 deploys
- *   /sites/6b39b212-…-a16faa9ecd08/deploys            200, 3 deploys
- *
- * So the default is the DOMAIN. `NETLIFY_SITE_ID` still overrides, and the site
- * id is what a CI environment usually has.
- */
+/** The deploys API answers 404 for the bare site name; the domain or site id works. */
 const SITE = process.env.NETLIFY_SITE_ID || "sparkwtp.netlify.app";
 
-/* `loadEnvLocal` moved to ./load-env-local.mjs on 2026-08-25 — the handoff
-   needed the same thing and two copies is the thing that can disagree. */
 loadEnvLocal();
 
-/* `git` is `gitFor(ROOT)` from ./git-lite.mjs — one copy (RULING 103). */
 const git = gitFor(ROOT);
 
 function say(mark, label, detail) {
@@ -77,9 +37,7 @@ function say(mark, label, detail) {
  * The newest commit on `main` that Netlify would actually have built.
  *
  * Walks back from the tip, classifying each commit by its own changed paths.
- * Stops at the first deploy-eligible one, or gives up after `limit` — a session
- * that shipped nothing but paperwork for 40 commits is not a state this needs
- * to resolve, and saying so beats walking to the root.
+ * Stops at the first deploy-eligible one, or gives up after `limit`.
  */
 async function lastDeployEligible(limit = 40) {
   const { classifyDeploy } = await import("../lib/ops/deploy-paths.ts");
@@ -97,39 +55,18 @@ async function lastDeployEligible(limit = 40) {
 }
 
 /**
- * **DID THE DEPLOY FOR THIS SHA SUCCEED?** — `NJ25`, closed 2026-08-25.
+ * Did the deploy carrying this SHA succeed? Asked about the commit itself, so a
+ * failed deploy is not mistaken for one still building.
  *
  * ```
  * node scripts/deploy-live.mjs --sha=<sha>          # ask once
  * node scripts/deploy-live.mjs --sha=<sha> --wait   # poll to a terminal state
  * ```
  *
- * ## The gap this closes, and why the existing verdict did not close it
- *
- * `NJ25`: a session's deploy errored and nothing in the close-out path noticed.
- * The check above looks for the newest deploy whose state is `ready` and
- * compares its commit to the last deploy-eligible one. When the deploy for the
- * shipped SHA has ERRORED there is no ready deploy carrying it, so the newest
- * ready deploy is an OLDER commit and the verdict reads **BEHIND by 1**.
- *
- * That is not wrong, and it is not the sentence a reader needs. *Behind by one*
- * is exactly what a deploy still building looks like — so the one state that
- * demands action reads identically to the one state that demands patience, and
- * a session that waits is doing the right thing for a build and the wrong thing
- * for a failure.
- *
- * RULING 113: observe the step's product AT THE STEP. The product of a ship is
- * a DEPLOY, and the question is whether that deploy — the one carrying this
- * commit — reached `ready`.
- *
- * ## Four verdicts, kept apart
- *
  *   0  SUCCESS      — a deploy carrying this SHA reached `ready`
  *   1  FAILED       — a deploy carrying this SHA is in `error`, with its message
  *   2  PENDING      — it exists and is still building, or has not appeared yet
  *   3  CANNOT-TELL  — no credential, or the API would not answer
- *
- * `3` is not a pass, for the reason the whole file already gives.
  */
 async function deployForSha(token, sha) {
   let res;
@@ -143,15 +80,6 @@ async function deployForSha(token, sha) {
   if (!res.ok) return { verdict: "CANNOT-TELL", why: `HTTP ${res.status} from the deploys API` };
   const deploys = await res.json();
   if (!Array.isArray(deploys)) return { verdict: "CANNOT-TELL", why: "the deploys API returned no list" };
-  /*
-   * THE DECISION LIVES IN `lib/ops/deploy-verdict.ts`, not here.
-   *
-   * There was no failed deploy in the last forty to prove the FAILED verdict
-   * against, so the only way to show the instrument catching the thing it was
-   * written for is to PLANT one — and a decision reachable only through a live
-   * API call is a decision nothing can test. RULING 130's shape: a production
-   * path nothing could observe.
-   */
   const v = verdictForDeploys(deploys, sha);
   return { verdict: v.kind, why: v.why, deploy: v.deploy };
 }
@@ -166,8 +94,7 @@ if (SHA_ARG) {
     process.exit(3);
   }
   const waiting = process.argv.includes("--wait");
-  /* Ten minutes at thirty-second intervals — longer than this build takes, and
-     short enough that a stuck deploy is reported rather than waited on forever. */
+  // Ten minutes at thirty-second intervals.
   const attempts = waiting ? 20 : 1;
   let last = { verdict: "CANNOT-TELL", why: "nothing asked" };
   for (let i = 0; i < attempts; i++) {
@@ -245,25 +172,8 @@ async function main() {
     process.exit(3);
   }
 
-  /*
-   * ── ASK ABOUT THE COMMIT, NOT ABOUT THE NEWEST READY DEPLOY ──────────────
-   *
-   * This compared `eligible.sha` against whichever deploy was newest AND ready,
-   * and reported the git distance between them. That is the NJ25 defect in its
-   * original home, and it survived NJ25's fix because the fix went into the
-   * `--sha` mode beside it and nobody swept the sibling — the named-instance
-   * failure, in the same file as the instance.
-   *
-   * Measured 2026-08-25: `5ae234a` was mid-build, so the newest READY deploy was
-   * five commits older and this printed **BEHIND by 5 deploy-eligible
-   * commit(s)** — an alarm about production being stale, for a deploy that
-   * completed successfully a minute later. *Behind* and *still building* are
-   * the state that demands action and the state that demands patience, and they
-   * read identically here.
-   *
-   * `verdictForDeploys` asks the only question that separates them: what
-   * happened to the deploy carrying THIS commit.
-   */
+  // Ask about the deploy carrying this commit, not the newest ready deploy:
+  // "behind" and "still building" must not read the same.
   const verdict = verdictForDeploys(deploys, eligible.sha);
   const short = eligible.sha.slice(0, 7);
   if (verdict.kind === "SUCCESS") {

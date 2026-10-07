@@ -1,16 +1,9 @@
 /**
- * **THE BEHAVIOR-EVENT WIRE FORMAT** — what the browser batcher sends to
- * `/api/events` and what the endpoint accepts. (S2.4, October 1, 2026.)
- *
- * Shared by both halves so they cannot drift: the client builds events with
- * these types, the endpoint validates with `readEventBatch`. Pure — no DOM, no
- * database — so the same file is imported by the browser and by the route.
- *
- * What an event may carry is deliberately narrow: a type, an id, a time, the
- * ZIP and district being viewed, how the reader arrived at that ZIP, the card
- * touched and for how long, and — for a reaction or a pick — the choice. No
- * name, no address, no free text beyond a question (which only the Ask path
- * sends, and which the store scrubs and self-redacts).
+ * The behavior-event wire format shared by the browser batcher and
+ * `/api/events`. Pure, so both import it. An event carries a type, id, time,
+ * the ZIP and district viewed, how the reader arrived at that ZIP, the card
+ * and for how long, and for a reaction or pick the choice. No name, no
+ * address, no free text beyond an Ask question, which the store scrubs.
  */
 
 export const CLIENT_EVENT_TYPES = [

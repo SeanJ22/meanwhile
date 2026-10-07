@@ -1,33 +1,14 @@
 /**
- * **THE FIX QUEUE — a gap the owner can act on, not just read.**
- * (ADM-20, the 9.4.26 evening admin feedback.)
- *
- * The owner's words: *"If there is a gap or something that is missing, then
- * what I would like is something where I can just say, 'Add this to the
- * queue,' and have it essentially build an ongoing queue of things to be
- * fixed. Then I can say, 'Okay go fix these things and go do that.'"*
- *
- * ## The store is the decision log, on purpose
- *
- * A queued gap IS a decision the owner made — "fix this" — so it travels the
- * path decisions already travel: the admin decision route appends an
- * `OwnerDecisionIntent`, `pnpm owner:decisions:pull` exports it, the tracker
- * applier turns it into work (`planFixQueue` in `scripts/tracker-core.mjs`),
- * and the canonicalizer records on the intent what it became. No second
- * store, no second sync, no second place a queued item could be lost.
- *
- * The two records are told apart by subject:
+ * The fix queue: a gap the owner queues to be fixed. A queued gap is an owner
+ * decision, so it lives in the decision log:
  *
  * ```
- *   fix:<hash>    "Add this to the queue" — one gap, identified by WHERE it
- *                 was reported and WHAT it says, so the same gap queued twice
- *                 is one item (the intent id differs; the subject does not)
- *   fix-queue     "Go fix these" — the owner's dispatch of everything queued
- *                 so far; the applier opens a tracker row per queued gap and
- *                 the runner's next cycle shows each one as opened work
+ *   fix:<hash>    "Add this to the queue": one gap, identified by where it was
+ *                 reported and what it says, so queuing it twice is one item
+ *   fix-queue     "Go fix these": the owner's dispatch of everything queued
  * ```
  *
- * PURE: rows in, view out. Nothing here reads a store or a clock.
+ * Pure: rows in, view out.
  */
 import { isResolutionRecord } from "./decision-log.ts";
 import type { OwnerDecisionIntent } from "./owner-surface.ts";
@@ -60,12 +41,9 @@ export function fixConsequence(where: string, says: string): string {
 }
 
 /**
- * The queue button is a `<button form=… name="fix" value="where — says">`
- * rather than a form of its own: it sits inside sentences and captions
- * (phrasing content), and a `<form>` there is invalid HTML the browser
- * repairs by closing the paragraph — which broke hydration and lost the
- * theme on the whole page. So the button carries one value and the decision
- * route derives the subject and the consequence from it, here, in one place.
+ * The queue button carries one `value="where — says"` (a `<form>` inside
+ * phrasing content is invalid HTML), and the decision route derives the
+ * subject and consequence from it here.
  */
 export function parseFixField(value: string): { readonly where: string; readonly says: string; readonly subjectId: string; readonly consequenceShown: string } | null {
   const text = value.trim();
@@ -101,7 +79,7 @@ export interface FixQueueItem {
   readonly says: string;
   readonly queuedAt: string;
   readonly state: FixQueueState;
-  /** The tracker row the applier opened for it, once the canonicalizer has recorded one. */
+  /** The tracker row opened for it, once one is recorded. */
   readonly openedWork: readonly { readonly id: string; readonly title: string }[];
   readonly refusedReason: string | null;
 }
@@ -120,16 +98,12 @@ function splitConsequence(consequence: string): { where: string; says: string } 
 }
 
 /**
- * Fold the decision log into the queue. Input is the COLLAPSED log (one row
- * per decision, latest state) — `collapseDecisionLog` — so a resolution twin
- * has already been folded into its original.
+ * Fold the collapsed decision log (`collapseDecisionLog`) into the queue.
  *
  * A gap's state:
- *   OPENED   the canonicalizer recorded work opened for it (`openedWork` set,
- *            or state CANONICALIZED)
+ *   OPENED   work was recorded as opened for it (`openedWork` set, or state CANONICALIZED)
  *   REFUSED  the gates refused it (REJECTED_BY_GATES), with the reason
- *   SENT     a "Go fix these" was recorded after it was queued and the sync
- *            has not yet reported back
+ *   SENT     a "Go fix these" was recorded after it was queued, not yet reported back
  *   QUEUED   waiting for the owner to send the queue
  */
 export function fixQueueView(collapsed: readonly OwnerDecisionIntent[]): FixQueueView {

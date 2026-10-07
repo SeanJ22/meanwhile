@@ -1,5 +1,4 @@
 import checklist from "../coverage/checklist-map.json" with { type: "json" };
-/** Existing publication doors and their executable worker record contracts. */
 export const WORKER_READER_CLASSES = {
   "voting-sites": "VOTING_SITE",
   "government-budgets": "ADOPTED_BUDGET",
@@ -21,10 +20,8 @@ export function isWorkerReaderContract(id: string): id is WorkerReaderContract {
   return Object.hasOwn(WORKER_READER_CLASSES, id);
 }
 
-/** The publication passes the runner can be asked for by id (`--only=`): the registry door and each reader door. */
 export const WORKER_PUBLICATION_TASK_IDS: readonly string[] = ["registry-runtime-bindings", ...Object.keys(WORKER_READER_CLASSES)];
 
-/** Data, shared by work creation, Box builders and the Admin checklist. */
 export const CHECKLIST_PUBLICATION_DOORS = checklist.publicationDoors as readonly {
   readonly family: string; readonly fields: readonly string[]; readonly recordClasses: readonly string[];
   readonly contractId: "registry-runtime-bindings" | WorkerReaderContract;

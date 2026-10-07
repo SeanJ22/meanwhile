@@ -19,7 +19,6 @@ function validInstant(value: unknown): value is string {
   return nonempty(value) && Number.isFinite(Date.parse(value));
 }
 
-/** Parse the durable eight-check receipt as evidence, never as trusted JSON. */
 export function parseValidationReceipt(value: unknown): ValidationReceipt | null {
   const row = object(value);
   if (

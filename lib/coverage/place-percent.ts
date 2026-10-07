@@ -1,11 +1,7 @@
 import { checklistItem } from "./checklist-map.ts";
 
-/** The one percent formula for a place: Admin, the national list and the runner's
- * place order all read it. Captured means published, captured and waiting to
- * publish, or not published by the government. Core items only: extension items
- * are counted apart. It only counts; it never gates publishing.
- *
- * PURE. */
+/** The one percent formula for a place. Captured means published, held awaiting
+ * publication, or not published by the government. Core items only. Pure. */
 export type PlaceItemState = "published" | "held" | "unpublished" | "stale" | "missing";
 
 /** An item is core when the overlay scores it as core; every other civic item is an extension. */

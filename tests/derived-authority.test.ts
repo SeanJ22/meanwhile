@@ -11,13 +11,9 @@ import {
 } from "../lib/civic-data/derived-authority.ts";
 
 /**
- * **A DERIVED VERSION IS RECOMPUTABLE FROM ITS INPUTS, AND ONLY A PUBLISHER
- * WITHDRAWS A ROW.** (NH330 Stage 2, piece 1, 2026-09-24.)
- *
- * The wiring store's row writer (piece 2) builds against this rule. The rows
- * here are wiring-shaped but the rule is generic: promoted with inputs,
- * attestation, adapter binding and the reader adapter's own verification; held
- * by name and never removed; removed only on ROUTE_WITHDRAWN_BY_PUBLISHER.
+ * A derived version is recomputable from its inputs. Rows are promoted with inputs, attestation, adapter binding and
+ * the reader adapter's own verification; held by name and never removed; removed only on
+ * ROUTE_WITHDRAWN_BY_PUBLISHER.
  */
 
 interface WiringRow { readonly bodyId: string; readonly adapter: string; readonly url: string }
@@ -49,7 +45,7 @@ test("a promoted row carries its inputs, and an undecided row is carried byte-ex
 
 test("a held row is never removed: absence, transport, an access control and a walk's pre-2026-09-25 robots skip hold it by name", () => {
   const previous = [{ key: "trustees", row: trustees }, { key: "energy", row: energy }];
-  /* ROBOTS_REFUSED names only a route a walk made before the owner decision of 2026-09-25 skipped; robots.txt holds nothing now. */
+  /* ROBOTS_REFUSED names only a route an older walk recorded; robots.txt holds nothing now. */
   for (const reason of ["WALK_ABSENT", "TRANSPORT_FAILED", "ROBOTS_REFUSED", "CHALLENGED"] as const) {
     const plan = planDerivedVersion(previous, [{ disposition: "HOLD", key: "trustees", reason, detail: "this pass", inputs: [] }]);
     assert.deepEqual(plan.rows.map((r) => r.key), ["energy", "trustees"], `${reason} keeps the row`);
@@ -73,9 +69,9 @@ test("only the publisher withdraws a row, with vaulted evidence", () => {
 });
 
 /**
- * Rulings §3 ("C16" was a session label, not Sean's decision: Sean, 2026-10-01): a page returning "not found" is not
- * the only reason to suspend or correct a connection; wrong attribution, conflicting evidence, or a changed calendar
- * also trigger review, and previously verified records are preserved through temporary outages.
+ * A page returning "not found" is not the only reason to suspend or correct a connection; wrong attribution,
+ * conflicting evidence, or a changed calendar also trigger review, and previously verified records survive temporary
+ * outages.
  */
 test("C16: a trigger suspends a promoted row, which stays marked until a later review restores it", () => {
   const previous = [{ key: "trustees", row: trustees }];

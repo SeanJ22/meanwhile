@@ -1,92 +1,10 @@
-/**
- * **A STAGING DEPLOY MAY NEVER RESOLVE THE PRODUCTION DATABASE.**
- * (Lane 5, 2026-09-01.)
- *
- * ## The failure this module exists to make unshippable
- *
- * The staging host — `STAGING_RENDER_ORIGIN` in `lib/ops/origins.ts`, and it is
- * named there rather than spelled here — is a Netlify BRANCH DEPLOY of the same
- * site, built from the same repository, with the same code reading the same
- * variable name.
- * The only thing that makes it staging rather than a second production is what
- * `DATABASE_URL` resolves to in that build's environment — one line in a
- * platform settings panel that nobody re-reads.
- *
- * If that line is wrong, nothing visible breaks. The staging site comes up, it
- * serves real data, it looks right, and every `/api/meetings` GET taken against
- * it writes an unmarked ORGANIC row into `search_log` — **the table this
- * business sells from** — while every walk, every probe and every reader-suite
- * run against staging writes into the store readers are served from. There is
- * no error, no alarm and no reader-visible symptom. It is discovered, if it is
- * ever discovered, in an aggregate somebody sold.
- *
- * `lib/db/write-guard.ts` is the closest existing protection and it does not
- * reach this: it asks whether the RUNTIME is production, and a Netlify branch
- * deploy is a built Next server, so `NODE_ENV` is `"production"` there exactly
- * as it is on the real site. That module names this hole itself — *"`NODE_ENV`
- * cannot tell the production deployment apart from a LOCAL production build"* —
- * and this is the same hole one host over. The two guards are deliberately
- * independent and answer different questions:
- *
- * ```
- *   write-guard.ts      MAY this process write?          runtime + declaration
- *   staging-isolation   is this deploy pointed at the    endpoint identity
- *                       store readers are served from?
- * ```
- *
- * ## This module is PURE, and that is a security property
- *
- * No network, no filesystem, no clock, no `process.env`. Every input is passed
- * in, so every branch — including the seeded failure — is constructible in a
- * test rather than reproducible only by misconfiguring a deploy.
- *
- * ## THE CREDENTIAL RULE, and it is absolute
- *
- * `classifyDatabaseUrl` and `sameEndpointIdentity` receive connection strings
- * carrying a password. **They return a role or a boolean. They never return,
- * log, throw or embed the string, any component of it, or anything derived
- * from its credentials.** In particular they never re-throw a parse error:
- * Node's `new URL()` failure carries the ENTIRE input back on `err.input`, and
- * a `catch` that rethrows, wraps, or writes `err.message` into a reason string
- * is how a password reaches a CI log that a hundred people can read. Every
- * `catch` here is empty by intent, and `tests/staging-isolation.test.ts` plants
- * a password and proves it appears in no output on any path.
- *
- * ## WHY `"unknown"` IS A REAL ANSWER AND `"staging"` IS NEVER A DEFAULT
- *
- * The two wrong answers are not symmetrical:
- *
- * ```
- *   wrong "staging"  -> a test suite writes into the sold store. Silent.
- *   wrong "unknown"  -> a branch deploy is refused. Loud, and fixed in a minute.
- * ```
- *
- * So weak evidence may only ever move the answer TOWARD the refusing side. A
- * URL that merely looks like staging stays `"unknown"`, and a `CANNOT_TELL`
- * fails safe (RULING 182, RULING 184: a route that could not be established is
- * never an established fact).
- */
+/** A staging deploy may never resolve the production database: isolation is decided by where a connection points, never its name. */
 
-/* ------------------------------------------------------------------ roles */
-
-/**
- * What a connection string points at.
- *
- * `"unknown"` is not a failure state and not a placeholder — it is the honest
- * answer whenever the evidence does not settle the question, and it is what a
- * naive implementation replaces with a guess.
- */
+/** What a connection string points at; `"unknown"` is the honest answer when the evidence does not settle it. */
 export const DATABASE_ROLES = ["staging", "production", "local", "unknown"] as const;
 export type DatabaseRole = (typeof DATABASE_ROLES)[number];
 
-/**
- * The anchors a classification is made against.
- *
- * Each hint may be a bare host (`ep-quiet-forest-a1b2c3.us-east-2.aws.neon.tech`)
- * or a whole connection string. Accepting the connection string matters: it
- * means the CALLER never has to slice a secret apart to produce a hint, and
- * slicing is where a secret escapes.
- */
+/** The anchors a classification is made against; a hint may be a bare host or a whole connection string, so no caller slices a secret. */
 export interface ClassifyHints {
   /** The connection string or host this project treats as production. */
   readonly productionHostHint?: string | null;
@@ -97,35 +15,10 @@ export interface ClassifyHints {
 /** Hosts that cannot be a shared store, whatever else is true of them. */
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "0.0.0.0", "::1"]);
 
-/**
- * Name fragments that may CONVICT a URL of being production, and nothing else.
- *
- * There is deliberately no staging equivalent. A token list that could produce
- * `"staging"` would be a way to be permitted by naming, and the whole point of
- * the asymmetry above is that a name is not evidence in the permitting
- * direction. Extending this list can only ever refuse more deploys, so it is
- * safe to extend and can never become a bypass.
- */
+/** Name fragments that may convict a URL of being production, and nothing else; there is deliberately no staging list. */
 const PRODUCTION_NAME_TOKENS = new Set(["prod", "production"]);
 
-/**
- * The stable identity of the endpoint a connection string resolves to.
- *
- * Neon branch endpoints are `ep-<name>-<id>.<region>.aws.neon.tech`, and the
- * `ep-…` label is the branch: the region and the `aws.neon.tech` suffix are
- * shared by every branch of every project, so comparing whole hosts would call
- * two DIFFERENT branches the same place the day a pooler host is used. The
- * `ep-…` label is therefore the identity, and a non-Neon host is its own.
- *
- * A POOLED connection carries the real branch in `?options=endpoint=ep-…`
- * while the HOST is the pooler's. Reading `options` first is what stops a
- * pooled production string from reading as a different endpoint than the
- * direct one — the exact shape that would let a collision check pass on two
- * spellings of one database.
- *
- * Returns `null` when nothing could be established. `null` is never treated as
- * a match and never as a non-match.
- */
+/** The `ep-…` endpoint label a connection string resolves to: the branch identity, since region and suffix are shared. */
 function endpointIdentityOf(value: string | null | undefined): string | null {
   if (typeof value !== "string") return null;
   const raw = value.trim();
@@ -138,11 +31,7 @@ function endpointIdentityOf(value: string | null | undefined): string | null {
     host = parsed.hostname;
     options = parsed.searchParams.get("options");
   } catch {
-    /*
-     * NOTHING IS READ FROM THE ERROR. Node attaches the whole input string to
-     * `err.input`, and its message has carried the input in past versions. An
-     * empty catch is the only shape that cannot leak, so it is the shape.
-     */
+    // Nothing is read from the error: Node attaches the whole input string to it.
   }
 
   if (host === "") {
@@ -168,28 +57,14 @@ function endpointIdentityOf(value: string | null | undefined): string | null {
 /** The database (or Neon branch) name, lowercased. `null` when unreadable. */
 function databaseNameOf(value: string): string | null {
   try {
-    /*
-     * Deliberately NOT `new URL(value).pathname`.
-     *
-     * RULING 14 (`tests/path-separator.test.ts`) bans that shape repo-wide,
-     * and although the reason it was adopted was FILE urls, the ban is right
-     * here too for a second reason: `pathname` PERCENT-DECODES. A database
-     * name containing an escaped character would decode into a different
-     * string, and this value is COMPARED against another connection's name to
-     * decide whether staging and production are the same store. A comparison
-     * that silently normalises its inputs is how two different databases come
-     * to look like one — or one like two.
-     *
-     * Taking the segment after the authority directly is narrower, decodes
-     * nothing, and still reads nothing from the credential portion.
-     */
+    // Not `new URL(value).pathname`, which percent-decodes and would compare a different string.
     const afterScheme = value.replace(/^[a-z0-9+.-]+:\/\//i, "");
     const slash = afterScheme.indexOf("/");
     if (slash === -1) return null;
     const name = (afterScheme.slice(slash + 1).split(/[/?#]/)[0] ?? "").trim();
     return name === "" ? null : name.toLowerCase();
   } catch {
-    /* See `endpointIdentityOf`: nothing is read from the error. */
+    // Nothing is read from the error.
     return null;
   }
 }
@@ -199,33 +74,7 @@ function segments(value: string): string[] {
   return value.split(/[^a-z0-9]+/i).filter(Boolean);
 }
 
-/**
- * **Classify a connection string by WHERE IT POINTS, never by what it is called.**
- *
- * The ladder, strongest evidence first. Every rung that does not settle the
- * question falls through to `"unknown"`; none of them falls through to a guess.
- *
- *  1. **A local host is local.** Nothing reachable only from this machine can
- *     be the store readers are served from.
- *  2. **Endpoint identity equal to the production anchor is production.**
- *     This is the rung that catches the seeded failure, and it catches it even
- *     when the deploy's settings panel calls the variable something reassuring.
- *  3. **Endpoint identity equal to the staging anchor is staging.**
- *  4. **A `prod` / `production` token in the endpoint or database name is
- *     production.** Weak evidence, admitted only in the refusing direction.
- *  5. **Otherwise `"unknown"`.**
- *
- * WHEN THE TWO ANCHORS ARE THE SAME ENDPOINT, the answer is `"unknown"` rather
- * than `"production"` or `"staging"`. Anchors that do not distinguish two
- * places cannot classify anything, and returning either label would be
- * reporting the caller's misconfiguration as a measurement of this URL.
- * `evaluateIsolation` refuses that state through the collision rule.
- *
- * NEVER THROWS. A malformed URL, a null, an empty string and a hostile string
- * are all `"unknown"`, because the alternative — an exception whose message or
- * `input` carries the connection string — is the leak this module is built to
- * prevent.
- */
+/** Classify a connection string by where it points, strongest evidence first; every unsettled rung falls through to `"unknown"`. */
 export function classifyDatabaseUrl(
   url: string | null | undefined,
   opts: ClassifyHints,
@@ -253,20 +102,7 @@ export function classifyDatabaseUrl(
   return "unknown";
 }
 
-/**
- * Do these two connection strings resolve to the SAME endpoint?
- *
- * **`null` is not `false`.** A pair where either identity could not be
- * established is an UNMEASURED collision, and CLAUDE.md's rule applies
- * directly: an operation that can return nothing must be asked what it
- * returned. `evaluateIsolation` treats `null` exactly as it treats an
- * unasked question — it refuses — so there is no way to be permitted by
- * failing to measure.
- *
- * Returns a boolean or `null` and NEVER either identity, because a caller
- * holding an identity is a caller that can print one beside the variable it
- * came from.
- */
+/** Whether two connection strings resolve to the same endpoint; `null` is unmeasured, not `false`, and is refused. */
 export function sameEndpointIdentity(
   a: string | null | undefined,
   b: string | null | undefined,
@@ -277,15 +113,7 @@ export function sameEndpointIdentity(
   return ia === ib;
 }
 
-/* --------------------------------------------------------------- verdicts */
-
-/**
- * The two contexts this module recognises, as constants rather than as strings
- * typed at each call site. Netlify's own vocabulary is wider —
- * `deploy-preview`, `dev` — and NORMALISING IT IS THE CALLER'S JOB, at the
- * impure boundary, where the mapping can be printed. Every context that is not
- * `production` collapses to `branch-deploy`, which is the strict side.
- */
+/** The two recognised contexts; every non-production context collapses to `branch-deploy`, the strict side. */
 export const BRANCH_DEPLOY_CONTEXT = "branch-deploy";
 export const PRODUCTION_CONTEXT = "production";
 
@@ -297,20 +125,7 @@ export interface IsolationVerdict {
   readonly reason: string;
 }
 
-/**
- * May this deploy proceed against the database it has resolved?
- *
- * Each rule names the failure it prevents and the wrong answer a naive
- * implementation gives.
- *
- * `sameEndpointAsProduction` is the CALLER'S MEASUREMENT, taken with
- * {@link sameEndpointIdentity}. It is optional in the type and it is not
- * optional in effect: **omitting it refuses a branch deploy.** That direction
- * is deliberate and it is copied from `evaluateReleaseFreeze`'s rule 4 — a
- * caller that leaves the question unasked gets the strict answer, never the
- * lenient one, which is the only shape under which "there is no skip flag"
- * survives contact with a caller who would like one.
- */
+/** Whether this deploy may proceed against its resolved database. Omitting `sameEndpointAsProduction` refuses a branch deploy. */
 export function evaluateIsolation(input: {
   readonly context: string;
   readonly role: DatabaseRole;
@@ -327,13 +142,7 @@ export function evaluateIsolation(input: {
     reason,
   });
 
-  /*
-   * AN UNRECOGNISED CONTEXT IS NOT A PERMITTED ONE. A new deploy context is a
-   * decision — somebody has to say which side of the isolation boundary it
-   * falls on — and a `default:` branch that let it through would answer that
-   * decision by accident, in the permitting direction, for every future
-   * context at once.
-   */
+  // An unrecognised context is not a permitted one.
   if (context !== BRANCH_DEPLOY_CONTEXT && context !== PRODUCTION_CONTEXT) {
     return verdict(
       false,
@@ -344,13 +153,7 @@ export function evaluateIsolation(input: {
   }
 
   if (context === PRODUCTION_CONTEXT) {
-    /*
-     * PRODUCTION MUST SERVE PRODUCTION. The mirror-image failure of the seeded
-     * one, and it is not hypothetical: a settings panel where the two branch
-     * URLs were pasted into each other's slots produces a production site
-     * serving the staging store — every reader sees stale or empty civic data,
-     * and every reaction is written where nothing will ever read it.
-     */
+    // Production must serve production.
     if (input.role !== "production") {
       return verdict(
         false,
@@ -362,19 +165,7 @@ export function evaluateIsolation(input: {
     return verdict(true, "the production context resolving the production database.");
   }
 
-  /* ------------------------------- branch-deploy (staging) ---------------- */
-
-  /*
-   * THE COLLISION RULE, FIRST, BECAUSE IT OUTRANKS EVERY LABEL. Two variables
-   * can be named anything and still be one database. This is checked before
-   * the roles for exactly that reason: a deploy whose staging URL resolves to
-   * the production endpoint is refused even when both ends are confidently
-   * labelled "staging".
-   *
-   * It applies ONLY on this side. In the production context the two strings
-   * SHOULD resolve to the same endpoint, and refusing that would be refusing
-   * the correct configuration.
-   */
+  // The collision rule outranks every label: a staging URL resolving to the production endpoint is refused.
   if (collision === true) {
     return verdict(
       false,
@@ -384,11 +175,7 @@ export function evaluateIsolation(input: {
     );
   }
 
-  /*
-   * THE SEEDED FAILURE. A staging deploy resolving the production database.
-   * A naive implementation never reaches this branch at all, because it asks
-   * whether the URL is "set" rather than where it points.
-   */
+  // A staging deploy resolving the production database.
   if (input.role === "production") {
     return verdict(
       false,
@@ -398,12 +185,7 @@ export function evaluateIsolation(input: {
     );
   }
 
-  /*
-   * CANNOT_TELL FAILS SAFE. An unverifiable staging database is refused, not
-   * permitted. The wrong answer a naive implementation gives is to default the
-   * unclassifiable case to "staging" because that is the reassuring word — and
-   * that default is precisely how a production URL passes.
-   */
+  // An unverifiable staging database is refused, never defaulted to staging.
   if (input.role === "unknown") {
     return verdict(
       false,
@@ -413,12 +195,7 @@ export function evaluateIsolation(input: {
     );
   }
 
-  /*
-   * THE ANCHOR ITSELF HAS TO EXIST. If the production connection could not be
-   * classified, then no comparison against production happened, and a verdict
-   * that reported OK here would be reporting the ABSENCE of a check as the
-   * result of one.
-   */
+  // The production anchor itself has to be classified, or no comparison happened.
   if (input.productionRole !== "production") {
     return verdict(
       false,
@@ -444,23 +221,7 @@ export function evaluateIsolation(input: {
   );
 }
 
-/* ----------------------------------------------------- record-path safety */
-
-/**
- * Would writing here overwrite the retired historical production record?
- *
- * The staging observer must be STRUCTURALLY incapable of writing
- * `data/ops/production-integrity.json`. Release certification now reads the
- * canonical control-plane log, never this file. A staging reading landing in
- * the retired production artifact would still erase historical provenance and
- * make evidence about the branch-deploy host look like a production reading.
- *
- * **Compared case-INSENSITIVELY, and that is not sloppiness.** On Windows two
- * paths differing only in case are ONE FILE, so a case-sensitive comparison
- * would let `Data/Ops/Production-Integrity.json` through and overwrite the
- * record it was written to protect. The cost of the other direction is a
- * refused write on a path nobody would ever create.
- */
+/** Whether `candidate` is the production record path, compared case-insensitively since paths differing only in case can be one file. */
 export function recordPathCollides(candidate: string, productionRecordPath: string): boolean {
   const norm = (p: string) => p.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
   return norm(candidate) === norm(productionRecordPath);

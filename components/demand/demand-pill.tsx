@@ -4,46 +4,10 @@ import { useState } from "react";
 import { getOrCreateBrowserKey, mintBrowserKey } from "@/lib/state/browser-key";
 
 /**
- * **"WANT US TO GET THIS INFO SOONER?"** (OWN-Q6, the owner's amendment on
- * Q6/Q7, authorized 2026-08-31.)
- *
- * The owner asked for a clickable pill that registers the click with a brief
- * confirmation. This is the whole surface, and every bound on it is the
- * owner's own.
- *
- * ## What the reader can do with it, exhaustively
- *
- * Tap it once. There is no text box, no rating, no second step, and no undo —
- * an undo needs to know WHICH row to retract, which needs an identifier the
- * feature deliberately does not have. Tapping twice records two asks, which is
- * what the pill literally says it does.
- *
- * ## What it never shows
- *
- * A count. A total. A rank. Anything about anyone else's taps, in any form
- * including aggregate. `CLAUDE.md`'s no-user-to-user rule reaches this by name
- * — *stored and aggregated, never rendered back to any user* — and the owner's
- * own instruction was that results are never shown to readers. There is no
- * read path behind this component to render one from, which is a stronger
- * guarantee than remembering not to.
- *
- * ## The confirmation is about the ASK, not about the outcome
- *
- * *"Thanks — we've noted it."* We have noted the ask. We have NOT promised the
- * record, and a confirmation reading *"we'll get it soon"* would be a claim
- * about a government's publication schedule that nothing on our side controls.
- * The product does not announce its own failure (RULING 139) and it does not
- * announce a success it cannot deliver either.
- *
- * A failed write says so plainly, because a pill that silently does nothing
- * while looking like it worked is the quiet lie this codebase keeps catching.
- *
- * ## Symmetry
- *
- * One component, used on the body card and the candidate card with the same
- * props. `tests/demand-signal.test.ts` asserts both call sites, so it renders
- * on every body and candidate card or on none — never on the well-covered ones
- * only, which would make the pill itself a coverage claim.
+ * "Want us to get this info sooner?" One tap records one ask; there is no
+ * undo, since rows carry no identifier to retract. It never shows a count or
+ * anything about other readers' taps, and has no read path to do so. A failed
+ * write says so.
  */
 export type DemandSubjectType = "BODY" | "CANDIDATE";
 
@@ -77,17 +41,14 @@ export function DemandPill({
           subjectType,
           subjectId,
           signal: "WANT_THIS_SOONER",
-          // The returning-reader ID, the exact time and a one-per-tap event id,
-          // so the shared reader events count this tap once, by day and week,
-          // and a retried request is never counted twice.
+          // Returning-reader ID, exact time and a per-tap event id, so a retried request is counted once.
           continuityKey: getOrCreateBrowserKey("wtp.ask_key"),
           occurredAt: tapAt,
           eventId: tapId,
           ...(typeof lat === "number" && typeof lng === "number" ? { lat, lng } : {}),
         }),
       });
-      // 204 stored, 202 accepted with no store behind it. Both are the ask
-      // reaching us, which is what the confirmation claims and all it claims.
+      // 204 stored, 202 accepted with no store behind it; both mean the ask reached us.
       setPhase(response.ok ? "NOTED" : "FAILED");
     } catch {
       setPhase("FAILED");
@@ -120,7 +81,6 @@ export function DemandPill({
         {phase === "SENDING" ? "Noting…" : "Want us to get this info sooner?"}
       </button>
       {phase === "FAILED" && (
-        // Ours, said as ours. Never "try again" over a tap that may have landed.
         <span className="ml-1.5 text-[0.625rem] text-muted">
           We couldn&apos;t note that just now.
         </span>

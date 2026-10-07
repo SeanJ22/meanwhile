@@ -20,27 +20,6 @@ import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { makeSchedulePageSource } from "../lib/sources/schedulepage/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
-/**
- * **THE VENUE-GAP CLASS, ADAPTER BY ADAPTER.** (2026-09-23.)
- *
- * The owner's rule, from the Tucson Unified regression: *"Missing agenda text
- * or location must never suppress a meeting."* Every adapter that used to DROP
- * a sitting whose place had no reviewed venue row now publishes it, with no pin
- * and its gap named the one way the model reads it (`unplacedVenueGap`,
- * `MeetingVenueGap` in lib/sources/types.ts, read by lib/meetings/online.ts):
- *
- * - the sitting's own record names a place → `STATED_NOT_PLACED`, its words;
- * - the record's place field is blank → `NOT_STATED_BY_PUBLISHER`;
- * - the route has no place field for the sitting at all → no `venueGap`: our
- *   own place-not-recorded gap.
- *
- * Each test plants the gap on the adapter's own recorded fixture (no live
- * calls) and checks four things: the sitting is published, it is not pinned,
- * its gap is named, and it is still COUNTED as `unknownVenue` (kept, so the
- * accounting conserves with nothing dropped for want of a place). A reviewed
- * place in the same fixture is still placed.
- */
-
 const FIXTURES = join(import.meta.dirname, "fixtures");
 const fixture = (name: string) => readFileSync(join(FIXTURES, name), "utf8");
 
@@ -83,8 +62,6 @@ test("unplacedVenueGap: words are the stated place, verbatim; blank is the publi
   }
 });
 
-// ── CivicClerk ─────────────────────────────────────────────────────────────
-
 test("civicclerk: an unreviewed room and a blank one are published with the gap, a reviewed room still placed", () => {
   const wiring = row(["CIVICCLERK"], (w) => w.config.slug === "capaz");
   // The OData Events row shape the adapter reads (the fact-bridge test pins the
@@ -112,8 +89,6 @@ test("civicclerk: an unreviewed room and a blank one are published with the gap,
   assert.equal(accounting.outcome, "CONSERVED");
 });
 
-// ── CivicPlus ──────────────────────────────────────────────────────────────
-
 test("civicplus: an event whose LOCATION has no reviewed row is published in the feed's words", () => {
   const wiring = row(["CIVICPLUS"], (w) => w.bodyId.endsWith("#governing"));
   const ical = fixture("civicplus-rockaway.ics")
@@ -136,8 +111,7 @@ test("civicplus: an event whose LOCATION has no reviewed row is published in the
 
 test("civicplus: an archived sitting with no one reviewed venue is published with our own gap", () => {
   const council = row(["CIVICPLUS"], (w) => w.bodyId.endsWith("#governing"));
-  // The same body, scoped where no venue row exists, so `soleVenueForBody`
-  // finds none — the case that used to drop every archived sitting.
+  // The same body, scoped where no venue row exists, so `soleVenueForBody` finds none.
   const unscoped: BodySourceWiring = { ...council, ocdId: "ocd-division/country:us/state:nj/county:morris/place:dover" };
   const now = new Date("2026-08-13T12:00:00-07:00");
   const { meetings, drops, accounting } = makeCivicPlusSource([unscoped]).normalizeWithDrops(
@@ -150,8 +124,6 @@ test("civicplus: an archived sitting with no one reviewed venue is published wit
   assert.equal(accounting.outcome, "CONSERVED");
   assert.equal(drops.unknownVenue, meetings.filter((m) => m.location === null && !m.online).length);
 });
-
-// ── Clerksboards ───────────────────────────────────────────────────────────
 
 test("clerksboards: a Meeting Location with no reviewed row publishes every instance in the Clerk's words", () => {
   const wiring: BodySourceWiring = {
@@ -184,8 +156,6 @@ test("clerksboards: a Meeting Location with no reviewed row publishes every inst
   assert.ok(recorded.meetings.every((m) => m.location?.name === "Tucson City Hall, Mayor and Council Chambers"), "placed as before");
 });
 
-// ── Diligent ───────────────────────────────────────────────────────────────
-
 test("diligent: a portal row naming an unreviewed room, or none, is published with the gap the portal states", () => {
   const wiring = row(["DILIGENT", "CIVICWEB"], (w) => w.config.slug === "tusd1");
   const rows = (JSON.parse(fixture("diligent-tusd-meetings.json")) as DiligentMeeting[]).map((m) =>
@@ -204,8 +174,6 @@ test("diligent: a portal row naming an unreviewed room, or none, is published wi
   assert.equal(drops.unknownVenue, 2);
   assert.equal(accounting.dropped, 0);
 });
-
-// ── iCalendar ──────────────────────────────────────────────────────────────
 
 function wilmotIcs(edit: (uid: string, block: string) => string): string {
   return fixture("ical/wilmot-2026-08-19.ics")
@@ -267,9 +235,6 @@ test("ical: with a standing venue that has no reviewed row, the feed's words sti
 });
 
 test("ical: a standing venue stands in only for a LOCATION that names no place, never for another building (2026-09-25)", () => {
-  // Measured that day over every ICAL row's live feed: 15 sittings whose feed
-  // named another place (a treatment plant, a library, a highway garage) were
-  // pinned at Warner Town Hall by the row's standing venue.
   const select = row(["ICAL"], (w) => w.config.slug === "wilmot-selectboard");
   assert.ok(select.config.venueMatch, "the row states a standing venue");
   const ics = wilmotIcs((uid, block) => (uid.startsWith("10001057-") ? block.replace(/^LOCATION:.*$/m, "LOCATION:Wilmot Public Library") : block));
@@ -285,8 +250,6 @@ test("ical: a standing venue stands in only for a LOCATION that names no place, 
   assert.equal(namesNoPlace("pillsbury library"), false);
   assert.equal(namesNoPlace("TH"), false, "two letters that are no state are somebody's words for a room");
 });
-
-// ── IQM2 ───────────────────────────────────────────────────────────────────
 
 test("iqm2: an unreviewed room, a blank tooltip venue and a virtual sitting are all published", () => {
   const wiring = wiringForTypes(["IQM2"])[0];
@@ -314,8 +277,6 @@ test("iqm2: an unreviewed room, a blank tooltip venue and a virtual sitting are 
   assert.equal(drops.placeless, 1);
   assert.equal(accounting.dropped, drops.notConfigured, "nothing of this body is dropped");
 });
-
-// ── Pima Community College's own pages ─────────────────────────────────────
 
 test("pima-edu: a room code with no reviewed spelling renders in the college's words; a sitting nothing places keeps our gap", async () => {
   const dir = join(FIXTURES, "pima-edu");
@@ -350,8 +311,6 @@ test("pima-edu: a room code with no reviewed spelling renders in the college's w
   assert.equal(drops.unknownVenue, 3);
   assert.equal(accounting.outcome, "CONSERVED");
 });
-
-// ── Revize ─────────────────────────────────────────────────────────────────
 
 test("revize: an upcoming sitting in an unreviewed room, or online, is published; nothing is dropped for its place", () => {
   const wiring = wiringForTypes(["REVIZE"])[0];
@@ -394,8 +353,6 @@ test("revize: an archived sitting with no one reviewed venue is published with o
   assert.equal(accounting.outcome, "CONSERVED");
 });
 
-// ── The body's own schedule page ───────────────────────────────────────────
-
 test("schedulepage: a row naming an unreviewed room renders its words; the page's room with no reviewed row keeps our gap", () => {
   const kearsarge = row(["SCHEDULEPAGE"], (w) => w.config.slug === "kearsarge");
   const now = new Date("2027-01-01T12:00:00-05:00");
@@ -425,8 +382,6 @@ test("schedulepage: a row naming an unreviewed room renders its words; the page'
   assert.equal(unreviewed.accounting.dropped, unreviewed.drops.notConfigured, "nothing of this body is dropped");
 });
 
-// ── Apptegy ────────────────────────────────────────────────────────────────
-
 test("apptegy: a board meeting with no venue, or a venue with no coordinates, is published and never pinned at 0,0", () => {
   const vail = row(["APPTEGY"], (w) => w.config.slug === "vail");
   const events = (JSON.parse(fixture("apptegy-vail-events.json")).events as ApptegyEvent[]).map((e) =>
@@ -450,8 +405,6 @@ test("apptegy: a board meeting with no venue, or a venue with no coordinates, is
   assert.equal(accounting.outcome, "CONSERVED");
 });
 
-// ── OnBase: the one deliberate exception, pinned ───────────────────────────
-
 test("onbase: an unmatched meeting name still drops, counted — the name key is its only body filter", () => {
   const rows = wiringForTypes(["ONBASE"]);
   const now = new Date("2026-08-13T12:00:00-07:00");
@@ -460,8 +413,7 @@ test("onbase: an unmatched meeting name still drops, counted — the name key is
     now,
   );
   // The Joint Meeting row is not verified as the Mayor and Council's sitting by
-  // anything but a name the cache would have to know; publishing it would put
-  // another body's meeting on the Council's card. Unchanged by this class.
+  // anything but a name the cache would have to know; publishing it would put another body's meeting on the Council's card.
   assert.equal(meetings.length, 9);
   assert.equal(drops.unknownVenue, 1);
 });

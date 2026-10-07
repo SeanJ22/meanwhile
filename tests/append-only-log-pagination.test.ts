@@ -1,20 +1,8 @@
 /**
- * The append-only log reads must not exceed the Neon HTTP driver's 64 MiB
- * response cap, and callers that want a subset must get it by CONTENT, not by
- * position. Before 2026-09-17 `pgAppendOnlyRepository.read`/`readAll` issued ONE
- * unbounded `SELECT ... ORDER BY position`, so when the owner-digest log crossed
- * 64 MiB every read threw `NeonDbError: response is too large` — and that read
- * is how the standing runner verifies its adoption receipt at startup, so it
- * crash-looped. `read`/`readAll` now page; `readWhere` is a paged content filter
- * (`record #>> path = value`) that finds a record by what it is rather than
- * where it sits; `readRecent` is a bounded newest-first tail.
- *
- * These are deterministic, provider-independent tests over a fake `Sql` that
- * enforces the contract the reads depend on: every scan is bounded by `LIMIT`,
- * the concatenation across pages equals the whole selection in order, and a
- * content filter returns EVERY match regardless of position. The fake THROWS on
- * an unbounded scan, so a regression to a single unbounded `SELECT` fails here
- * rather than only against a >64 MiB production log.
+ * Append-only log reads never exceed the Neon HTTP driver's 64 MiB response cap: `read`/`readAll`
+ * page, `readWhere` filters by content (`record #>> path = value`), and `readRecent` is a bounded
+ * newest-first tail. The fake `Sql` throws on any scan without a `LIMIT`; concatenated pages must
+ * equal the whole selection in order, and a content filter returns every match regardless of position.
  */
 
 import assert from "node:assert/strict";

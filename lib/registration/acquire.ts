@@ -1,29 +1,20 @@
 /**
- * **THE CENSUS OF GOVERNMENTS, CONFIRMED BYTE FOR BYTE.** (2026-09-23; asked
- * conditionally since 2026-09-24.)
- *
- * Registration derives every state's governments from the committed reference
- * (`data/derived/registration/`), which was built from the 2022 Census of
- * Governments. Each routine run confirms census.gov still serves the exact
- * bytes the reference was built from, and it does so without downloading
- * them when it can:
+ * Census of Governments, confirmed byte for byte. Registration derives every state's governments from
+ * the committed reference (`data/derived/registration/`). Each routine run confirms census.gov still
+ * serves the exact bytes it was built from, without downloading them when it can:
  *
  * ```
- *   304 Not Modified     census.gov confirms nothing changed since the Last-Modified
- *                        the pinned bytes were served with; no body is read
+ *   304 Not Modified     nothing changed since the pinned Last-Modified; no body is read
  *   200, other date      the file changed: refused on its headers, body unread
- *   200, pinned date     the server ignored the condition; the body is read and
- *                        held to the pinned size and hash, as before
+ *   200, pinned date     the server ignored the condition; the body is read and held to the
+ *                        pinned size and hash
  * ```
  *
- * A different size, hash or date is a new Census vintage (or a damaged
- * transfer), refused by name, and nothing moves until the reference is
- * rebuilt from it. The response is read only under the acquisition deadline's
- * signal, capped at twice the pinned size, and accepted only from census.gov
- * over HTTPS.
+ * A different size, hash or date is a new Census vintage (or a damaged transfer), refused by name. The
+ * response is read only under the acquisition deadline's signal, capped at twice the pinned size, and
+ * accepted only from census.gov over HTTPS.
  *
- * `@freshness-reads-here` — `retrievedAt` is stamped the moment census.gov
- * answers this run's request, whether a 304 or the bytes themselves.
+ * `@freshness-reads-here` — `retrievedAt` is stamped the moment census.gov answers this run's request.
  */
 import { createHash } from "node:crypto";
 

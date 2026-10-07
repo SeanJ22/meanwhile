@@ -1,15 +1,6 @@
 "use client";
 
-/**
- * **THE PREVIEW EVERY CHANGE GOES THROUGH.**
- *
- * Shows what the action affects, local or whole system ("Whole system · affects
- * every state" in amber), selected versus all matching, cost and undo.
- * Send is focused on open; Escape closes; focus is kept inside the
- * dialog and returns to the control that opened it. Send is one action: the
- * idempotency key is fixed when the dialog opens, and the button turns off the
- * moment it is pressed, so a double click or a retried request is one send.
- */
+/** The idempotency key is fixed when the dialog opens, so a double click or a retried request is one send. */
 import { useEffect, useId, useRef, useState } from "react";
 
 import type { ActionDef, Preview } from "./actions.ts";
@@ -27,7 +18,6 @@ export function ActionDialog(props: {
   readonly def: ActionDef;
   readonly preview: Preview;
   readonly mode: "live" | "sample";
-  /** The eligibility reason, re-checked live while the dialog is open. */
   readonly blocked: string | null;
   readonly onSend: (send: DialogSend) => void;
   readonly onClose: () => void;

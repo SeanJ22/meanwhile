@@ -1,11 +1,6 @@
-/**
- * **THE STATES WE TRACK.** The 50 states, DC and the five territories that
- * Admin selects over. A fixed reference list, not a measurement.
- */
 export interface StateEntry {
   readonly code: string;
   readonly name: string;
-  /** The pilot states carrying real walked data first. */
   readonly pilot: boolean;
 }
 

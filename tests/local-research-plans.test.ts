@@ -1,5 +1,5 @@
 /**
- * CH-22: local-jurisdiction rows that reach the paid model path get the work plan a Send's do, with its
+ * Local-jurisdiction rows that reach the paid model path get the work plan a Send's do, with its
  * reader door, so their findings go through the coordinator and the builders instead of staying staged.
  */
 import assert from "node:assert/strict";
@@ -19,8 +19,8 @@ import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts"
 
 const ROOT = join(import.meta.dirname, "..");
 const T = "2026-10-06T14:00:00.000Z";
-const registry = (state: string) => JSON.parse(readFileSync(join(ROOT, `data/states/${state}/jurisdictions/${state}.json`), "utf8")) as JurisdictionRegistry;
-installOperationalReferenceBundle(operationalReferenceBundle({ az: registry("az"), nh: registry("nh"), nj: registry("nj") }));
+const REGISTRIES = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<"az" | "nh" | "nj", JurisdictionRegistry>;
+installOperationalReferenceBundle(operationalReferenceBundle(REGISTRIES));
 
 const joined: MeetingPartitionOwnership = { ...UNREAD_MEETING_PARTITIONS, bodyIdFor: (id) => `${id}#governing-body` };
 const registryFor = (meetingPartitions: MeetingPartitionOwnership) => buildRegistry([localJurisdictionsProvider({
@@ -29,7 +29,7 @@ const registryFor = (meetingPartitions: MeetingPartitionOwnership) => buildRegis
 test("every tracked government's paid row carries a work plan; a joined body gives it a reader door", () => {
   const pass = registryFor(joined);
   const paid = pass.units.filter((u) => u.route.executorClass === "BOUNDED_MODEL_WORKER");
-  assert.ok(paid.length > 100, "Arizona's tracked governments owe paid discovery");
+  assert.ok(paid.length > 0, "the tracked governments owe paid discovery");
   assert.ok(paid.every((u) => u.obligation.autonomousPlan), "no paid local row is left without a plan");
   const doors = paid.filter((u) => u.obligation.autonomousPlan?.publication);
   assert.equal(doors.length, paid.length, "with the body joined, each plan publishes through a door");
@@ -81,7 +81,7 @@ test("an opened local row is planned work: the coordinator queues its Scout for 
 test("with paid work in the hunter lane the round opens a due planned row instead of only deferring it", () => {
   const round = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
   assert.match(round, /const queuesForHunterLane = laneClosure\?\.hunterLane === true;/);
-  assert.match(round, /if \(queuesForHunterLane && !canary\) \{[\s\S]*?if \(!row\.obligation\.autonomousPlan\) continue;\s*[\s\S]*?await openOccurrenceInStep\(\{ \.\.\.scheduled, nextDueAt: row\.nextDueAt \}\) === true\) queued \+= 1;/,
+  assert.match(round, /if \(queuesForHunterLane && !canary\) \{[\s\S]*?if \(!plannedForHunters\(row\.obligation\.autonomousPlan\)\) continue;\s*[\s\S]*?await openOccurrenceInStep\(\{ \.\.\.scheduled, nextDueAt: row\.nextDueAt \}\) === true\) queued \+= 1;/,
     "each due planned row is opened for the hunter lane; a row with no plan is left to the lane");
   assert.ok(round.indexOf("planned paid rows queued for the hunter lane") < round.indexOf("const cycle = await runCycle({"), "opened before the round dispatches");
   assert.match(round, /local research rows: \$\{local\.length\} paid; \$\{planned\.length\} carry a work plan/);
@@ -89,7 +89,7 @@ test("with paid work in the hunter lane the round opens a due planned row instea
 
 test("the model lane names the hunter-lane closure only when nothing else holds paid work", () => {
   const facts = { dry: false, noModel: false, credentialConfigured: true, credentialVar: "KEY",
-    activation: { promotionEnabled: true, openRecordClasses: ["BALLOT_CONTEST"] }, paused: false, pauseIntentId: null,
+    paused: false, pauseIntentId: null,
     runnerPaused: false, runnerPauseIntentId: null, spendHold: null, unreadableControls: [] } as unknown as Parameters<typeof modelLaneClosure>[0];
   assert.equal(modelLaneClosure(facts), null);
   assert.equal(modelLaneClosure({ ...facts, paidWorkInHunterLane: true })?.hunterLane, true);

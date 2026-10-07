@@ -1,6 +1,3 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import type { StateVotesSnapshot } from "./types.ts";
 import {
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
@@ -19,12 +16,8 @@ import {
 } from "../../civic-data/read-model.ts";
 
 /**
- * State-legislature roll calls, read once per process.
- *
- * Reader requests never fetch a publisher. Only proof-validated promotions
- * from official state publishers enter the runtime cache. The old committed
- * LegiScan projection is research/test evidence and is never a production
- * bootstrap or fallback.
+ * State-legislature roll calls, read once per process. Reader requests never fetch a publisher; only
+ * proof-validated promotions from official state publishers enter the runtime cache.
  */
 
 const cacheByScope = new Map<OfficialStateVoteScope, StateVotesSnapshot>();
@@ -35,17 +28,9 @@ type PromotedStateVotesRead = Extract<
 >;
 
 /**
- * **ONLY A SCOPE SOMETHING STILL WRITES IS READ.** (2026-09-25, R9.)
- *
- * The official state scopes whose registered routine contract promotes a
- * `STATE_ROLL_CALL` projection — derived from `ROUTINE_SOURCE_CONTRACTS`, the
- * way `tests/state-rollcalls-reader-visibility.test.ts` derives the reader
- * render gate, so a state migrated off the per-jurisdiction pointer leaves this
- * list with its contract. This used to be every official target: New Hampshire
- * moved to the per-legislator fan-out (`nh-state-rollcalls`,
- * `STATE_LEGISLATOR_VOTES`), nothing has written its `STATE_ROLL_CALL` pointer
- * since, and every proof enumeration and Reader read still opened that stale
- * version.
+ * Only a scope something still writes is read: the official state scopes whose registered routine
+ * contract promotes a `STATE_ROLL_CALL` projection, derived from `ROUTINE_SOURCE_CONTRACTS`, so a state
+ * migrated off the per-jurisdiction pointer leaves this list with its contract.
  */
 export const OFFICIAL_STATE_VOTE_SCOPES: readonly OfficialStateVoteScope[] = OFFICIAL_STATE_ROLL_CALL_TARGETS
   .filter((target) => ROUTINE_SOURCE_CONTRACTS.some((contract) =>
@@ -56,10 +41,9 @@ export const OFFICIAL_STATE_VOTE_SCOPES: readonly OfficialStateVoteScope[] = OFF
   .map(({ jurisdiction }) => jurisdiction);
 
 /**
- * Official state scopes whose `STATE_ROLL_CALL` pointer is retired, by name.
- * The pointer and its versions stay in the store as written; nothing reads
- * them. `tests/vote-source-isolation.test.ts` holds this list equal to the
- * official targets the contracts no longer promote per jurisdiction.
+ * Official state scopes whose `STATE_ROLL_CALL` pointer is retired, by name. The pointer and its versions
+ * stay in the store as written; nothing reads them. `tests/vote-source-isolation.test.ts` holds this list
+ * equal to the official targets the contracts no longer promote per jurisdiction.
  */
 export const RETIRED_STATE_ROLL_CALL_SCOPES: readonly {
   readonly scope: OfficialStateVoteScope;
@@ -72,12 +56,6 @@ export function isRetiredStateRollCallScope(scope: OfficialStateVoteScope): bool
   return !OFFICIAL_STATE_VOTE_SCOPES.includes(scope);
 }
 export type { OfficialStateVoteScope } from "../../state-rollcalls/authority.ts";
-
-function stateForScope(scope: OfficialStateVoteScope): string {
-  const target = officialStateRollCallTargetByScope(scope);
-  if (!target) throw new Error(`OFFICIAL_STATE_VOTE_SCOPE_INVALID:${scope}`);
-  return target.state;
-}
 
 export function officialStateVoteProjectionIssue(
   scope: OfficialStateVoteScope,
@@ -215,10 +193,8 @@ export interface AvailableOfficialStateVotes {
 }
 
 /**
- * Enumerate official state-roll authorities without reopening the retired
- * LegiScan aggregate. An answered-but-empty canonical scope is an explicit
- * current absence; an unreadable store or invalid promoted projection is a
- * failed proof run, never an excuse to select research bytes.
+ * Enumerate official state-roll authorities. An answered-but-empty canonical scope is an explicit current
+ * absence; an unreadable store or invalid promoted projection is a failed proof run.
  */
 export async function readAvailableOfficialStateVotes(
   options: PromotedCivicDataReadOptions = {},
@@ -253,29 +229,6 @@ export async function readAvailableOfficialStateVotes(
   return { promoted, readbacks };
 }
 
-function researchFixture(scope: OfficialStateVoteScope): StateVotesSnapshot {
-  const fixture = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "votes", "state-votes-snapshot.json"), "utf8"),
-  ) as StateVotesSnapshot;
-  const state = stateForScope(scope);
-  const rollCalls = fixture.rollCalls.filter((roll) => roll.state === state);
-  const rollIds = new Set(rollCalls.map((roll) => roll.id));
-  const positions = fixture.positions.filter((position) => rollIds.has(position.rollCallId));
-  const byState = fixture.identifierMatch.byState[state];
-  return {
-    generatedAt: fixture.generatedAt,
-    datasets: fixture.datasets.filter((dataset) => dataset.state === state),
-    identifierMatch: {
-      peopleSeen: byState?.peopleSeen ?? 0,
-      peopleMatched: byState?.peopleMatched ?? 0,
-      distinctOfficeholders: new Set(positions.map((position) => position.officeholderId)).size,
-      byState: byState ? { [state]: structuredClone(byState) } : {},
-    },
-    rollCalls: structuredClone(rollCalls),
-    positions: structuredClone(positions),
-  };
-}
-
 /**
  * Preload exactly one permanent authority. The scope is required before this
  * function can open a store, so one state's request never probes or mutates a
@@ -300,14 +253,10 @@ export async function refreshStateVotesFromPromoted(
   }
 }
 
-/**
- * Current official projection, or an explicit test-only research fixture.
- * Production never reads `data/votes/state-votes-snapshot.json`.
- */
+/** Current official projection. */
 export function getStateVotesSnapshot(scope: OfficialStateVoteScope): StateVotesSnapshot {
   const held = cacheByScope.get(scope);
   if (held) return held;
-  if (mayUseTestFixture()) return researchFixture(scope);
   throw new Error(`No proof-validated official state roll-call projection is loaded for ${scope}.`);
 }
 

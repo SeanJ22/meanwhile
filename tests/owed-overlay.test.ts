@@ -1,7 +1,4 @@
-/**
- * SC-14 and BR-33: Sean can add an item to what is owed, and decline an added one, from Admin, each with a reason in a log and an
- * undo. The change reaches a place's owed list on the next read with no release, and it never holds back publishing.
- */
+// Owner additions to and declines of what is owed reach a place's list on the next read and never hold back publishing.
 import assert from "node:assert/strict";
 import test from "node:test";
 

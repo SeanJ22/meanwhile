@@ -1,8 +1,6 @@
 /**
- * The research transport (2026-09-25): Node first, and a 403 asked once more through curl as who we are.
- * Measured that day, Cloudflare in front of Sutton's, Newbury's and Kearsarge's sites challenged Node's client on
- * every header set and admitted curl carrying the project's own name, purpose and contact 30 times in 30. No test
- * here touches the network.
+ * The research transport: Node first, and a 403 asked once more through curl identifying the project by name,
+ * purpose and contact. No test here touches the network.
  */
 
 import assert from "node:assert/strict";

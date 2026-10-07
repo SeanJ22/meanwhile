@@ -1,4 +1,4 @@
-/** CP-02: source labels and their code defaults. Pure, including in the isolated Validator. */
+/** Source labels and their code defaults. Pure, including in the isolated Validator. */
 export const SOURCE_KINDS = ["OFFICIAL", "CAMPAIGN", "FILING", "VOTER_GUIDE", "FORUM", "NEWS", "REFERENCE", "OTHER"] as const;
 export type SourceKind = (typeof SOURCE_KINDS)[number];
 export interface SourcePolicy {

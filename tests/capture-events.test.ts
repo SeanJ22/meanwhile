@@ -58,7 +58,6 @@ test("S2.4 events: a malformed batch is refused whole, never partly accepted", (
 });
 
 test("S2.4 events: the batch carries nothing a reader typed except through the Ask path", () => {
-  // Free text is not a field of an event: an unknown key is simply not carried.
   const parsed = readEventBatch(batch([{ ...event(1), question: "who is my senator", email: "a@b.co" }]));
   assert.ok(parsed);
   const keys = Object.keys(parsed.events[0]);
@@ -84,19 +83,16 @@ test("S2.4 events: the browser batcher sends one request per batch, keeps the ba
   const { captureEvent, flushEvents, resetEventClientForTests } = await import("../lib/events/client.ts");
   resetEventClientForTests();
 
-  // Twenty events trigger a flush by themselves: one request, not twenty.
   for (let i = 0; i < 20; i++) captureEvent({ type: "CARD_OPEN", cardId: `MEETING:${i}`, cardKind: "MEETING" });
   await new Promise((r) => setTimeout(r, 5));
   assert.equal(sent.length, 1);
   assert.equal(sent[0].events.length, 20);
 
-  // The server answered 503, so the same batch id is sent again.
   flushEvents();
   await new Promise((r) => setTimeout(r, 5));
   assert.equal(sent.length, 2);
   assert.equal(sent[1].batchId, sent[0].batchId);
 
-  // Third failure drops it; the next flush has nothing to send.
   flushEvents();
   await new Promise((r) => setTimeout(r, 5));
   assert.equal(sent.length, 3);
@@ -104,7 +100,6 @@ test("S2.4 events: the browser batcher sends one request per batch, keeps the ba
   await new Promise((r) => setTimeout(r, 5));
   assert.equal(sent.length, 3, "a batch that failed three times is dropped, not retried forever");
 
-  // A 2xx counts it, and the key is the same random value every time.
   respond = 204;
   captureEvent({ type: "ZIP_VIEW", zip: "85701" });
   flushEvents();

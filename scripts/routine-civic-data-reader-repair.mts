@@ -34,10 +34,7 @@ function safeFailure(value: string): string {
     .slice(0, 4_000) || "Reader repair failed without a diagnostic.";
 }
 
-// An error nothing caught ends this child through one sanitized RCD_FATAL line
-// naming its step (lib/ops/fatal-line.ts). Without it the supervisor quoted the
-// last eight stderr lines, which for an uncaught throw are stack frames: the
-// 2026-09-25T23:01Z runtime-authority refusals recorded no reason at all.
+// An uncaught error ends this child through one sanitized RCD_FATAL line naming its step (lib/ops/fatal-line.ts).
 let step = "reading the Reader repair arguments";
 installFatalLine("routine-civic-data-reader-repair", () => step);
 
@@ -53,9 +50,7 @@ if (meetingAggregate === (contractId !== null && contractId !== "")) {
   throw new Error("READER_REPAIR_DOMAIN_ARGUMENT_INVALID");
 }
 
-// A one-contract child writes stage lines to stderr, so a child the runner
-// kills leaves the step it stopped in as its failure detail
-// (lib/ops/stage-trace.ts). Protocol records stay on stdout.
+// Stage lines go to stderr so a killed child leaves its last step as the failure detail; protocol records stay on stdout.
 const stage = meetingAggregate
   ? null
   : (what: string): void => {
@@ -74,20 +69,13 @@ const store = stage
   : new PostgresRoutineDataStore();
 
 let failed = false;
-// A receipt from an earlier commit carries to this one when no typed Reader
-// code changed between them; otherwise the Reader re-reads (R31, 2026-09-25).
-// Every runner handoff once re-read every Reader (195.3 MB on an isolated copy).
+// A receipt from an earlier commit carries to this one when no typed Reader code changed between them.
 const attestor = readerVerifierClosureAttestor();
 if (meetingAggregate) {
-  // One composition of every partition per pass, made only when something
-  // needs it: the Reader readbacks of newly promoted versions and the prepared
-  // snapshot's republication ask for exactly the same read, and a pass that
-  // promoted a partition needs both. Each once composed on its own (about
-  // 24 MB from the reader database apiece). A failed composition is not kept,
-  // so the second consumer tries again as it did before.
+  // One composition per pass, shared by the Reader readbacks and the snapshot republication; a failed one is not kept.
   let composing: Promise<MeetingsProjectionReadResult> | null = null;
   const aggregate = (): Promise<MeetingsProjectionReadResult> => {
-    composing ??= readMeetingsProjection({ store, now: observedAt, bypassCache: true, allowUnconfiguredBootstrap: false })
+    composing ??= readMeetingsProjection({ store, now: observedAt, bypassCache: true })
       .catch((error: unknown) => {
         composing = null;
         throw error;

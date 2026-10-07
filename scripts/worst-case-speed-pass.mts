@@ -1,29 +1,20 @@
 #!/usr/bin/env node
 /**
- * **ONE WORST-CASE SPEED PASS ON THE LIVE SITE.** (FE-02.)
+ * Worst-case speed pass on the live site: every resident-task surface and Ask question at
+ * sampled published ZIPs, phone and desktop, each visit a fresh browser context. Judged by
+ * the slowest visit against three seconds; an unfinished visit fails.
  *
- * Every surface in the resident-task set and every Ask question in it, at ZIPs
- * sampled from the published places, on a phone (390 by 844) and a desktop,
- * each visit a fresh browser context (empty cache and storage). Judged by the
- * slowest visit against three seconds; a visit that never finished is a
- * failure. The pass is recorded in the live-audit log, and the Scoreboard's
- * "Site speed and reliability" row reads it.
+ *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/worst-case-speed-pass.mts [--dry-run]
  *
- * Runs on the runner host, by the pattern of served-reader-production.ts:
- *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/worst-case-speed-pass.mts
- *
- * What "usable" means, per surface, measured on the browser's own clock from navigation start:
+ * "Usable", on the browser clock from navigation start:
  *   home, map   the first pin of the reader's area is on the map
- *   ballot      the ballot page's heading is there and the page can answer a tap
+ *   ballot      the ballot heading is there and the page can answer a tap
  *   meetings    the meetings door has opened and shows its groups
  *   officials   the officials door has opened
- *   ask         from pressing Ask to the first answer, refusal or destination (the page load is the home row)
+ *   ask         from pressing Ask to the first answer, refusal or destination
  *
- * Writes are blocked in every visit except Ask's, which must reach /api/ask to be measured. Ask runs a
- * model, so Ask is measured at one sampled ZIP per pass (WTP_SPEED_ASK_ZIPS, default 1), with the run's
- * synthetic marker so its rows are not counted as readers. Exit 0 with a one-line summary; exit 1 when
- * the control plane is not configured or no published place could be read. `--dry-run` measures and
- * prints each row without recording anything (for checking the pass by hand).
+ * Writes are blocked except for Ask, which runs a model and is measured at WTP_SPEED_ASK_ZIPS
+ * ZIPs (default 1) with the synthetic marker. `--dry-run` prints rows without recording.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -136,7 +127,6 @@ if (DRY) {
 } else {
   const repos = await createPgRepositories(url!, now, { skipBootstrap: true });
   await recordSpeedPass(repos, pass);
-  // FE-26: a page over its limit goes onto the fix list now, not at the next look at Admin.
   const fixes = await openSurfaceFixes(repos, pass, now).catch((error) => { console.error(`speed: fix items were not opened (${error instanceof Error ? error.message : error})`); return { opened: [] }; });
   if (fixes.opened.length > 0) console.log(`speed: ${fixes.opened.length} fix item${fixes.opened.length === 1 ? "" : "s"} kept open`);
 }

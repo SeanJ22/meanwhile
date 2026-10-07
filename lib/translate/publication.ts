@@ -21,9 +21,8 @@ export function translationPackage(input: {
   const verified = section3Page({ url: record.sourceUrl, text: record.sourceText, retrievedAt: record.retrievedAt, linkingPage, sourcePolicy: primary.sourcePolicy },
     record.kind === "MEASURE" ? "BALLOT_MEASURE" : record.kind === "AGENDA" || record.kind === "MINUTES" ? "MEETING" : "OFFICIAL_BOARD_DIRECTORY", now);
   if (!verified.ok || !isOfficialSource(record.sourceUrl) && !linkingPage) throw new Error("Translation source is stale or not an official document.");
-  // The review clock orders this open fact set. Subject IDs and source hashes
-  // identify members, but cannot order unrelated subjects or changed documents.
-  // The v2 prefix sorts after the original "translation:" package versions.
+  // The review clock orders this open fact set; subject IDs and source hashes
+  // cannot order unrelated subjects. The v2 prefix sorts after "translation:".
   return { contractId: "plain-english-translations", version: `translations-v2:${new Date(record.writtenAt).toISOString()}`,
     sourceThrough: record.retrievedAt, sourceReceipt: section3SourceReceipt(input.captures, now, record.checkerModel,
       "Writer and independent checker compared every translated sentence with the saved official source; code confirmed every supporting passage."),

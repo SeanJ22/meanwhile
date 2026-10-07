@@ -1,14 +1,3 @@
-/**
- * **THE SCOUT'S DOOR INTO THE FIELD MANUAL.** (Owner directive 2026-09-19.)
- *
- * A scout READS a projection of the field manual before it walks (the inherited
- * half of the RULING 63 pair) and WRITES its grounded discoveries straight back
- * — no human `method:learn` step between finding a door and the next scout
- * seeing it. This module is the small bridge between the scout result shape and
- * the field-manual store, kept out of the pure store module so that stays free
- * of scheduler types.
- */
-
 import {
   fieldManualEntryId,
   fieldManualPlaceRank,
@@ -57,9 +46,7 @@ export function scoutFieldManualProjection(
   opts: { readonly subjectId?: string | null; readonly obligationId?: string | null; readonly recordClass?: string | null; readonly limit?: number },
 ): FieldManualProjection {
   const states = scoutStateHint(opts.subjectId, opts.obligationId);
-  // Registry classes and historic method fields use different vocabularies.
-  // Rank applicable field hints first, but retain cross-family methods in the
-  // remaining slots: a hard exact-class filter hid the existing AZ roster doors.
+  // Rank applicable field hints first; cross-family methods keep the remaining slots.
   const related: Readonly<Record<string, readonly string[]>> = {
     OFFICIAL_ROSTER: ["officeholder", "roster", "contact", "verifiedpage", "photo", "body", "officials"],
     OFFICIAL_BOARD_DIRECTORY: ["body", "jurisdiction", "roster", "verifiedpage"],
@@ -108,19 +95,14 @@ export function scoutFieldManualCatalog(
 const DEAD_DOOR_LINE = /^\S+\/\S+ (BLOCKED|FAILED) \(/;
 /** An access control named on a door: the only thing that makes a dead door a wall. */
 const ACCESS_CONTROL_NAMED = /\b(HTTP )?(401|402|403|407|429|451)\b|challenge|captcha|login|sign[- ]in|paywall|rate[- ]limit|forbidden|authenticat/i;
-/** A robots.txt verdict named on a door, as a pre-2026-09-25 walk recorded a robots-only refusal. */
+/** A robots.txt verdict named on a door. */
 const ROBOTS_VERDICT_NAMED = /\b(DISALLOWED|CANNOT_TELL)\b|robots\.txt|permission (was )?(denied|unknown)/i;
 
-/**
- * Whether a projected dead door was recorded for robots.txt alone: dead, naming a robots verdict, and naming no
- * access control. Such a door is NOT a wall — robots.txt is recorded and never refuses a public page (owner
- * decision 2026-09-25) — so the scout is told to walk it.
- */
+/** Whether a dead door was recorded for robots.txt alone (no access control named). Such a door is not a wall, so the scout walks it. */
 export function isRobotsOnlyDeadDoor(line: string): boolean {
   return DEAD_DOOR_LINE.test(line) && ROBOTS_VERDICT_NAMED.test(line) && !ACCESS_CONTROL_NAMED.test(line);
 }
 
-/** The brief lines a scout reads, with the RULING 63 header naming the manual it inherited. */
 export function fieldManualBriefLines(projection: FieldManualProjection): string[] {
   if (projection.total === 0) return [];
   if (projection.entryIds.length === 0) {
@@ -187,7 +169,7 @@ export function scoutDiscoveryEntries(result: ScoutResult, stateHint: readonly s
   }))];
 }
 
-/** Every route id the manual already holds — a newly-built candidate that matches one is a rebuilt-existing defect (RULING 63). */
+/** Every route id the manual already holds; a newly built candidate matching one is a rebuilt-existing defect. */
 export function knownRouteIds(store: FieldManualStore): ReadonlySet<string> {
   const ids = new Set<string>();
   for (const e of store.entries) {
@@ -198,7 +180,7 @@ export function knownRouteIds(store: FieldManualStore): ReadonlySet<string> {
   return ids;
 }
 
-/** The RULING 63 reported pair for one walk: inherited doors offered, newly built, and any rebuilt-existing defect. */
+/** The reported pair for one walk: inherited doors offered, newly built, and any rebuilt-existing defect. */
 export interface CompoundingPair {
   readonly inheritedCount: number;
   readonly newlyBuilt: number;
@@ -225,16 +207,7 @@ function doorKey(value: string): string {
   }
 }
 
-/**
- * **GIVEN IS NOT USED.** (MW-025, 2026-09-25.)
- *
- * The inherited half of the pair counts the doors HANDED to the walk. This is
- * the half that says which of them the walk actually went through: an entry
- * counts as route reuse only when a successful, machine-recorded research rung
- * actually walked its URL or route id. A proposed candidate is not use, and
- * several inherited entries describing the same door earn one credit. This
- * receipt does not claim saved-byte reuse or avoided paid calls.
- */
+/** Which inherited doors the walk actually went through: only a successful machine-recorded rung on the URL or route id counts, once per door. */
 export function usedFieldManualEntryIds(result: ScoutResult, handedIds: readonly string[], store: FieldManualStore): string[] {
   if (handedIds.length === 0) return [];
   const walked = new Set<string>(result.rungs.filter(rung => rung.ok === true &&
@@ -256,7 +229,6 @@ export function usedFieldManualEntryIds(result: ScoutResult, handedIds: readonly
   });
 }
 
-/** A scout's write-back is the shared field-manual write (`writeFieldManual`). */
 export async function writeFieldManualDiscoveries(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string) {
   const bank = await readFieldManual(repos);
   const methods = entries.flatMap(door => doorMethodEntries(door, [], bank.store.entries));

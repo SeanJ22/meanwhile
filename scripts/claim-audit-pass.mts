@@ -1,21 +1,11 @@
 #!/usr/bin/env node
 /**
- * **THE WEEKLY CHECK OF THE TEAM'S OWN CLAIMS, AND THE DAILY CHECK THAT PROVEN STILL HOLDS.** (DP-33, DP-34.)
- *
- * Every run (daily): each Proven label is re-measured on today's fix map; one
- * that no longer holds reads "Proven, broke since", writes its one update and
- * is back in the Queue.
- *
- * Samples the week's claimed wins and Proven labels, recomputes each from the
- * fix map and the fix list, keeps the pass in the live-audit log, and answers
- * each wrong claim with a red flag and a lesson. Once a week: a rerun in the
- * same week does nothing. Plain code, no model.
- *
- *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/claim-audit-pass.mts
+ * Daily: re-measures each Proven label on today's fix map. Weekly: samples the
+ * week's claimed wins and Proven labels and recomputes each from the fix map.
+ * A rerun in the same week does nothing.
  *
  * `--controlled` feeds a false claim through the same checks against
- * in-memory records, writes nothing anywhere, and exits 0 only if it is caught.
- * Its pass is marked synthetic, so it can never be recorded or shown as real.
+ * in-memory records, writes nothing, and exits 0 only if it is caught.
  */
 import { neon } from "@neondatabase/serverless";
 
@@ -62,7 +52,6 @@ if (!out.ran || out.pass === null) {
   console.log("claim audit: this week is already checked, or there is no config row; nothing to do");
   process.exit(0);
 }
-/* RULING 159: a count over nothing is not a result. A pass that checked no claims says so and fails. */
 if (out.pass.checks.length === 0) {
   console.error(`claim audit: the pass for the week of ${out.pass.week} checked 0 claims; nothing was measured`);
   process.exit(1);

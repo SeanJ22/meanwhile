@@ -4,17 +4,9 @@ import { topicTerms } from "./person-votes.ts";
 import type { PersistedSittingOutcomes } from "../outcomes/types.ts";
 
 /**
- * **HOW A BODY OR ONE MEMBER VOTED ON AN ITEM, ACROSS EVERY SITTING WE HOLD.** (CA-41.)
- *
- * The outcome store keeps every sitting past the routine window (DB-07), and a
- * concluded sitting's record lives in the meeting history projection (DB-06).
- * Ask used to read one chosen sitting at a time, so "how did the board vote on
- * the library budget" about a sitting 120 or more days back had no way in unless
- * the reader named the date. This module reads all of a body's held sittings,
- * by body or by person, with no date window, and composes the answer from the
- * publisher's own rows: the date, the item as the agenda titles it, the
- * publisher's result words, and each member's recorded word, unmapped and never
- * summed. It adds no claim; what is not matched is the writer's, as before.
+ * How a body or one member voted on an item, across every held sitting with no
+ * date window, composed from the publisher's own rows: the date, the item as
+ * titled, the result words, and each member's word unmapped and never summed.
  *
  * Pure: the sittings are an argument (`sittingsForBody(bodyId)` in the route).
  */
@@ -50,17 +42,15 @@ function nameTokens(name: string): string[] {
   return normalizeName(name).split(" ").filter((word) => word.length > 0);
 }
 
-/** The person's own words in the question, with titles dropped: "Mayor Romero" is `romero`. */
+/** The person's own words in the question, with titles dropped. */
 function personTokens(person: string): string[] {
   return nameTokens(person).filter((word) => !ROLE_WORDS.has(word));
 }
 
 /**
  * A recorded vote belongs to the person asked about when every name word the
- * reader gave appears in the publisher's name for the voter (as whole words),
- * and the reader gave at least one. "Romero" matches "Regina Romero"; "Regina
- * Romero" does not match "Romero, Carlos". The comparison is on words, so a
- * surname inside a longer one never matches.
+ * reader gave appears as a whole word in the publisher's voter name, and at
+ * least one was given.
  */
 export function voteIsBy(personName: string | null, asked: string): boolean {
   if (!personName) return false;

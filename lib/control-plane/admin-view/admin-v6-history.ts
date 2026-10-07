@@ -1,4 +1,3 @@
-/** Admin v6 order history (BR-01): one bounded newest-first page of every order, mapped to its kind at read time. */
 import { createHash } from "node:crypto";
 import { ADMIN_RECEIPT_LOG_KEY, type ActionReceipt } from "../gateway/contract.ts";
 import { gatewayActionKind } from "../../../app/(admin)/_mw/admin-v6/actions.ts";
@@ -46,7 +45,6 @@ function statusOf(receipt: ActionReceipt): V6ReceiptStatus {
   if (receipt.outcome === "IN_PROGRESS") return "running";
   return eventTime(receipt.completedAt) ? "done" : "unknown";
 }
-/** What an order acted on, in words. A place is named by the page from its own place list. */
 function targetWords(kind: ActionKind): string {
   if (kind.startsWith("global-runner-")) return "the standing runner";
   if (kind === "global-ceiling") return "the daily budget";
@@ -105,11 +103,9 @@ function parseCursor(raw: string | null | undefined, query: { scope: string; q: 
   return c as Cursor;
 }
 
-/** Pure adapter over exact gateway types. Receipt timestamps order the rows; no append-order claim. */
 export function projectV6History(
   rows: readonly ActionReceipt[],
   query: V6HistoryQuery,
-  /** What the runner did about each receipt, by receipt id. Absent means nothing is known. */
   confirmations: ReadonlyMap<string, Confirmation> = new Map(),
 ): V6HistorySection {
   const q = (query.q ?? "").trim().toLowerCase();
@@ -142,7 +138,6 @@ function readCursor(query: V6HistoryQuery): ReadCursor | null {
     value.status !== (query.status ?? "all") || !Number.isSafeInteger(value.beforePosition) || value.beforePosition! < 0) throw new Error("INVALID_HISTORY_CURSOR");
   return value as ReadCursor;
 }
-/** One bounded source page, with a stable newest-first cursor. No complete-log read. */
 export async function readV6History(repos: ControlPlaneRepositories, query: V6HistoryQuery): Promise<V6HistorySection> {
   const cursor = readCursor(query);
   const limit = Number.isInteger(query.limit) ? Math.max(1, Math.min(ADMIN_V6_HISTORY_MAX_LIMIT, query.limit!)) : ADMIN_V6_HISTORY_MAX_LIMIT;
@@ -156,7 +151,6 @@ export async function readV6History(repos: ControlPlaneRepositories, query: V6Hi
   const window = rows.slice(0, limit);
   const confirmations = new Map<string, Confirmation>();
   await Promise.all(window.map(async row => { confirmations.set(row.receipt.receiptId, await confirmReceipt(repos, row.receipt)); }));
-  // The database already applied scope refs, including legacy projection refs.
   const receipts = window.map(row => query.scope === "us" ? row.receipt : { ...row.receipt, requestedSubject: query.scope });
   const section = projectV6History(receipts, { ...query, cursor: null }, confirmations);
   const nextCursor = rows.length > limit && window.length ? Buffer.from(JSON.stringify({ v: 2, scope: query.scope,

@@ -1,22 +1,16 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 
 import { promotedPayloadSha256 } from "../../lib/civic-data/attested-promotion.ts";
 import { requiredManualProductionContract, type ManualProductionContractId } from "../../lib/civic-data/manual-contracts.ts";
 import type { CivicDataReadResult, PromotedEdgeEntry } from "../../lib/civic-data/read-model.ts";
 import type { PromotedFamilyArtifactValue } from "../../lib/meetings/edge-artifacts.ts";
-import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../../lib/funding/data-plane.ts";
 import { projectionKey } from "../../lib/civic-data/store.ts";
 import { VALIDATION_CHECKS, type RoutineRecordClass, type ValidationReceipt } from "../../lib/civic-data/types.ts";
 
 /**
- * A proven pointer as the reader edge carries it, built from a value the test
- * already holds (a first seed or a tracked fixture): the pointer row with a
- * GOOD eight-check receipt naming its version, and the attestation of that
- * version with the payload's own SHA-256. Every Reader-side check of the edge
- * copy (`readPromotedCivicData` with `{ edge }`) holds for it, exactly as for
- * an entry the runner publishes from a real proof.
+ * A proven pointer as the reader edge carries it: the pointer row with a GOOD
+ * receipt naming its version, and the attestation of that version with the
+ * payload's own SHA-256, so every Reader-side check of the edge copy holds.
  */
 export function provenEdgeEntry<T>(input: {
   readonly recordClass: RoutineRecordClass;
@@ -79,21 +73,10 @@ export function manualEdgeEntry(id: ManualProductionContractId, value: unknown, 
   return provenEdgeEntry({ recordClass: contract.recordClass, scope: contract.scope, sourceId: contract.sourceId, versionId, value });
 }
 
-/** The value a first-seed or fixture read serves (the test's own database path). */
+/** The value a read serves. */
 export function servedValue<T>(read: CivicDataReadResult<T>): T {
   assert.ok(read.kind === "BOOTSTRAP" || read.kind === "PROMOTED", `the first seed is readable: ${read.kind}`);
   return read.value as T;
-}
-
-/** Every state's money pointer, proven, carrying that state's tracked test fixture. */
-export function stateMoneyFixtureEntries(versionFor: (state: string) => string): PromotedEdgeEntry[] {
-  return (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) => provenEdgeEntry({
-    recordClass: "STATE_CAMPAIGN_FINANCE",
-    scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
-    sourceId: STATE_CAMPAIGN_FINANCE_SOURCES[state].sourceId,
-    versionId: versionFor(state),
-    value: JSON.parse(readFileSync(join(process.cwd(), "data", "states", state.toLowerCase(), "funding", `state-money-${state.toLowerCase()}-2026.json`), "utf8")) as unknown,
-  }));
 }
 
 /** A proven-pointer family's published value. */

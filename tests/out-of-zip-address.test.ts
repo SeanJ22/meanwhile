@@ -1,17 +1,5 @@
-/**
- * **AN ADDRESS THAT RESOLVES SOMEWHERE ELSE IS NOT ONE WE COULD NOT PLACE.**
- * (Session B closure, BAL-38, 2026-08-31.)
- *
- * The owner: *"Out-of-zip address is rejected instead of redirected."*
- *
- * `locateAddressInZip` puts the ZIP INTO the geocoder query, so an address one
- * ZIP over cannot match and comes back exactly like a bad address. The reader
- * was then told *"We couldn't place that in 85701"* — true, about us, and
- * concealing that we had placed it perfectly well in 85641.
- *
- * The evidence was in the response all along: `parseCensusPoint` read the
- * coordinates and dropped `addressComponents.zip`.
- */
+// `locateAddressInZip` puts the ZIP into the geocoder query, so an address one ZIP over fails exactly like a
+// bad address; the reply's own ZIP is what tells them apart.
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -67,11 +55,7 @@ test("SEEDED BAL-38: an address in the NEXT zip over is reported, not swallowed"
 });
 
 test("SEEDED BAL-38: the SAME zip is not a redirect and offers nothing", async () => {
-  /*
-   * A constrained lookup that failed for some other reason — a street we
-   * cannot match, a number that does not exist — must not produce an offer to
-   * switch to the ZIP the reader is already on.
-   */
+  // A constrained lookup that failed for another reason must not offer the ZIP the reader is already on.
   const zip = await zipThisAddressResolvesTo("1", "Nowhere St", "85701", {
     fetchImpl: (async () => ok(reply("85701"))) as unknown as typeof fetch,
   });

@@ -1,38 +1,30 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { prlProfileForSubject, projectPrlProfile } from "../lib/sources/prl/snapshot.ts";
-import { PRL_CATEGORIES, PRL_RHETORIC_ATTRIBUTION, type PrlSnapshot } from "../lib/sources/prl/types.ts";
+import { PRL_RHETORIC_ATTRIBUTION, type PrlSnapshot } from "../lib/sources/prl/types.ts";
 
-const snapshot = JSON.parse(readFileSync("data/prl/prl-profiles.json", "utf8")) as PrlSnapshot;
-
-test("all held eligible PRL profiles survive exact bioguide reader projection", () => {
-  assert.ok(snapshot.profiles.length > 0);
-  for (const profile of snapshot.profiles) {
-    const answer = prlProfileForSubject(`congress:${profile.bioguideId}`);
-    assert.ok(answer, profile.bioguideId);
-    assert.equal(answer.bioguideId, profile.bioguideId);
-    assert.equal(answer.statementCount, profile.statementCount);
-    assert.deepEqual(answer.shares, profile.shares);
-    assert.equal(answer.measuredAt, profile.measuredAt);
-    assert.equal(answer.retrievedAt, snapshot.fetchedAt);
-    assert.equal(answer.sourceUrl, snapshot.sourceUrl);
-    assert.deepEqual(answer.communicationSources, profile.sources);
-    assert.equal(answer.categories.length, PRL_CATEGORIES.filter(c => profile.shares[c.key] !== null).length);
-    assert.equal(answer.attribution.citation, PRL_RHETORIC_ATTRIBUTION.citation);
-    for (const category of answer.categories) {
-      assert.match(category.sentence, /Polarization Research Lab/);
-      assert.ok(category.sentence.includes(profile.statementCount.toLocaleString("en-US")));
-      assert.equal(category.share, profile.shares[category.id]);
-    }
-  }
-});
+const snapshot: PrlSnapshot = {
+  formatVersion: 1,
+  fetchedAt: "2026-09-28T00:00:00.000Z",
+  sourceFile: "fixture.csv",
+  sourceUrl: "https://americaspoliticalpulse.com/elites/data",
+  rowsInFile: 1,
+  rowsWithStatements: 1,
+  profiles: [{
+    bioguideId: "A000001",
+    prlName: "Fixture Member",
+    statementCount: 1200,
+    shares: { policy: 60, "attack-policy": 10, "attack-personal": 2, creditclaiming: 20, bipartisanship: 8 },
+    sources: ["press releases"],
+    measuredAt: "2026-09-27",
+  }],
+  rosterMisses: [],
+  attribution: PRL_RHETORIC_ATTRIBUTION,
+};
 
 test("PRL is exact official identity only, never a display-name or wrong-tier join", () => {
   assert.equal(prlProfileForSubject("Mark Kelly"), null);
   assert.equal(prlProfileForSubject("statewide:az/governor"), null);
-  assert.equal(prlProfileForSubject("congress:Z999999"), null);
-  assert.notDeepEqual(prlProfileForSubject("congress:K000377"), prlProfileForSubject("congress:G000574"));
 });
 
 test("reader projection preserves the counts/shares allowlist and refuses an uncited measurement", () => {

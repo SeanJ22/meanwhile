@@ -1,109 +1,11 @@
 /**
- * **THE SCOUT — A BOUNDED MODEL WORKER THAT INVESTIGATES THROUGH TOOLS.**
- * (Level 1 activation, 2026-09-01. RULING 240, RULING 241. Machine-owned
- * provenance, 2026-09-02, RULING 243. Worker Efficiency Law, 2026-09-02,
- * RULING 244.)
- *
- * This is the model lane's `DeclaredExecutor`. It generalizes the proven
- * `pnpm model:proof` plumbing — one Attempt through `dispatchOne`, lane
- * declared before anything is persisted, provider-reported usage and a
- * computed cost on the Attempt — and adds the thing the proof deliberately
- * lacked: WORK. The model receives an obligation and a set of research tools;
- * it acts through the tools and through nothing else; its typed result is
- * validated against the artifacts those tools vaulted; and the Attempt is
- * disposed from the validated result, never from prose.
- *
- * ## What the model is and is not allowed to do, enforced here
- *
- * ```
- *   MAY   read robots.txt, fetch public URLs, drive a browser, read inherited
- *         evidence — each through a tool that vaults first and returns the
- *         sanitized representation second. robots.txt is read and recorded,
- *         never a refusal of a public page (owner decision 2026-09-25)
- *   MAY   annotate the rungs it walked and propose route/method candidates
- *   MAY NOT  see bytes no vault holds, cite an artifact no vault holds, return
- *         an absence before the ladder, promote its own proposal, end the
- *         Attempt without the typed result, re-read a URL this Attempt already
- *         vaulted, re-walk a rung a prior Attempt recorded as durably failed,
- *         or get past an access control (login, paywall, 403, challenge, 429)
- * ```
- *
- * The rung list is DERIVED from the tool calls that ran. The model annotates;
- * it does not invent. A candidate's provenance — observedOn, permission,
- * recordClass, evidenceArtifactIds — is DERIVED from the artifact, obligation
- * and permission records; the model's statements about them are recorded as
- * CLAIMS and checked, never written into durable provenance (RULING 243).
- *
- * ## The request shape, and why every byte of it is where it is (RULING 244;
- * the prompt-caching session of 2026-09-06)
- *
- * ```
- *   tools     stable per process   breakpoint on the LAST definition
- *   system    stable per process   breakpoint on the block — the pre-warm's
- *                                  target (`scoutPrewarmRequest`)
- *   brief     stable per Attempt   the first user block; nothing per-request
- *                                  sits before it
- *   turns     grow per turn        the MOVING breakpoint: top-level
- *                                  `cache_control` on the request, which the
- *                                  API places on the last cacheable block and
- *                                  moves forward every turn, so turn N reads
- *                                  turns 1..N-1 from the cache
- * ```
- *
- * Three breakpoints of the provider's four, five-minute TTL (turns are seconds
- * apart; `SCOUT_CACHE_POLICY` states the argument and the measured cycle gap
- * that rules the 1-hour TTL out). Nothing that varies per request — no
- * timestamp, Attempt id, obligation id or cycle id — appears before the last
- * breakpoint; the brief carries the obligation and it sits after the static
- * prefix.
- *
- * Every turn's usage is recorded as a STEP with the model, the effort, the
- * five billed token quantities (the cache-write split by TTL beside the
- * aggregate) and the cost at that model's rate from exactly those quantities.
- * Two cache-defect signatures are read over the steps at the end of the
- * Attempt (`lib/control-plane/cache-defects.ts`): a turn after the first that
- * paid for more uncached input than it appended — the STATIONARY breakpoint
- * the 2026-09-02 Attempts showed — and a turn that read ZERO cached tokens.
- * Either is a `cacheDefect`, a fact about our request assembly, never hidden
- * in a total. Effort is set per role and never varies inside an Attempt (a
- * change would invalidate the cache).
- *
- * ## Bounds, and every one is stated on the result
- *
- * Turns, tool calls, wall clock, tokens, requests per host. When one is
- * reached the executor tells the model so and asks for the typed result with
- * the rungs walked and the next rungs, so the next Attempt resumes rather than
- * restarts. A model that does not answer that request in the grace turns is
- * ABORTED with the reason named; its measured cost still reaches the ledger.
- *
- * ## The ladder — cheapest suitable class first (MW-031, MW-033, 2026-09-25)
- *
- * The loop's first attempt runs on the step registry's base class (currently Haiku 4.5;
- * `scoutLoopBase`, which the pre-warm reads too). When that attempt ends with
- * one of the closed `MODEL_ESCALATION_REASONS` observed — bound exhausted
- * without a result, a refused result never corrected, no typed result, or an
- * HTTP 400 on the cheaper model — the executor asks `reserveEscalation` to
- * hold the frontier attempt's worst case against the spend ceiling, and only
- * then continues THE SAME conversation on the frontier: every rung, artifact
- * and representation carries forward, the no-re-read set and the tool-call
- * and per-host bounds are shared, and the wall clock is the Attempt's. The
- * result records the class, why, the reason, a short evidence line and every
- * attempt's cost; `usd` is their sum. A refused escalation is recorded too.
- *
- * ## Preserved thinking — the conversation is append-only (Claude Opus 5.5, 2026-09-25)
- *
- * On Claude Opus 5.5 a thinking block is bound to the model and to the
- * conversation before it; replaying one after an edit of the system, the
- * tools or an earlier message is HTTP 400 on accounts created on or after
- * 2026-08-31. Nothing already sent is edited here: turns are appended, the
- * payload bound RESTARTS the conversation from the machine's record instead
- * of eliding old results in place (`scoutCarriedForward`), and the escalation
- * appends to the same conversation (why that is valid: the comment where it
- * happens). Every request states `drop_block` under the beta header
- * (`SCOUT_THINKING`) and every reported drop is recorded on the result.
- *
- * No secret is read here. The transport is injected; the runner builds it
- * from the workers' dedicated credential by NAME.
+ * The Scout: the model lane's `DeclaredExecutor`, a bounded model worker that acts only through research tools.
+ * Every tool vaults before it returns a sanitized representation; robots.txt is recorded, never a refusal; an
+ * access control is never bypassed. The rung list and a candidate's provenance are derived from what the tools
+ * recorded, never from the model's account. The request is tools, system and brief as a static cached prefix,
+ * then append-only turns under a moving breakpoint; a payload bound restarts the conversation from the
+ * machine's record rather than editing what was sent. The loop starts on the cheapest suitable class and
+ * escalates only for a closed, observed reason, after reserving the second attempt's worst case.
  */
 
 import type { AttemptCost } from "../attempt.ts";
@@ -179,7 +81,6 @@ import {
   type ScoutStop,
 } from "./scout-result.ts";
 
-/* ------------------------------------------------------------ the transport */
 
 export interface ModelUsage {
   readonly input_tokens?: number;
@@ -193,15 +94,7 @@ export type ContentBlock =
   | { readonly type: "tool_use"; readonly id: string; readonly name: string; readonly input: unknown }
   | { readonly type: string; readonly [key: string]: unknown };
 
-/**
- * One entry of the response's `input_transformations` (beta
- * `thinking-binding-controls-2026-08-01`): a thinking block the API dropped
- * before the model saw it. `reason` is `prefix_binding_mismatch` (our history
- * changed under the block — a defect of our request assembly) or
- * `model_binding_mismatch` (the conversation moved to a model that cannot read
- * it — expected after an escalation). Later checks add values, so both fields
- * are open strings.
- */
+/** One dropped thinking block from `input_transformations`. `prefix_binding_mismatch` is our assembly defect; `model_binding_mismatch` is expected after an escalation. Open strings. */
 export interface InputTransformation {
   readonly type: string;
   readonly path?: string;
@@ -220,28 +113,7 @@ export interface ModelResponse {
 
 export type CacheControl = { readonly type: "ephemeral"; readonly ttl?: "5m" | "1h" };
 
-/**
- * **PRESERVED THINKING — THE SETTING EVERY SCOUT REQUEST STATES.** (2026-09-25;
- * claude-api skill, model-migration.md, "Migrating to Claude Opus 5.5",
- * breaking change 3, and "Migrating to Claude Fable 5.1 from Claude Fable 5",
- * breaking changes 2 and 3.)
- *
- * On Claude Opus 5.5 a thinking block is bound to the model that produced it
- * and to the conversation prefix before it (system, tools, every earlier
- * message). Accounts created on or after 2026-08-31 reject a replayed block
- * after an edit of that prefix with HTTP 400; older accounts only record it.
- * The Scout conversation is append-only (see `scoutCarriedForward`), so no
- * block is ever invalidated — and the skill's three-step check says to set the
- * production behaviour EXPLICITLY rather than rely on either default: with
- * `drop_block` a mismatch degrades (the block and every later one are dropped
- * for that request, reported in `input_transformations`) instead of failing
- * the Attempt, and the executor records every entry on the result. Models that
- * do not enforce the check (Sonnet 5) accept the field and report only
- * model-binding drops, so one request body serves both rungs of the ladder.
- * `adaptive` is what both models run when `thinking` is omitted — stating it
- * changes nothing but lets `block_binding` ride on it. The field requires the
- * beta header (`anthropicBetasFor`); without it the API answers 400.
- */
+/** Preserved thinking: `drop_block` is stated explicitly so a binding mismatch degrades (and is recorded) instead of failing. Requires the beta header (`anthropicBetasFor`). */
 export const SCOUT_THINKING = {
   type: "adaptive",
   block_binding: { prefix_mismatch_behavior: "drop_block" },
@@ -260,13 +132,7 @@ export interface ModelRequest {
   readonly max_tokens: number;
   readonly system: readonly { readonly type: "text"; readonly text: string; readonly cache_control?: CacheControl }[];
   readonly tools: readonly ScoutToolSpec[];
-  /**
-   * `auto` only. A forced `{type:"tool"}` / `{type:"any"}` is HTTP 400 on
-   * Claude Opus 5.5 (claude-api skill, model-migration.md, "Migrating to
-   * Claude Opus 5.5", breaking change 2) and on `max_tokens: 0`; steer from the
-   * prompt and use `strict: true` on the tool instead. Narrowed here so a
-   * forced choice cannot compile.
-   */
+  /** `auto` only: a forced tool choice is HTTP 400 on Opus 5.5 and with `max_tokens: 0`. */
   readonly tool_choice?: { readonly type: "auto" };
   /** Adaptive thinking with the preserved-thinking behaviour stated (`SCOUT_THINKING`). */
   readonly thinking?: {
@@ -276,11 +142,7 @@ export interface ModelRequest {
   /** Effort per role (`ROLE_EFFORT`); the cap is economic, never a truth judgement. */
   readonly output_config?: { readonly effort: ModelEffort };
   readonly messages: readonly { readonly role: "user" | "assistant"; readonly content: unknown }[];
-  /**
-   * The MOVING breakpoint (2026-09-06): the API places it on the last
-   * cacheable block and moves it forward each turn. Sent when
-   * `SCOUT_CACHE_POLICY.movingBreakpoint` is `TOP_LEVEL`.
-   */
+  /** The moving breakpoint, placed and advanced by the API. Sent when `SCOUT_CACHE_POLICY.movingBreakpoint` is `TOP_LEVEL`. */
   readonly cache_control?: CacheControl;
 }
 
@@ -342,12 +204,7 @@ export function anthropicRateLimits(headers: Headers): AnthropicRateLimits {
   };
 }
 
-/**
- * The beta headers a request body needs, derived from the body itself so a
- * field that requires a beta can never be sent without it (2026-09-25).
- * `thinking.block_binding` without `thinking-binding-controls-2026-08-01` is
- * HTTP 400 ("block_binding: Extra inputs are not permitted").
- */
+/** The beta headers a body needs, derived from the body so a beta field is never sent without its header. */
 export function anthropicBetasFor(request: ModelRequest): string[] {
   return request.thinking?.block_binding !== undefined ? [THINKING_BINDING_BETA] : [];
 }
@@ -359,12 +216,7 @@ export function cachedModelRequest(request: ModelRequest): ModelRequest {
     ? request : { ...request, cache_control: { type: "ephemeral" } };
 }
 
-/**
- * The real transport, against the Messages API. `apiKey` is passed in by the
- * runner, which read it by NAME; it is never logged and never placed in a
- * record. A non-2xx answer throws with the status and the first bytes of the
- * body so the Attempt aborts with a named reason.
- */
+/** The real transport. `apiKey` is never logged or recorded; a non-2xx answer throws with the status and the first bytes of the body. */
 export function anthropicTransport(
   apiKey: string,
   fetchImpl: typeof fetch = fetch,
@@ -393,7 +245,6 @@ export function anthropicTransport(
   };
 }
 
-/* ----------------------------------------------------- the executor's own tools */
 
 const RECORD_RUNG_SPEC: ScoutToolSpec = {
   name: "record_rung",
@@ -497,18 +348,13 @@ const FINISH_SPEC: ScoutToolSpec = {
   },
 };
 
-/* ------------------------------------------------------------- the prompts */
 
-/**
- * The system prompt. STABLE across Attempts so the provider's prompt cache
- * applies; nothing per-obligation is here. Volatile content is the first user
- * message.
- */
+/** The system prompt: stable across Attempts so the prompt cache applies; nothing per-obligation is here. */
 export function scoutSystemPrompt(bound: ScoutBound, minRungs: number, playbook?: string, role: "SCOUT" | "DETECTIVE" = "SCOUT"): string {
   return workerSystemPrompt(role, playbook ?? defaultPlaybookText(role)).replaceAll("{{minimum_rungs}}", String(minRungs));
 }
 
-/** How the brief labels one prior rung. A robots-only refusal (before 2026-09-25) is named as walkable, never as failed. */
+/** How the brief labels one prior rung. A robots-only refusal is named as walkable, never as failed. */
 function priorRungLabel(kind: PriorFailureClass): string {
   switch (kind) {
     case "DURABLE":
@@ -522,12 +368,7 @@ function priorRungLabel(kind: PriorFailureClass): string {
   }
 }
 
-/**
- * The brief — the first user message. Stable for the whole Attempt, so it
- * sits under a breakpoint. A RESUMED Attempt starts from the recorded rung
- * list: the prior rungs come FIRST, with what each returned, then the next
- * rungs the prior Attempt named, then the obligation.
- */
+/** The brief, the first user message: prior rungs first (what each returned), then the next rungs named, then the obligation. */
 export function scoutBrief(
   row: ScheduledObligation,
   route: RouteDescriptor | null,
@@ -587,7 +428,6 @@ export function scoutBrief(
   return lines.filter((l) => l !== "").join("\n");
 }
 
-/* ------------------------------------------------------------- the executor */
 
 export interface ScoutExecutorDeps {
   readonly role?: "SCOUT" | "DETECTIVE";
@@ -614,34 +454,17 @@ export interface ScoutExecutorDeps {
     /** Current recorded Send questions, including marks saved during this cycle. */
     readonly ownerQuestions?: readonly WorkQuestion[];
     readonly tools: Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "browse" | "openOne" | "timeoutMs" | "readHeldArtifact" | "readManualDocument">;
-    /**
-     * The canonical executor decision for this row (`decideExecutor`). A
-     * DETERMINISTIC decision reaching this executor is refused before any
-     * request (SCOUT_GRADUATED_ROUTE): a graduated route never spends a model.
-     */
+    /** The canonical executor decision. A DETERMINISTIC decision reaching this executor is refused before any request. */
     readonly decision?: ExecutorKind;
   };
   readonly onStart?: (info: { readonly attemptId: string; readonly obligationId: string; readonly startedAt: string }) => Promise<void>;
-  /**
-   * Persist the typed result BEFORE the Attempt closes. May return an amended
-   * result (method candidate ids, persistence notes) that the disposition then
-   * names. Receives the artifacts so a candidate's URL can be matched to what
-   * the Attempt actually opened.
-   */
+  /** Persist the typed result before the Attempt closes; may return an amended result the disposition names. */
   readonly onResult?: (result: ScoutResult, artifacts: readonly WorkArtifact[]) => Promise<ScoutResult | void>;
-  /**
-   * **RESERVE THE ESCALATION BEFORE MAKING IT.** (MW-031, MW-033, 2026-09-25.)
-   * When the cheaper attempt shows a recorded escalation reason, the executor
-   * asks this seam to hold the second attempt's worst case against the spend
-   * ceiling BEFORE a single frontier request is sent. The runner backs it with
-   * `FleetSafetyController.holdModelBudget`, the same rolling ceiling every
-   * per-request reservation reads. Absent, every escalation is refused
-   * `NOT_RESERVED` — fail closed, never an unreserved second attempt.
-   */
+  /** Reserve the escalation's worst case against the spend ceiling before any higher-class request. Absent, every escalation is refused `NOT_RESERVED`. */
   readonly reserveEscalation?: (request: ScoutEscalationRequest) => ScoutEscalationAdmission | Promise<ScoutEscalationAdmission>;
 }
 
-/** What the executor asks the runner to reserve before a second, higher-class attempt (MW-031, MW-033). */
+/** What the executor asks the runner to reserve before a second, higher-class attempt. */
 export interface ScoutEscalationRequest {
   readonly attemptId: string;
   readonly obligationId: string;
@@ -669,7 +492,7 @@ export type ScoutEscalationAdmission =
 /** The escalation evidence line is short: a sentence an owner reads, never a transcript. */
 export const SCOUT_ESCALATION_EVIDENCE_MAX_CHARS = 300;
 
-/** CH-30: after this many attempts in a row that the AI service did not answer, the next one starts a tier up. */
+/** After this many attempts in a row the AI service did not answer, the next one starts a tier up. */
 export const OUTAGE_TIER_AFTER = 2;
 
 /**
@@ -686,13 +509,7 @@ export function scoutAttemptWorstCaseUsd(model: string, bound: ScoutBound): numb
   return (bound.maxOutputTokensPerTurn / 1_000_000) * dearest;
 }
 
-/**
- * **WHAT ONE SCOUT JOB HOLDS AGAINST A SEND OR AREA BUDGET BEFORE IT STARTS.**
- * Initial response allowance at the starting tier. Every request, including
- * the first, must hold its full worst-case cost before sending (spend-holds.ts).
- * Null when the start model has no stated rate: no budget can be held,
- * and budgeted work waits.
- */
+/** What one Scout job holds against a Send or area budget before it starts. Null when the start model has no stated rate, so budgeted work waits. */
 export function scoutJobWorstCaseUsd(bound: ScoutBound, modelOverride?: string): number | null {
   return scoutAttemptWorstCaseUsd(scoutLoopBase(modelOverride).model, bound);
 }
@@ -731,15 +548,7 @@ function normalizedUrl(raw: string): string {
   }
 }
 
-/**
- * The conversation as sent, on a copy. Every user block is sent BARE — the
- * moving breakpoint is the request's top-level `cache_control`, placed by the
- * API on the last cacheable block — so no stale marker is ever left behind
- * and no message-level marker competes with it. Under the `LAST_BLOCK`
- * fallback the last block of the newest user turn carries the marker instead,
- * which is what this lane sent from 2026-09-02 to 2026-09-06. Assistant turns
- * are the provider's own content, echoed.
- */
+/** The conversation as sent, on a copy. User blocks are sent bare under the top-level breakpoint; under `LAST_BLOCK` the newest user turn's last block carries the marker. */
 export function withCacheBreakpoints(
   messages: readonly { readonly role: "user" | "assistant"; readonly content: unknown }[],
   movingBreakpoint: "TOP_LEVEL" | "LAST_BLOCK" = SCOUT_CACHE_POLICY.movingBreakpoint,
@@ -760,43 +569,9 @@ export function withCacheBreakpoints(
 }
 
 /**
- * **THE PER-ATTEMPT CONTEXT BOUND — WHAT MAY ACCUMULATE IN ONE SCOUT'S MESSAGES.**
- * (2026-09-17. The scout PAYLOAD_BYTE_CEILING fix.)
- *
- * Every turn re-sends the whole conversation, and `FleetSafetyController` counts
- * each re-send's bytes against the cycle's payload budget
- * (`FLEET_SAFETY_BOUNDS.maxPayloadBytesPerCycle`, 16 MiB). Left unbounded, a
- * scout that fetched a few large pages grew its conversation until one turn's
- * projected request crossed the ceiling and the Attempt ABORTED with
- * PAYLOAD_BYTE_CEILING — which is what stopped every scout that ran from
- * 2026-09-15 on. `fitRepresentation` bounds a SINGLE tool result; nothing
- * bounded their ACCUMULATION across turns.
- *
- * So the representations a conversation carries are held under a byte budget.
- * Until 2026-09-25 that was done by eliding the OLDEST tool results IN PLACE —
- * an edit of earlier messages. On Claude Opus 5.5 every thinking block is bound
- * to the conversation prefix before it, and an edit invalidates every later
- * block: HTTP 400 on accounts created on or after 2026-08-31 (claude-api
- * skill, model-migration.md, "Migrating to Claude Opus 5.5", breaking change
- * 3; the append-only replacements table under "Migrating to Claude Fable 5.1
- * from Claude Fable 5", breaking change 3).
- *
- * The budget is now kept WITHOUT an edit. The conversation only ever grows;
- * when its representations pass the budget the executor RESTARTS it — the
- * skill's "simple compaction": the next request is the brief plus one
- * carried-forward block written from the machine's own record (every rung with
- * what it returned, the model's note and its artifact ids; the newest results
- * whole), and nothing else is replayed — no earlier turn, no thinking block —
- * so nothing sent is tied to the old transcript. Server-side context editing
- * (`clear_tool_uses_20250919`) was not used: it clears what the MODEL reads,
- * but the request body — what the payload budget counts — still carries every
- * byte, and every clearing pass rewrites the cached conversation (skill,
- * cost-optimization.md §2.3).
- *
- * This is a NEW floor on context, never a raised cap: with representations
- * held under ~100 KB a scout request is ~150-200 KB, so both concurrent scouts
- * across the full turn bound stay well under the cycle's payload ceiling and
- * leave room for the deterministic lane.
+ * The per-Attempt context bound. Representations carried in the conversation are held under a byte budget so a
+ * re-sent turn cannot cross the cycle's payload ceiling. Past it the conversation is restarted from the brief
+ * plus a carried-forward block, never edited in place, because an edit invalidates later thinking blocks.
  */
 export const SCOUT_CONTEXT_TOOL_RESULT_BUDGET = 100_000;
 
@@ -818,18 +593,7 @@ export function representationBytesIn(messages: readonly Turn[]): number {
   return bytes;
 }
 
-/**
- * **THE CARRIED-FORWARD BLOCK A RESTART STARTS FROM.** Built from the machine's
- * record and the conversation being retired, never from what the model said
- * about itself. Every rung walked is listed with what it returned, the model's
- * note and its artifact ids. The most recent turn's results are repeated whole —
- * a refused finish or an error included, so the model sees what it must fix —
- * and older representations follow newest-first while they fit in HALF the
- * budget, so the restarted conversation has room to grow for some turns before
- * the next restart. The newest representation is always whole. A result not
- * repeated is its rung line: the vaulted artifact holds it, and a re-read is
- * refused.
- */
+/** The carried-forward block a restart starts from, built from the machine's record: every rung with what it returned, the newest results whole, older ones newest-first within half the budget. */
 export function scoutCarriedForward(input: {
   readonly messages: readonly Turn[];
   readonly rungs: readonly ScoutRung[];
@@ -905,12 +669,7 @@ export function withToolBreakpoint(specs: readonly ScoutToolSpec[]): ScoutToolSp
   });
 }
 
-/**
- * **THE STATIC PREFIX — tools then system, exactly as every Attempt sends
- * them, built in one place.** (2026-09-06.) The executor and the pre-warm
- * request both call this, so the pre-warm's bytes cannot drift from the
- * Attempts' and the entry it writes is the entry they read.
- */
+/** The static prefix (tools then system), built in one place so the pre-warm writes exactly the entry Attempts read. */
 export function scoutStaticPrefix(input: {
   readonly toolkitSpecs: readonly ScoutToolSpec[];
   readonly bound: ScoutBound;
@@ -924,16 +683,7 @@ export function scoutStaticPrefix(input: {
   };
 }
 
-/**
- * **THE TTL ORDER THE API ENFORCES, CHECKED BEFORE A BYTE IS SENT.**
- * (2026-09-06.) Blocks are processed tools → system → messages, and a
- * 1-hour marker may never come after a 5-minute one. Measured that day with a
- * planted request: HTTP 400, `system.0.cache_control.ttl: a ttl='1h'
- * cache_control block must not come after a ttl='5m' cache_control block.
- * Note that blocks are processed in the following order: tools, system,
- * messages.` A request that would earn that answer is refused here by name
- * instead of costing a round trip; the executor and the pre-warm both call it.
- */
+/** The API's TTL order (tools, system, messages; no 1-hour marker after a 5-minute one), checked before sending. */
 export function cacheTtlOrderProblems(request: Pick<ModelRequest, "tools" | "system" | "messages"> & { readonly cache_control?: CacheControl }): string[] {
   const markers: { readonly where: string; readonly ttl: "5m" | "1h" }[] = [];
   request.tools.forEach((t, i) => { if (t.cache_control) markers.push({ where: `tools[${i}]`, ttl: (t.cache_control as CacheControl).ttl ?? "5m" }); });
@@ -957,27 +707,7 @@ export function cacheTtlOrderProblems(request: Pick<ModelRequest, "tools" | "sys
 export const SCOUT_PREWARM_PLACEHOLDER = "warmup";
 
 
-/**
- * **THE PRE-WARM REQUEST.** (2026-09-06.) `max_tokens: 0` runs prefill only:
- * the API writes the cache at the static prefix's breakpoint and returns
- * `content: []` with a usage block, billing the cache write and no output.
- * The same tools, system, `tool_choice: auto` and effort the Attempts' first
- * turns send; the breakpoint stays on the system block, never on the
- * placeholder. Measured 2026-09-06: HTTP 200, `cache_creation_input_tokens`
- * 4,586 on the first call and `cache_read_input_tokens` 4,586 on the second.
- * A forced `tool_choice` is refused with `max_tokens: 0` (HTTP 400,
- * "tool_choice: type \"tool\" or \"any\" cannot be used when max_tokens is 0"),
- * which is why the bound turn's forced finish never pre-warms.
- *
- * It sends the Attempts' `thinking` setting too (2026-09-25): thinking and
- * effort are rendered into the prompt, so a pre-warm with different settings
- * can write an entry real traffic never reads (claude-api skill,
- * prompt-caching.md, "Pre-warming the cache"). Adaptive thinking is accepted
- * with `max_tokens: 0`; only `thinking.type: "enabled"` is refused there.
- * `toolkitSpecs` must be the Attempts' own list — with the search tool when the
- * owner's paid-search switch is on (`scoutToolSpecsFor`) — or the entry
- * written is for a prefix no Attempt sends.
- */
+/** The pre-warm request: `max_tokens: 0` runs prefill only and writes the static prefix's cache entry. It sends the Attempts' own tools, thinking and effort so the entry matches real traffic. */
 export function scoutPrewarmRequest(input: {
   readonly model: string;
   readonly effort: ModelEffort;
@@ -999,15 +729,7 @@ export function scoutPrewarmRequest(input: {
   };
 }
 
-/**
- * The bytes-per-token figure the pre-warm's cache-minimum check divides by
- * (2026-09-25; an engineering choice). No tokenizer runs offline and a
- * `count_tokens` call is a network round trip, so the check takes a LOWER BOUND
- * on the prefix's tokens from its UTF-8 bytes: JSON schema and English prose
- * run under four bytes a token (the static prefix, ~12.2 KB of JSON and text
- * today, was measured at 4,586 tokens on 2026-09-06). An undercount can only
- * SKIP a pre-warm that would have cached; it can never send one that cannot.
- */
+/** Bytes per token for a lower bound on prefix tokens; an undercount can only skip a pre-warm that would have cached. */
 export const PREFIX_BYTES_PER_TOKEN_CEILING = 4;
 
 /** A lower bound on the tokens in a static prefix (tools + system), from its bytes. */
@@ -1032,15 +754,7 @@ export type ScoutPrewarmPlan =
       readonly detail: string;
     };
 
-/**
- * **WHETHER, AND FOR WHICH MODEL, TO PRE-WARM.** (MW-033, 2026-09-25.) The
- * pre-warm warms the model the loop STARTS on (`scoutLoopBase`, the same answer
- * the executor reads), never a model it might escalate to — a speculative write
- * for a model most Attempts never reach is pure cost. And it is sent only when
- * the prefix clears that model's minimum cacheable length: below it the
- * provider silently caches nothing, so the call would bill a prefill that warms
- * no entry. Such a pre-warm is SKIPPED with a named reason instead.
- */
+/** Whether, and for which model, to pre-warm: only the loop's start model, and only when the prefix clears its minimum cacheable length. */
 export function scoutPrewarmPlan(input: {
   readonly toolkitSpecs: readonly ScoutToolSpec[];
   readonly bound: ScoutBound;
@@ -1075,12 +789,7 @@ export function scoutPrewarmPlan(input: {
   return { kind: "SEND", model: start.model, request, prefixTokensAtLeast: atLeast, minimumCacheablePrefixTokens: minimum };
 }
 
-/**
- * The robots.txt verdict the page rungs ran under (those that vaulted one of `ids`, or every page rung when `ids` is
- * null), as a RECORD — never a refusal (owner decision 2026-09-25). One verdict when they agree; when they differ, the
- * one that says the most about the host's rules (DISALLOWED, CANNOT_TELL, ALLOWED, NOT_APPLICABLE); `fallback` when no
- * rung carries a verdict (results recorded before rungs carried one, or inherited evidence only).
- */
+/** The robots.txt verdict the page rungs ran under, as a record, never a refusal. When rungs differ, the most informative verdict wins; `fallback` when none carries one. */
 function recordedVerdict(rungs: readonly ScoutRung[], ids: ReadonlySet<string> | null, fallback: PermissionState): PermissionState {
   const seen = new Set<PermissionState>();
   for (const r of rungs) {
@@ -1113,7 +822,7 @@ export function dispositionForScout(result: {
   switch (result.outcome) {
     case "ROUTE_CANDIDATE": {
       const first = result.candidates[0];
-      /* The candidate's machine-derived robots.txt verdict, as a record; CANNOT_TELL only when nothing was derived. Never a refusal. */
+      /* The candidate's machine-derived robots.txt verdict, as a record; CANNOT_TELL only when nothing was derived. */
       const permission: PermissionState = first?.permission ?? "CANNOT_TELL";
       return {
         disposition: "DISCOVERED" as Disposition,
@@ -1147,11 +856,7 @@ export function dispositionForScout(result: {
         note: note("A SPECIFIC ADAPTER IS ALL THAT REMAINS — our tooling, never the record."),
       };
     case "BLOCKED": {
-      /*
-       * BLOCKED means an ACCESS CONTROL (a login, a paywall, a 403 or bot challenge, a 429) walled every walked rung;
-       * robots.txt is never one (owner decision 2026-09-25). `permission` is only the robots.txt verdict the walked
-       * rungs recorded, never the reason for the block — an observed line mentioning DISALLOWED no longer decides it.
-       */
+      /* BLOCKED means an access control walled every walked rung; robots.txt never does, and `permission` is only the recorded robots verdict. */
       return {
         disposition: "BLOCKED_CURRENTLY",
         observation: null,
@@ -1174,16 +879,10 @@ export function dispositionForScout(result: {
   }
 }
 
-/** The step the research loop is registered under. Sonnet first since MW-033; asserted before every transport call. */
+/** The step the research loop is registered under; asserted before every transport call. */
 export const SCOUT_LOOP_STEP = "scout-research-loop";
 
-/**
- * **WHERE THE LOOP STARTS — ONE ANSWER FOR THE EXECUTOR AND THE PRE-WARM.**
- * (MW-033, 2026-09-25.) The class, model and effort of the research loop's
- * first attempt, from the step registry, with the registry's reason for that
- * class. An injected model (a test, a proof) overrides the id only; its class
- * is the registry class that names that id, or the routed class when none does.
- */
+/** Where the loop starts (class, model and effort), one answer for the executor and the pre-warm. An injected model overrides the id only. */
 export function scoutLoopBase(modelOverride?: string): {
   readonly model: string;
   readonly modelClass: ModelClass;
@@ -1216,12 +915,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
   const bound = deps.bound ?? RESEARCH_BOUNDS.perDispatch;
   const minRungs = deps.minRungs ?? MIN_DISTINCT_RUNGS;
   const clock = deps.now ?? (() => new Date().toISOString());
-  /*
-   * The routing decides where the loop starts — the cheapest suitable class
-   * (MW-033) — its model and its effort; an injected model (tests, a proof)
-   * overrides the id only. The escalation target is the registry's, or none
-   * when the start is already the top of the ladder.
-   */
+  /* The routing decides the start class, model and effort; an injected model overrides the id only. */
   const defaultBase = scoutLoopBase(deps.model);
   const model = defaultBase.model;
 
@@ -1231,16 +925,13 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
     run: async ({ obligation: row, routeTaskId, workItemId, attemptId, holder, executor: decidedKind, bound: workerBound }): Promise<WorkOutcome> => {
       const startedMs = Date.now();
       const startedAt = clock();
-      /* CH-07: the hunter's wall clock. 0 means no limit stated (tests); every production caller states one. */
+      /* The hunter's wall clock. 0 means no limit stated (tests). */
       const wallLimitMs = workerBound?.maxWallMs ?? 0;
       let ctx: ReturnType<ScoutExecutorDeps["contextFor"]>;
       try {
         ctx = deps.contextFor(row);
       } catch (error) {
-        // This boundary precedes toolkit construction, onStart and every model
-        // transport. Dispatch durably records this measured zero on the Attempt
-        // before its ordinary hold settlement runs. Later/unknown failures retain
-        // their existing accounting; this is never a historical hold reconciler.
+        // This boundary precedes toolkit construction, onStart and every model transport; dispatch records the measured zero before hold settlement.
         return {
           kind: "ABORTED", ranAs: "BOUNDED_MODEL_WORKER", endedAt: clock(), artifacts: [],
           cost: { inputTokens: 0, outputTokens: 0, usd: 0,
@@ -1252,12 +943,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         };
       }
       const sourceRecordClass = ctx.sourceRecordClass ?? row.obligation.recordClass;
-      /*
-       * CH-30: when the AI service has not answered the last OUTAGE_TIER_AFTER attempts at this item, the next one
-       * starts on the next tier up (the same guarded ladder an escalation uses), so an outage that is one model's
-       * does not keep the work waiting. An injected test model, the top of the ladder, or a target above the ceiling
-       * leaves the start where it was.
-       */
+      /* After repeated unanswered attempts the next starts a tier up, unless the model is injected, at the top, or above the ceiling. */
       const outageTier = (ctx.inherited.transportFailures ?? 0) >= OUTAGE_TIER_AFTER && deps.model === undefined
         ? (() => { try { return assertStepMayEscalate(SCOUT_LOOP_STEP, "PROVIDER_UNAVAILABLE", defaultBase.modelClass); } catch { return null; } })()
         : null;
@@ -1296,13 +982,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const artifacts: WorkArtifact[] = [];
       const knowledgeReads: NonNullable<ScoutResult["knowledgeReads"]>[number][] = [];
       const brief = scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited, ctx.ownerQuestions);
-      /*
-       * APPEND-ONLY (2026-09-25). Nothing already sent in this array is ever
-       * changed: turns are pushed, and the only other move is a RESTART that
-       * replaces the whole conversation with a fresh start
-       * (`scoutCarriedForward`). An edit would invalidate every later thinking
-       * block on Claude Opus 5.5 — see `SCOUT_THINKING`.
-       */
+      /* Append-only: nothing already sent is changed; the only other move is a restart (`scoutCarriedForward`). */
       const messages: { role: "user" | "assistant"; content: unknown }[] = [
         { role: "user", content: [{ type: "text", text: brief }] satisfies UserContent },
       ];
@@ -1323,7 +1003,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const overruns: ScoutRepresentationOverrun[] = [];
       /** (tool | normalized url) -> artifact ids vaulted by it this Attempt. The no-re-read set. */
       const vaultedByCall = new Map<string, string[]>();
-      /** tool_use id -> artifact ids it vaulted, so the context bound's stubs can point at the evidence (2026-09-17). */
+      /** tool_use id -> artifact ids it vaulted, so the context bound's stubs can point at the evidence. */
       const artifactIdsByToolUse = new Map<string, string[]>();
       /** The API's cache TTL for the writes this lane asks for; the aggregate fallback prices at it. */
       const requestedTtl = SCOUT_CACHE_POLICY.ttl;
@@ -1356,27 +1036,12 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
        * Every model request still passes the existing budget reservation.
        */
       let attemptTurns = 0;
-      /*
-       * EARLY STOP (2026-09-19). A walk that has cleared the minRungs floor and
-       * then adds no new distinct evidence-backed rung for STALL_TURNS turns is
-       * spinning on walls: it has read what the openable routes hold and the rest
-       * are known walls (access controls). ~83% of authored-site walks are correct
-       * negatives (RULING 52), and paying the full turn bound to re-confirm one
-       * is the waste being ended. At >= minRungs the model may legitimately
-       * conclude an absence, so this converts a proven negative into a finished
-       * result instead of a bound timeout.
-       */
+      /* Early stop: past the minRungs floor, STALL_TURNS turns with no new distinct evidence-backed rung ask for the typed result. */
       const STALL_TURNS = 3;
       let evidenceHigh = 0;
       let stallTurns = 0;
 
-      /*
-       * RULING 244, SEEDED (v): a route the decision rule sent to the
-       * DETERMINISTIC lane never spends a model. The dispatcher declares the
-       * decided kind on the run input; if it says DETERMINISTIC and this
-       * executor was reached anyway, no transport call is made and the
-       * Attempt aborts by name with a measured zero.
-       */
+      /* A route decided DETERMINISTIC never spends a model: no transport call, and the Attempt aborts by name with a measured zero. */
       if (decidedKind === "DETERMINISTIC" || ctx.decision === "DETERMINISTIC") {
         lastRefusal = [
           {
@@ -1424,13 +1089,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const GRACE_TURNS = 2;
       let graceUsed = 0;
 
-      /**
-       * ONE MODEL ATTEMPT: the loop below, on `current`'s model. The first runs
-       * on the loop's base class; an escalated one continues the same
-       * conversation — every rung, artifact and representation carried forward —
-       * on the higher class. `consult` is the step registry, asked before EVERY
-       * model call; `onPriced` converts an escalation hold into settled spend.
-       */
+      /** One model attempt on `current`'s model; an escalation continues the same conversation. `consult` is asked before every model call. */
       interface ModelAttemptRun {
         readonly escalation?: ScoutModelAttempt["escalation"];
         readonly model: string;
@@ -1440,7 +1099,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       }
       const runModelAttempt = async (current: ModelAttemptRun): Promise<void> => {
         while (finish === null && lastRefusal?.[0]?.code !== "SCOUT_GRADUATED_ROUTE") {
-          /* CH-07: out of time. Nothing more is sent; the steps walked so far become the case file below. */
+          /* Out of time: nothing more is sent; the steps walked become the case file. */
           if (wallLimitMs > 0 && Date.now() - startedMs >= wallLimitMs) {
             stoppedBy = "TIMEOUT";
             break;
@@ -1448,7 +1107,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           if (boundNotice !== null && graceUsed >= GRACE_TURNS) break;
           if (boundNotice !== null) graceUsed += 1;
 
-          /* RULING 244: the step registry is consulted before EVERY model call. A deterministic step here throws. */
+          /* The step registry is consulted before every model call; a deterministic step throws. */
           const step = current.consult();
           let response: ModelResponse;
           let enteredTransport = false;
@@ -1458,15 +1117,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               max_tokens: bound.maxOutputTokensPerTurn,
               system: prefix.system,
               tools: prefix.tools,
-              /*
-               * Always `auto` — never a forced-tool bound turn. Forcing
-               * `tool_choice` to `finish` invalidates the messages cache (measured
-               * 2026-09-06), so the bound turn re-read only the static prefix and
-               * re-wrote the whole conversation (~16-24K tokens, ~$0.10-0.15 an
-               * Attempt). The BOUND-REACHED / EARLY-STOP instruction plus the
-               * research-tool refusal below drive the finish under `auto` at no
-               * cache cost.
-               */
+              /* Always `auto`: forcing `finish` invalidates the messages cache. The bound or early-stop instruction drives the finish. */
               tool_choice: { type: "auto" },
               /* Preserved thinking, stated on every turn of both models (`SCOUT_THINKING`); the pre-warm sends the same. */
               ...scoutThinkingOptions(current.model, step.effort),
@@ -1572,13 +1223,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                   freshness: { now: clock(), cadenceHours: row.cadenceHours } },
               });
               const issues = validated.issues;
-              /*
-               * THE BOUND DOES NOT LAUNDER A REFUSED ABSENCE. A model told its
-               * absence was early, that then walks NO further rung and waits for
-               * the bound, has not earned the bound's exemption: the rung count
-               * at the refusal is remembered, and an unchanged count at the
-               * bound keeps the refusal.
-               */
+              /* The bound does not launder a refused absence: an unchanged rung count at the bound keeps the refusal. */
               if (
                 issues.length === 0 &&
                 stoppedBy === "BOUND" &&
@@ -1648,7 +1293,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                 rungs.push({ ...call.rung, index, note: null, at: clock() });
                 header = `[rung ${index}: ${call.rung.rung} → ${call.rung.target} · ${call.rung.observed}]\n`;
               }
-              /* RULING 244: the representation is sized to the step, never a raw document. */
+              /* The representation is sized to the step, never a raw document. */
               const ids = call.artifacts.map((a) => a.artifactId);
               artifactIdsByToolUse.set(use.id, ids);
               const fit = fitRepresentation(use.name, `${header}${call.forModel}`, ids);
@@ -1663,14 +1308,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             results.push({ type: "tool_result", tool_use_id: use.id, is_error: true, content: `unknown tool ${use.name}` });
           }
           messages.push({ role: "user", content: results });
-          /*
-           * Bound the accumulated representations so the next re-sent
-           * conversation cannot drive the cycle's PAYLOAD_BYTE_CEILING
-           * (2026-09-17) — by a RESTART from the machine's record, never by
-           * editing what was already sent (2026-09-25, `scoutCarriedForward`).
-           * It happens here, after a whole tool round, so no tool call is left
-           * waiting on its result.
-           */
+          /* Bound accumulated representations by a restart, after a whole tool round so no call waits on its result. */
           if (representationBytesIn(messages) > SCOUT_CONTEXT_TOOL_RESULT_BUDGET) {
             contextRestarts += 1;
             const carried = scoutCarriedForward({
@@ -1693,13 +1331,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             });
           }
 
-          /*
-           * EARLY STOP: once the minRungs floor is met, if STALL_TURNS consecutive
-           * turns add no new distinct evidence-backed rung, the field is exhausted
-           * — ask for the typed result now instead of paying to the bound. The
-           * finish path (research tools refused, `auto` tool_choice, the message
-           * below) runs exactly as it does for a real bound.
-           */
+          /* Early stop once the floor is met and STALL_TURNS turns add no new rung; the finish path runs as for a real bound. */
           if (boundNotice === null) {
             const evidenceNow = distinctEvidenceRungs(rungs);
             if (evidenceNow > evidenceHigh) {
@@ -1727,7 +1359,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         }
       };
 
-      /* ------------------------------------------- the ladder (MW-033) */
       const graduated = lastRefusal?.[0]?.code === "SCOUT_GRADUATED_ROUTE";
       const modelAttempts: ScoutModelAttempt[] = [];
       /** The first provider turn of each model attempt that ran, parallel to `modelAttempts`. */
@@ -1744,13 +1375,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         });
         attemptFirstTurns.push(firstTurn);
       };
-      /**
-       * What the cheaper attempt SHOWED, as one of the closed reasons, or null
-       * when nothing it showed is a reason to move up: an accepted result, a
-       * graduated route, or a transport failure that is not the model's (an
-       * overload, a network fault, a ceiling refusal — none is fixed by a
-       * dearer model, and a ceiling must never be escalated around).
-       */
+      /** The closed reason the cheaper attempt showed, or null: an accepted result, a graduated route, or a transport failure a dearer model would not fix. */
       const observedEscalation = (): { readonly reason: ModelEscalationReason; readonly evidence: string } | null => {
         if (finish !== null || graduated) return null;
         if (transportFailure !== null) {
@@ -1855,35 +1480,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             stallTurns = 0;
           };
           resetForSecondAttempt();
-          /*
-           * THE FRONTIER CONTINUES THE SAME CONVERSATION, APPENDED TO — NOT A
-           * FRESH ONE, AND NO SONNET BLOCK IS STRIPPED (2026-09-25). Why this is
-           * valid on an enforced account (created on or after 2026-08-31) and on
-           * an older one alike, from the claude-api skill, model-migration.md:
-           *
-           *   - model binding ("Migrating to Claude Opus 5.5", breaking change 3):
-           *     Claude Opus 5.5 reads thinking blocks from earlier Opus, Sonnet and
-           *     Haiku models — "a conversation that moves onto claude-opus-5-5
-           *     keeps its reasoning"; a block a model cannot read is dropped
-           *     before it sees it, unbilled, never a 400, and "keep passing blocks
-           *     back unchanged when you switch models; don't strip them yourself"
-           *     ("Migrating to Claude Fable 5.1 from Claude Fable 5", breaking
-           *     change 2);
-           *   - conversation binding (same section, breaking change 3): the check
-           *     compares system, tools and every earlier message to when each
-           *     block was produced. The escalation only APPENDS this message; the
-           *     system and tools are the same `prefix`; history is never edited
-           *     (`scoutCarriedForward`). So every Sonnet block is still valid.
-           *
-           * A fresh seeded conversation would forfeit the representations the
-           * cheaper attempt paid for and the frontier's reading of Sonnet's
-           * reasoning, for no validity gain; stripping blocks is the skill's
-           * one-time recovery, not a steady state. The prompt cache is per model,
-           * so the frontier's first turn writes this conversation once either
-           * way, and every later frontier turn reads it. Every request states
-           * `drop_block` (`SCOUT_THINKING`), so an assembly defect degrades and
-           * is recorded in `inputTransformations` instead of failing the Attempt.
-           */
+          /* The frontier continues the same conversation, appended to: earlier blocks stay valid because history is never edited, and blocks a model cannot read are dropped by the API. */
           messages.push({
             role: "user",
             content: [
@@ -1918,7 +1515,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       }
       const last = modelAttempts.at(-1) ?? { modelClass: base.modelClass, model };
 
-      /* ---------------------------------------------------- the result */
       const elapsedMs = Date.now() - startedMs;
       for (const [step, d] of deterministic) {
         steps.push({
@@ -1933,20 +1529,11 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           count: d.count,
         });
       }
-      /*
-       * Only a local pre-send refusal or recognized request rejection establishes zero.
-       * A lost response or server failure leaves the request's charge unknown,
-       * even after earlier metered turns. Their steps remain available, while
-       * the aggregate is null so ordinary settlement retains the whole hold.
-       */
+      /* Only a local pre-send refusal or a recognized request rejection establishes zero; otherwise the aggregate is null and the whole hold is retained. */
       const refusedBeforeAnyUsage = !unpricedTransport && (transportFailure !== null || turns === 0) && !usage.reported;
       const inputTokens = unpricedTransport ? null : usage.reported ? usage.input + usage.cacheRead + usage.cacheCreate : refusedBeforeAnyUsage ? 0 : null;
       const outputTokens = unpricedTransport ? null : usage.reported ? usage.output : refusedBeforeAnyUsage ? 0 : null;
-      /*
-       * The cost is the sum of the steps, each priced at the rate of the model
-       * it was sent to. With an escalation that is two models, and this sum is
-       * the COMBINED cost of both attempts (MW-031); `modelAttempts` splits it.
-       */
+      /* The cost is the sum of the steps, each priced at its model's rate; `modelAttempts` splits it. */
       const modelSteps = steps.filter((s) => s.kind === "MODEL");
       const usd = unpricedTransport ? null : usage.reported
         ? modelSteps.some((s) => s.usd === null)
@@ -1955,11 +1542,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         : refusedBeforeAnyUsage
           ? 0
           : null;
-      /*
-       * The five billed quantities on the ledger row (2026-09-06): the turns'
-       * metered usage summed. Unknown transport exposure makes aggregate
-       * quantities unknown; the individual completed steps retain their usage.
-       */
+      /* The five billed quantities: the turns' metered usage summed, unknown under unknown transport exposure. */
       const summed = sumMeteredUsage(meteredTurns);
       const metering = usage.reported && !unpricedTransport
         ? meteredCostFields(summed)
@@ -1975,16 +1558,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         requestCount: unpricedTransport ? null : transportInvocations + toolkit.requestCount,
         ...metering,
       };
-      /*
-       * THE CHARGE BY MODEL (MW-031, 2026-09-25). `cost` is the Attempt's ONE
-       * charge — both attempts combined — and the Attempt's worker is the model
-       * it started on, so a by-model view gave Sonnet the frontier's dollars.
-       * When more than one model ran, each attempt's part is carried to the
-       * ledger (`WorkOutcome.costByModel` → `CostEntry.byModel`): its dollars
-       * are the attempt's own (`modelAttempts`), its tokens the attempt's own
-       * turns, and the parts sum to `cost`. Emit this complete split only when
-       * no request has unknown transport exposure.
-       */
+      /* The charge by model, emitted only when no request has unknown transport exposure; the parts sum to `cost`. */
       const costByModel: CostModelShare[] | null =
         modelAttempts.length > 1 && usage.reported && !unpricedTransport
           ? modelAttempts.map((a, i) => {
@@ -2001,26 +1575,15 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               return { model: a.model, requestCount: transportInvocationsByModel.get(a.model) ?? 0, usd: a.usd, inputTokens: whole, outputTokens: own.outputTokens, ...fields };
             })
           : null;
-      /*
-       * The two cache-defect signatures, read over the recorded turns
-       * (`cache-defects.ts`): the stationary breakpoint the 2026-09-02
-       * Attempts showed, and the zero read RULING 244 named.
-       */
-      /*
-       * Read PER MODEL ATTEMPT (2026-09-25): the provider's cache is per model,
-       * so an escalated attempt's first turn re-writes the conversation by
-       * design and is that attempt's first turn, never a defect of the one
-       * before it.
-       */
+      /* The two cache-defect signatures, read over the recorded turns (`cache-defects.ts`). */
+      /* Read per model attempt: the cache is per model, so an escalated attempt's first turn re-writes by design. */
       const defectReadings = usage.reported
         ? modelAttempts.map((a, i) =>
             detectCacheDefects(
               modelSteps
                 .filter((s) => s.turn !== null && s.turn >= (attemptFirstTurns[i] ?? 1) && s.turn < (attemptFirstTurns[i] ?? 1) + a.turns)
                 .map((s) => ({ turn: s.turn ?? 0, uncachedInput: s.tokens.uncachedInput, cacheRead: s.tokens.cacheRead, cacheWrite: s.tokens.cacheWrite })),
-              /* Per the ATTEMPT's model, not one Opus-sized scalar: a cheaper class
-                 has a HIGHER minimum, so 512 would read its legitimately-uncacheable
-                 prefix increment as a stationary-breakpoint defect (model-cost.ts). */
+              /* Each attempt's own model minimum (a cheaper class has a higher one). */
               minimumCacheablePrefixTokensFor(a.model) ?? SCOUT_CACHE_POLICY.minimumCacheablePrefixTokens,
             ),
           )
@@ -2029,17 +1592,9 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       if (defectReading) defectTurns.push(...defectReading.turns);
 
       let refusal: ScoutIssue[] | null = null;
-      /*
-       * CH-07: a hunter that ran out of time is not a refusal and not an absence. Its result is a
-       * NO_PROGRESS carrying the rungs it walked as the next steps, stoppedBy "TIMEOUT", so the next turn
-       * goes to a detective with what was tried (the existing NO_PROGRESS trigger) and `isArguedAbsence`
-       * never files it as a 30-day absence.
-       */
+      /* A hunter out of time is NO_PROGRESS with stoppedBy TIMEOUT carrying the rungs walked; never an argued absence. */
       const timedOut = finish === null && stoppedBy === "TIMEOUT";
-      /*
-       * CH-30: an AI service that did not answer is not a thrown-away walk. The steps walked are saved as the case file
-       * (the same shape a timed-out hunter saves), so the next agent resumes from them; the refusal still names the cause.
-       */
+      /* An AI service that did not answer: the steps walked are saved as the case file, and the refusal names the cause. */
       const walkedSteps = rungs.map((r) => `${r.tool} -> ${r.target}${r.observed ? `: ${String(r.observed).slice(0, 160)}` : ""}`).slice(0, 40);
       const outageCaseFile: { narrative: string; nextRungs: string[] } | null =
         finish === null && !timedOut && transportFailure !== null && !policyRefusedBeforeSending && rungs.length > 0
@@ -2066,7 +1621,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                   detail: `the model produced no accepted typed result in ${turns} turn(s)${boundNotice ? ` after ${boundNotice}` : ""}`,
                 },
               ]);
-        /* MW-033: a refused escalation is recorded as part of the outcome, AFTER the root cause. */
+        /* A refused escalation is recorded after the root cause. */
         if (escalationRefused !== null) {
           refusal = [
             ...refusal,

@@ -1,23 +1,10 @@
 /**
- * RULING 167 — donor rendering is AGGREGATE ONLY.
+ * Donor rendering is aggregate only: no individual donor name or address renders anywhere.
  *
- * No individual donor name and no donor address renders anywhere in this
- * product. The guard has two halves and both are load-bearing:
- *
- *  1. The AGGREGATOR is correct — the parts equal the whole, so a reader who
- *     loses the rows does not also lose the arithmetic.
- *  2. The RENDER SITES do not name an individual. This is asserted over the
- *     component SOURCE, by shape, because the defect is a JSX expression that
- *     puts `contributorName` on screen and no runtime assertion over grouped
- *     data can see one (RULING 110 — a sweep reports the shapes it searched).
- *
- * The second half is verified against a case it was NOT derived from
- * (RULING 157). The rule was derived from the outer "Individual donors"
- * column, which is what the ruling and the brief both describe. The
- * independent case is the SECOND-HOP panel — a joint fundraiser's own donors,
- * inside a collapsed `<details>` a reader has to open, rendered by a different
- * function from a different fold, and the site a fix aimed at the named
- * instance would have left standing.
+ *  1. The aggregator is correct: the parts equal the whole.
+ *  2. The render sites do not name an individual. Asserted over the component source, by shape, because the defect
+ *     is a JSX expression that puts `contributorName` on screen and no runtime assertion over grouped data can see
+ *     one. It is checked on the outer "Individual donors" column and independently on the second-hop panel.
  */
 
 import assert from "node:assert/strict";
@@ -106,16 +93,11 @@ test("an individual may never render a filed name or a filed place; an organizat
   );
 });
 
-/* -------------------------------------------------------------------------- */
-/* THE RENDER SITES                                                            */
-/* -------------------------------------------------------------------------- */
-
 const FUNDING_SECTION = join(ROOT, "components/funding/funding-section.tsx");
 
 /**
- * The shapes a reader-facing individual-donor row takes. Names, not strings
- * (RULING 110): the defect is *a JSX expression rendering a contributor's filed
- * name into a list that includes individuals*, never one particular spelling.
+ * The shapes a reader-facing individual-donor row takes: a JSX expression rendering a contributor's filed name into a
+ * list that includes individuals, never one particular spelling.
  */
 const NAMES_A_CONTRIBUTOR = [
   /\{\s*group\.contributorName\s*\}/,
@@ -126,8 +108,7 @@ const NAMES_A_CONTRIBUTOR = [
 test("the funding section renders no contributor name that could be an individual", () => {
   const src = readFileSync(FUNDING_SECTION, "utf8");
 
-  // The list handed to ContributorRow must be organizations only. This is the
-  // DERIVED-FROM case: the outer "Individual donors" column.
+  // The list handed to ContributorRow must be organizations only: the outer "Individual donors" column.
   assert.ok(
     src.includes("aggregateIndividuals(data.contributorGroups.individuals)"),
     "the outer individual column renders an aggregate, not rows",
@@ -137,9 +118,7 @@ test("the funding section renders no contributor name that could be an individua
     "no ContributorColumn is handed the individual groups",
   );
 
-  // THE INDEPENDENT CASE (RULING 157): the second-hop panel, which folds a
-  // joint fundraiser's own book and used to concatenate its individuals into
-  // the same rendered list.
+  // The independent case: the second-hop panel, which folds a joint fundraiser's own book.
   assert.ok(
     !/\[\s*\.\.\.folded\.organizations\s*,\s*\.\.\.folded\.individuals\s*\]/.test(src),
     "the second-hop panel no longer concatenates individuals into its rendered rows — " +
@@ -151,9 +130,7 @@ test("the funding section renders no contributor name that could be an individua
     "the second-hop panel aggregates its individuals instead",
   );
 
-  // And the shape sweep, with its denominator stated (RULING 159): every
-  // surviving `contributorName` render must sit inside a code path that
-  // cannot receive an individual.
+  // Every surviving `contributorName` render must sit inside a code path that cannot receive an individual.
   const renders = NAMES_A_CONTRIBUTOR.flatMap((shape) => [...src.matchAll(new RegExp(shape, "g"))]);
   assert.ok(
     renders.length > 0,
@@ -172,10 +149,7 @@ test("the funding section renders no contributor name that could be an individua
   }
 });
 
-/**
- * THE INSTRUMENT IS SHOWN CATCHING THE REAL THING (RULING 110). A planted
- * source string in the shape the defect actually took must be flagged.
- */
+/** Positive control: a planted source string in the shape the defect took must be flagged. */
 test("the shape sweep catches a planted individual-donor row", () => {
   const planted = `
     function IndividualDonors({ groups }: { groups: ContributorGroup[] }) {

@@ -21,8 +21,7 @@ export function isFundedHunt(scope: { readonly budgetStartedAt?: string | null; 
   return Boolean(scope.budgetStartedAt) && scope.budgetUsd > 0;
 }
 
-/** Historical receipt identity for consumers still being migrated by their owners (the Cochise-only source
- * rules in manual-producer-invocation.ts). Execution and continuation select current funded scopes, never this constant. */
+/** Historical receipt identity for consumers still being migrated. Execution and continuation select current funded scopes, never this constant. */
 export const ORIGINAL_LIFETIME_HUNT = {
   key: "zcta:2020/85635", receiptId: "expansion.scope.set:scope:85635:1yfuc2c:pgfomast",
   budgetStartedAt: "2026-09-27T22:17:50.236Z", budgetUsd: 50,
@@ -54,11 +53,7 @@ function lifetimeHuntContinuation(
   const due = read.work?.dueThisCycle ?? 0;
   const dispatched = read.work?.dispatchedThisCycle ?? 0;
   if (!Number.isSafeInteger(due) || !Number.isSafeInteger(dispatched) || due < 0 || dispatched < 0) return null;
-  // A standing slice can dispatch every due obligation while its opened
-  // WorkItems still owe parser, validation, audit or publication. The exact
-  // assignment's completion exceptions, not today's standing due count, are
-  // the remaining-work authority. Its downstream workers retain their own
-  // provider and retry admission on the next bounded cycle.
+  // The assignment's completion exceptions, not the standing due count, are the remaining-work authority: opened WorkItems may still owe parsing, validation, audit or publication.
   const incomplete = assignment.completion;
   const remaining = (incomplete.unsettledCount ?? 0) + (incomplete.refusedCount ?? 0) || incomplete.exceptions.length;
   if (due <= dispatched && remaining <= 0) return null;

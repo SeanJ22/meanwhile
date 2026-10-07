@@ -1,28 +1,9 @@
 /**
- * **PUBLICATION AND READER AVAILABILITY, FROM NARROW EVIDENCE.** (2026-09-23.)
- *
- * The owner's question, per routine contract: is it published, and can a
- * reader see the published version? The canonical observability projection
- * (`observability.ts`) answers it with full historical proofs. Its read
- * selects every candidate version with its payload (3.8 GB on 2026-09-23),
- * so a request-scoped Admin read can no longer finish it (it is bounded and
- * named unread, `observability-server.ts`).
- *
- * This answer reads no payload. The narrow evidence:
- * - the promotion pointer (which version is published, and when);
- * - the typed Reader readback event recorded for exactly that version (PASS
- *   or FAIL, and when);
- * - the latest local attempt per contract (state, time, failure code).
- *
- * It is a narrower claim than the proof-based projection: it trusts the
- * pointer and the readback event as recorded and re-hashes no payload. The
- * panel that renders it says so. Unknown stays unknown: a contract with no
- * pointer is NOT_PUBLISHED, and a published version with no readback event is
- * PUBLISHED_NOT_READ_BACK. Neither becomes a zero or a pass.
+ * Trusts the pointer and the readback event as recorded and re-hashes no payload. No pointer is NOT_PUBLISHED; a
+ * published version with no readback event is PUBLISHED_NOT_READ_BACK. Neither becomes a zero or a pass.
  */
 import { parseReaderProjectionReadback } from "./reader-readback.ts";
 
-/** The contract identity this read needs (routine and manual contracts both carry it). */
 export interface PublicationContract {
   readonly id: string;
   readonly sourceId: string;
@@ -41,7 +22,6 @@ export interface PublicationStatusRows {
     readonly currentVersionId: string;
     readonly promotedAt: string;
   }[];
-  /** One row per (source, class, scope): the candidate with the latest local attempt (sequence-1 event). */
   readonly latestAttempts: readonly {
     readonly candidateId: string;
     readonly sourceId: string;
@@ -51,7 +31,6 @@ export interface PublicationStatusRows {
     readonly attemptedAt: string;
     readonly failureCode: string | null;
   }[];
-  /** READER_PROJECTION_READBACK events recorded against the pointed (current) versions. */
   readonly readbacks: readonly { readonly candidateId: string; readonly at: string; readonly detail: string }[];
 }
 
@@ -87,7 +66,6 @@ export interface ContractPublication {
   readonly says: string;
 }
 
-/** What an Admin request read. A failed read never becomes zero counts. */
 export type PublicationStatusRead =
   | { readonly kind: "HELD"; readonly asOf: string; readonly view: PublicationStatusView }
   | { readonly kind: "NOT_CONNECTED" | "STORE_UNREACHABLE"; readonly detail: string };
@@ -95,7 +73,6 @@ export type PublicationStatusRead =
 export interface PublicationStatusView {
   readonly contracts: readonly ContractPublication[];
   readonly counts: Readonly<Record<PublicationVerdict, number>>;
-  /** Contracts whose latest local attempt carries a failure code. */
   readonly latestAttemptFailing: number;
 }
 

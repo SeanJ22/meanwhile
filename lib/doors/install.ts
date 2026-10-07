@@ -1,22 +1,9 @@
 /**
- * DB-12: put the registry's rows where adapters read them, behind a switch.
- *
- * The code's `SOURCE_WIRING` stays the default and the way back. With
- * `WTP_DOORS_READ=registry` the runner calls `installDoorWiringFromRegistry`
- * at the start of a pass: the registry's rows are installed only when they
- * match the code's exactly, so a registry that is empty, half seeded or edited
- * wrongly never changes what meetings readers see. A hand edit that is meant to
- * change a door is made on the door and is read from the next pass once the
- * switch is on (the comparison then covers only doors the code also names;
- * see `wiringParity`'s `differs` and `only in the registry` lines).
- *
- * DB-13: with the switch on, the registry is read every pass and is the list
- * once it holds every body the code names. A door added or edited in Admin is
- * then read on the next pass; a registry that has lost a door the code still
- * names is refused whole and the code's list stays in use.
- * `refreshDoorsForPass` also rebuilds the runner's meeting partitions from it.
- *
- * The switch is off until the new path is checked live (rulings §5).
+ * Puts the registry's door rows where adapters read them, behind
+ * `WTP_DOORS_READ=registry`; the code's `SOURCE_WIRING` is the default. With
+ * the switch on the registry is read every pass, and a registry that is empty
+ * or has lost a door the code still names is refused whole, keeping the
+ * code's list.
  */
 
 import { refreshCuratedBodyStatus } from "../registry/curated-bodies.ts";
@@ -95,13 +82,13 @@ export async function installDoorWiringFromRegistry(
 
 export interface DoorPassResult extends DoorInstallResult {
   readonly partitions: MeetingPartitionRefresh | null;
-  /** DB-22: the doors that collect outcomes, built into their own work; null with the switch off or the code's list in use. */
+  /** The doors that collect outcomes, built into their own work; null with the switch off or the code's list in use. */
   readonly outcomes: OutcomePartitionRefresh | null;
 }
 
 /**
- * The start of a runner pass (DB-13): read the doors, then build the pass's
- * meeting partitions from them. With the switch off nothing changes.
+ * The start of a runner pass: read the doors, then build the pass's meeting
+ * partitions from them. With the switch off nothing changes.
  */
 export async function refreshDoorsForPass(
   repo: DoorRepository,

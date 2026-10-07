@@ -1,8 +1,3 @@
-/**
- * Hooks for admin BR-05 and BR-16/BR-37 in the hunters' runner files:
- * the round reads Admin's shut-door threshold and echoes what it applied into
- * the heartbeat, and the parent runner fires scheduled orders on its own clock.
- */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";

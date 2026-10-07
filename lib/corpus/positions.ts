@@ -2,47 +2,13 @@ import { DEFAULT_STANCE_TOPICS } from "../stances/topics.ts";
 import type { SourceSnapshot, StatementCorpus } from "./types.ts";
 
 /**
- * D35 — THE THREE-ANSWER MACHINERY (built 2026-08-17).
- *
- * ## Why three answers and not two
- *
- * The corpus has held snapshots of what candidates and officials publish
- * since 3e, and nothing has rendered from it. `types.ts` says why in as many
- * words: *"rendering requires the three-answer machinery first — matched /
- * searched-and-nothing / not-yet-collected, each with its denominator —
- * because without it an empty match silently reads as 'this person has no
- * position on X', which is a false claim about a person."*
- *
- * That is the whole design. An empty result is not one fact, it is two, and
- * they are not close:
- *
- * | answer | what it says | whose fact it is |
- * |---|---|---|
- * | `MATCHED` | here is what they published, verbatim | theirs |
- * | `SEARCHED_NOTHING_MATCHED` | we read N pages of theirs and none mentioned it | ours, and bounded |
- * | `NOT_YET_COLLECTED` | we have not read anything of theirs yet | ours, and open |
- *
- * The second and third must never render as one another, and neither may ever
- * render as "no position" — which would be the third fact, the one nobody
- * here is entitled to state. This is CLAUDE.md's named-gap rule applied to a
- * corpus: the gap gets a name of its own and the name says WHOSE gap it is.
- *
- * ## Quote and link, never characterize
- *
- * A matched answer is a VERBATIM passage from a page the subject published,
- * carrying its URL and the date we read it. Nothing is summarised, condensed,
- * paraphrased or labelled. There is no model in this path and no sentence in
- * this file that describes a person — the only prose here describes OUR
- * search, which is a fact about us.
- *
- * ## The change marker
- *
- * The corpus is append-only, so two snapshots of one URL with different
- * hashes mean the page changed between the dates. The surface says THAT and
- * shows both dates. It never says what changed and never interprets it —
- * never "flip-flopped", never "softened", never anything. The rule from
- * `types.ts` is unchanged and it is the reason the marker carries dates and
- * not adjectives.
+ * Answers "what has this person said about X" in exactly one of three ways:
+ *   MATCHED                   verbatim passages from their published pages
+ *   SEARCHED_NOTHING_MATCHED  we read N of their pages and none mentioned it
+ *   NOT_YET_COLLECTED         we have not read anything of theirs yet
+ * The last two never render as each other or as "no position". Nothing is
+ * summarised or characterised. Two snapshots of one URL with different hashes
+ * mark that the page changed, with dates only, never what changed.
  */
 
 /** Which of the three answers this is. Closed, and each is a different fact. */
@@ -63,10 +29,7 @@ export interface PositionPassage {
   quote: string;
   /** The reader's own terms that hit, so the match is checkable. */
   matchedTerms: string[];
-  /**
-   * The page changed between two reads. Dates only — the marker says THAT it
-   * changed, never what, and never what it means.
-   */
+  /** The page changed between two reads. Dates only, never what changed. */
   changedSince: string | null;
 }
 
@@ -76,11 +39,7 @@ export interface PositionAnswer {
   topic: string;
   /** Only ever non-empty on MATCHED. */
   passages: PositionPassage[];
-  /**
-   * THE DENOMINATOR, on every answer including the empty ones. "We found
-   * nothing" is worth nothing without "in how much" — a search of zero pages
-   * and a search of nine are opposite claims and used to render alike.
-   */
+  /** The denominator, on every answer including the empty ones. */
   searched: {
     /** Distinct URLs of this subject's that we hold readable text for. */
     pages: number;
@@ -89,32 +48,13 @@ export interface PositionAnswer {
     /** Snapshots we hold but could not read — named, never counted as read. */
     unreadable: number;
     /**
-     * **Passages that CONTAIN the term and are not quotable** (item 13,
-     * 2026-08-19). Found by the item-13 verification, not by reading code.
-     *
-     * `passagesOf` splits on sentence-ending punctuation, and a passage over
-     * `PASSAGE_MAX_CHARS` is skipped. A press-release rail — a run of
-     * headlines with no full stop in it — is therefore one enormous
-     * "passage", and it is skipped. That skip is CORRECT: quoting a link rail
-     * as somebody's own words is RULING 6, and clipping 420 characters out of
-     * a 1,428-character run breaks a word, which is RULING 7.
-     *
-     * What was NOT correct is what the reader was then told. Andy Biggs's
-     * house.gov page carries "Mining Engineering" in exactly such a rail, and
-     * the answer rendered as *"we read their pages and none of them mentions
-     * mining"* — a checkable, false statement about a named person, produced
-     * by our own passage cap. The named-gap rule is explicit that our gap and
-     * their absence may never render as the same sentence.
-     *
-     * So the skip is counted, and the surface says which happened.
+     * Passages that contain the term but exceed PASSAGE_MAX_CHARS (e.g. a link
+     * rail with no full stop), so are not quoted. Counted so the answer does not
+     * claim they never mentioned it.
      */
     presentButUnquotable: number;
   };
-  /**
-   * Somewhere of theirs to go when we have nothing. Their own published page,
-   * never a search engine and never a guess — null is a fine answer and the
-   * surface says so plainly.
-   */
+  /** Their own published page for when we have nothing; never a search engine or a guess. */
   theirPage: string | null;
 }
 
@@ -125,18 +65,11 @@ export const PASSAGE_MAX_CHARS = 420;
 /** The shortest term worth searching. Below this every page matches. */
 export const MIN_TERM_CHARS = 3;
 
-/**
- * Terms a reader is likely to be searching FOR rather than WITH. Stripped so
- * "what does she think about housing" searches for `housing`, not for `what`.
- * Mechanical and reviewable: the list is here, whole, and nothing stems it.
- */
+/** Words a reader searches with, not for. Stripped from the query; nothing is stemmed. */
 const STOP_WORDS = new Set([
   "the", "and", "for", "are", "but", "not", "you", "all", "any", "can",
   "her", "was", "one", "our", "out", "his", "has", "had", "how", "its",
   "who", "did", "does", "what", "when", "where", "why", "about", "with",
-  // Third-person pronouns. A reader asking "what does she think about
-  // housing" is searching for `housing`; leaving `she` in makes every page
-  // that happens to use the word a hit, which is a match on nothing.
   "she", "him", "hers", "theirs", "your", "yours", "mine",
   "from", "that", "this", "they", "them", "their", "there", "would", "should",
   "think", "thinks", "position", "positions", "stance", "say", "says", "said",
@@ -165,13 +98,8 @@ export function searchTerms(topic: string): string[] {
 }
 
 /**
- * Split extracted page text into sentence-ish runs.
- *
- * Deliberately crude, and it has to be: this text came off a scraped page with
- * its navigation flattened into it, so a clever parser would be inventing
- * structure the source does not have. A run bounded by sentence punctuation is
- * the most that can be claimed, and every run is returned EXACTLY as it
- * appears — trimming whitespace is the only edit this function makes.
+ * Splits extracted page text on sentence punctuation. Each run is returned
+ * exactly as it appears apart from trimmed whitespace.
  */
 export function passagesOf(text: string): string[] {
   return text
@@ -200,22 +128,13 @@ function changedSince(
   return earlier[0]?.retrievedAt ?? null;
 }
 
-/**
- * The subject's own page, for the NOT_YET_COLLECTED answer. Their campaign
- * site is preferred over an official page because the question is what THEY
- * say; either is theirs, and null when we hold neither.
- */
+/** The subject's campaign site, else an official page, else null. */
 function theirPageFrom(mine: readonly SourceSnapshot[]): string | null {
   const campaign = mine.find((s) => s.kind === "CAMPAIGN_SITE");
   return campaign?.url ?? mine[0]?.url ?? null;
 }
 
-/**
- * Answer "what has this person said about X" in one of exactly three ways.
- *
- * Pure: the corpus is an argument, so the identical function runs in the tests
- * against the committed file and on the surface against the same file.
- */
+/** Pure: the corpus is an argument. */
 export function positionsFor(
   subjectId: string,
   topic: string,
@@ -227,15 +146,11 @@ export function positionsFor(
     pages: new Set(readable.map((s) => s.url)).size,
     snapshots: readable.length,
     unreadable: mine.length - readable.length,
-    // Filled below, once the terms are known. Declared here so every return
-    // path carries the field rather than some of them.
     presentButUnquotable: 0,
   };
   const theirPage = theirPageFrom(mine);
 
-  // ── Answer three: we have not read anything of theirs. ──────────────────
-  // Checked FIRST and on the corpus rather than on the match, because "we
-  // searched and found nothing" is a claim about a search that did not happen.
+  // Not yet collected is checked first: there was no search to report on.
   if (readable.length === 0) {
     return {
       kind: "NOT_YET_COLLECTED",
@@ -249,8 +164,7 @@ export function positionsFor(
   const terms = searchTerms(topic);
   const hits: PositionPassage[] = [];
   if (terms.length > 0) {
-    // Newest first, so the passage a reader sees is the most recent thing the
-    // page said, and an older read is never mistaken for a current one.
+    // Newest first, so a reader sees the most recent thing the page said.
     const ordered = [...readable].sort((a, b) =>
       b.retrievedAt.localeCompare(a.retrievedAt),
     );
@@ -258,10 +172,7 @@ export function positionsFor(
     for (const snapshot of ordered) {
       for (const raw of passagesOf(snapshot.text as string)) {
         if (raw.length > PASSAGE_MAX_CHARS) {
-          // Item 13: the skip is right and the silence about it was not.
-          // Count the ones that would have matched, so the answer can say
-          // "we hold it and will not quote it" rather than "they never said
-          // it" — see `searched.presentButUnquotable`.
+          // Count the too-long passages that would have matched; see `searched.presentButUnquotable`.
           const long = ` ${normalize(raw)} `;
           if (terms.some((t) => long.includes(` ${t} `))) {
             searched.presentButUnquotable += 1;
@@ -271,8 +182,7 @@ export function positionsFor(
         const normalized = ` ${normalize(raw)} `;
         const matched = terms.filter((t) => normalized.includes(` ${t} `));
         if (matched.length === 0) continue;
-        // The same boilerplate sentence appears on every page of a site.
-        // Quoting it three times is not three pieces of evidence.
+        // The same boilerplate sentence on every page of a site counts once.
         const key = normalize(raw);
         if (seen.has(key)) continue;
         seen.add(key);
@@ -290,7 +200,6 @@ export function positionsFor(
     }
   }
 
-  // ── Answer two: we read their pages and none of them mentioned it. ──────
   if (hits.length === 0) {
     return {
       kind: "SEARCHED_NOTHING_MATCHED",
@@ -301,10 +210,7 @@ export function positionsFor(
     };
   }
 
-  // ── Answer one: here is what they published, in their own words. ────────
-  // Ranked by how many of the reader's terms a passage carries, which is the
-  // only ordering here and is mechanical. Nothing is ranked by sentiment,
-  // relevance-as-judged, or anything a model could have an opinion about.
+  // Ranked only by how many of the reader's terms a passage carries.
   hits.sort(
     (a, b) =>
       b.matchedTerms.length - a.matchedTerms.length ||
@@ -330,13 +236,8 @@ export function positionMatchCount(
 }
 
 /**
- * The topics offered as chips beside the search box. CURATED and committed —
- * not derived from the corpus, because a topic list read off what a candidate
- * happens to have published would silently become a list of what THEY chose
- * to talk about, which is a characterisation by omission.
- *
- * They are also deliberately plain nouns rather than framings: "housing", not
- * "the housing crisis". A framing in the search box is the product taking a
- * position through the question.
+ * Topic chips beside the search box: curated plain nouns, never derived from
+ * the corpus (that would reflect what candidates chose to talk about) and
+ * never framings.
  */
 export const POSITION_TOPICS: readonly string[] = DEFAULT_STANCE_TOPICS.map((topic) => topic.label);

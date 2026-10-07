@@ -1,19 +1,13 @@
 /**
- * DP-22 and DP-21: what a method did in each place, kept apart.
+ * What a method did in each place, kept apart. An entry's `outcome` is the
+ * latest result anywhere; `placeResults` keeps one result per place, and a
+ * newer result replaces only the same place's, recording what it superseded.
  *
- * DP-22. An entry's single `outcome` is "latest anywhere": the display value.
- * Underneath it, `placeResults` keeps one result per place, so a route that
- * worked in one state and failed in another shows both, and a newer result
- * replaces only the older result for the SAME place, recording which
- * observation it superseded.
+ * When the manual is projected for a place with the fix map's rows for it,
+ * each method line says whether it works here, is untried here, or fails here;
+ * the ones that fail here are left out of the brief.
  *
- * DP-21. When the manual is projected for a place and the caller hands in the
- * fix map's rows for that place, each method line says whether it works here,
- * has not been tried here (try it and record the result) or fails here, and the
- * ones that fail here are left out of the brief, so a Scout's inherited lines
- * never send it down a road already known closed in this place.
- *
- * PURE: no store, no clock.
+ * Pure: no store, no clock.
  */
 
 import type { FieldManualEntry, FieldManualOutcome } from "./field-manual.ts";

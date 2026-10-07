@@ -74,14 +74,7 @@ test("NC7b: HELD with no recorded commit holds for nothing", () => {
 });
 
 test("an abbreviated recorded SHA and the full served one are the SAME commit", () => {
-  /*
-   * THE FALSE-FREEZE DIRECTION, guarded explicitly. The committed record has
-   * carried an abbreviated sha since 2026-08-28 (`"71325247"`) and
-   * `GET /api/build` returns all forty characters. Strict equality would have
-   * reported PRODUCTION_MOVED for a commit that had not moved — a refusal for a
-   * reason that was never true, which is the direction that gets a gate switched
-   * off rather than fixed.
-   */
+  // An abbreviated recorded sha against the full served sha must not read as PRODUCTION_MOVED.
   const abbreviated = SHA_A.slice(0, 8);
   assert.equal(sameCommit(abbreviated, SHA_A), true);
   assert.equal(sameCommit(SHA_A, SHA_B), false);

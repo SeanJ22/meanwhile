@@ -1,16 +1,9 @@
 /**
- * **FE-02 · WORST-CASE SPEED, MEASURED ON PRODUCTION, PHONE AND DESKTOP.**
- *
- * What a resident waits for, judged by the worst run, never the median. A run
- * that never finished counts as a failure. Every surface in the resident-task
- * set (data/health/resident-tasks.json) is measured, plus each Ask question in
- * it, at ZIPs sampled from the published places, on a phone (390 by 844) and a
- * desktop. The budget is three seconds.
- *
- * PURE: the targets, the ZIP sample and the verdict. The browser pass that
- * takes the runs is `scripts/worst-case-speed-pass.mts`; it records each pass
- * in the live-audit log, and the Scoreboard's "Site speed and reliability" row
- * reads the latest one.
+ * Worst-case speed on production, phone (390 by 844) and desktop: the worst
+ * run, never the median, against a three-second budget; a run that never
+ * finished fails. Every resident-task surface and Ask question is measured at
+ * ZIPs sampled from the published places. Pure: targets, ZIP sample and
+ * verdict; `scripts/worst-case-speed-pass.mts` takes the runs.
  */
 
 export const SPEED_BUDGET_MS = 3000;

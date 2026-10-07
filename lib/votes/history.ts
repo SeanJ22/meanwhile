@@ -87,9 +87,8 @@ export async function readHistoricalFederalVotesForMember(
       const position = positions.get(vote.id);
       if (!position) continue;
       seen.add(vote.id);
-      // The current canonical bill-summary corpus is keyed by the exact
-      // official bill URL. An older proven roll call can still carry its
-      // existing reviewed explanation even after it leaves Recent.
+      // Bill summaries are keyed by the exact official bill URL, so an older
+      // roll call keeps its reviewed explanation after it leaves Recent.
       votes.push({ ...vote, position, partyBreakdown: null,
         ...reviewedHistoricalBill(vote.billUrl, reviewedSummaries),
         historicalVersionId: version.projection.versionId,

@@ -3,12 +3,7 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { researchVaultResolver } from "../control-plane/workers/vault-object.ts";
 import { workerVaultResolver } from "../control-plane/workers/vault.ts";
 
-/** A publication job resolves only the artifact identities it actually uses.
- * Keep all observations of each identity, in the original log order: an earlier
- * acquisition may have missing bytes while a later one is still held. The two
- * existing provenance validators share that bounded metadata read. Nothing is
- * cached across jobs, including a missing artifact or a failed lookup.
- */
+/** Keep every observation of each identity in log order: an earlier one may lack bytes a later one holds. Nothing is cached across jobs. */
 export function publicationVaultReaders(repos: ControlPlaneRepositories, store: EvidenceStore, project = "freshness") {
   let keys: Promise<string[]> | undefined;
   const evidenceStore: EvidenceStore = {
@@ -29,8 +24,6 @@ export function publicationVaultReaders(repos: ControlPlaneRepositories, store: 
           const keys = await repos.artifacts.keysWhere(["artifactId"], id);
           records = (await Promise.all(keys.map(key => repos.artifacts.readWhere(key, ["artifactId"], id)))).flat();
         } else {
-          // Legacy/test providers without filtered reads retain their exact
-          // behavior. Postgres uses its existing artifact-id expression index.
           records = (await repos.artifacts.readAll()).filter(row => row.artifactId === id);
         }
         const scoped = { ...repos, artifacts: { ...repos.artifacts, readAll: async () => records } };

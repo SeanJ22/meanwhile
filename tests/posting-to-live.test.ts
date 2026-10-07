@@ -13,7 +13,7 @@ import type { Meeting } from "../lib/sources/types.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
 
-/** DB-27: four times kept apart for each change, and the clock stops at the reader readback PASS. */
+/** Four times kept apart for each change; the clock stops at the reader readback PASS. */
 
 const legistar = MEETING_PARTITION_CONTRACTS.find((partition) => partition.meetingSource === "legistar")!;
 const url = "https://webapi.legistar.com/v1/pima/events";

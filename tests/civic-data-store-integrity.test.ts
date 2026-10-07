@@ -682,17 +682,12 @@ test("a contract-A runtime envelope cannot mutate contract B through the public 
   );
 });
 
-/** The SELECT list of a query, before its FROM clause. */
 function selectList(query: { toSQL(): { sql: string } }): string {
   const text = query.toSQL().sql;
   return text.slice(0, text.indexOf(" from "));
 }
 
 test("Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it", () => {
-  // Measured against production on 2026-09-23: the NJ roll-call payload is
-  // 9.8 MB on the wire and its candidate row 23.7 MB. The readback once read
-  // the payload to inspect, again to check the pointer, and the candidate to
-  // append evidence, around the typed Reader's own read of both.
   const pointer = selectList(promotedPointerIdentityRead(drizzle.mock({ schema }), "STATE_ROLL_CALL", ["US-NJ"]));
   assert.doesNotMatch(pointer, /"payload"|"validation_receipt"/);
   for (const column of ["key", "source_id", "record_class", "scope", "current_version_id", "last_known_good_version_id", "promoted_at"]) {
@@ -781,10 +776,6 @@ test("the Postgres promotion transaction is selected from the exact persisted pr
   assert.match(promote, /where \$\{eligibility\} and \$\{pointerOwnsCandidate\}/);
   assert.match(promote, /validationReceipt: persistedReceipt/);
   assert.doesNotMatch(promote, /validationReceipt: receipt[,\n]/);
-  // The same transaction, answered without its dataset: the pointer write
-  // returns identity and receipt, the candidate write its id, and the
-  // projection's payload is the read model already in hand (which the
-  // insert copies as the pointer's payload).
   assert.doesNotMatch(promote, /\.returning\(\)/, "a bare RETURNING ships the whole payload or envelope back");
   assert.match(promote, /\.onConflictDoUpdate\(\{[\s\S]*\}\)\.returning\(PROMOTED_POINTER_COLUMNS\)/);
   assert.match(promote, /update\(civicDataCandidates\)[\s\S]*\.returning\(\{ candidateId: civicDataCandidates\.id \}\)/);
@@ -815,7 +806,6 @@ test("a promotion's RETURNING names the moved pointer and never carries its data
   }
 });
 
-/** Postgres type OIDs the canned Neon HTTP answers below declare. */
 const NEON_TYPE = { text: 25, bool: 16, jsonb: 3802, timestamptz: 1184, void: 2278 } as const;
 type NeonColumn = readonly [name: string, type: keyof typeof NEON_TYPE];
 interface NeonAnswer {
@@ -827,11 +817,7 @@ interface NeonStatement {
   readonly params: readonly unknown[];
 }
 
-/**
- * Drive the real PostgresRoutineDataStore through the Neon driver's own fetch
- * seam: every statement is recorded and answered from canned rows in the
- * driver's raw-text array protocol. No network, no database.
- */
+// Drives the real PostgresRoutineDataStore through the Neon driver's fetch seam, answered from canned rows; no network.
 async function withCannedNeon<T>(
   answer: (statement: NeonStatement) => NeonAnswer,
   run: (store: PostgresRoutineDataStore, sent: NeonStatement[]) => Promise<T>,
@@ -865,8 +851,6 @@ async function withCannedNeon<T>(
   process.env.DATABASE_URL = "postgresql://canned:canned@ep-canned-store-proof.us-east-2.aws.neon.tech/neondb";
   try {
     const store = new PostgresRoutineDataStore();
-    // The installed-runtime attestation is its own suite's subject; this proof
-    // enters with the exact contract authority a registered FEC child holds.
     Object.assign(store as unknown as Record<string, unknown>, {
       writeAuthority: {
         repo: ROOT,
@@ -885,7 +869,6 @@ async function withCannedNeon<T>(
   }
 }
 
-/** The RETURNING list of a statement, or null when it has none. */
 function returningList(query: string): string | null {
   const at = query.lastIndexOf(" returning ");
   return at < 0 ? null : query.slice(at + " returning ".length);
@@ -989,13 +972,6 @@ test("a candidate summary is every row column but the envelope and identity set"
 });
 
 test("a Postgres transition never reads the envelope the caller holds; it verifies it and returns it", async () => {
-  // A transition read the whole row before its compare-and-set and again
-  // after it: two copies of the envelope per step, 47.3 MB for one NJ
-  // roll-call step on 2026-09-23. The post-write copy went first; then the
-  // pre-read still carried the envelope, ~235 MB an hour (R26, 2026-09-25).
-  // The envelope is written once at create and never updated, and promotion
-  // already holds it: the pre-read is identity, state, retrieval instant and
-  // hashes, and the held envelope is verified against those columns.
   const value = candidate("postgres-transition-narrow");
   const at = "2026-09-08T12:00:00.000Z";
   const wholeRow: readonly (readonly [NeonColumn, unknown])[] = [
@@ -1026,7 +1002,6 @@ test("a Postgres transition never reads the envelope the caller holds; it verifi
     rows: [cells.map(([, cell]) => cell)],
   });
   const cell = (name: string) => wholeRow.find(([[column]]) => column === name)!;
-  // The pre-read, in its select order: the Reader-evidence columns, then the instant and hashes.
   const transitionRow: readonly (readonly [NeonColumn, unknown])[] = [
     cell("id"), cell("source_id"), cell("record_class"), cell("scope"), cell("state"),
     [["has_bootstrap_import", "bool"], false], [["bootstrap_import", "jsonb"], null],
@@ -1087,7 +1062,6 @@ test("a Postgres transition never reads the envelope the caller holds; it verifi
     });
   }
 
-  // A caller that does not hold the envelope gets it from one envelope-only read, after the write.
   const unheld = await withCannedNeon(canned, async (store, sent) => {
     const record = await store.transition(value.id, "NORMALIZED", at, "normalized");
     const reads = candidateReads(sent);
@@ -1100,10 +1074,6 @@ test("a Postgres transition never reads the envelope the caller holds; it verifi
 });
 
 test("promotion hands every transition the candidate it already holds", async () => {
-  // R26: the NORMALIZED step discarded the envelope it had read, and the
-  // VALIDATED step's copy was the one promotion returned. The memory store
-  // enforces the same verification, so a run that passes a foreign envelope
-  // fails here as it would against Postgres.
   const store = new MemoryRoutineDataStore();
   const value = candidate("promotion-holds-envelope");
   const held: { state: string; candidate: RoutineCandidate | undefined }[] = [];
@@ -1119,13 +1089,11 @@ test("promotion hands every transition the candidate it already holds", async ()
   const outcome = await processRoutineCandidate(spying, value, "2026-09-08T12:01:00.000Z");
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.deepEqual(held.map(({ state }) => state), ["NORMALIZED", "VALIDATED"]);
-  // Promotion holds the envelope it created (the change set attached), which is the durable one.
   const durable = (await store.readCandidate(value.id))!.candidate;
   assert.ok(durable.changeSet, "precondition: promotion stores the envelope with its change set");
   for (const step of held) assert.deepEqual(step.candidate, durable, `${step.state} was handed the envelope promotion holds`);
   assert.deepEqual(outcome.candidate.candidate, durable);
 
-  // And a foreign envelope is refused by the memory store exactly as by Postgres.
   const other = candidate("promotion-holds-envelope-2");
   await store.create({
     candidate: other, state: "FETCHED", acquisitionSucceeded: true, receipt: null,
@@ -1221,8 +1189,6 @@ test("terminal store exposes no one-time import or aggregate retirement door", (
   const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
   const adapter = readFileSync(join(ROOT, "lib", "civic-data", "candidate-integrity.ts"), "utf8");
   const memory = new MemoryRoutineDataStore();
-  // Inspect the retired API family without importing or invoking its former
-  // callable vocabulary. Reject new members of that family as well.
   const retiredMember = /^(?:assertPdcV2|retirePdcV2)/;
   for (const target of [memory, Object.getPrototypeOf(memory)]) {
     assert.deepEqual(Object.getOwnPropertyNames(target).filter((name) => retiredMember.test(name)), []);

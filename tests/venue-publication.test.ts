@@ -58,7 +58,7 @@ test("a pass with no new match, or a refused one, changes nothing and never thro
   assert.deepEqual(await publishVenueResolutions({ store, package: null, now: T1 }), { records: 0, outcome: null, held: null });
   const first = await automaticVenuePackage({ snapshot: snapshot(T1, "1415 Melody Ln"), existingIds: new Set(), memberRoutes: ROUTES,
     clock: () => T1, fetchImpl: fetchFor("1415 Melody Ln", -109.9, 31.39) });
-  // A coordinate outside the United States fails the §3 validator: the pointer holds, nothing is promoted.
+  // A coordinate outside the United States fails the validator: the pointer holds, nothing is promoted.
   const bad = { ...first.package!, payload: { kind: "venue-resolutions" as const,
     records: (first.package!.payload as { records: readonly Record<string, unknown>[] }).records.map((row) => ({ ...row, lat: 0, lng: 0 })) as never } };
   const held = await publishVenueResolutions({ store, package: bad, now: T1 });

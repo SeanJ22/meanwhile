@@ -12,22 +12,10 @@ import {
 } from "react";
 
 /**
- * THE LARGE DETAIL CARD (approved reader design, 2026-09-28; INTERACTIONS §1).
- *
- * One card, over a scrim that covers the map, the header and the sidebar. It
- * holds one view at a time; moving deeper happens inside it, and **← Back to
- * <previous>** returns to the previous view at the scroll position it was left
- * at. **✕ Close** closes the whole card. Escape closes it, and so does a click
- * on the scrim.
- *
- * Accessibility the prototype left undone and this frame does:
- * - focus moves to Close on open and returns to the opener on close;
- * - Tab is trapped inside the card while it is open;
- * - everything behind it is `inert`, so no background control can be reached
- *   by keyboard, pointer or assistive technology while it is up.
- *
- * The frame owns chrome only. Each view's content is the existing component
- * for that record, rendered with `embedded` so it drops its own overlay.
+ * The large detail card over a scrim. One view at a time; "← Back to …"
+ * restores the previous view and its scroll position. Escape, ✕ and a scrim
+ * click close it. Focus moves to Close on open and returns to the opener;
+ * Tab is trapped; everything behind is `inert`. Views render with `embedded`.
  */
 export function ReaderCard({
   viewKey,
@@ -49,7 +37,7 @@ export function ReaderCard({
   kicker: string;
   /** A tier colour for the kicker when it names a tier. */
   kickerTone?: string;
-  /** "Near 85701 · orientation, not your exact districts" on list views. */
+  /** The ZIP context line on list views. */
   zipContext?: string | null;
   zip?: string | null;
   recordId?: string | null;
@@ -68,8 +56,7 @@ export function ReaderCard({
   const bodyRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  // Order matters: the opener is recorded before the background goes inert
-  // (inert blurs anything focused inside it).
+  // Record the opener before the background goes inert (inert blurs focus inside it).
   useFocusReturn(closeRef);
   useBackgroundInert(cardRef);
 
@@ -79,9 +66,7 @@ export function ReaderCard({
     const target = restoreScroll ?? 0;
     body.scrollTop = target;
     if (target === 0) return;
-    // A restored view's content can finish laying out a frame or two after
-    // it mounts (lazy sections, a clock read on a frame), which would clamp
-    // the position. Re-apply until it holds, for at most a few frames.
+    // Late layout can clamp the restored position; re-apply for a few frames.
     let frames = 0;
     let handle = 0;
     const settle = () => {
@@ -98,8 +83,7 @@ export function ReaderCard({
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      // A dialog opened FROM the card (the calendar chooser, a phone choice)
-      // lives outside it and handles its own keys; the card steps aside.
+      // A dialog opened from the card lives outside it and handles its own keys.
       const active = document.activeElement;
       const card = cardRef.current;
       if (card && active && active !== document.body && !card.contains(active)) return;
@@ -160,9 +144,7 @@ export function ReaderCard({
         >
           {children}
         </div>
-        {/* Every card, one path: a reader who sees something wrong can say so
-            from where they are. New tab, so the view they were reading and
-            any draft stay put. */}
+        {/* Feedback opens in a new tab so the view and any draft stay put. */}
         <footer className="mw-card-foot">
           <a
             className="mw-report-link"
@@ -241,8 +223,7 @@ function useFocusReturn(closeRef: RefObject<HTMLButtonElement | null>): void {
     );
     return () => {
       cancelAnimationFrame(frame);
-      // After React removes the card, the opener is reachable again (the
-      // inert cleanup ran first), so focus can land on it.
+      // After the inert cleanup, so the opener can take focus.
       setTimeout(restore, 0);
     };
   }, [closeRef, restore]);

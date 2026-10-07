@@ -224,7 +224,6 @@ test("filed organizations and aggregate private giving reach cards and Ask, with
   const html = renderToStaticMarkup(createElement(StateMoneySection, { records: [record] }));
   assert.match(html, /Neighbors PAC/);
   assert.match(html, /Individual giving/);
-  /* The filing source sits in the card's Sources section (frontend's shared Sources, FE-12). */
   assert.match(html, /<span class="card-section-title">Sources<\/span>/);
   assert.match(html, /Candidate campaign filings/);
   assert.doesNotMatch(html, /Private Donor|Private Lane|Private Road|Unclassified Person/);

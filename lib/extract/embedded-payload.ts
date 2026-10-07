@@ -2,45 +2,15 @@ import { cannotRun, extracted, zeroRows } from "./types.ts";
 import type { ExtractResult } from "./types.ts";
 
 /**
- * LAYER 4 — the embedded CMS payload (F11, Prompt C item 12).
+ * Layer 4: the embedded CMS payload. Some CMSes ship page content as JSON in a
+ * `<script>` tag, so the rendered prose never carries it. Finds every script
+ * whose body is or contains JSON, parses it, and flattens it to every string
+ * worth reading with its key path (`pageContent.staff[3].name`) as provenance.
  *
- * ## This layer is why F11 stopped being about PDFs
- *
- * Vail Unified's superintendent was carried as "Carruth" — a surname with no
- * given name, which this product will not ship about a real person. The cause
- * was none of the three anyone guessed. The link was in the static HTML. The
- * page answered **200 to a plain fetch**. And "John Carruth" was in that HTML
- * **six times**.
- *
- * The fetch worked, discovery worked, and THE EXTRACTION READ NOTHING: the
- * district runs on **Apptegy**, which ships its page content as an escaped
- * JSON payload inside a `<script>` tag. A reader of the RENDERED PROSE finds a
- * news blurb saying "Superintendent Carruth" and never the byline, because the
- * byline is in the payload and the prose is not.
- *
- * That failure is invisible from every layer above it. The class size here is
- * bounded — two bodies on Apptegy — but the failure MODE is not: every CMS
- * that hydrates from an embedded payload has it, and there is no signal in a
- * successful fetch that distinguishes them.
- *
- * ## What it does
- *
- * Finds every `<script>` whose body is or contains JSON, parses it, and walks
- * it to a flat list of every string worth reading, each with the key path it
- * came from. The key path is the point: `pageContent.staff[3].name` is
- * evidence, and a bare string in a blob is not.
- *
- * THREE ENCODINGS, because CMSes use all three and the difference is invisible
- * from outside:
- *   1. A plain JSON script (`type="application/json"`, Next's `__NEXT_DATA__`,
- *      JSON-LD).
- *   2. A JSON string ASSIGNED to a variable (`window.__DATA__ = {...}`).
- *   3. A DOUBLY-encoded payload — a JSON string whose value is itself JSON,
- *      which is Apptegy's shape and the one that produced this row.
- *
- * ## The interface
- *
- *   extractEmbeddedPayload(html, source) -> ExtractResult<PayloadString>
+ * Three encodings:
+ *   1. A plain JSON script (`type="application/json"`, `__NEXT_DATA__`, JSON-LD).
+ *   2. JSON assigned to a variable (`window.__DATA__ = {...}`).
+ *   3. A doubly-encoded payload: a JSON string whose value is itself JSON.
  */
 
 export interface PayloadString {
@@ -70,21 +40,12 @@ function tryParse(text: string): unknown {
 }
 
 /**
- * Pull the JSON payload out of a script body that is not itself JSON.
- *
- * THREE SHAPES, and the scanner has to walk the text as JAVASCRIPT rather than
- * hunting for a brace, because the brace it wants is frequently inside a string
- * literal:
+ * Pull the JSON payload out of a script body that is not itself JSON. Walks
+ * the text as JavaScript, because the wanted brace is often inside a string:
  *
  *   window.__DATA__ = {"a":1}          a bare object literal
  *   window.__DATA__ = [1,2]            a bare array literal
- *   window.__DATA__ = "{\"a\":1}"      a JSON STRING whose value is JSON
- *
- * The third is Apptegy's, and it is the one that produced this row. Its first
- * `{` sits inside a quoted string with escaped inner quotes, so a scanner that
- * starts at the first brace captures `{\"a\":1}` — which is not valid JSON —
- * and gives up. Missing it is exactly how a byline printed six times in the
- * HTML was recorded as absent.
+ *   window.__DATA__ = "{\"a\":1}"      a JSON string whose value is JSON
  */
 export function firstJsonLiteral(text: string): unknown {
   let inString = false;
@@ -170,11 +131,8 @@ function readBalanced(text: string, from: number): unknown {
 }
 
 /**
- * Every string in a parsed payload, with its key path.
- *
- * A string that is ITSELF valid JSON is parsed and walked — that is the
- * doubly-encoded case, and skipping it is exactly how the Apptegy byline was
- * missed.
+ * Every string in a parsed payload, with its key path. A string that is itself
+ * valid JSON is parsed and walked (the doubly-encoded case).
  */
 export function walkStrings(
   node: unknown,
@@ -261,13 +219,7 @@ export function extractEmbeddedPayload(
   return extracted("EMBEDDED_PAYLOAD", source, bytes, out, counts);
 }
 
-/**
- * The question a hunt actually asks: does this payload name this person?
- *
- * Returns every payload string containing the needle, with its key path — so a
- * hit is evidence with provenance rather than a substring match somebody has
- * to go and confirm by hand.
- */
+/** Every payload string containing the needle, with its key path as provenance. */
 export function findInPayload(
   result: ExtractResult<PayloadString>,
   needle: string,

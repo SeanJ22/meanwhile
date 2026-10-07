@@ -27,7 +27,7 @@ into nano; never paste them into chat, GitHub, screenshots or a shell command.
 | `WTP_CONTROL_PLANE_DATABASE_URL` | Same screen, production value of this exact name. This must match the live Admin database. |
 | `WTP_PRODUCTION_DATABASE_URL_WRITE` | Existing approved production writer credential, under this exact name in the live settings or Sean's saved credentials. If absent, S0 must supply its private location; do not reuse a read-only URL. |
 | `WTP_PRODUCTION_DATABASE_URL_READONLY` | Existing production read-only credential of this name, from the live settings or Sean's saved credentials. |
-| `WTP_VAULT_PROVIDER` | Keep `netlify`; copy the retained vault and portraits to the production destination in step 2 before starting the service. |
+ `WTP_VAULT_PROVIDER` | Keep `netlify`. |
 | `WTP_BLOBS_SITE_ID` and `NETLIFY_SITE_ID` | Live project → Project configuration → General → Project details → Project ID. Replace the staging ID `acafb24c-9803-4d0d-8f6c-8b9d21d96169` in both lines. |
 | `WTP_BLOBS_TOKEN` and `NETLIFY_BLOBS_TOKEN` | A Netlify personal access token authorized for the live project: User settings → Applications → Personal access tokens. Paste the same authorized token into both lines. |
 
@@ -47,102 +47,12 @@ the **Production** deploy context:
 Enter the token privately in Netlify; never include its value in a report.
 Redeploy the live site after saving. Admin and the Linux runner must point to
 the same production project and evidence store so an Admin send can wake the
-runner. After starting the service in step 3, send an instruction in step 4
+runner. After starting the service in step 2, send an instruction in step 3
 and confirm its receipt appears on the runner's next control-plane poll and
 in Admin's instruction history. Give S0 a missing receipt or refusal.
-A transfer to staging alone does not populate production.
 Save nano with **Ctrl+O**, **Enter**, then **Ctrl+X**.
 
-### 2. Copy the retained vault and portraits to production
-
-Keep `meanwhile-runner.service` stopped. After saving the production settings
-above, paste in the Linux terminal:
-
-```sh
-cd /opt/meanwhile
-runuser -u meanwhile -- node --env-file=/etc/meanwhile/runner.env --experimental-strip-types scripts/pilot-runtime-transfer.mts --root=/var/lib/meanwhile/transfer
-```
-
-This existing, idempotent command reads `WTP_VAULT_PROVIDER`,
-`WTP_BLOBS_SITE_ID`, `WTP_BLOBS_TOKEN`, and optional `WTP_VAULT_STORE`
-(default `meanwhile-evidence`) from `/etc/meanwhile/runner.env`. It copies to
-that project's evidence store and `meanwhile-portraits`, preserving the local
-originals. Repeating it reuses matching immutable vault bodies and writes the
-same retained portrait bytes. The staging copy does not populate this project.
-
-For the retained source copied during S13.7, expect:
-
-```text
-Source vault entry could not be read: <missing key> (EvidenceStoreRefusal)
-... fourteen separate missing-source lines ...
-Transferred 10919 vault objects and 1066 portraits; 14 source vault entries failed. Local originals remain.
-```
-
-Those fourteen bodies are absent from the source; they remain failures for
-S8 to recapture. Their exact keys are listed separately in the
-[final transfer result](https://github.com/SeanJ22/meanwhile/pull/500#issuecomment-5925004517).
-Exit 1 accompanies that summary while they remain missing. An exit code alone
-does not show completion: destination failures stop before the final summary.
-If S8 has restored bodies or added portraits, the counts change accordingly.
-
-Run this hosted readback even when the transfer exits 1 for those sources.
-It reads five retained vault samples and every retained portrait from the same
-production destination and compares them with the original bytes:
-
-```sh
-runuser -u meanwhile -- node --env-file=/etc/meanwhile/runner.env --experimental-strip-types --input-type=module <<'NODE'
-import assert from 'node:assert/strict';
-import { getStore } from '@netlify/blobs';
-import { readFile, readdir } from 'node:fs/promises';
-import { join, relative } from 'node:path';
-import { DurableEvidenceStore } from './lib/control-plane/evidence/durable-store.ts';
-import { netlifyEvidenceStoreFromEnv } from './lib/control-plane/evidence/netlify-store.ts';
-const env = process.env;
-assert.equal(env.WTP_RUNTIME_MODE, 'production');
-assert.equal(env.WTP_DB_ROLE, 'production');
-assert.equal(env.WTP_VAULT_PROVIDER, 'netlify');
-assert.ok(env.WTP_BLOBS_SITE_ID && env.WTP_BLOBS_SITE_ID !== 'acafb24c-9803-4d0d-8f6c-8b9d21d96169');
-assert.equal(env.WTP_BLOBS_SITE_ID, env.NETLIFY_SITE_ID);
-const root = '/var/lib/meanwhile/transfer';
-const source = new DurableEvidenceStore(join(root, 'data/control-plane/vault'), { remote: null });
-const remote = netlifyEvidenceStoreFromEnv();
-const keys = await source.list('');
-console.log(JSON.stringify({ retainedVaultEntries: keys.length, hostedVaultEntries: (await remote.list('')).length }));
-let evidenceReads = 0, portraitReads = 0;
-for (const i of new Set([0, Math.floor(keys.length / 4), Math.floor(keys.length / 2), Math.floor(keys.length * 3 / 4), keys.length - 1])) {
-  let held;
-  try { held = await source.get(keys[i]); }
-  catch { console.log('Sample source unavailable; already reported by transfer'); continue; }
-  assert.ok(held, 'SOURCE_SAMPLE_MISSING');
-  const got = await remote.get(keys[i]);
-  assert.ok(got && Buffer.from(got.bytes).equals(Buffer.from(held.bytes)), 'HOSTED_VAULT_READ_MISMATCH');
-  evidenceReads++;
-}
-const portraits = getStore({ name: 'meanwhile-portraits', siteID: env.WTP_BLOBS_SITE_ID, token: env.WTP_BLOBS_TOKEN, consistency: 'strong' });
-async function checkPortraits(directory) {
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) { await checkPortraits(path); continue; }
-    if (!/\.(avif|webp|png|jpe?g)$/i.test(entry.name)) continue;
-    const held = await readFile(path);
-    const got = await portraits.get(relative(join(root, 'public'), path), { type: 'arrayBuffer' });
-    assert.ok(got && Buffer.from(got).equals(held), 'HOSTED_PORTRAIT_READ_MISMATCH');
-    portraitReads++;
-  }
-}
-for (const family of ['officials', 'candidates']) await checkPortraits(join(root, 'public', family));
-console.log(JSON.stringify({ hostedEvidenceSamplesPassed: evidenceReads, hostedPortraitReadsPassed: portraitReads, originalsPreserved: true }));
-NODE
-```
-
-With this retained source, the last line should be
-`{"hostedEvidenceSamplesPassed":5,"hostedPortraitReadsPassed":1066,"originalsPreserved":true}`,
-and readback should exit 0. The source lists 10,933 vault entries, including
-the fourteen missing bodies. Hosted entry totals may include other objects;
-that total is not a claim that every vault body was read back. Give S0 any
-transfer or readback failure output. Keep originals until Sean's deletion approval.
-
-### 3. Start continuous work and confirm it is running
+### 2. Start continuous work and confirm it is running
 
 In the same Linux terminal, paste:
 
@@ -162,7 +72,7 @@ without stopping the service. If it repeatedly restarts or reports a refusal,
 paste `systemctl stop meanwhile-runner.service` and give S0 the error lines
 without secrets.
 
-### 4. Make the first sends in Admin's command center
+### 3. Make the first sends in Admin's command center
 
 Open the live site's **/admin**, sign in as owner, and use the command center.
 Choose **Now** → open **Direct work** → **Whole system · affects every state**.
@@ -197,7 +107,7 @@ To recreate a staging storage destination without importing live settings:
    folder containing a plain `index.html` identifying it as staging storage.
 2. In Project configuration → General → Project details, set the project name
    to `meanwhile-runner-staging` and copy its **Project ID**. Record its name
-   and ID in the S13 PR before any transfer. Keep the live site's domain and
+   and ID in the S13 PR. Keep the live site's domain and
    settings on the live project.
 3. From User settings → Applications → Personal access tokens, choose **New
    access token**, name it **Meanwhile runner staging**, choose its expiration,
@@ -212,24 +122,11 @@ To recreate a staging storage destination without importing live settings:
 Save the single `nano` edit with **Ctrl+O**, **Enter**, then **Ctrl+X**. Keep the
 token out of GitHub and chat; post only the staging project's name and ID.
 
-The transfer uses `meanwhile-evidence` and `meanwhile-portraits` in that staging
-project. After the retained source has been uploaded and extracted into
-`/var/lib/meanwhile/transfer`, run on Linux:
-
-```sh
-cd /opt/meanwhile
-runuser -u meanwhile -- node --env-file=/etc/meanwhile/runner.env --experimental-strip-types scripts/pilot-runtime-transfer.mts --root=/var/lib/meanwhile/transfer
-```
-
-Keep the source originals until Sean's deletion approval. A later production
-cutover must use the live project's own settings and data; a staging transfer
-does not authorize that cutover.
-
 When an app deploy on the separate staging project is ready, set
 `WTP_VAULT_PROVIDER=netlify` in that project's build settings and redeploy.
 Existing `/officials/*` and `/candidates/*` URLs then use `/api/portraits/*` and
 that project's `meanwhile-portraits` store. Hosted portrait reads use Netlify's
-supplied credentials. Do this after copying the objects. The live project keeps
+supplied credentials. The live project keeps
 its current provider until its own production migration is authorized.
 
 ## Installed host

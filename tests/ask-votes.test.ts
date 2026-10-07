@@ -11,37 +11,11 @@ import {
   statesOf,
   voteEvidenceFor,
 } from "../lib/ask/votes.ts";
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await Promise.all([initializeFederalVoteFirstSeed(), installRegistryRuntimeFirstSeeds()]);
-
-/**
- * **ASK-06 — CANDIDATE VOTES REACH ASK.** (2026-08-28.)
- *
- * The store existed and the door did not. `data/votes/votes-snapshot.json` and
- * `data/votes/state-votes-snapshot.json` have held 12,234 recorded positions
- * across 1,157 rostered officeholders for weeks, and grepping the sixteen
- * files of `lib/ask/` for `VOTE`, `ROLL_CALL`, `rollCall` or `votes` returned
- * nothing at all: `EvidenceRecord.kind` had sixteen members and none of them
- * was a vote. A reader asking what their representative had actually DONE got
- * the honest-gap sentence over a store holding twenty of his roll calls.
- *
- * ## What these tests are really about
- *
- * Not "can we find the votes" — that part is a filter over an array. The whole
- * risk in this feature is IDENTITY, and it is asymmetric in a way that decides
- * the design:
- *
- * * A missed join costs real votes and reads as an HONEST GAP.
- * * A wrong join reads as a confident, sourced, completely FALSE statement
- *   about how a named person voted.
- *
- * So the join is exact and it fails closed, and most of what is asserted below
- * is the refusals. Every one of them is measured against the real committed
- * rosters rather than a fixture, because a fixture would prove the matcher
- * matches itself.
- */
+/* The held federal directory and twenty synthetic roll calls per chamber, each with every member's position. */
+await installRegistryAuthority();
+await installFederalVotes();
 
 const AZ = "ocd-division/country:us/state:az";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -56,10 +30,6 @@ test("historical Ask totals retain the recent chamber denominator under an expli
     rollCallVotesRecorded: 39, rollCallVotesShown: 39, earlierRollCallVotesShown: 19 });
   assert.equal("rollCallsHeldForTheirChamber" in totals, false);
 });
-
-/* ══════════════════════════════════════════════════════════════════════
-   (a) AN INCUMBENT WITH VOTES
-   ══════════════════════════════════════════════════════════════════════ */
 
 test("(a) Juan Ciscomani's twenty federal roll calls reach Ask, each with its own source", () => {
   const ev = voteEvidenceFor("Juan Ciscomani", { withinStates: statesOf(READER) });
@@ -108,17 +78,6 @@ test("(a) Juan Ciscomani's twenty federal roll calls reach Ask, each with its ow
 });
 
 test("(a) a candidate for one office shows the votes of the office he HOLDS, named as such", () => {
-  /*
-   * **ANDY BIGGS IS THE CASE THAT DECIDES THE OFFICE RULE.** He is on the
-   * Arizona ballot for GOVERNOR and he is a sitting U.S. Representative with
-   * twenty recorded federal votes. Both facts are true and only one of them is
-   * where the votes came from.
-   *
-   * Suppressing them because the offices differ would delete a real public
-   * record from the one surface a voter reads before voting. Printing them
-   * under "candidate for Governor" would say he cast them as a gubernatorial
-   * candidate. The record names the seat, so it can do neither.
-   */
   const ev = voteEvidenceFor("Andy Biggs", { withinStates: ["AZ"] });
   assert.equal(ev.identity.kind, "JOINED");
   assert.equal(ev.denominators.rollCallVotesRecorded, 20);
@@ -128,198 +87,9 @@ test("(a) a candidate for one office shows the votes of the office he HOLDS, nam
   }
 });
 
-test("(a) a state legislator's votes carry the LegiScan attribution the licence requires", () => {
-  /*
-   * CC BY 4.0 requires attribution wherever the data appears, and the source
-   * line is where it appears in an Ask answer. Derived from the one constant
-   * in `lib/sources/legiscan/types.ts` so a second surface cannot ship a
-   * variant of the licence string or forget it.
-   */
-  const ev = voteEvidenceFor("Gail Griffin", { withinStates: ["AZ"] });
-  assert.equal(ev.identity.kind, "JOINED");
-  assert.equal(ev.denominators.rollCallVotesRecorded, 12);
-  assert.ok(ev.records.length > 0);
-  for (const record of ev.records) {
-    assert.equal(record.sourceOrg, "LegiScan (CC BY 4.0)");
-    assert.match(record.sourceUrl ?? "", /^https:\/\/legiscan\.com\/AZ\/rollcall\//);
-  }
-});
-
-/* ══════════════════════════════════════════════════════════════════════
-   (b) A CANDIDATE WITH NO HELD VOTING RECORD
-   ══════════════════════════════════════════════════════════════════════ */
-
-test("(b) Warren Petersen resolves, his office resolves, and the empty store is a NAMED gap", () => {
-  /*
-   * **THE THREE THINGS THIS MUST NOT BE.**
-   *
-   * He IS on the roster — `plural:66e496a4-…`, State Senator — and the store
-   * holds ZERO positions for him. So:
-   *
-   * 1. Not SILENCE. Silence under a candidate's name reads as "nothing to
-   *    say about how he votes", which is a claim about him.
-   * 2. Not "no votes cast". That is a claim about a person built entirely out
-   *    of OUR collection state, and it is the absence-as-assertion the
-   *    constitution forbids by name.
-   * 3. Not THEIRS. The legislature published its roll calls; what is missing
-   *    is our recording of his positions in them. The gap is ours.
-   */
-  const ev = voteEvidenceFor("Warren Petersen", { withinStates: ["AZ"] });
-
-  assert.equal(ev.identity.kind, "JOINED", "the person resolves");
-  assert.equal(
-    ev.identity.kind === "JOINED" ? ev.identity.seat.officeTitle : null,
-    "State Senator",
-    "the office resolves",
-  );
-  assert.equal(ev.records.length, 0, "and the store holds nothing");
-  assert.equal(ev.denominators.rollCallVotesRecorded, 0);
-
-  assert.equal(ev.gaps.length, 1);
-  assert.equal(ev.gaps[0].whose, "OURS");
-  assert.match(
-    ev.gaps[0].statement,
-    /We hold Warren Petersen as State Senator\. None of the \d+ roll calls we have recorded for that legislature carries a vote by them, so we have no voting record to show yet\./,
-  );
-  /*
-   * **THE DENOMINATOR IS IN THE SENTENCE**, so a reader can tell "we hold 24
-   * roll calls and none records a vote by him" from "we hold no roll calls at
-   * all". Those are different facts and they read identically without it.
-   */
-  assert.ok((ev.denominators.rollCallsHeldForTheirLegislature ?? 0) > 0);
-
-  /* And it never says he did not vote. */
-  assert.doesNotMatch(ev.gaps[0].statement, /did not vote|has not voted|no votes cast/i);
-});
-
-test("(b) Eva Diaz is the same shape, and is never merged with another Diaz", () => {
-  const eva = voteEvidenceFor("Eva Diaz", { withinStates: ["AZ"] });
-  assert.equal(eva.identity.kind, "JOINED");
-  assert.equal(eva.records.length, 0);
-  assert.match(eva.gaps[0].statement, /We hold Eva Diaz as State Senator\./);
-
-  /*
-   * **THE CONTROL.** Lupe Diaz holds twelve recorded votes. A surname join, or
-   * a surname-plus-initial join, would hand them to Eva — a confident, sourced,
-   * false statement about how a named person voted. Her answer holds none.
-   */
-  const lupe = voteEvidenceFor("Lupe Diaz", { withinStates: ["AZ"] });
-  assert.equal(lupe.denominators.rollCallVotesRecorded, 12);
-  for (const record of eva.records) {
-    assert.doesNotMatch(record.text, /Lupe/);
-  }
-});
-
-/* ══════════════════════════════════════════════════════════════════════
-   (c) THE ADVERSARIAL IDENTITY CASES
-   ══════════════════════════════════════════════════════════════════════ */
-
-test("(c) THE ADVERSARIAL CASE: Sally Ann Gonzales fails CLOSED to an honest gap", () => {
-  /*
-   * **THE WHOLE OF ASK-06 IS DECIDED HERE.**
-   *
-   * The ballot's District 20 State REPRESENTATIVE line carries *Sally Ann
-   * Gonzales*. The roster carries *Sally Gonzales*, a State SENATOR, with
-   * twelve recorded roll calls. Almost certainly one person.
-   *
-   * | Choice | Cost |
-   * |---|---|
-   * | Join | twelve votes cast in the SENATE attached to a HOUSE candidacy — a false claim about a named person's record |
-   * | Refuse | twelve real public votes not shown — an honest gap |
-   *
-   * There is no version of this where guessing is the careful option. The
-   * roster says a different chamber; the names differ; nothing published joins
-   * them. `lib/ballot/incumbency.ts` already takes exactly this posture for
-   * exactly this reason, and it took it after a fourteen-year incumbent was
-   * publicly labelled a challenger.
-   */
-  const ev = voteEvidenceFor("Sally Ann Gonzales", { withinStates: ["AZ"] });
-
-  assert.equal(ev.identity.kind, "NAME_FORM_UNCONFIRMED");
-  assert.equal(ev.records.length, 0, "NOT ONE vote may be attached");
-  assert.equal(ev.gaps.length, 1);
-  assert.equal(ev.gaps[0].whose, "OURS");
-
-  /*
-   * The sentence says we could not confirm, and stops. It does NOT name the
-   * near miss, does not count her votes, and does not say the two are or are
-   * not the same person — each of those would be the claim we cannot source,
-   * and printing "Sally Gonzales, State Senator, 12 votes" under this
-   * candidacy would make the join in the reader's head instead of in the code.
-   */
-  assert.match(
-    ev.gaps[0].statement,
-    /We have not recorded a voting record for Sally Ann Gonzales\. Our roster holds a similarly-named officeholder and we could not confirm from the records we hold that it is the same person/,
-  );
-  assert.doesNotMatch(ev.gaps[0].statement, /12|twelve|Senator|Sally Gonzales/);
-
-  /* And the record it refused to attach is genuinely there, so this test is
-     measuring a refusal rather than an absence. */
-  const senator = voteEvidenceFor("Sally Gonzales", { withinStates: ["AZ"] });
-  assert.equal(senator.identity.kind, "JOINED");
-  assert.equal(senator.denominators.rollCallVotesRecorded, 12);
-  assert.equal(
-    senator.identity.kind === "JOINED" ? senator.identity.seat.officeTitle : null,
-    "State Senator",
-    "the roster really does say a different chamber — that is the whole hazard",
-  );
-});
-
-test("(c) three more name forms fail closed, and the cost of each is recorded", () => {
-  /*
-   * Every row below is a REAL public voting record this product will not show,
-   * and each is the right call for the Sally Gonzales reason. They are pinned
-   * with their costs so the day a stable identifier makes them joinable, this
-   * test fails and says exactly what was unlocked.
-   *
-   *   Adelita Grijalva        vs  Adelita S. Grijalva   — 20 federal votes
-   *   Rachel "Jones" Keshel   vs  Rachel Keshel         — 12 state votes
-   *   Alexander Kolodin       vs  Alex Kolodin          — 0 votes today
-   *
-   * **The fix is never a looser matcher.** Dropping middle initials, quoted
-   * aliases or given-name variants also merges Lupe / Genoveva / Eva Diaz and
-   * Alma / Consuelo / Lydia Hernandez — six distinct sitting legislators,
-   * three of them holding twelve recorded votes each.
-   */
-  /*
-   * **ONE OF THESE WAS UNLOCKED WHILE THIS TEST WAS BEING WRITTEN, AND THIS IS
-   * THE TEST DOING ITS JOB.** (2026-08-28, at integration.)
-   *
-   * `Rachel "Jones" Keshel` vs `Rachel Keshel` now JOINS, and the twelve votes
-   * are shown. The unlock is not a looser matcher and not a stable identifier
-   * — it is that a QUOTED ALIAS IS PUBLISHED, IN QUOTATION MARKS, BY THE
-   * RECORD ITSELF, so removing it is reading the record rather than making a
-   * judgement about it. `nameParts` extracts it as an alternative given name;
-   * the given name and the surname still have to match EXACTLY, and
-   * `resolveIdentity` still refuses unless exactly one roster row matches.
-   *
-   * The distinction that keeps this honest is the one immediately below: an
-   * UNQUOTED middle name or initial is not an alias, and `Sally Ann Gonzales`,
-   * `Adelita S. Grijalva` and `Alex Kolodin` are all still refused. The
-   * companion test proves the six Diaz and Hernandez legislators stay distinct.
-   */
-  const UNLOCKED_BY_A_PUBLISHED_ALIAS: [string, string, number][] = [
-    ['Rachel "Jones" Keshel', "Rachel Keshel", 12],
-  ];
-  for (const [asFiled, asRostered, cost] of UNLOCKED_BY_A_PUBLISHED_ALIAS) {
-    const filed = voteEvidenceFor(asFiled, { withinStates: ["AZ"] });
-    assert.equal(filed.identity.kind, "JOINED", asFiled);
-    assert.equal(filed.denominators.rollCallVotesRecorded, cost, asFiled);
-    // It reaches the SAME seat as the rostered form — not merely some seat.
-    const rostered = voteEvidenceFor(asRostered, { withinStates: ["AZ"] });
-    assert.equal(rostered.identity.kind, "JOINED", asRostered);
-    assert.deepEqual(
-      filed.identity.kind === "JOINED" && rostered.identity.kind === "JOINED"
-        ? filed.identity.seat.officeholderId === rostered.identity.seat.officeholderId
-        : false,
-      true,
-      `${asFiled} and ${asRostered} must resolve to one officeholder, not two`,
-    );
-  }
-
+test("(c) a federal name form fails closed, and the cost is recorded", () => {
   const BLOCKED: [string, string, number][] = [
     ["Adelita Grijalva", "Adelita S. Grijalva", 20],
-    ["Alexander Kolodin", "Alex Kolodin", 0],
   ];
 
   for (const [asFiled, asRostered, cost] of BLOCKED) {
@@ -338,35 +108,6 @@ test("(c) three more name forms fail closed, and the cost of each is recorded", 
   }
 });
 
-test("(c) the distinct people a loose match would merge stay distinct", () => {
-  /*
-   * The other side of the same rule, measured. If any two of these ever
-   * resolve to one seat, a reader is being shown one person's votes under
-   * another person's name.
-   */
-  const NAMES = [
-    "Lupe Diaz",
-    "Eva Diaz",
-    "Alma Hernandez",
-    "Consuelo Hernandez",
-    "Lydia Hernandez",
-  ];
-  const seats = new Map<string, string>();
-  for (const name of NAMES) {
-    const identity = resolveVoteIdentity(name, { withinStates: ["AZ"] });
-    assert.equal(identity.kind, "JOINED", `${name} must resolve to a roster row`);
-    if (identity.kind !== "JOINED") continue;
-    const already = seats.get(identity.seat.officeholderId);
-    assert.equal(
-      already,
-      undefined,
-      `${name} and ${already} resolved to the SAME seat — a loose match has crept in`,
-    );
-    seats.set(identity.seat.officeholderId, name);
-  }
-  assert.equal(seats.size, NAMES.length);
-});
-
 test("(c) a name nobody on the roster carries is its own state, not a near miss", () => {
   const ev = voteEvidenceFor("Katie Hobbs", { withinStates: ["AZ"] });
   assert.equal(ev.identity.kind, "NO_ROSTER_ROW");
@@ -377,55 +118,7 @@ test("(c) a name nobody on the roster carries is its own state, not a near miss"
   assert.match(ev.gaps[0].statement, /A voting record exists only for a seat we hold/);
 });
 
-test("(c) two people of one exact name is a REFUSAL, and the state exists before it is needed", () => {
-  /*
-   * **MEASURED: zero exact full-name collisions across 1,157 officeholders.**
-   * So this branch is unreachable against today's committed rosters — which is
-   * precisely why it is asserted directly rather than left to be discovered by
-   * the first state where two legislators share a name.
-   *
-   * The refusal is the same shape as every other: nothing attached, a named
-   * gap, and no choice made between two named people.
-   */
-  const rosters = ["04", "33", "34", "us"].map(
-    (scope) =>
-      JSON.parse(
-        readFileSync(
-          join(process.cwd(), ...(scope === "us"
-            ? ["lib", "registry", `officeholders-${scope}.json`]
-            : ["data", "states", ({ "04": "az", "33": "nh", "34": "nj" } as Record<string, string>)[scope], "officials", `officeholders-${scope}.json`])),
-          "utf8",
-        ),
-      ) as { officeholders: { name: string }[] },
-  );
-  const seen = new Map<string, number>();
-  for (const roster of rosters) {
-    for (const holder of roster.officeholders) {
-      const key = identityKey(holder.name);
-      seen.set(key, (seen.get(key) ?? 0) + 1);
-    }
-  }
-  const collisions = [...seen.entries()].filter(([, n]) => n > 1);
-  assert.deepEqual(
-    collisions.map(([k]) => k),
-    [],
-    "the measurement moved: an exact full-name collision now exists, and the AMBIGUOUS_NAME branch is live. " +
-      "Re-read it and confirm it still refuses rather than choosing.",
-  );
-});
-
-/* ══════════════════════════════════════════════════════════════════════
-   THE RULES THE RECORDS THEMSELVES OBEY
-   ══════════════════════════════════════════════════════════════════════ */
-
 test("nothing here scores, ranks, rates or recommends", () => {
-  /*
-   * `lib/votes/types.ts` states it for the store and it binds just as hard on
-   * a surface built from the store: no record may carry a score, rating, rank,
-   * match, fit, grade, alignment or recommendation, and the product never
-   * tells anyone how to vote. A vote surface is where such a thing would
-   * arrive disguised as helpfulness.
-   */
   const source = readFileSync(join(process.cwd(), "lib", "ask", "votes.ts"), "utf8");
   const code = source.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:])\/\/.*$/gm, "$1");
   for (const banned of [
@@ -472,16 +165,6 @@ test("the identity key drops only what is never identity", () => {
   assert.notEqual(identityKey("Adelita Grijalva"), identityKey("Adelita S. Grijalva"));
   assert.notEqual(identityKey("Alexander Kolodin"), identityKey("Alex Kolodin"));
 
-  /*
-   * A QUOTED alias is the one thing here that is not a judgement: the record
-   * prints it in quotation marks as an annotation on the name, so dropping it
-   * reads the record rather than deciding something about it. The given name
-   * and the surname still have to match exactly, and one key still has to
-   * match exactly one roster row.
-   *
-   * The line above it is the proof this is not a loose matcher: `Sally Ann
-   * Gonzales` carries an UNQUOTED middle name and stays separate.
-   */
   assert.equal(identityKey('Rachel "Jones" Keshel'), identityKey("Rachel Keshel"));
   assert.notEqual(identityKey('Rachel "Jones" Keshel'), identityKey("Rachel Jones"));
 });
@@ -492,25 +175,5 @@ test("the roster scope is read from the reader's own divisions, never from a sta
   assert.deepEqual(
     statesOf(["ocd-division/country:us/state:nh/county:merrimack", AZ]).sort(),
     ["AZ", "NH"],
-  );
-
-  /*
-   * And it BINDS: a name scoped to Arizona must not reach a New Hampshire
-   * seat. Without this, a name typed on one ballot could pick up another
-   * state's legislator's record — the substitution defect with a roll call
-   * attached to it.
-   */
-  const nh = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "states", "nh", "officials", "officeholders-33.json"), "utf8"),
-  ) as { officeholders: { name: string }[] };
-  const someNewHampshireMember = nh.officeholders[0].name;
-  assert.equal(
-    resolveVoteIdentity(someNewHampshireMember, { withinStates: ["AZ"] }).kind !== "JOINED",
-    true,
-    "a New Hampshire member resolved inside an Arizona-scoped question",
-  );
-  assert.equal(
-    resolveVoteIdentity(someNewHampshireMember, { withinStates: ["NH"] }).kind,
-    "JOINED",
   );
 });

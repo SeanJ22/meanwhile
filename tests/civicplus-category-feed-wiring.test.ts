@@ -1,17 +1,3 @@
-/**
- * **A CIVICPLUS CATEGORY FEED NAMED EXACTLY FOR THE GOVERNING BODY WIRES AS THAT BODY'S WHOLE CALENDAR.**
- * (2026-09-26, the 85635 expansion. READER-BOUND: `lib/sources/ical/index.ts` and
- * `lib/civic-data/meeting-body-crosswalk.ts`.)
- *
- * Cochise County files its Board of Supervisors' sittings in a CivicPlus feed its own iCalendar index lists as "Board
- * of Supervisors" (catID 31). No title in it names the board ("Special Board Meeting", "Jail District Meeting": the
- * board sitting as the district boards), and it carries no CATEGORIES, so no title or category filter selects them.
- * The site's own category name is the naming evidence: the C16 reviewer re-reads it from the vaulted index, and only
- * an exact category-to-governing-body match on the body's own attested host gives a `feedScope: "category"` row. An
- * event naming another body only ("Public Notice for Planning and Zoning Commission Lunch and Learn") is excluded by
- * that name's exact words, as a longer name is. The fixtures are the county's real index and feed.
- */
-
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -114,7 +100,6 @@ test("COCHISE WIRES: the Board of Supervisors' category feed becomes its whole-f
     "10 AM MST each, the board sitting as itself and as the three district boards",
   );
 
-  /* The derived wiring's own verification, the adapter re-reading the vaulted bytes, selects the same sittings: it promotes. */
   const texts = new Map([...walked.bodies].map(([id, b]) => [id, b.text] as const));
   const inputs: DerivedWiringInputs = {
     crosswalk: {
@@ -147,14 +132,12 @@ test("COCHISE WIRES: the Board of Supervisors' category feed becomes its whole-f
 test("STRICT: a category naming another body, a generic category, a partial name and a feed on another host never give a whole-feed row", async () => {
   const walked = await walk(SITE());
   const indexStep = walked.attempt.steps.find((s) => s.url === INDEX_URL)!;
-  /* The reviewer re-reads the category from the vaulted index: an index filing the feed under anything but the board's exact name holds it. */
   for (const category of ["Planning and Zoning Commission", "Meetings", "Main Calendar", "Board of Supervisors Meetings", "Supervisors"]) {
     const renamed = INDEX.replace(">Board of Supervisors</a>", `>${category}</a>`);
     const result = review(walked.attempt, (id) => (id === indexStep.artifactId ? { ...walked.bodies.get(id)!, text: renamed } : walked.bodies.get(id) ?? null));
     assert.ok(!result.accepted.some((a) => a.row.bodyId === `${OCD}#governing`), `${category}: no governing row`);
     assert.ok(result.held.some((h) => h.reason === "NO_EVENT_NAMES_BODY" && h.route === BOS_FEED), `${category}: held NO_EVENT_NAMES_BODY`);
   }
-  /* Other body categories are discoverable; an off-host feed remains unattested. */
   for (const index of [
     INDEX.replace(`href="${BOS_FEED}"`, `href="https://calendar.example.com/common/modules/iCalendar/iCalendar.aspx?catID=31&feed=calendar"`),
   ]) {

@@ -1,11 +1,4 @@
-/**
- * The narrow read behind `publication-status.ts`. (2026-09-23.)
- *
- * No candidate or promotion payload is selected. The candidate JSON column is
- * never touched, not even through a path operator: unpacking it row by row is
- * what made the canonical observability read take minutes. The read uses one
- * read-only snapshot, and each statement is bounded server-side.
- */
+/** Never touches the candidate JSON column, not even through a path operator: unpacking it row by row takes minutes. */
 import { Pool } from "@neondatabase/serverless";
 import { and, inArray, like, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-serverless";
@@ -45,9 +38,7 @@ export async function readPublicationStatusRows(
         currentVersionId: civicDataPromotions.currentVersionId,
         promotedAt: civicDataPromotions.promotedAt,
       }).from(civicDataPromotions);
-      // The latest LOCAL attempt (the sequence-1 event), never the adapter's
-      // claimed retrieval time; a tie is broken by candidate id and said so by
-      // the caller's copy.
+            // The latest LOCAL attempt (the sequence-1 event), never the adapter's claimed retrieval time.
       const latest = rowsOf(await db.execute(sql`
         SELECT DISTINCT ON (c.source_id, c.record_class, c.scope)
                c.id AS candidate_id, c.source_id, c.record_class, c.scope, c.state, c.failure_code, e.at AS attempted_at

@@ -1,15 +1,9 @@
 /**
- * DB-26: what the hourly check finds is live within the hour.
- *
- * Rulings §4's checks are unchanged: hourly for a body with a sitting in the next seven days or one held in the last
- * seven, twice daily for everyone else. This file is the hourly check's first look. Each hot door's start page or
- * feed is looked at once an hour (DB-25's probe). When the look sees a change, it is stored on the door
- * (`validators.changedAt`), and the publish-now lane (BX-12, `publishNowDoorTasks`) reads that door at once and
- * publishes what it finds, without waiting for the next routine pass.
- *
- * A small government is never asked for more than ten requests an hour (rulings §2): the plan counts the looks
- * already made at a host in the last hour and spends only what is left of the ten. A look that cannot be made this
- * minute is made on a later one, oldest look first. Plain code, no AI.
+ * The hourly check's first look. Each hot door's start page or feed is looked
+ * at once an hour; a change is stored on the door (`validators.changedAt`) for
+ * the publish-now lane to read at once. One host gets at most ten requests an
+ * hour, counting looks already made; a look that cannot be made now waits,
+ * oldest first. Plain code, no AI.
  */
 
 import { doorPartitionIds } from "./mission-refresh.ts";
@@ -17,7 +11,7 @@ import { firstLook, probeUrlFor, recordProbe, type ProbeFetch, type ProbeResult 
 import { HOT_CHECK_MINUTES } from "./overdue.ts";
 import type { DoorRecord, DoorRepository } from "./registry.ts";
 
-/** Rulings §2: at most this many requests to one website in an hour. */
+/** At most this many requests to one website in an hour. */
 export const PROBE_HOST_HOURLY_LIMIT = 10;
 /** A look is made this long before the hour is up, so the check lands on the hour rather than after it. */
 export const PROBE_LEAD_MINUTES = 5;
@@ -25,7 +19,7 @@ export const PROBE_LEAD_MINUTES = 5;
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
 
-/** Off by default: the old path (the routine pass alone) stays until the first look is checked live. */
+/** Off by default: the routine pass alone reads doors until probes are switched on. */
 export const DOOR_PROBE_SWITCH = "WTP_DOOR_PROBES";
 export function doorProbesOn(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return env[DOOR_PROBE_SWITCH]?.trim().toLowerCase() === "on";

@@ -1,31 +1,15 @@
 import { isSourceAcquisitionFailure } from "../../civic-data/source-acquisition-error.ts";
 
 /**
- * **WHOSE STOPWATCH RAN OUT — decided from the thrown value, not assumed.**
- * (2026-09-24, the Pima/Mesa venue freeze.)
+ * Whose stopwatch ran out, decided from the thrown value. A rejection is a `WALL` only on evidence that
+ * the publisher's side stopped it: the source-acquisition brand, the shared HTTP client's error (it
+ * carries the status and ladder rung), a deadline or abort, or a transport signature in the message.
+ * Everything else, including an unknown, is a `JOB`: our code's failure, and it alarms. Either way the
+ * affected partition keeps its last-known-good pointer; the kind decides diagnosis and alarm, never what
+ * readers see.
  *
- * The composite used to label EVERY rejected child fetch a `WALL`. From
- * 2026-09-14 to 2026-09-24 the Pima County Board's two Legistar partitions and
- * Mesa's InSite partition threw our own `VENUE_RESOLUTIONS_MISSING` before a
- * single publisher request was made, ~240 times a day each, and every one was
- * recorded as the publisher walling us. Nothing alarmed, because a wall is
- * friction the ladder expects, while a broken job is ours to fix.
- *
- * RULING 250: *"Anything that is our code is a JOB failure … Check whose
- * stopwatch ran out before naming a wall."* RULING 283: *"An unclassified
- * failure escalates — the direction an unknown must point when the harm is
- * silence."* So a rejection is a `WALL` only on evidence that the publisher's
- * side stopped it — the source-acquisition brand, the shared HTTP client's
- * error (it carries the status and the ladder rung), a deadline or abort, or a
- * transport signature in the message. Everything else, including an unknown,
- * is a `JOB`. Either way the affected partition keeps its last-known-good
- * pointer; the kind decides diagnosis and alarm, never what readers see.
- *
- * A robots.txt line is not the publisher's wall. Since the owner decision of
- * 2026-09-25 ("Robots.txt alone must not block acquisition") no fetcher stops
- * on one, so a failure that names only robots.txt is our own code stopping
- * where it should have read: a `JOB`, and it alarms. An access control (a
- * 401, 403 or 429, a bot challenge, a login) stays a `WALL`.
+ * A robots.txt line is not the publisher's wall: no fetcher stops on one, so a failure naming only
+ * robots.txt is a `JOB`. An access control (401, 403, 429, a bot challenge, a login) stays a `WALL`.
  */
 export type FetchFailureKind = "WALL" | "JOB";
 

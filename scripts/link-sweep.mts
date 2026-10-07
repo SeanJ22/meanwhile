@@ -1,5 +1,5 @@
 /**
- * DB-51: sweep the outbound links in the published reader edge and record how many are dead on each surface.
+ * Sweep the outbound links in the published reader edge and record how many are dead on each surface.
  *
  * Dry run by default: it reads the edge, looks at the links within the request rules, and prints the counts.
  * `--apply` writes the counts beside door health. Plain code: no AI, no model cost. `--limit=<n>` looks at only

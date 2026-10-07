@@ -1,47 +1,49 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
 import test from "node:test";
-import { allCandidateCards, cardForCandidacy, cardForNominee } from "../lib/ballot/candidate-cards.ts";
 import { readerCandidateProfiles } from "../lib/ballot/candidate-reader-privacy.ts";
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
+import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { candidateContactCensus } from "../lib/ballot/candidate-contacts.ts";
-import { candidateProfileEvidenceFor } from "../lib/ask/candidate-profile.ts";
 import { contactForCandidate } from "../lib/ask/candidate-contact.ts";
 import { contactRecord } from "../lib/ask/contacts.ts";
-import { installCandidateCorpusFirstSeed, installNjMorrisFilingFirstSeed, installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { readNjMorrisFiling } from "../lib/sources/ballot-nj-morris/index.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
-await Promise.all([installCandidateCorpusFirstSeed(), installNjMorrisFilingFirstSeed(), installRegistryRuntimeFirstSeeds()]);
-
-test("filed addresses stay in preserved evidence and never reach candidate card or Ask projections", () => {
-  const sourcePath = "data/ballot/candidate-cards-2026.json";
-  const before = readFileSync(sourcePath, "utf8");
-  const evidence = JSON.parse(before) as { cards: Record<string, { filedAddress?: string }> };
-  const cards = allCandidateCards();
-  const filed = Object.entries(evidence.cards).filter(([, card]) => card.filedAddress);
-  assert.ok(filed.length > 0, "exercise the actual legacy projection, not only empty fields");
-  assert.deepEqual(cards.hunts, [], "acquisition notes remain evidence only");
-  for (const [key, held] of filed) {
-    const split = key.indexOf("|");
-    const card = split < 0 ? cardForCandidacy(key) : cardForNominee(key.slice(0, split), key.slice(split + 1));
-    assert.ok(card);
-    assert.equal(card.filedAddress, null);
-    assert.equal(card.filedAddressSource, null);
-    assert.ok(!JSON.stringify(cards).includes(held.filedAddress!));
-    const answer = candidateProfileEvidenceFor({ kind: "PERSON", id: key, name: "Candidate" });
-    assert.ok(!JSON.stringify(answer).includes(held.filedAddress!));
-  }
-  assert.equal(readFileSync(sourcePath, "utf8"), before, "saved source evidence is unchanged");
-});
+const MORRIS = requiredRoutineContract("nj-morris-filing");
+const SOURCE = { sourceUrl: "https://filing.example.gov/list", sourceOrg: "Election office", collectedAt: "2026-10-01" };
+await readNjMorrisFiling({ now: "2026-10-01T12:00:00.000Z", edge: provenEdgeEntry({
+  recordClass: MORRIS.recordClass, scope: MORRIS.scope, sourceId: MORRIS.sourceId, versionId: "cv-filed-address", retrievedAt: "2026-10-01T12:00:00.000Z",
+  value: {
+    ballot: {
+      formatVersion: 1,
+      election: { id: "example-2026-general", date: "2026-11-03" },
+      contests: [{ id: "example-contest", type: "CANDIDACY", ocdId: "ocd-division/country:us/state:nj/county:example", divisionVintage: "2020", voteFor: 1, provenance: { sourceUrl: SOURCE.sourceUrl } }],
+      candidacies: [
+        { id: "ballot-nj-morris:example-a", contestId: "example-contest", provenance: { sourceUrl: SOURCE.sourceUrl } },
+        { id: "ballot-nj-morris:example-b", contestId: "example-contest", provenance: { sourceUrl: SOURCE.sourceUrl } },
+      ],
+      measures: [],
+      absences: [],
+    },
+    contacts: { generatedAt: "2026-10-01", route: "filing", note: "", contacts: [
+      { candidacyId: "ballot-nj-morris:example-a", email: "campaign@example.test", filedAddress: "123 Private Lane, Example City", ...SOURCE },
+      { candidacyId: "ballot-nj-morris:example-b", email: null, filedAddress: "456 Private Road, Example City", ...SOURCE },
+    ] },
+  },
+}) });
 
 test("filing email and its source survive while the filed address cannot reach Ask", () => {
-  for (const row of candidateContactCensus().contacts) {
+  const contacts = candidateContactCensus().contacts;
+  assert.equal(contacts.length, 2);
+  for (const row of contacts) {
     assert.equal(Object.hasOwn(row, "filedAddress"), false, "the reader contact contract carries no address field at all");
     const contact = contactForCandidate(row.candidacyId, "Candidate", "Office")!;
     assert.ok(!("filedAddress" in contact) || contact.filedAddress === null);
     assert.equal(contact.email, row.email);
     assert.equal(contactRecord(contact).sourceUrl, row.sourceUrl);
     assert.ok(!contactRecord(contact).text.includes("filed mailing address"));
+    assert.ok(!JSON.stringify(contact).includes("Private"));
   }
 });
 
@@ -66,7 +68,6 @@ test("both renderers reject legacy address props and retain a filing source even
   assert.ok(result.card.includes("mailto:campaign@example.test"));
   assert.ok(result.ask.includes("mailto:campaign@example.test"));
 });
-
 
 test("reader publication redacts fields and acquisition notes without changing the retained source", () => {
   const address = "123 Private Lane, Example City";

@@ -1,12 +1,7 @@
 /**
- * **ONE STATE'S REGISTRATION, READ FROM ITS PROMOTED POINTER.** (2026-09-23.)
- *
- * The typed reader for the REGISTRATION record class: the promotion engine's
- * source-scoped verifier reads a candidate back through it before a pointer
- * moves, and the reader composition reads each state it needs through it.
- * There is no first seed and no bootstrap: a state with no promoted
- * registration answers NOT_RECORDED, which every consumer names as not
- * registered yet — never as a state with no governments.
+ * One state's registration, read from its promoted pointer. The promotion engine's verifier and the
+ * reader composition both read through it. There is no bootstrap: a state with no promoted registration
+ * answers NOT_RECORDED, named as not registered yet, never as a state with no governments.
  */
 import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import type { RegistrationReadModel } from "./candidate.ts";

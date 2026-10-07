@@ -1,7 +1,4 @@
-/**
- * @freshness-reads-here — attemptedAt is canonical evidence of the failed
- * publisher attempt itself and is never projected as source freshness.
- */
+/** @freshness-reads-here: attemptedAt dates the failed attempt and is never projected as source freshness. */
 import { failedAcquisitionCandidate } from "./candidate-builders.ts";
 import { requiredRoutineContract } from "./contracts.ts";
 import { processRegisteredRoutineCandidate, type PromotionOutcome } from "./promotion.ts";
@@ -31,12 +28,6 @@ export interface RegisteredSourceFailureRecord {
   readonly line: string;
 }
 
-/**
- * Persist one genuine, source-aware pre-candidate failure through the source's
- * registered contract. The ordinary promotion driver supplies the complete
- * eight-check receipt, preserves the pointer/LKG, and advances only this
- * source's attempt/retry clock.
- */
 export async function recordRegisteredSourceAcquisitionFailure(input: {
   readonly store: RoutineDataStore;
   readonly contractId: string;
@@ -79,9 +70,6 @@ export async function recordRegisteredSourceAcquisitionFailure(input: {
     throw new Error(`SOURCE_FAILURE_DURABILITY_CONTRACT_BROKEN:${input.contractId}:${candidate.id}`);
   }
   const receipt: RoutineRunnerReceipt = {
-    // Protocol identity is the exact standing task/contract id. Publisher
-    // display names belong in acquisition evidence, never in the correlation
-    // field consumed by the supervisor's durable owner outcome.
     source: input.contractId,
     candidateId: candidate.id,
     acquisitionSucceeded: false,

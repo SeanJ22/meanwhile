@@ -1,244 +1,12 @@
-/**
- * **THE CONTROL-PLANE DATABASE'S OWN SCHEMA, VERSIONED IN THE MODULE.**
- * (Session B, W3.1 / W3.2, 2026-08-30. RULING 220 step 1.)
- *
- * ## Why this is not a Drizzle migration
- *
- * RULING 220 puts Level-2 scheduling state in a DEDICATED database, separate
- * from the reader-serving one, with **schema owned by the provider itself:
- * outside `lib/db`, outside `drizzle.config.ts`, invisible to `pnpm db:gate`**.
- * That is not an evasion of the shipping gate — it is the point. `db:gate` asks
- * PRODUCTION whether the SERVING schema is applied, and freezing a release
- * because control-plane bookkeeping has not migrated would freeze it for a
- * reason with nothing to do with what a reader is told.
- *
- * ## "Not governed by the serving gate" must not become "ungoverned"
- *
- * So this file carries three things a migration would otherwise have given it,
- * and `pnpm control-plane:gate` checks all three:
- *
- * ```
- *   VERSIONED   BOOTSTRAP_VERSION moves when the DDL moves, and the database
- *               records which version it is at
- *   APPLIED     the gate asks the database its version and compares
- *   DRIFT       the gate compares the live table/column set against what this
- *               module declares, so a hand-edit in a console is caught
- * ```
- *
- * ## Idempotent bootstrap, and why every statement is CREATE IF NOT EXISTS
- *
- * The provider brings its own schema up on connect. A worker starting on a
- * fresh machine must not need a separate migration step it could skip — a
- * scheduler whose first act can be to fail on a missing table is a scheduler
- * that requires an operator, which is the thing the whole workstream is
- * removing. Idempotent DDL is what makes "just connect" safe to run from every
- * process, every time.
- */
+/** The control-plane schema, versioned in this module. */
 
-/**
- * Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it.
- *
- * ## What version 9 adds, and why (Admin Pass C, ADM-C6, 2026-09-06)
- *
- * The Operator Control Room routes every state-changing thing the owner can do
- * — a button, a chat instruction, a delegated agent job — through ONE typed
- * Action Gateway. Three tables are what make that gateway more than a helper:
- *
- * ```
- *   cp_log_admin_receipts   §3.7 — every action, permitted or refused, leaves a
- *                           durable append-only receipt. "A toast is not proof."
- *                           It is also the IDEMPOTENCY INDEX: the gateway looks
- *                           for `<type>:<idempotencyKey>` before it does any
- *                           work, so a double-click, a retried fetch and a
- *                           replayed chat tool call are one action with one
- *                           receipt rather than two state changes
- *   cp_log_agent_jobs       the delegated-agent bridge's own history — one
- *                           append per state a job reaches. Reserved: the
- *                           record shape is declared in
- *                           `lib/control-plane/gateway/agent-job.ts` and the
- *                           bridge that writes it lands beside it
- *   cp_admin_config         the owner's operational policy, one aggregate at id
- *                           "current". Today it carries exactly one clause: may
- *                           paid API fallback be used (§9A.22). It is an
- *                           AGGREGATE and not a log because the question the
- *                           executor asks is "what is the policy NOW", and a
- *                           policy assembled by folding a log is a policy two
- *                           readers can disagree about. Its history is not
- *                           lost: every change is made by a gateway action and
- *                           the receipt log holds the change
- * ```
- *
- * Additive: no existing table, column or statement moved, so a store at v8
- * reads exactly as it did and the three new tables are created when the next
- * exact installed STANDING_PARENT runtime opens the durable repository. There
- * is no arbitrary-checkout production bootstrap command.
- *
- * ## What version 11 adds, and why (the field manual, 2026-09-19)
- *
- * `cp_field_manual` — one aggregate, id "live" — is the single growing store of
- * learned discovery knowledge every model-driven worker reads (as a projection)
- * before it walks and writes back to when it finds something, with no human
- * graduation step. It consolidates knowledge that was scattered across
- * `data/method/knowledge.json`, `cp_method_candidates`, `lib/hunt/branch-manifest.ts`
- * and the hunt dossiers, each entry keeping its original shape so nothing is
- * lost. Additive: no existing table, column or statement moved, and the one new
- * table is created when the next installed runtime opens the durable repository.
- */
-/*
- * ## What version 12 adds, and why (meetings discovery attempts, 2026-09-23)
- *
- * `cp_log_discovery_attempts` — the unpaid meetings-discovery executor's record
- * of every walk of a government's own site: what it read, what permission it
- * walked under, what it found or why it stopped, and when the need is due
- * again. It is the per-need attempt record RULING 250 asks for; nothing else
- * held one. Additive: no existing table, column or statement moved, and the
- * one new table is created when the next installed runtime opens the durable
- * repository.
- */
-/*
- * ## What version 13 adds, and why (Ask-gap observations, 2026-09-25)
- *
- * `cp_ask_gap_observations` — one aggregate per government body, Ask gap code
- * and UTC day, holding exactly the body id, the code, its record class, the
- * day and a count of the answers that told a reader that gap. The owner
- * approved recording the body behind an unanswered Ask question so targeted
- * work can be created (2026-09-25), and approved nothing personal: no
- * question, no reader, no instant (`lib/control-plane/ask-gap-observations.ts`).
- * Additive: no existing table, column or statement moved, and the one new
- * table is created when the next installed runtime opens the durable
- * repository. Until then Ask's write fails by name after the answer, and the
- * reader is not told.
- */
-/** Version 14 adds durable, CAS-leased Admin requests for already-held original bytes.
- * Version 15 reserves an indexed, immutable checklist instance projection and
- * scope head. No writer is enabled by this schema move: a missing head remains
- * UNAVAILABLE, never a zero-instance claim.
- * Version 16 adds atomic action-history companions and the active-claim and
- * latest-cycle indexes. Historical receipts remain readable without backfill.
- * Version 17 preserves writes from older receipt providers while invalidating
- * partial history instead of demanding a companion from those providers. */
-// Version 18 adds the exact source-URL artifact index, online while captures continue.
-// Version 19 adds the Door Registry table (DB-09).
-/*
- * ## What version 20 adds, and why (each task reads only its own history, CH-26, 2026-10-05)
- *
- * Indexes for the reads a task makes about its own work item, subject and
- * lineage, so those reads stop scanning whole tables as history grows
- * (rulings §5: nothing loads the whole country). Each index is on the exact
- * expression the repository's filtered read sends (`value #>> '{path}'` for an
- * aggregate's `listWhere`, `record #>> '{path}'` for a log's `keysWhere`), since
- * Postgres matches an expression index only to the same expression: the older
- * `->>` indexes do not serve `listWhere`. `cp_work_items_repair_parent` is the
- * lineage index: a work item's repair children, found without listing every
- * work item. Every index is built online (`CREATE INDEX CONCURRENTLY`), the way
- * version 18's source-URL index is, so captures and leases continue while it
- * builds. Additive: no table, column or statement moved.
- */
-// Version 21 adds the live-audit log (DP-13): results, corrections and pulls. Additive.
-/*
- * ## What version 22 adds, and why (each table says when it last changed, by the database's clock, 2026-10-06)
- *
- * The research round re-read whole control-plane tables on every worker wave
- * (planner selection, standing runtime, round start, promotion tail, campaign
- * chain), and that re-reading was most of the control-plane data-transfer bill.
- * The round now keeps one in-memory copy of those tables and each later read
- * fetches only the rows changed since its last read (`incremental-reads.ts`).
- * That needs a "changed since" the database itself vouches for:
- *
- * ```
- *   changed_at   timestamptz NOT NULL DEFAULT now(), on every aggregate and
- *                every log table. An insert takes the default; an UPDATE is
- *                stamped by a BEFORE UPDATE trigger (`cp_touch_changed_at`),
- *                so a writer running older code, or any raw upsert, still
- *                moves it. compareAndSet also sets it explicitly.
- * ```
- *
- * Not `updated_at` / `recorded_at`: both hold the WRITER's `now`, which can be
- * stale or skewed, so they cannot answer "what changed since my last read".
- * `now()` is the database's clock (transaction start).
- *
- * The column is added inside a guard that first asks the catalog whether it is
- * already there, so a bootstrap on a current database takes no table lock.
- * Adding it is metadata only: on Postgres 11+ a column with a non-volatile
- * default (`now()` is STABLE) is not a table rewrite; existing rows read the
- * default evaluated once at the ALTER, which is a correct "changed at or
- * before" for them. Indexes on `changed_at` for the tables the round reads are
- * built online (`CREATE INDEX CONCURRENTLY`), as versions 18 and 20 are.
- * Additive: no table, column or statement moved.
- */
-// Version 23 adds the RouteTask indexes for Attempts and leases: `listWhere(["routeTaskId"])` (the
-// coordinator's attempt lookup, model batches, cycle selection) scanned the whole table on every call
-// (2026-10-06: 130,945 full scans of cp_attempts). Built online. Additive.
-/*
- * ## What version 24 adds, and why (one row per spend hold, 2026-10-06)
- *
- * Every dollar paid work may spend on a Send or an area is held first
- * (MW-021, `expansion/spend-holds.ts`). The holds lived in ONE jsonb document,
- * the shared budget ledger row's `spendHolds`, so every admission (each Scout
- * job, each model request on budgeted work) read and compare-and-set the whole
- * row: 38 MB at its worst and the largest control-plane transfer, and 656
- * Scout holds landed within two minutes of a runner start. Sean, 2026-10-06:
- * "Split the giant single-row records into real tables, one row per item: the
- * spend ledger (holds) ... Settled holds are cleared or moved out, never
- * accumulated."
- *
- * ```
- *   cp_spend_holds        one row per hold: its lines (`keys`, GIN-indexed),
- *                         amount, when it was held, and once settled what
- *                         was measured and when that cost was recorded
- *   cp_admit_spend_hold   the admission, in the database: one statement, so
- *                         one implicit transaction. It takes a transaction
- *                         advisory lock on each line it names (sorted, so two
- *                         admissions never deadlock), drops the holds on those
- *                         lines that no longer count, and decides exactly as
- *                         `decideHold` does on what is left. Two admissions on
- *                         one line serialize; admissions on different lines
- *                         run in parallel. Nothing reads the whole table
- *   the move              the holds still on the ledger row are copied into
- *                         the table and the row's `spendHolds` emptied, under
- *                         a row lock, with the revision bumped so a writer
- *                         mid compare-and-set retries on the emptied row.
- *                         Re-running it finds nothing to move. Skipped while
- *                         `WTP_SPEND_HOLDS_TABLE=0` keeps the holds on the row
- * ```
- *
- * The table is new and small, so its indexes are built in the bootstrap after
- * a catalog check (no lock at all once they exist), and the function is
- * replaced only when its body's version marker is not the one installed.
- * Additive: no existing table, column or statement moved; the ledger row's
- * other fields are untouched.
- */
-/*
- * ## What version 25 adds, and why (the hourly vital signs, 2026-10-06)
- *
- * Sean, Oct 6: "The runner writes one small row per hour: facts that reached
- * readers, money spent, cost per fact, Neon bytes the runner itself read
- * (counted per query and tagged with the calling code), rounds finished versus
- * killed, and paid jobs that ended without a result." `cp_vital_signs` is that
- * row, one per UTC hour, upserted by the runner (`lib/control-plane/vital-signs.ts`
- * VITAL_SIGNS_UPSERT, partial every 10 minutes, final each hour). Admin's Now
- * screen and the daily brief read it instead of raw tables. Nullable counts
- * mean "not recorded", never zero. `neon_project_bytes` is River's cross-check
- * against Neon's own project total; the runner never writes it. Additive: a new
- * small table (24 rows a day), nothing existing moved.
- */
+/** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
 export const BOOTSTRAP_VERSION = 25;
 
 /**
- * The tables, and the shape each one carries.
- *
- * Two kinds and no more, mirroring the interfaces exactly:
- *
- * ```
- *   AGGREGATE     id, revision, updated_at, value   — CAS on revision
- *   APPEND_ONLY   key, record_id, position, record  — unique on (log, record_id)
- * ```
- *
- * The value is `jsonb` rather than columns per field. That is deliberate: the
- * domain types are owned by `work-item.ts`, `route-task.ts` and `attempt.ts`,
- * and mirroring their fields into columns would put a second definition of
- * every aggregate in this file — which would then drift, silently, exactly the
- * way two surfaces answering one question always do.
+ *   AGGREGATE     id, revision, updated_at, value   (CAS on revision)
+ *   APPEND_ONLY   key, record_id, position, record  (unique on log and record_id)
+ * Values are `jsonb`: the domain types own their fields.
  */
 export const AGGREGATE_KINDS = [
   "work_items",
@@ -246,117 +14,19 @@ export const AGGREGATE_KINDS = [
   "attempts",
   "leases",
   "budget",
-  /* The scheduler's durable state. (Session B resume, W3.C — version 2.) */
   "obligations",
   "occurrences",
   "debts",
-  /*
-   * THE OWNER CONTROL CENTRE'S DATA PLANE. (Session C final, ITEM H — version 3.)
-   *
-   * The admin host (`ADMIN_ORIGIN`) runs in a Netlify function bundle. It cannot read
-   * the always-on machine's filesystem, its Drive mirror, its process table or
-   * its scratch output, and `next.config.ts` documents at length what happens
-   * to a `process.cwd()` read that nobody traced: it returns nothing, the catch
-   * returns null, and the surface renders a gap that is indistinguishable from
-   * honest missing data. On a HEALTH page that failure mode tells the owner his
-   * pilot is fine because the page could not find the file that says otherwise.
-   *
-   * So these three exist to be WRITTEN by the runner and READ by the deploy:
-   *
-   *   owner_snapshots      one aggregate, id "current" — the whole control
-   *                        centre at one instant, so seven panels cannot show
-   *                        seven different moments and imply they are one
-   *   runner_heartbeat     id "pilot-runner" — "is it alive" has to be a fact
-   *                        the runner WROTE, never one the page infers from the
-   *                        absence of bad news
-   *   cache_observations   id "organic-prod-ask" — the H1 waiver's standing
-   *                        check. A "has this ever happened?" fact cannot live
-   *                        in a serverless function's memory, and the ledger in
-   *                        `lib/ask/prompt-cache.ts` is per-process
-   *
-   * Every one of them is AGGREGATE-ONLY at rest and in render, enforced by
-   * field name in `lib/control-plane/owner-surface.ts`.
-   */
   "owner_snapshots",
   "runner_heartbeat",
   "cache_observations",
-  /*
-   * LEVEL 1 — RESEARCH. (Level 1 activation, 2026-09-01 — version 4.)
-   *
-   *   research_state   id "level-1" — what the standing runner measured about
-   *                    the Scout lane on its last cycle: lane enabled, the
-   *                    worker credential confirmed BY NAME, the bounds, the
-   *                    rolling spend, the queue counts, the Scouts running.
-   *                    The admin Research view DERIVES ACTIVE/DEGRADED/
-   *                    INACTIVE from it and from the heartbeat; no verdict is
-   *                    stored, because a stored verdict outlives its truth
-   */
   "research_state",
-  /* PDC: mutable method-candidate lifecycle is canonical runtime state, never a tracked Git file. */
+  /* Method-candidate lifecycle is runtime state, never a tracked Git file. */
   "method_candidates",
-  /*
-   * THE STATE READINESS CONTROL PANEL'S DATA PLANE. (2026-09-03 — version 7.)
-   *
-   *   readiness_snapshots  one aggregate per state, keyed by two-letter state
-   *                        code — the whole materialized readiness table for
-   *                        that state at one instant, written by a publisher
-   *                        and read by the operator panel at one instant. Like
-   *                        owner_snapshots it is DERIVED, never authored: there
-   *                        is no admin-writable status field anywhere in it.
-   */
   "readiness_snapshots",
-  /*
-   * THE OWNER'S OPERATIONAL POLICY. (Admin Pass C, ADM-C6 — version 9.)
-   *
-   *   admin_config  one aggregate, id "current" — what the owner has decided
-   *                 about how the system may operate, as opposed to what it
-   *                 has measured. Today that is one clause: whether paid API
-   *                 fallback is permitted (§9A.22), which defaults OFF and
-   *                 must still read OFF after a deploy or a restart. That
-   *                 requirement is the whole reason it is here rather than in
-   *                 browser state: a toggle stored in a tab is a toggle that
-   *                 silently resets, and one stored in an env var is a toggle
-   *                 the owner cannot move.
-   *
-   *                 An AGGREGATE, so the executor's question — "what is the
-   *                 policy now" — has exactly one answer. The history of the
-   *                 policy lives in the receipt log, where every change was
-   *                 made.
-   */
   "admin_config",
-  /*
-   * THE FIELD MANUAL. (Owner directive 2026-09-19 — version 11.)
-   *
-   *   field_manual  one aggregate, id "live" — the single growing store of
-   *                 learned discovery knowledge. Every model-driven worker reads
-   *                 a PROJECTION of it (narrowed to its role and jurisdiction, so
-   *                 it costs cents cached rather than the whole store's ~70K
-   *                 tokens) before it walks, and writes what it learned straight
-   *                 back with no human admission step. An AGGREGATE because the
-   *                 question is "what do we know that applies here, now"; it only
-   *                 ever grows (an entry is refreshed, never removed) so a
-   *                 consolidation that keeps every meaning cannot shrink it.
-   */
   "field_manual",
-  /*
-   * WHAT READERS WERE TOLD ASK DOES NOT HOLD. (2026-09-25 — version 13.)
-   *
-   *   ask_gap_observations  one aggregate per body, gap code and UTC day, id
-   *                         `<body id>#<code>#<day>`: the body, the code, its
-   *                         record class, the day and a count. Nothing about a
-   *                         reader or a question. An AGGREGATE because a second
-   *                         ask the same day is a count, never a new row.
-   */
   "ask_gap_observations",
-  /*
-   * THE DOOR REGISTRY. (DB-09 — version 19.)
-   *
-   *   doors  one aggregate per door, id = the door id: what reads it, the
-   *          bodies and hosts behind it, what it holds, how often it is
-   *          checked, and whether it is open, shut or set aside. An AGGREGATE
-   *          because the question every reader asks is "what is this door now";
-   *          the history of each change is the receipt log. Additive.
-   */
   "doors",
   /** Original-byte copy requests; never source acquisition or a second scheduler. */
   "admin_evidence_copy_requests",
@@ -368,125 +38,19 @@ export const APPEND_ONLY_LOGS = [
   "dispositions",
   "artifacts",
   "costs",
-  /*
-   * THE OWNER'S HISTORY AND HIS DECISIONS. (Session C final, ITEM H — version 3.)
-   *
-   *   owner_digests    every digest the runner wrote, so the page can show the
-   *                    latest AND the history. Append-only because a digest is
-   *                    a reading taken at a time; rewriting one would be
-   *                    rewriting what was true then
-   *   owner_decisions  the INTENT a decision button appends. Append-only for
-   *                    the same reason the disposition log is: it is the commit
-   *                    point, and the canonicalisation that follows replays it
-   *                    rather than mutating it
-   */
   "owner_digests",
   "owner_decisions",
-  /*
-   * LEVEL 1 — RESEARCH. (Version 4.)
-   *
-   *   research_intents  the owner's PAUSE / RESUME / RUN_CYCLE_NOW intents,
-   *                     appended by the admin API under the admin security
-   *                     boundary, and the runner's HONORED records beside
-   *                     them. Append-only: an intent is a fact about a moment
-   *   scout_results     every typed Scout result, keyed by obligation id —
-   *                     the durable learning, and the resume cursor the next
-   *                     Attempt on that obligation reads
-   */
   "research_intents",
   "scout_results",
   "worker_results",
-  /*
-   * THE NIGHTLY DOOR. (RULING 242 — version 5.)
-   *
-   *   promotion_pipeline  every typed transition SCOUTED -> CONFIRMED ->
-   *                       VERIFIED -> AUDITED -> APPROVED_FOR_PROMOTION, and
-   *                       every REFUSED record with its reasons, keyed by
-   *                       item id. The only path toward reader truth
-   *   window_runs         one record per nightly window, keyed by the
-   *                       America/New_York date it answered for
-   *   window_incidents    a stage failure, typed, keyed by window id; the
-   *                       next window catches up what it names
-   *   window_intents      explicit owner RUN_WINDOW_NOW requests, and the
-   *                       runner's HONORED record beside it
-   */
   "promotion_pipeline",
   "window_runs",
   "window_incidents",
   "window_intents",
-  /*
-   * SOFTWARE RELEASE REVIEW. (Admin Pass B, 2026-09-06 — version 8.)
-   *
-   *   software_release_reviews  the owner's decisions on a SOFTWARE BUILD
-   *                             (APPROVE / NEEDS_CHANGES / DISCARD / feedback /
-   *                             the Raised State variant / the composite
-   *                             OWNER_APPROVED_FOR_PRODUCTION), keyed by the
-   *                             exact staging SHA each was made against, plus
-   *                             the Admin's own note that it observed a
-   *                             manifest for that SHA. Append-only, never
-   *                             updated, never deleted, joined to nothing
-   *                             civic. Additive: no existing table or
-   *                             statement moved.
-   */
   "software_release_reviews",
-  /*
-   * THE ACTION GATEWAY. (Admin Pass C, ADM-C6 — version 9.)
-   *
-   *   admin_receipts  every action the console submitted and what came of it,
-   *                   keyed under one log key ("admin-action") with the record
-   *                   id `<action type>:<idempotency key>`. Two jobs, and the
-   *                   second is the load-bearing one:
-   *
-   *                     PROOF        §3.7 — who initiated it, what it was, its
-   *                                  authority class, the target, the input
-   *                                  digest, the code SHA and state revision it
-   *                                  was rendered against, started, completed,
-   *                                  outcome, refusal, downstream work ids,
-   *                                  where to read the result back, what would
-   *                                  undo it. A refusal is a receipt too: a
-   *                                  refusal that leaves no record is
-   *                                  indistinguishable from a click that never
-   *                                  arrived
-   *                     IDEMPOTENCY  the gateway reads this log BEFORE it does
-   *                                  any work and returns the existing receipt
-   *                                  when the id is already present, so a
-   *                                  double-click, a retried fetch and a
-   *                                  replayed chat tool call are one action
-   *
-   *                   Deriving the record id from the action rather than from
-   *                   the clock is what makes the second job work: the store's
-   *                   own append idempotency then does the deduplication, and
-   *                   a differing record under one id is refused rather than
-   *                   silently accepted.
-   *
-   *   agent_jobs      the delegated-agent bridge's history — one append per
-   *                   state a job reaches (requested, started, finished), never
-   *                   an edit, so a job that died is still visibly a job that
-   *                   was requested. Declared here with its record shape in
-   *                   `lib/control-plane/gateway/agent-job.ts` so the storage
-   *                   is in place and versioned before the bridge that writes
-   *                   it, rather than arriving as a second schema move later.
-   *
-   *   discovery_attempts  one append per walk of a government's own site for
-   *                   its meeting route (v12, 2026-09-23), keyed by
-   *                   jurisdiction id. Record shape: `MeetingsDiscoveryAttempt`
-   *                   in `lib/hunt/meetings-site-discovery.ts`. Append-only
-   *                   because a walk is a reading taken at a time; a later walk
-   *                   never rewrites what an earlier one saw.
-   */
   "admin_receipts",
   "agent_jobs",
   "discovery_attempts",
-  /*
-   * THE LIVE AUDIT. (DP-13 — version 21.)
-   *
-   *   live_audits  published facts re-read on their own pages after they
-   *                publish: one RESULT per fact checked (keyed by UTC day),
-   *                the CORRECTION each red flag led to (keyed "corrections"),
-   *                and the PULL a red flag takes off the live page (keyed by
-   *                work item). Append-only: an audit is a reading taken at a
-   *                time. Additive: no existing table or statement moved.
-   */
   "live_audits",
 ] as const;
 
@@ -499,34 +63,13 @@ export const DECLARED_TABLES: readonly string[] = [
   "cp_admin_action_history_readiness",
   "cp_checklist_scope_heads",
   "cp_checklist_instance_projections",
-  /* Version 24: one row per spend hold. */
   "cp_spend_holds",
-  /* Version 25: one row per hour of vital signs. */
   "cp_vital_signs",
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
 ];
 
-/**
- * **ONE STATEMENT PER ENTRY, AND THE DRIVER IS WHY.**
- * (Session B resume, W3.D, 2026-08-31.)
- *
- * `BOOTSTRAP_DDL` documents itself as "a list rather than one blob because the
- * driver executes one statement per call" — and then `appendOnlyTable` returned
- * a CREATE TABLE and a CREATE INDEX in a single template string. Over
- * `@neondatabase/serverless`'s HTTP client every query is a PREPARED statement,
- * and Postgres refuses `cannot insert multiple commands into a prepared
- * statement` (SQLSTATE 42601).
- *
- * So the bootstrap could never have run against a real Postgres database. That
- * was invisible for as long as it was: `control-plane:gate` exits 0 on
- * NOT_CONFIGURED, no control-plane database was provisioned, and the file and
- * memory providers do not execute DDL. The first connection to a live database
- * failed on the first log table.
- *
- * These builders return ARRAYS now, so a statement is a statement and the list
- * cannot silently hold a blob again.
- */
+/** One statement per entry: the HTTP driver prepares every query, and Postgres refuses multiple commands in a prepared statement. */
 function aggregateTable(name: string): readonly string[] {
   return [
     `CREATE TABLE IF NOT EXISTS cp_${name} (
@@ -539,35 +82,7 @@ function aggregateTable(name: string): readonly string[] {
   ];
 }
 
-/**
- * **THE POSITION IS UNIQUE PER LOG KEY, AND THE DATABASE ENFORCES IT.**
- * (Session B resume, W3.D, 2026-08-31 — schema version 2.)
- *
- * This index was `CREATE INDEX` — NOT unique — while `pgAppendOnlyRepository`
- * computed `position` as `COALESCE(MAX(position) + 1, 0)` over the same
- * `log_key` inside the INSERT. Under READ COMMITTED, which is what Neon
- * serves by default, two concurrent inserts carrying DIFFERENT `record_id`s
- * each see the same committed maximum and each write that position. Neither
- * violates `PRIMARY KEY (log_key, record_id)`, so both commit and the log
- * holds two records at one position.
- *
- * That is not a hypothetical about a busy system. It is the ordinary result of
- * the two-worker contention this control plane is FOR, and the log is the
- * replay history — `reconcile()` walks dispositions in position order to
- * finish writes a crash interrupted. Two records at one position make that
- * order ambiguous, and an ambiguous replay order is a recovery that can apply
- * commits in a sequence that never happened.
- *
- * The fix is two things, deliberately, and neither is sufficient alone:
- *
- * 1. **A UNIQUE index**, so the invariant is a property of the DATABASE. A
- *    correctness rule enforced only by application discipline is enforced only
- *    until the next caller.
- * 2. **A transaction-scoped ADVISORY LOCK per log key** in the writer, so
- *    concurrent appends to one log SERIALIZE instead of racing and then losing
- *    one to a constraint violation. The unique index alone would be correct and
- *    would turn ordinary contention into a failure rate.
- */
+/** Unique per log key, enforced by the database: concurrent inserts under READ COMMITTED could otherwise share a position and make replay order ambiguous. */
 function appendOnlyTable(name: string): readonly string[] {
   return [
     `CREATE TABLE IF NOT EXISTS cp_log_${name} (
@@ -584,13 +99,6 @@ function appendOnlyTable(name: string): readonly string[] {
   ];
 }
 
-/**
- * The bootstrap, as a list of statements.
- *
- * A list rather than one blob because the driver executes one statement per
- * call, and because a failure then names the statement that failed rather than
- * "the bootstrap".
- */
 export const ARTIFACT_SOURCE_INDEX_DDL = `CREATE INDEX CONCURRENTLY IF NOT EXISTS cp_log_artifacts_source_url
      ON cp_log_artifacts (md5(record->>'canonicalUrl'), (record->>'recordedAt') DESC NULLS LAST, (record->>'artifactId') ASC);`;
 
@@ -604,7 +112,7 @@ function onlineIndex(name: string, on: string): OnlineIndex {
   return { name, ddl: `CREATE INDEX CONCURRENTLY IF NOT EXISTS ${name} ON ${on};`, inProgressCode: "CONTROL_PLANE_INDEX_BUILD_IN_PROGRESS" };
 }
 
-/** Version 20 (CH-26): the scoped history reads' indexes, each on the exact expression its read sends. */
+/** The scoped history reads' indexes, each on the exact expression its read sends. */
 export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_attempts_work_item", "cp_attempts ((value #>> '{workItemId}'))"),
   onlineIndex("cp_route_tasks_work_item", "cp_route_tasks ((value #>> '{workItemId}'))"),
@@ -618,13 +126,13 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_log_costs_recorded_at", "cp_log_costs (recorded_at)"),
 ];
 
-/** Version 22: every aggregate and log table this schema declares, each of which carries `changed_at`. */
+/** Every aggregate and log table this schema declares, each of which carries `changed_at`. */
 export const CHANGED_AT_TABLES: readonly string[] = [
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
 ];
 
-/** Version 22: the trigger function that stamps `changed_at` with the database clock on every UPDATE. */
+/** The trigger function that stamps `changed_at` with the database clock on every UPDATE. */
 export const CHANGED_AT_TOUCH_FUNCTION_DDL = `CREATE OR REPLACE FUNCTION cp_touch_changed_at() RETURNS trigger
 LANGUAGE plpgsql AS $$
 BEGIN
@@ -632,11 +140,7 @@ BEGIN
   RETURN NEW;
 END $$;`;
 
-/**
- * Version 22: one guarded statement per table. The catalog is asked first, so
- * a database that already has the column and trigger takes no lock at all;
- * otherwise the ALTER is metadata only (non-volatile default, Postgres 11+).
- */
+/** The catalog is asked first, so a current database takes no lock; otherwise the ALTER is metadata only. */
 export function changedAtColumnDdl(table: string): string {
   if (!/^cp_[a-z0-9_]+$/.test(table)) throw new Error(`unsafe control-plane table name ${JSON.stringify(table)}`);
   return `DO $$ BEGIN
@@ -655,21 +159,19 @@ FOR EACH ROW EXECUTE FUNCTION cp_touch_changed_at();
 END $$;`;
 }
 
-/** Version 22: the `changed_at` indexes for the tables the research round reads incrementally, built online. */
+/** The `changed_at` indexes for the tables read incrementally, built online. */
 export const CHANGED_AT_INDEXES: readonly OnlineIndex[] = [
   "cp_work_items", "cp_attempts", "cp_route_tasks", "cp_occurrences", "cp_leases",
   "cp_log_artifacts", "cp_log_scout_results", "cp_log_worker_results", "cp_log_costs",
 ].map(table => onlineIndex(`${table}_changed_at`, `${table} (changed_at)`));
 
-/** Version 23: the RouteTask lookups, on the exact expression `listWhere(["routeTaskId"])` sends. */
+/** The RouteTask lookups, on the exact expression `listWhere(["routeTaskId"])` sends. */
 export const ROUTE_TASK_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_attempts_route_task", "cp_attempts ((value #>> '{routeTaskId}'))"),
   onlineIndex("cp_leases_route_task", "cp_leases ((value #>> '{routeTaskId}'))"),
 ];
 
-/* ------------------------------------------------------------ version 25: vital signs */
-
-/** Version 25: the hourly vital signs row the runner upserts (`vital-signs.ts` VITAL_SIGNS_UPSERT). */
+/** The hourly vital signs row the runner upserts (`vital-signs.ts` VITAL_SIGNS_UPSERT). */
 export const VITAL_SIGNS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_vital_signs (
      hour                  timestamptz PRIMARY KEY,
      facts_live            integer,
@@ -690,9 +192,7 @@ export const VITAL_SIGNS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_vital_signs 
      written_at            timestamptz NOT NULL
    );`;
 
-/* ------------------------------------------------------------ version 24: spend holds */
-
-/** Version 24: one row per spend hold. `cost_recorded_at` is null until the hold's job is settled. */
+/** One row per spend hold. `cost_recorded_at` is null until the hold's job is settled. */
 export const SPEND_HOLDS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_spend_holds (
      hold_id          text PRIMARY KEY,
      job_id           text NOT NULL,
@@ -707,13 +207,7 @@ export const SPEND_HOLDS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_spend_holds 
      changed_at       timestamptz NOT NULL DEFAULT now()
    );`;
 
-/**
- * Version 24: the hold reads' indexes. `keys` (GIN) serves "the holds on these
- * lines"; `job_id` the settle; the two partial indexes serve "live" and its
- * negation (unsettled by when held, settled by when its cost was recorded);
- * `held_at` the 24-hour window. Each is created only when the catalog does
- * not have it, so a current database takes no lock.
- */
+/** Each index is created only when the catalog lacks it, so a current database takes no lock. */
 export const SPEND_HOLDS_INDEXES: readonly { readonly name: string; readonly on: string }[] = [
   { name: "cp_spend_holds_keys", on: "cp_spend_holds USING gin (keys)" },
   { name: "cp_spend_holds_job", on: "cp_spend_holds (job_id)" },
@@ -771,16 +265,8 @@ const LINE_LEFT_SQL = `(SELECT round(((l->>'budgetUsd')::numeric - ((l->>'histor
         AND (coalesce((l->>'lifetime')::boolean, false) OR h.held_at >= win))`;
 
 /**
- * Version 24: the admission (`decideHold`, in the database). Arguments: the
- * hold (`holdId`, `jobId`, `obligationId`, `usd` — null when not a measured
- * amount — and `what`), the lines (`{sends, areas}`, each `{key, budgetUsd,
- * historicalUsd, historyReadAt, lifetime}`), now, the window / stale /
- * retention lengths in ms, and how many dead holds on the locked lines one
- * admission may delete. Returns `{admit: true, hold}` (null hold: no lines),
- * or `{admit: false, refusal: 'AMOUNT' | 'SEND' | 'AREA', left, position}`;
- * the caller words the refusal with the same functions `decideHold` uses.
- * One difference, on purpose: a line whose left cannot be computed (a
- * non-numeric budget) refuses, where `decideHold` would compare NaN.
+ * `decideHold`, in the database. Returns `{admit: true, hold}` or `{admit: false, refusal, left, position}`.
+ * Unlike `decideHold`, a line whose left cannot be computed refuses rather than comparing NaN.
  */
 export const ADMIT_SPEND_HOLD_FUNCTION_DDL = `DO $do$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'cp_admit_spend_hold'
@@ -861,12 +347,7 @@ export const ADMIT_SPEND_HOLD_FUNCTION_DDL = `DO $do$ BEGIN
   END IF;
 END $do$;`;
 
-/**
- * Version 24: the one-time move. The ledger row is locked, its holds copied
- * (an id already in the table is kept as it is), and its `spendHolds`
- * emptied with the revision bumped, in one transaction. A hold that cannot be
- * read as one (no job, amount or instant) is not copied.
- */
+/** One transaction: lock the ledger row, copy its holds (existing ids kept), empty `spendHolds` and bump the revision. */
 export const SPEND_HOLDS_MOVE_DDL = `DO $do$
 DECLARE held jsonb;
 BEGIN
@@ -899,20 +380,8 @@ export const BOOTSTRAP_DDL: readonly string[] = [
      applied_at  timestamptz NOT NULL
    );`,
   /*
-   * THE POSITION ALLOCATOR — one row per (log, key), holding the next position.
-   *
-   * A separate table rather than an advisory lock, and the reason is the
-   * driver. `@neondatabase/serverless`'s `neon()` client speaks HTTP: each
-   * query may land on a different backend connection, so there is no stable
-   * SESSION to hold a session-scoped advisory lock and no client-side
-   * transaction to scope a transaction-scoped one. A lock that silently is not
-   * held is worse than no lock, because the code reads as if it were.
-   *
-   * `INSERT ... ON CONFLICT DO UPDATE ... RETURNING` needs neither. It is one
-   * statement, so it is one implicit transaction; the conflict path takes a ROW
-   * LOCK on the head row, so concurrent allocators for one key serialize and
-   * each receives a distinct position. That is the "genuinely unique ordered
-   * sequence", and it is enforced by the database rather than by a convention.
+   * A position-allocator table rather than an advisory lock: the HTTP driver has no stable session.
+   * `INSERT ... ON CONFLICT DO UPDATE ... RETURNING` row-locks the head row, so allocations serialize.
    */
   `CREATE TABLE IF NOT EXISTS cp_log_heads (
      log_table     text NOT NULL,
@@ -944,7 +413,6 @@ export const BOOTSTRAP_DDL: readonly string[] = [
    );`,
   ...AGGREGATE_KINDS.flatMap(aggregateTable),
   ...APPEND_ONLY_LOGS.flatMap(appendOnlyTable),
-  // The action-history tables follow their canonical receipt source.
   `CREATE TABLE IF NOT EXISTS cp_admin_action_history_projection (
   gateway_receipt_id text PRIMARY KEY,
   gateway_log_key text NOT NULL DEFAULT 'admin-action' CHECK (gateway_log_key = 'admin-action'),
@@ -1106,22 +574,11 @@ END $$;`,
   `CREATE INDEX IF NOT EXISTS cp_attempts_lease_id ON cp_attempts ((value->>'leaseId'));`,
   `CREATE INDEX IF NOT EXISTS cp_log_owner_digests_cycle_kind_position
      ON cp_log_owner_digests (log_key, (record #>> '{runtimeOutcome,kind}'), position DESC);`,
-  /*
-   * The due-work index. RULING 220 names indexed due-time queries as one of the
-   * two things the filesystem provider cannot carry — a due-time query over a
-   * directory is a full scan, and a SQL index is the boring correct tool.
-   */
   `CREATE INDEX IF NOT EXISTS cp_route_tasks_state
      ON cp_route_tasks ((value->>'state'));`,
   `CREATE INDEX IF NOT EXISTS cp_leases_expiry
      ON cp_leases ((value->>'expiresAt'));`,
-  /*
-   * THE DUE-TIME INDEX, which is the whole reason a standing obligation stores
-   * its next-due rather than only deriving it. RULING 220 names an indexed
-   * due-time query as one of the two things the filesystem provider cannot
-   * carry, and this is it: "which obligations are due?" is a range scan here
-   * and a full directory scan there.
-   */
+  /* Due-time index: "which obligations are due?" is a range scan. */
   `CREATE INDEX IF NOT EXISTS cp_obligations_next_due
      ON cp_obligations ((value->>'nextDueAt'))
      WHERE (value->>'active')::boolean;`,
@@ -1129,32 +586,19 @@ END $$;`,
      ON cp_debts ((value->>'retryAt'));`,
   `CREATE INDEX IF NOT EXISTS cp_occurrences_obligation
      ON cp_occurrences ((value->>'obligationId'));`,
-  // Version 20 (CH-26): built online, after every table they index exists.
   ...SCOPED_HISTORY_INDEXES.map(index => index.ddl),
-  // Version 22: every aggregate and log says when it last changed, by the database's clock.
   CHANGED_AT_TOUCH_FUNCTION_DDL,
   ...CHANGED_AT_TABLES.map(changedAtColumnDdl),
   ...CHANGED_AT_INDEXES.map(index => index.ddl),
-  // Version 23: the RouteTask lookups for Attempts and leases.
   ...ROUTE_TASK_INDEXES.map(index => index.ddl),
-  // Version 24: one row per spend hold, the admission in the database, and the one-time move off the ledger row.
   SPEND_HOLDS_TABLE_DDL,
   SPEND_HOLDS_INDEXES_DDL,
   ADMIT_SPEND_HOLD_FUNCTION_DDL,
   SPEND_HOLDS_MOVE_DDL,
-  // Version 25: the hourly vital signs row.
   VITAL_SIGNS_TABLE_DDL,
 ];
 
-/**
- * Duplicate (log_key, position) pairs the version-1 schema could have admitted.
- *
- * Run BEFORE the unique index is created, because `CREATE UNIQUE INDEX` over a
- * table that already holds a duplicate fails with a constraint error that names
- * the index rather than the data. A database that never raced has nothing here
- * and the query returns zero rows; one that did needs a person, and the gate
- * says which log and which position rather than "the bootstrap failed".
- */
+/** Run before the unique index is created, so a duplicate is reported by log and position. */
 export function duplicatePositionQuery(log: string): string {
   return `SELECT log_key, position, count(*) AS n
           FROM cp_log_${log}
@@ -1182,19 +626,7 @@ export interface SchemaVerdict {
   readonly problems: readonly string[];
 }
 
-/**
- * Judge a live reading against what this module declares.
- *
- * PURE, so the gate's rule is testable without a database — which matters more
- * than usual here, because the database is exactly what a session without the
- * credential cannot reach. A gate whose logic could only be exercised against
- * the thing it guards is a gate nobody can check.
- *
- * **An unreachable database is NOT a pass.** It is `reachable: false` with the
- * reason, and the caller decides whether that is fatal — a gate that treated
- * "could not connect" as "nothing wrong" would go green on every machine that
- * has no control plane at all.
- */
+/** Pure. An unreachable database is not a pass. */
 export function judgeSchema(input: {
   readonly configured: boolean;
   readonly reachable: boolean;
@@ -1235,9 +667,7 @@ export function judgeSchema(input: {
 
   const live = new Set(input.liveTables);
   const missingTables = DECLARED_TABLES.filter((t) => !live.has(t));
-  /* Only `cp_`-prefixed tables are ours to judge. A dedicated database might
-     legitimately hold something else one day, and claiming otherwise would make
-     this gate an opinion about the whole database. */
+  /* Only `cp_`-prefixed tables are judged. */
   const unexpectedTables = [...live].filter(
     (t) => t.startsWith("cp_") && !DECLARED_TABLES.includes(t),
   );

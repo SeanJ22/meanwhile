@@ -1,13 +1,11 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import type { HeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { liveFamiliesByGovernment } from "../lib/control-plane/expansion/live-families.ts";
 import { jurisdictionRequirements } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { UNREAD_MEETING_PARTITIONS } from "../lib/control-plane/scheduler/provider-inputs.ts";
-import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 
 const NOW = "2026-10-04T12:00:00.000Z";
 const D = "ocd-division/country:us/state:xx/county:example";
@@ -46,8 +44,15 @@ test("a stale row, an unheld row, or no held row at all keeps the discovery Scou
 });
 
 test("a live family drops only its discovery Scout; the other families and the directory stay", () => {
-  const reg: JurisdictionRegistry = JSON.parse(readFileSync(join(import.meta.dirname, "../data/states/az/jurisdictions/az.json"), "utf8"));
-  const school = { ...reg.jurisdictions.find(j => j.govClass === "SCHOOL_DISTRICT")!, sourceIds: [] };
+  const school: Jurisdiction = {
+    id: "xx:school:example-unified", stateCode: "XX", name: "Example Unified School District", govClass: "SCHOOL_DISTRICT",
+    countyName: "EXAMPLE", enumeratedFrom: "census-govt-units", ownWebAddress: "https://www.example.k12.xx.us/", sourceIds: [],
+  };
+  const reg: JurisdictionRegistry = {
+    formatVersion: 1, stateCode: "XX", generatedBy: "test", generatedOn: "2026-10-04", _note: [],
+    enumerationSources: [{ id: "census-govt-units", describe: "Census of Governments", path: "census", rowsRead: 1 }],
+    counts: {}, disagreements: [], sourceCatalog: {}, jurisdictions: [school],
+  };
   const routes = (live?: ReadonlySet<string>) => jurisdictionRequirements(reg, school, UNREAD_MEETING_PARTITIONS, true, live).map(r => r.route.routeId);
   const before = routes();
   assert.ok(before.includes("coverage-discovery:officeholders"));

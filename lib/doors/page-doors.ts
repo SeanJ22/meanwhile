@@ -1,15 +1,8 @@
 /**
- * DB-54: pages that feed live facts become doors.
- *
- * Only meeting wiring and a fixed list of feeds are doors from the start. A
- * roster, contact, comment-rule or directory page that a Scout or detective
- * found is not, until a fact from it goes live. When a worker publishes a
- * fact from a saved page, that page gets a door record: its host, what it
- * holds, how often it is due (the fact class's freshness window), and who
- * found it. The registry then grows with every mission (design §6.3).
- *
- * Nothing here names a place. Not every publication writes a door: a page that
- * published nothing, or one that is not a plain web address, adds none.
+ * Pages that feed live facts become doors. When a worker publishes a fact
+ * from a saved page, that page gets a door record: its host, what it holds,
+ * how often it is due (the fact class's freshness window), and who found it.
+ * A page that is not a plain web address adds none.
  */
 
 import { createHash } from "node:crypto";

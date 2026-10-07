@@ -154,7 +154,7 @@ test("DB-06: an old concluded sitting with a record moves to history first, then
   assert.equal(readHistory.kind, "PROMOTED", JSON.stringify("detail" in readHistory ? readHistory.detail : readHistory));
 
   // The Reader's composition still answers for it: nothing is in neither place.
-  const composed = await readMeetingsProjection({ store, now: NOW, bypassCache: true, allowUnconfiguredBootstrap: false });
+  const composed = await readMeetingsProjection({ store, now: NOW, bypassCache: true });
   assert.equal(composed.kind, "PROMOTED", JSON.stringify("detail" in composed ? composed.detail : composed));
   const ids = composed.kind === "PROMOTED" ? composed.value.meetings.map(({ id }) => id) : [];
   assert.ok(ids.includes(oldRecord.id) && ids.includes(fresh.id));
@@ -171,7 +171,7 @@ test("DB-06: a refused history write moves nothing, and the partition keeps ever
   assert.equal(move.outcome, "REFUSED");
   assert.equal(move.moved.size, 0);
   assert.equal(await promotedRows(store, meetingHistoryScope(legistar.scope)), null);
-  // The next partition pass carries the sitting exactly as DB-01 does.
+  // The next partition pass carries the sitting.
   const [result] = await promoteMeetingPartitions({
     store, partitions: [legistar], meetings: [meeting("fresh", daysBefore(-5))], agendaDocuments: [],
     reports: [report(NOW)], generatedAt: NOW,
@@ -225,7 +225,7 @@ test("DB-06: history contracts are derived from their partition and never join t
   assert.ok(!MEETING_PARTITION_CONTRACTS.some((partition) => partition.scope === contract.scope || partition.id === contract.id));
 });
 
-/* ── DB-55: meeting history already deleted is restored ─────────────────── */
+/* ── Meeting history already deleted is restored ─────────────────── */
 
 const EARLIER_NOW = "2026-09-08T12:00:00.000Z";
 
@@ -238,7 +238,7 @@ async function seedThenDeleteTheOldWay() {
     sources: [{ source: "legistar", ok: true, error: null, fetched: 1, normalized: 1, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 }, acquisitions: report(EARLIER_NOW).acquisitions }],
     meetings: [keep], agendaDocuments: [],
   };
-  // What every pass did before DB-01: remove every sitting outside the shown 90 days, records or not.
+  // A pass that removed every sitting outside the shown 90 days, records or not.
   const removal = (row: Meeting) => ({
     key: `meeting:${row.id}`, code: "OUTSIDE_REGISTERED_SERVING_WINDOW" as const,
     windowContract: "MEETING_READER_SERVING_WINDOW_V1" as const,

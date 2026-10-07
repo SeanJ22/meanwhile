@@ -4,45 +4,15 @@ import { workerPublicationContext } from "../lib/civic-data/worker-publication-c
 import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 /**
  * `pnpm voting-sites:fetch` — owner-invoked acquisition and canonical
- * promotion of every covered jurisdiction's voting locations (tracker B19).
+ * promotion of every covered jurisdiction's voting locations.
  *
  * @freshness-reads-here — the candidate stamp follows the complete set of
  * official reads; failure stamps identify the failed source attempt only.
  *
- * ## What this is not
- *
- * It is not an aggregator read. Vote411, Google Civic and the state portals
- * all carry polling places, and none of them is the authority: B19's sourcing
- * law says the sites come from the jurisdiction's own election authority,
- * cited with a read date, or they do not ship. Every retrieval below names the
- * body that published it.
- *
- * ## The three states use two models, and the retrieval shape follows
- *
- * * **Pima County, AZ — VOTE CENTERS.** The county's own ArcGIS organisation
- *   (`UTBp78iglGpbqp1B`, owner `julia.jones@pima.gov_Pima`) publishes the
- *   election-day vote centers, early voting sites and mobile sites as feature
- *   services carrying their own coordinates. Found at rung 8/12: the county's
- *   `Pima Votes` page is CivicPlus, its embedded widget state names an ArcGIS
- *   Experience Builder app, and the app's item data names the services. No
- *   HTML was scraped and no coordinate was invented.
- * * **Morris County, NJ — ASSIGNED BY DISTRICT.** The county Board of
- *   Elections publishes one page per municipality with a ward/district →
- *   location table. Rung 2 answers; the tables carry `rowspan`, which the
- *   parser here honours because dropping it silently drops locations.
- * * **New Hampshire — ASSIGNED BY TOWN.** The state list is walled; see
- *   `NH_WALL` below for every rung and its result. Towns that publish their
- *   own polling place are retrieved from the town, which is the election
- *   authority in New Hampshire (RSA 669:1 et seq. put the election in the
- *   town's hands). Towns that do not are recorded with their rungs.
- *
- * ## Geocoding
- *
- * Morris and NH addresses carry no coordinates, so they run through the
- * Census Bureau's one-line geocoder — the same benchmark the app already uses,
- * serialized and identified. A site whose address does not geocode is KEPT,
- * listed without a pin, with the count stated — never dropped, and never
- * pinned somewhere plausible.
+ * Sites come only from the jurisdiction's own election authority, cited with a
+ * read date; aggregators are never the source. Addresses without coordinates
+ * run through the Census one-line geocoder; a site that does not geocode is
+ * kept without a pin and counted, never dropped or pinned somewhere plausible.
  */
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -75,13 +45,9 @@ import {
 } from "../lib/ballot/voting-sites.ts";
 
 /**
- * The election these sites are for. Pima labels every row with the election it
- * belongs to, and the layers carry PAST elections alongside the current one —
- * "CD7 General", "CoT General", "RTA", "2026 Mid Term Primary". Shipping
- * those as places a reader can vote NOW would be a specific false claim about
- * a date, so rows are filtered to this label and the excluded count is stated.
- * A row the authority left UNLABELED is kept with a null label and renders as
- * a named gap; it is never promoted into this one.
+ * The election these sites are for. Layers that label rows by election also
+ * carry past elections, so rows are filtered to this label and the excluded
+ * count is stated. An unlabeled row is kept with a null label.
  */
 const CURRENT_ELECTION = "2026 General";
 const RECEIPT_SOURCE = "voting-sites";
@@ -98,11 +64,7 @@ if (!process.argv.slice(2).includes("--promote")) {
 }
 prepareProductionCivicDataWrite();
 
-/** Today, from the clock. Never a plausible date. */
-// F01-continued session 2, item 0B: the Phoenix day comes from the one
-// module that owns it, exactly as `pnpm stamp` does. This file used to
-// carry its own byte-identical copy of the formatter — correct on the day
-// it was written, and one more place for the rule to drift.
+/** Today, from the clock. */
 import { today } from "./doc-dates.mjs";
 const TODAY = today();
 
@@ -198,12 +160,8 @@ async function geocodeOnce(address: string): Promise<{ lat: number; lng: number 
 }
 
 /**
- * Geocode, with the two rewrites the county's own formatting requires.
- *
- * The authority writes cross streets ("21 Blue Mill Road & Sand Spring Rd")
- * and suite lines, neither of which the Census one-line geocoder resolves.
- * Trying the address as published FIRST and the narrowed form second keeps the
- * published string as the thing we cite while still landing a point.
+ * Geocode the address as published first, then with cross streets and suite
+ * lines removed; the published string stays the thing cited.
  */
 async function geocode(address: string): Promise<{ lat: number; lng: number } | null> {
   const key = votingSiteAddressKey(address);
@@ -299,10 +257,7 @@ async function retrievePima(): Promise<VotingJurisdiction> {
       const address = str(a.address);
       const lat = Number(a.latitude ?? f.geometry?.y);
       const lng = Number(a.longitude ?? f.geometry?.x);
-      // These two layers carry PAST elections alongside the current one. A
-      // site published for an election that has already happened is not a
-      // place a reader can vote now, and rendering it as one would be a false
-      // claim about a date. Excluded, and counted.
+      // These two layers carry past elections alongside the current one: excluded, and counted.
       const label = str(a.Election);
       if (label !== CURRENT_ELECTION) {
         staleElection += 1;
@@ -377,12 +332,8 @@ function cellText(html: string): string {
 }
 
 /**
- * Parse one HTML table into a grid, honouring `rowspan` and `colspan`.
- *
- * The naive version — split rows, split cells — silently drops every location
- * that a `rowspan` shares across wards. Boonton is the case: four wards, two
- * buildings, and a rowspan-blind read reports two wards with no location at
- * all. An operation that can drop rows must be written so it cannot.
+ * Parse one HTML table into a grid, honouring `rowspan` and `colspan`; a
+ * rowspan-blind read drops locations shared across wards.
  */
 function parseTable(tableHtml: string): string[][] {
   const rows = [...tableHtml.matchAll(/<tr[\s\S]*?<\/tr>/gi)].map(([r]) => r);
@@ -420,7 +371,7 @@ function parseTable(tableHtml: string): string[][] {
   return grid;
 }
 
-/** `Town of Boonton Polling Locations` → `Town of Boonton`. */
+/** `Town of X Polling Locations` → `Town of X`. */
 function municipalityName(label: string): string {
   return decode(label).replace(/\s*Polling Locations\s*$/i, "").trim();
 }
@@ -484,16 +435,14 @@ async function retrieveMorris(): Promise<VotingJurisdiction[]> {
     const sites: VotingSite[] = [];
     let n = 0;
     for (const [location, serves] of byLocation) {
-      // The county writes "Name, Room, 100 Washington St, Boonton, NJ 07005".
-      // The street address is the tail from the first segment that starts
-      // with a house number; the head is the building's name.
+      // "Name, Room, 100 Main St, Town, ST 00000": the street address is the
+      // tail from the first segment that starts with a house number.
       const segs = location.split(",").map((s) => s.trim()).filter(Boolean);
       const start = segs.findIndex((s) => /^\d/.test(s));
       const name = start > 0 ? segs.slice(0, start).join(", ") : segs[0] ?? location;
       const address = start >= 0 ? segs.slice(start).join(", ") : location;
       const point = await geocode(address);
-      // A site that will not geocode is KEPT, unpinnable. Dropping it would
-      // write our retrieval failure into the data as the county's silence.
+      // A site that will not geocode is kept, unpinned.
       if (!point) unplaceable += 1;
       sites.push({
         id: `nj-morris-${slug(page.name)}-${(n += 1)}`,
@@ -568,13 +517,9 @@ function slug(name: string): string {
 }
 
 /**
- * The OCD-ID for a Morris municipality, or null.
- *
- * NULL RATHER THAN A GUESS. An OCD-ID is the universal join key and a wrong
- * one attaches a real town's polling places to a different town. The names the
- * county writes ("Town of Boonton", "Boonton Township") map onto two different
- * OCD forms, and a jurisdiction we cannot key renders by name without a
- * point test rather than being keyed to the nearest-looking division.
+ * The OCD-ID for a municipality, or null rather than a guess: "Town of X" and
+ * "X Township" are two different OCD forms, and a wrong id attaches one town's
+ * polling places to another.
  */
 function ocdForMorris(name: string): string {
   const bare = name
@@ -601,17 +546,9 @@ function ocdForMorris(name: string): string {
  * ------------------------------------------------------------------ */
 
 /**
- * The state list wall, walked and recorded rather than asserted.
- *
- * `app.sos.nh.gov/statelistclerkandpolling` is the Secretary of State's own
- * statewide list of clerks and polling places, and it is unreachable from
- * here. Rung 7 is the part worth reading twice: the endpoint was RECOVERED
- * (rung 11 returned an archived bundle naming
- * `ClerkandPolling/GetClerkandPollingList`), and it was DELIBERATELY NOT
- * CALLED, because the tool gates that call behind a reCAPTCHA and
- * circumventing bot detection is one of the four things `CLAUDE.md` says we
- * never do. A rung found and refused on principle is still a rung walked; it
- * is not a wall, and it is not an exhaustion claim.
+ * The state list (`app.sos.nh.gov/statelistclerkandpolling`) is unreachable
+ * from here; its endpoint sits behind a reCAPTCHA and is deliberately not
+ * called. Each rung walked is recorded.
  */
 const NH_WALL: SiteRung[] = [
   { rung: 2, what: "Plain fetch of www.sos.nh.gov/elections/voters", result: "HTTP 403 (Akamai edge denial)", attemptedAt: "2026-08-19" },
@@ -628,13 +565,9 @@ const NH_WALL: SiteRung[] = [
 ];
 
 /**
- * New Hampshire towns whose OWN site publishes their polling place.
- *
- * In New Hampshire the town runs the election, so the town's page is the
- * authority — not a fallback for the state list. Each entry names the page it
- * was read from and the date. A town is here only when its own site states the
- * place; nothing here is inferred from a neighbouring town, a news report or a
- * state aggregator.
+ * New Hampshire towns whose own site publishes their polling place. The town
+ * runs the election, so its page is the authority; each entry names the page
+ * and the read date.
  */
 const NH_TOWN_HITS: {
   ocdId: string;

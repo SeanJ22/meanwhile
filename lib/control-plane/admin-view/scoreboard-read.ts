@@ -1,13 +1,4 @@
-/**
- * **`admin-v6/scoreboard@1` — THE SCOREBOARD'S READING (BR-23).** Replaces "Is it learning".
- *
- * One row per number in the design's Scoreboard list. A row carries its value, the counts behind it, one sentence, and, when
- * there is no value, why it is not measured; "—" is shown for it, never a zero or a guess. Rows are never blended into one
- * number: completeness, freshness, delivery and readiness stay separate. PURE: readings in, view out; a reading the caller
- * could not take arrives as null and its row says so.
- *
- * The weekly Scout series that made up "Is it learning" live on in `learning`.
- */
+/** A row with no value says why and shows "—", never a zero or a guess. Rows are never blended into one number. */
 import type {
   LearningView, NotMeasured, Reading, ScoreboardFamilyRow, ScoreboardGateRow, ScoreboardMissionRow, ScoreboardPlaceRow, ScoreboardReadinessRow, ScoreboardRow, ScoreboardView, Trend, TrendWeek,
 } from "../../../app/(admin)/_mw/admin-v6/model.ts";
@@ -182,20 +173,15 @@ export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, 
   return { trends: trendList, readings, notMeasured };
 }
 
-/* ------------------------------------------------------------ scoreboard */
-
 export interface PublicationCounts {
-  /** Approved records on the public page: seen fresh, last seen too long ago, and not found there. */
   readonly seen: number;
   readonly stale: number;
   readonly notFound: number;
   readonly unread: number;
-  /** Routine contracts published and read back, out of all registered; null when that read failed. */
   readonly contractsReadBack: number | null;
   readonly contracts: number | null;
 }
 
-/** What the Scorecard measures for one sent place (SC-03 to SC-11, SC-19); the Scoreboard adds these up and never averages them. */
 export interface ScoreboardPlace {
   readonly label: string;
   readonly measures: PlaceMeasures;
@@ -203,52 +189,35 @@ export interface ScoreboardPlace {
   readonly coverage: PlaceCoverage;
   readonly profiles: PeopleCoverage;
   readonly growth: PlaceGrowth | null;
-  /** The last daily point kept from an earlier day, for the trend; null with no earlier day. */
   readonly earlier: PlaceHistoryPoint | null;
-  /** Time from the mission's start to its core information live; null when the place has no mission start or no core item is owed yet. */
   readonly core: CoreLive | null;
 }
 
 export interface ScoreboardReadings {
   /** The sent places the Scorecard measured; an empty list is "no place has been sent", null is "could not be read". */
   readonly places: readonly ScoreboardPlace[] | null;
-  /** Sent places whose owed list could not be read in time; they are named, never counted as zero. */
   readonly placesUnread: number;
-  /** The newest orders, newest first; `window` is how many were looked at. */
   readonly orders: readonly V6HistoryReceipt[] | null;
   readonly publication: PublicationCounts | null;
   readonly shutDoors: { readonly shut: number; readonly open: number; readonly setAside: number; readonly unreadable: number } | null;
-  /** Reader-days over the capture window. */
   readonly returning: { readonly days: number; readonly readerDays: number; readonly returningDays: number } | null;
   readonly learning: LearningView;
   readonly doors: DoorFacts | null;
-  /** DB-52: unknown when the existing digest measurement cannot be read. */
   readonly factoryLearning?: FactoryLearning | null;
   readonly gates: readonly GateHealthRow[] | null;
-  /** BR-32: overdue doors, posting-to-live and the repair log; null when none could be read. */
   readonly doorNumbers?: Omit<DoorNumberReadings, "shutDoors"> | null;
-  /** BR-31: the last seven days of the flow from findings to live; null when it could not be read or none is recorded. Absent means not read. */
   readonly flow?: FlowWeek | null;
-  /** The last two full hours of the runner's vital signs; null when unreadable. Absent means not read. */
   readonly vital?: readonly ScoreboardVitalHour[] | null;
   readonly readiness: readonly ReadinessCount[];
-  /** The week's live audits of published facts (DP-18); null when the audit log could not be read. Absent means not read. */
   readonly audit?: AuditAccuracyReading | null;
-  /** The latest worst-case speed pass on the live site (FE-02); null when unreadable or none ran. Absent means not read. */
   readonly speed?: SpeedPass | null;
-  /** FE-26: the link sweep's dead links per surface; null when unreadable. Absent means not read. */
   readonly deadLinks?: readonly DeadLinkReading[] | null;
-  /** The two limits the speed row judges by (the settings); absent uses the code defaults. */
   readonly speedLimits?: { readonly share?: number; readonly deadLinks?: number };
-  /** Where reusable fixes stand (DP-26); null when unreadable. Absent means not read. */
   readonly provenFixes?: ProvenFixesReading | null;
-  /** FE-23: the look passes of the last deploys, newest first, with each fix item's state; null when unreadable. Absent means not read. */
   readonly look?: LookReading | null;
-  /** The latest weekly check of the team's claimed wins (DP-33); null when none in two weeks or unreadable. Absent means not read. */
   readonly reportAccuracy?: ReportAccuracyReading | null;
 }
 
-/** Approved records by what the public page showed, from the published pipeline read; every state is counted, none is dropped. */
 export function publicationCountsOf(read: PipelineRead, contracts: { readonly readBack: number; readonly total: number } | null): PublicationCounts {
   const t = { seen: 0, stale: 0, notFound: 0, unread: 0 };
   for (const a of read.approved) {
@@ -287,14 +256,11 @@ function ordersRow(orders: ScoreboardReadings["orders"]): ScoreboardRow {
   });
 }
 
-/* ------------------------------------------------- the Scorecard's rows */
-
 type Frac = { readonly n: number; readonly of: number };
 const total = (places: readonly ScoreboardPlace[], pick: (p: ScoreboardPlace) => Frac): Frac => places.reduce((a, p) => ({ n: a.n + pick(p).n, of: a.of + pick(p).of }), { n: 0, of: 0 });
 const dayWords = (day: string): string => new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric" }).format(new Date(`${day}T00:00:00Z`));
 const pctOf = (f: Frac): number | null => (f.of > 0 ? Math.floor((f.n * 100) / f.of) : null);
 
-/** Direction against the last earlier day, summed over the places that have one: "Up from 31% on Oct 4 · good". */
 function trendWords(points: readonly { readonly now: Frac; readonly earlier: PlaceHistoryPoint | null }[]): string {
   const have = points.filter((p) => p.earlier !== null && p.earlier.completeness.of > 0);
   if (have.length === 0) return "No earlier day to compare yet.";
@@ -448,7 +414,6 @@ function secondCoverageRow(d: FactoryLearning | null | undefined): ScoreboardRow
 
 const easternDay = (iso: string): string => new Date(iso).toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
 
-/** DP-18: "Of N facts audited this week, X% are still accurate. Here are the K we fixed." "—" when nothing was judged. */
 export function auditRow(a: AuditAccuracyReading | null | undefined): ScoreboardRow {
   const id = "Audit accuracy", name = "Audit accuracy";
   if (a === undefined) return unmeasured(id, name, "The auditors' green and red flags are not recorded here yet.");
@@ -468,10 +433,6 @@ export function auditRow(a: AuditAccuracyReading | null | undefined): Scoreboard
   return row(id, name, { value: `${a.accuratePercent}%`, counts, says: `${a.sentence}${second}`, items, technical });
 }
 
-/**
- * FE-02 and FE-26: each surface, judged by its slowest visits against three seconds: the share of visits over the limit, the visits that
- * never finished (errors) and the dead links found on the links readers follow. `deadLinks` absent means the link sweep was not read.
- */
 export function speedRow(p: SpeedPass | null | undefined, deadLinks?: readonly DeadLinkReading[] | null, limits: { readonly share?: number; readonly deadLinks?: number } = {}): ScoreboardRow {
   const id = "Site speed and reliability", name = "Site speed and reliability";
   if (p === undefined) return unmeasured(id, name, "Page load times and errors are not recorded here yet.");
@@ -499,7 +460,6 @@ export function speedRow(p: SpeedPass | null | undefined, deadLinks?: readonly D
   });
 }
 
-/** DP-26: how many fixes proved out across places, and any proven fix that broke. */
 export function provenFixesRow(p: ProvenFixesReading | null | undefined): ScoreboardRow {
   const id = "Proven fixes", name = "Proven fixes";
   if (p === undefined) return unmeasured(id, name, "Fixes proved across places are not recorded here yet.");
@@ -514,7 +474,6 @@ export function provenFixesRow(p: ProvenFixesReading | null | undefined): Scoreb
   });
 }
 
-/** DP-33: "X of K claimed wins confirmed", recomputed from source records by the claim auditors. */
 export function reportAccuracyRow(a: ReportAccuracyReading | null | undefined): ScoreboardRow {
   const id = "Report accuracy", name = "Report accuracy";
   if (a === undefined) return unmeasured(id, name, "Auditor confirmation of the team's claimed wins is not recorded here yet.");
@@ -531,17 +490,13 @@ export function reportAccuracyRow(a: ReportAccuracyReading | null | undefined): 
 
 export interface LookReading {
   readonly now: string;
-  /** Newest first. */
   readonly passes: readonly LookPass[];
-  /** The fix list's state by item id, so a red shows where its fix stands. */
   readonly fixStates: ReadonlyMap<string, FixState>;
-  /** Where a stored screenshot is served from. */
   readonly imageUrl: (key: string) => string;
 }
 
 const FIX_WORDS: Record<FixState, string> = { OPEN: "fix not started", FIXING: "being fixed", FIXED: "fixed", CAME_BACK: "came back after a fix" };
 
-/** The first later pass that looked at the same screen again (same surface and size), oldest first; null when none has. */
 function relook(red: LookScreen, at: string, passes: readonly LookPass[]): LookScreen | null {
   const later = passes.filter((p) => p.at > at).sort((a, b) => a.at.localeCompare(b.at));
   for (const p of later) {
@@ -551,10 +506,6 @@ function relook(red: LookScreen, at: string, passes: readonly LookPass[]): LookS
   return null;
 }
 
-/**
- * FE-23: how the live site looked this week. The green and red screens counted across the week's deploy looks, the newest reds with
- * their screenshots, and each red's fix and re-look. Our own look passes judge it, never readers.
- */
 export function lookRow(l: LookReading | null | undefined): ScoreboardRow {
   const id = "Look and feel", name = "Look and feel";
   if (l === undefined) return unmeasured(id, name, "The front-end flags are not recorded here yet.");
@@ -598,7 +549,6 @@ export function lookRow(l: LookReading | null | undefined): ScoreboardRow {
 const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
 ];
 
-/** The Scoreboard in the design's order. Every number in the list has a row; one with no reading says "—" and why. */
 export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
   const byId = new Map<string, ScoreboardRow>([
     ["Orders", ordersRow(r.orders)],

@@ -1,49 +1,19 @@
 /**
- * **THE FOUR LAYERS EVERY STATE ON THIS CONSOLE IS RENDERED IN.**
- * (Admin C, §9A.2, from the 9.6.26 owner feedback.)
- *
- * The owner's test for every surface, verbatim:
- *
- * > **What am I looking at? Does this need me? What happened? What happens next?**
- *
- * So a state is never one dense paragraph with a machine code in it. It is:
- *
- * ```
- *   1  what this is      one line naming the thing, not the enum
- *   2  what happened     one plain sentence, past tense, with the time
- *   3  does this need me Yes with the action, or No
- *   4  what happens next one plain sentence, future tense, with the time
- *   —  technical detail  the instrument's own words, the codes, the ids, the
- *                        SHA, the raw receipt — one disclosure away, never
- *                        hidden and never leading
- * ```
- *
- * These primitives are shared by every admin surface so the shape is the same
- * everywhere; a section that wants a different shape is a section that has not
- * decided what it is telling him.
- *
- * Nothing here reads a store, the clock or the environment.
+ * Every state renders in four layers: what this is, what happened, does this need me, what happens next,
+ * with the technical detail one disclosure away.
  */
 import type { ReactNode } from "react";
 
 import { plainCode, plainMeaning, plainText } from "@/lib/control-plane/plain-words.ts";
 
-/** Whether a card needs the owner, and what to do if it does. */
 export interface NeedsYou {
   readonly needed: boolean;
-  /** When needed: what he should do, in his words. */
   readonly action?: string;
 }
 
 export const NEEDS_NOTHING: NeedsYou = { needed: false };
 
-/**
- * The four layers, in order, with the technical evidence behind a disclosure.
- *
- * `what` is the noun — what this card is about. `happened` and `next` are
- * sentences. `detail` is anything: the instrument's own sentence, a table, a
- * list of ids. It is only rendered when there is something in it.
- */
+/** `detail` is rendered only when there is something in it. */
 export function StatusBlock(props: {
   readonly what: ReactNode;
   readonly happened: ReactNode;
@@ -70,12 +40,6 @@ export function StatusBlock(props: {
   );
 }
 
-/**
- * `Needs you: No` or `Needs you: Yes — <action>`.
- *
- * The owner named this line on the role cards as something he likes and wants
- * everywhere (POS-14, and §9A.3 "Every card must also state Needs you").
- */
 export function NeedsYouLine({ needs }: { needs: NeedsYou }) {
   if (!needs.needed) {
     return (
@@ -91,14 +55,7 @@ export function NeedsYouLine({ needs }: { needs: NeedsYou }) {
   );
 }
 
-/**
- * A machine constant rendered as words, with the raw code on hover and its
- * owner sentence beside it when the dictionary has one.
- *
- * This is the ONE place a code becomes text (ADM-25). A component that writes
- * `code.replace(/_/g, " ")` for itself is a second implementation of the same
- * rule and will drift from it.
- */
+/** The one place a machine constant becomes text: words on the face, the raw code on hover. */
 export function Code({ raw, withMeaning }: { raw: string | null | undefined; withMeaning?: boolean }) {
   const words = plainCode(raw);
   if (words === "") return null;
@@ -113,19 +70,10 @@ export function Code({ raw, withMeaning }: { raw: string | null | undefined; wit
   );
 }
 
-/**
- * An instrument's own sentence with every machine constant inside it turned
- * into words. For quoted text the page cannot restructure.
- */
 export function Plain({ text }: { text: string | null | undefined }) {
   return <>{plainText(text)}</>;
 }
 
-/**
- * A headline number with its plain definition underneath — the owner asked for
- * exactly this on the three summary cards (ADM-28: *"what does that even
- * mean?"*), and the definition is the load-bearing half.
- */
 export function DefinedTile(props: {
   readonly figure: string;
   readonly label: string;
@@ -148,11 +96,6 @@ export function DefinedTile(props: {
   );
 }
 
-/**
- * A horizontal bar. The owner asked for more visual comprehension rather than
- * more text (§9A.15), and this is the primitive the rest reuse: a share of a
- * whole, in a restrained semantic colour, with the numbers still legible.
- */
 export function Bar(props: {
   readonly value: number;
   readonly of: number;
@@ -172,10 +115,6 @@ export function Bar(props: {
   );
 }
 
-/**
- * A stacked bar: several tones in one track. For "how much is done, waiting and
- * blocked" in one glance.
- */
 export function StackBar({ parts, total }: { parts: readonly { tone: string; value: number; label: string }[]; total: number }) {
   const of = total > 0 ? total : 1;
   return (

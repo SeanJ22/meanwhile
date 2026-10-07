@@ -1,33 +1,20 @@
 /**
- * **HOW MANY GOVERNMENTS A SEND WOULD CREATE WORK FOR, BEFORE IT IS SENT.**
- * (2026-09-25. docs/rulings.md §1.)
- *
- * The composer's preview (`/api/admin/geography-preview`) states, per state the
- * geography reaches, where its governments come from and — for a state read
- * from its registration — how many governments a Send places there:
+ * How many governments a Send would create work for, before it is sent, per
+ * state the geography reaches:
  *
  * ```
- *   REVIEWED_REGISTRY  the state's reviewed registry (the promoted operational
- *                      reference) defines its governments; the runner places
- *                      them by their Census unit territory, which this page
- *                      does not hold, so the runner's receipt carries the count
- *   REGISTRATION       no reviewed registry: the state's promoted registration
- *                      names them. Each government it minted a body for owes
- *                      one requirement, its meetings discovery
+ *   REVIEWED_REGISTRY  the reviewed registry defines its governments; the
+ *                      runner places them by territory this page does not hold,
+ *                      so the runner's receipt carries the count
+ *   REGISTRATION       no reviewed registry: each government the promoted
+ *                      registration minted a body for owes its meetings discovery
  *   NOT_READ           the registration could not be read: named, never zero
  * ```
  *
- * **Certain, and at the edge.** The runner places a government by the runner's
- * rule (`certainlyOverlaps`) on its sampled share of each ZCTA
- * (`data/derived/zip-governments.json`, 30 MB, which Admin does not ship). The
- * preview reads the reader's ZIP index for the scope's own codes, which says
- * whether a division covers each code whole (share 1, known exactly) or only
- * part of it (share unknown). So it counts exactly the governments the runner
- * must place (`certain`), and separately the ones that touch the scope only
- * where they cover part of a code the scope holds more than the margin of
- * (`edge`): the runner places each of those only if its sampled share is large
- * enough. The runner's count lies in `[certain, certain + edge]`, and its
- * receipt states it exactly. PURE.
+ * The preview reads the reader's ZIP index (whole or partial coverage per
+ * code) rather than the runner's sampled shares, so it counts `certain`
+ * governments exactly and `edge` ones separately; the runner's count lies in
+ * `[certain, certain + edge]`. Pure.
  */
 import { certainlyOverlaps, OVERLAP_CERTAINTY_MARGIN, type DivisionTerritory, type ScopeGeometry } from "./overlap.ts";
 import type { TerritoryIndex } from "./membership.ts";

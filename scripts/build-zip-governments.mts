@@ -1,37 +1,20 @@
 /**
- * NATIONAL TERRITORY RESOLUTION — which governments govern which zip
- * (Prompt B item 5, 2026-08-20).
+ * National territory resolution: which governments govern which zip.
  *
- * Written national from the start and run nationally. The pilot zips are a
- * verification subset, not the target: the spatial join costs the same for
- * the country as it does for one state, and a per-state build would have to
- * be rewritten the first time somebody asked about a fifth zip.
+ * A ZCTA that straddles two counties maps to BOTH. Every government whose
+ * boundary contains any sampled point of the ZCTA becomes an edge, with no
+ * minimum overlap (a reader in the sliver is still governed by it); the
+ * sample count is carried on every edge so a sliver is distinguishable.
  *
- * THE OVERLAP RULE, STATED RATHER THAN IMPLIED (item 5.2). A ZCTA that
- * straddles two counties maps to BOTH. Every government whose boundary
- * contains any sampled point of the ZCTA becomes an edge, with no minimum
- * overlap threshold — because dropping a marginal overlap would hide a real
- * government from a real reader living in the sliver, and the whole product
- * exists to tell that reader what governs them. The sample count is carried
- * on every edge so a dominant relationship and a sliver are distinguishable
- * downstream without either being deleted here.
+ * Each ZCTA is sampled on a 0.01-degree lattice of interior points (about
+ * 1.1 km north-south), plus a representative interior point for any ZCTA too
+ * small to catch a lattice node, and each point is tested against every
+ * government layer (`lib/geo/point-in-polygon.ts`). Sampling approximates
+ * areal intersection: an overlap thinner than the lattice can be missed, and
+ * the fallback count is reported.
  *
- * THE METHOD. Each ZCTA is sampled on a 0.01-degree lattice of interior
- * points (about 1.1 km north-south), plus a representative interior point for
- * any ZCTA too small to catch a lattice node. Each sample point is tested
- * against every government layer with an accelerated even-odd ray cast
- * (`lib/geo/point-in-polygon.ts`). Sampling is an APPROXIMATION of areal
- * intersection and is stated as one: an overlap thinner than the lattice in
- * both directions can be missed, and the count of ZCTAs that needed the
- * fallback point is reported rather than hidden.
- *
- * RULING 9. Census counts GOVERNMENTS; this resolves TERRITORY. Tucson is one
- * row here and holds a dozen governing bodies. Nothing this script writes is
- * a body count, and Tier 2 is not reachable from it.
- *
- * RULING 12. Every fetch is WALL or JOB. The seven boundary files are fetched
- * by `corepack pnpm tiger:fetch` into `.cache/tiger`, serialized, with an
- * identified User-Agent. This script reads the cache and never fetches.
+ * This resolves TERRITORY, not a body count. The boundary files are fetched by
+ * `corepack pnpm tiger:fetch` into `.cache/tiger`; this script never fetches.
  *
  * Run:  corepack pnpm zipgov:build
  */
@@ -108,21 +91,10 @@ const LAYERS: LayerSpec[] = [
 const ZCTA_FILE = "cb_2020_us_zcta520_500k.zip";
 
 /**
- * TIGER PSEUDO-ENTITIES ARE NOT GOVERNMENTS, AND THIS SESSION FOUND ONE BY
- * READING ITS OWN OUTPUT.
- *
- * The first pilot verification resolved 85641 (Vail, Arizona) to a unified
- * school district named `School District Not Defined` [0499997] alongside the
- * real Vail Unified District. It is not a district. TIGER fills territory that
- * no school district covers with a placeholder feature so its layers tile the
- * country without holes, using the reserved local codes 99997 ("not defined"),
- * 99998 ("water") and 99999 ("unorganized territory").
- *
- * Counted as a government it would be worse than noise: it would render to a
- * reader at that zip as a body governing them, with a name that reads like a
- * finding about our own coverage. Dropped here, at the join, so nothing
- * downstream has to know about it — and named in the run's output, because a
- * silent filter and a silent bug look identical from outside.
+ * TIGER pseudo-entities are not governments: territory no school district
+ * covers is filled with placeholder features using reserved local codes 99997
+ * ("not defined"), 99998 ("water") and 99999 ("unorganized territory"). They
+ * are dropped at the join and named in the run's output.
  */
 const PSEUDO_LOCAL_CODES = new Set(["99997", "99998", "99999"]);
 
@@ -132,34 +104,19 @@ function isPseudoEntity(geoid: string, name: string): boolean {
 }
 
 /**
- * NOT EVERYTHING IN A TIGER LAYER IS A GOVERNMENT, AND THE DIFFERENCE IS THE
- * WHOLE PRODUCT.
+ * Not everything in a TIGER layer is a government. A census-designated place
+ * (CDP) or census county division (CCD) is statistical geography with no
+ * council, budget or officials.
  *
- * Found the same way as the pseudo-entity above — by reading the pilot output.
- * 85641 resolved to `Vail CDP`, `Rincon Valley CDP`, `Corona de Tucson CDP`
- * and `Tucson CCD`. Not one of those is a government. A census-designated
- * place is a name the Census gives a populated area so it can publish
- * statistics for it; a census county division is a statistical subdivision the
- * Census draws in states that have no minor civil divisions. Neither has a
- * council, a budget, a meeting, or a single elected official.
- *
- * Nationally this is not a rounding error: 12,587 of the 32,608 `place` rows
- * are CDPs and 5,198 of the 36,367 `cousub` rows are CCDs. Rendered as
- * governments they would put a fictional body on a reader's card, which is
- * `Never generate a candidate position` pointed at a whole institution.
- *
- * THE CLASSIFICATION NEVER ASSERTS. Three values, and the third is the point:
+ * The classification never asserts:
  *   STATISTICAL   — positively identified as a Census statistical entity.
  *   GOVERNMENT    — positively identified as a general-purpose government.
- *   UNCLASSIFIED  — everything else, carrying its LSAD code so a later session
- *                   can rule on it.
- * Gores, grants, plantations, locations and purchases are real New England
- * minor civil divisions whose governmental status varies by state and by
- * entity, so they land in UNCLASSIFIED rather than being guessed into either
- * bucket. An unclassified row is a work item, never a claim.
+ *   UNCLASSIFIED  — everything else, carrying its LSAD code. Gores, grants,
+ *                   plantations, locations and purchases vary by state and
+ *                   entity, so they land here; an unclassified row is a work
+ *                   item, never a claim.
  *
- * LSAD codes are the Census Bureau's own, from its Legal/Statistical Area
- * Description list.
+ * LSAD codes are the Census Bureau's own Legal/Statistical Area Description list.
  */
 const LSAD_STATISTICAL = new Set([
   "57", // CDP — census designated place
@@ -252,8 +209,8 @@ type Edge = {
   samples: number;
   /** GOVERNMENT, STATISTICAL or UNCLASSIFIED. Never inferred downstream. */
   entity: EntityClass;
-  /** The Census LSAD the classification was made from, carried so a later
-   *  session can rule on an UNCLASSIFIED row without re-deriving it. */
+  /** The Census LSAD the classification was made from, carried so an
+   *  UNCLASSIFIED row can be ruled on without re-deriving it. */
   lsad: string;
 };
 
@@ -278,9 +235,8 @@ zctaFeatures.forEach((zcta, zi) => {
     }
   }
 
-  // A ZCTA smaller than the lattice catches no node. Rather than dropping it —
-  // which would silently remove a real zip from the country's coverage — it
-  // gets one representative interior point, and the count is reported.
+  // A ZCTA smaller than the lattice catches no node; it gets one
+  // representative interior point, and the count is reported.
   if (points.length === 0) {
     fallbackPointUsed += 1;
     const ring = zcta.rings[0] ?? [];
@@ -319,11 +275,7 @@ zctaFeatures.forEach((zcta, zi) => {
   for (const layer of layers) {
     for (const [x, y] of points) {
       for (const ci of candidatesAt(layer.grid, x, y)) {
-        // Containment is tested FIRST, every time. An earlier draft skipped
-        // the test once a polygon had been hit and just incremented — which
-        // counted every later sample point of the zip as being inside a
-        // government it had only been a grid-cell neighbour of, and turned the
-        // sample count from evidence into decoration.
+        // Containment is tested every time; the sample count is evidence.
         if (!containsPoint(layer.polys[ci]!, x, y)) continue;
         const props = layer.features[ci]!.properties;
         if (isPseudoEntity(layer.spec.id(props), layer.spec.name(props))) {
@@ -362,18 +314,10 @@ console.log(`\nforward pass finished in ${((Date.now() - started) / 1000).toFixe
 /* -------------------------------------------------------------------------- */
 /* The reverse pass — governments smaller than the lattice                    */
 /*                                                                            */
-/* The forward pass samples ZCTAs and asks which governments contain each      */
-/* sample point. A government smaller than the 0.01-degree lattice can sit     */
-/* entirely between sample points and be missed — 2,213 incorporated places    */
-/* and CDPs were, in the first run. Reporting those as "resolved to no zip"    */
-/* would be this repo's own render-default rule broken one floor down: a       */
-/* method limitation rendered as a fact about the country.                     */
-/*                                                                            */
-/* So every government the forward pass did not reach is asked the question    */
-/* from its own side: take a representative interior point and find the ZCTA   */
-/* containing it. The count recovered this way is reported separately, because */
-/* a single containing point is weaker evidence than a lattice of them and a   */
-/* reader of these numbers should be able to see which is which.               */
+/* A government smaller than the 0.01-degree lattice can sit between sample    */
+/* points. Every government the forward pass did not reach is asked from its   */
+/* own side: a representative interior point and the ZCTA containing it. The   */
+/* count recovered this way is reported separately, as weaker evidence.        */
 /* -------------------------------------------------------------------------- */
 
 const zctaPolys = zctaFeatures.map((f) => indexPolygon(f.rings, f.bbox));

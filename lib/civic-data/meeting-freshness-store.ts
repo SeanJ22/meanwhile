@@ -1,7 +1,3 @@
-/** Bounded, read-only proof inputs for one permanent meeting partition.
- * No historical outcome counts are claimed from this deliberately narrow read.
- * Keep the full canonical proof evaluator; a pointer alone is not verification.
- */
 import { Pool, type PoolClient } from "@neondatabase/serverless";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
 import type { RoutineObservabilityRows } from "./observability.ts";
@@ -14,8 +10,7 @@ export async function readMeetingFreshnessRows(connection: string, contract: Mee
     await db.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");
     await db.query("SET LOCAL statement_timeout = 5000");
     const identity = [contract.sourceId, contract.recordClass, contract.scope];
-    // Preserve ALL latest-time ties and rows without a local attempt receipt:
-    // neither an arbitrary UUID winner nor an omitted malformed row can pass.
+    // Keep all latest-time ties and rows without a local attempt receipt.
     const selected = await db.query<{ id: string }>(`
       WITH attempts AS (
         SELECT c.id, e.at, max(e.at) OVER () AS newest
@@ -35,9 +30,7 @@ export async function readMeetingFreshnessRows(connection: string, contract: Mee
         WHERE c.candidate#>>'{bootstrapImport,predecessorVersionId}' IS NOT NULL`, identity);
     const ids = selected.rows.map(row => row.id);
     if (ids.length > 64) throw new Error("MEETING_FRESHNESS_AMBIGUOUS_AUTHORITY");
-    // Bound transferred JSON before fetching it, in the same MVCC snapshot.
-    // This is a memory bound, never a spending or coverage cap: overflow holds
-    // this partition explicitly rather than truncating its required evidence.
+    // A memory bound, not a coverage cap: overflow holds the partition instead of truncating its evidence.
     const size = await db.query<{ bytes: string }>(`
       SELECT coalesce(sum(bytes),0)::text AS bytes FROM (
         SELECT octet_length(row_to_json(c)::text) AS bytes FROM civic_data_candidates c WHERE id=ANY($1::text[])
@@ -66,7 +59,6 @@ export async function readMeetingFreshnessRows(connection: string, contract: Mee
       promotions: promotions.rows.map(row => ({ ...row, promotedAt: iso(row.promotedAt) })),
     };
   } finally {
-    // Releasing a client with an error discards any still-open failed snapshot.
     db?.release(true);
     await pool.end();
   }

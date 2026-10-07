@@ -1,10 +1,6 @@
 /**
- * @freshness-reads-here
- *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * @freshness-reads-here — the freshness date is taken at the moment of the
+ * fetch, by the code path that performs the read.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -27,26 +23,20 @@ import {
 } from "../normalize-account.ts";
 
 /**
- * Revize meeting source — the Merrimack County half of the 03255 hunt.
- *
- * Revize's calendar.php is JavaScript-only, but two things on the site are
- * server-rendered (ladder rungs recorded 2026-08-13, verified again today):
+ * Revize meeting source. calendar.php is JavaScript-only, but two things on a
+ * Revize site are server-rendered:
  *
  * 1. **The homepage "Upcoming Meetings" block** — the next few meetings as
  *    plain text: a title line, a `Month D, YYYY @ H:MMAM` line, a venue line.
  *    This is where the meeting rows come from.
  * 2. **The body's notices/agendas page** — dated PDFs ("Public Notice
- *    8.10.26.pdf", "BOC Packet 7.27.26.pdf"), posted days-to-weeks ahead per
- *    RSA 91-A. This is where agenda links come from, matched to a meeting by
- *    the date in the filename. The `?t=` cache-buster is stripped; the
- *    tokenless URL serves fine (the strip-the-token rung).
+ *    8.10.26.pdf", "BOC Packet 7.27.26.pdf"). This is where agenda links come
+ *    from, matched to a meeting by the date in the filename. The `?t=`
+ *    cache-buster is stripped; the tokenless URL serves fine.
  *
- * The venue string is cryptic ("OCH - Concord") and resolves through the
- * venue cache; the expansion — OCH, 163 N. Main St., Concord — was read from
- * the county's own 7/27 public-notice PDF, cited on the cache row. A venue
- * string with no reviewed row is never placed and never suppresses its
- * sitting: it is published with no pin and the block's own words as its named
- * gap, counted as `unknownVenue` (the venue-gap class, 2026-09-23).
+ * Venue strings resolve through the venue cache. One with no reviewed row is
+ * never placed and never suppresses its sitting: it is published with no pin
+ * and the block's own words as its named gap, counted as `unknownVenue`.
  */
 
 const SOURCE_NAME = "revize";
@@ -160,10 +150,9 @@ export function parseAgendaDocuments(
       if (worded && MONTHS[worded[1].toLowerCase()]) {
         month = MONTHS[worded[1].toLowerCase()];
         day = Number(worded[2]);
-        // The page is one running archive; a filename with no year belongs
-        // to the year the sibling numeric-dated files around it carry. The
-        // current year is the only honest guess and it is only a *match*
-        // key — nothing renders it.
+        // The page is one running archive; a filename with no year takes the
+        // year the sibling numeric-dated files carry. It is only a match key —
+        // nothing renders it.
         year = new Date().getFullYear();
       }
     }
@@ -204,13 +193,11 @@ export function makeRevizeSource(
       notConfigured: 0,
     };
 
-    // A-002 · counted in the unit the disposition happens in. One raw row is
-    // one town's homepage plus its notices page, and both expand into many
-    // logical records — an upcoming-block item, or a dated document set.
+        // Counted per logical record: an upcoming-block item or a dated document set.
     let considered = 0;
     let duplicates = 0;
-    // A-002 · `placeless` and `unknownVenue` tally sittings that are then
-    // PRODUCED (D18; the venue-gap class, 2026-09-23), so neither is a drop.
+        // `placeless` and `unknownVenue` tally sittings that are then
+        // PRODUCED, so neither is a drop.
     let keptButPlaceless = 0;
 
     for (const { wiring, homepageHtml, agendaPageHtml, collectedAt } of raw) {
@@ -221,9 +208,7 @@ export function makeRevizeSource(
 
       for (const item of parseUpcomingBlock(homepageHtml)) {
         considered += 1;
-        // Only the wired body's meetings; the block also lists bodies we have
-        // not wired (Merrimack's Executive Committee is the county
-        // delegation's, a different government).
+        // Only the wired body's meetings; the block also lists other bodies.
         if (
           wiring.config.titleMatch &&
           !item.title.includes(wiring.config.titleMatch)
@@ -256,15 +241,11 @@ export function makeRevizeSource(
         );
 
         /*
-         * **NO PLACE NEVER SUPPRESSES THE SITTING** (the venue-gap class,
-         * 2026-09-23). Each of these used to `continue`; each is now KEPT
-         * with no pin and counted as before: a venue line naming no building
-         * is online (D18, `placeless`), a venue line with no reviewed row is
-         * the county's own words (`STATED_NOT_PLACED`), and an item with no
-         * venue line is the county's own gap (`NOT_STATED_BY_PUBLISHER`), both
-         * `unknownVenue`. A sitting noticed for a venue other than the keyed
-         * one (the board alternates venues) now reaches the reader in the
-         * county's words instead of vanishing.
+         * No place never suppresses the sitting; each case is kept with no pin:
+         * a venue line naming no building is online (`placeless`), a venue line
+         * with no reviewed row is the publisher's own words
+         * (`STATED_NOT_PLACED`), and an item with no venue line is the
+         * publisher's own gap (`NOT_STATED_BY_PUBLISHER`), both `unknownVenue`.
          */
         const online = item.venueText && isPlacelessLocation(item.venueText)
           ? { label: item.venueText, joinUrl: null }
@@ -283,8 +264,7 @@ export function makeRevizeSource(
         }
 
         // The agenda (or, failing that, the statutory notice) whose filename
-        // dates to this meeting. Observed on the body's own page — never
-        // constructed from a pattern.
+        // dates to this meeting, as observed on the page — never constructed.
         const dated = documents.filter(
           (doc) => doc.year === year && doc.month === month && doc.day === day,
         );
@@ -298,7 +278,6 @@ export function makeRevizeSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
           ocdId: wiring.ocdId,
-          /* NH-RC4: the body, from the wiring row that produced this meeting. */
           bodyId: wiring.bodyId,
           bodyName: wiring.config.bodyName ?? item.title,
           title: item.title,
@@ -326,15 +305,9 @@ export function makeRevizeSource(
         });
       }
 
-      // ── M59: the archive rung ────────────────────────────────────────────
-      // The "Upcoming Meetings" block is upcoming by construction, so until
-      // now this body's past sittings did not exist as far as the app was
-      // concerned — the Concluded filter matched nothing at 03301 and said so
-      // honestly, which was true and useless. The notices page carries them:
-      // one public notice, board packet and minutes set per sitting, each
-      // filename dated. What it does NOT carry is a start time, and that is
-      // the whole reason these rows needed a new shape rather than a default
-      // hour. `startPrecision: "DAY"` says the publisher gave us a day.
+      // The archive rung: the notices page carries past sittings (one notice,
+      // packet and minutes set each, filename-dated) but no start time, so
+      // these rows carry `startPrecision: "DAY"` rather than a default hour.
       const pageUrl = `${wiring.config.base}/${wiring.config.agendaPage}`;
       const seen = new Set(meetings.map((m) => m.id));
       const venue = soleVenueForBody(SOURCE_NAME, wiring.ocdId);
@@ -351,20 +324,16 @@ export function makeRevizeSource(
         // A date the upcoming block already produced with a REAL time wins.
         // The archive never overwrites a known hour with an unknown one.
         if (seen.has(id)) {
-          // A-002: the same sitting arriving a second way is a duplicate, not
-          // a record with no disposition.
+          // The same sitting arriving a second way is a duplicate.
           duplicates += 1;
           continue;
         }
 
         if (!venue) {
           /*
-           * The notices page states no place for any sitting — its rows are
-           * dated documents — and this body has no one reviewed venue to place
-           * them with. That never suppresses the sitting (the venue-gap class,
-           * 2026-09-23): it is published with no place and our own
-           * place-not-recorded gap (there are no publisher words to quote),
-           * counted as `unknownVenue` and kept. This used to `continue`.
+           * The notices page states no place for any sitting, so the sitting is
+           * published with our own place-not-recorded gap, counted
+           * `unknownVenue`.
            */
           drops.unknownVenue++;
           keptButPlaceless += 1;
@@ -382,7 +351,6 @@ export function makeRevizeSource(
         meetings.push({
           id,
           ocdId: wiring.ocdId,
-          /* NH-RC4: the body, from the wiring row that produced this meeting. */
           bodyId: wiring.bodyId,
           bodyName: wiring.config.bodyName ?? wiring.publishingOrg,
           title: wiring.config.bodyName ?? wiring.publishingOrg,
@@ -414,9 +382,7 @@ export function makeRevizeSource(
     return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
       logicalInput: considered,
       duplicates,
-      // Every `placeless` and `unknownVenue` here tallies a sitting that is
-      // then produced (A-002). Until the venue-gap class (2026-09-23) both had
-      // a `continue` behind them and were real drops.
+      // Every `placeless` and `unknownVenue` here tallies a sitting that is then produced.
       countedButProduced: keptButPlaceless,
     });
   };
@@ -424,12 +390,9 @@ export function makeRevizeSource(
   return {
     name: SOURCE_NAME,
 
-    // The archive rung above walks every dated document the notices page
-    // lists and clips nothing off the back, so this source's own window is
-    // the publisher's, not the app's 90-day serving window. Carry-forward
-    // reads this to decide what a healthy run WOULD have produced; nothing
-    // else does, and the reader still only ever sees the serving window,
-    // which `lib/meetings/query.ts` clips independently.
+    // The archive rung clips nothing off the back, so this source's window is
+    // the publisher's. Carry-forward reads this; the reader still only sees the
+    // serving window, which `lib/meetings/query.ts` clips independently.
     publishedLookbackDays: null,
 
     async fetch(query?: MeetingQuery): Promise<RevizeRaw[]> {

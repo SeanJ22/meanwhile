@@ -1,10 +1,8 @@
 /**
  * @freshness-reads-here
  *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * The clock stamps in this file are minted by the code path that performs the read: the freshness date
+ * is taken at the moment of the fetch.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -31,42 +29,19 @@ import {
 } from "../normalize-account.ts";
 
 /**
- * BoardBook Premier (Sparq Data Solutions) — the school-board agenda portal
- * behind `meetings.boardbook.org/Public/Organization/<orgId>`.
+ * BoardBook Premier (Sparq Data Solutions): the school-board agenda portal behind
+ * `meetings.boardbook.org/Public/Organization/<orgId>`. One server-rendered page carries the whole
+ * meeting archive as `<tr class=" row-for-board">` rows: date-time-title, meeting type, the venue as three
+ * labeled spans (name, street, city-state-zip), and public agenda/notice links. Plain GET, no auth.
  *
- * One server-rendered page carries the organization's whole meeting archive
- * (Amphitheater's reaches back to 2018 — 401 rows at first fetch) as
- * `<tr class=" row-for-board">` rows, each with the date-time-title line,
- * the meeting type, the venue as three labeled spans (name, street, city
- * -state-zip), and public links (`/Public/Agenda/<org>?meeting=<id>`,
- * `/Public/PublicNotice/...`). Everything is plain GET, no auth, no
- * client-side rendering — ladder rung 2, the page itself.
- *
- * The portal posts each meeting's notice days ahead (Amphitheater's Aug 11
- * sitting released Aug 10), so between postings the upcoming window can
- * honestly be empty while the concluded tier still carries recent sittings.
- * The wiring row's `meetingCadence` (the body's own published schedule) is
- * the reader's answer to "when do they usually meet".
- *
- * The feed publishes venue name AND address per row; coordinates still come
- * from the venue cache so every pin carries a citable geocoder call — an
- * unmatched venue is never guessed (§0c), and never suppresses the sitting: it
- * is published with no pin and the row's own venue words as its named gap,
- * counted as `unknownVenue` (the venue-gap class, 2026-09-23).
+ * Notices post days ahead, so the upcoming window can honestly be empty between postings. Coordinates come
+ * from the venue cache; an unmatched venue is never guessed and never suppresses the sitting: it is
+ * published with no pin, its own venue words as its named gap, counted as `unknownVenue`.
  */
 
 const SOURCE_NAME = "boardbook";
 
-/**
- * The fetch window IS the served window (M76, 2026-08-15).
- *
- * These were literal 60 and 30 with a comment claiming they matched the
- * cascade. The served lookback moved 30 -> 90 and the adapters did not, so
- * every source quietly dropped sixty days of published, retrievable history
- * at the fetch — invisible to every count check, because each adapter
- * honestly reported what it had asked for. Deriving them is what makes the
- * drift impossible rather than merely noticed.
- */
+/** The fetch window is the served window, derived from the serving constants so the two cannot drift. */
 const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
@@ -202,14 +177,8 @@ export function makeBoardBookSource(
         }
 
         const location = row.locationName ?? "";
-        /*
-         * A meeting held online is KEPT (D18). No building means no
-         * coordinates and no pin, but it is a real public meeting a reader
-         * could attend, and dropping it applied the map's constraint to the
-         * reader. The label is the published string verbatim; nothing here
-         * publishes a join link, so joinUrl is null and renders as the gap
-         * it is rather than as some other URL dressed up as a way in.
-         */
+        // A meeting held online is kept: no building means no pin, but it is a real public meeting. The label is
+        // the published string verbatim; no join link is published, so `joinUrl` is null.
         const online = location && isPlacelessLocation(location)
           ? { label: location, joinUrl: null }
           : null;
@@ -221,14 +190,8 @@ export function makeBoardBookSource(
           keptButPlaceless += 1;
         }
         const venue = online || !location ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location) ?? null;
-        /*
-         * No reviewed venue never suppresses the sitting (the venue-gap class,
-         * 2026-09-23). It is published with no pin and its gap named: the
-         * row's own three venue spans (name, street, city-state-zip) in the
-         * portal's order, or the portal's silence where the row prints none.
-         * Counted as `unknownVenue`, and produced. Both cases used to
-         * `continue`.
-         */
+        // No reviewed venue never suppresses the sitting: it is published with no pin and its gap named (the
+        // row's own venue spans, or the portal's silence), counted as `unknownVenue`.
         const venueGap = !online && !venue
           ? unplacedVenueGap(
               [row.locationName, row.addressLine, row.cityStateZip].filter(Boolean).join(", "),

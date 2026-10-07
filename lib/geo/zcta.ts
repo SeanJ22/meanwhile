@@ -1,6 +1,4 @@
-// The import attribute is what lets this module load under `node --test` as
-// well as under the bundler. Without it Node refuses the JSON outright, which
-// kept every zip-level test out of the suite.
+// The import attribute lets this module load under `node --test` as well as the bundler.
 import centroidFile from "./zcta-centroids.json" with { type: "json" };
 import {
   isWellFormedZip,
@@ -13,29 +11,12 @@ import {
 } from "./zcta-core.ts";
 
 /**
- * Zip → map coordinate, SYNCHRONOUSLY, with the whole table in the module.
+ * Zip → map coordinate, synchronously, with the whole table in the module.
+ * For the server and scripts only; client components use `./zcta-table.ts`.
  *
- * Orientation only. A ZCTA is a statistical shape derived from mail delivery
- * routes; it crosses city, county, school district, and legislative lines. It
- * tells the map where to look and nothing else. Anything that needs actual
- * districts asks for a street address, and says why at the point of asking.
- *
- * ## THIS MODULE IS FOR THE SERVER AND FOR SCRIPTS — P-002, 2026-08-24.
- *
- * The static import above pulls 960,770 bytes into whatever graph reaches it.
- * On a server or in a script that is free. In the browser it was 32.5% of the
- * landing page's initial JavaScript — more than MapLibre — for a table no
- * reader can use until they type a zip.
- *
- * So the three client components that used to import this now use
- * `./zcta-table.ts`, which loads the same file with a dynamic `import()`.
- * `tests/zcta-async.test.ts` fails the build if a client component imports
- * this one again, because nothing else would notice: the page would work
- * perfectly and simply be a megabyte heavier.
- *
- * The logic lives in `./zcta-core.ts` and is called by both, so there is one
- * implementation of "which zip is nearest" rather than a copy per module
- * (RULING 103).
+ * Orientation only: a ZCTA crosses city, county, school district and
+ * legislative lines. Anything that needs actual districts asks for a street
+ * address.
  */
 
 export type { ZctaCentroid, ZipResolution };
@@ -45,11 +26,8 @@ export { isWellFormedZip };
 const CENTROIDS = centroidFile.centroids as unknown as CentroidTable;
 
 /**
- * Whether the centroid table covers the whole country.
- *
- * False while the committed stub is in place. It changes what an unrecognized
- * zip means: with a partial table we can't claim a zip doesn't exist, only that
- * we don't have it yet — and the UI has to say the honest one.
+ * Whether the centroid table covers the whole country. With a partial table
+ * an unrecognized zip is "we don't have it yet", not "it doesn't exist".
  */
 export const COVERAGE_IS_COMPLETE: boolean = centroidFile.complete === true;
 

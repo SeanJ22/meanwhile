@@ -11,24 +11,12 @@ import {
 } from "../coverage/zip-tier.ts";
 
 /**
- * Writes to the search log — what was asked and where, never who.
- *
- * The two-store constraint (CLAUDE.md) applies from the first row, which is
- * this one: no account key, no device ID, no fingerprint, no retained IP, no
- * session key. The row's shape is enforced by the schema
- * (tests/db-schema.test.ts) and the *values* are filtered here — a caller
- * cannot smuggle an identifier through the `detail` bag.
- *
- * Logging is fire-and-forget and must never break the reader's request:
- * a demo without a database still serves the map, it just doesn't log.
+ * Writes to the search log: what was asked and where, never who. The schema
+ * enforces the row's shape; the `detail` values are filtered here. Without a
+ * database the write is skipped and the request still succeeds.
  */
 
-/**
- * The dataset every division identifier in the current registry was resolved
- * against — all 940 divisions carry TIGER_GENZ2025 (docs/state.md §9,
- * provenance distribution verified). When the boundary vintage changes, this
- * constant changes with it in the same commit.
- */
+/** The dataset every division identifier in the current registry was resolved against. */
 export const DIVISION_VINTAGE = "TIGER_GENZ2025";
 
 export type SearchLogEventType =
@@ -46,13 +34,8 @@ export const SEARCH_LOG_EVENT_TYPES: SearchLogEventType[] = [
   "MEETING_OPENED",
   "DISTRICT_SELECTED",
   "FILTER_APPLIED",
-  // Approved by the author (session brief 1d, 2026-08-15) — added together
-  // with its line on /transparency, per the coupling rule.
   "OFFICIAL_OPENED",
-  // The ask box (session brief 5, 2026-08-19), same coupling: routed asks
-  // log the topic id only; a refusal logs the question's text (capped)
-  // because unanswered questions are the roadmap — disclosed on
-  // /transparency in the same commit. Identifier-free like every row.
+  // Routed asks log the topic id only; a refusal logs the capped question text.
   "QUESTION_ASKED",
 ];
 
@@ -64,21 +47,13 @@ export interface SearchLogEvent {
   ocdIds: string[];
   /** Scalar facts only; validated against the forbidden fragments below. */
   detail?: Record<string, string | number | boolean>;
-  /**
-   * Whose traffic this is (C05). Supplied by the caller from the incoming
-   * request's own declaration — see `lib/db/run-marker.ts`. Absent means
-   * ORGANIC, which is the correct reading of "nobody said otherwise" for a
-   * human at a browser.
-   */
+  /** Whose traffic this is, from the request's own declaration. Absent means ORGANIC. */
   marker?: RunMarker;
 }
 
 /**
- * Detail keys that would turn an event row into a person. Same family as the
- * schema-level guard, applied to the free-form bag the schema cannot see
- * into. A rejected event is dropped loudly (thrown to the caller's catch) —
- * never written with the key silently stripped, because a caller passing an
- * identifier is a bug to surface, not launder.
+ * Detail keys that would turn an event row into a person. A rejected event
+ * throws; the key is never silently stripped.
  */
 const FORBIDDEN_DETAIL_FRAGMENTS = [
   "user",
@@ -127,9 +102,8 @@ export function isValidEventType(value: unknown): value is SearchLogEventType {
 }
 
 /**
- * Validate and write one event. Throws on a malformed event (caller bug);
- * returns false when there is no database to write to (a real state for the
- * demo until DATABASE_URL is set in the deploy environment).
+ * Validate and write one event. Throws on a malformed event; returns false
+ * when there is no database.
  */
 export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
   if (!isValidEventType(event.eventType)) {
@@ -142,8 +116,7 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
 
   const zip = event.approximateLocation?.trim() || null;
   if (zip !== null && !/^\d{5}$/.test(zip)) {
-    // Anything beyond five digits could be a street address someone typed —
-    // which is more location than this table is allowed to hold.
+    // More than five digits could be a street address.
     throw new Error("approximateLocation must be a five-digit zip or absent");
   }
 
@@ -151,19 +124,10 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
 
   if (!process.env.DATABASE_URL) return false;
 
-  // Ordered after the DATABASE_URL check on purpose: "there is no database" is
-  // an ordinary state that returns false, while "there is a database and it is
-  // the production one, and we are not production" is a misconfiguration that
-  // throws. Collapsing the two would hide the second inside the first.
+  // After the DATABASE_URL check: no database returns false, the wrong database throws.
   assertWriteAllowed("a search log event");
 
-  // The scrub pass (session brief 4, wall clock 2026-08-14): free text —
-  // the refusal log's question field, and any string a future event
-  // carries — is scrubbed of phone-number-, email-, and street-address-
-  // shaped tokens BEFORE storage. The store is described as
-  // identifier-free; a reader typing their own address into a question
-  // must not make that description false. Mechanical, tested in
-  // tests/ask-box.test.ts; disclosed on /transparency in the same commit.
+  // String detail values are scrubbed of phone-, email- and address-shaped tokens before storage.
   let detail = event.detail ?? null;
   if (detail) {
     detail = Object.fromEntries(
@@ -183,21 +147,12 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
       ocdIds: event.ocdIds,
       divisionVintage: DIVISION_VINTAGE,
       detail,
-      // C05: whose traffic this is, declared at write time. `runId` is null on
-      // every organic row by construction, so it can never relate two
-      // readers' rows to each other.
+      // `runId` is null on every organic row, so it never relates two readers' rows.
       runClass: marker.runClass,
       runId: marker.runClass === "ORGANIC" ? null : marker.runId,
-      // RULING 6 / item 8: the coverage tier of the place this row is about,
-      // stamped from the ledger at WRITE time. A row a buyer weights by
-      // coverage depth has to carry the depth the reader actually saw, not
-      // the depth we happen to have reached by the time they export.
-      // `UNKNOWN` when the zip has no stamped tier — never TIER_0, which
-      // would claim we looked at its governments and found none.
+      // Stamped at write time. `UNKNOWN` when the zip has no stamped tier, never TIER_0.
       coverageTier: coverageTierForZip(zip),
-      // Prompt C item 3. Counted, not floored — see lib/db/schema.ts.
-      // UNKNOWN where the zip has no stamped distribution, never four
-      // zeros, which would claim we counted this place and found none.
+      // UNKNOWN where the zip has no stamped distribution, never four zeros.
       coverageTierDistribution: encodeTierDistribution(tierDistributionForZip(zip)),
     });
   return true;

@@ -1,27 +1,3 @@
-/**
- * **THE RESEARCH VIEW — what the admin Research page reads, and the one thing it derives.**
- * (Level 1 activation, 2026-09-01. RULING 240, RULING 241.)
- *
- * Server-side reads over the control plane, each answering HELD / NOT_RECORDED /
- * STORE_UNREACHABLE exactly as `admin-data.ts` does, and ONE pure function that
- * turns those answers into everything the page renders.
- *
- * ```
- *   THE VERDICT IS DERIVED     `deriveLevel1` at read time, from the heartbeat,
- *                              the state, the intents and the live spend. A
- *                              stored flag on the state record is never read —
- *                              there is no code path here that looks for one
- *   EVERY NUMBER IS MEASURED   a `Measured` with its denominator and contract,
- *                              or a `Gap` that says whose gap it is
- *   A FAILED READ IS NAMED     an unreachable store can never make the lane
- *                              read ACTIVE; it reads INACTIVE with the store
- *                              named as the reason
- *   NO CREDENTIAL VALUE        the worker credential reaches the view as a
- *                              NAME and a configured flag, copied field by
- *                              field, never as the record it came from
- * ```
- */
-
 import { unreachable, type ReadOutcome } from "./admin-data.ts";
 import type { CostEntry } from "./cost.ts";
 import type { FleetSafetySnapshot } from "./fleet-safety.ts";
@@ -64,11 +40,9 @@ import type { ScoutOutcome, ScoutResult, ScoutStop } from "./scheduler/scout-res
 import { researchDigestRows, type ResearchDigestRows } from "./research-digest.ts";
 import type { DispatchOrdering, ResearchMetrics } from "./research-metrics.ts";
 
-/** How many Scout results and intents the page lists. The totals are always stated beside them. */
 export const SCOUT_RESULTS_SHOWN = 25;
 export const INTENTS_SHOWN = 10;
 
-/* ------------------------------------------------------------------ reads */
 
 export async function readResearchState(
   repos: ControlPlaneRepositories,
@@ -87,7 +61,6 @@ export async function readResearchState(
   }
 }
 
-/** The intent log in append order. An empty log is HELD: no intent has been recorded. */
 export async function readResearchIntents(
   repos: ControlPlaneRepositories,
 ): Promise<ReadOutcome<readonly ResearchIntent[]>> {
@@ -99,9 +72,7 @@ export async function readResearchIntents(
 }
 
 export interface ScoutResultsRead {
-  /** Every typed result the log holds. */
   readonly total: number;
-  /** The newest `SCOUT_RESULTS_SHOWN`, newest first by `recordedAt`. */
   readonly latest: readonly ScoutResult[];
 }
 
@@ -133,7 +104,6 @@ export interface ScoutSpendRead {
   readonly asOf: string;
 }
 
-/** Scout spend in the rolling window, from the DURABLE cost ledger, as of `nowIso`. */
 export async function readScoutSpend(
   repos: ControlPlaneRepositories,
   nowIso: string,
@@ -151,15 +121,12 @@ export async function readScoutSpend(
 }
 
 export interface ScoutEvidenceRead {
-  /** Distinct artifact ids across every result's `artifactIds`. */
   readonly distinctArtifacts: number;
-  /** Every artifact id citation, duplicates included. The denominator of the distinct count. */
   readonly citations: number;
   readonly attempts: number;
   readonly attemptsWithEvidence: number;
 }
 
-/** Derived from the results themselves, so the page never scans the artifact log. */
 export function scoutEvidenceOf(results: readonly ScoutResult[]): ScoutEvidenceRead {
   const distinct = new Set<string>();
   let citations = 0;
@@ -189,7 +156,6 @@ export async function readScoutEvidenceCount(
   }
 }
 
-/* ---------------------------------------------------------------- intents */
 
 export type ResearchIntentRecord = Extract<ResearchIntent, { readonly kind: "INTENT" }>;
 
@@ -201,12 +167,6 @@ export function parseResearchIntentAction(raw: unknown): ResearchIntentAction | 
     : null;
 }
 
-/**
- * The intent the admin route appends. The session id is provenance, never a
- * reader identity. `note` is the owner's own words — a DISPATCH target or a
- * PAUSE_RUNNER reason — and is null for every other action. `budgetUsd` is a
- * DISPATCH's own budget (MW-021), kept only on a DISPATCH.
- */
 export function buildResearchIntent(
   action: ResearchIntentAction,
   requestedAt: string,
@@ -228,12 +188,6 @@ export function buildResearchIntent(
   };
 }
 
-/**
- * Validate the owner's note for an action (ADM-8 dispatch target, ADM-5 pause
- * reason). A DISPATCH without words is refused: "deploy the fleet" to nowhere
- * is not an instruction. Everything else may carry a note or not. Returns the
- * trimmed note, or a refusal sentence.
- */
 export function validateIntentNote(
   action: ResearchIntentAction,
   raw: unknown,
@@ -277,18 +231,10 @@ export async function appendResearchIntent(
   }
 }
 
-/* --------------------------------------------------------------- the view */
 
 export interface ScoutRow {
   readonly subject: string;
   readonly obligationId: string;
-  /**
-   * The executor's own sentence for why a MODEL was spent on this unit. It
-   * explains the dispatch, never the goal — the owner read it and said *"I
-   * have no idea how to translate the reason at all."* It stays on the row as
-   * disclosure detail; the face is built by `scoutStory` in
-   * `lib/control-plane/plain-work.ts` from the typed fields beneath.
-   */
   readonly reason: string;
   readonly model: string;
   readonly elapsedMs: number;
@@ -300,16 +246,10 @@ export interface ScoutRow {
   readonly artifactCount: number;
   readonly candidateCount: number;
   readonly recordedAt: string;
-  /* ---- the typed facts the plain sentences are built from (ADM-48) ---- */
-  /** What class of record the obligation is about. */
   readonly recordClass: string;
-  /** The route the obligation names, or null when it names none. */
   readonly routeId: string | null;
-  /** The executor's refusal codes; empty when it accepted the Scout's finish. */
   readonly refusalCodes: readonly string[];
-  /** Distinct evidence-backed rungs the Scout walked. */
   readonly evidenceRungs: number;
-  /** The rungs the Scout said it would try next — the proof there IS a next route. */
   readonly nextRungs: readonly string[];
 }
 
@@ -327,21 +267,10 @@ export interface IntentRow {
 
 export interface ResearchView {
   readonly nowIso: string;
-  /** ACTIVE / DEGRADED / INACTIVE. `reading.verdict` unless a required input was unreadable. */
   readonly verdict: Level1Verdict;
-  /** Every named reason the lane is not ACTIVE, store failures included. Empty when ACTIVE. */
   readonly reasons: readonly string[];
-  /** The raw derivation, for a caller that wants each condition. */
   readonly reading: Level1Reading;
-  /** Each input the store could not answer, by name. */
   readonly storeNotes: readonly string[];
-  /**
-   * What the runner is doing, and the facts the card needs to say what it did
-   * and when it runs again (ADM-24 wording, applied here by ADM-42's item 9).
-   * `standing` is `runner-standing.ts` — the ONE place a human sentence for
-   * runner state is generated — so this page and Pilot health cannot disagree
-   * about whether the runner is paused, late or in a blackout.
-   */
   readonly runner: {
     readonly state: RunnerLiveness;
     readonly detail: string;
@@ -351,15 +280,9 @@ export interface ResearchView {
     readonly lastBeatAt: string | null;
     readonly lastCycleStartedAt: string | null;
     readonly lastCycleFinishedAt: string | null;
-    /** When the runner itself believes the next cycle is due. Null when it was started without an interval. */
     readonly nextCycleDueAt: string | null;
     readonly testedSha: string | null;
   };
-  /**
-   * The last cycle's Fleet safety snapshot: what stopped work early, what was
-   * pushed to a later cycle, and which providers are paused. A gap when the
-   * cycle that wrote this state predates the field.
-   */
   readonly safety: Held<FleetSafetySnapshot>;
   readonly cycle: Held<{
     readonly beatAt: string;
@@ -387,7 +310,6 @@ export interface ResearchView {
     readonly windowUsd: Held<Measured>;
     readonly measuredAttempts: Held<Measured>;
     readonly unmeasuredAttempts: Held<Measured>;
-    /** The cap condition's own words when eligible work is cap-deferred; the lane can be ACTIVE and deferring. */
     readonly capDeferredNote: string | null;
   };
   readonly queue: Held<{
@@ -411,17 +333,9 @@ export interface ResearchView {
     readonly rejected: Held<Measured>;
   }>;
   readonly intents: Held<{ readonly shown: Measured; readonly rows: readonly IntentRow[] }>;
-  /** The one pause form that applies: PAUSE when running, RESUME when paused. */
   readonly pauseAction: "PAUSE" | "RESUME";
-  /**
-   * The host supervision reading the last cycle carried (RULING 246), and the
-   * condition it derived. A gap names whose gap it is; the condition is also
-   * in `reading.conditions`, this is the panel's own copy.
-   */
   readonly supervision: Held<HostSupervision & { readonly condition: Level1Condition | null }>;
-  /** The reader-impact order the last cycle applied to the Scout lane (Work Item 5). */
   readonly ordering: Held<DispatchOrdering>;
-  /** The lane's numbers as the last cycle computed them, plus the typed rows the page's panels render. */
   readonly metrics: Held<{ readonly record: ResearchMetrics; readonly rows: ResearchDigestRows }>;
 }
 
@@ -462,11 +376,7 @@ function count(
   }
 }
 
-/**
- * Spend may lawfully exceed its ceiling — the cap fires AT the cap, after the
- * Attempt that crossed it is recorded — so this is the one number not built by
- * `measured()`, which would refuse it. Finite and non-negative are still required.
- */
+/** Spend may exceed its ceiling (the cap fires after the crossing Attempt is recorded), so this bypasses `measured()`; it still requires finite and non-negative. */
 function spendMeasure(windowUsd: number, ceilingUsd: number, windowHours: number): Held<Measured> {
   if (!Number.isFinite(windowUsd) || windowUsd < 0 || !Number.isFinite(ceilingUsd)) {
     return gap("OURS", "the Scout spend in the window could not be read as a finite usd amount");
@@ -526,10 +436,6 @@ function intentRowsOf(log: readonly ResearchIntent[]): IntentRow[] {
     .sort((a, b) => (a.requestedAt < b.requestedAt ? 1 : a.requestedAt > b.requestedAt ? -1 : 0));
 }
 
-/**
- * Build everything the page renders. PURE: every input is a record read at
- * call time and `nowIso` is the only clock.
- */
 export function buildResearchView(input: ResearchViewInput): ResearchView {
   const heartbeat = valueOf(input.heartbeat);
   const state = valueOf(input.state);
@@ -558,9 +464,7 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
   nameFailure("Scout results", input.results);
   nameFailure("Scout evidence", input.evidence);
 
-  // A lane whose pause log, state or heartbeat could not be READ is not known
-  // to be active. Deriving ACTIVE over an unreadable input would assert an
-  // absence out of a failed read.
+  // An unreadable pause log, state or heartbeat never derives ACTIVE.
   const requiredUnreadable = [input.heartbeat, input.state, input.intents].some(
     (o) => o.kind === "STORE_UNREACHABLE",
   );
@@ -749,13 +653,7 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
               ),
             });
 
-  /*
-   * The counts are BY LIFECYCLE STATE (`candidateCounts`): `proposed` is what
-   * is still PROPOSED, not the total offered. Measured live 2026-09-02: seven
-   * candidates stood VALIDATED with zero still PROPOSED, and a denominator of
-   * `proposed` rendered them as "no method candidate proposed yet". The total
-   * every candidate was offered against is the sum of the four states.
-   */
+  /* Counts are by lifecycle state; the total offered is the sum of the four states. */
   const mc = state?.methodCandidates ?? null;
   const mcTotal = mc === null ? 0 : mc.proposed + mc.validated + mc.admitted + mc.rejected;
   const methodCandidates: ResearchView["methodCandidates"] = !state
@@ -867,11 +765,8 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
   };
 }
 
-/* ------------------------------------------------------------- the audit */
 
-/** Every number the page is about to emit, for `auditRenderedNumbers`. */
 export function renderedNumbersOf(view: ResearchView): RenderedNumber[] {
-  // A panel that is not held contributes no number; the sentence is never rendered.
   const none: Held<Measured> = gap("OURS", "this panel holds no number to audit");
   const q = view.queue.held ? view.queue.value : null;
   const mc = view.methodCandidates.held ? view.methodCandidates.value : null;
@@ -901,7 +796,6 @@ export function renderedNumbersOf(view: ResearchView): RenderedNumber[] {
     ["method candidates rejected", mc?.rejected ?? none],
     ["intents shown", view.intents.held ? held(view.intents.value.shown) : none],
   ];
-  // A gap is not a number; only what will actually be printed as one is audited.
   return candidates.flatMap(([label, m]) =>
     m.held
       ? [{ label, value: m.value.value, denominator: m.value.denominator, contract: m.value.contract }]
@@ -909,7 +803,6 @@ export function renderedNumbersOf(view: ResearchView): RenderedNumber[] {
   );
 }
 
-/** Every stated N against the rows that exist to render it, for `checkStatedEqualsRendered`. */
 export function countClaimsOf(view: ResearchView): CountClaim[] {
   const claims: CountClaim[] = [];
   if (view.results.held) {

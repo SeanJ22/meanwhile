@@ -6,7 +6,18 @@ import { keyVoteEvidenceFor } from "../lib/ask/key-votes.ts";
 
 import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
 
-const subject = { kind: "PERSON" as const, id: "congress:K000377", name: "Mark Kelly" };
+import { installFederalVotes, installRegistryAuthority, syntheticFederalDirectory, syntheticFederalKeyVotes } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
+// The reviewed selection with a synthetic position map, each roll reference marked as verified against its source.
+const keyVotes = syntheticFederalKeyVotes();
+const verified = (refs: typeof keyVotes.snapshot.entries[number]["house"]) => refs.map((ref) => ({ ...ref, verifiedAt: "2026-09-20" }));
+await installFederalVotes({ keyVotes: { ...keyVotes, snapshot: { ...keyVotes.snapshot,
+  entries: keyVotes.snapshot.entries.map((entry) => ({ ...entry, house: verified(entry.house), senate: verified(entry.senate) })) } } });
+
+// A senator of the synthetic federal directory, with a held position on every selected key vote.
+const senator = syntheticFederalDirectory().roster.officeholders.find((row) => row.chamber === "senate")!;
+const subject = { kind: "PERSON" as const, id: senator.id, name: senator.name };
 
 test("key-vote identity, missing position, physical-roll deduplication and conflicting position controls fail closed", async () => {
   const unknown = await keyVoteEvidenceFor(subject, ["congress:Z999999"]);

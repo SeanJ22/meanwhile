@@ -5,8 +5,7 @@ import { publishWorkerPollingResults } from "./worker-polling-publication.ts";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord, FieldValue } from "../control-plane/workers/types.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import { canonicalJson, keysWhere } from "../control-plane/repository/types.ts";
-import { readCompletedWorkerResultsOf } from "../control-plane/repository/worker-completion.ts";
+import { canonicalJson } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { readRegistryRuntimePrior, type RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
@@ -18,7 +17,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
-import { auditPull, captureIntact, capturesForPublication, section3SourceReceipt, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
+import { auditPull, captureIntact, jobWorkerResults, capturesForPublication, section3SourceReceipt, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { createHash } from "node:crypto";
@@ -246,21 +245,7 @@ export async function publishWorkerReaderResults(input: {
   if (input.contractId === "voting-sites") return publishWorkerPollingResults(input);
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { readHeld } = captureReaders;
-  /* Only the results of these work items are read, and for a saved page another item captured, that item's own. */
-  const resultsByItem = new Map<string, readonly WorkerResultRecord[]>();
-  const resultsOf = async (ids: readonly string[]): Promise<readonly WorkerResultRecord[]> => {
-    const missing = [...new Set(ids)].filter(id => !resultsByItem.has(id));
-    if (missing.length) {
-      const read = await readCompletedWorkerResultsOf(input.repos, missing);
-      for (const id of missing) resultsByItem.set(id, read.filter(record => record.workItemId === id));
-    }
-    return [...new Set(ids)].flatMap(id => resultsByItem.get(id)!);
-  };
-  const results = await resultsOf(input.workItemIds);
-  const readCapture = async (id: string, own: readonly WorkerResultRecord[]) => {
-    const owners = await keysWhere(input.repos.artifacts, ["artifactId"], id);
-    return captureReaders.readCapture(id, owners === null ? own : await resultsOf(owners));
-  };
+  const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   if (input.contractId === "ballot-navigation") {
     const held = input.workItemIds.filter(id => !latestParserResult(results, id));

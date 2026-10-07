@@ -126,7 +126,8 @@ async function proveRosterPublication(partial = false, box = false) {
     assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 1,
       "the normal runner retries an old whole-roster hold instead of leaving it stranded");
   }
-  const published = await publishWorkerRosterResults(input);
+  const whole = async (): Promise<never> => { throw new Error("the whole worker-result log was read"); };
+  const published = await publishWorkerRosterResults({ ...input, repos: { ...h.repos, workerResults: { ...h.repos.workerResults, readAll: whole, readSince: whole } } });
   assert.equal(published[0].outcome.status, partial ? "PARTIALLY_PUBLISHED" : "PUBLISHED", JSON.stringify(published));
   assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: existing.members.length - (partial ? 1 : 0) },
     "a retained neighbour whose new row is unresolved earns no accepted-result reuse credit");

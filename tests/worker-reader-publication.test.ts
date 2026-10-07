@@ -48,6 +48,12 @@ import { createElement } from "react";
 import { OfficialFilings } from "../components/ballot/official-filings.tsx";
 import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
 
+/** The job's repositories with the whole worker-result log made unreadable: a publisher reads only its own job's results. */
+function withoutWholeResultLog<R extends { workerResults: object }>(repos: R): R {
+  const whole = async (): Promise<never> => { throw new Error("the whole worker-result log was read"); };
+  return { ...repos, workerResults: { ...repos.workerResults, readAll: whole, readSince: whole } };
+}
+
 async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT" | "PUBLIC_RECORD") {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
@@ -524,7 +530,7 @@ test("completed polling workers publish every registered site through the existi
   await f.h.repos.doors.put(doorId, door, f.h.now());
   await f.h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value,
     autonomousPlan: { ...item.value.autonomousPlan!, sourceRegistryReferences: [...item.value.autonomousPlan!.sourceRegistryReferences, doorId] } }, f.h.now());
-  const report = await publishWorkerReaderResults(f.input);
+  const report = await publishWorkerReaderResults({ ...f.input, repos: withoutWholeResultLog(f.h.repos) });
   assert.equal(report.length, 1); assert.equal(report[0].outcome.status, "PUBLISHED", report[0].outcome.detail);
   const read = await readVotingSitesProjection({ store: f.store, now: f.h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
@@ -540,7 +546,7 @@ test("completed polling workers publish every registered site through the existi
 test("normal complete candidate workers publish their whole contest into general readers and the candidate work inventory",async()=>{
   const facts=["Avery Example","Jordan Sample"].map(candidateName=>({election:"2026 General election",electionDate:"2026-11-03",office:"County Council",candidateName,givenName:candidateName.split(" ")[0],familyName:candidateName.split(" ")[1]}));
   const f=await workerFixture("ballot-contests",facts);
-  const published=await publishWorkerReaderResults(f.input);
+  const published=await publishWorkerReaderResults({...f.input,repos:withoutWholeResultLog(f.h.repos)});
   assert.equal(published[0].outcome.status,"PUBLISHED",JSON.stringify(published));
   const read=await readGenericBallotProjection({store:f.store,now:f.h.now(),bypassCache:true});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")throw new Error("General ballot missing");

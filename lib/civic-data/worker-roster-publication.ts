@@ -9,7 +9,6 @@ import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/
 import type { WorkerEvidence, WorkerResultRecord } from "../control-plane/workers/types.ts";
 import { projectReaderRoster, type BodyRoster } from "../registry/body-rosters.ts";
 import type { OfficialCandidacyBridgeRow, RegistryRuntimePackage, RegistryRuntimePrior, RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
-import { readCompletedWorkerResults } from "../control-plane/repository/worker-completion.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, registryBaseSourceReceipt } from "../registry/runtime-data-plane.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -22,7 +21,7 @@ import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { heldDirectoryReading, materializeBodyDirectoryWork, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
 import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
-import { auditPull, capturesForPublication, captureIntact, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
+import { auditPull, capturesForPublication, captureIntact, jobWorkerResults, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { readHeldRoster } from "./worker-held-roster.ts";
 import { heldBodySchedule, type HeldBodySchedule } from "./worker-held-meetings.ts";
@@ -321,8 +320,9 @@ export async function publishWorkerRosterResults(input: {
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   if (!input.workItemIds.length) return [];
   const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
-  const records = await readCompletedWorkerResults(input.repos);
-  const { readHeld, readCapture } = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
+  const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
+  const { readHeld } = captureReaders;
+  const { results: records, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
   /* Only the work items a sibling rule can name are read: filtered reads (and the government's own item), in id order, then the rule itself. */
   const itemsWhere = async (rule: (item: WorkItem) => boolean, paths: readonly (readonly [readonly string[], string])[], ids: readonly string[] = []) => {
     const rows = [...(await Promise.all(paths.map(([path, value]) => input.repos.workItems.listWhere(path, value)))).flat(),

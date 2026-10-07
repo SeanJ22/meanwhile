@@ -15,11 +15,10 @@ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { readCompletedWorkerResults } from "../control-plane/repository/worker-completion.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import { readManualProjectionPrior, manualProjectionCandidate } from "./manual-projections.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
-import { auditPull, capturesForPublication, latestParserResult } from "./worker-publication-evidence.ts";
+import { auditPull, capturesForPublication, jobWorkerResults, latestParserResult } from "./worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { workerBallotMeasuresPackage } from "./worker-ballot-measures.ts";
 
@@ -114,7 +113,7 @@ export async function publishWorkerBallotContestsResults(input: {
   repos: ControlPlaneRepositories; store: RoutineDataStore; workItemIds: readonly string[]; now: string;
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
 }) {
-  const results = await readCompletedWorkerResults(input.repos);
+  const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, input.readCapture);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value, plan = item.autonomousPlan;
@@ -128,13 +127,13 @@ export async function publishWorkerBallotContestsResults(input: {
     let candidateId: string | null = null, versionId: string | null = null, verified = false;
     try {
       requirePublication(parser.result.role === "PARSER", "PARSER_RESULT_UNRESOLVED");
-      const captures = await capturesForPublication({ ...input, workItemId: id, primaryId: parser.result.artifactId, results });
+      const captures = await capturesForPublication({ ...input, readCapture, workItemId: id, primaryId: parser.result.artifactId, results });
       if (plan.contract.schemaVersion === 2 && plan.contract.recordClass === "BALLOT_MEASURE") {
         const urls = new Set(parser.result.records.map(row => row.fields.textUrl).filter((url): url is string => typeof url === "string" && url.startsWith("https://")));
         const held = (await input.repos.artifacts.read(id)).filter(row => urls.has(row.canonicalUrl) && !row.partial)
           .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
         const fetched = await Promise.all(held.filter(row => !captures.some(capture => capture.evidence.artifactId === row.artifactId))
-          .map(row => input.readCapture(row.artifactId, results).catch(() => null)));
+          .map(row => readCapture(row.artifactId, results).catch(() => null)));
         captures.push(...fetched.filter((capture): capture is WorkerPublicationCapture => capture !== null));
       }
       const checked = workerBallotContestsPackage({ plan, parser, captures, now: input.now, results,

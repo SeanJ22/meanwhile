@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { emptyFieldManual, fieldManualEntryId, upsertEntries, type FieldManualEntry, type FieldManualOutcome, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
+import { fieldManualEntryId, foldEntries, type FieldManualEntry, type FieldManualOutcome, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import { KNOWLEDGE_SOURCE, METHOD_VERSION_KIND, ROUTE_ENTRY_KIND } from "../lib/method/manual-bridge.ts";
 import type { MethodKnowledge } from "../lib/method/knowledge.ts";
 
@@ -83,5 +83,5 @@ export function methodVersionEntry(store: Pick<MethodKnowledge, "version" | "upd
 
 /** A manual seeded with the frozen store: every route whole, plus the version entry. */
 export function seededFieldManual(store: MethodKnowledge = methodFixture()): FieldManualStore {
-  return upsertEntries(emptyFieldManual(), [...knowledgeEntries(store), methodVersionEntry(store)], "2026-09-30");
+  return ({ entries: foldEntries([...knowledgeEntries(store), methodVersionEntry(store)]) });
 }

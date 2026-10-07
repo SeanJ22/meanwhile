@@ -79,11 +79,11 @@ test('the actual Palominas archive capture is a dead end; only the current page 
   const entries=scoutDiscoveryEntries({subjectId:'az:school:palominas-school-district-49',recordClass:'PUBLIC_COMMENT_RULE',
     attemptId:'archive-failure',recordedAt:captured,sourceDeadEnds,candidates:[],refusal:[]} as unknown as ScoutResult,['az']);
   await writeFieldManualDiscoveries(repos,entries,captured);
-  const store=(await repos.fieldManual.read('live'))!.value;
+  const store={entries:(await repos.fieldManual.list()).map(row=>row.value)};
   assert.equal(store.entries[0].kind,'SOURCE_DEAD_END');
   assert.equal(store.entries[0].outcome,'FAILED');
   assert.equal(store.entries[0].url,finalUrl);
-  assert.match(scoutFieldManualProjection(store,{subjectId:'az:school:palominas-school-district-49'}).lines.join('\n'),/2021-09-25.*Archived capture/);
+  assert.match(scoutFieldManualProjection({store},{subjectId:'az:school:palominas-school-district-49'}).lines.join('\n'),/2021-09-25.*Archived capture/);
   const expired=scoutSourceDeadEnds(kit.factEvidence!,new Date(Date.parse(captured)+(freshness.cadenceHours+1)*3_600_000).toISOString(),freshness.cadenceHours);
   assert.ok(expired.some(source=>source.artifactId===liveId && source.reason.includes('outside')),'held current pages also expire on their own cadence');
 });

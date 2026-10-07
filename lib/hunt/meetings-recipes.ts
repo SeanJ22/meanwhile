@@ -463,6 +463,7 @@ export function recipeEntry(recipe: MeetingsRecipe, observedAt: string): FieldMa
     states: recipe.state === null ? [] : [recipe.state],
     recordClasses: ["meetings"],
     platforms: recipe.platform === null ? [] : [recipe.platform],
+    ...(recipe.state === null && recipe.platform === null ? { portable: true } : {}),
     outcome: recipe.successes > 0 ? "YIELDED" : latest === null ? "REFERENCE" : "FAILED",
     url: recipe.lastSuccess?.url ?? null,
     source: RECIPE_SOURCE,

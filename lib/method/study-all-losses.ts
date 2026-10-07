@@ -70,7 +70,8 @@ function lessonFor(kind: LossKind, subject: string, words: string, study: LossSt
 function entry(kind: LossKind, key: string, title: string, says: string, now: string, platforms: string[] = [], states: string[] = []): FieldManualEntry {
   return newFieldManualEntry(LOSS_LESSON_SOURCE, key, {
     role: "SHARED", kind: "LESSON", title: title.slice(0, 160), summary: says.replace(/\s+/g, " ").slice(0, 280), outcome: "FAILED",
-    observedAt: now, platforms, states: states.filter((s) => /^[a-z]{2}$/.test(s)), payload: { lossKind: kind, key },
+    observedAt: now, platforms, states: states.filter((s) => /^[a-z]{2}$/.test(s)),
+    ...(platforms.length + states.filter((s) => /^[a-z]{2}$/.test(s)).length === 0 ? { portable: true } : {}), payload: { lossKind: kind, key },
   });
 }
 

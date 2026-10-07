@@ -1,7 +1,7 @@
 import { fork } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
-import { narrowFieldManual, type FieldManualQuery, type FieldManualRead } from "../field-manual.ts";
+import { readFieldManualRows, type FieldManualQuery, type FieldManualRepos } from "../field-manual.ts";
 import type { BrowseFn } from "../scheduler/scout-contract.ts";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -13,8 +13,8 @@ import { endOwnedProcessTree } from "../../../scripts/pilot-runtime-child.mts";
 export { workerProcessSlots, type WorkerProcessSlots } from "./worker-slots.ts";
 const processMemorySlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER);
 
-/** Transient tools on this host; leases, costs and publications keep their existing stores. */
-export async function startWorkerToolsHost(input: { knowledge: FieldManualRead; browse: BrowseFn }) {
+/** Transient tools on this host; leases, costs and publications keep their existing stores. A manual read takes only the asking job's rows. */
+export async function startWorkerToolsHost(input: { repos: FieldManualRepos; browse: BrowseFn }) {
   const token = randomUUID();
   const server = createServer(async (request, response) => {
     if (request.method !== "POST" || request.url !== "/" || request.headers.authorization !== token) {
@@ -24,7 +24,7 @@ export async function startWorkerToolsHost(input: { knowledge: FieldManualRead; 
       const chunks: Buffer[] = [];
       for await (const chunk of request) chunks.push(Buffer.from(chunk));
       const message = JSON.parse(Buffer.concat(chunks).toString("utf8")) as { kind: string; body: unknown };
-      const result = message.kind === "manual" ? narrowFieldManual(input.knowledge, message.body as FieldManualQuery)
+      const result = message.kind === "manual" ? await readFieldManualRows(input.repos, message.body as FieldManualQuery)
         : message.kind === "browse" ? await input.browse(message.body as Parameters<BrowseFn>[0]) : null;
       if (result === null) { response.writeHead(404).end(); return; }
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(result));

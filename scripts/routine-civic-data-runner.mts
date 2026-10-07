@@ -148,7 +148,6 @@ import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
-import { readFieldManual } from "../lib/control-plane/field-manual.ts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { sharedScoutBrowser } from "./scout-browse.mts";
 import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
@@ -250,8 +249,8 @@ const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
 
 const sharedBrowser = sharedScoutBrowser();
 const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
-  ? await startWorkerToolsHost({ knowledge: await readFieldManual(await createPgRepositories(controlPlaneUrlFromEnv()!,
-    RUN_STARTED_AT, { skipBootstrap: true })), browse: sharedBrowser.browse }) : null;
+  ? await startWorkerToolsHost({ repos: await createPgRepositories(controlPlaneUrlFromEnv()!,
+    RUN_STARTED_AT, { skipBootstrap: true }), browse: sharedBrowser.browse }) : null;
 const routineMemorySlots = routineProcessSlots();
 const childMemoryReleases = new Map<string, () => void>();
 const startedSourceChildren = new Set<string>();

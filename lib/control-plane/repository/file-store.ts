@@ -34,7 +34,9 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import type { FieldManualStore } from "../field-manual.ts";
+import type { FieldManualEntry } from "../field-manual.ts";
+import { fieldManualRows } from "./field-manual-rows.ts";
+import { aggregateFixMap, type FixMapRow } from "../../method/fix-map.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
@@ -600,11 +602,8 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       "OwnerSnapshot",
       "owner-snapshots",
     ),
-    fieldManual: fileAggregateRepository<FieldManualStore>(
-      resolved,
-      "FieldManual",
-      "field-manual",
-    ),
+    fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries")),
+    fixMap: aggregateFixMap(fileAggregateRepository<FixMapRow>(resolved, "FixMapRow", "fix-map")),
     runnerHeartbeat: fileAggregateRepository<RunnerHeartbeat>(
       resolved,
       "RunnerHeartbeat",

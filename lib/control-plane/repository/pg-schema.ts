@@ -1,7 +1,9 @@
 /** The control-plane schema, versioned in this module. */
 
+import { FIX_MAP_DDL } from "../../method/fix-map.ts";
+
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 25;
+export const BOOTSTRAP_VERSION = 26;
 
 /**
  *   AGGREGATE     id, revision, updated_at, value   (CAS on revision)
@@ -26,6 +28,8 @@ export const AGGREGATE_KINDS = [
   "readiness_snapshots",
   "admin_config",
   "field_manual",
+  /** The field manual, one row per entry. */
+  "field_manual_entries",
   "ask_gap_observations",
   "doors",
   /** Original-byte copy requests; never source acquisition or a second scheduler. */
@@ -65,6 +69,7 @@ export const DECLARED_TABLES: readonly string[] = [
   "cp_checklist_instance_projections",
   "cp_spend_holds",
   "cp_vital_signs",
+  "cp_fix_map",
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
 ];
@@ -369,6 +374,10 @@ BEGIN
     WHERE id = 'shared-budget-ledger';
 END $do$;`;
 
+/** Reads by kind (method knowledge, playbooks, official links) take only their rows. */
+export const FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL =
+  "CREATE INDEX IF NOT EXISTS cp_field_manual_entries_kind ON cp_field_manual_entries ((value->>'kind'));";
+
 /** Every index the bootstrap builds online, by its DDL statement. */
 export const ONLINE_INDEXES: ReadonlyMap<string, OnlineIndex> = new Map(
   [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES, ...ROUTE_TASK_INDEXES].map(index => [index.ddl, index] as const));
@@ -596,6 +605,8 @@ END $$;`,
   ADMIT_SPEND_HOLD_FUNCTION_DDL,
   SPEND_HOLDS_MOVE_DDL,
   VITAL_SIGNS_TABLE_DDL,
+  ...FIX_MAP_DDL,
+  FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL,
 ];
 
 /** Run before the unique index is created, so a duplicate is reported by log and position. */

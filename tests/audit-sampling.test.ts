@@ -94,11 +94,12 @@ test("a judgment call is always model-reviewed, even in a settled stratum; an or
 test("what the manual remembers of a stratum keeps it under review after its results have aged out; the results, when present, win", async () => {
   const stratumRow = (host: string, outcome: "FAILED" | "YIELDED", modelReviewed: boolean) => newFieldManualEntry("auditor-learning", `stratum|PLANNING_MEETING|${host}`, {
     role: "AUDITOR", kind: "AUDIT_STRATUM", title: "t", summary: "s", outcome, payload: { recordClass: "PLANNING_MEETING", host, modelReviewed } });
-  const store = { formatVersion: 1 as const, updatedOn: null, entries: [stratumRow("www.broke.gov", "FAILED", true), stratumRow("www.fine.gov", "YIELDED", true)] };
+  const store = { entries: [stratumRow("www.broke.gov", "FAILED", true), stratumRow("www.fine.gov", "YIELDED", true)] };
   const h = auditHistoryFromManual(store);
   assert.equal(h.get("PLANNING_MEETING|www.broke.gov")!.everBroken, true);
   assert.equal(sampleDecision(spec("www.broke.gov", "x"), new Map([...h]), false, { ...DEFAULT_AUDIT_SAMPLE_POLICY, floorPerStratum: 1 }).reason, "BROKEN_STRATUM");
-  const sampler = createModelAuditSampler({ workerResults: { readAll: async () => [] }, fieldManual: { read: async () => ({ value: store, revision: 1 }) } } as never,
+  const sampler = createModelAuditSampler({ workerResults: { readAll: async () => [] },
+    fieldManual: { slice: async () => store.entries.map((value) => ({ id: value.id, revision: 1, updatedAt: "", value })) } } as never,
     { ...DEFAULT_AUDIT_SAMPLE_POLICY, floorPerStratum: 1, ratio: 0, quotedRatio: 0 });
   assert.equal(await sampler(spec("www.broke.gov", "a1")), true, "a stratum the manual says broke is reviewed");
   assert.equal(await sampler(spec("www.fine.gov", "a2")), false, "a stratum the manual says was reviewed and held is not new");

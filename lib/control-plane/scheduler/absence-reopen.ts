@@ -11,7 +11,7 @@ export interface Capability {
   readonly observedAt?: string | null;
 }
 
-const CAPABILITY_KINDS: readonly string[] = ["METHOD", "ROUTE", "PLATFORM_ADAPTER", "ENGINEER_ADAPTER_PR"];
+export const CAPABILITY_KINDS: readonly string[] = ["METHOD", "ROUTE", "PLATFORM_ADAPTER", "ENGINEER_ADAPTER_PR"];
 
 const norm = (value: string): string => value.trim().toLowerCase();
 

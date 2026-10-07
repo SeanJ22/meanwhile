@@ -1026,6 +1026,7 @@ export function discoveryFieldManualEntries(attempt: MeetingsDiscoveryAttempt): 
     states,
     recordClasses: ["meetings"],
     platforms: vendor === "own-site-meetings-page" ? [] : [vendor],
+    ...(attempt.jurisdictionId.startsWith("ocd-division/") ? { ocdIds: [attempt.jurisdictionId.split("#")[0]!] } : {}),
     outcome,
     url,
     source: "cp_log_discovery_attempts",

@@ -227,7 +227,7 @@ test('the next parser request uses an edited Bank playbook inside its cached sys
   };
   const { repos, runtime, item, artifact, contract, now } = await parserHarness(TEXT, transport);
   await writeFieldManual(repos, [newFieldManualEntry('role-playbook', 'PARSER', {
-    role: 'PARSER', kind: 'PLAYBOOK', title: 'parser', summary: 'current instructions', outcome: 'REFERENCE',
+    role: 'PARSER', kind: 'PLAYBOOK', title: 'parser', summary: 'current instructions', outcome: 'REFERENCE', portable: true,
     payload: { text: 'Read the saved heading before listing records.' },
   })], now());
   const task = await enqueueWorkerTask(repos, { workItemId: item.id, role: 'PARSER', artifactId: artifact.id, contract, now: now() });

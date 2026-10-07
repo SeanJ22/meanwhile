@@ -141,8 +141,8 @@ test("a place inherits other jobs' published fields before national acquisition"
   const name = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-01")!;
   const contact = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-08")!;
   const seen: string[] = [];
-  const bank = repos.fieldManual.read.bind(repos.fieldManual);
-  repos.fieldManual.read = async id => { seen.push("knowledge"); return bank(id); };
+  const bank = repos.fieldManual.slice.bind(repos.fieldManual);
+  repos.fieldManual.slice = async query => { seen.push("knowledge"); return bank(query); };
   const result = await planPlaceHunt({ repos, divisions: [division], now,
     readHeld: async ids => {
       seen.push("held"); assert.deepEqual(ids, [division.id]);

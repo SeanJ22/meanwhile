@@ -38,10 +38,10 @@ export async function runPlaceSource(input: {
   readonly readHeld?: (divisionIds: readonly string[]) => Promise<PlaceCapture>;
 }) {
   if (!/^\d{5}$/.test(input.zip)) throw new Error("A five-digit ZIP is required");
-  // This is before even national geography, so every acquisition inherits the
-  // same bank. A failed bank read remains visible without holding verified facts.
-  const knowledge = input.knowledge ?? await readFieldManual(input.repos);
   const divisions = input.divisions ?? await divisionsForZip(input.zip, input.geography);
+  // Every acquisition for the ZIP inherits what the bank holds for its divisions.
+  // A failed bank read remains visible without holding verified facts.
+  const knowledge = input.knowledge ?? await readFieldManual(input.repos, { ocdIds: divisions.map(division => division.id) });
   const ids = divisions.map(division => division.id);
   const readHeld = input.readHeld ?? (divisionIds => readHeldPlaceCapture(divisionIds,
     { store: input.store, now: input.clock?.() ?? input.now, bypassCache: true }));

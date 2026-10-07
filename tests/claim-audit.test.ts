@@ -3,7 +3,6 @@ import { execFileSync } from "node:child_process";
 import test from "node:test";
 
 import { buildScoreboard, reportAccuracyRow, type ScoreboardReadings } from "../lib/control-plane/admin-view/scoreboard-read.ts";
-import { FIELD_MANUAL_ID } from "../lib/control-plane/field-manual.ts";
 import { recordAttemptsKeepingHistory } from "../lib/control-plane/fix-history.ts";
 import { fixItems } from "../lib/control-plane/fix-list.ts";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
@@ -53,7 +52,7 @@ test("a false claim fed to it is caught: a red flag in Admin and a lesson with i
   const flag = fixItems(await config(repos)).find((i) => i.addedBy === "The claim auditors");
   assert.ok(flag, "a red flag on the fix list");
   assert.match(flag!.says, /A claimed win was wrong\. The update said 5 places working and 0 places failing; the fix map held 2 places and 0 places\./);
-  const manual = (await repos.fieldManual.mustRead(FIELD_MANUAL_ID)).value;
+  const manual = { entries: (await repos.fieldManual.list()).map((row) => row.value) };
   assert.equal(manual.entries.filter((e) => e.kind === "CLAIM_LESSON").length, 1);
   assert.equal((await runClaimAuditWeek(repos, map, "2026-09-09T00:00:00.000Z")).ran, false, "once a week");
   const reading = reportAccuracy(await readRecentClaimPasses(repos, [weekOf(now)]));

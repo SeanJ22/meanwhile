@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Seeds and grows the field manual from the knowledge stores. Each store is
- * folded into the one `cp_field_manual` aggregate as typed entries whose
+ * folded into the field manual (one row per entry) as typed entries whose
  * `payload` keeps the original record verbatim. It only ever grows: a re-run
  * refreshes entries in place and never removes one. The large Markdown
  * method-of-record docs are indexed as pointer entries; their text stays in git.
@@ -17,7 +17,6 @@ import { join } from "node:path";
 
 import {
   fieldManualEntryId,
-  readFieldManual,
   writeFieldManual,
   type FieldManualEntry,
   type FieldManualOutcome,
@@ -174,6 +173,7 @@ function fromDocs(): FieldManualEntry[] {
       platforms: [],
       outcome: "REFERENCE",
       url: doc.path,
+      portable: true,
       source: doc.path,
       observedAt: null,
       tier: null,
@@ -311,9 +311,9 @@ async function main(): Promise<void> {
 
   const written = await writeFieldManual(repos, entries, new Date().toISOString());
   if (written.error) throw new Error(`field-manual-seed: the write failed: ${written.error}`);
-  const total = (await readFieldManual(repos)).store.entries.length;
+  const total = (await repos.fieldManual.list()).length;
   console.log(`
-Wrote cp_field_manual/live (${target}): ${total} entries total (${written.written} offered by this seed).`);
+Wrote the field manual (${target}): ${total} entries total (${written.written} offered by this seed).`);
 }
 
 await main();

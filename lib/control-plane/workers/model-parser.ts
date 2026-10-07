@@ -158,7 +158,7 @@ export function parseLearningEntries(
     const prior = store.entries.find((e) => e.id === parseFieldsId(input.recordClass));
     const merged = [...new Set([...(((prior?.payload as { fieldNames?: string[] } | undefined)?.fieldNames) ?? []), ...input.fieldNames])].sort();
     entries.push(newFieldManualEntry(PARSE_LEARNING_SOURCE, `fields|${input.recordClass}`, {
-      role: "PARSER", kind: "PARSE_FIELDS", outcome: "REFERENCE",
+      role: "PARSER", kind: "PARSE_FIELDS", outcome: "REFERENCE", portable: true,
       title: `${input.recordClass}: field names used by earlier parses`,
       summary: `earlier parses of ${input.recordClass} settled on: ${merged.join(", ")}`.slice(0, 300),
       recordClasses: [input.recordClass], observedAt: day, payload: { recordClass: input.recordClass, fieldNames: merged },

@@ -28,7 +28,7 @@ export const hostOfUrl = (url: string): string | null =>
 
 /** THE READ, once per pass, before any record is checked. A failed read checks without inherited links. */
 export async function readValidatorManual(repos: FieldManualRepos): Promise<ValidatorManual> {
-  const read = await readFieldManual(repos, { role: "VALIDATOR" });
+  const read = await readFieldManual(repos, { role: "VALIDATOR", kinds: ["OFFICIAL_LINK", "PLAYBOOK"], everywhere: true });
   const links = new Map<string, string[]>();
   // Every official link counts, whatever state or record class learned it.
   const entries = read.store.entries.filter(e => e.kind === "OFFICIAL_LINK").sort((a, b) => (b.observedAt ?? "").localeCompare(a.observedAt ?? ""));

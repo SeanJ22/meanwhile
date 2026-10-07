@@ -21,7 +21,8 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import type { FieldManualStore } from "../field-manual.ts";
+import type { FieldManualEntry, FieldManualQuery } from "../field-manual.ts";
+import type { FixMapRepository } from "../../method/fix-map.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
@@ -234,6 +235,13 @@ export interface AggregateRepository<T> {
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
   /** Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order; `through` is the store's clock when the read began. */
   listChangedSince?(since: string | null): Promise<ChangedRows<T>>;
+}
+
+/** The field manual's rows, one aggregate per entry. */
+export interface FieldManualRepository extends AggregateRepository<FieldManualEntry> {
+  readMany(ids: readonly string[]): Promise<readonly Persisted<FieldManualEntry>[]>;
+  /** The rows one job could use (`entryInSlice`); a store may return more, never fewer. */
+  slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
 }
 
 /** What `AggregateRepository.listChangedSince` answers. */
@@ -451,8 +459,10 @@ export interface ControlPlaneRepositories {
   readonly costs: AppendOnlyRepository<CostEntry>;
   /** Read server-side by the admin host. Every record is aggregate-only (`assertAggregateOnly`). */
   readonly ownerSnapshots: AggregateRepository<OwnerSnapshot>;
-  /** One aggregate, id "live": learned discovery knowledge every model-driven worker reads and writes back. */
-  readonly fieldManual: AggregateRepository<FieldManualStore>;
+  /** Learned discovery knowledge every model-driven worker reads and writes back, one row per entry. */
+  readonly fieldManual: FieldManualRepository;
+  /** What each reusable method did in each place. */
+  readonly fixMap: FixMapRepository;
   /** Keyed by runner id. "Alive" is DERIVED from this beat, never stored. */
   readonly runnerHeartbeat: AggregateRepository<RunnerHeartbeat>;
   readonly cacheObservations: AggregateRepository<CacheObservationRecord>;

@@ -165,7 +165,7 @@ export function createModelAuditSampler(repos: Pick<ControlPlaneRepositories, "w
   let loaded: Promise<{ history: Map<string, StratumHistory>; parsers: Map<string, WorkerResultRecord> }> | null = null;
   const load = () => (loaded ??= Promise.all([
     repos.workerResults.readAll(),
-    repos.fieldManual ? readFieldManual({ fieldManual: repos.fieldManual }).then((r) => r.store) : Promise.resolve(emptyFieldManual()),
+    repos.fieldManual ? readFieldManual({ fieldManual: repos.fieldManual }, { kinds: ["AUDIT_STRATUM"], everywhere: true }).then((r) => r.store) : Promise.resolve(emptyFieldManual()),
   ]).then(([all, manual]) => ({
     // The results are the more exact record; the manual covers strata they no longer show.
     history: new Map([...auditHistoryFromManual(manual), ...auditHistoryFrom(all)]),

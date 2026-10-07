@@ -41,7 +41,7 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
     id:doorId,role:"SHARED",kind:"VENDOR_TENANT",title:"Seeded test door",
     summary:"a portable inherited door for the capture assertion",states:[],recordClasses:[],
     platforms:[],outcome:"YIELDED",url:"https://seeded.example/door",source:"test-seed",
-    observedAt:"2026-09-19",tier:null,payload:{}}],h.now());
+    observedAt:"2026-09-19",tier:null,portable:true,payload:{}}],h.now());
   assert.equal(seeded.written,1);
   const requests:ModelRequest[]=[];
   const searches: string[] = [];
@@ -101,8 +101,8 @@ test("one running worker runtime saves a new observed route and hands it to its 
   assert.equal(first.refusal, null, JSON.stringify(first.refusal));
   assert.equal(first.candidates.length, 1);
   assert.deepEqual(first.rebuiltExistingRoutes, []);
-  const stored = await h.repos.fieldManual.read("live");
-  const entry = stored!.value.entries.find(e => e.url === discovered)!;
+  const stored = (await h.repos.fieldManual.list()).map(row => row.value);
+  const entry = stored.find(e => e.url === discovered)!;
   assert.ok(entry, "real runtime write-back persisted the discovered route");
   const item = (await h.repos.workItems.mustRead(h.item.id)).value;
   const task = createRouteTask({ workItemId: item.id, routeId: "reuse-check", routeLabel: "Follow-up route check", target: discovered, inherited: true, now: h.now() });

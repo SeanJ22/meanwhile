@@ -138,7 +138,7 @@ test("the zero-row predicate has ONE implementation and both callers use it", ()
   assert.equal(
     isZeroRowExtraction({ documentsInHand: 3, produced: 0, dropped: 0, outOfWindow: 0 }),
     true,
-    "three documents in hand, nothing out, nothing dropped — RULING 43",
+    "three documents in hand, nothing out, nothing dropped",
   );
   assert.equal(
     isZeroRowExtraction({ documentsInHand: 3, produced: 0, dropped: 3, outOfWindow: 0 }),
@@ -178,7 +178,7 @@ test("legistar's composite wrapper conserves, and agrees with the adapter EXACTL
   assert.equal(direct.accounting.outcome, "CONSERVED", "the adapter itself must conserve");
   assert.ok(
     direct.drops.placeless > 0,
-    "the fixture must still carry a placeless meeting, or this guard proves nothing (RULING 110)",
+    "the fixture must still carry a placeless meeting, or this guard proves nothing",
   );
 
   const cap = CAPABILITIES.find((c) => c.name === "legistar");

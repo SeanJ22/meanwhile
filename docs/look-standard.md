@@ -477,7 +477,7 @@ Good live example: pending River capture and visual review.
 
 ### WGH-22: Address resolution
 
-Before a confirmed address, ZIP-scoped surfaces show every governing entity intersecting the ZIP. After a confirmed address, the scope IS the address: only entities that govern that address are shown, and an entity that is not the reader's is out of scope rather than annotated. (RULING 222.)
+Before a confirmed address, ZIP-scoped surfaces show every governing entity intersecting the ZIP. After a confirmed address, the scope IS the address: only entities that govern that address are shown, and an entity that is not the reader's is out of scope rather than annotated.
 
 Sweep disposition: FIXED_VERIFIED.
 Bad/example candidates: 2026-08-30_17-53-46.PNG (source inventory; capture path not found in checked-in feedback); 2026-08-30_17-53-11.PNG (source inventory; capture path not found in checked-in feedback); 2026-08-30_17-54-02.PNG (source inventory; capture path not found in checked-in feedback).

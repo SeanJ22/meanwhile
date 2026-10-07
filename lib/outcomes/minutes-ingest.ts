@@ -454,7 +454,7 @@ export function minutesSitting(
         extraction: "ZERO_ROWS_FAILED",
         extractionNote:
           `The minutes document was fetched and yielded no text: ${document.unreadable} A zero-row ` +
-          "extraction is a FAILED extraction (RULING 100); nothing is claimed about what was decided.",
+          "extraction is a FAILED extraction; nothing is claimed about what was decided.",
         minutesPointer: pointer,
         outcomes: [],
         routesWalked: ["INSITE_CALENDAR"],
@@ -506,7 +506,7 @@ export function minutesSitting(
         extraction: "ZERO_ROWS_FAILED",
         extractionNote:
           `The minutes were read (${parsed.bodyCharacters} characters) and yielded no motion, and they do ` +
-          "not say that no action was taken. A zero-row extraction is a FAILED extraction (RULING 100), " +
+          "not say that no action was taken. A zero-row extraction is a FAILED extraction, " +
           `not a sitting where nothing was decided.${unread}`,
         minutesPointer: pointer,
         outcomes: [],

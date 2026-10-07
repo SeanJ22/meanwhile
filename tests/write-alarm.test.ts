@@ -93,7 +93,7 @@ test("6.5: the alarm is not left as an unawaited promise", () => {
   }
 });
 
-test("6.4 / RULING 25: the reader-facing answers on the write paths are unchanged", () => {
+test("6.4: the reader-facing answers on the write paths are unchanged", () => {
   const reactions = readFileSync(join(ROOT, "app", "api", "reactions", "route.ts"), "utf8");
   assert.match(
     reactions,

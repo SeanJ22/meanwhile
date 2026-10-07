@@ -367,7 +367,7 @@ function validateRoute(
         "REGIME_VOCABULARY_UNKNOWN",
         regimeId,
         `${where}.permission is ${JSON.stringify(permission)}, outside PERMISSION_STATES`,
-        "Permission and transport are orthogonal (RULING 182); an unrecognised permission value " +
+        "Permission and transport are orthogonal; an unrecognised permission value " +
           "collapses that distinction.",
       ),
     );

@@ -113,7 +113,7 @@ test("THE INSTRUMENT DEFECT: coverage.divisions cannot carry a seat coverage.sea
   assert.ok(!seatIds.has(SLDL_17), "and the ZIP centroid's answer simply does not carry 17");
 });
 
-test("RULING 222: a district the address EXCLUDES leaves the panel entirely", () => {
+test("a district the address EXCLUDES leaves the panel entirely", () => {
   const summary = coverage({ seats: [seat(SLDL_19, "State House District 19", "sldl")] });
   const panel = panelSeatsFor(summary, atAddress(), STATE_SEAT_TYPES, []);
 

@@ -22,7 +22,7 @@ export class EmptyDenominatorError extends Error {
 
   constructor(subject: string, where: string) {
     super(
-      `DENOMINATOR FLOOR (RULING 159): counting "${subject}" over an EMPTY population at ${where}. ` +
+      `DENOMINATOR FLOOR: counting "${subject}" over an EMPTY population at ${where}. ` +
         `Zero is a result that must be earned, never defaulted to. Either the selector/query matched ` +
         `nothing — which is a defect in the instrument, not a fact about the data — or the population ` +
         `is genuinely empty, in which case say why via \`reason\` and take COULD_NOT_ASSERT.`,

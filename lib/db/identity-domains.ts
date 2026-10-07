@@ -222,7 +222,7 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
       candidacy_id: { space: "CIVIC_IDENTIFIER" },
       answers: {
         space: "PROSE",
-        why: "A candidate's own words, published verbatim (RULING 112). Public by intent.",
+        why: "A candidate's own words, published verbatim. Public by intent.",
       },
     },
   },

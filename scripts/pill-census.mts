@@ -128,7 +128,7 @@ if (import.meta.filename === process.argv[1]) {
     console.log("    NOT FOUND — the reference pill is gone, so nothing can be compared to it");
   }
 
-  console.log("\n  THE THREE-WAY SPLIT (RULING 105):");
+  console.log("\n  THE THREE-WAY SPLIT:");
   console.log(
     `    UNIFORM with the reference       ${census.measured.length - census.differing.length} of ${census.measured.length} rule(s)`,
   );

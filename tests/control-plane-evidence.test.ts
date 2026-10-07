@@ -106,7 +106,7 @@ function assertCarriesNoSecret(label: string, subject: unknown): void {
     assert.equal(
       text.includes(secret),
       false,
-      `${label} carries a credential value. RULING 127: the fingerprint, the class, the ` +
+      `${label} carries a credential value. The fingerprint, the class, the ` +
         "length and the line are what may be printed; the value never is.",
     );
     // The tail alone is enough to be a leak, and a naive truncation would pass

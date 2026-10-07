@@ -223,7 +223,7 @@ export function scheduleObligation(
     source = "DEFAULT_NO_SIGNAL";
     basis =
       "no reader deadline and no observed change rate exist for this obligation yet, so it takes " +
-      "RULING 212's surviving default of daily — which is a DEFAULT and not a derivation, and " +
+      "the surviving default of daily — which is a DEFAULT and not a derivation, and " +
       "this row says so rather than reading like a measured cadence";
   }
 
@@ -246,7 +246,7 @@ export function scheduleObligation(
       cadenceSource: "ARGUED_ABSENT",
       basis:
         `a scout argued this record absent; the absence stands until ${obligation.absentUntil} ` +
-        "(RULING 52: one measurement on one date; RULING 53: absences expire), so the next reading " +
+        "(one measurement on one date; absences expire), so the next reading " +
         "is owed then rather than on the ordinary cadence, and the proven negative is not re-walked meanwhile",
     };
   }

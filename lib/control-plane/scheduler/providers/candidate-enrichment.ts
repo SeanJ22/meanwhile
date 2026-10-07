@@ -123,7 +123,7 @@ export function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
       "the endpoint answered HTTP 200 application/json with a populated `pages` array to the identified " +
       "User-Agent. The en.wikipedia.org search API path stays robots-Disallowed and unused " +
       "(WIKI_API_DISALLOWED; tests/wikipedia-permission.test.ts); this is Wikimedia's published " +
-      "automated door on a separate host. CC BY-SA — facts are not copyrightable (RULING 87), and this " +
+      "automated door on a separate host. CC BY-SA — facts are not copyrightable, and this " +
       "route is DISCOVERY ONLY: it points at a page and is never a source of record. Wikimedia 2026 API " +
       "policy honoured: descriptive User-Agent with contact (generic UAs are throttled to the lowest " +
       "tier), per-host spacing under the 3-request guideline, and a 429 backs off via WALL_STATUSES.",
@@ -154,7 +154,7 @@ function marginaliaRoute(c: CanonicalCandidacy): RouteDescriptor {
       "then HTTP 404 — the publisher serves NO robots document, which is an absence of restrictions " +
       "and never a grant. `https://api.marginalia.nu/robots.txt` answers HTTP 401 to a bare client " +
       "and to an identified one alike, which is a TRANSPORT answer and not a permission verdict " +
-      "(RULING 182, CANNOT_TELL). The endpoint itself answered HTTP 200 with a `license` field and a " +
+      "(CANNOT_TELL). The endpoint itself answered HTTP 200 with a `license` field and a " +
       "populated `results` array on the same date, and that licence is the publisher's own statement " +
       "of the terms it is served under.",
   };
@@ -179,7 +179,7 @@ function generalIndexWall(stateCode: string): RouteDescriptor {
         "ZERO result links. The 2026-08-25 reading that recorded it working counted eight ECHOES of " +
         "the query in the page's own furniture. Mojeek, Brave and Ecosia carry `Disallow: /search` and " +
         "are DISALLOWED, which is a different fact and is never re-walked on a clock. This row is the " +
-        "WALL, and RULING 53 sends a session back to it.",
+        "WALL, and its dated reading expires and sends a session back to it.",
     },
     citation: "docs/sources.md — the search-pool table, re-measured 2026-08-26",
   };
@@ -223,12 +223,12 @@ function routesForCandidacy(
         target: `${displayName(c)} — the candidate's own publication`,
         reason:
           `${authoredOwed.join(" and ").toUpperCase()} IS ONLY EVER TAKEN FROM THE CANDIDATE'S OWN ` +
-          "STATEMENT. RULING 26: every position rendered to a reader carries a source record pointing " +
+          "STATEMENT. Every position rendered to a reader carries a source record pointing " +
           "at a specific statement by that candidate, and a general index may point at a page but may " +
           "never be the page. This is BLOCKED ON the campaign-site routes on this same record, which " +
           "is a named dependency and is never an absence about this person.",
       },
-      citation: "CLAUDE.md — never generate a candidate position; RULING 26",
+      citation: "CLAUDE.md — never generate a candidate position",
     });
   }
 

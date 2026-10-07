@@ -300,7 +300,7 @@ export function buildBreakGlassIncident(input: {
       `route: POST /api/admin/session (${BREAK_GLASS_FLAG_VAR}=${BREAK_GLASS_ENABLED_VALUE})`,
       `session issued: ${input.sessionRef ?? "none"}`,
       `attempts in window: ${input.attemptsInWindowIncludingThis} of ${input.max} per ${input.windowSeconds}s`,
-      "law: RULING 245 break-glass under RULING 238 custody",
+      "law: break-glass sign-in under owner-held secret custody",
     ],
     cycleOk: null,
     testedSha: null,

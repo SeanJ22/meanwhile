@@ -133,7 +133,7 @@ test("every candidate handed in gets a decision — none may fall through", () =
   assert.equal(out.size, 3, "a candidate with no decision asks the question again somewhere else");
 });
 
-test("a non-elected office renders no Incumbent/Challenger label at all (BC-26, RULING 118)", () => {
+test("a non-elected office renders no Incumbent/Challenger label at all (BC-26)", () => {
   const out = resolveContestIncumbency({
     candidates: [cand("Sam Superintendent")],
     holders: [holder("Sam", "Superintendent")],

@@ -263,7 +263,7 @@ test("knowledge that has outgrown a still-closed conclusion is a validation fail
   k = learnRoute(k, route("new-one", { fields: ["roster"] }), "2026-08-26").knowledge;
   assert.ok(
     validateKnowledge(k, conclusions).some((i) => i.rule === "unreopened-conclusion"),
-    "silence here is the failure RULING 178 names",
+    "a conclusion knowledge has outgrown must not pass silently",
   );
 });
 
@@ -314,7 +314,7 @@ test("a failed inherited route grows a sub-branch and is never deleted", () => {
   assert.ok(validateKnowledge(undated).some((i) => i.rule === "subbranch-undated"));
 });
 
-test("a duplicate route is reported as the defect RULING 63 names", () => {
+test("a duplicate route is reported as a defect", () => {
   let k = emptyKnowledge();
   k = learnRoute(k, route("dupe"), "2026-08-26").knowledge;
   const again = learnRoute(k, route("dupe"), "2026-08-26");

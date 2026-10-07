@@ -66,5 +66,5 @@ export function describeCacheDefects(reading: CacheDefectReading): string {
   if (reading.zeroReadTurns.length > 0) {
     parts.push(`turn(s) ${reading.zeroReadTurns.join(", ")} read ZERO cached tokens over a prefix identical to the previous turn's`);
   }
-  return `${parts.join("; ")}; a repeated-prefix turn that does not read its prefix from the cache is a defect in our request assembly (RULING 244)`;
+  return `${parts.join("; ")}; a repeated-prefix turn that does not read its prefix from the cache is a defect in our request assembly`;
 }

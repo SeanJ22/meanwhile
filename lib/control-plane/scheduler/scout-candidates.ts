@@ -54,7 +54,7 @@ export interface MachineOwnedProvenance {
 
 /** The origin line, written from machine-owned values only. */
 export function originLine(attemptId: string, obligationId: string, observedOn: string): string {
-  return `SCOUT Attempt ${attemptId} on ${obligationId}, observed ${observedOn} (provenance machine-derived from the artifact record, RULING 243)`;
+  return `SCOUT Attempt ${attemptId} on ${obligationId}, observed ${observedOn} (provenance machine-derived from the artifact record)`;
 }
 
 /** The ROUTE_EXISTENCE statement, written from machine-owned values only. */
@@ -147,7 +147,7 @@ export async function proposeScoutCandidates(input: {
     if (c.provenance === undefined) {
       notProposed.push({
         routeId: c.routeId,
-        why: "the candidate carries no machine provenance derivation (RULING 243); a proposal whose provenance the model wrote is not learned",
+        why: "the candidate carries no machine provenance derivation; a proposal whose provenance the model wrote is not learned",
       });
       continue;
     }

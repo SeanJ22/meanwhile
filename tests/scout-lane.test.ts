@@ -1331,7 +1331,7 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   assert.deepEqual(results[0].cacheDefect?.turns, [2], "turn 2 re-sent an identical prefix and read nothing from the cache");
   assert.deepEqual(results[0].cacheDefect?.zeroReadTurns, [2]);
   assert.deepEqual(results[0].cacheDefect?.stationaryTurns, [], "a zero read whose uncached input did not grow past what it appended is not the stationary signature");
-  assert.match(results[0].cacheDefect?.detail ?? "", /RULING 244/);
+  assert.match(results[0].cacheDefect?.detail ?? "", /defect in our request assembly/);
   assert.match(result.detail, /CACHE DEFECT on turn\(s\) 2/);
 
   let w = 0;

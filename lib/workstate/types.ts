@@ -52,8 +52,8 @@ export const NON_REASONS: ReadonlyArray<{ name: string; pattern: RegExp; why: st
   {
     name: "merge cadence",
     pattern:
-      /planned merge|one merge per session|merge cadence|merge (?:is )?(?:taken|done|landed|complete)|already (?:merged|shipped)|shipped for the session|RULING 1\b/i,
-    why: "RULING 1 governs shipping cadence, not session duration — delay the merge instead of ending the session",
+      /planned merge|one merge per session|merge cadence|merge (?:is )?(?:taken|done|landed|complete)|already (?:merged|shipped)|shipped for the session/i,
+    why: "merge cadence governs shipping, not session duration — delay the merge instead of ending the session",
   },
 ];
 
@@ -294,7 +294,7 @@ export function recordPermissionRead(input: {
   if (!read && input.verdictFromDocument) {
     throw new Error(
       `permission verdict supplied for ${input.host} with transport ${input.transport}: ` +
-        "a document that was not retrieved cannot have been read (RULING 182)",
+        "a document that was not retrieved cannot have been read",
     );
   }
   return {

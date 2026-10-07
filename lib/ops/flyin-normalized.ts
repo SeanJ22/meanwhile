@@ -215,7 +215,7 @@ export function judgeSoftware(app: ArmSummary, bare: ArmSummary): SoftwareVerdic
   if (app.framesMeasured <= 0) {
     throw new Error(
       "flyin-normalized: the software application arm measured ZERO frames, so its jank share " +
-        "has no denominator. That is a broken recorder, not a smooth flight (RULING 159).",
+        "has no denominator. That is a broken recorder, not a smooth flight.",
     );
   }
   const ratio = app.medianFps / bare.medianFps;

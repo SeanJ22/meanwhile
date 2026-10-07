@@ -495,7 +495,7 @@ function laneShare(record: RunRecord): string[] {
         ? ` (${Object.entries(lanes.model.deferredBy).map(([k, v]) => `${k} ${v}`).join(", ")})`
         : ""),
   );
-  out.push("", "## RESEARCH — LEVEL 1 (RULING 240)", "");
+  out.push("", "## RESEARCH — LEVEL 1", "");
   out.push(
     `- lane: ${state?.modelLaneEnabled ? "ENABLED" : `CLOSED — ${state?.modelLaneDisabledReason ?? "reason unrecorded"}`}`,
     `- credential: ${state?.workerCredential?.name ?? "WTP_WORKERS_ANTHROPIC_API_KEY"} configured in the cycle process: ${state?.workerCredential?.configured ? "yes" : "NO"} (by name)`,
@@ -515,7 +515,7 @@ function laneShare(record: RunRecord): string[] {
   }
   out.push("- PROMOTION: OFF. A Scout finding is inventory and a candidate; nothing it produced changed what a reader is told.");
   /* The metrics travel on the research state the cycle wrote; a record without them says so rather than printing zeros. */
-  out.push("", "## RESEARCH METRICS (RULING 244 · reader-impact ordering)", "");
+  out.push("", "## RESEARCH METRICS (reader-impact ordering)", "");
   if (state?.metrics) {
     for (const line of researchDigestLines(state.metrics)) out.push(`- ${line.trim()}`);
   } else {
@@ -600,7 +600,7 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
   }
   out.push("");
 
-  out.push("## STAGED, PROMOTION-READY (RULING 224)");
+  out.push("## STAGED, PROMOTION-READY");
   out.push("");
   const staged = record.staged ?? [];
   const ready = staged.filter((s) => s.state === "STAGED_PROMOTION_READY");

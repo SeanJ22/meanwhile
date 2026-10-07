@@ -64,7 +64,7 @@ export function verdictForDeploys(deploys: readonly DeployRecord[], sha: string)
       return {
         kind: "CANCELLED-BY-FILTER",
         why:
-          `deploy ${errored.id} was cancelled before it built — "${msg}". That is RULING 124's deploy ` +
+          `deploy ${errored.id} was cancelled before it built — "${msg}". That is the deploy ` +
           "filter doing its job on a commit that cannot change what a reader sees, and it is not a failure.",
         deploy: errored,
       };

@@ -455,10 +455,10 @@
 [njhunt6] 85641: the reader is not told the basemap is unavailable
 [njhunt6] 85701: the basemap style has real layers
 [njhunt6] 85701: the reader is not told the basemap is unavailable
-[promptB] /ballot renders no coverage note at 03255 (RULING 59)
-[promptB] /ballot renders no coverage note at 07866 (RULING 59)
-[promptB] /ballot renders no coverage note at 85641 (RULING 59)
-[promptB] /ballot renders no coverage note at 85701 (RULING 59)
+[promptB] /ballot renders no coverage note at 03255
+[promptB] /ballot renders no coverage note at 07866
+[promptB] /ballot renders no coverage note at 85641
+[promptB] /ballot renders no coverage note at 85701
 [promptC] /api/build answers
 [promptC] /api/build states the code SHA
 [promptC] /api/build states the deploy identifier

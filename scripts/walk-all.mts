@@ -520,9 +520,9 @@ for (const { zip } of WALK_PLACES) {
     /* The retired per-page coverage note must not come back. */
     check(
       "promptB",
-      `/ballot renders no coverage note at ${zip} (RULING 59)`,
+      `/ballot renders no coverage note at ${zip}`,
       !/data-coverage-note=/.test(ballot.text),
-      "the coverage note is rendering again — RULING 59 deleted it, because a " +
+      "the coverage note is rendering again — it was deleted because a " +
         "sentence counting what has not been worked out goes false the moment " +
         "the work is done and no test can see it",
     );
@@ -537,14 +537,14 @@ for (const { zip } of WALK_PLACES) {
       /data-collection-note/.test(ballot.text) ||
         !/vote for/i.test(ballot.text),
       "the page renders candidate contests and says nothing about what a " +
-        "short card means — RULING 42's disclosure is missing",
+        "short card means — the short-card disclosure is missing",
     );
     check(
       "promptE",
       `/ballot carries no per-card completeness marker at ${zip}`,
       !/haven't found much about this candidate/i.test(ballot.text),
-      "a per-card completeness marker is back on the ballot — RULING 42 " +
-        "deleted it, and it lands on exactly the least-resourced candidate",
+      "a per-card completeness marker is back on the ballot — it was " +
+        "deleted because it lands on exactly the least-resourced candidate",
     );
 
     /* The ballot page links "How we handle data" instead of carrying the device-only sentence. */
@@ -827,7 +827,7 @@ for (const { zip } of WALK_PLACES) {
       "njhunt6",
       `${zip}: the basemap style has real layers`,
       "the page exposes no map handle to read a layer count from — a check that CANNOT RUN, " +
-        "reported apart from one that failed (RULING 24)",
+        "reported apart from one that failed",
     );
   } else {
     check(

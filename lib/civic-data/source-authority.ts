@@ -137,7 +137,7 @@ export const SOURCE_AUTHORITIES = {
       "official voter-registration lookup route",
       "official polling-place lookup route",
       "verified campaign or personal site binding",
-      "a state legislator's capitol or district office address and phone from the Open States reference file, joined to the official roster and marked unofficial (Sean, 2026-10-01)",
+      "a state legislator's capitol or district office address and phone from the Open States reference file, joined to the official roster and marked unofficial",
       "reviewed exact-source venue address and coordinate resolution",
       "official everyday service contact route for an exact state/topic cell",
       "explicit owner-reviewed CONTACT_OWED obligation where no supported contact is held",
@@ -546,7 +546,7 @@ export const SOURCE_AUTHORITIES = {
     routineAutoPromotion: true,
     derivedPromotion: {
       inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE", "PIPELINE_APPROVAL"],
-      authorization: "Sean, 2026-09-21: \"You may enable automatic promotion for qualifying results. Fix the gap, recover value already paid for.\" (RULING 292)",
+      authorization: "Sean, 2026-09-21: \"You may enable automatic promotion for qualifying results. Fix the gap, recover value already paid for.\"",
     },
   },
   "nj-morris-county-clerk": {

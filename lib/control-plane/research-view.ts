@@ -705,7 +705,7 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
   const supervision: ResearchView["supervision"] = !state
     ? stateGap()
     : state.hostSupervision === undefined || state.hostSupervision === null
-      ? gap("OURS", "the last cycle carried no host supervision reading; a parent relaunch has not been proven to this page (RULING 246)")
+      ? gap("OURS", "the last cycle carried no host supervision reading; a parent relaunch has not been proven to this page")
       : held({ ...state.hostSupervision, condition: supervisionCondition });
   const ordering: ResearchView["ordering"] = !state
     ? stateGap()

@@ -102,8 +102,7 @@ export function parseMembers(text: string): MembersExtraction {
     throw sourceAcquisitionFailure(
       "PUBLISHER_DOCUMENT_INVALID",
       `nh:members: the file carries ${lines.length} non-empty line(s). A roster of the New Hampshire ` +
-        "General Court is 400-odd rows, so this is a failed retrieval, not an empty legislature " +
-        "(RULING 43).",
+        "General Court is 400-odd rows, so this is a failed retrieval, not an empty legislature.",
     );
   }
 

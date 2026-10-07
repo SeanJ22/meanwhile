@@ -117,7 +117,7 @@ const COVERAGE_OBJECT =
   /\b(collected|found|information|detail|details|data|record|records|published|research|words|profile|material|source|sources)\b/i;
 const OUR_SUBJECT = /\b(we|our|us|this candidate|this card|so far)\b/i;
 
-test("RULING 44: the pill makes no claim about OUR data", () => {
+test("the pill makes no claim about OUR data", () => {
   const sentence = COULD_GOVERN_SENTENCE;
   assert.equal(sentence, `${COULD_GOVERN_TEXT} — ${COULD_GOVERN_ACTION}`);
   assert.doesNotMatch(
@@ -137,7 +137,7 @@ test("RULING 44: the pill makes no claim about OUR data", () => {
   );
 });
 
-test("RULING 44: the pill's subject is the reader's location, and it says so", () => {
+test("the pill's subject is the reader's location, and it says so", () => {
   const sentence = COULD_GOVERN_SENTENCE;
   assert.equal(sentence, `${COULD_GOVERN_TEXT} — ${COULD_GOVERN_ACTION}`);
   assert.match(sentence, /\byou\b/i, "it addresses the reader");
@@ -145,7 +145,7 @@ test("RULING 44: the pill's subject is the reader's location, and it says so", (
   assert.match(sentence, /\bgovern/i, "the verb is govern");
 });
 
-test("RULING 44: the pill attaches to a BODY, never to a candidate", () => {
+test("the pill attaches to a BODY, never to a candidate", () => {
   /*
    * A completeness marker's harm was printing next to a named person on the thinnest card. The mark renders on the
    * contest heading, which is a body, so it can never single out a candidate.
@@ -162,7 +162,7 @@ test("RULING 44: the pill attaches to a BODY, never to a candidate", () => {
   );
 });
 
-test("RULING 71: the pill never gates — the page renders every contest regardless", () => {
+test("the pill never gates — the page renders every contest regardless", () => {
   const page = codeOf("app", "ballot", "page.tsx");
   // `needsPill` may only decide a marker. If it ever decided a filter, a contest would vanish because of where a
   // reader might live.
@@ -178,7 +178,7 @@ test("RULING 71: the pill never gates — the page renders every contest regardl
   );
 });
 
-test("RULING 74: the session store keeps the OUTCOME, never the address", () => {
+test("the session store keeps the OUTCOME, never the address", () => {
   const mod = codeOf("lib", "geo", "session-address.ts");
   // The shape is the guarantee. A field for a house number or a coordinate
   // would make this a location record, which is the one thing it must not be.
@@ -195,7 +195,7 @@ test("RULING 74: the session store keeps the OUTCOME, never the address", () => 
   );
 });
 
-test("RULING 74: nothing about the address reaches the server or a store", () => {
+test("nothing about the address reaches the server or a store", () => {
   const mod = codeOf("lib", "geo", "session-address.ts");
   assert.doesNotMatch(
     mod,
@@ -204,7 +204,7 @@ test("RULING 74: nothing about the address reaches the server or a store", () =>
   );
 });
 
-test("RULING 74: an address given for one zip does not answer for another", () => {
+test("an address given for one zip does not answer for another", () => {
   const mod = codeOf("lib", "geo", "session-address.ts");
   assert.match(
     mod,
@@ -213,7 +213,7 @@ test("RULING 74: an address given for one zip does not answer for another", () =
   );
 });
 
-test("RULING 74: the narrowing surface reads the session before it prompts", () => {
+test("the narrowing surface reads the session before it prompts", () => {
   /* There is one address form across surfaces, and the session read lives in it. */
   const narrowing = codeOf("components", "address", "address-prompt.tsx");
   assert.match(narrowing, /sessionAddressFor\(zip\)/, "it asks what the session already holds");
@@ -266,7 +266,7 @@ test("3.3: the statewide rule matches the SHAPE exactly, not a prefix", async ()
   assert.notEqual(c.certaintyOf("ocd-division/country:us/state:nj/sldl:25"), "CERTAIN");
 });
 
-test("RULING 71: the action half of the pill is never hidden by a media query", () => {
+test("the action half of the pill is never hidden by a media query", () => {
   /*
    * Stripping the invitation leaves a bare uncertainty marker beside a body's name, which reads as a completeness
    * statement. It may wrap; it may not vanish.

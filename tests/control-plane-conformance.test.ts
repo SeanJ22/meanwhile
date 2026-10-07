@@ -76,7 +76,7 @@ test("the conformance suite states WHICH providers it ran, and which it did not"
         `${names.length} of 3 provider(s). Set ${CONTROL_PLANE_TEST_URL_VAR} to an ISOLATED ` +
         `test database to run it. ${CONTROL_PLANE_URL_VAR}` +
         `${prodControlPlaneUrl !== null ? " IS set, but it names the LIVE production control plane and is never used as a test database." : " is not set."} ` +
-        "RULING 220's cutover proof has not been performed.",
+        "The control-plane cutover proof has not been performed.",
     );
   }
   assert.ok(names.length >= 2, "at least the double and the durable store always run");

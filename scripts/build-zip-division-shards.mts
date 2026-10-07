@@ -165,7 +165,7 @@ writeFileSync(
       generatedAt: today(),
       source: "data/derived/zip-governments.json (national TIGER lattice sampling), with each government's OCD id built from the Census names by lib/ocd/divisions.ts",
       note:
-        "Every division whose territory reaches each ZCTA, one shard per two-digit ZIP prefix. Not a claim that a reader at the ZIP is governed by all of them: `partial` lists those covering only part of the ZIP's sampled area (RULING 71). Committed OCD ids never move; a name collision elsewhere is suffixed with the Census GEOID.",
+        "Every division whose territory reaches each ZCTA, one shard per two-digit ZIP prefix. Not a claim that a reader at the ZIP is governed by all of them: `partial` lists those covering only part of the ZIP's sampled area. Committed OCD ids never move; a name collision elsewhere is suffixed with the Census GEOID.",
       counts: {
         zips: zipsWritten,
         shards: Object.keys(index).length,

@@ -975,7 +975,7 @@ test("the incident record names class, moment and outcome, passes aggregate-only
   assert.ok(accepted.lines.some((l) => l === "outcome: ACCEPTED"));
   assert.ok(accepted.lines.some((l) => l === "at: 2026-09-02T12:00:00.000Z"));
   assert.ok(accepted.lines.some((l) => l === "session issued: adm_example"));
-  assert.ok(accepted.lines.some((l) => /RULING 245/.test(l) && /RULING 238/.test(l)));
+  assert.ok(accepted.lines.some((l) => /break-glass/.test(l) && /custody/.test(l)));
 
   const refused = buildBreakGlassIncident({
     at: "2026-09-02T12:00:01.000Z",
@@ -1063,7 +1063,7 @@ test("the middleware's unauthenticated set is exactly the four surfaces", () => 
   assert.deepEqual(listed, ["/admin/login", "/admin/auth/google", "/admin/auth/callback", "/api/admin/session"]);
 });
 
-test("a session issued before RULING 245 still verifies, and `via` round-trips", async () => {
+test("a session issued before Google sign-in still verifies, and `via` round-trips", async () => {
   const iat = NOW;
   const legacy = await signSession({ sid: "adm_legacy", iat, exp: iat + SESSION_LIFETIME_SECONDS }, SESSION_KEY);
   const verdict = await verifySession(legacy, SESSION_KEY, iat + 1);

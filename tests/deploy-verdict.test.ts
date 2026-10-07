@@ -46,7 +46,7 @@ describe("NJ25 — the close-out verifies the deploy for the shipped SHA succeed
     assert.match(v.why, /building site/, "the failure must carry Netlify's own message, not a generic one");
   });
 
-  it("a FILTER CANCEL is not a failure — RULING 115, and it is the live case", () => {
+  it("a FILTER CANCEL is not a failure, and it is the live case", () => {
     /* Netlify writes a deploy-filter cancel as `state: "error"`; it must not raise the failure alarm. */
     const v = verdictForDeploys(
       [

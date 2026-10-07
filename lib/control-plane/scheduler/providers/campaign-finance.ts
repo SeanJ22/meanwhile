@@ -106,7 +106,7 @@ const AZ_ROUTES: readonly RouteDescriptor[] = [
       reason:
         "THIS PROCESS HOLDS NO FTP CLIENT. The drop was walked 2026-08-26 and is anonymous, live, " +
         "and carries 8,828 Arizona campaign committees and the state's 109 filing jurisdictions. " +
-        "That is RULING 166's rung ZERO and it outranks every page-by-page route below it. The " +
+        "That is the body-own-publication order's rung ZERO and it outranks every page-by-page route below it. The " +
         "missing piece is an adapter in this repository, which is a fact about OUR tooling and is " +
         "never a fact about the record — REQUIRES_NEW_ADAPTER, and the obligation stays live.",
     },
@@ -246,8 +246,8 @@ const NH_ROUTES: readonly RouteDescriptor[] = [
       reason:
         "PUBLIC RECORD STILL OWED — HUMAN/OFFLINE ACCESS REQUIRED. Every machine-executable public " +
         "route above is worked independently; this one ends in a human or offline act, which under " +
-        "RULING 205 keeps the obligation LIVE rather than closing it. RULING 215 removes external " +
-        "workflow execution from this architecture, so no agent sends this request.",
+        "the rules keep the obligation LIVE rather than closing it. External " +
+        "workflow execution is outside this architecture, so no agent sends this request.",
     },
     citation: "docs/frontier.md — Part F: rung 13 unwalked, named as a start on 2026-08-19",
   },

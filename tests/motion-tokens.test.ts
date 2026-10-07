@@ -18,7 +18,7 @@ const GLOBALS = join(ROOT, "app", "globals.css");
  * the reduced-motion floor honors an OS request for less motion everywhere.
  */
 
-test("the motion sweep catches a raw duration — the instrument works (RULING 110)", () => {
+test("the motion sweep catches a raw duration — the instrument works", () => {
   // PLANT: the exact shape the sweep exists to catch.
   const planted = ".x { transition: transform 0.2s ease; }";
   const hits = rawMotionInCss(planted);

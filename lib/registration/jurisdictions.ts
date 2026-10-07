@@ -112,7 +112,7 @@ export function registrationOwnSiteSource(census: string): JurisdictionSource {
     state: "DISCOVERY_OWED",
     owed:
       "walk this row's `ownWebAddress` for the body's own meeting notices, agendas, minutes and officeholder roster, " +
-      "under RULING 166's body-own-publication-first order. The address is the Census's self-reported record, read " +
+      "under the body-own-publication-first order. The address is the Census's self-reported record, read " +
       "with minimal quality control; an address is not an acquisition.",
     citation: `${census} — the 2022 Census of Governments files this state's registration reference was built from (web_address)`,
   };

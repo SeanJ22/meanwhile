@@ -198,6 +198,6 @@ if (process.argv.includes("--scrub")) {
 
 console.log(
   "\n  A credential that has appeared in any of these must be treated as COMPROMISED and ROTATED.\n" +
-    "  Scrubbing the file is necessary and is not sufficient — RULING 127.",
+    "  Scrubbing the file is necessary and is not sufficient.",
 );
 process.exit(1);

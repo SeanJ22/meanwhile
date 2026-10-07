@@ -184,7 +184,7 @@ test("the shared browser site enforces the barrier, and enforces it first", asyn
     src,
     /from "\.\.\/lib\/ops\/provider-access\.ts"/,
     "scripts/browser.mts must import the policy rather than restate it — a copy inside the " +
-      "harness is remembered rather than enforced, which is the argument RULING 101 already made",
+      "harness is remembered rather than enforced",
   );
   assert.match(
     src,

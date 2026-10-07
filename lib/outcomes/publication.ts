@@ -174,7 +174,7 @@ export function reconcilePublicationObservations(
         "is posted: " +
         latest.map((o) => `${o.routeId} says ${o.report}`).join("; ") +
         ". Neither reading is preferred here. One route succeeding never retires " +
-        "another (RULING 207), and a document published between two reads appears " +
+        "another, and a document published between two reads appears " +
         "on one surface before the other — so the disagreement is reported rather " +
         "than resolved.",
     };

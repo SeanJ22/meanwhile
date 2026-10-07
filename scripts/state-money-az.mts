@@ -172,7 +172,7 @@ for (const q of universeQueries(CYCLE_2026.startYear, CYCLE_2026.endYear)) {
   if (parsed.data.length !== parsed.recordsTotal) {
     throw new Error(
       `GetNEWTableData ${label} returned ${parsed.data.length} of ${parsed.recordsTotal} rows — a SHORT READ, ` +
-        "and a partial that reconciles is still a wrong answer (RULING 100).",
+        "and a partial that reconciles is still a wrong answer.",
     );
   }
   perQuery.push({ label, rows: parsed.data.length, entities: new Set(parsed.data.map((r) => r.EntityID)).size });

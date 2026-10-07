@@ -7,7 +7,7 @@ import { composeSittingAnswer, composeSittingAnswerWithBasis, type ComposableSit
 import { measureAnswer } from "../lib/ask/length-contract.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 import type { EvidencePack, EvidenceRecord } from "../lib/ask/evidence.ts";
-import { useOutcomeSnapshotForTests } from "../lib/outcomes/store.ts";
+import { useOutcomeSnapshotForTests as installOutcomeSnapshot } from "../lib/outcomes/store.ts";
 import { applyMinutesApprovals, minutesLinkFor, minutesSitting, type MinutesDocumentRead } from "../lib/outcomes/minutes-ingest.ts";
 import { mergeSnapshot, toPersistedSitting } from "../lib/outcomes/ingest.ts";
 import { findClient } from "../lib/sources/legistar/client-registry.ts";
@@ -100,7 +100,7 @@ test("a motion with no result recorded is SAID to have none — never read as pa
   const agenda = sitting.agenda.filter((row) => row.eventItemId === pass.eventItemId)
     .flatMap((row) => [row, { ...row, eventItemId: contradictory.eventItemId, title: `Second reading of ${row.title}` }, { ...row, eventItemId: absent.eventItemId, title: `Report on ${row.title}` }]);
   // The two actions the composer leads with are the contested ones; the unremarkable pass is left to the records.
-  useOutcomeSnapshotForTests(mergeSnapshot({ generatedOn: "UNKNOWN", generatedAt: "UNKNOWN", tenants: [], sittings: [] }, [{ ...sitting, agenda, outcomes: [absent, contradictory, pass], rollCalls: [] }], { generatedOn: "2026-08-12", generatedAt: "2026-08-12T22:00:00.000Z" }));
+  installOutcomeSnapshot(mergeSnapshot({ generatedOn: "UNKNOWN", generatedAt: "UNKNOWN", tenants: [], sittings: [] }, [{ ...sitting, agenda, outcomes: [absent, contradictory, pass], rollCalls: [] }], { generatedOn: "2026-08-12", generatedAt: "2026-08-12T22:00:00.000Z" }));
   try {
     const chosen: ComposableSitting = { id: sitting.meetingId, title: "Board of Supervisors Regular Meeting", startsAt: sitting.startsAt!, timeZone: "America/Phoenix", status: "SCHEDULED" };
     const outcome = meetingOutcomeEvidenceFor({ bodyId: PIMA, meetingId: chosen.id, startsAt: chosen.startsAt, question: QUESTION });
@@ -116,7 +116,7 @@ test("a motion with no result recorded is SAID to have none — never read as pa
     assert.ok(phrases.some((phrase) => phrase.startsWith("\"Second reading of") && phrase.endsWith("its published result contradicts itself")), "a record that contradicts itself is never given either result");
     assert.equal(phrases.findIndex((phrase) => phrase.startsWith("\"Second reading of")), 0, "the contradictory result leads");
   } finally {
-    useOutcomeSnapshotForTests(null);
+    installOutcomeSnapshot(null);
   }
 });
 
@@ -147,7 +147,7 @@ const EMPTY_STORE: OutcomeSnapshot = { generatedOn: "UNKNOWN", generatedAt: "UNK
 test("minutes-local item numbers stay distinct when a question reads two sittings", () => {
   const first = mesaSitting("1336059");
   const second = { ...first, meetingId: `${first.meetingId}-second-sitting`, startsAt: "2026-07-27T19:00:00-07:00" };
-  useOutcomeSnapshotForTests(mergeSnapshot(EMPTY_STORE, [first, second], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" }));
+  installOutcomeSnapshot(mergeSnapshot(EMPTY_STORE, [first, second], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" }));
   try {
     const readings = [first, second].map(sitting => meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId: sitting.meetingId, startsAt: sitting.startsAt!, question: "What did the Mesa City Council decide?" }));
     assert.ok(readings.every(reading => reading.actions.length > 0));
@@ -157,13 +157,13 @@ test("minutes-local item numbers stay distinct when a question reads two sitting
       assert.ok(action.recordId.startsWith(`${action.meetingId}#`));
       assert.ok(reading.records.some(record => record.id === action.recordId));
     }
-  } finally { useOutcomeSnapshotForTests(null); }
+  } finally { installOutcomeSnapshot(null); }
 });
 
 test("Mesa: the council's decisions from its own minutes — each motion and its result in the minutes' words, and the minutes' standing", () => {
   const july27 = mesaSitting("1336059");
   // The store as the routine holds it: the sitting merged in, its minutes' standing applied.
-  useOutcomeSnapshotForTests(applyMinutesApprovals(mergeSnapshot(EMPTY_STORE, [july27], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" })));
+  installOutcomeSnapshot(applyMinutesApprovals(mergeSnapshot(EMPTY_STORE, [july27], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" })));
   try {
     const sitting: ComposableSitting = { id: july27.meetingId, title: "City Council Meeting", startsAt: july27.startsAt!, timeZone: "America/Phoenix", status: "SCHEDULED" };
     const outcome = meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId: sitting.id, startsAt: sitting.startsAt, question: "What did the Mesa City Council decide recently?" });
@@ -190,14 +190,14 @@ test("Mesa: the council's decisions from its own minutes — each motion and its
     }
     assertGrounded(composed.answer, records, [27, 2026, 15, shown]);
   } finally {
-    useOutcomeSnapshotForTests(null);
+    installOutcomeSnapshot(null);
   }
 });
 
 /** The Mesa July 27 sitting held as the routine holds it, and a composing input over it. */
 function mesaHeld(extraSittings: readonly PersistedSittingOutcomes[] = []) {
   const july27 = mesaSitting("1336059");
-  useOutcomeSnapshotForTests(applyMinutesApprovals(mergeSnapshot(EMPTY_STORE, [july27, ...extraSittings], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" })));
+  installOutcomeSnapshot(applyMinutesApprovals(mergeSnapshot(EMPTY_STORE, [july27, ...extraSittings], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" })));
   const sitting: ComposableSitting = { id: july27.meetingId, title: "City Council Meeting", startsAt: july27.startsAt!, timeZone: "America/Phoenix", status: "SCHEDULED" };
   const outcome = meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId: sitting.id, startsAt: sitting.startsAt, question: "What did the Mesa City Council decide recently?" });
   const input: SittingAnswerInput = { shape: "MEETING_OUTCOME", subjectName: "Mesa City Council", sittings: [sitting],
@@ -231,7 +231,7 @@ test("composition steps aside — and the model writes — whenever the records 
     const memberVote = { kind: "MEETING_MEMBER_VOTE", id: `${sitting.id}#vote`, text: "A member's recorded vote." } as EvidenceRecord;
     assert.equal(composeSittingAnswerWithBasis({ ...input, records: [...input.records, memberVote], questionClass: "HOW_DID_THEY_VOTE" }).basis, "ROLL_CALLS");
     assert.equal(composeSittingAnswerWithBasis({ ...input, questionClass: null }).composed, null, "recorded actions outside a decisions question are for the model");
-  } finally { useOutcomeSnapshotForTests(null); }
+  } finally { installOutcomeSnapshot(null); }
 });
 
 test("a same-day sitting is counted beside the chosen one, or its named outcome gap is said for it", () => {
@@ -249,7 +249,7 @@ test("a same-day sitting is counted beside the chosen one, or its named outcome 
     const gap: SittingGap = { role: "OUTCOME", meetingId: earlier.id, gap: { whose: "THEIRS", statement: "We read that sitting's agenda items and the body's own record shows no action recorded against them." } };
     const withGap = composeSittingAnswer({ ...input, sittings: [sitting, earlier], records: records.filter((record) => !theirs.records.includes(record)), sittingGaps: [gap] });
     assert.match(withGap?.answer ?? "", /For the "City Council Study Session" sitting earlier that day: We read that sitting's agenda items and the body's own record shows no action recorded against them\./);
-  } finally { useOutcomeSnapshotForTests(null); }
+  } finally { installOutcomeSnapshot(null); }
 });
 
 test("the held actions are read beside the records, never inside them: every quoted field is a span of its own record's text", () => {
@@ -263,5 +263,5 @@ test("the held actions are read beside the records, never inside them: every quo
       for (const span of [action.item, action.motion, action.result, action.matterFile]) if (span) assert.ok(text.includes(plain(span)), `${action.recordId}: ${span.slice(0, 40)}`);
     }
     assert.ok(outcome.records.every((record) => !("actions" in record)), "the records are unchanged in shape");
-  } finally { useOutcomeSnapshotForTests(null); }
+  } finally { installOutcomeSnapshot(null); }
 });

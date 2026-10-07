@@ -28,7 +28,7 @@ test("a structured agenda never supplies an action or member vote, and no struct
   assert.deepEqual(absent.records, []);
   assert.deepEqual(absent.gaps, []);
   const sitting = outcomes.sittings.find((row) => row.agenda.length > 0 && row.outcomes.length > 0)!;
-  const held = meetingOutcomeEvidenceFor({ bodyId: "ocd-division/country:us/state:az/county:pima#governing", meetingId: sitting.meetingId, startsAt: sitting.startsAt, question: "What was on the agenda?" });
+  const held = meetingOutcomeEvidenceFor({ bodyId: "ocd-division/country:us/state:az/county:pima#governing", meetingId: sitting.meetingId, startsAt: sitting.startsAt!, question: "What was on the agenda?" });
   assert.ok(held.records.length > 0);
   assert.ok(held.records.every((record) => record.kind === "AGENDA_ITEM" && record.id.endsWith("#agenda")));
   assert.equal(held.denominators.structuredAgendaItemsForThatMeeting, held.records.length);

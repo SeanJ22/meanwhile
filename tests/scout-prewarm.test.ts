@@ -200,8 +200,6 @@ async function cycleWith(input: { readonly rows: number; readonly admit: boolean
     holder: "t",
     now: NOW,
     leaseTtlMs: 60_000,
-    reader: { contract: "READER", state: "NOT_READY", reason: "test" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "test" },
     research: {
       decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "test", disagreement: null }),
       admitScout: () => (input.admit ? { admit: true } : { admit: false, code: "CEILING", why: "test" }),

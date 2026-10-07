@@ -80,7 +80,7 @@ test('a solved held route bypasses paid admission and prewarming and counts as d
     toolkitFor:()=>{throw Error('No tools');},contextFor:()=>{throw Error('No new research');},now:()=>NOW});
   const cycle=await runCycle({repos,obligations:[OBLIGATION],debts:[],routeTaskFor:()=>task.id,maturity:()=> 'UNGRADUATED',
     holder:'held-cycle',now:NOW,leaseTtlMs:60_000,executor:{lane:'DETERMINISTIC',run:async()=>{throw Error('Use the held executor');}},
-    reader:{contract:'READER',state:'NOT_READY',reason:'fixture'},truth:{contract:'TRUTH',state:'NOT_READY',reason:'fixture'},
+    
     research:{decide:()=>({kind:'BOUNDED_MODEL_WORKER',why:'old route classification',disagreement:null}),
       admitScout:()=>{admissions++;return {admit:false,code:'PAUSED',why:'Paid work paused'};},
       prewarm:async()=>{warms++;throw Error('No prewarm');},modelExecutor:()=>held,workerCapacity:1,scoutLeaseTtlMs:420_000}});
@@ -104,8 +104,6 @@ test("full-size due queue dispatches an opened Scout before its deadline and nev
     routeTaskFor: id => id === OBLIGATION.id ? task.id : null,
     maturity: () => "UNGRADUATED", holder: "scaled-cycle", now: NOW, leaseTtlMs: 60_000,
     executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("unopened deterministic dispatched"); } },
-    reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
     research: {
       decide: row => ({ kind: row.obligation.id.startsWith("det-") ? "DETERMINISTIC" : "BOUNDED_MODEL_WORKER", why: "fixture", disagreement: null }),
       admitScout: () => { admissions += 1; return { admit: true }; },
@@ -172,8 +170,6 @@ test("twenty ready Scouts for one place enter shared worker slots together", { t
   const cycle = await runCycle({ repos, obligations, debts: [], routeTaskFor: id => tasks.get(id) ?? null,
     maturity: () => "UNGRADUATED", holder: "one-place-parallel", now: NOW, leaseTtlMs: 60_000,
     executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("model job reached plain-code lane"); } },
-    reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
     research: { decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "ready work in one place", disagreement: null }),
       admitScout: () => ({ admit: true }), workerCapacity: researchWorkerCapacity({ ...funded, readyWork: obligations.length }),
       scoutLeaseTtlMs: 420_000, modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => {
@@ -233,7 +229,6 @@ async function ordinaryWorkerProcesses() {
       const cycle = await runCycle({ repos, obligations: [OBLIGATION], debts: [],
         routeTaskFor: () => task.id, maturity: () => "UNGRADUATED", holder: "ordinary-process-test",
         now: NOW, leaseTtlMs: 60_000, executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("wrong lane"); } },
-        reader: { contract: "READER", state: "NOT_READY", reason: "fixture" }, truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
         research: { decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "fixture", disagreement: null }),
           admitScout: () => ({ admit: true }), modelExecutor: executor, workerCapacity: 2, scoutLeaseTtlMs: 60_000 } });
       assert.equal(pids.length, 1);
@@ -275,8 +270,7 @@ async function ordinaryWorkerProcesses() {
     const cycle = await runCycle({ repos, obligations: [OBLIGATION], debts: [], routeTaskFor: () => task.id,
       maturity: () => "GRADUATED", holder: "ordinary-route-process-test", now: NOW, leaseTtlMs: 60_000,
       executor, workerCapacity: 2,
-      reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-      truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" } });
+      });
     assert.equal(pids.length, 1);
     assert.notEqual(pids[0], process.pid);
     assert.equal(opened, 1);
@@ -588,8 +582,6 @@ test("1. SEEDED: a route declared DETERMINISTIC never consumes a model", async (
     holder: "t",
     now: NOW,
     leaseTtlMs: 60_000,
-    reader: { contract: "READER", state: "NOT_READY", reason: "test" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "test" },
     research: {
       decide: () => ({ kind: "DETERMINISTIC", why: "declared", disagreement: null }),
       admitScout: () => ({ admit: true }),
@@ -875,8 +867,6 @@ test("6. SEEDED: the rolling ceiling DEFERS model work by name and disposes noth
     holder: "t",
     now: NOW,
     leaseTtlMs: 60_000,
-    reader: { contract: "READER", state: "NOT_READY", reason: "test" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "test" },
     research: {
       decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "novel", disagreement: null }),
       admitScout: () => ({ admit: false, code: "CEILING", why: "the rolling daily research ceiling is reached: $25.0000 of $25" }),

@@ -579,8 +579,6 @@ test("scheduler aggregate refusal leaves the exact registered obligation durably
     holder: "fixture",
     now: NIGHT,
     leaseTtlMs: 1_000,
-    reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
     admitDispatch: (row) => ({ admit: false, code: "DISPATCH_CEILING", why: `${row.obligation.id} is beyond the aggregate ceiling` }),
   });
   assert.equal(executorCalls, 0);

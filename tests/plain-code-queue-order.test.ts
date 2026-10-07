@@ -105,8 +105,6 @@ async function dispatcherRun(input: { readonly cycles: number; readonly perCycle
       now: new Date(START_MS + c * HOUR_MS).toISOString(),
       leaseTtlMs: 60_000,
       maxDispatches: input.perCycle,
-      reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-      truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
       ...(input.placeFirst ? { placeFirst: input.placeFirst } : {}),
       research: {
         decide: () => ({ kind: "DETERMINISTIC", why: "fixture: a derived HTTP_GET shape", disagreement: null }),

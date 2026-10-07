@@ -71,8 +71,6 @@ async function heldEverywhereCycle() {
       maxDispatches: 0,
       executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("no plain-code row may start"); } },
       admitDispatch: () => ({ admit: false, code: "SCHEDULED_BLACKOUT", why: "fixture blackout" }),
-      reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-      truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
       research: {
         decide: (row) => ({ kind: row.obligation.id.startsWith("det-") ? "DETERMINISTIC" : "BOUNDED_MODEL_WORKER", why: "fixture", disagreement: null }),
         admitScout: (row) =>

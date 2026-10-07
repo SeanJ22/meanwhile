@@ -182,8 +182,6 @@ async function scoutLaneRun(input: { readonly cycles: number; readonly perCycle:
       holder: "scout-queue",
       now: new Date(START_MS + c * HOUR_MS).toISOString(),
       leaseTtlMs: 60_000,
-      reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-      truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
       research: {
         decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "fixture: no address is known", disagreement: null }),
         compareModelRows: (l, r) => NEW(l, r, (id) => carried.get(id)),
@@ -272,8 +270,6 @@ test("actual paid and plain-code admissions retain hunt rounds through place pri
     maturity: () => "UNGRADUATED", holder: "hunt-round-regression", now, leaseTtlMs: 60_000,
     executor: scheduled => ({ lane: "DETERMINISTIC", run: execute("plain", scheduled) }), workerCapacity: 1,
     huntFor, placeComparator: async () => (a, b) => priority.indexOf(huntFor(a)) - priority.indexOf(huntFor(b)),
-    reader: { contract: "READER", state: "NOT_READY", reason: "offline fixture" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "offline fixture" },
     research: { decide: scheduled => ({ kind: scheduled.obligation.id.startsWith("paid:") ? "BOUNDED_MODEL_WORKER" : "DETERMINISTIC",
       why: "offline lane regression", disagreement: null }),
       admitScout: () => ({ admit: true }), workerCapacity: 1, scoutLeaseTtlMs: 60_000,

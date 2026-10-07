@@ -1,0 +1,134 @@
+[
+  {
+    "page": "admin?view=now",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 179,
+    "fcpMs": 440,
+    "domMs": 400,
+    "readyMs": 7141,
+    "height": 2182,
+    "chars": 1815
+  },
+  {
+    "page": "admin?view=queue",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 55,
+    "fcpMs": 204,
+    "domMs": 187,
+    "readyMs": 6037,
+    "height": 1368,
+    "chars": 788
+  },
+  {
+    "page": "admin?view=workers",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 30,
+    "fcpMs": 168,
+    "domMs": 146,
+    "readyMs": 5517,
+    "height": 3526,
+    "chars": 3843
+  },
+  {
+    "page": "admin?view=work",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 33,
+    "fcpMs": 184,
+    "domMs": 115,
+    "readyMs": 5588,
+    "height": 1368,
+    "chars": 623
+  },
+  {
+    "page": "admin?view=checklist",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 49,
+    "fcpMs": 180,
+    "domMs": 157,
+    "readyMs": 5423,
+    "height": 1766,
+    "chars": 1397
+  },
+  {
+    "page": "admin?view=money",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 36,
+    "fcpMs": 192,
+    "domMs": 106,
+    "readyMs": 5810,
+    "height": 1368,
+    "chars": 776
+  },
+  {
+    "page": "admin?view=scoreboard",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 34,
+    "fcpMs": 112,
+    "domMs": 99,
+    "readyMs": 5803,
+    "height": 3716,
+    "chars": 4750
+  },
+  {
+    "page": "admin?view=data",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 49,
+    "fcpMs": 148,
+    "domMs": 128,
+    "readyMs": 5937,
+    "height": 4083,
+    "chars": 4227
+  },
+  {
+    "page": "admin?view=settings",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 48,
+    "fcpMs": 168,
+    "domMs": 143,
+    "readyMs": 5654,
+    "height": 3204,
+    "chars": 2889
+  },
+  {
+    "page": "admin?view=reports",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 35,
+    "fcpMs": 132,
+    "domMs": 121,
+    "readyMs": 5500,
+    "height": 1368,
+    "chars": 947
+  },
+  {
+    "page": "admin?view=changes",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 23,
+    "fcpMs": 136,
+    "domMs": 138,
+    "readyMs": 6032,
+    "height": 1368,
+    "chars": 576
+  },
+  {
+    "page": "admin?view=chat",
+    "theme": "dark",
+    "status": 200,
+    "ttfbMs": 32,
+    "fcpMs": 124,
+    "domMs": 93,
+    "readyMs": 5175,
+    "height": 1368,
+    "chars": 1073
+  }
+]

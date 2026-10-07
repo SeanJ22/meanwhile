@@ -1,0 +1,205 @@
+Live updates on. Last live check October 6, 10:32 PM ET. Unavailable: the research lane's state (nothing published yet); how much freshness debt is outstanding (the last publish could not measure it). Other readings continue to update.
+
+Skip to the page
+meanwhile …
+Now
+Queue
+Workers
+Work
+Checklist
+Money
+Scoreboard
+Data business
+Settings
+Reports
+Changes
+Ask the console
+Start many hunts
+United States
+Change place
+Country
+Period
+Today
+Last 7 days
+Last 30 days
+This month (October 2026)
+Live · updated 10:32 PM ET
+
+ALL TRACKED STATES
+
+Scoreboard
+Orders
+0
+
+0 orders in the history
+
+No order has been given yet.
+
+Technical details
+Mission progress
+—
+
+No place has been sent yet, so there is nothing to count.
+
+Technical details
+Checklist completeness
+—
+
+No place has been sent yet, so there is nothing to count.
+
+Technical details
+Coverage
+—
+
+No place has been sent yet, so there is nothing to count.
+
+Technical details
+Public delivery
+—
+
+No accepted record has been counted yet.
+
+Technical details
+People coverage
+—
+
+No place has been sent yet, so there is nothing to count.
+
+Technical details
+Facts live per hour
+—
+
+Nothing has been recorded about facts going live yet, or the record could not be read just now.
+
+Technical details
+Cost per fact
+—
+
+Nothing has been recorded about facts going live yet, or the record could not be read just now.
+
+Technical details
+Audit accuracy
+—
+
+No published fact has been audited this week.
+
+Technical details
+Freshness
+—
+
+No accepted record has been seen on the page yet, so nothing can be called on schedule or overdue.
+
+Technical details
+Shut doors
+0
+
+0 shut · 0 open · 0 set aside
+
+How many ways in are shut right now. How long each took to reopen could not be read just now.
+
+Technical details
+Posted to live
+17%
+
+71 of 401 changes live within an hour · 59 not live yet · 260 timed from the body's own posting, 82 from when we first saw it
+
+The target is an hour, over the last 7 days. The slowest took 14,429.8 hours. A change with no posting time from the body is timed from when we first saw it, and says so.
+
+Technical details
+Overdue doors
+0
+
+0 of 0 open doors are past their check
+
+Every open door was read within its check.
+
+Technical details
+Time to core information live
+—
+
+No place has been sent yet, so there is nothing to count.
+
+Technical details
+Look and feel
+—
+
+No look check of the live site has run in the last week.
+
+Technical details
+Site speed and reliability
+—
+
+No speed check of the live site has been recorded in the last two days.
+
+Technical details
+Return visits
+0%
+
+2 of 313 reader-days were returning readers
+
+A reader counts once for each day they came, over the last 14 days.
+
+Technical details
+Time to repair
+—
+
+The repair log could not be read just now.
+
+Technical details
+Repairs without code
+—
+
+The repair log could not be read just now.
+
+Technical details
+Proven fixes
+—
+
+No reusable fix has been tried in a place yet.
+
+Technical details
+Report accuracy
+—
+
+No weekly check of the team's claimed wins in the last two weeks.
+
+Technical details
+Head-start hit rate
+—
+
+No target has recorded whether the Bank alone solved it yet.
+
+Technical details
+Second-time coverage
+—
+
+No government has two completed, comparable coverage runs yet.
+
+Technical details
+Time to core information live, by mission
+
+—
+
+Launch checks
+1 fine · 2 need a look · 8 not measured
+CHECK	STATE	WHAT WAS READ
+The runner is on the released code	Needs a look	The runner tested d89746be, which contains raw main c814d4c6 but is not it: this reading of main is behind the runner, or the runner is on unmerged work.
+The runner reaches the database	Not measured	No cycle has reported whether the database was reached.
+Waiting work is being sent out	Not measured	No normal dispatch has been recorded.
+Scouts receive what we already know	Not measured	No reading yet records what an actual scout was handed.
+Spending stays under the ceiling	Not measured	Spend or the ceiling could not be read.
+Scheduled work is not silently blocked	Fine	The next cycle is scheduled and not overdue.
+Bad data cannot replace good data	Not measured	Publication refusals are counted elsewhere; no single reading covers this yet.
+Each kind of fact reaches a reader	Not measured	Per-family reader checks are not recorded yet.
+Status is honest	Not measured	No automatic reading exists for this.
+Sources and privacy	Not measured	No automatic reading exists for this.
+The runner keeps going overnight	Needs a look	The last cycle did not finish cleanly.
+Readiness, counted apart from what places are owed
+GROUP	WORKING	FAILING	NOT MEASURED
+Finding sources	0 of 20	0 of 20	20 of 20
+Recovery	0 of 17	1 of 17	16 of 17
+Publishing	0 of 18	0 of 18	18 of 18
+Ask	0 of 20	0 of 20	20 of 20
+Are lessons reaching the Bank?
+One reading
+0 Bank write errors

@@ -1,0 +1,1630 @@
+[
+  {
+    "zip": "02916",
+    "loadStatus": 200,
+    "placeMs": 30007,
+    "askMs": 60038,
+    "text": "▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n02916\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nNewfields, NH\nBody\nAll bodies\nSafety Building Committee — Newfields, NH\n1\nMeetings\n1 venue\n2\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 02916\n\nNothing upcoming; showing recent meetings (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n\nLAST CHECKED 19 hours ago · 1 calendar listing is older than that: we last reached it 7 days ago\n\n▸ About this data\nChecked 19 hours ago\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n02916\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "answer": "▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n02916\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nNewfields, NH\nBody\nAll bodies\nSafety Building Committee — Newfields, NH\n1\nMeetings\n1 venue\n2\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 02916\n\nNothing upcoming; showing recent meetings (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n\nLAST CHECKED 19 hours ago · 1 calendar listing is older than that: we last reached it 7 days ago\n\n▸ About this data\nChecked 19 hours ago\nAsk\n✕\nAsk, or find a thing by name\n\nYour kid's school, the library, a pothole in the road — we'll point you at the office that owns it. Or ask for what's on your ballot, meetings near you, the districts you are in or how to reach them. Type a meeting, body or district by name to go straight to it.\n\nAsk\n\nWHERE TO LOOK\n\nThe districts you are in\n\nA zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.\n\nThe districts you are in\nClose\n\nYour United States Senators are Jack Reed (Democrat) and Sheldon Whitehouse (Democrat); your United States Representative is Gabe Amo (Democrat) for District 1.\n\nRecords (3)\nWho this is (3)\n\nSource: unitedstates/congress-legislators (community project)\n\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n02916\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "calls": [
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 151
+      },
+      {
+        "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+        "query": "",
+        "status": 503,
+        "ms": 14
+      },
+      {
+        "path": "/api/meetings",
+        "query": "?lat=41.84266&lng=-71.35244&zip=02916",
+        "status": 200,
+        "ms": 1757
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AA000380",
+        "status": 200,
+        "ms": 44
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AR000122",
+        "status": 200,
+        "ms": 47
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AW000802",
+        "status": 200,
+        "ms": 51
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 120
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 571
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 580
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 581
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 587
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 25
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 37
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 9
+      },
+      {
+        "path": "/api/ask/grounded",
+        "query": "",
+        "status": 200,
+        "ms": 181
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 28
+      },
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      }
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: [map] Bad response code: 503",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "totalMs": 92346
+  },
+  {
+    "zip": "07432",
+    "loadStatus": 200,
+    "placeMs": 30011,
+    "askMs": 60057,
+    "text": "6\n27\n22\n6\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n07432\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nMorris County, NJ\nMorris Hills Regional School District, NJ\nRockaway Township School District, NJ\nRockaway Township, NJ\nBody\nAll bodies\nBoard of Adjustment — Rockaway Township, NJ\nBoard of County Commissioners — Morris County, NJ\nBoard of Education — Morris Hills Regional School District, NJ\nPlanning Board — Rockaway Township, NJ\nRTSD Board — Rockaway Township School District, NJ\nTownship Council — Rockaway Township, NJ\n61\nMeetings\n4 venues\n3\nBodies here\n0\nDistricts in view\n8\nOfficials\nNear 07432\n\nNothing closer, so showing meetings from farther out (16 → 37 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n\nLAST CHECKED 19 hours ago · 4 calendar listings are older than that: each one says when we last reached it\n\n▸ About this data\nChecked 19 hours ago\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n07432\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "answer": "6\n27\n22\n6\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n07432\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nMorris County, NJ\nMorris Hills Regional School District, NJ\nRockaway Township School District, NJ\nRockaway Township, NJ\nBody\nAll bodies\nBoard of Adjustment — Rockaway Township, NJ\nBoard of County Commissioners — Morris County, NJ\nBoard of Education — Morris Hills Regional School District, NJ\nPlanning Board — Rockaway Township, NJ\nRTSD Board — Rockaway Township School District, NJ\nTownship Council — Rockaway Township, NJ\n61\nMeetings\n4 venues\n3\nBodies here\n0\nDistricts in view\n8\nOfficials\nNear 07432\n\nNothing closer, so showing meetings from farther out (16 → 37 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n\nLAST CHECKED 19 hours ago · 4 calendar listings are older than that: each one says when we last reached it\n\n▸ About this data\nChecked 19 hours ago\nAsk\n✕\nAsk, or find a thing by name\n\nYour kid's school, the library, a pothole in the road — we'll point you at the office that owns it. Or ask for what's on your ballot, meetings near you, the districts you are in or how to reach them. Type a meeting, body or district by name to go straight to it.\n\nAsk\n\nWHERE TO LOOK\n\nThe districts you are in\n\nA zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.\n\nThe districts you are in\nClose\n\nYour United States Senators are Andy Kim (Democrat) and Cory A. Booker (Democrat); your United States Representative is Josh Gottheimer (Democrat) for District 5.\n\nRecords (3)\nWho this is (3)\n\nSource: unitedstates/congress-legislators (community project)\n\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n07432\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "calls": [
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 115
+      },
+      {
+        "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+        "query": "",
+        "status": 503,
+        "ms": 9
+      },
+      {
+        "path": "/api/meetings",
+        "query": "?lat=40.99581&lng=-74.14126&zip=07432",
+        "status": 200,
+        "ms": 843
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 29
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AG000583",
+        "status": 200,
+        "ms": 6
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AK000394",
+        "status": 200,
+        "ms": 21
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AB001288",
+        "status": 200,
+        "ms": 22
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=nj-legislature%3A493",
+        "status": 200,
+        "ms": 32
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=nj-legislature%3A366",
+        "status": 200,
+        "ms": 33
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=nj-legislature%3A430",
+        "status": 200,
+        "ms": 33
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 504
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 510
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 518
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 528
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 530
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 567
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 634
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 655
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 658
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 663
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 696
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 703
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 766
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 8
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 8
+      },
+      {
+        "path": "/api/ask/grounded",
+        "query": "",
+        "status": 200,
+        "ms": 164
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 16
+      },
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      }
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: [map] Bad response code: 503",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "totalMs": 92565
+  },
+  {
+    "zip": "17032",
+    "loadStatus": 200,
+    "placeMs": 30011,
+    "askMs": 60033,
+    "text": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n17032\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n10\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 17032\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n17032\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "answer": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n17032\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n10\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 17032\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nAsk\n✕\nAsk, or find a thing by name\n\nYour kid's school, the library, a pothole in the road — we'll point you at the office that owns it. Or ask for what's on your ballot, meetings near you, the districts you are in or how to reach them. Type a meeting, body or district by name to go straight to it.\n\nAsk\n\nWHERE TO LOOK\n\nThe districts you are in\n\nA zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.\n\nThe districts you are in\nClose\n\nYour United States Senators are David McCormick (Republican) and John Fetterman (Democrat); your United States Representative is Scott Perry (Republican) for District 10.\n\nRecords (3)\nWho this is (3)\n\nSource: unitedstates/congress-legislators (community project)\n\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n17032\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "calls": [
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 151
+      },
+      {
+        "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+        "query": "",
+        "status": 503,
+        "ms": 12
+      },
+      {
+        "path": "/api/meetings",
+        "query": "?lat=40.49183&lng=-76.83255&zip=17032",
+        "status": 200,
+        "ms": 1254
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 28
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AP000605",
+        "status": 200,
+        "ms": 9
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AM001243",
+        "status": 200,
+        "ms": 15
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AF000479",
+        "status": 200,
+        "ms": 15
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 496
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 520
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 542
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 547
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 556
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 601
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 623
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 646
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 671
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 675
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 678
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 738
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 776
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 789
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 1029
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      },
+      {
+        "path": "/api/ask/grounded",
+        "query": "",
+        "status": 200,
+        "ms": 138
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 0
+      },
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      }
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: [map] Bad response code: 503",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "totalMs": 92393
+  },
+  {
+    "zip": "22749",
+    "loadStatus": 200,
+    "placeMs": 30011,
+    "askMs": 60024,
+    "text": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n22749\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n2\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 22749\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n22749\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "answer": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n22749\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n2\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 22749\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nAsk\n✕\nAsk, or find a thing by name\n\nYour kid's school, the library, a pothole in the road — we'll point you at the office that owns it. Or ask for what's on your ballot, meetings near you, the districts you are in or how to reach them. Type a meeting, body or district by name to go straight to it.\n\nAsk\n\nWHERE TO LOOK\n\nThe districts you are in\n\nA zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.\n\nThe districts you are in\nClose\n\nYour United States Senators are Mark R. Warner (Democrat) and Tim Kaine (Democrat); your United States Representative is Suhas Subramanyam (Democrat) for District 10.\n\nRecords (3)\nWho this is (3)\n\nSource: unitedstates/congress-legislators (community project)\n\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n22749\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "calls": [
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 121
+      },
+      {
+        "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+        "query": "",
+        "status": 503,
+        "ms": 10
+      },
+      {
+        "path": "/api/meetings",
+        "query": "?lat=38.61966&lng=-78.18023&zip=22749",
+        "status": 200,
+        "ms": 606
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 41
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AS001230",
+        "status": 200,
+        "ms": 12
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AW000805",
+        "status": 200,
+        "ms": 8
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AK000384",
+        "status": 200,
+        "ms": 0
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 352
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 454
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 462
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 468
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 475
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 581
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 587
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 718
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 732
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 748
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 751
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 748
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      },
+      {
+        "path": "/api/ask/grounded",
+        "query": "",
+        "status": 200,
+        "ms": 78
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 10
+      },
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      }
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: [map] Bad response code: 503",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "totalMs": 92408
+  },
+  {
+    "zip": "38879",
+    "loadStatus": 200,
+    "placeMs": 30012,
+    "askMs": 60051,
+    "text": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n38879\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n3\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 38879\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n38879\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "answer": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n38879\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n3\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 38879\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nAsk\n✕\nAsk, or find a thing by name\n\nYour kid's school, the library, a pothole in the road — we'll point you at the office that owns it. Or ask for what's on your ballot, meetings near you, the districts you are in or how to reach them. Type a meeting, body or district by name to go straight to it.\n\nAsk\n\nWHERE TO LOOK\n\nThe districts you are in\n\nA zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.\n\nThe districts you are in\nClose\n\nYour United States Senators are Cindy Hyde-Smith (Republican) and Roger F. Wicker (Republican); your United States Representative is Trent Kelly (Republican) for District 1.\n\nRecords (3)\nWho this is (3)\n\nSource: unitedstates/congress-legislators (community project)\n\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n38879\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "calls": [
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 130
+      },
+      {
+        "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      },
+      {
+        "path": "/api/meetings",
+        "query": "?lat=34.18462&lng=-88.71816&zip=38879",
+        "status": 200,
+        "ms": 565
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 57
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AK000388",
+        "status": 200,
+        "ms": 5
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AH001079",
+        "status": 200,
+        "ms": 21
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AW000437",
+        "status": 200,
+        "ms": 23
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 495
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 514
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 538
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 536
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 553
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 569
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 629
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 643
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 673
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 682
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 698
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 723
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 776
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 785
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 797
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      },
+      {
+        "path": "/api/ask/grounded",
+        "query": "",
+        "status": 200,
+        "ms": 108
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 14
+      },
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      }
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: [map] Bad response code: 503",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "totalMs": 92426
+  },
+  {
+    "zip": "46052",
+    "loadStatus": 200,
+    "placeMs": 30012,
+    "askMs": 60055,
+    "text": "▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n46052\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n17\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 46052\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n46052\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "answer": "▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n46052\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n17\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 46052\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nAsk\n✕\nAsk, or find a thing by name\n\nYour kid's school, the library, a pothole in the road — we'll point you at the office that owns it. Or ask for what's on your ballot, meetings near you, the districts you are in or how to reach them. Type a meeting, body or district by name to go straight to it.\n\nAsk\n\nWHERE TO LOOK\n\nThe districts you are in\n\nA zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.\n\nThe districts you are in\nClose\n\nYour United States Senators are Jim Banks (Republican) and Todd Young (Republican); your United States Representative is James R. Baird (Republican) for District 4.\n\nRecords (3)\nWho this is (3)\n\nSource: unitedstates/congress-legislators (community project)\n\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n46052\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "calls": [
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 114
+      },
+      {
+        "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+        "query": "",
+        "status": 503,
+        "ms": 5
+      },
+      {
+        "path": "/api/meetings",
+        "query": "?lat=40.04304&lng=-86.45674&zip=46052",
+        "status": 200,
+        "ms": 879
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 45
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AB001307",
+        "status": 200,
+        "ms": 8
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AB001299",
+        "status": 200,
+        "ms": 26
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AY000064",
+        "status": 200,
+        "ms": 34
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 501
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 540
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 541
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 579
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 582
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 639
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 1584
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      },
+      {
+        "path": "/api/ask/grounded",
+        "query": "",
+        "status": 200,
+        "ms": 157
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 36
+      },
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 8
+      }
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: [map] Bad response code: 503",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "totalMs": 92581
+  },
+  {
+    "zip": "54947",
+    "loadStatus": 200,
+    "placeMs": 30010,
+    "askMs": 60044,
+    "text": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n54947\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n7\nBodies here\n0\nDistricts in view\n4\nOfficials\nNear 54947\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n54947\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "answer": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n54947\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n7\nBodies here\n0\nDistricts in view\n4\nOfficials\nNear 54947\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nAsk\n✕\nAsk, or find a thing by name\n\nYour kid's school, the library, a pothole in the road — we'll point you at the office that owns it. Or ask for what's on your ballot, meetings near you, the districts you are in or how to reach them. Type a meeting, body or district by name to go straight to it.\n\nAsk\n\nWHERE TO LOOK\n\nThe districts you are in\n\nA zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.\n\nThe districts you are in\nClose\n\nYour United States Senators are Ron Johnson (Republican) and Tammy Baldwin (Democrat); your ZIP code reaches 2 congressional districts: Glenn Grothman (Republican) for District 6 and Tony Wied (Republican) for District 8.\n\nRecords (4)\nWho this is (4)\n\nSource: unitedstates/congress-legislators (community project)\n\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n54947\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "calls": [
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 146
+      },
+      {
+        "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+        "query": "",
+        "status": 503,
+        "ms": 8
+      },
+      {
+        "path": "/api/meetings",
+        "query": "?lat=44.20359&lng=-88.69875&zip=54947",
+        "status": 200,
+        "ms": 1040
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 23
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AW000829",
+        "status": 200,
+        "ms": 22
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AG000576",
+        "status": 200,
+        "ms": 23
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AJ000293",
+        "status": 200,
+        "ms": 32
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AB001230",
+        "status": 200,
+        "ms": 32
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 506
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 521
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 526
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 541
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 544
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 550
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 637
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 660
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 661
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 678
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 696
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 8
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      },
+      {
+        "path": "/api/ask/grounded",
+        "query": "",
+        "status": 200,
+        "ms": 115
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 33
+      },
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 11
+      }
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: [map] Bad response code: 503",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "totalMs": 92193
+  },
+  {
+    "zip": "55310",
+    "loadStatus": 200,
+    "placeMs": 30001,
+    "askMs": 60078,
+    "text": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n55310\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n12\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 55310\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n55310\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "answer": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n55310\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n12\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 55310\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 19 hours ago\nAsk\n✕\nAsk, or find a thing by name\n\nYour kid's school, the library, a pothole in the road — we'll point you at the office that owns it. Or ask for what's on your ballot, meetings near you, the districts you are in or how to reach them. Type a meeting, body or district by name to go straight to it.\n\nAsk\n\nWHERE TO LOOK\n\nThe districts you are in\n\nA zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.\n\nThe districts you are in\nClose\n\nYour United States Senators are Amy Klobuchar (Democrat) and Tina Smith (Democrat); your United States Representative is Michelle Fischbach (Republican) for District 7.\n\nRecords (3)\nWho this is (3)\n\nSource: unitedstates/congress-legislators (community project)\n\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n55310\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "calls": [
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 296
+      },
+      {
+        "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+        "query": "",
+        "status": 503,
+        "ms": 3
+      },
+      {
+        "path": "/api/meetings",
+        "query": "?lat=44.75912&lng=-94.88076&zip=55310",
+        "status": 200,
+        "ms": 2358
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 23
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AF000470",
+        "status": 200,
+        "ms": 55
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AK000367",
+        "status": 200,
+        "ms": 55
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AS001203",
+        "status": 200,
+        "ms": 86
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 368
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 481
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 533
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 532
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 566
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 573
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 108
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 644
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 655
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 700
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 725
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 28
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 18
+      },
+      {
+        "path": "/api/ask/grounded",
+        "query": "",
+        "status": 200,
+        "ms": 154
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 40
+      },
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 5
+      }
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: [map] Bad response code: 503",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "totalMs": 93253
+  },
+  {
+    "zip": "96731",
+    "loadStatus": 200,
+    "placeMs": 30011,
+    "askMs": 60036,
+    "text": "▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n96731\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n2\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 96731\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked just now\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n96731\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "answer": "▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n96731\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n2\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 96731\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 1 minute ago\nAsk\n✕\nAsk, or find a thing by name\n\nYour kid's school, the library, a pothole in the road — we'll point you at the office that owns it. Or ask for what's on your ballot, meetings near you, the districts you are in or how to reach them. Type a meeting, body or district by name to go straight to it.\n\nAsk\n\nWHERE TO LOOK\n\nThe districts you are in\n\nA zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.\n\nThe districts you are in\nClose\n\nYour United States Senators are Brian Schatz (Democrat) and Mazie K. Hirono (Democrat); your United States Representative is Jill N. Tokuda (Democrat) for District 2.\n\nRecords (3)\nWho this is (3)\n\nSource: unitedstates/congress-legislators (community project)\n\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n96731\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "calls": [
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 145
+      },
+      {
+        "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      },
+      {
+        "path": "/api/meetings",
+        "query": "?lat=21.67808&lng=-157.96921&zip=96731",
+        "status": 200,
+        "ms": 467
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 19
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AT000487",
+        "status": 200,
+        "ms": 3
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AS001194",
+        "status": 200,
+        "ms": 3
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AH001042",
+        "status": 200,
+        "ms": 13
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 401
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 447
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 411
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 9
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 11
+      },
+      {
+        "path": "/api/ask/grounded",
+        "query": "",
+        "status": 200,
+        "ms": 102
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 28
+      },
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 16
+      }
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: [map] Bad response code: 503",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "totalMs": 92439
+  },
+  {
+    "zip": "99020",
+    "loadStatus": 200,
+    "placeMs": 30010,
+    "askMs": 60066,
+    "text": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n99020\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n2\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 99020\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked just now\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n99020\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "answer": "▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n▤\n\nBASEMAP UNAVAILABLE\n\nThe map's background image isn't loading right now. Everything else works — the pins are in the right places, and meeting details still open. Reloading often fixes it.\n\nSchool\nLocal\nState\nFederal\nConcluded\nDistrict boundary\nmeanwhile\n«\nBallot\n99020\n▾\nWho governs here?\nWhere can I vote?\nAsk about a meeting, a school…\nLocal\nState\nFederal\nJurisdiction\nAll jurisdictions\nBody\nAll bodies\n0\nMeetings\n0 venues\n2\nBodies here\n0\nDistricts in view\n3\nOfficials\nNear 99020\n\nNo meetings collected for this area yet (16 → 93 mi)\n\nNear me\nOff · showing the whole area\n▸\nFilters\nNone active\n▸ About this data\nChecked 1 minute ago\nAsk\n✕\nAsk, or find a thing by name\n\nYour kid's school, the library, a pothole in the road — we'll point you at the office that owns it. Or ask for what's on your ballot, meetings near you, the districts you are in or how to reach them. Type a meeting, body or district by name to go straight to it.\n\nAsk\n\nWHERE TO LOOK\n\nThe districts you are in\n\nA zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.\n\nThe districts you are in\nClose\n\nYour United States Senators are Maria Cantwell (Democrat) and Patty Murray (Democrat); your United States Representative is Michael Baumgartner (Republican) for District 5.\n\nRecords (3)\nWho this is (3)\n\nSource: unitedstates/congress-legislators (community project)\n\nmeanwhile\n\nWhether you care about politics or not, politics cares about you.\n\nGovernment reports to you.\n\nWhile you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.\n\nNot in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.\n\nKnow where it's happening. Know when it's happening. Show up if you can.\n\nAnd when you can't — say something anyway.\n\nStart where you live\n\nZIP code\n\nShow meetings\n\nPICK UP WHERE YOU LEFT OFF\n\n99020\n\nAny U.S. zip works.\n\nUse my location\n\nOR\n\nKeep current view\n\nWhat this site collects",
+    "calls": [
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 144
+      },
+      {
+        "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+        "query": "",
+        "status": 503,
+        "ms": 15
+      },
+      {
+        "path": "/api/meetings",
+        "query": "?lat=47.5626&lng=-117.4966&zip=99020",
+        "status": 200,
+        "ms": 580
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 34
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AB001322",
+        "status": 200,
+        "ms": 3
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AC000127",
+        "status": 200,
+        "ms": 4
+      },
+      {
+        "path": "/api/directory",
+        "query": "?member=congress%3AM001111",
+        "status": 200,
+        "ms": 4
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 424
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 476
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 481
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 495
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 504
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 510
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 604
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 626
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 629
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 633
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 653
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 735
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 761
+      },
+      {
+        "path": "/api/geocode",
+        "query": "",
+        "status": 200,
+        "ms": 823
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 6
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 8
+      },
+      {
+        "path": "/api/events",
+        "query": "",
+        "status": 503,
+        "ms": 7
+      },
+      {
+        "path": "/api/ask/grounded",
+        "query": "",
+        "status": 200,
+        "ms": 108
+      },
+      {
+        "path": "/api/log",
+        "query": "",
+        "status": 204,
+        "ms": 22
+      },
+      {
+        "path": "/api/reader/settings",
+        "query": "",
+        "status": 503,
+        "ms": 8
+      }
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: [map] Bad response code: 503",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "console: Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "totalMs": 92489
+  }
+]

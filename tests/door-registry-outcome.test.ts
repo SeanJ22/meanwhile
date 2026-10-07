@@ -5,7 +5,8 @@ import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.
 import { SOURCE_WIRING } from "@/lib/registry/source-wiring.ts";
 import { seedMeetingDoors } from "@/lib/doors/seed-meetings.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
-import { recordDoorOutcome, recordMemberOutcomes } from "@/lib/doors/outcome.ts";
+import { recordDoorOutcome, recordMemberOutcomes, taskDoorId } from "@/lib/doors/outcome.ts";
+import { feedDoorDrafts, seedFeedDoors } from "@/lib/doors/seed-feeds.ts";
 
 const AT = "2026-10-04T12:00:00.000Z";
 
@@ -55,4 +56,17 @@ test("the family child's one call records every member's own result and survives
   assert.deepEqual(done, { recorded: 2, missing: 0 });
   const broken = { read: async () => { throw new Error("store down"); } } as never;
   assert.equal(await recordFamilyReads(broken, [{ ok: true, member: { id: a.doorId } }], AT), null);
+});
+
+test("a routine task's read lands on its meeting door or its feed door, and on no door when it has neither", async () => {
+  const repos = await seeded();
+  const [meeting] = (await listDoors(repos.doors)).doors;
+  await seedFeedDoors({ repo: repos.doors, deriveInputAt: AT, at: AT });
+  const feed = feedDoorDrafts()[0]!;
+  const taskId = String(feed.config!.contractId);
+  assert.equal(await taskDoorId(repos.doors, meeting!.doorId), meeting!.doorId);
+  assert.equal(await taskDoorId(repos.doors, taskId), feed.doorId);
+  assert.equal(await taskDoorId(repos.doors, "no-such-task"), null);
+  assert.equal(await recordDoorOutcome(repos.doors, (await taskDoorId(repos.doors, taskId))!, "SUCCESS", "2026-10-04T13:00:00.000Z"), true);
+  assert.equal((await repos.doors.read(feed.doorId))!.value.lastSuccessAt, "2026-10-04T13:00:00.000Z");
 });

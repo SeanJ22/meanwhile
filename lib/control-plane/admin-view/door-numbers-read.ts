@@ -5,7 +5,7 @@ import { MEETINGS_RECORD_CLASS } from "../../meetings/snapshot.ts";
 import { readPreparedMeetingsProjection } from "../../meetings/prepared-snapshot.ts";
 import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
 import { meetingFactsByDoor, overdueDoors, type OverdueDoor } from "../../doors/overdue.ts";
-import type { DoorRecord } from "../../doors/registry.ts";
+import { readOnSchedule, type DoorRecord } from "../../doors/registry.ts";
 import { fixItems } from "../fix-list.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { DoorNumberReadings } from "./door-numbers.ts";
@@ -34,5 +34,6 @@ export async function readDoorNumbers(input: { readonly now: string; readonly do
     input.doors === null ? null : attempt(() => readOverdueDoors(input.doors!, input.now)),
     attempt(() => readRecentPostingToLive()),
   ]);
-  return { now: input.now, overdue, posting, fixes: input.config === null ? null : fixItems(input.config) };
+  const scheduled = input.doors === null ? null : input.doors.filter((door) => door.status === "OPEN" && readOnSchedule(door)).length;
+  return { now: input.now, overdue, scheduled, posting, fixes: input.config === null ? null : fixItems(input.config) };
 }

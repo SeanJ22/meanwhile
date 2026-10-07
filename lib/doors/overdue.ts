@@ -2,12 +2,13 @@
  * A door is overdue when its last successful read is older than its check:
  * its own `checkEveryMinutes`, or the standing check for its kind (meeting
  * doors: hourly with a sitting within 7 days either side, else twice daily).
- * A door that never succeeded is measured from its last record change. Shut
- * and suspended doors are not listed. Pure.
+ * A door that never succeeded is measured from its last record change. Only
+ * doors a routine task reads on a clock can be overdue; shut and suspended
+ * doors are not listed. Pure.
  */
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import { checkEveryWithObserved } from "./observed-rate.ts";
-import type { DoorRecord } from "./registry.ts";
+import { readOnSchedule, type DoorRecord } from "./registry.ts";
 
 const DAY_MS = 86_400_000;
 const MINUTE_MS = 60_000;
@@ -77,7 +78,7 @@ export function overdueDoors(
   const nowMs = Date.parse(now);
   const out: OverdueDoor[] = [];
   for (const door of doors) {
-    if (door.status !== "OPEN") continue;
+    if (door.status !== "OPEN" || !readOnSchedule(door)) continue;
     const key = door.meeting != null && door.bodyIds.length === 1 ? doorFactsKey(door.kind, door.bodyIds[0]!) : null;
     const held = key === null ? undefined : facts.get(key);
     const check = checkEveryFor(door, held);

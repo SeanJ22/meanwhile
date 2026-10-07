@@ -153,6 +153,7 @@ function verdictOf(fetched: ResearchFetchResult, row: LeadRow, nowMs: number): V
 function lessonFor(row: LeadRow, order: LeadOrder, nowIso: string): FieldManualEntry {
   const found = row.found!;
   const works = row.state === "WORKS";
+  const procedure = works ? replayProcedure(found) : undefined;
   const notes = Object.entries(row.notes).map(([k, v]) => `${k}: ${v}`).join("; ");
   const host = new URL(found.finalUrl).hostname;
   const robots = found.robots?.verdict === "DISALLOWED" ? ` ${ROBOTS_WORDS}` : "";
@@ -170,8 +171,16 @@ function lessonFor(row: LeadRow, order: LeadOrder, nowIso: string): FieldManualE
     ...(row.place ? { ocdIds: [row.place] } : {}),
     observedAt: row.testedAt ?? nowIso,
     payload: { lead: { link: row.link, finalUrl: found.finalUrl, notes: row.notes, orderId: order.orderId, row: row.n,
-      httpStatus: found.httpStatus, contentType: found.contentType, robots: found.robots }, places: row.place ? [row.place] : [] },
+      httpStatus: found.httpStatus, contentType: found.contentType, robots: found.robots }, places: row.place ? [row.place] : [],
+      ...(procedure ? { procedure } : {}) },
   });
+}
+
+/** On a vendor-hosted page, the same path on another tenant's host: the request the auto-try replays at each matching door. */
+function replayProcedure(found: LeadFound): string | undefined {
+  if (found.platform === null || detectTenancy(found.finalUrl, found.finalUrl)[0]?.platform !== found.platform) return undefined;
+  const url = new URL(found.finalUrl);
+  return `GET https://{host}${url.pathname}${url.search}`;
 }
 
 const ROBOTS_WORDS = "Its robots.txt asks automated readers to stay out; that is recorded, and it was read anyway.";

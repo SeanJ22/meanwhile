@@ -24,6 +24,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { ResearchGet } from "../lib/hunt/robots-first-fetch.ts";
 import type { DoorRecord } from "../lib/doors/registry.ts";
+import type { ProbeFetch } from "../lib/doors/probe.ts";
 import { runSpreadPass } from "../lib/method/spread-pass.ts";
 import { sheetAsCsv } from "../lib/control-plane/bulk-hunts/workbook.ts";
 import { previewLeads } from "../lib/control-plane/leads/preview.ts";
@@ -211,11 +212,19 @@ test("five rows flow end to end: parsed, ordered, held or tested, each with its 
   const page = await readFieldManual(repos, { role: "SCOUT", state: "az" });
   assert.ok(page.projection.lines.some((l) => l.includes("flagstaff.az.gov/agendas")), "a worker in the state is shown the lesson");
 
-  const spread = await runSpreadPass({ repos, since: "2026-10-07T00:00:00.000Z", now: NOW, sendPlaceIds: new Set(), paidTriesLeft: 0 });
+  // Release 17's auto-try replays the lead's page at the other Legistar door, by plain code.
+  assert.equal((lesson.payload as { procedure?: string }).procedure, "GET https://{host}/Departments.aspx");
+  const tries: string[] = [];
+  const probe: ProbeFetch = async (url) => {
+    tries.push(url);
+    const ok = url === "https://pima.legistar.com/Departments.aspx" || url.endsWith("/robots.txt");
+    return { status: ok ? 200 : 404, headers: { get: () => null }, bytes: async () => new TextEncoder().encode(url.endsWith("/robots.txt") ? ROBOTS : "<html>Departments</html>") };
+  };
+  const spread = await runSpreadPass({ repos, now: NOW, sendPlaceIds: new Set(), paidTriesLeft: 0, fetch: probe });
   assert.equal(spread.methods, 1);
-  const pima = (await repos.fixMap.forPlace(PIMA)).find((r) => r.methodId === lesson.id)!;
-  assert.equal(pima.state, "UNTRIED");
-  assert.match(pima.cause!, /^Queued: it worked in .*place:tucson.*same kind of door; a free try\./);
+  assert.equal(spread.tried.works, 1);
+  assert.ok(tries.includes("https://pima.legistar.com/Departments.aspx"));
+  assert.equal((await repos.fixMap.forPlace(PIMA)).find((r) => r.methodId === lesson.id)!.state, "WORKS", "it now works at Pima County too");
 
   // A second upload of a link that became a lesson is already held.
   const again = await submit(ask("leads-key-again", [{ link: "https://tucson.legistar.com/Departments.aspx", notes: {} }]), deps(repos));

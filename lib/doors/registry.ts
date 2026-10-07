@@ -6,10 +6,22 @@
  * data. Pure: callers hand in the repository and the time.
  */
 
-import type { AggregateRepository } from "../control-plane/repository/types.ts";
+import { canonicalJson, type AggregateRepository } from "../control-plane/repository/types.ts";
 
 /** Whether a door is read, shut because it stopped working, or deliberately set aside. */
 export const DOOR_STATUSES = ["OPEN", "SHUT", "SUSPENDED"] as const;
+
+/** The kinds of door a routine source task reads on its clock, one door per task. */
+export const FEED_DOOR_KINDS: readonly string[] = ["source-feed", "derived-feed"];
+export const feedDoorId = (taskId: string): string => `feed:${taskId}`;
+
+/**
+ * Whether a routine task reads this door on a clock: a meeting door or a feed. Other doors (found pages, route
+ * hints, link sweeps) are read when work needs them, so they owe no scheduled read.
+ */
+export function readOnSchedule(door: Pick<DoorRecord, "kind" | "meeting">): boolean {
+  return door.meeting != null || FEED_DOOR_KINDS.includes(door.kind);
+}
 export type DoorStatus = (typeof DOOR_STATUSES)[number];
 
 /** Who last wrote the record: a person through the gateway, or a derive step. */
@@ -364,8 +376,9 @@ export function applyDerivedRow(
 }
 
 const FIELDS = ["kind", "ocdId", "bodyIds", "hosts", "config", "holds", "checkEveryMinutes", "notes", "meeting", "status", "readNow"] as const;
+/** Key order is not compared: the store hands settings back in its own order. */
 function sameFields(a: DoorRecord, b: DoorRecord): boolean {
-  return FIELDS.every((f) => JSON.stringify(a[f]) === JSON.stringify(b[f]));
+  return FIELDS.every((f) => canonicalJson(a[f]) === canonicalJson(b[f]));
 }
 
 /** The editable fields only, for showing what an edit changed. */

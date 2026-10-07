@@ -338,7 +338,8 @@ export function entryInSlice(entry: FieldManualEntry, query: FieldManualQuery): 
   return state !== undefined && reach.states.includes(state);
 }
 
-const placeLabel = (place: string): string => {
+/** A place in plain words: "pima AZ". */
+export const placeLabel = (place: string): string => {
   const parts = place.split("/");
   const last = parts.at(-1) ?? place;
   const state = stateOfPlace(place);

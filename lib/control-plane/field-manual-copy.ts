@@ -22,6 +22,7 @@ import {
   type FieldManualRepos,
 } from "./field-manual.ts";
 import { addBankWriteErrors } from "./bank-write-health.ts";
+import { addUpdate } from "./updates.ts";
 import type { Persisted } from "./repository/types.ts";
 
 /** The old document table, as the copy needs it. */
@@ -144,7 +145,21 @@ export async function copyFieldManualDocument(old: SingleDocumentManual, repos: 
   await saveFieldManualEntries(repos, [newFieldManualEntry("field-manual-copy", now, { role: "SHARED", kind: "COPY_REPORT",
     title: "Lessons copied into one row each", summary: `${report.entries} lessons copied; ${reach.NOWHERE} name no place yet`,
     outcome: "REFERENCE", observedAt: now, portable: true, payload: report })], now);
+  // The copy stands whether or not its brief line could be written.
+  if (repos.adminConfig) await addUpdate({ adminConfig: repos.adminConfig }, { id: `field-manual-copy:${now}`, at: now, label: "TESTING", what: copyBriefLine(report) }).catch(() => undefined);
   return report;
+}
+
+const count = (n: number, one: string, many = `${one}s`): string => `${n.toLocaleString("en-US")} ${n === 1 ? one : many}`;
+
+/** The one line the daily brief shows for a copy. */
+export function copyBriefLine(report: FieldManualCopyReport): string {
+  const { reach } = report;
+  const retagged = report.retagged.fromRecord + report.retagged.fromSameAddress;
+  return `The field manual now keeps each lesson on its own: ${count(report.entries, "lesson")} copied — ${reach.PLACE.toLocaleString("en-US")} for one place, ` +
+    `${reach.STATE.toLocaleString("en-US")} for a state, ${reach.PLATFORM.toLocaleString("en-US")} for a website platform, ${reach.METHOD.toLocaleString("en-US")} methods offered anywhere they fit, ` +
+    `${reach.EVERYWHERE.toLocaleString("en-US")} for everywhere; ${count(retagged, "lesson")} got ${retagged === 1 ? "its" : "their"} place back from the record, ` +
+    `and ${count(reach.NOWHERE, "lesson")} ${reach.NOWHERE === 1 ? "names" : "name"} no place yet and ${reach.NOWHERE === 1 ? "is" : "are"} listed for review.`;
 }
 
 /** The id the report of the copy made at `copiedAt` is saved under. */

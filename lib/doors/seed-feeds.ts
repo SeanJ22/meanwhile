@@ -9,7 +9,7 @@ import { AUTOMATIC_REFRESH_CONTRACT_IDS } from "../civic-data/automatic-refresh.
 import { ROUTINE_SOURCE_CONTRACTS } from "../civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import { sourceAuthority } from "../civic-data/source-authority.ts";
-import { normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
+import { feedDoorId, normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
 
 const MINUTE = 60_000;
 
@@ -54,7 +54,7 @@ interface FeedInput {
 function draftFor(feed: FeedInput): DoorDraft {
   const keyRef = keyRefFor(feed.id, feed.sourceId);
   return {
-    doorId: `feed:${feed.id}`,
+    doorId: feedDoorId(feed.id),
     kind: feed.authorityMode === "DERIVED" ? "derived-feed" : "source-feed",
     ocdId: null,
     bodyIds: [],

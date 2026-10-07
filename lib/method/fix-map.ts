@@ -50,6 +50,19 @@ export function methodWorksOf(rows: readonly FixMapRow[], methodIds: readonly st
   return out;
 }
 
+const workedAt = (r: FixMapRow): number => Date.parse(r.triedAt ?? r.updatedAt);
+
+/** Pure: the `workingMethods` answer from rows already held. */
+export function latestWorking(rows: readonly FixMapRow[], limit: number): FixMapRow[] {
+  const newest = new Map<string, FixMapRow>();
+  for (const row of rows) {
+    if (row.state !== "WORKS") continue;
+    const held = newest.get(row.methodId);
+    if (!held || workedAt(row) > workedAt(held) || (workedAt(row) === workedAt(held) && row.placeId < held.placeId)) newest.set(row.methodId, row);
+  }
+  return [...newest.values()].sort((a, b) => workedAt(b) - workedAt(a) || a.methodId.localeCompare(b.methodId)).slice(0, limit);
+}
+
 /** An old replay or a newly scheduled trial cannot erase a known result. */
 export function applyFixResult(prior: FixMapRow | null, incoming: FixMapRow): FixMapRow {
   if (!prior) return incoming;
@@ -66,8 +79,8 @@ export interface FixMapRepository {
   forMethod(methodId: string, limit?: number): Promise<readonly FixMapRow[]>;
   /** For each named method, where it works. */
   worksFor(methodIds: readonly string[]): Promise<ReadonlyMap<string, MethodWorks>>;
-  /** Rows that started working at or after `since`, oldest first. */
-  worksSince(since: string, limit?: number): Promise<readonly FixMapRow[]>;
+  /** Each method that works somewhere: its newest working row, newest first. */
+  workingMethods(limit?: number): Promise<readonly FixMapRow[]>;
   put(row: FixMapRow): Promise<void>;
 }
 
@@ -96,9 +109,10 @@ export function createFixMapRepository(query: Query): FixMapRepository {
       return new Map(rows.map((row) => [String(row.method_id),
         { places: (row.places as string[] | null) ?? [], states: [...((row.states as string[] | null) ?? [])].sort() }] as const));
     },
-    worksSince: async (since, limit) => (await query(
-      "SELECT * FROM cp_fix_map WHERE state = 'WORKS' AND tried_at >= $1::timestamptz ORDER BY tried_at, method_id, place_id LIMIT $2",
-      [since, bounded(limit)])).map(decode),
+    workingMethods: async (limit) => (await query(
+      `SELECT * FROM (SELECT DISTINCT ON (method_id) * FROM cp_fix_map WHERE state = 'WORKS'
+        ORDER BY method_id, coalesce(tried_at, updated_at) DESC, place_id) newest
+      ORDER BY coalesce(tried_at, updated_at) DESC, method_id LIMIT $1`, [bounded(limit)])).map(decode),
     put: async row => {
       await query(`INSERT INTO cp_fix_map (method_id, place_id, state, tried_at, attempt_id, cause, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -121,10 +135,7 @@ export function aggregateFixMap(repo: AggregateRepository<FixMapRow>): FixMapRep
     forPlace: async (placeId, limit = 200) => (await all()).filter((r) => r.placeId === placeId).sort((a, b) => a.methodId.localeCompare(b.methodId)).slice(0, limit),
     forMethod: async (methodId, limit = 200) => (await all()).filter((r) => r.methodId === methodId).sort((a, b) => a.placeId.localeCompare(b.placeId)).slice(0, limit),
     worksFor: async (methodIds) => methodWorksOf(await all(), methodIds),
-    worksSince: async (since, limit = 200) => (await all())
-      .filter((r) => r.state === "WORKS" && Date.parse(r.triedAt ?? r.updatedAt) >= Date.parse(since))
-      .sort((a, b) => Date.parse(a.triedAt ?? a.updatedAt) - Date.parse(b.triedAt ?? b.updatedAt) || a.methodId.localeCompare(b.methodId))
-      .slice(0, limit),
+    workingMethods: async (limit = 200) => latestWorking(await all(), limit),
     put: async (row) => {
       for (let attempt = 0; ; attempt += 1) {
         const held = await repo.read(idOf(row));

@@ -33,11 +33,11 @@ test("where a method works is read per method, never the whole map", async () =>
   assert.equal((await repo.worksFor([])).size, 0);
   assert.equal(calls.length, 0, "no methods, no read");
   await repo.worksFor(["a", "b", "a"]);
-  await repo.worksSince("2026-10-01T00:00:00.000Z", 50);
+  await repo.workingMethods(50);
   assert.match(calls[0]!.sql, /WHERE method_id = ANY\(\$1::text\[\]\) AND state = 'WORKS' GROUP BY method_id/);
   assert.deepEqual(calls[0]!.params, [["a", "b"]]);
-  assert.match(calls[1]!.sql, /state = 'WORKS' AND tried_at >= \$1::timestamptz/);
-  assert.deepEqual(calls[1]!.params, ["2026-10-01T00:00:00.000Z", 50]);
+  assert.match(calls[1]!.sql, /DISTINCT ON \(method_id\) \* FROM cp_fix_map WHERE state = 'WORKS'/);
+  assert.deepEqual(calls[1]!.params, [50]);
   const row = (placeId: string, at: string, state: FixMapRow["state"] = "WORKS"): FixMapRow =>
     ({ methodId: "m", placeId, state, triedAt: at, attemptId: null, cause: null, updatedAt: at });
   const held = methodWorksOf([row("ocd-division/country:us/state:az/county:pima", "2026-10-01T00:00:00Z"),

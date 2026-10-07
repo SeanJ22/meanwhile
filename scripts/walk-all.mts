@@ -884,7 +884,7 @@ for (const { zip } of WALK_PLACES) {
     if (!card) return { reason: "no who-governs card" };
 
     const flat = (card.textContent || "").replace(/\\s+/g, " ");
-    // "N bodies govern the area around 85701" / "One body governs the area"
+    // "N bodies govern the area around <ZIP>" / "One body governs the area"
     // / "We track the calendars of M of the N bodies that govern the area".
     let prose = null;
     const ofThe = flat.match(/of the (\\d+) bodies that govern the area/);
@@ -1661,51 +1661,9 @@ for (const { zip } of WALK_PLACES) {
       const n = Number((h.querySelector(".al-group-count")?.textContent || "").trim());
       if (Number.isFinite(n)) counts.push(n);
     }
-    /*
-     * **THE PANEL PAGES AT 200, SO THE CLIP BELONGS IN THE ARITHMETIC.**
-     * (NH121, 2026-08-24.)
-     *
-     * The list renders the first 200 and states what it is holding back —
-     * Show N more (N hidden) — so above 200 the group counts and the header
-     * legitimately differ, and a check that did not read the hidden count
-     * would report a NAMED REGRESSION over a surface telling the truth.
-     *
-     * **THIS IS NOT THE EXPLANATION FOR THE 03255 FAILURE OF 2026-08-24**, and
-     * saying so matters more than the code. That panel states 201, sums 200
-     * across 7 groups, and renders NO more-button at all — measured, not
-     * assumed — so the one missing row is NOT a paging clip and is not yet
-     * understood. NH121 carries it. This block was written while that failure
-     * was being diagnosed; it is correct on its own terms and it fixed nothing.
-     *
-     * A clip that is NOT stated still fails, which is the half that matters.
-     */
+    /* The list renders the first 200 and states the rest as "Show N more (N hidden)". */
     const more = document.querySelector(".al-more");
-    /*
-     * NH121's ACTUAL CAUSE — A REGEX ESCAPE EATEN BY A TEMPLATE LITERAL.
-     * (2026-08-24. The timing theory that preceded it was wrong, and
-     * docs/state.md records it as wrong.)
-     *
-     * This whole evaluate is a TEMPLATE LITERAL, so the page never received
-     * what the source appears to say. A backslash before a parenthesis is not a
-     * recognised escape in a template literal, so it collapses to a bare
-     * parenthesis, and the page compiled the escaped parens as a CAPTURE GROUP.
-     * The regex still matched "Show 1 more (1 hidden)" — which is why nothing
-     * threw and nothing looked wrong — but the groups shifted by one, so index
-     * 1 held "1 hidden" rather than "1", and Number of that is NaN.
-     *
-     * NaN then poisoned the check silently: 200 + NaN is NaN, so the equality
-     * failed; and NaN > 0 is FALSE, so the report took the no-clip branch and
-     * printed "group counts sum 200 across 7 group(s)" as though the panel had
-     * rendered no clip at all. It renders one at t=0 — measured nine times from
-     * 0ms to 9s, always present.
-     *
-     * So this stood as a NAMED REGRESSION against the product for a day and the
-     * product was correct throughout.
-     *
-     * THE FIX IS TO STOP PUTTING A REGEX INSIDE A TEMPLATE LITERAL. indexOf and
-     * a digits-only strip cannot lose an escape. The previous version was
-     * clever and wrong, and this one is dull and right.
-     */
+    /* No regex here: inside this template literal a backslash before a paren is dropped. */
     const moreText = more ? (more.textContent || "") : "";
     const open = moreText.lastIndexOf("(");
     const hiddenDigits = open >= 0 ? moreText.slice(open + 1).replace(/[^0-9]/g, "") : "";

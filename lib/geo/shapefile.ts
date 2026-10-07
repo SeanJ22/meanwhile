@@ -1,22 +1,7 @@
 /**
- * A minimal shapefile reader — .shp geometry, .dbf attributes, .zip container
- * (Prompt B item 5, 2026-08-20).
- *
- * WHY THIS EXISTS RATHER THAN A DEPENDENCY. The national territory join needs
- * seven Census cartographic boundary files and nothing else from a geo stack:
- * read polygons, read attribute rows, pair them by index. Adding a geo library
- * to the runtime dependency list to do that would put a package in the client
- * bundle budget's blast radius for a job that runs offline in a script. The
- * shapefile format is a published spec, the subset used here is small, and
- * every count it produces is reconciled against the file's own record count —
- * a reader that silently drops records is exactly the "operation that returned
- * nothing" this repo already has a rule about, so it reports its counts.
- *
- * SCOPE, stated rather than implied: this reads the polygon and polyline
- * shape types Census publishes for boundary files (types 5 and 15, plus the
- * null type 0). It does NOT implement points, multipatch, or measures. A file
- * holding an unsupported type FAILS with the type number rather than
- * returning an empty geometry.
+ * Minimal shapefile reader: .shp geometry, .dbf attributes, .zip container.
+ * Reads polygon (5), polygonZ (15) and null (0) shapes only; any other shape
+ * type throws.
  */
 
 import { inflateRawSync } from "node:zlib";
@@ -26,24 +11,18 @@ export type Ring = Array<[number, number]>;
 export type ShapeRecord = {
   /** 1-based record number from the file itself. */
   recordNumber: number;
-  /** Every ring, in file order. Outer and inner rings are not separated: the
-   *  intersection tests below treat a hole as a ring, which is correct for
-   *  "does this boundary touch that one" and wrong for area. Area is not
-   *  computed anywhere in this session. */
+  /** Every ring in file order; outer rings and holes are not separated. */
   rings: Ring[];
   bbox: [number, number, number, number];
 };
 
-/* -------------------------------------------------------------------------- */
-/* ZIP                                                                        */
-/* -------------------------------------------------------------------------- */
+/* ZIP */
 
 type ZipEntry = { name: string; data: Buffer };
 
 /**
- * Reads a ZIP central directory and inflates the members. Census boundary
- * zips are stored/deflated with no encryption and no zip64, which is the
- * subset handled here — anything else throws by name.
+ * Reads a ZIP central directory and inflates the members. Handles stored and
+ * deflated entries only, with no encryption and no zip64.
  */
 export function readZip(buf: Buffer): ZipEntry[] {
   // End of central directory: scan back for the signature.
@@ -85,9 +64,7 @@ export function readZip(buf: Buffer): ZipEntry[] {
   return out;
 }
 
-/* -------------------------------------------------------------------------- */
-/* .shp                                                                       */
-/* -------------------------------------------------------------------------- */
+/* .shp */
 
 const NULL_SHAPE = 0;
 const POLYGON = 5;
@@ -142,26 +119,9 @@ export function readShp(buf: Buffer): ShapeRecord[] {
   return records;
 }
 
-/* -------------------------------------------------------------------------- */
-/* .dbf                                                                       */
-/* -------------------------------------------------------------------------- */
+/* .dbf */
 
-/**
- * THE ENCODING IS DECLARED IN THE FILE, AND THE FIRST DRAFT GUESSED IT WRONG.
- *
- * `readDbf` hardcoded `latin1`, and the national join wrote the Texas place
- * César Chávez CDP with each of its two accented characters expanded into the
- * two-character sequence a UTF-8 byte pair becomes when it is read one byte at
- * a time. Caught by this repo's own `tests/mojibake.test.ts` rather than by
- * anything here — and that guard then caught this comment, when the first
- * version of it pasted the broken spelling in as an example. Every Census
- * boundary zip ships a `.cpg` sidecar naming its code page, and these all say
- * `UTF-8`.
- *
- * So the encoding is READ, never assumed. A shapefile with no `.cpg` falls
- * back to `latin1`, which is the historical dBase default — stated here so
- * the fallback is a decision rather than a leftover.
- */
+/** Encoding from the `.cpg` sidecar; `latin1` (the dBase default) when absent. */
 function encodingFrom(entries: ZipEntry[]): BufferEncoding {
   const cpg = entries.find((e) => e.name.toLowerCase().endsWith(".cpg"));
   if (!cpg) return "latin1";
@@ -170,11 +130,7 @@ function encodingFrom(entries: ZipEntry[]): BufferEncoding {
   return "latin1";
 }
 
-/**
- * A boundary zip's attribute rows alone, in the encoding its `.cpg` declares —
- * for a caller that needs names and codes (the national ZIP index) and would
- * otherwise parse hundreds of megabytes of geometry it never reads.
- */
+/** A boundary zip's attribute rows only, without parsing geometry. */
 export function readBoundaryAttributes(buf: Buffer): Record<string, string>[] {
   const entries = readZip(buf);
   const dbf = entries.find((e) => e.name.toLowerCase().endsWith(".dbf"));
@@ -208,9 +164,7 @@ export function readDbf(buf: Buffer, encoding: BufferEncoding = "latin1"): Recor
   return out;
 }
 
-/* -------------------------------------------------------------------------- */
-/* The pairing                                                                */
-/* -------------------------------------------------------------------------- */
+/* The pairing */
 
 export type Feature = {
   properties: Record<string, string>;
@@ -219,12 +173,8 @@ export type Feature = {
 };
 
 /**
- * Reads one Census boundary zip into features.
- *
- * The geometry and attribute counts are compared before anything is returned.
- * A shapefile pairs .shp records to .dbf rows BY POSITION, so a reader that
- * silently tolerates a length mismatch produces features whose names belong to
- * a different polygon — which is the FEC replication bug in geographic form.
+ * Reads one Census boundary zip into features. .shp records pair with .dbf
+ * rows by position, so a count mismatch throws rather than mislabeling.
  */
 export function readBoundaryZip(buf: Buffer): { features: Feature[]; counts: string } {
   const entries = readZip(buf);

@@ -1,9 +1,0 @@
-{
-  "observedAt": "2026-09-04T06:42:17.204Z",
-  "holder": "cycle@SeanLenovo#19956",
-  "exactLocalPid": 19956,
-  "processProbeExit": 0,
-  "releasedThrough": "releaseWindowLease",
-  "released": true,
-  "reason": "The stopped old runner's exact cycle PID is absent; the old lease is recovered without falsifying clock or expiry."
-}

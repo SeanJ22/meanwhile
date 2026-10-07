@@ -1,5 +1,0 @@
-@echo off
-rem WeThePeople pilot runner - installed by scripts/pilot-task.ps1
-rem Delete this file to stop the runner coming back at logon.
-cd /d "C:\Users\seanj\dev\we-the-people"
-start "" /min "C:\Program Files\nodejs\node.exe" --env-file=.env.local --experimental-strip-types scripts/pilot-runner.mts --interval=60

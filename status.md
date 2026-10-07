@@ -1,6 +1,6 @@
 # River status
 
-build_state: CLEANUP RELEASE built and tested; release 13 NOT yet promoted (permission refused to push river and release/13; waiting on Sean). river = d89746b; main = c814d4c (release 12); tested head d63d6e5 on stream/salvage-cleanup-release; runner stopped
+build_state: RELEASE 13 (cleanup) open as PR #719, merge when CI is green (Sean OK'd). river = d63d6e5; main = c814d4c (release 12); runner stopped
 worker: river
 provider: Claude (scheduled resume)
 run_id: session_01EJWrnyFbffUajJtnCW6EWs-cleanup2
@@ -9,13 +9,7 @@ heartbeat: 2026-10-07T06:50:14Z
 
 ## RELEASE 13 — the cleanup release (read first)
 
-**Release number: 13** (branch `release/13`, not created yet). The tested commit is **d63d6e5** on `stream/salvage-cleanup-release`, a fast-forward of river d89746b.
-
-**Blocked on one thing.** This session's permission check refused the push that fast-forwards `river` to d63d6e5 and creates `release/13`, twice. Nothing reached river or main. Sean, choose one:
-- allow that push in this session; or
-- run it yourself: `git push origin d63d6e515:river && git push origin d63d6e515:refs/heads/release/13`, then open release/13 → main.
-
-The PR text is ready in the session; merge once its CI is green.
+**Release number: 13**: https://github.com/SeanJ22/meanwhile/pull/719 (`release/13` → main). River was fast-forwarded to the tested commit **d63d6e5** with Sean's OK. River merges it when CI is green.
 
 **Runner restart steps (Sean runs these after release 13 is merged and Netlify has deployed it; nothing here touches the runner until then):**
 1. From Windows PowerShell: `ssh.exe -t -i "$env:USERPROFILE\.ssh\wtp-deploy" root@146.190.74.145`
@@ -61,7 +55,7 @@ The PR text is ready in the session; merge once its CI is green.
 - Runner cycle: only the three differences listed in the restart steps.
 - Gates on a fresh checkout with no DATABASE_URL: 7,673 tests, 0 failed; lint, tsc, build and standalone build pass. `db:gate` needs CI's read-only secret; run with that read-only URL, it HOLDS (35 of 35 migrations applied).
 
-Lock: River keeps the lock and its heartbeat so river stays at d89746b and the fast-forward stays valid.
+Lock: River keeps the lock until release 13 is merged.
 
 Briefs: board/briefs f78f81401 has 2,206 ownership rows; the rows for files this release removed are gone.
 

@@ -1,11 +1,19 @@
 # River status
 
-build_state: RELEASES 13 and 14 MERGED to main (049f86206; PRs #719, #720). river = 8fa3854. Runner stopped, waiting on Sean's restart (steps below). River lock released.
+build_state: RELEASE 15 MERGED to main (4385853, PR #722: Haiku 5.5 everywhere; docs-only PRs certified on open; cancelled runs leave no red checks). river = 3c2a470. Release 16 (stream/reads) in rework after a civic-data firewall refusal; 17 (stream/manual) and 18 (stream/leads) built, finishing. Sean merges no longer needed: River merges green release PRs (Sean, Oct 7); Sean restarts the runner after 16.
 worker: river
 provider: Claude (scheduled resume)
 run_id: session_01D8EZAejHqhy9XbGCw6G6bL-r15
 lock: session_01D8EZAejHqhy9XbGCw6G6bL
 heartbeat: 2026-10-07T22:16:51Z
+
+## RELEASE 15 — Haiku 5.5: MERGED (Oct 7, 2026)
+
+- PR #722, merge 4385853. Steps HK-01, CI-01, CI-02. Tested river 3c2a470 (gates 8/8, 7,677 tests, 0 failed).
+- Runner: no setting changes. Takes effect on the runner's next restart onto main (Sean).
+- Ask on the local copy of production: 33/36 answers identical to river; reading step ~0.9 s (was ~2 s).
+- Open, pre-existing, queued for after 18: school-board questions don't bind to the ZIP's district and get no labeled AI answer; first question after cold start can exceed 3 s; 85701 school-board question falls back to Opus in ~10 s (same before 15).
+- Local copy of production (reader + all 47 control-plane tables, read without sorts): scratchpad localprod/, pristine snapshot for before/after.
 
 ## RELEASE 13 — the cleanup release: MERGED (read first)
 

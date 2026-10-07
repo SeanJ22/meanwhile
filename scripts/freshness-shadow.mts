@@ -23,6 +23,7 @@ import { oneHunterPath } from "../lib/control-plane/workers/scout-scheduling.ts"
 import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
+import { soleWriter } from "../lib/control-plane/repository/shared.ts";
 import { selectedCycleRepositories } from "../lib/control-plane/scheduler/cycle-selection.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
@@ -1746,8 +1747,11 @@ let scoutsAdmittedOutsideLifetime = 0;
 let priorCircuits: readonly ProviderCircuit[] = [];
 let priorLastSuccessfulActivity: string | null = null;
 let priorResearchState: ResearchState | null = null;
+/* This round is the research state's only writer: the revision it read or last wrote is the one it writes on. */
+let researchStateRevision: number | null | undefined;
 try {
   const previous = await repos.researchState.read(RESEARCH_STATE_ID);
+  researchStateRevision = previous?.revision ?? null;
   priorResearchState = previous?.value ?? null;
   priorCircuits = previous?.value.fleetSafety?.providerCircuits ?? [];
   priorLastSuccessfulActivity = previous?.value.fleetSafety?.lastSuccessfulActivity ?? null;
@@ -2551,19 +2555,16 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
 }
 
 /*
- * Up to four read-and-compare-and-set tries, inside one budget, and every
- * failed try said on stderr. The row is 1.1 MB, so each try moves
- * about 3.3 MB; the four tries used to fail silently, and at 30 s a request
- * they could hold a finalization for four minutes without a word.
+ * Up to four tries, inside one budget, and every failed try said on stderr.
+ * The 1.1 MB row is never read before a write: a lost compare-and-set names
+ * the current revision and the write goes again on it.
  */
+const putResearchState = soleWriter(repos.researchState, RESEARCH_STATE_ID, researchStateRevision);
 const writeResearchState = cycleStateWriter(async (cycleFinishedAt) => {
   await (async () => {
     for (let tries = 0; tries < 4; tries += 1) {
       try {
-        const current = await repos.researchState.read(RESEARCH_STATE_ID);
-        const next = researchState(cycleFinishedAt);
-        if (current === null) await repos.researchState.put(RESEARCH_STATE_ID, next, nowIso());
-        else await repos.researchState.compareAndSet(RESEARCH_STATE_ID, current.revision, next, nowIso());
+        await putResearchState(researchState(cycleFinishedAt), nowIso());
         return;
       } catch (error) {
         const detail = error instanceof Error ? error.message : String(error);

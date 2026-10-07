@@ -68,6 +68,7 @@ jobs:
           WTP_PR_DRAFT: ${{ github.event.pull_request.draft }}
           WTP_PR_AUTO_MERGE: ${{ github.event.pull_request.auto_merge != null }}
           WTP_PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          WTP_PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: node scripts/pr-ci-tier.mjs
       - name: Preflight — the cheap deterministic checks
         id: preflight

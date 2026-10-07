@@ -95,18 +95,23 @@ async function renderAfter(repos: ReturnType<typeof createMemoryRepositories>) {
 const INTENDED = {
   OTHER_PLACE: "a lesson about another place's own source stays with that place",
   NO_PLACE: "a lesson that names no place no longer applies everywhere by default",
+  OTHER_PLATFORM: "a job on a known platform leaves out lessons learned on other platforms",
+  OTHER_CLASS: "the Engineer's page is cut for its job's record class, as every other role's already was",
   OTHER_STATE: "a lesson from another state reaches this job only through the methods ranking",
   BELOW_LIMIT: "still applies, ranked below the page's line limit by the new order",
   HERE_NOTE: "a method line now says whether it works here, or where it has worked",
   METHOD_ELSEWHERE: "a method from anywhere is offered, ranked by where it has worked",
   PLATFORM_ANY_STATE: "a platform lesson applies on its platform in every state",
-  RANKED_IN: "ranked into the page by the new order (this place, its state, national, elsewhere)",
+  THIS_PLACE: "this place's own lessons rank first",
+  ITS_STATE: "its state's lessons rank next, ahead of other places' doors",
+  NATIONAL: "what applies everywhere (and platform lessons when the job's platform is unknown) ranks after its state",
+  COUNTS: "the header counts the rows the job read, not the whole manual",
 } as const;
 
 const strip = (line: string) => line.replace(/^\s+• /, "").replace(/ \[(works here|untried here[^\]]*|fails here[^\]]*)\]$/, "");
 
 function classify(line: string, side: "removed" | "added", entries: readonly FieldManualEntry[], read: FieldManualRead,
-  job: { state: string; ocdId?: string } | null, otherSide: readonly string[]): keyof typeof INTENDED | null {
+  job: { state: string; recordClass: string; platform?: string } | null, otherSide: readonly string[]): keyof typeof INTENDED | null {
   const body = strip(line);
   const entry = entries.find((e) => body.startsWith(fieldManualLine(e).replace(/ seen \d{4}-\d{2}-\d{2}$/, "")));
   if (!entry) return null;
@@ -118,12 +123,16 @@ function classify(line: string, side: "removed" | "added", entries: readonly Fie
     if (reach === "NOWHERE") return "NO_PLACE";
     if (reach === "PLACE") return "OTHER_PLACE";
     if (reach === "STATE" && job !== null && !entry.states.includes(job.state)) return "OTHER_STATE";
+    if (job?.platform && entry.platforms.length > 0 && !entry.platforms.includes(job.platform)) return "OTHER_PLATFORM";
+    if (job !== null && entry.recordClasses.length > 0 && !entry.recordClasses.includes(job.recordClass.toLowerCase())) return "OTHER_CLASS";
     return null;
   }
   if (!inSlice) return null;
   if (reach === "METHOD") return "METHOD_ELSEWHERE";
-  if (reach === "PLATFORM" && job !== null && !entry.states.includes(job.state)) return "PLATFORM_ANY_STATE";
-  return "RANKED_IN";
+  if (reach === "PLATFORM" && job !== null && entry.states.length > 0 && !entry.states.includes(job.state)) return "PLATFORM_ANY_STATE";
+  if (reach === "PLACE") return "THIS_PLACE";
+  if (reach === "STATE") return "ITS_STATE";
+  return "NATIONAL";
 }
 
 test("every role's starting page is the old page except for the listed intended changes", async () => {
@@ -139,10 +148,20 @@ test("every role's starting page is the old page except for the listed intended 
         assert.deepEqual(now.manual, old.manual, `${role} ${key}: the inherited routing is unchanged`);
         continue;
       }
-      const job = jobs.find((j) => j.key === key) ?? (role === "ENGINEER" ? jobs[0]! : null);
+      const job = jobs.find((j) => j.key === key) ?? (role === "ENGINEER" ? { ...jobs[0]!, platform: "legistar" } : null);
       const read = after.reads[role]![key]!;
-      const removed = old.manual.filter((line) => !now.manual.includes(line) && line.startsWith("  • "));
-      const added = now.manual.filter((line) => !old.manual.includes(line) && (line.startsWith("  • ") || role !== "SCOUT" && role !== "DETECTIVE"));
+      // A Scout's page wraps its lines in a header and a note; every other page is the lines themselves.
+      const brief = role === "SCOUT" || role === "DETECTIVE";
+      const entryLine = (line: string) => !brief || line.startsWith("  • ");
+      if (brief) {
+        const wallNote = (line: string) => line.startsWith("  A BLOCKED or FAILED door is a wall");
+        const frame = (lines: readonly string[]) => lines.filter((line) => !entryLine(line) && !wallNote(line)).map((line) => line.replace(/\d+/g, "#"));
+        assert.deepEqual(frame(now.manual), frame(old.manual), `${role} ${key}: the header is unchanged but for counts (${INTENDED.COUNTS})`);
+        assert.equal(now.manual.some(wallNote), now.manual.some((line) => /^ {2}• \S+\/\S+ (BLOCKED|FAILED) \(/.test(line)),
+          `${role} ${key}: the wall note shows exactly when a dead door is on the page`);
+      }
+      const removed = old.manual.filter((line) => !now.manual.includes(line) && entryLine(line));
+      const added = now.manual.filter((line) => !old.manual.includes(line) && entryLine(line));
       for (const [side, lines, other] of [["removed", removed, added], ["added", added, removed]] as const) {
         for (const line of lines) {
           const why = classify(line, side, rows, read, job, other);

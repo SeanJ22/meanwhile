@@ -107,6 +107,7 @@ import {
 import { childFatalLine, childStderrCause } from "../lib/ops/fatal-line.ts";
 import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
+import { publishNowLane } from "../lib/civic-data/publish-now.ts";
 import {
   appendIntakeRuntimeObservationDigest,
   appendRoutineCivicDataSupervisorDigest,
@@ -824,6 +825,29 @@ async function runRoutineCivicData(): Promise<void> {
   }
 }
 
+/** Each minute, saved parser results and changed doors publish without waiting for the routine pass (publish-now.ts). */
+async function runPublishNow(): Promise<void> {
+  if (provider !== "postgres" || canary) return;
+  const startedAt = new Date().toISOString();
+  const [run] = await runRuntimeChildren([{
+    id: "publish-now",
+    executable: process.execPath,
+    args: [...TS_CHILD, "scripts/publish-now-runner.mts"],
+    env: standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }),
+  }], {
+    cwd: CODE_ROOT,
+    env: process.env,
+    maxBufferBytes: 16 * 1024 * 1024,
+    onStdout: (_id, output) => process.stdout.write(output),
+    onStderr: (_id, output) => process.stderr.write(output),
+  });
+  if (!run) throw new Error("PUBLISH_NOW_CHILD_RESULT_MISSING");
+  if (run.status !== 0) {
+    await persistOuterRoutineChildFailure(routineSupervisorCycleId(hostname(), startedAt, "publish-now"), startedAt, run,
+      `${run.stdout ?? ""}\n${run.stderr ?? ""}`, "publish-now");
+  }
+}
+
 /**
  * A timeout, spawn failure, forced kill, or uncaught child exception cannot
  * disappear into this host's console. If the child already persisted its
@@ -836,7 +860,9 @@ async function persistOuterRoutineChildFailure(
   startedAt: string,
   run: Awaited<ReturnType<typeof runRuntimeChildren>>[number],
   output: string,
+  lane: "routine-civic-data" | "publish-now" = "routine-civic-data",
 ): Promise<void> {
+  const name = lane === "publish-now" ? "publish now" : "routine civic data";
   const outer = routineSupervisorOuterEvidence({
     output,
     termination: run.termination,
@@ -853,11 +879,12 @@ async function persistOuterRoutineChildFailure(
       (row) => row.runtimeOutcome?.kind === "ROUTINE_CIVIC_DATA_SUPERVISOR",
     );
     if (existing) {
-      console.error(`  routine civic data: canonical supervisor incident ${cycleId} was already persisted by the child`);
+      console.error(`  ${name}: canonical supervisor incident ${cycleId} was already persisted by the child`);
       return;
     }
     const finishedAt = new Date().toISOString();
     const outcome = routineCivicDataSupervisorOutcome({
+      lane,
       cycleId,
       startedAt,
       finishedAt,
@@ -868,20 +895,20 @@ async function persistOuterRoutineChildFailure(
       attemptedTasks: evidence.attemptedTasks,
       verifiedSourceSuccesses: evidence.verifiedSourceSuccesses,
       verifiedSourceFailures: evidence.verifiedSourceFailures,
-      failures: [{ taskId: "routine-civic-data-runner", code: evidence.code, detail: evidence.detail }],
+      failures: [{ taskId: `${lane}-runner`, code: evidence.code, detail: evidence.detail }],
     });
     await appendRoutineCivicDataSupervisorDigest(repos, {
       outcome,
       lines: [
-        `ROUTINE CIVIC DATA OUTER SUPERVISOR FAILED — ${evidence.code}`,
+        `${name.toUpperCase()} OUTER SUPERVISOR FAILED — ${evidence.code}`,
         evidence.detail,
         "The standing parent recorded this because the bounded child ended nonzero; exact source receipts remain the only source-disposition authority.",
       ],
     });
-    console.error(`  routine civic data: outer supervisor incident persisted for Admin as ${cycleId}`);
+    console.error(`  ${name}: outer supervisor incident persisted for Admin as ${cycleId}`);
   } catch (error) {
     console.error(
-      `  routine civic data: outer supervisor incident could not reach canonical Admin storage ` +
+      `  ${name}: outer supervisor incident could not reach canonical Admin storage ` +
         `(${error instanceof Error ? error.name : "error"}); the standing runner will retry and no source disposition was changed`,
     );
   }
@@ -1315,6 +1342,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },
   { id: "hunter-lane", everyMs: 60_000, run: runHunterLane },
+  publishNowLane(runPublishNow),
 ], (outcome) => {
   if (outcome.state === "FAILED") {
     console.error(`  ${outcome.id}: standing operation failed — ${outcome.error}`);

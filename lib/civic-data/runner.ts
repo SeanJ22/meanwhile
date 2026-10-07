@@ -26,13 +26,13 @@ export function routinePreSpawnMemoryDeferral(run: BoundedChildResult, childStar
 
 export const ROUTINE_SUPERVISOR_STARTED_AT_ENV = "WTP_ROUTINE_SUPERVISOR_STARTED_AT";
 
-export function routineSupervisorCycleId(host: string, startedAt: string): string {
+export function routineSupervisorCycleId(host: string, startedAt: string, lane: "routine-civic-data" | "publish-now" = "routine-civic-data"): string {
   const parsed = Date.parse(startedAt);
   if (!Number.isFinite(parsed) || new Date(parsed).toISOString() !== startedAt) {
     throw new Error(`ROUTINE_SUPERVISOR_STARTED_AT_INVALID:${startedAt}`);
   }
   if (!host.trim() || /[\r\n]/.test(host)) throw new Error("ROUTINE_SUPERVISOR_HOST_INVALID");
-  return `routine-civic-data-supervisor:${host}:${startedAt}`;
+  return `${lane}-supervisor:${host}:${startedAt}`;
 }
 
 export interface RoutineSourceTask {

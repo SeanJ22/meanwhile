@@ -7,6 +7,7 @@ import { useV6 } from "./context.tsx";
 import { SECTION_DEP } from "./dependencies.ts";
 import { count, mst, usd, WORKER_STAGE_WORDS, type AdminV6Data, type AgentRun, type WorkerJob, type WorkerStage, type WorkersRunning, type WorkerStatus } from "./model.ts";
 import { relation } from "./places.ts";
+import { tierShortName } from "@/lib/models.ts";
 import { runnerStateWords } from "./pulse-view.ts";
 import { EvidenceCopyControl } from "../evidence-copy-control.tsx";
 import { Actions, Card, cx, Empty, Pill, Technical, usePager } from "./ui.tsx";
@@ -129,7 +130,7 @@ export function workersSectionArrived(src: AdminV6Data["workers"]): boolean {
 type AgentFilter = "all" | AgentRun["state"];
 const AGENT_FILTERS: readonly (readonly [AgentFilter, string])[] = [["all", "Every run"], ["running", "Working now"], ["done", "Finished"], ["stopped", "Stopped"], ["did-not-finish", "Did not finish"]];
 const TIER_TONE: Readonly<Record<AgentRun["model"]["tier"], "info" | "good" | "gold" | "slate" | "warn">> = { haiku: "good", sonnet: "info", opus: "gold", "plain-code": "slate", older: "warn" };
-const TIER_WORDS: Readonly<Record<AgentRun["model"]["tier"], string>> = { haiku: "Haiku 4.5", sonnet: "Sonnet 5.5", opus: "Opus 5.5", "plain-code": "Plain code", older: "Older model" };
+const TIER_WORDS: Readonly<Record<AgentRun["model"]["tier"], string>> = { haiku: tierShortName("haiku"), sonnet: tierShortName("sonnet"), opus: tierShortName("opus"), "plain-code": "Plain code", older: "Older model" };
 
 function Agents() {
   const v = useV6();

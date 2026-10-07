@@ -19,7 +19,7 @@ test("every Ask send records model/tier, cache billing and no question or reader
   assert.equal(rows.length,1);
   assert.equal(rows[0].model,MODELS.haiku.model); assert.equal(rows[0].tier,"haiku");
   assert.equal(rows[0].cost.inputTokens,120); assert.equal(rows[0].cost.requestCount,1);
-  assert.ok(Math.abs(rows[0].cost.usd! - .000152)<1e-12);
+  assert.ok(Math.abs(rows[0].cost.usd! - .0000152)<1e-12);
   assert.ok(!JSON.stringify(rows).includes("private question"));
   assert.equal(rows[0].question,undefined);
 });
@@ -42,10 +42,10 @@ test("provider refusals and malformed responses preserve unknown spend and serve
   const write = async(e:CostEntry)=>{rows.push(e);};
   await assert.rejects(meteredAskFetch(async()=>{throw new TypeError("secret transport detail");},"fallback",write)("https://provider/messages",init));
   await meteredAskFetch(async()=>new Response("bad",{status:429}),"classifier",write)("https://provider/messages",init);
-  await meteredAskFetch(async()=>new Response(JSON.stringify({model:`${MODELS.haiku.model}-20251001`,usage:{input_tokens:3,output_tokens:2}})),"writer",write)("https://provider/messages",init);
+  await meteredAskFetch(async()=>new Response(JSON.stringify({model:`${MODELS.haiku.model}-20261001`,usage:{input_tokens:3,output_tokens:2}})),"writer",write)("https://provider/messages",init);
   assert.deepEqual(rows.map(r=>r.tier),["haiku","haiku","haiku"]);
   assert.equal(rows[0].cost.usd,null); assert.equal(rows[1].cost.usd,null);
-  assert.equal(rows[2].model,`${MODELS.haiku.model}-20251001`);
+  assert.equal(rows[2].model,`${MODELS.haiku.model}-20261001`);
   assert.ok(!JSON.stringify(rows).includes("secret transport detail"));
 });
 
@@ -121,6 +121,6 @@ test("all tiers' dated served identities use their own central price while prese
     assert.equal(rows[0].model, served);
     assert.equal(rows[0].servedModel, served);
     assert.equal(rows[0].requestedModel, model.model);
-    assert.equal(rows[0].cost.usd, (100 * model.inputUsdPerMillion + 10 * model.outputUsdPerMillion) / 1_000_000);
+    assert.ok(Math.abs(rows[0].cost.usd! - (100 * model.inputUsdPerMillion + 10 * model.outputUsdPerMillion) / 1_000_000) < 1e-15);
   }
 });

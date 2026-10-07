@@ -205,7 +205,7 @@ export class ModelParseFailure extends Error {
 }
 
 function toolInput(response: ModelResponse, expectedModel: string): unknown {
-  // The provider answers with the dated alias of a tier's model (claude-haiku-4-5-20251001): the same model.
+  // The provider may answer with a dated alias of the model asked for: the same model.
   if (canonicalModelId(String(response.model)) !== canonicalModelId(expectedModel)) throw new Error("PARSE_MODEL_IDENTITY_MISMATCH");
   const tools = (Array.isArray(response.content) ? response.content : []).filter((b) => b.type === "tool_use");
   if (tools.length !== 1 || tools[0]!.name !== "record_extraction" || response.stop_reason !== "tool_use") throw new Error(`PARSE_MODEL_NO_TOOL_CALL:${String(response.stop_reason).slice(0, 60)}`);
@@ -286,7 +286,7 @@ export function modelParseReasoner(
         const body = userBody(contract, route, input.evidence.text.slice(w.start, w.end));
         if (index === 0 && firstBody === "") firstBody = body;
         const request: ModelRequest = { model, max_tokens: PARSE_RESPONSE_MAX_TOKENS,
-          ...(step.modelClass === "haiku" ? {} : { output_config: { effort: step.effort } }),
+          output_config: { effort: step.effort },
           system: [{ type: "text", text: workerSystemPrompt("PARSER", rolePlaybook(manual.store.entries, "PARSER").text), cache_control: { type: "ephemeral" } }], tools: [RECORD_EXTRACTION],
           tool_choice: { type: "auto" }, messages: [{ role: "user", content: body }] };
         const response = await send(request).catch((error) => {

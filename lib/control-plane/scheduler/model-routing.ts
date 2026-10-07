@@ -5,7 +5,7 @@
  */
 
 import { MODELS } from "../../models.ts";
-import { MODEL_WORKER_MODEL, rateFor } from "../model-cost.ts";
+import { MODEL_WORKER_MODEL, highestRates, rateFor } from "../model-cost.ts";
 
 /** The model classes a step may route to. Cheapest first. */
 export const MODEL_CLASSES = ["haiku", "sonnet", "frontier"] as const;
@@ -46,8 +46,7 @@ export type StepRoute =
     };
 
 export const SCOUT_STEPS = {
-  /** Acquisition starts with Haiku. Unsupported adaptive-thinking/effort fields
-   * are omitted by the request builder; configuration is not evidence of quality.
+  /** Acquisition starts with Haiku; configuration is not evidence of quality.
    * A failed standard must carry an observed reason before escalation. */
   "scout-research-loop": {
     kind: "MODEL",
@@ -262,10 +261,11 @@ export function modelCeilingViolation(model: string): string | null {
   }
   const ceiling = rateFor(MODEL_CEILING);
   if (ceiling === null) return "the ceiling model itself has no rate row (control-plane misconfiguration)";
-  if (rate.inputUsdPerMillion > ceiling.inputUsdPerMillion || rate.outputUsdPerMillion > ceiling.outputUsdPerMillion) {
+  const [card, top] = [highestRates(rate), highestRates(ceiling)];
+  if (card.inputUsdPerMillion > top.inputUsdPerMillion || card.outputUsdPerMillion > top.outputUsdPerMillion) {
     return (
-      `it is priced above the ceiling (${rate.inputUsdPerMillion}/${rate.outputUsdPerMillion} vs ` +
-      `${ceiling.inputUsdPerMillion}/${ceiling.outputUsdPerMillion} USD per million in/out)`
+      `it is priced above the ceiling (${card.inputUsdPerMillion}/${card.outputUsdPerMillion} vs ` +
+      `${top.inputUsdPerMillion}/${top.outputUsdPerMillion} USD per million in/out)`
     );
   }
   return null;

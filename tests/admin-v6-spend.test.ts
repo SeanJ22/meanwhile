@@ -8,7 +8,7 @@ const old = (month: string, role: string, model: string | null, usd: number | nu
 const NOT_RECORDED = neonTransferOf({ kind: "NOT_INSTALLED", rows: [], detail: "Daily database transfer is not recorded until migration 0030 is applied." });
 
 test("models are named by catalog tier, older versions by family, and anything else is not recorded", () => {
-  assert.deepEqual(modelLabel("claude-haiku-4-5-20251001"), { key: "haiku", tier: "haiku", name: "Claude Haiku 4.5" });
+  assert.deepEqual(modelLabel("claude-haiku-5-5-20261001"), { key: "haiku", tier: "haiku", name: "Claude Haiku 5.5" });
   assert.equal(modelLabel("claude-sonnet-5-5").tier, "sonnet");
   assert.equal(modelLabel("claude-opus-5-5").tier, "opus");
   const older = modelLabel("claude-opus-5");
@@ -20,7 +20,7 @@ test("models are named by catalog tier, older versions by family, and anything e
 
 test("spend is priced dollars by tier and by Eastern day, search kept apart, unpriced rows counted beside", () => {
   const view = spendView([
-    row("2026-09-28", "SCOUT", "claude-haiku-4-5-20251001", 27.3), row("2026-09-28", "SCOUT", "claude-sonnet-5-5", 3.0, 2),
+    row("2026-09-28", "SCOUT", "claude-haiku-5-5-20261001", 27.3), row("2026-09-28", "SCOUT", "claude-sonnet-5-5", 3.0, 2),
     row("2026-09-28", "DISCOVERY_SEARCH", null, 0.012), row("2026-09-27", "SCOUT", null, 0.4), row("2026-09-27", "SCOUT", "claude-opus-5", null, 5), row("2026-09-27", "SCOUT", "claude-opus-5-5", 0),
   ], NOT_RECORDED);
   assert.deepEqual(view.byTier.map((t) => [t.tier, t.usd]), [["haiku", 27.3], ["sonnet", 3], ["unrecorded", 0.4]]);
@@ -54,11 +54,11 @@ test("the ledger is aggregated in the database, in Eastern days, with a split ch
 
 test("months add up every priced row, days only the recent ones, and the month in progress comes first", () => {
   const view = spendView([
-    row("2026-09-28", "SCOUT", "claude-haiku-4-5-20251001", 2), row("2026-09-27", "SCOUT", "claude-sonnet-5-5", 1), row("2026-09-27", "DISCOVERY_SEARCH", null, 0.5),
-    old("2026-09", "SCOUT", "claude-haiku-4-5-20251001", 10), old("2026-08", "SCOUT", "claude-opus-5-5", 4, 3), old("2026-08", "SCOUT", "claude-opus-5-5", null, 2),
+    row("2026-09-28", "SCOUT", "claude-haiku-5-5-20261001", 2), row("2026-09-27", "SCOUT", "claude-sonnet-5-5", 1), row("2026-09-27", "DISCOVERY_SEARCH", null, 0.5),
+    old("2026-09", "SCOUT", "claude-haiku-5-5-20261001", 10), old("2026-08", "SCOUT", "claude-opus-5-5", 4, 3), old("2026-08", "SCOUT", "claude-opus-5-5", null, 2),
   ], NOT_RECORDED);
   assert.deepEqual(view.byMonth.map((m) => [m.month, m.anthropicUsd, m.searchUsd]), [["2026-09", 13, 0.5], ["2026-08", 4, 0]]);
-  assert.deepEqual(view.byMonth[0].byTier.map((t) => [t.name, t.usd]), [["Claude Haiku 4.5", 12], ["Claude Sonnet 5.5", 1]].map(([n, u]) => [n, u]));
+  assert.deepEqual(view.byMonth[0].byTier.map((t) => [t.name, t.usd]), [["Claude Haiku 5.5", 12], ["Claude Sonnet 5.5", 1]].map(([n, u]) => [n, u]));
   assert.equal(view.anthropicUsd, 3, "the day window is only the recent rows");
   assert.equal(view.unpricedRows, 0, "an unpriced row outside the day window is not counted against the days");
 });
@@ -69,12 +69,12 @@ test("work is named by its place and kind of record, and its tiers, moves and re
   assert.equal(workName("mystery-work", null), "mystery-work");
   const [moved, stayed, unknown] = workCosts([
     { work: "freshness:jurisdiction:nh:county:merrimack#officeholders-0", jurisdiction: "nh:county:merrimack", usd: 1.23456, unpriced: false, tries: 3,
-      models: ["claude-sonnet-5-5", "claude-haiku-4-5-20251001"], outcomes: ["EVIDENCE_FOUND", "NO_PROGRESS"], refused: 0 },
-    { work: "x#meetings-1", jurisdiction: "az:city:city-of-tucson", usd: 0.2, unpriced: false, tries: 1, models: ["claude-haiku-4-5-20251001"], outcomes: [], refused: 1 },
+      models: ["claude-sonnet-5-5", "claude-haiku-5-5-20261001"], outcomes: ["EVIDENCE_FOUND", "NO_PROGRESS"], refused: 0 },
+    { work: "x#meetings-1", jurisdiction: "az:city:city-of-tucson", usd: 0.2, unpriced: false, tries: 1, models: ["claude-haiku-5-5-20261001"], outcomes: [], refused: 1 },
     { work: "y", jurisdiction: null, usd: 5, unpriced: true, tries: 2, models: [], outcomes: [], refused: 0 },
   ]);
-  assert.equal(moved.models, "Claude Haiku 4.5 → Claude Sonnet 5.5");
-  assert.match(moved.movedUpWhy, /Started on Claude Haiku 4\.5 and moved up to Claude Sonnet 5\.5; the reason isn’t saved/);
+  assert.equal(moved.models, "Claude Haiku 5.5 → Claude Sonnet 5.5");
+  assert.match(moved.movedUpWhy, /Started on Claude Haiku 5\.5 and moved up to Claude Sonnet 5\.5; the reason isn’t saved/);
   assert.equal(moved.benefit, "Found the record, Nothing yet");
   assert.equal(moved.costUsd, 1.2346);
   assert.deepEqual(moved.applies, ["st:nh"]);

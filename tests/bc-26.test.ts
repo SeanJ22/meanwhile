@@ -98,6 +98,6 @@ test("BC-26 — THE CLASS: every non-elected role in the registry, with its deno
   const independent = appointed.filter((r) => !/carruth/i.test(r.name));
   assert.ok(
     independent.length >= 2,
-    `only ${independent.length} appointed role(s) outside the derived case — RULING 157 is unsatisfied`,
+    `only ${independent.length} appointed role(s) outside the derived case — at least two are required`,
   );
 });

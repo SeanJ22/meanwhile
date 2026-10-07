@@ -97,7 +97,7 @@ test("writeFieldManualDiscoveries writes live and is grow-only across a second w
   assert.ok(fieldManualBriefLines(projection)[0]!.includes("inherited door"));
 });
 
-test("compoundingPair flags a rebuilt-existing route as a defect (RULING 63)", () => {
+test("compoundingPair flags a rebuilt-existing route as a defect", () => {
   const known = new Set(["morris-legistar-events"]);
   const pair = compoundingPair(5, result(), known);
   assert.equal(pair.inheritedCount, 5);

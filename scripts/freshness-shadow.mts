@@ -3662,7 +3662,7 @@ if (!dry && !canary) {
     }
   }
   if (absencesRecorded > 0) {
-    console.log(`  argued absences recorded: ${absencesRecorded} (each rechecks in ${ABSENCE_EXPIRY_DAYS} days; RULING 52/53)`);
+    console.log(`  argued absences recorded: ${absencesRecorded} (each rechecks in ${ABSENCE_EXPIRY_DAYS} days)`);
   }
 }
 
@@ -4099,7 +4099,7 @@ const researchLines = [
   `  circuits           ${safety.providerCircuits.length === 0 ? "none" : safety.providerCircuits.map(c => `${c.provider}: ${c.condition} (latched until ${c.eligibleAt})`).join("; ")}`,
   `  last success       ${safety.lastSuccessfulActivity ?? "none recorded"}`,
   "",
-  "RESEARCH — LEVEL 1 (RULING 240)",
+  "RESEARCH — LEVEL 1",
   `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
   `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
   `  model              ${SCOUT_MODEL} · ${workerCapacity} workers · Admin spend dial $${effectiveCeilingUsd}/day; each hunt retains its own budget`,
@@ -4119,7 +4119,7 @@ const researchLines = [
   ),
   `  runtime            ${runtimeConditions.length === 0 ? "no condition prevents eligible Scout work" : runtimeConditions.join("; ")}`,
   `  supervision        ${hostSupervision.measurable ? `relaunch trigger ${hostSupervision.relaunchTrigger.present === null ? "UNKNOWN" : hostSupervision.relaunchTrigger.present ? "present" : "ABSENT"}` : hostSupervision.notMeasurableReason} · ` +
-    `proof ${hostSupervision.proof === null ? `ABSENT at ${hostSupervision.proofPath}` : `${hostSupervision.proof.verdict} ${hostSupervision.proof.measuredAt} (${hostSupervision.proof.secondsToRelaunch ?? "?"}s)`} (RULING 246)`,
+    `proof ${hostSupervision.proof === null ? `ABSENT at ${hostSupervision.proofPath}` : `${hostSupervision.proof.verdict} ${hostSupervision.proof.measuredAt} (${hostSupervision.proof.secondsToRelaunch ?? "?"}s)`}`,
   /* Every Attempt this cycle, by step — the cache reads per turn are the proof the prefix held. */
   ...scoutResultsThisCycle.flatMap((r) => {
     const model = (r.steps ?? []).filter((s) => s.kind === "MODEL");

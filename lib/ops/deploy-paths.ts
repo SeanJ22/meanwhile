@@ -72,7 +72,7 @@ export function classifyDeploy(
   if (context && context !== "production") {
     return {
       verdict: "cancel",
-      reason: `context is '${context}' — only production builds (RULING 124); previews and branch deploys duplicate a gate nobody reads`,
+      reason: `context is '${context}' — only production builds; previews and branch deploys duplicate a gate nobody reads`,
       shipping: [],
       nonShipping: [],
     };
@@ -82,7 +82,7 @@ export function classifyDeploy(
     return {
       verdict: "cannot-tell",
       reason:
-        "the changed-file list could not be computed — building, because a check that cannot reach its subject must never print like a passing one (RULING 24)",
+        "the changed-file list could not be computed — building, because a check that cannot reach its subject must never print like a passing one",
       shipping: [],
       nonShipping: [],
     };

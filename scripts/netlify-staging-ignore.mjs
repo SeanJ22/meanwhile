@@ -55,7 +55,7 @@ export function classifyBranchDeploy(branch) {
   }
   return {
     verdict: "cancel",
-    reason: `branch is ${name}, not ${STAGING_BRANCH} — RULING 124 item 1.1 stands for every branch but the integration branch`,
+    reason: `branch is ${name}, not ${STAGING_BRANCH} — only the integration branch builds a staging deploy`,
   };
 }
 

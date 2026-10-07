@@ -155,7 +155,7 @@ export class ZeroRowExtractionError extends Error {
     super(
       `${source}: fetched ${fetched} document(s) and extracted 0 meeting(s), ` +
         "with no drop recorded to account for one — a zero-row extraction is a " +
-        "failed extraction, never an empty calendar (RULING 43)",
+        "failed extraction, never an empty calendar",
     );
     this.name = "ZeroRowExtractionError";
     this.source = source;

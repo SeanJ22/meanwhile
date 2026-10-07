@@ -200,7 +200,7 @@ export function assertAggregateOnly(record: unknown, context: string): void {
       if (FORBIDDEN_RECORD_FIELDS.includes(key)) {
         throw new Error(
           `${context} refused: the owner-surface record carries the field '${key}' at ${path}.${key}. ` +
-            "Aggregate-only is a boundary, not a storage rule (RULING 226) — anything EXPOSED, " +
+            "Aggregate-only is a boundary, not a storage rule — anything EXPOSED, " +
             "RENDERED or LICENSED is aggregate-only without exception, and the owner reading his " +
             "own control centre is a rendering like any other.",
         );

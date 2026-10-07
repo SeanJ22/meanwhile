@@ -56,7 +56,7 @@ test("the sweep reaches the source tree it claims to", () => {
   );
 });
 
-test("RULING 14: no path is inverted from POSIX into platform separators", () => {
+test("no path is inverted from POSIX into platform separators", () => {
   // Source-text patterns, so the guard does not depend on the separator it polices.
   const INVERSIONS: Array<[RegExp, string]> = [
     [/\.replace\(\s*\/\\\/\/g\s*,\s*(?:"\\\\\\\\"|'\\\\\\\\'|sep)\s*\)/, "replace(/\\//g, <platform separator>)"],
@@ -82,7 +82,7 @@ test("RULING 14: no path is inverted from POSIX into platform separators", () =>
   );
 });
 
-test("RULING 14: no repo-path literal uses a backslash as its separator", () => {
+test("no repo-path literal uses a backslash as its separator", () => {
   // Anchored on the repo's top-level directories so an escaped backslash in a regex or iCal text is not swept up.
   const DIRS = SWEPT_ROOTS.join("|");
   const BACKSLASH_PATH = new RegExp(`["'\`](?:\\.\\.?\\\\\\\\)?(?:${DIRS})\\\\\\\\[a-z]`, "i");
@@ -102,7 +102,7 @@ test("RULING 14: no repo-path literal uses a backslash as its separator", () => 
   );
 });
 
-test("RULING 14: the shared normalizer exists and normalizes both directions", () => {
+test("the shared normalizer exists and normalizes both directions", () => {
   // Built rather than written: a Windows-separator path literal is what the test above bans.
   const WIN_SEP = String.fromCharCode(92);
   const windowsPath = ["lib", "coverage", "states.ts"].join(WIN_SEP);
@@ -119,7 +119,7 @@ test("RULING 14: the shared normalizer exists and normalizes both directions", (
   );
 });
 
-test("RULING 14: a state holding path compares the same on both platforms", () => {
+test("a state holding path compares the same on both platforms", () => {
   assert.equal(toPosix("data\\states\\wi\\ballot\\wi-dane-2028.json"), "data/states/wi/ballot/wi-dane-2028.json");
 });
 
@@ -127,7 +127,7 @@ test("RULING 14: a state holding path compares the same on both platforms", () =
  * A URL pathname is not a filesystem path: on Windows `new URL(import.meta.url).pathname` is `/C:/...`, which
  * `join()` resolves against the working directory. Invisible on Linux. `fileURLToPath` is the decoder.
  */
-test("RULING 14: no file URL is used as a path without fileURLToPath", () => {
+test("no file URL is used as a path without fileURLToPath", () => {
   // Assembled from pieces so this guard does not match itself.
   const BANNED = new RegExp(String.raw`new URL\([^)]*\)\.` + "pathname");
 
@@ -170,7 +170,7 @@ test("RULING 14: no file URL is used as a path without fileURLToPath", () => {
 });
 
 // The denominator: the sanctioned decoder should be in wide use, or the sweep is reading the wrong tree.
-test("RULING 14: the sanctioned file-URL decoder is the established idiom", () => {
+test("the sanctioned file-URL decoder is the established idiom", () => {
   let users = 0;
   for (const abs of sourceFiles()) {
     if (/fileURLToPath\(/.test(codeOnly(readFileSync(abs, "utf8")))) users += 1;

@@ -119,7 +119,7 @@ export const TIE_BREAK = "longest wait first within a band: the next-due, or the
 
 export const ORDERING_RULE =
   "band 1 = a reader is waiting on it (canonical FreshnessObligation.readerImpactAt set); " +
-  "band 2 = source-universe completion (RULING 229 universe providers); band 3 = long tail; within a band, the longest wait first " +
+  "band 2 = source-universe completion (universe providers); band 3 = long tail; within a band, the longest wait first " +
   "(a row that failed waits from the end of its backoff)";
 
 export const ORDERING_SCOPE =
@@ -129,7 +129,7 @@ export const ORDERING_SCOPE =
 export function bandFor(row: OrderableObligation, _inputs: OrderingInputs): { readonly band: ReaderImpactBand; readonly why: string } {
   if (row.readerImpactAt !== null) return { band: 1, why: `readerImpactAt ${row.readerImpactAt} is set by the provider` };
   if (row.providerId !== null && UNIVERSE_PROVIDERS.includes(row.providerId)) {
-    return { band: 2, why: `provider ${row.providerId} is a source-universe denominator (RULING 229)` };
+    return { band: 2, why: `provider ${row.providerId} is a source-universe denominator` };
   }
   return { band: 3, why: "no reader-impact signal and not a universe provider: the long tail" };
 }

@@ -71,8 +71,8 @@ export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: Meetings
         ? `${source?.owed ?? "walk the government's own recorded site for its meetings"} ` +
           "REQUIRES_NEW_ADAPTER: this is a fact about our tooling and our reading, never about the record."
         : "no website is recorded for this government, so its meetings have no source yet. The first step is " +
-          "its own site (RULING 249, Tier B), found from what the tier above publishes about it; an absence is " +
-          "argued, never asserted (RULING 250). REQUIRES_NEW_ADAPTER: a fact about our reading, never about the record.",
+          "its own site (Tier B), found from what the tier above publishes about it; an absence is " +
+          "argued, never asserted. REQUIRES_NEW_ADAPTER: a fact about our reading, never about the record.",
     },
     citation:
       source?.citation ??

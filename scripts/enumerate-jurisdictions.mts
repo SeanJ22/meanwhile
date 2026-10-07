@@ -143,7 +143,7 @@ const OWN_SITE_SOURCE: JurisdictionSource = {
   state: "DISCOVERY_OWED",
   owed:
     "walk this row's `ownWebAddress` for the body's own meeting notices, agendas, minutes and " +
-    "officeholder roster, under RULING 166's body-own-publication-first order. The address is " +
+    "officeholder roster, under the body-own-publication-first order. The address is " +
     "recorded; no adapter in this repository opens it, and an address is not an acquisition.",
   citation: CENSUS_CITATION,
 };
@@ -590,7 +590,7 @@ function build(plan: StatePlan): JurisdictionRegistry {
       "it may never be read as one. A government absent from every enumeration read here is absent from",
       "THIS FILE. That is a fact about this file and never a fact about the state.",
       "",
-      "RULING 229: a jurisdiction is enumerated so that it can be an OPEN OBLIGATION with a clock BEFORE",
+      "A jurisdiction is enumerated so that it can be an OPEN OBLIGATION with a clock BEFORE",
       "a reader needs it. Activating a ZIP inside one of these governments must be applicability work,",
       "never a fresh external hunt for a record the authority already owed.",
       "",

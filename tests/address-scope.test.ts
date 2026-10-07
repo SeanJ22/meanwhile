@@ -37,7 +37,7 @@ function zipOnlyLocation(): ResolvedLocation {
   };
 }
 
-test("RULING 222: a confirmed address removes the districts it excludes", () => {
+test("a confirmed address removes the districts it excludes", () => {
   const rows = [{ ocdId: SLDL_17 }, { ocdId: SLDL_19 }];
   assert.deepEqual(
     scopedToAddress(rows, atAddress()).map((r) => r.ocdId),
@@ -51,7 +51,7 @@ test("RULING 222: a confirmed address removes the districts it excludes", () => 
   );
 });
 
-test("RULING 222: without a confirmed address nothing is removed", () => {
+test("without a confirmed address nothing is removed", () => {
   const rows = [{ ocdId: SLDL_17 }, { ocdId: SLDL_19 }];
   assert.equal(
     scopedToAddress(rows, zipOnlyLocation()).length,
@@ -61,7 +61,7 @@ test("RULING 222: without a confirmed address nothing is removed", () => {
   assert.equal(excludedByAddress(rows, zipOnlyLocation()).length, 0);
 });
 
-test("RULING 222 does NOT reach a row that was never ruled out", () => {
+test("address scoping does NOT reach a row that was never ruled out", () => {
   // Only rows determined not to govern the reader are dropped; an overlapping school district was never ruled out.
   const kept = scopedToAddress([{ ocdId: SCHOOL_B }], atAddress());
   assert.equal(kept.length, 1);
@@ -97,7 +97,7 @@ function withoutComments(source: string): string {
     .replace(/\{\s*\/\*[\s\S]*?\*\/\s*\}/g, " ");
 }
 
-test("RULING 222: no reader surface renders a 'not yours' exclusion label", () => {
+test("no reader surface renders a 'not yours' exclusion label", () => {
   const offenders: string[] = [];
   for (const { path, source } of readerComponents()) {
     const code = withoutComments(source);
@@ -108,11 +108,11 @@ test("RULING 222: no reader surface renders a 'not yours' exclusion label", () =
   assert.deepEqual(
     offenders,
     [],
-    "an entity that is not the reader's is out of scope, never annotated (RULING 222)",
+    "an entity that is not the reader's is out of scope, never annotated",
   );
 });
 
-test("RULING 222: no reader surface renders a row it knows is ELSEWHERE_IN_ZIP", () => {
+test("no reader surface renders a row it knows is ELSEWHERE_IN_ZIP", () => {
   // `district-popup.tsx` is a browse surface: standing relative to a tapped district is its answer.
   const allowed = new Set([join("components", "map", "popup", "district-popup.tsx")]);
   const offenders: string[] = [];
@@ -128,7 +128,7 @@ test("RULING 222: no reader surface renders a row it knows is ELSEWHERE_IN_ZIP",
   );
 });
 
-test("RULING 222: the who-governs card scopes its lists to the address", () => {
+test("the who-governs card scopes its lists to the address", () => {
   const source = readFileSync(join("components", "map", "coverage-notice.tsx"), "utf8");
   const code = withoutComments(source);
   assert.ok(

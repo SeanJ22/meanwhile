@@ -362,7 +362,7 @@ export function stageOne(input: StageInput): StagedEntry {
       ? `${rowCount} row(s) acquired; the publisher declared no total, so what fraction of the ` +
         "index this is CANNOT BE ASSERTED"
       : `${rowCount} of the ${declaredTotal} row(s) this query's own response declares — ` +
-        "whole for THIS request, which is not a claim that the index is whole (RULING 207)";
+        "whole for THIS request, which is not a claim that the index is whole";
 
   const dir = stagingDir(input.root);
   mkdirSync(dir, { recursive: true });

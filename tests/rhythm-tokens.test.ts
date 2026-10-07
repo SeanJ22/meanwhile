@@ -18,7 +18,7 @@ const GLOBALS = join(ROOT, "app", "globals.css");
 // The reader design rules live in app/reader.css (globals.css mirror cap); the scale applies to both.
 const css = readFileSync(GLOBALS, "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
 
-test("the rhythm sweep catches an off-scale value — the instrument works (RULING 110)", () => {
+test("the rhythm sweep catches an off-scale value — the instrument works", () => {
   assert.equal(offScaleSpacing(".x{padding:13px}").length, 1, "13px is off the spacing scale");
   assert.equal(offScaleSpacing(".x{padding:var(--space-3)}").length, 0, "a token is on-scale");
   assert.equal(offScaleSpacing(".x{padding:16px 24px}").length, 0, "16/24 are on-scale");

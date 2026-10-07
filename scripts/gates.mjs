@@ -37,7 +37,7 @@ const GATES = [
     id: "assert:browser",
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm run assert:browser",
-    why: "RULING 113 — observe the step's product at the step",
+    why: "observe the step's product at the step",
   },
   {
     id: "test",
@@ -116,7 +116,7 @@ try {
   /* absent is the normal case and is not a failure */
 }
 
-console.log("local gates — the set CI requires (RULING 155)\n");
+console.log("local gates — the set CI requires\n");
 
 /*
  * The cheap tier runs first, and the expensive tier is not run on a head that

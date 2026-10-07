@@ -110,7 +110,7 @@ export function fieldManualBriefLines(projection: FieldManualProjection): string
   }
   const dead = projection.lines.some((l) => DEAD_DOOR_LINE.test(l));
   return [
-    `FIELD MANUAL — ${projection.entryIds.length} inherited door(s) of ${projection.total}; walk what already worked before novelty, and do not rebuild a door already listed here (RULING 63):`,
+    `FIELD MANUAL — ${projection.entryIds.length} inherited door(s) of ${projection.total}; walk what already worked before novelty, and do not rebuild a door already listed here:`,
     ...(dead
       ? [
           "  A BLOCKED or FAILED door is a wall only when an access control stopped it (a login or 401, a paywall, a 403 or bot challenge, a 429): never bypass it, walk another public route. " +

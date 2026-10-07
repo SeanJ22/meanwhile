@@ -46,7 +46,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "The METHOD travels — RULING 94's third move is shape-testing and it applies anywhere. The specific shapes are American two-party naming conventions and will not survive a jurisdiction with different party structures."
+        "note": "The METHOD travels — the third move is shape-testing and it applies anywhere. The specific shapes are American two-party naming conventions and will not survive a jurisdiction with different party structures."
       },
       "outcomes": [],
       "subBranches": [],
@@ -121,7 +121,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "The technique travels; the seeds are per-state (RULING 60). New Hampshire's ballot at 03255 is federal, statewide and county with no municipal layer, and its legislators live on a General Court roster with no New Jersey equivalent."
+        "note": "The technique travels; the seeds are per-state. New Hampshire's ballot at 03255 is federal, statewide and county with no municipal layer, and its legislators live on a General Court roster with no New Jersey equivalent."
       },
       "outcomes": [],
       "subBranches": [
@@ -184,7 +184,7 @@
       "subBranches": [
         {
           "jurisdiction": "Morris County, New Jersey, 2026-08-22",
-          "failedOn": "nothing failed — this is the reverse entry, and it is recorded here because RULING 60 is about what a route does in a new SHAPE, which includes doing better",
+          "failedOn": "nothing failed — this is the reverse entry, and it is recorded here because the point is what a route does in a new SHAPE, which includes doing better",
           "reason": "inherited route failed here; replaced by: the clerk's own candidates page names its current PDFs and the PDFs carry a real text layer: 272 candidates county-wide, 260 with a filed email and 260 with a filed street address, all fifteen 07866 candidates among them, at rung 2. The version segment in the asset path (`/v/9/`) changes on every revision and both revisions stay reachable, so discovery reads the page's own hrefs and takes the newest — a hardcoded URL here reads a superseded filing as current.",
           "replacedBy": "the clerk's own candidates page names its current PDFs and the PDFs carry a real text layer: 272 candidates county-wide, 260 with a filed email and 260 with a filed street address, all fifteen 07866 candidates among them, at rung 2. The version segment in the asset path (`/v/9/`) changes on every revision and both revisions stay reachable, so discovery reads the page's own hrefs and takes the newest — a hardcoded URL here reads a superseded filing as current."
         }
@@ -235,11 +235,11 @@
         {
           "jurisdiction": "New Jersey ELEC, 2026-08-22",
           "failedOn": "`elec.nj.gov` serves an Imperva/Incapsula challenge page rather than the site — 212 bytes at rung 2, recorded here since 2026-08-19 and unchanged on re-walk today. This is a WALL and it is named, not defeated",
-          "reason": "inherited route failed here; replaced by: `filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact — RULING 52.",
-          "replacedBy": "`filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact — RULING 52."
+          "reason": "inherited route failed here; replaced by: `filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact.",
+          "replacedBy": "`filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact."
         },
         {
-          "jurisdiction": "New Jersey ELEC, off the web entirely — 2026-08-22 (NJ Hunt 2, RULING 69)",
+          "jurisdiction": "New Jersey ELEC, off the web entirely — 2026-08-22 (NJ Hunt 2)",
           "failedOn": "the Imperva wall above was recorded as though it were the whole of ELEC. It is the whole of ELEC'S WEBSITE, which is a different and much smaller thing, and reading one as the other is how a host becomes a permanent wall in this repo",
           "reason": "inherited route failed here; replaced by: the FEC's Combined Federal/State Disclosure and Election Directory names ELEC's staff and its OFF-WEB contact: Amanda S. Haines, Executive Director, 25 South Stockton Street, 5th Floor, Trenton NJ 08608, PO Box 185, Trenton NJ 08625-0185, 609/292-8700. A telephone and a postal address are a compliant route to a public record that a WAF cannot refuse, and they take this from rung 2 straight to rung 13 — the body's own records-request path — without touching the challenge page at all. Committed at `data/reference/fec_combined_federal_state_disclosure_directory.pdf`, page 80.",
           "replacedBy": "the FEC's Combined Federal/State Disclosure and Election Directory names ELEC's staff and its OFF-WEB contact: Amanda S. Haines, Executive Director, 25 South Stockton Street, 5th Floor, Trenton NJ 08608, PO Box 185, Trenton NJ 08625-0185, 609/292-8700. A telephone and a postal address are a compliant route to a public record that a WAF cannot refuse, and they take this from rung 2 straight to rung 13 — the body's own records-request path — without touching the challenge page at all. Committed at `data/reference/fec_combined_federal_state_disclosure_directory.pdf`, page 80."
@@ -536,8 +536,8 @@
         {
           "jurisdiction": "every Newbury county candidate, 2026-08-21",
           "failedOn": "facebook.com renders ~950 KB and ZERO characters of readable text to a headless browser — rung 6 does not clear it, and the wall is deliberate anti-automation defence rather than a bug to route around",
-          "reason": "inherited route failed here; replaced by: RULING 66: the five compliant routes below — `ad-library`, `social-archive`, `social-mirror`, `news-embed`, and the campaign's own site's link to the page. Authenticated or credentialed access is NEVER attempted: it breaches the platform's terms, risks the account it runs under, and RULING 12 says such a wall is NAMED, not defeated.",
-          "replacedBy": "RULING 66: the five compliant routes below — `ad-library`, `social-archive`, `social-mirror`, `news-embed`, and the campaign's own site's link to the page. Authenticated or credentialed access is NEVER attempted: it breaches the platform's terms, risks the account it runs under, and RULING 12 says such a wall is NAMED, not defeated."
+          "reason": "inherited route failed here; replaced by: the five compliant routes below — `ad-library`, `social-archive`, `social-mirror`, `news-embed`, and the campaign's own site's link to the page. Authenticated or credentialed access is NEVER attempted: it breaches the platform's terms, risks the account it runs under, and such a wall is NAMED, not defeated.",
+          "replacedBy": "the five compliant routes below — `ad-library`, `social-archive`, `social-mirror`, `news-embed`, and the campaign's own site's link to the page. Authenticated or credentialed access is NEVER attempted: it breaches the platform's terms, risks the account it runs under, and such a wall is NAMED, not defeated."
         }
       ],
       "origin": "lib/hunt/branch-manifest.ts (v7)",
@@ -930,7 +930,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "Small-town America broadly. It is the route RULING 57's twigs are actually reachable through."
+        "note": "Small-town America broadly. It is the route the smallest twigs are actually reachable through."
       },
       "outcomes": [],
       "subBranches": [],
@@ -1130,7 +1130,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "Roughly 19,000 US municipality articles share this template, so one parser reads all of them. New England town articles and New Jersey municipality articles both parse. Where it will break is a place with no article at all, and the smallest twigs RULING 57 exists for are exactly those."
+        "note": "Roughly 19,000 US municipality articles share this template, so one parser reads all of them. New England town articles and New Jersey municipality articles both parse. Where it will break is a place with no article at all, and the smallest twigs are exactly those."
       },
       "outcomes": [],
       "subBranches": [],
@@ -1369,7 +1369,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "NATIONAL BY CONSTRUCTION — this is one federal publication covering all fifty states, which is the whole point of RULING 93. What it points AT differs per state, and that is the next route down."
+        "note": "NATIONAL BY CONSTRUCTION — this is one federal publication covering all fifty states, which is the whole point. What it points AT differs per state, and that is the next route down."
       },
       "outcomes": [],
       "subBranches": [],
@@ -1543,7 +1543,7 @@
     },
     {
       "id": "official-enumeration-cross-check",
-      "title": "reconcile two INDEPENDENT official enumerations of the same body and record the disagreement rather than choosing one (RULING 57)",
+      "title": "reconcile two INDEPENDENT official enumerations of the same body and record the disagreement rather than choosing one",
       "tier": "A0",
       "fields": [
         "roster",
@@ -1680,7 +1680,7 @@
           "walkedOn": "2026-08-27",
           "rows": 45,
           "outcome": "YIELDED",
-          "note": "180-row village sheet; 10 of Merrimack's 15 no-website governments named. The five absent are East Andover Fire Precinct, BCEP Solid Waste District and three school districts, which are apportioned in a different DRA publication. Lake Todd Village appears TWICE at 0.24 and 0.38, both flagged *Apportioned — independent official evidence for the Bradford/Newbury spanning district RULING 121 names. A rate of 0 is a district that filed and set no rate, not an absence."
+          "note": "180-row village sheet; 10 of Merrimack's 15 no-website governments named. The five absent are East Andover Fire Precinct, BCEP Solid Waste District and three school districts, which are apportioned in a different DRA publication. Lake Todd Village appears TWICE at 0.24 and 0.38, both flagged *Apportioned — independent official evidence for the Bradford/Newbury spanning district. A rate of 0 is a district that filed and set no rate, not an absence."
         }
       ],
       "subBranches": [],
@@ -2058,7 +2058,7 @@
         "publishers": [
           "azgeo.az.gov"
         ],
-        "note": "services6.arcgis.com serves org-scoped paths only, so a bare /robots.txt has no tenant and the router answers 403 with the body `Invalid URL`. The robots sweep correctly returns CANNOT_TELL and fails safe. RULING 182: permission state and transport state are orthogonal — the resolution is the PUBLISHER's permission (azgeo.az.gov -> azgeo-data-hub-agic.hub.arcgis.com, ALLOWED) plus the item's own access and licence fields, not a softer read of the vendor's robots."
+        "note": "services6.arcgis.com serves org-scoped paths only, so a bare /robots.txt has no tenant and the router answers 403 with the body `Invalid URL`. The robots sweep correctly returns CANNOT_TELL and fails safe. Permission state and transport state are orthogonal — the resolution is the PUBLISHER's permission (azgeo.az.gov -> azgeo-data-hub-agic.hub.arcgis.com, ALLOWED) plus the item's own access and licence fields, not a softer read of the vendor's robots."
       },
       "outcomes": [
         {
@@ -2297,7 +2297,7 @@
           "azed.gov",
           "www.azed.gov"
         ],
-        "note": "measured on two Arizona hosts with opposite answers, which is the point: azed.gov serves a Cloudflare interstitial to roughly one request in three and the real robots.txt to the others, while apps.arizona.vote served the interstitial at every one of rungs 2, 3, 4, 5 and 6. A retry distinguishes them and nothing else does. RULING 182 still governs the unresolved case: the route fails safe and the FACT is hunted elsewhere."
+        "note": "measured on two Arizona hosts with opposite answers, which is the point: azed.gov serves a Cloudflare interstitial to roughly one request in three and the real robots.txt to the others, while apps.arizona.vote served the interstitial at every one of rungs 2, 3, 4, 5 and 6. A retry distinguishes them and nothing else does. The same rule still governs the unresolved case: the route fails safe and the FACT is hunted elsewhere."
       },
       "outcomes": [
         {
@@ -2396,7 +2396,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "The SHAPE is general: a partisan primary filing cannot show a nonpartisan district office, and a PRIMARY candidate list cannot either, because a district office with no primary is not on a primary ballot. So the general-election listing is the right document and it is a different document from both. THE ARIZONA HOST IS WALLED: on 2026-08-27 apps.arizona.vote answered HTTP 403 to curl, to a bare node fetch carrying a browser user agent, and to a real Playwright browser at rung 6 alike — Cloudflare bot protection, not a rule. Its own robots.txt is 403 too, so permission is CANNOT_TELL and is NOT a disallow (RULING 182). Bypassing bot detection is prohibited, so this is BLOCKED_CURRENTLY rather than exhausted (RULING 184). Do not re-walk it with a fourth HTTP client and expect a different answer: vary the SOURCE, not the client. The untried branches are the COUNTY election authority's own general-election candidate list or sample ballot, the printed sample ballot when published, and a public-records request."
+        "note": "The SHAPE is general: a partisan primary filing cannot show a nonpartisan district office, and a PRIMARY candidate list cannot either, because a district office with no primary is not on a primary ballot. So the general-election listing is the right document and it is a different document from both. THE ARIZONA HOST IS WALLED: on 2026-08-27 apps.arizona.vote answered HTTP 403 to curl, to a bare node fetch carrying a browser user agent, and to a real Playwright browser at rung 6 alike — Cloudflare bot protection, not a rule. Its own robots.txt is 403 too, so permission is CANNOT_TELL and is NOT a disallow. Bypassing bot detection is prohibited, so this is BLOCKED_CURRENTLY rather than exhausted. Do not re-walk it with a fourth HTTP client and expect a different answer: vary the SOURCE, not the client. The untried branches are the COUNTY election authority's own general-election candidate list or sample ballot, the printed sample ballot when published, and a public-records request."
       },
       "outcomes": [
         {
@@ -2518,7 +2518,7 @@
           "diligent"
         ],
         "publishers": [],
-        "note": "THE SHAPE IS GENERAL AND IT IS A PERMISSION FACT, NOT A WALL. Two vendor hosts were read on 2026-08-27 and both publish a blanket disallow for every automated client: vailschooldistrict.community.highbond.com/robots.txt (23,479 bytes, 486 User-agent blocks, EXACTLY ONE 'User-agent: *' block carrying 'Disallow: /', and ZERO 'Allow:' directives anywhere in the file) and go.boarddocs.com/robots.txt (21,760 bytes, 'User-agent: * / Disallow: / / Crawl-delay: 1000'). Both were fetched successfully at rung 2, twice, with a bare curl client and with a browser user agent, so this is a READ RULE and not a transport failure — the CANNOT_TELL case of RULING 182 does not apply and must not be claimed here. THE CONSEQUENCE FOR ANY DISTRICT ON THESE PLATFORMS: there is no permitted machine route to the agenda through the vendor, and no number of client variations changes that, because varying the client to defeat a rule is not hunting, it is circumvention. The fact remains owed and the branches that stay eligible are the body's OWN publication, the statutory posting, a different vendor the same body also uses, and a public-records request. DO NOT RE-WALK THIS ON A CLOCK: a disallow is not an absence with an expiry, and RULING 184's recheck cadence is for blocked TRANSPORT, not for a published rule."
+        "note": "THE SHAPE IS GENERAL AND IT IS A PERMISSION FACT, NOT A WALL. Two vendor hosts were read on 2026-08-27 and both publish a blanket disallow for every automated client: vailschooldistrict.community.highbond.com/robots.txt (23,479 bytes, 486 User-agent blocks, EXACTLY ONE 'User-agent: *' block carrying 'Disallow: /', and ZERO 'Allow:' directives anywhere in the file) and go.boarddocs.com/robots.txt (21,760 bytes, 'User-agent: * / Disallow: / / Crawl-delay: 1000'). Both were fetched successfully at rung 2, twice, with a bare curl client and with a browser user agent, so this is a READ RULE and not a transport failure — the CANNOT_TELL case does not apply and must not be claimed here. THE CONSEQUENCE FOR ANY DISTRICT ON THESE PLATFORMS: there is no permitted machine route to the agenda through the vendor, and no number of client variations changes that, because varying the client to defeat a rule is not hunting, it is circumvention. The fact remains owed and the branches that stay eligible are the body's OWN publication, the statutory posting, a different vendor the same body also uses, and a public-records request. DO NOT RE-WALK THIS ON A CLOCK: a disallow is not an absence with an expiry, and the recheck cadence is for blocked TRANSPORT, not for a published rule."
       },
       "outcomes": [
         {
@@ -2639,7 +2639,7 @@
           "novusagenda"
         ],
         "publishers": [],
-        "note": "PERMISSION IS CLEAN AND THAT IS THE FINDING: vailschools.novusagenda.com/robots.txt is HTTP 404, so the host publishes NO restriction, which is a definite permission answer and not a CANNOT_TELL. The portal is live — /agendapublic/ returns 84,595 bytes and /agendapublic/meetingsresponsive.aspx returns 35,506 — and its markup carries AgendaHTML and AgendaPDF markers, so agenda documents are what it serves. WHAT WAS TRIED AND DID NOT WORK: a bare viewstate POST to meetingsresponsive.aspx carrying __VIEWSTATE, __VIEWSTATEGENERATOR, __EVENTVALIDATION, the session cookie, btnSearch, and a 1/1/2015-12/31/2026 window in both txtCalendarFrom/hfFromDate and txtCalendarTo/hfToDate. It returned HTTP 200 and 35,442 bytes containing ZERO MeetingID links, ZERO agenda links, and a date range RESET TO THE PORTAL'S OWN DEFAULTS rather than echoing the window that was sent. THE RESET IS THE DIAGNOSIS: the date parameters were not applied, so the search never ran over the requested window. THIS IS A FAILED EXTRACTION AND IS RECORDED AS ONE (RULING 100) — a zero-row result from a search that did not accept its own parameters is not evidence that the portal holds no meetings, and it must never be written down as one. The untried branches are the Telerik date-picker's own callback protocol, a real browser at rung 6 driving the actual controls, and the per-meeting DisplayAgendaPublic.aspx?MeetingID=N endpoint enumerated directly rather than through the search form. NH229's claim that this portal 'carries everything before 2017-03-14' is UNVERIFIED and is mildly contradicted by the portal defaulting to a current window."
+        "note": "PERMISSION IS CLEAN AND THAT IS THE FINDING: vailschools.novusagenda.com/robots.txt is HTTP 404, so the host publishes NO restriction, which is a definite permission answer and not a CANNOT_TELL. The portal is live — /agendapublic/ returns 84,595 bytes and /agendapublic/meetingsresponsive.aspx returns 35,506 — and its markup carries AgendaHTML and AgendaPDF markers, so agenda documents are what it serves. WHAT WAS TRIED AND DID NOT WORK: a bare viewstate POST to meetingsresponsive.aspx carrying __VIEWSTATE, __VIEWSTATEGENERATOR, __EVENTVALIDATION, the session cookie, btnSearch, and a 1/1/2015-12/31/2026 window in both txtCalendarFrom/hfFromDate and txtCalendarTo/hfToDate. It returned HTTP 200 and 35,442 bytes containing ZERO MeetingID links, ZERO agenda links, and a date range RESET TO THE PORTAL'S OWN DEFAULTS rather than echoing the window that was sent. THE RESET IS THE DIAGNOSIS: the date parameters were not applied, so the search never ran over the requested window. THIS IS A FAILED EXTRACTION AND IS RECORDED AS ONE — a zero-row result from a search that did not accept its own parameters is not evidence that the portal holds no meetings, and it must never be written down as one. The untried branches are the Telerik date-picker's own callback protocol, a real browser at rung 6 driving the actual controls, and the per-meeting DisplayAgendaPublic.aspx?MeetingID=N endpoint enumerated directly rather than through the search form. NH229's claim that this portal 'carries everything before 2017-03-14' is UNVERIFIED and is mildly contradicted by the portal defaulting to a current window."
       },
       "outcomes": [
         {
@@ -2717,7 +2717,7 @@
           "novusagenda"
         ],
         "publishers": [],
-        "note": "THE GENERAL SHAPE, AND IT EXPLAINS A WHOLE CLASS OF 'THE PORTAL IGNORED MY QUERY'. On NovusAGENDA's MeetingsResponsive.aspx the visible date inputs txtCalendarFrom and txtCalendarTo carry the DISABLED attribute, and the hidden hfFromDate/hfToDate beside them are written by the ddlDateRange <select> ('Last Month', 'Last Year', 'Custom Date Range', ...). A POST that sets the hidden fields and submits btnSearch therefore sets a value the server recomputes from the dropdown before the search runs, and the response echoes the DEFAULT window rather than the requested one. THE DIAGNOSTIC IS THE ECHO: read back whatever the page reports the applied window to be, and compare it to the window you asked for. Equal means the query ran; different means it did not, and a zero-row result from a query that did not run is a FAILED extraction (RULING 100) and never an absence. THE FIX IS TO OPERATE THE CONTROL THAT OWNS THE VALUE: select the named window, or select 'Custom Date Range' — which is what ENABLES the text boxes — and then type into them. A browser at rung 6 finds this in one step because it refuses to click a disabled element and says so; a hand-built POST cannot find it at all, because a disabled input is still serialisable and still ignored."
+        "note": "THE GENERAL SHAPE, AND IT EXPLAINS A WHOLE CLASS OF 'THE PORTAL IGNORED MY QUERY'. On NovusAGENDA's MeetingsResponsive.aspx the visible date inputs txtCalendarFrom and txtCalendarTo carry the DISABLED attribute, and the hidden hfFromDate/hfToDate beside them are written by the ddlDateRange <select> ('Last Month', 'Last Year', 'Custom Date Range', ...). A POST that sets the hidden fields and submits btnSearch therefore sets a value the server recomputes from the dropdown before the search runs, and the response echoes the DEFAULT window rather than the requested one. THE DIAGNOSTIC IS THE ECHO: read back whatever the page reports the applied window to be, and compare it to the window you asked for. Equal means the query ran; different means it did not, and a zero-row result from a query that did not run is a FAILED extraction and never an absence. THE FIX IS TO OPERATE THE CONTROL THAT OWNS THE VALUE: select the named window, or select 'Custom Date Range' — which is what ENABLES the text boxes — and then type into them. A browser at rung 6 finds this in one step because it refuses to click a disabled element and says so; a hand-built POST cannot find it at all, because a disabled input is still serialisable and still ignored."
       },
       "outcomes": [
         {
@@ -2810,7 +2810,7 @@
         }
       ],
       "subBranches": [],
-      "origin": "generalised 2026-08-28 from the Novus walk, where eight windows returned zero and the number was worth nothing until the same code read thirty rows over a wider window. It is the retrieval-side twin of RULING 100.",
+      "origin": "generalised 2026-08-28 from the Novus walk, where eight windows returned zero and the number was worth nothing until the same code read thirty rows over a wider window. It is the retrieval-side twin of the rule that a zero-row extraction is a FAILED extraction.",
       "learnedOn": "2026-08-28",
       "effort": {
         "repeats": "ONCE",
@@ -2876,7 +2876,7 @@
           "apps.azleg.gov",
           "www.azleg.gov"
         ],
-        "note": "A GOVERNOR'S RECORD HAS TWO HALVES AND THEY HAVE DIFFERENT PUBLISHERS. Executive orders come from the executive's own office and are readable. Bills signed and vetoed are legislative history, and in Arizona they live in the legislature's bill-status application at apps.azleg.gov, whose robots.txt is 29 bytes: 'User-agent: * / Disallow: /'. Read 2026-08-28. That is a PERMISSION verdict and not a wall — no client variation changes it, and varying the client to defeat a published rule is circumvention rather than hunting (RULING 148: a disallow is never re-walked on a clock). WHAT REMAINS ELIGIBLE: www.azleg.gov is ALLOWED with Crawl-delay 120 and named disallows (/DocumentsForBill.asp, /FormatDocument.asp, /ExecutiveNominationsByNominee.asp, /search/), so the legacy site is a live branch that was NOT walked here and is recorded so the next session starts from the permission rather than from a guess. The other eligible branches are the executive office's own announcements of bill action, the Secretary of State's chaptered-laws publication, and a public-records request. THE CONSEQUENCE FOR ANY ANSWER BUILT ON THE HALF WE HAVE: it must NAME the missing half. Six executive orders presented without saying vetoes are absent reads as a complete account of a governor's year, which is an absence asserted by omission."
+        "note": "A GOVERNOR'S RECORD HAS TWO HALVES AND THEY HAVE DIFFERENT PUBLISHERS. Executive orders come from the executive's own office and are readable. Bills signed and vetoed are legislative history, and in Arizona they live in the legislature's bill-status application at apps.azleg.gov, whose robots.txt is 29 bytes: 'User-agent: * / Disallow: /'. Read 2026-08-28. That is a PERMISSION verdict and not a wall — no client variation changes it, and varying the client to defeat a published rule is circumvention rather than hunting (a disallow is never re-walked on a clock). WHAT REMAINS ELIGIBLE: www.azleg.gov is ALLOWED with Crawl-delay 120 and named disallows (/DocumentsForBill.asp, /FormatDocument.asp, /ExecutiveNominationsByNominee.asp, /search/), so the legacy site is a live branch that was NOT walked here and is recorded so the next session starts from the permission rather than from a guess. The other eligible branches are the executive office's own announcements of bill action, the Secretary of State's chaptered-laws publication, and a public-records request. THE CONSEQUENCE FOR ANY ANSWER BUILT ON THE HALF WE HAVE: it must NAME the missing half. Six executive orders presented without saying vetoes are absent reads as a complete account of a governor's year, which is an absence asserted by omission."
       },
       "outcomes": [
         {
@@ -3013,7 +3013,7 @@
           "legistar"
         ],
         "publishers": [],
-        "note": "A READER SAYING 'THE MEETINGS ARE MISSING' IS A CLAIM ABOUT A SURFACE, AND IT HAS TWO COMPLETELY DIFFERENT CAUSES THAT LOOK IDENTICAL. Either rows are being lost between the source and the screen, or the source never had them. THE CHEAP DISCRIMINATOR RUNS FIRST AND IS ALREADY WRITTEN DOWN: the snapshot records fetched, normalized and drops-by-reason per source. If fetched equals normalized and the drops are accounted, no row was lost and the pipeline is not the suspect — which is a strictly stronger statement than 'the code looks right'. THEN ASK THE PRIMARY SOURCE THE SAME QUESTION THE ADAPTER ASKED, by hand, over the same window: if the API returns what the snapshot holds, the adapter is exonerated by observation rather than by inspection. Only then is the question about the publisher, and only then is it worth hunting other routes. Doing this in the other order costs a session: it is possible to read an adapter for an hour and learn nothing that one query would have settled. NOTE THE TRAP IN THE OTHER DIRECTION TOO — a reconciled denominator that is missing required source records is still a wrong result (RULING 100). Reconciling proves nothing was DROPPED; it never proves enough was ASKED FOR."
+        "note": "A READER SAYING 'THE MEETINGS ARE MISSING' IS A CLAIM ABOUT A SURFACE, AND IT HAS TWO COMPLETELY DIFFERENT CAUSES THAT LOOK IDENTICAL. Either rows are being lost between the source and the screen, or the source never had them. THE CHEAP DISCRIMINATOR RUNS FIRST AND IS ALREADY WRITTEN DOWN: the snapshot records fetched, normalized and drops-by-reason per source. If fetched equals normalized and the drops are accounted, no row was lost and the pipeline is not the suspect — which is a strictly stronger statement than 'the code looks right'. THEN ASK THE PRIMARY SOURCE THE SAME QUESTION THE ADAPTER ASKED, by hand, over the same window: if the API returns what the snapshot holds, the adapter is exonerated by observation rather than by inspection. Only then is the question about the publisher, and only then is it worth hunting other routes. Doing this in the other order costs a session: it is possible to read an adapter for an hour and learn nothing that one query would have settled. NOTE THE TRAP IN THE OTHER DIRECTION TOO — a reconciled denominator that is missing required source records is still a wrong result. Reconciling proves nothing was DROPPED; it never proves enough was ASKED FOR."
       },
       "outcomes": [
         {
@@ -3392,7 +3392,7 @@
           "legistar"
         ],
         "publishers": [],
-        "note": "THE CORRECTION, AND IT IS AN ACCOUNTING LESSON RATHER THAN A RETRIEVAL ONE. 'fetched 16, normalized 16, drops accounted' is a strong, true statement about ONE ROUTE'S ANSWER: nothing between that source and the screen was dropped. It is not a statement about the body's calendar, and the two get confused because the reconciliation feels like a proof and there is nothing else in view to compare it against. THE FAILURE MODE, OBSERVED: a session read a per-source denominator that reconciled exactly, queried the primary API by hand over the same window, got the same answer, and recorded the snapshot as 'complete for the window' — then inferred from the API's silence a fact about the government (that it publishes September only as a recurring rule). Every measurement in that chain was correct; the inference was false, and the portal published all three sittings individually. THE DISCRIMINATOR THAT IS MISSING FROM A RECONCILED DENOMINATOR IS A SECOND ROUTE. Until a second independent route has been asked the same question, a reconciled count has a denominator of ONE ROUTE'S OPINION, and the honest sentence is 'this route returned N and nothing was lost', never 'there are N'. THE CHEAP SECOND ROUTE for a vendor-backed body is the vendor's own web UI (see vendor-api-and-vendor-web-ui-are-different-records); for a body's own site it is the sitemap. RULING 100 already says a partial that reconciles is still a wrong answer — this is that ruling meeting a real reconciliation and losing."
+        "note": "THE CORRECTION, AND IT IS AN ACCOUNTING LESSON RATHER THAN A RETRIEVAL ONE. 'fetched 16, normalized 16, drops accounted' is a strong, true statement about ONE ROUTE'S ANSWER: nothing between that source and the screen was dropped. It is not a statement about the body's calendar, and the two get confused because the reconciliation feels like a proof and there is nothing else in view to compare it against. THE FAILURE MODE, OBSERVED: a session read a per-source denominator that reconciled exactly, queried the primary API by hand over the same window, got the same answer, and recorded the snapshot as 'complete for the window' — then inferred from the API's silence a fact about the government (that it publishes September only as a recurring rule). Every measurement in that chain was correct; the inference was false, and the portal published all three sittings individually. THE DISCRIMINATOR THAT IS MISSING FROM A RECONCILED DENOMINATOR IS A SECOND ROUTE. Until a second independent route has been asked the same question, a reconciled count has a denominator of ONE ROUTE'S OPINION, and the honest sentence is 'this route returned N and nothing was lost', never 'there are N'. THE CHEAP SECOND ROUTE for a vendor-backed body is the vendor's own web UI (see vendor-api-and-vendor-web-ui-are-different-records); for a body's own site it is the sitemap. The rule already says a partial that reconciles is still a wrong answer — this is that ruling meeting a real reconciliation and losing."
       },
       "outcomes": [
         {
@@ -3404,7 +3404,7 @@
         }
       ],
       "subBranches": [],
-      "origin": "generalised 2026-08-28 from correcting a conclusion recorded earlier the same day by a session that had quoted RULING 100 in the very route where it then called one route's answer complete. That is the evidence that the written rule is not enough on its own and the discriminator has to be a habit: ask a second route before writing the word.",
+      "origin": "generalised 2026-08-28 from correcting a conclusion recorded earlier the same day by a session that had quoted the failed-extraction rule in the very route where it then called one route's answer complete. That is the evidence that the written rule is not enough on its own and the discriminator has to be a habit: ask a second route before writing the word.",
       "learnedOn": "2026-08-28",
       "effort": {
         "repeats": "ONCE",
@@ -3615,7 +3615,7 @@
         "repeats": "ONCE",
         "execution": "MACHINE",
         "discovery": "NEW_METHOD",
-        "note": "Changes to lib/hunt/portrait-pick.ts and lib/photos/staged.ts — the shared picker and the one door into the review, so no later hunt can be missing them (RULING 103)."
+        "note": "Changes to lib/hunt/portrait-pick.ts and lib/photos/staged.ts — the shared picker and the one door into the review, so no later hunt can be missing them."
       },
       "learnedAtVersion": 52,
       "kind": "RETRIEVAL"
@@ -3825,7 +3825,7 @@
           "boardbook"
         ],
         "publishers": [],
-        "note": "TWO FACTS, AND THE SECOND ONE IS THE TRAP. /Public/Organization/{id} returns the ENTIRE archive on one page with no pagination — read 2026-08-29 on meetings.boardbook.org for Pima County JTED No. 11, yielding 267 meetings spanning 2009-2026 with agendas as HTML — and /Public/DownloadAgenda/{slug}?meeting={id} returned a verified 12.4 MB packet PDF. robots.txt answers HTTP 404, so NO_ROBOTS: the host publishes no restriction. THE TRAP: /Public/Minutes/ is a CLIENT-RENDERED shell that strips to 757 bytes of chrome. A parser pointed at it returns nothing and, unless the zero is treated as a failed extraction (RULING 100), reports every meeting in the archive as having empty minutes — an absence manufactured from a rendering choice. The minutes are reachable through the packet and through the 302 on /Documents/FileViewerOrPublic/, neither of which was walked. BoardBook is operated by Sparq Data Solutions Inc. and its market is school districts and JTEDs nationally."
+        "note": "TWO FACTS, AND THE SECOND ONE IS THE TRAP. /Public/Organization/{id} returns the ENTIRE archive on one page with no pagination — read 2026-08-29 on meetings.boardbook.org for Pima County JTED No. 11, yielding 267 meetings spanning 2009-2026 with agendas as HTML — and /Public/DownloadAgenda/{slug}?meeting={id} returned a verified 12.4 MB packet PDF. robots.txt answers HTTP 404, so NO_ROBOTS: the host publishes no restriction. THE TRAP: /Public/Minutes/ is a CLIENT-RENDERED shell that strips to 757 bytes of chrome. A parser pointed at it returns nothing and, unless the zero is treated as a failed extraction, reports every meeting in the archive as having empty minutes — an absence manufactured from a rendering choice. The minutes are reachable through the packet and through the 302 on /Documents/FileViewerOrPublic/, neither of which was walked. BoardBook is operated by Sparq Data Solutions Inc. and its market is school districts and JTEDs nationally."
       },
       "outcomes": [
         {
@@ -3884,7 +3884,7 @@
           "pimajted.org",
           "www.pimajted.org"
         ],
-        "note": "A HOST IS AN ORIGIN, NOT A GOVERNMENT, AND THE TWO FORMS ARE TWO ORIGINS. Read 2026-08-29: www.pimajted.org answers HTTP 403 with a Cloudflare interstitial titled 'Just a moment...' to four clients, while the apex pimajted.org answers 200, carries robots.txt with 'Disallow: /wp-admin/' only, and serves the entire site including a 267-meeting archive. A session that resolved the www form, met the interstitial and stopped would have recorded a body covering 36 of 44 sampled ZIP points as BLOCKED_CURRENTLY. Under RULING 182 the 403 is TRANSPORT and permission on that origin is CANNOT_TELL; it is never a permission verdict and never a fact about the body. THE GENERAL RULE: try both the apex and the www form before recording any host-level disposition, and record the disposition against the ORIGIN that produced it rather than against the government."
+        "note": "A HOST IS AN ORIGIN, NOT A GOVERNMENT, AND THE TWO FORMS ARE TWO ORIGINS. Read 2026-08-29: www.pimajted.org answers HTTP 403 with a Cloudflare interstitial titled 'Just a moment...' to four clients, while the apex pimajted.org answers 200, carries robots.txt with 'Disallow: /wp-admin/' only, and serves the entire site including a 267-meeting archive. A session that resolved the www form, met the interstitial and stopped would have recorded a body covering 36 of 44 sampled ZIP points as BLOCKED_CURRENTLY. The 403 is TRANSPORT and permission on that origin is CANNOT_TELL; it is never a permission verdict and never a fact about the body. THE GENERAL RULE: try both the apex and the www form before recording any host-level disposition, and record the disposition against the ORIGIN that produced it rather than against the government."
       },
       "outcomes": [
         {
@@ -3896,7 +3896,7 @@
         }
       ],
       "subBranches": [],
-      "origin": "conceived 2026-08-29 when the JTED's published URL carried the www form and answered 403. The apex was tried because RULING 182 requires varying the client and the route before converting a refusal into a verdict, and the origin turned out to be the variable that mattered rather than the client.",
+      "origin": "conceived 2026-08-29 when the JTED's published URL carried the www form and answered 403. The apex was tried because the rules require varying the client and the route before converting a refusal into a verdict, and the origin turned out to be the variable that mattered rather than the client.",
       "learnedOn": "2026-08-29",
       "claims": [
         {
@@ -4040,7 +4040,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "A 401 ON THE ONE ROUTE ANYBODY KNOWS IS NOT THE PUBLICATION'S ANSWER. Pima County's campaign-finance filing BODIES answer HTTP 401 at documents/getdocumentfiling/{id} to every client tried — bare curl, a browser user agent, Origin and Referer set, and the trailing-slash form the app itself calls. A prior session correctly recorded that as a wall on a route rather than a statement about the filing, and stopped. On 2026-08-29 the app's own JavaScript bundle was read and all 59 API routes enumerated from it (RULING 207: one route failing never bounds the route universe). /advancedsearch/contributions/{customerId} answers 500 rather than 401, and the ASP.NET stack trace NAMES the cause — ContributionsSearch calling CurrentUserOrWebSiteUserAsync then GetSubdomain(url) throwing on a null URI. The API has its own anonymous WEBSITE-USER path and needed only the tenant subdomain, which it reads from the Origin header. With Origin set it answers HTTP 200 at 1,090,303 bytes: 900 contribution rows and 584 distribution rows, with no credential, no login and no bypass — the identical request the county's own public app makes. THE PORTABLE METHOD: when a known endpoint refuses, read the SPA bundle for the route table before concluding anything, and read a 500's stack trace as a description of what the server wanted rather than as a failure. THE PORTABLE CAUTION: 900 was proved not to be a cap by partitioning against the server (2025: 502 = 502, 2026: 368 = 368), because a truncated result cannot partition consistently."
+        "note": "A 401 ON THE ONE ROUTE ANYBODY KNOWS IS NOT THE PUBLICATION'S ANSWER. Pima County's campaign-finance filing BODIES answer HTTP 401 at documents/getdocumentfiling/{id} to every client tried — bare curl, a browser user agent, Origin and Referer set, and the trailing-slash form the app itself calls. A prior session correctly recorded that as a wall on a route rather than a statement about the filing, and stopped. On 2026-08-29 the app's own JavaScript bundle was read and all 59 API routes enumerated from it (one route failing never bounds the route universe). /advancedsearch/contributions/{customerId} answers 500 rather than 401, and the ASP.NET stack trace NAMES the cause — ContributionsSearch calling CurrentUserOrWebSiteUserAsync then GetSubdomain(url) throwing on a null URI. The API has its own anonymous WEBSITE-USER path and needed only the tenant subdomain, which it reads from the Origin header. With Origin set it answers HTTP 200 at 1,090,303 bytes: 900 contribution rows and 584 distribution rows, with no credential, no login and no bypass — the identical request the county's own public app makes. THE PORTABLE METHOD: when a known endpoint refuses, read the SPA bundle for the route table before concluding anything, and read a 500's stack trace as a description of what the server wanted rather than as a failure. THE PORTABLE CAUTION: 900 was proved not to be a cap by partitioning against the server (2025: 502 = 502, 2026: 368 = 368), because a truncated result cannot partition consistently."
       },
       "outcomes": [
         {
@@ -4052,7 +4052,7 @@
         }
       ],
       "subBranches": [],
-      "origin": "conceived 2026-08-29 under RULING 205, which forbids a route disposition from closing a record obligation. The 401 had already been recorded honestly and the obligation left open; this is what working it rather than accepting it produced.",
+      "origin": "conceived 2026-08-29 under the rule that forbids a route disposition from closing a record obligation. The 401 had already been recorded honestly and the obligation left open; this is what working it rather than accepting it produced.",
       "learnedOn": "2026-08-29",
       "effort": {
         "repeats": "PER_VENDOR",
@@ -4093,7 +4093,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "THE MISTAKE THIS PREVENTS IS RECORDING A PERMISSION QUESTION AS UNANSWERABLE WHEN ONLY OUR CLIENT WAS REFUSED. Under RULING 148 an unanswered permission question refuses the walk, so a robots.txt that 403s does not merely delay a route — it closes the whole fact class behind it. cfs.sos.nh.gov and www.sos.nh.gov were both recorded that way on 2026-08-19 and 2026-08-26. MEASURED 2026-08-31: https://www.sos.nh.gov/robots.txt answers HTTP 200 (2103 bytes, a standard Drupal file) to a bare node fetch, and HTTP 403 to the identical request whose User-Agent carries this project's name. Every Disallow in it is a CMS internal (/core/, /profiles/, /admin/, /user/login, /search/, README files); NOTHING disallows elections, campaign finance or the lobbyist registry. THE PROCEDURE: before recording a permission question as UNANSWERED, re-read robots.txt with the identification REMOVED from the User-Agent and carried in From: and X-Purpose: instead. This is the identified-agent-refused finding applied to the permission read itself rather than to the data fetch, and it is the read that gates everything else. SECOND FINDING, recorded so it is not misread later: cfs.sos.nh.gov publishes no robots.txt — it returns its Angular shell for /robots.txt byte-identically to a nonsense path. That is an absence of published restrictions, NOT a 200 that grants permission; a SPA catch-all is not a rule."
+        "note": "THE MISTAKE THIS PREVENTS IS RECORDING A PERMISSION QUESTION AS UNANSWERABLE WHEN ONLY OUR CLIENT WAS REFUSED. An unanswered permission question refuses the walk, so a robots.txt that 403s does not merely delay a route — it closes the whole fact class behind it. cfs.sos.nh.gov and www.sos.nh.gov were both recorded that way on 2026-08-19 and 2026-08-26. MEASURED 2026-08-31: https://www.sos.nh.gov/robots.txt answers HTTP 200 (2103 bytes, a standard Drupal file) to a bare node fetch, and HTTP 403 to the identical request whose User-Agent carries this project's name. Every Disallow in it is a CMS internal (/core/, /profiles/, /admin/, /user/login, /search/, README files); NOTHING disallows elections, campaign finance or the lobbyist registry. THE PROCEDURE: before recording a permission question as UNANSWERED, re-read robots.txt with the identification REMOVED from the User-Agent and carried in From: and X-Purpose: instead. This is the identified-agent-refused finding applied to the permission read itself rather than to the data fetch, and it is the read that gates everything else. SECOND FINDING, recorded so it is not misread later: cfs.sos.nh.gov publishes no robots.txt — it returns its Angular shell for /robots.txt byte-identically to a nonsense path. That is an absence of published restrictions, NOT a 200 that grants permission; a SPA catch-all is not a rule."
       },
       "outcomes": [
         {
@@ -4101,7 +4101,7 @@
           "walkedOn": "2026-08-31",
           "rows": 2,
           "outcome": "YIELDED",
-          "note": "Permission ANSWERED for both NH SOS hosts: www.sos.nh.gov publishes a robots.txt that forbids no civic path, and cfs.sos.nh.gov publishes none at all. The walk that RULING 148 had refused is permitted."
+          "note": "Permission ANSWERED for both NH SOS hosts: www.sos.nh.gov publishes a robots.txt that forbids no civic path, and cfs.sos.nh.gov publishes none at all. The walk that had been refused is permitted."
         }
       ],
       "subBranches": [],
@@ -4312,7 +4312,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "THE MISTAKE THIS PREVENTS IS LETTING A MISSING CLIENT READ AS A MISSING RECORD. Arizona's own Bulk Filing Guide names ftp://ftp.azsos.gov/cfsdata2/; it was walked 2026-08-26, is anonymous, and carries 8,828 campaign committees and the state's 109 filing jurisdictions (1 state, 15 counties, 93 cities and towns). Under RULING 166 that is rung ZERO and it outranks every page-by-page route beneath it, including the SeeTheMoney endpoint that the same session did walk. IT IS STILL UNWALKED FOR THIS PURPOSE, and the reason is entirely on our side: node ships no FTP client and this repository has not written one. THE PROCEDURE: register it as a route anyway, with an opening of NOT_MACHINE_EXECUTABLE naming the missing client, so an unattended cycle disposes REQUIRES_NEW_ADAPTER on a clock instead of the route being forgotten. REQUIRES_NEW_ADAPTER is absent from TERMINAL_DISPOSITIONS and from the discharging set, so the debt accrues, the next-due stands, and the digest names the adapter every cycle until somebody writes it. A route nobody can execute and nobody is reminded of is indistinguishable from a route nobody knows about."
+        "note": "THE MISTAKE THIS PREVENTS IS LETTING A MISSING CLIENT READ AS A MISSING RECORD. Arizona's own Bulk Filing Guide names ftp://ftp.azsos.gov/cfsdata2/; it was walked 2026-08-26, is anonymous, and carries 8,828 campaign committees and the state's 109 filing jurisdictions (1 state, 15 counties, 93 cities and towns). That is rung ZERO and it outranks every page-by-page route beneath it, including the SeeTheMoney endpoint that the same session did walk. IT IS STILL UNWALKED FOR THIS PURPOSE, and the reason is entirely on our side: node ships no FTP client and this repository has not written one. THE PROCEDURE: register it as a route anyway, with an opening of NOT_MACHINE_EXECUTABLE naming the missing client, so an unattended cycle disposes REQUIRES_NEW_ADAPTER on a clock instead of the route being forgotten. REQUIRES_NEW_ADAPTER is absent from TERMINAL_DISPOSITIONS and from the discharging set, so the debt accrues, the next-due stands, and the digest names the adapter every cycle until somebody writes it. A route nobody can execute and nobody is reminded of is indistinguishable from a route nobody knows about."
       },
       "outcomes": [
         {
@@ -4581,7 +4581,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "THE MISTAKE THIS PREVENTS IS TREATING 'ONLY A HUMAN CAN DO THIS' AS 'THIS IS DONE'. RULING 205's third close is PUBLIC RECORD STILL OWED - HUMAN/OFFLINE ACCESS REQUIRED, and it keeps the obligation LIVE. A route in that state that exists only as a sentence in a document is a route nobody is reminded of. THE PROCEDURE: register it as a scheduled route whose opening is NOT_MACHINE_EXECUTABLE with the human act named, so every unattended cycle disposes REQUIRES_NEW_ADAPTER, accrues debt against it, keeps a persisted next-due, and prints it in the digest the owner reads. It can never be discharged by a machine, which is the point: the clock is what carries it to a person. RULING 215 removed external workflow execution from this architecture, so no agent sends the request - the digest asks the owner to. New Hampshire's Department of State public-records path (rung 13) was named as the next session's start on 2026-08-19 and is still unwalked on 2026-08-31."
+        "note": "THE MISTAKE THIS PREVENTS IS TREATING 'ONLY A HUMAN CAN DO THIS' AS 'THIS IS DONE'. The third close is PUBLIC RECORD STILL OWED - HUMAN/OFFLINE ACCESS REQUIRED, and it keeps the obligation LIVE. A route in that state that exists only as a sentence in a document is a route nobody is reminded of. THE PROCEDURE: register it as a scheduled route whose opening is NOT_MACHINE_EXECUTABLE with the human act named, so every unattended cycle disposes REQUIRES_NEW_ADAPTER, accrues debt against it, keeps a persisted next-due, and prints it in the digest the owner reads. It can never be discharged by a machine, which is the point: the clock is what carries it to a person. External workflow execution was removed from this architecture, so no agent sends the request - the digest asks the owner to. New Hampshire's Department of State public-records path (rung 13) was named as the next session's start on 2026-08-19 and is still unwalked on 2026-08-31."
       },
       "outcomes": [
         {
@@ -4634,7 +4634,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "THE MISTAKE THIS PREVENTS IS READING A WELL-FORMED EMPTY ANSWER AS AN ABSENCE. RULING 100's warning is usually described against a MALFORMED reply — seethemoney.az.gov returns a two-byte empty string for a bad DataTables body, which is obviously wrong on sight. The dangerous case is the WELL-FORMED one: /Reporting/GetNEWDetailedTableData answers HTTP 200 with a complete DataTables envelope, draw and recordsFiltered present, and recordsTotal 0. Nothing about it looks like a failure, and a session that recorded it as 'this committee has no transactions' would have written a false fact about a government. MEASURED 2026-08-31: the endpoint needs BOTH the page's own Name=1~<id> form AND a separate entityId=<id> query parameter. With Name alone it returns the well-formed zero; with entityId it returns the committee's itemised ledger — 229 income transactions for entity 102162. THE PROCEDURE: when an endpoint returns a well-formed zero for a subject you have independent reason to believe exists, do not record the zero. Enumerate every identifier-shaped parameter the application's own code sets — GetParameters() in the bundle here builds Name, OfficeID, PartyID, transactionDispositionID AND entityId — and send them all before concluding. A parameter the SPA sets from a variable rather than from the URL hash is the one a hash-replay will miss."
+        "note": "THE MISTAKE THIS PREVENTS IS READING A WELL-FORMED EMPTY ANSWER AS AN ABSENCE. The failed-extraction warning is usually described against a MALFORMED reply — seethemoney.az.gov returns a two-byte empty string for a bad DataTables body, which is obviously wrong on sight. The dangerous case is the WELL-FORMED one: /Reporting/GetNEWDetailedTableData answers HTTP 200 with a complete DataTables envelope, draw and recordsFiltered present, and recordsTotal 0. Nothing about it looks like a failure, and a session that recorded it as 'this committee has no transactions' would have written a false fact about a government. MEASURED 2026-08-31: the endpoint needs BOTH the page's own Name=1~<id> form AND a separate entityId=<id> query parameter. With Name alone it returns the well-formed zero; with entityId it returns the committee's itemised ledger — 229 income transactions for entity 102162. THE PROCEDURE: when an endpoint returns a well-formed zero for a subject you have independent reason to believe exists, do not record the zero. Enumerate every identifier-shaped parameter the application's own code sets — GetParameters() in the bundle here builds Name, OfficeID, PartyID, transactionDispositionID AND entityId — and send them all before concluding. A parameter the SPA sets from a variable rather than from the URL hash is the one a hash-replay will miss."
       },
       "outcomes": [
         {
@@ -4642,7 +4642,7 @@
           "walkedOn": "2026-08-31",
           "rows": 58,
           "outcome": "YIELDED",
-          "note": "58 Arizona committees' itemised income and expense ledgers read and aggregated, which is what licensed data/states/az/funding/state-money-az-2026.json. Aggregates only: the itemised rows carry contributor name, occupation and employer (RULING 167) and were never persisted."
+          "note": "58 Arizona committees' itemised income and expense ledgers read and aggregated, which is what licensed data/states/az/funding/state-money-az-2026.json. Aggregates only: the itemised rows carry contributor name, occupation and employer and were never persisted."
         }
       ],
       "subBranches": [],
@@ -5084,7 +5084,7 @@
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
-        "note": "THE DISCIPLINE. RULING 283 makes a cutover disable the old writer, so a replacement that re-finds the dates but loses a place, a cancellation or a sitting turns a permission fix into a false claim on a reader's screen. Diff the candidate against the held partition sitting by sitting and fact by fact (time, place, virtual/in-person, cancellation, agenda link), and cut over only where the permitted route is a superset. Measured 2026-09-23: Pima Community College 7/7 sittings with every place stated and one corrected → WIRED; Sunnyside 12/12 dates but 1/12 places → HELD; Tucson Unified 15/18 sittings, a lost CANCELLED annotation and a TBD place → HELD. The held partition is read read-only; nothing is fetched from the refused host to make the comparison. A permitted page can also be MORE current than the platform (PCC Aug 10 virtual, TUSD Jul 15 Zoom): the sitting's own most specific statement governs place, never the standing sentence."
+        "note": "THE DISCIPLINE. A cutover disables the old writer, so a replacement that re-finds the dates but loses a place, a cancellation or a sitting turns a permission fix into a false claim on a reader's screen. Diff the candidate against the held partition sitting by sitting and fact by fact (time, place, virtual/in-person, cancellation, agenda link), and cut over only where the permitted route is a superset. Measured 2026-09-23: Pima Community College 7/7 sittings with every place stated and one corrected → WIRED; Sunnyside 12/12 dates but 1/12 places → HELD; Tucson Unified 15/18 sittings, a lost CANCELLED annotation and a TBD place → HELD. The held partition is read read-only; nothing is fetched from the refused host to make the comparison. A permitted page can also be MORE current than the platform (PCC Aug 10 virtual, TUSD Jul 15 Zoom): the sitting's own most specific statement governs place, never the standing sentence."
       },
       "outcomes": [
         {

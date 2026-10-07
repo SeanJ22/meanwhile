@@ -201,7 +201,7 @@ test("the preflight firewall supplies both production contract registries instea
 const BEFORE_INSTALL: ReadonlyArray<{ script: string; why: string }> = [
   {
     script: "scripts/preflight.mjs",
-    why: "RULING 279's cheap tier — it answers from the tree before anything is bought",
+    why: "the cheap tier — it answers from the tree before anything is bought",
   },
   {
     script: "scripts/pr-ci-tier.mjs",

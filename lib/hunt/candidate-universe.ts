@@ -292,7 +292,7 @@ export function deriveCandidateUniverse(input: {
     _note: [
       "DERIVED VIEW — production derives this in memory from proof-validated canonical projections.",
       "",
-      "RULING 229: this is the ACQUISITION DENOMINATOR for candidate enrichment in this state. It is",
+      "This is the ACQUISITION DENOMINATOR for candidate enrichment in this state. It is",
       "keyed to the STATE and the OFFICE, never to a ZIP, a county or a pilot ballot. `pilotIds` keeps",
       "the join to the certified ballots this identity was seen on, so a reader projection is a JOIN and",
       "never a rename.",

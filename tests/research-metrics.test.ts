@@ -110,7 +110,7 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
   assert.equal(ordering.inputs.pilotJurisdictions, undefined, "no pilot place is ahead of the line");
   assert.deepEqual(ordering.inputs.universeProviders, UNIVERSE_PROVIDERS);
   assert.match(ordered[0].why, /readerImpactAt/);
-  assert.match(ordered[1].why, /RULING 229/);
+  assert.match(ordered[1].why, /source-universe denominator/);
   assert.match(ordered[4].why, /long tail/);
   // Retired ordering fields on the inputs cannot influence the band.
   const legacyMutation = {

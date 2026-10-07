@@ -1091,7 +1091,7 @@ export async function createPgRepositories(
       "createPgRepositories requires an explicit connection string. There is deliberately no " +
         "default: a control plane that can be opened by accident is one whose contents nobody " +
         "can account for, and a default here could point at the SERVING database, which " +
-        "RULING 220 separates on purpose.",
+        "is kept separate on purpose.",
     );
   }
   installDatabaseTransferCounter();

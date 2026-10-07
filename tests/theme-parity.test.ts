@@ -8,7 +8,7 @@ import { themeParityGaps, isLiteralColor } from "../lib/design/theme-parity.ts";
 const ROOT = join(import.meta.dirname, "..");
 const GLOBALS = join(ROOT, "app", "globals.css");
 
-test("the parity classifier reads literal vs derived correctly (RULING 110)", () => {
+test("the parity classifier reads literal vs derived correctly", () => {
   assert.equal(isLiteralColor("#1a1a2e"), true);
   assert.equal(isLiteralColor("rgba(0,0,0,0.3)"), true);
   assert.equal(isLiteralColor("var(--link)"), false, "an alias inherits theme variance");

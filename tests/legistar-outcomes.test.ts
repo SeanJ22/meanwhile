@@ -509,7 +509,7 @@ test("provenance names the endpoint each record was actually read from", () => {
   assert.doesNotMatch(rollCall.provenance.sourceOrg, /granicus|legistar/i);
 });
 
-test("RULING 107: a read that returned rows mints the day it was read", () => {
+test("a read that returned rows mints the day it was read", () => {
   const stamp = receiptFor(
     "https://webapi.legistar.com/v1/pima/events/1825/eventitems",
     ITEMS_1825,
@@ -519,7 +519,7 @@ test("RULING 107: a read that returned rows mints the day it was read", () => {
   assert.equal(toAgendaRecords(ITEMS_1825, CONTEXT)[0].provenance.readOn, "2026-08-29");
 });
 
-test("RULING 107 seeded failure: a zero-row reply mints NO date at all", () => {
+test("seeded failure: a zero-row reply mints NO date at all", () => {
   // `JSON.stringify([])` is two bytes of nothing and must never date a record.
   const stamp = receiptFor(
     "https://webapi.legistar.com/v1/pima/events/9999/eventitems",
@@ -530,7 +530,7 @@ test("RULING 107 seeded failure: a zero-row reply mints NO date at all", () => {
   assert.notEqual(stamp, "2026-08-29");
 });
 
-test("RULING 107 positive control: an empty sitting carries a stale stamp, a real one does not", async () => {
+test("positive control: an empty sitting carries a stale stamp, a real one does not", async () => {
   const empty = await collectEventOutcomes("pima", 9999, {
     sourceOrg: "Pima County Clerk of the Board",
     fetchItems: async () => [],

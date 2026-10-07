@@ -470,7 +470,7 @@ if (introduced.length > 0) {
 const connection = process.env[VARIABLE];
 if (!connection) {
   complain(`\ndb:gate: COULD NOT TELL — ${VARIABLE} is not set in this environment.`);
-  complain("  An unset credential is not a passing schema check (RULING 24).");
+  complain("  An unset credential is not a passing schema check.");
   complain(
     "  In CI this is a repository secret. Add WTP_PRODUCTION_DATABASE_URL_READONLY under " +
       "Settings > Secrets and variables > Actions; the value is the read-only production string " +

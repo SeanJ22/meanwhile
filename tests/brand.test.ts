@@ -112,7 +112,7 @@ test("the adapters that lost their copy still SEND the repo-derived token", () =
     assert.doesNotMatch(
       source,
       /function userAgent\(\)/,
-      `${path} has grown its own copy back — four copies is what RULING 103 removed`,
+      `${path} has grown its own copy back — the shared User-Agent replaced four copies`,
     );
   }
 });

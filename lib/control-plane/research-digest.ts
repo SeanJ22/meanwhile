@@ -10,7 +10,7 @@ const money = (v: number | null | undefined): string => (v === null || v === und
 export function researchDigestLines(m: ResearchMetrics): string[] {
   const c = m.capacity;
   const lines: string[] = [
-    "RESEARCH METRICS (RULING 229 ordering · RULING 244 efficiency)",
+    "RESEARCH METRICS (ordering · efficiency)",
     `  capacity           ${c.attemptsPerDayAtCap === null ? "UNMEASURED — no measured Scout Attempt in the window" : `${c.attemptsPerDayAtCap} Attempt(s)/day at the $${c.ceilingUsd} ceiling`}` +
       ` · mean ${usd(c.meanUsdPerAttempt)}/Attempt over ${c.denominator}`,
   ];

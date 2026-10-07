@@ -89,7 +89,7 @@ describe("the questionnaire store touches no sold store — asserted BY NAME", (
   });
 });
 
-describe("RULING 112 — verbatim, swept by SHAPE", () => {
+describe("verbatim, swept by SHAPE", () => {
   /** The shapes a truncation or a summarisation would take: a call that shortens text. */
   const SHAPES: [string, RegExp][] = [
     /*

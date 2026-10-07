@@ -331,7 +331,7 @@ test("A-007 · an unreadable zone is counted as unplaceableInTime, not dropped s
   assert.equal(
     result.drops.unplaceableInTime,
     1,
-    "and the record must say so — a silent skip is the shape RULING 43 exists for",
+    "and the record must say so — a silent skip loses a meeting without a trace",
   );
   assert.equal(result.accounting.outcome, "CONSERVED");
 });

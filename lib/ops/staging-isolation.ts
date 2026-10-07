@@ -191,7 +191,7 @@ export function evaluateIsolation(input: {
       false,
       "DATABASE_URL could not be classified, so nothing establishes that this branch " +
         "deploy is NOT pointed at production. An unverifiable staging database is refused; a " +
-        "could-not-tell is never a pass (RULING 24).",
+        "could-not-tell is never a pass.",
     );
   }
 

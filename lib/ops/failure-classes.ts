@@ -37,7 +37,7 @@ export const FAILURE_CLASSES: readonly FailureClass[] = [
       "The gate needs Chromium and could not find it where it looked. Check the install step's own " +
       "log for the directory it wrote to and compare it against the path lib/ops/chromium-pin.ts " +
       "searches — Chrome for Testing writes chrome-linux64/chrome, the legacy layout was " +
-      "chrome-linux/chrome (RULING 113).",
+      "chrome-linux/chrome.",
     shapes: [/NO CHROMIUM INSTALLED/i, /Executable doesn't exist at/i, /browserType\.launch/i],
   },
   {
@@ -46,7 +46,7 @@ export const FAILURE_CLASSES: readonly FailureClass[] = [
       "A source's oldest serving row crossed its allowed age. Inspect that source's canonical " +
       "attempt, retry/backoff, hold, and LKG receipts in Admin; repair its source-scoped data-plane " +
       "contract. Do not refresh or revert a tracked snapshot and do not dispatch software CI.",
-    shapes: [/headroom/i, /oldest row/i, /past its RULING 53 window/i],
+    shapes: [/headroom/i, /oldest row/i],
   },
   {
     id: "credential-missing",

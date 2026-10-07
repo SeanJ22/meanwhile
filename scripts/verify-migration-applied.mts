@@ -45,7 +45,7 @@ const envName =
 const url = process.env[envName];
 if (!url) {
   console.error(`verify:migration — ${envName} is not set, so this could not be checked at all.`);
-  console.error("That is a COULD-NOT-TELL, not a pass (RULING 24).");
+  console.error("That is a COULD-NOT-TELL, not a pass.");
   process.exit(2);
 }
 

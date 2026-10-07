@@ -107,7 +107,7 @@ function findOffences(text: string): { kind: string; text: string; context: stri
 async function main(): Promise<void> {
   const base = process.env.ADMIN_SWEEP_BASE ?? "http://localhost:3100";
   if (!/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(base)) {
-    throw new Error(`admin:plain-sweep refuses ${base}: this instrument reads a LOCAL build and never production (RULING 125's rule, applied here).`);
+    throw new Error(`admin:plain-sweep refuses ${base}: this instrument reads a LOCAL build and never production.`);
   }
   const key = process.env.WTP_ADMIN_SESSION_KEY;
   if (!key) throw new Error("WTP_ADMIN_SESSION_KEY is not set, so no admin session can be minted and no admin page can be read.");

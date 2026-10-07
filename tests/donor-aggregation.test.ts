@@ -89,7 +89,7 @@ test("an individual may never render a filed name or a filed place; an organizat
   assert.equal(
     mayRenderFiledLocation({ kind: "COMMITTEE_OR_ORGANIZATION" } as ContributorGroup),
     true,
-    "the organizations-render-as-filed rule is untouched by RULING 167",
+    "the organizations-render-as-filed rule is untouched",
   );
 });
 

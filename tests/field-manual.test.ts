@@ -60,7 +60,7 @@ test("upsertEntries only grows: a re-import updates in place and never removes",
   store = upsertEntries(store, [entry({ id: "fm-a", states: ["nj"], observedAt: "2026-09-19", title: "updated" })], "2026-09-20");
   assert.equal(store.entries.length, 2, "the store grew or held, never shrank");
   const a = store.entries.find((e) => e.id === "fm-a")!;
-  assert.deepEqual(a.states, ["nh", "nj"], "jurisdictions union (RULING 61 — a route applies retroactively across states)");
+  assert.deepEqual(a.states, ["nh", "nj"], "jurisdictions union (a route applies retroactively across states)");
   assert.equal(a.title, "updated", "the fresher observation wins the scalar fields");
   assert.equal(store.updatedOn, "2026-09-20");
 });

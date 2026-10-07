@@ -327,7 +327,7 @@ export function registrationCandidate(input: {
     violations.push(
       territory
         ? `The reference lists no government in ${target.state}, and its TIGER/Line functional status does not show that none governs: a failed extraction.`
-        : `The reference lists no government in ${target.state}: a failed extraction, never a state with no government (RULING 269).`,
+        : `The reference lists no government in ${target.state}: a failed extraction, never a state with no government.`,
     );
   }
 

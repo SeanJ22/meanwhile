@@ -29,7 +29,7 @@ test("every body class has a reader label and a stated reason", () => {
   }
 });
 
-test("RULING 118 — the govern verb never attaches to an appointed-led body", () => {
+test("the govern verb never attaches to an appointed-led body", () => {
   for (const bodyClass of APPOINTED_LED) {
     assert.equal(
       governVerbMayAttach(bodyClass),
@@ -43,7 +43,7 @@ test("RULING 118 — the govern verb never attaches to an appointed-led body", (
   assert.equal(governVerbMayAttach("REGIONAL"), true);
 });
 
-test("RULING 119 — a sovereign nation is labelled as one, and the verb does not attach", () => {
+test("a sovereign nation is labelled as one, and the verb does not attach", () => {
   assert.equal(bodyClassShort("SOVEREIGN_TRIBAL"), "Sovereign nation");
   assert.equal(bodyClassLong("SOVEREIGN_TRIBAL"), "Sovereign tribal nation");
   /*
@@ -95,7 +95,7 @@ test("the instrument catches a real instance — the binary it was written for",
   assert.match(theRealThing, /bodyClass\s*===\s*"GOVERNING"\s*\?\s*"/);
 });
 
-test("RULING 119 — the three nations are named, with a federal code behind each id", () => {
+test("the three nations are named, with a federal code behind each id", () => {
   assert.equal(TRIBAL_NATIONS.length, 3);
   const names = TRIBAL_NATIONS.map((n) => n.name);
   assert.ok(names.includes("Navajo Nation"));

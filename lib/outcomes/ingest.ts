@@ -68,8 +68,8 @@ export function toPersistedSitting(input: PersistInput): PersistedSittingOutcome
     extraction = "ZERO_ROWS_FAILED";
     extractionNote =
       "The eventitems route returned ZERO rows for this sitting. A zero-row " +
-      "extraction is a FAILED extraction, never an agenda with nothing on it " +
-      "(RULING 100), so no claim is made about what was noticed or decided here.";
+      "extraction is a FAILED extraction, never an agenda with nothing on it, " +
+      "so no claim is made about what was noticed or decided here.";
   }
 
   return {

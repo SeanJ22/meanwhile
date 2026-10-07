@@ -17,7 +17,7 @@ interface Step {
 
 function workflows(): { file: string; text: string; doc: Record<string, unknown> }[] {
   const files = readdirSync(WORKFLOW_DIR).filter((f) => f.endsWith(".yml") || f.endsWith(".yaml"));
-  assert.ok(files.length > 0, "no workflow files found — this reader matched nothing (RULING 159)");
+  assert.ok(files.length > 0, "no workflow files found — this reader matched nothing");
   return files.map((f) => {
     const text = readFileSync(join(WORKFLOW_DIR, f), "utf8");
     return { file: f, text, doc: parse(text) as Record<string, unknown> };
@@ -36,7 +36,7 @@ test("PDC terminal boundary: the retired intake workflow cannot swallow or repor
   );
 });
 
-test("RULING 164: a continue-on-error step must have its outcome READ somewhere", () => {
+test("a continue-on-error step must have its outcome READ somewhere", () => {
   const offenders: string[] = [];
   let swallowable = 0;
 
@@ -60,7 +60,7 @@ test("RULING 164: a continue-on-error step must have its outcome READ somewhere"
   assert.deepEqual(offenders, [], "every continue-on-error failure must be reported by something downstream");
 });
 
-test("RULING 164: the swallowed-failure reader catches a planted one", () => {
+test("the swallowed-failure reader catches a planted one", () => {
   const planted = parse(
     [
       "name: Planted",

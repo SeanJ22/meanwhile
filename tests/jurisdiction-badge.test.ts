@@ -277,7 +277,7 @@ test("JUR-2: a failed resolution still beats everything — NO_BOUNDARY wins", (
   assert.equal(badgeFor({ ocdId: JUR2_TOWNSHIP }, null, "ZIP", new Set([JUR2_TOWNSHIP])), "NO_BOUNDARY");
 });
 
-test("JUR-2: the COULD_GOVERN wording is the RULING 71 wording, not a second one", () => {
+test("JUR-2: the COULD_GOVERN wording is the one shared wording, not a second one", () => {
   /*
    * Two wordings for one claim about one reader is how they drift. This is
    * the same sentence the ballot page's pill carries, imported rather than
@@ -313,7 +313,7 @@ test("JUR-2 third era: a centroid MISS on a zip basis does not assert NEARBY", (
   assert.equal(badgeFor(somewhereElse, atPoint, "ZIP", partial), "COULD_GOVERN");
 });
 
-test("JUR-2 third era: RULING 71 survives — a HIT on a zip basis still GOVERNS", () => {
+test("JUR-2 third era: a HIT on a zip basis still GOVERNS", () => {
   /*
    * A county, a regional district or a state covering the WHOLE zip does not
    * become uncertain because the zip crosses a municipal line, and a pill on

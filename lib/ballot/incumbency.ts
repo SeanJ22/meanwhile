@@ -116,7 +116,7 @@ export interface ContestIncumbencyInput {
 
 export const NOT_ELECTED: IncumbencyDecision = {
   standing: "UNKNOWN",
-  basis: "this office is not filled by election, so incumbency does not attach to it (RULING 118)",
+  basis: "this office is not filled by election, so incumbency does not attach to it",
   source: null,
 };
 

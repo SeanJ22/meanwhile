@@ -170,7 +170,7 @@ export function gradeApplicability(a: Applicability, j: Jurisdiction): Applicabi
     `${provedAs}, but recorded ${dims.mismatched
       .map((m) => m.reason)
       .join("; ")} and this jurisdiction is not — evidence disagrees on ` +
-    `${dims.mismatched.map((m) => m.dimension).join("+")}, so the fit here is offered, not proven (RULING 178)`;
+    `${dims.mismatched.map((m) => m.dimension).join("+")}, so the fit here is offered, not proven`;
 
   const proven = (reason: string): ApplicabilityVerdict =>
     dims.mismatched.length > 0
@@ -250,13 +250,13 @@ export function gradeApplicability(a: Applicability, j: Jurisdiction): Applicabi
           dimension
             ? `its ${dimension} constraint is unstated on one side — not excluded is not matched`
             : "the class names no checkable dimension"
-        } (RULING 178: offered, not proven)`,
+        } (offered, not proven)`,
       );
     }
 
     case "UNKNOWN":
     default:
-      return offered("portability unknown — offered, not proven (RULING 178)");
+      return offered("portability unknown — offered, not proven");
   }
 }
 

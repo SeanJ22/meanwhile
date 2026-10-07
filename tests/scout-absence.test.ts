@@ -35,7 +35,7 @@ test("a standing (future) absence holds the next reading to the expiry, not the 
   assert.ok(isScheduled(plain) && Date.parse(plain.nextDueAt) <= NOW_MS, "the same row is due now without the absence");
 });
 
-test("an EXPIRED absence is ignored — the row comes due on its ordinary cadence again (RULING 53)", () => {
+test("an EXPIRED absence is ignored — the row comes due on its ordinary cadence again", () => {
   const past = new Date(NOW_MS - 3_600_000).toISOString(); // expired an hour ago
   const row = scheduleObligation({ ...BASE, absentUntil: past }, NOW_MS);
   assert.ok(isScheduled(row));
@@ -49,7 +49,7 @@ test("isArguedAbsence: only a finished, floor-clearing NO_PROGRESS is an absence
   const argued = { outcome: "NO_PROGRESS", stoppedBy: "BOUND", distinctEvidenceRungs: 8, refusal: null, researchRole: "DETECTIVE" as const };
   assert.equal(isArguedAbsence(argued, min), true, "the ladder was walked to the floor and nothing is there");
   assert.equal(isArguedAbsence({ ...argued, stoppedBy: "MODEL" }, min), true, "the model's own judgment that nothing is there is an absence too");
-  assert.equal(isArguedAbsence({ ...argued, outcome: "BLOCKED", stoppedBy: "MODEL" }, min), false, "BLOCKED is an obstruction (RULING 250), retried on its cadence, never a recorded absence");
+  assert.equal(isArguedAbsence({ ...argued, outcome: "BLOCKED", stoppedBy: "MODEL" }, min), false, "BLOCKED is an obstruction, retried on its cadence, never a recorded absence");
   assert.equal(isArguedAbsence({ ...argued, refusal: [{ code: "SCOUT_NO_FINISH" }] }, min), false, "a refusal is debt/retry, not an absence");
   assert.equal(isArguedAbsence({ ...argued, outcome: "EVIDENCE_FOUND" }, min), false, "a find is not an absence");
   assert.equal(isArguedAbsence({ ...argued, distinctEvidenceRungs: min - 1 }, min), false, "below the floor, absence is asserted not argued");

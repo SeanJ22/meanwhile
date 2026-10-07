@@ -72,7 +72,7 @@ export const SCOUT_STEPS = {
   "date-parsing": {
     kind: "DETERMINISTIC",
     implementedIn: "lib/control-plane/scheduler/scout-result.ts (deriveCandidateProvenance)",
-    why: "RULING 243: provenance dates are written by the machine from the artifact record; a model's date is a claim",
+    why: "provenance dates are written by the machine from the artifact record; a model's date is a claim",
   },
   /** A sub-call that extracts a field from a representation. Haiku, escalating to Sonnet. */
   extraction: {
@@ -120,7 +120,7 @@ export class DeterministicStepInvokedModel extends Error {
   constructor(step: string, implementedIn: string) {
     super(
       `STEP ROUTING REFUSED: "${step}" is a DETERMINISTIC step (${implementedIn}) and may never consume a model. ` +
-        "RULING 244: a step deterministic code can perform never spends a model.",
+        "A step deterministic code can perform never spends a model.",
     );
     this.name = "DeterministicStepInvokedModel";
     this.step = step;
@@ -322,7 +322,7 @@ export function fitRepresentation(tool: string, text: string, artifactIds: reado
   const bytes = Buffer.byteLength(text, "utf8");
   if (bytes <= budget) return { text, bytes, budget, truncated: false };
   const notice =
-    `\n--- REPRESENTATION TRUNCATED: ${bytes} bytes exceeds the ${tool} budget of ${budget} bytes (RULING 244); ` +
+    `\n--- REPRESENTATION TRUNCATED: ${bytes} bytes exceeds the ${tool} budget of ${budget} bytes; ` +
     `the vaulted artifact${artifactIds.length === 1 ? "" : "s"} ${artifactIds.join(", ") || "(none)"} hold${artifactIds.length === 1 ? "s" : ""} the rest ---`;
   const room = Math.max(0, budget - Buffer.byteLength(notice, "utf8"));
   return { text: Buffer.from(text, "utf8").subarray(0, room).toString("utf8") + notice, bytes, budget, truncated: true };

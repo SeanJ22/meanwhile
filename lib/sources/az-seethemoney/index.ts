@@ -597,7 +597,7 @@ export async function fetchAz(
     if (parsed.data.length !== parsed.recordsTotal) {
       throw new Error(
         `GetNEWTableData returned ${parsed.data.length} of ${parsed.recordsTotal} rows — a SHORT READ. ` +
-          "A partial that reconciles is still a wrong answer (RULING 100).",
+          "A partial that reconciles is still a wrong answer.",
       );
     }
     for (const r of parsed.data) seen.set(`${r.EntityID}|${r.OfficeID}|${r.PartyName}|${r.Income}|${r.Expense}`, r);

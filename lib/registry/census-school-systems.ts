@@ -1,74 +1,17 @@
 /**
- * **THE CENSUS SCHOOL-SYSTEM INDEX — the authority for independent versus
- * dependent, read directly rather than through an intersection.**
- * (Rewritten 2026-08-23, item 2, from `scripts/classify-school-districts.mts`.)
+ * The Census school-system index: the authority for independent versus dependent school systems, read
+ * directly from the Census of Governments (`census_govt_units_2022.csv` school districts are governments;
+ * `census_govt_units_2022_dependent_school_systems.csv` rows are departments of another government).
  *
- * ## The defect this replaces, and it was a false zero of exactly the shape
- * this project names most often
- *
- * The first classifier looked a district up in
- * `data/derived/census-nces-crosswalk.csv`. That file is a MATCHED-PAIRS
- * artifact: 9,776 rows, each a Census system that also matched an NCES LEA.
- * Its own report states the cost in the same breath — **4,083 Census school
- * systems failed to match NCES and are therefore not in it at all**, 3,373
- * independent and 710 dependent.
- *
- * So the classifier was asking the INTERSECTION a question only the CENSUS can
- * answer, and every district the intersection had dropped came back
- * `UNCLASSIFIED` — 219 of 514, reported as a gap in the data when it was a gap
- * in the lookup. Newmarket School District is the clean example: it is in NCES
- * as a regular local district and it is not in the crosswalk, so a district
- * that plainly exists rendered with no class definition at all.
- *
- * **The authority is the Census of Governments itself**, and both halves of it
- * are committed:
- *
- * - `data/reference/census_govt_units_2022.csv` — 12,546 rows with
- *   `gov_type = SCHOOL DISTRICT`. These ARE governments: their own board,
- *   their own budget.
- * - `data/reference/census_govt_units_2022_dependent_school_systems.csv` —
- *   1,313 rows. These are NOT governments: departments of a city, a county or
- *   the state.
- *
- * ## The four branches, and why each one exists
- *
- * Every branch is ONE-TO-ONE ONLY. A key resolving to rows of BOTH kinds is
- * ambiguous and yields nothing, because a coin-flip between "you elect this
- * board" and "you do not" is the worst possible answer.
- *
- * 1. **EXACT** — the shared normalizer's core key, `fips|core`.
- * 2. **RELAXED** — the same with the New England structural words dropped
- *    (`TOWN`, `COOPERATIVE`), and each token de-pluralised. The Census writes
- *    `GILMANTON TOWN SCH DIST` and `WHITE MTS REGIONAL SCH DIST` where the
- *    registry writes `Gilmanton School District` and `White Mountain Regional
- *    School District`. `CITY` and `COUNTY` are deliberately NOT dropped, for
- *    the reason the normalizer already gives: `Albertville City` and `Marshall
- *    County` are different governments.
- * 3. **NCES ALIAS** — the crosswalk's `nces_lea_name` mapped to its
- *    `census_kind`. This is the crosswalk used for what it IS good for: a
- *    dictionary of the OTHER agency's house style for a system whose Census
- *    kind is already known. It catches a registry label that follows NCES
- *    rather than Census wording.
- * 4. **PLACE-WORD RELAXED** — the same again with `CITY` and `COUNTY` also
- *    dropped, still keyed to the state. The two agencies disagree about the
- *    place word in BOTH directions: the Census writes `NASHUA CITY SCHOOL
- *    DISTRICT` where the registry writes `Nashua School District`, and the
- *    registry writes `Rahway City School District` where the Census writes
- *    `RAHWAY SCHOOL DIST`. The normalizer keeps these words for a real reason
- *    — in Alabama `Albertville City` and `Marshall County` are different
- *    districts — and the one-to-one rule is what makes dropping them safe
- *    here: where a state genuinely holds both, the key resolves to two rows
- *    and this branch declines to answer.
- * 5. **INTERSTATE** — a nationwide unique-name match, no state key.
- *    `Rivendell Interstate School District` sits in NH and VT and the Census
- *    files it once, under **Vermont**. A state-keyed lookup can never find it
- *    from the New Hampshire side, and that is a fact about interstate
- *    districts rather than about this one.
- *
- * A district none of the four reaches is `UNCLASSIFIED` and gets NO class
- * definition. That direction of failure is deliberate and unchanged: guessing
- * INDEPENDENT because most districts are would be a claim about who governs a
- * reader's schools made on a base rate.
+ * Every branch is one-to-one only; a key resolving to rows of both kinds yields nothing.
+ * 1. EXACT: the shared normalizer's core key, `fips|core`.
+ * 2. RELAXED: New England structural words dropped and tokens de-pluralised. `CITY` and `COUNTY` stay.
+ * 3. NCES ALIAS: the crosswalk's `nces_lea_name` mapped to its `census_kind`.
+ * 4. PLACE-WORD RELAXED: `CITY` and `COUNTY` also dropped, still keyed to the state; safe only because
+ *    of the one-to-one rule.
+ * 5. INTERSTATE: a nationwide unique-name match with no state key (the Census files an interstate
+ *    district under one state only).
+ * A district none of them reaches is `UNCLASSIFIED` and gets no class definition; never a base-rate guess.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -88,10 +31,8 @@ export interface Classification {
 }
 
 /**
- * A minimal RFC-4180 reader. The Census files quote embedded commas —
- * `"BOARD OF EDUCATION, CITY OF X"` — and a `split(",")` reader silently
- * shifts every column after it, which is how `gov_type` came back holding
- * fragments like ` INC."`.
+ * A minimal RFC-4180 reader. The Census files quote embedded commas, which a `split(",")` reader would
+ * shift into later columns.
  */
 function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
@@ -171,11 +112,8 @@ function put(map: Map<string, Bucket>, key: string, kind: Classification["kind"]
 }
 
 /**
- * Reads both Census files and builds the four branch indexes.
- *
- * `root` is the repo root. Nothing here touches the network: both files and
- * the crosswalk are committed, which is what makes this runnable with no
- * credentials and no egress.
+ * Reads both Census files and the crosswalk and builds the branch indexes. `root` is the repo root.
+ * No network.
  */
 export function buildCensusSchoolIndex(root: string): CensusSchoolIndex {
   const exact = new Map<string, Bucket>();

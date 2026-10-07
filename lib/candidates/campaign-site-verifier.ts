@@ -1,47 +1,3 @@
-/**
- * @freshness-reads-here — a verified page's retrievedAt is the instant this module's own robots-first read of
- * that page returned, minted in the function that performed the read.
- *
- * **THE CAMPAIGN-SITE VERIFIER — PLAIN CODE, NO MODEL.** (2026-09-25.)
- *
- * Paid research left 582 candidate-enrichment findings at SCOUTED and 325
- * Marginalia search results behind "NORMALIZER MISSING". Most of what they
- * point at is a lead toward the largest held class: a candidate's campaign
- * website (CAN-04/CAN-05). A lead is not a hit. This module decides, from the
- * saved source pages, whether a lead is the named candidate's
- * CURRENT campaign site.
- *
- * ```
- *   lead ──► host class ──► robots-first read ──► vault ──► page checks ──► VERIFIED
- *             │                 (researchFetch)                    │
- *             └─ refused by name ◄───────────────────────────────── └─ refused by name
- * ```
- *
- * A lead passes only when these hold on the fetched page:
- *
- * - it is an HTTPS HTML page answered 2xx with no access control in front of
- *   it (a login, a 403, a bot challenge: `lib/hunt/access-control.ts`), and
- *   every origin in its redirect chain had robots.txt read first and recorded
- *   (`lib/hunt/robots-first-fetch.ts`). The robots verdict travels with the
- *   read as evidence and never refuses it (owner decision 2026-09-25);
- * - its final host is not a social platform, an aggregator or voter guide, a
- *   news outlet, a government or institutional site, a party or organization
- *   site, a web archive or proxy, or a search engine (closed lists below);
- * - the page names the candidate: an exact name form of the filed name
- *   (`lib/identity/name-forms.ts`, plus this file's named rules), never a
- *   surname alone, never a similarity score, never a diminutive;
- * - the page names the office (or contest) OR the district;
- * - the site is the candidate's own: its host or its title names them;
- * - the page evidences the CURRENT cycle: the cycle year inside an election
- *   phrase ("elect", "vote", "campaign", "paid for by"…), or in its title.
- *   A yearless page may instead use a separately saved current candidacy
- *   profile that cites this campaign, with its exact spans and bytes carried
- *   through publication. A page whose election phrases carry only earlier years is the candidate's
- *   PAST-CYCLE site, refused and labelled historical.
- *
- * Every refusal is typed. A refusal is never an absence: "this lead is not the
- * site" is never "the candidate has no site".
- */
 import { createHash } from "node:crypto";
 
 import { nameForms } from "../identity/name-forms.ts";
@@ -52,15 +8,11 @@ import type { PermissionVerdict } from "../control-plane/scheduler/robots.ts";
 
 export const CAMPAIGN_SITE_VERIFIER_ID = "campaign-site-verifier/1";
 
-/** The election every published link must evidence. */
 export const CURRENT_CYCLE = 2026;
 
-/** How far from an election phrase a year may sit and still be about the election. */
 const CYCLE_WINDOW_CHARS = 100;
 
-/** Who the page must name, from the canonical candidacy (lib/hunt/candidate-universe.ts). Never from the lead. */
 export interface CampaignSiteIdentity {
-  /** `nj:2026:state-nj-county-morris-place-mendham-township:member-of-the-township-committee:duarte-amalia`. */
   readonly candidacyId: string;
   readonly givenName: string;
   readonly familyName: string;
@@ -71,15 +23,12 @@ export interface CampaignSiteIdentity {
   readonly cycle: number;
 }
 
-/** Where a lead came from. Carried on every verdict; a lead never vouches for itself. */
 export type CampaignSiteLeadOrigin = "SCOUT_FINDING" | "MARGINALIA_POINTER" | "RECORDED_SITE";
 
 export interface CampaignSiteLead {
   readonly url: string;
   readonly origin: CampaignSiteLeadOrigin;
-  /** The pipeline item, artifact, or index row the lead was read from. */
   readonly ref: string;
-  /** What the pointer said the page was called. Never evidence. */
   readonly title?: string | null;
 }
 
@@ -94,9 +43,7 @@ export const CAMPAIGN_SITE_REFUSALS = [
   "WEB_ARCHIVE",
   "SEARCH_ENGINE",
   "NOT_A_PAGE",
-  /** Historical: before the owner decision of 2026-09-25 a robots.txt verdict refused a lead. Never produced now. */
   "ROBOTS_REFUSED",
-  /** An access control answered in place of the page (a recorded wall, a 401/403/429, a bot challenge). Never bypassed. */
   "ACCESS_CONTROLLED",
   "TRANSPORT_FAILED",
   "HTTP_NOT_OK",
@@ -106,7 +53,6 @@ export const CAMPAIGN_SITE_REFUSALS = [
   "SITE_NOT_CANDIDATE_BRANDED",
   "CYCLE_NOT_EVIDENCED",
   "HISTORICAL_CYCLE",
-  /** Not a verdict about the lead: it was not read this run (an offline replay holds no bytes for it, or the read bound was reached). It stays owed. */
   "NOT_READ",
 ] as const;
 export type CampaignSiteRefusalCode = (typeof CAMPAIGN_SITE_REFUSALS)[number];
@@ -116,14 +62,6 @@ export interface CampaignSiteRefusal {
   readonly detail: string;
 }
 
-/* ------------------------------------------------------------ host classes */
-
-/**
- * Closed host lists. A host on none of them is judged by the page; a host on
- * one of them is never a candidate's own site whatever the page says. Each
- * list names hosts this project has actually been pointed at (the held scout
- * evidence and the held Marginalia results), plus the obvious national ones.
- */
 const SOCIAL_HOSTS = [
   "facebook.com", "fb.com", "instagram.com", "x.com", "twitter.com", "linkedin.com", "youtube.com", "youtu.be",
   "tiktok.com", "threads.net", "bsky.app", "reddit.com", "nextdoor.com", "pinterest.com", "flickr.com",
@@ -168,9 +106,8 @@ const SEARCH_HOSTS = [
   "searx.be", "marginalia.nu", "yandex.com", "search.yahoo.com", "startpage.com", "qwant.com", "kagi.com",
   "search.marcia.com", "news.google.com", "4get.ca",
 ];
-/** Party committees and civic organizations: not the candidate's own site even when the page is about them. */
 const ORGANIZATION_HOSTS = ["lwvnh.org", "lwv.org", "cnht.org", "hardingcivic.org", "efinstitute.org", "aclink.org"];
-/** Party and civic tokens in a site's own label (`tritowngop`, `randolphdems2026`, `rockawayrepublicanclub`). */
+/** Party and civic tokens in a site's own label. */
 const ORGANIZATION_LABEL_TOKEN = /(gop(?![a-z])|gopcc|dems(?![a-z])|democrats|republicans|republicanclub|democraticclub|republicanwomen|democraticwomen|nhdp|lwv)/;
 const ORGANIZATION_TITLE = /\b(democrats|republicans|gop|dems)\b|\bdemocratic (?:party|committee|club|women|organization)\b|\brepublican (?:party|committee|club|women|organization)\b|\bleague of women voters\b/;
 /** Official municipal hosts named in the held evidence that are not on a .gov/.us TLD. */
@@ -182,7 +119,6 @@ const GOVERNMENT_HOSTS = [
   "cityofbenson.com", "avondale.org", "washtwpsd.org", "sefd911.org", "coronafire.org", "wtps.org", "mhrd.org",
   "rpsnj.org", "mtarlingtonk8.org", "hpreg.org", "morriscountyclerk.org", "atlanticcountyclerk.org",
 ];
-/** Site builders whose left-most label is the tenant: the tenant, not the builder, is the site. */
 const BUILDER_SUFFIXES = [
   "wixsite.com", "squarespace.com", "weebly.com", "nationbuilder.com", "square.site", "blogspot.com",
   "wordpress.com", "godaddysites.com", "carrd.co", "webflow.io", "business.site", "mystrikingly.com", "jimdosite.com",
@@ -193,7 +129,6 @@ function onList(host: string, list: readonly string[]): string | null {
   return list.find((entry) => bare === entry || bare.endsWith(`.${entry}`)) ?? null;
 }
 
-/** The label that names the site: a builder tenant, or the registrable domain's own label. */
 export function siteLabel(host: string): string {
   const bare = host.toLowerCase().replace(/^www\./, "");
   const builder = BUILDER_SUFFIXES.find((suffix) => bare.endsWith(`.${suffix}`));
@@ -202,7 +137,6 @@ export function siteLabel(host: string): string {
   return labels.length >= 2 ? labels[labels.length - 2]! : bare;
 }
 
-/** The host a campaign link is keyed by: lower case, no `www.`. */
 export function siteHost(url: string): string | null {
   try {
     return new URL(url).hostname.toLowerCase().replace(/^www\./, "");
@@ -216,7 +150,6 @@ export function registrableDomain(host: string): string {
   return host.toLowerCase().replace(/^www\./, "").split(".").slice(-2).join(".");
 }
 
-/** How deep a page sits in its site; the shallowest verified page of one site is the one a card links. */
 export function sitePathLength(url: string): number {
   try {
     // A web page's path, never a file path.
@@ -227,10 +160,6 @@ export function sitePathLength(url: string): number {
   }
 }
 
-/**
- * Why a URL's host can never be a candidate's own campaign site, or null.
- * Pure and pre-fetch: a lead refused here is never requested.
- */
 export function campaignSiteHostRefusal(url: string): CampaignSiteRefusal | null {
   let parsed: URL;
   try {
@@ -264,8 +193,6 @@ export function campaignSiteHostRefusal(url: string): CampaignSiteRefusal | null
   return null;
 }
 
-/* --------------------------------------------------------- page text */
-
 const ENTITIES: Readonly<Record<string, string>> = {
   amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", ndash: "-", mdash: "-", rsquo: "'", lsquo: "'",
   rdquo: '"', ldquo: '"', copy: "©", middot: "·", bull: "•", hellip: "...", reg: "®", trade: "™",
@@ -286,7 +213,6 @@ function safeChar(code: number): string {
   }
 }
 
-/** The page's visible words: scripts, styles, templates and comments removed. */
 export function pageVisibleText(html: string): string {
   return decodeEntities(
     html
@@ -304,7 +230,6 @@ function metaContent(html: string, key: string): string | null {
   return value === "" ? null : value;
 }
 
-/** What the page calls itself: its title, og:title, og:site_name and first h1. */
 export function pageHeadings(html: string): { readonly title: string | null; readonly headings: readonly string[] } {
   const title = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1];
   const h1 = /<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(html)?.[1];
@@ -337,7 +262,6 @@ export function comparisonText(raw: string): string {
     .trim();
 }
 
-/** Where a form occurs as whole words, or -1. */
 function wordIndex(haystack: string, form: string): number {
   if (form === "") return -1;
   const index = ` ${haystack} `.indexOf(` ${form} `);
@@ -348,8 +272,6 @@ function excerpt(text: string, index: number, length: number): string {
   const start = Math.max(0, index - 40);
   return text.slice(start, Math.min(text.length, index + length + 40)).trim();
 }
-
-/* ------------------------------------------------------------- the name */
 
 export type CampaignNameRule = "AS_PUBLISHED" | "NICKNAME_REMOVED" | "NICKNAME_AS_GIVEN" | "NICKNAME_AS_FAMILY" | "SUFFIX_REMOVED" | "MIDDLE_INITIAL_OMITTED" | "MIDDLE_NAME_OMITTED" | "PARENTHESIZED_NICKNAME";
 
@@ -400,23 +322,13 @@ export function campaignNameForms(identity: Pick<CampaignSiteIdentity, "givenNam
   return [...out.values()].sort((a, b) => a.rules.length - b.rules.length || a.form.localeCompare(b.form));
 }
 
-/** Name tokens long enough to brand a host: given, family, nickname and family-name parts. */
 export function brandTokens(identity: Pick<CampaignSiteIdentity, "givenName" | "familyName">): string[] {
   const tokens = new Set<string>();
   for (const form of campaignNameForms(identity)) for (const token of form.form.split(" ")) if (token.replace(/'/g, "").length >= 3) tokens.add(token.replace(/'/g, ""));
   return [...tokens];
 }
 
-/**
- * Whether a title brands the page as the candidate's own. Some SEGMENT of the
- * title (split on `|`, `-`, `–`, `—`, `:`, `·`) must BEGIN with their name —
- * optionally after "elect", "re-elect", "vote", "meet" or "team" — and be
- * either the name alone or "<name> for …" / "<name> 4 …". So "Rita Chipperson -
- * Harding Township Committee" and "Home | Jane Doe for Council" brand the page;
- * "AFP Action Endorses Juan Ciscomani for U.S. House" and "Katie Hobbs signs
- * budget" do not. A page about a candidate on a host we have not listed is
- * exactly what this guards against.
- */
+/** Some segment of the title (split on `|`, `-`, `–`, `—`, `:`, `·`) must begin with the name, optionally after elect, re-elect, vote, meet or team, and be the name alone or `<name> for …`. */
 export function titleBrandsCandidate(title: string, forms: readonly string[]): string | null {
   const segments = title.split(/\s+[|\-–—:·•]\s+|\s*[|–—·•]\s*/).map(comparisonText).filter((segment) => segment !== "");
   for (const form of forms) {
@@ -427,13 +339,6 @@ export function titleBrandsCandidate(title: string, forms: readonly string[]): s
   return null;
 }
 
-/* ------------------------------------------------------ office and district */
-
-/**
- * The office as a page would write it. The filed title is reduced to its core
- * (no "Member of the", no district, ward or term qualifier), and a closed table
- * adds the forms a campaign uses for that office. Every form is exact text.
- */
 export function officeForms(officeTitle: string): string[] {
   const core = comparisonText(
     officeTitle
@@ -463,11 +368,9 @@ export function officeForms(officeTitle: string): string[] {
   if (/county attorney/.test(core)) add("county attorney");
   if (/register of (deeds|probate)/.test(core)) add(core.replace(/^county /, ""));
   if (/sheriff/.test(core)) add("sheriff");
-  /* The filed office first, then the table's forms in the order written: the first form found is the one recorded. */
   return [...forms].filter((form) => form.length > 0);
 }
 
-/** The candidate's name as a sentence should print it: an all-capitals filed token is written in title case. */
 export function candidateDisplayName(identity: Pick<CampaignSiteIdentity, "givenName" | "familyName">): string {
   const cap = (word: string) => (word === word.toUpperCase() && /[A-Z]/.test(word) ? word.charAt(0) + word.slice(1).toLowerCase() : word);
   return `${identity.givenName} ${identity.familyName}`.split(/\s+/).map((word) => word.split("-").map(cap).join("-")).join(" ").trim();
@@ -475,7 +378,6 @@ export function candidateDisplayName(identity: Pick<CampaignSiteIdentity, "given
 
 const STATE_NAMES: Readonly<Record<string, string>> = Object.fromEntries(US_STATES.map(state => [state.code, comparisonText(state.name)]));
 
-/** The district as a page would write it, from the OCD id and the title's own district words. */
 export function districtForms(identity: Pick<CampaignSiteIdentity, "ocdId" | "officeTitle" | "stateCode">): string[] {
   const forms = new Set<string>();
   const add = (value: string) => {
@@ -516,8 +418,6 @@ export function districtForms(identity: Pick<CampaignSiteIdentity, "ocdId" | "of
   return [...forms].sort();
 }
 
-/* ------------------------------------------------------------- the cycle */
-
 /**
  * Phrases that make a nearby year an ELECTION year. Checked on the comparison
  * text (lower case, punctuation as spaces). Bare "general" is deliberately
@@ -527,15 +427,11 @@ const ELECTION_PHRASE = /\b(elect|elected|electing|election|elections|re ?elect|
 
 export interface CycleEvidence {
   readonly state: "CURRENT" | "HISTORICAL" | "NOT_EVIDENCED";
-  /** The current-cycle span, when found. */
   readonly span: { readonly year: number; readonly phrase: string; readonly index: number; readonly excerpt: string; readonly where: "TITLE" | "PAGE" | "INDEPENDENT_PROFILE" } | null;
-  /** Present only when the election span comes from these separately saved bytes. */
   readonly source?: CampaignSiteSourceReference;
-  /** Earlier election years found beside an election phrase. */
   readonly earlierYears: readonly number[];
 }
 
-/** Where the cycle year sits inside an election phrase, or in the title, or only earlier years do. */
 export function cycleEvidence(text: string, headings: readonly string[], cycle: number): CycleEvidence {
   const years = new Map<number, { index: number; phrase: string }[]>();
   const phrases = [...text.matchAll(ELECTION_PHRASE)].map((m) => ({ index: m.index ?? 0, phrase: m[0] }));
@@ -560,9 +456,6 @@ export function cycleEvidence(text: string, headings: readonly string[], cycle: 
   return { state: earlier.length > 0 ? "HISTORICAL" : "NOT_EVIDENCED", span: null, earlierYears: earlier };
 }
 
-/* ------------------------------------------------------------- the read */
-
-/** One read of a lead, as it was acquired. The verifier never sees a read it did not make robots-first. */
 export interface CampaignSitePageRead {
   readonly requestedUrl: string;
   readonly finalUrl: string;
@@ -572,12 +465,10 @@ export interface CampaignSitePageRead {
   /** sha256 (bare hex) of the exact bytes. */
   readonly sha256: string;
   readonly retrievedAt: string;
-  /** Every origin's robots verdict along the redirect chain. */
   readonly permissions: readonly { readonly origin: string; readonly verdict: PermissionVerdict; readonly detail: string }[];
   readonly redirects: readonly { readonly from: string; readonly status: number; readonly to: string }[];
 }
 
-/** A saved supporting source, carried through publication for byte-for-byte rechecking. */
 export interface CampaignSiteSourceReference {
   readonly artifactId: string;
   readonly sha256: string;
@@ -593,7 +484,6 @@ export interface CampaignSiteSupportingRead {
   readonly page: CampaignSitePageRead;
 }
 
-/** Every https anchor on a saved page that leaves the page's own host, in page order. */
 function* offSiteLinks(page: CampaignSitePageRead): Generator<{ url: URL; attributes: string; inner: string }> {
   const html = page.body.replace(/<(script|style|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ");
   for (const match of html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi)) {
@@ -606,11 +496,6 @@ function* offSiteLinks(page: CampaignSitePageRead): Generator<{ url: URL; attrib
   }
 }
 
-/**
- * The hosts a saved page links to. Every lead profileCampaignSiteLeads can find
- * on the page, for any candidacy, is on one of these hosts, so a page whose
- * hosts lack a campaign's host can never support that campaign.
- */
 export function linkedSiteHosts(page: CampaignSitePageRead): Set<string> {
   const hosts = new Set<string>();
   for (const { url } of offSiteLinks(page)) {
@@ -620,7 +505,6 @@ export function linkedSiteHosts(page: CampaignSitePageRead): Set<string> {
   return hosts;
 }
 
-/** Observed campaign links on one candidate's captured profile, never guessed hosts. */
 export function profileCampaignSiteLeads(page: CampaignSitePageRead, subject: CampaignSiteIdentity, ref: string): CampaignSiteLead[] {
   const headings = pageHeadings(page.body).headings;
   const forms = campaignNameForms(subject).map(form => form.form);
@@ -640,7 +524,6 @@ export function profileCampaignSiteLeads(page: CampaignSitePageRead, subject: Ca
     .map(url => ({ url, origin: "SCOUT_FINDING", ref }));
 }
 
-/** The two saved pages agree on this current candidacy and the observed campaign link. */
 export function profileSupportsCampaign(identity: CampaignSiteIdentity, primary: CampaignSitePageRead, supporting: CampaignSiteSupportingRead): boolean {
   const { page, source } = supporting;
   const age = Math.abs(Date.parse(primary.retrievedAt) - Date.parse(page.retrievedAt));
@@ -697,7 +580,6 @@ export type CampaignSiteVerdict =
   | {
       readonly verdict: "VERIFIED";
       readonly measurement: CampaignSiteMeasurement;
-      /** The one sentence a reader card may carry: what the fetched page showed. */
       readonly verification: string;
     }
   | {
@@ -705,7 +587,6 @@ export type CampaignSiteVerdict =
       readonly lead: CampaignSiteLead;
       readonly candidacyId: string;
       readonly refusals: readonly CampaignSiteRefusal[];
-      /** Set only for HISTORICAL_CYCLE: the site is the candidate's past-cycle site, labelled, never published. */
       readonly historical: { readonly years: readonly number[] } | null;
       readonly measurement: CampaignSiteMeasurement | null;
     };
@@ -719,7 +600,6 @@ const refusal = (identity: CampaignSiteIdentity, lead: CampaignSiteLead, refusal
   measurement,
 });
 
-/** Find the first form that occurs, in the order given. */
 function firstSpan(text: string, forms: readonly string[]): CampaignSiteSpan | null {
   for (const form of forms) {
     const index = wordIndex(text, form);
@@ -728,10 +608,6 @@ function firstSpan(text: string, forms: readonly string[]): CampaignSiteSpan | n
   return null;
 }
 
-/**
- * **THE PAGE CHECKS.** Pure: one read in, one verdict out. The caller made the
- * read robots-first and vaulted its bytes; this decides only what they show.
- */
 export function verifyCampaignSitePage(identity: CampaignSiteIdentity, lead: CampaignSiteLead, read: CampaignSitePageRead,
   supporting?: CampaignSiteSupportingRead): CampaignSiteVerdict {
   const hostRefused = campaignSiteHostRefusal(read.finalUrl);
@@ -786,6 +662,7 @@ export function verifyCampaignSitePage(identity: CampaignSiteIdentity, lead: Cam
     district,
     branding,
     cycle,
+    // Robots verdicts are recorded evidence; they refuse nothing.
     permissions: read.permissions,
     redirects: read.redirects,
   };
@@ -793,7 +670,6 @@ export function verifyCampaignSitePage(identity: CampaignSiteIdentity, lead: Cam
   const refusals: CampaignSiteRefusal[] = [];
   if (hostRefused !== null) refusals.push(hostRefused);
   if (!read.finalUrl.startsWith("https://")) refusals.push({ code: "NOT_HTTPS", detail: `${read.finalUrl} is not HTTPS; a reader link is HTTPS only` });
-  /* The robots verdicts in read.permissions are recorded evidence and refuse nothing (owner decision 2026-09-25). */
   const control = accessControlIn({ status: read.httpStatus, text: read.body });
   if (read.httpStatus < 200 || read.httpStatus >= 300) {
     refusals.push({ code: "HTTP_NOT_OK", detail: `${read.finalUrl} answered HTTP ${read.httpStatus}${control === null ? "" : ` (${control.detail})`}` });
@@ -833,8 +709,6 @@ export function verifyCampaignSitePage(identity: CampaignSiteIdentity, lead: Cam
   };
 }
 
-/* ------------------------------------------------------ the robots-first read */
-
 /**
  * Read one lead robots-first, recording the robots verdict. The host is judged before any request, so a
  * social, aggregator, news, government, archive or search host is never asked
@@ -871,7 +745,6 @@ export async function readCampaignSiteLead(
   };
 }
 
-/** A read made from bytes already held (a vaulted earlier read), for re-verification and audit. */
 export function heldPageRead(input: {
   readonly requestedUrl: string;
   readonly finalUrl?: string;
@@ -879,7 +752,6 @@ export function heldPageRead(input: {
   readonly contentType: string;
   readonly body: string;
   readonly retrievedAt: string;
-  /** The held bytes' own sha256, when known; otherwise the body's UTF-8 digest. */
   readonly sha256?: string;
 }): CampaignSitePageRead {
   return {

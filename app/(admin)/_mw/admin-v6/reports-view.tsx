@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * **REPORTS — what readers said was wrong, from the live site and the tester
- * site.** Newest first, each labeled by the site it came from, with the card,
- * the ZIP and the record id. Read only: there is no delete.
- */
 import type { ReportRow, ReportsReading, SiteReports } from "@/lib/control-plane/reports/read-reports.ts";
 
 import { mst } from "./model.ts";

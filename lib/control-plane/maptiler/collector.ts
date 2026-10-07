@@ -1,11 +1,4 @@
-/**
- * Standing MapTiler usage collection.
- *
- * This module returns a candidate to the canonical owner-snapshot publisher. It
- * never writes a file, Git, or a second ledger. Both provider classifiers must
- * produce one complete billing window before the candidate is promotable; a
- * partial answer is an explicit failed attempt and the publisher retains LKG.
- */
+/** Both classifiers must produce one complete billing window; a partial answer is a failed attempt and the publisher keeps the last good reading. */
 
 import {
   fetchTimeline,
@@ -108,7 +101,6 @@ function failedSnapshot(input: {
   };
 }
 
-/** Collect one fail-closed candidate. Persistence and LKG promotion are separate. */
 export async function collectMapTilerUsage(
   input: CollectMapTilerUsageInput = {},
 ): Promise<MapTilerUsageSnapshot> {

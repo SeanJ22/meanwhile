@@ -22,9 +22,7 @@ export interface SourceScopedHeldFact {
 
 export interface SourceScopedReconciliation<T = unknown> {
   readonly members: readonly SourceScopedMember<T>[];
-  /** A successful-only receipt suitable for deterministic promotion authority. */
   readonly promotionReceipt: ManualSourceSetReceipt;
-  /** Exact blocked/ambiguous members and conservative prior-member retention. */
   readonly excludedFacts: readonly SourceScopedHeldFact[];
   readonly supportedCurrentSources: number;
   readonly inputMembers: number;

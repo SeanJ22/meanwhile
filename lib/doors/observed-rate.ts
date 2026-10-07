@@ -1,21 +1,17 @@
 /**
- * **REFRESH FOLLOWS HOW OFTEN EACH DOOR ACTUALLY CHANGES** (DB-30).
- *
- * Each read that promotes something different from the version before it is a change. The door keeps when the last
- * one happened and the running average of the gaps between them (`observedChangeMinutes`: the plain mean of the first
- * few gaps, then weighted a quarter toward each new one, so a door whose habit changes is followed within a few changes). Its check defaults to the faster of its policy and that observed rate, never faster than the hourly
- * floor of rulings §4 and never slower than the policy: a door that changes more often than its policy says is read
- * as often as it changes, and a door that changes rarely is read on its policy. A check a person set on the door
- * stays exactly as set. Meetings keep their §4 sitting-window schedule, which is already the floor, so no
- * observation can make a meeting door slower than it.
- *
- * Plain code: no model and no clock of its own.
+ * Refresh follows how often each door actually changes. A read that promotes
+ * something different from the version before it is a change; the door keeps
+ * the last change time and a running average gap (`observedChangeMinutes`:
+ * the plain mean of the first few gaps, then each new gap weighted a quarter).
+ * Its check is the faster of its policy and that observed rate, never faster
+ * than hourly and never slower than the policy. A check set on the door stays
+ * as set.
  */
 
 import { isDoorRecord, type DoorRecord, type DoorRepository } from "./registry.ts";
 
 const MINUTE_MS = 60_000;
-/** Rulings §4: hourly is the fastest standing check. */
+/** Hourly is the fastest standing check. */
 export const MIN_OBSERVED_CHECK_MINUTES = 60;
 /** Once a few gaps are in, each new gap counts for a quarter of the average. */
 const RECENT_WEIGHT = 0.25;

@@ -1,33 +1,12 @@
 import "server-only";
 
 /**
- * **CONTAINERS AND THEIR CODES, FROM THE PUBLISHED LOOKUP.** (Admin redesign,
- * 2026-09-23.)
+ * Membership (which ZCTAs a container overlaps) comes from the published Census lookup; coverage (which
+ * governments reach each ZCTA) comes from the national ZIP index. A ZCTA the index does not carry is
+ * `indexed: false`, never a ZCTA with no governments.
  *
- * Two facts, kept apart because the design insists they are different:
- *
- * ```
- *   membership   which Census ZIP-code tabulation areas (ZCTAs) a county,
- *                congressional district or metro area overlaps, wholly or in
- *                part — the published Census geography lookup, nothing else
- *   coverage     which governments' territory reaches each ZCTA — the reader's
- *                own national ZIP index (`lib/geo/zip-division-index.ts`), the
- *                same one the reader uses to decide what governs a ZIP
- * ```
- *
- * The index covers every ZIP code in the country. A ZCTA it does not carry
- * (the lattice found no land in it), or whose shard cannot be read, is
- * `indexed: false` and the page names it as not indexed. It is never shown as a
- * ZCTA with no governments.
- *
- * Production reads only the slice a page needs from the promoted pointer
- * (`lib/control-plane/admin-view/promoted-slices.ts`): one state's containers,
- * one container, or one code's containers, cut out by Postgres. A cold server
- * used to read the whole 13.7 MB lookup and prove it before any of these
- * answered (7.5 s, 2026-09-24), and a load over three seconds is not a win
- * (Sean, 2026-09-24). The whole lookup is built only outside production where
- * the store holds no pointer: the committed Arizona bootstrap that local work
- * and tests read.
+ * Production reads only the slice a page needs from the promoted pointer. The whole lookup is built only
+ * outside production, where the store holds no pointer.
  */
 import type { GeographyRef, GeographyType } from "@/lib/census-geography/contract.ts";
 import type { PublishedLookupSource, PublishedLookupState } from "@/lib/census-geography/reader.ts";
@@ -38,7 +17,6 @@ import { withSharedScopeDivisions } from "@/lib/control-plane/expansion/scope-di
 import { readerQuery } from "./reader-query.ts";
 import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead, type SharedRead } from "./shared-read.ts";
 
-/** One code's place in the index: every division whose territory reaches it, or not indexed. */
 async function indexedCode(zcta5: string): Promise<{ readonly indexed: boolean; readonly divisions: readonly string[]; readonly partial: readonly string[] }> {
   const held = await zipDivisionEntry(zcta5);
   const entry = held ? withSharedScopeDivisions(held, zcta5) : null;
@@ -71,8 +49,6 @@ function byLabel(a: GeographyRef, b: GeographyRef): number {
   return a.label.localeCompare(b.label, "en", { numeric: true });
 }
 
-/* ---------------------------------------------------------------- the slices */
-
 /*
  * A slice is kept a minute fresh and half an hour recent, like every Admin
  * read (see shared-read.ts), per question asked. The questions are few (a state
@@ -102,8 +78,6 @@ function readsWholeLookup(slice: Slice<unknown> | null): boolean {
   return process.env.NODE_ENV !== "production" && (slice === null || slice.kind === "NOT_PUBLISHED");
 }
 
-/* ------------------------------------------------ the whole lookup (not prod) */
-
 type LookupOpened =
   | { readonly ok: true; readonly state: PublishedLookupState }
   | { readonly ok: false; readonly detail: string };
@@ -130,9 +104,6 @@ async function lookupOrUnread(): Promise<LookupOpened> {
   });
 }
 
-/* ------------------------------------------------------------------ the reads */
-
-/** Every container of the given types that lies in, or reaches into, the state. */
 export async function listContainers(
   stateAbbr: string,
   types: readonly GeographyType[],
@@ -167,7 +138,6 @@ export async function listContainers(
   return { kind: "HELD", source: opened.state.source, versionId: opened.state.versionId, value: out };
 }
 
-/** One container's ZCTAs, each joined to the reader's ZIP division index. */
 export async function loadContainer(
   type: GeographyType,
   geoid: string,
@@ -250,7 +220,6 @@ export async function loadZcta(zcta5: string): Promise<LookupRead<{ readonly geo
   } };
 }
 
-/** Every container of one type in the state, each with its codes — one read, one pass. */
 export async function loadContainersWithCodes(stateAbbr: string, type: GeographyType): Promise<LookupRead<readonly ContainerWithCodes[]>> {
   const st = stateAbbr.toUpperCase();
   const query = readerQuery();
@@ -292,7 +261,6 @@ function sortMemberships(memberships: CodeMembership[]): CodeMembership[] {
   return memberships.sort((a, b) => a.type.localeCompare(b.type) || a.label.localeCompare(b.label, "en", { numeric: true }));
 }
 
-/** Which containers one code belongs to, of the given types (the lookup's reverse index). */
 export async function membershipsOfCode(zcta5: string, types: readonly GeographyType[]): Promise<LookupRead<{ readonly memberships: readonly CodeMembership[]; readonly code: ZctaInScope }>> {
   const query = readerQuery();
   const slice =
@@ -332,7 +300,6 @@ export async function membershipsOfCode(zcta5: string, types: readonly Geography
   };
 }
 
-/** The divisions reaching any of these ZCTAs: the set a body's division is tested against. */
 export function divisionsOf(zctas: readonly ZctaInScope[]): ReadonlySet<string> {
   const out = new Set<string>();
   for (const z of zctas) for (const d of z.divisions) out.add(d);

@@ -1,15 +1,5 @@
-/**
- * The BUILT dataset — the internal shape produced by the importer and consumed
- * by the read model (`lookup.ts`). This is NOT the Admin-facing contract
- * (`contract.ts`); it is the compact precomputed relationship set that becomes
- * a promotion read-model payload and/or a bootstrap fixture.
- *
- * It is deliberately compact (short arrays, no repeated labels per overlap) so
- * a national build fits comfortably under the promotion pointer's size budget.
- */
 import type { CbsaClass, FractionBasis, GeographyType, GeographyVersion } from "./contract.ts";
 
-/** One ZCTA's overlap with a grouping, in the built dataset. */
 export interface BuiltOverlap {
   readonly zcta5: string;
   /** The ZCTA lies wholly inside the grouping (area share ≈ 1). */
@@ -18,7 +8,6 @@ export interface BuiltOverlap {
   readonly fraction: number | null;
 }
 
-/** One grouping instance (e.g. one congressional district) with its ZCTAs. */
 export interface BuiltGrouping {
   readonly geoid: string;
   readonly ocdId: string | null;
@@ -31,7 +20,6 @@ export interface BuiltGrouping {
   readonly overlaps: readonly BuiltOverlap[];
 }
 
-/** All instances of one geography type at one version. */
 export interface BuiltScope {
   readonly type: GeographyType;
   readonly version: string;
@@ -43,7 +31,6 @@ export interface BuiltScope {
   readonly zctaEdgeCount: number;
 }
 
-/** The whole built dataset: every scope, plus honest coverage prose. */
 export interface BuiltDataset {
   readonly formatVersion: 1;
   readonly builtAt: string;

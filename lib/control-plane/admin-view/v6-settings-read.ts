@@ -1,15 +1,4 @@
-/**
- * **THE SETTINGS VIEW'S READ (BR-05, BR-06).**
- *
- * One row per registered setting, plus the spend ceiling (which keeps its own
- * field and action): its current value, when it changed, the log of earlier
- * values, the undo for its newest change, and whether the runner has it in
- * force (from the runner's own heartbeat) or readers have it (from the reader
- * edge). Two point reads: the config row and the heartbeat. No log scan.
- *
- * Plain words only: the machine key travels as the control's target and is
- * never rendered.
- */
+/** The machine key travels as the control's target and is never rendered. */
 import { fleetSpendCeilingOverrideUsd, type AdminConfig } from "../gateway/admin-config.ts";
 import { resolveRollingCeiling } from "../fleet-safety.ts";
 import type { RunnerHeartbeat } from "../owner-surface.ts";
@@ -24,9 +13,8 @@ export interface SettingLogRow {
   readonly at: string;
   readonly beforeWords: string;
   readonly afterWords: string;
-  /** The note, or null when none was given. */
   readonly why: string | null;
-  /** Named only when the factory made the change; Sean's own changes carry no name. */
+    /** Named only when the factory made the change; the owner's own changes carry no name. */
   readonly by: string | null;
   readonly wasUndo: boolean;
 }
@@ -36,16 +24,12 @@ export interface SettingRow {
   readonly key: string;
   readonly label: string;
   readonly valueWords: string;
-  /** The value as typed into the change box. */
   readonly valueInput: string;
   readonly isDefault: boolean;
   readonly changedAt: string | null;
-  /** How a new value is offered; "ceiling" uses the existing daily-budget control. */
   readonly control: SettingControl | "ceiling";
   readonly unit: string | null;
-  /** Where the value takes effect, and whether it has. */
   readonly inForce: { readonly where: "runner" | "readers" | "next-read"; readonly yes: boolean | null; readonly since: string | null };
-  /** Undo for the newest change: what it sets back, as the send carries it. */
   readonly undo: { readonly changeId: string; readonly value: string; readonly valueWords: string } | null;
   readonly log: readonly SettingLogRow[];
 }
@@ -53,7 +37,6 @@ export interface SettingRow {
 export interface SettingsView {
   readonly observedAt: string;
   readonly rows: readonly SettingRow[];
-  /** The runner's last report of what it applied, or null when it has not reported one. */
   readonly runnerAppliedAt: string | null;
 }
 
@@ -75,11 +58,9 @@ function logRows(config: AdminConfig | null, key: string, words: (v: SettingValu
   }));
 }
 
-/** Build the view from one config read, the heartbeat, and (when readable) the reader edge's published values. */
 export function projectSettings(input: {
   readonly config: AdminConfig | null;
   readonly heartbeat: RunnerHeartbeat | null;
-  /** The reader edge's values, or null when they could not be read. */
   readonly published: Readonly<Record<string, SettingValue>> | null;
   readonly observedAt: string;
 }): SettingsView {
@@ -103,7 +84,6 @@ export function projectSettings(input: {
       log,
     };
   });
-  // The spend ceiling keeps its own field and action; its changes log into the same history.
   const override = fleetSpendCeilingOverrideUsd(config);
   const ceiling = resolveRollingCeiling(override).rollingCeilingUsd;
   const dollars = (v: SettingValue) => typeof v === "number" ? `$${v.toFixed(2)} a day` : "—";

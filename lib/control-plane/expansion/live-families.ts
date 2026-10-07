@@ -1,20 +1,10 @@
 /**
- * **WHICH INFORMATION FAMILIES A GOVERNMENT ALREADY HAS LIVE** (CH-04).
+ * Which information families a government already has live: every owed row
+ * published and fresh, or shown as not published by the government, in the
+ * held place capture. Such a family needs no discovery Scout; its refresh
+ * stays scheduled. A family with no held row is never live.
  *
- * A Send plans a paid discovery Scout for every family a government has no
- * source entry for. When an earlier Send already filled that family's rows
- * for the government, a second Scout buys nothing. This reads the held place
- * capture (what any job published, never filtered by the Send that found it)
- * and names the families whose owed rows are all published and fresh, or shown
- * as not published by the government.
- *
- * It only removes the discovery Scout. The family's refresh and comparison stay
- * scheduled on their existing routes: a healthy feed does not prove complete
- * coverage (rulings §2). The open-ended "discover every body" inventory row is
- * not counted, since nothing ever holds it; a family with no held row at all
- * is never live.
- *
- * PURE.
+ * Pure.
  */
 import { buildPlaceOwedList } from "../../coverage/place-owed.ts";
 import type { HeldPlaceCapture } from "../../civic-data/held-place-capture.ts";

@@ -50,12 +50,6 @@ function candidateId(sourceId: string, scope: string, rawHash: string, retrieved
   return `cv-${sha256(`${sourceId}\u001f${scope}\u001f${rawHash}\u001f${retrievedAt}`).slice(0, 32)}`;
 }
 
-/**
- * Durable evidence for a source attempt that failed before bytes existed.
- * Only the source-aware acquisition adapter may call this: a parent process
- * cannot infer publisher failure from a child crash or a missing receipt. No
- * zero rows or guessed final URL can escape as absence.
- */
 export function failedAcquisitionCandidate(input: {
   readonly sourceId: string;
   readonly recordClass: RoutineRecordClass;
@@ -194,7 +188,6 @@ export interface NhMemberReadModel {
     readonly district: string;
     readonly seatNo: string;
   }[];
-  /** Omitted only by the explicit tracked bootstrap/import seed. */
   readonly officialIdentityAuthority?: {
     readonly sourceUrl: string;
     readonly sourceVersion: string;
@@ -204,7 +197,6 @@ export interface NhMemberReadModel {
   };
 }
 
-/** Exact official roster used to resolve a canonical person before votes. */
 export interface OfficialStateLegislatorReadModel {
   readonly formatVersion: 1;
   readonly sourceId: OfficialStateRollCallSourceId;
@@ -212,7 +204,6 @@ export interface OfficialStateLegislatorReadModel {
   readonly term: string;
   readonly generatedAt: string;
   readonly roster: OfficeholderSet;
-  /** Publisher rows outside the active-seat horizon, each explicitly disposed. */
   readonly sourceAudit?: {
     readonly observedRecords: number;
     readonly excludedRecords: readonly {
@@ -268,12 +259,6 @@ export function nhMemberOfficeholderId(member: MembersExtraction["members"][numb
   return officialStateOfficeholderId("nh-general-court", nhMemberOfficialPersonId(member));
 }
 
-/**
- * The tracked/bootstrap identity projection is deliberately distinct from a
- * live `/3` publisher crosswalk.  It gives an exact legacy LKG stable internal
- * identities without claiming that its synthetic ids are General Court
- * PersonID values.  Only the explicit bootstrap/import paths may call it.
- */
 export function trustedNhMembersImportReadModel(
   members: MembersExtraction["members"],
   term: string,
@@ -305,7 +290,6 @@ export function trustedNhMembersImportReadModel(
   };
 }
 
-/** Candidate-envelope identities matching trustedNhMembersImportReadModel. */
 export function trustedNhMembersImportIdentityEvidence(
   members: MembersExtraction["members"],
   term: string,
@@ -339,10 +323,6 @@ export function trustedNhMembersImportIdentityEvidence(
   });
 }
 
-/**
- * The raw roster/participant authority a state-vote acquisition cites, before
- * it is reduced to the digest-bearing evidence shape the read models carry.
- */
 export interface OfficialStateIdentityAuthorityInputs {
   readonly contractId: string;
   readonly versionId: string;
@@ -358,13 +338,6 @@ export interface OfficialStateIdentityAuthorityInputs {
   };
 }
 
-/**
- * Reduce a state-vote acquisition's cited roster/participant authority to the
- * exact digest-bearing evidence shape every state-vote read model carries. One
- * assembly, shared by the whole-chamber roll-call candidate and the per-member
- * fan-out, so the fan-out computes the roster and participant digests once and
- * every member candidate and the marker cite byte-identical authority.
- */
 export function officialStateIdentityAuthorityEvidence(input: {
   readonly sourceId: OfficialStateRollCallSourceId;
   readonly jurisdiction: OfficialStateVoteScope;
@@ -430,9 +403,7 @@ export function officialStateRollCallsCandidate(input: {
     readonly contractId: string;
     readonly versionId: string;
     readonly currentOfficeholderIds: readonly string[];
-    /** Exact official term/session identity horizon, including former members. */
     readonly sessionParticipantIds: readonly string[];
-    /** Stable publisher version or content digest naming that identity horizon. */
     readonly sessionParticipantSourceVersion: string;
     readonly sessionParticipantAudit?: {
       readonly historyParticipantCount: number;
@@ -708,14 +679,6 @@ export function officialStateRollCallsCandidate(input: {
   };
 }
 
-/**
- * One state legislator's votes across a term (`STATE_LEGISLATOR_VOTES`), scoped
- * to their exact officeholder id. Its write is bounded by the member's own
- * tenure, never the chamber times every year, so a state's acquisition fan-out
- * promotes one small candidate per member and re-promotes only the members
- * whose votes changed this cycle. Roll metadata is joined from the per-state
- * roll index; only the member's positions live here.
- */
 export function officialStateLegislatorVotesCandidate(input: {
   readonly sourceId: OfficialStateRollCallSourceId;
   readonly jurisdiction: OfficialStateVoteScope;
@@ -810,14 +773,6 @@ export function officialStateLegislatorVotesCandidate(input: {
   };
 }
 
-/**
- * The per-state fan-out marker the standing runner's clock reads
- * (`STATE_LEGISLATOR_VOTES`, scope = jurisdiction). A watermark over one term's
- * acquisition carrying a single civic record so it promotes GOOD; it holds no
- * positions and is at a distinct scope from the reader's
- * `STATE_ROLL_CALL:<jurisdiction>` pointer, so a promoted marker never renders
- * as a false "no votes" for any member.
- */
 export function officialStateLegislatorVotesSessionMarker(input: {
   readonly sourceId: OfficialStateRollCallSourceId;
   readonly jurisdiction: OfficialStateVoteScope;
@@ -905,7 +860,6 @@ export function officialStateLegislatorVotesSessionMarker(input: {
   };
 }
 
-/** A complete current official state-legislator roster, never a vendor join. */
 export function officialStateLegislatorsCandidate(input: {
   readonly sourceId: OfficialStateRollCallSourceId;
   readonly jurisdiction: OfficialStateVoteScope;
@@ -1031,7 +985,6 @@ export function officialStateLegislatorsCandidate(input: {
   };
 }
 
-/** Official roster probe that records an attempt but cannot promote emptiness. */
 export function officialStateLegislatorHorizonRefusalCandidate(input: {
   readonly sourceId: OfficialStateRollCallSourceId;
   readonly jurisdiction: OfficialStateVoteScope;
@@ -1068,13 +1021,6 @@ export function officialStateLegislatorHorizonRefusalCandidate(input: {
   };
 }
 
-/**
- * A source-authenticated horizon probe that is deliberately incapable of
- * promotion.  This is the honest standing-runner outcome for a legislature
- * whose official landing page is reachable but whose complete roll-call
- * universe has not yet been lawfully enumerated.  It records that we looked;
- * it never turns zero parsed rows into an empty legislature.
- */
 export function officialStateRollCallHorizonRefusalCandidate(input: {
   readonly sourceId: OfficialStateRollCallSourceId;
   readonly jurisdiction: OfficialStateVoteScope;
@@ -1265,7 +1211,6 @@ export function nhMembersCandidate(input: {
   };
 }
 
-/** Existing FundingSnapshot shape, with invalid zero-result absences excluded. */
 export function fecFundingCandidate(input: {
   readonly snapshot: FundingSnapshot;
   readonly rawBodies: readonly string[];
@@ -1501,10 +1446,6 @@ export function njMorrisFilingCandidate(input: {
   const rawHash = sha256(input.rawBodies.map((body) => sha256(body)).join("\n"));
   const contestIds = new Set(contests.map((contest) => contest.id));
   const violations: string[] = [];
-  // The clerk's host, and the one naming rule the selector also reads
-  // (morris-filing-documents.ts, RULING 103). This copy demanded a date stamp
-  // after the selector stopped, and refused the clerk's 2026-09-18 revision
-  // `2026-general-candidates.pdf` as "not both acquired".
   const onClerkHost = (url: string) => /^https:\/\/www\.morriscountyclerk\.org\//i.test(url);
   const generalDocumentIsCurrent = onClerkHost(input.currentDocumentSet.generalCandidatesUrl) &&
     isMorrisGeneralCandidatesDocument(input.currentDocumentSet.generalCandidatesUrl);

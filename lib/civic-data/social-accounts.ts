@@ -1,19 +1,4 @@
-/**
- * **SOCIAL ACCOUNTS READ OFF PAGES WE ALREADY HOLD (CA-05).**
- *
- * A person's social profile links are collected from the saved page they sit
- * on: an official roster or profile page (`OFFICIAL`) or a verified campaign
- * site (`CAMPAIGN`). A link is a fact only when it is on that saved page, so
- * every account carries the page it was read from and `accountIsOnPage` re-runs
- * the same check against the saved bytes. Platforms come from the social
- * platform list (CA-04): a platform added there is collected with no code change.
- *
- * Share buttons, post links and "follow us" widgets are not accounts. Only a
- * profile address counts: one path segment (or the platform's own profile
- * prefix such as `/in/`, `/channel/` or `/@`).
- *
- * Pure. No fetching; the caller supplies the saved text.
- */
+/** Only a profile address counts (one path segment, or the platform's own profile prefix); share and post links do not. */
 import { platformForUrl, type SocialPlatform } from "../officials/social-platforms.ts";
 import type { AccountKind, SocialAccount } from "../officials/types.ts";
 
@@ -21,13 +6,11 @@ import type { AccountKind, SocialAccount } from "../officials/types.ts";
 export type SocialPageKind = "OFFICIAL_PAGE" | "CAMPAIGN_SITE";
 export const ACCOUNT_KIND_FOR_PAGE: Readonly<Record<SocialPageKind, AccountKind>> = { OFFICIAL_PAGE: "OFFICIAL", CAMPAIGN_SITE: "CAMPAIGN" };
 
-/** First path segments that are never a profile, on any platform. */
 const NOT_A_PROFILE = new Set([
   "share", "sharer", "sharer.php", "intent", "dialog", "plugins", "tr", "hashtag", "search", "login", "logout", "signup", "home", "explore",
   "i", "p", "reel", "reels", "stories", "watch", "embed", "status", "posts", "photo", "photos", "events", "groups", "pages", "policy",
   "privacy", "legal", "about", "help", "settings", "feed", "pub", "jobs", "learning", "sharearticle",
 ]);
-/** A profile's own prefix, where the account name is the second segment. */
 const PREFIXED = new Set(["in", "company", "channel", "c", "user"]);
 
 function candidates(text: string): string[] {
@@ -37,7 +20,6 @@ function candidates(text: string): string[] {
   return out.map((raw) => raw.replace(/&amp;/g, "&").replace(/[.,;:]+$/, "")).filter((raw) => /^https?:\/\//i.test(raw));
 }
 
-/** The profile address a link names, in one canonical spelling, or null when it is not a profile link. */
 export function profileAddress(link: string): string | null {
   let url: URL;
   try { url = new URL(link); } catch { return null; }
@@ -59,7 +41,6 @@ export function profileAddress(link: string): string | null {
   return `https://${url.hostname.toLowerCase().replace(/^www\./, "")}${path}`;
 }
 
-/** The accounts a saved page links, one per platform address. Nothing the page does not link is returned. */
 export function socialAccountsOnPage(input: {
   readonly pageUrl: string; readonly text: string; readonly pageKind: SocialPageKind;
   readonly platforms: readonly SocialPlatform[]; readonly collectedAt: string;
@@ -79,7 +60,6 @@ export function socialAccountsOnPage(input: {
   return out;
 }
 
-/** The check: this account's profile address is linked on the saved page it names. */
 export function accountIsOnPage(account: SocialAccount, text: string, platforms: readonly SocialPlatform[]): boolean {
   if (!platformForUrl(account.url, platforms)) return false;
   const want = profileAddress(account.url)?.toLowerCase();

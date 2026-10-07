@@ -1,20 +1,9 @@
-/**
- * Plain-code reading of a saved official "Boards" / "Commissions" page — the
- * cheapest route (held data, then code) before any model. Government CMS
- * directory pages give each board its own titled section (an accordion item,
- * a heading); the section titles that name a body are the directory. Values
- * are taken from the page as written; the §3 check then confirms each one is
- * on the page.
- */
 import { scheduleSentences } from "./worker-held-meetings.ts";
 
 export interface HeldDirectoryRow {
   readonly bodyName: string;
-  /** A category label the reader assigns: a commission, or an appointed advisory board, committee or trust. */
   readonly bodyClass: "Commission" | "Advisory";
-  /** When the body regularly meets, as its own section of the page says it, with the time. */
   readonly meetingCadence?: string;
-  /** The body's office address and phone, as its own section of the page writes them. */
   readonly officeAddress?: string;
   readonly officePhone?: string;
 }
@@ -25,7 +14,6 @@ const BODY_NAME = /(\b(board|commission|committee|council|trust|authority|corpor
 const BARE = /^(the )?(city |town |county )?(board|commission|committee|council)s?$/i;
 
 const STREET = "(?:St|Street|Ave|Avenue|Rd|Road|Blvd|Boulevard|Dr|Drive|Way|Ln|Lane|Ct|Court|Pkwy|Parkway|Hwy|Highway|Pl|Place|Plaza|Sq|Square|Cir|Circle)";
-/** A US street address that ends in a state and ZIP: the shape a body's office address takes on its page. */
 const ADDRESS = new RegExp(`\\b\\d{1,6}\\s+(?:[A-Z0-9][\\w.'-]*\\s+){0,5}?${STREET}\\b\\.?(?:,?\\s+(?:Suite|Ste|Room|Rm|Floor|Fl|Unit|#)\\.?\\s*[\\w-]+)?,?\\s+[A-Z][A-Za-z.' -]{1,30},?\\s+[A-Z]{2}\\s+\\d{5}(?:-\\d{4})?\\b`);
 const PHONE = /\(\d{3}\)\s?\d{3}-\d{4}|\b\d{3}[-.]\d{3}[-.]\d{4}\b/;
 
@@ -35,7 +23,6 @@ const decode = (text: string) => text
   .replace(/&nbsp;/gi, " ").replace(/&quot;/gi, "\"").replace(/&#39;|&apos;/gi, "'").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&amp;/gi, "&");
 const visible = (html: string) => decode(html.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
 
-/** The bodies a saved directory page lists, or null when the page is not a directory. */
 export function readHeldDirectory(html: string): readonly HeldDirectoryRow[] | null {
   const title = visible(/<title\b[^>]*>([\s\S]*?)<\/title\s*>/i.exec(html)?.[1] ?? "");
   if (!DIRECTORY_PAGE.test(title)) return null;
@@ -46,7 +33,6 @@ export function readHeldDirectory(html: string): readonly HeldDirectoryRow[] | n
   titles.forEach((match, index) => {
     const name = visible(match[2] ?? match[4] ?? "");
     if (name.length < 4 || name.length > 90 || !/^[A-Z]/.test(name) || BARE.test(name) || !BODY_NAME.test(name)) return;
-    // The body's own section runs to the next title; its schedule is read there and nowhere else.
     const section = content.slice((match.index ?? 0) + match[0].length, titles[index + 1]?.index ?? content.length);
     const meetingCadence = scheduleSentences(section);
     const text = visible(section);

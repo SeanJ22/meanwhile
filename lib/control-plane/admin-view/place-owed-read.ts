@@ -1,17 +1,4 @@
-/**
- * **WHAT ANY PLACE IS OWED AND WHAT WE HOLD, READ FOR ADMIN.**
- *
- * One place key in, S9's owed list out: every division the place touches, then
- * everything a reader there is owed, filled from what is already held for those
- * divisions by any job (`readHeldPlaceCapture`, S6), then the blanks named.
- * A ZIP resolves to every Census polygon it intersects (`divisionsForZip`, S9);
- * a county resolves to its own government; a state to its own government. No
- * agent runs and nothing is written: this is a read of held data, and a failed
- * read is a named refusal, never an empty place that looks finished.
- *
- * The result is memoized for a few minutes per place, so paging the list and
- * moving between tabs do not repeat the Census and reader-database reads.
- */
+/** A read of held data only: no agent runs and nothing is written. A failed read is a named refusal, never an empty place. */
 import { divisionsForZip, type PlaceDivision } from "../expansion/national-geography.ts";
 import { readHeldPlaceCapture, type HeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
@@ -42,10 +29,9 @@ export interface PlaceOwedRefusal {
 export interface PlaceOwedDeps {
   readonly now: () => string;
   readonly resolveDivisions: (place: ResolvedPlace) => Promise<{ readonly label: string; readonly covers: string; readonly divisions: readonly PlaceDivisionLike[];
-    /** The ZIPs in the place when they are known; absent for a place whose ZIPs are not listed. */
     readonly zips?: readonly string[] }>;
   readonly readHeld: (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
-  /** Makes what Sean added to, or declined from, what is owed the one this list is built with; returns its revision. Absent means none. */
+    /** Makes the owner's owed overlay the one this list is built with; returns its revision. Absent means none. */
   readonly refreshOverlay?: () => Promise<string>;
 }
 export interface PlaceDivisionLike {
@@ -59,7 +45,6 @@ export type ResolvedPlace =
   | { readonly kind: "district"; readonly geoid: string; readonly state: string }
   | { readonly kind: "state"; readonly state: string };
 
-/** The owed list is defined for a ZIP, a county, a congressional district or a state. Other geographies and the country are not a place view. */
 export function resolvePlaceKey(key: string): ResolvedPlace | PlaceOwedRefusal {
   const scope = parseV6PlaceKey(key);
   if (scope === null || scope.kind === "country") return { state: "REFUSED", code: "NOT_A_PLACE", says: "Choose a ZIP, a county, a congressional district or a state to see what it is owed. The whole country is a list of states, not one place." };
@@ -104,7 +89,6 @@ export const defaultPlaceOwedDeps: PlaceOwedDeps = {
       return { label: `ZIP ${place.zip}`, covers: "Every government, district and body whose boundary touches this ZIP, plus the state and the country.", divisions, zips: [place.zip] };
     }
     if (place.kind === "district") {
-      // One owed list for the whole district: the divisions of every ZIP in it, read from held data once. No network: the ZIPs come from the published lookup and the divisions from the committed ZIP index.
       const read = await readStateDistricts(place.state);
       if (!read.ok) throw new Error(read.says);
       const district = read.districts.find((d) => d.geoid === place.geoid);
@@ -131,7 +115,7 @@ const memo = new Map<string, { at: number; overlay: string; read: PlaceOwedRead 
 export async function readPlaceOwed(placeKey: string, deps: PlaceOwedDeps = defaultPlaceOwedDeps, options: { readonly fresh?: boolean } = {}): Promise<PlaceOwedRead | PlaceOwedRefusal> {
   const place = resolvePlaceKey(placeKey);
   if ("says" in place) return place;
-  // What Sean added or declined changes the list, so a remembered list is only reused while the overlay is the same.
+    // A remembered list is only reused while the owed overlay is the same.
   const overlay = deps.refreshOverlay ? await deps.refreshOverlay() : "none";
   const cached = memo.get(placeKey);
   if (!options.fresh && cached && cached.overlay === overlay && Date.now() - cached.at < MEMO_MS) return cached.read;
@@ -157,7 +141,6 @@ export async function readPlaceOwed(placeKey: string, deps: PlaceOwedDeps = defa
   return read;
 }
 
-/** The mission map's open blanks for a place, grouped by squad then subject: what applies, is due, is not satisfied and is not in progress. A refused read is returned as the refusal, never as an empty map. */
 export async function openBlanks(placeKey: string, deps: PlaceOwedDeps = defaultPlaceOwedDeps, options: { readonly fresh?: boolean; readonly squads?: Readonly<Record<string, string>> } = {}): Promise<{ readonly state: "READ"; readonly placeKey: string; readonly blanks: OpenBlanks } | PlaceOwedRefusal> {
   const read = await readPlaceOwed(placeKey, deps, options);
   return read.state === "REFUSED" ? read : { state: "READ", placeKey, blanks: openBlanksOf(read.rows, options.squads) };

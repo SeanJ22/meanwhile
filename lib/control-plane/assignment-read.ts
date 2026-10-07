@@ -1,27 +1,4 @@
-/**
- * **WHAT THE ASSIGNMENT VIEW READS — ONCE FOR THE PUBLISHER, BY ID FOR THE DRILLDOWN.**
- *
- * Two read paths, one projection (`assignment-view.ts`):
- *
- * ```
- *   readAllAssignmentSources   every record the join needs, read once through
- *                              the repositories (keyset-paged, so no response
- *                              nears the 64 MiB cap). The standing publisher
- *                              calls it; the admin page never does.
- *   readAssignmentSourcesById  ONE assignment's records, by targeted reads
- *                              keyed the way the logs are keyed — the obligation
- *                              and its debt and Scout results by obligation id,
- *                              its rounds by their derived occurrence ids, the
- *                              artifacts, costs and worker results by work item,
- *                              the disposition commits by route task, the
- *                              pipeline items by their derived item ids. The
- *                              admin drilldown calls it, for any id, including
- *                              the ones the bounded published list left out.
- * ```
- *
- * Read-only: nothing here appends, puts or compare-and-sets. A failed read is
- * STORE_UNREACHABLE, never an empty assignment (`admin-data.ts`).
- */
+/** Read-only. A failed read is STORE_UNREACHABLE, never an empty assignment. */
 import type { Attempt, ExecutionLease } from "./attempt.ts";
 import { unreachable, type ReadOutcome } from "./admin-data.ts";
 import { parseAskGapObligationId } from "./ask-gap-id.ts";
@@ -38,14 +15,12 @@ import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { WorkItem } from "./work-item.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
 
-/** What every read shares: the clock, the activation reading and the pilot ZIPs the band is read against. */
 export interface AssignmentReadBase {
   readonly nowIso: string;
   readonly activation: ActivationGateReading | null;
   readonly pilotZips: readonly string[];
 }
 
-/** The published assignment join needs execution facts, not replay grants or task inputs. */
 export const ASSIGNMENT_ATTEMPT_PROJECTION = {
   id: true, routeTaskId: true, workItemId: true, worker: ["role", "provider", "version"],
   leaseId: true, startedAt: true, endedAt: true, outcome: true, abortReason: true, artifactIds: true,
@@ -82,8 +57,7 @@ const DEBT_PROJECTION = {
 const READ_CONCURRENCY = 16;
 const MAX_INHERITED_ORIGIN_REFERENCES = 32;
 
-/** Metadata alone is not authority to reuse bytes; this only confirms the
- * declared capture's original owner, complete Attempt, project and subject. */
+/** Metadata alone is not authority to reuse bytes. */
 export function verifiedInheritedOrigin(input: {
   child: WorkItem; origin: WorkItem | null; artifact: ArtifactRecord | null; attempt: Attempt | null;
   declaredArtifactId: string; declaredOriginWorkItemId: string;
@@ -112,7 +86,6 @@ function unique(ids: readonly (string | null | undefined)[]): string[] {
   return [...new Set(ids.filter((id): id is string => typeof id === "string" && id !== ""))];
 }
 
-/** Group a whole promotion-pipeline log into item states, in append order. */
 export function pipelineStatesOf(records: readonly unknown[]): PipelineItemState[] {
   const byItem = new Map<string, PromotionPipelineRecord[]>();
   for (const r of records) {
@@ -124,17 +97,11 @@ export function pipelineStatesOf(records: readonly unknown[]): PipelineItemState
   return [...byItem.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([itemId, recs]) => deriveItemState(itemId, recs));
 }
 
-/** Leases only for the route tasks that hold an open Attempt: the one question a lease answers here. */
 async function leasesFor(repos: ControlPlaneRepositories, attempts: readonly Attempt[]): Promise<ExecutionLease[]> {
   const open = unique(attempts.filter((a) => a.outcome === null).map((a) => a.routeTaskId));
   return values(await inBatches(open, (id) => repos.leases.read(id)));
 }
 
-/**
- * Every record the assignment view joins, read once. Arrays the caller has
- * already read (the publisher reads costs, attempts, obligations and the
- * pipeline for its other panels) are passed in and not read twice.
- */
 export async function readAllAssignmentSources(
   repos: ControlPlaneRepositories,
   base: AssignmentReadBase,
@@ -159,7 +126,6 @@ export async function readAllAssignmentSources(
   ]);
   const pipeline =
     already.pipeline !== undefined ? already.pipeline : pipelineStatesOf(await repos.promotionPipeline.readAll());
-  /* What readers were told (v13). A failed read is null — the page says it was not read — and never fails the publish. */
   const observed = await readAskGapObservations(repos.askGapObservations);
   return {
     nowIso: base.nowIso,
@@ -184,7 +150,6 @@ export async function readAllAssignmentSources(
   };
 }
 
-/** The pipeline item ids a set of Scout results can have produced (the ids are derived, never stored elsewhere). */
 function pipelineItemIdsOf(results: readonly ScoutResult[]): string[] {
   const ids: string[] = [];
   for (const r of results) {
@@ -195,7 +160,6 @@ function pipelineItemIdsOf(results: readonly ScoutResult[]): string[] {
   return unique(ids);
 }
 
-/** The pipeline items a set of Scout results names, read by their derived ids, as item states. */
 async function pipelineOfScouts(repos: ControlPlaneRepositories, itemIds: readonly string[]): Promise<PipelineItemState[]> {
   const lists = await inBatches(itemIds, (itemId) => repos.promotionPipeline.read(itemId));
   return itemIds
@@ -205,32 +169,8 @@ async function pipelineOfScouts(repos: ControlPlaneRepositories, itemIds: readon
 }
 
 /**
- * One assignment's records, by id: a standing obligation id, or a work item id.
- * NOT_RECORDED when neither exists; STORE_UNREACHABLE when a read failed.
- *
- * Each read starts as soon as the ids it is keyed by are known, so the reads
- * form as few dependent round trips as the keys allow (Sean, 2026-09-24: a load
- * over three seconds is not a win). Measured 2026-09-25 on production for
- * `freshness:campaign-finance:ballot-az-pima:prop-423#AZ_PIMA_COUNTY_CAMPAIGN_FINANCE_PAGE`:
- * 76 point reads in five dependent waves, 1.31 s from a workstation, the
- * pipeline read waiting on the attempts it does not need. Now:
- *
- * ```
- *   wave 1   everything keyed by the id itself: the obligation, its debt, its
- *            Scout results (a work item id finds no debt and no Scout result
- *            under its own key: two empty point reads, dropped)
- *   wave 2   the obligation's rounds by their derived ids, beside the pipeline
- *            items its Scout results name — or, for a work item id, the item
- *   wave 3   the work items and route tasks the rounds name, and everything
- *            keyed by them: artifacts, costs, worker results, disposition commits
- *   wave 4   the attempts of those route tasks, beside any later route task a
- *            work item lists that no round names
- *   (wave 5) only when wave 4 found such a task or an open attempt: its
- *            attempts and commits, and the leases of open attempts
- * ```
- *
- * The answer is the same records, in the same order, as reading each wave only
- * after the one before had fully finished.
+ * NOT_RECORDED when neither id exists; STORE_UNREACHABLE when a read failed. Each read starts as soon as the ids it is
+ * keyed by are known; the answer is the same records, in the same order, as reading wave by wave.
  */
 export async function readAssignmentSourcesById(
   repos: ControlPlaneRepositories,
@@ -244,9 +184,7 @@ export async function readAssignmentSourcesById(
     let debts: FreshnessDebt[] = [];
     let workItemIds: string[];
     let routeTaskIds: string[];
-    /* The work item a work-item drilldown already read, reused rather than read twice. */
     let itemRows: (Persisted<WorkItem> | null)[] | null = null;
-    /* What wave 3 reads beside the rounds' records: nothing more for an obligation; for a work item, its Scout results and the pipeline. */
     let wave3Extra: () => Promise<{ readonly scoutResults: ScoutResult[]; readonly pipeline: PipelineItemState[] }>;
 
     if (obligationRow !== null) {
@@ -279,14 +217,12 @@ export async function readAssignmentSourcesById(
       wave3Extra = async () => {
         const [scouts, all] = await Promise.all([
           clause.startsWith("freshness:") ? repos.scoutResults.read(clause) : Promise.resolve([] as readonly ScoutResult[]),
-          // A fleet extraction names its work item, not a derivable item id: the (small) log is read whole.
           repos.promotionPipeline.readAll(),
         ]);
         return { scoutResults: scouts.filter((r) => r.workItemId === id), pipeline: pipelineStatesOf(all) };
       };
     }
 
-    /* An Ask-gap obligation's body: what readers were told of its gaps, read by body beside the rest. A failed read is null, never a failed drilldown. */
     const askGap = obligations.length === 1 ? parseAskGapObligationId(obligations[0]!.id) : null;
     const askGapRead = askGap === null
       ? Promise.resolve(undefined)
@@ -316,7 +252,6 @@ export async function readAssignmentSourcesById(
 
     const attemptById = new Map<string, Persisted<Attempt> | null>(namedAttemptIds.map((a, i) => [a, namedAttemptRows[i]]));
     const commitsByTask = new Map<string, readonly DispositionCommit[]>(routeTaskIds.map((rt, i) => [rt, commitLists[i]]));
-    // A later task's attempts and commits (and any task whose id is not the key it was read by) are read once they are known.
     const lateAttemptIds = attemptIds.filter((a) => !attemptById.has(a));
     const lateTaskIds = allTaskIds.filter((rt) => !commitsByTask.has(rt));
     if (lateAttemptIds.length + lateTaskIds.length > 0) {

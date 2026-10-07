@@ -1,38 +1,13 @@
 /**
- * **NEON BYTES BY CALLING CODE, PER UTC HOUR.** (Vital signs, Sean, Oct 6.)
- *
- * Release 8's first hour moved about 9.4 GB from the control-plane project and
- * nothing in the database could say which code read it: the project has no
- * pg_stat_statements, and the table read counters count rows Postgres touched,
- * not bytes sent to us. This counter names the source.
- *
- * Every Neon HTTP response already passes through `databaseTransferFetch`
- * (transfer.ts), which measures its decoded body. Here each of those bodies is
- * added to an hour bucket under a caller key:
+ * Neon response bytes by calling code, per UTC hour. Each body measured by
+ * `databaseTransferFetch` (transfer.ts) is added to an hour bucket under
  *
  *   <repository operation> ← <first frame outside the repository layer>
- *   e.g. "cp_attempts.list ← lib/control-plane/promotion/campaign-publication-cycle.ts:56"
  *
- * The operation is the name `boundedQuery` already gives every control-plane
- * call; the frame is read from the stack once per distinct stack and cached.
- * Nothing is logged per query and nothing is written to a database.
- *
- * The runner is several processes (the parent, the research child, its lease
- * workers, routine and publication children). When `WTP_VITAL_SIGNS_REPORT=1`,
- * which the standing runner sets for every child it starts, each process prints
- * its hour totals, with its other hour counters (`countVitalSign`: rounds
- * finished, killed or deferred; facts published), as one
- * `vital-signs-bytes {json}` line on its stdout once a minute and when it exits.
- * The output already reaches the runner (lease workers share the research
- * child's stdout; routine children's lines are passed on by
- * bounded-child-pass.ts); the runner takes those lines out of the stream
- * (pilot-runtime-child.mts) and alone keeps and sums the hour
- * (lib/ops/vital-signs-hours.ts). Each line is the process's whole hour so far,
- * so a lost line costs nothing once the next one arrives, and a process killed
- * without warning loses at most its last minute. This module touches no file:
- * it is in every data command's import closure, and the release firewall
- * allows no repository writer there. Outside the runner (the site, Admin,
- * tests) the counts stay in memory.
+ * When `WTP_VITAL_SIGNS_REPORT=1`, each process prints its whole hour so far
+ * as one `vital-signs-bytes {json}` stdout line once a minute and at exit; the
+ * runner parent strips and sums those lines. This module writes no files: it
+ * is in every data command's import closure. Elsewhere the counts stay in memory.
  */
 import { AsyncLocalStorage } from "node:async_hooks";
 import { basename } from "node:path";

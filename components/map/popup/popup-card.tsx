@@ -11,15 +11,8 @@ import { LevelTag } from "@/components/ui/level-tag";
 import lumenStyles from "./lumen-popup.module.css";
 
 /**
- * The port of EdiaStratMap's `.popup-card`, as React primitives.
- *
- * **Edia builds these as HTML strings** with `escapeHtml`/`escapeAttr` and
- * `onclick` attributes, because it is vanilla JS and has no other option. That
- * half is deliberately not ported: React escapes for us, and a real handler
- * cannot be broken by a body name containing a quote. What *is* ported exactly
- * is the visual grammar — the measurements live in `globals.css` under
- * `.popup-card`. DSN-2 adds the workbook's scoped surface treatment through
- * `lumen-popup.module.css`; the fixed head, scrolling body and More stay.
+ * Popup card primitives. Measurements live in `globals.css` under
+ * `.popup-card`; the scoped surface treatment is `lumen-popup.module.css`.
  */
 
 const TIER_VAR: Record<Tier, string> = {
@@ -39,7 +32,7 @@ interface PopupCardProps {
   type: string;
   tier: Tier;
   title: string;
-  /** Appended to the eyebrow — Edia's holdout-badge pattern, ours is status. */
+  /** Status badges appended to the eyebrow. */
   badges?: PopupBadge[];
   /** Opens the large tier. Omitted where there is nothing deeper. */
   onExpand?: () => void;
@@ -48,40 +41,16 @@ interface PopupCardProps {
   onClose?: () => void;
   /** Keeps a selected boundary while returning its details to a pill. */
   onMinimize?: () => void;
-  /**
-   * The body renders the title itself (item 2, 2026-08-16) — the person
-   * card's identity block leads with the name as its dominant type, and the
-   * card heading above it was the same fact a second time, four pixels away.
-   * The heading is still the accessible name via `aria-label`.
-   */
+  /** The body renders the title itself; the heading stays the accessible name via `aria-label`. */
   titleInBody?: boolean;
-  /**
-   * MTG-15 (2026-09-02): the level word after the title, opt-in.
-   *
-   * The eyebrow above already wears the tier's COLOUR on the jurisdiction
-   * string, but not the WORD — so a reader learns "Tucson, AZ" is local from
-   * the ink, never in as many words. The meeting card asks for the word by
-   * passing its tier; the official and district compact cards leave it unset
-   * and are unchanged, so this closes the meeting class without restyling the
-   * other two.
-   */
+  /** The level word after the title, opt-in. */
   levelTier?: Tier | null;
   children: ReactNode;
 }
 
 /**
- * The compact glance card (3). Two affordances, both always visible when
- * available: a close X in the corner, and an obvious full-width "More"
- * footer that opens the large tier — a corner icon alone was an entry
- * point readers never found. The title is plain text: the reader gesture
- * on a card is expansion, never clipboard (4a).
- *
- * **A press outside dismisses it** (item 1, 2026-08-15, the author: "that's
- * natural mobile behavior"). One hook here rather than three in the callers,
- * because all three compact cards — official, district, meeting — are this
- * component, and a dismissal gesture that worked on two of the three would be
- * worse than none. The corner X stays: the gesture is an addition, and a way
- * out nobody discovers is not a way out.
+ * The compact glance card: a close X and a full-width "More" footer that opens
+ * the large tier. A press outside dismisses it.
  */
 export function PopupCard({
   type,
@@ -104,9 +73,7 @@ export function PopupCard({
     <div
       ref={rootRef}
       className={`popup-card pointer-events-auto ${lumenStyles.card}`}
-      /* The tier ring (design handoff 2026-09-13): the card wears its real
-         level-of-government colour. Styled in lumen-popup.module.css by
-         data-tier; the colour is never set here at the call site. */
+      /* The tier ring colour comes from lumen-popup.module.css by data-tier. */
       data-tier={tier}
       role="dialog"
       aria-label={title}
@@ -128,23 +95,7 @@ export function PopupCard({
         </button>
       )}
 
-      {/*
-        F01 1.3 (2026-08-19, the author): *"On the small battlecard I have to
-        scroll to expand for More. What I would like is to have More locked at
-        the bottom — and if there is more to scroll, maybe Sadie Shaw doesn't
-        show up on the first shot, I want to scroll into the data. But if I
-        want to just simply click More, that should never be hidden."*
-
-        Everything used to scroll together inside a `max-height: 55vh` card, so
-        a district with five board members pushed the one control that opens
-        the FULL card off the bottom. The path to the large battlecard was
-        behind a scroll — a hidden entry point, which the friction rule counts
-        as a defect with the same standing as a wrong number.
-
-        Three bands now, in one flex column: the type and title are fixed
-        furniture, the content scrolls, and More is pinned. Rows falling below
-        the fold is expected and fine, which is exactly what the author said.
-      */}
+      {/* Fixed head, scrolling content, and More pinned at the foot. */}
       <div className="popup-card-head">
         <p className="popup-type" style={{ color: TIER_VAR[tier] }}>
           {type}
@@ -190,10 +141,3 @@ export { PopupRow, NoValue } from "./popup-row";
 export function PopupSectionLabel({ children }: { children: ReactNode }) {
   return <p className="popup-section-label">{children}</p>;
 }
-
-/*
- * `Copyable` (click-to-copy) is deliberately gone (4a): it was a developer
- * affordance that leaked to readers — the reader gesture on a card is
- * expansion, never clipboard.
- */
-

@@ -1,5 +1,3 @@
-/** Source filing facts, kept separate from certified ballot membership and
- * candidate/committee joins. Those existing publishers retain their burdens. */
 export const OFFICIAL_FILING_CLASSES = ["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING", "CAMPAIGN_FINANCE_DOCUMENT"] as const;
 export type OfficialFilingClass = typeof OFFICIAL_FILING_CLASSES[number];
 export interface OfficialFiling {

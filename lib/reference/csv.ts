@@ -1,10 +1,6 @@
 /**
- * A CSV reader that handles quoted fields with embedded commas, quotes and
- * newlines — the Census unit file has all three, and a `split(",")` reader
- * silently produces short rows rather than failing.
- *
- * Returns rows as string arrays. The caller maps to objects, so a 90,837-row
- * file is not turned into 90,837 objects unless something wants them.
+ * A CSV reader that handles quoted fields with embedded commas, quotes and newlines. Returns rows as
+ * string arrays; the caller maps to objects.
  */
 export function parseCsv(text: string): string[][] {
   const rows: string[][] = [];

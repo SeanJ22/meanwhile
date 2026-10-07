@@ -209,7 +209,7 @@ export function projectResearchProgression(input: {
     candidateMethods,bottlenecks,evidenceGaps:[...gaps].sort() };
 }
 
-/** Uses existing completed nightly-window boundaries and canonical research logs. No new store. */
+/** Uses completed window boundaries and canonical research logs. No new store. */
 export async function readResearchProgression(repos: ControlPlaneRepositories, input: {
   readonly windowId: string; readonly through: string; readonly gate: ActivationGateReading; readonly candidates: readonly MethodCandidate[];
   readonly knowledge: MethodKnowledge; readonly conclusions: readonly ConclusionRecord[];

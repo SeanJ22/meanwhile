@@ -27,14 +27,9 @@ import { bodyDisplayName } from "@/lib/text/reader-names";
 
 
 /**
- * The sidebar-count doors (8a, 2026-08-17): tapping a stat number opens the
- * list it counts, as a LARGE surface following the one-at-a-time rule —
- * opening a door closes any other large surface, and rows lead on to the
- * entity popups (an official's card, a meeting's card).
- *
- * Honesty rules carried through: bodies render the division's label when the
- * body's own name is unsourced; a door with nothing behind it says why
- * rather than rendering empty chrome.
+ * The sidebar-count doors: tapping a stat number opens the list it counts as
+ * a large surface, closing any other. Bodies with an unsourced name render the
+ * division's label; an empty door says why.
  */
 
 export function DoorOverlay({
@@ -56,18 +51,13 @@ export function DoorOverlay({
   door: "bodies" | "districts" | "officials";
   coverage: CoverageSummary | null;
   meetings: Meeting[];
-  /** The districts the map is drawing — the same list the stat card
-   *  counts, rendered row for row (3g). */
+  /** The districts the map is drawing; the same list the stat card counts. */
   drawnDistricts: DrawnDistrict[];
-  /** Whether the overlay is on — off means the card said "Off", and the
-   *  door explains rather than rendering an empty list. */
+  /** Off means the door explains rather than rendering an empty list. */
   districtOverlayOn: boolean;
-  /** True when a street address has resolved, which is when this door can
-   *  honestly list the districts the reader is IN rather than the ones the
-   *  camera happens to be over. */
+  /** A street address resolved, so the door can list the districts the reader is in. */
   atAddress: boolean;
-  /** Turns the overlay on from inside the door (M57). Sending the reader
-   *  to hunt for a checkbox in the sidebar was a hidden entry point. */
+  /** Turns the overlay on from inside the door. */
   onShowDistricts: () => void;
   onOpenOfficial: (
     holder: SeatHolder,
@@ -75,41 +65,18 @@ export function DoorOverlay({
     tier: "local" | "state" | "national",
   ) => void;
   onOpenMeeting: (meeting: Meeting) => void;
-  /**
-   * A BODY ROW OPENS ITS CARD (g4 item 9).
-   *
-   * The sidebar's Bodies door was the last list surface still throwing the
-   * reader out of the product: the row was an `<a target="_blank">` straight
-   * to `homepageUrl`, so tapping Pima left for pima.gov before the reader had
-   * been told anything about Pima at all. The who-governs card's own body
-   * rows were converted in g3 and this one was missed, which is exactly why
-   * the item asks for an AUDIT rather than a fix.
-   *
-   * The official site is still one tap away — inside the card, with the
-   * roster, the sittings and the sources, which is where every external door
-   * on a reader surface belongs.
-   */
+  /** A body row opens its card; external links live inside the card. */
   onOpenBody: (body: CoveredBody) => void;
   onClose: () => void;
   /** Rendered inside the design card, which owns the frame and the title. */
   embedded?: boolean;
-  /**
-   * Approved reader design: "Show on the map" on a district the map is
-   * drawing — fits its whole boundary and parks the card. Returns nothing;
-   * offered only for districts the map can actually fit.
-   */
+  /** "Show on the map": fits a drawn district's whole boundary and parks the card. */
   onShowDistrict?: (ocdId: string) => void;
   /** The districts the map is drawing — only those can be fitted. */
   showableDistrictIds?: readonly string[];
 }) {
-  // "Districts in view", not "here": this list is what the map is drawing
-  // across the whole viewport, so at 85701 it holds Marana and Oro Valley —
-  // districts the reader is emphatically not in. The other two doors ARE
-  // "here": they come from the coverage summary for the reader's point.
-  // M139: the districts door is headed plainly, because its two sections now
-  // carry the specific claims ("Districts you're in", "Districts in view").
-  // Naming one of them up here too printed the same heading twice on the same
-  // panel, which reads as a rendering fault rather than as structure.
+  // "Districts in view", not "here": the list is the whole viewport. The two
+  // sections inside carry the specific headings.
   const title =
     door === "bodies"
       ? "Bodies here"
@@ -118,13 +85,7 @@ export function DoorOverlay({
         : "Officials here";
 
   return (
-    // Item 5 (2026-08-15): z-40 → z-1300. Found by the overlap audit, not by
-    // eye: a door is a LARGE surface, and every other large surface on this
-    // screen sits at 1200–1300, while the map legend is ambient chrome at
-    // 1100. A door at 40 therefore rendered UNDERNEATH the legend, which put
-    // six words of pin-colour key across a list of a county's officials at
-    // 390px. The legend's own rule already says it must never cover a card
-    // the reader opened; this is the other half of that rule.
+    // z-1300: a door is a large surface and must sit above the legend (1100).
     <div
       className={
         embedded
@@ -159,9 +120,7 @@ export function DoorOverlay({
         </div>
 
         {door === "districts" ? (
-          // 3g: this door lists the districts the card counted — the same
-          // list, not a different universe. It renders even with no
-          // coverage; the drawn overlay is client-side and honest alone.
+          // Lists exactly the districts the card counted.
           <ShowDistrictContext.Provider value={{ onShow: onShowDistrict, showable: showableDistrictIds }}>
           <DistrictsDoor
             drawnDistricts={drawnDistricts}
@@ -214,34 +173,7 @@ function BodiesDoor({
     <ul className="mt-3 space-y-2">
       {coverage.bodies.map((body) => {
         const label = bodyDisplayName(body);
-        /*
-         * PU02's class sweep (NJ Hunt 4 item 3, 2026-08-22). This is the same
-         * defect as the autocomplete's: an EXACT string join between the
-         * meetings snapshot's `bodyName`, which is whatever a portal published,
-         * and the registry's `name`, which a hunt read off the body's own page.
-         * `Selectboard` against `Select Board`, `Board of Adjustment` against
-         * `Board of Adjustment (BAJ)` — the same body, no match, and a row that
-         * reads as having no next sitting while its sittings are in the file.
-         *
-         * Fixed at the shared path: `sameName` in `lib/search/body-row.ts`,
-         * which normalises two spellings of one name and refuses anything
-         * looser. The division is checked too — a body name alone is not a key,
-         * and "Planning Board" exists in every town in the county.
-         */
-        /*
-         * **NOW AN EXACT KEY** (2026-08-27, Red Control 4).
-         *
-         * This was `m.ocdId === body.ocdId && sameName(m.bodyName, body.name)`
-         * — division plus a normalised name comparison, which was the best key
-         * available and is the reason the comment above exists. Meetings carry
-         * `bodyId` from the wiring row that produced them now, so the row is a
-         * lookup rather than a comparison: no normalisation to get right, no
-         * "Planning Board" in nine towns to disambiguate, and a body whose name
-         * the source spells a third way still matches.
-         *
-         * `sameName` stays where it is and keeps its own callers; what changes
-         * is that this row no longer depends on two strings agreeing.
-         */
+        /* Matched by exact `bodyId`, never by name. */
         const next = meetings.find(
           (m) => m.status === "SCHEDULED" && m.bodyId !== undefined && m.bodyId === body.bodyId,
         );
@@ -251,12 +183,7 @@ function BodiesDoor({
             className="border-b border-[var(--panel-border)] pb-2 last:border-0"
           >
             <div className="flex items-baseline justify-between gap-3">
-              {/* g4 item 9: the row opens the body's LARGE BATTLECARD. It
-                  used to be an outbound link to `homepageUrl`, so tapping
-                  Pima left the product for pima.gov before the reader had
-                  been told anything about Pima. The official site is still
-                  one tap away — inside the card, beside the roster, the
-                  sittings and the sources. */}
+              {/* The row opens the body's large battlecard. */}
               <button
                 type="button"
                 onClick={() => onOpenBody(body)}
@@ -266,15 +193,6 @@ function BodiesDoor({
                 {label}
               </button>
               <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
-                {/*
-                  **THIS WAS A BINARY, AND THAT WAS THE DEFECT** (RULING 118 /
-                  RULING 119, 2026-08-24). `GOVERNING ? "Governing" :
-                  "Advisory"` calls EVERY other kind of body advisory — a
-                  commission, a private association, an executive department,
-                  and, the day one shipped, a sovereign tribal nation. A
-                  sovereign government labelled "Advisory" is a false claim
-                  about a nation, not a cosmetic slip.
-                */}
                 {bodyClassShort(body.bodyClass)}
               </span>
             </div>
@@ -306,35 +224,10 @@ function DistrictsDoor({
   ) => void;
 }) {
   /*
-   * M139 sub-item 3 (2026-08-18) — TWO SECTIONS, ALWAYS BOTH, NEVER CONFLATED.
-   *
-   * This door used to be either/or: at a resolved address it showed the
-   * governing set and nothing else, and everywhere else it showed the drawn
-   * set and nothing else. So the reader at an address could not see what the
-   * map was drawing, and the reader at a zip was never told that the question
-   * they actually have — which districts am I IN — has an answer they can
-   * reach. Two different lists were also wearing one heading depending on
-   * where you stood, which is the conflation the row names.
-   *
-   * They are different claims and they now render as two, each with its own
-   * COUNT beside its own heading:
-   *
-   *   "Districts you're in" — divisions whose boundary CONTAINS the reader's
-   *   resolved point. Geometry, not display: it does not depend on whether
-   *   boundaries are drawn.
-   *
-   *   "Districts in view"  — what the map is drawing across the whole
-   *   viewport. At 85701 that includes Marana and Oro Valley, which the
-   *   reader is emphatically not in.
-   *
-   * THE ROW'S OWN WORDING WAS "Districts in this zip" AND THAT IS THE ONE
-   * THING NOT BUILT, deliberately. `deriveStatsView` already settles it and
-   * CLAUDE.md's entry rule settles it above that: a ZCTA crosses city, county
-   * and school lines, so a zip centroid can sit in a different town than the
-   * reader and a heading claiming otherwise would be the exact overclaim the
-   * product forbids. Without an address the first section renders its honest
-   * gap instead of a list — a fact about what we cannot know from a zip,
-   * named as ours.
+   * Two sections, always both: "Districts you're in" (boundaries containing
+   * the resolved point) and "Districts in view" (what the map draws). Without
+   * an address the first renders its named gap; a zip centroid cannot say
+   * which districts the reader is in.
    */
   const governingRows =
     atAddress && coverage
@@ -343,19 +236,7 @@ function DistrictsDoor({
         )
       : null;
 
-  /*
-   * **MAP-5 (2026-08-30) — THE DOOR NOW READS THE MAP, NOT THE SWITCH.**
-   *
-   * `districtOverlayOn && drawnDistricts.length > 0` made the SWITCH a veto
-   * over the EVIDENCE. `ui.showDistricts` is a mirror of the persisted
-   * preference the map reads directly, so it can lag or diverge — and when it
-   * did, this door told a reader looking at four named State House districts,
-   * beside a tile reading 33, that boundaries were switched off and there was
-   * nothing to count.
-   *
-   * The stats tile was repaired for exactly this on 2026-08-19 and this door
-   * was not, which is the same defect surviving inside one file. `districtsAreVisible` is now the single rule and both call it.
-   */
+  /* `districtsAreVisible` is the single rule, shared with the stats tile. */
   const drawnRows =
     drawnDistricts.length > 0
       ? districtDoorRows(drawnDistricts, coverage?.seats ?? [])
@@ -375,8 +256,7 @@ function DistrictsDoor({
             <DistrictRows rows={governingRows} coverage={coverage} onOpenOfficial={onOpenOfficial} />
           </>
         ) : (
-          // The named gap, in the gap's own register: a fact about the limits
-          // of a zip, not a claim that the reader is in nothing.
+          // A fact about the limits of a zip, not a claim that the reader is in nothing.
           <p className="mt-2 t-body text-muted">
             A zip code crosses city, county and school district lines, so it
             can&apos;t say which districts you&apos;re in. Adding your street
@@ -385,17 +265,14 @@ function DistrictsDoor({
         )}
       </DoorSection>
 
-      {/* The dividing line the row asks for: two sections, visibly two. */}
       <div className="mt-4 border-t border-[var(--panel-border)]" />
 
       <DoorSection heading="Districts in view" count={drawnRows?.length ?? null}>
         {drawnRows ? (
-          // 3g: EXACTLY one row per drawn district — the count stated above.
+          // Exactly one row per drawn district.
           <DistrictRows rows={drawnRows} coverage={coverage} onOpenOfficial={onOpenOfficial} />
         ) : districtsSwitchedOffAndEmpty(drawnDistricts.length, districtOverlayOn) ? (
-          // M57: the switch is here, not somewhere the reader has to go find.
-          // MAP-5: and this branch is reached only when the layer is off AND
-          // nothing is painted — the one state in which the sentence is true.
+          // Reached only when the layer is off and nothing is painted.
           <div className="mt-2">
             <p className="t-body text-muted">
               District boundaries are switched off, so none are drawn and there
@@ -420,14 +297,8 @@ function DistrictsDoor({
 }
 
 /**
- * One section of the districts door: a heading, its own count, its own body.
- *
- * The count sits WITH the heading it belongs to and nowhere else. A single
- * number floating above two lists is how "179 districts" came to read as a
- * claim about the reader's government while the list underneath meant
- * something else entirely — the defect `deriveStatsView` was rewritten for.
- * A null count renders no number at all rather than a zero: "we can't tell
- * you from a zip" and "the answer is none" are different sentences.
+ * One section of the districts door: a heading with its own count. A null
+ * count renders no number: "can't tell from a zip" is not "none".
  */
 function DoorSection({
   heading,
@@ -530,10 +401,7 @@ function OfficialsDoor({
     tier: "local" | "state" | "national",
   ) => void;
 }) {
-  // Item 2c (2026-08-14 second session): one derivation for every
-  // officials surface, grouped Local / State / Federal, closest-first —
-  // the list must not open with the names people already know. The flat
-  // mixed list (senators first, no locals at all) was the defect.
+  // Grouped Local / State / Federal, closest first.
   const groups = groupOfficials(coverage);
   const total = groups.local.length + groups.state.length + groups.federal.length;
   if (total === 0) {
@@ -553,7 +421,6 @@ function OfficialsDoor({
       {(Object.keys(TIER_GROUP_LABELS) as TierGroup[]).map((group) =>
         groups[group].length === 0 ? null : (
           <div key={group}>
-            {/* Structural label (design pass). */}
             <p className={`t-structure ${TIER_HEADER_CLASS[group]}`}>
               {TIER_GROUP_LABELS[group]}
             </p>

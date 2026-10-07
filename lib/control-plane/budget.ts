@@ -1,43 +1,20 @@
 /**
- * SHARED HOST / VENDOR / CREDENTIAL BUDGETS — politeness that does not multiply.
- *
- * THE LOAD-BEARING PROPERTY, stated first because everything else here exists to
- * serve it:
- *
- *     THE BUDGET IS SHARED. Twelve workers touching one publisher contend on ONE
- *     HostBudget. Per-worker politeness MULTIPLIES and is therefore not
- *     politeness at all.
- *
- * A worker that waits 2s between its own requests is well behaved exactly once.
- * Twelve such workers, each individually correct, are twenty-four requests in
- * the two seconds during which the publisher believed it had asked for one. This
- * is not a hypothetical rate-limit story: it is the arithmetic of fanning out,
- * and it is how a project that intends to be a good citizen gets a government
- * server to block it. The ledger below is the single place that count lives, so
- * a twelve-way fan-out is arithmetically incapable of becoming twelve budgets.
- *
- * Three scopes, because a host is not the only unit a limit is enforced at:
+ * Shared host, vendor and credential budgets. The budget is shared: every
+ * worker touching one publisher contends on one HostBudget, because per-worker
+ * politeness multiplies with fan-out.
  *
  *   - HOST: one origin. Concurrency, minimum interval, daily cap, backoff.
- *   - VENDOR: one supplier spanning MANY hosts. A hundred Legistar tenants are a
- *     hundred hostnames and one company's infrastructure; a per-host budget that
- *     leaves the vendor unconstrained is a per-host budget that is wrong.
- *   - CREDENTIAL: an API key's own quota, which follows the key rather than the
- *     host and is shared by everyone who holds it.
+ *   - VENDOR: one supplier spanning many hosts (e.g. many tenants of one platform).
+ *   - CREDENTIAL: an API key's own quota, shared by everyone who holds it.
  *
- * TIME IS A PARAMETER. Nothing here reads a clock. Every decision is a pure
- * function of (ledger, host, now), so a test can put twelve workers at the same
- * instant and a replay can reproduce a refusal exactly.
- *
- * IMMUTABLE UPDATES. `tryAcquire` returns a NEW ledger. The caller threads it,
- * and a lost update becomes a visible sequencing bug rather than an invisible
- * over-fetch.
+ * Pure functions of (ledger, host, now); nothing reads a clock. `tryAcquire`
+ * returns a new ledger for the caller to thread.
  */
 
 /** ---------------------------------------------------------------- budgets */
 
 export interface HostBudget {
-  /** Bare origin host, e.g. "pima.legistar.com". Never a full URL. */
+  /** Bare origin host, e.g. "example.legistar.com". Never a full URL. */
   readonly host: string;
   /** Requests in flight AT ONCE, across every worker in the system. */
   readonly maxConcurrent: number;
@@ -47,11 +24,7 @@ export interface HostBudget {
   readonly dailyRequestCap: number | null;
   /** Set by `backoff()` on 429/503. Null when the host is not backed off. */
   readonly backoffUntil: string | null;
-  /**
-   * `Crawl-delay` as the host ITSELF published it. When present it overrides a
-   * shorter `minIntervalMs`: a host that stated its own preference has been
-   * asked, and asking and then ignoring the answer is worse than not asking.
-   */
+  /** `Crawl-delay` as the host itself published it; overrides a shorter `minIntervalMs`. */
   readonly observedCrawlDelayMs: number | null;
   /** Which vendor this host belongs to, if any. */
   readonly vendor: string | null;
@@ -101,11 +74,9 @@ export interface BudgetLedger {
   readonly hostState: Readonly<Record<string, HostState>>;
   readonly credentialState: Readonly<Record<string, CredentialState>>;
   /**
-   * MW-021 (2026-09-25): the dollar holds paid work took against the owner's
-   * Send and area budgets, on this ONE shared ledger so concurrent Scouts and
-   * overlapping cycles decide against the same remaining budget under its
-   * compare-and-set (`lib/control-plane/expansion/spend-holds.ts`). Absent on
-   * a ledger no budgeted work has touched.
+   * Dollar holds paid work took against Send and area budgets, on this shared
+   * ledger so concurrent work decides against the same remaining budget
+   * (`expansion/spend-holds.ts`). Absent on a ledger no budgeted work touched.
    */
   readonly spendHolds?: Readonly<Record<string, SpendHold>>;
 }
@@ -129,12 +100,7 @@ export interface SpendHold {
   readonly settled: { readonly usd: number; readonly costRecordedAt: string } | null;
 }
 
-/**
- * A concurrency refusal has no knowable wait — it ends when some other worker
- * releases, and nothing in a pure function can know when that is. The stated
- * wait is therefore a RETRY HINT and is documented as one, rather than a promise
- * dressed up as a number.
- */
+/** A concurrency refusal has no knowable wait; the stated wait is a retry hint. */
 export const CONCURRENCY_RETRY_HINT_MS = 250;
 
 const EMPTY_HOST_STATE: HostState = {
@@ -258,13 +224,7 @@ function refuse(
   return { granted: false, ledger, waitMs: Math.max(waitMs, 0), refusal, reason };
 }
 
-/**
- * Ask the shared budget for permission to make ONE request to `host`.
- *
- * Refuses by default: a host with no registered budget is refused, because the
- * politeness owed to a publisher we have never characterised is unknown, and
- * "unknown" resolves to "do not hit it yet" rather than "go ahead".
- */
+/** Ask the shared budget to make one request to `host`. A host with no registered budget is refused. */
 export function tryAcquire(
   ledger: BudgetLedger,
   host: string,
@@ -457,13 +417,7 @@ export function tryAcquire(
   };
 }
 
-/**
- * Return a slot.
- *
- * Floors at zero rather than going negative. A double release is a bug, but a
- * NEGATIVE in-flight count is a bug that hands out free concurrency to everyone
- * afterwards, and this module refuses to be the second failure.
- */
+/** Return a slot. Floors at zero so a double release cannot hand out free concurrency. */
 export function release(
   ledger: BudgetLedger,
   host: string,
@@ -488,13 +442,7 @@ export function release(
   };
 }
 
-/**
- * Record a 429/503 (or a Retry-After) as a shared, named backoff.
- *
- * `why` is required. A host that is quiet for an hour with no recorded cause is
- * indistinguishable from a host that published nothing, and that confusion is
- * exactly how a blocked ROUTE becomes an asserted absent FACT.
- */
+/** Record a 429/503 (or a Retry-After) as a shared, named backoff. `why` is required. */
 export function backoff(
   ledger: BudgetLedger,
   host: string,
@@ -503,8 +451,7 @@ export function backoff(
 ): BudgetLedger {
   const state = ledger.hostState[host] ?? EMPTY_HOST_STATE;
   const existing = state.backoffUntil;
-  // Never shorten an existing backoff: the longer of the two is the one that
-  // was actually asked for.
+  // Never shorten an existing backoff.
   const applied =
     existing && Date.parse(existing) > Date.parse(until) ? existing : until;
   return {

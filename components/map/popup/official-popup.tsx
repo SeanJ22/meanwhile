@@ -33,19 +33,10 @@ import { officialStateVotesRenderToReader } from "@/lib/state-rollcalls/reader-v
 import { PopupCard, PopupSectionLabel } from "./popup-card";
 
 /**
- * The rep surfaces (3c), in the two-tier architecture:
- *
- * - **`OfficialPopup`** — the compact glance card: who they are and how to
- *   reach them, with an obvious "More" opening the large tier.
- * - The **large tier** (`official-modal.tsx`) composes the shared pieces
- *   exported here: identity, contact, the roll-call record with reaction
- *   capture, and the office blurb.
- *
- * Everything rendered traces to a published record — the roster row (linked
- * as SOURCE), the licensed photo manifest, the curated campaign-site
- * overlay. The office blurb describes the *office*, never the holder, and
- * the campaign site is always labeled as such with the official page first.
- * A missing photo renders initials, never a broken image.
+ * The officeholder surfaces: `OfficialPopup`, the compact glance card, and the
+ * shared pieces the large card (`official-modal.tsx`) composes. The office
+ * blurb describes the office, never the holder; a missing photo renders
+ * initials.
  */
 
 interface OfficialPopupProps {
@@ -61,16 +52,8 @@ interface OfficialPopupProps {
 const initialsOf = personInitials;
 
 /**
- * The publisher-recorded states, as FILLED PILLS (item 5, 2026-08-16).
- *
- * They were bare bold text in a colour. A pill in the chip grammar is what
- * this system already uses for a stated fact, and the colours still state the
- * member's VOTE — what they cast, never whether it was good. The legend below
- * the list says exactly that.
- *
- * The no-red is a DIFFERENT SHADE from the party red on purpose, and the fill
- * strategy is inverted from a party chip's as well — see `--vote-no` in
- * globals.css. A no-vote must never read as a party mark at a glance.
+ * Recorded positions as filled pills; the colour states the vote cast, never
+ * a judgement. `--vote-no` is a different shade from the party red.
  */
 const POSITION_STYLE: Record<VotePosition, { label: string; tone: string }> = {
   YES: { label: "Voted yes", tone: "yes" },
@@ -81,12 +64,7 @@ const POSITION_STYLE: Record<VotePosition, { label: string; tone: string }> = {
   UNKNOWN: { label: "Publisher position unclassified", tone: "neutral" },
 };
 
-/**
- * A recorded position, in the pill grammar.
- *
- * `tone="gap"` is the NAMED GAP form — an outline, never a position's
- * colour. Absence is not an opinion and must not wear one (item 12).
- */
+/** A recorded position as a pill. `tone="gap"` is the named-gap outline, never a position's colour. */
 export function VotePill({
   tone,
   children,
@@ -99,8 +77,7 @@ export function VotePill({
 
 export type MemberRollCall = RollCallVote & {
   position: VotePosition;
-  /** Item 3: per-party for/against, or null when it wouldn't sum to the
-   *  chamber's recorded tally — the honest unavailable state. */
+  /** Per-party for/against, or null when it would not sum to the chamber's recorded tally. */
   partyBreakdown: { party: string; yes: number; no: number }[] | null;
   /** Canonical server projection; the client never imports tracked civic data. */
   billSummary: BillSummary | null;
@@ -112,32 +89,15 @@ export type MemberRollCall = RollCallVote & {
 };
 
 /**
- * How many recent roll calls the "Recent" column shows.
- *
- * **Count-based, not a time window** (item 6b): a
- * congress votes in bursts, and "the last 30 days" is forty roll calls in one
- * week and none in the next. Twenty self-adjusts to the chamber's own rhythm
- * and always fills the column.
- *
- * **Nothing is filtered out of it, and nothing is footnoted as lesser.**
- * Procedural votes — tabling, cloture, rules — are exactly
- * where a member's real position often lives, because voting to table a bill
- * is voting to kill it without going on record against it. This column shows
- * every roll call the member cast, in the chamber's own words, with the plain
- * function of the motion beside it.
- *
- * Was 5 until 2026-08-15.
+ * How many recent roll calls the "Recent" view shows. Count-based, not a time
+ * window, since chambers vote in bursts. Nothing is filtered out: procedural
+ * votes are included.
  */
 const VOTE_LIMIT = 20;
 
 /**
- * The licence attribution a vote store requires, when it requires one.
- *
- * Federal roll calls come from the chambers' own public-domain XML and carry
- * none. LegiScan's state data is CC BY 4.0 and the licence requires
- * attribution wherever it appears, so the API sends it with the rows and this
- * renders it — never a hardcoded string on the client, which could drift from
- * the store it describes.
+ * The licence attribution a vote store requires, sent by the API with the
+ * rows. Federal roll calls carry none; LegiScan state data is CC BY 4.0.
  */
 export type VoteAttribution = {
   text: string;
@@ -147,16 +107,10 @@ export type VoteAttribution = {
 };
 
 /**
- * Whether this holder has a roll-call store we render at all.
- *
- * `congress:` — the chambers' XML (5). `plural:` — a state legislator, from the
- * retired LegiScan fixture (test only). Official state legislators
- * (`officialStateVotesRenderToReader`) render their votes through `/api/votes` →
- * the promoted STATE_ROLL_CALL projection — currently NJ; AZ (a filed named
- * source gap) and NH (a mid-flight per-legislator fan-out) are deliberately
- * excluded there, never a silent "no votes". Anything else — a county
- * commissioner, a selectboard member — has no roll-call store, and the section
- * renders nothing rather than an empty heading.
+ * Whether this holder has a roll-call store we render. `congress:` is the
+ * chambers' XML; `plural:` is the LegiScan test fixture; official state
+ * legislators render through `/api/votes` where
+ * `officialStateVotesRenderToReader` allows. Anything else renders nothing.
  */
 function hasVoteRecord(id: string): boolean {
   return id.startsWith("congress:") || id.startsWith("plural:") || officialStateVotesRenderToReader(id);
@@ -165,19 +119,12 @@ function hasVoteRecord(id: string): boolean {
 export function RecentVotes(props: {
   holder: SeatHolder;
   reactionContext: ReactionViewContext | null;
-  /**
-   * Item 6b (2026-08-15): render as the two-column architecture — "Recent"
-   * beside "When it mattered", each its own collapsed section — rather than
-   * as one flat list. The large card passes this; the compact glance card
-   * does not, and keeps its single short list.
-   */
+  /** Render as the large card's Voting Record views; the compact card keeps one short list. */
   columns?: boolean;
   /** Full record inside a caller-owned header, including the ballot card. */
   contentOnly?: boolean;
 }) {
-  // Keyed on the holder so a holder change discards the fetched record
-  // structurally — a new holder never wears the previous one's votes
-  // (D40 hygiene, same shape as the funding block).
+  // Keyed on the holder so a new holder never shows the previous one's votes.
   return <RecentVotesInner key={props.holder.id} {...props} />;
 }
 
@@ -203,10 +150,8 @@ function RecentVotesInner({
   const [historyAnchor, setHistoryAnchor] = useState<string | null>(null);
   const [historyLoadingMore, setHistoryLoadingMore] = useState(false);
   const [failed, setFailed] = useState(false);
-  // An official state record that is not live yet renders no section at all
-  // (set in the fetch's catch), distinct from `failed`, which is the transient
-  // line federal/fixture ids keep. Reset on holder change by the key on
-  // RecentVotesInner.
+  // An official state record that is not live yet renders no section (set in
+  // the fetch's catch), distinct from `failed`.
   const [absent, setAbsent] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
@@ -233,11 +178,7 @@ function RecentVotesInner({
         setPickedKeyVotes(payload.pickedKeyVotes ?? []);
       } catch {
         if (controller.signal.aborted) return;
-        // An official state legislator whose promoted STATE_ROLL_CALL record is
-        // not live yet (e.g. before the standing runner's first promotion)
-        // renders NOTHING — never "couldn't load", which would announce our own
-        // failure (RULING 254). The section simply does not appear until the
-        // record is live. Federal/fixture ids keep the transient line.
+        // An official state record not live yet renders nothing, never "couldn't load".
         if (officialStateVotesRenderToReader(holder.id)) setAbsent(true);
         else setFailed(true);
       }
@@ -291,10 +232,7 @@ function RecentVotesInner({
     }
   };
 
-  // A holder with no vote store renders nothing here — never an empty
-  // "Recent votes" heading, which reads as "this person does not vote". An
-  // official state record that isn't live yet (absent, from the fetch's catch)
-  // renders the same nothing rather than a self-referential failure line.
+  // No vote store, or a state record not live yet: no "Recent votes" heading.
   if (!hasVoteRecord(holder.id) || absent) return contentOnly ? <WorkingOnIt /> : null;
 
   const visibleVotes = votes?.slice(0, showAll ? undefined : VOTE_LIMIT) ?? null;
@@ -324,11 +262,7 @@ function RecentVotesInner({
     </>}
   </>;
 
-  /*
-   * The compact glance card keeps the flat short list it always had — it is
-   * a glance, and two collapsed columns inside a 300px popup would be two
-   * things to tap before seeing anything.
-   */
+  /* The compact glance card keeps the flat short list. */
   if (!columns && !contentOnly) {
     return (
       <>
@@ -340,28 +274,8 @@ function RecentVotesInner({
   }
 
   /*
-   * Item 4 (2026-08-16) — replacing 6b's two columns.
-   *
-   * What was wrong: "Recent" and "When it mattered" floated as two headers
-   * with no parent, so the first question a reader asks is "recent WHAT?" —
-   * and side by side they each wasted half the card on empty column space.
-   *
-   * The architecture now:
-   *
-   *   - ONE "Voting Record" section header, at the SAME full width as
-   *     "Campaign money" and the others above it. It is one of the
-   *     collapsible sections in the 6b4 grammar, not a special case.
-   *   - Inside it, Recent and When it mattered are SELECTORS. The selected
-   *     view consumes the full width of the box, and selecting one collapses
-   *     the other — accordion behaviour INSIDE Voting Record only. The
-   *     sections above are untouched by it.
-   *
-   * INFORMATION ARCHITECTURE IS OTHERWISE UNCHANGED. Both views keep their
-   * complete answers, newest first, overlap unmarked, the House nominations
-   * line as shipped. **Overlap is expected and unmarked**: a recent vote that
-   * is also a when-it-mattered vote appears in both, because each view has to
-   * be a complete answer to its own question, and cross-marking them would
-   * make one look like a subset of the other.
+   * One "Voting Record" section with Recent and When it mattered as selectors.
+   * Each view is a complete answer; overlap between them is unmarked.
    */
   const fullRecord = (
       <VotingRecordViews
@@ -375,12 +289,7 @@ function RecentVotesInner({
             </>
           ) : null
         }
-        /* F01 5.1 (2026-08-19): this used to be `keyVotes.length` — every
-           entry in the curated list, including the sixteen nomination
-           questions a House member cannot vote on. The headline now counts
-           the votes the member ACTUALLY PARTICIPATED IN, which is what a
-           reader opening it expects to find underneath. The full denominator
-           has not vanished: it is stated inside, per group. */
+        /* Counts the votes the member participated in; full denominators are stated per group inside. */
         keyVotesMeta={
           keyVotes.length > 0 ? String(votedCount(keyVotes)) : null
         }
@@ -417,11 +326,10 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                 data-recent-vote-id={vote.id}
                 className="mt-2 border-b border-[var(--panel-border)] pb-2 last:border-0"
               >
-                {/* Plain words first — the official title, never ours. */}
+                {/* The official title, never ours. */}
                 <p className="t-detail leading-snug">{vote.title}</p>
 
                 <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 t-caption">
-                  {/* Item 5: the position as a filled pill, in both views. */}
                   <VotePill tone={POSITION_STYLE[vote.position].tone as "yes" | "no" | "neutral"}>
                     {POSITION_STYLE[vote.position].label}
                   </VotePill>
@@ -430,11 +338,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                     {vote.legisNum ? ` · ${vote.legisNum}` : ""}
                   </span>
                 </p>
-                {/* Item 3 (2026-08-14 second session): how the parties
-                    voted, under the member's own vote. Real numbers from
-                    the roll call, refused server-side unless they sum to
-                    the recorded tally. Numbers only — no "party-line"
-                    labels, no "crossed the aisle"; the reader concludes. */}
+                {/* Party numbers from the roll call, refused server-side unless they sum to the tally. Numbers only. */}
                 {vote.partyBreakdown ? (
                   <p className="mt-1 t-caption leading-relaxed text-paper-dim">
                     How the parties voted:{" "}
@@ -449,12 +353,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                   <WorkingOnIt inline />
                 )}
                 {explainer && (
-                  // The vote-type explainer (4b): what kind of vote this was,
-                  // in plain words — "yes then no on the same act" reads as
-                  // incoherence until the reader knows one was procedural.
-                  // 5b (2026-08-17): plus the mechanical meaning of a No on
-                  // this vote type, from the same data file — never
-                  // evaluative.
+                  // What kind of vote this was and the mechanical meaning of a No on it; never evaluative.
                   <p className="mt-1 t-caption leading-relaxed text-paper-dim">
                     {explainer.plain}{" "}
                     <span className="text-muted">{explainer.noMeans}</span>
@@ -466,9 +365,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                   pending={vote.billSummaryPending}
                 />
 
-                {/* The sensor (P03): asked after the record, never before it.
-                    6c: the compact frame — as prominent as the ballot's, not
-                    as large, because a card carries a dozen of these. */}
+                {/* Asked after the record, never before it. */}
                 <ReactionControl
                   targetType="FEDERAL_VOTE"
                   targetId={vote.id}
@@ -492,18 +389,8 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
 }
 
 /**
- * The two views inside Voting Record, and the accordion between them.
- *
- * One selected at a time, and one ALWAYS selected — a state where neither is
- * open would make the reader tap twice to see a record they already asked
- * for by opening the section. "Recent" leads because it answers the question
- * a reader arrives with; "When it mattered" is the curated list and says so
- * in its own criteria sentence.
- *
- * The selector is `aria-pressed` rather than a tablist: these are two views
- * of one record inside an already-labelled region, and a nested tablist
- * inside a collapsible section reads to a screen reader as a second
- * navigation the card does not have.
+ * The two views inside Voting Record. One is always selected. The selector is
+ * `aria-pressed` rather than a nested tablist.
  */
 function VotingRecordViews({
   recent,
@@ -572,11 +459,8 @@ function VotingRecordViews({
 }
 
 /**
- * The curated plain-language bill summary (item 4, 2026-08-16), behind the
- * reader gesture — expansion. Labeled, cited to the CRS summary it
- * paraphrases, with the official record staying one click away on the row.
- * A bill honestly pending renders the coming state; the vote row is never
- * blocked either way.
+ * The curated plain-language bill summary behind an expander, cited to the
+ * CRS summary it paraphrases. A pending bill renders the coming state.
  */
 export function BillPlainSummary({
   summary,
@@ -591,7 +475,6 @@ export function BillPlainSummary({
       <summary className="cursor-pointer t-caption text-paper-dim underline decoration-dotted hover:text-signal">
         What this bill does — plain language
       </summary>
-      {/* 3b: the product's voice renders BOLD. */}
       <p className="mt-1 t-caption font-semibold leading-relaxed text-paper-dim">
         {summary.summary}
       </p>
@@ -606,14 +489,13 @@ export function OfficialIdentity({
 }: {
   holder: SeatHolder;
   seatLabel: string | null;
-  /** The expanded surface earns a bigger portrait (3h, 2026-08-16). */
+  /** The expanded surface uses a bigger portrait. */
   large?: boolean;
 }) {
   return (
     <div className="mt-2 flex items-start gap-3">
       {holder.photoUrl ? (
-        // Served from our origin; source and license are recorded per
-        // image in lib/registry/official-photos.json (D20).
+        // Served from our origin.
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={holder.photoUrl}
@@ -636,16 +518,13 @@ export function OfficialIdentity({
       <div className="min-w-0">
         <p className="t-body leading-snug">
           {readerOfficeTitle(holder.officeTitle)}
-          {/* A seat label identical to the title ("Mayor · Mayor") is
-              noise, not information — caught on the item-1 gate
-              screenshot. */}
+          {/* A seat label identical to the title is not repeated. */}
           {seatLabel && seatLabel !== holder.officeTitle
             ? ` · ${seatLabel}`
             : ""}
         </p>
         {holder.partyLabel && (
-          // Display only. Nothing infers anything from it. Colored per the
-          // party palette (3a) — the color states the label, never a view.
+          // Display only; the colour states the label, never a view.
           <p
             className="mt-0.5 t-detail"
             style={{ color: partyColorVar(holder.partyLabel) }}
@@ -654,15 +533,8 @@ export function OfficialIdentity({
           </p>
         )}
         {/*
-          Item 6d (2026-08-15): "In seat until", and — on the large card only
-          — age. Both render ONLY from a sourced value and neither is ever
-          computed from an election cycle or a news profile. A holder with no
-          sourced term end renders no line at all rather than an em dash,
-          because a visible blank invites a reader to conclude something.
-
-          The age is computed from the birth date AT RENDER (see
-          lib/officials/tenure.ts), so it cannot staleness-drift the way a
-          stored number would.
+          Term end and (large card only) age render only from sourced values;
+          age is computed at render (lib/officials/tenure.ts). No line when unsourced.
         */}
         {(() => {
           const until = inSeatUntil(holder.termEnd);
@@ -684,22 +556,6 @@ export function OfficialIdentity({
             </p>
           );
         })()}
-        {/*
-          **BC-14 (2026-08-25) — the third instance, and it was nearly missed.**
-
-          This file renders inside `PopupCard`, so it IS a small card — the one
-          `walk-all` opens by clicking a name on the who-governs list. The
-          first pass of this sweep classified it as part of the LARGE card and
-          left the tag standing, on nothing better than the file's name.
-
-          Checking rather than assuming is what found it, and the check is
-          structural: `.popup-card` is the small card and `.account-modal` is
-          the large one, so the question is which primitive a file renders
-          into. All four `.source-tag` sites turn out to be on small surfaces.
-
-          `holder.sourceUrl` is untouched on the record (RULING 138) and still
-          renders in the large card.
-        */}
       </div>
     </div>
   );
@@ -710,13 +566,10 @@ export function OfficeBlurb({
   bare = false,
 }: {
   holder: SeatHolder;
-  /** The CardSection header names it (6b4); drop the duplicate label. */
+  /** The CardSection header names it; drop the duplicate label. */
   bare?: boolean;
 }) {
-  // Item 1 (2026-08-14 second session): the blurb resolves against the
-  // holder's OWN jurisdiction, read off the roster that carries them —
-  // never a per-type default that smuggles one city's charter onto
-  // another city's mayor.
+  // Resolved against the holder's own jurisdiction, never a per-type default.
   const blurb = blurbForTitle(
     holder.officeTitle,
     holder.officeJurisdictionOcdId,
@@ -748,30 +601,8 @@ export function OfficeBlurb({
 }
 
 /**
- * The compact glance card — ITEM 4, 2026-08-16.
- *
- * The previous form was scattered, with too much info. It carried the name, a party pill, a row of outlined chips (state, chamber,
- * incumbent), the office title, an in-seat date, and a wrapped grid of up to
- * ten contact pills, all inside 300px.
- *
- * It is three things now and nothing else:
- *
- *  1. the name, with the photo-or-initials circle;
- *  2. the party as the FILLED PILL — the pill belongs on battlecards, small
- *     and large; it is banned only from the who-governs list;
- *  3. the contact pills in ONE VERTICAL COLUMN — phone, email, contact form,
- *     official page, campaign site, X where held. The rest of the social row
- *     is large-card only.
- *
- * "More" sits at the bottom, full width, aligned with the column, and opens
- * the large battlecard — which carries the office, the in-seat line, the
- * chips, the full social row, the record and everything else. **Nothing is
- * deleted; it moved one tap down.**
- *
- * The eyebrow above the card keeps the office title: it is the card's
- * structural label — what KIND of card this is, in the tier's colour — and
- * every popup in this system has one. The role line inside the body, which
- * said the same words a second time four pixels lower, is what went.
+ * The compact glance card: name with photo or initials, the party pill, and
+ * primary contact pills in one column, with "More" opening the large card.
  */
 export function OfficialPopup({
   holder,
@@ -788,16 +619,9 @@ export function OfficialPopup({
       onExpand={onExpand}
       expandLabel={hasVoteRecord(holder.id) ? `More about ${holder.name} — voting record` : `More about ${holder.name} — office and contact`}
       onClose={onClose}
-      /* Item 2 (2026-08-16): the card's own title is the identity block's
-         name now. Rendering it twice, once as the popup heading and once as
-         the header's dominant type, was two of the same fact. */
       titleInBody
     >
       <PersonIdentity holder={holder} seatLabel={seatLabel} identityOnly />
-      {/* Item 2: the pill row REPLACES the REACH THEM
-          label/value ledger — the ledger is what broke, and a pill carries
-          its own label so nothing competes for the popup's fixed width.
-          Item 4: one column, primary channels only. */}
       <ContactPills holder={holder} compact layout="column" scope="primary" />
     </PopupCard>
   );

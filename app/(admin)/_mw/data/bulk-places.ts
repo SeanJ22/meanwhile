@@ -1,24 +1,10 @@
 import "server-only";
 
-/**
- * **WHICH ZIPS A PICK MEANS, AND WHICH ZIPS ARE REAL.** (S11.)
- *
- * A pasted list or a file already is ZIPs. A pick of a state, county,
- * congressional district, metro area or state legislative district is one
- * mission, named from the published Census lookup (`data/geography.ts`). It is
- * never turned into a pile of ZIP hunts: the runner resolves the mission's ZIPs
- * itself, once, when it plans its work.
- *
- * `describeZips` then says, for each ZIP, which state it is in and whether the
- * reader's national ZIP index knows it. A ZIP the index does not know is named
- * and left out of the send, never sent as a hunt that can find nothing.
- */
 import { stateOfZip } from "@/lib/control-plane/bulk-hunts/zip-state.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 
 import { listContainers } from "./geography.ts";
 
-/** The geography types a pick can name besides a whole state. Each is a mission of its own. */
 export const PICKABLE_TYPES = ["county", "congressional_district", "cbsa", "state_leg_upper", "state_leg_lower"] as const;
 export type PickableType = (typeof PICKABLE_TYPES)[number];
 
@@ -41,7 +27,6 @@ export function validPick(raw: unknown): PlacePick | null {
   return null;
 }
 
-/** The counties, districts or metro areas of one state that can be picked. */
 export async function pickable(state: string, type: PickableType): Promise<
   | { readonly ok: true; readonly items: readonly { readonly geoid: string; readonly label: string }[] }
   | { readonly ok: false; readonly why: string }
@@ -51,10 +36,7 @@ export async function pickable(state: string, type: PickableType): Promise<
   return { ok: true, items: (read.value[type] ?? []).map((g) => ({ geoid: g.geoid, label: g.label })) };
 }
 
-/**
- * One pick as one mission: the geography the scope list records, from the published lookup. A whole state is the one geography
- * the lookup has no container for, so its plan follows the county plan it is built from. Nothing here expands a mission into ZIPs.
- */
+/** A whole state has no container in the lookup, so its plan follows the county plan it is built from. Nothing here expands a mission into ZIPs. */
 export async function missionForPick(pick: PlacePick): Promise<
   | { readonly ok: true; readonly geography: { readonly type: string; readonly geoid: string; readonly version: string; readonly label: string; readonly stateAbbr: string } }
   | { readonly ok: false; readonly why: string }

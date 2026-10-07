@@ -45,9 +45,7 @@ export interface WorkerPublicationCapture {
   readonly partial: boolean;
 }
 
-/** One roster read from one saved official page: by a parser result, or by plain code from held evidence. */
 export interface RosterReading {
-  /** The parser result id, or `held:<artifactId>` for a page read in code. */
   readonly id: string;
   readonly capture: WorkerPublicationCapture;
   readonly linkingPage: OfficialLinkingPage | null;
@@ -55,22 +53,15 @@ export interface RosterReading {
   /** Every member row on the page was read, so a prior member absent from it has left. */
   readonly complete: boolean;
   readonly method: string;
-  /**
-   * CA-02: the capture is the saved Open States CSV, not an official page. The
-   * member is published as an Open States (Reference) row for the seat; an
-   * official roster value replaces it later. Only name and seat are taken.
-   */
   readonly reference?: "OPEN_STATES";
 }
 
 const isOpenStatesSource = (url: string): boolean => isOpenStatesRosterUrl(url);
-/** The one Open States bulk file a reference reading may cite. */
 export const isOpenStatesRosterUrl = (url: string): boolean => /^https:\/\/data\.openstates\.org\/people\/current\/[a-z]{2}\.csv$/.test(url);
 
 const requireThat = (value: unknown, reason: string): void => { if (!value) throw new Error(reason); };
 const digest = (text: string) => createHash("sha256").update(text).digest("hex");
 
-/** Carry the exact candidate accepted by the existing atomic door and typed readback. */
 export function acceptedRegistryPrior(published: PromotionOutcome): RegistryRuntimePrior {
   if (!published.promoted) throw new Error("REGISTRY_PUBLICATION_NOT_ACCEPTED");
   const candidate = published.candidate.candidate;
@@ -84,17 +75,11 @@ const SCHOOL_BOARD = /\b(governing board|school board|board of (education|truste
 const BODY_NAME = [/\b(city|town|village|borough|township) (council|commission|committee)\b/, /\bboard of (supervisors|commissioners|education|trustees|aldermen|selectmen)\b/,
   /\b(governing board|school board|select ?board|township committee)\b/, /\bcouncil\b/];
 const titleCase = (text: string) => text.replace(/\b\p{L}/gu, c => c.toUpperCase());
-/** The division a body governs: the place its page must name when the body has no name yet. */
 const governmentOf = <D extends { readonly ocdId: string }>(divisions: readonly D[], { ocdId }: { readonly ocdId: string | null }): D | null =>
   divisions.find(row => row.ocdId === ocdId) ?? null;
 
-/**
- * The saved page is about this body. A page read in code (`inTitle`) must say
- * so in its title or main heading — a city page's navigation names many
- * bodies. An extraction bound to this body needs only to name it.
- */
+/** A page read in code must name the body in its title or main heading: a city page's navigation names many bodies. */
 export function pageIsAboutBody(html: string, body: { readonly id: string; readonly name: string | null }, divisionLabel: string | null, inTitle = true): boolean {
-  // A legislative seat: its holder's own page names the district.
   const seat = /\/(?:sldl|sldu|cd):([a-z0-9-]+)#seat$/.exec(body.id)?.[1];
   if (seat) return seat === "at-large" ? ` ${words(html)} `.includes(" at large ") : ` ${words(html)} `.includes(` district ${seat.replace(/^0+/, "")} `);
   if (!inTitle && body.name) return words(html).includes(words(body.name));
@@ -102,8 +87,7 @@ export function pageIsAboutBody(html: string, body: { readonly id: string; reado
   if (body.name) {
     const own = words(divisionLabel ? body.name.replace(new RegExp(divisionLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"), "") : body.name);
     if (own.length > 0 && title.includes(own)) return true;
-    // A governing body named from its own pages is still the body its "Mayor & Council" page names;
-    // a bare "Commission" title is another body once the governing body has a name.
+        // A bare "Commission" title is another body once the governing body has a name.
     return body.id.endsWith("#governing") && GOVERNING.test(title.replace(/\bcommission\b/g, ""));
   }
   if (body.id.endsWith("#governing")) return GOVERNING.test(title);
@@ -111,7 +95,6 @@ export function pageIsAboutBody(html: string, body: { readonly id: string; reado
   return false;
 }
 
-/** The body's name as its own page states it, for a registry body not yet named. */
 export function bodyNameFromPage(html: string, divisionLabel: string): string | null {
   const text = pageWords(html);
   for (const pattern of BODY_NAME) {
@@ -121,19 +104,11 @@ export function bodyNameFromPage(html: string, divisionLabel: string): string | 
   return null;
 }
 
-/**
- * The registry door for a roster that passes §3: members whose seat and name
- * are on a saved official page from the right place, inside its freshness
- * window, go live; contact details attach when they are on the page too;
- * blanks stay open. A complete roster records departures; a partial one keeps
- * prior members on their own earlier source.
- */
 export function workerRosterPublication(input: {
   readonly bodyId: string;
   readonly reading: RosterReading;
   readonly prior: RegistryRuntimePrior;
   readonly now: string;
-  /** The body's regular schedule and agenda link from a saved official page, when one states them. */
   readonly schedule?: HeldBodySchedule | null;
 }): RegistryRuntimePackage & { readonly departed: readonly string[]; readonly accepted: readonly { recordId: string; memberId: string }[]; readonly unresolved: readonly string[] } {
   const { reading, prior, now } = input;
@@ -151,8 +126,6 @@ export function workerRosterPublication(input: {
   requireThat(body, "ROSTER_BODY_UNREGISTERED");
   if (!body) throw new Error("ROSTER_BODY_UNREGISTERED");
   const division = governmentOf(prior.payload.registry.divisions, body);
-  // The right place: the page is about this body, and names its government when the body is not yet named.
-  // A reference reading names its seat by district membership on the saved CSV, checked by the caller.
   requireThat(reference || ((body.name !== null || division === null || pageWords(capture.evidence.text).includes(division.label.toLowerCase())) &&
     pageIsAboutBody(capture.evidence.text, body, division?.label ?? null, reading.id.startsWith("held:"))), "ROSTER_PAGE_NOT_THIS_BODY");
   const previous = prior.payload.bodyRosters.find(roster => roster.bodyId === body.id);
@@ -162,7 +135,6 @@ export function workerRosterPublication(input: {
   const unresolved: string[] = [];
   for (const member of reading.members) {
     if (reference) {
-      // The name is on the saved CSV; the seat is the row's own district, checked by the caller. Nothing else is taken.
       const named = typeof member.fields.name === "string" && valueOnPage(member.fields.name, page.text);
       if (named && typeof member.fields.office === "string") live.push({ recordId: member.recordId, fields: { name: member.fields.name, office: member.fields.office }, verified: ["name", "office"] });
       else unresolved.push(member.recordId);
@@ -188,7 +160,6 @@ export function workerRosterPublication(input: {
   const accepted: { recordId: string; memberId: string }[] = [];
   const members: BodyRoster["members"] = live.map(member => {
     const name = verifiedValue(member, "name")!, officeTitle = verifiedValue(member, "office")!;
-    // An official value replaces an Open States reference row for the same person, whatever title each source writes.
     const matching = previous?.members.filter(old => old.name === name && (old.officeTitle === officeTitle || (!reference && isOpenStatesSource(old.membershipSource?.sourceUrl ?? previous.sourceUrl)))) ?? [];
     requireThat(matching.length <= 1, "ROSTER_PRIOR_PERSON_IDENTITY_CONFLICT");
     const old = matching[0];
@@ -246,7 +217,6 @@ export function workerRosterPublication(input: {
     partisanship: previous?.partisanship ?? "UNDETERMINED", ...(previous?.partisanshipSourceUrl ? { partisanshipSourceUrl: previous.partisanshipSourceUrl } : {}), members };
   const rendered = projectReaderRoster(proposed);
   requireThat(rendered.roster.members.length > 0, "ROSTER_NO_READER_ELIGIBLE_MEMBERS");
-  // A row the reader roster refuses as a person (navigation text) stays open too.
   for (const row of rendered.dispositions.filter(row => row.state === "IDENTITY_UNRESOLVED")) {
     const binding = accepted.findIndex(a => a.memberId === row.sourceId);
     if (binding >= 0) unresolved.push(accepted.splice(binding, 1)[0].recordId);
@@ -257,8 +227,7 @@ export function workerRosterPublication(input: {
   const departures: { bodyId: string; holderId: string; sourceUrl: string }[] = [];
   if (previous) {
     for (const member of previous.members.filter(old => !rendered.roster.members.some(current => current.id === old.id))) {
-      // A complete official roster that no longer lists someone is the departure's evidence:
-      // the member leaves the reader with their disposition, candidacy and photo rows.
+            // A complete official roster that no longer lists someone is the departure's evidence.
       if (reading.complete && unresolved.length === 0 && pageVerdict.kind === "OFFICIAL" && capture.observedAt >= previous.collectedAt) {
         departed.push(`${member.name} (${member.officeTitle})`);
         departures.push({ bodyId: body.id, holderId: member.id, sourceUrl: source.sourceUrl });
@@ -276,8 +245,6 @@ export function workerRosterPublication(input: {
       divisions: body.ocdId ? [body.ocdId] : [], authority: "REGISTRY_BODY_ROSTER", sourceUrl: source.sourceUrl },
       status: "NOT_CHECKED", candidacy: null, unresolvedCandidacyIds: [],
       reason: "Officeholding verified on the body's official page. Ballot candidacy remains owed; no candidacy or absence is asserted." }));
-  // The body itself: named and sourced from its own roster page when it was only Census-derived,
-  // and its regular schedule and agenda link attached when a saved official page states them.
   const own = (division ? bodyName.toLowerCase().split(division.label.toLowerCase()).join(" ") : bodyName.toLowerCase()).replace(/\s+/g, " ").trim();
   const named = body.name === null && own.length > 0 && pageWords(capture.evidence.text).includes(own);
   const schedule = input.schedule?.schedule;
@@ -296,7 +263,6 @@ export function workerRosterPublication(input: {
       : section3SourceReceipt(pages, now, `section3-validator:${reading.id}`,
       `${reading.method}: ${members.length} member(s) with seat and name on the saved official page inside its freshness window (§3).` +
       (schedule?.cadence || schedule?.agendaUrl ? ` The body's regular schedule and agenda link were read in code from ${input.schedule!.capture.evidence.canonicalUrl}.` : "")),
-    // The source-scoped door carries unchanged bodies on their prior authority; this supplies only the verified roster.
     payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions: [], bodies },
       bodyRosters: [rendered.roster], rosterReaderDispositions: rendered.dispositions,
       statewideExecutives: [], officialCandidacies: { ...prior.payload.officialCandidacies, rows: pendingCandidacies },
@@ -304,7 +270,6 @@ export function workerRosterPublication(input: {
     departed, accepted, unresolved };
 }
 
-/** A roster from the work's latest parser result, checked in code. */
 function parserReading(parser: WorkerResultRecord, contract: NonNullable<WorkItem["autonomousPlan"]>["contract"], captures: readonly WorkerPublicationCapture[]): RosterReading | null {
   if (parser.result.role !== "PARSER" || contract.schemaVersion !== 2) return null;
   const extraction = parser.result;
@@ -320,11 +285,6 @@ function parserReading(parser: WorkerResultRecord, contract: NonNullable<WorkIte
     complete: !isQuotedExtraction(contract, extraction) && !replay.some(f => f.code.startsWith("COMPLETENESS_") || f.code === "DECLARED_COUNT_MISMATCH"), method: `Parser result ${parser.id}` };
 }
 
-/**
- * A roster read in plain code from saved official pages held for this body by
- * any job — newest first — before any model is asked. The first intact,
- * official, fresh page about this body with a member table is the reading.
- */
 export async function heldRosterReading(input: {
   readonly bodyId: string; readonly prior: RegistryRuntimePrior; readonly now: string;
   readonly artifacts: readonly ArtifactRecord[];
@@ -353,16 +313,10 @@ export async function heldRosterReading(input: {
   return null;
 }
 
-/**
- * Publish every roster and body-directory item that now meets §3, in one
- * pass. No live Send, auditor or owner instruction is required. Each body
- * advances independently; a hold goes back onto its own work item.
- */
 export async function publishWorkerRosterResults(input: {
   readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore;
   readonly workItemIds: readonly string[]; readonly now: string;
   readonly readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
-  /** Reads a held page straight from the vault by its artifact record; enables reuse of any job's saved evidence. */
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   if (!input.workItemIds.length) return [];
@@ -371,15 +325,11 @@ export async function publishWorkerRosterResults(input: {
   const { readHeld, readCapture } = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const allItems = (await input.repos.workItems.list()).map(row => row.value);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
-  // Carry accepted snapshots through the pass; reload only after an external base change.
   let registry: RegistryRuntimePrior | null | undefined;
-  // Several jobs can owe the same body. Its saved pages are read once per pass, and
-  // once a reading is published every other job for that body reuses that publication.
   const heldByBody = new Map<string, Promise<RosterReading | null>>();
   const heldDirectories = new Map<string, Promise<DirectoryReading | null>>();
   const schedules = new Map<string, Promise<HeldBodySchedule | null>>();
   const publishedByBody = new Map<string, NonNullable<WorkItem["publicationOutcome"]>>();
-  // The Validator reads what earlier passes learned before it checks anything, and writes back once at the end.
   const manual = await readValidatorManual(input.repos);
   const learned: ValidatorObservation[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
@@ -400,7 +350,6 @@ export async function publishWorkerRosterResults(input: {
       const directory = plan.contract.recordClass === "OFFICIAL_BOARD_DIRECTORY";
       captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture, officialLinks: manual.officialLinks }) : [];
       if (directory && !parser) {
-        // No extraction yet: read the government's saved directory pages in code, once per government per pass.
         const government = plan.directorySubject?.jurisdiction.id ?? id;
         if (!heldDirectories.has(government)) heldDirectories.set(government, (async () => {
           const siblings = allItems.filter(other => (other.autonomousPlan?.directorySubject?.jurisdiction.id ?? other.id) === government);
@@ -423,7 +372,6 @@ export async function publishWorkerRosterResults(input: {
           reading = await heldByBody.get(bodyId)!;
         }
         if (!reading) throw new Error("ROSTER_NO_READABLE_SAVED_PAGE:No extraction yet, and no saved official page for this body has a member table that passes §3");
-        // The body's regular schedule, from any job's saved official pages for the same government.
         if (!schedules.has(bodyId)) schedules.set(bodyId, (async () => {
           const body = prior.payload.registry.bodies.find(row => row.id === bodyId);
           if (!body) return null;
@@ -434,8 +382,7 @@ export async function publishWorkerRosterResults(input: {
         })());
         schedule = await schedules.get(bodyId)!;
       }
-      // The roster package is pure code over the reading, so it is built before the "already published" check:
-      // a newly saved schedule page, or a body fact the reading now supports, is new work even when the roster is unchanged.
+            // Built before the "already published" check: a new schedule page or body fact is new work even when the roster is unchanged.
       const roster = directory ? null : workerRosterPublication({ bodyId, reading: reading!, prior, now: input.now, schedule });
       const bodyChange = roster?.payload.registry.bodies.length ? `+body:${digest(canonicalJson(roster.payload.registry.bodies)).slice(0, 12)}` : "";
       readingId = directory ? parser?.id ?? heldDirectory!.id : `${reading!.id}${schedule ? `+${schedule.capture.evidence.artifactId}` : ""}${bodyChange}`;
@@ -503,10 +450,8 @@ ${readingId}`, outcome);
       const detail = sanitizedErrorDiagnostic(error);
       const code = detail.split(":")[0];
       const recovery = (code.startsWith("ROSTER_") && !["ROSTER_PRIOR_READER_AUTHORITY_MISSING", "ROSTER_READER_READBACK_FAILED"].includes(code)) || code.startsWith("WORKER_PUBLICATION_") || code === "DIRECTORY_NO_READABLE_SAVED_PAGE" ? "WORKER" : "PUBLISHER";
-      // A hold names the extraction it judged, so owed worker repair waits for a newer one instead of retrying every pass.
       outcome = { at: input.now, workerResultId: readingId ?? parserId ?? "none", status: "HELD", code,
         detail: `${detail}. ${recovery === "WORKER" ? "Continue source work through the existing worker" : "Retry the publication with the verified evidence retained"}; no owner approval is required.`, recovery, candidateId, versionId };
-      // A moved base is retried by the next job for this body; any other hold is this reading's result for the pass.
       if (readingId && code !== "PROMOTION_BASE_CHANGED") publishedByBody.set(`${bodyId}\n${readingId}`, outcome);
       }
     }
@@ -523,12 +468,6 @@ ${readingId}`, outcome);
   return report;
 }
 
-/**
- * Publish one §3 roster reading that did not come from a work item — for
- * example an official's own profile page found through a national lead. The
- * reading's members go live on the same registry door; a one-person reading
- * is partial, so prior members stay on their own source.
- */
 export async function publishRosterReading(input: {
   readonly store: RoutineDataStore; readonly bodyId: string; readonly reading: RosterReading; readonly now: string;
   readonly prior?: RegistryRuntimePrior;

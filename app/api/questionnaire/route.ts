@@ -10,45 +10,14 @@ import { OFFICE_CLASSES } from "@/lib/questionnaire/instrument";
 import { findInvitation, findToken, storeResponse } from "@/lib/db/questionnaire";
 
 /**
- * POST /api/questionnaire — a candidate submits their own words.
+ * POST /api/questionnaire: a candidate submits their own words. Nothing here sends email.
  *
- * ## What this is NOT
+ * 1. Nothing is ever truncated: an over-limit answer is refused with its word count and the limit.
+ * 2. Answers publish verbatim: nothing here summarises, paraphrases or rates.
+ * 3. The instrument version comes from the invitation, never from the current constant.
  *
- * **It is not the send path.** Nothing here emails anybody. `NH108` holds the
- * four sending decisions and they are Sean's — the domain, the provider
- * credential, the deliverability warm-up, and the timing. This route only
- * accepts an answer from somebody who already holds a link.
- *
- * ## RULING 112, and the three clauses this route is responsible for
- *
- * 1. **Nothing is ever truncated.** An over-limit answer is REFUSED at submit
- *    time with its own word count shown, and the candidate decides what to cut.
- *    Silent truncation favours whoever writes short, invisibly. The refusal
- *    names the question and both numbers, because "too long" without a count is
- *    an instruction to guess.
- * 2. **Answers publish verbatim.** Nothing here summarises, paraphrases,
- *    compresses, annotates or rates. That is enforced by ABSENCE — there is no
- *    such call in this file and no such column on the record — and
- *    `tests/questionnaire-store.test.ts` sweeps for it BY SHAPE (RULING 110).
- * 3. **The instrument version travels with the answer.** It is taken from the
- *    INVITATION, never from the current constant: a candidate who was invited
- *    under `v1` answered `v1`'s questions, and stamping today's version onto
- *    their words would make two people in one contest look like they answered
- *    the same instrument when they did not.
- *
- * ## The store, and the rule it does not touch
- *
- * A candidate's answer is published civic content, not reader data. It lands in
- * the content store. **No column is added to the search log or the reactions
- * store, and no identifier is created** — the link carries the identity, only
- * `sha256(token)` is kept, and there is no account and no password.
- *
- * ## Failure states are kept apart
- *
- * A bad link, an expired link, a used link, an over-limit answer and an
- * unreachable store are five different facts and get five different answers. A
- * single "could not submit" would tell a candidate to do the wrong thing in at
- * least four of the five cases.
+ * Only `sha256(token)` is kept. A bad, expired or used link, an over-limit answer and an unreachable store
+ * each get their own answer.
  */
 export const runtime = "nodejs";
 
@@ -176,13 +145,7 @@ export async function POST(request: Request): Promise<Response> {
   const asked = questionsFor(officeClass);
   const askedIds = new Set(asked.map((q) => q.id));
 
-  /*
-   * RULING 112: nothing is truncated. Every over-limit answer is collected and
-   * ALL of them are returned together, not just the first — a candidate told
-   * about one long answer at a time, one round-trip at a time, is being given
-   * the same information in the most expensive possible form, which is reader
-   * friction and a defect with the same standing as a wrong number.
-   */
+  /* Every over-limit answer is collected and all of them are returned together. */
   const overLimit: { questionId: string; words: number; limit: number }[] = [];
   const unknown: string[] = [];
   for (const a of answers) {

@@ -1,37 +1,15 @@
 /**
- * **THE DECISION LOG, COLLAPSED TO ONE ROW PER DECISION.**
- * (ADM-4, the 9.4.26 admin feedback. Lane C.)
- *
- * The owner-decision log in the control plane is APPEND-ONLY. A decision is
- * appended once as the owner makes it, and what became of it is appended
- * later as a SECOND record carrying the same intent id plus a `#resolved`
- * suffix (`scripts/canonicalize-owner-decisions.mts`). Nothing is ever
- * rewritten, which is correct — what he decided at that instant is not
- * editable — and it means the raw log holds two rows for one decision once
- * the decision has landed anywhere.
- *
- * Every consumer that wants "the decisions, and where each one stands" has to
- * fold those pairs the same way, or two surfaces will disagree about whether a
- * decision is still pending. This module is that fold, written once, and it is
- * PURE: it takes rows and returns rows. It reads no store, no clock and no
- * environment, so a test can hand it any log it likes.
- *
- * Type-only imports from `owner-surface.ts`, deliberately: the contract owns
- * the record shape, and this module owns nothing but the fold.
+ * Folds the append-only owner-decision log to one row per decision. A
+ * resolution is a second record with the same intent id plus `#resolved`.
+ * Pure: rows in, rows out.
  */
 
 import type { OwnerDecisionIntent } from "./owner-surface.ts";
 
-/** The suffix the canonicalizer appends to the id of a resolution record. */
+/** The suffix on the id of a resolution record. */
 export const RESOLVED_SUFFIX = "#resolved";
 
-/**
- * The id of the DECISION a record is about.
- *
- * A resolution record's id is the decision's id plus the suffix; stripping it
- * (however many times it was applied — a defensive loop, because a twin of a
- * twin would otherwise be a third "decision" nobody made) names the decision.
- */
+/** The id of the decision a record is about; strips the suffix however many times it was applied. */
 export function baseIntentId(intentId: string): string {
   let id = intentId;
   while (id.endsWith(RESOLVED_SUFFIX)) id = id.slice(0, -RESOLVED_SUFFIX.length);
@@ -43,29 +21,16 @@ export function resolvedIntentId(intentId: string): string {
   return `${baseIntentId(intentId)}${RESOLVED_SUFFIX}`;
 }
 
-/** Is this record the canonicalizer's resolution of a decision, not the decision itself? */
+/** Is this record a resolution of a decision, not the decision itself? */
 export function isResolutionRecord(row: Pick<OwnerDecisionIntent, "intentId">): boolean {
   return row.intentId.endsWith(RESOLVED_SUFFIX);
 }
 
 /**
- * One row per decision, carrying the LATEST state.
- *
- * The rule, in full:
- *
- * - Records are grouped by their base id (the `#resolved` suffix stripped).
- * - A resolution record WINS over the original for `state`, `canonicalRef` and
- *   `refusedReason`, because it is the later fact about the same decision.
- *   Everything the owner wrote — subject, option, consequence, his words, the
- *   session he decided in, when — is taken from the original when one is
- *   present, so a resolution can never quietly change what was decided.
- * - The output is ordered newest `decidedAt` first, and by id when two
- *   decisions share an instant, so the order is a function of the rows and
- *   not of the order the store handed them over in.
- *
- * Input order is irrelevant on purpose: `readDecisions` reverses the log and
- * the file store returns it in append order, and a fold that depended on
- * which of those it was given would be right on exactly one of them.
+ * One row per decision, carrying the latest state, newest `decidedAt` first
+ * (ties by id). A resolution wins for `state`, `canonicalRef` and
+ * `refusedReason`; everything else comes from the original when present, so a
+ * resolution cannot change what was decided. Input order is irrelevant.
  */
 export function collapseDecisionLog(
   rows: readonly OwnerDecisionIntent[],
@@ -82,8 +47,7 @@ export function collapseDecisionLog(
   for (const id of ids) {
     const original = originals.get(id);
     const resolution = resolutions.get(id);
-    // A resolution with no surviving original is still a decision the owner
-    // made — the record carries every field — so it stands on its own.
+    // A resolution with no surviving original carries every field, so it stands alone.
     const base = original ?? (resolution as OwnerDecisionIntent);
     const latest = resolution ?? base;
     out.push({
@@ -93,8 +57,7 @@ export function collapseDecisionLog(
       canonicalRef: latest.canonicalRef,
       refusedReason: latest.refusedReason,
       ownerAnswer: base.ownerAnswer ?? null,
-      // What the tracker did with it travels on the resolution (ADM-16), so
-      // the later fact wins here too; absent on records written before it.
+      // Absent on older records.
       openedWork: latest.openedWork ?? base.openedWork,
       subjectTitle: latest.subjectTitle ?? base.subjectTitle ?? null,
     });
@@ -109,13 +72,8 @@ function compareNewestFirst(a: OwnerDecisionIntent, b: OwnerDecisionIntent): num
 }
 
 /**
- * The newest decision the owner has recorded about one subject, or null when
- * he has recorded none.
- *
- * "Newest" is by `decidedAt`, never by log position, and it is the ONLY
- * decision the tracker applier acts on: a later decision about the same row
- * supersedes an earlier one, and applying both would close a row on an answer
- * he had already changed his mind about.
+ * The newest decision recorded about one subject (by `decidedAt`, never log
+ * position), or null. A later decision supersedes an earlier one.
  */
 export function latestDecisionFor(
   rows: readonly OwnerDecisionIntent[],

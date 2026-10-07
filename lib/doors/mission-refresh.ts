@@ -1,25 +1,17 @@
 /**
- * **STARTING A MISSION REFRESHES EVERY DOOR ALREADY KNOWN THERE** (DB-56; design §3 and §13.2).
+ * Starting a mission marks every open door inside the place `readNow`, so the
+ * routine runner reads it at once instead of on its schedule.
  *
- * A place the factory already covers is refreshed in minutes, because its doors are known. When a mission starts,
- * every open door whose division is inside the mission's place is marked `readNow`, so the routine runner reads it at
- * once, alongside the national place job, instead of waiting for its schedule.
+ * 1. `markDoorsReadNow`: at mission start, sets only `readNow` and `updatedAt`
+ *    on matching OPEN doors; never touches `editedAt`.
+ * 2. `readNowDueRequests`: each marked meeting door becomes an ordinary due
+ *    request, spent by the partition's first attempt after the mark and
+ *    expiring after the request lifetime.
+ * 3. `settleReadNow`: clears a mark once the door has recorded an outcome
+ *    since it, or it has expired.
  *
- * Three pieces, none of which adds a clock, a gate or a second reader:
- *
- * 1. `markDoorsReadNow`: the one write, at mission start. It sets only `readNow` and `updatedAt` on a matching OPEN
- *    door (a shut or suspended door is not read, so a read-now mark on it would only wait). It never touches a hand
- *    edit's `editedAt`, so a later derive step is not blocked by it.
- * 2. `readNowDueRequests`: the pass's reading of those marks. Each marked meeting door becomes the same due request the
- *    owner's controlled refresh uses (`routine-due-request.ts`), so the ordinary pass reads it through the normal due
- *    check, frontier, lane slots and same-host gap. A request is spent by the partition's first durable attempt after
- *    the mark (the door's own recorded outcome, which leaves `updatedAt` alone), and expires after the request lifetime, so
- *    a mark cannot become a second schedule.
- * 3. `settleReadNow`: clears a mark once the door has recorded an outcome since it, or it has expired.
- *
- * Which doors are "inside the place" is the caller's list of divisions (the mission's governments, resolved the way the
- * runner resolves them for the national place job); a door is inside when its division, or any body it feeds, is one of
- * those divisions or a child of one.
+ * A door is inside the place when its division, or any body it feeds, is one
+ * of the caller's divisions or a child of one.
  */
 import { ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS, type RoutineDueRequest } from "../civic-data/routine-due-request.ts";
 import { isDoorRecord, listDoors, type DoorRecord, type DoorRepository } from "./registry.ts";

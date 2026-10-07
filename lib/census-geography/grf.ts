@@ -1,27 +1,3 @@
-/**
- * Build ZCTA↔geography overlaps for the UPCOMING-ELECTION boundaries from the
- * Census grf/2026 block-level "current geographic reference" files
- * (`grf/2026/public_grfc_cur26_<st>.txt`). Each 2020 tabulation block carries
- * `CDCURFP` (the CURRENT congressional district — the grfn names file's
- * `CDSESSN` is 120, i.e. the 120th Congress / 2026 election; `CDDECFP` is the
- * old 116th), `SLDUST`, `SLDLST`, `ZCTA5CE`, and `AREALAND`.
- *
- * WHY grf, not tab20: the tab20 ZCTA relationship files only reach the 119th
- * Congress (verified: TIGER through 2025, GENZ2025, and rel2020/2022/2024 are
- * all cd119). grf/2026 is the one ORIGINAL CENSUS source that carries the 120th
- * boundaries — so no per-state redistricting files and no exception to the
- * Census-only source policy are needed.
- *
- * METHOD: a ZCTA's share of a district is the sum of its blocks' land in that
- * district ÷ the ZCTA's total block land — the same AREA-share meaning as the
- * tab20 build (no population weight; RULING 275). Streaming + in-memory: no
- * filesystem writes (firewall-safe on the standing runner's routine path).
- *
- * COST: the block files are large (~55 MB/state, ~2.9 GB nationally) versus
- * ~6 MB for a tab20 CD file. The 2026 map is stable until the election, so the
- * cd:120 scope is intended to refresh at a lower cadence than the monthly tab20
- * refresh, and is opt-in (not in DEFAULT_SCOPES).
- */
 import { createHash } from "node:crypto";
 
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
@@ -30,15 +6,10 @@ import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
 import { WHOLE_THRESHOLD } from "./build.ts";
 import { censusGeographyUserAgent } from "./http.ts";
 
+/** The 2026 congressional map from Census grf block files; the tab20 relationship files stop at the 119th Congress. Shares are area-based, as in the tab20 build. */
 const GRF_BASE = "https://www2.census.gov/geo/docs/maps-data/data/grf/2026";
 
-/**
- * Every 2-digit Census state/territory FIPS, derived from the authoritative
- * `FIPS_TO_STATE` registry — never a hand-kept state list (the coverage-manifest
- * guard forbids re-enumerating the covered states outside lib/coverage). A
- * jurisdiction whose grf/2026 block file does not exist (e.g. an outlying
- * territory) 404s and is skipped by the acquisition below.
- */
+/** Every Census state and territory FIPS; one with no grf file 404s and is skipped. */
 export const GRF_STATE_FIPS: readonly string[] = Object.keys(FIPS_TO_STATE)
   .filter((fips) => /^\d{2}$/.test(fips))
   .sort();
@@ -46,7 +17,6 @@ export const GRF_STATE_FIPS: readonly string[] = Object.keys(FIPS_TO_STATE)
 export interface GrfTarget {
   readonly type: GeographyType;
   readonly version: string;
-  /** The grf column carrying this geography's current district code. */
   readonly column: "CDCURFP" | "SLDUST" | "SLDLST";
   /** District-code width: 2 for a congressional district, 3 for a state-leg district. */
   readonly districtWidth: number;
@@ -56,7 +26,6 @@ export interface GrfTarget {
   readonly districtNoun: string;
 }
 
-/** The 120th-Congress (2026 general election) congressional districts. */
 export const GRF_CD120: GrfTarget = {
   type: "congressional_district",
   version: "cd:120",
@@ -75,12 +44,10 @@ export interface GrfColumns {
   readonly district: number;
 }
 
-/** Split a grf header line (BOM-stripped) into column names. */
 export function parseGrfHeader(headerLine: string): string[] {
   return headerLine.replace(/^﻿/, "").trim().split("|");
 }
 
-/** Resolve the columns we need by name; throws loudly if the header changed. */
 export function resolveGrfColumns(header: readonly string[], column: GrfTarget["column"]): GrfColumns {
   const at = (name: string): number => {
     const i = header.indexOf(name);
@@ -113,7 +80,6 @@ export class GrfAccumulator {
     this.cols = cols;
   }
 
-  /** Feed one already-split grf block row (fields split on "|"). */
   add(fields: readonly string[]): void {
     this.blocks += 1;
     const zcta = (fields[this.cols.zcta] ?? "").trim();
@@ -178,16 +144,10 @@ export class GrfAccumulator {
 
 export interface AcquireGrfOptions {
   readonly fetchImpl?: typeof fetch;
-  /** Restrict to these 2-digit state FIPS (default: all of GRF_STATE_FIPS). */
   readonly states?: ReadonlySet<string>;
   readonly signal?: AbortSignal;
 }
 
-/**
- * Fetch + build a grf-sourced scope (e.g. cd:120) across the requested states,
- * entirely in memory. Never writes a file. Each per-state file repeats the
- * header; the accumulator is created from the first and later headers are skipped.
- */
 export async function acquireGrfScope(target: GrfTarget, options: AcquireGrfOptions = {}): Promise<BuiltScope> {
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
   const states = options.states ? GRF_STATE_FIPS.filter((s) => options.states!.has(s)) : GRF_STATE_FIPS;

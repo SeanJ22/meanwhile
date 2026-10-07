@@ -1,11 +1,3 @@
-/**
- * Plain-code reading of a saved official roster page — the cheapest route
- * (held data, then code) before any model. It reads member tables whose
- * header names a person column and a seat column, the shape nearly every
- * government CMS staff directory publishes. Values are taken from the page as
- * written; the §3 check then confirms each one is on the page.
- */
-
 export interface HeldRosterRow {
   /** Display name. "Last, First" becomes "First Last"; `nameAsWritten` keeps the page's form. */
   readonly name: string;
@@ -18,7 +10,6 @@ export interface HeldRosterRow {
 
 export interface HeldRoster {
   readonly rows: readonly HeldRosterRow[];
-  /** Every body row of the table became a member row; nothing was skipped. */
   readonly complete: boolean;
 }
 
@@ -49,7 +40,6 @@ function absolute(href: string, pageUrl: string): string | null {
   } catch { return null; }
 }
 
-/** Every roster table on the page, deduplicated (CMS pages often repeat a table for mobile). */
 export function readHeldRoster(html: string, pageUrl: string): HeldRoster | null {
   const seen = new Map<string, HeldRosterRow>();
   let complete = true;

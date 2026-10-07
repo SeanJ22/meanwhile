@@ -1,12 +1,8 @@
 /**
- * DB-21: each door knows when it last worked.
- *
- * `lastSuccessAt` and `lastFailureAt` are written onto the door's record by the
- * runner after each read of it: for a hand-wired door from its partition's
- * promotion outcome, for a derived member from that member's own result (never
- * the family's, so one failing calendar does not mark its healthy neighbours).
- * A system write: it does not count as a hand edit and changes nothing else
- * on the record, including its status (shutting a door is DB-32).
+ * Records `lastSuccessAt` / `lastFailureAt` on a door after each read: for a
+ * hand-wired door from its partition's promotion outcome, for a derived member
+ * from that member's own result. A system write: not a hand edit, and nothing
+ * else on the record changes.
  */
 
 import { observeChange } from "./observed-rate.ts";
@@ -17,7 +13,7 @@ export type DoorOutcome = "SUCCESS" | "FAILURE";
 /** Returns true when the record was written; false when there is no such door (nothing is invented). */
 export async function recordDoorOutcome(
   repo: DoorRepository, doorId: string, outcome: DoorOutcome, at: string,
-  /** DB-30: the read promoted something different from the version before it. Written in the same single write. */
+  /** The read promoted something different from the version before it. */
   changed = false,
 ): Promise<boolean> {
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -53,9 +49,9 @@ export async function recordMemberOutcomes(
 }
 
 /**
- * The one line the derived family child calls after its member reads (hook for
- * the meetings lane's `scripts/ingest.ts`): each member's own result onto its
- * own door. A registry that cannot be written never changes the read's outcome.
+ * Called by the derived family child after its member reads: each member's own
+ * result onto its own door. A registry that cannot be written never changes
+ * the read's outcome.
  */
 export async function recordFamilyReads(
   repo: DoorRepository,

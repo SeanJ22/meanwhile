@@ -1,53 +1,20 @@
 /**
- * **THE CANONICAL CANDIDATE UNIVERSE, keyed to the STATE and not to a ZIP.**
- * (Session C3, lane C, 2026-09-01. RULING 229.)
- *
- * ## The defect, in one identifier
- *
- * Every candidate this project holds is keyed `ballot-az-pima:governor:hobbs-katie`.
- * Katie Hobbs is running for Governor of **Arizona**. She is not the Pima
- * ballot's candidate; she is on the Pima ballot, and on the ballot of every
- * other Arizona ZIP. An identity that names the pilot county has one predictable
- * consequence: **activating a second Arizona ZIP looks like a new candidate**,
- * because the corpus is keyed by where we happened to look first.
- *
- * That is what turned candidate enrichment into per-ZIP work. Campaign sites,
- * candidate-authored positions, bios, photos and published contact were hunted
- * for the VISIBLE candidate universe — 68 acquisition attempts — and a reader
- * arriving from a ZIP outside 85641/85701 would trigger the hunt again for
- * people whose records the state authority already published.
- *
- * ## What a canonical identity is here, and what it is NOT
+ * The canonical candidate universe, keyed to the state and not to a ZIP or
+ * county, so a second ZIP in the same state never looks like new candidates.
  *
  * ```
- *   az:2026:state-az:governor:hobbs-katie          canonical — office and
- *                                                  jurisdiction, no ZIP, no
- *                                                  county, no pilot
- *   ballot-az-pima:governor:hobbs-katie            a PROJECTION of it onto one
- *                                                  county's certified ballot
+ *   az:2026:state-az:governor:<slug>          canonical: office and
+ *                                             jurisdiction, no ZIP or county
+ *   ballot-az-<county>:governor:<slug>        a projection onto one county's
+ *                                             certified ballot
  * ```
  *
- * The canonical row keeps every pilot id it was seen under (`pilotIds`), so the
- * projection is a JOIN rather than a rename. Nothing downstream loses the
- * ability to answer "what does 85641's ballot say" — it gains the ability to
- * answer "what does Arizona's candidate universe say", which is the question
- * the acquisition denominator is about.
+ * The canonical row keeps every ballot id it was seen under (`pilotIds`), so
+ * the projection is a join, not a rename. `deriveCandidateUniverse` takes
+ * ballot documents and enrichment stores as values.
  *
- * ## THE DERIVATION RE-DERIVES; IT DOES NOT HARDCODE
- *
- * `deriveCandidateUniverse` is given ballot documents and enrichment stores as
- * VALUES. Production supplies those values from the proof-validated promoted
- * ballot/profile/candidate-publication projections. Historical hunt artifacts
- * may still exercise this pure function in tests, but cannot feed the standing
- * scheduler or a Reader.
- *
- * ## Absence is never asserted
- *
- * A candidate whose campaign site was searched for and not found is
- * `SEARCHED_NO_RESULT` and carries the date. A candidate nobody has looked for
- * is `UNWORKED`. Those are different facts, they are owed to a reader as
- * different sentences, and a corpus that stored them the same way would let the
- * second impersonate the first.
+ * Absence is never asserted: `SEARCHED_NO_RESULT` carries its date, and a
+ * field nobody looked for is `UNWORKED`.
  */
 
 /** The enrichment fields a candidate card is made of. */
@@ -61,13 +28,7 @@ export const ENRICHMENT_FIELDS: readonly EnrichmentField[] = [
   "contact",
 ];
 
-/**
- * What this project knows about ONE field for ONE candidate.
- *
- * `SEARCHED_NO_RESULT` and `UNWORKED` are kept apart on purpose. Collapsing them
- * is how a hunt nobody ran comes to read as a hunt that found nothing, which is
- * an absence asserted about a person.
- */
+/** What this project knows about one field for one candidate. `SEARCHED_NO_RESULT` and `UNWORKED` stay distinct. */
 export type EnrichmentState = "FOUND" | "SEARCHED_NO_RESULT" | "UNWORKED";
 
 export interface EnrichmentReading {
@@ -79,7 +40,7 @@ export interface EnrichmentReading {
 }
 
 export interface CanonicalCandidacy {
-  /** `az:2026:state-az:governor:hobbs-katie`. No ZIP, no county, no pilot. */
+  /** `az:2026:state-az:governor:<slug>`. No ZIP or county. */
   readonly id: string;
   readonly stateCode: string;
   readonly cycle: number;
@@ -89,7 +50,7 @@ export interface CanonicalCandidacy {
   readonly givenName: string;
   readonly familyName: string;
   readonly partyLabel: string | null;
-  /** Every pilot-ballot id this person was seen under. The join, kept. */
+  /** Every ballot id this person was seen under. The join, kept. */
   readonly pilotIds: readonly string[];
   /** Where the CANDIDACY itself came from. A citation, never a claim. */
   readonly provenance: readonly string[];
@@ -123,13 +84,8 @@ export function slug(s: string): string {
 }
 
 /**
- * The OCD division, shortened to something readable, WITHOUT losing the
- * distinction between two districts of the same office.
- *
- * `ocd-division/country:us/state:az/sldl:19` becomes `state-az-sldl-19`. Two
- * State Representative contests in different districts therefore get different
- * canonical contest ids, which is the whole reason the division is in the key
- * rather than only the title.
+ * The OCD division, shortened but still distinct per district:
+ * `ocd-division/country:us/state:az/sldl:19` becomes `state-az-sldl-19`.
  */
 export function ocdSlug(ocdId: string): string {
   return slug(ocdId.replace(/^ocd-division\/country:us\//, ""));
@@ -172,29 +128,24 @@ export interface BallotDocument {
   }[];
 }
 
-/** The three committed enrichment stores, as values. Keyed by PILOT id. */
+/** The enrichment stores, as values, keyed by ballot id. */
 export interface EnrichmentStores {
-  /** `data/ballot/candidate-hunt-state.json` — `candidates[pilotId][field]`. */
+  /** `candidates[pilotId][field]`, with an explicit per-field state. */
   readonly huntState: Record<string, Record<string, { state?: string; checkedAt?: string }>>;
-  /** `data/ballot/candidate-cards-2026.json` — `cards[pilotId]`. */
+  /** `cards[pilotId]`. */
   readonly cards: Record<string, Record<string, unknown>>;
-  /** `data/ballot/candidate-links-2026.json` — `links["<contestId>|<Name>"]`. */
+  /** `links["<contestId>|<Name>"]`. */
   readonly links: Record<string, unknown>;
-  /** `links.hunts[]` — a MISS carries the date it was searched. */
+  /** `links.hunts[]`: a MISS carries the date it was searched. */
   readonly linkHunts: readonly { key?: string; note?: string; attemptedAt?: string }[];
 }
 
 const EMPTY: EnrichmentReading = { state: "UNWORKED", checkedAt: null, sourceUrl: null };
 
 /**
- * One field's reading for one person, from whichever store answers it.
- *
- * The stores were written by different sessions for different purposes and they
- * do not agree on vocabulary. `candidate-hunt-state.json` is the one that
- * carries an explicit per-field state, so it wins where it speaks; the cards and
- * the links fill in a FOUND that predates it. **Nothing here upgrades an absence
- * into a finding**: a field no store mentions is UNWORKED, which is a statement
- * about us.
+ * One field's reading for one person. The hunt state carries an explicit
+ * per-field state and wins where it speaks; cards and links fill in a FOUND.
+ * A field no store mentions is UNWORKED.
  */
 function readField(
   field: EnrichmentField,
@@ -203,14 +154,8 @@ function readField(
   stores: EnrichmentStores,
 ): EnrichmentReading {
   /*
-   * **THE STORES USE TWO KEY FORMS FOR ONE PERSON, AND BOTH ARE TRIED.**
-   *
-   * `data/ballot/candidate-cards-2026.json` carries 39 Arizona keys of which
-   * only 19 are ballot candidacy ids; the rest are `<contestId>|Display Name`,
-   * the form the LINK store uses. A lookup that tried one form found 19 of 39
-   * cards and reported the other 20 people as having no bio, no photo and no
-   * contact — an absence manufactured by a key convention. Both forms are tried,
-   * and a person found under either is found.
+   * The stores key one person two ways (ballot candidacy id, and
+   * `<contestId>|Display Name`); both are tried.
    */
   const pilotIds = [...pilotIdsIn, ...linkKeys];
   for (const pid of pilotIds) {
@@ -233,8 +178,7 @@ function readField(
     }
     for (const hunt of stores.linkHunts) {
       if (!hunt.key || !linkKeys.includes(hunt.key)) continue;
-      /* "MISS — searched 2026-08-13; no campaign site found". A searched miss is
-         a DATED fact about a search; it is never a fact about the candidate. */
+      /* A searched miss is a dated fact about a search, never about the candidate. */
       if (/\bMISS\b/i.test(hunt.note ?? "")) {
         return { state: "SEARCHED_NO_RESULT", checkedAt: hunt.attemptedAt ?? null, sourceUrl: null };
       }
@@ -279,9 +223,7 @@ export function deriveCandidateUniverse(input: {
 }): CandidateUniverse {
   const byId = new Map<string, CanonicalCandidacy>();
   const contributed = new Map<string, number>();
-  /* LOCAL, deliberately. A module-scoped cache here would be shared state
-     between two derivations of two states, which is the kind of thing that
-     works until the day something runs both. */
+  /* Local, not module-scoped: two derivations must not share state. */
   const linkKeysById = new Map<string, string[]>();
 
   for (const doc of input.documents) {

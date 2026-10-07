@@ -5,7 +5,6 @@ import type { ServedReaderWitness } from "../served-reader.ts";
 import type { WorkItem } from "../work-item.ts";
 import { PUBLIC_SITE_ORIGIN } from "../../ops/origins.ts";
 
-/** One indexed snapshot row, with the witness filtered in Postgres before transport. */
 export const EXACT_SERVED_WITNESS_SQL = `
   SELECT entry.witness
   FROM cp_owner_snapshots AS snapshot
@@ -75,7 +74,6 @@ export async function readExactServedWitness(sql: Sql, item: WorkItem): Promise<
   return exactWitness(rows[0]?.witness, item);
 }
 
-/** Publication and browser observation remain three separate claims with verification. */
 export async function readPublishedResultObservation(input: {
   readonly repos: Pick<ControlPlaneRepositories, "workItems">;
   readonly subjectKey: PublishedResultSubjectKey;

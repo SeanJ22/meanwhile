@@ -1,16 +1,11 @@
 /**
- * **WHAT SEAN ADDED TO, OR DECLINED FROM, WHAT A PLACE IS OWED (SC-14, BR-33).**
- *
- * The State Run Checklist is data (`checklist-map.json`). On top of it sits this one record on the Admin config row: items Sean
- * added to what is owed, and rows Sean declined, each with its reason, who (the admin session, never a name) and when, and a log
- * with undo, as settings have. Reading it needs no release: the next read of a place builds its owed list with it.
- *
- * - An **addition** is a new checklist item in a family that exists. Wherever that family applies, the item is owed and counts in
- *   the core score, so completeness honestly drops until it is filled.
- * - A **decline** removes one row (this subject, this item) from what is owed. Additions stay automatic; declines are Sean's.
- *
- * Nothing here gates publishing: it changes what is counted as owed, never what may be shown to a reader.
- * PURE except for the one active-overlay slot, which a reader of the config row sets before it builds an owed list.
+ * Admin's additions to, and declines from, what a place is owed, stored on the
+ * Admin config row with reason, admin session and time, and an undo log.
+ * - An addition is a new item in an existing family, owed wherever that family
+ *   applies and counted in the core score.
+ * - A decline removes one (subject, item) row from what is owed.
+ * Changes what is counted as owed, never what a reader may see. Pure except
+ * for the active-overlay slot.
  */
 import { CHECKLIST_FAMILIES, CHECKLIST_ITEMS, type ChecklistItemRule } from "./checklist-map.ts";
 import { installOwedOverlay, NO_OWED_OVERLAY, type ActiveOwedOverlay } from "./owed-overlay-slot.ts";
@@ -135,7 +130,6 @@ export function withOwedUndo(record: OwedOverlayRecord, input: { readonly undoCh
   return { ...record, additions, declines, log: keepLog(record.log, { changeId: input.changeId, kind: "undo", at: input.at, says: `Undid: ${entry.says}`, undoOf: base }), updatedAt: input.at };
 }
 
-/* ------------------------------------------------------ the active overlay */
 
 /** The rule a family's new item gets: owed wherever the family applies, counted in the core score, placed by the family's own unit. */
 function ruleFor(group: string): ChecklistItemRule {

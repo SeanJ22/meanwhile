@@ -1,14 +1,9 @@
 /**
- * DP-12: a detective's door repair is used on the very next check.
- *
- * When a detective's result on a failing door has a candidate whose saved
- * evidence grounds it, the candidate's address is written at once as the
- * door's new record through `repairDoor` (the same edit `door.update` makes),
- * labeled Testing in the door's notes. The door then reads by plain code on its
- * next check, with no further model cost. A shut door stays shut until a read of
- * the new record succeeds (lib/doors/shut.ts), which is also what completes its
- * fix item; a record that fails again is shut again and the label stays so the
- * fix-spreading step (DP-24) and Admin know it is unproven.
+ * A detective's door repair is used on the very next check. A grounded
+ * candidate's address is written at once as the door's new record through
+ * `repairDoor`, labeled Testing in the door's notes, so the next check reads
+ * it by plain code. A shut door stays shut until a read of the new record
+ * succeeds; the label stays until then.
  */
 
 import type { ScoutCandidate, ScoutResult } from "../control-plane/scheduler/scout-result.ts";

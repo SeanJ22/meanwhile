@@ -12,17 +12,9 @@ import { coverageWords, placeCoverage, type PlaceCoverage } from "../../coverage
 import { US_STATES } from "../readiness/catalog.ts";
 import { sendWordsFor } from "./blocker-causes.ts";
 
-/**
- * **`admin-v6/checklist@1` FOR ANY PLACE: SEAN'S SCORE AND THE OWED LIST BEHIND IT.**
- *
- * Structurally matches Admin v6 `ChecklistView` (model.ts) without importing the
- * UI bundle. `score` is the place's capture scorecard (place-scorecard.ts);
- * `placeGroups` fills the existing status bars; `items` is one window of the
- * owed list for the chosen group. The score never gates publishing.
- */
+/** Structurally matches Admin v6 `ChecklistView` (model.ts) without importing the UI bundle. The score never gates publishing. */
 export const PLACE_ITEM_PAGE = 50;
 
-/** The place-group order the checklist uses (its own profile order, place groups only). */
 const GROUP_ORDER: readonly string[] = [...new Set(CHECKLIST_PROFILE.definitions.map((d) => d.group))];
 
 const DEFINITIONS = CHECKLIST_PROFILE.definitions.map((d) => ({ id: d.id, group: d.group, requirement: d.requirement, owner: d.owner, label: d.label }));
@@ -40,9 +32,8 @@ export interface AdminV6PlaceScore {
   readonly covers: string;
   readonly observedAt: string;
   readonly divisionCount: number;
-  /** The words a Send to fill this place's blanks carries, or null when the place cannot be named to the fleet. */
   readonly sendWords: string | null;
-  /** The target Sean set for this place, or null. */
+    /** The target the owner set for this place, or null. */
   readonly target: { readonly goalPercent: number; readonly setAt: string } | null;
   /** Core items only; the family rows add up to it. */
   readonly overall: GroupScore;
@@ -51,19 +42,13 @@ export interface AdminV6PlaceScore {
   readonly extension: GroupScore | null;
   /** Summary items whose detail items carry the count: listed, out of the denominator. Null when none. */
   readonly summary: GroupScore | null;
-  /** Completeness, freshness and delivery, each with its counts and never blended. */
   readonly measures: PlaceMeasures;
   readonly familyMeasures: readonly { readonly group: string; readonly measures: PlaceMeasures }[];
-  /** Up, down or same against the last earlier day's completeness, with that day's value. Null with no earlier point. */
   readonly trend: PlaceTrend | null;
-  /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
   readonly notCaptured: NotCaptured;
   readonly familyNotCaptured: readonly ({ readonly group: string } & NotCaptured)[];
-  /** Officials and candidates with a full profile, with the count behind each field. A measure, never a gate. */
   readonly profiles: { readonly words: string; readonly figures: PeopleCoverage };
-  /** Governments, bodies, seats and people accounted for against what is expected; "total unknown" where it cannot be known. */
   readonly coverage: { readonly words: readonly string[]; readonly figures: PlaceCoverage };
-  /** Completeness on the starting list and on the grown list, side by side; null until the place has a mission start. */
   readonly growth: PlaceGrowth | null;
 }
 export interface AdminV6PlaceItem {
@@ -79,11 +64,8 @@ export interface AdminV6PlaceItem {
   readonly next: string;
   readonly parts: readonly { readonly text: string; readonly status: string; readonly proof: string; readonly tone: "good" | "warn" | "muted" }[];
   readonly sourceUrl: string | null;
-  /** The six statuses of this blank. `missing` words the one that matters most. */
   readonly statuses: RowStatuses | null;
-  /** When the next check is due for a blank awaiting publication or due for a refresh. */
   readonly nextCheckAt: string | null;
-  /** When this blank started being owed, shown only when it was added after the mission started; null otherwise. */
   readonly addedAt: string | null;
   readonly actions: readonly { readonly kind: "send-agents" | "owed-decline"; readonly target: string; readonly label: string; readonly payload: Readonly<Record<string, string>> }[];
 }
@@ -98,12 +80,7 @@ export interface AdminV6PlaceChecklistView {
   readonly score: AdminV6PlaceScore;
 }
 
-/**
- * What the runner should read as this place: the state, plus the county's own name as the one term. A ZIP is not a unit the
- * fleet's registry names (the governments that serve it are), so a ZIP's send names the county it sits in, taken from the
- * governments the owed list resolved for it. Work for a county serves every ZIP in it. With no county known, a ZIP's send is
- * refused rather than widened to the whole state.
- */
+/** A ZIP's send names the county it sits in; with no county known it is refused rather than widened to the whole state. */
 export function placeSendWords(placeKey: string, label: string, divisions: readonly { readonly id: string; readonly label: string }[] = []): string | null {
   const m = /^(?:geo:|st:)([a-z]{2})(?:.([a-z_]+).([0-9A-Za-z]+))?$/.exec(placeKey);
   const state = m ? US_STATES.find((s) => s.code === m[1])?.name ?? null : null;
@@ -111,7 +88,7 @@ export function placeSendWords(placeKey: string, label: string, divisions: reado
   const countyOf = (name: string) => name.replace(/,.*$/, "").replace(/\s+County$/i, "").trim();
   const countyDivision = divisions.find((d) => /\/county:[a-z0-9_.~-]+$/.test(d.id));
   if (m[2] === "zcta" && countyDivision === undefined) return null;
-  // The fleet's registry names governments, not districts: a district's send would widen to the whole state, so it is refused instead.
+    // A district's send would widen to the whole state, so it is refused instead.
   if (m[2] === "congressional_district") return null;
   const term = m[2] === "zcta" ? countyOf(countyDivision!.label) : m[2] === "county" ? countyOf(label) : null;
   return sendWordsFor({ stateNames: [state], zip: term, subject: null, label: null });
@@ -139,7 +116,6 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null, miss
     addedAt: item.owedSince !== null && missionStart !== null && !onStartingList(item, missionStart) ? item.owedSince : null,
     actions: [
       ...(open && words !== null ? [{ kind: "send-agents" as const, target: placeKey, label: "Send agents", payload: { words } }] : []),
-      // A blank added after the mission started can be declined, with a reason; the starting list's own blanks cannot.
       ...(item.owedSince !== null && missionStart !== null && !onStartingList(item, missionStart)
         ? [{ kind: "owed-decline" as const, target: placeKey, label: "Decline", payload: { rows: JSON.stringify([{ rowId: item.key, subjectLabel: item.subject, requirement: item.requirement }]), what: item.requirement.split(" — ")[0] ?? item.requirement } }] : []),
     ],
@@ -185,7 +161,6 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
   };
 }
 
-/** A scope with no owed list (the whole country, or a geography type without one): the real definitions stay, and the score says plainly it is not measured here. */
 export function v6PlaceNotMeasured(placeKey: string, says: string, asOf: string) {
   return {
     contract: ADMIN_V6_CHECKLIST_CONTRACT, scope: placeKey, revision: `place:${placeKey}:not-measured`, asOf,

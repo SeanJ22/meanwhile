@@ -4,7 +4,7 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { governmentMoneyView } from "@/lib/funding/government-money";
 import type { GovernmentBudgetFact } from "@/lib/civic-data/government-budget-contract";
 
-/** BodySections mounts this inside its Money section and shared Sources card. */
+/** A body's budget facts with their sources; the gap line when none are held. */
 export function GovernmentMoneySection({bodyId,divisionId,records}:{bodyId:string;divisionId:string;records:readonly GovernmentBudgetFact[]}) {
   const view=governmentMoneyView(records,bodyId,divisionId);
   if(!view.rows.length)return <WorkingOnIt />;

@@ -1,41 +1,26 @@
 import { officialLinkingPageFromAsync, type LazyOfficialPage } from "../../sources/official-page-events/index.ts";
 /**
- * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR.** (2026-09-23.)
+ * The unpaid meetings-discovery executor: walks a government's own site for
+ * meeting routes. It makes no model call. For one need it:
  *
- * A Send's mission map owes every government in its places a meeting calendar;
- * where a body holds no calendar route, its meetings are still to be discovered
- * (`lib/hunt/mission-meetings-discovery.ts`, CH-21). The local-jurisdictions
- * provider opens no MEETINGS route, and the only other executor that walks a
- * site is the paid Scout lane. This is the deterministic one. It makes no model call.
+ * 1. reads robots.txt for the origin before any other request (following
+ *    redirects per RFC 9309) and records the verdict; no verdict stops the
+ *    walk. Only a real access control (a recorded wall, or the site's own 401,
+ *    403 or 429) makes it BLOCKED, and it is never pushed past;
+ * 2. reads the homepage one redirect hop at a time, reading each new host's
+ *    robots.txt first;
+ * 3. names the meeting routes the page evidences
+ *    (`lib/hunt/meetings-site-discovery.ts`) and confirms each by content;
+ * 4. appends the walk to `discoveryAttempts` and writes found routes, leads and
+ *    dead doors to the field manual.
  *
- * For one need it:
+ * Each request's timeout is cut to the caller's time left. A walk the time
+ * runs out on concludes nothing unless it already confirmed a route, and the
+ * need stays due. A find is only a candidate; a walk that finds nothing is a
+ * reading with a recheck date, never an absence.
  *
- * 1. reads robots.txt for the government's own origin before any other
- *    request, following its redirects as RFC 9309 asks, and RECORDS the
- *    verdict on every step. No verdict stops the walk: robots.txt alone never
- *    blocks reading a public page (owner decision 2026-09-25). Only a real
- *    access control makes the walk BLOCKED — a recorded wall, or the site's
- *    own 401, 403 or 429 to this client — and it is never pushed past;
- * 2. reads the homepage, following redirects one hop at a time. Each new host's
- *    robots.txt is read and recorded before anything is requested from it;
- * 3. names the meeting routes the page itself evidences
- *    (`lib/hunt/meetings-site-discovery.ts`) and requests the verifiable ones,
- *    confirming each by content;
- * 4. appends the walk, found and not found alike, to `discoveryAttempts`, and
- *    writes found routes, leads and dead doors to the field manual.
- *
- * It keeps to the caller's time. Each request's timeout is cut to the time
- * left, and no request is sent once too little remains. A walk the time runs
- * out on concludes nothing unless it already confirmed a route: it is not
- * recorded as a reading, and the need stays due.
- *
- * It never promotes, never wires a body, and never writes reader truth: a find
- * is a candidate for the verification path. A walk that finds nothing is never
- * an absence (RULING 250); it is a reading with a recheck date.
- *
- * Every request goes through the caller's `open`. The runner builds it on its
- * own FleetSafety provider key, so a latch here cannot stop the routine lanes.
- * The host spacing is shared with every other lane.
+ * Every request goes through the caller's `open`, built on its own FleetSafety
+ * provider key. Host spacing is shared with every other lane.
  */
 
 import { createHash } from "node:crypto";
@@ -217,9 +202,7 @@ export function searchCostEntry(input: {
 
 /**
  * Hosts that wall this client by an access control (a 403 to an identified
- * client), measured and recorded, so no request is sent, robots.txt included:
- * the list keeps a recorded wall from costing another request per walk. Never a
- * robots.txt line (owner decision 2026-09-25).
+ * client), so no request is sent, robots.txt included. Never a robots.txt line.
  */
 export { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
 import { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
@@ -238,12 +221,9 @@ const SOURCE_ID = "meetings-discovery";
 
 /**
  * The work identity every artifact of a walk carries: the need, not a WorkItem.
- * The evidence vault writes it as a directory name (`workItemPrefix`), and the
- * standing runner's host is Windows, where `:` is not a legal path character:
- * `discovery:meetings:az:school:x` failed every walk's first write (ENOENT, the
- * first cycle after NS28, 2026-09-24). So every character outside
- * `[A-Za-z0-9._-]` becomes `_`, and a short fingerprint of the id keeps two ids
- * that differ only there in different directories.
+ * Written as a directory name, so every character outside `[A-Za-z0-9._-]`
+ * becomes `_` (`:` is illegal on Windows) and a short fingerprint keeps ids that
+ * differ only there apart.
  */
 export function discoveryWorkId(jurisdictionId: string): string {
   return `discovery-meetings-${jurisdictionId.replace(/[^A-Za-z0-9._-]/g, "_")}-${fingerprint([jurisdictionId]).slice(0, 8)}`;
@@ -353,11 +333,9 @@ export async function walkMeetingsDiscoveryNeed(
 
   /**
    * Vault a body the walk read, and say what of it the walk may read. A body carrying a confirmed third-party
-   * credential (`classifyAcquisition`) is RESTRICTED_RAW. Its exact bytes are offered to the vault, which keeps
-   * them only on an encrypted, access-controlled substrate, and the walk reads and keeps its sanitized
-   * derivative instead (`lib/control-plane/evidence/artifact.ts`). A vault that refuses a body is a fact about
-   * our storage, recorded on the step; it never ends the walk. One school district's homepage carrying a key
-   * stopped every remaining walk of a pass on 2026-09-24.
+   * credential (`classifyAcquisition`) is RESTRICTED_RAW: its bytes go only to an encrypted, access-controlled
+   * substrate and the walk reads the sanitized derivative (`evidence/artifact.ts`). A vault refusal is recorded
+   * on the step and never ends the walk.
    */
   async function vaultBody(
     url: string,
@@ -496,7 +474,7 @@ export async function walkMeetingsDiscoveryNeed(
   /** GET one URL, one hop at a time, reading and recording every host's robots.txt first. Null when nothing usable came back. */
   async function get(start: string, purpose: DiscoveryStep["purpose"], accept: string) {
     let current = start;
-    /* Each redirect this request followed: the chain a derived wiring row's attestation cites (NH330). */
+    /* Each redirect this request followed: the chain a derived wiring row's attestation cites. */
     const redirects: { from: string; to: string; status: number }[] = [];
     for (let hops = 0; hops <= MAX_REDIRECT_HOPS; hops += 1) {
       let url: URL;
@@ -507,10 +485,7 @@ export async function walkMeetingsDiscoveryNeed(
         return null;
       }
       const permission = await permissionFor(url);
-      /*
-       * Only a recorded access-control wall stops the request. A robots.txt verdict (DISALLOWED, or CANNOT_TELL when
-       * the rules could not be read) is recorded on the step and never refuses a public page (owner decision 2026-09-25).
-       */
+      /* Only a recorded access-control wall stops the request; a robots.txt verdict is recorded and never refuses a public page. */
       if (permission.verdict === "RECORDED_WALL") {
         skipped(purpose, url.toString(), permission.verdict, `not requested: a recorded access-control wall (${permission.detail})`);
         return null;
@@ -545,10 +520,7 @@ export async function walkMeetingsDiscoveryNeed(
         : null;
       const walled = challenge !== null && challenge.kind === "CHALLENGE";
       const ok = got.status !== null && got.status >= 200 && got.status < 300 && got.transportError === null && !walled;
-      /*
-       * A 404 or 410 is the only evidence that withdraws a derived wiring row (ROUTE_WITHDRAWN_BY_PUBLISHER,
-       * NH330), so its body is vaulted as that evidence. Nothing else is read from it.
-       */
+      /* A 404 or 410 is the only evidence that withdraws a derived wiring row, so its body is vaulted. Nothing else is read from it. */
       const gone = got.transportError === null && (got.status === 404 || got.status === 410);
       /* The body reaches the walk as decoded text, so a binary one (a PDF) would be vaulted as something it is not. */
       const binary = (ok || gone) && !textualType(got.contentType);
@@ -617,7 +589,7 @@ export async function walkMeetingsDiscoveryNeed(
   const found: DiscoveryFind[] = [];
   const leads: Omit<DiscoveryFind, "count" | "artifactId">[] = [];
   const recipeApplied: MeetingsDiscoveryAttempt["recipes"]["applied"][number][] = [];
-  /* `via`: the read page whose link the route came from, which its host attestation chains through (NH330). */
+  /* `via`: the read page whose link the route came from, which its host attestation chains through. */
   type Via = { readonly page: string; readonly artifactId: string | null } | null;
   const planned: { candidate: EndpointCandidate; recipeIds: string[]; label: string | null; via: Via }[] = [];
   /* The pages step 3 read, kept so step 3b can read the routes they link. */
@@ -798,12 +770,11 @@ export async function walkMeetingsDiscoveryNeed(
     }
 
     /*
-     * 3b. When nothing is confirmed yet, the pages this walk already read are read
-     * once more, for the routes they link. A body's meetings are often one link past
-     * the page that names them: Chandler's "City Council Meetings" page links its
-     * agenda publisher (2026-09-24). A readable route is requested and confirmed by
-     * content, within the walk's endpoint bound. An unreadable publisher is a lead.
-     * Nothing is guessed: every candidate is a link a read page carries.
+     * 3b. When nothing is confirmed yet, the pages already read are read once
+     * more for the routes they link (meetings are often one link past the page
+     * naming them). A readable route is confirmed by content within the
+     * endpoint bound; an unreadable publisher is a lead. Every candidate is a
+     * link a read page carries.
      */
     if (found.length === 0) {
       const tried = new Set([...planned.map((p) => p.candidate.url), ...candidates.map((c) => c.url), ...(civicPlusIndex === null ? [] : [civicPlusIndex])]);
@@ -1074,7 +1045,7 @@ export function discoveryFieldManualEntries(attempt: MeetingsDiscoveryAttempt): 
       { attemptId: attempt.attemptId, ...l }));
   }
   if (attempt.outcome === "BLOCKED") {
-    /* What walled each origin: a recorded wall (the step's permission), or its own 401, 403 or 429 to this client. A step a pre-2026-09-25 walk skipped for robots.txt still names its verdict. */
+    /* What walled each origin: a recorded wall (the step's permission), or its own 401, 403 or 429 to this client. A step an older walk skipped for robots.txt still names its verdict. */
     /* An access control only: a recorded wall, the site's own 401/403/429, or a bot challenge. Never a robots line. */
     const walls = attempt.steps.filter((s) =>
       s.purpose === "homepage" &&
@@ -1093,10 +1064,9 @@ export function walkableByFreeWalk(need: Pick<MeetingsDiscoveryNeed, "basis" | "
 }
 
 /**
- * The needs a pass may walk: every need the owner's dispatch materialized, as
- * its registry records it now, then the mission map's calendar blanks (CH-21:
- * each government in a Send's places whose body holds no calendar route). A
- * government both name is walked once, as dispatched.
+ * The needs a pass may walk: every need the owner's dispatch materialized, then
+ * the mission map's calendar blanks. A government both name is walked once, as
+ * dispatched.
  */
 export function discoveryNeedsToWalk(
   mission: readonly MeetingsDiscoveryNeed[],
@@ -1166,7 +1136,7 @@ export async function runMeetingsDiscovery(
     const latest = priorAttempts.at(-1);
     /* A walk made without the government's current hints set its recheck without them: the need is due again now. */
     const hintsChanged = hinted.has(need.jurisdictionId) && latest?.routeHints?.fingerprint !== hinted.get(need.jurisdictionId);
-    /* A find recorded before walks carried their provenance cannot be attested for wiring (NH330): walk it again. */
+    /* A find recorded before walks carried their provenance cannot be attested for wiring: walk it again. */
     const findWithoutProvenance = latest?.outcome === "FOUND" && latest.site === undefined;
     // Older walks used multi-day holds. They cannot silence a calendar index
     // beyond the current source cadence, even before a new walk is recorded.

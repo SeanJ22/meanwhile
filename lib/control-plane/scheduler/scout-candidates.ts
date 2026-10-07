@@ -1,31 +1,8 @@
 /**
- * **FROM A SCOUT'S ROUTE CANDIDATE TO THE METHOD-CANDIDATE STORE.**
- * (Level 1 activation, 2026-09-01. RULING 240. Machine-owned provenance,
- * 2026-09-02, RULING 243.)
- *
- * Models handle novelty; code handles learned procedure. The bridge is the
- * EXISTING candidate lifecycle in `lib/method/candidate.ts` —
- * `PROPOSED -> VALIDATED -> ADMITTED | REJECTED`. A route that validates on
- * the Attempt that opened it is written to the field manual and admitted at
- * once, so it is used the moment it works (DP-25). Two Attempts offering the
- * same route id prove nothing: whether a method is Proven comes only from the
- * fix map and the bar.
- *
- * Only a candidate whose URL the Attempt actually OPENED (an artifact with
- * that canonical URL) is proposed: a route the method store learns carries an
- * outcome in a jurisdiction, and a URL merely observed on a page has none.
- * The rest stay on the typed Scout result, marked unverified.
- *
- * ## What reaches durable provenance (RULING 243)
- *
- * `learnedRouteFrom` writes `origin`, `note` and the ROUTE_EXISTENCE claim
- * from the candidate's MACHINE-OWNED fields — `observedOn`, `permission`,
- * `recordClass`, `evidenceArtifactIds` — which the executor derived from the
- * artifact, obligation and permission records before it accepted the finish.
- * The model's own statements about those facts travel separately as
- * `modelClaims` on the candidate record and are never written into the
- * proposal. A candidate without a machine derivation (no `provenance`) is a
- * pre-ruling shape and is not proposed.
+ * From a Scout's route candidate to the method-candidate store (`PROPOSED -> VALIDATED -> ADMITTED | REJECTED`).
+ * Only a candidate whose URL the Attempt actually opened is proposed, and its provenance is written only from
+ * machine-owned fields; the model's own claims travel separately as `modelClaims`. A route that validates is
+ * admitted at once.
  */
 
 
@@ -186,7 +163,7 @@ export async function proposeScoutCandidates(input: {
       observedMethodVersion: knowledge.version,
     });
     store = offered.store;
-    // DP-25: an offer already admitted is done; one validated but not yet written (a failed manual write) finishes admission below.
+    // An offer already admitted is done; one validated but not yet written finishes admission below.
     if (offered.already && offered.candidate.lifecycle !== "VALIDATED") {
       proposed.push({ routeId: c.routeId, candidateId: offered.candidate.id, lifecycle: offered.candidate.lifecycle, issues: [], already: true });
       continue;
@@ -236,11 +213,7 @@ export async function proposeScoutCandidates(input: {
       store = r.store;
       proposed.push({ routeId: c.routeId, candidateId: r.candidate.id, lifecycle: r.candidate.lifecycle, issues: [r.candidate.rejection?.reason ?? "malformed"], already: false });
     }
-    /*
-     * DP-25: a validated route is used the moment it works once, as this place's door entry. Whether the method is
-     * proven comes only from the fix map and the bar (lib/method/fix-status.ts), never from two Attempts offering the
-     * same route id.
-     */
+    /* A validated route is used the moment it works once; whether a method is proven comes only from the fix map and the bar. */
     if (store.candidates.find((candidate) => candidate.id === offered.candidate.id)?.lifecycle === "VALIDATED") {
       const learned = learnBatch(knowledge, prior ? [prior.proposal, proposal] : [proposal], input.stamp);
       const route = learned.knowledge.routes.find((route) => route.id === c.routeId)!;

@@ -5,40 +5,13 @@ import {
 import type { ContributionRow } from "./types.ts";
 
 /**
- * **What kind of money one contribution row is — the single derivation.**
+ * What kind of money one contribution row is: the single derivation, from the
+ * FEC's own entity and committee typing, never from the name. A candidate's
+ * own money (entity CAN, or a line 13A loan) renders as such; unknown codes
+ * fall to the honest generic; individuals get no suffix. `contributorBand`
+ * and `plainContributorLabel` both read this one ladder.
  *
- * The plain suffix for a contributor row, mechanically derived from the
- * FEC's own entity typing — never from the name (2a, 2026-08-19). A
- * candidate lending or giving to their own campaign files as entity CAN
- * (or line 13A for candidate loans), and that renders as what it is: the
- * candidate's own money. Unknown codes fall back to the honest generic
- * rather than a guess; individuals get no suffix, as before.
- *
- * Lives in its own module — NOT display.ts — because the client-side
- * funding section renders these labels and display.ts sits on the
- * node:fs snapshot graph. The first placement broke the browser build
- * exactly the way lib/meetings/constants.ts warns about.
- *
- * ## Why the ladder is a function and not two copies (2026-08-19, g20)
- *
- * D06's concentration bands needed the same question answered — "what kind
- * of filer is this?" — and the first draft asked `committeeTypeLabelFor`
- * directly, skipping the two steps above it. Reading the real snapshot is
- * what caught it, and what it caught was not cosmetic:
- *
- * - **Seven of twenty-one candidates** had rows land in the unfiled bucket.
- * - Lily Tang Williams' **$80,000 of her own money** (entity CAN, line 13A)
- *   would have rendered as "a committee whose filing doesn't state its
- *   type" — a false claim about a filing that states its type perfectly
- *   well, attached to the largest number on her card.
- * - ActBlue, WinRed, the Camden County Republican Committee and a
- *   candidate's own second committee file entity types (ORG, COM, CCM) and
- *   no committee type. The FEC classified them; only the committee table
- *   does not reach them.
- *
- * So the ladder lives here once, `contributorBand` is what both surfaces
- * call, and `plainContributorLabel` is the same ladder's label. A second
- * implementation of this question is the defect, not the fix.
+ * Client-safe: kept out of display.ts, which is on the node:fs graph.
  */
 
 /** The band id for a candidate's own money — not a committee category. */
@@ -56,11 +29,8 @@ export interface ContributorBand {
 }
 
 /**
- * The FEC's own entity-type codes, and the plain words for each. These are
- * the rung BELOW the committee table: a filer the FEC typed as an
- * organization, a committee or a candidate's committee, but for which no
- * `committee_type` was filed. Rendering these as "not stated" would be our
- * gap wearing the filing's clothes.
+ * The FEC's own entity-type codes, for a filer typed as an organization, a
+ * committee or a candidate's committee with no `committee_type` filed.
  */
 const ENTITY_TYPE_BANDS: Readonly<Record<string, ContributorBand>> = {
   CCM: { id: "entity-ccm", label: "a candidate's campaign committee" },
@@ -112,15 +82,13 @@ export function contributorBand(row: {
   if (row.entityType === "IND") return null;
 
   // 4. The FEC's entity typing, where the committee typing is absent. This
-  //    is where ActBlue, WinRed and a county party committee live.
+  //    is where conduit platforms and county party committees live.
   const byEntity = row.entityType ? ENTITY_TYPE_BANDS[row.entityType] : undefined;
   if (byEntity) return byEntity;
 
-  // 5. Nothing filed at all. On the committee side that is a named gap; on
-  //    the individual side it is just a person, and the caller's `kind`
-  //    says which. A row with no typing and no kind is treated as the gap,
-  //    because asserting "a person" from an absence would be the same
-  //    manufactured claim in the other direction.
+  // 5. Nothing filed at all: on the committee side a named gap, on the
+  //    individual side a person, as the caller's `kind` says. No typing and no
+  //    kind is treated as the gap.
   if (row.kind === "INDIVIDUAL") return null;
   return {
     id: UNFILED_BAND_ID,
@@ -130,11 +98,9 @@ export function contributorBand(row: {
 }
 
 /**
- * The plain suffix beside a contributor's name. The ladder above, rendered
- * — with one difference the surface needs: a committee-side row with no
- * typing at all keeps the pre-2a generic ("committee or organization")
- * rather than the band's longer sentence, because it sits inline after a
- * name rather than in a list of categories.
+ * The plain suffix beside a contributor's name: the ladder above, except that
+ * a committee-side row with no typing keeps the short generic ("committee or
+ * organization"), since it sits inline after a name.
  */
 export function plainContributorLabel(row: {
   kind: ContributionRow["kind"];
@@ -155,12 +121,9 @@ export function plainContributorLabel(row: {
 }
 
 /**
+/**
  * The typed label for a contributing committee, or null when the filing
- * carries no typing (individuals, and rows from before item 6's capture).
- *
- * Exported separately from the string above because the surface needs the
- * whole record — the label to render AND the two-sentence explainer with
- * its FEC source — and a bare string cannot carry those.
+ * carries no typing. Returns the whole record (label, explainer, FEC source).
  */
 export function contributorTypeLabel(row: {
   entityType?: string | null;

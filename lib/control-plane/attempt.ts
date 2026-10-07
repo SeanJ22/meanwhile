@@ -1,28 +1,11 @@
 /**
- * ATTEMPTS AND LEASES — the layer where "workers are disposable" becomes
- * mechanical rather than aspirational.
+ * Attempts and leases. A crashed or interrupted Attempt is ABORTED and may
+ * preserve artifacts, but it cannot leave behind YIELDED, ZERO, BLOCKED or
+ * NOT_APPLICABLE as if the route finished. Whether an execution reached a
+ * completion boundary is decided here, from outside the worker (a lease that
+ * stopped being renewed), never from the worker's own account.
  *
- * The load-bearing sentence of the target architecture is:
- *
- *     A crashed or interrupted Attempt is ABORTED and may preserve artifacts,
- *     but it cannot leave behind YIELDED, ZERO, BLOCKED, or NOT_APPLICABLE as
- *     if the route finished.
- *
- * This file is the only place in the system permitted to say whether an
- * execution reached a completion boundary. Everything downstream — the
- * disposition writer, the completion evaluator, the method-candidate intake —
- * asks THIS module rather than trusting a worker's own account of itself.
- *
- * Why that separation exists: a worker that dies is, by construction, not
- * available to report that it died. The only honest reading of a dead worker is
- * made from OUTSIDE it, from a lease that stopped being renewed. A design that
- * asks the worker to write its own terminal state has already lost the cases it
- * was built for.
- *
- * TIME IS ALWAYS A PARAMETER HERE. No function in this file reads a clock. A
- * library that reaches for the wall clock cannot be replayed, and the
- * reproducibility attack mode in the threat model exists precisely to catch
- * that class of drift.
+ * Time is always a parameter; nothing here reads a clock.
  */
 
 import { attemptId, leaseId } from "./ids.ts";
@@ -31,13 +14,8 @@ import type { CapabilityGrant } from "./capability.ts";
 /** ------------------------------------------------------------- attempts */
 
 /**
- * How an Attempt ENDED. This is execution state and is never a
- * `RouteDisposition`.
- *
- * The distinction is the entire point. `ABORTED` says something about our
- * worker. `WALKED_NO_YIELD` says something about a government. Collapsing them
- * is how "our process died" becomes "this record is not published", which is
- * the one failure this product cannot survive.
+ * How an Attempt ended: execution state, never a `RouteDisposition`. `ABORTED`
+ * is about our worker; `WALKED_NO_YIELD` is about a government.
  */
 export const ATTEMPT_OUTCOMES = [
   /** Reached a defined completion boundary. The ONLY outcome that may carry a disposition. */
@@ -55,12 +33,7 @@ export const ATTEMPT_OUTCOMES = [
 ] as const;
 export type AttemptOutcome = (typeof ATTEMPT_OUTCOMES)[number];
 
-/**
- * The outcomes that permit a terminal route disposition to be written.
- *
- * Exactly one member, and it should stay that way. Every proposal to widen this
- * list is a proposal to let one of our failures describe a government.
- */
+/** The outcomes that permit a terminal route disposition. Widening this lets our failures describe a government. */
 export const DISPOSITION_BEARING_OUTCOMES: readonly AttemptOutcome[] = ["COMPLETED"];
 
 /** Outcomes that leave the RouteTask reclaimable by a replacement Attempt. */
@@ -83,11 +56,7 @@ export const WORKER_ROLES = [
   "VALIDATOR",
   "ADVERSARIAL_AUDITOR",
   "RELEASE_ORCHESTRATOR",
-  /*
-   * A search-API request made by the unpaid meetings-discovery executor
-   * (2026-09-23). Not a model worker: it exists so search spend is accounted
-   * apart from model spend, one CostEntry per provider request.
-   */
+  /* A search-API request from the meetings-discovery executor, so search spend is accounted apart from model spend. */
   DISCOVERY_SEARCH_ROLE,
 ] as const;
 export type WorkerRole = (typeof WORKER_ROLES)[number];
@@ -105,21 +74,11 @@ export interface WorkerRef {
 }
 
 /**
- * Measured, never estimated. An unmeasurable field is null, not a guess.
- *
- * **The prompt-cache metering (2026-09-06).** `inputTokens` is the whole prompt
- * — uncached plus cache reads plus cache writes — and it is what the fleet
- * safety bounds and the capacity figures have always read. The five fields
- * below split it the way the provider bills it, and `batch` says whether the
- * request went through the Message Batches API (every price halved). Dollars
- * in `usd` are computed from exactly these five token quantities plus
- * `outputTokens` (`priceMeteredUsage` in `model-cost.ts`), never from
- * `inputTokens` at the base price.
- *
- * A row persisted before this date carries NONE of the six: a reader must
- * treat an absent field as UNMEASURED (`cacheMeteringOf` in `cost.ts`), never
- * as zero — a zero would assert that every read missed the cache, which is a
- * measurement nobody took.
+ * Measured, never estimated; an unmeasurable field is null. `inputTokens` is
+ * the whole prompt (uncached + cache reads + cache writes); the fields below
+ * split it as the provider bills it, and `usd` is priced from them
+ * (`priceMeteredUsage`). Older rows carry none of the six cache fields: absent
+ * means UNMEASURED (`cacheMeteringOf`), never zero.
  */
 export interface AttemptCost {
   readonly inputTokens: number | null;
@@ -192,16 +151,9 @@ export interface AttemptProviderBatch {
 /** ---------------------------------------------------------------- leases */
 
 /**
- * A time-bounded claim on a RouteTask.
- *
- * Two workers claiming the same RouteTask is not a hypothetical; it is the
- * expected steady state of a system that fans out. The lease is what makes the
- * second one lose cleanly instead of duplicating a side effect against a
- * government server.
- *
- * Expiry is evaluated against a caller-supplied `now` for the same reason
- * everything else here is: so a test can put the clock where it needs it, and
- * so replay is exact.
+ * A time-bounded claim on a RouteTask, so a second worker loses cleanly
+ * instead of duplicating a side effect. Expiry is evaluated against a
+ * caller-supplied `now`.
  */
 export interface ExecutionLease {
   readonly id: string;
@@ -235,14 +187,7 @@ export function isExpired(lease: ExecutionLease, now: string): boolean {
   return lease.released || Date.parse(lease.expiresAt) <= Date.parse(now);
 }
 
-/**
- * Claim a RouteTask, or refuse.
- *
- * `existing` is the current lease if there is one. A live lease held by someone
- * else is a `LeaseConflict` — the caller does not get to override it, because
- * "I am sure the other worker is dead" is exactly the belief that produces two
- * concurrent writes against one publisher.
- */
+/** Claim a RouteTask, or refuse. A live lease held by someone else is a `LeaseConflict` and cannot be overridden. */
 export function claim(
   routeTaskId: string,
   holder: string,
@@ -319,17 +264,7 @@ export class AttemptContract extends Error {
   }
 }
 
-/**
- * Close an Attempt.
- *
- * Two refusals live here, and both describe failures that have cost this
- * project real time:
- *
- *   - A non-`COMPLETED` outcome without a named `abortReason`. "It failed" is
- *     not a reason; the next session cannot act on it and the auditor cannot
- *     attack it.
- *   - Closing an Attempt twice. A second close is a lost update in disguise.
- */
+/** Close an Attempt. Refuses a non-`COMPLETED` outcome without a named `abortReason`, and a second close. */
 export function endAttempt(
   attempt: Attempt,
   outcome: AttemptOutcome,
@@ -352,8 +287,7 @@ export function endAttempt(
     outcome,
     endedAt: now,
     abortReason: opts.abortReason ?? null,
-    // Artifacts accumulate even on abort. Preserving partial evidence is the
-    // reason an interrupted walk is not a total loss.
+    // Artifacts accumulate even on abort.
     artifactIds: opts.artifactIds ?? attempt.artifactIds,
     cost: opts.cost ?? attempt.cost,
   };

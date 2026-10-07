@@ -9,7 +9,6 @@ export interface LinkHealthEdgeStore {
   read(): Promise<{ snapshot: ReaderLinkHealth; etag: string } | null>;
   write(snapshot: ReaderLinkHealth, etag: string | null): Promise<boolean>;
 }
-/** Separate pointer in the existing Reader store; no control-plane read on Reader. */
 export function linkHealthEdgeStore(): LinkHealthEdgeStore {
   const siteID = process.env.NETLIFY_SITE_ID || process.env.NETLIFY_BLOBS_SITE_ID;
   const token = process.env.NETLIFY_API_TOKEN || process.env.NETLIFY_BLOBS_TOKEN;
@@ -28,7 +27,7 @@ export function linkHealthEdgeStore(): LinkHealthEdgeStore {
   };
 }
 
-/** Bank calls after DB-51 records real results; a stale sweep cannot replace a newer one. */
+/** A stale sweep cannot replace a newer one. */
 export async function publishReaderLinkHealth(results: Parameters<typeof projectLinkHealth>[1], sweptAt: string,
   options: { store?: LinkHealthEdgeStore; purge?: (tags: readonly string[]) => Promise<unknown> } = {},
 ): Promise<boolean> {

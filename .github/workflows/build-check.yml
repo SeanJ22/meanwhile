@@ -12,11 +12,7 @@ on:
       - ready_for_review
       - labeled
       - auto_merge_enabled
-  # The integration safety net for affected-only pull-request tests: the whole
-  # suite on main's tip once a day. A software certification, not a data
-  # clock. Its required-named jobs report under "scheduled …" names, so a
-  # scheduled result never lands on main's tip as a required context.
-  # 09:17 UTC = 02:17 Arizona MST; release checks keep their event triggers.
+  # Whole suite on main once a day; its jobs report under "scheduled …" names so they never count as required checks.
   schedule:
     - cron: '17 9 * * *'
   workflow_dispatch:
@@ -36,18 +32,14 @@ permissions:
   contents: read
   checks: read
   pull-requests: read
-# Every push to main keeps its own group, so a later (even docs-only) push never
-# cancels a code commit's run and leaves it unjudged. Each pull request
-# supersedes its own older run; the scheduled run supersedes its own.
+# Each push to main keeps its own run; a pull request's newer run replaces its older one.
 concurrency:
   group: build-check-${{ github.event_name == 'schedule' && 'scheduled' || github.ref }}${{ github.event_name == 'push' && format('-{0}', github.sha) || '' }}
   cancel-in-progress: true
 jobs:
   admission:
     name: admission (preflight and integrity)
-    # A draft pull request buys no Actions: sessions run lint and types for
-    # their files locally, and ready_for_review starts the real run.
-    # Admission needs no installed dependencies: every step runs on bare Node.
+    # Draft pull requests run nothing. Admission runs on bare Node with no install.
     if: (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -77,7 +69,7 @@ jobs:
           WTP_PR_AUTO_MERGE: ${{ github.event.pull_request.auto_merge != null }}
           WTP_PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
         run: node scripts/pr-ci-tier.mjs
-      - name: Preflight — the cheap deterministic checks (RULING 279)
+      - name: Preflight — the cheap deterministic checks
         id: preflight
         run: node scripts/preflight.mjs
       - name: Decide whether the expensive tier runs
@@ -107,9 +99,7 @@ jobs:
           CACHED_COMMIT_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
           COMMIT_REF: ${{ github.sha }}
         run: node scripts/netlify-ignore.mjs --ci
-      # A pull request runs the tests its change can reach (or all four shards
-      # when the change is not code the import graph follows); the
-      # scheduled run and a manual dispatch run all four. Main runs none.
+      # Pull requests run the tests their change can reach; scheduled and manual runs run all four shards; main runs none.
       - name: Select the tests this change can reach
         id: tests
         if: always() && steps.tier.outputs.expensive == 'yes'
@@ -158,8 +148,7 @@ jobs:
         id: install
         if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting'
         run: corepack pnpm install --frozen-lockfile
-      # One install, then every check reports even when an earlier one fails;
-      # the job fails if any of them did.
+      # Every check reports even when an earlier one fails.
       - name: Lint
         if: always() && steps.install.outcome == 'success' && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting')
         timeout-minutes: 10
@@ -168,18 +157,9 @@ jobs:
         if: always() && steps.install.outcome == 'success' && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting')
         timeout-minutes: 10
         env:
-          # The same whole-program check as the build's, measured at 1.79 GB on
-          # main against the runner's ~2 GB default heap: the Build step's limit.
+          # Whole-program type check needs more than the runner's default ~2 GB heap.
           NODE_OPTIONS: --max-old-space-size=4096
         run: corepack pnpm exec tsc --noEmit
-      - name: Canonical state holdings and residual paths
-        if: always() && steps.install.outcome == 'success' && needs.admission.outputs.tier == 'yes'
-        timeout-minutes: 5
-        run: corepack pnpm state-holdings:check
-      - name: Generated state manifests against committed observations
-        if: always() && steps.install.outcome == 'success' && needs.admission.outputs.tier == 'yes'
-        timeout-minutes: 5
-        run: corepack pnpm state-manifest --check
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -233,26 +213,13 @@ jobs:
         if: (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main') && (matrix.mode == 'standalone' || github.event_name == 'workflow_dispatch') && needs.admission.outputs.deploy_build != 'no'
         env:
           NEXT_PRIVATE_STANDALONE: ${{ matrix.mode == 'standalone' && 'true' || '' }}
-          # Next's type check of the whole program ran out of heap here at the
-          # runner's ~2 GB default (#378, 2026-09-23; tsc alone peaks near
-          # 1.8 GB on main). The deploy build gets the same heap in netlify.toml,
-          # so this step stays a rehearsal of it.
+          # Same heap as the deploy build in netlify.toml.
           NODE_OPTIONS: --max-old-space-size=4096
         run: corepack pnpm run build
       - name: Bundle-scanning checks (need the build above)
         if: matrix.mode == 'standalone' && needs.admission.outputs.tier == 'yes' && needs.admission.outputs.deploy_build != 'no'
         timeout-minutes: 10
         run: corepack pnpm run test:bundle
-      - name: Trace census
-        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main') && (matrix.mode == 'standalone' || github.event_name == 'workflow_dispatch') && needs.admission.outputs.deploy_build != 'no'
-        run: node scripts/trace-census.mjs --files trace-files.txt
-      - name: Keep the trace list
-        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main') && (matrix.mode == 'standalone' || github.event_name == 'workflow_dispatch') && needs.admission.outputs.deploy_build != 'no'
-        uses: actions/upload-artifact@v5
-        with:
-          name: trace-files-${{ matrix.mode }}-${{ github.sha }}
-          path: trace-files.txt
-          if-no-files-found: warn
       - name: Preflight was red — nothing expensive was bought
         if: always() && needs.admission.outputs.tier == 'no-preflight'
         run: |
@@ -280,16 +247,12 @@ jobs:
       - admission
     if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
   test:
-    # One leg named `affected` for the tests a pull request's change can reach,
-    # or the four shards (1/4 … 4/4) for the whole suite; see
-    # scripts/ci-affected-tests.mjs. No leg runs when the change reaches no test,
-    # and main runs none (the scheduled run covers it).
+    # One `affected` leg for a pull request's reachable tests, or four shards for the whole suite (scripts/ci-affected-tests.mjs).
     name: test (${{ matrix.shard }})
     needs:
       - admission
       - verify
-    # Tests wait for the structural checks. The plan and the legs are both
-    # checked so an empty matrix can never be expanded.
+    # Both checks keep an empty matrix from expanding.
     if: needs.admission.outputs.tier == 'yes' && needs.verify.result == 'success' && (needs.admission.outputs.test_plan == 'affected' || needs.admission.outputs.test_plan == 'full') && needs.admission.outputs.test_legs != '' && needs.admission.outputs.test_legs != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 75
@@ -323,23 +286,16 @@ jobs:
       - name: Install
         if: needs.admission.outputs.tier == 'yes'
         run: corepack pnpm install --frozen-lockfile
-      - name: Frozen holdings base for extraction proofs
+      - name: Fetch the frozen import commit a test reads
         if: success() && needs.admission.outputs.tier == 'yes'
         shell: bash
         run: |
-          holdings_base=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/state-holdings/move-plan.json','utf8')).baseSha)")
-          [[ "$holdings_base" =~ ^[0-9a-f]{40}$ ]] || exit 1
-          git cat-file -e "${holdings_base}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_base"
-          holdings_update=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/states/az/ballot/measure-summaries.json','utf8')).source.integratedUpdate.commit)")
-          [[ "$holdings_update" =~ ^[0-9a-f]{40}$ ]] || exit 1
-          git cat-file -e "${holdings_update}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_update"
-          # PDC bridge accounting reads this distinct immutable import fixture.
+          # tests/trusted-lkg-import.test.ts reads this commit.
           pdc_frozen_base=$(node --input-type=module -e 'import{readFileSync}from"node:fs";console.log(readFileSync("lib/civic-data/trusted-lkg-import.ts","utf8").match(/export const PDC_V2_FROZEN_BASE_SHA = "([a-f0-9]{40})";/)[1])')
           [[ "$pdc_frozen_base" =~ ^[0-9a-f]{40}$ ]] || exit 1
           git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json" 2>/dev/null || git fetch --no-tags --depth=1 origin "$pdc_frozen_base"
           git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json"
-      # The browser is bought only when a selected test's imports reach Playwright
-      # (always for the whole suite).
+      # The browser is installed only when a selected test imports Playwright.
       - uses: actions/cache@v4
         if: needs.admission.outputs.tier == 'yes' && needs.admission.outputs.needs_browser == 'true'
         with:

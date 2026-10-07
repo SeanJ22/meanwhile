@@ -1,19 +1,9 @@
 /**
- * **REGISTRATION'S PUBLICATION IDENTITY.** (2026-09-23.)
- *
- * One routine contract per state registers that state's governments from the
- * 2022 Census of Governments: its divisions and a body for each government
- * the Census ties to one. The scope list is the FIPS table of states, DC and
- * territories (`lib/ocd/fips.ts`) — a fact about the country, never a list of
- * states someone chose to cover — so every state is registered without a code
- * change.
- *
- * The source is pinned to exact bytes: the Census ZIP the reference
- * (`data/derived/registration/`) was built from, attested against
- * census.gov on 2026-09-23 (`data/reference/census_govt_units_2022.md`). A
- * different file at that URL is a new vintage, which is refused by name and
- * leaves every state's prior registration live until the reference is
- * rebuilt from it.
+ * Registration's publication identity. One routine contract per state registers its governments from
+ * the 2022 Census of Governments. The scope list is the FIPS table (`lib/ocd/fips.ts`), so every state is
+ * registered without a code change. The source is pinned to the exact Census ZIP bytes the reference
+ * (`data/derived/registration/`) was built from; a different file at that URL is a new vintage, refused
+ * by name, leaving every state's prior registration live.
  */
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 
@@ -26,9 +16,9 @@ export const REGISTRATION_SOURCE_URL = "https://www2.census.gov/programs-surveys
 export const REGISTRATION_SOURCE_SHA256 = "3ef3d93c91697b00d4d53384176dc584db9dacbd0f0a23e45657f0a3a1058c28" as const;
 export const REGISTRATION_SOURCE_BYTES = 11_459_763;
 /**
- * The Last-Modified census.gov serves with exactly the pinned bytes (one full read, 2026-09-23:
- * `data/reference/census_govt_units_2022.md`). Each run asks with If-Modified-Since set to it, so an
- * unchanged file is confirmed by a 304 with no body, and a changed one is refused on its headers.
+ * The Last-Modified census.gov serves with exactly the pinned bytes. Each run asks with
+ * If-Modified-Since set to it, so an unchanged file is confirmed by a 304 with no body, and a changed one
+ * is refused on its headers.
  */
 export const REGISTRATION_SOURCE_LAST_MODIFIED = "Thu, 24 Aug 2023 12:44:48 GMT" as const;
 export const REGISTRATION_SOURCE_THROUGH = "2022" as const;

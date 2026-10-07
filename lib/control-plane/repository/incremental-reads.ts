@@ -1,43 +1,8 @@
 /**
- * **ONE IN-MEMORY COPY PER ROUND, AND EACH LATER READ FETCHES ONLY WHAT CHANGED.**
- *
- * The research round (`scripts/freshness-shadow.mts`) re-read whole
- * control-plane tables on every worker wave: the planner's selection, the
- * standing runtime's unscoped broker, the round start, the promotion tail and
- * the campaign chain each call `list()` / `readAll()` on the same few tables.
- * That re-reading was most of the control-plane data-transfer bill.
- *
- * This wrapper keeps one copy of those tables for the life of the wrapped
- * bundle. The first `list()` / `readAll()` reads the table whole; each later
- * one asks the store only for rows whose database-clock `changed_at` (schema
- * v22) is at or after the previous read's start minus a slack, merges them, and
- * returns EXACTLY what the plain read would return now:
- *
- * ```
- *   aggregates   same rows, by id ascending; a row seen twice keeps the higher
- *                revision (aggregates are never deleted by any repository API)
- *   logs         same records, by key then position; a record is immutable, so
- *                one seen twice across the slack overlap is kept once
- * ```
- *
- * Why the watermark is safe: the store's `through` is its clock when the read
- * BEGAN. A change committed after that began has a `changed_at` no earlier than
- * its own statement's start, and every control-plane write is one bounded
- * statement (request-bounds.ts: at most 25 s), so the next read from
- * `through - slackMs` (default 120 s) sees it.
- *
- * Why the order is the plain read's: the store returns every batch in its own
- * `ORDER BY`, and each batch is checked against the order this wrapper sorts
- * by (code-point id; key then position). A batch out of that order means the
- * database collates differently, so the table goes back to plain reads for the
- * rest of the process rather than return rows in an order `list()` would not.
- *
- * Never stale and never partial in silence: a store without the method reads
- * plainly; a changed-since read that throws (for example `changed_at` does not
- * exist yet because version 22 has not been applied) falls back to the plain
- * read for that call and logs one line naming the table. Every other method
- * passes through untouched — writes, `read`, `listWhere`, `readSince`, all of
- * them.
+ * One in-memory copy per wrapped bundle; each later `list()` / `readAll()` fetches only rows whose
+ * `changed_at` is at or after the previous read's start minus a slack, and returns exactly what the plain
+ * read would. Safe because every control-plane write is one bounded statement shorter than the slack.
+ * A batch out of the expected order, or a changed-since read that throws, falls back to plain reads.
  */
 
 import type {
@@ -54,12 +19,10 @@ export const INCREMENTAL_READS_SLACK_MS = 120_000;
 /** The env switch that keeps the way back: `0` turns the wrapper off where it is wired. */
 export const INCREMENTAL_READS_ENV = "WTP_INCREMENTAL_READS";
 
-/** On unless the switch says `0`. */
 export function incrementalReadsEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return env[INCREMENTAL_READS_ENV] !== "0";
 }
 
-/** The aggregates whose `list()` and the logs whose `readAll()` are read incrementally. */
 export const INCREMENTAL_AGGREGATES = ["workItems", "attempts", "routeTasks", "occurrences", "leases"] as const;
 export const INCREMENTAL_LOGS = ["artifacts", "scoutResults", "workerResults"] as const;
 
@@ -221,11 +184,7 @@ function incrementalLog<T>(
   return { ...repo, readAll };
 }
 
-/**
- * The bundle with incremental `list()` on {@link INCREMENTAL_AGGREGATES} and
- * incremental `readAll()` on {@link INCREMENTAL_LOGS}. Wrap ONCE where the
- * repositories are opened: the copy lives as long as the returned bundle.
- */
+/** Wrap once where the repositories are opened: the copy lives as long as the returned bundle. */
 export function withIncrementalReads(
   repos: ControlPlaneRepositories,
   options: IncrementalReadOptions = {},

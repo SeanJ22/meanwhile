@@ -30,14 +30,14 @@ export async function GET(request: NextRequest) {
     const held = await opened.repos.adminConfig.read(ADMIN_CONFIG_ID);
     const config = held && isAdminConfig(held.value) ? held.value : null;
     const list = config ? fixItems(config) : [];
-    // FE-21: the last few deploys' look checks, so a red flag's fix item keeps its screenshot after the next deploy.
+    // The last few deploys' look checks, so a red flag's fix item keeps its screenshot after the next deploy.
     const looks = await readLatestLookPasses(opened.repos, 5).catch(() => null);
     return {
       contract: "admin-v6/fixes@1",
       scope: request.nextUrl.searchParams.get("scope") ?? "united-states",
       revision: `fixes:${list.length}:${held?.revision ?? 0}:${queue.items.length}:${queue.counts.queued}:${queue.counts.sent}:${queue.counts.opened}:${queue.counts.refused}`,
       asOf: observedAt,
-      // DP-26: fixes in Testing ride along, so the Queue lists them as rows.
+      // Fixes in Testing ride along, so the Queue lists them as rows.
       data: v6FixesView(queue, list, observedAt, { standings: fixesInTesting(config), bar: readFixProofBar(config) },
         looks === null ? undefined : { view: lookView(looks[0] ?? null, shotUrl), shots: lookShotsByFix(looks, shotUrl) }),
       missingParts: list.some((i) => i.state === "FIXED") ? [] : [FIXES_MISSING_HISTORY],

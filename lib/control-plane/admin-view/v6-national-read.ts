@@ -1,37 +1,4 @@
-/**
- * **`admin-v6/national@1` — THE DISTRICT PROGRESS VIEW.** (S12.3.)
- *
- * One list, three depths, chosen by the scope the page is on:
- *
- * ```
- *   us                  one row per state or territory
- *   st:az               one row per congressional district of that state (AZ-06)
- *   geo:az.congressional_district.0406
- *                       one row per ZIP in that district
- * ```
- *
- * Every row carries the same columns: saved hunts, ZIPs worked of total, the
- * place score, and stuck items. A figure this read does not have is null, which
- * the page shows as "—"; it is never zero.
- *
- * ```
- *   hunts        saved lifetime hunts filed under the row (state), or whose ZIP lies inside it
- *   ZIPs worked  ZIPs with a saved ZIP hunt that has spent money or recorded any charge
- *   ZIPs total   ZIPs in the district (the published Census lookup); in a state, ZIPs in the national ZIP index
- *   completeness  the share of what the place owes now, from its core items, that we hold (place-measures.ts)
- *   stuck        stuck rows of the published work index, each counted once
- * ```
- *
- * The place score of a district is the same kind of number Admin gives a ZIP, a
- * county or a state: one owed list built over the union of the divisions of
- * every ZIP in the district. Held data is read ONCE for the whole list (one
- * `readHeld` over every division any row needs, then one owed list per row in
- * memory), never once per row. Scores are memoized for five minutes and never
- * hold the list back: if they are not ready inside the budget the rows come
- * back with null scores, and the read keeps going so the next one has them.
- *
- * PURE apart from the injected reads.
- */
+/** A figure this read does not have is null ("—"), never zero. Held data is read once for the whole list, never once per row. */
 import { buildPlaceOwedList } from "../../coverage/place-owed.ts";
 import type { HeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
@@ -57,7 +24,6 @@ export interface AdminV6NationalRow {
   readonly checklistItems: number | null;
   readonly tracked: boolean;
   readonly kind: NationalRowKind;
-  /** The place this row sits directly inside, for breadcrumbs. */
   readonly parentKey: string;
   readonly zipsWorked: number | null;
   readonly zipsTotal: number | null;
@@ -65,19 +31,13 @@ export interface AdminV6NationalRow {
   readonly score: number | null;
 }
 
-/* ------------------------------------------------------------- the query */
-
-/** The scope this read answers: exactly one, and a real v6 place (a body or a malformed Census address is refused, never widened to the country). */
 export function nationalScopeOf(params: URLSearchParams): { readonly ok: true; readonly scopeKey: string; readonly scope: V6PlaceScope } | { readonly ok: false; readonly code: string } {
   const query = validateV6Query(params);
   if (!query.ok) return query;
   return query.scope === null ? { ok: false, code: "INVALID_SCOPE" } : { ok: true, scopeKey: query.scopeKey, scope: query.scope };
 }
 
-/* --------------------------------------------------------------- the rows */
-
 export interface NationalHuntSources {
-  /** Saved scopes from the owner policy row; null when it could not be read. */
   readonly scopes: readonly ExpansionScopeDecision[] | null;
   readonly malformedScopes: number;
   readonly attribution: BillingAttribution | null | undefined;
@@ -91,7 +51,6 @@ interface HuntFact {
   readonly worked: boolean | null;
 }
 
-/** Saved lifetime hunts only, the ones the Hunts screen lists as hunts. */
 function huntFacts(hunts: NationalHuntSources): readonly HuntFact[] | null {
   if (hunts.scopes === null || hunts.malformedScopes > 0) return null;
   return hunts.scopes.filter((d) => typeof d.budgetStartedAt === "string").map((d): HuntFact => {
@@ -102,7 +61,6 @@ function huntFacts(hunts: NationalHuntSources): readonly HuntFact[] | null {
   });
 }
 
-/** ZIPs worked among these ZIP hunts: each ZIP once; unknown when a hunt's accounting is missing and no other hunt on that ZIP shows work. */
 function zipsWorkedOf(zipHunts: readonly HuntFact[]): number | null {
   const byZip = new Map<string, boolean | null>();
   for (const h of zipHunts) {
@@ -129,9 +87,7 @@ export interface NationalInputs {
   readonly scope: V6PlaceScope;
   readonly hunts: NationalHuntSources;
   readonly stuck: readonly StuckRowLike[] | null;
-  /** ZIPs per state in the national ZIP index; null when it could not be read. */
   readonly zipCounts: ReadonlyMap<string, number> | null;
-  /** The districts of the scope's state; null at country scope or when unread. */
   readonly districts: readonly DistrictInfo[] | null;
   /** Place score by place key; a key absent or null is "—". */
   readonly scores: ReadonlyMap<string, number | null>;
@@ -174,7 +130,6 @@ export function nationalRows(inputs: NationalInputs): readonly AdminV6NationalRo
     });
   }
 
-  // A district: one row per ZIP. Any other Census geography is not a list this view has.
   if (scope.type !== "congressional_district") return [];
   const district = inputs.districts?.find((d) => d.geoid === scope.geoid && d.state === scope.state) ?? null;
   if (district === null) return [];
@@ -190,12 +145,9 @@ export function nationalRows(inputs: NationalInputs): readonly AdminV6NationalRo
   });
 }
 
-/* ------------------------------------------------------------ place scores */
-
 export interface ScoreTarget {
   readonly placeKey: string;
   readonly divisions: readonly NationalDivision[];
-  /** The ZIPs in the target, so its ZIP-scope items are owed once per ZIP. Absent when they are not known. */
   readonly zips?: readonly string[];
 }
 
@@ -206,11 +158,7 @@ export interface ScoreDeps {
 
 const tick = () => new Promise<void>((resolve) => setImmediate(resolve));
 
-/**
- * The place score of every target from ONE read of held data: the divisions of all of them go in together, and each target's
- * owed list is then built in memory over its own divisions (`buildPlaceOwedList` keeps only the subjects that touch them), so
- * a target's number is exactly what `readPlaceOwed` would give that place on its own.
- */
+/** Each target's owed list is built in memory over its own divisions, so its number is exactly what `readPlaceOwed` gives that place alone. */
 export async function scoreTargets(targets: readonly ScoreTarget[], deps: ScoreDeps): Promise<Map<string, number | null>> {
   const out = new Map<string, number | null>();
   if (targets.length === 0) return out;
@@ -242,16 +190,11 @@ async function limited<T>(run: () => Promise<T>): Promise<T> {
   }
 }
 
-/** Test seam: forget memoized scores and in-flight reads. */
 export function forgetNationalScores(): void {
   scoreMemo.clear();
   scoring.clear();
 }
 
-/**
- * The scores for one scope's rows, or an empty map when they are not ready inside `budgetMs`. The read is shared (one per
- * scope at a time, two across scopes) and keeps going after the budget so the next request finds it memoized.
- */
 export async function scoresWithin(scopeKey: string, build: () => Promise<readonly ScoreTarget[]>, deps: ScoreDeps, budgetMs: number): Promise<{ readonly scores: ReadonlyMap<string, number | null>; readonly ready: boolean }> {
   const hit = scoreMemo.get(scopeKey);
   if (hit && Date.now() - hit.at < MEMO_MS) return { scores: hit.scores, ready: true };
@@ -275,23 +218,18 @@ export async function scoresWithin(scopeKey: string, build: () => Promise<readon
   return result;
 }
 
-/* ----------------------------------------------------------------- the section */
-
 export interface NationalDeps extends ScoreDeps {
   readonly districts: (state: string) => Promise<DistrictsRead>;
   readonly zipCounts: () => Promise<ReadonlyMap<string, number> | null>;
   readonly zipDivisions: (zips: readonly string[]) => Promise<ReadonlyMap<string, readonly string[]>>;
-  /** How long a response may wait for place scores before it returns without them. */
   readonly scoreBudgetMs: number;
 }
 
 export interface NationalSources {
   readonly hunts: NationalHuntSources;
-  /** The stuck rows of the published work index; null when it could not be read. */
   readonly stuck: readonly StuckRowLike[] | null;
 }
 
-/** The score targets of a scope: the divisions each row's owed list is built over. */
 async function targetsOf(scope: V6PlaceScope, districts: readonly DistrictInfo[] | null, deps: NationalDeps): Promise<readonly ScoreTarget[]> {
   if (scope.kind === "country") {
     return US_STATES.flatMap((s) => {
@@ -310,10 +248,7 @@ async function targetsOf(scope: V6PlaceScope, districts: readonly DistrictInfo[]
   return district.zips.map((z) => ({ placeKey: `geo:${district.state}.zcta.${z}`, zips: [z], divisions: unionDivisions([ids.get(z) ?? []], districtAlways(district)) }));
 }
 
-/**
- * **admin-v6/national@1.** The rows for this scope (see the header). A state whose districts cannot be read answers a
- * refusal rather than an empty list, so a missing list never reads as a state with no districts.
- */
+/** A state whose districts cannot be read answers a refusal, never an empty list. */
 export async function v6NationalSection(input: { readonly scopeKey: string; readonly scope: V6PlaceScope; readonly sources: NationalSources; readonly deps: NationalDeps }): Promise<AdminV6SectionEnvelope<readonly AdminV6NationalRow[]> | V6Refusal> {
   const { scope, deps, sources } = input;
   const state = scope.kind === "country" ? null : scope.state;

@@ -8,19 +8,8 @@ import {
 } from "@/lib/state/subscribe-to-storage";
 
 /**
- * The zips this device has looked at, most recent first (item 3, 2026-08-15).
- *
- * Device-local and nothing else. This list is the ONLY thing about a reader's
- * location that survives a tab closing — the current location itself is
- * session-scoped now (6f: "reopening the app asks where you are"), and the
- * point behind a narrowed street was never stored at all. A recents list is
- * orientation, exactly like the zip it holds: it makes the second visit one
- * tap instead of eleven, and it can be cleared by clearing site data.
- *
- * It never leaves the device. It is not sent with any request, it is not in
- * any export, and it joins nothing — the collection stores are the three named
- * in CLAUDE.md and this is not one of them: it is a UI convenience living in
- * the browser, the same class of thing as the theme choice.
+ * The zips this device has looked at, most recent first. Device-local only:
+ * never sent with any request, exported or joined.
  */
 
 const STORAGE_KEY = "wtp.recent_zips";

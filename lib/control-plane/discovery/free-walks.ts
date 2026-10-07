@@ -1,33 +1,18 @@
 /**
- * **WHAT THE FREE WALK LAST RECORDED, READ ONCE A CYCLE FOR THE PAID LANE.**
- * (2026-09-26. Reuse known findings; do not require free-route exhaustion.)
- *
- * `paidDiscoveryHold` lets a paid Scout take an owner-dispatched meetings-
- * discovery row without repeating an already confirmed route. This is the
- * reading the hold asks for (`FreeDiscoveryWalks`), taken from the walk's own
- * attempt log (`cp_log_discovery_attempts`) in ONE batched read a cycle. It
- * reads the newest attempt of each dispatched government, cut down to its
- * outcome, when it finished and its leads (`readLatest`). A cycle therefore
- * never downloads whole walks to learn three fields.
+ * What the free walk last recorded for each dispatched government, read once a
+ * cycle for `paidDiscoveryHold` from `cp_log_discovery_attempts` in one
+ * batched read of the newest attempt's outcome, finish time and leads.
  *
  * ```
  *   FOUND             the newest walk confirmed a route
- *   WALKED_NOT_FOUND  the newest walk confirmed nothing: the site showed
- *                     nothing or only leads, was a wall, or could not be read.
- *                     The free lane had its turn. For a wall or an unreadable
- *                     site the paid lane is the other path (RULING 248)
+ *   WALKED_NOT_FOUND  the newest walk confirmed nothing (nothing or only leads,
+ *                     a wall, or unreadable); the paid lane is the other path
  *   NOT_WALKED        no walk is recorded yet: paid admission is not held by this
- *   NO_SITE_TO_WALK   no site the walk can open is recorded (find-own-site):
- *                     the free lane has nothing to try, so the paid lane may go
- *   UNREAD            the log could not be read, or the government's need
- *                     could not be derived: the row stays held, so a failed
- *                     read never opens the paid lane
+ *   NO_SITE_TO_WALK   no site the walk can open is recorded: the paid lane may go
+ *   UNREAD            the log or the need could not be read: the row stays held
  * ```
  *
- * The leads travel with the reading as evidence for the Scout's brief. They
- * show where the free walk saw a meetings page or a publisher it could not
- * confirm, so paid work starts from them rather than from nothing. They are
- * evidence only, and the Scout still confirms.
+ * Leads travel as evidence for the Scout's brief; the Scout still confirms.
  */
 
 import type { DiscoveryOutcome } from "../../hunt/meetings-site-discovery.ts";

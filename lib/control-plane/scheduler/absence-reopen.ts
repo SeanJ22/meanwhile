@@ -1,44 +1,20 @@
-/**
- * **A NEW CAPABILITY REOPENS THE DEAD ENDS IT COULD SOLVE.** (DP-10.)
- *
- * "Wake when an adapter is installed" (`wakeInstalledAdapterDebts`) generalized
- * to "wake when a capability appears". When a route or method entry is written
- * for a platform and record class, or an adapter or tool appears, every
- * recorded absence whose `unlockWhen` names it is cleared, so the obligation
- * is owed in the next round instead of waiting out its clock.
- *
- * What matches (a trigger is stored with the absence, DP-06):
- * - ADAPTER: the capability is for that platform.
- * - TOOL: the capability is that tool.
- * - ROUTE: the capability is for that record class (and that platform, when the
- *   trigger names one). The record class alone is the weakest match the
- *   absence stores; it is why a trigger can carry the platform.
- * - DATE: never. The clock reopens it by itself.
- *
- * A capability that does not work (a failed or blocked entry) is not a new
- * capability and reopens nothing.
- */
+/** A new working capability clears every recorded absence whose `unlockWhen` it matches: ADAPTER by platform, TOOL by tool, ROUTE by record class (and platform when named), DATE never. */
 import type { FieldManualEntry } from "../field-manual.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { ABSENCE_EXPIRY_DAYS, type AbsenceUnlock, type AbsenceUnlockTrigger } from "./absence.ts";
 
-/** What appeared: the platforms, record classes and tools a new working entry covers. */
 export interface Capability {
   readonly platforms: readonly string[];
   readonly recordClasses: readonly string[];
   readonly tools: readonly string[];
-  /** One line saying what appeared, kept on the reopened obligation. */
   readonly because: string;
-  /** When the entry was observed (a UTC day or an instant); null when unknown. */
   readonly observedAt?: string | null;
 }
 
-/** Entry kinds that mean "a way of getting this now exists". */
 const CAPABILITY_KINDS: readonly string[] = ["METHOD", "ROUTE", "PLATFORM_ADAPTER", "ENGINEER_ADAPTER_PR"];
 
 const norm = (value: string): string => value.trim().toLowerCase();
 
-/** The capabilities a set of newly written field-manual entries stands for: working entries of a capability kind. */
 export function capabilitiesFromEntries(entries: readonly FieldManualEntry[]): Capability[] {
   return entries
     .filter((entry) => CAPABILITY_KINDS.includes(entry.kind) && entry.outcome === "YIELDED")
@@ -80,7 +56,6 @@ export function appearedAfter(capability: Capability, unlock: AbsenceUnlock, abs
   return capability.observedAt.length <= 10 ? capability.observedAt > recordedAt.slice(0, 10) : capability.observedAt >= recordedAt;
 }
 
-/** The first capability that matches any of the absence's triggers, or null. */
 export function unlockedBy(unlock: AbsenceUnlock | null | undefined, capabilities: readonly Capability[], absentUntil?: string | null): Capability | null {
   if (!unlock) return null;
   return capabilities.find((capability) => appearedAfter(capability, unlock, absentUntil) &&
@@ -116,13 +91,8 @@ export async function reopenAbsencesFor(
   return reopened;
 }
 
-/** Capabilities observed this recently are checked each round; older ones already had their rounds. */
 export const RECENT_CAPABILITY_DAYS = 2;
 
-/**
- * Each round: the working capabilities the bank gained in the last two days reopen the dead ends argued
- * before they appeared. Reads the obligations only when such a capability exists.
- */
 export async function reopenAbsencesForRecentCapabilities(
   repos: Pick<ControlPlaneRepositories, "obligations">,
   entries: readonly FieldManualEntry[],

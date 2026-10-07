@@ -22,7 +22,7 @@ export interface CampaignFinanceRecord extends Readonly<Record<string, unknown>>
 }
 export interface CampaignFinanceProjection { readonly kind: "campaign-finance"; readonly records: readonly CampaignFinanceRecord[] }
 
-/** CP-09: unknown amounts or filing periods leave a source document, never a Money figure. */
+/** Unknown amounts or filing periods leave a source document, never a Money figure. */
 export function campaignFinanceRecordKind(record: StateMoneyRecord): CampaignFinanceRecord["kind"] {
   return typeof record.totals.coveringPeriod === "string" && Boolean(record.totals.coveringPeriod.trim()) &&
     [record.totals.receipts, record.totals.expenditures, record.totals.cashOnHand, record.funding?.individualTotal,

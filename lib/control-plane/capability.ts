@@ -1,49 +1,21 @@
 /**
- * THE POLICY / CAPABILITY ENGINE — what a worker is ALLOWED to do, decided
- * outside the worker.
+ * The policy/capability engine: what a worker is allowed to do, decided
+ * outside the worker against a closed capability list.
  *
- * The premise of the control plane is that workers are disposable and not
- * trusted to describe themselves (see `attempt.ts`). A worker that cannot be
- * trusted to report its own death cannot be trusted to police its own reach
- * either. So authority is a GRANT held by the control plane and checked against
- * a closed capability list, never a convention a worker is expected to respect.
+ *   1. Default deny: an unknown capability, unrecognised role, or role with no
+ *      grant is refused.
+ *   2. Least privilege by role (a PARSER has no network at all).
+ *   3. Neutrality and coverage symmetry are invariants, not capabilities;
+ *      `assertNeutralityEnabled` throws on an attempt to turn one off.
  *
- * Three properties are load-bearing, and each one is a real failure this design
- * is built to make impossible:
- *
- *   1. DEFAULT DENY. An unknown capability, an unrecognised role, or a role with
- *      no grant is REFUSED. The alternative — "not listed, so probably fine" —
- *      turns every future capability into a silently granted one on the day it
- *      is named.
- *
- *   2. LEAST PRIVILEGE BY ROLE. A PARSER has no network at all. Not "should not
- *      use the network", not "has no reason to": it cannot be authorized for it.
- *      A parser that can fetch is a parser that can quietly repair its own input,
- *      and a repaired input is an unsourced fact.
- *
- *   3. SOME THINGS ARE NOT CAPABILITIES AT ALL. Political neutrality and
- *      coverage symmetry are not privileges to be granted or withheld — they are
- *      invariants, and this module refuses to represent a world in which they
- *      are off. `assertNeutralityEnabled` exists so that an attempt to turn one
- *      off is an exception at the point of the attempt, not a quiet boolean that
- *      travels.
- *
- * TIME IS A PARAMETER. Nothing here reads a clock; `grantedAt` is supplied by
- * the caller so a grant can be replayed exactly.
+ * Nothing here reads a clock; `grantedAt` is caller-supplied.
  */
 
 import { WORKER_ROLES, type WorkerRole } from "./attempt.ts";
 
 /** ----------------------------------------------------------- capabilities */
 
-/**
- * The CLOSED list. A capability that is not here does not exist, and asking for
- * one is a refusal rather than a pass-through.
- *
- * The list is deliberately finer-grained than "read" and "write" in the two
- * places where coarse grants have historically leaked: the evidence vault
- * (sanitized vs restricted) and the method store (propose vs promote).
- */
+/** The closed list. Finer-grained than read/write for the evidence vault and the method store. */
 export const CAPABILITIES = [
   /** Fetch a PUBLIC first-party URL. Never a credentialed or private surface. */
   "NETWORK_PUBLIC_READ",
@@ -80,14 +52,7 @@ export function isCapability(value: string): value is Capability {
   return CAPABILITY_SET.has(value);
 }
 
-/**
- * Capabilities that no DEFAULT grant may ever carry.
- *
- * These are not "rarely needed". They are the ones whose blast radius lands on
- * something outside this repository — the production store, a government
- * records officer, a person's inbox — and each therefore requires a grant that
- * an owner constructed on purpose, for one job, with `notes` saying why.
- */
+/** Capabilities no default grant may carry: each needs an owner-constructed grant with `notes`. */
 export const OWNER_GATED_CAPABILITIES: readonly Capability[] = [
   "PRODUCTION_DB_WRITE",
   "EXTERNAL_COMMUNICATION",
@@ -110,30 +75,19 @@ export interface CapabilityGrant {
 }
 
 /**
- * LEAST PRIVILEGE, stated once and enforced everywhere.
+ * Least privilege, read as refusals:
  *
- * Read this table as a set of refusals rather than a set of permissions — the
- * interesting entries are the absences:
- *
- *   - PARSER has NO network capability of any kind, and no restricted vault
- *     read. It sees sanitized bytes that an ACQUIRER already captured, and
- *     nothing else. It cannot re-fetch to "check", so its output is a function
- *     of recorded evidence alone.
- *   - ACQUIRER can fetch and can write evidence, but cannot CANONICAL_PROMOTE.
- *     The role that obtains a document is not the role that declares it true.
+ *   - PARSER has no network and no restricted vault read; its output is a
+ *     function of recorded evidence alone.
+ *   - ACQUIRER can fetch and write evidence, but cannot CANONICAL_PROMOTE.
  *   - MERGE_TO_MAIN belongs to RELEASE_ORCHESTRATOR alone.
- *   - PRODUCTION_DB_WRITE belongs to nobody. It is a separate, deliberate grant.
- *   - EXTERNAL_COMMUNICATION and RECORDS_REQUEST_SEND belong to nobody: sending
- *     something to a human outside this project is the author's decision.
- *   - ADVERSARIAL_AUDITOR KEEPS NETWORK_PUBLIC_READ. That is not an oversight
- *     and not a convenience. An auditor that can only re-read the artifacts the
- *     acquirer chose to keep can only ever confirm the acquirer's framing; its
- *     independence is exactly its ability to go get first-party evidence
- *     itself. It holds no write capability of any kind, which is what keeps that
- *     independence from becoming a second, unreviewed writer.
+ *   - PRODUCTION_DB_WRITE, EXTERNAL_COMMUNICATION and RECORDS_REQUEST_SEND
+ *     belong to nobody by default.
+ *   - ADVERSARIAL_AUDITOR keeps NETWORK_PUBLIC_READ so it can fetch first-party
+ *     evidence independently, and holds no write capability.
  */
 export const DEFAULT_GRANTS: Record<WorkerRole, readonly Capability[]> = {
-  /* A search-API request, not a worker: it holds no capability (2026-09-23). */
+  /* A search-API request, not a worker: it holds no capability. */
   DISCOVERY_SEARCH: [],
   SCOUT: [
     "NETWORK_PUBLIC_READ",
@@ -210,14 +164,7 @@ export class PolicyContract extends Error {
   }
 }
 
-/**
- * A refusal, carrying the two facts a report needs to be actionable: WHO asked
- * and WHAT they asked for.
- *
- * Both are fields as well as message text, because a downstream reporter that
- * has to regex a sentence to find out which role was refused will eventually
- * regex it wrong.
- */
+/** A refusal, carrying who asked and what they asked for as fields as well as message text. */
 export class PolicyRefusal extends Error {
   readonly role: WorkerRole | string;
   readonly capability: Capability | string;
@@ -240,13 +187,7 @@ export interface AuthorizationResult {
   readonly capability: Capability | string;
 }
 
-/**
- * The single decision point. DEFAULT DENY.
- *
- * Every non-allow path here refuses. There is no branch that falls through to
- * `allowed: true` because a lookup missed, which is the shape every "we forgot
- * to handle that case" privilege escalation actually takes.
- */
+/** The single decision point. Default deny: every non-allow path refuses. */
 export function authorize(
   grant: CapabilityGrant | null | undefined,
   capability: Capability | string,
@@ -322,14 +263,7 @@ export function rolesWithCapabilityByDefault(capability: Capability): WorkerRole
 
 /** ------------------------------------------------------- always-on policy */
 
-/**
- * Invariants, not privileges.
- *
- * These are modelled as flags ONLY so that an attempt to disable one is
- * representable long enough to be refused. Nothing in this module ever
- * constructs a policy with one of them off, and `assertNeutralityEnabled`
- * throws the moment such a policy is handed to it.
- */
+/** Invariants, modelled as flags only so an attempt to disable one can be refused. */
 export const ALWAYS_ON_INVARIANTS = ["POLITICAL_NEUTRALITY", "COVERAGE_SYMMETRY"] as const;
 export type AlwaysOnInvariant = (typeof ALWAYS_ON_INVARIANTS)[number];
 
@@ -368,13 +302,7 @@ export class NeutralityDisabled extends Error {
   }
 }
 
-/**
- * Throws if anyone has tried to turn an always-on invariant off.
- *
- * Called at policy load and before any scheduling decision. The refusal is at
- * the point of the attempt on purpose — a boolean that travels one function
- * further has already made the wrong behaviour reachable.
- */
+/** Throws if an always-on invariant was turned off. Called at policy load and before any scheduling decision. */
 export function assertNeutralityEnabled(policy: PolicyFlags): void {
   if (!policy.politicalNeutrality) throw new NeutralityDisabled("POLITICAL_NEUTRALITY");
   if (!policy.coverageSymmetry) throw new NeutralityDisabled("COVERAGE_SYMMETRY");

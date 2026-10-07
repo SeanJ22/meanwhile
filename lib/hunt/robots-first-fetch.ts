@@ -1,44 +1,25 @@
 /**
- * **A RESEARCH FETCH THAT READS ROBOTS.TXT FIRST, RECORDS IT, AND NEVER DEFEATS
- * AN ACCESS CONTROL.** (2026-09-24, R15; robots made evidence rather than a
- * gate by the owner decision of 2026-09-25.)
- *
- * Research sessions and their agents read government sites to find and verify
- * routes: an official site, a meetings page, a feed. They did it with ad-hoc
- * curl, and robots-first was an instruction, not a property. On 2026-09-24 a
- * verification agent's own script mistook an unread second robots.txt redirect
- * for "no robots file". Reading the rules first, and recording what they said,
- * is still a property of construction here.
- *
- * What changed on 2026-09-25 is what the reading DOES. Sean: "Robots.txt alone
- * must not block acquisition. I explicitly authorize automated reading of
- * publicly accessible pages even when robots.txt requests otherwise." So the
- * verdict is recorded with the fetch (`permissions`: verdict, matched rule, the
- * document's sha256, when it was read) and the public page is requested. The
- * same decision "does not extend to bypassing authentication or other access
- * controls", and neither does this module. Every request goes through
- * `researchFetch`, which:
+ * A research fetch that reads robots.txt first, records it, and never defeats
+ * an access control. Robots.txt is evidence, never a block: its verdict
+ * travels with the fetch (`permissions`: verdict, matched rule, the document's
+ * sha256, when it was read) and the public page is requested. Every request
+ * goes through `researchFetch`, which:
  *
  * 1. refuses, with no request at all, a URL that is not public http(s) and a
- *    host recorded as walling this client by an access control (the discovery
- *    walk's RECORDED_WALLS: a 403 to an identified client, never a robots line);
+ *    host recorded as walling this client by an access control;
  * 2. reads the host's robots.txt before anything else on that origin, follows
  *    its redirects as RFC 9309 asks (at most five, public hops only), evaluates
- *    it with the standing runner's own evaluator for the `we-the-people` token,
- *    and RECORDS the verdict. No verdict refuses (`ROBOTS_BLOCKS_ACQUISITION`);
- *    a robots.txt that could not be read is recorded CANNOT_TELL, never "no
- *    robots file";
- * 3. follows a page's redirects one hop at a time, reading and recording step 2
- *    again for every new origin before requesting anything from it;
+ *    it with the standing runner's evaluator for the `we-the-people` token,
+ *    and records the verdict; one that could not be read is CANNOT_TELL,
+ *    never "no robots file";
+ * 3. follows a page's redirects one hop at a time, repeating step 2 for every
+ *    new origin before requesting anything from it;
  * 4. spaces requests to one host (two seconds, or the host's own Crawl-delay
- *    when it asks for more), identifies itself as the project does, sends no
- *    credential, cookie or session, and hands every request, robots.txt
- *    included, to the caller's log;
- * 5. names an access control on the answer (`accessControl`: 401/402/403/407/
- *    429/451 or a bot challenge page, `lib/hunt/access-control.ts`). It is a
- *    technical failure of this route, reported and never pushed through: a 429
- *    backs the host off for `RATE_LIMIT_BACKOFF_MS` before anything else is
- *    asked of it, and nothing is re-sent under another identity.
+ *    when longer), identifies itself, sends no credential, cookie or session,
+ *    and hands every request, robots.txt included, to the caller's log;
+ * 5. names an access control on the answer (`accessControl`,
+ *    `lib/hunt/access-control.ts`): reported, never pushed through; a 429
+ *    backs the host off for `RATE_LIMIT_BACKOFF_MS`.
  *
  * There is no flag that skips a step.
  */
@@ -51,13 +32,7 @@ import { DEFAULT_ROBOTS_TOKEN, evaluatePermission, type PermissionVerdict } from
 import { DEFAULT_USER_AGENT } from "../control-plane/scheduler/user-agent.ts";
 import { assertPublicUrl } from "./egress.ts";
 
-/**
- * Hosts whose use waits on an owner decision. Nothing is requested from them, robots.txt included.
- *
- * Empty since 2026-09-25: its one entry, destinyhosted.com, waited only on whether a disallow-all robots.txt
- * should stop us, and the owner decided that robots.txt alone never does. A host goes here only for a real,
- * pending owner decision, never for a robots line.
- */
+/** Hosts whose use waits on a pending owner decision. Nothing is requested from them, robots.txt included. */
 export const OWNER_DECISION_HOSTS: readonly { readonly host: RegExp; readonly why: string }[] = [];
 
 const MAX_ROBOTS_REDIRECTS = 5;
@@ -90,7 +65,7 @@ export interface RobotsMemo {
   readonly status: number | null;
   readonly transportError: string | null;
   readonly contentType: string | null;
-  /** sha256 of the bytes read; null on a transport failure. Absent on a memo written before 2026-09-25. */
+  /** sha256 of the bytes read; null on a transport failure. Absent on older memos. */
   readonly robotsSha256?: string | null;
   /** The redirects followed to reach it. */
   readonly via: readonly string[];
@@ -260,7 +235,7 @@ export async function researchFetch(start: string, runtime: ResearchRuntime): Pr
     }
     const refused = refusalFor(url);
     if (refused !== null) return { outcome: "REFUSED", url: start, refusedUrl: url.toString(), reason: `not requested: ${refused}`, redirects, permissions };
-    /* Recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false (owner decision 2026-09-25). */
+    /* Recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false. */
     const { crawlDelayMs, ...reading } = await permission(url);
     permissions.push(reading);
     const got = await send(url, "page", ACCEPT_PAGE, crawlDelayMs ?? 0);

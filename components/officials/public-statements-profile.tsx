@@ -15,11 +15,7 @@ export function PublicStatementsProfile({ subjectId, onProfile }: { subjectId: s
 /** Only congressional identities have a PRL profile to look for. */
 export const PRL_SUBJECT = /^congress:[A-Z]\d{6}$/;
 
-/**
- * What the Public statements section is showing (lead review of 49e7b4a4):
- * every fetch outcome SETTLES to exactly one state, so a card can never stay
- * on "Loading" after the answer arrived.
- */
+/** Every fetch outcome settles to exactly one state, so a card never stays on "Loading". */
 export type StatementsLoad =
   | { kind: "not-applicable" }
   | { kind: "loading" }
@@ -57,8 +53,7 @@ function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onPro
   switch (load.kind) {
     case "not-applicable":
     case "none":
-      // A blank never reads as "nothing here": the section says what is not
-      // held, and why it might not be.
+      // A blank never reads as "nothing here".
       return (
         <CardSection title="Public statements">
           <p className="mw-feed-gap" data-statement-feed="not-held">
@@ -94,10 +89,8 @@ function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onPro
 }
 
 /**
- * The approved design's names for PRL's five categories, keyed by the held
- * category id. Definitions are the product's own explainers in
- * `lib/sources/prl/types.ts` (checked against PRL's codebook there), never
- * the prototype's paraphrase.
+ * Names for PRL's five categories by held category id. Definitions are in
+ * `lib/sources/prl/types.ts`.
  */
 const CATEGORY_NAME: Record<string, string> = {
   policy: "Policy discussion",
@@ -137,12 +130,7 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
       <div className="space-y-3 t-body">
         {numeric ? (
           <>
-            {/*
-              Approved design: five bars on ONE shared 0–100% scale. PRL's
-              categories overlap — a statement can be several at once — so the
-              bars never add to 100, are never normalized, and carry no
-              per-category count (the tracked total is not their denominator).
-            */}
+            {/* One shared 0–100% scale. Categories overlap, so bars never sum to 100 and are never normalized. */}
             <p className="mw-chart-note">
               The share of this member&apos;s tracked statements that PRL&apos;s
               classifier placed in each category. Categories overlap, so they
@@ -176,12 +164,7 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
                 <span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100%</span>
               </span>
             </div>
-            {/*
-              The same figures in PRL's own sentences — for a screen reader, and
-              because the reader proof renders this component and checks every
-              held sentence reaches the page. Collapsed by default; in the
-              markup either way.
-            */}
+            {/* The same figures in PRL's own sentences, for screen readers; collapsed by default. */}
             <details className="mw-chart-words">
               <summary>The same figures in words</summary>
               {categories.map(category => <p key={category.id}>{category.sentence}</p>)}
@@ -212,11 +195,7 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
             {categories.map(category => <p key={category.id}>{category.sentence}</p>)}
           </>
         )}
-        {/*
-          R2 (lead holding inventory, 2026-09-29): no verified per-statement
-          rows are held for any member, so the design's recent-statements feed
-          is stated as unavailable — never a sample, never a fixed state.
-        */}
+        {/* No verified per-statement rows are held, so the feed is stated as unavailable. */}
         <p className="mw-feed-gap" data-statement-feed="not-held">
           Individual statements aren&apos;t held here yet — only PRL&apos;s category
           shares.{" "}

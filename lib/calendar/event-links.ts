@@ -1,12 +1,3 @@
-/**
- * Calendar-link builders (session item 4, wall clock 2026-08-14 second
- * session) — pure, shared by every surface that renders a date. Two
- * event shapes: a timed instant (meetings) and an all-day date
- * (election day, registration deadlines). Apple Calendar and Outlook
- * both consume the same .ics; only Google differs — so the popup is
- * presentation, not new plumbing.
- */
-
 import type { CalendarSafeMeeting } from "../map/format.ts";
 import {
   TIME_NOT_POSTED,
@@ -20,37 +11,15 @@ import { PRODUCT_NAME } from "../brand.ts";
 import { statedVenueText } from "../meetings/online.ts";
 
 export interface CalendarEventInput {
-  /** Stable id for the ICS UID. */
   id: string;
   title: string;
   /** Timed event: ISO instant. Exactly one of these two is set. */
   startsAtIso?: string;
-  /**
-   * The published end instant, when the source states one. Without it the
-   * entry blocks a placeholder window and says so in its own description —
-   * never a silent invented end time.
-   */
   endsAtIso?: string;
-  /** A timed entry whose end was not published (the placeholder window). */
   endEstimated?: boolean;
   /** All-day event: YYYY-MM-DD. */
   allDayDate?: string;
-  /**
-   * **The last day of a multi-day window, INCLUSIVE** — item 16, 2026-08-19.
-   *
-   * New Jersey's in-person early voting runs 10/24/2026 through 11/01/2026,
-   * and it rendered with no calendar affordance at all because the shape here
-   * could only hold one day. A window is the event a reader most needs in a
-   * calendar: a deadline is a thing to remember, a window is a thing to miss.
-   *
-   * INCLUSIVE, because that is what the authority published — "through
-   * November 1st". `.ics` and Google both want an EXCLUSIVE end, and that
-   * conversion happens once, in `allDayStamps`, where the off-by-one belongs
-   * rather than at every call site.
-   *
-   * Ignored unless `allDayDate` is set; a timed event with an end date would
-   * be two different things at once.
-   */
+  /** Last day of a multi-day window, inclusive; ignored unless `allDayDate` is set. `allDayStamps` makes the exclusive end. */
   allDayEndDate?: string;
   location?: string;
   description?: string;
@@ -65,24 +34,7 @@ function toCalStamp(iso: string): string {
   return `${iso.slice(0, 19).replace(/[-:]/g, "")}Z`.replace(/\.\d+Z$/, "Z");
 }
 
-/**
- * YYYY-MM-DD → YYYYMMDD, and the exclusive day AFTER the last one for DTEND.
- *
- * `lastDate` is the inclusive final day of a window, or absent for a single
- * day — in which case the window is that day and the arithmetic is the same.
- *
- * **The arithmetic is deliberately in UTC and that is not the UTC bug.** An
- * all-day event carries a DATE and no time (`DTSTART;VALUE=DATE`), so it does
- * not sit in any zone and cannot be shifted by one: parsing `2026-11-01` at
- * `T00:00:00Z` and adding a UTC day yields `2026-11-02` in every timezone the
- * reader could be in.
- *
- * That is what makes the New Jersey window safe. `10/24 – 11/01` straddles
- * the end of Eastern daylight time — 11/01 IS the transition day — and a
- * timed event would need care there. A date-valued one needs none, which is
- * the reason a window is emitted as all-day rather than as a 00:00–23:59
- * pair.
- */
+/** All-day events carry a date and no zone, so UTC date arithmetic is exact here. */
 function allDayStamps(date: string, lastDate?: string): { start: string; end: string } {
   const start = date.replace(/-/g, "");
   const final = lastDate && lastDate >= date ? lastDate : date;
@@ -101,7 +53,6 @@ function timedStamps(iso: string, endIso?: string): { start: string; end: string
   };
 }
 
-/** True when a timed meeting's calendar entry uses a published end time. */
 export function hasPublishedEnd(meeting: { startsAt: string; endsAt?: string | null }): boolean {
   if (!meeting.endsAt) return false;
   const start = Date.parse(meeting.startsAt);
@@ -148,21 +99,11 @@ export function icsDataHref(event: CalendarEventInput): string {
   return `data:text/calendar;charset=utf-8,${encodeURIComponent(lines.join("\r\n"))}`;
 }
 
-/** Filename for the .ics download. */
 export function icsFileName(event: CalendarEventInput): string {
   return `${event.id.replace(/[^a-z0-9-]/gi, "-")}.ics`;
 }
 
-/**
- * A meeting as a calendar event (M59, 2026-08-15) — pure, so the rule that
- * decides timed-versus-all-day is testable without rendering a component.
- *
- * A meeting whose publisher never posted a start time becomes an ALL-DAY
- * event carrying the same sentence the card shows. The alternative — a timed
- * event at the midnight `startsAt` holds for ordering — would put a fabricated
- * hour into the reader's own calendar and ring an alarm at midnight, which is
- * the one place a wrong time does real damage.
- */
+/** A meeting with no published start time becomes an all-day event, never a timed one at midnight. */
 export function meetingCalendarEvent(
   meeting: CalendarSafeMeeting,
   options: { origin?: string } = {},
@@ -190,33 +131,6 @@ export function meetingCalendarEvent(
             : { endEstimated: true }),
         }
       : { allDayDate: meetingLocalDate(meeting) }),
-    /*
-     * An online meeting's LOCATION line carries what the body published —
-     * "Virtual Meeting" — and the join link when there is one (D18). It never
-     * carries an address, because there is not one, and a calendar entry that
-     * invented a building would send someone across town.
-     */
-    /*
-     * **MTG-4 (2026-08-23) — through `locationLine`, not a join.**
-     *
-     * The venue was reaching the event; what it was reaching it as was
-     * sometimes the same string twice. Several sources publish the ADDRESS as
-     * the venue name, so `[name, address].join(", ")` produced *65 Mount Hope
-     * Road, 65 Mount Hope Road* in the calendar entry — the author's Vail
-     * defect, which every reader-facing surface has routed through
-     * `locationLine` since 2026-08-16 and this one never did.
-     *
-     * A calendar entry is a reader-facing surface that outlives the tab it
-     * was created in, and it is the one place a duplicated address is hardest
-     * to notice and most annoying to fix.
-     */
-    /*
-     * 2026-09-23 (official-page events): a physical sitting whose room is a
-     * named gap carries the place its publisher STATED, verbatim ("Cholla High
-     * School South Gym") — the same words the card shows, never an address we
-     * do not hold. A page that states no place leaves the line out, as it
-     * always has for a sitting with nothing published about where it is.
-     */
     location: meeting.location
       ? locationLine(meeting.location.name, meeting.location.address)
       : meeting.venueGap

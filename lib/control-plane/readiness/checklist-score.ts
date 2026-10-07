@@ -16,7 +16,6 @@ export interface ChecklistDecision {
   readonly reason: string;
 }
 export interface ChecklistInstance {
-  /** Stable fact/object/period identity. The profile and scope do not create another paid job. */
   readonly obligationKey: string;
   readonly definitionIds: readonly string[];
   readonly predicateKey: string;

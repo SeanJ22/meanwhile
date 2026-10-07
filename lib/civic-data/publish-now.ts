@@ -9,20 +9,15 @@ import { latestParserResult } from "./worker-publication-evidence.ts";
 
 export const PUBLISH_NOW_INTERVAL_MS = 60_000;
 export const PUBLISH_NOW_SINGLETON_PORT = 49_373;
-/** Register on the parent's independent scheduler, beside its routine lane. */
 export function publishNowLane(run: () => Promise<void>): IndependentRuntimeLane {
   return { id: "publish-now", everyMs: PUBLISH_NOW_INTERVAL_MS, run };
 }
 
-/** Parser results are already a durable, non-expiring outbox. Their exact ids
- * are acknowledged by publicationOutcome.workerResultId; a crash cannot eat a
- * request. The hourly held-page scan stays on the routine lane. */
+/** Parser results are a durable outbox acknowledged by publicationOutcome.workerResultId, so a crash cannot lose a request. */
 export function publishNowWorkerTasks(items: readonly WorkItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
   return workerPublicationTasks(items.filter(item => latestParserResult(results, item.id) !== undefined), results, now);
 }
 
-/** Probe changes stay pending until a successful read; no due-request expiry
- * can discard them. The ordinary source executor retains its retry interval. */
 export function publishNowDoorTasks(doors: readonly DoorRecord[], tasks: readonly RoutineSourceTask[], now: string): RoutineSourceTask[] {
   const requests = new Map<string, string>();
   for (const door of doors) {

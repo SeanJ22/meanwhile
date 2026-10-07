@@ -1,92 +1,9 @@
 import { readGenericBallotProjection, type GenericBallotProjection } from "../../../ballot/generic-projection.ts";
 /**
- * **PROVIDER FIVE — CANDIDATE ENRICHMENT, FOR THE WHOLE STATE.**
- * (Session C3, lane C, 2026-09-01. RULING 229, RULING 87, RULING 182,
- * RULING 207, RULING 53.)
- *
- * ## The defect, stated as what a second ZIP used to cost
- *
- * Campaign sites, candidate-authored positions, bios, photos and published
- * contact were hunted **for the visible candidate universe** — the candidates on
- * two Arizona ZIPs' certified ballot, 68 acquisition attempts, keyed
- * `ballot-az-pima:*`. Every one of those people is running for an office in
- * ARIZONA. Activating a third Arizona ZIP that reaches the same Governor's race
- * would have started the identical hunt over, because the corpus was keyed by
- * where we happened to look first.
- *
- * This provider makes the enrichment fields STANDING OBLIGATIONS against each
- * state's canonical promoted ballot/profile projection, so the work is owed
- * before a reader arrives rather than triggered by one. The former generated
- * hunt files are retained only as research evidence and are never opened here.
- *
- * **The denominator is labelled, not assumed "statewide" (R-C9).** Only a
- * population acquired from an authority's complete applicable universe earns
- * that word; a pilot-derived population with a ZIP-free key is pilot-derived,
- * and `lib/candidates/population-label.ts` is what says which is which. As of
- * 2026-09-01, 925 of these 1,720 obligations stand over pilot-derived NH and
- * NJ populations, so a header claiming "statewide" here would have described
- * the KEY and been read as describing the PEOPLE.
- *
- * ## THE PORTFOLIO IS THE ONE ALREADY PROVEN, AND ITS WALLS ARE CARRIED TOO
- *
- * "The SAME equal-effort route portfolio already proven for the visible
- * candidates" is a specific set, and every member below is registered on a
- * PERMISSION READING and a CONTROL that this repository has actually taken:
- *
- * ```
- *   candidate-site-recorded      the site we already hold, re-walked. RULING 53:
- *                                a held finding is re-established, not assumed
- *   candidate-wikipedia-api      REGISTERED AS DISALLOWED, NOT AS A ROUTE.
- *                                `en.wikipedia.org/robots.txt`, read
- *                                2026-09-01, carries `Disallow: /w/` for
- *                                `User-agent: *` with two narrow `Allow:`
- *                                exceptions, and a search query is neither.
- *                                A disallow is honoured and is NEVER re-walked
- *                                on a clock
- *   candidate-marginalia-index   api.marginalia.nu/public/search — an
- *                                independent keyword index, walked 2026-08-24
- *                                with a real control (a `license` field and a
- *                                `results` array). CC-BY-NC-SA: it may POINT at
- *                                a URL and may never be a source of record, so
- *                                the URL is then fetched from the origin
- *   candidate-web-index-4get     REGISTERED AS A WALL, NOT AS A ROUTE. Its
- *                                robots.txt permits every path and it is the
- *                                only compliant general index in the register —
- *                                and on 2026-08-26 it returned ZERO result
- *                                links to this client. That is a wall, it
- *                                carries a date, and RULING 53 sends a session
- *                                back to it. Left unregistered it would simply
- *                                be forgotten
- * ```
- *
- * **PERMISSION WAS READ BEFORE EACH ROUTE WAS BUILT, AND ONE READING KILLED A
- * ROUTE.** `candidate-wikipedia-api` was first written as an openable HTTP GET
- * on the strength of `docs/sources.md`'s Wikipedia row. Reading the host's own
- * `robots.txt` refused it. The row is now a recorded DISALLOW, and the note it
- * carries says which claim in `docs/sources.md` that falsifies — a question
- * this lane raises and does not answer.
- *
- * **`4get.ca` is the reason this file names its walls.** The 2026-08-25 reading
- * recorded it as working; the 2026-08-26 re-measurement found the "names the
- * subject 8 times" signal was eight ECHOES of the query in the page's own
- * furniture. A route registered on the earlier reading would have been opening a
- * search engine that returns nothing, and calling the silence an absence about a
- * candidate.
- *
- * ## WHAT IS NEVER REGISTERED HERE
- *
- * A route that would produce a POSITION. `positions` obligations open the
- * candidate's OWN site and nothing else, because RULING 26's first
- * non-negotiable is that a position carries a source record pointing at a
- * specific statement by that candidate. A general index may point at a page; it
- * may never be the page.
- *
- * ## AND NOTHING IS REGISTERED FOR A FIELD ALREADY HELD
- *
- * A `FOUND` field is not re-hunted on this provider's clock — it is the
- * re-walk's business and the re-walk has its own. Registering an obligation for
- * a record we hold would spend the whole portfolio re-finding what is in the
- * corpus, which is the exact opposite of RULING 229's invariant.
+ * Candidate enrichment fields (campaign site, positions, bios, photos, contact) as standing obligations against
+ * each tracked state's canonical promoted ballot projection, so the work is owed before a reader arrives. Every
+ * route is its own scheduled unit, walls are registered so they are re-walked, nothing is registered for a
+ * field already held, and positions come only from the candidate's own site.
  */
 
 import { currentExtraction, type CandidateCorpus } from "../../../candidates/corpus.ts";
@@ -121,15 +38,7 @@ import { trackedStatesFromOperationalReference, type TrackedStatesSource } from 
 
 export const CANDIDATE_ENRICHMENT_PROVIDER_ID = "candidate-enrichment";
 
-/**
- * The states whose canonical candidate BALLOT AUTHORITY is registered in the
- * civic-data contracts (`az-sos-ballot`, `nh-curated-ballot`,
- * `nj-morris-filing`). A property of those contracts, not of coverage: which
- * states this provider ENUMERATES is the tracked set it is handed
- * (`TrackedStatesSource`, 2026-09-23). A tracked state outside this list is
- * named as a dataset gap every cycle — its ballot authority is not registered —
- * and never skipped quietly or read as an election with no candidates.
- */
+/** The states whose canonical candidate ballot authority is registered in the civic-data contracts. A tracked state outside this list is named as a dataset gap every cycle. */
 const LEGACY_BALLOT_AUTHORITY_STATES = ["az", "nh", "nj"] as const;
 /** Legacy path retained until the generic authority is checked live. */
 export const BALLOT_AUTHORITY_STATES = LEGACY_BALLOT_AUTHORITY_STATES;
@@ -138,12 +47,7 @@ const hasBallotAuthority = (state: string): state is BallotAuthorityState =>
   (BALLOT_AUTHORITY_STATES as readonly string[]).includes(state);
 export const CYCLE = 2026;
 
-/**
- * Identification the hosts below actually serve.
- *
- * A person and a purpose, in headers. No credential, no session, and nothing
- * claiming to be a residential client — identification, never evasion.
- */
+/** Identification headers: a person and a purpose, never a credential. */
 function identifiedHeaders(): Record<string, string> {
   const from = process.env.INGEST_CONTACT_EMAIL;
   return {
@@ -153,13 +57,7 @@ function identifiedHeaders(): Record<string, string> {
   };
 }
 
-/**
- * Identification the Wikimedia API policy requires: a descriptive User-Agent
- * WITH a contact. A generic User-Agent is throttled to the lowest global
- * rate-limit tier (Wikimedia enforced global API rate limits in 2026), so this
- * is a functional requirement, not decoration — and it is identification, never
- * evasion (the transparency mandate forbids spoofing, not being named).
- */
+/** The identified User-Agent with a contact that the Wikimedia API policy requires (a generic one is throttled). */
 function wikimediaHeaders(): Record<string, string> {
   const from = process.env.INGEST_CONTACT_EMAIL;
   const agent =
@@ -197,35 +95,9 @@ function siteRoute(c: CanonicalCandidacy, url: string): RouteDescriptor {
 }
 
 /**
- * **WIKIPEDIA VIA THE WIKIMEDIA REST API — A LIVE, ROBOTS-COMPLIANT DISCOVERY ROUTE.**
- * (Reclassified 2026-09-17. Supersedes the 2026-09-01 NOT_MACHINE_EXECUTABLE reading.)
- *
- * The 2026-09-01 reading checked the article/API paths and found `Disallow: /w/`
- * covering the site's own search API path — real, still honoured, and kept out
- * of the tree (WIKI_API_DISALLOWED; tests/wikipedia-permission.test.ts). But it
- * stopped there and marked the WHOLE route NOT_MACHINE_EXECUTABLE, which left
- * Marginalia as the ONLY live discovery route per candidate — so one dead index
- * stranded the record. RULING 248 ("if a public record exists, get it — find
- * every avenue") points the other way: Wikimedia runs a public API built for
- * automated access, on a DIFFERENT host, and it is robots-permitted.
- *
- * Measured 2026-09-17 with the identified User-Agent in `wikimediaHeaders()`:
- *   - `api.wikimedia.org/robots.txt` carries no rule against `/core/v1/` (allowed).
- *   - `GET /core/v1/wikipedia/en/search/page?q=<q>&limit=5` -> HTTP 200
- *     `application/json` with a populated `pages` array (the yield contract below).
- *
- * The access discipline Wikimedia's 2026 API policy requires is honoured, and
- * the deterministic executor already provides most of it: a descriptive
- * User-Agent WITH a contact (a generic one is throttled to the lowest global
- * rate-limit tier, so it is functional, not decorative); per-host spacing
- * (`hostSpacer`, 1.5 s) keeps concurrency well under the 3-request guideline; and
- * a 429 is a WALL_STATUS, so a rate-limit answer disposes BLOCKED_CURRENTLY and
- * backs the route off on its next-due rather than being retried in-cycle.
- *
- * DISCOVERY ONLY, exactly as RULING 87 governs it: a result may POINT at a
- * candidate's own page; the record is proved at the origin and is never taken
- * from the index. Each discovery route is still its own scheduled unit on its
- * own clock, so a 200 here neither marks Marginalia worked nor the reverse.
+ * Wikipedia via the Wikimedia REST API (`api.wikimedia.org`, robots-permitted), a discovery route only: a
+ * result may point at a candidate's own page, and the record is proved at the origin. A 429 is a wall and
+ * disposes BLOCKED_CURRENTLY.
  */
 export function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
   return {
@@ -288,15 +160,7 @@ function marginaliaRoute(c: CanonicalCandidacy): RouteDescriptor {
   };
 }
 
-/**
- * The general-index WALL, registered so it is re-walked rather than forgotten.
- *
- * RULING 53: an absence expires and a wall carries a date. `4get.ca` is the only
- * general web index whose `robots.txt` permits the query path, and on 2026-08-26
- * it answered 200 with zero result links to this client. Registering it as
- * NOT_MACHINE_EXECUTABLE keeps it on a clock and keeps the reason in front of
- * whoever reads the digest.
- */
+/** The general-index wall, registered as NOT_MACHINE_EXECUTABLE so it is re-walked rather than forgotten. */
 function generalIndexWall(stateCode: string): RouteDescriptor {
   return {
     routeId: "candidate-web-index-4get",
@@ -317,29 +181,11 @@ function generalIndexWall(stateCode: string): RouteDescriptor {
         "are DISALLOWED, which is a different fact and is never re-walked on a clock. This row is the " +
         "WALL, and RULING 53 sends a session back to it.",
     },
-    citation: "docs/sources.md — the search-pool table, re-measured 2026-08-26; lib/hunt/search-pool.ts",
+    citation: "docs/sources.md — the search-pool table, re-measured 2026-08-26",
   };
 }
 
-/**
- * The whole portfolio for one candidacy, given the fields it still owes.
- *
- * ## POSITIONS AND BIOS ARE NARROWER THAN THE REST, AND THAT IS RULING 26
- *
- * A candidate's stance and their self-description are only ever taken from that
- * candidate's OWN statement. An index may point at a page; it may never be the
- * page. So where no site is held, those two fields are BLOCKED ON the
- * campaign-site question — a named dependency, never an absence about a person —
- * and that is stated on the record rather than left for a reader to infer from a
- * null.
- *
- * ## AND EVERY DISCOVERY ROUTE IS ON ITS OWN CLOCK (RULING 207)
- *
- * The recorded site, Wikipedia and Marginalia are materially distinct
- * representations. A 200 from one does not mark the others worked, does not
- * clear their debt and does not move their next-due, because they are separate
- * scheduled units over one record.
- */
+/** The whole portfolio for one candidacy, given the fields it still owes. Positions and bios come only from the candidate's own statement, so with no site held they are blocked on the campaign-site question. */
 function routesForCandidacy(
   c: CanonicalCandidacy,
   owed: readonly EnrichmentField[],
@@ -466,9 +312,7 @@ export async function preloadCandidateEnrichmentAuthorities(
   if (general?.status === "rejected" || general?.status === "fulfilled" && general.value.kind === "STORE_UNREACHABLE") {
     failures.push("General ballot records could not be read; retained legacy authorities remain usable.");
   }
-  // The worker must inherit the same automatically delivered links and page
-  // text the Reader sees. Reading only the original profile/corpus pointers
-  // made a later cycle rediscover information its own publisher had delivered.
+  // The worker inherits the same delivered links and page text the Reader sees.
   const derived = results[5];
   if (derived.status === "fulfilled" && derived.value.kind === "PROMOTED") {
     const records = derived.value.value.records;
@@ -524,7 +368,7 @@ function profileStores(
   };
 }
 
-/** Pure derivation used by the provider and the permanent no-second-ZIP proof. */
+/** Pure derivation used by the provider. */
 export function candidateUniversesFromPromoted(
   authorities: CandidateEnrichmentAuthorities,
   nowIso: string,
@@ -652,13 +496,7 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
       "obligations against each state's canonical promoted ballot/profile denominator — never a " +
       "tracked hunt artifact and never the ZIPs that happen to be enabled",
 
-    /*
-     * THE IDENTITY SCHEME IS THE FIX. `freshness:candidate-enrichment:` then a
-     * canonical `<state>:<cycle>:<division>:<office>:<person>` — no ZIP, no
-     * county, no pilot. Activating another ZIP that reaches this candidacy finds
-     * this row already registered, already clocked and already worked, which is
-     * RULING 229's invariant expressed as a primary key.
-     */
+    /* Identity: `freshness:candidate-enrichment:<state>:<cycle>:<division>:<office>:<person>`, with no ZIP or county, so every place reaching this candidacy finds the same row. */
     scheduledId: (record, route) =>
       `freshness:candidate-enrichment:${record.subjectId}#${route.routeId}`,
 
@@ -671,7 +509,7 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
         : { universes: {}, failures: ["canonical ballot/profile projections were not preloaded"] };
       failures.push(...settled.failures);
 
-      /* THE TRACKED STATES, read as data (2026-09-23). A tracked state with no registered ballot authority is named, never skipped. */
+      /* Tracked states, read as data. A tracked state with no registered ballot authority is named, never skipped. */
       const tracked = trackedStates.read();
       const enumerated: string[] = [];
       if ("unreadable" in tracked) {
@@ -698,18 +536,7 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
           continue;
         }
 
-        /*
-         * **THE RECORD IS THE CANDIDATE'S PUBLIC RECORD; THE ROUTES ARE ITS
-         * REPRESENTATIONS.** (RULING 206, RULING 207, and the registry's own
-         * doctrine in `registry.ts`.)
-         *
-         * The first draft of this file made the record (candidacy × FIELD),
-         * which put the same Wikipedia query and the same Marginalia query on
-         * three separate clocks for one person — one for the site, one for the
-         * photo, one for the contact — and would have opened one endpoint three
-         * times to answer one question. A representation is scheduled once; the
-         * FIELDS it is owed for are what the representation is read FOR.
-         */
+        /* The record is the candidate's public record; each route is scheduled once and the fields are what it is read for. */
         for (const c of universe.candidacies) {
           const owed = ENRICHMENT_FIELDS.filter((f) => c.enrichment[f].state !== "FOUND");
           if (owed.length === 0) continue;
@@ -719,14 +546,7 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
             recordClass: "candidate-enrichment",
             subjectId: c.id,
             scopeDivisions: [c.ocdId],
-            /*
-             * NULL ON BOTH SIGNALS, for the reason the campaign-finance records
-             * carry: a candidate with no campaign site on their card costs a
-             * reader TODAY, not on election day. We hold no declared publication
-             * cycle for a campaign website and will not invent one — a cycle
-             * nobody read is a fabricated citation with a number in it.
-             * RULING 212's surviving default applies.
-             */
+            /* Null on both signals: a missing campaign site costs a reader today, and no publication cycle is held. */
             readerImpactAt: null,
             observedChangeRateHours: null,
             lastWorkedAt: owed
@@ -738,13 +558,7 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
           });
         }
 
-        /*
-         * THE WALL IS ONE RECORD, NOT ONE PER PERSON.
-         *
-         * `4get.ca` returning nothing is a fact about the index. Registering it
-         * under every candidacy would have written 378 copies of one wall into
-         * the control plane and called the noise coverage.
-         */
+        /* The wall is one record, not one per person. */
         records.push({
           recordClass: "candidate-enrichment",
           subjectId: `${stateCode}:${CYCLE}:general-web-index-availability`,

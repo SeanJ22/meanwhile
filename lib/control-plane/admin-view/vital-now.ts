@@ -1,9 +1,4 @@
-/**
- * **THE LAST FULL HOURS (Admin Now, from `cp_vital_signs`).** The hourly row the runner writes, read for Now: the last two full
- * hours, each with the numbers Sean watches. The read is one indexed lookup of at most three rows (the open hour is skipped).
- * A number nobody recorded is null and shows "—"; a row written before the table exists reads as not measured, never as zero.
- * Target: under 0.7 GB read an hour (board/river vital-signs.md); a paid job that ended with nothing is red above 0.
- */
+/** A number nobody recorded is null ("—"); a missing table reads as not measured, never zero. The open hour is skipped. */
 import type { ScoreboardVitalHour } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
@@ -16,7 +11,6 @@ export const VITAL_NOW_SQL = `SELECT hour, facts_live, spend_usd, cost_per_fact_
 
 const num = (v: unknown): number | null => (v === null || v === undefined || !Number.isFinite(Number(v)) ? null : Number(v));
 
-/** The last two complete UTC hours before `nowIso`, newest first. Null when the table is not installed or could not be read. */
 export async function readVitalNow(control: Sql, nowIso: string): Promise<readonly ScoreboardVitalHour[] | null> {
   const end = Math.floor(Date.parse(nowIso) / HOUR) * HOUR;
   try {
@@ -29,7 +23,6 @@ export async function readVitalNow(control: Sql, nowIso: string): Promise<readon
   }
 }
 
-/** PURE: rows in, Now's hours out. An hour with no row is simply absent; the screen says so. */
 export function vitalHours(rows: readonly Record<string, unknown>[]): readonly ScoreboardVitalHour[] {
   return rows.map((r): ScoreboardVitalHour => {
     const bytes = num(r.neon_bytes_read);

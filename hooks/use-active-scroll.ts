@@ -10,13 +10,10 @@ const ACTIVE_GAP_MS = 400;
 const REPORT_AT_MS = 10_000;
 
 /**
- * **ACTIVE SCROLLING, AS TIME** (S2.4, October 1, 2026).
- *
- * Adds up the time the reader is actually scrolling (scroll events less than a
- * moment apart) on any scroll container of the page, and records it as one
- * `ACTIVE_SCROLL` event when ten seconds have gathered or the tab goes to the
- * background. It is a duration, not a stream of scroll positions: nothing about
- * where on the page, and one event per ten seconds at most.
+ * Adds up the time the reader is actively scrolling (events less than a moment
+ * apart) on any scroll container, and records it as one `ACTIVE_SCROLL` event
+ * when ten seconds have gathered or the tab is hidden. A duration only, never
+ * positions.
  */
 export function useActiveScroll(pageId: string): void {
   useEffect(() => {

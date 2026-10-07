@@ -1,28 +1,11 @@
 /**
- * **FE-18 · RESIDENT TASKS RUN ON THE LIVE SITE.**
+ * Scripted resident tasks run against the live site: the taps a resident would
+ * make and what the page must then show. Every finder names its target by the
+ * words on the page and its row, never by a place.
  *
- * Each task in `data/health/resident-tasks.json` (FE-17) is a plain-word goal
- * ("find when my council meets and how to comment"). This file turns each one
- * into scripted taps a resident would make and the things the page must then
- * show, judged in the reader's terms. The browser pass that drives them is
- * `scripts/resident-tasks.mts`; it runs at ZIPs sampled from the published
- * places (a newly published place's ZIPs first), on a phone and a desktop.
- *
- * Scripted, not model-driven: every step names what a resident would tap by
- * its words on the page and the row it sits in, never by a place. Nothing here
- * costs a model call except the Ask tasks, which go through Ask itself under
- * its own spending controls.
- *
- * A task PASSES when every tap found its target, the page then showed every
- * required thing, and the taps stayed within the task's tap budget. Anything
- * else FAILS and says why: the dead end (the thing a resident could not find
- * or could not tap), the things the page never showed, or the taps over
- * budget. The slowest step (action to usable result) is recorded with each
- * run; FE-02 judges speed against three seconds.
- *
- * PURE: the scripts, the ZIP choice, the verdict and Admin's reading.
+ * A task passes when every tap found its target, the page showed every
+ * required thing, and the taps stayed within the task's tap budget.
  */
-import { GROUNDED_MODES } from "./ask-evaluation.ts";
 import { SPEED_BUDGET_MS, SPEED_PROFILES, sampleZips, type SpeedProfile } from "./worst-case-speed.ts";
 
 export const TASK_PROFILES = SPEED_PROFILES;
@@ -118,6 +101,7 @@ const DIRECTIONS = "a[href*='maps/dir'], a[href*='google.com/maps'], a[href*='ma
 const PIN = ".wtp-pin";
 const CARD = ".mw-card";
 const ASK_ANSWER = "[data-ask-panel]";
+const GROUNDED_MODES = ["GROUNDED_CLAUDE", "GROUNDED_COMPOSED", "STRUCTURED_GROUNDED"] as const;
 /** An answer from our records: a grounded mode (never the general-knowledge fallback), a destination or the bodies list. */
 const ASK_GROUNDED = [...GROUNDED_MODES.map((m) => `[data-ask-grounded-mode='${m}']`), "[data-ask-destination]", "[data-ask-answer-bodies]"].join(", ");
 
@@ -298,7 +282,7 @@ export interface TaskStepRecord {
   readonly ms: number | null;
   /** The screenshot's key in the image store; null when it could not be stored. */
   readonly shot: string | null;
-  /** Page-measurement issues on this screen (FE-16), by kind. */
+  /** Page-measurement issues on this screen, by kind. */
   readonly issues: Readonly<Record<string, number>>;
 }
 

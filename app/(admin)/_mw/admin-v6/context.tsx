@@ -1,11 +1,5 @@
 "use client";
 
-/**
- * The command center's shared state, handed to every screen: the data bundle,
- * the selected scope, the connection, the viewer's access, the receipts, and
- * the three ways to move (open a detail, change screen, change scope) plus the
- * one way to act (open an action preview).
- */
 import { createContext, useContext } from "react";
 
 import type { ActionDef } from "./actions.ts";
@@ -61,7 +55,6 @@ export interface V6 {
   go(view: View): void;
   open(detail: Detail): void;
   setScope(key: string): void;
-  /** Why this control is off, or null when it can be used. */
   whyNot(ref: ActionRef): string | null;
   act(ref: ActionRef): void;
   check(receipt: UiReceipt): void;
@@ -69,7 +62,6 @@ export interface V6 {
   defOf(ref: ActionRef): ActionDef;
   nameOf(id: string): string;
   focusInstruction(): void;
-  /** Live paged sections: send search, filters or a cursor to the server. A no-op for local data. */
   query(section: SectionId, params: Readonly<Record<string, string>>): void;
 }
 

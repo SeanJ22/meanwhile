@@ -1,47 +1,15 @@
-/**
- * **WHAT EACH LANE HELD THIS CYCLE, AND WHY — IN NUMBERS THAT ADD UP.**
- * (MW-014, MW-029, MW-071, 2026-09-25.)
- *
- * The cycle counted every skipped row by its reason, and then threw most of
- * the reasons away: the research state kept four model-lane codes, the
- * plain-code lane kept none, the autonomous coordinator's non-dispatches were
- * silent, and the Fleet safety list dedupes by (work, code), so nothing on the
- * page could be summed. Owner question: *"why was this skipped?"* — and the
- * answer has to be a set of reasons whose counts equal the skipped count, or a
- * line that says they do not.
- *
- * ```
- *   per lane   due, dispatched, running now, waiting (due − dispatched − running),
- *              every reason a due row was not dispatched, and how long the oldest
- *              waiting row has been owed
- *   lanes      plain code (deterministic), paid Scout (model), and the autonomous
- *              coordinator's pass over registered work items
- * ```
- *
- * The reading rides on `ResearchState.queue.lanes` — a handful of small
- * numbers, never a row list — so the pulse can carry it from the one research
- * state read it already makes. Mid-cycle a lane's reasons are not counted yet
- * (`skippedBy: null`); the cycle's end writes them. PURE.
- */
+/** Per-lane due, dispatched, running and waiting counts, with every skip reason, so the reasons sum to the skipped count (or a line says they do not). Pure. */
 import type { LaneCounts } from "./shadow-loop.ts";
 import { waitingSince, type QueueDebt } from "./obligation.ts";
 import { plainCode } from "../plain-words.ts";
 
-/** One lane's reading. Small numbers only. */
 export interface QueueLaneReading {
-  /** Rows due to this lane this cycle (for the coordinator: registered work items it considered). */
   readonly due: number;
-  /** Rows the lane started. */
   readonly dispatched: number;
-  /** Rows running at the moment of the reading; null when the lane does not record in-flight work. */
   readonly active: number | null;
   /** Due rows not started and not running: due − dispatched − active. */
   readonly waiting: number;
-  /**
-   * Every reason a due row was not dispatched, by code — RECOVERED included,
-   * for a row an interrupted cycle had already settled. Null while the cycle
-   * is still running: the reasons are counted when it ends.
-   */
+  /** Every reason a due row was not dispatched, by code. Null while the cycle runs. */
   readonly skippedBy: Readonly<Record<string, number>> | null;
   /**
    * How long the oldest waiting row has been owed; null when none waits or it was not recorded.
@@ -52,13 +20,11 @@ export interface QueueLaneReading {
 }
 
 export interface QueueLanes {
-  /** When the reading was taken. */
   readonly at: string;
   /** True once the cycle has finished and every reason is counted. */
   readonly final: boolean;
   readonly deterministic: QueueLaneReading;
   readonly model: QueueLaneReading;
-  /** The autonomous coordinator's pass; null when it did not run this cycle. */
   readonly autonomous: QueueLaneReading | null;
 }
 
@@ -70,7 +36,6 @@ export const LANE_WORDS: Readonly<Record<LaneKey, string>> = {
   autonomous: "Registered work items",
 };
 
-/** A lane from the cycle's own counts: every deferral, and the recovered rows, as reasons. */
 function finalLane(lane: {
   readonly due: number;
   readonly dispatched: number;
@@ -90,37 +55,24 @@ function finalLane(lane: {
   };
 }
 
-/** The reading at a cycle's end, from `CycleResult.lanes` and the coordinator's pass (null when it did not run). */
 export function lanesAtCycleEnd(lanes: LaneCounts, autonomous: QueueLaneReading | null, at: string): QueueLanes {
   return { at, final: true, deterministic: finalLane(lanes.deterministic), model: finalLane(lanes.model), autonomous };
 }
 
-/** A due row as the cycle script holds it before dispatch. */
 export interface DueRow {
   readonly obligation: { readonly id: string };
   readonly nextDueAt: string;
 }
 
-/**
- * The reading while the cycle runs: the Scout lane's running rows are active,
- * the plain-code lane runs one row at a time and records none in flight
- * (`active: null`), and no reason is counted yet. The oldest waiting row is the
- * one neither started nor running that has been owed longest. The plain-code
- * lane uses its queue key for this (`waitingSince`, from the debt carried into
- * the cycle), so the reading during the cycle and the one after it use the same
- * measure.
- */
+/** The reading while the cycle runs: no reason is counted yet, and the plain-code lane records none in flight. */
 export function lanesInFlight(input: {
   readonly at: string;
   readonly deterministicRows: readonly DueRow[];
   readonly modelRows: readonly DueRow[];
   readonly deterministicDispatched: number;
   readonly modelDispatched: number;
-  /** Obligation ids already started this cycle, in either lane. */
   readonly startedIds: ReadonlySet<string>;
-  /** Obligation ids of the Scouts running now. */
   readonly runningIds: ReadonlySet<string>;
-  /** The debt carried into the cycle, by obligation id. Absent, every plain-code row reads as having none. */
   readonly debtFor?: (obligationId: string) => QueueDebt | null | undefined;
 }): QueueLanes {
   const oldest = (rows: readonly DueRow[], since: (row: DueRow) => string): string | null => {
@@ -158,16 +110,13 @@ export function lanesInFlight(input: {
   };
 }
 
-/** What `runAutonomousCoordinator` returns, as far as the accounting needs it. */
 export interface CoordinatorPass {
-  /** Registered work items the pass considered. */
   readonly considered: number;
   readonly decisions: readonly { readonly workItemId: string; readonly action: string; readonly task: unknown; readonly reason: string }[];
   readonly dispatches: readonly unknown[];
   readonly deferred: readonly { readonly workItemId: string; readonly reason: string }[];
 }
 
-/** The machine code a coordinator decision's reason leads with, else one named for its action. */
 export function coordinatorDecisionCode(decision: { readonly action: string; readonly task: unknown; readonly reason: string }): string {
   const lead = /^([A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)\b/.exec(decision.reason)?.[1];
   if (lead !== undefined) return lead;
@@ -199,7 +148,6 @@ export function coordinatorLane(pass: CoordinatorPass): QueueLaneReading {
   };
 }
 
-/* ---------------------------------------------------------------- the words */
 
 const SKIP_WORDS: Readonly<Record<string, string>> = {
   NO_OPEN_OCCURRENCE: "its round could not be opened this cycle",
@@ -222,7 +170,6 @@ export function skipWords(code: string): string {
   return SKIP_WORDS[code] ?? plainCode(code).toLowerCase();
 }
 
-/** One reason line: the lane, the code, its words and its count. */
 export interface SkipReason {
   readonly lane: LaneKey;
   readonly code: string;
@@ -230,7 +177,6 @@ export interface SkipReason {
   readonly count: number;
 }
 
-/** One lane's skipped work, and whether its reasons add up. */
 export interface LaneSkips {
   readonly lane: LaneKey;
   readonly name: string;
@@ -250,7 +196,6 @@ export interface SkippedWork {
   readonly due: number;
   /** Generated from the figures above; never a fixed sentence. */
   readonly says: string;
-  /** Every lane whose reasons do not sum, named. Empty when they all do. */
   readonly mismatches: readonly string[];
 }
 
@@ -270,7 +215,6 @@ function laneSkips(lane: LaneKey, r: QueueLaneReading): LaneSkips {
   return { lane, name: LANE_WORDS[lane], due: r.due, skipped, reasons, mismatch };
 }
 
-/** The runner card's skipped-work reading, from the research state's queue lanes. Null when none was recorded. */
 export function skippedWork(lanes: QueueLanes | null | undefined): SkippedWork | null {
   if (lanes === null || lanes === undefined) return null;
   const rows: LaneSkips[] = [laneSkips("deterministic", lanes.deterministic), laneSkips("model", lanes.model)];
@@ -289,20 +233,16 @@ export function skippedWork(lanes: QueueLanes | null | undefined): SkippedWork |
   return { final: lanes.final, at: lanes.at, lanes: rows, skipped, due, says, mismatches };
 }
 
-/* ---------------------------------------------------------------- the gauges */
 
-/** One lane gauge for the live strip: its counts and its own blocking reason. */
 export interface LaneGauge {
   readonly lane: LaneKey;
   readonly name: string;
   readonly active: number | null;
   readonly waiting: number;
   readonly oldestWaitingDueAt: string | null;
-  /** The largest reason holding the lane's waiting rows, in words; null when nothing waits or it is not counted yet. */
   readonly blockedBy: string | null;
 }
 
-/** The lane gauges the pulse carries: the reading's own figures, and each lane's leading reason. */
 export function laneGauges(lanes: QueueLanes | null | undefined): readonly LaneGauge[] | null {
   if (lanes === null || lanes === undefined) return null;
   const gauge = (lane: LaneKey, r: QueueLaneReading): LaneGauge => {
@@ -321,10 +261,6 @@ export function laneGauges(lanes: QueueLanes | null | undefined): readonly LaneG
   return out;
 }
 
-/**
- * The lanes as the pulse carries them, from a research state value: one
- * derivation, so the page's first draw and every refresh say the same thing.
- */
 export function pulseLanesOf(state: unknown): { readonly at: string; readonly final: boolean; readonly gauges: readonly LaneGauge[] } | null {
   const lanes = queueLanesOf(state);
   const gauges = laneGauges(lanes);

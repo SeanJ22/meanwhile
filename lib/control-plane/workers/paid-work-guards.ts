@@ -1,15 +1,4 @@
-/**
- * **THE PAID-WORK GUARDS, IN ONE PLACE (CH-24).**
- *
- * Every paid model request a worker makes passes the same checks: the Send and
- * area budgets it is held against (MW-021), the Fleet ceiling and provider
- * circuits (FleetSafety), the provider's own rate limits, and the paid worker
- * capacity those leave. The research round built these inline; they live here
- * so the round and the standing lease-worker lane build the same guards from
- * the same objects, and one guard cannot drift from the other. Nothing here
- * changes a limit or reads a setting: the caller hands in the controllers it
- * armed from the owner's settings and the durable ledgers.
- */
+/** The paid-work guards in one place, so the round and the standing lane build the same guards from the same objects: Send and area budgets, the Fleet ceiling and provider circuits, provider rate limits, and paid worker capacity. Nothing here changes a limit or reads a setting. */
 import { randomUUID } from "node:crypto";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { attemptBatchJournal, batchEnabledFor, batchEnabledForJob, batchRequestHash, type BatchJob, type BatchLane,
@@ -51,7 +40,7 @@ export interface PaidWorkGuardDeps {
   readonly batch: ReturnType<typeof backgroundBatchTransport>;
   /** Whether the paid model lane is open at all (`modelLaneClosure` found nothing closing it). */
   readonly modelLaneEnabled: boolean;
-  /** The owner's rolling ceiling in force, re-read mid-round (CH-03). */
+  /** The owner's rolling ceiling in force, re-read mid-round. */
   readonly ceilingUsd: () => number;
   /** WTP_ANTHROPIC_REQUESTS_PER_MINUTE, when the runner's environment sets it. */
   readonly requestsPerMinute?: number;
@@ -130,8 +119,7 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
     const routing = workerBatchRouting(task);
     const batching = routing.lane !== null && batchEnabledForJob(routing.lane, routing.job);
     const journal = attemptBatchJournal(repos, taskId, deps.now);
-    // BX-13: a request already sent to the batch service under earlier routing is collected, never sent twice,
-    // whatever its job now says. The journal is read for the same tasks as before (a batch lane that is on).
+    // A request already sent to the batch service is collected, never sent twice, whatever its job now says.
     const recoverable = routing.lane !== null && batchEnabledFor(routing.lane);
     if (recoverable && await journal.read(batchRequestHash(request))) {
       // Recovery reads an already submitted request, so it neither reserves
@@ -176,12 +164,7 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
     openJobs: (): readonly JobSpend[] => [...openJobs] };
 }
 
-/**
- * BX-13: which batch lane a lease worker's request belongs to, and what job it serves. Only work no reader
- * waits on takes the slow discount service: an audit sample after publishing, or a diagnostic replay of
- * saved results (a backfill). Every other parse (a live fact's refresh, a mission's first fill, anything
- * unclassified) goes straight to the model. Roles outside the two lanes never batch.
- */
+/** Which batch lane a lease worker's request belongs to. Only work no reader waits on (an audit sample after publishing, a diagnostic replay) takes the slow discount service; roles outside the two lanes never batch. */
 export function workerBatchRouting(task: Pick<RouteTask, "workerTask">): { readonly lane: BatchLane | null; readonly job: BatchJob | undefined } {
   const spec = task.workerTask;
   if (spec?.role === "ADVERSARIAL_AUDITOR") return { lane: "background-worker-audit", job: spec.purpose === "DIAGNOSTIC_REPLAY" ? "BACKFILL" : "AUDIT_SAMPLE" };

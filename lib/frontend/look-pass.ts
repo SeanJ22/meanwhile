@@ -1,19 +1,11 @@
 /**
- * **EVERY DEPLOY IS LOOKED AT ON THE LIVE SITE.** (FE-21.)
- *
  * When the commit the live site serves changes, one look pass runs on
  * production: each reader surface at a sampled published ZIP, on a phone and a
- * desktop. Each screen keeps its screenshot and its page measurements (FE-16),
- * and the look reviewer (FE-20) gives every screen a red or green verdict from
- * the screenshots, the task and the written standard alone.
- *
- * A red flag becomes a fix-list item that points at its screenshot; green
- * flags are counted. A deploy's look entry is green only when every screen was
- * reviewed and none is red. That is a reporting rule: nothing here holds back
- * data or a release.
- *
- * This file is plain code: what to shoot, how to judge the pass, what the fix
- * list gets, and what Admin shows. scripts/look-pass.mts drives the browser.
+ * desktop. Each screen keeps its screenshot and page measurements, and the
+ * look reviewer gives it a red or green verdict. A red flag becomes a
+ * fix-list item pointing at its screenshot. A deploy's look entry is green
+ * only when every screen was reviewed and none is red; this is reporting
+ * only and holds back nothing.
  */
 import type { PageIssueKind } from "../health/page-metrics.ts";
 import type { LookQuestion, LookReviewOutcome } from "./look-review.ts";
@@ -25,7 +17,7 @@ export const LOOK_PROFILES = {
 } as const;
 export type LookProfile = keyof typeof LOOK_PROFILES;
 
-/** The reader surfaces a look pass shoots. Ask is left out: opening it costs a model call, and its answer card is a resident task (FE-18). */
+/** The reader surfaces a look pass shoots. Ask is left out: opening it costs a model call. */
 export const LOOK_SURFACES = ["home", "ballot", "meetings", "officials"] as const;
 export type LookSurface = (typeof LOOK_SURFACES)[number];
 
@@ -69,7 +61,7 @@ export interface LookScreen {
   readonly label: string;
   /** Blob key of the screenshot; null when the screen could not be shot. */
   readonly shot: string | null;
-  /** Page measurement issues by kind (FE-16), counted. */
+  /** Page measurement issues by kind, counted. */
   readonly issues: Partial<Record<PageIssueKind, number>>;
   /** The first measurement sentences, for the fix item and Admin. */
   readonly issueLines: readonly string[];

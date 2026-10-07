@@ -4,24 +4,6 @@ import { dirname, join } from "node:path";
 
 import type { ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
 
-/**
- * The transport for the geographic reader artifacts. Two implementations sit
- * behind one interface so the SAME publish/read logic runs against Netlify
- * Blobs in production and a local directory in dev/test/measurement:
- *
- *  - {@link NetlifyBlobsArtifactStore} — the production edge store. The runner
- *    (off Netlify, on the owner's machine) writes with an explicit siteID +
- *    Netlify token; the reader (a Netlify Function) reads with auto-provisioned
- *    credentials. Blobs is the durable store; a CDN-cached Route Handler in
- *    front of it is what actually serves readers from the edge.
- *  - {@link LocalFileArtifactStore} — a filesystem store for local runs and the
- *    origin-path (cache-miss) latency measurement, with no Netlify dependency.
- *
- * Manifest writes are monotonic: the store exposes the current manifest's ETag,
- * and a write lands only against that ETag (or against "no manifest yet"), so
- * two overlapping publishes can never put an older sequence over a newer one.
- */
-
 export const READER_ARTIFACT_STORE_NAME = "reader-artifacts";
 export const READER_MANIFEST_KEY = "reader/manifest.json";
 
@@ -36,24 +18,16 @@ export interface ReaderArtifactStore {
   readManifest(): Promise<StoredManifest | null>;
   readArtifact(key: string): Promise<ReaderGeoArtifact | null>;
   writeArtifact(key: string, artifact: ReaderGeoArtifact): Promise<void>;
-  /**
-   * Compare-and-set the manifest against `expectedEtag` (null = expect absent).
-   * Returns modified:false without writing if the stored ETag has moved — the
-   * caller re-reads and retries, so an older publish never wins.
-   */
+  /** Compare-and-set against `expectedEtag` (null = expect absent); modified:false when the stored ETag moved. */
   writeManifest(
     manifest: ReaderManifest,
     expectedEtag: string | null,
   ): Promise<{ modified: boolean; etag: string | null }>;
-  /** Immutable raw bytes (used for the gzip-compressed registry-runtime artifact). */
   readBytes(key: string): Promise<Uint8Array | null>;
   writeBytes(key: string, bytes: Uint8Array): Promise<void>;
 }
 
-// ---------------------------------------------------------------- Netlify Blobs
-
 interface NetlifyBlobsOptions {
-  /** Explicit credentials for an OFF-Netlify writer (the standing runner). */
   readonly siteID?: string;
   readonly token?: string;
 }
@@ -118,14 +92,11 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
 
   async writeBytes(key: string, bytes: Uint8Array): Promise<void> {
     const store = await this.store("strong");
-    // Copy into a plain ArrayBuffer (the set() type wants ArrayBuffer|Blob|string).
     const buffer = new ArrayBuffer(bytes.byteLength);
     new Uint8Array(buffer).set(bytes);
     await store.set(key, buffer);
   }
 }
-
-// ---------------------------------------------------------------- Local file store
 
 export class LocalFileArtifactStore implements ReaderArtifactStore {
   readonly kind = "local-file" as const;
@@ -195,13 +166,6 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
   }
 }
 
-// ---------------------------------------------------------------- selection
-
-/**
- * The reader's store. `WTP_READER_EDGE_DIR` selects the local file store (dev,
- * tests, and the origin-path measurement); otherwise Netlify Blobs, which the
- * reader reads with auto-provisioned credentials on Netlify compute.
- */
 export function resolveReaderArtifactStore(): ReaderArtifactStore | null {
   const localDir = process.env.WTP_READER_EDGE_DIR?.trim();
   if (localDir) return new LocalFileArtifactStore(localDir);
@@ -213,12 +177,6 @@ export function resolveReaderArtifactStore(): ReaderArtifactStore | null {
   return null;
 }
 
-/**
- * The runner's WRITE store. Prefers the local dir when set; otherwise Netlify
- * Blobs with the explicit siteID + token the off-Netlify runner must supply.
- * Returns null when neither is configured, so the runner degrades to publishing
- * only the DB prepared row (the reader then falls back to it) instead of failing.
- */
 export function resolveReaderArtifactWriteStore(): ReaderArtifactStore | null {
   const localDir = process.env.WTP_READER_EDGE_DIR?.trim();
   if (localDir) return new LocalFileArtifactStore(localDir);

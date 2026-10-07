@@ -10,8 +10,9 @@ import {
 import type { SpeedPass } from "./worst-case-speed.ts";
 
 /**
- * FE-26: a surface over its limit opens one fix-list item (the same gap reported again is the same item). Called by the scheduled
- * speed pass right after it records its result, so a slow page is on the fix list as soon as it is seen.
+ * A surface over its limit opens one fix-list item (the same gap reported
+ * again is the same item). Called by the scheduled speed pass right after it
+ * records its result.
  */
 export async function openSurfaceFixes(
   repos: Pick<ControlPlaneRepositories, "adminConfig" | "doors">, pass: SpeedPass, at: string,

@@ -11,10 +11,9 @@ export interface ScopedStandingWork {
 }
 
 /** Place shared standing work by the divisions its own provider declares.
- * Candidate and finance IDs are not government registry IDs. A geography-only
- * registry join silently omitted them from both Send priority and its budget.
- * The published Census lookup supplies sub-state overlap; state-wide source
- * records are reused in each applicable scope without duplicating their work.
+ * Candidate and finance IDs are not government registry IDs. The published
+ * Census lookup supplies sub-state overlap; state-wide source records are
+ * reused in each applicable scope without duplicating their work.
  */
 export async function declaredWorkMembers(scopes: readonly ResolvedScope[], work: readonly ScopedStandingWork[], lookup: CensusGeographyLookup, localDivisions: ReadonlyMap<string, DivisionTerritory> = new Map()): Promise<Map<string, ReadonlySet<string>>> {
   const out = new Map<string, ReadonlySet<string>>();

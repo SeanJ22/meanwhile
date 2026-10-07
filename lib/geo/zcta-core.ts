@@ -1,30 +1,7 @@
 /**
- * The zip→coordinate LOGIC, with the table passed in — P-002, 2026-08-24.
- *
- * ## Why this exists
- *
- * `lib/geo/zcta-centroids.json` is **960,770 raw bytes**, and it was 32.5% of
- * the landing page's initial JavaScript — larger than MapLibre, and by a
- * distance the single heaviest thing a reader downloads before the map draws.
- * It got there honestly: `lib/geo/zcta.ts` imports it statically, and three
- * client components import that module.
- *
- * A reader cannot use the table until they type a zip or press *use my
- * location*, and neither of those happens at first paint. So the client loads
- * it asynchronously (`./zcta-table.ts`) while the server keeps its synchronous
- * import (`./zcta.ts`), which costs a reader nothing.
- *
- * ## Why the logic is HERE and not in either of them
- *
- * Two modules answering the same three questions is a duplicate
- * implementation, and RULING 103 is explicit that the sweep for those compares
- * SHAPE with identifiers set aside — two copies of `nearestZcta` would collide
- * in that sweep and would deserve to. So the functions take the table as an
- * argument, both modules call these, and there is exactly one place where
- * "which zip is nearest" is decided.
- *
- * Nothing here imports the JSON. That is what makes it free to be in both
- * graphs.
+ * The zip→coordinate logic, with the table passed in, so the server's
+ * synchronous module (`./zcta.ts`) and the client's lazy one
+ * (`./zcta-table.ts`) share one implementation. Nothing here imports the JSON.
  */
 
 export interface ZctaCentroid {
@@ -41,12 +18,8 @@ export type ZipResolution =
   | { ok: false; reason: "malformed" | "unknown" | "uncovered" };
 
 /**
- * Five digits. Rejects ZIP+4 and anything non-numeric.
- *
- * Deliberately NOT part of the async surface: it is a regex, it costs nothing,
- * and the entry field validates as the reader types. Making the reader wait on
- * a 960 KB download to be told they typed four digits would be the fix costing
- * more than the defect.
+ * Five digits. Rejects ZIP+4 and anything non-numeric. Synchronous, so the
+ * entry field never waits on the table to validate.
  */
 export function isWellFormedZip(input: string): boolean {
   return /^\d{5}$/.test(input.trim());
@@ -63,17 +36,9 @@ export function lookupIn(centroids: CentroidTable, input: string): ZctaCentroid 
 }
 
 /**
- * The ZCTA whose centroid is closest to a coordinate.
- *
- * Backs "Use my location" on the entry overlay. Note what this deliberately is
- * not: it does not decide which districts a coordinate falls in, and it is not
- * a reverse geocoder. It converts a browser position into the same kind of
- * orientation a typed zip gives — no more authoritative for having come from
- * GPS. Treating a precise coordinate as district truth is the exact mistake
- * CLAUDE.md rules out for zip, and a coordinate invites it more strongly.
- *
- * Linear scan over ~33k points. It runs once, on a click, and a spatial index
- * for a single query would cost more to build than the scan costs to run.
+ * The ZCTA whose centroid is closest to a coordinate, for "Use my location".
+ * Orientation only, like a typed zip: not a reverse geocoder and not district
+ * truth. A linear scan; it runs once, on a click.
  */
 export function nearestIn(
   centroids: CentroidTable,
@@ -86,9 +51,7 @@ export function nearestIn(
   for (const zip in centroids) {
     const [zLat, zLng] = centroids[zip];
 
-    // Squared degrees, with longitude scaled by cos(latitude) so the comparison
-    // is not skewed at high latitudes. Only used for ranking, never reported,
-    // so it does not need to be a real distance.
+    // Squared degrees with longitude scaled by cos(latitude): for ranking only.
     const dLat = zLat - lat;
     const dLng = (zLng - lng) * Math.cos((lat * Math.PI) / 180);
     const distance = dLat * dLat + dLng * dLng;

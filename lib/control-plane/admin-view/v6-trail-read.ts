@@ -1,29 +1,13 @@
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { PILOT_ZIPS } from "../../health/owner-corpus-compile.ts";
 import { readAssignmentSourcesById } from "../assignment-read.ts";
 import { assignmentEvidenceTrail, type AssignmentEvidenceTrail } from "./assignment-evidence-trail.ts";
 import { workName } from "./v6-spend-read.ts";
 
-/**
- * **admin-v6/trail@1 — WHAT A SEND REACHED, AND THE EVIDENCE BEHIND EACH PIECE OF WORK.**
- *
- * Two reads, both on demand from a click and neither part of the live refresh:
- *
- *   reached   the obligations an instruction (a Send, or a hunt's receipt) marked, newest mark first, from the marks the
- *             runner writes on each row it creates or reorders
- *   trail     one piece of work's source-to-public-result trail: saved documents (with the private original-copy
- *             control for an exact RAW capture), attempts, extraction, checks, publication and the reader's readback
- *
- * The trail is the existing exact-identity projection (`assignmentEvidenceTrail`): every row joins on work, attempt,
- * artifact and result identity, and no raw saved bytes or URL credentials enter it. A saved document is not an accepted
- * fact, and a publication is not a confirmed public result; the trail says so on each step.
- */
 export const ADMIN_V6_TRAIL_CONTRACT = "admin-v6/trail@1" as const;
 export const REACHED_LIMIT = 12;
 export const TRAIL_EVENT_LIMIT = 40;
-/** A ref or item id: a receipt, an intent id or an obligation or work item id. Never a free-text field. */
 export const TRAIL_ID = /^[A-Za-z0-9:._@#+/ -]{1,240}$/;
 
 export interface TrailEventView {
@@ -87,10 +71,9 @@ export async function readReached(sql: Sql, ref: string): Promise<AdminV6Reached
 export type TrailRead = { readonly kind: "HELD"; readonly trail: AdminV6Trail } | { readonly kind: "NOT_RECORDED" | "UNREAD"; readonly detail: string };
 
 export async function readTrail(repos: ControlPlaneRepositories, id: string, nowIso: string): Promise<TrailRead> {
-  const read = await readAssignmentSourcesById(repos, id, { nowIso, activation: null, pilotZips: PILOT_ZIPS });
+  const read = await readAssignmentSourcesById(repos, id, { nowIso, activation: null, pilotZips: [] });
   if (read.kind === "NOT_RECORDED") return { kind: "NOT_RECORDED", detail: read.detail };
   if (read.kind !== "HELD") return { kind: "UNREAD", detail: read.detail };
-  // The reader's own readback of what was published comes from the published snapshot; without it the trail says so in its gaps.
   const snapshot = await repos.ownerSnapshots.readNarrowed("current", { servedReaderReadback: true }).catch(() => null);
   const servedReader = ((snapshot?.value ?? null) as { servedReaderReadback?: AssignmentSourcesServed } | null)?.servedReaderReadback ?? null;
   return { kind: "HELD", trail: trailView(assignmentEvidenceTrail({ ...read.value, servedReader }, id, null)) };

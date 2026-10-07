@@ -1,12 +1,7 @@
-/* DSN-1: the supplied Pearl Button CSS worksheet, scaled to the existing
-   44px Ask pill. Reference: Uiverse / marcelodolza, pretty-goose-7 (MIT).
-   The rounded form, two curved highlights, five shadow layers and press
-   remain. No label replacement or text mask: the existing words stay legible.
-   Design handoff 2026-09-13: the Pearl is Ask's treatment at EVERY placement
-   (was map-only), so the selector no longer filters on the placement value. */
+/* Pearl button scaled to the 44px Ask pill, at every placement.
+   Reference: Uiverse / marcelodolza, pretty-goose-7 (MIT). */
 .pearl[data-ask-pill] {
-  /* --ask aliases --online (the meeting "online only" purple) so the Ask pearl
-     and the meeting status can diverge later without a hunt. */
+  /* --ask aliases --online so the two can diverge later. */
   --ask-pearl-lavender: var(--ask);
   --ask-pearl-ink: var(--bg);
   --ask-pearl-soft-highlight: rgba(255, 255, 255, 0.07);
@@ -23,8 +18,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  /* Keep the inherited 1px border width, padding, gap, type and min-height:
-     the Pearl test must occupy exactly the pill's previous footprint. */
+  /* Keep the inherited border width, padding, gap, type and min-height: same footprint as the pill. */
   border-color: transparent;
   border-radius: var(--radius-pill);
   background: var(--ask-pearl-lavender);

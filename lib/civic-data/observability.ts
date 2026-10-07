@@ -1,11 +1,3 @@
-/**
- * Server-side owner projection for the permanent routine civic-data plane.
- *
- * This module reads the three canonical data-plane tables. It does not write,
- * fetch a public source, infer an empty store from an error, or maintain an
- * Admin-specific outcome ledger. The pure projector is exported so the exact
- * evidence and count rules can be tested without a database connection.
- */
 import {
   cadenceMsAt,
   sittingWindowRereadMs,
@@ -53,11 +45,6 @@ import {
   type UnchangedConfirmation,
 } from "./unchanged-confirmation.ts";
 
-/**
- * Evidence appended to a PROMOTED candidate that is not a disposition of it: a
- * Reader readback, or an unchanged confirmation and its sources event. Neither
- * is a source-state transition, and neither is a second promotion.
- */
 function isNonDispositionEvidence(detail: string): boolean {
   return isReaderProjectionReadbackDetail(detail) || isUnchangedConfirmationDetail(detail);
 }
@@ -95,22 +82,17 @@ function isManualContract(contract: ObservableCivicDataContract): contract is Ma
   return "execution" in contract && contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY";
 }
 
-/**
- * A value exists only when its evidence exists. In particular, a missing
- * persisted array is NOT_RECORDED; it is never rendered as numeric zero.
- */
+/** A missing persisted array is NOT_RECORDED, never numeric zero. */
 export type Observation<T> =
   | { readonly kind: "MEASURED"; readonly value: T }
   | { readonly kind: "NOT_RECORDED"; readonly detail: string }
   | { readonly kind: "UNKNOWN"; readonly detail: string }
   | { readonly kind: "NOT_APPLICABLE"; readonly detail: string };
 
-/** True only when this observation owes evidence that could actually exist. */
 export function observationNeedsEvidence<T>(observation: Observation<T>): boolean {
   return observation.kind !== "MEASURED" && observation.kind !== "NOT_APPLICABLE";
 }
 
-/** Every numeric value carries the exact members/events from which it came. */
 export type DrilldownCount<T> =
   | { readonly kind: "MEASURED"; readonly value: number; readonly members: readonly T[] }
   | { readonly kind: "NOT_RECORDED"; readonly detail: string; readonly members: readonly T[] }
@@ -169,14 +151,7 @@ export interface RoutineObservabilityRows {
   readonly candidates: readonly RoutineCandidateRow[];
   readonly events: readonly RoutineCandidateEventRow[];
   readonly promotions: readonly RoutinePromotionRow[];
-  /**
-   * The prepared reader-serving snapshots (RULING 283 serving copies), read in
-   * the SAME MVCC snapshot as the promotions above so publication lag is a
-   * comparison of two facts from one instant, never two reads. Optional: a
-   * caller that predates this read (or a store with no such table yet) leaves
-   * it undefined, and the projector reports the serving copy as not-yet-read
-   * rather than inventing an empty or a zero lag.
-   */
+    /** Read in the same MVCC snapshot as the promotions; undefined means not yet read, never a zero lag. */
   readonly preparedProjections?: readonly RoutinePreparedProjectionRow[];
 }
 
@@ -303,7 +278,6 @@ export interface RoutineContractObservation {
     readonly activeEveryMs: number;
     readonly retryDescription: string;
     readonly nextDue: Observation<string>;
-    /** Latest-attempt disposition, separate from the age of the serving LKG. */
     readonly operationalState: SourceOperationalState;
     readonly operationalDetail: string;
     readonly freshness: FreshnessState;
@@ -331,12 +305,6 @@ export interface RoutineContractMember {
   readonly freshness: FreshnessState;
 }
 
-/**
- * One promoted meeting partition whose current authoritative version has not
- * yet reached the prepared reader-serving snapshot — publication lag, made of
- * two facts read in one MVCC snapshot: the partition's current promotion and
- * what the serving copy was last composed from.
- */
 export interface PreparedSnapshotLagMember {
   readonly contractId: string;
   readonly scope: string;
@@ -345,13 +313,6 @@ export interface PreparedSnapshotLagMember {
   readonly servedVersionId: string | null;
 }
 
-/**
- * The prepared meetings reader snapshot (the RULING 283 serving copy the reader
- * actually reads) observed against the authoritative promotions. It is not a
- * registered source contract, so it lives beside the contract rows rather than
- * as one of them: a serving projection, its freshness, and its lag behind the
- * promoted partitions — never presented as an acquisition or a promotion clock.
- */
 export interface PreparedSnapshotObservation {
   readonly recordClass: string;
   readonly scope: string;
@@ -360,11 +321,8 @@ export interface PreparedSnapshotObservation {
   readonly generatedAt: Observation<string>;
   readonly composedAt: Observation<string>;
   readonly promotedThrough: Observation<string>;
-  /** How many meeting partitions the serving copy was composed from. */
   readonly composedPartitions: Observation<number>;
-  /** How many meeting partitions currently hold an authoritative promotion. */
   readonly promotedPartitions: Observation<number>;
-  /** Promoted partitions not yet reflected in the serving copy. */
   readonly lag: DrilldownCount<PreparedSnapshotLagMember>;
   readonly detail: string;
 }
@@ -397,7 +355,6 @@ export interface RoutineObservabilityView {
     readonly latestOutcomeNotRecorded: DrilldownCount<RoutineContractMember>;
     readonly latestOutcomeUnknown: DrilldownCount<RoutineContractMember>;
   };
-  /** The prepared meetings reader-serving snapshot: its freshness and its lag. */
   readonly preparedMeetingSnapshot: PreparedSnapshotObservation;
 }
 
@@ -407,7 +364,6 @@ export type RoutineObservabilityRead =
   | {
       readonly kind: "STORE_UNREACHABLE";
       readonly detail: string;
-      /** READ_TIMED_OUT: the store answered, but this read cannot finish inside a request's statement limit. */
       readonly cause?: "READ_TIMED_OUT";
     }
   | { readonly kind: "PROJECTION_FAILED"; readonly detail: string };
@@ -544,12 +500,6 @@ function acquisitionEvidence(row: RoutineCandidateRow, nowMs: number): Observati
   return measured(row.acquisitionSucceeded);
 }
 
-/**
- * The append-only sequence-1 source event is the data plane's locally observed
- * attempt clock. Adapter-supplied retrieval time is evidence about the source
- * response, not authority over scheduling/history time; a bad future source
- * timestamp must therefore be containable rather than poisoning this clock.
- */
 function sourceAttemptTime(
   row: RoutineCandidateRow,
   events: readonly RoutineCandidateEventRow[],
@@ -591,16 +541,7 @@ function sourceAttemptTime(
   return measured(new Date(Date.parse(ordered[0]!.at)).toISOString());
 }
 
-/**
- * The durable source history is a state machine, not merely an ordered list of
- * recognised labels. Keeping this check pure lets every Admin proof path use
- * the same failure boundary: a skipped validation/normalisation state, a
- * revival after refusal, or a second source disposition is unreadable evidence
- * rather than a successful acquisition or promotion.
- *
- * Reader-readback PROMOTED events are a separate evidence domain and are
- * deliberately excluded before adjacent source transitions are considered.
- */
+/** Reader-readback PROMOTED events are excluded before adjacent source transitions are checked. */
 export function adjacentSourceStateTransitionIssue(
   events: readonly Pick<RoutineCandidateEventRow, "sequence" | "state" | "detail">[],
 ): string | null {
@@ -610,9 +551,6 @@ export function adjacentSourceStateTransitionIssue(
   const first = ordered[0];
   if (first) {
     const initial = candidateState(first.state);
-    // `SOURCE_BLOCKED` is created atomically when acquisition itself fails.
-    // Every acquisition that produced bytes begins FETCHED; no later pipeline
-    // state may appear as though its missing predecessor evidence existed.
     if (initial !== null && initial !== "FETCHED" && initial !== "SOURCE_BLOCKED") {
       return `an illegal initial source state ${initial} at sequence ${first.sequence}`;
     }
@@ -620,8 +558,6 @@ export function adjacentSourceStateTransitionIssue(
   for (let index = 1; index < ordered.length; index += 1) {
     const prior = candidateState(ordered[index - 1]!.state);
     const next = candidateState(ordered[index]!.state);
-    // The existing state-shape checks own unrecognised labels. This helper is
-    // solely the adjacent-transition authority and never guesses their value.
     if (prior === null || next === null) continue;
     const legal =
       (prior === "FETCHED" && (next === "NORMALIZED" || terminalRefusalState(next))) ||
@@ -979,9 +915,7 @@ function pointerProof(
     event.state === "PROMOTED" &&
     !isNonDispositionEvidence(event.detail));
   const candidateEvents = events.filter((event) => event.candidateId === promotion.currentVersionId);
-  // Reader delivery is a separate failure domain. A malformed/future Reader
-  // receipt makes delivery UNKNOWN below; it must not invalidate a valid
-  // source promotion or reclassify that source as failed.
+    // A malformed or future Reader receipt makes delivery UNKNOWN; it never invalidates a valid source promotion.
   const sourceEvents = candidateEvents.filter((event) => !isNonDispositionEvidence(event.detail));
   const unreadableSourceStates = sourceEvents.filter((event) => candidateState(event.state) === null);
   if (unreadableSourceStates.length > 0) reasons.push(`${unreadableSourceStates.length} source event state(s) are unrecognised`);
@@ -1115,9 +1049,7 @@ function readerProjectionProof(
   if (!atomicPromotion || latest.sequence <= atomicPromotion.sequence) {
     return unknown("The latest Reader-projection readback does not follow the canonical atomic promotion event.");
   }
-  // Quiet source re-checks append confirmation + retained-source events to the
-  // same candidate. Reader-only sequence numbers therefore need not be adjacent.
-  // Prove continuity against ALL appended evidence, never skip a missing event.
+    // Confirmations append events to the same candidate, so reader-only sequence numbers need not be adjacent.
   const appended = events.filter(event => event.candidateId === canonical.value.versionId && event.sequence > atomicPromotion.sequence)
     .sort((a, b) => a.sequence - b.sequence);
   if (appended.some((event, index) => event.sequence !== atomicPromotion.sequence + index + 1)) {
@@ -1196,7 +1128,6 @@ function freshness(
   activeEveryMs?: number,
 ): { readonly state: FreshnessState; readonly detail: string } {
   if (!canonicalCandidate) return { state: "UNKNOWN", detail: "No proven canonical promotion is recorded, so production freshness cannot be measured." };
-  // A confirmed re-check re-read the source and found the canonical version current.
   const succeededAt = Math.max(
     Date.parse(canonicalCandidate.retrievedAt),
     confirmation ? Date.parse(confirmation.retrieval.retrievedAt) : Number.NEGATIVE_INFINITY,
@@ -1274,20 +1205,11 @@ function nextDue(
   return measured(new Date(succeeded + cadenceMsAt(contract, nowMs)).toISOString());
 }
 
-/**
- * The runner reads publication from a MEETING scope's sitting list, which the
- * store reports only for MEETING scopes; every other record class keeps its
- * contract's retry, and so does its Admin row.
- */
 function runnerSeesPublished(contract: RoutineSourceContract, published: boolean): boolean {
   return published || contract.recordClass !== "MEETING";
 }
 
-/**
- * The instant the runner admits a retry of an attempt made at `attemptedMs`.
- * A sitting-window retry is owed on the contract clock, or twice daily for a
- * meeting partition never published (R20), and admitted 15 minutes early (C6).
- */
+/** A sitting-window retry is owed on the contract clock, or twice daily for a meeting partition never published, and admitted 15 minutes early. */
 function observedRetryAtMs(contract: RoutineSourceContract, attemptedMs: number, published: boolean): number {
   const schedule = contract.schedule;
   if (schedule?.kind !== "SITTING_WINDOW") return attemptedMs + contract.retry.afterMs;
@@ -1309,11 +1231,6 @@ function observedRetryDescription(contract: RoutineSourceContract, published: bo
     : `${contract.retry.description}; never published, so ${Math.round(retryMs / 3_600_000)} hours after its last attempt (the base cadence)${lead}`;
 }
 
-/**
- * Each sitting-window contract's hot signal at `nowMs`, from the promoted
- * MEETING payloads this projection already read: the same sitting starts, and
- * the same rule, the runner admits on.
- */
 function sittingWindowSignalsFromPromotions(
   contracts: readonly ObservableCivicDataContract[],
   promotions: readonly RoutinePromotionRow[],
@@ -1323,7 +1240,7 @@ function sittingWindowSignalsFromPromotions(
     .filter((row) => row.recordClass === "MEETING")
     .map((row) => [row.scope, meetingPayloadSittingStarts(row.payload)] as const));
   const startsById = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, startsByScope.get(partition.scope)]));
-  // A publisher-stated end decides when its sitting concluded, as the runner reads it (C6).
+    // A publisher-stated end decides when its sitting concluded, as the runner reads it.
   const endsByScope = new Map(promotions
     .filter((row) => row.recordClass === "MEETING")
     .map((row) => [row.scope, meetingPayloadStatedEnds(row.payload)] as const));
@@ -1350,11 +1267,7 @@ const TERMINAL_REFUSAL_STATES = new Set<CandidateState>([
   "CANNOT_TELL",
 ]);
 
-/**
- * Current operational disposition and canonical-data age are independent.
- * A fresh LKG may be serving while a later attempt is held or backing off;
- * that source must not render HEALTHY merely because its old GOOD row is young.
- */
+/** Operational disposition and data age are independent: a young GOOD row does not make a held source HEALTHY. */
 function operationalState(
   contract: ObservableCivicDataContract,
   latest: RoutineCandidateRow | undefined,
@@ -1488,11 +1401,6 @@ function latestAttemptTime(
   return measured(new Date(latestMs).toISOString());
 }
 
-/**
- * A confirmation is a successful source acquisition that wrote no candidate.
- * It moves a recorded or absent time forward. An unprovable one stays
- * unprovable: newer evidence never hides a gap.
- */
 function withConfirmation(observation: Observation<string>, confirmation: UnchangedConfirmation | null): Observation<string> {
   if (confirmation === null || observation.kind === "UNKNOWN") return observation;
   if (observation.kind === "MEASURED" && Date.parse(observation.value) >= Date.parse(confirmation.observedAt)) return observation;
@@ -1537,11 +1445,7 @@ function latestSuccessfulSourceAcquisition(
   return latestSuccess;
 }
 
-/**
- * There is no causal tie-breaker for two distinct attempts at the same latest
- * instant. A UUID/order-by choice may make the page deterministic, but it
- * cannot make either candidate the proven latest source disposition.
- */
+/** Two distinct attempts at the same latest instant have no causal tie-breaker. */
 function latestCandidateOrderIssue(
   candidates: readonly RoutineCandidateRow[],
   events: readonly RoutineCandidateEventRow[],
@@ -1639,7 +1543,6 @@ interface HistoricalPromotionProof {
   };
 }
 
-/** A historical PROMOTED label is an outcome only with its exact source-scoped proof. */
 function historicalPromotionProofUncached(
   event: ExactOutcomeEvent,
   candidate: RoutineCandidateRow,
@@ -1786,7 +1689,6 @@ function terminalEventIssue(
   return null;
 }
 
-/** Candidate row and append-only event history are one durable disposition. */
 function currentCandidateEventIssue(
   candidate: RoutineCandidateRow,
   candidates: readonly RoutineCandidateRow[],
@@ -1854,9 +1756,6 @@ function historyWindow(
     (attemptedAt.kind !== "MEASURED" && rawAcquisitionInsideWindow(row))
       ? [row]
       : []);
-  // If the local clock and source-supplied clock disagree about window
-  // membership, the row still participates in the consistency audit. It may
-  // not silently fall between those two authorities.
   const candidateEvidenceInWindow = candidateAttemptTimes.flatMap(({ row, attemptedAt }) =>
     attemptInsideWindow(attemptedAt) || rawAcquisitionInsideWindow(row) ||
     (attemptedAt.kind !== "MEASURED" && !Number.isFinite(Date.parse(row.retrievedAt)))
@@ -1946,9 +1845,6 @@ function historyWindow(
     const proof = matches[0];
     return proof.kind === "MEASURED" ? measured(proof.value.outcome.outcome) : carryGap(proof);
   };
-  // A confirmed re-check is a successful source acquisition that wrote no
-  // candidate: one attempt per confirmation receipt in the window, on the
-  // version it confirmed, with an UNCHANGED outcome (never a promotion).
   const confirmationAttempts = events.flatMap((event): AttemptHistoryMember[] => {
     if (event.state !== "PROMOTED" || !event.detail.startsWith(UNCHANGED_CONFIRMATION_PREFIX)) return [];
     const at = Date.parse(event.at);
@@ -1959,7 +1855,7 @@ function historyWindow(
     const receipt = parseValidationReceipt(row.validationReceipt);
     return [{
       candidateId: row.id,
-      attemptedAt: measured(iso(event.at)!), // the recorded event instant (checked finite above)
+      attemptedAt: measured(iso(event.at)!),
       state: measured("PROMOTED" as const),
       acquisitionSucceeded: measured(true),
       authorityOrigin: "LIVE_SOURCE_ACQUISITION",
@@ -2093,8 +1989,6 @@ function projectContract(
   const canonicalCandidate = canonical.kind === "MEASURED"
     ? candidates.find((row) => row.id === canonical.value.versionId)
     : undefined;
-  // The canonical version's newest unchanged confirmation: a later successful
-  // re-check that wrote no candidate (RULING 283's receipted no-change).
   const confirmation = canonical.kind === "MEASURED"
     ? latestUnchangedConfirmation(
         events.filter((event) => event.candidateId === canonical.value.versionId && event.state === "PROMOTED"),
@@ -2282,10 +2176,8 @@ function contractMember(row: RoutineContractObservation): RoutineContractMember 
   };
 }
 
-// Mirrors MEETINGS_RECORD_CLASS / MEETINGS_PREPARED_SCOPE in
-// lib/meetings/prepared-snapshot.ts (the reader path is authoritative). Inlined
-// here so the admin projector never imports the composing reader; a reader test
-// pins the two together.
+// Mirrors MEETINGS_RECORD_CLASS / MEETINGS_PREPARED_SCOPE in lib/meetings/prepared-snapshot.ts, inlined so the
+// admin projector never imports the composing reader.
 const PREPARED_MEETING_RECORD_CLASS = "MEETING";
 const PREPARED_MEETING_SCOPE = "composed-reader-snapshot";
 
@@ -2300,14 +2192,6 @@ function preparedCoupling(value: unknown): Map<string, string> | null {
   return out;
 }
 
-/**
- * Observe the prepared meetings reader-serving snapshot against the promoted
- * partitions read in the same MVCC snapshot. Publication lag is exactly the set
- * of meeting partitions whose current authoritative promotion is not what the
- * serving copy was last composed from — so an owner sees, without guessing,
- * that promoted data has not yet reached the reader and by how much. A missing
- * serving copy is an explicit first-seed condition, never a zero lag.
- */
 function projectPreparedMeetingSnapshot(
   rows: RoutineObservabilityRows,
   nowMs: number,
@@ -2376,7 +2260,7 @@ function projectPreparedMeetingSnapshot(
   const lagMembers: PreparedSnapshotLagMember[] = [];
   for (const contract of MEETING_PARTITION_CONTRACTS) {
     const promotedVersionId = promotedByScope.get(contract.scope);
-    if (promotedVersionId === undefined) continue; // not promoted → nothing to lag behind
+    if (promotedVersionId === undefined) continue;
     const servedVersionId = coupling.get(contract.id) ?? null;
     if (servedVersionId !== promotedVersionId) {
       lagMembers.push({ contractId: contract.id, scope: contract.scope, promotedVersionId, servedVersionId });
@@ -2400,7 +2284,6 @@ function projectPreparedMeetingSnapshot(
   };
 }
 
-/** Build the whole owner view from one complete read of canonical evidence. */
 function projectRoutineDataObservabilityUncached(
   rows: RoutineObservabilityRows,
   now: string,
@@ -2447,7 +2330,6 @@ function projectRoutineDataObservabilityUncached(
   };
 }
 
-/** Plain rendering shared by the page and deterministic render tests. */
 export function observationText<T>(observation: Observation<T>, show: (value: T) => string = String): string {
   switch (observation.kind) {
     case "MEASURED": return show(observation.value);
@@ -2467,18 +2349,11 @@ export function drilldownCountText<T>(count: DrilldownCount<T>): string {
 export interface RoutineObservabilityProjectionReadOptions {
   readonly now: string;
   readonly connected: boolean;
-  /** Identity inlined into the currently deployed Admin/Reader build. */
   readonly currentReaderBuild?: CurrentReaderBuildIdentity;
   readonly readRows?: (since: string) => Promise<RoutineObservabilityRows>;
-  /** DB-14: bring the registry's doors into the meeting lists before the projection; a failure leaves the last good lists. */
   readonly adoptDoors?: () => Promise<unknown>;
 }
 
-/**
- * Deterministic read boundary used by the server-only adapter. Keeping this
- * part pure lets tests plant every connection/projection outcome without importing
- * database credentials or a framework server marker.
- */
 export async function projectRoutineDataObservabilityRead(
   options: RoutineObservabilityProjectionReadOptions,
 ): Promise<RoutineObservabilityRead> {
@@ -2535,9 +2410,7 @@ export async function projectRoutineDataObservabilityRead(
   }
 }
 
-// The projector is synchronous and never mutates its canonical snapshot.
-// Repeated 24h/7d/30d checks reuse only identical historical proof inputs in
-// this call. A later read gets a fresh cache; nested calls restore their parent.
+// Proof inputs are cached per call only; nested calls restore their parent cache.
 let historicalProofMemo: { ids: WeakMap<object, number>; nextId: number; results: Map<string, ReturnType<typeof historicalPromotionProofUncached>> } | null = null;
 function historicalPromotionProof(...args: Parameters<typeof historicalPromotionProofUncached>): ReturnType<typeof historicalPromotionProofUncached> {
   const memo = historicalProofMemo;

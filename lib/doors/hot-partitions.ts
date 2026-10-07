@@ -1,8 +1,7 @@
 /**
- * DB-26: which meeting partitions are hot right now. The hourly first look (hourly-check.ts) spends its requests on
- * them. The signal is the one the routine pass admits on (sittingWindowSignals): a sitting in the next seven days or
- * one held in the last seven, by the publisher's stated end where one exists. A partition whose sittings cannot be
- * read counts as hot, as it does for admission.
+ * Which meeting partitions are hot right now: a sitting in the next seven days
+ * or held in the last seven, by the publisher's stated end where one exists.
+ * A partition whose sittings cannot be read counts as hot.
  */
 import { readRoutineTaskClocks, routineTaskFromContract, sittingWindowSignals, type RoutineTaskClock, type RoutineSourceTask } from "../civic-data/runner.ts";
 import { statedSittingEndsByScope, statedSittingEndsRead } from "../civic-data/sitting-window-admission.ts";

@@ -5,9 +5,9 @@ import { formatDateMDY } from "@/lib/map/format";
 import { VotePill } from "@/components/map/popup/official-popup";
 
 /**
- * Key votes Sean picked (CA-46), beside the reviewed list and the full record.
- * The wording, date and result are the chamber's own; the reason is Sean's, said
- * as his. A position we do not hold is our gap, never "did not vote".
+ * Hand-picked key votes, beside the reviewed list and the full record. The
+ * wording, date and result are the chamber's own; the reason is the picker's,
+ * attributed. A position we do not hold is our gap, never "did not vote".
  */
 const POSITION: Record<VotePosition, { label: string; tone: "yes" | "no" | "neutral" }> = {
   YES: { label: "Voted yes", tone: "yes" },

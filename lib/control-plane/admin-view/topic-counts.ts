@@ -1,17 +1,8 @@
 /**
- * @freshness-reads-here — `observedAt` is the instant this module's own read of the store's totals returned.
+ * @freshness-reads-here: `observedAt` is the instant this module's own read of the store's totals returned.
  *
- * **WHAT RESIDENTS ASK ABOUT, AS A SHARE OF USERS — aggregate only.**
- *
- * The shape S6's read returns (asked for on #490, widened to a day or a week on Sean's 2:30 PM MST note): one row per day or week, ZIP or district, and topic, with the number of distinct
- * users who asked about that topic and the number of distinct users in that same group. This module turns those rows into what
- * Admin shows: each as a percentage of users with the count beside it. Small groups are shown the same way and are never hidden
- * or suppressed. Free-form questions stay as their own topic. Nothing here carries a name, an address, or a user, session or
- * device id: a row with only the aggregate fields below is all this module will pass on, whatever else it was handed.
- *
- * `readTopicCounts()` reads S6's store (`reader_event_totals`, migration 0034) through the data business's live totals, for everyone (no
- * ZIP or district split): the last twelve weeks and the last fourteen days. A store that is not installed answers NOT_INSTALLED and the
- * view says "no topic counts yet". An empty list is never shown as "nobody asked".
+ * Aggregate only: small groups are never hidden, and only the aggregate fields below are passed on. An empty list is
+ * never shown as "nobody asked".
  */
 import { liveTotals } from "../data-business/live.ts";
 import { daysBefore, todayUtc } from "../data-business/slice.ts";
@@ -22,14 +13,10 @@ export const TOPIC_ROW_LIMIT = 500;
 
 /** One aggregate row. Exactly these fields; nothing about any one person. */
 export interface TopicCountRow {
-  /** The day itself (`grain: "day"`) or the Monday of the week (`grain: "week"`), `YYYY-MM-DD` (UTC). */
   readonly period: string;
   readonly grain: "day" | "week";
-  /** Five digits, or null when the group is not by ZIP. */
   readonly zip: string | null;
-  /** The district's own stable label, or null. */
   readonly district: string | null;
-  /** An id from the internal taxonomy, or "free-form". */
   readonly topic: string;
   readonly users: number;
   readonly totalUsers: number;
@@ -59,7 +46,6 @@ export interface TopicShown {
 
 export const NO_TOPIC_COUNTS_YET = "—";
 
-/** "tax-and-fees" → "Tax and fees". A taxonomy id becomes words; free-form keeps its own name. */
 export function topicLabel(topic: string): string {
   if (topic === FREE_FORM_TOPIC) return "Free-form question";
   const words = topic.replace(/[_.-]+/g, " ").trim();
@@ -69,11 +55,7 @@ export function topicLabel(topic: string): string {
 const isCount = (n: unknown): n is number => typeof n === "number" && Number.isInteger(n) && n >= 0;
 const isWeek = (w: unknown): w is string => typeof w === "string" && /^\d{4}-\d{2}-\d{2}$/.test(w);
 
-/**
- * The rows to show: only well-formed aggregate rows, only their aggregate fields, never a group dropped for being small.
- * A row that is malformed (a count that is not a whole number, more askers than users) is counted in `hidden` and named, never
- * silently dropped, and never shown as a number it does not have.
- */
+/** A malformed row is counted in `hidden` and named, never silently dropped. */
 export function topicCountsView(read: TopicCountsRead): TopicCountsView {
   if (read.kind === "NOT_INSTALLED") return { kind: "NOT_INSTALLED", says: read.detail || NO_TOPIC_COUNTS_YET };
   const shown: TopicShown[] = [];
@@ -93,7 +75,6 @@ export function topicCountsView(read: TopicCountsRead): TopicCountsView {
   };
 }
 
-/** The topic counts for everyone, by week and by day: a topic's distinct readers beside all readers in the same period. */
 export async function readTopicCounts(totals: Sources["totals"] = liveTotals(), now: Date = new Date()): Promise<TopicCountsRead> {
   const to = todayUtc(now);
   const rows: TopicCountRow[] = [];

@@ -1,18 +1,3 @@
-/**
- * Official polling-place lookups, per covered state (item 6, 2026-08-15).
- *
- * The sibling of `registration-links.ts`, and the same discipline: every
- * entry is the state election authority's own tool, and every URL was
- * fetched and verified — the verification sentence says how, including
- * which rung of the ladder answered when a plain client got a 403.
- *
- * This is the SHALLOW version deliberately. The deeper thing — taking the
- * reader's own address and naming their polling place on our own surface —
- * is a tracker row, not this file. Pointing at the authority's own tool is
- * honest and correct today; a lookup we build ourselves would have to be
- * right about every precinct in three states before it could ship, and a
- * polling place that is wrong by one street is worse than a link.
- */
 import {
   currentCuratedReaderRecords,
   type BallotNavigationProjectionRecord,
@@ -20,17 +5,14 @@ import {
 
 export interface PollingPlaceLink {
   state: string;
-  /** The reader-facing line — plain words, 15-year-old test. */
   label: string;
   url: string;
   sourceOrg: string;
-  /** What the tool asks for, so nobody taps into a surprise. */
   note: string;
   verification: string;
   verifiedAt: string;
 }
 
-/** Initial adoption/node:test evidence; production reads `ballot-navigation`. */
 export const POLLING_PLACE_LINKS: PollingPlaceLink[] = [
   {
     state: "AZ",

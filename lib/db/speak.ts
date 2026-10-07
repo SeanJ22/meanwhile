@@ -16,30 +16,16 @@ import { speakYourMind } from "./schema.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
 
 /**
- * **BC-11 — the SINGLE write path for Speak Your Mind.**
- *
- * One path, so the redaction and the triage cannot be skipped by a second
- * caller. That is the same argument that put the search log's scrub in its
- * write path rather than in its route, and it matters more here: the two
- * things this path does — RULE 3's self-disclosure pass and RULE 4's abuse
- * triage — are the two the author said must exist BEFORE any export path
- * does. A second insert site that forgot either would be a row born unsafe.
- *
- * ## The continuity key has its OWN digest space, and that is RULE 1
- *
- * `sha256("speak-your-mind:" + key)`. The reactions store hashes the same kind
- * of browser-minted key as `sha256(key)` and the intake limiter as
- * `sha256("intake-limiter:" + key)`. Without the prefix all three would be the
- * same digest of the same input — **equality-joinable across three stores that
- * the constitution says share no key**. The prefix is the whole boundary, and
- * `tests/identity-boundary.test.ts` proves it over the values (RULING 132).
+ * The single write path for Speak Your Mind, so the self-disclosure redaction
+ * and abuse triage cannot be skipped. The continuity key is digested as
+ * `sha256("speak-your-mind:" + key)`; the prefix keeps it from being
+ * equality-joinable with the reaction and limiter digests of the same kind of key.
  */
 
 const SPEAK_KEY_PREFIX = "speak-your-mind:";
 const SPEAK_RUN_PREFIX = "speak-run:";
 
-/** The cap. One home (lib/speak/limits.ts), re-exported so the write path and
- *  the route read the same number the surface does. */
+/** Re-exported so the write path and the route read the same cap the surface does. */
 export { SPEAK_MAX_CHARS } from "../speak/limits.ts";
 
 export function hashSpeakKey(key: string): string {
@@ -50,16 +36,7 @@ function hashRunId(runId: string): string {
   return createHash("sha256").update(`${SPEAK_RUN_PREFIX}${runId}`).digest("hex");
 }
 
-/**
- * **DERIVED from the column, not typed twice** (2026-08-25, `BAL-19`).
- *
- * This was a second hand-written copy of the same union that lives in
- * `lib/speak/client.ts`, and adding `CANDIDATE` to the schema and to the
- * client left this one behind — RULING 103 exactly: a duplicate
- * implementation that a symptom grep cannot find, because it is not the same
- * text as the thing it duplicates. Reading it off the column means the two
- * cannot diverge again on this side.
- */
+/** Derived from the column so it cannot diverge from the schema. */
 export type SpeakSubjectType = (typeof speakYourMind.subjectType.enumValues)[number];
 
 export type SpeakWriteResult =
@@ -96,16 +73,10 @@ export async function writeSpeakYourMind(
     throw new Error("speak-your-mind requires a continuity key");
   }
 
-  /*
-   * RULE 3 FIRST, and the order is not arbitrary: the triage below reads the
-   * REDACTED text, so a phone number or a street address can never be the
-   * thing that lands a row in the review queue carrying itself. What the
-   * author reviews is a message with the writer's own identifiers already out
-   * of it.
-   */
+  // Redact first: triage reads the redacted text, so the review queue never carries the writer's identifiers.
   const redacted = redactSelfDisclosure(raw);
 
-  /* RULE 4. Nothing here notifies anybody — see `lib/speak/triage.ts`. */
+  // Triage only marks the row; nothing here notifies anybody.
   const review = triage(redacted.text);
 
   const marker = submission.marker ?? ORGANIC;
@@ -120,7 +91,7 @@ export async function writeSpeakYourMind(
       subjectId: submission.subjectId,
       ocdIds: submission.ocdIds,
       divisionVintage: submission.divisionVintage,
-      // Item 8.4: derived HERE from the row's own divisions, never sent.
+      // Derived from the row's own divisions, never sent.
       coverageTier: coverageTierForOcdIds(submission.ocdIds),
       coverageTierDistribution: encodeTierDistribution(
         tierDistributionForOcdIds(submission.ocdIds),

@@ -10,7 +10,6 @@ const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 const MEMO_MS = 120_000;
 let memo: { at: number; rows: readonly AdminV6SourceReliability[] } | null = null;
 
-/** Read-only. Source reliability is whole-system: a source serves many places. */
 export async function v6ReliabilityGet(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });

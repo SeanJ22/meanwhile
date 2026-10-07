@@ -5,30 +5,10 @@ import { useMemo, useState } from "react";
 import { WORD_LIMIT, checkWordLimit, type Question } from "@/lib/questionnaire/instrument";
 
 /**
- * The form a candidate types their own words into.
- *
- * ## The word count is shown AS THEY TYPE, and it never cuts
- *
- * RULING 112: *an over-limit answer is REFUSED at submit time with its own word
- * count shown, and the candidate decides what to cut. Silent truncation favours
- * whoever writes short, invisibly.*
- *
- * So there is no `maxLength` on any field and no slice anywhere in this file.
- * The count is live, the limit is stated up front rather than applied silently,
- * and going over is allowed while typing — being unable to type past a limit is
- * a truncation the user performs on our behalf, and it loses the sentence they
- * were in the middle of.
- *
- * The server refuses over-limit answers too. Both checks call the same
- * `checkWordLimit`, so a client that is out of date cannot let something
- * through that the server would then quietly cut.
- *
- * ## The register
- *
- * `CLAUDE.md`'s voice doctrine: PLAYFUL on interaction surfaces, LEVEL on claim
- * surfaces. A questionnaire a real person is filling in about a real
- * candidacy — where the words will publish under their name — is a claim
- * surface throughout. Nothing here is cute.
+ * The form a candidate types their own words into. The word count shows as
+ * they type and nothing is ever truncated: no `maxLength`, no slice. Over the
+ * limit is refused at submit with the count shown, by the same
+ * `checkWordLimit` the server uses.
  */
 export function AnswerForm({
   token,
@@ -62,7 +42,7 @@ export function AnswerForm({
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (overLimit.length > 0) {
-      // Told BEFORE anything is sent, and nothing is cut.
+      // Told before anything is sent; nothing is cut.
       setState({
         kind: "refused",
         overLimit: overLimit.map((q) => q.id),
@@ -89,20 +69,13 @@ export function AnswerForm({
         overLimit?: { questionId: string }[];
       };
       if (data.ok) {
-        // The SUCCESS is established by `ok`, and the sentence is the server's.
-        // Where it sent none, this says what we know — that the submission
-        // went through — and does not invent a fuller sentence than the
-        // evidence supports.
+        // `ok` establishes success; the sentence is the server's, or empty.
         setState({ kind: "sent", message: data.message ?? "" });
       } else {
         setState({
           kind: "refused",
           overLimit: (data.overLimit ?? []).map((o) => o.questionId),
-          // NOT `?? "That did not save. Nothing has been recorded."`.
-          // A missing message is a fact about OUR response, and "nothing has
-          // been recorded" is a claim about OUR STORE that we would be
-          // making out of a null. Where the server did not say, this says
-          // that it did not say.
+          // A missing server message is said as such, not turned into a claim about the store.
           message:
             data.message ??
             "That did not go through, and we cannot tell you why — our own answer came back " +

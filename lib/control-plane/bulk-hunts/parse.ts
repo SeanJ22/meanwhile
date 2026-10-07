@@ -1,24 +1,18 @@
 /**
- * **READING A LIST OF ZIPS OUT OF WHATEVER THE OWNER PASTES OR UPLOADS.** (S11.)
- *
- * The owner sends many hunts at once from a pasted list ("85635 85641, 85901"),
- * from a spreadsheet saved as CSV (the Cook toss-up districts and their ZIPs), or
- * from a pick of districts, counties or a state (resolved elsewhere). This file
- * is the first two. It is PURE: text in, a list of ZIPs and a plain account of
- * everything it did not take out.
+ * Reads a list of ZIPs from pasted text or a CSV. Pure: text in, ZIPs out, plus
+ * an account of everything not taken.
  *
  * ```
  *   a ZIP         five digits, or ZIP+4 cut back to five
- *   lost zero     a spreadsheet drops the zero from New England ZIPs ("2135"):
- *                 four digits are padded and counted, because guessing silently
- *                 is how a hunt goes to the wrong place
- *   removed       a row whose evidence says the ZIP left the district in the
- *                 2026 redraw is skipped and counted, not hunted
+ *   lost zero     four digits (a spreadsheet dropped the leading zero) are
+ *                 padded and counted
+ *   removed       a row whose evidence says the ZIP left the district in a
+ *                 redraw is skipped and counted
  *   not a ZIP     anything else in a pasted list is named, never dropped quietly
  * ```
  *
  * A column named district (or group, name, place) becomes the group a ZIP is
- * shown under, so a file of 21 districts reads as 21 groups, not one long list.
+ * shown under.
  */
 
 export interface ParsedZip {

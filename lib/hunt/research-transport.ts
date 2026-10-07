@@ -1,17 +1,12 @@
 /**
- * **A RESEARCH READ REFUSED AS A CLIENT IS ASKED AGAIN AS WHO WE ARE, THROUGH ANOTHER CLIENT.** (2026-09-25.)
- *
- * `pnpm research:fetch` sent every request through Node's own `fetch`. The Cloudflare filter in front of three
- * New Hampshire hosts the runner reads (www.suttonnh.gov, www.newbury.nh.gov, www.kearsarge.org) challenges
- * Node's client whatever it says (403, `cf-mitigated: challenge`), so research sessions recorded those towns as
- * refusing us: a fresh read of Newbury's calendar export was "refused by the town's JavaScript challenge"
- * (commit 7b3e5abb). Measured on 2026-09-25 (22:05-22:20Z), `curl` carrying this project's own name and its
- * purpose and contact headers was admitted 30 times in 30 on the same hosts.
- *
- * So a 403 is asked once more, through `curl`, with the same `User-Agent` the research read already sent plus
- * `X-Purpose` and `X-Contact`. Nothing answers or evades a challenge: a host that refuses the second client too
- * is recorded as refusing, with its own status. Like the Node transport, this never follows a redirect (the
- * caller asks robots.txt of every new origin first) and never throws for a site.
+ * A research read refused as a client is asked again as who we are, through
+ * another client. Some bot filters challenge Node's own `fetch` whatever it
+ * sends, while `curl` carrying the project's name and its purpose and contact
+ * headers is admitted. So a 403 is asked once more through `curl`, with the
+ * same `User-Agent` plus `X-Purpose` and `X-Contact`. Nothing answers or
+ * evades a challenge: a host that refuses the second client too is recorded
+ * as refusing. Never follows a redirect (the caller asks robots.txt of every
+ * new origin first) and never throws for a site.
  */
 
 import { nodeResearchGet, type ResearchGet } from "./robots-first-fetch.ts";

@@ -9,7 +9,6 @@ const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 const MEMO_MS = 120_000;
 let memo: { at: number; asOf: string; view: AdminV6Publication } | null = null;
 
-/** Read-only. Publication is whole-system: a routine contract serves many places. */
 export async function v6PublicationGet(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });

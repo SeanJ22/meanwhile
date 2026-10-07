@@ -52,7 +52,6 @@ function safeFailure(value: string): string {
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 export type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
-/** Publish serving copies independently of per-contract reader repair. */
 export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, observedAt: string,
   selected: readonly Pick<PromotedPointerIdentity, "recordClass" | "scope">[] | null = null,
   options: { readonly artifactStore?: ReaderArtifactStore | null;
@@ -79,22 +78,9 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
   const refreshes = (family: keyof typeof specialPointers) => specialPointers[family].some(pointer => owns(pointer.recordClass, pointer.scope));
   const pointerFamilies = Object.fromEntries(Object.entries(promotedEdgePointers()).filter(([, pointers]) => pointers.some(pointer => owns(pointer.recordClass, pointer.scope)))) as ReturnType<typeof promotedEdgePointers>;
 
-  // PDC-9: publish the composed snapshot as GEOGRAPHIC edge artifacts so the
-  // reader serves ready-to-display data from the CDN edge — no database wake,
-  // no 124-partition compose per visit, and new data appears without a rebuild.
-  // Reads the prepared row (one cheap query, no recompose), partitions it by
-  // state, writes the immutable artifacts and flips the manifest with a monotonic
-  // CAS, then purges the manifest cache tag for instant switchover. Idempotent
-  // (unchanged data republishes nothing) and last-valid-safe (a failure leaves
-  // the previous manifest serving). The production supervisor reports missing
-  // or local-only storage as a failure; it cannot establish live delivery.
-  //
-  // R28 (2026-09-25): the served manifest is read first, and the prepared row
-  // (about 7.5 MB) is read only when the publish could change something
-  // (scripts/lib/reader-edge-current.ts). Every pass once read the whole row to
-  // learn that the manifest was already current.
+    // The served manifest is read first; the prepared row is read only when the publish could change something.
+    // A failure leaves the previous manifest serving.
   try {
-    // Resolve the write destination once; report it even when publication fails.
     const artifactStore = options.artifactStore === undefined ? resolveReaderArtifactWriteStore() : options.artifactStore;
     destination = artifactStore?.kind === "local-file" ? "local folder" : artifactStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured";
     if (artifactStore === null) {
@@ -109,7 +95,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       if (options.requireLiveStore && artifactStore.kind === "local-file") {
         throw new Error("Reader pages would be saved to a folder on the runner. Readers are still seeing the older copy.");
       }
-      // Read only identities, grouped by class, once for this publication pass.
       const grouped = new Map<RoutineRecordClass, Set<string>>();
       for (const pointer of [...Object.values(specialPointers).flat().filter(pointer => owns(pointer.recordClass, pointer.scope)), ...Object.values(pointerFamilies).flat(),
         ...[manual("comment-access"), manual("everyday-routing")].filter(pointer => owns(pointer.recordClass, pointer.scope)),
@@ -136,10 +121,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         console.error("PREPARED_MEETING_SNAPSHOT_FAILED: " + detail);
       }
 
-      // The other ready-to-display families the reader serves, read here (the
-      // single clock, production DB) so the visitor never reads them from the DB.
-      // A failed read leaves them out of the manifest; the reader then falls back
-      // to its own DB read for that family — never a hard failure of the publish.
+            // A failed read leaves a family out of the manifest; the reader falls back to its own DB read for it.
       const extras: { commentAccess?: readonly unknown[]; everydayRouting?: unknown; versionIds: Partial<Record<"comment-access" | "everyday-routing", string | null>> } = {
         commentAccess: servedManifest?.commentAccess, everydayRouting: servedManifest?.everydayRouting, versionIds: { ...servedManifest?.extrasVersionIds },
       };
@@ -163,17 +145,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
           console.error("READER_EDGE_EXTRAS_SKIPPED: " + safeFailure(sanitizedErrorDiagnostic(error)));
         }
       }
-      // The large authority families (registry-runtime, federal-directory,
-      // campaign-sites): publish each promoted, validated value (production DB)
-      // as its own compressed NATIONAL artifact ONLY when it validates. A
-      // failed/absent read simply omits that family (the reader falls back to the
-      // DB for it), never a hard failure of the publish.
-      //
-      // A family whose current pointer is still the version the edge already
-      // serves carries its artifact forward and is not read at all: that
-      // artifact was written from a proven read of the same immutable version.
-      // Every pass once read every family whole (30.8 MB on 2026-09-23, 24 MB
-      // of it registry-runtime) to learn that nothing had changed.
+            // A family whose pointer is still the version the edge serves carries its artifact forward unread.
       const servedIfCurrent = async (family: AuthorityFamily, currentVersion: () => Promise<string | null>): Promise<string | null> => {
         const served = servedAuthorityVersion(servedManifest, family);
         if (served === null) return null;
@@ -235,9 +207,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: campaign-sites ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
-      // State legislators: one artifact holding the promoted read model per scope
-      // (the pilot state chambers). Each scope that fails/absent is simply omitted;
-      // the reader falls back to the DB for that scope only.
       if (refreshes("state-legislators")) try {
         delete authority["state-legislators"];
         const carried = await servedIfCurrent("state-legislators", async () => {
@@ -269,14 +238,8 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-legislators ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
-      // The recorded meeting outcomes and the comment-access rules (C20, 2026-09-24):
-      // from the database they were a cold Ask's two slowest reads (2.0–2.3 s and
-      // 0.6–0.8 s). Each is carried forward while its pointer is still the served
-      // version, and read whole only when it moved.
       if (refreshes("meeting-outcomes")) try {
         delete authority["meeting-outcomes"];
-        // Pima's, Mesa's and each door's pointers, combined (NH332, DB-22): the artifact is Pima's alone while no
-        // other pointer exists, and names every version once they do.
         const doorPointers = [...DOOR_OUTCOME_POINTERS];
         if (doorReadModeFromEnv() === "registry" && !outcomePartitionsAreCurrent()) {
           // The doors were not read this pass, so the door list is unknown, not empty: keep serving the last artifact
@@ -300,8 +263,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
           else {
             const oc = await readOutcomeProjection({ store, now: observedAt, bypassCache: true });
             const mesa = await readMesaOutcomeProjection({ store, now: observedAt, bypassCache: true });
-            // Complete or left out: a Mesa or door read that failed must not publish the rest alone as if it had
-            // nothing; the reader then reads them from the database.
+                        // Complete or left out: a failed read must not publish the rest alone as if it had nothing.
             if (mesa.kind !== "PROMOTED" && mesa.kind !== "NOT_RECORDED") throw new Error(`mesa minutes outcomes read ${mesa.kind}`);
             await readDoorOutcomeProjections({ store, now: observedAt, bypassCache: true });
             const doorParts = doorOutcomeParts();
@@ -333,14 +295,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: comment-access ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
-      // The proven pointers a cold /ballot and a cold Ask read from the database
-      // (2026-09-25): the ballots, candidate profiles and publications, navigation,
-      // the NH roster, FEC, state and Pima money, federal votes and key votes,
-      // statements and executive actions (lib/civic-data/promoted-edge-publication.ts).
-      // Each family is carried while its pointers still name the served version,
-      // read and proved only when one moved, and published only after its own
-      // Reader accepted the entry; a family that fails is left out, and the
-      // reader reads it from the database.
       try {
         const promoted = await readPromotedEdgeFamilies({ store, servedManifest, now: observedAt, families: pointerFamilies });
         for (const family of Object.keys(pointerFamilies) as PromotedAuthorityFamily[]) delete authority[family];
@@ -349,9 +303,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: promoted pointers ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
-      // Every state's promoted registration (lib/registration/edge.ts): one identity read for every registration
-      // pointer decides which states carry by reference; only a state whose version moved is read. The section is
-      // complete or left out: any failure leaves it out this pass, and the reader reads registration from the database.
+            // Complete or left out: any failure leaves the section out this pass.
       let registrations: PublishRegistrations | undefined = servedManifest?.registrations === undefined ? undefined : Object.fromEntries(Object.entries(servedManifest.registrations).map(([state, ref]) => [state, { versionId: ref.version, carried: true }]));
       if (selected === null || selected.some(pointer => pointer.recordClass === "REGISTRATION")) try {
         const plan = registrationEdgePlan(await store.readPromotionIdentities("REGISTRATION", REGISTRATION_SCOPES), servedManifest?.registrations);
@@ -369,7 +321,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         process.stderr.write(`READER_EDGE_REGISTRATIONS_SKIPPED: ${safeFailure(sanitizedErrorDiagnostic(error))}
 `);
       }
-      // Authority-only updates carry geographic references; unchanged meeting payloads never cross the DB.
       const meetingRegistryVersion = authority["registry-runtime"]?.versionId ?? null;
       const sameComposition = prepared?.status === "CURRENT" && servedManifest?.meetingLayout === "governing-area" &&
         servedManifest.meetingRegistryVersion !== undefined && servedManifest.meetingRegistryVersion === meetingRegistryVersion &&
@@ -389,8 +340,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         } else if (registry && "value" in registry) {
           meetingBodies = (registry.value as RegistryRuntimeReadModel).registry.bodies;
         } else {
-          // A carried authority stays cheap: resolve only divisions represented
-          // in this changed meeting composition, including bodies' other areas.
           const divisions = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.ocdId ? [meeting.ocdId.split("#")[0]] : []))];
           const bodyIds = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.bodyId ? [meeting.bodyId] : []))];
           const read = await (options.readMeetingRegistry ?? ((ids, bodies) =>
@@ -422,12 +371,10 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
   return outcome;
 }
 
-/** Compatibility for individual data publishers and local measurement callers. */
 export async function publishRoutineReaderEdge(...args: Parameters<typeof publishRoutineReaderEdgeOutcome>): Promise<boolean> {
   return (await publishRoutineReaderEdgeOutcome(...args)).ok;
 }
 
-/** The supervisor is production unless its local measurement/development opt-in is explicit. */
 export async function publishSupervisorReaderEdge(
   store: RoutineDataStore, observedAt: string,
   selected: Parameters<typeof publishRoutineReaderEdgeOutcome>[2] = null,

@@ -1,36 +1,4 @@
-/**
- * **THE SHADOW LOOP — one unattended cycle, end to end.**
- * (Session B, W3.5, 2026-08-30.)
- *
- * ```
- *   RECLAIM   sweep leases whose holder stopped renewing
- *   SCHEDULE  derive a next-due for every active obligation
- *   RETRY     take back the debt whose backoff has elapsed
- *   DISPATCH  claim what is due and run it through a disposable worker
- *   RECORD    results, debt, next-due — durably, through the repositories
- *   DIGEST    a reading whose headline is PILOT HEALTH
- * ```
- *
- * ## Shadow means one thing, precisely
- *
- * The loop OBSERVES, ACQUIRES, RECORDS and runs the canonical instruments.
- * **It does not promote anything to canonical reader truth.** No result of a
- * cycle changes what a reader is told. That is not a safety margin around a
- * feature that is nearly ready — it is the state RULING 212, 216 and 218
- * jointly require until the scheduler's results are INDEPENDENTLY_REPRODUCED,
- * and the session that built the scheduler cannot supply that by definition.
- *
- * `promoteToReaderTruth` does not exist in this module and no caller can pass
- * a flag that would create it. The absence is the mechanism.
- *
- * ## Why the digest leads with PILOT HEALTH and not with activity
- *
- * RULING 217. A digest that leads with *312 routes walked, 1,847 records
- * refreshed* reads as health and measures effort — and effort is not evidence.
- * The three contracts come first, each stating its own blocker, and the
- * activity counts sit underneath where they belong: as what the loop did, not
- * as how the pilot is.
- */
+/** One unattended cycle: reclaim, schedule, retry, dispatch, record, digest. */
 
 import {
   aggregateIncidents,
@@ -70,8 +38,6 @@ import {
   type ScheduledObligation,
   type SchedulePass,
 } from "./obligation.ts";
-import type { ContractReading, PilotHealthRollup } from "../../health/contracts.ts";
-import { freshnessContract, pilotHealth } from "../../health/contracts.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 
 /** One cycle's inputs. Every clock and every seam is injected. */
@@ -86,59 +52,16 @@ export interface CycleInput {
   readonly routeTaskFor: (obligationId: string) => string | null;
   /** The standing runner opens only its bounded lane slots, retaining all other due rows. */
   readonly requireOpenOccurrence?: boolean;
-  /**
-   * **OPEN IN STEP WITH DISPATCH, NOT AHEAD OF IT.** (2026-09-18.)
-   *
-   * When present, each lane opens an obligation's occurrence just-in-time —
-   * only after the row has passed the wall and admission gates and is about to
-   * dispatch — and defers it by name when opening fails. Nothing is pre-opened,
-   * so the runner opens exactly what it can dispatch before the wall instead of
-   * the whole backlog, and there is no per-cycle open ceiling to size. Returns
-   * whether the occurrence is now open (so `routeTaskFor` resolves it). Absent,
-   * `requireOpenOccurrence` governs and the caller pre-opens.
-   *
-   * It may instead return `{ settled }`: the obligation's open occurrence holds
-   * a RouteTask an interrupted cycle already disposed (2026-09-22). That row is
-   * RECOVERED with the committed disposition and never dispatched; the caller
-   * closes it in its occurrence-and-debt phase (`closeCycleOccurrences`).
-   */
+  /** Opens an obligation's occurrence just-in-time, after admission; returns whether it is open, or `{ settled }` for an occurrence an interrupted cycle already disposed. Absent, `requireOpenOccurrence` governs. */
   readonly openOccurrence?: (
     row: ScheduledObligation,
   ) => Promise<boolean | { readonly settled: SettledOccurrence }>;
-  /**
-   * **SETTLED OCCURRENCES RECOVERED BEFORE ANY LANE RUNS.** (2026-09-23.)
-   *
-   * The caller finds them with `findSettledOccurrences`. Each one whose
-   * obligation is scheduled is recovered by the rule `openOccurrence`'s
-   * `{ settled }` applies, whatever its lane, due time, debt backoff or
-   * admission. Its row is then withheld from both lanes, so it is recovered
-   * exactly once. A recovery walks nothing and spends nothing, so no dispatch
-   * gate applies to it.
-   */
+  /** Settled occurrences recovered before any lane runs, whatever their lane, due time, backoff or admission; each is withheld from both lanes. */
   readonly settledOccurrences?: readonly SettledOccurrence[];
   /** Observability only; recovery still completes before any worker is admitted. */
   readonly onRecoveryComplete?: () => void;
   readonly maturity: MethodMaturity;
-  /**
-    * The executor, WITH its lane declared. (W3.E regression, 2026-08-31.)
-    *
-    * A bare `run` let the dispatcher open the persisted Attempt under the
-    * lane the method store IMPLIED rather than the one about to execute, so a
-    * deterministic walk was recorded as an anthropic model worker.
-    */
-  /**
-   * **A FUNCTION IS ACCEPTED, AND THAT IS PART D1's REQUIREMENT.**
-   * (Session C, 2026-08-31.)
-   *
-   * One `DeclaredExecutor` for a whole cycle was right while every obligation
-   * came from one corpus and was worked by one HTTP GET. It cannot express the
-   * registry: a campaign-finance portfolio carries a DataTables POST that is
-   * deterministic, an FTP drop no client here can open, and a records-request
-   * route that ends in a human act. Those are different lanes over one cycle,
-   * and the lane is DECLARED before the Attempt is persisted — so it has to be
-   * decidable per obligation or the Attempt is opened under the wrong worker
-   * identity, which is the exact W3.E defect wearing a registry.
-   */
+  /** The executor with its lane declared, or a function choosing one per obligation; the lane is declared before the Attempt is persisted. */
   readonly executor: DeclaredExecutor | ((obligation: ScheduledObligation) => DeclaredExecutor);
   readonly methodVersion?: number;
   readonly policyVersion?: string;
@@ -149,14 +72,6 @@ export interface CycleInput {
   readonly clock?: () => string;
   readonly leaseTtlMs: number;
   readonly bound?: WorkerBound;
-  /**
-   * The canonical READER and TRUTH readings, taken by their own instruments.
-   * Passed in rather than computed here: a scheduler that computed its own
-   * reader health would be grading its own homework, and the digest's headline
-   * has to come from the instruments that own those contracts.
-   */
-  readonly reader: ContractReading;
-  readonly truth: ContractReading;
   /** A ceiling on how many due items one cycle dispatches. Stated, not implied. */
   readonly maxDispatches?: number;
   readonly workerCapacity?: number;
@@ -172,44 +87,16 @@ export interface CycleInput {
   ) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
   /** A tightly scoped canary may skip the whole lease sweep; normal cycles never do. */
   readonly skipReclaim?: boolean;
-  /**
-   * **THE OWNER'S DISPATCH REORDERS THE DUE SET.** (ADM-8, 9.4.26 admin
-   * feedback, 2026-09-04.)
-   *
-   * Obligation ids the owner dispatched the fleet at this cycle. They are
-   * placed FIRST in the due set — ahead of the oldest-first order — in BOTH
-   * lanes, with their relative order otherwise untouched. A dispatch reorders
-   * and nothing else: it does not add a row, does not make an undue row due,
-   * does not lift a debt backoff, and does not change any ceiling or budget.
-   * Absent or empty, each lane keeps its own order: the Scout lane's
-   * `compareModelRows`, and the plain-code lane's longest wait first
-   * (`plainCodeQueueOrder`).
-   */
+  /** Obligation ids the owner dispatched, placed first in both lanes; a dispatch reorders and nothing else. */
   readonly placeFirst?: ReadonlySet<string>;
   readonly placeComparator?: () => Promise<(left: ScheduledObligation, right: ScheduledObligation) => number>;
-  /**
-   * **LEVEL 1 — TWO LANES IN ONE CYCLE.** (Level 1 activation, 2026-09-01.)
-   *
-   * Absent, the cycle runs exactly as before: one serial queue. Present, the
-   * due set is split by the canonical executor decision: deterministic rows
-   * run the existing serial queue under `maxDispatches`; model rows run a
-   * bounded pool of Scouts, each admitted or DEFERRED BY NAME by `admitScout`
-   * (the rolling ceiling, the per-cycle maximum, the lane state). The two
-   * lanes run concurrently — they are different obligations on different
-   * route tasks — so Scout minutes do not come out of the deterministic
-   * drain. Both stop STARTING work at the dispatch budget.
-   */
+  /** Two lanes in one cycle: deterministic rows run the serial queue under `maxDispatches`; model rows run a bounded Scout pool, each admitted or deferred by name. Absent, one serial queue. */
   readonly research?: ResearchLanes;
 }
 
 export interface ResearchLanes {
   readonly decide: (row: ScheduledObligation) => ExecutorDecision;
-  /**
-   * A shut door goes to a detective, and its plain re-read must not stop (DP-02). One occurrence
-   * carries one route task, so the plain re-read runs in the same cycle only when the detective
-   * is refused (paid lane paused, capped or blacked out). Absent or null, the row has no plain
-   * decision to keep.
-   */
+  /** A shut door goes to a detective; its plain re-read runs in the same cycle only when the detective is refused. */
   readonly plainBesideDetective?: (row: ScheduledObligation) => ExecutorDecision | null;
   /**
    * Optional canonical order for the actual due model rows. `runCycle` sorts a
@@ -219,10 +106,7 @@ export interface ResearchLanes {
    * also records for Admin.
    */
   readonly compareModelRows?: (left: ScheduledObligation, right: ScheduledObligation) => number;
-  /**
-   * May answer asynchronously (MW-021, 2026-09-25): a budgeted Send's or
-   * area's hold is taken on the shared budget ledger before the Scout starts.
-   */
+  /** May answer asynchronously: a budgeted Send's or area's hold is taken before the Scout starts. */
   readonly admitScout: (
     row: ScheduledObligation,
   ) => ScoutAdmission | Promise<ScoutAdmission>;
@@ -231,23 +115,9 @@ export interface ResearchLanes {
   readonly scoutLeaseTtlMs: number;
   /** A Scout is not STARTED when it could not finish inside the dispatch budget. */
   readonly onDispatched?: (result: DispatchResult, lane: ExecutorKind) => void | Promise<void>;
-  /**
-   * A Scout `admitScout` admitted that then did not run (its occurrence could
-   * not be opened, it was recovered, or an aggregate refused it), so whatever
-   * the admission held is released (MW-021, 2026-09-25).
-   */
+  /** A Scout admitted that then did not run releases whatever the admission held. */
   readonly onAdmittedNotDispatched?: (row: ScheduledObligation, code: string) => void | Promise<void>;
-  /**
-   * **THE PRE-WARM.** (2026-09-06.) Called ONCE per cycle, before the first
-   * admitted Scout is dispatched and after nothing else: it writes the static
-   * prefix (tools + system) to the prompt cache so every Attempt this cycle
-   * — including the two that start together under the concurrency bound —
-   * reads it instead of each paying the write. Every admitted row awaits the
-   * same promise, so no Attempt starts before the entry exists. Never called
-   * when no Scout is admitted: a cycle that dispatches nothing warms nothing.
-   * The outcome travels on `LaneCounts.model.prewarm`; a failure is recorded
-   * there and the Attempts still run.
-   */
+  /** The pre-warm: called once per cycle before the first admitted Scout, and awaited by every admitted Scout. Never called when none is admitted; a failure is recorded and the Attempts still run. */
   readonly prewarm?: () => Promise<PrewarmOutcome>;
 }
 
@@ -263,22 +133,10 @@ export type PrewarmOutcome =
       readonly durationMs: number;
     }
   | { readonly status: "FAILED"; readonly at: string; readonly detail: string; readonly durationMs: number }
-  /* MW-033 (2026-09-25): no paid call was made — the loop's start model's prefix could not be shown to reach its cacheable minimum. */
+  /* No paid call was made — the loop's start model's prefix could not be shown to reach its cacheable minimum. */
   | { readonly status: "SKIPPED"; readonly at: string; readonly model: string; readonly code: string; readonly detail: string; readonly durationMs: number };
 
-/**
- * **EVERY DUE ROW IS ACCOUNTED FOR, BY LANE.** (MW-014, MW-029, 2026-09-25.)
- *
- * Each due row a lane holds ends the cycle in exactly one place: dispatched,
- * deferred under one code, or recovered with a disposition an interrupted
- * cycle already committed. So `dispatched + Σ deferredBy + recovered = due`
- * for each lane, and a reader of the counts can check it rather than trust it.
- * `oldestWaitingDueAt` is how long the oldest waiting work has been owed, among
- * the rows the lane did not reach. In the model lane, it is the earliest
- * next-due. In the plain-code lane, it is the earliest time a row joined the
- * queue, which is also the queue's order (`waitingSince`). That is the row's
- * next-due, or the end of its backoff if its last attempt failed.
- */
+/** Every due row ends in exactly one place per lane: `dispatched + Σ deferredBy + recovered = due`. */
 export interface LaneCounts {
   readonly deterministic: {
     readonly due: number;
@@ -327,10 +185,9 @@ export interface CycleResult {
   readonly debts: readonly FreshnessDebt[];
   readonly incidents: readonly Incident[];
   readonly risk: StalenessRisk;
-  readonly health: PilotHealthRollup;
   /** Per-lane counts when research lanes ran; null when the cycle ran one queue. */
   readonly lanes: LaneCounts | null;
-  /** Structural, and it is the shadow guarantee. Always false in this module. */
+  /** Always false in this module. */
   readonly promotedToReaderTruth: false;
 }
 
@@ -392,13 +249,7 @@ export async function runPool<T>(items: readonly T[], limit: number, fn: (item: 
   await Promise.all(workers);
 }
 
-/**
- * Move the rows whose obligation id is in `first` to the front, keeping the
- * relative order of both groups. Pure and stable, so the cycle script's
- * opening order and the dispatcher's due order are the SAME derivation of the
- * owner's dispatch (ADM-8) — two surfaces, one ordering. An empty set returns
- * the rows as they were.
- */
+/** Move rows whose obligation id is in `first` to the front, keeping relative order. Pure and stable. */
 export function placeFirstRows<T extends { readonly obligation: { readonly id: string } }>(
   rows: readonly T[],
   first: ReadonlySet<string> | undefined,
@@ -407,24 +258,12 @@ export function placeFirstRows<T extends { readonly obligation: { readonly id: s
   return [...rows.filter((r) => first.has(r.obligation.id)), ...rows.filter((r) => !first.has(r.obligation.id))];
 }
 
-/**
- * Run one full cycle. Unattended: nothing here can ask a question.
- *
- * A cycle that could block on an answer is a cycle that stops the loop, and
- * RULING 146 forbids it — a decision that is genuinely the author's becomes a
- * Needs Sean row and the session keeps going. There is no prompt, no readline
- * and no confirmation in this path.
- */
+/** Run one full cycle. Unattended: nothing here can ask a question. */
 export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const startedAt = input.now;
   const nowMs = Date.parse(input.now);
 
-  /*
-   * 1 · RECLAIM FIRST, and the order matters. A route still leased by a dead
-   * worker is a route this cycle would skip as contended. Sweeping before
-   * scheduling means a worker that died since the last cycle costs one cycle
-   * of latency rather than a lease TTL every cycle forever.
-   */
+  /* 1 · Reclaim first, so a worker that died since the last cycle costs one cycle of latency. */
   const reclaim = input.skipReclaim
     ? { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] }
     : await sweepExpiredLeases(input.recoveryRepos ?? input.repos, {
@@ -439,25 +278,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   /* 3 · RETRY. Debt whose backoff has elapsed rejoins the due set. */
   const retryIds = new Set(retryable(input.debts, nowMs).map((d) => d.obligationId));
 
-  /*
-   * **DEBT BACKOFF GATES RE-DISPATCH, and without this it does not.**
-   * (Session C, 2026-08-31.)
-   *
-   * `dueNow` answers "has the clock passed?" and knows nothing about failure.
-   * An obligation that has never been discharged never advances its anchor, so
-   * its next-due sits permanently in the past and it was dispatched on EVERY
-   * cycle regardless of the backoff `recordFailure` computed. The retry
-   * schedule was therefore real, tested, and bypassed — the same shape as the
-   * debt that was durable in a store nothing loaded.
-   *
-   * It only became visible when a permanently-walled route was registered: the
-   * Arizona FTP drop this process holds no client for would have been opened,
-   * refused and re-opened once a cycle forever, and the incident aggregate
-   * would have reported an outage that is really a missing adapter.
-   *
-   * So an obligation carrying debt is due only when its backoff has ELAPSED.
-   * It is held out by name and counted in `deferred`, never dropped.
-   */
+  /* Debt backoff gates re-dispatch: an obligation carrying debt is due only when its backoff has elapsed, and is otherwise deferred by name. */
   const backedOff = new Map(
     input.debts
       .filter((d) => d.consecutiveFailures > 0 && !retryIds.has(d.obligationId))
@@ -468,7 +289,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const alsoDue = schedule.scheduled.filter(
     (row) => retryIds.has(row.obligation.id) && !due.includes(row),
   );
-  /* The owner's dispatch (ADM-8) goes first; everything else keeps the oldest-first order above. */
+  /* The owner's dispatch goes first; everything else keeps the oldest-first order above. */
   const workNow = placeFirstRows([...due, ...alsoDue], input.placeFirst);
 
   /* 4 · DISPATCH, under a stated ceiling. Anything beyond it is DEFERRED with
@@ -482,16 +303,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const deferred: { obligationId: string; why: string }[] = [];
   const debtsById = new Map(input.debts.map((d) => [d.obligationId, d]));
 
-  /*
-   * **A SETTLED OCCURRENCE IS RECOVERED, NEVER DISPATCHED.** (2026-09-22.)
-   *
-   * An interrupted cycle committed this occurrence's disposition and ended
-   * before closing it. Walking the route again would claim a settled task, so
-   * the disposition already committed is recorded by the rule `record` applies
-   * to a dispatch's: a reading discharges the debt; any other disposition
-   * closes the route, not the obligation, and accrues debt exactly as a WORKED
-   * non-reading does, so the obligation stays owed and retries on its backoff.
-   */
+  /* A settled occurrence is recovered, never dispatched: a reading discharges its debt; any other disposition accrues debt and stays owed. */
   const recover = (row: ScheduledObligation, settled: SettledOccurrence): void => {
     const discharged = DISCHARGING_DISPOSITIONS.includes(settled.disposition.disposition);
     recovered.push({ ...settled, discharged });
@@ -512,13 +324,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     );
   };
 
-  /*
-   * 3b · RECOVER, BEFORE ANY LANE. (2026-09-23.) Every settled occurrence the
-   * caller found is recovered here, whatever its due time, backoff, lane or
-   * admission, and its row is withheld from both lanes below. An obligation
-   * with no schedule has no row to recover against and is left open for the
-   * caller to name.
-   */
+  /* 3b · Recover before any lane, and withhold recovered rows from both lanes. */
   const scheduledById = new Map(schedule.scheduled.map((row) => [row.obligation.id, row] as const));
   for (const settled of input.settledOccurrences ?? []) {
     const row = scheduledById.get(settled.obligationId);
@@ -547,41 +353,15 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    */
   const record = (row: ScheduledObligation, result: DispatchResult): void => {
     dispatched.push(result);
-    /*
-     * 5 · RECORD. A failure becomes DEBT — durable, self-retrying, and nobody
-     * is notified (RULING 218).
-     *
-     * **DEBT IS CLEARED BY A COMMITTED DISPOSITION AND BY NOTHING ELSE.**
-     * (Session B resume, W3.A.) This read `result.outcome === "WORKED"`, and
-     * WORKED was issued on a seam that returned `ok: true` for a no-op. So a
-     * shadow executor that fetched nothing deleted the obligation's debt and
-     * the loop recomputed a next-due from work that never happened —
-     * freshness, asserted from our own inaction. `dischargesObligation`
-     * requires the disposition commit, and it is the ONLY thing that does.
-     */
+    /* 5 · Record. A failure becomes debt; debt is cleared only by a committed disposition (`dischargesObligation`). */
     if (dischargesObligation(result)) {
       debtsById.delete(row.obligation.id);
       worked.push(row.obligation.id);
     } else if (result.outcome === "SIMULATED") {
-      /*
-       * A SHADOW DECISION IS NOT A FAILURE AND IT IS NOT A SUCCESS.
-       *
-       * It does not become debt, because nothing about the publisher went
-       * wrong and an incident count that rose on our own decision not to walk
-       * would report a wall where there is none. It does not clear debt
-       * either. Any debt the obligation already carried stands untouched, and
-       * the obligation stays due — which is the honest state: still owed.
-       */
+      /* A shadow decision neither becomes debt nor clears it; the obligation stays due. */
       simulated.push(row.obligation.id);
     } else if (result.outcome !== "NOT_CLAIMED") {
-      /*
-       * FAILED, NO_ROUTE_TASK, and — the case that is easy to miss — a WORKED
-       * result whose committed disposition is NOT a reading. A route disposed
-       * `BLOCKED_CURRENTLY` reached a legitimate terminal state and refreshed
-       * nothing, so the obligation is still owed and its debt still accrues.
-       * Letting that fall through to neither branch would leave a walled route
-       * with no debt row, which is an obligation that quietly stops retrying.
-       */
+      /* FAILED, NO_ROUTE_TASK, or a WORKED result whose disposition is not a reading: the obligation is still owed and its debt accrues. */
       debtsById.set(
         row.obligation.id,
         recordFailure(debtsById.get(row.obligation.id) ?? null, {
@@ -608,25 +388,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   };
 
 
-  /*
-   * **ONE OBLIGATION'S THROW MAY NOT ABORT THE CYCLE.** (Autonomy-recovery
-   * session, 2026-09-01.)
-   *
-   * `dispatchOne` already converts every EXPECTED failure — a live foreign
-   * lease, a refused disposition, a worker that threw — into a FAILED
-   * `DispatchResult` and returns it. What it does not catch is an UNEXPECTED
-   * throw from the store beneath it: a transient Neon error, or the
-   * inconsistent state a killed cycle leaves behind (an occurrence whose
-   * RouteTask a crash left mid-transition). Before this, such a throw
-   * propagated out of `runCycle`, aborted the whole cycle, and stranded every
-   * other due occurrence — and a crash-restart re-hit the same state and
-   * re-aborted, which is the recovery loop that required manual surgery.
-   *
-   * So an unexpected throw is isolated to its obligation: recorded as a
-   * FAILED dispatch (the branch above accrues debt and keeps it owed) and the
-   * cycle continues. The obligation is not discharged, only deferred to a
-   * retry — which is exactly the honest state.
-   */
+  /* An unexpected throw from one obligation is recorded as a FAILED dispatch and the cycle continues. */
   const dispatchRow = async (
     row: ScheduledObligation,
     opts: { readonly executor: DeclaredExecutor; readonly leaseTtlMs: number; readonly decision?: ExecutorDecision },
@@ -696,26 +458,10 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       decisions.set(row.obligation.id, decision);
       (decision.kind === "BOUNDED_MODEL_WORKER" ? modelRows : deterministicRows).push(row);
     }
-    /*
-     * NH328 — `dueNow` is oldest-first, but the bounded Scout lane is governed
-     * by reader impact. Apply the canonical comparator to the ACTUAL due model
-     * set after lane classification and before admission. Sorting this existing
-     * array cannot add, remove, or duplicate an obligation; it only determines
-     * which due row reaches a scarce Scout slot first. The deterministic lane
-     * is ordered below, by how long each row has waited.
-     */
+    /* The Scout lane is ordered by reader impact over the actual due model set, before admission. Sorting cannot add, remove or duplicate a row. */
     if (research.compareModelRows !== undefined) modelRows.sort(research.compareModelRows);
   }
-  /*
-   * **THE PLAIN-CODE LANE SERVES THE LONGEST WAIT FIRST.** (2026-09-25.) The
-   * lane is ordered by `waitingSince`, using the debt carried into the cycle.
-   * A row whose last attempt failed rejoins behind every row already waiting.
-   * It does not keep its first next-due and jump back to the head each time
-   * its backoff ends, as it did before. Then the owner's placed-first rows go
-   * to the front, in the same order (ADM-8). Sorting this array can reorder
-   * rows. It cannot add, drop or duplicate one, and it changes no cadence and
-   * no backoff.
-   */
+  /* The plain-code lane serves the longest wait first (`waitingSince`), then the owner's placed-first rows go to the front. */
   const debtAtCycleStart = new Map(input.debts.map((d) => [d.obligationId, d] as const));
   const debtOf = (obligationId: string) => debtAtCycleStart.get(obligationId);
   const plainCodeQueue = placeFirstRows(plainCodeQueueOrder(deterministicRows, debtOf), input.placeFirst);
@@ -753,13 +499,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     return admission.code;
   };
 
-  /*
-   * Open in step with dispatch when the caller supplies `openOccurrence`:
-   * nothing is pre-opened, so a lane opens only the rows it is about to run, and
-   * the wall — not a per-cycle open ceiling — bounds how many it opens. Absent,
-   * the pre-open path stands and this is a no-op; the early `requireOpenOccurrence`
-   * check governs instead.
-   */
+  /* With `openOccurrence`, a lane opens only the rows it is about to run. */
   const tryOpen = async (
     row: ScheduledObligation,
   ): Promise<boolean | { readonly settled: SettledOccurrence }> => {
@@ -822,18 +562,8 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     }, input.placeComparator, input.huntFor);
   };
 
-  /*
-   * THE MODEL LANE — a bounded pool of Scouts. Every row is admitted or
-   * DEFERRED BY CODE (the rolling ceiling, the per-cycle maximum, a paused or
-   * unconfigured lane), and a Scout that could not finish inside the dispatch
-   * budget is not started at all: a Scout killed mid-walk by the supervisor
-   * leaves an Attempt with no outcome and a lease to reclaim.
-   */
-  /**
-   * The cycle's one pre-warm (2026-09-06). Created by the first admitted
-   * Scout and awaited by every admitted Scout, so the two that start together
-   * under the concurrency bound both find the static prefix written.
-   */
+  /* The model lane: a bounded Scout pool, each row admitted or deferred by code; a Scout that could not finish inside the dispatch budget is not started. */
+  /** The cycle's one pre-warm, created by the first admitted Scout and awaited by every admitted Scout. */
   let prewarmOnce: Promise<PrewarmOutcome> | null = null;
   let prewarmOutcome: PrewarmOutcome | null = null;
   const warmStaticPrefix = async (): Promise<void> => {
@@ -967,21 +697,11 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     incidents: aggregateIncidents(debts, nowMs),
     risk,
     lanes,
-    health: pilotHealth(input.reader, input.truth, freshnessContract(risk)),
     promotedToReaderTruth: false,
   };
 }
 
-/**
- * **CLOSE WHAT THE CYCLE DISPATCHED AND WHAT IT RECOVERED, BY ONE RULE.**
- *
- * The close half of the occurrence-and-debt phase. A dispatch's occurrence
- * closes DISCHARGED only on a committed reading (`dischargesObligation`); a
- * recovered one by the same rule, applied to the disposition its RouteTask
- * already carries (`closeSettledOccurrence`). Everything else closes UNRESOLVED
- * and its obligation stays owed. `occurrenceFor` names the occurrence each
- * dispatched obligation ran under; a recovered one carries its own.
- */
+/** Close what the cycle dispatched and recovered by one rule: DISCHARGED only on a committed reading, UNRESOLVED otherwise. */
 export async function closeCycleOccurrences(
   repos: ControlPlaneRepositories,
   input: {
@@ -1046,28 +766,10 @@ export async function closeCycleOccurrences(
   if (failures.length) throw failures.sort((a, b) => a.index - b.index)[0]!.error;
 }
 
-/**
- * The digest, in the order RULING 217 requires: health first, activity under.
- *
- * Returned as lines rather than printed, so the same function serves a console
- * run, a run record and a test — three surfaces that must not be able to
- * disagree about what the cycle said.
- */
+/** The digest as lines, so a console run, a run record and a test say the same thing. */
 export function digestLines(cycle: CycleResult): string[] {
   const out: string[] = [];
-  out.push("PILOT HEALTH");
-  for (const r of cycle.health.readings) {
-    out.push(`  ${r.contract.padEnd(9)} ${r.state}`);
-    out.push(`      ${r.reason}`);
-  }
-  out.push(
-    `  ROLLUP    ${cycle.health.green ? "GREEN" : "NOT GREEN"}` +
-      (cycle.health.blocking.length > 0
-        ? ` — blocked by ${cycle.health.blocking.map((b) => `${b.contract} (${b.state})`).join(", ")}`
-        : ""),
-  );
-  out.push("");
-  out.push("ACTIVITY — what this cycle did, which is not how the pilot is");
+  out.push("ACTIVITY — what this cycle did");
   out.push(
     `  obligations        ${cycle.schedule.scheduled.length} scheduled · ` +
       `${cycle.schedule.unscheduled.length} unscheduled`,

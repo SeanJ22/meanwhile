@@ -13,11 +13,9 @@ import { readV6Sources } from "./v6-money-hunts-route.ts";
 import { validateV6Query } from "./v6-hunts-read.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
-/** Twelve months of the ledger is a real read: one answer serves every open page for this long. */
 const MEMO_MS = 90_000;
 let memo: { at: number; data: AdminV6SpendView } | null = null;
 
-/** What the summary needs beside the ledger, from the same moment: every open reservation and the daily limit. Each is null when unread. */
 const UNREAD = { setAsideUsd: null, dailyLimitUsd: null, huntersNow: null, worstCaseCharges: null } as const;
 
 async function limitsAndHolds(readAt: string): Promise<Pick<AdminV6SpendView, "setAsideUsd" | "dailyLimitUsd" | "huntersNow" | "worstCaseCharges">> {
@@ -38,7 +36,6 @@ async function limitsAndHolds(readAt: string): Promise<Pick<AdminV6SpendView, "s
   } catch { return UNREAD; }
 }
 
-/** Read-only. Spend is whole-system: the ledger is not split by place, so every scope reads the same figures and says so. */
 export async function v6SpendGet(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });

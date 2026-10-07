@@ -7,15 +7,6 @@ import {
   type SourceAuthorityContract,
 } from "./types.ts";
 
-/**
- * The one authority/competence registry for routine civic data. An adapter may
- * add parser mechanics, but it may not invent trusted hosts or competent facts.
- */
-
-/**
- * The official-page linking the source, as saved bytes. It may itself be
- * vouched for by a page that links to it.
- */
 export interface OfficialLinkingPage {
   readonly url: string;
   readonly html: string;
@@ -34,13 +25,7 @@ const hostOf = (url: string, base?: string): string | null => {
   return base === undefined ? null : hostOf(base);
 };
 
-/**
- * Whether a page is an official government source (Sean, 2026-09-29). Any
- * `.gov` site is official automatically. Any other site — a vendor-hosted
- * government portal (Legistar, CivicPlus, BoardDocs, Granicus) or a government
- * site on `.us`, `.org` or `.com` — is official once an official government
- * page links to it. There is no host list: the link is the evidence.
- */
+/** Any `.gov` site is official; any other site is official once an official government page links to it. No host list. */
 export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null): boolean {
   const host = hostOf(url);
   if (host === null) return false;
@@ -174,8 +159,6 @@ export const SOURCE_AUTHORITIES = {
     publisher: "The election authority named by each sourced jurisdiction",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
-    // Transport routes are data. The candidate applies §3 to each site's
-    // publisher URL and saves the official linking page for non-.gov sources.
     routePrefixes: ["https://"],
     jurisdictions: REGISTRATION_TARGETS.map(target => target.jurisdiction),
     recordClasses: ["VOTING_SITE"],
@@ -360,7 +343,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
     routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX],
-    // Every state, DC and territory in the FIPS table: registration covers the country, never a chosen list.
     jurisdictions: REGISTRATION_TARGETS.map((t) => t.jurisdiction),
     recordClasses: ["REGISTRATION"],
     competentFacts: [
@@ -436,58 +418,28 @@ export const SOURCE_AUTHORITIES = {
       "https://clerksboards.tucsonaz.gov/", "https://meetings.boardbook.org/", "https://mesa.legistar.com/",
       "https://webapi.legistar.com/v1/",
       "https://morriscountynj.iqm2.com/", "https://newlondon.nh.gov/",
-      // Newbury's CivicWeb portal (newburynh.civicweb.net) is a retired route
-      // since 2026-09-25 — the host no longer resolves — and no longer inherits
-      // meetings authority; the town's own calendar feed carries its Selectboard.
-      // Pima Community College's own pages (2026-09-23); its Diligent tenant
-      // pima.community.highbond.com is a retired route — superseded by these
-      // pages, which carry every sitting it did — and no longer inherits
-      // meetings authority. (It was retired for its robots.txt alone; since the
-      // owner decision of 2026-09-25 robots.txt blocks nothing, and the tenant
-      // is readable for the college's agenda links.)
       "https://www.pima.edu/robots.txt",
       "https://www.pima.edu/about-pima/leadership-policies/governing-board/",
       "https://events.pima.edu/",
-      // Sunnyside USD's own calendar JSON (read 2026-09-23), unioned with its
-      // portal's list for the forward window.
       "https://www.susd12.org/robots.txt",
       "https://www.susd12.org/api/calendars/150042/events",
       "https://susd-12.community.highbond.com/", "https://tucsonaz.hylandcloud.com/",
       "https://pima.legistar.com/",
-      // The Clerk of the Board's schedule: the county's current page, and the
-      // /2559/ address it moved from (2026-09-24, C18), which earlier reads retain.
       "https://www.pima.gov/board-of-supervisors-meeting-schedule",
       "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
       "https://tusd1-schooldesk.community.diligentoneplatform.com/", "https://vailschooldistrictaz.thrillshare.com/",
       "https://warnernh.gov/", "https://www.cap-az.com/", "https://www.kearsarge.org/", "https://www.merrimackcounty.net/",
       "https://www.mesaaz.gov/", "https://www.mhrd.org/", "https://www.newbury.nh.gov/", "https://www.rockawaytownship.org/",
       "https://www.suttonnh.gov/", "https://www.wilmotnh.org/",
-      // Tucson Unified's own reconfiguration page (official-page events,
-      // 2026-09-23): the district host, scoped to the one page wired.
       "https://www.tusd1.org/Reconfiguration",
-      // Chandler's City Clerk page and its rules (C14, 2026-09-24): the schedule
-      // table on the city's own host, scoped to the one page wired.
       "https://www.chandleraz.gov/robots.txt",
       "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
       "https://www.chandleraz.gov/rest/events/day/",
-      // The Council's Destiny Agenda month lists (2026-09-25), scoped to the
-      // tenant and the one meeting type wired; read once robots.txt stopped
-      // blocking public pages (owner decision, 2026-09-25).
       "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC",
-      // Two Newbury bodies the town calendar never carries, read from their
-      // own publications (C9, 2026-09-24), each scoped to the one route wired:
-      // the Library Trustees' notices feed on the library's site, and the
-      // Energy Committee's own home page. Wired in #411 without these routes,
-      // every production attempt threw FINAL_HOST_NOT_AUTHORIZED before
-      // writing a candidate or a receipt (measured 23:01Z and 23:06Z).
       "https://newburynhlibrary.net/feed/",
       "https://www.newburyenergynh.org/",
-      // Holbrook, AZ's own agendas-and-minutes year pages and their rules
-      // (document listing, 2026-09-25), scoped to the council-agenda path.
       "https://holbrookaz.gov/robots.txt",
       "https://holbrookaz.gov/government/council-agenda/",
-      // Winslow, AZ's SuiteOne Media portal home page (2026-09-25): the one
-      // page read, and the tenant's rules document.
       "https://winslowaz.suiteonemedia.com/robots.txt",
       "https://winslowaz.suiteonemedia.com/?embed=1",
     ],
@@ -502,12 +454,10 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
-  /*
-   * Rulings §3 (labelled C16; not an owner decision, Sean 2026-10-01): a reviewed crosswalk row plus a route the
-   * discovery walk validated publishes through the standing runner with no code release. Neither authority below has a
-   * route of its own; each is authentic only as the exact inputs its candidate names (lib/civic-data/derived-door.ts).
-   * The ~authorization~ strings below are stored citation text, kept byte-identical.
-   */
+    /*
+     * Neither authority below has a route of its own; each is authentic only as the exact inputs its candidate names.
+     * The `authorization` strings are stored text, kept byte-identical.
+     */
   "meeting-source-wiring": {
     id: "meeting-source-wiring",
     publisher: "The standing runner, from promoted and vaulted inputs only: the reviewed meeting-body crosswalk, registration, the discovery walk's attempts and its vaulted evidence",
@@ -519,7 +469,6 @@ export const SOURCE_AUTHORITIES = {
     competentFacts: [
       "which reviewed calendar route publishes as which exact body, recomputed from promoted and vaulted inputs",
       "a connection suspended for review, the trigger and its evidence",
-      /* The automatic crosswalk (contract meeting-body-crosswalk-derived, 2026-09-25): C16 option A, the runner's deterministic reviewer. */
       "which calendar on a government's attested own host is its registered body's or a printed sub-body's, accepted by the deterministic reviewer on vaulted bytes",
     ],
     expectedIdentifierKeys: ["record_id", "body_id"],
@@ -540,7 +489,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: [],
-    /* Every registered state has a family (2026-09-25): a sitting in Ohio is inside this authority as one in Arizona is. */
     jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],
     competentFacts: ["meeting time", "meeting status", "public body", "location", "agenda link", "agenda document"],
@@ -556,12 +504,6 @@ export const SOURCE_AUTHORITIES = {
       authorization: "C16: owner decision recorded 2026-09-24T22:43Z",
     },
   },
-  /*
-   * A partition's durable meeting history (DB-06): concluded sittings that carry an agenda, minutes, an outcome or a
-   * vote, moved out of the live partition once they are older than the held window, and kept for good (rulings §4:
-   * "do not delete history"). No route of its own: authentic only as the exact promoted partition version the
-   * sittings were taken from (and the history version it extends), each of which carries its publisher's own evidence.
-   */
   "meetings-history": {
     id: "meetings-history",
     publisher: "The public bodies whose sittings the live meeting partitions hold, kept from the promoted partition version they were read in",
@@ -583,12 +525,6 @@ export const SOURCE_AUTHORITIES = {
       authorization: "Rulings §4 (history is kept, never deleted; Sean, October 3, 2026) and build plan v6 DB-06",
     },
   },
-  /*
-   * The verified campaign sites the standing runner's campaign-site chain approves (2026-09-25): each row is a site
-   * our own robots-first read verified, audited with measured controls and an independent second signal, and
-   * approved; the writer verifies its vaulted bytes again before it cites them. No route of its own: authentic only
-   * as its pipeline approvals, those vaulted bytes, and the promoted candidate-profiles version it was composed against.
-   */
   "candidate-campaign-site-chain": {
     id: "candidate-campaign-site-chain",
     publisher: "The standing runner, from held and vaulted inputs only: the campaign-site chain's pipeline approvals, the vaulted bytes of each verifying robots-first read, and the promoted candidate-profiles version",
@@ -763,12 +699,6 @@ export const SOURCE_AUTHORITIES = {
     publisher: "City of Mesa City Clerk, on the city's public Legistar portal",
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "OFFICIAL_PLATFORM",
-    // The portal host, and the vendor's document host scoped to Mesa's own
-    // path. robots.txt answered 404 (NO_ROBOTS) on the portal on 2026-08-28 and
-    // 2026-09-25. legistar.granicus.com publishes `Disallow: /`, which kept it
-    // out until the owner decision of 2026-09-25 (robots.txt alone never blocks
-    // a public page); the minutes reader now follows a minutes link there when
-    // the portal carries none (lib/outcomes/minutes-ingest.ts).
     routePrefixes: ["https://mesa.legistar.com/", "https://legistar.granicus.com/mesa/"],
     jurisdictions: ["US-AZ"],
     recordClasses: ["MEETING_OUTCOME"],
@@ -781,11 +711,6 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
-  /*
-   * Outcomes of any Legistar door that holds `outcomes` (DB-22): agenda actions, decisions, roll calls and minutes read
-   * from the body's own Legistar tenant. The hosts are the doors' own (installDoorHosts, like the meeting doors), so a
-   * body added as a door is read with no change here; the per-place contracts above stay until a live read matches.
-   */
   "door-outcomes": {
     id: "door-outcomes",
     publisher: "Public bodies on Legistar, each read on the host its own door names",
@@ -959,7 +884,6 @@ export function manualSourceReceiptStructureIssue(
   return null;
 }
 
-/** Validate the dynamic publisher boundary used only by explicit manual contracts. */
 export function authorityForManualReceipt(
   sourceId: string,
   recordClass: RoutineRecordClass,
@@ -1013,14 +937,7 @@ export function authorityForManualReceipt(
   return { ok: true, contract };
 }
 
-/**
- * DB-16: hosts the doors in use name for meetings, installed by a pass that
- * reads the registry (lib/doors/install.ts). Null, the default and the way
- * back, means only the contract's own routes are registered. A door's host
- * lets a read land anywhere on that host over HTTPS; the rulings §3 rule that
- * a vendor host counts when an official page links to it is checked elsewhere
- * and is unchanged.
- */
+/** Null means only the contract's own routes are registered. A door's host admits any HTTPS path on that host. */
 let doorHosts: ReadonlySet<string> | null = null;
 const DOOR_HOST_SOURCES: ReadonlySet<string> = new Set(["meetings-public-bodies", "door-outcomes"]);
 

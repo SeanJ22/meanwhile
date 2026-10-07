@@ -1,16 +1,8 @@
 /**
- * DB-25: each check looks before it reads.
- *
- * Before a scheduled read, one cheap first look per feed: a conditional request
- * (the stored ETag or Last-Modified) or, when the publisher offers neither, a
- * hash of the listing page or feed bytes. Nothing more is read when nothing
- * changed, which keeps small governments well under ten requests an hour. There
- * is no AI cost anywhere in this file.
- *
- * Probes are keyed by the URL looked at, so one probe covers every body (and
- * every door) behind one feed. `fetchFn` is injected: the runner passes its
- * paced, host-limited fetch, so request pacing and Retry-After handling stay
- * where they already live.
+ * One cheap first look per feed before a scheduled read: a conditional request
+ * (stored ETag or Last-Modified) or, when the publisher offers neither, a hash
+ * of the page bytes. Probes are keyed by URL, so one covers every door behind
+ * a feed. `fetchFn` is injected so pacing and Retry-After stay with the caller.
  */
 
 import { createHash } from "node:crypto";

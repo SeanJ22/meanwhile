@@ -20,8 +20,7 @@ export function tierVars(tier: Tier | null): CSSProperties {
   } as CSSProperties;
 }
 
-/** The accent for a set of tiers: the tier's own when one is active, the
- *  all-tiers accent when more than one is. Mirrors Edia's `active-both`. */
+/** The tier's own accent when one is active, the all-tiers accent when several are. */
 export function tierSetVars(tiers: readonly Tier[]): CSSProperties {
   if (tiers.length === 1) return tierVars(tiers[0]);
   if (tiers.length === 0) return {};

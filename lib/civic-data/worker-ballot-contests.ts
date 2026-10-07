@@ -28,7 +28,6 @@ const text = (value: unknown) => typeof value === "string" ? value : "";
 const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex").slice(0, 24);
 const groupKey = (f: Readonly<Record<string, unknown>>) => canonicalCivicDataJson([words(f.election), words(f.office), words(f.jurisdictionName)]);
 
-/** Replay every source row before letting a contest's full listed set move together. */
 export function workerBallotContestsPackage(input: {
   plan: AutonomousWorkPlan; parser: WorkerResultRecord; captures: readonly WorkerPublicationCapture[];
   registry: RegistryRuntimePrior | null; now: string; results?: readonly WorkerResultRecord[];
@@ -44,9 +43,7 @@ export function workerBallotContestsPackage(input: {
   for (const row of source) groups.set(groupKey(row), [...groups.get(groupKey(row)) ?? [], row]);
   const state = checked.contract.jurisdiction.state.toUpperCase();
   const ballots: Record<string, BallotSet> = {}, heldContests: string[] = [];
-  // Structured delimiters are not visible word boundaries in section3Contest.
-  // Use the exact replayed source cells, preserving names (including commas);
-  // the original capture and its raw hash remain the publication evidence.
+    // Structured delimiters are not visible word boundaries in section3Contest, so use the exact replayed source cells.
   const pageText = ["DELIMITED_TEXT", "JSON_RECORDS", "XML_RECORDS"].includes(checked.contract.extraction.format)
     ? source.map(row => Object.values(row).join("\n")).join("\n") : checked.primary.evidence.text;
   const page = { url: checked.primary.evidence.canonicalUrl, text: pageText,
@@ -90,7 +87,6 @@ export function workerBallotContestsPackage(input: {
     sourceReceipt: checked.sourceReceipt, payload: { kind: "ballot-contests", ballots } }, heldContests };
 }
 
-/** Replace a complete contest atomically; other elections/contests keep their exact saved authority. */
 export function mergeBallotContests(input: ManualProjectionPackage, prior: ManualProjectionPrior | null): ManualProjectionPackage {
   const fresh = input.payload as GenericBallotProjection;
   const previous = prior?.payload as GenericBallotProjection | undefined;
@@ -114,7 +110,6 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     sources: sources.filter((source, at) => sources.findIndex(row => canonicalCivicDataJson(row) === canonicalCivicDataJson(source)) === at) } };
 }
 
-/** A retained parser result reaches the same registered promotion and typed readback as every reader door. */
 export async function publishWorkerBallotContestsResults(input: {
   repos: ControlPlaneRepositories; store: RoutineDataStore; workItemIds: readonly string[]; now: string;
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;

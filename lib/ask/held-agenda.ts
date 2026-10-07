@@ -8,10 +8,9 @@ type HeldAgendaSitting = Pick<AskSitting, "id" | "bodyId" | "title" | "bodyName"
 /** What Ask holds for one sitting's agenda, read exactly as the meeting leaf reads it. */
 export interface SittingAgendaHoldings {
   /**
-   * The documents a reader is shown for the sitting, newest first: one per
-   * DISTINCT content, and no publication-index page once the sitting's own
-   * document is held (`readerAgendaDocuments`, which `/api/agenda` serves).
-   * `documents[0]` is the document every agenda item and portal record cites.
+   * The documents a reader is shown for the sitting, newest first
+   * (`readerAgendaDocuments`, as `/api/agenda` serves). `documents[0]` is the
+   * document every agenda item and portal record cites.
    */
   readonly documents: readonly AgendaDocument[];
   /** One AGENDA_DOCUMENT record per shown document. */
@@ -19,17 +18,9 @@ export interface SittingAgendaHoldings {
 }
 
 /**
- * **ONE READING OF A SITTING'S HELD AGENDA, FOR EVERY PART OF THE ANSWER.**
- * (2026-09-22.)
- *
- * Ask listed every stored fetch as its own record, told the answer model a
- * sitting held 89 agenda documents, and cited agenda items to the newest
- * STORED row — for Tucson Unified sitting 499 that was 88 re-reads of one
- * unchanged page plus the board's site root, the same false revision the
- * meeting card told. The records, the count the model is given and the
- * document every item and portal record cites now all come from this one
- * projection. The stored rows are untouched; each shown document is the
- * newest row carrying its content.
+ * One reading of a sitting's held agenda for every part of the answer: the
+ * records, the count the model is given and the cited document all come from
+ * this projection. Stored rows are untouched.
  */
 export function sittingAgendaHoldings(
   meeting: HeldAgendaSitting,

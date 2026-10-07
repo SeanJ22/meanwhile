@@ -1,63 +1,34 @@
 /**
- * **THE AUTOMATIC CALENDAR-TO-BODY REVIEWER: ONE DISCOVERY WALK'S SAVED
- * EVIDENCE, REVIEWED BY RULE.** (C16 option A, 2026-09-25.)
+ * The automatic calendar-to-body reviewer: reviews one discovery walk's saved
+ * evidence by rule. Its reviewer id names its own code version
+ * (`auto-crosswalk-reviewer@<digest>`), never the owner.
  *
- * Under docs/rulings.md §3, a calendar-to-body record that passes verification
- * on saved official evidence publishes with no per-record owner review ("C16"
- * was an earlier session's label, not Sean's decision: Sean, 2026-10-01). Until now a person or an
- * agent session hand-built each crosswalk package. This is an agent-written
- * reviewer the standing runner applies to every walk that found a calendar; its
- * reviewer id names its own code version (`auto-crosswalk-reviewer@<digest>`),
- * never the owner.
+ * From each ICAL, OFFICIAL_PAGE_EVENTS, DILIGENT or LEGISTAR find it proposes
+ * rows for the government's registered body (`<ocdId>#governing`, or `#board`
+ * for a school district) and for sub-bodies whose names the government prints
+ * in event titles or categories. A proposal is accepted only when every check
+ * passes; otherwise it is held by name, with what was ruled out, what would
+ * settle it and who moves next:
  *
- * From each find of kind ICAL (vendor `ical`), OFFICIAL_PAGE_EVENTS (vendor
- * `official-page-events`), DILIGENT (vendor `diligent`) or LEGISTAR (vendor
- * `legistar-api`) it proposes rows for:
- *
- * - the government's registered body (`<ocdId>#governing`, or `#board` for a
- *   school district), for the events a governing-body name of its kind of
- *   government names ("City Council", "Board of County Commissioners",
- *   "Board of Education"); and
- * - the sub-bodies whose names the government prints in its event titles or
- *   categories ("Housing Commission"), each id derived from that name alone.
- *
- * A proposal is **accepted only when every check passes**; anything else is
- * held by name, with what was ruled out, what would settle it and who moves
- * next, and publishes nothing:
- *
- * 1. the calendar is on the government's attested own host: the walk's chain
- *    from its recorded site reaches it (`attestationFor`), and its host is the
- *    host of the homepage the walk read as the government's;
- * 2. every read it rests on (the calendar, the page naming the body) answered
- *    2xx with no access control in front of it, and the walk read and recorded
- *    that host's robots.txt first. The robots verdict is evidence and never
- *    holds a row (owner decision 2026-09-25: robots.txt alone must not block
- *    acquisition); a login, a 403, a rate limit or a bot challenge still does;
- * 3. the calendar's bytes and the naming page's bytes are held in the vault,
- *    cited by their sha256;
+ * 1. the calendar is on the government's attested own host (`attestationFor`);
+ * 2. every read it rests on answered 2xx with no access control, and the host's
+ *    robots.txt was read and recorded first (the verdict is evidence, never a
+ *    hold; a login, 403, rate limit or bot challenge still holds);
+ * 3. the calendar's and naming page's bytes are held in the vault, cited by sha256;
  * 4. the state's registration pairs the government with a body;
- * 5. a saved official document prints the body's name; the attested calendar
- *    itself counts under rulings §3. When no title names the
- *    governing body, a CivicPlus category feed whose own site files it under
- *    exactly that body's name (the vaulted iCalendar index that linked it,
- *    re-read here) names it instead, and the whole feed is its
- *    (`feedScope: "category"`, 2026-09-26): never a partial name, a generic
- *    category, another body's category or another host;
- * 6. the filter selects at least one event, and no event it selects names a
- *    different body. A longer name that contains this one ("Fair Housing
- *    Commission", "Youth City Council") is excluded by its exact words
- *    (`titleExclude`); an event naming this body and another ("City Council
- *    and Planning Commission Joint Meeting"), or a name that reads as another
- *    government's, holds the row;
- * 7. the calendar's zone is stated or its state lies in one zone, it agrees
- *    with itself and with the state, and no selected event is stamped in UTC
- *    (Holbrook stored 6 PM local as 18:00 UTC: R21);
+ * 5. a saved official document (the attested calendar counts) prints the body's
+ *    name; when no title does, a CivicPlus category feed filed under exactly
+ *    that body's name names it, and the whole feed is its (`feedScope: "category"`);
+ * 6. the filter selects at least one event and none naming a different body; a
+ *    longer containing name is excluded by its exact words (`titleExclude`), and
+ *    an event naming this body and another holds the row;
+ * 7. the calendar's zone is stated or its state lies in one zone, it is
+ *    consistent, and no selected event is stamped in UTC;
  * 8. no two proposals select the same event, and one calendar carries at most
- *    `AUTO_CROSSWALK_ROUTE_CAP` bodies (each is read on its own each pass);
- * 9. the row passes every C16 row check (`crosswalkRowIssue`).
+ *    `AUTO_CROSSWALK_ROUTE_CAP` bodies;
+ * 9. the row passes `crosswalkRowIssue`.
  *
- * Nothing here judges which site is a government's (C15) or reads anything
- * but what it is handed. PURE: no fetch, no clock, no store.
+ * Pure: no fetch, no clock, no store.
  */
 import { createHash } from "node:crypto";
 import { parseDiligentMeetings } from "../../sources/diligent/index.ts";
@@ -303,14 +274,11 @@ export type CategoryBody =
   | { readonly unmatched: string };
 
 /**
- * **WHICH REGISTERED BODY A CALENDAR CATEGORY NAMES, OR WHY NONE.** (2026-09-25, the 85635 expansion.)
- *
- * A category is a body's name only when it is exactly one printed name and nothing else, the rule the review
- * below applies to an event's `CATEGORIES`. A government's registration pairs it with one body, its governing
- * body, so a category names a registered body only when that one name is a governing-body name of this kind of
- * government ("Board of Supervisors" of a county). Nothing is guessed: an office or a department ("Assessor"), a
- * general calendar ("Main Calendar"), a phrase longer than one name ("Clerk of the Board"), another government's
- * body ("Housing Authority") and a sub-body the registration does not record are each left unmatched, by name.
+ * Which registered body a calendar category names, or why none. A category
+ * names a body only when it is exactly one printed name and that name is a
+ * governing-body name of this kind of government. Offices, general calendars,
+ * longer phrases, other governments' bodies and unregistered sub-bodies are
+ * left unmatched, by name.
  */
 export function categoryBodyOf(category: string, jurisdictionId: string): CategoryBody {
   const shown = flat(category);
@@ -464,8 +432,7 @@ function zoneFor(kind: CrosswalkKind, selected: readonly CalendarEvent[], calend
 
 /**
  * The category a CivicPlus site files a feed under, read from the vaulted index page that linked the feed, when it is
- * exactly the name of the government's governing body (`categoryBodyOf`): the naming evidence a feed whose titles
- * never name the body still carries (2026-09-26, the 85635 expansion).
+ * exactly the name of the government's governing body (`categoryBodyOf`).
  */
 interface CategoryScope {
   /** The category as the site prints it. */
@@ -618,7 +585,7 @@ function deadEnd(reason: AutoCrosswalkHoldReason, name: string | null, route: st
     case "ROBOTS_NOT_READ":
       return { ruledOut: "accepting a read made without the host's robots.txt read and recorded first", wouldSettle: "a walk that reads the host's robots.txt first and records it (any verdict), then reads the calendar and the naming page", whoMovesNext: "the free discovery walk, on its next visit" };
     case "PERMISSION_NOT_SHOWN":
-      /* Historical: produced before the owner decision of 2026-09-25, when a robots verdict other than ALLOWED held a row. */
+      /* Produced only by older reviews, when a robots verdict other than ALLOWED held a row. */
       return { ruledOut: "nothing now: a robots.txt verdict no longer holds a row (owner decision 2026-09-25)", wouldSettle: "the next review of a walk of this calendar", whoMovesNext: "the free discovery walk, on its next visit" };
     case "EVIDENCE_NOT_VAULTED":
       return { ruledOut: "citing bytes the vault does not hold", wouldSettle: "a walk that vaults the calendar and the page naming the body", whoMovesNext: "the free discovery walk, on its next visit" };
@@ -653,10 +620,7 @@ function deadEnd(reason: AutoCrosswalkHoldReason, name: string | null, route: st
   }
 }
 
-/**
- * **REVIEW ONE WALK.** Every accepted row, and every hold, for the calendars the walk found. Nothing here reads
- * anything it is not handed.
- */
+/** Review one walk: every accepted row and every hold for the calendars it found. */
 export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrosswalkReview {
   const { attempt } = input.walk;
   const jurisdictionId = attempt.jurisdictionId;
@@ -676,7 +640,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
   const steps = attempt.steps;
   /* A read is one that answered 2xx: a 401, 403 or 429 is an access control and is never read past. */
   const readOk = (s: DiscoveryStep): boolean => s.status !== null && s.status >= 200 && s.status < 300;
-  /* Robots.txt read first and recorded for the host, whatever it said: the verdict is evidence, never a hold (owner decision 2026-09-25). */
+  /* Robots.txt read first and recorded for the host, whatever it said: the verdict is evidence, never a hold. */
   const robotsRead = (host: string): boolean => steps.some((s) => s.purpose === "robots" && httpsHost(s.url) === host);
   /*
    * The category a CivicPlus site files this feed under, re-read from the index page the walk vaulted and that linked

@@ -1,18 +1,8 @@
 "use client";
 
 /**
- * **THE PRODUCTION ENTRY POINT.** Mount this in the Admin route (Codex owns the
- * route; see ACCEPTANCE.md "Integration").
- *
- * The route must also render the shell's existing `LiveRefresh` exactly once:
- * it is the single `/api/admin/live` poller, and this component listens to its
- * `meanwhile:admin-pulse` events (Codex, 2026-09-28 20:18 UTC). Each pulse
- * updates the connection indicator and feeds `LiveSync`, which reads the
- * sections the pulse announces and re-reads them when their revision moves. A
- * reconnect re-reads once. The executor is the live gateway executor. No sample
- * data is imported here.
- *
- * Scope stays in the deployed `?scope=` URL (country, state, Census geography).
+ * The route must also render the shell's `LiveRefresh` exactly once: it is the single `/api/admin/live`
+ * poller, and this component listens to its `meanwhile:admin-pulse` events.
  */
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -58,7 +48,6 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
   const conn = usePulseFeed({ onPulse: (pulse) => sync.onPulse(pulse), onReconnected: () => sync.catchUp() });
   const executor = useMemo(() => liveExecutor({ capabilities: () => sync.capabilities(), stateVersion: () => sync.revision() }), [sync]);
   useEffect(() => () => executor.dispose?.(), [executor]);
-  // The districts and ZIPs The country has listed stay places after the list moves on, so opening one keeps its breadcrumbs.
   const [seen, setSeen] = useState<{ readonly from: SectionState | null; readonly places: readonly Place[] }>({ from: null, places: [] });
   if (seen.from !== snapshot.national) {
     setSeen({ from: snapshot.national, places: rememberPlaces(seen.places, snapshot.national.phase === "live" ? snapshot.national.data as readonly StateRow[] : null) });

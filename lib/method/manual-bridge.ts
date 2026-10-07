@@ -1,16 +1,6 @@
 /**
- * **THE METHOD STORE, AS FIELD-MANUAL ENTRIES.**
- *
- * `data/method/knowledge.json` is frozen: a human had to run a `method:learn-*`
- * script to admit anything, and nothing has since (owner directive 2026-09-19).
- * The field manual is the one store agents read and write live. This module is
- * the one mapping between them, used twice:
- *
- * - the seed folds every route of the frozen store into the manual, and
- * - routing asks the manual which routes are learned, so a route an agent
- *   writes as a `ROUTE` entry graduates without a human step.
- *
- * Pure except `readMethodVersion`, which reads the one manual aggregate: no fs, no clock.
+ * The one mapping between the frozen method store and the live field manual: the seed folds every frozen route into the
+ * manual, and routing asks the manual which routes are learned. Pure except `readMethodVersion`.
  */
 
 import type { FieldManualStore } from "../control-plane/field-manual.ts";

@@ -1,11 +1,4 @@
-/**
- * **THE DOORS PANEL'S READ (DB-09 hook, admin side).**
- *
- * The Door Registry (`lib/doors/registry.ts`) as Admin shows it: how many doors
- * are open, shut and set aside, the shut ones first with why and since when,
- * and the newest door changes from the `door.save` receipts. Plain words: a door
- * is named by what it holds and the website it reads, never by its id.
- */
+/** A door is named by what it holds and the website it reads, never by its id. */
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 
@@ -31,7 +24,6 @@ const HOLD_WORDS: Readonly<Record<string, string>> = {
   meetings: "meetings", votes: "votes", money: "money filings", officials: "officials", agendas: "agendas", minutes: "minutes",
 };
 
-/** A door in words: what it holds, for whom, and the website it reads. */
 export function doorName(door: DoorRecord): string {
   const holds = door.holds.map((h) => HOLD_WORDS[h] ?? h.replace(/-/g, " ")).join(", ") || "records";
   const who = door.meeting?.jurisdiction ? ` for ${door.meeting.jurisdiction}` : "";

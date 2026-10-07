@@ -5,9 +5,6 @@ import type { CodeSlice, ContainerSlice, ScopeSlice, Slice } from "../control-pl
 const TYPES: readonly GeographyType[] = ["congressional_district", "state_leg_upper", "state_leg_lower"];
 export const censusDistrictEdgeVersion = (sourceVersion: string): string => `census-districts/v1:${sourceVersion}`;
 
-/** Serving copy of a proved Census pointer, indexed once by the publisher.
- * Container identity is stored once, not repeated for every overlapping ZIP.
- * The same scope/vintage evidence used by Admin remains on the copy. */
 export interface CensusDistrictEdge {
   readonly formatVersion: 1;
   readonly versionId: string;

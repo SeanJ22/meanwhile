@@ -271,14 +271,8 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
 export const MEMORY_WAIT_REPORT_EVERY_MS = 60_000;
 
 /**
- * A wait for host memory says, once a minute, that it is still waiting.
- * (Returned live failure, 2026-10-05.) The runner ends a research round after
- * ten minutes with no changed output, and a memory wait may run until the
- * round's dispatch deadline, which can be later. A silent wait was ended as a
- * crash, losing the round, before it could end as the deferral the design
- * gives it. Each line names the wait and its minute, so it is new output; the
- * wait itself stays bounded by its own deadline, and quick admissions print
- * nothing.
+ * A wait for host memory reports once a minute that it is still waiting, so the
+ * runner's no-output timeout does not end it as a crash. Quick admissions print nothing.
  */
 export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
   readonly write?: (line: string) => void;
@@ -307,15 +301,10 @@ export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
 }
 
 /**
- * **WHAT THE HOST HOLDS, FOR THE RUNNER'S HEARTBEAT.** (Sean, Oct 6: record
- * host total memory, current RSS and reservations in the runner heartbeat, so
- * River can report how many jobs fit and what more memory would buy.)
- *
- * Read-only: the shared reservation file is read without its lock (writers
- * replace it whole), and nothing is reserved or released here. `fitLeaseWorkers`
- * is the admission rule's own arithmetic (`workerProcessSlots`): free memory
- * less the 0.75 GiB margin and the growth every reservation and parent may
- * still make, over one lease worker's peak.
+ * What the host holds, for the runner's heartbeat. Read-only: the reservation
+ * file is read without its lock (writers replace it whole). `fitLeaseWorkers`
+ * is free memory less the 0.75 GiB margin and reserved growth, over one lease
+ * worker's peak.
  */
 export interface HostMemoryReading {
   readonly at: string;

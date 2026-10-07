@@ -4,29 +4,7 @@ import { ripcordPulled } from "@/lib/ripcords";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 
-/**
- * POST /api/ask/classify — the Level 1 rung of the ask box (6d).
- *
- * The client calls this ONLY when the on-device keyword matcher refused. It
- * answers with one curated topic id, or nothing. It never answers the
- * reader's question: the sentences the reader sees are assembled on the
- * client from the same curated route the keyword path produces, from the
- * same registry and the same sourced people.
- *
- * What this route does not do, deliberately:
- *
- * - **It stores nothing.** No row, no log line, no device key, no IP kept.
- *   The ask box's own logging is unchanged and still runs on the client:
- *   a routed ask logs its topic id, a refusal logs the capped question. A
- *   question classified here logs its topic id like any other routed ask —
- *   the classifier changes which topic is found, never what is recorded.
- * - **It is not an intake path.** The n-stores rule is not in play because
- *   there is no store; there is nothing here to join to anything.
- *
- * Same posture as the other POST routes: same-origin, a per-IP window whose
- * IP lives only in this instance's memory for the window, a body cap, and
- * `ripcord.askClassifier` above all of it.
- */
+/** Called only when the on-device keyword matcher refused. Answers with one curated topic id or nothing, never the reader's question. Stores nothing. */
 
 export const runtime = "nodejs";
 

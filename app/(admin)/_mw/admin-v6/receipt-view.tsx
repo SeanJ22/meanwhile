@@ -1,9 +1,5 @@
 "use client";
 
-/**
- * One instruction and what happened to it. The lifecycle facts are kept apart;
- * a fact nothing has reported shows as "—".
- */
 import type { ReactElement } from "react";
 
 import { useV6 } from "./context.tsx";

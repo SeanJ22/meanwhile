@@ -1,29 +1,22 @@
 /**
- * **READING THE CHANGES FROM GITHUB — server side, cached, never a blank that
- * looks like "nothing changed".** (S11.)
+ * Reads the changes from GitHub, server side and cached.
  *
  * @freshness-reads-here — `observedAt` is the instant of this module's own read of GitHub,
  * stamped when that read is made, never a date carried from earlier work.
  *
- * The repository is private, so an unauthenticated read answers 404. The page
- * needs one read-only token, named `WTP_GITHUB_READ_TOKEN`, with Pull requests,
- * Contents and Metadata read access on this one repository. Without it the page
- * says exactly that and lists nothing. It does not guess.
- *
- * Two kinds of read, both small and cached for `CHANGES_CACHE_SECONDS`:
+ * The repository is private: without `WTP_GITHUB_READ_TOKEN` (Pull requests,
+ * Contents and Metadata read) the page says so and lists nothing.
  *
  * ```
- *   one GraphQL call     the 60 most recently updated pull requests, with their
- *                        check state, in one round trip
- *   per merged PR        is its merge commit inside the live site's commit?
- *                        (`compare/<merge>...<live>`), and when it is not, does
- *                        it touch anything the site serves? (`pulls/<n>/files`
- *                        against `isNonShippingPath`)
+ *   one GraphQL call     the most recently updated pull requests, with check state
+ *   per merged PR        is its merge commit inside the live site's commit
+ *                        (`compare/<merge>...<live>`), and if not, does it touch
+ *                        anything the site serves (`pulls/<n>/files` against
+ *                        `isNonShippingPath`)
  * ```
  *
- * The live site's commit comes from its own `/api/build`. The Admin is the same
- * Netlify site under another name, so its own build stamp is the same fact;
- * locally there is no stamp and the public endpoint answers instead.
+ * The live commit comes from this build's own `/api/build` stamp, else the
+ * public endpoint.
  */
 import { isNonShippingPath } from "../../ops/deploy-paths.ts";
 import { PUBLIC_SITE_ORIGIN } from "../../ops/origins.ts";

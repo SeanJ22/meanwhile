@@ -1,113 +1,23 @@
 import { assertSanctionedRuntimeAuthority } from "../civic-data/runtime-authority.ts";
 
 /**
- * NOTHING BUT PRODUCTION WRITES TO PRODUCTION (2026-08-17, the author's P0).
+ * Nothing but production writes to production. Guards writes, not reads.
  *
- * ## What happened
- *
- * `.env.local` carries the PRODUCTION `DATABASE_URL`. So `pnpm dev` is a
- * production client, and opening a browser at `localhost:3000` wrote an
- * unmarked ORGANIC row into `search_log` — the table the business sells from.
- * That was the third undeclared run in one day and the first from a writer
- * that is not a script, which is why nothing caught it:
- * `tests/browser-construction.test.ts` guards every live browser SCRIPT, and
- * structurally cannot see a human opening a browser.
- *
- * The fix is two independent protections. The first is a separate local
- * database, so local never touches production. The second is that the
- * production write path additionally refuses any request whose environment is
- * not production, because one hand-edited env file must not be able to
- * recreate this.
- *
- * This module is the second protection, the braces. The belt is `.env.local` pointing somewhere else,
- * and the two are deliberately independent: the belt is one line in an
- * untracked file that any session or any hand can change, and a protection
- * that a hand-edit defeats is not a protection. Recreating the defect now
- * takes TWO simultaneous mistakes rather than one.
- *
- * ## Why this guards WRITES and not reads
- *
- * The harm is a row in a sold store, not a SELECT. Guarding reads would break
- * local development of every surface that reads officials, districts and
- * funding, and would buy nothing — a read pollutes nothing and is invisible in
- * the aggregate. So reads are untouched, deliberately, and this is stated
- * rather than left to be inferred from where the calls happen to be.
- *
- * ## The two signals, and why each is the one it is
- *
- * `WTP_DB_ROLE` declares WHAT the connection string points at, because a URL
- * cannot be asked. The production hostname is deliberately NOT hardcoded here:
- * a committed allowlist of production hosts is infrastructure detail in a repo
- * that does not need it, and it would silently fail open the day the host
- * changes — the guard would see an unrecognised host and call it local, which
- * is the wrong direction to fail.
- *
- * **Unset defaults to `production`**, and that default is the whole design.
- * Anything that has not declared itself is ASSUMED to be pointed at the sold
- * store, so a new checkout, a forgotten variable, a fresh CI box and a script
- * nobody thought about are all refused rather than trusted. This is the same
- * conservative reading `lib/db/run-marker.ts` applies to a malformed marker:
- * resolve the ambiguity in the direction that keeps rows OUT of what we sell.
- *
- * `NODE_ENV === "production"` decides whether this is the production runtime,
- * and it is chosen over `NETLIFY`, `CONTEXT` or any other platform variable
- * for one reason: Next sets it itself. `next dev` is always `development` and
- * a built Next server is always `production`, guaranteed by the framework
- * rather than by a deploy setting somebody has to remember. A platform
- * variable that turns out not to be present at function runtime would refuse
- * every production write — which is the failure `run-marker.ts` describes as
- * the one we would discover months later, and this module must not be able to
- * cause it.
- *
- * ## The residual hole, named rather than papered over
- *
- * `NODE_ENV` cannot tell the production deployment apart from a LOCAL
- * production build (`next build && next start`) — both are `production`. So
- * the braces alone do not stop a local production build pointed at the
- * production database. That case is covered by the belt instead, and it is not
- * a current workflow: `pnpm dev` is the dev path and the walks run against
- * either `localhost:3000` or the deployed URL, never a local `next start`.
- *
- * Closing it properly needs a signal only the real deployment has, which means
- * reading what Netlify actually exposes at function runtime rather than
- * assuming it — the build-stamp endpoint is the place that becomes checkable.
- * Recorded as this row's named remainder rather than claimed as done.
+ * `WTP_DB_ROLE` declares what `DATABASE_URL` points at; anything other than an
+ * exact "local" is read as production, so an undeclared environment is refused.
+ * `NODE_ENV === "production"` (set by Next itself) marks the production
+ * runtime. `NODE_ENV` cannot tell a local `next start` from the deployment, so
+ * a local production build pointed at production is not stopped here.
  */
 
 export type DbRole = "production" | "local";
 
 /**
- * THE NAMED SANCTIONS (g13, 2026-08-18).
- *
- * ## Why a third path exists at all
- *
- * The daily intake tripwire purges the limiter table's expired rows — a write
- * the n-stores isolation contract REQUIRES on the limiter's own 48-hour
- * schedule. It runs in GitHub Actions, where `NODE_ENV` and `WTP_DB_ROLE` are
- * both unset, so the guard read it as a non-production runtime pointed at the
- * sold store. It read correctly: that is exactly what it was. The job had
- * never been taught to say who it was, and the guard refused it every day
- * from 2026-08-18.
- *
- * The wrong fix is to widen the guard — teach it that CI is fine, or that a
- * purge is harmless, or that an unset `NODE_ENV` deserves the benefit of the
- * doubt. Each of those reopens the P0 for every writer, to fix one. So the
- * guard is not loosened. Instead a writer may hold a SANCTION: a purpose named
- * out loud, scoped to one operation, that opens nothing else.
- *
- * ## The three conditions, all required
- *
+ * Named sanctions: a non-production writer may write only when all three hold.
  * 1. `WTP_SANCTIONED_WRITE` names a sanction in this table.
- * 2. The operation being attempted is that sanction's operation, exactly. So
- *    a declaration set for the purge cannot open a reaction write, and a
- *    script that is not the sanctioned one is refused while carrying it.
- * 3. The process's `DATABASE_URL` IS `WTP_PRODUCTION_DATABASE_URL_WRITE` —
- *    the one sanctioned write path (`lib/db/write-handle.ts`), asked for by
- *    its own name. A sanction that opened a write to whatever string happened
- *    to be nearest would be a declaration standing in for a destination.
- *
- * Every one of those is proven by planting in `tests/write-guard.test.ts`.
- * A guard whose refusal has never been demonstrated is a comment.
+ * 2. The operation is exactly that sanction's operation.
+ * 3. `DATABASE_URL` is `WTP_PRODUCTION_DATABASE_URL_WRITE`, the one sanctioned
+ *    write path (`lib/db/write-handle.ts`).
  */
 export const SANCTIONED_WRITES: Record<string, string> = {
   /** Standing runner's intake observation, via `purgeExpiredLimiterState`. */
@@ -132,14 +42,13 @@ export interface WriteContext {
   allowed: boolean;
   /** Why, in words, for the error and for the report. */
   reason: string;
-  /** The named sanction this write proceeded under, when it did (g13). */
+  /** The named sanction this write proceeded under, when it did. */
   sanction?: string | null;
 }
 
 /**
  * Thrown when a non-production runtime tries to write to the production
- * database. Its own class so a caller can tell a refusal apart from a database
- * being down — one is a misconfiguration to fix, the other is an outage.
+ * database; its own class so a refusal is distinguishable from an outage.
  */
 export class ProductionWriteRefused extends Error {
   readonly context: WriteContext;
@@ -148,10 +57,6 @@ export class ProductionWriteRefused extends Error {
       `refusing to write ${operation} to the production database from a non-production runtime. ` +
         `${context.reason} ` +
         `Point DATABASE_URL at a local database and set WTP_DB_ROLE=local in .env.local. ` +
-        // g13: the third door, named where the refusal is read. A scheduled job
-        // that legitimately must write used to be told only about .env.local,
-        // which is advice a CI runner cannot take — so the message described a
-        // fix that did not apply to the reader most likely to hit it.
         `If this is a scheduled job that legitimately must write, it needs a NAMED SANCTION: ` +
         `set ${SANCTION_VARIABLE} to a purpose listed in SANCTIONED_WRITES and connect through ` +
         `${SANCTIONED_WRITE_VARIABLE}, the one sanctioned write path. ` +
@@ -164,16 +69,12 @@ export class ProductionWriteRefused extends Error {
 
 type Env = Record<string, string | undefined>;
 
-/**
- * Read the two signals and decide. Pure — the environment is a parameter so
- * the test suite can exercise every combination without mutating the process.
- */
+/** Read the signals and decide. Pure; the environment is a parameter. */
 export function describeWriteContext(
   env: Env = process.env as Env,
   operation?: string,
 ): WriteContext {
-  // Anything that is not an explicit "local" is treated as production. A typo
-  // ("locl", "Local ") therefore fails SAFE rather than opening the gate.
+  // Anything that is not an exact "local" is treated as production.
   const dbRole: DbRole = env.WTP_DB_ROLE === "local" ? "local" : "production";
   const isProductionRuntime = env.NODE_ENV === "production";
 
@@ -195,9 +96,7 @@ export function describeWriteContext(
     };
   }
 
-  // The named sanction (g13). All three conditions or none — a partial match
-  // is refused with the missing condition named, because "refused" without a
-  // reason is how a scheduled job stays broken for a week.
+  // A named sanction needs all three conditions; a partial match names what is missing.
   let refusalDetail: WriteContext | null = null;
   const declared = env[SANCTION_VARIABLE];
   if (declared) {
@@ -258,21 +157,13 @@ export function describeWriteContext(
 }
 
 /**
- * The call every write path makes first. Throws rather than returning false:
- * a refused write is a misconfiguration to surface, and a silent false is the
- * empty success CLAUDE.md forbids — it would read exactly like "there was no
- * database", which is a different and much less alarming fact.
+ * The call every write path makes first. Throws rather than returning false,
+ * so a refusal never reads like "there was no database".
  */
 export function assertWriteAllowed(operation: string, env: Env = process.env as Env): void {
-  // The operation travels INTO the decision (g13), not just into the message:
-  // a named sanction opens exactly one operation, so the guard has to know
-  // which one is being attempted before it can honour anything.
+  // A sanction opens exactly one operation, so the decision needs the operation.
   const context = describeWriteContext(env, operation);
   if (!context.allowed) throw new ProductionWriteRefused(operation, context);
-  // A named non-Next production sanction is necessary but no longer
-  // sufficient. PDC V2 binds it to the clean detached installed runtime, its
-  // immediate admitted parent, and (for source children) one exact contract.
-  // Check the declaration even if NODE_ENV happens to be "production" so a
-  // developer shell cannot bypass the authority graph by changing that flag.
+  // A sanction must also hold runtime authority; checked whatever NODE_ENV says.
   if (env[SANCTION_VARIABLE]) assertSanctionedRuntimeAuthority(operation, env);
 }

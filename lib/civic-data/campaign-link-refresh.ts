@@ -1,8 +1,4 @@
-/** Publication may refresh the evidence for the same campaign site without a
- * human step: another page on the same site (tobinmenard.com/ and
- * tobinmenard.com/about) is the same site, and the newer verified read decides.
- * A different site is an unresolved identity/source conflict, not an automatic
- * replacement. Day-only old evidence cannot establish same-day order. */
+/** Another page of the same site may refresh the evidence, and the newer verified read decides. A different site is an unresolved conflict, never a replacement; day-only old evidence cannot establish same-day order. */
 export function campaignLinkRefreshIssue(
   prior: { readonly url: string; readonly attemptedAt: string } | null | undefined,
   next: { readonly url: string; readonly attemptedAt: string },

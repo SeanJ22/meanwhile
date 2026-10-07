@@ -4,8 +4,6 @@ import { CivicPayloadParts } from "./payload-parts.ts";
 const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
 const serves = `(${division}) OR x->'alsoServesOcdIds' ?| $3::text[] OR x->>'id'=ANY($4::text[])`;
 
-/** Field paths select only collections a place capture consumes. The database
- * follows immutable references and filters records before they cross the wire. */
 function collections(recordClass: string): Record<string, string> {
   if (recordClass === "REGISTRY_RUNTIME_BINDING") return {
     "registry.divisions": division, "registry.bodies": serves,
@@ -84,8 +82,6 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
   for (const scope of scopes) if (versions.has(scope) && rows.find(row => row.scope === scope && row.field === "$version")?.rows !== versions.get(scope)) {
     throw new Error("CIVIC_POINTER_CHANGED_DURING_READ");
   }
-  // Only selected records can still contain references (for example a long
-  // biography). Their existing decoder preserves their exact field values.
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => { throw new Error("READ_ONLY"); },
     read: async hashes => {
       const [found] = await query([{ text: "SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", params: [[...hashes]] }]);

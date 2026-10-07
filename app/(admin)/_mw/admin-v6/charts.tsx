@@ -1,11 +1,5 @@
 "use client";
 
-/**
- * Charts in the v6 palette. Every chart also has: values shown directly, a
- * hover title per mark, a cue that is not color (label, stripe, outline), and a
- * table alternative behind "Show as a table". One series keeps one color over
- * time; different series differ clearly in brightness (blue against amber).
- */
 import type { ChartColor, ItemStatus, Trend } from "./model.ts";
 import { count, ITEM_STATUS_ORDER } from "./model.ts";
 import { cx } from "./ui.tsx";

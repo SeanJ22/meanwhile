@@ -55,4 +55,3 @@ export function governmentBudgetIssue(value: unknown): string | null {
     !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0, 10) !== date)) || row.fiscalStart && row.fiscalEnd && row.fiscalStart > row.fiscalEnd) return "Budget fiscal year dates are invalid.";
   return null;
 }
-

@@ -1,39 +1,7 @@
 /**
- * **A REAL EXECUTOR: it fetches a publisher's own surface and records what it got.**
- * (Session B resume, W3.F, 2026-08-31.)
- *
- * The shadow runner's executor was `async () => ({ ok: true })`. It performed
- * no retrieval, and under the old seam that `ok: true` read as WORKED and
- * cleared the obligation's freshness debt. Eight dispatches were reported as
- * having worked routes that were never opened.
- *
- * This one opens them. It is deliberately the DETERMINISTIC lane — an HTTP GET
- * against a URL the project already holds provenance for — because that is
- * what the meetings obligations need and because a model worker is the wrong
- * first proof: it would put variance between the scheduler and the thing being
- * proven, and the question here is whether the LIFECYCLE runs, not whether a
- * model can find a route.
- *
- * ## The disposition mapping is the whole of the honesty
- *
- * ```
- *   2xx with bytes      INGESTED          an artifact exists, hashed
- *   2xx with no bytes   ABORTED           a zero-byte read is a FAILED read
- *   401 403 429 challenge  BLOCKED_CURRENTLY   a wall, named as a wall
- *   4xx other           BLOCKED_CURRENTLY  still a fact about the route
- *   5xx / transport     ABORTED           their side, or the wire, broke
- * ```
- *
- * **There is no branch that produces `WALKED_NO_YIELD` from a failure**, and
- * that absence is the point. `WALKED_NO_YIELD` asserts that the route was
- * REACHED and the publisher genuinely had nothing — a claim about a
- * government. Nothing this module can observe from a non-2xx response
- * justifies it, so nothing here can write it. A 404 is a fact about a URL; the
- * record it was supposed to serve is still owed.
- *
- * Equally, a zero-byte 200 does not become an empty document. That is the
- * cross-cutting rule — a zero-row extraction is a FAILED extraction — and it
- * is the shape this repository has paid for more than once.
+ * Deterministic executor: an HTTP GET against a held URL, recorded as an artifact. 2xx with bytes is INGESTED;
+ * a zero-byte 2xx or a 5xx/transport failure is ABORTED; any other 4xx or a challenge is BLOCKED_CURRENTLY.
+ * Nothing here writes WALKED_NO_YIELD.
  */
 
 import { createHash } from "node:crypto";
@@ -47,11 +15,7 @@ import { websiteRequestLimit, websiteSizeForObligation, type WebsiteSizeForUrl }
 /** How long one route may take before the attempt is abandoned. */
 export const DEFAULT_FETCH_TIMEOUT_MS = 30_000;
 
-/**
- * Between requests to ONE host. A freshness sweep across a publisher's bodies
- * is dozens of requests at the same origin, and a scheduler that fired them
- * with no spacing is a load test wearing a refresh's name.
- */
+/** Spacing between requests to one host. */
 export const PER_HOST_SPACING_MS = 1_500;
 
 /** The statuses that mean "a wall", as distinct from "their side broke". */
@@ -103,12 +67,7 @@ export const realFetch: FetchOne = async (url, timeoutMs) => {
       signal: controller.signal,
       redirect: "follow",
       headers: {
-        /*
-         * Named, not disguised. The transparency mandate permits persistence
-         * and forbids residential-proxy spoofing; a User-Agent that says who
-         * we are is the opposite of evasion, and it gives an administrator
-         * someone to contact rather than a mystery to block.
-         */
+        /* Named, not disguised: the User-Agent says who we are. */
         "User-Agent":
           "we-the-people-freshness/1.0 (civic records refresh; public data; contact via repository)",
         Accept: "text/html,application/xhtml+xml,application/json,text/calendar,*/*",
@@ -138,22 +97,7 @@ export const realFetch: FetchOne = async (url, timeoutMs) => {
   }
 };
 
-/**
- * **WHAT THIS MODULE ACTUALLY RUNS, on every path.**
- * (Session B closure, W3.E, 2026-08-31.)
- *
- * A deterministic HTTP GET. No model runs here, whatever `chooseExecutor`
- * decided — and it frequently decides otherwise, because nothing in the method
- * store joins a meetings publisher to a graduated route, so every meetings
- * obligation is classified ungraduated and routed to the bounded model lane.
- * The shadow runner then injects THIS walker regardless.
- *
- * That arrangement is fine. What was not fine is that the run record reported
- * the DECISION as the fact: the 2026-08-31 cycles recorded 10
- * BOUNDED_MODEL_WORKER Attempts for work no model touched, which invites a
- * reader of the cost ledger to attribute model spend and model variance to a
- * run that had neither.
- */
+/** What this module runs on every path: a deterministic HTTP GET, whatever `chooseExecutor` decided. */
 const RAN_AS = "DETERMINISTIC" as const;
 
 function cost(outcome: FetchOutcome): AttemptCost {
@@ -165,14 +109,7 @@ function cost(outcome: FetchOutcome): AttemptCost {
   };
 }
 
-/**
- * Build the executor.
- *
- * `urlFor` is injected rather than read from the obligation, because an
- * obligation names a SUBJECT and a route class, not a URL — and a scheduler
- * that carried URLs on its obligations would be a route list with a clock,
- * which is the thing `VENDOR != RECORD` refuses.
- */
+/** Build the executor. `urlFor` is injected because an obligation names a subject and route class, not a URL. */
 export function httpExecutor(input: {
   readonly urlFor: (obligationId: string) => string | null;
   readonly fetchOne?: FetchOne;
@@ -263,13 +200,7 @@ export function httpExecutor(input: {
         disposition: {
           disposition: "BLOCKED_CURRENTLY",
           observation: null,
-          /*
-           * PERMISSION AND TRANSPORT ARE ORTHOGONAL (RULING 182). A 403 is a
-           * refusal of THIS CLIENT and is not a reading of the host's rules, so
-           * permission is CANNOT_TELL and fails safe rather than being written
-           * down as DISALLOWED — which would retire a route on evidence that
-           * never mentioned a rule.
-           */
+          /* Permission and transport are orthogonal: a 403 refuses this client and says nothing about the host's rules, so permission is CANNOT_TELL. */
           permission: "CANNOT_TELL",
           transport: "CHALLENGED",
           note:

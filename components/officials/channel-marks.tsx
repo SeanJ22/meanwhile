@@ -1,16 +1,6 @@
 /**
- * Icon-size marks for the contact pill row (items 2 and 8, 2026-08-16).
- *
- * **The calendar-chooser standard applies** (see `calendar-marks.tsx`): these
- * are simplified, self-drawn glyphs that identify which channel a pill opens.
- * They are NOT the platforms' official brand assets and they do not reproduce
- * anyone's trademark. Shipping another company's official mark is a claim of
- * association this product does not make and has no licence for.
- *
- * Unlike the calendar tiles, these are MONOCHROME and draw in
- * `currentColor` — a pill is a tappable fact in the app's own register, and
- * five brand colours in one row would make the row read as an advertisement
- * rather than as a way to reach an office.
+ * Self-drawn monochrome glyphs (`currentColor`) for the contact pill row; not
+ * the platforms' official marks.
  */
 
 const S = { width: 15, height: 15, viewBox: "0 0 24 24", "aria-hidden": true } as const;

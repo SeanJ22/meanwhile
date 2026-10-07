@@ -1,17 +1,6 @@
 /**
- * **THE UPDATES FEED (BR-24) — what changed, with an honest label.**
- *
- * An update is `{what, when, label, evidence, shownAt}`. It appears on Now once,
- * then drops off. Sources add updates through `addUpdate` (fix-list completions,
- * merged-and-live changes today; fix-map transitions, door reopenings, new kinds
- * found and new owed items from later steps).
- *
- * ```
- *   PROVEN    worked at the proof bar
- *   TESTING   live or done, not yet proven
- *   EXPECTED  something we expect; never shown as a win
- * ```
- * Updates live on the Admin config row, so they survive a reload and a restart.
+ * The updates feed: `{what, when, label, evidence, shownAt}`, shown on Now once. Labels: PROVEN (worked at the
+ * proof bar), TESTING (live, not yet proven), EXPECTED (never shown as a win). Stored on the Admin config row.
  */
 import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } from "./gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
@@ -31,11 +20,11 @@ export interface UpdateRecord {
   readonly after: string | null;
   /** When Now first showed it. Null until then. */
   readonly shownAt: string | null;
-  /** For an update about items added to a place's owed list: what Decline would remove (BR-33). */
+  /** For an update about items added to a place's owed list: what Decline would remove. */
   readonly decline?: OwedDeclinePayload;
   /** Something that went wrong (a proven fix broke). Never shown as a win. */
   readonly setback?: boolean;
-  /** The numbers a win claims, so the claim auditors can recompute them from source records (DP-33). */
+  /** The numbers a win claims, so the claim auditors can recompute them from source records. */
   readonly claim?: UpdateClaim;
 }
 

@@ -1,18 +1,8 @@
 /**
- * DB-32 / DB-34 connection: what a read tells a door about itself.
- *
- * `lib/doors/shut.ts` judges a door from a `DoorEvidence`; this turns what the
- * meeting runner already has into one. A held partition's durable candidate
- * says why its read failed (the failure code and, for a refused address, the
- * `HTTP <status>` the validator wrote). A derived family member's own read says
- * whether it came back with sittings and which status its last response gave.
- * A read that proves nothing about the door itself (a validation hold on bytes
- * that were acquired, or a clean read with no sittings where we do not know the
- * last good count) gives no evidence, and the caller keeps its plain last
- * success / last failure record.
- *
- * Off unless `WTP_DOOR_SHUT=on`, so the old path stays until a live pass has
- * been checked.
+ * Turns what the meeting runner already has into a `DoorEvidence` for
+ * `lib/doors/shut.ts`. A read that proves nothing about the door itself gives
+ * no evidence, and the caller keeps its plain last success / failure record.
+ * Off unless `WTP_DOOR_SHUT=on`.
  */
 
 import { isDoorRecord, type DoorRepository } from "./registry.ts";

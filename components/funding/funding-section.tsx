@@ -22,20 +22,11 @@ import { formatDateMDY } from "@/lib/map/format";
 import { plainMoney } from "@/lib/funding/plain-money";
 
 /**
- * The Funding section (D34) — campaign money in the plain register, on
- * candidate cards and the official large popup. FUNDING is its own evidence
- * tier (CLAUDE.md): visually distinct from statements and votes, and the
- * data never blends with either.
- *
- * What renders is exactly what the FEC publishes: committee totals in
- * sentences, and — while ripcord.fecContributorDisplay is live — the
- * largest contributions listed as filed, cited, never characterized. The
- * reaction controls are the standard reusable control, tagged
- * FUNDING_TOTAL_REACTION / CONTRIBUTOR_REACTION and keyed by FEC candidate
- * id so the same committee gets the same answer everywhere.
- *
- * No directive on this file: rendered by the server ballot page and by the
- * client modal alike.
+ * Campaign money as the FEC publishes it: committee totals in sentences and,
+ * while `ripcord.fecContributorDisplay` is live, the largest contributions as
+ * filed. Kept visually distinct from statements and votes. Reaction targets
+ * are keyed by FEC candidate id. No directive: rendered by the server ballot
+ * page and the client modal alike.
  */
 
 const SECTION_LABEL_CLASS = "t-eyebrow text-muted";
@@ -47,19 +38,9 @@ export function FundingDisplay({
 }: {
   data: FundingDisplayData;
   context: ReactionViewContext | null;
-  /**
-   * Inside a CardSection whose header already says "Campaign money" (6b4):
-   * the block drops its own frame and eyebrow rather than nesting two frames
-   * and saying the same two words twice, one line apart.
-   */
+  /** Inside a CardSection that already names the block: drops its own frame and eyebrow. */
   bare?: boolean;
 }) {
-  // The flagship treatment (design pass, item 2b): the money surface is
-  // the product's most distinctive content and renders like it — the
-  // section carries its own frame, contributor rows read as designed
-  // records, type labels render as pills. Rendering only: the data, the
-  // labels, the mapping table and the organizations-as-filed rule are
-  // untouched.
   return (
     <div
       data-funding-section
@@ -76,12 +57,6 @@ export function FundingDisplay({
           {sentence}
         </p>
       ))}
-      {/* The question, 2026-08-15. The old wording — "Would you
-          vote for someone whose campaign is funded this way?" — asked the
-          reader to convert a feeling about money into a voting intention,
-          which is two questions in one button row. This asks the one the
-          display is actually about, on the five-point scale the server
-          accepts for funding targets and nothing else. */}
       <ReactionControl
         targetType="FUNDING_TOTAL_REACTION"
         targetId={data.fecCandidateId}
@@ -96,45 +71,18 @@ export function FundingDisplay({
             The biggest contributions this campaign&apos;s main committee has
             reported, listed exactly as filed — biggest first, in two groups.
           </p>
-          {/* Item 2 (2026-08-15): two compact columns, each sorted by amount
-              descending. The reader's question is "who has spent the most to
-              get this person elected?", and a single list led by individuals
-              does not answer it. Stacked on a phone, side by side from 640px;
-              the sort and the grouping are identical either way, and both
-              come from lib/funding/grouping.ts so the two funding surfaces
-              cannot drift apart. */}
+          {/* Two columns sorted by amount, grouped by lib/funding/grouping.ts. */}
           <div className="mt-2 grid gap-x-5 gap-y-3 sm:grid-cols-2">
             <ContributorColumn
               title="Committees & organizations"
               groups={data.contributorGroups.organizations}
               secondHop={data.secondHop}
             />
-            {/* RULING 167 — donor rendering is AGGREGATE ONLY. This column
-                used to be a named list of private individuals with the city
-                each of them lives in. Publishing that is lawful and rendering
-                it searchably builds a way to locate people by their politics,
-                which is not a thing this product will build. The money is
-                still here; the people are not. */}
+            {/* Individual donors render as aggregates only, never by name. */}
             <IndividualDonorsPanel
               aggregate={aggregateIndividuals(data.contributorGroups.individuals)}
             />
           </div>
-          {/*
-            ITEM 5 (2026-08-16): ONE ASK PER OBJECT.
-            This prompt was word-for-word the first one, so a reader who had
-            just answered "How do you feel about how this campaign is funded?"
-            after the totals met the identical sentence again under the
-            contributions table. It read as a nag, and an annoyed second
-            answer is worse data than no second answer.
-
-            Two different civic objects deserve two different questions. The
-            totals are how much money and where it came from in aggregate;
-            this table is WHO GAVE IT, by name, as filed. The sensors were
-            already distinct — CONTRIBUTOR_REACTION and
-            FUNDING_TOTAL_REACTION are separate target types, so they write
-            separate rows under the unique index and aggregate under separate
-            keys — and only the wording was pooling them in the reader's head.
-          */}
           <ReactionControl
             targetType="CONTRIBUTOR_REACTION"
             targetId={data.fecCandidateId}
@@ -144,25 +92,6 @@ export function FundingDisplay({
         </div>
       )}
 
-      {/*
-        **BAL-16 (2026-08-25) — COLLAPSED BY DEFAULT, SAME RULE AS BAL-8.**
-
-        Screenshot `17-41-20` shows both of these headings expanded by
-        default in the large battlecard. The rule is the one BAL-8 already
-        applies to the provisions list — *the content is good, the user opens
-        it by choice.*
-
-        Nothing here is removed, reworded or shortened. Every sentence still
-        carries its own denominator and its own LEVEL register, and the
-        summary bar names exactly what is behind it, which is what keeps
-        this on the right side of the reader-friction rule: the defect that
-        rule names is a click that buys the reader nothing, and this one
-        buys a card a reader can get to the bottom of.
-
-        The control is `provisions-summary`, reused rather than
-        reimplemented — RULING 103 is what happens when a treatment gets a
-        second implementation under a second name.
-      */}
       {data.contributorsShown && data.concentrationSentences.length > 0 && (
         <details className="mt-3" data-money-origin>
           <summary className="provisions-summary">
@@ -171,22 +100,7 @@ export function FundingDisplay({
             </span>
             Where that money came from
           </summary>
-          {/*
-            D06 (2026-08-18). Placed AFTER the contributions table on
-            purpose: these are figures ABOUT the rows above, and a summary
-            that appears before the thing it summarises reads as an
-            independent claim.
-
-            LEVEL register throughout — a claim surface about a real
-            person's money. It states shares; it never says whether a share
-            is high, unusual, or a problem, and it never sorts a donor into
-            an industry or a cause.
-
-            Every sentence carries its denominator, built in
-            lib/funding/concentration.ts: these are computed over the
-            LARGEST reported contributions and not the campaign's whole
-            book, and a percentage without that base is a false claim.
-          */}
+          {/* Shares are computed over the largest reported contributions listed above, not the whole book. */}
           {data.concentration && <OriginBars data={data} />}
           <ul className="mt-1 space-y-1.5">
             {data.concentrationSentences.map((sentence) => (
@@ -201,25 +115,6 @@ export function FundingDisplay({
         </details>
       )}
 
-      {/*
-        **BAL-16 (2026-08-25) — COLLAPSED BY DEFAULT, SAME RULE AS BAL-8.**
-
-        Screenshot `17-41-20` shows both of these headings expanded by
-        default in the large battlecard. The rule is the one BAL-8 already
-        applies to the provisions list — *the content is good, the user opens
-        it by choice.*
-
-        Nothing here is removed, reworded or shortened. Every sentence still
-        carries its own denominator and its own LEVEL register, and the
-        summary bar names exactly what is behind it, which is what keeps
-        this on the right side of the reader-friction rule: the defect that
-        rule names is a click that buys the reader nothing, and this one
-        buys a card a reader can get to the bottom of.
-
-        The control is `provisions-summary`, reused rather than
-        reimplemented — RULING 103 is what happens when a treatment gets a
-        second implementation under a second name.
-      */}
       {data.contributorsShown && data.typeConcentrationSentences.length > 0 && (
         <details className="mt-3" data-money-kind>
           <summary className="provisions-summary">
@@ -228,21 +123,7 @@ export function FundingDisplay({
             </span>
             What kind of money it was
           </summary>
-          {/*
-            D06's third feature (2026-08-19, g20): concentration on the
-            FEC's OWN axis, because an
-            industry axis would need a taxonomy no government body
-            publishes — see lib/funding/type-concentration.ts.
-
-            LEVEL register. Every band is a category the contributing
-            committee filed for itself; the app never decides what kind of
-            thing an organization is, and never says whether a category is
-            good, bad or unusual.
-
-            Committee money only, and the first sentence says so: the
-            committee and individual lists were sampled separately, so a
-            band spanning both would be a share of a base we chose.
-          */}
+          {/* Committee money only, by the type each committee filed for itself. */}
           <TypeBars data={data} />
           <ul className="mt-1 space-y-1.5">
             {data.typeConcentrationSentences.map((sentence) => (
@@ -263,11 +144,9 @@ export function FundingDisplay({
 }
 
 /**
- * The overview line and, when the reader projection carries the committee's
- * reported totals as numbers, the three figure tiles (approved reader design,
- * 2026-09-28). Raised, spent and cash on hand are three SEPARATE reported
- * values — cash is never raised minus spent — so each tile shows its own
- * figure or nothing. Without numbers the sentences below carry the totals.
+ * The overview line and, when reported totals are numbers, three figure
+ * tiles. Raised, spent and cash on hand are separate reported values (cash is
+ * never raised minus spent); each tile shows its own figure or nothing.
  */
 type ReportedTotals = {
   receipts: number;
@@ -423,10 +302,8 @@ function TypeBars({ data }: { data: FundingDisplayData }) {
 }
 
 /**
- * One of the two money columns. Renders nothing when its group is empty:
- * the snapshot holds the FEC's top receipts, so an empty committees column
- * means no committee appears among them — and a "none" line there would
- * read as a claim about the whole book rather than about this list.
+ * One of the two money columns. Renders nothing when empty: the snapshot holds
+ * only the FEC's top receipts, so "none" would misstate the whole book.
  */
 function ContributorColumn({
   title,
@@ -460,26 +337,7 @@ function ContributorColumn({
   );
 }
 
-/**
- * The individual money, as a total and a place rollup. (RULING 167.)
- *
- * A state is not an address, a count is not a name, and neither can be walked
- * back to a person. What a reader loses is the ability to read one neighbour's
- * name off a screen; what they keep is every figure that tells them where this
- * campaign's money comes from.
- *
- * Renders nothing when there is no individual money at all — a "none" line
- * here would read as a claim about the whole book rather than about the FEC's
- * top receipts, which is all the snapshot holds.
- */
-/**
- * The bucket for filings that carried no state.
- *
- * A NAMED GAP rather than an inline default: the render-default sweep flags a
- * sentence appearing after `??`, and it is right to — that is the shape that
- * turns an absence into an assertion. Naming it says what it is, which is a
- * fact about the FILING and not about the donor.
- */
+/** The bucket for filings that carried no state. */
 const STATE_NOT_ON_FILING = "State not stated on the filing";
 
 function IndividualDonorsPanel({ aggregate }: { aggregate: IndividualAggregate }) {
@@ -564,14 +422,8 @@ function ContributorRow({
   group: ContributorGroup;
   hop: SecondHopCommittee | null;
 }) {
-  // 2a: the suffix comes from the FEC's entity typing — a candidate's own
-  // money says so, plainly.
   const entityLabel = plainContributorLabel(group);
-  // Item 6 (2026-08-14): where the contributing committee filed its own
-  // typing, the label carries an explainer. `typeLabel` is null for
-  // individuals and for rows the FEC never typed — those keep the plain
-  // suffix with nothing to tap, because there is nothing more we honestly
-  // know.
+  // Null for individuals and rows the FEC never typed; those get no explainer.
   const typeLabel = contributorTypeLabel(group);
   return (
     <li
@@ -593,15 +445,9 @@ function ContributorRow({
         </span>
       </div>
       {typeLabel && (
-        // Expansion, never a new tab (CLAUDE.md's reader gesture).
-        // `<details>` so this stays a server-renderable component and costs
-        // no client JavaScript. The pill is the tap target (item 2b); its
-        // family comes from lib/funding/pill-colors.ts and never the party
-        // palette.
+        // `<details>` keeps this server-renderable; pill colours come from lib/funding/pill-colors.ts, never the party palette.
         <details className="funding-type mt-0.5">
           <summary>
-            {/* The pill drops the leading article ("SUPER PAC"); the prose
-                `label` fragment is untouched and still used inline elsewhere. */}
             <span className={pillClassFor(typeLabel)}>{committeePillLabel(typeLabel)}</span>
           </summary>
           <p className="mt-1 t-caption leading-relaxed text-voice">
@@ -613,11 +459,7 @@ function ContributorRow({
       )}
 
       {group.count > 1 && (
-        // Item 2: repeated filings from one contributor fold into a single
-        // row so the money's order is readable, and the filings are one tap
-        // away, exactly as filed. The summed amount is repeated here on
-        // purpose — the summary states what the expander contains, and its
-        // total is the reader's own check that the parts equal the whole.
+        // Repeated filings from one contributor fold into one row; the summed amount is the reader's check.
         <details className="funding-type mt-0.5" data-collapsed-filings={group.count}>
           <summary>
             <span className="t-caption text-muted">
@@ -653,34 +495,21 @@ function ContributorRow({
 }
 
 /**
- * The second hop (item 3, 2026-08-15).
- *
- * The BUTTON is playful — it is an interaction surface, and its label is
- * "Give me the tea". Everything inside it is a CLAIM
- * surface and reads level: a committee's own filed receipts, its own name
- * over them, the allocation caveat where the filing says it applies, and
- * the committee's FEC page. The fund's donors are never relabelled as this
- * candidate's donors — the heading names the fund, and the note says what a
- * joint fundraiser actually does with the money.
+ * A joint fundraiser's or conduit's own filed receipts. The fund's donors are
+ * never relabelled as this candidate's donors.
  */
 function SecondHopPanel({
   hop,
   toCampaign,
 }: {
   hop: SecondHopCommittee;
-  /** What this committee gave THIS campaign, from the row above it. */
+  /** What this committee gave this campaign, from the row above it. */
   toCampaign?: { amount: number; count: number; noun: string };
 }) {
   const isJointFundraiser = hop.designation === "J";
-  // The same fold as the outer list, for the same reason: ActBlue's books
-  // carry one donor twice at $500,000 and WinRed's carry one three times.
-  // Two identical lines read as two donors.
+  // The same fold as the outer list: one donor can appear several times in these books.
   const folded = groupContributions(hop.topContributions);
-  // RULING 167 applies HERE TOO, and this is the site a fix aimed at the outer
-  // list would have missed (RULING 103 — the sweep predicate is every
-  // duplicate implementation, not only the named instance). A joint
-  // fundraiser's own donors are private individuals in exactly the way this
-  // campaign's are.
+  // Individual donors are private here too; only organizations are listed.
   const rows = [...folded.organizations].sort((a, b) => b.amount - a.amount);
   const hopIndividuals = aggregateIndividuals(folded.individuals);
   return (
@@ -691,12 +520,7 @@ function SecondHopPanel({
         </span>
       </summary>
       <div className="mt-1.5 rounded-md border border-[var(--panel-border)] p-2">
-        {/*
-          Approved reader design: two sets of books, side by side and never
-          added together — what this committee gave the campaign (from the
-          campaign's filing) and what the committee itself reported raising
-          (from the committee's own filing).
-        */}
+        {/* Two sets of books, side by side and never added together. */}
         <div className="mw-books" data-books>
           {toCampaign && (
             <div className="mw-books-panel">
@@ -786,7 +610,7 @@ export function FundingAbsence({ data }: { data: FundingAbsenceData }) {
   );
 }
 
-/** The honest line for state and local races — a stated gap, never silence. */
+/** The state and local races line: a stated gap, never silence. */
 export function StateFundingNote({ note }: { note: string }) {
   return (
     <p className="mt-2 t-caption leading-relaxed text-muted">{note}</p>

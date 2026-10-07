@@ -1,9 +1,5 @@
 "use client";
 
-/**
- * **DOORS — a panel on Workers (DB-09 hook).** How many doors are open, shut and set aside, the shut ones with why
- * and since when, and the newest door changes. A door is named by what it holds and the website it reads.
- */
 import type { DoorsView } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
 
 import { count, mst } from "./model.ts";

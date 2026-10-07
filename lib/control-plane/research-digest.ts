@@ -1,31 +1,10 @@
-/**
- * **THE RESEARCH DIGEST — the lines the runner prints and the rows the admin
- * page renders, from `ResearchMetrics`.** (Work Item 5 and 6, 2026-09-02;
- * plain meanings added for the 9.4.26 evening feedback, ADM-11.)
- *
- * Pure functions over the metrics record. `researchDigestLines` returns the
- * markdown-shaped lines `scripts/pilot-runner.mts` and the cycle script print
- * into the digest; `researchDigestRows` returns typed rows the admin research
- * page's panels render. Neither reads anything; a number that is not on the
- * metrics record does not appear here.
- *
- * Every number is printed WITH its denominator or rule, and an unmeasured
- * value prints as its named gap — never as zero and never as a dash.
- *
- * Every row also carries a MEANING (ADM-11): one plain sentence saying what
- * the number is and why the owner would care, before the rule. His words on
- * "model share, trailing window 9.1%": *"I don't even know what that number
- * represents."* The denominator column stays — it is why the number can be
- * trusted — but it cannot be the only explanation.
- */
-
 import { count as thousands, plainCode, usdCents } from "./plain-words.ts";
 import { PIPELINE_STAGES, type CacheHitRate, type ResearchMetrics } from "./research-metrics.ts";
 
 const pct = (v: number | null): string => (v === null ? "UNMEASURED" : `${(v * 100).toFixed(1)}%`);
 /** The runner's own digest keeps four places; it is a machine record, not a face. */
 const usd = (v: number | null): string => (v === null ? "UNMEASURED" : `$${v.toFixed(4)}`);
-/** What the owner reads: dollars to the cent (ADM-26), with the sentinel preserved for the gap. */
+/** Dollars to the cent, with the sentinel preserved for the gap. */
 const money = (v: number | null | undefined): string => (v === null || v === undefined ? "UNMEASURED" : usdCents(v));
 
 export function researchDigestLines(m: ResearchMetrics): string[] {
@@ -68,15 +47,10 @@ export function researchDigestLines(m: ResearchMetrics): string[] {
   return lines;
 }
 
-/**
- * The cache lines for one role (2026-09-06): the rate with its three counts,
- * uncached input per Attempt, the batch share, and the dollar effect of
- * caching — each with its denominator. A role whose rows all predate the cache
- * fields prints NOT MEASURED and says why.
- */
+/** Each figure with its denominator. A role whose rows predate the cache fields prints the rate row only. */
 export function cacheRoleLines(r: CacheHitRate): string[] {
   const head = `  cache hit rate     ${r.role} `;
-  /* A row computed before 2026-09-06 (a persisted metrics record) carries none of the ledger columns; it prints as it always did. */
+  /* A persisted row without the ledger columns prints as before. */
   if (typeof r.measuredRows !== "number") {
     return [
       `${head}${pct(r.hitRate)} (read ${r.cacheRead} · write ${r.cacheWrite} · uncached ${r.uncachedInput}` +
@@ -107,21 +81,14 @@ export function cacheRoleLines(r: CacheHitRate): string[] {
   ];
 }
 
-/* ------------------------------------------------------------------ rows */
-
 export interface DigestRow {
   readonly label: string;
   readonly value: string;
-  /** How it is counted, in ordinary English. Never a code path (ADM-46). */
+  /** How it is counted, in ordinary English. Never a code path. */
   readonly denominator: string;
-  /** One plain sentence: what this number is, and why it matters (ADM-11). */
+  /** One plain sentence: what this number is, and why it matters. */
   readonly meaning: string;
-  /**
-   * The instrument's own words for the denominator — repository names, file
-   * paths, ruling citations — for the disclosure beneath the row. Present only
-   * where the plain sentence replaced something machine-shaped, so the page
-   * never hides anything it did not also say (ADM-46).
-   */
+  /** The instrument's own words for the denominator, for the disclosure; present only where the plain sentence replaced them. */
   readonly technical?: string;
 }
 
@@ -134,14 +101,8 @@ export interface ResearchDigestRows {
   readonly costPerOutcome: readonly DigestRow[];
 }
 
-/** What each group of measures is FOR, in one sentence, for the section lead. */
 export const METRIC_GROUP_MEANING: Readonly<Record<keyof ResearchDigestRows, string>> = {
-  /*
-   * These say what a group is FOR and never change; `metricGroupLead` says what
-   * it currently reads. The band DEFINITIONS live in the lead and nowhere else,
-   * because ADM-45 asks for them once above the group rather than in the
-   * standing sentence and again on every row.
-   */
+  /* What a group is for, never changing; `metricGroupLead` says what it currently reads. Band definitions live only in the lead. */
   capacity: "Why this matters: it is the ceiling on how much genuinely new ground the fleet can cover in a day, and it moves when the cost of an attempt moves.",
   queueBands: "Why the order matters: only a handful of paid attempts run each day, so which ones go first decides what a reader can see next.",
   funnel: "How far found records have travelled toward being trusted: scouted, then confirmed, verified, audited and approved; beside it, how many scout-found methods were validated and admitted into the toolbox.",
@@ -150,22 +111,7 @@ export const METRIC_GROUP_MEANING: Readonly<Record<keyof ResearchDigestRows, str
   costPerOutcome: "What each useful result has cost: the whole measured scout spend divided by how many results of each kind it produced.",
 };
 
-/**
- * **WHY A STAGE IS AT ZERO, AND WHERE ITS NUMBER COMES FROM, IN ENGLISH.**
- * (ADM-46, 2026-09-06.)
- *
- * The owner likes the funnel and asked for two things it did not do: stop
- * printing code paths as prose — `cp_method_candidates/live lifecycle
- * counts`, `distinct obligations with a non-refused Scout result in
- * repos.scoutResults`, and the promotion-pipeline sentence that named a
- * directory and another lane — and SAY why a zero is a zero.
- *
- * A stage's `source` travels on the persisted metrics record, so a record
- * written by an earlier cycle carries the old machine sentence and always
- * will. These functions therefore derive the plain denominator from the STAGE,
- * which is a stable constant, and keep the record's own sentence as the
- * disclosure line rather than translating a string in place.
- */
+/** Why a stage stands at zero, in plain English. */
 /** Each useful outcome as the thing it is, so the cost row is not "Cost per ROUTE_CANDIDATE". */
 export const OUTCOME_LABEL: Readonly<Record<string, string>> = {
   ROUTE_CANDIDATE: "new way in",
@@ -174,7 +120,6 @@ export const OUTCOME_LABEL: Readonly<Record<string, string>> = {
   GRADUATED_ROUTE: "method added to the toolbox",
 };
 
-/** Each funnel stage as the step it actually is. Unique inside the group: the page keys rows on the label. */
 export const FUNNEL_LABEL: Readonly<Record<string, string>> = {
   SCOUTED: "Found by a hunter",
   CONFIRMED: "Confirmed a second time",
@@ -235,7 +180,6 @@ const FUNNEL_MEANING: Readonly<Record<string, string>> = {
   DETERMINISTIC_REPLAYS: "Times plain code re-walked a route an admitted method taught it — the payoff of the funnel.",
 };
 
-/** Typed rows for the admin research page's panels. One row per number, each with its denominator and meaning. */
 export function researchDigestRows(m: ResearchMetrics): ResearchDigestRows {
   const c = m.capacity;
   const capacity: DigestRow[] = [
@@ -257,12 +201,7 @@ export function researchDigestRows(m: ResearchMetrics): ResearchDigestRows {
   const queueBands: DigestRow[] =
     m.ordering === null
       ? [{ label: "Queue by band", value: "NOT ORDERED", denominator: "no model-class work was due this cycle, or the order was not computed", meaning: "Nothing model-class was due this cycle, so there was no queue to sort." }]
-      : /*
-         * The band DEFINITIONS are stated once, in the group's lead sentence
-         * (ADM-45: "Band definitions ONCE above the group, not repeated per
-         * row"). Every row therefore carries the same counting rule and a
-         * meaning about its own number rather than a third copy of the rule.
-         */
+      : /* Band definitions are stated once, in the group's lead. */
         ([1, 2, 3] as const).map((b) => ({
           label: `Band ${b}`,
           value: String(m.ordering?.bands[b] ?? 0),
@@ -306,7 +245,7 @@ export function researchDigestRows(m: ResearchMetrics): ResearchDigestRows {
     m.cacheByRole.length === 0
       ? [{ label: "Cache hit rate", value: "NOT MEASURED", denominator: "no paid model request was billed in this window, so there is nothing to divide", technical: "no cost-ledger row for a model role in the window", meaning: "No model request has been billed in this window, so there is nothing to compute a hit rate from. That is a missing measurement, not a rate of zero." }]
       : m.cacheByRole.flatMap((r) => {
-          /* A row computed before 2026-09-06 carries no ledger columns: the rate row only, as before. */
+          /* A persisted row without the ledger columns: the rate row only. */
           const metered = typeof r.measuredRows === "number";
           const who = plainCode(r.role);
           const rate: DigestRow = {
@@ -371,27 +310,7 @@ export function researchDigestRows(m: ResearchMetrics): ResearchDigestRows {
   return { capacity, queueBands, funnel, share, cache, costPerOutcome };
 }
 
-/* ------------------------------------------------------------- the leads */
-
-/**
- * **THE ONE USEFUL SENTENCE ABOVE EACH GROUP, COMPUTED FROM THE NUMBERS.**
- * (ADM-45 and ADM-47, 2026-09-06.)
- *
- * `METRIC_GROUP_MEANING` says what a group is FOR and never changes. This says
- * what it CURRENTLY SAYS, from the record, and it is where the owner's two
- * specific instructions live:
- *
- *   capacity   *"At the current average cost, the $25 daily limit buys about
- *              79 Scout attempts at roughly $0.31 each."* — computed from the
- *              record, never a written-in number, and a named gap when the
- *              mean was never measured.
- *   share      *"A zero must say why."* — `0% model work this cycle` is a
- *              different fact when nothing was dispatched than when everything
- *              dispatched ran as plain code, and the sentence says which.
- *
- * A group with nothing computable to say returns null and the page prints only
- * the standing meaning. PURE.
- */
+/** The sentence above each group, computed from the numbers. */
 export function metricGroupLead(m: ResearchMetrics): Readonly<Record<keyof ResearchDigestRows, string | null>> {
   const c = m.capacity;
   const capacity =

@@ -1,31 +1,7 @@
 /**
- * **READING THE ARIZONA 2026 IDENTITY LAYER.**
- * (Session C3, 2026-09-01. RULING 229.)
- *
- * **This module is hand-written. The two files it READS are the generated
- * ones** — `pnpm identity:az` writes them, and they are never hand-edited
- * (RULING 92). The distinction matters to the register guard as much as to a
- * reader: what is generated is the data, not this loader.
- *
- * The two artifacts:
- *
- * - `data/states/az/identity/az-2026-candidate-registry.json` — the statewide canonical
- *   candidate/contest registry.
- * - `data/states/az/identity/az-2026-certified-lineup-reconciliation.json` — the
- *   PRECOMPUTED bridge from each certified-lineup nominee card to the canonical
- *   candidacy the state campaign-money snapshot is keyed on, plus the population
- *   proof.
- *
- * **Nothing here matches names at run time.** The bridge is a lookup table; the
- * matching happened once, in the generator, over the whole population, and the
- * result is committed so a person can read it. A reader surface that did its own
- * name matching would be exactly the fuzzy join this layer exists to replace.
- *
- * The files are read through `process.cwd()`, which the Next tracer cannot see,
- * so `next.config.ts` traces `./data/states/az/identity/*.json` for `/ballot`. Untraced,
- * these reads return nothing, every certified nominee falls back to the
- * unreconciled state, and the money vanishes again — a regression that looks
- * exactly like honest missing data, which is why it is called out here.
+ * Reads the Arizona 2026 candidate registry and the precomputed bridge from
+ * each certified-lineup nominee card to its canonical candidacy. Nothing here
+ * matches names at run time; the bridge is a lookup table.
  */
 
 import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
@@ -35,9 +11,6 @@ import type {
   LineupReconciliation,
   LineupReconciliationRow,
 } from "./types.ts";
-
-export const AZ_REGISTRY_FILE = "az-2026-candidate-registry.json";
-export const AZ_LINEUP_BRIDGE_FILE = "az-2026-certified-lineup-reconciliation.json";
 
 let registryCache: AzIdentityRegistry | null | undefined;
 let bridgeCache: LineupReconciliation | null | undefined;
@@ -66,12 +39,9 @@ function index(): Map<string, LineupReconciliationRow> {
 }
 
 /**
- * Does the bridge speak for this contest at all?
- *
- * `false` is not "unresolved" — it means this contest's cards are not certified
- * Arizona lineup cards, so nothing here applies to them and the caller's
- * existing behaviour stands unchanged. New Hampshire and New Jersey answer
- * `false` here and must keep working exactly as they did.
+ * Whether the bridge speaks for this contest. `false` is not "unresolved": the
+ * contest's cards are not certified Arizona lineup cards, and the caller's own
+ * behaviour stands.
  */
 export function lineupBridgeCovers(contestId: string): boolean {
   if (!contestId.startsWith("ballot-az-")) return false;
@@ -89,12 +59,8 @@ export function lineupRowForCard(cardKey: string): LineupReconciliationRow | nul
 }
 
 /**
- * The canonical candidacy id a nominee card resolves to, or `null`.
- *
- * `null` covers every unresolved outcome deliberately: a caller must not be
- * able to tell *which* kind of unresolved it is from this function and act
- * differently, because there is no action that differs. The row itself carries
- * the reason, for the artifact and for the reader's sentence.
+ * The canonical candidacy id a nominee card resolves to, or `null` for every
+ * unresolved outcome alike; the row itself carries the reason.
  */
 export function reconciledCandidacyIdForCard(cardKey: string): string | null {
   const row = lineupRowForCard(cardKey);
@@ -103,23 +69,13 @@ export function reconciledCandidacyIdForCard(cardKey: string): string | null {
 }
 
 /**
- * **ONE NAME, TWO PARTIES: THE PAIR THE GENERATOR ALREADY FOUND.**
- *
- * A `PARTY_CONFLICT` card is exactly one name match in the card's own contest
- * whose two authorities publish different party labels (Teri Ann Hourihan:
- * the certified canvass says "No Labels", the Secretary of State's filing list
- * says "Arizona Independent Party"). The card still has NO canonical candidacy
- * — `reconciledCandidacyIdForCard` stays `null` and `readerPersonKeys` stays
- * the card alone — because we have not established that the two rows are the
- * same candidacy.
- *
- * What this returns is the committed pair itself, so a reader surface can
- * treat the reader's words ("Teri Ann Hourihan") as naming one subject instead
- * of asking "which one did you mean?" about two rows that exist only because
- * two authorities disagree, and then state BOTH parties with their sources.
- * It never attaches the filing's money or records to the card as its own.
- * `null` unless the row is a PARTY_CONFLICT with exactly one registry
- * identity that names a canonical candidacy.
+ * A `PARTY_CONFLICT` card is one name match in its contest whose two
+ * authorities publish different party labels. The card still has no canonical
+ * candidacy; this returns the pair so a reader surface can treat the name as
+ * one subject and state both parties with their sources. It never attaches the
+ * filing's money or records to the card. `null` unless the row is a
+ * PARTY_CONFLICT with exactly one registry identity naming a canonical
+ * candidacy.
  */
 export interface PartyConflictFiling {
   readonly cardKey: string;

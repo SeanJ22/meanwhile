@@ -8,53 +8,15 @@ import type { ContributionRow } from "./types.ts";
 export { OWN_MONEY_BAND_ID, UNFILED_BAND_ID };
 
 /**
- * **Concentration, on the FEC's own axis** — D06's third named feature,
- * shipped 2026-08-19 (g20).
+ * Concentration on the FEC's own axis: how committee money divides across the
+ * categories contributing committees filed for themselves, through
+ * `contributorBand` in `./labels.ts` (the one ladder). Not industry
+ * concentration: the FEC publishes no industry taxonomy.
  *
- * ## Why this is not "industry concentration", and why that is the honest form
- *
- * D06's own wording asks for industry concentration. g19 declined to ship it
- * and wrote down why: an industry figure needs an employer-to-industry
- * taxonomy, the FEC publishes none, and every taxonomy that exists is an
- * aggregator's proprietary classification — which `CLAUDE.md`'s source rule
- * excludes by name, and which would have this product deciding what kind of
- * thing an organization is. "Organizations render as filed, never
- * characterized" forbids that outright.
- *
- * The design ships concentration **by the FEC's own entity typing**
- * instead. That is what this file computes. Every band below is a
- * category the contributing committee itself filed — `committee_type`,
- * `organization_type`, `designation` — mapped through the single
- * author-reviewable table in `./committee-types.ts` and nowhere else. A
- * trade association's PAC and a super PAC are different facts about who is
- * paying, and the FEC is the one saying which is which. We carry the
- * meaning; we do not generate it.
- *
- * ## Three things this deliberately does not do
- *
- * 1. **It never crosses the committee/individual line.** The rows a reader
- *    is shown are two separately-sampled top-fives (see section 3 of
- *    `./concentration.ts`), so a share computed across both would be a share
- *    of a base we chose. Bands are computed over the COMMITTEE side only,
- *    and every share states that base in the reader's words.
- * 2. **An unfiled typing is a named gap, never "an organization".** A row
- *    whose filing carries no typing at all falls into its own band whose
- *    label says whose gap it is — the filing's. Defaulting it into the
- *    generic organization band would convert an absence into a claim, which
- *    the render-default rule forbids one layer up.
- * 3. **It ranks nothing and nobody.** The bands sort by dollars because that
- *    is the figure; the sort is arithmetic on a published number, and no
- *    candidate, committee or category is scored, graded or recommended.
- *
- * ## The band derivation is NOT here, and that is the point
- *
- * `contributorBand` in `./labels.ts` is the one ladder that answers "what
- * kind of filer is this row" — candidate's own money, then the committee
- * table, then the FEC's entity typing, then the named gap. The first draft
- * of this file called `committeeTypeLabelFor` directly and skipped two of
- * those rungs; the real snapshot caught it, and what it caught was a
- * candidate's own $80,000 rendering as an untyped committee. See that
- * file's header for the full count.
+ * 1. Committee side only: the rows shown are two separately sampled
+ *    top-fives, so a share across both would be a share of a base we chose.
+ * 2. An unfiled typing is a named gap band, never "an organization".
+ * 3. Bands sort by dollars; nothing is scored or ranked.
  */
 
 export interface TypeConcentrationBand {
@@ -76,18 +38,15 @@ export interface TypeConcentration {
   /** The FEC categories this money falls across, dollars descending. */
   bands: TypeConcentrationBand[];
   /**
-   * How many distinct categories the money falls across. This IS the
-   * concentration figure: one band means every committee dollar here came
-   * from one kind of filer, and more bands mean it is spread wider.
+   * How many distinct categories the money falls across: the concentration
+   * figure itself.
    */
   bandCount: number;
 }
 
 /**
- * Compute the bands. Returns null when there is no committee money to
- * compute over — a reader then sees nothing here rather than an empty
- * category list, which would read as "no committee money", a claim about
- * the campaign rather than about our sample.
+ * Compute the bands. Null when there is no committee money to compute over,
+ * so the reader sees nothing rather than an empty list.
  */
 export function typeConcentrationOf(
   rows: ContributionRow[],
@@ -102,10 +61,8 @@ export function typeConcentrationOf(
 
   const byBand = new Map<string, TypeConcentrationBand>();
   for (const row of committees) {
-    // Null only for an individual donor, which cannot occur on this side —
-    // but a `?? gap` here would be a default manufacturing a claim, so it
-    // is skipped instead and the totals below are recomputed from the
-    // bands, never from `committees`.
+    // Null only for an individual, which cannot occur on this side; skipped
+    // rather than defaulted, and totals are recomputed from the bands.
     const band = contributorBand(row);
     if (!band) continue;
     const { id, label } = band;
@@ -125,9 +82,7 @@ export function typeConcentrationOf(
 
   if (bands.length === 0) return null;
 
-  // Stated N equals rendered rows: the base is the sum of what the bands
-  // actually hold, so a skipped row can never leave the headline dollars
-  // larger than the dollars the reader can see listed underneath.
+  // The base is the sum of what the bands hold, so the headline never exceeds the listed dollars.
   return {
     contributionCount: bands.reduce((sum, b) => sum + b.count, 0),
     totalAmount: bands.reduce((sum, b) => sum + b.amount, 0),
@@ -142,15 +97,8 @@ function dollars(amount: number): string {
 }
 
 /**
- * The sentences, in the reader's words.
- *
- * **Level register** — a claim surface about a real person's money. It says
- * what kind of filer the money came from and how much; it never says whether
- * that is a lot, whether it is good, or what it suggests about anybody.
- *
- * The base is stated first, in the sentence before any figure, because every
- * dollar below is a dollar out of it and the base is not the campaign's whole
- * book.
+ * The sentences, in the reader's words. States what kind of filer and how
+ * much, never whether that is a lot or what it suggests.
  */
 export function typeConcentrationSentences(
   concentration: TypeConcentration,

@@ -1,6 +1,5 @@
 "use client";
 
-/** The Queue's rows from the sections already loaded plus the two small readings it needs (shut doors, scheduled orders). Shared by the Queue and Now. */
 import type { DoorsView } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
 import type { ScheduledView } from "@/lib/control-plane/admin-view/v6-scheduled-read.ts";
 

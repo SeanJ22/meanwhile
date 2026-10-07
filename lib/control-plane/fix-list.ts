@@ -1,5 +1,5 @@
 /**
- * **THE FIX LIST (BR-03) — the one list of broken things and their repairs.**
+ * The fix list: the one list of broken things and their repairs.
  *
  * Items live on the Admin config row, written through the gateway or by code
  * through `addFixItem`, so an item added in Admin is still there after a reload

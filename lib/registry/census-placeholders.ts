@@ -1,25 +1,13 @@
 /**
- * **A CENSUS PLACEHOLDER IS GEOGRAPHY, NEVER A GOVERNMENT.** (2026-09-23.)
- *
- * TIGER writes one placeholder per state into each school-district layer: LEA
- * code 99997, named "School District Not Defined" — land that lies inside no
- * district of that kind. The division is a true fact about the place and stays
- * (item 6b, 2026-08-15, relabelled it "No unified school district here"). But
- * no board meets for it, so no body may ever be minted on it: the registry
- * once held `…/school_district:school_district_not_defined#board` for Arizona
- * and New Hampshire, counted as registered bodies everywhere a body is counted.
- *
- * Identified by the Census's own code, not by a label someone may later
- * rewrite; the slug the committed geometry gave it is the fallback for a row
+ * A Census placeholder is geography, never a government. TIGER writes one placeholder per state into
+ * each school-district layer (LEA code 99997, "School District Not Defined"). The division stays, but no
+ * body may be minted on it. Identified by the Census code; the committed slug is the fallback for a row
  * with no GEOID.
  */
 export const CENSUS_PLACEHOLDER_BODY_ISSUE = "BODY_ON_CENSUS_PLACEHOLDER_DIVISION";
 
 /**
- * The Census placeholder names we have actually seen, and what each means in
- * plain words (item 6b, 2026-08-15). Extended only when a new one is SEEN —
- * a mapping for a string nobody has met is a guess. The committed geometry's
- * labels are rewritten by `scripts/normalize-census-placeholders.mts`; a
+ * The Census placeholder names seen so far, in plain words. Extend only when a new one is seen. A
  * registry promotion translates a division's label the same way.
  */
 export const CENSUS_PLACEHOLDER_LABELS: Readonly<Record<string, string>> = {
@@ -33,12 +21,8 @@ export function isCensusPlaceholderDivision(division: { readonly ocdId: string; 
 }
 
 /**
- * The frozen first-seed registry as anything that counts or emits bodies must
- * read it: every division stays (a placeholder is real geography), and no body
- * minted on a Census placeholder survives. `lib/registry/registry.json` itself
- * stays byte-identical, because its bytes are proof-bound; this is the one view
- * of it, shared by the runtime first seed (lib/registry/runtime-read-model.ts)
- * and every tool that reads the file.
+ * A registry as anything that counts or emits bodies must read it: every division stays (a placeholder
+ * is real geography), and no body minted on a Census placeholder survives.
  */
 export function withoutPlaceholderBodies<
   R extends {

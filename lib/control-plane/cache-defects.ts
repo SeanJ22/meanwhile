@@ -1,28 +1,5 @@
 /**
- * **THE CACHE-DEFECT DETECTOR — the stationary-breakpoint signature, and the
- * zero-read one beside it.** (Prompt-caching session, 2026-09-06.)
- *
- * ## What the old detector measured, and what it missed
- *
- * The RULING 244 detector flagged a turn after the first that read ZERO
- * cached tokens. Every measured Scout Attempt of 2026-09-02 passed it, and
- * every one of them re-sent its whole conversation at full price on every
- * turn: the breakpoint sat on the system prompt and never moved, so each turn
- * read the 4,082-token static prefix (never zero) and paid for everything
- * after it uncached. Twenty-three Attempts, 4.4 million uncached tokens, and
- * the detector reported clean — it was measuring the wrong thing.
- *
- * ## The signature this detector reads
- *
- * With a breakpoint that moves forward each turn, turn N's prompt is turn
- * N−1's prompt plus what was appended since (the previous assistant output
- * and the new tool results): everything before the new breakpoint is either
- * read from the cache or written to it, and `input_tokens` — the uncached
- * remainder — is only the tail past the last breakpoint, a few tokens. With a
- * stationary breakpoint the uncached remainder IS the conversation and grows
- * every turn.
- *
- * So, per turn N > 1, with `total = uncached + read + write`:
+ * Cache-defect detector. Per turn N > 1, with `total = uncached + read + write`:
  *
  * ```
  *   appended        = total(N) − total(N−1)
@@ -30,12 +7,12 @@
  *   ZERO_READ  when   read(N) === 0
  * ```
  *
- * The slack of one model minimum (512 tokens on claude-opus-5) is the amount a
- * moving breakpoint can legitimately leave uncached — a prefix increment under
- * the minimum is not cacheable and shows up as uncached input. Both conditions
- * are cache defects; both are counted, each by name, with the denominator.
+ * A moving breakpoint leaves only the tail uncached; a stationary one leaves
+ * the whole growing conversation uncached while still reading the static
+ * prefix. The slack of one model minimum is what a moving breakpoint can
+ * legitimately leave uncached.
  *
- * Pure over the per-turn usage rows. Nothing here reads a clock or a store.
+ * Pure over the per-turn usage rows.
  */
 
 export interface TurnUsage {

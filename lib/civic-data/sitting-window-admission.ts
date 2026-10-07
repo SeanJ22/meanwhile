@@ -1,46 +1,7 @@
 /**
- * **WHEN A MEETING BODY MUST BE READ, AND WHEN THE RUNNER MAY READ IT (C6).**
- *
- * The owner's rule (2026-09-24): every meeting body is read twice daily, and
- * hourly while it has a meeting in the next seven days or one that concluded
- * in the previous seven. "Hourly" is at most 60 minutes between reads and
- * "twice daily" at most 12 hours: those are the deadlines, and nothing here
- * treats a later read as on time.
- *
- * - **Conclusion.** A sitting concludes at its stated end when the publisher
- *   states one (3 of 880 promoted sittings on 2026-09-25, all Tucson Unified).
- *   Otherwise the scheduler counts it concluded up to a day after it starts: of
- *   443 publisher-stated durations read on 2026-09-25 (those 3 and every event
- *   in Flagstaff's catID 49 feed) the longest was 15 h and none reached 24 h.
- *   The day is a scheduling bound only. It is never stored as an end or shown
- *   to a reader, and a stated end, longer or shorter, always replaces it.
- * - **Lead.** An hourly read becomes eligible 25 minutes before its deadline. A
- *   pass starts on the first one-minute tick at least five minutes after the
- *   last one started and after the last one ended, and a pass lasts as long as
- *   its slowest child, reader repairs included. Over 196 production passes
- *   (2026-09-24 5:00 AM to 11:00 PM MST) a pass took 1:34 at the median, 10:58
- *   at p99 and 15:52 at most, so a read eligible just as a long pass began waited
- *   up to about 17 minutes for the next one, and a lane then has its backlog to
- *   clear. The lead covers that wait, up to two earlier reads on the same lane
- *   with the one-minute gaps, and the child's start. A read made due at 55
- *   minutes landed at 60:08-62:05.
- *   A twice-daily read becomes eligible 2 hours early, so the lane reads it in
- *   slots the hourly bodies leave free: twice-daily reads that fell due together
- *   (as after the B3 switch) spread out instead of returning as the same burst
- *   every 12 hours.
- * - **Never published (R20).** A partition with no promotion has no meeting on
- *   record, so it takes the twice-daily deadline after each attempt, not the
- *   contract's one-hour failure retry. Never-published retries had taken 4.2 of
- *   New London's 12 reads an hour.
- * - **A failed read never waits longer than the schedule it failed (2026-09-25).**
- *   A published task's retry after a failed read is its contract's retry, but
- *   never later than its re-read period: within the hour while hourly. A derived
- *   meeting family retries on six hours, so a published family whose read failed
- *   while its bodies were hourly went up to six hours unchecked (the whole-registry
- *   replay in tests/meeting-refresh-schedule-clock.test.ts: 340 minutes).
- *
- * The runner admits on these instants and orders each lane by deadline; Admin
- * shows the same instants.
+ * Every meeting body is read twice daily, and hourly while it has a sitting starting in the next seven days or one
+ * concluded in the previous seven. The day bound for a sitting without a stated end is a scheduling bound only; it is
+ * never stored or shown, and a stated end always replaces it.
  */
 import { and, eq, sql } from "drizzle-orm";
 
@@ -54,21 +15,15 @@ export const SITTING_WINDOW_BASE_ADMISSION_LEAD_MS = 2 * 60 * 60_000;
 /** A sitting without an end time counts as concluded no later than this after it starts. */
 export const SITTING_CONCLUSION_BOUND_MS = 24 * 60 * 60_000;
 
-/** A publisher-stated end, by the sitting's start as published (`startsAt`). */
 export type StatedSittingEnds = ReadonlyMap<string, number>;
 
-/** When a sitting concludes for scheduling: its stated end, or the day bound. */
 export function sittingConclusionMs(start: string, statedEnds?: StatedSittingEnds): number {
   const at = Date.parse(start);
   const stated = statedEnds?.get(start);
   return stated !== undefined && Number.isFinite(stated) && stated >= at ? stated : at + SITTING_CONCLUSION_BOUND_MS;
 }
 
-/**
- * Hot by the owner's rule: a sitting starting within the window ahead, or one
- * that concluded within the window behind (`sittingConclusionMs`).
- * `undefined` means a sitting list could not be read, which reads as hot.
- */
+/** `undefined` means the sitting list could not be read, which reads as hot. */
 export function sittingWindowHotByConclusion(
   schedule: SittingWindowSchedule,
   sittingLists: readonly (readonly string[] | undefined)[],
@@ -84,7 +39,6 @@ export function sittingWindowHotByConclusion(
   return sittingWindowHot(schedule, concluded, nowMs) === true ? true : byStart;
 }
 
-/** Every stated end a MEETING payload carries, by start; the memory twin of `statedSittingEndsRead`. */
 export function meetingPayloadStatedEnds(payload: unknown): Map<string, number> {
   const meetings = payload && typeof payload === "object" ? (payload as { meetings?: unknown }).meetings : undefined;
   const ends = new Map<string, number>();
@@ -98,10 +52,6 @@ export function meetingPayloadStatedEnds(payload: unknown): Map<string, number> 
   return ends;
 }
 
-/**
- * Every promoted MEETING scope's stated ends, as [start, end] pairs built in
- * Postgres: only sittings that state both, and never a payload.
- */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function statedSittingEndsRead(db: any) {
   const payload = civicDataPromotions.payload;
@@ -116,7 +66,6 @@ export function statedSittingEndsRead(db: any) {
     .where(and(eq(civicDataPromotions.recordClass, "MEETING"), sql`${pairs} <> '[]'::jsonb`));
 }
 
-/** The stated ends by scope, from `statedSittingEndsRead` rows. */
 export function statedSittingEndsByScope(rows: readonly { readonly scope: string; readonly pairs: unknown }[]): Map<string, Map<string, number>> {
   const byScope = new Map<string, Map<string, number>>();
   for (const { scope, pairs } of rows) {
@@ -140,23 +89,18 @@ export function sittingWindowRetryMs(
   return published ? retryMs : Math.max(retryMs, schedule.baseEveryMs);
 }
 
-/** What a sitting-window deadline is computed from: store-observed instants, in ms. */
 export interface SittingWindowReads {
   readonly attemptedMs: number;
   /** NaN when no success is proven. */
   readonly succeededMs: number;
-  /** The scope holds a promotion. */
   readonly published: boolean;
 }
 
 export interface SittingWindowObligation {
-  /** The instant by which the next read is owed. */
   readonly deadlineMs: number;
-  /** The instant the runner may admit it. */
   readonly eligibleAtMs: number;
 }
 
-/** The next read a sitting-window task owes, and when the runner may make it. */
 export function sittingWindowObligation(
   schedule: SittingWindowSchedule,
   retryMs: number,

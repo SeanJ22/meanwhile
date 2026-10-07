@@ -1,27 +1,3 @@
-/**
- * **WHAT THE RUNNER IS DOING, IN ONE SENTENCE THE OWNER CAN ACT ON.**
- * (ADM-5, 9.4.26 admin feedback.)
- *
- * The owner turned the runner off on purpose and the page showed him a red
- * "SILENT — last beat 542 minutes ago" with nothing to say whether that was
- * his doing or a failure. Liveness alone cannot answer that: a beat is a fact
- * about the process, and "I stopped it" is a fact about the owner. So this
- * projection reads BOTH — the heartbeat and the owner's standing
- * PAUSE_RUNNER / RESUME_RUNNER intent — and says which one it is:
- *
- *   PAUSED      the owner's latest runner intent is a pause; amber, never red.
- *               The detail says since when, why (his note), and whether the
- *               runner acknowledged it (a HONORED record or a pause-carrying
- *               beat) — an unacknowledged pause is still his pause.
- *   ALIVE       beating within tolerance and not paused.
- *   LATE        past the late threshold, no pause recorded.
- *   SILENT      past the silent threshold, no pause recorded — this is the
- *               state that used to swallow a deliberate stop; it now says
- *               "no pause is recorded" so the owner knows what to do.
- *   NEVER_BEAT  no heartbeat record at all.
- *
- * PURE: heartbeat + intent log + clock in, sentences out. No store, no env.
- */
 import { livenessOf, type HealthLevel, type RunnerHeartbeat, type RunnerLiveness } from "./owner-surface.ts";
 import { readIntents, type ResearchIntent } from "./scheduler/research-policy.ts";
 import { type FleetSafetySnapshot } from "./fleet-safety.ts";
@@ -82,11 +58,8 @@ export type RunnerStandingState = RunnerLiveness | "ACTIVE" | "PAUSED" | "CIRCUI
 export interface RunnerStanding {
   readonly state: RunnerStandingState;
   readonly level: HealthLevel;
-  /** Two or three words: "Paused by you", "Running", "Silent — no pause recorded". */
   readonly headline: string;
-  /** One plain sentence with the facts (since when, why, last beat). */
   readonly detail: string;
-  /** Minutes since the last beat, or null with no beat. */
   readonly sinceBeatMinutes: number | null;
   readonly pause: {
     readonly intentId: string;
@@ -96,7 +69,6 @@ export interface RunnerStanding {
     /** The runner wrote an acknowledgement (HONORED record or a pause-carrying beat). */
     readonly acknowledged: boolean;
   } | null;
-  /** The one control that applies now: record a pause, or resume. */
   readonly control: "PAUSE_RUNNER" | "RESUME_RUNNER";
 }
 

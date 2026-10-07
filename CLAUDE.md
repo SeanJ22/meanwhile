@@ -1,51 +1,37 @@
-# Meanwhile — working guide for Claude
+# Meanwhile — working guide
 
-Adopted September 25, 2026; updated September 29, 2026. This guide applies Sean's standing decisions in `docs/rulings.md`; it does not create a second policy source.
+`docs/rulings.md` is the only rulebook. Only Sean changes it; no agent edits it for any reason. You may suggest that something become a ruling, and Sean decides. This guide only explains how to apply the rulings and creates no policy of its own. How the system works is in the system guide, `docs/how-meanwhile-works.md`.
 
 ## Start with the goal
 
-Read rulings §0 first. It says what Meanwhile is: from any US ZIP code, a resident right away understands everything government does that touches them, in the best civic product anyone has used. Its list shows the intent and is never a ceiling; if a resident would reasonably need something, it is in scope whether or not it is written down, and you are expected to notice it and raise or build it. Every task works backward from that picture, and every plan, change and report is judged by the §0 tests. Work that moves none of them waits.
+Read rulings §0 first: anyone in the United States opens Meanwhile and right away understands everything government does that touches them. Its list shows the intent and is never a ceiling. Work backward from that picture, and judge every plan, change and report by the §0 tests. Work that moves none of them waits.
 
-Then read Sean's current request and the rest of `docs/rulings.md` in the intended working copy. Identify the repository, branch, and revision. Read the current state summary and the technical documents needed for this task; do not reread all history without a specific reason.
+Then read Sean's current request and the rest of `docs/rulings.md`. Identify the repository, branch and revision you are working on. Use the actual code, scripts and configuration for implementation facts.
 
-Apply the decision and approval rules in rulings §8–9. Check previous answers before asking again. Use actual scripts, configuration, and code for implementation facts. Another worktree's old instructions or a historical ACTIVE label does not establish current policy.
+## Keep the objective
 
-## Define and keep the objective
+State the requested result in reader terms: what a resident will see that they could not see before. Work backward through every required connection, find missing dependencies before building, and keep the original objective until it is done, a fatal error stops it, or Sean changes it. A finished screen or a passing component test is not proof that the connected workflow works.
 
-Apply rulings §1. State the requested result in reader terms: what a resident will see that they could not see before. Work backward through every required connection. Identify missing dependencies before building. Keep the original objective until completion, a fatal error derails it, or Sean changes it; ordinary obstacles require further work.
+Do not add a gate, proof step, certification, ledger or scoring system without Sean's approval.
 
-For expansion, trace the new place through work creation, discovery, acquisition, verification, status tracking, public delivery, and what Admin shows about it. A completed screen or successful handoff is not proof that the connected workflow works.
+## Work without waiting
 
-Do not add a gate, proof step, certification, ledger, or scoring system without Sean's approval (§0). When unsure whether something is needed, ask which §0 test it moves.
+Keep a short plan of remaining tasks, one owner each, with real dependencies and no durations. Start ready work now and run independent work in parallel. If only Sean can unblock something, prepare the exact step, ask for that one thing, and keep working on everything else. Leave spending limits and pauses set in Admin as they are.
 
-## Execute without avoidable waiting
+## Acquire, publish, learn
 
-Apply rulings §5. Keep a brief plan with remaining tasks, one owner per task or shared check, and real dependencies; plans carry no durations or dates. Start ready work now, parallelize independent work, and challenge delays across active sessions before repeating their estimates.
+Start every hunt from the place: list what a reader there is owed, fill it from national sources and everything already held, then send agents only for the blanks. Publish each fact as soon as it meets the §3 standard. Keep every blank open as standing work. Save what worked and what failed where later work will read it.
 
-Reuse valid evidence, remove duplicate work, and verify the version that ships. Use direct tests and equivalent measurements to remove idle waits. Keep working through build, testing, repair, promotion, and reader verification. Do not stop at a progress report or use optional polishing to delay delivery.
+## Verify
 
-If an actual owner action is needed, follow rulings §8: prepare the executable step, ask for only that dependency, and continue independent work. Preserve spending controls and pauses Sean sets in Admin.
+Verification means the §3 standard and the §0 tests. Test the whole result, including real connections and first-use speed, and look at the live page for anything visible. Investigate contradictions and anything in our own code that only works on a second try. Never report a skipped or failed check as passing.
 
-## Acquire, publish, and learn
+## How code ships
 
-Apply rulings §2–4 and §7. Start every hunt from the place (§0): list what a reader there is owed, fill it from national sources and from everything already held for that place by any job, then send agents only for the blanks. Give every acquiring agent the APIs, feeds and tools Sean has provided. Search broadly beyond connected feeds and compare findings with the reader.
+Builders push only their own `stream/<lane>` branch, cut from `river`, and open no pull requests (Codex may keep one draft pull request into `river` when publishing a branch needs one). Mark a step finished with a `READY: <step ids>` commit after its focused checks pass. Name new migrations by step id; River numbers them.
 
-Publish each fact as soon as it meets the §3 standard, and let later facts attach as they are verified. Keep every blank open as standing work. Use the exact meeting coverage and refresh requirements in §4; do not copy separate thresholds into this guide. Register both successful sources and transferable methods, learn from failures, and apply those lessons to later work.
+River (`scripts/river.mjs`) folds each lane's exact READY commit into `river-next`, runs `pnpm gates` on the combination, and moves `river` to that tested commit. A couple of times a day it ships `river` to `main` in one `release/<n>` pull request. Data, doors, settings and playbooks go live as data, without a release.
 
-## Verify before declaring completion
+## Report
 
-Apply rulings §6. Verification means the §3 standard and the §0 tests. Test the full result, including actual connections, first-use performance, and the original failing conditions. Inspect visible changes on the live page. Investigate contradictions, and second-attempt successes in our own code; fix causes rather than merely explaining them.
-
-State which evidence shows the result works for readers. Do not report a skipped or failed check as passing. Retire proof steps that protect no reader outcome instead of repeating them. Preserve evidence and working data under §9; use the project's actual data-publishing and software-release processes.
-
-## How code ships: streams → river → main
-
-This describes the release mechanism; it adds no policy. Builders push only their own `stream/<lane>` branch, cut from `river`, and open no pull requests. The one exception is Codex: when publishing a branch needs a PR, keep one draft PR into `river`, never into `main`. After a step's focused checks pass, mark it with a `READY: <step ids>` commit; later WIP commits are not integrated. Name new migrations by step id and leave numbering and the journal to River.
-
-River (`scripts/river.mjs`) folds each lane's exact READY commit into `river-next`, drops `.factory/`, numbers migrations, runs `pnpm gates` once on the combination, and fast-forwards `river` to that tested commit. A couple of times a day it ships `river` to `main` through one `release/<n>` pull request listing its steps. Data never rides the river: facts, doors, settings and playbooks go live as data, without a release.
-
-## Finish and report
-
-Apply rulings §10. Give a verified win its own space and explain why it matters to a reader. Then briefly report what changed, which §0 test it moves, how it was verified, actual delivery status, and any remaining work with its owner and next action. Use plain English. Admin shows times in Eastern time; schedules reported to Sean use Arizona MST.
-
-Update current state and shared learning with the result. Record engineering choices as engineering choices. Change standing rulings only for an actual owner decision, preserving its source and scope. Do not create another rule merely because an existing one applies to this incident.
+Lead with the result in plain English. Give a verified win its own space. Then say what changed, which §0 test it moves, how it was verified, whether it is built, merged, deployed and working for readers, and what remains with its owner and next action. Admin shows Eastern time; report schedules to Sean in Eastern time.

@@ -10,7 +10,6 @@ const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 const MEMO_MS = 20_000;
 let memo: { at: number; runs: readonly AdminV6AgentRun[] } | null = null;
 
-/** Read-only: the most recent agent runs, scoped to the place's state (a ZIP or county sees its state's runs as shared work). */
 export async function v6AgentsGet(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });

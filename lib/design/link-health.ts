@@ -1,4 +1,4 @@
-/** URL identity matches DB-51: fragments do not name a different page. */
+/** URL identity for link health: fragments do not name a different page. */
 export function linkHealthKey(address: string): string | null {
   try {
     const url = new URL(address);

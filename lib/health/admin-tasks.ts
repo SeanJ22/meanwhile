@@ -1,12 +1,8 @@
 /**
- * **FE-37 — Admin itself is reviewed by running Sean's tasks.**
- *
- * `data/health/admin-tasks.json` holds the tasks. A run in Admin (with a minted
- * session, like `scripts/admin-walk.mts`) reports, per task: the words on
- * screen, the taps, the time to the first decision, and each view's first-open
- * time. This module turns those readings into red and green flags in the shape
- * the Scoreboard and the look reviewer already use. It reads nothing and writes
- * nothing; the runner passes the readings in.
+ * Admin is reviewed by running the owner's tasks (`data/health/admin-tasks.json`).
+ * A run reports, per task, the words on screen, the taps, the time to the
+ * first decision and each view's first-open time; this turns those readings
+ * into red and green flags. Pure: the runner passes the readings in.
  */
 import { SPEED_BUDGET_MS } from "./worst-case-speed.ts";
 import { VIEW_IDS, type View } from "../../app/(admin)/_mw/admin-v6/view-param.ts";
@@ -30,11 +26,11 @@ export interface AdminTaskReading {
   readonly taskId: string;
   readonly taps: number;
   readonly words: number | null;
-  /** From opening the start view to the first screen that lets Sean decide. */
+  /** From opening the start view to the first screen that lets the owner decide. */
   readonly decisionMs: number | null;
   /** First open of the start view, from navigation to usable. */
   readonly firstOpenMs: number | null;
-  /** Whether Sean's success condition was reached by the scripted taps. */
+  /** Whether the task's success condition was reached by the scripted taps. */
   readonly reached: boolean;
   readonly screenshot: string | null;
 }

@@ -9,18 +9,9 @@ import { useRecentZips } from "@/hooks/use-recent-zips";
 import { lookupZctaAsync, warmZctaTable } from "@/lib/geo/zcta-table";
 
 /**
- * Changing zip without opening the drawer (item 3, 2026-08-15).
- *
- * The author: changing zips meant opening the sidebar, finding CHANGE, and
- * going through the welcome card — three surfaces to do the single most
- * common thing a reader does twice. This is the fast path: the zip in the
- * floater is a button, and it opens five digits' worth of input with the
- * device's recent zips underneath at one tap each.
- *
- * It is a *fast* path, never a second source of truth: it resolves through
- * the same `lookupZcta` and calls the same `onPick` the welcome card does, so
- * a zip entered here and a zip entered there produce the identical state.
- * The recents are device-local (`use-recent-zips.ts`) and go nowhere.
+ * Changing zip from the floater: five digits of input with the device's recent
+ * zips underneath. Resolves through the same `lookupZcta` and `onPick` as the
+ * welcome card; recents are device-local (`use-recent-zips.ts`).
  */
 export function ZipSwitcher({
   current,
@@ -57,8 +48,7 @@ export function ZipSwitcher({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose, embedded]);
 
-  // P-002 · the switcher is opened deliberately, so warming it on open puts
-  // the fetch entirely inside the time the reader spends choosing.
+  // Warm the lookup on open, while the reader is choosing.
   useEffect(() => {
     warmZctaTable();
   }, []);
@@ -66,15 +56,11 @@ export function ZipSwitcher({
   const take = async (zip: string, origin: LocationOrigin = "TYPED_ZIP") => {
     const found = await lookupZctaAsync(zip);
     if (!found) {
-      // The honest failure, in the reader's terms: we do not hold a centroid
-      // for this zip, which is a fact about our data and not about the zip.
+      // A fact about our data, not about the zip.
       setError(`We don't have a location on file for ${zip}.`);
       return;
     }
-    /* The ACT, never the conclusion it licenses — `stampResidency` on the
-       server decides what a typed zip is worth. The default is TYPED_ZIP
-       because `submit` is the typing path; the recents list below passes
-       UNKNOWN, for the reason the welcome card's recents do. */
+    /* Records what the reader did; the server's `stampResidency` decides what it is worth. */
     recordLocationOrigin(found.zip, origin);
     onPick(found.zip, found.lat, found.lng);
     onClose();
@@ -89,8 +75,7 @@ export function ZipSwitcher({
     void take(zip);
   };
 
-  // The current zip is where the reader already is; offering it as a
-  // destination is a button that does nothing.
+  // The current zip is not offered as a destination.
   const others = recents.filter((z) => z !== current);
 
   return (
@@ -131,7 +116,7 @@ export function ZipSwitcher({
           <p className="zip-switcher-label">{embedded ? "Recent" : "Recent on this device"}</p>
           <div className="zip-switcher-recents">
             {others.map((zip) => (
-              /* Recents mix origins and nothing recorded which. UNKNOWN. */
+              /* Recents mix origins and nothing recorded which. */
               <button key={zip} type="button" onClick={() => void take(zip, "UNKNOWN")}>
                 {zip}
               </button>

@@ -5,15 +5,6 @@ import {
 } from "./registry.ts";
 import { getGeneralLineup } from "./general-lineup.ts";
 
-/**
- * The set of candidate ids a CANDIDATE reaction may target (3d) — every
- * candidacy id in the canonical promoted ballot projections plus every certified-lineup
- * nominee key (`<contestId>|<name>`). The write path checks against this
- * set the way vote reactions check the votes snapshot: the surface only
- * renders the control on real candidates, so anything else is a client bug
- * or a probe, and it fails closed.
- */
-
 async function addCandidateTargets(
   ids: Set<string>,
   { state, source }: RegisteredBallotSource,
@@ -28,11 +19,6 @@ async function addCandidateTargets(
   }
 }
 
-/**
- * Candidate targets from either every authority (bounded engineering census)
- * or the one authority named by an exact submitted target. Runtime write paths
- * always pass the target, so an unrelated state's pointer is never opened.
- */
 export async function getCandidateTargetIds(targetId?: string): Promise<Set<string>> {
   const ids = new Set<string>();
   const exact = targetId === undefined ? null : await readerBallotSourceForTargetId(targetId);

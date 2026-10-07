@@ -66,7 +66,7 @@ export function placeWorkReadings(config: unknown, places: readonly PlaceWorkRea
     if (!previous || Date.parse(target.setAt) >= Date.parse(previous.setAt)) targets.set(key, target as { goalPercent: number; setAt: string });
   }
   const readings = places.map(place => {
-    // The same percent Admin and the national list show, so the runner's order matches what Sean reads.
+    // The same percent Admin and the national list show, so the runner's order matches what the owner reads.
     const percent = placePercent(place.items) ?? 0;
     const target = targets.get(placeKey(place.key));
     return { ...place, percent, target: target && percent < target.goalPercent ? target : null };
@@ -100,7 +100,7 @@ export function clearPlaceReadingMemo(): void { readingMemo.clear(); }
 /** Due admission and process ordering share the owner's target and held facts. */
 export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, zips: readonly string[], now: string) {
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  // What the owner added to, or declined from, what places are owed counts in the order the runner works in (SC-14, BR-33).
+  // What the owner added to, or declined from, what places are owed counts in the order the runner works in.
   setActiveOwedOverlay(row !== null && isAdminConfig(row.value) ? row.value.owedOverlay : null);
   const decisions = expansionScopesOf(row?.value ?? null);
   if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
@@ -249,7 +249,7 @@ export type DispatchWorkTarget =
       readonly ref: string;
       readonly budgetUsd: number;
       readonly scope: PlannedScope;
-      /** MW-002: the questions the owner asked of this Send; recorded on every obligation it reaches. */
+      /** The questions the owner asked of this Send; recorded on every obligation it reaches. */
       readonly questions?: readonly WorkQuestion[];
       /** Only a new Send opts into missing-family discovery; deployment does not expand old instructions. */
       readonly sourceWorkVersion?: 1;
@@ -271,7 +271,7 @@ export type DispatchWorkTarget =
 export interface DurableRowFacts {
   readonly active: boolean;
   readonly materializedBy?: string;
-  /** The Sends already recorded on the row (MW-001), so a Send is recorded on it once. */
+  /** The Sends already recorded on the row, so a Send is recorded on it once. */
   readonly assignments?: readonly ObligationAssignment[];
 }
 
@@ -292,9 +292,8 @@ export interface DispatchWorkWorld {
   /** Registries the promoted bundle carries that the runtime's reader refuses, by lower-case state, with the reason. */
   readonly refusedRegistries?: ReadonlyMap<string, string>;
   /**
-   * CH-04: the information families already live for a government, from the held place capture
-   * (`liveFamiliesByGovernment`). A government listed here gets no paid discovery Scout for that
-   * family; its refresh and comparison stay on their existing routes. Absent means not read.
+   * The information families already live for a government (`liveFamiliesByGovernment`). A government listed here
+   * gets no paid discovery Scout for that family. Absent means not read.
    */
   readonly liveFamilies?: ReadonlyMap<string, ReadonlySet<string>>;
 }
@@ -347,7 +346,7 @@ export function requirementsFor(
   const from = registrySourceOf(reg);
   const bodyId = requirementBodyId(j, meetingPartitions);
   for (const r of jurisdictionRequirements(reg, j, meetingPartitions, discoverMissingFamilies, liveFamilies)) {
-    // CH-22: the same plan the local-jurisdictions provider gives this row, so both writers agree.
+    // The same plan the local-jurisdictions provider gives this row, so both writers agree.
     const autonomousPlan = requirementPlan(j, r, bodyId, discoverMissingFamilies);
     out.push({
       obligation: { ...obligationOf(r.obligationId, "local-jurisdiction", j.id, r.route.routeId, from), ...(autonomousPlan ? { autonomousPlan } : {}) },
@@ -505,7 +504,7 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
     0,
   );
   const unplaced = unplacedRegistered + unplacedCensus;
-  /* RULING 251: a zero where the territory should have named governments is a gap in the data, never an empty geography. */
+  /* A zero where the territory should have named governments is a gap in the data, never an empty geography. */
   if (placed.length === 0 && blocked.length === 0) {
     blocked.push({
       code: "NO_GOVERNMENT_PLACED",
@@ -604,10 +603,9 @@ export interface TargetPlan {
 export type PlannedWrite = PlannedInstance & { readonly target: DispatchWorkTarget };
 
 /**
- * MW-001: a row a Send reached that is already on a clock and does not yet
- * record that Send — a CARRIED row, or one another Send created. It is
- * recorded REORDERED; a created row whose creator is not on record (created
- * before Sends were kept on the row) is left unmarked rather than guessed.
+ * A row a Send reached that is already on a clock and does not yet record that
+ * Send. It is recorded REORDERED; a created row whose creator is not on record
+ * is left unmarked rather than guessed.
  */
 export interface PlannedMark {
   readonly obligationId: string;
@@ -623,7 +621,7 @@ export interface DispatchWorkPlan {
   readonly corpusSize: number;
 }
 
-/** The entry a Send leaves on an obligation it reached (MW-001), with its questions when it asked any (MW-002). */
+/** The entry a Send leaves on an obligation it reached, with its questions when it asked any. */
 export function assignmentEntry(target: DispatchWorkTarget, relation: ObligationAssignment["relation"], at: string): ObligationAssignment {
   const questions = target.kind === "SCOPE" ? (target.questions ?? []) : [];
   return {
@@ -636,10 +634,10 @@ export function assignmentEntry(target: DispatchWorkTarget, relation: Obligation
 }
 
 /**
- * **PLAN.** Classify every requirement instance of every target, and order the
- * missing ones for writing: the owner's DISPATCH targets first (oldest first),
- * then scopes in their run order, each target's governments by id. An instance
- * two targets share is written once, under the first.
+ * Classify every requirement instance of every target, and order the missing
+ * ones for writing: DISPATCH targets first (oldest first), then scopes in run
+ * order, each target's governments by id. A shared instance is written once,
+ * under the first.
  */
 export function planDispatchWork(input: {
   readonly targets: readonly DispatchWorkTarget[];
@@ -674,7 +672,7 @@ export function planDispatchWork(input: {
       instances.push(...requirementsFor(reg, jurisdiction, needOf(reg, jurisdiction.id), world.meetingPartitions,
         target.kind === "SCOPE" && target.sourceWorkVersion === 1, world.liveFamilies?.get(jurisdiction.id)));
     }
-    /* MW-001: does the row already record this Send, in any relation? */
+    /* Does the row already record this Send, in any relation? */
     const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key && a.ref === target.ref);
 
     const planned: PlannedInstance[] = [];
@@ -738,7 +736,7 @@ export interface DispatchWorkApplied {
   /** Planned writes not reached this cycle: the budget or the wall ran out first. */
   readonly deferred: readonly string[];
   readonly stoppedBy: "DONE";
-  /** MW-001: REORDERED records written this cycle. */
+  /** REORDERED records written this cycle. */
   readonly marked?: readonly { readonly obligationId: string; readonly assignmentKey: string }[];
   readonly markFailed?: readonly { readonly obligationId: string; readonly assignmentKey: string; readonly why: string }[];
 
@@ -857,10 +855,7 @@ export interface DispatchWorkTargetReading {
   readonly units: {
     /** Governments placed in the target that the registry gives requirements to. */
     readonly placed: number;
-    /**
-     * Of `placed`, how many were read from their state's registration because the state has no reviewed registry
-     * (2026-09-25); the rest are the reviewed registries'. Absent on a reading taken before it was counted.
-     */
+    /** Of `placed`, how many were read from their state's registration (no reviewed registry). Absent on older readings. */
     readonly fromRegistration?: number;
     /** Governments the target holds that a missing dataset blocks; null when that count cannot be taken. */
     readonly blocked: number | null;
@@ -873,9 +868,8 @@ export interface DispatchWorkTargetReading {
   /** Standing obligations about the target's governments, of every standing obligation this cycle. */
   readonly reordered: { readonly obligations: number; readonly of: number };
   /**
-   * MW-001: this Send recorded on the rows it reached this cycle — created and
-   * reordered — and the REORDERED records still to write. Absent on readings
-   * written before Sends were kept on the row.
+   * This Send recorded on the rows it reached this cycle, and the REORDERED
+   * records still to write. Absent on older readings.
    */
   readonly assignment?: { readonly recordedThisCycle: number; readonly marksDeferred: number; readonly marksFailed: number };
   /** Plain sentences: why created work waits, which budgets bind, what is not built. */
@@ -892,7 +886,7 @@ export interface DispatchWorkReading {
   readonly deferred: number;
   readonly failed: readonly { readonly obligationId: string; readonly why: string }[];
   readonly stoppedBy: DispatchWorkApplied["stoppedBy"] | null;
-  /** MW-001: REORDERED records written this cycle, and those left for the next. Absent on older readings. */
+  /** REORDERED records written this cycle, and those left for the next. Absent on older readings. */
   readonly marked?: number;
   readonly marksDeferred?: number;
   readonly targets: readonly DispatchWorkTargetReading[];
@@ -951,7 +945,7 @@ export function dispatchWorkReading(
     const blocked = blockedCounts.some((n) => n === null) ? null : blockedCounts.reduce<number>((a, n) => a + (n ?? 0), 0);
     const says: string[] = [];
     if (context.writes === "PLAN_ONLY") says.push(`Planned only, nothing written this cycle: ${context.planOnlyWhy ?? "this cycle may not write"}.`);
-    /* Where the governments came from: the reviewed registries, or a state's registration (2026-09-25). */
+    /* Where the governments came from: the reviewed registries, or a state's registration. */
     const fromRegistration = t.units.placed.filter((u) => registrySourceOf(u.reg) === "REGISTRATION");
     if (fromRegistration.length > 0) {
       const versions = [...new Map(fromRegistration.map((u) => [u.reg.stateCode, u.reg.registration?.versionId ?? ""])).entries()]
@@ -1155,7 +1149,7 @@ export function carriedDispatchTargets(prior: unknown, cancelled: ReadonlySet<st
         !cancelled.has(t.ref) &&
         (t.requirements.deferred > 0 ||
           t.requirements.failed > 0 ||
-          /* MW-001: a Send is carried until every row it reached records it. */
+          /* A Send is carried until every row it reached records it. */
           (t.assignment?.marksDeferred ?? 0) > 0 ||
           (t.assignment?.marksFailed ?? 0) > 0),
     )

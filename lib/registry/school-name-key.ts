@@ -1,39 +1,14 @@
 /**
- * **THE SCHOOL-DISTRICT NAME KEY — one normalizer, two callers.**
- *
- * Extracted 2026-08-22 (DEF-2, item 11) from
- * `scripts/build-census-nces-crosswalk.mts`, which is where it was written and
- * where it stays in use. It moved here the moment a SECOND caller needed it:
- * `scripts/classify-school-districts.mts` has to reproduce the crosswalk's own
- * key exactly in order to look a district up in it, and a second copy of a
- * normalizer is a copy that drifts — a key that stops matching does not fail,
- * it just quietly stops finding things, which is the shape this project calls a
- * false zero.
- *
- * The comments below are the crosswalk's own, unchanged. They are the record of
- * why each table entry is there, and every one of them was learned by measuring
- * a match rate.
+ * The school-district name key: one normalizer shared by every caller that joins Census and NCES school
+ * system names, so the keys cannot drift.
  */
 /**
- * THE TWO AGENCIES ABBREVIATE DIFFERENTLY, AND THE FIRST DRAFT OF THIS FILE
- * MATCHED 2,038 OF 13,859 BECAUSE OF IT.
- *
- * Census writes `CASTRO VAL UNIFIED SCH DIST`, `CAYUGA IND SCH DIST 902`,
- * `RAVENA COEYMANS SELKIRK CENTRAL SCH DIST`. CCD writes `Castro Valley
- * Unified`, `ASPERMONT ISD`, `Payson CUSD 1`. Neither is wrong; they are two
- * house styles for the same governments, and a normalizer that does not know
- * both reports a 14% match rate as a finding about the data rather than as a
- * finding about itself. A low match rate that is really a normalizer bug is
- * the same failure as a zero-row join reported as a clean build.
- *
+ * The two agencies abbreviate differently (`CASTRO VAL UNIFIED SCH DIST` vs `Castro Valley Unified`).
  * Three passes, applied identically to both sides:
- *   1. EXPAND word-level abbreviations (SCH -> SCHOOL, UNIF -> UNIFIED).
- *   2. EXPAND acronyms that stand for a whole district type (ISD, CUSD, UFSD).
- *   3. DROP structural tokens — the words that say what KIND of district this
- *      is rather than WHICH one. What survives is the distinctive name.
- *
- * CITY and COUNTY are deliberately NOT dropped: `Albertville City` and
- * `Marshall County` are different governments and both files keep the word.
+ *   1. Expand word-level abbreviations (SCH -> SCHOOL, UNIF -> UNIFIED).
+ *   2. Expand acronyms that stand for a whole district type (ISD, CUSD, UFSD).
+ *   3. Drop structural tokens: the words that say what kind of district this is rather than which one.
+ * CITY and COUNTY are not dropped: `Albertville City` and `Marshall County` are different governments.
  */
 const EXPAND: Record<string, string> = {
   SCH: "SCHOOL",
@@ -63,19 +38,8 @@ const EXPAND: Record<string, string> = {
   CENT: "CENTRAL",
   CTR: "CENTER",
   SUPV: "SUPERVISORY",
-  /*
-   * Added 2026-08-23 (item 2), each from a district the join missed and a
-   * human then found by hand in the Census file:
-   *   DT      "BRIDGEWATER-RARITAN REG SCH DT"        (NJ)
-   *   FT      "FT THOMAS SCHOOL DISTRICT 7"           (AZ)
-   *   COOPERATN "HILLSBORO DEERING COOPERATN SCH DIST" (NH)
-   *   CNTY    "PASSAIC CNTY-MANCHESTER REG SCHOOL DIST" (NJ)
-   *   MTN/MTS "WHITE MTS REGIONAL SCH DIST"           (NH)
-   *   DISRICT "ROUND VALLEY UNIFIED SCHOOL DISRICT 10" — a TYPO in the
-   *           Census of Governments' own file. It is corrected here rather
-   *           than in the committed source, because the source is evidence
-   *           and evidence is not edited.
-   */
+  // Abbreviations seen in the Census file, including a typo in it (DISRICT); corrected here because the
+  // source is evidence and is not edited.
   DT: "DISTRICT",
   FT: "FORT",
   COOPERATN: "COOPERATIVE",
@@ -162,13 +126,8 @@ export type NormalizedName = {
 export function normalizeName(raw: string): NormalizedName {
   const cleaned = raw
     .toUpperCase()
-    /*
-     * **An apostrophe CLOSES rather than splits** (corrected 2026-08-23,
-     * item 2). Replacing it with a space turned `Hart's Location School
-     * District` into `HART S LOCATION` while the Census wrote `HARTS
-     * LOCATION SCHOOL DIST 236`, and the two never met. Every other
-     * punctuation mark here separates two words; an apostrophe is inside one.
-     */
+    // An apostrophe closes rather than splits (`Hart's` -> `HARTS`); every other punctuation mark here
+    // separates two words.
     .replace(/['\u2018\u2019\u02bc]/g, "")
     .replace(/[.,"()/]/g, " ")
     .replace(/&/g, " AND ")

@@ -1,13 +1,8 @@
 /**
- * DB-35: a door is repaired by editing its record.
- *
- * One function does the repair for both callers: Sean from a queue row (the
- * `door.update` gateway action, which replaces the old `use-url` control) and a
- * detective through its tool. It changes only the fields named, sets `readNow`
- * so the next pass reads the door, and never reopens a shut door by itself:
- * a shut door reopens when a read of the new record succeeds (lib/doors/shut.ts),
- * which is what completes its fix item (DB-34). The fix item moves to "being
- * worked on" now. The previous record is returned so Undo can restore it.
+ * A door is repaired by editing its record, for both the `door.update` gateway
+ * action and a detective. Changes only the fields named and sets `readNow`. It
+ * never reopens a shut door by itself: a shut door reopens when a read of the
+ * new record succeeds. The previous record is returned so Undo can restore it.
  */
 
 import { startFixItem } from "../control-plane/fix-list.ts";

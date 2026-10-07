@@ -1,11 +1,5 @@
 "use client";
 
-/**
- * **IS CAPTURE WORKING? — a panel on Now.** Events per day by type, the share sorted into a topic or left free-form, new and returning
- * readers, usage by district (a Florida district beside a New Jersey one), and anything that failed to record. Counts and shares of
- * groups, never a person: no anonymous ID, exact time or trail is in what this reads. A block that could not be read says so; it is
- * never drawn as zero.
- */
 import type { CaptureHealthView } from "@/lib/control-plane/admin-view/v6-capture-health.ts";
 
 import { mst } from "./model.ts";

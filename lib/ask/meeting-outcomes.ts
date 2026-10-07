@@ -6,9 +6,9 @@ import type { LegistarOutcomeRecord } from "../sources/legistar/outcomes.ts";
 import type { PersistedSittingOutcomes } from "../outcomes/types.ts";
 
 /**
- * A record read off a sitting's minutes (NH332) is answered in the minutes'
- * own words: the item as printed, the exact passage, and where the document
- * stands — action minutes are never presented as the approved record.
+ * A record read off a sitting's minutes is answered in the minutes' own words:
+ * the item as printed, the exact passage, and where the document stands.
+ * Action minutes are never presented as the approved record.
  */
 function minutesActionText(rec: LegistarOutcomeRecord, sitting: PersistedSittingOutcomes | undefined): string {
   const section = rec.sectionQuote ? ` (under "${rec.sectionQuote}")` : "";
@@ -24,18 +24,11 @@ export function meetingRecordQuestionClass(question: string): QuestionClass | nu
 }
 
 /**
- * **ONE RECORDED ACTION, AS THE CODE THAT COMPOSES A "WHAT DID THEY DECIDE"
- * ANSWER READS IT.** (2026-09-25, the Ask three-second repair.)
- *
- * Every string field is a verbatim span of the `MEETING_ACTION` record's own
- * `text` — the text is built from these same values just below — so a composed
- * answer can quote them and still quote only what the reader is shown.
- * `lib/ask/sitting-answer.ts` checks that again before it quotes anything. The
- * remaining fields (`disposition`, `divided`, `consent`) only ORDER the actions
- * in a composed answer; none of them is ever printed.
- *
- * This travels beside the records, never inside them: the reader's records
- * and the writer's input are unchanged by it.
+ * One recorded action as a composed "what did they decide" answer reads it.
+ * Every string field is a verbatim span of the `MEETING_ACTION` record's
+ * `text` (re-checked by `lib/ask/sitting-answer.ts`); `disposition`, `divided`
+ * and `consent` only order actions and are never printed. Travels beside the
+ * records, never inside them.
  */
 export interface HeldMeetingAction {
   /** The `MEETING_ACTION` record; minutes-local item IDs also name their sitting. */
@@ -111,13 +104,9 @@ export function meetingOutcomeEvidenceFor(input: { bodyId: string; meetingId: st
       continue;
     }
     /*
-     * The publisher's structured record (Legistar event items). The item's own
-     * title and the publisher's pass/fail word now travel in the record's text
-     * (2026-09-25): before, a reader — and any writer — saw "File ID 20656: The
-     * board's recorded action was "approve"" and could not tell what the item
-     * was or whether the motion carried. The word is carried unmapped; a
-     * record whose two result fields disagree says so; a record with no result
-     * says so in the store's own sentence. None is ever read as a defeat.
+     * The publisher's structured record: the item's title and the pass/fail word
+     * travel in the text, unmapped. Disagreeing result fields say so; no result
+     * says so in the store's sentence. None is read as a defeat.
      */
     const title = titles.get(rec.eventItemId) ?? null;
     const resultState = rec.dispositionConflict ? "CONTRADICTORY" as const : rec.dispositionRaw ? "STATED" as const : "ABSENT" as const;

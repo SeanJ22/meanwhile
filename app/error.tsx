@@ -6,17 +6,6 @@ import { useEffect } from "react";
 
 import { Logo } from "@/components/brand/logo";
 
-/**
- * **The root error boundary (2026-09-14).**
- *
- * The application had no `error.tsx` at any level, so any uncaught render error
- * — on the map, on any route without its own boundary — reached the reader as
- * the browser's own error page. This catches the root segment; `app/ballot/`
- * has its own with the same copy.
- *
- * RULING 254: state what the reader can do, never a verdict on ourselves. The
- * copy is the plain fact and the two ways forward, nothing else.
- */
 export default function RootError({
   error,
   reset,

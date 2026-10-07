@@ -1,46 +1,23 @@
 /**
- * **ANY REGISTERED STATE'S GOVERNMENTS, AS THE JURISDICTION REGISTRY A SEND
- * READS.** (2026-09-25. docs/rulings.md §1: Admin must support adding and
- * tracking any geography through work creation, discovery, acquisition,
- * verification and public delivery.)
- *
- * A Send (Admin → `expansion.scope.set`, or a DISPATCH) creates work only from
- * a jurisdiction registry: who the governments are, and what each one owes
- * (MW-028, `lib/control-plane/expansion/dispatch-work.ts`). The reviewed
- * registries — the promoted operational reference — cover Arizona, New
- * Hampshire and New Jersey, and they WIN wherever they exist. Every other
- * state, DC and territory is registered already: REGISTRATION, one promoted
- * version per state, from the 2022 Census of Governments (TIGER/Line 2023
- * functional status for a territory). This module reads a state's registration
- * as a registry in the shape dispatch-work needs, so a Send in any registered
- * state creates work with no code change:
+ * Any registered state's governments, as the jurisdiction registry a Send reads. A Send creates work
+ * only from a jurisdiction registry (`lib/control-plane/expansion/dispatch-work.ts`). Reviewed registries
+ * win wherever they exist; every other state, DC and territory is read here from its promoted
+ * registration, so a Send in any registered state creates work with no code change:
  *
  * ```
- *   the governments   every government row of the committed reference the
- *                     promoted version was built from (its referenceSha256),
- *                     under the jurisdiction ids the reviewed registries use
+ *   the governments   every government row of the committed reference the promoted version was
+ *                     built from, under the reviewed registries' jurisdiction ids
  *                     (`<st>:<class>:<slug>`, `-<pid6>` on a collision)
- *   the body          the body that version minted for the government, on its
- *                     Census division (`ocdId`, `bodyId`); none where
- *                     registration pairs the government with no division
- *   what it owes      its meetings, and nothing else: no statute routing is
- *                     read for these states, so no campaign-finance, ballot or
- *                     roster route is invented. Where the Census of Governments
- *                     records the government's own web address, the own-site
- *                     MEETINGS source (DISCOVERY_OWED: `own-site-meetings`);
- *                     where it records none — every territory government —
- *                     no source, so the need is `find-own-site`
+ *   the body          the body that version minted for the government on its Census division;
+ *                     none where registration pairs the government with no division
+ *   what it owes      its meetings only. Where the Census records a web address, the own-site
+ *                     MEETINGS source (`own-site-meetings`); where it records none, `find-own-site`
  * ```
  *
- * Only the promoted version is read: it is the one readers use, and the
- * committed reference is read only as the exact input that version names (its
- * `referenceSha256`), never in its place. A state with no promoted registration,
- * a read that fails, or a promoted version built from another reference than
- * the committed one refuses the state by name: nothing is guessed, and its
- * governments are named as blocked rather than created.
+ * Only the promoted version is read. A state with no promoted registration, a failed read, or a version
+ * built from another reference is refused by name and its governments are named as blocked.
  *
- * SERVER-ONLY (node:fs). Only the standing runner and tests read it; a request
- * path never does.
+ * Server-only (node:fs); a request path never reads it.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";

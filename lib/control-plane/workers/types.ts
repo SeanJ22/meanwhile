@@ -5,11 +5,10 @@ import type { CapabilityGrant } from "../capability.ts";
 import type { Attempt } from "../attempt.ts";
 import type { RouteTask } from "../route-task.ts";
 import { assertResearchResult, type AcquirerResult, type DetectiveResult, type AcquirerTaskSpec } from "./research-types.ts";
-import type { EngineeringResult, EngineeringTaskSpec } from "./engineering-types.ts";
 
 /** One wire contract: the broker validates both sides of the disposable worker boundary. */
 export const WORKER_SCHEMA_VERSION = 1 as const;
-export const FLEET_ROLES = ["PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR", "ACQUIRER", "DETECTIVE", "ENGINEERING"] as const;
+export const FLEET_ROLES = ["PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR", "ACQUIRER", "DETECTIVE"] as const;
 export type FleetRole = (typeof FLEET_ROLES)[number];
 export type ComputationRole = "PARSER" | "VALIDATOR" | "ADVERSARIAL_AUDITOR";
 export type FieldValue = string | number | boolean | null;
@@ -278,11 +277,10 @@ export interface AuditorResult {
   readonly reopenRequired: boolean;
 }
 export type FleetInput = ParserWorkerInput | ValidatorWorkerInput | AuditorWorkerInput;
-export type FleetResult = ParserResult | ValidatorResult | AuditorResult | AcquirerResult | DetectiveResult | EngineeringResult;
+export type FleetResult = ParserResult | ValidatorResult | AuditorResult | AcquirerResult | DetectiveResult;
 export interface WorkerTaskSpec {
   readonly auditEscalation?: { readonly previousResultId: string; readonly from: string; readonly to: "sonnet" | "frontier"; readonly reason: string };
   readonly acquisition?: AcquirerTaskSpec;
-  readonly engineering?: EngineeringTaskSpec;
   readonly schemaVersion: 1;
   /** Replay proves reproducibility without advancing or resetting the civic obligation. */
   readonly purpose?: "OBLIGATION" | "DIAGNOSTIC_REPLAY";
@@ -354,15 +352,6 @@ export interface WorkerResultRecord {
 /** Shared runtime assertion, including nested discriminants and count-bearing shapes. */
 export function assertFleetResult(value: unknown, role: FleetRole, attemptId: string): asserts value is FleetResult {
   if (role === "ACQUIRER" || role === "DETECTIVE") { assertResearchResult(value, role, attemptId); return; }
-  if (role === "ENGINEERING") {
-    const r = value as EngineeringResult;
-    if (!r || r.role !== role || r.attemptId !== attemptId || !["CANDIDATE_PROVED", "REFUSED", "PROOF_FAILED"].includes(r.verdict) ||
-      r.adoption !== "INTEGRATION_REVIEW_REQUIRED" || !Array.isArray(r.findings) || !Array.isArray(r.artifactIds) ||
-      !Array.isArray(r.proposedFiles) || !Array.isArray(r.affectedPaths) || !r.reproducibility ||
-      (r.verdict === "CANDIDATE_PROVED" && (r.reproducibility.verdict !== "PASS" || !r.proposedFiles.length || r.reproducibility.isolatedExecutions < 2)) ||
-      r.proposedFiles.some(f => !f.path.startsWith("review-candidates/") || f.path.includes("..") || !f.content || !/^sha256-[a-f0-9]{64}$/.test(f.contentHash))) throw new Error("ENGINEERING_RESULT_SCHEMA_INVALID");
-    return;
-  }
   if (!value || typeof value !== "object") throw new Error("WORKER_RESULT_SCHEMA_INVALID");
   const r = value as Record<string, unknown>;
   if (r.role !== role || r.attemptId !== attemptId) throw new Error("WORKER_RESULT_IDENTITY_MISMATCH");

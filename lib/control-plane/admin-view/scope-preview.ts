@@ -15,8 +15,7 @@ export interface PreviewScopeBody {
   readonly codes: readonly { readonly zcta5: string; readonly partial: boolean }[];
 }
 
-/** The same registry join as the counts, with identity and uncertainty retained.
- * These are indexed bodies, not a claim that undiscovered bodies do not exist. */
+/** Indexed bodies, not a claim that undiscovered bodies do not exist. */
 export function previewScopeBodies(codes: readonly PreviewScopeCode[], index: BodyIndex, watched: readonly BodyView[] = []): PreviewScopeBody[] {
   const watchedById = new Map(watched.map(body => [body.id, body]));
   const bodies = new Map<string, { id: string; name: string; coverageStatus: CoverageStatus; codes: Map<string, boolean> }>();

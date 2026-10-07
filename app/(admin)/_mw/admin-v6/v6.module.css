@@ -1,9 +1,3 @@
-/*
- * Admin v6 command center. Built only on the repository's existing tokens
- * (app/globals.css), so light and dark themes both work. Chart colors are the
- * v6 palette; every chart also carries a text label, a value and a table.
- */
-
 .root {
   --v6-teal: oklch(0.8 0.11 175);
   --v6-blue: oklch(0.64 0.14 255);
@@ -56,8 +50,6 @@
 .skip:focus {
   top: 8px;
 }
-
-/* ---------------------------------------------------------------- header */
 
 .header {
   position: sticky;
@@ -254,8 +246,6 @@
   box-shadow: inset 0 0 0 1px var(--lumen-rim-strong);
 }
 
-/* ------------------------------------------------------------------ page */
-
 .main {
   max-width: 1240px;
   margin: 0 auto;
@@ -390,8 +380,6 @@
   gap: 10px;
 }
 
-/* ---------------------------------------------------------------- pills */
-
 .pill {
   white-space: nowrap;
   display: inline-flex;
@@ -414,8 +402,6 @@
 .textGood { color: var(--pill-teal-text); }
 .textWarn { color: var(--pill-amber-text); }
 .textInfo { color: var(--pill-cyan-text); }
-
-/* -------------------------------------------------------------- buttons */
 
 .btn {
   white-space: nowrap;
@@ -475,8 +461,6 @@
   margin: 0;
 }
 
-/* ------------------------------------------------------------------ tabs */
-
 .tabs {
   display: flex;
   flex-wrap: wrap;
@@ -504,8 +488,6 @@
   margin-left: 6px;
   color: var(--text-dim);
 }
-
-/* ---------------------------------------------------------------- tables */
 
 .tableWrap {
   overflow-x: auto;
@@ -580,8 +562,6 @@
   padding-left: 16px;
 }
 
-/* --------------------------------------------------------- dependency */
-
 .notice {
   border-radius: var(--radius-sm);
   padding: 10px 12px;
@@ -616,8 +596,6 @@
   background: var(--pill-teal-bg);
 }
 
-/* -------------------------------------------------------------- answers */
-
 .answers {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
@@ -646,8 +624,6 @@
   font-weight: 600;
   line-height: 1.15;
 }
-
-/* ---------------------------------------------------------------- map */
 
 .nation {
   display: grid;
@@ -727,8 +703,6 @@
   box-shadow: inset 0 0 0 1px var(--text-dim);
 }
 
-/* -------------------------------------------------------------- stage dots */
-
 .dots {
   display: inline-flex;
   align-items: center;
@@ -752,8 +726,6 @@
 .mark-wrong { background: var(--pill-amber-text); border-radius: 3px; }
 .mark-partial { background: var(--pill-amber-text); border-radius: 3px; opacity: 0.7; }
 .mark-reported { background: var(--pill-teal-bg); border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--pill-teal-text); }
-
-/* ---------------------------------------------------------------- charts */
 
 .bar {
   display: flex;
@@ -880,8 +852,6 @@
   background: repeating-linear-gradient(45deg, var(--pill-cyan-text) 0 3px, transparent 3px 6px);
 }
 
-/* ------------------------------------------------------------- stages list */
-
 .trail {
   list-style: none;
   margin: 0;
@@ -913,8 +883,6 @@
   color: var(--pill-teal-text);
   box-shadow: none;
 }
-
-/* ---------------------------------------------------------------- dialog */
 
 .overlay {
   position: fixed;
@@ -989,8 +957,6 @@
   max-width: min(420px, calc(100vw - 32px));
 }
 
-/* ---------------------------------------------------------------- phone */
-
 @media (max-width: 860px) {
   .nation {
     grid-template-columns: 1fr;
@@ -1044,28 +1010,9 @@
   }
 }
 
-/* Existing ancillary Admin elements, namespaced to preserve their appearance. */
 /*
- * THE MEANWHILE ADMIN SHELL — the design package's one look, transcribed.
- *
- * Source of truth: the design package's prototype, "Meanwhile Admin
- * (standalone).html" (21 September 2026). Every value below was read out of
- * that prototype's own inline styles and its resolved design tokens, so a
- * screen here and the prototype side by side agree on size, weight, colour,
- * spacing and radius.
- *
- * The shell is always dark, as the design is: the tokens are declared on the
- * root class with the design's values rather than borrowed from the reader's
- * theme, so a reader's light-theme choice never repaints the control centre.
- * The values are the reader palette's own dark values (app/globals.css), and
- * the three the design adds (the lit control surface, the subtle rule and the
- * danger rim) come from the design system the prototype was drawn in.
- *
- * Two quirks of the prototype are reproduced on purpose, because the
- * screenshots the owner approved show them: a card has no border (its
- * border declaration named a box-shadow token and dropped out, so a card is
- * fill plus shadow), and a secondary button is borderless for the same
- * reason.
+ * The shell is always dark: tokens are declared on the root class, so a reader's light theme never repaints it.
+ * A card has no border (fill plus shadow) and a secondary button is borderless, as in the approved design.
  */
 
 /*
@@ -1129,12 +1076,6 @@
   text-decoration: none;
 }
 
-/*
- * THE HEADER FRAME on a page the design does not draw (research, sources,
- * release review and the rest). It sits at the top of that page's own
- * centred column and bleeds to the viewport edges, so the header reads the
- * same on every page while the page below keeps its content.
- */
 .legacyFrame {
   background: var(--mw-bg);
   color: var(--mw-text);
@@ -1153,8 +1094,6 @@
 .legacyFrame button {
   font-family: var(--mw-sans);
 }
-
-/* ================================================================ header */
 
 .legacyHeader {
   display: flex;
@@ -1279,8 +1218,6 @@
   color: var(--mw-muted);
 }
 
-/* ================================================================ tabs */
-
 .legacyTabs {
   display: flex;
   gap: 4px;
@@ -1302,8 +1239,6 @@
   color: var(--mw-text);
 }
 
-/* ================================================================ context strip */
-
 .legacyStrip {
   display: flex;
   gap: 10px;
@@ -1320,8 +1255,6 @@
 .legacyStripWarn {
   color: var(--mw-gold-text);
 }
-
-/* ================================================================ page */
 
 .legacyContainer {
   max-width: 1160px;
@@ -1479,8 +1412,6 @@
   margin-left: auto;
 }
 
-/* ================================================================ type */
-
 .legacyH2Page {
   font: 600 24px var(--mw-sans);
   margin: 0 0 6px;
@@ -1629,8 +1560,6 @@
   color: var(--mw-danger);
 }
 
-/* ================================================================ figures */
-
 .legacyFigGrid {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
@@ -1706,8 +1635,6 @@
   color: var(--mw-link);
 }
 
-/* ================================================================ pills */
-
 .legacyPill {
   display: inline-block;
   border-radius: 999px;
@@ -1755,8 +1682,6 @@
 .legacyDashLarge {
   padding: 5px 11px;
 }
-
-/* ================================================================ controls */
 
 .legacyBtnPrimary {
   display: inline-block;
@@ -1958,8 +1883,6 @@
   outline-offset: 2px;
 }
 
-/* ================================================================ inset rows */
-
 .legacyInset {
   background: var(--mw-control);
   border: 1px solid var(--mw-rule);
@@ -2024,8 +1947,6 @@
   text-align: right;
 }
 
-/* ================================================================ six cells */
-
 .legacyCells {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2054,8 +1975,6 @@
   color: var(--mw-muted);
   margin-top: 6px;
 }
-
-/* ================================================================ dead ends, receipts */
 
 .legacyDeadEnd {
   margin-top: 24px;
@@ -2116,8 +2035,6 @@
   padding: 14px 16px;
 }
 
-/* ================================================================ tables */
-
 .legacyTable {
   display: grid;
   min-width: 720px;
@@ -2154,8 +2071,6 @@
   background: rgba(79, 201, 232, 0.06);
 }
 
-/* ================================================================ tally */
-
 .legacyTally {
   display: flex;
   gap: 24px;
@@ -2173,8 +2088,6 @@
   align-items: baseline;
 }
 
-/* ================================================================ crumbs */
-
 .legacyCrumbs {
   display: flex;
   gap: 8px;
@@ -2190,8 +2103,6 @@
 .legacyCrumbHere {
   color: var(--mw-text);
 }
-
-/* ================================================================ refusal */
 
 .legacyRefusal {
   border: 1px dashed var(--mw-gold-text);

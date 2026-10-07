@@ -55,10 +55,7 @@ function fundingBootstrap(): CivicDataBootstrap<FundingSnapshot> {
   const heldAbsenceCount = tracked.absences.length;
   const value: FundingSnapshot = {
     ...tracked,
-    // The promoted FEC contract deliberately makes no absence claim: the
-    // frozen rows lack the bounded authoritative horizon and completed
-    // pagination required to prove one. Keep them in the historical file,
-    // but never let a local bootstrap revive them as Reader authority.
+    // The frozen rows cannot prove an absence; never revive them as Reader authority.
     absences: [],
   };
   const sourceThrough = value.candidates
@@ -110,7 +107,7 @@ export async function refreshFundingFromPromoted(
   return promotedVersionOrThrow(await readFundingSnapshot(options));
 }
 
-/** The FEC read, edge first (2026-09-25): the reader edge's proven copy through this Reader, else the database. */
+/** The FEC read, edge first: the reader edge's proven copy through this Reader, else the database. */
 export const settleFundingSnapshotRead = (): Promise<CivicDataReadResult<FundingSnapshot>> =>
   readPromotedEdgeFirst("FEC_FUNDING", FEC_SCOPE, readFundingSnapshot, "The FEC funding");
 /** The FEC preload, edge first. */
@@ -157,15 +154,9 @@ export function contributorRowsForDisplay(
 }
 
 /**
- * The second hop for a set of grouped contributor rows (item 3) — the
- * contributing committees' own books, keyed by committee id.
- *
- * Same ripcord as the first hop: these are FEC_CONTRIBUTOR rows, and
- * `ripcord.fecContributorDisplay` empties them HERE, at the accessor, not
- * in a component. Only ids the hop actually holds are returned, so a
- * committee we never fetched renders no expander rather than an empty one —
- * "we haven't looked one level down for this committee" and "this committee
- * has no donors" are different claims and must not render the same.
+ * The contributing committees' own books, keyed by committee id. Emptied by
+ * `ripcord.fecContributorDisplay` here, at the accessor. Only ids actually
+ * fetched are returned, so an unfetched committee renders no expander.
  */
 export function secondHopForGroups(
   groups: ContributorGroups,

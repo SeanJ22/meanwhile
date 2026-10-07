@@ -1,81 +1,16 @@
 /**
- * WHO IS THE FILING AUTHORITY?
+ * Resolves the legally responsible filing custodian for a contest, committee
+ * and period, which is not the same as which portal covers that level: the
+ * custodian's level need not match the office's level (a school district may
+ * file with a county officer).
  *
- * ## The question this file asks, and the one it refuses to ask
+ * Routing rules are data in `data/campaign-finance/filing-regimes.json`,
+ * validated by `filing-regime.ts`. A jurisdiction absent from the registry
+ * resolves to `NO_REGIME_ON_RECORD`; nothing falls through to a guessed
+ * custodian. When it cannot resolve it returns `OPEN` or `NO_REGIME_ON_RECORD`
+ * and names the routes still to walk.
  *
- * The discovery question for campaign finance is **"who is the legally
- * responsible custodian for this contest, this committee and this period?"** It
- * is NOT "which API covers this level". Those two questions give different
- * answers, and the second one is how a whole tier of American campaign money
- * goes missing: a session that reasons from portals finds the state portal,
- * finds no county portal, and writes down an absence about a government.
- *
- * **Arizona is the state that taught this project the difference.**
- * `states/az/sources.md`, reading `https://www.azleg.gov/ars/16/00928.htm` on
- * 2026-08-26 (HTTP 200, 3,387 bytes, titled *16-928 - Filing officer;
- * statements and reports*), quotes the statute directly:
- *
- * > "The secretary of state is the filing officer for statewide and legislative
- * > elections"
- *
- * > "The county officer in charge of elections is the filing officer for county,
- * > school district, community college district and special taxing district
- * > elections"
- *
- * > "The city or town clerk is the filing officer for city and town elections."
- *
- * Three consequences, all encoded rather than remembered:
- *
- *   1. **The authority's level need not match the office's level.** A school
- *      district is not a county, and its money files with the county officer in
- *      charge of elections anyway. Same for community college districts and
- *      special taxing districts. `resolveFilingAuthority` returns an authority
- *      whose `level` is `COUNTY` for an office whose level is `SCHOOL_DISTRICT`,
- *      and `tests/control-plane-campaign-finance.test.ts` asserts exactly that.
- *
- *   2. **It is the county officer IN CHARGE OF ELECTIONS** — a single defined
- *      role, which in Arizona is not always the recorder. `states/az/sources.md`
- *      records that correction against an earlier brief rather than smoothing
- *      it, and the correction is carried in the registry.
- *
- *   3. **Local campaign finance in Arizona is FEDERATED BY STATUTE**, across
- *      **109 filing jurisdictions — 1 State, 15 County, 93 City/Town**, from the
- *      state's own `Jurisdictions.txt` pulled 2026-08-26. A claim of
- *      campaign-finance coverage in Arizona without that denominator is
- *      meaningless, so the denominator travels with the regime.
- *
- * ## WHERE THE ROUTING NOW LIVES, and why it moved
- *
- * Every routing rule above is **DATA**, in
- * `data/campaign-finance/filing-regimes.json`, loaded and validated by
- * `filing-regime.ts`. This file resolves; it does not remember.
- *
- * The reason is national expansion. The same three facts hold in fifty states
- * with fifty different answers, and the shape that cannot carry them is an
- * `if (state === "AZ") … else if (state === "NH") …` tree — not because it is
- * ugly, but because **a state nobody has read falls off the end of it into
- * whatever the last branch says.** A fall-through in a filing-authority
- * resolver hands a jurisdiction a custodian nobody checked, and an absence then
- * gets asserted about a government that was never asked. There is no
- * fall-through here: a jurisdiction absent from the registry resolves to
- * `NO_REGIME_ON_RECORD`, which keeps the contest open and names the statute
- * still owed.
- *
- * Adding a state is therefore a change to the JSON and to nothing under `lib/`.
- * `tests/filing-regime-registry.test.ts` proves that against a fixture
- * jurisdiction rather than asserting it in prose.
- *
- * ## When it cannot resolve
- *
- * It returns `OPEN` (the routing rule is known, the office holding it is not) or
- * `NO_REGIME_ON_RECORD` (we have not read the rule), and names the routes still
- * to walk. It never guesses a custodian. A guessed custodian produces a hunt
- * against the wrong government, and then an absence about the right one.
- *
- * ## Time
- *
- * Nothing here reads a clock. `asOf` is a caller-supplied parameter throughout,
- * and omitting it selects by SUPERSESSION rather than by a guessed today.
+ * Nothing here reads a clock. Omitting `asOf` selects by supersession.
  */
 
 import { readFileSync } from "node:fs";
@@ -105,28 +40,13 @@ import {
 
 /* ── The registry, loaded once ────────────────────────────────────────────── */
 
-/**
- * The path is resolved from THIS MODULE rather than from `process.cwd()`.
- *
- * The constants below are module-level and therefore evaluate at import time, so
- * a cwd-relative read would make importing this file depend on which directory a
- * script happened to start in. `lib/funding/snapshot.ts` reads its snapshot
- * lazily inside a function and can afford `process.cwd()`; a module constant
- * cannot.
- */
+/** Resolved from this module, not `process.cwd()`: the constants below evaluate at import time. */
 const REGISTRY_FILE = join(import.meta.dirname, "..", "..", "..", ...FILING_REGIME_REGISTRY_PATH);
 const REGISTRY_CITATION = FILING_REGIME_REGISTRY_PATH.join("/");
 
 let registryCache: FilingRegimeRegistry | null = null;
 
-/**
- * The committed filing-regime registry, validated.
- *
- * A malformed or ambiguous registry throws `FilingRegimeRegistryInvalid` here,
- * at import, rather than resolving half the jurisdictions and leaving the rest
- * looking unread. Refusal is whole on purpose: a partial routing table sends
- * money questions to the wrong government and reports the answer as a fact.
- */
+/** The committed filing-regime registry. A malformed or ambiguous registry throws at import; refusal is whole. */
 export function filingRegimeRegistry(): FilingRegimeRegistry {
   if (!registryCache) {
     registryCache = loadFilingRegimeRegistry(
@@ -141,18 +61,7 @@ export function filingRegimeRegistry(): FilingRegimeRegistry {
 
 const REGISTRY = filingRegimeRegistry();
 
-/**
- * The FEC.
- *
- * `statutoryBasis` is **null on purpose**, and the registry carries that null.
- * This repository has read Arizona's filing-officer statute from `azleg.gov` and
- * quoted it; it has NOT read whichever federal provision names the FEC as the
- * federal filing officer. `states/az/sources.md` poses that as the generalising
- * question asked of every state — answered for AZ (§ 16-928), NH (RSA 664:7 and
- * 664:6) and NJ. The federal answer is not in this repository, so the field
- * stays null and the open question is named. A plausible citation would be a
- * fabrication in the one field whose whole job is being checkable.
- */
+/** The FEC. `statutoryBasis` is null until the federal provision has been read from source. */
 export const FEC_AUTHORITY: FilingAuthority = requireAuthority(REGISTRY, "us:federal:fec");
 
 /** The Arizona Secretary of State, as a custodian rather than as a portal. */
@@ -161,37 +70,19 @@ export const AZ_SECRETARY_OF_STATE: FilingAuthority = requireAuthority(
   "az:state:secretary-of-state",
 );
 
-/**
- * The Pima County officer in charge of elections.
- *
- * **Named by ROLE, because the statute names a role.** The individual office
- * holding that role in Pima County is not asserted — `states/az/sources.md`
- * records that the county-level officer is *the county officer in charge of
- * elections*, "a single defined role and in Arizona is not always the recorder",
- * correcting a brief that had said "county recorder, county elections department
- * or board of supervisors". Which office that is in Pima County is an OPEN
- * identification, carried on `statutoryOpenQuestion` in the registry.
- */
+/** The county officer in charge of elections, named by role; which office holds it is an open identification. */
 export const PIMA_COUNTY_FILING_OFFICER: FilingAuthority = requireAuthority(
   REGISTRY,
   "az:county:pima:officer-in-charge-of-elections",
 );
 
-/** The City of Tucson clerk — the statute's municipal branch, for Pima's largest city. */
+/** The city clerk: the statute's municipal branch. */
 export const TUCSON_CITY_CLERK: FilingAuthority = requireAuthority(
   REGISTRY,
   "az:municipal:tucson:city-clerk",
 );
 
-/**
- * The Citizens Clean Elections Commission — a SECOND authority over the same
- * money, not a substitute for the first.
- *
- * Carried in the registry as a `coRegulator` rather than as a custodian, because
- * a model with one custodian slot per contest would silently drop it. The FEC's
- * own combined directory lists it under ARIZONA with "Regulation of Campaign
- * Finance Reports" among its functions, beside the Secretary of State.
- */
+/** A co-regulator over the same money, carried as `coRegulator`, not as a substitute custodian. */
 export const AZ_CLEAN_ELECTIONS_COMMISSION: FilingAuthority = requireAuthority(
   REGISTRY,
   "az:state:clean-elections-commission",
@@ -216,12 +107,7 @@ function requireRegime(jurisdiction: string): FilingRegime {
 
 export const FEDERAL_REGIME: FilingRegime = requireRegime("US");
 
-/**
- * Arizona's regime, assembled from the three § 16-928 routing rules.
- *
- * Read the `authorityLevel` column against the `officeLevel` column. Four of the
- * seven rows disagree, and that disagreement is the finding.
- */
+/** Arizona's regime. Read `authorityLevel` against `officeLevel`: they need not agree. */
 export const ARIZONA_REGIME: FilingRegime = requireRegime("AZ");
 
 /** The regimes this repository has read a routing rule for. Never a complete list. */
@@ -232,13 +118,8 @@ export const REGIMES: readonly FilingRegime[] = REGISTRY.jurisdictions
 /* ── Resolution ───────────────────────────────────────────────────────────── */
 
 /**
- * What a session that reasoned from PORTALS rather than from the STATUTE would
- * naively expect the custodian's level to be: the same tier as the office.
- *
- * This table exists only to be contradicted. `levelMismatchNote` compares it
- * against the routing rule's actual answer and states the difference out loud,
- * so the mismatch is a reported finding rather than something a reader has to
- * notice.
+ * The custodian level a portal-first reading would expect (the office's own
+ * tier). `levelMismatchNote` compares it with the rule's actual answer.
  */
 export const NAIVE_LEVEL_FOR_OFFICE: Readonly<Record<OfficeLevel, FilingAuthority["level"]>> = {
   FEDERAL: "FEDERAL",
@@ -280,17 +161,7 @@ export interface FilingAuthorityQuery {
   readonly municipality?: string | null;
 }
 
-/**
- * The three routing states — `RESOLVED`, `OPEN`, `NO_REGIME_ON_RECORD` — defined
- * once, in `model.ts`, and re-exported here so callers that speak to the
- * resolver need not know which file holds the vocabulary.
- *
- * It is DEFINED there rather than here because `CampaignFinanceCoverage` carries
- * the value and this module already imports that file: defining it here would be
- * a cycle, and defining it in both places would be two vocabularies free to
- * drift apart (RULING 103). The reasoning for the third value lives with the
- * definition.
- */
+/** Defined in `model.ts` (which this module imports) and re-exported here. */
 export {
   AUTHORITY_RESOLUTION_STATUSES,
   type AuthorityResolutionStatus,
@@ -320,13 +191,13 @@ export interface FilingAuthorityResolution {
   readonly statutoryQuote: string | null;
   /** The custodian role in the rule's own words, even when the office is unknown. */
   readonly custodianRole: string | null;
-  /** WHO SERVES THE RECORDS — which may be neither the office nor the authority. */
+  /** Who serves the records, which may be neither the office nor the authority. */
   readonly publisher: RegimePublisher | null;
   /** The office's own level, so a reader can see it differ from the authority's. */
   readonly officeLevel: OfficeLevel;
   /** Null when unresolved; otherwise the authority's level, which may differ. */
   readonly authorityLevel: FilingAuthority["level"] | null;
-  /** Set when the two differ. This is the finding, stated rather than implied. */
+  /** Set when the two differ. */
   readonly levelMismatchNote: string | null;
   /** Adapter route ids bearing on this regime's records. */
   readonly applicableRouteIds: readonly string[];
@@ -338,21 +209,13 @@ export interface FilingAuthorityResolution {
 export interface ResolveFilingAuthorityOptions {
   /** Defaults to the committed registry. A test may pass its own. */
   readonly registry?: FilingRegimeRegistry;
-  /**
-   * The date the question is asked ABOUT. Omitted means "select by supersession",
-   * never "today": a library that guesses today misdates every conclusion.
-   */
+  /** The date the question is asked about. Omitted selects by supersession, never "today". */
   readonly asOf?: string | null;
 }
 
 /**
- * Resolve the custodian, or return an unresolved state naming what is still owed.
- *
- * There is deliberately no fall-through that picks the state authority when a
- * local one is not known, and none that picks the FEC when a jurisdiction is not
- * in the registry. "The state portal is the only one I can see" is the portal
- * question, and answering the statute question with it is the exact error this
- * file exists to prevent.
+ * Resolve the custodian, or return an unresolved state naming what is still
+ * owed. There is no fall-through to the state authority or the FEC.
  */
 export function resolveFilingAuthority(
   query: FilingAuthorityQuery,
@@ -482,20 +345,8 @@ export interface UnresolvedAuthorityVerdict {
 }
 
 /**
- * **A REGIME WE COULD NOT RESOLVE IS NEVER A REASON TO CLOSE A CONTEST.**
- *
- * It is a reason to keep hunting, and this function is the shape that makes that
- * checkable rather than remembered: `coverageState` is the literal `"OPEN"` and
- * `closesTheContest` the literal `false`, so no argument to it produces closure
- * and no caller reading either field can read the wrong answer.
- *
- * The failure it prevents is the quiet one. A resolver that returns "unknown"
- * hands a caller a falsy value, and a caller with a falsy authority writes
- * "no filing authority — no money to report", which is an absence asserted about
- * a government on the strength of this repository not having read a statute. A
- * finite attempt count never earns an absence, and neither does an unread one:
- * the honest sentence is "I have run out of ideas", which is a claim about the
- * session, never "this is not published", which is a claim about a government.
+ * An unresolved regime never closes a contest: `coverageState` is literal
+ * `"OPEN"` and `closesTheContest` literal `false`.
  */
 export function unresolvedAuthorityKeepsCoverageOpen(input: {
   contestId: string;
@@ -538,28 +389,9 @@ export interface FecAbsenceVerdict {
 }
 
 /**
- * **FEC ABSENCE IS NOT CLOSURE.**
- *
- * The FEC holds federal filings. It does not hold Arizona's, because A.R.S.
- * § 16-928 routes Arizona's money to the Secretary of State, fifteen county
- * officers and ninety-three city and town clerks. "The FEC has no record for
- * this contest" is therefore a fact about the FEC's jurisdiction and says
- * nothing whatever about whether the money was filed.
- *
- * The corroborating artifact is already committed:
- * `data/reference/fec_combined_federal_state_disclosure_directory.csv` is the
- * FEC's OWN directory of state disclosure offices, and for ARIZONA it lists the
- * Secretary of State, the Corporation Commission and the Citizens Clean
- * Elections Commission — and **no county officer and no city clerk at all.** The
- * federal directory stops one tier above the tier this product reaches for. A
- * session that treated the federal view as complete would report an absence
- * about ninety-three governments it never asked.
- *
- * **It now runs through the registry**, so the same guarantee holds for a
- * jurisdiction whose statute has never been read: the resolution comes back
- * `NO_REGIME_ON_RECORD`, the statute route is owed and named, and the verdict is
- * still `OPEN`. There is no argument to this function that yields a closed
- * contest.
+ * FEC absence is not closure: the FEC does not hold state and local filings.
+ * The verdict is always `OPEN`, including for a jurisdiction whose statute has
+ * never been read (`NO_REGIME_ON_RECORD`).
  */
 export function fecAbsenceIsNotClosure(input: {
   contestId: string;

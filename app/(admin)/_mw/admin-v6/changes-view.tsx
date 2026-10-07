@@ -1,13 +1,5 @@
 "use client";
 
-/**
- * **CHANGES — one plain line for each change any session has made, and where it
- * has got to.** (S11; rulings §0 test 5: Sean can see what is happening.)
- *
- * Building, on test, deploying, live. Each line links to the pull request. The
- * list is read from GitHub on the server (`lib/control-plane/changes/source.ts`)
- * and fetched when this view opens. When GitHub cannot be read the view shows "—".
- */
 import { CHANGE_STATUSES, CHANGE_STATUS_WORDS, groupChanges, type ChangeRow } from "@/lib/control-plane/changes/model.ts";
 import type { ChangesReading } from "@/lib/control-plane/changes/source.ts";
 
@@ -16,7 +8,6 @@ import { Card, cx, Empty, Failed, Loading } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
 import s from "./v6.module.css";
 
-/** The live list is the newest of a long history; the rest is on GitHub. */
 const LIVE_SHOWN = 20;
 
 function Line({ row }: { readonly row: ChangeRow }) {

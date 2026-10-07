@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * **UPDATES — on Now (BR-24).** What changed, each with an honest label (Proven, Testing, Expected). An update shows
- * here once: the page that first reads it keeps it until reload, and the next load does not show it again. An
- * expected item is never listed as a win.
- */
 import { useEffect, useState } from "react";
 
 import type { UpdateLine, UpdatesView } from "@/lib/control-plane/admin-view/updates-read.ts";

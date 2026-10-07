@@ -8,7 +8,6 @@ import { validateV6Query } from "./v6-hunts-read.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 
-/** Read-only. Sends are whole-system instructions, so every scope reads the same list. */
 export async function v6SendsGet(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });

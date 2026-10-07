@@ -1,89 +1,14 @@
 /**
- * **PROVIDER TWO — CAMPAIGN FINANCE.** (Session C, PART D1/D2, 2026-08-31.)
- *
- * ## Why this file exists, stated as the defect it closes
- *
- * `lib/control-plane/campaign-finance/obligations.ts` models a genuinely local
- * campaign-finance obligation against a real committed ballot. Before this
- * provider, every caller was either its own definition or a test. **A domain
- * obligation reachable only from tests is a failure**: the tests were written
- * beside the model and cannot disagree with it, and no unattended process ever
- * opened one of its routes.
- *
- * This provider puts campaign-finance records into the same scheduler the
- * research corpus goes through, so a due Arizona or New Hampshire route opens
- * an occurrence, a WorkItem, a RouteTask, an Attempt, a disposition, debt and a
- * persisted next-due exactly as a body's calendar does — with no operator
- * choosing a finance hunt.
- *
- * ## THE PORTFOLIO IS THE POINT (RULING 207)
- *
- * Each record below carries SEVERAL routes and every one of them is scheduled
- * independently. `ONE ROUTE SUCCESS != SOURCE UNIVERSE COMPLETE` is not a
- * slogan a report satisfies; it is a property of the schedule. A 200 from the
- * SeeTheMoney DataTables action does not mark the FTP bulk drop worked, does
- * not clear its debt, and does not move its clock — because they are different
- * scheduled units over one record.
- *
- * ## What each descriptor rests on, and what it does not claim
- *
- * ```
- *   az-sos-seethemoney-datatables   MEASURED 2026-08-31: recordsTotal 370 for
- *                                   the 2025-2026 cycle at JurisdictionId=0.
- *                                   Registered on the parameter shape the
- *                                   method store records. AWAITING ADAPTER —
- *                                   the row semantics are UNDETERMINED and
- *                                   nothing here publishes a per-person total
- *   az-sos-cfs-bulk-ftp             RULING 166's rung ZERO. Anonymous, live
- *                                   2026-08-26, 8,828 committees and 109
- *                                   filing jurisdictions. This process holds
- *                                   NO FTP CLIENT, so it disposes
- *                                   REQUIRES_NEW_ADAPTER — a fact about our
- *                                   tooling, never about the record
- *   az-pima-easyvote-public-filings The county portal recorded UNWALKED on
- *                                   2026-08-26. A GET, and the first reading
- *                                   of it is this scheduler's
- *   nh-cfs-filing-entity-details    PROVEN 2026-08-31 by `pnpm money:nh`: a
- *                                   plain server-side POST answers 200 with
- *                                   JSON. CORS bound the browser, not us
- *   nh-cfs-transaction-detail       The contribution and expenditure detail
- *                                   sits behind endpoints nobody has derived.
- *                                   A SCOUT's job, and it says so
- *   nh-sos-lobbyist-registry        A source class this product holds nothing
- *                                   of in any state except Arizona, on a host
- *                                   whose permission is now ANSWERED
- *   nh-sos-records-request          Rung 13. PUBLIC RECORD STILL OWED —
- *                                   HUMAN/OFFLINE ACCESS REQUIRED. It keeps a
- *                                   clock so it cannot be forgotten, and it
- *                                   can never be discharged by a machine
- * ```
- *
- * ## The 403 that was our own name
- *
- * `www.sos.nh.gov` answers 200 to a bare client and 403 to the identical
- * request carrying this project's name in the User-Agent. Until 2026-09-25 the
- * lobbyist-registry descriptor left the name out of the User-Agent to get past
- * that filter. The owner decision of 2026-09-25 rules that out (access
- * controls are never bypassed; a filter that refuses an identified client is
- * one), so every descriptor here sends the route executor's identified
- * User-Agent, with `From:` and `X-Purpose:` added beside it. A 403 is a
- * technical failure of the route, pursued by other public routes.
- *
- * ## HOW LANE AZ AND LANE NH SLOT IN — by CONTRACT, not by conversation
- *
- * `data/campaign-finance/route-descriptors/*.json` is read FIRST when present.
- * Each file is `{ "records": ProvidedObligationSpec[] }` using the same
- * `RouteDescriptor` shape as the built-ins, minus nothing. A file that lands
- * replaces the built-in record with the SAME `subjectId` wholesale, so a lane
- * that confirms a live route ships one JSON file and changes no code here.
- * A file that parses to zero records is a FAILED read and is reported as one.
+ * Campaign-finance records as scheduled obligations. Each record carries several routes, each scheduled
+ * independently, so one route's success never marks another worked. A descriptor file in
+ * `data/campaign-finance/route-descriptors/` replaces the built-in record with the same `subjectId`; a file
+ * that yields zero records is a failed read.
  */
 
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { arizonaLocalObligation } from "../../campaign-finance/obligations.ts";
-import { ballotFinanceObligations, ballotFinanceScheduledId, type BallotFinanceInputs } from "../../campaign-finance/obligations.ts";
+import { ballotFinanceObligations, ballotFinanceScheduledId, type BallotFinanceInputs } from "../../campaign-finance/ballot-obligations.ts";
 
 import type {
   ObligationProvider,
@@ -98,13 +23,7 @@ export const CAMPAIGN_FINANCE_PROVIDER_ID = "campaign-finance";
 /** Where a lane drops a confirmed route descriptor file. The contract path. */
 export const DESCRIPTOR_DIR = ["data", "campaign-finance", "route-descriptors"] as const;
 
-/**
- * Identification the New Hampshire host family actually serves.
- *
- * `INGEST_CONTACT_EMAIL` is the repository's existing contact variable and is
- * read by NAME. Unset, the header is omitted and `X-Purpose` still says why we
- * are here — a slower route to a conversation, never a disguise.
- */
+/** Identification headers. `INGEST_CONTACT_EMAIL` is read by name; unset, `From` is omitted. */
 function identifiedHeaders(): Record<string, string> {
   const from = process.env.INGEST_CONTACT_EMAIL;
   return {
@@ -113,27 +32,9 @@ function identifiedHeaders(): Record<string, string> {
   };
 }
 
-/* ------------------------------------------------------- Arizona, statewide */
 
-/**
- * The DataTables request the Arizona portal actually answers.
- *
- * The filters ride in the QUERY STRING and the body is the standard DataTables
- * form encoding INCLUDING `columns[N][data]`, because that array is the
- * projection the action builds its result from. Recorded in the method store as
- * `datatables-endpoint-needs-its-column-array`; the three filters that were
- * missing until 2026-08-31 are `IsLessActive`, `ShowOfficeHolder` and
- * `ChartName`.
- */
-/*
- * MEASURED FROM THE RESPONSE, not guessed. A live cycle on 2026-08-31 returned
- * `recordsTotal` 370 and rows carrying exactly these keys, so the projection is
- * written from what the action actually emits rather than from a plausible
- * guess at what it might. `EntityLastName` arrives as
- * `"Accalia, Jayme <br>(102162)"` — presentation markup inside a data field,
- * which the normalizer carries verbatim and names rather than silently
- * stripping.
- */
+/** The DataTables request the portal answers: filters in the query string, and a body that includes `columns[N][data]`, the projection the action builds its result from. */
+/* The keys the action emits, as measured from a live response. */
 const AZ_DATATABLE_COLUMNS = [
   "EntityID",
   "EntityFirstName",
@@ -210,7 +111,6 @@ const AZ_ROUTES: readonly RouteDescriptor[] = [
         "never a fact about the record — REQUIRES_NEW_ADAPTER, and the obligation stays live.",
     },
     citation:
-      "docs/governance/policies/discovery.md — RULING 166, measured 2026-08-26; " +
       "docs/body-or-intermediary-audit.md — 'The FTP: YES, 2026-08-26. 8,828 committees.'",
     awaitingAdapter:
       "an FTP client. Until one exists this route disposes REQUIRES_NEW_ADAPTER on a clock rather " +
@@ -235,12 +135,7 @@ const AZ_ROUTES: readonly RouteDescriptor[] = [
         accept: "application/json, text/javascript, */*; q=0.01",
       },
     },
-    /*
-     * THE TWO-BYTE 200 IS WHY THIS FIELD EXISTS. Between 2026-08-24 and
-     * 2026-08-31 every guessed body here answered HTTP 200 with `""`. Without
-     * a contract that is an INGESTED disposition over a two-byte artifact
-     * calling itself the state's filer index.
-     */
+    /* The yield contract keeps a two-byte HTTP 200 from being ingested as the filer index. */
     yieldContract: {
       describe:
         "a server-side DataTables response carrying draw, data, recordsTotal and recordsFiltered",
@@ -270,7 +165,6 @@ const AZ_ROUTES: readonly RouteDescriptor[] = [
   },
 ];
 
-/* -------------------------------------------------- New Hampshire, statewide */
 
 const NH_ROUTES: readonly RouteDescriptor[] = [
   {
@@ -331,10 +225,7 @@ const NH_ROUTES: readonly RouteDescriptor[] = [
       kind: "HTTP_GET",
       url: "https://www.sos.nh.gov/lobbyists",
       headers: {
-        /*
-         * The route executor's identified User-Agent stands (2026-09-25): leaving the project's name out of it to get
-         * past this host's filter was a disguise, and access controls are never bypassed.
-         */
+        /* The route executor's identified User-Agent stands; access controls are never bypassed. */
         ...identifiedHeaders(),
       },
     },
@@ -362,34 +253,8 @@ const NH_ROUTES: readonly RouteDescriptor[] = [
   },
 ];
 
-/* ---------------------------------------------------------- the built-in set */
 
-/**
- * The records this provider schedules when no lane descriptor file has landed.
- *
- * ## `readerImpactAt` IS NULL, AND THAT IS THE CORRECT READING
- *
- * The obvious value is the 2026 general election, and it was written that way
- * first. It is wrong, and the way it is wrong matters: `readerImpactAt` means
- * *when staleness in this record STARTS costing a reader something*, and for a
- * body's calendar that is genuinely the next sitting — nobody is hurt by a
- * stale agenda for a meeting that has not been scheduled. **Campaign-finance
- * staleness costs a reader TODAY.** A reader looking at a candidate's money is
- * shown a stale figure the moment it goes stale, not in November.
- *
- * Putting the election date here told the scheduler that staleness is free
- * until then: `scheduleObligation` halves the remaining time, clamps at
- * `MAX_DERIVED_CADENCE_HOURS`, and produces a THIRTY-DAY refresh for a filer
- * index that moves continuously in an election year. The derivation was working
- * correctly on a signal that was a misreading of the field.
- *
- * Null on both signals falls to RULING 212's surviving default of DAILY, and
- * the row's `cadenceSource` says `DEFAULT_NO_SIGNAL` — which is the honest
- * label. **We do not hold the filing calendars for either regime**, so we
- * cannot state a `declaredCycleHours` and will not invent one: a publisher
- * cycle nobody read is a fabricated citation with a number in it. Acquiring
- * those calendars is what would turn this into a `DECLARED_CYCLE`.
- */
+/** The records this provider schedules when no descriptor file has landed. `readerImpactAt` is null: campaign-finance staleness costs a reader today, so the default cadence applies. */
 export const AZ_PIMA_ELECTION_DATE = "2026-11-03";
 
 function builtInRecords(): ProvidedObligation[] {
@@ -415,126 +280,12 @@ function builtInRecords(): ProvidedObligation[] {
   ];
 }
 
-/* ------------------------------- THE MODELLED OBLIGATIONS, MADE OPERATIONAL */
-
-/**
- * **THE DEFECT THIS SECTION CLOSES, NAMED EXACTLY.**
- *
- * `arizonaLocalObligation()` in
- * `lib/control-plane/campaign-finance/obligations.ts` models Proposition 423's
- * genuinely local Pima County routes, each carrying its disposition,
- * permission state, rung and citation.
- *
- * **A domain obligation reachable only from tests is a failure.** The tests
- * were written beside the model and cannot disagree with it, so nine open
- * routes sat with no clock, no worker and no next-due while the digest reported
- * a healthy schedule over a different set of rows entirely.
- *
- * So the LOCAL model's OPEN routes are registered here. Each one gets an occurrence,
- * a RouteTask, an Attempt, a disposition, debt and a persisted next-due like
- * any other representation.
- *
- * PDC deliberately excludes the sibling federal AZ-06 model. The permanent
- * `fec-funding` contract is now the one clock and authority for FEC acquisition,
- * promotion, LKG and Reader delivery. Registering the federal model here would
- * restore a second set of FEC clocks and would also require this child process
- * to bootstrap a synchronous projection from the canonical store merely to
- * construct its registry.
- *
- * ## NO URL IS INVENTED, and that is why most of them do not fetch
- *
- * A `PlannedRoute` declares a `target` that is a HOST — `www.pima.gov`,
- * `ftp.azsos.gov` — and not an addressable representation. Turning a host into
- * `https://<host>/` would be guessing which page holds the record, and a guess
- * that returns HTTP 200 is the worst available outcome: a terminal INGESTED
- * over a front page, cited as a county's campaign-finance filings.
- *
- * So a modelled route is opened only where the model itself records an explicit
- * address. Every other one is `NOT_MACHINE_EXECUTABLE`, disposes
- * `REQUIRES_NEW_ADAPTER`, and its note carries the model's own note plus — where
- * one exists — a POINTER at the registry route that already addresses the same
- * representation. That pointer is the thing a later session needs: it says the
- * record is not stuck, it is being worked through a different route.
- */
-
-/** The only addresses the model states explicitly. Nothing else is guessed. */
-const MODELLED_ROUTE_URLS: Readonly<Record<string, string>> = {
-  AZ_PIMA_EASYVOTE_PUBLIC_FILINGS:
-    "https://pimacountyaz.easyvotecampaignfinance.com/home/publicfilings",
-};
-
-/** Where an already-registered route addresses the same representation. */
-const MODELLED_ROUTE_SUPERSEDED_BY: Readonly<Record<string, string>> = {
-  AZ_SEETHEMONEY_PLAIN_FETCH: "az-sos-seethemoney-datatables",
-  AZ_SEETHEMONEY_LIVE_BROWSER: "az-sos-seethemoney-datatables",
-  AZ_SOS_FTP_CFSDATA2: "az-sos-cfs-bulk-ftp",
-};
-
-function modelledRecords(nowIso: string): ProvidedObligation[] {
-  const out: ProvidedObligation[] = [];
-  for (const obligation of [arizonaLocalObligation(nowIso)]) {
-    const routes: RouteDescriptor[] = obligation.openRoutes.map((planned) => {
-      const id = planned.declaration.routeId;
-      const url = MODELLED_ROUTE_URLS[id];
-      const supersededBy = MODELLED_ROUTE_SUPERSEDED_BY[id];
-      return {
-        routeId: id,
-        label: planned.declaration.label,
-        executorClass: url ? "DETERMINISTIC" : "BOUNDED_MODEL_WORKER",
-        executorReason: url
-          ? "the model states an explicit address, so an HTTP GET opens it"
-          : "the model states a HOST and not an addressable representation; finding the address is " +
-            "a scout's job and a deterministic client pointed at a front page would guess",
-        open: url
-          ? { kind: "HTTP_GET", url }
-          : {
-              kind: "NOT_MACHINE_EXECUTABLE",
-              target: planned.declaration.target,
-              reason:
-                `${planned.note} THIS ROUTE DECLARES A HOST, NOT AN ADDRESS, so nothing here can ` +
-                "open it without guessing which page holds the record." +
-                (supersededBy
-                  ? ` The SAME representation is already worked by registered route ` +
-                    `\`${supersededBy}\`, so the record is not stuck — this row is the model's own ` +
-                    "entry for it and keeps its clock."
-                  : ""),
-            },
-        citation: planned.citation,
-        ...(supersededBy
-          ? { awaitingAdapter: `an address for this host, or retirement in favour of \`${supersededBy}\`` }
-          : {}),
-      };
-    });
-
-    if (routes.length === 0) continue;
-    out.push({
-      recordClass: "campaign-finance",
-      subjectId: obligation.coverage.contestId,
-      /* Null for the same reason the statewide records are: campaign-finance
-         staleness costs a reader today, not on election day. */
-      readerImpactAt: null,
-      observedChangeRateHours: null,
-      lastWorkedAt: null,
-      routes,
-    });
-  }
-  return out;
-}
-
-/* ----------------------------------------- the descriptor-file drop-in path */
 
 interface DescriptorFile {
   readonly records?: readonly ProvidedObligation[];
 }
 
-/**
- * Read every lane-supplied descriptor file, keyed by subject.
- *
- * A file that is present and yields no records is a FAILED read, not an empty
- * one, and the failure is returned rather than silently falling back — a lane
- * that shipped a broken descriptor must see that it shipped a broken
- * descriptor, not watch the built-ins quietly cover for it.
- */
+/** Read every descriptor file, keyed by subject. A present file that yields no records is a failed read, returned rather than covered by the built-ins. */
 export function readDescriptorFiles(root: string): {
   readonly bySubject: Map<string, ProvidedObligation>;
   readonly failures: readonly string[];
@@ -585,12 +336,7 @@ export function campaignFinanceProvider(readBallotInputs?: () => BallotFinanceIn
       "state and county campaign-finance record universes (AZ SOS, NH SOS), each with its whole " +
       "route portfolio scheduled independently so no one 200 retires the others",
 
-    /*
-     * THE SCHEDULED UNIT IS THE REPRESENTATION. One durable row per route means
-     * the FTP drop's wall accrues its own debt on its own clock while the
-     * DataTables route keeps its own — which is RULING 207 expressed as state
-     * rather than as a sentence in a report.
-     */
+    /* One durable row per route, so each route keeps its own debt and clock. */
     scheduledId: (record, route) =>
       readBallotInputs ? ballotFinanceScheduledId(record, route) : `freshness:campaign-finance:${record.subjectId}#${route.routeId}`,
 
@@ -601,7 +347,7 @@ export function campaignFinanceProvider(readBallotInputs?: () => BallotFinanceIn
       }
       // Preserved way back until River checks the connected generic path live.
       const dropped = readDescriptorFiles(ctx.root);
-      const records = [...builtInRecords(), ...modelledRecords(ctx.nowIso)].map(
+      const records = builtInRecords().map(
         (r) => dropped.bySubject.get(r.subjectId) ?? r,
       );
       /* A lane descriptor for a subject the built-ins do not carry is ADDED,

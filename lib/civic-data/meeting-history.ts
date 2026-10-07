@@ -1,24 +1,4 @@
-/**
- * **A PARTITION'S DURABLE MEETING HISTORY** (DB-06; rulings §4: "do not delete history").
- *
- * A concluded sitting that carries an agenda, minutes, an outcome or a vote is kept for good. Once it is older than
- * the held window (120 days) it leaves its live partition, so partitions do not grow without end, and goes to the
- * partition's own history: the same record class (`MEETING`) at the partition's scope plus `:history`, one pointer per
- * partition, written only by that partition's own child.
- *
- * **Order of operations: no record is ever in neither place.**
- *
- * 1. The history version that adds the sittings is promoted FIRST, derived from the exact promoted partition version
- *    the sittings were taken from (and the history version it extends).
- * 2. Only then does the partition's next candidate remove them, each under `MOVED_TO_HISTORY` naming the history
- *    version. The validator re-derives the sitting's own facts, and the door confirms the history pointer holds the
- *    record (`movedToHistoryAuthorityIssue`) before the removal is accepted.
- * 3. A failed or refused history write moves nothing: the sittings stay in the partition exactly as DB-01 left them.
- *
- * History is append-only and never re-read from the publisher, so it makes no claim about what the publisher lists
- * today. Its rows are marked carried (`OUTSIDE_FETCH_WINDOW`, never a disappearance) with the instant each was last
- * really read. Readers see history through the composition: `mergeMeetingHistory` adds it to its partition's rows.
- */
+/** History is promoted before the partition removes the sittings, so no record is ever in neither place. */
 import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -46,7 +26,6 @@ const MEETING_RECORD_CLASS = "MEETING" as const;
 const HISTORY_MAX_AGE_MS = 100 * 365 * 86_400_000;
 const sha256 = (value: string): string => createHash("sha256").update(value).digest("hex");
 
-/** Where each sitting that left its partition now lives, keyed by meeting id. */
 export interface MeetingHistoryMoveRecord {
   readonly historyScope: string;
   readonly historyVersionId: string;
@@ -60,20 +39,14 @@ export type MeetingHistoryMove =
 
 const NOTHING = new Map<string, MeetingHistoryMoveRecord>();
 
-/** The way back: `WTP_MEETING_HISTORY_MOVE=off` keeps every record in its partition, as DB-01 left them. */
 export function meetingHistoryMoveEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return env.WTP_MEETING_HISTORY_MOVE?.trim().toLowerCase() !== "off";
 }
 
-/** The adapter a row's id is namespaced under: `<source>:<rest>`. */
 function sourceOf(meeting: Meeting): string {
   return meeting.carried?.source ?? meeting.id.split(":")[0] ?? "unknown";
 }
 
-/**
- * The concluded sittings of a live partition version that now belong in its history: older than the held window and
- * carrying a record, with every agenda document attached to them. Pure.
- */
 export function movableToHistory(
   snapshot: MeetingsSnapshot | null,
   anchor: string,
@@ -95,7 +68,6 @@ export function movableToHistory(
   };
 }
 
-/** A sitting as history holds it: carried, with the instant it was last really read, and never a disappearance. */
 function asHistoryRow(meeting: Meeting, generatedAt: string): Meeting {
   const collected = meeting.provenance?.collectedAt;
   const lastFreshAt = meeting.carried?.lastFreshAt ??
@@ -103,7 +75,6 @@ function asHistoryRow(meeting: Meeting, generatedAt: string): Meeting {
   return { ...meeting, carried: { source: sourceOf(meeting), lastFreshAt, reason: "OUTSIDE_FETCH_WINDOW" } };
 }
 
-/** One report per adapter the history's rows came from, reconciled to the carried marks the snapshot validator counts. */
 function historyReports(meetings: readonly Meeting[]): SnapshotSourceReport[] {
   const counts = new Map<string, number>();
   for (const meeting of meetings) counts.set(meeting.carried!.source, (counts.get(meeting.carried!.source) ?? 0) + 1);
@@ -118,7 +89,6 @@ function historyReports(meetings: readonly Meeting[]): SnapshotSourceReport[] {
   }));
 }
 
-/** The next history version: what it held, plus the moved sittings (the newer copy of a sitting wins). Pure. */
 export function buildMeetingHistorySnapshot(input: {
   readonly history: MeetingsSnapshot | null;
   readonly moved: readonly Meeting[];
@@ -141,7 +111,6 @@ export function buildMeetingHistorySnapshot(input: {
   };
 }
 
-/** Whether history already holds every moved sitting and agenda document exactly as the partition does. */
 function historyAlreadyHolds(
   history: MeetingsSnapshot | null,
   moved: readonly Meeting[],
@@ -155,10 +124,6 @@ function historyAlreadyHolds(
     documents.every((document) => heldDocuments.has(document.id));
 }
 
-/**
- * The history candidate: authentic as the promoted partition version it was taken from and the history version it
- * extends, never as a route of its own.
- */
 export function meetingHistoryCandidate(
   partition: MeetingPartitionContract,
   snapshot: MeetingsSnapshot,
@@ -232,7 +197,6 @@ export function meetingHistoryCandidate(
   };
 }
 
-/** Read one partition's history, validated like a partition. NOT_RECORDED until the first sitting moves. */
 export async function readMeetingHistory(
   partition: MeetingPartitionContract,
   options: { readonly store: RoutineDataStore; readonly now?: string; readonly bypassCache?: boolean },
@@ -241,23 +205,15 @@ export async function readMeetingHistory(
     store: options.store,
     now: options.now,
     bypassCache: options.bypassCache ?? true,
-    // History carries no freshness expectation: it is kept as last published.
     maxAgeMs: HISTORY_MAX_AGE_MS,
   });
 }
 
-/** The history promotion path: a registered door that the caller supplies (`promotion.ts`), so this module stays pure. */
 export type MeetingHistoryDoor = (
   candidate: RoutineCandidate,
   now: string,
 ) => Promise<PromotionOutcome>;
 
-/**
- * Move a partition's concluded, record-carrying sittings older than the held window into its history. The history is
- * promoted first; the caller then removes the returned sittings from the partition under `MOVED_TO_HISTORY`
- * (`reconcileSuccessfulMeetingPartition`'s `movedToHistory`). Anything short of a promoted history version returns
- * nothing moved, so the partition keeps every record exactly as before.
- */
 export async function moveConcludedMeetingsToHistory(input: {
   readonly store: RoutineDataStore;
   readonly partition: MeetingPartitionContract;
@@ -265,7 +221,6 @@ export async function moveConcludedMeetingsToHistory(input: {
   readonly generatedAt: string;
   readonly door: MeetingHistoryDoor;
 }): Promise<MeetingHistoryMove> {
-  // Cheap, in memory: most passes have nothing old enough, and read nothing further.
   if (movableToHistory(input.previous, input.generatedAt) === null) {
     return { outcome: "NONE", moved: NOTHING, detail: "no concluded sitting with a record is older than the held window" };
   }
@@ -310,7 +265,6 @@ export async function moveConcludedMeetingsToHistory(input: {
   return { outcome: "MOVED", moved: record(versionId), detail: `${movable.meetings.length} sitting(s) added to history ${versionId}` };
 }
 
-/** The removal evidence for one sitting that left the partition for its history. */
 export function movedToHistoryEvidence(
   meeting: Pick<Meeting, "id" | "startsAt">,
   moved: MeetingHistoryMoveRecord,
@@ -329,11 +283,6 @@ export function movedToHistoryEvidence(
   };
 }
 
-/**
- * **The door's check that history really holds what a partition candidate removes.** Why a candidate's
- * `MOVED_TO_HISTORY` removals are not backed by the partition's own promoted history, or null. Reads the history
- * pointer as it stands (not only the version the evidence names, which a later version extends).
- */
 export async function movedToHistoryAuthorityIssue(
   store: Pick<RoutineDataStore, "readPromotion">,
   candidate: RoutineCandidate,
@@ -348,7 +297,6 @@ export async function movedToHistoryAuthorityIssue(
   if (pointer === null) return "MOVED_TO_HISTORY_NOT_HELD: this partition has no promoted history";
   const held = pointer.payload as MeetingsSnapshot | null;
   const meetings = new Map((held?.meetings ?? []).map((meeting) => [meeting.id, meeting]));
-  // An agenda-document record is keyed by its meeting (`agendaDocumentRecordKey`); its versions move with it.
   const documentedMeetings = new Set((held?.agendaDocuments ?? []).map(({ meetingId }) => meetingId));
   for (const row of rows) {
     if (row.code !== "MOVED_TO_HISTORY") continue;
@@ -366,10 +314,6 @@ export async function movedToHistoryAuthorityIssue(
   return null;
 }
 
-/**
- * A partition's rows with its history added, for the Reader's composition. A sitting both hold is the live one. The
- * added rows are accounted as carried so the composed snapshot reconciles (`validateSnapshot`). Pure.
- */
 export function mergeMeetingHistory(value: MeetingsSnapshot, history: MeetingsSnapshot | null): MeetingsSnapshot {
   if (history === null || history.meetings.length === 0) return value;
   const live = new Set(value.meetings.map(({ id }) => id));

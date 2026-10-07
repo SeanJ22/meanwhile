@@ -16,52 +16,10 @@ import type { AskSubjectRef } from "@/lib/ask/subject";
 import { gapsNotInAnswer } from "@/lib/text/say-once";
 
 /**
- * **ASK ON THE BALLOT — the same engine, a different surface.**
- * (ASK04, 2026-08-27.)
- *
- * ## Why this is not `<AskBox>`
- *
- * There is ONE Ask engine and this component uses it: `/api/ask/grounded`,
- * which holds interpretation, canonical resolution, retrieval, the evidence
- * pack, synthesis and validation. Nothing about answering a question lives
- * here.
- *
- * What could not be reused is the map panel's CHROME. `components/ask/ask-box.tsx`
- * reads `useShellData()` — the meetings cascade, the venue list, the drawn
- * districts, the stored location — and `useUi()`, both provided only inside
- * `map-entry.tsx`. Mounting it on the ballot would mean either standing the
- * whole map shell up behind a page that has no map, or threading a second
- * data pipeline through a 1,673-line component. Neither is "one engine"; both
- * are one WIDGET, forced.
- *
- * So the split is: the ENGINE is shared and the SURFACE is thin. A ballot
- * question and a map question reach the identical pipeline, resolve against
- * the identical registry, and are validated by the identical rules. What
- * differs is the context each surface can honestly contribute — and the
- * ballot's context is genuinely different, which is the point of A10.
- *
- * ## What this surface contributes
- *
- * The reader's divisions, their zip, and the contests, candidates and measures
- * actually on the page — **as canonical references, with ids** (PR #212
- * follow-up, 2026-08-28). They used to travel as display strings, which meant
- * they reached the interpretation model as prose and the BINDER never saw them:
- * nothing on this page was an entity Ask could resolve, and retrieval had no id
- * to select on.
- *
- * That is what makes *"what has she done?"* answerable here and correctly
- * REFUSED where more than one person could be meant. The referent is not
- * decided by the model — Claude may propose one, and `lib/ask/resolve.ts`
- * binds it against these references or asks. Where two people fit, it asks.
- *
- * ## What it will not do
- *
- * It renders `answer` when the server says the answer was grounded and
- * validated, and it renders the records and named gaps in every other case.
- * **It never discards a useful reply because one optional field is null** —
- * that exact class of defect was found repeatedly in the previous session's
- * client handling, and it is the reason `records` and `gaps` travel on every
- * response shape this route returns.
+ * Ask on the ballot page. Uses the same `/api/ask/grounded` engine as the map
+ * Ask; this surface only contributes the reader's divisions, zip and the
+ * contests, candidates and measures on the page as canonical references.
+ * Records and gaps render whenever present, even when `answer` is null.
  */
 
 type GroundedReply = AskAnswerPayload;
@@ -83,16 +41,9 @@ export function BallotAsk({
   const [reply, setReply] = useState<GroundedReply | null>(null);
   const [working, setWorking] = useState(false);
   const [failed, setFailed] = useState(false);
-  /* The question that produced the reply on screen, so the heading cannot
-     drift out of step with the answer under it while a new one is in flight. */
+  /* The question that produced the reply on screen. */
   const [answered, setAnswered] = useState("");
-  /*
-   * **THE BOUNDED FOLLOW-UP, and bounded is the operative word.** What makes
-   * a follow-up answerable is knowing what the previous turn resolved to. What
-   * would make it a privacy problem is keeping a person's political
-   * conversation. This holds the last few turns, in memory, for this mount
-   * only — it does not persist and leaving the page ends it.
-   */
+  /* Follow-up context: the last few resolved subjects, in memory for this mount only. */
   const [priorSubjects, setPriorSubjects] = useState<AskSubjectRef[]>([]);
   const [priorTurns, setPriorTurns] = useState<
     { question: string; resolvedSubject: string | null }[]
@@ -108,21 +59,6 @@ export function BallotAsk({
     inFlight.current = controller;
     setWorking(true);
     setFailed(false);
-    /*
-     * **THE PREVIOUS ANSWER GOES WHEN A NEW QUESTION STARTS.**
-     * (Found 2026-08-28 by reading the panel rather than the DOM.)
-     *
-     * This component already kept `answered` so the heading could not drift
-     * out of step with the answer under it — and the answer itself stayed on
-     * screen anyway. A reader who asked about Proposition 423 and then asked
-     * who is running for Governor sat looking at the Proposition 423 answer
-     * with a "Looking…" button beside it, which reads as the product answering
-     * the new question with the old subject. That is the substitution defect
-     * made out of latency instead of out of routing.
-     *
-     * Clearing is not discarding a useful reply: it is declining to show an
-     * answer to a question the reader has moved on from.
-     */
     setReply(null);
     setAnswered("");
     try {
@@ -138,13 +74,9 @@ export function BallotAsk({
           activeSubjects,
           priorSubjects,
           priorTurns,
-          /* WHAT THE READER DID, never what it proves — `stampResidency` on
-             the server decides that, so no client can assert a confidence. */
+          /* What the reader did; the server decides the confidence. */
           locationOrigin: readLocationOriginFor(zip),
-          /* The returning-reader ID: random, minted on this browser's first
-             question, anonymous, and in its OWN slot (sharing one with
-             reactions or Speak Your Mind would make one browser produce one
-             value across stores that share no key). */
+          /* Anonymous per-browser key in its own storage slot. */
           continuityKey: getOrCreateBrowserKey("wtp.ask_key"),
         }),
         signal: controller.signal,
@@ -158,9 +90,7 @@ export function BallotAsk({
       if (!body) { setFailed(true); return; }
       setReply(body);
       setAnswered(question);
-      /* The conversation advances only on a CANONICAL resolution: a turn that
-         resolved nothing offers no referent, and recording it would let a later
-         pronoun point at a question rather than at a person. */
+      /* Only a canonical resolution becomes a referent for later turns. */
       if (body.subject) {
         const resolved = body.subject;
         setPriorSubjects((prior) =>
@@ -181,11 +111,6 @@ export function BallotAsk({
     }
   }
 
-  /*
-   * Every branch below renders SOMETHING TRUE. There is no branch that renders
-   * a generic civics sentence, and none that renders an answer about a
-   * government other than the one that resolved.
-   */
   const records = reply?.records ?? [];
   // A gap the answer's own sentence already states is not printed a second time.
   const gaps = gapsNotInAnswer(reply?.answer, reply?.gaps ?? []);
@@ -215,25 +140,9 @@ export function BallotAsk({
               return;
             }
             /*
-             * **ESCAPE, WHICH THIS HANDLED NOWHERE** (BAL-26, 2026-08-28).
-             *
-             * Only Enter was handled. On the old placement — a permanently
-             * open panel at the foot of the page — nothing was listening for
-             * Escape and nothing needed to be. In the pill row it does: the
-             * panel is dismissable now, and the map's Ask panel has handled
-             * Escape since it shipped.
-             *
-             * The nested form, deliberately. A half-typed question is what
-             * the reader most likely wants Escape to take back, so the first
-             * press clears the field and STOPS — `stopPropagation` keeps it
-             * from reaching the document listener in
-             * `components/ballot/ballot-ask-pill.tsx`, so the panel stays
-             * open and the cursor stays where it was. With the field already
-             * empty the press falls through and the panel closes.
-             *
-             * It also aborts a request in flight, for the same reason the new
-             * question does: an answer arriving for a question the reader has
-             * just abandoned is the substitution defect made out of latency.
+             * The first Escape on a non-empty field clears it and stops
+             * propagation so the panel stays open; an empty field lets it
+             * through to close the panel. Either way an in-flight request aborts.
              */
             if (e.key === "Escape" && text.length > 0) {
               e.stopPropagation();
@@ -256,11 +165,6 @@ export function BallotAsk({
         </button>
       </div>
 
-      {/*
-        A transport failure is a fact about US and says so. It is deliberately
-        not "we found nothing", which would be a claim about a government made
-        out of a failed request.
-      */}
       {failed && (
         <p className="mt-3 t-body" data-ask-state="TRANSPORT_FAILED">
           That didn&rsquo;t reach us. Try again in a moment.
@@ -282,17 +186,6 @@ export function BallotAsk({
             </p>
           )}
 
-          {/*
-            Named, and we hold no such thing. Said — never quietly swapped.
-
-            **The word is "anything", not "a government".** The first version
-            said "a government", and the first thing it was asked on this
-            surface was about a person: a reader was told *"We don't have a
-            government recorded under 'Katie Hobbs'"*, which is wrong about the
-            kind of thing she is as well as wrong about whether we hold her.
-            The binding rung resolves bodies, people and measures alike, so the
-            sentence may not name one of the three.
-          */}
           {reply.mode === "UNRESOLVED" && (
             <p>{unresolvedReadLine(reply)}</p>
           )}
@@ -312,13 +205,7 @@ export function BallotAsk({
           {/* The grounded sentence, when there is one that passed validation. */}
           {reply.answer && !reply.agendaLead && <p className="mt-2">{reply.answer}</p>}
 
-          {/*
-            THE RECORDS RENDER WHETHER OR NOT PROSE DID. This is the structured
-            half of the degradation ladder: grounded → structured → honest gap.
-            A reply whose synthesis was unavailable or was REJECTED still
-            carries everything needed to answer truthfully, and throwing it away
-            because `answer` is null is the exact defect class this guards.
-          */}
+          {/* Records render whether or not prose did. */}
           <AskAnswerRecords records={records} initiallyOpen={!reply.answer} agendaLead={reply.agendaLead} prose={reply.agendaLead ? reply.answer : null} />
 
           {/* Named gaps, each one saying whose gap it is. */}
@@ -328,23 +215,7 @@ export function BallotAsk({
             </p>
           ))}
 
-          {/*
-            **NO BRANCH MAY RENDER SILENCE.** (Found 2026-08-27 by reading the
-            reader output rather than the DOM.)
-
-            The first version of this component had no such branch, and a reply
-            of NO_EVIDENCE with no subject, no records and no gaps rendered
-            NOTHING: the reader typed a question, the server answered, and the
-            panel showed them the empty form back. Every earlier check passed —
-            the panel was present, the mode attribute was correct, the request
-            and the reply were both fine. The defect was only visible in the
-            sentence, which is the whole lesson of the previous session.
-
-            The wording is the constitution's shape: the ATTRIBUTION is required
-            and the verdict on ourselves is struck. "We have not recorded this"
-            is a fact about us; "we failed" is a verdict, and RULING 139 strikes
-            it. Then it offers the narrowing and stops.
-          */}
+          {/* No branch may render silence. */}
           {!reply.answer &&
             records.length === 0 &&
             gaps.length === 0 &&
@@ -357,19 +228,11 @@ export function BallotAsk({
               />
             )}
 
-          {/*
-            **THE CONTACTS, AND WHY EACH ONE IS HERE.**
-
-            Not a ranking and not "who to call" — this product may not order
-            people by influence. Each line states the sourced RELATIONSHIP
-            between that person and what the reader asked about, and stops.
-          */}
           <AskAnswerContacts contacts={reply.contacts ?? []} />
 
           {sources.length > 0 && (
             <p className="mt-3 t-detail text-[var(--text-muted)]">
-              {/* One line per PUBLISHER, not one per document — see
-                  `sourceLinks`. Six documents from one office are one source. */}
+              {/* One line per publisher, not per document. */}
               Source
               {sourceLinks(sources).length > 1 ? "s" : ""}:{" "}
               {sourceLinks(sources).map((l, i) => (
@@ -381,16 +244,7 @@ export function BallotAsk({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {/*
-                      **A NULL PUBLISHER RENDERS AS THE HOST, NOT AS A PHRASE.**
-                      This read "the record" until the render-default sweep
-                      caught it, and the sweep was right: a link whose publisher
-                      we did not record, labelled "the record", reads as an
-                      attributed source and is not one. The hostname is a
-                      MECHANICAL READ of the URL we are already showing — a fact
-                      about where the link goes, never a claim about who
-                      published what is there.
-                    */}
+                    {/* A null publisher renders as the URL's host. */}
                     {l.label}
                   </a>
                 </span>

@@ -1,62 +1,4 @@
-/**
- * **ASSIGNMENTS — EVERY UNIT OF WORK, FOLLOWED END TO END, IN SEVEN PARTS.**
- * (Owner ask, 2026-09-22: connected, assignment-level operational visibility.
- * The read side of MW-001 — nothing here writes, dispatches or re-attributes.)
- *
- * The control plane records every piece of the chain — the standing obligation
- * and why it is due, each round (occurrence) it opened, the WorkItem and
- * RouteTask of that round, every Attempt and the worker that ran it, what was
- * vaulted, what the Scout proposed, the disposition, the debt and its backoff,
- * the promotion pipeline, the cost ledger — and until now each lived on its own
- * page, keyed its own way. This module joins them into one row per ASSIGNMENT,
- * so the owner can follow a unit of work from "why is this owed" to "did a
- * reader get it", including the unhealthy and the blocked.
- *
- * ## What an assignment is
- *
- * ```
- *   STANDING_OBLIGATION   one recurring clock (cp_obligations). Its rounds are
- *                         its occurrences; each round owns one WorkItem and one
- *                         RouteTask; retries are Attempts on that RouteTask and
- *                         later rounds. Every record keyed to those work items
- *                         (artifacts, costs, Scout results, worker results,
- *                         pipeline items, the debt) is joined to it.
- *   WORK_ITEM             an explicitly created piece of work that is NOT a
- *                         round of a standing clock: the fleet's acquire /
- *                         parse / validate / audit chains, and — in their own
- *                         lane so they never count as real work — the
- *                         conformance and proof rows (MW-024).
- *   ROUTINE_CONTRACT      a routine civic-data contract in the production data
- *                         plane (`assignment-routine.ts`), read live by the
- *                         page through the Sources page's own read path.
- * ```
- *
- * ## The seven parts, in the order the owner asked for them
- *
- * ```
- *   1 what / where / why / who    record class, subject, jurisdiction, why it is
- *                                 due and its reader-impact band, worker role and
- *                                 model — "model not recorded" when it was not
- *   2 discovered vs downloaded    routes and findings proposed; documents vaulted
- *   3 parsed / failed / usable    parser runs and the records they produced
- *   4 verified / rejected / needs pipeline stages, refusals with their reasons,
- *     more evidence               validator and auditor verdicts
- *   5 promoted vs publicly        the activation gate and the served-reader
- *     available                   witness, each named when it is a gap
- *   6 cost                        measured dollars across every retry; unmeasured
- *                                 model work named as unknown, never $0
- *   7 what is waiting             age, blocker, who owns the next step, next action
- * ```
- *
- * ## Honest by construction
- *
- * Every number the page draws carries a denominator and a contract
- * ({@link assignmentRenderedNumbers}); a value nobody measured is a named
- * {@link Gap}; the published list is BOUNDED and says exactly what it left out.
- * A shared cost (the Scout cache pre-warm, attempt id `scout-prewarm:…`) is
- * never split across assignments by guesswork — it is named as shared. PURE:
- * records in, rows out; the only clock is `nowIso`.
- */
+/** A value nobody measured is a named {@link Gap}, never zero; a shared cost is named as shared, never split by guesswork. PURE. */
 import { attemptFamilyOf, type AttemptFamily } from "../registry/attempt-families.ts";
 import { ASK_GAP_CODES, ASK_GAP_CODE_WORDS, type AskGapCode } from "../ask/gap-codes.ts";
 import { askGapNoteParts, askGapTitle, parseAskGapObligationId } from "./ask-gap-id.ts";
@@ -113,28 +55,14 @@ function assignmentStateCode(row: AssignmentRow): string | null {
   return row.what.where.held ? STATE_CODE_BY_NAME.get(row.what.where.value.state ?? "") ?? null : null;
 }
 
-/** How many rows of one (state, lane) group the PUBLISHED view carries. Stated on the page. */
 export const ASSIGNMENT_ROWS_PER_GROUP = 20;
-/** Test and proof rows are real rows and never real work: the list carries fewer of them. */
 export const ASSIGNMENT_PROOF_ROWS_PER_GROUP = 5;
-/**
- * The published view never serializes past this many bytes: rows are admitted
- * one rank at a time across every group until the next would cross it, and
- * every row left out is counted. (The owner snapshot is read on every Admin
- * render; a Neon response over 64 MiB once stopped the runner.)
- */
+/** Rows are admitted one rank at a time across every group until the next would cross this, and every row left out is counted. */
 export const ASSIGNMENT_VIEW_BYTE_BUDGET = 300_000;
-/** Free text on a PUBLISHED row is clipped to this many characters; the drilldown reads it whole. */
 export const ASSIGNMENT_TEXT_CLIP = 160;
-/** Evidence lists on a PUBLISHED row carry at most this many members, and the rest are counted. */
 export const ASSIGNMENT_LIST_CLIP = 2;
-/** The drilldown's own bounds: generous, but still bounds, and still counted. */
 export const DRILLDOWN_TEXT_CLIP = 4000;
 export const DRILLDOWN_LIST_CLIP = 60;
-
-/* ================================================================== *
- * THE VOCABULARY
- * ================================================================== */
 
 export const ASSIGNMENT_KINDS = ["STANDING_OBLIGATION", "WORK_ITEM", "ROUTINE_CONTRACT"] as const;
 export type AssignmentKind = (typeof ASSIGNMENT_KINDS)[number];
@@ -207,10 +135,6 @@ export const OWNER_WORDS: Readonly<Record<NextStepOwner, string>> = {
   NOBODY: "Nobody — nothing is owed",
 };
 
-/* ================================================================== *
- * THE ROW
- * ================================================================== */
-
 export type WorkerModel =
   | { readonly kind: "MODEL"; readonly id: string }
   | { readonly kind: "PLAIN_CODE"; readonly tool: string }
@@ -219,18 +143,14 @@ export type WorkerModel =
 export interface AssignmentWorker {
   readonly role: string;
   readonly model: WorkerModel;
-  /** Null when the lane's own record could not count them (never a partial count stood in for the whole). */
   readonly attempts: number | null;
-  /** Models the provider itself reported on this worker's results. Empty when none reported one. */
   readonly reportedModels: readonly string[];
 }
 
-/** Part 1 — what is being worked on, where, why, and by whom. */
 export interface AssignmentWhat {
   readonly title: string;
   readonly recordClass: string | null;
   readonly subject: string | null;
-  /** The subject as the owner reads it (the one display projection); never a person's name invented from a slug. */
   readonly subjectName: string | null;
   readonly route: string | null;
   readonly where: Held<{ readonly name: string; readonly state: string | null }>;
@@ -242,13 +162,7 @@ export interface AssignmentWhat {
     readonly band: { readonly band: 1 | 2 | 3; readonly why: string } | null;
   };
   readonly workers: Held<readonly AssignmentWorker[]>;
-  /**
-   * MW-002: the question the latest round asks, as its work item recorded it.
-   * Null when no round recorded one — "not recorded", never a default. Absent
-   * on rows built by paths that do not read it.
-   */
   readonly question?: WorkQuestion | null;
-  /** MW-001: the owner's Sends recorded on the obligation, in the order they reached it. */
   readonly assignments?: readonly ObligationAssignment[];
 }
 
@@ -269,11 +183,8 @@ export interface AssignmentDownload {
   readonly attemptId: string;
 }
 
-/** Part 2 — what was discovered versus what was actually downloaded. */
 export interface AssignmentDiscovery {
-  /** Rounds opened (reached by a worker or not). Null when the lane could not count them. */
   readonly rounds: number | null;
-  /** Null when the lane could not count them. */
   readonly attempts: number | null;
   readonly discovered: Held<{
     readonly routes: number;
@@ -288,7 +199,6 @@ export interface AssignmentDiscovery {
   readonly downloaded: Held<{
     readonly count: number;
     readonly complete: Measured;
-    /** Null when the lane does not record byte counts. */
     readonly bytes: number | null;
     readonly items: readonly AssignmentDownload[];
     readonly more: number;
@@ -296,7 +206,6 @@ export interface AssignmentDiscovery {
   }>;
 }
 
-/** Part 3 — what parsed, what failed, and the usable records produced. */
 export interface AssignmentParsing {
   readonly parsed: Held<{
     readonly runs: number;
@@ -325,16 +234,13 @@ export interface AssignmentRejection {
   readonly itemId: string;
 }
 
-/** Part 4 — what passed verification, what was rejected and why, what needs more evidence. */
 export interface AssignmentVerification {
   readonly pipeline: Held<{
-    /** What was verified: promotion-pipeline items (research), or validation checks (routine contracts). */
     readonly unit: "pipeline item" | "validation check";
     readonly items: number;
     readonly passed: Measured;
     readonly needsMoreEvidence: Measured;
     readonly rejected: Measured;
-    /** Furthest pipeline stage reached, by stage; null where the unit is not a pipeline item. */
     readonly furthest: Readonly<Record<PipelineStage, number>> | null;
     readonly rejections: readonly AssignmentRejection[];
     readonly moreRejections: number;
@@ -344,11 +250,7 @@ export interface AssignmentVerification {
   }>;
   readonly checks: readonly AssignmentCheck[];
   readonly moreChecks: number;
-  /**
-   * Each refusal carries WHEN it was recorded: a refusal's own text states the
-   * limit in force at that time (a 2026-09-19 refusal quotes a $25 ceiling that
-   * is no longer the ceiling), so an undated line would read as current.
-   */
+    /** Dated, because a refusal's text states the limit in force when it was recorded. */
   readonly refusedFinishes: readonly { readonly attemptId: string; readonly at: string; readonly codes: readonly string[]; readonly says: string }[];
   readonly refusedFinishCount: number;
 }
@@ -361,19 +263,15 @@ export interface PromotionStatus {
 }
 
 export interface PublicAvailability {
-  /** CONFIRMED by a reader-page readback; NO_READER_PAGE when the work feeds no reader page at all. */
   readonly state: "CONFIRMED" | "NO_READER_PAGE";
   readonly at: string | null;
   readonly says: string;
   readonly proof: string | null;
 }
 
-/** Part 5 — what was promoted versus what is confirmed publicly available. */
 export interface AssignmentDelivery {
-  /** Exact latest publication comparison, never downloads presented as new findings. */
   readonly records?: { readonly added: number; readonly changed: number; readonly reused: number };
   readonly recordChanges?: NonNullable<WorkItem["publicationOutcome"]>["recordChanges"];
-  /** Research items approved for promotion; null where promotion does not run through the research pipeline. */
   readonly approved: Held<Measured> | null;
   readonly promoted: Held<PromotionStatus>;
   readonly publiclyAvailable: Held<PublicAvailability>;
@@ -386,23 +284,15 @@ export type AssignmentDollars =
   | { readonly kind: "UNMEASURED"; readonly gap: Gap }
   | { readonly kind: "NOTHING_RAN"; readonly says: string };
 
-/** Part 6 — costs, including retries and escalations; unknown is named, never $0. */
 export interface AssignmentCost {
   readonly dollars: AssignmentDollars;
   readonly entries: number;
-  /** Rows that reported a dollar figure (a measured $0 included). */
   readonly measured: number;
-  /** Rows from work that could reach a paid model and reported no dollars: unknown. */
   readonly unmeasured: number;
-  /** Rows from plain-code work: no paid-model charge exists to measure. */
   readonly plainCode: number;
-  /** Measured $0 rows from a model role that made no model request at all. */
   readonly noModelCall: number;
-  /** Attempts that could reach a paid model and left no cost row (still open, or never recorded): unknown. */
   readonly attemptsWithoutCostRow: number;
-  /** Plain-code attempts that left no cost row: no model charge, and their requests and time were not recorded. Null when uncounted. */
   readonly plainAttemptsWithoutCostRow: number | null;
-  /** Rounds a worker reached. Null when the lane could not count them. */
   readonly rounds: number | null;
   readonly attempts: number | null;
   /**
@@ -411,9 +301,7 @@ export interface AssignmentCost {
    * discharged round is not a retry. Null when it cannot be told.
    */
   readonly retries: number | null;
-  /** Model-routing escalations: a named gap (recorded on each Scout result since 2026-09-25, not yet joined here), or null where the lane uses no model at all. */
   readonly escalations: { readonly toOwner: number; readonly modelRouting: Gap | null };
-  /** Requests, bytes and time from the cost rows; null where the lane writes no cost rows at all. */
   readonly nonDollar: { readonly requests: number; readonly bytes: number; readonly durationMs: number } | null;
   readonly says: string;
 }
@@ -423,24 +311,17 @@ export type AssignmentBlocker =
   | { readonly kind: "NAMED"; readonly says: string }
   | { readonly kind: "UNKNOWN"; readonly gap: Gap };
 
-/** Part 7 — what is waiting: its age, its blocker, who owns the next step, the next action. */
 export interface AssignmentWaiting {
   readonly waiting: boolean;
-  /** The instant the wait is measured from; the page states the age against its own clock. */
   readonly since: string | null;
-  /** Eligible for dispatch now and not yet dispatched (due, and past any failure backoff). Null when it cannot be told. */
   readonly overdue: boolean | null;
-  /** The stored next-due time. */
   readonly dueAt: string | null;
-  /** The failure backoff's retry time, when a live debt holds it. */
   readonly retryAt: string | null;
   /** When the runner may next dispatch it: the later of `dueAt` and `retryAt`. */
   readonly eligibleAt: string | null;
   readonly backoff: {
-    /** Consecutive rounds that did not discharge the obligation (a found route counts: it is not a reading). */
     readonly failures: number;
     readonly since: string;
-    /** The retry class the runner recorded on the debt, raw; disclosure only. */
     readonly retryClass: string;
     readonly says: string;
   } | null;
@@ -463,10 +344,8 @@ export interface AssignmentEvidence {
   readonly attemptIds: readonly string[];
   readonly occurrenceIds: readonly string[];
   readonly dispositionCommitIds: readonly string[];
-  /** Other evidence identities the kind carries (a promoted version, a reader readback event). */
   readonly otherIds: readonly { readonly what: string; readonly id: string }[];
   readonly notes: readonly AssignmentNote[];
-  /** How many of each list the row does not carry (bounded lists; nothing is silently dropped). */
   readonly more: {
     readonly workItems: number;
     readonly routeTasks: number;
@@ -483,7 +362,6 @@ export interface AssignmentRow {
   readonly kind: AssignmentKind;
   readonly lane: AssignmentLane;
   readonly state: AssignmentState;
-  /** One plain sentence: why the state is what it is. */
   readonly stateSays: string;
   readonly lastActivityAt: string | null;
   readonly what: AssignmentWhat;
@@ -496,13 +374,6 @@ export interface AssignmentRow {
   readonly evidence: AssignmentEvidence;
 }
 
-/**
- * **ONE ASSIGNMENT, AS THE PUBLISHED LIST CARRIES IT** — the same seven parts,
- * each reduced to the figures a list row shows, so the bounded list can hold
- * several hundred rows inside its byte budget. The full chain (every lead,
- * download, refusal and note) is read live by id on the drilldown. A null
- * part is a gap the page names in words; it is never rendered as a zero.
- */
 export interface AssignmentListRow {
   readonly id: string;
   readonly kind: AssignmentKind;
@@ -510,24 +381,16 @@ export interface AssignmentListRow {
   readonly state: AssignmentState;
   readonly stateSays: string;
   readonly lastActivityAt: string | null;
-  /* 1 — what, where, why, who */
   readonly title: string;
   readonly subjectName: string | null;
-  /** Null when no subject is on record. */
   readonly where: string | null;
-  /** Canonical attribution, retained separately from the human-readable place. */
   readonly stateCode?: string | null;
-  /** Exact durable Send associations; absent only on older published snapshots. */
   readonly assignmentKeys?: readonly string[];
   readonly band: 1 | 2 | 3 | null;
-  /** Null when no worker has taken it yet. */
   readonly workers: readonly { readonly role: string; readonly model: WorkerModel; readonly attempts: number | null }[] | null;
-  /* 2 — discovered versus downloaded; null when nothing has run */
   readonly discovered: { readonly routes: number; readonly records: number; readonly pointers: number; readonly sourceRows: number | null } | null;
   readonly downloaded: Measured | null;
-  /* 3 — parsed; null when no parse step has run */
   readonly parsed: { readonly succeeded: number; readonly failed: number; readonly usable: Measured | null } | null;
-  /* 4 — verified; null when the pipeline was not read */
   readonly verification: {
     readonly unit: "pipeline item" | "validation check";
     readonly items: number;
@@ -536,32 +399,26 @@ export interface AssignmentListRow {
     readonly rejected: number;
     readonly refusedFinishes: number;
   } | null;
-  /* 5 — promoted versus publicly available; null is a named gap */
   readonly promoted: PromotionStatus["state"] | null;
   readonly publiclyAvailable: PublicAvailability["state"] | null;
-  /* 6 — cost */
   readonly cost: {
     readonly kind: AssignmentDollars["kind"];
     readonly usd: Measured | null;
     readonly unmeasured: number;
-    /** Null when the lane could not count them. */
     readonly attempts: number | null;
     readonly retries: number | null;
   };
-  /* 7 — what is waiting */
   readonly waiting: {
     readonly waiting: boolean;
     readonly since: string | null;
     readonly overdue: boolean | null;
     readonly eligibleAt: string | null;
-    /** Null when nothing blocks it; the words for an unknown blocker are the gap's own. */
     readonly blocker: string | null;
     readonly owner: NextStepOwner;
     readonly nextAction: string;
   };
 }
 
-/** The list row a full row reduces to. Pure; loses detail, never meaning. */
 export function listRowOf(row: AssignmentRow, textClip = ASSIGNMENT_TEXT_CLIP): AssignmentListRow {
   const discovered = row.discovery.discovered.held ? row.discovery.discovered.value : null;
   const parsed = row.parsing.parsed.held ? row.parsing.parsed.value : null;
@@ -615,10 +472,6 @@ export function listRowOf(row: AssignmentRow, textClip = ASSIGNMENT_TEXT_CLIP): 
   };
 }
 
-/* ================================================================== *
- * THE INPUT
- * ================================================================== */
-
 export interface AssignmentSources {
   readonly nowIso: string;
   readonly obligations: readonly StandingObligation[];
@@ -627,45 +480,26 @@ export interface AssignmentSources {
   readonly routeTasks: readonly RouteTask[];
   readonly attempts: readonly Attempt[];
   readonly debts: readonly FreshnessDebt[];
-  /** Leases of the route tasks that hold an open Attempt. Null = not read: an open Attempt cannot then be proven live. */
   readonly leases: readonly ExecutionLease[] | null;
-  /** Disposition commits, when read; the RouteTask's applied disposition is used either way. */
   readonly dispositions: readonly DispositionCommit[] | null;
   readonly artifacts: readonly ArtifactRecord[];
-  /** Targeted by-ID origin records for declared inherited captures. Null means
-   * the bounded origin read was unavailable; absent on whole-population reads. */
   readonly inheritedOrigins?: readonly { readonly artifact: ArtifactRecord; readonly attempt: Attempt; readonly originWorkItemId: string }[] | null;
   readonly costs: readonly CostEntry[];
   readonly scoutResults: readonly ScoutResult[];
   readonly workerResults: readonly WorkerResultRecord[];
-  /** Every promotion-pipeline item derived from the log, or null when the pipeline could not be read. */
   readonly pipeline: readonly PipelineItemState[] | null;
   readonly activation: ActivationGateReading | null;
-  /** No served-reader readback producer is wired yet (the witness bridge), so this is always null today. */
+    /** No served-reader readback producer is wired yet, so this is always null today. */
   readonly servedReader: import("./served-reader.ts").ServedReaderReadback | null;
-  /** The installed release's pilot ZIPs, for the reader-impact band (the runner's own list). */
   readonly pilotZips: readonly string[];
-  /**
-   * What readers were told Ask does not hold, counted per body, gap and day
-   * (`ask-gap-observations.ts`). Null: the read failed. Absent: not read by
-   * this caller. Either way no Ask-gap row says how often readers met it.
-   */
   readonly askGapObservations?: readonly AskGapObservation[] | null;
 }
 
 export interface AssignmentBuildOptions {
   readonly textClip?: number;
   readonly listClip?: number;
-  /**
-   * The measured dollars each assignment's cost is stated against. Defaults to
-   * every measured dollar attributed to an assignment in this reading.
-   */
   readonly costDenominatorUsd?: number | null;
 }
-
-/* ================================================================== *
- * SMALL HELPERS
- * ================================================================== */
 
 const HOUR_MS = 3_600_000;
 
@@ -680,7 +514,6 @@ function clip(text: string | null | undefined, max: number): string {
   return `${raw.slice(0, Math.max(0, max - 1)).trimEnd()}…`;
 }
 
-/** Free text clipped to a bound, whitespace collapsed; one implementation for every assignment builder. */
 export const clipText = clip;
 
 function plural(n: number, one: string, many = `${one}s`): string {
@@ -721,20 +554,15 @@ function push<K, V>(map: Map<K, V[]>, key: K, value: V): void {
   else map.set(key, [value]);
 }
 
-/** Bounded list: the first `n`, and how many were left off. */
 function bounded<T>(items: readonly T[], n: number): { readonly items: readonly T[]; readonly more: number } {
   return { items: items.slice(0, n), more: Math.max(0, items.length - n) };
 }
 
-/** The provider that owns a standing obligation, from its id scheme (each provider's own `scheduledId`). */
 export const OBLIGATION_PROVIDER_PREFIXES: readonly { readonly prefix: string; readonly providerId: string }[] = [
   { prefix: "freshness:candidate-enrichment:", providerId: "candidate-enrichment" },
   { prefix: "freshness:jurisdiction:", providerId: "local-jurisdictions" },
   { prefix: "freshness:campaign-finance:", providerId: "campaign-finance" },
-  { prefix: "freshness:tracker:", providerId: "tracker-intake" },
-  /* MW-028: meetings discovery the owner's dispatch materialized. */
   { prefix: "freshness:meetings-discovery:", providerId: "meetings-discovery" },
-  /* The gaps Ask states about a body, one per body and gap code (2026-09-25). */
   { prefix: "freshness:ask-gap:", providerId: "ask-gaps" },
 ];
 
@@ -742,18 +570,15 @@ export function providerOfObligation(id: string): string | null {
   return OBLIGATION_PROVIDER_PREFIXES.find((p) => id.startsWith(p.prefix))?.providerId ?? null;
 }
 
-/** Conformance and proof runs write rows into the control plane; they are real rows and never real work. */
 export function isProofRecord(input: { readonly obligationId?: string | null; readonly project?: string | null }): boolean {
   if (typeof input.obligationId === "string" && input.obligationId.startsWith("proof-")) return true;
   return isProofProject(input.project);
 }
 
-/** A shared cost is attributable to no single assignment: today, the Scout prompt-cache pre-warm. */
 export function isSharedCost(entry: Pick<CostEntry, "routeId" | "attemptId">): boolean {
   return entry.routeId === SCOUT_PREWARM_ROUTE_ID || entry.attemptId.startsWith("scout-prewarm:");
 }
 
-/** What ran, as recorded on the Attempt. Never an assumed model. */
 export function workerModelOf(worker: WorkerRef | null | undefined): WorkerModel {
   if (!worker) return { kind: "NOT_RECORDED", says: "model not recorded — the attempt carries no worker identity" };
   const version = (worker.version ?? "").trim();
@@ -764,7 +589,6 @@ export function workerModelOf(worker: WorkerRef | null | undefined): WorkerModel
   return { kind: "MODEL", id: version };
 }
 
-/** Could this cost row's work have reached a paid model? Read from the Attempt, then the role policy. */
 function canReachPaidModel(role: string, attempt: Attempt | undefined): boolean {
   if (attempt) {
     const model = workerModelOf(attempt.worker);
@@ -790,10 +614,6 @@ function costRowKind(entry: CostEntry, attempt: Attempt | undefined): CostRowKin
 const GUARD_CODES = new Set(["STAGE_ALREADY_REACHED", "STAGE_OUT_OF_ORDER"]);
 const stageIndex = (stage: PipelineStage | null): number => (stage === null ? -1 : PIPELINE_STAGES.indexOf(stage));
 
-/* ================================================================== *
- * THE INDEX — every record keyed the way the join needs it
- * ================================================================== */
-
 interface Index {
   readonly now: number;
   readonly obligations: Map<string, StandingObligation>;
@@ -816,7 +636,6 @@ interface Index {
   readonly workerResultByAttempt: Map<string, WorkerResultRecord>;
   readonly pipelineByAttempt: Map<string, PipelineItemState[]>;
   readonly pipelineByWorkItem: Map<string, PipelineItemState[]>;
-  /** What readers were told, by `askedGapKey`, over the observation window; null when the observations were not read. */
   readonly askedGaps: ReadonlyMap<string, AskedGap> | null;
 }
 
@@ -907,11 +726,6 @@ function indexSources(src: AssignmentSources): Index {
   };
 }
 
-/* ================================================================== *
- * MEMBERSHIP — which assignment each work item belongs to
- * ================================================================== */
-
-/** The standing obligation a work item is a round of, or null when it was created on its own. */
 function obligationOfWorkItem(workItemId: string, idx: Index, seen = new Set<string>()): string | null {
   if (seen.has(workItemId)) return null;
   seen.add(workItemId);
@@ -941,7 +755,6 @@ interface Members {
   readonly workItemIds: Set<string>;
 }
 
-/** Every assignment id the records name, with the work items that belong to it. */
 function members(idx: Index): Map<string, Members> {
   const out = new Map<string, Members>();
   const standing = (obligationId: string): Members => {
@@ -956,7 +769,6 @@ function members(idx: Index): Map<string, Members> {
     const m = standing(obligationId);
     for (const occ of occs) m.workItemIds.add(occ.workItemId);
   }
-  // Every work item id any execution record names, so an orphan is shown rather than dropped.
   const workItemIds = new Set<string>([
     ...idx.workItems.keys(),
     ...idx.routeTasksByWorkItem.keys(),
@@ -973,10 +785,6 @@ function members(idx: Index): Map<string, Members> {
   }
   return out;
 }
-
-/* ================================================================== *
- * ROUNDS AND THEIR OUTCOMES
- * ================================================================== */
 
 interface Round {
   readonly occurrence: FreshnessOccurrence | null;
@@ -1174,10 +982,6 @@ function fromWorkerResult(r: WorkerResultRecord, clipAt: number): RoundOutcome {
       return result.verdict === "SUPPORTED"
         ? { state: "SUCCEEDED", code: "DETECTIVE_SUPPORTED", says: `The detective's evidence supports the answer: ${clip(result.conclusion, clipAt)}`, at, owner: "FLEET", nextAction: "" }
         : { state: "FAILED", code: `DETECTIVE_${result.verdict}`, says: `The detective did not settle it (${plainCode(result.verdict).toLowerCase()}): ${clip(result.nextAction, clipAt)}`, at, owner: "FLEET", nextAction: clip(result.nextAction, clipAt) };
-    case "ENGINEERING":
-      return result.verdict === "CANDIDATE_PROVED"
-        ? { state: "SUCCEEDED", code: "ENGINEERING_CANDIDATE_PROVED", says: "An engineering candidate was proved and waits for integration review.", at, owner: "ENGINEERING", nextAction: "Review the proved candidate for integration." }
-        : { state: "FAILED", code: `ENGINEERING_${result.verdict}`, says: `The engineering candidate did not prove out (${plainCode(result.verdict).toLowerCase()})${finding()}`, at, owner: "ENGINEERING", nextAction: "Revise the candidate and prove it again." };
   }
 }
 
@@ -1197,11 +1001,7 @@ function roundOutcome(round: Round, idx: Index, clipAt: number): RoundOutcome | 
   }
   const d = round.routeTask?.disposition ?? null;
   if (d) {
-    /*
-     * The disposition is the committed record; when a Scout earned it, the
-     * Scout's own typed outcome says more than the disposition it was mapped
-     * to (HUMAN_REQUIRED is committed as BLOCKED_CURRENTLY), so it leads.
-     */
+        /* A Scout's own typed outcome says more than the disposition it was mapped to, so it leads. */
     const scout = idx.scoutByAttempt.get(d.attemptId);
     if (scout && (scout.refusal === null || scout.refusal.length === 0)) return fromScout(scout, clipAt);
     return fromDisposition(d, clipAt);
@@ -1271,10 +1071,6 @@ function roundOutcome(round: Round, idx: Index, clipAt: number): RoundOutcome | 
   };
 }
 
-/* ================================================================== *
- * GATHERING ONE ASSIGNMENT'S RECORDS
- * ================================================================== */
-
 interface Gathered {
   readonly members: Members;
   readonly obligation: StandingObligation | null;
@@ -1290,7 +1086,6 @@ interface Gathered {
   readonly pipeline: readonly PipelineItemState[];
   readonly commits: readonly DispositionCommit[];
   readonly debt: FreshnessDebt | null;
-  /** Dispositions a PLAIN-CODE walk committed with its own row counts, oldest first. A Scout's count is not a source row count. */
   readonly observed: readonly RouteDisposition[];
 }
 
@@ -1318,7 +1113,6 @@ function gather(m: Members, idx: Index): Gathered {
       seenTasks.add(task.id);
       rounds.push({ occurrence: null, routeTask: task, routeTaskId: task.id, attempts: idx.attemptsByRouteTask.get(task.id) ?? [] });
     }
-    // An Attempt whose RouteTask is not on record still belongs here, as its own round.
     for (const a of idx.attemptsByWorkItem.get(wi) ?? []) {
       if (seenTasks.has(a.routeTaskId)) continue;
       seenTasks.add(a.routeTaskId);
@@ -1355,10 +1149,6 @@ function gather(m: Members, idx: Index): Gathered {
     .sort((a, b) => ms(a.at) - ms(b.at));
   return { members: m, obligation, occurrences, workItems, missingWorkItems, rounds, attempts, artifacts, costs, scouts, workerResults, pipeline, commits, debt, observed };
 }
-
-/* ================================================================== *
- * PART BUILDERS
- * ================================================================== */
 
 interface Clips {
   readonly text: number;
@@ -1402,14 +1192,7 @@ function workersOf(g: Gathered): Held<readonly AssignmentWorker[]> {
   );
 }
 
-/**
- * The jurisdiction key a subject names. A candidacy key
- * (`nj:2026:state-nj-place-rockaway:<office>:<person>`) carries its
- * jurisdiction in the contest segment; it is rewritten as the OCD path it
- * spells so the ONE display projection (`displayNameOf`) names it. Any other
- * subject is already a jurisdiction-shaped key and is returned unchanged; a
- * contest segment of an unrecognised shape is left alone rather than guessed.
- */
+/** A candidacy key carries its jurisdiction in the contest segment; it is rewritten as the OCD path it spells. Other shapes are left alone. */
 export function jurisdictionKeyOf(subject: string): string {
   const m = /^[a-z]{2}:\d{4}:(state-[a-z]{2}(?:-[a-z0-9-]+)?):[a-z0-9-]+:[a-z0-9-]+$/i.exec(subject);
   if (!m) return subject;
@@ -1433,7 +1216,6 @@ function whereOf(subject: string | null): Held<{ readonly name: string; readonly
   return held({ name: d.name, state: d.state });
 }
 
-/** How often readers were told one Ask gap, as the row says it; nothing when the observations were not read. */
 function askedSays(idx: Index, bodyId: string, code: AskGapCode): string {
   if (idx.askedGaps === null) return "";
   const told = idx.askedGaps.get(askedGapKey(bodyId, code));
@@ -1475,7 +1257,6 @@ function whatOfStanding(g: Gathered, idx: Index, src: AssignmentSources, clips: 
   const cadence = isScheduled(scheduled) ? clip(scheduled.basis, clips.text) : clip(`the scheduler cannot place it: ${scheduled.reason}`, clips.text);
   const routeWords = ob.routeId === null ? "no route named yet" : words(ob.routeId);
   const askGap = parseAskGapObligationId(ob.id);
-  /* MW-002: the latest round's own recorded question; an older round that recorded none says so. */
   const latestRound = [...g.workItems].sort((a, b) => (a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0))[0] ?? null;
   return {
     question: latestRound?.question ?? null,
@@ -1561,7 +1342,6 @@ function discoveryOf(g: Gathered, clips: Clips): AssignmentDiscovery {
       leads.push({ kind: f.kind, says: clip(f.summary, clips.text), url: null, artifactIds: f.artifactIds });
     }
   }
-  // The newest plain-code walk's own count of what the source returned.
   const observed = g.observed.at(-1);
   const sourceRows = observed?.observation?.rawCount ?? null;
   if (observed && sourceRows !== null) {
@@ -1631,8 +1411,6 @@ const ACQUISITION_ONLY = /acquisition only|nothing here is normali[sz]ed/i;
 function parsingOf(g: Gathered, clips: Clips): AssignmentParsing {
   const parsers = g.workerResults.filter((r) => r.result.role === "PARSER");
   const resulted = new Set(parsers.map((r) => r.attemptId));
-  // A parser attempt that closed without a parse result still ran: an aborted one failed, and a completed
-  // one whose result is not on record is counted as that. Neither is dropped.
   const closedParsers = g.attempts.filter((a) => a.worker?.role === "PARSER" && a.outcome !== null && !resulted.has(a.id));
   const abortedParsers = closedParsers.filter((a) => a.outcome !== "COMPLETED");
   const lostResults = closedParsers.length - abortedParsers.length;
@@ -1686,7 +1464,6 @@ function parsingOf(g: Gathered, clips: Clips): AssignmentParsing {
       ),
     };
   }
-  // The same failure repeated is one line with its count, so a retry loop reads as one cause.
   const repeats = new Map<string, number>();
   for (const f of failures) repeats.set(f, (repeats.get(f) ?? 0) + 1);
   const listed = bounded(
@@ -1831,7 +1608,6 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
   } else if (src.activation === null) {
     promoted = gap("OURS", "the activation gate was not read on this publish, so whether promotion is on is not shown");
   } else if (!src.activation.promotionEnabled) {
-    // The gate's full reason is carried once, on the view; each row names the fact.
     promoted = held({
       state: "NOT_PROMOTED",
       says: "Not promoted: the activation gate is off.",
@@ -1858,14 +1634,7 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
   };
 }
 
-/**
- * Retries: attempts beyond the first on each round, plus — for a standing
- * obligation — each worked round that followed a worked round which did not
- * discharge the obligation (only a committed reading discharges one). A
- * scheduled re-reading after a discharged round is routine work, not a retry.
- * A preceding round whose RouteTask is not on record cannot be judged, so no
- * retry is claimed for the round after it.
- */
+/** A scheduled re-reading after a discharged round is routine, not a retry; a round after an unrecorded RouteTask claims no retry. */
 function retriesOf(g: Gathered): number {
   let retries = 0;
   for (const r of g.rounds) retries += Math.max(0, r.attempts.length - 1);
@@ -2006,7 +1775,6 @@ function notesOf(g: Gathered, clips: Clips): { readonly items: readonly Assignme
 }
 
 function evidenceOf(g: Gathered, clips: Clips): AssignmentEvidence {
-  // Newest first throughout: the round, step or attempt the owner most likely wants is the latest.
   const workItemIds = [...g.members.workItemIds].reverse();
   const routeTaskIds = g.rounds.map((r) => r.routeTaskId).filter((id): id is string => id !== null).reverse();
   const attemptIds = [...g.attempts].reverse().map((a) => a.id);
@@ -2034,10 +1802,6 @@ function evidenceOf(g: Gathered, clips: Clips): AssignmentEvidence {
     },
   };
 }
-
-/* ================================================================== *
- * STATE AND PART 7
- * ================================================================== */
 
 const WORK_ITEM_STATE_READING: Partial<Record<WorkItemState, { readonly state: AssignmentState; readonly owner: NextStepOwner; readonly says: string; readonly next: string }>> = {
   BLOCKED: { state: "BLOCKED", owner: "ENGINEERING", says: "The work item is blocked.", next: "Clear the blocker its last result names, then run it again." },
@@ -2085,11 +1849,6 @@ function backoffOf(debt: FreshnessDebt | null, clipAt: number): AssignmentWaitin
   };
 }
 
-/**
- * When the runner may next dispatch a standing obligation: once it is due AND
- * its failure backoff (if any) has elapsed — the later of the two. Null when
- * neither is recorded.
- */
 export function eligibleAtOf(dueAt: string | null, retryAt: string | null): string | null {
   return latestIso([dueAt, retryAt]);
 }
@@ -2130,14 +1889,6 @@ function nextStepWords(input: {
   return input.outcome?.nextAction ?? "";
 }
 
-/**
- * **AN ASK GAP'S NEXT STEP, FROM ITS LATEST ROUND'S OWN NOTE.** (2026-09-25.)
- * A round closed `DISCOVERED` was carried by a routine read: the runner owns it,
- * and a `CADENCE_BROKEN` note names the read that is behind the owner's cadence.
- * A round closed `REQUIRES_NEW_ADAPTER` names the adapter engineering owes. The
- * note grammar is `ask-gap-id.ts`'s. Null before any round, or for any other
- * disposition, which keeps the ordinary reading.
- */
 function askGapStep(d: RouteDisposition | null, clipAt: number): { readonly owner: NextStepOwner; readonly nextAction: string } | null {
   if (d === null) return null;
   const parts = askGapNoteParts(d.note);
@@ -2170,7 +1921,6 @@ function askGapStep(d: RouteDisposition | null, clipAt: number): { readonly owne
   return null;
 }
 
-/** The next step of an obligation a detective argued absent, while the absence stands: its recheck and its stored unlock. */
 export function arguedAbsenceWords(ob: Pick<StandingObligation, "absentUntil" | "absenceUnlock"> | null, now: number, clipAt: number): string | null {
   if (ob === null || !ob.absentUntil || !(ms(ob.absentUntil) > now)) return null;
   const recheck = `Recorded as not published; it is looked for again by ${formatEastern(ob.absentUntil)}.`;
@@ -2201,7 +1951,6 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
   const stepWords = (state: AssignmentState, outcome: RoundOutcome | null): string =>
     nextStepWords({ state, outcome, overdue, dueAt, retryAt, eligibleAt, backoff: backoff !== null, band });
 
-  // WORKING first, whatever else is true.
   for (const r of g.rounds) {
     const out = roundOutcome(r, idx, clips.text);
     if (out?.state === "WORKING") {
@@ -2298,9 +2047,6 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
       : state === "UNKNOWN"
         ? { kind: "UNKNOWN", gap: { whose: "UNKNOWABLE_NOW", says: outcome.says } }
         : { kind: "NAMED", says: outcome.says };
-  // The age of the wait: a failure streak from its first failure; a result that
-  // did not discharge the record from the start of that streak; an overdue
-  // reading from when it became eligible.
   const since =
     state === "FAILED"
       ? (backoff?.since ?? outcome.at)
@@ -2308,7 +2054,6 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
         ? (backoff?.since ?? (overdue ? eligibleAt : null))
         : outcome.at;
   const askGap = ob !== null && parseAskGapObligationId(ob.id) !== null ? askGapStep(latest?.routeTask?.disposition ?? null, clips.text) : null;
-  /* DP-06: a standing argued absence says what would unlock it, from the condition stored with it. */
   const argued = arguedAbsenceWords(ob, now, clips.text);
   return {
     state,
@@ -2432,10 +2177,6 @@ function deriveWorkItem(g: Gathered, idx: Index, clips: Clips): Derived {
   };
 }
 
-/* ================================================================== *
- * THE BUILD
- * ================================================================== */
-
 function lastActivityOf(g: Gathered): string | null {
   return latestIso([
     ...g.attempts.map((a) => a.endedAt ?? a.startedAt),
@@ -2446,7 +2187,6 @@ function lastActivityOf(g: Gathered): string | null {
   ]);
 }
 
-/** Measured dollars joined to any assignment: the default denominator for per-assignment cost. */
 function attributedUsd(all: readonly Gathered[], idx: Index): number | null {
   let total = 0;
   let any = false;
@@ -2508,18 +2248,9 @@ function buildAll(src: AssignmentSources, options: AssignmentBuildOptions): Buil
   return { idx, memberships, rows };
 }
 
-/**
- * Every assignment the records name, each with its seven parts. UNBOUNDED —
- * the drilldown and the demo use it; the published view is built from it by
- * {@link buildAssignmentView}, which bounds it and says what it left out.
- */
 export function buildAssignments(src: AssignmentSources, options: AssignmentBuildOptions = {}): AssignmentRow[] {
   return buildAll(src, options).rows;
 }
-
-/* ================================================================== *
- * THE PUBLISHED VIEW — bounded, ordered, and honest about what it left out
- * ================================================================== */
 
 export interface AssignmentGroup {
   readonly state: AssignmentState;
@@ -2531,11 +2262,9 @@ export interface AssignmentGroup {
 export interface AssignmentCostSummary {
   readonly ledgerRows: number;
   readonly ledgerMeasuredUsd: number | null;
-  /** Measured dollars joined to an assignment, of every measured dollar in the ledger. */
   readonly attributed: Held<Measured>;
   readonly shared: { readonly rows: number; readonly usd: Held<Measured>; readonly says: string };
   readonly unattributed: { readonly rows: number; readonly usd: Held<Measured>; readonly says: string };
-  /** Ledger rows from work that could reach a paid model and reported no dollars, of all such rows. */
   readonly unmeasuredModelRows: Held<Measured>;
   readonly plainCodeRows: number;
 }
@@ -2545,22 +2274,10 @@ export interface AssignmentSummary {
   readonly byState: readonly { readonly state: AssignmentState; readonly count: Measured }[];
   readonly byLane: readonly { readonly lane: AssignmentLane; readonly count: Measured }[];
   readonly groups: readonly AssignmentGroup[];
-  /** Active standing obligations whose next reading is past due, of every active standing obligation with a next-due. */
   readonly overdue: Held<Measured>;
-  /** Active standing obligations carrying a live freshness debt (a failure backoff), of every active standing obligation. */
   readonly inBackoff: Held<Measured>;
   readonly costs: AssignmentCostSummary;
   readonly pipeline: Held<{ readonly linked: Measured; readonly unlinked: number }>;
-  /**
-   * Open Ask gaps by code: the active `freshness:ask-gap:` obligations. A gap —
-   * never zero — when no Ask-gap obligation is on record at all. Absent on a
-   * view published before the count existed, which a page names as not counted.
-   *
-   * `told` (2026-09-25): how many open gaps readers were told in the
-   * observation window, and the most-told of them by body and gap, each with its
-   * share of every telling of an open gap. Absent when the observations were not
-   * read, which the words say rather than implying nobody was told.
-   */
   readonly askGaps?: Held<{
     readonly open: number;
     readonly byCode: readonly { readonly code: AskGapCode; readonly count: Measured }[];
@@ -2571,24 +2288,16 @@ export interface AssignmentSummary {
   }>;
 }
 
-/** How many of the most-told open Ask gaps the summary names. */
 export const MOST_TOLD_ASK_GAPS = 5;
 
 export interface AssignmentView {
   readonly version: typeof ASSIGNMENT_VIEW_VERSION;
   readonly builtAt: string;
   readonly summary: AssignmentSummary;
-  /** The bounded, ordered list; each row's full chain opens live by its id. */
   readonly rows: readonly AssignmentListRow[];
-  /** Every assignment's compact identity and triage facts. The detailed rows
-   * remain bounded; any indexed id opens through the existing by-id read. */
   readonly allRowsIndex?: readonly AssignmentIndexRow[];
-  /** Public-safe publication attempts, including partial and held outcomes.
-   * A missing row means no publisher attempt is recorded, not no search. */
   readonly bodyAttempts?: readonly BodyPublicationAttempt[];
-  /** Counts over the entire holding, before bounded row selection. Empty key = shared or unplaced. */
   readonly geographicCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
-  /** Complete counts before row trimming, keyed by the durable Send identity. */
   readonly instructionCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
   /** Current work status by immutable key+receipt. A new same-key hunt never
    * inherits an old completed row as its own completed work. */
@@ -2614,17 +2323,13 @@ export interface AssignmentIndexRow {
   readonly subjectName: string | null;
   readonly stateCode: string | null;
   readonly assignmentKeys: readonly string[];
-  /** Every durable mark on this assignment, including retired hunt receipts. */
   readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string; readonly at: string }[];
   /** Receipt-specific state; an unproven carried row is UNKNOWN. */
   readonly instructionStates?: Readonly<Record<string, AssignmentState>>;
-  /** Full retained execution search terms from the canonical assignment membership. */
   readonly historyTerms?: readonly string[];
   readonly lastActivityAt: string | null;
   readonly lastAttemptAt?: string | null;
-  /** Recorded WorkItems whose dependency graph names this assignment's work. */
   readonly directDependentCount?: number | null;
-  /** Dependents for which this assignment is the sole unsatisfied upstream. */
   readonly readyAfterThisSettlesCount?: number | null;
   readonly band: 1 | 2 | 3 | null;
   readonly overdue: boolean | null;
@@ -2637,12 +2342,9 @@ export interface AssignmentIndexRow {
 
 export interface BodyPublicationAttempt {
   readonly bodyId: string;
-  /** The kind of fact this attempt was for, from the publication door it used. Null when the door is not mapped. */
   readonly family: AttemptFamily | null;
   readonly workItemId: string;
-  /** Only marks from this WorkItem's owning standing obligation. */
   readonly assignmentKeys: readonly string[];
-  /** The exact receipt in force when this result was published. */
   readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[];
   readonly at: string;
   readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
@@ -2702,7 +2404,6 @@ export function bodyPublicationAttempts(workItems: readonly WorkItem[],
   }).sort((a, b) => b.at.localeCompare(a.at) || a.workItemId.localeCompare(b.workItemId));
 }
 
-/** What the snapshot carries: the view, or the named reason it could not be built. */
 export type AssignmentPublication =
   | { readonly kind: "BUILT"; readonly view: AssignmentView }
   | { readonly kind: "NOT_BUILT"; readonly at: string; readonly says: string };
@@ -2784,7 +2485,6 @@ function summarize(built: Built, src: AssignmentSources, published: ReadonlyMap<
       ? gap("OURS", "no active standing obligation is on record")
       : held(measured(backoffCount, active.length, "active standing obligations carrying a live freshness debt (failed and waiting on a backoff retry), of every active standing obligation", "cp_obligations joined to cp_debts"));
 
-  // The ledger, whole: what joined an assignment (by the same membership the rows were built from), what is shared, what joined nothing.
   const assigned = new Set<string>();
   for (const m of built.memberships.values()) for (const wi of m.workItemIds) assigned.add(wi);
   let ledgerUsd = 0;
@@ -2872,7 +2572,6 @@ function summarize(built: Built, src: AssignmentSources, published: ReadonlyMap<
     return parsed === null ? [] : [{ bodyId: parsed.bodyId, code: parsed.code, active: o.active }];
   });
   const openAskGaps = askGapRows.filter((row) => row.active);
-  /* What readers were told of the OPEN gaps: a closed gap's old tellings owe nothing. */
   const told = (() => {
     const asked = built.idx.askedGaps;
     if (asked === null) return undefined;
@@ -2912,10 +2611,6 @@ function summarize(built: Built, src: AssignmentSources, published: ReadonlyMap<
   return { total, byState, byLane, groups, overdue, inBackoff, costs, pipeline: pipelineHeld, askGaps };
 }
 
-/**
- * The published view: every count over the whole universe, and a BOUNDED,
- * ordered set of rows, with what was left out stated per group.
- */
 export function buildAssignmentView(
   src: AssignmentSources,
   options: { readonly perGroup?: number; readonly byteBudget?: number; readonly reads?: AssignmentView["reads"] } = {},
@@ -2957,8 +2652,6 @@ export function buildAssignmentView(
     const instructionStates: Record<string,AssignmentState> = {};
     for (const mark of assignmentRefs) {
       const sameKey=assignmentRefs.filter(other=>other.key===mark.key);
-      // An aggregate standing state covers every round. It cannot certify a
-      // separate same-key hunt without its own accepted result/reuse receipt.
       instructionStates[instructionReceiptKey(mark.key,mark.ref)] = sameKey.some(other=>other.ref!==mark.ref)
         ? "UNKNOWN" : listed.state;
     }
@@ -3002,12 +2695,7 @@ export function buildAssignmentView(
       if (group.length > 0) groups.push(group.map((r) => listRowOf(r)));
     }
   }
-  /*
-   * The byte budget, fairly: rows are admitted one RANK at a time across every
-   * group (each group's first, then each group's second …), so a budget spent
-   * early can never leave a whole state unlisted. A row that would cross the
-   * budget is left out and counted.
-   */
+    /* Rows are admitted one rank at a time across every group, so an early-spent budget never leaves a whole state unlisted. */
   const kept: AssignmentListRow[] = [];
   let bytes = 0;
   let trimmed = 0;
@@ -3051,10 +2739,6 @@ export function buildAssignmentView(
   };
 }
 
-/* ================================================================== *
- * THE PAGE'S AUDIT OF ITSELF
- * ================================================================== */
-
 function pushHeld(out: RenderedNumber[], label: string, h: Held<Measured>): void {
   if (h.held) out.push({ label, value: h.value.value, denominator: h.value.denominator, contract: h.value.contract });
 }
@@ -3063,7 +2747,6 @@ function pushMeasured(out: RenderedNumber[], label: string, m: Measured): void {
   out.push({ label, value: m.value, denominator: m.denominator, contract: m.contract });
 }
 
-/** The numbers one assignment row draws, for `auditRenderedNumbers`. */
 export function assignmentRowNumbers(row: AssignmentRow): RenderedNumber[] {
   const out: RenderedNumber[] = [];
   const at = `assignment ${row.id}`;
@@ -3080,7 +2763,6 @@ export function assignmentRowNumbers(row: AssignmentRow): RenderedNumber[] {
   return out;
 }
 
-/** A group's listed and left-out rows, each out of the group's whole count, as the page draws them. */
 export function groupMeasures(g: AssignmentGroup): { readonly listed: Measured; readonly leftOut: Measured } {
   const source = "the published assignment view's group counts";
   return {
@@ -3093,20 +2775,10 @@ export interface AssignmentCounts {
   readonly total: number;
   readonly byState: readonly { readonly state: AssignmentState; readonly count: Measured }[];
   readonly byLane: readonly { readonly lane: AssignmentLane; readonly count: Measured }[];
-  /**
-   * Why these counts are NOT the whole universe, in words; empty when they
-   * are. A half that was not published or could not be read is unknown, so a
-   * page must not draw these sums as counts while this is non-empty: an
-   * unknown never reads as zero.
-   */
+    /** Non-empty when a half was not published or not read: the page must not draw these sums as counts. */
   readonly missing: readonly string[];
 }
 
-/**
- * The counts the page's filters show: the published control-plane view and
- * the live routine contracts together, each out of both together. Either half
- * may be missing (not published, not connected); what is counted says so.
- */
 export function combinedCounts(
   view: AssignmentView | null,
   routine: readonly { readonly state: AssignmentState; readonly lane: AssignmentLane }[],
@@ -3142,7 +2814,6 @@ export function combinedCounts(
   };
 }
 
-/** The numbers one published list row draws, for `auditRenderedNumbers`. */
 export function assignmentListRowNumbers(row: AssignmentListRow): RenderedNumber[] {
   const out: RenderedNumber[] = [];
   const at = `assignment ${row.id}`;
@@ -3152,7 +2823,6 @@ export function assignmentListRowNumbers(row: AssignmentListRow): RenderedNumber
   return out;
 }
 
-/** Every number the view draws in its summary, plus the numbers of the list rows the page renders. */
 export function assignmentRenderedNumbers(view: AssignmentView, renderedRows: readonly AssignmentListRow[] = []): RenderedNumber[] {
   const out: RenderedNumber[] = [];
   for (const s of view.summary.byState) pushMeasured(out, `assignments · ${STATE_WORDS[s.state].label}`, s.count);
@@ -3180,7 +2850,6 @@ export function assignmentRenderedNumbers(view: AssignmentView, renderedRows: re
   return out;
 }
 
-/** Open Ask gaps by code as the owner reads them, or the named reason they are not counted — never a zero standing in for unknown. */
 export function askGapCountWords(view: Pick<AssignmentView, "summary">): string {
   const counted = view.summary.askGaps;
   if (counted === undefined) return "Open Ask gaps are not counted on this published list: it was built before the count existed.";
@@ -3204,7 +2873,6 @@ export function askGapCountWords(view: Pick<AssignmentView, "summary">): string 
   );
 }
 
-/** Every number the Ask-gap summary draws, for `auditRenderedNumbers`: the open gaps by code, and what readers were told of them. */
 export function askGapRenderedNumbers(view: Pick<AssignmentView, "summary">): RenderedNumber[] {
   const out: RenderedNumber[] = [];
   const counted = view.summary.askGaps;
@@ -3218,17 +2886,14 @@ export function askGapRenderedNumbers(view: Pick<AssignmentView, "summary">): Re
   return out;
 }
 
-/** The combined filter counts, for `auditRenderedNumbers`. */
 export function combinedCountNumbers(counts: AssignmentCounts): RenderedNumber[] {
   const out: RenderedNumber[] = [];
-  // Incomplete counts are not drawn as numbers (AssignmentFilters), so there is nothing to audit.
   if (counts.missing.length > 0) return out;
   for (const s of counts.byState) pushMeasured(out, `assignments on this page · ${STATE_WORDS[s.state].label}`, s.count);
   for (const l of counts.byLane) pushMeasured(out, `assignments on this page · ${LANE_WORDS[l.lane].label}`, l.count);
   return out;
 }
 
-/** The view's own stated-N claims: the counts by state and by lane each sum to the total, and the published list is what it says. */
 export function assignmentCountClaims(view: AssignmentView): CountClaim[] {
   const byState = view.summary.byState.reduce((n, s) => n + s.count.value, 0);
   const byLane = view.summary.byLane.reduce((n, l) => n + l.count.value, 0);
@@ -3245,7 +2910,6 @@ export function assignmentCountClaims(view: AssignmentView): CountClaim[] {
   ];
 }
 
-/** How long, in hours, a row has waited as of `nowIso`; null when it is not measured from anything. */
 export function waitingHours(row: { readonly waiting: { readonly since: string | null } }, nowIso: string): number | null {
   const since = ms(row.waiting.since);
   const now = ms(nowIso);

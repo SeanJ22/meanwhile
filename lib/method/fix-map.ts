@@ -1,4 +1,4 @@
-/** One observation per reusable method and place. Production schema wiring belongs to River. */
+/** One observation per reusable method and place. */
 export type FixMapState = "WORKS" | "FAILS" | "UNTRIED";
 export interface FixMapRow {
   readonly methodId: string; readonly placeId: string; readonly state: FixMapState;

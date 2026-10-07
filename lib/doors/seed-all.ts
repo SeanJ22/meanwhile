@@ -1,11 +1,7 @@
 /**
- * DB-10, DB-11, DB-23: the one import of today's doors, as a function the
- * runner can call on start and the seed script calls by hand.
- *
- * It writes through the same upserts every derive step uses, so a second run
- * changes nothing and a hand edit newer than the wiring is kept. The runner
- * seeds only when `WTP_DOORS_SEED=on` and only while the registry holds no
- * doors; with the switch unset nothing is written (the way back).
+ * The one import of today's doors, through the same upserts every derive step
+ * uses, so a second run changes nothing and a newer hand edit is kept. The
+ * runner seeds only when `WTP_DOORS_SEED=on` and the registry holds no doors.
  */
 
 import { readDerivedMeetingWiring, type DerivedWiringRecord } from "../civic-data/derived-meeting-wiring.ts";

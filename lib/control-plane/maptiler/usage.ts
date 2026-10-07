@@ -1,29 +1,3 @@
-/**
- * **FROM A PROVIDER'S TIMELINE TO A SENTENCE THE OWNER CAN ACT ON**
- * (MAPQ-5, MAPQ-6 and MAPQ-7, 2026-09-07).
- *
- * Pure. Nothing here reads a clock, a network or an environment — the instant
- * and the reading are arguments, so a test can put the clock where it needs it
- * and a projection is exact.
- *
- * ## The four questions, and the one this file refuses to answer
- *
- *   How much did we use?              — summed from the provider's own rows
- *   Which key spent it?               — classified against `lib/map/key-matrix.ts`
- *   Which service spent it?           — kept apart, because Tiles and Rendered
- *                                       maps are billed differently
- *   When does the allowance run out?  — burn rate over a stated window
- *
- * The question it refuses: **"how many humans was that?"** Production-key usage
- * is public-origin usage plus any bounded probe we have named. It is not proof
- * that a request came from a person. An external crawler that genuinely
- * executes the public site is part of public-origin usage and always was. What
- * changed with MAPQ-1 is narrower and worth exactly what it is: OUR declared
- * robots are no longer mixed into that number. Every wording in this file is
- * written to that boundary, and `tests/maptiler-usage.test.ts` asserts the
- * panel never says "human", "person", "reader" or "organic" about it.
- */
-
 import { KEY_MATRIX, type KeyIdentityName } from "../../map/key-matrix.ts";
 import {
   ownerDigestAttention,
@@ -41,17 +15,7 @@ import {
 } from "./types.ts";
 import type { MapTilerTimeline } from "./client.ts";
 
-/* ------------------------------------------------------------------ *
- * 1. NORMALIZE — the provider's shape into ours, losing nothing
- * ------------------------------------------------------------------ */
-
-/**
- * Flatten one timeline into day rows.
- *
- * `estimated_data` is kept and MARKED rather than dropped or merged. MapTiler
- * projects the remainder of the current billing period, and a projection summed
- * into a measurement produces a number that is neither.
- */
+/** `estimated_data` is kept and marked, never summed into a measurement. */
 export function normalizeTimeline(input: {
   readonly timeline: MapTilerTimeline;
   readonly classifier: MapTilerClassifier;
@@ -114,11 +78,6 @@ export function normalizeTimeline(input: {
   return rows;
 }
 
-/* ------------------------------------------------------------------ *
- * 2. CLASSIFY — a provider key label against our own matrix
- * ------------------------------------------------------------------ */
-
-/** Where a key's requests are expected to come from, in plain words. */
 export type KeyExpectation =
   | "PUBLIC_PRODUCTION"
   | "OWNER_MANUAL_STAGING"
@@ -143,16 +102,7 @@ const EXPECTATION_BY_IDENTITY: Readonly<Record<string, KeyExpectation>> = {
   "meanwhile-synthetic-provider-smoke": "BOUNDED_SMOKE",
 };
 
-/**
- * Match a provider key label to one of our declared identities.
- *
- * Exact, case-insensitive, on the identity NAME the owner is asked to give the
- * key in `docs/maptiler-keys.md`. Deliberately not a fuzzy match: a key called
- * `meanwhile-prod-browser-old` is a different key, and quietly folding it into
- * production's number is how the first bill became unreadable. Anything we do
- * not recognise is UNCLASSIFIED, is expected to be zero, and is meant to be
- * visually obvious when it is not.
- */
+/** Exact, case-insensitive match on the identity name; deliberately not fuzzy. Anything unrecognised is UNCLASSIFIED. */
 export function classifyKeyLabel(label: string): {
   readonly identity: KeyIdentityName | "UNCLASSIFIED";
   readonly expectation: KeyExpectation;
@@ -181,10 +131,6 @@ const SAYS: Readonly<Record<KeyExpectation, string>> = {
     "installed somewhere nobody has declared.",
 };
 
-/* ------------------------------------------------------------------ *
- * 3. PROJECT — the panel
- * ------------------------------------------------------------------ */
-
 export interface ServiceRow {
   readonly service: string;
   readonly requests: number;
@@ -204,16 +150,14 @@ export interface BurnReading {
 export interface ActorComparison {
   readonly state: "MEASURED" | "UNKNOWN";
   readonly counts: MapTilerActorCounts | null;
-  /** Defects, not ratios. Empty is the expected state after MAPQ-1. */
+  /** Defects, not ratios. Empty is the expected state. */
   readonly defects: readonly string[];
   readonly says: string;
 }
 
 export interface MapTilerPanel {
   readonly connection: MapTilerUsageSnapshot["connection"];
-  /** Whether the face is showing a current measurement, retained LKG, or no measurement. */
   readonly readingState: "MEASURED_CURRENT" | "MEASURED_LKG" | "UNKNOWN";
-  /** The one-line reading. Plain language, and never a claim about people. */
   readonly says: string;
   readonly collectedAt: string;
   readonly since: string | null;
@@ -226,13 +170,10 @@ export interface MapTilerPanel {
   readonly byKey: readonly KeyRow[];
   readonly byService: readonly ServiceRow[];
   readonly burn: BurnReading | null;
-  /** MAPQ-1's standing fact: is ordinary automation externally blocked right now? */
   readonly automationBlocked: boolean;
   readonly automationSays: string;
   readonly actors: ActorComparison | null;
-  /** The newest automatic attempt when it failed after the displayed measurement. */
   readonly latestAttemptSays: string | null;
-  /** Everything that needs the owner, as finished sentences. */
   readonly needsOwner: readonly string[];
 }
 
@@ -258,14 +199,7 @@ function addDays(iso: string, days: number): string {
   return date.toISOString().slice(0, 10);
 }
 
-/**
- * Burn over the trailing measured window.
- *
- * MEASURED days only: including the provider's own projection for the rest of
- * the period would make the projection an input to itself. The window is
- * stated in the reading, because "average daily burn" without a window is a
- * number nobody can check.
- */
+/** Measured days only: the provider's projection must not be an input to itself. */
 export function burnFrom(input: {
   readonly days: readonly MapTilerUsageDay[];
   readonly remaining: number | null;
@@ -302,16 +236,7 @@ export function burnFrom(input: {
   return { perDay, windowDays: window.length, windowSince, windowUntil, exhaustionDate, says };
 }
 
-/**
- * The comparison MAPQ-7 asks for — and the defect it is looking for.
- *
- * The purpose is anomaly detection, not a ratio to normalize. A declared
- * synthetic run that reached MapTiler after MAPQ-1 is a DEFECT, so it is named
- * as one rather than folded into an expected proportion. The only evidence we
- * can have of that from the provider's side is usage on a key nobody declared,
- * or smoke-key usage on days nobody ran the smoke — both of which are stated,
- * neither of which is inferred from a ratio.
- */
+/** Anomaly detection, not a ratio: a declared synthetic run reaching MapTiler is a defect. */
 export function compareActors(input: {
   readonly counts: MapTilerActorCounts | null;
   readonly byKey: readonly KeyRow[];
@@ -375,10 +300,7 @@ function measuredSnapshotIssue(snapshot: MapTilerUsageSnapshot): string | null {
   return null;
 }
 
-/**
- * Promote only a complete provider reading. A failed or partial attempt is
- * recorded on the retained prior measurement instead of replacing that LKG.
- */
+/** Promote only a complete reading; a failed or partial attempt is recorded on the retained prior measurement. */
 export function retainMapTilerLastKnownGood(input: {
   readonly candidate: MapTilerUsageSnapshot;
   readonly previous: MapTilerUsageSnapshot | null | undefined;
@@ -425,14 +347,6 @@ export function retainMapTilerLastKnownGood(input: {
   return { ...failedCandidate, latestAttempt: failedAttempt };
 }
 
-/**
- * The whole panel, from one published snapshot.
- *
- * `automationBlocked` is a fact about THIS repository at the commit the panel
- * was built from, not something read back from the provider — so it is stated
- * with its evidence rather than asserted: the barrier is a class guard with a
- * test, and the panel names it.
- */
 export function projectPanel(input: {
   readonly snapshot: MapTilerUsageSnapshot;
   readonly burnWindowDays?: number;
@@ -519,11 +433,7 @@ export function projectPanel(input: {
     })
     .sort((a, b) => b.requests - a.requests || a.label.localeCompare(b.label));
 
-  /*
-   * Every declared identity gets a row even at zero. A key with no traffic is a
-   * fact — it is how the panel shows that our automation stopped spending — and
-   * a missing row would read as "not measured", which is a different fact.
-   */
+  /* Every declared identity gets a row even at zero; a missing row would read as "not measured". */
   for (const identity of KEY_MATRIX) {
     if (identity.name === "none") continue;
     if (byKey.some((row) => row.identity === identity.name)) continue;
@@ -544,12 +454,8 @@ export function projectPanel(input: {
   const keys = totalFor(snap.days, "api_keys");
   const services = totalFor(snap.days, "services");
   /*
-   * The two classifiers are two views of ONE population, so the total is the
-   * LARGER of them rather than their sum — adding them would double the bill.
-   * Larger rather than either one in particular because the two can disagree,
-   * and understating a quota reading is the dangerous direction: a number that
-   * is too low reads as headroom. When they disagree the gap is visible in the
-   * two tables, which is where an owner can act on it.
+   * The two classifiers are two views of one population: the total is the larger of them,
+   * never their sum. Larger, because understating a quota reads as headroom.
    */
   const used = Math.max(keys.measured, services.measured);
   const estimatedIncluded = Math.max(keys.estimated, services.estimated);
@@ -612,32 +518,8 @@ export function projectPanel(input: {
   };
 }
 
-/**
- * **THE PANEL'S NUMBERS, HANDED TO THE AUDIT THE REST OF THE CONSOLE USES.**
- * (Found at integration, 2026-09-07, by two independent review dimensions.)
- *
- * `app/(admin)/admin/page.tsx` collects every section's figures into one array,
- * runs `auditRenderedNumbers` over it, and REFUSES TO RENDER THE WHOLE PAGE if
- * any of them lacks a denominator or an interpretation contract. Cost,
- * obligations, intake and the Fleet all feed it. This panel shipped without
- * feeding it, which made it the only section on the owner's home page emitting
- * numbers outside the guarantee the page is built on — a parallel version of a
- * rule that already exists, which `lib/control-plane/owner-surface.ts` says
- * never to build.
- *
- * The contract on each is the sentence the owner is entitled to read the number
- * BY. "9,541 requests" is not information: 9,541 of 100,000 is a Tuesday and
- * 9,541 of 10,000 is an emergency.
- *
- * **A denominator here may be smaller than its value, and that is deliberate.**
- * `auditRenderedNumbers` checks that a denominator EXISTS, not that it bounds
- * the value — and it must not, because the measurement that started all of this
- * was 101,863 requests against an allowance of 100,000. A panel that could not
- * represent an overrun would be useless exactly when it mattered.
- */
+/** Admin refuses to render the page if any audited figure lacks a denominator or contract, so the panel feeds `auditRenderedNumbers`. */
 export function maptilerSectionNumbers(panel: MapTilerPanel): readonly RenderedNumber[] {
-  /* Nothing is rendered as a number when there is no reading, so nothing is
-   * declared. An unasked question has no denominator because it has no value. */
   if (panel.connection !== "CONNECTED" || panel.used === null) return [];
   const numbers: RenderedNumber[] = [];
   const used = panel.used;
@@ -693,10 +575,6 @@ export function maptilerSectionNumbers(panel: MapTilerPanel): readonly RenderedN
   return numbers;
 }
 
-/* ------------------------------------------------------------------ *
- * 5. APPEND-ONLY ATTEMPT HISTORY — 24h / 7d / 30d, never latest-only
- * ------------------------------------------------------------------ */
-
 export type MapTilerHistoryDisposition =
   | MapTilerUsageCollectionOutcome["disposition"]
   | "INCONSISTENT_RECEIPT";
@@ -724,7 +602,6 @@ export interface MapTilerHistoryWindow {
 
 export interface MapTilerAttemptHistory {
   readonly windows: readonly MapTilerHistoryWindow[];
-  /** Exact, newest-first receipts whose finish time lies in the last 30 days. */
   readonly attempts: readonly MapTilerHistoryAttempt[];
   /** Durable rows whose time is malformed or in the future; never silently omitted. */
   readonly unplaced: readonly MapTilerHistoryAttempt[];
@@ -736,11 +613,7 @@ const MAPTILER_HISTORY_WINDOWS = [
   { id: "30d", label: "30 days", milliseconds: 30 * 24 * 60 * 60 * 1_000 },
 ] as const;
 
-/**
- * Project the durable owner-digest rows without rereading the replaceable
- * owner snapshot. A malformed receipt remains visible as inconsistent and is
- * never counted as a successful collection.
- */
+/** A malformed receipt stays visible as inconsistent and is never counted as a successful collection. */
 export function projectMapTilerAttemptHistory(
   digests: readonly OwnerDigestRecord[],
   nowIso: string,
@@ -796,7 +669,6 @@ export function projectMapTilerAttemptHistory(
   return { windows, attempts: placed, unplaced };
 }
 
-/** Every history figure rendered by Admin, with the attempt population named. */
 export function maptilerHistoryNumbers(history: MapTilerAttemptHistory): readonly RenderedNumber[] {
   return history.windows.flatMap((window) => {
     const denominator = window.attempts;
@@ -817,7 +689,6 @@ export function maptilerHistoryNumbers(history: MapTilerAttemptHistory): readonl
   });
 }
 
-/** The allowance the reading was taken against, and whether anybody confirmed it. */
 export function allowanceFrom(raw: string | undefined): {
   readonly allowance: number;
   readonly assumed: boolean;

@@ -1,7 +1,7 @@
 /**
- * DB-26: the fetch the hourly first look uses. It says who we are (the same identified User-Agent every adapter
- * sends), goes at a human pace to any one website, gives up on a silent one, and never reads more than a megabyte.
- * A 429 or 503 is a failed look, so the door is read on its schedule and looked at again later.
+ * The fetch the hourly first look uses: the identified User-Agent, a human
+ * pace per website, a timeout, and at most a megabyte read. A 429 or 503 is a
+ * failed look.
  */
 
 import { sourceUserAgent } from "../sources/http.ts";

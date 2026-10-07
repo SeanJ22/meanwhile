@@ -1,12 +1,4 @@
-/**
- * **THE PERIODS ADMIN OFFERS, GENERATED FROM THE CLOCK.** (S12.3, Sean 5:05 and 5:08 PM MST, October 1, 2026.)
- *
- * Today, Last 7 days, Last 30 days, then the current month the moment it starts (at midnight on November 1, November 2026 appears
- * by itself), then earlier months newest first. Once the months span more than one calendar year they are grouped by year. Nothing
- * here is a list written down in advance. Days and months are Eastern, like everything else Admin shows.
- *
- * PURE: the clock is passed in. Client-safe.
- */
+/** Generated from the clock, never a fixed list. Days and months are Eastern. PURE; client-safe. */
 export interface PeriodOption { readonly id: string; readonly label: string }
 export interface PeriodGroup { readonly label: string | null; readonly options: readonly PeriodOption[] }
 
@@ -22,16 +14,11 @@ export const easternMonth = (now: Date): string => easternDay(now).slice(0, 7);
 
 export const monthWords = (month: string): string => new Date(`${month}-01T12:00:00Z`).toLocaleDateString("en-US", { timeZone: "UTC", month: "long", year: "numeric" });
 
-/** The month before `month`. */
 function previousMonth(month: string): string {
   const [y, m] = month.split("-").map(Number);
   return m === 1 ? `${y - 1}-12` : `${y}-${String(m - 1).padStart(2, "0")}`;
 }
 
-/**
- * The picker's groups. `earliest` is the oldest month with anything in it (`YYYY-MM`), or null when none is known: months run from
- * the current one back to it, and with none known only the current month is offered.
- */
 export function periodGroups(now: Date, earliest: string | null): readonly PeriodGroup[] {
   const current = easternMonth(now);
   const months: string[] = [];
@@ -47,12 +34,10 @@ export function periodGroups(now: Date, earliest: string | null): readonly Perio
   return [rolling, ...years.map((y): PeriodGroup => ({ label: y, options: months.filter((m) => m.startsWith(y)).map((m) => ({ id: m, label: label(m) })) }))];
 }
 
-/** Is this one of the ids the picker can hold right now? */
 export function isPeriod(id: string, now: Date, earliest: string | null): boolean {
   return periodGroups(now, earliest).some((g) => g.options.some((o) => o.id === id));
 }
 
-/** A period in words: "Today", "Last 7 days", "This month (October 2026)", "September 2026". */
 export function periodLabel(id: string, now: Date): string {
   if (id === TODAY) return "Today";
   if (id === LAST_7_DAYS) return "Last 7 days";

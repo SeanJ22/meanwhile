@@ -6,65 +6,7 @@ import type { DoorRecord } from "../../doors/registry.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
-/**
- * THE DURABLE FILESYSTEM STORE — where "the worker may die" stops being a
- * design intention.
- *
- * ============================================================================
- * WHY A FILESYSTEM AND NOT A DATABASE
- *
- * Restated here so the next session does not re-litigate it from the code:
- *
- *   - Postgres/Neon in this repository is the SERVING substrate for
- *     reader-facing data. Control-plane work state is not reader-facing, and
- *     campaign-finance filings are already kept out of Postgres where it does not
- *     belong. A Drizzle migration for it would additionally trip `pnpm db:gate`,
- *     which asks PRODUCTION whether the schema is applied — and would freeze a
- *     release for a reason unrelated to truth.
- *   - The repository's existing, governed durability substrate for canonical
- *     multi-session work state is the committed file store: `data/workstate/*.json`,
- *     `data/method/knowledge.json`, `docs/governance/ledger.jsonl`. That is an
- *     authorized substrate which already satisfies "survives process death".
- *
- * The store is therefore PROVIDER-NEUTRAL at the interface and a filesystem at
- * the implementation. Swapping it later is a new file in this directory, not a
- * change to a single domain rule.
- * ============================================================================
- *
- * THE RACES THIS FILE GUARDS, AND THE ONES THE SUITE CAN ACTUALLY OBSERVE —
- * stated plainly, because claiming a proof the tests do not deliver is worse
- * than claiming nothing:
- *
- *   OBSERVED IN-PROCESS. Compare-and-set. Two `await`ed writers that both read
- *   revision N and both write are genuinely serialized by the single-threaded
- *   event loop, so the second one really does find revision N+1 and really is
- *   refused by `ConcurrentModification`. That is a true observation of the CAS
- *   rule, and it is the rule the coordinator depends on.
- *
- *   OBSERVED IN-PROCESS. Lock exclusion. `withLock` re-entered while held really
- *   does raise `RepositoryLockHeld`, because the lock is an `wx` file create and
- *   the file really is there.
- *
- *   NOT OBSERVED IN-PROCESS. True simultaneity. One process cannot interleave
- *   two writes mid-`writeFile`, so the suite cannot demonstrate a torn read. The
- *   defences against it are structural rather than tested here: every aggregate
- *   write is `write to a temp file, then rename`, and `rename` over an existing
- *   path is atomic on both POSIX and Windows (`MoveFileEx` with
- *   `MOVEFILE_REPLACE_EXISTING`), so a concurrent reader sees either the whole
- *   old file or the whole new one and never a half-written one. Every history
- *   write is an `appendFile`, which opens with `O_APPEND` so two appenders
- *   cannot overwrite each other's offset. And every read-modify-write sequence
- *   is wrapped in an exclusive-create (`wx`) lock file, which is the primitive
- *   that actually holds across processes.
- *
- *   NOT OBSERVED ANYWHERE HERE. Crash-consistency of the filesystem itself
- *   (fsync, journal mode, network filesystems). We do not fsync, so a machine
- *   losing power mid-write can still lose the last write. What this store
- *   guarantees is that a lost write is a write that did not happen, never a
- *   half-write that a later reader mistakes for a whole one.
- *
- * Nothing here reads a clock.
- */
+/** Durable filesystem store. Every write is an exclusive create, so compare-and-set and append are arbitrated by the filesystem. */
 
 import { appendFile, link, mkdir, open, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
@@ -124,30 +66,14 @@ import {
   type RecordProjection,
 } from "./types.ts";
 
-/** ------------------------------------------------------------ primitives */
-
-/**
- * A temp-file suffix that is unique per write without being random.
- *
- * Randomness in a library is a replay hazard and this project treats it as one,
- * so the discriminator is the process id plus a per-process counter: unique
- * across concurrent writers, and reproducible in a way a random name is not.
- */
+/** Unique per write without randomness: process id plus a per-process counter. */
 let tempCounter = 0;
 function tempPath(target: string): string {
   tempCounter += 1;
   return `${target}.${process.pid}.${tempCounter}.tmp`;
 }
 
-/**
- * A filename that is safe on every filesystem and still traceable to its key.
- *
- * The readable prefix is for a human opening the directory; the `fingerprint`
- * suffix is what makes it injective. A sanitiser alone would map
- * `pima.legistar.com` and `pima_legistar_com` onto one file, and two hosts
- * sharing one budget file is exactly the failure the shared budget was built to
- * prevent — arriving through the storage layer instead of the arithmetic.
- */
+/** The readable prefix is for humans; the `fingerprint` suffix makes the name injective. */
 function fileNameFor(key: string): string {
   const readable = key.replace(/[^A-Za-z0-9._-]/g, "_").slice(0, 64);
   return `${readable}-${fingerprint([key])}`;
@@ -162,24 +88,9 @@ function isEexist(error: unknown): boolean {
 }
 
 /**
- * Create `target` with its FULL contents, or fail because it already exists.
- *
- * This is the primitive the whole compare-and-set rests on, and it has to be
- * genuinely all-or-nothing. Write-then-rename is atomic for a REPLACEMENT and
- * useless here: two writers that both rename both succeed, and the second one
- * silently destroys the first. So the sequence is write a complete temp file,
- * then `link` it into place — `link` fails with EEXIST when the target exists,
- * and when it succeeds the target has the whole content from the instant it is
- * visible. There is no window in which a reader can see a half-written file and
- * no window in which two writers can both believe they won.
- *
- * `link` is unavailable on a few filesystems. The fallback is an exclusive
- * `open(path, "wx")` followed by a write, which keeps the exclusivity but opens
- * a brief window where a concurrent reader sees an EMPTY file. That reader gets
- * `CorruptPersistedState` — noisy, and never a wrong answer, which is the right
- * way round for a fallback.
- *
- * Returns false when the target already existed.
+ * All-or-nothing exclusive create: write a complete temp file, then `link` it into place (EEXIST when the
+ * target exists). Where `link` is unavailable, an exclusive `open(path, "wx")` plus write lets a concurrent
+ * reader briefly see an empty file, which reads as `CorruptPersistedState`, never a wrong answer.
  */
 async function exclusiveCreate(target: string, contents: string): Promise<boolean> {
   await mkdir(path.dirname(target), { recursive: true });
@@ -212,16 +123,7 @@ async function exclusiveCreate(target: string, contents: string): Promise<boolea
   }
 }
 
-/**
- * Read and parse one JSON file, or refuse by name.
- *
- * ENOENT is the ONLY absence this function admits, and it means the record was
- * never written. Everything else — a truncated file, a permissions failure, a
- * JSON syntax error, an envelope missing its revision — is a FAILED READ and is
- * raised. Returning `null` for any of those would teach every caller above that
- * unreadable state and absent state are the same thing, which is the exact
- * substitution this product cannot survive.
- */
+/** ENOENT is the only absence; every other failure is raised, never returned as null. */
 async function readJsonFile<T>(file: string, validate: (parsed: unknown) => T): Promise<T | null> {
   let raw: string;
   try {
@@ -267,16 +169,7 @@ function validateEnvelope<T>(file: string, kind: string, parsed: unknown): Persi
   return { id: row.id, revision: row.revision, updatedAt: row.updatedAt, value: row.value as T };
 }
 
-/**
- * List a directory that may legitimately not exist yet.
- *
- * A missing KIND directory means nothing of that kind has ever been written, and
- * the store root — which the factory created — proves we are looking in the
- * right place. A missing ROOT is different and is corruption: it means the
- * directory we were handed and wrote into is gone, and answering "no records"
- * there would be a check that could not reach its subject printing like a
- * passing one.
- */
+/** A missing kind directory is empty; a missing root is corruption. */
 async function listDirectory(root: string, dir: string): Promise<string[]> {
   try {
     return await readdir(dir);
@@ -297,27 +190,7 @@ async function listDirectory(root: string, dir: string): Promise<string[]> {
   return [];
 }
 
-/** ---------------------------------------------------------- aggregates */
-
-/**
- * ONE FILE PER REVISION, and the current state is the highest one present.
- *
- * The obvious layout — one file per aggregate, rewritten in place — cannot
- * implement compare-and-set. Two writers that both read revision 3 both write
- * revision 4, both `rename` over the same path, and both succeed; the second
- * silently destroys the first, which is the exact lost update the revision
- * number was introduced to prevent. Rename is atomic for a REPLACEMENT and
- * therefore no help at all when the whole point is not to replace.
- *
- * So a write is the EXCLUSIVE CREATION of `<id>.r<n>.json`. Taking revision 4 is
- * winning a race to create one specific filename, which the filesystem
- * arbitrates in a single operation. Whoever loses gets EEXIST, re-reads, and is
- * refused by `ConcurrentModification` naming the revision that actually landed.
- *
- * That the aggregate's whole history stays on disk is a deliberate side effect
- * rather than a cost. Nothing in the control plane's questions is served by
- * forgetting.
- */
+/** One file per revision (`<id>.r<n>.json`); taking a revision is winning an exclusive create, and the loser is refused with `ConcurrentModification`. */
 export function fileAggregateRepository<T>(
   root: string,
   kind: string,
@@ -353,10 +226,7 @@ export function fileAggregateRepository<T>(
     const latest = revisions[revisions.length - 1];
     const row = await readRevision(id, latest);
     if (row === null) {
-      // The directory listing named this file and the read did not find it.
-      // That is not an absence; it is a store changing underneath us, and
-      // answering "no record" would be a check that could not reach its subject
-      // reporting like a passing one.
+      // Listed but not found on read: the store changed underneath us, which is not an absence.
       throw new CorruptPersistedState(
         fileForRevision(id, latest),
         `revision ${latest} was listed in ${dir} and then could not be read`,
@@ -409,16 +279,7 @@ export function fileAggregateRepository<T>(
       return row;
     },
 
-    /**
-     * Idempotent CREATE.
-     *
-     * The comparison is against revision 1 — the creation — not against the
-     * latest state. Identity here is derived from the inputs that CREATED the
-     * aggregate, so "is this the same obligation?" is a question about how it
-     * began. Comparing against the latest would refuse a perfectly legitimate
-     * re-registration of a task that has since been claimed, and a guard that
-     * fires on correct behaviour is a guard on its way to being deleted.
-     */
+    /** Compared against revision 1, the creation, so re-registering a task that has since moved is still idempotent. */
     put: async (id: string, value: T, now: string): Promise<PutOutcome<T>> => {
       const row: Persisted<T> = { id, revision: 1, updatedAt: now, value };
       const created = await exclusiveCreate(
@@ -474,8 +335,6 @@ export function fileAggregateRepository<T>(
   };
 }
 
-/** -------------------------------------------------------- append-only logs */
-
 interface LogLine<T> {
   readonly key: string;
   readonly recordId: string;
@@ -507,18 +366,7 @@ function parseLogLine<T>(file: string, line: string, lineNumber: number): LogLin
   return { key: row.key, recordId: row.recordId, at: String(row.at ?? ""), record: row.record as T };
 }
 
-/**
- * Collapse identical retries and REFUSE divergent ones, at read time.
- *
- * `appendFile` opens with `O_APPEND`, so two concurrent appenders can never
- * overwrite each other — but they can both have checked for a record id, both
- * found nothing, and both written. The check in `append` is therefore
- * best-effort against a truly simultaneous appender, and this is where that gap
- * is closed: two lines sharing one record id with DIFFERENT content is a history
- * that cannot be replayed, and it is raised the moment anyone reads it rather
- * than resolved by preferring whichever line came first. Two lines with
- * identical content are one retried write and collapse to one record.
- */
+/** Identical lines sharing a record id collapse to one; divergent ones are raised on read. */
 function dedupeHistory<T>(log: string, file: string, lines: readonly LogLine<T>[]): LogLine<T>[] {
   const seen = new Map<string, LogLine<T>>();
   const out: LogLine<T>[] = [];
@@ -581,9 +429,7 @@ export function fileAppendOnlyRepository<T>(
       const file = fileFor(key);
       await mkdir(path.dirname(file), { recursive: true });
       const entry: LogLine<T> = { key, recordId, at: now, record };
-      // `appendFile` opens with O_APPEND, so two concurrent appenders cannot
-      // land on the same offset and clobber one another. A whole-file rewrite
-      // here would make history the one thing a race can shorten.
+      // O_APPEND, never a whole-file rewrite: a race must not be able to shorten history.
       await appendFile(file, `${JSON.stringify(entry)}\n`, "utf8");
       return { appended: true, recordId, record, position: lines.length };
     },
@@ -678,17 +524,7 @@ export function fileAppendOnlyRepository<T>(
   }
 }
 
-/** ------------------------------------------------------------------ locks */
-
-/**
- * Cross-process exclusion via exclusive-create.
- *
- * `open(path, "wx")` fails with EEXIST when the file already exists, and that
- * check-and-create is a single filesystem operation — which is what makes it a
- * lock rather than a race with extra steps. It REFUSES when held; it does not
- * wait. A library that promised not to read a clock cannot honestly implement a
- * timeout, and a wait without a timeout is a hang.
- */
+/** Exclusive-create lock. It refuses when held and never waits. */
 export function fileLockManager(root: string): LockManager {
   const dir = path.join(root, "locks");
   return {
@@ -718,20 +554,7 @@ export function fileLockManager(root: string): LockManager {
   };
 }
 
-/** ------------------------------------------------------------ the bundle */
-
-/**
- * Open the durable store rooted at `root`.
- *
- * NO ENV MAGIC AND NO DEFAULT. The caller names the directory, always. A default
- * would eventually write control-plane state into the repository tree from a
- * test run, and a store that can be created by accident is a store whose
- * contents nobody can account for.
- *
- * The factory is async because it creates the root: after this call, a MISSING
- * root is corruption rather than emptiness, and every read below can rely on
- * that distinction.
- */
+/** No default directory. After this call creates the root, a missing root is corruption, not emptiness. */
 export async function createFileRepositories(root: string): Promise<ControlPlaneRepositories> {
   if (typeof root !== "string" || root.trim().length === 0) {
     throw new Error(
@@ -772,7 +595,6 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
         .slice(0, Math.max(0, Math.trunc(limit))),
     adminEvidenceCopyRequests: fileAggregateRepository<AdminEvidenceCopyRequest>(resolved, "AdminEvidenceCopyRequest", "admin-evidence-copy-requests"),
     costs: fileAppendOnlyRepository<CostEntry>(resolved, "costs"),
-    /* The owner control centre's data plane (ITEM H). */
     ownerSnapshots: fileAggregateRepository<OwnerSnapshot>(
       resolved,
       "OwnerSnapshot",
@@ -795,30 +617,23 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ),
     ownerDigests: fileAppendOnlyRepository<OwnerDigestRecord>(resolved, "owner-digests"),
     ownerDecisions: fileAppendOnlyRepository<OwnerDecisionIntent>(resolved, "owner-decisions"),
-    /* Level 1 — Research (schema v4). */
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
     boxFindings: fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings"),
     scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
-    /* The nightly door (RULING 242, schema v5). */
     promotionPipeline: fileAppendOnlyRepository<PromotionPipelineRecord>(resolved, "promotion-pipeline"),
     windowRuns: fileAppendOnlyRepository<WindowRunRecord>(resolved, "window-runs"),
     windowIncidents: fileAppendOnlyRepository<WindowIncident>(resolved, "window-incidents"),
     windowIntents: fileAppendOnlyRepository<WindowIntent>(resolved, "window-intents"),
-    /* Software release review (Admin Pass B, schema v8). */
     softwareReleaseReviews: fileAppendOnlyRepository<SoftwareReleaseReviewRecord>(resolved, "software-release-reviews"),
-    /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
     adminReceipts: fileAppendOnlyRepository<ActionReceipt>(resolved, "admin-receipts"),
     agentJobs: fileAppendOnlyRepository<AgentJobRecord>(resolved, "agent-jobs"),
     discoveryAttempts: fileAppendOnlyRepository<MeetingsDiscoveryAttempt>(resolved, "discovery-attempts"),
-    /* Live-audit results, corrections and pulls (DP-13, schema v21). */
     liveAudits: fileAppendOnlyRepository<LiveAuditLogRow>(resolved, "live-audits"),
     adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
-    /* What readers were told Ask does not hold (schema v13). */
     askGapObservations: fileAggregateRepository<AskGapObservation>(resolved, "AskGapObservation", "ask-gap-observations"),
-    /* The Door Registry (DB-09, schema v19). */
     doors: fileAggregateRepository<DoorRecord>(resolved, "Door", "doors"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),

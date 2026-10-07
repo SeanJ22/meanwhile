@@ -1,17 +1,8 @@
-/**
- * DB-54: the call the worker publishers make after a fact from a saved page
- * goes live. Kept apart from the publishers so they add one line each.
- */
-
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { doorIdOfPage, finderOfRole, recordPublishedPages, type PageFinder } from "../doors/page-doors.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 
-/**
- * Registers the page behind a published fact as a door. Does nothing unless
- * the outcome put at least one fact live, so a held reading adds no door.
- * Never throws: the publication already happened.
- */
+/** Does nothing unless the outcome put at least one fact live. Never throws: the publication already happened. */
 export async function recordPublishedPageDoor(input: {
   readonly repos: Pick<ControlPlaneRepositories, "attempts" | "doors">;
   readonly page: WorkerPublicationCapture | null | undefined;
@@ -41,10 +32,6 @@ export async function recordPublishedPageDoor(input: {
   }
 }
 
-/**
- * DB-28: an outcome that put facts live names the door they came through, so a fact's Sources row can show it. The id
- * is the one `recordPublishedPageDoor` registers for the same page. A held outcome, or a page with no door, is unchanged.
- */
 export function withPageDoor<T extends { readonly status: string }>(outcome: T, page: WorkerPublicationCapture | null | undefined, recordClass: string): T & { readonly doorId?: string } {
   if (!page || outcome.status === "HELD") return outcome;
   const doorId = doorIdOfPage(recordClass, page.evidence.canonicalUrl);

@@ -1,12 +1,5 @@
 "use client";
 
-/**
- * **WHAT READERS ARE ASKING FOR — a panel on Now.** Where people looked, which
- * governments, meetings and officials they opened, what they asked, and what they
- * pressed "get this sooner" on. Counts of events, never a person: there is no
- * reader, session or device in the store, so there is nothing to show per reader.
- * It is the map of what to cover next.
- */
 import type { DemandList, ReaderDemandReading } from "@/lib/control-plane/reader-demand.ts";
 
 import { mst } from "./model.ts";

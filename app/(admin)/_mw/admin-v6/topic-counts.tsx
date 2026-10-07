@@ -1,11 +1,5 @@
 "use client";
 
-/**
- * **WHAT RESIDENTS ASK ABOUT — a panel on Now.** Each topic as a share of the users in the same week and ZIP or district, with
- * the count beside it. Aggregate only: there is no person, address, session or device in these rows. Small groups are shown the
- * same way as large ones, never hidden. Free-form questions are their own topic. Until the counts exist it says so, and a
- * missing count is never shown as zero.
- */
 import { useState } from "react";
 
 import type { TopicCountsView } from "@/lib/control-plane/admin-view/topic-counts.ts";

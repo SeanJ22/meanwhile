@@ -1,20 +1,8 @@
 /**
- * **EVERY TIMESTAMP THE OWNER READS IS EASTERN TIME, SPELLED OUT.**
- * (ADM-22, the 9.4.26 evening admin feedback.)
+ * The one formatter for a timestamp shown to the owner: Eastern time, spelled
+ * out. The raw ISO string stays on `<When>`'s `dateTime` and hover title.
  *
- * The owner's words: *"You could just say 'last updated September 5' and then
- * go off of Eastern Standard Time. That makes more sense for this, operating
- * in the United States and nowhere else."* Every console surface printed raw
- * ISO-8601 UTC strings (`2026-09-05T02:20:57.808Z`) wherever it had a stamp,
- * and the class is the same on all of them: a machine-facing string in a
- * human-facing sentence.
- *
- * This is the ONE formatter for a stamp shown to the owner. The raw ISO string
- * is not lost — the `<When>` component in `console-ui.tsx` carries it as the
- * `dateTime` attribute and the hover title — but it never leads.
- *
- * PURE: no clock is read. "ET" is used for both EST and EDT on purpose; the
- * owner asked for Eastern, and the hour shown is already the local one.
+ * Pure: no clock is read. "ET" covers both EST and EDT; the hour shown is already local.
  */
 
 export const EASTERN_ZONE = "America/New_York";

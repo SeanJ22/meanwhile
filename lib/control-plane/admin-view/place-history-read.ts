@@ -2,7 +2,6 @@ import { isPlaceHistory, type PlaceHistoryPoint } from "../../coverage/place-his
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 
-/** One place's daily points from the published owner snapshot, selected in Postgres so only that place crosses the wire. */
 export const PLACE_HISTORY_SQL = `SELECT s.value->'placeHistory'->$1 AS points FROM cp_owner_snapshots s WHERE s.id = 'current'`;
 
 export async function readPlaceHistory(sql: Sql, placeKey: string): Promise<readonly PlaceHistoryPoint[]> {

@@ -1,26 +1,18 @@
 /**
- * **PAGE MEASUREMENTS ANYONE CAN RUN.** (FE-16.)
+ * Page measurements: what a reader feels on a phone and no unit test sees:
+ * layout shift, sideways scroll, cut-off text, small tap targets, type and
+ * spacing off the token scales, and faint text.
  *
- * Seven things a reader feels on a phone and no unit test sees: the page
- * jumping as it loads, sideways scroll, words cut off, buttons too small for a
- * thumb, type and spacing nobody named, and text too faint to read.
- *
- * Same division as `dom-evaluation.ts`: the browser is asked ONE question
- * ({@link collectPageObservation}, run inside the page) and every verdict is a
- * pure function of the value it returns. A failing issue can be reproduced
- * from the recorded observation alone, and nothing here touches a browser,
- * the network or a database.
- *
- * Usage from any harness holding a Playwright page:
+ * The browser is asked one question (`collectPageObservation`, run inside the
+ * page) and every verdict is a pure function of its result:
  *
  * ```ts
  * const obs = await page.evaluate(collectPageObservation);
  * const report = measurePage(obs);   // report.issues lists each one with its element
  * ```
  *
- * A measurement that could not be taken (a background painted by an image, no
- * layout-shift entries because the browser does not report them) is listed
- * under `notMeasured` with the reason. It is never counted as a pass.
+ * A measurement that could not be taken is listed under `notMeasured` with
+ * the reason, never counted as a pass.
  */
 
 import { SPACE_PX } from "../design/rhythm.ts";
@@ -82,7 +74,7 @@ export interface PageObservation {
   /** Layout-shift entries, or null when the browser reports none to read. */
   layoutShifts: { value: number; hadRecentInput: boolean }[] | null;
   elements: ObservedElement[];
-  /** Visible card citations outside their Sources disclosure (FE-22). */
+  /** Visible card citations outside their Sources disclosure. */
   sourceLeaks?: { selector: string; text: string; reason: string }[];
 }
 
@@ -343,11 +335,10 @@ export const LAYOUT_SHIFT_INIT_SCRIPT = `(() => {
 })();`;
 
 /**
- * Runs INSIDE the browser (`page.evaluate(collectPageObservation)`). It must
- * stay self-contained: no imports, no closure over module values, because the
+ * Runs inside the browser (`page.evaluate(collectPageObservation)`). Must stay
+ * self-contained: no imports and no closure over module values, because the
  * function is serialised and sent to the page.
- *
- *  */
+ */
 export function collectPageObservation(): PageObservation {
   const MAX_ELEMENTS = 4000;
 

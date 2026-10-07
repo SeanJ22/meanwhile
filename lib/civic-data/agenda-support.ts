@@ -5,7 +5,6 @@ export interface AgendaSupportingReaders<TListing> {
   readonly listingIdentity: () => Promise<TListing>;
 }
 
-/** Supporting outcomes and body identity cannot erase held meeting documents. */
 export async function settleAgendaSupportingHoldings<TListing>(
   meetingId: string,
   bodyId: string | null,

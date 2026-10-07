@@ -1,4 +1,3 @@
-/** DB-47. Admin registers this factory with the same read adapter as the view. */
 import type { RegisteredAction } from "./registry.ts";
 import { rollbackId, rollbackSha, type RollbackView } from "../../ops/release-rollback.ts";
 

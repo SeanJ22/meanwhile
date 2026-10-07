@@ -6,38 +6,14 @@ import type { DirectoryOffice, DirectorySource } from "@/lib/officials/directory
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 
 /**
- * One federal member's district offices and committee seats.
- *
- * ## Why this became a hook
- *
- * `MemberDirectory` owned this fetch, and g4 item 8 gave a second component a
- * use for the same answer: the contact pill row has to show the DISTRICT
- * office's number beside the Washington one, and the district numbers live in
- * this payload. Two components each running their own `fetch` for one member
- * is two requests for one answer, and — worse — two places that can disagree
- * about whether the answer arrived.
- *
- * ## The cache, and why it is a promise
- *
- * Keyed on the member id and holding the PROMISE rather than the value, so
- * two components mounting in the same tick share one request instead of
- * racing. The route is `private, no-store` by construction (a member's
- * directory must never be served from a shared cache under another member's
- * key — D40), so the browser will not do this for us.
- *
- * A failure is not cached: the entry is dropped so the next open retries,
- * rather than a transient network blip turning into a permanent "no record"
- * for the rest of the session — which would be an absence we invented.
+ * One federal member's district offices and committee seats, shared by every
+ * component that needs them. The cache holds the promise per member id, so
+ * simultaneous mounts share one request; failures are not cached.
  */
 
 /**
- * A committee seat AS THE ROUTE SERVES IT — the chamber's own row plus the
- * jurisdiction statement the route joins onto it.
- *
- * Declared here rather than imported from `lib/officials/directory`, because
- * that module's `DirectoryCommittee` is the shape stored on disk and this is
- * the shape that comes back over the wire. Stating the difference is what
- * stops a field appearing in one and being assumed in the other.
+ * A committee seat as the route serves it: the chamber's row plus the joined
+ * jurisdiction statement. Distinct from the on-disk `DirectoryCommittee`.
  */
 export interface DirectoryCommitteeSeat {
   committeeId: string;
@@ -89,10 +65,7 @@ export function loadMemberDirectory(memberId: string): Promise<MemberDirectory> 
 export interface MemberDirectoryState {
   /** Null while in flight, and null when the member is not federal. */
   directory: MemberDirectory | null;
-  /**
-   * The request failed. Kept separate from "no record", because they are
-   * different claims and only one of them is about the member.
-   */
+  /** The request failed; distinct from "no record". */
   failed: boolean;
 }
 
@@ -104,14 +77,8 @@ export function useMemberDirectory(memberId: string): MemberDirectoryState {
     let live = true;
     if (!memberDirectoryReaches(memberId, "offices")) return;
     /*
-     * No synchronous reset before the fetch.
-     *
-     * Clearing state at the top of an effect is a cascading render, and it is
-     * also unnecessary here: the id is the component's own key at every call
-     * site, so a different member is a different mount with fresh state. What
-     * IS load-bearing is the `live` flag below — an answer for a member the
-     * reader has already left must never be applied, which is the same rule
-     * as the stale zip shading and the stale focus mask.
+     * No reset before the fetch: the id is the component's key at every call
+     * site. The `live` flag drops an answer for a member already left.
      */
     void loadMemberDirectory(memberId)
       .then((payload) => {

@@ -13,49 +13,13 @@ import {
 } from "./intent.ts";
 
 /**
- * **THE INTERPRETATION RUNG — Claude reading the question, with the civic
- * context it was never given before (2026-08-27).**
- *
- * ## What this replaces
- *
- * The Level 1 classifier (`lib/routing/classifier.ts`) has been the only place
- * a model ran in this product. Its entire contract is *"pick one of sixteen
- * topic ids, or NONE"*, and its system prompt contains the topic list and
- * nothing else. It has never been told what governments exist, where the
- * reader lives, what today's date is, or what records this product holds.
- *
- * That is worth stating precisely, because it was mis-diagnosed once already:
- * when *"What's on the Vail school district agenda?"* returned Sunnyside, the
- * paid model did not receive the wrong context and choose wrongly. **It
- * received essentially no civic context at all** and correctly answered the
- * only question it was asked — which drawer is this, out of sixteen. The
- * substitution happened downstream, in deterministic routing that asked for
- * boards in the reader's own coverage.
- *
- * So this rung is not "another model call". It is the first one that is given
- * the material a reading of the question actually requires:
- *
- * - **The governments that exist**, named the way a reader names them, with
- *   their division type — which is what separates a school district from a
- *   town of the same name.
- * - **Today's date**, so *"in the last 12 months"* is a computable window
- *   rather than a phrase. An agent does not know today's date and neither
- *   does a model; both are told.
- * - **The conversation so far**, bounded, so *"what has she vetoed"* has a
- *   referent.
- *
- * ## What it is still not allowed to do
- *
- * It answers with a READING of the question. It does not answer the question,
- * it is not shown any record, and every entity it names is a HYPOTHESIS that
- * `resolve.ts` reconciles against the registry before a single record is
- * fetched. A mention this rung invents that matches no government resolves to
- * `UNRESOLVED` and the reader is told so — it can never become a body.
- *
- * The inventory it is shown is a list of names this product already holds and
- * already renders. Showing it to the model discloses nothing about the reader.
- *
- * The question is scrubbed before it leaves, exactly as the classifier's is.
+ * The interpretation rung: a model reads the question with the civic context
+ * a reading requires (the governments that exist, with their division types;
+ * today's date; the bounded conversation so far). It returns a reading, not an
+ * answer, and sees no record. Every entity it names is a hypothesis that
+ * `resolve.ts` reconciles against the registry; an invented mention resolves to
+ * `UNRESOLVED`. The inventory is names the product already renders, and the
+ * question is scrubbed before it leaves.
  */
 
 /** The interpretation rung's whole budget, request to parsed reply. Measured median ~2.8-3.4 s. */
@@ -63,10 +27,8 @@ export const ASK_INTERPRET_TIMEOUT_MS = 6_000;
 
 export interface InterpretContext {
   /**
-   * What the reader could plausibly be naming — the search index and their own
-   * covered bodies, already merged by the caller. Names and division types
-   * only; no ids, because an id the model echoed back would look like a
-   * resolution and it is not one.
+   * What the reader could be naming: names and division types only. No ids,
+   * since an echoed id would look like a resolution.
    */
   inventory: readonly { name: string; divisionType?: string | null }[];
   /** `YYYY-MM-DD`. Supplied, never derived here — this module is not a clock. */
@@ -75,12 +37,7 @@ export interface InterpretContext {
   approximateLocation?: string | null;
   /** Which surface asked. Ballot questions carry different default referents. */
   surface?: "MAP" | "BALLOT" | "UNKNOWN";
-  /**
-   * Bounded conversation context — the last few exchanges, and what is on
-   * screen. This is what makes *"what has she done?"* answerable, and it is
-   * capped because a growing transcript is a person-level record and this
-   * product does not keep one.
-   */
+  /** The last few exchanges, capped: a growing transcript would be a person-level record. */
   priorTurns?: readonly { question: string; resolvedSubject: string | null }[];
   /** What the reader currently has open, when the surface can say. */
   activeSubjects?: readonly string[];
@@ -96,46 +53,10 @@ const MAX_QUESTION_CHARS = 400;
 const MAX_PRIOR_TURNS = 4;
 
 /**
- * The model, READ FROM `lib/ask/model.ts`, with adaptive thinking at `low`
- * effort. (ITEM K, 2026-09-01 — the literal that used to sit below is gone so
- * the model comes from one table rather than four-way agreement.)
- *
- * Thinking is deliberately ON here where the topic classifier disables it.
- * The classifier's job is one label and thinking-off is defensible for it;
- * this rung has to decide a tense, an entity and a referent together, and a
- * disabled-thinking model of this generation has a documented failure mode
- * where reasoning
- * leaks into the visible output. Low effort with thinking on is both cheaper
- * to be wrong about and the shape the API is happiest with.
+ * The READER role from `lib/ask/model.ts`, resolved per call so overrides
+ * apply. Thinking is on here (unlike the classifier): this rung decides a
+ * tense, an entity and a referent together.
  */
-/**
- * **RESOLVED AT CALL TIME, NOT BOUND AT MODULE LOAD.**
- * (Repaired 2026-09-01, found while attributing a walk regression.)
- *
- * This read `const MODEL = ASK_SYNTHESIS_MODEL`, which binds the CONSTANT
- * once when the module is first imported. `WTP_ASK_MODEL` is applied by
- * {@link resolveAskModel}, so this rung ignored the override entirely —
- * `lib/ask/synthesize.ts` honoured it and three other Ask call sites did not.
- *
- * ITEM K's brief permits the override on two conditions: it defaults to the
- * constant when unset, and **the RESOLVED value — not the default — is what
- * gets recorded and logged**. A rung that reads the constant satisfies the
- * first and silently breaks the second.
- *
- * The cost is not hypothetical. RULING 234 makes the measurement the
- * reversibility mechanism for the Sonnet 5 switch — *if it fails a required
- * question the incumbent held, revert the one constant and report the
- * question.* With three rungs bound at load, an experiment or an emergency
- * revert through the environment would have moved ONE of four call sites while
- * reporting that it had moved the model, and the run that proved it would have
- * been measuring a mixture.
- *
- * It was found exactly that way: an isolation walk with
- * `WTP_ASK_MODEL=claude-opus-5` reproduced the failure identically, which
- * looked like proof the model was innocent and was really proof that the
- * override never reached this code.
- */
-/* 2026-09-25: the READER role of `lib/ask/model.ts`'s one table, resolved per call. */
 const askModel = (): string => resolveAskRoleModel("READER");
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
@@ -172,17 +93,9 @@ export function interpretSchema(): Record<string, unknown> {
 }
 
 /**
- * The instruction. About READING, never about answering — the words "answer",
- * "explain" and "advise" are absent on purpose, exactly as they are in the
- * topic classifier's prompt, because this rung is not doing any of those.
- *
- * **TWO PARTS, THE ZIP'S CONTEXT FIRST.** (2026-09-29, S3.) The stable part is
- * the instructions and the governments and people this ZIP's reader could be
- * naming; it is byte-identical for every question asked from one ZIP and is the
- * cached prefix. Today's date, where the reader says they are and what they are
- * looking at follow it, so a new day or a new surface never invalidates the
- * ZIP's cached context. (Before, the date sat on the second line, ahead of the
- * inventory: nothing here could ever be a cache hit across midnight.)
+ * The instruction, about reading, never answering. Two parts: the stable part
+ * (instructions and the ZIP's governments and people) is byte-identical per
+ * ZIP and is the cached prefix; the date, location and surface follow it.
  */
 export function interpretSystem(context: InterpretContext): { stable: string; volatile: string } {
   const inventory = context.inventory
@@ -255,15 +168,8 @@ export async function interpretQuestion(
   const system = interpretSystem(context);
 
   /*
-   * The conversation rides as real turns rather than as a blob inside the
-   * system prompt, because that is what the referent question is actually
-   * about: "she" points at the previous exchange, and flattening the exchange
-   * into prose loses the very structure that makes it resolvable.
-   *
-   * Only the question and what it RESOLVED TO travel. The prior ANSWERS do
-   * not: they are the largest thing here, they are reconstructible from the
-   * resolved subject, and a growing transcript of a reader's political
-   * questions is precisely the person-level record this product does not keep.
+   * Prior turns ride as real messages: only each question and what it resolved
+   * to, never the prior answers.
    */
   const messages: { role: "user" | "assistant"; content: string }[] = [];
   for (const turn of priorTurns) {
@@ -288,11 +194,8 @@ export async function interpretQuestion(
   });
 
   try {
-    // A bounded wait (2026-09-24): an unbounded model call is how the first
-    // live Pima request outlived the platform limit and reached the reader as
-    // "that didn't reach us". Past the bound, the deterministic reading
-    // stands in, exactly as it does for any other unavailable model. A reading
-    // that has not answered by the hedge time is asked again (lib/ask/hedged-fetch.ts).
+    // A bounded wait: past it the deterministic reading stands in. A slow
+    // reading is asked again at the hedge time (lib/ask/hedged-fetch.ts).
     const response = await hedgedFetch(impl, MESSAGES_URL, {
       method: "POST",
       headers: {
@@ -339,14 +242,8 @@ export async function interpretQuestion(
 }
 
 /**
- * The deterministic reading, used when the model rung did not run.
- *
- * **This is a FALLBACK and it is deliberately weaker than the rung above.**
- * It exists so an unavailable model degrades to a narrower answer rather than
- * to a wrong one: it reads tense, which is the thing whose absence produced a
- * confidently wrong meeting, and it reads nothing else. Entity mentions stay
- * empty, so the caller's own binder — which has always run on the raw
- * question — remains the only thing that names a government.
+ * The deterministic fallback when the model rung did not run. It reads tense
+ * only; entity mentions stay empty, so the binder alone names a government.
  */
 export function interpretWithoutModel(question: string): AskInterpretation {
   const t = question.toLowerCase();
@@ -361,30 +258,12 @@ export function interpretWithoutModel(question: string): AskInterpretation {
     const months = rangeMatch[2].startsWith("year") ? n * 12 : n;
     return { ...base, temporal: { kind: "RANGE", trailingMonths: Math.min(120, months) } };
   }
-  /*
-   * Past beats future when both appear. "What did they decide about the next
-   * budget" is a question about a meeting that already happened, and the cost
-   * of the two errors is not symmetric: answering a past question with a
-   * future agenda invents a discussion that has not occurred yet.
-   */
+  /* Past beats future when both appear: answering a past question with a future agenda invents a discussion. */
   if (pastWords && !nextWords) return { ...base, temporal: { kind: "LAST" } };
   if (nextWords && !pastWords) return { ...base, temporal: { kind: "NEXT" } };
   if (pastWords && nextWords) return { ...base, temporal: { kind: "LAST" } };
 
-  /*
-   * **"WHAT'S ON THE AGENDA" IS A QUESTION ABOUT THE NEXT SITTING.**
-   * (Found by the route-level red control, 2026-08-28.)
-   *
-   * The model rung is told this in as many words — *"'What's on the agenda'
-   * with no other time words is NEXT"* — and this fallback did not know it. It
-   * carried no time words, so it returned `NONE`, the route resolved `ANY`,
-   * and `ANY` is `upcoming[0] ?? past[0]`: the exact ASK02 defect, still live
-   * on the degraded path, waiting for a day with no key or a hit ceiling.
-   *
-   * The two rungs now read the same rule. `asksForBodyAgenda` is the detector
-   * the deterministic route already used for this question shape, so this is
-   * the product's existing answer rather than a second one written here.
-   */
+  /* "What's on the agenda" with no time words is the next sitting (`asksForBodyAgenda`). */
   if (asksForBodyAgenda(question)) return { ...base, temporal: { kind: "NEXT" } };
 
   return base;

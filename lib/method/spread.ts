@@ -1,25 +1,8 @@
 /**
- * DP-24: a fix is tried everywhere the same kind of door exists.
- *
- * When a method has its first success, `planSpread` lists every place whose
- * door matches (the registry's door kind, or the platform detected on a held
- * page) and says how each is tried:
- *
- *  - plain-code tries go to every matching place, within pacing: a known small
- *    local publisher gets at most ten requests an hour (rulings §2), so a round
- *    takes only what its hourly allowance covers and the rest wait for the next
- *    round;
- *  - paid tries (a Scout briefed with the method) go only to places inside a
- *    Send, and no more of them than the budget dial leaves.
- *
- * Places are picked by kind of door, never because a place is next in line for
- * a mission or a test (rulings §1): the order inside a round is a fixed shuffle
- * keyed by the method and place, which no queue position changes. A place that
- * already has a result for the method is not tried again here (a result is
- * refreshed by its own attempts). Results go to the fix map; no approval is
- * needed for a plain-code try.
- *
- * PURE: no store, no clock, no network. Nothing here names a place.
+ * When a method first succeeds, `planSpread` lists every place whose door matches it (by door kind, or by the platform
+ * detected on a held page). Plain-code tries go to every matching place within each small publisher's hourly allowance;
+ * paid tries go only to places inside a Send, within the budget dial. The order is a fixed shuffle keyed by method and
+ * place, never queue position. A place with a result for the method is not tried again here. Pure.
  */
 
 import { createHash } from "node:crypto";
@@ -60,13 +43,13 @@ export interface SpreadPlan {
 export interface SpreadInput {
   readonly method: SpreadMethod;
   readonly doors: readonly DoorRecord[];
-  /** Platform detected on a held page, by door id, lower case (lib/hunt/platform-tenancy). */
+  /** Platform detected on a held page, by door id, lower case. */
   readonly detectedPlatform?: (doorId: string) => string | null | undefined;
   /** The fix map's rows for this method. */
   readonly fixMapRows: readonly FixMapRow[];
   /** What is known of a place's publisher; unknown means full speed. */
   readonly sizeFor?: (host: string) => WebsiteSize | null | undefined;
-  /** Places inside a Send (where the factory is sent is Sean's call); null means none is sent. */
+  /** Places inside a Send; null means none is sent. */
   readonly sendPlaceIds: ReadonlySet<string> | null;
   /** How many paid tries the budget dial leaves for this round. */
   readonly paidTriesLeft: number;

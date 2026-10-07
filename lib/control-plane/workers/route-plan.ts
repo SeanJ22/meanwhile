@@ -10,10 +10,7 @@ export function isRoutePlan(plan: Pick<AutonomousWorkPlan, "capability"> | undef
   return plan?.capability.startsWith(ROUTE_PLAN_CAPABILITY_PREFIX) === true;
 }
 
-/**
- * CH-23 part 2, behind WTP_ONE_HUNTER_PATH: a route plan only counts as planned work while the switch is on. With it
- * off, a row that already holds one is treated as unplanned, so its paid Scout runs in the round's research path as before.
- */
+/** Behind WTP_ONE_HUNTER_PATH: with the switch off, a row holding a route plan is treated as unplanned. */
 export function plannedForHunters(plan: AutonomousWorkPlan | undefined, env: NodeJS.ProcessEnv = process.env): plan is AutonomousWorkPlan {
   return plan !== undefined && (!isRoutePlan(plan) || oneHunterPath(env));
 }
@@ -35,14 +32,10 @@ function stateOf(record: Pick<ProvidedObligation, "subjectId" | "scopeDivisions"
 }
 
 /**
- * CH-23 part 2: the work plan for a provider's paid route that no provider planned, so its Scout runs as a coordinator
- * work item with a plan (one hunter path) instead of in the round's separate research path.
- *
- * The plan keeps the row's own record class and subject. A coordinator Scout records its result under the plan's
- * class and subject, so what already reads Scout results by class and subject (the promotion pipeline, the
- * campaign-site chain) reads these the same way. The Scout is briefed from the route itself: what it is, why no
- * plain client opens it, and its address when it has one. No address is invented: a target that is not an https URL
- * is described, never seeded. No reader door is named here; a provider that holds one plans the route itself (CH-22).
+ * A coordinator work plan for a provider's paid route that no provider planned.
+ * It keeps the row's record class and subject so existing readers of Scout
+ * results see it unchanged. A target that is not an https URL is described,
+ * never seeded.
  */
 export function routeWorkPlan(input: { readonly providerId: string; readonly record: ProvidedObligation; readonly route: RouteDescriptor }): AutonomousWorkPlan | null {
   const { providerId, record, route } = input;
@@ -55,7 +48,7 @@ export function routeWorkPlan(input: { readonly providerId: string; readonly rec
   return {
     version: 1, capability: `${ROUTE_PLAN_CAPABILITY_PREFIX}${providerId}`, jurisdiction: state,
     sourceRegistryReferences: [record.subjectId, route.routeId], seedUrls: seed ? [seed] : [],
-    sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
+    sources: [], acquisition: [], auditScope: "SOURCE_UNIVERSE",
     contract: {
       schemaVersion: 2, recordClass: record.recordClass, subjectId: record.subjectId,
       requiredFields: ["value", "sourceUrl", "sourceSentence"],

@@ -1,18 +1,15 @@
 /**
- * DB-32: a door that stops working is marked shut at once.
- *
- * Each door is judged from its own result, never from a family's total (a
- * derived member from its own read, DB-21). A door goes SHUT, with `shutSince`
- * and the reason on its record, on any of:
+ * A door that stops working is marked shut at once, judged from its own
+ * result, never a family's total. It goes SHUT, with `shutSince` and the
+ * reason, on any of:
  *
  *  - the address answers 404 or 410;
  *  - a read succeeds but yields no rows where the last good version had rows;
- *  - a parse or schema failure (the page no longer reads the way the door says);
- *  - a run of consecutive transport failures reaching `SHUT_AFTER_TRANSPORT_FAILURES`.
+ *  - a parse or schema failure;
+ *  - `SHUT_AFTER_TRANSPORT_FAILURES` consecutive transport failures.
  *
- * The next good read clears it and records when it reopened. A door someone
- * set aside (SUSPENDED) is never shut or reopened by a read. A system write: it
- * does not count as a hand edit and changes nothing else on the record.
+ * The next good read reopens it. A SUSPENDED door is never shut or reopened by
+ * a read. A system write: not a hand edit.
  */
 
 import { isDoorRecord, type DoorRecord, type DoorRepository } from "./registry.ts";
@@ -96,8 +93,7 @@ export async function recordDoorEvidence(repo: DoorRepository, doorId: string, e
       if (attempt === 1) throw error;
       continue;
     }
-    // DB-34: the fix list hears of a shut or a reopening once the door write has landed; a list that
-    // cannot be written never undoes the door's own state (the next judgement of a shut door finds the item).
+    // The fix list hears of the change only after the door write lands; its failure never undoes the door's state.
     if (fixes && verdict.change === "SHUT") await openShutDoorFix(fixes, next, at).catch(() => undefined);
     if (fixes && verdict.change === "REOPENED") await completeReopenedDoorFix(fixes, door, next, at).catch(() => undefined);
     return { written: true, change: verdict.change };

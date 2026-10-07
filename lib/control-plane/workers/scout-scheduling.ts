@@ -25,7 +25,7 @@ export function autonomousScoutHistory(root: RouteTask, tasks: readonly RouteTas
     .sort((a, b) => a.startedAt.localeCompare(b.startedAt) || a.id.localeCompare(b.id));
   let debt: FreshnessDebt | null = null;
   for (const attempt of history) {
-    /* CH-29: our own guard refusing a request is not an attempt on the source; it adds no failure and no backoff. */
+    // Our own guard refusing a request is not an attempt on the source: no failure, no backoff.
     if (attempt.outcome === "DENIED_BY_POLICY" && refusedByOurOwnGuard(attempt.abortReason)) continue;
     // Completing one bounded search does not settle an unresolved source obligation.
     if (attempt.endedAt) debt = recordFailure(debt, { obligationId: root.id,
@@ -37,9 +37,9 @@ export function autonomousScoutHistory(root: RouteTask, tasks: readonly RouteTas
 }
 
 /**
- * CH-29: a request our own spending or execution guard refused before anything was sent (the executor words every
- * such refusal `SCOUT_POLICY_DENIED … refused before sending by the spending or execution policy`). It touched no
- * source, so it is not an attempt on the source and not a dead end; it is re-checked on a fixed pace, not backed off.
+ * A request our own spending or execution guard refused before anything was
+ * sent (`SCOUT_POLICY_DENIED … refused before sending by the spending or
+ * execution policy`). Re-checked on a fixed pace, not backed off.
  */
 export function refusedByOurOwnGuard(reason: string | null | undefined): boolean {
   return /SCOUT_POLICY_DENIED|refused before sending by the spending or execution policy/.test(reason ?? "");
@@ -61,18 +61,14 @@ export function guardRecheckAt(attempt: Pick<Attempt, "endedAt">): string | null
 }
 
 /**
- * CH-23: a walk that finished and found nothing (the executor words it `SCOUT_NO_PROGRESS`). It is not a failed
- * request: the next walk goes to a detective on the ordinary backoff, and a detective's argued absence holds the
- * item on its absence clock (`absentUntil` on the owning obligation) rather than blocking it for good.
+ * A walk that finished and found nothing (`SCOUT_NO_PROGRESS`). Not a failed
+ * request: the next walk goes to a detective on the ordinary backoff.
  */
 export function scoutWalkedToNothing(attempt: Pick<Attempt, "abortReason"> | undefined): boolean {
   return /\bSCOUT_NO_PROGRESS\b/.test(attempt?.abortReason ?? "");
 }
 
-/**
- * CH-23's runner switch (an entry in the runner's environment file until DB-46's switches exist). Off, a walk that
- * found nothing stays blocked as before; on, it goes to a detective after its backoff. Removed once checked live.
- */
+/** Runner switch: off, a walk that found nothing stays blocked; on, it goes to a detective after its backoff. */
 export function oneHunterPath(env: NodeJS.ProcessEnv = process.env): boolean {
   return env.WTP_ONE_HUNTER_PATH === "1";
 }

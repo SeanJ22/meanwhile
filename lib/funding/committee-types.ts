@@ -1,37 +1,19 @@
 /**
- * What kind of money this is — item 6 of the tester's mobile pass
- * (2026-08-14), the author's item, validated by the tester the same day.
+ * What kind of money this is: the whole mapping from FEC filed fields to the
+ * committee labels a reader sees. Nothing outside it may invent a label.
  *
- * The defect it answers: every committee in the funding section rendered the
- * same four words, "a political action committee". Grant Thornton's PAC,
- * Marsh & McLennan's, the Broadcasters', Fidelity's — a corporate PAC, a
- * trade association's PAC and a super PAC are different facts about who is
- * paying, and collapsing them into one label told the reader nothing.
+ * 1. Every label is derived mechanically from `committee_type`,
+ *    `organization_type` and `designation` as filed on the Schedule A row's
+ *    `contributor` object, never from a committee's name.
+ * 2. An unmapped or absent code falls to the honest generic, never a guess.
+ * 3. A label says what a committee is under federal law, never what it is
+ *    for or whom it favors.
  *
- * **This file is the whole mapping.** One place, author-reviewable, and
- * nothing outside it may invent a label. The rules below:
- *
- * 1. Every label is derived MECHANICALLY from the FEC's own filed fields —
- *    `committee_type`, `organization_type` and `designation`, carried on the
- *    Schedule A row's `contributor` object exactly as the committee filed
- *    them. Nothing is ever inferred from a committee's NAME. "Citizens for
- *    a Better Tomorrow" is typed by its filing or not at all.
- * 2. Where the FEC does not classify, the honest generic stands. An
- *    unmapped or absent code falls to "an organization" (or the entity-type
- *    label already in `plainContributorLabel`) — never to a guess, and
- *    never to a label that sounds more specific than the filing supports.
- * 3. Organizations render as filed, never characterized (CLAUDE.md). A type
- *    label says what a committee IS under federal law; it never says what
- *    it is for, who it favors, or what it believes.
- *
- * Code sets fetched and verified 2026-08-14 against the FEC's own pages:
- * - committee type (`committee_type`) and the CMTE_DSGN designation list —
- *   https://www.fec.gov/campaign-finance-data/committee-type-code-descriptions/
- *   and https://www.fec.gov/campaign-finance-data/committee-master-file-description/
- * - interest-group category (ORG_TP): "C = Corporation, L = Labor
- *   organization, M = Membership organization, T = Trade association,
- *   V = Cooperative, W = Corporation without capital stock" —
- *   https://www.fec.gov/campaign-finance-data/committee-master-file-description/
+ * Code sets: https://www.fec.gov/campaign-finance-data/committee-type-code-descriptions/
+ * and https://www.fec.gov/campaign-finance-data/committee-master-file-description/
+ * (ORG_TP: C = Corporation, L = Labor organization, M = Membership
+ * organization, T = Trade association, V = Cooperative, W = Corporation
+ * without capital stock).
  */
 
 /** The FEC typing carried on a contribution row, exactly as filed. */
@@ -45,12 +27,8 @@ export interface FiledCommitteeTyping {
 }
 
 /**
- * One label the app is allowed to render, with the two sentences a reader
- * gets when they tap it.
- *
- * The explainer is in the product's register (the 15-year-old test) and
- * paraphrases the FEC's own definition — it never adds a claim the FEC's
- * page does not make.
+ * One label the app may render, with the two plain sentences a reader gets
+ * when they tap it, paraphrasing the FEC's own definition.
  */
 export interface CommitteeTypeLabel {
   /** Stable key, for tests and for the explainer lookup. */
@@ -73,12 +51,8 @@ const FEC_MASTER_FILE =
  * array cannot reach a reader — `tests/funding.test.ts` holds that.
  */
 export const COMMITTEE_TYPE_LABELS: readonly CommitteeTypeLabel[] = [
-  // NOTE: "the candidate's own committee" is deliberately NOT in this table.
-  // Money from the candidate themselves is answered earlier and by a
-  // different filed field — entity type CAN, or line 13A for a candidate
-  // loan — and renders as "the candidate's own money" (D41). A second entry
-  // here could never be reached, and a label in this table that cannot
-  // render is a claim no test can check.
+  // "The candidate's own money" is answered earlier from entity type CAN (or a
+  // line 13A loan), so it has no entry here.
   {
     id: "joint-fundraiser",
     label: "a joint fundraising committee",
@@ -193,15 +167,9 @@ export function committeeTypeLabelById(id: string): CommitteeTypeLabel | null {
 }
 
 /**
- * The label as it renders ON A PILL — a tag, not a sentence, so the leading
- * article is dropped ("SUPER PAC", not "a super PAC"; the pill CSS uppercases).
- *
- * A SEPARATE reader over the same `label`, never a mutation of it: `label` stays
- * the lowercase sentence fragment used inline in prose (plainContributorLabel and
- * the concentration bands complete "…identifies this contributor as ___"), and
- * nothing about the FEC classification, the id, or any API changes. Only a
- * leading "a "/"an " is removed; "another candidate's…" is left intact, because
- * it carries no article. (Design handoff 2026-09-13, consequence 1.)
+ * The label as it renders on a pill: a tag, so a leading "a "/"an " is
+ * dropped ("SUPER PAC"). A separate reader over `label`, which stays the
+ * lowercase sentence fragment used in prose.
  */
 export function committeePillLabel(label: CommitteeTypeLabel): string {
   return label.label.replace(/^an? /, "");
@@ -218,13 +186,9 @@ const ORGANIZATION_TYPE: Readonly<Record<string, string>> = {
 };
 
 /**
- * The derivation, in order. Each step reads one filed field and nothing
- * else; the order is what resolves committees that satisfy more than one
- * rule (a leadership PAC also files as committee type N or Q, and the
- * designation is the more specific fact about it).
- *
- * Returns null when the filing carries no typing at all — the caller keeps
- * whatever the entity-type label already said rather than inventing one.
+ * The derivation, in order. Each step reads one filed field; the order
+ * resolves committees that satisfy more than one rule. Null when the filing
+ * carries no typing at all.
  */
 export function committeeTypeLabelFor(
   typing: FiledCommitteeTyping,
@@ -232,11 +196,8 @@ export function committeeTypeLabelFor(
   const { committeeType, organizationType, designation } = typing;
 
   // 1. A joint fundraiser is designated J and separately files as whatever
-  //    committee type fits it — S and N both occur in our own snapshot. The
-  //    designation is the specific truth and must win, or a shared account
+  //    committee type fits it. The designation must win, or a shared account
   //    raising for two campaigns renders as one campaign's own committee.
-  //    (Caught by reading the output before shipping: DUCKWORTH KIM VICTORY
-  //    FUND typed S, BOOKER VICTORY FUND typed N.)
   if (designation === "J") return committeeTypeLabelById("joint-fundraiser");
 
   // 2. A leadership PAC files as a PAC and is designated D. Same reasoning:

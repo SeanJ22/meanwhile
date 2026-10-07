@@ -1,10 +1,3 @@
-/**
- * Acquire + build the ZCTA↔geography overlap dataset from Census tab20
- * relationship files, entirely in memory. No filesystem writes: this module is
- * on the standing runner's routine acquisition path, where the civic-data
- * firewall forbids a reachable filesystem writer. The routine refresh command
- * and the local build script both call `acquireDataset`.
- */
 import { createHash } from "node:crypto";
 
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
@@ -23,7 +16,6 @@ interface Source extends Tab20Spec {
   readonly effectiveFor: string;
 }
 
-/** The direct national ZCTA relationship files, one per geography type. */
 export const CENSUS_GEO_SOURCES: Record<string, Source> = {
   cd119: {
     type: "congressional_district", version: "cd:119", geoTag: "CD119_20", labelSuffix: "(119th Congress)",
@@ -70,18 +62,10 @@ export const CBSA_DELINEATION = {
   url: "https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/2023/delineation-files/list1_2023.xlsx",
 } as const;
 
-/**
- * The default published coverage: Admin's FIVE primary groupings — congressional
- * district, county, CBSA (metro/micro), state upper and state lower. `place` and
- * `county_subdivision` are additional national coverage this lane also builds but
- * are not among Admin's five, so they are opt-in via `only`.
- */
 export const DEFAULT_SCOPES: readonly string[] = ["cd119", "county", "cbsa", "sldu", "sldl"];
 
 export interface AcquireOptions {
-  /** Which source keys to build (default DEFAULT_SCOPES). */
   readonly only?: readonly string[];
-  /** Restrict groupings to these 2-digit state FIPS (a priority batch). */
   readonly states?: ReadonlySet<string>;
   /** Overridable for tests so the suite never touches the network. */
   readonly fetchImpl?: typeof fetch;
@@ -121,7 +105,6 @@ async function streamLines(
   return { bytes, sha256: hash.digest("hex"), lastModified };
 }
 
-/** Fetch a whole file into memory (for the xlsx delineation), with its sha256. */
 async function fetchBytes(
   url: string,
   fetchImpl: typeof fetch,
@@ -214,7 +197,6 @@ function cbsaVersionMeta(countyScope: BuiltScope, xlsxUrl: string, xlsxSha: stri
   };
 }
 
-/** Fetch + build the dataset in memory. Never writes a file. */
 export async function acquireDataset(options: AcquireOptions = {}): Promise<BuiltDataset> {
   const keys = options.only ?? DEFAULT_SCOPES;
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
@@ -253,7 +235,6 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
     cd120Scope = await acquireGrfScope(GRF_CD120, { fetchImpl, states: options.states, signal: options.signal });
   }
 
-  // Assemble output scopes in requested order, applying any state filter.
   const scopes: BuiltScope[] = [];
   for (const key of keys) {
     let scope = key === "cbsa" ? cbsaScope : key === "cd120" ? cd120Scope : builtByKey.get(key);

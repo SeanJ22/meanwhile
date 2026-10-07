@@ -1,28 +1,15 @@
 /**
- * **A METHOD THAT WORKED IS SAVED, SO THE RUNNER REPEATS IT.** (2026-09-23.)
+ * A discovery method that worked is saved so the runner repeats it: what was
+ * missing, the query patterns, the navigation, the publisher's traits, the
+ * extractor, what verification requires, what it cost and when it last
+ * worked. Recipes live in the field manual (`cp_field_manual`, kind
+ * `MEETINGS_RECIPE`); failures are kept with their limits so the same
+ * unchanged failure is not paid for twice. Seed counts start at zero.
  *
- * Owner directive, 2026-09-23: when a discovery method succeeds, save enough
- * for the runner to repeat it: what was missing, the query patterns, the
- * navigation, the publisher's traits, the extractor, what verification
- * requires, what it cost, and when it last worked. It is retrieved for another
- * body or state with the identity substituted, survives restarts and deploys,
- * and is actually consulted by the standing runner. Failed approaches are kept
- * with their limits, so the same unchanged failure is not paid for twice.
- *
- * A recipe is a record in the field manual (`cp_field_manual`, kind
- * `MEETINGS_RECIPE`), the store every worker already reads and that outlives
- * any process. The seeds below are methods this repo has already measured.
- * Their success and failure counts start at zero and grow only from the
- * runner's own walks.
- *
- * A recipe never guesses a vendor tenant. It proposes a PATH on the
- * government's own origin, only when the homepage shows the recipe's
- * precondition, or follows a LINK the homepage itself carries, on its own host.
- * Whatever it proposes is opened robots-first and confirmed by content, like
- * every other candidate. A recipe candidate that answers a shell
- * is a failure recorded against the recipe, never a find.
- *
- * PURE: no fetch, no clock, no store.
+ * A recipe never guesses a vendor tenant: it proposes a path on the
+ * government's own origin when the homepage shows its precondition, or
+ * follows a link the homepage carries on its own host. Whatever it proposes
+ * is opened robots-first and confirmed by content. Pure.
  */
 
 import type { FieldManualEntry } from "../control-plane/field-manual.ts";
@@ -35,11 +22,9 @@ export const RECIPE_SOURCE = "meetings-recipes";
 
 /** How long a failure for one jurisdiction stands before the recipe is tried there again. */
 /**
- * How long a method is held off one government after it failed there. One
- * failed route is not proof the information is not there (RULING 250), so the
- * first failure holds only RECIPE_FAILURE_FIRST_HOLD_DAYS. Each consecutive
- * failure on the same government doubles the hold, up to
- * RECIPE_FAILURE_HOLD_DAYS. A success clears it.
+ * How long a method is held off one government after it failed there: the
+ * first failure holds RECIPE_FAILURE_FIRST_HOLD_DAYS, each consecutive failure
+ * doubles it up to RECIPE_FAILURE_HOLD_DAYS, and a success clears it.
  */
 export const RECIPE_FAILURE_FIRST_HOLD_DAYS = 3;
 export const RECIPE_FAILURE_HOLD_DAYS = 30;
@@ -172,14 +157,9 @@ export const SEED_RECIPES: readonly MeetingsRecipe[] = [
     provenance: "lib/sources/civicplus/index.ts header: /common/modules/iCalendar/iCalendar.aspx?catID=<n>&feed=calendar",
   }),
   /*
-   * THE TUSD METHOD, saved after the initial repair (2026-09-23). Tucson
-   * Unified's reconfiguration sessions were missing from the reader because they
-   * are on the district's own page, not its Diligent portal. #384 wired that page
-   * by hand. This is the method that finds such a page without a hand: the
-   * homepage links it ("Reconfiguration Committee"), and the page dates its
-   * sessions. It is portable because nothing in it names Tucson. The body's
-   * identity is substituted at verification, and the Santa Fe transfer test
-   * proves it in another state. Counts start at zero: only runner walks move them.
+   * A district's own page that its homepage links (e.g. a committee page) and
+   * that dates its sessions, found without a vendor portal. Portable: nothing
+   * names a place; the body's identity is substituted at verification.
    */
   seed({
     recipeId: "official-page-events-linked-committee-page",
@@ -261,12 +241,9 @@ function isRecipe(value: unknown): value is MeetingsRecipe {
 
 /**
  * The recipes the runner knows: every MEETINGS_RECIPE in the field manual,
- * then any seed the manual does not hold yet. A learned recipe is the stored
- * one. A seed the manual holds takes its method from the code and only its
- * counts and failure memory from the store: the runner saves the whole recipe
- * after every application, so a stored copy of a seed would otherwise keep the
- * method as it stood that day, and a corrected seed would never reach the
- * runner.
+ * then any seed the manual does not hold yet. For a seed the manual holds,
+ * the method comes from the code and only counts and failure memory from the
+ * store, so a corrected seed reaches the runner.
  */
 export function knownRecipes(entries: readonly FieldManualEntry[]): readonly MeetingsRecipe[] {
   const stored = new Map<string, MeetingsRecipe>();
@@ -315,11 +292,9 @@ export function failureStands(recipe: MeetingsRecipe, jurisdictionId: string, no
 }
 
 /**
- * A link step follows navigation, not news. A headline that names the council
- * ("Chandler City Council Appoints … City Attorney", 2026-09-24) is a story,
- * not the page where a body keeps its meetings. Such a link cost a request and
- * a 30-day hold. So a followed link carries a short label, and it does not sit
- * under a news, press, blog or article section of the site.
+ * A link step follows navigation, not news: a headline naming the council is
+ * a story, not where the body keeps its meetings. A followed link carries a
+ * short label and does not sit under a news, press, blog or article section.
  */
 export const LINK_STEP_MAX_WORDS = 6;
 const LINK_STEP_STORY_PATH = /\/(news|news-center|newsroom|press|press-releases?|blogs?|stories|articles?|posts?)(\/|$)/i;

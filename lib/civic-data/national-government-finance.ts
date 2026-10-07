@@ -16,8 +16,6 @@ import type { ControlPlaneRepositories } from "../control-plane/repository/types
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
-/** Door field maps carry the source's codebook and government key, so Census,
- * FAC and USAspending are read in ordinary code before any paid local work. */
 export const NATIONAL_GOVERNMENT_FINANCE_DOOR_KINDS = ["government-finance-census", "government-finance-fac", "government-finance-usaspending"] as const;
 type Field = "governmentId" | "governmentName" | "title" | "kindLabel" | "sourceSentence" | GovernmentFinanceField;
 const fields: readonly Field[] = ["governmentId", "governmentName", "title", "kindLabel", "sourceSentence", ...GOVERNMENT_FINANCE_FIELDS];
@@ -36,7 +34,6 @@ export function nationalGovernmentFinancePackage(input: {
   readonly door: DoorRecord;
   readonly government: { readonly bodyId: string; readonly ocdId: string; readonly name: string; readonly sourceGovernmentId: string };
   readonly responses: readonly CapturedFinanceResponse[];
-  /** Official saved metadata/codebook, if the source's units or labels are not in every row. */
   readonly metadataCaptures?: readonly WorkerPublicationCapture[];
   readonly now: string;
 }): ManualProjectionPackage & { readonly payload: CuratedReaderProjection } {
@@ -119,16 +116,12 @@ export function nationalGovernmentFinancePackage(input: {
     sourceReceipt: { ...sourceReceipt, sources: sourceReceipt.sources.map((source, index) => index < used.length ? { ...source, rawHash: rawHashes[index] } : source) },
     payload: { kind: "government-budgets", records } };
 }
-/** Existing admitted lease calls this before requesting paid local facts. No
- * new clock, model transport, country-wide projection or production seed. */
 export async function publishNationalGovernmentFinance(store: RoutineDataStore, input: Parameters<typeof nationalGovernmentFinancePackage>[0]) {
   const built = nationalGovernmentFinancePackage(input);
   const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(built, store, input.now);
   return processRegisteredManualCandidate(store, "government-budgets", candidate, input.now, expectedBaseVersionId);
 }
 
-/** Normal admitted door lease, before any paid local blank-filling. The outcome
- * stays on the existing work item, including a failed read that retains GOOD. */
 export async function runNationalGovernmentFinancePublication(input: Parameters<typeof nationalGovernmentFinancePackage>[0] & {
   readonly repos: Pick<ControlPlaneRepositories, "workItems">; readonly store: RoutineDataStore;
   readonly workItemId: string; readonly workerResultId: string;

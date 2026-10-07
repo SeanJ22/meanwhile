@@ -5,13 +5,11 @@ import { unifiedCorpus } from "../corpus/unified.ts";
 import type { StatementCorpus } from "../corpus/types.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
-/** Search the same committed, quoted evidence as the Positions reader. */
 export function statementEvidenceFor(
   subject: EvidenceSubject,
   question: string,
   _canonicalKeys: readonly string[],
   readCorpus: () => StatementCorpus = unifiedCorpus,
-  /** Identity keys the caller already proved (the published topic answers, CA-14). Ask itself re-derives them. */
   provenKeys?: readonly string[],
 ): { records: EvidenceRecord[]; gaps: EvidenceGap[]; denominators: Record<string, number> } {
   const records: EvidenceRecord[] = [];
@@ -20,7 +18,6 @@ export function statementEvidenceFor(
   if (subject.kind !== "PERSON" || !/\b(say|said|says|think|thought|position|positions|stance|views?|published|statement|believe|believes|support|oppose)\b/i.test(question)) {
     return { records, gaps, denominators };
   }
-  // Entity words locate a person; they are not the topic we are searching for.
   const names = new Set(searchTerms(subject.name));
   const topic = searchTerms(question).filter((word) => !names.has(word)).join(" ");
   if (!topic) return { records, gaps, denominators };

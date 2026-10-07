@@ -1,53 +1,3 @@
-/**
- * WHETHER AN INCUMBENCY LABEL MAY ATTACH TO THIS CONTEST AT ALL.
- * (2026-08-28, the contest-universe session.)
- *
- * ## The defect this exists to close, stated exactly
- *
- * Officeholder acquisition finds INCUMBENTS first. It has to: an officeholder
- * is a person a government publishes a page about, and a challenger is a person
- * who filed a form. So every hour spent acquiring officeholders moves some
- * candidates from *unresolved* to *incumbent* and moves nobody at all to
- * *provably not the incumbent*.
- *
- * On 2026-08-28 that asymmetry was measured: this repository's contests with at
- * least one sourced holder went from 17 to 23 of 126 in a single session, and
- * the resolution rendered **`Incumbent` on the one candidate we had matched and
- * `Challenger` on everybody else in the same contest** — because
- * `resolveContestIncumbency` treats *not among the holders we hold* as *not the
- * incumbent*.
- *
- * **That is an acquisition asymmetry reaching a reader as a claim about
- * people.** `Challenger` is a sentence about a named person: it says they do
- * not currently hold this seat. Our evidence for it was that they were not in a
- * store whose own doc block calls itself *what we have acquired so far*.
- *
- * ## The rule
- *
- * **Absent from our officeholder store is UNRESOLVED, not NOT_INCUMBENT** — a
- * fact about us, never a negative fact about a person — *unless the officeholder
- * universe for that exact office is itself known complete*.
- *
- * And because a per-candidate answer would then put `Incumbent` on the one
- * person we matched while the rest of the contest carried a visible unresolved
- * state, which is the per-card completeness marker RULING 42 deleted, the
- * decision is taken **per contest**: either every label in the contest is
- * earned, or the contest carries none.
- *
- * ## What is DERIVED here, and from which recorded input
- *
- * Nothing below is asserted per contest. Every input is a property of a RECORD:
- *
- * | Input | Read from |
- * |---|---|
- * | is the candidate list the certified nominee list? | whether a certified canvass names this contest's nominees, and whether the rendered list IS that list |
- * | can the holder source enumerate this seat? | which retrieval branch produced the holders — see `HolderSourceShape` |
- * | does the holder count reconcile? | the contest's own `voteFor`, against the number of holders the source returned |
- * | was every candidate evaluated? | the resolution map, against the rendered candidate list |
- *
- * @see lib/ballot/incumbency.ts for the per-candidate matching this sits above.
- */
-
 import {
   nameParts,
   namesAgree,
@@ -58,117 +8,33 @@ import {
   type IncumbencyDecision,
 } from "./incumbency.ts";
 
-/* -------------------------------------------------------------------------- */
-/* THE THREE EXPLICIT STATES                                                   */
-/* -------------------------------------------------------------------------- */
-
-/**
- * What we have established about ONE candidate, deterministically.
- *
- * `NOT_INCUMBENT` is a claim about the person and is therefore the expensive
- * one: it may only be produced against a COMPLETE officeholder universe.
- * `UNRESOLVED` is a claim about us and is the honest default for everything
- * else — no holder record, an ambiguous match, or a universe we cannot show is
- * complete.
- */
+/** NOT_INCUMBENT is a claim about the person and needs a complete officeholder universe; absence from our store is UNRESOLVED. Labels are decided per contest. */
 export type CandidateIncumbencyState = "INCUMBENT" | "NOT_INCUMBENT" | "UNRESOLVED";
 
-/* -------------------------------------------------------------------------- */
-/* WHAT A HOLDER SOURCE CAN ACTUALLY ANSWER                                    */
-/* -------------------------------------------------------------------------- */
-
-/**
- * The SHAPE of the retrieval that produced the holders — which decides whether
- * absence from it means anything.
- *
- * This is the load-bearing distinction and it is a property of the SOURCE, not
- * of the office, so it is recorded once per branch rather than per contest.
- *
- * - `ENUMERATES_THE_SEAT` — the body publishes its whole membership and the
- *   source can be sliced to this exact seat, so a person's absence from it is
- *   the body's statement rather than our gap. New Hampshire's General Court
- *   publishes `Members.txt`, every sitting member of both chambers, keyed to
- *   county and district.
- * - `COLLECTED_PERSON_BY_PERSON` — the store grew as people were acquired, so
- *   absence is OUR gap and can never be read as a fact about a person. This is
- *   the officeholder registry: the curated statewide-executive store says so in
- *   its own words, and the generated rosters measure it — of 90 Arizona rows 66
- *   never attached to a division at all, 325 of 410 in New Hampshire, 99 of 120
- *   in New Jersey. A division's holder list missing somebody is routine.
- * - `PROBED_PER_CANDIDATE` — the source can only confirm the people it was
- *   handed, so it can never enumerate anybody it was not asked about. This is
- *   the FEC candidate/committee join against the congressional roster: it is
- *   reached once per candidate, by key.
- * - `NOTHING_READ` — no branch produced holders.
- */
 export type HolderSourceShape =
   | "ENUMERATES_THE_SEAT"
   | "COLLECTED_PERSON_BY_PERSON"
   | "PROBED_PER_CANDIDATE"
   | "NOTHING_READ";
 
-/** One universe, evaluated. `reason` is written to be quotable in a report. */
 export interface UniverseFinding {
   readonly complete: boolean;
-  /** The authoritative source, named. Null only when nothing was read. */
   readonly source: string | null;
-  /** Why it is complete, or precisely what is missing. */
   readonly reason: string;
-  /**
-   * **NOT ACQUIRED, versus ACQUIRED AND DISAGREEING.** (BAL-32, 2026-08-30.)
-   *
-   * Both are `complete: false` and they are not the same fact, so anything
-   * deciding what a reader may be told has to be able to tell them apart:
-   *
-   * ```
-   *   contradicted: false   we hold no certified list for this contest.
-   *                         Nothing disputes the people shown.
-   *   contradicted: true    we hold one and the people shown are NOT the
-   *                         people it names. Something we can source says
-   *                         this page's identities are wrong.
-   * ```
-   *
-   * A positive per-person label may survive the first and may never survive
-   * the second: under a live identity discrepancy the person we matched to the
-   * officeholder record may not be the person on the card, and a label is
-   * then a claim about somebody by name that we have evidence against.
-   */
+  /** True only when a certified list exists and names other people than those shown; no per-person label survives it. */
   readonly contradicted: boolean;
 }
 
-/* -------------------------------------------------------------------------- */
-/* THE CANDIDATE UNIVERSE                                                      */
-/* -------------------------------------------------------------------------- */
-
-/**
- * ONE CERTIFIED NOMINEE PAIRED WITH THE RENDERED CANDIDATE WHO IS THAT PERSON.
- *
- * Both sides carry the RAW string each record printed, never the normalised
- * form. The normalisation is how the two were matched; it is not a name anybody
- * is called, and putting it on the object invites a later surface to render it.
- */
 export interface IdentityPair {
   readonly certified: string;
   readonly rendered: string;
 }
 
-/**
- * Whether the people on the page ARE the people the canvass certified.
- *
- * The three failure lists are separate because they are three different facts
- * and only one report is actionable from each:
- * `missingFromRendered` is a candidate the reader never sees, `absentFromCertified`
- * is a person on the page the certified list does not name, and `ambiguous` is a
- * name our comparison could not resolve to exactly one person on the other side.
- */
 export interface IdentityReconciliation {
   readonly reconciled: boolean;
   readonly pairs: readonly IdentityPair[];
-  /** Certified nominees no rendered candidate could be reconciled to. Raw strings. */
   readonly missingFromRendered: readonly string[];
-  /** Rendered candidates no certified nominee could be reconciled to. Raw strings. */
   readonly absentFromCertified: readonly string[];
-  /** Names that matched more than one person on the other side. Refused, never chosen between. */
   readonly ambiguous: readonly string[];
 }
 
@@ -183,60 +49,6 @@ const parseSide = (names: readonly string[]): Parsed[] =>
     return { raw, parts: nameParts(givenName, familyName) };
   });
 
-/**
- * SET MEMBERSHIP OVER PEOPLE, NOT OVER STRINGS AND NOT OVER A COUNT.
- * (2026-08-28, the candidate-identity repair.)
- *
- * ## The defect this closes, with the instance that was live when it was written
- *
- * `candidateUniverse` decided completeness with `rendered !== certified.count`.
- * A count is not a set, and on 2026-08-28 this repository was shipping the
- * proof. **`ballot-az-pima:us-house-6`**, resolved off the committed
- * filed-candidate list, passed the candidate-universe gate on `4 === 4` and went
- * label-eligible, producing three `NOT_INCUMBENT` labels — while the two lists
- * were different sets of people:
- *
- * ```
- * certified (SoS 2026 primary canvass)  JoAnna Mendoza  Juan Ciscomani  Jereme Lance Peters  Gary Swing
- * rendered  (filed-candidate record)    JoAnna Mendoza  Juan Ciscomani  Jereme Lance Peters  Iman Bah
- * ```
- *
- * **Iman Bah is not a certified nominee of that contest and was carrying a
- * negative claim about himself measured against a universe he is not in; Gary
- * Swing is certified and was not on the page at all.**
- * `ballot-az-pima:state-senate-19` is the same shape — `2 === 2`, with Ryan
- * Slawson rendered where the canvass certifies Bob Karp.
- *
- * **THE COUNT IS A DENOMINATOR AND A DIAGNOSTIC. IT IS NEVER THE PROOF OF
- * MEMBERSHIP EQUALITY.** Two lists of the same length are two lists of the same
- * length. It is reported, because *four certified against eight rendered* tells
- * a reader where to look; it decides nothing.
- *
- * ## The rules, which are explicit and none of which are fuzzy
- *
- * There is no similarity score here and no threshold. Matching goes through the
- * normaliser this repository already has and had already argued for —
- * `splitDisplayName` → `nameParts` → `namesAgree`, then `namesAgreeLoosely` over
- * whatever is left. That is deliberate reuse rather than a second
- * implementation (RULING 63): those functions already carry the suffix handling
- * (`Daniel Francis Butierez Sr.`), the quoted-alias rule the record itself
- * prints (`Walter "Les" Presmyk`), the middle-initial rule (`Karen Elizabeth
- * Ebel` / `Karen E. Ebel`) and the serving-name/filed-name prefix rule
- * (`Gregory M. Sargent` / `Greg Sargent`), each with the measured instance that
- * bought it. A second normaliser here would drift from the one the incumbency
- * matcher uses, and then the universe and the label would disagree about who a
- * person is.
- *
- * **Every pairing must be ONE-TO-ONE, in both directions, or it is refused.** A
- * certified nominee that agrees with two rendered candidates is `ambiguous`, not
- * a coin flip — the same fail-closed the matching layer takes when one sitting
- * member matches two people on a ballot. Ordering is irrelevant by construction:
- * this is set membership, and the pass loops rather than zips.
- *
- * A blank or unusable name fails closed on its own: `nameParts` gives it an
- * empty surname, `namesAgree` refuses an empty surname, and it lands in the
- * leftovers as unmatched. **We never invent an identity to close a set.**
- */
 export function reconcileCandidateIdentities(
   certified: readonly string[],
   rendered: readonly string[],
@@ -247,8 +59,6 @@ export function reconcileCandidateIdentities(
   const pairs: IdentityPair[] = [];
   const pairedLeft = new Set<number>();
   const pairedRight = new Set<number>();
-  /** Had at least one plausible counterpart, in either pass — so its failure is
-   *  ambiguity rather than absence, and those are different reports. */
   const sawSomebodyLeft = new Set<number>();
   const sawSomebodyRight = new Set<number>();
 
@@ -307,50 +117,13 @@ export function reconcileCandidateIdentities(
 }
 
 export interface CandidateUniverseInput {
-  /**
-   * The certified nominee list for this contest, where one exists — the state's
-   * own canvass, naming who is actually on the general-election ballot.
-   *
-   * **`names` is the whole point and replaced a `count`.** The certified source
-   * has to hand over WHO, because *how many* cannot tell a reader whether the
-   * people in front of them are the certified ones. Raw strings, exactly as the
-   * canvass prints them, so the mismatch report can quote the document. A
-   * contest whose corpus record carries no usable name for a nominee fails
-   * closed by the ordinary path: the name reconciles to nobody.
-   */
   readonly certified: { readonly source: string; readonly names: readonly string[] } | null;
-  /** The candidates this contest actually renders, as the page names them. */
   readonly rendered: readonly string[];
-  /** The source behind the rendered list, for the finding when it is not certified. */
   readonly renderedSource: string | null;
 }
 
-/** The English list, so a `reason` reads as a sentence and not as a dump. */
 const nameList = (names: readonly string[]): string => names.join(", ");
 
-/**
- * Is the candidate list the whole of who is in this contest — and IS IT THEM?
- *
- * **A FILING LIST IS NOT A NOMINEE LIST, and this session has the instance.**
- * Arizona's State Mine Inspector contest was built from the Secretary of
- * State's March 30 filing PDF, and that PDF **did not carry the certified
- * Republican nominee** — he was found in the SoS primary canvass and added, and
- * the contest's scopeNote now records the omission. A filing list is who filed
- * by a deadline; people withdraw, people are disqualified, write-ins win, and
- * the document itself says the list narrows when the general-election list
- * publishes.
- *
- * So completeness requires a CERTIFIED nominee list, and it requires the
- * rendered list to BE that list — a certified list that exists somewhere while
- * the reader sees a filing list is not a complete universe on the page.
- *
- * **"BE that list" is decided over IDENTITIES.** It used to be decided over
- * `count`, and `lib/ballot/contest-universe.ts`'s
- * `reconcileCandidateIdentities` doc block carries the two live contests that
- * passed that gate while showing the wrong people. The count survives here as a
- * DIAGNOSTIC inside the reason — it tells a reader where to look — and it is
- * never the proof of membership equality.
- */
 export function candidateUniverse(input: CandidateUniverseInput): UniverseFinding {
   if (input.certified === null) {
     return {
@@ -367,13 +140,6 @@ export function candidateUniverse(input: CandidateUniverseInput): UniverseFindin
 
   const check = reconcileCandidateIdentities(input.certified.names, input.rendered);
   if (!check.reconciled) {
-    /*
-     * WHOSE GAP: ours. The certified list is the government's statement of who
-     * is in this contest; a page showing somebody else is our assembly, not
-     * their omission. The specific names are the actionable half — a reader or
-     * a later session can act on "Gary Swing is not on this page" and can do
-     * nothing at all with "the universe is incomplete".
-     */
     const clauses: string[] = [];
     if (check.missingFromRendered.length > 0) {
       clauses.push(
@@ -393,21 +159,6 @@ export function candidateUniverse(input: CandidateUniverseInput): UniverseFindin
     }
     return {
       complete: false,
-      /*
-       * **THE ONE PLACE THIS IS TRUE.** (BAL-32, 2026-08-30.)
-       *
-       * A certified list exists AND the people rendered are not the people it
-       * names. That is not an unacquired universe, it is a live identity
-       * discrepancy: something we can source says this page's names are wrong.
-       * Under it, no per-person label may render at all — the person we
-       * matched to an officeholder record may not be the person on the card,
-       * and labelling them anyway is a claim about somebody by name that we
-       * hold evidence against.
-       *
-       * Every other incomplete finding is `contradicted: false` — we simply do
-       * not hold the list. Nothing disputes the people shown, and a positive
-       * sourced fact about one of them survives.
-       */
       contradicted: true,
       source: input.certified.source,
       reason:
@@ -429,38 +180,13 @@ export function candidateUniverse(input: CandidateUniverseInput): UniverseFindin
   };
 }
 
-/* -------------------------------------------------------------------------- */
-/* THE OFFICEHOLDER UNIVERSE                                                   */
-/* -------------------------------------------------------------------------- */
-
 export interface OfficeholderUniverseInput {
   readonly shape: HolderSourceShape;
   readonly source: string | null;
-  /** How many current holders the source returned for this exact seat. */
   readonly holders: number;
-  /** Seats this contest fills, from the contest's own record (`voteFor`). */
   readonly seatsThisContestFills: number | null;
 }
 
-/**
- * Do we hold EVERY current holder of this exact office?
- *
- * Two independent gates, and both must pass. The shape gate carries the weight;
- * the count gate exists because a source that enumerates a body is still being
- * asked for one seat inside it, and a slice that comes back short is a slice
- * that failed.
- *
- * **It fails closed on a vacancy**, deliberately. A district with an unfilled
- * seat returns fewer holders than the contest fills, we cannot tell that from a
- * slice that simply missed somebody, and the safe reading of the two is the one
- * that stays quiet.
- *
- * **It refuses the coincidence, too.** Arizona's Corporation Commission seats
- * five members on staggered terms and two were up in 2026; we hold exactly two
- * holders. `holders === seatsThisContestFills` is TRUE there and the universe is
- * three people short — which is why the count can never be the only gate, and
- * why that contest is stopped by its source shape instead.
- */
 export function officeholderUniverse(input: OfficeholderUniverseInput): UniverseFinding {
   if (input.shape === "NOTHING_READ" || input.holders === 0) {
     return {
@@ -522,18 +248,6 @@ export function officeholderUniverse(input: OfficeholderUniverseInput): Universe
   };
 }
 
-/* -------------------------------------------------------------------------- */
-/* THE PER-CANDIDATE STATE                                                     */
-/* -------------------------------------------------------------------------- */
-
-/**
- * Turn the matching layer's answer into the three explicit states.
- *
- * **This function is the whole prohibition, in one place.** A `CHALLENGER` out
- * of `resolveContestIncumbency` means only *did not match any holder we hold*.
- * It becomes `NOT_INCUMBENT` — a claim about the person — ONLY where the
- * officeholder universe is complete. Everywhere else it is `UNRESOLVED`.
- */
 export function statesFromResolution(
   decisions: ReadonlyMap<string, IncumbencyDecision>,
   candidateKeys: readonly string[],
@@ -550,10 +264,6 @@ export function statesFromResolution(
   return out;
 }
 
-/* -------------------------------------------------------------------------- */
-/* THE ELIGIBILITY DECISION                                                    */
-/* -------------------------------------------------------------------------- */
-
 export interface ContestEligibility {
   readonly eligible: boolean;
   readonly candidateUniverse: UniverseFinding;
@@ -563,17 +273,9 @@ export interface ContestEligibility {
   readonly incumbent: number;
   readonly notIncumbent: number;
   readonly unresolved: number;
-  /** Plain-language, quotable: why a label may or may not attach here. */
   readonly reason: string;
 }
 
-/**
- * The four conditions, evaluated together. All of them, or the contest is
- * silent for every candidate in it — including the one we matched.
- *
- * Returned rather than logged, because a reader-facing decision has to be
- * explainable: the inputs it turned on are on the object.
- */
 export function contestLabelEligibility(input: {
   readonly candidateUniverse: UniverseFinding;
   readonly officeholderUniverse: UniverseFinding;

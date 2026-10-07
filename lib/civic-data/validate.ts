@@ -41,15 +41,7 @@ function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
 }
 
-/**
- * A 304 Not Modified carries no bytes. It is authentic only where a contract
- * pins exact bytes to the Last-Modified they were served with, and only for a
- * candidate built from exactly those bytes. Today that is registration's Census
- * of Governments file (`lib/registration/publication.ts`, bound by one full
- * read); a 304 anywhere else acquired nothing. The raw hash must be the one
- * registration builds from the pinned sha, its reference and the reviewed
- * registry version, so a 304 cannot carry another file's provenance.
- */
+/** A 304 carries no bytes: authentic only where a contract pins exact bytes to their Last-Modified, for a candidate built from them. */
 export function notModifiedIssue(candidate: RoutineCandidate): string | null {
   if (candidate.recordClass !== "REGISTRATION") {
     return `HTTP 304 carries no bytes, and ${candidate.recordClass} pins no bytes to a Last-Modified, so nothing was acquired.`;
@@ -103,21 +95,9 @@ function jurisdictionAllowed(candidate: RoutineCandidate, allowed: readonly stri
   return candidate.identities.every((identity) => allowed.includes(identity.jurisdiction));
 }
 
-/**
- * **A VERSION THAT NAMES A PUBLICATION IS NOT AN ORDER.** (2026-09-24.)
- * CISA's registry is versioned by the git commit of `current-full.csv`, and two
- * commit hashes compared as strings say nothing about which came first: every
- * daily revision from 2026-09-15 to 09-24 was refused as "11fe34b4… precedes
- * promoted e68adb11…", eight upstream updates in a row, while the pointer sat on
- * the 09-15 registry. For these classes the version still has to equal the
- * expected one; which publication is newer is decided by the acquisition and
- * source-through order checked beside it, never by the hash.
- */
+/** For these classes the version names a publication, not an order: which is newer is decided by acquisition and source-through order. */
 const UNORDERED_VERSION_CLASSES: ReadonlySet<RoutineCandidate["recordClass"]> = new Set(["DOTGOV_REFERENCE"]);
 
-/** Worker publication editions identify audited attempts, not sortable source
- * vintages. Exact expected-version agreement and both real time-order checks
- * below still apply; random hash spelling cannot establish chronology. */
 function hasOpaqueWorkerEdition(candidate: RoutineCandidate): boolean {
   return (candidate.sourceId === "registry-reviewed-bindings" && candidate.recordClass === "REGISTRY_RUNTIME_BINDING" &&
     /^worker-roster:wr-[a-f0-9]{24}$/.test(candidate.temporal.version)) ||
@@ -141,10 +121,7 @@ function object(value: unknown): Record<string, unknown> | null {
     : null;
 }
 
-/** A gap becoming an official filing is a reclassification of the same
- * candidacy, although the legacy finance member key changes from its target
- * key to the newly known committee ID. Prove that pair; an unmatched loss
- * remains an incomplete-horizon removal and must still be held. */
+/** A gap becoming an official filing reclassifies the same candidacy though its finance member key changes; an unmatched loss stays held. */
 function stateFinanceGapResolution(candidate: RoutineCandidate): ValidationCheck | null {
   if (candidate.recordClass !== "STATE_CAMPAIGN_FINANCE" || (candidate.removalEvidence?.length ?? 0) > 0) return null;
   const removed = candidate.changeSet?.removed ?? [];
@@ -180,11 +157,7 @@ function stateFinanceGapResolution(candidate: RoutineCandidate): ValidationCheck
   );
 }
 
-/**
- * Removals an auditor's BROKE verdict caused (DP-15). Every removed key must be named by exactly one
- * pull row and be held by this candidate as an audit-pulled excluded fact for the same member, so a
- * removal can never be claimed without the pull that explains it. Anything else falls through.
- */
+/** Every removed key must be named by exactly one pull row and held as an audit-pulled excluded fact for the same member. */
 function auditPullRemovalCheck(candidate: RoutineCandidate, removed: readonly { readonly key: string }[],
   evidence: NonNullable<RoutineCandidate["removalEvidence"]>): ValidationCheck | null {
   if (candidate.recordClass !== "CURATED_READER_RECORD" || removed.length === 0 || evidence.length !== removed.length) return null;
@@ -271,7 +244,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
   // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
   const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence>>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
-  // One pass after DB-01: a `V1` row (the old shown window) is still accepted.
+    // A `V1` row (the old shown window) is still accepted.
   const legacyWindow = meetingLegacyServingWindowAt(candidate.retrieval.retrievedAt);
   let currentMembers: ReadonlyMap<string, unknown> | null = null;
   const currentMember = (key: string): unknown => {
@@ -292,16 +265,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
     const meetingId = typeof before?.id === "string" ? before.id : null;
     const startsAt = typeof before?.startsAt === "string" ? before.startsAt : null;
     if (row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY") {
-      /*
-       * A prior record replaced by the fresh record that now holds its
-       * sitting: an occurrence of its recurring series (2026-09-23,
-       * `supersedesSeriesRecord`), or the same sitting its publisher re-issued
-       * under a new id (2026-09-24, `reissuesSitting`). Nothing in the evidence
-       * row is taken on trust: the successor is looked up among THIS
-       * candidate's own members, must be a fresh row rather than a carried
-       * one, and must pass the same tests the reconciliation applied, re-run
-       * here on the stored records.
-       */
+            /* The successor must be a fresh member of this candidate and pass the same reconciliation tests, re-run here. */
       const successor = typeof row.successorKey === "string" ? object(currentMember(row.successorKey)) : null;
       const successorId = typeof successor?.id === "string" ? successor.id : null;
       const successorStartsAt = typeof successor?.startsAt === "string" ? successor.startsAt : null;
@@ -335,12 +299,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       continue;
     }
     if (row.code === "EXCLUDED_BY_PUBLISHER") {
-      /*
-       * A sitting the publisher struck out of its series (2026-09-23). The
-       * statement must be one THIS read recorded, as a held fact of this
-       * candidate, for this record's own body; the removed record must be
-       * that very sitting; and the candidate must not publish it anyway.
-       */
+            /* The strike must be a held fact this read recorded for this record's own body, and the sitting must not publish. */
       const stated = (candidate.excludedFacts ?? [])
         .filter((fact) => fact.code === "MEETING_EXCLUDED_BY_PUBLISHER")
         .map((fact) => object(fact.record))
@@ -365,12 +324,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       continue;
     }
     if (row.code === "MOVED_TO_HISTORY") {
-      /*
-       * A concluded sitting leaves its live partition only into the partition's durable history (DB-06). The record
-       * must have been concluded, started before this clock's held window, and be named here under exactly its own
-       * partition's history scope. That the named history version really holds the record is the door's check against
-       * the store (`movedToHistoryAuthorityIssue`), which runs before this validator.
-       */
+            /* That the named history version holds the record is the door's check (`movedToHistoryAuthorityIssue`), run before this. */
       const heldWindow = registeredWindow;
       const prior = Date.parse(row.priorStartsAt);
       const lower = Date.parse(row.lowerBound);
@@ -453,15 +407,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
   return null;
 }
 
-/**
- * A registry member may leave an open fact set only as a body minted on a
- * Census "no district here" placeholder (Sean, 2026-09-23). Nothing in the
- * evidence row is taken on trust; every clause is re-derived from this
- * candidate: the removed record is exactly `body:<its id>`, it sat on exactly
- * the named division, and the candidate still holds that division, a
- * placeholder by its own Census code (lib/registry/census-placeholders.ts).
- * Every other registry removal stays refused.
- */
+/** A registry member may leave only as a body on a Census placeholder division, re-derived from this candidate. */
 function registryPlaceholderRemovalCheck(
   candidate: RoutineCandidate,
   removed: RoutineChangeSet["removed"],
@@ -517,7 +463,6 @@ export function failureStateFor(check: ValidationCheck): CandidateState {
   }
 }
 
-/** Every decision below is deterministic and tied to one named GOOD check. */
 export function validateRoutineCandidate(
   candidate: RoutineCandidate,
   lastKnownGood: CandidateVersionRecord | null,
@@ -537,7 +482,6 @@ export function validateRoutineCandidate(
   const readModel = durableCanonicalJson(candidate.readModel);
   const suppliedCivicRecords = candidate.civicRecords === undefined ? null : canonicalMembers(candidate.civicRecords);
   const canonicalDerivedCivicRecords = canonicalMembers(derivedCivicRecords);
-  /* A DERIVED authority has no route: its candidate is authentic only as the exact inputs it names (derived-door.ts). */
   const authority = candidate.retrieval.derived
     ? derivedAuthorityFor(candidate)
     : candidate.retrieval.manualSourceReceipt
@@ -853,7 +797,6 @@ export function validateRoutineCandidate(
   return { receipt, state: blocking ? failureStateFor(blocking) : "VALIDATED" };
 }
 
-/** A concluded meeting row that names an agenda, minutes, an outcome or a vote is a kept record (DB-01). */
 function meetingRowCarriesRecords(row: Record<string, unknown>): boolean {
   if (typeof row.agendaUrl === "string" && row.agendaUrl !== "") return true;
   const links = Array.isArray(row.publishedLinks) ? row.publishedLinks : [];

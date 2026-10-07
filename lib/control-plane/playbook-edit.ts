@@ -1,4 +1,4 @@
-/** DB-44. Gateway callers supply the receipt id and time; no direct production write path. */
+/** Gateway callers supply the receipt id and time; there is no direct production write path. */
 import { createHash } from "node:crypto";
 import { emptyFieldManual, FIELD_MANUAL_ID, newFieldManualEntry, type FieldManualRepos, type FieldManualRole, type FieldManualEntry } from "./field-manual.ts";
 import { rolePlaybook } from "./playbooks.ts";

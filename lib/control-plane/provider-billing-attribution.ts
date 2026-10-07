@@ -21,16 +21,12 @@ export function providerBillingAttribution(input: {
   const modelIds = new Set(input.attempts.filter(a => a.worker.provider === "anthropic" || a.worker.version.startsWith("claude-")).map(a => a.id));
   const providerOf = (c: CostEntry): ReportingProvider | null => c.source === "api.exa.ai" ? "exa" : c.source === "api.search.brave.com" ? "brave" : modelIds.has(c.attemptId) || c.byModel?.some(m => m.model.startsWith("claude-")) || c.source === "api.anthropic.com" ? "anthropic-api" : null;
   const scopes = input.scopes?.filter(s => s.budgetStartedAt) ?? [];
-  // One actual charge appears in at most one hunt subtotal. Its complete list
-  // of beneficiary receipts remains on the ledger; this stable owner is only
-  // a reporting allocation, never a waiver of another overlapping cap.
+  // One charge appears in at most one hunt subtotal: a reporting allocation, never a waiver of another overlapping cap.
   const beneficiaryHunts = (c:CostEntry):readonly ExpansionScopeDecision[] => {
     const eligible=scopes.filter(s=>Date.parse(c.recordedAt)>=Date.parse(s.budgetStartedAt!));
     const exact=eligible.filter(s=>c.assignmentRefs?.some(mark=>mark.key===s.key&&mark.ref===s.receiptId));
     if (c.assignmentRefs !== undefined) return exact;
-    // Rows written before exact refs existed still consume a funded hunt that
-    // was already running. Its immutable receipt and saved member subjects anchor
-    // the legacy join, and only a single match is attributed.
+    // Rows without exact refs are joined through the funded hunt's receipt and saved member subjects; only a single match is attributed.
     const legacy=eligible.filter(s=>isFundedHunt(s) && (c.assignmentKeys?.includes(s.key)===true ||
       (c.jurisdiction!==null && input.scopeMembers?.get(s.key)?.has(c.jurisdiction)===true)));
     return legacy.length===1?legacy:[];

@@ -1,20 +1,9 @@
 /**
- * **THE STATEMENT SWEEP SEARCHES (CA-16).**
- *
- * After the held-captures pass (`statement-sweep.ts`) every person is searched
- * on the open web for the same topics with the same queries, so no candidate
- * gets more or less effort than another. A search returns pointers only: each
- * hit is a lead the Scout opens and saves, and the next held pass reads the
- * saved page. A lead is never shown to a reader as a statement.
- *
- * How often the sweep is due comes from the reader-neutral setting
- * `statements.sweepSchedule`: a list of "within N days of the election, sweep
- * every M days" rows. The nearer the election, the shorter the interval. The
- * sweep record lists every query that was run and what came back, so a blank
- * says what was searched.
- *
- * Pure: the search function and the clock are arguments. The caller owns the
- * paid-search budget (it is the `ScoutSearch` it passes in).
+ * After the held-captures pass, every person is searched on the open web for
+ * the same topics with the same queries. A hit is only a lead for the Scout to
+ * open and save; it is never shown as a statement. Due dates come from the
+ * `statements.sweepSchedule` setting (tighter nearer the election). Pure: the
+ * search function (which owns the paid budget) and the clock are arguments.
  */
 import { registerSetting, type SettingValue } from "../control-plane/settings.ts";
 import type { ScoutSearch } from "../control-plane/scheduler/scout-contract.ts";
@@ -194,9 +183,8 @@ export async function searchSweepPeople(
 }
 
 /**
- * "Not found in the sources checked" after CA-16 needs the held pass AND the
- * search to have run in full for the topic. A refused query leaves the topic
- * open standing work.
+ * "Not found in the sources checked" needs the held pass and the search to have
+ * run in full for the topic. A refused query leaves the topic open.
  */
 export function searchCoversTopic(record: SweepSearchRecord, topic: string): boolean {
   return SWEEP_QUERY_KINDS.every((kind) => record.searched.some((s) => s.topic === topic && s.kind === kind && s.error === null));

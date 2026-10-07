@@ -4,21 +4,10 @@ import { sourceKindLabel } from "./source-kinds.ts";
 import type { SourceSnapshot, StatementCorpus } from "./types.ts";
 
 /**
- * The statement sweep (CA-15): every official and candidate gets a standing
- * "statements" blank, and one sweep record per person and topic says which
- * sources were searched.
- *
- * The sweep reads what we already hold, first: roster and profile pages,
- * campaign sites, minutes, filings, financial disclosure statements and voter
- * guides. A held page counts for a person only when it is theirs (it is held
- * under their id) or it quotes them by name. Every topic is searched against
- * the same set of pages, so each person gets the same effort on the same
- * topics. "Not found in the sources checked" may be shown only for a topic
- * whose record says an equal-effort sweep ran (`mayShowNotFound`).
- *
- * Pure: the held pages are arguments. It adds no claim about a person; the
- * records describe our search, and a passage is still found by
- * `positionsFor`, verbatim.
+ * One sweep record per person and topic, saying which held sources were
+ * searched. A held page counts for a person when it is held under their id or
+ * quotes them by name; every topic is searched against the same pages. "Not
+ * found in the sources checked" may be shown only when `mayShowNotFound`. Pure.
  */
 
 export interface SweepPerson {

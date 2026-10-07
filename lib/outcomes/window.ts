@@ -1,8 +1,6 @@
 /**
- * The rolling routine window both official-outcome readers use (Pima's
- * Legistar API reader and Mesa's minutes reader): today in the body's own
- * zone, back a fixed number of days, with `--from`/`--to` as explicit
- * operator overrides. One implementation, so the two readers cannot drift.
+ * The rolling routine window official-outcome readers share: today in the body's own zone, back a
+ * fixed number of days, with `--from`/`--to` as explicit operator overrides.
  */
 
 const DAY_MS = 24 * 60 * 60 * 1_000;
@@ -28,7 +26,7 @@ export interface OutcomeWindow {
   readonly to: string;
 }
 
-/** `code` names the reader in the refusal (e.g. PIMA_OUTCOME_WINDOW_INVALID). */
+/** `code` names the reader in the refusal. */
 export function rollingOutcomeWindow(
   args: { readonly from: string | null; readonly to: string | null },
   timeZone: string,

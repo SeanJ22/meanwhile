@@ -4,18 +4,6 @@ import { MODELS, canonicalModelId, modelTierFor, type ModelTier } from "../../mo
 import { stateCodeOf } from "../unit-state.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 
-/**
- * **admin-v6/agents@1 — WHAT EACH AGENT DID, WHAT IT COST, WHAT IT FOUND.**
- *
- * One row per Attempt (an agent's single run), newest first, read from the
- * control plane's own records: the attempt, its cost-ledger rows, the saved
- * pages it kept, and the result it recorded (a Scout's outcome and narrative, a
- * Parser's records, a Validator's verdict). Every statement is bounded to the
- * recent attempts it names; nothing scans a log to count it.
- *
- * A run still open after the runner's wall is "did not finish"; a cost the ledger
- * has no price for is null.
- */
 export const ADMIN_V6_AGENTS_CONTRACT = "admin-v6/agents@1" as const;
 export const AGENT_RUN_LIMIT = 40;
 /** The runner kills a child at 15 minutes; an attempt open longer than this is not running. */
@@ -131,8 +119,6 @@ export function agentRuns(input: {
     };
   });
 }
-
-/* ------------------------------------------------------------- the reads */
 
 export async function readAgentRuns(sql: Sql, nowIso: string): Promise<readonly AdminV6AgentRun[]> {
   const POINT = { callClass: "PAGE" } as const;

@@ -1,4 +1,3 @@
-/** Unsent instructions belong to the place where they were written. */
 export interface InstructionDraft {
   readonly text: string;
   readonly chosenBody: string | null;

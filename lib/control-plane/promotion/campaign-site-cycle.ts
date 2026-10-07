@@ -25,16 +25,10 @@ import { memoryInProcess, type ResearchGet, type ResearchRuntime } from "../../h
 
 export const CAMPAIGN_SITE_MAX_READS = 12;
 export const CAMPAIGN_SITE_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
-/** Each HTTP request retains its transport timeout, independently of the pass. */
 export const CAMPAIGN_SITE_REQUEST_TIMEOUT_MS = 10_000;
 const REQUEST_TIMED_OUT = "CAMPAIGN_SITE_REQUEST_TIMED_OUT";
 
-/**
- * `work`, or nothing once `ms` of wall time pass — measured by a real timer,
- * so a promise that never settles cannot hold its caller. The timer is always
- * cleared, and an abandoned promise's later rejection is swallowed here rather
- * than surfacing as an unhandled rejection in the runner.
- */
+/** `work`, or nothing once `ms` pass on a real timer; the timer is cleared and a late rejection is swallowed. */
 export async function withinWallTime<T>(work: Promise<T>, ms: number): Promise<{ readonly done: true; readonly value: T } | { readonly done: false }> {
   work.catch(() => undefined);
   if (!(ms > 0)) return { done: false };
@@ -71,7 +65,6 @@ export interface CampaignSiteCycleInput {
   readonly methodVersion: number;
   readonly maxReads?: number;
   readonly recheckAfterMs?: number;
-  /** When loading started, for elapsed-time reporting. */
   readonly startedAtMs?: number;
   /** The round's dispatch cutoff: no lead read starts after it, and an unread lead stays owed. */
   readonly deadlineMs?: number;
@@ -81,16 +74,11 @@ export interface CampaignSiteCycleReport {
   readonly chain: CampaignSiteChainReport;
   /** Lead verdicts this pass reached, by how: a read now, an earlier read's vaulted bytes, or none. */
   readonly verdicts: { readonly read: number; readonly vault: number; readonly verified: number; readonly refused: number; readonly deferred: number };
-  /** Every refusal and deferral code across the leads this pass weighed, counted. */
   readonly byCode: Readonly<Record<string, number>>;
   readonly elapsedMs: number;
 }
 
-/**
- * Run the chain once, inside the pass's bounds. Every lead read is
- * robots-first; nothing here reaches a model, a paid index, or a civic-data
- * store: publication is the derived contract's.
- */
+/** Every lead read is robots-first; nothing here reaches a model, a paid index or a civic-data store. */
 export async function runCampaignSiteCycle(input: CampaignSiteCycleInput): Promise<CampaignSiteCycleReport> {
   const started = input.startedAtMs ?? input.clock();
   let timeouts = 0;
@@ -156,7 +144,6 @@ export async function runCampaignSiteCycle(input: CampaignSiteCycleInput): Promi
   return { chain, verdicts: { read, vault, verified, refused, deferred }, byCode, elapsedMs: input.clock() - started };
 }
 
-/** The pass in one digest line: what was read, what verified, where each item stands, and every refusal by code. */
 export function campaignSiteCycleLine(report: CampaignSiteCycleReport): string {
   const { chain, verdicts } = report;
   const codes = Object.entries(report.byCode).sort(([a], [b]) => a.localeCompare(b)).map(([code, n]) => `${code} ${n}`).join(", ");
@@ -166,8 +153,6 @@ export function campaignSiteCycleLine(report: CampaignSiteCycleReport): string {
     (chain.unjoined.length > 0 ? ` · ${chain.unjoined.length} held finding(s) join no canonical candidacy` : "") +
     (codes === "" ? "" : ` · refused/deferred by code: ${codes}`);
 }
-
-/* --------------------------------------------------------------- inputs */
 
 /** The artifact ids one staged answer cites: the gap's `artifact(s):` line, or the promotion-ready snapshot's own list. */
 function stagedArtifactIds(root: string, entry: StagingManifest["entries"][number]): string[] {
@@ -182,12 +167,7 @@ function stagedArtifactIds(root: string, entry: StagingManifest["entries"][numbe
   }
 }
 
-/**
- * Every held Marginalia answer, by candidacy: the manifest's INGESTED
- * `candidate-marginalia-index` entries, each answer's bytes read back from
- * the vault and proved against their sidecar. An answer the vault cannot
- * produce is counted, never guessed.
- */
+/** Every held Marginalia answer by candidacy, read back from the vault and checked against its sidecar. An unproducible answer is counted, never guessed. */
 export async function heldMarginaliaFromManifest(
   root: string,
   manifest: StagingManifest | null,
@@ -214,12 +194,7 @@ export async function heldMarginaliaFromManifest(
   return { responses, entries, unreadable };
 }
 
-/**
- * The canonical candidacies a site may verify for, from the promoted pointers
- * the candidate-enrichment provider preloaded: its own universes, the Arizona
- * certified lineup's nominee keys, and the filings' stated domains (the Morris
- * clerk's filed contacts and any filed website), domains only.
- */
+/** The canonical candidacies a site may verify for, from the preloaded promoted pointers; filed domains only, never addresses. */
 export function campaignSiteSubjectsFromHoldings(
   holdings: CandidateEnrichmentAuthorityHoldings,
   nowIso: string,
@@ -237,10 +212,7 @@ export function campaignSiteSubjectsFromHoldings(
     }
   }
   const subjects = campaignSiteSubjects({ universes: Object.values(universes), lineups, filings });
-  /*
-   * Who already carries a campaign link: the publication door's own rule (PRIOR_CAMPAIGN_LINK_HELD), a reviewed
-   * campaign link on any of the candidacy's Reader keys in the promoted profiles. The pass reads their leads last.
-   */
+  /* Candidacies already carrying a reviewed campaign link on a Reader key (PRIOR_CAMPAIGN_LINK_HELD) are read last. */
   const links = holdings.profiles?.links.links ?? {};
   const linked = new Set([...subjects.values()].filter((s) => s.readerKeys.some((key) => links[key]?.campaign)).map((s) => s.candidacyId));
   return { subjects, failures, linked };

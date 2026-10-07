@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * **MONEY.** One summary row, then one table. Every summary figure is `moneySummary` over the one cost-ledger read for the period in the
- * picker: Spent (settled paid-AI charges, the tiers add up to it), Search, Set aside (open reservations now), Today (settled today plus
- * set aside) against the daily limit, Left today (the limit minus Today), and the tiers. A hunt's own limit appears only in the table.
- */
 import { useMemo, useState } from "react";
 
 import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";

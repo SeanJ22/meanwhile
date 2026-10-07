@@ -1,14 +1,9 @@
 import { LIFECYCLE, NO_PRODUCER_REASON, applicabilityOf, checklistItem, hasProducer } from "./checklist-map.ts";
 
 /**
- * **THE SIX STATUSES OF ONE OWED BLANK.** Whether it applies, whether it is due,
- * what the hunt found, whether the government has published it, how fresh it is,
- * and whether residents can see it. Each is filled from data already held, so
- * Admin can say "agenda not published yet" instead of "missing". The old blended
- * state stays beside these as a compatibility field. Nothing here gates
- * publishing.
- *
- * PURE.
+ * The six statuses of one owed blank: applies, due, found, published by the
+ * government, freshness, and reader visibility, each from data already held.
+ * `state` stays beside them as the old blended field. Pure.
  */
 export type AppliesStatus = "applies" | "depends" | "unresolved";
 export type DueStatus = "due" | "not-yet-due" | "unresolved";

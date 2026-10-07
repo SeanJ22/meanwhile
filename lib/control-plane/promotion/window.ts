@@ -1,20 +1,7 @@
 /**
- * THE RESEARCH WINDOW'S DECISIONS — pure, and one host-global lock.
- *
- *   RESEARCH ONLY        this module evaluates research pipeline state; it is
- *                        not a civic-data acquisition or promotion clock
- *   NO READER DOOR       the standing routine-data runner owns validated
- *                        candidate/version promotion independently
- *   ONE WINDOW AT A TIME the lock is a CAS lease in the `leases` aggregate,
- *                        never `repos.locks`: the Postgres provider's advisory
- *                        lock is released by the HTTP driver before the guarded
- *                        section runs (measured 2026-09-02: unlock answered
- *                        false on the same backend pid)
- *   A MISSED WINDOW      is caught up by name, never silently skipped
- *   A FAILED STAGE       opens an incident; the next research window catches up what
- *                        the incident names
- *
- * Nothing here reads a clock, a disk or the network.
+ * Research-window decisions over pipeline state; no reader door and no civic-data promotion.
+ * The lock is a CAS lease in `leases`, never `repos.locks`: the Postgres advisory lock is released
+ * by the HTTP driver before the guarded section runs.
  */
 
 import { claim, isExpired, release, type ExecutionLease } from "../attempt.ts";
@@ -41,8 +28,6 @@ export const WINDOW_LEASE_ID = "nightly-window";
 export const WINDOW_LEASE_TTL_MS = 90 * 60_000;
 /** A window that starts later than this after its boundary is a CATCH_UP. */
 export const CATCH_UP_GRACE_MS = 60 * 60_000;
-
-/* -------------------------------------------------------------- the clock */
 
 interface ZonedParts {
   readonly year: number;
@@ -107,13 +92,7 @@ export interface WindowDue {
   readonly reason: string;
 }
 
-/**
- * Is a window due now?
- *
- * The most recent boundary at or before `nowIso` names the local date owed.
- * With no prior window recorded, nothing before that date is claimed missed —
- * no state is not permission to invent state.
- */
+/** With no prior window recorded, nothing before the owed date is claimed missed. */
 export function windowDue(input: {
   readonly nowIso: string;
   readonly lastWindowLocalDate: string | null;
@@ -169,8 +148,6 @@ export function windowDue(input: {
   };
 }
 
-/* --------------------------------------------------------------- the lock */
-
 export class WindowLockHeld extends Error {
   readonly holder: string;
   readonly until: string;
@@ -186,10 +163,7 @@ export class WindowLockHeld extends Error {
   }
 }
 
-/**
- * Claim the window lease, or refuse. The aggregate id is fixed so the slot is
- * the race; the value's own id moves per claim.
- */
+/** The aggregate id is fixed so the slot is the race; the value's own id moves per claim. */
 export async function acquireWindowLease(
   repos: ControlPlaneRepositories,
   holder: string,
@@ -240,25 +214,9 @@ export type ExitedHolderRecovery =
   | { readonly state: "NOT_NEEDED" | "KEPT"; readonly holder: string | null; readonly reason: string };
 
 /**
- * **A WINDOW LEASE WHOSE HOLDER HAS EXITED ON THIS HOST IS RELEASED BY THIS
- * HOST.** (2026-09-23.)
- *
- * A cycle that dies in a native abort never reaches its `finally`. The cycles
- * at 00:18Z and 01:38Z on 2026-09-23 died this way, from a V8 heap exhaustion.
- * Their lease then stood for the rest of its 25-minute TTL, and a runner
- * relaunched in that time had its first cycle refused under it (17:54Z on
- * 2026-09-22; 00:25Z on 2026-09-23).
- *
- * The rule is the one `scripts/autonomous-fleet-cutover.mts
- * --recover-dead-holder` applies by hand:
- * - the exact holder names a process on THIS host, and
- * - no process with that pid exists.
- *
- * It releases through the same compare-and-set as `releaseWindowLease`, and
- * leaves clock and expiry untouched. It keeps the lease when:
- * - another host's process holds it, since it cannot be judged from here;
- * - the holder names no process;
- * - the pid is live, or its existence cannot be read.
+ * Releases a lease whose holder names a process on this host that no longer exists, through the same
+ * compare-and-set as `releaseWindowLease`. Keeps it when another host holds it, the holder names no
+ * process, or the pid is live or unreadable.
  */
 export async function releaseWindowLeaseOfExitedLocalHolder(
   repos: ControlPlaneRepositories,
@@ -279,10 +237,7 @@ export async function releaseWindowLeaseOfExitedLocalHolder(
   return { state: "RELEASED", holder, expiresAt: current.value.expiresAt };
 }
 
-/**
- * Run `fn` under the window lease. Released in a finally, so a normal return
- * hands it back; a dead process holds nothing past the TTL.
- */
+/** Released in a finally; a dead process holds nothing past the TTL. */
 export async function withNightlyWindowLease<R>(
   repos: ControlPlaneRepositories,
   holder: string,
@@ -305,12 +260,7 @@ export async function withNightlyWindowLease<R>(
   }
 }
 
-/* ------------------------------------------------------------ evaluation */
-
-/**
- * Describe each verified item for the publication window. DEFER retains the
- * window-level execution reason; class and field activation lists are retired.
- */
+/** DEFER retains the window-level execution reason. */
 export function evaluateItems(
   states: readonly PipelineItemState[],
   gate: Pick<ActivationGateReading, "openRecordClasses" | "openFields">,
@@ -346,8 +296,6 @@ export function evaluateItems(
   };
 }
 
-/* --------------------------------------------------------- record guards */
-
 /** A window record this module wrote, as opposed to a foreign row under the same log. */
 export function isWindowRunRecord(value: unknown): value is WindowRunRecord {
   if (value === null || typeof value !== "object") return false;
@@ -373,8 +321,6 @@ export function lastWindowLocalDate(records: readonly unknown[]): string | null 
   return dates.at(-1) ?? null;
 }
 
-/* ------------------------------------------------------------- incidents */
-
 export function openIncident(input: {
   readonly windowId: string;
   readonly stage: WindowStageName | "LOCK";
@@ -398,8 +344,6 @@ export function openIncident(input: {
 export function windowId(localDate: string, startedAt: string, host: string): string {
   return `nw-${localDate}-${fingerprint([startedAt, host])}`;
 }
-
-/* --------------------------------------------------------------- digest */
 
 export function windowHeadline(run: WindowRunRecord): string {
   const failed = run.stages.filter((s) => s.outcome === "FAILED").map((s) => s.stage);

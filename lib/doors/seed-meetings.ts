@@ -1,16 +1,9 @@
 /**
- * DB-10: today's meeting doors, as registry records.
- *
- * Door ids follow how partitions really work. A hand-wired door is
- * (meeting source, body), which is today's partition id
- * (`meetings:<source>:<bodyId>`); one wiring row can produce several sources
- * and so several doors. A derived member's door id is its derived wiring row
- * id, and it stays a member of its state's family partition
- * (`meetings:derived:<state>`), named in its settings.
- *
- * PURE: mapping only. `scripts/seed-doors-from-meetings.mts` does the one-time
- * write. Pointers and last-known-good data are not touched here: the registry
- * records doors, it does not move what readers see.
+ * Today's meeting doors as registry records. A hand-wired door is (meeting
+ * source, body), its partition id `meetings:<source>:<bodyId>`; one wiring row
+ * can produce several. A derived member's door id is its derived wiring row id,
+ * and it stays in its state's family partition (`meetings:derived:<state>`).
+ * Pure mapping; the registry records doors and does not move what readers see.
  */
 
 import { derivedMeetingFamilyId, meetingAcquisitionFailureDomain, meetingPartitionId } from "../civic-data/meeting-partitions.ts";

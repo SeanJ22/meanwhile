@@ -1,21 +1,3 @@
-/**
- * Build ZCTA↔geography overlap scopes from Census `tab20` relationship files.
- *
- * The tab20 files are pipe-delimited with a header naming every column. For a
- * pairing of geography G and ZCTA, each row carries G's fields, the ZCTA's
- * fields, and `AREALAND_PART`/`AREAWATER_PART` — the area of the overlap. We
- * key overlaps by name (never by fixed column index) because the two files we
- * read put the geographies in different orders (county file: ZCTA first; cd-sld
- * file: district first).
- *
- * The overlap share is AREA-based: `AREALAND_PART / AREALAND_<ZCTA>`. These
- * files carry no population, so population weighting is honestly unavailable
- * (RULING 275: state the mapping method; never guess a share). Rows whose ZCTA
- * side is blank are the part of the geography that lies in no ZCTA — skipped.
- *
- * Pure and streaming-friendly: feed split lines to `ScopeAccumulator.add`, then
- * call `finish`. No I/O here, so the logic is unit-testable without the network.
- */
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { FractionBasis, GeographyVersion } from "./contract.ts";
 import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
@@ -23,7 +5,6 @@ import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
 /** A ZCTA whose area lies this fraction (or more) inside a geography is "whole". */
 export const WHOLE_THRESHOLD = 0.9999;
 
-/** What identifies a tab20 source: the geography type/version and its column tag. */
 export interface Tab20Spec {
   readonly type: BuiltScope["type"];
   /** Version key, e.g. "cd:119". */
@@ -46,7 +27,6 @@ export interface Tab20Columns {
   readonly areaLandPart: number;
 }
 
-/** Split a tab20 header line (BOM-stripped) into column names. */
 export function parseTab20Header(headerLine: string): string[] {
   return headerLine.replace(/^﻿/, "").trim().split("|");
 }
@@ -75,11 +55,10 @@ export function resolveTab20Columns(header: readonly string[], geoTag: string): 
 interface GeoAccumulator {
   name: string;
   geoAreaLand: number;
-  /** zcta5 -> summed overlap land area, and the ZCTA's own land area. */
   overlaps: Map<string, { part: number; zctaAreaLand: number }>;
 }
 
-/** Accumulates one scope (one geography type at one version) row by row. */
+/** Accumulates one scope row by row. Columns are keyed by name, never index; the share is area-based (AREALAND_PART over the ZCTA's own land), since these files carry no population. */
 export class ScopeAccumulator {
   private readonly geos = new Map<string, GeoAccumulator>();
   private rows = 0;
@@ -95,7 +74,6 @@ export class ScopeAccumulator {
     this.cols = cols;
   }
 
-  /** Feed one already-split data row (fields split on "|"). */
   add(fields: readonly string[]): void {
     this.rows += 1;
     const zcta = (fields[this.cols.zctaGeoid] ?? "").trim();

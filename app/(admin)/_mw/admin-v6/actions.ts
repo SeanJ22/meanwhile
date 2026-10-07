@@ -1,16 +1,4 @@
-/**
- * **EVERY CONTROL, WHAT IT PROMISES, AND WHETHER ANYTHING CAN CARRY IT OUT.**
- *
- * Each v6 control has one entry: its label, whether it is local or whole-system,
- * the rows its preview shows (what it affects, what changes, cost, undo), and
- * the short words its final "Done" uses. Admin carries no explanation copy.
- *
- * `gateway` maps the kinds the deployed `/api/admin/action` registry performs.
- * Everything else carries a named `dependency` and, outside the sample preview,
- * is shown as "Not connected yet" instead of a Send button.
- *
- * PURE.
- */
+/** `gateway` maps the kinds the deployed `/api/admin/action` registry performs; any other control carries a named `dependency`. */
 import type { ActionKind, DecisionSpec, Dependency, Hunt } from "./model.ts";
 import { usd } from "./model.ts";
 import { addableFamilies } from "@/lib/coverage/owed-overlay.ts";
@@ -24,7 +12,6 @@ function switchWords(target: string): { readonly label: string; readonly who: st
   return { label: RECIPES.find((r) => r.id === id)?.label ?? id, who: audienceWords(at < 0 ? "" : target.slice(at + 1)) };
 }
 
-/** A ZIP place key, the only kind of place a single hunt starts from (the rest start from the many-hunts panel). */
 export function isZipPlace(target: string): boolean {
   return /^geo:[a-z]{2}\.zcta\.\d{5}$/.test(target);
 }
@@ -45,12 +32,9 @@ export interface PreviewContext {
   readonly decision?: DecisionSpec;
   readonly fix?: { readonly id: string; readonly title: string; readonly owner: string; readonly resourcesNow: string; readonly helps: string; readonly needsCode: boolean };
   readonly url?: string;
-  /** The words a send-agents instruction carries. */
   readonly words?: string;
-  /** The live count, when the server supplies one. */
   readonly waitingCount?: number | null;
   readonly outreachAuthorized: boolean;
-  /** The control's own values (a setting's current value, an undo's earlier value). */
   readonly payload?: Readonly<Record<string, string>>;
 }
 
@@ -58,7 +42,6 @@ export interface PreviewOption {
   readonly id: string;
   readonly label: string;
   readonly note: string;
-  /** Why this option cannot be chosen, when it cannot. */
   readonly blocked?: string;
   readonly ownWords?: boolean;
 }
@@ -69,15 +52,11 @@ export interface Preview {
   readonly rows: readonly (readonly [string, string])[];
   readonly options?: readonly PreviewOption[];
   readonly items?: readonly PreviewItem[];
-  /** A number the owner types (a hunt's lifetime limit). */
   readonly amount?: { readonly label: string; readonly initial: string; readonly text?: boolean };
-  /** Offer the optional note box. */
   readonly note?: boolean;
-  /** A problem with what was entered, or null. */
   readonly invalid?: (input: { readonly option: string | null; readonly words: string; readonly amount: string; readonly selected: number }) => string | null;
 }
 
-/** A deployed registry action that already carries this control out (inputs: contract.ts `actionInput`). */
 export interface GatewayMapping {
   readonly type: string;
   /** The registry action quotes the rendered state; the executor sends the latest pulse revision. */
@@ -87,16 +66,12 @@ export interface GatewayMapping {
 export interface ActionDef {
   readonly kind: ActionKind;
   readonly label: string;
-  /** Which permission beyond "can change things" this needs. */
   readonly needs: "owner" | "spend";
-  /** The short words a final Done shows. */
   readonly doneWords: string;
   readonly preview: (ctx: PreviewContext) => Preview;
   readonly gateway: GatewayMapping | null;
   readonly dependency: Dependency | null;
 }
-
-/* ---------------------------------------------------------- dependencies */
 
 export const DEP = {
   typedPlans: {
@@ -131,8 +106,6 @@ export const DEP = {
   },
 } as const satisfies Record<string, Dependency>;
 
-/* ----------------------------------------------------------------- words */
-
 const COST_NONE = "None";
 const MODEL_ORDER = "Haiku 4.5, then Sonnet 5.5, then Opus 5.5";
 
@@ -149,8 +122,6 @@ function waitingWords(ctx: PreviewContext): string {
 function huntLeft(h: Hunt | null | undefined): string {
   return h ? `${usd(Math.max(0, h.limitUsd - h.spentUsd - h.heldUsd))} left in the limit` : "—";
 }
-
-/* --------------------------------------------------------------- catalog */
 
 const defs: ActionDef[] = [
   {
@@ -994,12 +965,10 @@ export function actionDef(kind: ActionKind): ActionDef {
   return d;
 }
 
-/** The kinds a real executor can carry out today. */
 export function connectedKinds(): readonly ActionKind[] {
   return defs.filter((d) => d.gateway !== null).map((d) => d.kind);
 }
 
-/** Read legacy receipts through the same gateway map used to send controls. */
 export function gatewayActionKind(type: string, evidence: { subject?: string; says?: string } = {}): ActionKind | null {
   if (type === "decision.record" && evidence.subject !== "fix-queue") return null;
   const candidates = defs.filter(definition => definition.gateway?.type === type);

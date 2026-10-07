@@ -1,36 +1,17 @@
 /**
- * **THE RUNNER'S READS FOR THE EXPANSION SCOPES.** (Expansion controls, 2026-09-23.)
+ * The runner's reads for the expansion scopes: the published Census geography
+ * lookup (one load per cycle; anything but a "published" source resolves
+ * nothing) and the Census unit territories from data/derived/place-reference/.
+ * The territory index is returned with the plan so it is read once per cycle.
  *
- * Two reads, both only when the owner has selected at least one scope:
- *
- * ```
- *   the Census geography lookup   the published promoted pointer, through
- *                                 `loadPublishedLookupState` — ONE load per cycle,
- *                                 reused for every scope. Anything but a
- *                                 "published" source resolves nothing: a
- *                                 bootstrap fixture is not live coverage
- *   the Census unit territories   data/derived/place-reference/ — state indexes
- *                                 address only the place's unit and share rows.
- *                                 National held inputs are projected at install,
- *                                 never read by this runtime.
- * ```
- *
- * The same reads serve the work a scope materializes (MW-028,
- * `dispatch-work.ts`): the territory index is returned with the plan, so it is
- * read once per cycle, never twice.
- *
- * SERVER-ONLY (node:fs and the production data plane). Never imported by a
- * client module.
+ * Server-only.
  */
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 
 import type { CensusGeographyLookup, GeographyType } from "../../census-geography/contract.ts";
 import { loadPublishedLookupState, type PublishedLookupSource } from "../../census-geography/reader.ts";
 import { installedOperationalReferenceRegistries } from "../../civic-data/operational-references.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { APPROXIMATE_DISTRICT_EXTRACT_PATH, type ApproximateDistrictExtract } from "./district-territory.ts";
 import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 import {
   buildTerritoryIndex,
@@ -83,10 +64,8 @@ export function readZctaShares(root: string, wanted: ReadonlySet<string>, states
 
 /**
  * The territory index the runner uses: the preloaded registries, the committed
- * units, and their sampled shares — for every unit, registered state or not
- * (MW-028, 2026-09-23), so a geography in a state with no registry counts the
- * governments it blocks by the same certain-overlap rule as a registered one,
- * rather than by wholly-inside ZCTAs alone.
+ * units and their sampled shares, for every unit whether or not its state has a
+ * registry.
  */
 export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[], states = [...new Set(registries.map(registry => registry.stateCode))], zips?: ReadonlySet<string>, places: ReadonlyMap<string, readonly PlaceDivision[]> = new Map()): TerritoryIndex {
   const selected = new Set(states.map(state => state.toUpperCase()));
@@ -115,7 +94,7 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
   const scopedRegistries = registries.filter(registry => selected.has(registry.stateCode.toUpperCase())).map(registry => zips ? {
     ...registry, jurisdictions: registry.jurisdictions.filter(j => j.govClass === "STATE" || unitIds.has(j.id) || Boolean(j.censusDivision && wanted.has(j.censusDivision))),
   } : registry);
-  /* A registry read from registration places each government by the division its body sits on, by that division's own layer and GEOID (2026-09-25). */
+  /* A registration-read registry places each government by its body's division, by that division's own layer and GEOID. */
   for (const registry of scopedRegistries) {
     if (registry.registration?.kind !== "REGISTRATION") continue;
     for (const j of registry.jurisdictions) if (j.censusDivision) wanted.add(j.censusDivision);
@@ -126,20 +105,7 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
     const own = j.censusDivision ? shares.get(j.censusDivision) : undefined;
     const touched = j.censusDivision ? exact.get(j.censusDivision) : undefined;
     return own === undefined && !touched ? undefined : { zctas: new Set([...(own?.keys() ?? []), ...(touched ?? [])]), shares: own ?? new Map() };
-  }, states.some(state => state.toUpperCase() === "AZ") ? readApproximateDistrictExtract(root) : null);
-}
-
-/**
- * The approximate special-district boundary extract (`district-territory.ts`): read here, for Send placement only,
- * and nowhere on a reader path (tests/district-territory.test.ts holds that). A missing or malformed file is named.
- */
-export function readApproximateDistrictExtract(root: string): ApproximateDistrictExtract {
-  const path = join(root, ...APPROXIMATE_DISTRICT_EXTRACT_PATH);
-  const parsed = JSON.parse(readFileSync(path, "utf8")) as ApproximateDistrictExtract;
-  if (parsed.kind !== "az-fire-district-territory" || parsed.formatVersion !== 1 || !Array.isArray(parsed.districts) || !/APPROXIMATE/.test(parsed.provenance?.approximate ?? "")) {
-    throw new Error(`${APPROXIMATE_DISTRICT_EXTRACT_PATH.join("/")} is not an approximate district extract this build reads`);
-  }
-  return parsed;
+  });
 }
 
 /** Read the Census unit territories. Throws with the path named; the caller turns that into a named condition. */
@@ -286,12 +252,7 @@ export interface ExpansionLoad {
   readonly plan: ExpansionPlan | null;
   /** Named runtime conditions for the research state. Empty when nothing went wrong. */
   readonly conditions: readonly string[];
-  /**
-   * The territory index the plan was placed with, for the work a scope
-   * materializes (MW-028, `dispatch-work.ts`) — read once, never twice. Null
-   * when no scope is selected, or with `territoryDetail` saying why it could
-   * not be built.
-   */
+  /** The territory index the plan was placed with. Null when no scope is selected, or with `territoryDetail` saying why. */
   readonly territory?: TerritoryIndex | null;
   readonly territoryDetail?: string | null;
 }
@@ -324,14 +285,7 @@ export async function loadExpansionPlan(input: {
   try {
     const row = await input.repos.adminConfig.read(ADMIN_CONFIG_ID);
     if (row !== null && !isAdminConfig(row.value)) {
-      /*
-       * A policy row that is not a policy fails CLOSED, exactly as a row that
-       * could not be read does (2026-09-25). It used to read as "no row", so the
-       * owner's scope budgets silently disappeared and paid work ran unbounded
-       * by them. Whatever scopes the row still carries readably are kept, so
-       * their work is still placed and created; the row itself counts as one
-       * unreadable entry, which holds paid Scout work until it is fixed.
-       */
+      /* A policy row that is not a policy fails closed: readable scopes are kept, and the row counts as one unreadable entry, holding paid Scout work. */
       const salvaged = row.value !== null && typeof row.value === "object" ? expansionScopesOf(row.value as { readonly expansionScopes?: unknown }) : null;
       decisions = salvaged?.scopes ?? [];
       malformed = 1 + (salvaged?.malformed ?? 0);

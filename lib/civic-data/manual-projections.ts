@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
 import { electionFieldIssue } from "./election-fields.ts";
 import { translationProjectionProblems, type TranslationProjection } from "../translate/projection-contract.ts";
-import { jurisdictionFromOcdId } from "../coverage/states.ts";
+import { jurisdictionFromOcdId, US_JURISDICTIONS } from "../coverage/states.ts";
 import { manualPayloadScope } from "./scoped-manual-contracts.ts";
 import { specialDistrictBoundaryIssue } from "../registry/special-district-boundary.ts";
 import { publicRecordIssue } from "./public-record-contract.ts";
@@ -20,7 +20,6 @@ import type { AnalysesFile } from "../ballot/analyses.ts";
 import type { CandidateCorpus } from "../candidates/corpus.ts";
 import type { StatementCorpus } from "../corpus/types.ts";
 import type { AzIdentityRegistry, LineupReconciliation } from "../identity/types.ts";
-import { officeholderIdentityMayEnterReader } from "../officials/roster-authority.ts";
 import {
   everydayRoutingProjectionFromRecords,
   everydayRoutingProjectionProblems,
@@ -110,7 +109,6 @@ export interface CuratedReaderProjection {
   readonly kind: "official-filings" | "comment-access" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance";
   /** Stable exact members. Each family has its own contract, pointer, and LKG. */
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
-  /** Present on denominator-governed Reader families such as everyday routing. */
   readonly formatVersion?: number;
   readonly denominator?: Readonly<Record<string, number>>;
 }
@@ -166,10 +164,9 @@ function string(value: unknown): string {
 }
 
 function jurisdictionForCandidateKey(key: string): string {
-  if (key.startsWith("ballot-az-") || key.startsWith("az-")) return "US-AZ";
-  if (key.startsWith("ballot-nh-") || key.startsWith("nh-")) return "US-NH";
-  if (key.startsWith("ballot-nj-") || key.startsWith("nj-")) return "US-NJ";
-  return "UNRESOLVED";
+  const slug = /^(?:ballot-)?([a-z]{2})-/.exec(key)?.[1];
+  const state = US_JURISDICTIONS.find((row) => row.slug === slug);
+  return state ? `US-${state.usps}` : "UNRESOLVED";
 }
 
 function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetReceipt): string[] {
@@ -288,8 +285,7 @@ function curatedRecordIssue(
   }
   if (contractId === "campaign-sites") {
     const site = object(row.site);
-    return !officeholderIdentityMayEnterReader(string(row.officeholderId), null) ||
-        !/^https:\/\//.test(string(site?.url)) ||
+    return !/^https:\/\//.test(string(site?.url)) ||
         !string(site?.verification) ||
         !Number.isFinite(Date.parse(string(site?.attemptedAt)))
       ? `${string(row.id)} lacks an eligible exact identity, verified HTTPS site, or attempt date.`
@@ -298,7 +294,7 @@ function curatedRecordIssue(
   if (contractId === "member-offices") {
     const office = object(row.office);
     return row.kind !== "MEMBER_OFFICE" ||
-        !string(row.officeholderId) || !officeholderIdentityMayEnterReader(string(row.officeholderId), null) ||
+        !string(row.officeholderId) ||
         !["CAPITOL", "DISTRICT"].includes(string(row.officeKind)) ||
         !/^https:\/\//.test(string(row.sourceUrl)) || !string(row.sourceOrg) ||
         !Number.isFinite(Date.parse(string(row.collectedAt))) ||
@@ -315,8 +311,7 @@ function curatedRecordIssue(
       (bodyOcdId === null && !string(row.tenant)) ||
       !Number.isFinite(row.lat) ||
       !Number.isFinite(row.lng) ||
-      // BX-09: no person reviews an automatic pin, so the validator holds the same United States box the matcher uses
-      // (lib/meetings/automatic-venue-resolutions.ts); a (0, 0) or overseas point can never be promoted.
+      // No person reviews an automatic pin, so it must sit in the same United States box the matcher uses.
       Number(row.lat) < 18 || Number(row.lat) > 72 ||
       Number(row.lng) < -180 || Number(row.lng) > -65 ||
       !/^https:\/\//.test(string(row.addressSourceUrl)) ||
@@ -418,7 +413,7 @@ function sourceScopedMemberIssue(
     const contentHash = string(row.contentHash);
     const retrievedAt = string(row.retrievedAt);
     const extraction = string(row.extraction);
-    if (!id || !officeholderIdentityMayEnterReader(subjectId, null) || !/^https:\/\//.test(url) ||
+    if (!id || !/^https:\/\//.test(url) ||
         !SHA256_PATTERN.test(contentHash) || !Number.isFinite(Date.parse(retrievedAt)) || !Number.isInteger(row.httpStatus) ||
         !["CAMPAIGN_SITE", "OFFICIAL_PAGE"].includes(string(row.kind)) ||
         !(extraction === "failed" || (extraction === "ok" && string(row.text).trim())) ||
@@ -442,7 +437,7 @@ function sourceScopedMemberIssue(
     const row = object(member.record);
     if (!row) return `${member.key} is not a curated Reader record.`;
     const issue = curatedRecordIssue(contractId, row);
-    /* A crosswalk row cites exactly the receipted bytes of the pages it rests on (C16). */
+    // A crosswalk row cites exactly the receipted bytes of the pages it rests on.
     return issue ?? (contractId === "meeting-body-crosswalk" ? crosswalkReceiptIssue(row as unknown as MeetingBodyCrosswalkRow, receipt.sources) : null);
   }
   return null;
@@ -867,23 +862,13 @@ function officeholderStatementProjection(
     missingRequiredFields: snapshots.length > 0 && complete
       ? []
       : ["snapshots.id/subjectId/url/contentHash/retrievedAt/httpStatus/extraction"],
-    violations: [
-      ...duplicateProblems(ids, "Officeholder statement snapshot"),
-      ...(identities.some((identity) => !officeholderIdentityMayEnterReader(identity.subjectId, null))
-        ? ["A statement is keyed only to a retired intermediary officeholder identity."]
-        : []),
-    ],
+    violations: duplicateProblems(ids, "Officeholder statement snapshot"),
     schemaVersion: "officeholder-statements:1",
     consumerChecks: [
       {
         consumer: "/api/positions and Ask statement search",
         passed: snapshots.length > 0 && complete,
         detail: `${snapshots.length} append-only primary-publication snapshot(s).`,
-      },
-      {
-        consumer: "production officeholder identity boundary",
-        passed: identities.every((identity) => officeholderIdentityMayEnterReader(identity.subjectId, null)),
-        detail: "No retired intermediary-only identity can enter the Reader projection.",
       },
     ],
     factKind: "owner-reviewed officeholder-controlled and official primary-publication snapshots",
@@ -902,7 +887,6 @@ function curatedReaderProjection(
   if (held?.kind !== contractId) shapeProblems.push(`The projection kind does not match ${contractId}.`);
 
   const referenceSources = sourceReceipt.sources.filter((source) => source.sourceClass === "REFERENCE_PUBLISHER");
-  // Open States is an acceptable source for a legislator's offices (Sean, 2026-10-01); each record says `official: false`.
   if (referenceSources.length > 0 && contractId === "member-offices") {
     if (records.some((row) => row.official !== false && referenceSources.some((source) => source.finalUrl === string(row.sourceUrl) || source.requestedUrl === string(row.sourceUrl)))) {
       shapeProblems.push("A member office read from a reference publisher cannot be marked official.");

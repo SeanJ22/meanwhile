@@ -1,51 +1,7 @@
 /**
- * **A STAGED PORTRAIT MUST DECODE AS AN IMAGE BEFORE IT CAN QUEUE.**
- * (2026-08-25, Item 11 of the one-session brief.)
- *
- * ## What happened
- *
- * The door-2 hunt of the night before queued **two soft-404 HTML pages as
- * portraits**. Both had healthy byte counts — a 404 page is several kilobytes
- * of real markup — both were served at `200`, and both carried a `.jpg` in the
- * URL. Nothing between the fetch and the review sheet asked whether the bytes
- * were an image, so two error pages went into a queue whose entire purpose is
- * to put a face in front of the author, and only his eyes on the sheet caught
- * them.
- *
- * ## Why a status code and a byte count cannot catch it
- *
- * They are the two things a soft 404 is specifically good at. `200` is what
- * makes it SOFT, and the byte count of an error page is indistinguishable from
- * the byte count of a portrait. RULING 117 settled the same question for the
- * asset store and settled it the same way: **a 200 that is not the thing is
- * not a document**, and the check has to be on the CONTENT.
- *
- * ## Magic bytes, and then an actual decode
- *
- * Magic bytes alone are necessary and not sufficient — they read four bytes
- * and say nothing about the 40,000 after them, so a truncated file, a
- * half-written download, or an image whose body is an error page with a
- * borrowed header all pass. So each format is walked through its own structure
- * until the DIMENSIONS fall out of it:
- *
- * - **PNG** — the signature, then `IHDR` at the position the spec fixes it at,
- *   then a scan for `IDAT`, because a PNG with no image data is a header.
- * - **JPEG** — the SOI, then the marker chain walked segment by segment to a
- *   Start-Of-Frame. A file that runs out of bytes before one is not a JPEG.
- * - **GIF** and **WebP** — signature plus the dimension fields their headers
- *   carry.
- *
- * Reaching a real width and height means the byte stream was structurally an
- * image for as far as it needed to be. An HTML page cannot produce one, and
- * neither can a truncated download.
- *
- * ## Why this is a module rather than a function in the fetcher
- *
- * There WAS a dimension reader — `imageSize` inside
- * `scripts/fetch-official-portraits.mts` — and it was perfectly good. It lived
- * in one script, so the door-2 hunt did not call it, and a check nobody can
- * reach from a second staging path is a check the second staging path does not
- * have. RULING 103: fix at the shared code path.
+ * A staged portrait must decode as an image before it can queue. A status code and a byte count cannot
+ * catch a soft 404, and magic bytes alone pass truncated files, so each format is walked through its own
+ * structure until real dimensions fall out of it.
  */
 
 /** The smallest a portrait may be and still be a portrait rather than an icon. */
@@ -54,23 +10,9 @@ export const MIN_PORTRAIT_EDGE = 96;
 export type ImageFormat = "png" | "jpeg" | "gif" | "webp";
 
 /**
- * The `Accept` header every portrait fetch sends — **derived from what this
- * module can actually read**, so the request and the decoder cannot drift.
- *
- * A portrait fetch that sends no `Accept` lets the host choose the format, and
- * a portrait fetch that sends the browser-shaped `image/avif,image/webp,...`
- * asks for one this decoder does not know. Both end the same way: a real photo,
- * served correctly at 200, decoded as `NOT_AN_IMAGE` — **a false absence about
- * a named public official's published portrait, manufactured by us, on a host
- * that did nothing wrong.**
- *
- * This is not hypothetical. `static.wixstatic.com` content-negotiates, and on
- * 2026-08-31 it returned AVIF for the Arizona State Treasurer's official
- * portrait the moment it was asked for AVIF. It returned WebP when asked for
- * the formats above. The hosts have moved; the decoder has not.
- *
- * So the rule is: **ask only for what we can read.** If a format is added to
- * `ImageFormat` and to `decodeImage`, add it here in the same change.
+ * The `Accept` header every portrait fetch sends, limited to what `decodeImage` can read so a host never
+ * negotiates a format we would then reject. If a format is added to `ImageFormat` and `decodeImage`, add
+ * it here in the same change.
  */
 export const PORTRAIT_ACCEPT = "image/png,image/jpeg,image/gif,image/webp,*/*;q=0.5";
 
@@ -136,11 +78,8 @@ function jpegSize(buf: Uint8Array): { w: number; h: number } | null {
 }
 
 /**
- * Decode enough of `buf` to be certain it is an image, and say how big.
- *
- * Every failure is NAMED. A caller that cannot tell "this is an HTML page"
- * from "this is a truncated JPEG" cannot write a useful report, and the two
- * want different responses — one is a wrong URL, the other is a retry.
+ * Decode enough of `buf` to be certain it is an image, and say how big. Every failure is named: an HTML
+ * page (wrong URL) and a truncated file (retry) want different responses.
  */
 export function decodeImage(buf: Uint8Array): DecodeVerdict {
   const bytes = buf.length;

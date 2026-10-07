@@ -1,17 +1,7 @@
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 
-/**
- * **admin-v6/sends@1 — THE INSTRUCTIONS YOU SENT THE FLEET, AND WHICH ARE STILL RUNNING.**
- *
- * A "Deploy fleet here" instruction (DISPATCH) keeps being carried by the runner
- * while it still has requirements to create, so one click can keep working for
- * many rounds. This lists each recent instruction with where it stands, so any
- * one can be taken back (CANCEL_DISPATCH). Read from three bounded statements:
- * the recent DISPATCH and CANCEL_DISPATCH intents, the runner's own HONORED
- * records for them, and the targets the last cycle carried. "Cancelled" is shown
- * only once the runner has recorded it; before that it is a request.
- */
+/** "Cancelled" is shown only once the runner has recorded it; before that it is a request. */
 export const ADMIN_V6_SENDS_CONTRACT = "admin-v6/sends@1" as const;
 export const SENDS_LIMIT = 20;
 
@@ -27,7 +17,6 @@ export interface AdminV6Send {
   readonly sentAt: string;
   readonly state: SendState;
   readonly stateWords: string;
-  /** What the runner recorded when it read it, in its own words. */
   readonly ranAs: string | null;
   readonly canCancel: boolean;
 }

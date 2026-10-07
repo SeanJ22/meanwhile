@@ -1,32 +1,4 @@
-/**
- * **THE SLICE A PAGE NEEDS, NOT THE WHOLE PAYLOAD.** (Admin, 2026-09-24.)
- *
- * Sean (2026-09-24): a load over three seconds, or a success only on a second
- * attempt, is not a win. Two promoted reader payloads kept Admin's first loads
- * over that line, because a cold server read each one whole and proved it:
- * the Census geography lookup (13.7 MB, 7.5 s) and the registry (6.1 s, the
- * 3.6 MB pointer plus the candidate it is proved against). A page needs a
- * sliver of either: one state's containers, one container's codes, the six
- * fields of each registry body. So Postgres cuts the sliver out of the
- * promoted pointer row and only that crosses the wire. Measured on production
- * 2026-09-24: Arizona's 95 containers with their codes in 48 ms, Pima County
- * in 239 ms. Registration (2026-09-25) is fifty-odd pointers of 1-5 MB each:
- * which states have one is read from the pointer columns alone, and a state's
- * counts from inside its own row.
- *
- * ```
- *   the row     civic_data_promotions, the promoted pointer itself: its current
- *               version is its last known good one (a table constraint), so its
- *               payload is the version the reader serves
- *   read only   every statement runs in one READ ONLY transaction, so Postgres
- *               itself refuses a write
- *   absent      no pointer row means not published to this store yet, which is
- *               never an empty list
- * ```
- *
- * Pure over an injected query (`ReadOnlyQuery`): the Admin data layer passes
- * the reader store's (`app/(admin)/_mw/data/reader-query.ts`), tests pass rows.
- */
+/** Postgres cuts the slice out of the promoted pointer row inside one READ ONLY transaction. No pointer row means not published yet, never an empty list. */
 import type { CbsaClass, GeographyRef, GeographyType } from "@/lib/census-geography/contract.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "@/lib/census-geography/publication.ts";
 import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "@/lib/registration/publication.ts";
@@ -49,8 +21,6 @@ export type Slice<T> =
 
 const POINTER = "SELECT current_version_id AS version_id FROM civic_data_promotions WHERE record_class = $1 AND scope = $2";
 
-/* ------------------------------------------------------------------ geography */
-
 export interface OverlapSlice {
   readonly zcta5: string;
   readonly whole: boolean;
@@ -59,20 +29,13 @@ export interface OverlapSlice {
 
 export interface ContainerSlice {
   readonly ref: GeographyRef;
-  /** The plan the container's version is drawn to, e.g. "119th Congress". */
   readonly plan: string;
-  /** Its ZCTAs, when the read asked for them. */
   readonly overlaps: readonly OverlapSlice[] | null;
 }
 
 const GEO_TYPES: readonly GeographyType[] = ["county", "congressional_district", "cbsa", "state_leg_upper", "state_leg_lower"];
 
-/**
- * One statement answers two things: which scopes are published (a `scope` row
- * each, so a type the pointer does not carry is never read as "none there"),
- * and the groupings the filter selects. The payload is decoded once, in the
- * materialized `scopes` CTE, however many rows come back.
- */
+/** A `scope` row per published scope, so a type the pointer does not carry is never read as "none there". */
 function groupingsQuery(withOverlaps: boolean, where: string): string {
   const grouping =
     "g->>'geoid', g->>'ocdId', g->>'label', g->>'stateFips', g->>'stateAbbr', g->>'cbsaClass', g->'memberStates'" +
@@ -89,7 +52,6 @@ function groupingsQuery(withOverlaps: boolean, where: string): string {
   );
 }
 
-/** A published scope: its type, version and plan. */
 export interface ScopeSlice {
   readonly type: GeographyType;
   readonly version: string;
@@ -118,7 +80,6 @@ function overlapsOf(value: unknown): OverlapSlice[] {
   });
 }
 
-/** A grouping row as the lookup's own ref: the same fields `createLookup` returns. */
 export function containerOfRow(row: Row, withOverlaps: boolean): ContainerSlice | null {
   const type = row.type;
   const geoid = text(row.geoid);
@@ -142,7 +103,6 @@ export function containerOfRow(row: Row, withOverlaps: boolean): ContainerSlice 
   return { ref, plan: text(row.plan) ?? "", overlaps: withOverlaps ? overlapsOf(row.overlaps) : null };
 }
 
-/** The rows of one `groupingsQuery` as published scopes and containers. */
 export function geographyOfRows(rows: readonly Row[], withOverlaps: boolean): GeographySlice {
   const scopes: ScopeSlice[] = [];
   const containers: ContainerSlice[] = [];
@@ -175,7 +135,6 @@ async function geography(
   }
 }
 
-/** Every container of these types that lies in, or reaches into, the state. */
 export async function stateContainers(
   stateAbbr: string,
   types: readonly GeographyType[],
@@ -190,7 +149,6 @@ export async function stateContainers(
   return (await geography(query, `The Census geography for ${st}`, [statement], withOverlaps)).slice;
 }
 
-/** One container, with its ZCTAs. */
 export async function oneContainer(type: GeographyType, geoid: string, query: ReadOnlyQuery | null): Promise<Slice<GeographySlice>> {
   const statement = { text: groupingsQuery(true, "g->>'geoid' = $4"), params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [type], geoid] };
   return (await geography(query, `The Census geography for ${type.replace(/_/g, " ")} ${geoid}`, [statement], true)).slice;
@@ -198,11 +156,9 @@ export async function oneContainer(type: GeographyType, geoid: string, query: Re
 
 export interface CodeSlice extends GeographySlice {
   readonly zctaTabulations?: readonly string[];
-  /** Whether the ZCTA is in the published universe at all. */
   readonly known: boolean;
 }
 
-/** Every container of these types whose ZCTAs include this one, each with that ZCTA's overlap alone. */
 export async function containersOfCode(
   zcta5: string,
   types: readonly GeographyType[],
@@ -235,9 +191,6 @@ export async function containersOfCode(
   };
 }
 
-/* ------------------------------------------------------------------ registration */
-
-/** A government a state's promoted registration minted a body for, on its Census division. */
 export interface RegisteredGovernmentSlice {
   readonly jurisdictionId: string;
   readonly ocdId: string;
@@ -249,10 +202,6 @@ const REGISTRATION_GOVERNMENTS =
   " FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'bodies') b" +
   " WHERE p.record_class = $1 AND p.scope = $2 AND b->>'jurisdictionId' IS NOT NULL AND b->>'ocdId' = ANY($3::text[])";
 
-/**
- * The governments one state's promoted registration (`REGISTRATION`, `US-<ST>:registration:v1`) holds a body for
- * on any of these divisions: the sliver the Send preview needs (2026-09-25), never the whole version.
- */
 export async function registrationGovernments(
   state: string,
   ocdIds: readonly string[],
@@ -279,8 +228,6 @@ export async function registrationGovernments(
     return { kind: "UNREAD", detail: `${st}'s registration could not be read (${error instanceof Error ? error.name : "error"}).` };
   }
 }
-
-/* ------------------------------------------------------------------ registry */
 
 export interface RegistryBodyFields {
   readonly id: string;
@@ -310,7 +257,6 @@ export function registryBodyOfRow(row: Row): RegistryBodyFields | null {
   };
 }
 
-/** The six fields of every body the promoted registry holds. */
 export async function registryBodies(query: ReadOnlyQuery | null): Promise<Slice<readonly RegistryBodyFields[]>> {
   if (query === null) return { kind: "UNREAD", detail: "The registry was not read: this deployment names no reader store." };
   const params = ["REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE];
@@ -331,18 +277,9 @@ export async function registryBodies(query: ReadOnlyQuery | null): Promise<Slice
   }
 }
 
-/* ------------------------------------------------------------------ registration */
-
-/**
- * One state's promoted REGISTRATION pointer, as its metadata alone: which
- * version is live and when it was promoted. The registration itself (1-5 MB a
- * state) is never read for this.
- */
 export interface RegistrationPointer {
-  /** Lower-case USPS code: "oh". */
   readonly state: string;
   readonly versionId: string;
-  /** ISO instant the pointer was promoted. */
   readonly promotedAt: string;
 }
 
@@ -350,11 +287,6 @@ export type RegistrationPointers =
   | { readonly kind: "HELD"; readonly pointers: readonly RegistrationPointer[] }
   | { readonly kind: "UNREAD"; readonly detail: string };
 
-/**
- * Every state's registration pointer in one indexed read of three small
- * columns. Measured against production 2026-09-25: 51 rows, 6.8 KB, 0.13 ms
- * in Postgres (42 buffers, none of them the payload).
- */
 const REGISTRATION_POINTERS =
   "SELECT scope, current_version_id AS version_id, promoted_at FROM civic_data_promotions WHERE record_class = $1 AND scope = ANY($2::text[])";
 
@@ -381,24 +313,14 @@ export async function registrationPointers(query: ReadOnlyQuery | null): Promise
   }
 }
 
-/** What one state's promoted registration holds, counted by Postgres inside the row. */
 export interface RegistrationCounts {
   readonly promotedAt: string;
-  /** Governments the Census of Governments lists in the state (the state government itself excluded). */
   readonly governments: number;
-  /** Of those, the ones placed on a Census division. */
   readonly pairedGovernments: number;
-  /** Bodies the registration holds (a government's, or a school district's board). */
   readonly bodies: number;
-  /** Census divisions the registration holds. */
   readonly divisions: number;
 }
 
-/**
- * One state's counts: the counts object and two array lengths, cut out of the
- * pointer row so ~300 bytes cross the wire. Measured against production
- * 2026-09-25 on the largest state, Pennsylvania: 9.7 ms in Postgres.
- */
 const REGISTRATION_COUNTS =
   "SELECT current_version_id AS version_id, promoted_at, (payload->'counts'->>'governments')::int AS governments," +
   " (payload->'counts'->>'pairedGovernments')::int AS paired, jsonb_array_length(payload->'bodies') AS bodies," +
@@ -409,7 +331,6 @@ function count(value: unknown): number | null {
   return Number.isInteger(n) && n >= 0 ? n : null;
 }
 
-/** One state's registration counts, or NOT_PUBLISHED when no registration is promoted for it. */
 export async function registrationCounts(state: string, query: ReadOnlyQuery | null): Promise<Slice<RegistrationCounts>> {
   const target = REGISTRATION_TARGETS.find((t) => t.state === state.toUpperCase());
   // A code outside the FIPS table has no registration contract, so it has nothing promoted.

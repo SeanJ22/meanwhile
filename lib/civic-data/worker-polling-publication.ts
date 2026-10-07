@@ -15,8 +15,6 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
-/** A door refresh advances one exact jurisdiction through the existing voting
- * projection, preserving every other GOOD authority and its original dates. */
 export async function publishPollingDoor(input: {
   readonly store: RoutineDataStore; readonly door: DoorRecord;
   readonly capture: WorkerPublicationCapture; readonly jurisdictionName: string;
@@ -42,8 +40,6 @@ export async function publishPollingDoor(input: {
   return { ...published, jurisdiction };
 }
 
-/** Existing completed-worker publication dispatch; no new clock or acquisition
- * command. The actual registered door, scope and saved parser artifact agree. */
 export async function publishWorkerPollingResults(input: {
   readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore;
   readonly workItemIds: readonly string[]; readonly now: string;

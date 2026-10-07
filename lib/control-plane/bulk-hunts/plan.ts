@@ -1,10 +1,7 @@
 /**
- * **ONE BUDGET FOR ALL, THE SAME BUDGET EACH, OR ONE EACH.** (S11.)
- *
- * The expansion list holds a budget per hunt; there is no pooled budget across
- * hunts. So "one budget for all" is a total divided evenly, and the plan says
- * so in numbers. It can never spend more than the total, because every hunt's
- * own budget is rounded DOWN to the cent.
+ * Budgets for a bulk send. There is no pooled budget across hunts, so "one
+ * budget for all" is a total divided evenly, each share rounded down to the
+ * cent so the total is never exceeded.
  *
  * ```
  *   split   a total for everything, divided evenly between the hunts
@@ -12,7 +9,7 @@
  *   each    a budget for each hunt; a hunt with none named gets the default
  * ```
  *
- * PURE.
+ * Pure.
  */
 import { SCOPE_BUDGET_MAX_USD } from "../expansion/scopes.ts";
 import { BULK_MAX_ZIPS } from "./parse.ts";
@@ -55,7 +52,6 @@ export function planBudgets(zips: readonly string[], spec: BudgetSpec): PlanResu
   if (spec.mode === "split") {
     const total = amount(spec.totalUsd, "the total budget");
     if (!total.ok) return total;
-    // Round each share DOWN to the cent so the shares never add up to more than the total.
     const share = Math.floor(cents(total.usd) / zips.length);
     items = zips.map((zip) => ({ zip, budgetUsd: usdOf(share) }));
     words = `${money(total.usd)} shared evenly: ${money(usdOf(share))} for each of ${zips.length.toLocaleString("en-US")} hunts.`;

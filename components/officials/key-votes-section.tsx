@@ -13,33 +13,12 @@ import { VotePill } from "@/components/map/popup/official-popup";
 import { CardSection } from "./card-section";
 
 /**
- * The key votes section (B15) — a fixed list of questions, each
- * answered by this member's OWN chamber's roll call.
- *
- * ## Four things this must never become
- *
- * 1. **A score.** Nothing here is summed, averaged, graded or ordered by
- *    agreement with anything. The list order is fixed, and identical on
- *    every member's card.
- * 2. **A selection made after the fact.** The criteria sentence renders ON
- *    the surface, above the list, verbatim — so the reader can see the rule
- *    the entries were picked by rather than take our word for it.
- * 3. **A card that shows a member the other chamber's vote.** An entry is a
- *    question; each chamber answered it with its own roll calls, and a
- *    House member's card shows House roll calls only.
- * 4. **A blank that reads as an answer.** There are three different kinds
- *    of "no vote here" and they say three different things:
- *      - the chamber does not vote on this at all, or has not acted yet —
- *        a stated fact, in the entry's own note;
- *      - the member did not vote, or was not in office — stated;
- *      - **we have not recorded this chamber's vote yet** — OUR gap, said
- *        as ours. Collapsing the third into the first two would turn a
- *        hole in our research into a claim about a legislature.
+ * Key votes: a fixed list of questions, each answered by this member's own
+ * chamber's roll calls. Never a score; the criteria sentence renders above the
+ * list; a member's card shows only their chamber's votes. "No vote here" has
+ * three distinct sentences: the chamber does not vote on it, the member did
+ * not vote or was not in office, or we have not recorded it yet.
  */
-
-// The section's own eyebrow is gone (item 6b4, 2026-08-15): the CardSection
-// header above it now says "When it mattered", and
-// a "Key votes" label one line under it was the same thing said twice.
 
 export interface KeyVoteRow {
   entry: KeyVoteEntry;
@@ -56,58 +35,25 @@ export interface KeyVoteRow {
 }
 
 /**
- * Item 5 (2026-08-16): the position renders as a FILLED PILL here too, in
- * the same grammar as the Recent view. Two views of one record must not
- * state the same fact in two visual languages.
- *
- * The tone carries the vote and nothing else — green for yes, red for no,
- * gray for a recorded non-position. A NAMED GAP is not in this table: it
- * renders `tone="gap"`, an outline, because absence is not a position and
- * must never wear one (item 12).
+ * Positions as filled pills, the same grammar as the Recent view. A named gap
+ * renders `tone="gap"`, an outline, never a position colour.
  */
 const POSITION_PILL: Record<string, { label: string; tone: "yes" | "no" | "neutral" }> = {
   YES: { label: "Voted yes", tone: "yes" },
   NO: { label: "Voted no", tone: "no" },
   PRESENT: { label: "Voted present", tone: "neutral" },
   /*
-   * **F01 5.2 (2026-08-19): if a member was in session, the card must say
-   * what they did.** We did record it, and then failed to say it.
-   *
-   * `NOT_VOTING` is what `scripts/fetch-key-vote-positions.mts` writes for a
-   * member who WAS SEATED and did not vote — the chambers publish "Not Voting"
-   * and "Absent" and the fetcher maps both to it. This map had no key for it,
-   * so 140 stored positions fell through to the generic branch below and
-   * rendered "Position recorded": a string that tells a reader nothing, in
-   * place of the true and useful answer.
-   *
-   * `DID_NOT_VOTE` is the OTHER vocabulary — `KeyVoteRowData.positions` types
-   * both — and it stays, because a caller may supply either. Two names for one
-   * state is not ideal and is deliberately not renamed here: the snapshot, the
-   * fetcher and the row type all use `NOT_VOTING`, and a rename touching all
-   * three is a bigger change than this item, tracked rather than smuggled in.
-   *
-   * Neutral tone on both, because a recorded absence is a fact about the
-   * member and not a position — it must never wear the yes or no colour, and
-   * it is equally never a GAP, which is the outline. Three states, three
-   * treatments (item 12).
+   * `NOT_VOTING` is what scripts/fetch-key-vote-positions.mts writes for a
+   * seated member who did not vote; `DID_NOT_VOTE` is the other vocabulary
+   * callers may supply. Both are neutral: a recorded absence, not a position.
    */
   NOT_VOTING: { label: "Did not vote", tone: "neutral" },
   DID_NOT_VOTE: { label: "Did not vote", tone: "neutral" },
 };
 
 /**
- * Newest first, on a neutral and deterministic criterion (item 6b,
- * 2026-08-15: "the whole card reads consistently backward through time").
- *
- * The refs carry no date, so the ordering is congress → session → roll
- * number, which is monotonic in time within a chamber and is the chamber's
- * own numbering rather than anything we computed. Entries with no roll call
- * at all — the two the fetch correctly refused — sort LAST rather than being
- * dropped: they are part of the stated N and their absence line is the point.
- *
- * This is ordering by TIME, which the never-rank rule permits by name
- * ("ballot order or alphabetical" is its example of a neutral criterion, not
- * its limit). Nothing here is ordered by agreement, importance, or fit.
+ * Newest first by congress, session and roll number (the chamber's own
+ * numbering). Entries with no roll call sort last and stay in the stated N.
  */
 function newestFirst(rows: KeyVoteRow[]): KeyVoteRow[] {
   const rank = (row: KeyVoteRow): number => {
@@ -133,15 +79,8 @@ export function KeyVotesSection({
   const people = newestFirst(rows.filter((r) => r.entry.group === "PEOPLE"));
 
   /*
-   * Item 6b, on House cards: Votes on people renders once as the single
-   * honest line "the House doesn't vote on nominations", collapsed and
-   * inert — never repeated per entry, never an empty section.
-   *
-   * The snapshot carries that sentence on every PEOPLE entry's `houseNote`,
-   * which is right in the data and wrong on a card: sixteen identical
-   * sentences under sixteen names is the repeated-notice defect the footnote
-   * system exists to stop. So a House card collapses the whole group into
-   * the one line. A Senate card gets both groups in full.
+   * On House cards, Votes on people collapses to the one line that the House
+   * does not vote on nominations. A Senate card gets both groups in full.
    */
   const houseNominationsLine =
     chamber === "house"
@@ -151,51 +90,16 @@ export function KeyVotesSection({
 
   return (
     <div>
-      {/* Requirement 2: the rule the list was picked by, on the surface,
-          verbatim. Not a link to it, not a summary of it. At the head of the
-          column, per item 6b. */}
+      {/* The rule the list was picked by, verbatim, at the head of the column. */}
       <p className="t-caption leading-relaxed text-voice">
         {KEY_VOTES_CRITERIA}
       </p>
 
-      {/*
-        ITEM 6 (2026-08-16): THE PANE THAT LOOKED EMPTY.
-        DIAGNOSED — the data was never the problem. Production's /api/votes
-        serves 36 key votes for a senator, 20 laws and 16 people, and every
-        one of them reached this component. What the reader saw on selecting
-        "When it mattered" was the criteria sentence and two CLOSED bars: both
-        sub-groups defaulted shut, at the same size and colour as the pane's
-        own header, so the pane's entire visible content was one small
-        paragraph.
-
-        A view the reader has just chosen must not need two more taps before
-        it shows anything — that is reader friction, and none of the four
-        sanctioned exceptions covers it. Both groups open with the pane. They
-        keep their headers, their counts and their chevrons, and they now
-        INDENT as sub-groups, so what they are is legible: a thing containing
-        two things, each still a thing to click.
-
-        **F01 5.3 (2026-08-19) REVERSES the `defaultOpen` half of that**:
-        "When it mattered" still drops down, but Votes on laws and Votes on
-        people both start collapsed. Recorded as a reversal rather than a tidy-up so a later
-        session reading the paragraph above does not restore it.
-
-        The friction the old decision was protecting against is answered a
-        different way and is still answered: the pane is no longer a criteria
-        sentence over two bare bars, because each bar now states its COUNT in
-        the header ("Votes on laws 20", "Votes on people none"), which is the
-        pane's actual answer visible without a tap. The indent and the scale
-        step from that same pass stay.
-      */}
+      {/* Both sub-groups start collapsed; each header states its count. */}
       {laws.length > 0 && (
         <CardSection
           title="Votes on laws"
-          /* F01 5.1 (2026-08-19): TWO numbers, not one. The first is what the
-             member actually voted on — which is what the headline above now
-             counts, so the two agree — and the second is the full curated
-             list, which keeps our own gaps visible as the difference. The
-             prior single N counted every entry and was therefore a number
-             that described neither. */
+          /* Two numbers: votes the member cast, and the full curated list. */
           meta={
             votedCount(laws) === laws.length
               ? `${laws.length}`
@@ -208,8 +112,7 @@ export function KeyVotesSection({
       )}
 
       {houseNominationsLine ? (
-        // One header, one sentence behind it. Never sixteen rows of the same
-        // sentence — but open, because the sentence IS the answer.
+        // One header, one sentence; open, because the sentence is the answer.
         <CardSection title="Votes on people" meta="none" level="sub">
           <p className="t-detail leading-relaxed text-voice">
             {houseNominationsLine}
@@ -259,8 +162,7 @@ export function KeyVoteGroupBlock({
                 </span>
               )}
             </p>
-            {/* The explainer: LEVEL register, anchored to the bill's own
-                contents. The title never does the explaining. */}
+            {/* The explainer is anchored to the bill's own contents. */}
             <p className="mt-0.5 t-caption leading-relaxed text-voice">
               {row.entry.explainer}
             </p>
@@ -272,18 +174,7 @@ export function KeyVoteGroupBlock({
                     key={`${ref.congress}-${ref.session}-${ref.rollNumber}`}
                     className="mt-1 t-detail"
                   >
-                    {/*
-                      A NULL POSITION IS NOT "Did not vote" (fixed 2026-08-15,
-                      item 6b). This used to default a null straight into
-                      `DID_NOT_VOTE`, which turns "we hold nothing for this
-                      person on this roll call" into a specific, checkable,
-                      wrong claim about a named member of Congress — and the
-                      commonest reason for a null is the most innocent one:
-                      they were not in that chamber in 2021. Requirement 4 of
-                      this file's own header says exactly this; the render
-                      did not obey it until the positions existed to obey it
-                      with.
-                    */}
+                    {/* A null position is not "Did not vote". */}
                     {(() => {
                       const position = row.positions[i];
                       if (position) {
@@ -294,11 +185,7 @@ export function KeyVoteGroupBlock({
                           <VotePill tone="neutral">Position recorded</VotePill>
                         );
                       }
-                      // Both of these are GAPS, not positions, and they wear
-                      // the outline rather than a colour. The first is a fact
-                      // about the member's tenure; the second is a fact about
-                      // OUR research. Collapsing either into a position colour
-                      // is how a null becomes an assertion.
+                      // Both are gaps and wear the outline: tenure, or our research.
                       return row.held?.[i] ? <VotePill tone="gap">Not in this chamber for this vote</VotePill> : <WorkingOnIt inline />;
                     })()}
                     {ref.tally && (
@@ -310,9 +197,7 @@ export function KeyVoteGroupBlock({
 
                   </p>
                 ))}
-                {/* The Senate voted the four April 2024 bills as one. A
-                    senator's card says so rather than showing four rows the
-                    Senate never took. */}
+                {/* The Senate voted the four April 2024 bills as one. */}
                 {chamber === "senate" && row.entry.siblingGroup === "april-2024" && (
                   <p className="mt-0.5 t-caption leading-relaxed text-muted">
                     {APRIL_2024_SENATE_NOTE}
@@ -321,9 +206,7 @@ export function KeyVoteGroupBlock({
               </>
             ) : (
               <p className="mt-1 t-detail leading-relaxed text-muted">
-                {/* Requirement 4. A stated note is a fact about the
-                    legislature; its absence is a fact about us, and they are
-                    never allowed to render as the same sentence. */}
+                {/* A stated note is a fact about the legislature; its absence is ours. */}
                 {row.note ?? <WorkingOnIt inline />}
               </p>
             )}

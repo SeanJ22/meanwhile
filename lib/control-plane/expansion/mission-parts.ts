@@ -1,18 +1,12 @@
 /**
- * **MISSION PARTS (CH-15).**
+ * Mission parts: each worked by its own squad (governments and meetings;
+ * people and money; ballot). Maps a checklist family, item or record class to
+ * its part. Families start from the checklist overlay's `squad`
+ * (`lib/coverage/checklist-map.json`); the `expansion.missionParts` setting
+ * overrides any of it. Anything no part takes reads as null and is shown under
+ * "other".
  *
- * A mission is split into parts, and each part is worked by its own squad
- * (design §8.1): governments and meetings; people and money; ballot. This maps
- * a checklist family, a checklist item or a record class to its part.
- *
- * The families start from the checklist overlay's `squad`
- * (`lib/coverage/checklist-map.json`). The `expansion.missionParts` setting
- * overrides any of it: which parts exist, which family or record class each
- * takes, and which parts weight their squad by government class (CH-17). Its
- * starting value is the three §8.1 parts. A family or record class no part
- * takes reads as null; the caller shows it under "other", never drops it.
- *
- * PURE. No store, no clock, no environment.
+ * Pure. No store, no clock, no environment.
  */
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import { readSetting, registerSetting, type SettingValue } from "../settings.ts";
@@ -43,7 +37,7 @@ const GOVERNMENTS = "governments-meetings";
 const PEOPLE = "people-money";
 const BALLOT = "ballot";
 
-/** The starting value: the three §8.1 parts, the overlay's families, and every record class the factory writes. */
+/** The starting value: the three default parts, the overlay's families, and every record class the factory writes. */
 export const DEFAULT_MISSION_PARTS: MissionPartsSetting = {
   parts: [
     { id: GOVERNMENTS, label: "Governments and meetings" },
@@ -124,11 +118,9 @@ export function missionPartOf(work: { readonly checklistId?: string | null; read
 }
 
 /**
- * The part of a work plan (CH-16). Plans built since CH-16 carry `missionPart`
- * from the starting parts; older plans carry none. Given the parts in force,
- * the plan's record class decides, so a changed setting re-parts held work
- * without rewriting it; the stored part is the fallback for a record class the
- * setting does not place.
+ * The part of a work plan. The plan's record class decides under the parts in
+ * force, so a changed setting re-parts held work without rewriting it; the
+ * stored `missionPart` is the fallback.
  */
 export function missionPartOfPlan(plan: { readonly missionPart?: string; readonly contract: { readonly recordClass: string } },
   parts: MissionPartsSetting = DEFAULT_MISSION_PARTS): string | null {
@@ -171,7 +163,7 @@ export function missionPartCounts(items: readonly PlaceOwedItem[], parts: Missio
     .map(([part, row]) => ({ part, label: labels.get(part) ?? OTHER_PART_LABEL, ...row }));
 }
 
-/** A mission's work counted by part (CH-16): every work item once, under its plan's part; work with no plan or no part under "other". */
+/** A mission's work counted by part: every work item once, under its plan's part; work with no plan or no part under "other". */
 export function missionWorkCounts(items: readonly { readonly autonomousPlan?: { readonly missionPart?: string; readonly contract: { readonly recordClass: string } } }[],
   parts: MissionPartsSetting = DEFAULT_MISSION_PARTS): readonly { readonly part: string; readonly label: string; readonly work: number }[] {
   const tally = new Map<string, number>(parts.parts.map((part) => [part.id, 0]));

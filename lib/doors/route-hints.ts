@@ -1,14 +1,8 @@
 /**
- * DB-23: route hints are door records.
- *
- * A route hint says where a government's meetings are already known to be: the
- * current official site when the recorded one went stale, and routes found on
- * its own publications. Each government's hints are one door of kind
- * `route-hints` (door id `route-hints:<jurisdiction id>`), edited like any other
- * door, with the observation and evidence each hint carries kept in its settings.
- * The discovery walk reads them back with `routeHintsFromDoors`.
- *
- * PURE: mapping only. No place is named here; places are the data.
+ * Route hints as door records: where a government's meetings are already
+ * known to be. Each government's hints are one door of kind `route-hints`
+ * (`route-hints:<jurisdiction id>`), each hint JSON-encoded in its settings.
+ * Pure mapping.
  */
 
 import type { JurisdictionRouteHints, OfficialSiteHint, RouteHint } from "../hunt/meetings-route-hints.ts";
@@ -93,11 +87,9 @@ export async function seedRouteHintDoors(input: {
 }
 
 /**
- * What the discovery walk tries first, read from the registry each time it is
- * asked (hook for the hunters lane's `scripts/freshness-shadow.mts`, which now
- * passes `ROUTE_HINTS`). With no route-hints door at all, or an unreadable
- * registry, the committed list is used, so the walk never starts with fewer
- * hints than it has today. Once the doors are imported they alone decide.
+ * What the discovery walk tries first, read from the registry each time. With
+ * no route-hints door at all, or an unreadable registry, the committed list is
+ * used; once any are imported the doors alone decide.
  */
 export async function readRouteHints(repo: DoorRepository, committed: readonly JurisdictionRouteHints[]): Promise<readonly JurisdictionRouteHints[]> {
   try {

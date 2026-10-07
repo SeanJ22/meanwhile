@@ -1,14 +1,4 @@
-/**
- * **"REPORT A PROBLEM" SUBMISSIONS, FOR THE COMMAND CENTER'S REPORTS VIEW.**
- *
- * Reads both sites' reports through S6's `readFeedback` (the feedback store,
- * `FEEDBACK_DATABASE_URL` when set), labeled by the site each came from. A reader's
- * reply address is contact data and never leaves this module: the view is told only
- * whether one was left. There is no delete or edit path anywhere in this reading.
- *
- * `about`, `zip` and `recordId` are the card the reader reported (S6, #490); a store
- * that does not carry them yet answers `null` for each and the view says so.
- */
+/** A reader's reply address never leaves this module: the view is told only whether one was left. No delete or edit path. */
 import { readFeedback, type FeedbackSite } from "../../db/feedback.ts";
 
 export interface ReportRow {
@@ -17,7 +7,6 @@ export interface ReportRow {
   readonly site: FeedbackSite;
   readonly message: string;
   readonly surface: string;
-  /** Who wrote it: a reader, or one of our own test runs. */
   readonly origin: "reader" | "owner test" | "automated test" | "unclassified";
   readonly about: string | null;
   readonly zip: string | null;

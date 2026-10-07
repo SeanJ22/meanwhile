@@ -10,22 +10,9 @@ import { settleRegistryAuthorityReads } from "@/lib/registry/server";
 /**
  * GET /api/agenda?meetingId=<source-namespaced id>
  *
- * The stored agenda documents for one meeting, from the promoted projection —
- * the append-only versions the retrieval pass already fetched (4c). The
- * documents are already in the canonical holding; this route exists because the
- * meeting surface was linking them while rendering their content as absent.
- *
- * Newest version first. A document whose extraction failed is returned with
- * its note and null text — the surface says so honestly and links the
- * document rather than pretending nothing exists.
- *
- * **`documents` is exactly what the reader is shown, and each row is a VERSION**
- * (2026-09-22): one row per distinct content, and no publication-index page
- * once the sitting's own document is held — `readerAgendaDocuments`. Tucson
- * Unified sitting 499 held 89 stored rows (88 identical re-fetches of its own
- * page plus the board's site root) and the card called that 89 versions of a
- * revised agenda. The stored rows are untouched provenance; the rows not shown
- * are stated in `documentAccounting`, which reconciles to the rows held.
+ * The stored agenda documents for one meeting, newest version first. `documents` is exactly what the reader
+ * is shown, one row per distinct content; the rows not shown are stated in `documentAccounting`. A document
+ * whose extraction failed is returned with its note and null text.
  */
 
 export const runtime = "nodejs";

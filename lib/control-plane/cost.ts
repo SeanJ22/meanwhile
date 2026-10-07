@@ -1,44 +1,21 @@
 /**
- * THE COST LEDGER — what a run spent, rolled up along the dimensions a
- * SCHEDULER needs.
+ * The cost ledger, rolled up along the dimensions a scheduler needs.
  *
- * ============================================================================
- * THE INVARIANT OF THIS MODULE, and the reason it is a module rather than a few
- * fields on `Attempt`:
+ * Cost informs scheduling, never truth: nothing here may judge whether a fact
+ * or record is right. `tests/control-plane-policy.test.ts` fails if an exported
+ * function is named like a truth judgement.
  *
- *     COST INFORMS SCHEDULING. COST NEVER INFORMS TRUTH.
+ * An unmeasured field is not zero: every total carries `measured` and
+ * `unmeasured` counts, and a total over nothing measured is `null`.
  *
- * Nothing in this file may answer, or help answer, whether a fact is right,
- * whether a record should stand, or whether a correction is worth making. There
- * is no cheap wrong answer and no expensive right one; a claim about a
- * government is right or it is not, and what it cost to establish that has no
- * standing in the question. Cost decides what runs NEXT, how much of it runs at
- * once, and when a run stops — and nothing else.
- *
- * That prohibition is enforced mechanically, not by good intentions: a sweep in
- * `tests/control-plane-policy.test.ts` reads this file's own source and fails if
- * any EXPORTED function is named in the shape of a truth judgement. The sweep
- * ships with a positive control, because a detector nobody has seen fire is a
- * detector nobody has tested.
- * ============================================================================
- *
- * THE OTHER LOAD-BEARING RULE: an unmeasured field is NOT zero.
- *
- * `AttemptCost` fields are nullable because a provider may not report tokens, a
- * transport may not report bytes, and an aborted attempt may report neither.
- * Coercing those nulls to 0 produces a total that LOOKS complete and is not, and
- * a scheduler that believes a run was free will happily schedule a thousand more
- * of them. Every total here therefore travels with `measured` and `unmeasured`
- * counts, and a total over nothing measured is `null` rather than `0`.
- *
- * TIME IS A PARAMETER. Nothing here reads a clock.
+ * Nothing here reads a clock.
  */
 
 import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
 import type { WorkQuestion } from "./work-question.ts";
 import { canonicalModelId, modelTierFor, MODEL_TIERS, MODELS, type ModelTier } from "../models.ts";
 import { CACHE_RATE_MULTIPLIERS, rateFor } from "./model-cost.ts";
-/* Re-exported so a cost reader keys on the one constant (2026-09-23). */
+/* Re-exported so a cost reader keys on the one constant. */
 export { DISCOVERY_SEARCH_ROLE } from "./attempt.ts";
 
 /** The invariant, as a string a report can print verbatim. */
@@ -47,11 +24,9 @@ export const COST_SCHEDULING_INVARIANT =
   "Cost never informs TRUTH: what a fact cost has no bearing on whether it is right.";
 
 /*
- * The discovery search rung's charges (2026-09-23) carry DISCOVERY_SEARCH_ROLE
- * (above, from attempt.ts): one row per request, `source` the API host
- * (api.search.brave.com, api.exa.ai), `usd` the published price — or null when
- * none is known, never 0. Search money is not model money; every view that
- * counts model spend leaves these rows out and shows them on their own line.
+ * Discovery search charges carry DISCOVERY_SEARCH_ROLE: one row per request,
+ * `source` the API host, `usd` the published price or null (never 0). Every
+ * view of model spend leaves these rows out.
  */
 /** The key a search charge with no host recorded is grouped under. */
 export const SEARCH_SOURCE_NOT_ON_RECORD = "(host not recorded)";
@@ -65,7 +40,7 @@ export const COST_METRICS = [
   "durationMs",
   "bytesFetched",
   "requestCount",
-  /* The prompt-cache metering (2026-09-06). Absent on rows recorded before, which `sumMetric` counts as unmeasured. */
+  /* Prompt-cache metering. Absent on older rows, which `sumMetric` counts as unmeasured. */
   "cacheReadInputTokens",
   "cacheCreationInputTokens",
   "cacheCreation5mInputTokens",
@@ -75,15 +50,9 @@ export const COST_METRICS = [
 export type CostMetric = (typeof COST_METRICS)[number];
 
 /**
- * **THE PARSER FOR THE CACHE FIELDS, AND THE THREE THINGS A ROW CAN SAY.**
- * (2026-09-06.)
- *
- * The ledger is JSON in an append-only log, so a row written before the cache
- * fields existed simply lacks the keys. That row is `PREDATES_FIELDS`: nothing
- * about its cache behaviour was measured, and a digest prints NOT MEASURED for
- * it by name. A row that carries the keys with `null` values is `UNREPORTED`:
- * the request ran and the provider reported no usage (a refusal before any
- * completion). Only a `MEASURED` row contributes token counts to a rate.
+ * Parses the cache fields. A row lacking the keys is `PREDATES_FIELDS`; keys
+ * with null values are `UNREPORTED` (the provider reported no usage). Only a
+ * `MEASURED` row contributes token counts to a rate.
  */
 export type CacheMetering =
   | { readonly status: "PREDATES_FIELDS" }
@@ -148,12 +117,7 @@ export interface CostEntry {
   readonly cost: AttemptCost;
   /** Caller-supplied ISO stamp. This module never reads a clock. */
   readonly recordedAt: string;
-  /*
-   * WHAT THE CHARGE WAS FOR (MW-001, MW-013, MW-024; 2026-09-25). Each is
-   * optional and absent on every row written before it existed, which a reader
-   * names as "recorded before purpose was kept" — never as a purpose of its own.
-   * The body the work was for is `jurisdiction`, as it always was.
-   */
+  /* What the charge was for. Each is absent on older rows, which a reader names as "recorded before purpose was kept". */
   /** The standing obligation (or task) the dispatch was a round of. */
   readonly obligationId?: string;
   /** The owner's Sends that obligation belonged to when the charge was written; empty when none reached it. */
@@ -163,7 +127,7 @@ export interface CostEntry {
   readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[];
   /** The record class the work kept fresh. */
   readonly recordClass?: string;
-  /** The question the work asked (MW-002), when the round recorded one. */
+  /** The question the work asked, when the round recorded one. */
   readonly question?: WorkQuestion;
   /**
    * What the attempt came to: the disposition it committed (`INGESTED`,
@@ -171,17 +135,11 @@ export interface CostEntry {
    * `DISPOSITION_REFUSED`, `LANE_MISMATCH` when it committed none.
    */
   readonly resultKind?: string;
-  /**
-   * A proof or test run's charge (MW-024). Real money: it stays inside every
-   * total and every ceiling, and is kept out of what production work produced.
-   */
+  /** A proof or test run's charge. Real money: inside every total and ceiling, kept out of production productivity. */
   readonly nonProduction?: true;
   /**
-   * WHICH MODEL EACH PART OF THE CHARGE WAS FOR (MW-031, 2026-09-25). Written
-   * only when one Attempt ran more than one model — a Scout that started on
-   * Sonnet 5 and escalated to Opus 5.5. `cost` stays the Attempt's one combined
-   * charge; these shares split it, each priced at its own model's rate, and sum
-   * to it. Absent: the whole charge is the Attempt's worker model, as before.
+   * Per-model shares when one Attempt ran more than one model. `cost` stays the
+   * combined charge; shares are priced at their own model's rate and sum to it.
    * Read through `costPortionsByModel`, never summed beside `cost`.
    */
   readonly byModel?: readonly CostModelShare[];
@@ -249,10 +207,9 @@ export function costEntryModelRequestBound(entry: CostEntry): number | null {
   return Number.isFinite(usd) ? usd : null;
 }
 
-/** CH-02: what an unpriced model charge is counted at when nothing tighter
- * bounds it. The row's own token counts (or, where it recorded none, the dearest
- * model's context and output limits for every request it made, at least one),
- * all at the dearest listed price. Never a measured charge. */
+/** What an unpriced model charge is counted at when nothing tighter bounds it:
+ * the row's token counts (or the dearest model's context and output limits per
+ * request, at least one), all at the dearest listed price. Never a measured charge. */
 export function costEntryWorstCaseUsd(entry: CostEntry): number {
   const requests = boundedTokenCount(entry.cost.requestCount) && entry.cost.requestCount > 0 ? entry.cost.requestCount : 1;
   const summed = [entry.cost.uncachedInputTokens, entry.cost.cacheReadInputTokens, entry.cost.cacheCreationInputTokens];
@@ -315,16 +272,11 @@ export function spendByTier(entries: readonly CostEntry[], range: { readonly sin
 }
 
 /**
- * **A CHARGE, SPLIT BY THE MODEL EACH PART WAS FOR — WITHOUT COUNTING IT TWICE.**
- * (MW-031, 2026-09-25.) A row with no `byModel` is one portion under
- * `attemptModel` (the Attempt's worker model), exactly as every by-model view
- * read it before. A row with a split gives one portion per share: the share's
- * dollars and billed tokens replace the row's, and the Attempt's non-model
- * quantities (its duration, the bytes it fetched, its non-model requests) stay
- * on the FIRST share — the model the Attempt started on — so every portion's
- * figures sum back to the row's. A split that does not sum to the row's
- * dollars (a share unmeasured under a measured total, or a different sum) is
- * not trusted: the row is read whole under `attemptModel`, never guessed.
+ * A charge split by the model each part was for, without double counting. A row
+ * without `byModel` is one portion under `attemptModel`. With a split, each
+ * share replaces the row's dollars and tokens; non-model quantities stay on the
+ * first share. A split that does not sum to the row's dollars is not trusted:
+ * the row is read whole under `attemptModel`.
  */
 export function costPortionsByModel(entry: CostEntry, attemptModel: string): readonly { readonly model: string; readonly entry: CostEntry }[] {
   const shares = entry.byModel;
@@ -363,7 +315,7 @@ function splitMatchesCharge(cost: AttemptCost, shares: readonly CostModelShare[]
 /** What the dispatcher writes on a charge's `resultKind` when no disposition was committed. */
 export const COST_RESULT_WITHOUT_DISPOSITION = ["NO_DISPOSITION", "SIMULATED", "DISPOSITION_REFUSED", "LANE_MISMATCH"] as const;
 
-/** The project the autonomous-fleet proof scripts run and charge under (MW-024): never `freshness`. */
+/** The project the autonomous-fleet proof scripts run and charge under: never `freshness`. */
 export const AUTONOMOUS_FLEET_PROOF_PROJECT = "autonomous-fleet-proof";
 
 /**
@@ -381,13 +333,7 @@ export function isProofProject(project: string | null | undefined): boolean {
   return /^conformance(-|$)/.test(p) || p === "control-plane-proof" || p === AUTONOMOUS_FLEET_PROOF_PROJECT;
 }
 
-/**
- * Lift an Attempt into a ledger entry.
- *
- * The Attempt's own `cost` is copied UNCHANGED, nulls included. This function
- * has no defaulting behaviour on purpose — the one place a null could quietly
- * become a zero is the place that reads the measurement, so it does not.
- */
+/** Lift an Attempt into a ledger entry. `cost` is copied unchanged, nulls included. */
 export function costEntryFromAttempt(
   attempt: Attempt,
   context: {
@@ -427,12 +373,7 @@ export type RollupDimension = (typeof ROLLUP_DIMENSIONS)[number];
 /** The bucket a null dimension key lands in. Named, never silently dropped. */
 export const UNATTRIBUTED = "(unattributed)";
 
-/**
- * A total that knows what it does not know.
- *
- * `total` is the sum of the MEASURED values only, and is `null` when nothing was
- * measured — because the sum of no measurements is not zero, it is nothing.
- */
+/** A total that knows what it does not know: `total` sums measured values only, and is null when none were. */
 export interface MeasuredTotal {
   readonly total: number | null;
   readonly measured: number;
@@ -490,12 +431,7 @@ export function sumMetric(
   };
 }
 
-/**
- * Roll entries up along one dimension.
- *
- * Buckets come back sorted by key so a report is stable across runs, which
- * matters because these reports get diffed.
- */
+/** Roll entries up along one dimension. Buckets are sorted by key so reports are stable. */
 export function rollup(
   entries: readonly CostEntry[],
   dimension: RollupDimension,
@@ -521,24 +457,14 @@ export function rollup(
 
 export interface BudgetCheck {
   readonly within: boolean;
-  /**
-   * False when the check could not actually be made — no cap set, or the spend
-   * is unmeasured. An unenforceable check is REPORTED, never quietly passed off
-   * as a pass, because "we did not exceed the cap" and "we cannot tell whether
-   * we exceeded the cap" are different sentences.
-   */
+  /** False when the check could not be made (no cap, or unmeasured spend); reported, never passed off as a pass. */
   readonly enforceable: boolean;
   readonly spent: number | null;
   readonly cap: number | null;
   readonly reason: string;
 }
 
-/**
- * Is `spent` still under `cap`?
- *
- * The cap FIRES AT the cap: spending exactly the cap is spent, not spare. An
- * off-by-one here is a cap that is never quite reached.
- */
+/** Is `spent` still under `cap`? Spending exactly the cap is spent. */
 export function withinBudget(
   spent: number | null,
   cap: number | null,
@@ -621,15 +547,7 @@ export interface ScheduleDecision {
   readonly unenforceable: readonly string[];
 }
 
-/**
- * The ONLY question this module answers about work: should more of it START now?
- *
- * Note what is absent and will stay absent: there is no function here that takes
- * a cost and returns anything about whether a record is right, whether a
- * disposition should stand, or whether a correction is worth its price. A
- * cheaply obtained wrong answer is still wrong, and an expensive correction is
- * still owed. See COST_SCHEDULING_INVARIANT.
- */
+/** The only question this module answers about work: should more of it start now? */
 export function shouldScheduleMoreWork(input: {
   spent: Partial<Record<CostMetric, number | null>>;
   caps: Partial<Record<CostMetric, number | null>>;
@@ -668,34 +586,16 @@ export function shouldScheduleMoreWork(input: {
 /** ------------------------------------------------------- calendar windows */
 
 /**
- * **THE UTC CALENDAR MONTH, AS A LEDGER WINDOW.** (§9A.23 of the Admin C
- * brief, 2026-09-06.)
- *
- * The owner's Claude API funds reset on the first day of each month **UTC**,
- * and no other window in this codebase is that window. The three enforced
- * spend windows are a per-cycle counter, a Phoenix 18:00→06:00 operational
- * night and a *sliding* 24 hours (`fleet-safety.ts`); the console's spend bars
- * are bucketed by EASTERN calendar day; the politeness ledger rolls its
- * request counts over at UTC midnight. None of them is a calendar month, and
- * three of them are in the wrong zone, so this had to be its own window rather
- * than a reuse of any of them.
- *
- * PURE, with the clock as a parameter — the whole reason this is testable at a
- * month boundary and across the UTC/Eastern day edge, where "today" in New York
- * and "today" in UTC name different months for five hours of every month's
- * first day.
- *
- * `until` is INCLUSIVE and is the moment the reading was taken for the current
- * month, or the last millisecond of the month for a past one. Adjacent months
- * therefore neither overlap nor leave a gap, and a row stamped exactly at `now`
- * is counted rather than lost to an exclusive bound.
+ * The UTC calendar month as a ledger window (API funds reset at 00:00 UTC on
+ * the 1st). `until` is inclusive: `now` for the open month, the last
+ * millisecond for a past one, so adjacent months neither overlap nor gap.
  */
 export interface LedgerWindow {
   /** 00:00:00.000Z on the 1st. Inclusive. */
   readonly since: string;
   /** Inclusive: `nowIso` for the open month, the month's last millisecond for a closed one. */
   readonly until: string;
-  /** 00:00:00.000Z on the 1st of the FOLLOWING month — when the funds reset. */
+  /** 00:00:00.000Z on the 1st of the following month, when the funds reset. */
   readonly resetsAt: string;
   /** "September 2026". */
   readonly label: string;
@@ -705,12 +605,7 @@ export interface LedgerWindow {
 
 const UTC_MONTH_LABEL = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "long", year: "numeric" });
 
-/**
- * The UTC calendar month containing `nowIso`, or one `monthsBack` before it
- * (1 = the previous month). Throws on an unreadable stamp rather than
- * returning a window over the epoch, which would render as a confident total
- * for a month nobody asked about.
- */
+/** The UTC calendar month containing `nowIso`, or `monthsBack` before it. Throws on an unreadable stamp. */
 export function utcMonthWindow(nowIso: string, monthsBack = 0): LedgerWindow {
   const now = Date.parse(nowIso);
   if (!Number.isFinite(now)) {
@@ -732,13 +627,7 @@ export function utcMonthWindow(nowIso: string, monthsBack = 0): LedgerWindow {
   };
 }
 
-/**
- * The ledger rows recorded inside a window, both bounds inclusive.
- *
- * A row whose `recordedAt` cannot be parsed is DROPPED and never silently
- * counted at the epoch — an unreadable stamp is an unattributable row, and
- * placing it in January 1970 would quietly deflate every month that has one.
- */
+/** The ledger rows recorded inside a window, both bounds inclusive. An unparseable `recordedAt` is dropped. */
 export function entriesInWindow(entries: readonly CostEntry[], window: Pick<LedgerWindow, "since" | "until">): readonly CostEntry[] {
   const since = Date.parse(window.since);
   const until = Date.parse(window.until);

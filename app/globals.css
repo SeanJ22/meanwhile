@@ -1,14 +1,12 @@
 @import "tailwindcss";
 
-/* FE-07: each type rung carries its size and reading rhythm together. */
+/* Each type rung carries its size and reading rhythm together. */
 @utility t-display { font-size: var(--text-display); line-height: var(--text-display-lh); }
 @utility t-title { font-size: var(--text-title); line-height: var(--text-title-lh); }
 @utility t-heading { font-size: var(--text-heading); line-height: var(--text-heading-lh); }
 @utility t-body { font-size: var(--text-body); line-height: var(--text-body-lh); }
 @utility t-detail { font-size: var(--text-detail); line-height: var(--text-detail-lh); }
 @utility t-caption { font-size: var(--text-caption); line-height: var(--text-caption-lh); }
-
-/* Design tokens, ported from EdiaStratMap's src/styles/main.css — docs/globals-css-notes.md#design-tokens-ported-from-ediastratmap-s-src-styles-main-css-1 */
 
 :root {
   /* State extrusion colours preserve the existing silhouette material. */
@@ -22,25 +20,12 @@
   --panel-bg: #1e2028;
   --surface: #21242d;
   --text: #e8e9ed;
-  /* Raised 2026-08-15 (item 5, the sun test) from #8b8d97, which cleared AA
-     and nothing else — 4.92:1 on --panel-bg. Secondary rows are READ, so
-     they are held to the 7:1 sun bar like every other reading token. */
+  /* Held to the 7:1 reading bar on --panel-bg. */
   --text-dim: #a8abb7;
   --text-muted: #5c5e66;
-  /* Raised from #e17055 for the same reason: a failure line is the one
-     sentence a reader must not have to squint at. */
   --danger: #f0917a;
 
-  /* ── RHYTHM: radius, spacing, type (2026-09-03, the visual-polish session) ──
-     One radius family, one spacing scale, one type scale, so every card, sheet
-     and pill reads as the same object. Elevation is the --shadow-* family
-     below. A value off these scales is a defect the rhythm guard reports and
-     ratchets down (lib/design/rhythm.ts, tests/rhythm-tokens.test.ts).
-
-     RADIUS — the object-shape family. --radius is the card corner; --radius-sm
-     the inner block; --radius-lg the flagship sheet; --radius-pill the fully
-     round chip/pill; --radius-circle the portrait. Every rounded object in the
-     app is one of these five, which is what makes them read as one system. */
+  /* One radius family, one spacing scale, one type scale. A value off these scales is reported by the rhythm guard (lib/design/rhythm.ts). */
   --radius: 10px;
   --radius-sm: 6px;
   /* Card-corner alias for the ported Lumen surfaces (== --radius, the card
@@ -50,10 +35,7 @@
   --radius-pill: 999px;
   --radius-circle: 50%;
 
-  /* SPACING — the 4-based scale (DESIGN.md): 4 / 8 / 12 / 16 / 24 / 32 / 48.
-     Named by step so the rhythm is legible at the call site. This is THE scale;
-     the guard reports every padding/margin/gap still on a raw literal off it,
-     and that count only shrinks. */
+  /* SPACING: the 4-based scale 4 / 8 / 12 / 16 / 24 / 32 / 48. */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -62,11 +44,7 @@
   --space-8: 32px;
   --space-12: 48px;
 
-  /* TYPE — the scale from DESIGN.md, size paired with a tuned line-height so a
-     rung carries both. Display leads a page; title a contest or modal; heading
-     a card or name; body reads; detail is the secondary row; caption the
-     provenance line. These are the only font-size sources reader surfaces
-     should reach for; the guard ratchets raw font-size down toward them. */
+  /* TYPE: size paired with a tuned line-height. These are the only font-size sources reader surfaces should use. */
   --text-display: 1.5rem;
   --text-display-lh: 1.15;
   --text-title: 1.125rem;
@@ -80,9 +58,6 @@
   --text-caption: 0.6875rem;
   --text-caption-lh: 1.4;
 
-  /* Tiers. Local is the brightest because local meetings are the thing this
-     screen is for; national is the coolest because it is the least actionable
-     on a Tuesday night. */
   --accent-local: #ffb000;
   --accent-local-glow: rgba(255, 176, 0, 0.25);
   --accent-state: #00b894;
@@ -91,66 +66,30 @@
   --accent-national-glow: rgba(108, 143, 212, 0.25);
   --accent-all: #e8853d;
   --accent-all-glow: rgba(232, 133, 61, 0.25);
-  /* School government gets its own dot color (2g): a school-board meeting and
-     a congressional town hall at the same address must read apart without a
-     click. Magenta sits far from the amber/teal/blue tier family and stays
-     bright against the #454545-max basemap. */
   --accent-school: #e84393;
   --accent-school-glow: rgba(232, 67, 147, 0.25);
 
-  /* WHERE YOU VOTE (B19). Deliberately outside the tier family: a voting-site
-     pin answers a different question from every meeting pin on the map, and
-     the spec is that it be unmistakable against them. Violet is the one hue
-     the tier set does not use, and it holds against the basemap. */
   --accent-voting: #b57bff;
   --accent-voting-glow: rgba(181, 123, 255, 0.3);
 
-  /* The FILLED form of a tier accent (item 5, 2026-08-15) — the selected tier — docs/globals-css-notes.md#the-filled-form-of-a-tier-accent-item-5-2026-08-15-the-selected-tier-2 */
   --tier-fill-local: var(--accent-local);
   --tier-fill-state: var(--accent-state);
   --tier-fill-national: var(--accent-national);
   --tier-fill-on: #0f1117;
 
   /*
-    THE BRAND MARK (ITEM J, 2026-09-01). One token, declared once, because it
-    is `--accent-state` on purpose and not a fourth teal.
-
-    WHY IT REUSES A TIER ACCENT RATHER THAN GETTING ITS OWN. A new hue near
-    `--accent-state` (#00b894 dark / #00896e light) and `--concluded`
-    (#6fa8a5 / #3a6a67) would put three almost-identical teals on one screen,
-    and two colours that are almost the same read as a rendering bug or an
-    unintended relationship — the reader cannot tell which. Deliberate reuse
-    is honest; a near-miss is not.
-
-    THE SCOPING RULE, AND IT IS LOAD-BEARING. `--mark` may be referenced ONLY
-    by the logo component (`components/brand/logo.tsx`, styles under
-    `.wtp-logo`). It may never appear as a fill, border, text colour, glow or
-    tint on any other element, at any time. The tier colours are learned from
-    the map legend; the logo never appears in the legend, so a small square
-    beside a serif wordmark does not read as "state government" — but that
-    holds ONLY while the token stays inside the lockup. The moment it tints
-    something else, the overlap stops being reuse and becomes ambiguity, and
-    a reader cannot tell a brand from a status claim. Same reasoning that
-    keeps `.jurisdiction-badge[data-badge="GOVERNS"]` on `--text` rather than
-    on a tier accent. `tests/brand-mark-scope.test.ts` refuses any other
-    reference.
-
-    Declared once, in the dark block, and deliberately NOT restated under
-    `[data-theme="light"]`: its value is a reference, and `--accent-state`
-    already carries its own light override, so the mark follows the theme
-    without a second declaration that could drift from the first.
+    `--mark` may be referenced only by the logo component (`.wtp-logo`); it is never a fill, border, text
+    colour or tint anywhere else. Not restated under [data-theme="light"]: `--accent-state` carries its own
+    light override.
   */
   --mark: var(--accent-state);
 
-  /* Meeting status. Concluded is cool and quiet — present, clearly not — docs/globals-css-notes.md#meeting-status-concluded-is-cool-and-quiet-present-clearly-not-3 */
   --concluded: #6fa8a5;
   --canceled: #e17055;
   --online: #9b7fd4;
 
-  /* Boundary strokes. docs/state.md §4.1: the basemap draws its roads as one — docs/globals-css-notes.md#boundary-strokes-docs-state-md-4-1-the-basemap-draws-its-roads-as-one-4 */
   --district-line: #5f7a8a;
 
-  /* Party affiliation colors (3a, 2026-08-19) — display only, applied to — docs/globals-css-notes.md#party-affiliation-colors-3a-2026-08-19-display-only-applied-to-5 */
   --party-democratic: #7da7f0;
   --party-republican: #f0857c;
   --party-green: #6fcf8f;
@@ -158,23 +97,14 @@
   --party-none: #9aa0ab;
 
   --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.3);
-  /* Lumen × Meanwhile (2026-09-13): enriched to the shipped popup-card / modal
-     depth (was 0 10px 40px rgba(0,0,0,.5)); read only within globals.css. */
   --shadow-popup: 0 18px 40px -16px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 0.5);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
-  /* App-card elevation for the ballot pill and other lit controls. */
   --shadow-app-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 20px -10px rgba(0, 0, 0, 0.6);
 
-  /* The design pass (2026-08-15) — the committed system. DESIGN.md is — docs/globals-css-notes.md#the-design-pass-2026-08-15-the-committed-system-design-md-is-6 */
   --voice: #a4b1c9;
 
-  /* THE PALETTE PASS (item 5, 2026-08-15). The author: "I don't know how — docs/globals-css-notes.md#the-palette-pass-item-5-2026-08-15-the-author-i-don-t-know-how-7 */
-  /* THE BROWN DIES (item 6, 2026-08-16). The author: "I hate this brown — docs/globals-css-notes.md#the-brown-dies-item-6-2026-08-16-the-author-i-hate-this-brown-8 */
   --link: #4fc9e8;
   --label: #a9adb9;
-  /* Lumen × Meanwhile (2026-09-13): toned from #4fc9e8 (which equalled --link),
-     too hot as a large dark-mode fill. Dark ink on #43b4d1 = 7.81:1, over the
-     7:1 sun bar; #38a3bf and below drop under it. Light theme keeps #0a4f61. */
   --action: #43b4d1;
   --action-on: #0f1117;
   /* The hover ring and its glow, for a pressed neutral control (Lumen material).
@@ -182,25 +112,21 @@
   --ring: #4fc9e8;
   --link-glow: rgba(79, 201, 232, 0.38);
 
-  /* Text ON a filled PARTY chip (item 3). The party colours are tuned as
+  /* Text ON a filled PARTY chip. The party colours are tuned as
      TEXT colours, so in dark they are light and the chip's text is the page
      ground. Same inversion the tier fills already use. */
   --party-on: #0f1117;
 
-  /* VOTE AND REACTION PILLS (item 5) — docs/globals-css-notes.md#vote-and-reaction-pills-item-5-9 */
   --vote-yes: #1c7d4c;
   --vote-no: #c23d24;
   --vote-neutral: #5b6170;
   --vote-text: #fdfaf4;
-  /* The five-point funding scale's own shades (D61's scale, item 5's — docs/globals-css-notes.md#the-five-point-funding-scale-s-own-shades-d61-s-scale-item-5-s-10 */
   --vote-yes-strong: #14603a;
   --vote-no-strong: #931f12;
 
-  /* --signal IS A REAL PROPERTY NOW, and it was not before — docs/globals-css-notes.md#signal-is-a-real-property-now-and-it-was-not-before-11 */
   --signal: var(--link);
   --signal-dim: color-mix(in srgb, var(--link) 55%, var(--text-muted));
 
-  /* PILL FAMILIES (funding type labels, item 2b). Six families, chosen — docs/globals-css-notes.md#pill-families-funding-type-labels-item-2b-six-families-chosen-12 */
   --pill-teal-text: #79d8ca;
   --pill-teal-bg: rgba(46, 169, 156, 0.16);
   --pill-cyan-text: #85cbe0;
@@ -214,46 +140,20 @@
   --pill-stone-text: #cfc2ae;
   --pill-stone-bg: rgba(160, 142, 112, 0.17);
 
-  /* ── MOTION (2026-09-03, the visual-polish session) ──────────────────────
-     One duration scale and one easing family. Every transition and animation
-     in the app references these; a raw duration or a bare `ease` in a
-     reader-facing rule is a defect (scripts/motion-token-sweep.mts).
-
-     Motion NEVER implies status. These tokens make a surface feel considered,
-     never urgent — urgency is an editorial claim about a government, and the
-     way a panel opens is not the place to make one.
-
-       --dur-fast   micro-feedback: carets, hovers, focus rings, small toggles
-       --dur-base   the standard state change: panel, pill, tab, disclosure
-       --dur-slow   the largest single move a reader's eye tracks
-       --dur-pulse  the ambient loading loop ONLY (a skeleton breathing). A
-                    looping ambient, never a state transition — named apart so
-                    the sweep does not read it as one.
-
-     Easings are the standard decelerate / accelerate / symmetric set. No
-     overshoot: nothing in this product bounces, because a bounce is a
-     personality the civic record does not have.
-       --ease-enter  content arriving  (decelerate: quick in, soft settle)
-       --ease-exit   content leaving   (accelerate: soft in, quick out)
-       --ease-move   a thing moving or resizing in place (symmetric) */
+  /* MOTION: one duration scale and one easing family. A raw duration or a bare `ease` in a reader-facing rule
+     is a defect (scripts/motion-token-sweep.mts). --dur-pulse is the ambient loading loop only. No overshoot. */
   --dur-fast: 120ms;
   --dur-base: 200ms;
   --dur-slow: 320ms;
   --dur-pulse: 1100ms;
-  /* LAY-12 explicitly specifies a 1.5-second boundary-control glow. It is a
-     navigation affordance, separate from the loading-only pulse above. */
   --dur-boundary-glow: 1500ms;
   --ease-boundary-glow: ease-in-out;
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-move: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ── LUMEN MATERIAL (Lumen × Meanwhile design handoff, 2026-09-13) ─────────
-     "Lumen lights what you can press; it never enters a fill that states a
-     fact." The lit surface, hairline rim and horizon for pressable NEUTRAL
-     controls and cards. The themed leaves are re-declared under
-     [data-theme="light"] because var() inside a custom-property resolves at the
-     scope where the DECLARATION lives, not where it is used. */
+  /* LUMEN MATERIAL for pressable neutral controls and cards. The themed leaves are re-declared under
+     [data-theme="light"] because var() inside a custom property resolves where it is declared. */
   --lumen-peak: color-mix(in srgb, var(--panel) 82%, white);
   --lumen-floor: var(--panel);
   --lumen-rim: rgba(255, 255, 255, 0.1);
@@ -278,16 +178,12 @@
   --panel-bg: #f8f9fa;
   --surface: #ebedf0;
   --text: #1a1a2e;
-  /* Darkened 2026-08-15 (item 5, the sun test) from #5a5d6b (6.20:1). */
   --text-dim: #4b4f5c;
   --text-muted: #9197a3;
-  /* Darkened from #c0392b (5.44:1) for the same reason. */
   --danger: #95281c;
 
   --accent-local: #b8860b;
   --accent-local-glow: rgba(184, 134, 11, 0.18);
-  /* B19's violet, darkened for the light theme the same way every tier
-     accent above it is — the pin sits on a pale basemap here. */
   --accent-voting: #6d28d9;
   --accent-voting-glow: rgba(109, 40, 217, 0.2);
   --accent-state: #00896e;
@@ -299,7 +195,6 @@
   --accent-school: #c2185b;
   --accent-school-glow: rgba(194, 24, 91, 0.18);
 
-  /* ITEM 10 (2026-08-16): THE AMBER REMNANT. These three were near-black — docs/globals-css-notes.md#item-10-2026-08-16-the-amber-remnant-these-three-were-near-black-13 */
   --tier-fill-local: #e0a213;
   --tier-fill-state: #1cc3a2;
   --tier-fill-national: #90afe4;
@@ -310,11 +205,6 @@
   --party-independent: #6b3fa0;
   --party-none: #4d5158;
 
-  /* MTG-14 (2026-08-28): #4a8481 measured 3.81:1 against --bg, BELOW the AA
-     bar, and it was shipping — the meeting status tokens had never been in the
-     contrast audit at all. #3a6a67 is 5.45:1, in line with --canceled (4.85)
-     and --online (5.06). Fixed rather than exempted: an exemption written to
-     make a failing pair pass is how a bar stops meaning anything. */
   --concluded: #3a6a67;
   --canceled: #c0392b;
   /* Darkened for the light theme like its two siblings: the pill paints its
@@ -328,17 +218,11 @@
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
   --shadow-app-card: 0 1px 2px rgba(20, 22, 28, 0.05), 0 8px 20px -10px rgba(20, 22, 28, 0.2);
 
-  /* The design-pass tokens, light theme. Same roles as dark — docs/globals-css-notes.md#the-design-pass-tokens-light-theme-same-roles-as-dark-14 */
   --voice: #3f4f68;
-  /* Item 6, 2026-08-16 — this is the brown the author named, and it is
-     gone. A deep azure, the same hue family as the dark theme's, measured
-     8.13 / 9.11 / 8.65:1 against the three surfaces it renders on. */
   --link: #0a4f61;
   --label: #494e5b;
   --action: #0a4f61;
   --action-on: #fdfaf4;
-  /* Lumen × Meanwhile (2026-09-13). #4fc9e8 on the light page is 1.73:1
-     (invisible); #17809e = 4.05:1, over the 3:1 graphics floor. */
   --ring: #17809e;
   --link-glow: rgba(23, 128, 158, 0.30);
   /* Lumen material, re-declared (var() resolves at the declaration scope). */
@@ -346,17 +230,11 @@
   --lumen-floor: color-mix(in srgb, var(--panel) 93%, black);
   --lumen-rim: rgba(0, 0, 0, 0.08);
   --lumen-rim-strong: rgba(0, 0, 0, 0.14);
-  /* Was color-mix(--online 60%) — a purple line; --online means "online-only".
-     Now the interactive cyan, so both themes speak one language. */
   --lumen-horizon: var(--ring);
   --ask: var(--online);
 
-  /* Light party colours are DEEP, so the filled chip's text is near-white —
-     the inversion of the dark theme, same as the tier fills. */
   --party-on: #fdfaf4;
 
-  /* Deep fills, near-white text, in both themes. See the dark block for why
-     the register rather than the hue is what separates a vote from a party. */
   --vote-yes: #14663c;
   --vote-no: #8f2416;
   --vote-neutral: #4d525e;
@@ -378,16 +256,7 @@
   --pill-stone-bg: rgba(160, 142, 112, 0.16);
 }
 
-/* ── REDUCED MOTION — the guaranteed floor (2026-09-03) ────────────────────
-   A reader who asks the operating system for less motion gets it, everywhere,
-   without a rule having to remember to opt in. Transitions and animations
-   settle instantly instead of playing; scrolling jumps instead of gliding.
-
-   Nothing is HIDDEN — every affordance stays exactly as visible as it is with
-   motion on. This only removes the movement, never the thing that moved. A
-   skeleton still shows; it just stops breathing. Per-surface reduced-motion
-   rules elsewhere in this file are kept as belt-and-braces; this block is the
-   floor the motion-token guard asserts. */
+/* REDUCED MOTION: transitions and animations settle instantly and scrolling jumps. Nothing is hidden; only movement is removed. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -421,15 +290,8 @@
   --color-online: var(--online);
   --color-district-line: var(--district-line);
 
-  /* The three registers (design pass): text-voice for the app's
-     explainer voice, text-link for anything tappable. Data keeps
-     --text and the mono face. */
   --color-voice: var(--voice);
   --color-link: var(--link);
-  /* Item 5 (2026-08-15). `text-label` is where the gold went: structural
-     labels organize, so they carry WEIGHT and neutral confidence rather than
-     the interactive accent. `bg-action`/`text-action-on` are the filled
-     primary action — the one place a saturated accent is still correct. */
   --color-label: var(--label);
   --color-action: var(--action);
   --color-action-on: var(--action-on);
@@ -443,33 +305,10 @@
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 
-  /*
-    THE THIRD REGISTER IS A CLAIM, NOT A STYLE (ITEM J, 2026-09-01).
-
-    EB Garamond means: this text is quoted from, or names, a public record.
-    Sans means the app is speaking in its own voice; mono carries numerals and
-    identifiers. So the serif face may only be applied by the components that
-    render SOURCED content — a ballot question word for word, an official
-    analysis, a candidate's own quoted passage. It is never set by hand at a
-    call site, and it is never worn by an app-authored summary: a serif face
-    on text this product wrote asserts a provenance that does not exist, which
-    is the same category of failure as rendering a position without a source
-    record. It just fails visually instead of structurally.
-
-    NAMED `--font-record` AND NOT `--font-voice`. `--voice` is already a
-    COLOUR in this file. A `--font-voice` sitting beside a `--voice` colour is
-    a collision waiting to be misread, and `--font-record` names the token's
-    job. `--font-display` above is DM Sans and stays that way.
-
-    `.t-record` in @layer components is the only thing that should apply it.
-  */
+  /* `--font-record` (EB Garamond) marks text quoted from a public record; only `.t-record` applies it. */
   --font-record: var(--font-eb-garamond), ui-serif, Georgia, "Times New Roman", serif;
 
-  /* Motion, exposed to Tailwind (2026-09-03). The bare `transition` /
-     `transition-colors` utilities pick up the fast rung and the symmetric
-     ease by default; `duration-fast|base|slow` and `ease-enter|exit|move`
-     name the rest. The values resolve through the real `:root` properties, so
-     a utility and a hand-written rule always agree on one scale. */
+  /* Motion exposed to Tailwind, resolving through the real :root properties. */
   --default-transition-duration: var(--dur-fast);
   --default-transition-timing-function: var(--ease-move);
   --duration-fast: var(--dur-fast);
@@ -480,7 +319,6 @@
   --ease-move: var(--ease-move);
 }
 
-/* LEGACY ALIASES — delete as Phase 2/3 replaces the components that use them — docs/globals-css-notes.md#legacy-aliases-delete-as-phase-2-3-replaces-the-components-that-use-them-15 */
 @theme inline {
   --color-ink: var(--bg);
   --color-ink-panel: var(--panel);
@@ -490,13 +328,11 @@
   --color-paper: var(--text);
   --color-paper-dim: var(--text-dim);
   --color-muted: var(--text-muted);
-  /* Item 6 (2026-08-16): these aliased --accent-local, so text-signal — docs/globals-css-notes.md#item-6-2026-08-16-these-aliased-accent-local-so-text-signal-16 */
   --color-signal: var(--link);
   /* Used as a border and a muted label colour, so it has to be an opaque
      colour rather than the glow rgba. */
   --color-signal-dim: color-mix(in srgb, var(--link) 55%, var(--text-muted));
 
-  /* Archivo is gone; DM Sans carries display text too. */
   --font-display: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -546,25 +382,7 @@
     letter-spacing: -0.3px;
   }
 
-  /*
-    THE RECORD REGISTER (ITEM J, 2026-09-01) — the only thing that applies
-    `--font-record`.
-
-    Put this on text that is QUOTED FROM a public record: a ballot question
-    word for word, an official analysis reproduced whole, a candidate's own
-    passage. Do not put it on anything this product wrote. A serif face on an
-    app-authored summary asserts a provenance that does not exist, which is
-    the same category of failure as rendering a position without a source
-    record — it just fails visually instead of structurally. The plain-
-    language measure summary on the ballot is the sharpest example: it sits
-    directly above the official text it paraphrases, and the two must not
-    look like they came from the same place.
-
-    EB Garamond runs small and light next to DM Sans at the same nominal
-    size, so the class buys a little size and leading back. It does NOT set a
-    colour: the record already renders in the data register, and the register
-    a piece of text is in is not this class's business.
-  */
+  /* The only thing that applies `--font-record`: text quoted from a public record, never text this product wrote. No colour is set here. */
   .t-record {
     font-family: var(--font-record);
     font-weight: 500;
@@ -579,8 +397,7 @@
     box-shadow: var(--shadow-panel);
   }
 
-  /* Theme toggle and reset sit absolutely in the sidebar header — reset at
-     right: 0, theme at right: 36px, exactly as Edia places them. */
+  /* Theme toggle and reset sit absolutely in the sidebar header: reset at right: 0, theme at right: 36px. */
   .icon-btn {
     background: transparent;
     border: 1px solid var(--panel-border);
@@ -599,8 +416,6 @@
     color: var(--link);
     background: color-mix(in srgb, var(--link) 14%, transparent);
   }
-
-  /* The design pass (2026-08-15): the type scale's structural rungs — docs/globals-css-notes.md#the-design-pass-2026-08-15-the-type-scale-s-structural-rungs-17 */
 
   /* Tier and section headers: LOCAL / STATE / FEDERAL, ballot section
      heads, door-overlay groups. Color comes from the caller (tier
@@ -630,9 +445,6 @@
     content: none;
   }
 
-  /* Surface eyebrows: the small mono caption naming what a block IS
-     ("Campaign money · FEC", "The next election"). One size up from the
-     old 9px, weight instead of size for presence. */
   .t-eyebrow {
     font-family: var(--font-mono);
     font-size: 0.625rem;
@@ -641,11 +453,7 @@
     letter-spacing: 0.15em;
   }
 
-  /* ------------------------------------------------------------------
-     The funding type pills (item 2b). One pill per typed label; the
-     pill IS the tap target for the explainer. Families are assigned in
-     lib/funding/pill-colors.ts and never approach the party palette.
-  */
+  /* The funding type pills: families are assigned in lib/funding/pill-colors.ts and never approach the party palette. */
   .pill {
     display: inline-flex;
     align-items: center;
@@ -667,23 +475,13 @@
   .pill--stone { --pill-bg: var(--pill-stone-bg); --pill-text: var(--pill-stone-text); }
 }
 
-/* ============================================================================ — docs/globals-css-notes.md#note-18 */
-
-/* G05 RULE 4f — THE RAIL IS A CARD OVER THE MAP, AND IT ENDS WHERE ITS — docs/globals-css-notes.md#g05-rule-4f-the-rail-is-a-card-over-the-map-and-it-ends-where-its-19 */
 :root {
   /* One number, so the rail's width and every offset that clears it cannot
      drift apart. The map canvas and MapLibre's controls both read it. */
   --rail-width: 340px;
   --rail-inset: 12px;
-  /* WGH-6 (2026-08-24): the who-governs card takes the rail's space when the
-     rail minimizes, and needs the longest body name plus its type label on one
-     line. Measured against "Morris Hills Regional School District" +
-     "SCHOOL DISTRICT" at 07866, which is the pair the author named. */
   --wgh-wide: 460px;
-  /* WGH-9 (2026-08-25): the shared width of the two map pills. One token
-     because it is a pair that has to agree, and a pair written twice is a
-     pair that drifts. 220px is the wider label at these numbers, so neither
-     pill is stretched. */
+  /* The shared width of the two map pills: one token so the pair agrees. */
   --map-pill-min-width: 224px;
   --rail-gutter: 364px; /* rail-width + 2 × rail-inset */
 }
@@ -693,7 +491,6 @@
   top: calc(var(--rail-inset) + env(safe-area-inset-top, 0px));
   left: var(--rail-inset);
   width: var(--rail-width);
-  /* 4f: ends where the content ends. */
   height: auto;
   max-height: calc(
     100dvh - (var(--rail-inset) * 2) - env(safe-area-inset-top, 0px) -
@@ -701,7 +498,7 @@
   );
   background: var(--panel);
   border: 1px solid var(--panel-border);
-  /* The committed radius token — never a new ad-hoc scale (CLAUDE.md). */
+  /* The committed radius token, never a new ad-hoc scale. */
   border-radius: var(--radius);
   box-shadow: var(--shadow-panel);
   display: flex;
@@ -711,7 +508,6 @@
   transition: transform var(--dur-base) var(--ease-move);
 }
 
-/* One pattern at every width (2f): visible by default, slides left to hide — docs/globals-css-notes.md#one-pattern-at-every-width-2f-visible-by-default-slides-left-to-hide-20 */
 main[data-sidebar="closed"] .sidebar {
   transform: translateX(-100%);
   visibility: hidden;
@@ -726,10 +522,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border-bottom: 1px solid var(--panel-border);
 }
 
-/* The ballot entry in the rail's header (item 2, the tester's mobile pass
-   2026-08-14). It was a dotted-underline line in the footer, below
-   `mt-auto`; on a phone that is under the browser chrome. Here it reads as
-   what it is and is on screen the moment the drawer opens. */
 .sidebar-ballot-entry {
   display: flex;
   align-items: center;
@@ -754,7 +546,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   color: var(--signal);
 }
 
-/* 4f: the scroller takes what is left and NO MORE. flex: 1 made it claim — docs/globals-css-notes.md#4f-the-scroller-takes-what-is-left-and-no-more-flex-1-made-it-claim-21 */
 .sidebar-scroll {
   flex: 0 1 auto;
   overflow-y: auto;
@@ -780,27 +571,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border-radius: 2px;
 }
 
-/* ==========================================================================
-   THE LOCKUP (ITEM J, 2026-09-01) — `components/brand/logo.tsx`
-
-   `meanwhile • • ▪` — a lowercase serif wordmark, two grey dots, one filled
-   square. The component's own header carries the reasoning; what lives here
-   is the geometry, and it is all relative so one type size drives everything.
-
-   THE BEAT is the unit: the dot diameter and the square's side are the same
-   length, and every gap and the clear space are measured in it. At the
-   wordmark's size the beat is 0.18em, which is roughly the optical weight of
-   a period in EB Garamond 500 — the marks have to read as an ELLIPSIS that
-   resolves, not as three bullets.
-
-   CLEAR SPACE is one beat on all sides, measured from the square, applied as
-   padding on the lockup itself so no call site has to remember it.
-
-   The square is `--mark` and the dots are `--text-muted`; both tokens already
-   swap per theme, so there is ONE code path for both themes and nothing to
-   drift. `--mark` appears in this file exactly here and in its own
-   declaration — see the token comment for why that matters.
-   ========================================================================== */
+/* THE LOCKUP (`components/brand/logo.tsx`). The beat (dot diameter = square side) is the unit for every gap and the clear space; at the wordmark's size it is 0.18em. */
 .wtp-logo {
   --wtp-logo-beat: 0.18em;
   display: inline-flex;
@@ -867,10 +638,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   position: relative;
 }
 
-/* F01/ITEM J: the sidebar header's brand is the LOCKUP now, and `.brand-name`
-   is the block that carries the lockup and the location line under it. The
-   16px/600/-0.3px sans treatment it used to wear is gone — the name renders
-   in the serif wordmark or not at all. */
 .brand-name {
   display: flex;
   flex-direction: column;
@@ -908,7 +675,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border-color: var(--link);
 }
 
-/* Reset sits at right: 0, theme toggle at right: 36px — Edia's placement. */
 .brand .reset-view-btn {
   position: absolute;
   top: 0;
@@ -920,7 +686,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   right: 36px;
 }
 
-/* ---- View toggle: the primary mode switch ---- */
 .view-toggle {
   display: flex;
   background: var(--bg);
@@ -950,7 +715,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   background: var(--surface);
 }
 
-/* Item 5 (2026-08-15): a selected tier wears ITS OWN colour, never the — docs/globals-css-notes.md#item-5-2026-08-15-a-selected-tier-wears-its-own-colour-never-the-22 */
 .view-btn[data-active="true"] {
   background: var(--tier-fill);
   color: var(--tier-fill-on);
@@ -967,7 +731,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   --tier-fill: var(--tier-fill-national);
 }
 
-/* ---- Scope selectors (Edia's team/rep) ---- */
 .scope-selectors {
   display: flex;
   flex-wrap: wrap;
@@ -984,7 +747,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .scope-label {
-  /* Structural label (design pass). */
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -1004,7 +766,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border: 1px solid var(--accent-national-glow);
 }
 
-/* ---- Selects: one treatment, custom chevron ---- */
 .filter-select,
 .scope-select {
   width: 100%;
@@ -1041,11 +802,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   background-color: color-mix(in srgb, var(--link) 14%, transparent);
 }
 
-/* ---- Stats ---- */
-/* Item 6 (2026-08-16): the counters redesigned — docs/globals-css-notes.md#item-6-2026-08-16-the-counters-redesigned-23 */
-/* LAY-5: the divider under the tiles goes with the raw text it was separating
-   the tiles FROM. Every block below is a surface card now, and a rule between
-   two cards is a third treatment nobody asked for. */
 .stats-bar {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1066,9 +822,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   grid-column: 1 / -1;
 }
 
-/* 6f (2026-08-15): the highlight means "this door is open", and it means that
-   on all four tiles. It used to be a permanent accent on MEETINGS alone,
-   which read as a selection state and was not one. */
+/* The highlight means "this door is open", on all four tiles. */
 .stat-card[data-open] {
   border-color: var(--link);
   background: color-mix(in srgb, var(--link) 10%, var(--surface));
@@ -1083,10 +837,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-variant-numeric: tabular-nums;
 }
 
-/* The label reads as a NOUN, not as a header cell. Sentence case at a
-   readable size, wrapping freely inside its own tile — the uppercase
-   letter-spaced form is what made "DISTRICTS IN VIEW" wider than the box it
-   lived in, and shouting a label does not make its number clearer. */
 .stat-card .label {
   font-size: 11px;
   line-height: 1.25;
@@ -1095,9 +845,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   overflow-wrap: break-word;
 }
 
-/* The dropped-record row. Full width under the cards, and deliberately not
-   quiet: a meeting that could not be placed is missing from the map, and a
-   reader who cannot see the count reads the map as complete. */
+/* The dropped-record row is deliberately not quiet: a meeting that could not be placed is missing from the map. */
 .stat-missing {
   width: 100%;
   font-size: 11px;
@@ -1106,7 +854,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   padding: 2px 0 0;
 }
 
-/* ---- Search ---- */
 .search-box {
   padding: 14px 22px;
   border-bottom: 1px solid var(--panel-border);
@@ -1238,15 +985,11 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-family: var(--font-mono);
 }
 
-/* ---- Proximity-style controls: radius and near-me ---- */
 .prox-control {
   padding: 10px 22px;
   border-bottom: 1px solid var(--panel-border);
 }
 
-/* LAY-5: in the rail this is a SECTION, so it takes the tile chrome and drops
-   the divider rule — a card with a line under it is two treatments arguing.
-   Scoped to the rail's own child so the copy inside Filters is untouched. */
 .sidebar-scroll > .prox-control {
   margin: 10px 22px;
   padding: 11px 12px;
@@ -1392,9 +1135,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   line-height: 1.4;
 }
 
-/* ---- Filters ---- */
-/* LAY-5 (2026-08-24, the author's capture 11-57-33) — THE TOP'S TREATMENT — docs/globals-css-notes.md#lay-5-2026-08-24-the-author-s-capture-11-57-33-the-top-s-treatment-24 */
-
 .rail-section {
   margin: 10px 22px;
   padding: 11px 12px;
@@ -1403,9 +1143,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border-radius: var(--radius-sm);
 }
 
-/* LAY-6 (2026-08-24): closed, this reserves NOTHING. The bottom padding and
-   the header's bottom margin are the gap BEFORE the panel, so they are paid
-   for only when a panel is there to precede. Closed it is one row high. */
+/* Closed, this reserves nothing: the padding and margin are paid only when a panel is open. */
 .filters-area {
   margin: 10px 22px;
   padding: 11px 12px;
@@ -1447,7 +1185,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .filters-title {
-  /* Structural label (design pass): organizes, so it carries weight. */
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -1475,7 +1212,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   color: var(--action-on);
 }
 
-/* A collapsible filter group's header (g4 item 14) — docs/globals-css-notes.md#a-collapsible-filter-group-s-header-g4-item-14-25 */
 .filter-group-toggle {
   display: inline-flex;
   align-items: center;
@@ -1512,7 +1248,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .filter-label {
-  /* Structural label (design pass). */
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -1608,7 +1343,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   gap: 8px;
 }
 
-/* ---- Legend ---- */
 .legend {
   position: fixed;
   bottom: var(--map-legend-bottom);
@@ -1617,9 +1351,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border: 1px solid var(--panel-border);
   border-radius: var(--radius);
   padding: 8px 14px;
-  /* 3h (2026-08-16): below the popup layer (1200) and the bottom sheet
-     (1150) — the legend is ambient chrome and must never cover a card the
-     reader opened (author's screenshot: it overlaid the compact popup). */
+  /* Below the popup layer (1200) and the bottom sheet (1150): the legend must never cover an opened card. */
   z-index: 1100;
   display: flex;
   gap: 12px;
@@ -1636,13 +1368,11 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   white-space: nowrap;
 }
 
-/* 6e: a category with nothing on the map right now stays in the key,
-   muted — the legend never mutates with the view. */
+/* A category with nothing on the map stays in the key, muted. */
 .legend-item[data-muted="true"] {
   opacity: 0.35;
 }
 
-/* 6g: every interactive element says so. */
 button:not(:disabled),
 a,
 select,
@@ -1682,7 +1412,6 @@ label:has(> input[type="checkbox"]) {
   flex-shrink: 0;
 }
 
-/* The top-right floaters (item 2, 2026-08-15): the ballot entry, the zip, and — docs/globals-css-notes.md#the-top-right-floaters-item-2-2026-08-15-the-ballot-entry-the-zip-and-26 */
 .map-floaters {
   position: relative;
   display: flex;
@@ -1695,18 +1424,15 @@ label:has(> input[type="checkbox"]) {
   display: flex;
   align-items: stretch;
   gap: 8px;
-  /* G07 (2026-08-17): THE LABEL GOT LONGER, SO THE ROW HAS TO BE ABLE TO WRAP — docs/globals-css-notes.md#g07-2026-08-17-the-label-got-longer-so-the-row-has-to-be-able-to-wrap-27 */
   flex-wrap: wrap;
   justify-content: flex-end;
 }
 
-/* The cluster can never be wider than what holds it, at any placement. The
-   overflow above went unnoticed because nothing said it could not happen. */
+/* The cluster can never be wider than what holds it, at any placement. */
 .map-floaters {
   max-width: 100%;
 }
 
-/* F01 10.2 (2026-08-19, the author): "The order — Ballot, then zip, then Ask — docs/globals-css-notes.md#f01-10-2-2026-08-19-the-author-the-order-ballot-then-zip-then-ask-28 */
 .map-floaters[data-pill-cluster="sidebar"],
 .map-floaters[data-pill-cluster="wgh"] {
   align-items: stretch;
@@ -1737,12 +1463,10 @@ label:has(> input[type="checkbox"]) {
   flex: 1 1 auto;
 }
 
-/* The map placement starts CLEAR OF THE HAMBURGER, which is fixed at (12,12) — docs/globals-css-notes.md#the-map-placement-starts-clear-of-the-hamburger-which-is-fixed-at-12-12-29 */
 [data-pill-cluster="map"] {
   margin-left: 56px;
 }
 
-/* G05 rule 4e: THE SAME CLUSTER, IN A BOUNDED CONTAINER — docs/globals-css-notes.md#g05-rule-4e-the-same-cluster-in-a-bounded-container-30 */
 [data-pill-cluster="wgh"],
 [data-pill-cluster="sidebar"] {
   width: 100%;
@@ -1754,7 +1478,6 @@ label:has(> input[type="checkbox"]) {
   flex-wrap: wrap;
 }
 
-/* The ballot pill keeps its intrinsic size; the Ask pill takes whatever is — docs/globals-css-notes.md#the-ballot-pill-keeps-its-intrinsic-size-the-ask-pill-takes-whatever-is-31 */
 [data-pill-cluster="wgh"] .ask-pill,
 [data-pill-cluster="sidebar"] .ask-pill {
   flex: 1 1 auto;
@@ -1769,9 +1492,7 @@ label:has(> input[type="checkbox"]) {
   white-space: nowrap;
 }
 
-/* 4a: the expansion hangs under the pill that produced it, at the container's
-   full width — it is a panel, not a floater, and it never right-hugs. */
-/* F01 8.2 (2026-08-19, the author): "the expanded Ask bar is enormously wide — docs/globals-css-notes.md#f01-8-2-2026-08-19-the-author-the-expanded-ask-bar-is-enormously-wide-32 */
+/* The expansion hangs under the pill that produced it, at the container's full width. */
 .ask-expansion {
   width: 100%;
 }
@@ -1807,7 +1528,7 @@ label:has(> input[type="checkbox"]) {
 }
 
 /* One shell, two tap targets: an <a> cannot contain a <button>, and the zip
-   has to be its own control (item 3). The hairline between them is what says
+   has to be its own control. The hairline between them is what says
    "two things" without spending a second pill on it. */
 .ballot-pill {
   display: inline-flex;
@@ -1820,9 +1541,7 @@ label:has(> input[type="checkbox"]) {
     transform var(--dur-lumen) var(--ease-lumen);
 }
 
-/* One object (design handoff 2026-09-13): hovering EITHER half rings and lifts
-   the PAIR — the halves never ring individually. The container clips overflow,
-   so a half cannot draw its own outer ring; the ring lives here. */
+/* Hovering either half rings and lifts the pair; the container clips overflow, so the ring lives here. */
 .ballot-pill:hover {
   box-shadow: 0 0 0 1px var(--ring), 0 0 14px var(--link-glow), var(--shadow-app-card);
   transform: translateY(-1px);
@@ -1832,7 +1551,6 @@ label:has(> input[type="checkbox"]) {
   transition-duration: var(--dur-base);
 }
 
-/* M139 (2026-08-18) — the two halves carry the pill's own curve — docs/globals-css-notes.md#m139-2026-08-18-the-two-halves-carry-the-pill-s-own-curve-33 */
 .ballot-pill-main {
   display: inline-flex;
   align-items: center;
@@ -1848,8 +1566,7 @@ label:has(> input[type="checkbox"]) {
   border-radius: var(--radius-pill) 0 0 var(--radius-pill);
 }
 
-/* The action half stays FLAT --action and does not brighten on its own — the
-   pair's ring is the hover signal now. Ink pinned against base.css's a:hover. */
+/* The action half stays flat --action; the pair's ring is the hover signal. Ink pinned against base.css's a:hover. */
 a.ballot-pill-main,
 a.ballot-pill-main:hover,
 a.ballot-pill-main:focus {
@@ -1874,9 +1591,7 @@ a.ballot-pill-main:focus {
   gap: 5px;
   padding: 11px 13px;
   border: 0;
-  /* Lumen lit surface (design handoff 2026-09-13): the pressable ZIP half is a
-     neutral control — lit from below, hairline rim. The pair's ring on hover
-     comes from .ballot-pill, so this half never draws its own outer ring. */
+  /* The zip half is a lit neutral control; the pair's ring comes from .ballot-pill. */
   background-color: var(--lumen-floor);
   background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
   box-shadow: inset 0 0 0 1px var(--lumen-rim);
@@ -1886,8 +1601,7 @@ a.ballot-pill-main:focus {
   font-weight: 600;
   letter-spacing: 0.04em;
   cursor: pointer;
-  /* The right half of the pill, so its outline follows the pill's edge
-     instead of being clipped square against it (M139). */
+  /* The right half of the pill, so its outline follows the pill's edge. */
   border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
   /* 44px thumb target at phone width — the padding above already clears it,
      stated here so a later type change cannot quietly shrink it. */
@@ -1925,9 +1639,6 @@ a.ballot-pill-main:focus {
   outline-offset: 2px;
 }
 
-/* Ask: the same weight as the ballot pill but the QUIET treatment, because
-   the two are peers in reach and not in claim — the ballot is where the
-   product is going, the ask is a door beside it. */
 .ask-pill {
   display: inline-flex;
   align-items: center;
@@ -1955,10 +1666,7 @@ a.ballot-pill-main:focus {
   color: var(--signal);
 }
 
-/* The compact zip entry (item 3). Hangs under the pill it opened from, right
-   aligned so it never runs off the right edge at 390px — which is the exact
-   defect item 4 exists to fix on the calendar chooser, and there is no reason
-   to ship it twice. */
+/* Right-aligned so it never runs off the right edge at 390px. */
 .zip-switcher {
   width: min(272px, calc(100vw - 24px));
   padding: 12px 13px 13px;
@@ -2046,13 +1754,11 @@ a.ballot-pill-main:focus {
   color: var(--signal);
 }
 
-/* 6g (2026-08-15, the author): the SOURCE tag broke to "SR / C" beside a long — docs/globals-css-notes.md#6g-2026-08-15-the-author-the-source-tag-broke-to-sr-c-beside-a-long-34 */
 .source-tag {
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-/* The collapsible battlecard section (item 6b4, 2026-08-15). The header is a — docs/globals-css-notes.md#the-collapsible-battlecard-section-item-6b4-2026-08-15-the-header-is-a-35 */
 .card-section {
   margin-top: 10px;
 }
@@ -2069,9 +1775,6 @@ a.ballot-pill-main:focus {
   padding: 0 14px;
   border: 0;
   border-radius: var(--radius-sm);
-  /* Lumen control material (design handoff 2026-09-13): a disclosure row is a
-     control, so it is lit from below with a hairline rim and a horizon that
-     lights while the row is open. Was a flat --link-tinted pill. */
   background-color: var(--surface);
   background-image: radial-gradient(ellipse 130% 100% at 50% 100%, color-mix(in srgb, var(--surface) 84%, white) 0%, var(--surface) 66%);
   box-shadow: inset 0 0 0 1px var(--lumen-rim);
@@ -2136,7 +1839,6 @@ a.ballot-pill-main:focus {
   transition: transform var(--dur-base) var(--ease-move);
 }
 
-/* Item 4 (2026-08-16) — THE CHEVRON DEFECT, diagnosed — docs/globals-css-notes.md#item-4-2026-08-16-the-chevron-defect-diagnosed-36 */
 .card-section[data-open] > .card-section-header .card-section-chevron {
   transform: rotate(180deg);
 }
@@ -2145,7 +1847,6 @@ a.ballot-pill-main:focus {
   padding: 10px 2px 2px;
 }
 
-/* SUB-GROUPS INSIDE A PANE (item 6, 2026-08-16, the author's ruling) — docs/globals-css-notes.md#sub-groups-inside-a-pane-item-6-2026-08-16-the-author-s-ruling-37 */
 .card-section[data-level="sub"] {
   margin-top: 8px;
   margin-left: 10px;
@@ -2174,8 +1875,6 @@ a.ballot-pill-main:focus {
   padding: 8px 0 2px;
 }
 
-/* The zip switcher's chevron (item 4's audit, 2026-08-16). It had no state
-   rule at all — down while closed, still down while open. */
 .zip-chevron {
   transition: transform var(--dur-base) var(--ease-move);
 }
@@ -2197,7 +1896,6 @@ a.ballot-pill-main:focus {
   }
 }
 
-/* Item 4 (2026-08-16): the two views INSIDE Voting Record — docs/globals-css-notes.md#item-4-2026-08-16-the-two-views-inside-voting-record-38 */
 .vote-view-switch {
   display: flex;
   flex-wrap: wrap;
@@ -2229,9 +1927,6 @@ a.ballot-pill-main:focus {
   color: var(--link);
 }
 
-/* The selected view. Filled in the interactive accent, because this IS the
-   selected state and item 5's palette pass reserves the saturated accent for
-   exactly that. */
 .vote-view-btn[data-selected] {
   border-color: transparent;
   background: var(--action);
@@ -2250,8 +1945,6 @@ a.ballot-pill-main:focus {
   width: 100%;
 }
 
-/* ========================================================================== — docs/globals-css-notes.md#note-39 */
-
 .id-header {
   display: flex;
   align-items: flex-start;
@@ -2263,9 +1956,7 @@ a.ballot-pill-main:focus {
   gap: 16px;
 }
 
-/* ONE geometry, whatever is behind it — a photo and a pair of initials
-   occupy the identical circle. This extends 6b3's uniform tile: layout
-   weight tracks OUR research, never the person. */
+/* One geometry whatever is behind it: a photo and a pair of initials occupy the identical circle. */
 .id-portrait {
   flex: 0 0 auto;
   display: flex;
@@ -2315,12 +2006,10 @@ a.ballot-pill-main:focus {
   line-height: 1.15;
   letter-spacing: -0.015em;
   color: var(--text);
-  /* Long names wrap; they never truncate. "Dr. Matt Heinz" losing its title
-     to an ellipsis is a different person's name. */
+  /* Long names wrap; they never truncate: an ellipsis can turn a name into a different person's. */
   overflow-wrap: anywhere;
 }
 
-/* The dominant type on the card. Under one second to "who is this". */
 .id-name--lg {
   font-size: 1.75rem;
   letter-spacing: -0.025em;
@@ -2358,15 +2047,7 @@ a.ballot-pill-main:focus {
   color: var(--party-on);
 }
 
-/* A chip that is a fact about OUR SOURCING rather than about the person.
-   (2026-08-26, Items 10-15.)
-
-   The render-default rule says a named gap renders in the gap's own register,
-   and that a colour is a claim too: "we haven't sourced who holds this seat"
-   may not wear the same outline as "Incumbent". A dashed border and a dimmer
-   foreground say "this is about our record" without inventing a new scale.
-   The height and the radius do not move — a different SIZE would make the same
-   claim a second time, and sizes creep. */
+/* A chip about our sourcing, not the person: dashed and dimmer, same height and radius. */
 .id-chip-unsourced {
   border-style: dashed;
   border-color: color-mix(in srgb, var(--panel-border) 70%, transparent);
@@ -2380,13 +2061,7 @@ a.ballot-pill-main:focus {
   font-size: 0.8125rem;
 }
 
-/* BATTLECARD CTA (design handoff 2026-09-13). The one loud action on a candidate
-   — "View Battlecard" — in the reader's own battlecard green, wearing the Lumen
-   material. The hover ring is a DARKER green than the fill so the edge reads as a
-   rim; the glow stays the bright green and widens (a dark ring alone would make
-   the button recede on a dark panel). This green is scoped to the reader's
-   battlecard — Admin actions are neutral Lumen controls, never this. Replaces a
-   flat fill whose hover referenced an undefined --battlecard-green-hover. */
+/* The battlecard CTA. The hover ring is a darker green than the fill so the edge reads as a rim. Scoped to the reader's battlecard. */
 .battlecard-cta {
   position: relative;
   isolation: isolate;
@@ -2479,7 +2154,6 @@ a.ballot-pill-main:focus {
   color: var(--label);
 }
 
-/* THE CONTACT PILL ROW (items 2 and 8) — docs/globals-css-notes.md#the-contact-pill-row-items-2-and-8-40 */
 .contact-pill-row {
   display: flex;
   flex-wrap: wrap;
@@ -2499,9 +2173,6 @@ a.ballot-pill-main:focus {
   padding: 0 14px;
   border: 0;
   border-radius: var(--radius-pill);
-  /* Lumen control material (design handoff 2026-09-13): lit from below, a
-     hairline rim, a horizon at the base. "Lumen lights what you can press."
-     Replaces the flat --panel-bg fill + --link border-recolour on hover. */
   background-color: var(--lumen-floor);
   background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
   box-shadow: inset 0 0 0 1px var(--lumen-rim);
@@ -2529,9 +2200,7 @@ a.ballot-pill-main:focus {
   transition: opacity var(--dur-lumen) var(--ease-lumen);
 }
 
-/* Hover is a ring around the WHOLE pill, not a border/label recolour — the
-   label stays put, so the pill still reads as one object and spends no
-   semantic colour (the cyan that used to sit beside party red / tier teal). */
+/* Hover is a ring around the whole pill; the label stays put. */
 .contact-pill:hover {
   box-shadow: inset 0 0 0 1px var(--lumen-rim-strong), 0 0 0 1px var(--ring), 0 0 14px var(--link-glow);
   transform: translateY(-1px);
@@ -2547,9 +2216,7 @@ a.ballot-pill-main:focus {
   transition-duration: var(--dur-base);
 }
 
-/* Focus is independent of hover: it stays the --link outline, never the ring
-   (tests/focus-visible). An <a>.contact-pill inheriting base.css's a:hover
-   colour is pinned so the label does not flip to the foreground ink. */
+/* Focus is independent of hover: it stays the --link outline. An <a>.contact-pill's a:hover colour is pinned. */
 .contact-pill:focus-visible {
   outline: 2px solid var(--link);
   outline-offset: 2px;
@@ -2561,9 +2228,7 @@ a.ballot-pill-main:focus {
   color: var(--text);
 }
 
-/* The compact form for the small popup. Still above the tap floor: a 40px
-   pill on a phone is the smallest thing a thumb reliably hits, and the row
-   sits inside a card the reader has deliberately opened. */
+/* The compact form for the small popup; still at the 40px tap floor. */
 .contact-pill-row[data-compact] .contact-pill {
   min-height: 40px;
   padding: 0 11px;
@@ -2571,7 +2236,6 @@ a.ballot-pill-main:focus {
   gap: 6px;
 }
 
-/* ONE CLEAN COLUMN (item 4, 2026-08-16, the author's ruling) — docs/globals-css-notes.md#one-clean-column-item-4-2026-08-16-the-author-s-ruling-41 */
 .contact-pill-row[data-layout="column"] {
   flex-direction: column;
   flex-wrap: nowrap;
@@ -2589,10 +2253,6 @@ a.ballot-pill-main:focus {
   padding-bottom: 8px;
 }
 
-/* THE PERSON ROW (item 2) — a representation list that stays horizontally — docs/globals-css-notes.md#the-person-row-item-2-a-representation-list-that-stays-horizontally-42 */
-/* F01 7.1 (2026-08-19, the author's walkthrough): "Section headers get one — docs/globals-css-notes.md#f01-7-1-2026-08-19-the-author-s-walkthrough-section-headers-get-one-43 */
-/* NH-1 (2026-08-23, the author's 8/22 walkthrough; tracker NH77) — docs/globals-css-notes.md#nh-1-2026-08-23-the-author-s-8-22-walkthrough-tracker-nh77-44 */
-/* ALIGN-1 (2026-08-25) — EVERYTHING READS LEFT TO RIGHT. NOTHING INDENTS — docs/globals-css-notes.md#align-1-2026-08-25-everything-reads-left-to-right-nothing-indents-45 */
 .person-row {
   display: flex;
   flex-direction: row;
@@ -2614,7 +2274,6 @@ a.ballot-pill-main:focus {
   overflow-wrap: break-word;
 }
 
-/* PARTY AS PLAIN TEXT (item 3, 2026-08-16, the author's ruling) — docs/globals-css-notes.md#party-as-plain-text-item-3-2026-08-16-the-author-s-ruling-46 */
 .person-row-party {
   font-size: 0.6875rem;
   font-weight: 600;
@@ -2629,7 +2288,6 @@ a.ballot-pill-main:focus {
   overflow-wrap: break-word;
 }
 
-/* VOTE AND REACTION PILLS (item 5) — docs/globals-css-notes.md#vote-and-reaction-pills-item-5-47 */
 .vote-pill {
   display: inline-flex;
   align-items: center;
@@ -2668,12 +2326,11 @@ a.ballot-pill-main:focus {
   --vote-fill: var(--vote-no-strong);
 }
 
-/* The settled reaction's fill lives with `.reaction-choice`, further down —
-   it has to BEAT the base control, and putting it here is what broke it.
-   See `.reaction-choice.reaction-choice--settled`. */
+/* The settled reaction's fill lives with `.reaction-choice`, further down:
+   it has to BEAT the base control. See `.reaction-choice.reaction-choice--settled`. */
 
 /* A NAMED GAP is not a position and never wears a position's colour. It is
-   an outline in the muted register — the rule from item 12 made visible. */
+   an outline in the muted register. */
 .vote-pill--gap {
   background: transparent;
   border-color: var(--panel-border);
@@ -2681,7 +2338,6 @@ a.ballot-pill-main:focus {
   font-weight: 600;
 }
 
-/* Item 6b3 (2026-08-15): one silhouette per contest, whatever the source — docs/globals-css-notes.md#item-6b3-2026-08-15-one-silhouette-per-contest-whatever-the-source-48 */
 .candidate-row {
   display: flex;
   gap: 12px;
@@ -2716,7 +2372,6 @@ a.ballot-pill-main:focus {
   color: var(--text-muted);
 }
 
-/* The reaction box (item 6c, 2026-08-15) — the sensor as the point of the — docs/globals-css-notes.md#the-reaction-box-item-6c-2026-08-15-the-sensor-as-the-point-of-the-49 */
 .reaction-box {
   margin-top: 12px;
   border: 1px solid color-mix(in srgb, var(--link) 40%, var(--panel-border));
@@ -2731,7 +2386,6 @@ a.ballot-pill-main:focus {
   padding: 9px 10px;
 }
 
-/* Item 5 (2026-08-16): the measure/proposition PICK takes the same frame and — docs/globals-css-notes.md#item-5-2026-08-16-the-measure-proposition-pick-takes-the-same-frame-and-50 */
 .reaction-box[data-kind="pick"] {
   border-style: dashed;
 }
@@ -2759,8 +2413,6 @@ a.ballot-pill-main:focus {
   gap: 6px;
 }
 
-/* The five-point scale's group separators (g3 item 7, 2026-08-16) — docs/globals-css-notes.md#the-five-point-scale-s-group-separators-g3-item-7-2026-08-16-51 */
-/* The five-point scale's group dividers (g3 item 7, BOLDER for g4 item 7) — docs/globals-css-notes.md#the-five-point-scale-s-group-dividers-g3-item-7-bolder-for-g4-item-7-52 */
 .scale-sep {
   flex: 0 0 2px;
   align-self: stretch;
@@ -2771,7 +2423,7 @@ a.ballot-pill-main:focus {
 }
 
 /*
- * The mark on a selected answer (g4 item 7).
+ * The mark on a selected answer.
  *
  * The carrier of the state; the fill colour reinforces it. Sized down and
  * spaced from the label so it reads as a status mark rather than as part of
@@ -2783,16 +2435,12 @@ a.ballot-pill-main:focus {
   line-height: 1;
 }
 
-/* A meeting's status, as a FILLED pill (g4 item 11) — docs/globals-css-notes.md#a-meeting-s-status-as-a-filled-pill-g4-item-11-53 */
 .meeting-status-pill {
   display: inline-block;
   margin-right: 6px;
   padding: 0 10px;
   border-radius: 20px;
-  /* Sans, not mono (design handoff 2026-09-13): mono is for numerals and
-     technical strings; "Concluded" is a label, and the sans uppercase label
-     register now matches the jurisdiction badges. The mark, the word and the
-     spoken qualifier all stay. */
+  /* Sans, not mono: "Concluded" is a label, not a numeral. */
   font-family: var(--font-sans);
   font-size: 0.6875rem;
   font-weight: 600;
@@ -2834,7 +2482,6 @@ a.ballot-pill-main:focus {
   font-size: 0.75rem;
 }
 
-/* THE SETTLED REACTION (item 5, corrected 2026-08-16) — docs/globals-css-notes.md#the-settled-reaction-item-5-corrected-2026-08-16-54 */
 .reaction-choice.reaction-choice--settled {
   border-color: transparent;
   background: var(--vote-fill, var(--surface));
@@ -2842,9 +2489,7 @@ a.ballot-pill-main:focus {
   font-weight: 700;
 }
 
-/* The calendar chooser's three destinations (item 4, 2026-08-15). Full-width
-   rows at a comfortable tap size, so the phone form is the same component as
-   the desktop one rather than a shrunken version of it. */
+/* Full-width rows at a comfortable tap size. */
 .calendar-choice {
   display: flex;
   align-items: center;
@@ -2867,7 +2512,6 @@ a.ballot-pill-main:focus {
   flex-shrink: 0;
 }
 
-/* RULING 71 (NJ Hunt 3, 2026-08-22) — "Could govern you" — docs/globals-css-notes.md#ruling-71-nj-hunt-3-2026-08-22-could-govern-you-55 */
 .could-govern-pill {
   display: inline-flex;
   align-items: baseline;
@@ -2885,14 +2529,10 @@ a.ballot-pill-main:focus {
   vertical-align: middle;
 }
 
-/* BAL-26 (2026-08-28): this read `var(--muted)`, which is defined NOWHERE in
-   this repository, so the declaration resolved to nothing and the text kept
-   its inherited colour. The token is `--text-muted`. */
 .could-govern-action {
   color: var(--text-muted);
 }
 
-/* The pill is per BODY, so on a narrow viewport it wraps under the title — docs/globals-css-notes.md#the-pill-is-per-body-so-on-a-narrow-viewport-it-wraps-under-the-title-56 */
 @media (max-width: 460px) {
   .could-govern-pill {
     margin-left: 0;
@@ -2907,8 +2547,6 @@ a.ballot-pill-main:focus {
   display: none;
 }
 
-/* "Show me my actual ballot" (item 2, 2026-08-15) — the ballot page's way out
-   of the limitation its own first sentence states. */
 .ballot-narrow-link {
   font-size: 0.8125rem;
   font-weight: 500;
@@ -2993,8 +2631,7 @@ a.ballot-pill-main:focus {
   color: var(--danger);
 }
 
-/* Friction-rule exception (2): declining stays the effortless default, and
-   the promise is at the point of asking rather than in a policy. */
+/* Declining stays the effortless default. */
 .ballot-narrow-promise {
   margin-top: 9px;
   font-size: 0.6875rem;
@@ -3043,9 +2680,8 @@ a.ballot-pill-main:focus {
   display: none;
 }
 
-/* The who-governs card while a fresher answer is in flight (6f). It stays on
-   screen — un-rendering it is what blinked the bubble on every pan — and it
-   dims, so a held answer can never read as a settled one. */
+/* The who-governs card while a fresher answer is in flight. It stays on
+   screen and dims, so a held answer can never read as a settled one. */
 .coverage-notice[data-refreshing="true"] {
   opacity: 0.55;
   transition: opacity var(--dur-fast) var(--ease-move);
@@ -3057,10 +2693,7 @@ a.ballot-pill-main:focus {
   }
 }
 
-/* The who-governs card, shrunk out of the way (2h): once the reader engages
-   with something specific, the card collapses into this bubble and one tap
-   brings it back. Same corner, same family. */
-/* WGH-9 (2026-08-25) — THE TWO PILLS ARE ONE PILL WITH TWO LABELS — docs/globals-css-notes.md#wgh-9-2026-08-25-the-two-pills-are-one-pill-with-two-labels-57 */
+/* The who-governs card collapsed into a bubble; one tap brings it back. */
 .notice-fab,
 .count-badge {
   display: inline-flex;
@@ -3071,8 +2704,7 @@ a.ballot-pill-main:focus {
   background: var(--panel);
   border: 1px solid var(--panel-border);
   /* The band's GEOMETRY is shared so the two boxes are the same size and the
-     labels start at the same x. Only its COLOUR differs, which is exactly the
-     one difference the author permitted. */
+     labels start at the same x. Only its COLOUR differs. */
   border-left: 3px solid var(--panel-border);
   border-radius: var(--radius);
   color: var(--text-dim);
@@ -3100,8 +2732,6 @@ a.ballot-pill-main:focus {
   }
 }
 
-/* ---- Count badge + list overlay ---- */
-/* Everything this shares with .notice-fab is in the joint block above — docs/globals-css-notes.md#everything-this-shares-with-notice-fab-is-in-the-joint-block-above-58 */
 .count-badge {
   border-left-color: var(--tier-accent, var(--panel-border));
   transition: all var(--dur-base) var(--ease-move);
@@ -3118,13 +2748,12 @@ a.ballot-pill-main:focus {
   color: var(--text);
 }
 
-/* Item 5 (2026-08-15): the counters are DATA, and data renders in the data — docs/globals-css-notes.md#item-5-2026-08-15-the-counters-are-data-and-data-renders-in-the-data-59 */
 .cb-num {
   font-weight: 650;
   color: var(--text);
 }
 
-/* The list is a LARGE popup, not a full-screen takeover (3): same centered
+/* The list is a LARGE popup, not a full-screen takeover: same centered
    frame as .account-modal, same backdrop, same one-at-a-time rule. */
 .al-overlay {
   position: absolute;
@@ -3152,7 +2781,6 @@ a.ballot-pill-main:focus {
 }
 
 .al-overlay-header {
-  /* F01 2.5, the same class — fixed furniture never shrinks. */
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -3172,7 +2800,6 @@ a.ballot-pill-main:focus {
 }
 
 .al-overlay-controls {
-  /* F01 2.5, the same class. */
   flex-shrink: 0;
   display: flex;
   gap: 8px;
@@ -3201,7 +2828,6 @@ a.ballot-pill-main:focus {
   border-bottom: 1px solid var(--panel-border);
   color: var(--text-dim);
   font-family: inherit;
-  /* Structural label (design pass). */
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -3253,14 +2879,12 @@ a.ballot-pill-main:focus {
   margin-top: 2px;
 }
 
-/* MTG-1, second pass (2026-08-23). The jurisdiction badge moved out of the — docs/globals-css-notes.md#mtg-1-second-pass-2026-08-23-the-jurisdiction-badge-moved-out-of-the-60 */
 .al-row-jurisdiction {
   display: block;
   margin-top: 3px;
   white-space: normal;
 }
 
-/* MTG-1 (2026-08-23, the author's 8/22 walkthrough). The meta line was a plain — docs/globals-css-notes.md#mtg-1-2026-08-23-the-author-s-8-22-walkthrough-the-meta-line-was-a-plain-61 */
 .al-row-meta {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -3301,7 +2925,7 @@ a.ballot-pill-main:focus {
   line-height: 1.6;
 }
 
-/* The coverage-gap sentence under an empty Concluded filter (M58). Reads as
+/* The coverage-gap sentence under an empty Concluded filter. Reads as
    a statement rather than a filter hint, because it is one. */
 .al-empty-gap {
   display: inline-block;
@@ -3309,14 +2933,12 @@ a.ballot-pill-main:focus {
   color: var(--text);
 }
 
-/* ---- District disambiguation ---- */
 .district-picker {
   position: absolute;
   z-index: 1250;
   pointer-events: auto;
   min-width: 210px;
   max-width: 280px;
-  /* F01 9.1 (2026-08-19): the cap follows the VIEWPORT as well as the design — docs/globals-css-notes.md#f01-9-1-2026-08-19-the-cap-follows-the-viewport-as-well-as-the-design-62 */
   max-height: min(340px, calc(100dvh - 24px));
   overflow-y: auto;
   background: var(--panel);
@@ -3384,7 +3006,6 @@ a.ballot-pill-main:focus {
   white-space: nowrap;
 }
 
-/* ---- Welcome overlay ---- */
 .welcome-overlay {
   position: absolute;
   inset: 0;
@@ -3411,11 +3032,8 @@ a.ballot-pill-main:focus {
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-lg);
-  /* F01 13.2: less vertical padding, and the horizontal padding comes in a
-     little so the extra width goes to the TEXT rather than to the margins. */
   padding: 30px 34px;
   text-align: center;
-  /* F01 13.2: "we can make this box wider if necessary to accommodate" — the — docs/globals-css-notes.md#f01-13-2-we-can-make-this-box-wider-if-necessary-to-accommodate-the-63 */
   max-width: 540px;
   width: 92%;
   max-height: 100%;
@@ -3423,10 +3041,7 @@ a.ballot-pill-main:focus {
   box-shadow: var(--shadow-card);
 }
 
-/* F01 13.1 (2026-08-19): the icon and the name are ONE LOCKUP on one line.
-   See welcome-overlay.tsx for why the icon used to sit up and to the left —
-   Tailwind's preflight makes an <svg> a block, so the card's text-align could
-   not centre it. A flex row does not care. */
+/* A flex row centres the lockup: Tailwind's preflight makes an <svg> a block. */
 .welcome-lockup {
   display: flex;
   align-items: center;
@@ -3434,39 +3049,19 @@ a.ballot-pill-main:focus {
   gap: 10px;
 }
 
-/* `.welcome-icon` retired (ITEM J, 2026-09-01). It styled a map-pin SVG in
-   `var(--link)` — a pin, which contradicts the ZIP-is-orientation rule, in the
-   interactive accent, which made the brand read as a control. The lockup
-   replaced both; see welcome-overlay.tsx. Nothing carries this class now, and
-   the rule is gone rather than left dark. */
-
-/* The thin gray line the author asked for, directly under the lockup. It is
-   the header's own rule, not a section divider — quieter than --panel-border
-   on purpose. */
 .welcome-rule {
   margin: 14px 0 18px;
   border: 0;
   border-top: 1px solid color-mix(in srgb, var(--text-dim) 26%, transparent);
 }
 
-/* 6e2 (2026-08-15, the author, on BOTH desktop and phone): "the overlay's — docs/globals-css-notes.md#6e2-2026-08-15-the-author-on-both-desktop-and-phone-the-overlay-s-64 */
 .welcome-title {
-  /* ITEM J: the <h1> is now a HOLDER for the lockup, not a type treatment.
-     The 1.75rem/700/-0.02em sans it used to carry belonged to the app's own
-     voice, and the product's name is not something the app says. All of the
-     type lives in `.wtp-logo` and scales from the one size the component is
-     given. */
   display: flex;
   justify-content: center;
-  /* F01 13.1: the gap below is the rule's now, not the title's. */
   margin-bottom: 0;
   color: var(--text);
 }
 
-/* `.welcome-subtitle` retired 6e2 (2026-08-15) — the institutional line it
-   styled is gone; see welcome-overlay.tsx for why. */
-
-/* F01 13.2 (2026-08-19, the author): "The mission also can be shrunk — docs/globals-css-notes.md#f01-13-2-2026-08-19-the-author-the-mission-also-can-be-shrunk-65 */
 .welcome-msg {
   font-size: 0.9375rem;
   color: var(--text-dim);
@@ -3574,8 +3169,7 @@ a.ballot-pill-main:focus {
   cursor: not-allowed;
 }
 
-/* The zip-is-orientation note. Deliberately part of the card rather than a
-   link: CLAUDE.md requires the limitation to be stated where the ask is. */
+/* The zip-is-orientation note is part of the card: the limitation is stated where the ask is. */
 .welcome-fineprint {
   margin-top: 20px;
   padding-top: 16px;
@@ -3597,11 +3191,9 @@ a.ballot-pill-main:focus {
   }
 }
 
-/* MapLibre's own controls must clear the sidebar. Edia does the equivalent
-   with `.leaflet-left { left: 350px !important; }`. */
+/* MapLibre's own controls must clear the sidebar. */
 .maplibregl-ctrl-top-left {
-  /* 4f: clears the rail CARD — inset + width + inset — plus a breath. Read
-     from the same variable the rail is drawn from, so the two cannot drift. */
+  /* Clears the rail card (inset + width + inset) plus a breath, from the same variable the rail uses. */
   left: calc(var(--rail-gutter) + 10px);
 }
 
@@ -3629,7 +3221,7 @@ a.ballot-pill-main:focus {
   height: 13px;
   border-radius: var(--radius-pill);
   /* --pin-color is set per venue by the marker pool from the government
-     level(s) meeting there (2g); a mixed venue gets an inline conic-gradient
+     level(s) meeting there; a mixed venue gets an inline conic-gradient
      split ring instead, which overrides this background. */
   background: var(--pin-color, var(--accent-local));
   box-shadow:
@@ -3639,8 +3231,6 @@ a.ballot-pill-main:focus {
     height var(--dur-fast) var(--ease-move),
     box-shadow var(--dur-fast) var(--ease-move);
 }
-
-/* THE JURISDICTION BADGE — M81 — docs/globals-css-notes.md#the-jurisdiction-badge-m81-66 */
 
 .jurisdiction-badge {
   display: inline-block;
@@ -3653,7 +3243,6 @@ a.ballot-pill-main:focus {
   border: 1px solid transparent;
 }
 
-/* FILLED, and deliberately not a tier colour. --accent-local is a TIER — docs/globals-css-notes.md#filled-and-deliberately-not-a-tier-colour-accent-local-is-a-tier-67 */
 .jurisdiction-badge[data-badge="GOVERNS"] {
   background: var(--text);
   border-color: var(--text);
@@ -3673,7 +3262,6 @@ a.ballot-pill-main:focus {
   color: var(--text-muted);
 }
 
-/* JUR-2 (2026-08-23). The zip could not settle this, so the pill does not — docs/globals-css-notes.md#jur-2-2026-08-23-the-zip-could-not-settle-this-so-the-pill-does-not-68 */
 .jurisdiction-badge[data-badge="COULD_GOVERN"] {
   background: none;
   border-color: var(--panel-border);
@@ -3692,9 +3280,7 @@ button.jurisdiction-badge-action {
     box-shadow var(--dur-base) var(--ease-move);
 }
 
-/* COULD_GOVERN is the one actionable badge, so it is the one that takes the
-   ring on hover (design handoff 2026-09-13); the other three are settled facts
-   and stay flat. At rest this still matches its three siblings exactly. */
+/* COULD_GOVERN is the one actionable badge, so it alone takes the hover ring. */
 button.jurisdiction-badge-action:hover {
   color: var(--link);
   border-color: var(--ring);
@@ -3717,9 +3303,6 @@ button.jurisdiction-badge-action:focus-visible {
   color: var(--text-muted);
 }
 
-/* WHERE CAN I VOTE — B19's panel — docs/globals-css-notes.md#where-can-i-vote-b19-s-panel-69 */
-
-/* F01 1e (2026-08-19, the author): "make the box pill-shaped, matching the — docs/globals-css-notes.md#f01-1e-2026-08-19-the-author-make-the-box-pill-shaped-matching-the-70 */
 .voting-open-button {
   display: inline-flex;
   align-items: center;
@@ -3741,7 +3324,6 @@ button.jurisdiction-badge-action:focus-visible {
   border-color: var(--accent-voting);
 }
 
-/* BAL-8 (2026-08-24) — "What's in it, part by part" COLLAPSES, and the control — docs/globals-css-notes.md#bal-8-2026-08-24-what-s-in-it-part-by-part-collapses-and-the-control-71 */
 .provisions-summary {
   display: inline-flex;
   align-items: center;
@@ -3839,7 +3421,6 @@ button.jurisdiction-badge-action:focus-visible {
 .voting-panel-input {
   width: 100%;
   border: 1px solid var(--panel-border);
-  /* F01 1e: the entry inside the pill matches the pill. */
   border-radius: var(--radius-pill);
   background: var(--bg);
   color: var(--text);
@@ -4001,9 +3582,6 @@ button.jurisdiction-badge-action:focus-visible {
   flex: none;
 }
 
-/* VOT-1 (2026-08-25): the distance from the address the reader typed. It
-   reads as one of the site's own facts, in the same quiet type as the address
-   and the room, because it IS one — not a badge and not a ranking mark. */
 .voting-site-distance,
 .voting-site-address,
 .voting-site-room,
@@ -4043,7 +3621,6 @@ button.jurisdiction-badge-action:focus-visible {
   color: var(--text-muted);
 }
 
-/* WHERE YOU VOTE (B19) — docs/globals-css-notes.md#where-you-vote-b19-72 */
 .wtp-vote-pin {
   display: grid;
   place-items: center;
@@ -4122,13 +3699,11 @@ button.jurisdiction-badge-action:focus-visible {
     0 0 0 5px var(--concluded);
 }
 
-/* A FANNED PIN SAYS IT MOVED (M19, 2026-08-17, the author's ruling: spiderfy) — docs/globals-css-notes.md#a-fanned-pin-says-it-moved-m19-2026-08-17-the-author-s-ruling-spiderfy-73 */
 .wtp-pin[data-spiderfied="true"] .wtp-pin-dot {
   outline: 1px dashed color-mix(in srgb, var(--text-dim) 70%, transparent);
   outline-offset: 5px;
 }
 
-/* F01 9.3 (2026-08-19, the author) — THE FAN READS AS A SPIDER — docs/globals-css-notes.md#f01-9-3-2026-08-19-the-author-the-fan-reads-as-a-spider-74 */
 .wtp-pin[data-spiderfied="true"]::before {
   content: "";
   position: absolute;
@@ -4161,7 +3736,6 @@ button.jurisdiction-badge-action:focus-visible {
   pointer-events: none;
 }
 
-/* NH144 — THIS RULE WAS THE FAN COLLAPSING, AND IT SAID relative — docs/globals-css-notes.md#nh144-this-rule-was-the-fan-collapsing-and-it-said-relative-75 */
 .wtp-pin[data-spiderfied="true"] {
   position: absolute;
 }
@@ -4241,12 +3815,6 @@ button.jurisdiction-badge-action:focus-visible {
   }
 }
 
-/* ========================================================================== — docs/globals-css-notes.md#note-76 */
-
-/* F01 1.3 (2026-08-19): the card is three bands, not one scroller — fixed
-   head, scrolling body, PINNED More. See popup-card.tsx for the author's
-   words; the short version is that the door to the large battlecard was
-   behind a scroll, and a hidden entry point is a defect. */
 .popup-card {
   position: relative;
   display: flex;
@@ -4273,8 +3841,7 @@ button.jurisdiction-badge-action:focus-visible {
   overflow-y: auto;
 }
 
-/* 5px thin scrollbar, matching the sidebar's treatment. It moved from the
-   card to the BODY with the scroll (F01 1.3). */
+/* 5px thin scrollbar, matching the sidebar's treatment. */
 .popup-card-body::-webkit-scrollbar {
   width: 5px;
 }
@@ -4317,7 +3884,6 @@ button.jurisdiction-badge-action:focus-visible {
 /* The eyebrow. Tier colour is set inline from the tier accent, so this only
    carries the type treatment. */
 .popup-type {
-  /* Surface eyebrow (design pass): one size up from the old 9px. */
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -4327,7 +3893,6 @@ button.jurisdiction-badge-action:focus-visible {
   padding-right: 28px;
 }
 
-/* Edia appends a holdout badge to the eyebrow; ours appends meeting status. */
 .popup-badge {
   display: inline-block;
   margin-left: 6px;
@@ -4385,14 +3950,12 @@ button.jurisdiction-badge-action:focus-visible {
   word-break: break-word;
 }
 
-/* Edia's `.pv.money`. Numerals, times and OCD-IDs get the mono face so digits
-   line up and an identifier is visibly an identifier rather than prose. */
+/* Numerals, times and OCD-IDs get the mono face so digits line up. */
 .pv.mono {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 11px;
 }
 
-/* BC-7 (2026-08-24) — THE SPURIOUS BLANK LINE, AND WHAT IT ACTUALLY WAS — docs/globals-css-notes.md#bc-7-2026-08-24-the-spurious-blank-line-and-what-it-actually-was-77 */
 .popup-row:has(+ .popup-section-label) {
   border-bottom: none;
 }
@@ -4401,7 +3964,6 @@ button.jurisdiction-badge-action:focus-visible {
   margin-top: 8px;
   padding-top: 6px;
   border-top: 1px solid var(--panel-border);
-  /* Structural label (design pass): organizes, so it carries weight. */
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
@@ -4411,7 +3973,6 @@ button.jurisdiction-badge-action:focus-visible {
   color: var(--text-dim);
 }
 
-/* Click-to-copy, with the tooltip affordance Edia uses. */
 .copyable {
   cursor: pointer;
   position: relative;
@@ -4450,7 +4011,6 @@ button.jurisdiction-badge-action:focus-visible {
   opacity: 1;
 }
 
-/* A 40px invisible touch target under the 14px dot — docs/globals-css-notes.md#a-40px-invisible-touch-target-under-the-14px-dot-78 */
 @media (pointer: coarse) {
   .wtp-pin::after {
     content: "";
@@ -4463,12 +4023,7 @@ button.jurisdiction-badge-action:focus-visible {
   }
 }
 
-/* ========================================================================== — docs/globals-css-notes.md#note-79 */
-
 @media (max-width: 639px) {
-  /* LAY-4: the column carries the drawer's width now, because the rail is its
-     child and fills it. One number, in one place — the rail and the column
-     disagreeing about how wide the drawer is would be a gap down its edge. */
   .rail-column {
     width: min(var(--rail-width), 86vw);
   }
@@ -4489,14 +4044,12 @@ button.jurisdiction-badge-action:focus-visible {
     padding: 28px 20px;
   }
 
-  /* The legend was hidden at phone width while every pin shared one color — docs/globals-css-notes.md#the-legend-was-hidden-at-phone-width-while-every-pin-shared-one-color-80 */
   .legend {
     right: 10px;
     padding: 5px 9px;
     gap: 8px;
   }
 
-  /* Item 5 (2026-08-15, the author's production pass): "the sidebar footer — docs/globals-css-notes.md#item-5-2026-08-15-the-author-s-production-pass-the-sidebar-footer-81 */
   main[data-sidebar="open"] .legend {
     display: none;
   }
@@ -4517,20 +4070,14 @@ button.jurisdiction-badge-action:focus-visible {
   }
 }
 
-/* ========================================================================== — docs/globals-css-notes.md#note-82 */
-
 :root {
-  /* Clears the hamburger (12 + 44 = 56) and MapLibre's zoom column (0 + 70),
-     plus breathing room. Any fixed control added to the top strip must fit
-     inside this band or move — that is the rule item 3 buys. */
+  /* Clears the hamburger (12 + 44 = 56) and MapLibre's zoom column (0 + 70), plus breathing room. Any fixed control added to the top strip must fit inside this band. */
   --map-control-band: 76px;
 
-  /* The bottom counterpart of the control band (4c, 2026-08-15) — docs/globals-css-notes.md#the-bottom-counterpart-of-the-control-band-4c-2026-08-15-83 */
   --map-legend-bottom: 14px;
   --map-legend-height: 24px;
 }
 
-/* At phone width the legend is raised clear of the map attribution line — docs/globals-css-notes.md#at-phone-width-the-legend-is-raised-clear-of-the-map-attribution-line-84 */
 @media (max-width: 639px) {
   :root {
     --map-legend-bottom: 34px;
@@ -4539,7 +4086,6 @@ button.jurisdiction-badge-action:focus-visible {
 
 /* Explicit, because it is load-bearing: the top row wins over the bottom
    stack. Relying on DOM order is what let a tall card bury the ballot. */
-/* F01 7.3 (2026-08-19), caught by MEASURING rather than by looking — docs/globals-css-notes.md#f01-7-3-2026-08-19-caught-by-measuring-rather-than-by-looking-85 */
 .map-top-row {
   position: relative;
   z-index: 2;
@@ -4579,22 +4125,16 @@ button.jurisdiction-badge-action:focus-visible {
   overscroll-behavior: contain;
 }
 
-/* A definite top gives the stack a definite height, which is what makes the — docs/globals-css-notes.md#a-definite-top-gives-the-stack-a-definite-height-which-is-what-makes-the-86 */
 .map-bottom-stack {
   top: var(--map-control-band);
 }
 
-/* The gutter the LEGEND needs, the bottom counterpart of the band above — docs/globals-css-notes.md#the-gutter-the-legend-needs-the-bottom-counterpart-of-the-band-above-87 */
 .map-bottom-stack {
   padding-bottom: calc(
     var(--map-legend-bottom) + var(--map-legend-height) + 8px
   ) !important;
 }
 
-/* The "what kind of money" label and its tap-for-explainer (item 6,
-   2026-08-14). The label sits where the plain suffix used to, reading as
-   part of the row; tapping it opens two sentences and the FEC page they
-   paraphrase. Expansion, never a new tab. */
 .funding-type > summary {
   display: inline-flex;
   align-items: center;
@@ -4631,18 +4171,11 @@ button.jurisdiction-badge-action:focus-visible {
   }
 }
 
-/* FUNDING PILL — the hybrid (design handoff 2026-09-13). A funding-type pill
-   states a category AND presses, so the flat family fill is left UNTOUCHED and
-   the interaction ring sits OUTSIDE it, in the family's own saturated ink — not
-   the generic cyan, because a cyan ring on an amber pill is a recolour by the
-   back door. Register: uppercase label with the trailing-space trim; the label
-   itself drops its leading article upstream (pillLabel in committee-types.ts).
-   The chevron already rotates 90° via .funding-type[open] > summary::after. */
+/* Funding pill: the family fill is untouched and the interaction ring sits outside it, in the family's own ink. */
 .funding-type .pill {
   font-size: 0.625rem;
   letter-spacing: 0.08em;
-  /* Trim the trailing letter-spacing: the exact negative of the tracking above,
-     as the trailing-space rule (LBL-2/OFF-2) requires it stated. */
+  /* Trim the trailing letter-spacing: the exact negative of the tracking above. */
   margin-inline-end: -0.08em;
   text-transform: uppercase;
   transition: box-shadow var(--dur-base) var(--ease-move),
@@ -4651,8 +4184,7 @@ button.jurisdiction-badge-action:focus-visible {
 .funding-type > summary:hover .pill {
   transform: translateY(-1px);
 }
-/* Focus: the summary keeps the app's global :focus-visible ring (never
-   suppressed here — tests/focus-visible), so keyboard focus is always visible. */
+/* Focus: the summary keeps the global :focus-visible ring, never suppressed here. */
 /* Expanded holds a steady 1px ring; hover adds the family glow. The ring value
    is the family's own -text token — the one already contrast-checked against
    that family's fill. */
@@ -4669,8 +4201,7 @@ button.jurisdiction-badge-action:focus-visible {
 .funding-type > summary:hover .pill--slate { box-shadow: 0 0 0 1px var(--pill-slate-text), 0 0 12px color-mix(in srgb, var(--pill-slate-text) 45%, transparent); }
 .funding-type > summary:hover .pill--stone { box-shadow: 0 0 0 1px var(--pill-stone-text), 0 0 12px color-mix(in srgb, var(--pill-stone-text) 45%, transparent); }
 
-/* The hamburger — thumb-sized, above the map, below the overlays. Rendered
-   whenever the sidebar is effectively hidden, at any width (2f). */
+/* The hamburger: rendered whenever the sidebar is effectively hidden, at any width. */
 .sidebar-toggle {
   position: absolute;
   top: 12px;
@@ -4688,7 +4219,6 @@ button.jurisdiction-badge-action:focus-visible {
   box-shadow: var(--shadow-card);
 }
 
-/* F01 12.1 (2026-08-19, the author) — THE PICKS CARD AS A PHONE — docs/globals-css-notes.md#f01-12-1-2026-08-19-the-author-the-picks-card-as-a-phone-88 */
 .picks-phone {
   width: 100%;
   max-width: 300px;
@@ -4714,10 +4244,6 @@ button.jurisdiction-badge-action:focus-visible {
   border-radius: 26px;
 }
 
-/* F01 9.4 (2026-08-19): the small reset, on the map, under the hamburger.
-   Same visibility rule as the hamburger — see the note at its render — so
-   exactly one reset control is on screen at any moment. */
-/* BESIDE the hamburger, not under it. Measured at 390×844 before this moved — docs/globals-css-notes.md#beside-the-hamburger-not-under-it-measured-at-390-844-before-this-moved-89 */
 .map-reset-btn {
   position: absolute;
   top: 18px;
@@ -4756,7 +4282,6 @@ main[data-sidebar="closed"] .map-reset-btn {
   display: inline-flex;
 }
 
-/* F01 7.3: the top row starts AFTER the fixed control band, whenever that band — docs/globals-css-notes.md#f01-7-3-the-top-row-starts-after-the-fixed-control-band-whenever-that-band-90 */
 main[data-sidebar="closed"] .map-top-row {
   padding-left: 104px;
 }
@@ -4767,7 +4292,6 @@ main[data-sidebar="closed"] .map-top-row {
     display: inline-flex;
   }
 
-  /* F01 7.3 — see the note above. Same condition, same clearance. */
   main:not([data-sidebar="open"]) .map-top-row {
     padding-left: 104px;
   }
@@ -4790,10 +4314,6 @@ main[data-sidebar="closed"] .map-top-row {
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   border-bottom: none;
 }
-
-/* ==========================================================================
-   Full-screen modal — the port of `.account-modal`.
-   ========================================================================== */
 
 .account-modal-overlay {
   position: fixed;
@@ -4822,16 +4342,8 @@ main[data-sidebar="closed"] .map-top-row {
   overflow: hidden;
 }
 
-/* TierCard MODAL tier ring (design handoff 2026-09-13). The battlecard modal
-   wears the contest's REAL level of government, derived from the contest OCD id
-   via tierForOcdId — never guessed. data-tier is set only when the tier is
-   known; an unknown tier stays the neutral card above (no false claim). The
-   ring replaces the neutral border with a 1px inset at 62% + a 1px halo at 22%,
-   and lights a 2px tier horizon at the base. */
-/* The tier accent per level, read through the Tailwind bridge aliases
-   (--color-local/state/national == the tier accents) so the tier ring is a
-   genuine tier-semantic use without reading the amber-guarded --accent-local
-   directly (amber-remnant.test). */
+/* The modal's tier ring: data-tier is set only when the tier is known from the contest OCD id; unknown stays neutral. */
+/* Read through the Tailwind bridge aliases, not the amber-guarded --accent-local. */
 .account-modal[data-tier="local"] { --tier-ring: var(--color-local); }
 .account-modal[data-tier="state"] { --tier-ring: var(--color-state); }
 .account-modal[data-tier="national"] { --tier-ring: var(--color-national); }
@@ -4855,7 +4367,6 @@ main[data-sidebar="closed"] .map-top-row {
   box-shadow: 0 0 12px color-mix(in srgb, var(--tier-ring) 50%, transparent);
 }
 
-/* F01 2.5 (2026-08-19, the author): "those need to be fully in view at all — docs/globals-css-notes.md#f01-2-5-2026-08-19-the-author-those-need-to-be-fully-in-view-at-all-91 */
 .account-modal-header {
   flex-shrink: 0;
   display: flex;
@@ -4881,7 +4392,6 @@ main[data-sidebar="closed"] .map-top-row {
 }
 
 .account-modal-tabs {
-  /* F01 2.5 — see the note on .account-modal-header. */
   flex-shrink: 0;
   display: flex;
   gap: 2px;
@@ -4916,10 +4426,7 @@ main[data-sidebar="closed"] .map-top-row {
   border-bottom-color: var(--accent-all);
 }
 
-/* Item 1 (2026-08-16): the Sources tab states how many records are behind
-   the card, so the reader can see there ARE some without opening it — the
-   tab used to be able to say "nothing" while the card was built entirely
-   from external records. Mono, because it is a count. */
+/* The Sources tab count; mono because it is a count. */
 .account-modal-tab-count {
   margin-left: 5px;
   font-family: var(--font-mono);
@@ -4937,32 +4444,7 @@ main[data-sidebar="closed"] .map-top-row {
   scrollbar-color: var(--panel-border) transparent;
 }
 
-/*
-   **BC-29 (2026-08-25) — SPEAK YOUR MIND IS A FIXED FOOT, NOT A SECOND SCROLL
-   REGION.**
-
-   Sean, on the Kearsarge large battlecard (`17-51-51`): *"the Speak Your Mind
-   pill sits in a small scroll region of its own. It becomes a floating pill
-   fixed at the bottom. Only the board member list scrolls. Speak Your Mind
-   stays put and is never covered by anything."*
-
-   What the capture shows is the mechanism: the panel was rendered in a SECOND
-   `.account-modal-body`, which is `flex: 1` with `overflow-y: auto` — so two
-   siblings both claimed the remaining height and both grew their own
-   scrollbars. The pill ended up inside a ~40px strip with its own scroll,
-   clipped at the modal's bottom edge.
-
-   `flex: 0 0 auto` is the whole fix: the foot takes its CONTENT height and
-   never competes for the remainder, so the list above it gets all of it and
-   scrolls alone. The border and the opaque panel background are what make
-   "never covered" true rather than promised — a transparent foot over a
-   scrolling list shows the list sliding underneath it.
-
-   `max-height` is the one concession, and it is for the OPEN state: the panel
-   expands into a textarea and a send row, and on a short viewport that could
-   otherwise take the whole modal. It scrolls only once open and only past 55%,
-   which is a state a reader deliberately entered.
-*/
+/* A fixed foot: `flex: 0 0 auto` so the list above takes the remainder and scrolls alone; `max-height` applies only when open. */
 .account-modal-foot {
   flex: 0 0 auto;
   max-height: 55%;
@@ -5001,7 +4483,6 @@ main[data-sidebar="closed"] .map-top-row {
   border-bottom: none;
 }
 
-/* WHICH LINE? — R39, 2026-08-17, the author's production feedback — docs/globals-css-notes.md#which-line-r39-2026-08-17-the-author-s-production-feedback-92 */
 .phone-modal-overlay {
   position: fixed;
   inset: 0;
@@ -5028,7 +4509,6 @@ main[data-sidebar="closed"] .map-top-row {
 }
 
 .phone-modal-header {
-  /* F01 2.5, the same class. */
   flex-shrink: 0;
   display: flex;
   align-items: flex-start;
@@ -5056,9 +4536,7 @@ main[data-sidebar="closed"] .map-top-row {
   overflow-y: auto;
 }
 
-/* Each row is a whole tap target, not a number with a link inside it. The
-   44px floor is the same one `.contact-pill` holds — a phone chooser whose
-   rows are below tap size has moved the defect rather than fixed it. */
+/* Each row is a whole tap target, at the 44px floor. */
 .phone-modal-row {
   display: flex;
   flex-direction: column;
@@ -5093,8 +4571,6 @@ main[data-sidebar="closed"] .map-top-row {
   display: none;
 }
 
-/* The state extrusion's mute-and-blur (g3 item 10, M91 — the author's design — docs/globals-css-notes.md#the-state-extrusion-s-mute-and-blur-g3-item-10-m91-the-author-s-design-93 */
-/* The rise itself (g4 item 2). Two blurred silhouettes of the state, masked — docs/globals-css-notes.md#the-rise-itself-g4-item-2-two-blurred-silhouettes-of-the-state-masked-94 */
 .state-focus-art {
   position: absolute;
   top: 0;
@@ -5103,27 +4579,13 @@ main[data-sidebar="closed"] .map-top-row {
   pointer-events: none;
 }
 
-/*
- * The map's box, not the page's. The first version was position: fixed over
- * the whole viewport and muted the SIDEBAR along with the terrain — a scrim
- * built to push land away was pushing the controls away too.
- */
 .state-focus-layer {
   position: absolute;
   inset: 0;
-  /* BELOW every piece of chrome, above the terrain — docs/globals-css-notes.md#below-every-piece-of-chrome-above-the-terrain-95 */
   z-index: 0;
   pointer-events: none;
 }
 
-/* The state-focus DOM scrim (`.state-focus-scrim`) and its software-rasteriser
-   degrade (`[data-wtp-raster]`) are gone: V94 replaced the DOM overlay with map
-   layers (lib/map/state-relief.ts), so the scrim is unmounted and
-   `data-wtp-raster` is never set on any element. The motion degrade now lives in
-   components/map/map-canvas.tsx, scoped to a positively-identified software
-   rasteriser; `data-camera-moving` (still live) hides the DOM markers there. */
-
-/* The border-crossing prompt (e's 6b2, built in g3 item 10) — docs/globals-css-notes.md#the-border-crossing-prompt-e-s-6b2-built-in-g3-item-10-98 */
 .state-crossing {
   position: fixed;
   left: 50%;
@@ -5171,8 +4633,6 @@ main[data-sidebar="closed"] .map-top-row {
 .state-crossing-secondary {
   color: var(--text-dim);
 }
-
-/* THE ADDRESS PROMPT — one component, every surface (WGH-5, 2026-08-22) — docs/globals-css-notes.md#the-address-prompt-one-component-every-surface-wgh-5-2026-08-22-99 */
 
 .address-prompt-trigger {
   font-size: 0.8125rem;
@@ -5253,8 +4713,7 @@ main[data-sidebar="closed"] .map-top-row {
   cursor: default;
 }
 
-/* Declining stays the effortless default — friction-rule exception (2). It is
-   a quiet link beside the action, never a second button competing with it. */
+/* Declining is a quiet link beside the action, never a second button. */
 .address-prompt-skip,
 .address-prompt-fields .address-prompt-skip {
   border: 0;
@@ -5276,8 +4735,6 @@ main[data-sidebar="closed"] .map-top-row {
   color: var(--danger);
 }
 
-/* The promise is at the point of asking rather than in a policy —
-   friction-rule exception (3), consent to collection. */
 .address-prompt-promise {
   margin-top: 9px;
   font-size: 0.6875rem;
@@ -5315,8 +4772,6 @@ main[data-sidebar="closed"] .map-top-row {
   cursor: pointer;
 }
 
-/* WGH-1 (2026-08-22) — the ROW MARK and the ONE NOTICE — docs/globals-css-notes.md#wgh-1-2026-08-22-the-row-mark-and-the-one-notice-100 */
-
 .could-govern-mark {
   display: inline;
   margin-left: 3px;
@@ -5328,16 +4783,10 @@ main[data-sidebar="closed"] .map-top-row {
   cursor: default;
 }
 
-/* Sits between the Local listing and the State listing — where the author put
-   it, and where a mark two rows above is still in view. */
 .could-govern-notice {
   margin-top: 10px;
 }
 
-/* JUR-4: where the sentence appears now, it appears ONCE and it is deliberate
-   — bolder and more explicit than the small annotation it replaced, because a
-   thing said once may be said properly. It is a button, because the old pill
-   was dead: clicking it did nothing at all. */
 .could-govern-notice-pill {
   display: inline-flex;
   align-items: baseline;
@@ -5363,7 +4812,6 @@ main[data-sidebar="closed"] .map-top-row {
   font-weight: 700;
 }
 
-/* The action half is never hidden, at any width. The first version of the old — docs/globals-css-notes.md#the-action-half-is-never-hidden-at-any-width-the-first-version-of-the-old-101 */
 @media (max-width: 460px) {
   .could-govern-notice-pill {
     display: block;
@@ -5371,8 +4819,6 @@ main[data-sidebar="closed"] .map-top-row {
     white-space: normal;
   }
 }
-
-/* MTG-5 — "Make your voice heard", collapsed (2026-08-23) — docs/globals-css-notes.md#mtg-5-make-your-voice-heard-collapsed-2026-08-23-102 */
 
 .how-to-be-heard-summary {
   cursor: pointer;
@@ -5407,13 +4853,10 @@ main[data-sidebar="closed"] .map-top-row {
   color: var(--text);
 }
 
-/* JUR-4 (2026-08-23) — the jurisdiction answer, once per group — docs/globals-css-notes.md#jur-4-2026-08-23-the-jurisdiction-answer-once-per-group-103 */
 .al-group-jurisdiction {
   padding: 8px 22px 4px;
   margin: 0;
 }
-
-/* LBL-2 — LETTER-SPACED UPPERCASE LOSES ITS LAST LETTER AT AN EDGE — docs/globals-css-notes.md#lbl-2-letter-spaced-uppercase-loses-its-last-letter-at-an-edge-104 */
 
 .t-eyebrow,
 .text-label,
@@ -5427,8 +4870,6 @@ main[data-sidebar="closed"] .map-top-row {
 .trailing-space-trimmed {
   margin-inline-end: -0.15em;
 }
-
-/* OFF-2 (2026-08-24) — THE SAME DEFECT, OUTSIDE THE SWEPT CLASS — docs/globals-css-notes.md#off-2-2026-08-24-the-same-defect-outside-the-swept-class-105 */
 
 .trailing-space-trimmed-10 {
   margin-inline-end: -0.1em;
@@ -5450,8 +4891,6 @@ main[data-sidebar="closed"] .map-top-row {
   margin-inline-end: -0.18em;
 }
 
-/* LBL-2, THIRD PASS (2026-08-25) — THE PREDICATE COULD NOT SEE 0.2em, AND HAD — docs/globals-css-notes.md#lbl-2-third-pass-2026-08-25-the-predicate-could-not-see-0-2em-and-had-106 */
-
 .trailing-space-trimmed-6 {
   margin-inline-end: -0.06em;
 }
@@ -5467,8 +4906,6 @@ main[data-sidebar="closed"] .map-top-row {
 .trailing-space-trimmed-20 {
   margin-inline-end: -0.2em;
 }
-
-/* LAY-4 / LAY-3 (2026-08-24, the author's annotated capture 11-55-29) — docs/globals-css-notes.md#lay-4-lay-3-2026-08-24-the-author-s-annotated-capture-11-55-29-107 */
 
 .rail-column {
   position: fixed;
@@ -5493,8 +4930,6 @@ main[data-sidebar="closed"] .map-top-row {
   pointer-events: auto;
 }
 
-/* WGH-6 (2026-08-24) — WITH THE RAIL MINIMIZED, THE CARD TAKES THE SPACE — docs/globals-css-notes.md#wgh-6-2026-08-24-with-the-rail-minimized-the-card-takes-the-space-108 */
-/* WGH-8 (2026-08-25) — THEY SWAP, THEY DO NOT DIFFER — docs/globals-css-notes.md#wgh-8-2026-08-25-they-swap-they-do-not-differ-109 */
 .rail-column {
   width: min(var(--wgh-wide), calc(100vw - (var(--rail-inset) * 2)));
 }
@@ -5502,28 +4937,22 @@ main[data-sidebar="closed"] .map-top-row {
 /* The rail inside the column. It keeps every visual property it had; what it
    loses is its own position: fixed, because a fixed child is out of flow
    and out of flow is exactly where overlap comes from. */
-/* WHICH CHILD YIELDS, and the first version of this got it backwards — docs/globals-css-notes.md#which-child-yields-and-the-first-version-of-this-got-it-backwards-110 */
 .rail-column > .sidebar {
   position: relative;
   top: auto;
   left: auto;
   width: 100%;
-  /* LAY-11 (2026-08-25) supersedes LAY-7's GROW — docs/globals-css-notes.md#lay-11-the-rail-ends-where-its-content-ends */
   flex: 0 0 auto;
   min-height: 0;
-  /* 58%, and the number is a JUDGEMENT that is stated rather than hidden — docs/globals-css-notes.md#58-and-the-number-is-a-judgement-that-is-stated-rather-than-hidden-112 */
   max-height: 100%;
 }
 
-/* The region the author's two arrows point into: under the rail, the rail's — docs/globals-css-notes.md#the-region-the-author-s-two-arrows-point-into-under-the-rail-the-rail-s-113 */
 .rail-floaters {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
   gap: 10px;
-  /* Takes whatever the rail leaves, and scrolls its own card rather than — docs/globals-css-notes.md#takes-whatever-the-rail-leaves-and-scrolls-its-own-card-rather-than-114 */
-  /* LAY-7 (2026-08-25): the floaters take their CONTENT height and the rail — docs/globals-css-notes.md#lay-7-2026-08-25-the-floaters-take-their-content-height-and-the-rail-115 */
   flex: 1 1 auto;
   min-height: 0;
   /* The same gutter `.map-bottom-stack` reserves, for the same reason: the map
@@ -5536,26 +4965,18 @@ main[data-sidebar="closed"] .map-top-row {
   pointer-events: none;
 }
 
-/* LAY-7 (2026-08-25) — WHICH CHILD TAKES THE REMAINDER DEPENDS ON WHICH — docs/globals-css-notes.md#lay-7-2026-08-25-which-child-takes-the-remainder-depends-on-which-116 */
 main:not([data-sidebar="closed"]) .rail-column > .sidebar {
-  /* LAY-11: hug the content. See the note beside the base rule above. */
   flex: 0 0 auto;
 }
 
 main:not([data-sidebar="closed"]) .rail-floaters {
-  /* LAY-11: the FLOATERS take the remainder now, and they were already
-     `justify-content: flex-end`, so their cards stay anchored near the foot of
-     the column exactly where `17-17-53` shows them. The rail no longer pads
-     itself out to reach them. */
   flex: 1 1 auto;
 }
 
-/* A HIDDEN RAIL STILL TAKES ITS FLEX SHARE, and that is what kept the card — docs/globals-css-notes.md#a-hidden-rail-still-takes-its-flex-share-and-that-is-what-kept-the-card-117 */
 main[data-sidebar="closed"] .rail-column > .sidebar {
   flex: 0 0 0;
 }
 
-/* ...AND THE FLOATERS THEN START AT THE TOP OF THE COLUMN, WHERE THE — docs/globals-css-notes.md#and-the-floaters-then-start-at-the-top-of-the-column-where-the-118 */
 main[data-sidebar="closed"] .rail-floaters {
   padding-top: calc(var(--rail-inset) + 44px);
 }
@@ -5565,7 +4986,6 @@ main[data-sidebar="closed"] .rail-floaters {
   flex: 1 1 auto;
 }
 
-/* ...AND SO DOES THE CARD INSIDE IT. Giving the region the column was not — docs/globals-css-notes.md#and-so-does-the-card-inside-it-giving-the-region-the-column-was-not-119 */
 main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   flex: 1 1 auto;
   min-height: 0;
@@ -5627,16 +5047,12 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   color: var(--text);
 }
 
-/* LAY-2 (item 4, 2026-08-23) — THE FILTER PANEL WAS OFF-CENTRE, AND THIS IS — docs/globals-css-notes.md#lay-2-item-4-2026-08-23-the-filter-panel-was-off-centre-and-this-is-120 */
-
 .filters-area .prox-control {
   padding-left: 0;
   padding-right: 0;
   border-bottom: 0;
 }
 
-/* The gap between groups was 16px against a 12px header margin, so the panel's
-   vertical rhythm changed halfway down it. One step, everywhere. */
 .filters-area .filter-group {
   margin-bottom: 12px;
 }
@@ -5652,57 +5068,14 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   margin-left: auto;
 }
 
-/* BC-11 (2026-08-24) — SPEAK YOUR MIND — docs/globals-css-notes.md#bc-11-2026-08-24-speak-your-mind-121 */
-
-/*
-   **DARK-2 (2026-08-25) — THE PILL INVERTS IN DARK MODE, IT DOES NOT DARKEN.**
-
-   Sean: "the Speak Your Mind pill is navy with white text — it fades into the
-   dark background. Everything else in dark mode is white on dark, so the pill
-   inverts: lighter blue with black text."
-
-   On a pale surface a dark fill is the loudest thing on the card, and that is
-   the whole mechanism — a FILLED control among outline controls reads as the
-   action without a word of instruction. On a dark surface the identical fill is
-   the QUIETEST thing on it, so the mechanism inverts with the ground rather
-   than surviving it. A colour chosen once and used in both themes is not one
-   control; it is one value doing two different jobs, one of them badly.
-
-   **THIS FILE IS DARK-FIRST, AND THE FIRST VERSION OF THIS FIX GOT IT
-   BACKWARDS.** (Corrected 2026-08-26.) `app/layout.tsx` writes
-   `data-theme="light"` before first paint and writes NOTHING for dark, so bare
-   `:root` IS the dark theme and `[data-theme="light"]` is the override — the
-   same shape every other token in this file uses.
-
-   The first version put the inverted values behind
-   `@media (prefers-color-scheme: dark)` and `:root[data-theme="dark"]`, which
-   is the artifact-style light-first pattern. Neither ever fires here: the app
-   never sets `data-theme="dark"`, and the media query asks the OPERATING
-   SYSTEM a question the app has already answered for itself. So on the default
-   theme with a light OS — which is most machines — the pill stayed navy on
-   dark, and Sean's complaint was untouched.
-
-   **It was caught by a capture, not by reasoning.** A computed-style probe
-   agreed with the fix because the probe set `colorScheme: "dark"` on the
-   browser context, which made the media query fire — the case the fix was
-   derived from. The battlecard capture, taken with no colorScheme at all, is
-   the independent case, and it showed the navy pill (RULING 157).
-
-   LIGHT MODE IS UNCHANGED — his words. The navy below is the value it always
-   had.
-*/
+/* Bare :root is the dark theme and [data-theme="light"] is the override; the app never sets data-theme="dark". */
 :root {
   /* DARK is the default theme in this file. */
   --speak-navy: #7ba7e8;
   --speak-navy-hover: #96b9ee;
   --speak-on-navy: #0d1526;
 
-  /* BAL-14: the View-battlecard green. Sean settled the colour and the reason
-     is his — green is the only option that does not compete with the red and
-     blue of party affiliation, which now sit on that very card as a pill under
-     BAL-18. Its own token rather than a reuse of --party-green, because a
-     control tinted with a PARTY colour is a coincidence waiting to be read as
-     a claim. */
+  /* Its own token rather than --party-green, so a control never reads as a party colour. */
   --battlecard-green: #6fcf8f;
   --battlecard-green-hover: #8adaa4;
   --battlecard-on-green: #0b1a11;
@@ -5721,7 +5094,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   margin-top: 12px;
 }
 
-/* BC-21 (2026-08-25) — THE PILL IS THE SAME BAR AS THE SECTIONS AROUND IT — docs/globals-css-notes.md#bc-21-2026-08-25-the-pill-is-the-same-bar-as-the-sections-around-it-122 */
 .speak-pill {
   display: flex;
   align-items: center;
@@ -5749,20 +5121,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   border-color: var(--speak-navy-hover);
 }
 
-/* The framing question. Playful register — it is an ASK, and the whole
-   instrument is the invitation to say the thing you would actually say. */
-/*
-   **BC-27 (2026-08-25) — IT WAS FLUSH AGAINST THE PILL.**
-
-   Sean red-outlined the whole block on 17-28-27: "What would you say if John
-   Carruth were standing in front of you?" sat hard against the bottom edge of
-   the navy pill with no gap at all, and the line's own leading was tight enough
-   that the two read as one crushed object.
-
-   The pill is a rounded bar and the question is a sentence; a sentence starting
-   at the exact pixel a filled bar ends looks like a rendering fault rather than
-   a layout. The inline padding aligns the sentence with the block rather than
-   letting it start hard on the outer edge. */
+/* The question needs a gap from the pill above it. */
 .speak-framing {
   margin-top: 10px;
   padding-inline: 2px;
@@ -5834,7 +5193,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   color: var(--text);
 }
 
-/* BAL-11 (2026-08-25) — THE BALLOT'S TWO TOP LINKS ARE PILLS — docs/globals-css-notes.md#bal-11-2026-08-25-the-ballot-s-two-top-links-are-pills-123 */
 .ballot-top-pills {
   display: flex;
   flex-wrap: wrap;
@@ -5842,7 +5200,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   margin-top: 14px;
 }
 
-/* BAL-23 (2026-08-25) — the open form takes its OWN ROW — docs/globals-css-notes.md#bal-23-2026-08-25-the-open-form-takes-its-own-row-124 */
 .ballot-top-pills .address-prompt {
   flex: 1 0 100%;
   margin-top: 0;
@@ -5883,45 +5240,8 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   background: none;
 }
 
-/* BAL-25 (2026-08-28) — the ballot's desktop second column — docs/globals-css-notes.md#bal-25-2026-08-28-the-ballot-s-desktop-second-column */
-/*
- * BAL-39 (2026-08-31) — THE GAPS WERE THE GRID, MEASURED BEFORE ANYTHING MOVED.
- *
- * The owner: *two-column desktop layout has gaps and misaligned boxes.* The
- * row's blocker required a measurement before a layout change, and here it is,
- * from the rendered DOM at 1280 on 2026-08-31:
- *
- *   85701, 22 cards. Every pair shared a y — 981, 2466, 3472, 4439, 5301,
- *   6826 — because a two-column GRID places in ROWS. The row's height is its
- *   tallest card and every shorter card leaves a hole under it. Vertical gaps
- *   ran 13px to 689px in one column; the 689 sits under a 836px card whose
- *   row-mate (Corporation Commissioner) is 1332px.
- *   07866, 9 cards: 20px to 468px, same cause.
- *
- * So this was never a spacing bug. `align-items: start` was already correct —
- * the cards were not stretching, they were row-LOCKED — and no gap value fixes
- * a hole whose size is set by another card's height.
- *
- * **CSS multi-column flows instead of placing.** Each card is laid down under
- * the previous one in its column with a fixed gap, so a tall card pushes only
- * what is below IT. `break-inside: avoid` keeps a card whole across the column
- * boundary, which is the one thing columns will do wrong if not told.
- *
- * ## The reading order changes, and that is the deliberate part
- *
- * A grid reads left-right, left-right. Columns read down, then over. **The DOM
- * order is untouched**, so a screen reader and every assistive path still get
- * ballot order exactly as before; what changes is the visual path, and down-
- * then-over is how a printed ballot reads. It is also the only order in which
- * consecutive contests are visually adjacent, which is what the holes were
- * destroying.
- *
- * `tests/ballot-two-column.test.ts` pins the mechanism; the walk measures the
- * gaps on the rendered DOM, because this is a defect the DOM shows and a
- * stylesheet reading cannot.
- */
-/* BAL-43: office blocks stay in ballot order from top to bottom. The second
-   desktop column belongs to candidates within each office, not other offices. */
+/* Multi-column flow, not a grid: a tall card pushes only what is below it. The DOM order stays ballot order. */
+/* Office blocks stay in ballot order from top to bottom; the second desktop column holds candidates within each office. */
 .ballot-office-list {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -5985,7 +5305,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   }
 }
 
-/* BAL-26 (2026-08-28) — Ask, in the pill row under the heading — docs/globals-css-notes.md#bal-26-2026-08-28-ask-in-the-pill-row-under-the-heading */
 .ballot-ask-pill {
   border-color: color-mix(in srgb, var(--signal) 45%, var(--panel-border));
   background: color-mix(in srgb, var(--signal) 8%, var(--panel-bg));
@@ -5997,22 +5316,12 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   background: color-mix(in srgb, var(--signal) 14%, var(--panel-bg));
 }
 
-/* BAL-41 / MTG-15 (2026-09-02): the level tag — Local / State / Federal in the
-   tier's own accent, the same word and treatment the Who Governs Here card
-   wears (`.popup-type`: uppercase, bold, letter-spaced). One class so a ballot
-   race and a meeting card cannot say "State" two different ways.
-
-   Placed after the last word of a title. Inline flow is the owner's
-   deterministic fallback: `inline-block` + `white-space: nowrap` keeps the tag
-   whole and lets it follow the last word when the line has room, or wrap to its
-   own line beneath the title when it does not. Colour is set inline from
-   `--accent-<tier>` by <LevelTag>; the tier comes from OCD identity, never the
-   title. */
+/* The level tag: `inline-block` + `white-space: nowrap` keeps it whole after a title's last word, or wrapped beneath. Colour is set inline from `--accent-<tier>`. */
 .level-tag {
   display: inline-block;
   white-space: nowrap;
   margin-inline-start: 0.4em;
-  /* LBL-2: letter-spacing adds its space AFTER the last glyph, so a tag pinned
+  /* Letter-spacing adds its space AFTER the last glyph, so a tag pinned
      against a right edge (a wrapping title, a flex end) would clip its last
      letter. The trim takes the trailing space back, matching the tracking —
      the same compensation `.popup-type` and the `.t-eyebrow` family carry. */
@@ -6025,10 +5334,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   vertical-align: baseline;
 }
 
-/* A section header the owner asked to carry the tier's colour outright —
-   "Statewide measures" in the state accent, "Local measures" in the local one —
-   rather than a tag beside it. The structure eyebrow (`.t-structure`) keeps its
-   size and rule; only the ink changes, from the same `--accent-<tier>` set. */
+/* A section header in its tier's colour; only the ink changes. */
 .t-structure.level-heading {
   color: var(--level-heading-color, inherit);
 }
@@ -6058,7 +5364,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   }
 }
 
-/* BAL-10 (2026-08-25): the ballot route's loading indicator. A quiet pulse — docs/globals-css-notes.md#bal-10-2026-08-25-the-ballot-route-s-loading-indicator-a-quiet-pulse-125 */
 .ballot-loading-dot {
   width: 9px;
   height: 9px;
@@ -6079,12 +5384,10 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   }
 }
 
-/* ALIGN-2 (2026-08-26) — THE NAMES SIT UNDER THEIR HEADING, INDENTED — docs/globals-css-notes.md#align-2-2026-08-26-the-names-sit-under-their-heading-indented */
 .person-under-heading {
   padding-left: 10px;
 }
 
-/* MAP-4 (2026-08-28) — A VERTICAL SCROLLER MUST NOT GROW A HORIZONTAL ONE — docs/globals-css-notes.md#map-4-a-vertical-scroller-must-not-grow-a-horizontal-one */
 .sidebar-scroll,
 .search-autocomplete,
 .filter-chips-scroll,
@@ -6104,10 +5407,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   overflow-wrap: break-word;
 }
 
-/* ASK-22 (2026-08-31): the list overlay's focus chip. An answer can open the
-   list scoped to the body it was about, and the scope is always visible and
-   always one tap from being cleared — a narrowing a reader cannot see is one
-   they will read as an absence. */
+/* The list overlay's focus chip: the scope is always visible and one tap from being cleared. */
 .al-focus-chip {
   margin-left: 0.5rem;
   display: inline-flex;
@@ -6123,7 +5423,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   white-space: nowrap;
 }
 
-/* LAY-12: selected-boundary details stay reachable without covering the map. */
+/* Selected-boundary details stay reachable without covering the map. */
 @keyframes boundaryPillGlow {
   0%, 100% { box-shadow: var(--shadow-panel); }
   50% { box-shadow: var(--shadow-panel), 0 0 12px color-mix(in srgb, var(--link) 28%, transparent); }
@@ -6168,13 +5468,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   .boundary-info-pill { animation: none; }
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   READER DESIGN (2026-09-28) — the approved Meanwhile reader surfaces.
-   Source: Meanwhile-Implementation-Handoff (DESIGN-SPEC §1–§7). New token
-   names only, so nothing above and nothing in Admin changes meaning.
-   Dark Lumen control glow: the package says keep Admin's value where it
-   differs (README §4.9), so --ctl-img reads Admin's --mw-control gradient.
-   ══════════════════════════════════════════════════════════════════════════ */
+/* READER DESIGN tokens. New token names only, so nothing above and nothing in Admin changes meaning. */
 :root {
   --ground: #0f1117;
   --sheet: #181a20;

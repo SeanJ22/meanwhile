@@ -76,13 +76,7 @@ export function trustedLkgFixtureSetSha256(fixtures: readonly TrustedLkgFixtureE
   return sha256(canonicalCivicDataJson({ contractVersion: 1, fixtures }));
 }
 
-/**
- * Content-address the complete JSON candidate proof while avoiding the three
- * fields which are circular (`bootstrapImport`, `id`) or deterministically
- * derived at the promotion door (`changeSet`). JSON round-tripping exactly
- * matches the representation stored in Postgres JSONB, including omission of
- * optional `undefined` members.
- */
+/** Content-addresses the candidate proof minus the circular (`bootstrapImport`, `id`) and door-derived (`changeSet`) fields. */
 export function trustedLkgCandidateEnvelopeSha256(candidate: RoutineCandidate): string {
   const envelope = { ...candidate } as Record<string, unknown>;
   delete envelope.id;
@@ -123,12 +117,6 @@ export function isTrustedLkgImportCandidate(candidate: unknown): candidate is Ro
   );
 }
 
-/**
- * Validate the self-contained import receipt without consulting Git or a
- * mutable store. The one-time executable additionally proves its clean HEAD,
- * ancestry, file bytes, and empty destination pointer before calling the
- * ordinary atomic promotion door.
- */
 function trustedLkgFirstSeedEvidenceIssue(
   candidate: RoutineCandidate,
   predecessor: CandidateVersionRecord | null,
@@ -638,15 +626,7 @@ function exactCivicRecordMembership(left: unknown, right: unknown): boolean {
   return [...leftMembers].every(([key, member]) => rightMembers.get(key) === member);
 }
 
-/**
- * The one pre-PDC Congress directory pointer was validated before Postgres
- * JSONB reordered the byMember/committees object keys used to build this
- * member array. Its unique keyed records still equal the exact Reader
- * projection; only their array order changed. Accept that one missing-digest
- * `/2` predecessor shape so its immutable row can receive a canonical sorted
- * integrity successor. Any missing, duplicated, extra, or changed member is
- * still refused.
- */
+/** Accepts the one `/2` predecessor whose member array order changed under JSONB; any other member difference is refused. */
 function legacyCongressCivicRecordOrderOnly(
   contractId: string,
   predecessor: CandidateVersionRecord,
@@ -754,17 +734,7 @@ function legacyNhMembersV2Identities(
   });
 }
 
-/**
- * Recognize exactly the durable `/2` NH contract emitted by the frozen
- * software tree and derive its one truthful import-only `/3` projection.  A
- * null result is a hard refusal, never a generic parser-version exemption.
- * This is deliberately contract-shape/content bound rather than pinned to one
- * observed roster digest: the legacy runner remains production authority until
- * the bounded transfer and may lawfully promote a newer GOOD `/2` LKG first.
- * Every admitted row must still prove its own exact legacy payload, Reader
- * projection, identities, hashes, receipt, pointer, and permanent chamber
- * floors before the one content-addressed successor can be constructed.
- */
+/** A null result is a hard refusal, never a generic parser-version exemption. */
 export function trustedLkgNhMembersV2ToV3BridgeParts(
   predecessor: CandidateVersionRecord,
 ): NhMembersV2ToV3BridgeParts | null {
@@ -934,21 +904,14 @@ function reattestationCopyIssue(
   return null;
 }
 
-/** Hash the exact mutable pointer observation before its one CAS successor. */
 export function trustedLkgPredecessorPointerSha256(pointer: PromotedProjection): string {
   return trustedLkgEvidenceSha256(pointer);
 }
 
-/** Hash the exact immutable candidate/version row used as the predecessor. */
 export function trustedLkgPredecessorRecordSha256(row: CandidateVersionRecord): string {
   return trustedLkgEvidenceSha256(row);
 }
 
-/**
- * Prove an exact successor against the immutable predecessor row. The old
- * pointer is reconstructed from its persisted promotion instant and the old
- * row, then compared with the pointer digest captured before CAS.
- */
 export function trustedLkgReattestationEvidenceIssue(
   candidate: RoutineCandidate,
   predecessor: CandidateVersionRecord | null,
@@ -1166,7 +1129,6 @@ export function trustedLkgReattestationEvidenceIssue(
   return null;
 }
 
-/** Validate either authorized one-time transfer without a compatibility path. */
 export function trustedLkgImportEvidenceIssue(
   candidate: RoutineCandidate,
   predecessor: CandidateVersionRecord | null = null,

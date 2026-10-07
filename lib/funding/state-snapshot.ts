@@ -125,9 +125,9 @@ export async function refreshStateMoneyProjectionFromPromoted(
 }
 
 /**
- * One state's money, edge first (2026-09-25): the reader edge's proven copy of
- * that state's pointer through this same Reader and validator, else the
- * database exactly as `refreshStateMoneyProjectionFromPromoted`.
+ * One state's money, edge first: the reader edge's proven copy of that
+ * state's pointer through this same Reader and validator, else the database
+ * as `refreshStateMoneyProjectionFromPromoted`.
  */
 export function settleStateMoneyRead(state: StateCampaignFinanceJurisdiction): Promise<StateRead> {
   return readPromotedEdgeFirst(
@@ -183,10 +183,9 @@ export async function readStateMoneyProjections(
 }
 
 /**
- * Request preload for the independent state projections. Failures stay in the
- * exact state's read state, so an NH publisher or projection defect cannot
- * take an AZ Reader down (and vice versa). The affected state's synchronous
- * selector still fails closed instead of manufacturing an empty answer.
+ * Request preload for the independent state projections. Failures stay in
+ * that state's read state, so one state's defect cannot take another's
+ * Reader down; the affected state's selector still fails closed.
  */
 export async function refreshStateMoneyFromPromoted(
   options: PromotedCivicDataReadOptions = {},

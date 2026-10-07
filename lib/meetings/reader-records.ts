@@ -32,7 +32,7 @@ export function meetingReaderRecords(meetingId: string, expectedBodyId?: string 
   // A duplicate vendor/event key or conflicting body must never choose the first row.
   if (sittings.length !== 1 || (expectedBodyId && sittings[0].bodyId !== expectedBodyId)) return { ...empty, status: "IDENTITY_UNRESOLVED" };
   const sitting = sittings[0];
-  // Minutes not yet published (NH332): we hold no record of this sitting's outcomes to attach.
+  // Minutes not yet published: we hold no record of this sitting's outcomes to attach.
   if (sitting.extraction === "NOT_YET_PUBLISHED") return { ...empty, bodyId: sitting.bodyId };
   const query = { meetingId, bodyId: sitting.bodyId };
   const agenda = outcomeEvidenceFor({ ...query, questionClass: "WHAT_WAS_NOTICED" }).records.filter((r): r is LegistarAgendaRecord => r.recordClass === "AGENDA");

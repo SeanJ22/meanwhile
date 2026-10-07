@@ -15,7 +15,6 @@ import { PostgresRoutineDataStore } from "./store.ts";
 import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 import { FRESHNESS_HOURS, meetingFreshnessHours } from "../coverage/checklist-map.ts";
 
-/** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
   readonly subjects: readonly { id: string; kind: "division" | "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string; funcstat?: string; startsAt?: string }[];
   readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held" | "unpublished";
@@ -28,7 +27,6 @@ function published<T>(read: PlaceCaptureRead<T>): T | null {
   throw new Error(`HELD_PLACE_READ_FAILED:${read.metadata.recordClass}:${read.metadata.scope}:${read.kind}`);
 }
 
-/** Only the individual supported fields count; inventories and unrelated fields remain open. */
 export function projectHeldPlaceCapture(
   divisionIds: readonly string[], registryRead: PlaceCaptureRead<RegistryRuntimeReadModel>,
   meetingReads: readonly PlaceCaptureRead<MeetingsSnapshot>[], now: string,
@@ -139,7 +137,6 @@ export function projectHeldPlaceCapture(
             value: { statement: observation.evidenceQuote } });
         }
       }
-      // This is the typed finding made by the official minutes reader, never an empty array or failed extraction.
       const checked = Date.parse(sitting.publication.observedAt);
       const hours = meetingFreshnessHours(sitting.startsAt ?? "", now);
       const sourceUrl = sitting.publication.inSiteUrl ?? sitting.sourceUrl;

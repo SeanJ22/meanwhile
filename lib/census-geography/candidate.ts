@@ -1,12 +1,3 @@
-/**
- * Build a civic-data promotion candidate from a built ZCTA-overlap dataset,
- * modelled on `censusAcsCandidate`. The candidate's read model IS the dataset;
- * the reader (`reader.ts`) reads the promoted pointer's payload and serves it.
- *
- * This is the ONLY new writer the census-geography lane adds, and it writes
- * nothing itself — it hands a `RoutineCandidate` to the existing promotion
- * engine (`processRegisteredManualCandidate`), which is the authorized door.
- */
 import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
@@ -41,8 +32,6 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
   // One identity per grouping: an official Census GEOID, never invented.
   const identities = dataset.scopes.flatMap((s) =>
     s.groupings.map((g) => ({
-      // National source authority (jurisdiction "US"); the state lives in the
-      // identifiers and GEOID, mirroring the ACS reference candidate.
       subjectId: `${s.type}:${g.geoid}:${s.version}`,
       jurisdiction: "US",
       identifiers: { type: s.type, geoid: g.geoid, version: s.version, state_fips: g.stateFips },
@@ -53,15 +42,8 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
 
   const id = `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}${CENSUS_GEO_SCOPE}${rawHash}${retrievedAt}`).slice(0, 32)}`;
 
-  // The read model IS the dataset, and the engine derives the change set from
-  // it (candidateChangeSet reads candidate.readModel). The normalized evidence
-  // is therefore a compact descriptor bound to that exact read model by its
-  // canonical hash, as the other builders' descriptors are, never a second
-  // copy. A second copy put the national candidate at 48.8 MB, and promote()
-  // RETURNs the candidate and pointer rows in one Neon HTTP response: 75.8 MB
-  // escaped against the 64 MiB (67.1 MB) response cap on the first routine
-  // pass (VALIDATED, never promoted). This descriptor brings it to 58.5 MB.
   const readModelHash = sha256(canonicalCivicDataJson(dataset));
+  // A compact descriptor bound to the read model by its hash, never a second copy: the promotion response has a size cap.
   const normalizedPayload = {
     formatVersion: dataset.formatVersion,
     builtAt: dataset.builtAt,

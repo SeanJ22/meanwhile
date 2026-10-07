@@ -1,73 +1,9 @@
 /**
- * **WHAT A SCOUT RETURNS, AND WHAT THE MACHINE REFUSES TO ACCEPT FROM ONE.**
- * (Level 1 activation, 2026-09-01. RULING 240. Machine-owned provenance,
- * 2026-09-02, RULING 243. Worker Efficiency Law instrumentation, 2026-09-02,
- * RULING 244.)
- *
- * A Scout is a bounded model worker whose job is NOVELTY: a representation
- * nothing deterministic can open yet, a route the method store has not
- * learned, a wall whose compliant alternative has not been found. It reasons
- * over evidence its tools vaulted during the Attempt; it never creates
- * evidence by describing what it remembers seeing. Its output is therefore a
- * TYPED RESULT this file defines, validated here against the artifacts the
- * Attempt actually vaulted, and never chat prose.
- *
- * ## The invariants, each of which is a refusal below
- *
- * ```
- *   NO TOOL, NO RESULT      a Scout that called no research tool wrote prose;
- *                           it is refused (SCOUT_NO_TOOL_USED)
- *   A URL IS NOT A ROUTE    a candidate must cite artifact ids vaulted in THIS
- *                           Attempt (or inherited evidence cited by id); an id
- *                           the vault does not hold is a memory, not evidence
- *   NO EARLY ABSENCE        NO_PROGRESS / BLOCKED / NEEDS_ADAPTER require the
- *                           declared minimum of DISTINCT evidence-backed rungs,
- *                           unless the Attempt's own bound ended the walk — in
- *                           which case the result says so and carries the
- *                           rungs walked and the next rungs, so the next
- *                           Attempt resumes rather than restarts
- *   THE RUNG LIST IS OWED   a result without the walked-rung list is refused
- *   PROVENANCE IS THE       a candidate's observedOn, permission, recordClass
- *   MACHINE'S               and evidenceArtifactIds are DERIVED from the
- *                           artifact, obligation and permission records; the
- *                           model's values are recorded as CLAIMS, and a claim
- *                           that disagrees with the record is refused
- *                           (SCOUT_PROVENANCE_DISAGREES), an absent one refused
- *                           (SCOUT_PROVENANCE_ABSENT), and a citation set from
- *                           which no single verdict follows refused
- *                           (SCOUT_PROVENANCE_UNDERIVABLE)
- * ```
- *
- * The rung list is DERIVED by the executor from the tool calls that actually
- * ran and the artifacts they vaulted — never taken from the model's account of
- * itself. The model annotates rungs; it does not invent them.
- *
- * ## FIELD OWNERSHIP (RULING 243) — every field, and who writes it
- *
- * ```
- *   ScoutCandidate
- *     routeId, title, url, procedure, relevance   MODEL-PROPOSED  (procedure, relevance)
- *     permissionReading                          MODEL-PROPOSED  (its reading of the rules, prose)
- *     deterministic                              MODEL-PROPOSED  (replayability)
- *     unverified                                 MODEL-PROPOSED  (what remains unverified)
- *     claims                                     MODEL-PROPOSED, RECORDED VERBATIM, NEVER USED AS PROVENANCE
- *     observedOn                                 MACHINE-OWNED   earliest retrievedAt date among the cited artifacts
- *     permission                                 MACHINE-OWNED   the cited artifacts' permission verdict (robots documents excluded)
- *     recordClass                                MACHINE-OWNED   the obligation's record class
- *     evidenceArtifactIds                        MACHINE-OWNED   the cited ids the vault (or inherited evidence) holds
- *     provenance                                 MACHINE-OWNED   which artifacts the derivation rested on, and the rule
- *   ScoutFinding
- *     summary, kind                              MODEL-PROPOSED
- *     artifactIds                                MODEL-CITED, MACHINE-CHECKED against the vault
- *   ScoutRung
- *     rung (the label)                           MODEL-PROPOSED  (stated on the tool call)
- *     note                                       MODEL-PROPOSED
- *     index, tool, target, observed, ok,
- *     permission, artifactIds, at                MACHINE-OWNED
- *   ScoutResult
- *     outcome, nextRungs, unverified, narrative  MODEL-PROPOSED  (outcome validated against the ladder)
- *     everything else                            MACHINE-OWNED   (identity, usage, steps, cost, refusal, stamps)
- * ```
+ * What a Scout returns and what the machine refuses from one. A result with no research tool used, a candidate
+ * citing an id the vault does not hold, an absence before the declared minimum of distinct evidence-backed rungs
+ * (unless the Attempt's bound ended the walk), or a missing rung list is refused. The rung list is derived from
+ * the tool calls that ran. A candidate's `observedOn`, `permission`, `recordClass`, `evidenceArtifactIds` and
+ * `provenance` are machine-owned; the model's values are recorded as claims and checked against them.
  */
 
 import type { PermissionState } from "../../workstate/types.ts";
@@ -82,10 +18,7 @@ export const SCOUT_OUTCOMES = [
   "EVIDENCE_FOUND",
   /** A specific adapter is named and nothing else stands in the way. REQUIRES_NEW_ADAPTER. */
   "NEEDS_ADAPTER",
-  /**
-   * Every walked rung hit an access control (a login or 401, a paywall, a 403 or bot challenge, a 429). BLOCKED_CURRENTLY.
-   * robots.txt is never a wall: it is recorded and does not refuse a public page (owner decision 2026-09-25).
-   */
+  /** Every walked rung hit an access control (login, paywall, 403 or challenge, 429). BLOCKED_CURRENTLY. robots.txt is never a wall. */
   "BLOCKED",
   /** The ladder was walked to the declared minimum and nothing advanced. The Attempt ABORTS; the obligation stays owed. */
   "NO_PROGRESS",
@@ -117,7 +50,7 @@ export const SCOUT_LADDER = [
 /** The minimum DISTINCT evidence-backed rungs before an absence-shaped outcome is accepted. */
 export const MIN_DISTINCT_RUNGS = 4;
 
-/** Who ended the walk. The rung minimum applies only when the MODEL chose to stop. TIMEOUT is the wall clock (CH-07): never an argued absence. */
+/** Who ended the walk. The rung minimum applies only when the model chose to stop; TIMEOUT is never an argued absence. */
 export type ScoutStop = "MODEL" | "BOUND" | "TIMEOUT";
 
 /** One rung walked — DERIVED from a tool call that ran, annotated by the model. */
@@ -141,7 +74,7 @@ export interface ScoutRung {
   /** The model's one-sentence reading of what this rung returned. */
   readonly note: string | null;
   readonly at: string;
-  /** Whether the tool call succeeded. Machine-written; absent on results recorded before 2026-09-02. */
+  /** Whether the tool call succeeded. Machine-written; absent on older results. */
   readonly ok?: boolean;
   /** The permission verdict the call ran under. Machine-written; absent on older results. */
   readonly permission?: PermissionState;
@@ -183,9 +116,9 @@ export interface ScoutCandidate {
   /** Whether the procedure appears replayable without a model. */
   readonly deterministic: boolean;
   readonly unverified: readonly string[];
-  /** The model's original provenance statements. Absent on results recorded before RULING 243. */
+  /** The model's original provenance statements. Absent on older results. */
   readonly claims?: ScoutProvenanceClaims;
-  /** The machine's derivation record. Absent on results recorded before RULING 243. */
+  /** The machine's derivation record. Absent on older results. */
   readonly provenance?: ScoutCandidateProvenance;
   /** Proposal only; the standing coordinator replays it against completed vaulted evidence. */
   readonly contractRepair?: unknown;
@@ -247,7 +180,7 @@ export interface ScoutUsage {
   readonly cacheCreationInputTokens: number | null;
   readonly turns: number;
   readonly toolCalls: number;
-  /* ---- the cache-write split by TTL (2026-09-06). Absent on results recorded before; null when no response carried a split. ---- */
+  /* ---- the cache-write split by TTL. Absent on older results; null when no response carried a split. ---- */
   readonly cacheCreation5mInputTokens?: number | null;
   readonly cacheCreation1hInputTokens?: number | null;
 }
@@ -260,13 +193,7 @@ export interface StepTokens {
   readonly output: number;
 }
 
-/**
- * **ONE STEP OF THE ATTEMPT, INSTRUMENTED.** (RULING 244.) A MODEL step is one
- * provider turn: the model, the effort, the four token categories and the
- * cost at that model's rate. A DETERMINISTIC step is aggregated: how many
- * times the code ran and how many bytes of representation it handed the
- * model. No model, no tokens, no cost — and that is the measurement.
- */
+/** One instrumented step: a MODEL step is one provider turn with its tokens and cost; a DETERMINISTIC step is aggregated (runs and bytes handed to the model). */
 export interface ScoutStep {
   readonly step: string;
   readonly kind: "MODEL" | "DETERMINISTIC";
@@ -281,26 +208,17 @@ export interface ScoutStep {
   readonly representationBytes: number;
   /** How many times a deterministic step ran; 1 for a model turn. */
   readonly count: number;
-  /**
-   * The cache-write split by TTL for a MODEL step (2026-09-06), read from the
-   * response's `usage.cache_creation`. Absent on steps recorded before; null
-   * members when the response carried the aggregate and no split.
-   */
+  /** The cache-write split by TTL for a MODEL step, from `usage.cache_creation`. Absent on older steps; null members when only the aggregate came back. */
   readonly cacheWriteSplit?: { readonly ephemeral5m: number | null; readonly ephemeral1h: number | null };
   /** Whether `usd` priced the aggregate cache write at the requested TTL because the response carried no split. */
   readonly cacheWritePricedFrom?: "SPLIT" | "AGGREGATE" | "NONE";
 }
 
-/**
- * A cache defect on a turn after the first, recorded. Two signatures
- * (`lib/control-plane/cache-defects.ts`): a STATIONARY breakpoint — the turn
- * paid for more uncached input than it appended — and a ZERO READ over an
- * identical prefix. `turns` is the union; the two lists name which.
- */
+/** A cache defect on a turn after the first: a stationary breakpoint or a zero read (`cache-defects.ts`). `turns` is the union. */
 export interface ScoutCacheDefect {
   readonly turns: readonly number[];
   readonly detail: string;
-  /** Absent on results recorded before 2026-09-06, whose detector read only the zero-read signature. */
+  /** Absent on older results, whose detector read only the zero-read signature. */
   readonly stationaryTurns?: readonly number[];
   readonly zeroReadTurns?: readonly number[];
 }
@@ -322,13 +240,7 @@ export interface ScoutRepresentationOverrun {
   readonly artifactIds: readonly string[];
 }
 
-/**
- * **ONE MODEL ATTEMPT INSIDE THE ATTEMPT.** (MW-031, 2026-09-25.) The loop
- * starts on its cheapest suitable class; when it escalates, the second attempt
- * continues the same conversation on the higher class. Each attempt's cost is
- * the sum of its own turns at its own model's rate; the result's `usd` is the
- * combined cost of all of them.
- */
+/** One model attempt inside the Attempt, with its own turns and cost at its model's rate. `usd` on the result is the combined cost. */
 export interface ScoutModelAttempt {
   readonly escalation?: { readonly from: string; readonly at: string; readonly reason: ModelEscalationReason; readonly evidence: string };
   readonly modelClass: ModelClass;
@@ -392,16 +304,11 @@ export interface ScoutResult {
     readonly contentHash: string; readonly offset: number; readonly length: number }[];
   /** Method candidate ids proposed into the candidate store, if any. */
   readonly methodCandidateIds: readonly string[];
-  /**
-   * Non-null when the executor REFUSED the model's finish (an early absence,
-   * a candidate without evidence, no tool used). The record is persisted so
-   * the audit trail and the resume cursor survive; its `outcome` is never a
-   * legitimate finding, and every reader must show it as REFUSED.
-   */
+  /** Non-null when the executor refused the model's finish. The record is persisted, and every reader must show it as REFUSED. */
   readonly refusal: readonly ScoutIssue[] | null;
   readonly startedAt: string;
   readonly recordedAt: string;
-  /* ---- RULING 244 instrumentation. Absent on results recorded before 2026-09-02. ---- */
+  /* ---- Instrumentation. Absent on older results. ---- */
   /** The effort the SCOUT role ran at. */
   readonly effort?: ModelEffort | null;
   readonly steps?: readonly ScoutStep[];
@@ -410,33 +317,20 @@ export interface ScoutResult {
   readonly representationOverruns?: readonly ScoutRepresentationOverrun[];
   /** How many prior rungs the brief listed as the resume cursor. */
   readonly resumedFromRungs?: number;
-  /* ---- RULING 63 compounding pair (the field manual, 2026-09-19). Absent on results before it. ---- */
-  /** How many field-manual doors were projected into this walk's brief — the INHERITED half of the pair. */
+  /* ---- The field-manual pair. Absent on older results. ---- */
+  /** How many field-manual doors were projected into this walk's brief. */
   readonly inheritedFieldManual?: number;
   /** RouteIds this walk proposed that the manual ALREADY held: rebuilding an existing door is a reported defect, not neutral progress. */
   readonly rebuiltExistingRoutes?: readonly string[];
-  /**
-   * The exact field-manual entry ids projected into this walk's brief — the
-   * inherited doors HANDED to the scout at dispatch. This is the captured input
-   * for a knowledge-delivery audit: it is recorded when the brief is built, so a
-   * later reader checks what the scout actually received rather than recomputing
-   * what the projection would return now (the store grows between runs). Absent
-   * on results recorded before this capture (2026-09-19).
-   */
+  /** The exact field-manual entry ids projected into this walk's brief, captured at dispatch. Absent on older results. */
   readonly inheritedFieldManualEntryIds?: readonly string[];
   /** Complete role/state-applicable local catalog IDs available through find_manual/read_manual at dispatch. */
   readonly availableFieldManualEntryIds?: readonly string[];
   /** The exact rendered field-manual brief lines that led this walk's inherited context, captured at dispatch alongside `inheritedFieldManualEntryIds`. Absent on older results. */
   readonly inheritedFieldManualLines?: readonly string[];
-  /**
-   * MW-025: the handed entry ids whose route a successful research rung
-   * actually walked, deduplicated by door. This is route reuse only, with no
-   * saved-byte or paid-call savings claim. Absent on
-   * results recorded before it (2026-09-25): read as not recorded, never as
-   * none used.
-   */
+  /** The handed entry ids whose route a successful research rung actually walked, by door. Absent on older results (not recorded, never none used). */
   readonly usedFieldManualEntryIds?: readonly string[];
-  /* ---- MW-031 / MW-033 model routing (2026-09-25). Absent on results before: those ran the frontier only and never escalated. ---- */
+  /* ---- Model routing. Absent on older results, which ran the frontier only. ---- */
   /** The class whose attempt produced this result — the last one that ran. `worker.model` is its model. */
   readonly modelClass?: ModelClass;
   /** Why the loop STARTED on its class: the step registry's stated reason. */
@@ -451,20 +345,10 @@ export interface ScoutResult {
   readonly escalationRefused?: ScoutEscalationRefused | null;
   /** Every model attempt that ran, cheapest first, each with its own cost. `usd` above is their combined cost. */
   readonly modelAttempts?: readonly ScoutModelAttempt[];
-  /* ---- Preserved thinking (Claude Opus 5.5, 2026-09-25). Absent on results before: those sent no thinking setting and read no drops. ---- */
-  /**
-   * Every thinking block the provider reported dropping (`input_transformations`).
-   * A `prefix_binding_mismatch` means our history changed under a block — a
-   * defect of our request assembly, named like a cache defect; a
-   * `model_binding_mismatch` after an escalation is the model switch, expected.
-   * Empty when nothing was dropped.
-   */
+  /* ---- Preserved thinking. Absent on older results. ---- */
+  /** Every thinking block the provider reported dropping. `prefix_binding_mismatch` is our assembly defect; `model_binding_mismatch` after an escalation is expected. */
   readonly inputTransformations?: readonly ScoutInputTransformation[];
-  /**
-   * How many times the conversation was restarted from the machine's record to
-   * stay under the payload budget (`scoutCarriedForward`). Each restart is one
-   * cache write of the carried-forward start, never an edit of history.
-   */
+  /** How many times the conversation was restarted from the machine's record to stay under the payload budget. */
   readonly contextRestarts?: number;
 }
 
@@ -479,13 +363,8 @@ export interface ScoutInputTransformation {
   readonly reason: string | null;
 }
 
-/* ------------------------------------------------------------- validation */
 
-/**
- * THE CLOSED LIST OF REFUSALS. A finish is refused with one or more of these
- * and nothing else; a new way to be wrong is added here, documented, and
- * tested, never improvised in a detail string.
- */
+/** The closed list of refusals; a new one is added here and tested, never improvised in a detail string. */
 export const SCOUT_REFUSALS = [
   "SCOUT_NO_TOOL_USED",
   "SCOUT_RUNG_LIST_MISSING",
@@ -502,23 +381,15 @@ export const SCOUT_REFUSALS = [
   "SCOUT_POLICY_DENIED",
   /** The turns ran out with no accepted finish. */
   "SCOUT_NO_FINISH",
-  /** RULING 243: a candidate omits observedOn, permission or recordClass, so no claim was made to check. */
+  /** A candidate omits observedOn, permission or recordClass, so no claim was made to check. */
   "SCOUT_PROVENANCE_ABSENT",
-  /** RULING 243: the model's observedOn / permission / recordClass disagrees with the machine's derivation. */
+  /** The model's observedOn, permission or recordClass disagrees with the machine's derivation. */
   "SCOUT_PROVENANCE_DISAGREES",
-  /**
-   * RULING 243: the cited artifacts yield no single verdict (none with provenance, or disagreeing verdicts). A
-   * DISALLOWED retrieval is no longer one of these: robots.txt is recorded, never a refusal (owner decision 2026-09-25).
-   */
+  /** The cited artifacts yield no single verdict (none with provenance, or disagreeing verdicts). */
   "SCOUT_PROVENANCE_UNDERIVABLE",
-  /** RULING 244: the executor decision was DETERMINISTIC (a graduated or declared route) and the model executor was reached anyway. */
+  /** The executor decision was DETERMINISTIC and the model executor was reached anyway. */
   "SCOUT_GRADUATED_ROUTE",
-  /**
-   * MW-033 (2026-09-25): the cheaper attempt showed a recorded escalation
-   * reason and the escalation was refused (ceiling, unmeasured spend, wall
-   * clock, or no reservation). Always AFTER the cheaper attempt's own refusal,
-   * which stays first as the root cause.
-   */
+  /** The cheaper attempt showed an escalation reason and the escalation was refused. Always after the cheaper attempt's own refusal. */
   "SCOUT_ESCALATION_REFUSED",
 ] as const;
 export type ScoutRefusal = (typeof SCOUT_REFUSALS)[number];
@@ -549,7 +420,6 @@ export function distinctEvidenceRungs(rungs: readonly ScoutRung[]): number {
   return seen.size;
 }
 
-/* --------------------------------------------- machine-owned provenance */
 
 /** The methodRouteId of a robots document. It is the robots.txt RECORD, never the route's evidence. */
 export const ROBOTS_ROUTE_ID = "scout:read_permission";
@@ -616,11 +486,7 @@ export function deriveCandidateProvenance(input: {
   }
   const observedOn = dates.reduce((a, b) => (a < b ? a : b));
 
-  /*
-   * A page retrieved under a DISALLOWED or CANNOT_TELL robots.txt verdict substantiates a route like any other public
-   * page: the verdict is recorded on the candidate, never a refusal (owner decision 2026-09-25, ROBOTS_BLOCKS_ACQUISITION
-   * is false). What stops a page is an access control (lib/hunt/access-control.ts), and the tools report that as a wall.
-   */
+  /* A page read under a DISALLOWED or CANNOT_TELL robots verdict substantiates a route like any public page; the verdict is recorded. */
   const pages = withRecord.filter((p) => p.methodRouteId !== ROBOTS_ROUTE_ID);
   if (pages.length === 0) {
     return {
@@ -667,17 +533,9 @@ export function claimsOf(c: Partial<ScoutCandidate>): ScoutProvenanceClaims {
 }
 
 /**
- * Validate what the model proposed against what the Attempt actually did.
- *
- * `rungs` are the executor's derived rungs. `vaulted` is every artifact id the
- * Attempt's tools vaulted; `inherited` every id the executor handed the model
- * as inherited evidence. A cited id outside both sets is a memory.
- *
- * When `machine` is supplied (the executor always supplies it), every
- * candidate's provenance claims are checked against the derivation and the
- * accepted candidates are returned REWRITTEN with machine-owned values in
- * `candidates`. Absent (older callers, unit tests of the other rules), the
- * provenance rules are not applied and `candidates` echoes the input.
+ * Validate what the model proposed against what the Attempt actually did. A cited id outside `vaulted` and
+ * `inherited` is refused. With `machine`, provenance claims are checked and accepted candidates are rewritten
+ * with machine-owned values.
  */
 export function validateScoutFinish(input: {
   readonly finish: ScoutFinishInput;
@@ -765,7 +623,7 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
       rewritten.push(c);
       continue;
     }
-    /* RULING 243: the machine derives; the model's values are claims. */
+    /* The machine derives; the model's values are claims. */
     const claims = claimsOf(c);
     const label = `candidate ${c.routeId ?? "(unnamed)"} at ${c.url ?? "(no url)"}`;
     const absent = (["observedOn", "permission", "recordClass"] as const).filter((k) => claims[k] === null);
@@ -884,29 +742,17 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
   return { issues, candidates: rewritten };
 }
 
-/* --------------------------------------------------- prior-rung classes */
 
 /**
- * Whether a prior rung's failure is DURABLE (an access control — a 401/403/429
- * wall or a bot challenge — a not-found) or TRANSIENT (their
- * side broke, the transport timed out). A rung recorded as durably failed is not
- * re-walked for `REWALK_REFUSAL_DAYS`; absences expire, and a transport failure
- * is a fact about a moment, so a transient one is not refused at all.
- * Classified from the machine-written `observed` line, which is the only record
- * older results carry.
- *
- * ROBOTS.TXT IS NEVER A DURABLE FAILURE. Before the owner decision of
- * 2026-09-25 the tools refused a DISALLOWED or CANNOT_TELL host without sending
- * a request ("permission DISALLOWED (...); no request sent"). Those rungs are
- * `ROBOTS_ONLY`: nothing was asked of the page, nothing failed, and the rung is
- * walked again now that robots.txt is recorded and never refuses a public page.
- * A `read_permission` rung is the robots record itself, never a failure.
+ * Whether a prior rung's failure is DURABLE (an access control or a not-found; not re-walked for
+ * `REWALK_REFUSAL_DAYS`) or TRANSIENT (not refused). Classified from the machine-written `observed` line.
+ * robots.txt is never a durable failure: older robots-only refusals are `ROBOTS_ONLY` and walked again.
  */
 export const REWALK_REFUSAL_DAYS = 30;
 
 export type PriorFailureClass = "DURABLE" | "TRANSIENT" | "ROBOTS_ONLY" | "NOT_A_FAILURE";
 
-/** The observed line of a rung the tools refused for robots.txt alone, before 2026-09-25 (historical records only). */
+/** The observed line of a rung the tools once refused for robots.txt alone (historical records only). */
 export const ROBOTS_ONLY_REFUSAL = /permission (DISALLOWED|CANNOT_TELL)\b[^\n]*no request sent/i;
 
 export function classifyPriorRung(rung: {
@@ -928,10 +774,7 @@ export function classifyPriorRung(rung: {
   return "NOT_A_FAILURE";
 }
 
-/**
- * CH-30: how many of the newest results, in a row and oldest first, ended because the AI service did not answer
- * (`SCOUT_TRANSPORT_FAILED`). A result that ended any other way stops the count. The history is what backoff learns from.
- */
+/** How many of the newest results in a row ended because the AI service did not answer (`SCOUT_TRANSPORT_FAILED`). */
 export function consecutiveTransportFailures(results: readonly Pick<ScoutResult, "refusal">[]): number {
   let count = 0;
   for (let i = results.length - 1; i >= 0; i--) {

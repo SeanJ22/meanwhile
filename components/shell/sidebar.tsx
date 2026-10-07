@@ -17,22 +17,10 @@ import { StatsBar } from "./stats-bar";
 import { ViewToggle } from "./view-toggle";
 
 /**
- * The reader's sidebar (approved reader design, 2026-09-28).
- *
- * Order follows the design: the bare wordmark with the theme circle and the
- * collapse control; the compound nav (Ballot · ZIP · Who governs here? ·
- * Where can I vote?) with Ask directly below it; the Local/State/Federal well;
- * the Jurisdiction and Body selects; then the scrolling half — stat tiles,
- * Near me, Filters and About this data.
- *
- * The compound nav and Ask arrive as one node from `map-entry`, which owns the
- * popups they open, so there is still exactly one of each control on screen.
- * Every control the old rail carried is still here: Reset view, the quick
- * tour, the freshness line, and the transparency and feedback links moved into
- * About this data rather than leaving.
- *
- * On a phone the same component is the bottom sheet (`.sidebar` CSS); its
- * header then reads "▾ Close" instead of the collapse chevron.
+ * The reader's sidebar: wordmark and controls, the compound nav with Ask (one
+ * node from `map-entry`), the tier well, Jurisdiction and Body selects, then
+ * stat tiles, Near me, Filters and About this data. On a phone it is the
+ * bottom sheet.
  */
 export function Sidebar({
   onReset,
@@ -126,9 +114,7 @@ export function Sidebar({
           <Legend inline />
         </div>
         {carriedShown && snapshot && (
-          // Listings this refresh could not re-fetch are older than the
-          // header's "Checked … ago" — the reader sees that without opening
-          // About this data.
+          // Listings this refresh could not re-fetch are older than "Checked … ago".
           <div className="mw-carried-note">
             <DataFreshness snapshot={snapshot} />
           </div>

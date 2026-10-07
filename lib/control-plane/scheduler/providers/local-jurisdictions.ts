@@ -1,92 +1,10 @@
 /**
- * **PROVIDER FOUR — LOCAL JURISDICTIONS.** (Session C3, lane C, 2026-09-01.
- * RULING 229, A.R.S. § 16-928, RULING 205, RULING 207, RULING 182.)
- *
- * ## The defect this closes, stated as the invisible thing it makes visible
- *
- * The reviewed filing-regime model routes Arizona correctly and knows
- * exactly two custodians by NAME: the Secretary of State, and Pima County. The
- * Arizona SOS's own bulk table names **109 filing jurisdictions**. Until
- * the jurisdiction operational-reference projection existed, the other 107 were not small obligations
- * — they were no obligations at all. No name, no clock, no debt row, no
- * denominator. **A government nobody has named cannot be behind schedule.**
- *
- * This provider gives the named ones a clock.
- *
- * ## WHAT IT REGISTERS, AND THE THREE THINGS IT DELIBERATELY DOES NOT
- *
- * ```
- *   REGISTERED    the STATE row, every COUNTY row, and every jurisdiction that
- *                 is a FILING OFFICER IN ITS OWN RIGHT by statute — in Arizona,
- *                 A.R.S. § 16-928's city and town clerks — in every TRACKED
- *                 state (below)
- *
- *   NOT REGISTERED, and each for a reason about the RECORD rather than about us
- *
- *   1  STATEWIDE-scope routes on a local row. `seethemoney.az.gov` is ONE
- *      record with ONE portfolio, already scheduled once by the
- *      campaign-finance provider. Scheduling it again under all 688 Arizona
- *      governments would be 688 requests for one record — which is not RULING
- *      207, it is the opposite of it: the rule says never skip a materially
- *      DISTINCT representation, not fetch one representation once per subject.
- *
- *   2  PER_COUNTY routes on a district row. Under § 16-928 a school district's,
- *      community college district's and special taxing district's campaign
- *      finance IS the county officer's record. That route is registered ON THE
- *      COUNTY, once. Registering it per district would schedule one record 44
- *      times in Pima alone.
- *
- *   3  The 2,501 enumerated governments that hold no filing-officer role of
- *      their own. They ARE named, durably, in the canonical promoted
- *      operational-reference projection
- *      with their custodian, their routing statute and the sentence saying what
- *      is owed. What they do not have is an individually scheduled row, and the
- *      reason is the record and not the queue: their finance records belong to
- *      a custodian that IS scheduled.
- * ```
- *
- * ## WHICH STATES — THE COVERAGE SET, READ AS DATA (2026-09-23)
- *
- * This file used to schedule `["az", "nh", "nj"]`, a list in code, so a state
- * the owner registered could not be tracked without a code change. The tracked
- * states are now handed in (`TrackedStatesSource` in `../provider-inputs.ts`):
- * the coverage set, and until its promoted accessor is on main, the states
- * whose registry the promoted operational-reference bundle carries. A tracked
- * state whose registry cannot be read is a named read failure, never a silent
- * skip, and never a fallback to a list.
- *
- * ## MEETINGS ROUTES ARE CARRIED BY WHAT THE DATA SAYS OWNS THEM (2026-09-23)
- *
- * The permanent source/body meeting-partition contracts are the only production
- * meetings clock (RULING 282/283). What that means for a registry `MEETINGS`
- * source is now decided by the source's own state and the partition wiring,
- * instead of a blanket strip:
- *
- * ```
- *   DISCOVERY_OWED            the address or the extraction is not known, so
- *                             this is DISCOVERY, not acquisition. The
- *                             meetings-discovery provider carries it, in the
- *                             gap ledger's shape, once the owner's dispatch
- *                             materializes it (MW-028). Never a clock here
- *   known address, and a      inventory: the partition is the clock
- *     partition owns it
- *   known address, and the    the only clock this government's meetings have,
- *     wiring says none does   so it is scheduled here
- *   known address, wiring     HELD and named: never scheduled beside a
- *     unread                  partition that may already own it
- * ```
- *
- * Every registry meetings source today is DISCOVERY_OWED, so no meetings route
- * is scheduled here, exactly as before.
- *
- * ## WORK THE OWNER'S DISPATCH MATERIALIZED (MW-028)
- *
- * `lib/control-plane/expansion/dispatch-work.ts` creates the requirement
- * instances a dispatched geography owes that no clock carries — for example a
- * county in a state the registry covers and the coverage set does not track
- * yet. It creates them under THIS provider's ids, so tracking the state later
- * re-registers the same rows rather than a second copy, and this provider keeps
- * every such row in its corpus while the registry still defines it.
+ * Local jurisdictions as standing obligations in every tracked state: the state row, every county, and every
+ * government that is a filing officer in its own right. Not registered: statewide-scope routes on a local row
+ * (already scheduled once by their own provider), per-county routes on a district row (registered on the
+ * county once), and governments with no filing-officer role (their records belong to a scheduled custodian).
+ * Meetings routes are carried by what owns them: DISCOVERY_OWED goes to meetings discovery, a partition-owned
+ * route is inventory, and an unread wiring holds the route by name.
  */
 
 import { sourceOf, type Jurisdiction, type JurisdictionRegistry, type JurisdictionSource } from "../../../hunt/jurisdiction-universe.ts";
@@ -149,26 +67,14 @@ export interface JurisdictionRequirement {
   readonly heldReason?: string;
 }
 
-/** Custodian dedupe, the header's rules 1 and 2: whose record a source is. */
+/** Custodian dedupe: whose record a source is. */
 function belongsToThisRow(s: JurisdictionSource, j: Jurisdiction): boolean {
   if (s.scope === "STATEWIDE") return false;
   if (s.scope === "PER_COUNTY" && j.govClass !== "COUNTY") return false;
   return true;
 }
 
-/**
- * The route id, which is the fragment after `#` in the durable obligation id.
- *
- * It does NOT repeat the jurisdiction: the obligation id already carries it, and
- * `freshness:jurisdiction:az:city:city-of-benson#az:city:city-of-benson:...`
- * says the same thing twice in a primary key. Where the registry names a
- * method-store route, that name is used verbatim — it is the join to
- * `data/method/knowledge.json` that decides GRADUATED or UNGRADUATED.
- *
- * `n` counts the row's non-meetings sources only, as it always has: counting
- * meetings sources would move every existing positional id and orphan its
- * next-due, occurrence count and debt row.
- */
+/** The route id (the fragment after `#`). A registry-named method route is used verbatim; `n` counts non-meetings sources only so positional ids never move. */
 function routeIdFor(s: JurisdictionSource, n: number): string {
   return s.routeId ?? `${s.recordClass.toLowerCase().replace(/_/g, "-")}-${n}`;
 }
@@ -194,11 +100,7 @@ function descriptorFor(j: Jurisdiction, s: JurisdictionSource, routeId: string):
     };
   }
 
-  /*
-   * EVERYTHING ELSE IS NOT_MACHINE_EXECUTABLE, and the reason is carried
-   * verbatim from the registry's `owed` sentence rather than summarised. A
-   * summarised next move is a next move somebody has to reconstruct.
-   */
+  /* Everything else is NOT_MACHINE_EXECUTABLE, carrying the registry's `owed` sentence verbatim. */
   return {
     routeId,
     label,
@@ -219,14 +121,7 @@ function descriptorFor(j: Jurisdiction, s: JurisdictionSource, routeId: string):
   };
 }
 
-/**
- * **THE REGISTRY'S OWN REQUIREMENT DEFINITIONS FOR ONE GOVERNMENT**, with the
- * ids this provider gives them. Meetings DISCOVERY is not here: it belongs to
- * `meetings-discovery.ts`, in the gap ledger's shape.
- *
- * Sources are taken in the row's own order, custodian-deduped, and non-meetings
- * sources keep the positional ids they have always had.
- */
+/** The registry's own requirement definitions for one government, custodian-deduped, in the row's order. Meetings discovery belongs to `meetings-discovery.ts`. */
 const NO_LIVE_FAMILIES: ReadonlySet<string> = new Set();
 
 export function jurisdictionRequirements(
@@ -234,7 +129,7 @@ export function jurisdictionRequirements(
   j: Jurisdiction,
   meetingPartitions: MeetingPartitionOwnership = UNREAD_MEETING_PARTITIONS,
   discoverMissingFamilies = false,
-  /** Record classes whose owed rows for this government are already live (CH-04): no paid discovery Scout is queued for them. */
+  /** Record classes whose owed rows for this government are already live: no paid discovery Scout is queued for them. */
   liveFamilies: ReadonlySet<string> = NO_LIVE_FAMILIES,
 ): readonly JurisdictionRequirement[] {
   const out: JurisdictionRequirement[] = [];
@@ -271,10 +166,7 @@ export function jurisdictionRequirements(
       citation: `Registered government ${j.id}.` };
     out.push({ obligationId: localJurisdictionObligationId(j.id, directoryRoute), sourceKey: directoryRoute,
       source: directorySource, route: descriptorFor(j, directorySource, directoryRoute), carriage: "HERE" });
-    // A registered government with no source entry still owes discovery. These
-    // are questions, not invented sources, filing authorities or absence claims.
-    // Known shared custodians remain on their existing routes instead of being
-    // copied under every district they serve. Meetings retain their own provider.
+    // A registered government with no source entry still owes discovery: questions, not invented sources. Shared custodians stay on their existing routes.
     const represented = new Set(j.sourceIds.map(key => sourceOf(reg, j, key).recordClass));
     const families = [
       ["OFFICEHOLDERS", "Find the governing bodies, subordinate boards, current offices and members, their official pages, contacts and published statements. Establish exact authority and identity before extraction."],
@@ -317,12 +209,7 @@ export function requirementBodyId(j: Jurisdiction, meetingPartitions: MeetingPar
   return meetingPartitions.bodyIdFor ? meetingPartitions.bodyIdFor(j.id) : j.bodyId ?? null;
 }
 
-/**
- * The work plan one requirement's paid work carries (CH-22), or null. Discovery the owner's Send
- * materialized always gets one; a registry route gets one when it reaches the paid model path, so a
- * tracked government's findings go through the coordinator and the builders to a reader door the
- * way a Send's do, instead of staying staged. Meetings keep their own discovery and publishing.
- */
+/** The work plan one requirement's paid work carries, or null: always for discovery a Send materialized, and for a registry route on the paid model path. */
 export function requirementPlan(j: Jurisdiction, r: JurisdictionRequirement, bodyId: string | null, discoverMissingFamilies: boolean): AutonomousWorkPlan | null {
   if (!discoverMissingFamilies && (r.carriage !== "HERE" || r.route.executorClass !== "BOUNDED_MODEL_WORKER")) return null;
   if (r.route.routeId === "coverage-discovery:body-directory") return bodyDirectoryDiscoveryPlan(j, bodyId);
@@ -330,23 +217,13 @@ export function requirementPlan(j: Jurisdiction, r: JurisdictionRequirement, bod
   return jurisdictionDiscoveryPlan(j, r.source, r.route.routeId, bodyId);
 }
 
-/**
- * Which enumerated governments get an individually scheduled row in a tracked
- * state.
- *
- * A STATE and a COUNTY always: they are custodians by statute everywhere this
- * project has read one. Any other government only where a route carried here
- * belongs to it alone — in Arizona § 16-928 makes the clerk the filing officer,
- * and in New Hampshire and New Jersey this repository has read no such
- * provision, so their municipal rows carry a discovery obligation in the
- * registry and no separate clock here.
- */
+/** Which governments get an individually scheduled row in a tracked state: a state and a county always; any other only where a route carried here belongs to it alone. */
 function isScheduledHere(j: Jurisdiction, requirements: readonly JurisdictionRequirement[]): boolean {
   if (j.govClass === "STATE" || j.govClass === "COUNTY") return true;
   return requirements.some((r) => r.carriage === "HERE" && r.source.scope === "THIS_JURISDICTION");
 }
 
-/** `az:county:county-of-pima` from `freshness:jurisdiction:az:county:county-of-pima#ballot-1`, or null. */
+/** `xx:county:county-of-name` from `freshness:jurisdiction:xx:county:county-of-name#ballot-1`, or null. */
 function jurisdictionOf(obligationId: string): string | null {
   if (!obligationId.startsWith(LOCAL_JURISDICTION_NAMESPACE)) return null;
   const rest = obligationId.slice(LOCAL_JURISDICTION_NAMESPACE.length);
@@ -419,7 +296,7 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
         }
       }
 
-      /* THE OWNER'S MATERIALIZED WORK, kept while the registry still defines it (MW-028). */
+      /* The owner's materialized work, kept while the registry still defines it. */
       const materialized = readMaterialized();
       if ("unreadable" in materialized) {
         failures.push(`the work the owner's dispatch materialized could not be read (${materialized.unreadable})`);
@@ -447,14 +324,7 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
       const records: ProvidedObligation[] = [...routesBySubject.keys()].sort().map((subjectId) => ({
         recordClass: "local-jurisdiction",
         subjectId,
-        /*
-         * NULL ON BOTH SIGNALS, and the reason is the same one the
-         * campaign-finance records carry: a filing officer's publication
-         * costs a reader the moment it goes stale, not on election day. We
-         * hold no declared publication cycle for any of these governments
-         * and will not invent one — a publisher cycle nobody read is a
-         * fabricated citation with a number in it.
-         */
+        /* Null on both signals: a filing officer's publication costs a reader the moment it goes stale, and no publication cycle is held. */
         readerImpactAt: null,
         observedChangeRateHours: null,
         lastWorkedAt: null,

@@ -8,15 +8,9 @@ import type { Meeting } from "@/lib/sources/types";
 import { useShellData } from "@/lib/state/data";
 
 /**
- * The jurisdiction badge for a meeting, answered the one way every surface
- * asks it: the reader's divisions, the basis they came from, and the CLASS of
- * the body that is meeting.
- *
- * The popup, the panel and the list each called `badgeFor` with geometry alone,
- * so an advisory board sitting inside the reader's city read "Governs your
- * area". The class rides in the coverage the same response carries, keyed by
- * the meeting's `bodyId`; a meeting whose body is not in that coverage has no
- * class to ask and keeps the geometric answer.
+ * The jurisdiction badge for a meeting: the reader's divisions, their basis,
+ * and the class of the meeting body (from coverage, by `bodyId`). A body not
+ * in coverage keeps the geometric answer.
  */
 export function useMeetingBadge(): {
   badgeOf: (meeting: Pick<Meeting, "ocdId" | "bodyId">) => JurisdictionBadge;

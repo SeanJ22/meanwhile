@@ -1,9 +1,5 @@
 "use client";
 
-/**
- * **WORK.** Every work row by stage, with search and paging. Orders, stuck cases, instructions sent to the fleet, hunts, shut
- * doors and fix items are on the Queue (BR-14, BR-34); this keeps only the rows themselves until they move too.
- */
 import { useState } from "react";
 
 import { useV6 } from "./context.tsx";

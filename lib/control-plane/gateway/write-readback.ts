@@ -1,25 +1,8 @@
 /**
- * **A WRITE THAT TIMED OUT IS READ BACK BEFORE THE OWNER IS TOLD ANYTHING.** (S11, from S7's finding.)
- *
- * A store call that "did not settle" (`ControlPlaneRequestTimeout`) says nothing
- * about whether the database applied it: the statement may have committed and
- * the answer been lost. The gateway used to report "nothing was recorded" for
- * that, which can be false. The class fix lives here, once, for every write the
- * gateway makes:
- *
- * ```
- *   the write times out
- *     read it back
- *       it is there      -> it is SAVED; the action carries on as if the write had answered
- *       it is not there  -> NOT SAVED, said plainly, and safe to send again
- *       the read fails   -> MAY HAVE SAVED; said plainly, never "nothing was recorded"
- * ```
- *
- * The three stores an action writes are wrapped: the policy row (`adminConfig`,
- * which every setting, hunt and billing action writes), the owner decision log
- * and the research intent log. Any other error passes through untouched.
- *
- * PURE apart from the reads it is handed. No clock, no environment.
+ * A write that timed out is read back before the owner is told anything:
+ *   there        -> saved
+ *   not there    -> not saved, safe to send again
+ *   read fails   -> may have saved; never "nothing was recorded"
  */
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 
@@ -43,10 +26,6 @@ export class WriteMayHaveSaved extends Error {
   }
 }
 
-/**
- * The plain sentence for a failed write. Never "nothing was recorded" unless a
- * read-back (or an error that cannot have applied anything) says so.
- */
 export function writeFailureSays(what: string, error: unknown): string {
   const name = (error as Error | null)?.name ?? "error";
   if (name === "WriteMayHaveSaved") {
@@ -58,7 +37,6 @@ export function writeFailureSays(what: string, error: unknown): string {
   return `${what} could not be written (${name}), so nothing was recorded.`;
 }
 
-/** The same for the log-append helpers, which carry only a message. */
 export function appendFailureSays(detail: string): string {
   if (detail.startsWith("WRITE_MAY_HAVE_SAVED")) {
     return "May have saved: the store timed out and could not be read back just now. Check the page before sending it again.";
@@ -77,7 +55,6 @@ async function readBack<T>(read: () => Promise<T>): Promise<{ readonly ok: true;
   }
 }
 
-/** The repositories an action writes through, each write read back on a timeout. */
 export function withWriteReadback(repos: ControlPlaneRepositories): ControlPlaneRepositories {
   const config = repos.adminConfig;
   const adminConfig: typeof config = {

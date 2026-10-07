@@ -1,16 +1,7 @@
 /**
- * **THE START OF SIGN IN WITH GOOGLE.** (RULING 245, 2026-09-02.)
- *
- * GET on the admin host only. Mints a PKCE verifier, a `state` and a `nonce`,
- * seals them in the ten-minute `__Host-wtp-oauth` cookie (the one `Lax` cookie —
- * `lib/control-plane/admin-google.ts` explains why), and 302s to Google.
- *
- * The redirect URI is built from `ADMIN_ORIGIN`, never from the request: it
- * must equal the URI registered on the OAuth client byte for byte, and a
- * request's own host is the one thing a prober controls.
- *
- * NOT_CONFIGURED is a 303 back to the login page, which names the missing
- * variables. Never a 500 — a stack trace on an auth route is a map.
+ * The redirect URI is built from `ADMIN_ORIGIN`, never from the request: it must equal the registered URI
+ * byte for byte, and a request's own host is what a prober controls. NOT_CONFIGURED is a 303 back to the
+ * login page, never a 500.
  */
 
 import { NextResponse, type NextRequest } from "next/server";

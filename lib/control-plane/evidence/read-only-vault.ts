@@ -1,21 +1,14 @@
 /**
- * **THE EVIDENCE VAULT, READ AND NEVER WRITTEN.** (C16, 2026-09-24.)
+ * The evidence vault, read-only, for routine children that may not reach a
+ * filesystem writer. Same on-disk layout as `DurableEvidenceStore`:
  *
- * The standing runner's routine children may not reach a filesystem writer
- * (the civic-data firewall's ROUTINE_PATH_WRITES_REPOSITORY), so the derived
- * wiring child cannot import `DurableEvidenceStore`, which carries the write
- * path. This is the read half of the same on-disk layout, with nothing else:
+ * - every committed object is a body beside its `<key>.meta.json` sidecar; a
+ *   body with no sidecar is never listed;
+ * - an artifact's id is recomputed from its sidecar (`artifactId(tier, contentHash)`);
+ * - every read recomputes the body's sha256 and refuses a mismatch.
  *
- * - every committed object is a body beside its `<key>.meta.json` sidecar, and
- *   a body with no sidecar is an incomplete write that is never listed;
- * - an artifact's id is `artifactId(tier, contentHash)`, recomputed from its
- *   sidecar, so an index lookup cannot be pointed at other bytes;
- * - every read recomputes the body's sha256 and refuses a mismatch: a bad
- *   sector is a failed read, never a document.
- *
- * `root` is the vault root (`<checkout>/data/control-plane/vault`, the
- * scheduler's `VAULT_DIR`). An absent root is an empty vault, a true statement
- * about a checkout nothing has written to; any other failure is thrown.
+ * `root` is the vault root (`VAULT_DIR`). An absent root is an empty vault;
+ * any other failure is thrown.
  */
 import { createHash } from "node:crypto";
 import type { Dirent } from "node:fs";

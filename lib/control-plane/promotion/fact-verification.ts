@@ -1,63 +1,12 @@
-/**
- * **THE FIVE VERIFICATION BURDENS, MEASURED — AND THE AUDIT CONTROLS, MEASURED.**
- * (Fleet Promotion Readiness, PRDY-3, 2026-09-06.)
- *
- * ## What the projection used to say
- *
- * `projectFleetPipeline` offered VERIFIED with two checks copied from the
- * Validator's verdict and three marked NOT_IMPLEMENTED — "capture validation
- * does not prove reader rendering, whole-source false-zero safety, or every
- * reader assertion-class burden" — and offered AUDITED with `controls: null`,
- * "runtime independent known-answer batch controls are NOT MEASURED". Both
- * were honest, and both refused every item forever (ACT-3). This module runs
- * the checks instead of declaring them unrunnable, for exactly the two fact
- * classes the bridge produces, over the IMMUTABLE bytes re-read from the vault.
- *
- * ## The five checks, what each actually measures
- *
- * ```
- *   CLAIM_RESOLVES_TO_SOURCE_SPAN        every field the fact rests on has a parser
- *                                        evidence span whose offsets, re-read from the
- *                                        bytes, quote that exact value
- *   CANONICAL_IDENTITY_UNIQUE            the body id is a registry body, the meeting id is
- *                                        namespaced by its source, one row per identity in
- *                                        the artifact, and the newest reading of the same
- *                                        source does not contradict the fact
- *   ASSERTION_CLASS_BURDENS              date/time semantics (zone, offset, precision,
- *                                        status), venue-or-online agreement, provenance on
- *                                        the publisher's own host, agenda link observed or
- *                                        adapter-derived from the publisher's flag
- *   NEUTRALITY_AND_RENDERING_SYMMETRY    the canonical renderer prints the source's own wall
- *                                        clock; a one-fact snapshot passes the Reader's own
- *                                        validator; an empty agenda slot is claimed only when
- *                                        the publisher's record showed the slot
- *   FALSE_ZERO                           rows were read, the count declared by the publisher
- *                                        agrees, nothing was partial, and no absence is stated
- * ```
- *
- * A check FAILS with the measurement that failed it. Nothing here returns
- * NOT_IMPLEMENTED: a burden this module cannot measure for a fact is a FAIL
- * with the reason, because "could not check" is not "checked".
- *
- * ## Controls
- *
- * `measureFactControls` plants known-answer controls from an INDEPENDENT read
- * of the same bytes — one JSON parse, no parser code — and scores what the
- * validated extraction stated about them with `scoreControls`, the repository's
- * one scoring function. Known-present facts are the row values the fact rests
- * on; known-absence facts are fields the publisher's own row leaves null and
- * an event id the artifact does not carry. Recall, false absences and false
- * presences are therefore measured, with their denominators, per artifact.
- */
+/** A check that cannot be measured is a FAIL with the reason, never NOT_IMPLEMENTED. Controls are planted from an independent parse of the same bytes. */
 import { formatMeetingTime, TIME_NOT_POSTED } from "../../map/format.ts";
 import { snapshotCounts, validateSnapshot, type MeetingsSnapshot } from "../../meetings/snapshot.ts";
 import type { Meeting } from "../../sources/types.ts";
-import { scoreControls, type ControlFact, type ControlObservation, type ControlScore } from "../../health/control-fact.ts";
 import { contentHash } from "../ids.ts";
 import type { ArtifactRecord } from "../repository/types.ts";
 import type { ExtractedRecord, ParserResult } from "../workers/types.ts";
 import { factAgreementIn, sourceRows, type MeetingFact, type NormalizedSource } from "./meeting-facts.ts";
-import { VERIFICATION_CHECKS, type VerificationCheck, type VerificationCheckName } from "./types.ts";
+import { VERIFICATION_CHECKS, type ControlFact, type ControlObservation, type ControlScore, type VerificationCheck, type VerificationCheckName } from "./types.ts";
 
 export const FACT_VERIFICATION_VERSION = "fact-verification/1";
 
@@ -83,7 +32,6 @@ export interface FactVerificationInput {
   readonly siblings: readonly MeetingFact[];
   /** The newest reading of the same source recorded AFTER this artifact, when one exists. */
   readonly newerSameSource: NormalizedSource | null;
-  /** Registry body ids the Reader recognises — `lib/registry/registry.json` plus the Legistar client registry. */
   readonly registryBodyIds: ReadonlySet<string>;
   readonly now: string;
   /** The row the fact came from; resolved from the bytes when absent. */
@@ -112,8 +60,6 @@ function recordFor(input: FactVerificationInput): ExtractedRecord | null {
   return input.parser.records.find((r) => r.id === input.fact.chain.extractedRecordId) ?? null;
 }
 
-/* ------------------------------------------------------------ check 1 --- */
-
 function claimResolvesToSourceSpan(input: FactVerificationInput, row: Record<string, unknown> | null, record: ExtractedRecord | null): VerificationCheck {
   const failures: string[] = [];
   const hash = contentHash(input.text);
@@ -139,8 +85,6 @@ function claimResolvesToSourceSpan(input: FactVerificationInput, row: Record<str
   return check("CLAIM_RESOLVES_TO_SOURCE_SPAN", failures, `${resolved} resting field(s) of ${input.fact.meetingId} re-read from the immutable bytes at their recorded offsets and equal both the validated record and the row`);
 }
 
-/* ------------------------------------------------------------ check 2 --- */
-
 function canonicalIdentityUnique(input: FactVerificationInput): VerificationCheck {
   const failures: string[] = [];
   const fact = input.fact;
@@ -160,8 +104,6 @@ function canonicalIdentityUnique(input: FactVerificationInput): VerificationChec
   }
   return check("CANONICAL_IDENTITY_UNIQUE", failures, `body ${fact.body.bodyId} is a registry body via ${fact.body.resolvedBy}; ${fact.meetingId} is the one ${fact.recordClass} identity in the artifact; ${currency}`);
 }
-
-/* ------------------------------------------------------------ check 3 --- */
 
 function assertionClassBurdens(input: FactVerificationInput, row: Record<string, unknown> | null): VerificationCheck {
   const failures: string[] = [];
@@ -184,8 +126,7 @@ function assertionClassBurdens(input: FactVerificationInput, row: Record<string,
   if (m.venueGap && (m.location !== null || m.online)) failures.push("a venue gap alongside a location or an online block; the three must agree");
   if (m.location !== null && m.online) failures.push("both a location and an online block; the two must agree");
   if (m.location !== null && (!Number.isFinite(m.location.lat) || !Number.isFinite(m.location.lng) || !m.location.name)) failures.push("a placed meeting without coordinates or a venue name");
-  // The capture's route authority is where "the right place" is decided (§3);
-  // the record's own link only has to exist.
+  // Where a record came from is decided by the capture's route authority; the record's own link only has to exist.
   if (m.provenance.sourceUrl === null) failures.push("no source URL on the record");
   if (!m.provenance.sourceOrg.trim()) failures.push("no publishing organisation on the record");
   if (m.provenance.collectedAt !== fact.source.acquiredAt) failures.push(`collectedAt ${m.provenance.collectedAt} is not the acquisition ${fact.source.acquiredAt}`);
@@ -211,8 +152,6 @@ function assertionClassBurdens(input: FactVerificationInput, row: Record<string,
   }
   return check("ASSERTION_CLASS_BURDENS", failures, `start ${fact.time.startsAt} in ${fact.time.timeZone} (${fact.time.precision}) from wall clock ${JSON.stringify(fact.time.sourceWallClock)}; status ${m.status}; ${m.location ? `venue ${m.location.name}` : `online: ${m.online?.label}`}; source ${m.provenance.sourceUrl} by ${m.provenance.sourceOrg}${fact.recordClass === "agendas" ? `; agenda ${fact.agenda.observedHow}` : ""}`);
 }
-
-/* ------------------------------------------------------------ check 4 --- */
 
 /** The Reader's renderer, on the fact's own meeting; null when the renderer itself refuses (an unreadable zone). */
 export function renderedWallClock(meeting: Meeting): string | null {
@@ -269,8 +208,6 @@ function neutralityAndRenderingSymmetry(input: FactVerificationInput, row: Recor
   return check("NEUTRALITY_AND_RENDERING_SYMMETRY", failures, `formatMeetingTime renders ${JSON.stringify(rendered)} for the publisher's ${JSON.stringify(fact.time.sourceWallClock)}; validateSnapshot accepts a one-fact snapshot; agenda gap ${m.agendaUrl === null ? (m.agendaSlotObservedEmpty ? "is the publisher's empty slot" : "is ours (no link carried)") : "does not arise"}`);
 }
 
-/* ------------------------------------------------------------ check 5 --- */
-
 function falseZero(input: FactVerificationInput): VerificationCheck {
   const failures: string[] = [];
   const { parser, artifact } = input;
@@ -285,8 +222,6 @@ function falseZero(input: FactVerificationInput): VerificationCheck {
   if (!input.fact.chain.completenessScope.trim()) failures.push("the contract states no completeness scope");
   return check("FALSE_ZERO", failures, `${parser.actualRowCount} of ${parser.sourceRowCount} rows read from a complete ${artifact.byteLength}-byte capture${parser.declaredRowCount === null ? "" : ` (publisher declares ${parser.declaredRowCount})`}; ${pagination ? "another page remains and " : ""}the fact claims only this capture: ${input.fact.chain.completenessScope}`);
 }
-
-/* ------------------------------------------------------------- the run --- */
 
 export interface FactVerification {
   readonly checks: readonly VerificationCheck[];
@@ -308,8 +243,6 @@ export function verifyMeetingFact(input: FactVerificationInput): FactVerificatio
   return { checks, passed: checks.every((c) => c.result === "PASS") };
 }
 
-/* ------------------------------------------------------------ controls --- */
-
 const CONTROL_FIELDS: Readonly<Record<"legistar" | "civicclerk", { readonly id: string; readonly present: readonly string[]; readonly nullable: readonly string[] }>> = {
   legistar: { id: "EventId", present: ["EventId", "EventBodyName", "EventDate", "EventTime", "EventLocation", "EventAgendaFile"], nullable: ["EventTime", "EventLocation", "EventAgendaFile", "EventComment"] },
   civicclerk: { id: "id", present: ["id", "eventName", "startDateTime", "eventCategoryName"], nullable: ["eventName", "startDateTime", "eventCategoryName"] },
@@ -320,6 +253,52 @@ export interface FactControlMeasurement {
   readonly facts: readonly ControlFact[];
   readonly observations: readonly ControlObservation[];
   readonly instrument: string;
+}
+
+/** Observations join facts by `statement`; an unknown or duplicate observation throws. */
+function scoreControls(facts: readonly ControlFact[], observations: readonly ControlObservation[]): ControlScore {
+  const byStatement = new Map(facts.map((f) => [f.statement, f]));
+  if (byStatement.size !== facts.length) {
+    throw new Error("two control facts share one statement — identity here is the statement");
+  }
+  const seen = new Set<string>();
+  let recalled = 0;
+  let absencesRecalled = 0;
+  let falseAbsences = 0;
+  let falsePresences = 0;
+  for (const observation of observations) {
+    const fact = byStatement.get(observation.statement);
+    if (!fact) {
+      throw new Error(
+        `observation about ${JSON.stringify(observation.statement)} matches no loaded control fact`,
+      );
+    }
+    if (seen.has(observation.statement)) {
+      throw new Error(`duplicate observation for ${JSON.stringify(observation.statement)}`);
+    }
+    seen.add(observation.statement);
+    if (fact.fact_class === "known_present") {
+      if (observation.observed === "FACT_STATED") recalled += 1;
+      if (observation.observed === "ABSENCE_ASSERTED") falseAbsences += 1;
+    } else {
+      if (observation.observed === "FACT_STATED") falsePresences += 1;
+      if (observation.observed === "ABSENCE_ASSERTED") absencesRecalled += 1;
+    }
+  }
+  const knownPresentCount = facts.filter((f) => f.fact_class === "known_present").length;
+  const knownAbsenceCount = facts.length - knownPresentCount;
+  return {
+    knownPresentCount,
+    knownAbsenceCount,
+    recalled,
+    absencesRecalled,
+    falseAbsences,
+    falsePresences,
+    unobserved: facts.length - seen.size,
+    recall: knownPresentCount === 0 ? null : recalled / knownPresentCount,
+    falseAbsenceRate: knownPresentCount === 0 ? null : falseAbsences / knownPresentCount,
+    falsePresenceRate: knownAbsenceCount === 0 ? null : falsePresences / knownAbsenceCount,
+  };
 }
 
 /**
@@ -377,7 +356,6 @@ export function measureFactControls(input: {
   return { score, facts, observations, instrument: `${FACT_VERIFICATION_VERSION}: ${facts.length} control(s) planted from an independent parse of ${input.artifact.artifactId}; ${input.parser.records.length} validated record(s) observed` };
 }
 
-/** Do measured controls clear the approval burden? Every denominator is on the score. */
 export function controlsClean(score: ControlScore): { readonly clean: boolean; readonly detail: string } {
   const clean = score.knownPresentCount > 0 && score.falseAbsences === 0 && score.falsePresences === 0 && score.unobserved === 0 && score.recall === 1;
   return { clean, detail: `recall ${score.recalled} of ${score.knownPresentCount}, absences recalled ${score.absencesRecalled} of ${score.knownAbsenceCount}, false absences ${score.falseAbsences}, false presences ${score.falsePresences}, unobserved ${score.unobserved}` };

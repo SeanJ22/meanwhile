@@ -1,20 +1,7 @@
 /**
- * **A RED FLAG IS FIXED OR PULLED AT ONCE, AND THE LESSON IS KEPT.** (DP-14.)
- *
- * When the live audit finds a published fact whose value is no longer on its
- * page (`live-audit.ts`), the same pass:
- *
- * 1. **pulls it** through the existing publication path (the next published
- *    version leaves it out, DP-15), so a reader stops being shown it;
- * 2. **reopens** the work item that owns it, so a corrected value is fetched
- *    and published when the page says something else;
- * 3. **adds a fix-list item** (the one list of broken things and their repairs);
- * 4. **writes an audit lesson** that carries the platform, so it applies to every
- *    door of that kind and the next detective starts from it.
- *
- * When the pulled fact later audits green again (the corrected value is up), the
- * correction is marked FIXED. Everything that touches a store is passed in, so
- * this is testable without one; the callers wire the real writers.
+ * Answers a red live-audit flag at once: pull the fact through the publication path, reopen the owning work
+ * item, add a fix-list item, and write a lesson keyed by platform. A pulled fact that audits green again is
+ * marked FIXED. Every store is passed in.
  */
 import { newFieldManualEntry, type FieldManualEntry } from "../field-manual.ts";
 import type { AuditCorrection } from "../admin-view/v6-audit-read.ts";

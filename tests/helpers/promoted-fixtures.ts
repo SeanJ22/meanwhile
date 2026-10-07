@@ -192,7 +192,9 @@ export async function withPromotedFixturesInChildren<T>(fn: () => Promise<T>): P
   const previous = process.env.NODE_OPTIONS;
   const loader = pathToFileURL(join(ROOT, "scripts/register-test-loader.mjs")).href;
   const preload = pathToFileURL(join(ROOT, "tests/helpers/promoted-fixtures-preload.ts")).href;
-  process.env.NODE_OPTIONS = [previous, "--experimental-strip-types", `--import=${loader}`, `--import=${preload}`].filter(Boolean).join(" ");
+  // Node 24's async context frames do not carry a preload's enterWith into the entry module.
+  const frames = process.allowedNodeEnvironmentFlags.has("--no-async-context-frame") ? "--no-async-context-frame" : null;
+  process.env.NODE_OPTIONS = [previous, frames, "--experimental-strip-types", `--import=${loader}`, `--import=${preload}`].filter(Boolean).join(" ");
   try {
     return await fn();
   } finally {

@@ -13,6 +13,9 @@
   ],
   "integration_from": 118,
   "integration_count": 120,
-  "pr": null,
+  "pr": {
+    "number": 722,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/722"
+  },
   "at": "2026-10-07T21:25:51Z"
 }

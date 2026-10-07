@@ -367,6 +367,7 @@ const ROBOTS_CONSUMERS: Readonly<Record<string, string>> = {
   "lib/control-plane/promotion/campaign-publication-cycle.ts": "tests/campaign-site-runner.test.ts: a disallowed linked publication is captured with its robots verdict",
   "lib/candidates/campaign-site-verifier.ts": "tests/campaign-site-verifier.test.ts",
   "lib/civic-data/website-correction-acquisition.ts": "tests/website-corrections.test.ts",
+  "lib/method/method-try.ts": "tests/method-spread.test.ts: a disallowed site's request is still made and its verdict counted",
   "scripts/robots-sweep.mts": "records verdicts only; its consumers below",
   "scripts/verify-extraction.mts": "records the verdict on each result; never skips a roster for one",
   "scripts/research-fetch.mts": "the command line over researchFetch (tests/robots-first-fetch.test.ts)",

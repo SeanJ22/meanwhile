@@ -37,6 +37,7 @@ import {
   usedFieldManualEntryIds,
   writeFieldManualDiscoveries,
 } from "../scheduler/field-manual-scout.ts";
+import { recordFoundSources } from "../../doors/page-doors.ts";
 import { durableResearchTools, researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
@@ -140,13 +141,26 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
   // Each walk reads only the manual rows its place could use, as it starts.
   const manualReads = new Map<string, FieldManualRead>();
+  // The divisions each walk's obligation covers: its places for the manual and the fix map.
+  const walkDivisions = new Map<string, readonly string[]>();
+  const divisionsOf = async (item: WorkItem): Promise<readonly string[]> => {
+    try {
+      const occurrence = (await input.repos.occurrences.listWhere(["workItemId"], item.id))[0];
+      const obligation = occurrence ? await input.repos.obligations.read(occurrence.value.obligationId) : null;
+      return obligation?.value.scopeDivisions ?? [];
+    } catch {
+      return [];
+    }
+  };
   const readScoutManual = async (item: WorkItem): Promise<void> => {
-    manualReads.set(item.id, await readFieldManual(input.repos, scoutFieldManualQuery({ subjectId: item.subject, obligationId: item.id })));
+    const divisions = await divisionsOf(item);
+    walkDivisions.set(item.id, divisions);
+    manualReads.set(item.id, await readFieldManual(input.repos, scoutFieldManualQuery({ subjectId: item.subject, obligationId: item.id, divisions })));
   };
   // The rows are held only while the walk runs; a process that runs many walks keeps none of them.
   const withManual = async <T>(item: WorkItem, walk: () => Promise<T>): Promise<T> => {
     await readScoutManual(item);
-    try { return await walk(); } finally { manualReads.delete(item.id); inheritedManualStores.delete(item.id); }
+    try { return await walk(); } finally { manualReads.delete(item.id); walkDivisions.delete(item.id); inheritedManualStores.delete(item.id); }
   };
   const withScoutManual = (item: WorkItem, executor: DeclaredExecutor): DeclaredExecutor => ({ ...executor,
     run: (...args) => withManual(item, () => executor.run(...args)),
@@ -262,9 +276,10 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           adapterRoutes:plan.sources.map(source=>({routeId:source.id,label:source.applicableBecause,target:source.url}))});
         // The field manual projected to this jurisdiction takes the line budget the mission's lines leave.
         const manual=manualReads.get(item.id)??{store:{entries:[]}};
-        const manualProjection=scoutFieldManualProjection(manual,{subjectId:item.subject,obligationId:item.id,recordClass:plan.contract.recordClass,
+        const divisions=walkDivisions.get(item.id)??[];
+        const manualProjection=scoutFieldManualProjection(manual,{subjectId:item.subject,obligationId:item.id,divisions,recordClass:plan.contract.recordClass,
           limit:SCOUT_BRIEF_LINE_BUDGET-mission.lines.length});
-        const manualEntries=scoutFieldManualCatalog(manual,{subjectId:item.subject,obligationId:item.id});
+        const manualEntries=scoutFieldManualCatalog(manual,{subjectId:item.subject,obligationId:item.id,divisions});
         const repair=(item as typeof item & {readonly planRepair?:PlanRepairLink}).planRepair;
         inheritedFieldManualCounts.set(item.id,manualEntries.length);
         inheritedManualStores.set(item.id,manual.store);
@@ -316,7 +331,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           const written=await writeFieldManualDiscoveries(input.repos,scoutDiscoveryEntries(result,scoutStateHint(result.subjectId,result.obligationId)),result.recordedAt);
           if(written.error) recorded={...recorded,unverified:[...recorded.unverified,`field manual write-back failed: ${written.error}`]};
         }
-        const fixed=await recordScoutMethods(input.repos,recorded,handedManual);
+        const fixed=await recordScoutMethods(input.repos,recorded,handedManual,walkDivisions.get(result.workItemId)??[]);
         if(fixed) recorded={...recorded,unverified:[...recorded.unverified,fixed]};
         await writeFieldManual(input.repos,[newFieldManualEntry("investigation",recorded.subjectId+":"+recorded.recordClass,{
           role:"SHARED",kind:"INVESTIGATION_RESULT",title:recorded.subjectId,
@@ -324,6 +339,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           recordClasses:[recorded.recordClass],observedAt:recorded.recordedAt,
           payload:{subjectId:recorded.subjectId,recordClass:recorded.recordClass,facts:recorded.findings,routes:recorded.candidates,tried:recorded.rungs,nextRungs:recorded.nextRungs}})],recorded.recordedAt);
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
+        await recordFoundSources(input.repos.doors,[recorded],recorded.recordedAt);
         if (indexFindings) await indexScoutFindings(input.repos.boxFindings, recorded, now());
         return recorded;
       }

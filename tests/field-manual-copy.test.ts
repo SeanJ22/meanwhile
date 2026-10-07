@@ -8,7 +8,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { BANK_WRITE_HEALTH_ID } from "../lib/control-plane/bank-write-health.ts";
-import { copiedReach, copyFieldManualDocument, copyReportId, retagForRows, type SingleDocumentManual } from "../lib/control-plane/field-manual-copy.ts";
+import { copiedReach, copyBriefLine, copyFieldManualDocument, copyReportId, retagForRows, type SingleDocumentManual } from "../lib/control-plane/field-manual-copy.ts";
+import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { updateRecords } from "../lib/control-plane/updates.ts";
 import { fieldManualEntryId, type FieldManualEntry } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { Persisted } from "../lib/control-plane/repository/types.ts";
@@ -85,6 +87,11 @@ test("the copy saves every entry as a row, records method results, keeps the doc
   const fix = new Map([...(await repos.fixMap.forPlace(PIMA)), ...(await repos.fixMap.forPlace(MORRIS))].map((r) => [`${r.methodId}@${r.placeId}`, r.state] as const));
   assert.deepEqual(Object.fromEntries(fix), { [`method@${PIMA}`]: "WORKS", [`method@${MORRIS}`]: "WORKS", [`route@${PIMA}`]: "FAILS" });
   assert.equal(await copyFieldManualDocument(table, repos, "2026-10-07T12:05:00.000Z"), null, "the next start finds nothing to copy");
+  const lines = updateRecords((await repos.adminConfig.read(ADMIN_CONFIG_ID))!.value as AdminConfig).filter((u) => u.id.startsWith("field-manual-copy:"));
+  assert.equal(lines.length, 1, "one line for the daily brief");
+  assert.equal(lines[0]!.what, copyBriefLine(report));
+  assert.equal(lines[0]!.what, "The field manual now keeps each lesson on its own: 9 lessons copied — 3 for one place, 1 for a state, 1 for a website platform, " +
+    "2 methods offered anywhere they fit, 1 for everywhere; 4 lessons got their place back from the record, and 1 lesson names no place yet and is listed for review.");
 });
 
 test("a document the old code writes again is copied by the next start, merged so nothing is lost", async () => {

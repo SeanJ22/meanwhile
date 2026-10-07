@@ -211,7 +211,8 @@ import {
   type MeetingsDiscoveryPass,
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { knownRecipes, RECIPE_KIND } from "../lib/hunt/meetings-recipes.ts";
-import { runSpreadPass, sentMoneyPlaces } from "../lib/method/spread-pass.ts";
+import { runSpreadPass, sentMoneyPlaces, spreadLine } from "../lib/method/spread-pass.ts";
+import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
@@ -292,6 +293,7 @@ import {
   usedFieldManualEntryIds,
   writeFieldManualDiscoveries,
 } from "../lib/control-plane/scheduler/field-manual-scout.ts";
+import { recordFoundSources } from "../lib/doors/page-doors.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
 import { candidateCounts as countMethodCandidates } from "../lib/method/candidate.ts";
@@ -2263,6 +2265,8 @@ const priorDispositionsByObligation = new Map<string, { disposition: string; per
 /* Each due place's own field-manual rows, read once before its Scout is briefed. */
 const manualReads = new Map<string, FieldManualRead>();
 const inheritedManualStores = new Map<string, FieldManualStore>();
+/* The divisions each Scout's obligation covers, where its method results are recorded. */
+const scoutDivisions = new Map<string, readonly string[]>();
 const inheritedFieldManualCounts = new Map<string, number>();
 /** The exact projected doors handed to each obligation's scout at dispatch — captured input for the delivery audit, keyed by obligation id. */
 const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly lines: readonly string[] }>();
@@ -2279,7 +2283,7 @@ if (modelLaneEnabled && dueModel.length > 0) {
   }
   const places = [...new Map(dueModel.map((row) => [row.obligation.subjectId, row.obligation] as const)).values()];
   const reads = await Promise.all(places.map(async (obligation) => [obligation.subjectId,
-    await readFieldManual(repos, scoutFieldManualQuery({ subjectId: obligation.subjectId, obligationId: obligation.id }))] as const));
+    await readFieldManual(repos, scoutFieldManualQuery({ subjectId: obligation.subjectId, obligationId: obligation.id, divisions: obligation.scopeDivisions ?? [] }))] as const));
   for (const [subjectId, read] of reads) manualReads.set(subjectId, read);
   const unread = reads.find(([, read]) => read.error !== undefined);
   if (unread) runtimeConditions.push(`the field manual could not be read: ${unread[1].error}`);
@@ -2392,8 +2396,10 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
   const projection = scoutFieldManualProjection(manual, {
     subjectId: row.obligation.subjectId,
     obligationId: row.obligation.id,
+    divisions: row.obligation.scopeDivisions ?? [],
     recordClass: row.obligation.recordClass,
   });
+  scoutDivisions.set(id, row.obligation.scopeDivisions ?? []);
   inheritedFieldManualCounts.set(id, projection.entryIds.length);
   inheritedManualStores.set(id, manual.store);
   const manualLines = fieldManualBriefLines(projection);
@@ -2815,11 +2821,12 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
             amended = { ...amended, unverified: [...amended.unverified, `field manual write-back failed: ${written.error}`] };
           }
         }
-        const fixed = await recordScoutMethods(repos, amended, handedManual);
+        const fixed = await recordScoutMethods(repos, amended, handedManual, scoutDivisions.get(amended.obligationId) ?? []);
         if (fixed) amended = { ...amended, unverified: [...amended.unverified, fixed] };
         const heldJobId = jobSpend.get(amended.obligationId)?.jobId;
         if (heldJobId !== undefined) amended = { ...amended, spendHoldJobId: heldJobId };
         await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
+        await recordFoundSources(repos.doors, [amended], nowIso());
         scoutResultsThisCycle.push(amended);
         priorScoutResults.set(amended.obligationId,[...(priorScoutResults.get(amended.obligationId)??[]),amended]);
         const outcome = amended.refusal !== null ? "REFUSED"
@@ -3121,17 +3128,14 @@ for (const row of cycle.deferred) {
 /* ------------------------------------------------- spread what started working --- */
 
 if (!dry && !canary) {
-  const spread = await pending.step("methods:spread", () => runSpreadPass({ repos,
-    since: new Date(Date.parse(NOW) - 24 * 3_600_000).toISOString(), now: nowIso(),
+  const spread = await pending.step("methods:spread", () => runSpreadPass({ repos, now: nowIso(),
     sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
-    paidTriesLeft: guards.paidWorkerCapacity() })).catch((error: unknown) => {
-    runtimeConditions.push(`methods that started working were not queued elsewhere: ${error instanceof Error ? error.message : String(error)}`);
+    paidTriesLeft: guards.paidWorkerCapacity(), fetch: pacedProbeFetch(), sizeFor: websiteSize })).catch((error: unknown) => {
+    runtimeConditions.push(`working methods were not tried elsewhere: ${error instanceof Error ? error.message : String(error)}`);
     return null;
   });
-  if (spread && spread.methods > 0) {
-    console.log(`  spread: ${spread.methods} method(s) that started working queued for ${spread.free} free and ${spread.paid} paid tr${spread.free + spread.paid === 1 ? "y" : "ies"} elsewhere` +
-      (spread.paidSkipped ? `; ${spread.paidSkipped} paid tr${spread.paidSkipped === 1 ? "y" : "ies"} not made (outside a Send or past the budget dial)` : ""));
-  }
+  if (spread && spread.methods > 0) console.log(`  spread: ${spreadLine(spread)}`);
+  if (spread?.writeError) runtimeConditions.push(`the spread's results were not all recorded: ${spread.writeError}`);
 }
 
 /* ------------------------------------------------- close, and persist debt --- */

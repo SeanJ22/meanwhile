@@ -62,7 +62,7 @@ import { recordDoorEvidence, type DoorEvidence } from "../lib/doors/shut.ts";
 import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
 import { isDoorRecord } from "../lib/doors/registry.ts";
 import { doorReadModeFromEnv, refreshDoorsForPass } from "../lib/doors/install.ts";
-import { doorSeedOnFromEnv, seedDoorsOnStart } from "../lib/doors/seed-all.ts";
+import { doorSyncLine, syncHeldDoors } from "../lib/doors/seed-all.ts";
 import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
 import { editDeriveDueRequests } from "../lib/doors/edit-derive.ts";
 import { meetingReadQuietMs } from "../lib/civic-data/meeting-lanes.ts";
@@ -171,12 +171,11 @@ const PUBLISH_NOW = process.argv.includes("--publish-now");
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 // With WTP_DOORS_READ=registry the meeting work is built from the door registry; otherwise the code's list.
 const CODE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
-if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlaneUrlFromEnv() !== null) {
+if (controlPlaneUrlFromEnv() !== null && (!PUBLISH_NOW || doorReadModeFromEnv() === "registry")) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
-    // An empty registry is seeded once from today's doors (WTP_DOORS_SEED=on); otherwise nothing is written.
-    const seeded = await seedDoorsOnStart(doorRepos.doors);
-    console.log(`RCD_TASK routine-civic-data-runner: door registry seed — ${seeded.seeded ? `${seeded.result.total} doors now held` : seeded.reason}`);
+    // Every routine pass brings the doors the system holds into the registry; a pass with nothing new writes nothing.
+    if (!PUBLISH_NOW) console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors, { scoutResults: doorRepos.scoutResults }))}`);
     if (doorReadModeFromEnv() === "registry") {
       const doorPass = await refreshDoorsForPass(doorRepos.doors);
       console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from ${doorPass.reading} (${doorPass.partitions?.partitions ?? doorPass.rows} partitions)` +

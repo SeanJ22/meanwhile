@@ -43,17 +43,26 @@ export interface ScoutManualOptions {
   /** The place the walk is for: its division, or a state code. */
   readonly subjectId?: string | null;
   readonly obligationId?: string | null;
+  /** The divisions the walk's obligation covers. */
+  readonly divisions?: readonly string[];
   readonly recordClass?: string | null;
   readonly limit?: number;
+}
+
+/** The walk's own places: its subject when that is a division, and the divisions its obligation covers. */
+export function scoutPlaces(subjectId: string | null | undefined, divisions: readonly string[] = []): string[] {
+  const subject = subjectId?.split("#")[0];
+  return [...new Set([...(subject?.startsWith("ocd-division/") ? [subject] : []), ...divisions.filter((d) => d.startsWith("ocd-division/"))])];
 }
 
 /** The read a scout's page is cut from: its role, its place and its state. */
 export function scoutFieldManualQuery(opts: ScoutManualOptions): FieldManualQuery {
   const states = scoutStateHint(opts.subjectId, opts.obligationId);
+  const places = scoutPlaces(opts.subjectId, opts.divisions);
   return {
     role: "SCOUT", subjectId: opts.subjectId ?? undefined,
     ...(states[0] ? { state: states[0] } : {}),
-    ...(opts.subjectId?.startsWith("ocd-division/") ? { ocdIds: [opts.subjectId] } : {}),
+    ...(places.length > 0 ? { ocdIds: places } : {}),
   };
 }
 
@@ -243,14 +252,17 @@ export async function writeFieldManualDiscoveries(repos: FieldManualRepos, entri
   return writeFieldManual(repos, foldEntries([...entries, ...methods]), now);
 }
 
-/** Record in the fix map, at the walk's place, what it did with the methods it opened from its page; the words of a failure, or null. */
+/** Record in the fix map, at each of the walk's places, what it did with the methods it opened from its page; the words of a failure, or null. */
 export async function recordScoutMethods(repos: Pick<ControlPlaneRepositories, "fixMap" | "adminConfig">, result: ScoutResult,
-  handed: FieldManualStore): Promise<string | null> {
-  const attempt = attemptFromScoutResult(result, result.subjectId.split("#")[0]!);
-  if (!attempt.placeId.startsWith("ocd-division/")) return null;
+  handed: FieldManualStore, divisions: readonly string[] = []): Promise<string | null> {
+  const places = scoutPlaces(result.subjectId, divisions);
+  if (places.length === 0) return null;
   const methods = new Set(handed.entries.filter(isTransferableMethod).map((entry) => entry.id));
   const titles = new Map(handed.entries.map((entry) => [entry.id, entry.title] as const));
-  const done = await recordAttemptsKeepingHistory(repos.fixMap, repos, [{ ...attempt, methodIds: attempt.methodIds.filter((id) => methods.has(id)) }],
-    (id) => titles.get(id) ?? null);
+  const attempts = places.map((place) => {
+    const attempt = attemptFromScoutResult(result, place);
+    return { ...attempt, methodIds: attempt.methodIds.filter((id) => methods.has(id)) };
+  });
+  const done = await recordAttemptsKeepingHistory(repos.fixMap, repos, attempts, (id) => titles.get(id) ?? null);
   return done.failed > 0 ? `the fix map was not updated for ${done.failed} method result(s)` : null;
 }

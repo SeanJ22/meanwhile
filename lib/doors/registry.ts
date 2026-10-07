@@ -6,7 +6,7 @@
  * data. Pure: callers hand in the repository and the time.
  */
 
-import type { AggregateRepository } from "../control-plane/repository/types.ts";
+import { canonicalJson, type AggregateRepository } from "../control-plane/repository/types.ts";
 
 /** Whether a door is read, shut because it stopped working, or deliberately set aside. */
 export const DOOR_STATUSES = ["OPEN", "SHUT", "SUSPENDED"] as const;
@@ -364,8 +364,9 @@ export function applyDerivedRow(
 }
 
 const FIELDS = ["kind", "ocdId", "bodyIds", "hosts", "config", "holds", "checkEveryMinutes", "notes", "meeting", "status", "readNow"] as const;
+/** Key order is not compared: the store hands settings back in its own order. */
 function sameFields(a: DoorRecord, b: DoorRecord): boolean {
-  return FIELDS.every((f) => JSON.stringify(a[f]) === JSON.stringify(b[f]));
+  return FIELDS.every((f) => canonicalJson(a[f]) === canonicalJson(b[f]));
 }
 
 /** The editable fields only, for showing what an edit changed. */

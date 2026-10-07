@@ -1633,5 +1633,29 @@
     "tested_sha": "d89746be44704ed235382db296cd68875d750e62",
     "gates": "pass",
     "at": "2026-10-06T19:41:12Z"
+  },
+  {
+    "lane": "ci",
+    "steps": [
+      "CI-01"
+    ],
+    "ready_sha": "5693402700d494bc995451315d109534882974b6",
+    "merge_sha": "8d86b4f775974b694f3f365879a85385709bc0ca",
+    "river_sha": "ce52ee5a4a7e849eca41545b551e63029ce4e676",
+    "tested_sha": "ce52ee5a4a7e849eca41545b551e63029ce4e676",
+    "gates": "pass",
+    "at": "2026-10-07T21:25:20Z"
+  },
+  {
+    "lane": "models",
+    "steps": [
+      "HK-01"
+    ],
+    "ready_sha": "498b766c410f0fc0722b982bcd27136e451192e0",
+    "merge_sha": "c21f4c1a0564ba7935e6693c1b76056b2e6fa07b",
+    "river_sha": "ce52ee5a4a7e849eca41545b551e63029ce4e676",
+    "tested_sha": "ce52ee5a4a7e849eca41545b551e63029ce4e676",
+    "gates": "pass",
+    "at": "2026-10-07T21:25:20Z"
   }
 ]

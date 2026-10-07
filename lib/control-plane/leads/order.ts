@@ -36,9 +36,7 @@ export interface LeadRow {
   readonly stateAbbr: string | null;
   readonly tries: number;
   readonly testedAt: string | null;
-  /** Requests the last test sent to the link's website. */
-  readonly requests: number;
-  /** Not tested again before this time (the website asked us to wait). */
+  /** Not tested again before this time (the website asked us to wait, or pacing held it back). */
   readonly notBefore: string | null;
   readonly found: LeadFound | null;
   /** The field manual entry it became, once saved. */

@@ -140,7 +140,7 @@ export const LEAD_ACTIONS: readonly RegisteredAction[] = [
         const byHost = d.url === null || d.bad !== null ? null : placesByHost.get(hostOf(d.url));
         const place = named.place ?? (door?.ocdId ? door.ocdId.split("#")[0]! : byHost?.size === 1 ? [...byHost][0]! : null);
         const base = { n: i + 1, link: d.link, url: d.url, notes: d.notes, place, stateAbbr: named.state ?? (place ? stateOfPlace(place) : null),
-          tries: 0, testedAt: null, requests: 0, notBefore: null, found: null, lessonId: null };
+          tries: 0, testedAt: null, notBefore: null, found: null, lessonId: null };
         if (d.bad !== null) return { ...base, state: "FAILED", why: d.bad };
         if (captured.has(d.url!)) return { ...base, state: "HELD", why: "Already held: a saved copy of this page is on file." };
         if (door !== undefined) return { ...base, state: "HELD", why: "Already held: we read this page on a schedule." };

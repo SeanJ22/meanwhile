@@ -1,6 +1,7 @@
 /** The control-plane schema, versioned in this module. */
 
 import { FIX_MAP_DDL } from "../../method/fix-map.ts";
+import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
 export const BOOTSTRAP_VERSION = 27;
@@ -72,6 +73,7 @@ export const DECLARED_TABLES: readonly string[] = [
   "cp_spend_holds",
   "cp_vital_signs",
   "cp_fix_map",
+  "cp_website_pacing",
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
 ];
@@ -608,6 +610,7 @@ END $$;`,
   SPEND_HOLDS_MOVE_DDL,
   VITAL_SIGNS_TABLE_DDL,
   ...FIX_MAP_DDL,
+  ...WEBSITE_PACING_DDL,
   FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL,
 ];
 

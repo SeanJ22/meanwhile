@@ -4,6 +4,7 @@ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import type { LeadOrder } from "../leads/order.ts";
+import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
@@ -609,6 +610,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ),
     fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries")),
     fixMap: aggregateFixMap(fileAggregateRepository<FixMapRow>(resolved, "FixMapRow", "fix-map")),
+    websitePacing: memoryWebsitePacing(),
     runnerHeartbeat: fileAggregateRepository<RunnerHeartbeat>(
       resolved,
       "RunnerHeartbeat",

@@ -40,6 +40,7 @@ import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import type { LeadOrder } from "../leads/order.ts";
+import type { WebsitePacing } from "../website-pacing.ts";
 
 /** `revision` starts at 1 and increments by exactly one per accepted write. */
 export interface Persisted<T> {
@@ -466,6 +467,8 @@ export interface ControlPlaneRepositories {
   readonly fieldManual: FieldManualRepository;
   /** What each reusable method did in each place. */
   readonly fixMap: FixMapRepository;
+  /** Every reader's shared count and holds per website. */
+  readonly websitePacing: WebsitePacing;
   /** Keyed by runner id. "Alive" is DERIVED from this beat, never stored. */
   readonly runnerHeartbeat: AggregateRepository<RunnerHeartbeat>;
   readonly cacheObservations: AggregateRepository<CacheObservationRecord>;

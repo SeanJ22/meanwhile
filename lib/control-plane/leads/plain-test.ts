@@ -1,9 +1,10 @@
 /**
  * The runner's pass over open research-leads orders: each queued link is read
  * once by plain code (`researchFetch`: robots.txt read and recorded first,
- * never a block), at normal pacing. A known small publisher gets at most its
- * hourly request limit; everything else is read at full speed. Retry-After is
- * honored, and a 429 or 5xx means try later.
+ * never a block), through the runner's guarded fetch, so its requests count
+ * in the same per-website pacing as every other reader: a known small
+ * publisher's hourly allowance, and the hold after a 429, a 5xx or a
+ * Retry-After. A link held back by pacing waits for its turn.
  *
  * A link that reads is saved as a lesson with the owner as its source, tied to
  * its place and platform, so the spread pass carries it to places with the
@@ -15,30 +16,28 @@
 import { newFieldManualEntry, writeFieldManual, type FieldManualEntry } from "../field-manual.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { ConcurrentModification } from "../repository/types.ts";
-import { websiteRequestLimit, type WebsiteSize } from "../scheduler/host-supervision.ts";
+import type { FleetSafetyController } from "../fleet-safety.ts";
 import { formatEasternTime } from "../eastern-time.ts";
 import { memoryInProcess, researchFetch, type ResearchFetchResult, type ResearchGet } from "../../hunt/robots-first-fetch.ts";
 import { detectTenancy } from "../../hunt/platform-tenancy.ts";
 import { retryAfterMs } from "../../doors/link-sweep.ts";
+import { RATE_LIMIT_BACKOFF_MS } from "../../hunt/access-control.ts";
 import { isLeadOrder, OWNER_LEAD_SOURCE, rowOpen, type LeadFound, type LeadOrder, type LeadRow } from "./order.ts";
 
 /** How long one round spends starting new tests. */
 export const LEADS_PASS_BUDGET_MS = 60_000;
 /** The most links one pass tests. */
 export const LEADS_PASS_MAX_TESTS = 300;
-/** A website that asked us to wait, and gave no time, is left this long. */
+/** A server error is tried again after this long. */
 export const LEAD_BACKOFF_MS = 15 * 60_000;
 /** Tries before an unreachable link or a server error is called failed. */
 export const LEAD_MAX_TRIES = 3;
-const HOUR_MS = 3_600_000;
 
 export interface LeadsPassInput {
   readonly repos: Pick<ControlPlaneRepositories, "leadOrders" | "fieldManual"> & Partial<Pick<ControlPlaneRepositories, "fixMap" | "adminConfig">>;
   readonly get: ResearchGet;
   readonly now: () => number;
   readonly sleep: (ms: number) => Promise<void>;
-  /** What is known of a link's publisher; unknown means full speed. */
-  readonly sizeFor?: (url: string) => WebsiteSize | null | undefined;
   /** Places inside a Send or a funded area: the only places paid work may go. */
   readonly sendPlaceIds: ReadonlySet<string>;
   readonly maxTests?: number;
@@ -69,7 +68,29 @@ export function insideSentPlace(place: string | null, sent: ReadonlySet<string>)
 }
 
 const hostOf = (url: string): string => new URL(url).host.toLowerCase();
-const READABLE = /html|xml|json|pdf|text\/|calendar|rss|atom|csv|spreadsheet|msword|officedocument/i;
+
+/** The runner's guarded fetch as the research reader takes it: every request, robots.txt included, is paced with every other reader's. */
+export function guardedLeadGet(safety: Pick<FleetSafetyController, "guardedOpenBytes">, fetchImpl: typeof fetch = fetch): ResearchGet {
+  const opened = safety.guardedOpenBytes("public-web", "research-leads", fetchImpl, { followRedirects: false });
+  return async ({ url, headers, timeoutMs }) => {
+    const got = await opened({ url, headers, timeoutMs });
+    return { status: got.status, body: got.bytes, contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
+  };
+}
+
+const ISO = /\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z/;
+
+/** A request the shared pacing held back, with when it may go: null when the refusal is not about pacing. */
+function heldBack(transportError: string, nowMs: number): { readonly why: string; readonly until: number | null } | null {
+  const code = /^([A-Z][A-Z0-9_]+): /.exec(transportError)?.[1];
+  if (code === undefined) return null;
+  const at = ISO.exec(transportError)?.[0];
+  const until = at === undefined ? null : Date.parse(at);
+  const after = until !== null && until > nowMs ? ` trying again after ${formatEasternTime(new Date(until).toISOString())}` : " trying again next round";
+  if (code === "WEBSITE_REQUEST_CAP") return { why: "A small local website is read at most 10 times an hour; this link is next in line.", until };
+  if (code === "WEBSITE_ASKED_TO_WAIT" || code === "PROVIDER_CIRCUIT_BROKEN") return { why: `The website asked us to wait;${after}.`, until };
+  return { why: "Our pacing held it back this round; trying again next round.", until };
+}const READABLE = /html|xml|json|pdf|text\/|calendar|rss|atom|csv|spreadsheet|msword|officedocument/i;
 
 /** The platform a page is on: its own host first, then a vendor's markup on the page. */
 function platformOf(finalUrl: string, html: string): { id: string; label: string } | null {
@@ -83,7 +104,7 @@ type Verdict =
   | { readonly kind: "works"; readonly found: LeadFound }
   | { readonly kind: "turned-away"; readonly why: string; readonly found: LeadFound | null }
   | { readonly kind: "failed"; readonly why: string; readonly found: LeadFound | null }
-  | { readonly kind: "later"; readonly why: string; readonly waitMs: number | null; readonly pauseHost: boolean; readonly countsTry: boolean };
+  | { readonly kind: "later"; readonly why: string; readonly until: number | null; readonly countsTry: boolean };
 
 function verdictOf(fetched: ResearchFetchResult, row: LeadRow, nowMs: number): Verdict {
   if (fetched.outcome === "REFUSED") {
@@ -98,24 +119,22 @@ function verdictOf(fetched: ResearchFetchResult, row: LeadRow, nowMs: number): V
     robots: robots ? { verdict: robots.verdict, detail: robots.detail } : null };
   if (fetched.transportError !== null || fetched.status === null) {
     if (/ENOTFOUND|getaddrinfo/i.test(fetched.transportError ?? "")) return { kind: "failed", found: null, why: "The website's address doesn't exist." };
-    // The runner's own pacing held the request back (a small publisher's hourly allowance, or a website resting after it asked us to slow down).
-    if (/^[A-Z][A-Z0-9_]+: /.test(fetched.transportError ?? "")) {
-      return { kind: "later", why: "Our pacing for this website held it back; trying again next round.", waitMs: null, pauseHost: true, countsTry: false };
-    }
+    const held = heldBack(fetched.transportError ?? "", nowMs);
+    if (held !== null) return { kind: "later", why: held.why, until: held.until, countsTry: false };
     return row.tries + 1 >= LEAD_MAX_TRIES
       ? { kind: "failed", found: null, why: `The website didn't answer in ${LEAD_MAX_TRIES} tries.` }
-      : { kind: "later", why: "The website didn't answer; trying again next round.", waitMs: null, pauseHost: false, countsTry: true };
+      : { kind: "later", why: "The website didn't answer; trying again next round.", until: null, countsTry: true };
   }
   const status = fetched.status;
   const wait = retryAfterMs(fetched.retryAfter, nowMs);
   if (status === 429 || status === 503 || (status >= 500 && wait !== null)) {
-    const ms = wait ?? LEAD_BACKOFF_MS;
-    return { kind: "later", why: `The website asked us to wait; trying again after ${formatEasternTime(new Date(nowMs + ms).toISOString())}.`, waitMs: ms, pauseHost: true, countsTry: false };
+    const until = nowMs + Math.max(RATE_LIMIT_BACKOFF_MS, wait ?? 0);
+    return { kind: "later", why: `The website asked us to wait; trying again after ${formatEasternTime(new Date(until).toISOString())}.`, until, countsTry: false };
   }
   if (status >= 500) {
     return row.tries + 1 >= LEAD_MAX_TRIES
       ? { kind: "failed", found, why: `The website kept answering with a server error (${status}) across ${LEAD_MAX_TRIES} tries.` }
-      : { kind: "later", why: `The website had a server error (${status}); trying again later.`, waitMs: LEAD_BACKOFF_MS, pauseHost: false, countsTry: true };
+      : { kind: "later", why: `The website had a server error (${status}); trying again later.`, until: nowMs + LEAD_BACKOFF_MS, countsTry: true };
   }
   if (status === 404) return { kind: "failed", found, why: "The page wasn't found (404)." };
   if (status === 410) return { kind: "failed", found, why: "The page is gone (410)." };
@@ -176,12 +195,9 @@ export async function runLeadsPass(input: LeadsPassInput): Promise<LeadsPassResu
     changed.set(orderId, rows);
   };
 
-  // What each website has been asked in the last hour, across every open order.
-  const used = new Map<string, number>();
   const due: { order: LeadOrder; row: LeadRow }[] = [];
   for (const { value: order } of orders) {
     for (const row of order.rows) {
-      if (row.url !== null && row.testedAt !== null && nowMs - Date.parse(row.testedAt) < HOUR_MS) used.set(hostOf(row.url), (used.get(hostOf(row.url)) ?? 0) + row.requests);
       if (row.state === "QUEUED" && row.url !== null && (row.notBefore === null || Date.parse(row.notBefore) <= nowMs)) due.push({ order, row });
     }
   }
@@ -192,48 +208,33 @@ export async function runLeadsPass(input: LeadsPassInput): Promise<LeadsPassResu
   }
 
   const memory = memoryInProcess();
-  const readHost = async (host: string, items: readonly { order: LeadOrder; row: LeadRow }[]): Promise<void> => {
-    const cap = websiteRequestLimit(input.sizeFor?.(items[0]!.row.url!));
-    let spent = used.get(host) ?? 0;
-    /** Set once the website asked us to wait (until a time) or our pacing held it back (until next round). */
-    let paused: { readonly until: number | null; readonly why: string } | null = null;
+  const readHost = async (items: readonly { order: LeadOrder; row: LeadRow }[]): Promise<void> => {
     for (const { order, row } of items) {
       if (input.deadlineMs !== undefined && input.now() >= input.deadlineMs) return;
-      const robotsRead = memory.robots(new URL(row.url!).origin) !== undefined;
-      if (cap !== null && spent + (robotsRead ? 1 : 2) > cap) {
-        change(order.orderId, { ...row, why: `A small local website is read at most ${cap} times an hour; this link is next in line.` });
-        result.waiting += 1;
-        continue;
-      }
-      if (paused !== null) {
-        change(order.orderId, { ...row, notBefore: paused.until === null ? null : new Date(paused.until).toISOString(), why: paused.why });
-        result.waiting += 1;
-        continue;
-      }
-      let requests = 0;
       const fetched = await researchFetch(row.url!, { get: input.get, memory, now: input.now, sleep: input.sleep,
-        ...(input.spacingMs !== undefined ? { spacingMs: input.spacingMs } : {}), log: () => { requests += 1; } });
-      spent += requests;
+        ...(input.spacingMs !== undefined ? { spacingMs: input.spacingMs } : {}) });
       const at = new Date(input.now()).toISOString();
-      const tested = { ...row, testedAt: at, requests };
-      result.tested += 1;
       const verdict = verdictOf(fetched, row, input.now());
       if (verdict.kind === "later") {
-        if (verdict.pauseHost) paused = { until: verdict.waitMs === null ? null : input.now() + verdict.waitMs, why: verdict.why };
-        change(order.orderId, { ...tested, tries: row.tries + (verdict.countsTry ? 1 : 0), why: verdict.why,
-          notBefore: verdict.waitMs === null ? null : new Date(input.now() + verdict.waitMs).toISOString() });
+        change(order.orderId, { ...row, testedAt: verdict.countsTry ? at : row.testedAt, tries: row.tries + (verdict.countsTry ? 1 : 0), why: verdict.why,
+          notBefore: verdict.until === null ? null : new Date(verdict.until).toISOString() });
         result.waiting += 1;
-      } else if (verdict.kind === "works") {
-        change(order.orderId, { ...tested, tries: row.tries + 1, notBefore: null, state: "WORKS", found: verdict.found, why: worksWords({ ...tested, found: verdict.found }) });
+        if (verdict.countsTry) result.tested += 1;
+        continue;
+      }
+      const tested = { ...row, testedAt: at, tries: row.tries + 1, notBefore: null, found: verdict.found };
+      result.tested += 1;
+      if (verdict.kind === "works") {
+        change(order.orderId, { ...tested, state: "WORKS", why: worksWords(tested) });
         result.works += 1;
       } else if (verdict.kind === "turned-away" && insideSentPlace(row.place, input.sendPlaceIds)) {
-        change(order.orderId, { ...tested, tries: row.tries + 1, notBefore: null, state: "PAID", found: verdict.found,
+        change(order.orderId, { ...tested, state: "PAID",
           why: `Plain code couldn't read it: ${verdict.why}. Its place has your money, so paid workers there are given it to try.` });
         result.paid += 1;
       } else {
         const why = verdict.kind === "failed" ? verdict.why
           : `Plain code couldn't read it: ${verdict.why}. Paid work runs only inside places you've sent money to, and ${row.place === null ? "no place is known for this link" : "this link's place isn't one of them"}.`;
-        change(order.orderId, { ...tested, tries: row.tries + 1, notBefore: null, state: "FAILED", found: verdict.found, why });
+        change(order.orderId, { ...tested, state: "FAILED", why });
         result.failed += 1;
       }
     }
@@ -242,8 +243,7 @@ export async function runLeadsPass(input: LeadsPassInput): Promise<LeadsPassResu
   let next = 0;
   await Promise.all(Array.from({ length: Math.min(Math.max(1, input.concurrency ?? 6), hosts.length) }, async () => {
     while (next < hosts.length) {
-      const [host, items] = hosts[next++]!;
-      await readHost(host, items);
+      await readHost(hosts[next++]![1]);
     }
   }));
 

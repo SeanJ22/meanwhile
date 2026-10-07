@@ -4,6 +4,7 @@ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import type { LeadOrder } from "../leads/order.ts";
+import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
@@ -346,6 +347,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
     fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry")),
     fixMap: aggregateFixMap(memoryAggregateRepository<FixMapRow>("FixMapRow")),
+    websitePacing: memoryWebsitePacing(),
     runnerHeartbeat: memoryAggregateRepository<RunnerHeartbeat>("RunnerHeartbeat"),
     cacheObservations: memoryAggregateRepository<CacheObservationRecord>("CacheObservationRecord"),
     ownerDigests: memoryAppendOnlyRepository<OwnerDigestRecord>("owner_digests"),

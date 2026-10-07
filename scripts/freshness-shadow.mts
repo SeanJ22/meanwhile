@@ -212,7 +212,7 @@ import {
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { knownRecipes, RECIPE_KIND } from "../lib/hunt/meetings-recipes.ts";
 import { runSpreadPass, sentMoneyPlaces } from "../lib/method/spread-pass.ts";
-import { LEADS_PASS_BUDGET_MS, runLeadsPass } from "../lib/control-plane/leads/plain-test.ts";
+import { guardedLeadGet, LEADS_PASS_BUDGET_MS, runLeadsPass } from "../lib/control-plane/leads/plain-test.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
@@ -1782,6 +1782,7 @@ const fleetSafety = new FleetSafetyController({
   /* The second lock: while the lane is closed for any reason, no model request is reserved at all. */
   modelHold: laneDisabledReason,
   circuits: priorCircuits,
+  websitePacing: repos.websitePacing,
   lastSuccessfulActivity: priorLastSuccessfulActivity,
   rollingCeilingUsd: effectiveCeilingUsd,
   lifetimeHuntWork,
@@ -3123,15 +3124,8 @@ for (const row of cycle.deferred) {
 
 if (!dry && !canary) {
   const leads = await pending.step("leads:test", () => runLeadsPass({ repos,
-    get: (() => {
-      const opened = fleetSafety.guardedOpenBytes("public-web", "research-leads", fetch, { followRedirects: false });
-      return async ({ url, headers, timeoutMs }) => {
-        const got = await opened({ url, headers, timeoutMs });
-        return { status: got.status, body: got.bytes, contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
-      };
-    })(),
+    get: guardedLeadGet(fleetSafety),
     now: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)),
-    sizeFor: websiteSize,
     sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
     deadlineMs: Date.now() + LEADS_PASS_BUDGET_MS })).catch((error: unknown) => {
     runtimeConditions.push(`the owner's research leads were not tested this round: ${error instanceof Error ? error.message : String(error)}`);

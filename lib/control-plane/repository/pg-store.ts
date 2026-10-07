@@ -5,6 +5,7 @@ import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import type { LeadOrder } from "../leads/order.ts";
+import { createWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
@@ -1239,6 +1240,7 @@ export async function createPgRepositories(
   };
 
   const fixMapRun = boundedRunner(sql, "cp_fix_map", bounds);
+  const pacingRun = boundedRunner(sql, "cp_website_pacing", bounds);
   const repositories: ControlPlaneRepositories = {
     adminActionHistoryPage: query => readActionHistoryPage(sql, query, bounds),
     workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
@@ -1276,6 +1278,8 @@ export async function createPgRepositories(
     fieldManual: pgFieldManualRepository(sql, bounded),
     fixMap: createFixMapRepository(async (text, params) =>
       (await fixMapRun("fixMap", "PAGE", text, params)) as readonly Record<string, unknown>[]),
+    websitePacing: createWebsitePacing(async (text, params) =>
+      (await pacingRun("websitePacing", "POINT", text, params)) as readonly Record<string, unknown>[]),
     runnerHeartbeat: pgAggregateRepository<RunnerHeartbeat>(
       sql,
       "RunnerHeartbeat",

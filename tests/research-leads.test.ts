@@ -17,7 +17,9 @@ import type { GatewayDeps } from "../lib/control-plane/gateway/registry.ts";
 import { readFieldManual } from "../lib/control-plane/field-manual.ts";
 import { canonicalLeadUrl, isLeadOrder, LEADS_MAX_ROWS, OWNER_LEAD_SOURCE, placeFromNotes, type LeadOrder } from "../lib/control-plane/leads/order.ts";
 import { LINK_COLUMN, parseLeads } from "../lib/control-plane/leads/parse.ts";
-import { insideSentPlace, runLeadsPass } from "../lib/control-plane/leads/plain-test.ts";
+import { guardedLeadGet, insideSentPlace, runLeadsPass } from "../lib/control-plane/leads/plain-test.ts";
+import { FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
+import { createWebsitePacing, WEBSITE_TAKE_SQL, websiteOf, type WebsitePacing } from "../lib/control-plane/website-pacing.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { ResearchGet } from "../lib/hunt/robots-first-fetch.ts";
@@ -247,48 +249,129 @@ test("a link plain code is turned away from goes to paid work only inside a plac
   assert.ok(!insideSentPlace("ocd-division/country:us/state:az", new Set([TUCSON])));
 });
 
-test("pacing: a small publisher gets its hourly allowance, and a website that asks us to wait is left until then", async () => {
+/** A round's guarded fetch, as the runner builds it: the controller paces every reader through the shared store. */
+function roundSafety(pacing: WebsitePacing, clock: () => number, small: (host: string) => boolean): FleetSafetyController {
+  return new FleetSafetyController({ now: new Date(clock()).toISOString(), costs: [], clock, websitePacing: pacing,
+    websiteSize: (url) => (small(new URL(url).hostname) ? { kind: "local-government", population: 4_000 } : { kind: "federal" }) });
+}
+/** A website answering from a table of pages, robots.txt allowing everything, and counting what it was asked. */
+function site(pages: Readonly<Record<string, Page>>, asked: string[]): typeof fetch {
+  return (async (input: string | URL | Request) => {
+    const url = String(input instanceof Request ? input.url : input);
+    asked.push(url);
+    if (url.endsWith("/robots.txt")) return new Response(ROBOTS, { status: 200, headers: { "content-type": "text/plain" } });
+    const page = pages[url];
+    if (!page) return new Response("not found", { status: 404 });
+    return new Response(page.body ?? "", { status: page.status, headers: { "content-type": page.type ?? "text/html", ...(page.retryAfter ? { "retry-after": page.retryAfter } : {}) } });
+  }) as typeof fetch;
+}
+
+test("pacing: lead tests and every other reader share one hourly count per small website, across processes and rounds", async () => {
   const repos = createMemoryRepositories();
-  const links = Array.from({ length: 8 }, (_, i) => ({ link: `https://smalltown.example.gov/p${i}`, notes: {} }));
-  const out = await submit(ask("leads-key-pace", [...links, { link: "https://busy.example.gov/a", notes: {} }, { link: "https://busy.example.gov/b", notes: {} }]), deps(repos));
-  const pages: Record<string, Page> = Object.fromEntries(links.map((l) => [l.link, { status: 200, body: "ok" }]));
-  pages["https://busy.example.gov/a"] = { status: 429, retryAfter: "1800" };
-  pages["https://busy.example.gov/b"] = { status: 200, body: "ok" };
-  const asked: string[] = [];
   const clock = passClock();
-  const result = await runLeadsPass({ repos, ...clock, sendPlaceIds: new Set(), spacingMs: 0, get: siteGet(pages, asked),
-    sizeFor: (url) => (url.includes("smalltown") ? { kind: "local-government", population: 4_000 } : null) });
-  assert.equal(asked.filter((u) => u.includes("smalltown")).length, 9, "robots.txt and eight pages fit inside the allowance of ten");
+  const small = (host: string) => host.replace(/^www\./, "") === "smalltown.example.gov";
+  const links = Array.from({ length: 8 }, (_, i) => ({ link: `https://smalltown.example.gov/p${i}`, notes: {} }));
+  const out = await submit(ask("leads-key-pace", links), deps(repos));
+  const asked: string[] = [];
+  const fetchSite = site(Object.fromEntries(links.map((l) => [l.link, { status: 200, body: "ok" }])), asked);
+
+  // Another process (a lease worker acquiring for a hunt) reads the same website six times first.
+  const worker = roundSafety(repos.websitePacing, clock.now, small);
+  const acquire = worker.guardedOpenOne("public-web", "hunt-acquisition", fetchSite);
+  for (let i = 0; i < 6; i += 1) assert.equal((await acquire({ url: "https://www.smalltown.example.gov/agendas", method: "GET", headers: {}, timeoutMs: 1000 })).status, 404);
+
+  const round = roundSafety(repos.websitePacing, clock.now, small);
+  const result = await runLeadsPass({ repos, ...clock, sendPlaceIds: new Set(), spacingMs: 0, get: guardedLeadGet(round, fetchSite) });
+  assert.equal(asked.filter((u) => u.includes("smalltown")).length, 10, "six for the hunt, robots.txt and three pages for the leads: ten in the hour, never eleven");
+  let rows = (await orderOf(repos, out.receipt.receiptId)).rows;
+  assert.equal(rows.filter((r) => r.state === "WORKS").length, 3);
+  const waiting = rows.filter((r) => r.state === "QUEUED");
+  assert.equal(waiting.length, 5);
+  assert.equal(waiting[0]!.why, "A small local website is read at most 10 times an hour; this link is next in line.");
+  assert.equal(waiting[0]!.tries, 0, "waiting for the allowance is not a failed try");
+  assert.equal(Date.parse(waiting[0]!.notBefore!), Date.parse(NOW) + 3_600_000, "next in line when the oldest request of the hour ages out");
+  assert.equal(result.waiting, 5);
+  assert.match(await acquire({ url: "https://smalltown.example.gov/x", method: "GET", headers: {}, timeoutMs: 1000 }).then((r) => r.transportError ?? ""), /^WEBSITE_REQUEST_CAP: /,
+    "the leads' requests count against the hunt too");
+
+  // The next round, a new controller over the same store: still nothing until the hour turns.
+  const nextRound = roundSafety(repos.websitePacing, clock.now, small);
+  const again = await runLeadsPass({ repos, ...clock, sendPlaceIds: new Set(), spacingMs: 0, get: guardedLeadGet(nextRound, fetchSite) });
+  assert.equal(again.tested, 0, "rows wait for their time");
+  await clock.sleep(3_600_000);
+  const hourLater = roundSafety(repos.websitePacing, clock.now, small);
+  await runLeadsPass({ repos, ...clock, sendPlaceIds: new Set(), spacingMs: 0, get: guardedLeadGet(hourLater, fetchSite) });
+  rows = (await orderOf(repos, out.receipt.receiptId)).rows;
+  assert.equal(rows.filter((r) => r.state === "WORKS").length, 8, "the next hour's allowance reads the rest");
+
+  // A website that is not small is read at full speed.
+  const busy = await submit(ask("leads-key-big", Array.from({ length: 15 }, (_, i) => ({ link: `https://big.example.gov/p${i}`, notes: {} }))), deps(repos));
+  await runLeadsPass({ repos, ...clock, sendPlaceIds: new Set(), spacingMs: 0,
+    get: guardedLeadGet(hourLater, site(Object.fromEntries(Array.from({ length: 15 }, (_, i) => [`https://big.example.gov/p${i}`, { status: 200, body: "ok" }])), [])) });
+  assert.equal((await orderOf(repos, busy.receipt.receiptId)).rows.filter((r) => r.state === "WORKS").length, 15);
+});
+
+test("pacing: a 429 with Retry-After from a lead holds that website for every reader, and another reader's 503 holds the leads", async () => {
+  const repos = createMemoryRepositories();
+  const clock = passClock();
+  const out = await submit(ask("leads-key-wait", [
+    { link: "https://busy.example.gov/a", notes: {} }, { link: "https://busy.example.gov/b", notes: {} }, { link: "https://other.example.gov/c", notes: {} },
+  ]), deps(repos));
+  const asked: string[] = [];
+  const pages: Record<string, Page> = { "https://busy.example.gov/a": { status: 429, retryAfter: "1800" }, "https://busy.example.gov/b": { status: 200, body: "ok" },
+    "https://other.example.gov/c": { status: 200, body: "ok" } };
+  const round = roundSafety(repos.websitePacing, clock.now, () => false);
+  await runLeadsPass({ repos, ...clock, sendPlaceIds: new Set(), spacingMs: 0, get: guardedLeadGet(round, site(pages, asked)), concurrency: 1 });
   const rows = (await orderOf(repos, out.receipt.receiptId)).rows;
-  const small = rows.filter((r) => r.link.includes("smalltown"));
-  assert.equal(small.filter((r) => r.state === "WORKS").length, 8);
-  const busy = rows.filter((r) => r.link.includes("busy"));
-  assert.deepEqual(busy.map((r) => r.state), ["QUEUED", "QUEUED"]);
-  assert.match(busy[0]!.why, /The website asked us to wait; trying again after/);
-  assert.equal(busy[0]!.tries, 0, "a request to wait is not a failed try");
-  assert.ok(Date.parse(busy[1]!.notBefore!) - Date.parse(NOW) >= 1_800_000, "Retry-After holds the rest of that website too");
-  assert.ok(!asked.includes("https://busy.example.gov/b"));
-  assert.equal(result.waiting, 2);
+  assert.deepEqual(rows.map((r) => r.state), ["QUEUED", "QUEUED", "WORKS"]);
+  assert.match(rows[0]!.why, /^The website asked us to wait; trying again after/);
+  assert.equal(rows[0]!.tries, 0, "a request to wait is not a failed try");
+  assert.ok(!asked.includes("https://busy.example.gov/b"), "the rest of that website is not asked");
+  assert.equal(Date.parse(rows[1]!.notBefore!), Date.parse(NOW) + 1_800_000, "held to the time the website gave");
+
+  // Another process, reading through the shared store, is held too.
+  const worker = roundSafety(repos.websitePacing, clock.now, () => false);
+  const held = await worker.guardedOpenOne("public-web", "hunt-acquisition", site(pages, asked))({ url: "https://busy.example.gov/agendas", method: "GET", headers: {}, timeoutMs: 1000 });
+  assert.match(held.transportError ?? "", /^WEBSITE_ASKED_TO_WAIT: busy\.example\.gov asked to be left alone until /);
+  assert.equal(held.requestCount, 0);
+
+  // And a 503 another reader got holds the leads for that website.
+  const later = await submit(ask("leads-key-held", [{ link: "https://flaky.example.gov/a", notes: {} }]), deps(repos));
+  await worker.guardedOpenBytes("public-web", "hunt-acquisition", (async () => new Response("down", { status: 503 })) as typeof fetch)({ url: "https://flaky.example.gov/", headers: {}, timeoutMs: 1000 });
+  const fresh = roundSafety(repos.websitePacing, clock.now, () => false);
+  await runLeadsPass({ repos, ...clock, sendPlaceIds: new Set(), spacingMs: 0, get: guardedLeadGet(fresh, site({ "https://flaky.example.gov/a": { status: 200, body: "ok" } }, asked)) });
+  const flaky = (await orderOf(repos, later.receipt.receiptId)).rows[0]!;
+  assert.equal(flaky.state, "QUEUED");
+  assert.match(flaky.why, /^The website asked us to wait; trying again after/);
+  assert.ok(!asked.includes("https://flaky.example.gov/a"));
+
   const working = await confirmReceipt(repos, out.receipt, Date.parse(NOW));
   assert.equal(working.state, "working");
-  const card = applyConfirmation(startReceipt({ key: "k", def: actionDef("leads-send"), target: "leads", targetName: "10 links", label: "Send research leads", scopeKey: "us", scopeName: "United States", level: "global", at: NOW, simulated: false }), working, NOW);
+  const card = applyConfirmation(startReceipt({ key: "k", def: actionDef("leads-send"), target: "leads", targetName: "3 links", label: "Send research leads", scopeKey: "us", scopeName: "United States", level: "global", at: NOW, simulated: false }), working, NOW);
   assert.equal(card.status, "running");
   assert.equal(orderStepsReached(card), 4, "in progress");
   assert.equal(card.items.filter((i) => i.label === "Waiting").length, 2);
 });
 
-test("a small publisher's eleventh request waits for the next hour", async () => {
-  const repos = createMemoryRepositories();
-  const links = Array.from({ length: 12 }, (_, i) => ({ link: `https://tiny.example.gov/p${i}`, notes: {} }));
-  const out = await submit(ask("leads-key-tiny", links), deps(repos));
-  await runLeadsPass({ repos, ...passClock(), sendPlaceIds: new Set(), spacingMs: 0, get: siteGet(Object.fromEntries(links.map((l) => [l.link, { status: 200, body: "ok" }]))),
-    sizeFor: () => ({ kind: "school-district", students: 900 }) });
-  const rows = (await orderOf(repos, out.receipt.receiptId)).rows;
-  assert.equal(rows.filter((r) => r.state === "WORKS").length, 9);
-  assert.equal(rows.filter((r) => r.state === "QUEUED").length, 3);
-  assert.match(rows.find((r) => r.state === "QUEUED")!.why, /A small local website is read at most 10 times an hour/);
-  const later = await runLeadsPass({ repos, ...passClock(), sendPlaceIds: new Set(), spacingMs: 0, get: siteGet({}), sizeFor: () => ({ kind: "school-district", students: 900 }) });
-  assert.equal(later.tested, 0, "the same hour's allowance is spent across rounds");
+test("the shared pacing store takes a request under one row lock and says when the next is allowed", async () => {
+  assert.match(WEBSITE_TAKE_SQL, /ON CONFLICT \(site\) DO UPDATE SET[\s\S]*WHERE cardinality\(ARRAY\(SELECT t FROM unnest\(p\.requests\) t WHERE t > \$2::timestamptz\)\) < \$4\s+RETURNING site/);
+  const calls: { text: string; params: readonly unknown[] }[] = [];
+  let full = false;
+  const pacing = createWebsitePacing(async (text, params) => {
+    calls.push({ text, params });
+    if (text === WEBSITE_TAKE_SQL) return full ? [] : [{ site: params[0] }];
+    if (text.startsWith("SELECT min(t)")) return [{ oldest: new Date("2026-10-07T15:20:00.000Z") }];
+    if (text.startsWith("SELECT site, hold_until")) return [{ site: "busy.example.gov", hold_until: "2026-10-07T16:30:00.000Z" }];
+    return [];
+  });
+  assert.deepEqual(await pacing.take("tiny.example.gov", 10, Date.parse(NOW)), { ok: true });
+  assert.deepEqual(calls[0]!.params, ["tiny.example.gov", "2026-10-07T15:00:00.000Z", NOW, 10]);
+  full = true;
+  assert.deepEqual(await pacing.take("tiny.example.gov", 10, Date.parse(NOW)), { ok: false, until: Date.parse("2026-10-07T16:20:00.000Z") });
+  await pacing.hold("busy.example.gov", Date.parse("2026-10-07T16:30:00.000Z"), Date.parse(NOW));
+  assert.match(calls.at(-1)!.text, /hold_until = GREATEST\(COALESCE\(p\.hold_until, \$2::timestamptz\), \$2::timestamptz\)/);
+  assert.deepEqual([...await pacing.heldUntil(Date.parse(NOW))], [["busy.example.gov", Date.parse("2026-10-07T16:30:00.000Z")]]);
+  assert.equal(websiteOf("https://WWW.SmallTown.example.gov/x"), "smalltown.example.gov", "one website however it is addressed");
 });
 
 test("a lead whose robots.txt disallows us is still read; the verdict is recorded on the row and the lesson", async () => {
@@ -306,11 +389,18 @@ test("a lead whose robots.txt disallows us is still read; the verdict is recorde
   assert.equal((lesson.payload as { lead: { robots: { verdict: string } } }).lead.robots.verdict, "DISALLOWED");
 });
 
-test("version 27 declares one row per leads order, and captures are looked up by the source index's own expression", async () => {
+test("version 27 declares one row per leads order and one per paced website, and captures are looked up by the source index's own expression", async () => {
   const { BOOTSTRAP_VERSION, DECLARED_TABLES } = await import("../lib/control-plane/repository/pg-schema.ts");
   const { CAPTURED_URLS_SQL } = await import("../lib/control-plane/repository/pg-store.ts");
   assert.ok(BOOTSTRAP_VERSION >= 27);
   assert.ok(DECLARED_TABLES.includes("cp_lead_orders"));
+  assert.ok(DECLARED_TABLES.includes("cp_website_pacing"));
+  const { BOOTSTRAP_DDL } = await import("../lib/control-plane/repository/pg-schema.ts");
+  const { WEBSITE_PACING_DDL } = await import("../lib/control-plane/website-pacing.ts");
+  for (const ddl of WEBSITE_PACING_DDL) {
+    assert.ok(BOOTSTRAP_DDL.includes(ddl));
+    assert.equal(ddl.trim().split(";").filter((part) => part.trim() !== "").length, 1, "the HTTP driver prepares one statement per query");
+  }
   assert.match(CAPTURED_URLS_SQL, /md5\(record->>'canonicalUrl'\) = ANY\(\$1::text\[\]\) AND record->>'canonicalUrl' = ANY\(\$2::text\[\]\)/);
   const repos = createMemoryRepositories();
   await repos.artifacts.append("artifacts", "a1", { artifactId: "a1", canonicalUrl: "https://a.example.gov/", recordedAt: NOW } as unknown as ArtifactRecord, NOW);

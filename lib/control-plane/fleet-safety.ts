@@ -17,6 +17,8 @@ import type { OpenOne } from "./scheduler/route-executor.ts";
 import { httpProviderFailure, type FetchOutcome } from "./scheduler/http-executor.ts";
 import { sourceReliabilityKey } from "./scheduler/scout-reliability.ts";
 import { websiteRequestLimit, type WebsiteSizeForUrl } from "./scheduler/host-supervision.ts";
+import { memoryWebsitePacing, websiteOf, type WebsitePacing } from "./website-pacing.ts";
+import { RATE_LIMIT_BACKOFF_MS } from "../hunt/access-control.ts";
 import { FIRST_BACKOFF_MINUTES, MAX_BACKOFF_MINUTES } from "./scheduler/debt.ts";
 
 export const FLEET_ZONE = "America/Phoenix";
@@ -62,6 +64,7 @@ export type FleetStopCode =
   | "PROVIDER_REQUEST_CEILING"
   | "PAYLOAD_BYTE_CEILING"
   | "WEBSITE_REQUEST_CAP"
+  | "WEBSITE_ASKED_TO_WAIT"
   | "DISPATCH_CEILING"
   | "WALL_CLOCK_CEILING"
   | "UNMEASURED_MODEL_SPEND"
@@ -277,6 +280,9 @@ export function classifyProviderFailure(error: unknown): {
   return { class: "OTHER", condition, status };
 }
 
+/** How often a reader re-reads which websites every reader is holding. */
+const HELD_REFRESH_MS = 30_000;
+
 export class FleetSafetyRefusal extends Error {
   readonly code: FleetStopCode;
   constructor(code: FleetStopCode, message: string) {
@@ -368,7 +374,11 @@ export class FleetSafetyController {
   private readonly stopReasons = new Set<string>();
   private readonly circuits = new Map<string, ProviderCircuit>();
   private readonly httpPending = new Map<string, Promise<void>>();
-  private readonly websiteRequests = new Map<string, Map<string, number>>();
+  /** Every reader's shared count and holds per website; this process's own when the store cannot answer. */
+  private readonly pacing: WebsitePacing;
+  private readonly localPacing = memoryWebsitePacing();
+  /** The held websites as last read, refreshed every `HELD_REFRESH_MS`, and every hold this process recorded since. */
+  private held: { readonly at: number; readonly until: ReadonlyMap<string, number> } | null = null;
   private readonly websiteSize?: WebsiteSizeForUrl;
   private cycleUsd = 0;
   private cycleModelSpendMeasured = true;
@@ -400,6 +410,8 @@ export class FleetSafetyController {
     readonly lifetimeHuntWork?: (work: string) => boolean;
     readonly clock?: () => number;
     readonly websiteSize?: WebsiteSizeForUrl;
+    /** The store every reader shares (`repos.websitePacing`); absent, this process paces alone. */
+    readonly websitePacing?: WebsitePacing;
   }) {
     const ceiling = resolveRollingCeiling(input.rollingCeilingUsd);
     this.bounds =
@@ -413,6 +425,7 @@ export class FleetSafetyController {
     this.modelHold = input.modelHold ?? null;
     this.clock = input.clock ?? Date.now;
     this.websiteSize = input.websiteSize;
+    this.pacing = input.websitePacing ?? this.localPacing;
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
     const nightSpend = aggregateModelSpend(input.costs, this.night.start, input.now, input.spendHolds);
     const rollingSpend = aggregateModelSpend(
@@ -704,16 +717,39 @@ export class FleetSafetyController {
     return merged;
   }
 
-  private admitWebsiteRequest(url: string, work: string): void {
+  /**
+   * One count per website, shared by every reader in every process: a website some reader was asked to leave alone
+   * waits until then, and a small publisher's website takes its hourly allowance across all work and rounds.
+   */
+  private async admitWebsiteRequest(url: string, work: string): Promise<void> {
+    const site = websiteOf(url);
+    const now = this.clock();
+    const until = (await this.heldWebsites(now)).get(site);
+    if (until !== undefined && until > now) this.refuse(work, "WEBSITE_ASKED_TO_WAIT", `${site} asked to be left alone until ${new Date(until).toISOString()}`);
     const limit = websiteRequestLimit(this.websiteSize?.(url));
     if (limit === null) return;
-    // One work item shares its allowance across text/bytes readers and redirects.
-    const host = new URL(url).host.toLowerCase();
-    const counts = this.websiteRequests.get(work) ?? new Map<string, number>();
-    const count = counts.get(host) ?? 0;
-    if (count >= limit) this.refuse(work, "WEBSITE_REQUEST_CAP", `${host} has had ${count} of ${limit} requests for this work; small-publisher allowance exhausted`);
-    counts.set(host, count + 1);
-    this.websiteRequests.set(work, counts);
+    const took = await this.pacing.take(site, limit, now).catch(() => this.localPacing.take(site, limit, now));
+    if (!took.ok) this.refuse(work, "WEBSITE_REQUEST_CAP", `${site} has had its ${limit} requests in the last hour; small-publisher allowance exhausted until ${new Date(took.until).toISOString()}`);
+  }
+
+  private async heldWebsites(now: number): Promise<ReadonlyMap<string, number>> {
+    if (this.held === null || now - this.held.at >= HELD_REFRESH_MS) {
+      const read = await this.pacing.heldUntil(now).catch(() => null);
+      this.held = { at: now, until: read ?? this.held?.until ?? new Map() };
+    }
+    return this.held.until;
+  }
+
+  /** A 429 or 5xx (with its Retry-After, when sent) holds the website for every reader. */
+  private async holdWebsiteAfter(url: string, response: Response): Promise<void> {
+    if (response.status !== 429 && response.status < 500) return;
+    const now = this.clock();
+    const site = websiteOf(url);
+    const until = now + Math.max(RATE_LIMIT_BACKOFF_MS, this.retryAfterMs(response) ?? 0);
+    const held = new Map(this.held?.until ?? []);
+    held.set(site, Math.max(until, held.get(site) ?? 0));
+    this.held = { at: this.held?.at ?? now, until: held };
+    await this.pacing.hold(site, until, now).catch(() => this.localPacing.hold(site, until, now));
   }
 
   /** A fetch seam that hard-caps application payload consumption by streaming. */
@@ -751,7 +787,7 @@ export class FleetSafetyController {
           }
           this.expireProviderCircuits();
           observed = this.circuits.get(provider);
-          if (!observed || Date.parse(observed.eligibleAt) <= this.clock()) this.admitWebsiteRequest(currentUrl, work);
+          if (!observed || Date.parse(observed.eligibleAt) <= this.clock()) await this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work, currentBody === undefined ? 0 : Buffer.byteLength(currentBody));
           try {
             requests++;
@@ -805,6 +841,7 @@ export class FleetSafetyController {
           this.latchProvider(provider, failure ?? hard.condition, work, new Date(this.clock()).toISOString(),
             this.retryAfterMs(response), hard.class === "HARD" ? "HARD" : "TRANSIENT");
         } else if (response.ok) this.providerSucceeded(provider, observed);
+        await this.holdWebsiteAfter(currentUrl, response);
         return outcome;
       } catch (error) {
         if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
@@ -849,7 +886,7 @@ export class FleetSafetyController {
             if (recovery) recoveries.push([provider, recovery]);
           }
           observed = this.circuits.get(provider);
-          if (!observed || Date.parse(observed.eligibleAt) <= this.clock()) this.admitWebsiteRequest(currentUrl, work);
+          if (!observed || Date.parse(observed.eligibleAt) <= this.clock()) await this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work);
           try {
             sent = true;
@@ -893,6 +930,7 @@ export class FleetSafetyController {
         else if (!partialFailureObserved && observed && this.hardCircuit(observed) && (failure.class === "TRANSIENT" || recoveryFailure !== null)) {
           this.latchProvider(provider, recoveryFailure ?? failure.condition, work, new Date(this.clock()).toISOString(), this.retryAfterMs(response), "TRANSIENT");
         } else if (response.ok && recoveryFailure === null) this.providerSucceeded(provider, observed);
+        await this.holdWebsiteAfter(currentUrl, response);
         return {
           status: response.status,
           bytes: merged,

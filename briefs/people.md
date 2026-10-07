@@ -167,7 +167,7 @@ Rows of these groups that stop free acquisition are in section 1: E (2).
 | `tests/statement-sweep-search.test.ts` | lib/corpus/statement-sweep-search.ts is reached only by this test; wire it into the statement sweep so stances get searched for every person. |
 | `tests/vote-source-isolation.test.ts` | Keep isolation tests; delete the AZ/NH/NJ authority map, the retired-NH-pointer refusal and the retired-aggregate (Open States) probe tests. |
 
-**Check and close (9 rows).** The inventory gives these only comment, citation or deleted-file reference fixes, which the cleanup release was doing. Confirm each is done on `river`; finish any leftover; then close the row: `tests/photo-person.test.ts`, `tests/portrait-pick.test.ts`, `tests/positions-search.test.ts`, `tests/questionnaire-store.test.ts`, `tests/reader-directory-delivery.test.ts`, `tests/reader-key-votes-delivery.test.ts`, `tests/reader-last-mile-registry-failure.test.ts`, `tests/reader-prl-delivery.test.ts`, `tests/social-platforms.test.ts`.
+**Check and close (8 rows).** The inventory gives these only comment, citation or deleted-file reference fixes, which the cleanup release was doing. Confirm each is done on `river`; finish any leftover; then close the row: `tests/photo-person.test.ts`, `tests/portrait-pick.test.ts`, `tests/positions-search.test.ts`, `tests/questionnaire-store.test.ts`, `tests/reader-directory-delivery.test.ts`, `tests/reader-key-votes-delivery.test.ts`, `tests/reader-prl-delivery.test.ts`, `tests/social-platforms.test.ts`.
 
 ## Notes
 

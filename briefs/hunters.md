@@ -82,7 +82,6 @@ _None._
 | `tests/hunter-lane.test.ts` | Lane behavior is fine, but it pins the lane behind the WTP_CONTINUOUS_HUNTERS switch, one of the ten default-off switches to delete. |
 | `tests/identified-ua-wall.test.ts` | Real access behavior, but cites an owner decision by date. |
 | `tests/lease-runtime-once.test.ts` | Real worker behavior, but it pins an old per-task path kept behind a switch. |
-| `tests/level1-supervision.test.ts` | Shows Sean whether the runner restarts itself, but cites a numbered ruling. |
 | `tests/meetings-discovery-search.test.ts` | Search use is real, but it pins a code-set daily and per-cycle request cap (200/day default). Caps must come only from Sean's Admin spend settings. |
 | `tests/mission-meetings-discovery.test.ts` | Real behavior. Delete the tombstone check that asserts the retired gap-ledger files stay gone. |
 | `tests/mission-parts.test.ts` | Real behavior. One test reads the committed Arizona jurisdiction file; use a fixture so it survives that data moving to the database. |
@@ -90,7 +89,6 @@ _None._
 | `tests/model-ceiling.test.ts` | A model limit set in code, not by Sean in Admin. Move the allowed-model ceiling to an Admin setting and test that instead. |
 | `tests/model-lane.test.ts` | Drop the tests tying paid work to the open-record-class allowlist, which the plan deletes. |
 | `tests/obligation-registry.test.ts` | Remove RULING 282/283/207/224/228 citations and use a fixture instead of the committed AZ/NH/NJ jurisdiction files. |
-| `tests/pilot-task-installer.test.ts` | Runner keep-alive is real. Delete the tombstone checks that the retired nightly-window clock stays gone. |
 | `tests/robots-recorded-not-blocking.test.ts` | Checks real behavior that stays, but carries old ruling or owner-attribution labels; strip those labels and comments, keep the assertions. |
 | `tests/same-round-work.test.ts` | Keep same-round work; delete the WTP_FIRST_HUNT_NEXT_ROUND switch test and the old one-round-lag path it guards. |
 | `tests/scheduler-freshness.test.ts` | Checks real behavior that stays, but carries old ruling or owner-attribution labels; strip those labels and comments, keep the assertions. Also rename the 'PILOT HEALTH' digest heading. |

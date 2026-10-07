@@ -170,10 +170,8 @@ Rows of these groups that stop free acquisition are in section 1: F (4), H (1).
 | `tests/ask-answer-contract.test.ts` | Real Ask contract; remove the numbered-ruling comment. |
 | `tests/ask-box.test.ts` | Delete the daily classifier cap test (an env-var cap Sean didn't set) and the pilot-ZIP everyday contact grid tests; strip ruling attributions. |
 | `tests/ask-destinations.test.ts` | Real routing checks; remove the "author's ruling" and dated-ruling wording in comments and a test title. |
-| `tests/ask-exact-body-identity.test.ts` | Real behavior, but it reads the committed meetings snapshot file; use a fixture. |
 | `tests/ask-gap-observation.test.ts` | Delete tests pinning that Ask saves no question or place and that uncoded gaps record nothing; the rulings say every question is saved with its place and becomes work. |
 | `tests/ask-gap-work.test.ts` | Delete the test pinning that gap work never fetches, and stop reading the committed meetings snapshot; the rest is real behavior. |
-| `tests/ask-grounded-route.test.ts` | Delete the two tests pinning the Open States ban (they import roster-authority.ts and assert Plural/Open States ids may not enter the reader). |
 | `tests/ask-group-money-answer.test.ts` | Real behavior, but it tallies exactly Arizona, New Hampshire and New Jersey from committed state files; loop over whatever states are held. |
 | `tests/ask-identity-bridge.test.ts` | Pins an Arizona-only identity table read from committed files; rewrite against a national identity match from the database. |
 | `tests/ask-integration.test.ts` | Real Ask wiring; one test reads the committed Pima ballot file, which should move to the database. Use a fixture. |
@@ -204,7 +202,6 @@ Rows of these groups that stop free acquisition are in section 1: F (4), H (1).
 | `tests/control-plane-campaign-finance.test.ts` | Drop tests for coverage.ts, which nothing runs, the Arizona-walls-verbatim pin, and the "never sold, wall 1" policy test. Keep model and obligation tests. |
 | `tests/everyday-routing-data-plane.test.ts` | Drop the test pinning the hand import's 36 cells and 26 sources for four pilot ZIPs. |
 | `tests/filing-regime-registry.test.ts` | Drop tests that use coverage.ts, which nothing runs, and the clock-reading source scan. |
-| `tests/funding-reader-edge.test.ts` | Edge serving is real, but the test runs only over a hard-coded pilot target list with the AZ ballot. Draw targets from held data for any state. |
 | `tests/funding-source-isolation.test.ts` | Isolation is real, but the test builds in an Arizona-only identity reader. Funding identity should work for every state. |
 | `tests/funding.test.ts` | It pins named individual donors on cards (ripcord live), which the rules forbid, plus a pilot candidate gate and ruling citations. |
 | `tests/helpers/pima-september-22-sitting.ts` | Useful Ask fixture, but it reads the committed production seed in data/states/az/outcomes. Read the tests/fixtures copy so the data can leave the repo. |

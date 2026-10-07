@@ -47,7 +47,6 @@ Inventory: Its three tested helpers move into lib for the post-publish sampler. 
 | `tests/jurisdiction-content.test.ts` | The leak check is right, but it runs only over four hard-coded pilot ZIPs. Run it over any ZIP from data. |
 | `tests/look-pass.test.ts` | One case pins a fallback spending ceiling Sean never set; the Admin-dial and pause cases stay. |
 | `tests/provider-access.test.ts` | Keeps test traffic off a paid key. Remove the RULING 101 citation. |
-| `tests/reader-diagnostics.test.ts` | Real. Delete the assertion that the refusal message names RULING 9, and its citation. |
 | `tests/route-floor-applicability.test.ts` | Checks real behavior that stays, but carries old ruling or owner-attribution labels; strip those labels and comments, keep the assertions. |
 | `tests/speed-visits.test.ts` | Speed measuring serves the three-second rule; remove 'off unless switched on' so the lane simply runs. |
 

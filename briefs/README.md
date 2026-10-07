@@ -17,18 +17,18 @@ These briefs run the build factory after the cleanup release. Each lane's work i
 | Lane | Rows | 1: stops free acquisition | 2: groups | 3: rest |
 |---|---|---|---|---|
 | measures | 46 | 0 | 16 (C, N) | 30 |
-| hunters | 87 | 24 | 0 | 63 |
+| hunters | 85 | 24 | 0 | 61 |
 | registry | 212 | 53 | 124 (N) | 35 |
-| meetings | 90 | 22 | 3 (J, N) | 65 |
-| auditors | 30 | 0 | 1 (K) | 29 |
-| people | 1,195 | 25 | 1,094 (D, I, M, N) | 76 |
-| admin | 78 | 0 | 1 (L) | 77 |
+| meetings | 89 | 22 | 3 (J, N) | 64 |
+| auditors | 29 | 0 | 1 (K) | 28 |
+| people | 1,194 | 25 | 1,094 (D, I, M, N) | 75 |
+| admin | 76 | 0 | 1 (L) | 75 |
 | slide | 66 | 6 | 0 | 60 |
-| ballot | 196 | 32 | 4 (F, N) | 160 |
+| ballot | 193 | 32 | 4 (F, N) | 157 |
 | bank | 69 | 3 | 46 (A, B) | 20 |
 | frontend | 93 | 0 | 1 (N) | 92 |
 | river | 54 | 0 | 0 | 54 |
-| **Total** | **2,216** | **165** | **1,290** | **761** |
+| **Total** | **2,206** | **165** | **1,290** | **751** |
 
 All rows in groups E, G and H, and some in F and N, stop free acquisition, so they sit in bucket 1 and keep their group letter in `ownership.csv`.
 

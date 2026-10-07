@@ -1,21 +1,22 @@
 {
   "n": 15,
   "branch": "release/15",
-  "river_sha": "ce52ee5a4a7e849eca41545b551e63029ce4e676",
-  "tested_sha": "ce52ee5a4a7e849eca41545b551e63029ce4e676",
+  "river_sha": "3c2a470eb136002033ff6245002809e16da29f84",
+  "tested_sha": "3c2a470eb136002033ff6245002809e16da29f84",
   "steps": [
     "CI-01",
-    "HK-01"
+    "HK-01",
+    "CI-02"
   ],
   "lanes": [
     "ci",
     "models"
   ],
   "integration_from": 118,
-  "integration_count": 120,
+  "integration_count": 121,
   "pr": {
     "number": 722,
     "url": "https://github.com/SeanJ22/meanwhile/pull/722"
   },
-  "at": "2026-10-07T21:25:51Z"
+  "at": "2026-10-07T22:26:09Z"
 }

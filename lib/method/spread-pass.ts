@@ -1,7 +1,7 @@
 /**
  * When a method starts working somewhere, it is queued in every place whose
  * door has the same kind of website (`planSpread`): a free try everywhere, a
- * paid try only inside places Sean has sent money to. A queued try is the fix
+ * paid try only inside places the owner has sent money to. A queued try is the fix
  * map's "untried here" row for that place, which every worker there reads at
  * the head of its untried methods; a place with a result is never queued again.
  */
@@ -17,7 +17,7 @@ import type { FixMapRow } from "./fix-map.ts";
 
 const place = (subject: string): string => subject.split("#")[0]!;
 
-/** The places Sean has sent money to: members of a Send, and of an area with a budget. */
+/** The places the owner has sent money to: members of a Send, and of an area with a budget. */
 export function sentMoneyPlaces(input: { readonly areas: readonly BudgetScope[] | null; readonly sends: AssignmentMembership | null }): ReadonlySet<string> {
   const out = new Set<string>();
   for (const scope of input.areas ?? []) {

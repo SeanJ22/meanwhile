@@ -143,9 +143,14 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const readScoutManual = async (item: WorkItem): Promise<void> => {
     manualReads.set(item.id, await readFieldManual(input.repos, scoutFieldManualQuery({ subjectId: item.subject, obligationId: item.id })));
   };
+  // The rows are held only while the walk runs; a process that runs many walks keeps none of them.
+  const withManual = async <T>(item: WorkItem, walk: () => Promise<T>): Promise<T> => {
+    await readScoutManual(item);
+    try { return await walk(); } finally { manualReads.delete(item.id); inheritedManualStores.delete(item.id); }
+  };
   const withScoutManual = (item: WorkItem, executor: DeclaredExecutor): DeclaredExecutor => ({ ...executor,
-    run: async (...args) => { await readScoutManual(item); return executor.run(...args); },
-    ...(executor.dispatch ? { dispatch: async (...args) => { await readScoutManual(item); return executor.dispatch!(...args); } } : {}) });
+    run: (...args) => withManual(item, () => executor.run(...args)),
+    ...(executor.dispatch ? { dispatch: (...args) => withManual(item, () => executor.dispatch!(...args)) } : {}) });
 
   // The lineage broker: which sibling's captures each lineage root may reuse. Whole-store when unscoped; one task's lineage when scoped.
   let lineages: ReturnType<typeof selectStandingLineages> = [];

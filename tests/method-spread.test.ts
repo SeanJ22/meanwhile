@@ -1,6 +1,6 @@
 /**
  * A method that starts working is queued wherever the same kind of website
- * is: free tries everywhere, paid tries only inside places Sean has sent money
+ * is: free tries everywhere, paid tries only inside places the owner has sent money
  * to and only as many as the budget dial leaves. Every worker in a queued place
  * then sees the method with where it worked.
  */
@@ -43,7 +43,7 @@ test("free tries go to every matching place; paid tries only inside a Send and w
   assert.deepEqual(plan.paidSkipped.map((s) => s.reason).sort(), ["the budget dial leaves no paid tries this round", "this place is not inside a Send"]);
 });
 
-test("the places Sean has sent money to: members of a Send, and of an area with a budget", () => {
+test("the places the owner has sent money to: members of a Send, and of an area with a budget", () => {
   const area = (members: string[], budgetUsd: number, resolved = true) =>
     ({ key: "k", label: "l", budgetUsd, resolved, members: new Set(members), states: ["AZ"], historicalUsd: 0 }) as BudgetScope;
   const sends = { byKey: new Map([["send:1", { created: new Map([["o1", { obligationId: "o1", subjectId: `${MORRIS}#governing`, joinedAt: NOW }]]), reordered: new Map() }]]),

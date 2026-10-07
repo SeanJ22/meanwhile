@@ -1,66 +1,67 @@
-# Build lane: bank (Knowledge Bank and Fix Map)
+# Lane: bank (Knowledge bank and state profiles)
 
-**Suggested starting model: GPT Sol 6.1.** Playbook storage, fix history and reusable methods with focused tests.
-**Claude continuation:** existing `registry` worker, using its selected Sonnet 5.5 model unless a supported model change is made. The lane keeps the same scope and branch.
-Select the model in the actual task/session settings; writing its name in this brief does not switch models. Follow the model and usage rules in `common.md`.
+**Starts in Codex** (suggested model GPT Sol 6.1). Status file: `.factory/bank.md` on `stream/bank`. If the Codex run stops, the Claude `registry` worker (Sonnet 5.5) continues this lane on the same branch (common.md, "Paired continuation").
 
-**Starts in Codex.** Your logical lane stays `bank` and your branch stays `stream/bank`. If the Codex run stops, the existing scheduled Claude worker `registry` continues this same lane under the handoff rules in `common.md`. No routine restart by Sean is required.
+Read `briefs/common.md` first. Your work is every row in `briefs/ownership.csv` with `lane = bank` (69 rows). Each row's full reason and evidence are in the inventory. Take them in the order below.
 
-Your status file is `.factory/bank.md` on `stream/bank`. A provider change does not change your steps or their acceptance conditions. Read the current assignment on `board/river` before writing.
+**Area.** The field manual and method store, and spreading a working method to same-kind doors; playbooks; loss-study follow-up; the dead-link sweep; and state profiles.
 
-Read `briefs/common.md` first. It tells you how every run works. This file is your lane's steps and notes. You have 27 steps, and the full text of each is in `plan/plan.md`.
+**Also yours (not in the inventory):**
+- **State profiles** (rulings §2 step 7; inventory groups A and B). Why you: a state profile is that state's wins, losses and methods, kept in the same store as the field manual you own.
 
-## Your steps, in the order to take them
+**Shared files you own:** `lib/control-plane/field-manual.ts`.
 
-Take the first one that's ready. "Needs" lists only what you wait on from other lanes. Steps inside your own lane follow the plan's "Depends on" line.
+## 1. What stops free acquisition (rulings §2)
 
-1. **DP-07** Routes are written for the kind of door, not one address
-2. **DB-42** Playbooks, part 1: Scouts and detectives read written playbooks
-3. **DB-38** Silent Bank write failures become visible
-4. **DB-49** A door-kind fix is checked by its own tests only
-5. **DP-09** We can tell how often detectives' routes get reused
-6. **DB-37** Lessons and doors in the Bank are tied to places
-7. **DB-40** The Bank knows how long and how much each kind of job takes
-8. **DB-41** Platform fingerprints are data
-9. **DP-08** One place's notes stop crowding everyone's head start
-10. **DP-19** A fix map table
-11. **DB-51** Dead links are found before readers find them; needs DB-09 (registry)
-12. **DB-39** The Bank moves to one row per entry (only if writes are failing)
-13. **DB-43** Playbooks, part 2: every other role reads a playbook
-14. **DB-46** Switches that need no release; needs BR-05 (admin)
-15. **DB-57** A repair agent gets only the broken part
-16. **DP-20** The fix map fills from every attempt
-17. **DB-44** Playbooks are edited in Admin, with undo; needs BR-06 (admin)
-18. **DB-47** Roll back a release from Admin; needs BR-14 (measures)
-19. **DB-50** An engineer-built adapter can become a feed; needs DB-17 (registry)
-20. **DP-21** Briefs say whether a method works, is untried, or fails here
-21. **DP-27** Failures are compared to find what they share
-22. **DP-23** A fix moves from Testing to Proven against a bar that is a setting; needs BR-05 (admin)
-23. **DP-24** A fix is tried everywhere the same kind of door exists; needs DB-17 (registry)
-24. **DB-45** Meeting windows and check timings are settings; needs BR-05 (admin), DB-01 (meetings), DB-26 (meetings)
-25. **DB-52** The factory measures how much faster it gets; needs BX-06 (slide)
-26. **DP-22** Results in one place no longer overwrite another place's
-27. **DP-28** Lessons from losses: predict, build a variant, or call the engineers; needs DP-03 (auditors)
+| Path | Action |
+|---|---|
+| `lib/control-plane/playbooks/detective.md` | Make the first rung held data and national APIs, then search, news and the subject's own site. |
+| `lib/control-plane/playbooks/scout.md` | Its ladder never names held data, Open States, Congress, Census, FEC, LegiScan, search or news, so paid scouts skip free sources. First rung: held data and national APIs, then search and news. |
+| `tests/meetings-official-page.test.ts` | Delete the tests that re-key a verified route whenever its code digest changes; the plan keys it by output version instead. |
 
-## Other lanes wait on these of yours (push each the moment it's ready)
+## 2. Groups
 
-- DB-42 → CA-25 (ballot)
-- DB-51 → FE-26 (meetings)
-- DB-51 → FE-28 (frontend)
-- DP-07 → DP-10 (auditors)
-- DP-20 → DP-30 (auditors)
-- DP-21 → CH-20 (hunters)
-- DP-23 → DP-25 (auditors)
-- DP-23 → DP-26 (auditors)
-- DP-23 → DP-33 (auditors)
-- DP-23 → DP-34 (auditors)
-- DP-24 → DP-25 (auditors)
-- DP-28 → DP-29 (auditors)
+### Group A (44 rows)
 
-## Notes for this lane
+Inventory: Usable sources, endpoints, platforms and keys load into the source registry as data; each state's structure, walls and statutes load into its state profile; operating facts go into docs/how-meanwhile-works.md. Then the files are deleted.
 
-- The fix map chain, DP-19 → DP-20 → DP-23 and DP-24, feeds the end of the plan's longest chain in the auditors lane (DP-25, DP-30, DP-33, DP-34). Do it early.
-- DB-42 (written playbooks) unblocks the ballot lane's translator (CA-25). Push it early.
-- DB-46 (switches that need no release) needs admin's BR-05.
-- DB-47: the rollback button uses the existing Netlify token if its scope allows (Sean's decision D6). If the token's scope doesn't allow it, write that under `needs Sean` in one line and carry on with everything else.
-- Playbooks and settings are data, with a log and undo (rulings §9).
+Source rows go into the registry lane's source registry through its data path; ask River for the hook if one is missing. Create `docs/how-meanwhile-works.md` once and add to it.
+
+| Paths | Action |
+|---|---|
+| `docs/**` (29 files; exact list in `ownership.csv`) | Move sources, endpoints, platforms and keys into the source registry as data and operating facts into `docs/how-meanwhile-works.md`; then delete each file. |
+| `states/**` (15 files: `TIERS.md` and the az, nh, nj notes, sources, explainers and tenancy files) | Move each state's structure, walls, statutes and sources into that state's profile in the database; then delete each file. |
+
+### Group B (2 rows)
+
+Inventory: Facts that hold up load into the Arizona, New Jersey and New Hampshire state profiles. Then both files are deleted.
+
+| Path | Action |
+|---|---|
+| `data/health/control-facts.json` | The August answer key goes (Sean, Oct 6). First pull out every fact in it that holds up and still matters for 85701, 85641, 07866 and 03255, and load those facts into the Arizona, New Jersey and New Hampshire state profiles. Then delete. |
+| `docs/Meanwhile-Owner-Checklist.xlsx` | The August answer key goes (Sean, Oct 6). First pull out every fact in it that holds up and still matters for 85701, 85641, 07866 and 03255, and load those facts into the Arizona, New Jersey and New Hampshire state profiles. Then delete. |
+
+## 3. The rest
+
+| Path | Action |
+|---|---|
+| `data/method/conclusions.json` | The runner reads this file, so method conclusions can only change by code release. Read them from the database instead, then delete the file. |
+| `lib/control-plane/playbooks/parser.md` | Says it reads "ONE saved official document", which implies only official sources count. Change to "saved source document". |
+| `lib/doors/link-sweep.ts` | Built and correct about request pacing, but nothing runs it: no runner job, no package command. Put it on the runner's clock so Admin's dead-link count is real. |
+| `lib/method/candidate.ts` | Used by scout write-back and the scoreboard. Remove the "RULING 243" citation; keep the code. |
+| `lib/method/claims.ts` | Used by the method store's validator. Remove the ruling citations at lines 24, 172 and 755; its other importers in lib/governance are being deleted. |
+| `lib/method/learn-batch.ts` | Used by scout write-back. Remove the ruling citations and the pilot-ZIP script reference in comments. |
+| `lib/method/loss-response.ts` | Wire it into the daily loss study pass so lessons turn into action, as rules section 7 asks. |
+| `lib/method/portability.ts` | Used by preflight and the method store. Remove the 13 ruling citations; keep the code. |
+| `lib/method/spread.ts` | Wire it into the fix-standing pass so a method that works is tried at every same-kind door, which rules section 7 wants. |
+| `scripts/link-sweep.mts` | Admin already reads its counts but nothing runs it. Put it on the audit pass clock so it runs by itself. No package.json entry. |
+| `tests/field-manual-scout.test.ts` | Real learning loop; robots-not-a-wall matches the rules. Remove the ruling citation. |
+| `tests/link-sweep.test.ts` | Reader link health is owed, but scripts/link-sweep.mts is run by nothing. Wire it into the runner. |
+| `tests/method-fixtures.ts` | Used by kept method-store tests. Remove the RULING 103 citation in its header. |
+| `tests/research-docs-and-method-bridge.test.ts` | Route-learning checks stay; drop the checks that every docs/detective and state NOTES line is in the manual, which come from a one-time seed script. |
+
+**Check and close (6 rows).** The inventory gives these only comment, citation or deleted-file reference fixes, which the cleanup release was doing. Confirm each is done on `river`; finish any leftover; then close the row: `lib/method/conclusions.ts`, `scripts/field-manual-seed.mts`, `tests/field-manual.test.ts`, `tests/method-claims.test.ts`, `tests/method-knowledge.test.ts`, `tests/method-projection.test.ts`.
+
+## Notes
+
+- How shared knowledge is read: rulings §7.

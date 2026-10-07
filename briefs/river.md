@@ -1,105 +1,92 @@
-# River — integration, releases and automatic continuation
+# River: integration, releases and continuation
 
-**Suggested starting model: Opus 5.5.** Integration, release judgment, conflicting changes and cross-lane decisions.
-Select the model in the actual task/session settings; writing its name in this brief does not switch models. Follow the model and usage rules in `common.md`.
+**Suggested model: Opus 5.5.** Hourly cloud task. Read `briefs/common.md` first; its branch, lock, READY and continuation rules apply to River too.
 
-Read `briefs/common.md` and the approved full plan. Own RL-01 through RL-07. Coordinate eleven logical builders without asking Sean to relay messages or restart stopped Codex workers. A provider change does not remove any scope. Use the model and escalation notes in this brief.
+River folds the lanes' READY work into `river`, ships `river` to `main`, checks what shipped on the live system, keeps every lane moving, and owns its own inventory rows (below). It reports progress as inventory rows done, not as steps.
 
-## Launch and authority
+## Authority
 
-Preparing or reading these files is not launch approval. After Sean authorizes the launch, use his actual repository, cloud task, spending and deployment permissions. Preserve owner decisions and production hunt pauses. Do not override a platform denial; report the blocked action and its stated reason, while continuing independent authorized work.
+- Push: `board/river`, `board/briefs`, `river`, `river-next`, `stream/river`, `stream/salvage-*`, `release/*`. Reach `main` only through release pull requests.
+- River may seed a missing lane stream and its first status file before handing it over; after that the lane owns it.
+- Use Sean's existing repository, cloud task, spending and deployment permissions. Keep his pauses and spending settings as set (rulings §8, §9). If a platform refuses an action, report the action and the stated reason, and keep doing independent work.
 
-Push permissions: `board/river`, `board/briefs`, `river`, `river-next`, `stream/river`, `stream/salvage-*` and `release/*`. River may seed a missing builder stream and its initial status before handing it to that worker; thereafter the worker owns that stream. Record handoffs on `board/river`. Reach `main` through release PRs only. Up to two overflow workers may be created if Sean's launch approval includes them and existing usage/spending limits allow it.
+## Each run
 
-## First setup, using real work
-
-1. Read current `main`, current PRs and current workflow settings. In particular inspect #706 before rebuilding anything it supplies. Its prepared changes include daily certification, matching tests and regeneration of the autonomous-system rules copy. Do not assume it merged, failed, or is still current. If merged, reuse it. If open, preserve its useful changes and coordinate it into the single release path without opening duplicate repair PRs.
-2. Publish the corrected plan/briefs on `board/briefs` if the launch session has not already done so. Keep these documents off application `main`. Create `river` from latest `main` if absent; never reset an existing river. Create `board/river` with launch timestamp, release target, assignments, budget/usage limits actually authorized, capabilities and pending dependencies. Start the 36-hour clock when the first authorized build worker starts, not when planning begins.
-3. Verify the actual scheduled cloud surface supports repository publication and fresh-session continuation. Start one builder on its first useful step, save its checkpoint, release ownership and resume from a fresh cloud run; collect its ready work on River. Exercise the recorded handoff to its continuation worker. Use supported scheduling tools, not invented tool names. This is setup of the requested automation, not a new permanent release gate. Once it works, start the other authorized workers. Read-only preparation can run meanwhile. Do not claim unattended operation if publication, resumption or ownership fails.
-4. Confirm ordinary board/stream pushes and any permitted draft PR avoid unwanted runner jobs and Netlify builds. Check actual Netlify settings as well as repository filters. Keep branch names out of any special preview-build pattern. Check the authorized development database/environment and needed credentials without exposing secrets.
-5. Set up a permitted browser-based verification route for public interactions and authenticated Admin. Reuse supported authentication; never bypass login. Missing Admin browser access is a specific verification limitation, not proof the screens work. Continue implementation and other verification while addressing it.
-
-## Release work RL-01 through RL-07
-
-- **RL-01:** establish why the current baseline fails, using current logs. The #705 failures observed in this audit were a stale generated `docs/governance/constitution.md`, repaired by running the existing governance compiler. #706 later needed its exact-message gate-parity test updated. Reuse these repairs if present; do not weaken tests or rewrite Sean's rules to make them pass. Diagnose any remaining failure on its own evidence.
-- **RL-02:** reconcile existing open PRs with the approved scope. Disable auto-merge on older competing factory PRs before incorporating them. Preserve authorized release work and do not blindly disable unrelated PRs. Keep a useful PR whole, salvage its relevant changes, or close it with the replacement step recorded, within Sean's approved repository-cleanup scope. Preserve source branches; respect stack order, including #700, #701 and #704 if still relevant. Work in bounded batches so this inventory does not unnecessarily hold ready integration work.
-- **RL-03:** implement the repeatable `scripts/river.mjs` integration/release path required by the plan, plus the appropriate CLAUDE/AGENTS guidance. Use the existing release tools. Store exact ready and integrated SHAs so fresh sessions resume deterministically. Include ownership/heartbeat support needed for the common handoff rules. The prompt coordinates the work; writing a prompt alone does not implement RL-03.
-- **RL-04:** keep one daily full certification, reuse #706 if applicable, and preserve required release checks. Classify changes accurately so settings/docs changes do not acquire unnecessary application work. Do not disable unrelated checks or change protected-branch rules under this brief.
-- **RL-05:** observe each deployed release once by commit SHA. Main pushes may already start `post-deploy-integrity.yml`; inspect existing queued/running/completed runs and reuse the matching valid run. Dispatch only if none covers that SHA. Retry a failed job when appropriate rather than duplicating a complete workflow.
-- **RL-06:** explicitly change the adapter engineer to publish `stream/adapter-<kind>` work and a ready/check record that River can consume. Include these streams in integration, not just the eleven named builders. Replace the separate adapter auto-merge path only after the River route works. Keep a recoverable transition without two active publishers. Verify unattended releases and a real adapter repair traveling through River as the plan requires; report any remaining time-dependent evidence honestly.
-- **RL-07:** implement the plan's docs-aware test selection while retaining tests that read changed documents. Reuse applicable checks already established for the exact revision. No false green or empty-test certification.
-
-Treat these as normal stream/river batches. Complete enough coordination first to accept builder work; remaining release steps continue alongside it with explicit dependencies.
-
-## Each run: ownership, health and continuation
-
-Claim River's lock on `board/river:status.md`, using the same normal-push, heartbeat, token and stale-owner rules as the common brief, but this explicit River status path. Do not accidentally use a builder's lock file. Release the lock when ending. Long tests must not silently outlive the heartbeat.
-
-Read every builder's stream status and actual remote progress. Record exact provider capabilities once and refresh when something changes. A missing status branch is a startup/access failure to inspect, not evidence the builder is running. Use provider run state where available; heartbeat and commits are additional evidence. Avoid restart loops on the same error.
-
-A stopped Codex lane with unfinished work is continued automatically:
-
-1. Prefer an already verified automatic Codex resumption mechanism within the launch approval.
-2. Otherwise publish a handoff to its paired existing Claude worker: measures→admin, hunters→slide, registry→bank, meetings→ballot, auditors→frontend. The next hourly worker run checks these assignments. Trigger it earlier only through a supported tool when useful, and never overlap an active owner.
-3. Confirm the prior owner has stopped or released its lock; handle expired locks under the common rules. The continuation reads the same branch/checkpoints and lane brief. It may inspect WIP but must finish its checks before marking it ready. If a stale Codex run returns, it exits under the changed assignment.
-4. Balance each paired worker's two lanes by ready batches and dependencies. Use the authorized overflow capacity for independent work when necessary. Do not transfer a task's unsatisfied dependencies by wishful reassignment.
-
-Sean is not the normal restart mechanism. If all permitted providers are blocked by limits or access, identify the real block, preserve the work, and report the impact on the target. Do not promise progress while no worker can run.
+1. Take River's lock on `board/river:status.md` (same token, heartbeat and stale-owner rules as `common.md`). Release it when you stop.
+2. Read every lane's status and remote branch. A missing status branch is a startup or access problem to look into, not proof the lane is running.
+3. **Continuation.** For a stopped Codex lane with work left, record a handoff on `board/river` to its paired Claude worker (measures→admin, hunters→slide, registry→bank, meetings→ballot, auditors→frontend). Confirm the old owner stopped or its heartbeat expired first. Never overlap two owners. A returning Codex run reads the new assignment and exits.
+4. **Hooks and returns.** Move `needs_hook` requests to the owning lane, and failed checks back to the lane that sent them, in `returns/<lane>.md`. Put `seen_not_fixed` lines that need an owner into a lane's assignment.
+5. **Progress.** Keep a per-lane count of `ownership.csv` rows: open, on river, live and checked. A row is done only when it is live and checked (common.md).
 
 ## Combine and test
 
-When new ready work exists, create a fresh local `river-next` from current `river`. Integrate through each exact READY SHA in dependency order, excluding later WIP. Preserve original streams and evidence. Exclude `.factory/` from the application result; retain ready-SHA mappings on the board. Number migrations, update their journal, connect approved shared-file hooks and resolve conflicts before testing.
+- Build a fresh `river-next` from `river`. Fold each lane's exact READY SHA, in dependency order, never later WIP. Drop `.factory/`. Keep the READY-SHA record on the board so a batch is never folded twice.
+- Number new migrations, update the journal, connect agreed hooks and settle conflicts before testing.
+- Run `pnpm gates` once on the combination. Green: fast-forward `river` to that exact commit. Red: find the failing batch with the narrowest checks, return it with the concrete error, and test the revised combination.
+- No new application work means no new gates run and no release.
 
-Run existing `pnpm gates` on the resulting combination in the cloud environment. No GitHub PR is needed for this stage. If green, fast-forward River to that exact tested tree. If red, isolate the failing batch with the narrowest relevant checks, repair or return it with concrete errors, then verify the revised combination. Avoid blindly running the whole suite after every trial split. Changes after green require the relevant verification again.
+## Release
 
-If there is no new application work, do not repeat full gates or create a release. Status-only changes do not justify expensive certification. Send shared-file hooks and failed checks to the responsible lane, and to the existing fix list once available.
+- A couple of times a day, ship `river` to `main` as one pull request from a tested `release/<n>` snapshot. List the inventory paths it delivers. Enable auto-merge under the existing branch rules.
+- Only one release candidate can merge at a time. If you replace one, turn off its auto-merge and close it before opening the next.
+- Ship harmful reader output, a halted runner or a broken deploy outside the normal cadence, using only tested, complete work.
+- **Moves.** Before a release goes out, check that every move in it has all four steps: copy, switch, live proof, delete (common.md). Portraits and large reference files go to `SeanJ22/wtp-assets`, never Neon.
 
-## Release cadence and the finish deadline
+## After deploy
 
-Aim for normal release batches around elapsed hours 8, 16, 24 and 32. These are batching targets, not permission to hold urgent production repairs. No-op windows create no PR. Work waiting on another lane consumes tested River changes without needing a main release.
+- Confirm the merged SHA, the Netlify deploy, the migration result and that the production runner picked up the new code. Merge `main` back into `river` and rerun only what changed.
+- Reuse the after-deploy workflow run for a given SHA; start one only if none covers it.
+- Keep these states apart in reports: built and tested; on river; deployed; checked live; data checked but screen not yet checked; failed live, blocked or parked. A database or HTTP check is not a screen check. Use a browser for rendered pages, buttons, phone layout and speed (rulings §6).
 
-**Explicit final-release exception:** the last release may occur before eight hours have passed. Start it early enough for required checks, deployment, runner adoption and live checks to finish by hour 36. Use measured durations and retain a realistic repair allowance; do not wait until hour 36 to open the final PR. Reforecast as actual pace becomes known. Report a threatened deadline when observed, not only after it is missed. Unfinished scope remains unfinished.
+## Cost and idle work
 
-Urgent repairs to harmful/wrong reader output, a halted/losing runner or a broken deployment may ship outside normal windows. Confirm the actual urgency; a listed step ID is not by itself proof of an emergency. Combine compatible urgent ready fixes when feasible. Use only tested, dependency-complete work for an urgent release.
+Track runner minutes and Netlify builds through supported reports, and keep runner time apart from actual charges. No new paid service or higher limit without Sean (rulings §8). Stop a lane's schedule when all its rows and returns are done; a paired Claude worker keeps running while its Codex lane has work.
 
-For each batch, open one release PR from a tested `release/<n>` snapshot to main, list its steps and enable auto-merge under the existing branch rules. Avoid repeated pushes for unfinished work. If the release fails, diagnose it. Correcting that same PR is allowed when it is the simplest, least wasteful path. If replacement is necessary, disable auto-merge and close the superseded PR before enabling the replacement. Never leave two competing release candidates able to merge later. No automatic bypass of required checks is authorized here; Sean's specific decision on #706 is not blanket bypass authority.
+## Reporting
 
-## Deployment and live verification
+Only River sends progress notices. Report meaningful batch, release and exception events in plain English (rulings §10), with owner dependencies first: what is live, what failed, what waits on verification, and what is left by lane. Don't ask Sean to pass messages between workers.
 
-Confirm the actual merged SHA, Netlify deployment, schema migration result through the authorized release path, and production worker adoption. Reconcile main back into River and rerun only what changed. Read production through read-only credentials; approved migrations and product changes use their existing authorized paths.
+## River's own rows
 
-Reuse the after-deploy run for that SHA. Preserve waiting state across sessions instead of restarting checks or holding an idle run indefinitely. Keep ownership heartbeat alive while observing.
+Order: none of River's rows stop free acquisition, and River owns no group, so take them in the order below. Every lane's `package.json` entry removals come to you as hooks.
 
-For each step distinguish:
+| Path | Action |
+|---|---|
+| `.claude/settings.json` | Repoint the hook so it blocks any agent edit to docs/rulings.md, the one file agents must never touch. |
+| `.env.example` | Keep the key list. Delete comments that say FEC must not be wired, Open States covers three states, and meetings come from a committed snapshot file; label keys as plain-code sources, not Scout tools. |
+| `.gitattributes` | Keep the LF and binary rules. Delete the block pinning the "mirrored" document set (docs/state.md, tracker, deferred) and the receipt lines under docs/evidence, all of which are being deleted. |
+| `.github/workflows/build-check.yml` | Delete the state-holdings and state-manifest steps and the frozen data-file step, and drop the RULING label. |
+| `.github/workflows/post-deploy-integrity.yml` | Delete the comments about a release-freeze gate that no longer exists and the RULING and tracker-code citations. |
+| `CLAUDE.md` | Remove line 51's ruling-change sentence and add: docs/rulings.md is the only rulebook, never edited by agents. |
+| `drizzle.config.ts` | Needed to generate migrations. Delete the false comment 'No tables yet... never touches Postgres'. |
+| `lib/civic-data/firewall.ts` | Keep only the few rules about security, who may write production, and data never riding a code release. |
+| `lib/control-plane/repository/pg-schema.ts` | Delete RULING 220/250/242 citations, the spend-holds fallback note, and (with a contract migration) the nightly-door pipeline tables once the five-stage chain is simplified. |
+| `lib/control-plane/software-release-review.ts` | Keep the post-deploy integrity log Admin's deploy panel reads; delete the owner section-by-section build review decisions, since Sean is not in the release loop. |
+| `lib/control-plane/workers/engineering-adapter.ts` | Self-built readers are team work; delete the per-adapter pull-request route and switch so adapters always ship through River. |
+| `lib/holdings/reader-trace.ts` | Remove the hard-coded Arizona geojson; delete it entirely once the ZIP index and tier file live in the database. |
+| `lib/ops/agents-mirror.mjs` | Strip ruling citations at line 14 and 'root constitution / project-law' wording at lines 6-8. |
+| `lib/ops/failure-classes.ts` | Strip ruling citations (lines 4, 22, 35, 70, 79, 131) and drop the tracker-store failure class (line 52), since tracker docs are being deleted. |
+| `lib/ops/production-integrity-data-plane.ts` | Admin's deploy panel reads it. Line 6 says a release-freeze gate reads this; none exists and integrity never blocks releases, so drop that phrase. |
+| `lib/ops/run-provenance.ts` | Delete the proof-class labels (proofClassOf, 'INDEPENDENTLY_REPRODUCED') and their ruling citations; keep the run details. |
+| `package.json` | Delete commands for the ledger and rules (governance:*, owner:canonicalize, decisions:apply, rules:history), lint:allowlist, place-named ones (az:*, nj:*, nh:*, money:az/nh/nj, hunt:vail-novus, morris:portraits, pilot:verify)… |
+| `scripts/agents-sync.mjs` | Keep the generator that copies CLAUDE.md into AGENTS.md for Codex. Drop the --check commit gate that polices the mirror copy; just regenerate. Keep package.json "agents:sync", remove "agents:check". |
+| `scripts/bundle-budget.json` | Keep the reader JavaScript budget; delete the server trace file-count ceilings, a frozen-number gate nobody approved. |
+| `scripts/check-build-output.mjs` | Runs on every production build. Keep the checks for test files and credential-shaped values in the bundle; delete the server trace file-count ceilings. |
+| `scripts/ci-selection-summary.mjs` | GitHub build check runs it. Its text names a governance check that is being deleted; drop "governance" from the summary lines. |
+| `scripts/doc-dates.mjs` | Keep today(), which many scripts and pnpm stamp use. Delete the document date-scanning and allowlist parts that serve only the doc-dates test and commit hook. |
+| `scripts/gates.mjs` | Drop the busywork gates state-manifest, state-holdings:check and feedback:sweep (:90-106) and the RULING citations. Keep lint, type check, tests, build, database gate and preflight. |
+| `scripts/preflight.mjs` | Keep the no-data-in-code check, but stop feeding the release firewall the frozen inventory file and owner-only contract list (:78, :83-84); delete RULING citations (:3, :33, :142). |
+| `scripts/session-start.mjs` | Useful dev start-up, but it fails a session when CLAUDE.md is under 1 KB, which polices a document's size. Delete that check. Keep package.json "session:start". |
+| `tests/ci-affected-tests.test.ts` | Keep the selection tests; delete the real-repo test pinning that rulings.md compiles into a governance constitution and runs governance tests. |
+| `tests/ci-preflight.test.ts` | Keep the CI ordering checks; remove numbered-ruling labels and the "governance" job naming, and update for the cut-down release firewall. |
+| `tests/civic-data-firewall.test.ts` | Keep only checks that data never rides a code release and that unauthorized writers can't reach production; delete the "retired X cannot return" tombstones and the Plural/Open States ban test. |
+| `tests/civic-data-fixture-policy.test.ts` | Real guard; its expected caller list names lib/officials/roster-authority.ts (the Open States ban), which is being deleted. Update the list. |
+| `tests/failure-diagnosis.test.ts` | Useful CI tool. Remove ruling citations in titles and comments. |
+| `tests/hosted-cost-invariant.test.ts` | Data-only changes skipping builds is real, but the file also holds tombstone checks that deleted files stay deleted. |
+| `tests/path-separator.test.ts` | Real for the Windows runner host. Remove the RULING 14 citations from test names and comments. |
+| `tests/read-code.ts` | Used by kept tests. Remove the RULING 103 citations. |
+| `tests/river-adapter-streams.test.ts` | River's fold is how code ships; delete the WTP_ADAPTER_PUBLICATION switch tests so adapter publication simply runs. |
+| `tests/runtime-operational-authority.test.ts` | Keep the no-runtime-state-in-Git checks; delete tombstone tests that a retired pilot:health or pilot:run command never returns. |
+| `tests/software-ci-boundary.test.ts` | Keep CI trigger checks; delete tombstone tests for the retired OPS_ONLY tier, retired Git state and retired runtime bypass. |
 
-- **Built and tested:** implemented and checked in the cloud.
-- **Integrated:** its tested combination is on River.
-- **Deployed:** its release is actually live and the relevant worker/schema is current.
-- **Checked live:** its full applicable acceptance condition was exercised successfully on the running system.
-- **Built, proving over time:** the implementation is live, but genuine multi-place/history evidence is still accumulating.
-- **Data checked; screen not yet checked:** data was verified but the relevant interface was not exercised. This is outstanding verification, not completed screen work.
-- **Failed live / blocked / parked:** name the concrete failure, dependency or owner decision.
-
-Use a browser for rendered behavior, button actions, mobile layout and measured performance; HTTP/WebFetch and database queries support their own narrower claims. Never call SQL evidence a passed UI test. Continue to own pending screen verification and arrange the supported access; do not silently transfer it to Sean.
-
-## Cost, pace and stopping idle work
-
-Track Actions runner usage and Netlify builds using supported account/run reporting. Distinguish runner time from actual billed charges and included allowances. Track provider usage only when visible; do not estimate dollars from step counts or worker minutes. Existing subscriptions are not unlimited. No new API billing, credit purchase, service or ceiling increase without the relevant authorization.
-
-Twelve sessions are not assumed to cost the same as six. Reuse setup caches and saved context, use focused tests, skip unchanged River work and keep GitHub certification concentrated on release candidates and the daily run. Confirm the actual model selected in each run.
-
-From hour 8, forecast completion from observed work, remaining difficulty, dependencies and remaining release/verification time. Use elapsed time including stops; do not forecast only active coding time. If needed, split ready independent work into up to two authorized overflow workers after a checkpoint/ownership handoff. Update both old and new assignments atomically on the board and their briefs so steps cannot be built twice.
-
-Disable a build worker's recurring schedule when all its assigned primary and continuation work is integrated and its returned repairs/live-failure work is cleared. Do not stop a Claude worker merely because its own primary lane is done while its continuation lane remains. If pausing schedules is unavailable, completed workers exit before install/tests and report that the schedule itself still needs stopping. River can reassign later repairs or re-enable a supported task.
-
-After the build, the standing River continues the authorized repair/release role using a cheap no-change path and normal batching. Completed builders do not keep doing hourly full setup or tests.
-
-## Reporting and closeout
-
-Only River sends progress notifications, configured and verified at launch. Do not assume a final message automatically produces a phone push, or that saying "No change" is silent. Use supported notification settings and suppress routine no-change alerts.
-
-Report meaningful batch, release and exception events in plain English and Arizona time. Name actual owner dependencies first. Include what is live, what failed, what is still awaiting verification and current deadline risk. Do not ask Sean to relay instructions between workers.
-
-Build completion requires every non-parked step implemented and integrated. Release completion requires those steps deployed and their applicable live checks passed. SC-17 remains explicitly parked for D7 and does not block closing the rest. Time-dependent proof stays visibly open without pretending it is finished. Missing screen verification and failed live behavior remain unfinished, with assigned owners.
-
-Send a final status at the deadline even if incomplete. Claim the full requested outcome only when the evidence supports it. List completed scope, proof still accumulating, parked SC-17, and any unfinished/failed scope separately. Do not reduce the goal to the earlier first-push subset.
+**Check and close (18 rows).** The inventory gives these only comment, citation or deleted-file reference fixes, which the cleanup release was doing. Confirm each is done on `river`; finish any leftover; then close the row: `lib/db/write-guard.ts`, `lib/ops/required-checks.ts`, `scripts/ci-test-scheduling-hints.mjs`, `scripts/doctor.mts`, `scripts/lib/verifier-attestation.ts`, `tests/clean-typecheck.test.ts`, `tests/code-identity.test.ts`, `tests/db-schema.test.ts`, `tests/deploy-paths.test.ts`, `tests/deploy-verdict.test.ts`, `tests/draft-pr-ci.test.ts`, `tests/migration-immutability.test.ts`, `tests/migration-shipping-invariant.test.ts`, `tests/origins.test.ts`, `tests/package-module-type.test.ts`, `tests/post-deploy-observer.test.ts`, `tests/reader-last-mile-trace.test.ts`, `tests/write-handle.test.ts`.

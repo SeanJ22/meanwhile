@@ -178,7 +178,7 @@ function rawResponse(response: ModelResponse): string {
     : block.type === "tool_use" ? canonicalJson({ type: block.type, name: block.name, input: block.input }) : "").filter(Boolean).join("\n");
 }
 function validateAnswer(response: ModelResponse, expectedModel: string, context: IndependentAuditContext): Pick<Review, "verdict" | "challenges"> {
-  // The provider answers with the dated alias of a tier's model (claude-haiku-4-5-20251001): the same model.
+  // The provider may answer with a dated alias of the model asked for: the same model.
   if (canonicalModelId(String(response.model)) !== canonicalModelId(expectedModel)) validationFailure("AUDIT_MODEL_IDENTITY_MISMATCH");
   if (!Array.isArray(response.content)) validationFailure("AUDIT_MODEL_CONTENT_INVALID");
   const tools = response.content.filter((block) => block.type === "tool_use");
@@ -241,7 +241,7 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
       }
     }
     const request: ModelRequest = { model: route.model, max_tokens: 2_048,
-      ...(route.modelClass === "haiku" ? {} : { output_config: { effort: route.effort } }),
+      output_config: { effort: route.effort },
       system: [{ type: "text", text: workerSystemPrompt("AUDITOR", (await readRolePlaybook(repos, "AUDITOR")).text), cache_control: { type: "ephemeral" } }], tools: [RECORD_AUDIT],
       tool_choice: { type: "auto" },
       messages: [{ role: "user", content: body }] };

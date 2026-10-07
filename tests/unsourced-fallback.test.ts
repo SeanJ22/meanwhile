@@ -82,10 +82,10 @@ test("ASK-12: the SOURCED refusal is unchanged — the civic path did not move",
 test("Sean, October 1, 2026: Ask without a held source may answer, states its source, and stays short", async () => {
   const { unsourcedSourceLine, askUnsourced } = await import("../lib/routing/unsourced-fallback.ts");
   assert.equal(
-    unsourcedSourceLine("claude-haiku-4-5"),
-    "Source: Claude Haiku 4.5, general knowledge — not a public record this site holds.",
+    unsourcedSourceLine("claude-haiku-5-5"),
+    "Source: Claude Haiku 5.5, general knowledge — not a public record this site holds.",
   );
-  assert.equal(unsourcedAnswer("x", "claude-haiku-4-5").sourceLine, unsourcedSourceLine("claude-haiku-4-5"));
+  assert.equal(unsourcedAnswer("x", "claude-haiku-5-5").sourceLine, unsourcedSourceLine("claude-haiku-5-5"));
   assert.equal(shouldFallBack({ routerAnswered: false, routerDeclined: true }), true);
   let sent = "";
   process.env.ANTHROPIC_API_KEY ??= "test-key";

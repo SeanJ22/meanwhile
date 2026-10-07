@@ -206,8 +206,7 @@ export async function interpretQuestion(
       body: JSON.stringify({
         model,
         max_tokens: Math.max(1024, fields.minMaxTokens),
-        /* What the model accepts, from the registry: adaptive thinking where it takes it
-           (none on Haiku 4.5), the role's effort only where it takes one. */
+        /* The READER role's thinking and effort, as the registry says the model accepts them. */
         ...(fields.thinking ? { thinking: fields.thinking } : {}),
         output_config: {
           ...(fields.effort ? { effort: fields.effort } : {}),

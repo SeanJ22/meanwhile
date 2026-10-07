@@ -80,7 +80,7 @@ export const ASK_MODEL_ROLES: Readonly<Record<AskModelRole, AskModelRoleSpec>> =
     defaultTier: "haiku",
     env: ["WTP_ASK_READER_MODEL"],
     effort: "low",
-    thinking: "ADAPTIVE",
+    thinking: "OFF",
     canBeOff: false,
   }),
   FAST_WRITER: roleSpec({

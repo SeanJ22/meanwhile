@@ -1,12 +1,14 @@
 /** Cost informs scheduling, never truth. An unmeasured count yields null, never zero, and a model with no rate row costs null. */
 
-import { MODELS, MODEL_TIERS, MODEL_PRICE_SOURCE, MODEL_PRICES_STATED_ON, modelTierFor } from "../models.ts";
+import { MODELS, MODEL_TIERS, MODEL_PRICE_SOURCE, MODEL_PRICES_STATED_ON, canonicalModelId, modelTierFor } from "../models.ts";
 
 export const MODEL_WORKER_MODEL = MODELS.opus.model;
 export interface ModelRate {
   readonly model: string;
   readonly inputUsdPerMillion: number;
   readonly outputUsdPerMillion: number;
+  /** The rate card for a request whose prompt is above `aboveInputTokens`; absent where one card covers every length. */
+  readonly longPrompt?: { readonly aboveInputTokens: number; readonly inputUsdPerMillion: number; readonly outputUsdPerMillion: number };
   readonly statedOn: string;
   readonly source: string;
 }
@@ -20,19 +22,39 @@ export const MODEL_RATES: readonly ModelRate[] = [
     statedOn: "2026-08-31", source: "Anthropic first-party API rates (legacy Opus 5)" },
   { model: "claude-sonnet-5", inputUsdPerMillion: 2, outputUsdPerMillion: 10,
     statedOn: "2026-09-02", source: "Anthropic first-party API rates (legacy Sonnet 5)" },
+  { model: "claude-haiku-4-5", inputUsdPerMillion: 1, outputUsdPerMillion: 5,
+    statedOn: "2026-09-29", source: "Anthropic first-party API rates (legacy Haiku 4.5)" },
 ];
 
-/** The dated Haiku id resolves to the undated one so both meet one rate row. */
-export const MODEL_ID_ALIASES: Readonly<Record<string, string>> = {
-  "claude-haiku-4-5-20251001": "claude-haiku-4-5",
+/** The id a rate row is keyed by: a tier's model, or the undated id. */
+const rowId = (model: string): string => {
+  const tier = modelTierFor(model);
+  return tier ? MODELS[tier].model : canonicalModelId(model);
 };
 
-/** The rate row for a model id (aliases resolved), or null when no row is stated. */
+/** The rate row for a model id (dated aliases resolved), or null when no row is stated. */
 export function rateFor(model: string): ModelRate | null {
-  const tier = modelTierFor(model);
-  const id = tier ? MODELS[tier].model : MODEL_ID_ALIASES[model] ?? model;
+  const id = rowId(model);
   return MODEL_RATES.find((r) => r.model === id) ?? null;
 }
+
+type PriceCard = Pick<ModelRate, "inputUsdPerMillion" | "outputUsdPerMillion" | "longPrompt">;
+
+/** The input and output prices that apply to one request, by the size of its prompt. */
+export function ratesForPrompt(rate: PriceCard, promptTokens: number): { readonly inputUsdPerMillion: number; readonly outputUsdPerMillion: number } {
+  return rate.longPrompt && promptTokens > rate.longPrompt.aboveInputTokens ? rate.longPrompt : rate;
+}
+
+/** The highest input and output prices a row can charge. */
+export function highestRates(rate: PriceCard): { readonly inputUsdPerMillion: number; readonly outputUsdPerMillion: number } {
+  return rate.longPrompt ?? rate;
+}
+
+/** The dearest input and output prices any active tier can charge, for bounds that do not know the model. */
+export const DEAREST_ACTIVE_RATES = {
+  inputUsdPerMillion: Math.max(...MODEL_TIERS.map((tier) => highestRates(MODELS[tier]).inputUsdPerMillion)),
+  outputUsdPerMillion: Math.max(...MODEL_TIERS.map((tier) => highestRates(MODELS[tier]).outputUsdPerMillion)),
+} as const;
 
 /**
  * Minimum cacheable prefix per model; below it a `cache_control` breakpoint is silently ignored.
@@ -43,6 +65,7 @@ export const MODEL_CACHE_MINIMUMS = {
     ...Object.fromEntries(MODEL_TIERS.map((tier) => [MODELS[tier].model, MODELS[tier].minimumCacheablePrefixTokens])),
     "claude-opus-5": 512,
     "claude-sonnet-5": 1024,
+    "claude-haiku-4-5": 4096,
   } as Readonly<Record<string, number>>,
   statedOn: "2026-09-22",
   source: "Anthropic first-party prompt-caching reference (per-model minimum cacheable prefix)",
@@ -53,11 +76,9 @@ export const MODEL_CACHE_READ_MULTIPLIER: Readonly<Record<string, number>> = {
   ...Object.fromEntries(MODEL_TIERS.map((tier) => [MODELS[tier].model, MODELS[tier].cacheReadMultiplier])),
 };
 
-/** The minimum cacheable prefix for a model id (aliases resolved), or null when no row states one. */
+/** The minimum cacheable prefix for a model id (dated aliases resolved), or null when no row states one. */
 export function minimumCacheablePrefixTokensFor(model: string): number | null {
-  const tier = modelTierFor(model);
-  const id = tier ? MODELS[tier].model : MODEL_ID_ALIASES[model] ?? model;
-  return MODEL_CACHE_MINIMUMS.values[id] ?? null;
+  return MODEL_CACHE_MINIMUMS.values[rowId(model)] ?? null;
 }
 
 /** Prompt-cache rates as multiples of the input rate. `cacheRead` is the default; `cacheReadMultiplierFor` overrides it per model. */
@@ -73,11 +94,9 @@ export const CACHE_RATE_MULTIPLIERS = {
   source: "Anthropic first-party API rates, read from the claude-api reference (prompt caching; Message Batches)",
 } as const;
 
-/** The cache-read multiplier for a model id (aliases resolved); the standard 0.1x default unless the model states its own (Opus 5.5 = 0.05x). */
+/** The cache-read multiplier for a model id (dated aliases resolved); the standard 0.1x default unless the model states its own (Opus 5.5 = 0.05x). */
 export function cacheReadMultiplierFor(model: string): number {
-  const tier = modelTierFor(model);
-  const id = tier ? MODELS[tier].model : MODEL_ID_ALIASES[model] ?? model;
-  return MODEL_CACHE_READ_MULTIPLIER[id] ?? CACHE_RATE_MULTIPLIERS.cacheRead;
+  return MODEL_CACHE_READ_MULTIPLIER[rowId(model)] ?? CACHE_RATE_MULTIPLIERS.cacheRead;
 }
 
 /**
@@ -134,6 +153,7 @@ export interface PricedUsage {
  *   cache reads     x base x the model's read multiplier
  *   output          x output price
  *   then x 0.5 once for the Batches API
+ * Base and output prices are the rate card for the prompt's size: uncached input, cache reads and cache writes together.
  * The aggregate cache write is priced only when its split is absent, at `requestedTtl`.
  */
 export function priceMeteredUsage(
@@ -147,10 +167,12 @@ export function priceMeteredUsage(
   if (rate === null || usage.uncachedInputTokens === null || usage.outputTokens === null) {
     return { usd: null, cacheWritePricedFrom: "NONE", aggregateTtl: null };
   }
-  const base = rate.inputUsdPerMillion / 1_000_000;
   const read = usage.cacheReadInputTokens ?? 0;
   const aggregate = usage.cacheCreationInputTokens ?? 0;
   const hasSplit = usage.cacheCreation5mInputTokens !== null && usage.cacheCreation1hInputTokens !== null;
+  const written = hasSplit ? (usage.cacheCreation5mInputTokens ?? 0) + (usage.cacheCreation1hInputTokens ?? 0) : aggregate;
+  const card = ratesForPrompt(rate, usage.uncachedInputTokens + read + written);
+  const base = card.inputUsdPerMillion / 1_000_000;
   let writes: number;
   let pricedFrom: PricedUsage["cacheWritePricedFrom"];
   let aggregateTtl: CacheWriteTtl | null = null;
@@ -172,7 +194,7 @@ export function priceMeteredUsage(
     usage.uncachedInputTokens * base +
     writes +
     read * base * cacheReadMultiplierFor(rate.model) +
-    (usage.outputTokens / 1_000_000) * rate.outputUsdPerMillion;
+    (usage.outputTokens / 1_000_000) * card.outputUsdPerMillion;
   return { usd: usage.batch ? full * CACHE_RATE_MULTIPLIERS.batch : full, cacheWritePricedFrom: pricedFrom, aggregateTtl };
 }
 
@@ -267,8 +289,9 @@ export function usdForUsage(
   rate: ModelRate = MODEL_WORKER_RATES,
 ): number | null {
   if (inputTokens === null || outputTokens === null) return null;
+  const card = ratesForPrompt(rate, inputTokens);
   return (
-    (inputTokens / 1_000_000) * rate.inputUsdPerMillion +
-    (outputTokens / 1_000_000) * rate.outputUsdPerMillion
+    (inputTokens / 1_000_000) * card.inputUsdPerMillion +
+    (outputTokens / 1_000_000) * card.outputUsdPerMillion
   );
 }

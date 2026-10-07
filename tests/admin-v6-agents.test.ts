@@ -11,7 +11,7 @@ test("an agent run names its role, model tier, cost, what it found and its saved
     runs: [run("at-1", "SCOUT", { version: "claude-sonnet-5-5" }), run("at-2", "ACQUIRER", { version: "route-executor/1.0" }), run("at-3", "SCOUT", { version: "claude-opus-5" })],
     costs: [
       { attemptId: "at-1", usd: 0.4, jurisdiction: "az:school:palominas-school-district-49", obligationId: "freshness:meetings-discovery:az:school:palominas-school-district-49#own-site-meetings",
-        byModel: [{ model: "claude-haiku-4-5-20251001", usd: 0.1 }, { model: "claude-sonnet-5-5", usd: 0.3 }] },
+        byModel: [{ model: "claude-haiku-5-5-20261001", usd: 0.1 }, { model: "claude-sonnet-5-5", usd: 0.3 }] },
       { attemptId: "at-2", usd: 0, jurisdiction: null, obligationId: null, byModel: null },
     ],
     artifacts: [{ attemptId: "at-1", artifactId: "ar-deadbeef", workItemId: "wi-abc", url: "https://www.cochise.az.gov/agenda", byteLength: 1200, tier: "RAW", partial: false, count: 3 }],
@@ -34,7 +34,7 @@ test("an agent run names its role, model tier, cost, what it found and its saved
 test("a retired model is named as older; an unpriced run is unknown, not $0; an old open run did not finish", () => {
   const out = agentRuns({ nowIso: NOW,
     runs: [run("at-1", "SCOUT", { version: "claude-opus-5" }), run("at-2", "PARSER", { endedAt: null, outcome: null, startedAt: "2026-09-30T17:59:00.000Z" }),
-      run("at-3", "SCOUT", { endedAt: null, outcome: null, startedAt: "2026-09-30T10:00:00.000Z", version: "claude-haiku-4-5" })],
+      run("at-3", "SCOUT", { endedAt: null, outcome: null, startedAt: "2026-09-30T10:00:00.000Z", version: "claude-haiku-5-5" })],
     costs: [{ attemptId: "at-1", usd: null, jurisdiction: null, obligationId: null, byModel: null }], artifacts: [], results: [] });
   assert.equal(out[0].model.tier, "older");
   assert.equal(out[0].model.name, "claude-opus-5");

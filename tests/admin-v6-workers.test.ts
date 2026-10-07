@@ -90,7 +90,7 @@ function jobRow(f: JobFixture): RunningJobRow {
   return { leaseId, routeTaskId: `rt-${f.id}`, holder: "runner@test", expiresAt: f.expiresAt ?? "2026-09-28T22:10:00.000Z", released: f.released ?? false,
     attempt: kind === "none" ? null : { id: f.id, leaseId: kind === "other-lease" ? "ls-someone-else" : leaseId, startedAt,
       endedAt: kind === "ended" ? "2026-09-28T21:55:00.000Z" : null, outcome: kind === "ended" ? "COMPLETED" : null,
-      role: f.role ?? "ACQUIRER", version: f.role === "SCOUT" ? "claude-haiku-4-5-20251001" : "route-executor/1.0", workItemId: `wi-${f.id}` },
+      role: f.role ?? "ACQUIRER", version: f.role === "SCOUT" ? "claude-haiku-5-5-20261001" : "route-executor/1.0", workItemId: `wi-${f.id}` },
     obligation: o === null ? null : { id: `ob-${f.id}`, recordClass: o.recordClass ?? "meetings", subjectId: o.subjectId ?? "body-x", scopeDivisions: o.divisions ?? [], assignments: o.marks ?? [] } };
 }
 
@@ -122,7 +122,7 @@ async function world(opts: { scouts?: ScoutFixture[]; sources?: { id: string; p:
   for (const s of scouts) {
     const task = `rt-${s.attemptId}`;
     await repos.attempts.put(s.attemptId, { id: s.attemptId, routeTaskId: task, workItemId: `wi-${s.attemptId}`, leaseId: `ls-${s.attemptId}`,
-      worker: { role: "SCOUT", provider: "anthropic", version: "claude-haiku-4-5-20251001", instance: "i" }, startedAt: s.startedAt,
+      worker: { role: "SCOUT", provider: "anthropic", version: "claude-haiku-5-5-20261001", instance: "i" }, startedAt: s.startedAt,
       endedAt: s.endedAt ?? null, outcome: s.outcome ?? null } as never, NOW);
     if (s.lease) await repos.leases.put(task, { id: s.lease.id ?? `ls-${s.attemptId}`, routeTaskId: task, holder: "cycle@test", claimedAt: s.startedAt,
       expiresAt: s.lease.expiresAt, heartbeatAt: s.startedAt, released: s.lease.released ?? false }, NOW);
@@ -155,7 +155,7 @@ test("only an open attempt with its own live lease is running; an expired lease 
   const events = s.data.events ?? [];
   const started = events.filter(e => e.kind === "Paid research started");
   assert.equal(started.length, 1, "the live Scout alone is running");
-  assert.match(started[0].text, /running now with Cheapest AI \(claude-haiku-4-5-20251001\)\. Work claim holds until/);
+  assert.match(started[0].text, /running now with Cheapest AI \(Claude Haiku 5\.5\)\. Work claim holds until/);
   const stopped = events.filter(e => e.kind === "No live work claim");
   assert.equal(stopped.length, 1);
   assert.match(stopped[0].text, /its work claim (ran out|is gone)/);
@@ -410,7 +410,7 @@ test("a job is running only with an open attempt on its own unreleased, unexpire
 test("a Scout is a running job too, with its model named", async () => {
   const out = ok(await section("us", await world({ scouts: [], jobs: [{ id: "at-scout", role: "SCOUT" }] })));
   assert.equal(out.data.jobs?.[0].stage, "finding");
-  assert.equal(out.data.jobs?.[0].model, "Cheapest AI (claude-haiku-4-5-20251001)");
+  assert.equal(out.data.jobs?.[0].model, "Cheapest AI (Claude Haiku 5.5)");
   assert.equal(out.data.jobs?.[0].title, "Scout · body-x");
 });
 

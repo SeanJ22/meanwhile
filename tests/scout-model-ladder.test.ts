@@ -44,7 +44,7 @@ import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligat
 import { scheduledFixture } from "./control-plane-fixtures.ts";
 import { RESEARCH_BOUNDS, SCOUT_MODEL, type ScoutBound } from "../lib/control-plane/scheduler/research-policy.ts";
 import type { InheritedEvidence, ScoutToolContext, ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
-import {
+import { SCOUT_THINKING,
   ModelTransportError,
   SCOUT_ESCALATION_EVIDENCE_MAX_CHARS,
   cacheTtlOrderProblems,
@@ -238,7 +238,7 @@ test('a long Scout walks beyond the former turn, tool, token and wall limits unt
  try {
  const walks=Array.from({length:40},(_,i)=>[fetchOf('u'+i,`https://source${i}.gov/meetings`)]);
  const script=[...walks,[candidateFinish('done','art-40',walks.map((_,index)=>({index,note:'opened source'})))]];
- for(const ceiling of [100,0.75]) {
+ for(const ceiling of [100,0.075]) {
   const controller=new FleetSafetyController({now:NOW,costs:[],rollingCeilingUsd:ceiling,clock:()=>NOW_MS});
   const fake=perModelTransport({[HAIKU]:script},()=>{elapsed+=60_000;return {input_tokens:20_000,output_tokens:100};});
   const {outcome,result}=await runLadder({model:HAIKU,transport:controller.guardedModelTransport('anthropic',OBLIGATION.id,fake)});
@@ -253,7 +253,7 @@ test('a long Scout walks beyond the former turn, tool, token and wall limits unt
 });
 
 
-test("L1: acquisition starts with Haiku and omits unsupported effort and adaptive thinking", async () => {
+test("L1: acquisition starts with Haiku, with adaptive thinking and the Scout's effort", async () => {
   assert.equal(SCOUT_MODEL, HAIKU);
   assert.equal(scoutLoopBase().model, HAIKU);
   const transport = perModelTransport({ [HAIKU]: [[fetchOf("u1", "https://a.gov/meetings")], [candidateFinish("f", "art-1", [{ index: 0, note: "meetings page" }])]] });
@@ -261,14 +261,14 @@ test("L1: acquisition starts with Haiku and omits unsupported effort and adaptiv
   assert.equal(transport.requests.length, 2);
   for (const request of transport.requests) {
     assert.equal(request.model, HAIKU);
-    assert.equal(request.output_config, undefined);
-    assert.equal(request.thinking, undefined);
+    assert.deepEqual(request.output_config, { effort: "medium" });
+    assert.deepEqual(request.thinking, SCOUT_THINKING);
     assert.deepEqual(request.tools.at(-1)?.cache_control, { type: "ephemeral" });
     assert.deepEqual(request.system[0].cache_control, { type: "ephemeral" });
     assert.deepEqual(request.cache_control, { type: "ephemeral" });
     assert.deepEqual(cacheTtlOrderProblems(request), []);
   }
-  assert.equal(minimumCacheablePrefixTokensFor(HAIKU), 4096);
+  assert.equal(minimumCacheablePrefixTokensFor(HAIKU), 512);
   const prewarm = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
   assert.equal(prewarm.kind, "SEND", "the full direct-API toolkit now clears Haiku's cache minimum");
   if (prewarm.kind === "SEND") assert.ok(prewarm.prefixTokensAtLeast >= minimumCacheablePrefixTokensFor(HAIKU)!);
@@ -547,11 +547,13 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
   assert.equal(JSON.stringify(captured[0].system), JSON.stringify(plan.request.system), "byte-identical system");
   assert.deepEqual(captured[0].output_config, plan.request.output_config, "the same effort, so the warmed entry is the one read");
 
-  /* A small toolkit does not clear Haiku's 4,096-token minimum, so no paid call is made. */
-  const haiku = scoutPrewarmPlan({ toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: HAIKU });
-  assert.equal(haiku.kind, "SKIP");
-  assert.equal(haiku.kind === "SKIP" ? haiku.code : null, "BELOW_CACHE_MINIMUM");
-  assert.match(haiku.kind === "SKIP" ? haiku.detail : "", /4096-token cacheable minimum/);
+  /* A small toolkit does not clear a 4,096-token minimum (the historical Haiku 4.5 row), so no paid call is made. */
+  const older = scoutPrewarmPlan({ toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: "claude-haiku-4-5" });
+  assert.equal(older.kind, "SKIP");
+  assert.equal(older.kind === "SKIP" ? older.code : null, "BELOW_CACHE_MINIMUM");
+  assert.match(older.kind === "SKIP" ? older.detail : "", /4096-token cacheable minimum/);
+  /* Haiku 5.5's 512-token minimum is cleared even with no research tools. */
+  assert.equal(scoutPrewarmPlan({ toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: HAIKU }).kind, "SEND");
   /* Opus 5.5's 512-token minimum is cleared even with no research tools: the executor's own tools and system suffice. */
   const bareOpus = scoutPrewarmPlan({ toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: 1, model: OPUS });
   assert.equal(bareOpus.kind, "SEND");

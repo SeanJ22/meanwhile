@@ -268,6 +268,21 @@ test("independent normal workers automatically publish public-comment rules thro
   assert.equal(spoken.records.find(row => row.accessRule?.field === "signup")?.sourceUrl, sources.signup?.sourceUrl);
 });
 
+test("a reader publication reads its own work items' results and its pages' owners', never the whole result log", async () => {
+  const f = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "The board provides a public comment period." });
+  const keysRead: string[] = [];
+  const handed: string[][] = [];
+  const whole = async (): Promise<never> => { throw new Error("the whole worker-result log was read"); };
+  const repos = { ...f.h.repos, workerResults: { ...f.h.repos.workerResults, readAll: whole, readSince: whole,
+    readKeys: async (keys: readonly string[]) => { keysRead.push(...keys); return f.h.repos.workerResults.readKeys!(keys); } } };
+  const published = await publishWorkerReaderResults({ ...f.input, repos,
+    readCapture: async (id, results) => { handed.push(results.map(row => `${row.workItemId}:${row.result.role}`)); return f.input.readCapture(id); } });
+  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
+  assert.deepEqual([...new Set(keysRead)], [f.h.item.id], "only this item's results, read once");
+  assert.ok(handed.length > 0 && handed.every(rows => rows.includes(`${f.h.item.id}:ACQUIRER`)),
+    "each saved page is read with the results of the item that captured it");
+});
+
 test("an unfamiliar source-worded kind publishes automatically to its exact place and adds one durable Admin update", async () => {
   const f = await workerFixture("public-records", { title: "2026 watershed notice", kindLabel: "watershed notice",
     sourceSentence: "The 2026 watershed notice is a watershed notice." });

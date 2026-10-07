@@ -225,7 +225,7 @@ test("a link never read goes first, re-reads by nearness to today, and another s
   assert.deepEqual(order.slice(9), noticeOnly.map(([id]) => id), "the shared notice page is not last");
 });
 
-test("one run reads all six Board Actions links and no landing page; the next run reads no link twice", async () => {
+test("one run reads every link once, new links first and the shared notice page last; the next run reads no link twice", async () => {
   const meetings = tucsonUnified("run:", agendaDocumentStore);
   const requested: string[] = [];
   const pdf = readFileSync("tests/fixtures/tusd-govboard/board-actions-2026-09-22.pdf");
@@ -240,10 +240,20 @@ test("one run reads all six Board Actions links and no landing page; the next ru
       });
   }) as typeof fetch;
 
+  // No per-run cap: every distinct link is read, each exactly once. The six
+  // Board Actions links never read go first, then the re-reads, and the notice
+  // page the eight sittings 495 and the unlinked seven share is read once, last.
   await retrieveAgendas(meetings);
-  assert.equal(requested.length, 8);
-  for (const [, , link] of boardActions) assert.ok(requested.includes(link), `${link} was not read`);
-  assert.ok(!requested.includes(NOTICE), "a read was spent on the notice page while new links waited");
+  assert.deepEqual(
+    requested,
+    [
+      ...boardActions.map(([, , link]) => link),
+      `${ACTIONS}09-22-2026S.pdf`,
+      `${PORTAL}502`,
+      NOTICE,
+    ],
+    "one run did not read new links first, re-reads next and the shared notice page once, last",
+  );
   for (const [raw, , link] of boardActions) {
     assert.ok(
       agendaDocumentStore.versionsFor(`run:${raw}`).some(({ documentUrl }) => documentUrl === link),
@@ -251,14 +261,22 @@ test("one run reads all six Board Actions links and no landing page; the next ru
     );
   }
 
-  // Every sitting now holds its own link: the second run re-reads the eight
-  // nearest today. Sitting 495 holds the notice page, so the page is read
-  // once for it and for none of the seven sittings that share it.
+  // Every sitting now holds its own link: the second run re-reads every
+  // distinct link once, nearest today first, and the notice page once for all
+  // eight sittings that share it.
   requested.length = 0;
   await retrieveAgendas(meetings);
-  assert.equal(requested.length, 8);
   assert.equal(new Set(requested).size, requested.length, "one run read a link twice");
-  assert.ok(!requested.includes(`${ACTIONS}07-14-2026R(1).pdf`), "the farthest re-read was preferred to a nearer one");
+  assert.deepEqual(
+    [...requested].sort(),
+    [...boardActions.map(([, , link]) => link), `${ACTIONS}09-22-2026S.pdf`, `${PORTAL}502`, NOTICE].sort(),
+    "the second run did not re-read every held link",
+  );
+  assert.deepEqual(
+    requested.filter((url) => url.endsWith(".pdf")),
+    [`${ACTIONS}09-22-2026S.pdf`, ...boardActions.map(([, , link]) => link)],
+    "re-reads did not go nearest today first",
+  );
 });
 
 test("a vendor-host link read through its portal page ranks as read once the sitting holds the portal's link", () => {

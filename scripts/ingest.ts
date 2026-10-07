@@ -287,6 +287,42 @@ const AGENDA_REDIRECT_LIMIT = 5;
  * link that redirects into a refused host is held. The base fetch is read per
  * call, so a stubbed global in a test is the one used.
  */
+/**
+ * One run reads each distinct URL once, however many sittings reach it: a
+ * body's notice page or a shared agenda is requested the first time and every
+ * later sitting is answered from those bytes (or that failure). Each sitting
+ * still judges the document for itself.
+ */
+export function readOncePerRun(base: typeof fetch): typeof fetch & { readonly distinctReads: () => number } {
+  type Held = { readonly status: number; readonly statusText: string; readonly headers: [string, string][]; readonly bytes: Uint8Array };
+  const reads = new Map<string, Promise<Held>>();
+  const wrapped = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input instanceof Request ? input.url : input);
+    let read = reads.get(url);
+    if (!read) {
+      read = (async () => {
+        const response = await base(input, init);
+        return {
+          status: response.status,
+          statusText: response.statusText,
+          headers: [...response.headers.entries()],
+          bytes: new Uint8Array(await response.arrayBuffer()),
+        };
+      })();
+      reads.set(url, read);
+    }
+    const held = await read;
+    const nullBody = held.status === 204 || held.status === 205 || held.status === 304;
+    return new Response(nullBody ? null : held.bytes.slice(), {
+      status: held.status,
+      statusText: held.statusText,
+      headers: held.headers,
+    });
+  }) as typeof fetch & { readonly distinctReads: () => number };
+  Object.defineProperty(wrapped, "distinctReads", { value: () => reads.size });
+  return wrapped;
+}
+
 export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
   return (async (input: RequestInfo | URL, init?: RequestInit) => {
     const impl = base ?? globalThis.fetch;
@@ -486,7 +522,7 @@ export async function retrieveAgendas(meetings: Meeting[]) {
     return url !== null && agendaRetrievalRefusal(url) === null;
   });
   // A link never read for its sitting goes first (`agendaRetrievalOrder`).
-  const capped = agendaRetrievalOrder(withAgenda);
+  const ordered = agendaRetrievalOrder(withAgenda);
   let stored = 0;
   let revised = 0;
   /* Documents refused as landing pages — stated, never silently dropped. */
@@ -504,9 +540,9 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   let noticePagesRefused = 0;
   /* A notice page is one body's page: read once per run, however many sittings reach it. */
   const noticePageRefusedThisRun = new Set<string>();
-  const fetchImpl = refusalCheckedFetch();
+  const fetchImpl = readOncePerRun(refusalCheckedFetch());
 
-  for (const meeting of capped) {
+  for (const meeting of ordered) {
     try {
       const url = documentUrlFor(meeting);
       const viaNoticePage = readThroughNoticePage(meeting);
@@ -603,7 +639,8 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   }
 
   console.log(
-    `agenda documents: ${withAgenda.length} linked, ${capped.length} fetched, ` +
+    `agenda documents: ${withAgenda.length} linked, ${ordered.length} fetched ` +
+      `(${fetchImpl.distinctReads()} distinct URL(s) requested, each once), ` +
       `${stored} stored, ${revised} revisions, ` +
       `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed, ` +
       `${failedOverHeld} failed read(s) not stored over a held version, ` +

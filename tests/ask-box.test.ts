@@ -7,6 +7,9 @@ import { coverageAt } from "../lib/registry/server.ts";
 import { answerQuestion, REFUSAL_LOG_MAX_CHARS } from "../lib/routing/ask.ts";
 import { matchTopic } from "../lib/routing/match.ts";
 import { resolveAskRoleModel } from "../lib/ask/model.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryAuthority();
 
 const TUCSON: [number, number] = [32.21696, -110.971];
 const ROOT = join(import.meta.dirname, "..");
@@ -249,6 +252,7 @@ test("no generation: the ask pipeline touches no LLM, no network, no API key", (
 });
 
 test("log discipline: routed asks log the topic only; refusals carry capped text", () => {
+  const source = readFileSync(join(ROOT, "components", "ask", "ask-box.tsx"), "utf8");
   const routedCall = /logEvent\("QUESTION_ASKED", ocdIds, \{[\s\S]*?routed: true,([\s\S]*?)\}\);/.exec(
     source,
   );

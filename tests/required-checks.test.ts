@@ -41,7 +41,7 @@ test("every auxiliary context feeds the fail-closed required final status", () =
     "test (affected)", "test (1/4)", "test (2/4)", "test (3/4)", "test (4/4)",
   ].sort(), "unrecognized auxiliary checks require an explicit aggregation contract");
   assert.deepEqual(parsed.jobs.gates.needs, ["admission", "verify", "test", "build"]);
-  assert.equal(parsed.jobs.gates.if, "always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
+  assert.equal(parsed.jobs.gates.if, "!cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
   const reducer = parsed.jobs.gates.steps.find((s: { run?: string }) => s.run === "node scripts/ci-verdict.mjs");
   assert.ok(reducer);
   assert.equal(reducer.if, undefined);

@@ -23,6 +23,17 @@ function labelsValue(raw) {
   }
 }
 
+/** True when every file the pull request changes is a document; null when the diff cannot be read. */
+async function documentsOnlyValue(base) {
+  try {
+    const { changedFiles, isDocumentPath } = await import("./ci-affected-tests.mjs");
+    const changed = changedFiles(process.cwd(), base);
+    return changed.length > 0 && changed.every(isDocumentPath);
+  } catch {
+    return null;
+  }
+}
+
 function emit(line) {
   if (process.env.GITHUB_OUTPUT) {
     appendFileSync(process.env.GITHUB_OUTPUT, `${line}\n`, "utf8");
@@ -43,6 +54,7 @@ async function main() {
       draft: draftValue(process.env.WTP_PR_DRAFT),
       autoMerge: draftValue(process.env.WTP_PR_AUTO_MERGE),
       labels: labelsValue(process.env.WTP_PR_LABELS),
+      documentsOnly: await documentsOnlyValue(process.env.WTP_PR_BASE_SHA),
     });
   } catch (error) {
     console.log(`pr-ci-tier · ${decision.reason}: ${error?.message ?? error}`);

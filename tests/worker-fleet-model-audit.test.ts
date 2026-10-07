@@ -63,8 +63,8 @@ test("cheaper-first audit uses auto tool choice and a strict schema compatible w
   let request: ModelRequest | undefined;
   const transport: ModelTransport = async (value) => { request = value; return response({ verdict: "SURVIVED", challenges: [] }); };
   await modelAuditReasoner(createMemoryRepositories(), transport, () => NOW).review(context(), "auditor-attempt");
-  assert.equal(MODEL, "claude-haiku-4-5");
-  assert.equal(request?.output_config, undefined, "Haiku does not accept effort configuration");
+  assert.equal(MODEL, "claude-haiku-5-5");
+  assert.deepEqual(request?.output_config, { effort: "low" }, "the audit states its sub-step effort");
   assert.deepEqual(request?.tool_choice, { type: "auto" }, "a forced {type:'tool'} is HTTP 400 on Claude Opus 5.5");
   const tool = request?.tools[0];
   assert.equal(tool?.name, "record_audit");

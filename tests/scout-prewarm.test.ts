@@ -109,7 +109,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   assert.equal(JSON.stringify(plan.request.tools), JSON.stringify(first.tools), "byte-identical tools — search included");
   assert.equal(JSON.stringify(plan.request.system), JSON.stringify(first.system), "byte-identical system");
   assert.deepEqual(plan.request.thinking, first.thinking, "the same thinking setting: it is rendered into the prompt");
-  assert.equal(plan.request.thinking, undefined, "Haiku does not accept adaptive thinking");
+  assert.deepEqual(plan.request.thinking, SCOUT_THINKING, "every tier takes adaptive thinking");
   assert.deepEqual(plan.request.output_config, first.output_config, "the same effort");
   /* The per-model minimum check still decides: Sonnet 5's is 1,024 (Opus 5.5's recorded 512). */
   assert.equal(plan.minimumCacheablePrefixTokens, minimumCacheablePrefixTokensFor(first.model));

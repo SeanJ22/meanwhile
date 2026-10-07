@@ -71,7 +71,7 @@ const request = (maxTokens = 8_192): ModelRequest => ({ model: MODELS.sonnet.mod
 test("the initial hold uses the response allowance at the starting tier; requests extend it before sending", () => {
   assert.equal(WORST, scoutAttemptWorstCaseUsd(MODELS.haiku.model, RESEARCH_BOUNDS.perDispatch));
   /* One maximum response initially held at each execution tier. */
-  assert.ok(Math.abs(WORST - 0.04096) < 1e-9, `worst case ${WORST}`);
+  assert.ok(Math.abs(WORST - 0.02048) < 1e-9, `worst case ${WORST}`);
   assert.ok(Math.abs(scoutAttemptWorstCaseUsd(MODELS.opus.model, RESEARCH_BOUNDS.perDispatch)! - 0.16384) < 1e-9, "the escalation's worst case at Opus 5.5");
 });
 
@@ -82,7 +82,7 @@ test("a job that would exceed the Send's budget is refused before any spend", as
   const admitted = await job.admit(WORST, "one Scout job");
   assert.equal(admitted.admit, false);
   assert.equal(!admitted.admit && admitted.code, "ASSIGNMENT_BUDGET");
-  assert.match(!admitted.admit ? admitted.why : "", /\$0\.01 left.*\$0\.04\) does not fit/);
+  assert.match(!admitted.admit ? admitted.why : "", /\$0\.01 left.*\$0\.02\) does not fit/);
   assert.equal(sent.length, 0, "no request was ever sent");
   /* The area's own cap refuses the same way, even with the Send's room. */
   const other = new JobSpend(spend, "job-2", "ob-2", lines([send(100)], [area(0.04, 0.035)]));

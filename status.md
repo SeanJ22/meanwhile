@@ -3,9 +3,9 @@
 build_state: RELEASES 13 and 14 MERGED to main (049f86206; PRs #719, #720). river = 8fa3854. Runner stopped, waiting on Sean's restart (steps below). River lock released.
 worker: river
 provider: Claude (scheduled resume)
-run_id: session_01EJWrnyFbffUajJtnCW6EWs-cleanup2
-lock: none
-heartbeat: 2026-10-07T17:54:34Z
+run_id: session_01D8EZAejHqhy9XbGCw6G6bL-r15
+lock: session_01D8EZAejHqhy9XbGCw6G6bL
+heartbeat: 2026-10-07T20:51:24Z
 
 ## RELEASE 13 — the cleanup release: MERGED (read first)
 

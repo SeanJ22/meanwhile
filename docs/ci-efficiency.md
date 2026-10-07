@@ -97,6 +97,8 @@ Measured against merged PRs #639–#649, a change inside the control-plane/civic
 
 **Documents-only pull requests are certified when they open.** A ready pull request normally waits with lint and types (`tier=waiting`, a red verdict) until auto-merge is on or the `run-full-ci` label is added, so a pull request merged by hand without auto-merge stays red. `scripts/pr-ci-tier.mjs` reads the pull request's diff from `WTP_PR_BASE_SHA`; when every changed file is a document (`isDocumentPath`), the pull request goes straight to the full tier, whose proof is the documents-only test selection above and no build. A diff that cannot be read keeps the waiting tier.
 
+**A cancelled run cancels its required contexts instead of failing them.** A newer event on the same pull request (a push, a label, auto-merge turned on) cancels the older run through the concurrency group. The `build` and `gates` jobs run on `!cancelled()`, so in a cancelled run they end cancelled: the context still blocks a merge, but it is not reported as a red failure. A refused admission in a run that was not cancelled still fails them.
+
 Before enabling impact selection, the classification was:
 
 | Category | Required treatment |

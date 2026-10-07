@@ -246,7 +246,7 @@ jobs:
         run: echo "No application rebuild; tests, lint and types still run."
     needs:
       - admission
-    if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+    if: "!cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)"
   test:
     # One `affected` leg for a pull request's reachable tests, or four shards for the whole suite (scripts/ci-affected-tests.mjs).
     name: test (${{ matrix.shard }})
@@ -335,6 +335,9 @@ jobs:
           path: .scratch/ci/
           if-no-files-found: warn
           retention-days: 7
+  # A run cancelled by a newer one (or by hand) cancels its build and final contexts instead of failing them:
+  # a cancelled required context still blocks a merge, but it is not a red result. A refused admission in a run
+  # that was not cancelled still fails them loudly.
   gates:
     name: ${{ github.event_name == 'schedule' && 'scheduled ' || '' }}gates (test · lint · tsc)
     needs:
@@ -342,7 +345,7 @@ jobs:
       - verify
       - test
       - build
-    if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+    if: "!cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)"
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

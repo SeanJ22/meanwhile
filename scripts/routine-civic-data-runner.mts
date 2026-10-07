@@ -56,7 +56,7 @@ import {
   observableRoutineContracts,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { OUTCOME_PARTITION_CONTRACTS } from "../lib/civic-data/outcome-partitions.ts";
-import { recordDoorOutcome, type DoorOutcome } from "../lib/doors/outcome.ts";
+import { recordDoorOutcome, taskDoorId, type DoorOutcome } from "../lib/doors/outcome.ts";
 import { doorShutEnabled, evidenceFromCandidate, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
 import { recordDoorEvidence, type DoorEvidence } from "../lib/doors/shut.ts";
 import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
@@ -285,24 +285,27 @@ async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
 }
 
 /**
- * A hand-wired meeting door's last success or failure, from its partition's
- * promotion outcome. A registry that cannot be written never changes the pass.
+ * The task's door's last success or failure (a hand-wired meeting door, or a
+ * feed's door), from its promotion outcome. A registry that cannot be written
+ * never changes the pass.
  */
 let doorOutcomeRepos: Promise<Awaited<ReturnType<typeof createPgRepositories>>> | null = null;
-async function recordMeetingDoorOutcome(taskId: string, outcome: DoorOutcome, changed = false, evidence: DoorEvidence | null = null): Promise<void> {
+async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, changed = false, evidence: DoorEvidence | null = null): Promise<void> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) return;
   try {
     doorOutcomeRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
     const repos = await doorOutcomeRepos;
+    const doorId = await taskDoorId(repos.doors, taskId);
+    if (doorId === null) return;
     const at = new Date().toISOString();
     // With WTP_DOOR_SHUT=on, a failed read that tells the door itself is gone judges it and opens its fix item;
     // a promoted read reopens a door that was shut.
     if (outcome === "FAILURE" && evidence !== null) {
-      if ((await recordDoorEvidence(repos.doors, taskId, evidence, at, repos)).written) return;
+      if ((await recordDoorEvidence(repos.doors, doorId, evidence, at, repos)).written) return;
     }
-    await recordDoorOutcome(repos.doors, taskId, outcome, at, changed);
-    if (outcome === "SUCCESS" && doorShutEnabled() && await reopenDoorIfShut(repos.doors, taskId, at, repos)) {
+    await recordDoorOutcome(repos.doors, doorId, outcome, at, changed);
+    if (outcome === "SUCCESS" && doorShutEnabled() && await reopenDoorIfShut(repos.doors, doorId, at, repos)) {
       console.log(`RCD_TASK ${taskId}: its door was shut and reads again; reopened`);
     }
   } catch (error) {
@@ -927,14 +930,14 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${durableIssue}`);
     } else if (promoted) {
       verifiedSourceSuccesses += 1;
-      await recordMeetingDoorOutcome(pending.task.id, "SUCCESS", receipt.promotedVersion !== null && receipt.confirmedAt === undefined);
+      await recordTaskDoorOutcome(pending.task.id, "SUCCESS", receipt.promotedVersion !== null && receipt.confirmedAt === undefined);
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_SUCCESS");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
       console.log(`RCD_TASK ${pending.task.id}: GOOD (${receipt.state})`);
     } else {
       verifiedSourceFailures += 1;
       const failedCandidate = doorShutEnabled() && !receipt.acquisitionSucceeded ? await store.readCandidateSummary(receipt.candidateId).catch(() => null) : null;
-      await recordMeetingDoorOutcome(pending.task.id, "FAILURE", false, failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
+      await recordTaskDoorOutcome(pending.task.id, "FAILURE", false, failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_FAILURE");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
       console.log(`RCD_TASK ${pending.task.id}: SOURCE_HELD_LKG (${receipt.state})`);

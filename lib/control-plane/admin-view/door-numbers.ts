@@ -15,6 +15,8 @@ export interface DoorNumberReadings {
   readonly now: string;
   readonly shutDoors: DoorCounts | null;
   readonly overdue: readonly OverdueDoor[] | null;
+  /** Open doors a routine task reads on a clock: the only doors that can be overdue. */
+  readonly scheduled: number | null;
   readonly posting: readonly PostingToLiveRow[] | null;
   readonly fixes: readonly FixItem[] | null;
 }
@@ -69,14 +71,14 @@ function postedRow(r: DoorNumberReadings): ScoreboardRow {
 
 function overdueRow(r: DoorNumberReadings): ScoreboardRow {
   const id = "Overdue doors";
-  if (r.overdue === null || r.shutDoors === null) return unmeasured(id, "The door registry could not be read just now, so no door is called late.");
+  if (r.overdue === null || r.scheduled === null) return unmeasured(id, "The door registry could not be read just now, so no door is called late.");
   const late = r.overdue;
   const counted = late.filter((d) => d.liveFacts !== null);
   const facts = counted.reduce((a, d) => a + d.liveFacts!, 0);
   return row(id, {
     value: n(late.length),
-    counts: `${n(late.length)} of ${n(r.shutDoors.open)} open doors are past their check${late.length > 0 ? ` · ${n(facts)} live facts behind ${n(counted.length)} of them${late.length - counted.length > 0 ? `, ${n(late.length - counted.length)} not counted yet` : ""}` : ""}`,
-    says: late.length === 0 ? "Every open door was read within its check." : `The latest is ${minutesWords(late[0]!.overdueByMinutes)} past its check. A shut door is counted under Shut doors, not here.`,
+    counts: `${n(late.length)} of ${n(r.scheduled)} doors read on a schedule are past their check${late.length > 0 ? ` · ${n(facts)} live facts behind ${n(counted.length)} of them${late.length - counted.length > 0 ? `, ${n(late.length - counted.length)} not counted yet` : ""}` : ""}`,
+    says: late.length === 0 ? "Every door read on a schedule was read within its check." : `The latest is ${minutesWords(late[0]!.overdueByMinutes)} past its check. A shut door is counted under Shut doors, not here; a found page is read when work needs it, so it is not counted.`,
   });
 }
 

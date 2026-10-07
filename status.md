@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 13 MERGED to main (da481ba, PR #719). Release 14 (ruling citations) open as PR #720. river = 8fa3854; runner stopped, waiting on Sean's restart
+build_state: RELEASES 13 and 14 MERGED to main (049f86206; PRs #719, #720). river = 8fa3854. Runner stopped, waiting on Sean's restart (steps below). River lock released.
 worker: river
 provider: Claude (scheduled resume)
 run_id: session_01EJWrnyFbffUajJtnCW6EWs-cleanup2
@@ -11,7 +11,7 @@ heartbeat: 2026-10-07T06:50:14Z
 
 **Release number: 13**, merged to main as da481ba (https://github.com/SeanJ22/meanwhile/pull/719). Two test-only fixes landed before the merge: on Node 24, forked lease workers in `worker-fleet-coordinator` lost the preloaded registry fixture inside their IPC message handlers.
 
-**Release 14** (ruling citations removed from strings, messages and JSON notes) is open as https://github.com/SeanJ22/meanwhile/pull/720. It needs no runner change.
+**Release 14** (ruling citations removed from strings, messages and JSON notes) is merged (https://github.com/SeanJ22/meanwhile/pull/720). It needs no runner change.
 
 **Runner restart steps (Sean runs these once Netlify has deployed release 13; River does not touch the runner):**
 1. From Windows PowerShell: `ssh.exe -t -i "$env:USERPROFILE\.ssh\wtp-deploy" root@146.190.74.145`
@@ -57,7 +57,7 @@ heartbeat: 2026-10-07T06:50:14Z
 - Runner cycle: only the three differences listed in the restart steps.
 - Gates on a fresh checkout with no DATABASE_URL: 7,673 tests, 0 failed; lint, tsc, build and standalone build pass. `db:gate` needs CI's read-only secret; run with that read-only URL, it HOLDS (35 of 35 migrations applied).
 
-Lock: River keeps the lock until release 14 is merged or returned.
+Lock: released after release 14 merged.
 
 Briefs: board/briefs f78f81401 has 2,206 ownership rows; the rows for files this release removed are gone.
 

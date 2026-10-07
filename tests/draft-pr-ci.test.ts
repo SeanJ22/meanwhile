@@ -66,6 +66,10 @@ test("draft/waiting/full classifier is fail-closed for the complete pull-request
     { what: "run-full-ci label", eventName: "pull_request", action: "labeled", draft: false, labels: ["run-full-ci"], tier: "full" },
     { what: "engineer adapter", eventName: "pull_request", action: "synchronize", draft: false, labels: ["engineer-adapter"], tier: "full" },
     { what: "other label only", eventName: "pull_request", action: "labeled", draft: false, labels: ["docs"], tier: "waiting" },
+    { what: "ready, documents only", eventName: "pull_request", action: "opened", draft: false, autoMerge: false, documentsOnly: true, tier: "full" },
+    { what: "ready, code changed", eventName: "pull_request", action: "synchronize", draft: false, autoMerge: false, documentsOnly: false, tier: "waiting" },
+    { what: "ready, unreadable diff", eventName: "pull_request", action: "synchronize", draft: false, autoMerge: false, documentsOnly: null, tier: "waiting" },
+    { what: "draft, documents only", eventName: "pull_request", action: "opened", draft: true, documentsOnly: true, tier: "draft" },
     { what: "unknown PR action", eventName: "pull_request", action: "edited", draft: true, tier: "full" },
     { what: "missing PR state", eventName: "pull_request", action: "synchronize", draft: null, tier: "full" },
     { what: "push to main", eventName: "push", action: null, draft: null, tier: "full" },
@@ -76,6 +80,12 @@ test("draft/waiting/full classifier is fail-closed for the complete pull-request
   for (const row of rows) {
     assert.equal(classifyPullRequestCiTier(row).tier, row.tier, row.what);
   }
+});
+
+test("a ready documents-only pull request is certified at once: the adapter reads the diff from the base", () => {
+  const adapter = readFileSync(join(ROOT, "scripts", "pr-ci-tier.mjs"), "utf8");
+  assert.match(adapter, /changedFiles\(process\.cwd\(\), base\)/);
+  assert.match(adapter, /changed\.every\(isDocumentPath\)/);
 });
 
 test("ready_for_review is an explicit trigger and the existing shipping triggers remain", () => {
@@ -115,6 +125,7 @@ test("admission alone classifies draft/full before preflight", () => {
       WTP_PR_DRAFT: "${{ github.event.pull_request.draft }}",
       WTP_PR_AUTO_MERGE: "${{ github.event.pull_request.auto_merge != null }}",
       WTP_PR_LABELS: "${{ toJSON(github.event.pull_request.labels.*.name) }}",
+      WTP_PR_BASE_SHA: "${{ github.event.pull_request.base.sha }}",
     });
     assert.equal(preflight.if, undefined, `${jobId} suppresses deterministic preflight`);
     assert.match(tier.run ?? "", /steps\.pr_tier\.outputs\.tier/);

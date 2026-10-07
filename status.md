@@ -5,7 +5,7 @@ worker: river
 provider: Claude (scheduled resume)
 run_id: session_01D8EZAejHqhy9XbGCw6G6bL-r15
 lock: session_01D8EZAejHqhy9XbGCw6G6bL
-heartbeat: 2026-10-07T21:19:44Z
+heartbeat: 2026-10-07T21:26:51Z
 
 ## RELEASE 13 — the cleanup release: MERGED (read first)
 

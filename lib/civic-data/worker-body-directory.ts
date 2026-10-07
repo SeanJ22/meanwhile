@@ -181,7 +181,7 @@ export async function materializeBodyDirectoryWork(input: { repos: ControlPlaneR
         priority: parent.priority, question: parent.question, contract: parent.contract,
         dependencies: [{ upstreamId: parent.id, kind: "PRODUCES_CONSUMES", reason: "Verified body identity and territorial authority",
           evidence: [body.id, body.provenance.sourceUrl ?? "", parent.publicationOutcome?.versionId ?? ""] }], now: input.now });
-      const shared = (await input.repos.workItems.list()).find(row => row.value.project === parent.project && row.value.subject === parent.subject &&
+      const shared = (await input.repos.workItems.listWhere(["subject"], parent.subject)).find(row => row.value.project === parent.project && row.value.subject === parent.subject &&
         row.value.autonomousPlan?.publication?.bodyId === body.id && row.value.autonomousPlan.contract.recordClass === childPlan.contract.recordClass);
       const prior = shared ? await input.repos.workItems.mustRead(shared.id) : await input.repos.workItems.read(child.id);
       if (!prior) await registerWorkItem(input.repos, { ...child, autonomousPlan: childPlan,

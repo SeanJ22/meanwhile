@@ -962,13 +962,12 @@ export const FIELD_MANUAL_SLICE_SQL = `SELECT id, revision, updated_at, value FR
   WHERE ($1::text[] IS NULL OR value->>'role' = ANY($1::text[]))
     AND ($2::text[] IS NULL OR value->>'kind' = ANY($2::text[]))
     AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses', '[]'::jsonb)) = 0 OR value->'recordClasses' ? $3::text)
-    AND ($7::text IS NULL OR jsonb_array_length(coalesce(value->'platforms', '[]'::jsonb)) = 0 OR value->'platforms' ? $7::text)
-    AND ($4::boolean
-      OR value->>'kind' = ANY($5::text[])
-      OR coalesce((value->'reach'->>'everywhere')::boolean, false)
-      OR coalesce(value->'reach'->'places', '[]'::jsonb) ?| $6::text[]
-      OR jsonb_array_length(coalesce(value->'reach'->'platforms', '[]'::jsonb)) > 0
-      OR ($8::text IS NOT NULL AND coalesce(value->'reach'->'states', '[]'::jsonb) ? $8::text))
+    AND (($4::boolean AND ($7::text IS NULL OR jsonb_array_length(coalesce(value->'platforms', '[]'::jsonb)) = 0 OR value->'platforms' ? $7::text))
+      OR (NOT $4::boolean AND (value->>'kind' = ANY($5::text[])
+        OR coalesce((value->'reach'->>'everywhere')::boolean, false)
+        OR coalesce(value->'reach'->'places', '[]'::jsonb) ?| $6::text[]
+        OR (jsonb_array_length(coalesce(value->'reach'->'platforms', '[]'::jsonb)) > 0 AND ($7::text IS NULL OR value->'reach'->'platforms' ? $7::text))
+        OR ($8::text IS NOT NULL AND coalesce(value->'reach'->'states', '[]'::jsonb) ? $8::text))))
     AND ($9::text IS NULL OR id > $9::text)
   ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`;
 

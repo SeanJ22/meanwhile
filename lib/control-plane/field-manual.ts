@@ -326,12 +326,14 @@ export function entryInSlice(entry: FieldManualEntry, query: FieldManualQuery): 
   if (query.role !== undefined && entry.role !== "SHARED" && entry.role !== query.role) return false;
   if (query.kinds !== undefined && !query.kinds.includes(entry.kind)) return false;
   if (query.recordClass !== undefined && entry.recordClasses.length > 0 && !entry.recordClasses.includes(query.recordClass.toLowerCase())) return false;
+  // A job on a known platform takes platform lessons and methods for that platform only.
   const platform = query.platform?.toLowerCase();
-  // A job on a known platform leaves out what was learned on other platforms.
-  if (platform !== undefined && entry.platforms.length > 0 && !entry.platforms.includes(platform)) return false;
-  if (query.everywhere === true || isTransferableMethod(entry)) return true;
+  const onPlatform = (platforms: readonly string[]) => platform === undefined || platforms.length === 0 || platforms.includes(platform);
+  if (query.everywhere === true) return onPlatform(entry.platforms);
   const reach = reachOfStored(entry);
-  if (reach.everywhere || placeMatches(reach.places, query) || reach.platforms.length > 0) return true;
+  if (reach.everywhere || placeMatches(reach.places, query)) return true;
+  if (reach.platforms.length > 0 && onPlatform(reach.platforms)) return true;
+  if (isTransferableMethod(entry) && onPlatform(entry.platforms)) return true;
   const state = queryState(query);
   return state !== undefined && reach.states.includes(state);
 }

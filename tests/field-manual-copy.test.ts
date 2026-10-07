@@ -105,7 +105,7 @@ test("a document written while the copy ran stays for the next start; two starts
   const table = documentTable([old("a", { states: ["az"] })], 2);
   const racing: SingleDocumentManual = { ...table, read: async (id) => {
     const row = await table.read(id);
-    if (id === "live" && row) table.rows.set("live", { ...row, revision: row.revision + 1, value: { entries: [...row.value.entries, old("b", { states: ["az"] })] } });
+    if (id === "live" && row) table.rows.set("live", { ...row, revision: row.revision + 1, value: { entries: [...(row.value.entries ?? []), old("b", { states: ["az"] })] } });
     return row;
   } };
   assert.equal(await copyFieldManualDocument(racing, repos, NOW), null, "the document moved on, so it is not retired");

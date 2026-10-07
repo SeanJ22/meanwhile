@@ -27,19 +27,61 @@ import {
   readPrlProjection,
   resetPrlCache,
 } from "../lib/sources/prl/snapshot.ts";
-import type { PrlSnapshot } from "../lib/sources/prl/types.ts";
+import { PRL_RHETORIC_ATTRIBUTION, type PrlSnapshot } from "../lib/sources/prl/types.ts";
 
 const ROOT = process.cwd();
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T13:00:00.000Z";
-const PIMA_URL = "https://www.pima.gov/3199/Pima-Votes";
+const SOURCE_URL = "https://elections.example.gov/az/locations";
 
 function votingFixture(): VotingSitesFile {
-  return JSON.parse(readFileSync(join(ROOT, "data", "voting-sites.json"), "utf8")) as VotingSitesFile;
+  const site = (id: string, name: string, address: string, lat: number, lng: number, election: string) =>
+    ({ id, name, address, room: null, lat, lng, kind: "ELECTION_DAY" as const, election, serves: null });
+  return {
+    generatedAt: "2026-08-19",
+    jurisdictions: [
+      {
+        ocdId: "ocd-division/country:us/state:az/county:example", name: "Example County", state: "AZ", model: "VOTE_CENTER",
+        election: "2026 General",
+        sites: [
+          site("az-example-day-1", "Community Center", "100 Main Street, Exampleville, AZ 85000", 32.2, -110.9, "2026 General"),
+          site("az-example-day-2", "Public Library", "200 Oak Avenue, Exampleville, AZ 85000", 32.3, -110.8, "2026 General"),
+        ],
+        sourceOrg: "Example County Elections", sourceUrl: SOURCE_URL, collectedAt: "2026-08-19", refusal: null,
+      },
+      {
+        ocdId: "ocd-division/country:us/state:nj/place:example_one", name: "Town of Example One", state: "NJ", model: "ASSIGNED",
+        election: "2026 General Election",
+        sites: [site("nj-example-one-1", "Firehouse", "1 Elm Street, Example One, NJ 07000", 40.9, -74.4, "2026 General Election")],
+        sourceOrg: "Example County Board of Elections", sourceUrl: "https://elections.example.gov/nj/example-one", collectedAt: "2026-08-19", refusal: null,
+      },
+      {
+        ocdId: "ocd-division/country:us/state:nj/place:example_two", name: "Borough of Example Two", state: "NJ", model: "ASSIGNED",
+        election: "2026 General Election",
+        sites: [site("nj-example-two-1", "Borough Hall", "2 Pine Street, Example Two, NJ 07001", 40.8, -74.5, "2026 General Election")],
+        sourceOrg: "Example County Board of Elections", sourceUrl: "https://elections.example.gov/nj/example-two", collectedAt: "2026-08-19", refusal: null,
+      },
+    ],
+  } as VotingSitesFile;
 }
 
 function prlFixture(): PrlSnapshot {
-  return JSON.parse(readFileSync(join(ROOT, "data", "prl", "prl-profiles.json"), "utf8")) as PrlSnapshot;
+  const profile = (bioguideId: string, prlName: string) => ({
+    bioguideId, prlName, statementCount: 1200,
+    shares: { policy: 60, bipartisanship: 5, creditclaiming: 20, "attack-policy": 12, "attack-personal": 3 },
+    sources: ["all"], measuredAt: "2026-08-16",
+  });
+  return {
+    formatVersion: 1,
+    fetchedAt: "2026-08-19T15:24:21.701Z",
+    sourceFile: "profiles-all-national.csv",
+    sourceUrl: "https://americaspoliticalpulse.com/data/elite/profiles-all-national.zip",
+    rowsInFile: 3,
+    rowsWithStatements: 2,
+    profiles: [profile("A000001", "Member One"), profile("B000002", "Member Two")],
+    rosterMisses: ["C000003"],
+    attribution: PRL_RHETORIC_ATTRIBUTION,
+  } as PrlSnapshot;
 }
 
 function votingCandidate(file: VotingSitesFile, at: string, raw: string, failures: Parameters<typeof votingSitesCandidate>[0]["failures"] = []) {
@@ -49,8 +91,8 @@ function votingCandidate(file: VotingSitesFile, at: string, raw: string, failure
     failures,
     rawBodies: [raw],
     successfulAuthorityReads: 1,
-    requestedUrl: PIMA_URL,
-    finalUrl: PIMA_URL,
+    requestedUrl: SOURCE_URL,
+    finalUrl: SOURCE_URL,
     retrievedAt: at,
   });
 }
@@ -69,7 +111,9 @@ test("voting sites promote with exact source/class/scope evidence and the Reader
   const outcome = await processRegisteredManualCandidate(store, "voting-sites", candidate, T0);
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.equal(outcome.readerReadback?.status, "PASS");
-  assert.ok((outcome.candidate.candidate.changeSet?.added.length ?? 0) > 300);
+  const fixture = votingFixture();
+  assert.equal(outcome.candidate.candidate.changeSet?.added.length,
+    fixture.jurisdictions.length + fixture.jurisdictions.reduce((sum, row) => sum + row.sites.length, 0));
   const read = await readVotingSitesProjection({ store, bypassCache: true, now: T0 });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(loadVotingSites().jurisdictions.length, votingFixture().jurisdictions.length);
@@ -156,8 +200,8 @@ test("one failed voting authority retains only its prior scope while healthy aut
     failures: [{ state: "NJ", code: "MORRIS_UNAVAILABLE", detail: "official publisher unavailable" }],
     rawBodies: ["healthy AZ and NH bytes; failed NJ response"],
     successfulAuthorityReads: 2,
-    requestedUrl: PIMA_URL,
-    finalUrl: PIMA_URL,
+    requestedUrl: SOURCE_URL,
+    finalUrl: SOURCE_URL,
     retrievedAt: T1,
   });
   const promoted = await processRegisteredManualCandidate(store, "voting-sites", successor, T1);
@@ -269,15 +313,6 @@ test("voting-sites and PRL are owner-only promotion commands with no tracked mut
   assert.equal(SOURCE_AUTHORITIES.prl.trust, "T3_ATTRIBUTED_PRIMARY");
   assert.ok(SOURCE_AUTHORITIES.prl.competentFacts.every((fact) => /PRL|licence/.test(fact)));
 
-  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as { scripts: Record<string, string> };
-  assert.equal(
-    pkg.scripts["voting-sites:fetch"],
-    "node scripts/installed-runtime-command.mjs manual-promote --contract=voting-sites",
-  );
-  assert.equal(
-    pkg.scripts["prl:fetch"],
-    "node scripts/installed-runtime-command.mjs manual-promote --contract=prl",
-  );
   for (const contract of contracts) {
     const source = readFileSync(join(ROOT, contract.command[0]), "utf8");
     assert.doesNotMatch(source, /\b(?:writeFile|writeFileSync|appendFile|appendFileSync|createWriteStream)\s*\(/, contract.id);
@@ -291,8 +326,6 @@ test("voting-sites and PRL are owner-only promotion commands with no tracked mut
   const prlReader = readFileSync(join(ROOT, "lib", "sources", "prl", "snapshot.ts"), "utf8");
   assert.match(votingReader, /readPromotedCivicData/);
   assert.match(prlReader, /readPromotedCivicData/);
-  assert.match(votingReader, /mayUseTestFixture/);
-  assert.match(prlReader, /mayUseTestFixture/);
   const config = readFileSync(join(ROOT, "next.config.ts"), "utf8");
   const trace = readFileSync(join(ROOT, "lib", "holdings", "reader-trace.ts"), "utf8");
   assert.doesNotMatch(config, /data\/prl\/prl-profiles\.json/);

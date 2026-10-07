@@ -8,7 +8,7 @@ import {
 } from "../lib/ask/model-result-cache.ts";
 
 /**
- * One model call per distinct evidence, not per visitor (2026-09-24). The key
+ * One model call per distinct evidence, not per visitor. The key
  * is the input: when the civic data behind an answer changes, the pack changes
  * and so does the key, so a stale answer can never be replayed over new
  * evidence.

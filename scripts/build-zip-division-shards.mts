@@ -1,22 +1,13 @@
 /**
- * **THE ZIP INDEX, FOR EVERY ZIP CODE IN THE COUNTRY.** (2026-09-23.)
+ * The ZIP index, for every ZIP code in the country.
  *
  *   node_modules/.bin/tsx scripts/build-zip-division-shards.mts [--tiger=<dir>]
  *
- * Sean's direction: new states and areas "will be added rapidly, it needs to be
- * able to track and keep up everywhere, not just a small subset", and adding
- * one must not be a code change.
- *
- * The index it replaced (kept as the frozen baseline
- * `tests/fixtures/zip-division-ids-three-state.json`) named a government for a
- * ZIP only when this repository had committed that government's polygon, and
- * the committed geometry is clipped to three states' pilot counties — so it
- * held 279 ZIPs. The national inputs already exist: `zip-governments.json` places all 33,791
- * ZCTAs against every county, place, county subdivision and school district in
- * the country (`pnpm zipgov:build`). What was missing is each government's OCD
- * id without a committed polygon, and that comes from the Census names with the
- * same constructors the committed geometry uses (`lib/ocd/divisions.ts`, called
- * exactly as `scripts/fetch-districts.ts` calls them):
+ * `zip-governments.json` places every ZCTA against every county, place, county
+ * subdivision and school district in the country (`pnpm zipgov:build`). Each
+ * government's OCD id comes from the Census names with the same constructors
+ * the committed geometry uses (`lib/ocd/divisions.ts`, called exactly as
+ * `scripts/fetch-districts.ts` calls them):
  *
  * ```
  *   county   countyIdentity(STATEFP, NAME)
@@ -25,41 +16,22 @@
  *   school   schoolIdentity(STATEFP, NAME)      (unified, elementary, secondary)
  * ```
  *
- * ## Two governments, one constructed id
- *
- * The committed geometry's rule (`fetch-districts.ts`, RULING 80) holds: every
- * side of a collision is disambiguated with its Census GEOID, never one kept
- * bare and one suffixed. The one exception is the one that rule already names:
- * an id that is ALREADY COMMITTED never moves, because the registry, bodies and
- * sources join on it — so a committed (layer, GEOID) keeps its committed id and
- * only the other sides take the suffix. Every such collision is printed by
- * name, never renamed silently.
- *
- * ## What is written
+ * On a name collision every side is disambiguated with its Census GEOID,
+ * except that an id ALREADY COMMITTED never moves (registry, bodies and sources
+ * join on it); every collision is printed by name.
  *
  * One shard per two-digit ZIP prefix under `data/derived/zip-divisions/`, each
- * holding its ZIPs' divisions once and referring to them by position, and an
- * `index.json` naming every shard with its sha256, ZIP count and states. One
- * national file would be ~34 MB — too large to parse per request; a shard is
- * about a hundred kilobytes. One per ZIP3 would be ~900 files, each traced
- * into every route that can be asked for any ZIP, which is what the bundle
- * budget's file count exists to catch (R23); ~100 keeps it near its baseline.
- * A ZCTA's states come from its county edges, so a code that crosses a state
+ * holding its ZIPs' divisions once and referring to them by position, plus an
+ * `index.json` naming every shard with its sha256, ZIP count and states. A
+ * national file would be too large to parse per request, and one file per ZIP3
+ * would multiply the files traced into every route. A ZCTA crossing a state
  * line is listed under each state it reaches.
  *
- * Two assertions, and the build refuses on either: no two governments share an
- * id (bar the one shared id the committed geometry already holds, carried and
- * printed rather than created), and no ZIP loses a division (or a partial
- * marking) that the committed geometry still carries — measured against the
- * three-state baseline and against the previous build. An id the baseline kept
- * after the geometry re-minted it is stale there, and printed as corrected.
- *
- * Measured 2026-09-23: 33,791 ZIPs in 99 shards (~8.7 MB, the largest 256 KB;
- * ZIP for ZIP identical to the first, one-per-ZIP3 layout), 85,541 governments,
- * every edge given an id; 278 name collisions, 16 of whose committed sides kept
- * their ids; one inherited shared id (New Jersey's Union Township unified and
- * elementary school districts); one stale id corrected (New Jersey's Washington
- * Township school districts, which the registry already keys by GEOID suffix).
+ * The build refuses if two governments share an id (bar a shared id the
+ * committed geometry already holds, printed) or if a ZIP loses a division or
+ * partial marking the committed geometry still carries, measured against the
+ * three-state baseline (`tests/fixtures/zip-division-ids-three-state.json`)
+ * and the previous build.
  */
 
 import { createHash } from "node:crypto";
@@ -110,7 +82,7 @@ for (const [zip, list] of Object.entries(zipGov.zips)) {
       continue;
     }
     ids.add(id);
-    // RULING 71: a zip whose total cannot be established calls nothing certain.
+    // A zip whose total cannot be established calls nothing certain.
     if (total === 0 || e.samples < total) partial.add(id);
   }
   if (total === 0) noCountyEdge++;
@@ -129,14 +101,11 @@ const baseline = JSON.parse(readFileSync(join(ROOT, "tests", "fixtures", "zip-di
 // The previous build, when there is one: a rebuild may add, and may never drop, a committed id.
 const previous = existsSync(join(OUT, "index.json")) ? readAllZipDivisions(ROOT) : new Map<string, ZipDivisionEntry>();
 /*
- * An id the baseline carries that the committed geometry no longer does is the
- * baseline being stale, not a loss: New Jersey's two Washington Township
- * school districts were re-minted with their GEOID suffixes (and the registry's
- * bodies follow the suffixed ids) while the three-state index kept the bare
- * one, which joins to no body. Those are printed as corrected. Losing an id the
- * committed geometry still carries refuses the build, against either the
- * baseline or the previous build; an id only the national layers minted may
- * change with a new Census vintage, and is counted.
+ * An id the baseline carries that the committed geometry no longer does (the
+ * geometry re-minted it with a GEOID suffix) is the baseline being stale, and
+ * printed as corrected. Losing an id the committed geometry still carries
+ * refuses the build; an id only the national layers minted may change with a
+ * new Census vintage, and is counted.
  */
 const committedIds = new Set(pinned.values());
 const losses: string[] = [];
@@ -230,5 +199,5 @@ for (const [id, holders] of inheritedCollapses) console.log(`INHERITED shared id
 if (pinsNotNational.length > 0) console.log(`committed ids with no row in the 2023 national layers (a vintage difference, kept out rather than guessed): ${pinsNotNational.join(", ")}`);
 console.log(`ZIPs written: ${zipsWritten} in ${Object.keys(index).length} shards; the baseline's ${Object.keys(baseline.zips).length} ZIPs and the previous build's ${previous.size} keep every committed division they had; stale ids corrected: ${[...corrected].join(", ") || "none"}`);
 console.log(`edges with no id: ${JSON.stringify(unmappedByLayer)}`);
-// Every ZIP written either reaches a county or is counted as reaching none (RULING 159: a count carries its denominator).
+// Every ZIP written either reaches a county or is counted as reaching none.
 console.log(floorLine(floored("ZIPs written that reach a county", "the national ZIP shards", zipsWritten, zipsWritten - noCountyEdge)));

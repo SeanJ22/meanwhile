@@ -8,23 +8,15 @@ import { agendaDocumentStore } from "../lib/meetings/agenda-documents.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
 
 /**
- * **A HOST WHOSE ROBOTS.TXT DISALLOWS THIS CLIENT IS STILL READ FOR AN AGENDA.**
- * (Owner decision 2026-09-25: "Robots.txt alone must not block acquisition.")
- *
- * From 2026-09-24 until that decision the ingest refused every host a route
- * catalogue recorded DISALLOWED — legistar.granicus.com, whose robots.txt reads
- * `User-agent: * / Disallow: /` — and held its agenda links as links. These
- * hold the new rule: robots.txt is recorded and blocks nothing; the only host
- * agenda retrieval refuses is a retired route's host that nothing may fetch
- * (Newbury's CivicWeb portal, which no longer resolves). A Legistar sitting's
- * agenda is read through the tenant portal's own link first, because the
- * sitting already holds its versions there, and from the vendor's file when
- * the portal falls short.
+ * A host whose robots.txt disallows this client is still read for an agenda: robots.txt is
+ * recorded and blocks nothing. The only host agenda retrieval refuses is a retired route's host
+ * that no longer resolves. A Legistar sitting's agenda is read through the tenant portal's own link
+ * first, and from the vendor's file when the portal falls short.
  */
 
 const AGENDA_HTML = "<html><body><h1>Agenda</h1><p>1. Call to order.</p><p>2. Adjourn.</p></body></html>";
 const DEAD_RETIRED_HOST_URL = "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370";
-/** A real agenda PDF with a text layer (Pima Community College, 2026-08-10), standing in for the vendor's file. */
+/** A real agenda PDF with a text layer, standing in for the vendor's file. */
 const AGENDA_PDF = readFileSync(join(import.meta.dirname, "fixtures", "pima-edu", "agenda-2026-08-10.pdf"));
 const vendorPdf = () => new Response(new Uint8Array(AGENDA_PDF), { status: 200, headers: { "content-type": "application/pdf" } });
 
@@ -110,7 +102,7 @@ test("the ingest's agenda retrieval reads a robots-disallowed vendor host, and h
 });
 
 /**
- * Every redirect hop is asked the same question (2026-09-24). A hop into a
+ * Every redirect hop is asked the same question. A hop into a
  * robots-disallowed host is followed like any other; a hop into a dead retired
  * route's host is held, and that host is never requested.
  */
@@ -141,11 +133,9 @@ test("an agenda link that redirects into a dead retired host is held as a link; 
 });
 
 /**
- * A vendor-host API agenda link is read through the portal's own link to the
- * same agenda first (2026-09-24). Pima's 22 September sitting: the API's
- * EventAgendaFile is on legistar.granicus.com, and the sitting's detail page
- * (EventInSiteURL, held as provenance.sourceUrl) links the agenda on
- * pima.legistar.com. The excerpt is recorded; the network below is a stub.
+ * A vendor-host API agenda link is read through the portal's own link to the same agenda first: the
+ * API's EventAgendaFile is on the vendor host, and the sitting's detail page (EventInSiteURL, held as
+ * provenance.sourceUrl) links the agenda on the tenant portal. The network below is a stub.
  */
 const DETAIL_1828 = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1828&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
 const PORTAL_AGENDA_1828 = "https://pima.legistar.com/View.ashx?M=A&ID=1381577&GUID=00EFD752-6A28-42D3-B329-E717E49891D0&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";

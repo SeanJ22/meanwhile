@@ -13,14 +13,8 @@ import { researchVaultResolver } from "../lib/control-plane/workers/vault-object
 import type { ArtifactRecord, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 
 /**
- * WHICH RECORD OF AN ARTIFACT THE WORKER RESOLVER READS. (2026-09-23.)
- *
  * An artifact id is derived from tier and hash, so one id can have several
- * records: the same bytes retrieved by two Attempts, or for two work items. The
- * resolver used to bind the first record only and refuse
- * `WORKER_ARTIFACT_NOT_IN_VAULT` whenever that record's bytes had never been
- * vaulted, even with the same bytes held under a later record. Every root is an
- * `mkdtemp` directory removed by the test that made it.
+ * records; the resolver must read whichever record's bytes are actually held.
  */
 
 const PROJECT = "freshness";

@@ -2,20 +2,13 @@ import { createHash, createHmac } from "node:crypto";
 import { posix } from "node:path";
 
 /**
- * **Where the large raw PRL rows come to rest — the routine's object store.**
+ * The routine's object store for the large raw PRL rows, which may not enter
+ * Postgres. They land as bounded partition objects; only a small receipt (keys
+ * and a high-water mark) reaches the database.
  *
- * The classified-statement and full-text files are hundreds of megabytes and
- * millions of rows; they may not enter Postgres. They land in object storage as
- * bounded partition objects, and only a small receipt (keys + a high-water
- * mark) reaches the database.
- *
- * This module holds NO filesystem writer, on purpose. The standing runner's
- * canonical door is the production data plane, and a routine reachable from a
- * filesystem writer could bypass it (`lib/civic-data/firewall.ts`). So the
- * routine writes only through `S3ArchiveStore` — an S3-compatible client (SigV4)
- * for a Neon storage bucket, whose signer is verified against the published AWS
- * Signature V4 test vector. The on-disk twin used by tests and manual runs lives
- * in `archive-store-local.ts`, off the runner's import path.
+ * No filesystem writer lives here, so the standing runner cannot bypass the
+ * production data plane. `S3ArchiveStore` is an S3-compatible SigV4 client for
+ * a Neon storage bucket; the on-disk twin is `archive-store-local.ts`.
  */
 
 export interface PrlObjectMeta {

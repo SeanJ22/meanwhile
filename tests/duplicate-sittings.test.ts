@@ -5,13 +5,8 @@ import { collapseDuplicateSittings } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 /**
- * **ONE SITTING, ONE ROW** — the cross-source merge (NH Hunt, 2026-08-20).
- *
- * Wired because the Town of Newbury's own iCalendar feed holds 24 sittings of
- * its four boards inside the serving window against the 16 their existing
- * routes produce, and the two routes could not both ship until something above
- * them merged. The existing routes carry the AGENDAS and the feed carries the
- * DATES, so neither could be dropped.
+ * One sitting, one row: the cross-source merge. A town's own calendar feed carries the dates and its existing routes
+ * carry the agendas, so neither can be dropped and the merge must collapse the same sitting from both.
  */
 
 function meeting(over: Partial<Meeting> & { id: string }): Meeting {
@@ -54,10 +49,8 @@ test("the same sitting from two sources becomes one row, and the agenda wins", (
 
 test("the key is the INSTANT, not the string that spells it", () => {
   /*
-   * The defect this catches shipped for one run: `schedulepage` writes
-   * `2026-06-16T19:00:00-04:00` and `ical` writes `2026-06-16T23:00:00.000Z`
-   * for the same moment, the merge keyed on the text, and it reported
-   * `collapsed: 0` against a page visibly showing one meeting twice.
+   * The same moment written as `2026-06-16T19:00:00-04:00` and `2026-06-16T23:00:00.000Z` must collapse; a merge
+   * keyed on the text would not.
    */
   const offset = meeting({
     id: "schedulepage:newbury-conservation:1",
@@ -78,10 +71,8 @@ test("the key is the INSTANT, not the string that spells it", () => {
 
 test("two sittings of one body from ONE source are left alone", () => {
   /*
-   * A board publishing a Regular Session and an Executive Session at the same
-   * hour is publishing two meetings, and the adapter reading its own portal is
-   * what knows the difference. Collapsing these would delete a real sitting to
-   * tidy up a first, which is why the merge is cross-source only.
+   * A board publishing a Regular Session and an Executive Session at the same hour is publishing two meetings; the
+   * merge is cross-source only.
    */
   const regular = meeting({ id: "legistar:newbury:1", title: "Regular Session" });
   const executive = meeting({ id: "legistar:newbury:2", title: "Executive Session" });

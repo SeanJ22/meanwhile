@@ -312,12 +312,12 @@ export async function verifyRoutineReaderProjection(
         return verifyExactVersion(verifierId, await readExecutiveActionsProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Arizona official-actions");
       }
       case "pima-legistar-outcomes": {
-        const { readOutcomeProjection } = await import("../outcomes/store.ts");
-        return verifyExactVersion(verifierId, await readOutcomeProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Pima meeting-outcomes");
+        const [{ readDoorOutcomeProjection }, { PIMA_OUTCOME_TENANT }] = await Promise.all([import("../outcomes/store.ts"), import("../outcomes/data-plane.ts")]);
+        return verifyExactVersion(verifierId, await readDoorOutcomeProjection(PIMA_OUTCOME_TENANT.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Pima meeting-outcomes");
       }
       case "mesa-legistar-minutes-outcomes": {
-        const { readMesaOutcomeProjection } = await import("../outcomes/store.ts");
-        return verifyExactVersion(verifierId, await readMesaOutcomeProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Mesa meeting-outcomes");
+        const [{ readDoorOutcomeProjection }, { MESA_OUTCOME_TENANT }] = await Promise.all([import("../outcomes/store.ts"), import("../outcomes/data-plane.ts")]);
+        return verifyExactVersion(verifierId, await readDoorOutcomeProjection(MESA_OUTCOME_TENANT.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Mesa meeting-outcomes");
       }
       case "official-filings":
     case "comment-access":
@@ -828,7 +828,7 @@ export async function repairMeetingReaderProjectionReadbacks(
         aggregate = await options.aggregate();
       } else {
         const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
-        aggregate = await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
+        aggregate = await readMeetingsProjection({ store, now, bypassCache: true });
       }
     } catch (error) {
       aggregateError = sanitizedErrorDiagnostic(error);

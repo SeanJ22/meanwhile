@@ -16,24 +16,13 @@ import {
   type AncestryOracle,
 } from "../lib/control-plane/code-identity.ts";
 
-/**
- * **PRDY-1 — EXECUTABLE SHA IDENTITY.** (Fleet Promotion Readiness, 2026-09-06.)
- *
- * The activation audit's ACT-1 read the runner as stale because raw main
- * (`54d4d946`, an observer-only integrity reading) was not the SHA the runner
- * had tested (`972d1a60`, its parent and the newest commit whose tree changes
- * executable code). These tests hold the repaired evidence model: three SHAs,
- * the canonical shipping classification deciding which commits count, and a
- * verdict whose unanswerable cases all fall the safe way.
- */
-
 const EXECUTABLE = "972d1a607510818ee23a50e90689e80050ec131c";
 const OBSERVER = "54d4d946d919671f20d19aae5191e7b58709c8e9";
 
-test("PRDY-1: an observer-only child of the executable head does not make a current runner look stale (ACT-1)", () => {
+test("an observer-only child of the executable head does not make a current runner look stale", () => {
   const derived = deriveEffectiveExecutable([
-    { sha: OBSERVER, changed: ["data/ops/production-integrity.json", "docs/status-ledger.md"] },
-    { sha: EXECUTABLE, changed: ["lib/control-plane/scheduler/scout-executor.ts", "docs/status-ledger.md"] },
+    { sha: OBSERVER, changed: ["data/ops/integrity-reading.json", "docs/notes.md"] },
+    { sha: EXECUTABLE, changed: ["lib/control-plane/scheduler/scout-executor.ts", "docs/notes.md"] },
   ]);
   assert.equal(derived.effectiveExecutableSha, EXECUTABLE);
   assert.deepEqual(derived.nonShippingAbove.map((c) => c.sha), [OBSERVER]);
@@ -48,18 +37,17 @@ test("PRDY-1: an observer-only child of the executable head does not make a curr
   assert.equal(testedExecutable.verdict, "CONSISTENT");
   assert.match(testedExecutable.detail, /non-shipping commits only/);
 
-  // The runner later caught up to the observer commit itself: still consistent.
   const caughtUp = judgeCodeIdentity({
     rawMainSha: OBSERVER, effectiveExecutableSha: EXECUTABLE, runnerTestedSha: OBSERVER, walkExhausted: false, contains: oracle,
   });
   assert.equal(caughtUp.verdict, "CONSISTENT");
 });
 
-test("PRDY-1: executable code above the runner is the real stale case, undiminished", () => {
+test("executable code above the runner is the real stale case, undiminished", () => {
   const NEWER = "a".repeat(40);
   const derived = deriveEffectiveExecutable([
     { sha: NEWER, changed: ["lib/sources/legistar/index.ts"] },
-    { sha: OBSERVER, changed: ["data/ops/production-integrity.json"] },
+    { sha: OBSERVER, changed: ["data/ops/integrity-reading.json"] },
     { sha: EXECUTABLE, changed: ["lib/x.ts"] },
   ]);
   assert.equal(derived.effectiveExecutableSha, NEWER);
@@ -74,22 +62,22 @@ test("PRDY-1: executable code above the runner is the real stale case, undiminis
   assert.match(judged.detail, /stale/);
 });
 
-test("PRDY-1: unclassifiable and mixed commits are executable; the walk bound refuses rather than guesses", () => {
+test("unclassifiable and mixed commits are executable; the walk bound refuses rather than guesses", () => {
   const MERGE = "b".repeat(40);
   const MIXED = "c".repeat(40);
   assert.equal(
-    deriveEffectiveExecutable([{ sha: OBSERVER, changed: ["docs/status-ledger.md"] }, { sha: MERGE, changed: [] }]).effectiveExecutableSha,
+    deriveEffectiveExecutable([{ sha: OBSERVER, changed: ["docs/notes.md"] }, { sha: MERGE, changed: [] }]).effectiveExecutableSha,
     MERGE,
     "an empty first-parent diff is UNKNOWN under the cost rule and therefore executable here",
   );
   assert.equal(deriveEffectiveExecutable([{ sha: MERGE, changed: null }]).executable?.klass, "UNKNOWN");
   assert.equal(
-    deriveEffectiveExecutable([{ sha: MIXED, changed: ["data/ops/production-integrity.json", "lib/a.ts"] }]).effectiveExecutableSha,
+    deriveEffectiveExecutable([{ sha: MIXED, changed: ["data/ops/integrity-reading.json", "lib/a.ts"] }]).effectiveExecutableSha,
     MIXED,
     "one proof-bearing path makes the whole commit executable",
   );
   const exhausted = deriveEffectiveExecutable(
-    [{ sha: OBSERVER, changed: ["docs/status-ledger.md"] }, { sha: MERGE, changed: ["data/ops/refresh-debt.json"] }, { sha: MIXED, changed: ["lib/a.ts"] }],
+    [{ sha: OBSERVER, changed: ["docs/notes.md"] }, { sha: MERGE, changed: ["data/ops/refresh-debt.json"] }, { sha: MIXED, changed: ["lib/a.ts"] }],
     2,
   );
   assert.equal(exhausted.effectiveExecutableSha, null);
@@ -101,7 +89,7 @@ test("PRDY-1: unclassifiable and mixed commits are executable; the walk bound re
   assert.match(judged.detail, /within its bound/);
 });
 
-test("PRDY-1: a missing SHA or an unanswerable git is CANNOT_TELL; ahead-of-main and off-main are named, never called current", () => {
+test("a missing SHA or an unanswerable git is CANNOT_TELL; ahead-of-main and off-main are named, never called current", () => {
   const always: AncestryOracle = () => true;
   assert.equal(judgeCodeIdentity({ rawMainSha: null, effectiveExecutableSha: EXECUTABLE, runnerTestedSha: EXECUTABLE, walkExhausted: false, contains: always }).verdict, "CANNOT_TELL");
   assert.equal(judgeCodeIdentity({ rawMainSha: OBSERVER, effectiveExecutableSha: EXECUTABLE, runnerTestedSha: null, walkExhausted: false, contains: always }).verdict, "CANNOT_TELL");
@@ -126,8 +114,6 @@ test("PRDY-1: a missing SHA or an unanswerable git is CANNOT_TELL; ahead-of-main
   );
 });
 
-/* ---------------------------------------------------------- a real repo --- */
-
 function git(dir: string, args: readonly string[]): string {
   return execFileSync("git", [...args], { cwd: dir, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
 }
@@ -140,7 +126,7 @@ function commit(dir: string, path: string, message: string): string {
   return git(dir, ["rev-parse", "HEAD"]);
 }
 
-test("PRDY-1: readCodeIdentity derives the three SHAs and the verdict from a real repository, with no network", () => {
+test("readCodeIdentity derives the three SHAs and the verdict from a real repository, with no network", () => {
   const dir = mkdtempSync(join(tmpdir(), "wtp-code-identity-"));
   try {
     git(dir, ["init", "--quiet"]);
@@ -150,12 +136,12 @@ test("PRDY-1: readCodeIdentity derives the three SHAs and the verdict from a rea
     git(dir, ["config", "commit.gpgsign", "false"]);
     const root = commit(dir, "lib/a.ts", "root");
     const executable = commit(dir, "lib/b.ts", "shipping change");
-    const observer1 = commit(dir, "data/ops/production-integrity.json", "observer reading");
-    const observer2 = commit(dir, "docs/status-ledger.md", "status ledger");
+    const observer1 = commit(dir, "data/ops/integrity-reading.json", "observer reading");
+    const observer2 = commit(dir, "docs/notes.md", "notes");
     const now = "2026-09-06T00:00:00.000Z";
 
     assert.equal(firstParentChangedPaths(root, dir), null, "a root commit has no first parent to diff against");
-    assert.deepEqual(firstParentChangedPaths(observer1, dir), ["data/ops/production-integrity.json"]);
+    assert.deepEqual(firstParentChangedPaths(observer1, dir), ["data/ops/integrity-reading.json"]);
     assert.deepEqual(walkFirstParent(observer2, dir, 3).map((c) => c.sha), [observer2, observer1, executable]);
 
     const identity = readCodeIdentity({ cwd: dir, runnerTestedSha: executable, now });
@@ -187,7 +173,6 @@ test("PRDY-1: readCodeIdentity derives the three SHAs and the verdict from a rea
     git(dir, ["checkout", "--quiet", "main"]);
     assert.equal(readCodeIdentity({ cwd: dir, runnerTestedSha: side, now }).verdict, "RUNNER_NOT_ON_MAIN");
 
-    // Only ops-only commits within a tiny bound: the walk refuses instead of naming a head.
     const bounded = readCodeIdentity({ cwd: dir, runnerTestedSha: newer, now, bound: 1 });
     assert.equal(bounded.walkBound, 1);
     // `newer` is executable and is the tip, so a bound of 1 still finds it; move the tip onto ops-only commits.
@@ -202,7 +187,7 @@ test("PRDY-1: readCodeIdentity derives the three SHAs and the verdict from a rea
   }
 });
 
-test("2026-09-23: the read is bounded — a spent budget asks git nothing and reads CANNOT_TELL; the walk reads a diff only when judged", () => {
+test("the read is bounded — a spent budget asks git nothing and reads CANNOT_TELL; the walk reads a diff only when judged", () => {
   const dir = mkdtempSync(join(tmpdir(), "wtp-code-identity-budget-"));
   try {
     git(dir, ["init", "--quiet"]);
@@ -212,7 +197,7 @@ test("2026-09-23: the read is bounded — a spent budget asks git nothing and re
     git(dir, ["config", "commit.gpgsign", "false"]);
     commit(dir, "lib/a.ts", "root");
     const executable = commit(dir, "lib/b.ts", "shipping change");
-    const observer = commit(dir, "docs/status-ledger.md", "status ledger");
+    const observer = commit(dir, "docs/notes.md", "notes");
     const now = "2026-09-23T17:43:29.000Z";
 
     const spent = readCodeIdentity({ cwd: dir, runnerTestedSha: executable, now, budgetMs: 0 });
@@ -227,7 +212,7 @@ test("2026-09-23: the read is bounded — a spent budget asks git nothing and re
     const walk = walkFirstParent(observer, dir, 3);
     assert.deepEqual(walk.map((c) => c.sha).slice(0, 2), [observer, executable]);
     const first = walk[0]!.changed;
-    assert.deepEqual(first, ["docs/status-ledger.md"]);
+    assert.deepEqual(first, ["docs/notes.md"]);
     renameSync(join(dir, ".git"), join(dir, ".git-away"));
     try {
       assert.equal(walk[1]!.changed, null, "read on first access, after the walk had returned");
@@ -240,7 +225,7 @@ test("2026-09-23: the read is bounded — a spent budget asks git nothing and re
   }
 });
 
-test("PRDY-1: a stored record that is not a code identity is refused, never read as consistent", () => {
+test("a stored record that is not a code identity is refused, never read as consistent", () => {
   assert.equal(isCodeIdentity(null), false);
   assert.equal(isCodeIdentity({ formatVersion: 1, readAt: "x", verdict: "GREEN", detail: "", nonShippingAbove: [] }), false);
   assert.equal(isCodeIdentity({ formatVersion: 2, readAt: "x", verdict: "CONSISTENT", detail: "", nonShippingAbove: [] }), false);

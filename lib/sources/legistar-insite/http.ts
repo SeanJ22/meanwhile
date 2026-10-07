@@ -1,29 +1,12 @@
 /**
- * The InSite portal's own transport — a GET, an ASP.NET postback, and the
- * pacing the vendor asks for.
+ * The InSite portal's own transport: a GET, an ASP.NET postback, and the pacing the vendor asks for. Kept
+ * here so the shared GET client in `lib/sources/http.ts` never carries one vendor's form-posting quirks.
+ * Identification and document validation are not re-implemented: the User-Agent comes from
+ * `sourceUserAgent()` and every response goes through `readValidatedResponse()`.
  *
- * ## Why this is here rather than in `lib/sources/http.ts`
- *
- * `CLAUDE.md`: *adding a source means adding a directory, never editing shared
- * ingestion logic.* Nothing else in this repository posts a form. The shared
- * client is a GET client with a ladder, and widening it to carry a request body
- * so that one adapter can drive one vendor's dropdown would put this tenant's
- * quirks in every other adapter's path.
- *
- * What it does NOT re-implement: identification and document validation. The
- * User-Agent comes from `sourceUserAgent()` and every response goes through
- * `readValidatedResponse()`, so a 200 carrying a challenge page or a blank body
- * is a WALL on its rung here exactly as it is everywhere else — never an empty
- * calendar handed upward.
- *
- * ## Pacing
- *
- * `legistar.com`'s apex robots.txt publishes `Crawl-delay: 2`. The tenant hosts
- * (`pima.legistar.com`, `mesa.legistar.com`) return 404 for robots.txt and so
- * publish no rules of their own — read 2026-08-28. A 404 is not permission to
- * go faster than the vendor asked on its own name, so the whole vendor is paced
- * at the apex's stated delay. Two seconds between requests, serialized, one
- * tenant at a time.
+ * Pacing: `legistar.com`'s apex robots.txt publishes `Crawl-delay: 2`; tenant hosts publish no rules of
+ * their own, so the whole vendor is paced at the apex's delay. Two seconds between requests, serialized,
+ * one tenant at a time.
  */
 import {
   SourceHttpError,
@@ -32,11 +15,7 @@ import {
 } from "../http.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 
-/**
- * `Crawl-delay: 2`, as published at https://legistar.com/robots.txt and read
- * 2026-08-28. Stated in the units the directive uses so the number can be
- * checked against the source rather than trusted.
- */
+/** `Crawl-delay: 2`, as published at https://legistar.com/robots.txt, in the directive's own units. */
 export const INSITE_CRAWL_DELAY_SECONDS = 2;
 export const INSITE_SPACING_MS = INSITE_CRAWL_DELAY_SECONDS * 1000;
 
@@ -60,9 +39,8 @@ function validatorsOf(response: Response): DocumentValidators {
  */
 export class InSiteSession {
   /**
-   * Cookies by the host that set them. A portal's ASP.NET session goes back to that portal only: since
-   * 2026-09-25 a minutes link may sit on the vendor's document host, and a session is never handed to a host
-   * that did not issue it.
+   * Cookies by the host that set them. A portal's ASP.NET session goes back to that portal only, never to
+   * another host (e.g. a vendor document host).
    */
   private readonly jar = new Map<string, Map<string, string>>();
   private readonly spacingMs: number;
@@ -79,9 +57,8 @@ export class InSiteSession {
     spacingMs?: number;
     signal?: AbortSignal;
     /**
-     * False for an optional read that must end on the exact URL it was
-     * registered for: a redirect is then answered as a refusal naming where
-     * the page moved, and is never followed (2026-09-24).
+     * False for an optional read that must end on the exact URL it was registered for: a redirect is then
+     * answered as a refusal naming where the page moved, and is never followed.
      */
     followRedirects?: boolean;
   } = {}) {
@@ -176,10 +153,8 @@ export class InSiteSession {
   }
 
   /**
-   * A document's exact bytes (NH332, 2026-09-25): the minutes PDF on the
-   * portal host. Paced and identified like every other read here; a non-2xx
-   * status throws, and the caller judges the bytes (a PDF with no text layer
-   * is a failed extraction, never an empty document).
+   * A document's exact bytes (e.g. a minutes PDF on the portal host). Paced and identified like every other
+   * read here; a non-2xx status throws, and the caller judges the bytes.
    */
   async getBytes(
     url: string,
@@ -206,12 +181,8 @@ export class InSiteSession {
   }
 
   /**
-   * A document's identity without its bytes (2026-09-25): one paced HEAD, for
-   * a minutes document whose last read failed, so an unchanged 18.8 MB PDF is
-   * not downloaded again to fail again. Mesa's portal answers HEAD with the
-   * status, `Content-Length` and `Content-Type` and no `ETag` or
-   * `Last-Modified` (measured that day). Never throws for the site: a failed
-   * request is `null`, and the caller decides what an unchecked document means.
+   * A document's identity without its bytes: one paced HEAD, so an unchanged document whose last read
+   * failed is not downloaded again. Never throws for the site: a failed request is `null`.
    */
   async head(url: string, accept = "*/*"): Promise<({ status: number; contentType: string; contentLength: number | null } & DocumentValidators) | null> {
     await this.pace();

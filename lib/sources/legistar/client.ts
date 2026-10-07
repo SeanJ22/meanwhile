@@ -1,26 +1,11 @@
 /**
- * The HTTP half of the Legistar adapter: paging, pacing, and backoff.
- *
- * Kept apart from normalize() so the transform stays pure and testable against
- * a recorded fixture, and so the retrieval discipline lives in exactly one
- * place rather than being re-decided per endpoint.
- *
- * The discipline is from the brief's §4.5.4 and it is engineering manners, not
- * hedging: identify yourself, go at a human pace, never parallelize against a
- * single tenant, and honour what the server tells you.
+ * The HTTP half of the Legistar adapter: paging, pacing and backoff. Kept apart from normalize() so the
+ * transform stays pure, and so the retrieval discipline lives in one place: identify yourself, go at a
+ * human pace, never parallelize against a single tenant, and honour what the server tells you.
  */
 
-/*
- * The User-Agent is `sourceUserAgent` from the shared HTTP module (RULING 103,
- * 2026-08-23). This file carried its own byte-identical copy, and so did the
- * Congress and Plural adapters — four implementations of "who is calling",
- * which is a claim `CLAUDE.md` makes law: an identified `User-Agent` with a
- * contact address. Four copies is four places for that claim to drift.
- *
- * The PACING is deliberately NOT shared. Legistar's spacing and retry budget
- * were measured against Legistar; folding them into the shared module would
- * silently re-tune a tenant's rate limit.
- */
+// The User-Agent is the shared `sourceUserAgent`. The pacing is deliberately not shared: Legistar's
+// spacing and retry budget were measured against Legistar.
 import { sourceUserAgent } from "../http.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 
@@ -29,13 +14,7 @@ const API_ROOT = "https://webapi.legistar.com/v1";
 /** Legistar caps a reply at 1000 rows regardless of what `$top` asks for. */
 const PAGE_SIZE = 1000;
 
-/**
- * The runaway stop for `pageById`, named rather than inline — A-006.
- *
- * A number written into a loop condition cannot be referred to by the error
- * that reports hitting it, and an error that cannot name its own limit sends a
- * reader hunting for it.
- */
+/** The runaway stop for `pageById`, named so the error that reports hitting it can name it. */
 const MAX_PAGES = 100;
 
 /** Between requests to the same tenant. Serialized, never concurrent. */
@@ -58,11 +37,8 @@ export class LegistarError extends Error {
 }
 
 /**
- * What a status code from this API actually means.
- *
- * Measured across nine client slugs on 2026-08-12 and worth encoding, because a
- * bare 500 from an API that is demonstrably live reads as an outage and is not
- * one — it is the answer for a slug that is not a client.
+ * What a status code from this API actually means: a bare 500 from this live API is the answer for a slug
+ * that is not a client, not an outage.
  */
 export function describeStatus(status: number): string {
   if (status === 403) {
@@ -194,22 +170,8 @@ async function pageById<T>(
   let cursor = 0;
   let guard = 0;
 
-  /*
-   * 100 pages of 1000 is far past any real client-year; it is a runaway stop,
-   * not a coverage limit.
-   *
-   * **A-006's class, found by the sweep that A-006 required** (external
-   * correctness audit of `336a3eb`, remediated 2026-08-24). The named finding
-   * was Apptegy's twelve-page cap ending the walk with a live next pointer and
-   * reporting clean success. This loop had the identical shape: it exits at
-   * 100 iterations whether or not the last page was full, and a full last page
-   * is precisely the server saying there is more.
-   *
-   * The comment above already asserted the distinction — "a runaway stop, not
-   * a coverage limit" — and nothing enforced it, which is the same gap the
-   * Apptegy comment had. A cap that is documented as unreachable and is
-   * silently reachable is worse than one nobody claimed anything about.
-   */
+  // A runaway stop, not a coverage limit: exiting on the cap after a full last page (the server saying there
+  // is more) is reported as a failure, never a clean success.
   while (guard++ < MAX_PAGES) {
     const clauses = [`${idField} gt ${cursor}`];
     if (filter) clauses.push(filter);
@@ -295,23 +257,11 @@ export async function fetchEvent<T>(
 }
 
 /**
- * **The per-person roll call for one agenda item** — the single strongest
- * civic record this product can hold, and the only one `record-class.ts`
- * admits for `HOW_DID_THEY_VOTE`.
- *
- * `/v1/{slug}/eventitems/{EventItemId}/votes`. Walked 2026-08-29 against the
- * Pima tenant: HTTP 200 on every item probed, including items with no votes,
- * so a 200 proves the route works and proves nothing about the item.
- *
- * **This returns the ROWS, never a verdict on them.** A zero-row reply is
- * ambiguous at this layer — it is a legitimate empty for an item nobody put a
- * question on, and a FAILED extraction for an item whose own record says a
- * roll call was taken. Deciding which is `classifyRollCall` in `outcomes.ts`,
- * where the item is in scope; deciding it here, with only the array, is how a
- * wall becomes an emptiness.
- *
- * Not paged: an event item's roll is one body's membership, tens of rows at
- * the outside, and `$top` at the collection cap covers it in one request.
+ * The per-person roll call for one agenda item (`/v1/{slug}/eventitems/{EventItemId}/votes`). It returns
+ * 200 even for items with no votes, so a 200 proves nothing about the item. This returns the rows, never
+ * a verdict: whether a zero-row reply is a legitimate empty or a failed extraction is decided by
+ * `classifyRollCall` in `outcomes.ts`, where the item is in scope. Not paged: one body's membership fits
+ * in one request.
  */
 export async function fetchEventItemVotes<T>(
   slug: string,

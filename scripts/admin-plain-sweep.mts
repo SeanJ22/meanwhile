@@ -1,53 +1,34 @@
 /**
- * **THE PLAIN-ENGLISH SWEEP: WHAT THE OWNER ACTUALLY SEES, NOT WHAT THE SOURCE
- * SAYS.** (ADM-25 and §9A.1 of the Admin C brief, 2026-09-06.)
- *
- * RULING 262 is explicit that a class sweep **sweeps the DOM, not source
- * grep**, and this is the instrument for the plain-English class. A guard that
- * greps `page.tsx` for `CYCLE_DEFERRED` proves nothing: the constant does not
- * appear in the source at all — it arrives at render time from the control
- * plane, inside an instrument's own sentence, and lands on the face of the
- * page. Only the rendered document can be asked.
- *
- * ## What "the face" means, exactly
- *
- * The brief keeps every machine code available in disclosures, tooltips and
- * copy panels. So the sweep reads the document TWICE:
+ * The plain-English sweep over the RENDERED admin console: machine codes arrive
+ * at render time from the control plane, so only the rendered document can be
+ * asked. It reads the document twice:
  *
  * ```
- *   FACE   every `<details>` closed, every `title=` ignored — what he sees
- *          before he clicks anything. A machine constant here is a defect.
- *   DEPTH  every `<details>` open — what he sees after he asks. A machine
- *          constant here is CORRECT and is counted, not failed.
+ *   FACE   every `<details>` closed, every `title=` ignored — what the owner
+ *          sees before clicking anything. A machine constant here is a defect.
+ *   DEPTH  every `<details>` open. A machine constant here is CORRECT and is
+ *          counted, not failed.
  * ```
  *
- * The report states both numbers with their denominator, because "no codes on
- * the face" is only meaningful beside "and here is how many are still available
- * one click down" — the fix was never to delete information.
- *
- * ## What counts as a machine constant
+ * What counts as a machine constant:
  *
  * ```
  *   SCREAMING_SNAKE     CYCLE_DEFERRED, NOT_WALKED, REFUSED_BY_HOST
  *   an env-var name     WTP_WORKERS_ANTHROPIC_API_KEY
- *   a shell command     pnpm reader:suite
+ *   a shell command     pnpm <script>
  *   a source path       lib/control-plane/promotion
  *   a bare long hash    a 12+ hex run of a work-item or attempt id
  *   four-decimal money  $0.4394
  * ```
  *
- * Each has a named exception list, and every exception carries a REASON — the
- * house rule for a guard baseline. A word that is genuinely how the owner says
- * it (READER, TRUTH, FRESHNESS, GREEN, AMBER, RED) is not a machine constant;
- * it is the vocabulary he asked for and kept.
- *
- * ## Usage
+ * Each exception carries its reason; the owner's own vocabulary (READER,
+ * TRUTH, FRESHNESS, GREEN, AMBER, RED) is not a machine constant.
  *
  *   pnpm admin:plain-sweep                    # against a local next start
  *   ADMIN_SWEEP_BASE=http://localhost:3100 pnpm admin:plain-sweep
  *
- * It mints a real admin session rather than bypassing the gate, exactly as the
- * admin walk does, and it never contacts production.
+ * It mints a real admin session rather than bypassing the gate, and it never
+ * contacts production.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { ADMIN_ORIGIN } from "../lib/ops/origins.ts";
@@ -85,7 +66,7 @@ export const OFFENCES: readonly Offence[] = [
  * Every entry carries the reason it is not a defect.
  */
 export const ALLOWED_ON_THE_FACE: Readonly<Record<string, string>> = {
-  // The health scale the owner explicitly likes and asked to keep (POS-13).
+  // The health scale the owner explicitly asked to keep.
   GREEN: "the health grade, in the owner's own words",
   AMBER: "the health grade, in the owner's own words",
   RED: "the health grade, in the owner's own words",
@@ -98,7 +79,7 @@ export const ALLOWED_ON_THE_FACE: Readonly<Record<string, string>> = {
 export interface SweepReading {
   readonly path: string;
   readonly status: number;
-  /** Milliseconds to first render and to data-ready, for ADM-38. */
+  /** Milliseconds to first render and to data-ready. */
   readonly domMs: number;
   readonly readyMs: number;
   readonly faceChars: number;

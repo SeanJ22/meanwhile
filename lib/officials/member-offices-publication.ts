@@ -1,23 +1,6 @@
 /**
- * The daily member-office refresh: every state legislator's capitol and
- * district offices, published through the curated `member-offices` pointer.
- *
- * For each state with an official roster (OFFICIAL_STATE_LEGISLATOR_TARGETS),
- * the legislature's own promoted roster is read, Open States' current file for
- * that state is fetched, and the two are joined by `memberOfficeRecords`
- * (lib/officials/member-offices.ts). Every state's offices go out in one
- * package with a source receipt naming each file's exact bytes.
- *
- * Source rule (Sean, 2026-10-01): Open States is an acceptable source for these
- * offices; official values win; an office no official page states is
- * `official: false`. Open States is a secondary aggregator, so its file is
- * receipted as a REFERENCE_PUBLISHER, the one class the curated door admits
- * only for records that say they are not official.
- *
- * A state whose roster or file cannot be read is a gap with its reason, never
- * a failure of the other states, and keeps its prior GOOD offices (the
- * successor retains every omitted member). The routine runner calls this
- * daily through `scripts/publish-member-offices.mts`; no owner step.
+ * The daily member-office refresh: each state's promoted legislative roster joined with Open States' current file,
+ * published in one package through the curated `member-offices` pointer with a receipt for each file's exact bytes.
  */
 import { createHash } from "node:crypto";
 

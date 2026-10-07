@@ -1,16 +1,6 @@
 /**
- * FIPS state codes to postal abbreviations, and the OCD division prefix each
- * one takes.
- *
- * Written out as an explicit literal on purpose. CLAUDE.md makes OCD-IDs the
- * universal join key and forbids joining geographic entities on name strings —
- * so this table is never derived from a shapefile's NAME field. Census renames
- * things between vintages; a numeric code does not move.
- *
- * The prefix differs by entity class, and the difference is not cosmetic:
- * states are `state:`, the District of Columbia is `district:`, and the five
- * territories are `territory:`. Forcing all of them into `state:` would mint
- * identifiers that no other OCD consumer recognizes.
+ * FIPS state codes to postal abbreviations and OCD prefixes, written out as a literal and never derived from names.
+ * States are `state:`, DC is `district:`, territories are `territory:`.
  */
 
 export type OcdPrefix = "state" | "district" | "territory";
@@ -100,12 +90,7 @@ export function isJurisdictionSegment(prefix: string, postal: string): boolean {
   return prefix === "state" || NON_STATE_SEGMENTS.has(`${prefix}:${postal}`);
 }
 
-/**
- * Congressional district codes that carry no district.
- *
- * `ZZ` is Census's code for water and unassigned area. It is not a seat and
- * must never be rendered as one.
- */
+/** Congressional district codes that carry no seat; `ZZ` is water and unassigned area. */
 export const NON_DISTRICT_CD_CODES = new Set(["ZZ"]);
 
 /** Census's code for a state with a single at-large district. */
@@ -125,24 +110,8 @@ export interface DistrictIdentity {
 }
 
 /**
- * Build the OCD division ID for one congressional seat.
- *
- * Returns null when the row is not a seat — water, unassigned area, or a state
- * code this table does not know. The caller drops those and logs why.
- *
- * Every seat is `<jurisdiction>/cd:<number|at-large>`. That shape was verified
- * on 2026-08-11 against the canonical published list,
- * `opencivicdata/ocd-division-ids`, `identifiers/country-us.csv`:
- *
- * - A single-seat state is `cd:at-large`. `state:wy/cd:1` and `state:wy/cd:0`
- *   do not exist in the list; `state:wy/cd:at-large` does.
- * - DC's delegate is `district:dc/cd:at-large`, not bare `district:dc`.
- * - A territory's delegate or resident commissioner is
- *   `territory:pr/cd:at-large`, not bare `territory:pr`.
- *
- * The bare `district:dc` and `territory:pr` identifiers are real, but they name
- * the jurisdiction rather than the seat inside it. Using them for a district
- * feature would join a boundary to the wrong kind of entity.
+ * The OCD division ID for one congressional seat, `<jurisdiction>/cd:<number|at-large>`, or null when the row is not a
+ * seat. Single-seat states, DC and territories use `cd:at-large`.
  */
 export function districtIdentity(
   statefp: string,

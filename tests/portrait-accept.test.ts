@@ -5,23 +5,8 @@ import test from "node:test";
 
 import { PORTRAIT_ACCEPT } from "../lib/photos/decode.ts";
 
-/*
- * THE DEFECT THIS GUARDS, and it is a false absence rather than a crash.
- *
- * `decodeImage` reads png, jpeg, gif and webp. A portrait fetch that ASKS for
- * a format outside that set gets it, fails to decode it, and records
- * NOT_AN_IMAGE — which the hunt then reports as no portrait published. That is
- * a false claim about a named public official, produced entirely by us, on a
- * host that answered correctly.
- *
- * Found on 2026-08-31 against `static.wixstatic.com`, which content-negotiates:
- * asked for AVIF it returned a real AVIF portrait of the Arizona State
- * Treasurer, which decoded as absent; asked for the formats above it returned
- * WebP, which decoded fine. The host had not changed. The request had.
- *
- * So the header and the decoder must move together, and this is what makes
- * that mechanical rather than remembered.
- */
+// The Accept header and the decoder's formats must move together: a host that content-negotiates returns a format
+// we cannot decode, and the hunt then reports a false absence of a portrait.
 
 const ROOT = join(import.meta.dirname, "..");
 
@@ -46,11 +31,7 @@ test("the portrait Accept header offers nothing the decoder cannot read", () => 
 });
 
 test("the header offers EVERY format the decoder can read", () => {
-  /*
-   * The reverse direction, and it is not symmetry for its own sake: a format
-   * dropped from the header is a portrait we decline to accept and then report
-   * as missing. Under-asking produces the same false absence as over-asking.
-   */
+  // A format dropped from the header is a portrait declined and then reported missing.
   for (const format of DECODABLE) {
     assert.ok(
       PORTRAIT_ACCEPT.includes(`image/${format}`),
@@ -60,11 +41,7 @@ test("the header offers EVERY format the decoder can read", () => {
 });
 
 test("the declared decodable set still matches what decodeImage branches on", () => {
-  /*
-   * DECODABLE above is written down, so it can go stale the moment someone
-   * teaches decodeImage a new format. This reads the module's own
-   * `ImageFormat` union rather than trusting the copy.
-   */
+  // Reads the module's own `ImageFormat` union rather than trusting the copy above.
   const src = readFileSync(join(ROOT, "lib", "photos", "decode.ts"), "utf8");
   const match = src.match(/export type ImageFormat =([^;]+);/);
   assert.ok(match, "could not find the ImageFormat union in lib/photos/decode.ts");
@@ -78,16 +55,9 @@ test("the declared decodable set still matches what decodeImage branches on", ()
 });
 
 test("every portrait fetch sends the header rather than letting the host choose", () => {
-  /*
-   * A fetch with NO Accept header is not safe either: it lets the host pick,
-   * and hosts are moving to AVIF. This asserts the call sites send it, because
-   * the constant existing is worth nothing if nobody passes it.
-   */
+  // With no Accept header the host picks the format, so the call sites must send it.
   const sites = [
     join(ROOT, "lib", "hunt", "portrait-pick.ts"),
-    join(ROOT, "scripts", "hunt-statewide-portraits-0828.mts"),
-    join(ROOT, "scripts", "hunt-door3-portraits-0828.mts"),
-    join(ROOT, "scripts", "stage-own03-portraits.mts"),
   ];
 
   for (const site of sites) {

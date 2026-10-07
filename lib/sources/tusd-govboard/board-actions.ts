@@ -1,19 +1,15 @@
 import { decodeEntities } from "../http.ts";
 
 /**
- * **Tucson Unified's Board Actions index — one PDF per Governing Board sitting.**
- * (2026-09-23, the Pima school-agenda routes session.)
- *
- * `govboard.tusd1.org/Actions` lists, per sitting, a link whose visible text is
- * the sitting's date (`August 25, 2026`) and whose target is a PDF on the same
- * permitted host (`/_theme/files/GovBoard/Docs/actions/08-25-2026S.pdf`). The
- * PDF's own first line is `GOVERNING BOARD AGENDA <KIND> MEETING – Board
- * Actions`: every numbered agenda item with the action taken on it. It exists
- * only after the sitting, so it is a CONCLUDED sitting's agenda record.
+ * A district's Board Actions index: one PDF per Governing Board sitting. Each
+ * link's visible text is the sitting's date (`August 25, 2026`) and its target
+ * a PDF on the same host (`/_theme/files/GovBoard/Docs/actions/08-25-2026S.pdf`)
+ * whose first line is `GOVERNING BOARD AGENDA <KIND> MEETING – Board Actions`:
+ * every numbered agenda item with the action taken. It exists only after the
+ * sitting, so it is a CONCLUDED sitting's agenda record.
  *
  * Keyed by ISO day. The first link for a day wins; the page lists newest first
- * and never two sittings on one day (the executive session is not a separate
- * Board Actions entry).
+ * and never two sittings on one day.
  */
 export function parseBoardActions(html: string, pageUrl: string): Map<string, string> {
   const out = new Map<string, string>();

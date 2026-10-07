@@ -20,14 +20,9 @@ import { makePermissionGate, permittedText } from "../lib/sources/permission-gat
 import { SOURCE_WIRING, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
 
 /**
- * Pima Community College's Governing Board, read from the college's OWN
- * permitted pages instead of its robots-disallowed Diligent tenant — against
- * responses recorded 2026-09-23 (tests/fixtures/pima-edu/retrieval.json names
- * each URL, instant, status, byte count and sha256). No live calls.
- *
- * The floors below are counts of what the recorded pages contain, so a parser
- * that returns [] on the real markup fails loudly rather than reporting an
- * empty board.
+ * A college board read from its own permitted pages, against recorded responses
+ * (tests/fixtures/pima-edu/retrieval.json names each URL, instant, status, byte count and sha256).
+ * The floors are counts of what the recorded pages contain, so a parser returning [] fails loudly.
  */
 
 const FIXTURES = join(import.meta.dirname, "fixtures", "pima-edu");
@@ -149,14 +144,12 @@ test("normalize: every Diligent sitting in the window is re-found, conserved, wi
   assert.equal(accounting.outcome, "CONSERVED");
   assert.equal(meetings.length, 12, meetings.map((m) => m.id).join(", "));
   assert.equal(drops.unknownVenue, 0);
-  // DB-05: the held 120-day window reaches three more sittings (90 to 120 days out) that the college's pages date but
-  // state no time for; they are counted as unplaceable in time, never guessed (they were out of the window: 22 then).
+  // Sittings the pages date but state no time for are counted as unplaceable in time, never guessed.
   assert.equal(drops.unplaceableInTime, 3);
   assert.equal(accounting.outOfWindow, 19);
 
   const byId = new Map(meetings.map((m) => [m.id, m]));
-  // The seven sittings production held from the disallowed tenant (Diligent
-  // ids 706, 698, 705, 707, 708, 699, 700), each on the college's own pages:
+  // The sittings production held from the disallowed tenant, each found on the college's own pages:
   const heldEquivalents = [
     ["pima-edu:pcc:2026-08-10-study-session", "2026-08-10T17:00:00-07:00"],
     ["pima-edu:pcc:2026-08-28-committee", "2026-08-28T09:00:00-07:00"],

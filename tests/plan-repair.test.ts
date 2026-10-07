@@ -136,7 +136,7 @@ test("completed Scout repair retains parent instructions and creates one ordinar
   assert.equal(resolved.primary.workItemId, f.h.item.id, "The immutable capture keeps its original WorkItem attribution.");
   await assert.rejects(resolvedHeldAuditAttribution({ ...attribution, workItemId: f.h.item.id }), /SCOPE_MISMATCH/);
   await assert.rejects(resolvedHeldAuditAttribution({ ...attribution, items: items.map(item => item.id === childId ? { ...item, subject: "wrong-subject" } : item) }), /SUBJECT_MISMATCH/);
-  // A roster is not a judgment call (rulings §3): the Validator's PASS stages it with no Auditor before publication.
+  // A roster is not a judgment call: the Validator's PASS stages it with no Auditor before publication.
   const staged = await nextAutonomousOperation(f.h.runtime, childId);
   assert.equal(staged.action, "STAGED", JSON.stringify(staged));
   assert.equal(staged.task, null);

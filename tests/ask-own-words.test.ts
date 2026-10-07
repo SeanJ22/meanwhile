@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
 
 import type { EvidenceRecord } from "../lib/ask/evidence.ts";
 import { composeOwnWordsAnswer, ownWordsPassages, readsAsSpokenSentence } from "../lib/ask/own-words.ts";

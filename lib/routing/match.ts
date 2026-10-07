@@ -1,48 +1,25 @@
 import { TOPIC_ROUTES } from "./topics.ts";
 
 /**
- * Keyword → topic matching for the ask box (5, 2026-08-19). NO generation:
- * a question either lands in a curated topic domain by keyword evidence or
- * it is refused honestly. Matching is mechanical — normalized word hits
- * against curated keyword lists — and deterministic: the highest hit count
- * wins, a tie or zero refuses. Nothing here reads party, and nothing here
- * invents a route (A07: no source, no answer).
- *
- * Keywords are curated per topic ON TOP of the route's own examples —
- * variants and stems listed out rather than stemmed by code, so what
- * matches is exactly what a reviewer can read here.
+ * Keyword → topic matching for the ask box. No generation: a question lands in a curated topic by
+ * keyword evidence or is refused. Mechanical and deterministic: the highest hit count wins; a tie or zero
+ * refuses. Keywords are listed out per topic rather than stemmed by code, so what matches is exactly
+ * what a reviewer can read here.
  */
 
 const TOPIC_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
   "schools-operations": [
     "teacher", "teachers", "principal", "bus", "buses", "superintendent",
     "classroom", "grades", "bullying",
-    // From the refusal log (wall clock 2026-08-14): "my kids school"
-    // refused on the school-anchor tie. The possessive marks the reader's
-    // own child — a running-the-school question, not a policy one.
+    // The possessive marks the reader's own child: a running-the-school question, not a policy one.
     "kid", "kids",
   ],
   "schools-policy": [
     "curriculum", "closing", "boundaries", "build", "building", "built",
     "construction", "opening", "calendar",
-    /*
-     * NH-3 (2026-08-23). *"when does school start?"* was REFUSED — it hit the
-     * bare anchor "school" once for each school topic and nothing else, so it
-     * sat below the two-hit strong-match threshold and the reader was told no
-     * sourced owner had been routed for the topic. The school district plainly
-     * owns it.
-     *
-     * These are PHRASES, not the bare word "start". Adding "start" alone would
-     * route "when does the meeting start" and "when does early voting start" to
-     * the school board, which is the single-word failure the threshold ruling
-     * exists to stop — a word carries a topic's vocabulary, not its intent.
-     * Each phrase below already contains the anchor, so a hit here is a second
-     * distinct hit rather than the same evidence counted twice.
-     *
-     * It routes to POLICY rather than operations because the school calendar is
-     * adopted by the board: N.J.S.A. 18A:36-2 in New Jersey, RSA 189:1 in New
-     * Hampshire. The superintendent runs the year the board sets.
-     */
+    // Phrases, not the bare word "start", which would route other questions to the school board. Each
+    // already contains the anchor, so a hit here is a second distinct hit. Routes to policy because the
+    // school calendar is adopted by the board.
     "school start", "school starts", "school starting",
     "school year", "school calendar", "first day of school",
     "school begin", "school begins",
@@ -55,7 +32,6 @@ const TOPIC_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
   "roads-local": [
     "pothole", "potholes", "road", "roads", "street", "streets", "speeding",
     "crosswalk", "streetlight", "streetlights", "sidewalk", "traffic",
-    // From the refusal log (wall clock 2026-08-14): "I want a bike lane".
     "bike", "bike lane", "bicycle",
   ],
   "trash-recycling": [
@@ -135,34 +111,11 @@ function hitsFor(normalized: string, topicId: string): string[] {
 }
 
 /**
- * THE STRONG-MATCH THRESHOLD (the author's matcher ruling, 2026-08-17).
- *
- * The keyword layer routes on a STRONG match and on nothing else: **two or
- * more distinct keyword hits for the winning topic**. One hit is evidence
- * that a word appeared, not evidence of what was asked.
- *
- * The proving case is in `tests/ask-matcher.test.ts` and it is permanent:
- * *"what will the weather be like on election day"* hits `election` once,
- * and one hit used to be enough to route it to `elections-voting` and answer,
- * at length, about who runs elections. Nothing was fabricated and every
- * sentence was sourced — so A07's contract held — but the reader was answered
- * a question nobody asked, which is its own kind of wrong. A single word
- * carries a topic's vocabulary; it does not carry a topic's intent.
- *
- * Weak matches are not refused here. They FALL THROUGH to the Level 1
- * classifier (`classifier.ts`), which reads the whole question rather than
- * counting words and either picks the right curated drawer or says nothing
- * routes. The classifier generates nothing and selects only among curated
- * destinations; where it is switched off or unreachable, a weak match gets
- * the honest refusal with the destinations offered, never a low-confidence
- * route. That is the whole of the ruling, and it is why this threshold can be
- * raised without losing the questions it stops answering by reflex.
- *
- * The OTHER strong class — an exact name (a body, a person, a district, a
- * place, or a meeting named as such, or a destination phrase) — is not
- * counted here, because a name is not a keyword. It lives in `exact-name.ts`
- * and in `destinations.ts`, and it routes without needing a second hit:
- * naming a thing IS the intent to be taken to it.
+ * The strong-match threshold: the keyword layer routes only on two or more distinct keyword hits for
+ * the winning topic. One hit is evidence a word appeared, not of what was asked. Weak matches fall
+ * through to the Level 1 classifier (`classifier.ts`); where it is unavailable, a weak match gets the
+ * refusal with destinations offered, never a low-confidence route. Exact names and destination phrases
+ * are the other strong class (`exact-name.ts`, `destinations.ts`).
  */
 export const STRONG_MATCH_MIN_HITS = 2;
 

@@ -1,6 +1,6 @@
 /**
- * **THE AUTOMATIC CALENDAR-TO-BODY RECORDS, REVIEWED BY THE STANDING RUNNER
- * FROM WHAT IS ALREADY PROMOTED OR VAULTED.** (C16 option A, 2026-09-25.)
+ * The automatic calendar-to-body records, reviewed by the standing runner from
+ * what is already promoted or vaulted.
  *
  *   node --experimental-strip-types scripts/derive-meeting-body-crosswalk.mts --promote
  *
@@ -17,10 +17,9 @@
  *   the calendar bytes each walk confirmed, and the pages it saved.
  *
  * Each walk is reviewed by `reviewDiscoveryWalk` (lib/control-plane/discovery/
- * auto-crosswalk.ts), whose reviewer id is the digest of its own code: every
- * accepted row passes every C16 row check on vaulted bytes, and everything
- * else is held by name with who moves next. The version is planned by
- * `planDerivedCrosswalk` and promoted through
+ * auto-crosswalk.ts): every accepted row passes every row check on vaulted
+ * bytes, and everything else is held by name with who moves next. The version
+ * is planned by `planDerivedCrosswalk` and promoted through
  * `processRegisteredRoutineCandidate`, whose door checks every promoted input
  * against the store. Anything it cannot read refuses the candidate by name and
  * leaves the last known good rows live. The wiring derive reads these rows
@@ -53,7 +52,6 @@ import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.t
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
-import { digestValueClosure } from "../lib/ops/generator-digest.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference, type LoadedReference } from "../lib/registration/reference.ts";
@@ -69,9 +67,12 @@ prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
-/** The reviewer is named by its own code: a change to the review re-keys every row it accepts from then on. */
-const REVIEWER = autoCrosswalkReviewerId(digestValueClosure(process.cwd(), "lib/control-plane/discovery/auto-crosswalk.ts").digest);
-/** The vendors whose finds the reviewer reads; a walk whose finds are all others still has them held by name. */
+/**
+ * The reviewer's output version (12 hex). Change it only when the review's
+ * accepted output changes: a new value re-keys every row it accepts from then on.
+ */
+const AUTO_CROSSWALK_REVIEW_VERSION = "37f3d4f2533c";
+const REVIEWER = autoCrosswalkReviewerId(AUTO_CROSSWALK_REVIEW_VERSION);
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
   const outcome = await processRegisteredRoutineCandidate(store, DERIVED_CROSSWALK_CONTRACT_ID, candidate, now);
@@ -209,7 +210,6 @@ async function main(): Promise<void> {
   for (const id of plan.accepted) console.log(`  accepted ${id}`);
   for (const id of plan.renewed) console.log(`  renewed ${id}`);
   for (const h of plan.held) console.log(`  held ${h.jurisdictionId} ${h.route}${h.bodyName ? ` (${h.bodyName})` : ""}: ${h.reason}: ${h.detail}`);
-  /* RULING 159: the run's summary states its denominator, and says why when there is none. */
   const decided = plan.accepted.length + plan.renewed.length;
   console.log(floorLine(floored(
     "meeting bodies accepted or renewed",

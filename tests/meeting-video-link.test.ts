@@ -6,7 +6,7 @@ import { normalizeWithDrops, publicVideoUrl, type LegistarEventWithClient } from
 import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
 import { meetingCardSources } from "../lib/officials/card-sources.ts";
 
-/** BX-10: a concluded meeting links the recording its publisher's own record gives. */
+/** A concluded meeting links the recording its publisher's own record gives. */
 
 const EVENTS = JSON.parse(
   readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url), "utf8"),

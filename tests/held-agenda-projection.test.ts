@@ -37,7 +37,7 @@ function row(meetingId: string, documentUrl: string, text: string, retrievedAt: 
   };
 }
 
-/** Production, 2026-09-22: 88 hourly re-reads of the sitting's own unchanged page, plus the board's site root. */
+/** 88 hourly re-reads of the sitting's own unchanged page, plus the board's site root. */
 function tusd499Corpus(): AgendaDocument[] {
   return [
     row("diligent:tusd1:499", SITE_ROOT, SITE_ROOT_TEXT, "2026-08-21T12:00:00.000Z"),
@@ -51,11 +51,7 @@ function tusd499Corpus(): AgendaDocument[] {
 const REVISION_LANGUAGE = /revis|version|amend/i;
 
 test("Ask, Tucson Unified 499: 89 stored rows (88 re-reads of its portal page plus the site root) are two index records with no revision language", () => {
-  /*
-   * Corrected 2026-09-23: the 88 re-reads are the Diligent portal page's skip
-   * links, not the sitting's agenda, so both distinct contents are named as
-   * publication indexes. Identical re-reads are still ONE record.
-   */
+  /* The re-reads are the portal page's skip links, not the sitting's agenda, so both distinct contents are publication indexes; identical re-reads are one record. */
   const corpus = tusd499Corpus();
   assert.equal(corpus.filter((document) => document.meetingId === sitting.id).length, 89);
   const records = heldAgendaDocumentRecords(sitting, corpus, meetings);

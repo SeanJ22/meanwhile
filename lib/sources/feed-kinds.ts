@@ -1,26 +1,20 @@
 /**
- * DB-50: an engineer-built adapter can become a feed.
- *
- * An installed platform adapter (`lib/sources/platform-adapters/<name>.ts`) may
- * export `feedKind`, declaring itself a kind of door a registry record can name:
+ * An engineer-built adapter can become a feed. An installed platform adapter
+ * (`lib/sources/platform-adapters/<name>.ts`) may export `feedKind`, declaring itself a kind of door a
+ * registry record can name:
  *
  *   feedKind = { kind: "some-platform", configKeys: ["pageUrl"], read(door, ctx) { ... } }
  *
- * `read` is given one door's settings and a polite, paced text fetch, and returns
- * the sittings it found, each with a start time, a title, where the facts came
- * from and, when it states them, a place and an agenda link. It builds no
- * `Meeting`: the platform here does, so every sitting an engineer kind publishes
- * carries the same fields, status, provenance and honest accounting as any other
- * source's, and one that cannot be built is counted as dropped, never lost.
+ * `read` is given one door's settings and a polite, paced text fetch, and returns the sittings it found,
+ * each with a start time, a title, where the facts came from and, when stated, a place and an agenda link.
+ * It builds no `Meeting`: the platform does, so every sitting carries the same fields, status, provenance
+ * and accounting as any other source's, and one that cannot be built is counted as dropped.
  *
- * @freshness-reads-here — collectedAt stamps the moment each door's feed was
- * actually read, immediately after `kind.read` returns.
+ * @freshness-reads-here — collectedAt stamps the moment each door's feed was actually read, immediately
+ * after `kind.read` returns.
  *
- * Installed kinds are registered once per pass by the same loader that reads
- * Scout adapters (`scheduler/scout-adapters.ts`); with none registered nothing
- * about composite wiring changes.
- *
- * Nothing here names a place.
+ * Installed kinds are registered once per pass by the loader that reads Scout adapters
+ * (`scheduler/scout-adapters.ts`); with none registered nothing about composite wiring changes.
  */
 
 import type { BodySourceWiring } from "../registry/source-wiring.ts";

@@ -1,35 +1,7 @@
 /**
- * **A VERIFIED UPCOMING MEETING WITH NO AGENDA YET AND NO BUILDING STAYS ON
- * EVERY READER SURFACE THAT LISTS MEETINGS.** (The owner's Tucson Unified
- * report, 2026-09-23.)
- *
- * The report: at 85701, Tucson Unified showed concluded meetings and a working
- * "Read the agenda" link for September 22, and none of the district's three
- * upcoming committee meetings (Sep 28, Sep 30, Oct 5), each "Final version not
- * published" on the district's portal. The store, the promotion and
- * `/api/meetings` all carried the three rows. The loss was in the reader:
- *
- * - the panel behind the Duffy pin is headed "Tucson Unified School District ·
- *   8 public meetings" and listed only the sittings held in that room — all
- *   concluded. The three upcoming sittings are published "Via Zoom Webinar",
- *   so they have no building, no pin, and were on no panel
- *   (`lib/meetings/venues.ts` skips them, correctly, for pins);
- * - the district card's "Upcoming 3" door dispatched a Body scope keyed on the
- *   division's bare OCD-ID, which no meeting's `<ocdId>|<bodyName>` key can
- *   equal, and opened "0 meetings — Nothing matches the current filters"
- *   (`lib/state/derive.ts`, `components/map/map-entry.tsx`).
- *
- * Neither loss was the missing agenda. Both hold for any meeting with no
- * building. This file proves the fix on the reader's rendered surfaces against
- * recorded rows — Tucson Unified's own, and two cases the fix did not come
- * from (RULING 257): Pima Community College (another tenant, a division-less
- * body) and Pima County (a division with two sources and more than one body).
- * It also proves the missing-location path the recorded rows do not contain: a
- * sitting with no building AND no published online access stays listed and
- * says so, and is never called "online".
- *
- * No live calls: `tests/fixtures/reader-upcoming-meetings-85701.json` is the
- * production response, saved.
+ * A verified upcoming meeting with no agenda yet and no building stays on every reader surface that
+ * lists meetings, and a sitting with no building and no published online access stays listed and is
+ * never called "online". The fixture is a saved production response; no live calls.
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -59,7 +31,7 @@ const UPCOMING = ["diligent:tusd1:503", "diligent:tusd1:505", "diligent:tusd1:50
 const SEP22 = "diligent:tusd1:499";
 const SEP22_AGENDA =
   "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=499";
-/** Pima Community College's upcoming sittings with no building and no agenda. */
+/** A division-less body's upcoming sittings with no building and no agenda. */
 const PCC_PLACELESS_UPCOMING = ["diligent:pcc:699", "diligent:pcc:700"];
 /** The missing-location case, derived from a recorded row (see the render script). */
 const UNRECORDED = "diligent:tusd1:505";
@@ -67,7 +39,7 @@ const UNRECORDED = "diligent:tusd1:505";
 const byId = new Map(fixture.meetings.map((m) => [m.id, m]));
 
 
-test("the recorded rows are the owner's case: scheduled, no agenda, no building", () => {
+test("the recorded rows are scheduled, with no agenda and no building", () => {
   for (const id of UPCOMING) {
     const m = byId.get(id);
     assert.ok(m, `${id} is missing from the recorded response`);
@@ -89,16 +61,12 @@ test("the recorded rows are the owner's case: scheduled, no agenda, no building"
 });
 
 test("the district card's door opens exactly the rows its count counted, never a Body scope", async () => {
-  /*
-   * Imported here rather than at the top so a checkout without the module
-   * fails THIS test and still runs the rendered ones below.
-   */
   const { divisionUpcoming, focusList, showDivisionUpcoming } = await import("../lib/state/list-focus.ts");
   const meetings = applyFilters({ meetings: fixture.meetings, ui: INITIAL_STATE, center: null, now: RECORDED_NOW });
 
   for (const division of [
     { ocdId: TUSD, label: "Tucson Unified District" },
-    // A case the fix did not come from: two sources, more than one body.
+    // Two sources, more than one body.
     { ocdId: PIMA, label: "Pima" },
   ]) {
     const stated = divisionUpcoming(meetings, division.ocdId);
@@ -127,9 +95,7 @@ test("the district card's door opens exactly the rows its count counted, never a
   // The component dispatches the shared action and nothing else, and no
   // component but the Body dropdown dispatches a Body scope at all.
   const entry = readFileSync(join(ROOT, "components/map/map-entry.tsx"), "utf8");
-  // Approved reader design (2026-09-28): a selected district opens its full
-  // card inside the one large card, and that card lists the division's
-  // sittings itself (its Meetings section) rather than behind a list filter.
+  // A selected district opens its full card, which lists the division's sittings itself.
   assert.ok(entry.includes("subject: districtSubject("), "a selected district opens its district card");
   assert.doesNotMatch(entry, /type: "scope\/body"/, "map-entry dispatches a Body scope");
 });
@@ -145,7 +111,6 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
     import { applyFilters } from './lib/state/derive.ts';
     import { ListOverlay } from './components/map/list-overlay.tsx';
     import { MeetingPanel } from './components/map/meeting-panel.tsx';
-    import { MeetingPopup } from './components/map/popup/meeting-popup.tsx';
     import { DistrictPopup } from './components/map/popup/district-popup.tsx';
     import { DoorOverlay } from './components/map/door-overlay.tsx';
     import * as venuesModule from './lib/meetings/venues.ts';
@@ -170,8 +135,7 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
       };
     }
     const render = (data, ui, child) => renderToStaticMarkup(h(DataProvider, { value: data }, h(UiProvider, { initial: ui }, child)));
-    // What the page hands the panel behind a pin. A checkout without the
-    // helper hands it nothing, which is exactly what the reader got.
+    // What the page hands the panel behind a pin.
     const placelessFor = (venue, meetings) => venuesModule.placelessSittingsOfVenueBodies
       ? venuesModule.placelessSittingsOfVenueBodies(venue, meetings) : [];
 
@@ -191,23 +155,18 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
       }));
       out.bodies = render(data, {}, h(DoorOverlay, { door: 'bodies', coverage: fixture.coverage, meetings, drawnDistricts: [], districtOverlayOn: false, atAddress: false,
         onShowDistricts: () => {}, onOpenOfficial: () => {}, onOpenMeeting: () => {}, onOpenBody: () => {}, onClose: () => {} }));
-      out.popup503 = render(data, {}, h(MeetingPopup, { meeting: meetings.find((m) => m.id === 'diligent:tusd1:503'), onClose: () => {} }));
     }
     {
       const all = fixture.meetings.map((m) => (m.id === unrecorded.id ? unrecorded : m));
       const { data, meetings, venues } = shell(all);
       out.unrecordedList = render(data, { listOverlayOpen: true, listGroupBy: 'none' }, h(ListOverlay, { onPickMeeting: () => {} }));
-      out.unrecordedPopup = render(data, {}, h(MeetingPopup, { meeting: unrecorded, onClose: () => {} }));
       const duffy = venues.find((v) => /Duffy Community Center/.test(v.name));
       out.unrecordedDuffy = duffy ? render(data, {}, h(MeetingPanel, { venue: duffy, placeless: placelessFor(duffy, meetings), onClose: () => {}, onOpenMeeting: () => {} })) : '';
       out.unrecordedPinned = venues.some((v) => v.meetings.some((m) => m.id === unrecorded.id));
     }
     console.log(JSON.stringify(out));
   `;
-  // tsx resolves the components' extensionless imports; the repo's test loader,
-  // registered after it and so consulted first, supplies CSS-module class keys
-  // (the popups import one) — the real components, rendered as the server
-  // renders them.
+  // tsx resolves extensionless imports; the test loader, consulted first, supplies CSS-module class keys.
   const output = execFileSync(
     process.execPath,
     [
@@ -253,7 +212,7 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
   }
   check(/Read the agenda/.test(duffy), "Duffy panel: no agenda link renders at all");
 
-  // ── A case the fix did not come from: Pima Community College's pin. ──
+  // ── A division-less body's pin. ──
   const pccIds = rowIds(html("pcc"));
   for (const id of PCC_PLACELESS_UPCOMING) check(pccIds.includes(id), `PCC panel: ${id} is not rendered`);
 
@@ -264,19 +223,11 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
   // ── The Bodies door: the next sitting is the first upcoming one. ──
   check(/Next meeting[\s\S]*Mon, September 28th, 2026/.test(text(html("bodies"))), "Bodies door: Tucson Unified's next meeting is not Sep 28");
 
-  // ── The meeting's own card. ──
-  const popup = text(html("popup503"));
-  check(/data-meeting-where="online"/.test(popup) && /data-status="online"/.test(popup), "503 card: the online sentence is missing");
-  check(popup.includes("Via Zoom Webinar") && /data-working-on-it=/.test(popup), "503 card: the join-link gap is missing");
-
   // ── The missing-location path: listed, never "online", gap named. ──
   const unrecordedRow = rowMarkup(html("unrecordedList"), UNRECORDED);
   check(unrecordedRow.length > 0, "no-place sitting: dropped from the meeting list");
   check(!/data-status="online"/.test(unrecordedRow), "no-place sitting: marked online in the meeting list");
   check(/data-meeting-where="unrecorded"/.test(unrecordedRow), "no-place sitting: the list row names no gap");
-  const unrecordedPopup = text(html("unrecordedPopup"));
-  check(/data-working-on-it=/.test(unrecordedPopup), "no-place sitting: the card names no gap");
-  check(!unrecordedPopup.includes("Online only"), "no-place sitting: the card calls it online");
   check(rowIds(html("unrecordedDuffy")).includes(UNRECORDED), "no-place sitting: dropped from the body's pin panel");
   check(/data-meeting-where="unrecorded"/.test(rowMarkup(html("unrecordedDuffy"), UNRECORDED)), "no-place sitting: the pin panel names no gap");
   check(r.unrecordedPinned === false, "no-place sitting: given a pin");

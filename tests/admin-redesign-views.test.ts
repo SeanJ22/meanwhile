@@ -6,9 +6,6 @@ import { lateWords, sharedRead } from "@/app/(admin)/_mw/data/shared-read.ts";
 import { parseScope, scopeParam, withScope } from "@/app/(admin)/_mw/scope.ts";
 
 /**
- * **THE REDESIGNED ADMIN'S PURE MODELS KEEP THEIR PROMISES.** (Admin
- * redesign, 2026-09-23.)
- *
  * The honesty rules the Money and Fix list screens make, proven on their pure
  * models: an unread provider is never a number, a bill is never added to the
  * ledger, a state never borrows another state's counts, a fraction of a cent
@@ -19,7 +16,7 @@ import { parseScope, scopeParam, withScope } from "@/app/(admin)/_mw/scope.ts";
 const NOW = "2026-09-23T16:00:00.000Z";
 
 test("a body read through two sources holds at least its larger source, and every total over it says it is a floor", () => {
-  // Pima County's Board of Supervisors on 2026-09-23: 12 meetings through Legistar InSite (the newer version), 15 through Legistar.
+  // One board: 12 meetings through Legistar InSite, 15 through Legistar.
   const contract = (id: string, source: string): WatchedContract => ({
     id: `meetings:${source}:pima-bos`,
     scope: `source:${source}:body:pima-bos`,
@@ -70,7 +67,7 @@ test("a shared read loads once for every caller at once, serves a recent read wh
     return new Promise<R>((resolve) => setTimeout(() => resolve({ kind: "HELD", n }), ms));
   };
 
-  // Three callers at once share one load (All states used to load the Census lookup three times over).
+  // Three callers at once share one load.
   const three = await Promise.all([reader.read(slow(1, 5)), reader.read(slow(1, 5)), reader.read(slow(1, 5))]);
   assert.equal(loads, 1);
   assert.deepEqual(three.map((r) => (r.kind === "HELD" ? r.n : null)), [1, 1, 1]);
@@ -114,8 +111,7 @@ test("the scope travels in the URL and an unreadable scope is everywhere, never 
 });
 
 test("a read our own code failed is never shown as the site refusing us: the ingest's JOB_FAILURE mark reads as ours, with engineering next", () => {
-  // The Pima Board of Supervisors shape (2026-09-14 to 09-24): every read failed on our own venue handling, recorded as
-  // SOURCE_BLOCKED / SOURCE_RETRIEVAL_FAILED, and Admin read it as a publisher wall. The ingest now marks such a failure.
+  // A failure in our own handling, recorded as SOURCE_BLOCKED / SOURCE_RETRIEVAL_FAILED, carries the ingest's JOB_FAILURE mark.
   const contract: WatchedContract = {
     id: "meetings:legistar-insite:pima-bos",
     scope: "source:legistar-insite:body:pima-bos",

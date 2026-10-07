@@ -1,24 +1,6 @@
 /**
- * **ONE SITTING THE PUBLISHER'S OWN CALENDAR LISTS TWICE IS ONE SITTING.**
- * (2026-09-25.)
- *
- * The defect: the Town of Newbury's Drupal calendar carries some sittings
- * under two recurring series at once (`calendar.42976…`, created 2026-03-31,
- * and `calendar.44076…`, created 2026-09-22, for the Selectboard of 26 October
- * 2026 at 18:00), each with its own `UID` and its own event page and every
- * published field the same. Keyed on the `UID`, each became a meeting, and a
- * reader saw the sitting twice.
- *
- * The fixture is the RECORDED read of the town's own export
- * (`tests/fixtures/ical/newbury-2026-09-23-selectboard.ics`, read
- * 2026-09-23T17:29:56Z, its Selectboard events as served with `DESCRIPTION`
- * removed; see tests/ical-occurrence-identity.test.ts). A fresh read on
- * 2026-09-25 was refused before any calendar byte: the town's host answered
- * the robots-first research client with a JavaScript challenge (HTTP 403,
- * "Enable JavaScript and cookies to continue"), which is never passed.
- *
- * Whose rule this is: an engineering correctness rule under docs/rulings.md
- * §9, first framed as an owner decision — see `collapsePublisherRelistings`.
+ * One sitting the publisher's own calendar lists twice, under two recurring series with every published field
+ * the same, is one sitting. The fixture is a recorded read of a town's export with `DESCRIPTION` removed.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -39,7 +21,7 @@ const GOVERNING: BodySourceWiring = SOURCE_WIRING.find((row) => row.agendaSource
 const id = (node: number) => `ical:${SLUG}:calendar.${node}.field_date_and_time.0@www.newbury.nh.gov`;
 const page = (node: number) => `https://www.newbury.nh.gov/home/events/${node}`;
 
-/** The seven in-window sittings the town lists under both series (the last two are 90 to 120 days out, in the held window, DB-03): [survivor node, relisted node, UTC start]. */
+/** The seven in-window sittings the town lists under both series (the last two in the 120-day held window): [survivor node, relisted node, UTC start]. */
 const TWICE: readonly (readonly [number, number, string])[] = [
   [42976, 44076, "2026-10-26T22:00:00.000Z"],
   [42981, 44081, "2026-11-09T23:00:00.000Z"],
@@ -101,9 +83,7 @@ test("RELISTED · the answer does not depend on which listing the feed serves fi
 });
 
 test("RELISTED · two listings that differ in ANY published field stay two listings", () => {
-  // Real pairs the town published at one instant with different titles, in
-  // the window of a read on 2026-04-01: 2 February (a Budget Hearing and the
-  // regular meeting) and 13 April ("… Public Hearing" and the regular meeting).
+  // Real pairs the town published at one instant with different titles.
   const spring = normalize(FIXTURE, "2026-04-01T12:00:00.000Z");
   assert.equal(spring.duplicateIdentity?.publisherRelisted, 0);
   for (const [a, b, startsAt] of [[42406, 38991, "2026-02-02T23:00:00.000Z"], [40731, 39016, "2026-04-13T22:00:00.000Z"]] as const) {
@@ -114,8 +94,7 @@ test("RELISTED · two listings that differ in ANY published field stay two listi
 
   // The two real 26 October listings, each changed in one field the town could
   // publish: a description, a room, an end, a status, another page. None merges.
-  // (A title that differs is the two real pairs above; editing one title here
-  // would also end the feed's restated-rule reading, which is not this test.)
+  // (A title that differs is the two real pairs above.)
   const [kept, relisted] = TWICE[0];
   const edits: readonly [string, (b: string) => string][] = [
     ["description", (b) => b.replace("SUMMARY:", "DESCRIPTION:Agenda to follow\r\nSUMMARY:")],
@@ -156,7 +135,7 @@ test("RELISTED · only the publisher's record-keeping and the URL's own id are s
 
 test("RELISTED · the listing the merge retires yields to the one kept, and is never carried as a second sitting", () => {
   const fresh = normalize(FIXTURE).meetings;
-  // What production held before this change: both listings of each sitting.
+  // Both listings of each sitting, as held before collapsing.
   const before: Meeting[] = fresh.flatMap((meeting) => {
     const listings = meeting.provenance.publisherListings;
     const single = { ...meeting, provenance: { ...meeting.provenance } };

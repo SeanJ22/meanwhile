@@ -2,12 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
-await Promise.all([
-  initializeFederalVoteFirstSeed(),
-  installRegistryRuntimeFirstSeeds(),
-]);
+await initializeFederalVoteFirstSeed();
 
 import { meetingOutcomeEvidenceFor, type HeldMeetingAction } from "../lib/ask/meeting-outcomes.ts";
 import { composeSittingAnswer, composeSittingAnswerWithBasis, type ComposableSitting, type SittingAnswerInput, type SittingGap } from "../lib/ask/sitting-answer.ts";
@@ -22,20 +18,6 @@ import { parseCalendarRows, type InSiteCalendarRow } from "../lib/sources/legist
 import type { MinutesPage } from "../lib/sources/legistar-insite/minutes.ts";
 import { findTenant } from "../lib/sources/legistar-insite/tenant-registry.ts";
 import { NEVER_READ } from "../lib/ops/freshness.ts";
-
-/**
- * **"WHAT DID THEY DECIDE" IS READ OFF THE BODY'S OWN RECORD.** (2026-09-25,
- * the Ask three-second repair.)
- *
- * Measured warm, locally, that day: "What did the Pima board decide at its last
- * meeting?" took 3.1-3.8 s, the fast model writing a paragraph out of the
- * recorded actions. The answer is now composed in code from those records —
- * the sitting's date, the result counts over their denominator, each motion and
- * result in the publisher's own words — and faces the same validator. These
- * tests pin it on the two shapes the store holds (Pima's structured Legistar
- * event items; Mesa's minutes), the missing-result case, what it refuses, and
- * that it quotes nothing a reader is not shown.
- */
 
 const PIMA = "ocd-division/country:us/state:az/county:pima#governing";
 const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
@@ -86,8 +68,6 @@ function assertGrounded(answer: string, records: readonly EvidenceRecord[], allo
     assert.ok(allowedNumbers.includes(Number(number)), `the number ${number} outside a quote is a count or the date`);
   }
 }
-
-/* ── Pima: the publisher's structured record ─────────────────────────────── */
 
 const PIMA_1825: ComposableSitting = { id: "legistar:pima:1825", title: "Board of Supervisors Regular Meeting", startsAt: "2026-08-25T17:00:00-07:00", timeZone: "America/Phoenix", status: "SCHEDULED" };
 
@@ -163,8 +143,6 @@ test("a motion with no result recorded is SAID to have none — never read as pa
   }
 });
 
-/* ── Mesa: the council's own minutes ─────────────────────────────────────── */
-
 const DIR = "tests/fixtures/legistar-insite-mesa-minutes";
 const tenant = findTenant("mesa")!;
 const gridRows = [
@@ -239,8 +217,6 @@ test("Mesa: the council's decisions from its own minutes — each motion and its
   }
 });
 
-/* ── what it refuses ─────────────────────────────────────────────────────── */
-
 test("composition steps aside — and the model writes — whenever the records cannot carry the answer", () => {
   const outcome = meetingOutcomeEvidenceFor({ bodyId: PIMA, meetingId: PIMA_1825.id, startsAt: PIMA_1825.startsAt, question: QUESTION });
   const input = pimaInput(PIMA_1825, outcome);
@@ -290,8 +266,6 @@ test("the held actions are read beside the records, never inside them: every quo
   }
   assert.ok(outcome.records.every((record) => !("actions" in record)), "the records are unchanged in shape");
 });
-
-/* ── the route: no model call ────────────────────────────────────────────── */
 
 const calls: string[] = [];
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";

@@ -4,9 +4,7 @@ import { test } from "node:test";
 import { AREA_FACTS, areaFactsForState } from "../lib/area/facts.ts";
 
 /**
- * 7 (2026-08-17): the mover's page holds the register — official sources,
- * plain sentences, zero characterization. The controversial topics are
- * exactly the ones where a leaked adjective becomes an editorial.
+ * The mover's page: official sources, plain sentences, no characterization.
  */
 
 const REQUIRED_TOPICS = [

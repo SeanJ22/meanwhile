@@ -12,7 +12,7 @@ import {
 } from "../lib/text/reader-names.ts";
 
 test("S2.4: a portal's sitting words are not part of the body's name", () => {
-  // Measured at 85635: the Body filter listed meeting titles as bodies.
+  // The Body filter must not list meeting titles as bodies.
   assert.equal(readerBodyName("GOVERNING BOARD AGENDA REGULAR MEETING"), "Governing Board");
   assert.equal(readerBodyName("GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING"), "Governing Board");
   assert.equal(readerBodyName("Governing Board Meeting 10/20/2026"), "Governing Board");
@@ -61,7 +61,7 @@ test("S2.4: one party, one label", () => {
   // A party we have no family for is shown as filed, never guessed.
   assert.equal(readerPartyLabel("Working Families Party"), "Working Families Party");
   assert.equal(readerPartyLabel("Arizona Independent Party"), "Arizona Independent Party");
-  // Nothing filed renders nothing (M62).
+  // Nothing filed renders nothing.
   assert.equal(readerPartyLabel(null), null);
   assert.equal(readerPartyLabel("  "), null);
 });
@@ -99,7 +99,7 @@ test("S2.4: the carried-listings note describes what is in view", () => {
     failed: [],
     carried: { count: 2, lastFreshAt: "2026-09-26T10:00:00.000Z" },
   };
-  // 10001: two carried rows somewhere else, none on screen — the note goes.
+  // Two carried rows somewhere else, none on screen — the note goes.
   assert.equal(snapshotInView(snapshot, [{}, {}])?.carried, undefined);
   assert.equal(snapshotInView(snapshot, [])?.carried, undefined);
   // One carried row in view: the note is about that row.

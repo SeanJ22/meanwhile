@@ -9,7 +9,6 @@ import {
   candidateEnrichmentUniversesFromHoldings,
   type CandidateEnrichmentAuthorityHoldings,
 } from "../scheduler/providers/candidate-enrichment.ts";
-import type { ActivationGateReading } from "./types.ts";
 import {
   MARGINALIA_ROUTE_ID,
   projectCampaignSiteChains,
@@ -49,7 +48,6 @@ export interface CampaignSiteCycleInput {
   /** Candidacies whose promoted profile already carries a campaign link: their leads are read after every other candidacy's. */
   readonly linkedCandidacies?: ReadonlySet<string>;
   readonly marginalia: readonly HeldMarginaliaResponse[];
-  readonly gate: Pick<ActivationGateReading, "promotionEnabled" | "openRecordClasses" | "openFields">;
   /** The cycle's instant: the chain's clock for freshness and the rotation's hour. */
   readonly now: string;
   /** Milliseconds, for freshness and elapsed-time reporting. */
@@ -120,7 +118,6 @@ export async function runCampaignSiteCycle(input: CampaignSiteCycleInput): Promi
       readLead,
       recordRead: recorder.recordRead,
       heldPage: recorder.heldPage,
-      gate: input.gate,
       now: input.now,
       maxReads: input.maxReads ?? CAMPAIGN_SITE_MAX_READS,
       recheckAfterMs: input.recheckAfterMs ?? CAMPAIGN_SITE_RECHECK_MS,

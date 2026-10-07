@@ -1,53 +1,20 @@
 /**
- * **PERSONAL-NAME FORMS, AS A PARSE — NEVER AS A SIMILARITY SCORE.**
- * (Session C3, 2026-09-01. RULING 229.)
+ * Personal-name forms, as a parse, never as a similarity score. Each function
+ * expands one published name into a finite set of exact strings, each labelled
+ * with the annotation rule that produced it; reconciliation is string equality
+ * between two such sets. No edit distance, token-subset test or "closest".
  *
- * ## What this is for, and what it is forbidden from being
+ * - `AS_PUBLISHED`: after Unicode and whitespace normalisation only.
+ * - `NICKNAME_REMOVED`: a quoted segment (`"Nick"`) is a publisher's
+ *   annotation, so the name without it is a real form.
+ * - `NICKNAME_AS_GIVEN` / `NICKNAME_AS_FAMILY`: the quoted segment standing in
+ *   for either end of the name. Both readings are generated, since the
+ *   publisher marks both uses identically.
+ * - `SUFFIX_REMOVED`: a trailing generational suffix, applied on top of each
+ *   rule above.
  *
- * Two Arizona election authorities publish the same 2026 candidates under
- * annotated forms of one name. The certified canvass writes
- * `Walter "Les" Presmyk`; the Secretary of State's candidate-filing list writes
- * the same person the same way; other pairs differ only in an annotation one
- * side chose to carry. Reconciling them requires knowing what an annotation
- * MEANS — not how close two strings look.
- *
- * **There is no fuzzy matching here and there may never be one.** No edit
- * distance, no token-subset test, no "closest" anything. Every function below
- * EXPANDS one published name into a finite set of EXACT strings, each labelled
- * with the annotation rule that produced it. A reconciliation is then string
- * equality between two such sets, and a nominee whose set shares nothing with
- * exactly one candidacy's set is simply not reconciled.
- *
- * The reason is measured rather than theoretical: this project has already
- * watched a name join turn five live committees into manufactured absences, and
- * the failure mode in the other direction is worse — a wrong join puts one
- * candidate's fundraising under their opponent's photograph. A candidate's
- * money is the single field where a plausible answer is more dangerous than no
- * answer.
- *
- * ## The rules, each named because the artifact records which one fired
- *
- * - `AS_PUBLISHED` — the name after Unicode and whitespace normalisation only.
- *   Nothing is removed. This is the form that matches in the ordinary case.
- * - `NICKNAME_REMOVED` — a quoted segment (`"Les"`, `“Nick”`) is an ANNOTATION
- *   the publisher added, so the name with it removed is a real form of the same
- *   name.
- * - `NICKNAME_AS_GIVEN` / `NICKNAME_AS_FAMILY` — the quoted segment standing in
- *   for one end of the name. **Both readings are generated, deliberately.**
- *   Arizona's own 2026 filings contain one of each — `Nicholas "Nick" Myers`
- *   (given) and `Rachel "Jones" Keshel` (family) — the publisher marks them
- *   identically, and nothing in the string says which is meant. Generating one
- *   reading would silently drop whichever candidate used the other; generating
- *   both costs nothing, because a form describing nobody matches nobody.
- * - `SUFFIX_REMOVED` — a trailing generational suffix (`Jr`, `Sr`, `II`…) is an
- *   annotation in exactly the same sense. Emitted ON TOP OF each rule above, so
- *   `Daniel Francis Butierez Sr.` reconciles whether or not the other authority
- *   carried the suffix.
- *
- * **A diminutive is not an annotation and is never inferred.** `Tom` is not
- * derived from `Thomas` anywhere in this file. Arizona's own control for that
- * is `Tom Horne` against the filed `Horne, Thomas Chalres`, and the correct
- * outcome there is that he stays unreconciled and renders an honest gap.
+ * A diminutive is not an annotation and is never inferred (`Tom` is not
+ * derived from `Thomas`).
  */
 
 /** Which annotation rule produced a form. Recorded in the artifact, per row. */
@@ -66,20 +33,14 @@ export interface NameForm {
 }
 
 /**
- * Generational suffixes, as TOKENS.
- *
- * Deliberately short and closed. It holds the forms Arizona's two 2026
- * authorities actually publish and nothing speculative — a longer list is more
- * chances to delete a real name token (`Ross`, `Vi`) than to gain a match.
+ * Generational suffixes, as tokens. Short and closed: a longer list risks
+ * deleting a real name token.
  */
 const SUFFIX_TOKENS = new Set(["jr", "sr", "ii", "iii", "iv"]);
 
 /**
- * Unicode and whitespace normalisation, applied to BOTH sides identically.
- *
- * Curly punctuation is the one that actually bites: a canvass transcribed from
- * a PDF carries `’` and `“ ”` where a JSON filing list carries `'` and `"`, and
- * two identical names then compare unequal for a reason no reader would accept.
+ * Unicode and whitespace normalisation, applied to both sides identically
+ * (curly quotes and apostrophes fold to straight ones).
  */
 export function normalizeNameText(raw: string): string {
   return raw
@@ -94,13 +55,9 @@ export function normalizeNameText(raw: string): string {
 }
 
 /**
- * The comparison key for one already-parsed form.
- *
- * Case is folded and `.` is dropped, both symmetrically: `Michael D. Butts` and
- * `Michael D Butts` are one name written two ways, and a period is not a fact
- * about a person. Apostrophes and hyphens are KEPT — `O'Donnell` without its
- * apostrophe is a different surname, and dropping it would widen the key rather
- * than normalise it.
+ * The comparison key for one already-parsed form. Case is folded and `.` is
+ * dropped; apostrophes and hyphens are kept (`O'Donnell` is a different surname
+ * without its apostrophe).
  */
 function comparisonKey(text: string): string {
   return normalizeNameText(text).toLowerCase().replace(/\./g, "").replace(/\s+/g, " ").trim();
@@ -120,12 +77,10 @@ function stripTrailingSuffix(tokens: string[]): string[] | null {
 }
 
 /**
- * Every exact form one published name may lawfully be compared as.
- *
- * The set always contains `AS_PUBLISHED`; everything else is present only when
- * the name actually carries the annotation that rule is about. Forms are
- * de-duplicated on their comparison key, keeping the SHORTEST rule chain, so
- * the artifact records the simplest true reason a pair matched.
+ * Every exact form one published name may be compared as. Always contains
+ * `AS_PUBLISHED`; other rules apply only when the name carries their
+ * annotation. De-duplicated on the comparison key, keeping the shortest rule
+ * chain.
  */
 export function nameForms(raw: string): NameForm[] {
   const base = normalizeNameText(raw);
@@ -172,11 +127,8 @@ export function nameFormKeys(raw: string): Set<string> {
 }
 
 /**
- * Do two published names share at least one EXACT form, and which one?
- *
- * Returns the shared form with the shortest rule chain, or `null`. `null` is
- * the whole answer — there is no second-best return value, because there is no
- * such thing as an almost-match here.
+ * Do two published names share at least one exact form, and which one? The
+ * shared form with the shortest rule chain, or `null`.
  */
 export function sharedNameForm(a: string, b: string): NameForm | null {
   const bKeys = new Map(nameForms(b).map((f) => [f.form, f]));

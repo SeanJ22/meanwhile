@@ -1,15 +1,12 @@
 /**
- * **EVERY STATE'S DIVISIONS AND GOVERNMENTS, PAIRED.** (2026-09-23.)
+ * Every state's divisions and governments, paired.
  *
  *   node_modules/.bin/tsx scripts/build-registration-reference.mts [--tiger=<dir>]
  *
- * Sean's direction is to track every state without a code change, the runner
- * keeping each state's registration current. Registration needs two facts per
- * state that no committed file joins today: which Census divisions exist (with
+ * Registration needs two facts per state: which Census divisions exist (with
  * the OCD ids every other holding uses) and which of them is each government's
  * territory. This builds both, one file per state under
  * `data/derived/registration/`, from inputs already held:
- *
  * ```
  *   divisions     the 2023 Census cartographic-boundary layers, ids from
  *                 scripts/lib/national-division-ids.mts (the ZIP index's own
@@ -39,14 +36,12 @@
  * Anything that does not pair is written with the reason, never guessed: the
  * file answers "which division is this government's" or says why it cannot.
  *
- * ## The territories, from the Census's functional status (2026-09-25)
+ * ## The territories, from the Census's functional status
  *
  * The Census of Governments does not enumerate American Samoa, Guam, the
- * Northern Mariana Islands, Puerto Rico or the U.S. Virgin Islands, so it
- * lists no government there and registration refused all five. Their
- * governments come instead from the one Census field that says whether a
- * division governs: TIGER/Line 2023's FUNCSTAT (docs/state.md §4.6 M17),
- * committed as `data/reference/census_tiger_2023_territory_functional_status.csv`
+ * Northern Mariana Islands, Puerto Rico or the U.S. Virgin Islands. Their
+ * governments come from TIGER/Line 2023's FUNCSTAT, committed as
+ * `data/reference/census_tiger_2023_territory_functional_status.csv`
  * by `scripts/extract-territory-functional-status.mts`. A territory's county,
  * county-subdivision and place divisions carry their LSAD, FUNCSTAT and
  * CLASSFP, and a government row is written for each one whose status governs
@@ -56,7 +51,6 @@
  * so; the territory itself gets no government row beyond its STATE line, as
  * no state does. A territory division with no TIGER/Line status refuses the
  * build: a missing status is no evidence either way.
- *
  * Unchanged states keep their build date: each state's entry in `index.json`
  * carries the date its file last changed, so a rebuild that leaves a state's
  * bytes alone leaves its registration's records alone too.
@@ -64,8 +58,7 @@
  * Each government also carries the jurisdiction id the operational reference
  * mints for it (`scripts/enumerate-jurisdictions.mts`: `<st>:<class>:<slug>`,
  * with the Census id appended on a name collision, the state itself first), so
- * a jurisdiction id and an OCD id meet in one row for the first time. Tests
- * hold those ids to the committed AZ, NH and NJ references.
+ * a jurisdiction id and an OCD id meet in one row.
  *
  * No body is minted here. Which governments become bodies, and when, is the
  * registration contract's rule; this file is the reference it reads.
@@ -86,7 +79,7 @@ const OUT = join(ROOT, "data", "derived", "registration");
 const GOVERNMENTS = "data/reference/census_govt_units_2022.csv";
 const DEPENDENTS = "data/reference/census_govt_units_2022_dependent_school_systems.csv";
 const FUNCSTAT = "data/reference/census_tiger_2023_territory_functional_status.csv";
-/** The functional statuses that govern (docs/state.md §4.6 M17): active, partially consolidated, consolidated, subordinate. */
+/** The functional statuses that govern: active, partially consolidated, consolidated, subordinate. */
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 /** The TIGER/Line layers the functional status is read for, and the Census entity each one's government is. */
 const FUNCSTAT_LAYERS: Readonly<Record<string, { readonly govType: string; readonly prefix: string }>> = {

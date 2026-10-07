@@ -1,12 +1,6 @@
 /**
- * Execution tiers, cheapest first. Prices are USD per million tokens.
- *
- * `capabilities` says what each model ACCEPTS in a request (Anthropic's
- * thinking and effort tables, and the Migrating-to-Opus-5.5 / Sonnet-5.5 guides),
- * checked against live requests on 2026-09-25 (Haiku 4.5 takes neither thinking
- * budget nor effort; Opus 5.5 and Sonnet 5.5 take adaptive thinking with an
- * effort field and refuse `disabled`; Sonnet 5.5 takes `between_tools` in its
- * place). Ask builds every request's thinking and effort fields from these.
+ * Execution tiers, cheapest first. Prices are USD per million tokens. `capabilities` says what each model accepts in a
+ * request; Ask builds every request's thinking and effort fields from these.
  */
 export const MODELS = {
   haiku: {
@@ -34,8 +28,7 @@ export const MODELS = {
 
 export type ModelTier = keyof typeof MODELS;
 export const MODEL_TIERS = ["haiku", "sonnet", "opus"] as const;
-/** Provider protocol maxima used to bound historical unmetered sends, not new
- * application caps. Verified 2026-10-02 from the first-party model overview. */
+/** Provider protocol maxima used to bound historical unmetered sends, not new application caps. */
 export const MODEL_LIMIT_SOURCE = "https://platform.claude.com/docs/en/models/overview";
 export const MODEL_PRICE_SOURCE = "https://platform.claude.com/docs/en/about-claude/pricing";
 export const MODEL_PRICES_STATED_ON = "2026-09-29";
@@ -72,11 +65,7 @@ export function activeModelTierFor(model: string): ModelTier | null {
   return modelTierFor(canonicalModelId(model));
 }
 
-/**
- * Models that may never be sent, each with the reason an override naming one is
- * refused. `claude-opus-5` is out of the rotation (Sean, 2026-09-25); `claude-sonnet-5`
- * is replaced by Sonnet 5.5 and kept only to read old records and price old spend.
- */
+/** Models that may never be sent, each with the reason an override naming one is refused. */
 export const RETIRED_MODELS: Readonly<Record<string, string>> = {
   "claude-opus-5": `retired on 2026-09-25 (Sean: out of the rotation completely); use ${MODELS.opus.model}`,
   "claude-sonnet-5": `replaced for active use by ${MODELS.sonnet.model}; kept only for historical pricing and receipts`,
@@ -107,20 +96,12 @@ export interface ModelRequestFields {
   readonly minMaxTokens: number;
 }
 
-/**
- * Room for an always-thinking model's thinking on a rung whose reply is tiny
- * (the classifier's one id). Measured 2026-09-25: Opus 5.5 at `low` effort with
- * `max_tokens: 64` spent all 64 tokens thinking and returned no text. A ceiling, not a spend.
- */
+/** Room for an always-thinking model's thinking on a rung whose reply is tiny. A ceiling, not a spend. */
 export const ALWAYS_THINKS_MIN_MAX_TOKENS = 1024;
 
 /**
- * **THE ONE PLACE A REQUEST'S THINKING AND EFFORT FIELDS ARE DECIDED.**
- * ADAPTIVE: `adaptive` where the model takes it, omitted where it does not. OFF:
- * `disabled` where accepted, else `between_tools`, else omitted (an always-thinking
- * model then runs adaptive at the given effort, its only control). Effort goes
- * only to a model that takes it. An id that is not a tier gets the most
- * conservative fields, which every model accepts.
+ * The one place a request's thinking and effort fields are decided. ADAPTIVE: `adaptive` where accepted. OFF: `disabled`
+ * where accepted, else `between_tools`, else omitted. An id that is not a tier gets the most conservative fields.
  */
 export function modelRequestFields(model: string, want: { thinking: ModelThinkingMode; effort: string | null }): ModelRequestFields {
   const tier = activeModelTierFor(model);

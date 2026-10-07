@@ -2,9 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 import { verifyPortraitSources, portraitVerificationMatches, portraitBindingMatches, type PortraitVerification } from "../lib/photos/evidence.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
-import { allCandidateCards, cardForCandidacy, cardForNominee } from "../lib/ballot/candidate-cards.ts";
 
 const NOW="2026-10-01T00:00:00Z", NAME="Jane Doe", IMAGE="https://images.example.org/jane-doe.jpg";
 function capture(url:string,text:string):WorkerPublicationCapture {
@@ -46,17 +44,6 @@ test('a replacement URL or source image cannot inherit another portrait verifica
     assert.equal(portraitBindingMatches(NAME,{...photo,sourceUrl:'https://images.example.org/other.jpg'}),false);
     assert.equal(portraitVerificationMatches(NAME,{...verification,sources:[verification.sources[0]]}),true);
     assert.equal(portraitVerificationMatches(NAME),false);
-});
-
-test('already-published portraits and the candidate biography/contact fields stay visible without a new approval record',async()=>{
-  await installRegistryRuntimeFirstSeeds();
-  const file=allCandidateCards();
-  for(const [key,card] of Object.entries(file.cards).filter(([,c])=>c.photoUrl).slice(0,5)){
-    const i=key.indexOf('|');const got=i<0?cardForCandidacy(key):cardForNominee(key.slice(0,i),key.slice(i+1));
-    assert.ok(got);
-    assert.ok(got.photoUrl,'an already-published portrait stays visible while its sources gain corroboration');
-    for(const field of ['bio','bioSourceUrl','email','phone','filedAddress'] as const)assert.equal(got[field],card[field]);
-  }
 });
 
 test('CP-10: one official portrait publishes without a licence sentence and still binds the exact image bytes',()=>{

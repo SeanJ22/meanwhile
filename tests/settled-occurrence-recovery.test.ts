@@ -1,33 +1,3 @@
-/**
- * **A SETTLED ROUTE IS NEVER WALKED AGAIN, AND SETTLING IT NEVER CLOSES THE
- * OBLIGATION'S REMAINING WORK.** (2026-09-22.)
- *
- * The upstream cause of the dead leases in `tests/dead-lease-sweep.test.ts`. A
- * dispatch commits its disposition while it runs, and the cycle closes the
- * occurrence afterwards, so a cycle that ends between the two leaves the
- * occurrence open on a RouteTask that is already disposed. The next cycle
- * resumed it and dispatched it: `claimRouteTask` admitted the claim and flipped
- * DISPOSED to CLAIMED, a second Attempt opened, its disposition was refused as a
- * second one, and its lease was left behind. On 2026-09-22 production held 65
- * tasks in that shape and 62 more open occurrences waiting to produce it.
- *
- * The fix has two halves: `resumeOpenOccurrence` returns such an occurrence as
- * SETTLED and the cycle recovers it with the disposition already committed, and
- * `claimRouteTask` refuses a disposed RouteTask and writes nothing. Recovery
- * closes the OCCURRENCE by the rule a dispatch's own disposition is judged by,
- * and nothing more — so the tests below also hold what it must not close:
- * INGESTED bytes stay readable to parsing, verification and staging; a
- * WALKED_NO_YIELD or a non-reading disposition leaves the obligation owed and
- * walked again under a new RouteTask; an aborted or interrupted occurrence (no
- * disposition) is still dispatched, its earlier Attempt and partial evidence
- * kept.
- *
- * The fixture is the production shape, built by the calls production made: an
- * occurrence opened and dispatched to a committed disposition by a cycle that
- * then ended before its occurrence-and-debt phase. Every test runs on the
- * in-memory double AND the durable file store.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync, readFileSync } from "node:fs";
@@ -78,24 +48,34 @@ import {
   installOperationalReferenceBundle,
   operationalReferenceBundle,
 } from "../lib/civic-data/operational-references.ts";
-import type { ContractReading } from "../lib/health/contracts.ts";
+import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 import { methodFixture } from "./method-store-fixture.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
-/* The held-evidence workers resolve the Avondale feed's subject through the operational registry. */
+const REGISTRIES = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<"az" | "nh" | "nj", JurisdictionRegistry>;
 installOperationalReferenceBundle(operationalReferenceBundle({
-  az: JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")),
-  nh: JSON.parse(readFileSync(join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")),
-  nj: JSON.parse(readFileSync(join(ROOT, "data/states/nj/jurisdictions/nj.json"), "utf8")),
+  ...REGISTRIES,
+  az: {
+    ...REGISTRIES.az,
+    counts: { ...REGISTRIES.az.counts, CITY_OR_TOWN: (REGISTRIES.az.counts.CITY_OR_TOWN ?? 0) + 1 },
+    jurisdictions: [...REGISTRIES.az.jurisdictions, {
+      id: "az:city:city-of-avondale",
+      stateCode: "AZ",
+      name: "CITY OF AVONDALE",
+      govClass: "CITY_OR_TOWN",
+      countyName: "MARICOPA",
+      enumeratedFrom: "census-govt-units-2022",
+      ownWebAddress: "http://www.avondale.org",
+      sourceIds: ["MEETINGS:THIS_JURISDICTION:this-government-itself"],
+    }],
+  },
 }));
 
 const T0 = "2026-09-01T19:36:07.092Z"; // the cycle that committed its dispositions and died
 const T1 = "2026-09-22T20:00:00.000Z"; // the cycle that resumes them
 const T2 = "2026-09-22T21:00:00.000Z"; // the cycle after that
 const TTL = 120_000;
-const READER: ContractReading = { contract: "READER", state: "NOT_READY", reason: "fixture" };
-const TRUTH: ContractReading = { contract: "TRUTH", state: "NOT_READY", reason: "fixture" };
 const AVONDALE = "az:city:city-of-avondale";
 const AVONDALE_EVENTS = "https://avondaleaz.api.civicclerk.com/v1/Events";
 
@@ -119,7 +99,6 @@ function scheduled(o: FreshnessObligation, now: string): ScheduledObligation {
   return row;
 }
 
-/** A route walked to a terminal disposition that carries no bytes. */
 function disposes(disposition: "WALKED_NO_YIELD" | "REQUIRES_NEW_ADAPTER"): RunWork {
   const reached = disposition === "WALKED_NO_YIELD";
   return async () => ({
@@ -136,7 +115,6 @@ function disposes(disposition: "WALKED_NO_YIELD" | "REQUIRES_NEW_ADAPTER"): RunW
   });
 }
 
-/** A route that retrieved real bytes: vaulted first, then disposed INGESTED over them. */
 function ingests(vaultRoot: string, url: string, body: string): RunWork {
   const vault = cycleVault(vaultRoot);
   return async ({ workItemId, attemptId, obligation: row }) => {
@@ -212,18 +190,10 @@ async function interrupted(repos: ControlPlaneRepositories, o: FreshnessObligati
   };
 }
 
-/** Fails the test the moment a settled route is walked. */
 const neverRuns: RunWork = async () => {
   throw new Error("a settled route was walked again");
 };
 
-/**
- * One cycle as the standing runner runs it: occurrences resumed or opened in
- * step with dispatch (scripts/freshness-shadow.mts `openOccurrenceInStep`), then
- * closed by `closeCycleOccurrences` and the debt persisted. `scan` runs the
- * runner's pre-dispatch scan (`findSettledOccurrences` from a RouteTask
- * listing); without it, only a lane that reaches a row recovers it.
- */
 async function cycleAt(
   repos: ControlPlaneRepositories,
   now: string,
@@ -268,15 +238,12 @@ async function cycleAt(
     holder: `freshness-shadow@${now}`,
     now,
     leaseTtlMs: TTL,
-    reader: READER,
-    truth: TRUTH,
   });
   await closeCycleOccurrences(repos, { cycle, occurrenceFor: (id) => open.get(id)?.id ?? null, now });
   await persistDebts(repos, cycle.debts, now);
   return { cycle, ran, open };
 }
 
-/** Everything a second walk of one route would write, read back. */
 async function routeState(repos: ControlPlaneRepositories, routeTaskId: string, workItemId: string) {
   return {
     task: await repos.routeTasks.mustRead(routeTaskId),
@@ -384,7 +351,6 @@ test("failed cycle closure joins every independent write before returning the or
 test("SEEDED: an open occurrence on an already-disposed RouteTask is recovered, never dispatched — no second claim, Attempt or lease", async () => {
   for (const [label, repos] of await eachStore("wtp-settled-")) {
     const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-settled-vault-"));
-    /* Two occurrences a single dying cycle disposed, like the 62 production still held: a reading and a route fact. */
     const read = await interrupted(repos, obligation("ob-ingested"), ingests(vaultRoot, "https://example.gov/feed.json", '{"rows":[1]}'));
     const adapter = await interrupted(repos, obligation("ob-adapter"), disposes("REQUIRES_NEW_ADAPTER"));
     await repos.debts.put(
@@ -432,7 +398,6 @@ test("SEEDED: an open occurrence on an already-disposed RouteTask is recovered, 
       );
     }
 
-    /* What discharge closed, and what it did not. */
     const readOccurrence = (await repos.occurrences.mustRead(read.occurrenceId)).value;
     assert.equal(readOccurrence.closedAt, T1);
     assert.equal(readOccurrence.disposition, "INGESTED");
@@ -452,7 +417,6 @@ test("SEEDED: an open occurrence on an already-disposed RouteTask is recovered, 
     assert.equal(debt.cause, "AWAITING_ADAPTER", `${label}: a missing adapter is not a host refusal`);
     assert.match(debt.detail, /REQUIRES_NEW_ADAPTER/);
 
-    /* Reported apart from dispatches, and a recovered reading is not overdue. */
     const lines = digestLines(cycle);
     assert.ok(
       lines.some((l) => /^ {2}recovered +2 open occurrence\(s\).*1 reading\(s\) discharged, 1 still owed/.test(l)),
@@ -477,7 +441,6 @@ test("SEEDED: claimRouteTask refuses a disposed RouteTask and writes nothing, an
     );
     assert.deepEqual(await routeState(repos, walked.routeTaskId, walked.workItemId), before, `${label}: nothing moved`);
 
-    /* The 65's shape: the pre-fix claim took the slot and wrote CLAIMED, and its dispatch left the lease. */
     const slot = await repos.leases.mustRead(walked.routeTaskId);
     const legacy = await repos.leases.compareAndSet(
       walked.routeTaskId,
@@ -520,7 +483,6 @@ test("SEEDED: claimRouteTask refuses a disposed RouteTask and writes nothing, an
       `${label}: the refusal does not take over the dead lease, open an Attempt or touch the state`,
     );
 
-    /* A still-open occurrence on it is SETTLED: disposition is read, not the overwritten state. */
     const resumed = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-settled")).value);
     assert.equal(resumed?.kind, "SETTLED", `${label}: resumed as settled despite state ${residue.task.value.state}`);
 
@@ -550,7 +512,6 @@ test("claimRouteTask refuses a RouteTask disposed while the claim raced for its 
       policyVersion: "unversioned",
     });
 
-    /* Worker B passes the settled check; worker A commits its disposition before B reads the lease slot. */
     let disposedDuringRace = false;
     const racing = new Proxy(repos, {
       get(target, kind, receiver) {
@@ -631,13 +592,11 @@ test("a recovered INGESTED occurrence keeps its bytes eligible for parsing, veri
     const recovered = cycle.recovered[0];
     assert.equal(recovered.discharged, true);
 
-    /* The evidence is the disposing Attempt's, untouched. */
     const records = await repos.artifacts.read(held.workItemId);
     assert.deepEqual(records.map((r) => r.artifactId), committed.artifactIds, `${label}: the artifact record stands`);
     assert.equal(records[0].attemptId, committed.attemptId);
     assert.equal((await repos.dispositions.read(held.routeTaskId)).length, 1, `${label}: one commit, never a second`);
 
-    /* STAGING: a later cycle's vault reads the bytes back by held identity, and nothing else's. */
     const later = cycleVault(vaultRoot);
     assert.equal(later.ledger.size, 0, `${label}: this cycle retrieved nothing`);
     assert.equal(await later.readHeld(records[0]), feed, `${label}: the recovered bytes are read back`);
@@ -666,7 +625,6 @@ test("a recovered INGESTED occurrence keeps its bytes eligible for parsing, veri
     assert.match(staged.readerSentence, /ACQUIRED and is held/, `${label}: staged as held, never as "not yet reached"`);
     assert.ok(staged.unresolved.some((u) => u.includes(committed.artifactIds[0])), `${label}: citing the held artifact`);
 
-    /* PARSING, VALIDATION, AUDIT: the held-evidence workers still enqueue the first stage for it. */
     const runtime = standingFleetRuntime({ root: ROOT, method: methodFixture(), vaultRoot, repos, now: () => T2 });
     await advanceHeldWorkerFleet(ROOT, runtime, 1);
     const parser = (await repos.routeTasks.list()).find(
@@ -744,7 +702,6 @@ test("a recovered WALKED_NO_YIELD discharges this period's reading only: the obl
     assert.equal((await repos.obligations.mustRead("ob-empty")).value.lastWorkedAt, T0);
     assert.equal((await repos.debts.mustRead("ob-empty")).value.consecutiveFailures, 0, `${label}: the reading clears the debt, as a dispatched one does`);
 
-    /* The need stays open: the next cycle walks the obligation again, under a NEW RouteTask. */
     const next = await cycleAt(repos, T2, disposes("WALKED_NO_YIELD"));
     assert.equal(next.ran, 1, `${label}: walked again`);
     const again = next.open.get("ob-empty");
@@ -753,7 +710,6 @@ test("a recovered WALKED_NO_YIELD discharges this period's reading only: the obl
     assert.equal((await repos.occurrences.mustRead(again.id)).value.sequence, 2);
     assert.equal((await repos.dispositions.read(again.routeTaskId)).length, 1);
 
-    /* And the earlier walk is kept as the evidence the next approach inherits. */
     assert.equal((await repos.routeTasks.mustRead(empty.routeTaskId)).value.disposition?.disposition, "WALKED_NO_YIELD");
     assert.equal((await repos.dispositions.read(empty.routeTaskId)).length, 1, `${label}: its commit is still in the log`);
     assert.equal((await repos.occurrences.mustRead(empty.occurrenceId)).value.routeTaskId, empty.routeTaskId);
@@ -789,7 +745,6 @@ test("an aborted or interrupted occurrence is still resumed and dispatched, and 
     const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-settled-vault-"));
     const vault = cycleVault(vaultRoot);
 
-    /* ABORTED: the worker reached no boundary but kept a partial capture. */
     const aborted = await interrupted(repos, obligation("ob-aborted"), async ({ workItemId, attemptId }) => {
       const body = '{"partial":';
       const { artifact } = recordAcquisition(
@@ -829,7 +784,6 @@ test("an aborted or interrupted occurrence is still resumed and dispatched, and 
     assert.equal(aborted.walked.dispositionCommitted, false);
     assert.equal((await repos.routeTasks.mustRead(aborted.routeTaskId)).value.state, "RECLAIMABLE");
 
-    /* INTERRUPTED: a worker killed mid-walk, its Attempt open and its lease left to expire. */
     await repos.obligations.put("ob-killed", standing(obligation("ob-killed"), T0), T0);
     const killed = await openOccurrence(repos, {
       obligation: (await repos.obligations.mustRead("ob-killed")).value,
@@ -889,7 +843,6 @@ test("an aborted or interrupted occurrence is still resumed and dispatched, and 
   }
 });
 
-/** A Scout lane that admits nothing, like production's while no delivery path is open. */
 function closedScoutLane(modelIds: ReadonlySet<string>): ResearchLanes {
   return {
     decide: (row) =>
@@ -927,7 +880,6 @@ test("BEFORE DISPATCH: every settled occurrence is recovered with no dispatch ca
     });
     assert.ok(holding.retryAt > T1, "precondition: the backoff still holds at T1");
     await repos.debts.put("ob-backed-off", holding, T0);
-    /* Due, never opened and not settled: ordinary work that the ceiling must still defer by name. */
     await repos.obligations.put("ob-owed", standing(obligation("ob-owed", { subjectId: "wtp-body/owed" }), T0), T0);
     const before = Object.fromEntries(
       await Promise.all(Object.entries(fixtures).map(async ([id, f]) => [id, await routeState(repos, f.routeTaskId, f.workItemId)] as const)),
@@ -1001,10 +953,8 @@ test("BEFORE DISPATCH: a recovered row is withheld from its lane, so an open lan
 test("findSettledOccurrences names exactly the open occurrences whose RouteTask is settled, each confirmed by a fresh read", async () => {
   for (const [label, repos] of await eachStore("wtp-settled-")) {
     await interrupted(repos, obligation("ob-settled"), disposes("WALKED_NO_YIELD"));
-    /* Open on a RouteTask with no disposition: owed work, for a lane to dispatch. */
     await repos.obligations.put("ob-open", standing(obligation("ob-open", { subjectId: "wtp-body/open" }), T0), T0);
     await openOccurrence(repos, { obligation: (await repos.obligations.mustRead("ob-open")).value, dueAt: T0, now: T0 });
-    /* Settled, and closed after both listings below were taken. */
     await interrupted(repos, obligation("ob-closed", { subjectId: "wtp-body/closed" }), disposes("WALKED_NO_YIELD"));
 
     const obligations = (await repos.obligations.list()).map((row) => row.value);

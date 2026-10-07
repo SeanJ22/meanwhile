@@ -1,7 +1,6 @@
 /**
- * MW-025 — a walk records which handed field-manual doors it actually used.
- * MW-027 — what the Scout results measure is drawn week by week, and a week
- * with no record is a gap, never a zero.
+ * A walk records which handed field-manual doors it actually used, and what the Scout results measure is drawn
+ * week by week; a week with no record is a gap, never a zero.
  */
 import assert from "node:assert/strict";
 import test from "node:test";

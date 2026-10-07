@@ -1,87 +1,32 @@
 /**
  * **THE STANDING PILOT RUNNER — THE MACHINE THAT KEEPS RUNNING.**
- * (Session C, PART G2, 2026-08-31.)
- *
- * ## What it is
  *
  * A long-lived process that runs `pnpm freshness:shadow`'s cycle on an
  * interval, forever, with no operator choosing what to work. It registers every
  * obligation provider, lets the scheduler decide what is due, dispatches it,
- * records the lifecycle, runs RULING 224's promotion tail to a STAGED state,
- * and writes ONE DIGEST PER CYCLE to a place the owner reads WITHOUT the repo.
+ * records the lifecycle, runs the promotion tail to a STAGED state, and writes
+ * one digest per cycle.
  *
  * **Shadow research promotion stays OFF.** `runCycle` has no parameter that
  * could change what a reader is told, and its tail writes only disposable host
- * diagnostics under `.runtime/control-plane/staging/`. Separately, after that shadow cycle, the
- * routine civic-data child may validate and promote its supported T1 sources
- * directly through the production data plane; that path does not promote the
- * shadow research output.
+ * diagnostics under `.runtime/control-plane/staging/`. Separately, after that
+ * cycle, the routine civic-data child may validate and promote its supported
+ * sources directly through the production data plane.
  *
- * ## The digest, and where it lands
+ * The digest carries pilot health, cost (by role, by model, and the cache hit
+ * rate from the cost ledger; a row written before the cache fields existed
+ * prints NOT MEASURED, never 0%), the lane share, and what advanced. Its local
+ * copy is written under `.mirror/` on the host.
  *
- * The Drive mirror is a SYNCED FILESYSTEM FOLDER and not an API, so delivery is
- * writing a file into it. `G:/My Drive/we-the-people` by default, overridable
- * by the `WTP_MIRROR` variable this repository already uses for the coverage
- * matrix, the owner intake and the photo review sheet.
- *
- * ```
- *   <mirror>/pilot-digest.md          THE CURRENT DIGEST — a STABLE name, so the
- *                                     owner opens the same file every morning
- *   <mirror>/pilot-digest-log.md      every cycle's headline, appended
- * ```
- *
- * A stable filename is deliberate. The owner reads this by glancing at Drive,
- * and a dated filename means finding today's before reading it. The log beside
- * it is what keeps the history the stable file overwrites.
- *
- * **When the mirror is unreachable the digest is written to `.mirror/` in the
- * repository and the runner SAYS SO in its own log.** A digest that silently
- * went nowhere is worse than no digest, because the owner reads its absence as
- * "nothing happened".
- *
- * ## What the digest carries, and what it refuses to invent
- *
- * ```
- *   PILOT HEALTH        the three contracts and the rollup, first (RULING 217)
- *   COST                total, by role, by model, and the CACHE HIT RATE
- *   LANE SHARE          deterministic vs bounded-model, as Attempts and as cost
- *   WHAT ADVANCED       dispositions, staged entries, and the walls by name
- * ```
- *
- * **The cache lines come from the cost ledger (2026-09-06).** `AttemptCost`
- * carries `cacheReadInputTokens`, `cacheCreationInputTokens` with its 5-minute
- * and 1-hour split, `uncachedInputTokens` and `batch`; the cycle computes the
- * hit rate, the uncached input per Attempt, the batch share and the dollar
- * effect of caching per role from its own ledger rows, and the window metrics
- * compute the same from the same ledger. A row written before the fields
- * existed prints NOT MEASURED by name — printing `0%` for it would assert that
- * every model read missed the cache, which is a measurement nobody took.
- *
- * ## Start and stop
- *
- * Production is installed once with `pnpm pilot:install` and controlled through
- * `pnpm pilot:start`, `pnpm pilot:stop`, and `pnpm pilot:status`. The runner
- * executable is an internal child of that installed runtime, not a direct
- * production command or a second clock.
- *
- * ## The owner's intents, and the console (9.4.26 admin feedback)
+ * ## The owner's intents, and the console
  *
  * Between cycles the runner reads the owner's intent log once a minute.
  * PAUSE_RUNNER holds research cycles and keeps the heartbeat alive with `pause`
- * set, so a deliberate research pause reads as one and not as a red SILENT
- * (ADM-5); routine civic data and intake keep ticking independently;
- * RESUME_RUNNER, RUN_CYCLE_NOW and a DISPATCH end the sleep early, and the
- * cycle puts the dispatched units first in both lanes (ADM-8). After every
- * cycle's digest the runner publishes the admin console ITSELF —
- * `publish-owner-snapshot.mts` — so the deployed pages never again wait on a
- * person (ADM-1). `pnpm pilot:stop` / `pilot:disable` / `pilot:start` write
- * the matching PAUSE_RUNNER / RESUME_RUNNER note through
- * `scripts/runner-pause-note.mts`, best effort.
- *
- * `scripts/pilot-task.ps1` registers a Scheduled Task that runs AT LOGON with
- * a restart-on-failure policy, which is what makes this survive a reboot of
- * this Windows 11 host. The exact commands are in that file's header and in
- * `docs/pilot-runner.md`.
+ * set, so a deliberate research pause reads as one and not as a red SILENT;
+ * routine civic data and intake keep ticking independently; RESUME_RUNNER,
+ * RUN_CYCLE_NOW and a DISPATCH end the sleep early, and the cycle puts the
+ * dispatched units first in both lanes. After every cycle's digest the runner
+ * publishes the admin console itself (`publish-owner-snapshot.mts`).
  *
  * Env var names only, never values.
  */
@@ -90,7 +35,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { hostname } from "node:os";
 import { reserveRoutineRefresh, finishRoutineRefresh } from "../lib/civic-data/owner-refresh.ts";
 import { join } from "node:path";
-import { assertProductionDatabaseTarget, resolvePilotMirror } from "./pilot-runtime-config.mjs";
+import { assertProductionDatabaseTarget } from "./pilot-runtime-config.mjs";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -215,7 +160,7 @@ const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-
 const STDERR_TAIL_LINES = 40;
 
 const ROOT = process.cwd();
-/* Vital signs (Sean, Oct 6): each child this parent starts, and theirs, prints its hour counts (Neon bytes
+/* Vital signs: each child this parent starts, and theirs, prints its hour counts (Neon bytes
    by calling code, rounds, facts) as report lines; this parent alone keeps them here, with its own, and sums the hour. */
 const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
 process.env[VITAL_SIGNS_REPORT_ENV] = "1";
@@ -255,7 +200,7 @@ function standingChildEnvironment(
   if (STAGING) return billingCollector ? { ...parentEnv } : withoutBillingSecrets(parentEnv);
   return provider === "postgres"
     ? admittedRuntimeChildEnvironment({
-      parentEnv: ["RESEARCH_CYCLE", "CONSOLE_PUBLISHER", "NIGHTLY_RESEARCH"].includes(capability)
+      parentEnv: ["RESEARCH_CYCLE", "CONSOLE_PUBLISHER"].includes(capability)
         && !STAGING ? runtimeProductionReadEnvironment(parentEnv)
         : parentEnv,
       capability,
@@ -276,7 +221,7 @@ const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
 /** The parent's own loaded code, captured before a handoff can move the checkout. */
 const PARENT_CODE_SHA = headSha(ROOT);
 /**
- * The code new children start from. It is the parent's own until DB-53's quick
+ * The code new children start from. It is the parent's own until the quick
  * switch moves new children to a staged release whose change leaves the
  * parent's code alone; then it names that release and its checkout.
  */
@@ -293,12 +238,8 @@ const idsArg = argv.find((a) => a.startsWith("--ids="));
 const scoutMaxArg = argv.find((a) => a.startsWith("--scout-max="));
 const canary = argv.includes("--canary");
 
-/**
- * The Drive mirror. A SYNCED FOLDER, not an API — writing a file into it IS the
- * delivery. The variable name is the one this repository already uses.
- */
-const MIRROR = resolvePilotMirror(ROOT, process.env.WTP_MIRROR, STAGING);
-const FALLBACK = join(ROOT, ".mirror");
+/** Host-local diagnostics: the digest's canonical copy is the control-plane digest log. */
+const DIGEST_DIR = join(ROOT, ".mirror");
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs");
 /**
  * The last-resort hang watchdog (scripts/runner-hang-watchdog.mts). The relaunch
@@ -359,7 +300,7 @@ interface RunRecord {
   /** Level 1 — Research, as the cycle recorded it. Absent on a record written before activation. */
   readonly research?: {
     readonly state?: {
-      /** RULING 244 / Work Item 5: the metrics the cycle computed. Absent on a record written before them. */
+      /** The metrics the cycle computed. Absent on a record written before them. */
       readonly metrics?: ResearchMetrics | null;
       readonly modelLaneEnabled?: boolean;
       readonly modelLaneDisabledReason?: string | null;
@@ -375,12 +316,12 @@ interface RunRecord {
       readonly deterministic?: { readonly due?: number; readonly dispatched?: number };
       readonly model?: {
         readonly due?: number; readonly dispatched?: number; readonly deferred?: number; readonly deferredBy?: Readonly<Record<string, number>>;
-        /** The cycle's pre-warm of the Scout static prefix (2026-09-06). Null when no Scout was admitted; absent on older records. */
+        /** The cycle's pre-warm of the Scout static prefix. Null when no Scout was admitted; absent on older records. */
         readonly prewarm?: PrewarmOutcome | null;
       };
     } | null;
     /**
-     * The cache-by-role rows for THIS cycle's cost-ledger rows (2026-09-06),
+     * The cache-by-role rows for THIS cycle's cost-ledger rows,
      * computed by the cycle from the same ledger the window metrics read, so the
      * COST section and the RESEARCH METRICS section cannot disagree. Absent on a
      * record written before.
@@ -511,7 +452,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
 
 /* --------------------------------------------------------------- the cost --- */
 
-/* The COST section moved to lib/control-plane/pilot-cost-digest.ts (2026-09-06) so it can be rendered over any run record and tested. */
+/* The COST section moved to lib/control-plane/pilot-cost-digest.ts so it can be rendered over any run record and tested. */
 
 function laneShare(record: RunRecord): string[] {
   const digest = record.digest ?? [];
@@ -596,7 +537,7 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
   );
   out.push("");
 
-  /* RULING 217: health first, activity under. A digest that leads with counts
+  /* Health first, activity under. A digest that leads with counts
      reads as health and measures effort. */
   out.push("## PILOT HEALTH");
   out.push("");
@@ -699,21 +640,18 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
 
 /* ---------------------------------------------------------------- delivery --- */
 
-function deliver(body: string, headline: string): { readonly where: string; readonly mirrored: boolean } {
-  const mirrored = MIRROR !== null && existsSync(MIRROR);
-  const target = mirrored ? MIRROR : FALLBACK;
-  if (!mirrored) mkdirSync(FALLBACK, { recursive: true });
-  const path = join(target, "pilot-digest.md");
+function deliver(body: string, headline: string): { readonly where: string } {
+  mkdirSync(DIGEST_DIR, { recursive: true });
+  const path = join(DIGEST_DIR, "pilot-digest.md");
   writeFileSync(path, body, "utf8");
-  appendFileSync(join(target, "pilot-digest-log.md"), `${headline}\n`, "utf8");
-  return { where: path, mirrored };
+  appendFileSync(join(DIGEST_DIR, "pilot-digest-log.md"), `${headline}\n`, "utf8");
+  return { where: path };
 }
 
 /* -------------------------------------------------------- console publish --- */
 
 /**
- * **THE ADMIN CONSOLE IS PUBLISHED BY THE MACHINE WHEN ITS INPUTS CHANGE.** (ADM-1,
- * 9.4.26 admin feedback, 2026-09-04.)
+ * **THE ADMIN CONSOLE IS PUBLISHED BY THE MACHINE WHEN ITS INPUTS CHANGE.**
  *
  * The deployed admin pages read a PUBLISHED control-plane record, never this
  * host's files. Before these children were admitted to the standing runner,
@@ -1101,9 +1039,8 @@ let currentCycleErrors = "";
 /** The research child's stdout and stderr together, in arrival order, for a crash record. */
 let currentCycleOutput = "";
 let researchCycleChild: ChildProcess | null = null;
-const RELEASE_DRAIN_FIRST = process.env.WTP_RELEASE_DRAIN_FIRST === "1";
 /*
- * DB-53: with WTP_RELEASE_QUICK_SWITCH=1 a staged release whose change leaves
+ * With WTP_RELEASE_QUICK_SWITCH=1 a staged release whose change leaves
  * the parent's own code alone is loaded by pointing new children at its
  * checkout; nothing drains and admissions never close. The drain-everything
  * path stays the default until this one is checked live.
@@ -1132,7 +1069,6 @@ function startReleaseStaging(targetSha: string): void {
 type StagedReleaseStep = "STAGING" | "SWITCHED" | "DRAIN";
 const parentChangeReported = new Set<string>();
 async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseStep> {
-  if (RELEASE_DRAIN_FIRST) return "DRAIN";
   if (!stagedReleaseIsReady(ROOT, targetSha)) {
     if (!stagingAttempted.has(targetSha)) startReleaseStaging(targetSha);
     // Staging already failed once for this target: the old drain still lands the release.
@@ -1161,8 +1097,7 @@ async function requestQueuedReleaseDrain(): Promise<void> {
   if (!AUTO_RELEASE_HANDOFF || !researchCycleActive || !researchCycleChild?.connected) return;
   const release = await inspectRuntimeRelease();
   if (release.state !== "UPDATE_REQUIRED") return;
-  // DB-48: install the release beside the running one first; admissions continue meanwhile.
-  // WTP_RELEASE_DRAIN_FIRST=1 keeps the old drain-first path until the staged path is checked live.
+  // Install the release beside the running one first; admissions continue meanwhile.
   if (release.targetSha !== null && await advanceStagedRelease(release.targetSha) !== "DRAIN") return;
   if (!researchCycleChild?.connected) return;
   // Reconciliation still applies only after both the research child and source lanes settle.
@@ -1238,7 +1173,7 @@ async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | nul
   try {
     const repos = await ownerRepositories();
     if (!repos) return;
-    /* Sean, Oct 6: the host's memory, the runner's process tree and the reservations, so River can say how many jobs fit. */
+    /* The host's memory, the runner's process tree and the reservations, so River can say how many jobs fit. */
     const memory = await hostMemoryReading().catch(() => null);
     let neonBytes: RunnerHeartbeat["neonBytes"] = null;
     try { neonBytes = neonBytesReading(); } catch { /* the last beat's reading stays */ }
@@ -1262,9 +1197,7 @@ async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | nul
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
 /**
- * **THE OWNER'S STANDING INTENTS ARE READ BETWEEN CYCLES.** (Level 1
- * activation, 2026-09-01. PAUSE_RUNNER / RESUME_RUNNER and DISPATCH added for
- * the 9.4.26 admin feedback, ADM-5 and ADM-8, 2026-09-04.)
+ * **THE OWNER'S STANDING INTENTS ARE READ BETWEEN CYCLES.**
  *
  * The interval sleep is taken in one-minute slices. Each minute the research
  * intent log is read ONCE and asked three things, in this order:
@@ -1287,7 +1220,7 @@ const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms
  *   NOTHING    the ordinary interval stands.
  *   UNREADABLE the log could not be read, or the control plane could not be
  *              opened. An intent nobody can read is not an intent nobody sent,
- *              so this is never read as "not paused" (2026-09-25): the interval
+ *              so this is never read as "not paused": the interval
  *              stands, and the next cycle is started with its paid model lane
  *              held closed (`--owner-intents-unreadable`). The cycle still
  *              runs because it also carries free work — plain-code refresh and
@@ -1332,10 +1265,10 @@ const actedOn = new Set<string>();
 const honorFailurePrinted = new Set<string>();
 
 /*
- * CH-24 part 2 (Proposal A): with WTP_CONTINUOUS_HUNTERS=1 the standing hunter lane is the one process that admits paid
+ * With WTP_CONTINUOUS_HUNTERS=1 the standing hunter lane is the one process that admits paid
  * model work; the research round plans and queues it (lib/control-plane/workers/hunter-lane.ts). Off by default until it
  * is checked live; the round's own lease waves run as before while it is off. The round's reading and queue live under
- * this parent's root, so children started from a staged release checkout (DB-53) share them.
+ * this parent's root, so children started from a staged release checkout share them.
  */
 const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
 if (!process.env.WTP_HUNTER_LANE_ARMING) process.env.WTP_HUNTER_LANE_ARMING = hunterLaneArmingPath(ROOT);
@@ -1439,7 +1372,7 @@ async function readRunnerControls(repos: ControlPlaneRepositories, force = false
 }
 
 /**
- * BR-16/BR-37: Sean's scheduled orders fire on time from this parent process,
+ * The owner's scheduled orders fire on time from this parent process,
  * between rounds and during them, on a clock separate from the owner-control
  * read. It fires once as the clock opens (process start and after each release
  * handoff) so an order that came due while the runner was down goes at once.
@@ -1653,7 +1586,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   // timer is already live, so that exact prior state may be restored.
   const reopenStandingClock = standingRuntimeTimer !== null;
   const reopenAdminCopyClock = adminCopyTimer !== null;
-  // DB-53: between rounds, a release that leaves the parent's code alone loads
+  // Between rounds, a release that leaves the parent's code alone loads
   // without closing admissions. At process start nothing runs yet, so the
   // ordinary restart path is already gap-free.
   if (RELEASE_QUICK_SWITCH && first.state === "UPDATE_REQUIRED" && first.targetSha !== null && reopenStandingClock && !runtimeAdmissionsHeld) {
@@ -1776,7 +1709,7 @@ async function honorRunnerIntent(
 }
 
 /**
- * Keep the heartbeat alive while idling on the owner's pause (ADM-5): the SAME
+ * Keep the heartbeat alive while idling on the owner's pause: the SAME
  * fields as the last beat — or a minimal one naming this host and SHA when no
  * beat exists — with `beatAt` now and `pause` naming the intent. `put` is
  * create-only, so an existing beat is moved by `compareAndSet` against the
@@ -1921,42 +1854,6 @@ async function ownerSays(): Promise<OwnerSays> {
   }
   return "NOTHING";
 }
-/* ===================== THE NIGHTLY RESEARCH WINDOW — begin =====================
- *
- * Research windows run after cycles and when an owner window action arrives.
- * There is no time-of-day restriction or separate night clock.
- *
- * This child is research-only and has no civic-data acquisition, promotion,
- * Git, build, deploy, or Reader materialization door.
- */
-let windowCheckFailed = false;
-
-async function windowDecision(): Promise<{ readonly run: boolean; readonly trigger: string; readonly reason: string }> {
-  if (provider !== "postgres") return { run: false, trigger: "", reason: "file provider" };
-  if (canary) return { run: false, trigger: "", reason: "live canary is scoped to its one named cycle" };
-  try {
-    if (intentRepos === null) {
-      const url = controlPlaneUrlFromEnv();
-      if (url === null) return { run: false, trigger: "", reason: "no control plane" };
-      intentRepos = await createPgRepositories(url, new Date().toISOString());
-    }
-    const log = (await readRunnerControls(intentRepos)).windows;
-    const honored = new Set(log.filter((r) => r.kind === "HONORED").map((r) => (r as { honors: string }).honors));
-    const pending = log.filter((r) => r.kind === "INTENT" && !honored.has(r.intentId));
-    if (pending.length > 0) return { run: true, trigger: "WAKEUP", reason: `${pending.length} RUN_WINDOW_NOW intent(s) pending` };
-    return { run: false, trigger: "", reason: "no window action pending" };
-  } catch (error) {
-    if (!windowCheckFailed) {
-      windowCheckFailed = true;
-      console.error(
-        `  the nightly window's due-check could not read the control plane (${error instanceof Error ? error.message : String(error)}); ` +
-          "the window is not run on a guess. This is printed once.",
-      );
-    }
-    return { run: false, trigger: "", reason: "unreadable" };
-  }
-}
-
 /**
  * True unless the OS answers that no process has this pid (ESRCH). A live
  * pid, a reused one, or one whose existence cannot be read counts as existing,
@@ -1972,11 +1869,10 @@ function processExists(pid: number): boolean {
 }
 
 /**
- * Before a research cycle or the nightly window, release a window lease that
- * a process on this host left behind when it exited without its `finally`
- * (window.ts `releaseWindowLeaseOfExitedLocalHolder`). (2026-09-23.) Without
- * this, a runner relaunched after a native crash had its first cycle refused
- * for the rest of the dead cycle's TTL. Best effort: an unreadable store
+ * Before a research cycle, release a window lease that a process on this host
+ * left behind when it exited without its `finally`
+ * (window.ts `releaseWindowLeaseOfExitedLocalHolder`), so a relaunched runner's
+ * first cycle is not refused for the rest of the dead cycle's TTL. Best effort: an unreadable store
  * leaves the child's own acquisition to decide, exactly as before. Returns the
  * line the digest carries when a lease was released.
  */
@@ -2009,30 +1905,6 @@ async function recoverExitedWindowHolder(before: string): Promise<string | null>
   }
 }
 
-async function runNightlyWindow(trigger: string): Promise<void> {
-  const startedAt = new Date().toISOString();
-  await recoverExitedWindowHolder("nightly window");
-  console.log(`\npilot-runner · nightly window (${trigger}) started ${startedAt} — SHADOW`);
-  const [run] = await runRuntimeChildren([{
-    id: "nightly-research-window",
-    executable: process.execPath,
-    args: [...TS_CHILD, "scripts/nightly-window.mts", "--shadow", trigger === "WAKEUP" ? "--force" : "", `--trigger=${trigger}`].filter((a) => a !== ""),
-    env: standingChildEnvironment("NIGHTLY_RESEARCH"),
-  }], {
-    cwd: CODE_ROOT,
-    env: process.env,
-
-    maxBufferBytes: 64 * 1024 * 1024,
-    noProgressMs: RUNTIME_NO_PROGRESS_MS,
-  });
-  if (!run) throw new Error("NIGHTLY_WINDOW_CHILD_RESULT_MISSING");
-  const lines = `${run.stdout ?? ""}${run.stderr ?? ""}`.split("\n").filter((l) => l.trim() !== "");
-  for (const l of lines.slice(-12)) console.log(`  ${l}`);
-  console.log(`  nightly window exit ${run.status ?? `signal ${run.signal ?? "none"}`} (0 clean, 2 a stage FAILED and is recorded, 3 lock held)`);
-}
-/* ===================== LANE E — THE NIGHTLY WINDOW (RULING 242) — end ===================== */
-
-let failedRoundRetryActive = false;
 async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   if (ownerWakePending) { ownerWakePending = false; return; }
   const until = Date.now() + totalMs;
@@ -2041,13 +1913,8 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
     /* One read: a pause holds, a resume / RUN_CYCLE_NOW / DISPATCH ends the sleep early. */
     const says = await ownerSays();
     if (says === "START_NOW") return;
-    /* The owner's PAUSE_RUNNER holds the window between cycles too (holdWhilePaused holds it before one). */
+    /* The owner's PAUSE_RUNNER holds between cycles too (holdWhilePaused holds before one). */
     if (says === "HOLD") continue;
-    // A nightly pass cannot consume the failed research round's retry window.
-    if (failedRoundRetryActive || Date.now() >= until) continue;
-    /* LANE E — the nightly window runs between cycles, on this clock. */
-    const decision = await windowDecision();
-    if (decision.run) await runNightlyWindow(decision.trigger);
   }
 }
 
@@ -2107,14 +1974,8 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
  * polling once a minute, beating every thirty — and return the moment it is
  * lifted. Not paused: return at once and the cycle starts. Unreadable: the
  * cycle starts too, with `ownerIntentsUnreadable` set, so the child holds its
- * paid lane closed (2026-09-25) — a pause nobody could read is never assumed
+ * paid lane closed — a pause nobody could read is never assumed
  * lifted for paid work, and the cycle's free work still runs.
- *
- * The nightly window is held too, here and between cycles. "I paused the
- * runner" means the WHOLE runner: the owner's stated reason on 9.4.26 was
- * usage. The window makes no model calls, but it uses the host and the
- * databases like a cycle does. A window skipped while paused is caught up
- * after RESUME_RUNNER.
  *
  * A canary does not wait here: it is one operator-launched cycle, and idling
  * in this loop would hang the command. It is not a way past a pause for paid
@@ -2140,32 +2001,13 @@ console.log(
   `pilot-runner · control plane ${provider}, interval ${INTERVAL_MIN} min, ` +
     `${CYCLES === Infinity ? "running until stopped" : `${CYCLES} cycle(s)`}\n` +
     `  singleton: ${PILOT_PROCESS_LEASE.host}:${PILOT_PROCESS_LEASE.port}\n` +
-    `  mirror: ${MIRROR ?? "disabled for staging"}${MIRROR !== null && existsSync(MIRROR) ? "" : " (digests stay in .mirror/)"}`,
+    `  digest: ${DIGEST_DIR}`,
 );
 
 /**
- * **THE CONSOLE IS PUBLISHED BEFORE THE FIRST CYCLE, NOT ONLY AFTER ONE.**
- * (9.6.26 owner feedback, ACLOSE-6.)
- *
- * ADM-1 put `publishConsole()` after every cycle's digest, which fixed a
- * console that went stale for a day. It left one window open, and the owner
- * walked straight into it: the readiness derivation contract was bumped to `@2`
- * and merged at 08:32Z, this host's working tree fast-forwarded onto that code
- * at 08:53Z, and the newest published readiness record was the one the PREVIOUS
- * cycle wrote at 08:25Z under `@1`. Every state therefore read
- * "REQUIRES REPUBLISH" — correctly, and for up to a whole cycle, because the
- * only thing that would republish was the END of a cycle that had just started.
- *
- * Publishing once at startup and then after every cycle bounds that window by
- * the gap between cycles rather than by the length of one. It costs a single
- * pass of two cheap child processes, it is idempotent (each publisher is a
- * read-derive-compare-and-set), and it means a runner that has just been
- * restarted onto new code says so on the console immediately instead of
- * fifteen minutes into its first cycle.
- *
- * The copy on the panel is the other half of this and lives with the panel: a
- * state in this window now reads as "the system is rebuilding this summary
- * automatically", not as a shell command the owner is expected to run.
+ * The console is published before the first cycle, not only after one, so a
+ * runner restarted onto new code republishes at once rather than at the end of
+ * its first cycle. Each publisher is a read-derive-compare-and-set.
  */
 console.log("\npilot-runner · publishing the console before the first cycle (the runner may have just come up on new code)");
 // This clock is independent of research and console children. All long-lived
@@ -2176,7 +2018,7 @@ startAdminCopyClock();
 await publishConsole();
 
 while (cycle < CYCLES) {
-  /* ADM-5: PAUSE_RUNNER holds research only; runtime data keeps its own tick. */
+  /* PAUSE_RUNNER holds research only; runtime data keeps its own tick. */
   const owner = await holdWhilePaused();
   // A deployment can finish while the runner is asleep (including a
   // RUN_CYCLE_NOW wake). Reconcile before admitting another research child;
@@ -2217,7 +2059,6 @@ while (cycle < CYCLES) {
     await writeLiveCycleBeat(startedAt, { code: null, signal: null });
     throw error;
   });
-  failedRoundRetryActive = !result.ok;
   await writeLiveCycleBeat(startedAt, { code: result.exitCode, signal: result.signal });
   await activeControlRead;
   if (result.circuit) {
@@ -2230,7 +2071,7 @@ while (cycle < CYCLES) {
       `- next automated eligibility: ${c.eligibleAt}\n- no provider probe, paid substitution, control-plane test write, or promotion was attempted\n`;
     const delivered = deliver(digest, headline);
     console.error(`  ${headline}`);
-    console.log(`  digest: ${delivered.where}${delivered.mirrored ? "" : "  (MIRROR NOT REACHABLE — repo fallback)"}`);
+    console.log(`  digest: ${delivered.where}`);
     /* (a) A circuit-broken cycle did not run a healthy cycle; still beat liveness. */
     await writeFailedCycleBeat(startedAt);
     const releaseExit = await reconcileRuntimeReleaseAtBoundary();
@@ -2262,7 +2103,7 @@ while (cycle < CYCLES) {
   }
 
   /*
-   * THE HEADLINE CARRIES ITS DENOMINATORS (RULING 159). "4 discharged" is the
+   * THE HEADLINE CARRIES ITS DENOMINATORS. "4 discharged" is the
    * shape that reads as health; "4 of 7 dispatched" is the shape that can be
    * argued with, and a cycle that dispatched nothing says COULD NOT ASSERT
    * rather than printing a measured-looking zero.
@@ -2324,16 +2165,14 @@ while (cycle < CYCLES) {
 
   const beforeSection = leaseRecovered === null ? "" : `\n## BEFORE THE CYCLE\n\n- ${leaseRecovered}\n`;
   const delivered = deliver(buildDigest(record, cycle, today(), result.ok) + beforeSection + failureSection, headline);
-  console.log(`  digest: ${delivered.where}${delivered.mirrored ? "" : "  (MIRROR NOT REACHABLE — repo fallback)"}`);
+  console.log(`  digest: ${delivered.where}`);
   console.log(`  ${headline}`);
 
   /* (a) On a NON-ok cycle the child did not write a beat; advance beatAt here so a
      failed cycle reads as "alive, last cycle did not pass", not as a dead runner. */
   if (!result.ok) await writeFailedCycleBeat(startedAt);
 
-  if (result.ok && provider === "postgres" && !canary && await ownerSays() !== "HOLD") await runNightlyWindow("RUNNER_CLOCK");
-
-  /* ADM-1: the console is published by the machine after every digest, succeeded or failed. */
+  /* The console is published by the machine after every digest, succeeded or failed. */
   await publishConsole();
 
   const releaseExit = await reconcileRuntimeReleaseAtBoundary();

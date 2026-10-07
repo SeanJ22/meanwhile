@@ -3,16 +3,11 @@ import type { TextChunks } from "./streaming.ts";
 import { streamCsvObjects } from "./streaming.ts";
 
 /**
- * **Precompute the per-official numbers at ingest time.**
- *
- * A reader page must read a handful of numbers, never scan millions of rows.
- * PRL already computes the federal and state shares (we read its means and
- * refuse its ranks). The primary candidates have no profile file, so their
- * per-candidate shares are aggregated here from PRL's own 0/1 labels — the
- * aggregation is ours and is marked as such; the classifications are PRL's.
- *
- * Every share is a percentage 0-100, the same units and the same allowlist the
- * federal profile adapter established in `index.ts`.
+ * Per-official numbers precomputed at ingest, so a reader page reads a handful
+ * of numbers instead of scanning millions of rows. Federal and state shares are
+ * PRL's own means; primary candidates have no profile file, so their shares are
+ * aggregated here from PRL's 0/1 labels and attributed as ours. Every share is
+ * a percentage 0-100.
  */
 
 /** The five mean columns, derived from the shared category table. */

@@ -1,15 +1,3 @@
-/**
- * **THE WIKIPEDIA DISCOVERY ROUTE IS LIVE AND ROBOTS-COMPLIANT.** (2026-09-17.)
- *
- * It was NOT_MACHINE_EXECUTABLE — a permission reading that checked the article
- * paths and missed that Wikimedia publishes an automated-access API on a
- * separate host. That left Marginalia as the only live discovery route per
- * candidate, so one dead index stranded the record (RULING 248 forbids exactly
- * that). This guard proves the route is now a deterministic HTTP GET against the
- * permitted Wikimedia REST search endpoint, identified as Wikimedia's API policy
- * requires, and that its yield contract treats an empty search as a FAILED
- * extraction rather than an empty document.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 

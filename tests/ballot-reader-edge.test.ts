@@ -43,42 +43,14 @@ import {
   stateMoneyFixtureEntries,
 } from "./helpers/promoted-edge-entry.ts";
 
-/**
- * **A COLD /ballot READS THE AUTHORITY FAMILIES FROM THE READER EDGE.** (R30,
- * 2026-09-25.)
- *
- * A cold /ballot server read about 50 MB from the database (measured on an
- * isolated copy, 2026-09-24), the registry runtime alone about 24 MB, while
- * the registry and the federal directory were already published on the reader
- * edge the map's routes read. The page never entered the edge. An earlier
- * attempt to route it there read MORE: its direct `refresh*FromPromoted`
- * preloads still read the database, and the edge's BOOTSTRAP next to the
- * database's PROMOTED of one version flipped the officeholder cache key.
- *
- * **AND EVERY FAMILY IT STILL READ FROM THE DATABASE.** (2026-09-25.) With
- * those four on the edge, production still took 5.1–5.8 s on the first
- * /ballot?zip=85701 an instance served: the ballot (read first, alone), the
- * candidate profiles, publications, FEC and state money were each a pointer
- * read and a proof read against a cold database. They are proven pointers on
- * the edge now (`PromotedEdgeEntry`), and a cold render with the whole edge
- * makes no database read at all, in the page or in any card.
- *
- * These tests render the real page with no database at all: DATABASE_URL names
- * an `.invalid` host (RFC 2606, it never resolves) and every Neon HTTP request
- * is answered here with no rows and counted by record class, so a family the
- * code reads from the database is seen even though nothing leaves the process.
- * The page's async components are then called from THIS test's context, as
- * React calls them from its render loop, never from inside the page function.
- */
+/** The real /ballot page is rendered with no database: every Neon HTTP request is answered here with no rows and counted by record class. Async components are called from this test's context, as React calls them. */
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 
 const REGISTRY_VERSION = "edge-test:ballot:registry";
 const FEDERAL_VERSION = "edge-test:ballot:federal";
 
-// The values the proven-pointer families carry: the same first seeds and
-// fixtures the database path serves this test process, read before the fake
-// database is installed.
+// The values the proven-pointer families carry, read before the fake database is installed.
 const seedStore = new MemoryRoutineDataStore();
 const azBallot = servedValue(await readAzBallotProjection({ store: seedStore, bypassCache: true }));
 const nhBallot = servedValue(await readNhBallotProjection({ store: seedStore, bypassCache: true }));
@@ -157,7 +129,7 @@ async function publishEdge(withPromoted: boolean): Promise<string> {
   assert.equal(published.status, "PUBLISHED", JSON.stringify(published));
   return dir;
 }
-/** The R30 edge: only the map's families. */
+/** The edge with only the map's families. */
 const mapEdgeDir = await publishEdge(false);
 /** The whole ballot edge: the map's families and every proven pointer the page reads. */
 const ballotEdgeDir = await publishEdge(true);
@@ -175,7 +147,7 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const body = JSON.parse(String(init?.body ?? "{}")) as { query?: string; params?: unknown[]; queries?: { query?: string; params?: unknown[] }[] };
   const queries = body.queries ?? [body];
   for (const query of queries) {
-    // Sean's daily byte counter (§0/§7) writes an aggregate, not a civic pointer read.
+    // The daily byte counter writes an aggregate, not a civic pointer read.
     if (/^\s*INSERT INTO database_transfer_daily\b/.test(query.query ?? "")) continue;
     const recordClass = (query.params ?? []).find((p): p is string => typeof p === "string" && /^[A-Z][A-Z_]+$/.test(p) && p !== "UNCHANGED_CONFIRMATION_V1");
     databaseReads.push({ phase, recordClass: recordClass ?? "UNKNOWN" });
@@ -218,7 +190,7 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
 }
 
 const MAP_FAMILIES = ["REGISTRY_RUNTIME_BINDING", "FEDERAL_DIRECTORY", "STATE_LEGISLATOR"];
-/** What a cold /ballot?zip=85701 read from the database with only the map's families on the edge (R30). */
+/** What a cold /ballot render read from the database with only the map's families on the edge. */
 const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "BALLOT_CANDIDACY", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION", "CURATED_READER_RECORD", "CURATED_READER_RECORD", "FEC_FUNDING", "STATE_CAMPAIGN_FINANCE"];
 
 test("React renders the page's async components outside the page's context: they see its edge only when handed it", () => {

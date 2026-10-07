@@ -1,38 +1,26 @@
-import { geometryFiles } from "../lib/holdings/files.ts";
-/** Build the resolver input from held geometry. National divisions remain available
- * until sourced derivatives replace every division; duplicate derivatives do not
- * make a pilot-state list the boundary of the national resolver. */
+/** Builds the resolver input from held geometry. A national file stays in until
+ * per-state derivatives cover every division it holds. */
 import { readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
 import { US_JURISDICTIONS, jurisdictionFromOcdId } from "../lib/coverage/states.ts";
+import { geometryFiles } from "../lib/holdings/discovery.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
 const OUT = join(process.cwd(), "data", "derived", "resolver-geometry.json");
 
-/**
- * Geometry that is not a district boundary at all.
- *
- * `state-outlines.geojson` is a GENERALIZED state boundary, drawn only to
- * decide which pixels the state-focus effect mutes. Its own header says it must
- * never answer a question about who governs a point, and a half-kilometre
- * accurate outline answering one is exactly what that forbids. Carried over
- * from `server.ts` verbatim, reason included.
- */
+/** Geometry that is not a division boundary and must never answer who governs a point. */
 const NOT_DISTRICT_GEOMETRY: Record<string, string> = {
   "state-outlines.geojson":
     "a generalized state outline for the focus effect — never a governance boundary",
   "body-territories.geojson":
-    "BODY territories, not DIVISION boundaries (NH233) — recorded plats belonging to governments " +
-    "the Census enumerates no division for, such as the Rocking K South Community Facilities " +
-    "District. It is loaded and point-tested by lib/registry/body-territory.ts on the same sweep, " +
-    "and it is excluded HERE because every feature in this manifest is keyed by ocdId and these " +
-    "features deliberately have none. Including it would make the division resolver answer with a " +
-    "body id, which is the join confusion this session spent its day removing.",
+    "BODY territories, not DIVISION boundaries — recorded plats belonging to governments " +
+    "the Census enumerates no division for. lib/registry/body-territory.ts point-tests them; " +
+    "they have no ocdId, so including them would make the division resolver answer with a body id.",
 };
 
-/** `cd119.geojson` → `cd119`; `cd119-04.geojson` → `cd119` + state `04`. */
+/** `cd119.geojson` → `cd119`; `cd119-NN.geojson` → `cd119` + state FIPS `NN`. */
 function parseName(file: string): { type: string; fips: string | null } {
   const stem = basename(file).replace(/\.geojson$/, "");
   const m = /^(.*)-(\d{2})$/.exec(stem);

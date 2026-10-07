@@ -1,10 +1,6 @@
 /**
- * @freshness-reads-here
- *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * @freshness-reads-here — the freshness date is taken at the moment of the
+ * fetch, by the code path that performs the read.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -35,51 +31,31 @@ import {
 } from "../normalize-account.ts";
 
 /**
- * The body's own page — tracker **M78**, born 2026-08-15; **M79** made it
- * four shapes on 2026-08-15.
- *
- * Not a vendor. A *family of shapes*: a body that publishes its own sittings
- * on its own site, with no portal in the path. That is ladder rung 2, it is
- * the most reliable source there is for a body that runs no agenda vendor,
- * and it is how an enormous number of American school boards, planning boards
- * and conservation commissions publish. The four shapes wired so far, all
- * discovered from real pages rather than imagined:
+ * The body's own page: not a vendor but a family of shapes, for a body that
+ * publishes its own sittings on its own site with no portal in the path.
  *
  * 1. `weekday-list` — the whole year as `Monday, January 26, 2026` lines with
- *    one sentence underneath naming the time and the room. Morris Hills
- *    Regional (M78) was the first.
+ *    one sentence underneath naming the time and the room.
  * 2. `month-table` — a two-column table, month in the left cell (carrying the
  *    year), one sitting per row in the right cell with its own words beside
  *    the date: `Apr 2 Staff Nominations`, `September 10 - Budget
- *    Presentations`. Kearsarge Regional School District (M79).
+ *    Presentations`.
  * 3. `dated-list` — a plain dated list with per-row times, `August 11, 2026 -
- *    6:00pm`, and a sentence naming the venue. Newbury's Conservation
- *    Commission (M79).
+ *    6:00pm`, and a sentence naming the venue.
  * 4. `agenda-list` — the document listing *is* the schedule: one row per
  *    sitting, each carrying a machine-readable `dc:date` and a link to that
- *    sitting's agenda or minutes. Newbury's Planning Board and Zoning Board
- *    of Adjustment (M79).
+ *    sitting's agenda or minutes.
  *
  * A row may declare more than one shape (`shapes: "dated-list,agenda-list"`);
  * the sittings are unioned by date, a stated time beats a date-only row, and
  * a document link is carried across from whichever shape found it.
  *
- * **The time comes off the page, never from a default.** A page that dates a
- * sitting without timing it ships `startPrecision: "DAY"` and the card says
- * the time was not posted (M59), rather than inventing an hour that would be
- * right most of the time and wrong exactly on the special sitting somebody
- * wanted to attend.
+ * The time comes off the page, never from a default: a page that dates a
+ * sitting without timing it ships `startPrecision: "DAY"`.
  *
- * **Two of these hosts refuse this pipeline's identified client**:
- * `kearsarge.org` and `newbury.nh.gov` answer 403 to it. From 2026-08-15 to
- * 2026-09-25 their rows were read with a browser header set instead (the
- * "browser profile"). That dressed the client as a browser to get past a
- * filter that had refused it, which the owner decision of 2026-09-25 rules out
- * (access controls are never bypassed), so every row is read as the project's
- * own identity (`lib/sources/http.ts`): Node's client first, then the same name
- * through `curl`, which both hosts admit (measured 2026-09-25). A refusal of
- * that is a wall: the partition keeps its last good version while another
- * public route is pursued.
+ * Every row is read as the project's own identity (`lib/sources/http.ts`):
+ * Node's client first, then the same name through `curl`. A refusal of that is
+ * a wall; access controls are never bypassed.
  */
 
 const SOURCE_NAME = "schedulepage";
@@ -113,14 +89,9 @@ function monthIndex(word: string): number {
 }
 
 /**
- * Rows a schedule page carries that are **not sittings of the body**.
- *
- * Kearsarge's table ends with two filing deadlines and carries the town
- * election in the middle of it, all three written in exactly the same shape as
- * a meeting row. Rendering "Election Day in your Town" as a school board
- * meeting at 6:30pm at 114 Main Street would be a fabricated claim about a
- * government, so they are dropped — and *counted*, because a silent skip and a
- * real absence must never look alike.
+ * Rows a schedule page carries that are not sittings of the body (filing
+ * deadlines, an election day) written in exactly a meeting row's shape. They
+ * are dropped and counted.
  */
 const NOT_A_SITTING = /\blast day\b|\belection day\b|\bdeadline\b|\bpolls? open\b/i;
 
@@ -134,45 +105,29 @@ export type ScheduleShape =
   | "agenda-list"
   /**
    * A MONTH GRID whose every event carries its own full date and time in a
-   * tooltip block — New London NH's GovOffice calendar (M123, 2026-08-19),
-   * and the shape a great many New England towns publish their whole
-   * government in:
+   * tooltip block:
    *
    * ```html
    * <div class="eventTip">
-   *   <div class="tipTitle">Board of Selectmen - 5:30 PM - Whipple Memorial Town Hall</div>
+   *   <div class="tipTitle">Board of Selectmen - 5:30 PM - Town Hall</div>
    *   Thursday, August 20, 2026 at 5:30 PM
    * </div>
    * ```
    *
-   * The grid itself is unparseable without knowing which month it is — but
-   * nothing here has to parse the grid, because every event states its own
-   * date beside its own title. That is the whole reason this shape is cheap.
-   *
-   * **It is one town-wide calendar, not one board's page**, so a row must
-   * carry `titleMatch` naming the body in the calendar's own words. Without
-   * it a band concert becomes a sitting of the Planning Board.
-   *
-   * **It serves ONE MONTH.** The page has `&month=&year=` navigation, and a
-   * row that reads only the default view reports the current month as the
-   * body's whole calendar — a real clip that reads exactly like a body with
-   * nothing scheduled. `monthsAhead` on the row walks them, and the count is
-   * stated per run.
+   * It is one town-wide calendar, so a row must carry `titleMatch` naming the
+   * body. It serves ONE MONTH; `monthsAhead` on the row walks the `&month=&year=`
+   * navigation and the count is stated per run.
    */
   | "event-tip"
   /**
-   * A BODY'S OWN FEED OF PUBLIC NOTICES (C9, 2026-09-24): one RSS item per
-   * sitting, whose text states the day, the time and the room, e.g. the
-   * Newbury Public Library's "There will be a Newbury Public Library Board of
-   * Trustee Meeting on Tuesday September 8th, 5pm at the Newbury Public
-   * Library." The feed also carries programs and job posts, so a row must
-   * carry `titleMatch` naming the body in the notices' own words.
+   * A body's own RSS feed of public notices: one item per sitting, whose text
+   * states the day, the time and the room. The feed also carries programs and
+   * job posts, so a row must carry `titleMatch`.
    */
   | "notice-feed"
   /**
-   * A BODY'S OWN "Next Meeting Date:" LINE (C9, 2026-09-24), e.g. the Newbury
-   * Energy Committee's home page: "Next Meeting Date: (tentative date)
-   * October 21, 2026 4pm Town Offices Meeting Room". One sitting per read.
+   * A body's own "Next Meeting Date:" line, e.g. "Next Meeting Date: (tentative
+   * date) October 21, 2026 4pm Town Offices Meeting Room". One sitting per read.
    */
   | "next-meeting-line";
 
@@ -189,24 +144,15 @@ export interface SchedulePageRaw {
   /** The documents page's HTML, where the row wires one. */
   documents?: string;
   /**
-   * The body's Destiny Agenda month lists (`destinyAgenda` on the row, 2026-09-25): each month from the
-   * window's start to `DESTINY_AHEAD_DAYS` ahead that was read, keyed `YYYY-MM`. A month not read is absent,
-   * and its sittings carry no document links; they are never unpublished for it.
+   * The body's Destiny Agenda month lists (`destinyAgenda` on the row), keyed `YYYY-MM`. A month not read is
+   * absent, and its sittings carry no document links; they are never unpublished for it.
    */
   destiny?: readonly { readonly month: string; readonly url: string; readonly html: string }[];
   collectedAt: string;
   /**
-   * This ROW's retrieval was refused, and `schedule` is empty (g3, 2026-08-16).
-   *
-   * Five bodies are wired to this adapter across three hosts. `fetch()` used
-   * to loop them and let the first failure throw, so **one host's 403 emptied
-   * all five calendars** — Kearsarge's fifteen sittings, Newbury's three
-   * land-use boards and Morris Hills Regional's board all vanished from
-   * production together because `kearsarge.org` refused the scheduled
-   * refresh's client. A row that fails is now recorded here and skipped; the
-   * rows that succeeded still ship, and the failure is carried to the
-   * snapshot so the reader is told which bodies we could not reach rather
-   * than being shown an empty calendar as if it were an empty government.
+   * This ROW's retrieval was refused, and `schedule` is empty. The other rows
+   * still ship, and the failure is carried to the snapshot so the reader is
+   * told which bodies we could not reach.
    */
   error?: string;
 }
@@ -253,12 +199,9 @@ function cellText(html: string): string {
 }
 
 /**
- * The element carrying `className`, with its nesting respected.
- *
- * A department page carries the body's own free-content block *and* a news
- * teaser list *and* a minutes archive, all of them full of dates. Scoping the
- * dated-list parser to the block the body writes itself is what keeps a
- * document's publication date from becoming a meeting.
+ * The element carrying `className`, with its nesting respected, so a dated-list
+ * parser scoped to the body's own block never reads a news teaser's or a
+ * document's date as a meeting.
  */
 export function sliceSection(html: string, className: string): string {
   const at = html.indexOf(className);
@@ -308,12 +251,8 @@ export function parseClockTime(
 }
 
 /**
- * The start time the page states for *every* sitting, as `{ hour, minute }`,
- * or null.
- *
- * Null is a real answer and is why `startPrecision` exists: it means the body
- * published dates and not an hour, which NH's RSA 91-A:2 explicitly permits
- * and plenty of districts do anyway.
+ * The start time the page states for every sitting, as `{ hour, minute }`, or
+ * null when the body published dates and no hour.
  */
 export function parseStatedTime(
   html: string,
@@ -337,12 +276,8 @@ function emptySitting(date: string, printed: string): ScheduledSitting {
 }
 
 /**
- * Shape 1 — every `Weekday, Month D, YYYY` the page publishes.
- *
- * Deliberately strict about the weekday prefix: a page carries dates in its
- * footer, its news teasers and its copyright line, and a bare "August 17,
- * 2026" anywhere on the page would become a meeting. In this shape the
- * schedule list is the only place the body writes the weekday out.
+ * Shape 1 — every `Weekday, Month D, YYYY` the page publishes. Strict about the
+ * weekday prefix, because a bare date also appears in footers and teasers.
  */
 export function parseSchedule(html: string): ScheduledSitting[] {
   const byDate = new Map<string, ScheduledSitting>();
@@ -366,19 +301,10 @@ export function parseSchedule(html: string): ScheduledSitting[] {
 }
 
 /**
- * Shape 2 — the two-column month table.
- *
- * The left cell carries the month and, on the row that opens a year, the year:
- * `April, 2026`, then bare `May`, `June`… and `January 2027` when the calendar
- * rolls. The right cell carries one sitting: its date and the board's own
- * words for it.
- *
- * **The year is tracked two ways and both must agree with the page.** A cell
- * that states a year sets it outright; a month whose ordinal goes backwards
- * without one rolls it forward. Kearsarge states `January 2027` explicitly, so
- * the two mechanisms agree there — but a page that omits it is the common
- * case, and a schedule silently filed twelve months early is invisible until a
- * reader shows up at an empty room.
+ * Shape 2 — the two-column month table. The left cell carries the month and,
+ * on the row that opens a year, the year (`April, 2026`, then bare `May`…). A
+ * cell that states a year sets it; a month whose ordinal goes backwards
+ * without one rolls it forward.
  */
 export function parseMonthTable(html: string): {
   sittings: ScheduledSitting[];
@@ -392,9 +318,7 @@ export function parseMonthTable(html: string): {
   let prevMonth: number | null = null;
 
   for (const row of table.matchAll(/<tr[\s\S]*?<\/tr>/gi)) {
-    // The header row is the table saying what its columns are, not a row it
-    // failed to date — counting "Date" as an unplaceable sitting would put a
-    // permanent 1 in a drop column that is supposed to mean something.
+    // The header row is not a sitting it failed to date; it is not counted.
     if (/<th\b/i.test(row[0])) continue;
     const cells = [...row[0].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)].map((c) =>
       cellText(c[1]),
@@ -446,12 +370,10 @@ export function parseMonthTable(html: string): {
 }
 
 /**
- * Shape 3 — a plain dated list, `August 11, 2026 - 6:00pm`, one per line.
- *
- * Scoped to a section by the caller (`sectionMatch`), because without that
- * scope this pattern is loose enough to swallow a news teaser's date. Newbury
- * writes two dates in one paragraph at least once and drops the space after a
- * comma at least twice, so the scan is per-match rather than per-line.
+ * Shape 3 — a plain dated list, `August 11, 2026 - 6:00pm`, one per line,
+ * scoped to a section by the caller (`sectionMatch`). Pages put two dates in
+ * one paragraph and drop the space after a comma, so the scan is per match,
+ * not per line.
  */
 export function parseDatedList(html: string): {
   sittings: ScheduledSitting[];
@@ -488,36 +410,21 @@ export function parseDatedList(html: string): {
 }
 
 /**
- * Shape 5 — a month grid whose every event states its own date and time.
- *
- * New London NH's GovOffice calendar (M123, 2026-08-19). The grid is a
- * `<table>` of day cells, and every event inside one carries:
+ * Shape 5 — a month grid whose every event states its own date and time:
  *
  * ```html
  * <div class="eventTip">
- *   <div class="tipTitle">Board of Selectmen - 5:30 PM - Whipple Memorial Town Hall</div>
+ *   <div class="tipTitle">Board of Selectmen - 5:30 PM - Town Hall</div>
  *   Thursday, August 20, 2026 at 5:30 PM
  * </div>
  * ```
  *
- * So the grid never has to be understood: each event is self-describing, and
- * the date beside it is the town's own words rather than a cell position this
- * parser would have to be right about.
+ * The grid never has to be understood: each event is self-describing.
  *
- * `titleMatch` is REQUIRED and is the whole safety of the shape. This is the
- * TOWN's calendar — band concerts, transfer-station hours and eleven boards
- * share it — so a row that matched nothing in particular would file a concert
- * as a sitting of the Planning Board. Rows whose title does not carry the
- * match are counted as `notSittings`, which is what makes "this board has
- * nothing this month" distinguishable from "the parser matched nothing".
- *
- * `titleMatch` is a comma-separated list of the body's own spellings, as the
- * `ical` adapter and `notice-feed` read it, compared with apostrophes set aside
- * on both sides (2026-09-25). Until then this shape read the whole string as one
- * phrase: the Firewards row's "Firewards,Fire Wards" matched nothing, and
- * "Citizens' Committee" missed the town's "Citizens Committee" and "Citizen's
- * Advisory Committee" — four New London bodies read as listing no meetings while
- * the town's calendar carried their sittings.
+ * `titleMatch` is REQUIRED: it is the whole town's calendar, so without it a
+ * concert becomes a sitting of the Planning Board. Rows whose title does not
+ * carry the match are counted as `notSittings`. It is a comma-separated list of
+ * the body's own spellings, compared with apostrophes set aside on both sides.
  */
 export function parseEventTips(
   html: string,
@@ -592,11 +499,10 @@ export interface DaySitting {
 }
 
 /**
- * A Drupal calendar's day file (`/rest/events/day/YYYYMMDD`, Chandler AZ, 2026-09-24): every event the city
- * posted for that day, each with its own start (`date_event`, e.g. `202609146:00pm`), its title as a link to
- * its own page, and its street address. It is the city's whole calendar, so `titleMatch` is required and is
- * the whole safety of the shape: a garden workshop never becomes a sitting of the Council. An item whose
- * `date_event` does not name the day asked for is counted, never moved to another day.
+ * A Drupal calendar's day file (`/rest/events/day/YYYYMMDD`): every event the city posted for that day, each
+ * with its own start (`date_event`, e.g. `202609146:00pm`), its title as a link to its own page, and its street
+ * address. It is the city's whole calendar, so `titleMatch` is required. An item whose `date_event` does not
+ * name the day asked for is counted, never moved to another day.
  */
 export function parseDayEvents(
   json: string,
@@ -657,7 +563,7 @@ export function scheduledOfDay(sittings: readonly DaySitting[]): DaySitting | nu
 /**
  * Shape 4 — the document listing *is* the schedule.
  *
- * Newbury's Drupal publishes one row per sitting carrying a machine-readable
+ * A Drupal site publishes one row per sitting carrying a machine-readable
  * `<span property="dc:date" content="2026-08-18T19:00:00-04:00">` and, just
  * ahead of it, the link to that sitting's agenda, minutes or event page. No
  * time is ever inferred: the offset-bearing timestamp is the town's own.
@@ -667,7 +573,7 @@ export function scheduledOfDay(sittings: readonly DaySitting[]): DaySitting | nu
  * the Zoning Board's Thursday under the Planning Board.
  *
  * A row timed at exactly local midnight is the town dating a document without
- * timing the sitting — that ships `DAY` precision, per M59. Where a board
+ * timing the sitting — that ships `DAY` precision. Where a board
  * publishes both an agenda and minutes for one date, the agenda wins: it is
  * the document a reader wants before a meeting they can still attend.
  */
@@ -711,12 +617,9 @@ export function parseAgendaList(
       sitting: {
         date: parsed[1],
         printed: parsed[1],
-        // **The link's text names the DOCUMENT, not the sitting.** "Agenda",
-        // "Meeting Minutes" — putting those on a card would title a
-        // government meeting after the piece of paper we found it in. The
-        // label is read for one thing only: the board writing "April Meeting
-        // is Cancelled" into it, which is the only cancellation signal this
-        // town publishes.
+        // The link's text names the DOCUMENT, not the sitting, so it never
+        // titles the card. It is read only for a cancellation the body writes
+        // into it ("April Meeting is Cancelled").
         note: null,
         time: midnight ? null : { hour, minute },
         href,
@@ -734,11 +637,8 @@ export function parseAgendaList(
 }
 
 /**
- * Documents on a second page, keyed by the date in their own link text.
- *
- * The link text is what the body wrote ("August 17, 2026 - Regular Meeting"),
- * so the date is published rather than derived from a filename that may or
- * may not be the meeting's date.
+ * Documents on a second page, keyed by the date in their own link text
+ * ("August 17, 2026 - Regular Meeting"), never by a filename.
  */
 export function parseDocuments(html: string): Map<string, string> {
   const byDate = new Map<string, string>();
@@ -759,7 +659,7 @@ export function parseDocuments(html: string): Map<string, string> {
 
 const WEEKDAY = String.raw`(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day`;
 
-/** "on Tuesday September 8th, 5pm at the Newbury Public Library" and its kin. */
+/** "on Tuesday September 8th, 5pm at the Public Library" and its kin. */
 const NOTICE_SITTING = new RegExp(
   String.raw`\bon\s+(?:${WEEKDAY},?\s+)?([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s*(\d{4}))?\s*,?\s*(?:at\s+)?(\d{1,2}(?::\d{2})?\s*[AaPp]\.?\s*[Mm]\.?)?(?:\s+at\s+(?:the\s+)?([^.<]{3,80}))?`,
   "i",
@@ -778,15 +678,11 @@ function feedField(item: string, name: string): string {
 }
 
 /**
- * Shape 6 — a body's own feed of public notices (C9, 2026-09-24).
- *
- * One `<item>` per notice. An item is a sitting only when its title or text
- * carries `titleMatch` AND its text states a day ("on Tuesday September 8th,
- * 5pm"); every other item — a program, a job post, a poetry contest — is
- * counted as `notSittings`, so "no trustees meeting this month" and "the
- * parser matched nothing" never look alike. A notice that names a day but no
- * year takes the year that puts the day nearest after the notice's own
- * `pubDate`, because a notice is posted before the sitting it announces.
+ * Shape 6 — a body's own feed of public notices. An item is a sitting only when
+ * its title or text carries `titleMatch` AND its text states a day ("on Tuesday
+ * September 8th, 5pm"); every other item is counted as `notSittings`. A notice
+ * that names a day but no year takes the year that puts the day nearest after
+ * the notice's own `pubDate`.
  */
 export function parseNoticeFeed(xml: string, titleMatch: string): {
   sittings: ScheduledSitting[];
@@ -826,12 +722,9 @@ export function parseNoticeFeed(xml: string, titleMatch: string): {
 }
 
 /**
- * Shape 7 — a body's own "Next Meeting Date:" line (C9, 2026-09-24).
- *
- * "Next Meeting Date: (tentative date) October 21, 2026 4pm Town Offices
- * Meeting Room". The qualifier is the body's own and is kept as the note, so
- * the title follows `sittingTitle`'s rule for a parenthetical. A line the
- * parser cannot date is counted as `undated`, never dropped silently.
+ * Shape 7 — a body's own "Next Meeting Date:" line. The qualifier ("(tentative
+ * date)") is kept as the note. A line the parser cannot date is counted as
+ * `undated`.
  */
 export function parseNextMeetingLine(html: string): {
   sittings: ScheduledSitting[];
@@ -859,14 +752,9 @@ export function parseNextMeetingLine(html: string): {
 }
 
 /**
- * The sitting's own name, where the body wrote one beside the date.
- *
- * "Budget Presentations" and "Organizational Meeting" are exactly what
- * `Meeting.title` is for, and dropping them would throw away the most useful
- * thing on the page. A parenthetical qualifier is not a name, though —
- * "(tentative)" as a meeting title reads like the board is unsure what it is
- * called — so a note that is nothing but a parenthetical falls back to the
- * body's name, and the weekday parenthetical is stripped off the front.
+ * The sitting's own name, where the body wrote one beside the date ("Budget
+ * Presentations"). A note that is nothing but a parenthetical falls back to the
+ * body's name, and a leading weekday parenthetical is stripped.
  */
 export function sittingTitle(note: string | null, bodyName: string): string {
   if (!note) return bodyName;
@@ -927,26 +815,10 @@ export interface MonthPage {
 }
 
 /**
- * Every month page a one-month calendar must be walked for, besides the
- * default view — which serves the CURRENT month and nothing else.
- *
- * **A month grid rolls, and history rolled off with it** (2026-09-01, the
- * scheduled refresh's first red run of September). `monthsAhead` walked the
- * page's own `&month=&year=` navigation FORWARD only. On 1 September New
- * London's calendar opened on September, the six August sittings this
- * pipeline had held since 2026-08-19 were no longer on any page it read, and
- * the rebuilt snapshot carried the town with no concluded meeting at all. The
- * town had published them the whole time — `&month=8&year=2026` answered 200
- * with 25 events on 2026-09-02 — so this was a clip of ours reading exactly
- * like a body with no history, which is the shape M58 exists to refuse.
- *
- * So the walk covers the WHOLE serving window in both directions: every month
- * overlapping `[startsAfter, startsBefore]` — the window the composite asks
- * every adapter for — plus `monthsAhead` as a floor for a row that is fetched
- * without one. The current month is the default page and is never repeated.
- * Months are read off UTC components; a window edge that falls in the last
- * hours of a month costs one extra page, and the normalizer's own clip decides
- * what a page's rows are worth.
+ * Every month page a one-month calendar must be walked for besides the default
+ * view (the current month): every month overlapping `[startsAfter,
+ * startsBefore]`, behind as well as ahead, with `monthsAhead` as a floor for a
+ * row fetched without a window. Months are read off UTC components.
  */
 export function monthPagesToWalk(input: {
   now: Date;
@@ -1003,17 +875,13 @@ export function makeSchedulePageSource(
     const windowEnd = now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000;
 
     /*
-     * A-002 · the logical record here is a SITTING, and one raw row is one
-     * body's page carrying many. A refused row is counted as one record too,
-     * because this adapter deliberately drops it into `notConfigured` rather
-     * than shortening its own input — see the comment immediately below, which
-     * is that decision written down before there was a contract to check it.
+     * The logical record is a SITTING; one raw row is one body's page carrying
+     * many. A refused row is counted as one record, dropped into `notConfigured`.
      */
     let considered = 0;
     let duplicates = 0;
     let outOfWindow = 0;
-    // A-002 · `unknownVenue` tallies a sitting that is then PRODUCED with no
-    // place (the venue-gap class, 2026-09-23), so it is not a drop.
+    // `unknownVenue` tallies a sitting that is then PRODUCED with no place, so it is not a drop.
     let keptUnplaced = 0;
 
     for (const row of raw) {
@@ -1022,17 +890,13 @@ export function makeSchedulePageSource(
       const destinyMonths = new Map<string, DestinyMonth>(
         (row.destiny ?? []).map((m) => [m.month, parseDestinyMonth(m.html, m.url)] as const),
       );
-      // A refused row publishes nothing THIS run. It is counted, not skipped:
-      // `notConfigured` is the drop bucket for "we had a row and produced no
-      // meeting from it", and a run that quietly shortened its own input is
-      // the empty-success shape. The division it belongs to is reported
-      // upward by `unreachableOcdIds` below, which is what puts the honest
-      // line on the reader's card instead of an empty calendar.
+      // A refused row publishes nothing this run and is counted in
+      // `notConfigured`; its division is reported through `unreachableOcdIds`
+      // so the reader's card names the gap.
       if (error) {
         considered += 1;
         drops.notConfigured += 1;
-        // A division-less body has no division to attribute the gap TO; the
-        // drop count above is the whole of what can honestly be said about it.
+        // A division-less body has no division to attribute the gap to.
         if (wiring.ocdId) unreachable.add(wiring.ocdId);
         continue;
       }
@@ -1094,10 +958,8 @@ export function makeSchedulePageSource(
       }
 
       /*
-       * A-002 · `mergeSittings` unions the shapes a row declares, keyed on the
-       * date, so a sitting a page states twice — once in its month table and
-       * once in its dated list — collapses to one. That collapse is a real
-       * disposition and used to leave no trace.
+       * `mergeSittings` unions the shapes a row declares, keyed on the date, so
+       * a sitting a page states twice collapses to one; that is counted.
        */
       const rawSittings = lists.reduce((n, l) => n + l.length, 0);
       const mergedSittings = mergeSittings(lists);
@@ -1152,8 +1014,7 @@ export function makeSchedulePageSource(
       for (const sitting of expanded) {
         const [y, mo, d] = sitting.date.split("-").map(Number);
         const time = sitting.time ?? stated;
-        // With no stated time, local midnight is an ORDERING position and
-        // never a claim — the same shape M59 gave the day-only archives.
+        // With no stated time, local midnight is an ordering position, never a claim.
         const startsAt = toZonedIso(
           y,
           mo,
@@ -1164,17 +1025,15 @@ export function makeSchedulePageSource(
         );
         const t = Date.parse(startsAt);
         if (t < windowStart || t > windowEnd) {
-          // A-002: a deliberate clip is still a disposition and is counted.
+          // A deliberate clip is still a disposition and is counted.
           outOfWindow += 1;
           continue;
         }
 
-        // A row naming a different room than the page's own sentence is
-        // resolved on ITS OWN string, so an uncurated venue is never placed
-        // at an inherited address that would send a reader to the wrong
-        // building.
-        /* A day file's own street address is the sitting's own place, resolved on its own words (C14);
-           otherwise a room the sitting's note or stated place names (C9). */
+        // A row naming a different room than the page's sentence is resolved on
+        // its own string, never placed at an inherited address. A day file's own
+        // street address is the sitting's own place; otherwise a room the
+        // sitting's note or stated place names.
         const marker = sitting.address ?? otherVenues.find((v) =>
           (sitting.note ? sitting.note.includes(v) : false) ||
           (sitting.place ? sitting.place.includes(v) : false),
@@ -1183,13 +1042,11 @@ export function makeSchedulePageSource(
           ? resolveVenue(SOURCE_NAME, wiring.ocdId, marker)
           : venue;
         /*
-         * **NO REVIEWED PLACE NEVER SUPPRESSES THE SITTING** (the venue-gap
-         * class, 2026-09-23). This used to `continue`. The sitting is now
-         * published with no pin, counted `unknownVenue` and kept: a row that
-         * names its own room renders that room in the row's own words
-         * (`STATED_NOT_PLACED`, the marker as printed); a row that inherits
-         * the page's sentence keeps our own place-not-recorded gap, because
-         * `venueMatch` is our key for that sentence and not a quotation of it.
+         * No reviewed place never suppresses the sitting: it is published with
+         * no pin, counted `unknownVenue`. A row that names its own room renders
+         * it in its own words (`STATED_NOT_PLACED`); a row inheriting the page's
+         * sentence keeps our own place-not-recorded gap, because `venueMatch` is
+         * our key for that sentence and not a quotation of it.
          */
         const venueGap = !rowVenue && marker ? unplacedVenueGap(marker, wiring.publishingOrg) : null;
         if (!rowVenue) {
@@ -1201,9 +1058,9 @@ export function makeSchedulePageSource(
         const base =
           wiring.config.documentsPage ?? wiring.config.schedulePage;
         /*
-         * The Destiny list's row for this sitting (2026-09-25): a day-file sitting joins on its date and the
-         * name the city printed for it; a date-only sitting joins only a date the list gives one row. The
-         * city's own link, where the page carries one, is kept ahead of it.
+         * The Destiny list's row for this sitting: a day-file sitting joins on its date and the name the city
+         * printed for it; a date-only sitting joins only a date the list gives one row. The city's own link,
+         * where the page carries one, is kept ahead of it.
          */
         const destinyJoin = joinDestinyRows(destinyMonths, sitting.date, sitting.pageUrl ? (sitting.note ?? null) : null);
         const destinyRow = destinyJoin !== null && destinyJoin !== "EMPTY" ? destinyJoin : null;
@@ -1211,7 +1068,6 @@ export function makeSchedulePageSource(
         meetings.push({
           id: sitting.id,
           ocdId: wiring.ocdId,
-          /* NH-RC4: the body, from the wiring row that produced this meeting. */
           bodyId: wiring.bodyId,
           bodyName,
           title: sittingTitle(sitting.note, bodyName),
@@ -1255,21 +1111,9 @@ export function makeSchedulePageSource(
     name: SOURCE_NAME,
 
     /**
-     * Serialized across bodies, same as every adapter here — and **isolated
-     * per body** (g3, 2026-08-16).
-     *
-     * The isolation is the fix for a production outage, not a nicety. These
-     * five rows live on three unrelated hosts, and a bare loop let the first
-     * host's refusal throw out of the whole adapter: the composite recorded
-     * `schedulepage: FAILED`, every one of the five bodies contributed
-     * nothing, and the committed snapshot replaced four working calendars
-     * with silence. A body whose own page answered is not implicated in a
-     * different body's WAF.
-     *
-     * A row that fails is recorded with its error and returned, rather than
-     * dropped: `normalizeWithDrops` needs to see it to attribute the gap to
-     * the right division, and a silently shorter list is the empty-success
-     * shape this repo has now sighted five times.
+     * Serialized across bodies and isolated per body: one host's refusal never
+     * empties another body's calendar. A failed row is returned with its error
+     * so `normalizeWithDrops` can attribute the gap to the right division.
      */
     async fetch(query?: MeetingQuery): Promise<SchedulePageRaw[]> {
       const collected: SchedulePageRaw[] = [];
@@ -1281,18 +1125,10 @@ export function makeSchedulePageSource(
             signal: query?.signal,
           });
           /*
-           * A MONTH GRID SERVES ONE MONTH, and reading only the default view
-           * reports this month as the body's whole calendar — a real clip
-           * that reads exactly like a body with nothing scheduled. New
-           * London's Board of Selectmen sits twice a month all year; the
-           * default view carries two of them.
-           *
-           * `monthsAhead` marks a row whose page publishes `&month=&year=`
-           * navigation. The months walked are `monthPagesToWalk`'s — the
-           * whole serving window, BEHIND as well as ahead — and the extra
-           * months are concatenated onto the same HTML: every event in this
-           * shape states its own full date, so there is nothing to keep
-           * separate.
+           * A month grid serves one month. `monthsAhead` marks a row whose
+           * page publishes `&month=&year=` navigation; the months walked are
+           * `monthPagesToWalk`'s, concatenated onto the same HTML, since every
+           * event in this shape states its own full date.
            */
           let schedule = text;
           const ahead = Number(wiring.config.monthsAhead ?? 0);
@@ -1324,9 +1160,8 @@ export function makeSchedulePageSource(
                 });
                 schedule += monthPage.text;
               } catch {
-                // One month refused is not the body's calendar refused. The
-                // months that answered still produce, and the shortfall shows
-                // in the count this run reports rather than in silence.
+                // One month refused is not the body's calendar refused; the
+                // shortfall shows in this run's count.
               }
             }
           }
@@ -1353,9 +1188,8 @@ export function makeSchedulePageSource(
             }
           }
           /*
-           * `destinyAgenda` names the body's Destiny Agenda list (2026-09-25): one request per calendar month
-           * from the window's start (the concluded lookback) to DESTINY_AHEAD_DAYS ahead, five a read. Documents
-           * are a separate capability from the schedule: a month refused leaves its sittings without links,
+           * `destinyAgenda` names the body's Destiny Agenda list: one request per calendar month from the
+           * window's start to DESTINY_AHEAD_DAYS ahead. A month refused leaves its sittings without links,
            * never unpublished.
            */
           const destiny: { month: string; url: string; html: string }[] = [];
@@ -1400,11 +1234,8 @@ export function makeSchedulePageSource(
         }
       }
 
-      // Every row refused is the whole source being refused, and that must
-      // still read as a source failure — the composite's own reporting, the
-      // snapshot's `failed` list and the reader's "we couldn't reach their
-      // calendar source" line all hang off it. Only a PARTIAL refusal is the
-      // new behaviour.
+      // Every row refused is the whole source refused and still reads as a
+      // source failure; only a PARTIAL refusal is isolated per body.
       if (collected.length > 0 && collected.every((row) => row.error)) {
         throw new Error(collected[0].error);
       }
@@ -1418,8 +1249,7 @@ export function makeSchedulePageSource(
     normalizeWithDrops,
 
     async upsert(meetings: Meeting[]) {
-      // No tables yet — lib/db/schema.ts is `export {}`. Same honest no-op as
-      // the other adapters until Phase 5 persistence lands.
+      // Persistence is the promotion door's; nothing to write here.
       return { inserted: 0, updated: meetings.length };
     },
   };

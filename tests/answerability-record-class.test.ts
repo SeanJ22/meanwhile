@@ -15,17 +15,8 @@ import {
 } from "../lib/answerability/record-class.ts";
 
 /**
- * **AN AGENDA IS NOT AN OUTCOME.**
- *
- * Every test in this file is one half of a pair. The seeded failure proves
- * the substitution is refused; the POSITIVE CONTROL immediately after it
- * proves the refusal is a rule about evidence and not a module that simply
- * says no — a guard that refuses everything protects nothing and gets
- * deleted the first time it blocks real work.
- *
- * Nothing here re-implements the matrix. Every assertion goes through the
- * exported functions, so a test passing means the shipped rule holds, not
- * that a copy of it in a test file holds.
+ * An agenda is not an outcome. Each seeded failure is paired with a positive control, and every
+ * assertion goes through the exported functions.
  */
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -53,10 +44,7 @@ test("SEEDED FAILURE: an agenda may not answer how a member voted", () => {
 });
 
 test("SEEDED FAILURE: an agenda-only corpus THROWS on a vote question", () => {
-  /*
-   * `ruleOnQuestion` is advice a caller can ignore. `assertAnswerable` is the
-   * wall — this is the "mechanically impossible" half of the requirement.
-   */
+  // `ruleOnQuestion` is advice; `assertAnswerable` enforces.
   assert.throws(
     () => assertAnswerable("HOW_DID_THEY_VOTE", ["AGENDA", "AGENDA_PACKET", "MEETING_NOTICE"]),
     (error: unknown) => {
@@ -82,10 +70,6 @@ test("SEEDED FAILURE: an agenda may not answer what was decided", () => {
 });
 
 test("POSITIVE CONTROL: the same agenda answers what was NOTICED", () => {
-  /*
-   * The half that makes the three above honest. If an agenda answered
-   * nothing, the refusals would be a broken module rather than a rule.
-   */
   assert.equal(answers("AGENDA", "WHAT_WAS_NOTICED"), true);
   const ruling = assertAnswerable("WHAT_WAS_NOTICED", ["AGENDA"]);
   assert.equal(ruling.answerable, true);
@@ -122,11 +106,7 @@ test("POSITIVE CONTROL: minutes DO answer what was decided", () => {
 });
 
 test("SEEDED FAILURE: minutes may not be read as the docket that was noticed", () => {
-  /*
-   * The mirror image of the agenda rule, and the one a reviewer usually
-   * misses. An item continued to the next sitting is ON the agenda and
-   * ABSENT from the minutes; a docket read off minutes silently drops it.
-   */
+  // An item continued to the next sitting is on the agenda and absent from the minutes.
   assert.equal(answers("MINUTES", "WHAT_WAS_NOTICED"), false);
   assert.match(refusalFor("MINUTES", "WHAT_WAS_NOTICED"), /continued to the\s+next sitting/i);
 });
@@ -175,12 +155,7 @@ test("every declared record class answers at least one question class", () => {
 });
 
 test("PAST_MEETING reads to NO question class, and the ambiguity is the point", () => {
-  /*
-   * "What happened at the last meeting?" is ambiguous between *what was
-   * noticed* and *what was decided*. A pipeline that resolves that by
-   * reaching for whatever it holds hands a reader an agenda as an account of
-   * a decision. The null forces the interpretation rung to decide.
-   */
+  // "What happened at the last meeting?" is ambiguous; the null forces the interpretation rung to decide.
   assert.equal(ASK_INTENT_READING.PAST_MEETING, null);
   assert.equal(ASK_INTENT_READING.UPCOMING_AGENDA, "WHAT_WAS_NOTICED");
   assert.equal(ASK_INTENT_READING.AGENDA_TOPIC, "WHAT_WAS_NOTICED");

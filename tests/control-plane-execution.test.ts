@@ -28,15 +28,6 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { routeTaskId, workItemId } from "../lib/control-plane/ids.ts";
 import { completionSnapshot, T0, T1, T2 } from "./control-plane-fixtures.ts";
 
-/**
- * THE SEEDED FAILURE SUITE — execution layer.
- *
- * Each test plants one of the failures the architecture document enumerates and
- * asserts the exact refusal that catches it. A test that merely asserts the
- * happy path proves the system runs; these prove it REFUSES, which is the only
- * property that matters when a worker is wrong.
- */
-
 const TTL = 10 * 60 * 1000;
 
 const WORKER: WorkerRef = {
@@ -59,8 +50,6 @@ function pimaItem(floor: readonly string[]) {
 }
 
 
-/** -------------------------------------------------- identity is derived */
-
 test("ids are pure functions of their inputs, so duplicate work collides", () => {
   const a = workItemId("meanwhile", "pima", "future meetings");
   const b = workItemId("meanwhile", "pima", "future meetings");
@@ -78,8 +67,6 @@ test("ids are pure functions of their inputs, so duplicate work collides", () =>
 
   assert.equal(routeTaskId("wi-1", "legistar-eventdates", "pima"), routeTaskId("wi-1", "legistar-eventdates", "pima"));
 });
-
-/** ------------------------------------------- SEEDED FAILURE 8: two claims */
 
 test("SEEDED: two workers claim the same RouteTask -> exactly one lease wins", () => {
   const lease = claim("rt-1", "worker-a", T0, TTL, null);
@@ -111,8 +98,6 @@ test("an expired lease cannot be heartbeat back to life", () => {
   assert.throws(() => heartbeat(lease, T2, TTL), /expired/);
 });
 
-/** --------------------------- SEEDED FAILURE 4: worker crashes mid-route */
-
 test("SEEDED: worker crashes mid-route -> ABORTED, artifacts kept, no disposition, task reclaimable", () => {
   const item = pimaItem([]);
   const task = createRouteTask({
@@ -143,7 +128,6 @@ test("SEEDED: worker crashes mid-route -> ABORTED, artifacts kept, no dispositio
   assert.equal(leavesReclaimable(crashed), true);
   assert.deepEqual(crashed.artifactIds, ["art-page1", "art-page2"], "partial evidence survives");
 
-  // The disposition write must refuse even though the caller asked politely.
   assert.throws(
     () =>
       disposeRoute(task, crashed, {
@@ -189,17 +173,6 @@ test("a non-COMPLETED attempt must name its reason, and no attempt ends twice", 
   );
 });
 
-/** ------------------------------- disposition integrity on a good attempt */
-
-/**
- * A completed Attempt that RECORDED the artifacts its disposition will cite.
- *
- * `disposeRoute` now refuses a disposition citing evidence its own Attempt
- * never captured, so these helpers have to model the real sequence: the walk
- * preserves artifacts, then the disposition points at them. Passing the ids
- * through `endAttempt` is what the acquirer actually does; the previous helper
- * skipped it and the dispositions below cited artifacts out of thin air.
- */
 function completedAttempt(taskId: string, instance = "worker-a", artifactIds: readonly string[] = ["art-1"]) {
   const lease = claim(taskId, instance, T0, TTL, null);
   return endAttempt(
@@ -318,8 +291,6 @@ test("an attempt cannot dispose of a route it does not belong to", () => {
   assert.throws(() => disposeRoute(task, foreign, OK_DISPOSITION({ attemptId: foreign.id })), /belongs to RouteTask/);
 });
 
-/** -------------- SEEDED FAILURE 3: blocked host is a route, not a fact ---- */
-
 test("SEEDED: one host blocked -> BLOCKED_CURRENTLY stays OUTSTANDING, never terminal", () => {
   const task = createRouteTask({
     workItemId: "wi-x",
@@ -347,8 +318,6 @@ test("SEEDED: one host blocked -> BLOCKED_CURRENTLY stays OUTSTANDING, never ter
   assert.equal(isOutstanding(blocked), true, "the route remains owed");
 });
 
-/** ------- SEEDED FAILURE 1: known API omitted -> completion is refused ---- */
-
 test("SEEDED: an inherited route with no disposition refuses completion by name", () => {
   const floor = [
     "legistar-events",
@@ -360,8 +329,6 @@ test("SEEDED: an inherited route with no disposition refuses completion by name"
   ];
   const item = pimaItem(floor);
 
-  // The worker walked five of six and forgot /EventDates — the exact historical
-  // failure this system exists to make impossible.
   const walked = floor
     .filter((r) => r !== "legistar-eventdates")
     .map((routeId) => {
@@ -459,8 +426,6 @@ test("a reclaimable route task refuses completion even when every route id is pr
   assert.ok(verdict.refusals.some((r) => r.code === "ROUTE_TASK_RECLAIMABLE"));
 });
 
-/** ------------------------------ contract clauses beyond the route floor -- */
-
 test("validation, audit independence, denominator and escalation each refuse by name", () => {
   const base = createWorkItem({
     project: "meanwhile",
@@ -482,7 +447,6 @@ test("validation, audit independence, denominator and escalation each refuse by 
   assert.ok(codes.includes("AUDIT_MISSING"));
   assert.ok(codes.includes("DENOMINATOR_INCOMPLETE"));
 
-  // An audit that only read our own summary does not discharge the clause.
   const selfAudited = evaluateCompletion(
     completionSnapshot({
       item: base,
@@ -508,7 +472,6 @@ test("validation, audit independence, denominator and escalation each refuse by 
   );
   assert.ok(selfAudited.refusals.some((r) => r.code === "AUDIT_NOT_INDEPENDENT"));
 
-  // Independent and surviving: the item may complete.
   const clean = evaluateCompletion(
     completionSnapshot({
       item: base,

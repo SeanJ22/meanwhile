@@ -1,32 +1,16 @@
 /**
- * The brand's raster assets, rendered rather than drawn by hand — ITEM J.
+ * The brand's raster assets, rendered rather than drawn by hand.
  *
  *   pnpm build && pnpm exec tsx scripts/brand-assets-0901.mts
  *
- * Produces `app/apple-icon.png` (180×180) and `app/opengraph-image.png`
- * (1200×630). Both are Next metadata-file conventions: the framework emits
- * the tags for them without any code, which is why they are static files and
- * not an `ImageResponse` route.
+ * Produces `app/apple-icon.png` (180×180), `app/opengraph-image.png`
+ * (1200×630) and `app/favicon.ico`, as Next metadata-file conventions.
  *
- * ## Why Playwright and not an SVG rasteriser
- *
- * The OG image carries the WORDMARK, and the wordmark is EB Garamond 500. A
- * rasteriser has no access to that face — `next/font` downloads it at build
- * time and drops it in `.next/static/media`, unnamed and content-hashed. So
- * this script finds the file the build actually produced, mounts it through a
- * `file://` `@font-face`, and screenshots the result. What ships is the same
- * face the site serves, not a lookalike.
- *
- * The browser comes from `launchGuarded` like every other browser in this
- * repo: a raw context leaks `x-wtp-synthetic-run` to third parties on unload.
- *
- * ## Why the colours are literal in here
- *
- * An OG image is fetched by a crawler with no stylesheet and no theme. It has
- * ONE form, and that form is the dark palette. The literals are pinned to
- * `globals.css` by `tests/brand-identity.test.ts` for `app/icon.svg`; this
- * script reads them out of the stylesheet at render time so it cannot drift
- * at all.
+ * The OG wordmark is EB Garamond 500, which `next/font` drops content-hashed
+ * into `.next/static/media`, so this finds the built font files, mounts them
+ * through a `file://` `@font-face`, and screenshots the result in a guarded
+ * browser (`launchGuarded`). An OG image has one form, the dark palette; its
+ * colours are read out of `globals.css` at render time.
  */
 
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -56,16 +40,9 @@ const MUTED = darkToken("--text-muted");
 
 /**
  * Every `@font-face` this build emitted for EB Garamond, with its `src`
- * rewritten to a `file://` URL.
- *
- * The font files are content-hashed and split by unicode subset, so there is
- * no single file to point at and no name to guess. Reading them out of the
- * BUILT stylesheet is the only way to be sure the OG image uses the same
- * bytes the site serves — and a woff2's name table is compressed, so scanning
- * the files themselves finds nothing.
- *
- * Zero faces is thrown on rather than fallen back from: a fallback serif
- * would render an OG image that is not the wordmark, and it would look fine.
+ * rewritten to a `file://` URL. Read from the BUILT stylesheet because the
+ * files are content-hashed and split by subset. Zero faces throws: a fallback
+ * serif would render a wordmark that is not the wordmark.
  */
 function garamondFaces(): { css: string; files: string[] } {
   const chunks = join(ROOT, ".next", "static", "chunks");
@@ -100,19 +77,10 @@ function garamondFaces(): { css: string; files: string[] } {
 }
 
 /**
- * The mark as a PNG, encoded by hand rather than screenshotted.
- *
- * **NEXT REFUSES THE WHOLE BUILD OVER THIS.** A `.ico` whose entries are
- * PNG-encoded must carry RGBA entries: Turbopack decodes `app/favicon.ico` at
- * build time and fails with *"Format error decoding Ico: The PNG is not in
- * RGBA format!"*. Chromium encodes an opaque page as truecolour WITHOUT an
- * alpha channel, and `omitBackground` does not change that when every pixel is
- * painted, so a screenshot cannot satisfy it.
- *
- * The mark is two solid rectangles, so hand-encoding is both exact and small:
- * colour type 6 (RGBA), one filter-0 scanline per row, deflated. It also
- * removes a browser from the favicon's path entirely, which makes the file
- * byte-identical on every machine that regenerates it.
+ * The mark as a PNG, encoded by hand rather than screenshotted. Next refuses
+ * the build unless a PNG-encoded `.ico` entry is RGBA, and Chromium encodes an
+ * opaque page without alpha. The mark is two solid rectangles, so colour type
+ * 6, one filter-0 scanline per row, deflated — byte-identical on every machine.
  */
 function markPng(size: number): Buffer {
   const inset = Math.round((size * 3) / 16);
@@ -237,13 +205,8 @@ async function main(): Promise<void> {
   await iconCtx.close();
   console.log(`  ok  app/apple-icon.png  180×180`);
 
-  /* ── favicon.ico ────────────────────────────────────────────────────────
-     `app/favicon.ico` was the CREATE-NEXT-APP DEFAULT — a black circle with a
-     white triangle — and Next lists it AHEAD of `icon.svg` in <head>, so it is
-     what a reader's tab actually showed in every browser that prefers .ico.
-     `app/icon.svg` alone does not fix that; the .ico has to carry the mark
-     too. Three sizes, PNG-encoded inside the container (read by every browser
-     since IE11), at the proportions `app/icon.svg` uses. */
+  /* ── favicon.ico: Next lists it ahead of `icon.svg`, so it must carry the
+     mark too. Three PNG-encoded sizes at `app/icon.svg`'s proportions. */
   const icoEntries = [16, 32, 48].map((size) => ({ size, png: markPng(size) }));
 
   const header = Buffer.alloc(6);
@@ -269,10 +232,8 @@ async function main(): Promise<void> {
   writeFileSync(join(ROOT, "app", "favicon.ico"), ico);
   console.log(`  ok  app/favicon.ico  ${icoEntries.map((e) => e.size).join("/")}  ${ico.length} bytes`);
 
-  /* ── the Open Graph card: the wordmark lockup, nothing else ───────────────
-     No photograph and no map. A map behind a civic brand implies the product
-     is about a place rather than about records, and a photograph of a
-     building implies a specific government endorsed it. */
+  /* ── the Open Graph card: the wordmark lockup, nothing else. No map and no
+     photograph, which would imply a place or an endorsing government. */
   const ogCtx = await browser.context({
     viewport: { width: 1200, height: 630 },
     deviceScaleFactor: 1,
@@ -291,53 +252,11 @@ async function main(): Promise<void> {
   const ogPath = join(ROOT, "app", "opengraph-image.png");
   await ogPage.screenshot({ path: ogPath });
 
-  /* ── the legibility proof: the wordmark at its 18px floor and at 22px ──── */
-  for (const theme of [
-    { name: "dark", bg: BG, text: TEXT },
-    { name: "light", bg: "#f0f2f5", text: "#1a1a2e" },
-  ]) {
-    for (const size of [18, 22]) {
-      const page = await ogCtx.newPage();
-      await page.setViewportSize({ width: 420, height: 120 });
-      await page.setContent(
-        `<!doctype html><html><body>
-           <div style="width:420px;height:120px;background:${theme.bg};display:flex;
-                       align-items:center;justify-content:center">
-             ${lockup(faceCss, size).replace(TEXT, theme.text)}
-           </div>
-         </body></html>`,
-      );
-      await page.evaluate("document.fonts.ready");
-      await page.waitForTimeout(200);
-      const out = join(
-        ROOT,
-        "docs",
-        "evidence",
-        "brand-2026-09-01",
-        `wordmark-${size}px-${theme.name}.png`,
-      );
-      await page.screenshot({ path: out, scale: "device" });
-      await page.close();
-      console.log(`  ok  wordmark-${size}px-${theme.name}.png`);
-    }
-  }
-
   await ogCtx.close();
   await browser.close();
 
   const bytes = readFileSync(ogPath).length;
   console.log(`  ok  app/opengraph-image.png  1200×630  ${bytes} bytes`);
-  writeFileSync(
-    join(ROOT, "docs", "evidence", "brand-2026-09-01", "assets.txt"),
-    [
-      `font subset files: ${files.join(", ")}`,
-      `--bg ${BG}  --mark(--accent-state) ${MARK}  --text ${TEXT}  --text-muted ${MUTED}`,
-      `app/apple-icon.png 180x180`,
-      `app/opengraph-image.png 1200x630 ${bytes} bytes`,
-      "",
-    ].join("\n"),
-    "utf8",
-  );
 }
 
 await main();

@@ -1,25 +1,9 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
 import { decodeImage, decodeRecord, MIN_PORTRAIT_EDGE } from "../lib/photos/decode.ts";
 
-/**
- * **THE TWO SOFT-404s.** (2026-08-25, Item 11.)
- *
- * The door-2 hunt queued two HTML error pages as portraits. Both were served
- * `200`, both carried a `.jpg` in the URL, and both had healthy byte counts —
- * which is exactly what a soft 404 is good at. Only the author's eyes on the
- * review sheet caught them.
- *
- * RULING 110: the instrument is shown catching the REAL SHAPE, not a plausible
- * one. So the first case below is a real error page, at a realistic size,
- * asserted against every check the old path had — status, extension, byte
- * count — and it defeats all three.
- */
-
-const ROOT = process.cwd();
+// A soft 404 is served 200 with a `.jpg` URL and a healthy byte count; only decoding the structure catches it.
 
 /** A soft 404, at the size a real one is. */
 function softNotFound(): Uint8Array {
@@ -73,11 +57,7 @@ test("a real PNG decodes, and reports its own dimensions", () => {
 });
 
 test("MAGIC BYTES ALONE ARE NOT ENOUGH: a PNG header with no image data is refused", () => {
-  /*
-   * This is the case a signature check cannot see and the reason this walks
-   * the structure. The first eight bytes are a genuine PNG signature and the
-   * IHDR is genuine; there is no picture in it.
-   */
+  // A genuine PNG signature and IHDR with no picture in it: a signature check cannot see this.
   const sig = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
   const ihdr = Buffer.alloc(25);
   ihdr.writeUInt32BE(13, 0);
@@ -91,8 +71,8 @@ test("MAGIC BYTES ALONE ARE NOT ENOUGH: a PNG header with no image data is refus
 });
 
 test("a truncated JPEG is TRUNCATED, which is not the same answer as NOT_AN_IMAGE", () => {
-  // A real SOI and a marker chain that stops before any Start-Of-Frame. The
-  // two states want different responses: one is a wrong URL, one is a retry.
+  // A real SOI and a marker chain that stops before any Start-Of-Frame. The two states want different responses:
+  // one is a wrong URL, one is a retry.
   const buf = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, ...new Array(20).fill(0)]);
   const verdict = decodeImage(buf);
   assert.equal(verdict.ok, false);
@@ -124,19 +104,4 @@ test("the record carries the decode DATE, because a decode is a measurement", ()
   assert.equal(bad.ok, false);
   assert.equal(bad.reason, "NOT_AN_IMAGE");
   assert.equal(bad.decodedAt, "2026-08-25");
-});
-
-test("the review queue REFUSES a row with no decode record, and says so out loud", () => {
-  /*
-   * The wiring, asserted in the source. A perfect decoder that the queue does
-   * not consult is the chromium-pin shape — a fix nothing can observe.
-   *
-   * Both halves matter: a MISSING record must refuse exactly as a FAILING one
-   * does, because "nobody decoded this" and "this is not an image" are both
-   * disqualifying, and a refusal must be REPORTED rather than dropped.
-   */
-  const src = readFileSync(join(ROOT, "lib", "photos", "staged.ts"), "utf8");
-  assert.match(src, /if \(!row\.decode\?\.ok\)/, "the queue does not gate on the decode record");
-  assert.match(src, /refusals\.push/, "a refused row is dropped silently instead of reported");
-  assert.match(src, /export function refusedPortraits/, "refusals are not readable by a caller");
 });

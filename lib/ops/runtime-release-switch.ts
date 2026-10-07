@@ -1,24 +1,7 @@
 /**
- * New code loads without stopping the factory (DB-53).
- *
- * DB-48 installs a deployed release in `.runtime/releases/<sha>` while the
- * running checkout keeps admitting work. This module decides whether the
- * runner may simply start its next children from that checkout, and makes the
- * checkout see the same host state the running one writes:
- *
- * - The parent restarts only when its own code changed: a file the runner
- *   process loaded (its import closure, read with the CI planner's own module
- *   reader) or the package files. Otherwise new children start from the staged
- *   checkout and children already running finish on the code they loaded.
- * - Host state lives in Git-ignored paths of the running checkout (the
- *   evidence vault, `.runtime/`, run diagnostics). The staged checkout links
- *   each of them back to the running checkout, so a child started from the new
- *   code reads and writes the same state. Anything new it leaves in an ignored
- *   path is carried back before the staged checkout is removed.
- *
- * The runner keeps the drain-everything path as the default until this one is
- * checked live; WTP_RELEASE_QUICK_SWITCH=1 in the runner's environment file
- * turns it on.
+ * New code loads without stopping the runner. The parent restarts only when its own code changed; otherwise new
+ * children start from the staged checkout. Host state lives in Git-ignored paths, linked from the staged checkout back
+ * to the running one and carried back before the staged checkout is removed. Enabled by WTP_RELEASE_QUICK_SWITCH=1.
  */
 
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, symlinkSync, appendFileSync } from "node:fs";

@@ -1,38 +1,11 @@
 /**
- * **A PORTRAIT'S CONTAINER IS NEVER A FINDING ABOUT THE PERSON** (built
- * 2026-08-21, NH Hunt 4 item 2).
+ * Normalises a portrait through the one client that decodes every format a
+ * browser decodes (WebP and AVIF included), so a container format never blocks
+ * a portrait. It names the format from the bytes, never the filename, and caps
+ * the served size; any resampling is recorded in the photo's source string.
+ * Nothing here judges whether the image is the right person.
  *
- * `stripImageMetadata` handles JPEG and PNG by byte surgery and returns
- * anything else unchanged with `stripped: false`, and `ship:candidate` refuses
- * to ship bytes it cannot inspect — both correct. The consequence was not:
- * campaign sites now serve WebP as a matter of course (and Squarespace serves
- * WebP bytes under a `.jpg` URL), so a portrait a person had read and approved
- * could not ship because of its container format. That is the absence of a
- * tool standing in for a fact about a candidate, which `CLAUDE.md` forbids by
- * name.
- *
- * This normalises a portrait through the one client that decodes every format
- * a browser decodes. It does three things and reports each:
- *
- * 1. **Decodes any container** — WebP and AVIF included.
- * 2. **Names the format from the BYTES, never from the plan.** The first run of
- *    this hunt shipped a JPEG under a `.png` filename because the plan said
- *    `.png` and nothing checked. A file whose extension disagrees with its
- *    bytes is served with the wrong content type, and it is the same class of
- *    defect as a render default manufacturing a claim: the name asserts
- *    something the contents do not support.
- * 3. **Caps the served size.** The same run shipped a 2.7 MB portrait onto a
- *    card. Reader friction is a defect with the standing of a wrong number, and
- *    a multi-megabyte thumbnail is friction. Anything over the cap is resampled
- *    and the resampling is RECORDED in the photo's source string, because a
- *    picture we re-encoded is not byte-identical to the one the source
- *    published and a reader comparing them deserves to know which is which.
- *
- * The pixels remain the source's. Nothing here judges whether the image is a
- * clean solo portrait of the right person — that is a human judgement about a
- * named person's face and the four-door rule keeps it there.
- *
- * A render that produces no pixels THROWS. A zero-byte image is a FAILED
+ * A render that produces no pixels throws: a zero-byte image is a failed
  * transcode, never an empty portrait.
  */
 import { mkdtempSync, writeFileSync, rmSync } from "node:fs";

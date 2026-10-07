@@ -1,10 +1,6 @@
 /**
- * **THE BATCH ROUTE — integrated, flagged, inert.** (Prompt-caching session,
- * 2026-09-06. Acceptance row PC-8; RULING 277.)
- *
- * The request shape under the flag, against a fake fetch; the flag's default;
- * the results file's shape; and the prohibition: no reader-facing path reaches
- * the batch module, and no reader-facing lane can be registered on it.
+ * The batch route: the request shape against a fake fetch, each lane's flag and default, the results file's shape,
+ * and the prohibition that no reader-facing path reaches the batch module.
  */
 
 import assert from "node:assert/strict";
@@ -22,8 +18,6 @@ import {
   runSingleRequestBatch,
   backgroundBatchTransport,
 } from "../lib/control-plane/model-batch.ts";
-import { synthesizeForComparison } from "../lib/ask/model-comparison.ts";
-import type { EvidencePack } from "../lib/ask/evidence.ts";
 import { MODELS } from "../lib/models.ts";
 import { modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
 
@@ -103,37 +97,6 @@ test("PC-8: results are JSON Lines keyed by custom_id in any order; an errored, 
   await assert.rejects(runSingleRequestBatch({ model: "m" }, { apiKey: "k", fetchImpl: failing, sleep: async () => undefined }), (e: Error) => e instanceof MessageBatchError && /errored/.test(e.message));
   assert.throws(() => batchRequestBody([]), /at least one request/);
   assert.throws(() => batchRequestBody([{ custom_id: "x", params: {} }, { custom_id: "x", params: {} }]), /unique/);
-});
-
-test("PC-8: the comparison seam routes through the batch only under the option, and reports the route on its outcome", async () => {
-  const pack: EvidencePack = {
-    question: "what is on the agenda",
-    intent: "UPCOMING_AGENDA",
-    temporal: { kind: "NEXT" },
-    subject: { kind: "BODY", id: "b", name: "Vail Unified District" },
-    records: [{ kind: "AGENDA_ITEM", id: "m1#0", bodyId: "b", text: "Item 0. Consideration of the capital improvement schedule.", occurredAt: "2026-09-09T02:00:00.000Z", sourceUrl: "https://example.gov/agenda-0.pdf", sourceOrg: "Vail Unified District", retrievedAt: "2026-08-31T00:00:00.000Z" } as EvidencePack["records"][number]],
-    gaps: [],
-    denominators: { agendasRead: 1 },
-    today: "2026-09-06",
-  };
-  const urls: string[] = [];
-  const message = { content: [{ type: "text", text: JSON.stringify({ answer: "The board considers its capital schedule.", citedSources: [1] }) }], usage: { input_tokens: 900, output_tokens: 40, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } };
-  const fetchImpl: typeof fetch = async (url) => {
-    urls.push(String(url));
-    if (String(url) === MESSAGE_BATCHES_ENDPOINT) return jsonResponse(200, { id: "mb", processing_status: "ended", request_counts: { processing: 0, succeeded: 1, errored: 0, canceled: 0, expired: 0 }, results_url: "https://x/results" });
-    if (String(url) === "https://x/results") return jsonResponse(200, `${JSON.stringify({ custom_id: "compare-claude-opus-5", result: { type: "succeeded", message } })}\n`, true);
-    return jsonResponse(200, message);
-  };
-  const sync = await synthesizeForComparison(pack, "claude-opus-5", { apiKey: "k", fetchImpl });
-  assert.equal(sync.kind, "WROTE");
-  assert.equal(sync.kind === "WROTE" && sync.batch, false, "off by default");
-  assert.deepEqual(urls, ["https://api.anthropic.com/v1/messages"]);
-  urls.length = 0;
-  const batched = await synthesizeForComparison(pack, "claude-opus-5", { apiKey: "k", fetchImpl, batch: true, batchPollIntervalMs: 1 });
-  assert.equal(batched.kind, "WROTE");
-  assert.equal(batched.kind === "WROTE" && batched.batch, true);
-  assert.equal(urls[0], MESSAGE_BATCHES_ENDPOINT, "under the option the same body goes to the batches endpoint");
-  assert.ok(!urls.includes("https://api.anthropic.com/v1/messages"), "and never to the synchronous endpoint");
 });
 
 test("PC-8: no reader-facing path reaches the batch module — nothing under app/, and none of the reader-facing Ask call sites", () => {

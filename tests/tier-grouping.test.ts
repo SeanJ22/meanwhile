@@ -10,20 +10,6 @@ import {
 import { namedHolderCount } from "../lib/registry/representation.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 
-/**
- * Items 2b and 2c (wall clock 2026-08-14 second session).
- *
- * 2b — the governor was missing from who-governs at every zip: the card
- * is built from division rows, legislators attach via districts, and a
- * statewide executive is elected by no district on the map, so no row
- * ever claimed them. The guard asserts the CLASS (statewide-executive
- * attachment), never the individual names.
- *
- * 2c — officials group under three tiers everywhere they render, always
- * closest-first: Local, State, Federal. Membership is asserted by office
- * type.
- */
-
 const ZIPS: Record<string, [number, number]> = {
   "85701": [32.21696, -110.971],
   "85641": [32.04903, -110.62291],
@@ -42,8 +28,6 @@ test("every zip's who-governs coverage includes its state's governor", async () 
       1,
       `${zip}: expected exactly one governor in statewideExecutives`,
     );
-    // The class, not the name: a statewide-executive row with a source
-    // read off the state's own site.
     const executive = STATEWIDE_EXECUTIVES.find(
       (e) => e.holder.id === governors[0].id,
     );
@@ -58,14 +42,6 @@ test("every zip's who-governs coverage includes its state's governor", async () 
 });
 
 test("statewide executives are sourced from the state's own domain, never a third party", () => {
-  /*
-   * A FLOOR, NOT A HEAD-COUNT (2026-08-28). This read `=== 3, "AZ, NJ, NH"`,
-   * which asserted the size of the store rather than the rule the test is
-   * named for. The rule is the loop: every row traces to a government domain.
-   * Pinning the count made ACQUIRING an officeholder fail a test about
-   * sourcing, and the three states are still covered — asserted by state,
-   * which is what "AZ, NJ, NH" was trying to say.
-   */
   assert.ok(STATEWIDE_EXECUTIVES.length >= 3, `only ${STATEWIDE_EXECUTIVES.length} rows`);
   const states = new Set(STATEWIDE_EXECUTIVES.map((e) => e.stateOcdId));
   for (const state of ["az", "nj", "nh"]) {
@@ -96,10 +72,6 @@ test("tier membership is correct by office type at every zip, closest-first", as
     "State Representative",
     "Assemblymember",
     "Governor",
-    // The statewide executives acquired 2026-08-28. The GROUPING was already
-    // right — `groupOfficials` reads the office level, not this list — and
-    // this set is the test's own allow-list of what may legitimately appear
-    // under STATE. It had to grow with the corpus or the corpus could not.
     "Lieutenant Governor",
     "Secretary of State",
     "Attorney General",
@@ -132,13 +104,11 @@ test("tier membership is correct by office type at every zip, closest-first", as
       );
     }
 
-    // The governor renders under STATE (2b ships inside 2c's structure).
     assert.ok(
       groups.state.some((r) => r.holder.officeTitle === "Governor"),
       `${zip}: governor missing from the STATE group`,
     );
 
-    // Closest-first: the flat list is local rows, then state, then federal.
     const flat = allOfficialRows(coverage);
     assert.deepEqual(
       flat.map((r) => r.holder.id),
@@ -148,12 +118,8 @@ test("tier membership is correct by office type at every zip, closest-first", as
       `${zip}: flat list must be Local → State → Federal`,
     );
 
-    // The stat card's N is this same derivation — stated N equals
-    // rendered rows, by construction and now by assertion.
     assert.equal(namedHolderCount(coverage), flat.length);
 
-    // Local must actually hold people at every covered zip — a flat list
-    // that silently lost the rosters is the door's old defect.
     assert.ok(groups.local.length > 0, `${zip}: LOCAL group is empty`);
   }
 });

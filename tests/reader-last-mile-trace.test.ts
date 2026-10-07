@@ -67,7 +67,6 @@ test("postbuild checker rejects a removed dynamic holding in emitted route manif
   };
   try {
     write(join(root, "data/derived/resolver-geometry.json"), { files: ["public/geo/state-outlines.geojson"] });
-    write(join(root, "data/states/az/funding/state-money-az-2026.json"), {});
     write(join(root, "data/derived/zip-divisions/85.json"), {});
     const contracts = readerTraceRequirements(root);
     const routes = new Map<string, Set<string>>();

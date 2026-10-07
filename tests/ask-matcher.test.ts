@@ -20,47 +20,17 @@ import {
 } from "../lib/routing/match.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 
-/**
- * THE AUTHOR'S MATCHER RULING (2026-08-17), held permanently.
- *
- * *"The keyword layer only routes on a STRONG match — multiple distinct
- * keyword hits, or an exact name match (a body, person, district, or
- * destination named as such). Anything weaker falls through to the Claude
- * classifier, which reads the full question and either picks the right drawer
- * or says nothing routes."*
- *
- * The first test below is the proving case the ruling names by hand, and it is
- * required to be permanent. Everything after it holds the rest of the ruling:
- * what the threshold is, which exact-name classes are honored, and that a weak
- * match reaches the reader as a refusal rather than as a low-confidence route
- * when the classifier is not available.
- */
-
 const TUCSON: [number, number] = [32.2226, -110.9747];
-
-// ── 1. THE PROVING CASE ────────────────────────────────────────────────────
 
 const WEATHER = "what will the weather be like on election day";
 
 test("PROVING CASE: the weather question does not route on the keyword layer", () => {
-  /*
-   * g11 found this and handed it over rather than claiming it as a defect,
-   * because nothing was fabricated: the word "election" is genuinely a keyword
-   * of `elections-voting`, the route's answer was assembled from sourced
-   * records, and A07's contract held throughout. What was wrong was narrower
-   * and worse — the product answered a question nobody had asked.
-   *
-   * One hit is now weak. This must never route on the keyword layer again.
-   */
   assert.equal(
     matchTopic(WEATHER),
     null,
     "one keyword hit ('election') may not carry a route",
   );
 
-  // It declined for the right reason, and the record says which: a single
-  // sub-threshold hit, not an absence of evidence. Naming the difference is
-  // what lets a later audit tell a near-miss from a blank.
   const weak = weakTopicMatch(WEATHER);
   assert.ok(weak, "the sub-threshold winner is still reportable");
   assert.equal(weak.topicId, "elections-voting");
@@ -86,8 +56,6 @@ test("PROVING CASE, end to end: with no classifier the weather question is REFUS
   assert.ok(result.answer.statement, "the refusal is stated to the reader");
   assert.equal(result.match, null, "no low-confidence route is ever the fallback");
 });
-
-// ── 2. THE THRESHOLD, STATED ───────────────────────────────────────────────
 
 test("the strong-match threshold is two distinct hits, and it is the same number the code uses", () => {
   assert.equal(STRONG_MATCH_MIN_HITS, 2);
@@ -117,8 +85,6 @@ test("the strong-match threshold is two distinct hits, and it is the same number
   assert.equal(weakTopicMatch("school"), null, "a one-hit tie is still a tie");
   assert.equal(weakTopicMatch(""), null);
 });
-
-// ── 3. THE EXACT-NAME CLASSES ──────────────────────────────────────────────
 
 const INDEX: NameableEntity[] = [
   { id: "b1", name: "Planning Commission", nameClass: "body" },
@@ -177,8 +143,6 @@ test("exact-name refuses ambiguity, article noise, and fragments", () => {
   assert.equal(matchExactName("", INDEX), null);
 });
 
-// ── 4. THE FALLTHROUGH CONTRACT ────────────────────────────────────────────
-
 test("a weak match with a classifier topic routes; the same match without one refuses", async () => {
   const coverage = await coverageAt(...TUCSON, 1);
   const question = "my water bill";
@@ -212,8 +176,6 @@ test("the classifier still cannot invent a route, and still cannot overrule a st
   assert.equal(strong.match?.via, undefined);
 });
 
-// ── 5. THE ANSWERED DEFINITION — A06'S ROADMAP ─────────────────────────────
-
 test("askWasAnswered is the single definition, and the surface reads it rather than repeating it", async () => {
   const coverage = await coverageAt(...TUCSON, 1);
 
@@ -238,19 +200,6 @@ test("askWasAnswered is the single definition, and the surface reads it rather t
   const refused = answerQuestion("qwertyuiop asdfgh", coverage, "85701");
   assert.equal(askWasAnswered(refused), false);
 
-  /*
-   * **THE GROUNDED REPLY, WHOLE, RATHER THAN A COUNT OF AGENDA HITS.**
-   * (ASK-05, 2026-08-28.)
-   *
-   * This read `{ agendaHits: 0 }` / `{ agendaHits: 3 }` — the topic sweep's
-   * hit count, taken from a SECOND engine that ran concurrently with the
-   * grounded one and rendered its own competing answer. That engine is gone;
-   * the sweep runs inside the one pipeline and its hits arrive as
-   * `AGENDA_MENTION` records, so the count to ask about is the payload's.
-   *
-   * The assertions are the same three facts, restated on the contract: an
-   * empty reply leaves a refusal a refusal, and evidence makes it an answer.
-   */
   const empty = transportFailure();
   empty.gaps = [];
   assert.equal(askWasAnswered(refused, empty), false);
@@ -270,13 +219,6 @@ test("askWasAnswered is the single definition, and the surface reads it rather t
     true,
   );
 
-  /*
-   * **AND A NAMED GAP IS AN ANSWER.** This could not be expressed at all
-   * before: "we hold this person and none of the 24 roll calls we have
-   * recorded carries a vote by them" is the honest answer to the question that
-   * was asked, and logging it `NO_ROUTE` would file a question this product
-   * answered correctly into the roadmap of things it cannot do.
-   */
   assert.equal(
     askWasAnswered(refused, {
       ...empty,
@@ -286,30 +228,13 @@ test("askWasAnswered is the single definition, and the surface reads it rather t
     true,
   );
 
-  /*
-   * **A TRANSPORT FAILURE IS NEITHER.** Its gap is about us reaching our own
-   * server; nothing was asked of the records, so nothing may be concluded
-   * about them. It reads as unanswered here, and the component skips the log
-   * row entirely rather than filing a question we never asked into A06's
-   * roadmap of things this product cannot do.
-   */
   assert.equal(askWasAnswered(refused, transportFailure()), false);
 
-  /*
-   * The component must not carry a SECOND definition of answered. g11's defect
-   * was a `routedSomewhere` expression that knew about topics and destinations
-   * and would have had to learn about the digest and exact names separately —
-   * three chances to disagree with the render. The source is pinned: the log
-   * branch reads the shared function.
-   */
   const source = readFileSync(
     join(process.cwd(), "components", "ask", "ask-box.tsx"),
     "utf8",
   );
-  // The call may carry extra evidence (A03's agenda hits, 2026-08-18) —
-  // what it may NOT do is decide "answered" itself. The pin is on the call,
-  // not on its argument list, so extending the definition stays legal and
-  // re-implementing it does not.
+  // The call may carry extra evidence; it may not decide "answered" itself.
   assert.match(
     source,
     /if \(askWasAnswered\(result[,)]/,
@@ -325,26 +250,7 @@ test("askWasAnswered is the single definition, and the surface reads it rather t
   );
 });
 
-/* -------------------------------------------- NH-3, 2026-08-23: schools --- */
-
-/**
- * **"WHEN DOES SCHOOL START?" IS A QUESTION THE SCHOOL DISTRICT OWNS.**
- *
- * It was REFUSED — *"We don't have a sourced answer for who owns this topic
- * yet. Rather than guess, we haven't routed it."* Not because the topic was
- * missing: `schools-operations` and `schools-policy` were both there. The
- * question hit the bare anchor "school" once for each of them and nothing
- * else, so it sat one hit below the strong-match threshold and fell through.
- *
- * The threshold is right and is not touched here — it is what stops *"what
- * will the weather be like on election day"* being answered at length about
- * who runs elections. What was missing was a SECOND piece of evidence, and
- * the negative controls below are the reason it is a phrase rather than the
- * bare word "start".
- *
- * It routes to POLICY because the board adopts the school calendar:
- * N.J.S.A. 18A:36-2, RSA 189:1. The superintendent runs the year the board sets.
- */
+/** "When does school start?" routes to school policy: the board adopts the school calendar. */
 test("NH-3: the school calendar routes to the school district", () => {
   for (const q of [
     "when does school start?",
@@ -365,12 +271,6 @@ test("NH-3: the school calendar routes to the school district", () => {
 });
 
 test("NH-3: the school cues are phrases, so they cannot capture other topics", () => {
-  /*
-   * The whole reason the fix is "school start" and not "start". A bare "start"
-   * would route every one of these to the school board — a word carrying a
-   * topic's vocabulary rather than its intent, which is the failure the
-   * threshold ruling was adopted over.
-   */
   for (const q of [
     "when does the meeting start",
     "when does early voting start",

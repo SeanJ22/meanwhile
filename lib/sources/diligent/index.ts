@@ -1,10 +1,8 @@
 /**
  * @freshness-reads-here
  *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * The clock stamps in this file are minted by the code path that performs the read: the freshness date
+ * is taken at the moment of the fetch.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -43,37 +41,18 @@ import {
 } from "../normalize-account.ts";
 
 /**
- * Diligent Community / iCompass CivicWeb meeting source — trackers **D13**
- * and the Newbury half of the 03255 hunt.
- *
- * Both brands ship the same portal software, and both expose the same WCF
- * JSON service the portal page itself calls:
+ * Diligent Community / iCompass CivicWeb meeting source. Both brands ship the same portal software and
+ * expose the same WCF JSON service the portal page itself calls:
  *
  *   <serviceBase>/Services/MeetingsService.svc/meetings?from=YYYY-MM-DD&to=YYYY-MM-DD
  *
- * Found by watching the network requests on `MeetingSchedule.aspx` — the page
- * renders "Loading…" to a plain client while this endpoint answers plain GET
- * with no auth. That is ladder rung 7: the same public data the page shows,
- * in the form the page already receives it. Verified live against both the
- * TUSD tenant (diligentoneplatform.com) and Newbury's (civicweb.net).
- *
- * `CIVICWEB` and `DILIGENT` stay distinct `AgendaSourceType` values — they
- * are different products to a clerk — but they dispatch here together because
- * the wire format is one format.
+ * The page renders "Loading…" to a plain client while this endpoint answers plain GET with no auth.
+ * `CIVICWEB` and `DILIGENT` stay distinct `AgendaSourceType` values but dispatch here together.
  */
 
 const SOURCE_NAME = "diligent";
 
-/**
- * The fetch window IS the served window (M76, 2026-08-15).
- *
- * These were literal 60 and 30 with a comment claiming they matched the
- * cascade. The served lookback moved 30 -> 90 and the adapters did not, so
- * every source quietly dropped sixty days of published, retrievable history
- * at the fetch — invisible to every count check, because each adapter
- * honestly reported what it had asked for. Deriving them is what makes the
- * drift impossible rather than merely noticed.
- */
+/** The fetch window is the served window, derived from the serving constants so the two cannot drift. */
 const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
@@ -122,17 +101,13 @@ function isoDate(date: Date): string {
 }
 
 /**
- * The body's name for a row, from published text only: the service's own
- * `MeetingTypeName` where the tenant sends one (TUSD does), else the wiring
- * row's `typeName:<TypeId>` — read off the portal's own MeetingTypeList page
- * and cited there — else the row's published `Name`. Never minted.
+ * The body's name for a row, from published text only: the service's own `MeetingTypeName` where the
+ * tenant sends one, else the wiring row's `typeName:<TypeId>` (cited on the row), else the row's
+ * published `Name`. Never minted.
  */
 function bodyNameFor(m: DiligentMeeting, wiring: BodySourceWiring): string {
-  // A `typeName:<TypeId>` override wins when the wiring row carries one:
-  // some tenants publish a SITTING name in MeetingTypeName ("Regular
-  // Governing Board Meeting", Sunnyside) where a body name belongs, and
-  // the override is itself a published name — read off the portal's
-  // MeetingTypeList or the body's own site, cited on the wiring row.
+  // A `typeName:<TypeId>` override wins: some tenants publish a sitting name in MeetingTypeName where a
+  // body name belongs, and the override is itself a published name cited on the wiring row.
   const fromConfig =
     m.TypeId != null ? wiring.config[`typeName:${m.TypeId}`] : undefined;
   if (fromConfig) return fromConfig;
@@ -177,22 +152,10 @@ export function makeDiligentSource(
       }
       const portal: { id: string; key: string }[] = [];
       const taken = new Set<string>();
-      /*
-       * **A CONCLUDED SITTING'S AGENDA RECORD FROM THE BODY'S OWN HOST.**
-       * (2026-09-23.)
-       *
-       * The portal's meeting page is not the agenda — the agenda is a linked
-       * document on the same tenant host (`/document/…`), which nothing here
-       * follows yet. (The tenants' robots.txt disallows this client; that is
-       * recorded, and has blocked nothing since the owner decision of
-       * 2026-09-25.) Tucson Unified publishes, for every Governing Board
-       * sitting, a Board Actions PDF on govboard.tusd1.org: the
-       * agenda's numbered items with the action taken on each. Where the
-       * wiring row names that index (`agendaRecordsUrl`) and the portal type
-       * ids it covers (`agendaRecordsTypeIds`, read off the portal's own
-       * rows), a CONCLUDED sitting of those types links its record instead of
-       * the portal page. Nothing else about the row changes.
-       */
+      // A concluded sitting's agenda record from the body's own host. Where the wiring row names the body's
+      // own agenda-records index (`agendaRecordsUrl`) and the portal type ids it covers
+      // (`agendaRecordsTypeIds`), a concluded sitting of those types links its record instead of the portal
+      // page. Nothing else about the row changes.
       const recordsByDay = agendaRecords
         ? parseBoardActions(agendaRecords.html, agendaRecords.url)
         : new Map<string, string>();
@@ -226,14 +189,8 @@ export function makeDiligentSource(
         );
 
         const location = (m.MeetingLocation ?? "").trim();
-        /*
-         * A meeting held online is KEPT (D18). No building means no
-         * coordinates and no pin, but it is a real public meeting a reader
-         * could attend, and dropping it applied the map's constraint to the
-         * reader. The label is the published string verbatim; nothing here
-         * publishes a join link, so joinUrl is null and renders as the gap
-         * it is rather than as some other URL dressed up as a way in.
-         */
+        // A meeting held online is kept: no building means no pin, but it is a real public meeting. The label is
+        // the published string verbatim; no join link is published, so `joinUrl` is null.
         const online = location && isPlacelessLocation(location)
           ? { label: location, joinUrl: null }
           : null;
@@ -243,24 +200,13 @@ export function makeDiligentSource(
           // so it is not a drop and must not be summed as one.
           keptButPlaceless += 1;
         }
-        // D31: the tenant is passed so a division-less body keys on itself
-        // rather than on a null every other division-less body also has.
-        // A sitting with no published place, or a place with no reviewed
-        // spelling yet, is still a verified sitting: it is published with no
-        // place rather than withheld (the owner's rule of 2026-09-23 — a
-        // missing location never suppresses an otherwise verified meeting).
+        // The tenant is passed so a division-less body keys on itself. A sitting with no published place, or a
+        // place with no reviewed spelling, is still published, with no place.
         const venue = online || !location
           ? null
           : resolveVenue(SOURCE_NAME, wiring.ocdId, location, wiring.config.slug) ?? null;
-        // The gap is NAMED, not hidden: `unknownVenue` still counts it, as
-        // `placeless` counts a kept online sitting (D18) — so the ingest
-        // report and the venue hunt still see an unreviewed place — and the
-        // row is PRODUCED with no place and the gap the portal's own
-        // `MeetingLocation` states (the venue-gap class, 2026-09-23, one
-        // construction for every adapter): its words verbatim when it names a
-        // room we hold no reviewed row for, the portal's silence when it is
-        // blank. It used to carry no gap, so a stated room read as "We
-        // haven't recorded a place for this meeting yet".
+        // The gap is named: `unknownVenue` still counts it, and the row is produced with no place and the gap the
+        // portal's own `MeetingLocation` states (its words verbatim, or its silence when blank).
         const venueGap = !online && !venue ? unplacedVenueGap(location, wiring.publishingOrg) : null;
         if (venueGap) {
           drops.unknownVenue++;
@@ -375,8 +321,8 @@ export function makeDiligentSource(
           fetchImpl,
           signal: query?.signal,
         });
-        // The body's own agenda-record index is read only under a permission
-        // verdict for ITS host, asked before the request (RULING 263).
+        // The body's own agenda-record index is read only under a permission verdict for its host, asked before
+        // the request.
         const gate = makePermissionGate({ fetchImpl, signal: query?.signal });
         const http = { fetchImpl, signal: query?.signal };
         const recordsUrl = wiring.config.agendaRecordsUrl;

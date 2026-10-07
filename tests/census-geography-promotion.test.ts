@@ -1,10 +1,3 @@
-/**
- * Proves the census-geography ROUTINE (automatic) publication wiring end to end
- * against the real promotion engine, using the in-memory store (the sanctioned
- * test store that skips the production-authority door — no bypass of the
- * certified runtime). The Postgres path additionally requires the certified
- * installed runtime and is exercised on an isolated Neon test branch.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -34,7 +27,6 @@ test("census-geography-relationships is an official .gov source that auto-qualif
   const auth = SOURCE_AUTHORITIES["census-geography-relationships"];
   assert.ok(auth, "the census-geography-relationships source authority exists");
   assert.ok(auth.routePrefixes.length > 0 && auth.routePrefixes.every((prefix) => isOfficialSource(prefix)), "every route is on an official .gov site");
-  // Auto-qualifies for automatic publication — no per-import manual approval.
   assert.equal(auth.routineAutoPromotion, true);
 });
 
@@ -44,7 +36,6 @@ test("the routine contract auto-publishes and matches the publication identity",
   assert.equal(c.recordClass, CENSUS_GEO_RECORD_CLASS);
   assert.equal(c.scope, CENSUS_GEO_SCOPE);
   assert.equal(c.parserNormalizerVersion, CENSUS_GEO_PARSER_VERSION);
-  // Automatic publication: no per-import manual approval.
   assert.equal(c.autoPromotable, true);
 });
 

@@ -8,14 +8,6 @@ import { answerQuestion, REFUSAL_LOG_MAX_CHARS } from "../lib/routing/ask.ts";
 import { matchTopic } from "../lib/routing/match.ts";
 import { resolveAskRoleModel } from "../lib/ask/model.ts";
 
-/**
- * The ask box, v1 (session brief 5, 2026-08-19): routing without
- * generation. The author's two golden cases run LIVE — the same
- * answerQuestion the surface calls, against the real registry at 85701 —
- * plus the honest refusal, the no-LLM guarantee, and the transparency
- * coupling.
- */
-
 const TUCSON: [number, number] = [32.21696, -110.971];
 const ROOT = join(import.meta.dirname, "..");
 
@@ -67,25 +59,8 @@ test("a tie between topics refuses — evidence that does not decide is not a ro
   assert.equal(matchTopic("   "), null);
 });
 
-// ── The everyday layer (session brief 3, wall clock 2026-08-14) ──────────
-
 test("golden, live at 85701: the pothole question returns Tucson's street-maintenance owner with a working phone", async () => {
   const coverage = await coverageAt(...TUCSON, 1);
-  /*
-   * THE MATCHER RULING CHANGED WHICH RUNG ANSWERS THIS, and the change is
-   * recorded here rather than hidden by rewording the fixture.
-   *
-   * "There's a pothole in front of my house — who do I call?" produces exactly
-   * ONE keyword hit (`pothole`); "who do I call" is a question shape, not
-   * topic evidence. Under the author's 2026-08-17 ruling one hit is weak, so
-   * the keyword layer declines and the Level 1 classifier is what reads the
-   * sentence and picks `roads-local`. The surface does that automatically; the
-   * test does it explicitly, because a test that quietly passed the classifier
-   * a topic it had not earned would prove nothing.
-   *
-   * The everyday contact — which is what this golden actually guards — rides
-   * the answer identically whichever rung found the topic.
-   */
   assert.equal(
     matchTopic("There's a pothole in front of my house — who do I call?"),
     null,
@@ -104,10 +79,6 @@ test("golden, live at 85701: the pothole question returns Tucson's street-mainte
     c.body.includes("Street Maintenance"),
   );
   assert.ok(streetMaintenance, "the street-maintenance owner must ride the answer");
-  // The city's own page, read in a real browser 2026-08-14: the published
-  // channel is Tucson 311 — call 3-1-1 or the request portal. The old
-  // direct TDOT line lives on in 2015-era news stories; the city's page
-  // today says 311, and the row ships what the page says.
   assert.equal(streetMaintenance.phone, "311");
   assert.equal(
     streetMaintenance.requestUrl,
@@ -115,18 +86,13 @@ test("golden, live at 85701: the pothole question returns Tucson's street-mainte
   );
   assert.match(streetMaintenance.sourceUrl, /^https:\/\/www\.tucsonaz\.gov\//);
   assert.equal(streetMaintenance.verification, "PAGE_FETCHED");
-  // The service line is the answer — the note says so.
   assert.ok(streetMaintenance.note?.includes("service line is the answer"));
 });
 
 test("the refusal log drove the map: the two live refusals now route", async () => {
   const { matchTopic } = await import("../lib/routing/match.ts");
-  // "my kids school" refused on the school-anchor tie (logged 2026-08-14
-  // 18:49 UTC); the possessive is a running-the-school question.
   assert.equal(matchTopic("my kids school")?.topicId, "schools-operations");
-  // "I want a bike lane" (logged 2026-08-14 18:16 UTC) is a streets ask.
   assert.equal(matchTopic("I want a bike lane")?.topicId, "roads-local");
-  // The original tie still refuses — "school" alone cannot decide.
   assert.equal(matchTopic("school"), null);
 });
 
@@ -211,10 +177,6 @@ test("the acknowledgment beat draws from the author's fixed pool — and code ne
   const { ASK_BEAT_POOL, PROHIBITED_BEAT_WORDS, beatStem } = await import(
     "../lib/routing/ask-beat-pool.ts"
   );
-  // The author's approved set, verbatim and in order (CLAUDE.md's register
-  // rule, 2026-08-15). This assertion IS the "code never adds a pool entry"
-  // guard: a fifth line — however good — fails the suite instead of
-  // shipping product voice nobody approved.
   assert.deepEqual(
     [...ASK_BEAT_POOL],
     [
@@ -226,9 +188,6 @@ test("the acknowledgment beat draws from the author's fixed pool — and code ne
     "the pool is the author's list; code never adds to it",
   );
   assert.equal(ASK_BEAT_POOL.length, 4);
-  // Acknowledgment register only — never a deliberation claim. Nothing a
-  // reader sees on this surface is generated, so a "Thinking…" label would
-  // be a false claim about a machine reasoning.
   for (const entry of ASK_BEAT_POOL) {
     for (const banned of PROHIBITED_BEAT_WORDS) {
       assert.ok(
@@ -248,9 +207,6 @@ test("the hang-tight beat is presentation only — routed and logged before the 
     join(ROOT, "components", "ask", "ask-box.tsx"),
     "utf8",
   );
-  // The words now come from the author's pool rather than a literal in the
-  // component (2026-08-15) — what this file pins is that the component
-  // renders a POOL DRAW and holds no beat copy of its own.
   assert.ok(
     source.includes("drawAskBeat()") && source.includes("beatStem(beat)"),
     "the beat renders a draw from the author's pool, not a hard-coded line",
@@ -259,15 +215,7 @@ test("the hang-tight beat is presentation only — routed and logged before the 
     /"\."\.repeat\(dots\)/.test(source),
     "the trailing dots animate in sequence for the beat's duration",
   );
-  /*
-   * **2026-09-30 — no held minimum.** Sean's rulings §6 fail any user-facing
-   * action over three seconds, measured until the result is usable, so the
-   * drawn 2.4-3.1 second hold (ASK-6) is gone: the answer replaces the beat the
-   * moment it is ready.
-   */
   assert.ok(!/BEAT_(MIN|MAX|STEP)_MS|drawBeatMs|beatTimer/.test(source), "an artificial hold on a ready answer is back");
-  // Never "Thinking" or anything implying AI — the transparency page says
-  // no AI answers questions and the label must not contradict it.
   assert.ok(!/Thinking|thinking\.\.\.|AI is/.test(source));
   // The answer is routed and logged BEFORE it is shown, and showing it logs nothing.
   const answerAt = source.indexOf("answerQuestion(question");
@@ -277,14 +225,6 @@ test("the hang-tight beat is presentation only — routed and logged before the 
     "route → log → show, in that order");
 });
 
-/**
- * Every module in the ask pipeline that may not generate, reach a network,
- * or hold a key. The list GROWS with the pipeline: `digest.ts`,
- * `exact-name.ts` and `destinations.ts` joined it on 2026-08-17 with A02 and
- * the author's matcher ruling. A new module in this path that the guard does
- * not name is a module the guard does not cover, and covering all of it is the
- * guard's whole value.
- */
 const NON_GENERATING_ROUTING_MODULES = [
   "match.ts",
   "ask.ts",
@@ -309,19 +249,6 @@ test("no generation: the ask pipeline touches no LLM, no network, no API key", (
 });
 
 test("log discipline: routed asks log the topic only; refusals carry capped text", () => {
-  // The component is the enforcement point — pin its source: the routed
-  // branch must not send the question, the refusal branch must cap it.
-  const source = readFileSync(
-    join(ROOT, "components", "ask", "ask-box.tsx"),
-    "utf8",
-  );
-  // The claim is that the ROUTED branch carries no question text — pinned
-  // against the branch's own object rather than against the line that
-  // happened to end it. The classifier (6d) added a `via` marker after
-  // `routed: true`, which is a fact about which rung found the topic and
-  // not a word the reader typed; asserting the shape rather than the
-  // terminator is what lets the second fact ride without loosening the
-  // first.
   const routedCall = /logEvent\("QUESTION_ASKED", ocdIds, \{[\s\S]*?routed: true,([\s\S]*?)\}\);/.exec(
     source,
   );
@@ -335,17 +262,12 @@ test("log discipline: routed asks log the topic only; refusals carry capped text
     /question: question\.slice\(0, REFUSAL_LOG_MAX_CHARS\)/,
     "the refusal log call must cap the text",
   );
-  // The only thing kept on the device is the returning-reader ID, through the
-  // one audited minting helper; no question text is stored here.
   assert.ok(!/localStorage/.test(source), "the ask box reaches storage only through getOrCreateBrowserKey");
   assert.equal(REFUSAL_LOG_MAX_CHARS, 200);
 });
 
-// ── The scrub (session brief 4, wall clock 2026-08-14) ───────────────────
-
 test("scrub: phone-, email-, and address-shaped text becomes [#] before storage", async () => {
   const { scrubFreeText, SCRUB_MARK } = await import("../lib/log/scrub.ts");
-  // The three fixture shapes the brief names, each in a real question.
   assert.equal(
     scrubFreeText("call me back at 973-627-2000 about the pothole"),
     `call me back at ${SCRUB_MARK} about the pothole`,
@@ -400,18 +322,8 @@ test("QUESTION_ASKED is a registered identifier-free event type", async () => {
     routed: false,
     question: "who fixes the streetlights",
   });
-  // 6d: a classifier-routed ask logs the topic and which rung found it.
   assertDetailIsAnonymous({ topic: "roads-local", routed: true, via: "classifier" });
 });
-
-/**
- * The Level 1 classifier — 6d, 2026-08-15.
- *
- * The doctrine these hold: the model picks WHICH curated topic a question
- * belongs to, out of a closed list, and writes none of the answer. Keyword
- * matching runs first and cannot be overruled; every failure of the rung
- * lands the reader on the honest refusal they would have had.
- */
 
 test("the classifier answers with a curated topic id, or nothing", async () => {
   const { classifiableTopicIds, readClassifierAnswer, classifierSchema, NO_TOPIC } =
@@ -452,13 +364,6 @@ test("the classifier answers with a curated topic id, or nothing", async () => {
 test("keyword-first: the classifier can never overrule a deterministic match", async () => {
   const coverage = await coverageAt(...TUCSON, 1);
 
-  /*
-   * The fixture is a STRONG match — two distinct hits, `pothole` and `street`
-   * — because after the 2026-08-17 ruling only a strong match can demonstrate
-   * this property at all. The prior fixture ("who do I call about the
-   * library") carried one hit, so it now falls through by design and would
-   * have tested the opposite of what this test is named for.
-   */
   const strong = "there is a pothole on my street";
   assert.equal(matchTopic(strong)?.matchedOn.length, 2);
   const keyworded = answerQuestion(strong, coverage, "85701");
@@ -521,7 +426,6 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
       );
     }) as unknown as typeof fetch;
 
-    /* 2026-09-25: the outcome also records the model sent and the model the API says served it. */
     const labelledBy = { model: resolveAskRoleModel("CLASSIFIER"), servedModel: null };
     assert.deepEqual(await classifyQuestion("first question", { fetchImpl }), {
       kind: "TOPIC",
@@ -575,9 +479,6 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
 });
 
 test("the classifier writes no reader-facing sentence, and the key stays server-side", () => {
-  // The whole doctrine, held in source. The classifier module may speak to
-  // Anthropic; nothing else in the routing pipeline may, and no component
-  // may read its output as text.
   for (const file of NON_GENERATING_ROUTING_MODULES) {
     const source = readFileSync(join(ROOT, "lib", "routing", file), "utf8");
     for (const b of ["fetch(", "anthropic", "openai", "API_KEY", "llm"]) {

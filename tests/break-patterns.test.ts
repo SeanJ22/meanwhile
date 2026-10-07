@@ -1,4 +1,4 @@
-/** DP-32: a door that breaks in the same month across years, or right after the same event, gets a lesson with the fix that worked last time. */
+/** A door that breaks in the same month across years, or right after the same event, gets a lesson with the fix that worked last time. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

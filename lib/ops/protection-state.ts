@@ -1,17 +1,4 @@
-/**
- * Is the protection on `main` still the permanent software-only boundary?
- *
- * `scripts/protection-verify.mjs` owns GitHub I/O. This module owns only the
- * fail-closed judgement, so the intended live state is deterministic and can
- * be pinned by tests.
- *
- * Terminal PDC removes the category-wide DeployKey bypass and every
- * write-enabled deploy key. Routine civic data and operational outcomes no
- * longer push `main`; therefore no machine needs a route around software CI.
- * The protections that guard real software changes remain unchanged: pull
- * requests, strict/up-to-date checks, the exact required contexts, deletion
- * protection, and non-fast-forward protection.
- */
+/** Whether `main`'s protection is still the permanent software-only boundary: a fail-closed judgement over a live reading. */
 
 export interface ProtectionReading {
   /** `repos/{o}/{r}/branches/main/protection`, or null when absent. */

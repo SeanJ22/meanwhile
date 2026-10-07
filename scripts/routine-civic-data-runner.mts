@@ -159,8 +159,7 @@ import {
   assertRuntimeAuthority,
 } from "../lib/civic-data/runtime-authority.ts";
 
-// An error nothing below catches ends this process through one sanitized
-// protocol line naming the step, which the parent quotes (lib/ops/fatal-line.ts).
+// An uncaught error ends this process through one sanitized protocol line naming the step (lib/ops/fatal-line.ts).
 let step = "reading its task selection";
 installFatalLine("routine-civic-data-runner", () => step);
 
@@ -171,13 +170,12 @@ const readCacheHost = await startCivicReadCacheHost();
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
-// DB-13: with WTP_DOORS_READ=registry the meeting work is built from the door
-// registry on every pass; otherwise (the default) the code's list is used as before.
+// With WTP_DOORS_READ=registry the meeting work is built from the door registry; otherwise the code's list.
 const CODE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
 if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlaneUrlFromEnv() !== null) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
-    // DB-10/DB-11/DB-23: an empty registry is seeded once from today's doors (WTP_DOORS_SEED=on); otherwise nothing is written.
+    // An empty registry is seeded once from today's doors (WTP_DOORS_SEED=on); otherwise nothing is written.
     const seeded = await seedDoorsOnStart(doorRepos.doors);
     console.log(`RCD_TASK routine-civic-data-runner: door registry seed — ${seeded.seeded ? `${seeded.result.total} doors now held` : seeded.reason}`);
     if (doorReadModeFromEnv() === "registry") {
@@ -272,9 +270,8 @@ function releaseChildMemory(id: string): void {
 }
 
 /**
- * DB-30: how often each open door has been seen to change, by door id (a task's id is its door's id), so a door that
- * changes faster than its policy is checked as often as it changes. A registry that cannot be read leaves every
- * task on its policy; it never stops a read.
+ * How often each open door has been seen to change, by door id, so a door that changes faster than its
+ * policy is checked as often as it changes. An unreadable registry leaves every task on its policy.
  */
 async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
   const connection = controlPlaneUrlFromEnv();
@@ -290,10 +287,8 @@ async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
 }
 
 /**
- * DB-21: a hand-wired meeting door's last success or failure, from its partition's
- * promotion outcome. A derived family's members are recorded by the family's own
- * child, from each member's result. A door that is not in the registry is left alone,
- * and a registry that cannot be written never changes the outcome of the pass.
+ * A hand-wired meeting door's last success or failure, from its partition's
+ * promotion outcome. A registry that cannot be written never changes the pass.
  */
 let doorOutcomeRepos: Promise<Awaited<ReturnType<typeof createPgRepositories>>> | null = null;
 async function recordMeetingDoorOutcome(taskId: string, outcome: DoorOutcome, changed = false, evidence: DoorEvidence | null = null): Promise<void> {
@@ -303,8 +298,8 @@ async function recordMeetingDoorOutcome(taskId: string, outcome: DoorOutcome, ch
     doorOutcomeRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
     const repos = await doorOutcomeRepos;
     const at = new Date().toISOString();
-    // DB-32/34 (WTP_DOOR_SHUT=on): a failed read that tells the door itself is gone judges it and opens its fix item;
-    // a promoted read reopens a door that was shut. Any other read keeps the plain last success / last failure record.
+    // With WTP_DOOR_SHUT=on, a failed read that tells the door itself is gone judges it and opens its fix item;
+    // a promoted read reopens a door that was shut.
     if (outcome === "FAILURE" && evidence !== null) {
       if ((await recordDoorEvidence(repos.doors, taskId, evidence, at, repos)).written) return;
     }
@@ -377,14 +372,9 @@ async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly Routi
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
   assertDurableRepositories(repos, "routine civic-data provider-frontier history");
   const taskIds = new Set(selectedTasks.map(({ id }) => id));
-  /* skipBootstrap does no I/O, so this read is the supervisor's first connect;
-     a transient Neon connect blip here would otherwise abort the whole routine
-     civic-data pass at its start. The read is idempotent, so retry it — same
-     resilience the schema bootstrap gets. See connect-retry.ts. */
+  /* This is the supervisor's first connect, so a transient connect failure is retried (connect-retry.ts). */
   const supervisorOutcomes = await withControlPlaneConnectRetry(
-    /* Read recent outcomes for retry admission and ordering, only the fields the
-       history validates: the newest window, narrowed by the store, oldest first
-       again so the rows keep their append order. Never every outcome whole. */
+    /* Recent outcomes only, narrowed to the fields the history validates, oldest first. */
     async () => [...await repos.ownerDigests.readRecentWhere(
       DIGEST_LOG_KEY,
       ["runtimeOutcome", "kind"],
@@ -400,8 +390,7 @@ async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly Routi
         ),
     },
   );
-  // This job's failure is saved as soon as it ends, while unrelated children
-  // can keep the round open. Waiting for the round digest repeated the defect.
+  // This job's failure is saved as soon as it ends, while unrelated children can keep the round open.
   const protocolFailures = await withControlPlaneConnectRetry(() => repos.ownerDigests.readRecentWhere(
     HUNT_SOURCE_PROGRESS_LOG_KEY, ["huntSourceProgress", "stage"], "FAILED",
     ROUTINE_SUPERVISOR_HISTORY_WINDOW, { testedSha: true, huntSourceProgress: true },
@@ -422,9 +411,8 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
   return parseRoutineDueRequests(row?.value.routineDueRequests);
 }
 
-/** Resolve the actual Admin Send for hunt work. Publication of work that
- * already meets §3 needs no Send (it is not paid work); a paused runner or an
- * unreadable control still admits nothing. */
+/** Resolve the actual Admin Send for hunt work. Publication of already-verified work needs no Send;
+ * a paused runner or an unreadable control still admits nothing. */
 async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   // An explicit selection of a publication door (`--only=registry-runtime-bindings`) still reads its owed work.
   if (FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
@@ -441,8 +429,8 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
   const publication = PUBLISH_NOW ? publishNowWorkerTasks(items, workers, RUN_STARTED_AT) : workerPublicationTasks(items, workers, RUN_STARTED_AT);
   if (PUBLISH_NOW) {
-    // DB-26: the hourly first look. Each hot door's page or feed is looked at once an hour; a change is stored on the
-    // door and read below at once. A look that cannot be made never stops the read of a door already known to have changed.
+    // The hourly first look: each hot door's page or feed is looked at once an hour; a change is stored on
+    // the door and read below at once. A look that cannot be made never stops a known-changed door's read.
     if (doorProbesOn()) {
       try {
         const listed = (await listDoors(repos.doors)).doors;
@@ -560,8 +548,7 @@ const supervisorFailures: SupervisorFailure[] = [];
 const pendingRuns: PendingRun[] = [];
 const verifiedTaskReceipts: RoutineCivicDataTaskReceiptReference[] = [];
 const dueCandidates: { readonly pending: PendingRun; readonly clock: RoutineTaskClock | undefined }[] = [];
-// When each lane's last read of this pass ended: a catch-up meeting read keeps
-// the same-host gap after it (C6).
+// When each lane's last read of this pass ended: a catch-up meeting read keeps the same-host gap after it.
 const laneLastEndedMs = new Map<string, number>();
 // The pass's own source reads not yet settled: their lanes take no catch-up read.
 const unsettledSourceRuns = new Set<string>();
@@ -600,14 +587,9 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
     testedSha: RUNNING_CODE_SHA, huntSourceProgress: progress }, at);
 }
 
-// Resolve every due scope at one frozen instant before launching. Canonical
-// clock reads drain through an ordered bounded pool, and the Neon transport
-// deadline makes each failure real cancellation rather than an orphaned
-// Promise. The provider frontier below then
-// admits one least-recently-considered partition per upstream. This is the
-// permanent cross-cycle boundary: a host with 32 partitions cannot stretch a
-// single pass to 32 child ceilings and prevent a newly due unrelated source
-// from entering the next pass.
+// Resolve every due scope at one frozen instant before launching. The provider frontier below
+// admits one least-recently-considered partition per upstream, so a host with many partitions
+// cannot stretch one pass and keep a newly due unrelated source out of the next.
 const admissionNowMs = Date.now();
 let huntTasks: readonly RoutineSourceTask[] = [];
 try {
@@ -627,10 +609,9 @@ const clockReads = FORCE
       selectedTasks,
       (task) => store.clock(task.sourceId, task.recordClass, task.scope),
     );
-// Meeting sources follow their bodies' sittings; the window is decided once,
-// at the same frozen instant, from this pass's own clock reads. A sitting's
-// publisher-stated end, where one exists, decides when it concluded (C6); an
-// unreadable end set falls back to the day bound and is reported.
+// Meeting sources follow their bodies' sittings; the window is decided once, at the same frozen
+// instant. A sitting's publisher-stated end decides when it concluded; an unreadable end set falls
+// back to the day bound and is reported.
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
 if (!FORCE && selectedTasks.some(task => task.recordClass === "MEETING")) {
   try {
@@ -657,15 +638,15 @@ if (!FORCE) {
     console.log(`RCD_DUE_REQUEST CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; every task keeps its normal schedule`);
   }
 }
-// DB-56: with the door registry in use, a door marked to be read now (a mission started in its place) is the same
-// due request an owner's controlled refresh makes, so the ordinary pass reads it. Spent marks are cleared first.
+// With the door registry in use, a door marked to be read now is the same due request an owner's
+// controlled refresh makes. Spent marks are cleared first.
 if (!FORCE && doorReadModeFromEnv() === "registry" && controlPlaneUrlFromEnv() !== null) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     const settledAt = new Date().toISOString();
     const cleared = await settleReadNow(doorRepos.doors, settledAt);
     const marked = readNowDueRequests((await listDoors(doorRepos.doors)).doors, new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id)), settledAt);
-    // DB-36: a door edited in Admin asks for the two derive steps now, not on their six-hour clock.
+    // A door edited in Admin asks for the two derive steps now, not on their six-hour clock.
     const derive = editDeriveDueRequests((await listDoors(doorRepos.doors)).doors, new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
     dueRequests = [...dueRequests, ...[...marked, ...derive].filter((request) => !dueRequests.some((held) => held.id === request.id))];
     if (marked.length > 0 || cleared > 0 || derive.length > 0) console.log(`RCD_DUE_REQUEST doors marked to be read now: ${marked.length} due, ${cleared} settled; ${derive.length} derive request(s) after door edits`);
@@ -775,8 +756,8 @@ for (const read of clockReads) {
   });
 }
 
-// A meeting lane is read earliest deadline first, up to three a pass (C6); a
-// requested partition's deadline is the earlier of its own and the request's.
+// A meeting lane is read earliest deadline first, up to three a pass; a requested partition's
+// deadline is the earlier of its own and the request's.
 const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock }) => ({
   task: pending.task,
   lastConsideredAt: newestConsideredAt(clock, supervisorAttempts.get(pending.task.id)),
@@ -802,12 +783,9 @@ const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admi
   : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
 attempted = pendingRuns.length;
 
-// Every meeting partition child proves the registry-runtime pointer before it
-// acquires anything: 24.47 MB each, 19.81 MB of it the pointed candidate read
-// only for that proof. With two or more in a pass, prove it once here and hand
-// each child the attestation; a child whose pointer or payload no longer
-// matches runs its own full proof. One child keeps its own proof: attesting it
-// would cost the same read twice.
+// Every meeting child proves the registry-runtime pointer before it acquires anything. With two or
+// more in a pass, prove it once here and hand each child the attestation; a child whose pointer no
+// longer matches runs its own full proof.
 const meetingPartitionRuns = pendingRuns.filter((pending) => pending.kind === "MEETING_PARTITION").length;
 let meetingChildAttestations: Readonly<Record<string, string>> = {};
 if (meetingPartitionRuns >= 2) {
@@ -857,7 +835,7 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
       })),
       ...(pending.kind === "MEETING_PARTITION" ? meetingChildAttestations : {}),
     },
-    // DB-58, behind WTP_MEETING_LANES: a host that goes quiet pauses its own read early.
+    // Behind WTP_MEETING_LANES: a host that goes quiet pauses its own read early.
     ...(pending.kind === "MEETING_PARTITION" && meetingReadQuietMs() !== undefined ? { timeoutMs: meetingReadQuietMs()! } : {}),
   };
 }
@@ -873,7 +851,7 @@ function recordSourceSettlementFailures(runs: readonly BoundedChildResult[]): vo
 
 step = "running the source pass";
 for (const { id } of pendingRuns) unsettledSourceRuns.add(id);
-// Awaited below, with the catch-up reads that run beside it (C6).
+// Awaited below, with the catch-up reads that run beside it.
 const sourcePass = runBoundedChildPass(
   pendingRuns.map(sourceChildCommand),
   {
@@ -882,7 +860,7 @@ const sourcePass = runBoundedChildPass(
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: sourceConcurrency,
-    // Two reads of one host in this pass start at least a minute apart (C6).
+    // Two reads of one host in this pass start at least a minute apart.
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       await acquireChildMemory(command);
@@ -1028,11 +1006,8 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
   }
 }
 
-// Reader delivery is its own OS-killable evidence domain. Each non-meeting
-// Reader gets one child; all meeting partitions share one child because the
-// actual Reader composes them together exactly once. Parent settlement only
-// parses/correlates protocol lines, so a hung application read cannot leave an
-// orphan Promise, delay source attribution, or mutate any source disposition.
+// Reader delivery is its own OS-killable evidence domain: one child per non-meeting Reader, one shared
+// child for all meeting partitions (the Reader composes them together once).
 const readerContracts = selectedReaderRepairContracts([
   ...observableRoutineContracts(),
   ...MANUAL_PRODUCTION_SOURCE_CONTRACTS,
@@ -1060,9 +1035,7 @@ function readerDomainExecutionFailure(
   return {
     taskId: domain.id,
     code: "READER_REPAIR_CHILD_EXIT_NONZERO",
-    // A child that died on an error nothing caught names its step and cause in
-    // one sanitized line. The stderr tail alone was the stack, so the
-    // 2026-09-25T23:01Z runtime-authority refusals recorded no reason.
+    // A child that died on an uncaught error names its step and cause in one sanitized line.
     detail: childFatalLine(run.stdout) ?? safeFailure(`${run.errorMessage ?? ""}\n${run.stdout}\n${run.stderr}`),
   };
 }
@@ -1089,11 +1062,8 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
   supervisorFailures.push(...reconciled.failures);
 }
 
-// A meeting read that falls due while the pass is held open, by its source
-// reads or by its Reader repair, starts as soon as its lane is free instead of
-// waiting for the next pass (C6; lib/civic-data/hot-read-catch-up.ts). The
-// repair starts once every such read beside the source reads has settled, and
-// launches the repairs a read could race first; catch-up resumes when they settle.
+// A meeting read that falls due while the pass is held open starts as soon as its lane is free
+// (lib/civic-data/hot-read-catch-up.ts). The repair starts once every such read has settled.
 const hotReadTasks = FORCE || PUBLISH_NOW
   ? []
   : clockReads.flatMap((read) => read.ok && read.task.contract.schedule?.kind === "SITTING_WINDOW" ? [read.task] : []);
@@ -1162,7 +1132,7 @@ const hotReadLimitsMs = {
 } as const;
 const hotReadsPastLimit = new Set<string>();
 
-/** The catch-up reads to start now: the pass's own rules over its own clock reads (C6). */
+/** The catch-up reads to start now: the pass's own rules over its own clock reads. */
 function admitHotReads(phase: "SOURCE" | "REPAIR", nowMs: number, slots: number, runningLanes: ReadonlySet<string>) {
   const plan = hotReadCatchUpAdmission({
     nowMs,

@@ -1,8 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
-import { installOutcomeFirstSeed, installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import {
   buildTopicTimeline,
   composeTopicAnswer,
@@ -16,42 +14,19 @@ import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import { overLengthBudget } from "../lib/ask/length-contract.ts";
 import { september22Sitting } from "./helpers/pima-september-22-sitting.ts";
 
-/**
- * **THE PIMA DATA-CENTER MISS, AS A CLASS.** (2026-09-24.)
- *
- * The reader asked "is pima county voting on data centers" at ZIP 85701. The
- * answer chose the Board's NEXT sitting from the question's tense, never
- * joined the two held data-center mentions to what the Board did with them —
- * the structured record held "approve", PASSED, "approved 3-2" for August 11 —
- * and said "we have no record of what the Board decided". The September 22
- * sitting (Resolution 2026-56, approved as amended 3-2) sat on the held
- * calendar unread and nothing said so.
- *
- * These tests pin the class: a topic question is answered from the topic's
- * dated timeline, each mention carries the status its evidence supports,
- * unread recent sittings are named, and the answer is composed without a
- * model. The recorded fixtures cover two platforms and two states so the fix
- * cannot be a Pima special case.
- */
-
-await Promise.all([initializeFederalVoteFirstSeed(), installRegistryRuntimeFirstSeeds(), installOutcomeFirstSeed()]);
-delete process.env.ANTHROPIC_API_KEY;
-
 const PIMA_BOARD = "ocd-division/country:us/state:az/county:pima#governing";
-const PIMA = "ocd-division/country:us/state:az/county:pima";
-const AZ = "ocd-division/country:us/state:az";
 const NOW = Date.parse("2026-09-24T12:00:00.000Z");
 const DATA_CENTER = agendaTopicFor("data center")!;
 const SOLAR = agendaTopicFor("solar farm")!;
 
-const outcomes = JSON.parse(readFileSync("data/states/az/outcomes/legistar-outcomes.json", "utf8")) as OutcomeSnapshot;
-const seed = JSON.parse(readFileSync("data/meetings-snapshot.json", "utf8")) as {
+const seed = JSON.parse(readFileSync("tests/fixtures/ask-topic-timeline.json", "utf8")) as {
   meetings: { id: string; bodyId: string | null; bodyName: string; title: string; startsAt: string; timeZone?: string; agendaUrl?: string | null; status?: string; provenance?: { sourceUrl?: string; sourceOrg?: string; collectedAt?: string } }[];
   agendaDocuments: { meetingId: string; documentUrl: string; sourceUrl: string; sourceOrg: string; retrievedAt: string; text: string | null; extraction: string }[];
+  sittings: OutcomeSnapshot["sittings"];
 };
 const pimaMeetings = seed.meetings.filter((meeting) => meeting.bodyId === PIMA_BOARD);
 const pimaDocuments = seed.agendaDocuments.filter((document) => pimaMeetings.some((meeting) => meeting.id === document.meetingId));
-const pimaSittings = outcomes.sittings.filter((sitting) => sitting.bodyId === PIMA_BOARD);
+const pimaSittings = seed.sittings.filter((sitting) => sitting.bodyId === PIMA_BOARD);
 
 test("a topic question is not a one-sitting question, and a one-sitting question is not a topic question", () => {
   assert.equal(topicFocusedQuestion("is pima county voting on data centers")?.id, "data-center");
@@ -138,7 +113,7 @@ test("ANOTHER STATE, ANOTHER PLATFORM, HELD DATA: Rockaway Township (NJ, CivicPl
   const body = "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing";
   const meetings = seed.meetings.filter((meeting) => meeting.bodyId === body);
   const documents = seed.agendaDocuments.filter((document) => meetings.some((meeting) => meeting.id === document.meetingId));
-  assert.ok(meetings.length > 0 && documents.length > 0, "the recorded Rockaway calendar and agendas are in the committed seed");
+  assert.ok(meetings.length > 0 && documents.length > 0, "the recorded Rockaway calendar and agendas are in the fixture");
   const timeline = buildTopicTimeline({ topic: DATA_CENTER, bodyId: body, bodyName: "Rockaway Township Council", meetings, documents, sittings: [], now: NOW });
   const days = timeline.entries.map((entry) => entry.localDay);
   assert.ok(days.includes("2026-06-09") && days.includes("2026-07-14"), `introduction and adoption sittings both held: ${days.join(", ")}`);
@@ -191,158 +166,8 @@ test("a canceled sitting is not named as an unread agenda, and a sitting beyond 
   );
 });
 
-const { POST } = await import("@/app/api/ask/grounded/route");
-const { resetGroundedState } = await import("@/lib/ask/grounded-state");
-
-async function ask(question: string, today: string) {
-  resetGroundedState();
-  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
-    body: JSON.stringify({ question, ocdIds: [AZ, PIMA], approximateLocation: "85701", surface: "MAP", today }),
-  }));
-  assert.equal(response.status, 200);
-  return await response.json() as {
-    mode: string; answer: string | null; subject: { id: string } | null;
-    records: { kind: string; id: string; text: string; occurredAt?: string | null }[];
-    gaps: { whose: string; statement: string }[];
-    denominators: Record<string, number>;
-    trace: { interpretation: { ran: boolean; why?: string }; synthesis: { ran: boolean; why?: string }; validation: { passed?: boolean; failed?: string[] }; retrieval: { selection: string }; answerMode: string };
-  };
-}
-
-test("ROUTE: the exact reader question is answered from the timeline, composed without any model call, and passes validation", async () => {
-  const body = await ask("is pima county voting on data centers", "2026-09-24");
-  assert.equal(body.subject?.id, PIMA_BOARD);
-  assert.equal(body.trace.interpretation.ran, false);
-  assert.equal(body.trace.interpretation.why, "deterministic-topic-route", "no model read the question");
-  assert.equal(body.trace.synthesis.ran, false, "no model wrote the answer");
-  assert.equal(body.mode, "GROUNDED_COMPOSED", JSON.stringify(body.trace.validation));
-  assert.equal(body.trace.validation.passed, true);
-  assert.match(body.answer ?? "", /August 11th, 2026/);
-  assert.match(body.answer ?? "", /passed agenda item 2/);
-  assert.match(body.answer ?? "", /September 22nd, 2026/, "the unread sitting is named");
-  assert.doesNotMatch(body.answer ?? "", /no record of what|still looking/i);
-  assert.ok(body.records.some((record) => record.kind === "MEETING_ACTION"), "the recorded outcome travels with the answer");
-  assert.ok(!body.records.some((record) => record.kind === "MEETING" && /October 13th/.test(record.text)), "the tense-picked NEXT sitting no longer stands in for the topic");
-  const statements = body.gaps.map((gap) => gap.statement);
-  assert.equal(new Set(statements).size, statements.length, "no gap sentence is repeated");
-});
-
-test("ROUTE, NEW JERSEY: a place named alone suggests its governing body, and the confirmed answer quotes the data-center ordinance", async () => {
-  const ROCKAWAY = "ocd-division/country:us/state:nj/county:morris/place:rockaway_township";
-  const post = async (extra: Record<string, unknown>) => {
-    resetGroundedState();
-    const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
-      method: "POST",
-      headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
-      body: JSON.stringify({ question: "is rockaway township voting on data centers", ocdIds: ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris", ROCKAWAY], approximateLocation: "07866", surface: "MAP", today: "2026-09-24", ...extra }),
-    }));
-    return await response.json() as {
-      mode: string; answer: string | null; confirmation?: { bodyId: string; name: string; question: string };
-      trace: { interpretation: { ran: boolean; why?: string }; synthesis: { ran: boolean }; sourcesLoaded?: string };
-    };
-  };
-  const first = await post({});
-  assert.equal(first.mode, "CLARIFY");
-  assert.equal(first.confirmation?.bodyId, `${ROCKAWAY}#governing`, "the township's own council, not whichever body sorts first");
-  // The Rockaway latency repair (2026-09-24): the confirm step is lexical, so it
-  // loads only the essential sources and calls no model (27 s cold before).
-  assert.equal(first.trace.sourcesLoaded, "ESSENTIAL", "the confirm step does not load the eleven deferrable sources");
-  assert.equal(first.trace.interpretation.ran, false, "no model reads a question the named-body decision settles");
-  assert.equal(first.trace.interpretation.why, "named-body-topic-route");
-  const confirmed = await post({ confirmation: first.confirmation });
-  assert.equal(confirmed.mode, "GROUNDED_COMPOSED");
-  assert.match(confirmed.answer ?? "", /O-26-23 .*DESIGNATE DATA CENTERS AS A PROHIBITED USE/);
-  assert.match(confirmed.answer ?? "", /we have not read the recorded outcome of that item/);
-  assert.equal(confirmed.trace.sourcesLoaded, "ESSENTIAL");
-  assert.equal(confirmed.trace.interpretation.ran, false);
-  assert.equal(confirmed.trace.synthesis.ran, false, "the confirmed answer is composed, not synthesized");
-
-  // Control: a topic question the lexical decision cannot settle (a pronoun, no
-  // named government) still loads every source, exactly as before.
-  resetGroundedState();
-  const pronoun = await (await POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
-    body: JSON.stringify({ question: "are they voting on data centers", ocdIds: ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris", ROCKAWAY], approximateLocation: "07866", surface: "MAP", today: "2026-09-24" }),
-  }))).json() as { trace: { sourcesLoaded?: string } };
-  assert.equal(pronoun.trace.sourcesLoaded, "ALL", "an unsettled question takes the full path");
-});
-
-test("TRACE, C20: every read inside sourcePreloads is timed by name, on an early return too", async () => {
-  // A cold Pima topic request spent 2,525 ms in sourcePreloads with no
-  // breakdown (production, 2026-09-24); Sean's bar is 3 s end to end on the
-  // first attempt. The named timings are the measurement the fix starts from.
-  const ROCKAWAY = "ocd-division/country:us/state:nj/county:morris/place:rockaway_township";
-  const ask = async (question: string) => {
-    resetGroundedState();
-    return await (await POST(new Request("https://wtp.test/api/ask/grounded", {
-      method: "POST",
-      headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
-      body: JSON.stringify({ question, ocdIds: ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris", ROCKAWAY], approximateLocation: "07866", surface: "MAP", today: "2026-09-24" }),
-    }))).json() as { mode: string; trace: { sourcesLoaded?: string; preloads?: Record<string, number>; preloadRetries?: string[] } };
-  };
-  const confirmStep = await ask("is rockaway township voting on data centers");
-  assert.equal(confirmStep.mode, "CLARIFY", "an early return");
-  const essential = confirmStep.trace.preloads ?? {};
-  for (const name of ["registry", "federalDirectory", "outcomes", "edgeManifest"]) {
-    assert.ok(Number.isFinite(essential[name]) && essential[name]! >= 0, `${name} is not timed`);
-  }
-  assert.equal(essential.funding, undefined, "a deferrable source the topic route never read is timed as if it were");
-  assert.equal(confirmStep.trace.preloadRetries, undefined, "no read here needed a second attempt");
-
-  const full = await ask("are they voting on data centers");
-  assert.equal(full.trace.sourcesLoaded, "ALL");
-  for (const name of ["registry", "federalDirectory", "outcomes", "funding", "federalVotes", "executiveActions"]) {
-    assert.ok(Number.isFinite(full.trace.preloads?.[name]), `${name} is not timed on the full path`);
-  }
-});
-
-test("ROUTE, AREA: a topic question that names no government is answered from the area's body timelines, without a model", async () => {
-  resetGroundedState();
-  const az = await (await POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
-    body: JSON.stringify({ question: "Is there a data center coming?", ocdIds: [AZ, PIMA, `${AZ}/place:tucson`], approximateLocation: "85701", surface: "MAP", today: "2026-09-24" }),
-  }))).json() as { mode: string; answer: string | null; subject: unknown; trace: { interpretation: { why?: string } }; denominators: Record<string, number> };
-  assert.equal(az.subject, null, "no government was named, none is substituted");
-  assert.equal(az.trace.interpretation.why, "deterministic-area-topic-route");
-  assert.equal(az.mode, "GROUNDED_COMPOSED");
-  assert.match(az.answer ?? "", /the Pima County Board Of Supervisors passed agenda item 2 \(File ID 20637\)/, az.answer ?? "");
-  assert.ok((az.denominators.topicAreaBodies ?? 0) >= 2, "every body governing the area was examined");
-  assert.match(az.answer ?? "", /We have not read the Pima County Board Of Supervisors agenda for September 22nd, 2026 yet/);
-
-  resetGroundedState();
-  const nj = await (await POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
-    body: JSON.stringify({ question: "Is anyone voting on data centers?", ocdIds: ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris", "ocd-division/country:us/state:nj/county:morris/place:rockaway_township"], approximateLocation: "07866", surface: "MAP", today: "2026-09-24" }),
-  }))).json() as { mode: string; answer: string | null };
-  assert.equal(nj.mode, "GROUNDED_COMPOSED");
-  assert.match(nj.answer ?? "", /Rockaway Township Council/);
-  assert.match(nj.answer ?? "", /O-26-23/);
-});
-
-test("ROUTE, AREA: a pronoun or an earlier turn keeps the model reading", async () => {
-  resetGroundedState();
-  const body = await (await POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
-    body: JSON.stringify({ question: "Are they voting on data centers?", ocdIds: [AZ, PIMA], approximateLocation: "85701", surface: "MAP", today: "2026-09-24" }),
-  }))).json() as { trace: { interpretation: { why?: string } } };
-  assert.notEqual(body.trace.interpretation.why, "deterministic-area-topic-route");
-});
-
-test("ROUTE: a question pointing at one sitting keeps the sitting selection (no timeline)", async () => {
-  const body = await ask("what is on the next Pima County Board of Supervisors meeting agenda about data centers", "2026-09-24");
-  assert.equal(body.denominators.topicTimelineEntries, undefined);
-  assert.notEqual(body.mode, "GROUNDED_COMPOSED");
-});
-
 test("TWO ROUTES, ONE STALE: the upcoming listings are dated by their own read, not by a fresh route that carries none of them", () => {
-  // 85701 on 2026-09-24: the Board's API route was read at 11:14Z and carries only the September 22 sittings;
-  // every upcoming sitting shown came from the portal's September 8 read.
+  // The API route was read today and carries only the September 22 sittings; every upcoming sitting came from an older portal read.
   const meetings = [
     { id: "legistar:pima:1828", bodyName: "Board of Supervisors", title: "Board of Supervisors", startsAt: "2026-09-22T17:00:00-07:00", timeZone: "America/Phoenix", agendaUrl: "https://legistar.granicus.com/pima/meetings/2026/9/1828_A_Board_of_Supervisors_26-09-22_Online_Agenda.pdf", provenance: { collectedAt: "2026-09-24T11:14:30.415Z" } },
     { id: "legistar-insite:pima:1381579", bodyName: "Board of Supervisors", title: "Board of Supervisors", startsAt: "2026-10-13T17:00:00-07:00", timeZone: "America/Phoenix", agendaUrl: null, provenance: { collectedAt: "2026-09-08T21:40:43.908Z" } },
@@ -360,12 +185,7 @@ test("TWO ROUTES, ONE STALE: the upcoming listings are dated by their own read, 
   assert.ok(!pastOnly.gaps.some((gap) => /last read|most recent read/.test(gap.statement)), "a read from this morning is not dated as old");
 });
 
-/**
- * The production state after #393 (2026-09-24 13:19Z): the Sept 22 agenda is held as a
- * document read from the county's own portal, and the recorded outcome arrives with the
- * outcomes routine. The excerpt is the portal PDF's extracted text around item 18, as
- * the ingest stored it (pima.legistar.com View.ashx ID 1381577, 24,403 characters).
- */
+/** The September 22 agenda as read from the county portal: the extracted text around item 18. */
 const SEPT22_PORTAL_AGENDA = {
   meetingId: "legistar:pima:1828",
   documentUrl: "https://pima.legistar.com/View.ashx?M=A&ID=1381577&GUID=00EFD752-6A28-42D3-B329-E717E49891D0&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",

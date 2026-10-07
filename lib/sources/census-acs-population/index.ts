@@ -1,72 +1,22 @@
 /**
- * **CENSUS ACS 5-YEAR TOTAL POPULATION (B01003), BY ZIP CODE TABULATION AREA
- * AND BY STATE.** (ADM-23, the 9.4.26 evening admin feedback; re-pointed at the
- * 2024 vintage and extended with the published margin of error for ADM-41 /
- * §9A.19, the 9.6.26 feedback.)
+ * Census ACS 5-year total population (B01003), by ZIP Code Tabulation Area and by state, from
+ * `api.census.gov` (public domain). The API key is `CENSUS_API_KEY` in the environment and is never
+ * printed. 2024 is the newest published 5-year vintage. A place or county estimate is a different
+ * geography and is never substituted for a ZCTA.
  *
- * The owner's words in September: *"32 people"* on ZIP 85633 and *"0 people"*
- * on 85654, presented as facts. Neither number was wrong as arithmetic — both
- * were faithful ACS values — but two things about them were wrong as a
- * rendering. The vintage was a year behind what the Bureau publishes, and an
- * estimate with a margin of error wider than itself was printed as a count.
- * This adapter fixes the first and acquires the instrument that fixes the
- * second.
+ *   ZCTA    `get=NAME,B01003_001E,B01003_001M&for=zip code tabulation area:*`, one call
+ *   STATE   `get=NAME,B01003_001E,B01003_001M&for=state:*` (50 states, DC, Puerto Rico), one call
  *
- * ## The source, and its permission
+ * `B01003_001M` is the Bureau's own 90% margin of error, the only non-arbitrary way to say whether a small
+ * ZCTA number may be read as a count. The API answers a margin it cannot compute with a negative jam
+ * value; those are stored as an empty cell, never as a negative number or zero. A ZIP with no ZCTA is a
+ * named gap downstream, never a zero.
  *
- * `api.census.gov`, the Census Bureau's own Data API — Tier A under RULING 84
- * (`docs/sources.md`, "census-acs-api"), a work of the United States
- * government, public domain. The API requires a key for anything beyond a
- * handful of daily calls; the key is `CENSUS_API_KEY` in the environment and
- * is never printed.
+ * `fetch()` reads the API and `normalize()` turns rows into typed records, refusing a non-numeric or
+ * negative estimate. `toCsv()` is a pure serializer for evidence and tests. Production promotes the
+ * normalized candidate through the data plane; this module has no filesystem writer.
  *
- * ## The vintage, and why this one
- *
- * ACS 5-Year is released one vintage at a time and the newest is the only
- * honest one to render. Measured directly on 2026-09-06 with this repository's
- * key: `/data/2024/acs/acs5` answers 200 (ZCTA 85633 = 48, 85654 = 0, Arizona
- * = 7,378,838) and `/data/2025/acs/acs5` answers **404** — 2025 is not
- * published. So 2024 is the newest available for this geography and is what is
- * acquired here. There is no Population Estimates Program product for a ZCTA,
- * and a place/city or county estimate is a DIFFERENT GEOGRAPHY and is never
- * substituted for one (§9A.19).
- *
- * ## What is fetched
- *
- *   ZCTA    `get=NAME,B01003_001E,B01003_001M&for=zip code tabulation area:*`
- *           — every ZIP Code Tabulation Area the release tabulates, one call
- *   STATE   `get=NAME,B01003_001E,B01003_001M&for=state:*` — the 50 states, DC
- *           and Puerto Rico, one call
- *
- * `B01003_001M` is the Bureau's own published **margin of error at 90%
- * confidence** for the same estimate. It is acquired because it is the only
- * non-arbitrary way to say whether a small ZCTA number may be read as a count:
- * an estimate whose margin of error reaches zero is not distinguishable from
- * zero, and the panel must say so rather than print the number as a fact. A
- * threshold invented here would be a fabrication; the Bureau's own interval is
- * not.
- *
- * The API answers a margin it cannot compute with a NEGATIVE jam value
- * (`-555555555` "the estimate is controlled, a statistical test is not
- * appropriate", `-222222222` "could not be computed", and siblings). Those are
- * NOT margins and are stored as an empty cell, never as a negative number and
- * never as zero — a jam value read as `0` would claim perfect precision.
- *
- * A ZCTA is the Census's generalisation of a ZIP code: most ZIPs map to a ZCTA
- * of the same five digits; a post-office-box ZIP or a single-building ZIP has
- * none, and a ZIP with no ZCTA is a NAMED GAP downstream, never a zero
- * (RULING 159).
- *
- * ## Shape
- *
- * `fetch()` reads the API and `normalize()` turns rows into typed records while
- * refusing a non-numeric or negative ESTIMATE. `toCsv()` is a pure serializer
- * retained for deterministic evidence/tests. Production acquisition promotes
- * the normalized candidate through the permanent data plane; this module has
- * no filesystem writer and cannot restore the historical Git-backed tables.
- *
- * @freshness-reads-here — `fetchedAt` is stamped by the call that reads the
- * source, and never restamped from a clock afterwards (RULING 107).
+ * @freshness-reads-here — `fetchedAt` is stamped by the call that reads the source, and never restamped.
  */
 import {
   readPublisherBody,

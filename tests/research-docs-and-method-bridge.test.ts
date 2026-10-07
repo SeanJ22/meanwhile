@@ -1,67 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 
 import { emptyFieldManual, fieldManualEntryId, upsertEntries } from "../lib/control-plane/field-manual.ts";
 import { KNOWLEDGE_SOURCE, learnedRouteIds } from "../lib/method/manual-bridge.ts";
 import { knowledgeEntries, methodFixture, methodVersionEntry } from "./method-store-fixture.ts";
-import { reassembleResearchDoc, researchDocEntries, sectionEntryId, splitMarkdownDocument } from "../lib/method/research-docs.ts";
-
-const ROOT = process.cwd();
-const noHints = () => [] as string[];
-
-function markdownUnder(dir: string): string[] {
-  const out: string[] = [];
-  for (const d of readdirSync(join(ROOT, dir), { withFileTypes: true })) {
-    const rel = `${dir}/${d.name}`;
-    if (d.isDirectory()) out.push(...markdownUnder(rel));
-    else if (d.name.endsWith(".md")) out.push(rel);
-  }
-  return out.sort();
-}
-
-const nonBlankLines = (text: string) => text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-
-test("a heading inside a code fence is not a section, and the preamble is kept", () => {
-  const text = ["# Title", "intro line", "", "## Real", "body one", "```", "## not a heading", "```", "### Sub", "body two"].join("\n");
-  const { preamble, sections } = splitMarkdownDocument(text);
-  assert.equal(preamble, "# Title\nintro line");
-  assert.deepEqual(sections.map((s) => s.heading), ["Real", "Sub"]);
-  assert.match(sections[0]!.body, /## not a heading/);
-});
-
-test("a repeated heading gets its own entry and the first keeps the id it always had", () => {
-  const text = "## Same\nfirst\n## Same\nsecond\n";
-  const entries = researchDocEntries({ path: "states/zz/NOTES.md", text, states: ["zz"], platformHints: noHints });
-  const ids = entries.map((e) => e.id);
-  assert.equal(new Set(ids).size, ids.length);
-  assert.ok(ids.includes(fieldManualEntryId("states/zz/NOTES.md", "Same")), "the first occurrence keeps the pre-existing id");
-  assert.ok(ids.includes(sectionEntryId("states/zz/NOTES.md", "Same", 2)));
-  assert.deepEqual(entries.filter((e) => e.kind === "STATE_NOTE" && (e.payload as { body?: string }).body).map((e) => (e.payload as { body: string }).body), ["first", "second"]);
-});
-
-test("every line of every state dossier and detective write-up is in the manual, in full", () => {
-  const paths = [...markdownUnder("states"), ...markdownUnder("docs/detective")];
-  assert.ok(paths.length >= 20, `expected the research docs, found ${paths.length}`);
-  for (const path of paths) {
-    const text = readFileSync(join(ROOT, path), "utf8");
-    const entries = researchDocEntries({ path, text, states: [], platformHints: noHints });
-    const held = new Set(nonBlankLines(reassembleResearchDoc(entries)));
-    const missing = nonBlankLines(text).filter((line) => !held.has(line));
-    assert.deepEqual(missing.slice(0, 3), [], `${path}: ${missing.length} line(s) of the document are not in the manual`);
-  }
-});
-
-test("the document entries that used to be pointers keep their ids, now carrying the text", () => {
-  for (const state of ["az", "nh", "nj"]) {
-    for (const name of ["sources", "NOTES", "tenancy", "descent", "descent-candidates"]) {
-      const path = `states/${state}/${name}.md`;
-      const entries = researchDocEntries({ path, text: readFileSync(join(ROOT, path), "utf8"), states: [state], platformHints: noHints });
-      assert.ok(entries.some((e) => e.id === fieldManualEntryId(path, "doc")), `${path} lost its document entry`);
-    }
-  }
-});
 
 test("the fixture folds into the manual with every route kept whole, and routing reads the same routes back", () => {
   const store = methodFixture();

@@ -1,49 +1,4 @@
-/**
- * **WHO RAN THIS, AND WAS THE WORK ALREADY IN.** (Session B WI1.8, 2026-08-30.)
- *
- * ## The hole this closes
- *
- * `status-result.ts` labelled EVERY successful canonical gate, suite or walk
- * result `INDEPENDENTLY_REPRODUCED`. It reached that label honestly from what
- * it could see — the record named a canonical command, a committed SHA and a
- * PASS — but what it could see did not include the one thing the class is
- * about. RULING 216 defines INDEPENDENTLY_REPRODUCED as reproduction
- *
- * > by a canonical suite/audit execution SEPARATE FROM the implementation's
- * > one-off proving observation, against a committed integration head or later
- * > head.
- *
- * The implementing session running `pnpm gates` on its own unmerged branch tip
- * satisfies "canonical command" and "committed SHA" and is precisely the
- * observation the ruling excludes. So the strongest proof class in the
- * repository was being awarded to the weakest evidence for it, and a status
- * ledger that says INDEPENDENTLY_REPRODUCED where it means "I just ran it" is
- * a ledger that has stopped distinguishing the two.
- *
- * ## What is recorded, and why each field is derivable rather than typed
- *
- * ```
- *   workingTreeClean   nothing uncommitted was measured
- *   integratedAtRunTime  the tested SHA was ALREADY in the integration branch
- *                        when the run started — so the run is not the change
- *                        proving itself
- *   runClass           who invoked it: this session, CI, or the scheduler
- * ```
- *
- * All three come from the environment at run time, not from a model's opinion
- * about its own independence. `runClass` reads the CI environment and an
- * explicit `WTP_RUN_CLASS`, and falls back to `LOCAL_SESSION` — the class that
- * cannot earn the stronger label. A missing provenance block is read the same
- * way. **The absent case is the weak case, always.**
- *
- * ## What this deliberately does NOT do
- *
- * It does not try to identify WHICH session ran. There is no durable session
- * identity to compare against, and inventing one would be a field a model
- * fills in about itself — the exact shape RULING 216 retired. Integration is
- * used as the proxy because it is a fact about the repository: work that is
- * already merged is work a later run did not author.
- */
+/** Who ran this, and was the work already in: the provenance that decides a passing run's proof class. */
 
 import { execFileSync } from "node:child_process";
 
@@ -55,11 +10,7 @@ export interface RunProvenance {
   readonly runClass: RunClass;
   /** Was every tracked file committed when the run started? */
   readonly workingTreeClean: boolean;
-  /**
-   * Was the tested SHA already contained by the integration branch at run
-   * time? Null when there is no integration ref to compare against — unknown,
-   * and unknown never earns the stronger class.
-   */
+  /** Whether the tested SHA was already in the integration branch at run time; null (unknown) never earns the stronger class. */
   readonly integratedAtRunTime: boolean | null;
   /** The ref the integration question was asked against, for the record. */
   readonly integrationRef: string | null;
@@ -81,14 +32,7 @@ function git(args: string[], cwd: string): string | null {
   }
 }
 
-/**
- * Read the provenance of the run happening now.
- *
- * Every unanswerable question resolves to the value that WEAKENS the claim:
- * an unreadable status is a dirty tree, an unresolvable integration ref is
- * `null`. A provenance reader that guesses optimistically would hand out the
- * activation-gating proof class on a failed git call.
- */
+/** Read the provenance of the current run; every unanswerable question resolves to the value that weakens the claim. */
 export function readRunProvenance(
   testedSha: string | null,
   cwd: string = process.cwd(),
@@ -120,20 +64,8 @@ export function readRunProvenance(
 export type ProofClass = "SESSION_MEASURED" | "INDEPENDENTLY_REPRODUCED";
 
 /**
- * Derive the proof class of a PASSING run from its recorded provenance.
- *
- * Three clauses, all required, and the reason each is required is that
- * dropping it readmits exactly the case A.1 mislabelled:
- *
- * - **clean tree** — an uncommitted tree is not reproducible by anyone.
- * - **integrated at run time** — the run did not author the code it measured.
- * - **not `LOCAL_SESSION`** — a run this session invoked is this session's own
- *   observation, however green, and however canonical the command was.
- *
- * A record with no provenance block is `SESSION_MEASURED`. That covers every
- * record written before this module existed, and it is the right reading of
- * them: nothing in those records says the run was independent, so nothing in
- * this function may say it either.
+ * The proof class of a passing run: `INDEPENDENTLY_REPRODUCED` only with a clean tree, integrated at run time, and not
+ * `LOCAL_SESSION`. A record with no provenance is `SESSION_MEASURED`.
  */
 export function proofClassOf(provenance: RunProvenance | null | undefined): ProofClass {
   if (!provenance) return "SESSION_MEASURED";

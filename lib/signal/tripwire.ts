@@ -1,7 +1,6 @@
 /**
- * Intake-volume analysis (T08 1f), kept pure so the permanent standing
- * runtime can turn identifier-free aggregate counts into deterministic flags.
- * Flags are observations, never automatic enforcement actions.
+ * Intake-volume analysis, kept pure so the standing runtime can turn identifier-free aggregate counts
+ * into deterministic flags. Flags are observations, never automatic enforcement.
  */
 
 export interface IntakeDayCount {
@@ -23,16 +22,10 @@ export interface TripwireFlag {
 
 /**
  * The thresholds, stated in the report so a flag is checkable by number:
- * - VOLUME_SPIKE: a day at or past max(VOLUME_FLOOR, VOLUME_MULTIPLE ×
- *   trailing median) — far outside the trailing normal range. The floor
- *   keeps single-digit demo days from flagging on a median of one or two,
- *   and a day needs at least MIN_TRAILING_DAYS of history to be judged:
- *   "outside the normal range" is not a claim that can be made about the
- *   window's first days, and a flag that fires on every fresh window is a
- *   flag the author learns to ignore.
- * - SUSPECT_SHARE: a day where suspect rows are at least SUSPECT_SHARE of
- *   the day's total, with at least SUSPECT_MIN_ROWS rows so a lone
- *   quarantined tap on a three-row day does not read as an attack.
+ * - VOLUME_SPIKE: a day at or past max(VOLUME_FLOOR, VOLUME_MULTIPLE × trailing median). A day needs at
+ *   least MIN_TRAILING_DAYS of history to be judged.
+ * - SUSPECT_SHARE: suspect rows at least SUSPECT_SHARE of the day's total, with at least
+ *   SUSPECT_MIN_ROWS rows.
  */
 export const TRIPWIRE_THRESHOLDS = {
   VOLUME_MULTIPLE: 4,

@@ -32,24 +32,6 @@ import {
 } from "../lib/control-plane/work-item.ts";
 import { completionSnapshot, T0, T1, T2 } from "./control-plane-fixtures.ts";
 
-/**
- * THE SEEDED FAILURE SUITE — the semantic contract.
- *
- * `control-plane-execution.test.ts` proves the execution layer refuses. This
- * file proves the four places where a rule EXISTED but was not mechanically
- * enforced, and each one is planted before it is asserted:
- *
- *   1. a contract clause the evaluator never read;
- *   2. a disposition detached from the Attempt that earned it;
- *   3. a reclaim that proved nothing about the Attempt it reclaimed against;
- *   4. a notification preference that could retire a public obligation.
- *
- * Every seeded failure below is paired with a POSITIVE CONTROL: the same
- * fixture, with only the defect corrected, completing. A detector with no
- * positive control is not proven — it may simply refuse everything.
- */
-
-/** Deliberately far past T2: a snooze the queue view would treat as future. */
 const T_FAR = "2026-12-01T00:00:00.000Z";
 const TTL = 10 * 60 * 1000;
 
@@ -96,7 +78,6 @@ const OK_DISPOSITION = (over: Partial<RouteDisposition> = {}): RouteDisposition 
   ...over,
 });
 
-/** An inherited RouteTask for `item`, walked to `disposition` by its own Attempt. */
 function walked(
   item: WorkItem,
   routeId: string,
@@ -128,10 +109,6 @@ function walked(
 }
 
 
-/** ===================================================================== 1 ===
- *  CompletionContract.acceptableDispositions — a clause nobody read
- *  ======================================================================== */
-
 function contractItem(over: {
   floor: readonly string[];
   acceptableDispositions?: readonly RouteDisposition["disposition"][] | null;
@@ -154,9 +131,6 @@ function contractItem(over: {
 }
 
 test("SEEDED: a contract narrows the acceptable dispositions and an inherited route lands outside it", () => {
-  // The obligation is to ENUMERATE meetings. A contract that says so accepts
-  // only INGESTED: "the route ran and returned nothing" does not enumerate
-  // anything, and under the old code this field was inert, so it completed.
   const item = contractItem({
     floor: ["legistar-events", "legistar-eventdates"],
     acceptableDispositions: ["INGESTED"],
@@ -196,8 +170,6 @@ test("POSITIVE CONTROL: the same WorkItem completes once the offending route is 
 });
 
 test("acceptableDispositions null preserves the governed default exactly", () => {
-  // WALKED_NO_YIELD from a reachable route is terminal under the default rules,
-  // and stays terminal. The new clause must add nothing when the field is null.
   const item = contractItem({ floor: ["legistar-events"], acceptableDispositions: null });
   const verdict = evaluateCompletion(
     completionSnapshot({ item, routeTasks: [walked(item, "legistar-events", "WALKED_NO_YIELD")] }),
@@ -211,10 +183,6 @@ test("acceptableDispositions null preserves the governed default exactly", () =>
 });
 
 test("the narrow reading: a mid-walk DISCOVERED route is not governed by the contract's set", () => {
-  // Rejecting the wider reading mechanically. A scout found a bonus endpoint
-  // that was never in the floor and honestly recorded POINTER_ONLY on it. That
-  // route is outstanding on its own merits (clause 2) — but it must not also be
-  // refused as a CONTRACT violation, because the contract was never about it.
   const item = contractItem({ floor: ["legistar-events"], acceptableDispositions: ["INGESTED"] });
   const discovered = walked(item, "some-bonus-portal", "NOT_APPLICABLE", { inherited: false });
 
@@ -246,10 +214,6 @@ test("acceptableDispositions only TIGHTENS: naming an open disposition does not 
   );
 });
 
-/** ===================================================================== 2 ===
- *  A RouteDisposition must be bound to the Attempt that earned it
- *  ======================================================================== */
-
 test("SEEDED: a COMPLETED Attempt launders another Attempt's id into a disposition", () => {
   const task = createRouteTask({
     workItemId: "wi-x",
@@ -273,7 +237,6 @@ test("SEEDED: a COMPLETED Attempt launders another Attempt's id into a dispositi
     "the refusal must name both the claimed Attempt and the presenting one",
   );
 
-  // An empty attemptId is the same defect with a blanker face.
   assert.throws(
     () => disposeRoute(task, a, OK_DISPOSITION({ attemptId: "" })),
     /names Attempt \(none\)/,
@@ -320,7 +283,6 @@ test("SEEDED: a disposition cites an artifact its own Attempt never recorded", (
     "evidence borrowed from another execution is evidence for another claim",
   );
 
-  // The whole-cloth case: an Attempt that captured nothing citing something.
   const empty = endedAttempt(task.id, "COMPLETED", { instance: "worker-b", artifactIds: [] });
   assert.throws(
     () => disposeRoute(task, empty, OK_DISPOSITION({ attemptId: empty.id, artifactIds: ["art-1"] })),
@@ -346,10 +308,6 @@ test("POSITIVE CONTROL: a disposition citing a SUBSET of its Attempt's artifacts
   assert.deepEqual(disposed.disposition?.artifactIds, ["art-p1", "art-p3"]);
   assert.equal(isTerminal(disposed), true);
 });
-
-/** ===================================================================== 3 ===
- *  reclaim() must prove it is reclaiming the right dead Attempt
- *  ======================================================================== */
 
 function pendingTask(routeId = "r"): RouteTask {
   return createRouteTask({
@@ -436,7 +394,6 @@ test("SEEDED: DENIED_BY_POLICY is not swept into the generic reclaim path", () =
   assert.equal(parked.policyDenial?.at, T1, "the timestamp comes from the Attempt, never from a clock");
   assert.match(parked.policyDenial?.requiredChange ?? "", /widen the ACQUIRER grant/);
 
-  // And the obligation refuses by its own name while the denial stands.
   const item = contractItem({ floor: [] });
   const verdict = evaluateCompletion(
     completionSnapshot({ item, routeTasks: [parked] }),
@@ -468,10 +425,6 @@ test("denyByPolicy refuses an unnamed change, a wrong outcome and a foreign task
     /belongs to RouteTask/,
   );
 });
-
-/** ===================================================================== 4 ===
- *  A snooze must not make a blocking escalation disappear from completion
- *  ======================================================================== */
 
 const BLOCKING: Escalation = createEscalation({
   id: "esc-records-officer",
@@ -509,13 +462,11 @@ test("SEEDED: a blocking escalation snoozed past `now` must not let the obligati
   const snoozed: Escalation = { ...BLOCKING, snoozedUntil: T_FAR };
   const item = contractItem({ floor: [], escalations: [snoozed] });
 
-  // The queue view genuinely hides it — that is its job, and it is unchanged.
   assert.deepEqual(
     openEscalations(item, T2).map((e) => e.id),
     [],
     "the Needs Sean queue still honours the snooze; snoozing is a notification decision",
   );
-  // The completion view does not, and takes no clock at all.
   assert.deepEqual(
     completionBlockingEscalations(item).map((e) => e.id),
     ["esc-records-officer"],
@@ -576,9 +527,7 @@ test("the AUTHOR_DECISION_REQUIRED / HUMAN_INTERACTION_REQUIRED carve-out surviv
 test("escalation ageing stays deterministic and clock-free", () => {
   assert.equal(escalationAgeHours(BLOCKING, T2), 0.5);
   assert.equal(escalationAgeHours(BLOCKING, T1), 1 / 12);
-  // Same inputs, same answer, no matter when it is asked.
   assert.equal(escalationAgeHours(BLOCKING, T2), escalationAgeHours(BLOCKING, T2));
-  // The response target is data, not a computation over the wall clock.
   assert.equal(BLOCKING.responseTargetHours, 48);
   assert.equal(escalationAgeHours(BLOCKING, T2) > BLOCKING.responseTargetHours, false);
 });

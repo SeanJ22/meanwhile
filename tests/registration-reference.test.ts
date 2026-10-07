@@ -7,9 +7,6 @@ import test from "node:test";
 import { parseCsv } from "../lib/reference/index.ts";
 
 /**
- * **EVERY STATE'S GOVERNMENTS, PAIRED TO THEIR DIVISIONS — AND NOTHING
- * GUESSED.** (2026-09-23; `scripts/build-registration-reference.mts`.)
- *
  * Registration without per-state code reads this reference. These pin what it
  * promises: every Census of Governments row sits in exactly one state's file;
  * a government pairs to a division by Census code wherever the Census gives

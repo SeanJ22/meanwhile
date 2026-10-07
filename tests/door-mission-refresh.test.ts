@@ -18,7 +18,7 @@ import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 import { routineDueRequestFor } from "../lib/civic-data/routine-due-request.ts";
 import { ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
 
-/** DB-56: starting a mission marks every open door already known in the place to be read now. */
+/** Starting a mission marks every open door already known in the place to be read now. */
 
 const SEEDED = "2026-10-04T12:00:00.000Z";
 const MISSION = "2026-10-04T13:00:00.000Z";

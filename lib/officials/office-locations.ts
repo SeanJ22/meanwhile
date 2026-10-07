@@ -1,14 +1,6 @@
 /**
- * One office-location fact for every kind of owner: a legislator's district or
- * capitol office, a campaign office, a body's office, a place a body meets.
- *
- * It replaces the legislator-only member-office shape as the thing readers and
- * Ask are given; `fromMemberOffice` carries the stored member offices into it.
- * An address is accepted only when a page presents it as an office. A campaign
- * address counts only when the page labels it an office or headquarters, and
- * never when it equals the candidate's filed mailing address, because small
- * campaigns often list a home as the contact address.
- * Pure code; no model, no network.
+ * One office-location fact for every kind of owner. An address counts only when a page presents it as an office; a
+ * campaign address never counts when it equals the candidate's filed mailing address.
  */
 import type { MemberOfficeRecord } from "./member-offices.ts";
 
@@ -70,7 +62,7 @@ export function fromMemberOffice(record: MemberOfficeRecord): OfficeLocation | n
     address: joinAddress(record.office), phone: record.office.phone, sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, collectedAt: record.collectedAt });
 }
 
-/** A body's office, as its own page states it (CA-06). */
+/** A body's office, as its own page states it. */
 export function fromBodyOffice(input: {
   readonly bodyId: string;
   readonly address?: string | null;
@@ -94,12 +86,7 @@ export function officeHoursFrom(text: string): string | null {
 
 const CAMPAIGN_LABEL = /^\s*(?:our\s+|the\s+)?(?:campaign\s+(?:office|headquarters|hq)|headquarters|hq|office|visit\s+our\s+office)\s*[:\-–]\s*(.+)$/i;
 
-/**
- * A campaign office from the campaign's own page text. Only a line the page
- * labels an office or headquarters counts; a bare "contact" or "mailing
- * address" never does, and an address equal to the filed mailing address is
- * refused (likely a home).
- */
+/** A campaign office from the campaign's own page: only a line labelled office or headquarters counts. */
 export function campaignOfficeFrom(input: {
   readonly ownerId: string;
   readonly pageText: string;

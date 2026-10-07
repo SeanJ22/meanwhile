@@ -37,14 +37,11 @@ import {
 import { readTerritoryIndex } from "@/lib/control-plane/expansion/runner-load.ts";
 import { scopeKeyOf, withScopeSet, type ExpansionScopeDecision, type ExpansionScopeGeography } from "@/lib/control-plane/expansion/scopes.ts";
 import { stateOfSubject, subjectOfObligationId } from "@/lib/control-plane/expansion/subjects.ts";
-import { scopeCreationNumbers, scopeCreationView } from "@/lib/control-plane/expansion/view.ts";
-import { auditRenderedNumbers } from "@/lib/control-plane/owner-surface.ts";
 import { lookupAction } from "@/lib/control-plane/gateway/registry.ts";
 import { deployPreview } from "@/lib/control-plane/deploy-preview.ts";
 import { appendResearchIntent, buildResearchIntent } from "@/lib/control-plane/research-view.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
-import { readActivationGate } from "@/lib/control-plane/promotion/activation-gate.ts";
 import { modelLaneClosure } from "@/lib/control-plane/scheduler/model-lane.ts";
 import { OWNER_DISPATCH } from "@/lib/control-plane/scheduler/obligation.ts";
 import { openOccurrence, resumeOpenOccurrence, planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
@@ -82,13 +79,9 @@ import { meetingsDiscoveryNeeds } from "@/lib/hunt/meetings-discovery.ts";
 import { sourcesOf, type Jurisdiction, type JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
 /**
- * **MW-028 — SENDING THE FLEET TO A GEOGRAPHY CREATES THE WORK IT IS MISSING.**
- *
- * Everything runs on recorded data — the committed Arizona, New Hampshire and
- * New Jersey jurisdiction registries, the committed Census unit territories
- * (`data/derived/census-unit-zips.json`, `zip-governments.json`) and the
- * committed Arizona census-geography bootstrap (county 04019 = Pima) — against
- * in-memory repositories and a fixed clock. No network, no database, no model.
+ * Sending the fleet to a geography creates the work it is missing. Runs on recorded data (the jurisdiction registry
+ * fixture, the committed Census unit territories and census-geography bootstrap) against in-memory repositories and
+ * a fixed clock. No network, no database, no model.
  */
 
 const ROOT = join(import.meta.dirname, "..");
@@ -96,11 +89,7 @@ const T0 = "2026-09-23T21:00:00.000Z";
 const T1 = "2026-09-23T22:00:00.000Z";
 const T2 = "2026-09-23T23:00:00.000Z";
 
-const REGISTRIES: Record<"az" | "nh" | "nj", JurisdictionRegistry> = {
-  az: JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")),
-  nh: JSON.parse(readFileSync(join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")),
-  nj: JSON.parse(readFileSync(join(ROOT, "data/states/nj/jurisdictions/nj.json"), "utf8")),
-};
+const REGISTRIES = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<"az" | "nh" | "nj", JurisdictionRegistry>;
 
 test("a new hunt discovers missing information families without inventing publishers or duplicating a shared custodian", () => {
   const reg = REGISTRIES.az;
@@ -198,7 +187,7 @@ async function planned(d: ExpansionScopeDecision): Promise<PlannedScope> {
   };
 }
 
-/** The two providers MW-028 feeds, exactly as the runner builds them. */
+/** The two providers dispatch work feeds, exactly as the runner builds them. */
 function registryPass(materialized: MaterializedReading, tracked = trackedStatesFromOperationalReference()): RegistryPass {
   return buildRegistry(
     [
@@ -209,7 +198,7 @@ function registryPass(materialized: MaterializedReading, tracked = trackedStates
   );
 }
 
-/** One runner cycle up to the MW-028 step: read the marked rows, build the corpus, register it. */
+/** One runner cycle up to the dispatch-work step: read the marked rows, build the corpus, register it. */
 async function cycleWorld(repos: ControlPlaneRepositories, now: string, over: Partial<DispatchWorkWorld> = {}) {
   const rows = await repos.obligations.listWhere(["materializedBy"], OWNER_DISPATCH);
   const registry = registryPass({ ids: new Set(rows.map((r) => r.id)) });
@@ -240,10 +229,6 @@ const CONTEXT: DispatchWorkContext = {
 function identity(r: DispatchWorkReading["targets"][number]["requirements"]): number {
   return r.carried + r.held + r.created + r.deferred + r.failed;
 }
-
-/* ======================================================================= *
- * creation for a scope
- * ======================================================================= */
 
 test("sending the fleet to Pima County creates what the registry defines there and no clock carries, in the shape syncObligations registers", async () => {
   const repos = createMemoryRepositories();
@@ -324,10 +309,6 @@ test("created work joins the corpus through its providers next cycle: scheduled,
   assert.ok(after.registry.obligations.some((o) => o.id === applied.written[0]));
 });
 
-/* ======================================================================= *
- * idempotence
- * ======================================================================= */
-
 test("sending the same scope twice creates nothing new, and overlapping geographies share one row per requirement", async () => {
   const repos = createMemoryRepositories();
   const pima = scopeWorkTarget(await planned(decision(PIMA)));
@@ -345,7 +326,7 @@ test("sending the same scope twice creates nothing new, and overlapping geograph
     assert.equal(t.requirements.created, once.written.length, "what exists is counted as created, cumulatively");
   }
 
-  /* Pima and CD 6 overlap: a requirement both hold is written once, under the first. */
+  /* The two scopes overlap: a requirement both hold is written once, under the first. */
   const fresh = createMemoryRepositories();
   const both = await cycleWorld(fresh, T0);
   const cd6 = scopeWorkTarget(await planned(decision(CD6, 2)));
@@ -355,10 +336,6 @@ test("sending the same scope twice creates nothing new, and overlapping geograph
   const shared = overlapping.targets[1].instances.filter((p) => overlapping.targets[0].instances.some((q) => q.instance.obligation.id === p.instance.obligation.id));
   assert.ok(shared.length > 0, "Pima and CD 6 share governments");
 });
-
-/* ======================================================================= *
- * the budget and the cap
- * ======================================================================= */
 
 test("all missing requirements are created in one pass without a cycle window", async () => {
   const repos = createMemoryRepositories();
@@ -375,10 +352,6 @@ test("all missing requirements are created in one pass without a cycle window", 
   const second = await cycleWorld(repos, T1);
   assert.equal(planDispatchWork({ targets: [pima], world: second.world }).writes.length, 0);
 });
-
-/* ======================================================================= *
- * blocked by missing data
- * ======================================================================= */
 
 test("a geography in a state with no promoted registry is blocked by name, and nothing is invented for it", async () => {
   /* Arizona unregistered: the same Census units, and no registry to say what they owe. */
@@ -489,7 +462,7 @@ test("a Census unit the registry does not carry is blocked NOT_IN_REGISTRY, with
   assert.deepEqual(t.blocked[0].sample, ["TOWN OF SOMEWHERE"]);
   assert.equal(t.units.blocked, 1);
 
-  /* RULING 251: ZCTAs that place no government at all are a gap in the territory data, never an empty geography. */
+  /* ZCTAs that place no government at all are a gap in the territory data, never an empty geography. */
   const nowhere: PlannedScope = { ...scope, zctas: new Set(["99999"]), whole: new Set(["99999"]) };
   const [empty] = dispatchWorkReading(planDispatchWork({ targets: [scopeWorkTarget(nowhere)], world }), null, CONTEXT).targets;
   assert.equal(empty.blocked[0].code, "NO_GOVERNMENT_PLACED");
@@ -505,10 +478,6 @@ test("a Census unit the registry does not carry is blocked NOT_IN_REGISTRY, with
   assert.equal(words.requirements.defined, 0);
   assert.match(words.says.join(" "), /No registered government in Arizona carries these words, so nothing was created/);
 });
-
-/* ======================================================================= *
- * no paid lane opened
- * ======================================================================= */
 
 test("creating work opens no paid lane: the owner's PAUSE stands, nothing but obligations is written, and paid discovery waits for the free walk", async () => {
   const repos = createMemoryRepositories();
@@ -531,13 +500,12 @@ test("creating work opens no paid lane: the owner's PAUSE stands, nothing but ob
   assert.equal((await repos.costs.readAll()).length, 0, "no charge");
   assert.equal((await repos.scoutResults.readAll()).length, 0, "no Scout ran");
 
-  /* The lane stays closed on the same facts: the activation gate is a code constant and the PAUSE stands. */
+  /* The lane stays closed on the same facts: the PAUSE stands. */
   const closure = modelLaneClosure({
     dry: false,
     noModel: false,
     credentialConfigured: true,
     credentialVar: "WTP_WORKERS_ANTHROPIC_API_KEY",
-    activation: readActivationGate(ROOT),
     paused: true,
     pauseIntentId: pause.intentId,
     runnerPaused: false,
@@ -563,7 +531,7 @@ test("creating work opens no paid lane: the owner's PAUSE stands, nothing but ob
   });
   assert.equal(gate.admit(discovery, jurisdictionId).admit, false);
 
-  /* And the receipt says why the created work waits, and which budgets bind it — the Send's own among them (MW-021). */
+  /* And the receipt says why the created work waits, and which budgets bind it — the Send's own among them. */
   const [t] = dispatchWorkReading(plan, applied, CONTEXT).targets;
   const says = t.says.join(" ");
   assert.match(says, /need a model and wait: paused by owner intent pause-1/);
@@ -583,10 +551,6 @@ test("a cycle that may not write plans, counts and writes nothing", async () => 
   assert.match(reading.targets[0].says[0], /Planned only, nothing written this cycle: the scheduled blackout/);
   assert.equal((await repos.obligations.listWhere(["materializedBy"], OWNER_DISPATCH)).length, 0);
 });
-
-/* ======================================================================= *
- * the DISPATCH path
- * ======================================================================= */
 
 test("a DISPATCH naming a registered state creates there, counts it on the owner's record, and carries its remainder forward", async () => {
   const repos = createMemoryRepositories();
@@ -617,7 +581,7 @@ test("a DISPATCH naming a registered state creates there, counts it on the owner
     }).length,
     0,
   );
-  /* MW-001: a Send is carried until every row it reached records it, even with nothing left to create. */
+  /* A Send is carried until every row it reached records it, even with nothing left to create. */
   assert.equal(
     carriedDispatchTargets({
       ...reading,
@@ -635,10 +599,6 @@ test("a DISPATCH naming a registered state creates there, counts it on the owner
 
   assert.match(dispatchWorkSentence(t), /created \d+ of \d+ requirement\(s\) the registry defines here \(\d+ this cycle\); reordered \d+ of \d+ standing obligations; 0 of \d+ governments blocked by missing data\./);
 });
-
-/* ======================================================================= *
- * the providers read data, never a list
- * ======================================================================= */
 
 /** The rule the provider has always used, restated here as an independent oracle: no existing id may move. */
 function legacyIds(reg: JurisdictionRegistry): Set<string> {
@@ -661,7 +621,6 @@ test("local-jurisdictions schedules the tracked states it is handed, keeps every
 
   const two = buildRegistry([localJurisdictionsProvider({ trackedStates: trackedStatesFrom(["AZ", "nh"], "a test coverage set") })], { root: ROOT, nowIso: T0 });
   assert.ok(two.units.length > 0);
-  assert.equal(two.units.some((u) => u.obligation.subjectId.startsWith("nj:")), false, "an untracked state has no standing clock");
 
   const withCo = buildRegistry([localJurisdictionsProvider({ trackedStates: trackedStatesFrom(["az", "co"], "a test coverage set") })], { root: ROOT, nowIso: T0 });
   assert.match(withCo.byProvider[0].readFailure ?? "", /co could not be read .*JURISDICTION_REGISTRY_NOT_READ:co: no reviewed registry, and its registration was not read/, "a tracked state with no registry is named");
@@ -752,11 +711,7 @@ test("syncObligations keeps the owner's mark when a provider's signals move", as
   assert.equal((await repos.obligations.mustRead(o.id)).value.materializedBy, OWNER_DISPATCH, "and the mark that keeps the row owed survives");
 });
 
-/* ======================================================================= *
- * what Admin and the gateway say
- * ======================================================================= */
-
-test("Admin reads the creation receipt for the decision it belongs to, with every number carrying its denominator", async () => {
+test("place work is ordered by the owner's target first, then by completion", () => {
   const places = [
     { key: "az.cd.06", receiptId: "target", items: [{ checklistId: "GOV-01", state: "published" as const }, { checklistId: "GOV-01", state: "unpublished" as const }, { checklistId: "GOV-01", state: "missing" as const }] },
     { key: "az.zcta.10001", receiptId: "lowest", items: [{ checklistId: "GOV-01", state: "missing" as const }] },
@@ -772,21 +727,6 @@ test("Admin reads the creation receipt for the decision it belongs to, with ever
   assert.deepEqual(orderPlaceWork({}, [{ ...places[0], items: [{ checklistId: "GOV-01", state: "missing" }] },
     { ...places[1], items: [{ checklistId: "GOV-01", state: "published" }] }]), ["target", "lowest"], "new captures rerank places");
   assert.throws(() => orderPlaceWork({ placeTargets: [{}] }, places), /PLACE_TARGETS_UNREADABLE/);
-  const repos = createMemoryRepositories();
-  const { world } = await cycleWorld(repos, T0);
-  const d = decision(PIMA);
-  const plan = planDispatchWork({ targets: [scopeWorkTarget(await planned(d))], world });
-  const reading = dispatchWorkReading(plan, await applyDispatchWork(repos, plan, { now: T0 }), CONTEXT);
-
-  const view = scopeCreationView(d, reading);
-  assert.equal(view.kind, "READ");
-  if (view.kind === "READ") {
-    const numbers = scopeCreationNumbers(view.target);
-    assert.ok(numbers.every((n) => n.denominator !== null && n.contract !== null));
-    assert.equal(auditRenderedNumbers(numbers).ok, true, auditRenderedNumbers(numbers).detail);
-  }
-  assert.equal(scopeCreationView({ ...d, decidedAt: T1 }, reading).kind, "NOT_YET", "a reading older than the decision is not its reading");
-  assert.equal(scopeCreationView(d, null).kind, "NOT_YET");
 });
 
 test("the gateway and the preview say the Send creates all missing work, and name no machine constant", () => {

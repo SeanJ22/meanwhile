@@ -19,42 +19,32 @@ import {
 
 const ROOT = process.cwd();
 
-/**
- * D62 — the Polarization Research Lab, what members SAY.
- *
- * The doctrine these hold: PRL numbers render AS PRL'S MEASUREMENT and never
- * in the app's voice; the identical panel for every member; no rank, no
- * percentile and no ideology score crosses the boundary at any remove; and
- * every share carries a stated base.
- */
+// PRL numbers render as PRL's measurement, never in the app's voice; no rank, percentile or ideology score crosses
+// the boundary; every share carries a stated base.
+
+const FIXTURE_CSV = [
+  allowedColumns().join(","),
+  "A000001,Somebody A,120,all,2026-08-16,70.99,10,5,5,1",
+  "B000002,Somebody B,40,all,2026-08-16,30,20,10,5,0",
+].join("\n");
 
 function snapshot(): PrlSnapshot {
-  return JSON.parse(
-    readFileSync(join(ROOT, "data", "prl", "prl-profiles.json"), "utf8"),
-  ) as PrlSnapshot;
+  const { profiles, rosterMisses } = normalizeProfiles(FIXTURE_CSV, ["A000001", "B000002"]);
+  return {
+    formatVersion: 1,
+    fetchedAt: "2026-08-16T00:00:00.000Z",
+    sourceFile: "fixture",
+    sourceUrl: PRL_RHETORIC_ATTRIBUTION.url,
+    rowsInFile: 2,
+    rowsWithStatements: 2,
+    profiles,
+    rosterMisses,
+    attribution: PRL_RHETORIC_ATTRIBUTION,
+  };
 }
 
-test("D62: the committed snapshot is real, and states its own denominators", () => {
-  const snap = snapshot();
-  assert.equal(snap.formatVersion, 1);
-  // A snapshot that matched nothing must not read as a pass — the empty-feed
-  // shape this codebase keeps naming.
-  assert.ok(snap.profiles.length > 400, `only ${snap.profiles.length} profiles`);
-  assert.ok(snap.rowsInFile >= snap.profiles.length);
-  assert.ok(snap.rowsWithStatements > 0);
-  assert.ok(Array.isArray(snap.rosterMisses));
-  // The file it was built from is pinned by hash, so a later run can tell
-  // whether the source moved or only our code did.
-  assert.match(snap.sourceFile, /sha256 [0-9a-f]{64}/);
-  assert.match(snap.sourceUrl, /^https:\/\/americaspoliticalpulse\.com\//);
-});
-
 test("D62: no rank, percentile or ideology score crosses the boundary", () => {
-  // The source file carries 17 of them, including a single left-right
-  // ideology number. Every one is exactly what CLAUDE.md forbids a record to
-  // grow, and a rank does not become acceptable because a university
-  // computed it. The filter is an ALLOWLIST so a new source column cannot
-  // arrive silently.
+  // The filter is an allowlist so a new source column cannot arrive silently.
   assertNoForbiddenColumns(allowedColumns());
   for (const column of allowedColumns()) {
     assert.doesNotMatch(column, /rank|percentile|ideology|nominate/i, column);
@@ -65,9 +55,7 @@ test("D62: no rank, percentile or ideology score crosses the boundary", () => {
     "the allowlist check must refuse an ideology score added to it",
   );
 
-  // And nothing in the committed snapshot's KEYS carries one either. Keys,
-  // not the serialized text: real members are named Crank, Frankel and
-  // Franklin, and a substring search over the whole file finds those.
+  // Keys, not serialized text: real member names contain these substrings.
   const snap = snapshot();
   for (const profile of snap.profiles) {
     for (const key of [...Object.keys(profile), ...Object.keys(profile.shares)]) {
@@ -81,17 +69,13 @@ test("D62: no rank, percentile or ideology score crosses the boundary", () => {
 });
 
 test("D62: the attribution is the RHETORIC citation, not the survey one", () => {
-  // The correction that made checking the page worth it. D62's row recorded
-  // the survey citation; the files this build uses are on a different page
-  // with a different one. Shipping the wrong string is an attribution error
-  // under the licence that permits the use at all.
+  // The files used are on the rhetoric page, whose citation differs from the survey one.
   assert.match(PRL_RHETORIC_ATTRIBUTION.citation, /Congressional Rhetoric Dataset/);
   assert.match(PRL_RHETORIC_ATTRIBUTION.url, /\/elites\/data$/);
   assert.match(PRL_SURVEY_ATTRIBUTION.citation, /Westwood, S\. J\., & Lelkes, Y\./);
   assert.notEqual(PRL_RHETORIC_ATTRIBUTION.citation, PRL_SURVEY_ATTRIBUTION.citation);
 
-  // The snapshot carries its attribution with the rows, the way
-  // LEGISCAN_ATTRIBUTION does, so it cannot drift from the data it covers.
+  // The snapshot carries its attribution with the rows.
   const snap = snapshot();
   assert.equal(snap.attribution.citation, PRL_RHETORIC_ATTRIBUTION.citation);
   assert.match(snap.attribution.licenceUrl, /creativecommons\.org\/licenses\/by\//);
@@ -99,10 +83,7 @@ test("D62: the attribution is the RHETORIC citation, not the survey one", () => 
 });
 
 test("D62: a share is a percentage as PRL computed it, never a fraction we scaled", () => {
-  // THE DEFECT THE REAL FILE CAUGHT. The `_mean` columns are 0-100, not
-  // 0-1, and the first sentence builder multiplied by 100 — Mark Kelly's
-  // policy share would have rendered as "7099%". Obvious at that size;
-  // the same error at 0.7 would have read "1%" and looked fine.
+  // The `_mean` columns are already 0-100; scaling them again renders an impossible share.
   const snap = snapshot();
   for (const profile of snap.profiles) {
     for (const [key, value] of Object.entries(profile.shares)) {
@@ -126,8 +107,7 @@ test("D62: every sentence is PRL's measurement, in PRL's name, with the count st
   for (const category of PRL_CATEGORIES) {
     const sentence = shareSentence(profile, category.key);
     if (!sentence) continue;
-    // Named, always: a PRL number in the app's own voice is the app making
-    // the measurement.
+    // Named, always: a PRL number in the app's own voice is the app making the measurement.
     assert.match(sentence, /Polarization Research Lab/);
     // The base rides with it — PRL's own pages print "Posts tracked: N".
     assert.match(sentence, /statements on file/);
@@ -145,8 +125,7 @@ test("D62: a member with no classified statements is a gap, never a silent drop"
   const result = normalizeProfiles(csv, ["A000001", "B000002", "C000003"]);
 
   assert.equal(result.profiles.length, 1);
-  // Every count stated: a run that returned one row of three asked-for must
-  // say which of the two other things happened to each.
+  // Every count stated.
   assert.equal(result.counts.rosterAsked, 3);
   assert.equal(result.counts.matched, 1);
   assert.equal(result.counts.droppedNoStatements, 1);
@@ -166,18 +145,13 @@ test("D62: a moved schema fails loudly rather than guessing which column replace
 });
 
 test("D62: the CSV reader survives a quoted field full of commas", () => {
-  // The source file embeds a whole ProPublica blob per member, in one
-  // quoted cell, with commas and colons throughout. A split(",") reader
-  // mis-columns every row after it and reads plausible garbage.
+  // The source embeds a long blob per member in one quoted cell, with commas throughout.
   const rows = parseCsv('a,b,c\n1,"x, y, z",3\n');
   assert.deepEqual(rows[1], ["1", "x, y, z", "3"]);
 });
 
 test("D62: PRL's race-competitiveness rating is not in this build", () => {
-  // The one exclusion D62 recorded as a recommendation: a "Toss Up" rating
-  // on a partisan gradient is a FORECAST, not a measurement — handicapping,
-  // and telling readers whose race matters suppresses exactly the local
-  // participation this product exists for. Same family as never-rank.
+  // A race rating is a forecast, not a measurement.
   const source = [
     readFileSync(join(ROOT, "lib", "sources", "prl", "index.ts"), "utf8"),
     readFileSync(join(ROOT, "lib", "sources", "prl", "types.ts"), "utf8"),

@@ -187,19 +187,7 @@ test("lazy pool drains failed batches and reuses successful decodes beyond the f
   assert.deepEqual(reads, [3, ...Array(19).fill(1)], "only the failed capture retries, then the selected root hydrates");
 });
 
-/**
- * Official-page events (2026-09-23) — against pages recorded with one
- * robots-checked GET each through `politeGetText`. No live calls.
- *
- * - tusd-reconfiguration.html: https://www.tusd1.org/Reconfiguration,
- *   200 at 2026-09-23T23:25:27Z; robots allows it (disallows only
- *   /TUSD-school-exit-survey and /PLC-Roskruge for `*`).
- * - sfps-board-of-education.html: https://www.sfps.info/page/board-of-education-2,
- *   200 at 2026-09-23T23:27:41Z; robots allows `/` and disallows `/api/`.
- *
- * `NOW` is the TUSD retrieval instant: 16:25 in Tucson, while the 9/23
- * session (4:00pm–6:30pm) is under way.
- */
+// Recorded pages, no live calls. `NOW` is the first page's retrieval instant, while its session is under way.
 const NOW = new Date("2026-09-23T23:25:27.424Z");
 const FIXTURES = new URL("./fixtures/official-page-events/", import.meta.url);
 const TUSD_HTML = readFileSync(new URL("tusd-reconfiguration.html", FIXTURES), "utf8");
@@ -219,13 +207,7 @@ const TUSD: OfficialPageBody = {
   nameTerms: ["Tucson Unified", "TUSD", "Joint Committee"],
 };
 
-/**
- * New Mexico identity, built only from New Mexico evidence: the NCES
- * directory's website for LEAID 3502370 (http://www.sfps.info), the page's
- * own name for the body ("SFPS Board of Education") and its committees'
- * names as the page writes them. Not a registry body — Santa Fe is not a
- * supported jurisdiction — so the id is this test's own label.
- */
+// Identity built only from the second page's own evidence; not a registry body, so the id is this test's label.
 const SFPS: OfficialPageBody = {
   id: "test:nm:santa-fe-public-schools",
   name: "Santa Fe Public Schools",
@@ -425,7 +407,7 @@ test("structured shapes: JSON-LD with an offset, cancellation only in the publis
   const { published } = verifyExtractedEvents(extraction, { pageUrl: TUSD_URL, linkingPage: TUSD.linkingPage, nameTerms: body.nameTerms, timeZone: body.timeZone, now: NOW });
   const brief = published.map((v) => [v.event.shape, v.startsAt, v.endsAt, v.precision, v.event.venue, v.event.canceled]);
   assert.deepEqual(brief, [
-    // 01:00Z on Oct 6 is 6:00pm on Oct 5 in Tucson: the publisher's instant, read back into local time.
+    // 01:00Z on Oct 6 is 6:00pm on Oct 5 locally: the publisher's instant, read back into local time.
     ["json-ld", "2026-10-05T18:00:00-07:00", "2026-10-05T19:30:00-07:00", "MINUTE", "Catalina High School Auditorium", false],
     ["json-ld", "2026-10-09T00:00:00-07:00", null, "DAY", null, true],
     ["microdata", "2026-10-20T18:00:00-07:00", null, "MINUTE", "Pueblo High School Library", false],

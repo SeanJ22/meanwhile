@@ -1,36 +1,4 @@
-/**
- * **WHAT A SANITIZED FIXTURE CAME FROM.** (2026-08-28, the post-cleanroom
- * shipping hotfix.)
- *
- * When `lib/ops/fixture-credentials.ts` removes a publisher's credential from a
- * captured page, it removes bytes that the capture genuinely contained. That is
- * correct — see that module for why — but it means the committed file is no
- * longer a faithful copy of what was retrieved, and a fixture that has quietly
- * diverged from its source with nothing recording the divergence is a fixture
- * nobody can re-derive.
- *
- * So the divergence is written down, and it is written down in TWO halves that
- * are owned by different things:
- *
- *   - **This file is the DECLARED half, and it is hand-authored.** Where the
- *     page came from and when it was read are facts about an act of retrieval.
- *     No scanner can recover them from the bytes, so a human states them, once,
- *     next to the code that uses them.
- *   - **`data/fixtures/sanitization.json` is the DERIVED half, and it is
- *     GENERATED** by `pnpm fixtures:credentials --sanitize`. Hashes, classes and
- *     counts are mechanical, and RULING 92 means nobody hand-edits them.
- *
- * `tests/fixture-credentials.test.ts` holds the two together: every fixture the
- * generated record names must have a declaration here, and every declaration
- * must name a file that exists. Neither half can drift without the suite saying
- * so.
- *
- * **The raw bytes are NOT committed anywhere.** `rawSha256` in the generated
- * record is the entire memory of them, and that is deliberate: the point of the
- * repair is that this repository stops being a durable mirror of a third
- * party's live credential. A hash is reproducible by anyone who re-captures the
- * page; the page itself is not ours to keep.
- */
+/** What a sanitized fixture came from: the provenance of a committed capture whose credentials were removed. */
 
 import { createHash } from "node:crypto";
 import { writeFileSync } from "node:fs";
@@ -50,12 +18,7 @@ export interface FixtureCapture {
   provesWhat: string;
 }
 
-/**
- * The captures that have been sanitized, and therefore need their provenance
- * stated. **A fixture absent from this list is not a fixture claimed clean** —
- * it is a fixture that has never needed redaction, which is the ordinary case
- * and needs no declaration.
- */
+/** The sanitized captures. A fixture absent from this list never needed redaction; it is not a fixture claimed clean. */
 export const SANITIZED_CAPTURES: readonly FixtureCapture[] = [
   {
     path: "tests/fixtures/legistar-insite-pima-clerk-schedule.html",
@@ -75,15 +38,7 @@ export const SANITIZED_CAPTURES: readonly FixtureCapture[] = [
       "the `event-tip` month-grid shape: one town-wide calendar carrying eleven boards, " +
       "concerts and transfer-station hours, from which one board's sittings are separated",
   },
-  /*
-   * The two Diligent Community meeting pages below were read by the session
-   * that diagnosed the Diligent agenda-extraction defect. Before this record
-   * was taken, their ASP.NET page state (`__VIEWSTATE`, `__EVENTVALIDATION`),
-   * the Telerik combined-script token and the WebResource/ScriptResource
-   * identifiers were replaced by fixed placeholders, so `rawSha256` below is
-   * the hash of that page-state-blanked page. The SHA-256 of each page exactly
-   * as served is stated in its `capturedBy`.
-   */
+  // Page state and script tokens were replaced by fixed placeholders before recording; `rawSha256` hashes that page.
   {
     path: "tests/fixtures/diligent/meeting-information-tusd-502.html",
     sourceUrl:
@@ -114,22 +69,7 @@ export function captureFor(path: string): FixtureCapture | null {
   return SANITIZED_CAPTURES.find((c) => c.path === path) ?? null;
 }
 
-/**
- * **THE ONE DOOR A CAPTURED PAGE ENTERS THE REPOSITORY THROUGH.**
- *
- * `scripts/learn-legistar-horizon.mts` wrote its recordings with a bare
- * `writeFileSync`, which is how a live Google Maps key and a thirty-day bearer
- * token reached `tests/fixtures/` and stopped a deploy. Every recorder now
- * calls this instead, so the redaction happens at the moment of acquisition
- * rather than being found later by a scanner — RULING 103's shared path, and
- * the reason `pnpm fixtures:credentials` should never again have anything to
- * find.
- *
- * It returns what it redacted so the caller can PRINT it. A recorder that
- * silently removed bytes from evidence would be worse than the leak: the whole
- * value of a fixture is that it is what the server sent, and any departure from
- * that has to be visible at the moment it happens.
- */
+/** The one door a captured page enters the repository through: redaction happens at acquisition. */
 export function writeCapturedFixture(
   absolutePath: string,
   body: string,

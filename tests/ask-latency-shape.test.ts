@@ -1,12 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
-await Promise.all([
-  initializeFederalVoteFirstSeed(),
-  installRegistryRuntimeFirstSeeds(),
-]);
+await initializeFederalVoteFirstSeed();
 
 import { bodyNameFromQuestion, lexicalQuestionShape, lexicalReading, unheldNamedBodyQuestion } from "../lib/ask/lexical-reading.ts";
 import {
@@ -25,25 +21,6 @@ import { WRITER_MEMBER_VOTE_ROWS, writerInputProof, writerSelection } from "../l
 import type { EvidencePack, EvidenceRecord } from "../lib/ask/evidence.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 
-/**
- * **THE SHAPE OF ASK'S LATENCY.** (2026-09-25, the Ask latency repair.)
- *
- * Measured on production 2026-09-25: a new question on a warm instance took
- * 7.5 s — 2.4 s reading it with a model and 4.8 s writing it with a model —
- * for answers the records already held. Sean's bar is three seconds from the
- * question to a usable answer. These tests pin the SHAPE that makes the fast
- * path fast and keeps it honest, with a fake transport that counts every call:
- *
- * - a question the reader's own words settle is read in code (no call);
- * - an answer the sitting records already are is composed (no call);
- * - anything else still reaches the model, exactly once per rung, and the two
- *   rungs are sequential only because the second needs the first's binding;
- * - an unchanged question over unchanged records is served from the cache;
- * - every composed answer faces the same validator, and a failure never ships;
- * - a model answer cites numbered sources instead of writing URLs out after
- *   the answer, and an invented citation still fails closed.
- */
-
 const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
 const MESA_SCHOOLS = "ocd-division/country:us/state:az/school_district:mesa_unified_district#board";
 const INVENTORY: BindableEntity[] = [
@@ -59,8 +36,6 @@ test("a named body missing from our records gets a gap while held ambiguities an
     assert.equal(unheldNamedBodyQuestion(question, INVENTORY), null, question);
   }
 });
-
-/* ── the lexical reading ─────────────────────────────────────────────────── */
 
 test("the canonical shapes are read, and anything with more in it is not", () => {
   const accepted: [string, string][] = [
@@ -114,7 +89,7 @@ test("the lexical reading binds exactly what every binder binds, with the tense 
   assert.equal(bodyNameFromQuestion("When does the Mesa City Council meet next?", INVENTORY, MESA_SCHOOLS), null);
   assert.equal(bodyNameFromQuestion("When do they meet next?", INVENTORY, MESA), null);
 
-  // The 2026-09-25 agreement check against the live model: no tense word is NONE, not NEXT.
+  // No tense word reads NONE, not NEXT.
   assert.deepEqual(lexicalReading({ question: "When does the Mesa City Council meet?", inventory: INVENTORY, namedBodies: INVENTORY })?.interpretation.temporal, { kind: "NONE" });
   assert.equal(lexicalReading({ question: "When did the Mesa City Council last meet?", inventory: INVENTORY, namedBodies: INVENTORY })?.interpretation.intent, "PAST_MEETING");
   const outcome = lexicalReading({ question: "What did the Mesa City Council decide recently?", inventory: INVENTORY, namedBodies: INVENTORY });
@@ -176,7 +151,6 @@ test("named-subject shapes read the subject kind they ask about, with the intent
     { id: GOV, name: "Governor", nameClass: "body", divisionType: "contest" },
   ];
   const read = (question: string) => lexicalReading({ question, inventory, namedBodies: INVENTORY });
-  // What claude-opus-5 returned for these on 2026-09-25 (a roster question reads PERSON_RECORD on all three models).
   assert.deepEqual([read("Who sits on the Mesa City Council?")?.subjectId, read("Who sits on the Mesa City Council?")?.interpretation.intent], [MESA, "PERSON_RECORD"]);
   assert.equal(read("What does the Mesa City Council do?")?.interpretation.intent, "CIVICS");
   assert.deepEqual([read("Explain Prop 141 to me")?.subjectId, read("Explain Prop 141 to me")?.interpretation.intent], [PROP, "MEASURE"]);
@@ -193,8 +167,6 @@ test("named-subject shapes read the subject kind they ask about, with the intent
   assert.equal(read("What has Katie Hobbs done about Prop 141?"), null, "two subjects named");
   assert.equal(read("What has Katie Hobbs school board done?"), null, "a class phrase on a person");
 });
-
-/* ── the composed sitting answer ─────────────────────────────────────────── */
 
 const STUDY: ComposableSitting = { id: "m1", title: "City Council Study Session", startsAt: "2026-09-28T17:15:00-07:00", timeZone: "America/Phoenix", status: "SCHEDULED" };
 const REGULAR: ComposableSitting = { id: "m2", title: "City Council", startsAt: "2026-09-28T17:45:00-07:00", timeZone: "America/Phoenix", status: "SCHEDULED" };
@@ -254,7 +226,7 @@ test("composition steps aside whenever there is something to summarise or a fact
 });
 
 test("a date-only posting is stated as its date, never as the midnight it is stored at", () => {
-  // Chandler's council listing (production, 2026-09-25) carries a date and no time.
+  // A council listing that carries a date and no time.
   const dayOnly: ComposableSitting = { id: "c1", title: "City Council", startsAt: "2026-10-12T00:00:00-07:00", timeZone: "America/Phoenix", startPrecision: "DAY", status: "SCHEDULED" };
   const records = [meetingRecord(dayOnly, "https://chandler.example.gov/c1")];
   const composed = composeSittingAnswer({ shape: "MEETING_TIME", subjectName: "Chandler", sittings: [dayOnly], records, sittingGaps: [], now: NOW });
@@ -302,8 +274,6 @@ test("a composed answer ships only on a passing verdict, against the SAME valida
   assert.equal(invented.composed, null);
   assert.ok(invented.verdict?.kind === "FAILED" && invented.verdict.failed.some((reason) => reason.startsWith("invented-source-url:")));
 });
-
-/* ── the route, with a transport that counts ─────────────────────────────── */
 
 const AZ = "ocd-division/country:us/state:az";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -569,8 +539,6 @@ test("ROUTE: a large outcome sitting sends the writer a bounded selection; the r
   assert.ok(sel && sel.memberVoteRowsShown <= WRITER_MEMBER_VOTE_ROWS && sel.memberVoteRowsShown + sel.memberVoteRowsWithheld === rows);
 });
 
-/* ── the citation format ─────────────────────────────────────────────────── */
-
 test("a citation is a source number, mapped back to the pack's own URL; an unknown number never passes", () => {
   const records: EvidenceRecord[] = [
     { kind: "MEETING", id: "m", text: "x", sourceUrl: "https://a.example/1" },
@@ -606,8 +574,6 @@ test("the synthesis request numbers the sources, asks for numbers, and still gen
   assert.deepEqual(context.sources, [{ n: 1, url: "https://mesa.example.gov/m1" }]);
 });
 
-/* ── what the writer is sent, and who writes ─────────────────────────────── */
-
 function voteRows(item: string, members: number, url: string): EvidenceRecord[] {
   return Array.from({ length: members }, (_, index) => ({
     kind: "MEETING_MEMBER_VOTE" as const, id: `${item}#m${index}`, bodyId: MESA, text: `On "Item ${item}", Member ${index} voted Aye.`, sourceUrl: url,
@@ -640,8 +606,7 @@ test("the writer is sent every record but member-vote rows past the bound, cut b
   assert.equal(writerInputProof(pack, records, records).receivesItsSelection, false, "the whole pack is NOT what the writer is sent");
   assert.equal(writerInputProof(pack, records, sent.records.filter((record) => record.id !== action.id)).receivesItsSelection, false, "a withheld action fails the proof");
 
-  // The writer is told, in its rules too, and an answer that calls the withheld votes unpublished is refused
-  // (measured 2026-09-25: the fast writer wrote exactly that over a 48-roll-call Pima sitting).
+  // The writer is told, in its rules too, and an answer that calls the withheld votes unpublished is refused.
   assert.match(synthesisPrompt(pack), /Never say or imply that the others were not published/);
   const refused = validateAnswer("Four members voted Aye on the first item. The Board has not published how each member voted on most other items.", [], pack);
   assert.ok(refused.kind === "FAILED" && refused.failed.includes("withheld-votes-called-unpublished"));

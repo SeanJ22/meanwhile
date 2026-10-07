@@ -1,12 +1,5 @@
 /**
- * ONE `git()` HELPER FOR THE PLAIN-NODE SCRIPTS.
- *
- * RULING 103, 2026-08-24. `scripts/close-out.mjs` had this; `deploy-live.mjs`
- * and `netlify-ignore.mjs` grew identical copies the same day, and
- * `pnpm dupes` caught the group by SHAPE before any of them shipped. Three
- * copies of a four-line function is not a crisis — but the rule is *fix at the
- * shared code path*, and the alternative on offer is recording a group in the
- * baseline with a reason it must stay separate. There isn't one.
+ * One `git()` helper for the plain-node scripts.
  *
  * **Deliberately dependency-free and plain `.mjs`.** `netlify-ignore.mjs` runs
  * in Netlify's build container BEFORE `pnpm install`, so anything it imports has

@@ -1,23 +1,19 @@
 /**
- * **RESEARCH FETCHES GO THROUGH HERE.** (2026-09-24, R15.)
- *
- * The one way a research session or its agents read a government site: robots.txt
- * first by construction, every redirect's origin asked again, walls and hosts
- * awaiting the owner's decision refused before any request, requests to one host
- * spaced, and every request written to the log. The rules are in
- * `lib/hunt/robots-first-fetch.ts`; this is its command line.
+ * The one way a research session or its agents read a government site:
+ * robots.txt first, every redirect's origin asked again, refused walls and hosts
+ * refused before any request, requests to one host spaced, and every request
+ * logged. The rules are in `lib/hunt/robots-first-fetch.ts`; this is its command line.
  *
  *   pnpm research:fetch <url> [--out <file>] [--cache <dir>] [--log <file.tsv>]
  *
  * - `--out`   writes the body, byte-exact (a PDF stays a PDF).
- * - `--cache` keeps robots.txt readings and per-host request times between runs,
- *             so a batch of calls asks each host once and stays spaced. Default:
- *             `<os tmpdir>/wtp-research-fetch`.
+ * - `--cache` keeps robots.txt readings and per-host request times between runs.
+ *             Default: `<os tmpdir>/wtp-research-fetch`.
  * - `--log`   appends one tab-separated line per request, robots.txt included.
  *
- * Prints one JSON object: the outcome (FETCHED or REFUSED and why), the final URL,
- * status, content type, sha256, the redirects followed and each origin's robots
- * verdict. It exits 0 on FETCHED, 3 on REFUSED, 1 on a usage error.
+ * Prints one JSON object (outcome, final URL, status, content type, sha256,
+ * redirects, each origin's robots verdict). Exits 0 on FETCHED, 3 on REFUSED,
+ * 1 on a usage error.
  */
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -64,7 +60,7 @@ const result = await researchFetch(target, {
   now: () => Date.now(),
   sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
   log: logPath === null ? undefined : (e) => appendFileSync(logPath, `${e.at}\t${e.purpose}\t${e.url}\t${e.status ?? ""}\t${e.transportError ?? ""}\t${e.bytes}\n`),
-  // Node first; a 403 is asked once more through curl as who we are (2026-09-25).
+  // Node first; a 403 is asked once more through curl as who we are.
   get: identifiedResearchGet(),
 });
 

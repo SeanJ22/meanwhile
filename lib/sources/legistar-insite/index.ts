@@ -1,8 +1,8 @@
 /**
  * @freshness-reads-here
  *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: `collectedAt` is taken at the moment of the fetch.
+ * The clock stamps here are minted by the code path that performs the read: `collectedAt` is taken at
+ * the moment of the fetch.
  */
 import { unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { observationFromGridCell } from "../../outcomes/publication.ts";
@@ -74,149 +74,45 @@ import {
 } from "./tenant-registry.ts";
 
 /**
- * **Legistar InSite — the vendor's own portal, read directly.** (2026-08-28.)
+ * Legistar InSite: the vendor's own portal, read directly.
  *
- * ## The false conclusion this exists to retire
+ * `webapi.legistar.com/v1/{client}/events` returns only sittings whose InSite meeting-detail page is
+ * publicly viewable; the others have no WebAPI record at all and the two routes number meetings in
+ * disjoint id spaces. The discriminator is `class="meeting_NotViewable"` in the portal's calendar grid, so
+ * every Legistar tenant loses its unpublished future sittings through the API alone. The API and the web
+ * UI also have different publication clocks: the portal can publish months ahead while the API carries
+ * only days.
  *
- * A prior session measured that `webapi.legistar.com/v1/pima/events` returns
- * **zero rows for September 2026**, reconciled the seven August rows it did
- * return, and recorded that Pima's September sittings "exist only as a
- * recurring schedule rule". The measurement reproduces exactly and is true. The
- * inference was false: the sittings are individually published records, on the
- * county's own portal, with a date, a time, a room and a meeting kind —
- * including a **1:00 PM study session on 8 September** that no recurrence rule
- * in this repository could have produced, because the committed rule text gives
- * study sessions no time at all.
+ * Not a replacement: `/events` carries the agenda file, agenda items and the acting-body join, which the
+ * grid does not. Both routes ship with their own provenance, and `sittingKey` in
+ * `lib/sources/event-identity.ts` stops one sitting rendering twice.
  *
- * Reconciling proves nothing was DROPPED. It never proves enough was ASKED FOR.
- *
- * ## What the API actually filters on
- *
- * Not agenda status, and not data it lacks. `/events` returns only the sittings
- * whose InSite meeting-detail page is **publicly viewable**; the ones it omits
- * have no WebAPI record at all (40 of 40 probed ids 404 on the item endpoint),
- * and the two routes number their meetings in disjoint id spaces. The
- * discriminator is `class="meeting_NotViewable"` in the portal's calendar grid.
- *
- * Three tenants, one day, one filter:
- *
- * | tenant | grid rows | not viewable | returned by `/events` |
- * | --- | --- | --- | --- |
- * | Mesa | 15 | 12 | exactly the 3 viewable |
- * | Phoenix | 8 | 8 | 0 |
- * | Pima | 3 | 3 | 0 |
- *
- * **Every wired Legistar tenant was silently losing its unpublished future
- * sittings.** That is a class defect, not a Pima one.
- *
- * ## The two publication clocks
- *
- * InSite published Pima's 22 September sitting on **15 June** — 74 days of
- * notice, read off the calendar RSS `pubDate`. The WebAPI's lead time across 32
- * Pima 2026 events is **max 5 days, median 0, min -2**. The Legistar adapter's
- * 60-day forward window is therefore asking that route for roughly ten times
- * more than it can ever return, and no amount of asking it harder changes that.
- * A vendor's public API and its public web UI are DIFFERENT RECORDS WITH
- * DIFFERENT PUBLICATION CLOCKS.
- *
- * ## What this adapter is not
- *
- * It is not a replacement. `/events` carries the agenda file, the agenda items
- * and the D19 acting-body join; the grid carries none of those. Both routes
- * ship, both keep their own provenance, and `sittingKey` in
- * `lib/sources/event-identity.ts` is what stops one sitting rendering twice.
- *
- * ## Permission
- *
- * `pima.legistar.com` and `mesa.legistar.com` return **404 for robots.txt** —
- * no rules published, read 2026-08-28. The `legistar.com` apex publishes
- * `Crawl-delay: 2` and disallows only `*?wtime` / `*?wmediaid` / `*?wchannelid`,
- * none of which this adapter requests. The delay is honoured for the whole
- * vendor. `pima.granicus.com` publishes `Disallow: /`; that is recorded and,
- * since the owner decision of 2026-09-25, blocks nothing. Its Live Proceedings
- * page is not read by anything here because no adapter for it exists yet — see
- * `GRANICUS_LIVE_PROCEEDINGS_ROUTE` below.
+ * Tenant hosts publish no robots.txt rules; the `legistar.com` apex publishes `Crawl-delay: 2`, honoured
+ * for the whole vendor, and disallows only paths this adapter never requests.
  */
 const SOURCE_NAME = "legistar-insite";
 
 /**
- * The Granicus Live Proceedings route lives with the rest of the route model,
- * in `./horizon.ts`, because it IS a route observation — one whose enumeration
- * state is `NOT_BUILT` (it was `PERMISSION_DISALLOWED` until 2026-09-25) and
- * whose claim about the content is null. Re-exported here because it is part
- * of this adapter's public surface, and a route that moved file is a route
- * somebody stops finding.
+ * The Granicus Live Proceedings route lives with the route model in `./horizon.ts` (enumeration state
+ * `NOT_BUILT`, no claim about its content); re-exported as part of this adapter's public surface.
  */
 export { GRANICUS_LIVE_PROCEEDINGS_ROUTE } from "./horizon.ts";
 
 const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
 /**
- * **THIS ADAPTER NO LONGER CLIPS THE FUTURE, AND THAT IS THE CORRECTION.**
- * (2026-08-28.)
- *
- * It used to stop at `UPCOMING_HORIZON_DAYS` — 60 — which on the day this was
- * written silently discarded **eight of the fourteen** future Board sittings
- * Pima County has published: everything from 10 November to 15 December, each
- * one an explicit dated instance carried by three separate first-party routes.
- * The clip produced no drop counter anybody would read as a loss, because
- * `outOfWindow` is the ordinary and correct name for a row outside the served
- * window.
- *
- * Two windows were being conflated. **What a publisher has published** and
- * **what this application currently serves** are different facts, and the
- * second is not this adapter's to enforce: `lib/meetings/query.ts` clips reads
- * to the serving horizon independently, on every read, for every source. An
- * adapter clipping as well bought nothing and cost the snapshot the rows that
- * would appear the instant the horizon widened.
- *
- * `CLAUDE.md`: *show everything we find; collection state never governs
- * display.* This is the same rule pointing the other way — DISPLAY state must
- * not govern collection either. `lib/sources/revize` already established the
- * shape for the backward edge (`publishedLookbackDays: null`, g13); this is
- * the forward one.
- *
- * The rows past the serving horizon are still ACCOUNTED: each carries a
- * `BEYOND_APP_SERVING_HORIZON` disposition naming this application's own
- * constant and its value, so the gap between what we hold and what a reader
- * sees is a stated number and not a silence.
+ * This adapter does not clip the future. What a publisher has published and what this application
+ * currently serves are different facts; `lib/meetings/query.ts` clips reads to the serving horizon on
+ * every read. Rows past the serving horizon carry a `BEYOND_APP_SERVING_HORIZON` disposition, so the gap
+ * between what we hold and what a reader sees is a stated number.
  */
 const SERVING_HORIZON_DAYS = MEETING_HELD_HORIZON_DAYS;
 
 /**
- * The grid ranges this adapter drives, in order.
- *
- * The vocabulary is the DROPDOWN'S OWN — read off the page rather than invented
- * — and it is still not complete: the control also offers "Last Week", "This
- * Week", "Next Week", "Last Year", "All Years" and every year back to 2013.
- * Those are rungs this adapter has not needed, not ranges that do not exist.
- *
- * ## Why this used to stop at "Next Month", and why that was a wrong answer
- *
- * The three-month set was chosen to stay inside the grid's 100-row page, on the
- * reasoning that "This Year" is a pagination trap — Mesa's answers `items 1 to
- * 100 of 148`. The trap is real. The conclusion was not: it traded **eleven of
- * Pima's fourteen published future sittings** for the convenience of not
- * writing a pager walk. Measured 2026-08-28 on `pima.legistar.com`:
- *
- * | range | rows | future Board sittings | pager |
- * | --- | --- | --- | --- |
- * | "Next Month" | 3 | **3** | none |
- * | "This Year" | 46 | **14** | none |
- * | "Next Year" | 0 | 0 | none — grid says "No records were found." |
- *
- * A one-month forward window against a portal publishing 109 days ahead is an
- * adapter asking for a quarter of what is there. `CLAUDE.md`: the universe of
- * methods is not bounded, and difficulty is friction rather than refusal. The
- * pager walk is the method, and it is now written (`parseGridPageTargets`).
- *
- * ## "Next Year" is in the set, and its zero is a publisher's zero
- *
- * It returns nothing today and that is not a reason to leave it out — it is the
- * range that will carry January the moment Pima files it, and asking it costs
- * one paced request. Its emptiness is only ever accepted when the grid renders
- * `rgNoRecords` and the words **"No records were found."**; a zero without that
- * sentence is a wall, reported as one.
+ * The grid ranges this adapter drives, in order, in the dropdown's own vocabulary. "This Year" pages at 100
+ * rows, so its pager is walked (`parseGridPageTargets`). "Next Year" is included: its emptiness is accepted
+ * only when the grid renders `rgNoRecords` and "No records were found."; a zero without that sentence is a
+ * wall.
  */
 export const RANGES: InSiteRange[] = [
   "Last Month",
@@ -227,9 +123,8 @@ export const RANGES: InSiteRange[] = [
 ];
 
 /**
- * The ranges to drive on `now`. The held window reaches back `WINDOW_BACK_DAYS`; "Last Month" and "This Year" cover
- * that until January to April, when it crosses into the prior calendar year, and then "Last Year" is read first too
- * (DB-03). Otherwise the set is `RANGES`, unchanged.
+ * The ranges to drive on `now`. The held window reaches back `WINDOW_BACK_DAYS`; when that crosses into the
+ * prior calendar year, "Last Year" is read first too. Otherwise the set is `RANGES`.
  */
 export function rangesAt(now: Date): InSiteRange[] {
   const backYear = new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000).getUTCFullYear();
@@ -237,25 +132,15 @@ export function rangesAt(now: Date): InSiteRange[] {
 }
 
 /**
- * How many pages of one range this adapter will walk before it reports the
- * enumeration incomplete.
- *
- * **A FLOOR AND AN INSTRUMENT, NEVER A COMPLETION CONDITION** (RULING 170,
- * RULING 184). Reaching it does not mean the range is enumerated; it means this
- * run stopped walking, and `partialScopes` says so with the pager's own total
- * beside the count we actually read. It exists because each page is a paced
- * request at the vendor's stated `Crawl-delay: 2` and a refresh job has other
- * bodies to serve — a budget on THIS run, not a claim about the portal.
+ * How many pages of one range this run will walk before reporting the enumeration incomplete. A budget on
+ * this run (each page is a paced request), never a completion condition: `partialScopes` reports the
+ * pager's total beside the count actually read.
  */
 export const MAX_GRID_PAGES = 6;
 
 /**
- * The ranges whose window can contain a date later than today.
- *
- * Used to attribute an incomplete enumeration to the right SCOPE, because
- * carry-forward preserves exactly the scope that fell short: a short "Last
- * Month" is an archive gap, and a short "This Year" is an UPCOMING gap that
- * would otherwise be carried as if the future were fine.
+ * The ranges whose window can contain a date later than today, so an incomplete enumeration is attributed
+ * to the right scope for carry-forward.
  */
 const REACHES_FUTURE = new Set<InSiteRange>([
   "This Week",
@@ -300,12 +185,8 @@ export interface LegistarInSiteRaw {
      */
     pages: { page: number; html: string; pager: InSiteGridPager | null }[];
     /**
-     * **The grid saying, in its own words, that it holds nothing.**
-     *
-     * True only for `class="rgNoRecords"` plus "No records were found."
-     * A zero-row window with this `false` is a FAILED RETRIEVAL, not an empty
-     * calendar, and the caller reports it as one. Pima's "Next Year" is the
-     * measured true case (2026-08-28).
+     * The grid saying, in its own words, that it holds nothing: true only for `class="rgNoRecords"` plus "No
+     * records were found." A zero-row window with this `false` is a failed retrieval.
      */
     noRecords: boolean;
   }[];
@@ -319,14 +200,9 @@ export interface LegistarInSiteRaw {
   /** Per-meeting iCalendar bodies, keyed by InSite id, for rows the grid could not time. */
   icalByInsiteId: Record<string, string>;
   /**
-   * **THE BODY'S OWN SITE, SAYING THE SAME THING WITHOUT THE VENDOR.**
-   *
-   * The Clerk of the Board's schedule table, when the tenant declares one and
-   * it was retrieved. `null` means nobody asked or the page refused — never
-   * that the county publishes no schedule.
-   *
-   * It is CORROBORATION and disposition evidence, not an ingestion source: no
-   * `Meeting` is produced from it. See `./clerk-schedule.ts`.
+   * The body's own clerk schedule table, when the tenant declares one and it was retrieved. `null` means
+   * nobody asked or the page refused, never that no schedule is published. Corroboration and disposition
+   * evidence only; see `./clerk-schedule.ts`.
    */
   clerkScheduleHtml: string | null;
   clerkScheduleUrl: string | null;
@@ -356,13 +232,9 @@ function gridTime(raw: string): { hour: number; minute: number } | null {
 }
 
 /**
- * The portal has **no cancellation field**, exactly like the WebAPI.
- *
- * A clerk who calls a sitting off says so in the row's own free text — the
- * `<em>` meeting kind, or the location. Deliberately narrow, and deliberately
- * not widened into guesswork: **a meeting wrongly marked canceled keeps someone
- * at home.** Nothing in the recorded Pima or Mesa fixtures matches it, so this
- * path has no live positive and must not grow one by inference.
+ * The portal has no cancellation field. A clerk who calls a sitting off says so in the row's free text
+ * (the `<em>` kind or the location). Deliberately narrow: a meeting wrongly marked canceled keeps someone
+ * at home.
  */
 function isCanceled(row: InSiteCalendarRow): boolean {
   return [row.kind ?? "", row.location, row.bodyName].some((field) =>
@@ -374,13 +246,9 @@ export interface InSiteNormalizeResult {
   meetings: Meeting[];
   drops: NormalizeDropCounts;
   /**
-   * **A-004 — completeness is never inferred from a successful read.**
-   *
-   * One entry per range whose grid came back PAGED: the pager published a
-   * total, and the page in hand held fewer rows than that. The retrieval
-   * succeeded and the ENUMERATION did not, and those are different facts. It
-   * rides on the existing partial-scope channel so carry-forward preserves
-   * exactly the scope that fell short and no other.
+   * Completeness is never inferred from a successful read: one entry per range whose pager published a total
+   * larger than the rows in hand. Rides the partial-scope channel so carry-forward preserves exactly the
+   * scope that fell short.
    */
   partialScopes: PartialScopeFailure[];
   /** Which route supplied each field of each meeting — one row per meeting. */
@@ -394,15 +262,8 @@ export interface InSiteNormalizeResult {
    */
   routes: RouteObservation[];
   /**
-   * **The publisher's own statement about each sitting's agenda, one per
-   * produced sitting.**
-   *
-   * The grid's agenda cell was previously read, used to decide `agendaUrl`, and
-   * then discarded — leaving a null whose reader-facing sentence ("the body has
-   * not posted an agenda") was a claim about a government supported only by our
-   * own empty field. These are that reading, kept, scoped to one sitting, with
-   * what the cell said and when we read it. `lib/ask/agenda-publication.ts`
-   * decides what may be SAID from them; nothing here renders a sentence.
+   * The publisher's own statement about each sitting's agenda, one per produced sitting, with what the cell
+   * said and when we read it. `lib/ask/agenda-publication.ts` decides what may be said from them.
    */
   publicationObservations: AgendaPublicationObservation[];
   /**
@@ -419,15 +280,9 @@ export interface InSiteNormalizeResult {
    */
   dispositions: InstanceDisposition[];
   /**
-   * **WHAT THIS RUN STILL OWES A READER**, derived from `dispositions` by
-   * `openObligations` — never asserted, never typed by hand.
-   *
-   * A disposition explains; it does not discharge. This is the subset that is
-   * explained AND still absent from the product: a sitting a first-party route
-   * published that we have not placed, a room we could not resolve, an hour
-   * nobody published. Every one of them is ALSO emitted as an incomplete
-   * `UPCOMING` scope in `partialScopes`, because that is the only one of these
-   * fields that survives the composite boundary and reaches the run's report.
+   * What this run still owes a reader, derived from `dispositions` by `openObligations`. Every one is also
+   * emitted as an incomplete `UPCOMING` scope in `partialScopes`, the only field that survives the composite
+   * boundary.
    */
   openObligations: InstanceDisposition[];
 }
@@ -450,12 +305,7 @@ export function normalizeWithDrops(
   const routes: RouteObservation[] = [];
   const tenantUnions: UnionInstance[] = [];
   const dispositions: InstanceDisposition[] = [];
-  /**
-   * **What the portal said about each sitting's agenda, kept.**
-   *
-   * One per produced sitting. See `lib/outcomes/publication.ts` for why this
-   * exists and what was being lost without it.
-   */
+  /** What the portal said about each sitting's agenda, kept. See `lib/outcomes/publication.ts`. */
   const publicationObservations: AgendaPublicationObservation[] = [];
   /*
    * The instant this normalize ran, which is the instant the grid HTML in hand
@@ -477,9 +327,8 @@ export function normalizeWithDrops(
   let considered = 0;
   let duplicates = 0;
   let outOfWindow = 0;
-  // D18: an online-only sitting is TALLIED as placeless and then PRODUCED; a
-  // sitting with no reviewed place is tallied as unknownVenue and PRODUCED
-  // with its venue gap named (the venue-gap class, 2026-09-23).
+  // An online-only sitting is tallied as placeless and produced; a sitting with no reviewed place is tallied
+  // as unknownVenue and produced with its venue gap named.
   let keptButPlaceless = 0;
   // A tenant whose portal refused every range holds no documents at all.
   let unretrieved = 0;
@@ -513,13 +362,9 @@ export function normalizeWithDrops(
     let gridComplete = true;
     let gridNote: string | null = null;
     /**
-     * Why a future instance this adapter SAW did not become a `Meeting` — or
-     * became one that still owes something — keyed on canonical identity.
-     * Recorded at the point of the decision, because a reason reconstructed
-     * afterwards from the absence of a row is a guess. Two verdicts ride here
-     * on a PRODUCED sitting: `CANCELED_BY_PUBLISHER` (it reaches the reader as
-     * canceled) and `VENUE_NOT_RESOLVED` (it reaches the reader with its place
-     * as a named gap, and the reviewed venue row is still owed).
+     * Why a future instance this adapter saw did not become a `Meeting`, or became one that still owes
+     * something, keyed on canonical identity and recorded at the point of the decision. Two verdicts ride on a
+     * produced sitting: `CANCELED_BY_PUBLISHER` and `VENUE_NOT_RESOLVED`.
      */
     const withheldBy = new Map<string, { verdict: DispositionVerdict; because: string }>();
     /**
@@ -543,16 +388,8 @@ export function normalizeWithDrops(
         parseCalendarRows,
       );
 
-      /*
-       * **A ZERO IS ONLY EVER THE PUBLISHER'S ZERO.** (RULING 100.)
-       *
-       * A range that returned no rows and did NOT render "No records were
-       * found." is a failed extraction wearing a 200 — a template change, an
-       * expired session, a challenge page. It is reported as an incomplete
-       * enumeration for that scope rather than folded into the union as
-       * nothing, because "this range is empty" and "we could not read this
-       * range" are different facts and only one of them is ours to state.
-       */
+      // A zero is only ever the publisher's zero. A range with no rows that did not render "No records were
+      // found." is a failed extraction, reported as an incomplete enumeration for that scope.
       if (rows.length === 0 && !window.noRecords) {
         gridComplete = false;
         gridNote =
@@ -566,17 +403,8 @@ export function normalizeWithDrops(
         });
       }
 
-      /*
-       * **THE GRID PAGES AT 100 AND PUBLISHES ITS TOTAL.** A range that came
-       * back short is an INCOMPLETE ENUMERATION and is reported as one — the
-       * same failure this adapter exists to correct, one layer down: a route
-       * answering completely about the part it chose to send. Mesa's "This
-       * Year" is the measured case, `items 1 to 100 of 148`.
-       *
-       * It rides on A-004's partial-scope channel so carry-forward preserves
-       * exactly the scope that fell short and no other, and so that
-       * completeness is never inferred from a successful read.
-       */
+      // A range that came back short of the pager's published total is an incomplete enumeration, reported
+      // through the partial-scope channel.
       if (window.pager && rows.length < window.pager.totalItems) {
         gridComplete = false;
         gridNote =
@@ -626,18 +454,8 @@ export function normalizeWithDrops(
         const at = Date.parse(startsAt);
         const local = localWallClock(startsAt, tenant.timeZone);
 
-        /*
-         * The FUTURE record this route published, captured before any of this
-         * adapter's own decisions can remove it.
-         *
-         * It is taken here rather than after the venue and window checks on
-         * purpose: the union is what the PUBLISHER said, and a row that this
-         * adapter later declines to produce — no venue record, outside the
-         * app's serving horizon — is still a sitting Pima County published and
-         * still owes the reader an explanation. Capturing it downstream of our
-         * own filters would mean the union could only ever contain what we
-         * already ship, which makes the acceptance rule vacuous.
-         */
+        // The future record this route published, captured before any of this adapter's own decisions can remove
+        // it: the union is what the publisher said, including rows this adapter later declines to produce.
         if (local && local.date >= tenantToday) {
           gridInstances.push({
             route: "INSITE_CALENDAR_GRID",
@@ -656,13 +474,7 @@ export function normalizeWithDrops(
           });
         }
 
-        /*
-         * **ONLY THE BACK EDGE CLIPS.** See `SERVING_HORIZON_DAYS` above: the
-         * forward clip used to live here and it discarded eight of Pima's
-         * fourteen published future sittings, counted as `outOfWindow`, which
-         * reads as routine. `lib/meetings/query.ts` clips reads to the serving
-         * horizon on every read, so nothing downstream depended on this.
-         */
+        // Only the back edge clips; `lib/meetings/query.ts` clips reads to the serving horizon on every read.
         if (at < backEdge) {
           outOfWindow += 1;
           continue;
@@ -689,19 +501,10 @@ export function normalizeWithDrops(
         }
 
         const venue = online || !location ? null : findTenantVenue(tenant, location) ?? null;
-        /*
-         * **NO REVIEWED PLACE NEVER SUPPRESSES THE SITTING** (the venue-gap
-         * class, 2026-09-23). A room name is still never geocoded at runtime —
-         * a pin on a building nobody promised is worse than a named gap — so
-         * the sitting is PUBLISHED with `location: null` and that gap: the
-         * location cell verbatim (`STATED_NOT_PLACED`), or, for an empty cell,
-         * the publisher's own silence (`NOT_STATED_BY_PUBLISHER`). It is still
-         * tallied as `unknownVenue` (counted, and produced) and still
-         * dispositioned `VENUE_NOT_RESOLVED`, which stays an OPEN obligation:
-         * what is owed now is the reviewed venue row, not the sitting. Both
-         * cases used to `continue`, and a tenant with an empty reviewed venue
-         * scope failed its whole partition before a row was read.
-         */
+        // No reviewed place never suppresses the sitting. A room name is never geocoded at runtime, so the sitting
+        // is published with `location: null` and its gap: the location cell verbatim (`STATED_NOT_PLACED`), or the
+        // publisher's silence for an empty cell (`NOT_STATED_BY_PUBLISHER`). Tallied as `unknownVenue` and
+        // dispositioned `VENUE_NOT_RESOLVED`, an open obligation for the reviewed venue row.
         const venueGap = !online && !venue ? unplacedVenueGap(location, tenant.publishingOrg) : null;
         if (venueGap) {
           drops.unknownVenue++;
@@ -724,12 +527,7 @@ export function normalizeWithDrops(
         const id = `${SOURCE_NAME}:${tenant.slug}:${row.insiteId ?? dedupeRef}`;
         const origin = `https://${tenant.host}`;
 
-        /*
-         * **KEEP THE PUBLISHER'S OWN READING.** One per sitting, scoped to that
-         * sitting, whatever the cell said — an "Agenda" cell is evidence too,
-         * and recording only the negatives would make this a defect log rather
-         * than an observation record.
-         */
+        // Keep the publisher's own reading: one per sitting, whatever the cell said.
         publicationObservations.push(
           observationFromGridCell({
             meetingId: id,
@@ -746,9 +544,8 @@ export function normalizeWithDrops(
           ocdId: tenant.ocdId,
           bodyId: tenant.bodyId,
           bodyName: row.bodyName,
-          // The `<em>` is what distinguishes one sitting from another on the
-          // same day — "Study Session" against a regular meeting. Where there
-          // is none, the body name is the most specific true thing available.
+          // The `<em>` distinguishes one sitting from another on the same day; without one, the body name is the most
+          // specific true thing available.
           title: row.kind ?? row.bodyName,
           startsAt,
           timeZone: tenant.timeZone,
@@ -762,25 +559,9 @@ export function normalizeWithDrops(
             : null,
           ...(online ? { online } : {}),
           ...(venueGap ? { venueGap } : {}),
-          /*
-           * Null when the portal says "Not Available", and never filled with
-           * the portal's own search page dressed up as an agenda.
-           *
-           * **The comment here used to say this null "renders as the NAMED GAP
-           * it is — the body has not posted an agenda". That sentence is a
-           * claim about a government, and this expression was destroying the
-           * only evidence that could have supported it.**
-           *
-           * The grid cell is the county's own words about its own docket. It
-           * was read, tested against a regex, used to decide a URL, and then
-           * dropped — leaving the reader-facing claim resting on nothing but
-           * our own empty field, which is a fact about US. The reading is now
-           * kept as an OBSERVATION (`publicationObservations` below, and
-           * `lib/outcomes/publication.ts`), scoped to this sitting, carrying
-           * what the cell actually said and when we read it. What may be said
-           * to a reader is then decided by `lib/ask/agenda-publication.ts`
-           * from that evidence rather than from this null.
-           */
+          // Null when the portal says "Not Available", and never the portal's search page dressed up as an agenda.
+          // The cell's own words are kept as an observation (`publicationObservations`); what may be said to a
+          // reader is decided by `lib/ask/agenda-publication.ts` from that evidence.
           agendaUrl:
             row.agenda.href && !/not available/i.test(row.agenda.status)
               ? `${origin}/${row.agenda.href.replace(/^\//, "")}`
@@ -790,25 +571,10 @@ export function normalizeWithDrops(
             ? "CANCELED"
             : ((at < now.getTime() ? "CONCLUDED" : "SCHEDULED") satisfies MeetingStatus),
           provenance: {
-            /*
-             * **THE PAGE THE ROW WAS ACTUALLY READ FROM, AND ONLY THAT.**
-             *
-             * This used to say a not-viewable sitting "has no public detail
-             * page". Measured 2026-08-28 and it is FALSE:
-             * `MeetingDetail.aspx?ID=1381586&GUID=723F4F9A-…` — the 15 December
-             * sitting, `meeting_NotViewable` on the grid, no anchor href —
-             * answers **200 with 84 KB titled "Pima County - Meeting of Board
-             * of Supervisors on 12/15/2026"**. `meeting_NotViewable` governs
-             * the LINK the grid renders, not the page's reachability. The
-             * correction is recorded in `INSITE_MEETING_DETAIL` in
-             * `./horizon.ts`, where it belongs as a route.
-             *
-             * The citation stays on the grid all the same, and for a better
-             * reason than the false one: **we cite what we read.** No detail
-             * page is fetched on a refresh — it is a corroboration rung, not a
-             * per-row request — so citing one would be citing a document this
-             * run never opened.
-             */
+            // The page the row was actually read from, and only that: we cite what we read. No detail page is fetched
+            // on a refresh, so citing one would cite a document this run never opened. (`meeting_NotViewable` governs
+            // the link the grid renders, not the detail page's reachability; see `INSITE_MEETING_DETAIL` in
+            // `./horizon.ts`.)
             sourceUrl: row.detailHref
               ? `${origin}/${row.detailHref.replace(/^\//, "")}`
               : reading.calendarUrl,
@@ -917,28 +683,9 @@ export function normalizeWithDrops(
         ),
       );
 
-      /*
-       * **THE FALLBACK THAT INVERTED ITS OWN MEANING** (audit finding E,
-       * corrected 2026-08-28).
-       *
-       * This chain used to end in `SUPERSEDED_BY_RICHER_ROUTE` for any instance
-       * with no `Meeting` and no recorded reason — while its own comment said
-       * the meeting-producing route had NOT carried it. Nothing richer
-       * superseded those sittings; nothing carried them at all. And because
-       * `unaccounted()` is satisfied by ANY disposition, the verdict turned
-       * "an explicit first-party route published a sitting we did not produce"
-       * into "accounted for", with the sitting nowhere near a reader.
-       *
-       * Pima never exposed it: its grid carries all fourteen, so the branch was
-       * unreachable on the only corpus anyone read. The next tenant is where it
-       * would have been paid for.
-       *
-       * So supersession is now a PRECONDITION. `richerRouteLink` must hand back
-       * a produced canonical meeting reached through an id the two routes
-       * provably share, or the word is not available. What is left when it
-       * cannot is `PUBLISHED_BUT_UNPLACED_BY_US`: an open obligation, named as
-       * ours, carrying the exact fields that would discharge it.
-       */
+      // Supersession is a precondition: `richerRouteLink` must return a produced canonical meeting reached
+      // through an id the two routes provably share. Otherwise the verdict is `PUBLISHED_BUT_UNPLACED_BY_US`, an
+      // open obligation carrying the fields that would discharge it.
       const superseded: RicherRouteLink | null =
         withheld || produced ? null : richerRouteLink(instance, producedByVendorId);
 
@@ -982,18 +729,9 @@ export function normalizeWithDrops(
         ...(missing ? { missingForPlacement: missing } : {}),
       });
 
-      /*
-       * **AND IT LEAVES THE ADAPTER.** `dispositions`, `union` and `routes` are
-       * this function's own richer report and are dropped at the composite
-       * boundary (`lib/sources/composite/index.ts` destructures the
-       * `ReportingMeetingSource` contract and nothing else). `partialScopes` is
-       * in that contract, so it is the one channel a sitting we failed to place
-       * can use to reach the run's report and carry-forward.
-       *
-       * A published sitting we did not produce IS an incomplete UPCOMING
-       * enumeration for this division. Reporting it as anything less would be
-       * the same silence one layer up.
-       */
+      // `dispositions`, `union` and `routes` are dropped at the composite boundary; `partialScopes` is the one
+      // channel a sitting we failed to place can use to reach the run's report and carry-forward. A published
+      // sitting we did not produce is an incomplete UPCOMING enumeration for this division.
       if (verdict === "PUBLISHED_BUT_UNPLACED_BY_US" && missing) {
         partialScopes.push({
           scope: "UPCOMING",
@@ -1007,12 +745,8 @@ export function normalizeWithDrops(
       }
     }
 
-    /*
-     * A route record that named a meeting and published no hour cannot be
-     * keyed, so it never enters the union — and it is still owed an
-     * explanation. `TIME_NOT_PUBLISHED` is OURS in the sense that we cannot
-     * place it, and the evidence quotes what the publisher did write.
-     */
+    // A route record that named a meeting and published no hour cannot be keyed, so it never enters the union,
+    // and it is still owed an explanation (`TIME_NOT_PUBLISHED`, quoting what the publisher wrote).
     for (const timeless of timelessInstances(observations)) {
       if (timeless.date < tenantToday) continue;
       dispositions.push({
@@ -1064,17 +798,8 @@ export function normalizeWithDrops(
 }
 
 /**
- * **WHOSE FACT THIS VERDICT IS, SAID OUT LOUD.**
- *
- * `CLAUDE.md`: a null renders as its NAMED GAP and the name says WHOSE gap it
- * is — "we haven't recorded this yet" is a fact about us, "not in this chamber
- * for this vote" is a fact about them, and they may never render as the same
- * sentence. A disposition is the machine-readable form of exactly that
- * distinction, so every verdict states its owner in the first word.
- *
- * There is no permission verdict. `ROUTE_DISALLOWED` returned null here until
- * 2026-09-25; it was never given to an instance, and since the owner decision
- * of that day robots.txt blocks nothing, so it is gone.
+ * Whose fact this verdict is, said out loud: every verdict states its owner in the first word, so "we
+ * haven't recorded this yet" and a fact about the body never render as the same sentence.
  */
 function dispositionClaim(verdict: DispositionVerdict, because: string | null): string | null {
   if (because) return because;
@@ -1090,13 +815,8 @@ function dispositionClaim(verdict: DispositionVerdict, because: string | null): 
         "a statement that the sitting is unpublished, uncertain or far off — the " +
         "county published it and we hold it."
       );
-    /*
-     * Both of the verdicts below are ALWAYS given a specific `because` by the
-     * caller — `supersessionClaim` and `unplacedClaim` — because each is a
-     * claim about a particular record and a generic sentence could not name it.
-     * These are the floors, and they are written so that a caller which somehow
-     * reached them still says something true and still says whose gap it is.
-     */
+    // Both verdicts below are always given a specific `because` by the caller; these are floors that still say
+    // something true and whose gap it is.
     case "SUPERSEDED_BY_RICHER_ROUTE":
       return (
         "THEIRS, then ours: a thinner route still carries this record, and the " +
@@ -1116,14 +836,8 @@ function dispositionClaim(verdict: DispositionVerdict, because: string | null): 
 }
 
 /**
- * The named gap, in FIELD terms — what would have to be acquired before this
- * sitting could reach a reader.
- *
- * Only fields that actually BLOCK construction are listed. A missing meeting
- * kind is not one of them (`title` falls back to the body's own name), and
- * listing it would inflate an honest gap into a bigger-sounding one. Never
- * empty: a verdict that says "we could not place it" and then names nothing is
- * a shrug wearing a schema.
+ * The named gap, in field terms: only fields that actually block construction are listed (a missing kind
+ * is not one; `title` falls back to the body name). Never empty.
  */
 function missingForPlacement(instance: UnionInstance, tenant: InSiteTenant): string[] {
   const missing: string[] = [];
@@ -1141,15 +855,9 @@ function missingForPlacement(instance: UnionInstance, tenant: InSiteTenant): str
     );
   }
 
-  /*
-   * The identity limitation, stated even when every field happens to be
-   * present: the routes that carried this sitting are CORROBORATION. Producing
-   * a `Meeting` from one of them is promoting it to an ingestion source, which
-   * `CLAUDE.md` makes an ask-before — and `SittingRoute` in
-   * `lib/sources/event-identity.ts` cannot even name `CLERK_SCHEDULE_PAGE` as a
-   * field's supplier, so a composed record could not carry honest per-field
-   * provenance today. Both are ours to fix and neither is a fact about the body.
-   */
+  // The identity limitation, stated even when every field is present: the routes that carried this sitting
+  // are corroboration, and `SittingRoute` cannot name `CLERK_SCHEDULE_PAGE` as a field's supplier, so a
+  // composed record could not carry honest per-field provenance today. Both are ours to fix.
   missing.push(
     `a record on a meeting-producing route (${MEETING_PRODUCING_ROUTES.join(", ")}) — ` +
       `this sitting is carried only by ${instance.routes.join(", ")}, which this adapter ` +
@@ -1192,17 +900,9 @@ function supersessionClaim(link: RicherRouteLink): string {
 }
 
 /**
- * The calendar RSS as a route in its own right.
- *
- * It is a materially distinct record and not a view of the grid: it carries
- * `pubDate` — the instant InSite itself first published each sitting, which
- * nothing else states — and it drops the location and the meeting kind, which
- * the grid alone has. Measured 2026-08-28 on Pima's "This Year" feed: **14 of
- * 14 future sittings present**, so on that day it independently confirmed the
- * whole horizon.
- *
- * The date and time come out of the item TITLE, which is the only place the
- * feed states them: `Board of Supervisors - 12/15/2026 - 5:00 PM`.
+ * The calendar RSS as a route in its own right: it carries `pubDate`, the instant InSite first published
+ * each sitting, and drops location and kind. The date and time come out of the item title, the only place
+ * the feed states them: `Board of Supervisors - 12/15/2026 - 5:00 PM`.
  */
 function feedObservation(
   reading: LegistarInSiteRaw,
@@ -1265,13 +965,8 @@ function feedObservation(
 }
 
 /**
- * The Clerk of the Board's own schedule table as a route — **the body speaking
- * for itself, on its own domain, without the vendor in between.**
- *
- * See `./clerk-schedule.ts` for what it carries that Granicus does not and for
- * the permission reading. It produces no meetings; it is here so that a
- * disagreement between the county and its vendor about whether a sitting exists
- * — or about what hour it starts — becomes visible instead of unknowable.
+ * The clerk's own schedule table as a route: the body speaking for itself on its own domain. It produces no
+ * meetings; it makes a disagreement between the county and its vendor visible. See `./clerk-schedule.ts`.
  */
 function clerkObservation(
   reading: LegistarInSiteRaw,
@@ -1355,13 +1050,9 @@ function publicationClock(reading: LegistarInSiteRaw): Map<string, string> {
 }
 
 /**
- * The wall clock from the per-meeting iCalendar export, when the grid's own
- * time cell could not be read.
- *
- * **`DTSTART` is FLOATING** — `20260908T130000`, no `Z` and no `TZID` — so it
- * is returned as the hour and minute that were written and combined with the
- * tenant's zone by the caller. Reading it as UTC would move a 1:00 PM study
- * session to 6:00 AM, silently.
+ * The wall clock from the per-meeting iCalendar export, when the grid's own time cell could not be read.
+ * `DTSTART` is floating (`20260908T130000`, no `Z`, no `TZID`), so the hour and minute are returned and
+ * combined with the tenant's zone by the caller; reading it as UTC would shift the time silently.
  */
 function icalTime(
   reading: LegistarInSiteRaw,
@@ -1389,12 +1080,10 @@ export function makeLegistarInSiteSource(
     async fetch(query: MeetingQuery): Promise<LegistarInSiteRaw[]> {
       const collected: LegistarInSiteRaw[] = [];
 
-      // Serialized across tenants as well as within one. Nothing here runs
-      // concurrently, and the session paces itself at the vendor's stated
+      // Serialized across tenants as well as within one; the session paces itself at the vendor's
       // `Crawl-delay: 2`.
       for (const tenant of tenants) {
-        // A tenant with no reviewed venue is read, never skipped for want of a
-        // coordinate (`venuesWithinRadius`, the venue-gap class, 2026-09-23).
+        // A tenant with no reviewed venue is read, never skipped for want of a coordinate.
         if (!venuesWithinRadius(tenant.venues, query)) continue;
 
         const session = new InSiteSession({
@@ -1417,24 +1106,9 @@ export function makeLegistarInSiteSource(
           const pager = parseGridPager(latest);
           const pages: LegistarInSiteRaw["windows"][number]["pages"] = [];
 
-          /*
-           * **THE PAGER WALK.** The grid pages at 100 and publishes its total,
-           * so a range holding 148 answers 100 rows and a clean 200 — a route
-           * answering completely about the part it chose to send, which is the
-           * exact failure shape this whole adapter exists to correct.
-           *
-           * The page targets are READ OFF THE PAGER, never constructed: the
-           * control indices are ASP.NET's own and are not derivable. Guessing
-           * one at Pima's "All Years" grid returned **page 3** while calling
-           * itself the next page, with 100 well-formed rows and every check
-           * passing (see `parseGridPageTargets`).
-           *
-           * `MAX_GRID_PAGES` is a budget on THIS run at the vendor's stated
-           * `Crawl-delay: 2`. Stopping on it does not enumerate the range; the
-           * shortfall against the published total is reported by
-           * `normalizeWithDrops` as an incomplete enumeration, with both
-           * numbers.
-           */
+          // The pager walk. Page targets are read off the pager, never constructed (see `parseGridPageTargets`).
+          // `MAX_GRID_PAGES` is a budget on this run; a shortfall against the published total is reported by
+          // `normalizeWithDrops` with both numbers.
           if (pager && pager.pageCount > 1) {
             let page = latest;
             for (let index = 2; index <= Math.min(pager.pageCount, MAX_GRID_PAGES); index++) {
@@ -1460,13 +1134,8 @@ export function makeLegistarInSiteSource(
           });
         }
 
-        /*
-         * The RSS link is read off the page in hand rather than constructed:
-         * `Feed.ashx`'s ID/GUID pair is minted per tenant AND per range, so a
-         * pair written into a config file is only ever true of the range it was
-         * recorded under. The refusal path returns null, and null means the
-         * publication clock is unknown — never that a sitting was published now.
-         */
+        // The RSS link is read off the page in hand: `Feed.ashx`'s ID/GUID pair is minted per tenant and per range.
+        // Null means the publication clock is unknown, never that a sitting was published now.
         let feedXml: string | null = null;
         const feedUrl = calendarFeedUrl(latest, `https://${tenant.host}`);
         if (feedUrl) {
@@ -1480,18 +1149,9 @@ export function makeLegistarInSiteSource(
           }
         }
 
-        /*
-         * The per-meeting iCalendar export is a FALLBACK RUNG, not a per-row
-         * fetch. The grid already publishes the date, the time, the room and
-         * the kind; asking the portal fifteen more times per tenant per refresh
-         * to re-read what it has already told us is rude and, at two seconds a
-         * request, would outrun the scheduled job's per-source budget. It is
-         * requested only for a row whose own time cell could not be read.
-         *
-         * `GUID` is mandatory: `View.ashx?M=IC&ID=…` alone answers 200 with a
-         * 19 KB HTML confirmation page, so the document marker is declared and
-         * a page that is not a calendar is a WALL rather than a timeless row.
-         */
+        // The per-meeting iCalendar export is a fallback rung, requested only for a row whose own time cell could
+        // not be read. `GUID` is mandatory: without it the portal answers 200 with an HTML page, so the document
+        // marker is declared and a non-calendar page is a WALL.
         const icalByInsiteId: Record<string, string> = {};
         for (const window of windows) {
           for (const row of parseCalendarRows(window.html)) {
@@ -1511,33 +1171,12 @@ export function makeLegistarInSiteSource(
           }
         }
 
-        /*
-         * The body's OWN schedule, when it declares one. A different publisher
-         * on a different domain, read last because everything above works
-         * without it and a refusal here must not cost the tenant its calendar.
-         *
-         * Not paced by `InSiteSession` — that session paces the Legistar
-         * vendor, and this is Pima County. `www.pima.gov/robots.txt` (read
-         * 2026-09-24) puts `User-agent: *` in one group with Siteimprove, so
-         * `*` is asked for `Crawl-delay: 20` and nothing is disallowed; one
-         * request per tenant per refresh is within it. (The 2026-08-28 reading
-         * took the group for Siteimprove's alone.)
-         */
-        /*
-         * **A MOVED PAGE IS A REFUSAL HERE, NEVER A NEW ROUTE.** (2026-09-24.)
-         * Every response a partition retains must end on a registered
-         * publication route (scripts/ingest.ts, candidateForMeetingPartition).
-         * Pima County moved this page to
-         * www.pima.gov/board-of-supervisors-meeting-schedule, the read
-         * followed the redirect and answered 200 there, and the unregistered
-         * final URL refused the WHOLE partition, with the 14 upcoming
-         * sittings the grid carries. So this read does not follow redirects:
-         * a move ends it here with no corroboration, the move is named in the
-         * route's note, and nothing from the new URL is retained. The move
-         * to /board-of-supervisors-meeting-schedule was registered on
-         * 2026-09-24 (C18) once its permission was read; a further move is
-         * refused the same way until it is.
-         */
+        // The body's own schedule, when it declares one: a different publisher on a different domain, read last so
+        // a refusal here never costs the tenant its calendar. Not paced by `InSiteSession` (which paces the
+        // vendor); one request per tenant per refresh, within the host's stated crawl delay.
+        // A moved page is a refusal here, never a new route: every response a partition retains must end on a
+        // registered publication route (scripts/ingest.ts, candidateForMeetingPartition), so this read does not
+        // follow redirects. A move ends it with no corroboration and is named in the route's note.
         let clerkScheduleHtml: string | null = null;
         let clerkScheduleNote: string | null = null;
         if (tenant.clerkScheduleUrl) {

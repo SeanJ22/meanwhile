@@ -20,9 +20,7 @@ import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
 import { readPlacePayloadParts } from "../lib/civic-data/place-payload-slices.ts";
 import { readPlacePointerSlice } from "../lib/civic-data/held-place-slices.ts";
 import { neonConfig } from "@neondatabase/serverless";
-import { readFileSync } from "node:fs";
 import { candidateDescriptionQualityIssue } from "../lib/candidates/blurbs.ts";
-import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 
 const county = "ocd-division/country:us/state:az/county:cochise";
 const neighbour = "ocd-division/country:us/state:az/county:pima";
@@ -111,9 +109,9 @@ test("current verified publications fill biography and readable corpus without a
   assert.deepEqual((capture.held.find(row => row.checklistId === "CAN-21")?.value as { sourceRevision: unknown }).sourceRevision, document.sourceRevision);
   assert.deepEqual((capture.held.find(row => row.checklistId === "CAN-05")?.value as { evidence: unknown }).evidence, evidence);
   assert.ok(!capture.held.some(row => row.checklistId === "CAN-07" || row.checklistId === "CAN-17"));
-  const heldCorpus = JSON.parse(readFileSync("data/candidates/corpus-2026.json", "utf8")) as CandidateCorpus;
-  const unusable = heldCorpus.documents.find(row => row.metaDescription && candidateDescriptionQualityIssue(row));
-  assert.ok(unusable, "reuse a real retained source description rejected by the Reader");
+  const unusable = { ...document, sourceRevision: undefined, metaDescription: "Sign up for our newsletter.",
+    contentHash: "7f80a1f73dcee52336c83d7bbde410449d3458a2d209d2f4fca4f518420cf768" };
+  assert.ok(candidateDescriptionQualityIssue(unusable), "a source description the Reader rejects");
   const rejected = projectHeldPlaceFamilies([county], null, { ...families, candidateProfiles: null,
     candidatePublications: [{ ...unusable, candidateKey: id, id: `${id}@${unusable.contentHash}`, retrievedAt: at }] });
   assert.ok(!rejected.held.some(row => row.checklistId === "CAN-16"), "a Reader-rejected description cannot inflate Admin biography capture");

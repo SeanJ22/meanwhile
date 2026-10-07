@@ -1,5 +1,5 @@
 /**
- * The standing hunter lane's process (CH-24 part 2, Proposal A). The runner
+ * The standing hunter lane's process. The runner
  * starts it only with WTP_CONTINUOUS_HUNTERS=1; the design note is in
  * lib/control-plane/workers/hunter-lane.ts. It is the one process that admits
  * paid model requests while the switch is on: the research round plans,
@@ -23,7 +23,6 @@ import { anthropicTransport } from "../lib/control-plane/scheduler/scout-executo
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import { durableSearchBudget } from "../lib/control-plane/discovery/search-runtime.ts";
 import { scoutEscalationReservation } from "../lib/control-plane/fleet-safety.ts";
-import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneWorkerTransport, type ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, hunterQueuePath, readHunterQueue,
   stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
@@ -74,7 +73,7 @@ const lane = hunterLane({
   readQueue: () => readHunterQueue(queuePath),
   arm: async () => {
     const armed = await armHunterLane({ repos, now: nowIso, armingPath, messages, batch, credentialConfigured: workerKey.length > 0,
-      credentialVar: WORKER_CREDENTIAL_VAR, activation: () => readActivationGate(ROOT), providerQueue, ownSpend,
+      credentialVar: WORKER_CREDENTIAL_VAR, providerQueue, ownSpend,
       /* The lane's own latches outlive a refresh: it is the one process sending paid requests. */
       circuits: lastFleet === null ? null : lastFleet.snapshot(nowIso()).providerCircuits,
       ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}),

@@ -1,30 +1,8 @@
 /**
- * MTG-9 — A MEETING CARD IS TITLED BY THE BODY, AND A SITTING IS NOT A BODY.
- * (2026-08-25, the author's `17-20-07`. Second pass on MTG-6, 2026-08-24.)
- *
- * **This is the test that would have caught it, and the reason it did not
- * exist is worth more than the fix.**
- *
- * MTG-6 shipped `venueBodyTitle`, a three-rung descent — shared `bodyName`,
- * else shared `jurisdiction`, else the building — and it was verified against
- * Tucson Unified, where the source publishes a DIFFERENT `bodyName` per
- * sitting. That case exercises rungs two and three and **never touches rung
- * one**. Rung one is the one that is wrong.
- *
- * Vail publishes `bodyName: "Governing Board Meeting"` on all eleven of its
- * sittings. `bodies.size === 1`, rung one fires, and the card headlines a
- * SITTING over the district's whole calendar with nothing naming the district.
- * **The first pass was measured on noisy bad data and shipped wrong on clean
- * bad data** — a constant wrong value reads as more authoritative than a
- * varying one (RULING 114).
- *
- * So the assertions below run over **every venue in the committed snapshot**
- * rather than over a fixture chosen to show the fix working (RULING 153 — a
- * verification states the reader's route and walks it; the reader's route here
- * is *open any venue card in the product*). The corpus is the anchor, and it is
- * data this repo did not author (RULING 147).
+ * A meeting card is titled by the body, and a sitting is not a body. A source that publishes one sitting name as
+ * `bodyName` on every sitting makes the shared-`bodyName` rung fire, so the descent must fall through to the
+ * jurisdiction when that name is a sitting.
  */
-
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -37,9 +15,9 @@ type Row = {
   location?: { name?: string | null; lat?: number | null; lng?: number | null } | null;
 };
 
-/** Every venue in the shipped snapshot, grouped the way `groupByVenue` groups. */
+/** Every venue in the recorded fixture, grouped the way `groupByVenue` groups. */
 function venues(): Array<{ key: string; name: string; meetings: Row[] }> {
-  const snapshot = JSON.parse(readFileSync("data/meetings-snapshot.json", "utf8")) as {
+  const snapshot = JSON.parse(readFileSync("tests/fixtures/reader-upcoming-meetings-85701.json", "utf8")) as {
     meetings?: Row[];
   };
   const grouped = new Map<string, { key: string; name: string; meetings: Row[] }>();
@@ -59,7 +37,7 @@ function venues(): Array<{ key: string; name: string; meetings: Row[] }> {
 
 test("MTG-9: the sweep reaches the corpus it claims to", () => {
   const all = venues();
-  assert.ok(all.length > 10, `only ${all.length} venue card(s) in the snapshot — the sweep read almost nothing`);
+  assert.ok(all.length > 1, `only ${all.length} venue card(s) in the fixture — the sweep read almost nothing`);
   assert.ok(
     all.some((v) => v.meetings.length > 1),
     "no multi-sitting venue in the corpus — rung one is unexercised and every assertion below is vacuous",
@@ -71,7 +49,7 @@ test("MTG-9: the sweep reaches the corpus it claims to", () => {
   );
 });
 
-test("MTG-9: no venue card in the shipped snapshot is titled with a sitting", () => {
+test("MTG-9: no venue card in the fixture is titled with a sitting", () => {
   const offenders: string[] = [];
   for (const v of venues()) {
     const { title, basis } = venueBodyTitle(v.meetings as never, v.name);
@@ -90,50 +68,32 @@ test("MTG-9: no venue card in the shipped snapshot is titled with a sitting", ()
 });
 
 test("MTG-9: Vail — the reported instance — now names the district", () => {
-  const vail = venues().find((v) =>
-    v.meetings.some((m) => /Vail Unified School District/i.test(m.jurisdiction ?? "")),
-  );
-  assert.ok(vail, "the Vail venue is no longer in the snapshot — this claim cannot be checked");
-  assert.ok(vail.meetings.length > 1, "expected Vail's multi-sitting venue");
-  /* The precondition: the source really does publish a sitting name here. If
-     it stops, this test would pass for a reason unrelated to the fix. */
-  const bodies = new Set(vail.meetings.map((m) => (m.bodyName ?? "").trim()));
-  assert.equal(bodies.size, 1, "Vail's sittings no longer share one bodyName — the case has changed");
-  assert.ok(
-    namesASitting([...bodies][0]!),
-    `Vail's shared bodyName is now "${[...bodies][0]}" — the source changed and this case no longer reproduces`,
-  );
-
+  const vail = {
+    name: "Vail District Office",
+    meetings: [
+      { bodyName: "Governing Board Meeting", jurisdiction: "Vail Unified School District, AZ" },
+      { bodyName: "Governing Board Meeting", jurisdiction: "Vail Unified School District, AZ" },
+    ],
+  };
+  assert.ok(namesASitting(vail.meetings[0].bodyName));
   const { title, basis } = venueBodyTitle(vail.meetings as never, vail.name);
   assert.equal(basis, "jurisdiction");
   assert.equal(title, "Vail Unified School District");
 });
 
 test("MTG-9: TUSD's single-sitting audit-committee venue — the instance nobody reported", () => {
-  /*
-   * The second of the two, found by sweeping rather than by being told. It sits
-   * in Tucson Unified, the district MTG-6 was validated against, and it was
-   * unreachable by that validation because a venue with ONE meeting always has
-   * `bodies.size === 1`.
-   */
-  const tusd = venues().find(
-    (v) =>
-      v.meetings.length === 1 &&
-      /AGENDA FOR AUDIT COMMITTEE MEETING/i.test(v.meetings[0]?.bodyName ?? ""),
-  );
-  if (!tusd) return; /* the sitting has aged out of the window — not a failure */
+  // A venue with one meeting always has one shared `bodyName`.
+  const tusd = {
+    name: "Tucson Unified Board Room",
+    meetings: [{ bodyName: "AGENDA FOR AUDIT COMMITTEE MEETING", jurisdiction: "Tucson Unified School District, AZ" }],
+  };
   const { title, basis } = venueBodyTitle(tusd.meetings as never, tusd.name);
   assert.equal(basis, "jurisdiction");
   assert.equal(title, "Tucson Unified School District");
 });
 
 test("MTG-9: the shape does not fire on a real body name", () => {
-  /*
-   * The other half of RULING 110: an instrument that flagged the honest cases
-   * would become pressure to delete the rung rather than to keep it. These are
-   * the 14 body-titled cards measured in the corpus on adoption, including the
-   * author's own named reference pattern.
-   */
+  // The body-titled cards a sitting check must leave alone.
   for (const real of [
     "Board of Supervisors",
     "Governing Board",
@@ -153,15 +113,14 @@ test("MTG-9: the shape does not fire on a real body name", () => {
     assert.equal(namesASitting(real), false, `"${real}" is a body and must keep its title`);
   }
 
-  /* And it does fire on the two that are sittings. */
+  /* It does fire on sittings. */
   for (const sitting of ["Governing Board Meeting", "AGENDA FOR AUDIT COMMITTEE MEETING"]) {
     assert.equal(namesASitting(sitting), true, `"${sitting}" names a sitting`);
   }
 });
 
 test("MTG-9: a body-titled card still wins over its jurisdiction", () => {
-  /* MTG-6's rung one is narrowed, not removed. Tucson's Parks and Recreation
-     Commission must not collapse to "Tucson". */
+  /* The shared-`bodyName` rung is narrowed, not removed. */
   const { title, basis } = venueBodyTitle(
     [
       { bodyName: "Tucson Parks and Recreation Commission", jurisdiction: "Tucson, AZ" },

@@ -236,7 +236,7 @@ test("only exact out-of-window meeting evidence removes a row and its attached a
   assert.equal(seeded[0]?.outcome.candidate.state, "PROMOTED");
 
   const fresh = meeting(legistar, SECOND, "still-served");
-  const previous = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: SECOND });
+  const previous = await readMeetingsProjection({ store, bypassCache: true, now: SECOND });
   assert.equal(previous.kind, "PROMOTED");
   const priorPartition = previous.kind === "PROMOTED"
     ? previous.value
@@ -248,7 +248,7 @@ test("only exact out-of-window meeting evidence removes a row and its attached a
     freshAgendaDocuments: [],
     previous: priorPartition,
   });
-  // The sitting's held agenda is one record, keyed by the sitting (2026-09-22).
+  // The sitting's held agenda is one record, keyed by the sitting.
   assert.deepEqual(reconciliation.removalEvidence.map(({ key }) => key).sort(), [
     agendaDocumentRecordKey(document),
     `meeting:${old.id}`,
@@ -319,7 +319,7 @@ test("one meeting source/body failure retains only its LKG while another partiti
   assert.equal((await store.readPromotion("MEETING", insite.scope))?.versionId, second[1]!.candidate.id);
   assert.equal(await store.readPromotion("MEETING", LEGACY_MEETINGS_AGGREGATE_SCOPE), null);
 
-  const read = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: SECOND });
+  const read = await readMeetingsProjection({ store, bypassCache: true, now: SECOND });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.equal(read.value.meetings.some((row) => row.id === "legistar:pima-1"), true);
@@ -343,7 +343,7 @@ test("one meeting source/body failure retains only its LKG while another partiti
   // its body has no sitting within seven days, hourly when it does.
   assert.equal(healthyClock.lastSucceededObservedAt, SECOND);
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 60 * 60_000, false), false);
-  // Hourly is owed 60 minutes after the success and admitted 25 minutes before (C6).
+  // Hourly is owed 60 minutes after the success and admitted 25 minutes before.
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 35 * 60_000 - 1, true), false);
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 35 * 60_000, true), true);
 });
@@ -359,10 +359,7 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     generatedAt: FIRST,
   });
   assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
-  // 2026-09-24: each partition promotion once composed the whole aggregate to
-  // read back its own receipt (every partition's payload and candidate, ~24 MB
-  // in production, per promotion). The promotion reads no sibling partition;
-  // the repair below is the one aggregate read that records every receipt.
+  // A partition promotion reads no sibling partition; the repair below is the one aggregate read that records every receipt.
   assert.equal(store.readPromotionsCalls, 0, "a partition promotion never reads the sibling partitions' payloads");
   assert.equal(promoted.every(({ outcome }) => outcome.readerReadback === null), true);
   const before = await Promise.all(promoted.map(async ({ candidate }) => ({
@@ -449,7 +446,7 @@ test("R31: meeting receipts carry across a commit that changed no Reader code wi
   let compositions = 0;
   const aggregate = () => {
     compositions += 1;
-    return readMeetingsProjection({ store, now: SECOND, bypassCache: true, allowUnconfiguredBootstrap: false });
+    return readMeetingsProjection({ store, now: SECOND, bypassCache: true });
   };
   const later = (ms: number) => new Date(Date.parse(SECOND) + ms).toISOString();
 
@@ -500,7 +497,7 @@ test("a pass that records readbacks and republishes the prepared snapshot compos
   const aggregate = () => {
     if (composing === null) {
       compositions += 1;
-      composing = readMeetingsProjection({ store, now: SECOND, bypassCache: true, allowUnconfiguredBootstrap: false });
+      composing = readMeetingsProjection({ store, now: SECOND, bypassCache: true });
     }
     return composing;
   };
@@ -612,7 +609,7 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
     },
   };
 
-  const read = await readMeetingsProjection({ store: corruptingStore, bypassCache: true, allowUnconfiguredBootstrap: false, now: SECOND });
+  const read = await readMeetingsProjection({ store: corruptingStore, bypassCache: true, now: SECOND });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:mesa-good"]);
@@ -623,7 +620,7 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   }
   assert.equal(scalarPromotionReads, 0);
   assert.equal(scalarCandidateReads, 0);
-  // One batch for every registered partition and its durable history (DB-06),
+  // One batch for every registered partition and its durable history,
   // and one more only for the held pointers of successors that have none yet
   // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
   assert.equal(promotionBatchReads, 2);
@@ -662,7 +659,7 @@ test("batched pointer/candidate proof failure cannot suppress an unrelated parti
     readCandidates: store.readCandidates.bind(store),
   };
 
-  const read = await readMeetingsProjection({ store: batchStore, bypassCache: true, allowUnconfiguredBootstrap: false, now: SECOND });
+  const read = await readMeetingsProjection({ store: batchStore, bypassCache: true, now: SECOND });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:mesa-proof-good"]);
@@ -690,7 +687,7 @@ test("a cross-partition id collision holds every claimant and never hides an unr
     generatedAt: FIRST,
   });
 
-  const read = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: SECOND });
+  const read = await readMeetingsProjection({ store, bypassCache: true, now: SECOND });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:unrelated"]);
@@ -840,7 +837,7 @@ test("a meeting re-check that finds no new fact is confirmed on the pointed vers
   assert.notEqual((await store.readPromotion("MEETING", legistar.scope))?.versionId, pointer.versionId);
 });
 
-/* ── DB-01: meeting history stops being deleted ─────────────────────────── */
+/* ── Meeting history stops being deleted ─────────────────────────── */
 
 const HELD_READ = "2026-09-08T13:00:01.000Z";
 const HELD_LATER = "2026-09-08T14:00:01.000Z";
@@ -892,7 +889,7 @@ test("DB-01: rows outside the dates a read fetched are carried as outside the fe
   const withRecord: Meeting = { ...meeting(legistar, HELD_READ, "old-record"), startsAt: daysBefore(130), status: "CONCLUDED", agendaUrl: "https://example.gov/a" };
   const reasons = (reconciliation: ReturnType<typeof reconcileAt>) =>
     new Map(reconciliation.meetings.filter((row) => row.carried).map((row) => [row.id, row.carried?.reason]));
-  // DB-03 to DB-05: legistar fetches the held 120 days, so a row 95 days back that its answer leaves out was asked about.
+  // legistar fetches the held 120 days, so a row 95 days back that its answer leaves out was asked about.
   const held = reasons(reconcileAt([ninetyFive, inside, withRecord]));
   assert.equal(held.get(ninetyFive.id), "UNEXPLAINED_DISAPPEARANCE");
   assert.equal(held.get(inside.id), "UNEXPLAINED_DISAPPEARANCE");

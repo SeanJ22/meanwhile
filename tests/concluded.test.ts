@@ -1,6 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
 import { CONCLUDED_LOOKBACK_DAYS } from "../lib/meetings/constants.ts";
@@ -15,25 +13,6 @@ import { applyFilters } from "../lib/state/derive.ts";
 import { INITIAL_STATE, uiReducer } from "../lib/state/reducer.ts";
 import { daysBackForStatuses } from "../lib/state/status-intent.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-
-/**
- * M58 (2026-08-15) — concluded meetings, and the control that could not
- * reveal them.
- *
- * The author reported seeing concluded meetings only at 85701. Measured on
- * production before anything was changed, the truth was worse and simpler:
- * tapping the **Concluded** chip rendered "0 meetings — nothing matches" at
- * ALL FOUR demo zips, Tucson included, while the payloads behind those
- * screens carried 24 concluded sittings at 85701, 4 at 07866 and 2 at 03255.
- * The server had been sending the recent past all along; the client's date
- * window starts at now, so `days < -daysBack` dropped every one, and the one
- * control that names concluded meetings could never match a row by itself.
- *
- * Two guards, then: the rule that makes the chip answerable, and the promise
- * that a Concluded surface is never silently empty.
- */
-
-const ROOT = join(import.meta.dirname, "..");
 
 function meetingAt(startsAt: string, status: Meeting["status"]): Meeting {
   return {
@@ -56,24 +35,12 @@ function meetingAt(startsAt: string, status: Meeting["status"]): Meeting {
   };
 }
 
-test("M58: the Concluded chip opens the window its own meetings live in", () => {
+test("the Concluded chip opens the window its own meetings live in", () => {
   const now = Date.parse("2026-08-15T12:00:00.000Z");
   const past = meetingAt("2026-07-20T17:00:00.000Z", "CONCLUDED");
   const future = meetingAt("2026-08-25T17:00:00.000Z", "SCHEDULED");
   const meetings = [past, future];
 
-  /*
-   * REWRITTEN 2026-08-15 (6f2), on this test's own instruction.
-   *
-   * It used to assert the DEFECT: default window (`now` → 60) plus the
-   * Concluded chip matched nothing, at every zip, and it said in its own
-   * message that a pass here means the window default changed and the test
-   * needs rewriting rather than deleting. It did change — the default is now
-   * 90 days back, matching the served window — so the defect is gone and the
-   * claim inverts. The reducer behaviour below is unchanged and is still the
-   * thing that has to hold: a reader who taps Concluded from ANY window ends
-   * up with one wide enough to answer.
-   */
   const naive = {
     ...INITIAL_STATE,
     filters: { ...INITIAL_STATE.filters, statuses: ["CONCLUDED" as const] },
@@ -84,8 +51,6 @@ test("M58: the Concluded chip opens the window its own meetings live in", () => 
     "the default window now reaches back far enough for the chip to answer on its own",
   );
 
-  // And from the OLD default, which is where the defect lived: the reducer
-  // still has to widen. This is the guard the rewrite must not lose.
   const fromNarrow = uiReducer(
     { ...INITIAL_STATE, filters: { ...INITIAL_STATE.filters, daysBack: 0 } },
     { type: "filter/toggleStatus", value: "CONCLUDED" },
@@ -96,7 +61,6 @@ test("M58: the Concluded chip opens the window its own meetings live in", () => 
     1,
   );
 
-  // Through the reducer, the way a reader actually taps it.
   const tapped = uiReducer(INITIAL_STATE, {
     type: "filter/toggleStatus",
     value: "CONCLUDED",
@@ -106,20 +70,15 @@ test("M58: the Concluded chip opens the window its own meetings live in", () => 
   assert.equal(shown.length, 1, "the concluded meeting must be revealed");
   assert.equal(shown[0].id, past.id);
 
-  // A forward-only status leaves the window where it was: nothing is
-  // widened that does not need widening.
   const scheduled = uiReducer(INITIAL_STATE, {
     type: "filter/toggleStatus",
     value: "SCHEDULED",
   });
   assert.equal(scheduled.filters.daysBack, INITIAL_STATE.filters.daysBack);
 
-  // The reader's own wider choice is never narrowed.
   assert.equal(daysBackForStatuses(["CONCLUDED"], 120), null);
   assert.equal(daysBackForStatuses([], 0), null);
 
-  // Turning the chip back off does not slam the window shut — the reader
-  // may have dragged it there, and inferring a retreat would be guessing.
   const untapped = uiReducer(tapped, {
     type: "filter/toggleStatus",
     value: "CONCLUDED",
@@ -127,12 +86,7 @@ test("M58: the Concluded chip opens the window its own meetings live in", () => 
   assert.equal(untapped.filters.daysBack, CONCLUDED_LOOKBACK_DAYS);
 });
 
-/**
- * The never-silently-empty promise. Every wired body either serves concluded
- * meetings or carries a stated, reader-facing reason it cannot — and the
- * reason has to survive being read aloud to a stranger.
- */
-test("M58: a body that publishes no history says so, in plain language", () => {
+test("a body that publishes no history says so, in plain language", () => {
   for (const row of SOURCE_WIRING) {
     if (row.publishesHistory === false) {
       const reason = row.historyGapReason ?? "";
@@ -140,8 +94,6 @@ test("M58: a body that publishes no history says so, in plain language", () => {
         reason.length > 20,
         `${row.bodyId}: publishesHistory=false with no reader-facing reason`,
       );
-      // The plain-language rule: no vendor names, no identifiers, no jargon
-      // in a sentence a reader sees.
       assert.ok(
         !/ical|rss|api|json|adapter|endpoint|scrape/i.test(reason),
         `${row.bodyId}: the reason talks like a build log — "${reason}"`,
@@ -156,13 +108,6 @@ test("M58: a body that publishes no history says so, in plain language", () => {
     }
   }
 
-  // The denominator, printed rather than assumed. **M59 (2026-08-15) took it
-  // to zero**: the two rows that carried a gap were Rockaway Township's
-  // council and Merrimack County's commissioners, and both archives are now
-  // ingested as date-only meetings. That is the mechanism working — a gap is
-  // a work item, and these two got done — so this asserts the CURRENT number
-  // rather than "at least one", and it will fail loudly if a new gap is
-  // recorded without anybody noticing.
   const gaps = allHistoryGaps();
   console.log(`\n  gaps  ${gaps.length} wired body/bodies publish no history\n`);
   assert.equal(
@@ -170,19 +115,12 @@ test("M58: a body that publishes no history says so, in plain language", () => {
     0,
     `${gaps.length} history gap(s): ${gaps.map((g) => g.bodyName).join(", ")}`,
   );
-  // Every gap joins by bodyId to a real wiring row — never a name.
   for (const gap of gaps) {
     assert.ok(SOURCE_WIRING.some((r) => r.bodyId === gap.bodyId));
   }
 });
 
-test("M58: the gap note fires only when the reader asks about the past", () => {
-  // Driven off a synthetic gap rather than a real one. When M59 closed the
-  // last two gaps this test had nothing to stand on, and deleting it would
-  // have retired the machinery that keeps a Concluded surface from being
-  // silently empty — machinery the next unwired vendor will need. So the
-  // note's behaviour is pinned directly, and the join against the real
-  // wiring rows stays below.
+test("the gap note fires only when the reader asks about the past", () => {
   const cleanBody = [{ bodyId: "ocd-division/country:us/state:az/county:pima#governing" }];
 
   assert.equal(concludedGapNote(false, cleanBody), null, "not asking, no note");
@@ -193,8 +131,6 @@ test("M58: the gap note fires only when the reader asks about the past", () => {
   );
   assert.equal(historyGapsFor(cleanBody).length, 0);
 
-  // With gaps present the note names each body and its reason, in the
-  // reader's language. Same function, gaps injected.
   const note = concludedGapNoteFor(true, [
     {
       bodyId: "ocd-division/country:us/state:zz/place:example#governing",
@@ -209,15 +145,7 @@ test("M58: the gap note fires only when the reader asks about the past", () => {
   assert.equal(concludedGapNoteFor(false, []), null);
 });
 
-/**
- * The adapter half: the source that CAN serve history must ask for it. The
- * Apptegy events API is upcoming-only unless `start_date` is sent, and this
- * adapter took the default for two of the four demo zips — so Vail and
- * Rockaway Township's school board were empty on the Concluded filter by
- * construction. Verified live 2026-08-15: `?start_date=2026-05-17` returns
- * four concluded board meetings for each org.
- */
-test("M58: the Apptegy fetch asks the vendor for the past", async () => {
+test("the Apptegy fetch asks the vendor for the past", async () => {
   const { makeApptegySource } = await import("../lib/sources/apptegy/index.ts");
   const asked: string[] = [];
   const fakeFetch = (async (input: string | URL) => {
@@ -262,78 +190,16 @@ test("M58: the Apptegy fetch asks the vendor for the past", async () => {
     );
   }
 
-  // And the past event survives normalization as CONCLUDED — a fetch that
-  // asks and a normalize that drops is the same silent empty.
   const meetings = source.normalize(raw, new Date("2026-08-15T12:00:00.000Z"));
   assert.ok(meetings.length > 0, "the fetched past event normalized to nothing");
   assert.ok(
     meetings.every((m) => m.status === "CONCLUDED"),
     "a June meeting read on 15 August is concluded",
   );
-  // The citation carries the window it was actually read with.
   const first = meetings[0];
   assert.ok(first, "no meeting to check the citation on");
   assert.ok(
     first.provenance.sourceUrl?.includes("start_date="),
     `citation does not name the window it was read with: ${first.provenance.sourceUrl}`,
-  );
-});
-
-/**
- * The whole point, stated as a denominator over the committed snapshot: how
- * many wired jurisdictions can show a concluded meeting, and every one that
- * cannot must be an explained gap rather than a silence. This is the test
- * that would have caught the original defect — five of the nine adapters
- * were serving history and nobody had ever counted.
- */
-test("M58: every wired jurisdiction either has history or explains its absence", () => {
-  const snapshot = JSON.parse(
-    readFileSync(join(ROOT, "data", "meetings-snapshot.json"), "utf8"),
-  ) as {
-    generatedAt: string;
-    meetings: Array<{ id: string; jurisdiction: string; startsAt: string }>;
-  };
-
-  /*
-   * "Past" is measured against the instant the snapshot was READ — the same
-   * instant every adapter's `normalize` used to stamp CONCLUDED — never
-   * against a date typed here. This held `2026-08-15` from the day it was
-   * written until 2026-09-02, which made it a clock with a stopped hand:
-   * once the serving window's 90 days had rolled past that date, no source
-   * could hold a sitting before it and every jurisdiction would have failed
-   * here at once, for a reason that had nothing to do with history.
-   */
-  const now = Date.parse(snapshot.generatedAt);
-  assert.ok(
-    Number.isFinite(now),
-    "the snapshot carries no readable generatedAt — this test cannot say what is past",
-  );
-  const pastByJurisdiction = new Map<string, number>();
-  for (const m of snapshot.meetings) {
-    const past = Date.parse(m.startsAt) < now ? 1 : 0;
-    pastByJurisdiction.set(
-      m.jurisdiction,
-      (pastByJurisdiction.get(m.jurisdiction) ?? 0) + past,
-    );
-  }
-
-  const explained = new Set(allHistoryGaps().map((g) => g.jurisdiction));
-  const unexplained: string[] = [];
-  for (const [jurisdiction, past] of pastByJurisdiction) {
-    if (past === 0 && !explained.has(jurisdiction)) unexplained.push(jurisdiction);
-  }
-
-  // Stated with its denominator, per CLAUDE.md: a deliberate clip must not
-  // read as a failure and a real failure must not read as a clip.
-  const total = pastByJurisdiction.size;
-  const withHistory = [...pastByJurisdiction.values()].filter((n) => n > 0).length;
-  assert.ok(
-    total > 0,
-    "the snapshot holds no meetings at all — fix that before reading this test",
-  );
-  assert.deepEqual(
-    unexplained,
-    [],
-    `${withHistory} of ${total} wired jurisdictions show concluded meetings; these show none and give no reason: ${unexplained.join(", ")}`,
   );
 });

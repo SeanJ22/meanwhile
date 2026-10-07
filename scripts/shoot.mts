@@ -1,30 +1,20 @@
 /**
  * Screenshot the running app.
  *
- * `pnpm shoot <name> [--zip 85701] [--theme dark|light] [--districts]
+ * `pnpm shoot <name> [--zip NNNNN] [--theme dark|light] [--districts]
  *                    [--viewport 1440x900] [--path /] [--wait 6000] [--zoom 14]`
  *
- * Why this exists: MapLibre renders on requestAnimationFrame, which browsers
- * stop delivering to a tab that is occluded or backgrounded. Capturing through
- * an attached browser therefore yields stale or empty frames whenever the
- * window happens to be covered — the map is fine, the capture is not. Playwright
- * drives a headless Chromium that is never occluded, so a shot is reproducible
- * regardless of what is on screen.
- *
- * Waits for the map's own idea of readiness rather than a fixed sleep: tiles
- * parsed and the first paint done. Note that `map.loaded()` is deliberately not
- * used — the MapTiler styles ship an attribution-only source that never reports
- * loaded, so `loaded()` is false forever. See map-canvas.tsx.
+ * Playwright drives a headless Chromium that is never occluded, so MapLibre's
+ * requestAnimationFrame always fires and a shot is reproducible. Waits for tiles
+ * parsed and the first paint rather than a fixed sleep; `map.loaded()` is not
+ * used because the MapTiler styles ship an attribution-only source that never
+ * reports loaded (see map-canvas.tsx).
  */
 
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 
-/**
- * C05 (2026-08-17): this run declares itself so the rows it writes to
- * production's search log are never counted as a reader's. The runner cannot
- * mark the row — the route writes it — so it says who it is in a header.
- */
+/** Declared so the rows this run writes to production's search log are never counted as a reader's. */
 const RUN_HEADERS = syntheticRunHeaders({
   WTP_RUN_ID:
     process.env.WTP_RUN_ID?.trim() ||
@@ -69,7 +59,7 @@ const settle = Number(arg("wait", "9000"));
 
 const browser = await launchGuarded({ label: "shoot" });
 const context = await browser.context({
-    // C05: this run is ours, declared at write time.
+    // This run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
   viewport: { width, height },
   deviceScaleFactor: 2,
@@ -87,11 +77,8 @@ await context.addInitScript(
       if (theme === "light") localStorage.setItem("wtp.theme", "light");
       else localStorage.removeItem("wtp.theme");
 
-      // SESSION storage since 2026-08-15 (6f): the reader's location no
-      // longer survives a tab closing, so seeding localStorage would seed
-      // nothing and every shot would be of the welcome overlay. The recents
-      // list is the localStorage half and is seeded with it, so the zip
-      // switcher has something to show.
+      // The reader's location lives in sessionStorage; the recents list is the localStorage half and
+      // is seeded with it, so the zip switcher has something to show.
       if (zip) {
         sessionStorage.setItem(
           "wtp.approximate_location",
@@ -115,12 +102,8 @@ await context.addInitScript(
   { zip, theme, districts: flag("districts"), tutorial: flag("tutorial") },
 );
 
-// The Next dev-mode indicator floats over the corner of the app in development
-// only. It is not part of the UI and must not appear in a shot someone is
-// reviewing as one.
-// Passed as a string, not a function: tsx compiles this file with esbuild,
-// which rewrites named inner functions to reference a `__name` helper that
-// does not exist in the page — the script then throws on every navigation.
+// Hide the Next dev-mode indicator. Passed as a string, not a function: esbuild rewrites named
+// inner functions to reference a `__name` helper that does not exist in the page.
 await context.addInitScript({
   content: `document.addEventListener("DOMContentLoaded",function(){
     var s=document.createElement("style");
@@ -151,9 +134,8 @@ if (typed) {
   await page.waitForTimeout(400);
 }
 
-// Type into the welcome card's zip field and submit with Enter, which is the
-// only way to reach the malformed-input message — the button is disabled until
-// five digits are in.
+// Type into the welcome card's zip field and submit with Enter: the button is disabled until five
+// digits are in, so this is the only way to reach the malformed-input message.
 const typedZip = arg("typezip");
 if (typedZip) {
   await page.fill(".welcome-card input[type=text]", typedZip);
@@ -161,10 +143,8 @@ if (typedZip) {
   await page.waitForTimeout(500);
 }
 
-// Type a question into the ask box and submit it. --ask captures the
-// ANSWER (waits out the ~3s beat); --askbeat captures the BEAT itself
-// (shoots mid-beat). Presentation-only driving; nothing new is logged
-// beyond what a real ask logs.
+// Type a question into the ask box and submit it. --ask captures the answer (waits out the ~3s
+// beat); --askbeat shoots mid-beat.
 const askQuestion = arg("ask") ?? arg("askbeat");
 if (askQuestion) {
   // Two instances can mount (card and rail) — prefer the who-governs
@@ -178,9 +158,8 @@ if (askQuestion) {
   await page.waitForTimeout(process.argv.includes("--askbeat") ? 900 : 3600);
 }
 
-// Click a labelled control — a district-type checkbox, a filter chip —
-// matched on its visible text. Exists because the per-type checkboxes live in
-// the store rather than localStorage, so no seed can turn them on.
+// Click a labelled control matched on its visible text; per-type checkboxes live in the store, so
+// no seed can turn them on.
 const clickLabel = arg("clicklabel");
 if (clickLabel) {
   await page
@@ -190,9 +169,8 @@ if (clickLabel) {
   await page.waitForTimeout(1200);
 }
 
-// Drag the map with a real mouse gesture, so movestart carries an
-// originalEvent — the signal scroll-and-settle (2i) keys on. Programmatic
-// panBy would not exercise it. Format: --drag x1,y1,x2,y2
+// Drag the map with a real mouse gesture, so movestart carries an originalEvent (programmatic
+// panBy would not). Format: --drag x1,y1,x2,y2
 const dragArg = arg("drag");
 if (dragArg) {
   const [x1, y1, x2, y2] = dragArg.split(",").map(Number);
@@ -230,18 +208,14 @@ if (fillArg) {
   await page.waitForTimeout(600);
 }
 
-// A sequence of clicks, for states that only exist several steps in — a popup
-// reached through a marker and a panel row, or a modal tab reached through
-// both plus the expand button. Pipe-separated rather than comma, because
-// Playwright selectors contain commas far more often than pipes.
+// A sequence of clicks for states several steps in. Pipe-separated, because Playwright selectors
+// contain commas far more often than pipes.
 const clickSeq = arg("clicks");
 if (clickSeq) {
   for (const selector of clickSeq.split("|")) {
     const trimmed = selector.trim();
     if (!trimmed) continue;
-    // Fail loudly. A missing step used to leave the shot on an earlier state,
-    // which looks exactly like a successful capture of the wrong thing — the
-    // no-op-reports-success shape this project keeps rediscovering.
+    // Fail loudly: a missing step would leave the shot on an earlier state that looks like success.
     await page.click(trimmed, { timeout: 5000 });
     await page.waitForTimeout(450);
   }
@@ -260,8 +234,7 @@ if (flag("list")) {
   await page.waitForTimeout(400);
 }
 
-// Switch every district type on. The default is one per tier; this is how the
-// worst case gets captured — all three Local boundaries over the same ground.
+// Switch every district type on, to capture the worst case.
 if (flag("alltypes")) {
   const boxes = page.locator("label.filter-check input[type=checkbox]");
   for (let i = 0; i < (await boxes.count()); i++) {
@@ -271,9 +244,7 @@ if (flag("alltypes")) {
   await page.waitForTimeout(1500);
 }
 
-// Force a zoom level. District legibility is a function of zoom — five Local
-// boundaries that read cleanly at z9 can be a solid mat at z14 — so verifying
-// that work means capturing the same place at several zooms.
+// Force a zoom level: district legibility is a function of zoom.
 const zoomTo = arg("zoom");
 if (zoomTo) {
   await page.evaluate((z) => {
@@ -302,8 +273,7 @@ if (zoomTo) {
       depth++;
     }
   }, Number(zoomTo));
-  // Re-tiling at a new zoom is not instant, and a shot taken mid-fetch shows
-  // fewer boundaries than the map actually draws.
+  // Re-tiling at a new zoom is not instant; a shot taken mid-fetch shows fewer boundaries.
   await page.waitForTimeout(4000);
 }
 
@@ -311,9 +281,7 @@ await mkdir(OUT_DIR, { recursive: true });
 const file = join(OUT_DIR, `${name}.png`);
 await page.screenshot({ path: file, scale: "css" });
 
-// Report what actually rendered, so a shot can never quietly be of an empty
-// map. Counts come from MapLibre itself via the same fiber walk used during
-// the Phase 0 diagnosis — the map instance is not exposed on window.
+// Report what actually rendered (via the same fiber walk), so a shot can never quietly be of an empty map.
 const stats = await page.evaluate(() => {
   const el = document.querySelector(".maplibregl-map");
   if (!el) return { error: "no map element" };

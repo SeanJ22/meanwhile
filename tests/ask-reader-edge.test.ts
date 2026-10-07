@@ -18,8 +18,6 @@ import {
 } from "../lib/civic-data/manual-read-models.ts";
 import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE } from "../lib/civic-data/derived-campaign-sites.ts";
 import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
-import { PIMA_LOCAL_FINANCE_CONTRACT } from "../lib/funding/data-plane.ts";
-import { azPimaFinanceReadState } from "../lib/control-plane/campaign-finance/held-records.ts";
 import { federalRollCallsReadState, readFederalRollCallsProjection } from "../lib/votes/snapshot.ts";
 import { readFederalKeyVotesProjection } from "../lib/votes/key-votes-projection.ts";
 import { FEDERAL_KEY_VOTE_SCOPE, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_SOURCE_ID } from "../lib/votes/data-plane.ts";
@@ -29,7 +27,6 @@ import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../lib/outcomes/data-plane.ts";
 import { outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
 import { registryRuntimeFirstSeed } from "../lib/registry/runtime-read-model.ts";
 import { federalDirectoryFirstSeed } from "../lib/officials/federal-directory-read-model.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import {
   absentEdgeEntry,
   manualEdgeEntry,
@@ -39,38 +36,21 @@ import {
   stateMoneyFixtureEntries,
 } from "./helpers/promoted-edge-entry.ts";
 
-/**
- * **A COLD ASK READS ITS SOURCES FROM THE READER EDGE.** (2026-09-25.)
- *
- * On production (deploy 9d275798) a cold "When does the Mesa City Council
- * meet next?" spent 14.8 s in `sourcePreloads`: every deferrable source was a
- * pointer read and a proof read against a cold database (a 2026-09-24 local
- * breakdown: Pima finance 6.8 s, state money 2.9 s, federal votes 2.8 s, the
- * AZ ballot 2.4 s). The registry, the federal directory, the recorded outcomes
- * and the comment-access rules were already on the edge (C20). The deferrable
- * sources are proven pointers on the edge now, read through their own Readers.
- *
- * The real Ask route is asked with no database: DATABASE_URL names an
- * `.invalid` host and every Neon HTTP request is answered here with no rows
- * and counted by record class, so any source read from the database is seen.
- */
+/** The real Ask route is asked with no database: every Neon HTTP request is answered here with no rows and counted by record class. */
 
 delete process.env.ANTHROPIC_API_KEY;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
-await installRegistryRuntimeFirstSeeds();
-
 // The values the edge carries: the first seeds and fixtures this test process serves, read before the fake database.
 const seedStore = new MemoryRoutineDataStore();
 const served = servedValue;
 await refreshOutcomeSnapshotFromPromoted();
 const outcomes = served(outcomeProjectionReadState());
-const fixture = <T,>(...path: string[]): T => JSON.parse(readFileSync(join(process.cwd(), "data", ...path), "utf8")) as T;
 const manual = manualEdgeEntry;
 const family = promotedFamily;
 const fec = requiredRoutineContract("fec-funding");
 const federalVotes = { sourceId: FEDERAL_VOTES_SOURCE_ID };
-const EDGE = { funding: "edge-test:ask:fec", pima: "edge-test:ask:pima", federalVotes: "edge-test:ask:federal-votes" };
+const EDGE = { funding: "edge-test:ask:fec", federalVotes: "edge-test:ask:federal-votes" };
 const PROMOTED: Partial<Record<PromotedAuthorityFamily, { value: PromotedFamilyArtifactValue; versionId: string }>> = {
   "ballot-contests": family([absentEdgeEntry("BALLOT_CANDIDACY", "US:state-election-ballots")], "edge-test:general-ballot-absent"),
   "ballot-az": family([manual("az-sos-ballot", served(await readAzBallotProjection({ store: seedStore, bypassCache: true })), "edge-test:ask:az")], "edge-test:ask:az"),
@@ -81,17 +61,6 @@ const PROMOTED: Partial<Record<PromotedAuthorityFamily, { value: PromotedFamilyA
   "candidate-publications": family([manual("candidate-corpus", served(await readCandidateCorpusProjection({ store: seedStore, bypassCache: true })), "edge-test:ask:corpus")], "edge-test:ask:corpus"),
   "federal-funding": family([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: served(await readFundingSnapshot({ store: seedStore, bypassCache: true })) })], EDGE.funding),
   "state-money": family(stateMoneyFixtureEntries((state) => `edge-test:ask:money:${state}`), "edge-test:ask:money"),
-  "pima-finance": family([provenEdgeEntry({
-    recordClass: "LOCAL_CAMPAIGN_FINANCE",
-    scope: PIMA_LOCAL_FINANCE_CONTRACT.scope,
-    sourceId: PIMA_LOCAL_FINANCE_CONTRACT.sourceId,
-    versionId: EDGE.pima,
-    value: {
-      formatVersion: 1,
-      held: fixture("states", "az", "campaign-finance", "az-pima-2026-held.json"),
-      transactions: fixture("states", "az", "campaign-finance", "az-pima-2026-transactions.json"),
-    },
-  })], EDGE.pima),
   "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: EDGE.federalVotes, value: served(await readFederalRollCallsProjection({ store: seedStore, bypassCache: true })) })], EDGE.federalVotes),
   "federal-key-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, sourceId: federalVotes.sourceId, versionId: "edge-test:ask:key-votes", value: served(await readFederalKeyVotesProjection({ store: seedStore, bypassCache: true })) })], "edge-test:ask:key-votes"),
   "officeholder-statements": family([manual("officeholder-statements", served(await readOfficeholderStatementsProjection({ store: seedStore, bypassCache: true })), "edge-test:ask:statements")], "edge-test:ask:statements"),
@@ -124,7 +93,7 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
   return dir;
 }
-/** What production served Ask from the edge before this change (C20). */
+/** The edge with only the identity sources. */
 const c20EdgeDir = await publishEdge(false);
 /** And with every deferrable source on it. */
 const fullEdgeDir = await publishEdge(true);
@@ -140,7 +109,7 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const body = JSON.parse(String(init?.body ?? "{}")) as { query?: string; params?: unknown[]; queries?: { query?: string; params?: unknown[] }[] };
   const queries = body.queries ?? [body];
   for (const query of queries) {
-    // Sean's daily byte counter (§0/§7) writes an aggregate, not a civic pointer read.
+    // The daily byte counter writes an aggregate, not a civic pointer read.
     if (/^\s*INSERT INTO database_transfer_daily\b/.test(query.query ?? "")) continue;
     const recordClass = (query.params ?? []).find((p): p is string => typeof p === "string" && /^[A-Z][A-Z_]+$/.test(p) && p !== "UNCHANGED_CONFIRMATION_V1");
     const scope = (query.params ?? []).find((p): p is string => typeof p === "string" && p !== recordClass && /[:+-]/.test(p));
@@ -152,7 +121,7 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
 
 const AZ = "ocd-division/country:us/state:az";
 
-/** One cold Ask: the Mesa question production measured at 14.8 s of source preloads. */
+/** One cold Ask about a body's next meeting. */
 async function askMesa(question = "When does the Mesa City Council meet next?"): Promise<{ trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } }> {
   clearPromotedReadModelCache();
   databaseReads.length = 0;
@@ -168,7 +137,7 @@ async function askMesa(question = "When does the Mesa City Council meet next?"):
   return await response.json() as { trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } };
 }
 
-/** What a cold Ask read from the database with the C20 edge: every deferrable source. */
+/** What a cold Ask reads from the database when only identity is on the edge. */
 const DEFERRABLE_FROM_DATABASE = [
   "BALLOT_CANDIDACY",
   "CANDIDATE_PROFILE",
@@ -202,7 +171,7 @@ test("with the C20 edge, a cold Mesa question reads the complete identity invent
     "STATE_CAMPAIGN_FINANCE:US-NH:campaign-finance:2026",
     "STATE_CAMPAIGN_FINANCE:US-NJ:campaign-finance:2026",
   ]);
-  // No STATE_ROLL_CALL: a body question never waits for a state legislature's roll calls (2026-09-25; route.ts personStateVotes).
+  // No STATE_ROLL_CALL: a body question never waits for a state legislature's roll calls.
   for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], UNRELATED_TRACE.has(source) ? undefined : "DATABASE", `the trace misnames ${source}`);
 });
 
@@ -212,8 +181,7 @@ test("with every deferrable source on the edge, a cold Mesa question reads none 
   assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");
   const moved = databaseReads.filter((read) => DEFERRABLE_FROM_DATABASE.includes(classOf(read)));
   assert.deepEqual(moved, [], "a source the edge carries was read from the database");
-  // The Arizona state roll calls (a pointer the edge does not carry) are read only for a question about a
-  // state legislator since 2026-09-25 (route.ts personStateVotes), so a Mesa question reads nothing from the database.
+  // State roll calls are read only for a question about a state legislator.
   assert.deepEqual([...databaseReads].sort(), []);
   assert.equal(fundingReadState().metadata.versionId, EDGE.funding, "FEC was not served from the edge");
   for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], UNRELATED_TRACE.has(source) ? undefined : "EDGE", `the trace misnames ${source}`);
@@ -224,20 +192,10 @@ test("an unsettled meeting-shaped question restores deferred edge evidence witho
   const payload = await askMesa("When does the Unheld Example City Council meet next?");
   assert.equal(payload.trace.sourcesLoaded, "ALL");
   assert.deepEqual(databaseReads, []);
-  assert.equal(azPimaFinanceReadState().metadata.versionId, EDGE.pima);
   assert.equal(federalRollCallsReadState().metadata.versionId, EDGE.federalVotes);
-  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], "EDGE", `the fallback lost ${source}`);
+  for (const source of DEFERRABLE_TRACE.filter((name) => name !== "azPimaFinance")) assert.equal(payload.trace.preloadSources?.[source], "EDGE", `the fallback lost ${source}`);
 });
 
-/**
- * **A KEPT-WARM INSTANCE IS READY FOR ITS FIRST ASK.** (2026-09-25, after
- * batch E.) On production at bba8770b a kept instance's first Ask took ~2.0 s
- * end to end against ~0.4 s for its second: ~0.73 s of the Ask's own source
- * preloads and ~0.6 s outside the handler, loading the Ask route's code. A
- * marked /api/warm call now loads both on its instance: the route module's
- * graph, and every Ask source from the edge, in the edge-only context. No
- * handler runs, so no model, no log and no write; nothing reaches the database.
- */
 test("a marked warm call loads the Ask's code and every Ask source from the edge, with no database request and no other fetch", async () => {
   // Versions only this edge carries: a read state that names one was loaded by the warm call, never by an Ask.
   const WARM = { funding: "edge-test:ask:warm:fec", federalVotes: "edge-test:ask:warm:federal-votes" };

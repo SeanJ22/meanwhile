@@ -1,14 +1,5 @@
 /**
- * **RENDER THE GATED ADMIN CONSOLE LOCALLY AND READ WHAT IT SAYS.**
- * (Admin Pass C, 2026-09-06.)
- *
- * Every admin pass has rebuilt this walk from scratch in a scratch directory
- * and then lost it. It lives in `scripts/` now, because "prove the change
- * renders before claiming it does" is the standing rule for this surface
- * (RULING 262: a capture is evidence only once it has been read) and the
- * instrument for it should not have to be re-derived every time.
- *
- * ## The two things that make an admin page renderable from a script
+ * Renders the gated admin console locally and reads what it says.
  *
  * ```
  *   the HOST gate    isAdminHostRequest reads x-forwarded-host, and undici
@@ -17,12 +8,10 @@
  *                    server has — never a bypass, never a disabled check
  * ```
  *
- * The cookie is `__Host-`-prefixed, so it needs `secure`, and Chromium refuses
- * to set a Secure cookie against an `http://` url — but it will happily SEND
- * one set against `https://localhost:<port>` to `http://localhost:<port>`.
- * That asymmetry is the whole trick and it is why the url below is rewritten.
- *
- * ## Usage
+ * The cookie is `__Host-`-prefixed, so it needs `secure`. Chromium refuses to
+ * set a Secure cookie against `http://` but will SEND one set against
+ * `https://localhost:<port>` to `http://localhost:<port>`, which is why the url
+ * below is rewritten.
  *
  *   pnpm admin:walk                                  # localhost:3100, dark
  *   ADMIN_WALK_BASE=http://localhost:3000 pnpm admin:walk
@@ -30,9 +19,7 @@
  *   ADMIN_WALK_THEMES=dark,light ADMIN_WALK_WIDTH=1024 pnpm admin:walk
  *
  * Writes a PNG and the page's rendered text per page per theme into
- * `.scratch/admin-walk/`, plus `timings.json` for the ADM-38 measurement.
- * `.scratch` is gitignored: RULING 20's guard fails the suite on a new PNG
- * anywhere it would be committed.
+ * `.scratch/admin-walk/` (gitignored), plus `timings.json`.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { ADMIN_ORIGIN } from "../lib/ops/origins.ts";
@@ -110,10 +97,8 @@ for (const theme of THEMES) {
     const text = await page.evaluate(() => document.body.innerText);
     writeFileSync(join(OUT, `${name}.txt`), text);
     /*
-     * ADM-38 measures what the OWNER waits for, which is not when the stream
-     * closes. A streamed page paints its shell long before `domcontentloaded`
-     * fires, so the two numbers that matter are the first byte and the first
-     * paint; `ready` is kept beside them as the outside edge.
+     * What the owner waits for is first byte and first paint (a streamed page
+     * paints long before `domcontentloaded`); `ready` is the outside edge.
      */
     const paint = await page.evaluate(() => {
       const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
@@ -134,10 +119,6 @@ for (const theme of THEMES) {
 
 await browser.close();
 writeFileSync(join(OUT, "timings.json"), `${JSON.stringify(readings, null, 2)}\n`);
-/*
- * RULING 159: a count printed by a script states its denominator. The walk's
- * denominator is every page it was asked for, in every theme — so a reading
- * that never happened (a page that would not load) is visible as a shortfall
- * rather than as a smaller-looking success.
- */
+/* The denominator is every page asked for, in every theme, so a page that
+   would not load shows as a shortfall. */
 console.log(`admin:walk · ${floorLine(floored("admin readings", "the requested pages in every theme", PAGES.length * THEMES.length, readings.length))} · written to ${OUT}`);

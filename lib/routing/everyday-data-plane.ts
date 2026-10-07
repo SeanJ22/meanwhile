@@ -31,9 +31,8 @@ export interface EverydayRoutingImportInput {
 }
 
 /**
- * Builds the owner-invoked import package without writing Git or the store.
- * Exact-byte receipts remain caller supplied; constructing the seed cannot
- * manufacture acquisition proof.
+ * Builds the import package without writing Git or the store. Exact-byte receipts are caller supplied;
+ * constructing the seed cannot manufacture acquisition proof.
  */
 export function everydayRoutingImportPackage(
   input: EverydayRoutingImportInput,
@@ -47,7 +46,7 @@ export function everydayRoutingImportPackage(
   };
 }
 
-/** Pure candidate construction; the shared owner-only promoter performs writes. */
+/** Pure candidate construction; the shared promoter performs writes. */
 export function everydayRoutingImportCandidate(
   input: EverydayRoutingImportInput,
   options: ManualProjectionCandidateOptions = {},
@@ -100,10 +99,6 @@ export function everydayRoutingReadState(): CivicDataReadResult<EverydayRoutingP
   return state;
 }
 
-/**
- * Synchronous Reader selector after server preload. The tracked projection is
- * available only to deterministic tests; production absence stays absence.
- */
 export function currentEverydayRoutingProjection(): EverydayRoutingProjection {
   if (state.kind === "PROMOTED") return state.value;
   if (mayUseTestFixture()) {

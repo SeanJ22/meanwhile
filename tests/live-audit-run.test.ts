@@ -1,4 +1,4 @@
-/** DP-13/DP-14: one connected live-audit cycle records every result, answers red flags at once, and marks pulled facts fixed. */
+/** One connected live-audit cycle records every result, answers red flags at once, and marks pulled facts fixed. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

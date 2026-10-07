@@ -268,16 +268,12 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "census-geography-overlaps",
     "nj-morris-filing",
     "pima-legistar-outcomes",
-    // Mesa's council decisions, read off its minutes on the portal host (NH332).
     "mesa-legistar-minutes-outcomes",
     "dotgov",
     // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
-    // The automatic crosswalk (C16 option A, 2026-09-25): the runner's own reviewer, on promoted and vaulted inputs.
     "meeting-body-crosswalk-derived",
-    // The derived meeting-source wiring (C16): recomputed from promoted and vaulted inputs, no route of its own.
     "meeting-source-wiring",
-    // The verified campaign sites the campaign-site chain approves (2026-09-25): pipeline approvals and vaulted reads, no route of its own.
     "candidate-campaign-sites-derived",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
@@ -332,9 +328,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "nj-legislature",
     "legiscan",
     "plural-openstates",
-    // DB-06: a partition's durable history promotes under its partition's own contract (`meetingHistoryContract`), so it has no contract of its own to list.
     "meetings-history",
-    // DB-22: door-built outcome contracts exist only at runtime, one per door that holds outcomes.
     "door-outcomes",
   ];
   const expectedAuthorities = new Set([
@@ -347,7 +341,6 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     assert.equal(source.id, id);
     assert.ok(source.publisher);
     if (source.routePrefixes.length === 0) {
-      /* A route-less authority is authorized only by a reviewed receipt, or only as the exact inputs it names (C16). */
       assert.ok(
         ("manualReceiptPromotion" in source && source.manualReceiptPromotion) ||
           ("derivedPromotion" in source && source.derivedPromotion && source.derivedPromotion.inputKinds.length > 0),
@@ -1167,7 +1160,6 @@ test("the standing authority envelope is narrowed independently for every runtim
     "CONSOLE_PUBLISHER",
     "ROUTINE_SUPERVISOR",
     "INTAKE_RUNTIME",
-    "NIGHTLY_RESEARCH",
   ]) {
     assert.match(pilot, new RegExp(`standingChildEnvironment\\(\\s*"${capability}"`));
   }
@@ -1243,7 +1235,6 @@ test("Reader readback repair covers the observable registry independently of sou
   const protocol = readFileSync("lib/civic-data/reader-repair-protocol.ts", "utf8");
   assert.match(runner, /const readerContracts = selectedReaderRepairContracts\(/);
   assert.match(runner, /const readerDomains = routineReaderRepairDomains\(readerContracts\)/);
-  // Launched racing-first (C6, lib/civic-data/hot-read-catch-up.ts); every domain still runs.
   assert.match(runner, /runBoundedChildPass\([\s\S]*readerLaunch\.map[\s\S]*scripts\/routine-civic-data-reader-repair\.mts/);
   assert.match(runner, /timeoutMs: domain\.timeoutMs/);
   assert.match(runner, /concurrency: ROUTINE_READER_CHILD_CONCURRENCY/);
@@ -1253,7 +1244,6 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
   // Repair composes once when needed; serving-copy publication runs independently.
   assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ aggregate, attestor \},?\s*\)/);
-  // A receipt from an earlier commit is carried, not re-read, when no Reader code changed (R31).
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
@@ -1335,7 +1325,7 @@ test("the routine runner derives its clock from durable candidate history", () =
   const frozenAdmission = source.indexOf("const admissionNowMs = Date.now()");
   const clockReads = source.indexOf("const clockReads = FORCE");
   // Sitting windows are decided once, at the frozen instant, from the same reads
-  // and the publisher-stated ends read in the same pass (C6).
+  // and the publisher-stated ends read in the same pass.
   const statedEnds = source.indexOf("statedSittingEndsRead(getDb())");
   const sittingSignals = source.indexOf("sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask)");
   const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs)");
@@ -1759,12 +1749,6 @@ test("nonzero child receipts must prove a durable held candidate and cannot clai
 });
 
 test("the durable receipt check proves a Reader-projected pointer by identity and reads nothing whole", async () => {
-  // Measured 2026-09-23: the whole-row reads here moved 66.9 MB for one held
-  // NJ roll-call settle (the refused candidate's envelope plus the LKG
-  // pointer's payload twice), against a 67.11 MB Neon response cap. Since
-  // then each settle still moved the pointer's payload and candidate once;
-  // the pass's Reader repair re-proves a Reader-projected version in full, so
-  // the settle proves the pointer by identity alone.
   class CountingStore extends MemoryRoutineDataStore {
     readonly whole: string[] = [];
 

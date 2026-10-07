@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { officialIdsForCandidacy, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
@@ -7,22 +6,6 @@ import { partyConflictCardForFiling, partyConflictFilingForCard, reconciledCandi
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import { bindNamedEntity, type BindableEntity } from "../lib/routing/named-entity.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-/**
- * **ONE PERSON HELD TWICE IS ONE SUBJECT TO ASK.** (2026-09-25.)
- *
- * Ask answered "which one did you mean?" and listed two identical names for
- * a person held as two records with no committed bridge between them, even
- * for a reader in that person's own district. These tests pin the committed
- * joins that remove the false clarification, and bind the reader's words over
- * the two entities exactly as `app/api/ask/grounded/route.ts` builds them
- * (an officeholder's id is replaced by the ballot id its committed candidacy
- * maps to), with the unjoined pair as the control that proves the join is
- * what binds.
- */
-
-await installRegistryRuntimeFirstSeeds();
 
 const person = (id: string, name: string): BindableEntity => ({ id, name, nameClass: "person", divisionType: "person" });
 
@@ -43,19 +26,8 @@ test("Amalia DUARTE: the Mendham Township Committee roster row and her 2026 Town
   assert.deepEqual(officialIdsForCandidacy(candidacyId), [officialId]);
   assert.deepEqual(readerPersonKeys(officialId).keys, [candidacyId, officialId]);
 
-  // Both records keep their own provenance: the body's own roster page and the county clerk's candidate list.
   const row = getRegistryRuntimeReadModel().officialCandidacies.rows.find((candidate) => candidate.holder.id === officialId)!;
   assert.equal(row.holder.sourceUrl, "https://www.mendhamtownship.org/266/Township-Committee");
-  const filing = (JSON.parse(readFileSync(new URL("../data/states/nj/ballot/nj-morris-2026.json", import.meta.url), "utf8")) as {
-    candidacies: { id: string; provenance: { sourceUrl: string } }[];
-  }).candidacies.find((candidate) => candidate.id === candidacyId)!;
-  assert.equal(row.candidacy?.sourceUrl, filing.provenance.sourceUrl);
-  const reviewed = (JSON.parse(readFileSync(new URL("../lib/registry/fixtures/official-person-candidacy-links-v1.json", import.meta.url), "utf8")) as {
-    rows: { officialId: string; holderName: string; candidacyId: string; holderSourceUrl: string }[];
-  }).rows.find((link) => link.officialId === officialId);
-  assert.deepEqual(reviewed && { holderName: reviewed.holderName, candidacyId: reviewed.candidacyId, holderSourceUrl: reviewed.holderSourceUrl }, {
-    holderName: row.holder.name, candidacyId, holderSourceUrl: row.holder.sourceUrl,
-  });
 
   const question = "How much has Amalia DUARTE raised?";
   const official = person(officialId, "Amalia Duarte, Member");

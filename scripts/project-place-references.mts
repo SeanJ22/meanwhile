@@ -4,10 +4,9 @@ import { join } from "node:path";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { parseCsv } from "../lib/reference/index.ts";
 import type { StateReference, StateReferenceIndex } from "../lib/control-plane/expansion/state-references.ts";
-import { withCensusSchoolTerritories, CENSUS_SCHOOL_INTERSECTIONS } from "../lib/control-plane/expansion/census-scope-observations.ts";
 import dependentSchools from "../lib/control-plane/expansion/reference/census-dependent-school-territories.json" with { type: "json" };
 import { unitShareKey } from "../lib/control-plane/expansion/membership.ts";
-import { ruledDistrictTerritory, DISTRICT_TERRITORIES, type ApproximateDistrictExtract } from "../lib/control-plane/expansion/district-territory.ts";
+import { ruledDistrictTerritory, DISTRICT_TERRITORIES } from "../lib/control-plane/expansion/district-territory.ts";
 
 const root = process.cwd();
 const out = join(root, "data", "derived", "place-reference");
@@ -24,12 +23,8 @@ function shardFor(state: string): StateReference {
 for (const state of Object.values(FIPS_TO_STATE)) shardFor(state.postal);
 const units = JSON.parse(readFileSync(join(root, "data", "derived", "census-unit-zips.json"), "utf8")) as { units: StateReference["units"] };
 const ids = new Set(units.units.map(unit => unit.pid6));
-for (const unit of withCensusSchoolTerritories([...units.units, ...dependentSchools.units.filter(unit => !ids.has(unit.pid6))])) {
+for (const unit of [...units.units, ...dependentSchools.units.filter(unit => !ids.has(unit.pid6))]) {
   if (shards.has(unit.state.toUpperCase())) shardFor(unit.state).units.push(unit);
-}
-for (const row of CENSUS_SCHOOL_INTERSECTIONS) {
-  const state = FIPS_TO_STATE[row.geoid.slice(0, 2)]?.postal;
-  if (state) (shardFor(state).exactShares[`${row.layer}:${row.geoid}`] ??= {})[row.zcta] = row.overlapSquareMetres / row.zctaAreaSquareMetres;
 }
 const samples = JSON.parse(readFileSync(join(root, "data", "derived", "zip-governments.json"), "utf8")) as {
   zips: Record<string, StateReference["zips"][string]["edges"]>;
@@ -92,10 +87,9 @@ for (const shard of shards.values()) {
     }
     const byPid = new Map(shard.units.map(unit => [`${shard.state}:${unit.pid6}`, unit]));
     const positions = new Map(shard.units.map((unit, i) => [unit.pid6, i]));
-    const approximate = shard.state === "AZ" ? JSON.parse(readFileSync(join(root, "lib/control-plane/expansion/reference/az-fire-district-territory.json"), "utf8")) as ApproximateDistrictExtract : null;
     for (const [i, unit] of shard.units.entries()) {
       if (unit.zips.length) continue;
-      const ruled = ruledDistrictTerritory(unit, byPid, () => undefined, unitShareKey, DISTRICT_TERRITORIES, approximate);
+      const ruled = ruledDistrictTerritory(unit, byPid, () => undefined, unitShareKey, DISTRICT_TERRITORIES);
       if (!ruled || "unplaced" in ruled) continue;
       const rule = DISTRICT_TERRITORIES.find(row => row.state === shard.state && row.pid6 === unit.pid6)?.rule;
       const dependencies = rule?.kind === "MEMBER_UNION" ? rule.members.flatMap(member => positions.get(member.pid6) ?? [])

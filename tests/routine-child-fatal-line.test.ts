@@ -6,16 +6,6 @@ import { test } from "node:test";
 import { routineSupervisorOuterEvidence } from "../lib/civic-data/runner-receipt.ts";
 import { FATAL_LINE_PREFIX, childFatalLine, fatalLine } from "../lib/ops/fatal-line.ts";
 
-/**
- * **A CHILD THAT DIES SAYS WHY, IN A LINE ITS PARENT MAY QUOTE.** (2026-09-24.)
- *
- * The routine civic-data child died at startup at 03:54Z, 06:56Z and 11:34Z
- * on 2026-09-24. Each time the digest said only "terminated=EXITED; exit=1;
- * launch plan=not exactly recorded", because the parent never quotes raw
- * stderr. The child now ends through one sanitized `RCD_FATAL` line naming
- * its step, and the parent's evidence quotes that line and nothing else.
- */
-
 function die(body: string) {
   const script = [
     "const { installFatalLine } = await import('./lib/ops/fatal-line.ts');",
@@ -88,13 +78,6 @@ test("the routine runner installs the fatal line before its first statement that
   }
 });
 
-/*
- * 2026-09-25T23:01Z: three Reader repair children died on a runtime-authority
- * refusal and the supervisor recorded only stack frames, because it quoted the
- * last eight stderr lines and an uncaught throw prints its reason above them.
- * The Reader repair child now ends through the same fatal line, and the
- * supervisor quotes that line for a Reader domain that exits non-zero.
- */
 test("a Reader repair child that dies before its protocol names its step and cause in the line the supervisor quotes", () => {
   const env = { ...process.env };
   for (const key of Object.keys(env)) {

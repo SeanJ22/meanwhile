@@ -36,7 +36,7 @@ const ROLLING: ExpansionScopeDecision = {
   geography: { type: "county", geoid: "04019", version: "county:2020", label: "Pima County", stateAbbr: "AZ" },
 };
 
-/** The saved 19:33 UTC reading of the original hunt (original-cost-attribution-2026-09-28T19-33-03.516Z.json). */
+/** A recorded cost reading of the original hunt. */
 const ORIGINAL_ROW = {
   key: ORIGINAL.key, receiptId: ORIGINAL.receiptId, label: ORIGINAL.geography.label, startedAt: ORIGINAL.budgetStartedAt!, budgetUsd: 50,
   anthropicUsd: 38.491002400000035, otherUsd: null, anthropicKnownUsd: 38.491002400000035, otherKnownUsd: 0.012,

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync, rmSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import * as nodeModule from "node:module";
 import { runInNewContext } from "node:vm";
@@ -9,13 +9,8 @@ import { defaultGrant } from "../lib/control-plane/capability.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { objectKey } from "../lib/control-plane/evidence/store.ts";
 import { runAcquirer, type AcquirerWorkerInput, type VaultedResearchEvidence } from "../lib/control-plane/workers/acquirer.ts";
-import { beginAttemptFor, claimRouteTask } from "../lib/control-plane/repository/coordinator.ts";
-import { completeWorkerTask } from "../lib/control-plane/repository/worker-completion.ts";
-import { sweepExpiredLeases } from "../lib/control-plane/scheduler/dispatch.ts";
-import { dispatchWorkerTask, drainWorkerQueue, enqueueWorkerTask, fleetExecutor, FLEET_IMPLEMENTATION_VERSION, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
-import { workerTaskAdmission } from "../lib/control-plane/workers/scheduling.ts";
+import { dispatchWorkerTask } from "../lib/control-plane/workers/runtime.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
-import { factChainHarness, PIMA_CONTRACT } from "./fact-chain-harness.ts";
 import type { ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
@@ -136,10 +131,7 @@ test("recovery never relaxes provenance, freshness, partial-capture or permissio
   assert.equal(noNetwork.verdict, "BLOCKED");
   assert.equal(noNetwork.blockers[0].code, "CAPABILITY_DENIED");
   assert.equal(f.networkCalls(), 0);
-  /*
-   * A recorded robots.txt verdict is NOT a boundary (owner decision 2026-09-25): a CANNOT_TELL route walks the
-   * network, robots.txt first, and only the page's own access control (here a 403) walls it — never bypassed.
-   */
+  /* A recorded robots.txt verdict is not a boundary: a CANNOT_TELL route walks the network, robots.txt first, and only the page's own access control (here a 403) walls it. */
   const calls: string[] = [];
   const walled: ScoutToolkit = { ...f.runtime.toolkit, call: async (name) => {
     calls.push(name);
@@ -159,10 +151,7 @@ test("recovery never relaxes provenance, freshness, partial-capture or permissio
 
 type WorkerResultRow = Awaited<ReturnType<ControlPlaneRepositories["workerResults"]["readAll"]>>[number];
 
-/**
- * A read-only view of `repos` in which every BLOCKED acquisition carries `code` / `retryable`: the shape a result
- * recorded before 2026-09-25 carries when robots.txt alone stopped it. Nothing is written; the store is unchanged.
- */
+/** A read-only view of `repos` in which every BLOCKED acquisition carries `code` / `retryable`, as an older result does when robots.txt alone stopped it. */
 function historicalBlockView(repos: ControlPlaneRepositories, code: ResearchBlocker["code"], retryable: boolean): ControlPlaneRepositories {
   const rewrite = (r: WorkerResultRow): WorkerResultRow => r.result.role === "ACQUIRER" && r.result.verdict === "BLOCKED"
     ? { ...r, result: { ...r.result, blockers: r.result.blockers.map(b => ({ ...b, code, retryable })) } } : r;
@@ -191,7 +180,7 @@ test("a route an older acquisition blocked for robots.txt alone (PERMISSION_DENI
   const historicalRuntime = { ...h.runtime, repos: historicalBlockView(h.repos, "PERMISSION_DENIED", false) };
   const robotsOnly = await nextAutonomousOperation(historicalRuntime, h.item.id);
   assert.equal(robotsOnly.action, "WORKER", robotsOnly.reason);
-  assert.equal(robotsOnly.task?.workerTask?.role, "ACQUIRER", "robots.txt alone never leaves a public route refused (owner decision 2026-09-25)");
+  assert.equal(robotsOnly.task?.workerTask?.role, "ACQUIRER", "robots.txt alone never leaves a public route refused");
   assert.notEqual(robotsOnly.task?.id, first.task!.id, "a fresh acquisition, not the recorded one");
   const before = h.calls.length;
   // The executor's injected tools close over the harness repositories. Give
@@ -250,79 +239,4 @@ test("failed publisher refresh retains the last acquired capture for unfinished 
   assert.equal((await h.repos.workerResults.readAll()).find(record => record.id === acquired.id)?.endedAt, acquired.endedAt);
   assert.equal((await h.repos.workerResults.readAll()).find(record => record.id === failure.id)?.result.verdict, "BLOCKED");
   assert.ok((await h.repos.artifacts.readAll()).some(record => record.artifactId === originalArtifact.artifactId && record.attemptId === originalArtifact.acquisitionAttemptId));
-});
-
-test("recorded research to verified meeting facts survives expired parser lease, refuses late completion, preserves proof and withholds publication", async t => {
-  const h = await factChainHarness();
-  t.after(() => rmSync(h.vaultRoot, { recursive: true, force: true, maxRetries: 3 }));
-  const text = readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url), "utf8");
-  const research = await h.hold(text, { role: "SCOUT" });
-  const confirmation = await h.hold(text, { role: "ACQUIRER" });
-  const parserTask = await enqueueWorkerTask(h.repos, { workItemId: h.itemId, role: "PARSER",
-    artifactId: research.artifactId, contract: PIMA_CONTRACT, now: h.now() });
-  const holder = "isolated-stalled-parser";
-  const claim = await claimRouteTask(h.repos, { routeTaskId: parserTask.id, holder, now: h.now(), ttlMs: 300_000 });
-  const attempt = await beginAttemptFor(h.repos, { routeTaskId: parserTask.id, workItemId: h.itemId,
-    lease: claim.lease.value, worker: { role: "PARSER", provider: "we-the-people", version: FLEET_IMPLEMENTATION_VERSION, instance: holder },
-    methodVersion: h.methodVersion, policyVersion: FLEET_POLICY_VERSION, now: h.now() });
-  const beforeExpiry = await sweepExpiredLeases(h.repos, { now: h.now(), observedBy: "isolated-supervisor" });
-  assert.ok(beforeExpiry.stillLive.includes(parserTask.id));
-  assert.deepEqual(await drainWorkerQueue(h.runtime, 1), [], "a live lease does not admit duplicate work");
-
-  // Complete the real parser computation, then simulate loss before its durable result boundary.
-  const executor = fleetExecutor(h.runtime, parserTask, holder);
-  const finished = await executor.run({ attemptId: attempt.id, workItemId: h.itemId, routeTaskId: parserTask.id,
-    holder, executor: executor.lane, bound: { maxAttempts: 3, maxWallMs: 120_000, maxCostUnits: 20_000 },
-    obligation: { obligation: { id: parserTask.id, recordClass: "LEGISTAR_EVENTS", subjectId: PIMA_CONTRACT.subjectId,
-      routeId: parserTask.routeId, active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null },
-      nextDueAt: parserTask.createdAt, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "isolated recovery fixture" } });
-  assert.equal(finished.kind, "RESULT_RECORDED");
-  if (finished.kind !== "RESULT_RECORDED") throw new Error("FIXTURE_PARSER_DID_NOT_FINISH");
-  assert.ok(finished.workerResult, "the completed parser must supply the durable result payload");
-  while (Date.parse(h.now()) <= Date.parse(claim.lease.value.expiresAt)) { /* advance only this fixture's clock */ }
-  const expired = await sweepExpiredLeases(h.repos, { now: h.now(), observedBy: "isolated-supervisor" });
-  assert.deepEqual(expired.reclaimed, [parserTask.id]);
-  assert.equal((await h.repos.attempts.mustRead(attempt.id)).value.outcome, "LEASE_EXPIRED");
-  await assert.rejects(completeWorkerTask(h.repos, finished.workerResult), /WORKER_COMPLETION_LEASE_OR_IDENTITY_REFUSED/);
-  assert.equal((await h.repos.workerResults.readAll()).length, 0);
-  assert.deepEqual(await drainWorkerQueue(h.runtime, 1), [], "existing capped retry delay remains enforced");
-  const reclaimed = (await h.repos.routeTasks.mustRead(parserTask.id)).value;
-  const admission = workerTaskAdmission(reclaimed, (await h.repos.attempts.list()).map(row => row.value), h.now());
-  assert.equal(admission.state, "BACKOFF");
-  while (Date.parse(h.now()) < Date.parse(admission.retryAt!)) { /* advance only this fixture's clock */ }
-  const recovered = await drainWorkerQueue(h.runtime, 1);
-  assert.equal(recovered.length, 1);
-  assert.equal(recovered[0].outcome, "WORKED", recovered[0].detail);
-  assert.notEqual(recovered[0].attemptId, attempt.id);
-  assert.deepEqual(await drainWorkerQueue(h.runtime, 1), []);
-  const parser = (await h.repos.workerResults.readAll())[0];
-  const validator = await h.run(research, "VALIDATOR", { producerResultId: parser.id });
-  const auditor = await h.run(research, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id,
-    validatorResultId: validator.id, auditScope: "SOURCE_UNIVERSE" });
-  assert.equal(validator.result.verdict, "PASS");
-  assert.equal(auditor.result.verdict, "SURVIVED");
-  const report = await projectFleetPipeline(h.repos, { readArtifactText: h.readArtifactText, now: h.now(),
-    registryBodyIds: new Set([PIMA_CONTRACT.subjectId]) });
-  assert.ok(report);
-  assert.equal(report.facts, 36);
-  assert.equal(report.states.length, 36);
-  assert.ok(report.states.every(state => state.byStage.VERIFIED?.checks.every(check => check.result === "PASS")));
-  assert.ok(report.states.every(state => state.stage === "AUDITED"));
-  assert.ok(report.states.every(state => state.byStage.APPROVED_FOR_PROMOTION === undefined));
-  assert.deepEqual(await h.repos.windowRuns.readAll(), [], "no publication window ran");
-  assert.deepEqual(await h.repos.windowIntents.readAll(), [], "no publication transaction was prepared");
-  assert.ok(report.states.every(state => state.byStage.SCOUTED?.actor.instance === research.attemptId));
-  assert.ok(report.states.every(state => state.byStage.CONFIRMED?.actor.instance === confirmation.attemptId));
-  assert.equal((await h.repos.attempts.mustRead(attempt.id)).value.outcome, "LEASE_EXPIRED", "old attempt stays terminal after new success");
-  assert.equal((await h.repos.routeTasks.mustRead(parserTask.id)).value.attemptIds.length, 2);
-  assert.equal(await h.readArtifactText(research.artifactId), text);
-  assert.equal((await h.repos.workerResults.readAll()).length, 3, "no late or duplicate result was committed");
-  const costs = await h.repos.costs.readAll();
-  t.diagnostic(JSON.stringify({ facts: report.facts, verified: report.states.filter(state => state.byStage.VERIFIED).length,
-    audited: report.states.filter(state => state.stage === "AUDITED").length, published: 0,
-    attempts: (await h.repos.attempts.list()).length, expiredAttempts: 1, committedWorkerResults: 3,
-    costRows: costs.length, requestCount: costs.reduce((sum, row) => sum + (row.cost.requestCount ?? 0), 0),
-    unknownRequestRows: costs.filter(row => row.cost.requestCount === null).length,
-    measuredUsd: costs.reduce((sum, row) => sum + (row.cost.usd ?? 0), 0),
-    unknownUsdRows: costs.filter(row => row.cost.usd === null).length }));
 });

@@ -1,9 +1,8 @@
 /**
- * **EVERY GOVERNMENT'S OCD ID, NATIONALLY — ASSIGNED ONCE.** (2026-09-23.)
- *
- * The one assignment both national builds read, so a government has the same
- * id in the ZIP index (`scripts/build-zip-division-shards.mts`) and in the
- * registration reference (`scripts/build-registration-reference.mts`):
+ * Every government's OCD id, nationally, assigned once. The ZIP index
+ * (`scripts/build-zip-division-shards.mts`) and the registration reference
+ * (`scripts/build-registration-reference.mts`) both read this, so a government
+ * has the same id in each:
  *
  * ```
  *   county   countyIdentity(STATEFP, NAME)
@@ -12,19 +11,16 @@
  *   school   schoolIdentity(STATEFP, NAME)      (unified, elementary, secondary)
  * ```
  *
- * from the Census cartographic-boundary files, with the constructors the
- * committed geometry uses (`lib/ocd/divisions.ts`). The committed geometry's
- * rule holds (RULING 80): every side of a name collision takes its Census
- * GEOID suffix, except an id that is already committed, which never moves —
- * the registry, bodies and sources join on it. A shared id whose every holder
- * is pinned to it is inherited from the committed geometry and carried as it
- * is; any other shared id refuses.
+ * Every side of a name collision takes its Census GEOID suffix, except an id
+ * already in committed geometry, which never moves: the registry, bodies and
+ * sources join on it. A shared id whose every holder is pinned to it is
+ * carried as it is; any other shared id refuses.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
 import { readBoundaryAttributes } from "../../lib/geo/shapefile.ts";
-import { geometryFiles } from "../../lib/holdings/files.ts";
+import { geometryFiles } from "../../lib/holdings/discovery.ts";
 import { countyIdentity, placeIdentity, schoolIdentity, subdivisionIdentity, type DivisionIdentity } from "../../lib/ocd/divisions.ts";
 
 export type Layer = "county" | "place" | "cousub" | "unsd" | "elsd" | "scsd";
@@ -60,7 +56,7 @@ export interface NationalDivision {
   readonly ocdId: string;
   /** The constructor's display label (what the committed geometry calls it). */
   readonly label: string;
-  /** The Census NAMELSAD (e.g. "Rockaway township"), or NAME where the layer has none. */
+  /** The Census NAMELSAD, or NAME where the layer has none. */
   readonly censusName: string;
   readonly lsad: string | null;
 }
@@ -148,14 +144,10 @@ export function nationalDivisionIds(root: string, tiger: string): NationalDivisi
     }
   }
   /*
-   * No two governments may share an id — with one named exception this build
-   * inherits rather than creates. The committed geometry already gives two
-   * governments one id where the two sit in different layer files (New Jersey's
-   * Union Township unified and elementary school districts), because the
-   * committed build checks collisions one file at a time. Renaming either would
-   * move a committed id; keeping both on it is exactly today's state. So a
-   * shared id whose every holder is pinned to it is carried as it is, and any
-   * other shared id refuses the build.
+   * Committed geometry already gives two governments one id where they sit in
+   * different layer files, because that build checks collisions one file at a
+   * time. Renaming either would move a committed id, so a shared id whose every
+   * holder is pinned to it is carried as it is; any other shared id refuses.
    */
   const owners = new Map<string, string>();
   const inheritedCollapses = new Map<string, Set<string>>();

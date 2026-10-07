@@ -1,40 +1,16 @@
 /**
- * Which of the 90,837 Census governments resolve to a zip (Prompt B items 5.3
- * to 5.6, 2026-08-20).
- *
- * `build-zip-governments.mts` answers the question in TIGER's vocabulary — a
- * county GEOID, a place GEOID, a school-district LEAID. This answers it in the
- * CENSUS OF GOVERNMENTS' vocabulary, which is the one every coverage
- * denominator in this product is stated against. The two are bridged per
- * government type, and each bridge is named because each one can fail
- * differently.
- *
- * THE BRIDGES
+ * Which Census of Governments units resolve to a zip, bridged per government
+ * type to the TIGER layers `build-zip-governments.mts` joins:
  *
  *   COUNTY            fips_state + fips_county          -> TIGER county GEOID
  *   MUNICIPAL         fips_state + fips_place           -> TIGER place GEOID
  *   TOWNSHIP          fips_state + fips_county + code   -> TIGER cousub GEOID,
- *                     falling back to the place GEOID, because in New England
- *                     a town is both an incorporated place and a county
- *                     subdivision and the Census file carries one code.
- *   SCHOOL DISTRICT   item 4's crosswalk -> nces_leaid  -> TIGER unsd/elsd/scsd
- *                     GEOID, which IS the LEAID. That is the whole reason the
- *                     crosswalk was built before this ran.
- *   SPECIAL DISTRICT  NO BRIDGE EXISTS. See below.
+ *                     falling back to the place GEOID (a New England town is both)
+ *   SCHOOL DISTRICT   the Census–NCES crosswalk -> nces_leaid -> TIGER unsd/elsd/scsd GEOID
+ *   SPECIAL DISTRICT  no bridge: TIGER publishes no special-district boundary.
  *
- * SPECIAL DISTRICTS ARE THE CEILING (item 5.3). The Census counts 39,555 of
- * them — 43.5% of all governments in the country — and TIGER publishes
- * boundaries for none of them at any vintage. Not a subset: none. So the
- * geometric method that resolves every other type resolves ZERO special
- * districts, and that number caps Tier 1 nationally. It is a headline of this
- * session, not a footnote.
- *
- * A mailing-address zip is NOT territory and is never counted as resolution
- * here. 1,341 special districts carry a `fips_place` and many more carry a
- * `zip`, but a district's administrative office being in a zip says nothing
- * about which zips it governs — a county water authority head-quartered
- * downtown serves the county. Those are recorded as SEEDS for the hunt that
- * closes them, labelled as seeds, and counted separately from resolutions.
+ * A mailing-address zip is never territory; those are recorded as seeds and
+ * counted separately from resolutions.
  *
  * Run:  corepack pnpm territory:resolve
  */
@@ -68,7 +44,7 @@ for (const [zip, edges] of Object.entries(zipGov.zips)) {
   }
 }
 
-/* ---- the school-district bridge, from item 4's crosswalk ------------------ */
+/* ---- the school-district bridge, from the Census–NCES crosswalk ---------- */
 
 const pid6ToLeaid = censusSchoolLeaIds(readFileSync(join(DERIVED, "census-nces-crosswalk.csv"), "utf8"));
 console.log(`school-district bridge: ${pid6ToLeaid.size} of 9,776 crosswalk rows parsed`);
@@ -77,8 +53,7 @@ console.log(`school-district bridge: ${pid6ToLeaid.size} of 9,776 crosswalk rows
 
 const independent = readTable("census_govt_units_2022");
 const dependent = readTable("census_govt_units_2022_dependent_school_systems");
-// The registry includes dependent school systems. Omitting their Census table
-// leaves those real governments permanently unplaceable despite an exact LEAID.
+// Dependent school systems are included; without their table they stay unplaceable despite an exact LEAID.
 const units = { ...independent, rows: [...independent.rows, ...dependent.rows.map(row =>
   independent.header.map(column => row[dependent.header.indexOf(column)] ?? ""))] };
 const col = (c: string) => units.header.indexOf(c);
@@ -160,8 +135,7 @@ for (const r of units.rows) {
   });
 }
 
-// The runner's scope reference can be refreshed without rewriting the frozen
-// reader territory artifact. Both outputs use this same Census/LEAID resolver.
+// `--dependent-only` refreshes the runner's scope reference without rewriting census-unit-zips.json.
 if (process.argv.includes("--dependent-only")) {
   const path = join(process.cwd(), "lib/control-plane/expansion/reference/census-dependent-school-territories.json");
   writeFileSync(path, JSON.stringify({
@@ -174,9 +148,7 @@ if (process.argv.includes("--dependent-only")) {
 
 /* ---- report -------------------------------------------------------------- */
 
-const lines: string[] = [];
 const say = (s = "") => {
-  lines.push(s);
   console.log(s);
 };
 
@@ -279,6 +251,5 @@ writeFileSync(
   })}\n`,
   "utf8",
 );
-writeFileSync(join(DERIVED, "census-unit-zips.report.txt"), `${lines.join("\n")}\n`, "utf8");
 say("");
 say("WROTE data/derived/census-unit-zips.json");

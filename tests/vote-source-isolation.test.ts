@@ -199,13 +199,6 @@ test("official state proof enumeration fails closed on an unreadable canonical s
   );
 });
 
-/*
- * R9 (2026-09-25): New Hampshire moved to the per-legislator fan-out
- * (`nh-state-rollcalls`, STATE_LEGISLATOR_VOTES); nothing writes its
- * STATE_ROLL_CALL pointer, yet every proof enumeration and Reader read still
- * opened that stale version. The read list is derived from the contracts, as
- * the Reader render gate is, and the retired scope is named.
- */
 test("R9: only scopes whose contract still promotes STATE_ROLL_CALL are read; the retired one is named", () => {
   const derived = OFFICIAL_STATE_ROLL_CALL_TARGETS
     .filter((target) => {

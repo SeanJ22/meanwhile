@@ -12,18 +12,7 @@ import {
 } from "../lib/ballot/pick-tally.ts";
 import type { StoredPick } from "../lib/ballot/picks.ts";
 
-/**
- * F01-continued items 8 and 9 (2026-08-19).
- *
- * Item 8: the reader's own ballot counted MEASURES and not CANDIDATES,
- * because a measure pick can only be explicit and a candidate pick can be
- * derived from a Yes on the reaction control. Item 9: "Clear my picks"
- * emptied the explicit file and left every derived pick rendering.
- *
- * These hold both, and they hold the DENOMINATOR rule that keeps them
- * honest — M is the rendered rows, so a tally can never describe a ballot
- * other than the one it sits on.
- */
+// The tally's denominator is the rendered rows, so it can never describe a ballot other than the one it sits on.
 
 const CANDIDATE_CONTEST: PickableContest = {
   contestId: "az-pima-2026:us-house-6",
@@ -39,9 +28,7 @@ const MEASURE_CONTEST: PickableContest = {
   contestId: "az-2026:prop-100",
   contestTitle: "Proposition 100",
   voteFor: 1,
-  // A measure carries NO reaction target: reactions attach to provisions, so
-  // there is no measure-level Yes to derive from. This is the asymmetry that
-  // made the undercount fall entirely on candidates.
+  // A measure carries no reaction target: reactions attach to provisions, so there is no measure-level Yes.
   options: [
     { id: "YES", label: "Yes" },
     { id: "NO", label: "No" },
@@ -69,8 +56,7 @@ test("THE DEFECT: a derived candidate pick is counted, not only the explicit mea
 });
 
 test("the old behaviour is what would fail: explicit-only would have counted 1 of 2", () => {
-  // The pre-fix surface read the explicit file alone. Recreated here as the
-  // control, so this test proves something rather than restating the fix.
+  // The explicit-file-only reading, recreated as the control.
   const explicitOnly = [explicitMeasureYes].length;
   const tally = tallyPicks(BALLOT, [explicitMeasureYes], new Set(["cand-a"]), {});
   assert.equal(explicitOnly, 1);
@@ -112,13 +98,10 @@ test("Yes to more than the seat elects is not a pick — it asks", () => {
   assert.equal(tally.picked, 0, "two Yeses in a one-seat race resolve to no pick");
 });
 
-// ── item 9: the clear ─────────────────────────────────────────────────────
-
 test("THE DEFECT: clearing suppresses the derived pick as well as the explicit one", () => {
   const yes = new Set(["cand-a"]);
   const suppressed = derivedToSuppress(BALLOT, yes, {});
-  // The explicit file is emptied by clearAllPicks; the suppression is what
-  // this test is about.
+  // clearAllPicks empties the explicit file; the suppression is what is under test.
   const after = tallyPicks(BALLOT, [], yes, suppressed);
   assert.equal(after.picked, 0, "nothing renders as a pick after a clear");
   assert.equal(after.rows.length, 0);
@@ -127,22 +110,14 @@ test("THE DEFECT: clearing suppresses the derived pick as well as the explicit o
 test("a clear records the choices cleared, not 'never derive here again'", () => {
   const suppressed = derivedToSuppress(BALLOT, new Set(["cand-a"]), {});
   assert.deepEqual(suppressed[CANDIDATE_CONTEST.contestId], ["cand-a"]);
-  // Say Yes to somebody else and the pick comes back: a new answer, not the
-  // one that was cleared.
+  // A new Yes after a clear is a new answer and brings the pick back.
   const later = tallyPicks(BALLOT, [], new Set(["cand-b"]), suppressed);
   assert.equal(later.picked, 1);
   assert.equal(later.rows[0].chosen[0], "Ben Brooks");
 });
 
 test("REGRESSION: a contest holding BOTH an explicit pick and a Yes clears completely", () => {
-  /*
-   * The first draft of this fix resolved the suppression against the reader's
-   * stored picks, so this contest came back EXPLICIT, escaped suppression,
-   * and re-derived the Yes the moment `clearAllPicks` emptied the file. The
-   * four-zip walk caught it on every zip: "Your pick for this race: Katie
-   * Hobbs" still standing after a clear. A clear removes the explicit picks,
-   * so the state to suppress is the state that exists AFTER they are gone.
-   */
+  // The state to suppress is the state that exists after the explicit picks are gone.
   const explicitCandidate: StoredPick = {
     contestId: CANDIDATE_CONTEST.contestId,
     contestTitle: CANDIDATE_CONTEST.contestTitle,
@@ -176,8 +151,6 @@ test("the count line names both kinds and reconciles with the numbers", () => {
   const one = tallyPicks([MEASURE_CONTEST], [explicitMeasureYes], new Set(), {});
   assert.equal(tallyLine(one), "1 of 1 race or measure on this ballot");
 });
-
-// ── the drift guard: one builder, three call sites ────────────────────────
 
 test("every PickControl on the ballot page gets its options from the shared builder", () => {
   const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
@@ -213,8 +186,7 @@ test("the picks store still transmits nothing after gaining the suppression fiel
   assert.ok(!/\bfetch\s*\(/.test(source));
   assert.ok(!/sendBeacon/.test(source));
   assert.ok(!/\/api\//.test(source));
-  // One key, still. The suppression rides inside the picks file rather than
-  // becoming a second store, because n-stores-never-join counts stores.
+  // One key: the suppression rides inside the picks file rather than becoming a second store.
   const keys = source.match(/localStorage\.(get|set)Item\(([^)]*)\)/g) ?? [];
   for (const k of keys) {
     assert.ok(

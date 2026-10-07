@@ -14,7 +14,7 @@ import { readReaderEdgeMeetings } from "../../meetings/edge-serving.ts";
 import { resolveReaderArtifactWriteStore } from "../../meetings/edge-store.ts";
 import { readPreparedMeetingsProjection } from "../../meetings/prepared-snapshot.ts";
 import type { MeetingsProjectionReadResult } from "../../meetings/snapshot.ts";
-import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, readOutcomeProjection } from "../../outcomes/store.ts";
+import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../../outcomes/store.ts";
 import type { PersistedSittingOutcomes } from "../../outcomes/types.ts";
 import type { AgendaDocumentLike } from "../../routing/agenda-search.ts";
 import { readAskGapObservations, type AskGapObservation } from "../ask-gap-observations.ts";
@@ -48,13 +48,13 @@ async function readHeldMeetings(now: string): Promise<MeetingsProjectionReadResu
 /** The recorded outcomes Ask reads, and whether they could be read (Ask's own test: an empty store is unreadable). */
 async function readHeldOutcomes(): Promise<{ readonly sittings: readonly PersistedSittingOutcomes[]; readonly unreadable: string | null }> {
   try {
-    await readOutcomeProjection();
+    await refreshOutcomeSnapshotFromPromoted();
   } catch (error) {
     return { sittings: [], unreadable: message(error) };
   }
   if (loadedFrom() === "EMPTY_STORE") {
     const state = outcomeProjectionReadState();
-    return { sittings: [], unreadable: `${state.kind}${"detail" in state && state.detail ? `: ${state.detail}` : ""}` };
+    return { sittings: [], unreadable: `${state.kind}${state.detail ? `: ${state.detail}` : ""}` };
   }
   return { sittings: getOutcomeSnapshot().sittings, unreadable: null };
 }

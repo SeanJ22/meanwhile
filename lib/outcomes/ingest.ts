@@ -1,42 +1,4 @@
-/**
- * **TURNING ONE WALKED SITTING INTO ONE DURABLE ROW — and deciding whether to
- * walk it again at all.**
- * (WS-LEGI, 2026-08-29.)
- *
- * Pure. Nothing here fetches; `scripts/legistar-outcomes-ingest.mts` does the
- * fetching and hands the results in. That split is what lets the acquisition
- * POLICY — the part that decides how many requests a tenant is asked for — be
- * tested against fixtures instead of against a county's web server.
- *
- * ## The source cost is real, and it is designed for rather than refused
- *
- * One request per acted item is what a per-person roll call costs on this API.
- * On Pima that is **545 vote requests across 20 sittings** (measured 2026-08-29:
- * 525 acted items plus the 20 attendance roll-call items, which are asked about
- * because a per-person record could be there and asking only one of the two
- * places is how the other becomes an asserted absence). At the adapter's
- * 350 ms spacing that is a little over three minutes of one tenant's time for
- * four months of its history.
- *
- * That is an ENGINEERING PARAMETER, not a reason to decline the source. What
- * makes it sustainable is that it is paid ONCE:
- *
- * 1. **Bounded historical backfill.** A window and a per-run sitting budget, so
- *    a first run on a new tenant is bounded and resumable rather than an
- *    open-ended crawl.
- * 2. **Incremental refresh afterwards**, keyed on the publisher's own
- *    `EventLastModifiedUtc` — see {@link refreshDecision}. A sitting the
- *    publisher has not touched costs ONE request to confirm, not 58.
- * 3. **Durable resume.** Every completed sitting is written before the next is
- *    started, so an interrupted run resumes at the cursor rather than restarting.
- * 4. **Retryable failures stay open.** A votes request that threw is persisted
- *    as a failure and re-asked next run. It is never converted into an absence,
- *    which is the one outcome that would make the saving permanent.
- *
- * The steady-state cost after the first backfill is one `events` request per
- * tenant per refresh, plus the items and votes for only those sittings whose
- * own modification stamp moved.
- */
+/** Turning one walked sitting into one durable row, and deciding whether to walk it again. Pure: the caller fetches. */
 
 import { legistarMeetingId } from "../sources/legistar/index.ts";
 import { minutesPointerFor } from "../sources/legistar/outcomes.ts";
@@ -52,15 +14,7 @@ import type {
   PersistedSittingOutcomes,
 } from "./types.ts";
 
-/**
- * The publisher's state for one sitting, plus the instant we observed it.
- *
- * Every field is carried across verbatim. Nothing is normalised, nothing is
- * ranked, and no verdict is computed — "is the agenda published" is a question
- * the *consuming* vocabulary answers from these fields, and a boolean minted
- * here would be this module quietly deciding what "published" means for every
- * tenant in the country.
- */
+/** The publisher's state for one sitting plus the instant observed, carried verbatim; no verdict is computed here. */
 export function publicationStatusFor(
   event: LegistarEvent,
   observedAt: string,
@@ -91,30 +45,13 @@ export interface PersistInput {
   readonly startsAt: string | null;
   /** Route ids from `lib/sources/legistar/routes.ts` that actually succeeded. */
   readonly routesWalked: readonly string[];
-  /**
-   * Set when the items route itself threw rather than returning rows. A request
-   * failure and a zero-row reply are different states and are kept apart here
-   * because only one of them is retryable for a different reason.
-   */
+  /** Set when the items route threw rather than returning rows; a request failure is not a zero-row reply. */
   readonly requestError?: string | null;
-  /**
-   * Readings of OTHER publisher surfaces for this same sitting — in practice the
-   * InSite portal grid's agenda cell, which `normalizeWithDrops` now keeps
-   * rather than discarding. Appended beside the Web API's own reading, never
-   * merged with it.
-   */
+  /** Readings of other publisher surfaces for this sitting, appended beside the Web API's reading, never merged. */
   readonly publicationObservations?: readonly AgendaPublicationObservation[];
 }
 
-/**
- * One walked sitting as one durable row.
- *
- * **The zero-row branch is the RULING 100 branch.** A sitting whose items route
- * returned an empty array is persisted with `extraction: "ZERO_ROWS_FAILED"` and
- * a sentence saying so. It is never written as a sitting whose agenda was empty,
- * because those two states are indistinguishable in a row count and only one of
- * them is a fact about the body.
- */
+/** One walked sitting as one durable row. A zero-row items reply is `ZERO_ROWS_FAILED`, never an empty agenda. */
 export function toPersistedSitting(input: PersistInput): PersistedSittingOutcomes {
   const { event, client, collected } = input;
 
@@ -156,13 +93,7 @@ export function toPersistedSitting(input: PersistInput): PersistedSittingOutcome
     failedRollCallExtractions: collected.failedRollCallExtractions,
     voteRequestFailures: collected.voteRequestFailures,
     routesWalked: input.routesWalked,
-    /*
-     * The Web API's structured publication record, as an observation. Any
-     * reading of the PORTAL grid for the same sitting is a second, independent
-     * representation and is appended by the caller that read it — never merged
-     * into this one, because two surfaces agreeing is evidence and one surface
-     * overwriting the other is the loss of it (RULING 207).
-     */
+    // The Web API's publication record as one observation; a portal reading is appended separately, never merged.
     publicationObservations: [
       observationFromEvent({
         meetingId: legistarMeetingId(client.slug, event.EventId),
@@ -175,12 +106,7 @@ export function toPersistedSitting(input: PersistInput): PersistedSittingOutcome
   };
 }
 
-/**
- * Why a sitting is being walked, or why it is being skipped.
- *
- * A skip needs a reason as much as a walk does: an unexplained skip in a
- * refresh is how a sitting silently stops being collected.
- */
+/** Why a sitting is being walked, or why it is skipped; a skip needs a reason too. */
 export type RefreshReason =
   /** Never seen. The backfill case. */
   | "NEW"
@@ -190,24 +116,11 @@ export type RefreshReason =
   | "PRIOR_EXTRACTION_FAILED"
   /** We hold it, and some votes requests are still open. */
   | "OPEN_VOTE_FAILURES"
-  /**
-   * The publisher gives us no modification stamp, so we cannot tell whether it
-   * changed. `CANNOT_TELL` fails safe toward WALKING (RULING 182): the cost of
-   * re-reading a sitting that did not change is a few requests, and the cost of
-   * skipping one that did is a stale record served as current.
-   */
+  /** No modification stamp, so a change cannot be ruled out: fails toward walking. */
   | "NO_MODIFICATION_STAMP"
   /** Held, unchanged, complete. The steady state, and the point of all this. */
   | "UNCHANGED_SKIP"
-  /**
-   * An operator asked for a rewalk regardless of the publisher's stamp — for a
-   * change in OUR transform, which the publisher's stamp cannot see.
-   *
-   * Its own reason rather than borrowing `PUBLISHER_MODIFIED`, because the log
-   * line is the only record of why a sitting was re-read and writing "the
-   * publisher modified it" when nobody did is a false statement about a
-   * government in a place nobody would ever check.
-   */
+  /** An operator asked for a rewalk for a change in our transform, which the publisher's stamp cannot see. */
   | "FORCED";
 
 export interface RefreshDecision {
@@ -215,20 +128,7 @@ export interface RefreshDecision {
   readonly reason: RefreshReason;
 }
 
-/**
- * **INCREMENTAL REFRESH — should this sitting be walked again?**
- *
- * `EventLastModifiedUtc` is the publisher's own statement that the row changed,
- * and it is the correct key precisely because it is theirs: a cadence of ours
- * ("re-walk every 14 days") re-reads sittings nobody touched and misses the one
- * amended an hour ago.
- *
- * It fails toward walking in every ambiguous case. An absent stamp, a stamp we
- * never recorded, or an unreadable one all walk. The only skip is the
- * affirmative one: we hold this sitting, its extraction succeeded, no vote
- * request is still open, and the publisher's stamp is byte-identical to the one
- * we stored.
- */
+/** Whether to walk a sitting again, keyed on the publisher's own `EventLastModifiedUtc`; every ambiguous case walks. */
 export function refreshDecision(
   event: LegistarEvent,
   held: PersistedSittingOutcomes | undefined,
@@ -250,17 +150,7 @@ export function refreshDecision(
   return { walk: false, reason: "UNCHANGED_SKIP" };
 }
 
-/**
- * Fold newly walked sittings into the held store.
- *
- * Keyed on `meetingId`, incoming wins, and everything else is preserved — which
- * is what makes an interrupted run resumable and what makes a single-tenant
- * refresh safe to run against a store holding several tenants. A run that
- * walked Mesa must not be able to drop Pima, and a merge that rebuilt the array
- * from only what this run saw would do exactly that.
- *
- * Sorted by meeting id so the committed artefact has a stable diff.
- */
+/** Fold newly walked sittings into the held store, keyed on `meetingId`, incoming wins, everything else preserved. Sorted by id. */
 export function mergeSnapshot(
   held: OutcomeSnapshot,
   incoming: readonly PersistedSittingOutcomes[],

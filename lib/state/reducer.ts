@@ -15,16 +15,11 @@ import type {
   UiState,
 } from "./types.ts";
 
-// Re-exported from their new home so existing importers keep working; the
-// defaults moved to defaults.ts so the reset registry can read them without
-// a circular import.
+// Re-exported for existing importers; the defaults live in defaults.ts so the
+// reset registry can read them without a circular import.
 export { ALL_DISTRICT_TYPES, DEFAULT_DISTRICT_TYPES, INITIAL_FILTERS, INITIAL_STATE };
 
-/**
- * The reducer.
- *
- * Pure and exported on its own so it can be tested without mounting React.
- */
+/** The reducer. Pure, so it is testable without mounting React. */
 
 /** Add or remove a value, preserving the caller's canonical ordering. */
 function toggle<T>(list: T[], value: T, order?: readonly T[]): T[] {
@@ -45,8 +40,7 @@ function clearedGroup(group: keyof FilterState, filters: FilterState): FilterSta
     case "statuses":
       return { ...filters, statuses: [] };
     case "districtTypes":
-      // "Cleared" means the default view (M24) — never everything-on, which
-      // is now the explicit Select all action instead.
+      // "Cleared" means the default view, never everything-on (that is Select all).
       return { ...filters, districtTypes: [...DEFAULT_DISTRICT_TYPES] };
     case "daysAhead":
     case "daysBack":
@@ -72,7 +66,7 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
 
     case "scope/jurisdiction":
       // Picking a jurisdiction repopulates the body dropdown, so the old body
-      // — which belonged to a different jurisdiction — cannot survive.
+      // cannot survive.
       return { ...state, jurisdiction: action.ocdId, body: null };
 
     case "scope/body":
@@ -88,9 +82,8 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
       };
 
     case "filter/toggleStatus": {
-      // M58: asking for concluded meetings opens the backward window they
-      // live in. Without this the chip is a dead control at every zip — see
-      // status-intent.ts for the measurement.
+      // Asking for concluded meetings opens the backward window they live in
+      // (see status-intent.ts).
       const statuses = toggle(state.filters.statuses, action.value);
       const daysBack = daysBackForStatuses(statuses, state.filters.daysBack);
       return {
@@ -136,8 +129,8 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
       return { ...state, filters: clearedGroup(action.group, state.filters) };
 
     case "filter/districtTypesSet":
-      // Select all / Clear on the district-type group (M25). Canonical order
-      // is kept so the checkbox list never reshuffles.
+      // Select all / Clear on the district-type group. Canonical order is kept
+      // so the checkbox list never reshuffles.
       return {
         ...state,
         filters: {
@@ -149,10 +142,7 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
       };
 
     case "filter/reset":
-      // Every registered control, not merely `filters` — the old form was
-      // written when filters were the only controls and quietly skipped
-      // tiers, scope, search, radius and near-me as each grew around it
-      // (tracker M24). The registry is the fix's structural half.
+      // Every registered control, not merely `filters` (see reset.ts).
       return resetAllControls(state);
 
     case "filter/togglePanel":
@@ -178,23 +168,9 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
       return { ...state, search: { query: "", open: false, highlighted: -1 } };
 
     /*
-     * **BC-16 (2026-08-25) — ONE SMALL CARD AT A TIME, MOST RECENT CLICK
-     * WINS.**
-     *
-     * The author's `09-20-11` has the Rockaway Township VENUE card and the
-     * Morris County DISTRICT card open at once, overlapping, each scrolling
-     * inside itself. Two answers to two different questions, one on top of the
-     * other, and the reader has to close one to read the other.
-     *
-     * The exclusion lives HERE rather than in the handlers for the same reason
-     * WGH-8's does: a rule enforced by every path that calls it is a rule the
-     * path nobody thought of does not follow. Opening either card is a
-     * transition in this reducer, so closing the other is part of the same
-     * transition and there is no ordering to get wrong.
-     *
-     * Selecting NOTHING (`key: null`, `ocdId: null`) is a close, not an open,
-     * and must not clear the other card — otherwise dismissing one would
-     * silently dismiss both.
+     * One small card at a time, most recent click wins. Enforced here so every
+     * path that opens a card follows it. Selecting NOTHING (`key: null`,
+     * `ocdId: null`) is a close and must not clear the other card.
      */
     case "select/venue":
       return {
@@ -221,10 +197,7 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
     case "radius/set":
       return { ...state, radiusKm: action.km, radiusOverridden: true };
 
-    // Turning the limiter off has to actually turn it off. It previously
-    // dispatched `filter/reset`, which cleared every unrelated filter and left
-    // `radiusOverridden` true — so the radius kept filtering while the control
-    // read "off", with no way back short of a reload.
+    // Turning the limiter off must actually turn it off, and touch no other filter.
     case "radius/clear":
       return {
         ...state,
@@ -261,17 +234,16 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
         ...state,
         listOverlayOpen: action.open,
         door: action.open ? null : state.door,
-        /* ASK-22: the focus belongs to ONE opening. Closing clears it, so a
-           later unfocused open cannot inherit a subject from an answer the
-           reader has moved on from. */
+        /* The focus belongs to ONE opening. Closing clears it, so a later
+           unfocused open cannot inherit a subject from an earlier answer. */
         listFocusBodyId: action.open ? (action.focusBodyId ?? null) : null,
         listFocusBodyName: action.open ? (action.focusBodyName ?? null) : null,
-        /* 2026-09-23: the district card's count, with the same lifetime. */
+        /* The district card's count focus, with the same lifetime. */
         listFocusDivision: action.open ? (action.focusDivision ?? null) : null,
       };
 
-    // 8a: the sidebar-count doors. One large surface at a time — opening a
-    // door closes the list overlay (and map-entry closes any large popup).
+    // The sidebar-count doors: one large surface at a time — opening a door
+    // closes the list overlay (and map-entry closes any large popup).
     case "door/open":
       return { ...state, door: action.door, listOverlayOpen: false };
 
@@ -305,9 +277,6 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
   }
 }
 
-// The old activeFilterCount/hasActiveFilter pair is gone (M24): it counted
-// only `filters`, and it counted the *default* district-type selection as
-// active — which is why a fresh page read "Filters 1" and Reset all
-// appeared to do nothing. The badge now reads `activeControlCount` from
-// lib/state/reset.ts, which covers every registered control and defines
-// active as "differs from the default view".
+// The active-filter badge reads `activeControlCount` from lib/state/reset.ts,
+// which covers every registered control and defines active as "differs from
+// the default view".

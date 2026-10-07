@@ -1,11 +1,6 @@
 /**
- * ITEM 8a (2026-08-26) — every job names its own cause, and a deterministic
- * refusal is not retried.
- *
- * Both instruments are proved against REAL CAPTURED LOG TEXT from runs this
- * repository actually produced, never against a fixture written to make the
- * matcher pass (RULING 110 — the instrument is shown catching the real thing).
- * The run ids are in the assertions so a reader can go and look.
+ * Every job names its own cause, and a deterministic refusal is not retried. Proved against captured log text from
+ * real runs, never against a fixture written to make the matcher pass.
  */
 
 import assert from "node:assert/strict";
@@ -36,10 +31,6 @@ const TRACKER_DISAGREEMENT = `
  ELIFECYCLE  Test failed. See above for more details.
 `;
 
-/* -------------------------------------------------------------------------- */
-/* THE DIAGNOSER                                                               */
-/* -------------------------------------------------------------------------- */
-
 test("the diagnoser names the ruleset refusal from the real log", () => {
   const d = diagnose(GH013, GH013.trim().split("\n").slice(-5));
   assert.equal(d.verdict, "KNOWN");
@@ -60,10 +51,7 @@ test("the diagnoser reports EVERY matching class, not the first (RULING 164)", (
 });
 
 test("the diagnoser recognises the store-and-views disagreement it was NOT derived from", () => {
-  // RULING 157 — the class list was derived from the GH013 log. This is a
-  // different run, a different job, and a different failure mode: the four
-  // tracker guards that went red because job-watch committed the store and
-  // left its generated views behind.
+  // An independent case: a different run, job and failure mode from the log the classes were derived from.
   const d = diagnose(TRACKER_DISAGREEMENT);
   assert.equal(d.verdict, "KNOWN");
   assert.ok(d.classes.some((c) => c.id === "tracker-store-and-views-disagree"));

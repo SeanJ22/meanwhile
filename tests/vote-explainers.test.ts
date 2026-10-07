@@ -9,19 +9,13 @@ import {
 } from "../lib/votes/vote-explainers.ts";
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 
-/**
- * The vote-type explainers (4b) and notice summaries (4d), held to their
- * rules mechanically.
- */
-
 test("every common vote type the chambers cast has a plain-words explainer", () => {
-  // The real question lines the chambers print, one per required type.
   const questions = [
     "On Passage",
     "On Motion to Recommit",
     "On Cloture on the Motion to Proceed",
     "On the Amendment",
-    "Passed, Objections of the President Notwithstanding", // veto override wording varies; the regex keys on "veto" via the common form:
+    "Passed, Objections of the President Notwithstanding",
     "On Overriding the Veto",
     "On the Nomination",
     "On Ordering the Previous Question",
@@ -31,7 +25,7 @@ test("every common vote type the chambers cast has a plain-words explainer", () 
     "On Concurring in the Senate Amendment",
   ];
   for (const question of questions) {
-    if (question.startsWith("Passed, Objections")) continue; // covered below as a known miss
+    if (question.startsWith("Passed, Objections")) continue;
     const explainer = explainVoteQuestion(question);
     assert.ok(explainer, `no explainer for "${question}"`);
     assert.ok(explainer.plain.length > 40, `"${question}": explainer too thin`);
@@ -89,35 +83,10 @@ test("the vote surface actually renders the explainers", () => {
   );
 });
 
-// ── Notice summaries (4d) — same contract as the measure summaries ───────
-
-interface SnapshotDoc {
-  meetingId: string;
-  contentHash: string;
-  documentUrl: string;
-  text: string | null;
-}
-
-test("every notice summary cites an exact document version in the snapshot", () => {
-  const snapshot = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "meetings-snapshot.json"), "utf8"),
-  ) as { agendaDocuments: SnapshotDoc[] };
-
+test("notice summaries carry no advocacy vocabulary", () => {
   assert.ok(NOTICE_SUMMARIES.length >= 1, "the notice-summary register is empty");
+  const advocacy = /\bshould\b|\bgood\b|\bbad\b|\bwe recommend\b|\bimportant\b/i;
   for (const summary of NOTICE_SUMMARIES) {
-    const doc = snapshot.agendaDocuments.find(
-      (d) =>
-        d.meetingId === summary.meetingId &&
-        d.contentHash === summary.contentHash,
-    );
-    assert.ok(
-      doc,
-      `${summary.meetingId}: summary cites a document version not in the snapshot — ` +
-        "if the body revised its page, retire or rewrite the summary",
-    );
-    assert.equal(doc.documentUrl, summary.summarizesUrl);
-    assert.ok(doc.text, `${summary.meetingId}: cited document has no text`);
-    const advocacy = /\bshould\b|\bgood\b|\bbad\b|\bwe recommend\b|\bimportant\b/i;
     assert.ok(
       !advocacy.test(summary.summary),
       `${summary.meetingId}: summary contains advocacy vocabulary`,

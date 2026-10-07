@@ -1,21 +1,14 @@
 /**
- * **WHEN TWO STORED AGENDA ROWS ARE THE SAME DOCUMENT CONTENT.** (2026-09-22.)
- *
- * The retrieval pass stores a new row whenever a fetch's bytes hash
- * differently, and some publisher pages never hash the same way twice: Tucson
- * Unified's MeetingInformation page was stored 88 times in four days with the
- * identical extracted text. A byte hash is a fact about the transfer; the
- * words are the document. So one rule, used by the ingest's append-only store,
- * the promotion change set and the reader's version count alike:
+ * When two stored agenda rows are the same document content. Some publisher
+ * pages never hash the same way twice, so a byte hash alone over-counts
+ * versions. One rule, used by the ingest's append-only store, the promotion
+ * change set and the reader's version count alike:
  *
  *   two rows carry the same content when their readable text is identical
  *   (whitespace runs are layout, not content) OR their bytes are identical.
  *
- * A row with no readable text is compared by its bytes alone, so a failed
- * extraction can never be declared equal to a different document.
- *
- * Pure and dependency-free on purpose: the reader's agenda card imports the
- * same rule in the browser bundle, and a server-only helper would fork it.
+ * A row with no readable text is compared by its bytes alone. Pure and
+ * dependency-free: the browser bundle imports the same rule.
  */
 
 export interface AgendaContentRow {
@@ -24,14 +17,10 @@ export interface AgendaContentRow {
 }
 
 /**
- * **THE NAME OF THE SIGNAL THAT A READ WAS THE PUBLISHER'S PAGE.** (2026-09-23.)
- *
- * An HTML page whose readable text is word for word what the same publisher
- * serves for a DIFFERENT sitting says nothing about either sitting: the words
- * are the page, not the document. The retrieval records such a read as a
- * failed extraction whose note opens with this name (RULING 269: a read that
- * returned nothing of the document is a failed read), and the reader
- * recognises the note by the same constant, so the two cannot drift.
+ * The signal that a read was the publisher's page: an HTML page whose
+ * readable text is word for word what the same publisher serves for a
+ * different sitting. Such a read is recorded as a failed extraction whose
+ * note opens with this name, and the reader recognises it by this constant.
  */
 export const PUBLISHER_PAGE_SIGNAL = "Same words as another meeting's page";
 

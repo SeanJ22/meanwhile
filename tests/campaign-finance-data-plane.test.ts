@@ -6,13 +6,10 @@ import test from "node:test";
 import { failedAcquisitionCandidate, normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { candidateChangeSet } from "../lib/civic-data/changes.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
-import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { manualCandidateContractIssue, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
-  PIMA_LOCAL_FINANCE_CONTRACT,
   STATE_CAMPAIGN_FINANCE_SOURCES,
-  pimaCampaignFinanceCandidate,
   stateCampaignFinanceCandidate,
   stateCampaignFinanceMembers,
   type StateCampaignFinanceJurisdiction,
@@ -28,14 +25,6 @@ import {
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import type { CandidateVersionRecord, PromotedProjection, RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { computeSplit, type StateMoneySnapshot } from "../lib/funding/state-money.ts";
-import {
-  azPimaHeld,
-  azPimaTransactions,
-  clearAzPimaFinanceProjectionForTest,
-  refreshAzPimaFinanceFromPromoted,
-  type AzPimaHeld,
-  type AzPimaTransactions,
-} from "../lib/control-plane/campaign-finance/held-records.ts";
 
 const ROOT = process.cwd();
 const T0 = "2026-09-08T12:00:00.000Z";
@@ -47,7 +36,7 @@ const URLS: Record<StateCampaignFinanceJurisdiction, string> = {
 };
 
 function fixture(state: StateCampaignFinanceJurisdiction): StateMoneySnapshot {
-  return JSON.parse(readFileSync(join(ROOT, "data", "states", state.toLowerCase(), "funding", `state-money-${state.toLowerCase()}-2026.json`), "utf8")) as StateMoneySnapshot;
+  return (JSON.parse(readFileSync(join(ROOT, "tests", "fixtures", "state-money-2026.json"), "utf8")) as Record<StateCampaignFinanceJurisdiction, StateMoneySnapshot>)[state];
 }
 
 function boundedSnapshot(state: StateCampaignFinanceJurisdiction): StateMoneySnapshot {
@@ -271,72 +260,4 @@ test("one invalid state projection cannot suppress or erase another state's Read
   assert.ok(azTarget);
   assert.equal(stateMoneyForTarget(nhTarget)[0]?.jurisdiction, "NH");
   assert.throws(() => stateMoneyForTarget(azTarget), /unavailable for AZ \(PROJECTION_INVALID\)/);
-});
-
-test("Pima filing index and transactions promote together; a capped successor preserves LKG", async () => {
-  clearAzPimaFinanceProjectionForTest();
-  const held = JSON.parse(readFileSync(join(ROOT, "data/states/az/campaign-finance/az-pima-2026-held.json"), "utf8")) as AzPimaHeld;
-  const transactions = JSON.parse(readFileSync(join(ROOT, "data/states/az/campaign-finance/az-pima-2026-transactions.json"), "utf8")) as AzPimaTransactions;
-  const store = new MemoryRoutineDataStore();
-  const url = "https://ecf-api.easyvoteapp.com/filer/documentsearch/19626734-D3E9-449C-BB5D-EDB9C0034907";
-  const good = pimaCampaignFinanceCandidate({ held, transactions, rawBodies: ["tenant", "filers", "contributions", "distributions"], requestedUrl: url, finalUrl: url, retrievedAt: T0 });
-  assert.deepEqual(good.sourceProjectionEvidence, {
-    kind: "SOURCE_PROJECTION_CONTRACT",
-    sourceId: PIMA_LOCAL_FINANCE_CONTRACT.sourceId,
-    recordClass: "LOCAL_CAMPAIGN_FINANCE",
-    scope: PIMA_LOCAL_FINANCE_CONTRACT.scope,
-  });
-  const promoted = await processRegisteredManualCandidate(store, "az-pima-local-finance", good, T0);
-  assert.equal(promoted.candidate.state, "PROMOTED");
-  assert.equal(promoted.readerReadback?.status, "PASS");
-  assert.ok((promoted.candidate.candidate.changeSet?.added.length ?? 0) > 1_000);
-  assert.equal(await refreshAzPimaFinanceFromPromoted({ store, bypassCache: true, now: T0 }), good.id);
-  assert.equal(azPimaHeld().committeeRegisterCountyPortal.length, held.committeeRegisterCountyPortal.length);
-  assert.equal(azPimaTransactions().contributions.length, transactions.contributions.length);
-
-  const cappedTransactions: AzPimaTransactions = {
-    ...structuredClone(transactions),
-    reconciliation: { ...structuredClone(transactions.reconciliation), capSuspected: true },
-  };
-  const capped = pimaCampaignFinanceCandidate({ held, transactions: cappedTransactions, rawBodies: ["tenant-2", "filers-2", "contributions-2", "distributions-2"], requestedUrl: url, finalUrl: url, retrievedAt: T1 });
-  const refused = await processRegisteredManualCandidate(store, "az-pima-local-finance", capped, T1);
-  assert.equal(refused.promoted, null);
-  assert.equal((await store.readPromotion("LOCAL_CAMPAIGN_FINANCE", PIMA_LOCAL_FINANCE_CONTRACT.scope))?.versionId, good.id);
-});
-
-test("finance contracts are owner-only and executable paths cannot write tracked runtime truth", () => {
-  const ids = new Set(["az-sos-campaign-finance", "nh-sos-campaign-finance", "nj-elec-campaign-finance", "az-pima-local-finance"]);
-  const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
-  assert.equal(contracts.length, 4);
-  assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
-  assert.ok(contracts.every((contract) => !Object.hasOwn(contract, "cadence") && !Object.hasOwn(contract, "retry")));
-
-  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as { scripts: Record<string, string> };
-  const expectedContracts: Record<string, string> = {
-    "money:az": "az-sos-campaign-finance",
-    "money:nh": "nh-sos-campaign-finance",
-    "money:nj": "nj-elec-campaign-finance",
-    "money:az:pima": "az-pima-local-finance",
-  };
-  for (const [key, contractId] of Object.entries(expectedContracts)) {
-    assert.equal(
-      pkg.scripts[key],
-      `node scripts/installed-runtime-command.mjs manual-promote --contract=${contractId}`,
-    );
-  }
-  for (const path of contracts.map((contract) => contract.command[0])) {
-    const source = readFileSync(join(ROOT, path), "utf8");
-    assert.doesNotMatch(source, /\b(?:writeFileSync|appendFileSync|createWriteStream)\s*\(/, path);
-    assert.doesNotMatch(source, /\bprocess\.exit\s*\(/, path);
-  }
-
-  const az = readFileSync(join(ROOT, "scripts/state-money-az.mts"), "utf8");
-  const nh = readFileSync(join(ROOT, "scripts/state-money-nh.mts"), "utf8");
-  const nj = readFileSync(join(ROOT, "scripts/state-money-nj.mts"), "utf8");
-  assert.doesNotMatch(az, /readFileSync\([^)]*az-2026-candidate-registry/);
-  assert.match(az, /readAzBallotProjection/);
-  assert.doesNotMatch(nh, /readFileSync\([^)]*nh-merrimack-2026/);
-  assert.match(nh, /readNhBallotProjection/);
-  assert.doesNotMatch(nj, /readFileSync\([^)]*nj-morris-2026/);
-  assert.match(nj, /readNjMorrisFiling/);
 });

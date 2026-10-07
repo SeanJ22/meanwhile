@@ -1,5 +1,5 @@
 /**
- * DB-09 returned hook (admin side): the command center shows the Door Registry and the door.save receipts in plain
+ * The command center shows the Door Registry and the door.save receipts in plain
  * English: counts, shut doors first with why and since when, and the newest changes, never a door's id.
  */
 import assert from "node:assert/strict";

@@ -65,7 +65,7 @@ import {
   legistarOutcomesCandidate,
   type OutcomeTenant,
 } from "../lib/outcomes/data-plane.ts";
-import { readOutcomeProjection } from "../lib/outcomes/store.ts";
+import { readDoorOutcomeProjection } from "../lib/outcomes/store.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
 import { loadOutcomePartitionForDoor } from "../lib/doors/outcome-door-load.ts";
@@ -78,7 +78,7 @@ const DEFAULT_MAX_SITTINGS = 40;
 
 export interface PimaOutcomeIngestArgs {
   readonly slug: string;
-  /** DB-22: the door whose outcomes this run reads; null for Pima's own contract. */
+  /** The door whose outcomes this run reads; null for Pima's own contract. */
   readonly door: string | null;
   readonly bodyId: number | null;
   /** Explicit operator bounds; null takes the rolling routine window. */
@@ -184,7 +184,7 @@ async function currentProjection(store: RoutineDataStore, tenant: OutcomeTenant)
 }> {
   // Pima's own pointer keeps its reader; a door's outcomes are read from the door's own scope.
   const read = tenant.contractId === PIMA_OUTCOME_TENANT.contractId
-    ? await readOutcomeProjection({ store, bypassCache: true })
+    ? await readDoorOutcomeProjection(tenant.scope, { store, bypassCache: true })
     : await readPromotedCivicData<OutcomeSnapshot>(tenant.recordClass, tenant.scope, { store, bypassCache: true });
   if (read.kind === "PROMOTED") return { snapshot: read.value, sourceThrough: read.metadata.sourceThrough };
   if (read.kind === "NOT_RECORDED") return { snapshot: EMPTY, sourceThrough: null };
@@ -197,7 +197,7 @@ export interface PimaOutcomeIngestInput {
   readonly client: LegistarClient;
   readonly args: PimaOutcomeIngestArgs;
   readonly window: OutcomeWindow;
-  /** The tenant whose pointer this run extends; Pima's own unless a door names another (DB-22). */
+  /** The tenant whose pointer this run extends; Pima's own unless a door names another. */
   readonly tenant?: OutcomeTenant;
   /** The observation clock; production reads the wall clock after each read returns. */
   readonly now?: () => string;
@@ -423,7 +423,7 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
 
 async function main(): Promise<void> {
   const args = parsePimaOutcomeIngestArgs(process.argv.slice(2));
-  // DB-22: any other body is read through the door that names it; Pima's own contract serves only Pima.
+  // Any other body is read through the door that names it; Pima's own contract serves only Pima.
   if (args.door === null && args.slug !== "pima") {
     throw new Error("PIMA_OUTCOME_CONTRACT_SCOPE_MISMATCH: another Legistar body is read through its own door (--door).");
   }

@@ -159,10 +159,7 @@ async function acquire(guideStatus = 200) {
 }
 
 function registries(): Record<JurisdictionReferenceState, JurisdictionRegistry> {
-  return Object.fromEntries(["az", "nh", "nj"].map((state) => [
-    state,
-    JSON.parse(readFileSync(join(ROOT, `data/states/${state}/jurisdictions/${state}.json`), "utf8")),
-  ])) as Record<JurisdictionReferenceState, JurisdictionRegistry>;
+  return JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<JurisdictionReferenceState, JurisdictionRegistry>;
 }
 
 function candidate(acquisition: JurisdictionReferenceAcquisitionSuccess) {
@@ -296,10 +293,15 @@ test("C15: a reviewed website correction promotes with the receipts of the pages
   assert.equal(acquired.kind, "ACQUIRED");
   if (acquired.kind !== "ACQUIRED") return;
   const c = WEBSITE_CORRECTIONS.find((x) => x.jurisdictionId === "az:city:city-of-cottonwood")!;
+  const CORRECTED_BEFORE = {
+    id: c.jurisdictionId, stateCode: "AZ", name: "CITY OF COTTONWOOD", govClass: "CITY_OR_TOWN", countyName: "YAVAPAI",
+    enumeratedFrom: "census-govt-units-2022", ownWebAddress: "http://www.ci.cottonwood.az.us", sourceIds: [],
+  } as unknown as Jurisdiction;
   const withRow = (row: (j: Jurisdiction) => Jurisdiction) => {
     const all = registries();
-    const az = all.az as unknown as { jurisdictions: Jurisdiction[] };
-    az.jurisdictions = az.jurisdictions.map((j) => (j.id === c.jurisdictionId ? row(j) : j));
+    const az = all.az as unknown as { jurisdictions: Jurisdiction[]; counts: Record<string, number> };
+    if (!az.jurisdictions.some((j) => j.id === c.jurisdictionId)) az.counts.CITY_OR_TOWN += 1;
+    az.jurisdictions = [...az.jurisdictions.filter((j) => j.id !== c.jurisdictionId), row(CORRECTED_BEFORE)];
     return all;
   };
   const corrected = withRow((j) => ({ ...j, ownWebAddress: c.corrected, ownWebAddressCorrection: websiteCorrectionNote(c, "APPLIED_VERIFIED") }));
@@ -344,10 +346,6 @@ test("the production promoter has no tracked-input or Git-writer fallback", () =
   assert.equal(pkg.scripts["fec:directories"], undefined);
   assert.equal(pkg.scripts["cf:agencies"], undefined);
   assert.equal(pkg.scripts["jurisdictions:enumerate"], undefined);
-  assert.equal(
-    pkg.scripts["jurisdictions:promote"],
-    "node scripts/installed-runtime-command.mjs manual-promote --contract=jurisdiction-operational-reference",
-  );
 
   const command = readFileSync(join(ROOT, "scripts/enumerate-jurisdictions.mts"), "utf8");
   assert.match(command, /acquireJurisdictionReferenceInputs/);
@@ -355,7 +353,7 @@ test("the production promoter has no tracked-input or Git-writer fallback", () =
   assert.doesNotMatch(command, /tests\/fixtures|data\/reference\/census_govt_units_2022/);
   const provider = readFileSync(join(ROOT, "lib/control-plane/scheduler/providers/local-jurisdictions.ts"), "utf8");
   assert.doesNotMatch(provider, /readFileSync|data\/states\/\$?\{?state|jurisdictionRegistryPath/);
-  /* The one accessor (2026-09-25): the promoted reviewed bundle, else a state's promoted registration the runner installed. */
+  /* The one accessor: the promoted reviewed bundle, else a state's promoted registration the runner installed. */
   assert.match(provider, /requiredJurisdictionRegistry/);
   const accessor = readFileSync(join(ROOT, "lib/civic-data/operational-references.ts"), "utf8");
   assert.doesNotMatch(accessor, /readFileSync|node:fs|data\/states/, "the accessor reads no tracked file");

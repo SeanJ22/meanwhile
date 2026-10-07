@@ -1,20 +1,11 @@
 /**
- * Intake protection policy (T08) — thresholds, the submission classifier,
- * and same-origin enforcement, shared by /api/reactions and /api/log.
+ * Intake protection policy: thresholds, the submission classifier, and same-origin enforcement, shared
+ * by /api/reactions and /api/log. Each threshold reads its environment variable at call time, and the
+ * family sits behind `ripcord.rateLimits` (lib/ripcords.ts). Validity checks are not in this family and
+ * are never behind any flag.
  *
- * Everything here is tunable without a code change: each threshold reads
- * its environment variable at call time, and the whole family sits behind
- * `ripcord.rateLimits` (lib/ripcords.ts) so a misfiring protection can be
- * switched off with a config flip. VALIDITY checks — registry membership,
- * enums, length caps — are deliberately NOT in this family and are never
- * behind any flag: they cannot misfire on a legitimate reader, because the
- * real app only offers real targets.
- *
- * The author's standard for every number: the tester reacting as fast as
- * her thumb moves must never hit a limit; a script hits one in its first
- * second. The defaults encode that — a human burst tops out well under
- * 40 taps a minute, a script sends hundreds — and the env vars exist so
- * production traffic can retune them without a deploy cycle through git.
+ * The standard for every number: a person reacting as fast as they can tap never hits a limit; a script
+ * hits one in its first second.
  */
 
 function envInt(name: string, fallback: number): number {
@@ -43,15 +34,9 @@ export interface IntakeLimits {
   /** Server-enforced cap on any string in a log event's detail bag. */
   logDetailValueMaxChars: number;
   /**
-   * The feedback form's own budget (R40, 2026-08-17), counted in the
-   * limiter's separate `feedback-limiter:` digest space so it neither spends
-   * nor is spent by the reaction budget.
-   *
-   * The numbers are shaped by what the surface IS: a person with a lot to
-   * report might send three or four messages in a sitting and would be
-   * appalled to be refused; nobody legitimate sends forty. Past the soft
-   * threshold a message still lands, quarantined — the author decides, and a
-   * genuinely angry reader is never silently dropped.
+   * The feedback form's own budget, counted in the limiter's separate `feedback-limiter:` digest space so
+   * it neither spends nor is spent by the reaction budget. Past the soft threshold a message still lands,
+   * quarantined.
    */
   feedbackPerMinuteHard: number;
   feedbackPerMinuteSoft: number;
@@ -82,10 +67,8 @@ export type SubmissionDisposition =
   | { kind: "REFUSE_DAILY" };
 
 /**
- * Classify one submission against the authoritative per-device counters
- * (lib/db/intake-limiter.ts — counts across every serverless instance,
- * unlike the in-memory windows). Pure, so the mechanism is testable
- * without a database: counts in, disposition out.
+ * Classify one submission against the authoritative per-device counters (lib/db/intake-limiter.ts,
+ * counted across every serverless instance). Pure.
  */
 export function classifySubmission(
   counters: { minuteCount: number; dayCount: number },
@@ -102,12 +85,8 @@ export function classifySubmission(
 }
 
 /**
- * The same classifier against the feedback thresholds (R40).
- *
- * A second function rather than a parameter on the first, because the two
- * paths take their counters from two different digest spaces and mixing the
- * thresholds would be a silent cross-charge — the exact thing the separate
- * space exists to prevent. Pure, so it is testable without a database.
+ * The same classifier against the feedback thresholds. A separate function because the two paths take
+ * their counters from different digest spaces. Pure.
  */
 export function classifyFeedbackSubmission(
   counters: { minuteCount: number; dayCount: number },

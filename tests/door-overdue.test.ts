@@ -5,7 +5,7 @@ import { COLD_CHECK_MINUTES, HOT_CHECK_MINUTES, STANDING_CHECK_MINUTES, checkEve
 import type { DoorRecord } from "../lib/doors/registry.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
-/** DB-31: doors whose last success is older than their check are listed, with the live facts behind each. */
+/** Doors whose last success is older than their check are listed, with the live facts behind each. */
 
 const NOW = "2026-10-04T12:00:00.000Z";
 const minutesAgo = (minutes: number) => new Date(Date.parse(NOW) - minutes * 60_000).toISOString();

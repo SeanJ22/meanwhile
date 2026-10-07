@@ -1,21 +1,6 @@
 /**
- * **A ROW THE OWNER CAN ACT ON: WHAT IT WANTED, WHAT HAPPENED, WHAT NEXT.**
- * (ADM-44, ADM-46, ADM-47 and ADM-48, from the 9.6.26 owner review.)
- *
- * The seeded failures these hold shut:
- *
- *   1  a row that says a public record cannot be had. The owner: *"'Completed.'
- *      What does that mean? Does it mean we're never going to get it? I refuse
- *      to believe that and that's a specific law: that can never be the case."*
- *      Every branch of both story functions must produce a next step, and none
- *      of them may say the record is unobtainable (CLAUDE.md, RULING 248).
- *   2  a machine constant on the face. `UNRESOLVED_INVESTIGATION`,
- *      `BLOCKED_ON_DEPENDENCY`, `SCOUT_EARLY_ABSENCE` and a bare record class
- *      are disclosure detail, never a rendered sentence.
- *   3  a `Completed` attempt beside an unreached document reading as success.
- *   4  a hard-coded capacity sentence. "79 attempts at $0.31" must be computed
- *      from the record and must become a NAMED GAP when nothing was measured.
- *   5  an unexplained zero on the share and the funnel (ADM-46, ADM-47).
+ * Every story branch produces a next step and never says a record is unobtainable; machine constants are
+ * disclosure detail, never a rendered sentence; capacity sentences are computed from the record, or a named gap.
  */
 
 import test from "node:test";
@@ -32,8 +17,6 @@ import {
 import { metricGroupLead, researchDigestRows } from "@/lib/control-plane/research-digest.ts";
 import type { ResearchMetrics } from "@/lib/control-plane/research-metrics.ts";
 import { SCOUT_OUTCOMES } from "@/lib/control-plane/scheduler/scout-result.ts";
-
-/* --------------------------------------------------------------- fixtures */
 
 const SUBJECT = { name: "Atlantic County, New Jersey", retryPhrase: null };
 
@@ -66,10 +49,6 @@ function attempt(over: Partial<AttemptFacts> = {}): AttemptFacts {
 /** Every machine constant that must never appear in a rendered sentence. */
 const MACHINE = /[A-Z][A-Z0-9]*_[A-Z0-9_]+/;
 
-/* ================================================================== *
- * SEEDED FAILURE 1 — a record is never presented as unobtainable
- * ================================================================== */
-
 test("SEEDED: every Scout outcome produces a next step, and none of them says the record cannot be had", () => {
   for (const outcome of SCOUT_OUTCOMES) {
     for (const stoppedBy of ["MODEL", "BOUND"] as const) {
@@ -91,7 +70,7 @@ test("SEEDED: every Scout outcome produces a next step, and none of them says th
 });
 
 test("SEEDED: an attempt that ran to the end while the goal stayed open says so, and still owes the record", () => {
-  // The exact case the owner read: COMPLETED beside a document that was never reached.
+  // COMPLETED beside a document that was never reached.
   const open = workerAttemptStory(attempt({ verdict: "FAILED", workItemState: "OPEN" }), { name: "Work item 6de0185c", retryPhrase: null });
   assert.match(open.happened, /ran to the end of its procedure/);
   assert.match(open.next, /open and in the queue; the next cycle with budget for it picks it up/);
@@ -100,7 +79,7 @@ test("SEEDED: an attempt that ran to the end while the goal stayed open says so,
   const timed = workerAttemptStory(attempt({ workItemState: "OPEN" }), { name: "Work item 6de0185c", retryPhrase: "at 10:15 PM ET" });
   assert.match(timed.next, /; it is due again at 10:15 PM ET\.$/);
   assert.equal((timed.next.match(/due again/g) ?? []).length, 1, "the retry is named once, not twice");
-  // "Work item EA78908 is blocked on a dependency. What the fuck does that mean?"
+  // A dependency block must be explained in plain words.
   const blocked = workerAttemptStory(attempt({ workItemState: "BLOCKED" }), { name: "Work item EA78908", retryPhrase: null });
   assert.match(blocked.next, /waiting on an earlier step to finish before it can move/);
   assert.doesNotMatch(blocked.next, /BLOCKED|dependency/);
@@ -155,10 +134,6 @@ test("the rungs a Scout still owes are named, which is the proof another route e
   assert.doesNotMatch(story.next, /other:/);
 });
 
-/* ================================================================== *
- * SEEDED FAILURE 2 — a record class reads as the thing it is
- * ================================================================== */
-
 test("a record class reads as the record, and an unknown one still reads as words", () => {
   assert.equal(recordClassWords("candidate-enrichment"), "candidate record");
   assert.equal(recordClassWords("campaign-finance"), "campaign finance filings");
@@ -168,10 +143,6 @@ test("a record class reads as the record, and an unknown one still reads as word
   assert.equal(recordClassWords("   "), "public record");
   for (const words of Object.values(RECORD_CLASS_WORDS)) assert.doesNotMatch(words, MACHINE);
 });
-
-/* ================================================================== *
- * SEEDED FAILURE 4 and 5 — the computed leads
- * ================================================================== */
 
 const METRICS: ResearchMetrics = {
   computedAt: "2026-09-06T16:00:00.000Z",
@@ -194,7 +165,7 @@ const METRICS: ResearchMetrics = {
 };
 
 test("SEEDED: the capacity lead is COMPUTED from the record, to the cent, and becomes a named gap when nothing was measured", () => {
-  // The owner's sentence: "the $25 daily limit buys about 79 Scout attempts at roughly $0.31 each."
+  // e.g. "the $25 daily limit buys about 79 Scout attempts at roughly $0.31 each."
   const lead = metricGroupLead(METRICS);
   assert.equal(lead.capacity, "The $25.00 daily budget buys about 79 scout attempts at $0.31 each.");
   // Positive control: it moves with the record rather than being written in.

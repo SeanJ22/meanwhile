@@ -9,7 +9,6 @@ import type { AuditEvidenceBase } from "../audit.ts";
 import { appendTransition, contextFromRepositories, readPipelineStatesWhere, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
 import {
   PROMOTION_PIPELINE_FORMAT_VERSION,
-  type ActivationGateReading,
   type ApprovalBurden,
   type ApprovedRecord,
   type ConfirmedRecord,
@@ -92,7 +91,6 @@ export interface CampaignSiteChainOptions {
   readonly recordRead: (subjectId: string, lead: CampaignSiteLead, read: CampaignSitePageRead) => Promise<ArtifactRecord>;
   /** The vaulted bytes of an artifact as a page read; null when the vault cannot produce them. */
   readonly heldPage: (artifact: ArtifactRecord) => Promise<CampaignSitePageRead | null>;
-  readonly gate: Pick<ActivationGateReading, "promotionEnabled" | "openRecordClasses" | "openFields">;
   readonly now: string;
   /** Distinct lead URLs read in one run at most; the rest stay owed, named. */
   readonly maxReads?: number;

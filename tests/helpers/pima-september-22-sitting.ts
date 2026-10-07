@@ -3,16 +3,13 @@ import { readFileSync } from "node:fs";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../../lib/outcomes/types.ts";
 
 /**
- * The official September 22 record as Pima's Legistar Web API published it on
- * 2026-09-23 (event 1828, item 331773): Resolution 2026-56, the data-center
- * moratorium, approved as amended 3-2. Built on the committed outcome seed's
- * August 11 sitting (legistar:pima:1824), which carries every other field of
- * the tenant's shape. One copy, shared by the topic-timeline and the
- * Ask-gap-observation tests.
+ * The official September 22 record as Pima's Legistar Web API published it
+ * (event 1828, item 331773), built on a held sitting of the same body, which
+ * carries every other field of the tenant's shape.
  */
 export function september22Sitting(): PersistedSittingOutcomes {
-  const seed = JSON.parse(readFileSync("data/states/az/outcomes/legistar-outcomes.json", "utf8")) as OutcomeSnapshot;
-  const template = seed.sittings.find((sitting) => sitting.meetingId === "legistar:pima:1824")!;
+  const seed = JSON.parse(readFileSync("tests/fixtures/legistar-outcome-store/data/outcomes/legistar-outcomes.json", "utf8")) as OutcomeSnapshot;
+  const template = seed.sittings.find((sitting) => sitting.meetingId === "legistar:pima:1848")!;
   const endpoint = "https://webapi.legistar.com/v1/pima/events/1828/eventitems";
   const provenance = { endpoint, sourceOrg: "Pima County Clerk of the Board", readOn: "2026-09-24" };
   return {

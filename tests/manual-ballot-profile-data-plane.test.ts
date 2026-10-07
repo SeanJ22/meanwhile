@@ -413,10 +413,6 @@ test("tracked writers and alternate Reader doors stay retired", () => {
   for (const command of ["acquire:az-sos-candidates", "ballot:az-pima-update", "candidates:fetch", "identity:az", "ship:candidate", "wire:0825", "wire:phones"]) {
     assert.equal(pkg.scripts[command], undefined, command);
   }
-  assert.equal(
-    pkg.scripts["civic-data:promote-manual"],
-    "node scripts/installed-runtime-command.mjs manual-promote",
-  );
 
   for (const path of [
     "lib/ballot/candidate-targets.ts",

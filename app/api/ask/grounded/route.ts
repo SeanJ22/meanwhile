@@ -73,7 +73,6 @@ import {
   contactRecord,
   contactsForBody,
   contactsForDivision,
-  contactsForRepresentatives,
   type AskContact,
 } from "@/lib/ask/contacts";
 import { contactForCandidate } from "@/lib/ask/candidate-contact";
@@ -144,7 +143,7 @@ import { afterResponse } from "@/lib/log/after-response";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { settleRejectedModelAnswer } from "@/lib/ask/length-fallback";
-import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders, readerRepresentatives } from "@/lib/ask/server-sources";
+import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders } from "@/lib/ask/server-sources";
 import { azHeldFilingSubjects, requestedHeldFilings, type HeldFilingSubject } from "@/lib/ask/held-filing-subjects";
 import {
   askAnswer,
@@ -1765,10 +1764,6 @@ export async function POST(request: Request) {
       denominators.meetingsHeldInTheWindow = areaMeetings.inWindow.length;
     }
 
-    /* The reader's own legislators are a fallback when nothing closer exists, never an addition to every answer. */
-    if (subject && contacts.length === 0) {
-      contacts.push(...contactsForRepresentatives(readerRepresentatives(ocdIds)));
-    }
     /* A ballot measure drops the reader-representative fallback (`lib/ask/relevance.ts`); gated before contacts become records so the pack and the panel agree. */
     const shownContacts = gateContactsToSubject(subject, contacts).contacts;
     const rosterGaps = rosterGapEvidenceFor(subject, shownContacts, canonicalSubjectKeys);

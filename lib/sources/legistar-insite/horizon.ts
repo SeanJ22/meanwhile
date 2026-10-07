@@ -1,79 +1,27 @@
 /**
- * **THE UNION IS THE ACCEPTANCE.** (2026-08-28, the correction to MTG-13.)
+ * The union is the acceptance. Routes enumerating one body's future can each carry different subsets
+ * (an empty API horizon beside a full portal calendar), so any rule of the form "ship what the routes
+ * agree on" can ship an empty calendar while every request returns 200. The rule is the opposite:
  *
- * ## The wrong answer this file exists to make impossible
+ * > An instance published by any materially distinct first-party route is owed to the reader. Absence
+ * > from another route is never evidence against it.
  *
- * A prior reading of Pima County's future settled on **three** September
- * sittings, because three is what the routes it happened to ask AGREED on. The
- * three are real, they ship, and they are the regression floor at the bottom of
- * this file's tests. They were never the answer.
+ * `intersectionOfRoutes` exists only so a test can name the forbidden semantics and prove it fails.
  *
- * Measured live on 2026-08-28, over the same body, the same day, one hour:
+ * Identity is `(bodyId, local date, local wall-clock time)` (`sittingKeyFromLocal` in
+ * `lib/sources/event-identity.ts`), because the routes do not share an id space.
  *
- * | route | explicit FUTURE Board sittings |
- * | --- | --- |
- * | `webapi.legistar.com/v1/pima/events` | **0** (latest row 2026-08-25) |
- * | `webapi.legistar.com/v1/pima/EventDates/138?FutureDatesOnly=true` | **0** |
- * | `pima.legistar.com/Calendar.aspx` — "Next Month" | 3 |
- * | `pima.legistar.com/Calendar.aspx` — "This Year" | **14** |
- * | `pima.legistar.com/Feed.ashx` (This Year RSS) | **14** |
- * | `www.pima.gov/2559/…Meeting-Schedule` (the Clerk's own table) | **14** |
- *
- * **The intersection of those six routes is ZERO SITTINGS.** The intersection
- * of the two that anyone had wired is zero as well. Any rule of the form "ship
- * what the routes agree on" ships an empty calendar for a county that has
- * fourteen published meetings, and it does it while every request returns 200.
- *
- * So the rule here is the opposite one, and it is not a preference:
- *
- * > **An instance published by ANY materially distinct first-party route is
- * > owed to the reader. Absence from another route is never evidence against
- * > it.** A route that does not carry a sitting has told us about ITSELF.
- *
- * `intersectionOfRoutes` at the bottom of this file exists solely so a test can
- * name the forbidden semantics and prove it fails. Nothing in the product path
- * calls it.
- *
- * ## Identity, and why it cannot be the vendor's number
- *
- * The routes do not share an id space. The WebAPI calls the 25 August sitting
- * `1825`; the portal grid calls it `1381574`; the Clerk's table numbers nothing
- * at all. Keying on a vendor id publishes one meeting three times.
- *
- * Identity is therefore `(bodyId, local date, local wall-clock time)` —
- * `sittingKeyFromLocal` in `lib/sources/event-identity.ts`, the same key the
- * meeting layer uses, so a union instance and a produced `Meeting` are
- * comparable without a second notion of sameness.
- *
- * ## Every instance is accounted for, as DATA
- *
- * A union instance either reaches the reader or carries an
- * `InstanceDisposition` naming why not and quoting the publisher. `unaccounted`
- * returns the ones that do neither, and it is asserted empty. A comment
- * explaining a gap is not a disposition: nothing reads a comment.
+ * Every union instance either reaches the reader or carries an `InstanceDisposition` naming why not and
+ * quoting the publisher; `unaccounted` returns the ones that do neither, and it is asserted empty.
  */
 import { sittingKeyFromLocal } from "../event-identity.ts";
 
 /**
- * The routes this workstream enumerated, each a materially distinct publisher
- * surface rather than a different query against one.
- *
- * "Materially distinct" is the test: two URLs are one route when one is a
- * filter over the other's dataset, and two routes when they are separately
- * generated records that can disagree. `Calendar.aspx` under "This Month" and
- * under "This Year" is ONE route asked twice. `Calendar.aspx` and the Clerk's
- * own table on `www.pima.gov` are two publishers.
+ * The routes this module enumerates, each a materially distinct publisher surface: two URLs are one route
+ * when one is a filter over the other's dataset, and two routes when they are separately generated
+ * records that can disagree.
  */
-/**
- * The routes, as a VALUE.
- *
- * This was a bare type union until the control plane needed to compute an
- * inherited route floor from it. A union that exists only in the type system
- * cannot be enumerated at runtime, so every consumer wanting "all of them" had
- * to retype the list — and a retyped floor is exactly the forgot-the-API defect
- * wearing a different hat. The array is now the declaration and the type is
- * derived from it, so the two cannot drift apart.
- */
+/** The routes, as a value; the type is derived from it so consumers can enumerate them at runtime. */
 export const FIRST_PARTY_ROUTES = [
   /** `webapi.legistar.com/v1/{client}/events` — the vendor's JSON API. */
   "LEGISTAR_WEBAPI_EVENTS",
@@ -96,20 +44,10 @@ export const FIRST_PARTY_ROUTES = [
 export type FirstPartyRoute = (typeof FIRST_PARTY_ROUTES)[number];
 
 /**
- * What a route's enumeration actually achieved — never inferred from a 200.
- *
- * The five states are five different facts and the product breaks if any two
- * are pooled. `PUBLISHER_STATED_EMPTY` is the only one that licenses a zero:
- * it means the page rendered its grid and said **"No records were found."**
- * `NOT_RETRIEVED` with zero rows is a wall wearing a zero, and `NOT_BUILT` —
- * no adapter reads the route yet, so nothing was asked — is a fact about US
- * that says nothing whatever about the record behind it.
- *
- * `NOT_BUILT` replaced `PERMISSION_DISALLOWED` on 2026-09-25: robots.txt is
- * recorded and blocks nothing since the owner decision of that day, so a
- * route nobody reads is unbuilt, not forbidden. Route observations are never
- * stored (they are dropped at the composite boundary), so no record carries
- * the old member.
+ * What a route's enumeration actually achieved, never inferred from a 200. `PUBLISHER_STATED_EMPTY` is the
+ * only state that licenses a zero (the grid said "No records were found."). `NOT_RETRIEVED` with zero rows
+ * is a wall. `NOT_BUILT` means no adapter reads the route yet: a fact about us, saying nothing about the
+ * record behind it.
  */
 export type EnumerationState =
   | "COMPLETE_AS_OBSERVED"
@@ -261,16 +199,8 @@ export function timelessInstances(observations: RouteObservation[]): RouteInstan
 }
 
 /**
- * **THE FORBIDDEN SEMANTICS, WRITTEN DOWN SO A TEST CAN FAIL IT.**
- *
- * The instances every one of the given routes carries. On Pima's live routes
- * this returns **zero** for a county publishing fourteen meetings, because the
- * WebAPI's future horizon is empty while the portal's runs to December.
- *
- * Nothing in the product path calls this. It is here because a rule that is
- * only ever stated in prose is a rule that comes back: the alternative to
- * naming the wrong answer in code is a later session re-deriving it, and this
- * one already did.
+ * The forbidden semantics, written down so a test can fail it: the instances every given route carries.
+ * Nothing in the product path calls this.
  */
 export function intersectionOfRoutes(
   union: UnionInstance[],
@@ -281,16 +211,8 @@ export function intersectionOfRoutes(
 }
 
 /**
- * Why a union instance is not in front of a reader — or that it is.
- *
- * Every verdict names WHOSE fact it is. `BEYOND_APP_SERVING_HORIZON` is a fact
- * about this application; `CANCELED_BY_PUBLISHER` is a fact about the body.
- * `CLAUDE.md` requires a null to render as its NAMED GAP with whose gap it is,
- * and a verdict that blurred the two would make that impossible upstream.
- *
- * A `ROUTE_DISALLOWED` verdict (robots.txt reads `Disallow: /`) existed until
- * 2026-09-25 and was never given to any instance. Since the owner decision of
- * that day robots.txt blocks nothing, so it is gone.
+ * Why a union instance is not in front of a reader, or that it is. Every verdict names whose fact it is
+ * (`BEYOND_APP_SERVING_HORIZON` is about this application; `CANCELED_BY_PUBLISHER` is about the body).
  */
 export type DispositionVerdict =
   /** It reaches the reader. The only verdict that is not a gap. */
@@ -298,10 +220,8 @@ export type DispositionVerdict =
   /** OURS: collected, keyed, carried — outside the window the app serves. */
   | "BEYOND_APP_SERVING_HORIZON"
   /**
-   * OURS: no reviewed venue record for the room the publisher named (or for a
-   * sitting whose location cell is empty). The sitting itself IS produced, with
-   * its place as a named gap (the venue-gap class, 2026-09-23); what stays open
-   * is the venue record that would put it on the map.
+   * Ours: no reviewed venue record for the room the publisher named (or the location cell is empty). The
+   * sitting itself is produced with its place as a named gap; what stays open is the venue record.
    */
   | "VENUE_NOT_RESOLVED"
   /** OURS: the route published no hour, so it has no canonical identity. */
@@ -311,68 +231,29 @@ export type DispositionVerdict =
   /** THEIRS: the row is a different body than the one this tenant is wired for. */
   | "NOT_THE_WIRED_BODY"
   /**
-   * Theirs and then ours: this record is the SAME PUBLISHER RECORD as one we
-   * produce under a different canonical identity — the county moved the hour
-   * and a thinner route still carries the earlier wording.
-   *
-   * **IT IS A CHECKED PRECONDITION AND NEVER A FALLBACK** (audit finding E,
-   * 2026-08-28). It is legal only when `richerRouteLink` below returns a
-   * concrete link: a produced canonical meeting, reached through an id the two
-   * routes provably share, in a declared id space. An instance that is simply
-   * missing from the meeting-producing route was NOT superseded by anything,
-   * and calling it superseded is the inversion this member exists to make
-   * impossible — see `PUBLISHED_BUT_UNPLACED_BY_US`.
+   * Theirs and then ours: the same publisher record as one we produce under a different canonical identity
+   * (e.g. the hour moved and a thinner route still carries the earlier wording). A checked precondition,
+   * never a fallback: legal only when `richerRouteLink` returns a concrete link. An instance merely missing
+   * from the producing route is `PUBLISHED_BUT_UNPLACED_BY_US`.
    */
   | "SUPERSEDED_BY_RICHER_ROUTE"
   /**
-   * **OURS, AND STILL OPEN.** An explicit first-party route published this
-   * sitting, the meeting-producing route did not carry it, and we have not
-   * placed it.
-   *
-   * This is the honest name for what used to be reported as
-   * `SUPERSEDED_BY_RICHER_ROUTE` by fallback. Nothing richer exists: the
-   * sitting is published, and the gap is entirely in what THIS PROJECT has
-   * acquired. It is an OPEN OBLIGATION — see `openObligations` — and the
-   * disposition carries `missingForPlacement`, naming the exact fields that
-   * would let it be placed.
+   * Ours, and still open: an explicit first-party route published this sitting, the producing route did not
+   * carry it, and we have not placed it. An open obligation (see `openObligations`), carrying
+   * `missingForPlacement`.
    */
   | "PUBLISHED_BUT_UNPLACED_BY_US";
 
 /**
- * **THE ROUTES THIS ADAPTER CAN ACTUALLY TURN INTO A `Meeting`.**
- *
- * One, today: the portal grid is the only route that publishes a room. (A grid
- * row whose room has no reviewed venue is still produced, with its place as a
- * named gap — the venue-gap class, 2026-09-23.) The RSS publishes a title and a
- * publication instant; the Clerk's table
- * publishes a date, an hour and a kind. Both are CORROBORATION — promoting
- * either to an ingestion source is an ask-before under `CLAUDE.md`, and this
- * constant is the single place that fact is checkable rather than commented.
- *
- * It is a list because it will grow, and it is exported because the disposition
- * logic must be able to say "the producing route did not carry it" without
- * hard-coding which route that is.
+ * The routes this adapter can actually turn into a `Meeting`: the portal grid, the only route that
+ * publishes a room. The RSS and the clerk's table are corroboration.
  */
 export const MEETING_PRODUCING_ROUTES: readonly FirstPartyRoute[] = ["INSITE_CALENDAR_GRID"];
 
 /**
- * **THE PROOF THAT SOMETHING RICHER ACTUALLY EXISTS.**
- *
- * Supersession is a claim about TWO records, and it is only true when the
- * second one is real, is richer, and is provably the same record. This returns
- * that proof or null, and `null` means the caller may not use the word.
- *
- * The link this can establish is a SHARED VENDOR ID inside ONE DECLARED ID
- * SPACE — the only cross-route link in this adapter that is a fact rather than
- * a resemblance. The routes do not share id spaces (the WebAPI calls Pima's 25
- * August sitting `1825` and the portal calls it `1381574`), so the space is
- * compared as well as the number and a null space never matches: the Clerk's
- * table numbers nothing, and a synthesized id would look joinable and is not.
- *
- * The superseding record must be one this run PRODUCED, and it must sit under a
- * DIFFERENT canonical identity — same identity would mean the instance itself
- * is in front of a reader, which is `REPRESENTED_IN_READER` and not
- * supersession.
+ * The proof that something richer actually exists. The link is a shared vendor id inside one declared id
+ * space (a null space never matches). The superseding record must be one this run produced, under a
+ * different canonical identity; the same identity is `REPRESENTED_IN_READER`, not supersession.
  */
 export interface RicherRouteLink {
   /** The route whose record we produced — richer because it places the sitting. */
@@ -444,13 +325,8 @@ export interface DispositionEvidence {
 }
 
 /**
- * A disposition is DATA, and it is the only permitted alternative to shipping
- * an instance.
- *
- * `claimAboutContent` is null wherever we are not entitled to a claim — a
- * route nobody read says nothing about what is behind it (RULING 182). It is
- * not optional and not omitted: an absent field reads as an oversight, a
- * present null reads as a decision.
+ * A disposition is data, and the only permitted alternative to shipping an instance. `claimAboutContent`
+ * is null wherever we are not entitled to a claim; present-and-null reads as a decision.
  */
 export interface InstanceDisposition {
   key: string;
@@ -483,20 +359,10 @@ export interface InstanceDisposition {
 }
 
 /**
- * **THE VERDICTS THAT LEAVE WORK OWED.**
- *
- * A disposition is not a closure. `unaccounted` below asks whether an instance
- * was EXPLAINED; this asks whether the explanation still owes a reader
- * something, which is a different question and the one that keeps a hunt
- * running.
- *
- * `REPRESENTED_IN_READER` is discharged. `CANCELED_BY_PUBLISHER` and
- * `NOT_THE_WIRED_BODY` are facts about the publisher and nothing is owed.
- * `BEYOND_APP_SERVING_HORIZON` is collected and keyed — held, not missing.
- * `SUPERSEDED_BY_RICHER_ROUTE` means the sitting IS served, under the
- * identity `supersededBy` names.
- *
- * The rest are ours and are open.
+ * The verdicts that leave work owed. `REPRESENTED_IN_READER` is discharged. `CANCELED_BY_PUBLISHER` and
+ * `NOT_THE_WIRED_BODY` are facts about the publisher. `BEYOND_APP_SERVING_HORIZON` is held, not missing.
+ * `SUPERSEDED_BY_RICHER_ROUTE` means the sitting is served under the identity `supersededBy` names. The
+ * rest are ours and open.
  */
 export const OPEN_OBLIGATION_VERDICTS: readonly DispositionVerdict[] = [
   "PUBLISHED_BUT_UNPLACED_BY_US",
@@ -518,16 +384,8 @@ export function openObligations(dispositions: InstanceDisposition[]): InstanceDi
 }
 
 /**
- * The union instances that neither reached the reader nor carry a disposition.
- *
- * **Asserted empty.** This is the whole acceptance rule expressed as a
- * function: an instance that is neither shipped nor explained is a sitting the
- * product lost quietly, which is the failure mode the September three were.
- *
- * **EMPTY HERE IS NOT "NOTHING IS OWED."** This function is satisfied by ANY
- * disposition, which is exactly how a fallback verdict once turned an unserved
- * sitting into an accounted one. What remains owed is `openObligations` above,
- * and the two are read together or not at all.
+ * The union instances that neither reached the reader nor carry a disposition. Asserted empty. Empty here
+ * is not "nothing is owed": read it together with `openObligations`.
  */
 export function unaccounted(
   union: UnionInstance[],
@@ -541,36 +399,16 @@ export function unaccounted(
 }
 
 /**
- * **A ROUTE NOBODY HAS BUILT YET, WITH ITS ROBOTS.TXT READING KEPT AS EVIDENCE.**
- *
- * `pima.granicus.com/robots.txt` publishes `User-agent: * / Disallow: /` —
- * read 2026-08-28 and again 2026-09-25. Until 2026-09-25 that reading walled
- * the "Live Proceedings" / `ViewPublisher.php` surface off from every rung,
- * and no adapter for it was ever written. Since the owner decision of
- * 2026-09-25 ("Robots.txt alone must not block acquisition") the reading is
- * recorded and blocks nothing, so the true state is ours: the route is not
- * built, and each run's observation of it retrieves nothing.
- *
- * Pima's own site links to it — `www.pima.gov/2312/Clerk-of-the-Board` renders
- * `http://pima.granicus.com/ViewPublisher.php?view_id=3` — so we know it
- * exists and that the county treats it as a publication surface. A research
- * read on 2026-09-25 (through the robots-first research fetch) answered HTTP
- * 200 text/html after a 308 to https, listing upcoming Board of Supervisors
- * sittings, and the page links an RSS feed (`ViewPublisherRSS.php`). That read
- * is why the route is worth building; it is not this adapter's observation,
- * so the run's observation still makes **no claim about what the route
- * holds**: not that it duplicates the portal, not that it adds nothing, not
- * that it is empty.
- *
- * The fourteen instances this workstream owes a reader are all obtainable from
- * routes this adapter already reads, which is why nothing here depends on it.
+ * A route nobody has built yet (a Granicus "Live Proceedings" `ViewPublisher.php` surface the county
+ * links to). Its robots.txt reading is kept as evidence and blocks nothing. No adapter reads it, so each
+ * run's observation makes no claim about what the route holds.
  */
 export const GRANICUS_LIVE_PROCEEDINGS_ROUTE = {
   host: "pima.granicus.com",
   /** The host's robots.txt, as read: recorded evidence, not a block. */
   rule: "User-agent: * / Disallow: /",
   readAt: "2026-08-28",
-  /** Since the owner decision of 2026-09-25 robots.txt blocks no public page. */
+  /** robots.txt blocks no public page. */
   robotsBlocks: false as const,
   /** OURS: no adapter reads this route yet. */
   state: "NOT_BUILT" as const,

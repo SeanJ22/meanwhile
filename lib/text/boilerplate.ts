@@ -1,48 +1,17 @@
 /**
- * **Template chrome is not what a candidate said.** (F01-continued item 11,
- * 2026-08-19 — the author's RULING 9 and RULING 10.)
- *
- * ## What went wrong
- *
- * Analilia Mejia's card credited her with "health care and prescription
- * costs" on the strength of this:
- *
- * > …ess Release For Immediate Release: August 6, 2026 Contact: Beth
- * > Wiesinger | NJ11AMPress@Mail.House.Gov Read More Rep. Mejia and Rep.
- * > Dingell Sound Alarm on GOP Medicaid Cuts Threatening Healthcare Access
- * > For Millions August 4, 2026 Press Release For Immediate Release: August
- * > 4, 2026 Contact: Beth Wiesinger | NJ11AMPress@Mail.H…
- *
- * That is a press-release index rail at the foot of a page — a list of links
- * — and it also begins mid-word.
- *
- * ## Why it is a neutrality defect and not a formatting one
- *
- * A candidate whose site carries a "Read More" rail gets credited with issues
- * they never addressed, while a candidate on a simpler site shows "mentions 0
- * of them". That is an information asymmetry **the product manufactures
- * itself**, inside a live contest, and it is exactly what the equal-effort
- * rule exists to catch: no change may leave one candidate better rendered
- * than another because of what their website's software happens to be.
- *
- * It also degrades the thing being sold. An issue-mention signal that is
- * partly reading CMS templates is measuring website software alongside
- * candidate speech.
- *
- * ## Two independent means, and both are applied
+ * Template chrome is not what a candidate said. A press-release rail or a
+ * "Read More" list would credit a candidate with issues by virtue of their
+ * website software, an asymmetry the product would manufacture inside a live
+ * contest. Three independent means are applied:
  *
  * 1. **Structural** — `stripChromeHtml` removes `nav`, `header`, `footer`,
  *    `aside` and anything a role or class marks as navigation, a related-links
- *    rail or an index. Runs on every site regardless of how many pages of it
- *    are held.
+ *    rail or an index.
  * 2. **Repetition** — `repeatedBlocks` finds text appearing on three or more
- *    held pages of the SAME site. Where fewer than three pages of a site are
- *    held the test cannot run, and the caller must say how many sites that
- *    was rather than letting structural exclusion quietly stand alone.
- *
- * And a third that is neither, because both of the above can be defeated by a
- * rail that lives inside `<main>` with no marking at all: `looksLikeChrome`
- * reads the PASSAGE and asks whether it is a list rather than a sentence.
+ *    held pages of the SAME site. With fewer pages held the test cannot run,
+ *    and the caller must say so.
+ * 3. **Passage shape** — `looksLikeChrome` asks whether a passage is a list
+ *    rather than a sentence, for rails inside `<main>` with no marking.
  */
 
 /* ─────────────────────────── 1. structural ──────────────────────────── */
@@ -51,12 +20,8 @@
 const CHROME_TAGS = ["nav", "header", "footer", "aside"] as const;
 
 /**
- * Roles and class/id fragments that mark a container as chrome.
- *
- * Deliberately a list rather than a cleverness: a reviewer can read it and
- * say whether it is right, and anything it misses is caught by
- * `looksLikeChrome` at the passage level rather than by a heuristic nobody
- * can audit.
+ * Roles and class/id fragments that mark a container as chrome: a readable
+ * list; anything it misses is caught by `looksLikeChrome`.
  */
 const CHROME_MARKERS = [
   "navigation",
@@ -89,20 +54,10 @@ const CHROME_MARKERS = [
 ];
 
 /**
- * **Markers match WHOLE class tokens, never substrings** — and the reason is a
- * measurement, not a preference.
- *
- * The first version matched anywhere inside the attribute, so `menu` hit 263
- * containers on `azleg.gov` (a WordPress theme whose entire layout is built
- * from `*menu*` classes) and `widget` hit 33. The page went from 7,652
- * extracted characters to 25 — the strip eating the document instead of its
- * chrome, which is the SAME asymmetry as under-stripping wearing the other
- * face: a candidate whose site happens to use those class names would render
- * as having said nothing.
- *
- * So: the attribute is split into tokens and a token must EQUAL a marker, or
- * be a marker followed by a separator (`nav__list`, `sidebar-primary`). A
- * token that merely CONTAINS one (`submenu`, `widget-area`) does not match.
+ * Markers match WHOLE class tokens, never substrings: substring matching let
+ * `menu` strip entire theme layouts. A token must EQUAL a marker or be a marker
+ * followed by a separator (`nav__list`, `sidebar-primary`); `submenu` and
+ * `widget-area` do not match.
  */
 const MARKERS = new Set(CHROME_MARKERS);
 function hasChromeMarker(openingTag: string): boolean {
@@ -120,11 +75,9 @@ function hasChromeMarker(openingTag: string): boolean {
 }
 
 /**
- * Remove one element and its contents wherever the opening tag matches.
- *
- * Written as a scanner rather than a regex because nesting is real — a
- * `<footer>` inside a `<footer>` closes the wrong one under a lazy match, and
- * a greedy one eats the rest of the page. It counts depth.
+ * Remove one element and its contents wherever the opening tag matches. A
+ * depth-counting scanner, because nested tags defeat both lazy and greedy
+ * regexes.
  */
 function dropElement(html: string, tag: string, requireMarker: boolean): string {
   const open = new RegExp(`<${tag}\\b[^>]*>`, "gi");
@@ -159,11 +112,9 @@ function dropElement(html: string, tag: string, requireMarker: boolean): string 
 }
 
 /**
- * The page with its template chrome removed.
- *
- * Order matters: scripts and styles first (their contents can contain markup
- * that confuses a tag scanner), then the chrome tags, then any `div`/`section`/
- * `ul` carrying a chrome marker.
+ * The page with its template chrome removed. Scripts and styles go first
+ * (their contents can confuse a tag scanner), then chrome tags, then any
+ * `div`/`section`/`ul` carrying a chrome marker.
  */
 export function stripChromeHtml(html: string): string {
   let out = html
@@ -184,16 +135,9 @@ function fingerprint(block: string): string {
 }
 
 /**
- * Blocks appearing on `minPages` or more pages of the same site.
- *
- * Returns fingerprints, not the original text: the caller matches candidate
- * passages against these, and matching on the display form would miss a block
- * that differs only in a date or a punctuation mark.
- *
- * **It reports whether it could run.** With fewer than `minPages` pages held,
- * the test is not a zero result — it is an unrun test, and a caller that
- * cannot tell those apart will report structural exclusion as though both had
- * been applied.
+ * Blocks appearing on `minPages` or more pages of the same site, as
+ * fingerprints (so a block differing only in a date still matches). It reports
+ * whether it could run: too few pages is an unrun test, not a zero result.
  */
 export function repeatedBlocks(
   pageTexts: readonly string[],
@@ -219,13 +163,8 @@ export function repeatedBlocks(
 /* ──────────────────── 3. the passage-level reading ──────────────────── */
 
 /**
- * Signals that a passage is a LIST rather than a statement.
- *
- * Each is a fact about shape, never about content: a press index repeats
- * "Read More", a release header repeats "For Immediate Release", a contact bar
- * carries an email address and a name and nothing else, and a rail carries
- * several dates in a row. None of them is an opinion about what the candidate
- * believes.
+ * Signals that a passage is a LIST rather than a statement. Each is a fact
+ * about shape, never about content.
  */
 const RAIL_SIGNALS: { name: string; test: (p: string) => boolean }[] = [
   { name: "read-more rail", test: (p) => /\bread more\b/i.test(p) },
@@ -261,10 +200,7 @@ const RAIL_SIGNALS: { name: string; test: (p: string) => boolean }[] = [
 
 /**
  * Whether this passage is template chrome rather than the subject's words.
- *
- * Returns the SIGNAL that fired, so a sweep can report what it excluded and
- * why rather than a bare count — an exclusion nobody can inspect is a filter
- * that silently decides what a candidate said.
+ * Returns the signal that fired, so every exclusion is inspectable.
  */
 export function chromeSignal(passage: string): string | null {
   for (const signal of RAIL_SIGNALS) {
@@ -280,20 +216,8 @@ export function looksLikeChrome(passage: string): boolean {
 /* ─────────────────── 4. the shared truncation helper ────────────────── */
 
 /**
- * **RULING 10: no reader-facing quotation may begin or end mid-word.**
- *
- * The defect was `haystack.slice(at - 160, at + 160)`, which cuts wherever the
- * arithmetic lands — "Press Release" became "…ess Release". The ellipsis also
- * sat flush against the fragment, so the mark and the mutilation arrived
- * together and neither explained the other.
- *
- * This snaps both ends OUT to the nearest whitespace, so a quote can only ever
- * grow to a word boundary and never shrink into one, and puts the ellipsis
- * outside the word with a space.
- *
- * Fixed HERE rather than at the call site, deliberately: a truncation rule
- * enforced by each caller remembering it is a rule that holds until the next
- * caller.
+ * No reader-facing quotation may begin or end mid-word. Both ends snap OUT to
+ * the nearest whitespace, and the ellipsis sits outside the word with a space.
  */
 export function excerptAround(
   text: string,

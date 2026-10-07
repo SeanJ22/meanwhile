@@ -1,10 +1,6 @@
 /**
- * The pointers the Reader combines beside Pima's and Mesa's (DB-22): one per door that collects outcomes.
- *
- * A leaf on purpose. The Reader's outcome store is bundled into request routes with a tight trace ceiling, so it must
- * not import the modules that build door contracts; the runner side (`lib/civic-data/outcome-partitions.ts`) fills this
- * list when a pass reads the registry's doors, and the store reads it. Empty until then, so a process that never read
- * the doors combines Pima and Mesa exactly as before.
+ * The door pointers the Reader combines, one per door that collects outcomes. A leaf: the outcome store is bundled
+ * into request routes, so it must not import the modules that build door contracts; the runner fills this list.
  */
 export interface DoorOutcomePointer {
   readonly contractId: string;

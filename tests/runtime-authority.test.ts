@@ -130,14 +130,6 @@ test("retired importer capability is refused at the raw environment parser", () 
   assert.match(issue(runtimeAuthorityEnvelope(retired)) ?? "", /absent or malformed/);
 });
 
-/*
- * 2026-09-25T23:01Z: the registration-nc, -nd and -oh Reader repair children
- * were refused as "runtime checkout facts are unreadable" and passed the pass
- * before and after on the same code. The runtime checkout is a worktree of the
- * development repository, and a read that opens the shared .git/config while
- * an agent's branch command rewrites it exits 128. These are the exact Git
- * words from a controlled reproduction on the runner host.
- */
 const CONFIG_RACE = Object.assign(new Error("Command failed: git status --porcelain=v1 --untracked-files=all"), {
   status: 128,
   stderr: "warning: unable to access 'C:/Users/seanj/dev/we-the-people/.git/config': Permission denied\n" +

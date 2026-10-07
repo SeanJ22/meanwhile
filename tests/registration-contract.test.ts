@@ -25,16 +25,10 @@ import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 
 /**
- * **EVERY STATE REGISTERS FROM DATA, THROUGH THE ONE DOOR, AND NEVER OVER THE
- * REVIEWED REGISTRY.** (2026-09-23; `lib/registration/`.)
- *
- * Sean's direction: every state trackable without a code change, kept current
- * by the runner. These pin that there is one registration contract per state
- * in the FIPS table; that a state's candidate promotes through the ordinary
- * engine and reads back through its typed reader; that an unchanged month
- * confirms UNCHANGED without a new candidate (§0/§5/§7 and Sean's S6 instruction);
- * that source holdings survive reviewed-registry changes while reviewed
- * records win in composition; and that changed Census bytes are refused.
+ * Every state registers from data through one contract per FIPS state: its candidate promotes through the
+ * ordinary engine and reads back through its typed reader; an unchanged month confirms UNCHANGED without a
+ * new candidate; source holdings survive reviewed-registry changes while reviewed records win in
+ * composition; and changed Census bytes are refused.
  */
 
 const ROOT = join(import.meta.dirname, "..");
@@ -104,7 +98,7 @@ test("a state's registration promotes through the engine, reads back through its
   const later = { ...RECEIPT, retrievedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString() };
   const second = registrationCandidate({ target, reference, receipt: later, reviewed });
   const again = await processRegisteredRoutineCandidate(store, target.contractId, second, later.retrievedAt);
-  // §0/§5/§7: Sean's S6 instruction retires storing unchanged payloads anew.
+  // Unchanged payloads are not stored anew.
   assert.equal(again.promoted?.versionId, first.id);
   assert.equal(again.confirmed?.recheck.changeSet?.outcome, "UNCHANGED", "the same Census bytes, reference and reviewed registry change nothing");
   assert.equal(await store.readCandidate(second.id), null, "the recheck is not a new stored candidate");

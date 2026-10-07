@@ -1,4 +1,4 @@
-/** DP-02: a shut door goes to a detective, and its plain re-read keeps running, paid lane open or closed. */
+/** A shut door goes to a detective, and its plain re-read keeps running, paid lane open or closed. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

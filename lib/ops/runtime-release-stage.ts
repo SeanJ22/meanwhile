@@ -1,12 +1,6 @@
 /**
- * Install a deployed release into its own checkout while the running one keeps
- * admitting work (DB-48). Which checkout children start from is switched in
- * the runner (DB-53, lib/ops/runtime-release-switch.ts). When the staged checkout is ready, the existing
- * boundary switch finds the package store already warm, so the drained window
- * shrinks to the switch itself.
- *
- * The old drain-first path stays behind WTP_RELEASE_DRAIN_FIRST=1 in the
- * runner's environment file until the staged path is verified live.
+ * Install a deployed release into its own checkout while the running one keeps admitting work, so the drained window
+ * shrinks to the switch itself. The drain-first path stays behind WTP_RELEASE_DRAIN_FIRST=1.
  */
 
 import { spawn } from "node:child_process";
@@ -98,7 +92,7 @@ export function stagedReleaseIsReady(root: string, targetSha: string): boolean {
 
 /**
  * Remove staged checkouts for any other target; each is a registered Git
- * worktree. `keep` names checkouts children may still be running from (DB-53).
+ * worktree. `keep` names checkouts children may still be running from.
  * Host state a child left in one is carried back to the running checkout first.
  */
 async function removeOtherStagedCheckouts(root: string, keep: readonly string[], run: AsyncRunCommand): Promise<void> {
@@ -165,7 +159,7 @@ export async function stageRuntimeRelease(input: {
   if (head.status !== 0 || head.stdout.trim().toLowerCase() !== targetSha) return fail("STAGED_CHECKOUT_EXACT_HEAD_FAILED", "staged checkout did not read back at the exact deployed target");
   const dirty = await run("git", ["status", "--porcelain=v1", "--untracked-files=all"], { cwd: directory, timeoutMs: GIT_TIMEOUT_MS });
   if (dirty.status !== 0 || dirty.stdout.trim() !== "") return fail("STAGED_CHECKOUT_DIRTY_AFTER_INSTALL", "frozen installation did not leave the staged checkout clean");
-  // DB-53: a child started from this checkout must see the running checkout's host state.
+  // A child started from this checkout must see the running checkout's host state.
   const linked = await linkRuntimeState({ root: input.root, directory, run });
   if ("failed" in linked) return fail("STAGED_STATE_LINK_FAILED", linked.failed);
   return record("READY", null, `release ${targetSha} is installed in its own checkout; the running one kept admitting work`);

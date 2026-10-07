@@ -19,22 +19,11 @@ import {
 } from "../scripts/ingest.ts";
 
 /**
- * **"LATEST" MEANS LATEST, AND A LINK NEVER READ IS READ FIRST.** (2026-09-24.)
- *
- * Two defects in the ingest's agenda pass, both measured in production on
- * 2026-09-24:
- * - Sunnyside 167 and 174 each stored the same words again on every run from
- *   03:25Z, because their held rows were interleaved out of read order and the
- *   store compares a new read with the LAST row by position.
- * - Tucson Unified's Board Actions PDFs for sittings 498, 493, 492, 491, 485
- *   and 484 were never read: those sittings held versions from their old
- *   portal links, so they ranked as held, while seven unlinked sittings spent
- *   seven of the eight reads on the board's notice page, which is refused as a
- *   landing page every time and so never becomes held.
- *
- * The held rows are recorded from production (tests/fixtures/diligent/
- * susd-167-held-rows.json). The Tucson Unified links, starts and held document
- * URLs are production's, recorded the same day. No live call is made.
+ * "Latest" means latest, and a link never read is read first:
+ * - held rows are compared in read order, so re-reading the same words stores nothing new;
+ * - a sitting holding versions only from an old link does not outrank one never read, and a notice
+ *   page shared by several sittings is read once.
+ * Held rows are recorded in tests/fixtures/diligent/susd-167-held-rows.json. No live call is made.
  */
 
 const realFetch = globalThis.fetch;
@@ -184,7 +173,7 @@ test("read order is retrievedAt, then id, whatever order the rows arrive in", ()
   assert.deepEqual(inRetrievalOrder([...rows].reverse()).map(({ id }) => id), ["m@z", "m@b", "m@a", "m@c"]);
 });
 
-// ── Tucson Unified, 2026-09-24 ─────────────────────────────────────────────
+// ── one board, linked and unlinked sittings ───────────────────────────────
 const NOTICE = "https://govboard.tusd1.org/";
 const PORTAL = "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=";
 const ACTIONS = "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/";
@@ -197,8 +186,7 @@ const boardActions: readonly [string, string, string][] = [
   ["diligent:tusd1:485", "2026-07-28T16:30:00-07:00", `${ACTIONS}07-28-2026.pdf`],
   ["diligent:tusd1:484", "2026-07-14T16:30:00-07:00", `${ACTIONS}07-14-2026R(1).pdf`],
 ];
-// Unlinked scheduled sittings. Production reaches the board's notice page
-// through the wiring's `noticeUrl`; the link is stated here directly.
+// Unlinked scheduled sittings, given the board's notice page (the wiring's `noticeUrl`) directly.
 const noticeOnly: readonly [string, string][] = [
   ["diligent:tusd1:503", "2026-09-28T18:15:00-07:00"],
   ["diligent:tusd1:505", "2026-09-30T16:00:00-07:00"],
@@ -289,8 +277,7 @@ test("a vendor-host link read through its portal page ranks as read once the sit
   store.append(version(pima.id, PORTAL_AGENDA, "1. Call to order. 2. Minutes.", "2026-09-24T11:14:00.000Z", PIMA));
   assert.deepEqual(agendaRetrievalOrder([pima, unread], Date.parse(NOW), store).map(({ id }) => id),
     ["legistar:pima:1829", "legistar:pima:1828"], "a portal-routed sitting holding its portal agenda does not rank as unread");
-  // Since 2026-09-25 the vendor's own file is read when the portal falls short;
-  // a sitting holding that file has been read too.
+  // A sitting holding the vendor's own file has been read too.
   const vendorHeld = new AgendaDocumentStore();
   vendorHeld.append(version(pima.id, API, "1. Call to order. 2. Minutes.", "2026-09-25T11:14:00.000Z", PIMA));
   assert.deepEqual(agendaRetrievalOrder([pima, unread], Date.parse(NOW), vendorHeld).map(({ id }) => id),

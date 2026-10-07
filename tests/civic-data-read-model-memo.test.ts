@@ -1,22 +1,3 @@
-/**
- * **The promotion proof is memoised per immutable versionId (RULING 288, made
- * in-process) — 2026-09-14.**
- *
- * A dense reader read (meetings: 83 promoted partitions) re-proved every
- * partition and re-hauled every candidate envelope on each cache-miss — the
- * 5.7 s / 13.4 s cold `/api/meetings` the owner saw. Because a promoted version
- * is immutable, a version proven GOOD once is GOOD for the instance's life, so
- * the read model now attests rather than re-runs: the pointer is still read
- * fresh every time (freshness is preserved), but a version already proven is
- * served without re-fetching its candidate or re-running the ~10 canonical
- * passes + two sha256 of the proof.
- *
- * These guards hold that it (a) proves once then attests, (b) NEVER masks a
- * pointer that has moved to a new version, and (c) fetches no candidate envelope
- * at all on the steady-state read. The store is a spy so the reads are counted;
- * each test clears the instance memo so a proven version does not leak between
- * scenarios (that leak, deliberately, is exactly what the memo does in life).
- */
 import assert from "node:assert/strict";
 import { beforeEach, test } from "node:test";
 
@@ -42,7 +23,6 @@ interface Version {
   candidate: CandidateVersionRecord;
 }
 
-/** A fully proof-valid (pointer, candidate) pair for one version. */
 function version(scope: string, versionId: string, payload: unknown): Version {
   const payloadHash = normalizedHash(payload);
   const receipt: ValidationReceipt = {
@@ -122,30 +102,18 @@ interface SpyCounts {
   readPromotion: number;
   readCandidate: number;
   readPromotions: number;
-  /** One entry per `readPromotions` call, each the scopes it was asked for. */
   readPromotionScopes: string[][];
-  /** One entry per `readCandidates` call, each the versionIds it was asked for. */
   readCandidates: string[][];
   readPromotionIdentity: number;
-  /** One entry per `readPromotionIdentities` call, each the scopes it was asked for. */
   readPromotionIdentities: string[][];
 }
 
-/**
- * A spy store over a MUTABLE pointer map (so a test can advance a pointer) and a
- * cumulative version→candidate map (old versions remain fetchable). Counts every
- * read so a test can prove which the memo skipped.
- */
 function spyStore(
   pointers: Map<string, Version>,
   options: {
-    /** Expose the identity-only pointer reads (every production store has them). */
     readonly identity?: boolean;
-    /** Make the batch identity read fail. */
     readonly identitiesFail?: boolean;
-    /** Hold every pointer read until this settles (to overlap concurrent readers). */
     readonly gate?: Promise<void>;
-    /** Fail this many pointer reads before answering. */
     readonly failFirstReads?: number;
   } = {},
 ) {
@@ -206,7 +174,6 @@ function spyStore(
         }
       : {}),
   };
-  /** Advance a scope's pointer to a new version, keeping the old fetchable. */
   const advance = (scope: string, next: Version) => {
     record(next);
     pointers.set(scope, next);
@@ -278,8 +245,6 @@ test("the batch read fetches candidate envelopes only for versions not yet prove
 
   const second = await readPromotedCivicDataBatch(CLASS, ["scope-a", "scope-b"], { store });
   assert.deepEqual(second.map((r) => r.kind), ["PROMOTED", "PROMOTED"]);
-  // The pointers are re-read (freshness) but NO candidate envelope is hauled:
-  // both versions are attested. This is the steady-state meetings read.
   assert.equal(counts.readPromotions, 2, "each batch read re-reads the pointers");
   assert.equal(counts.readCandidates.length, 1, "no envelope is hauled on the steady-state read");
 });
@@ -301,14 +266,6 @@ test("the batch read hauls only the moved partition's envelope when one pointer 
   assert.equal(b.kind, "PROMOTED");
   if (b.kind === "PROMOTED") assert.equal(b.value.answer, 3);
 });
-
-/*
- * **Version before contents (2026-09-23).** A promotion's payload is immutable
- * per version, so once this store has proved a pointer, a later read asks only
- * which version the pointer names and re-serves the proof when it has not
- * moved. Every whole payload used to be read again each time a scope's 30 s
- * cache expired, to learn that nothing had changed.
- */
 
 test("an unmoved pointer is served from this store's proof after asking only its identity", async () => {
   const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
@@ -431,12 +388,6 @@ test("a bypassCache batch read never asks identities", async () => {
   assert.deepEqual(counts.readPromotionIdentities, []);
   assert.equal(counts.readPromotions, 2);
 });
-
-/*
- * **One read per cold scope, however many callers ask at once (2026-09-23).**
- * A render asks for the same scope from several places; on a cold process each
- * caller used to download the whole scope itself.
- */
 
 function opened(): { gate: Promise<void>; open: () => void } {
   let open: () => void = () => undefined;

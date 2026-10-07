@@ -1,11 +1,6 @@
 /**
- * **MW-034 — OPUS IS THE CEILING, NEVER FABLE.** (owner rule, 2026-09-21.)
- *
- * The routing ladder tops out at the frontier class by construction; this makes
- * that a GUARD rather than a happy accident. The load-bearing test is the
- * POSITIVE CONTROL: a planted map that points a class at a Fable, at an unrated
- * model, or above Opus MUST throw — a guard nobody has seen fire is a guard
- * nobody has tested.
+ * Opus is the model ceiling, never Fable. The positive control: a planted map that points a class at a Fable, an
+ * unrated model, or above Opus must throw.
  */
 
 import assert from "node:assert/strict";

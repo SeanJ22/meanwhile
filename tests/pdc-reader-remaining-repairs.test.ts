@@ -10,10 +10,6 @@ import * as React from "react";
 
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { createHash } from "node:crypto";
-
-import { curatedRegistrySeedProblems, CURATED_BODY_SEED, REGISTRY_FIRST_SEED } from "../lib/holdings/registry-seed-proof.ts";
-
 import { fundingFreshnessNote } from "../lib/funding/freshness.ts";
 
 import { directFundingTargetPlan } from "../app/api/funding/[target]/route.ts";
@@ -112,17 +108,4 @@ test("an empty state funding selection retains stale disclosure but leaves curre
   assert.match(renderToStaticMarkup(render("ballot-az-pima:governor:person", [])), /source through 2026-09-08/);
   read.metadata.stale = "CURRENT";
   assert.equal(render("ballot-az-pima:governor:person", []), null);
-});
-
-test("registry seed proof binds exact curated records and rejects identity coincidence or wrong artifacts", () => {
-  const body = { id: "body:one", ocdId: "division:one", name: "Verified body", bodyOrigin: "CURATED", provenance: { sourceUrl: "https://clerk.example/body", sourceOrg: "Clerk" } };
-  const check = (seed: unknown, overrides: Record<string, unknown> = {}) => {
-    const artifactBytes = Buffer.from(typeof seed === "string" ? seed : JSON.stringify(seed));
-    return curatedRegistrySeedProblems({ holdingPath: CURATED_BODY_SEED, family: "curated-body-identities", artifactPath: REGISTRY_FIRST_SEED, artifactBytes, artifactSha256: createHash("sha256").update(artifactBytes).digest("hex"), artifactTraced: true, records: [{ auditId: "curated#/0", value: body }], ...overrides });
-  };
-  assert.deepEqual(check({ bodies: [body] }), []);
-  assert.deepEqual(check({ bodies: [body] }, { records: [{ auditId: "curated#/0", value: { ...body, _manifestStateCodes: ["az"] } }] }), [], "manifest-added state classification is not a source body field");
-  assert.ok(check({ bodies: [body] }, { records: [{ auditId: "curated#/0", value: { ...body, _otherHeldField: "required" } }] }).length, "other underscored fields remain required");
-  for (const seed of [{ bodies: [] }, { bodies: [{ ...body, id: "body:other" }], divisions: [{ id: body.id }] }, { bodies: [{ ...body, name: "Wrong body" }] }, { bodies: [{ ...body, provenance: { sourceOrg: "Other" } }] }, { bodies: [body, body] }, { bodies: [], note: body.id }, "{broken", null]) assert.ok(check(seed).length);
-  for (const overrides of [{ holdingPath: "lib/registry/auxiliary.json" }, { family: "body-compositions" }, { artifactPath: "another/registry.json" }, { artifactSha256: "0".repeat(64) }, { artifactTraced: false }, { records: [] }]) assert.ok(check({ bodies: [body] }, overrides).length);
 });

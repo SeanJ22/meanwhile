@@ -1,12 +1,4 @@
-/**
- * **WHICH PLACES A NEW DEPLOY WARMS.** (FE-03.)
- *
- * One ZIP per published county, read from the reader edge manifest, so a place
- * the runner has just published is warmed with the first deploy after it and no
- * list in code needs a new line. Pure: the caller supplies the manifest scopes,
- * the lowest ZIP per division and the ZIP centroid, so it is testable without
- * a network or the edge.
- */
+/** Which places a new deploy warms: one ZIP per published county, from the reader edge manifest. Pure. */
 
 export interface WarmPlace {
   readonly zip: string;

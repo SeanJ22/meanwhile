@@ -1,80 +1,27 @@
 /**
- * **ARIZONA STATE CAMPAIGN MONEY — the Secretary of State's own portal.**
- * (Session C2, 2026-08-31. RULING 205, RULING 206, RULING 207; filings never sold, Sean 2026-10-01.)
+ * Arizona state campaign money, from the Secretary of State's own portal (`seethemoney.az.gov`) and
+ * FTP (`ftp://ftp.azsos.gov/`): the published record for statewide and legislative offices, for which
+ * A.R.S. § 16-928 makes the Secretary of State the filing officer. Filings are never sold.
  *
- * The route portfolio for `seethemoney.az.gov` and `ftp://ftp.azsos.gov/`,
- * which together are the Arizona Secretary of State's published campaign
- * finance record for statewide and legislative offices — the offices A.R.S.
- * § 16-928 makes the Secretary of State the filing officer for, quoted in
- * `data/campaign-finance/filing-regimes.json`.
- *
- * ## THE VENDOR IS NOT THE RECORD, AND ONE ROUTE IS NOT THE PORTFOLIO
- *
- * RULING 206 and RULING 207. There are FOUR materially distinct
- * representations here and each carries facts the others do not:
+ * Four distinct representations, each carrying facts the others do not; a 200 from one retires none of
+ * the others:
  *
  * | Route | Carries what nothing else does |
  * | --- | --- |
  * | `GetNEWTableData` | the per-office, per-party breakdown of a committee's cycle activity |
- * | `GetNEWDetailedTableData` | the ITEMISED transactions — the only independent statement of a total |
+ * | `GetNEWDetailedTableData` | the itemised transactions, the only independent statement of a total |
  * | `GetDetailedInformation` | the committee's filed officers, address, office sought and status |
- * | `ftp://ftp.azsos.gov/cfsdata2/` | the whole 8,829-row committee REGISTER with organization and termination dates, and the filing CALENDAR |
+ * | `ftp://ftp.azsos.gov/cfsdata2/` | the whole committee register with organization and termination dates, and the filing calendar |
  *
- * A 200 from any one of them retires none of the others. The register in
- * particular is what separates a candidate's live 2026 committee from a
- * terminated committee for a different election, and no portal endpoint states
- * that.
+ * Both table endpoints are server-side DataTables actions: filters ride in the query string and the POST
+ * body must include the `columns[N][data]` array. A malformed body answers HTTP 200 with an empty string.
+ * `GetNEWDetailedTableData` also needs `entityId`, or it answers `recordsTotal: 0`.
  *
- * ## THE REQUEST SHAPE, WHICH IS THE PART NOBODY COULD GUESS
+ * The portal's default view (`IsLessActive=false`) hides most entities, so the universe walked is the
+ * union of the default, `IsLessActive=true` and `ShowOfficeHolder=true` queries.
  *
- * Both table endpoints are **server-side DataTables actions**: the filters ride
- * in the QUERY STRING and the POST body must be the DataTables form encoding
- * INCLUDING its `columns[N][data]` array, because that array is the projection
- * the action builds its result from. A guessed body answers HTTP 200 with a
- * two-byte empty string, which is a statement about the request and never about
- * Arizona's records (RULING 100).
- *
- * **`GetNEWDetailedTableData` needs one parameter more than the summary does,
- * and its absence is silent.** Without `entityId` it answers HTTP 200 with
- * `recordsTotal: 0` — a well-formed, entirely empty, entirely wrong answer.
- * `Name=1~<id>` alone is NOT enough; `entityId=<id>` is the load-bearing one.
- * That is why `detailQuery` refuses to build a URL without it rather than
- * letting a caller receive a zero-row extraction and read it as an absence.
- *
- * ## WHAT THE FILTER DEFAULTS HIDE, AND WHY THAT MATTERS MORE THAN THE SHAPE
- *
- * The portal's default view is `IsLessActive=false`, and it returns **370 rows
- * in 255 entities** for the 2025-2026 cycle. `IsLessActive=true` returns **844
- * rows in 716 entities** — 461 entities the default query never shows. A
- * `ShowOfficeHolder=true` query returns a further disjoint 16.
- *
- * A candidate sitting behind either flag, asked for with the defaults, comes
- * back as nothing. Recording that as *no reports on file* would be an absence
- * manufactured by our own query — the exact failure RULING 100 names. So the
- * universe this adapter walks is the UNION of all three, never the default.
- *
- * ## THE PERSONAL DATA IN THE DETAIL ROWS NEVER LANDS
- *
- * Itemised transaction rows carry contributor name, occupation, employer, city
- * and zip — the schema RULING 167 is a standing rule about. This adapter reads
- * them to compute a SUM and returns aggregates. `aggregateDetail` is the only
- * function that sees a transaction row and it returns numbers; no caller can
- * obtain the rows themselves, so no caller can persist them.
- *
- * ## Permission, measured rather than assumed (2026-08-31)
- *
- * `seethemoney.az.gov/robots.txt` — **HTTP 404, identically to a bare client,
- * to an identified client and to a browser-identified client**, so the 404 is
- * about the host and not about us. No terms document (404). No challenge, no
- * credential, no authentication of any kind. `apps.azsos.gov/robots.txt` — HTTP
- * 200, `Crawl-delay: 5`, disallowing `/apps/`, `/scripts/`, `/poll/`,
- * `/election/EOC2015/` and `/cptest/`; no rule reaches the FTP service. The FTP
- * is anonymous and the Secretary of State's own Bulk Filing Guide publishes the
- * path.
- *
- * **An absence of stated restriction is not a grant**, and the standing limits
- * govern regardless: no authentication, no circumvention, no rate that degrades
- * service, nothing not already published.
+ * Itemised rows carry contributor personal data; `aggregateDetail` is the only function that sees them,
+ * and it returns numbers only.
  */
 
 import {
@@ -103,24 +50,14 @@ export const FTP_DIR = "/cfsdata2";
  */
 export const JURISDICTION_ID = 0;
 
-/**
- * Identification the host serves. We are not pretending to be anyone: the
- * headers name a person and a purpose. No credential is sent and none is
- * needed.
- */
+/** Identification the host serves: the headers name a person and a purpose. No credential is sent. */
 export const HEADERS: Readonly<Record<string, string>> = Object.freeze({
   "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
   accept: "application/json, text/javascript, */*; q=0.01",
   "x-requested-with": "XMLHttpRequest",
   origin: BASE,
   referer: `${BASE}/Reporting/Explore`,
-  /*
-   * COMPOSED FROM THE ONE HOME, NEVER COPIED. `tests/feedback.test.ts` (R40)
-   * caught this file writing the literal, which is the third time that guard
-   * has caught the same copy — and the fix each time has been to compose from
-   * `lib/geo/outbound-agent.ts` rather than to widen the exemption, so the
-   * address stays in one place and the guard stays as tight as it was.
-   */
+  // Composed from `lib/geo/outbound-agent.ts`, never a copied literal.
   from: OUTBOUND_CONTACT,
   "x-purpose": "civic campaign-finance index for a public-records product",
 });
@@ -227,11 +164,8 @@ export function summaryQuery(o: SummaryQueryOptions): string {
 }
 
 /**
- * THE THREE QUERIES THAT TOGETHER ARE THE UNIVERSE.
- *
- * Stated as data rather than as a comment, so a caller cannot walk one of them
- * and believe it walked the source. Measured 2026-08-31 at `JurisdictionId=0`
- * for 2025-2026: 370 rows / 255 entities, 844 / 716, and 16 / 16.
+ * The three queries that together are the universe, stated as data so a caller cannot walk one and
+ * believe it walked the source.
  */
 export function universeQueries(startYear: number, endYear: number): SummaryQueryOptions[] {
   return [
@@ -252,12 +186,8 @@ export interface DetailQueryOptions {
 }
 
 /**
- * THE DETAIL QUERY, AND THE PARAMETER WHOSE ABSENCE IS SILENT.
- *
- * Without `entityId` this endpoint answers HTTP 200 and `recordsTotal: 0`. A
- * zero-row extraction is a FAILED extraction, never an empty document, and the
- * only defence against reading one as an absence is refusing to build the
- * request that produces it.
+ * The detail query. Without `entityId` this endpoint answers HTTP 200 and `recordsTotal: 0`, so the
+ * request is refused rather than built.
  */
 export function detailQuery(o: DetailQueryOptions): string {
   if (!Number.isInteger(o.entityId) || o.entityId <= 0) {
@@ -284,12 +214,8 @@ export function detailQuery(o: DetailQueryOptions): string {
 }
 
 /**
- * Parse a DataTables reply, and REFUSE anything that is not one.
- *
- * The two-byte `""` this API returns for a malformed request is valid JSON, so
- * a bare `JSON.parse` succeeds and a caller reading `.data ?? []` gets an empty
- * array and no error. That is the shape RULING 100 exists for: an operation
- * that can return nothing must be asked what it returned.
+ * Parse a DataTables reply, and refuse anything that is not one. The empty-string reply to a malformed
+ * request is valid JSON, so a bare `JSON.parse` would succeed.
  */
 export function parseTableResponse<T>(text: string, what: string): TableResponse<T> {
   let parsed: unknown;
@@ -312,10 +238,8 @@ export function parseTableResponse<T>(text: string, what: string): TableResponse
 }
 
 /**
- * `"Accalia, Jayme <br>(102162)"` → `{ family: "Accalia", given: "Jayme" }`.
- *
- * The id is already carried in `EntityID`, so it is stripped rather than
- * re-parsed: two sources for one fact is how they come to disagree.
+ * `"Family, Given <br>(102162)"` → `{ family, given }`. The id is already carried in `EntityID`, so it
+ * is stripped rather than re-parsed.
  */
 export function parseEntityName(raw: string | null): { family: string; given: string; display: string } {
   const cleaned = (raw ?? "")
@@ -339,18 +263,9 @@ export function cleanCommitteeName(raw: string | null): string {
 }
 
 /**
- * THE OFFICE KEY, AND WHY IT IS AN EXACT SEAT RATHER THAN A CLASS.
- *
- * `officesAgree` in `lib/funding/state-money.ts` compares office CLASSES, and
- * every Arizona office on this ballot is class `STATE`. That is correct for the
- * shared bar and nowhere near enough here: it would let a Governor candidate's
- * name match a State Senate committee for a person of the same name.
- *
- * So this adapter adds a guard that NARROWS. Both vocabularies map onto one
- * canonical seat key and the keys must be EQUAL. Arizona's two sides speak
- * differently — the ballot says `State Senator, District 19` and the filing
- * says `State Senator - District No. 19` — and an office neither side can key
- * is `null`, which never agrees with anything.
+ * The office key: an exact seat, not a class. Both vocabularies (`State Senator, District 19` on the
+ * ballot, `State Senator - District No. 19` in filings) map onto one canonical seat key; an office
+ * neither side can key is `null`, which never agrees with anything.
  */
 export function azOfficeKey(office: string | null | undefined): string | null {
   if (!office) return null;
@@ -435,13 +350,8 @@ export function parseReportingPeriods(text: string): ReportingPeriod[] {
 }
 
 /**
- * THE NEXT DUE DATE, READ FROM THE STATE'S OWN CALENDAR.
- *
- * An OURS GAP is only honest when a reader can be told when it will next be
- * worked, and a date this product invented would not be that. This returns the
- * next filing deadline the Secretary of State publishes for candidate
- * committees in the cycle, or `null` when the calendar states none after the
- * given day — which is a fact about the calendar and is reported as one.
+ * The next filing deadline the Secretary of State publishes for candidate committees in the cycle, or
+ * `null` when the calendar states none after the given day.
  */
 export function nextFilingDue(periods: readonly ReportingPeriod[], after: string, cycle = CYCLE_2026.cycle): ReportingPeriod | null {
   const eligible = periods
@@ -469,19 +379,10 @@ export interface EntityTotals {
 }
 
 /**
- * FOLD THE PER-OFFICE, PER-PARTY ROWS INTO ONE ENTITY.
- *
- * A candidate returns up to three rows sharing one `EntityID`: office and party
- * both stated, office stated and party null, and office empty with party
- * stated. `CashBalance` repeats identically on all of them — measured over the
- * 94 multi-row entities in the 2025-2026 cycle, 94 of 94 — which is what makes
- * it an ENTITY attribute rather than a partition, and `Income`/`Expense` the
- * partitions.
- *
- * **That much is structure. Whether the partitions SUM to the cycle total is a
- * question about the data and it is answered by measurement, not by this
- * function** — see `scripts/state-money-az.mts` and
- * `data/states/az/campaign-finance/az-seethemoney-2026-reconciliation.json`.
+ * Fold the per-office, per-party rows into one entity. A candidate returns up to three rows sharing one
+ * `EntityID`; `CashBalance` repeats identically on all of them (an entity attribute), while
+ * `Income`/`Expense` are the partitions. Whether the partitions sum to the cycle total is checked by
+ * `reconcileEntity`.
  */
 export function aggregateEntities(rows: readonly SummaryRow[]): Map<number, EntityTotals> {
   const out = new Map<number, EntityTotals>();
@@ -532,13 +433,8 @@ export interface DetailAggregate {
 }
 
 /**
- * THE ONLY FUNCTION THAT SEES AN ITEMISED TRANSACTION, AND IT RETURNS NUMBERS.
- *
- * Detail rows carry `TransactionFirstName`, `TransactionLastName`,
- * `TransactionOccupation`, `TransactionEmployer`, `TransactionCity` and
- * `TransactionZipCode` — the contributor schema RULING 167 is a standing rule
- * about. Nothing downstream is given the rows, so nothing downstream can
- * persist them.
+ * The only function that sees an itemised transaction, and it returns numbers. Nothing downstream is
+ * given the rows, so nothing downstream can persist them.
  */
 export function aggregateDetail(rows: readonly { Amount?: number | null }[]): DetailAggregate {
   let sum = 0;
@@ -547,18 +443,10 @@ export function aggregateDetail(rows: readonly { Amount?: number | null }[]): De
 }
 
 /**
- * THE ARIZONA GUARD, AND IT ONLY EVER NARROWS.
- *
- * `judgeMatch` is the shared bar and stays exactly where it is — this cannot
- * lower it, because it demands `judgeMatch` agree AND adds two conditions of
- * its own:
- *
- * - **The exact seat.** Both sides key to one canonical Arizona seat and the
- *   keys must be equal, so a Governor candidate cannot inherit a State Senate
- *   committee belonging to somebody with the same name.
- * - **The cycle.** A committee the state's own register shows TERMINATED before
- *   the cycle opened is a committee for a DIFFERENT ELECTION. It is not a weak
- *   lead about this candidacy; it is a strong fact about another one.
+ * The Arizona guard, which only ever narrows `judgeMatch`, the shared bar:
+ * - The exact seat: both sides key to one canonical seat and the keys must be equal.
+ * - The cycle: a committee the register shows terminated before the cycle opened belongs to a different
+ *   election.
  */
 export interface AzMatchInput {
   registeredName: string;
@@ -581,19 +469,8 @@ export interface AzMatchResult {
 }
 
 export function judgeAzMatch(input: AzMatchInput): AzMatchResult {
-  /*
-   * THE SHARED BAR IS APPLIED TO THE NAME FORMS THE PUBLISHERS ACTUALLY WROTE.
-   *
-   * `judgeMatch` calls `namesAgree` on the strings it is handed, and a ballot
-   * name carrying a quoted alternate — `Rachel "Jones" Keshel` — is two names
-   * written as one. Handing that string in unparsed makes the shared test
-   * refuse a person it would otherwise recognise, which is a defect in the
-   * INPUT, not a reason to soften the test.
-   *
-   * So the agreeing variant pair is resolved first and `judgeMatch` receives
-   * that. When no pair agrees, the originals go in and it reports the honest
-   * failure in the words a reviewer needs.
-   */
+  // A ballot name carrying a quoted alternate is two names written as one, so the agreeing variant pair
+  // is resolved first and `judgeMatch` receives that. When no pair agrees, the originals go in.
   let filedName = input.candidateNameAsFiled;
   let ballotNameForBar = input.ballotName;
   outer: for (const x of nameVariants(input.candidateNameAsFiled)) {
@@ -641,20 +518,10 @@ export function judgeAzMatch(input: AzMatchInput): AzMatchResult {
 const CANDIDATE_COMMITTEE_TYPES = /^(candidate|\$500 threshold \(candidate\))/i;
 
 /**
- * **AN ABSENCE NEEDS TWO REPRESENTATIONS TO AGREE, NOT ONE TO BE QUIET.**
- *
- * RULING 206: the portal is a filing cabinet and the register is another. If
- * the Secretary of State's own 8,829-row `Committees.txt` holds a live
- * candidate committee under this surname, then our failure to match it in the
- * portal is OUR gap — and writing *no reports on file* on a candidate's card
- * would be asserting an absence out of our own empty result, which is the one
- * thing the transparency mandate forbids outright.
- *
- * The surname is deliberately the whole test. It is coarse, and coarse is the
- * safe direction here: a false hit costs an OURS GAP, which is honest, while a
- * false miss costs a false claim about a named person's campaign.
- *
- * Returns the register rows that stand in the way, empty when none do.
+ * An absence needs two representations to agree. If the register holds a live candidate committee
+ * under this surname, failing to match it in the portal is our gap, never "no reports on file". The
+ * surname alone is the test: coarse, in the safe direction. Returns the register rows that stand in the
+ * way.
  */
 export function registerHoldsCandidateCommittee(
   register: ReadonlyMap<string, RegisterRow>,
@@ -694,17 +561,8 @@ export function provenanceFor(sourceUrl: string, collectedAt: string): Provenanc
   };
 }
 
-/*
- * ---------------------------------------------------------------------------
- * THE THREE VERBS EVERY ADAPTER EXPORTS.
- *
- * `upsert` writes a FILE rather than a table, and that is the design: this
- * corpus lives in `data/funding/` and is structurally unreachable from
- * Postgres, which is wall 1 of the campaign-finance firewall
- * (`tests/campaign-finance-firewall.test.ts`). An adapter that could write it
- * to a database would be a hole in that wall.
- * ---------------------------------------------------------------------------
- */
+// The three verbs every adapter exports. `upsert` writes a file, not a table: this corpus is
+// structurally unreachable from Postgres (the campaign-finance firewall).
 
 export interface AzRawCorpus {
   /** The union of the three universe queries, deduplicated by row identity. */
@@ -799,47 +657,17 @@ export interface NormalizeInput {
   contestById: ReadonlyMap<string, BallotContest>;
   electionYear: number;
   /**
-   * THE ENTITIES WHOSE FIGURES HAVE BEEN RECONCILED AGAINST THE PUBLISHER'S OWN
-   * ITEMISED LEDGER, one by one.
-   *
-   * A `FILED` record puts a dollar figure under a named person's photograph,
-   * and a wrong one there is a worse failure than an empty drop-down by a wide
-   * margin. So this is a SET rather than a flag: the licence to publish is
-   * granted per committee by a measurement of that committee, and an entity
-   * absent from this set cannot become a `FILED` record no matter what else
-   * agrees.
-   *
-   * Populated by `reconcileEntity` from the itemised ledger.
+   * The entities whose figures reconcile against the publisher's own itemised ledger. A set, not a flag:
+   * an entity absent from it cannot become a `FILED` record. Populated by `reconcileEntity`.
    */
   reconciledEntityIds: ReadonlySet<number>;
   nextDue: ReportingPeriod | null;
 }
 
 /**
- * DOES THE SUMMARY AGREE WITH THE PUBLISHER'S OWN ITEMISED LEDGER?
- *
- * The summary endpoint returns a candidate as several rows partitioned by
- * office and party. Session C tested whether those rows are PARTS by checking
- * `sum(Income) - sum(Expense) == CashBalance`, found it held for 134 of 255 and
- * broke for 121, and correctly refused to ship anything on it.
- *
- * **That test could not have succeeded, and the reason is a fact about the
- * data rather than about the effort.** `CashBalance` is repeated identically on
- * every row of an entity and does not move with the query window: it carries a
- * balance brought forward from before the cycle. Checking a within-window sum
- * against an across-window balance compares two different quantities, and the
- * 134 that agreed were the committees that happened to start from nothing.
- *
- * The independent statement that CAN settle it is the itemised transaction
- * ledger, which is the same publisher listing the same money one line at a
- * time. Measured 2026-08-31 over all 255 entities and 370 rows of the
- * 2025-2026 cycle: **`sum(summary Income) == sum(itemised income)` holds for
- * 255 of 255 and breaks for 0**, and the same for expense. The rows are parts
- * and their sum is the cycle total.
- *
- * This function is what keeps that a MEASUREMENT rather than a belief: it is
- * re-run per committee on every walk, and a committee that stops agreeing
- * stops rendering.
+ * Does the summary agree with the publisher's own itemised ledger? `CashBalance` carries a balance
+ * brought forward from before the cycle, so it cannot check a within-window sum; the itemised ledger
+ * can. Re-run per committee on every walk: a committee that stops agreeing stops rendering.
  */
 export function reconcileEntity(
   totals: EntityTotals,
@@ -880,19 +708,12 @@ export interface NormalizeResult {
 }
 
 /**
- * NORMALIZE — the certified ballot on one side, the register on the other.
- *
- * Three outcomes and no fourth, per candidacy:
- *
- * - **SOURCED_FILED.** A committee agrees on name, exact seat and cycle, and
- *   the cycle-total semantics are proven. Its filed figures render.
- * - **SOURCED_ABSENCE.** The union of all three universe queries holds no
- *   committee for this person at all. The agency was asked, on a stated date,
- *   and holds nothing. That is a fact about the records.
- * - **OURS_GAP.** A committee for this person exists and something we have not
- *   resolved stands between it and a figure — the seat disagrees, or the
- *   semantics of the figure are not established. This is OUR gap, it says so,
- *   and it carries the agency's own next filing deadline.
+ * Normalize: the certified ballot on one side, the register on the other. Three outcomes per candidacy:
+ * - SOURCED_FILED: a committee agrees on name, exact seat and cycle, and the cycle-total semantics are
+ *   proven. Its filed figures render.
+ * - SOURCED_ABSENCE: the union of the universe queries holds no committee for this person at all.
+ * - OURS_GAP: a committee for this person exists and something unresolved stands between it and a
+ *   figure. Carries the agency's next filing deadline.
  */
 export function normalizeAz(input: NormalizeInput): NormalizeResult {
   const { corpus, candidacies, contestById, electionYear } = input;
@@ -959,22 +780,8 @@ export function normalizeAz(input: NormalizeInput): NormalizeResult {
 
     if (matched.length > 0) {
       for (const m of matched) {
-        /*
-         * **A REGISTERED COMMITTEE REPORTING NOTHING IS NOT A COMMITTEE THAT
-         * RAISED $0, AND IT IS NOT A REGISTRY HOLDING NOTHING EITHER.**
-         *
-         * `REGISTERED_NO_ACTIVITY_REPORTED` was added to the shared contract on
-         * 2026-08-31 after this exact shape rendered *"No reports on file"* for
-         * six named New Hampshire candidates whose committees the state had
-         * named, with an id, an office and a cycle. Arizona hits the same shape
-         * — Duwayne Collier's Secretary of State committee is registered,
-         * reconciles against an itemised ledger of zero transactions, and has
-         * reported no money.
-         *
-         * So the figures go null rather than zero and the record says what the
-         * agency actually published: this committee exists and has reported
-         * nothing. `$0` would be a claim about his campaign.
-         */
+        // A registered committee reporting nothing is not a committee that raised $0: the figures go null and
+        // the record says the committee exists and has reported nothing.
         const hasMoney = m.entity.income > 0 || m.entity.expense > 0;
         records.push({
           dataClass: "STATE_COMMITTEE",
@@ -990,11 +797,8 @@ export function normalizeAz(input: NormalizeInput): NormalizeResult {
           totals: {
             receipts: hasMoney ? m.entity.income : null,
             expenditures: hasMoney ? m.entity.expense : null,
-            // The portal repeats one closing balance on every row of an
-            // entity, and it does NOT equal receipts minus expenditures inside
-            // this window — measured, and recorded in the reconciliation
-            // artifact. It carries something the window does not contain, so
-            // it is not published as this cycle's cash on hand.
+            // The portal's repeated closing balance does not equal receipts minus expenditures inside this window,
+            // so it is not published as this cycle's cash on hand.
             cashOnHand: null,
             reportCount: null,
             coveringPeriod: hasMoney
@@ -1127,13 +931,7 @@ export function normalizeAz(input: NormalizeInput): NormalizeResult {
   return { records, states };
 }
 
-/**
- * An `OURS_GAP` record, and every money field is null by construction.
- *
- * It is built here rather than at each call site so no branch can add a figure
- * to one: the shape of the function is the guarantee, and
- * `tests/state-money-az.test.ts` asserts it over the shipped snapshot as well.
- */
+/** An `OURS_GAP` record, with every money field null by construction. */
 function gapRecord(a: {
   cand: BallotCandidacy;
   contest: BallotContest;
@@ -1179,48 +977,17 @@ function gapRecord(a: {
 }
 
 /**
- * **A QUOTED SEGMENT IN A NAME IS AN ALTERNATE NAME, NOT A NAME TOKEN.**
- *
- * Both sides of this join annotate names the same way and nothing was reading
- * the annotation. Arizona's certified ballot carries `Rachel "Jones" Keshel`,
- * `Nicholas "Nick" Myers`, `Hollace "Holly" Lyon` and `Walter "Les" Presmyk`;
- * the Secretary of State's register carries `Slawson, Fred "Ryan"` and
- * `Presmyk, Walter "Les"`. The quotes are the publisher saying *also known as*.
- *
- * Treated as ordinary text, the quoted word becomes a token that can never
- * match anything, and `namesAgree` — correctly, on the input it was given —
- * refuses. **Measured on this ballot, that turned five live committees into
- * five manufactured absences**, including Rachel Keshel's, which had filed
- * $47,878.92 and would have rendered as *no reports on file*.
- *
- * So a name with a quoted segment expands into the two names it actually
- * states, and `namesAgree` is applied UNCHANGED to the pairs. This does not
- * loosen the bar by a hair: every variant still has to satisfy the shared test
- * in full. It stops handing that test a string the publisher never meant as one
- * name.
- *
- * `Tom Horne` against the filed `Horne, Thomas Chalres` is the control. There
- * is no annotation there — it is a diminutive, and no rule here invents one. He
- * stays unmatched, which is the correct outcome and the honest one.
+ * A quoted segment in a name is an alternate name ("also known as"), not a name token. A name with a
+ * quoted segment expands into the names it states, and `namesAgree` is applied unchanged to the pairs.
+ * No rule here invents diminutives.
  */
 export function nameVariants(name: string): string[] {
   const cleaned = name.replace(/<br\s*\/?>/gi, " ").replace(/\s+/g, " ").trim();
   const quoted = [...cleaned.matchAll(/["“”]([^"“”]+)["“”]/g)].map((m) => m[1].trim()).filter(Boolean);
   const withoutQuoted = cleaned.replace(/["“”][^"“”]+["“”]/g, " ").replace(/\s+/g, " ").trim();
   if (quoted.length === 0) return [cleaned];
-  /*
-   * THE QUOTED PART CAN STAND IN FOR EITHER END OF THE NAME, and which one it
-   * is differs across this very ballot:
-   *
-   *   Nicholas "Nick" Myers    the quoted part replaces the GIVEN name
-   *   Rachel "Jones" Keshel    the quoted part replaces the FAMILY name
-   *
-   * Both appear, the publisher marks them identically, and nothing in the
-   * string says which is meant. So both readings are generated and the shared
-   * `namesAgree` decides — a variant that describes nobody simply matches
-   * nobody, while assuming one reading would have dropped whichever candidate
-   * used the other.
-   */
+  // The quoted part can stand in for either the given or the family name, and nothing in the string says
+  // which, so both readings are generated and `namesAgree` decides.
   const variants = new Set<string>([withoutQuoted]);
   const parts = withoutQuoted.split(" ").filter(Boolean);
   for (const alt of quoted) {
@@ -1235,14 +1002,8 @@ export function nameVariants(name: string): string[] {
 }
 
 /**
- * Person identity, using the SHARED test rather than an Arizona one.
- *
- * `namesAgree` demands every token of the shorter name appear in the longer and
- * refuses a single shared token, so `Smith` is not a person. Arizona files
- * `SURNAME, FORENAME` and the ballot carries `Forename Surname`; the token-set
- * comparison answers that without a fuzzy threshold nobody could defend under a
- * candidate's photograph. What this adds is `nameVariants` on both sides —
- * parsing, not fuzz.
+ * Person identity, using the shared `namesAgree` test plus `nameVariants` on both sides: parsing, not
+ * fuzz.
  */
 export function azNamesAgree(a: string, b: string): boolean {
   for (const x of nameVariants(a)) for (const y of nameVariants(b)) if (namesAgree(x, y)) return true;

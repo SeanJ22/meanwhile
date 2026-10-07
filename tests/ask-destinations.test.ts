@@ -14,27 +14,8 @@ import {
   weakTopicMatch,
 } from "../lib/routing/match.ts";
 
-/**
- * G05 rule 4d (2026-08-17): the router learns four in-app destinations, and
- * the copy may only promise what the router can route.
- *
- * The rule's real risk is not that a destination fails to match. It is that
- * extending the router QUIETLY BREAKS the answers it already gave — "ballot"
- * is a keyword of `elections-voting`, and a naive extension would re-route
- * "how do I register to vote" to a page listing contests. So the first block
- * below is a regression net over the old behaviour, and it comes first on
- * purpose.
- */
-
 const ROOT = process.cwd();
 
-// ── 1. The extension changed nothing that already worked ──────────────────
-
-/**
- * Questions that routed to a topic before this change and must still route
- * to the SAME topic. Each is a real shape from the routes' own examples or
- * the refusal log entries recorded in `match.ts`.
- */
 const UNCHANGED: ReadonlyArray<[string, string]> = [
   ["how do I register to vote", "elections-voting"],
   ["where is my polling place", "elections-voting"],
@@ -48,24 +29,6 @@ const UNCHANGED: ReadonlyArray<[string, string]> = [
   ["a warehouse development next door", "zoning-development"],
 ];
 
-/**
- * THE THREE THE 2026-08-17 RULING MOVED, named rather than deleted.
- *
- * The author's matcher ruling raised the keyword bar to two distinct hits.
- * Ten of the twelve questions in the original regression net clear it
- * untouched. These two do not — each carries exactly one hit — so the keyword
- * layer now declines them and the Level 1 classifier reads the whole sentence
- * instead. That is the ruling working, not a regression, and it is written
- * down as its own list so a later session can see at a glance which questions
- * changed rung and why. Deleting them from the net would have hidden exactly
- * that.
- *
- * The cost is real and stated: with the classifier off, over its ceiling or
- * unreachable, these two get the honest refusal with the destinations offered.
- * The author weighed that against a matcher that answered "what will the
- * weather be like on election day" with a lecture on who runs elections, and
- * ruled for the refusal.
- */
 const WEAK_BY_DESIGN: ReadonlyArray<[string, string]> = [
   ["my water bill", "water-sewer"],
   ["my property assessment", "property-taxes"],
@@ -94,9 +57,6 @@ test("the ruling's cost is named: the weak-by-design questions decline, and say 
       null,
       `"${question}" must decline at the keyword layer under the strong-match rule`,
     );
-    // It declined for the RIGHT reason: one hit, not zero, and the hit it had
-    // was the correct topic. That is what makes the classifier's job easy and
-    // what tells a later reader this was a threshold decision.
     const weak = weakTopicMatch(question);
     assert.ok(weak, `"${question}" should still have a sub-threshold winner`);
     assert.equal(weak.topicId, topicId);
@@ -123,8 +83,6 @@ test("4d: a bare topic word is never hijacked by a destination", () => {
     );
   }
 });
-
-// ── 2. The four destinations route, and only on real evidence ─────────────
 
 test("4d: exactly the four categories the rule names, and no fifth", () => {
   const surfaces = DESTINATION_ROUTES.map((d) => d.surface).sort();
@@ -194,15 +152,7 @@ test("4d: a question with no destination refuses rather than guessing", () => {
   }
 });
 
-// ── 3. The gate itself: the copy may only promise what routes ─────────────
-
 test("4d: every destination points at a surface this app actually has", () => {
-  /*
-   * The rule one layer down. A destination naming a page that does not exist
-   * would be the copy promising what the router cannot route, wearing a
-   * different hat — and it would fail as a 404 in front of a reader rather
-   * than here.
-   */
   const appDir = join(ROOT, "app");
   const routes = new Set<string>();
   const walk = (dir: string, prefix: string) => {
@@ -234,12 +184,6 @@ test("4d: every destination carries a label and a level statement", () => {
       destination.statement.trim().length > 20,
       `${destination.id}'s statement is too short to say anything`,
     );
-    /*
-     * The register rule: a destination statement is a CLAIM surface — it
-     * describes what is on a page — so it stays level. And it may never
-     * imply completeness, which is the one thing this product's coverage
-     * gaps must never be smoothed into.
-     */
     assert.ok(
       !/\b(all|every|complete|comprehensive|everything)\b/i.test(destination.statement),
       `${destination.id}'s statement claims completeness: "${destination.statement}"`,
@@ -248,8 +192,6 @@ test("4d: every destination carries a label and a level statement", () => {
 });
 
 test("4d: the promised categories are DERIVED from what routes, never written beside it", () => {
-  // The gate expressed as code. If the copy ever hard-codes its own list,
-  // this is the test that says the two have stopped being the same thing.
   assert.deepEqual(
     [...ROUTABLE_CATEGORIES].sort(),
     DESTINATION_ROUTES.map((d) => d.label).sort(),
@@ -264,12 +206,6 @@ test("4d: the promised categories are DERIVED from what routes, never written be
 
 test("4d: destinations generate nothing — every phrase and sentence is committed", () => {
   const raw = readFileSync(join(ROOT, "lib", "routing", "destinations.ts"), "utf8");
-  /*
-   * Scanned with the comments stripped. The first version of this test read
-   * the whole file and failed on the module's own sentence "It generates
-   * nothing" — a guard firing on the documentation of the property it is
-   * guarding. The claim is about the CODE, so the code is what it reads.
-   */
   const code = raw.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/\/\/.*$/gm, " ");
   for (const forbidden of ["fetch(", "anthropic", "openai", "Math.random", "eval("]) {
     assert.ok(
@@ -285,24 +221,6 @@ test("4d: destinations generate nothing — every phrase and sentence is committ
   );
 });
 
-/* ---------------------------------------- ASK-1, 2026-08-23: tappability --- */
-
-/**
- * **A DESTINATION IS SOMETHING THE READER CAN TAP, NOT SOMETHING THEY ARE TOLD
- * TO GO AND FIND.**
- *
- * *"When is the next meeting?"* returned the heading "Where to look", the
- * label "Meetings near you", and a sentence explaining that the map shows the
- * meetings we have collected — **and nothing to click.** The ask box rendered
- * its link only when a destination carried an `href`, and three of the four
- * open IN PLACE and carry none.
- *
- * That is the reader-friction rule's own definition of a defect: a step
- * between a reader and the answer they came for, which is not one of the three
- * load-bearing exceptions. It is also the copy promising what the router
- * cannot route, one layer down from the gate rule 4d wrote this module for —
- * the surface was named and could not be reached.
- */
 test("ASK-1: every destination can actually be opened", () => {
   for (const d of DESTINATION_ROUTES) {
     const reachable = d.href !== null || d.action !== null;
@@ -327,12 +245,10 @@ test("ASK-1: the ask box renders a control for both kinds of destination", async
   const marks = box.match(/data-ask-destination-go/g) ?? [];
   assert.equal(marks.length, 2, "the ask box no longer renders both destination branches");
 
-  // The tap target. The line this replaced was a 12px underlined string, which
-  // is a mouse affordance rendered on a phone.
   assert.ok(
     box.includes("min-h-11"),
     "the destination control lost its 44px tap target",
   );
-  assert.match(box, /dispatch\(\{ type: "list\/open", open: true \}\)/, "the meetings door is no longer opened");
+  assert.match(box, /dispatch\(\{\s*type: "list\/open",\s*open: true,/, "the meetings door is no longer opened");
   assert.match(box, /dispatch\(\{ type: "door\/open", door: action\.door \}\)/, "the in-place doors are no longer opened");
 });

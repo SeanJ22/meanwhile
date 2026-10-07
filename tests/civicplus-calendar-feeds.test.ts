@@ -1,14 +1,3 @@
-/**
- * **A CIVICPLUS SITE'S CATEGORY CALENDAR FEEDS, MATCHED TO THE BODY EACH NAMES, NEVER GUESSED.** (2026-09-25,
- * the 85635 expansion.)
- *
- * Cochise County, AZ publishes on CivicPlus. The free walk found only its AgendaCenter, which no wiring kind reads.
- * Its `/iCalendar.aspx` index lists one iCal feed per calendar category; the walk now reads that index on a site
- * whose own markup shows CivicPlus, matches each category to the body it names by the C16 reviewer's own rule, and
- * reads every category feed; event names identify bodies independently of department category names. The fixtures are the county's
- * real index and its real "Board of Supervisors" feed, read 2026-09-26T04:52Z.
- */
-
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";

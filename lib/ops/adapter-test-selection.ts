@@ -4,7 +4,7 @@ export function adapterTestSelection(input: {
 }): { readonly kind: string; readonly files: readonly string[] } | null {
   const sourceChanges = input.changed.filter(path => path.startsWith("lib/sources/"));
   const kinds = [...new Set(sourceChanges.map(path => path.split("/")[2]!))];
-  if (kinds.length !== 1 || ["composite", "platform-adapters", "mock", "snapshot"].includes(kinds[0]!)) return null;
+  if (kinds.length !== 1 || ["composite", "platform-adapters", "snapshot"].includes(kinds[0]!)) return null;
   const kind = kinds[0]!;
   const prefix = `lib/sources/${kind}/`;
   const matching = input.tests.filter(path => {

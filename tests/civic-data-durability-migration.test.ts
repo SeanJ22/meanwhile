@@ -161,9 +161,7 @@ test("PDC 0026 refuses every planted durable-corruption class and never repairs 
       "store code must be serving and the read-only integrity census must pass before application.",
   });
 
-  // Plant the loss of every independent firewall. The detector must name the
-  // exact corruption class; this prevents a future generated-schema refresh
-  // from silently dropping a handwritten trigger or preflight predicate.
+  // A generated-schema refresh must not silently drop a handwritten trigger or preflight predicate.
   for (const [name, pattern] of FIREWALLS) {
     const planted = migration.replace(pattern, "/* PLANTED_FIREWALL_REMOVAL */");
     assert.ok(missingFirewalls(planted).includes(name), `${name}: planted firewall loss was not detected`);

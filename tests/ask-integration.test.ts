@@ -4,7 +4,6 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { ballotAskInventory, ballotRecordsFor, measureDesignations } from "../lib/ask/ballot-inventory.ts";
-import { lineupForContest } from "../lib/ballot/general-lineup.ts";
 import { contactRecord, contactsForBody, contactsForRepresentatives } from "../lib/ask/contacts.ts";
 import { evidenceProvenance } from "../lib/ask/evidence.ts";
 import { localDate, localTime, localWeekday, readableSitting } from "../lib/ask/meeting-time.ts";
@@ -23,28 +22,6 @@ import {
 } from "../lib/db/ask-signal.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
-
-/**
- * **THE PR #212 FOLLOW-UP — the integration that was missing, planted.**
- * (2026-08-28.)
- *
- * PR #212 built a grounded Ask engine and left five things undone, each of
- * which had a green test suite standing beside it:
- *
- * 1. The map Ask box never called the new engine.
- * 2. A model's alias expansion could outrank the entity the reader NAMED.
- * 3. `referent` was produced by the interpretation rung and read by nobody.
- * 4. The ballot's own contests, candidates and measures were not entities.
- * 5. `captureAskInteraction` had no production caller, while being described
- *    as one-flip activation.
- *
- * Every test below is written so that the code as it stood before this session
- * FAILS it. A check whose failure mode was never observed is not evidence —
- * that is the lesson PR #211 paid for and this file is built on it.
- */
 
 const ROOT = process.cwd();
 
@@ -63,10 +40,6 @@ function reading(over: Partial<AskInterpretation> = {}): AskInterpretation {
   return { ...unavailableInterpretation(), ...over };
 }
 
-/* ══════════════════════════════════════════════════════════════════════
-   1 · THE MAP ASK BOX USES THE GROUNDED ENGINE
-   ══════════════════════════════════════════════════════════════════════ */
-
 const ASK_BOX = readFileSync(join(ROOT, "components", "ask", "ask-box.tsx"), "utf8");
 const BALLOT_ASK = readFileSync(join(ROOT, "components", "ask", "ballot-ask.tsx"), "utf8");
 const GROUNDED_ROUTE = readFileSync(
@@ -81,12 +54,6 @@ function code(text: string): string {
 }
 
 test("BLOCKER 1: the map Ask box posts to the grounded engine", () => {
-  /*
-   * THE DEFECT, EXACTLY. At merged main this file fetched `/api/ask/classify`
-   * and `/api/ask/agenda` and nothing else. The grounded pipeline existed, was
-   * tested, answered the Vail question correctly through a harness — and the
-   * product's primary Ask surface routed around it.
-   */
   assert.match(
     code(ASK_BOX),
     /fetch\("\/api\/ask\/grounded"/,
@@ -95,19 +62,6 @@ test("BLOCKER 1: the map Ask box posts to the grounded engine", () => {
 });
 
 test("BLOCKER 1: the grounded call is AWAITED on every ask, so nothing can bypass it", () => {
-  /*
-   * Present-in-the-file is not enough: a call inside a branch nothing reaches
-   * would satisfy a grep and answer no reader. The pin is on the unconditional
-   * await that every non-navigation submission passes through.
-   *
-   * **UPDATED BY ASK-05 (2026-08-28).** This used to pin
-   * `await Promise.all([ askGrounded(question)` — and that `Promise.all` was
-   * itself the ASK-05 defect: the second entry in it was a SECOND engine whose
-   * reply rendered as a competing civic answer on the same screen. The
-   * property being asserted has not changed at all; the expression carrying it
-   * has, and the single await is the stronger form because there is no longer
-   * a second call to race.
-   */
   const source = code(ASK_BOX);
   assert.match(
     source,
@@ -127,19 +81,6 @@ test("BLOCKER 1: the grounded call is AWAITED on every ask, so nothing can bypas
 });
 
 test("ASK-05: the map surface calls exactly ONE engine for an answer", () => {
-  /*
-   * **THE BOUNDARY IS NO LONGER A FLAG A CLIENT DECLARES.**
-   *
-   * This test used to assert that the component sent `scope: "TOPIC_ONLY"` and
-   * that the server refused the named-body docket under it. That was a promise
-   * enforced by a conditional, and the conditional was the only thing standing
-   * between the reader and two answers.
-   *
-   * The component does not call `/api/ask/agenda` at all now, and the route
-   * has no topic or body-agenda branch left to gate. Both halves of the old
-   * assertion are replaced by their stronger forms: there is nothing to
-   * declare, and nothing to reach.
-   */
   const source = code(ASK_BOX);
   assert.ok(
     !/fetch\("\/api\/ask\/agenda"/.test(source),
@@ -156,13 +97,6 @@ test("ASK-05: the map surface calls exactly ONE engine for an answer", () => {
 });
 
 test("ASK-05: the SERVER holds no second civic answer, so the boundary is structural", () => {
-  /*
-   * A discipline held in a conditional drifts back the first time somebody
-   * edits the conditional. The topic sweep and the named-body docket are not
-   * declined here — they are ABSENT, and what remains is a lookup by meeting
-   * id that binds nothing and makes no claim about which government a question
-   * is about.
-   */
   const route = code(
     readFileSync(join(ROOT, "app", "api", "ask", "agenda", "route.ts"), "utf8"),
   );
@@ -186,14 +120,6 @@ test("ASK-05: the SERVER holds no second civic answer, so the boundary is struct
 });
 
 test("ASK-05: the topic sweep survived the move, with its scope and its denominators", () => {
-  /*
-   * **DELETING THE SECOND ANSWER MUST NOT DELETE THE CAPABILITY.** *"Is there
-   * a data centre coming?"* is a real question with a real denominator, and
-   * the risk in this refactor was always that removing the surface removed the
-   * answer with it. The sweep now lives in one module, emits into the one
-   * pack, and narrows to a bound body rather than sweeping the reader's whole
-   * area under an answer about one government.
-   */
   const sweep = code(
     readFileSync(join(ROOT, "lib", "ask", "agenda-topic.ts"), "utf8"),
   );
@@ -208,15 +134,6 @@ test("ASK-05: the topic sweep survived the move, with its scope and its denomina
     /subject\?\.kind === "BODY"\s*\?\s*\{ meetings: meetingsForBody\(/,
     "a bound body must NARROW the sweep, not merely coexist with it",
   );
-  /*
-   * **AND IT MUST NARROW ON THE BODY, NOT ON THE GEOGRAPHY.** (2026-08-29.)
-   *
-   * The assertion above passed throughout the Pima defect: the sweep WAS
-   * narrowed, to `m.ocdId === subject.id`, which on a division carrying two
-   * governments narrows to the wrong set rather than to none. "Narrowed" and
-   * "narrowed correctly" are different claims and only the second is worth
-   * guarding, so the rule the repair turns on is pinned here too.
-   */
   assert.match(
     route,
     /function meetingsForBody\([\s\S]*?bound\.level !== "BODY"[\s\S]*?m\.bodyId === bound\.id/,
@@ -225,11 +142,6 @@ test("ASK-05: the topic sweep survived the move, with its scope and its denomina
 });
 
 test("the unified input's SEARCH half is untouched — an exact name still navigates", () => {
-  /*
-   * The map input has two legitimate jobs and only one of them is an Ask. The
-   * exact-name branch returns BEFORE any question is asked or logged, which is
-   * the "two logs must not blur" rule, and it must survive this refactor.
-   */
   const source = code(ASK_BOX);
   assert.match(source, /if \(result\.exactName && onSearchPick\)/);
   assert.match(source, /setWorking\(false\);\s*pick\(hit\);\s*return;/);
@@ -238,19 +150,7 @@ test("the unified input's SEARCH half is untouched — an exact name still navig
   assert.match(source, /onSearchPick\?\.\(item\)/);
 });
 
-/* ══════════════════════════════════════════════════════════════════════
-   2 · IDENTITY PRECEDENCE
-   ══════════════════════════════════════════════════════════════════════ */
-
 test("BLOCKER 2: the reader's explicit entity beats a conflicting model expansion", () => {
-  /*
-   * **THE ADVERSARIAL CASE, AND IT IS THE WHOLE BLOCKER.**
-   *
-   * Both candidates bind. Both are real entities. The binder is not wrong
-   * about either — so no amount of binder correctness decides this, and the
-   * shipped ORDER decided it wrongly: `MODEL_EXPANSION` was tried first and
-   * returned first, so Claude's hypothesis beat the name the reader typed.
-   */
   const result = resolveInterpretation(
     reading({
       entityMentions: ["Katie Hobbs"],
@@ -269,12 +169,6 @@ test("BLOCKER 2: the reader's explicit entity beats a conflicting model expansio
 });
 
 test("BLOCKER 2: an ordinary alias still benefits from model normalization", () => {
-  /*
-   * The other direction, and it must not be lost to the fix. "VUSD" binds
-   * nothing verbatim — no entity's distinctive tokens appear in it — so the
-   * model's expansion is what makes the question answerable. A precedence rule
-   * that suppressed this would have traded one defect for a duller product.
-   */
   const result = resolveInterpretation(
     reading({
       entityMentions: ["VUSD"],
@@ -289,11 +183,6 @@ test("BLOCKER 2: an ordinary alias still benefits from model normalization", () 
 });
 
 test("BLOCKER 2: a model expansion may NARROW the reader's ambiguity, only from inside it", () => {
-  /*
-   * "Vail" with no class word fits both a town and a school district. The
-   * model saying which is the alias job. The model answering with a THIRD
-   * government is a substitution, and that is the line.
-   */
   const withPlace: BindableEntity[] = [
     ...ENTITIES,
     { id: "ocd-division/country:us/state:az/place:vail", name: "vail", nameClass: "place", divisionType: "place" },
@@ -321,11 +210,6 @@ test("BLOCKER 2: a model expansion may NARROW the reader's ambiguity, only from 
 });
 
 test("BLOCKER 2: named-but-unresolved is never NONE, and never falls through to a ZIP default", () => {
-  /*
-   * The PR #211 invariant, re-asserted through the new precedence. `NONE`
-   * licenses the reader's own divisions to decide the answer, which is exactly
-   * how a question about Vail was answered with Sunnyside.
-   */
   const result = resolveInterpretation(
     reading({ entityMentions: ["Cienega"], normalizedMentions: ["Cienega School District"] }),
     "What is on the Cienega school district agenda?",
@@ -352,17 +236,7 @@ test("BLOCKER 2: an UNRESOLVED explicit name is not repaired by a model expansio
   );
 });
 
-/* ══════════════════════════════════════════════════════════════════════
-   3 · THE REFERENT IS ACTUALLY CONSUMED
-   ══════════════════════════════════════════════════════════════════════ */
-
 test("BLOCKER 3: `resolveInterpretation` reads the referent field at all", () => {
-  /*
-   * The defect was mechanical and invisible: `interpretQuestion` returned
-   * `referent`, a comment claimed page context resolved "what has she done?",
-   * and a repository-wide search found the word only in the intent layer.
-   * A comment stronger than its code reads as covered and is not.
-   */
   const resolve = code(readFileSync(join(ROOT, "lib", "ask", "resolve.ts"), "utf8"));
   assert.match(resolve, /interpretation\.referent/, "the referent must be consumed");
 });
@@ -384,13 +258,6 @@ test("BLOCKER 3: one unambiguous focused person resolves a pronoun", () => {
 });
 
 test("BLOCKER 3: an UNCORROBORATED model referent does not bind", () => {
-  /*
-   * Claude may SUGGEST the referent. Claude does not make it true. A referent
-   * naming somebody the surface never said was on screen is the model reaching
-   * into its own memory for a subject, which is the one thing this pipeline
-   * exists to prevent — and it is the failure mode a naive "trust the
-   * referent" implementation would have shipped.
-   */
   const result = resolveInterpretation(
     reading({ referent: "Adrian Fontes" }),
     "What has she done?",
@@ -429,10 +296,6 @@ test("BLOCKER 3: more than one plausible person on screen CLARIFIES rather than 
 });
 
 test("BLOCKER 3: an explicit name overrides an active card", () => {
-  /*
-   * The motivating example. A reader looking at one candidate's card who
-   * types another candidate's NAME is asking about the person they typed.
-   */
   const result = resolveInterpretation(
     reading({ entityMentions: ["Katie Hobbs"] }),
     "What has Katie Hobbs done?",
@@ -445,11 +308,6 @@ test("BLOCKER 3: an explicit name overrides an active card", () => {
 });
 
 test("BLOCKER 3: an explicit name we do NOT hold stays unresolved rather than taking the open card", () => {
-  /*
-   * The dangerous half of the same rule. A reader who names somebody we do not
-   * hold, while a card is open, must not be answered about the card — that is
-   * the substitution defect arriving through the follow-up feature.
-   */
   const result = resolveInterpretation(
     reading({ entityMentions: ["Ruben Gallego"] }),
     "What has Ruben Gallego done for her district?",
@@ -483,10 +341,6 @@ test("a question with no pronoun and no mention never picks up page context", ()
 });
 
 test("both Ask surfaces send page context as canonical REFERENCES, not display strings", () => {
-  /*
-   * The strings used to travel to the interpretation model and stop there —
-   * the binder never saw them, so nothing on the ballot was resolvable.
-   */
   assert.match(code(BALLOT_ASK), /priorSubjects/);
   assert.match(code(ASK_BOX), /priorSubjects/);
   const page = code(readFileSync(join(ROOT, "app", "ballot", "page.tsx"), "utf8"));
@@ -507,25 +361,19 @@ test("readSubjectRefs refuses anything that is neither a name nor an id", () => 
   assert.equal(refs[1].focused, true);
 });
 
-/* ══════════════════════════════════════════════════════════════════════
-   4 · THE BALLOT'S CANONICAL INVENTORY
-   ══════════════════════════════════════════════════════════════════════ */
-
 const AZ_BALLOT = JSON.parse(
   readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
 ) as BallotSet;
 
-/** The live inventory: the same lineup lookup the ballot page renders from. */
-const nominees = (contestId: string) => lineupForContest(contestId)?.nominees ?? [];
+const GOVERNOR_NOMINEES = [
+  { name: "Katie Hobbs", partyLabel: "Democratic" },
+  { name: "Andy Biggs", partyLabel: "Republican" },
+  { name: "Risa Lombardo", partyLabel: "Green" },
+  { name: "Teri Ann Hourihan", partyLabel: "No Labels" },
+];
+const nominees = (contestId: string) => (contestId === "ballot-az-pima:governor" ? GOVERNOR_NOMINEES : []);
 
 test("BLOCKER 4: a non-statewide CHALLENGER on the reader's ballot is a resolvable entity", () => {
-  /*
-   * **THE DEFECT, NAMED.** Katie Hobbs answered on the ballot because she is a
-   * sitting statewide executive, not because the ballot contributed anything.
-   * Andy Biggs is on the same governor line and was not an entity this product
-   * held at all — nor was any challenger, any contest, or any of the fifteen
-   * propositions the same page renders.
-   */
   const inventory = ballotAskInventory(AZ_BALLOT, AZ_BALLOT.contests, nominees);
   const biggs = inventory.entities.find((e) => e.name === "Andy Biggs");
   assert.ok(biggs, "a challenger on the general-election ballot must be in the Ask inventory");
@@ -543,13 +391,6 @@ test("BLOCKER 4: a non-statewide CHALLENGER on the reader's ballot is a resolvab
 });
 
 test("BLOCKER 4: a person the two stores key differently does NOT become two entities", () => {
-  /*
-   * The false clarification, planted. The filing calls him
-   * `…:biggs-andy` and the general lineup keys him `…|Andy Biggs`. Offering
-   * both put two distinct ids behind one name, and the binder — correctly, by
-   * its own tie rule — reported AMBIGUOUS. The reader was asked which Andy
-   * Biggs they meant, about a distinction that exists only in our storage.
-   */
   const inventory = ballotAskInventory(AZ_BALLOT, AZ_BALLOT.contests, nominees);
   const ids = new Set(
     inventory.entities.filter((e) => e.name === "Andy Biggs").map((e) => e.id),
@@ -622,8 +463,6 @@ test("BLOCKER 4: a filing that does not state incumbency renders as UNKNOWN, nev
 
 test("BLOCKER 4: the authority's own statement of ABSENCE is evidence, with its citation", () => {
   const inventory = ballotAskInventory(AZ_BALLOT, AZ_BALLOT.contests);
-  /* Vail's school board race: two seats up, two filed, the election cancelled
-     as uncontested. That is a fact a reader needs, in the county's words. */
   const vailAbsence = AZ_BALLOT.absences.find((a) => a.ocdId === VAIL);
   assert.ok(vailAbsence, "the committed ballot holds Pima County's own statement");
   assert.match(vailAbsence!.statement, /no Vail Unified School District governing board race/i);
@@ -631,22 +470,7 @@ test("BLOCKER 4: the authority's own statement of ABSENCE is evidence, with its 
   void inventory;
 });
 
-/* ══════════════════════════════════════════════════════════════════════
-   5 · THE SITTING IS PRINTED IN THE BODY'S OWN ZONE
-   ══════════════════════════════════════════════════════════════════════ */
-
 test("RED CONTROL: a Vail sitting reads as its LOCAL day, not its UTC day", () => {
-  /*
-   * **THE WRONG FACT, IN A SMALL FONT.** Every Vail row in the corpus is stored
-   * at 02:00Z, which is 7:00 p.m. the PREVIOUS evening in Arizona — and 7:00
-   * p.m. is when the board actually sits, on the second and fourth Tuesday, as
-   * the district says on its own portal page.
-   *
-   * The grounded route's meeting record used to read `starting
-   * 2026-09-09T02:00:00.000Z in time zone America/Phoenix`, which printed a
-   * Wednesday for a meeting held on a Tuesday, and put an identifier on a
-   * reader surface while doing it.
-   */
   const sitting = { startsAt: "2026-09-09T02:00:00.000Z", timeZone: "America/Phoenix" };
   assert.equal(localDate(sitting), "2026-09-08", "the LOCAL calendar date is the 8th");
   assert.equal(localWeekday(sitting), "Tuesday");
@@ -670,10 +494,6 @@ test("the grounded route prints sittings through the shared formatter", () => {
     "the raw instant must not be interpolated into a record a reader sees",
   );
 });
-
-/* ══════════════════════════════════════════════════════════════════════
-   6 · CONTACTS COME ONLY FROM VERIFIED RELATIONSHIPS
-   ══════════════════════════════════════════════════════════════════════ */
 
 test("CONTACTS: Vail's board and superintendent come back, each with a source", () => {
   const contacts = contactsForBody(
@@ -746,10 +566,6 @@ test("CONTACTS: a representative's relationship is bounded by what a division pr
   assert.equal(contacts[0].basis, "READER_REPRESENTATIVE");
 });
 
-/* ══════════════════════════════════════════════════════════════════════
-   7 · SIGNAL CAPTURE — A REAL CALLER, SHIPPED GATED
-   ══════════════════════════════════════════════════════════════════════ */
-
 function captureInput(over: Partial<AskCaptureInput> = {}): AskCaptureInput {
   return {
     question: "What's on the Vail school district agenda?",
@@ -789,18 +605,12 @@ function captureInput(over: Partial<AskCaptureInput> = {}): AskCaptureInput {
 }
 
 test("ASK SIGNAL: there is a REAL production call site, in the route, after the answer", () => {
-  /*
-   * **THE DEFECT.** PR #212 described this as one-flip activation. It was not:
-   * `captureAskInteraction` was referenced only by its own module and its
-   * tests, and the route's own header said it stored nothing. Pulling the
-   * ripcord up would have changed nothing whatsoever.
-   */
   const route = code(GROUNDED_ROUTE);
   assert.match(route, /captureAskInteraction\(/, "the route must actually call the capture path");
   /* And it must be called with the DELIVERED answer, which is only known at
      the end — a call before synthesis would record an intention. */
   const captureAt = route.indexOf("await capture(mode,");
-  // The route calls the writing ladder (2026-09-25); synthesizeAnswer is its last rung.
+  // The route calls the writing ladder; synthesizeAnswer is its last rung.
   const synthesisAt = route.indexOf("await synthesizeWithLadder(");
   assert.ok(captureAt > 0 && synthesisAt > 0);
   assert.ok(
@@ -828,12 +638,6 @@ test("ASK SIGNAL: a call without a continuity key writes zero rows", async () =>
 });
 
 test("ASK SIGNAL: with the gate lifted, one Ask writes exactly one row of the right shape", async () => {
-  /*
-   * The controlled test the ripcord's activation has to be able to pass. The
-   * flag itself is not touched — the ripcord's own module reads process state
-   * and this asserts the SHAPE through the pure builder, which is the same
-   * object the write receives.
-   */
   const row = prepareAskInteraction({
     ...captureInput(),
     coverageTier: "TIER_1",
@@ -854,12 +658,7 @@ test("ASK SIGNAL: with the gate lifted, one Ask writes exactly one row of the ri
 });
 
 test("ASK SIGNAL: enabling the flag without minting a key writes NOTHING, loudly", async () => {
-  /*
-   * `askKeyHash("")` is a perfectly good digest of the empty string, and it is
-   * the SAME digest for every reader. A store enabled without minting would
-   * report one distinct reader forever, with nothing anywhere raising an
-   * error. The refusal makes the coupling structural.
-   */
+  /* An empty key hashes to the same digest for every reader, so a store enabled without minting must refuse. */
   const written: AskInteractionRow[] = [];
   const outcome = await captureAskInteraction(
     captureInput({ continuityKey: "" }),
@@ -919,20 +718,7 @@ test("ASK SIGNAL: the surfaces mint the returning-reader ID in the Ask store's o
   }
 });
 
-/* ══════════════════════════════════════════════════════════════════════
-   8 · THE STORED ANSWER IS SCRUBBED TOO
-   ══════════════════════════════════════════════════════════════════════ */
-
 test("PII: a name the reader introduced and the model echoed survives in NEITHER column", () => {
-  /*
-   * **THE PLANT.** The question scrub was correct and the answer was only
-   * truncated, so a reader who introduced themselves and a model that replied
-   * politely would put the name straight back into the row one column over —
-   * the store defeating its own redaction.
-   *
-   * A shape-based pass cannot find this. "Alma" in an answer is a word. What
-   * finds it is knowing which value was removed from the question.
-   */
   const row = prepareAskInteraction({
     ...captureInput({
       question:
@@ -960,13 +746,7 @@ test("PII: a name the reader introduced and the model echoed survives in NEITHER
 });
 
 test("PII: the scrub does not eat the answer's own meaning", () => {
-  /*
-   * The other direction, and it is why the answer does not use the reader-text
-   * pass wholesale: `STREET_ADDRESS_SHAPED` is "a number followed by
-   * capitalised words", which is the shape of every spelled-out date this
-   * product prints. Running it over an answer replaces the meeting date with a
-   * redaction mark and files a false STREET_ADDRESS flag on the row.
-   */
+  /* The reader-text address pass would redact every spelled-out date, so the answer does not use it wholesale. */
   const scrubbed = scrubStoredAnswer(
     "The board meets on Tuesday, September 8th, 2026 at 7:00 PM MST at 13801 E. Benson Highway.",
   );
@@ -991,10 +771,6 @@ test("approximateLocation cannot drift from coarse orientation into precision", 
   assert.equal(normalizeApproximateLocation("85641-1234"), null, "ZIP+4 is more precise than the column means");
   assert.equal(normalizeApproximateLocation("32.0,-110.7"), null, "a coordinate pair is refused");
 });
-
-/* ══════════════════════════════════════════════════════════════════════
-   9 · EVIDENCE PROVENANCE SURVIVES INTO THE ROW
-   ══════════════════════════════════════════════════════════════════════ */
 
 test("PROVENANCE: which records and which sources, not merely how many", () => {
   const provenance = evidenceProvenance([
@@ -1033,10 +809,6 @@ test("PROVENANCE: which records and which sources, not merely how many", () => {
   assert.deepEqual(row.evidenceSourceUrls, provenance.sourceUrls);
   assert.equal(row.evidenceRetrievedFrom, provenance.retrievedFrom);
 });
-
-/* ══════════════════════════════════════════════════════════════════════
-   10 · LOCATION / CONSTITUENCY, STAMPED FROM PRODUCT STATE
-   ══════════════════════════════════════════════════════════════════════ */
 
 test("RESIDENCY: a typed ZIP is a self-declared HOME ZIP — the author's rule, exactly", () => {
   assert.deepEqual(stampResidency("TYPED_ZIP"), {

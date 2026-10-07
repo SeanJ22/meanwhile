@@ -1,35 +1,8 @@
 /**
- * **ONE SITTING OF A RECURRING iCALENDAR SERIES IS ONE RECORD.** (2026-09-23.)
- *
- * The defect, measured in production (read-only): a Google Calendar series is
- * one `UID` across a master and its overrides, and `ical` keyed a meeting on
- * the `UID` alone. Every sitting of the series competed for one id, the first
- * event in feed order won, and Google serves its `.ics` in a different order
- * on every request. Between 2026-09-14 and 09-23 the Town of Bradford
- * Conservation Commission's one record moved its start 51 times across five
- * sittings; Warner's Zoning Board record 39 times across three, alternating a
- * held meeting with a cancelled one. A reader saw one sitting or another, and
- * never all of them.
- *
- * No live calls. The fixtures are RECORDED reads of the towns' own public
- * calendars, trimmed to the named series:
- *
- * - `bradford-2026-09-23-read-1.ics` and `-read-2.ics`: two reads of
- *   `calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/
- *   public/basic.ics`, taken 2026-09-23T16:05:27Z and 16:06:09Z (full feeds
- *   277,516 bytes each, sha256 8293df6d… and e91c159f…). Kept: every event of
- *   the Conservation Commission series (`qnahpc95…`), of the Planning Board
- *   series (`64q7u3of…_R20240528T230000`), and one Budget Committee event
- *   outside any series (`2issdnlf…`).
- * - `warner-2026-09-23.ics`: one read of Warner's calendar
- *   (`4550fa96…%40group.calendar.google.com`), 2026-09-23T15:49:14Z, 260,603
- *   bytes, sha256 881c6862…. Kept: the Zoning Board series
- *   (`6p16gsvl…_R20250213T000000`), the Conservation Commission series
- *   (`4qfd6hqi…`) and one Select Board series (`42cp3onv…`).
- *
- * Each event block is byte-for-byte as served, in the order served, except
- * that `DESCRIPTION` is removed: the adapter never reads it, and Warner's
- * carries agenda links that name private variance applicants.
+ * One sitting of a recurring iCalendar series is one record: a Google Calendar series is one `UID` across a
+ * master and its overrides, served in a different order on every request. The fixtures are recorded reads of
+ * towns' public calendars trimmed to the named series, each event block as served except that `DESCRIPTION`
+ * is removed (it can name private applicants).
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -110,8 +83,6 @@ function reordered(ics: string, order: (all: string[]) => string[]): string {
   return `${head}${order(blocks(ics)).join("")}END:VCALENDAR\r\n`;
 }
 
-/* ------------------------------------------ the defect, from the bytes --- */
-
 test("ICAL-OCC · two recorded reads 42 seconds apart serve the same events in different orders", () => {
   const withoutStamp = (block: string) => block.replace(/^DTSTAMP:.*\r\n/m, "");
   const first = blocks(READ_1).map(withoutStamp);
@@ -151,8 +122,6 @@ test("ICAL-OCC · the parser reads the recurrence fields it keys on", () => {
   assert.equal(budget?.recurrenceId, null);
 });
 
-/* ----------------------------------------------------------- the fix --- */
-
 test("ICAL-OCC · every sitting of the Conservation Commission series is its own record", () => {
   const { meetings, accounting, duplicateIdentity, recurrence } = normalize(
     wiringFor("bradford-conservation-commission"),
@@ -171,7 +140,7 @@ test("ICAL-OCC · every sitting of the Conservation Commission series is its own
       // 10 November at 7pm Eastern (standard time) is 00:00Z on the 11th.
       { id: `${CC_SERIES}/20261111T000000Z`, startsAt: "2026-11-18T00:00:00.000Z", status: "SCHEDULED", title: "Conservation Commission" },
       { id: `${CC_SERIES}/20261209T000000Z`, startsAt: "2026-12-16T00:00:00.000Z", status: "SCHEDULED", title: "Conservation Commission" },
-      // DB-03: the held window reaches 120 days ahead, so the January sitting is in.
+      // The held window reaches 120 days ahead, so the January sitting is in.
       { id: `${CC_SERIES}/20270106T000000Z`, startsAt: "2027-01-06T00:00:00.000Z", status: "SCHEDULED", title: "Conservation Commission" },
     ],
   );
@@ -225,7 +194,7 @@ test("ICAL-OCC · Warner's Zoning Board: each edited and each unedited sitting o
   assert.deepEqual(
     meetings.map(({ id, startsAt, status, title }) => ({ id, startsAt, status, title })),
     [
-      // DB-03: the held window reaches 120 days back and ahead, so 10 June and 14 January are in.
+      // The held window reaches 120 days back and ahead, so 10 June and 14 January are in.
       { id: `${ZBA_SERIES}/20260610T230000Z`, startsAt: "2026-06-10T23:00:00.000Z", status: "CONCLUDED", title: "Zoning Board Meeting" },
       { id: `${ZBA_SERIES}/20260708T230000Z`, startsAt: "2026-07-08T23:00:00.000Z", status: "CANCELED", title: "CANCELED Zoning Board Meeting" },
       { id: `${ZBA_SERIES}/20260812T230000Z`, startsAt: "2026-08-12T23:00:00.000Z", status: "CONCLUDED", title: "Zoning Board Meeting" },
@@ -244,15 +213,9 @@ const SB_SERIES = "ical:warner-select-board:42cp3onvveme22uorqju8uhu34@google.co
 
 test("ICAL-OCC · an edited sitting belongs to its series' body, and replaces the series' own copy of it", () => {
   /*
-   * Warner's Select Board series `42cp3onv…` starts 8 September, and the town
-   * edited that first sitting to read "RESCHEDULED Select Brd -9/15". Read by
-   * its own title that names no board, so it was dropped, and the series'
-   * unedited copy ("Select Board Meeting", 8 September) stood in for a sitting
-   * the town had edited. The series decides the body; the edited copy's own
-   * DTSTART decides when; its title is shown as the town wrote it. The
-   * series' own copy of that sitting is a counted duplicate, never a meeting.
-   * The title says the sitting moved to 9/15, so it was not held on 9/8
-   * (`movedOffItsDay`, 2026-09-24): this expectation read CONCLUDED until then.
+   * A series' edited first sitting is decided by the series for its body, by its own DTSTART for when, and
+   * shown with its title as written; the series' own copy of that sitting is a counted duplicate. A title saying
+   * the sitting moved means it was not held on its original day.
    */
   const wiring = wiringFor("warner-select-board");
   const selectBoard = (ics: string) =>
@@ -318,8 +281,6 @@ test("ICAL-OCC · an edited sitting is never claimed by a body its own title hap
   assert.equal(result.accounting.outcome, "CONSERVED");
 });
 
-/* ------------------------------------- two events claiming one sitting --- */
-
 const SELECT_BOARD_WIRING = {
   bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#select-board",
   ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
@@ -382,8 +343,6 @@ test("ICAL-OCC · two copies at the same revision are settled on content, never 
   assert.deepEqual(forward, backward);
 });
 
-/* ------------------------------------------------------- the helpers --- */
-
 test("ICAL-OCC · an occurrence stamp is the slot in UTC, or the date of an all-day slot", () => {
   assert.equal(occurrenceStampFromInstant("2026-09-15T23:00:00.000Z"), "20260915T230000Z");
   assert.equal(occurrenceStampFromInstant("not a time"), null);
@@ -423,9 +382,7 @@ test("ICAL-OCC · a series record is replaced only by an occurrence holding its 
   assert.equal(supersedesSeriesRecord(prior, { id: CC_SERIES, bodyId: body, startsAt: "2026-10-20T23:00:00.000Z" }), false, "not an occurrence");
 });
 
-/* ------------------------------------ the first read under the new id --- */
-
-/** The 15 September sitting of the Bradford Conservation Commission series. */
+/** The 15 September sitting of the Conservation Commission series. */
 const fifteenth = (rows: readonly Meeting[]): Meeting => {
   const found = rows.find((row) => row.id === `${CC_SERIES}/20260915T230000Z`);
   assert.ok(found, "the 15 September sitting is produced");
@@ -458,11 +415,7 @@ function report(ics: string, rows: number, feed = BRADFORD_FEED) {
   };
 }
 
-/**
- * What production holds today: ONE row under the series' `UID`-only id,
- * showing whichever sitting its last read listed first (15 September at
- * 15:13Z), with the town's calendar page stored against it.
- */
+/** A held row under the series' `UID`-only id, showing whichever sitting its last read listed first. */
 async function seedLegacySeriesRecord(
   store: MemoryRoutineDataStore,
   sitting: Meeting,
@@ -672,28 +625,10 @@ test("ICAL-OCC · the promotion door re-derives a supersession claim and refuses
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
 });
 
-/* ======================================================================== *
- *  RRULE EXPANSION (2026-09-23), proved against the towns' published view
- * ======================================================================== */
-
 /*
- * Full recorded feeds and the towns' own published view of them:
- *
- * - `bradford-2026-09-23-full.ics` and `warner-2026-09-23-full.ics`: every
- *   event of each Google Calendar feed as read at 2026-09-23T17:30:01Z through
- *   the product's own retrieval path (sha256 241ccd00… and 86bf769e…), with
- *   DESCRIPTION, ATTENDEE and ORGANIZER removed.
- * - `bradford-view-2026-10.html` and `warner-view-2026-10.html`: the agenda
- *   Google renders for October 2026 of the same calendars
- *   (`calendar.google.com/calendar/htmlembed?src=…&ctz=America/New_York
- *   &mode=AGENDA`), read at 17:34:48Z and 17:34:50Z. Each town's own calendar
- *   page (bradfordnh.gov/pages/calendar, warnernh.gov/calendar/) embeds exactly
- *   that calendar, so this is the town's published view. Every listed sitting
- *   carries Google's own instance id, `<series>_<UTC slot>`: the same slot this
- *   adapter keys on.
- * - `newbury-2026-09-23-selectboard.ics`: the Town of Newbury's Drupal export
- *   read at 17:29:56Z (sha256 664250b2…), its Selectboard events only,
- *   DESCRIPTION removed.
+ * Full recorded feeds (DESCRIPTION, ATTENDEE and ORGANIZER removed) and the agenda Google renders for October
+ * 2026 of the same calendars, which each town's calendar page embeds. Every listed sitting carries Google's
+ * instance id, `<series>_<UTC slot>`: the same slot this adapter keys on.
  */
 const BRADFORD_FULL = readFileSync(join(FIXTURES, "bradford-2026-09-23-full.ics"), "utf8");
 const WARNER_FULL = readFileSync(join(FIXTURES, "warner-2026-09-23-full.ics"), "utf8");
@@ -1044,9 +979,7 @@ test("ICAL-OCC · a feed that restates the series' rule on every sitting is read
   const governing = partition("newbury-ical-governing");
   const result = normalize([governing.wiring!], NEWBURY_SELECTBOARD, FULL_READ_AT);
   const uids = new Set(parseIcs(NEWBURY_SELECTBOARD).map((event) => event.uid));
-  // 24 events in the held 120-day window (DB-03; 17 in the 90-day window) select, and sittings listed twice under two
-  // series with every published field identical are one (2026-09-25, `collapsePublisherRelistings`;
-  // tests/ical-publisher-relisted.test.ts): 17 sittings (12 in the 90-day window).
+      // 24 events in the held 120-day window select, and sittings listed twice under two series with every published field identical are one: 17 sittings.
   assert.equal(result.meetings.length, 17);
   assert.equal(result.duplicateIdentity?.publisherRelisted, 7);
   for (const meeting of result.meetings) {

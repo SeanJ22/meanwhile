@@ -21,24 +21,14 @@ import {
 import { THIRD_PARTY_HOSTS } from "../lib/ops/origin-confinement.ts";
 
 /**
- * **THE QUOTA BARRIER, ASKED OF ITS WHOLE POPULATION** (MAPQ-1, 2026-09-07).
- *
- * The measurement behind it: 101,863 MapTiler requests against a 100,000-request
- * free allowance in the first billing period, with a public readership too small
- * to explain it, and a repository whose guarded Playwright harness was repaired
- * on 2026-08-22 so synthetic sessions could reach MapTiler again.
- *
- * This file asks the pure policy the questions a browser test cannot ask
- * cheaply: every named host, every scheme, both gates, the ceiling, and the
- * lookalike hostnames a substring match would get wrong. `tests/maptiler-barrier.test.ts`
- * then proves that a real browser actually obeys it.
+ * The map-tile quota barrier, asked of every named host, scheme, both gates, the ceiling, and lookalike hostnames a
+ * substring match would get wrong. `tests/maptiler-barrier.test.ts` proves a real browser obeys it.
  */
 
 const ALLOWED = { [PROVIDER_ACCESS_VAR]: MAPTILER } as const;
 
 test("every named MapTiler host is a provider host, and is blocked by default", () => {
-  /* The denominator, stated. A guard reporting zero leaks while inspecting
-   * nothing is the empty success this repository has a rule about. */
+  /* The denominator, stated. */
   assert.ok(MAPTILER_HOSTS.length >= 2, "the host list has collapsed");
   assert.ok(
     MAPTILER_HOSTS.includes("api.maptiler.com"),
@@ -60,9 +50,7 @@ test("every named MapTiler host is a provider host, and is blocked by default", 
 });
 
 test("a subdomain nobody has added yet is blocked the day it appears", () => {
-  /* The matcher is the registrable domain, not the enumerated list, so a host
-   * this repository has never seen is blocked on arrival rather than on the day
-   * somebody remembers to append it. */
+  /* The matcher is the registrable domain, so an unseen host is blocked on arrival. */
   for (const host of ["maptiler.com", "cdn.maptiler.com", "eu-central-1.tiles.maptiler.com"]) {
     assert.equal(providerOf(`https://${host}/x`), MAPTILER, `${host} must match`);
   }
@@ -93,14 +81,8 @@ test("only http and https can reach a provider; everything else is not a provide
 });
 
 test("every OTHER third party this product's pages reach is untouched by the barrier", () => {
-  /*
-   * The barrier bounds ONE provider's quota. It is not a general egress block,
-   * and a session that widened it into one would break font loading, the
-   * Congress and FEC reads, and every social link — silently, because they all
-   * fail as an absence rather than an error. So the whole stated denominator of
-   * third-party hosts in `lib/ops/origin-confinement.ts` is walked here, and
-   * only the MapTiler ones may match.
-   */
+  // The barrier bounds one provider's quota and is not a general egress block: every other third-party host in
+  // `lib/ops/origin-confinement.ts` must not match.
   const matched: string[] = [];
   for (const host of THIRD_PARTY_HOSTS) {
     if (providerOf(host) !== null) matched.push(host);
@@ -118,8 +100,7 @@ test("both gates are required, and neither alone opens the door", () => {
   assert.equal(resolveProviderPolicy({}).mode, "BLOCKED");
   assert.equal(resolveProviderPolicy({ requested: null, env: {} }).mode, "BLOCKED");
 
-  // The environment alone: a sweep started in a shell that once exported the
-  // variable must NOT inherit the ability to spend.
+  // The environment alone: a shell that once exported the variable must not inherit the ability to spend.
   assert.equal(
     resolveProviderPolicy({ requested: null, env: ALLOWED }).mode,
     "BLOCKED",
@@ -127,8 +108,7 @@ test("both gates are required, and neither alone opens the door", () => {
       "broad visual sweep would silently inherit the mode",
   );
 
-  // The call site alone: named as its own refusal so a smoke fails with the
-  // reason rather than with a silent zero.
+  // The call site alone, named as its own refusal.
   const asked = resolveProviderPolicy({ requested: MAPTILER, env: {} });
   assert.equal(asked.mode, "REFUSED_NOT_OPTED_IN");
   assert.equal(asked.ceiling, 0);
@@ -217,9 +197,7 @@ test("the shared browser site enforces the barrier, and enforces it first", asyn
     "a blocked provider request must be aborted, so MapLibre falls to FALLBACK_STYLE",
   );
 
-  /* Order matters, and it is asserted rather than assumed: the barrier runs
-   * before the confinement decision, so a request that is not going to leave
-   * never has its headers computed. */
+  /* The barrier runs before the confinement decision, so a request that will not leave never has its headers computed. */
   const barrierAt = src.indexOf("decideProviderRequest(");
   const confineAt = src.indexOf("confine(request.url()");
   assert.ok(barrierAt > 0 && confineAt > 0, "both decisions must be present in the route handler");
@@ -228,8 +206,7 @@ test("the shared browser site enforces the barrier, and enforces it first", asyn
     "the provider barrier must be decided before origin confinement",
   );
 
-  /* Two gates. A launch option that could open the door on its own would put
-   * the whole decision back inside a script author's memory. */
+  /* Two gates: a launch option alone cannot open the door. */
   assert.match(
     src,
     /resolveProviderPolicy\(\{[\s\S]{0,200}?requested:[\s\S]{0,120}?env:/,

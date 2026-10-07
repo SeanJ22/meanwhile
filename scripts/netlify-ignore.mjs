@@ -6,19 +6,16 @@
  * Netlify's convention and it is inverted from every other exit code in this
  * repo, so it is stated here rather than left to be remembered.
  *
- * Sean's instruction of 2026-08-24 — RULING 124. The reasoning, the measured
- * before-and-after, and the allowlist itself all live in
- * `lib/ops/deploy-paths.ts`, which is the ONE implementation (RULING 103);
- * this file is the adapter between Netlify's environment and that predicate.
+ * The allowlist and its reasoning live in `lib/ops/deploy-paths.ts`, the one
+ * implementation; this file is the adapter between Netlify's environment and
+ * that predicate.
  *
  * ## EVERY FAILURE PATH BUILDS
  *
  * The predicate cannot load, git is unavailable, the clone is shallow, there is
  * no cached deploy to diff against — every one of those exits non-zero and the
  * build runs. A filter that cancelled on its own confusion would serve stale
- * data to readers with nothing going red, and RULING 24 is explicit that a
- * check which cannot reach its subject must never print like a passing one.
- * A wasted build is the cheap failure and it is the only one this can produce.
+ * data to readers with nothing going red; a wasted build is the cheap failure.
  *
  * Netlify supplies `CACHED_COMMIT_REF` (the commit of the last successful
  * deploy for this context), `COMMIT_REF`, `CONTEXT` and `BRANCH`.
@@ -40,7 +37,6 @@ function log(line) {
   console.log(`netlify-ignore · ${line}`);
 }
 
-/* `git` is `gitFor(ROOT)` from ./git-lite.mjs — one copy (RULING 103). */
 const git = gitFor(ROOT);
 
 /**

@@ -1,4 +1,4 @@
-/** FE-18: every resident task has scripted taps that name no place, runs at a newly published place first, passes only within budget with every part shown, and reads in Admin as a pass or fail with its screenshot strip. */
+/** Every resident task has scripted taps that name no place, runs at a newly published place first, passes only within budget with every part shown, and reads in Admin as a pass or fail with its screenshot strip. */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";

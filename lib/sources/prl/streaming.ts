@@ -1,20 +1,8 @@
 /**
- * **Streaming parsers for files too large to hold in memory.**
- *
- * The classified-statement CSVs reach 461 MB compressed and several gigabytes
- * decompressed, and their `text` and `*_explanation` columns are free prose
- * full of commas, quotes and newlines. Two consequences drive this module:
- *
- * - A line-split is wrong. A record spans as many physical lines as its quoted
- *   text contains, and a `split(",")` mis-columns every row after the first
- *   embedded comma. Both parsers are quote/brace aware.
- * - The whole file must never sit in memory. Both parsers are fed text chunks
- *   and yield one record at a time, holding only the partial record that
- *   straddles a chunk boundary. Both are linear in the input length.
- *
- * The full-text `.json` members are a single top-level array of objects. The
- * JSON parser tracks string, escape and brace state, so it yields correct
- * objects whether or not PRL keeps one object per line.
+ * Streaming parsers for files too large to hold in memory. Records span as many
+ * physical lines as their quoted prose contains, so both parsers are quote/brace
+ * aware, are fed text chunks, yield one record at a time and are linear in the
+ * input. The full-text `.json` members are one top-level array of objects.
  */
 
 /** A source of decoded text chunks (e.g. an inflating zip member). */

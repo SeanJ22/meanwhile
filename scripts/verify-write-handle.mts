@@ -1,33 +1,15 @@
 /**
- * `pnpm verify:write-handle` — proof that the ONE sanctioned production write
- * path connects, writes, and cleans up after itself (g11, 2026-08-17; the
- * author's ruling A of the same day).
+ * `pnpm verify:write-handle` — proof that the one sanctioned production write
+ * path (`WTP_PRODUCTION_DATABASE_URL_WRITE`) connects, writes, and cleans up:
  *
- * ## What it proves, and why each step is here
+ * 1. it resolves through `lib/db/write-handle.ts`, so both refusals (the
+ *    READONLY variable by name, and any read-only user) are on the path;
+ * 2. it confirms the host is NOT the branch `DATABASE_URL` calls local;
+ * 3. it writes ONE row, marked SYNTHETIC with a run id it mints;
+ * 4. it reads that row back by the run id;
+ * 5. it deletes it and prints the before and after totals, so "delta 0" is checkable.
  *
- * `WTP_PRODUCTION_DATABASE_URL_WRITE` exists so that migrations and explicit
- * maintenance have a handle that says "write" out loud. A handle nobody has
- * exercised is a claim, so this exercises it end to end:
- *
- * 1. it resolves through `lib/db/write-handle.ts`, so the two refusals — the
- *    READONLY variable by name, and any read-only user in any variable — are
- *    on the path, not beside it;
- * 2. it confirms the host is NOT the branch `DATABASE_URL` calls local, since
- *    a "production" write handle pointed at the local branch would pass every
- *    other check while touching nothing production has ever seen (the exact
- *    failure R36 spent two sessions on);
- * 3. it writes ONE row, marked SYNTHETIC with a run id it mints, so the row is
- *    attributable the moment it exists rather than after the fact;
- * 4. it reads that row back BY the run id — a write that reports success and
- *    cannot be read back has not been proven;
- * 5. it deletes it and prints the before and after totals, so a repeat run
- *    cannot accumulate and the delta is a number rather than an assurance.
- *
- * ## This writes to PRODUCTION, on purpose
- *
- * The row it creates is named in the session report per CLAUDE.md's
- * probe-naming rule, and it is gone by the end of the run. The count is
- * printed both ways precisely so "delta 0" is checkable rather than claimed.
+ * This writes to PRODUCTION, on purpose; the row is gone by the end of the run.
  *
  * Run: `pnpm verify:write-handle`
  */

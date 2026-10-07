@@ -16,33 +16,16 @@ import {
   OFFICE_BLURBS,
   blurbForTitle,
 } from "../lib/officials/office-blurbs.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
 
 /**
- * The cross-jurisdiction guard (session item 1, wall clock 2026-08-14
- * second session) — the uniqueness invariant's sibling in curated data.
- *
- * The Rockaway Township mayor rendered with Tucson's charter copy and a
- * hyperlink to Tucson's charter, because the per-office-TYPE blurb had
- * been written for one specific city. One jurisdiction's content bound to
- * another jurisdiction's key — the same shape as the D40 cache-key bug,
- * in curated words instead of a join.
- *
- * The rule: no curated official's rendered content may reference a
- * jurisdiction outside their own. Checked mechanically with per-state
- * marker lists (place names as word-bounded regexes, official domains,
- * phone area codes) covering everything the four zips render. A marker
- * list is deliberately dumb — it will need a row when coverage grows,
- * and that edit is the audit trail.
+ * No curated official's rendered content may reference a jurisdiction outside their own, checked with per-state
+ * marker lists (place names as word-bounded regexes, official domains, phone area codes). A marker list needs a
+ * row when coverage grows.
  */
 
 type StateCode = "az" | "nj" | "nh";
 
-/** Markers that identify each state's jurisdictions: place-name words,
- *  official domains. Word-bounded when matched, so "Morrison" never trips
- *  "morris" and "available" never trips "vail". */
+/** Markers that identify each state's jurisdictions: place-name words and official domains, word-bounded when matched. */
 const STATE_MARKERS: Record<StateCode, readonly string[]> = {
   az: [
     "tucson",
@@ -243,18 +226,8 @@ test("curated bodies carry no foreign-jurisdiction content", () => {
 });
 
 /**
- * The ask box's own templates and links (item 1, the tester's mobile pass,
- * 2026-08-14). The tester asked "library" at 03255 and was told about Pima
- * County, Arizona. Last session's guard covered rosters, curated bodies and
- * everyday contacts; the TOPIC EXPLAINER TEMPLATES and their LINK TARGETS
- * were outside its scope, so the same bleed survived in a second place.
- *
- * Two halves, both mechanical:
- * - the shared templates name no covered place at all (place-specific truth
- *   lives in a step's `divisionWhy` and reaches only that division);
- * - the ANSWER AS RENDERED, resolved live against the real registry at each
- *   covered zip, carries nothing from another state in any sentence or any
- *   link — every topic, every zip.
+ * The ask box's shared templates name no covered place, and the answer as rendered at each covered zip carries
+ * nothing from another state in any sentence or link.
  */
 
 const ZIP_STATE: Record<string, StateCode> = {
@@ -332,7 +305,7 @@ test("the regression itself: every ask-box answer at every covered zip is free o
         strings.push([`${zip}/${route.id} step${i} gap`, step.gap]);
         for (const body of step.bodies) {
           strings.push([`${zip}/${route.id} step${i} body label`, body.label]);
-          // The link target is the half the tester actually tapped.
+          // The link target matters as much as the text.
           strings.push([`${zip}/${route.id} step${i} body link`, body.homepageUrl]);
         }
         for (const person of step.people) {

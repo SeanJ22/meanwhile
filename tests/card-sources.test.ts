@@ -1,8 +1,5 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
 
 import {
   BOUNDARY_PROVENANCE,
@@ -16,32 +13,6 @@ import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.
 import { statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-
-/**
- * The false-sentence guard (item 1, 2026-08-16).
- *
- * What shipped to production: the battlecard Sources tab said "Nothing on
- * this card came from an external record" on the Tucson Unified District
- * card, whose boundary is Census TIGER/Line, whose governing board is the
- * district's own roster page, and whose sittings come off the district's own
- * agenda vendor. Every fact on that card came from an external record. The
- * sentence was false, live, on a product whose entire claim is sourced
- * accuracy.
- *
- * The cause was a single hardcoded `sources: []` — the tab had never been
- * wired to the provenance the rows underneath were already carrying. So this
- * file holds two invariants, per the brief:
- *
- *   1. **Per card class, the stated source count equals the rendered rows.**
- *      Both come from the same array, and this proves it stays that way.
- *   2. **The empty sentence and a populated card can never coexist.** A card
- *      holding any externally sourced fact returns at least one source, so
- *      the honest-empty branch is unreachable from a populated card.
- *
- * The district case is asserted against the COMMITTED roster — the real
- * store, not a fixture — because the defect was a real district card and a
- * fixture-only test would have passed on the broken code too.
- */
 
 const TUSD = "ocd-division/country:us/state:az/school_district:tucson_unified_district";
 
@@ -109,9 +80,6 @@ test("a district card with a roster and meetings is never sourceless", () => {
 });
 
 test("a district card with NO roster and NO meetings still cites its boundary", () => {
-  // The boundary is what makes the card exist at all, and it has a publisher.
-  // This is the closest a district card gets to honestly empty, and it is
-  // still not empty.
   const sources = districtCardSources([], []);
   assert.equal(sources.length, 1);
   assert.equal(sources[0].provenance.sourceOrg, BOUNDARY_PROVENANCE.sourceOrg);

@@ -1,4 +1,4 @@
-/** DP-11: a dead end waits its source's own pace or the owner's per-class days, never past the longest-wait setting (5 days to start). */
+/** A dead end waits its source's own pace or the owner's per-class days, never past the longest-wait setting (5 days to start). */
 import assert from "node:assert/strict";
 import test from "node:test";
 

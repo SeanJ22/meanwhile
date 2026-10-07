@@ -8,8 +8,6 @@ import {
 } from "../lib/registry/wording.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
 
-/** D17 — the New Hampshire wording, and what gates it. */
-
 const NH = "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town";
 const AZ = "ocd-division/country:us/state:az/county:pima";
 
@@ -22,7 +20,6 @@ test("the state comes off the identifier, never off a label", () => {
 });
 
 test("DC and the territories are read as their own jurisdictions, exactly as lib/ocd/fips.ts mints them (2026-09-25)", () => {
-  // Their registrations were promoted and never reached a reader: the state was read off `state:` alone.
   assert.equal(stateOf("ocd-division/country:us/district:dc/county:district_of_columbia"), "dc");
   assert.equal(stateOf("ocd-division/country:us/territory:pr/county:adjuntas_municipio/place:adjuntas_barrio_pueblo"), "pr");
   assert.equal(stateOf("ocd-division/country:us/territory:vi"), "vi");
@@ -37,16 +34,10 @@ test("an exhausted New Hampshire search says the law does not require an agenda"
   const note = agendaAbsenceNote(NH, "NO_SOURCE_FOUND")!;
   assert.match(note, /searched high and low/);
   assert.match(note, /New Hampshire does not require an agenda/);
-  // The statute says notice is required and an agenda is not. Stating it the
-  // other way round would be a false legal claim rendered to a reader, which is
-  // precisely the error D17 exists to prevent.
   assert.ok(!/does require an agenda/.test(note.replace(/does not require/g, "")));
 });
 
 test("a body nobody searched never claims a search", () => {
-  // D17 split (2026-08-13): the statutory sentence renders for every NH body
-  // — it is a fact about the law, not about our work — while "searched high
-  // and low" is a diligence claim that only an exhausted hunt may make.
   for (const status of ["NOT_ATTEMPTED", "KNOWN_UNCOVERED", "LIVE"] as const) {
     const note = agendaAbsenceNote(NH, status)!;
     assert.match(note, /New Hampshire does not require an agenda/, status);
@@ -58,8 +49,7 @@ test("a body nobody searched never claims a search", () => {
 });
 
 test("outside a no-agenda state, an unsearched body gets no note at all", () => {
-  // Arizona requires the agenda posted; there is no statutory fact to state
-  // and no diligence to claim, so the caller's own copy covers it.
+  // Arizona requires the agenda posted, so there is no statutory fact to state.
   assert.equal(agendaAbsenceNote(AZ, "NOT_ATTEMPTED"), null);
   assert.equal(agendaAbsenceNote(AZ, "LIVE"), null);
 });
@@ -67,15 +57,10 @@ test("outside a no-agenda state, an unsearched body gets no note at all", () => 
 test("outside New Hampshire an exhausted search owns the gap", () => {
   const note = agendaAbsenceNote(AZ, "NO_SOURCE_FOUND")!;
   assert.match(note, /searched high and low/);
-  // Arizona requires the agenda posted on the body's website, so silence there
-  // is not lawful and must not be excused.
   assert.ok(!/does not require an agenda/.test(note));
 });
 
 test("the statutory sentence now renders for real NH bodies", () => {
-  // The split's whole point: before it, the exhausted count was zero and the
-  // copy rendered for nobody — including the bodies it was written for. Now
-  // every NH body carries the statutory fact, whatever its hunt state.
   const nhBodies = registry.bodies.filter(
     (b) => b.ocdId && stateOf(b.ocdId) === "nh",
   );
@@ -92,15 +77,6 @@ test("the statutory sentence now renders for real NH bodies", () => {
   assert.equal(exhausted.length, 0);
 });
 
-/**
- * M94 — one footnote per distinct sentence, bodies named inline.
- *
- * The production shape: at 03255 the who-governs panel repeated "we couldn't
- * reach their calendar source" and "New Hampshire does not require an agenda"
- * up to four times each, and three of those repeats named ONE town three
- * times because Newbury's Planning Board, Conservation Commission and Zoning
- * Board all sit on the same division.
- */
 test("identical footnotes collapse to one, naming every distinct body", () => {
   const bodies = [
     { divisionLabel: "Newbury town", ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town" },
@@ -143,23 +119,6 @@ test("a body with nothing to say contributes no footnote at all", () => {
   assert.deepEqual(collapsed, [], "an empty note became a rendered line");
 });
 
-/* ------------------------------------------------- F01 6.1, the gap sweep --- */
-
-/**
- * F01 6.1 / 6.2 (2026-08-19, the author's walkthrough): *"we need to stop
- * calling out potential errors we are making."*
- *
- * The product used to append an apology to every honest absence — "that's a
- * gap in our research" / "this is a gap in our data" — and then argue the
- * point ("not a statement that no vote happened"). The FACTUAL half stays and
- * is load-bearing: `CLAUDE.md`'s render-default rule requires a named gap to
- * say WHOSE gap it is, and "we haven't recorded / collected / wired" does
- * exactly that. What is struck is the editorial about our own shortcomings.
- *
- * **This guard is the class, not the instance.** It reads every reader-facing
- * source file rather than the seven call sites the sweep happened to find, so
- * a new surface cannot reintroduce the phrasing.
- */
 test("F01 6.1: no reader surface calls an absence a gap in our research or data", async () => {
   const { readdirSync, readFileSync: read, statSync } = await import("node:fs");
   const { join: j } = await import("node:path");
@@ -187,11 +146,6 @@ test("F01 6.1: no reader surface calls an absence a gap in our research or data"
   );
 });
 
-/**
- * The other half of 6.2 — the factual clause is not optional. An absence that
- * says nothing about whose absence it is would satisfy the ban above and
- * violate the render-default rule, so both halves are guarded together.
- */
 test("F01 6.2: an absence reads as the working-on-it sentence", async () => {
   const { readFileSync: read } = await import("node:fs");
   const { join: j } = await import("node:path");
@@ -206,30 +160,6 @@ test("F01 6.2: an absence reads as the working-on-it sentence", async () => {
   );
 });
 
-/* ------------------------------ item 4, 2026-08-23: the refusal clause --- */
-
-/**
- * **A CARD MAY SAY IT HAS NOT READ THE LAW. IT MAY NOT SAY IT WILL THEREFORE
- * TELL THE READER NOTHING.**
- *
- * The two-layer definition ruling (DEF-1..DEF-4, 2026-08-22) deleted *"we're
- * not going to describe it"* from the body cards. It survived one file over,
- * in `lib/ballot/battlecard-sections.ts`, as *"...so we can't describe it
- * here"* — because that file was never swept with them. A named instance whose
- * sibling nobody looked for, which is the failure the class-wide rule names.
- *
- * It was in the worst place in the product: the "What this office does"
- * section is FIRST and mandatory on every candidate and officeholder card, so
- * the refusal was the first sentence a reader met on the card of a person
- * asking for their vote.
- *
- * **This guard is the class, not the instance.** It reads every reader-facing
- * source file for the REFUSAL half — a sentence that converts "we have not
- * read it" into "so there is nothing here for you". The honest half is
- * untouched and is asserted separately below, exactly as F01 6.1 and 6.2 are
- * guarded together: banning the apology without keeping the attribution would
- * trade one defect for another.
- */
 test("item 4: no reader surface refuses to describe a body or an office", async () => {
   const { readdirSync, readFileSync: read, statSync } = await import("node:fs");
   const { join: j } = await import("node:path");
@@ -250,8 +180,7 @@ test("item 4: no reader surface refuses to describe a body or an office", async 
         continue;
       }
       if (!/\.(tsx?|json)$/.test(name)) continue;
-      // The file that records what was removed is where the dead copy is
-      // quoted, and a guard that cannot name what it bans cannot ban it.
+      // This file quotes the removed copy.
       if (p.endsWith(j("lib", "officials", "body-definitions.ts"))) continue;
       const text = read(p, "utf8");
       for (const re of REFUSALS) if (re.test(text)) offenders.push(`${p} — ${re}`);
@@ -266,11 +195,6 @@ test("item 4: no reader surface refuses to describe a body or an office", async 
   );
 });
 
-/**
- * The other half. Striking the refusal must not strike the attribution with it
- * — an empty section that said nothing about WHOSE gap it is would pass the
- * guard above and violate the render-default rule.
- */
 test("item 4: the office and body absence lines keep their whose-gap attribution", async () => {
   const { readFileSync: read } = await import("node:fs");
   const { join: j } = await import("node:path");

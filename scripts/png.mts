@@ -1,17 +1,6 @@
 /**
  * A minimal PNG reader for exactly what Playwright emits: 8-bit, non-
  * interlaced, colour type 6 (RGBA) or 2 (RGB).
- *
- * Hand-rolled rather than added as a dependency: the only thing in the
- * repository that needs to look at a pixel is its own visual measurements,
- * and a decoder that is `zlib` plus the five PNG filter types is cheaper to
- * keep honest than a package that would ship to nobody.
- *
- * Lifted out of `scripts/measure-extrusion.mts` for g5 item 1, because the
- * coverage measurement the brief asks for needs SATURATION as well as
- * luminance — "measurably darker AND less saturated" is two numbers, and a
- * decoder that only returns one of them is how a check ends up measuring the
- * wrong thing.
  */
 import { inflateSync } from "node:zlib";
 
@@ -114,15 +103,7 @@ export function decodePng(buffer: Buffer): DecodedPng {
 export interface PatchStats {
   /** Mean Rec. 709 luminance over the patch. */
   luma: number;
-  /**
-   * Mean chroma — max(r,g,b) − min(r,g,b), 0–255.
-   *
-   * Not HSV saturation: the scrim desaturates by `saturate(0.68)`, which is a
-   * multiplication in linear RGB about the luminance axis, and chroma is the
-   * quantity that actually shrinks. HSV saturation divides by value and so
-   * moves when the mute's own colour rect changes brightness, which would make
-   * the exterior check pass or fail for the wrong reason.
-   */
+  /** Mean chroma — max(r,g,b) − min(r,g,b), 0–255. Not HSV saturation, which moves with brightness. */
   chroma: number;
   /** Standard deviation of luminance — a blurred patch has less of it. */
   detail: number;
@@ -161,25 +142,9 @@ export function patchStats(
 }
 
 /**
- * Mean absolute luminance change over a rectangle, between two frames.
- *
- * **The robust way to ask "did this paint".** The first version of the panel
- * guard asked whether a patch carried local DETAIL, which sounds equivalent
- * and is not: a group header is mostly empty ground with a short label on the
- * left, so a patch at its centre reads a standard deviation of about 2.6 on a
- * perfectly good build and 0.0 on a broken one — a margin thin enough that
- * device pixel ratio alone flipped it, and a threshold that thin is a coin
- * toss wearing a number.
- *
- * Comparing the SAME rectangle before and after the surface opens is
- * self-calibrating instead. A painted panel replaces map terrain with its own
- * ground and text, which moves mean luminance by tens of units; a panel whose
- * pixels never arrived leaves the terrain exactly as it was, which moves it by
- * almost nothing. No absolute threshold has to know what the basemap looks
- * like at that spot.
- *
- * Both frames must be the same size — the caller's job, and a mismatch throws
- * rather than silently comparing the wrong pixels.
+ * Mean absolute luminance change over a rectangle, between two same-size frames.
+ * Self-calibrating: no absolute threshold has to know what the basemap looks
+ * like. A size mismatch throws.
  */
 export function regionChange(
   before: DecodedPng,

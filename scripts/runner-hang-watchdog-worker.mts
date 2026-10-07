@@ -1,13 +1,8 @@
 /**
- * The hang watchdog's Worker body (see scripts/runner-hang-watchdog.mts).
- *
- * A separate ESM module rather than an eval string so it carries no CommonJS
- * `require` (RULING 46) and type-checks like any other source. It runs in its
- * own thread, so it stays responsive when the MAIN thread's event loop is
- * blocked — the only situation the watchdog exists for. It mirrors
- * hangShouldTerminate() from lib/control-plane/runner-liveness.ts: if the main
- * thread has not refreshed the shared ping past the threshold, force-terminate
- * the whole process so the Scheduled Task relaunch trigger restarts it.
+ * The hang watchdog's Worker body (see scripts/runner-hang-watchdog.mts). It
+ * mirrors hangShouldTerminate() from lib/control-plane/runner-liveness.ts: if
+ * the main thread has not refreshed the shared ping past the threshold, it
+ * force-terminates the whole process.
  */
 import { workerData } from "node:worker_threads";
 
@@ -23,9 +18,7 @@ const killAfterMs = data.killAfterMs;
 const checkMs = Math.max(1_000, Math.floor(data.pingMs));
 
 if (Number.isFinite(killAfterMs) && killAfterMs > 0) {
-  // The interval is deliberately NOT unref'd: it is the only thing keeping this
-  // worker's event loop alive, and it must keep running to guard. The main side
-  // calls worker.unref(), so a live watchdog never holds the runner process open.
+  // Not unref'd: it keeps this worker alive to guard. The main side calls worker.unref().
   setInterval(() => {
     const last = Number(Atomics.load(view, 0));
     if (Number.isFinite(last) && last > 0 && Date.now() - last > killAfterMs) {

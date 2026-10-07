@@ -1,15 +1,3 @@
-/**
- * **A CONTROL-PLANE STORE CALL IS BOUNDED BY ITS CLASS AND TIMES OUT BY NAME.**
- * (Runner bounded store calls, 2026-09-23.)
- *
- * On 2026-09-23 four research cycles ran into the supervisor's 15-minute wall
- * with nothing on stderr and no record. These tests hold the fix at the
- * repository seam, with no network: the driver's own fetch hook
- * (`neonConfig.fetchFunction`) is replaced by one that never answers, and the
- * real `createPgRepositories` must fail each call by name inside its bound,
- * cancel the request, and hand connect-retry a timeout it can retry — or, when
- * the caller's budget is spent, one it must not.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -96,9 +84,8 @@ interface HungFetch {
 }
 
 /**
- * Install a driver fetch that never answers. `honorAbort` makes it reject with
- * the signal's reason when aborted, as undici does; without it the promise stays
- * pending forever, so only the call's own timer can settle it.
+ * A driver fetch that never answers. `honorAbort` makes it reject with the
+ * signal's reason when aborted; without it only the call's own timer can settle it.
  */
 async function withHungFetch<T>(honorAbort: boolean, fn: (hung: HungFetch) => Promise<T>): Promise<T> {
   const original = neonConfig.fetchFunction;
@@ -271,7 +258,7 @@ test("the measured defaults: POINT < DOCUMENT < PAGE, each inside the 30 s trans
   const { POINT, DOCUMENT, PAGE } = CONTROL_PLANE_REQUEST_BOUNDS_MS;
   assert.ok(POINT > 0 && POINT < DOCUMENT && DOCUMENT < PAGE, JSON.stringify(CONTROL_PLANE_REQUEST_BOUNDS_MS));
   assert.ok(PAGE < STANDING_NEON_REQUEST_DEADLINE_MS, "a page bound at or over the backstop would surface as the driver's unnamed TimeoutError");
-  /* Each is ~30x the slowest request measured in its class on 2026-09-23 (324 ms, 615 ms, 950 ms). */
+  /* At least 20x the slowest request measured in each class (324 ms, 615 ms, 950 ms). */
   assert.ok(POINT >= 324 * 20 && DOCUMENT >= 615 * 20 && PAGE >= 950 * 20);
 });
 
@@ -360,8 +347,6 @@ test("a bound that is not a positive integer is refused, so no call is ever unbo
     /CONTROL_PLANE_REQUEST_BOUND_INVALID: POINT=0/,
   );
 });
-
-/* ------------------------------------------------ the connect-retry seam --- */
 
 function hangThenAnswer(hangs: number): { readonly sql: BoundableSql; readonly calls: () => number } {
   let calls = 0;

@@ -1,5 +1,5 @@
 /**
- * MW-014 / MW-029 / MW-071 — every due row a lane holds is accounted for by
+ * Every due row a lane holds is accounted for by
  * reason, the reasons add up (or a MISMATCH line says they do not), the
  * coordinator's silent non-dispatches are counted, and the pulse carries the
  * lane gauges from the one research-state read it already makes.

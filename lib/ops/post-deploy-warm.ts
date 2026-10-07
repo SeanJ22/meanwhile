@@ -1,26 +1,4 @@
-/**
- * **WARM A NEW DEPLOY BEFORE ITS FIRST READER DOES.** (C21, 2026-09-25.)
- *
- * A deploy starts every server instance cold and empties the CDN for the
- * production context, and the first readers after it paid for both: on
- * production, 2026-09-25, `/api/meetings?zip=85701` from a fresh deploy took a
- * median 3.8 s, five of ten over the 3 s bar (docs/rulings.md §6). The five-
- * minute keep-warm pinger reaches a new deploy up to five minutes late.
- *
- * So when Netlify reports a production deploy succeeded
- * (`netlify/functions/deploy-succeeded.mts`), this waits until `/api/build`
- * serves that commit, then at once makes the pinger's fourteen marked warm
- * calls (each loads the reader edge, resolves one place per published state
- * and loads the Ask route's code and sources on its instance,
- * app/api/warm/route.ts) and asks `/api/meetings` for
- * each pilot ZIP exactly as the map asks, so the CDN holds those answers
- * before a reader arrives. It then asks each pilot once more and records
- * whether the CDN answered: the evidence, in the function log, that the fill
- * took.
- *
- * Everything here is pure or takes its fetch and clock as arguments, so
- * tests/post-deploy-warm.test.ts proves the plan without a network.
- */
+/** Warm a new production deploy's instances and fill its CDN before its first reader pays for a cold start. */
 import { PUBLIC_SITE_ORIGIN } from "./origins.ts";
 import type { WarmPlace } from "./warm-places.ts";
 
@@ -34,11 +12,7 @@ export const MAX_WARM_PLACES = 300;
 /** How many place requests are in flight at once. */
 export const WARM_CONCURRENCY = 24;
 
-/**
- * The map's request for a typed ZIP, byte for byte: `components/map/map-entry.tsx`
- * builds `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`, and a
- * typed ZIP's view carries no radius.
- */
+/** The map's request for a typed ZIP, byte for byte as the map builds it; a typed ZIP's view carries no radius. */
 export function readerMeetingsPath(point: WarmPlace): string {
   return `/api/meetings?lat=${point.lat}&lng=${point.lng}&zip=${point.zip}`;
 }
@@ -48,12 +22,7 @@ export interface DeployToWarm {
   readonly deployId: string;
 }
 
-/**
- * The production deploy an event names, or null for anything else: a branch
- * deploy, a preview, or a payload without a commit. Reads the legacy
- * `deploy-succeeded` body (`{ payload: { context, commit_ref, id } }`) and the
- * typed-handler shape (`{ deploy: { context, commitRef, id } }`).
- */
+/** The production deploy an event names, or null; reads both the legacy and typed-handler payload shapes. */
 export function deployToWarm(body: unknown): DeployToWarm | null {
   const record = (value: unknown): Record<string, unknown> | null =>
     typeof value === "object" && value !== null ? (value as Record<string, unknown>) : null;
@@ -129,7 +98,7 @@ async function readPilot(origin: string, point: WarmPlace, fetchImpl: typeof fet
   }
 }
 
-/** Wait for the deploy to serve, then warm its instances and fill the CDN with the pilot answers. */
+/** Wait for the deploy to serve, then warm its instances and fill the CDN with the places' answers. */
 export async function warmAfterDeploy(deploy: DeployToWarm, options: PostDeployWarmOptions): Promise<PostDeployWarmResult> {
   const origin = options.origin ?? PUBLIC_SITE_ORIGIN;
   const fetchImpl = options.fetchImpl ?? fetch;

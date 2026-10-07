@@ -1,4 +1,3 @@
-/** DP-33: auditors recompute the team's claimed wins from source records; a wrong claim is a red flag and a lesson; the Scoreboard says "X of K confirmed". */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import test from "node:test";

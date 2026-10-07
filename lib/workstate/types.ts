@@ -1,51 +1,20 @@
 /**
- * Canonical multi-session work state.
- *
- * ## What this replaces
- *
- * A prose report at the end of a session, plus a command that rebuilds a
- * frontier from seeds. The descent session of 2026-08-26 persisted
- * `states/<state>/descent.json` carrying per-level COUNTS — `found`, `followed`,
- * `yielded`, `candidatesNew`, and `finalPassNewLinks: 1986` — and nothing else.
- * Measured at that HEAD: no `edges` array, no cursor, no queue. **The number of
- * outstanding edges was persisted. The edges were not.**
- *
- * So resuming meant re-walking seeds to rediscover work the previous session had
- * already found, and "exact resume cursor" meant a command line. RULING 181:
- * a frontier is state, not a recipe for recreating state.
- *
- * ## The three separations this file exists to enforce
+ * Canonical multi-session work state: a frontier is persisted as edges, not as
+ * counts to be recreated from seeds. It keeps three separations:
  *
  * 1. **Session status is not workstream status is not graph status.**
  * 2. **Permission state is not transport state.**
  * 3. **A candidate is not a body.**
- *
- * Each was a real conflation with a measured cost, and none of them can be
- * fixed by a rule that asks a session to be careful.
  */
 
 /** ---------------------------------------------------------------- statuses */
 
 /**
  * Session status — FIVE states, because "was the state preserved?" and "was
- * there a legitimate reason to stop?" are two independent questions.
- *
- * **The context-percentage model this replaces was fiction** (RULING 189,
- * 2026-08-27). It asked the model for `context_used_percent` and
- * `context_remaining_percent` and then classified from them. The model does not
- * possess that measurement: a session reported ~4% used while the interface it
- * was running inside displayed roughly 47%, and the classifier believed the
- * number because a number was all it was given.
- *
- * A guessed quantity dressed as a measurement is worse than no quantity at all.
- * It made a status that reads as success purchasable with an estimate, and it
- * gave a session a reason to think about its own capacity instead of about the
- * work.
- *
- * So there is no threshold here, and no proxy for one. **A session stops when
- * the authorized work is done, when the author stops or redirects it, or when
- * something outside it actually prevents continuing.** Nothing else is a
- * reason, and the fourth state is the one that says so out loud.
+ * there a legitimate reason to stop?" are independent questions. There is no
+ * capacity threshold: a session stops when the authorized work is done, when
+ * the author stops or redirects it, or when something outside it actually
+ * prevents continuing.
  */
 export const SESSION_STATUSES = [
   /** The authorized work actually satisfies its completion rules. */
@@ -62,29 +31,16 @@ export const SESSION_STATUSES = [
 export type SessionStatus = (typeof SESSION_STATUSES)[number];
 
 /**
- * Stated reasons that are NOT reasons, and the mechanical refusal of each.
+ * Stated reasons that are NOT reasons for a clean stop:
  *
- * Both entries name a specific way this repository has already stopped a
- * session early while believing it had a justification.
+ * 1. **Self-estimated capacity** — context used or remaining, a percentage, a
+ *    token budget, an imminent compaction, or any other arbitrary proxy
+ *    (elapsed minutes, message/command/commit counts, a quota, fatigue).
+ * 2. **Merge cadence** — a planned merge having happened is not a reason to
+ *    stop while executable work remains.
  *
- * 1. **Self-estimated capacity.** The removed model's whole content. A session
- *    cannot measure its own context, so a stop reason that appeals to context
- *    used, context remaining, a percentage, a token budget or an imminent
- *    compaction is appealing to a guess. It never qualifies a clean stop, and
- *    naming a different arbitrary proxy — elapsed minutes, message counts,
- *    command counts, commit counts, a work quota, fatigue — is the same defect
- *    with a new unit.
- *
- * 2. **Merge cadence.** The preceding descent session stopped because "one
- *    planned merge per session (RULING 1), now taken" — while executable work
- *    remained. RULING 1 governs SHIPPING cadence: verify locally, accumulate,
- *    ship once. It says nothing about how long a session runs. **The planned
- *    merge having happened is not a reason to stop; the answer is to delay the
- *    merge until the session is actually ready to end.**
- *
- * This is deliberately narrow. It disqualifies a stated reason from making a
- * stop CLEAN; it never blocks a close, and it never touches `COMPLETE` or
- * `FAILED_CLOSEOUT`, which are derived from state rather than from prose.
+ * This only disqualifies a stated reason from making a stop CLEAN; it never
+ * blocks a close and never touches `COMPLETE` or `FAILED_CLOSEOUT`.
  */
 export const NON_REASONS: ReadonlyArray<{ name: string; pattern: RegExp; why: string }> = [
   {
@@ -109,14 +65,7 @@ export function disqualifyingNonReason(stopReason: string): { name: string; why:
   return null;
 }
 
-/**
- * What every non-`COMPLETE` close must record.
- *
- * Every field is either DERIVED from canonical state or a plain fact about what
- * happened. **None of them is an estimate**, and that is the point: the removed
- * `contextUsedPercent` / `contextRemainingPercent` pair asked a session to
- * report a number it had no way to know.
- */
+/** What every non-`COMPLETE` close must record: derived facts, never estimates. */
 export interface StopAccounting {
   /** Specific. "ran low" is not a stop reason, and neither is "the merge is taken". */
   stopReason: string;
@@ -139,17 +88,9 @@ export interface StopVerdict {
 }
 
 /**
- * Derive the session status from the accounting.
- *
- * **The model does not award itself a status; the state does.** A session that
- * claims a clean stop on a reason that is not a reason is refused here, and the
- * refusal names both the claim and the non-reason it appealed to — which is the
- * whole point of moving this out of prose.
- *
- * **Persisted resumability is not permission to stop voluntarily.** Canonical
- * state exists so that an interrupted session can be resumed; a session that
- * ends while it still has authorized executable work is `EARLY_HANDOFF` however
- * perfect its handoff is.
+ * Derives the session status from the accounting; a claimed clean stop on a
+ * non-reason is refused, naming both. A session that ends with authorized
+ * executable work still owed is `EARLY_HANDOFF`, however good its handoff.
  */
 export function classifySessionStop(
   a: StopAccounting,
@@ -171,9 +112,8 @@ export function classifySessionStop(
     return refuse("COMPLETE", "no executable owed work remains");
   }
 
-  // A stop reason is checked ONLY where it is doing work — that is, only where
-  // it is being offered as justification for a clean stop. An early handoff
-  // states whatever reason it states; it is already reported as early.
+  // A stop reason is checked only where it is offered as justification for a
+  // clean stop.
   const nonReason =
     a.authorStop || a.externalStop ? disqualifyingNonReason(a.stopReason) : null;
 
@@ -215,12 +155,9 @@ export type GraphStatus = (typeof GRAPH_STATUSES)[number];
 /** ----------------------------------------------------------- dispositions */
 
 /**
- * Work and source dispositions.
- *
- * **The false binary `taken OR absent` is deleted** (RULING 184). A CAPTCHA is
- * not absence. Missing tooling is not absence. A pending records request is not
- * absence. A third-party pointer is not necessarily something to ingest. A
- * presently prohibited route is not absence.
+ * Work and source dispositions. A CAPTCHA, missing tooling, a pending records
+ * request, a third-party pointer or a presently prohibited route is not
+ * absence.
  */
 export const DISPOSITIONS = [
   "UNWALKED",
@@ -239,11 +176,8 @@ export type Disposition = (typeof DISPOSITIONS)[number];
 
 /**
  * The dispositions that TERMINATE a child for completion purposes.
- *
- * Deliberately short. `BLOCKED_CURRENTLY`, `REQUIRES_NEW_ADAPTER` and
- * `RECORDS_REQUEST_PENDING` are NOT here: each is an open obligation wearing a
- * finished face, and counting them as done is precisely how a blocker becomes a
- * reported absence.
+ * `BLOCKED_CURRENTLY`, `REQUIRES_NEW_ADAPTER` and `RECORDS_REQUEST_PENDING` are
+ * open obligations, not done.
  */
 export const TERMINAL_DISPOSITIONS: readonly Disposition[] = [
   "INGESTED",
@@ -267,24 +201,17 @@ export const OPEN_DISPOSITIONS: readonly Disposition[] = [
 
 /**
  * What a host's robots.txt said about a route, as RECORDED evidence.
- *
- * `CANNOT_TELL` (the document could not be read) is NOT `DISALLOWED` (the
- * document was read and names the route): RULING 182 keeps the two apart, and
- * a transport failure may never become a verdict. Since the owner decision of
- * 2026-09-25 neither refuses a public page: "Robots.txt alone must not block
- * acquisition." Both are recorded and the route is walked; what stops a walk
- * is an access control (a challenge, a 401/403/429), never a robots line.
+ * `CANNOT_TELL` (the document could not be read) is NOT `DISALLOWED` (read and
+ * names the route); a transport failure may never become a verdict. Neither
+ * refuses a public page; what stops a walk is an access control (a challenge,
+ * a 401/403/429).
  */
 export const PERMISSION_STATES = ["ALLOWED", "DISALLOWED", "CANNOT_TELL", "NOT_APPLICABLE"] as const;
 export type PermissionState = (typeof PERMISSION_STATES)[number];
 
 /**
  * What happened when we tried to RETRIEVE something — including the permission
- * document itself.
- *
- * A value here is never a permission verdict. That collapse cost the descent
- * session multiple hosts, including the tops of two state descents, and
- * escalating the retrieval client recovered them.
+ * document itself. Never a permission verdict.
  */
 export const TRANSPORT_STATES = [
   "REACHABLE",
@@ -308,22 +235,15 @@ export interface PermissionRecord {
   checkedOn: string;
   /** Required when transport is not REACHABLE: what failed, in words. */
   failure?: string;
-  /**
-   * What the wall is AROUND (RULING 90 item 4). A refusal is one road closed,
-   * never a fact about the thing on the other side.
-   */
+  /** What the wall is AROUND: a refusal is one road closed, never a fact about the thing behind it. */
   around?: string;
 }
 
 /**
- * May we fetch from this host right now?
- *
- * A robots.txt verdict never refuses (owner decision 2026-09-25: robots.txt
- * alone must not block acquisition); it is recorded and the reason travels
- * with the answer. The one refusal here is an access control: a permission
- * read that a bot challenge answered (`CHALLENGED`) says the host is walling
- * this client, and a wall is investigated by another public route, never
- * pushed past.
+ * May we fetch from this host right now? A robots.txt verdict never refuses;
+ * it is recorded and travels with the answer. The one refusal is an access
+ * control: a permission read answered by a bot challenge (`CHALLENGED`), which
+ * is investigated by another public route, never pushed past.
  */
 export function mayWalk(p: PermissionRecord): { allowed: boolean; reason: string; recheck: boolean } {
   if (p.transport === "CHALLENGED") {
@@ -358,13 +278,7 @@ export function mayWalk(p: PermissionRecord): { allowed: boolean; reason: string
   }
 }
 
-/**
- * Record a permission-document retrieval.
- *
- * **A transport failure may never produce `DISALLOWED`.** That is enforced here
- * rather than remembered, because the collapse is one line of plausible code
- * and it reads as caution.
- */
+/** Records a permission-document retrieval. A transport failure may never produce `DISALLOWED`. */
 export function recordPermissionRead(input: {
   host: string;
   transport: TransportState;
@@ -397,13 +311,7 @@ export function recordPermissionRead(input: {
 
 /** ------------------------------------------- candidates, entities, bodies */
 
-/**
- * The lifecycle a link detector's output travels.
- *
- * **A large candidate count is not coverage** (RULING 183). The descent
- * produced 1,392 named candidates and promoted ZERO bodies; a job board
- * produced 154 false candidates and a calendar view 214.
- */
+/** The lifecycle a link detector's output travels. A large candidate count is not coverage. */
 export const CANDIDATE_STATES = [
   "EDGE_DISCOVERED",
   "ENTITY_CANDIDATE",
@@ -438,10 +346,8 @@ export interface EntityCandidate {
 }
 
 /**
- * The three-way split every coverage report states (RULING 105, RULING 183).
- *
- * A bare candidate count sounds like coverage and is not. The promoted count is
- * the numerator; nothing else may stand in for it.
+ * The three-way split every coverage report states. The promoted count is the
+ * numerator; nothing else may stand in for it.
  */
 export interface CandidateAccounting {
   candidates: number;
@@ -471,11 +377,9 @@ export function accountCandidates(cs: readonly EntityCandidate[]): CandidateAcco
 /** ------------------------------------------------------------------ edges */
 
 /**
- * A persisted frontier edge.
- *
- * Stable id, explicit parent, explicit disposition. **This is what
- * `descent.json` never held.** `passes` and `budget` choose how many of these
- * to process; they do not decide which exist (RULING 181).
+ * A persisted frontier edge: stable id, explicit parent, explicit disposition.
+ * `passes` and `budget` choose how many to process; they do not decide which
+ * exist.
  */
 export interface WorkEdge {
   id: string;
@@ -492,10 +396,8 @@ export interface WorkEdge {
   /** Required on a declined edge: why it does not enlarge the graph. */
   declinedReason?: string;
   /**
-   * Whether this edge is ELIGIBLE — whether it plausibly advances an owed
-   * question. An ineligible edge is recorded as evidence and does NOT enlarge
-   * the completion graph, which is what stops discovery becoming an infinite
-   * crawl (RULING 177).
+   * Whether this edge plausibly advances an owed question. An ineligible edge
+   * is recorded as evidence and does NOT enlarge the completion graph.
    */
   eligible: boolean;
 }
@@ -504,12 +406,7 @@ export interface WorkEdge {
 
 /**
  * The owed questions. A discovered route enlarges the active graph only when it
- * plausibly advances one of these.
- *
- * **This is the bound, and it is the only bound.** It is not a cap on effort —
- * effort is uncapped by RULING 177. It is a statement about SUBJECT: a
- * government page does not recursively make every hyperlink on the internet
- * owed.
+ * plausibly advances one of these: a bound on subject, not on effort.
  */
 export const OWED_QUESTIONS = [
   "identifies-a-governmental-body",
@@ -536,29 +433,10 @@ export interface EligibilityVerdict {
 
 /**
  * An UNMATERIALIZED OBLIGATION — work a previous run demonstrably discovered,
- * whose COUNT survived but whose IDENTITIES did not.
- *
- * ## The accounting question this exists to answer honestly
- *
- * The legacy descent left two different numbers, and collapsing them either way
- * would be a lie:
- *
- *   **1,614** eligible edges are persisted and resumable. Real, addressable,
- *   individually named on disk.
- *
- *   **3,900** edges the final pass queued — 1,986 NJ, 1,143 AZ, 771 NH — of
- *   which `descent.json` recorded only `finalPassNewLinks`. **The number was
- *   persisted. The edges were not.**
- *
- * Adding them gives 5,514 "outstanding edges", which claims 3,900 addresses the
- * repository does not have. Reporting only 1,614 silently discards work a
- * previous session did and the project still owes. Neither is acceptable, so
- * the two populations are kept APART, both counted, and the second is carried
- * as an obligation with a named discharge path.
- *
- * **It is never resumable and never complete.** It keeps the workstream OPEN
- * until a recovery walk re-materializes it into real edges, at which point it
- * is discharged with the count that discharged it.
+ * whose COUNT survived but whose IDENTITIES did not. Kept apart from the
+ * persisted, resumable edges and never added to them; it is never resumable
+ * or complete, and keeps the workstream OPEN until a recovery walk
+ * re-materializes it into real edges.
  */
 export interface UnmaterializedObligation {
   id: string;
@@ -578,12 +456,8 @@ export interface UnmaterializedObligation {
 }
 
 /**
- * The aggregate tail — the total obligation a repository is carrying.
- *
- * **This is the number that must never quietly shrink.** A per-state count can
- * legitimately move as one state is recovered; the aggregate moving without a
- * discharge record is work disappearing, which is the failure mode the whole
- * migration was built to prevent.
+ * The aggregate tail — the total obligation a repository is carrying. It may
+ * never shrink without a discharge record.
  */
 export interface AggregateTail {
   outstandingCount: number;
@@ -609,13 +483,10 @@ export function aggregateTail(
 /** ------------------------------------------------------------ convergence */
 
 /**
- * A convergence record.
- *
- * **`CONVERGED_AS_OF` never means "we know every possible way to find this."**
- * It means: under the current project knowledge, for this defined universe,
- * every currently eligible avenue has a disposition as of this date.
- *
- * All four versions are REQUIRED, because each can independently reopen it.
+ * A convergence record. `CONVERGED_AS_OF` means: under current project
+ * knowledge, for this defined universe, every currently eligible avenue has a
+ * disposition as of this date. All four versions are required, because each
+ * can independently reopen it.
  */
 export interface Convergence {
   convergedAsOf: string;

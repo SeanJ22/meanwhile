@@ -1,11 +1,4 @@
-/**
- * **BAL-24 (2026-08-25) — the two "NO LOCAL ELECTION" blocks.**
- *
- * The load-bearing assertion is the NEGATIVE one: nothing may be dropped. Sean
- * called this a duplicate and it was not — two municipalities, two true sourced
- * statements — so a fix that deduped would have deleted a fact about a real
- * government, which is the failure this product exists to avoid.
- */
+/** Grouping "no local election" absences: identical statements merge, and no absence is ever dropped. */
 import test from "node:test";
 import assert from "node:assert/strict";
 
@@ -39,12 +32,6 @@ test("BAL-24: two townships collapse to ONE block that names BOTH", () => {
 });
 
 test("BAL-24 — THE LOAD-BEARING CASE: nothing is ever dropped", () => {
-  /*
-   * A dedupe would pass every other assertion in this file while deleting a
-   * true, sourced statement about a named government. So the member count is
-   * asserted against the input across every shape below, not just the happy
-   * one.
-   */
   const inputs: BallotAbsence[][] = [
     [noLocal("a", "Denville Township"), noLocal("b", "Rockaway Township")],
     [noLocal("a", "Denville Township")],
@@ -95,9 +82,7 @@ test("BAL-24: a DIFFERENT authority never merges", () => {
 });
 
 test("BAL-24: a sentence that does not carry the shape renders exactly as it did", () => {
-  // The honest failure mode. A statement this cannot parse is left alone
-  // rather than forced into a group by a looser guess (RULING 110's shape
-  // reasoning, pointed at our own copy).
+  // A statement that cannot be parsed is left alone, never forced into a group.
   const odd = {
     ocdId: "z",
     divisionVintage: "v",

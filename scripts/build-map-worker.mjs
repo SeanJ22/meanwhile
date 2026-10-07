@@ -1,35 +1,14 @@
 // Bundles MapLibre's tile-parsing Web Worker into one self-contained file at
 // public/maplibre-gl-worker.mjs.
 //
-// Why this exists
-// ---------------
-// maplibre-gl 6 ships `maplibre-gl-worker.mjs`, whose first statement is
-// `import{...}from"./maplibre-gl-shared.mjs"` — a ~470 KB sibling. The library
-// locates that worker at runtime:
+// maplibre-gl ships `maplibre-gl-worker.mjs`, which imports a sibling
+// `./maplibre-gl-shared.mjs` and is located at runtime through a DYNAMIC
+// `new URL(...)` template that no bundler rewrites. Neither Turbopack nor
+// webpack emits a working worker, and the failure is silent: tiles (including
+// the GeoJSON district overlay, tiled inside the worker) are never parsed.
 //
-//     function bi(){let e=import.meta.url; ...
-//       return new URL(`./${t}`, e).href}
-//
-// That is a *dynamic* template, not the static `new URL("./w.mjs",
-// import.meta.url)` form that bundlers rewrite. So no bundler emits the worker
-// or its sibling as an addressable asset:
-//
-//   - Turbopack copies the worker byte-for-byte into /_next/static/media/
-//     without rewriting the specifier, and content-hashes the sibling. The
-//     worker then requests an unhashed ./maplibre-gl-shared.mjs that 404s.
-//   - webpack (verified, not assumed) never emits the worker at all, so the
-//     computed URL resolves against the chunk directory and 404s there.
-//
-// Either way the Worker's module evaluation fails and fires an `error` event
-// with an empty message that MapLibre does not surface. Tiles are fetched and
-// never parsed. Because MapLibre tiles GeoJSON sources *inside* the worker
-// (geojson-vt runs there), this also silently kills the district overlay: the
-// .geojson fetch succeeds, so nothing errors and the toggle stays enabled, but
-// the source never tiles and the layers draw nothing.
-//
-// Bundling flattens the sibling in, so the file the browser loads has no
-// imports left to resolve. `predev`/`prebuild` regenerate it, so a
-// `maplibre-gl` upgrade can never leave a stale vendored copy behind.
+// Bundling flattens the sibling in, so the loaded file has no imports left.
+// `predev`/`prebuild` regenerate it, so an upgrade never leaves a stale copy.
 
 import { build } from "esbuild";
 import { createRequire } from "node:module";

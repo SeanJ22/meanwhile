@@ -2,19 +2,11 @@ import { PRL_DATA_BASE, type PrlDataset } from "./inventory.ts";
 import { PRL_RHETORIC_ATTRIBUTION } from "./types.ts";
 
 /**
- * **The per-dataset ingest receipt — the durable, restartable state.**
- *
- * One receipt per dataset is written to the object store as `<id>/state.json`
- * beside its rows. Its high-water mark (capped at now) is where the next run
- * resumes, so a failure at one dataset never restarts the datasets that already
- * landed. For a profile dataset the precomputed per-official percentages ride in
- * the receipt; for an archive the rows live in the bucket and the receipt names
- * the object keys.
- *
- * The receipt deliberately does not go through the civic-data promotion plane:
- * PRL is licensed research inventory, not reader-facing routine civic truth, and
- * the plane's frozen source census classifies the `prl` family as owner-only.
- * Wiring a reader projection is a later presentation session's job.
+ * The per-dataset ingest receipt, written to the object store as
+ * `<id>/state.json` beside its rows. Its high-water mark (capped at now) is
+ * where the next run resumes. Profile datasets carry their precomputed
+ * percentages; archives name their object keys. It does not go through the
+ * civic-data promotion plane.
  */
 
 export type PrlProfileKind = "federal" | "state" | "primary";

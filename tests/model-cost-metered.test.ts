@@ -1,16 +1,8 @@
 /**
- * **THE METERED PRICE, FROM EXACTLY FIVE TOKEN QUANTITIES.** (Prompt-caching
- * session, 2026-09-06. Acceptance rows PC-9 and PC-10.)
- *
- * Claude Opus 5 (now LEGACY, kept to price historical billing) list prices:
- * $5 / MTok base input, $6.25 5-minute cache write (1.25×), $10 1-hour cache
- * write (2×), $0.50 cache read (0.1×), $25 output; the Batches API halves every
- * one of them, once.
- *
- * Claude Opus 5.5 (the CURRENT frontier; verified platform.claude.com 2026-09-22)
- * is cheaper: $4 / MTok base input, $5 5-minute cache write (1.25×), $8 1-hour
- * cache write (2×), $0.20 cache read — a NON-STANDARD 0.05× where every other
- * model reads at 0.1× — $20 output; minimum cacheable prefix 512.
+ * The metered price, from exactly five token quantities. Claude Opus 5 (legacy, kept to price historical billing):
+ * $5 / MTok base input, $6.25 5-minute cache write (1.25×), $10 1-hour cache write (2×), $0.50 cache read (0.1×),
+ * $25 output. Claude Opus 5.5: $4 base input, $5 5-minute write, $8 1-hour write, $0.20 cache read (a non-standard
+ * 0.05×), $20 output; minimum cacheable prefix 512. The Batches API halves every price, once.
  */
 
 import assert from "node:assert/strict";
@@ -94,11 +86,8 @@ test("PC-10: an unmeasured base count or an unpriced model is null, never zero",
 });
 
 /**
- * §9A.23 (2026-09-06) asks the monthly window for "cache savings where
- * measurable". The saving is a COUNTERFACTUAL at list price — what the same
- * tokens would have cost uncached — and it is priced through the one rate
- * table, so a model with no stated rate saves an unmeasured amount rather than
- * a plausible one.
+ * Cache savings are a counterfactual at list price, priced through the one rate table, so a model with no stated rate
+ * saves an unmeasured amount rather than a plausible one.
  */
 test("§9A.23: a cache read saved 0.9 of the base input rate, and an unpriced model saves null rather than a guess", () => {
   /* 2,000,000 read tokens on Claude Opus 5: $5/MTok × 2 × (1 − 0.1) = $9.00. */
@@ -113,12 +102,7 @@ test("§9A.23: a cache read saved 0.9 of the base input rate, and an unpriced mo
   assert.ok(Math.abs(charged + (cacheSavingUsd(2_000_000, "claude-opus-5") ?? 0) - 10) < 1e-9, "charged plus saved is the uncached price");
 });
 
-/**
- * Opus 5.5 through the SAME priced fields, at the verified rates. The load-
- * bearing new fact is the 0.05× cache-read multiplier: legacy Opus 5 and every
- * other model read at 0.1×, so a flat multiplier would over-charge Opus 5.5
- * reads by 2×. Same `known` usage; only the model id changes.
- */
+/** Opus 5.5 through the same priced fields: its 0.05× cache-read multiplier must not be flattened to 0.1×. */
 const KNOWN_USD_55 = 4 + 1 + 0.8 + 0.4 + 2; // 1M×$4 + 200k×$5 + 100k×$8 + 2M×$0.20 + 100k×$20 = $8.20
 
 test("Opus 5.5: the known usage prices at the verified $4/$20 rates and is cheaper than legacy Opus 5", () => {
@@ -186,11 +170,8 @@ test("PC-9: a ledger row predating the fields reads UNMEASURED by name; a null r
 });
 
 /**
- * The minimum cacheable prefix is a PER-MODEL, NON-MONOTONIC fact: the cheapest
- * model (Haiku 4.5) has the HIGHEST minimum. A cache-defect detector fed one
- * Opus-sized scalar (512) would read a cheaper model's legitimately-uncacheable
- * prefix increment as a stationary-breakpoint defect — so the lane must look it
- * up by the attempt's own model.
+ * The minimum cacheable prefix is per model and non-monotonic: the cheapest model (Haiku 4.5) has the highest
+ * minimum, so the lane looks it up by the attempt's own model.
  */
 test("per-model minimum cacheable prefix: looked up by model, non-monotonic, aliases resolved, unknown is null", () => {
   assert.equal(minimumCacheablePrefixTokensFor("claude-opus-5"), 512);
@@ -204,7 +185,7 @@ test("per-model minimum cacheable prefix: looked up by model, non-monotonic, ali
     minimumCacheablePrefixTokensFor("claude-haiku-4-5")! > minimumCacheablePrefixTokensFor("claude-opus-5")!,
     "Haiku's minimum exceeds Opus's — a per-model lookup is mandatory, not a convenience",
   );
-  /* RULING 244's dated Haiku spelling resolves to the reference id, one minimum. */
+  /* The dated Haiku spelling resolves to the reference id, one minimum. */
   assert.equal(
     minimumCacheablePrefixTokensFor("claude-haiku-4-5-20251001"),
     minimumCacheablePrefixTokensFor("claude-haiku-4-5"),

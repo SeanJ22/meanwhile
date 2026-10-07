@@ -3,21 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
-/**
- * **BAL-25 (2026-08-28) — THE BALLOT HAD NO BREAKPOINT AT ALL.**
- *
- * Not one `sm:`, `md:`, `lg:` or `xl:` utility existed on this surface: not in
- * `app/ballot/page.tsx` and not in any of the thirteen `components/ballot/*`
- * files. The container was `max-w-2xl`, so a 2,000px desktop rendered a 672px
- * column of ballot and 1,328px of background.
- *
- * The composition these tests hold is deliberately narrow in what it changes:
- * the reading measure does not move, and the extra width buys a second column
- * of WHOLE CANDIDATES within an office (BAL-43). `docs/DESIGN.md`'s "two-column trap" is why — a row that puts
- * a `nowrap` label and a value in competition for a fixed width starves the
- * value, and a contest heading is an arbitrarily long office title. So the
- * columns divide cards, never fields.
- */
+/** The extra width buys a second column of whole candidates within an office; columns divide cards, never fields. */
 
 const ROOT = process.cwd();
 const PAGE = readFileSync(join(ROOT, "app", "ballot", "page.tsx"), "utf8");
@@ -67,12 +53,7 @@ test("BAL-25: the container widens on desktop and the reading measure does not",
 });
 
 test("BAL-25: the loading skeleton hands over without moving the heading", () => {
-  /*
-   * `app/ballot/loading.tsx` was `max-w-3xl px-5 py-10 sm:py-14` against the
-   * page's `max-w-2xl px-4 py-8`, so the heading a reader was looking at jumped
-   * narrower, sideways AND upward the moment the ballot arrived — a layout
-   * shift on the one screen whose entire job is to say "this is working".
-   */
+  /* The loading skeleton matches the page container, so nothing shifts when the ballot arrives. */
   const page = mainClasses(PAGE);
   const loading = mainClasses(LOADING).filter((c) => c !== "min-h-dvh");
   assert.deepEqual(
@@ -128,13 +109,7 @@ test("BAL-43: measure cards keep their prior independent two-column flow", () =>
 });
 
 test("BAL-25: no ballot surface answers the desktop with a label/value column pair", () => {
-  /*
-   * `docs/DESIGN.md` — "The two-column trap". A naive desktop grid on the
-   * contest rows is refused: where a label can be arbitrarily long (an office
-   * title, a body name) the answer is to STACK, not to tune the width. This
-   * sweeps the whole ballot component directory for a responsive two-column
-   * grid that is not the card grid.
-   */
+  /* No responsive two-column grid other than the card grid: long labels stack. */
   const dir = join(ROOT, "components", "ballot");
   const sources = readdirSync(dir)
     .filter((f) => f.endsWith(".tsx"))

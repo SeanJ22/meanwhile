@@ -15,28 +15,6 @@ const meeting = (jurisdiction: string, sourceOrg: string) => ({
   provenance: { sourceOrg } as { sourceOrg: string },
 });
 
-/* ------------------------------------------------------------------------
- * SRC-1 / SRC-2 / SRC-3 (2026-08-24) — ONE SOURCE LINE, ZERO INLINE MARKERS.
- *
- * WHAT LEFT THIS FILE, STATED RATHER THAN LET VANISH (RULING 62). The four
- * F01 3.2 guards that pinned the FOOTNOTE MARKER system are gone, because the
- * behaviour they protected is the behaviour the author struck out:
- *
- *   - "one note per DISTINCT attribution, not one per row"   -> replaced below
- *     by the same distinctness claim asserted on `sourceCreditFor`.
- *   - "two bodies at one venue get two markers, in render order"  -> DELETED.
- *     There are no markers. The two-source case is asserted below as a LIST
- *     at the foot instead.
- *   - "a meeting from outside the list gets NO marker"       -> DELETED with
- *     `markerFor`, which no longer exists.
- *   - "the marker set never runs out and never collides"     -> DELETED with
- *     `attributionMarker`, which no longer exists.
- *
- * The two F01 3.1 guards (every list groups; the row prints no per-row
- * jurisdiction or source org) SURVIVE below, updated to the new function
- * names. They were never about markers.
- * ---------------------------------------------------------------------- */
-
 test("SRC-1: identical rows credit ONE source, and it is named verbatim", () => {
   const rows = [
     meeting("Tucson Unified School District, AZ", "TUSD Governing Board"),
@@ -46,8 +24,7 @@ test("SRC-1: identical rows credit ONE source, and it is named verbatim", () => 
   const credit = sourceCreditFor(rows);
   assert.equal(credit.kind, "single");
   assert.equal(credit.lead, "These were sourced from TUSD Governing Board.");
-  // The single form names its source in the sentence, so the list beneath is
-  // empty — printing it twice is the repetition this exists to remove.
+  // The single form names its source in the sentence, so the list beneath is empty.
   assert.deepEqual(credit.sources, []);
 });
 
@@ -57,8 +34,6 @@ test("SRC-1: one sitting reads 'This was', never 'These were'", () => {
 });
 
 test("SRC-2: more than one source is the author's sentence plus the list", () => {
-  // Tucson splits city and school meetings at one address, which is why the
-  // multi-source form has to exist at all.
   const school = meeting("Tucson Unified School District, AZ", "TUSD Governing Board");
   const city = meeting("Tucson, AZ", "City Clerk");
   const credit = sourceCreditFor([school, city, school]);
@@ -104,12 +79,8 @@ test("small counts read as words in the sentence, large ones as digits", () => {
   assert.equal(numberWord(11), "11");
 });
 
-/* ------------------------------------ F01 3.1, every surface, no excuses --- */
-
 test("F01 3.1: every meetings list renders the three groups, not a raw array", () => {
-  // The defect was not the ordering function; it was that half the callers
-  // never called it. This guard reads the surfaces themselves so a new one
-  // cannot ship rendering `.map` over an unordered list again.
+  // Reads the surfaces themselves so a new one cannot render `.map` over an unordered list.
   for (const file of [
     "components/map/meeting-panel.tsx",
     "components/map/popup/entity-modal.tsx",
@@ -125,8 +96,7 @@ test("F01 3.1: every meetings list renders the three groups, not a raw array", (
       /sourceCreditFor\(/,
       `${file} does not credit its sources in one line`,
     );
-    // The credit is built from the GROUPS in group order, never from the raw
-    // input — the sources must be named in the order the reader met them.
+    // The credit is built from the groups in group order, the order the reader met them.
     assert.match(
       source,
       /sourceCreditFor\(\s*\n?\s*groups\.flatMap/,
@@ -136,9 +106,7 @@ test("F01 3.1: every meetings list renders the three groups, not a raw array", (
 });
 
 test("SRC-1: no meeting surface prints a footnote marker on a row", () => {
-  // The author put a red arrow on a bare `*` floating between two meetings
-  // (`11-59-24`) and red-boxed the whole marker block at the foot of a
-  // Rockaway card (`12-24-03`). Neither may come back on any card surface.
+  // No inline footnote marker or marker block may come back on any card surface.
   for (const file of [
     "components/map/meeting-panel.tsx",
     "components/map/popup/entity-modal.tsx",

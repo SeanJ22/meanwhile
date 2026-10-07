@@ -13,11 +13,8 @@ import type { CommentAccess } from "@/lib/registry/comment-access-client";
 import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 
 /**
- * The server's answer, plus everything derived from it once.
- *
- * Kept separate from UiProvider because they change for different reasons: this
- * changes when a search returns, that changes when a reader clicks something.
- * One component owning both is what makes a shell hard to extend.
+ * The server's answer, plus everything derived from it once. Kept separate from
+ * UiProvider: this changes when a search returns, that when a reader clicks.
  */
 
 export interface ShellData {
@@ -36,41 +33,28 @@ export interface ShellData {
   result: MeetingSearchResult | null;
   location: StoredLocation | null;
   /** The districts currently drawn — the stats card counts this list and
-   *  the districts door renders it: one denominator for both (3g). */
+   *  the districts door renders it: one denominator for both. */
   drawnDistricts: DrawnDistrict[];
   /** Meetings the adapter could not place. Surfaced, never silent. */
   dropped: number;
   searchFailed: boolean;
   /**
    * True when the answer on screen was resolved from a street address the
-   * reader gave, rather than from a zip centroid.
-   *
-   * The districts counter is the first surface that needs to know: "you are
-   * in N districts" is only sayable about a real point, because a ZCTA
-   * centroid crosses city, county and school lines and can sit in another
-   * town entirely.
+   * reader gave, rather than from a zip centroid. "You are in N districts" is
+   * only sayable about a real point.
    */
   atAddress: boolean;
   /**
-   * Which divisions the reader's point is in — M81's jurisdiction badge.
-   *
-   * A SET, so a list row's membership test is O(1) rather than a scan per row
-   * per render. `null` when the point could not be resolved at all, which is
-   * not the same as an empty set: see `lib/meetings/jurisdiction-badge.ts` for
-   * why that distinction is the whole safety of the badge.
+   * Which divisions the reader's point is in, for the jurisdiction badge.
+   * `null` when the point could not be resolved at all, which is not the same
+   * as an empty set (see `lib/meetings/jurisdiction-badge.ts`).
    */
   governing: ReadonlySet<string> | null;
   /**
-   * Divisions covering only PART of the zip on screen (`JUR-2`, 2026-08-23).
-   *
-   * `governing` says which divisions the resolved point is in. When that point
-   * is a ZCTA centroid rather than an address the reader gave, membership is
-   * one point standing in for an area that crosses every kind of line — and
-   * the meeting card was printing "Governs your area" off it, with a tooltip
-   * saying the reader's address is inside. This is what stops it.
-   *
-   * `null` means unmeasured, which is not an empty set. An empty set says the
-   * lattice measured this zip and nothing about it is partial.
+   * Divisions covering only PART of the zip on screen. When the point is a
+   * ZCTA centroid, membership stands in for an area that crosses every kind of
+   * line, so these divisions must not be shown as governing the reader's
+   * address. `null` means unmeasured, which is not an empty set.
    */
   zipPartial: ReadonlySet<string> | null;
   /**

@@ -134,7 +134,7 @@ async function recordingBytes<T>(run: () => Promise<T>): Promise<{ value: T; key
   }
 }
 
-test("C21 · the map's routes fetch only the authority families they read, never Ask's outcomes or the comment-access artifact", async () => {
+test("the map's routes fetch only the authority families they read, never Ask's outcomes or the comment-access artifact", async () => {
   const { dir, manifest } = await publishEdge("c21-families");
   const store = new RecordingStore(dir);
   const bundle = await ensureReaderAuthorityEdge(manifest, store, READER_MAP_AUTHORITY_FAMILIES);
@@ -148,7 +148,7 @@ test("C21 · the map's routes fetch only the authority families they read, never
   assert.equal(everything.commentAccess?.versionId, "c21-families:comment-access");
 });
 
-test("C21 · concurrent reads on one instance share one fetch and one parse of an authority family", async () => {
+test("concurrent reads on one instance share one fetch and one parse of an authority family", async () => {
   const { dir, manifest } = await publishEdge("c21-shared");
   const store = new RecordingStore(dir);
   const [first, second] = await Promise.all([
@@ -159,7 +159,7 @@ test("C21 · concurrent reads on one instance share one fetch and one parse of a
   assert.equal(first.registryRuntime?.value, second.registryRuntime?.value, "one parsed value serves both");
 });
 
-test("C21 · the Blobs manifest is held fifteen seconds per instance, shared in flight, and an absent one is never held", async () => {
+test("the Blobs manifest is held fifteen seconds per instance, shared in flight, and an absent one is never held", async () => {
   let reads = 0;
   let answer: ReaderManifest | null = { formatVersion: 1, sequence: 7 } as unknown as ReaderManifest;
   const blobs = {
@@ -190,7 +190,7 @@ test("C21 · the Blobs manifest is held fifteen seconds per instance, shared in 
   assert.equal(READER_MANIFEST_MEMO_MS <= 30_000, true, "the brief's bound");
 });
 
-test("C21 · an edge value is validated once per object and version, and an invalid one fails every prime", () => {
+test("an edge value is validated once per object and version, and an invalid one fails every prime", () => {
   const value = registryRuntimeFirstSeed().value;
   const before = edgeValidationsRun();
   primeRegistryRuntimeFromValue(value, "c21-validate:1");
@@ -207,7 +207,7 @@ test("C21 · an edge value is validated once per object and version, and an inva
 
 const TUCSON = "lat=32.21696&lng=-110.971&zip=85701";
 
-test("C21 · a whole /api/meetings answer from the edge is held by the CDN, keyed on every query parameter, and says where its time went", async () => {
+test("a whole /api/meetings answer from the edge is held by the CDN, keyed on every query parameter, and says where its time went", async () => {
   const { dir } = await publishEdge("c21-route");
   process.env.WTP_READER_EDGE_DIR = dir;
   const { value: response, keys } = await recordingBytes(() => meetingsGET(new Request(`https://wtp.test/api/meetings?${TUCSON}`)));
@@ -215,7 +215,7 @@ test("C21 · a whole /api/meetings answer from the edge is held by the CDN, keye
   assert.equal(response.headers.get("netlify-cdn-cache-control"), "public, durable, s-maxage=300, stale-while-revalidate=3600");
   assert.equal(response.headers.get("netlify-cache-tag"), READER_MANIFEST_CACHE_TAG, "the tag the runner purges on every publication");
   assert.equal(READER_MANIFEST_CACHE_TAG, "reader-manifest");
-  assert.equal(response.headers.get("netlify-vary"), "query", "every query parameter is in the CDN key (D40)");
+  assert.equal(response.headers.get("netlify-vary"), "query", "every query parameter is in the CDN key");
   assert.equal(response.headers.get("cache-control"), "public, max-age=0, must-revalidate", "the browser revalidates, so a purge reaches it");
   const timing = response.headers.get("server-timing") ?? "";
   for (const stage of ["manifest", "authority", "divisions", "widen", "meetings", "search", "coverage", "total"]) {
@@ -228,7 +228,7 @@ test("C21 · a whole /api/meetings answer from the edge is held by the CDN, keye
   assert.ok(body.coverage && body.coverage.bodies.length > 0);
 });
 
-test("C21 · the held answer carries nothing about the visitor: other cookies, agents and addresses get the same bytes", async () => {
+test("the held answer carries nothing about the visitor: other cookies, agents and addresses get the same bytes", async () => {
   const ask = (headers: Record<string, string>) => meetingsGET(new Request(`https://wtp.test/api/meetings?${TUCSON}`, { headers }));
   const plain = await ask({});
   const other = await ask({ cookie: "wtp_session=abc; ab=1", "user-agent": "other-browser", "x-forwarded-for": "203.0.113.9", "x-wtp-synthetic-run": "reader-cold-path-test", "accept-language": "es" });
@@ -240,7 +240,7 @@ test("C21 · the held answer carries nothing about the visitor: other cookies, a
   }
 });
 
-test("C21 · a refusal, and an answer the edge did not serve whole, are never held", async () => {
+test("a refusal, and an answer the edge did not serve whole, are never held", async () => {
   const refused = await meetingsGET(new Request(`https://wtp.test/api/meetings?${TUCSON}&debug=1`));
   assert.equal(refused.status, 400);
   assert.equal(refused.headers.get("netlify-cdn-cache-control"), null);
@@ -254,7 +254,7 @@ test("C21 · a refusal, and an answer the edge did not serve whole, are never he
   assert.equal(fallback.headers.get("cache-control"), "no-store");
 });
 
-test("C21 · /api/representation reads the registry from the edge it entered, and the CDN holds its answer", async () => {
+test("/api/representation reads the registry from the edge it entered, and the CDN holds its answer", async () => {
   const { dir } = await publishEdge("c21-representation");
   process.env.WTP_READER_EDGE_DIR = dir;
   const division = ["ocd-division", "country:us", "state:az", "place:tucson"];
@@ -272,7 +272,7 @@ test("C21 · /api/representation reads the registry from the edge it entered, an
   assert.equal(body.ocdId, division.join("/"));
 });
 
-test("C21 · a warm call resolves one place per published state from the edge, and refuses what the edge does not carry", async () => {
+test("a warm call resolves one place per published state from the edge, and refuses what the edge does not carry", async () => {
   const withoutLegislators = await publishEdge("c21-warm-partial");
   process.env.WTP_READER_EDGE_DIR = withoutLegislators.dir;
   const states = [...new Set(withoutLegislators.manifest.scopes.map((scope) =>

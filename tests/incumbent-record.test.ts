@@ -13,7 +13,7 @@ await Promise.all([
 ]);
 
 /**
- * The incumbent-record join (4, 2026-08-19): ballot key → roster official
+ * The incumbent-record join: ballot key → roster official
  * through the FEC snapshot's exact-key pairing. The contract: a real
  * incumbent resolves to their roster record; everyone else — challengers,
  * unmatched filers, senate runs by incumbents whose current seat we don't

@@ -1,28 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
-await Promise.all([
-  initializeFederalVoteFirstSeed(),
-  installRegistryRuntimeFirstSeeds(),
-]);
+await initializeFederalVoteFirstSeed();
 import { lengthOnlyRejection, settleRejectedModelAnswer } from "../lib/ask/length-fallback.ts";
 import type { ValidationVerdict } from "../lib/ask/validate.ts";
 
-/**
- * **R13 (2026-09-25): AN ANSWER THAT IS ONLY TOO LONG IS NOT A WRONG ANSWER.**
- *
- * A model answer of 726 characters — 26 over the 700-character contract, and
- * clean on every other check — ended as `REJECTED_FELL_BACK` with no prose,
- * the mode that reports a grounding failure. It now falls back to prose code
- * composes from the same evidence where there is some, and otherwise to the
- * structured records, reported as what they are.
- *
- * The route test answers the model call from a stub: no key is real and no
- * request leaves the process — `api.anthropic.com` is answered here and
- * everything else is refused.
- */
+/** The route test answers the model call from a stub: no request leaves the process. */
 
 const PLAIN = "This summary restates only what the held records show and adds nothing to them";
 
@@ -79,8 +63,6 @@ test("R13: a length-only rejection falls back to the code-composed answer when t
   assert.deepEqual([substantive.mode, substantive.answer], ["REJECTED_FELL_BACK", null]);
 });
 
-/* ─────────────── the route, with a 726-character model answer ─────────────── */
-
 const ANTHROPIC = "https://api.anthropic.com/";
 
 async function askWithModelAnswer(modelAnswer: { answer: string; citedSources: number[] }) {
@@ -133,8 +115,7 @@ async function askWithModelAnswer(modelAnswer: { answer: string; citedSources: n
 
 test("R13: a 726-character model answer that fails only on length is not reported as a rejection", { concurrency: false }, async () => {
   const { payload, synthesisCalls } = await askWithModelAnswer({ answer: modelAnswerOf726(), citedSources: [] });
-  /* Two writers (2026-09-25): the fast writer's over-length answer fails validation, so the frontier
-     writer is asked; the stub answers it the same, and that final length-only failure is settled here. */
+  /* The fast writer's over-length answer fails validation, so the frontier writer is asked; the stub answers it the same. */
   assert.equal(synthesisCalls, 2, "the model path ran (from the stub), on both writers of the ladder");
   assert.equal(payload.trace.validation.ran, true);
   assert.deepEqual(payload.trace.validation.failed, ["too-long:726-characters-over-700"], "length is the only failure");

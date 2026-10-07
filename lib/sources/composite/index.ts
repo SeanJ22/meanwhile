@@ -17,55 +17,25 @@ import { runInSourceAcquisitionDomain } from "../acquisition-deadline.ts";
 import { fetchFailureKind, type FetchFailureKind } from "./failure-kind.ts";
 
 /**
- * The composite meeting source — trackers **D11**, **D12**, **M06**.
- *
- * Four zips across three states admit no single vendor, which is what settled
- * the composite-versus-hold-the-mock question (`docs/state.md` §5.2 item 1).
- * This fans one query out across child adapters and merges what comes back.
- *
- * The requirements that shaped it, all load-bearing:
- *
- * - **One source failing must never blank the map.** A child that throws or
- *   times out is recorded as a failure for that source; the others still
- *   return. The failure is *reported* — never a silently smaller map.
- * - **Per-source accounting.** Fetched, normalized, and dropped counts with
- *   the drop reasons split (`placeless` ≠ `unknownVenue`, D18), via the
- *   `ReportingMeetingSource` contract every child implements.
- * - **Namespaced ids.** Every child's `Meeting.id` must begin with its own
- *   source name. A child that violates that is excluded and reported as a
- *   failure, because un-namespaced ids collide silently downstream.
- * - **Acquisition is not authority.** This object only fans out one bounded
- *   acquisition. Each source/body result is persisted and promoted through
- *   its own canonical meeting-partition contract; the composite cache never
- *   becomes a Reader fallback or a shared pointer.
- * - **Children come from registry data**, not a hardcoded list — see
- *   `wiring.ts` beside this file and `lib/registry/source-wiring.ts` (§0b).
+ * The composite meeting source: fans one query out across child adapters and merges what comes back.
+ * - One source failing never blanks the map: a child that throws or times out is reported as a failure
+ *   for that source; the others still return.
+ * - Per-source accounting: fetched, normalized and dropped counts with the drop reasons split
+ *   (`placeless` ≠ `unknownVenue`), via the `ReportingMeetingSource` contract every child implements.
+ * - Namespaced ids: every child's `Meeting.id` must begin with its own source name, or the child is
+ *   excluded and reported as a failure.
+ * - Acquisition is not authority: each source/body result is persisted and promoted through its own
+ *   meeting-partition contract; the composite never becomes a Reader fallback.
+ * - Children come from registry data: see `wiring.ts` and `lib/registry/source-wiring.ts`.
  */
 
 /**
- * WHY a child contributed nothing — and the two answers are not alike (F22,
- * 2026-08-20).
- *
- * `ok: false` used to carry a vendor timeout and a violated id-namespace
- * contract in the same flag, and `scripts/ingest.ts` treated both the same
- * way: name it, skip it, and carry rows forward inside one aggregate snapshot.
- * So a WALL and a defect in our own code were indistinguishable in the log and
- * in the snapshot — the failed-operation-as-empty-success shape wearing the
- * other face.
- *
- * - `WALL` — the retrieval did not land: a refusal, a timeout, a challenge
- *   page, an unreachable host. The body's records are still there and the
- *   ladder still has rungs; this is friction, and `CLAUDE.md` is explicit
- *   that it is never a terminal state. Carry-forward keeps the source's last
- *   known version stays live through that exact partition pointer, while
- *   independently healthy partitions can still promote.
- * - `JOB` — the run itself is broken: a child returned ids outside its own
- *   namespace, or its `normalize` threw. Nothing about the ladder fixes it,
- *   nobody is waiting for a wall to fall, and a green run would hide it. The
- *   affected source/body partition records a failed attempt and keeps LKG.
- *
- * `SOURCE_BLOCKED` is deliberately not among these: a wall is recorded on the
- * rung it stopped at, and the next rung is attempted.
+ * Why a child contributed nothing.
+ * - `WALL`: the retrieval did not land (a refusal, a timeout, a challenge page, an unreachable host).
+ *   Never terminal: the source's last known version stays live through its partition pointer.
+ * - `JOB`: the run itself is broken (ids outside the child's namespace, or `normalize` threw). The
+ *   affected partition records a failed attempt and keeps LKG.
+ * There is no blocked kind: a wall is recorded on the rung it stopped at, and the next rung is attempted.
  */
 export type ChildFailureKind = "WALL" | "JOB";
 
@@ -81,25 +51,14 @@ export interface ChildRunReport {
    */
   failure?: ChildFailureKind;
   /**
-   * The furthest ladder rung a WALLED retrieval reached — the numbering in
-   * `CLAUDE.md` and `docs/source-ladder.md`, never a parallel vocabulary.
-   * Absent when the client cannot say, and absent stays absent.
+   * The furthest ladder rung a walled retrieval reached, in the one canonical ladder numbering. Absent when
+   * the client cannot say.
    */
   walledAtRung?: number;
   /**
-   * WHICH LADDER THIS NUMBER IS IN (RULING 17, Prompt C item 8, 2026-08-20).
-   *
-   * `CANONICAL` means `CLAUDE.md`'s retrieval-mechanics fourteen, which is the
-   * only numbered ladder as of 2026-08-20 and is what every value written by
-   * this code means. `PRE_F22_LADDER_UNKNOWN` marks a value recorded before
-   * F22, when this repo carried TWO numbered ladders — the mechanics fourteen
-   * and `docs/source-ladder.md`'s discovery thirteen — and nothing recorded
-   * which one a writer meant.
-   *
-   * A marked value keeps its number and is NEVER reinterpreted: guessing which
-   * ladder an old number meant would manufacture a retrieval history nobody
-   * walked. Absent means the same as `CANONICAL` for anything this code wrote,
-   * and the marker exists so a reader of old data is not told otherwise.
+   * Which ladder this number is in. `CANONICAL` is what every value this code writes means.
+   * `PRE_F22_LADDER_UNKNOWN` marks an older value recorded when two numbered ladders existed; such a value
+   * keeps its number and is never reinterpreted.
    */
   rungProvenance?: "CANONICAL" | "PRE_F22_LADDER_UNKNOWN";
   fetched: number;
@@ -112,37 +71,23 @@ export interface ChildRunReport {
    */
   unreachableOcdIds?: string[];
   /**
-   * **PARTIAL BY SCOPE** — A-004 (external correctness audit of `336a3eb`,
-   * remediated 2026-08-24).
-   *
-   * `unreachableOcdIds` says which divisions were refused. This says WHAT
-   * ABOUT a division was refused, which is the distinction an `ical` archive
-   * outage falls through: the upcoming feed answered, the past feed did not,
-   * the source reported `ok: true`, and every concluded meeting the previous
-   * snapshot held for that town was deleted.
-   *
-   * Completeness is never inferred from `ok: true`.
+   * Partial by scope: what about a division was refused (e.g. the upcoming feed answered and the past feed
+   * did not). Completeness is never inferred from `ok: true`.
    */
   partialScopes?: PartialScopeFailure[];
   /**
-   * A-005 · duplicates split by who decided they were duplicates — the feed's
-   * own repeated identifier, or this code's judgement about two records that
-   * carried none. Absent when the child has nothing to say.
+   * Duplicates split by who decided they were duplicates: the feed's own repeated identifier, or this
+   * code's judgement about two records that carried none.
    */
   duplicateIdentity?: DuplicateIdentityCounts;
   /**
-   * What the child did with recurring series (2026-09-23), forwarded verbatim
-   * so each body's partition can carry its own publisher exclusions and its
-   * own named refusals to expand.
+   * What the child did with recurring series, forwarded verbatim so each body's partition carries its own
+   * publisher exclusions and refusals to expand.
    */
   recurrence?: RecurrenceReport;
   /**
-   * The child's own `publishedLookbackDays` (g13), forwarded verbatim so
-   * carry-forward can judge a carried row against the window that child
-   * actually produces rather than against the app's serving window. Copied
-   * here rather than looked up later because the report is the only thing
-   * that survives the run — by the time the snapshot is written the source
-   * objects are out of scope.
+   * The child's own `publishedLookbackDays`, forwarded verbatim so carry-forward judges a carried row
+   * against the window that child actually produces.
    */
   publishedLookbackDays?: number | null;
   /** Exact successful HTTP bodies and observed final redirect URLs for this child. */
@@ -201,65 +146,20 @@ export interface CompositeOptions {
 }
 
 /**
- * **ONE SITTING, ONE ROW, HOWEVER MANY SOURCES CARRY IT** (NH Hunt, 2026-08-20).
+ * One sitting, one row, however many sources carry it, so a body can be wired on a second route (e.g. a
+ * town feed alongside an agenda portal) without rendering its sittings twice.
  *
- * ## Why this had to exist before a second route could be wired
+ * The key is `ocdId | bodyName | startsAt` (a null `ocdId` keys on `jurisdiction`). Two bodies at once,
+ * one body twice in a day, and two sources disagreeing about the time all stay separate rows. It
+ * collapses across sources only: two rows from the same source are that source's own catalogue.
  *
- * The Town of Newbury publishes its whole calendar as an iCalendar feed —
- * 1,157 events, and **24 sittings of its four wired boards inside the serving
- * window against the 16 those boards' existing routes produce.** Eight public
- * meetings a reader at 03255 could not see, sitting in a document the town
- * publishes for exactly this purpose.
- *
- * The obvious move — wire the feed as a second route — was not available,
- * because ids are namespaced PER SOURCE by contract and nothing above them
- * merged. Newbury's Selectboard on 14 September would have rendered twice, and
- * "we show every meeting" would have become "we show some meetings twice",
- * which is a worse failure than the one it fixed.
- *
- * The alternative — swapping the feed in and the old routes out — was
- * measured and REFUSED: the existing routes carry real agendas
- * (`newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370`,
- * `/planning-board/agenda/agenda-15`) and the feed carries none. Trading a
- * reader's agenda for a reader's date is not a trade this product should make.
- *
- * So both routes ship, and the merge decides.
- *
- * ## The key, and what it deliberately does NOT collapse
- *
- * `ocdId | bodyName | startsAt` — the same body, in the same division, sitting
- * at the same instant, is one sitting. Two bodies meeting at once stay two
- * rows; one body meeting twice in a day stays two rows; two sources
- * disagreeing about the TIME stay two rows, which is correct and is a finding
- * rather than a merge — a published disagreement about when a public meeting
- * starts is something a reader should see, not something we should average.
- *
- * A body with a null `ocdId` keys on its `jurisdiction` instead, so two
- * division-less bodies in different places cannot collide.
- *
- * **And it collapses ACROSS SOURCES ONLY.** Two rows from the SAME source at
- * the same instant are that source's own catalogue and are left alone: a board
- * that publishes a Regular Session and an Executive Session both at 18:00 is
- * publishing two meetings, and one adapter reading its own portal is the thing
- * that knows the difference. Cross-source is where the duplication this exists
- * for actually lives, and restricting it there is what stops the merge
- * deleting a real second sitting to tidy up a first.
- *
- * ## Which row wins, and why it is never arbitrary
- *
- * The one that tells the reader more, scored in this order:
- *   1. it carries an `agendaUrl` — the whole reason the swap was refused;
- *   2. it carries `actingBodies` — the D19 join, which only agenda-reading
- *      sources produce;
+ * The winner is the row that tells the reader more:
+ *   1. it carries an `agendaUrl`;
+ *   2. it carries `actingBodies`;
  *   3. it carries a `location` rather than only an `online` block;
- *   4. it is NOT a carried-forward row, because a fresh row beats a stale one;
- *   5. failing all of that, the first one seen, which is source-registration
- *      order and is stable across runs.
- *
- * **The count is reported, never silent.** `duplicateSittingsCollapsed` rides
- * on the composite's own report, so "fewer meetings than the reader would
- * otherwise have seen" is a stated number with a reason — the same rule every
- * drop counter in this file exists to satisfy.
+ *   4. it is not a carried-forward row;
+ *   5. otherwise the first seen (source-registration order, stable across runs).
+ * The count is reported as `duplicateSittingsCollapsed`.
  */
 export function collapseDuplicateSittings(rows: Meeting[],
   /** Optional field reconciliation inside the existing exact-sitting collapse.
@@ -294,15 +194,7 @@ export function collapseDuplicateSittings(rows: Meeting[],
   const kept: Meeting[] = [];
   const dropped: Meeting[] = [];
   for (const m of rows) {
-    /*
-     * The INSTANT, not the string. `schedulepage` writes
-     * `2026-06-16T19:00:00-04:00` and `ical` writes `2026-06-16T23:00:00.000Z`
-     * for the same moment, and keying on the text collapsed nothing at all —
-     * the first run of this merge reported `collapsed: 0` against a page that
-     * was visibly showing Newbury's Conservation Commission twice. A
-     * comparison that cannot see through a timezone offset is not a comparison
-     * of times.
-     */
+    // The instant, not the string: sources write the same moment with different offsets.
     const instant = Date.parse(m.startsAt);
     const key = [
       m.ocdId ?? `jurisdiction:${m.jurisdiction}`,
@@ -343,11 +235,8 @@ export function collapseDuplicateSittings(rows: Meeting[],
 }
 
 /**
- * A rejected child's message, with the transport's own code when the message
- * alone hides it. Node's fetch rejects a host that no longer resolves with a
- * bare `TypeError: fetch failed` and puts `ENOTFOUND` on `cause.code`; from
- * 2026-09-14 Newbury's retired CivicWeb host was stored ~2,077 times as only
- * "fetch failed", which reads like a flaky network rather than a gone host.
+ * A rejected child's message, with the transport's own code when the message alone hides it (Node's
+ * fetch puts `ENOTFOUND` on `cause.code` behind a bare `TypeError: fetch failed`).
  */
 export function childFailureMessage(reason: unknown): string {
   const message = String((reason as { message?: unknown } | null | undefined)?.message ?? reason);
@@ -442,12 +331,9 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           tagged.push({ source: child.name, raw });
         }
       } else {
-        // The failure is the report's job, not the map's problem: the other
-        // children's rows are already in `tagged`.
-        // F22: the furthest ladder rung this retrieval reached, when the
-        // shared client knows it. A whole-child acquisition deadline
-        // knows no rung and stays undefined — absent is recorded as absent
-        // rather than filled in with a plausible number.
+        // The failure is the report's job: the other children's rows are already in `tagged`. The furthest
+        // ladder rung is recorded when the shared client knows it; a whole-child deadline knows none and stays
+        // undefined.
         const rung = (result.reason as { rung?: number } | undefined)?.rung;
         fetchReports.set(child.name, {
           ok: false,
@@ -493,27 +379,22 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
         fetched: byChild.get(child.name)?.length ?? 0,
       };
 
-      // The child's declared window travels with every report it appears in,
-      // and the FAILURE branch is the one that matters: a failed child is
-      // exactly the child carry-forward has to judge, and a report that
-      // dropped the declaration on failure would have kept the g13 defect.
+      // The child's declared window travels with every report, including failures: a failed child is exactly
+      // the one carry-forward has to judge.
       const declaredWindow =
         child.publishedLookbackDays === undefined
           ? {}
           : { publishedLookbackDays: child.publishedLookbackDays };
 
       if (!fetched.ok) {
-        // The retrieval did not land. A WALL when the publisher's side stopped
-        // it; a JOB when our own code or configuration threw first (2026-09-24:
-        // VENUE_RESOLUTIONS_MISSING was filed as a wall for ten days). Either
-        // way the run continues and the partition keeps its last-known-good.
+        // The retrieval did not land: a WALL when the publisher's side stopped it, a JOB when our own code or
+        // configuration threw first. Either way the run continues and the partition keeps its last-known-good.
         children.push({
           source: child.name,
           ok: false,
           error: fetched.error,
           failure: fetched.failureKind ?? "WALL",
-          // The rung AND the ladder it is in, together — a number with no
-          // ladder is what RULING 17 had to go back and mark 50 values for.
+          // The rung and the ladder it is in, together.
           ...(typeof fetched.rung === "number"
             ? { walledAtRung: fetched.rung, rungProvenance: "CANONICAL" as const }
             : {}),
@@ -554,58 +435,14 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           continue;
         }
 
-        /*
-         * **A ZERO-ROW EXTRACTION IS A FAILED EXTRACTION, NEVER AN EMPTY
-         * DOCUMENT** — `CLAUDE.md`, adopted 2026-08-20, and this is the SIXTH
-         * sighting of the shape. Fixed here, at the shared path, rather than in
-         * the adapter it was found in: every one of the eleven children reaches
-         * this line, and only `ical` had any notion of a refusal of its own.
-         *
-         * FOUND LIVE (Prompt E close-out walk, 2026-08-20). The scheduled
-         * refresh at 02:00Z reported `ical` as `ok: true, fetched: 3,
-         * normalized: 0`, with every drop counter at zero — three documents in
-         * hand and not one event extracted from them, and no drop to say why.
-         * Because the source reported success, carry-forward did not run, and
-         * **Wilmot, New Hampshire went from 23 meetings to none** on a reader's
-         * page at 03255. The feed was healthy when checked by hand minutes
-         * later: HTTP 200, 20 events, categories intact.
-         *
-         * Documents in hand and zero rows out of them is our extraction failing
-         * on the vendor's real payload, or an egress being served a page that
-         * is not the calendar. Either way it is not a calendar with nothing in
-         * it, and it may not be written into the data as an absence.
-         *
-         * THE TENSION, STATED RATHER THAN HIDDEN. A body that genuinely goes
-         * quiet serves a real, empty feed, and this marks that red too. That is
-         * the correct trade in this direction: the carried rows are clipped to
-         * the serving window and age out on their own within days, whereas a
-         * silently emptied town is wrong on the reader's screen immediately and
-         * nothing says so. A source reporting zero DROPS as well as zero rows
-         * is the narrow case — a source that fetched and dropped everything
-         * already tells you why, and is left alone.
-         */
-        /*
-         * S-001 (external correctness audit of `336a3eb`, remediated
-         * 2026-08-24). This was a second, independent `droppedAny` boolean —
-         * the same `.some((n) => n > 0)` written out again, which is a
-         * duplicate implementation of a predicate rather than a second check
-         * (RULING 103). It now calls the one in `normalize-account.ts`, so the
-         * defence in depth stays and the drift cannot.
-         *
-         * The sweep for the shape found 2 sites and replaced 2.
-         */
-        /*
-         * **A REFUSED ROW IS NOT A DOCUMENT IN HAND.** (2026-09-24.) An adapter
-         * may keep a row whose retrieval the publisher refused, as
-         * `{ refused: true }`, so carry-forward can keep that body's sittings.
-         * Sutton, NH's feed intermittently answers a Cloudflare managed
-         * challenge (403, "Just a moment..."). The fetch layer named it, the
-         * iCal row kept it as a refusal, and this guard then counted the row as
-         * a document, reported "fetched 1 document(s) and extracted 0
-         * meeting(s)" and filed the town's wall as our JOB. Refused rows are
-         * now not documents. When every row a child fetched was refused, the
-         * child fails with the refusal's own kind and words.
-         */
+        // A zero-row extraction is a failed extraction, never an empty document. Documents in hand and zero rows
+        // out of them is our extraction failing (or a non-calendar page served), so it is never written into
+        // the data as an absence. A body that genuinely goes quiet is marked red too; carried rows age out of
+        // the serving window on their own. A source reporting drops as well is left alone: it already says why.
+        // The drop predicate is the shared one in `normalize-account.ts`.
+        // A refused row is not a document in hand. An adapter may keep a row whose retrieval the publisher
+        // refused (`{ refused: true }`) so carry-forward keeps that body's sittings. When every row a child
+        // fetched was refused, the child fails with the refusal's own kind and words.
         const refusedRows = (byChild.get(child.name) ?? []).filter(isRefusedRow);
         if (meetings.length === 0 && refusedRows.length > 0 && refusedRows.length >= fetched.fetched) {
           const reasons = [...new Set(refusedRows.map((row) => row.refusedReason).filter((reason): reason is string => Boolean(reason)))];
@@ -635,10 +472,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
             documentsInHand: fetched.fetched - refusedRows.length,
             produced: meetings.length,
             dropped: totalDropped(drops),
-            // The adapter's own count of records it set aside as outside the
-            // served window (2026-09-25): the same term its own guard in
-            // accountedNormalize reads. Tucson's IDA publishes a schedule whose
-            // every date has passed; that is a counted clip, not a zero.
+            // The adapter's own count of records set aside as outside the served window: a counted clip, not a zero.
             outOfWindow: accounting?.outOfWindow ?? 0,
           })
         ) {

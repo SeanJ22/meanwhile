@@ -1,10 +1,8 @@
 /**
- * **A SITTING'S PLACE, AS ITS OWN AGENDA STATES IT.** (2026-09-24.)
+ * **A SITTING'S PLACE, AS ITS OWN AGENDA STATES IT.**
  *
- * The owner's direction: "For locations, use the address published by the
- * official meeting source." Some listings name no place a map can pin. Mesa's
- * calendar grid says "Study Session" for 22 sittings, and each of their
- * agendas prints "City Hall 20 East Main Street" in its header. When a sitting
+ * Some listings name no place a map can pin while the agenda prints a street
+ * address in its header. When a sitting
  * is unplaced and its held agenda (the official meeting document) states a
  * street address, that address is matched to a PROMOTED reviewed venue in the
  * sitting's own division by normalized street address. The sitting is then

@@ -1,11 +1,6 @@
 /**
- * The frozen method store as a test fixture, and the manual entries it folds into.
- *
- * `tests/fixtures/method-knowledge.json` is the last copy of the store that
- * `data/method/knowledge.json` held before the field manual became the one
- * store. Production code never reads it; tests that need real route data
- * (the floor, the claim classes, the projection) read it here, and the tests
- * of the manual read the same routes back through `lib/method/manual-bridge.ts`.
+ * The frozen method store as a test fixture (`tests/fixtures/method-knowledge.json`), and the manual entries it
+ * folds into. Production code never reads it.
  */
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";

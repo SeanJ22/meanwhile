@@ -1,70 +1,33 @@
 /**
- * **WHAT A COUNCIL DECIDED, READ OFF ITS OWN MINUTES.** (NH332, 2026-09-25.)
+ * What a council decided, read off its own minutes, for tenants whose clerk does not enter actions in the
+ * Legistar Web API. The portal publishes minutes on the tenant host as
+ * `View.ashx?M=M&ID=<portal id>&GUID=<guid>` (the link the calendar grid's `hypMinutes` cell carries),
+ * answering 200 `application/pdf` with a text layer. The accessible HTML (`hypAccessibleMinutesHTML`) is
+ * read first whenever a tenant publishes it.
  *
- * ## Why this file exists
+ * The clerk's template: an item header (`*5-a.`, the asterisk marking the consent agenda), then
+ * `It was moved by <member>, seconded by <member>, that <motion>.`,
+ * `Upon tabulation of votes, it showed: AYES – <surnames> NAYS – <surnames|None>` and the chair's result
+ * (`Carried unanimously.`, `... declared the motion carried by majority vote.`).
  *
- * Mesa's clerk does not enter the City Council's actions in the Legistar Web
- * API: none of the 33 items on the 2026-09-14 sitting carried an action or a
- * pass flag (tests/fixtures/legistar/legistar-mesa-eventitems-4717.json). The
- * route that answers Pima's questions therefore gives Mesa nothing. The
- * decisions are in the council's minutes, which the portal publishes on the
- * permitted tenant host as `View.ashx?M=M&ID=<portal id>&GUID=<guid>` — the
- * link the calendar grid's `hypMinutes` cell carries — while the Web API's own
- * `EventMinutesFile` points at `legistar.granicus.com`, which robots.txt
- * refuses us.
- *
- * Measured 2026-09-25 (one request each, `pnpm research:fetch`, robots first;
- * `mesa.legistar.com/robots.txt` answers 404 → NO_ROBOTS):
- *
- * - `View.ashx?M=M` answers 200 `application/pdf` with no redirect. The text
- *   layer is present on every document read, including the scanned, signed
- *   copies (their text layer is the publisher's OCR).
- * - The grid's accessible-minutes cell (`hypAccessibleMinutesHTML`) read "Not
- *   available" on all 163 Mesa rows seen (148 on 2026-08-28, 15 on 2026-09-25),
- *   so the PDF is the route Mesa actually publishes. The accessible HTML is read
- *   first whenever a tenant publishes it.
- * - The clerk's template is stable across seven sittings read (five regular
- *   council meetings, a study session, a strategic planning session): an item
- *   header (`*5-a.`, the asterisk marking the consent agenda), then
- *   `It was moved by <member>, seconded by <member>, that <motion>.`,
- *   `Upon tabulation of votes, it showed: AYES – <surnames> NAYS – <surnames|None>`
- *   and the chair's result (`Carried unanimously.`, `Mayor Freeman declared the
- *   motion carried by majority vote.`).
- *
- * ## What this file will and will not say
- *
- * Everything here parses and nothing concludes. Every field is a verbatim
- * substring of the extracted text (whitespace collapsed), so every record a
- * reader sees can be quoted back to the page it came from.
- *
- * - **A motion with no result we could read is NOT_RECORDED**, never failed.
- * - **The AYES/NAYS tabulation is carried as text.** It names members by
- *   surname; turning it into per-member roll-call records is not done here, so
- *   nothing downstream may treat it as one.
- * - **Minutes with no motion are not a sitting where nothing was decided** —
- *   unless the minutes themselves say so ("no formal action taken"). Otherwise
- *   an empty parse is a failed extraction (RULING 100) for the caller to report.
- * - **Action minutes are not approved minutes.** The clerk publishes "Results"
- *   (titled "… ACTION MINUTES") soon after a sitting and the approved minutes
- *   weeks later, after the council approves them at a later sitting. The
- *   Legistar "Minutes status" field is no help: it read "Draft" on both kinds
- *   (MeetingDetail.aspx for 1343177 and 1336059, 2026-09-25), exactly as it
- *   reads "Draft" on every Pima sitting. The document's own title, the
- *   publisher's grid label, and a later sitting's recorded approval are the
- *   evidence, and {@link parseCouncilMinutes} returns all three raw.
+ * Everything here parses and nothing concludes. Every field is a verbatim substring of the extracted text
+ * (whitespace collapsed), so every record can be quoted back to its page.
+ * - A motion with no result we could read is NOT_RECORDED, never failed.
+ * - The AYES/NAYS tabulation is carried as text, never as per-member roll-call records.
+ * - Minutes with no motion are a failed extraction for the caller to report, unless the minutes
+ *   themselves say no formal action was taken.
+ * - Action minutes are not approved minutes. The Legistar "Minutes status" field cannot tell them apart;
+ *   the document's own title, the grid label and a later sitting's recorded approval are the evidence,
+ *   and {@link parseCouncilMinutes} returns all three raw.
  */
 import type { NeverRead, ReadStamp } from "../../ops/freshness.ts";
 import type { LegistarOutcomeRecord, OutcomeDisposition } from "../legistar/outcomes.ts";
 
 /**
- * **WHICH READING OF THE MINUTES THIS IS.** (2026-09-25.)
- *
- * A minutes document whose reading failed, or left an "It was moved" passage
+ * Which reading of the minutes this is. A document whose reading failed, or left an "It was moved" passage
  * unread, is read again when this differs from the revision that read it
- * (`lib/outcomes/minutes-ingest.ts`), and otherwise is not downloaded again
- * until the document changes. So a change to what this file extracts must
- * change this string; `tests/mesa-minutes-outcomes.test.ts` pins this file's
- * digest beside it, so an edit cannot land without that decision.
+ * (`lib/outcomes/minutes-ingest.ts`). A change to what this file extracts must change this string;
+ * `tests/mesa-minutes-outcomes.test.ts` pins this file's digest beside it.
  */
 export const MINUTES_PARSER_REVISION = "2026-09-25.motion-clauses";
 
@@ -220,11 +183,7 @@ function bodyOf(pages: readonly MinutesPage[]): { body: Body; endsAt: ParsedCoun
     starts.push({ offset: text.length, page: page.page });
     text += pageText;
   }
-  /*
-   * The minutes end at the clerk's attestation. Everything after it is the
-   * attached presentations — slide text that names items, amounts and
-   * sometimes "motion", none of it a record of what the council did.
-   */
+  // The minutes end at the clerk's attestation; everything after it is attached presentation text.
   // The OCR of a signed copy can lose "ATTEST:"; the certification sentence survives.
   const attest = [/\bATTEST\s*:/.exec(text), /\bI hereby certify that the foregoing minutes\b/.exec(text)]
     .filter((match): match is RegExpExecArray => match !== null)
@@ -304,9 +263,8 @@ interface HeaderHit {
 }
 
 /**
- * Item numbers run in order, and the "Items not on the Consent Agenda" section
- * only revisits numbers already seen. A number more than two past the largest
- * seen is prose ("Arizona Route 24. Rezone …", measured on 2026-04-20), not a header.
+ * Item numbers run in order, and the non-consent section only revisits numbers already seen, so a number
+ * more than two past the largest seen is prose, not a header.
  */
 const HEADER_SEQUENCE_SLACK = 2;
 
@@ -328,14 +286,11 @@ function headersIn(text: string): HeaderHit[] {
 }
 
 /**
- * "It was moved by <member>, seconded by <member>, " and then the motion's own words, in the three
- * forms the clerk writes (2026-09-25): "that Resolution No. 12559 be adopted" (the usual form),
- * "receipt of the above listed minutes be acknowledged" (no "that": the 2026-06-04 study session),
- * and "to direct the City Attorney to pursue litigation …" (an infinitive: the 2026-08-13 study
- * session's executive-session direction). The motion is read from the first word after the
- * seconder, so "that" stays part of the quoted motion where the clerk wrote it. The clause must
- * begin with a lower-case word that is not a conjunction; any other continuation stays an unread
- * passage, named, never guessed.
+ * "It was moved by <member>, seconded by <member>, " and then the motion's own words, in the three forms
+ * the clerk writes: "that Resolution No. 12559 be adopted" (the usual form), "receipt of the above listed
+ * minutes be acknowledged" (no "that"), and "to direct the City Attorney to …" (an infinitive). The motion
+ * is read from the first word after the seconder. The clause must begin with a lower-case word that is
+ * not a conjunction; any other continuation stays an unread passage, named, never guessed.
  */
 const MOTION_START = /It was moved by ([^,]{3,60}), seconded by ([^,]{3,60}), (?!(?:and|but|or)\b)(?=[a-z])/g;
 
@@ -590,11 +545,11 @@ export function consentItems(parsed: ParsedCouncilMinutes): readonly MinutesItem
 export interface MinutesRecordContext {
   /** The portal's own sitting id (`legistar-insite:<slug>:<id>`). */
   readonly eventId: number;
-  /** The publisher, never the vendor: "City of Mesa City Clerk". */
+  /** The publisher, never the vendor (e.g. a city clerk's office). */
   readonly sourceOrg: string;
   /** The exact minutes URL read. */
   readonly documentUrl: string;
-  /** The stamp minted from the document read (RULING 107). */
+  /** The stamp minted from the document read. */
   readonly readOn: ReadStamp | NeverRead;
 }
 

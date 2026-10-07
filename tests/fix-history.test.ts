@@ -1,4 +1,4 @@
-/** DP-30: a door or method's history is its fix-list items in order; a gap that broke twice reads as two episodes with how long each fix held. */
+/** A door or method's history is its fix-list items in order; a gap that broke twice reads as two episodes with how long each fix held. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

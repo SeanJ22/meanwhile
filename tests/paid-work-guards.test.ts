@@ -1,9 +1,7 @@
 /**
- * CH-24: the paid-work guards live in one module (paid-work-guards.ts) that the
- * research round builds from the controllers it arms, so a standing lease-worker
- * lane builds exactly the same ones. Each refusal is checked on the real holds,
- * the real Fleet controller and the real provider queue, with a fake model that
- * counts what it was asked to send.
+ * The paid-work guards live in one module that the research round builds from the controllers it arms, so a
+ * standing lease-worker lane builds the same ones. Each refusal is checked on the real holds, Fleet controller and
+ * provider queue, with a fake model that counts what it was asked to send.
  */
 import assert from "node:assert/strict";
 import test from "node:test";

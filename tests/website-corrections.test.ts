@@ -26,15 +26,6 @@ import { withWebsiteCorrection, type MeetingsDiscoveryNeed } from "../lib/hunt/m
 import { missionMeetingsDiscoveryNeeds } from "../lib/hunt/mission-meetings-discovery.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 
-/**
- * **C15: A GOVERNMENT'S WEBSITE IS CORRECTED ONLY ON ITS OWN EVIDENCE.** (2026-09-24.)
- *
- * The owner's rule for the website field: the official homepage and the federal .gov registry must identify the
- * same government. A registry row naming a parent identifies the parent. Where the site is not .gov, another
- * government's own publication must name it, or the case stays unresolved and is named. The reviewer recorded is
- * the agent session that checked it.
- */
-
 const HEX = "a".repeat(64);
 const COTTONWOOD = WEBSITE_CORRECTIONS.find((c) => c.jurisdictionId === "az:city:city-of-cottonwood")!;
 
@@ -66,7 +57,6 @@ test("C15: the nine named governments are each corrected on the rule or named un
     assert.equal(websiteCorrectionFor(u.jurisdictionId, u.recorded), null, `${u.jurisdictionId} is never applied`);
     assert.doesNotMatch(u.reviewedBy, /sean/i);
   }
-  /* Sutton, as the rule reads it: its own registry row, a homepage that could not be read, no other government's page. */
   const sutton = variant({
     jurisdictionId: "nh:city:town-of-sutton", governmentName: "Town of Sutton", recorded: "http://www.sutton-nh.gov", corrected: "https://www.suttonnh.gov",
     registry: { ...COTTONWOOD.registry!, domain: "suttonnh.gov", organization: "Town of Sutton", city: "Sutton Mills", state: "NH" },
@@ -144,8 +134,6 @@ test("C15: the CISA registry row is read by exact domain, quoted fields included
   assert.equal(registryRowFor("no,header\n", "cottonwoodaz.gov"), null);
 });
 
-/* ---- the promotion's reading of the sources again ---- */
-
 const REGISTRY_CSV = [
   "Domain name,Domain type,Organization name,Suborganization name,City,State,Security contact email",
   "cottonwoodaz.gov,City,City of Cottonwood,,Cottonwood,AZ,",
@@ -195,7 +183,6 @@ test("C15: an outage keeps the reviewed evidence, and says which source was not 
   assert.equal(challengedOutcome?.disposition, "APPLIED_ON_REVIEWED_EVIDENCE");
   assert.match(challengedOutcome!.detail, /an access control answered in place of the page \(a bot challenge/);
 
-  /* A 403 to this client is an access control: not a reading, never pushed past, and never a contradiction. */
   const forbidden = runtime({
     [DOTGOV_REGISTRY_URL]: { status: 200, body: REGISTRY_CSV },
     "https://cottonwoodaz.gov/": { status: 403, body: "<html><title>Forbidden</title></html>" },
@@ -221,7 +208,6 @@ test("C15: a public page read over a robots.txt that disallows it is a reading (
   );
   assert.deepEqual(read.receipts.map((r) => r.sourceId), ["website-correction:dotgov-registry", "website-correction:az:city:city-of-cottonwood:homepage"]);
 
-  /* A robots.txt that could not be read is recorded as unread and the page is read all the same. */
   const unreadable = runtime({
     "https://cottonwoodaz.gov/robots.txt": "TIMEOUT",
     [DOTGOV_REGISTRY_URL]: { status: 200, body: REGISTRY_CSV },
@@ -310,10 +296,6 @@ test("C15 with CH-21: a mission's discovery need carries the reviewed correction
   assert.equal(read.entries[0]!.need.addressCorrection?.recorded, COTTONWOOD.recorded);
 });
 
-/**
- * Sean's words: "Domain ownership alone does not prove which board a calendar belongs to." The website correction
- * says which site is the government's; it never attributes a calendar to a body. Nothing on the C16 path may read it.
- */
 test("C15: the website correction never feeds meetings body attribution (C16)", () => {
   const c16 = [
     "lib/civic-data/derived-authority.ts",

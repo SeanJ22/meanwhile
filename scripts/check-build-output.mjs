@@ -1,51 +1,14 @@
 #!/usr/bin/env node
 /**
- * The deployed artifact is asked what is in it — R23, closed 2026-08-17.
- *
- * Netlify refused `main@a8f7ff2` with two "likely secret" hits, and both were
- * planted test fixtures: the credential-shaped strings `tests/mirror-code.test.ts`
- * feeds its matcher to prove the code mirror refuses credential-shaped files.
- * No secret leaked. But the fixtures had no business being in a deployed
- * bundle at all, and the reason they were is R23's own diagnosis: a
- * `readFileSync` over a runtime-computed path in the curated ballot source, so
- * Turbopack could not know which files were needed and traced the WHOLE
- * PROJECT — `tests/` included — into the two bundles that reach it.
- *
- * Measured before the fix, 2026-08-17: `/api/ballot/scope` traced 2554 files
- * and `/ballot` traced 2567, each carrying 122 files from `tests/`, against
- * 104-195 traced for every other route.
- *
- * Two checks run here, and they are checks on the OUTPUT, not on the source —
- * the source fix can be undone by any future dynamic read, and the artifact is
- * what actually ships:
+ * Postbuild check of the deployed artifact itself, not the source:
  *
  *   1. No file under `tests/` appears in any trace manifest.
  *   2. No traced repo file carries a credential-shaped VALUE.
+ *   3. The server-trace and client-JS budgets in `scripts/bundle-budget.json`.
  *
- * Check 2 deliberately uses the value-shaped subset of the mirror's patterns.
- * The mirror also matches env-var NAMES (`ANTHROPIC_API_KEY`, a `DATABASE_URL`
- * assignment), which are not secrets and appear legitimately in code that
- * reads configuration; asserting on those would make this check cry wolf, and
- * a check that cries wolf gets muted. A scanner flags shapes that look like
- * live credentials, so that is what is asserted here.
- *
- * Wired as `postbuild`, so it runs on every `pnpm build` — locally and on
- * Netlify, before the secrets scan ever sees the output. A failure here is
- * loud and fails the build, which is the whole point: the alternative was
- * finding out from a refused deploy while production served a stale build.
- *
- * ---------------------------------------------------------------------------
- * WHY THE BODY OF THIS FILE IS A FUNCTION (g17, 2026-08-18).
- *
- * Every refusal below used to exist only as a branch nobody had ever taken. A
- * budget that has never refused is not known to work — it is a green light
- * whose bulb has never been tested, and this repo has already shipped one of
- * those (the source-level synthetic-run guard that was green through two live
- * leaks). So the whole evaluation is `evaluate({ root, budget })`, a pure read
- * of a directory tree, and `tests/build-budget.test.ts` plants EVERY refusal
- * direction against a synthetic `.next` and proves it refuses — each one with
- * a green control built from the same fixture with the plant removed, so a
- * check that refuses everything is caught as fast as one that refuses nothing.
+ * Check 2 matches value shapes only; env-var NAMES appear legitimately in code
+ * that reads configuration. `evaluate` is a pure read of a directory tree so
+ * every refusal can be planted against a synthetic `.next`.
  */
 
 import { readdirSync, readFileSync, existsSync } from "node:fs";
@@ -58,28 +21,9 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
- * THE CEILING RULE, stated once and applied to every budget in the file
- * (g17, 2026-08-18, AUD-02 1b).
- *
- * A ceiling is AT MOST the measured baseline plus 15%, rounded DOWN to a
- * readable unit. Rounding down, always, so that rounding can never quietly buy
- * headroom the rule did not grant.
- *
- * It is a CAP on headroom, not a formula for it. A tighter ceiling is always
- * allowed and needs no reason. A looser one is not permitted at all: a ceiling
- * above the cap can only have come from moving a number to make a red check
- * green, which is the one thing the author's standing rule forbids —
- * ceilings move only on proof.
- *
- * When a baseline legitimately moves — a Next upgrade, a new state's boundary
- * files entering `outputFileTracingIncludes` — the BASELINE is re-measured and
- * re-committed with what joined recorded as its reason, and the ceiling is
- * re-derived from it by this same rule. The headroom is not where a real
- * change is absorbed; it is only there so an ordinary dependency bump does not
- * fail a build and teach people to raise ceilings.
- *
- * `tests/build-budget.test.ts` asserts every committed ceiling against this
- * constant, so the rule is enforced rather than merely described.
+ * A ceiling is AT MOST the measured baseline plus HEADROOM, rounded DOWN to a
+ * readable unit. Tighter is always allowed; a ceiling moves only when its
+ * baseline is re-measured, never on its own.
  */
 export const HEADROOM = 0.15;
 
@@ -88,7 +32,7 @@ export function ceilingCap(baseline, unit) {
   return Math.floor((baseline * (1 + HEADROOM)) / unit) * unit;
 }
 
-/** Credential VALUE shapes. See the header for why names are not included. */
+/** Credential VALUE shapes. */
 const VALUE_SHAPES = [
   { name: "Anthropic-style key", re: /\bsk-ant-[A-Za-z0-9_-]{8,}/g },
   { name: "sk- style key", re: /\bsk-[A-Za-z0-9_-]{16,}/g },
@@ -105,17 +49,9 @@ const VALUE_SHAPES = [
 ];
 
 /**
- * Documentation placeholders, named rather than silently tolerated.
- *
- * `@neondatabase/serverless` ships its own usage example as a string — a
- * `postgresql` URL whose userinfo is the literal `user` and `password` — and
- * Turbopack compiles it into three server chunks. (Written out here it would
- * be a literal credential shape in a source file, which is the exact class of
- * thing this session removed; the entry below carries the shape instead.)
- * It is a shape, not a secret, and the
- * count of skipped placeholders is printed on every run so this list can
- * never quietly grow into a mask. Netlify's own scan agrees: it reported zero
- * real instances against this artifact.
+ * Documentation placeholders: `@neondatabase/serverless` ships a usage example
+ * whose userinfo is a literal placeholder. The skipped count is printed on every
+ * run so this list cannot quietly become a mask.
  */
 const PLACEHOLDER_USERINFO = new Set([
   "user:password",
@@ -148,13 +84,8 @@ function manifestKey(next, m) {
 }
 
 /**
- * The reader's initial JavaScript for `/`, read off the EMITTED HTML.
- *
- * The prerendered page names the scripts it loads, so this is what is served
- * rather than what a manifest planned to serve. Returns null when the page was
- * not prerendered — reported as UNMEASURED, and unmeasured is a refusal, not a
- * pass. A budget that reads a missing file as 0 bytes passes loudest exactly
- * when it has stopped working.
+ * The reader's initial JavaScript for `/`, read off the emitted HTML. Null when
+ * the page was not prerendered; unmeasured is a refusal, not a pass.
  */
 function clientCost(next) {
   const html = join(next, "server", "app", "index.html");
@@ -180,17 +111,14 @@ function clientCost(next) {
     const gz = gzipSync(bytes, { level: 9 }).length;
     raw += bytes.length;
     transfer += gz;
-    // MapLibre identifies itself in its own source. Read from the buffer rather
-    // than guessed from a filename: Turbopack's chunk names are content hashes
-    // and carry no library name at all.
+    // Turbopack chunk names are content hashes, so MapLibre is found by content.
     if (/maplibre|mapbox-gl/i.test(bytes.toString("utf8"))) {
       mapRaw += bytes.length;
       mapTransfer += gz;
     }
   }
-  // R53 (g18): the split by MODULE PROVENANCE, when the build emitted source
-  // maps. It attributes WITHIN a chunk, so re-chunking cannot move it. The
-  // substring figures above are kept and reported as the ESTIMATE they are.
+  // Attributes within a chunk from source maps, so re-chunking cannot move it;
+  // the substring figures above are only an estimate.
   const provenance = attributeByProvenance({ next, srcs });
 
   return {
@@ -205,11 +133,8 @@ function clientCost(next) {
 }
 
 /**
- * Read a build output and say what is wrong with it.
- *
- * Pure with respect to everything except the filesystem under `root`: no
- * process exit, no environment read, nothing printed. `lines` is what a run
- * prints on the way past; `failures` is what refuses the build.
+ * Reads a build output and says what is wrong with it. No process exit, no
+ * environment read, nothing printed: `lines` is reported, `failures` refuse.
  */
 export function evaluate({ root, budget }) {
   const next = join(root, ".next");
@@ -287,57 +212,14 @@ export function evaluate({ root, budget }) {
     );
   }
 
-  /* -- two budgets, not one number (AUD-02) -------------------------------- */
+  /* -- 3: budgets --------------------------------------------------------- */
 
   /*
-   * This block used to print `largest bundle ${worst} files` and every standing
-   * report read it as a bundle SIZE. It is neither a size nor a bundle: it is the
-   * cardinality of a Next server trace manifest, and it says nothing about the
-   * JavaScript a reader downloads. One ambiguous number was standing in for two
-   * questions, so neither was being answered.
-   *
-   * Both are answered now, both against committed baselines with stated ceilings,
-   * and a ceiling breach REFUSES rather than warns.
-   */
-
-  /*
-   * BUDGET 1 IS TWO NUMBERS, AND IT IS MEASURED IN THE MODE THAT DEPLOYS
-   * (R51 remainder, 2026-08-18, g16).
-   *
-   * The first form of this budget took `Math.max` over every manifest and
-   * compared it to one ceiling. That maximum is always `next-server.js` — the
-   * FRAMEWORK's own server runtime trace, which contains zero files of ours —
-   * so the number the budget refused on was a number this repo does not write.
-   * Two consequences, and both bit:
-   *
-   * 1. IT REFUSED A DEPLOY FOR A REASON UNRELATED TO WHAT IT GUARDS. Netlify's
-   *    Next runtime plugin builds in STANDALONE mode, which makes Next trace its
-   *    own server runtime for a self-contained deployment. Measured here rather
-   *    than argued: default mode 927 files, standalone 1130, and the 203 that
-   *    joined are ALL under `node_modules/next/dist` — with zero repo files and
-   *    every app route manifest byte-identical across the two modes. On Linux the
-   *    same build is +8 (`@img/sharp-linux*` in place of `sharp-win32`), which is
-   *    the 1138 Netlify refused. The baseline of 927 had been measured on Windows
-   *    in a mode Netlify never builds in: the budget had never once run under the
-   *    conditions it gates.
-   * 2. IT COULD PASS WHILE WRONG, WHICH IS WORSE. R23's defect lived in APP
-   *    manifests — two of them went to 2554 and 2567 files. Under one maximum,
-   *    an app route could grow from 195 files to 900 and still sit far below a
-   *    ceiling pinned to the framework's 927. The guard would have been green
-   *    for the very shape it exists to catch.
-   *
-   * Standalone mode duplicates every manifest under `standalone/.next/`. Those
-   * copies are folded onto their originals rather than counted twice — a budget
-   * that doubles its own population when the deploy mode changes is measuring
-   * the mode, not the build.
-   */
-
-  /**
-   * The build mode, read off the output rather than off the environment.
-   *
-   * `NEXT_PRIVATE_STANDALONE` is set by Netlify's plugin in ITS process, and this
-   * script is a child of the build command; asking the artifact what it is
-   * survives that and any other way the mode gets set.
+   * Budget 1 is two numbers. 1a is the largest APP route trace (a file count);
+   * 1b is Next's own server runtime trace, which holds no file of ours and
+   * differs between default and standalone mode, so it is budgeted per mode.
+   * Standalone copies under `standalone/.next/` are folded onto their originals.
+   * The mode is read off the output, not the environment.
    */
   const mode = existsSync(join(next, "standalone")) ? "standalone" : "default";
 
@@ -394,43 +276,11 @@ export function evaluate({ root, budget }) {
         `(baseline ${kb(budget.client.initialJsBytes)} / ${kb(budget.client.transferBytes)}, ` +
         `ceiling ${kb(budget.client.initialJsCeiling)} / ${kb(budget.client.transferCeiling)})`,
     );
-    /*
-     * THE CEILINGS IN EXACT BYTES, and this line exists because the KB one
-     * above misled a session (g20 correction 9.2, 2026-08-19).
-     *
-     * g19's report stated the client ceilings as "3,027,315 / 940,032",
-     * which reads as ceilings that had been moved off the committed
-     * 3,100,000 / 940,000 — and the raw figure looked precisely like
-     * measured-plus-300,000, which is not the ceiling rule and would have
-     * been a real violation of the author's standing order.
-     *
-     * Nothing had moved. `scripts/bundle-budget.json` has not been touched
-     * since g18. 3,100,000 / 1024 prints as "3027.3 KB" and 940,000 / 1024
-     * prints as "918.0 KB", and both were read back out of the display as
-     * byte figures — one multiplied by 1000, one by 1024.
-     *
-     * A whole session-brief correction came out of a rounded display, so the
-     * exact numbers are now printed beside it. The measurement already
-     * printed its own exact bytes on the next line; the CEILINGS did not,
-     * which is the asymmetry that made the trap.
-     */
+    // Exact bytes beside the KB figures, which misread easily as byte counts.
     lines.push(
       `           exact ceilings · raw ${budget.client.initialJsCeiling} · gzip ${budget.client.transferCeiling}`,
     );
-    /*
-     * R53 (g18): the split, by MODULE PROVENANCE where the build emitted
-     * source maps and LABELLED AS AN ESTIMATE where it did not.
-     *
-     * The substring form attributes a WHOLE chunk to MapLibre if the chunk
-     * mentions it, so it moves when chunks are reshuffled and it moved by
-     * this session own application-only change. It is not deleted - the
-     * auditor asked for the two tracked apart and deleting the split would
-     * discard the requirement - it is named for what it is.
-     *
-     * Gzip is deliberately NOT split either way. Compression is not additive,
-     * so a per-module gzip figure is arithmetic on a number with no per-module
-     * meaning.
-     */
+    // Gzip is not split: compression is not additive.
     if (client.provenance.available) {
       const p = client.provenance;
       lines.push(
@@ -468,8 +318,8 @@ export function evaluate({ root, budget }) {
         `(baseline ${budget.serverTrace.appManifest.largestManifestFiles}).\n` +
         "  Something is being traced into a route bundle that was not before — this is\n" +
         "  the shape R23 had, where a runtime-computed path made Turbopack trace the whole\n" +
-        "  project. Run `node scripts/trace-census.mjs --files after.txt` and diff it against\n" +
-        "  a clean build's to see WHICH files joined; fix the read at the source with the\n" +
+        "  project. Diff this build's trace manifests against a clean build's to see WHICH\n" +
+        "  files joined; fix the read at the source with the\n" +
         "  static-map pattern in lib/sources/ballot-curated/index.ts, or re-measure and\n" +
         "  re-commit the BASELINE in scripts/bundle-budget.json with the file list as its\n" +
         "  reason — the ceiling is then re-derived from it by the HEADROOM rule, never\n" +
@@ -489,8 +339,8 @@ export function evaluate({ root, budget }) {
         `  exceeds the committed ceiling of ${frameworkBudget.ceiling} ` +
         `(baseline ${frameworkBudget.largestManifestFiles}).\n` +
         "  This trace holds no file of ours, so the cause is almost certainly a Next upgrade\n" +
-        "  or a build-mode change rather than anything in this repo. Confirm that with\n" +
-        "  scripts/trace-census.mjs before touching the number, then re-measure the baseline\n" +
+        "  or a build-mode change rather than anything in this repo. Confirm that from the\n" +
+        "  trace manifests before touching the number, then re-measure the baseline\n" +
         "  for THIS MODE with what joined recorded as its reason.",
     );
   }

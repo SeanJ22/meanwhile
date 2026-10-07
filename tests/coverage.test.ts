@@ -1,4 +1,4 @@
-import { geometryFiles } from "../lib/holdings/files.ts";
+import { geometryFiles } from "../lib/holdings/discovery.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -9,7 +9,6 @@ import { resolveZip } from "../lib/geo/zcta.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import { type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { planPlaceHunt } from "../lib/hunt/place-plan.ts";
 import { buildPlaceOwedList, missingPlaceWork, type PlaceSubject } from "../lib/coverage/place-owed.ts";
@@ -166,19 +165,10 @@ test("a place inherits other jobs' published fields before national acquisition"
     acquireNational: async () => { throw Error("Must not acquire from a failed empty read"); } }), /Shared holdings unavailable/);
 });
 
-await installRegistryRuntimeFirstSeeds();
 
 /**
- * Coverage language, and the count that proves the derivation rule is right.
- *
- * Two jobs. The first is the four states of 4.6.6 — the reader must always be
- * able to tell "nothing is scheduled" from "we cannot see what is scheduled",
- * and must never be told they have no representation.
- *
- * The second is the federal check. Phase 4.7 says the derivation rule is
- * validated against the Census of Governments rather than invented, and this is
- * where that happens: the three clip counties hold exactly 74 general-purpose
- * governments, and a rule producing a different number is wrong.
+ * The reader can always tell "nothing is scheduled" from "we cannot see what is scheduled" and is never told they
+ * have no representation. The derivation rule is checked against the Census of Governments count.
  */
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -212,14 +202,7 @@ function coverageFor(zip: string, meetingCount: number) {
   );
 }
 
-/**
- * The 2022 Census of Governments count for the three clip counties.
- *
- * 39 municipalities in Morris NJ, 27 in Merrimack NH, 5 incorporated places in
- * Pima AZ, plus the 3 county governments. This is the number the derivation has
- * to reproduce, and reproducing it is what turns "the rule looks reasonable"
- * into "the rule agrees with the federal enumeration".
- */
+/** The 2022 Census of Governments count for the three clip counties: municipalities plus the county governments. */
 const COG_GENERAL_PURPOSE = 74;
 
 /** Per-county, from the same federal source. */
@@ -251,30 +234,9 @@ function _centroid(feature: GeoFeature): [number, number] {
 }
 
 test("the clip counties hold exactly the 74 governments Census enumerates", () => {
-  // The federal check, and the reason the derivation rule is credible rather
-  // than merely plausible. Done by geometric containment, not by reading county
-  // out of the identifier: after the FUNCSTAT fix a New Jersey borough is a flat
-  // `state:nj/place:*` row with no county segment at all, so an identifier-shaped
-  // test would silently miss 29 governments.
-  /*
-   * **THE COUNTY IS READ, NOT GUESSED.** (RULING 80, NJ Hunt 4 item 4,
-   * 2026-08-22.)
-   *
-   * This used to place each municipality in a county by AVERAGING its
-   * exterior-ring vertices and testing that point against the simplified county
-   * polygon. Both halves of that are approximations, and once the clip widened
-   * from three counties to twenty-two they stopped cancelling out: three Sussex
-   * County municipalities on the Lake Hopatcong shore — Byram township,
-   * Hopatcong and Stanhope — reported as Morris, and inflated a federal
-   * cross-check by three. A vertex average is not a centroid, and a
-   * 200-metre-simplified boundary is not a boundary.
-   *
-   * `clipCounties` is written onto every clipped feature at build time from the
-   * REAL overlap against the county polygons the clip is built from, before any
-   * simplification. It is exact. A municipality that genuinely straddles a
-   * county line carries both, and is counted in both — which is the truth about
-   * it, not a rounding of it.
-   */
+  // Counted by geometric containment, not from the identifier: a flat `place:*` row has no county segment.
+  // `clipCounties` is written at build time from the real overlap before simplification; a municipality that
+  // straddles a county line is counted in both.
   const measuredCounties = registry.divisions.filter(d => d.divisionType === "county" && Object.hasOwn(COG_BY_COUNTY, `${d.label.replace(/ County$/, "")} ${d.state}`));
   const countyLabel = new Map(measuredCounties.map(d => [d.geoid!, `${d.label.replace(/ County$/, "")} ${d.state}`]));
 
@@ -297,15 +259,11 @@ test("the clip counties hold exactly the 74 governments Census enumerates", () =
     }
   }
 
-  /*
-   * THE PAIR. The widened extent draws municipal governments outside the three
-   * counties this federal cross-check is about, and saying only the in-scope
-   * number would hide that. The standing figure is the per-county one below.
-   */
+  /* The widened extent draws municipal governments outside the clip counties; both numbers are reported. */
   console.log(
     `COG cross-check: ${Object.values(perCounty).reduce((a, b) => a + b, 0)} municipal ` +
       `bodies inside the three primary counties · ${outsideThePrimaries} held in the ` +
-      `adjacent counties the RULING 80 extent now draws`,
+      `adjacent counties the extent now draws`,
   );
 
   assert.deepEqual(
@@ -314,23 +272,7 @@ test("the clip counties hold exactly the 74 governments Census enumerates", () =
     `municipal counts per county disagree with the Census of Governments: ${JSON.stringify(perCounty)}`,
   );
 
-  /*
-   * The county term is the CLIP counties, which is what this test's constant
-   * has always meant — "plus the 3 county governments", per the note above
-   * COG_GENERAL_PURPOSE.
-   *
-   * It used to count every `divisionType === "county"` row, which was the same
-   * number for as long as the registry held only the clip counties. NH Hunt 5
-   * added Sullivan County: 03255's first-rung circle crosses three counties
-   * and the geometry is clipped to one, so Sullivan is now a division here
-   * with no polygon (lib/registry/curated-divisions.ts). It is a real
-   * government and it is correctly in the registry; it is simply not one of
-   * the three counties this federal cross-check is about, and counting it here
-   * would have made the check fail for being MORE complete.
-   *
-   * Scoped by the clip manifest rather than by a literal 3, so the two move
-   * together if the clip ever widens.
-   */
+  /* The county term is the clip counties only; other county divisions are real but outside this cross-check. */
   const clipFips = new Set(measuredCounties.map(d => d.geoid));
   const clipCountyRows = registry.divisions.filter(
     (d) => d.divisionType === "county" && d.geoid !== null && clipFips.has(d.geoid),
@@ -348,15 +290,8 @@ test("the clip counties hold exactly the 74 governments Census enumerates", () =
 });
 
 test("a government listed in both layers keeps the real row, not the fictitious one", () => {
-  // Concord NH is in the place file and the county-subdivision file. One city.
-  // Census marks the duplicate itself: the place row is FUNCSTAT=A and the
-  // subdivision row is FUNCSTAT=F, a fictitious entity that exists only to fill
-  // the geographic hierarchy.
-  //
-  // Which row survives matters as much as how many. An earlier read-layer
-  // dedupe kept the county-subdivision row and dropped `place:concord` — the
-  // count was right and the identity was wrong, which is worse, because every
-  // officeholder and meeting downstream joins on that key.
+  // Census marks the duplicate itself: the place row is FUNCSTAT=A and the county-subdivision row is FUNCSTAT=F.
+  // The surviving row must be the place row, because officeholders and meetings join on that key.
   const concord = registry.divisions.filter(
     (d) => d.divisionType === "place" && /concord/.test(d.ocdId) && d.state === "NH",
   );
@@ -379,16 +314,7 @@ test("a government listed in both layers keeps the real row, not the fictitious 
 });
 
 test("every fictitious row is suppressed, and only fictitious rows are", () => {
-  /*
-   * **121 across the clip EXTENT**, which is the three primary counties plus
-   * every county adjacent to them (RULING 80, 2026-08-22). It was 32 while the
-   * clip was three counties; the rule did not change and the universe did.
-   *
-   * If this number moves again, either Census changed a vintage, the clip
-   * changed, or the rule stopped reading FUNCSTAT — and the second assertion
-   * below is the one that distinguishes the third case from the first two,
-   * because it is about the RULE rather than about the count.
-   */
+  /* Counted across the clip extent. If this moves, the second assertion tells a rule change from a data change. */
   const municipal = registry.divisions.filter((d) => d.divisionType === "place");
   const fictitious = municipal.filter((d) => d.funcstat === "F");
 
@@ -406,10 +332,8 @@ test("every fictitious row is suppressed, and only fictitious rows are", () => {
 });
 
 test("Rockaway borough and township both survive as separate governments", () => {
-  // The case that makes the direction of the fix matter. Morris County holds
-  // both, and they are two municipalities with two councils. The borough is a
-  // flat place row; the township is a county subdivision; and there is a third,
-  // fictitious row duplicating the borough.
+  // Two municipalities with two councils: one a flat place row, one a county subdivision, plus a fictitious
+  // duplicate of the first.
   const rockaway = registry.divisions.filter((d) => /place:rockaway/.test(d.ocdId));
   const governing = rockaway.filter((d) => bodyOcdIds.has(d.ocdId)).map((d) => d.ocdId);
 
@@ -422,12 +346,7 @@ test("Rockaway borough and township both survive as separate governments", () =>
 });
 
 test("85701 keeps the City of Tucson and is not called unincorporated", () => {
-  // The regression the dedupe introduced and this test now pins. Downtown
-  // Tucson is covered by both `place:tucson` (the city) and
-  // `county:pima/place:tucson_ccd` (a statistical Census County Division).
-  // Reading the CCD as a subdivision government dropped the city, leaving the
-  // largest municipality in the test set unrepresented and reporting downtown
-  // as having no city government.
+  // The city place and a statistical Census County Division cover the same ground; the CCD must not drop the city.
   const coverage = coverageFor("85701", 0);
 
   assert.equal(
@@ -436,9 +355,7 @@ test("85701 keeps the City of Tucson and is not called unincorporated", () => {
     "downtown Tucson has a city government",
   );
 
-  // Exactly one municipal *government*. The division now also carries the
-  // city's boards, commissions and the PHA as curated bodies (D29) — real
-  // bodies, not extra city governments, and they must not read as one.
+  // Exactly one municipal government; the division's curated boards and commissions must not read as another.
   const municipal = coverage.bodies.filter(
     (b) => b.divisionType === "place" && b.name === null,
   );
@@ -451,31 +368,9 @@ test("85701 keeps the City of Tucson and is not called unincorporated", () => {
 });
 
 test("85641 states the unincorporated fact and still names its government", () => {
-  // The case the whole phase exists for. Vail is a CDP: no municipal
-  // government at all. The old answer was an empty map reading as civic
-  // silence; the correct one names the county and the school district and says
-  // plainly that there is no city government.
+  // A CDP has no municipal government; the answer names the county and the school district and says so.
   const coverage = coverageFor("85641", 0);
 
-  /*
-   * NONE_SCHEDULED since 2026-08-13, and it SURVIVED a real test of itself on
-   * 2026-08-27 — which is worth recording, because the survival was earned.
-   *
-   * That day found a governing body nobody knew about: the CENTRAL ARIZONA
-   * WATER CONSERVATION DISTRICT, which levies on every parcel in Pima County
-   * (Resolution 2026-43, ad valorem secondary 0.1000 plus water storage 0.0400
-   * on the county's whole valuation) and whose board is DIRECTLY ELECTED. Its
-   * own meetings page renders no meeting, so adding it turned this assertion to
-   * NO_SOURCE — correctly, because there was now a government here whose
-   * calendar we could not read.
-   *
-   * The available shortcut was to leave the district out and keep the greener
-   * state. CLAUDE.md forbids exactly that: collection state never governs
-   * display. So the district went in, and then the adapter did — its CivicClerk
-   * tenant slug is in its own page's `clerkEmbedProps` and the portal's OData
-   * API answers a plain GET. Every governing body at this point is LIVE again,
-   * and an empty calendar is once more a statement about the calendar.
-   */
   assert.equal(coverage.state, "NONE_SCHEDULED");
   assert.equal(coverage.unincorporated, true, "Vail is unincorporated and must say so");
 
@@ -496,9 +391,8 @@ test("85641 states the unincorporated fact and still names its government", () =
 });
 
 test("nobody is ever told they have no representation", () => {
-  // Every square foot of the country is governed by something. Whatever the
-  // coverage state, a target zip always resolves at least a county board, a
-  // school board, and state and federal seats.
+  // Whatever the coverage state, a zip always resolves at least a county board, a school board, and state and
+  // federal seats.
   for (const zip of ["85701", "85641", "07866", "03255"]) {
     const coverage = coverageFor(zip, 0);
     assert.ok(
@@ -515,22 +409,8 @@ test("nobody is ever told they have no representation", () => {
 
 test("finding meetings and finding nothing are different states", () => {
   assert.equal(coverageFor("85701", 4).state, "MEETINGS");
-  /*
-   * 85701 moved with 85641 through the Central Arizona Water Conservation
-   * District episode of 2026-08-27 described above — out of NONE_SCHEDULED
-   * when the district was added with no adapter, and back into it when the
-   * CivicClerk adapter landed. Both Pima zips move together because the
-   * district's territory is the county, which is itself the check that the
-   * finding was applied to the district's real reach rather than pinned to the
-   * zip that happened to find it.
-   */
   assert.equal(coverageFor("85701", 0).state, "NONE_SCHEDULED");
-  // …and 07866 joined it on 2026-08-15, when Morris Hills Regional — the last
-  // GOVERNING body at the point without a source — was wired (M78). The two
-  // bodies still unwired there are Rockaway's Environmental Commission and
-  // Board of Assessment Commissioners, both COMMISSION class, and the state
-  // deliberately does not turn on those: an unwired commission must not read
-  // as a government whose calendar is missing. The sidebar still counts them.
+  // An unwired commission must not read as a government whose calendar is missing; the sidebar still counts it.
   const rockaway = coverageFor("07866", 0);
   assert.equal(rockaway.state, "NONE_SCHEDULED");
   assert.ok(
@@ -548,12 +428,8 @@ test("finding meetings and finding nothing are different states", () => {
 });
 
 test("a body's name is never invented for display", () => {
-  // The copy prints the *division's* label, which Census sourced. A DERIVED
-  // body's own name is null and must stay that way until something sources
-  // it. A CURATED row may carry a name — that is what the origin means — and
-  // then it must cite the page the name was read off. (Rockaway's Planning
-  // Board and Board of Adjustment arrived curated on 2026-08-15, named from
-  // the township's own AgendaCenter headings.)
+  // A DERIVED body's own name is null until something sources it. A CURATED row may carry a name, and then it must
+  // cite the page the name was read off.
   const coverage = coverageFor("07866", 0);
   assert.ok(coverage.bodies.length > 0);
 
@@ -568,18 +444,12 @@ test("a body's name is never invented for display", () => {
     } else {
       assert.equal(source.name, null, `${body.bodyId} gained a name from nowhere`);
     }
-    // The coverageStatus assertion that used to sit here was incidental to this
-    // test and is now false: Rockaway township has an audit row, so it reads
-    // KNOWN_UNCOVERED. What this test is actually about — a name never being
-    // invented — is unaffected, and holds even for the audited rows, since a
-    // source hunt finds a website and never a body's name.
     assert.notEqual(body.divisionLabel, "", "a division label must be present to render");
   }
 });
 
 test("07866 counts its two school districts separately", () => {
-  // A K-8 district and a regional high school district cover the same ground,
-  // and they are two governments with two boards.
+  // A K-8 district and a regional high school district are two governments with two boards.
   const coverage = coverageFor("07866", 0);
   const schools = coverage.bodies.filter((b) => b.divisionType === "school_district");
 
@@ -590,18 +460,8 @@ test("07866 counts its two school districts separately", () => {
 });
 
 test("03255 resolves the town, deduped to one municipal division", () => {
-  // Newbury NH is a county subdivision and absent from the place file. Nothing
-  // should double it, and the town government must survive the dedupe.
-  //
-  // **The claim is one DIVISION, not one body** (corrected 2026-08-15, the
-  // truth session). This asserted one municipal body until the browser rung
-  // reached the town's own site and found the Planning Board, the
-  // Conservation Commission and the Zoning Board of Adjustment sitting beside
-  // the Selectboard — one division, many bodies, which the registry has
-  // always said is the normal case and which Tucson and Rockaway already
-  // demonstrate. The dedupe this test guards is of the DIVISION; a body count
-  // standing in for it would have made finding a town's other governments
-  // look like a regression.
+  // A town that is a county subdivision, absent from the place file, survives the dedupe as one division with many
+  // bodies; the dedupe is of the division, not the body count.
   const coverage = coverageFor("03255", 0);
   const municipal = coverage.bodies.filter((b) => b.divisionType === "place");
   const divisions = new Set(municipal.map((b) => b.divisionLabel));

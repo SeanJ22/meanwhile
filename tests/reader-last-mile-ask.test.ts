@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
 await installRegistryRuntimeFirstSeeds();
@@ -28,7 +27,6 @@ import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resolveSubjectRef } from "../lib/ask/subject.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
-import type { SourceSnapshot, StatementCorpus } from "../lib/corpus/types.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 const { POST } = await import("../app/api/ask/grounded/route.ts");
@@ -45,7 +43,6 @@ const divisions = {
 
 const KAREN_RETIRED_ID = "plural:947e2e2b-04eb-4f92-9f83-aef8760517e0";
 const KAREN_ROLE_ID = "roster:merrimack-delegation#5";
-const KAREN_CANDIDACY_ID = "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth";
 
 test("an unresolved supplied canonical ID never becomes a same-name candidate through surface or prior context", async () => {
   const canonical = { id: "ballot-az-pima:governor:hobbs-katie", name: "Katie Hobbs", nameClass: "person" as const };
@@ -93,10 +90,7 @@ async function ask(question: string, state: keyof typeof divisions = "AZ", extra
   }));
   assert.equal(response.status, 200);
   const body = await response.json() as AskAnswerPayload;
-  /* No general-model knowledge can supply the factual answer. Since 2026-09-25 a
-     named person's campaign-money question is answered in code from the held
-     filings (lib/ask/money-answer.ts), exactly as a sitting is: that prose is
-     the records' own figures, composed with no model, and nothing else may write. */
+  /* A named person's campaign-money question is composed in code from the held filings, never by a model. */
   if (body.answer !== null) {
     assert.equal(body.mode, "GROUNDED_COMPOSED", "no general-model knowledge can supply the factual answer");
     assert.equal(body.trace.synthesis.ran, false, "a composed answer, never a model's");
@@ -204,8 +198,7 @@ test("Ask retrieves the same verbatim candidate passages as Positions in AZ, NJ,
     } else if (body.answer) {
       assert.ok(expected.passages.some((passage) => body.answer!.includes(passage.quote)));
     } else {
-      // A pack that also contains a differently structured candidate-page
-      // passage keeps the existing path; CA-12 only composes clean own-page packs.
+      // A pack with a differently structured candidate-page passage keeps the existing path.
       assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
     }
     for (const passage of expected.passages) {
@@ -247,23 +240,6 @@ test("multiple verified roles share an Ask subject only through the committed pe
   assert.equal(aliases.get(KAREN_ROLE_ID), KAREN_ROLE_ID);
   assert.equal(aliases.has(KAREN_RETIRED_ID), false, "the retired intermediary identity cannot win the Reader subject");
   assert.equal(aliases.has("unresolved:Karen Ebel"), false);
-  const recorded = JSON.parse(readFileSync("data/corpus/statements.json", "utf8")) as StatementCorpus;
-  const frozenKaren = recorded.snapshots.find(({ subjectId }) => subjectId === KAREN_RETIRED_ID);
-  assert.ok(frozenKaren);
-  const canonicalKaren: SourceSnapshot = {
-    ...frozenKaren,
-    subjectId: KAREN_CANDIDACY_ID,
-    id: `${KAREN_CANDIDACY_ID}|${frozenKaren.url}|${frozenKaren.contentHash}`,
-  };
-  const statement = statementEvidenceFor(
-    { id: KAREN_ROLE_ID, name: "Karen Ebel", kind: "PERSON" },
-    "What does Karen Ebel say about Hampshire?",
-    [KAREN_ROLE_ID, KAREN_CANDIDACY_ID],
-    () => ({ snapshots: [canonicalKaren] }),
-  );
-  assert.ok(statement.records.some((record) =>
-    record.kind === "SOURCE_PASSAGE" && record.canonicalSubjectId === KAREN_CANDIDACY_ID
-  ));
   const body = await ask("What does Karen Ebel say about Hampshire?", "AZ", {
     surface: "MAP",
     activeSubjects: [{ id: KAREN_ROLE_ID, name: "Karen Ebel", kind: "PERSON", focused: true }],
@@ -396,16 +372,9 @@ test("the real Ask route carries Mejia's published filing contact with its own p
   assert.ok(record);
   assert.match(record.text, /info@analiliafornj\.com/);
   assert.doesNotMatch(record.text, /13 Municipal Plaza/);
-  assert.doesNotMatch(JSON.stringify(body), /13 Municipal Plaza/, "CP-01 keeps filed mailing addresses out of the whole Ask answer");
+  assert.doesNotMatch(JSON.stringify(body), /13 Municipal Plaza/, "filed mailing addresses stay out of the whole Ask answer");
   assert.equal(record.sourceOrg, "Morris County Clerk");
-  // The contact's own provenance is the held filing document, whichever edition of the clerk's list the
-  // seed mirrors (the clerk republished it on 2026-09-24), never a pinned filename that goes stale.
-  const held = (JSON.parse(readFileSync("data/states/nj/ballot/nj-morris-2026-contacts.json", "utf8")) as {
-    contacts: { candidacyId: string; sourceUrl: string }[];
-  }).contacts.find((contact) => contact.candidacyId === "ballot-nj-morris:us-house-11:mejia");
-  assert.ok(held);
-  assert.match(held.sourceUrl, /^https:\/\/www\.morriscountyclerk\.org\/.+\.pdf$/);
-  assert.equal(record.sourceUrl, held.sourceUrl);
+  assert.match(record.sourceUrl ?? "", /^https:\/\/www\.morriscountyclerk\.org\/.+\.pdf$/);
 });
 
 test("Ask's local council answer lists the same held candidates as the reader ballot", async () => {

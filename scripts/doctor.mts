@@ -1,60 +1,120 @@
 /**
- * `pnpm doctor` — **CAN THIS MACHINE DO THE WORK?**
- * (2026-08-27, the coverage-truth session.)
+ * `pnpm run doctor` — can this machine do the work? Every capability this
+ * repository depends on, each with a state and a remediation. It is an
+ * environment-readiness check, not the data-integrity one (`pnpm coverage`).
  *
- * Every capability this repository depends on, each with a state a machine can
- * read and a remediation a person can act on. It is an OPERATOR-SAFETY and
- * ENVIRONMENT-READINESS instrument and it is deliberately not the data-integrity
- * one — `pnpm coverage` is that.
- *
- * ## Invoke it as `pnpm run doctor`, and the `run` is not optional
- *
- * **pnpm owns the verb `doctor`.** `pnpm doctor` runs pnpm's own installation
- * check — versions, cache directory, registry connectivity — and never reaches
- * this script. It prints "All checks passed", which is true about pnpm and says
- * nothing about this repository, and that is a confusing thing for a readiness
- * tool to have happen to it. The script keeps the name because the name is
- * right; the invocation carries `run`.
+ * Invoke it as `pnpm run doctor`: pnpm owns the verb `doctor`, and `pnpm
+ * doctor` runs pnpm's own installation check instead.
  *
  * ```
  * pnpm run doctor
  * pnpm run doctor --json doctor.json
  * ```
  *
- * ## It never calls a credentialed endpoint
- *
- * `pnpm credentials` proves each key by using it and writes the ledger. This
- * reports a credential as PRESENT or MISSING **by name**, and stops there. The
- * separation is not tidiness: a readiness check that authenticates is a
- * readiness check that can be rate-limited, can leak a token into an error, and
- * cannot be run on a plane.
- *
- * ## The secret boundary
- *
- * Everything printed or written goes through `redact` in `lib/ops/doctor.ts`,
- * and `tests/doctor-secrets.test.ts` drives a sentinel through the FAILING
- * paths and captures stdout, stderr and both report files to prove it. A
- * passing check proves nothing about what an exception prints, which is the
- * whole reason that test exists.
+ * It never calls a credentialed endpoint: credentials are reported PRESENT or
+ * MISSING by name only (`pnpm credentials` proves them by calling). Everything
+ * printed or written goes through `redact`.
  */
 
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import {
-  blocking,
-  check,
-  detectPnpm,
-  nameLooksSecret,
-  needsRemediation,
-  redact,
-  type CheckResult,
-} from "../lib/ops/doctor.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { resolveChromium, describeChromium } from "../lib/ops/chromium-pin.ts";
 
 const ROOT = process.cwd();
+
+type CheckState = "PASS" | "FAIL" | "MISSING" | "COULD_NOT_VERIFY" | "OPTIONAL";
+
+interface CheckResult {
+  id: string;
+  what: string;
+  state: CheckState;
+  detail: string;
+  remediation: string | null;
+}
+
+const SECRET_NAME_SHAPES: readonly RegExp[] = [
+  /KEY$/i,
+  /_KEY_/i,
+  /TOKEN/i,
+  /SECRET/i,
+  /PASSWORD/i,
+  /PASSWD/i,
+  /CREDENTIAL/i,
+  /DATABASE_URL/i,
+  /_URL$/i,
+  /_DSN$/i,
+  /AUTH/i,
+  /SIGNING/i,
+  /PRIVATE/i,
+];
+
+function nameLooksSecret(name: string): boolean {
+  return SECRET_NAME_SHAPES.some((shape) => shape.test(name));
+}
+
+const SECRET_VALUE_SHAPES: readonly { re: RegExp; as: string }[] = [
+  { re: /\b([a-z][a-z0-9+.-]*):\/\/[^\s/@]+:[^\s/@]+@/gi, as: "$1://<credentials-removed>@" },
+  { re: /\bauthorization["'\s:=]+(bearer|basic|token)?\s*[^\s"',}]+/gi, as: "authorization: <removed>" },
+  { re: /([?&](?:api[_-]?key|key|token|access[_-]?token|secret)=)[^&\s"']+/gi, as: "$1<removed>" },
+  // 24+ characters, so an ordinary word, a short git SHA or an OCD id never matches.
+  { re: /\b[A-Za-z0-9_-]{24,}\.[A-Za-z0-9_-]{8,}\b/g, as: "<token-removed>" },
+  { re: /\b(?:sk|pk|ghp|gho|ghs|glpat|xox[baprs])[_-][A-Za-z0-9_-]{8,}\b/gi, as: "<token-removed>" },
+];
+
+/** The only way text leaves this script: known secret values first, then secret-shaped text. */
+function redact(text: unknown, env: Record<string, string | undefined>): string {
+  let s: string;
+  if (text instanceof Error) s = `${text.name}: ${text.message}`;
+  else if (typeof text === "string") s = text;
+  else {
+    try {
+      s = JSON.stringify(text);
+    } catch {
+      s = "<unserializable>";
+    }
+  }
+  if (s === "") return s;
+  const values = Object.entries(env)
+    .filter(([name, value]) => typeof value === "string" && value.length >= 8 && nameLooksSecret(name))
+    .map(([, value]) => value as string)
+    .sort((a, b) => b.length - a.length);
+  for (const v of values) s = s.split(v).join("<redacted>");
+  for (const { re, as } of SECRET_VALUE_SHAPES) s = s.replace(re, as);
+  return s;
+}
+
+function check(
+  id: string,
+  what: string,
+  state: CheckState,
+  detail: unknown,
+  remediation: string | null,
+  env: Record<string, string | undefined>,
+): CheckResult {
+  return { id, what, state, detail: redact(detail, env), remediation };
+}
+
+function needsRemediation(r: CheckResult): boolean {
+  return r.state !== "PASS" && r.state !== "OPTIONAL" && (r.remediation ?? "").trim().length === 0;
+}
+
+function blocking(results: readonly CheckResult[]): CheckResult[] {
+  return results.filter((r) => r.state === "FAIL" || r.state === "MISSING");
+}
+
+/** pnpm sets `npm_config_user_agent` for every script it runs; spawn only when not run through pnpm. */
+function detectPnpm(userAgent: string | undefined, spawn: () => string): { version: string | null; error: unknown } {
+  const fromUa = /(?:^|\s)pnpm\/(\S+)/.exec(userAgent ?? "");
+  if (fromUa) return { version: fromUa[1], error: null };
+  try {
+    return { version: spawn().trim() || null, error: null };
+  } catch (error) {
+    return { version: null, error };
+  }
+}
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -100,41 +160,11 @@ c(
     : `this repository runs TypeScript through node's own --experimental-strip-types, which needs node 22 or newer. Install it and re-run.`,
 );
 
-/*
- * COREPACK IS A KNOWN TRAP HERE, not a preference. `pnpm handoff --ship` run
- * THROUGH corepack breaks its child processes, and the secrets gate then
- * reports a mirror credential leak when its subprocess simply never ran. So
- * this reports which pnpm is on PATH rather than assuming.
- */
-/*
- * ON WINDOWS THE EXECUTABLE IS `pnpm.cmd`, and the first version of this check
- * reported `FAIL — spawnSync pnpm ENOENT` on a machine that was running the
- * check THROUGH pnpm. That is the exact failure this whole session is about,
- * committed by the readiness tool: an instrument reporting a fact about the
- * world when the fact was about the instrument. Both spellings are tried, and
- * a genuine absence is still a genuine FAIL.
- */
+/* Reports which pnpm is on PATH rather than assuming; corepack-routed pnpm breaks child processes. */
 let pnpmVersion = "";
 let pnpmError: unknown = null;
-/*
- * **ASK THE RUNNER, DO NOT SPAWN IT.** pnpm sets `npm_config_user_agent` for
- * every script it runs — "pnpm/11.21.0 npm/? node/v24.19.0 win32 x64" — so
- * when doctor is invoked through pnpm the answer is already in hand, exactly
- * and for free.
- *
- * Spawning was the first two attempts and both were wrong on Windows:
- * `execFileSync("pnpm")` is ENOENT because the executable is `pnpm.cmd`, and
- * `execFileSync("pnpm.cmd")` is ENOENT too because `execFile` does no PATHEXT
- * or shell resolution. Both reported `FAIL — pnpm is not on PATH` on a machine
- * that was running the check THROUGH pnpm. That is this session's own subject
- * committed by the readiness tool: a fact about the instrument, reported as a
- * fact about the world.
- */
-/* The rule itself lives in `lib/ops/doctor.ts` so a test can drive it with a
- * spawn that throws — see `detectPnpm`, and the control in
- * `tests/doctor-secrets.test.ts` that replays this exact false report. */
 const detected = detectPnpm(process.env.npm_config_user_agent, () =>
-  /* Not run through pnpm — spawn, with a shell so Windows resolves the shim. */
+  /* With a shell, so Windows resolves the `pnpm.cmd` shim. */
   execFileSync("pnpm --version", { encoding: "utf8", shell: true, maxBuffer: 1 << 20 }),
 );
 pnpmVersion = detected.version ?? "";
@@ -147,7 +177,7 @@ if (pnpmVersion) {
     "pnpm on PATH",
     "FAIL",
     pnpmError,
-    "install pnpm and put it on PATH. Do NOT route the gate commands through corepack: `pnpm handoff --ship` under corepack breaks its child processes and the secrets gate then reports a leak when its subprocess never ran.",
+    "install pnpm and put it on PATH. Do NOT route the gate commands through corepack: corepack breaks their child processes.",
   );
 }
 
@@ -172,12 +202,7 @@ try {
 
 /* ------------------------------------------------------- the build outputs */
 
-/*
- * `tsc --noEmit` CANNOT PASS ON A CLEAN CHECKOUT — `LayoutProps` comes out of
- * `.next/types`, so the type-check depends on a build having happened. That is
- * a real ordering trap and it is worth a check of its own rather than a
- * confusing type error twenty seconds into a gate run.
- */
+/* `tsc --noEmit` reads generated route types out of `.next/types`, so it needs a build first. */
 c(
   "next-build",
   "a Next build exists, which `tsc` depends on",
@@ -194,22 +219,17 @@ const REQUIRED_ARTIFACTS: { path: string; what: string; how: string }[] = [
   {
     path: "lib/registry/registry.json",
     what: "the body and division registry",
-    how: "run `pnpm registry:build`. It merges the boundary derivation, the curated overlay and lib/registry/promoted-bodies.json.",
+    how: "recover it from git.",
   },
   {
     path: "lib/registry/promoted-bodies.json",
     what: "the canonical promoted-body INPUT store",
-    how: "this is an INPUT, not a generated file — it cannot be rebuilt. Recover it from git; without it a registry build silently drops every lead-promoted body (NH232).",
-  },
-  {
-    path: "data/meetings-snapshot.json",
-    what: "the meetings snapshot",
-    how: "run `pnpm ingest composite`. Without it the app serves no meetings and says so.",
+    how: "this is an INPUT, not a generated file — it cannot be rebuilt. Recover it from git.",
   },
   {
     path: "data/states/az/geo/body-territories.geojson",
     what: "territories for governments with no Census division",
-    how: "run `pnpm cfd:territory --geojson data/states/az/geo/body-territories.geojson`. Without it, districts smaller than any division reach no reader (NH233).",
+    how: "recover it from git. Without it, districts smaller than any division reach no reader.",
   },
   {
     path: "data/derived/resolver-geometry.json",
@@ -225,10 +245,7 @@ for (const a of REQUIRED_ARTIFACTS) {
 
 /* ------------------------------------------------------------ credentials */
 
-/*
- * NAMES AND PRESENCE. Never a value, never a prefix, never a length — a length
- * is a real hint about a secret and costs nothing to withhold.
- */
+/* Names and presence only: never a value, a prefix or a length. */
 const secretNames = Object.keys(FILE_ENV).filter(nameLooksSecret).sort();
 const emptyNames = secretNames.filter((n) => (FILE_ENV[n] ?? "").trim() === "");
 c(
@@ -249,15 +266,13 @@ c(
   "whether those credentials actually work",
   "OPTIONAL",
   "not checked here, by design",
-  "run `pnpm credentials`, which proves each key by calling its endpoint and writes docs/credential-ledger.md. A readiness check that authenticates can be rate-limited and can leak a token into an error.",
+  "run `pnpm credentials`, which proves each key by calling its endpoint and prints the result. A readiness check that authenticates can be rate-limited and can leak a token into an error.",
 );
 
 /*
- * THE TWO DATABASE URLS, and the one that is known not to authenticate.
- * DATABASE_URL points at a local Neon branch whose role was created on the
- * production branch and does not exist on the sibling, so no local run can
- * prove a write. That is a KNOWN state and it is COULD_NOT_VERIFY, never FAIL:
- * a check that cannot run has not found a problem.
+ * Presence, shape and host only, without connecting. The local branch is known
+ * not to authenticate, so an unconnected check is COULD_NOT_VERIFY, never FAIL.
+ * A malformed value has no host to show, so the value itself goes through `redact`.
  */
 for (const key of ["DATABASE_URL", "WTP_PRODUCTION_DATABASE_URL_READONLY"]) {
   const raw = (ENV[key] ?? "").trim();
@@ -266,35 +281,6 @@ for (const key of ["DATABASE_URL", "WTP_PRODUCTION_DATABASE_URL_READONLY"]) {
     continue;
   }
 
-  /*
-   * **WELL-FORMED, WITHOUT CONNECTING — AND THIS IS A REAL LEAK PATH.**
-   *
-   * A malformed DSN is a genuine and common failure: a copied line that lost
-   * its scheme, an unescaped `@` in a password, a trailing quote. It is worth
-   * catching before a session spends ten minutes on a connection error.
-   *
-   * It is also the one place doctor is guaranteed to be HOLDING a credential
-   * while something throws, because `new URL(bad)` puts the whole string it was
-   * given into the message. So this check is both useful and the path
-   * `tests/doctor-secrets.test.ts` drives its sentinel down: with redaction
-   * off, the connection string reaches stdout and the JSON report from here.
-   */
-  /*
-   * **WHICH DATABASE, AND IS THE VALUE WELL-FORMED — WITHOUT CONNECTING.**
-   *
-   * "Which one am I pointed at" is the operator-safety question this command
-   * exists for: this repository has two database URLs, one local branch and one
-   * production read-only handle, and confusing them is the mistake that cannot
-   * be undone. The HOST answers it and the host is not secret.
-   *
-   * It is also a REAL LEAK PATH, which is why the check is shaped this way. On
-   * a malformed value there is no host to extract, so the honest detail is the
-   * value itself — and `redact` is the only thing standing between that and
-   * stdout, a JSON report and whatever a human pastes them into.
-   * `tests/doctor-secrets.test.ts` drives its sentinel down exactly this branch
-   * and captures all three sinks; with redaction disabled, the credential
-   * reaches every one of them.
-   */
   let shape: string;
   let state: "COULD_NOT_VERIFY" | "FAIL" = "COULD_NOT_VERIFY";
   let fix =
@@ -304,11 +290,6 @@ for (const key of ["DATABASE_URL", "WTP_PRODUCTION_DATABASE_URL_READONLY"]) {
     shape = `set, parses as ${u.protocol.replace(":", "")}, host ${u.hostname}`;
   } catch {
     state = "FAIL";
-    /*
-     * Node's `Invalid URL` message deliberately omits the input, so the value
-     * is included HERE, through `redact`, rather than being lost — an operator
-     * whose DSN lost its scheme needs to see the shape of what is there.
-     */
     shape = `does not parse as a URL: ${redact(raw, ENV)}`;
     fix = `${key} does not parse. Check for a missing scheme, an unescaped @ in the password, or a stray quote.`;
   }
@@ -345,11 +326,6 @@ try {
 
 const remediationMissing = results.filter(needsRemediation);
 if (remediationMissing.length > 0) {
-  /*
-   * A check that reports a problem and no way to act on it is half a check,
-   * and the half it is missing is the useful one. Refused here rather than
-   * left for a reader to notice.
-   */
   for (const r of remediationMissing) {
     r.remediation = "NO REMEDIATION RECORDED — this is a defect in pnpm doctor, not in your machine.";
   }
@@ -392,8 +368,7 @@ console.log(
 
 const out = arg("json");
 if (out) {
-  /* The report goes through the same boundary as stdout: `check` redacted each
-   * detail on the way in, so what is serialized here is already clean. */
+  /* `check` redacted each detail on the way in. */
   writeFileSync(
     out,
     `${JSON.stringify({ generatedAt: null, node, pnpm: redact(pnpmVersion, ENV), results }, null, 1)}\n`,

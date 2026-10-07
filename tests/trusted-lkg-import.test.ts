@@ -70,7 +70,7 @@ function candidate(
       };
   const civicRecords = civicRecordsFor(recordClass, payload);
   const fixtures = [{
-    path: manual ? "lib/registry/comment-access.ts" : "data/dotgov/snapshot.json",
+    path: manual ? "lib/registry/comment-access.ts" : "lib/civic-data/contracts.ts",
     sha256: sha256("exact frozen fixture bytes"),
     bytes: Buffer.byteLength("exact frozen fixture bytes"),
   }] as const;
@@ -165,8 +165,6 @@ function candidate(
   return { ...partial, id: trustedLkgCandidateId(evidence), bootstrapImport: evidence };
 }
 
-// Synthetic retained history captured from this test's original memory fixture.
-// Loading these records is not a new import and creates no production write path.
 const RETAINED_LKG_FIXTURE: {
   readonly outcome: PromotionOutcome;
   readonly events: readonly CandidateEvent[];
@@ -536,8 +534,6 @@ function retainedHistoricalLkg() {
   assert.equal(promotionProofIssue(MANUAL_RECORD_CLASS, MANUAL_SCOPE, outcome.promoted, outcome.candidate), null);
   assert.deepEqual(events.map(({ sequence }) => sequence), [1, 2, 3, 4, 5]);
   const store = new MemoryRoutineDataStore();
-  // Populate the deterministic test store with already retained rows. Production
-  // admission is tested separately below and may never create these markers.
   Object.assign(store, {
     candidates: new Map([[outcome.candidate.candidate.id, outcome.candidate]]),
     history: new Map([[outcome.candidate.candidate.id, [...events]]]),
@@ -821,14 +817,6 @@ test("Admin exposes imported LKG without claiming freshness or a source-authenti
   if (view.summary.lkgServing.kind === "MEASURED") assert.equal(view.summary.lkgServing.value, 1);
 });
 
-/*
- * **A failed first live read after the import is an attempt (2026-09-23).**
- * The import is neither an attempt nor a success, so it never postpones the
- * first live read. A live read made since the import IS an attempt. Four
- * meeting partitions whose first live read kept failing were read as never
- * attempted and re-fetched every pass: 964 SOURCE_BLOCKED candidates in the
- * 24 hours to 2026-09-24T05:23Z, each child paying its full canonical preload.
- */
 function withLiveAttempt(store: MemoryRoutineDataStore, template: CandidateVersionRecord, id: string, at: string): void {
   const { bootstrapImport: _import, ...live } = structuredClone(template.candidate);
   const rows = store as unknown as {
@@ -888,7 +876,6 @@ test("an import is read whole by its proof: its evidence binds the complete enve
   assert.deepEqual(narrowed, whole, "the envelope hash covers every field, identities included");
   const decide = (record: typeof whole) => promotionProofIssue(MANUAL_RECORD_CLASS, MANUAL_SCOPE, outcome.promoted!, record);
   assert.equal(decide(narrowed), null);
-  // Every tamper the whole row refuses, the narrowed row refuses the same way.
   const tampers: readonly ((record: typeof whole) => typeof whole)[] = [
     (record) => ({ ...record, candidate: { ...record.candidate, readModel: { tampered: true } } }) as typeof whole,
     (record) => ({ ...record, candidate: { ...record.candidate, normalizedPayload: { tampered: true } } }) as typeof whole,

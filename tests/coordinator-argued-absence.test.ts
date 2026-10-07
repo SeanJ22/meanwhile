@@ -1,8 +1,6 @@
 /**
- * CH-23 part 1: the coordinator path keeps the in-round absence rules. A coordinator Scout runs on a stand-in
- * obligation, so a detective walk that argues the record absent is recorded on the real obligation with what would
- * reopen it (DP-04, DP-06), the item waits on that clock instead of being blocked for good, and a plain Scout walk
- * that found nothing goes to a detective after its backoff.
+ * A coordinator Scout runs on a stand-in obligation, so a detective walk that argues the record absent is recorded on
+ * the real obligation with what would reopen it, and the item waits on that clock instead of being blocked for good.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -13,7 +11,7 @@ import { nextAutonomousOperation, runAutonomousCoordinator, type AutonomousCoord
 import { scoutWalkedToNothing, unchangedScoutFailure } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
 
-/* The re-walk after a walk that found nothing is behind CH-23's runner switch; each test sets it as it needs. */
+/* The re-walk after a walk that found nothing is behind a runner switch; each test sets it as it needs. */
 function withOneHunterPath(on: boolean) {
   if (on) process.env.WTP_ONE_HUNTER_PATH = "1"; else delete process.env.WTP_ONE_HUNTER_PATH;
 }

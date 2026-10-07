@@ -1,22 +1,7 @@
 /**
- * **A MEETING ROUTE IS EVIDENCED BY THE GOVERNMENT'S OWN PAGE, AND CONFIRMED BY
- * CONTENT.** (2026-09-23.)
- *
- * The pure half of the unpaid meetings-discovery executor
- * (`lib/hunt/meetings-site-discovery.ts`). What these tests hold:
- *
- * - **Origins.** A recorded address becomes its https origin and its www/apex
- *   twin; an unusable address becomes nothing.
- * - **Evidence, never a guess.** Candidates come only from a link, the vendor's
- *   markup on the government's domain, or a tenant the page's own script names.
- *   A vendor we cannot read is a lead, never a route. Verifiable routes come
- *   first.
- * - **Content, never status.** A route yields only when its body carries
- *   meetings. An HTML shell at a feed URL, an empty calendar, a non-2xx, or a
- *   JSON list whose rows are not events is not a find.
- * - **Outcomes.** A walk that found nothing is never an absence; the outcome
- *   says whether the site was read, refused, or unreachable, and a redirect is a
- *   hop, not an answer.
+ * A meeting route is evidenced by the government's own page and confirmed by content. Candidates come only from a
+ * link, the vendor's markup on the government's domain, or a tenant the page's own script names; a vendor we cannot
+ * read is a lead. A walk that found nothing is never an absence.
  */
 
 import assert from "node:assert/strict";
@@ -164,7 +149,7 @@ test("OUTCOME: found beats lead beats a read homepage; walled everywhere (an acc
     "a homepage read over a Disallow is a read (owner decision 2026-09-25)",
   );
   const walled = step({ status: null, permission: "RECORDED_WALL", rung: null });
-  /* An unrequested DISALLOWED step exists only in a walk made before 2026-09-25; it is not a wall now. */
+  /* An unrequested DISALLOWED step from an older walk is not a wall. */
   const skippedForRobots = { ...walled, url: "https://www.example.gov/", permission: "DISALLOWED" as const };
   const robotsOf = (over: Partial<DiscoveryStep>) => step({ purpose: "robots", url: "https://www.example.gov/robots.txt", permission: "CANNOT_TELL", ...over });
   assert.equal(

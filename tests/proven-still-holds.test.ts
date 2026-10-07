@@ -1,4 +1,4 @@
-/** DP-34: a green "Proven" means still working today; when recent results fail the bar it reads "Proven, broke since", says so once, and is back in the Queue. */
+/** A green "Proven" means still working today; when recent results fail the bar it reads "Proven, broke since", says so once, and is back in the Queue. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

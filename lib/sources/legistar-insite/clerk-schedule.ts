@@ -1,65 +1,23 @@
 /**
- * **THE BODY'S OWN CLERK, PUBLISHING THE SAME SITTINGS ON THE COUNTY'S OWN
- * SITE.** (Discovered and measured 2026-08-28.)
+ * A county clerk's own schedule table: the body's own publisher listing the sittings the vendor's
+ * calendar is generated from, on the county's own domain. The only available check on the vendor: if
+ * `Calendar.aspx` and this page disagree about whether a sitting exists or when it starts, that
+ * disagreement is shown. Re-measured every time this parser runs.
  *
- * ## Why a second enumeration of the same calendar is not redundant
+ * It also carries the clerk's submission deadline per sitting, end times, and amendments in the
+ * publisher's own voice (`Study Session ( at 2:00 p.m. ) * Amended to 1:30 p.m.`).
  *
- * Every route in this directory so far is Granicus telling us about Pima. The
- * Clerk of the Board's schedule table at
- * `https://www.pima.gov/board-of-supervisors-meeting-schedule` (moved there from
- * `/2559/Board-of-Supervisors-Meeting-Schedule` by 2026-09-24) is **Pima
- * telling us about Pima**, on Pima's own domain, and it is the record the
- * vendor's calendar is generated FROM rather than a copy of it.
+ * Not an ingestion source and produces no `Meeting` rows: it is corroboration and disposition evidence;
+ * `lib/sources/legistar-insite/horizon.ts` puts its instances in the union with their own provenance.
  *
- * That makes it the only available check on the vendor. If `Calendar.aspx` and
- * this page disagree about whether a sitting exists, or about what hour it
- * starts, a reader needs to know that a disagreement exists — and there is no
- * way to know it from one publisher.
- *
- * Measured the day it was found, over the future horizon: **14 explicit
- * instances here, 14 explicit instances on the InSite grid, 14 of 14 agreeing
- * on body, date and wall-clock time.** Two independent first-party publishers,
- * no disagreement. That is a result, not an assumption, and it is re-measured
- * every time this parser runs rather than remembered.
- *
- * ## What this page carries that the vendor's calendar does not
- *
- * - The Clerk's own **submission deadline** per sitting.
- * - An **end** time: `Special (at 1:00 p.m. - 6:00 p.m.)` for 20 October. The
- *   grid publishes a start and nothing else.
- * - **Amendments in the publisher's own voice**: `Study Session ( at 2:00 p.m.
- *   ) * Amended to 1:30 p.m.` — the county saying it moved its own meeting.
- *
- * ## What it is NOT
- *
- * It is not an ingestion source and it does not produce `Meeting` rows. It is
- * read as CORROBORATION and as disposition evidence — `lib/sources/legistar-
- * insite/horizon.ts` puts its instances in the union with their own provenance,
- * and the meetings a reader sees still come from the routes that carry a room,
- * an agenda link and a per-meeting record. Promoting it to a producing source
- * would be adding an external source, which `CLAUDE.md` makes an ask-before.
- *
- * ## Permission
- *
- * `www.pima.gov/robots.txt`, read 2026-09-24: `Disallow: /` for **Baiduspider
- * and Yandex only**. `User-agent: *` is in ONE group with `User-agent:
- * Siteimprove`, so it shares that group's `Crawl-delay: 20`, and nothing is
- * disallowed. (The 2026-08-28 reading took the delay for Siteimprove's alone.)
- * One request per tenant per refresh is within it.
- *
- * Nothing below concludes. A page that yields no rows is a failed extraction
- * for the caller to report as one — never a county with no meetings.
+ * A page that yields no rows is a failed extraction for the caller to report, never a county with no
+ * meetings.
  */
 import { decodeEntities } from "../http.ts";
 
 /**
- * One sitting as the Clerk's table publishes it.
- *
- * `startTime` is null when the row named a meeting and did NOT name an hour —
- * which the table genuinely does, for the pre-May-2026 rows whose start is
- * carried in the page's prose instead. **Null is the honest value**: this route
- * published a meeting without a time, and inferring one from the prose rule
- * would be this parser generating a fact the table does not state.
+ * One sitting as the clerk's table publishes it. `startTime` is null when the row named a meeting and
+ * not an hour; it is never inferred from the page's prose.
  */
 export interface ClerkScheduleInstance {
   /** `YYYY-MM-DD`, the body's own calendar date. */
@@ -85,10 +43,7 @@ export function clerkDate(raw: string): string | null {
   const month = Number(match[1]);
   const day = Number(match[2]);
   if (month < 1 || month > 12 || day < 1 || day > 31) return null;
-  // A two-digit year is read as 2000+YY. That is what the publisher means on a
-  // page whose own heading says "January 2026 through June 2026", and it is
-  // stated rather than assumed silently — a table that one day prints `1/6/99`
-  // will produce 2099 and be wrong out loud rather than quietly.
+  // A two-digit year is read as 2000+YY.
   const year = match[3].length === 2 ? 2000 + Number(match[3]) : Number(match[3]);
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }

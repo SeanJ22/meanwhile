@@ -71,9 +71,8 @@ test("all three measured Newbury dates retain two listings with unresolved disti
       assert.equal(readerResponse.status, 200);
       assert.equal(reader.meetingId, id);
       assert.deepEqual(reader.listingIdentity.groups, [group]);
-      // D1 (2026-09-24): another body's notice page held for this sitting (the
-      // Town of Bradford's calendar, on a Newbury sitting) is never shown for
-      // it; it is stated in the accounting instead.
+      // Another body's notice page held for this sitting is never shown for it;
+      // it is stated in the accounting instead.
       const sitting = held.find(meeting => meeting.id === id)!;
       const lent = documents.filter(document =>
         isAnotherBodysNoticePage(document.documentUrl, { bodyId: sitting.bodyId, publisher: document.sourceOrg }));

@@ -1,40 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
 
 import { coverageAt } from "../lib/registry/server.ts";
 import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { resolveRouting } from "../lib/routing/resolve.ts";
-
-/**
- * **ASK-5 (2026-08-24) — ASK AND REPRESENTATION MAY NOT DISAGREE ABOUT WHO
- * SITS ON A BODY.**
- *
- * The author's two captures, side by side. `12-04-06`: Ask, asked "when does
- * school start", answering *Tucson Unified District … We haven't sourced who
- * sits on this body yet.* `12-05-31`: the same district's battlecard, listing
- * six people, five of them with photographs.
- *
- * Both surfaces were honest about their own store, and that is exactly the
- * collection-versus-rendering pair the two-numbers rule names: Ask read the
- * LEGISLATIVE seats resolved from the reader's districts, the battlecard read
- * the BODY ROSTER store. A school board lives only in the second.
- *
- * This guard is deliberately a PARITY assertion rather than a fixed expected
- * list. Pinning "six people" would go red the day somebody sources a seventh —
- * the frozen-gap failure RULING 116 names. What must hold at any coverage is
- * that the two surfaces answer the same question with the same store.
- */
 
 const TUCSON: [number, number] = [32.21696, -110.971];
 
 test("ASK-5: every body a routed step names carries the roster the battlecard renders", async () => {
   const coverage = await coverageAt(...TUCSON, 1);
 
-  // The school-operations route is the one the capture asked. Its own step
-  // targets the school district's governing board.
+  // The school-operations route's own step targets the school district's governing board.
   const answer = resolveRouting("schools-operations", coverage);
   assert.equal(answer.kind, "ROUTED");
 
@@ -61,25 +37,6 @@ test("ASK-5: every body a routed step names carries the roster the battlecard re
     answer.steps.flatMap((s) => s.people.map((p) => p.id)),
   );
 
-  /*
-   * **AMENDED 2026-08-25 BY ASK-9 / ASK-10, and the amendment is narrow.**
-   *
-   * This asserted that Ask names EVERY member of the roster the battlecard
-   * renders. That was the right claim while Ask printed rosters, and it no
-   * longer does: Ask names bodies, not people, with the person who RUNS the
-   * body as the one named exception. Six names under one sentence at Tucson
-   * was the defect.
-   *
-   * So the parity claim moves from PEOPLE to the BODY, which is where the
-   * defect ASK-5 was opened over actually lived: Ask was reading
-   * `coverage.seats` — the legislative store — and a school board has never
-   * been in it, so Ask printed a sourced-sounding absence about a body whose
-   * members were one click away. **That failure is still impossible**, and
-   * these three assertions are what make it so: the body is named, its roster
-   * is reachable by the same id the battlecard uses, and whoever runs it is
-   * named. Nothing about the amendment weakens the store-parity claim; what it
-   * drops is a claim about how many of the store's rows are PRINTED.
-   */
   const bodyIds = new Set(answer.steps.flatMap((s) => s.bodies.map((b) => b.body.bodyId)));
   assert.ok(
     bodyIds.has(school.bodyId),

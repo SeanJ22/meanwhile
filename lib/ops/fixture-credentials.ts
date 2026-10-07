@@ -1,89 +1,4 @@
-/**
- * **A CAPTURED PUBLIC PAGE IS EVIDENCE, NOT A CREDENTIAL VAULT.**
- * (2026-08-28, the post-cleanroom shipping hotfix.)
- *
- * ## What happened, because the mechanism is the lesson
- *
- * PR #216 compiled and bundled clean and then failed Netlify's secret scan.
- * The finding was not ours: `tests/fixtures/legistar-insite-pima-clerk-schedule.html`
- * is a byte-for-byte capture of Pima County's Clerk of the Board schedule page,
- * recorded live by `scripts/learn-legistar-horizon.mts --record`, and the
- * PUBLISHER's own bootstrap JSON carries a Google Maps browser key. Nobody
- * pasted anything. The repository became a mirror of a third party's live
- * credential because a `writeFileSync` wrote a public page verbatim.
- *
- * That is the class, and it is a class about ACQUISITION, not about care:
- *
- * > PUBLIC WEB CAPTURE -> TEST FIXTURE MUST REMOVE CREDENTIAL-LIKE MATERIAL
- * > THAT IS IRRELEVANT TO THE TESTED RECORD, WHILE PRESERVING PROVENANCE AND
- * > PARSER SEMANTICS.
- *
- * A committed fixture is a PARSER REGRESSION ARTIFACT. It has to carry every
- * byte the parser reads and it has no business carrying anything else.
- *
- * ## WHY THIS IS PATTERN-BASED WHEN `secret-redaction.ts` REFUSES TO BE
- *
- * `lib/ops/secret-redaction.ts` argues at length that a secret sweep must run
- * BY VALUE, from `.env.local`, and that a shape-based scanner is both useless
- * and unsafe. **That argument is correct and this module does not contradict
- * it, because the two modules answer different questions.**
- *
- *   - `secret-redaction.ts` looks for OUR credentials. We hold the values, so
- *     by-value is available and is strictly better than any shape.
- *   - This module looks for a THIRD PARTY'S credentials, emitted by a page we
- *     did not write, whose values are unknowable before capture. By-value is
- *     not merely worse here; it is not a thing that can be done.
- *
- * ## THE PATTERN IS THE FILTER. THE `confirm` PREDICATE IS THE VERDICT.
- *
- * The false-positive problem that ruled out shapes over there is answered here
- * by **class-awareness in two stages**, and the second stage is the one that
- * matters. Every pattern is anchored on a vendor-assigned literal prefix or a
- * structural marker — `AIza`, three base64url JWT segments, `AKIA`,
- * `-----BEGIN … PRIVATE KEY-----`. None is "a long random-looking string", so
- * a git SHA, a CivicPlus container GUID, a meeting id, a date and an ordinary
- * UUID never reach stage two at all.
- *
- * Stage two then asks whether the match is a CREDENTIAL rather than merely a
- * string of that shape, and the two real cases this repository contains are
- * why it exists:
- *
- *   - `window.hcmsClientToken="Bearer eyJ…"` in the Pima capture decodes to a
- *     payload carrying `exp`, `nbf`, `iss`, `iat`, `jti`, `client_id` and
- *     `scope`. Those are RFC 7519 registered authentication claims. It is a
- *     bearer credential and it is live for thirty days.
- *   - `https://lnks.gd/l/eyJ…` in `data/states/nj/hunt/nj-campaign-sites-*.json` decodes
- *     to `{"bulletin_link_id", "uri", "bulletin_id", "url"}` — a GovDelivery
- *     signed *link*, whose entire payload is a public justice.gov URL. It is a
- *     PUBLIC RECORD IDENTIFIER that the hunt genuinely found, and redacting it
- *     would destroy the provenance of a source link to protect nothing.
- *
- * Registered-claims-or-`Bearer`-position separates those two perfectly, and it
- * is grounded in the standard rather than in a vocabulary someone guessed at.
- * The same discipline retires the other false positive the first draft had:
- * prose and the scanner's regression test both quote the string
- * `-----BEGIN OPENSSH PRIVATE KEY-----`, with the test using a deliberate
- * structural placeholder whose body is sixty-four `x`s. Requiring
- * an actual base64 body with real alphabet diversity excludes both **on the
- * evidence**, which is the only kind of exclusion that stays correct when
- * somebody edits those files.
- *
- * ## NOTHING IS SET ASIDE SILENTLY
- *
- * An unconfirmed match is still a finding. It is returned, counted, printed and
- * carries the reason it was not treated as a credential. Setting something
- * aside with no number is the trim this codebase names more often than any
- * other defect, and a scanner that quietly drops matches is indistinguishable
- * from one that never looked.
- *
- * ## NO PATTERN LIST IS EVER COMPLETE
- *
- * `CLASSES` is what the project knows now. It is a floor and never a completion
- * condition: a file this scanner passes is a file with no KNOWN credential
- * class in it, which is a claim about this list, not a claim about the file.
- * The gate exists so the known classes cost nobody a second red deploy — not so
- * anyone can call the fixture tree proven clean.
- */
+/** A captured public page is evidence, not a credential vault: known credential classes are found, confirmed and redacted. */
 
 /** What a redacted credential is replaced with. Matches no credential scanner. */
 export const REDACTION_PLACEHOLDER = "__SOURCE_CREDENTIAL_REDACTED__";
@@ -108,11 +23,7 @@ export interface CredentialClass {
   what: string;
   /** Anchored on a vendor prefix or a structural marker — never on entropy. */
   pattern: RegExp;
-  /**
-   * Stage two. Returns `null` when the match IS a credential, or a short reason
-   * when it is a string of that shape and demonstrably not one. The reason is
-   * printed, so a wrong exclusion is visible rather than invisible.
-   */
+  /** Stage two: null when the match is a credential, else a printed reason it demonstrably is not one. */
   confirm?: (value: string, context: MatchContext) => string | null;
 }
 
@@ -128,22 +39,10 @@ function decodeSegment(segment: string): Record<string, unknown> | null {
   }
 }
 
-/**
- * RFC 7519 registered claims, plus the two OAuth claims every identity server
- * in practice emits. A token carrying any of these is asserting *who bears it
- * and for how long*, which is what makes it a credential rather than a signed
- * identifier.
- */
+/** Registered JWT claims plus the two common OAuth ones: a token carrying any asserts who bears it and for how long. */
 const AUTH_CLAIMS = ["exp", "nbf", "iat", "iss", "aud", "sub", "jti", "scope", "client_id", "azp"];
 
-/**
- * THE KNOWN CREDENTIAL CLASSES.
- *
- * Each `pattern` is written WITHOUT the global flag; `matchAll` needs it, so
- * the scanner clones each with `g` rather than relying on a shared `lastIndex`.
- * A shared stateful regex across files is the classic way a scanner silently
- * skips the first match in every second file it reads.
- */
+/** The known credential classes. Each pattern is written without the global flag; the scanner clones it with `g`. */
 export const CLASSES: readonly CredentialClass[] = [
   {
     id: "google_api_key",
@@ -154,12 +53,7 @@ export const CLASSES: readonly CredentialClass[] = [
   {
     id: "jwt",
     what: "a signed JSON Web Token — a bearer credential for as long as it lives",
-    /*
-     * Three base64url segments, and the first TWO must begin `eyJ`, which is
-     * base64url for `{"`. That structural requirement keeps the pattern off
-     * ordinary base64: a random payload does not decode to a JSON object in
-     * both its header and its claims.
-     */
+    /* Three base64url segments with the first two beginning `eyJ`, which keeps the pattern off ordinary base64. */
     pattern: /eyJ[A-Za-z0-9_-]{6,}\.eyJ[A-Za-z0-9_-]{6,}\.[A-Za-z0-9_-]{8,}/,
     confirm: (value, { text, index }) => {
       const [header, payload] = value.split(".");
@@ -222,12 +116,7 @@ export const CLASSES: readonly CredentialClass[] = [
   {
     id: "private_key_block",
     what: "a PEM private key block",
-    /*
-     * THE BODY IS PART OF THE MATCH, and that is the whole refinement.
-     *
-     * Matching the header alone flags prose that merely NAMES the header,
-     * which is how a guard teaches people to ignore it.
-     */
+    /* The body is part of the match, so prose that merely names the header is not flagged. */
     pattern:
       /-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----[\r\n]+([A-Za-z0-9+/=][A-Za-z0-9+/=\r\n]{31,})/,
     confirm: (_value, { groups }) => {
@@ -261,15 +150,7 @@ export interface CredentialFinding {
   note?: string;
 }
 
-/**
- * A short, stable fingerprint of a value.
- *
- * **RULING 127 — no tool prints a credential value.** A fingerprint lets two
- * reports be compared, and a redaction be confirmed, without the value ever
- * reaching a terminal, a log, a PR body or a transcript. Twelve hex characters
- * is far too little to invert and far more than enough to distinguish the
- * handful of values one page emits.
- */
+/** A short, stable fingerprint of a value, so reports compare without the value ever being printed. */
 export function fingerprint(value: string, sha256Hex: (input: string) => string): string {
   return sha256Hex(value).slice(0, 12);
 }
@@ -357,30 +238,14 @@ export interface SanitizeResult {
   replaced: number;
 }
 
-/**
- * Replace every CONFIRMED credential with `REDACTION_PLACEHOLDER`.
- *
- * **Longest value first**, for the reason `redactSecrets` gives one module
- * over: one credential can contain another — a Mapbox `sk.` token contains a
- * JWT-shaped body — and replacing the short one first leaves the long one
- * mangled, unrecognisable to the second pass, and still partly present.
- *
- * Nothing else about the text is touched. The surrounding HTML, the table the
- * parser reads, every meeting row, date, time, body identity and public record
- * identifier survive byte-for-byte, and `tests/legistar-insite-union.test.ts`
- * is what proves it on the fixture this was written for.
- */
+/** Replace every confirmed credential with `REDACTION_PLACEHOLDER`, longest value first, since one credential can contain another. */
 export function sanitizeText(text: string, sha256Hex: (input: string) => string): SanitizeResult {
   const findings = scanText(text, sha256Hex);
   const confirmed = credentials(findings);
   const preserved = findings.filter((f) => !f.confirmed);
   if (confirmed.length === 0) return { text, redactions: [], preserved, replaced: 0 };
 
-  /*
-   * The values are re-derived here rather than carried out of `scanText`,
-   * which deliberately returns fingerprints only. Matching on fingerprint
-   * keeps the two passes agreeing without a second copy of the confirm logic.
-   */
+  /* Values are re-derived here, since `scanText` returns fingerprints only. */
   const wanted = new Set(confirmed.map((f) => f.fingerprint));
   const values = new Set<string>();
   for (const klass of CLASSES) {
@@ -401,26 +266,12 @@ export function sanitizeText(text: string, sha256Hex: (input: string) => string)
   return { text: out, redactions: confirmed, preserved, replaced };
 }
 
-/**
- * Is this path in a tree that holds captured third-party bodies?
- *
- * Kept as a function rather than a constant so the acquisition boundary and the
- * guard cannot drift apart — the sweep, the guard and `save()` in the recorder
- * all ask this one question.
- */
+/** Whether this path is in a tree holding captured third-party bodies; one question for the sweep, guard and recorder. */
 export function isCapturedFixturePath(repoRelativePath: string): boolean {
   return repoRelativePath.startsWith("tests/fixtures/");
 }
 
-/**
- * Files that legitimately contain the PATTERNS and never a value: this module,
- * its test, and its sweep.
- *
- * **This list is about pattern text, not about trust.** Nothing here is exempt
- * from scanning — the sweep still reads every one of them and still reports
- * what it finds. What the list does is keep the guard from failing on a regex
- * literal, which is the one way a scanner reliably gets disabled.
- */
+/** Files that contain the patterns and never a value. Still scanned; only exempt from failing on a regex literal. */
 export const PATTERN_BEARING_PATHS: readonly string[] = [
   "lib/ops/fixture-credentials.ts",
   "tests/fixture-credentials.test.ts",

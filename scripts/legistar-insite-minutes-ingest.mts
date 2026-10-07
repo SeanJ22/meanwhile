@@ -1,6 +1,6 @@
 /**
  * Mesa City Council decisions, read off the council's own minutes, on the
- * standing routine clock. (NH332, 2026-09-25.)
+ * standing routine clock.
  *
  * `mesa-legistar-minutes-outcomes` is a routine contract (ROUTINE_SOURCE_CONTRACTS
  * in lib/civic-data/contracts.ts). The standing runner invokes this internal
@@ -70,7 +70,7 @@ import {
   readMinutesDocument,
   sittingAfterRead,
 } from "../lib/outcomes/minutes-ingest.ts";
-import { readMesaOutcomeProjection } from "../lib/outcomes/store.ts";
+import { readDoorOutcomeProjection } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot, PersistedFailedMinutesRead, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { rollingOutcomeWindow, type OutcomeWindow } from "../lib/outcomes/window.ts";
 import { captureSourceAcquisitions, type SourceAcquisitionEvidence } from "../lib/sources/acquisition-trace.ts";
@@ -96,7 +96,7 @@ const MAX_GRID_PAGES = 6;
 
 export interface MinutesIngestArgs {
   readonly slug: string;
-  /** DB-22: the door whose minutes outcomes this run reads; null for Mesa's own contract. */
+  /** The door whose minutes outcomes this run reads; null for Mesa's own contract. */
   readonly door: string | null;
   readonly from: string | null;
   readonly to: string | null;
@@ -165,7 +165,7 @@ const EMPTY: OutcomeSnapshot = { generatedOn: "UNKNOWN", generatedAt: "UNKNOWN",
 async function currentProjection(store: RoutineDataStore, outcome: OutcomeTenant): Promise<{ readonly snapshot: OutcomeSnapshot; readonly sourceThrough: string | null }> {
   // Mesa's own pointer keeps its reader; a door's outcomes are read from the door's own scope.
   const read = outcome.contractId === MESA_OUTCOME_TENANT.contractId
-    ? await readMesaOutcomeProjection({ store, bypassCache: true })
+    ? await readDoorOutcomeProjection(outcome.scope, { store, bypassCache: true })
     : await readPromotedCivicData<OutcomeSnapshot>(outcome.recordClass, outcome.scope, { store, bypassCache: true });
   if (read.kind === "PROMOTED") return { snapshot: read.value, sourceThrough: read.metadata.sourceThrough };
   if (read.kind === "NOT_RECORDED") return { snapshot: EMPTY, sourceThrough: null };
@@ -178,7 +178,7 @@ export interface MinutesIngestInput {
   readonly tenant: InSiteTenant;
   readonly args: MinutesIngestArgs;
   readonly window: { readonly from: string; readonly to: string };
-  /** The outcome tenant this run extends; Mesa's own unless a door names another (DB-22). */
+  /** The outcome tenant this run extends; Mesa's own unless a door names another. */
   readonly outcomeTenant?: OutcomeTenant;
   /** The observation clock; production reads the wall clock after each read returns. */
   readonly now?: () => string;
@@ -345,7 +345,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
       continue;
     }
     /*
-     * A held failed extraction (2026-09-25): ask the portal, without the bytes, whether the document changed.
+     * A held failed extraction: ask the portal, without the bytes, whether the document changed.
      * Unchanged or unanswered, the failure stays held and nothing is downloaded; changed, it is read at once.
      */
     if (!decision.walk && decision.reason === "FAILED_DOCUMENT_CHECK" && decision.check) {
@@ -401,7 +401,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
       const document = await readMinutesDocument(link, read.value.bytes);
       const readOn = stampFromRead({ source: link.url, ok: true, bytes: document.byteCount, on: runStamp(new Date(observedAt)) });
       const fresh = minutesSitting({ ...base, row, observedAt, document, readOn }).sitting;
-      // A failure on the bytes is held with their identity; over verified minutes, beside them (2026-09-25).
+      // A failure on the bytes is held with their identity; over verified minutes, beside them.
       persisted = sittingAfterRead(heldSitting, fresh, failedMinutesReadFor(fresh, document, read.value.response, observedAt));
     }
     const proposed = applyMinutesApprovals(mergeSnapshot(snapshot, [...pending, persisted], {
@@ -478,7 +478,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
 
 async function main(): Promise<void> {
   const args = parseMinutesIngestArgs(process.argv.slice(2));
-  // DB-22: any other portal is read through the door that names it; Mesa's own contract serves only Mesa.
+  // Any other portal is read through the door that names it; Mesa's own contract serves only Mesa.
   if (args.door === null && args.slug !== MESA_OUTCOME_TENANT.slug) {
     throw new Error("MINUTES_OUTCOME_CONTRACT_SCOPE_MISMATCH: another portal's minutes are read through its own door (--door).");
   }

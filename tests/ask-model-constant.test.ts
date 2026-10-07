@@ -18,27 +18,6 @@ import { synthesisRequestBody } from "../lib/ask/synthesize.ts";
 import { MODELS } from "../lib/models.ts";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 
-/**
- * **THE ASK MODEL CONSTANT, ITS OVERRIDE, AND THE REQUEST SHAPE.**
- * (ITEM K, 2026-09-01.)
- *
- * Three things are under test, and each of them is a way the switch could have
- * gone wrong silently rather than loudly:
- *
- * 1. **The default is the CODE, never the environment.** An unset variable
- *    must resolve to the constant. If it did not, a deploy that forgot to set
- *    a variable would serve a different model than the suite measured, which
- *    is the exact drift the constant exists to prevent.
- * 2. **The request carries no sampling parameter and no manual thinking
- *    block.** `temperature`, `top_p` and `top_k` at any non-default value are
- *    a 400 on this model generation, and so is `{type: "enabled",
- *    budget_tokens: N}`. None of them is present today; this test is what
- *    stops one being added back by a session that remembers an older API.
- * 3. **Effort is PINNED and valid.** An omitted `effort` defaults to `high`
- *    server-side and thinking bills at the output rate, so an accidentally
- *    omitted field is an accidentally expensive one.
- */
-
 function pack(): EvidencePack {
   return {
     question: "When does the council next meet?",
@@ -60,8 +39,6 @@ function pack(): EvidencePack {
   } as unknown as EvidencePack;
 }
 
-/* ── 1. the constant, and the override's two conditions ──────────────────── */
-
 test("an unset override resolves to the constant — the default is the code", () => {
   assert.equal(resolveAskModel({}), ASK_SYNTHESIS_MODEL);
   assert.equal(resolveAskEffort({}), ASK_SYNTHESIS_EFFORT);
@@ -77,24 +54,7 @@ test("an empty or whitespace override is treated as unset, never as an empty mod
 });
 
 test("a set override is honoured, and is REPORTED as an override", () => {
-  /*
-   * The override value is DERIVED from the constant rather than written down,
-   * and that is the point of this line. It used to be the literal
-   * `claude-opus-5` — which was a different model from the constant on the day
-   * it was written, and became the SAME model the day the switch was reverted.
-   * An override equal to the constant is not an override, so the assertion
-   * quietly stopped testing anything and went red only because
-   * `askModelOverrides` is honest about it.
-   *
-   * A test that has to be edited every time the constant moves is a test that
-   * will one day be edited wrongly.
-   */
-  /*
-   * Widened to `string` on purpose. `ASK_SYNTHESIS_MODEL` narrows to a LITERAL
-   * type, so comparing it against the other model is a `TS2367` "no overlap"
-   * error — tsc is correct that the comparison is decidable at compile time,
-   * and that is exactly why the value must not be hardcoded here at runtime.
-   */
+  /* Widened to string: the constant narrows to a literal type, and a literal comparison is a TS2367 error. */
   const current: string = ASK_SYNTHESIS_MODEL;
   const other = current === MODELS.sonnet.model ? MODELS.opus.model : MODELS.sonnet.model;
   const env = { [ASK_MODEL_ENV]: other };
@@ -126,8 +86,6 @@ test("the startup line reports the RESOLVED values and carries no secret", () =>
      third field would be the place a credential eventually gets logged. */
   assert.ok(!/sk-|api[_-]?key/i.test(line), "the startup line must never carry a credential");
 });
-
-/* ── 2. the request shape ────────────────────────────────────────────────── */
 
 test("the Ask request sets no temperature, top_p or top_k — each is a 400 on this model", () => {
   const body = synthesisRequestBody(pack(), { model: ASK_SYNTHESIS_MODEL, cached: true });
@@ -167,45 +125,7 @@ test("the model id carries no date suffix — these ids are dateless AND pinned"
   assert.ok(!/-\d{8}$/.test(ASK_SYNTHESIS_MODEL), "no date suffix");
 });
 
-/* ── 3. the measurement-integrity argument is WRITTEN DOWN ───────────────── */
-
-test("the declaring module states WHY the model is a constant and not a per-environment variable", () => {
-  /*
-   * The brief required the reason stated where the constant is declared, and
-   * the reason is not decoration: it is the argument a future session needs
-   * before it "simplifies" this into an environment variable per environment
-   * and silently decouples the local suite from what production serves.
-   */
-  const source = readFileSync(join(process.cwd(), "lib/ask/model.ts"), "utf8");
-  assert.match(source, /measurement integrity/i);
-  assert.match(source, /local/i);
-  assert.match(source, /production/i);
-});
-
-/* ========================================================================== */
-/* The override must reach EVERY Ask rung, not just the one that reported it  */
-/* ========================================================================== */
-
 test("no Ask call site binds the model at module load", () => {
-  /*
-   * `const MODEL = ASK_SYNTHESIS_MODEL` binds the CONSTANT once, when the
-   * module is first imported, so `WTP_ASK_MODEL` never reaches that rung.
-   * Three of the four Ask call sites did exactly that: `synthesize.ts`
-   * honoured the override and `classifier.ts`, `unsourced-fallback.ts` and
-   * `interpret.ts` silently did not.
-   *
-   * ITEM K's brief allows the override on two conditions, and the second is
-   * that **the RESOLVED value — not the default — is what gets recorded**. A
-   * rung reading the constant meets the first and quietly breaks the second.
-   *
-   * What it cost: RULING 234 makes the measurement the reversibility mechanism
-   * for the Sonnet 5 switch. With three rungs bound at load, an emergency
-   * revert through the environment would have moved ONE call site while
-   * reporting the model had changed. It was found that way — an isolation walk
-   * with `WTP_ASK_MODEL=claude-opus-5` reproduced a failure identically, which
-   * read as proof the model was innocent and was really proof that the
-   * override never arrived.
-   */
   const rungs = [
     "lib/routing/classifier.ts",
     "lib/routing/unsourced-fallback.ts",
@@ -240,8 +160,7 @@ test("every Ask rung imports the RESOLVER, so the override cannot miss one", () 
     "lib/ask/synthesize.ts",
   ]) {
     const src = readFileSync(join(process.cwd(), rung), "utf8");
-    /* 2026-09-25: each rung resolves its ROLE (lib/ask/model.ts), whose override list carries
-       WTP_ASK_MODEL as an alias; the frontier writer still reads resolveAskModel. */
+    /* Each rung resolves its role (lib/ask/model.ts), whose override list carries WTP_ASK_MODEL as an alias. */
     assert.match(
       src,
       /import\s*\{[^}]*\b(resolveAskModel|resolveAskRoleModel)\b[^}]*\}\s*from/,

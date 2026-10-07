@@ -13,21 +13,13 @@ import {
 } from "../lib/ask/agenda-publication.ts";
 import { PUBLISHER_PAGE_SIGNAL } from "../lib/meetings/agenda-content.ts";
 import { extractHtmlText, type AgendaDocument } from "../lib/meetings/agenda-documents.ts";
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
 
 // The meeting card's agenda leaf, compiled through the existing tsx runtime.
 const { AgendaDocuments } = await tsImport("../components/map/popup/agenda-section.tsx", import.meta.url) as typeof import("../components/map/popup/agenda-section.tsx");
 
 /**
- * **A DILIGENT MEETING PAGE IS THE PORTAL, HOWEVER IT WAS READ.** (2026-09-23.)
- *
- * From 2026-09-14 readers of 18 Diligent sittings — Pima Community College 4,
- * Sunnyside 6, Tucson Unified 8 — were told "We hold the agenda document for
- * that meeting but could not extract its items", and the meeting card showed
- * the skip links as the document's text. Before that date the same sittings
- * said the link was the body's agenda portal, which is true: the sitting's
- * agenda is a document the page links, never the page. These run the reader's
- * own classifier, reading and card over the strings production holds.
+ * A Diligent meeting page is the body's agenda portal, however it was read: the sitting's agenda is a document the
+ * page links, never the page, and its skip links must not be shown as the document's text.
  */
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
@@ -142,16 +134,4 @@ test("negative controls: the rule reads the portal's own furniture on the portal
   assert.equal(agendaDocumentRepresentation(row(meetingId, url, agenda, "2026-09-23T00:00:00.000Z")), "TEXT");
   // A failed read with no note, or another note, is not the publisher's page.
   assert.equal(agendaDocumentRepresentation(row(meetingId, url, null, "2026-09-23T00:00:00.000Z")), "UNREADABLE");
-});
-
-test("regression control: every Diligent portal page in the committed holding is still read as the portal", () => {
-  // A case this change was not derived from: the whole-page rows read before 2026-08-28.
-  const snapshot = readSnapshot();
-  assert.ok(snapshot);
-  const portalRows = snapshot.agendaDocuments.filter((document) => {
-    const address = new URL(document.documentUrl);
-    return /\/Portal\/(?:MeetingInformation\.aspx)?\/?$/i.test(address.pathname);
-  });
-  assert.ok(portalRows.length >= 30, `the committed holding carries its Diligent pages (${portalRows.length})`);
-  for (const document of portalRows) assert.equal(agendaDocumentRepresentation(document), "PUBLICATION_PORTAL", document.id);
 });

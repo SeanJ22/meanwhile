@@ -39,8 +39,7 @@ test("Morris filing horizon requires the clerk's current general and school docu
 const CLERK = "https://www.morriscountyclerk.org";
 
 test("Morris: the clerk's unstamped 2026-09-18 revision is the current general document", () => {
-  // The clerk page's own PDF hrefs, as read on 2026-09-24. Requiring a date
-  // stamp refused this set 136 times from 2026-09-18 14:18Z.
+  // The clerk page's own PDF hrefs.
   const page = [
     '<a href="/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf">General</a>',
     '<a href="/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf">School</a>',
@@ -153,23 +152,28 @@ function promotedStore(payload: NjMorrisReadModel): CivicDataReadStore {
   };
 }
 
-test("NJ ballot and filed contacts bootstrap only after an answered missing pointer", async () => {
+const PROVENANCE = { sourceUrl: "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates", sourceOrg: "County Clerk", collectedAt: "2026-09-08", verifiedAt: "2026-09-08" };
+const READ_MODEL = {
+  ballot: {
+    formatVersion: 1,
+    election: { id: "nj-2026-11-03", state: "NJ", name: "General election", date: "2026-11-03" },
+    contests: [{ id: "contest:county", electionId: "nj-2026-11-03", ocdId: "ocd-division/country:us/state:nj/county:morris", divisionVintage: "fixture", title: "County Commissioner", type: "CANDIDACY", voteFor: 1, termYears: 3, scopeNote: null, provenance: PROVENANCE }],
+    candidacies: [{ id: "candidacy:a", contestId: "contest:county", familyName: "ALPHA", givenName: "Ann", partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance: PROVENANCE }],
+    measures: [],
+    absences: [],
+    removals: [],
+  },
+  contacts: { contacts: [{ candidacyId: "candidacy:a", email: "a@example.test" }] },
+} as unknown as NjMorrisReadModel;
+
+test("an answered missing NJ pointer is NOT_RECORDED, never a bundled ballot", async () => {
   const result = await readNjMorrisFiling({ store: noPointer, now: "2026-09-08T00:00:00.000Z" });
-  assert.equal(result.kind, "BOOTSTRAP");
-  if (result.kind !== "BOOTSTRAP") return;
-  assert.equal(result.metadata.sourceId, "nj-morris-county-clerk");
-  assert.match(result.detail, /store answered with no promoted pointer/);
-  assert.ok(result.value.ballot.contests.length >= 80);
-  assert.equal(candidateContactCensus().contacts.length, result.value.ballot.candidacies.length);
-  assert.match(ballotNjMorrisSource.normalize([result.value.ballot]).coverageNotes?.[0] ?? "", /first saved copy of the Morris County ballot/);
+  assert.equal(result.kind, "NOT_RECORDED");
 });
 
 test("NJ Reader uses the promoted ballot/contact projection and exposes its exact LKG", async () => {
-  const seeded = await readNjMorrisFiling({ store: noPointer });
-  assert.equal(seeded.kind, "BOOTSTRAP");
-  if (seeded.kind !== "BOOTSTRAP") return;
   const promoted = await readNjMorrisFiling({
-    store: promotedStore(seeded.value),
+    store: promotedStore(READ_MODEL),
     now: "2026-09-08T02:00:00.000Z",
   });
   assert.equal(promoted.kind, "PROMOTED");

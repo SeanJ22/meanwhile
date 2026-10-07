@@ -147,11 +147,8 @@ export type AvailableOfficialStateLegislatorsRead = Extract<
 >;
 
 /**
- * Project one already-classified canonical read into the coverage render shape.
- *
- * Keeping this conversion separate from the store read lets composite readers
- * retain the read's exact `NOT_RECORDED` or `STORE_UNREACHABLE` disposition
- * instead of learning it only through `null` versus a thrown exception.
+ * Projects one already-classified canonical read into the coverage render
+ * shape, so composite readers keep the read's exact disposition.
  */
 export function heldOfficialStateLegislatorsFromRead(
   scope: OfficialStateVoteScope,

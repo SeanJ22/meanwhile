@@ -1,4 +1,4 @@
-import { geometryPath, geometryFiles, rosterPath } from "../lib/holdings/files.ts";
+import { geometryFiles } from "../lib/holdings/discovery.ts";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -25,22 +25,9 @@ import {
 } from "../lib/state/district-intent.ts";
 
 /**
- * The panel-denominator guard.
- *
- * The regression this pins: the coverage notice — the only surface that
- * renders who governs and represents a point — returned null whenever the
- * cascade landed on `exact`. While the demo zips sat on the widened rung the
- * coupling was invisible; the moment the composite served real meetings
- * everywhere, every zip went exact and 537 federal officials plus three
- * state rosters silently left the product with every test green. The sixth
- * sighting of the shape CLAUDE.md names: an operation (here, a UI panel)
- * that can render nothing must be asked what it rendered.
- *
- * So: against the *committed* rosters and geometry — the real stores, not
- * fixtures — the render gate must say "render" at every demo zip on every
- * tier, and the summary behind it must actually name people. If a roster
- * file is non-empty and this panel would render nothing, that is a failing
- * build, not a styling choice.
+ * The coverage notice is the only surface that renders who governs and represents a point. Against the
+ * committed geometry, the render gate must say "render" at every test ZIP on every tier, and the summary
+ * behind it must actually name people.
  */
 
 const ROOT = join(import.meta.dirname, "..");
@@ -52,30 +39,10 @@ const ZIPS: Record<string, [number, number]> = {
   "03255": [43.31403, -72.02455],
 };
 
-function rosterPeopleCount(name: string): number {
-  const parsed = JSON.parse(
-    readFileSync(join(ROOT, rosterPath(name)), "utf8"),
-  ) as { officeholders?: unknown[]; people?: unknown[] };
-  const list = parsed.officeholders ?? parsed.people ?? [];
-  return Array.isArray(list) ? list.length : 0;
-}
-
-test("the committed rosters are non-empty (the denominator)", () => {
-  // If these ever legitimately empty out, the assertions below must weaken
-  // with them — that is the point of stating the denominator first.
-  assert.ok(rosterPeopleCount("officeholders-us.json") > 500);
-  for (const state of ["04", "33", "34"]) {
-    assert.ok(
-      rosterPeopleCount(`officeholders-${state}.json`) > 0,
-      `officeholders-${state}.json holds nobody`,
-    );
-  }
-});
 
 for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
   test(`officials surface renders at ${zip} on the exact tier`, async () => {
-    // meetingCount > 0 puts the summary in the MEETINGS state — the exact
-    // rung's normal case, and the one the old gate silently dropped.
+    // meetingCount > 0 puts the summary in the MEETINGS state, the exact rung's normal case.
     const coverage = await coverageAt(lat, lng, 1);
 
     assert.ok(hasRepresentation(coverage), `${zip}: summary holds nothing`);
@@ -84,14 +51,10 @@ for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
       `${zip}: populated store, panel gated off — the regression`,
     );
 
-    // The store names people (rosters are committed and non-empty per the
-    // test above), so the panel's holder count must not be zero.
     const named = namedHolderCount(coverage);
     assert.ok(named > 0, `${zip}: rosters non-empty but zero names surface`);
 
-    // Every seat at the four demo zips currently has a sourced holder —
-    // the "zero holes" audit. A broken join drops this, silently, which is
-    // exactly what happened with cd:0 and the NH designations.
+    // Every seat at the test ZIPs has a sourced holder; a broken join drops this silently.
     assert.equal(
       coverage.seatCounts.named,
       coverage.seatCounts.total,
@@ -108,17 +71,12 @@ test("the notice always renders on failure rungs, with or without coverage", () 
   }
 });
 
-/**
- * Same shape for the district overlays: every committed boundary file that a
- * layer spec references must exist and hold features. A layer whose file
- * went missing or empty would draw nothing while the toggle renders and the
- * build stays green — the panel-denominator failure in map clothing.
- */
+/** Every committed boundary file a layer spec references must exist and hold features. */
 test("held Census boundary fixtures retain features for each kind", () => {
   for (const type of DISTRICT_TYPES) {
     for (const file of geometryFiles(ROOT).filter(file => DISTRICT_LAYERS[type].censusLayers.some(layer => file.split("/").at(-1)!.startsWith(layer)))) {
       const parsed = JSON.parse(
-        readFileSync(join(ROOT, geometryPath(file)), "utf8"),
+        readFileSync(join(ROOT, file), "utf8"),
       ) as { features?: unknown[] };
       assert.ok(
         Array.isArray(parsed.features) && parsed.features.length > 0,
@@ -129,40 +87,21 @@ test("held Census boundary fixtures retain features for each kind", () => {
 });
 
 /**
- * The claims-reachable guard (session item 2, 2026-08-14 second session) —
- * the stated-N family extended to the map. The tester asked for Kearsarge
- * Regional School District by name at 03255; the who-governs card counted
- * it, but its layer (school) was not in the default draw set, so a body
- * the card claims was unreachable on the map. The rule: every body the
- * who-governs card counts must render when the overlay is on with the
- * DEFAULT type set — which now means every type defaults on, and every
- * counted body's division must exist as a feature in its layer's
- * committed geometry.
+ * Every body the who-governs card counts must render when the overlay is on with the default type set: every
+ * type defaults on, and every counted body's division exists as a feature in its layer's committed geometry.
  */
 test("every body the who-governs card counts is reachable on the map with default layers", async () => {
   const { DEFAULT_DISTRICT_TYPES, ALL_DISTRICT_TYPES } = await import(
     "../lib/state/defaults.ts"
   );
-  // All district types default on. If a type is ever
-  // removed from the default set again, the per-body check below is what
-  // says which claimed body just became unreachable.
   assert.deepEqual(
     [...DEFAULT_DISTRICT_TYPES].sort(),
     [...ALL_DISTRICT_TYPES].sort(),
     "all district-type layers default on",
   );
 
-  /*
-   * A division type maps to the CANDIDATE layers that could hold it, not to
-   * one layer (M12, 2026-08-17).
-   *
-   * Before the school split there was one school layer and one right answer.
-   * There are now three, and the Census assigns every district exactly one of
-   * them — so "reachable" means the body's feature is in AT LEAST ONE of the
-   * candidates, and every candidate has to be in the default draw set, since
-   * a body reachable only on a layer that defaults off is exactly the
-   * Kearsarge failure this test exists to catch.
-   */
+  // A division type maps to the candidate layers that could hold it; reachable means the body's feature is
+  // in at least one, and every candidate layer must be in the default draw set.
   const LAYERS_FOR_DIVISION: Record<string, string[]> = {
     county: ["county"],
     place: ["municipal"],
@@ -176,7 +115,7 @@ test("every body the who-governs card counts is reachable on the map with defaul
       ids = new Set();
       for (const file of geometryFiles(ROOT).filter(file => DISTRICT_LAYERS[type as (typeof DISTRICT_TYPES)[number]].censusLayers.some(layer => file.split("/").at(-1)!.startsWith(layer)))) {
         const parsed = JSON.parse(
-          readFileSync(join(ROOT, geometryPath(file)), "utf8"),
+          readFileSync(join(ROOT, file), "utf8"),
         ) as { features: Array<{ properties: { ocdId?: string } }> };
         for (const feature of parsed.features) {
           if (feature.properties.ocdId) ids.add(feature.properties.ocdId);
@@ -191,9 +130,7 @@ test("every body the who-governs card counts is reachable on the map with defaul
     const coverage = await coverageAt(lat, lng, 1);
     for (const body of coverage.bodies) {
       if (!body.ocdId) continue; // division-less curated bodies have no layer
-      // NH94: `divisionType` is null for a division-less body rather than the
-      // placeholder "place". The `ocdId` guard above already skips those; this
-      // narrows the type as well, and skipping the two together is the same set.
+      // `divisionType` is null for a division-less body; the `ocdId` guard above already skips those.
       if (!body.divisionType) continue;
       // Hoisted: the narrowing above does not survive into the closure below,
       // because `body.ocdId` is a mutable property.
@@ -227,15 +164,7 @@ test("every body the who-governs card counts is reachable on the map with defaul
   }
 });
 
-/**
- * The state-change half of the same guard (seventh sighting, 2026-08-14).
- * The initial-render checks above never exercised an *interaction*: with
- * "Show districts" off, the district-type checkboxes stayed live and every
- * click changed state with zero visible effect — reported in production as
- * "the checkboxes do nothing". The rule and the derivation now live in
- * lib/state/district-intent.ts where they can be held without a component
- * harness (that gap is M13).
- */
+/** With "Show districts" off, a district-type checkbox click must not change state with no visible effect. */
 test("a populated selection with the overlay on may never derive to nothing", () => {
   for (const selected of [
     ["congressional"],
@@ -264,24 +193,14 @@ test("touching the district-type group turns the overlay on — except clear", (
   assert.equal(interactionTurnsOverlayOn("clear"), false);
 });
 
-/**
- * The failed-fetch rule (2a, ninth sighting of the shape): **a failed
- * operation may not render as an empty success.** The regression this pins:
- * a settle-path fetch failed in production and the sidebar stood behind
- * "0 meetings / 0 bodies / 0 officials" while the failure card rendered
- * beside it — three confident false claims. "Couldn't check" and "none" are
- * different facts; the stat cards must never claim the second on the
- * strength of the first.
- */
+/** A failed operation may not render as an empty success: "couldn't check" and "none" are different facts. */
 test("a failed fetch renders couldn't-check, never confident zeros", async () => {
   const { deriveStatsView } = await import("../lib/state/derive.ts");
 
   const stats = {
     meetings: 0,
     bodies: 0,
-    // Item 6 (2026-08-23): the Bodies tile now states its unit and splits the
-    // pair. Zero bodies has no pair to state, so this is 0 rather than null —
-    // null is "coverage could not answer", which this fixture is not.
+    // Zero bodies has no pair to state, so this is 0; null means coverage could not answer.
     governingBodies: 0,
     districts: 10,
     governingDistricts: null,
@@ -334,8 +253,7 @@ test("3g: the districts door renders exactly the list the card counts", async ()
   ];
   const rows = districtDoorRows(drawn as never, seats as never);
 
-  // The invariant the author caught production violating: stated N ===
-  // rendered rows, from the SAME list.
+  // Stated N === rendered rows, from the same list.
   assert.equal(rows.length, drawn.length, "one row per drawn district, no more, no fewer");
   const cardN = deriveStatsView(
     computeStats({ meetings: [], coverage: null, drawnDistricts: drawn as never }),
@@ -351,9 +269,7 @@ test("3g: the districts door renders exactly the list the card counts", async ()
   // The undrawn seat created no row.
   assert.ok(!rows.some((r) => r.ocdId.endsWith("cd:6")));
 
-  // The in-view mode says so on the tile. The number used to travel bare —
-  // "179 DISTRICTS" beside a door headed "Districts in view" — and a tile
-  // that does not say what it counts is read as a claim about the reader.
+  // The in-view mode says so on the tile.
   const inView = deriveStatsView(
     computeStats({ meetings: [], coverage: null, drawnDistricts: drawn as never }),
     true,
@@ -368,8 +284,7 @@ test("the governing mode counts what contains the reader, and its door lists it"
     "../lib/state/derive.ts"
   );
 
-  // Newbury: a zip centroid crosses lines, an address does not. This is the
-  // real coverage summary from the committed geometry, not a fixture.
+  // A ZIP centroid crosses lines, an address does not. Real coverage from the committed geometry.
   const coverage = await coverageAt(...ZIPS["03255"], 0);
   assert.ok(
     coverage.divisions.length > 0,
@@ -457,25 +372,8 @@ test("3h: free scrolling never re-expands the who-governs card; a typed zip does
 });
 
 /**
- * Item 4 of the tester's mobile pass (2026-08-14). She reported roughly
- * four of the six district types checked and enabled the rest by hand. The
- * brief's stated hypothesis was stale device-local layer preferences from
- * before the all-on default, to be cleared by a one-time versioned
- * migration.
- *
- * Diagnosed before building it, and the hypothesis is wrong in a way worth
- * pinning: **the district-type selection is not persisted anywhere.** It
- * lives in the in-memory UI store and is rebuilt from DEFAULT_DISTRICT_TYPES
- * on every load, so no device can be carrying a stale one and a migration
- * would have migrated nothing. The actual cause was timing — her pass began
- * 2026-08-14 18:32 UTC and the all-on default merged to main at 22:59 UTC
- * the same day, so she was reading the previous deploy, whose default was
- * exactly three types plus the "Show districts" master toggle.
- *
- * This test is what keeps that answer true. The moment a district-type
- * selection starts being written to device storage, the defaults stop being
- * authoritative on a returning reader's device and the tester's report
- * becomes reproducible for real — at which point a migration IS owed.
+ * The district-type selection is not persisted anywhere: it is rebuilt from DEFAULT_DISTRICT_TYPES on every
+ * load. If it ever starts being written to device storage, a migration for stale selections is owed.
  */
 test("district-type selection is never persisted — the defaults stay authoritative on every device", () => {
   const sources = [
@@ -518,22 +416,11 @@ test("district-type selection is never persisted — the defaults stay authorita
 });
 
 /**
- * M57 (2026-08-15) — the sidebar counters, the denominator disease's third
- * sighting. The author's production pass: the sidebar read "6 OFFICIALS"
- * while the officials door listed a mayor, six council members, a five-seat
- * governing board, five county supervisors, the state delegation, the
- * governor and both senators — twenty-four people. Bodies was wrong the same
- * way and nobody had noticed: 13 against a door listing 60.
- *
- * Both counters had their OWN derivation, correct when written and never
- * updated as their doors grew. So the guard is not "the numbers agree today"
- * — it is that each counter is computed from the SAME collection its surface
- * renders, checked against real committed registry data at all four demo
- * zips. A counter that re-derives can drift; a counter handed the rendered
- * list cannot.
+ * Each sidebar counter is computed from the same collection its surface renders, checked against committed
+ * registry data at every test ZIP. A counter that re-derives can drift; one handed the rendered list cannot.
  */
 for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
-  test(`M57: every sidebar counter equals its door's rendered rows at ${zip}`, async () => {
+  test(`every sidebar counter equals its door's rendered rows at ${zip}`, async () => {
     const { computeStats, deriveStatsView, districtDoorRows } = await import(
       "../lib/state/derive.ts"
     );
@@ -574,9 +461,7 @@ for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
     // And the door's own flat list is the same set — no fourth derivation.
     assert.equal(allOfficialRows(coverage).length, officialRows);
 
-    // The regression in its exact production shape: the old derivation
-    // (seats + senators) must NOT be what the card says wherever curated
-    // locals or statewide executives exist.
+    // The old derivation (seats + senators) must not be what the card says where curated locals or statewide executives exist.
     const seatsAndSenatorsOnly = new Set<string>();
     for (const seat of coverage.seats)
       for (const h of seat.representatives) seatsAndSenatorsOnly.add(h.id);
@@ -585,7 +470,7 @@ for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
       assert.notEqual(
         view.officials,
         seatsAndSenatorsOnly.size,
-        `${zip}: the card is back on the seats-and-senators derivation — the M57 regression`,
+        `${zip}: the card is back on the seats-and-senators derivation`,
       );
     }
 
@@ -605,34 +490,16 @@ for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
   });
 }
 
-/**
- * The overlay-off state (M57, second report: the DISTRICTS counter rendered
- * blank). A dash is this product's word for "we could not
- * check". Spending it on a switch the reader flipped made the one number
- * that was never broken read as the broken one.
- */
-test("M57: districts off says Off, not the couldn't-check dash", async () => {
+/** A dash means "we could not check"; a switch the reader flipped is not that. */
+test("districts off says Off, not the couldn't-check dash", async () => {
   const { computeStats, deriveStatsView } = await import("../lib/state/derive.ts");
 
   const off = computeStats({ meetings: [], coverage: null, drawnDistricts: null });
   assert.equal(off.districts, null, "nothing drawn is null, not a count of zero");
   assert.equal(deriveStatsView(off, false, false).districts, "Off");
 
-  /*
-   * **F01 9.2 (2026-08-19) REVERSES the second half of this test.** It used to
-   * assert "even with a drawn list in hand, the master switch decides", and
-   * that produced districts in view listed as off, reproduced at 85701 with
-   * boundaries plainly on screen.
-   *
-   * The switch is a MIRROR of `use-district-layer`'s persisted preference, and
-   * a mirror can diverge from the map. `stats.districts` cannot: it is counted
-   * off the live map after rendering settles. A tile whose label claims
-   * something about THE VIEW must answer from the view.
-   *
-   * "Off" keeps the case it was written for — nothing drawn and the switch
-   * off, which is a state the reader made and can undo, and which must not
-   * spend the couldn't-check dash.
-   */
+  // A tile whose label claims something about the view answers from the live map (`stats.districts`), not
+  // the persisted switch. "Off" is nothing drawn with the switch off.
   const drawn = [
     {
       type: "county" as const,
@@ -663,20 +530,8 @@ test("M57: districts off says Off, not the couldn't-check dash", async () => {
 });
 
 /**
- * The class guard — every division card renders the people some other
- * surface already renders for that division (2026-08-15).
- *
- * The defect this pins is not one card. The division battlecard's
- * Representation tab resolved from the curated body rosters ALONE, and
- * rosters hold no legislative seats by construction — so a congressional, a
- * state-house and a state-senate card at every zip each denied its own
- * officeholder while the small popup beside it named them. Twelve cards
- * across the four zips, all reading "No sourced officeholder for this
- * division yet" over a populated index.
- *
- * The assertion is per DIVISION TYPE, deliberately: a fix that repaired `cd`
- * and left `sldl` would pass a spot check and reproduce the whole defect one
- * type down.
+ * Every division card renders the people some other surface already renders for that division, asserted per
+ * division type so a fix to one type cannot hide a defect in another.
  */
 test("no division card denies people another surface renders", async () => {
   const missing: string[] = [];
@@ -720,9 +575,7 @@ test("no division card denies people another surface renders", async () => {
 
   assert.deepEqual(missing, [], missing.join("\n"));
 
-  // The denominator, stated: an empty pass would satisfy the loop above
-  // silently, which is the exact failure shape this repo keeps recording.
-  // All six division types that carry people at these four zips are covered.
+  // An empty pass would satisfy the loop above silently; all six division types with people are covered.
   for (const type of [
     "cd",
     "sldl",

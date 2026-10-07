@@ -1,8 +1,5 @@
-/**
- * FE-16: each page measurement lists its issue with the element, over
- * synthetic observations. The browser half (collectPageObservation) is run by
- * the harnesses against a real page.
- */
+// Each page measurement lists its issue with the element, over synthetic observations.
+// The browser half (collectPageObservation) runs in the harnesses against a real page.
 import assert from "node:assert/strict";
 import test from "node:test";
 

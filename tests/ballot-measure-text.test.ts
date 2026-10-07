@@ -5,32 +5,7 @@ import { join } from "node:path";
 
 import type { BallotSet } from "@/lib/ballot/types";
 
-/**
- * **BAL-30 (2026-08-28) — THE MEASURE TEXT WAS IN THE REPOSITORY AND THE PAGE
- * RENDERED IT AS MISSING.**
- *
- * The tracker row for this work said the defect was acquisition — *"NOT a
- * rendering defect… The work is acquisition."* It was not. `measures[]` has
- * carried the official question for four local Pima County measures, and the
- * official interpretive statement for two of them, since 2026-08-27.
- * `app/ballot/page.tsx` contained no reference to `set.measures`, to
- * `questionText` or to `officialStatement`; the array's only consumer was
- * `lib/ask/ballot-inventory.ts`, so a reader could obtain the words by ASKING
- * for them and not by reading the card they belong to.
- *
- * `lib/ballot/analyses.ts` states the rule in its own header: data in hand may
- * never be displayed as missing. These tests hold the render to it from both
- * ends — the data is really there, and the page really reaches for it.
- *
- * **THE UNNAMED CONTROL, and it is the reason this file is not one assertion.**
- * Propositions 428 (Sahuarita) and 429 (Tanque Verde) are the same class of
- * question from the same publisher as 423 (Vail), and their `officialStatement`
- * is null because the only document read for them is the Pima County School
- * Superintendent's list, which titles the question without stating the fiscal
- * terms. A render that showed 423 richly and 428 identically would be
- * manufacturing a claim; a render that showed them as the same sentence would
- * be hiding one. They must differ, and the difference must say whose gap it is.
- */
+/** The measure text the ballot holds is rendered, and a measure whose statement was not read says whose gap that is. */
 
 const ROOT = process.cwd();
 const PAGE = readFileSync(join(ROOT, "app", "ballot", "page.tsx"), "utf8");

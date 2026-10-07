@@ -1,29 +1,8 @@
 /**
- * **SEARCH IS A POINTER, PRICED PER REQUEST, BUDGETED PER CYCLE AND PER DAY,
- * AND A METHOD IT PROVES IS SAVED.** (2026-09-23.)
- *
- * The discovery executor's search rung (`lib/hunt/discovery-search.ts`,
- * `lib/control-plane/discovery/search-runtime.ts`). No test reaches the network.
- * What these tests hold:
- *
- * - **Queries.** A saved method's templates come first, then the defaults; a
- *   query with an unfilled slot is never sent, and "own site" is expressed per
- *   provider (Brave's site:, Exa's includeDomains).
- * - **Pointers only.** A result is followed only on the government's own domain
- *   or a known meeting publisher, opened robots-first, and confirmed by content.
- * - **Every request is charged.** One cost row per request sent, role
- *   DISCOVERY_SEARCH, at the published price; a request lost in transport is
- *   UNMEASURED (null), and a refused one is never sent and never charged.
- * - **Budgeted.** The cycle's cap and the day's cap, kept in the durable
- *   shared ledger, refuse by name; FleetSafety's refusal passes through.
- * - **Learned.** A route a search found is saved as a method, and the next
- *   government's walk searches with it first.
- * - **Timed.** A query starts only with time left for the seam's worst case. A
- *   walk the time runs out on while following a result concludes nothing, and
- *   the requests it paid for are still reported with it.
- *
- * Every test that writes runs on the in-memory double AND the durable file
- * store.
+ * The discovery executor's search rung. A result is a pointer, followed only on the government's own domain or a
+ * known meeting publisher, robots-first, and confirmed by content. Every request sent is charged at the published
+ * price (a request lost in transport is unmeasured), the cycle and day caps refuse by name, and a route a search
+ * found is saved as a method the next walk searches with first. Every test that writes runs on both stores.
  */
 
 import assert from "node:assert/strict";

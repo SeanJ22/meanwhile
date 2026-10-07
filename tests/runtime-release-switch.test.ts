@@ -1,8 +1,3 @@
-/**
- * DB-53: new code loads without stopping the factory. A staged release whose
- * change leaves the parent runner's own code alone is loaded by starting new
- * children from its checkout, which shares the running checkout's host state.
- */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, writeFileSync } from "node:fs";

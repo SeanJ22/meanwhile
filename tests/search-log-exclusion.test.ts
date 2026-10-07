@@ -22,26 +22,6 @@ import { organicDenominatorSentence } from "../lib/signal/search-log-reads.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
-/**
- * C05 (2026-08-17): our own traffic stops contaminating the aggregate.
- *
- * Roughly 537 rows on production's `search_log` are ours, written by local and
- * CI Playwright runs, and every walk adds about 28 more. The number only grows
- * and nothing sold may ever contain it.
- *
- * The obvious fix — stop writing to production — was rejected by the author,
- * because it would delete the only end-to-end proof that the write path works.
- * So the row says whose it is, and this file holds the three properties that
- * make that claim worth anything:
- *
- *   1. the marker is DECLARED at write time, never inferred afterwards;
- *   2. `run_id` is null on every organic row, so it can never become a session
- *      key relating two readers to each other;
- *   3. **no aggregate can be written that reads the unfiltered table.**
- */
-
-// ── 1. Declared, not inferred ──────────────────────────────────────────────
-
 test("a request that declares nothing is a reader", () => {
   const marker = markerFromRequest(new Request("https://example.test/api/meetings"));
   assert.deepEqual(marker, ORGANIC);
@@ -58,8 +38,6 @@ test("a run declares itself in a header, and the id rides with it", () => {
 });
 
 test("a malformed declaration is synthetic, never quietly organic", () => {
-  // Something said it was automated and got the label wrong. Resolving that
-  // toward "reader" is the exact mistake the column exists to prevent.
   for (const bad of ["", "   ", "a".repeat(200), "has spaces", "semi;colon"]) {
     const marker = markerFromRequest(
       new Request("https://example.test/x", { headers: { [SYNTHETIC_RUN_HEADER]: bad } }),
@@ -86,15 +64,12 @@ test("a generated run id survives its own round trip through the header reader",
   assert.equal(marker.runId, id, "a generated id must not be rejected by the shape it was built for");
 });
 
-// ── 2. run_id cannot become a session key ──────────────────────────────────
-
 test("the marker columns exist and carry no identifier fragment", () => {
   const config = getTableConfig(schema.searchLog);
   const byName = new Map(config.columns.map((c) => [c.name, c]));
   assert.ok(byName.has("run_class"), "search_log must carry run_class");
   assert.ok(byName.has("run_id"), "search_log must carry run_id");
 
-  // Same discipline the rest of the table is held to.
   for (const forbidden of ["user", "account", "device", "session", "subscriber", "cookie"]) {
     for (const name of byName.keys()) {
       assert.ok(!name.toLowerCase().includes(forbidden), `${name} matches "${forbidden}"`);
@@ -102,33 +77,6 @@ test("the marker columns exist and carry no identifier fragment", () => {
   }
 });
 
-/**
- * **Reactions grew the marker, and the stores still share no key.**
- * (Amended 2026-08-19, F01-continued session 2 item 0D.)
- *
- * This test used to assert that `reactions` had NO `run_class` and NO
- * `run_id`, with the reason stated in its own message: *"run_id on both
- * stores would be a join path."* That reason was right and it still is. What
- * was wrong was the conclusion drawn from it — that the reactions table must
- * therefore have no attribution at all.
- *
- * The consequence of that was worse than the risk it avoided. `search_log`
- * could say which rows were ours and `reactions` could not, which is exactly
- * the wrong way round: a search-log row is a lookup, and a reactions row is
- * **the thing the business sells**. The only attribution the sold table
- * carried was a timestamp, and attributing by timestamp is precisely the
- * retrospective heuristic the marker exists to make unnecessary.
- *
- * So the column exists and the join path still does not, because the run id
- * is stored **namespaced and digested** — `sha256("reaction-run:" + runId)`
- * against the search log's raw label. Two columns sharing a name and no value
- * space. The precedent is `intake_limiter`, which `CLAUDE.md` describes doing
- * the identical thing against this same table's continuity hash.
- *
- * The assertion is therefore STRONGER than the one it replaces: absence of a
- * column is a fact that stops being checkable the moment somebody has a good
- * reason to add it, whereas this pins the property that actually matters.
- */
 test("reactions grew the marker in its own value space — the stores still share no key", () => {
   const reactionCols = new Set(
     getTableConfig(schema.reactions).columns.map((c) => c.name),
@@ -146,16 +94,12 @@ test("reactions grew the marker in its own value space — the stores still shar
     "the reaction run id must be namespaced and digested, never the raw label",
   );
 
-  // The two spaces must be provably different, not merely described as such.
   const raw = "f01c-s2@2026-08-19T00:00:00.000Z";
   const digested = createHash("sha256").update(`reaction-run:${raw}`, "utf8").digest("hex");
   assert.notEqual(digested, raw, "a digest that equalled the label would join");
-  // And different from the OTHER digest this table already computes, so a
-  // run id can never collide into the continuity-key space either.
   const continuity = createHash("sha256").update(raw, "utf8").digest("hex");
   assert.notEqual(digested, continuity, "the run digest must not share the continuity key's space");
 
-  // Nothing anywhere may query the two stores' run ids against each other.
   const roots = ["lib", "app", "scripts"];
   const offenders: string[] = [];
   for (const root of roots) {
@@ -172,10 +116,6 @@ test("reactions grew the marker in its own value space — the stores still shar
 });
 
 test("the migration marks pre-existing rows UNKNOWN, not organic", async () => {
-  // The column default is ORGANIC, which is right for a live request and
-  // WRONG for every row that already existed. drizzle-kit cannot know the
-  // difference, so the migration corrects them — and this asserts the
-  // correction is actually in the file rather than in the intention.
   const dir = join(process.cwd(), "lib", "db", "migrations");
   const files = (await readdir(dir)).filter((f) => f.endsWith(".sql"));
   const all = (
@@ -189,87 +129,21 @@ test("the migration marks pre-existing rows UNKNOWN, not organic", async () => {
   );
 });
 
-// ── 3. No aggregate can read the unfiltered table ──────────────────────────
-
 test("no module reads search_log without the organic filter", async () => {
-  /*
-   * The property that makes the other two worth anything. A filter each
-   * aggregate remembers to apply is a filter one aggregate will forget, and
-   * the forgetting is invisible — the number just comes out slightly too
-   * high, in our favour, on the thing we sell.
-   */
   const roots = ["lib", "scripts", "app"];
   const ALLOWED = new Set(
     [
-      // The write path and the schema, which are not reads.
       "lib/db/schema.ts",
       "lib/db/search-log.ts",
-      // The filter itself, and the census whose job is to describe the WHOLE
-      // table — it reports rather than aggregates, and it is not a sold
-      // number.
+      // The filter itself, and the census that describes the whole table.
       "lib/signal/search-log-reads.ts",
-      // The back-marking pass, which by definition operates on unmarked rows.
-      "scripts/searchlog-backmark.mts",
-      // G04, 2026-08-17: the walk asks how many rows ITS OWN run landed, by
-      // `run_id = <this run>`. That is the opposite of an aggregate — it is a
-      // count of OUR rows, the ones the organic filter exists to exclude, and
-      // filtering it to ORGANIC would make it report zero every time and read
-      // as "this run created nothing". Declared here with the reason, the
-      // DECLARED_EXTRAS pattern, because an exception that lives in code can
-      // be argued with and a silent one cannot.
+      // These read back only their own run's rows (or no count at all); filtering to ORGANIC would read zero.
       "scripts/walk-all.mts",
-      // R36, 2026-08-17: the read-only-credential probe. It SELECTs from
-      // search_log to prove the connection can read a real store table —
-      // grants are per-table, so `select 1` against nothing would prove
-      // nothing — and it deliberately takes no count and prints no total, so
-      // there is no number here for the organic filter to be protecting.
-      // Declared with its reason, the DECLARED_EXTRAS pattern, because an
-      // exception that lives in code can be argued with and a silent one
-      // cannot.
       "scripts/verify-readonly.mts",
-      // R42, 2026-08-17: the local-write probe. It writes one SYNTHETIC row
-      // through the real write path and reads it back BY ITS OWN run id —
-      // the same "count of OUR rows" exception the walk carries, and
-      // filtering it to ORGANIC would make it read zero and report the write
-      // as failed. Its only other read of the table is a before/after
-      // count(*) whose PURPOSE is to prove the probe row was removed again,
-      // and it prints the DELTA rather than the total for exactly the reason
-      // verify-readonly.mts gives: a raw total out of this table is a number
-      // somebody can quote. Declared with its reason, the DECLARED_EXTRAS
-      // pattern, because an exception that lives in code can be argued with
-      // and a silent one cannot.
-      "scripts/verify-local-write.mts",
-      // `T10`, 2026-08-24: the demo deletion. Its window predicate is
-      // `occurred_at`, and it MUST NOT filter to ORGANIC — the promise Sean
-      // made to the tester was that everything collected during the demo goes,
-      // and a deletion that spared the synthetic and session rows would be
-      // keeping exactly the rows nobody was promised would be kept. It emits
-      // no aggregate: it prints a per-store count of what it removed, which is
-      // the audit record of a deletion rather than a number about readers.
-      // Declared with its reason, the DECLARED_EXTRAS pattern, because an
-      // exception that lives in code can be argued with and a silent one
-      // cannot.
-      "lib/db/demo-deletion.ts",
-      // R36/R42, 2026-08-17 (g11): the run-id census. It is the command form
-      // of `runClassCensusQuery()`, whose documented job is to describe the
-      // WHOLE table INCLUDING the part that is ours — the one read that
-      // reports rather than aggregates. Filtering it to ORGANIC would delete
-      // the thing it exists to print: how many rows are not readers. It never
-      // emits an organic figure without the denominator sentence beside it,
-      // which is the protection the filter gives elsewhere. Declared with its
-      // reason, the DECLARED_EXTRAS pattern, because an exception that lives
-      // in code can be argued with and a silent one cannot.
-      "scripts/census-run-class.mts",
-      // R36, 2026-08-17 (g11): the production write-handle probe. It writes
-      // one SYNTHETIC row and reads it back BY ITS OWN run id — the same
-      // "count of OUR rows" exception the walk and the local-write probe
-      // carry — and its before/after count(*) exists to prove the row was
-      // removed again, printing the delta rather than the total for the same
-      // reason verify-readonly.mts gives.
       "scripts/verify-write-handle.mts",
-      // RULING 14: repo-relative paths are POSIX here, produced by
-      // posixRelative below. This list used to be inverted into the platform
-      // separator — the exact shape that broke coverage-manifest on Linux.
+      // A deletion by occurred_at: it must not spare non-ORGANIC rows, and it emits no aggregate.
+      "scripts/demo-sweep.mts",
+      // Paths are repo-relative POSIX, produced by posixRelative below.
     ],
   );
 
@@ -293,7 +167,6 @@ test("no module reads search_log without the organic filter", async () => {
     const relative = posixRelative(process.cwd(), file);
     if ([...ALLOWED].some((a) => relative === a)) continue;
     const src = await readFile(file, "utf8");
-    // Strip comments so an explanation of the rule is not a violation of it.
     const code = src
       .replace(/\/\*[\s\S]*?\*\//g, "")
       .split("\n")
@@ -319,8 +192,6 @@ test("no module reads search_log without the organic filter", async () => {
       "(lib/signal/search-log-reads.ts) — an aggregate that forgets is invisible",
   );
 });
-
-// ── The denominator, in words ──────────────────────────────────────────────
 
 test("the denominator sentence states the organic count and what was excluded", () => {
   const sentence = organicDenominatorSentence({
@@ -353,9 +224,6 @@ test("the author class is named in the sentence and counted in the exclusion", (
 });
 
 test("a class the sentence does not know about still cannot inflate the reader count", () => {
-  // The failure this pins: a future class lands in the table, nobody updates
-  // this file, and the excluded figure silently stops reconciling. Derived
-  // from the total, the arithmetic holds whatever the class is called.
   const sentence = organicDenominatorSentence({
     organic: 10,
     synthetic: 5,

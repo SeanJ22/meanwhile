@@ -16,17 +16,6 @@ import type { RetainedMeetingCandidate, RetainedSourceResponse } from "../lib/ci
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
 import { methodFixture } from "./method-store-fixture.ts";
 
-/*
- * Production, 2026-09-25: the Pima Legistar events feed returned the same
- * bytes (sha256 09ec49cc…) all day, but its request window rolls each UTC day,
- * so the URL changed at midnight. Every capture after that refused its
- * content-addressed artifact as a "different" record (the URL differed), left
- * its Attempt open to a lease expiry, and the next pass re-derived the same
- * RouteTask id and was refused again as "a DIFFERENT value". Migration 0029
- * made the second refusal permanent: an unchanged re-check now confirms the
- * pointed candidate instead of creating a new one, so the same candidate — and
- * the same task id — returns every pass.
- */
 const bytes = new Uint8Array(readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url)));
 const rawHash = createHash("sha256").update(bytes).digest("hex");
 const windowUrl = (from: string, to: string) =>

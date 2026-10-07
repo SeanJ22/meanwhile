@@ -1,11 +1,8 @@
 /**
  * Workers and Now screens show the real `admin-v6/workers@1` reading.
  *
- * The section bodies below are the saved production-shaped readback
- * (`workers-readback-2026-09-28T22-12-27-388Z.json`, read-only, commit
- * c50ed417) for `us`, `st:az` and `geo:az.zcta.85635`. They are served to
- * `LiveSync` by a fake fetch: this is test evidence of the page's behaviour,
- * not live production proof.
+ * The section bodies below are production-shaped readings for three scopes, served to `LiveSync`
+ * by a fake fetch.
  */
 import assert from "node:assert/strict";
 import { mock, test } from "node:test";

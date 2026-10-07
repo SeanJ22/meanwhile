@@ -1,30 +1,8 @@
 /**
- * **THE REOPENING LOOP, CLOSED, END TO END.** (2026-08-29.)
- *
- * `findReopenings()` and `applyReopenings()` have been correct since the method
- * store was built, and until now they ran over an empty array on every single
- * session — because nothing in this repository ever persisted a
- * `PriorConclusion`. `pnpm method:check` read `data/method/conclusions.json`,
- * the file did not exist, and the sweep reported zero awaiting reopening. Zero
- * was true the way a selector that matches nothing reports zero offenders: the
- * instrument was never pointed at a population.
- *
- * The five steps of the loop, each asserted, and none of them faked:
- *
- *   1. a conclusion is EARNED under method version N and persisted, stamped
- *      with N;
- *   2. a genuinely new applicable route is ADMITTED at N+1 through the
- *      candidate -> validation -> admission path, not by editing the store;
- *   3. `findReopenings()` identifies the prior conclusion;
- *   4. the WorkItem re-enters `REOPENED` — the REAL state from
- *      `lib/control-plane/work-item.ts`, imported rather than re-spelled;
- *   5. route existence SURVIVES a withdrawn or invalidated conclusion.
- *
- * **NO HISTORIC CONCLUSION IS MANUFACTURED HERE.** Every conclusion in this file
- * is earned inside the test, against a throwaway copy of the store, and carries
- * `fixture: true` IN ITS OWN DATA — which `validateConclusions` refuses in the
- * canonical corpus by name. A comment saying "this is only a fixture" is
- * invisible to the corpus a later session reads.
+ * The reopening loop, end to end: a conclusion earned under method version N is persisted stamped with N; a new
+ * applicable route admitted at N+1 through the real gate reopens it; the WorkItem re-enters the real `REOPENED`
+ * state; and route existence survives a withdrawn conclusion. Every conclusion here is earned inside the test and
+ * carries `fixture: true` in its own data, which `validateConclusions` refuses in the canonical corpus.
  */
 
 import assert from "node:assert/strict";
@@ -121,19 +99,17 @@ function earn(
   );
 }
 
-/* ------------------------------------------------------------ (1) (2) (3) (4) */
-
 test("THE LOOP — a conclusion earned at vN is reopened by a route admitted at vN+1", () => {
   const { dir, conclusionPath } = scratch("loop");
 
-  /* (1) EARNED AND PERSISTED, STAMPED WITH THE VERSION IT WAS EARNED UNDER. */
+  /* (1) Earned and persisted, stamped with the version it was earned under. */
   const before = methodFixture();
   const earned = earn(emptyConclusionStore(), before, [before.routes[0].id]);
   assert.equal(earned.record.earnedAtVersion, before.version);
   assert.equal(earned.record.status, "EARNED");
   writeConclusionStore(conclusionPath, earned.store);
 
-  // It survives a round trip to disk, which is the whole point of a corpus.
+  // It survives a round trip to disk.
   const reloaded = readConclusionStore(conclusionPath);
   assert.equal(reloaded.length, 1);
   assert.equal(reloaded[0].id, earned.record.id);
@@ -142,18 +118,18 @@ test("THE LOOP — a conclusion earned at vN is reopened by a route admitted at 
   // Nothing reopens it yet: every route in the store predates it.
   assert.deepEqual(findReopenings(before, reloaded), []);
 
-  /* (2) A NEW APPLICABLE ROUTE, ADMITTED THROUGH THE REAL PATH. */
+  /* (2) A new applicable route, admitted through the real path. */
   const after = admit(before, newAvenue("reopening-loop-avenue"), "at-test-avenue");
   assert.equal(after.version, before.version + 1);
 
-  /* (3) FINDREOPENINGS IDENTIFIES IT. */
+  /* (3) findReopenings identifies it. */
   const run = runReopenings(reloaded, after, ON);
   assert.equal(run.reopenings.length, 1, "knowledge grew past a closed conclusion and nothing noticed");
   assert.equal(run.reopenings[0].conclusion.id, earned.record.id);
   assert.equal(run.reopenings[0].route.id, "reopening-loop-avenue");
   assert.match(run.reopenings[0].why, /after this ABSENCE was earned at v/);
 
-  // The record now says it was reopened, and PRESERVES what it was earned under.
+  // The record says it was reopened, and preserves what it was earned under.
   const [record] = run.store;
   assert.equal(record.status, "REOPENED");
   assert.equal(record.reopenedBy, "reopening-loop-avenue");
@@ -161,7 +137,7 @@ test("THE LOOP — a conclusion earned at vN is reopened by a route admitted at 
   assert.equal(record.earnedAtVersion, before.version, "the old measurement was overwritten");
   assert.equal(record.earnedOn, ON);
 
-  /* (4) THE WORKITEM RE-ENTERS A GOVERNED OPEN STATE — the REAL vocabulary. */
+  /* (4) The WorkItem re-enters a governed open state. */
   const item = createWorkItem({
     project: "wtp",
     subject: "ocd-division/country:us/state:az/county:pima",
@@ -180,23 +156,20 @@ test("THE LOOP — a conclusion earned at vN is reopened by a route admitted at 
     false,
     "a reopened obligation that is still terminal has not been reopened",
   );
-  assert.match(moved.why, /RULING 179/);
+  assert.match(moved.why, /every eligible avenue/);
 
-  // And an item that was merely OPEN re-enters the same state, with a different
-  // reason — the distinction is reported rather than flattened.
+  // An item that was merely OPEN re-enters the same state, with a different reason.
   const stillOpen = workItemStateAfterReopening(item.state, run.reopenings[0]);
   assert.equal(stillOpen.to, "REOPENED");
   assert.equal(stillOpen.wasTerminal, false);
   assert.notEqual(stillOpen.why, moved.why);
 
-  /* AND THE LOOP TERMINATES: a reopened conclusion is not reopened again. */
+  /* The loop terminates: a reopened conclusion is not reopened again. */
   const second = runReopenings(run.store, after, ON);
   assert.deepEqual(second.reopened, [], "a reopened conclusion was reopened a second time");
 
   rmSync(dir, { recursive: true, force: true });
 });
-
-/* ------------------------------------------------------------------------ (5) */
 
 test("a WITHDRAWN conclusion does not delete the route that produced it", () => {
   const { dir, conclusionPath } = scratch("withdraw");
@@ -215,12 +188,11 @@ test("a WITHDRAWN conclusion does not delete the route that produced it", () => 
   assert.match(w.reason, /WHAT SURVIVES/);
   writeConclusionStore(conclusionPath, w.store);
 
-  // THE ROUTE IS UNTOUCHED — by bytes, and through the consumer read path.
+  // The route is untouched, by bytes and through the consumer read path.
   assert.equal(JSON.stringify(k.routes), routesBefore, "withdrawing a conclusion changed the routes");
   assert.ok(projectionHasRoute(projectMethodFor(k, AZ), producedBy));
 
-  // The record is KEPT, carrying why it went. Deleting it would let a later
-  // session re-earn the same wrong conclusion having never been told.
+  // The record is kept, carrying why it went, so a later session cannot re-earn the same wrong conclusion.
   const reloaded = readConclusionStore(conclusionPath);
   assert.equal(reloaded.length, 1);
   assert.equal(reloaded[0].status, "INVALIDATED");
@@ -243,8 +215,6 @@ test("a WITHDRAWN conclusion does not delete the route that produced it", () => 
 
   rmSync(dir, { recursive: true, force: true });
 });
-
-/* ------------------------------------------------------------------ the corpus */
 
 test("PLANTED: a FIXTURE conclusion is refused in the canonical corpus, by name", () => {
   const k = methodFixture();
@@ -308,8 +278,7 @@ test("the SHIPPED corpus is a PriorConclusion[] array, and it validates", () => 
     [],
     "a test fixture reached the canonical corpus",
   );
-  // Empty today, and that is a fact about US — the corpus has just been created.
-  // The assertion that matters is that the file is READ and VALID, not its size.
+  // The assertion that matters is that the file is read and valid, not its size.
   assert.deepEqual(findReopenings(k, store), []);
 });
 
@@ -319,12 +288,10 @@ test("a malformed corpus is a NAMED refusal, never an empty one", () => {
   mkdirSync(dir, { recursive: true });
   const path = join(dir, "conclusions.json");
 
-  // A missing file IS an empty corpus — that is honest, and it is what
-  // method:check has always done.
+  // A missing file is an empty corpus.
   assert.deepEqual(readConclusionStore(path), []);
 
-  // An envelope, though, is the shape somebody "tidied" it into, and silently
-  // reading it as empty would report zero conclusions over a full corpus.
+  // An envelope is refused rather than silently read as empty.
   writeFileSync(path, JSON.stringify({ conclusions: [] }), "utf8");
   assert.throws(() => readConclusionStore(path), /CONCLUSION CORPUS MALFORMED/);
   rmSync(dir, { recursive: true, force: true });

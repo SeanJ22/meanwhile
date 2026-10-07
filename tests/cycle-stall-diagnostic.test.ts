@@ -1,14 +1,6 @@
 /**
- * **A CYCLE THAT RUNS INTO THE WALL SAYS WHAT IT WAS WAITING ON.**
- * (Runner bounded store calls, 2026-09-23.)
- *
- * Four research cycles were ended by the supervisor's wall on 2026-09-23 with
- * nothing on stderr and no record, so what each awaited could only be guessed.
- * These tests hold the stall diagnostic: the main thread's account of the last
- * phase, the labelled await and the store calls in flight; the pure lines it
- * becomes; and the real worker thread, which must write it to stderr and the
- * cycle's record near the wall even while the main thread is blocked in a
- * synchronous call — the case a main-thread timer could never report.
+ * A cycle that runs into the wall says what it was waiting on. The worker thread must write the diagnostic to stderr
+ * and the cycle's record even while the main thread is blocked in a synchronous call.
  */
 import assert from "node:assert/strict";
 import { closeSync, existsSync, mkdtempSync, openSync, readFileSync, rmSync } from "node:fs";

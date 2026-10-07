@@ -7,15 +7,10 @@ import type { PrlDataset } from "./inventory.ts";
 import type { PrlSourceOpen } from "./ingest.ts";
 
 /**
- * **Acquire a dataset's bytes and stream its one member through the inflater.**
- *
- * The routine path writes no file: the standing runner's canonical door is the
- * production data plane, and a routine that could write the filesystem could
- * bypass it (`lib/civic-data/firewall.ts`). So the compressed archive is held in
- * memory and its single member is stream-inflated — the decompressed rows, which
- * reach several gigabytes, are never all resident and never touch disk. The
- * sha256 is of the exact compressed bytes, so a later run can tell whether the
- * source moved or only our code did.
+ * Acquires a dataset's bytes and streams its one member through the inflater.
+ * Nothing is written to disk: the compressed archive is held in memory and the
+ * multi-gigabyte member is stream-inflated. The sha256 is of the exact
+ * compressed bytes, so a later run can tell whether the source moved.
  */
 
 interface ZipLocalHeader {

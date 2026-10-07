@@ -3,9 +3,6 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
 
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 import { packHasEvidence, packSourceUrls } from "../lib/ask/evidence.ts";
@@ -17,16 +14,6 @@ import { synthesizeAnswer, synthesisPrompt, synthesisDateBlock } from "../lib/as
 import { validateAnswer } from "../lib/ask/validate.ts";
 import { statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
-
-/**
- * **THE GROUNDED ASK PIPELINE** (ASK01/ASK02, 2026-08-27).
- *
- * Every test here that guards a defect states the defect, and several of them
- * are written FALSE-FIRST — the assertion is constructed so that the code as it
- * stood before this session fails it. PR #211's most expensive lesson was that
- * a check can be green while the thing it names is broken, so a check whose
- * failure mode was never observed is not evidence.
- */
 
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district";
 
@@ -69,19 +56,6 @@ function pack(over: Partial<EvidencePack> = {}): EvidencePack {
   };
 }
 
-// ── The tense is a retrieval instruction ────────────────────────────────
-
-/**
- * **THE DEFECT, AS A SELECTION.** `bodyAgendaAnswer` read
- * `upcoming[0] ?? past[0]` for every question, so a question about the LAST
- * meeting was answered with the NEXT one.
- *
- * `select` is the REAL function both routes call, imported rather than
- * reimplemented. The first version of this file built its own upcoming/past
- * split and asserted against that, which would have passed forever no matter
- * what the routes did — a green check standing beside broken behaviour, which
- * is the one failure mode this repository has already paid for once.
- */
 const select = selectSitting;
 
 test("ASK02: a LAST question selects the most recent PAST meeting, not the next one", () => {
@@ -92,12 +66,6 @@ test("ASK02: a LAST question selects the most recent PAST meeting, not the next 
     { startsAt: "2026-09-09T02:00:00.000Z" },
   ];
 
-  /*
-   * FALSE-FIRST: this is the exact expression that shipped, and it is asserted
-   * to give the WRONG answer for this question. If a later refactor quietly
-   * restores it, the assertion below stops being a tautology and this test is
-   * the thing that notices.
-   */
   const oldBehaviour = select("ANY", meetings, now);
   assert.equal(oldBehaviour?.startsAt, "2026-09-09T02:00:00.000Z");
 
@@ -131,8 +99,6 @@ test("ASK02: a tensed question does NOT fall back to the other tense", () => {
   const onlyPast = [{ startsAt: "2026-08-12T02:00:00.000Z" }];
   assert.equal(select("NEXT", onlyPast, now), null);
 });
-
-// ── Interpretation is a hypothesis, and a bounded one ───────────────────
 
 test("ASK01: the interpretation reader rejects anything off the closed lists", () => {
   const bad = readInterpretation({
@@ -191,12 +157,6 @@ test("ASK01: the interpretation prompt carries civic context and is bounded", ()
     approximateLocation: "85641",
     surface: "MAP",
   });
-  /*
-   * The whole point of this rung. The topic classifier's prompt contains the
-   * topic list and NOTHING ELSE — no governments, no date. If this assertion
-   * ever fails, the model has stopped being told what exists and the product
-   * is back to the state where it could not resolve "Vail".
-   */
   assert.match(prompt, /Vail Unified School District \(school_district\)/);
   assert.match(prompt, /Today is 2026-08-27/);
   assert.match(prompt, /85641/);
@@ -210,8 +170,6 @@ test("ASK01: the interpretation prompt carries civic context and is bounded", ()
   assert.ok(!huge.includes(`Body ${MAX_INVENTORY + 10}`), "inventory must be capped");
 });
 
-// ── Resolution: a hypothesis becomes an identity, or fails honestly ─────
-
 test("ASK01: the model's expansion resolves an alias the reader's words alone would not", () => {
   const interpretation = {
     ...unavailableInterpretation(),
@@ -224,15 +182,7 @@ test("ASK01: the model's expansion resolves an alias the reader's words alone wo
 });
 
 test("ASK01: a government the model invented resolves UNRESOLVED, never NONE", () => {
-  /*
-   * **THE MOST IMPORTANT ASSERTION IN THIS FILE.**
-   *
-   * `NONE` means "no government was named", which licenses the reader's own ZIP
-   * to decide the answer. Returning it for "a government was named and we could
-   * not find it" is precisely how a question about Vail was answered with
-   * Sunnyside — and doing it here would restore that defect with a model's
-   * endorsement on top of it.
-   */
+  /* NONE means no government was named; a named government we cannot find must never become NONE. */
   const interpretation = {
     ...unavailableInterpretation(),
     entityMentions: ["Republic of Atlantis Water District"],
@@ -268,24 +218,7 @@ test("ASK01: resolution is a SUPERSET of the binder that shipped without a model
   assert.equal(result.basis, "WHOLE_QUESTION");
 });
 
-// ── Validation: the checks that can be made, made ───────────────────────
-
-/* ── The second wall: a pack holding another body's civic records ──────── */
-
 test("a MEETING record belonging to another body FAILS validation", () => {
-  /*
-   * **THE CHECK THE SUBSTITUTION CLASS ACTUALLY NEEDED.** (2026-08-29.)
-   *
-   * `subject-not-substituted` compares PROSE against the subject's name, and
-   * that is exactly why it could not catch the Pima defect: the subject WAS
-   * "Pima", the answer DID say "Pima", and the meeting inside the pack belonged
-   * to the Central Arizona Water Conservation District. Every name in the
-   * sentence was the right name; the RECORD was the wrong government's.
-   *
-   * The retrieval fix is primary and this is the second wall — it cannot make
-   * retrieval correct, only stop a future regression in it from reaching a
-   * reader, which the name-only check demonstrably could not.
-   */
   const p = pack({
     subject: { kind: "BODY", id: VAIL, name: "Vail Unified District" },
     records: [
@@ -390,11 +323,6 @@ test("ASK01: internal vocabulary never reaches a reader", () => {
 });
 
 test("ASK02: a LAST question answered entirely from future records fails validation", () => {
-  /*
-   * The temporal defect caught a SECOND time, at the last possible moment.
-   * The retrieval fix lives in one function; this is a property of the answer
-   * whichever path produced it.
-   */
   const p = pack({ temporal: { kind: "LAST" } });
   const verdict = validateAnswer("Vail will consider the 2027 capital budget.", [], p);
   assert.equal(verdict.kind, "FAILED");
@@ -403,20 +331,6 @@ test("ASK02: a LAST question answered entirely from future records fails validat
       verdict.failed.includes("past-question-answered-with-future-records"),
   );
 });
-
-/* ── Substitution is naming a FOREIGN government, not omitting a name ────
- *
- * **NH288 (2026-08-30).** The check here used to demand that the prose CONTAIN
- * a distinctive token of the subject's name, and that demand was itself a
- * defect: the deterministic reader framing already names the resolved subject,
- * so correct generated prose continues "The Board voted 5-0..." — natural
- * anaphora about exactly the right government — and the token rule discarded
- * it (`REJECTED_FELL_BACK`, records rendered with no prose). The rule the
- * defect class actually needs is the one `record-belongs-to-resolved-body`
- * runs at the id level plus this one at the prose level: an answer may not
- * NAME a different known government. Every control below states which half it
- * guards.
- */
 
 const PIMA_BOARD = "ocd-division/country:us/state:az/county:pima#governing";
 const CAWCD_BODY =
@@ -451,11 +365,6 @@ function pimaPack(over: Partial<EvidencePack> = {}): EvidencePack {
 }
 
 test("NH288: correct prose that says 'The Board' instead of the full name PASSES", () => {
-  /*
-   * FALSE-FIRST: this is the exact sentence shape the old token rule rejected.
-   * The subject's structured identity is already validated at the id level and
-   * the reader framing already names the body; anaphora is not substitution.
-   */
   const verdict = validateAnswer(
     "The Board voted 5-0 to approve the fiscal 2027 budget.",
     [],
@@ -481,10 +390,6 @@ test("NH288: prose naming a DIFFERENT known government fails mechanically", () =
 });
 
 test("NH288: foreign naming still fails when the prose ALSO says the subject's name", () => {
-  /*
-   * FALSE-FIRST against the OLD rule, which passed any prose containing
-   * "pima" — including prose whose lead actor is another government.
-   */
   const verdict = validateAnswer(
     "Pima County heard a presentation from the Central Arizona Water Conservation District.",
     [],
@@ -522,10 +427,6 @@ test("NH288: a one-word division label in the universe is a geography, never a n
 });
 
 test("NH288: with no known-subject universe the check checks nothing, honestly", () => {
-  /* The old test asserted this sentence FAILED for never saying "Vail". That
-     rejection was the NH288 defect. It passes now, and the substitution class
-     is carried by record-belongs-to-resolved-body plus the foreign-naming rule
-     above. */
   const verdict = validateAnswer(
     "The board will consider a capital budget at its next sitting.",
     [],
@@ -533,8 +434,6 @@ test("NH288: with no known-subject universe the check checks nothing, honestly",
   );
   assert.equal(verdict.kind, "PASSED", JSON.stringify(verdict));
 });
-
-// ── The evidence boundary ───────────────────────────────────────────────
 
 test("ASK01: synthesis REFUSES an empty pack and never touches the network", async () => {
   /*
@@ -561,9 +460,8 @@ test("ASK01: the synthesis prompt restates every rule it could break", () => {
   assert.match(prompt, /Never tell the reader how to vote/i);
   assert.match(prompt, /rank or score candidates/i);
   assert.match(prompt, /gap marked OURS is about us/i);
-  // The date sentence is the same words, but it no longer sits in the cacheable
-  // system prefix: it is a block of the first user turn, so the instructions
-  // above are byte-stable across a midnight (request shape, prompt caching 4a).
+  // The date sentence is not in the cacheable system prefix: it is a block of the first user turn, so the
+  // instructions above are byte-stable across a midnight.
   assert.doesNotMatch(prompt, /Today is/);
   assert.equal(synthesisDateBlock(pack()), "Today is 2026-08-27.");
 });
@@ -585,22 +483,6 @@ test("ASK01: the pack's source allow-list is exactly its records' URLs", () => {
 });
 
 test("ASK01: a named gap always says WHOSE gap it is", () => {
-  /*
-   * Shape only — this asserts that `whose` is one of two values and that a gap
-   * carries a sentence. It does NOT rule on whether either sentence is earned.
-   *
-   * The THEIRS example is written the way an earned one now reads, and that is
-   * deliberate. It used to say "The district has not published it yet." — a
-   * bare, unscoped claim about a government, which is exactly the sentence
-   * ASK-07 removed from `app/api/ask/grounded/route.ts` on 2026-08-29 because
-   * nothing in the input measured it. A worked example in a fixture is copied
-   * far more often than it is read, so leaving the deleted sentence sitting
-   * here as the illustration of a valid THEIRS would reintroduce it by hand.
-   * A THEIRS publication claim is earned only from a first-party observation
-   * of that exact sitting, still inside its freshness window
-   * (`lib/ask/agenda-publication.ts`), and it renders SCOPED TO THE MOMENT IT
-   * WAS TAKEN — which is what this one shows.
-   */
   const p = pack({
     gaps: [
       { whose: "OURS", statement: "We have not recorded this yet." },
@@ -617,25 +499,7 @@ test("ASK01: a named gap always says WHOSE gap it is", () => {
   }
 });
 
-// ── The ballot surface renders something true in every branch ───────────
-
 test("ASK04: no reply mode may render silence on the ballot", () => {
-  /*
-   * **A REAL DEFECT, FOUND BY READING THE READER OUTPUT.** (2026-08-27.)
-   *
-   * The first version of `components/ask/ballot-ask.tsx` had no branch for a
-   * reply carrying no answer, no records and no gaps. A reader asked "What
-   * does this office control?", the server correctly answered NO_EVIDENCE, and
-   * the panel rendered NOTHING — the empty form, back at them.
-   *
-   * Every check in place at the time passed. The panel was present, the mode
-   * attribute was right, the request and reply were both fine. Only the
-   * SENTENCE was missing, and only reading it found that.
-   *
-   * This guard is a source sweep rather than a render test because the
-   * component needs a browser and this suite has none. It asserts the branch
-   * EXISTS and is reachable for the mode that produced the defect.
-   */
   const source = readFileSync(
     join(process.cwd(), "components/ask/ballot-ask.tsx"),
     "utf8",
@@ -657,11 +521,6 @@ test("ASK04: no reply mode may render silence on the ballot", () => {
 });
 
 test("ASK04: the ballot surface renders records even when synthesis produced none", () => {
-  /*
-   * The degradation ladder, as a property of the CLIENT: grounded → structured
-   * → honest gap. PR #211 found the opposite repeatedly — a client discarding a
-   * useful server reply because one optional field was null.
-   */
   const source = readFileSync(
     join(process.cwd(), "components/ask/ballot-ask.tsx"),
     "utf8",
@@ -693,23 +552,6 @@ test("ASK04: the ballot surface posts to the ONE engine, with its own surface", 
 });
 
 test("ASK04: a COUNTY division alone must resolve the state's governor", () => {
-  /*
-   * **THE INVARIANT I BROKE.** (2026-08-27.)
-   *
-   * `personEntities` in the grounded route first filtered the reader's
-   * divisions to those matching the BARE state id, then called
-   * `statewideExecutivesFor` with what survived. On the map that was invisible,
-   * because a map reader's division list happens to include the bare state. On
-   * the ballot it emptied the person inventory completely — the ballot's
-   * divisions are counties, places and districts — so "What has Katie Hobbs
-   * done as governor?" came back UNRESOLVED on the surface most likely to ask
-   * it, and told the reader we hold no such thing while we did.
-   *
-   * The contract was already right and already used this way by `senatorsFor`
-   * and the who-governs card: the state is derived by PREFIX. This pins it, so
-   * a future caller re-deriving it more strictly fails here instead of in
-   * production.
-   */
   const fromCounty = statewideExecutivesFor([
     "ocd-division/country:us/state:az/county:pima",
   ]);
@@ -723,7 +565,6 @@ test("ASK04: a COUNTY division alone must resolve the state's governor", () => {
   ]);
   assert.ok(fromDistrict.some((s) => s.name === "Katie Hobbs"));
 
-  /* FALSE-FIRST: the filter that shipped, asserted to produce nothing. */
   const brokenFilter = ["ocd-division/country:us/state:az/county:pima"].filter((id) =>
     /^ocd-division\/country:us\/state:[a-z]{2}$/.test(id),
   );

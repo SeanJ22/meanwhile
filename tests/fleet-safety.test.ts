@@ -69,8 +69,6 @@ function cost(usd: number | null, recordedAt: string): CostEntry {
 
 test("model admission accumulates cycle spend with no per-cycle cap; only the rolling ceiling stops it", () => {
   const cycle = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
-  // Three requests settle with no per-cycle or operational-night refusal — those
-  // caps are retired, so cycle spend simply accumulates.
   for (const work of ["one", "two", "three"]) {
     const reservation = cycle.reserveModelRequest("anthropic", work, REQUEST);
     cycle.settleModelRequest(reservation, RESPONSE);
@@ -115,7 +113,7 @@ test("rollingCeilingReached is the PRE-admission read of the ceiling — so the 
   assert.equal(boundary.rollingCeilingReached(0.6).reached, true, "a scout that cannot afford its worst case is not admitted");
   assert.equal(boundary.rollingCeilingReached(0).reached, false, "the spent total itself is still under the ceiling");
 
-  // CH-02: an unpriced charge is counted at its worst case, so the ceiling stays in force.
+  // An unpriced charge is counted at its worst case, so the ceiling stays in force.
   const nullRow = cost(null, recent);
   const tokenless: CostEntry = { ...nullRow, role: "SCOUT", cost: { ...nullRow.cost, inputTokens: null, outputTokens: null, usd: null } };
   const unmeasured = fundedController({
@@ -163,11 +161,7 @@ test("the rolling ceiling is the injected owner override when given, the fallbac
   }
 });
 
-/*
- * 2026-09-25: FleetSafety's `paused` flag was display-only — a model request
- * was reserved under the owner's runner pause. Both locks below refuse the PAID
- * request and leave the free fetch seam admitting.
- */
+/* Both locks below refuse the PAID request under a pause and leave the free fetch seam admitting. */
 test("the owner's runner pause refuses every model request, while free fetches and dispatches are still admitted", () => {
   const paused = fundedController({ now: NIGHT, costs: [], paused: true, clock: () => Date.parse(NIGHT) });
   assert.throws(() => paused.reserveModelRequest("anthropic", "scout-under-pause", REQUEST), (error: unknown) =>
@@ -457,18 +451,18 @@ test("a pool admission refused after its memory wait settles the unsent job at z
 test("requests and dispatches keep running across days without a cycle wall", () => {
   const nowMs = Date.parse(NIGHT);
   const requests = fundedController({ now: NIGHT, costs: [], clock: () => nowMs });
-  // No per-cycle request cap: far more than the retired 24 are all admitted.
+  // No per-cycle request cap.
   for (let i = 0; i < 100; i += 1) requests.admitProviderRequest("public-web", `request-${i}`);
   assert.equal(requests.snapshot(NIGHT).cycle.requests, 100);
 
-  // No per-cycle payload total: recording bytes past the retired 16 MiB never refuses.
+  // No per-cycle payload total.
   const bytes = fundedController({ now: NIGHT, costs: [], clock: () => nowMs });
   bytes.recordInboundBytes("large-response", 64 * 1024 * 1024);
   bytes.recordInboundBytes("more", 1);
   assert.equal(bytes.snapshot(NIGHT).cycle.payloadBytes, 64 * 1024 * 1024 + 1);
 
   const dispatch = fundedController({ now: NIGHT, costs: [], clock: () => nowMs });
-  // No per-cycle dispatch cap: far more than the retired 10 are all admitted.
+  // No per-cycle dispatch cap.
   for (let i = 0; i < 100; i += 1) assert.equal(dispatch.admitDispatch(`dispatch-${i}`).admit, true);
   assert.equal(dispatch.snapshot(NIGHT).cycle.dispatches, 100);
 
@@ -835,18 +829,6 @@ test("402 and quota refusals hard-latch one provider without probing or substitu
 })();
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
 test("public redirects are counted as separate provider requests under one byte ceiling", async () => {
   let calls = 0;
   const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
@@ -928,9 +910,7 @@ test("a Scout model request is admitted while a public read is in flight (the tu
   });
   const pending = read({ url: "https://example.test/big", method: "GET", headers: {}, timeoutMs: 1_000 });
   await new Promise<void>((resolve) => setImmediate(resolve));
-  // The deterministic read holds its (now bounded) reservation. A concurrent
-  // Scout model request must not be refused for payload bytes before its first
-  // turn — this is the contention that darkened the Scout lane in 2026-09.
+  // The deterministic read holds its bounded reservation; a concurrent Scout model request must not be refused for payload bytes before its first turn.
   const scoutRequest: ModelRequest = {
     model: "claude-opus-5-5",
     max_tokens: 8_192,

@@ -1,26 +1,14 @@
 /**
- * **The future-date law, in one place.**
+ * The future-date rules. Every published row is stored, but:
  *
- * PRL's Press Releases set advertises a range ending July 2027. We store every
- * row it publishes — dropping rows would be the product deciding a government's
- * record for it. But two things must hold, and they are different:
+ * 1. Nothing dated after now is displayed or counted (`isVisibleAsOf`, applied
+ *    at read time by the presentation layer).
+ * 2. The high-water mark is capped at now (`advanceWatermark`), so one
+ *    future-dated row cannot skip every real row that arrives before its date.
  *
- * 1. **Nothing dated after now is displayed or counted.** A row claiming
- *    January 2027, read on 22 September 2026, is not in any answer or
- *    percentage. That is `isVisibleAsOf`, applied at read time by the
- *    presentation layer — this module supplies the predicate.
- *
- * 2. **The high-water mark is capped at now.** The incremental cursor advances
- *    only over rows dated at or before now. A single future-dated row must not
- *    push the marker to 2027 and silently skip every real row that arrives
- *    between now and then. That is `advanceWatermark`.
- *
- * PRL's cursors come in two widths: a `date` like `2017-06-21` and a
- * `last_updated` like `2025-07-20 21:48:58`, neither carrying a timezone. They
- * are normalized to a UTC instant for comparison; the few hours of possible
- * skew are immaterial at a weekly cadence, and comparison is deterministic
- * rather than dependent on the host timezone (which raw `Date.parse` of a
- * space-separated stamp is).
+ * Cursors are a `date` (`2017-06-21`) or a `last_updated`
+ * (`2025-07-20 21:48:58`), neither with a timezone; both are normalized to a UTC
+ * instant so comparison does not depend on the host timezone.
  */
 
 /** Parse a PRL `date` or `last_updated` to epoch ms (UTC), or null if unusable. */
@@ -105,9 +93,8 @@ export function advanceWatermark(
       bestRaw = (raw as string).trim();
     }
   }
-  // The mark can never itself exceed now, by construction (only ms<=now move
-  // it). The explicit floor below defends against a previous mark that was
-  // written before this cap existed.
+  // The mark can never itself exceed now; the floor below also covers a
+  // previous mark stored later than now.
   if (bestMs !== null && bestMs > nowMs) {
     bestRaw = previousMarkRaw;
   }

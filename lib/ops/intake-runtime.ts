@@ -1,14 +1,7 @@
 import type { Sql } from "../control-plane/repository/pg-store.ts";
 import { analyzeStore, type IntakeDayCount, type TripwireFlag } from "../signal/tripwire.ts";
 
-/**
- * Canonical owner-facing observation of the live intake stores.
- *
- * The rows behind this observation remain in the production application data
- * plane. The standing runner takes this aggregate reading and attaches it to
- * its existing durable heartbeat; no report file, Git commit, deploy, or
- * software check participates in the path.
- */
+/** Owner-facing observation of the live intake stores, attached to the runner's existing durable heartbeat. */
 export const INTAKE_RUNTIME_FORMAT_VERSION = 1;
 export const INTAKE_RUNTIME_WINDOW_HOURS = 24;
 

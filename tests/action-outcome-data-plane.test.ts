@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -16,11 +15,12 @@ import {
 } from "../lib/officials/executive-actions.ts";
 import {
   azOfficialActionsCandidate,
+  PIMA_OUTCOME_TENANT,
   pimaLegistarOutcomesCandidate,
 } from "../lib/outcomes/data-plane.ts";
 import {
   getOutcomeSnapshot,
-  readOutcomeProjection,
+  readDoorOutcomeProjection,
   resetOutcomeSnapshotCache,
 } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
@@ -58,10 +58,50 @@ function actionReceipt(
   };
 }
 
+function action(n: string, occurredAt: string, title: string): ExecutiveActionStore["actions"][number] {
+  return {
+    id: `az-eo-2026-${n}`,
+    officeholderId: "statewide:az/governor",
+    officeholderName: "Test Governor",
+    officeTitle: "Governor",
+    ocdId: "ocd-division/country:us/state:az",
+    kind: "EXECUTIVE_ORDER",
+    designation: `Executive Order 2026-${n}`,
+    title,
+    occurredAt,
+    sourceUrl: `https://azgovernor.gov/office-arizona-governor/executive-order/2026-${n}`,
+    documentUrl: `https://azgovernor.gov/sites/default/files/executive-order-2026-${n}.pdf`,
+    sourceOrg: "Office of the Arizona Governor",
+    collectedAt: "2026-08-28",
+    occurredAtState: "PUBLISHED",
+    sessionId: null,
+    chapter: null,
+    coveredBills: [],
+    enactmentRoute: null,
+  } as ExecutiveActionStore["actions"][number];
+}
+
+function actionStore(): ExecutiveActionStore {
+  return {
+    note: "Read from the Governor's own executive-order index and detail pages.",
+    source: {
+      index: "https://azgovernor.gov/executive-orders",
+      publisher: "Office of the Arizona Governor",
+      permission: "robots.txt allows content paths",
+      collectedAt: "2026-08-28",
+    },
+    denominator: { indexedAcrossPagesWalked: 37, indexPagesWalked: 4, detailPagesRead: 12, reachedEndOfIndex: false },
+    legislative: null,
+    actions: [
+      action("02", "2026-07-08", "Prohibiting State Government Workers from Using Nonpublic Information for Personal Profit"),
+      action("01", "2026-05-20", "Protecting Paychecks"),
+    ],
+  };
+}
+
 function oneActionStore(): { store: ExecutiveActionStore; receipt: ManualSourceSetReceipt } {
-  const full = JSON.parse(readFileSync("data/states/az/officials/az-governor-actions.json", "utf8")) as ExecutiveActionStore;
-  const action = full.actions.find((row) => row.documentUrl !== null) ?? full.actions[0]!;
-  const store = { ...full, actions: [action] };
+  const full = actionStore();
+  const store = { ...full, actions: [full.actions[0]!] };
   return {
     store,
     receipt: actionReceipt(store, "2026-09-08T18:00:00.000Z"),
@@ -69,10 +109,97 @@ function oneActionStore(): { store: ExecutiveActionStore; receipt: ManualSourceS
 }
 
 function oneGoodSitting(): OutcomeSnapshot {
-  const full = JSON.parse(readFileSync("data/states/az/outcomes/legistar-outcomes.json", "utf8")) as OutcomeSnapshot;
-  const sitting = full.sittings.find((row) => row.extraction === "RETRIEVED" && row.voteRequestFailures.length === 0);
-  assert.ok(sitting, "the engineering seed needs one successfully acquired sitting");
-  return { ...full, tenants: ["pima"], sittings: [sitting] };
+  const provenance = {
+    endpoint: "https://webapi.legistar.com/v1/pima/events/1801/eventitems",
+    sourceOrg: "Pima County Clerk of the Board",
+    readOn: "2026-08-29",
+  };
+  const detail = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1801&GID=243";
+  const agendaFile = "https://legistar.granicus.com/pima/meetings/2026/5/1801_A_Board_of_Supervisors_Agenda.pdf";
+  const minutesFile = "https://legistar.granicus.com/pima/meetings/2026/5/1801_M_Board_of_Supervisors_Summary.pdf";
+  return {
+    generatedOn: "2026-08-29",
+    generatedAt: "2026-08-30T05:40:12.819Z",
+    tenants: ["pima"],
+    sittings: [{
+      meetingId: "legistar:pima:1801",
+      bodyId: "ocd-division/country:us/state:az/county:pima#governing",
+      ocdId: "ocd-division/country:us/state:az/county:pima",
+      slug: "pima",
+      eventId: 1801,
+      bodyName: "Board of Supervisors",
+      jurisdiction: "Pima County, AZ",
+      startsAt: "2026-05-12T13:00:00-07:00",
+      sourceOrg: "Pima County Clerk of the Board",
+      sourceUrl: detail,
+      extraction: "RETRIEVED",
+      extractionNote: null,
+      publication: {
+        agendaStatusName: "Final",
+        agendaStatusId: 10,
+        agendaFile,
+        agendaLastPublishedUtc: "2026-05-11T22:39:33.11",
+        minutesStatusName: "Draft",
+        minutesStatusId: 9,
+        minutesFile,
+        minutesLastPublishedUtc: "2026-05-13T18:56:29.663",
+        inSiteUrl: detail,
+        lastModifiedUtc: "2026-05-13T18:56:29.83",
+        videoStatus: "Public",
+        observedAt: "2026-08-30T05:38:01.398Z",
+      },
+      minutesPointer: {
+        url: minutesFile,
+        status: "Draft",
+        host: "legistar.granicus.com",
+        retrievalNote: "Not retrieved; the host disallows all paths.",
+      },
+      agenda: [{
+        recordClass: "AGENDA",
+        eventItemId: 314842,
+        eventId: 1801,
+        sequence: 9,
+        agendaNumber: "2.",
+        title: "PLEDGE OF ALLEGIANCE",
+        matterFile: null,
+        matterType: null,
+        provenance,
+      }],
+      outcomes: [{
+        recordClass: "ACTION_SUMMARY",
+        eventItemId: 314842,
+        eventId: 1801,
+        matterFile: null,
+        action: "waive privilege",
+        disposition: "NOT_RECORDED",
+        dispositionRaw: null,
+        dispositionConflict: null,
+        dispositionGap: "The published record carries no pass or fail result for the motion.",
+        mover: null,
+        seconder: null,
+        tallyText: "Without objection, the Chair waived this item.",
+        matterStatus: null,
+        onConsentCalendar: false,
+        rollCall: "OUTCOME_WITHOUT_ROLL_CALL",
+        rollCallGap: "The publisher recorded the action and no per-person roll call for it.",
+        provenance,
+      }],
+      rollCalls: [],
+      failedRollCallExtractions: [],
+      voteRequestFailures: [],
+      routesWalked: ["WEBAPI_EVENTS", "WEBAPI_EVENTITEMS", "WEBAPI_EVENTITEM_VOTES"],
+      publicationObservations: [{
+        meetingId: "legistar:pima:1801",
+        provenance: "FIRST_PARTY_PUBLISHER",
+        report: "AVAILABLE",
+        observedAt: "2026-08-30T05:38:01.398Z",
+        observedUrl: detail,
+        sourceOrg: "Pima County Clerk of the Board",
+        evidenceQuote: `EventAgendaStatusName=Final; EventAgendaFile=${agendaFile}; EventAgendaLastPublishedUTC=2026-05-11T22:39:33.11`,
+        routeId: "WEBAPI_EVENT",
+      }],
+    }],
+  } as unknown as OutcomeSnapshot;
 }
 
 const evidence = [{
@@ -121,9 +248,8 @@ test("an unreceipted official action is held alone while its prior member and su
 });
 
 test("one blocked Arizona publication cannot hold an unrelated valid official action", async () => {
-  const full = JSON.parse(readFileSync("data/states/az/officials/az-governor-actions.json", "utf8")) as ExecutiveActionStore;
-  const actions = full.actions.filter((row) => row.documentUrl !== null).slice(0, 2);
-  assert.equal(actions.length, 2, "engineering evidence needs two independently published action documents");
+  const full = actionStore();
+  const actions = full.actions.slice(0, 2);
   const firstStore = { ...full, actions };
   const firstReceipt = actionReceipt(firstStore, "2026-09-08T20:00:00.000Z");
   const memory = new MemoryRoutineDataStore();
@@ -180,7 +306,6 @@ test("a failed Legistar sitting is durable, cannot replace LKG, and cannot affec
     retrievedAt: "2026-09-08T19:00:00.000Z",
     sourceThrough: "2026-09-08T18:59:00.000Z",
   });
-  // The standing runner's routine door is this scope's only writer.
   const promoted = await processRegisteredRoutineCandidate(memory, "pima-legistar-outcomes", good, "2026-09-08T19:01:00.000Z");
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.readerReadback?.status, "PASS");
@@ -202,7 +327,7 @@ test("a failed Legistar sitting is durable, cannot replace LKG, and cannot affec
   assert.equal((await memory.events(failed.id)).at(-1)?.state, "SOURCE_BLOCKED");
   assert.equal((await memory.readPromotion("MEETING_OUTCOME", "US-AZ:county:pima:legistar-outcomes"))?.versionId, good.id);
 
-  const read = await readOutcomeProjection({ store: memory, bypassCache: true });
+  const read = await readDoorOutcomeProjection(PIMA_OUTCOME_TENANT.scope, { store: memory, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(getOutcomeSnapshot().sittings[0]?.meetingId, snapshot.sittings[0]?.meetingId);
   resetOutcomeSnapshotCache();
@@ -214,7 +339,7 @@ test("store failure never reopens tracked action or outcome snapshots", async ()
     readCandidate: async () => null,
   };
   const actionRead = await readExecutiveActionsProjection({ store: failedStore, bypassCache: true });
-  const outcomeRead = await readOutcomeProjection({ store: failedStore, bypassCache: true });
+  const outcomeRead = await readDoorOutcomeProjection(PIMA_OUTCOME_TENANT.scope, { store: failedStore, bypassCache: true });
   assert.equal(actionRead.kind, "STORE_UNREACHABLE");
   assert.equal(outcomeRead.kind, "STORE_UNREACHABLE");
   assert.equal(executiveActionStore(), null);

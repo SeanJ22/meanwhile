@@ -13,18 +13,12 @@ import type { PrlDataset } from "./inventory.ts";
 import type { PrlIngestReceipt, PrlProfileKind } from "./receipt.ts";
 
 /**
- * **The ingestion engine: download, filter, land, mark.**
+ * The ingestion engine: download, filter, land, mark.
  *
- * One pass over the source. Large files stream so the whole never sits in
- * memory; their raw rows partition into bounded object-storage objects and only
- * the new ones (cursor newer than the mark) are written. Small profile files
- * are read whole and precomputed. Either way the run ends with a receipt whose
- * high-water mark is capped at now, so a future-dated row can neither advance
- * the marker nor be dropped.
- *
- * Everything the engine touches — the object store, the clock, the source
- * bytes, the prior receipt — is injected, so the logic is exercised without a
- * network or a database.
+ * Large files stream; their raw rows partition into bounded object-storage
+ * objects and only rows newer than the mark are written. Small profile files
+ * are read whole and precomputed. The receipt's high-water mark is capped at
+ * now. The object store, clock, source bytes and prior receipt are injected.
  *
  * @freshness-reads-here — the receipt's `fetchedAt` is stamped from the run's
  * injected `now`; it is the retrieval instant this ingestion records.

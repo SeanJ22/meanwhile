@@ -1,5 +1,5 @@
 /**
- * CH-24 part 2: the standing hunter lane arms the same paid-work guards the
+ * The standing hunter lane arms the same paid-work guards the
  * round does, from the owner's live controls and the round's host-local Send
  * and area reading. Every unreadable or stale input holds paid work by name;
  * a task's Send lines come from its own obligation's marks; the lane's own

@@ -14,7 +14,6 @@ import { meetingPartitionFreshnessMs } from "../civic-data/contracts.ts";
 import {
   HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
-  heldMeetingPartitionFor,
   type HeldMeetingPartition,
   type MeetingPartitionContract,
 } from "../civic-data/meeting-partitions.ts";

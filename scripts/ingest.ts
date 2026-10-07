@@ -2,9 +2,8 @@
  * Run one source adapter locally.
  *
  * @freshness-reads-here — a derived family member's retrievedAt is the instant its own read returned, minted in
- * readDerivedFamilyMember, the function that performed that read (C16).
+ * readDerivedFamilyMember, the function that performed that read.
  *
- *   pnpm ingest mock
  *   pnpm ingest composite -- --promote --only-partition=<contract-id>
  *
  * Adapters are looked up by directory name under lib/sources/. Adding a
@@ -13,7 +12,7 @@
  *
  * `composite` additionally prints the per-child report (fetched, normalized,
  * drops split by reason, failures) and retrieves agenda documents for the
- * meetings that carry one — capped and serialized, with unchanged documents
+ * meetings that carry one — serialized, with unchanged documents
  * skipped by content hash.
  */
 
@@ -87,7 +86,6 @@ import { makeIqm2Source } from "../lib/sources/iqm2/index.ts";
 import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { legistarSource } from "../lib/sources/legistar/index.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
-import { mockSource } from "../lib/sources/mock/index.ts";
 import { SOURCE_WIRING, isUnreadableRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
 import { isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
@@ -135,7 +133,6 @@ import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, readMeetingRes
 let REGISTRY: Registry | null = null;
 
 const SOURCES: Record<string, () => MeetingSource<unknown>> = {
-  mock: () => mockSource as unknown as MeetingSource<unknown>,
   // Everything below hits the network. Serialized and paced — see
   // lib/sources/http.ts and lib/sources/legistar/client.ts.
   legistar: () => legistarSource as unknown as MeetingSource<unknown>,
@@ -151,16 +148,13 @@ const SOURCES: Record<string, () => MeetingSource<unknown>> = {
     makeIqm2Source(wiringForTypes(["IQM2"])) as unknown as MeetingSource<unknown>,
   revize: () =>
     makeRevizeSource(wiringForTypes(["REVIZE"])) as unknown as MeetingSource<unknown>,
-  // F22: the standing partition budget, not the Reader's request budget.
+  // The standing partition budget, not the Reader's request budget.
   composite: () =>
     buildCompositeSource({
       timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
       captureAcquisitionEvidence: true,
     }) as unknown as MeetingSource<unknown>,
 };
-
-/** How many agenda documents one ingest run will fetch. Politeness, not coverage. */
-const AGENDA_RETRIEVAL_CAP = 8;
 
 export function selectedMeetingPartitions(args: readonly string[]): readonly MeetingPartitionContract[] {
   if (args.some((arg) => arg.startsWith("--partitions="))) {
@@ -210,22 +204,9 @@ export function documentUrlFor(meeting: Meeting): string | null {
   if (meeting.agendaUrl) return meeting.agendaUrl;
   if (meeting.status !== "SCHEDULED") return null;
   /*
-   * **THE NOTICE PAGE BELONGS TO A BODY, NOT TO A DIVISION** (NH Hunt 4,
-   * 2026-08-21).
-   *
-   * This used to take the FIRST wiring row on the meeting's division that
-   * carried a notice URL. That was harmless while one division had one wired
-   * body and became a wrong document the moment a division had two: adding the
-   * Lake Todd Village District to Newbury's division attached Lake Todd's
-   * notice page to the Town of Newbury's own meetings, and the ingest went and
-   * fetched it for them. A collapsing join, exactly the D40 shape — one key
-   * standing in for many rows.
-   *
-   * So the body is matched first, by the name the wiring itself publishes. The
-   * division-wide fallback survives, because a town whose boards all share one
-   * calendar page is the common case and it is correct — but only when every
-   * notice URL on that division AGREES. Where they disagree, there is no
-   * single right answer and this returns nothing rather than picking one.
+   * The notice page belongs to a body, not a division: the body is matched
+   * first; the division-wide page is used only when every notice URL on the
+   * division agrees, and nothing is returned when they disagree.
    */
   const onDivision = SOURCE_WIRING.filter(
     (row) => row.noticeUrl && row.ocdId !== null && row.ocdId === meeting.ocdId,
@@ -235,22 +216,9 @@ export function documentUrlFor(meeting: Meeting): string | null {
   const ownBody = onDivision.find((row) => row.bodyId === meeting.bodyId);
   if (ownBody) return ownBody.noticeUrl ?? null;
   /*
-   * **A DIVISION'S ONLY NOTICE PAGE CAN BELONG TO ANOTHER GOVERNMENT.**
-   * (2026-09-24.)
-   *
-   * "Every notice URL on the division agrees" was also true when the
-   * division carried exactly one, and that one was another publisher's. The
-   * Lake Todd Village District row is keyed on Newbury and publishes on the
-   * Town of Bradford's calendar, so every unlinked Newbury sitting was lent
-   * Bradford's calendar. The Central Arizona Water Conservation District is
-   * the only notice page on Pima County's division, so Pima's Board of
-   * Supervisors study session of 2026-10-13 was served CAP's board page as
-   * its agenda, under "Pima County Clerk of the Board". Production held 27
-   * such documents on 2026-09-24, every one served by /api/agenda.
-   *
-   * So only the sitting's own publisher's page is lent across bodies, and the
-   * body-name match reads only that publisher's rows too: two publishers on
-   * one division can each have a "Planning Board".
+   * A division's only notice page can belong to another government, so only
+   * the sitting's own publisher's page is lent across bodies, and the body-name
+   * match reads only that publisher's rows.
    */
   const publisher = meeting.provenance?.sourceOrg ?? null;
   const own = onDivision.filter((row) => publisher !== null && row.publishingOrg === publisher);
@@ -271,18 +239,11 @@ function readThroughNoticePage(meeting: Meeting): boolean {
 }
 
 /**
- * A held document that is not this sitting's agenda (D1): a notice page that
- * is neither the sitting's body's nor its publisher's, or a wiring notice
- * page, not the sitting's own link, that states no agenda item. Production
- * held 70 notice-page documents on 2026-09-24 and not one yields an agenda
- * item.
- *
- * Ownership is the one rule every reader surface asks
- * (`isAnotherBodysNoticePage`, lib/meetings/notice-pages.ts), by body id or
- * publisher (R14, 2026-09-25). This file used to keep its own publisher-only
- * copy, under which Tucson Unified's own notice page was "another's" — its
- * sittings are published as "Tucson Unified School District", its wiring row
- * as "… Governing Board" — and was set aside whatever it said.
+ * A held document that is not this sitting's agenda: a notice page that is
+ * neither the sitting's body's nor its publisher's, or a wiring notice page,
+ * not the sitting's own link, that states no agenda item. Ownership is the one
+ * rule every reader surface asks (`isAnotherBodysNoticePage`,
+ * lib/meetings/notice-pages.ts).
  */
 export function heldNoticePageIsNotItsAgenda(
   meeting: Pick<Meeting, "agendaUrl" | "provenance" | "bodyId">,
@@ -297,16 +258,9 @@ export function heldNoticePageIsNotItsAgenda(
 
 /**
  * Why an agenda link is held as a link and not read, or null when the document
- * may be requested. The one reason is a retired route whose host nothing may
- * fetch (`isUnreadableRetiredMeetingHost`: a host that no longer resolves,
- * such as Newbury's CivicWeb portal).
- *
- * robots.txt is never a reason (owner decision 2026-09-25: "Robots.txt alone
- * must not block acquisition"). Until then this also refused the Legistar
- * vendor's document host (`RECORDED_DISALLOWED`, robots `Disallow: /`) and
- * Pima Community College's Diligent tenant, retired for robots.txt alone. Both
- * are read again; an access control met on the way (a 401, 403 or 429, a
- * challenge) is a failed read of that link, recorded, and never worked around.
+ * may be requested. The one reason is a retired route whose host no longer
+ * resolves (`isUnreadableRetiredMeetingHost`). robots.txt is never a reason; an
+ * access control met on the way is a failed read, recorded, never worked around.
  */
 export type AgendaRetrievalRefusal = "RETIRED_ROUTE";
 
@@ -329,17 +283,9 @@ export class AgendaRedirectRefused extends Error {
 const AGENDA_REDIRECT_LIMIT = 5;
 
 /**
- * **EVERY REDIRECT HOP IS A NEW REQUEST, AND IS ASKED THE SAME QUESTION.**
- * (2026-09-24, RULING 263.)
- *
- * `fetch` follows redirects by itself, so {@link agendaRetrievalRefusal} held
- * only for the first hop: a link that redirects into a refused host would be
- * read. docs/sources.md already names the pattern — the host in a document URL
- * is frequently not the host of the portal that listed it. This follows each
- * redirect itself and refuses a hop into a refused host exactly as a refused
- * first hop is refused: the link is held and nothing is requested from that
- * host. The base fetch is read per call, so a stubbed global in a test is the
- * one used.
+ * Every redirect hop is a new request and is asked the same question, so a
+ * link that redirects into a refused host is held. The base fetch is read per
+ * call, so a stubbed global in a test is the one used.
  */
 export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
   return (async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -371,21 +317,10 @@ function portalDetailPageFor(meeting: Meeting): string | null {
 }
 
 /**
- * **A VENDOR-HOST AGENDA IS READ THROUGH THE SITTING'S PORTAL FIRST, AND FROM
- * THE VENDOR WHEN THE PORTAL FALLS SHORT.** (2026-09-24; the vendor file is
- * the fallback since 2026-09-25.)
- *
- * A Legistar sitting whose API agenda file sits on the vendor's document host
- * (`legistar.granicus.com`) has the same agenda on the tenant's own portal,
- * linked from the sitting's detail page, which the row already holds
- * (lib/sources/legistar/portal-agenda-link.ts). The portal route came in on
- * 2026-09-24, while the vendor host was refused for its robots.txt. Since the
- * owner decision of 2026-09-25 the vendor file is readable again, and the
- * portal stays first because every such sitting read since 2026-09-24 holds
- * its versions under the portal URL: reading the vendor copy instead would
- * store the same agenda again under a second address. When the portal page
- * links no agenda yet, or cannot be read, the vendor file is read — the other
- * public route to the same document.
+ * A vendor-host agenda (`legistar.granicus.com`) is read through the sitting's
+ * portal detail page first (lib/sources/legistar/portal-agenda-link.ts), since
+ * earlier versions are held under the portal URL, and from the vendor file
+ * when the portal page links none or cannot be read.
  */
 function readsThroughPortal(meeting: Meeting, url: string): boolean {
   return isLegistarDocumentHost(url) && portalDetailPageFor(meeting) !== null;
@@ -412,16 +347,8 @@ async function portalAgendaLinkFor(meeting: Meeting, fetchImpl: typeof fetch): P
 
 /**
  * Held document versions in the order they were read: `retrievedAt`, then id.
- * (2026-09-24.)
- *
- * The store asks "is this read new?" of a sitting's LAST version by position.
- * The partition payload was written as the store's rows followed by the rows
- * the store had set aside as repeats, so a sitting's held rows drifted out of
- * order: Sunnyside 167 held its 2026-09-14 skip links interleaved with its
- * 09-24 reads. The last row by position was then an old one, an unchanged read
- * compared against it looked new, and Sunnyside 167 and 174 each stored the
- * same words again on every run from 03:25Z. Seeding and writing in read order
- * keeps "last" meaning latest. No row is added, dropped or changed.
+ * The store compares a read against a sitting's LAST version by position, so
+ * rows must be seeded and written in read order. No row is added, dropped or changed.
  */
 export function inRetrievalOrder<T extends Pick<AgendaDocument, "id" | "retrievedAt">>(
   documents: readonly T[],
@@ -449,7 +376,7 @@ export function seedHeldAgendaDocuments(
   readonly carried: number;
   readonly refused: number;
   readonly refusedUrls: ReadonlySet<string>;
-  /** Notice pages that are not their sitting's agenda (D1), left out of this run's store. */
+  /** Notice pages that are not their sitting's agenda, left out of this run's store. */
   readonly noticePagesSetAside: number;
   readonly noticePageUrlsSetAside: ReadonlySet<string>;
 } {
@@ -488,26 +415,12 @@ export function seedHeldAgendaDocuments(
 }
 
 /**
- * Which linked sittings one run reads first. (2026-09-24.)
- *
- * The cap is politeness per run, so this order decides what a reader can ever
- * be given. It was "holds nothing yet" first, registry order after, and two
- * kinds of sitting starved behind it:
- * - A sitting whose link CHANGED holds versions from its old link, so it
- *   ranked as held. Tucson Unified's Board Actions PDFs for sittings 498, 493,
- *   492, 491, 485 and 484, linked since 2026-09-24, were never read.
- * - A body's notice page, given to each unlinked scheduled sitting, is refused
- *   as a landing page on every read and so is never held by any of them, and
- *   all of them ranked first on every run. Seven Tucson Unified sittings spent
- *   seven of the eight reads on govboard.tusd1.org/ each hour.
- *
- * So the rank is the link, not the sitting: first a link never read for this
- * sitting; then a re-read of a link it holds; last a link another sitting
- * already holds (a landing page, or a shared agenda), read when a read is left
- * over. A vendor-host link read through the sitting's portal page counts as
- * read when the sitting holds the portal's own agenda link or the vendor file.
- * Within a rank, the sitting nearest `nowMs` goes first, so an upcoming agenda
- * is re-checked before one from July.
+ * Which linked sittings one run reads first. The rank is the link, not the
+ * sitting: first a link never read for this sitting; then a re-read of a link
+ * it holds; last a link another sitting already holds (a landing page, or a
+ * shared agenda). A vendor-host link read through the sitting's portal page
+ * counts as read when the sitting holds the portal's agenda link or the vendor
+ * file. Within a rank, the sitting nearest `nowMs` goes first.
  */
 export function agendaRetrievalOrder(
   meetings: readonly Meeting[],
@@ -524,7 +437,7 @@ export function agendaRetrievalOrder(
     const url = documentUrlFor(meeting);
     if (url === null) return 3;
     // A body's notice page is read after every sitting's own link: it is the
-    // body's page, and one that states no agenda item is never held (D1).
+    // body's page, and one that states no agenda item is never held.
     if (readThroughNoticePage(meeting)) return 2;
     if (heldFromLink(meeting, url)) return 1;
     return store.isUrlOnAnotherMeeting(url, meeting.id) ? 2 : 0;
@@ -542,21 +455,9 @@ export function agendaRetrievalOrder(
 
 export async function retrieveAgendas(meetings: Meeting[]) {
   /*
-   * **A LINK INTO A DEAD RETIRED ROUTE'S HOST IS HELD AS A LINK, NEVER READ.**
-   * (2026-09-23, RULING 283 / RULING 263; narrowed 2026-09-25.)
-   *
-   * A body whose old agenda platform is retired can still publish links into
-   * it on its own pages, and a reader may follow one. When that host no
-   * longer resolves (Newbury's CivicWeb portal) there is nothing to read, so
-   * the link is kept on the meeting and nothing is requested. Counted, so a
-   * held link never reads as a retrieval that failed or an agenda nobody
-   * posted.
-   *
-   * robots.txt is never the reason (owner decision 2026-09-25). A route
-   * retired for robots.txt alone keeps its clock off and its host readable
-   * (`hostsReadable`, RETIRED_MEETING_ROUTES): Pima Community College's links
-   * into its Diligent tenant are read like any public agenda link, and the
-   * Legistar vendor's document host is read (below).
+   * A link into a retired route's host that no longer resolves is kept on the
+   * meeting and never requested, and counted. robots.txt is never the reason
+   * (`hostsReadable`, RETIRED_MEETING_ROUTES).
    */
   const heldAsLinks = meetings.filter((m) => {
     const url = documentUrlFor(m);
@@ -584,24 +485,22 @@ export async function retrieveAgendas(meetings: Meeting[]) {
     const url = documentUrlFor(m);
     return url !== null && agendaRetrievalRefusal(url) === null;
   });
-  // A link never read for its sitting goes first (`agendaRetrievalOrder`):
-  // the cap is politeness per run, so over repeated refreshes every agenda
-  // gets retrieved before any gets re-checked.
-  const capped = agendaRetrievalOrder(withAgenda).slice(0, AGENDA_RETRIEVAL_CAP);
+  // A link never read for its sitting goes first (`agendaRetrievalOrder`).
+  const capped = agendaRetrievalOrder(withAgenda);
   let stored = 0;
   let revised = 0;
   /* Documents refused as landing pages — stated, never silently dropped. */
   let landingPages = 0;
   let unchanged = 0;
   let failed = 0;
-  /* Failed reads kept off a sitting that already holds a version (RULING 269). */
+  /* Failed reads kept off a sitting that already holds a version. */
   let failedOverHeld = 0;
   /* Links that redirected into a refused host: held, never followed. */
   let redirectsRefused = 0;
   /* Vendor-host links read through the portal, and those read from the vendor's file instead. */
   let readViaPortal = 0;
   let readFromVendor = 0;
-  /* Notice-page reads that stated no agenda item, so no sitting holds them (D1). */
+  /* Notice-page reads that stated no agenda item, so no sitting holds them. */
   let noticePagesRefused = 0;
   /* A notice page is one body's page: read once per run, however many sittings reach it. */
   const noticePageRefusedThisRun = new Set<string>();
@@ -651,28 +550,10 @@ export async function retrieveAgendas(meetings: Meeting[]) {
         );
       }
       /*
-       * **A LANDING PAGE IS NOT AN AGENDA, AND THE CORPUS PROVES IT 56 TIMES
-       * OUT OF 56.** (2026-08-27.)
-       *
-       * Measured across the committed snapshot: of 198 agenda documents, 56
-       * share a URL with another meeting, and NOT ONE of those 56 yields a
-       * single agenda item. Of the 142 documents on a URL of their own, 67
-       * (47%) do. The shared class has never once given a reader an agenda —
-       * it inflates `documentsHeld`, and it is what put the Town of
-       * Bradford's calendar on fourteen Newbury meetings.
-       *
-       * The producers are two: an adapter setting `agendaUrl` to a portal
-       * ROOT (Vail's Highbond, Tucson Unified's board page), and the
-       * division-wide notice-URL fallback in `documentUrlFor` (Bradford's and
-       * Warner's town calendars). Both end at the same place — the body's own
-       * meetings page, stored as though it were one sitting's agenda.
-       *
-       * So the rule is drawn where the evidence is, and no wider: a document
-       * is refused when it BOTH extracts no agenda item AND is already stored
-       * against a different meeting. A genuine shared agenda — two bodies
-       * meeting jointly under one document — yields items and is kept. The
-       * meeting keeps its own `agendaUrl` either way, so the reader can still
-       * follow the link; we simply stop calling it an agenda we hold.
+       * A landing page is not an agenda: a document is refused when it BOTH
+       * extracts no agenda item AND is already stored against a different
+       * meeting. A genuine shared agenda yields items and is kept; the meeting
+       * keeps its own `agendaUrl` either way.
        */
       const alreadyOnAnotherMeeting = agendaDocumentStore.isUrlOnAnotherMeeting(
         doc.documentUrl,
@@ -683,15 +564,9 @@ export async function retrieveAgendas(meetings: Meeting[]) {
         continue;
       }
       /*
-       * **A NOTICE PAGE THAT STATES NO AGENDA ITEM IS NOT THIS SITTING'S
-       * AGENDA, FOR THE FIRST SITTING AS FOR EVERY OTHER.** (2026-09-24, D1.)
-       * The rule above refuses a page only once another sitting holds it, so
-       * the first unlinked sitting to reach a body's notice page kept it:
-       * Mesa's council meetings page is held as sitting 1343183's agenda and a
-       * reader is shown it as a read agenda with no items. Measured in
-       * production the same day, 70 held documents came from notice pages and
-       * not one yields an agenda item. A notice page that does state items (an
-       * agenda posted on the notice) is still held.
+       * A notice page that states no agenda item is not this sitting's agenda,
+       * for the first sitting to reach it as for every other. One that states
+       * items is still held.
        */
       if (viaNoticePage && agendaItems(doc.text ?? "").length === 0) {
         noticePagesRefused++;
@@ -700,13 +575,10 @@ export async function retrieveAgendas(meetings: Meeting[]) {
       }
 
       /*
-       * **A FAILED READ IS NEVER A NEW VERSION OVER ONE WE HOLD.** (RULING 269,
-       * 2026-09-23.) It is reported above and counted below, and nothing is
-       * stored: the store compares a failed row by its bytes alone, so a page
-       * whose bytes change on every request (Diligent's ViewState) would add a
-       * "version" every hour, and a failed read stored newest would stand in
-       * front of the text a reader was being shown. A sitting that holds
-       * nothing yet still records the failed read, so the gap is named.
+       * A failed read is never a new version over one we hold: the store
+       * compares a failed row by bytes alone, so a page whose bytes change per
+       * request would add a "version" every run. A sitting that holds nothing
+       * yet still records the failed read.
        */
       if (doc.extraction === "failed" && agendaDocumentStore.latestFor(doc.meetingId)) {
         failedOverHeld++;
@@ -731,8 +603,8 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   }
 
   console.log(
-    `agenda documents: ${withAgenda.length} linked, ${capped.length} fetched ` +
-      `(cap ${AGENDA_RETRIEVAL_CAP}), ${stored} stored, ${revised} revisions, ` +
+    `agenda documents: ${withAgenda.length} linked, ${capped.length} fetched, ` +
+      `${stored} stored, ${revised} revisions, ` +
       `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed, ` +
       `${failedOverHeld} failed read(s) not stored over a held version, ` +
       `${redirectsRefused} redirect(s) into a refused host not followed, ` +
@@ -785,7 +657,7 @@ async function readDerivedFamilyMember(member: DerivedWiringRecord, fetchImpl: t
 }
 
 /**
- * DB-21: each member of a derived family records its own last success or failure on its own door (never the
+ * Each member of a derived family records its own last success or failure on its own door (never the
  * family's, so one failing calendar does not mark its healthy neighbours). Only with the door registry in use; a
  * registry that cannot be written never changes the read's outcome.
  */
@@ -813,7 +685,7 @@ async function recordFamilyMemberOutcomes(reads: readonly FamilyMemberRead[]): P
 }
 
 /**
- * **ONE STATE'S DERIVED MEETING FAMILY, ONE CANDIDATE, EVERY MEMBER ON ITS OWN EVIDENCE** (C16).
+ * **ONE STATE'S DERIVED MEETING FAMILY, ONE CANDIDATE, EVERY MEMBER ON ITS OWN EVIDENCE**.
  *
  * The members are the promoted meeting-source wiring's rows for the state. Each ACTIVE member is read on its own
  * row; a SUSPENDED or failed member keeps its last verified sittings (`lib/civic-data/derived-meeting-family.ts`).
@@ -913,7 +785,7 @@ export async function promoteDerivedMeetingFamily(
   const finalBuild = { ...build, snapshot: { ...build.snapshot, meetings: [...placed.meetings],
     ...(venueReferenceEvidence.length > 0 ? { venueReferenceEvidence } : {}) } };
   const candidate = derivedFamilyCandidate(partition, finalBuild);
-  // An unchanged family pass is receipted on the pointed version (R23).
+  // An unchanged family pass is receipted on the pointed version.
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
   if (outcome.promoted || outcome.confirmed) await publishVenuePins(store, partition.id, census.package);
@@ -952,8 +824,7 @@ async function main() {
   }
   if (name === "composite" && !promote) {
     console.error(
-      "composite is a production-capable meetings refresh and requires --promote; " +
-        "tracked data/meetings-snapshot.json is a bootstrap fixture, not a promotion door",
+      "composite is a production-capable meetings refresh and requires --promote",
     );
     process.exitCode = 1;
     return;
@@ -963,8 +834,8 @@ async function main() {
     : [];
 
   /*
-   * A derived family (C16) reads its members from the promoted wiring, never from SOURCE_WIRING. It reads the wiring
-   * before anything else: every registered state has a family (2026-09-25), and one with no member yet refuses by
+   * A derived family reads its members from the promoted wiring, never from SOURCE_WIRING. It reads the wiring
+   * before anything else: every registered state has a family, and one with no member yet refuses by
    * name without the registry and venue preload (about 24 MB) a member's read needs.
    */
   if (promote && partitions.length === 1 && partitions[0]!.derivedFamily !== null) {
@@ -993,15 +864,8 @@ async function main() {
     ? await readPreviousMeetingPartition(promotionStore, partitions[0]!)
     : null;
 
-  // Continental US, wide enough to sweep everything the adapter has.
-  //
-  // The window is stated (M58, 2026-08-15). It used to be omitted, which read
-  // as "give me everything" and meant something else entirely to any adapter
-  // whose upstream defaults to upcoming-only: Apptegy quietly returned the
-  // future alone, so Vail and Rockaway Township's school board could never
-  // show a concluded meeting and nothing in the run said so. The window is
-  // the app's own cascade window, so the snapshot holds exactly what a reader
-  // can be shown and no more.
+  // Continental US, wide enough to sweep everything the adapter has. The window
+  // is always stated: some upstreams default to upcoming-only when it is omitted.
   const now = Date.now();
   const retained = await retainMeetingFetchBytes(() => source.fetch({
     lat: 39.5,
@@ -1036,12 +900,9 @@ async function main() {
           ? `  ${child.source}: ${child.fetched} fetched, ${child.normalized} normalized, ` +
               `drops: ${d.unknownVenue} unknownVenue / ${d.unplaceableInTime} unplaceableInTime / ` +
               `${d.notConfigured} notConfigured` +
-              // D18: `placeless` is no longer a drop — those meetings are KEPT,
-              // with no place and no pin. Printing it under "drops" would say
-              // the opposite of what the run did.
+              // `placeless` is not a drop: those meetings are kept, with no place and no pin.
               `, kept online: ${d.placeless}`
-          : // F22: the two kinds of nothing, told apart in the line a human
-            // reads. Each is recorded only for the selected source/body;
+          : // The two kinds of nothing, told apart. Each is recorded only for the selected source/body;
             // neither becomes an aggregate verdict over sibling partitions.
             `  ${child.source}: ${child.failure === "JOB" ? "JOB FAILURE" : "WALLED"} — ${child.error}`,
       );
@@ -1053,33 +914,13 @@ async function main() {
     // version rather than replacing it.
     if (previous) {
       /*
-       * **A CARRIED-FORWARD DOCUMENT IS RE-CHECKED, BECAUSE A WIRING ERROR
-       * OTHERWISE BECOMES PERMANENT.** (2026-08-27.)
+       * A carried-forward document is re-checked, because a wiring error would
+       * otherwise become permanent: a document attached to meetings of MORE
+       * THAN ONE GOVERNMENT is nobody's agenda and is dropped (the store is
+       * append-only, so a kept row would be re-appended every run). A page
+       * shared across sittings of one body is a landing page, left alone here.
        *
-       * Seeding the store from the previous snapshot is what makes append-only
-       * semantics hold across refreshes, and it also means a document attached
-       * under a wiring error survives every later run — the wiring is corrected,
-       * the ingest never looks again, and the wrong document is carried forever.
-       *
-       * That is not hypothetical. On 2026-08-21 fourteen NEWBURY meetings were
-       * given `bradfordnh.gov/pages/calendar` — the Town of BRADFORD's own
-       * calendar, which names Bradford Town Hall and Bradford's boards and does
-       * not mention Newbury anywhere — some carrying `sourceOrg: "Newbury
-       * Conservation Commission"`. Newbury's wiring rows carry no notice URL at
-       * all today, so the error is already fixed at the source and the data
-       * still says otherwise.
-       *
-       * The test applied here is the one that cannot be wrong: **a document
-       * attached to meetings of MORE THAN ONE GOVERNMENT is nobody's agenda.**
-       * One page cannot be two governments' agenda under any circumstances, so
-       * dropping it loses nothing true. A page shared across sittings of ONE
-       * body is a landing page and is a separate question (NH255) — it is left
-       * alone here, because it is at least that body's own page.
-       *
-       * Dropped rather than kept-and-flagged: the store is append-only, so a
-       * row that stays gets re-appended by every later run.
-       *
-       * **WHAT THIS REACHES, STATED EXACTLY (2026-09-24, D1).** Only this run's
+       * **WHAT THIS REACHES, STATED EXACTLY.** Only this run's
        * store: the retrieval order, the landing-page test and the agenda-stated
        * place matcher read it. The promoted payload is rebuilt from the previous
        * partition's own documents (reconcileSuccessfulMeetingPartition), and the
@@ -1109,12 +950,10 @@ async function main() {
 
     await retrieveAgendas(meetings);
     /*
-     * **A SITTING'S PLACE, AS ITS OWN AGENDA STATES IT.** (2026-09-24. The
-     * owner: "use the address published by the official meeting source".) An
-     * unplaced sitting whose held agenda states a street address that a
+     * An unplaced sitting whose held agenda states a street address that a
      * promoted reviewed venue of its division carries is placed with the
-     * agenda's own words and the venue's coordinates. See
-     * scripts/lib/agenda-meeting-location.ts.
+     * agenda's own words and the venue's coordinates
+     * (scripts/lib/agenda-meeting-location.ts).
      */
     const agendaPlaced = placeUnplacedFromAgendas(
       source.lastPartitionRows,
@@ -1232,7 +1071,7 @@ export async function readPreviousMeetingPartition(
 }
 
 /**
- * DB-06: move this partition's concluded, record-carrying sittings older than the held window into its durable history
+ * Move this partition's concluded, record-carrying sittings older than the held window into its durable history
  * BEFORE the partition's own candidate is built, so a sitting leaves the partition only once history holds it. Never
  * blocks the partition: any failure moves nothing and the partition keeps every record as DB-01 does. The way back is
  * `WTP_MEETING_HISTORY_MOVE=off`.
@@ -1262,7 +1101,7 @@ async function moveConcludedMeetingsForPartition(
 }
 
 /**
- * DB-55: with `WTP_MEETING_HISTORY_RESTORE=on`, add back the concluded sittings with records that the old 90-day rule
+ * With `WTP_MEETING_HISTORY_RESTORE=on`, add back the concluded sittings with records that the old 90-day rule
  * removed (`restoreRemovedMeetingHistory`), as carried rows of this partition's own candidate. Anything that goes
  * wrong leaves the partition exactly as it was.
  */
@@ -1296,27 +1135,12 @@ export interface SuccessfulMeetingPartitionReconciliation {
 }
 
 /**
- * **A CARRIED SITTING IS PLACED BY TODAY'S REVIEWED VENUES.** (C1, 2026-09-24.
- * The owner: "If an official meeting source publishes an address, use that
- * address and place the pin there.")
- *
- * A row is carried when its publisher's page stops listing it, which is what
- * happens to most sittings once they are held. The carry copies the last
- * fresh row, and that row's place was resolved against the reviewed venues of
- * THAT day. So a venue reviewed after the listing left never reached the
- * sitting: Tucson Unified's 23 September community-engagement session stated
- * "Cholla High School South Gym", the reviewed venue for exactly those words
- * was promoted on 24 September at 19:30Z, and the carried row still served
- * the words with no pin (measured read-only at 21:41Z, the only such row of
- * 13 carried).
- *
- * The sitting's facts are not touched: what the publisher last stated, and
- * when, stays as carried. Only our placement of its own stated words is
- * redone, through `resolveVenue`, the same lookup and scope the adapter would
- * apply to those words today. A row whose words match no reviewed venue, a
- * row with no stated words, an online or already placed row, and a row with
- * no division (whose scope needs the adapter's tenant, which a carried row
- * does not hold) are returned unchanged.
+ * A carried sitting is placed by today's reviewed venues: the carry copies the
+ * last fresh row, whose place was resolved against that day's venues. Only the
+ * placement of its own stated words is redone, through `resolveVenue`; the
+ * sitting's facts are untouched. A row whose words match no reviewed venue, a
+ * row with no stated words, an online or already placed row, and a row with no
+ * division are returned unchanged.
  */
 export function placeCarriedFromReviewedVenue(
   prior: Meeting,
@@ -1342,28 +1166,17 @@ export { meetingCarriesRecords };
  * A prior row is removed on one of four authorities, and on nothing else: an
  * exact prior start outside the same registered serving window used for
  * acquisition and Reader delivery; a fresh occurrence record of the same
- * recurring series that now holds the prior row's exact fact (2026-09-23,
- * `supersedesSeriesRecord`); the publisher striking that sitting out of its
+ * recurring series that now holds the prior row's exact fact
+ * (`supersedesSeriesRecord`); the publisher striking that sitting out of its
  * series (`EXCLUDED_BY_PUBLISHER`); or a fresh row of this partition that is
- * the same sitting, re-issued by its publisher under a new id (2026-09-24,
- * `reissuesSitting`). Agenda documents inherit an authority only from their
+ * the same sitting, re-issued by its publisher under a new id
+ * (`reissuesSitting`). Agenda documents inherit an authority only from their
  * exact removed meeting.
  *
- * The series authority exists for one transition. Until 2026-09-23 every
- * sitting of an iCalendar series shared the series' `UID`-only id; each series
- * now yields one record per sitting. Without it, the first read under the new
- * identity would carry the old record forward beside the occurrence that
- * replaced it, and a reader would see that sitting twice until it aged out of
- * the window.
- *
- * The re-issue authority is the same failure from the publisher's side, and
- * it is permanent: Tucson Unified's portal listed one Audit Committee sitting
- * as meeting 495 and then as meeting 501, and the carried 495 stood beside the
- * fresh 501. It is tested only where a row would otherwise be carried, after
- * every other authority, so a row with no fresh twin is carried exactly as
- * before. Both successor authorities are recorded as
- * `SUPERSEDED_BY_OCCURRENCE_IDENTITY` naming the successor, and the promotion
- * door re-runs both tests on the stored records.
+ * The re-issue authority is tested only where a row would otherwise be
+ * carried, after every other authority. Both successor authorities are
+ * recorded as `SUPERSEDED_BY_OCCURRENCE_IDENTITY` naming the successor, and
+ * the promotion door re-runs both tests on the stored records.
  */
 export function reconcileSuccessfulMeetingPartition(input: {
   readonly sourceName: string;
@@ -1389,7 +1202,7 @@ export function reconcileSuccessfulMeetingPartition(input: {
    */
   readonly fetchedWindow?: { readonly lowerBound: string; readonly upperBound: string };
   /**
-   * Concluded sittings with a record that this partition's history now holds (DB-06), by meeting id: promoted
+   * Concluded sittings with a record that this partition's history now holds, by meeting id: promoted
    * history FIRST (`moveConcludedMeetingsToHistory`), so these leave the partition under `MOVED_TO_HISTORY` and are
    * in no way carried. Omitted, nothing leaves and every record stays exactly as DB-01 keeps it.
    */
@@ -1569,7 +1382,7 @@ export function meetingsWiringCoverage(
 }
 
 /**
- * **THE RECURRENCE RECORD ONE PARTITION CARRIES.** (2026-09-23.)
+ * **THE RECURRENCE RECORD ONE PARTITION CARRIES.**
  *
  * Each in-window sitting this body's publisher struck out of a series
  * (`EXDATE`), and each series of this body whose rule was not expanded with
@@ -1698,10 +1511,10 @@ export async function promoteMeetingPartition(
     snapshot,
     retainedResponses,
   );
-  // A second attempt on the same readings (DB-06's safety net) needs its own candidate id.
+  // A second attempt on the same readings needs its own candidate id.
   const candidate = idSuffix === "" ? built : { ...built, id: `${built.id}${idSuffix}` };
   // An ordinary routine re-check that found nothing new is confirmed on the
-  // pointed version, not republished (RULING 283's receipted no-change).
+  // pointed version, not republished.
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt, undefined, { confirmUnchanged: true });
   return { candidate, outcome };
 }
@@ -1966,7 +1779,7 @@ async function promoteSelectedMeetingPartitions(
       error: c.error,
       ...(c.ok ? {} : { failure: c.failure ?? "WALL" }),
       // The rung travels with its ladder, or it travels as an unmarked number
-      // that a later session has to go back and mark (RULING 17).
+      // that a later session has to go back and mark.
       ...(typeof c.walledAtRung === "number"
         ? {
             walledAtRung: c.walledAtRung,

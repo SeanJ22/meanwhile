@@ -4,7 +4,7 @@ import test from "node:test";
 import { readReaderEdgeMeetings } from "../lib/meetings/edge-serving.ts";
 import type { MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
 
-/** DB-01: partitions hold 120 days of history; each read hands back only the window it asks for. */
+/** Partitions hold 120 days of history; each read hands back only the window it asks for. */
 const NOW = "2026-09-08T13:00:00.000Z";
 const at = (days: number) => new Date(Date.parse(NOW) + days * 86_400_000).toISOString();
 const row = (id: string, days: number) => ({ id, startsAt: at(days), status: "CONCLUDED" });

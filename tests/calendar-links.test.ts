@@ -7,11 +7,7 @@ import {
   icsFileName,
 } from "../lib/calendar/event-links.ts";
 
-/**
- * Item 4 (wall clock 2026-08-14 second session): the shared calendar
- * builders behind the ONE add-to-calendar control. Two shapes — timed
- * (meetings) and all-day (election dates, deadlines).
- */
+/** The shared calendar builders behind the add-to-calendar control: timed (meetings) and all-day (election dates, deadlines). */
 
 test("an all-day event builds VALUE=DATE ics with an exclusive end", () => {
   const href = icsDataHref({

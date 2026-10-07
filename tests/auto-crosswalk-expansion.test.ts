@@ -1,27 +1,4 @@
-/**
- * **A SEND TO A COUNTY IN A STATE NO ONE HAS WORKED BEFORE REACHES READERS
- * WITH NO PERSON AND NO CODE CHANGE.** (C16 option A and every-state families,
- * 2026-09-25.)
- *
- * Every step is the production path on the in-memory stores; nothing reaches
- * the network, no model is called, and no code names the county, its body, its
- * host or its calendar: they are data.
- *
- * 1. the owner's Send for "Franklin County, Ohio" creates a meetings-discovery
- *    obligation for each government it names (MW-028);
- * 2. the FREE discovery walk walks them first, though the committed gap ledger
- *    holds only Arizona, New Hampshire and New Jersey; the paid lane remains
- *    governed by the owner's separate pause and budgets;
- * 3. the walk finds each government's iCal feed on its own host, robots first,
- *    and vaults every byte;
- * 4. the runner's deterministic reviewer accepts the county's calendar for its
- *    registered governing body, and HOLDS the city's, whose only events name
- *    two bodies at once, with its reason and who moves next;
- * 5. the automatic crosswalk promotes through the routine door (DERIVED), the
- *    wiring derives from it, and Ohio's derived family promotes;
- * 6. the meetings Reader shows the county's sittings under the county's body,
- *    with their source link, and nothing of the held city.
- */
+/** A Send to a county in a state no one has worked before reaches readers with no person and no code change: every step is the production path on in-memory stores, with no network and no model. */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -116,9 +93,14 @@ const CITY_FEED = ics([
 ]);
 const CITY_HOME = `<html><body><p>City Council. Planning Commission.</p><a href="/events.ics">Events</a></body></html>`;
 
+/** A registered state's registry, read from the trimmed fixture. */
+function azRegistryFixture(): JurisdictionRegistry {
+  return (JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<string, JurisdictionRegistry>).az!;
+}
+
 /** The Ohio registry the Send reads: two governments the Census names, each owing meetings discovery on its own site. */
 function ohioRegistry(): JurisdictionRegistry {
-  const az = JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")) as JurisdictionRegistry;
+  const az = azRegistryFixture();
   const meetings = "MEETINGS:THIS_JURISDICTION:this-government-itself";
   const row = (id: string, name: string, govClass: Jurisdiction["govClass"], site: string): Jurisdiction => ({
     ...az.jurisdictions[0]!, id, stateCode: "OH", name, govClass, countyName: "FRANKLIN", ownWebAddress: site, sourceIds: [meetings],
@@ -188,8 +170,8 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   });
   assert.deepEqual(materialized.failures, []);
   const dispatched = materialized.entries.map((e) => ({ ...e.need, addressSource: { source: "OPERATIONAL_REFERENCE" as const, versionId: "ref-oh-1" } }));
-  /* Another Send's mission blanks, in another state, walk after the dispatched needs (CH-21). */
-  const azRegistry = JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")) as JurisdictionRegistry;
+  /* Another Send's mission blanks, in another state, walk after the dispatched needs. */
+  const azRegistry = azRegistryFixture();
   const mission = meetingsDiscoveryNeeds([azRegistry]);
   assert.equal(mission.some((n) => n.stateCode.toUpperCase() === "OH"), false, "the other mission holds no Ohio government");
   const needs = discoveryNeedsToWalk(mission, dispatched);

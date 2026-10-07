@@ -7,21 +7,9 @@ import { meetingHeadline, meetingSubline } from "../lib/map/format.ts";
 import { meetingCalendarEvent } from "../lib/calendar/event-links.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
-/* ========================================================================== */
-/* MTG-2 — the doubled label                                                  */
-/* ========================================================================== */
-
 /**
- * The 48-meetings list at 07866, twenty consecutive rows of Morris County,
- * every one of them:
- *
- *   Morris County, NJ — Board of County Commissioners
- *   Board of County Commissioners · Morris County, NJ
- *
- * Two facts, one row, printed twice and reordered. Neither line was wrong on
- * its own. The GUARD was wrong: `bodyName !== title` asks whether the sitting
- * has a distinct title, when the question is whether the headline already
- * carries the words about to be printed under it.
+ * A sub-line must not repeat words the headline already carries; the question is not whether `bodyName !== title`
+ * but whether the headline already contains what is about to be printed under it.
  */
 
 function meeting(over: Partial<Meeting>): Meeting {
@@ -49,8 +37,6 @@ test("MTG-2: the subline never repeats what the headline already said", () => {
   const sub = meetingSubline(m);
   assert.equal(headline, "Morris County, NJ — Board of County Commissioners");
   assert.equal(sub, "Work Session");
-  // The mechanical form of the rule, so a future wording change cannot
-  // reintroduce the defect a different way.
   assert.ok(
     !headline.toLowerCase().includes(sub.toLowerCase()),
     `the subline "${sub}" is already inside the headline "${headline}"`,
@@ -59,9 +45,9 @@ test("MTG-2: the subline never repeats what the headline already said", () => {
 
 test("MTG-2: the three ways a source writes the body name into the title", () => {
   const cases: Array<[Partial<Meeting>, string]> = [
-    // Prefix with a separator — Morris County.
+    // Prefix with a separator.
     [{ title: "Board of County Commissioners – Regular Meeting" }, "Regular Meeting"],
-    // Plain prefix — Rockaway Township.
+    // Plain prefix.
     [
       {
         bodyName: "Township Council",
@@ -86,11 +72,7 @@ test("MTG-2: the three ways a source writes the body name into the title", () =>
 });
 
 test("MTG-2: a bare generic noun is not a fact, and renders as nothing", () => {
-  /*
-   * "Board of Adjustment Meeting" reduces to "Meeting", which tells a reader
-   * looking at a list of meetings nothing at all — the doubled label again,
-   * shorter. An empty string is the answer, and the caller renders no line.
-   */
+  // A reduction to "Meeting" tells a reader nothing; an empty string means the caller renders no line.
   const m = meeting({
     bodyName: "Board of Adjustment",
     title: "Board of Adjustment Meeting",
@@ -100,12 +82,7 @@ test("MTG-2: a bare generic noun is not a fact, and renders as nothing", () => {
 });
 
 test("MTG-2: the jurisdiction renders below only where the headline left it out", () => {
-  /*
-   * `meetingHeadline` prepends the jurisdiction unless the body name already
-   * contains it. Both branches are checked here, because the half that keeps
-   * this fix from becoming a deletion is the one where the sub SHOULD carry
-   * the jurisdiction.
-   */
+  // `meetingHeadline` prepends the jurisdiction unless the body name already contains it; both branches are checked.
   const absorbed = meeting({
     bodyName: "Vail Unified School District Governing Board",
     title: "Vail Unified School District Governing Board Meeting",
@@ -124,16 +101,11 @@ test("MTG-2: the jurisdiction renders below only where the headline left it out"
 });
 
 test("MTG-2: no surface builds the old bodyName-plus-jurisdiction line", () => {
-  /*
-   * The class sweep. The defect was one template string in one component, and
-   * the same string is the obvious thing to write on the next list surface
-   * somebody adds.
-   */
+  // The same template string is the obvious thing to write on the next list surface.
   const offenders: string[] = [];
   for (const file of [
     "components/map/list-overlay.tsx",
     "components/map/meeting-panel.tsx",
-    "components/map/popup/meeting-popup.tsx",
   ]) {
     const src = readFileSync(join(process.cwd(), file), "utf8");
     if (/\$\{meeting\.bodyName\}\s*·\s*\$\{meeting\.jurisdiction\}/.test(src)) {
@@ -149,10 +121,6 @@ test("MTG-2: no surface builds the old bodyName-plus-jurisdiction line", () => {
   );
 });
 
-/* ========================================================================== */
-/* MTG-4 — the venue reaches the calendar entry, once                         */
-/* ========================================================================== */
-
 test("MTG-4: a created event carries the venue in its location field", () => {
   const event = meetingCalendarEvent(meeting({}), {});
   assert.equal(
@@ -163,12 +131,7 @@ test("MTG-4: a created event carries the venue in its location field", () => {
 });
 
 test("MTG-4: a source publishing the ADDRESS as the venue name does not double it", () => {
-  /*
-   * The author's Vail defect, in the one place it had never been fixed. Every
-   * reader-facing surface has routed through `locationLine` since 2026-08-16;
-   * the calendar builder joined with a comma and produced the same string
-   * twice — in an entry that outlives the tab it was made in.
-   */
+  // The calendar builder routes through `locationLine`, so an address published as the venue name is not doubled.
   const event = meetingCalendarEvent(
     meeting({
       location: {

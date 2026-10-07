@@ -1,7 +1,4 @@
-/**
- * The real held Pima Legistar capture and its artifact record, shared by the
- * fact-bridge and fact-verification suites (one implementation, RULING 103).
- */
+/** A recorded Legistar events capture and its artifact record, shared by the fact-bridge and fact-verification suites. */
 import { readFileSync } from "node:fs";
 
 import { contentHash } from "../lib/control-plane/ids.ts";

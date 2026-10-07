@@ -8,16 +8,6 @@ import { makeDiligentSource, type DiligentMeeting } from "../lib/sources/diligen
 import { forwardCalendarMonths, sittingBodyKey } from "../lib/sources/diligent/schedule-union.ts";
 import { SourceHttpError } from "../lib/sources/http.ts";
 
-/*
- * Tucson Unified's partition publishes every sitting in the forward window
- * that EITHER of the district's own publications verifies: its Diligent
- * portal's list (agenda links, cancellation notes) and its board site's
- * calendar (govboard.tusd1.org, permitted), which carries Governing Board
- * sittings months before the portal does. Recorded calendar fragments read
- * 2026-09-23 (tests/fixtures/tusd-govboard/retrieval.json); portal rows are
- * the production partition's own upcoming rows of that day.
- */
-
 const FIXTURES = join(import.meta.dirname, "fixtures", "tusd-govboard");
 const RETRIEVAL = JSON.parse(readFileSync(join(FIXTURES, "retrieval.json"), "utf8")) as Record<string, { url: string }>;
 const WIRING = SOURCE_WIRING.find((row) => row.bodyId.includes("tucson_unified_district"))!;
@@ -92,7 +82,6 @@ test("the partition publishes every forward sitting either source verifies, and 
     "diligent:tusd1:504",
     "diligent:tusd1:505",
   ]);
-  // Sep 28 is on both: ONE row, the portal's.
   assert.equal(result.meetings.filter((m) => m.startsAt.startsWith("2026-09-28")).length, 1);
   const oct6 = result.meetings.find((m) => m.id.endsWith("2026-10-06T1630-governing-board"))!;
   assert.equal(oct6.startsAt, "2026-10-06T16:30:00-07:00");
@@ -101,7 +90,6 @@ test("the partition publishes every forward sitting either source verifies, and 
   assert.equal(oct6.location?.name, "Duffy Community Center, Multipurpose Room");
   assert.equal(oct6.bodyId, WIRING.bodyId);
   assert.match(oct6.provenance.sourceUrl ?? "", /^https:\/\/govboard\.tusd1\.org\/inflow\/xti\/inCal\.aspx/);
-  // Conservation: every calendar entry is produced, a duplicate, or out of window.
   assert.equal(result.accounting.outcome, "CONSERVED");
   assert.equal(result.accounting.duplicates, 1);
   assert.equal(result.accounting.produced, 8);
@@ -175,7 +163,6 @@ test("the calendar is read under a recorded robots verdict that never refuses it
     if (url === "https://govboard.tusd1.org/Actions") {
       return new Response("<html></html>", { status: 200, headers: { "content-type": "text/html" } });
     }
-    /* The disallowed calendar pages ARE requested now (owner decision 2026-09-25); this one fails, as a page can. */
     if (url.startsWith("https://govboard.tusd1.org/")) {
       return new Response("<html>Not found</html>", { status: 404, headers: { "content-type": "text/html" } });
     }
@@ -194,8 +181,6 @@ test("the calendar is read under a recorded robots verdict that never refuses it
 test("Sunnyside: the district's own SmartSites calendar is unioned the same way, and a sitting with no stated place still publishes", () => {
   const susd = SOURCE_WIRING.find((row) => row.bodyId.includes("sunnyside_unified_district"))!;
   const events = JSON.parse(readFileSync(join(import.meta.dirname, "fixtures", "smartsites", "susd12-calendar-150042-events.json"), "utf8"));
-  // The recorded response ends Dec 31; add the Jan 12, 2027 sitting the live
-  // forward-window read of 2026-09-23 returned, exactly as the API shapes it.
   events.data.events.push({ id: "fixture-2026-12-15", title: "Governing Board Meeting", start_date: "2026-12-15", start_time: "18:30:00", address: "", all_day: false });
   const portalRows: DiligentMeeting[] = [168, 169, 170, 171, 172, 173].map((Id, i) => ({
     Id,
@@ -224,12 +209,6 @@ test("Sunnyside: the district's own SmartSites calendar is unioned the same way,
   assert.equal(result.accounting.outcome, "CONSERVED");
 });
 
-/*
- * RECORDED: the 17 portal rows production's TUSD partition held when the union
- * was built (cv-a088b86e…, promoted 2026-09-23T22:50:41Z, read read-only), in
- * the service's field names, beside the recorded calendar fragments. This is
- * the first promotion's effect, pinned.
- */
 const RECORDED = JSON.parse(readFileSync(join(FIXTURES, "diligent-tusd-portal-rows.json"), "utf8")) as { rows: DiligentMeeting[] };
 const AT_PROMOTION = new Date("2026-09-23T16:25:00-07:00");
 
@@ -268,7 +247,6 @@ test("recorded: row 500's own title says CANCELLED, so it is CANCELED, not CONCL
   const row500 = result.meetings.find((m) => m.id === "diligent:tusd1:500")!;
   assert.match(row500.title, /^CANCELLED DUE TO LACK OF QUORUM/);
   assert.equal(row500.status, "CANCELED");
-  // Only the publisher's own words cancel: no other recorded row is CANCELED.
   assert.deepEqual(result.meetings.filter((m) => m.status === "CANCELED").map((m) => m.id), ["diligent:tusd1:500"]);
 });
 
@@ -285,6 +263,6 @@ test("recorded, planted: a portal row whose place is blanked is published with t
 });
 
 test("the calendar route reads exactly the forward window's months", () => {
-  // DB-04: the forward window is the held 120 days, which from this NOW reaches into January.
+  // The forward window is 120 days, which from this NOW reaches into January.
   assert.deepEqual(forwardCalendarMonths(NOW), ["2026-09-01", "2026-10-01", "2026-11-01", "2026-12-01", "2027-01-01"]);
 });

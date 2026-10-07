@@ -8,20 +8,6 @@ import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/not
 import { agendaTopicFor } from "../lib/routing/agenda-search.ts";
 import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
 
-/**
- * **WHAT A READER IS SHOWN FOR A NOTICE PAGE HELD AS A SITTING'S AGENDA.**
- * (2026-09-24, D1.)
- *
- * The ingest no longer attaches notice pages, but production already held 70,
- * and the validator admits an agenda document's removal only with its
- * meeting's, so the reader projection decides what they are. Read with the
- * reader's own projection that day: CAP's meetings page was Pima Board sitting
- * 1381578's "publication index", Mesa's council page was shown as sitting
- * 1343183's read agenda, and a Warner Planning Board sitting's failed read of
- * the town calendar was "a document we could not read". The texts are the ones
- * production held.
- */
-
 const HELD = JSON.parse(readFileSync("tests/fixtures/notice-pages-held-2026-09-24.json", "utf8")) as {
   readonly cap: { readonly url: string; readonly text: string };
   readonly mesa: { readonly url: string; readonly text: string };
@@ -121,12 +107,6 @@ test("Ask's topic timeline neither searches CAP's page nor counts Oct 13 as a re
 });
 
 test("Newbury Selectboard: portal shells and another town's calendar are not 'the agendas we hold'", () => {
-  /*
-   * Production, 2026-09-24: "No mention of a cell tower in the 9 agendas we
-   * hold for Newbury Selectboard", beside a gap saying none of them was
-   * readable. The nine were four CivicWeb portal shells and five copies of the
-   * Town of Bradford's calendar. Recorded read-only that day.
-   */
   const NEWBURY = "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town";
   const HELD9 = JSON.parse(readFileSync("tests/fixtures/newbury-selectboard-held-2026-09-24.json", "utf8")) as {
     readonly portal: { readonly url: string; readonly extraction: string; readonly text: string };

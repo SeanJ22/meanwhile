@@ -1,12 +1,7 @@
 /**
- * Exact, fail-closed software handoff for the permanent standing runtime.
- *
- * Routine data never causes this path to run. The target is the newest published
- * production main deploy with the existing required CI checks green, at or before
- * the application SHA reported by `/api/build`. Pending newer deploys do not stop
- * the certified running code. The adapter at the bottom
- * may fetch/switch/install in a dedicated clean checkout; it has no commit,
- * push, merge, deployment, or civic-data write operation.
+ * Exact, fail-closed software handoff for the standing runtime: the target is the newest published production deploy
+ * with the required CI checks green, at or before the SHA `/api/build` reports. No commit, push, merge, deploy or
+ * civic-data write.
  *
  * @freshness-reads-here — observedAt records the exact release-handoff
  * observation that produced a hold; it is not civic-data source freshness.

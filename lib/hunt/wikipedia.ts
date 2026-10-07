@@ -17,7 +17,6 @@
  *
  * Only facts are extracted; no sentence is copied through to a reader surface.
  */
- */
 
 import {
   assertCount,
@@ -26,14 +25,15 @@ import {
 } from "../extract/count-assertion.ts";
 import { OUTBOUND_CONTACT } from "../geo/outbound-agent.ts";
 
+/* ────────────────────────────── Retrieval ────────────────────────────────── */
+
 /** Identified User-Agent, with the contact composed from `lib/geo/outbound-agent.ts`. */
- * `/api/voting-sites` made and the same fix.
- */
+export const WIKI_USER_AGENT = `we-the-people/1.0 (civic data for a public-records product; contact: ${OUTBOUND_CONTACT})`;
+
 /**
  * `/w/api.php`, which robots.txt disallows under `User-agent: *`. Recorded,
  * not blocking; the `/wiki/<Title>?action=raw` representation is used because
  * it returns the same wikitext. Exported as the recorded rule's path.
- */
  */
 export const WIKI_API_DISALLOWED = "https://en.wikipedia.org/w/api.php";
 

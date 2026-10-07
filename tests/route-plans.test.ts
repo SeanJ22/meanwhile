@@ -1,7 +1,3 @@
-/**
- * CH-23 part 2: behind WTP_ONE_HUNTER_PATH, every paid route no provider planned carries a route plan, so its Scout
- * runs as a coordinator work item with a plan (one hunter path). The plan keeps the row's class and subject.
- */
 import assert from "node:assert/strict";
 import { join } from "node:path";
 import test from "node:test";

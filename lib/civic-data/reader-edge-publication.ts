@@ -25,7 +25,7 @@ import { REGISTRATION_SCOPES, registrationEdgePlan } from "../registration/edge.
 import { readRegistrationProjection } from "../registration/reader.ts";
 import { readFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
 import { readOfficialStateLegislatorsProjection } from "../state-rollcalls/legislators.ts";
-import { combinedOutcomeVersionId, combineOutcomeProjections, doorOutcomeParts, doorOutcomesUnreadable, readDoorOutcomeProjections, readMesaOutcomeProjection, readOutcomeProjection } from "../outcomes/store.ts";
+import { combinedOutcomeVersionId, combineOutcomeProjections, doorOutcomeParts, doorOutcomesUnreadable, outcomePointers, readDoorOutcomeProjections } from "../outcomes/store.ts";
 import { DOOR_OUTCOME_POINTERS } from "../outcomes/door-outcome-pointers.ts";
 import { outcomePartitionsAreCurrent } from "./outcome-partitions.ts";
 import { doorReadModeFromEnv } from "../doors/install.ts";
@@ -240,7 +240,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       }
       if (refreshes("meeting-outcomes")) try {
         delete authority["meeting-outcomes"];
-        const doorPointers = [...DOOR_OUTCOME_POINTERS];
+        const doorPointers = outcomePointers();
         if (doorReadModeFromEnv() === "registry" && !outcomePartitionsAreCurrent()) {
           // The doors were not read this pass, so the door list is unknown, not empty: keep serving the last artifact
           // rather than publish one that silently drops every door's outcomes.
@@ -254,30 +254,20 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
               versionId: await pointerVersion(pointer.recordClass, pointer.scope)(),
             })));
             return combinedOutcomeVersionId(
-              await pointerVersion(PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass, PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope)(),
-              await pointerVersion(MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.recordClass, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.scope)(),
               doorVersions.filter((door): door is { contractId: string; versionId: string } => door.versionId !== null),
             );
           });
           if (carried !== null) authority["meeting-outcomes"] = { versionId: carried, carried: true };
           else {
-            const oc = await readOutcomeProjection({ store, now: observedAt, bypassCache: true });
-            const mesa = await readMesaOutcomeProjection({ store, now: observedAt, bypassCache: true });
-                        // Complete or left out: a failed read must not publish the rest alone as if it had nothing.
-            if (mesa.kind !== "PROMOTED" && mesa.kind !== "NOT_RECORDED") throw new Error(`mesa minutes outcomes read ${mesa.kind}`);
+            // Complete or left out: a failed read must not publish the rest alone as if it had nothing.
             await readDoorOutcomeProjections({ store, now: observedAt, bypassCache: true });
-            const doorParts = doorOutcomeParts();
             const unreadable = doorOutcomesUnreadable();
             if (unreadable.length > 0) throw new Error(`door outcomes read failed for ${unreadable.join(", ")}`);
-            const combined = oc.kind === "PROMOTED" && oc.metadata.versionId
-              ? combineOutcomeProjections(
-                  { value: oc.value, versionId: oc.metadata.versionId },
-                  mesa.kind === "PROMOTED" && mesa.metadata.versionId ? { value: mesa.value, versionId: mesa.metadata.versionId } : null,
-                  doorParts.map((part) => ({ value: part.value, pointers: [{ contractId: part.pointer.contractId, tenant: part.pointer.slug, versionId: part.versionId }] })),
-                )
-              : null;
+            const combined = combineOutcomeProjections(
+              doorOutcomeParts().map((part) => ({ value: part.value, pointers: [{ contractId: part.pointer.contractId, tenant: part.pointer.slug, versionId: part.versionId }] })),
+            );
             if (combined !== null) authority["meeting-outcomes"] = combined;
-            else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes kind=${oc.kind}\n`);
+            else process.stderr.write("READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes none promoted\n");
           }
         }
       } catch (error) {

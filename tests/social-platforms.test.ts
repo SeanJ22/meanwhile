@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { SOCIAL_PLATFORMS } from "../lib/hunt/coverage-matrix.ts";
 import { settingDefinition } from "../lib/control-plane/settings.ts";
 import {
   DEFAULT_SOCIAL_PLATFORMS, SOCIAL_PLATFORMS_SETTING, accountLabel, platformForUrl, profileUrl,
@@ -49,8 +48,4 @@ test("CA-04: the directory's own fields read as OFFICIAL accounts; X keeps its h
   assert.equal(accountLabel(DEFAULT_SOCIAL_PLATFORMS[1], accounts[0]), "@SenatorX");
   assert.equal(accountLabel(DEFAULT_SOCIAL_PLATFORMS[0], accounts[1]), "Facebook");
   assert.equal(profileUrl(DEFAULT_SOCIAL_PLATFORMS[5], "@someone"), "https://tiktok.com/@someone");
-});
-
-test("CA-04: the coverage matrix reads the same list", () => {
-  assert.deepEqual([...SOCIAL_PLATFORMS], [...DEFAULT_SOCIAL_PLATFORMS.map((p) => p.id), "other"]);
 });

@@ -38,8 +38,7 @@ async function main(): Promise<void> {
       ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
       async (signal): Promise<BuiltDataset> => {
         const built = await acquireDataset({ signal });
-        // A zero-overlap scope is a failed extraction (RULING 269), never an
-        // empty publication.
+        // A zero-overlap scope is a failed extraction, never an empty publication.
         if (built.scopes.length === 0 || built.scopes.some((s) => s.zctaEdgeCount === 0)) {
           throw sourceAcquisitionFailure(
             "PUBLISHER_DOCUMENT_INVALID",

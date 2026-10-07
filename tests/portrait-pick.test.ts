@@ -1,16 +1,6 @@
 /**
- * **THE PORTRAIT PICKER, AND THE CHECK THAT THE URL SERVES A PICTURE.**
- *
- * `pickPortrait` finds a name-matched `<img src>` in a page's markup. That is a
- * claim about the MARKUP and not about what the URL serves, and the two came
- * apart the first time the door-2 walk ran at scale:
- * `chesterborough.org//images/2022/08/08/russell-goodwin.jpeg` — the double
- * slash is the site's own template — answered **HTTP 200 with `text/html` and
- * 12,119 bytes**. Two soft-404 pages were queued as named people's faces.
- *
- * **The only reason it was caught is RULING 2.** Somebody opened the review
- * sheet AS AN IMAGE and saw two broken tiles. A byte count, a green capture
- * step, and the queue's own row count all said everything was fine.
+ * `pickPortrait` finds a name-matched `<img src>` in a page's markup. That is a claim about the markup, not about
+ * what the URL serves, so the picked URL is also fetched and checked to be a picture.
  */
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
@@ -24,7 +14,7 @@ import {
   verifyIsImage,
 } from "../lib/hunt/portrait-pick.ts";
 
-/** A fetch that answers with exactly what a named host answered on 2026-08-25. */
+/** A fetch that answers with exactly what a recorded host answered. */
 function canned(status: number, contentType: string, body: Uint8Array): typeof fetch {
   return (async () =>
     new Response(new Blob([body as BlobPart]), {
@@ -66,7 +56,7 @@ describe("a portrait URL has to serve a picture", () => {
   });
 
   it("decodes the entities a page's own markup puts inside a src", () => {
-    /* The live case: Chatham Township's WordPress emits `&#038;` for `&`. */
+    /* WordPress emits `&#038;` for `&`. */
     assert.equal(
       decodeEntities("https://i0.wp.com/x.jpg?resize=860%2C1000&#038;ssl=1"),
       "https://i0.wp.com/x.jpg?resize=860%2C1000&ssl=1",
@@ -90,10 +80,7 @@ describe("the picker matches on the name and nothing else", () => {
   });
 
   it("returns NOTHING rather than the best of a bad set", () => {
-    /*
-     * A largest-image or first-image heuristic picks the seal, and a wrong face
-     * is the one failure the photo rule says fails at EVERY door.
-     */
+    // A largest-image or first-image heuristic picks the seal; a wrong face is the worst failure.
     const furnitureOnly = `<img src="/img/seal.png" alt="Township seal"><img src="/img/banner.jpg" alt="">`;
     assert.equal(pickPortrait("Russell GOODWIN", imagesIn(furnitureOnly, "https://x/")), null);
   });

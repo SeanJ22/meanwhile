@@ -1,26 +1,4 @@
-/**
- * **THE CACHE-DEFECT DETECTOR, REPLAYED OVER RECORDED USAGE.** (Prompt-caching
- * session, 2026-09-06. Acceptance row PC-12.)
- *
- * Three recorded per-turn sequences, every number read off a real response:
- *
- *   HEALTHY      Scout Attempt `at-6ba0dac8b6aadc8e8a89697c`, 2026-09-06,
- *                turns 1–3 of six: reads grow, writes are the appended turn,
- *                uncached input is two tokens.
- *   STATIONARY   the shape of every 2026-09-02 Attempt (23 of them, 4.4M
- *                uncached tokens): the read is flat at the 4,082-token static
- *                prefix and the uncached remainder is the whole conversation,
- *                growing every turn. Reconstructed from the per-Attempt
- *                aggregates (read = 4,082 × later turns exactly), because
- *                those Attempts recorded no per-turn steps — which is why the
- *                old zero-read detector could not see them.
- *   BOUND TURN   the harness run of 2026-09-06, turn 4: the forced
- *                `tool_choice: finish` invalidated the messages cache, so the
- *                read collapsed to the 4,586-token static prefix and 24,369
- *                tokens were RE-WRITTEN. Uncached stays tiny: a write, not a
- *                stationary breakpoint, and not a zero read. Neither
- *                signature fires; the cost is in the write column, by design.
- */
+/** The cache-defect detector replayed over recorded per-turn usage: a healthy sequence, a stationary breakpoint, and a bound turn that re-wrote the prefix. */
 
 import assert from "node:assert/strict";
 import test from "node:test";

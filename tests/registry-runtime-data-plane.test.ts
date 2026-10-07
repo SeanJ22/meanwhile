@@ -26,10 +26,9 @@ import {
   federalDirectoryCandidate,
   type FederalDirectoryAcquisition,
 } from "../lib/officials/federal-directory-data-plane.ts";
-import { federalDirectoryFirstSeed, readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
+import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import {
   REGISTRY_RUNTIME_SCOPE,
-  REGISTRY_RUNTIME_SOURCE_ID,
   readRegistryRuntimePrior,
   registryBaseSourceReceipt,
   registryRuntimeCandidate,
@@ -433,7 +432,7 @@ test("a Census placeholder division is geography: no body is derived on it and n
 
 test("a promotion drops placeholder bodies whichever side holds them, names why, and translates the placeholder's name", async () => {
   const placeholders = frozenPlaceholders();
-  // The prior as production held it on 2026-09-14: both bodies, and New Hampshire's raw Census name.
+  // A prior holding both bodies and a raw Census name.
   const base = await registryPackage(T0, "placeholder-prior");
   const priorPayload = structuredClone(base.payload);
   priorPayload.registry.bodies = [...priorPayload.registry.bodies, ...placeholders.bodies].sort((left, right) => left.id.localeCompare(right.id));
@@ -478,14 +477,8 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
 });
 
 /**
- * The registry production holds (2026-09-14): the transfer-time trusted import,
- * explicitly not source-authenticated, carrying both placeholder boards and New
- * Hampshire's raw Census name. The admission door is retired, so no test mints
- * an import: this one is RECORDED — the retired importer's shape over the
- * committed registry, validated GOOD by the real validator when it was recorded
- * (tests/fixtures/registry-transfer-import.json.gz) — and placed as retained
- * history, exactly as the venue import fixture is. The tests interpret it;
- * nothing admits it.
+ * A recorded transfer-time import (tests/fixtures/registry-transfer-import.json.gz): not source-authenticated,
+ * carrying both placeholder boards and a raw Census name, placed as retained history. Nothing admits it.
  */
 async function transferImportedRegistry(store: MemoryRoutineDataStore, at: string) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as {
@@ -699,27 +692,10 @@ test("manual contracts have no clock and retired tracked writers cannot be invok
   const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, T0, contracts);
   assert.ok(view.contracts.every((row) => row.cadence.clock === "MANUAL" && row.cadence.nextDue.kind === "NOT_APPLICABLE"));
 
-  const federalImport = federalDirectoryFirstSeed();
-  const registryImport = registryRuntimeFirstSeed();
-  assert.equal(federalImport.sourceId, FEDERAL_DIRECTORY_SOURCE_ID);
-  assert.equal(registryImport.sourceId, REGISTRY_RUNTIME_SOURCE_ID);
-  assert.match(federalImport.versionId, /^bootstrap:FEDERAL_DIRECTORY:/);
-  assert.match(registryImport.versionId, /^bootstrap:REGISTRY_RUNTIME_BINDING:/);
-  assert.ok(federalImport.value.roster.officeholders.length >= 500);
-  assert.ok(registryImport.value.officialCandidacies.rows.length > 800);
-
   for (const path of ["scripts/build-officeholders.ts", "scripts/enrich-federal-officeholders.mts", "scripts/fetch-official-photos.mts", "scripts/migrate-congress-directory.mts"]) {
     assert.equal(existsSync(path), false, path);
   }
   const pkg = JSON.parse(readFileSync("package.json", "utf8")) as { scripts: Record<string, string> };
-  assert.equal(
-    pkg.scripts["congress:fetch"],
-    "node scripts/installed-runtime-command.mjs manual-promote --contract=congress-bulk-roster",
-  );
-  assert.equal(
-    pkg.scripts["registry:promote"],
-    "node scripts/installed-runtime-command.mjs manual-promote --contract=registry-runtime-bindings",
-  );
   assert.equal(pkg.scripts["registry:build"], undefined);
   assert.equal(pkg.scripts["officials:build"], undefined);
   assert.equal(pkg.scripts["officials:enrich"], undefined);

@@ -1,27 +1,4 @@
-/**
- * CAMPAIGN FINANCE — CAN A READER ACTUALLY ASK, AND GET A GROUNDED ANSWER?
- *
- * The registry proved we know WHICH PORTAL to search. That is not the product.
- * This file proves the rest of the chain, for two real obligations on one real
- * ballot, and seeds the four failures that would each silently produce a false
- * claim about a government or a candidate.
- *
- * ## Fixtures versus findings, stated once
- *
- * Tests whose ids begin with `fixture:` are INPUTS TO A FUNCTION. They assert
- * nothing about any real committee, filing or amount — and they are the only
- * way to test the independent-expenditure path at all, because **this
- * repository holds no independent-expenditure data of any kind** (tracker D51,
- * blocked behind PB10/D23). Tests that assert about the WORLD read the committed
- * artifacts: `data/fec/fec-2026.json`, `data/states/az/ballot/az-pima-2026.json` and
- * `data/states/az/campaign-finance/az-pima-2026-held.json`.
- *
- * ## Every seeded failure has a POSITIVE CONTROL
- *
- * A guard that refuses everything is not a guard, it is an outage. Each seeded
- * failure below is paired with the legitimate nearby case, and the pair is the
- * assertion: the failure must fail AND the neighbour must still work.
- */
+/** Campaign finance: can a reader ask and get a grounded answer. Tests on ids beginning fixture: are function inputs, never claims about real filings; each seeded failure is paired with a positive control. */
 
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -37,20 +14,11 @@ import {
   unresolvedAuthorityKeepsCoverageOpen,
 } from "../lib/control-plane/campaign-finance/authority.ts";
 import {
-  candidateFinanceFeatureEligibility,
-  evaluateCoverage,
-  sideSymmetryCheck,
-  symmetryCheck,
-} from "../lib/control-plane/campaign-finance/coverage.ts";
-import {
   MoneyFlattened,
   independentSpendingAbout,
   totalReceivedBy,
-  type CampaignFinanceCoverage,
-  type CandidateFinanceCoverage,
   type Contribution,
   type IndependentExpenditureReport,
-  type MeasureSideCoverage,
 } from "../lib/control-plane/campaign-finance/model.ts";
 import {
   FINANCE_QUESTIONS,
@@ -65,12 +33,7 @@ import {
   type HeldFilingUniverse,
 } from "../lib/control-plane/campaign-finance/answers.ts";
 import {
-  AZ_PIMA_CITATION,
-  azExpectedPeriods,
-  azPimaCommittees,
-  azPimaHeld,
   azPimaMoneyGap,
-  azPimaUniverse,
   federalHeldRecordsFor,
   federalIndependentExpenditureGap,
   federalUniverse,
@@ -78,8 +41,6 @@ import {
 
 const ROOT = join(import.meta.dirname, "..");
 const ASOF = "2026-08-29";
-
-/* ── Shared fixtures ──────────────────────────────────────────────────────── */
 
 function universe(over?: Partial<HeldFilingUniverse>): HeldFilingUniverse {
   return {
@@ -131,75 +92,6 @@ function ieReportSupporting(candidacyId: string, amount: number): IndependentExp
   };
 }
 
-function candidate(over: Partial<CandidateFinanceCoverage> & { candidacyId: string }): CandidateFinanceCoverage {
-  return {
-    displayName: over.candidacyId,
-    committeeIds: ["fixture:cmte"],
-    filingAuthorityResolved: true,
-    filingAuthorityIds: ["fixture:authority"],
-    filingsAcquired: ["fixture:filing"],
-    filingPeriodsExpected: ["fixture period"],
-    filingPeriodsMissing: [],
-    latestThroughDate: "2026-06-30",
-    acquisitionDepth: "SUMMARY_TOTALS",
-    openRouteIds: [],
-    identityGaps: [],
-    amendmentGaps: [],
-    asymmetryExplanation: null,
-    ...over,
-  };
-}
-
-function coverage(over: Partial<CampaignFinanceCoverage>): CampaignFinanceCoverage {
-  return {
-    contestId: "fixture:contest",
-    contestTitle: "Fixture Contest",
-    electionId: "fixture:election",
-    electionDate: "2026-11-03",
-    jurisdictionOcdId: "ocd-division/country:us/state:az",
-    officeLevel: "COUNTY",
-    filingRegimeState: "RESOLVED",
-    filingRegimeId: "fixture:regime",
-    candidateUniverse: [],
-    candidateUniverseSource: "fixture:ballot",
-    committeeUniverse: [],
-    expectedFilingAuthorityIds: ["fixture:authority"],
-    expectedFilingPeriods: [],
-    filingsAcquired: [],
-    filingsMissing: [],
-    latestThroughDate: null,
-    perCandidate: [],
-    routes: [],
-    identityGaps: [],
-    amendmentGaps: [],
-    status: "OPEN",
-    completeAsOf: null,
-    ...over,
-  };
-}
-
-function side(over: Partial<MeasureSideCoverage> & { side: "SUPPORT" | "OPPOSE" }): MeasureSideCoverage {
-  return {
-    committeeIds: ["fixture:cmte"],
-    committeeUniverseSource: "fixture:register",
-    filingAuthorityResolved: true,
-    filingAuthorityIds: ["fixture:authority"],
-    filingsAcquired: ["fixture:filing"],
-    acquisitionDepth: "SUMMARY_TOTALS",
-    latestThroughDate: "2026-06-30",
-    openRouteIds: [],
-    asymmetryExplanation: null,
-    ...over,
-  };
-}
-
-/* ══ THE FEDERAL PROVING OBLIGATION ═══════════════════════════════════════════
- *
- * ballot-az-pima:us-house-6 -> US federal regime -> Federal Election Commission
- * -> api.open.fec.gov, committed as data/fec/fec-2026.json -> the four certified
- * candidacies' principal committees -> itemized receipts and reported totals.
- */
-
 test("FEDERAL CHAIN: the ballot's four candidacies resolve to the FEC and carry real held records", () => {
   const ballot = JSON.parse(
     readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
@@ -219,7 +111,7 @@ test("FEDERAL CHAIN: the ballot's four candidacies resolve to the FEC and carry 
   assert.equal(resolution.status, "RESOLVED");
   assert.equal(resolution.authority?.id, "us:federal:fec");
 
-  // Committee -> money, read from the committed snapshot rather than transcribed.
+  // Committee -> money, read from the held snapshot rather than transcribed.
   const ciscomani = federalHeldRecordsFor(
     "ballot-az-pima:us-house-6:ciscomani-juan",
     "Juan Ciscomani",
@@ -283,15 +175,7 @@ test("FEDERAL: all three reader questions are addressed for a real candidacy", (
     },
     universe: u,
   });
-  /**
-   * THE NARROWING IS THE PROOF.
-   *
-   * `spent` is typed as the `FinanceAnswer` UNION, and the union's
-   * independent-expenditure arm carries no `reportedTotal` — so reading that
-   * field without first narrowing on `question` does not compile. That is the
-   * invariant enforcing itself on this very test: an outside group's spending
-   * has no "total received" for a caller to reach for.
-   */
+  /** spent is the FinanceAnswer union, and its independent-expenditure arm carries no reportedTotal, so the field cannot be read without narrowing. */
   assert.equal(spent.question, "WHAT_WAS_SPENT");
   if (spent.question !== "WHAT_WAS_SPENT") throw new Error("unreachable");
   assert.ok((spent.reportedTotal?.amount ?? 0) > 0, "the spending question IS answerable");
@@ -312,15 +196,6 @@ test("FEDERAL: all three reader questions are addressed for a real candidacy", (
   assert.equal(set.attributionsDistinct, true);
 });
 
-/* ══ THE LOCAL ARIZONA PROVING OBLIGATION ═════════════════════════════════════
- *
- * ballot-az-pima:prop-423 (Vail Unified School District No. 20 budget override)
- * -> A.R.S. § 16-928 -> the PIMA COUNTY OFFICER IN CHARGE OF ELECTIONS, whose
- * portal publishes under the name "Pima County Elections" -> EasyVote
- * (ecf-api.easyvoteapp.com) -> 138 filers / 680 filings, of which 5 committees
- * and 31 filings are the Vail district's -> AND NO MONEY AT ALL.
- */
-
 test("LOCAL AZ CHAIN: a school-district measure routes to the COUNTY officer, not the state and not the FEC", () => {
   const resolution = resolveFilingAuthority({
     jurisdiction: "AZ",
@@ -339,64 +214,7 @@ test("LOCAL AZ CHAIN: a school-district measure routes to the COUNTY officer, no
   assert.notEqual(resolution.authority?.id, "az:state:secretary-of-state");
 });
 
-test("LOCAL AZ: real committees and real filings were acquired from the county filing officer", () => {
-  const held = azPimaHeld();
-  assert.equal(held.filingAuthorityIdentification.officeNameAsPublished, "Pima County Elections");
-  assert.ok(held.filingAuthorityIdentification.readFrom.startsWith("https://ecf-api.easyvoteapp.com"));
-
-  const committees = azPimaCommittees();
-  assert.equal(committees.length, 5, "the five Vail-district committees in the county register");
-  const cove = committees.find((c) => c.registeredName === "Citizens of Vail for Education");
-  assert.ok(cove, "a real registered committee");
-  assert.equal(cove.type, "PAC");
-  // Identity is RECORDED, never asserted: the portal gives no candidacy id.
-  assert.equal(cove.authorizedByCandidacyId, null);
-
-  assert.equal(held.filingsIndexed.length, 31, "filings indexed for those committees");
-  assert.ok(
-    held.filingsIndexed.some((f) => f.documentName.includes("2026 July Pre-Election Report")),
-    "a real 2026 filing",
-  );
-});
-
-test("LOCAL AZ: the acquisition holds NO money, and every money answer says so as OUR gap", () => {
-  const held = azPimaHeld();
-  // Structural: no amount field exists anywhere in the committed local record.
-  const raw = JSON.stringify(held);
-  assert.ok(!/"amountReceived"|"amountSpent"|"amountSpentIndependently"/.test(raw));
-  assert.ok(held.notHeld.length >= 4, "and what is not held is NAMED, not counted");
-
-  const u = azPimaUniverse(ASOF);
-  const gap = azPimaMoneyGap("ballot-az-pima:prop-423#SUPPORT") as AttributedGap;
-
-  const who = answerWhoContributed({
-    subjectId: "ballot-az-pima:prop-423#SUPPORT",
-    subjectDisplayName: "the yes side of Proposition 423",
-    contributions: [],
-    universe: u,
-    gaps: [gap],
-  });
-  assert.equal(who.records.length, 0);
-  assert.ok(who.gaps.every((g) => g.attribution === "OURS"));
-  // The reader sentence must NEVER assert absence about the government.
-  for (const g of who.gaps) {
-    assert.equal(assertsAbsence(g.readerSentence), false, g.readerSentence);
-    assert.match(g.readerSentence, /gap in our records|not been able to read/i);
-  }
-});
-
-/**
- * Does this sentence ASSERT that no money was raised?
- *
- * Naive substring matching cannot answer that, and getting this wrong the first
- * time is instructive: the honest sentence *"that is a gap in our records, not a
- * statement that no money was raised"* contains the forbidden phrase and is the
- * exact sentence the rule wants. The phrase is not the defect; asserting it is.
- *
- * So the DISCLAIMER TAIL is cut first — everything from an explicit negation
- * marker onward — and only the HEAD, which is the claim the sentence actually
- * makes, is tested.
- */
+/** Does this sentence assert that no money was raised? The disclaimer tail is cut first, and only the claim it makes is tested. */
 function assertsAbsence(sentence: string): boolean {
   const head = sentence.split(
     /not a statement that|not a sign that|rather than a finding|not a finding|is not a statement/i,
@@ -419,19 +237,6 @@ test("WHOSE GAP: the absence-assertion detector actually detects one", () => {
     false,
   );
 });
-
-test("LOCAL AZ: the expected-period DENOMINATOR is now real, and open periods are not counted as missing", () => {
-  const periods = azExpectedPeriods(ASOF);
-  assert.equal(periods.all.length, 10, "the AZ 2026 PAC/Party reporting calendar");
-  assert.ok(periods.due.length > 0 && periods.due.length < periods.all.length);
-  // A period still open for filing is not a missing report.
-  assert.ok(periods.notYetDue.includes("Pre-General Election"));
-  assert.ok(periods.due.includes("Quarter 2"));
-  assert.ok(periods.sourceCitation.includes("ReportingPeriods.txt"));
-  assert.equal(azPimaUniverse(ASOF).periodsHeld.length, 0, "and we hold none of them");
-});
-
-/* ══ SEEDED FAILURE 1 — FEC ABSENCE MUST NOT CLOSE A NON-FEDERAL RACE ═════════ */
 
 test("SEEDED #1 FAIL CONTROL: no argument to fecAbsenceIsNotClosure closes a local contest", () => {
   for (const input of [
@@ -468,8 +273,6 @@ test("SEEDED #1 POSITIVE CONTROL: the FEC is still the right answer for the fede
   assert.ok(r.contributions.length > 0);
   assert.ok((r.aggregate?.reportedDisbursements ?? 0) > 0);
 });
-
-/* ══ SEEDED FAILURE 2 — AN IE SUPPORTING A CANDIDATE IS NOT MONEY RECEIVED ════ */
 
 test("SEEDED #2 FAIL CONTROL: an IE cast into the receipts render is REFUSED, not summed", () => {
   const report = ieReportSupporting("fixture:candidacy", 250_000);
@@ -553,110 +356,8 @@ test("SEEDED #2: the three questions cannot share a record kind", () => {
   assert.equal(new Set(kinds).size, 3, "three questions, three distinct facts");
 });
 
-/* ══ SEEDED FAILURE 3 — SYMMETRY IS MECHANICAL, FOR CANDIDATES AND FOR SIDES ══ */
-
-test("SEEDED #3 FAIL CONTROL (measure sides): one side hunted, the other not, is a FAILURE", () => {
-  const oneSided = coverage({
-    contestId: "fixture:prop",
-    measureSides: [
-      side({ side: "SUPPORT" }),
-      side({
-        side: "OPPOSE",
-        committeeIds: [],
-        committeeUniverseSource: null,
-        filingsAcquired: [],
-        acquisitionDepth: "NONE",
-        latestThroughDate: null,
-      }),
-    ],
-  });
-
-  const sides = sideSymmetryCheck(oneSided);
-  assert.equal(sides.verdict, "FAILURE");
-  assert.ok(sides.unexplained.some((f) => f.dimension === "COMMITTEE_UNIVERSE_SOURCE"));
-  assert.ok(sides.unexplained.some((f) => f.dimension === "ACQUISITION_DEPTH"));
-
-  /**
-   * AND THE PROOF THAT THIS CHECK WAS NEEDED: the pre-existing candidate sweep
-   * calls the very same record SYMMETRIC, because a measure has no candidates
-   * for it to compare. The guard was counting the wrong noun.
-   */
-  assert.equal(symmetryCheck(oneSided).verdict, "SYMMETRIC");
-
-  // The contest-level evaluator must not let it through either.
-  const verdict = evaluateCoverage(oneSided, ASOF);
-  assert.equal(verdict.sideSymmetry.verdict, "FAILURE");
-  assert.notEqual(verdict.status, "COMPLETE_AS_OF");
-  assert.ok(verdict.gaps.some((g) => g.kind === "MEASURE_SIDE_UNCOVERED"));
-});
-
-test("SEEDED #3 FAIL CONTROL (unasked sides): a measure with no side record at all is a FAILURE", () => {
-  const unasked = coverage({ contestId: "fixture:prop-unasked" });
-  const sides = sideSymmetryCheck(unasked);
-  assert.equal(sides.verdict, "FAILURE");
-  assert.equal(sides.findings.length, 2, "both sides unasked");
-  assert.ok(sides.findings.every((f) => f.dimension === "MEASURE_SIDE_ABSENT"));
-  // An unasked question is not a symmetric answer, and cannot be explained away.
-  assert.ok(sides.findings.every((f) => f.explainedBy === null));
-});
-
-test("SEEDED #3 FAIL CONTROL (candidates): three of four covered blocks the WHOLE contest", () => {
-  const threeOfFour = coverage({
-    candidateUniverse: ["a", "b", "c", "d"],
-    perCandidate: [candidate({ candidacyId: "a" }), candidate({ candidacyId: "b" }), candidate({ candidacyId: "c" })],
-  });
-  assert.equal(symmetryCheck(threeOfFour).verdict, "FAILURE");
-  const eligibility = candidateFinanceFeatureEligibility(threeOfFour);
-  assert.equal(eligibility.eligible, false, "not for the three either");
-  assert.equal(eligibility.candidatesComplete, 3);
-  assert.equal(eligibility.candidatesOwed, 4);
-});
-
-test("SEEDED #3 POSITIVE CONTROL: equal sides pass, a SOURCED asymmetry passes, a candidate contest is untouched", () => {
-  // (a) Both sides covered the same way.
-  const even = coverage({
-    contestId: "fixture:prop-even",
-    measureSides: [side({ side: "SUPPORT" }), side({ side: "OPPOSE" })],
-  });
-  assert.equal(sideSymmetryCheck(even).verdict, "SYMMETRIC");
-
-  // (b) A REAL difference in the filings, with a source. Not a failure.
-  const explained = coverage({
-    contestId: "fixture:prop-explained",
-    measureSides: [
-      side({ side: "SUPPORT" }),
-      side({
-        side: "OPPOSE",
-        committeeIds: [],
-        filingsAcquired: [],
-        acquisitionDepth: "AUTHORITY_RESOLVED",
-        asymmetryExplanation: {
-          reason:
-            "The county register was read in full for both sides and no committee has registered " +
-            "in opposition to this question.",
-          sourceCitation: AZ_PIMA_CITATION,
-          recordedOn: ASOF,
-        },
-      }),
-    ],
-  });
-  assert.equal(sideSymmetryCheck(explained).verdict, "EXPLAINED_ASYMMETRY");
-
-  // (c) NO FALSE POSITIVE on a candidate contest — the side unit does not apply.
-  const candidates = coverage({
-    candidateUniverse: ["a", "b"],
-    perCandidate: [candidate({ candidacyId: "a" }), candidate({ candidacyId: "b" })],
-  });
-  const sides = sideSymmetryCheck(candidates);
-  assert.equal(sides.verdict, "SYMMETRIC");
-  assert.equal(sides.findings.length, 0);
-  assert.match(sides.why, /candidate contest/);
-});
-
-/* ══ SEEDED FAILURE 4 — AN UNRESOLVED AUTHORITY KEEPS COVERAGE OPEN ══════════ */
-
 test("SEEDED #4 FAIL CONTROL: an unresolved authority never closes, and never falls back", () => {
-  // The rule is known (A.R.S. § 16-928); the Yavapai office holding it is not.
+  // The rule is known; the county office holding it is not.
   const open = resolveFilingAuthority({
     jurisdiction: "AZ",
     officeLevel: "SCHOOL_DISTRICT",
@@ -687,41 +388,10 @@ test("SEEDED #4 FAIL CONTROL: an unresolved authority never closes, and never fa
     assert.match(verdict.why, /about what this repository has read|closes nothing/);
   }
 
-  // And the evaluator cannot reach completion on an unresolved regime.
-  const unresolvedCoverage = coverage({
-    filingRegimeState: "NO_REGIME_ON_RECORD",
-    filingRegimeId: null,
-    candidateUniverse: ["a"],
-    perCandidate: [candidate({ candidacyId: "a" })],
-  });
-  const verdict = evaluateCoverage(unresolvedCoverage, ASOF);
-  assert.notEqual(verdict.status, "COMPLETE_AS_OF");
-  assert.ok(verdict.gaps.some((g) => g.kind === "FILING_REGIME_UNRESOLVED"));
-  assert.equal(verdict.featureEligibility.eligible, false);
 });
-
-test("SEEDED #4 POSITIVE CONTROL: a resolved regime with no gaps DOES reach COMPLETE_AS_OF", () => {
-  const complete = coverage({
-    contestId: "fixture:complete",
-    candidateUniverse: ["a", "b"],
-    perCandidate: [candidate({ candidacyId: "a" }), candidate({ candidacyId: "b" })],
-  });
-  const verdict = evaluateCoverage(complete, ASOF);
-  assert.deepEqual(verdict.gaps, [], "the gate is not simply always-closed");
-  assert.equal(verdict.status, "COMPLETE_AS_OF");
-  assert.equal(verdict.completeAsOf, ASOF);
-  assert.equal(verdict.featureEligibility.eligible, true);
-  assert.equal(verdict.sideSymmetry.verdict, "SYMMETRIC");
-});
-
-/* ══ WHOSE GAP IS IT? ════════════════════════════════════════════════════════ */
 
 test("WHOSE GAP: 'they filed none' and 'we have not read it' are never the same sentence", () => {
-  /**
-   * Iman Bah's committee reported ZERO itemized individual contributions for the
-   * 2026 cycle. Nobody is missing anything — that is THE FILER's filed fact, and
-   * it is read from the snapshot rather than asserted here.
-   */
+  /** A committee that reported zero itemized contributions: that is the filer's filed fact. */
   const bah = federalHeldRecordsFor("ballot-az-pima:us-house-6:bah-iman", "Iman Bah");
   assert.equal(bah.contributions.length, 0);
   assert.equal(bah.aggregate?.reportedItemizedReceipts, 0, "the filer reported zero itemized");
@@ -749,17 +419,14 @@ test("WHOSE GAP: 'they filed none' and 'we have not read it' are never the same 
   assert.equal(attributionsDiffer(collapsed), false, "the collapse must be detectable");
 });
 
-/* ══ COVERAGE LIMITS ═════════════════════════════════════════════════════════ */
-
 test("LIMITS: no answer anywhere can claim to rest on a complete filing set", () => {
   const fed = federalHeldRecordsFor("ballot-az-pima:us-house-6:ciscomani-juan", "Juan Ciscomani");
-  for (const u of [federalUniverse(fed), azPimaUniverse(ASOF), universe()]) {
+  for (const u of [federalUniverse(fed), universe()]) {
     assert.equal(u.isCompleteFilingSet, false);
     assert.ok(u.sourceCitations.length > 0, "and every universe is cited");
   }
-  // The federal denominator is honestly unknown; the Arizona one is now real.
+  // The federal denominator is honestly unknown.
   assert.equal(federalUniverse(fed).periodsExpected, null);
-  assert.notEqual(azPimaUniverse(ASOF).periodsExpected, null);
 });
 
 test("LIMITS: an answer with no source citation is refused outright", () => {

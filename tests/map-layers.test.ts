@@ -72,28 +72,6 @@ test("boundary counts coalesce by rendered frame and ignore basemap work", () =>
   assert.equal(calls, 4);
 });
 
-/**
- * The map's three untested layers — R05, 2026-08-17.
- *
- * The row's own words: "the 14 tests cover the cascade and time handling.
- * Nothing covers marker reconciliation, camera logic, or basemap resolution.
- * Part of why the tile failure was found by eye rather than by suite." So this
- * file takes those three, and nothing else — the pixel questions stay in the
- * walk, where pixels belong.
- *
- * WHAT IS DELIBERATELY NOT MOCKED. MapLibre's `Marker` and the live `Map` are
- * not stubbed, because a stub of them would be the thing under test. Instead
- * the reconciliation DECISION was split out of `rebuildMarkerPool` into
- * `reconcileKeys`, which has no map and no DOM in it, and the visibility and
- * selection passes are exercised against pool entries built by hand — they
- * only ever touch `element.dataset`, so a real map would add nothing but a
- * dependency. `updateMarkerIcon` gets a small element shim, because the rule
- * it carries (one level, one colour; several levels, an equal-slice ring;
- * concluded, hollow) is real logic that has already been wrong once.
- */
-
-/* --------------------------------------------------- 1: reconciliation --- */
-
 test("reconcile creates the new, updates the present, and removes only the absent", () => {
   const { create, update, remove } = reconcileKeys(["a", "b", "c"], ["b", "c", "d"]);
   assert.deepEqual(create, ["d"]);
@@ -106,8 +84,6 @@ test("an unchanged result set creates and removes nothing", () => {
   assert.deepEqual(create, []);
   assert.deepEqual(update, ["a", "b"]);
   assert.deepEqual(remove, []);
-  // The naive implementation this module exists to avoid would have reported
-  // two removals and two creations here.
 });
 
 test("an empty result removes the pool rather than leaving it stranded", () => {
@@ -116,8 +92,6 @@ test("an empty result removes the pool rather than leaving it stranded", () => {
   assert.deepEqual(update, []);
   assert.deepEqual(remove, ["a", "b"]);
 });
-
-/* ------------------------------------------------------- 2: visibility --- */
 
 interface StubElement {
   dataset: Record<string, string>;
@@ -137,8 +111,6 @@ const keys = (n: number, from = 0) =>
   new Set(Array.from({ length: n }, (_, i) => `v${i + from}`));
 
 test("a filter that narrows 500 pins to 480 writes 20 elements, not 980", () => {
-  // The number in the module's own header, asserted. This is the whole reason
-  // the previous-visible set exists, and it is invisible at fixture scale.
   const pool = stubPool(500);
   assert.equal(applyVisibility(pool, keys(500)), 500, "the first apply touches everything");
   assert.equal(applyVisibility(pool, keys(480)), 20);
@@ -163,8 +135,7 @@ test("hidden and shown are written as data attributes, so CSS owns the toggle", 
   const at = (k: string) => (pool.entries.get(k)!.element as unknown as StubElement).dataset;
   assert.equal(at("v0").hidden, "false");
   assert.equal(at("v2").hidden, "false");
-  // v1 was never visible, so it was never written — it has no attribute at all
-  // rather than a stale "false". Absence, not a manufactured value.
+  // v1 was never visible, so it was never written: no attribute, not a stale "false".
   assert.equal(at("v1").hidden, undefined);
 
   applyVisibility(pool, new Set(["v1"]));
@@ -173,30 +144,11 @@ test("hidden and shown are written as data attributes, so CSS owns the toggle", 
 });
 
 test("a visible key with no pool entry is skipped rather than counted", () => {
-  // The count is the diagnostic. Counting a key that wrote nothing would make
-  // the number that is supposed to catch a broken diff lie in its favour.
   const pool = stubPool(2);
   assert.equal(applyVisibility(pool, new Set(["v0", "v1", "ghost"])), 2);
 });
 
-/**
- * **AMENDED 2026-08-24 for P-004**, and the amendment is narrow.
- *
- * This used to assert the literal strings ["false", "true", "false"], which
- * pinned the IMPLEMENTATION — a sweep writing every pool entry on every
- * selection, 500 writes to select one pin. Selection is diffed now: an
- * unselected pin is never written, so its data-selected is ABSENT rather than
- * "false".
- *
- * Nothing a reader can see changed. Every CSS rule for a pin keys on
- * [data-selected="true"] (app/globals.css lines 4064, 4069, 4076) and none on
- * "false", so absent and "false" render identically — checked, not assumed.
- *
- * So the invariant is what is asserted: EXACTLY ONE pin reads true, and after
- * clearing, NONE does. That is the claim the test name always made, and it
- * holds at any implementation (RULING 116 - pin the invariant, never the
- * current value).
- */
+/** Selection is diffed: an unselected pin is never written, so its data-selected is absent rather than "false". */
 test("selection is exclusive, and clearing it clears every pin", () => {
   const pool = stubPool(3);
   const at = (k: string) => (pool.entries.get(k)!.element as unknown as StubElement).dataset;
@@ -212,8 +164,6 @@ test("selection is exclusive, and clearing it clears every pin", () => {
   applySelection(pool, null);
   assert.deepEqual(trueKeys(), [], "clearing leaves none");
 });
-
-/* ------------------------------------------------- 3: the marker's face --- */
 
 /** The narrowest element that `updateMarkerIcon` actually uses. */
 function shimElement() {
@@ -353,8 +303,6 @@ test("the badge counts only when there is something to count, and the label says
   assert.equal(three._attr.get("aria-label"), "City Hall, 3 meetings");
 });
 
-/* ----------------------------------------------------------- 4: camera --- */
-
 test("every zip with a deliberate altitude keeps it", () => {
   assert.equal(initialZoomForZip("85701"), METRO_ZOOM);
   assert.equal(initialZoomForZip("85641"), 10.3);
@@ -363,9 +311,7 @@ test("every zip with a deliberate altitude keeps it", () => {
 });
 
 test("a zip with no deliberate altitude gets the metro default, not zero", () => {
-  // The `||` in this function makes a zoom of 0 fall through to the default,
-  // which is correct here only because 0 is not a value the table holds. Pinned
-  // so that adding a whole-country entry cannot pass silently.
+  // The `||` in initialZoomForZip makes a zoom of 0 fall through to the default.
   for (const zip of ["99999", "", null, undefined]) {
     assert.equal(initialZoomForZip(zip), METRO_ZOOM, `${JSON.stringify(zip)} lost its default`);
   }
@@ -382,8 +328,6 @@ test("the first-load bounds are the continental US, the right way round", () => 
   assert.ok(west > -180 && east < 0, "the continental US is in the western hemisphere");
   assert.ok(south > 0 && north < 90, "and the northern one");
 });
-
-/* ---------------------------------------------------------- 5: basemap --- */
 
 function withEnv<T>(vars: Record<string, string | undefined>, run: () => T): T {
   const before: Record<string, string | undefined> = {};
@@ -403,9 +347,6 @@ function withEnv<T>(vars: Record<string, string | undefined>, run: () => T): T {
 }
 
 test("no key means no basemap — never a silent substitute provider", () => {
-  // The failure this rule was written from: a total rendering failure spent
-  // hours looking like a dark style choice. Null is what makes the caller say
-  // "Basemap unavailable" out loud.
   const choice = withEnv({ NEXT_PUBLIC_MAPTILER_KEY: undefined }, () => resolveBasemap("dark"));
   assert.equal(choice, null);
 });

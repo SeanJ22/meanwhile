@@ -1,83 +1,27 @@
 /**
- * **THE SEATS THE READER ACTUALLY HOLDS, ONCE THEY HAVE TOLD US WHERE THEY
- * ARE.** (WGH-22 — reported 8/28, "fixed" 8/28 and 8/30, falsified again
- * 2026-08-31. Third recurrence of the class; WGH-12 and WGH-15 are the same
- * defect wearing earlier numbers.)
+ * The seats the reader actually holds, once they have told us where they are.
  *
- * ## What the owner met, three times
- *
- * At 85641, address entered and resolved, two surfaces on one screen:
- *
- * ```
- *   the districts popup   State House District 17 · State Senate District 17
- *   Who Governs Here      State House District 19  "not yours — covers
- *                         State Senate District 19   another part of 85641"
- *                         ...and District 17 nowhere on the panel.
- * ```
- *
- * The owner's words: *if it stays stagnant when we put in an address, people
- * are not going to put in addresses, and that's a huge problem.*
- *
- * ## What each previous repair actually did, measured
- *
- * **WGH-15 (8/28)** routed the panel's seats through `applyResolvedLocation`,
- * which made the panel able to MARK a row as not the reader's. It could not
- * make the panel able to SHOW the right one.
- *
- * **WGH-22 (8/30)** moved the marked rows behind a disclosure and tried to add
- * the missing ones from `coverage.divisions`. Driven against production on
- * 2026-08-31 at the owner's exact address, the panel's State section came back
- * **empty**: District 19 correctly set aside, District 17 still absent. The
- * addition could never fire, at any ZIP, for any reader, because of one line
- * in `summarizeCoverage`:
- *
- * ```
- *   const seats = divisions.filter((d) => SEAT_TYPES.has(d.divisionType))
- * ```
- *
- * **`coverage.divisions` IS `coverage.seats` at the seat levels.** One
- * point-in-polygon answer at the ZIP centroid, carried twice under two names.
- * A district absent from one is absent from the other by construction, so
- * "reach the other list" was a fix over a distinction that does not exist. It
- * went green because its test hand-built a `CoverageSummary` whose `divisions`
- * carried District 17 while its `seats` did not — a shape production cannot
- * emit. The test agreed with the reasoning that produced it, and neither had
- * met the surface.
- *
- * ## What this does now
+ * `coverage.divisions` IS `coverage.seats` at the seat levels (one
+ * point-in-polygon answer at the ZIP centroid), so a district the reader's
+ * address is in can be absent from both when the ZIP crosses a legislative
+ * line. The panel is therefore built from `confirmedDivisionIds`, the reader's
+ * own answer:
  *
  * ```
  *   YOURS   the divisions the reader's ADDRESS confirmed at these levels,
  *           named and staffed by asking for them by key, PLUS the ZIP's seats
  *           the address did not rule out
  *   GONE    the districts the address positively excluded — off the panel,
- *           unlabelled, out of scope (RULING 222)
+ *           unlabelled, out of scope
  * ```
  *
- * `confirmedDivisionIds` is the reader's own answer and it is on their device.
- * It is the only list that carries District 17 at 85641, so it is the list the
- * panel is built from. What it does NOT carry is a name or a roster, and a
- * reader surface may never print an OCD-ID — so those are asked for by
- * division key through `hooks/use-confirmed-divisions.ts` and injected here as
- * rows. This module stays a pure function over data.
+ * Before a confirmed address the scope is the ZIP; after one, the scope IS the
+ * address. Names and rosters for confirmed divisions come from
+ * `hooks/use-confirmed-divisions.ts` and are injected, so this stays a pure
+ * function; a reader surface never prints an OCD-ID.
  *
- * ## RULING 222, and why the disclosure is gone rather than improved
- *
- * The 8/30 reading kept excluded districts on the panel behind a disclosure,
- * arguing RULING 26/27 forbade dropping them. The ruling of 2026-08-31
- * settles that reading: **before a confirmed address the scope is
- * the ZIP; after one, the scope IS the address.** Show-everything guarantees
- * completeness within the correct scope and never licensed displaying entities
- * we determined do not govern this reader. A *"not yours"* label on a
- * governing-entities surface is prohibited outright — an entity that is not
- * theirs is out of scope, not annotated.
- *
- * ## Without an address, nothing changes
- *
- * `UNSETTLED` is not `ELSEWHERE_IN_ZIP`. A reader who has given only a ZIP
- * sees exactly what they saw before: the whole ZIP's representation, in one
- * list, unpartitioned. There is nothing to scope to, and inventing one would
- * be the panel guessing.
+ * Without an address (`UNSETTLED`), the whole ZIP's representation is shown,
+ * unpartitioned.
  */
 
 import type { CoverageSummary, Seat } from "../registry/coverage.ts";
@@ -98,11 +42,8 @@ export const FEDERAL_SEAT_TYPES = ["cd"] as const;
 
 /**
  * How a row's people were arrived at, so the panel can say the right sentence
- * when there are none.
- *
- * `resolved` needs no sentence. The other three are three DIFFERENT facts and
- * `representationNoteFor` already words each one — collapsing them is how a
- * lookup still in flight renders as a district with no members.
+ * when there are none. `resolved` needs no sentence; the other three are
+ * different facts, worded by `representationNoteFor`.
  */
 export type SeatSourcing = "resolved" | "looking" | "unsourced" | "unavailable";
 
@@ -138,9 +79,8 @@ export interface PanelSeats {
   /** The reader's own, or the whole ZIP's when no address has settled. */
   readonly yours: readonly PanelSeat[];
   /**
-   * The districts the address POSITIVELY excluded. **Never rendered**
-   * (RULING 222). Carried so a check can assert they were dropped rather than
-   * never computed, and so the count of what was set aside stays inspectable.
+   * The districts the address POSITIVELY excluded. Never rendered; carried so
+   * a check can assert they were dropped rather than never computed.
    */
   readonly excluded: readonly PanelSeat[];
   /** True once an address has settled at least one of these levels. */
@@ -162,11 +102,8 @@ function seatOf(seat: Seat, location: ResolvedLocation): PanelSeat {
 }
 
 /**
- * Split the panel's seats for one set of division types.
- *
- * `confirmed` is injected rather than fetched so this stays a pure function
- * over data — the resolver reaches a route, and a module the panel imports for
- * arithmetic must not reach the network.
+ * Splits the panel's seats for one set of division types. `confirmed` is
+ * injected so this pure function never reaches the network.
  */
 export function panelSeatsFor(
   coverage: CoverageSummary,
@@ -177,13 +114,8 @@ export function panelSeatsFor(
   const inScope = coverage.seats.filter((s) => divisionTypes.includes(s.divisionType));
 
   /*
-   * **A STANDING IS NEVER REWRITTEN HERE, AND THAT IS THE WHOLE DISCIPLINE.**
-   *
-   * An earlier cut of this function stamped every row it added `CONFIRMED`.
-   * Driven against the real surface it did the worst possible thing: it
-   * promoted rows the reader's address EXCLUDES from a hedged claim to a
-   * confident wrong one. `standingOf` is the only thing that may say what a
-   * row IS. This function only decides which list each row goes in.
+   * A standing is never rewritten here: `standingOf` alone says what a row is;
+   * this function only decides which list each row goes in.
    */
   const kept = scopedToAddress(inScope, location).map((s) => seatOf(s as Seat, location));
   const excluded = excludedByAddress(inScope, location).map((s) =>
@@ -191,11 +123,9 @@ export function panelSeatsFor(
   );
 
   /*
-   * The reader's own districts, which the ZIP-scoped payload provably cannot
-   * carry when the ZIP crosses a legislative line. Only rows this section's
-   * levels own, only ones not already listed, and — the same gate as before —
-   * only ones `standingOf` independently confirms. A caller handing over a
-   * division the location does not confirm cannot widen the panel with it.
+   * The reader's own districts that the ZIP-scoped payload cannot carry: only
+   * rows this section's levels own, not already listed, and independently
+   * confirmed by `standingOf`.
    */
   const seen = new Set(kept.map((s) => s.ocdId));
   const mine: PanelSeat[] = confirmed

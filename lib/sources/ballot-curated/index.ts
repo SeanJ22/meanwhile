@@ -13,29 +13,21 @@ import {
 import type { AzBallotProjection, NhBallotProjection } from "../../civic-data/manual-projections.ts";
 
 /**
- * The two manually curated ballots now read their exact promoted projections.
- * Bundled files are named only as first-seed/test fixtures inside the canonical
- * read-model adapter; a store error can never reopen them.
- *
- * Edge first (2026-09-25): a reader request that entered the reader edge reads
- * the pointer's proven copy through the same Reader; any other caller reads
- * the database exactly as before.
+ * Curated ballots read their exact promoted projections. A reader request that entered the reader edge
+ * reads the pointer's proven copy through the same Reader; any other caller reads the database.
  */
 type CuratedProjection = AzBallotProjection | NhBallotProjection;
 type CuratedEntry = {
-  readonly bootstrapFile: string;
   readonly read: () => Promise<CivicDataReadResult<CuratedProjection>>;
   readonly state: () => CivicDataReadResult<CuratedProjection>;
 };
 
 const CURATED_FILES: Record<string, CuratedEntry> = {
   "ballot-az-pima": {
-    bootstrapFile: "data/states/az/ballot/az-pima-2026.json",
     read: settleAzBallotRead,
     state: azBallotReadState,
   },
   "ballot-nh-merrimack": {
-    bootstrapFile: "data/states/nh/ballot/nh-merrimack-2026.json",
     read: settleNhBallotRead,
     state: nhBallotReadState,
   },
@@ -43,11 +35,6 @@ const CURATED_FILES: Record<string, CuratedEntry> = {
 
 /** The names a curated source may be registered under — the map's own keys. */
 export const CURATED_BALLOT_NAMES = Object.keys(CURATED_FILES);
-
-/** The file a curated source reads, for provenance and for the tests. */
-export function curatedBallotFile(name: string): string | undefined {
-  return CURATED_FILES[name]?.bootstrapFile;
-}
 
 /**
  * A curated ballot source over one canonical production pointer. The validator

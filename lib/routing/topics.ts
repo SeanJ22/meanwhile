@@ -1,37 +1,21 @@
 import type { OfficeType } from "../officials/office-blurbs.ts";
 
 /**
- * The routing map — Phase 9's knowledge half (6). Topic domain → who can
- * actually act, in escalation order. Curated and cited, never inferred:
- * each route names the body types and office types that hold the power,
- * with the statutory basis the claim compresses. The chat surface that will
- * sit on top of this is next session's work; nothing here renders yet.
+ * The routing map: topic domain → who can actually act, in escalation order. Curated and cited, never
+ * inferred: each route names the body and office types that hold the power, with the statutory basis.
  *
- * **Party can never enter routing.** A route is about which OFFICE holds
- * the power — `tests/routing.test.ts` asserts no route references party
- * and that resolution output is identical however party labels are set.
- *
- * **A07 applies in full**: a topic with no mapped route returns the honest
- * gap, never a guess; a mapped route at a point where we hold no body or
- * roster returns "we don't yet know enough here to route this — here is
- * the general body that owns this topic."
+ * Party never enters routing: `tests/routing.test.ts` asserts no route references party. A topic with no
+ * mapped route returns the honest gap; a mapped route at a point where we hold no body or roster names
+ * the general body that owns the topic.
  */
 
 /** Which registry division types a routing step's body lives under. */
 export type BodyTarget = "municipal" | "county" | "school_district";
 
 /**
- * Per-division truth for a step, rendered ONLY to readers whose own
- * coverage includes that division.
- *
- * The item-1 defect (the tester's mobile pass, 2026-08-14): the libraries
- * route's county step carried "in Pima County the county board sits as the
- * Library District board" in its shared template, so a reader in Newbury,
- * NH was told about an Arizona county. Same shape as the Rockaway mayor and
- * the D40 cache key — one jurisdiction's content bound to another's key.
- *
- * The sourced Pima fact is real and worth keeping; it just belongs to Pima.
- * This is the topic-template sibling of `DIVISION_OFFICE_BLURBS`.
+ * Per-division truth for a step, rendered only to readers whose own coverage includes that division, so
+ * one jurisdiction's fact never reaches another's readers. The topic-template sibling of
+ * `DIVISION_OFFICE_BLURBS`.
  */
 export interface DivisionWhy {
   /** The division this copy belongs to. Full OCD id, never a name. */
@@ -47,13 +31,9 @@ export interface RouteStep {
   /** The office to talk to, in office-blurb terms (3d keys). */
   officeType: OfficeType | null;
   /**
-   * Why this step, in the product's plain register.
-   *
-   * **Jurisdiction-neutral, always.** A shared template names no county,
-   * city, district or body outside the reader's own — an Arizona example
-   * may never render at a New Hampshire zip, however illustrative.
-   * Place-specific truth goes in `divisionWhy` and reaches only that place.
-   * Guarded in `tests/jurisdiction-content.test.ts`.
+   * Why this step, in the product's plain register. Jurisdiction-neutral, always: a shared template names
+   * no place outside the reader's own. Place-specific truth goes in `divisionWhy`. Guarded in
+   * `tests/jurisdiction-content.test.ts`.
    */
   why: string;
   /** Overrides for readers whose coverage includes the named division. */
@@ -63,7 +43,7 @@ export interface RouteStep {
 export interface TopicRoute {
   id: string;
   label: string;
-  /** Phrases a reader might use. Matching is next session's chat work. */
+  /** Phrases a reader might use. */
   examples: string[];
   /** Steps in escalation order: who can act fastest first. */
   steps: RouteStep[];
@@ -137,7 +117,6 @@ export const TOPIC_ROUTES: readonly TopicRoute[] = [
         why: "Many library systems are county-run or county-funded, and in some places the county board doubles as the library district's own board — so the county board can act where the city cannot.",
         divisionWhy: [
           {
-            // The sourced Pima fact, kept where it belongs (item 1).
             divisionOcdId: "ocd-division/country:us/state:az/county:pima",
             why: "Here the library system is a county library district, and the county Board of Supervisors sits as its board — so the county board can act where the city cannot.",
             basis:

@@ -1,21 +1,3 @@
-/**
- * The control-plane cycle-start connect must survive a transient Neon blip.
- *
- * The standing runner's per-cycle child opens the control plane as its first
- * act; the Neon serverless driver connects on that first query. Under host load
- * the connect can throw `NeonDbError: Error connecting to database: fetch
- * failed` — and before connect-retry.ts that single throw aborted the whole
- * cycle ~2s in, so most cycles dispatched nothing while the endpoint itself was
- * healthy (ten manual reads of the same URL all succeeded).
- *
- * These tests are deterministic and provider-independent: a fake operation
- * throws the driver's exact transport error a bounded number of times and then
- * succeeds, and the retry is asserted to (a) recognise ONLY that establishment
- * class, (b) never retry a latched circuit or a real SQL/status error, and
- * (c) turn a run of transient throws into a success — the cycle-success-rate
- * claim, proven without a live database.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -32,8 +14,6 @@ import {
 } from "../lib/control-plane/repository/connect-retry.ts";
 import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 
-/** The shape @neondatabase/serverless throws: name "NeonDbError", a message,
-    an optional SQLSTATE `code`, and a `sourceError` for a transport failure. */
 class NeonDbErrorLike extends Error {
   code: string | undefined;
   sourceError: Error | undefined;
@@ -45,7 +25,6 @@ class NeonDbErrorLike extends Error {
   }
 }
 
-/** The exact error observed at bootstrap in the production run records. */
 function connectFetchFailed(): NeonDbErrorLike {
   return new NeonDbErrorLike("Error connecting to database: TypeError: fetch failed", {
     sourceError: new TypeError("fetch failed"),
@@ -114,9 +93,6 @@ test("returns the value on the first try without sleeping or retrying", async ()
 });
 
 test("a run of transient connect failures then a success returns the value", async () => {
-  // This is the reproduction: the operation crashes exactly as bootstrap did,
-  // twice, then connects. Without the retry this is a dead cycle; with it, a
-  // success.
   const delays: number[] = [];
   let calls = 0;
   const value = await withControlPlaneConnectRetry(
@@ -220,9 +196,7 @@ test("a caller's own classifier replaces the transport classifier; the bound and
   assert.equal(value, "read");
   assert.equal(calls, 3);
   assert.deepEqual(delays, [CONTROL_PLANE_CONNECT_BASE_BACKOFF_MS, CONTROL_PLANE_CONNECT_BASE_BACKOFF_MS * 2]);
-  // The default classifier would not have retried it.
   assert.equal(isTransientControlPlaneConnectError(storeReadFailed()), false);
-  // And the override still stops at the bound.
   let bounded = 0;
   await assert.rejects(
     withControlPlaneConnectRetry(
@@ -241,20 +215,6 @@ test("the default attempt budget is a small, bounded number", () => {
   assert.ok(CONTROL_PLANE_CONNECT_MAX_ATTEMPTS >= 2 && CONTROL_PLANE_CONNECT_MAX_ATTEMPTS <= 8);
 });
 
-/*
- * WIRING PROOF, NOT JUST THE HELPER. The tests above prove the retry recovers a
- * transient throw; this proves the retry is actually installed around the real
- * cycle-start connect. It drives the production `createPgRepositories` with a
- * fault injected at the driver's own fetch seam (`neonConfig.fetchFunction`, the
- * same seam installNeonRequestDeadline/installNeonCircuitBreaker compose on):
- * the first two connect fetches throw the driver's exact transport error, and
- * every fetch after answers with a valid result (including the already-valid
- * source index) so bootstrap completes. Before this fix that first throw aborted the whole cycle;
- * here createPgRepositories returns a live repository set instead.
- *
- * The global hook is saved and restored so it cannot leak into another test in
- * the shared suite process.
- */
 test("createPgRepositories survives a transient connect fault at the real bootstrap (wiring)", async () => {
   const originalFetch = neonConfig.fetchFunction;
   let fetchCalls = 0;
@@ -264,7 +224,6 @@ test("createPgRepositories survives a transient connect fault at the real bootst
       fetchCalls += 1;
       if (fetchCalls <= 2) {
         transientThrows += 1;
-        // Exactly what @neondatabase/serverless throws when the transport fails.
         const err = new Error("Error connecting to database: TypeError: fetch failed");
         err.name = "NeonDbError";
         (err as { sourceError?: Error }).sourceError = new TypeError("fetch failed");
@@ -298,18 +257,6 @@ test("createPgRepositories survives a transient connect fault at the real bootst
   }
 });
 
-/*
- * REGRESSION GUARD (2026-09-22). The retry above composes safely ONLY when each
- * attempt is bounded by installNeonRequestDeadline (see connect-retry.ts header).
- * Without it, a hung/faulting TLS connect is re-established with no per-attempt
- * deadline and Node 24 crashes natively in OpenSSL cert verification at cycle
- * start — the ~2-day "0 providers / 0 units" crash-loop. freshness-shadow.mts
- * was the lone standing-runner cycle child missing this install; routine-civic-
- * data-runner.mts had it. Both open the control plane at cycle start, so both
- * MUST install the deadline. This is a source tripwire, deliberately strict.
- * The console publisher joined the list when it began reading every record the
- * assignment view joins: one hung request there stalls the whole publish.
- */
 test("every standing-runner cycle child that bootstraps the control plane also installs the per-attempt Neon deadline", () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
   for (const child of ["scripts/freshness-shadow.mts", "scripts/routine-civic-data-runner.mts", "scripts/publish-owner-snapshot.mts"]) {

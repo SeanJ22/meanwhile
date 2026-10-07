@@ -6,17 +6,7 @@ import { agendaDocumentStore, contentHashOf, type AgendaDocument } from "../lib/
 import type { Meeting } from "../lib/sources/types.ts";
 import { retrieveAgendas } from "../scripts/ingest.ts";
 
-/**
- * **A FAILED READ IS NEVER A NEW VERSION OVER ONE WE HOLD.** (RULING 269,
- * 2026-09-23.)
- *
- * Tucson Unified, Sunnyside and Pima Community College hold 2,308 stored
- * versions of 18 sittings' "agendas" that are 54 to 69 characters of skip
- * links, because every read of a page whose bytes change per request was
- * appended. These run the ingest's own retrieval pass over the per-process
- * store it seeds, with the network replaced by a recorded or stated page. No
- * live call is made.
- */
+/** A failed read is never a new version over one we hold. These run the ingest's own retrieval pass with the network replaced by a recorded or stated page. */
 
 const realFetch = globalThis.fetch;
 after(() => {
@@ -98,11 +88,7 @@ test("a readable revision over a held version is still stored beside it", async 
 });
 
 test("the recorded Diligent page, read for a sitting already holding its skip links, adds nothing", async () => {
-  // Two Bond Oversight Committee sittings on the same tenant. The first holds
-  // the committee page the fixed extractor reads; the second holds the skip
-  // links production stored 147 times. The second's next read says the same
-  // words as the first's page, so it is the publisher's page, and it is not
-  // stored over what the sitting holds.
+  // The second sitting's next read says the same words as the first's page, so it is the publisher's page and is not stored over what the sitting holds.
   const portal = "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=";
   const page = readFileSync("tests/fixtures/diligent/meeting-information-tusd-502.html");
   const first = meeting("stub:ingest:496", `${portal}496`);

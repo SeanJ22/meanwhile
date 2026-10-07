@@ -1,8 +1,4 @@
-/**
- * DB-47 server adapter. Uses only the existing release credential and read-only
- * production migration reader. No build, Git push or migration operation.
- * API contract: netlify/open-api, restoreSiteDeploy (POST, 201 response).
- */
+/** Rollback server adapter: the existing release credential and read-only migration reader only; no build, push or migration. */
 import { createHash } from "node:crypto";
 import { readAppliedMigrationWhen } from "../db/applied-migrations.ts";
 import { phaseFromSql } from "../db/migration-phases.ts";

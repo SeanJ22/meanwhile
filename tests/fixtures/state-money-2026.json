@@ -1,0 +1,236 @@
+{
+ "AZ": {
+  "formatVersion": 1,
+  "collectedAt": "2026-09-01",
+  "cycle": 2026,
+  "split": {
+   "candidaciesInScope": 49,
+   "filed": 44,
+   "registeredNoActivityReported": 0,
+   "noReportsOnFile": 1,
+   "lead": 0,
+   "routeUnread": 0,
+   "unresolved": 4,
+   "filedRecords": 44
+  },
+  "byJurisdiction": {
+   "AZ": {
+    "inScope": 49,
+    "filed": 44,
+    "noReports": 1,
+    "lead": 0
+   }
+  },
+  "records": [
+   {
+    "dataClass": "STATE_COMMITTEE",
+    "jurisdiction": "AZ",
+    "agency": "Arizona Secretary of State — See The Money",
+    "filingsUrl": "https://seethemoney.az.gov/",
+    "committeeId": "101445",
+    "registeredName": "Glassman for Attorney General",
+    "candidateNameAsFiled": "Rodney Glassman",
+    "officeSought": "Attorney General",
+    "electionYear": 2026,
+    "filingState": "FILED",
+    "totals": {
+     "receipts": 3775589.91,
+     "expenditures": 3932955.22,
+     "cashOnHand": null,
+     "reportCount": null,
+     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+    },
+    "targetKeys": [
+     "ballot-az-pima:attorney-general:glassman-rodney"
+    ],
+    "match": {
+     "registeredName": "Glassman for Attorney General",
+     "officeAsFiled": "Attorney General",
+     "officeOnBallot": "Attorney General",
+     "electionYearAsFiled": 2026,
+     "electionYearOnBallot": 2026,
+     "allThreeAgree": true,
+     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    },
+    "checkedAt": "2026-09-01",
+    "provenance": {
+     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+     "sourceOrg": "Arizona Secretary of State — See The Money",
+     "collectedAt": "2026-09-01",
+     "verifiedAt": "2026-09-01"
+    }
+   },
+   {
+    "dataClass": "STATE_COMMITTEE",
+    "jurisdiction": "AZ",
+    "agency": "Arizona Secretary of State — See The Money",
+    "filingsUrl": "https://seethemoney.az.gov/",
+    "committeeId": null,
+    "registeredName": "",
+    "candidateNameAsFiled": "Walter \"Les\" Presmyk",
+    "officeSought": "State Mine Inspector",
+    "electionYear": 2026,
+    "filingState": "OURS_GAP",
+    "totals": {
+     "receipts": null,
+     "expenditures": null,
+     "cashOnHand": null,
+     "reportCount": null,
+     "coveringPeriod": null
+    },
+    "targetKeys": [
+     "ballot-az-pima:mine-inspector:presmyk-walter"
+    ],
+    "match": {
+     "registeredName": "",
+     "officeAsFiled": null,
+     "officeOnBallot": "State Mine Inspector",
+     "electionYearAsFiled": null,
+     "electionYearOnBallot": 2026,
+     "allThreeAgree": false,
+     "note": "OURS GAP — The agency holds a committee for this candidate, and the office it states is not the office on this ballot."
+    },
+    "checkedAt": "2026-09-01",
+    "provenance": {
+     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+     "sourceOrg": "Arizona Secretary of State — See The Money",
+     "collectedAt": "2026-09-01",
+     "verifiedAt": "2026-09-01"
+    },
+    "ourGap": {
+     "whatIsMissing": "The agency holds a committee for this candidate, and the office it states is not the office on this ballot.",
+     "nextDue": "2026-10-15",
+     "nextDueName": "Post-Primary Election (Q3)"
+    }
+   }
+  ]
+ },
+ "NH": {
+  "formatVersion": 1,
+  "collectedAt": "2026-09-01",
+  "cycle": 2026,
+  "split": {
+   "candidaciesInScope": 28,
+   "filed": 9,
+   "registeredNoActivityReported": 6,
+   "noReportsOnFile": 11,
+   "lead": 2,
+   "routeUnread": 0,
+   "unresolved": 2,
+   "filedRecords": 9
+  },
+  "byJurisdiction": {
+   "NH": {
+    "inScope": 28,
+    "filed": 9,
+    "registeredNoActivityReported": 6,
+    "noReports": 11,
+    "lead": 2,
+    "routeUnread": 0
+   }
+  },
+  "records": [
+   {
+    "dataClass": "STATE_COMMITTEE",
+    "jurisdiction": "NH",
+    "agency": "New Hampshire Secretary of State — Campaign Finance System",
+    "filingsUrl": "https://cfs.sos.nh.gov/",
+    "committeeId": "207411",
+    "registeredName": "Friends of Cinde Warmington ",
+    "candidateNameAsFiled": "Cinde Warmington",
+    "officeSought": "Governor",
+    "electionYear": 2026,
+    "filingState": "FILED",
+    "totals": {
+     "receipts": 888256.7,
+     "expenditures": 483777.32,
+     "cashOnHand": null,
+     "reportCount": null,
+     "coveringPeriod": "2026 Election Cycle"
+    },
+    "targetKeys": [
+     "ballot-nh-merrimack:governor:warmington-cinde"
+    ],
+    "match": {
+     "registeredName": "Friends of Cinde Warmington ",
+     "officeAsFiled": "Governor",
+     "officeOnBallot": "Governor",
+     "electionYearAsFiled": 2026,
+     "electionYearOnBallot": 2026,
+     "allThreeAgree": true,
+     "note": "name, office and election year all agree with the certified-ballot row"
+    },
+    "checkedAt": "2026-09-01",
+    "provenance": {
+     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
+     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
+     "collectedAt": "2026-09-01",
+     "verifiedAt": "2026-09-01"
+    }
+   }
+  ]
+ },
+ "NJ": {
+  "formatVersion": 1,
+  "collectedAt": "2026-09-01",
+  "cycle": 2026,
+  "split": {
+   "candidaciesInScope": 239,
+   "filed": 67,
+   "registeredNoActivityReported": 0,
+   "noReportsOnFile": 172,
+   "lead": 1,
+   "routeUnread": 0,
+   "unresolved": 0,
+   "filedRecords": 78
+  },
+  "byJurisdiction": {
+   "NJ": {
+    "inScope": 239,
+    "filed": 67,
+    "noReports": 172,
+    "lead": 1
+   }
+  },
+  "records": [
+   {
+    "dataClass": "STATE_COMMITTEE",
+    "jurisdiction": "NJ",
+    "agency": "New Jersey Election Law Enforcement Commission",
+    "filingsUrl": "https://www.njelecefilesearch.com/SearchEntityByLocation?entity=465973",
+    "committeeId": "465973",
+    "registeredName": "SELEN, TAYFUN",
+    "candidateNameAsFiled": "SELEN, TAYFUN",
+    "officeSought": "COUNTY COMMISSIONER",
+    "electionYear": 2026,
+    "filingState": "FILED",
+    "totals": {
+     "receipts": 225025.5,
+     "expenditures": 229525.5,
+     "cashOnHand": null,
+     "reportCount": 14,
+     "coveringPeriod": "72/24 HR, D-1, R-1, RQ-2024, RQ-2025 through 2026-06-22"
+    },
+    "targetKeys": [
+     "ballot-nj-morris:county-commissioner:selen"
+    ],
+    "match": {
+     "registeredName": "SELEN, TAYFUN",
+     "officeAsFiled": "COUNTY COMMISSIONER",
+     "officeOnBallot": "Member of the Board of County Commissioners",
+     "electionYearAsFiled": 2026,
+     "electionYearOnBallot": 2026,
+     "allThreeAgree": true,
+     "note": "name, office and election year all agree with the certified-ballot row"
+    },
+    "checkedAt": "2026-09-01",
+    "provenance": {
+     "sourceUrl": "https://www.njelecefilesearch.com/SearchEntityByLocation",
+     "sourceOrg": "New Jersey Election Law Enforcement Commission",
+     "collectedAt": "2026-09-01",
+     "verifiedAt": "2026-09-01"
+    }
+   }
+  ]
+ }
+}

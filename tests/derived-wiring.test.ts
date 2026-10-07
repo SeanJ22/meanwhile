@@ -1,20 +1,10 @@
 /**
- * **A REVIEWED CALENDAR BECOMES A WIRING ROW ONLY WHEN EVERY CHECK HOLDS, AND
- * A PROMOTED ONE IS SUSPENDED ON A REVIEW TRIGGER, NEVER ON AN OUTAGE.**
- * (NH330 Stage 2 / C16, 2026-09-24.)
+ * A reviewed calendar becomes a wiring row only when every check holds, and a promoted one is suspended on a review
+ * trigger (wrong attribution, conflicting evidence, a changed calendar), never on an outage.
  *
- * `lib/control-plane/discovery/derived-wiring.ts` decides each row of the
- * derived wiring store from the reviewed crosswalk and the latest walks. Real
- * walks, run against a recorded fake transport, supply the provenance; every
- * lookup the writer needs is a stub, so each check can be failed on its own.
- * The decisions are then planned by the interface's own rule
- * (`planDerivedVersion`), which must refuse none of them.
- *
- * Rulings §3 ("C16" was a session label, not Sean's decision: Sean,
- * 2026-10-01): a page returning "not found" is not the only reason to suspend
- * or correct a connection; wrong attribution, conflicting evidence, or a
- * changed calendar also trigger review, and previously verified records are
- * preserved through temporary outages.
+ * Real walks, run against a recorded fake transport, supply the provenance; every lookup the writer needs is a stub,
+ * so each check can be failed on its own. The decisions are then planned by `planDerivedVersion`, which must refuse
+ * none of them.
  */
 
 import assert from "node:assert/strict";

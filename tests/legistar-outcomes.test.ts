@@ -31,48 +31,6 @@ import type {
   LegistarVote,
 } from "../lib/sources/legistar/types.ts";
 
-/**
- * **WHAT THE BODY DECIDED, and the five substitutions that must stay refused.**
- *
- * Recorded live from `webapi.legistar.com/v1/pima/...` on 2026-08-29 with a
- * `MeanwhileCivicBot` User-Agent, serialized, ~350ms apart. That host publishes
- * no `robots.txt` at all (HTTP 404) and is recorded `NO_ROBOTS` in
- * `docs/sources.md`. No test below touches the network.
- *
- * The fixtures, and why each one is here:
- *
- * | file | what it is |
- * | --- | --- |
- * | `pima-event-1825.json` | the sitting record — minutes status and the minutes pointer |
- * | `pima-eventitems-1825.json` | 135 items: 58 acted, 57 pass-flagged, 1 roll-call-flagged |
- * | `pima-eventitems-1821.json` | 145 items, and the tally-without-a-roll-call case |
- * | `pima-votes-329182.json` | 5 named members' votes — the strong record |
- * | `pima-votes-329170.json` | `[]` for the roll-call-FLAGGED attendance item |
- * | `pima-votes-329177.json` | `[]` for an item with no recorded action |
- * | `pima-votes-323718.json` | `[]` for an item with an action, a Pass and a 5-0 tally |
- *
- * **The corpus measurement these tests are calibrated against.** Pima County
- * Board of Supervisors (`EventBodyId` 138), `EventDate` 2026-05-01..2026-08-29,
- * every item and every vote walked on 2026-08-29:
- *
- * ```
- * 20 sittings              1360 agenda items
- * 525 with a recorded action        465 with a pass flag
- * "Pass" 465 · "Fail" 0             ← a null flag can never mean Fail
- * 545 vote requests                 2083 per-person vote rows
- * 417 items with a per-person roll call
- * 108 acted items with ZERO vote rows        ← their gap, not a defeat
- *  49 of those carry a pass flag AND a tally sentence
- *  42 items say "carried by a N-N vote" and have ZERO per-person rows
- *  20 items flagged EventItemRollCallFlag=1 — one per sitting, all the literal
- *     "ROLL CALL" attendance item, all with no action, all returning 0 rows
- * ```
- *
- * The 42 is the number this file exists for: a pipeline that expanded those
- * tally sentences would publish roughly two hundred member positions that no
- * government ever recorded.
- */
-
 function load<T>(name: string): T {
   return JSON.parse(
     readFileSync(new URL(`./fixtures/legistar/${name}`, import.meta.url), "utf8"),
@@ -87,12 +45,7 @@ const VOTES_329170 = load<LegistarVote[]>("pima-votes-329170.json");
 const VOTES_329177 = load<LegistarVote[]>("pima-votes-329177.json");
 const VOTES_323718 = load<LegistarVote[]>("pima-votes-323718.json");
 
-/**
- * The stamp is minted from the recorded read, not written as a literal —
- * RULING 107, and the same call the live path makes. The fixtures ARE the
- * bytes the endpoint returned on 2026-08-29, so a receipt over them is
- * evidence of a read that genuinely happened.
- */
+/** The stamp is minted from the recorded read by the same call the live path makes. */
 const CONTEXT: OutcomeContext = {
   slug: "pima",
   eventId: 1825,
@@ -120,10 +73,6 @@ const NO_ACTION = itemById(ITEMS_1825, 329177);
 /** Action, Pass, "unanimously carried by a 5-0 vote", and zero per-person rows. */
 const TALLY_ONLY = itemById(ITEMS_1821, 323718);
 
-/* ================================================================== *
- * 0. The fixtures are what this file says they are.
- * ================================================================== */
-
 test("the recorded fixtures carry the shape and the counts claimed for them", () => {
   assert.equal(ITEMS_1825.length, 135);
   assert.equal(ITEMS_1821.length, 145);
@@ -132,8 +81,6 @@ test("the recorded fixtures carry the shape and the counts claimed for them", ()
   assert.equal(ITEMS_1825.filter((i) => i.EventItemPassedFlagName).length, 57);
   assert.equal(ITEMS_1825.filter((i) => i.EventItemRollCallFlag === 1).length, 1);
 
-  // The discard this workstream exists to stop: the outcome fields are on the
-  // wire and always were.
   assert.equal(ACTED_WITH_ROLL_CALL.EventItemActionName, "approve");
   assert.equal(ACTED_WITH_ROLL_CALL.EventItemPassedFlagName, "Pass");
   assert.equal(ACTED_WITH_ROLL_CALL.EventItemMover, "Rex Scott");
@@ -153,13 +100,7 @@ test("the recorded fixtures carry the shape and the counts claimed for them", ()
   assert.deepEqual([...flags], ["Pass"]);
 });
 
-/* ================================================================== *
- * INVARIANT 1 · an item with NO recorded action is not "failed to pass".
- * ================================================================== */
-
 test("INVARIANT 1 seeded failure: an item with no recorded action never reads as a defeat", () => {
-  // The seed: the item the pipeline would most plausibly mishandle — real,
-  // from the corpus, with no action, no flag, and no votes.
   assert.equal(NO_ACTION.EventItemActionName ?? null, null);
   assert.equal(NO_ACTION.EventItemPassedFlagName, null);
 
@@ -167,13 +108,10 @@ test("INVARIANT 1 seeded failure: an item with no recorded action never reads as
   assert.equal(read.disposition, "NOT_RECORDED");
   assert.notEqual(read.disposition, "FAILED");
 
-  // It produces NO outcome record at all — there is nothing to be wrong about.
   assert.equal(hasRecordedAction(NO_ACTION), false);
   const outcomes = toOutcomeRecords([NO_ACTION], CONTEXT);
   assert.equal(outcomes.length, 0);
 
-  // And the gap sentence is a fact about the PUBLISHER's record, named, with
-  // the defeat reading explicitly denied rather than merely absent.
   const gap = dispositionGap(NO_ACTION);
   assert.ok(gap);
   assert.match(gap, /carries no action at all/);
@@ -201,12 +139,8 @@ test("INVARIANT 1 at corpus scale: 135 items yield 58 outcome records, not 135",
 
   assert.equal(agenda.length, 135);
   assert.equal(outcomes.length, 58);
-  // The lengths differ, so there is no index correspondence for a caller to
-  // zip the two arrays by. That is a structural property, not a convention.
   assert.notEqual(agenda.length, outcomes.length);
 
-  // NOT ONE of the 58 reads as a defeat, because none of the 465 pass flags in
-  // the measured corpus ever said "Fail".
   assert.equal(outcomes.filter((o) => o.disposition === "FAILED").length, 0);
   assert.equal(outcomes.filter((o) => o.disposition === "PASSED").length, 57);
   assert.equal(outcomes.filter((o) => o.disposition === "NOT_RECORDED").length, 1);
@@ -215,10 +149,6 @@ test("INVARIANT 1 at corpus scale: 135 items yield 58 outcome records, not 135",
   assert.ok(unflagged);
   assert.match(String(unflagged.dispositionGap), /missing from their record, not decided against/);
 });
-
-/* ================================================================== *
- * INVARIANT 2 · an absent EventItemPassedFlagName is not Fail.
- * ================================================================== */
 
 test("INVARIANT 2 seeded failure: an action with a null pass flag is NOT_RECORDED, never FAILED", () => {
   const seeded: LegistarEventItem = {
@@ -231,8 +161,7 @@ test("INVARIANT 2 seeded failure: an action with a null pass flag is NOT_RECORDE
   assert.notEqual(read.disposition, "FAILED");
   assert.equal(read.raw, null);
 
-  // An outcome record IS still produced — the body did act — and it carries
-  // the named gap rather than a verdict.
+  // The body did act, so an outcome record is still produced, carrying the gap.
   const outcomes = toOutcomeRecords([seeded], CONTEXT);
   assert.equal(outcomes.length, 1);
   assert.equal(outcomes[0].disposition, "NOT_RECORDED");
@@ -248,7 +177,6 @@ test("INVARIANT 2 seeded failure: an unfamiliar flag string is not guessed at", 
   };
   const read = readDisposition(seeded);
   assert.equal(read.disposition, "NOT_RECORDED");
-  // Carried verbatim so a later session sees what it would have had to guess.
   assert.equal(read.raw, "Held");
 });
 
@@ -264,9 +192,7 @@ test("INVARIANT 2 seeded failure: a record contradicting itself decides nothing"
 });
 
 test("INVARIANT 2 positive control: the FAILED path exists and is reachable", () => {
-  // Not observed once in 465 measured Pima flags — so it is exercised with a
-  // constructed row, and the constructed row is labelled as such rather than
-  // being smuggled into a fixture as though a government had published it.
+  // A constructed row: no measured flag has ever said "Fail".
   const constructed: LegistarEventItem = {
     ...ACTED_WITH_ROLL_CALL,
     EventItemPassedFlagName: "Fail",
@@ -277,17 +203,10 @@ test("INVARIANT 2 positive control: the FAILED path exists and is reachable", ()
   assert.equal(read.raw, "Fail");
   assert.equal(read.conflict, null);
 
-  // And the real "Pass" beside it still reads as passed.
   assert.equal(readDisposition(ACTED_WITH_ROLL_CALL).disposition, "PASSED");
 });
 
-/* ================================================================== *
- * INVARIANT 3 · a tally is not a per-person position.
- * ================================================================== */
-
 test("INVARIANT 3 seeded failure: a 5-0 tally with zero roll-call rows yields NO roll call record", () => {
-  // The real seed, and the reason this whole file exists. The publisher wrote
-  // the arithmetic into prose and entered no roll.
   assert.match(
     String(TALLY_ONLY.EventItemActionText),
     /unanimously carried by a 5-0 vote/,
@@ -302,8 +221,6 @@ test("INVARIANT 3 seeded failure: a 5-0 tally with zero roll-call rows yields NO
   assert.equal(outcomes.length, 1);
   assert.equal(outcomes[0].tallyText, TALLY_ONLY.EventItemActionText);
 
-  // ACTION_SUMMARY answers "what did they decide" and is REFUSED for "how did
-  // they vote" by `record-class.ts` itself — the wall is not local to this file.
   assert.equal(answers(outcomes[0].recordClass, "WHAT_WAS_DECIDED"), true);
   assert.equal(answers(outcomes[0].recordClass, "HOW_DID_THEY_VOTE"), false);
 
@@ -314,8 +231,6 @@ test("INVARIANT 3 seeded failure: a 5-0 tally with zero roll-call rows yields NO
     /carries the result, not each member's recorded position/,
   );
 
-  // And the mover and seconder — two named people on a passing motion — do not
-  // make the outcome record answer for anyone's vote either.
   assert.equal(outcomes[0].mover, "Jennifer Allen");
   assert.equal(outcomes[0].seconder, "Matt Heinz");
   assert.equal(answers(outcomes[0].recordClass, "HOW_DID_THEY_VOTE"), false);
@@ -350,19 +265,13 @@ test("INVARIANT 3 positive control: a real roll call names five people and their
     ],
   );
 
-  // "Not Present" survives verbatim. Mapping the values to yes/no would erase
-  // it, and an erased abstention reads as a member who was there and agreed.
+  // Mapping values to yes/no would erase "Not Present".
   assert.ok(record.votes.some((v) => v.value === "Not Present"));
 
-  // This class, and only this class, answers the question.
   const ruling = assertAnswerable("HOW_DID_THEY_VOTE", [record.recordClass]);
   assert.equal(ruling.answerable, true);
   assert.deepEqual([...ruling.satisfiedBy], ["ROLL_CALL"]);
 });
-
-/* ================================================================== *
- * INVARIANT 4 · an agenda item may never satisfy an outcome question.
- * ================================================================== */
 
 test("INVARIANT 4 seeded failure: all 135 agenda records are refused for WHAT_WAS_DECIDED", () => {
   const agenda = toAgendaRecords(ITEMS_1825, CONTEXT);
@@ -379,7 +288,6 @@ test("INVARIANT 4 seeded failure: all 135 agenda records are refused for WHAT_WA
   assert.equal(voted.admitted.length, 0);
   assert.equal(voted.refused.length, 135);
 
-  // And the hard wall throws rather than merely advising.
   assert.throws(
     () => assertAnswerable("WHAT_WAS_DECIDED", agenda.map((a) => a.recordClass)),
     RecordClassRefused,
@@ -395,7 +303,6 @@ test("INVARIANT 4 structural: an agenda record has no field a decision could liv
       `an AGENDA record must not carry ${forbidden}`,
     );
   }
-  // And the outcome record is the mirror image: no docket fields on it.
   const outcomes = toOutcomeRecords(ITEMS_1825, CONTEXT);
   const outcomeFields = Object.keys(outcomes[0]);
   for (const forbidden of ["title", "sequence", "agendaNumber"]) {
@@ -416,8 +323,6 @@ test("INVARIANT 4 positive control: the same 135 agenda records DO answer what w
   const ruling = assertAnswerable("WHAT_WAS_NOTICED", agenda.map((a) => a.recordClass));
   assert.equal(ruling.answerable, true);
 
-  // And the outcome records answer the outcome question, so the refusal above
-  // is a rule about CLASSES and not this adapter failing to produce evidence.
   const outcomes = toOutcomeRecords(ITEMS_1825, CONTEXT);
   const decided = evidenceRecordsFor("WHAT_WAS_DECIDED", outcomes);
   assert.equal(decided.admitted.length, 58);
@@ -450,10 +355,6 @@ test("INVARIANT 4 mixed corpus: one question, three classes, only the right one 
   assert.equal(voted.admitted.length, 1);
 });
 
-/* ================================================================== *
- * INVARIANT 5 · a zero-row votes reply is TWO different facts.
- * ================================================================== */
-
 test("INVARIANT 5 seeded failure: zero rows on a roll-call-FLAGGED item is a FAILED extraction", () => {
   assert.equal(ROLL_CALL_FLAGGED.EventItemRollCallFlag, 1);
   assert.equal(VOTES_329170.length, 0);
@@ -462,15 +363,12 @@ test("INVARIANT 5 seeded failure: zero rows on a roll-call-FLAGGED item is a FAI
   assert.equal(state, "ROLL_CALL_ASSERTED_BUT_ABSENT");
   assert.equal(isFailedExtraction(state), true);
 
-  // The sentence says it is OUR failed retrieval and explicitly denies the
-  // absence reading. A zero-row extraction is a failed extraction.
   const gap = rollCallGap(state);
   assert.ok(gap);
   assert.match(gap, /could not retrieve it/);
   assert.match(gap, /not a record that no roll call happened/);
 
-  // No ROLL_CALL record is minted from it — an admitted-class record with an
-  // empty vote list is worse than none.
+  // An admitted-class record with an empty vote list is worse than none.
   assert.equal(rollCallRecordFrom(329170, VOTES_329170, CONTEXT), null);
 });
 
@@ -525,10 +423,6 @@ test("INVARIANT 5 the fourth state: never asked is not empty", () => {
   assert.notEqual(unasked[0].rollCall, asked[0].rollCall);
 });
 
-/* ================================================================== *
- * The minutes pointer: a lead, never a held record.
- * ================================================================== */
-
 test("the minutes pointer has NO record class, so it cannot be offered as evidence", () => {
   const pointer = minutesPointerFor(EVENT_1825);
   assert.equal(pointer.status, "Draft");
@@ -538,9 +432,6 @@ test("the minutes pointer has NO record class, so it cannot be offered as eviden
     "a minutes document nobody has read is not a MINUTES record; stamping a class " +
       "on it would let 'a minutes file exists' answer 'what did they decide'",
   );
-  // And the reason it was not walked is stated on the record itself: ours (no
-  // minutes adapter reads the vendor's file yet), never robots.txt, which
-  // blocks nothing since the owner decision of 2026-09-25.
   assert.match(pointer.retrievalNote, /No minutes adapter reads the file on legistar\.granicus\.com yet/);
   assert.doesNotMatch(pointer.retrievalNote, /Disallow/);
   assert.match(pointer.retrievalNote, /contents are not held/);
@@ -552,10 +443,6 @@ test("a sitting with no published minutes says so without asserting anything", (
   assert.equal(pointer.host, null);
   assert.match(pointer.retrievalNote, /names no minutes document/);
 });
-
-/* ================================================================== *
- * Collection: the sequencing, with the failures counted.
- * ================================================================== */
 
 test("collectEventOutcomes splits one sitting into three record sets and counts the failures", async () => {
   const votes: Record<number, LegistarVote[]> = {
@@ -581,8 +468,6 @@ test("collectEventOutcomes splits one sitting into three record sets and counts 
   assert.equal(result.rollCalls.length, 1);
   assert.equal(result.rollCalls[0].votes.length, 5);
 
-  // The flagged attendance item returned nothing and is reported as a failed
-  // extraction even though it produced no outcome record to hang it on.
   assert.deepEqual([...result.failedRollCallExtractions], [329170]);
   assert.equal(result.voteRequestFailures.length, 0);
 });
@@ -600,8 +485,7 @@ test("a votes request that throws leaves the item NOT_RETRIEVED and is named, ne
   assert.equal(result.rollCalls.length, 0);
   assert.equal(result.outcomes.length, 1);
   assert.equal(result.outcomes[0].rollCall, "NOT_RETRIEVED");
-  // Not counted as a failed EXTRACTION — the request never completed, which is
-  // a different fact from a completed request that returned nothing.
+  // A request that never completed is not a failed extraction.
   assert.equal(result.failedRollCallExtractions.length, 0);
   assert.equal(result.voteRequestFailures.length, 1);
   assert.equal(result.voteRequestFailures[0].eventItemId, 329182);
@@ -622,13 +506,8 @@ test("provenance names the endpoint each record was actually read from", () => {
     rollCall.provenance.endpoint,
     "https://webapi.legistar.com/v1/pima/eventitems/329182/votes",
   );
-  // The publishing body, never Granicus.
   assert.doesNotMatch(rollCall.provenance.sourceOrg, /granicus|legistar/i);
 });
-
-/* ================================================================== *
- * RULING 107 · the freshness date is evidence of a read, not a clock.
- * ================================================================== */
 
 test("RULING 107: a read that returned rows mints the day it was read", () => {
   const stamp = receiptFor(
@@ -641,8 +520,7 @@ test("RULING 107: a read that returned rows mints the day it was read", () => {
 });
 
 test("RULING 107 seeded failure: a zero-row reply mints NO date at all", () => {
-  // The zero-row rule and RULING 107 are the same rule here. `JSON.stringify([])`
-  // is two bytes, and two bytes of nothing must never date a record.
+  // `JSON.stringify([])` is two bytes of nothing and must never date a record.
   const stamp = receiptFor(
     "https://webapi.legistar.com/v1/pima/events/9999/eventitems",
     [],
@@ -671,14 +549,8 @@ test("RULING 107 positive control: an empty sitting carries a stale stamp, a rea
   assert.equal(real.agenda[0].provenance.readOn, "2026-08-29");
   // The roll call is dated by its OWN read, which returned five rows.
   assert.equal(real.rollCalls[0].provenance.readOn, "2026-08-29");
-  // And the 57 items whose votes route returned nothing produced no roll-call
-  // record to carry a date, which is the point: there is nothing to date.
   assert.equal(real.rollCalls.length, 1);
 });
-
-/* ================================================================== *
- * The second sitting, so nothing above is a one-meeting coincidence.
- * ================================================================== */
 
 test("the same split holds on a second real sitting", () => {
   const agenda = toAgendaRecords(ITEMS_1821, CONTEXT_1821);
@@ -690,9 +562,6 @@ test("the same split holds on a second real sitting", () => {
   assert.equal(outcomes.filter((o) => o.disposition === "FAILED").length, 0);
   assert.equal(outcomes.filter((o) => o.disposition === "NOT_RECORDED").length, 4);
 
-  // 35 items on this sitting alone carry a "carried by a N-N vote" sentence.
-  // Every one of them is on an ACTION_SUMMARY record and none of them is on a
-  // ROLL_CALL record, because no roll call was built from an item.
   const withTally = outcomes.filter((o) => /carried by a/i.test(o.tallyText ?? ""));
   assert.equal(withTally.length, 35);
   assert.ok(withTally.every((o) => !answers(o.recordClass, "HOW_DID_THEY_VOTE")));

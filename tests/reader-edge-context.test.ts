@@ -18,23 +18,9 @@ import { settleCommentAccessRead } from "../lib/registry/server.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
 /**
- * **THE READER AUTHORITY EDGE IS ENTERED WHERE ITS READS RUN.** (2026-09-24,
- * C20/C22.)
- *
- * `enterReaderAuthorityEdge` is `AsyncLocalStorage.enterWith`. On Node 24 (the
- * runtime Netlify serves, NODE_VERSION 24) a store entered inside an async
- * helper never reaches promise reactions created from the caller: a first
- * version of C20 entered the edge inside such a helper, and every registry and
- * federal-directory read chained on it would have gone to the database again
- * ("none" where the old shape saw "EDGE"). Local runs never saw it, because
- * there was no edge. These tests publish a real local edge store
- * (`WTP_READER_EDGE_DIR`) and ask the real Ask and funding routes, so the reads
- * must come from it.
- *
- * B6 (C20, later the same day): the recorded meeting outcomes and the
- * comment-access rules are edge families too. From a cold database they were
- * the slowest reads of a cold Ask (2.0–2.3 s and 0.6–0.8 s), so a request that
- * reads either from the database while the edge carries it fails here.
+ * `enterReaderAuthorityEdge` is `AsyncLocalStorage.enterWith`: on Node 24 a store entered inside an async
+ * helper never reaches promise reactions created from the caller. These tests publish a real local edge
+ * store (`WTP_READER_EDGE_DIR`) and ask the real routes, so the reads must come from it.
  */
 
 delete process.env.ANTHROPIC_API_KEY;
@@ -50,12 +36,10 @@ after(() => {
   rmSync(edgeDir, { recursive: true, force: true });
 });
 
-// The validated values the edge serves: the same first seeds and test fixtures
-// the database path reads in this process.
 await refreshOutcomeSnapshotFromPromoted();
 const outcomesValue = outcomeProjectionReadState();
 assert.ok(outcomesValue.kind === "BOOTSTRAP" || outcomesValue.kind === "PROMOTED", "the outcome fixture is readable");
-// The comment-access first seed, in the projection shape the runner publishes.
+// Comment access in the projection shape the runner publishes.
 const commentAccessProjection: CuratedReaderProjection = {
   kind: "comment-access",
   records: currentCommentAccess().map((value) => ({ id: `comment-access:${value.bodyId}`, ...value }) as unknown as CuratedReaderProjection["records"][number]),

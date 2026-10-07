@@ -1,15 +1,11 @@
 /**
- * **THE REST OF THE PATH A SEND IN ANY REGISTERED STATE TAKES.** (2026-09-25.)
+ * The rest of the path a Send in any registered state takes:
  *
- * - DC and the territories: every step of the meetings chain reads a
- *   division's state through `lib/ocd/state-of.ts`, which reads `/district:`
- *   and `/territory:` as well as `/state:`. Matching `state:` alone put Puerto
- *   Rico's divisions in no state: no crosswalk row, no wiring row, no derived
- *   family, no reader scope.
- * - Admin's preview: the registration slice Postgres cuts, the count by the
- *   runner's rule (certain, and at the edge), and the sentence per state.
- * - The runner reads registration where it must: before the providers run,
- *   before the territory is read, and for a DISPATCH.
+ * - DC and the territories: every step of the meetings chain reads a division's state through `lib/ocd/state-of.ts`,
+ *   which reads `/district:` and `/territory:` as well as `/state:`.
+ * - Admin's preview: the registration slice Postgres cuts, the count by the runner's rule (certain, and at the
+ *   edge), and the sentence per state.
+ * - The runner reads registration before the providers run, before the territory is read, and for a DISPATCH.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";

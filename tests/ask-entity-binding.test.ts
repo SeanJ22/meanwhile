@@ -15,44 +15,8 @@ import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { snapshotEntities } from "../lib/ask/inventory.ts";
 import { resolveInterpretation } from "../lib/ask/resolve.ts";
 
-/**
- * **A CONTEXT DEFAULT MAY NOT OVERRIDE AN EXPLICITLY NAMED ENTITY.**
- * (2026-08-27, the ask-entity session.)
- *
- * ## The defect, exactly as a tester found it
- *
- * At a Tucson zip a reader asked *"What's on the Vail school district
- * agenda?"* and the product answered about **Sunnyside Unified District** — a
- * different government about thirty miles away, named nowhere in the question,
- * with no statement that Vail had not been found and no statement that a
- * default was in use.
- *
- * The one-line proof of the mechanism, which is asserted below rather than
- * described: **deleting the word "Vail" produced an identical answer.** The
- * name the reader typed to say WHICH government they meant contributed
- * nothing, and their ZIP decided instead.
- *
- * ## What these tests pin
- *
- * The contract, in both directions, because only pinning one of them is how
- * this comes back:
- *
- * 1. A named government is never silently replaced — bound, disambiguated, or
- *    reported unresolved, and NEVER swapped for the reader's local one.
- * 2. A question that names NO government still gets the context default. A
- *    "fix" that simply stopped answering would pass half of this file and
- *    would have broken the product, so the default is pinned too.
- *
- * The real registry and the real coverage resolver are used throughout — a
- * hand-built fixture would prove the matcher matches itself.
- */
-
-/** Inside Sunnyside Unified's territory — the tester's own context. */
 const SUNNYSIDE_ZIP_POINT: [number, number] = [32.15102, -110.94461];
-/** 85641, Vail. */
 const VAIL_POINT: [number, number] = [32.00932, -110.66108];
-
-/* ─────────────────────────── the reported defect ─────────────────────────── */
 
 test("THE DEFECT: a question naming Vail never answers about Sunnyside", async () => {
   const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
@@ -79,7 +43,6 @@ test("THE DEFECT: a question naming Vail never answers about Sunnyside", async (
     `a question about Vail named ${named.join(", ")} — a government the reader did not ask about`,
   );
 
-  /* And the reader is TOLD what happened rather than left with a silent gap. */
   assert.notEqual(asked.binding.kind, "NONE", "the named government must be seen");
   const gaps = asked.answer.steps.map((s) => s.gap).filter(Boolean).join(" ");
   assert.match(
@@ -90,12 +53,6 @@ test("THE DEFECT: a question naming Vail never answers about Sunnyside", async (
 });
 
 test("THE PROOF: deleting the name is what changes the answer, and it still defaults", async () => {
-  /*
-   * The two questions differ by one word. Before the repair they produced the
-   * same answer, which is what proved the name was inert. After it they must
-   * differ — AND the nameless one must still get the local default, because a
-   * repair that merely stopped answering would also make them differ.
-   */
   const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
   const withName = answerQuestion(
     "What's on the Vail school district agenda?",
@@ -138,20 +95,12 @@ test("a reader standing in Vail still gets Vail, bound rather than defaulted", a
   if (asked.binding.kind !== "BOUND") return;
   assert.match(asked.binding.entity.id, /vail_unified_district/);
 
-  /*
-   * The binding must not COST this reader the answer. Binding and defaulting
-   * agree here — the government they named is also their own — and that is
-   * the case a repair can silently break by refusing to answer whenever a
-   * name appears. Vail is named, out loud.
-   */
   const labels = asked.answer.steps.flatMap((s) => s.bodies.map((b) => b.label));
   assert.ok(
     labels.some((l) => /Vail/i.test(l)),
     `the reader's own district was dropped by the binding: ${labels.join(", ") || "(nothing)"}`,
   );
 });
-
-/* ─────────────────── the reader's phrasings, as a reader types ────────────── */
 
 const INVENTORY: BindableEntity[] = [
   { id: "vail-sd", name: "Vail Unified District", nameClass: "body", divisionType: "school_district" },
@@ -181,8 +130,6 @@ test("the phrasings a reader actually types all reach the same government", () =
 });
 
 test("a name that fits two governments is ASKED about, never chosen between", () => {
-  /* "Vail" alone is a place AND a school district; "Rockaway" is two places
-     in the New Jersey pilot. Both must refuse to pick. */
   for (const [question, expected] of [
     ["what is Vail discussing", 2],
     ["what is Rockaway discussing", 2],
@@ -221,22 +168,12 @@ test("questions that name NO government leave the context default alone", () => 
 });
 
 test("the class the reader names separates a district from a town of that name", () => {
-  /* Both entities are called Vail. The words "school board" are the reader's
-     own, and they are what decides — not a preference for one class. */
   const board = bindNamedEntity("the Vail school board", INVENTORY);
   assert.equal(board.kind, "BOUND");
   if (board.kind === "BOUND") assert.equal(board.entity.divisionType, "school_district");
 });
 
-/* ──────────────────── adversarial: the rung's own failure modes ───────────── */
-
 test("PLANTED: a body named for a common question word cannot capture the question", () => {
-  /*
-   * "Agenda Committee" is a real shape, and on the first implementation of
-   * this rung it bound EVERY question containing the word "agenda" — including
-   * the Vail question this module was written for. A matcher able to override
-   * the default is able to override it wrongly, so the guard is pinned here.
-   */
   const bound = bindNamedEntity(
     "what's on the Vail school district agenda",
     INVENTORY,
@@ -257,12 +194,6 @@ test("PLANTED: a body named for a common question word cannot capture the questi
 });
 
 test("PLANTED: punctuation and interrogatives never become a government's name", () => {
-  /*
-   * Both of these shipped as bugs in the first implementation and both would
-   * have rendered a sentence to a reader: `normalizeName` turns "what's" into
-   * "what s", which put a government called "s" in front of "school district",
-   * and walking back past "my"/"on"/"is" reached "who".
-   */
   assert.equal(mentionBeforeClassPhrase("what's on the school district agenda?"), null);
   assert.equal(mentionBeforeClassPhrase("who is on my school board"), null);
   assert.equal(mentionBeforeClassPhrase("when does the city council meet"), null);
@@ -271,12 +202,6 @@ test("PLANTED: punctuation and interrogatives never become a government's name",
 });
 
 test("binding constrains retrieval by IDENTITY, never by label", async () => {
-  /*
-   * Two governments can share a name, so a label match would let the
-   * substitution back in through a different door. The constraint is asserted
-   * against a bound entity whose id belongs to nothing in this coverage: the
-   * correct result is no bodies at all, not the nearest lookalike.
-   */
   const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
   const answer = resolveRouting("schools-policy", coverage, {
     kind: "BOUND",
@@ -316,21 +241,6 @@ test("an unresolved or ambiguous name silences the default in routing too", asyn
 });
 
 test("PLANTED: one government arriving under TWO id spaces is not a tie", async () => {
-  /*
-   * **THE SEARCH INDEX AND COVERAGE DISAGREE ABOUT A GOVERNMENT'S ID, AND THE
-   * FIRST MERGE ASKED THE READER TO CHOOSE BETWEEN A THING AND ITSELF.**
-   *
-   * `lib/search/index.ts` mints `body:<venue key>` and labels a body with
-   * `meeting.bodyName`; coverage carries the registry's own `bodyId`. So one
-   * government reached `bindNamedEntity` twice under two ids, and distinct ids
-   * are the tie test — correctly so, because two REAL governments can share a
-   * name. The result was AMBIGUOUS between "Sunnyside Unified District" and
-   * "Sunnyside Unified District".
-   *
-   * A question carrying a class phrase hid it: the class tie-break picked the
-   * coverage row and the answer came out right. Only a question with NO class
-   * phrase exposed it — which is the shape a reader actually types.
-   */
   const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
   const local = coverage.bodies.find((b) => b.divisionType === "school_district");
   assert.ok(local, "precondition: this point must have a school district");
@@ -361,14 +271,6 @@ test("PLANTED: one government arriving under TWO id spaces is not a tie", async 
 });
 
 test("a named government the reader's context cannot satisfy silences the CONTACTS too", async () => {
-  /*
-   * `everydayContactsFor(topicId, zip)` reads a curated direct line for the
-   * topic AT THE ZIP IN VIEW. It has never seen the question and cannot know
-   * one named a government, so suppressing the wrong BODY while still printing
-   * the reader's own city service number under a question about a district
-   * thirty miles away would answer it wrongly in a smaller font. Same defect,
-   * different door.
-   */
   const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
 
   const named = answerQuestion(
@@ -384,8 +286,6 @@ test("a named government the reader's context cannot satisfy silences the CONTAC
     "a government we could not resolve must not carry the reader's own local contacts",
   );
 
-  /* And the reader's OWN questions keep theirs — the rule is about the name,
-   * not a blanket suppression. */
   const local = answerQuestion(
     "who do I call about a pothole",
     coverage,
@@ -396,14 +296,7 @@ test("a named government the reader's context cannot satisfy silences the CONTAC
 });
 
 test("dedupe does NOT collapse two genuinely distinct governments that share a name", () => {
-  /*
-   * The other half of the dedupe rule, and the half that makes it safe.
-   * Deduplication runs ACROSS the two inventories (search index vs coverage)
-   * and never WITHIN coverage — because two real governments can share a
-   * normalized name, and for them AMBIGUOUS is the correct answer rather than a
-   * bug. Collapsing them would put the substitution back with a tidier
-   * implementation.
-   */
+  /* Dedupe runs across the two inventories, never within coverage: two real governments can share a name. */
   const twoRealOnes: BindableEntity[] = [
     {
       id: "ocd-division/country:us/state:az/school_district:springfield_a#board",
@@ -432,23 +325,6 @@ test("dedupe does NOT collapse two genuinely distinct governments that share a n
 });
 
 test("the unresolved sentence claims only what was SEARCHED, never what we hold", async () => {
-  /*
-   * **THE SENTENCE I WROTE WAS FALSE, AND IT WAS A CLAIM ABOUT US.**
-   *
-   * It read *"We don't have a government recorded under 'vail'"*. At a Tucson
-   * zip that is false: the product holds Vail Unified District with eleven
-   * meetings and nine documents. What the binder actually did was search the
-   * reader's OWN AREA — the search index for what is in view, plus their
-   * covered bodies — and it never looks further, because from the client it
-   * cannot.
-   *
-   * So a local lookup produced a statement about the WHOLE corpus. Same class
-   * as a failed fetch becoming a recorded absence, pointed inward.
-   *
-   * `scripts/verify-ask-entity.mts` asserts the rendered text too, but it needs
-   * a browser and a production build. This guards the copy at the layer the
-   * defect lived in, so it cannot come back through a refactor nobody walks.
-   */
   const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
   const answer = resolveRouting("schools-policy", coverage, {
     kind: "UNRESOLVED",
@@ -461,26 +337,10 @@ test("the unresolved sentence claims only what was SEARCHED, never what we hold"
     !/do(n't| not) have a government/i.test(gaps),
     `the sentence claims the corpus holds no such government from a LOCAL lookup: ${gaps}`,
   );
-  /* And it must still name what the reader typed — scoping the claim is not a
-   * licence to stop telling them which word failed to match. */
   assert.match(gaps, /vail/i, "the reader is not told which name went unmatched");
 });
 
 test("the ambiguous sentence asks for something the product actually does", async () => {
-  /*
-   * **IT USED TO PROMISE AN INTERACTION THAT DOES NOT EXIST.**
-   *
-   * The sentence read *"Choose one and we'll answer for it"* — and nothing on
-   * the surface is choosable. The candidates render as prose: no buttons, no
-   * links, nothing to click. A reader following that instruction finds nothing
-   * to follow, which is a claim about the product rather than about a
-   * government, and false in the same way.
-   *
-   * What the product DOES do is read the class of government out of the
-   * reader's own words. So the sentence now asks for that — and this test ties
-   * the instruction to the behaviour, so the copy cannot promise one thing
-   * while the binder does another.
-   */
   const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
   const answer = resolveRouting("schools-policy", coverage, {
     kind: "AMBIGUOUS",
@@ -494,8 +354,6 @@ test("the ambiguous sentence asks for something the product actually does", asyn
     `the sentence asks the reader to choose, and nothing is choosable: ${gaps}`,
   );
 
-  /* And the instruction it DOES give must work. "school district" is exactly
-     what the sentence suggests, and it must resolve the tie it was offered for. */
   const ambiguous = bindNamedEntity("what is Vail discussing", INVENTORY);
   assert.equal(ambiguous.kind, "AMBIGUOUS", "precondition: this really is a tie");
   const disambiguated = bindNamedEntity("what is the Vail school district discussing", INVENTORY);
@@ -507,16 +365,6 @@ test("the ambiguous sentence asks for something the product actually does", asyn
   if (disambiguated.kind === "BOUND") assert.equal(disambiguated.entity.id, "vail-sd");
 });
 
-/* ───────────── R12: a topic word is not a body's name (2026-09-25) ────────── */
-
-/*
- * "What is Tucson doing about housing?" bound Tucson's Public Housing Authority
- * Board of Commissioners over Mayor and Council: the authority's own name
- * identifies it only by "housing", `nameAReaderCanSay` qualifies it with
- * "Tucson", and the whole-question tier ranked tucson+housing (two identifying
- * words) over tucson (one). Run against the Ask inventory builder and the
- * registry's own names, so the qualified name is the one the route binds on.
- */
 const TUCSON = "ocd-division/country:us/state:az/place:tucson";
 const TUCSON_PHA = `${TUCSON}#public-housing-authority`;
 const NO_INTERPRETATION = { entityMentions: [], normalizedMentions: [] } as unknown as Parameters<typeof resolveInterpretation>[0];
@@ -543,7 +391,6 @@ test("R12: a topic word does not bind the body named for it; the question stays 
     TUCSON_PHA,
     "the reader named a city and asked about a subject; they did not name the housing authority",
   );
-  /* THE PROOF, as for Vail: deleting the topic word changes nothing. */
   const without = resolveInterpretation(NO_INTERPRETATION, "What is Tucson doing?", entities);
   assert.deepEqual(housing.binding, without.binding);
   assert.equal(housing.binding.kind, "BOUND");

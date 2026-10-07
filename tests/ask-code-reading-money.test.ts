@@ -1,12 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
-await Promise.all([
-  initializeFederalVoteFirstSeed(),
-  installRegistryRuntimeFirstSeeds(),
-]);
+await initializeFederalVoteFirstSeed();
 
 import { ballotAskInventory, ballotRecordsFor, namedSourceFilingIds } from "../lib/ask/ballot-inventory.ts";
 import type { EvidenceRecord } from "../lib/ask/evidence.ts";
@@ -15,18 +11,6 @@ import { codeBestReading } from "../lib/ask/speculative-reading.ts";
 import { voteEvidenceReadsStateRollCalls } from "../lib/ask/votes.ts";
 import { BALLOT_SOURCES } from "../lib/ballot/registry.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
-
-/**
- * **THE CODE READS PERSON, MONEY AND "MEETING SOON" QUESTIONS, AND A NAMED
- * PERSON IS FOUND WHEREVER THE READER STANDS.** (2026-09-25.)
- *
- * The paid comparison that evening: questions the code could not read took a
- * model reading AND a model writing (3.7 s median on Haiku 4.5), while the
- * questions it did read answered in 0.3-2.3 s. And "How much has Rebecca
- * Harned raised?" came back UNRESOLVED for a Merrimack County reader although
- * the New Hampshire file holds her committee: her contest is not one of that
- * reader's divisions, and the ballot inventory required that it be.
- */
 
 const WARMINGTON = "ballot-nh-merrimack:governor:warmington-cinde";
 const AYOTTE = "ballot-nh-merrimack:governor:ayotte-kelly";
@@ -38,8 +22,6 @@ const nhSet = await (async () => {
   const entry = BALLOT_SOURCES.find(({ state }) => state === "nh")!;
   return entry.source.normalize(await entry.source.fetch());
 })();
-
-/* ── the ballot inventory ────────────────────────────────────────────────── */
 
 test("a held candidate the reader NAMES is a subject outside the reader's divisions — and nothing else from there is", () => {
   const matched = nhSet.contests.filter((contest) => contest.ocdId === NH || contest.ocdId === MERRIMACK);
@@ -60,8 +42,6 @@ test("a held candidate the reader NAMES is a subject outside the reader's divisi
   assert.ok(retrieved.records.some((record) => record.kind === "CANDIDACY" && record.id === HARNED));
   assert.ok(!retrieved.records.some((record) => record.kind === "CONTEST"), "no 'appears on this ballot' record for a contest outside the reader's divisions");
 });
-
-/* ── the lexical reading ─────────────────────────────────────────────────── */
 
 const people: BindableEntity[] = [
   { id: WARMINGTON, name: "Cinde Warmington", nameClass: "person", divisionType: "person" },
@@ -140,8 +120,6 @@ test("the code's guess for a pronoun money question is the models' reading: PERS
   assert.deepEqual(guess?.interpretation.temporal, { kind: "NONE" });
 });
 
-/* ── the route, against the committed corpus, with no model ─────────────── */
-
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 delete process.env.ANTHROPIC_API_KEY;
 let modelCalls = 0;
@@ -194,8 +172,6 @@ test("ROUTE: 'Has Cinde Warmington raised more money than Kelly Ayotte?' retriev
 });
 
 test("ROUTE: a comparison whose second name is SHORTER still reaches both people (the whole-question binder picks the longer name)", { concurrency: false }, async () => {
-  // Measured 2026-09-25 on production: "Joseph M. MURPHY" outranked "Marilyn ALTHOFF" on the whole question, so her
-  // held filing (her contest is outside a Morris County reader's divisions) never entered the inventory.
   const payload = await ask("Has Marilyn ALTHOFF raised more money than Joseph M. MURPHY?", ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris"]);
   assert.equal(payload.subject?.id, "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn");
   const money = payload.records.filter((record) => record.kind === "FINANCE_SUMMARY").map((record) => record.subjectId).sort();

@@ -10,13 +10,9 @@ import {
 } from "./archive-store.ts";
 
 /**
- * **The on-disk archive store — for tests, measurement, and manual runs only.**
- *
- * This module holds every filesystem writer, and it is deliberately NOT on the
- * standing runner's import path. The routine writes to object storage through
- * the S3 store; a routine that could write the filesystem could bypass the
- * canonical production data plane, which `lib/civic-data/firewall.ts` refuses.
- * A local run or a test wires this store explicitly.
+ * The on-disk archive store, for tests, measurement and manual runs only. It is
+ * deliberately not on the standing runner's import path, which writes only to
+ * object storage.
  */
 export class LocalFileArchiveStore implements PrlArchiveStore {
   readonly kind = "local-file" as const;
@@ -73,11 +69,8 @@ export function defaultArchiveRoot(env: NodeJS.ProcessEnv = process.env): string
 }
 
 /**
- * Resolve an archive store for a NON-routine caller (a test, a manual run):
- * the Neon bucket when configured, otherwise the durable local store — which is
- * a correct, complete store, not a fallback stub. The standing runner does not
- * use this; it uses `resolveS3ArchiveStore` so no filesystem writer is on its
- * import path.
+ * Resolves an archive store for a non-routine caller: the Neon bucket when
+ * configured, otherwise the durable local store.
  */
 export function resolvePrlArchiveStore(env: NodeJS.ProcessEnv = process.env): PrlArchiveStore {
   try {

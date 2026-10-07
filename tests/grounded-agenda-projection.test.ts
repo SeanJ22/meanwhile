@@ -42,7 +42,7 @@ function row(over: Partial<AgendaDocument> & Pick<AgendaDocument, "meetingId" | 
   };
 }
 
-/** Production, 2026-09-22: 88 hourly re-reads of 499's own unchanged page, beside the site root the fixture already holds for it. */
+/** 88 hourly re-reads of 499's own unchanged page, beside the site root the fixture already holds for it. */
 function tusd499Rereads(): AgendaDocument[] {
   return Array.from({ length: 88 }, (_, hour) => row({
     meetingId: TUSD_499,
@@ -57,12 +57,7 @@ function agendaRecordsFor(records: readonly EvidenceRecord[], meetingId: string)
 }
 
 test("one reading per sitting: Tucson Unified 499's 89 stored rows are its two index pages, the portal page's newest read first", () => {
-  /*
-   * Corrected 2026-09-23: the 88 re-reads are the Diligent portal page's skip
-   * links (the extractor had removed the ASP.NET server form holding the rest
-   * of the page), so the sitting holds two publication-index pages and no
-   * agenda. Identical re-reads are still ONE shown document.
-   */
+  /* The re-reads are the portal page's skip links, so the sitting holds two publication-index pages and no agenda; identical re-reads are one shown document. */
   const base = readSnapshot();
   assert.ok(base);
   const documents = [...base.agendaDocuments, ...tusd499Rereads()];
@@ -140,8 +135,7 @@ test("the real grounded route hands the answer model Tucson Unified 499's two in
   const [tusd, pima] = results;
   assert.equal(tusd!.status, 200);
   assert.equal(tusd!.payload.subject?.id, TUSD_BOARD);
-  // Corrected 2026-09-23: the 88 re-reads are the Diligent portal page's skip
-  // links, so 499 holds two publication-index pages, each named as one.
+  // The re-reads are the portal page's skip links, so 499 holds two publication-index pages, each named as one.
   const tusdDocuments = agendaRecordsFor(tusd!.payload.records, TUSD_499);
   assert.deepEqual(tusdDocuments.map((record) => record.sourceUrl), [OWN_PAGE, SITE_ROOT], "two distinct index pages, not 89 stored rows");
   assert.equal(tusdDocuments[0]!.retrievedAt, NEWEST_REREAD, "the projection's newest read of that content");

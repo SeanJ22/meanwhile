@@ -2,7 +2,7 @@
  * @freshness-reads-here — each download receipt's retrievedAt is the instant this script's own census.gov read
  * answered, minted right beside that fetch and kept with the file it read.
  *
- * **THE TERRITORIES' GOVERNMENTS, IN THE CENSUS'S OWN WORDS.** (2026-09-25.)
+ * The territories' governments, in the Census's own words.
  *
  *   node_modules/.bin/tsx scripts/extract-territory-functional-status.mts [--tiger=<dir>]
  *
@@ -10,8 +10,8 @@
  * lists nothing for American Samoa, Guam, the Northern Mariana Islands, Puerto
  * Rico or the U.S. Virgin Islands: it does not enumerate the territories. So
  * their registration reads the one Census field that says, per division,
- * whether a government sits on it: TIGER/Line's functional status (FUNCSTAT,
- * docs/state.md §4.6 M17). It exists only in full TIGER/Line, never in the
+ * whether a government sits on it: TIGER/Line's functional status (FUNCSTAT).
+ * It exists only in full TIGER/Line, never in the
  * cartographic files the division ids come from, and the method is the one
  * `scripts/fetch-districts.ts` established: download the TIGER/Line archive,
  * read only its attribute table, join on GEOID.

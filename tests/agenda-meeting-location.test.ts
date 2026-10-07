@@ -12,13 +12,8 @@ import {
 } from "../scripts/lib/agenda-meeting-location.ts";
 
 /**
- * **A SITTING'S PLACE, AS ITS OWN AGENDA STATES IT.** (2026-09-24.)
- *
- * The owner: "For locations, use the address published by the official meeting
- * source." The headers are recorded from production's held agenda PDFs (the
- * tenant portals, never a refused host). Mesa's calendar grid says "Study
- * Session" for 22 sittings whose agendas each print "City Hall 20 East Main
- * Street".
+ * A sitting's place, as its own agenda states it: the address published by the official meeting
+ * source, read from the agenda's header.
  */
 
 const fixture = JSON.parse(readFileSync(join(import.meta.dirname, "fixtures", "agenda-location-headers.json"), "utf8")) as {

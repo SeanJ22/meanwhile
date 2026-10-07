@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { gunzipSync } from "node:zlib";
 
 import {
   nhMembersCandidate,
@@ -29,8 +30,7 @@ import {
   heldOfficialStateLegislators,
   readOfficialStateLegislatorsProjection,
 } from "../lib/state-rollcalls/legislators.ts";
-import { registryRuntimeFirstSeed } from "../lib/registry/runtime-read-model.ts";
-import { registryRuntimeProjectionIssues } from "../lib/registry/runtime-data-plane.ts";
+import { registryRuntimeProjectionIssues, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { voteEvidenceFor } from "../lib/ask/votes.ts";
 import { parseStateRollCallArguments } from "../scripts/state-rollcalls.mts";
 import { parseStateLegislatorArguments } from "../scripts/state-legislators.mts";
@@ -467,7 +467,9 @@ test("a roll promotion is refused unless its exact roster pointer, LKG, and ID-s
 });
 
 test("the manual registry pointer and official state-roster contracts have no overlapping subject authority", () => {
-  const seed = registryRuntimeFirstSeed().value;
+  const seed = (JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as {
+    projection: { payload: RegistryRuntimeReadModel };
+  }).projection.payload;
   const manualSubjectIds = new Set([
     ...seed.bodyRosters.flatMap((roster) => roster.members.map((member) => member.id)),
     ...seed.rosterReaderDispositions.flatMap((row) => [row.sourceId, row.canonicalId ?? ""]),

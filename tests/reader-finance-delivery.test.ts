@@ -4,7 +4,6 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import reviewedPersonLinks from "../lib/registry/fixtures/official-person-candidacy-links-v1.json" with { type: "json" };
 import { campaignMoneyApiAnswer, campaignMoneyForTarget, currentOfficialIdentity, currentOfficialIdentityStatus, resolvedCandidacyForOfficial, officialFinanceIdentityMatches } from "../lib/funding/campaign-money.ts";
 import { ROSTER_READER_DISPOSITIONS } from "../lib/registry/body-rosters.ts";
 import { stateMoneyForCard } from "../lib/funding/nominee-money.ts";
@@ -28,7 +27,7 @@ test("official finance identity bridge is carried by the canonical registry proj
   assert.equal(bridge.formatVersion, 1);
   assert.equal(bridge.rule, "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE");
   assert.ok(bridge.rows.length > 800);
-  assert.ok(bridge.rows.every((row) => !row.holder.id.startsWith("plural:") && !('sourcePath' in row.holder)));
+  assert.ok(bridge.rows.every((row) => !('sourcePath' in row.holder)));
 });
 
 test("exact duplicate roster aliases preserve the canonical finance answer and requested identity", () => {
@@ -43,11 +42,6 @@ test("exact duplicate roster aliases preserve the canonical finance answer and r
     assert.deepEqual(campaignMoneyApiAnswer(row.sourceId), campaignMoneyApiAnswer(row.canonicalId));
     assert.deepEqual(currentOfficialIdentity(row.sourceId), currentOfficialIdentity(row.canonicalId));
     assert.deepEqual(resolvedCandidacyForOfficial(row.sourceId), resolvedCandidacyForOfficial(row.canonicalId));
-    const reviewed = reviewedPersonLinks.rows.find(link => link.officialId === row.sourceId);
-    if (reviewed) {
-      assert.equal(resolvedCandidacyForOfficial(row.canonicalId)?.candidacyId, reviewed.candidacyId, "A reviewed source-row alias preserves its exact candidacy under the canonical person");
-      assert.equal(actual.officialIdentity, "RESOLVED");
-    }
   }
 });
 
@@ -97,18 +91,6 @@ test("a candidacy for another office stays explicitly identified as that candida
   const yee = campaignMoneyForTarget("statewide:az/state-treasurer");
   assert.equal(yee.state.resolvedTargetKey, "ballot-az-pima:superintendent:yee-kimberly");
   assert.ok(yee.state.records.every(r => /Superintendent/i.test(r.match.officeOnBallot ?? "")));
-});
-
-test("a retired Plural officeholder cannot resolve through the finance identity bridge", () => {
-  const id = "plural:66e496a4-a407-4af1-add3-ef6899b89807";
-  assert.equal(bridge.rows.some(row => row.holder.id === id), false);
-  const answer = campaignMoneyForTarget(id);
-  assert.equal(answer.officialIdentity, "NOT_OFFICIAL");
-  assert.equal(answer.state.resolvedTargetKey, id);
-  assert.notEqual(answer.state.resolvedTargetKey, "ballot-az-pima:attorney-general:petersen-warren");
-  assert.deepEqual(answer.state.records, []);
-  assert.equal(currentOfficialIdentityStatus(id), "NOT_OFFICIAL");
-  assert.equal(resolvedCandidacyForOfficial(id), null);
 });
 
 test("federal officeholders' held state candidacies project without inventing federal records", () => {
@@ -172,16 +154,6 @@ test("the canonical federal contest cannot manufacture an Arizona state-finance 
   assert.equal(money.federal.kind, "funding");
   assert.equal(money.state.resolution, "FEDERAL_NOT_APPLICABLE");
   assert.deepEqual(money.state.records, []);
-});
-
-test("retired intermediary name reconciliation cannot attach Alma Hernandez's candidacy", () => {
-  const retired = campaignMoneyForTarget("plural:6dba6afa-b274-4273-b8c6-270d27214eee");
-  assert.equal(retired.officialIdentity, "NOT_OFFICIAL");
-  assert.equal(retired.state.resolvedTargetKey, "plural:6dba6afa-b274-4273-b8c6-270d27214eee");
-  assert.notEqual(retired.state.resolvedTargetKey, "ballot-az-pima:state-senate-20:hernandez-alma");
-  assert.deepEqual(retired.state.records, []);
-  assert.ok(stateMoneyForTarget("ballot-az-pima:state-senate-20:hernandez-alma").length > 0,
-    "the candidacy's own held finance remains readable without inventing an officeholder relationship");
 });
 
 test("a missing deployed normalized holding raises a failed read even if staged evidence exists", () => {

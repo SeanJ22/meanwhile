@@ -7,13 +7,7 @@ import {
 } from "../lib/ask/office-question.ts";
 import { OFFICE_BLURBS } from "../lib/officials/office-blurbs.ts";
 
-/**
- * ASK-14 — a question about what an office DOES reaches the definition we hold.
- *
- * The reported example is "What does the governor do". The controls that make
- * this a class are the offices Sean did not name, and the negative controls
- * that stop it becoming a civics generator.
- */
+// A question about what an office does reaches the definition we hold; a person question or an unheld office does not.
 
 /* --------------------------------------------------- the named example --- */
 
@@ -57,9 +51,7 @@ test("ASK-14 control: the longest phrase wins, so near-names do not collide", ()
 /* --------------------------------------------------- negative controls --- */
 
 test("ASK-14 negative control: naming an office is not asking what it does", () => {
-  // The gate that keeps this from answering a PERSON question with a job
-  // description. Verified end to end: "Who is the governor?" returns
-  // NO_EVIDENCE against the running route rather than the governor's duties.
+  // Naming an office in a person question must not answer with a job description.
   assert.equal(asksWhatAnOfficeDoes("Who is the governor?"), false);
   assert.equal(asksWhatAnOfficeDoes("Who is my mayor"), false);
   assert.equal(asksWhatAnOfficeDoes("When does the school board meet?"), false);
@@ -71,16 +63,14 @@ test("ASK-14 negative control: naming an office is not asking what it does", () 
 });
 
 test("ASK-14 negative control: an office we hold no definition for gets nothing", () => {
-  // The refusal is the point. A missing definition is answered by reading the
-  // statute and recording it, never by describing the office from memory.
+  // A missing definition is never described from memory.
   assert.equal(officeInQuestion("what does the harbourmaster do"), null);
   assert.equal(officeInQuestion("what does the dogcatcher do"), null);
   assert.equal(officeInQuestion("what does the president do"), null);
 });
 
 test("ASK-14 negative control: a bare word inside another office does not match it", () => {
-  // "clerk" alone is not "county clerk", and a substring match would answer
-  // the wrong office roughly half the time.
+  // A substring match would answer the wrong office.
   assert.equal(officeInQuestion("what does the court clerk do"), null);
 });
 

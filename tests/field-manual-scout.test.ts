@@ -87,13 +87,11 @@ test("writeFieldManualDiscoveries writes live and is grow-only across a second w
   let store = (await repos.fieldManual.read("live"))!.value;
   assert.equal(store.entries.length, 4);
 
-  // A second scout re-discovers the same door: the store refreshes, never forks.
   await writeFieldManualDiscoveries(repos, scoutDiscoveryEntries(result({ attemptId: "att-2" }), ["nj"]), "2026-09-20T00:00:00.000Z");
   store = (await repos.fieldManual.read("live"))!.value;
   assert.equal(store.entries.filter(e => e.kind === "SCOUT_DISCOVERY").length, 1, "a re-discovery updates the place door in place");
   assert.equal(store.entries.length, 5, "the new attempt adds a cost observation, not another door or method");
 
-  // The next scout inherits it via the projection.
   const projection = scoutFieldManualProjection(store, { subjectId: "ocd-division/country:us/state:nj/county:morris#governing", recordClass: "meetings" });
   assert.equal(projection.entryIds.length, 3, "the written door is inherited by the next NJ meetings scout");
   assert.ok(fieldManualBriefLines(projection)[0]!.includes("inherited door"));
@@ -153,7 +151,6 @@ test("a dead door recorded for robots.txt alone is not a wall: the brief says so
   assert.match(line("unread"), /\[robots\.txt only — not a wall; walk it\]$/);
   assert.doesNotMatch(line("forbidden"), /not a wall/, "a 403 is an access control: still a wall");
   assert.doesNotMatch(line("mixed"), /not a wall/, "a door that also met a 429 is still a wall");
-  /* A manual with no dead door carries no dead-door note. */
   const live = fieldManualBriefLines(projectFieldManual({ ...store, entries: [door("open", "a yielded route", "YIELDED")] }, { role: "SCOUT", state: "az" }));
   assert.equal(live.length, 2);
   assert.doesNotMatch(live.join("\n"), /not a wall/);

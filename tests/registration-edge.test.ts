@@ -16,9 +16,6 @@ import { enterReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
 /**
- * **REGISTRATION REACHES THE READER FROM THE EDGE, ONE STATE AT A TIME.**
- * (2026-09-24; `lib/registration/edge.ts`, `lib/meetings/edge-serving.ts`.)
- *
  * The reader never wakes the database for registration on an ordinary visit:
  * the runner publishes each state's promoted registration as its own artifact,
  * carries unchanged states forward by reference, and the reader fetches only

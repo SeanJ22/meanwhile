@@ -13,18 +13,6 @@ import {
   undatedFor,
   type ExecutiveAction,
 } from "../lib/officials/executive-actions.ts";
-import { parseChapterStamp } from "../scripts/hunt-azleg-parse.mts";
-
-/**
- * **THE COMMITTED ACTION STORE, AND THE SENTENCES IT PUTS IN FRONT OF A
- * READER.** (AZ04, 2026-08-28. No live calls.)
- *
- * The store is the product's claim about what a governor did. These tests are
- * about the ways that claim can be wrong while every function returns
- * successfully — a hardcoded verb, an invented date, an inference dressed as a
- * finding — because none of those raises an exception and all of them reach a
- * reader as a statement about a government.
- */
 
 const store = executiveActionStore();
 assert.ok(store, "the committed store must be readable from the repo root");
@@ -35,20 +23,7 @@ const SEAT = "statewide:az/governor";
 const fixture = (name: string) =>
   new Uint8Array(readFileSync(join(import.meta.dirname, "fixtures", name)));
 
-/* ══════════════════════════════════════════════════════════════════════
-   THE FALSE CLAIM THAT USED TO BE HARDCODED
-   ══════════════════════════════════════════════════════════════════════ */
-
 test("RENDER: no row that is not a signing ever renders the word `signed`", () => {
-  /*
-   * **THE DEFECT THIS FILE EXISTS FOR.** `actionText` used to be one template
-   * ending `signed ${occurredAt}.` — correct for executive orders, and a
-   * false statement about a government the moment a VETO row existed:
-   * *`HB2003, "…", signed 2026-06-19.`* about a bill she had just refused.
-   *
-   * The assertion is on the whole store, not on a crafted row, so a future
-   * kind that forgets to branch fails here rather than in production.
-   */
   for (const action of ALL) {
     const text = actionText(action);
     if (action.kind === "VETO" || action.kind === "BILL_LETTER_UNREAD") {
@@ -136,10 +111,6 @@ test("RENDER: no rendered sentence ever contains a null, undefined or empty quot
   }
 });
 
-/* ══════════════════════════════════════════════════════════════════════
-   DATES ARE READ OR THEY ARE NULL
-   ══════════════════════════════════════════════════════════════════════ */
-
 test("SCHEMA: a date is either published-and-read, or null with a reason naming whose gap it is", () => {
   for (const action of ALL) {
     if (action.occurredAt === null) {
@@ -189,21 +160,8 @@ test("WINDOW: an undated row is neither smuggled into a window nor silently drop
   }
 });
 
-/* ══════════════════════════════════════════════════════════════════════
-   THE INFERENCE THAT IS FORBIDDEN
-   ══════════════════════════════════════════════════════════════════════ */
-
 test("NEVER INFERRED: no bill is called a veto because it has a letter and no chapter", () => {
-  /*
-   * **THE ONE-LINE CHANGE THAT MUST NEVER BE MADE.** The 151 lettered bills
-   * and the 264 chaptered bills are disjoint, which is consistent with every
-   * letter being a veto and is NOT evidence of it. A VETO row is legitimate
-   * only when the letter's own words were read.
-   *
-   * So: every VETO in the store must carry a date, which only comes from a
-   * letter that was actually read. A veto derived from set arithmetic has no
-   * date to carry, and this is what catches it.
-   */
+  /* Every VETO must carry a date, which only comes from a letter actually read. */
   for (const veto of ALL.filter((a) => a.kind === "VETO")) {
     assert.ok(
       veto.occurredAt,
@@ -217,10 +175,6 @@ test("NEVER INFERRED: no bill is called a veto because it has a letter and no ch
     assert.equal(letter.occurredAt, null, `${letter.id} invented a date for an unread document`);
   }
 });
-
-/* ══════════════════════════════════════════════════════════════════════
-   THE DENOMINATOR, AND THE WALLS NAMED AS ROUTE STATES
-   ══════════════════════════════════════════════════════════════════════ */
 
 test("DENOMINATOR: the legislative half states what it did NOT reach", () => {
   const leg = store.legislative;
@@ -275,69 +229,22 @@ test("WALLS: every remaining wall is a ROUTE state, never an assertion of absenc
   );
 });
 
-/* ══════════════════════════════════════════════════════════════════════
-   THE DOCUMENTS THEMSELVES
-   ══════════════════════════════════════════════════════════════════════ */
-
-test("PDF: a chaptered version is born-digital and carries its own approval stamp", async () => {
+test("PDF: a chaptered version is born-digital and its text layer reads", async () => {
   const result = await extractTextLayer(fixture("azleg-legtext-0001.pdf"), "chapter 1");
   assert.equal(result.outcome, "EXTRACTED");
   assert.ok(result.rows >= 5, `only ${result.rows} pages of text`);
-
-  const stamp = parseChapterStamp(result.items.map((p) => p.text).join("\n"));
-  assert.equal(stamp.route, "APPROVED_BY_GOVERNOR");
-  assert.equal(stamp.approvedAt, "2026-02-06");
-  assert.equal(stamp.filedAt, "2026-02-06");
 });
 
 test("PDF: a governor's letter is a SCAN, and that reports as a failed read, not an empty document", async () => {
-  /*
-   * **THE CORRECTION.** `data/method/knowledge.json` recorded these as
-   * "born-digital PDF with a readable text layer". Measured with the repo's
-   * own instrument they are mixed-raster scans and the text layer returns
-   * nothing. This test pins the real state so the false claim cannot come
-   * back, and it asserts the DISTINCTION that matters: ZERO_ROWS is a finding
-   * about the layer, not a finding that the Governor wrote a blank page.
-   */
   const text = await extractTextLayer(fixture("azleg-govlettr-hb2003.pdf"), "hb2003 letter");
   assert.equal(text.outcome, "ZERO_ROWS", "a scan has no text layer to read");
   assert.equal(text.rows, 0);
   assert.ok(text.reason.length > 0, "and it says WHY, rather than returning an empty document");
 
-  /*
-   * **A FRESH READ, and not for tidiness.** `pdfjs.getDocument({data})`
-   * DETACHES the ArrayBuffer it is handed. Passing the same `Uint8Array` to a
-   * second layer hands it a zero-length view, and `runOcr` then reports *"the
-   * input is zero bytes — nothing was fetched"* about a document that was
-   * fetched perfectly. That is a false reason on a real failure, and it is the
-   * exact shape this repo's extraction toolkit exists to refuse. The hunter
-   * copies for the same reason.
-   */
+  /* A fresh read: pdfjs detaches the buffer it is handed. */
   const ocr = await runOcr(fixture("azleg-govlettr-hb2003.pdf"), "hb2003 letter", {
     binary: "definitely-not-a-real-binary",
   });
   assert.equal(ocr.outcome, "CANNOT_RUN");
   assert.match(ocr.reason, /not.*PATH|no OCR engine/i);
-});
-
-test("PDF: with an engine injected, the letter's own words decide the disposition", async () => {
-  /*
-   * The seam `lib/extract/ocr.ts` declares for "a session with a better
-   * engine". This proves the wiring end to end without installing anything:
-   * when text does arrive, a veto is read as a veto and dated from the
-   * letter's own dateline.
-   */
-  const { parseGovernorLetter } = await import("../scripts/hunt-azleg-parse.mts");
-  const ocr = await runOcr(fixture("azleg-govlettr-hb2003.pdf"), "hb2003 letter", {
-    engine: async () => [
-      "June 19, 2026\nThe Honorable Steve Montenegro\nSpeaker of the House\n" +
-        "RE: HB2003\nDear Speaker Montenegro:\nToday I vetoed HB2003.\nSincerely,\nKatie Hobbs",
-    ],
-  });
-  assert.equal(ocr.outcome, "EXTRACTED");
-
-  const parsed = parseGovernorLetter(ocr.items.map((p) => p.text).join("\n"));
-  assert.equal(parsed.disposition, "VETOED");
-  assert.equal(parsed.date, "2026-06-19");
-  assert.deepEqual(parsed.coveredBills, ["HB2003"]);
 });

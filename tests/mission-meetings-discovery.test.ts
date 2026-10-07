@@ -1,32 +1,9 @@
 /**
- * **MEETINGS DISCOVERY FOLLOWS THE MISSION MAP; THE GAP LEDGER IS RETIRED.** (CH-21, 2026-10-05.)
- *
- * Since 902f5c50 no freshness obligation carries a jurisdiction's meetings
- * discovery: the local-jurisdictions provider opens no MEETINGS source. The
- * old `freshness:jurisdiction:<id>#meetings-N` rows sit outside the corpus.
- * Until CH-21 they retired against the committed gap ledger, and the free walk
- * walked that ledger. Both now read the mission map (the owed rows).
- *
- * What these tests hold:
- *
- * - **The derivation.** A jurisdiction is owed meetings discovery when every
- *   MEETINGS source its registry row carries is DISCOVERY_OWED, or it carries none.
- * - **A held route.** A body holds a calendar route when its calendar row (MTG-01)
- *   or a meeting captured from it (MTG-12) holds a source; a government's statement
- *   that it publishes nothing is not one.
- * - **Mission blanks.** Every government in a mission place whose exact body holds
- *   no route is owed discovery, in any state, with no dispatch; one whose body holds
- *   a route is not; a state whose registry cannot be read is named.
- * - **Evidence first.** An old meetings row retires only when its government's exact
- *   body holds a calendar route, with a reason naming the body. No body join, no held
- *   route, unread owed rows or a provider that did not read cleanly hold it back by name.
- * - **Owned once.** The superseded planner never sees a meetings row.
- * - **Nothing else is written.** The occurrence closes unresolved, never with
- *   a disposition; the RouteTask, its lease, Attempts, commits and artifacts
- *   are not written, and nothing is deleted.
- *
- * Every test that writes runs on the in-memory double AND the durable file
- * store.
+ * Meetings discovery follows the mission map (the owed rows). A jurisdiction is owed meetings discovery when every
+ * MEETINGS source its registry row carries is DISCOVERY_OWED, or it carries none; a body holds a calendar route when
+ * its calendar row or a meeting captured from it holds a source. An old meetings row retires only when its
+ * government's exact body holds a calendar route, and the occurrence closes unresolved, never with a disposition.
+ * Every test that writes runs on the in-memory double and the durable file store.
  */
 
 import assert from "node:assert/strict";
@@ -84,7 +61,7 @@ function stored(id: string, over: Partial<StandingObligation> = {}): StandingObl
   return { ...obligation(id), nextDueAt: T0, occurrenceCount: 0, openOccurrenceId: null, updatedAt: T0, ...over };
 }
 
-/** The corpus after 902f5c50: local-jurisdictions still emits its other routes, and no MEETINGS route. */
+/** The corpus: local-jurisdictions emits its other routes, and no MEETINGS route. */
 const corpus = [{ providerId: "local-jurisdictions", obligationId: CLERK }];
 
 function registry(rows: JurisdictionRegistryFile["jurisdictions"], states: Record<string, string>): JurisdictionRegistryFile {
@@ -280,7 +257,7 @@ test("PLAN: unread owed rows or a provider that did not read cleanly retire noth
 });
 
 test("PLAN: the superseded planner never sees a meetings row, so a met need does not trip the bound", () => {
-  /* The production shape: the provider's meetings rows are 41% of its standing set. */
+  /* The provider's meetings rows are a large share of its standing set. */
   const meetings = Array.from({ length: 4 }, (_, i) => stored(meetingsRow(i % 2 === 0 ? AVONDALE : BENSON, i + 1)));
   const stale = stored(`freshness:jurisdiction:${BENSON}#clerk-9`);
   const wide = [...corpus, ...Array.from({ length: 5 }, (_, i) => ({ providerId: "local-jurisdictions", obligationId: `${CLERK}-${i}` }))];
@@ -296,7 +273,7 @@ test("PLAN: the superseded planner never sees a meetings row, so a met need does
   assert.deepEqual(rest.heldBack, []);
 });
 
-/** A meetings row registered before 902f5c50, its occurrence opened and never reached. */
+/** A meetings row registered before the provider stopped emitting MEETINGS routes, its occurrence opened and never reached. */
 async function meetingsShape(repos: ControlPlaneRepositories, jurisdictionId: string) {
   const id = meetingsRow(jurisdictionId);
   await syncObligations(repos, [obligation(id), obligation(CLERK)], T0);
@@ -322,7 +299,7 @@ test("SEEDED: a meetings row whose body holds a calendar route retires naming th
     const unlisted = await meetingsShape(repos, UNLISTED);
     const before = await untouched(repos, listed.routeTaskId, listed.workItemId);
 
-    /* After 902f5c50 the provider emits no MEETINGS route. */
+    /* The provider emits no MEETINGS route. */
     const sync = await syncObligations(repos, [obligation(CLERK)], T1);
     assert.deepEqual(sync.outside?.map((o) => o.id).sort(), [listed.id, unlisted.id].sort(), `${label}: sync names both rows it no longer walks`);
     const plan = planHeldRouteRetirement({ outside: sync.outside ?? [], corpus, providers: [CLEAN], routes: ROUTES });

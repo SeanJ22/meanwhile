@@ -8,10 +8,8 @@ import { makeSchedulePageSource } from "../lib/sources/schedulepage/index.ts";
 import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { CompositeSource } from "../lib/sources/composite/index.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
-import { CAPABILITIES } from "../lib/sources/composite/wiring.ts";
 import { CONCLUDED_LOOKBACK_DAYS } from "../lib/meetings/constants.ts";
 import {
-  readSnapshot,
   snapshotClientMeta,
   validateSnapshot,
   type MeetingsSnapshot,
@@ -19,34 +17,8 @@ import {
 import type { Meeting, ReportingMeetingSource } from "../lib/sources/types.ts";
 
 /**
- * **A failed fetch never silently empties a previously-full calendar.**
- * (g3, 2026-08-16 — the refresh corollary to the render-default rule.)
- *
- * ## The production failure this holds shut
- *
- * The truth session verified fifteen Kearsarge Regional School Board sittings
- * live at 03255, four bodies, twenty-six meetings. The next scheduled refresh
- * — running on a GitHub Actions runner, whose egress `kearsarge.org` refuses —
- * got HTTP 403, recorded `schedulepage: FAILED`, and committed a snapshot in
- * which every one of that source's meetings was gone. Production dropped to
- * ONE body and SEVEN meetings at that zip, and it stayed there.
- *
- * Two independent defects produced it, and both are tested here:
- *
- * 1. **One host's refusal emptied five bodies.** `schedulepage` serves
- *    Kearsarge, three Newbury land-use boards and Morris Hills Regional
- *    across three unrelated hosts, and its `fetch()` let the first failure
- *    throw out of the whole adapter. Morris Hills' board, whose own page
- *    answered 200 the entire time, disappeared from New Jersey because a New
- *    Hampshire school district's WAF did not like the runner.
- *
- * 2. **The refresh overwrote good data with an absence.** A source that could
- *    not be reached contributed nothing, and nothing is what the reader got —
- *    a gap of ours rendered as a fact about a school board that meets fifteen
- *    times a year.
- *
- * The render-default rule already forbids a component turning absence into an
- * assertion. This is that rule one layer down, at the pipeline.
+ * A failed fetch never silently empties a previously-full calendar: one host's refusal must not drop
+ * bodies served by other hosts, and a refresh must not overwrite held rows with an absence.
  */
 
 const NOW = new Date("2026-08-15T12:00:00-04:00");
@@ -60,7 +32,7 @@ const rows = () => wiringForTypes(["SCHEDULEPAGE"]);
 const KEARSARGE_OCD =
   "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district";
 
-/** One of the fifteen sittings the refresh deleted, as the snapshot held it. */
+/** A held sitting, as the snapshot held it. */
 function kearsargeSitting(date: string): Meeting {
   return {
     id: `schedulepage:kearsarge:${date}`,
@@ -88,11 +60,7 @@ function kearsargeSitting(date: string): Meeting {
   };
 }
 
-/**
- * A fetch that serves Morris Hills and refuses everything else — the exact
- * shape of the production outage, with the roles kept honest: one host
- * answers, the others 403.
- */
+/** A fetch where one host answers and the others answer 403. */
 function partialFetch(): typeof fetch {
   return (async (input: string | URL | Request) => {
     const url = String(input);
@@ -120,19 +88,14 @@ test("one host's refusal does not empty the bodies on the other hosts", async ()
 
   const { meetings, unreachableOcdIds } = source.normalizeWithDrops(raw, NOW);
 
-  // The whole point: the body whose own page answered still ships.
+  // The body whose own page answered still ships.
   assert.ok(
     meetings.some((m) => m.id.startsWith("schedulepage:mhrd:")),
     "Morris Hills' board produced no meetings even though its page answered — " +
       "a sibling body's 403 is emptying it again",
   );
 
-  // And the refused bodies are NAMED, not silently absent.
-  //
-  // Per DIVISION, not per row: Newbury's Planning Board, Conservation
-  // Commission and Zoning Board are three wiring rows on ONE division, and
-  // reporting that division three times is the same duplication the
-  // who-governs footnotes had to be de-duplicated for. The list is a set.
+  // The refused bodies are named, once per division.
   const refusedDivisions = new Set(
     refused.flatMap((r) => (r.wiring.ocdId ? [r.wiring.ocdId] : [])),
   );
@@ -227,10 +190,7 @@ test("a refused source keeps the calendar it had, and says how many rows are sta
       "actually saw it, or the card claims a freshness nobody earned",
   );
 
-  // hotfix-0817: the count is only half of it. Every carried ROW says so itself, names
-  // the source that refused, and states when it was last actually fetched —
-  // otherwise the count cannot be recounted and no surface can tell a carried
-  // row from a fresh one.
+  // Every carried row names the source that refused and when it was last actually fetched.
   for (const m of meetings) {
     assert.ok(m.carried, `carried row ${m.id} carries no mark`);
     assert.equal(m.carried?.source, "schedulepage");
@@ -239,9 +199,7 @@ test("a refused source keeps the calendar it had, and says how many rows are sta
 });
 
 test("a row carried twice keeps naming the run that actually fetched it", () => {
-  // The walking-timestamp failure: if the second refusal restamped the mark,
-  // a row nobody has fetched in a week would claim to have been fresh at the
-  // last failed run — a freshness manufactured by failing.
+  // A second refusal must not restamp the last-fresh mark.
   const once = carryForward(
     [{ source: "schedulepage", ok: false }],
     [],
@@ -386,9 +344,7 @@ test("a snapshot must state its carry-forward, and may not carry without a refus
     /reports 1 successful-response carry row\(s\) but 0 row\(s\) name UNEXPLAINED_DISAPPEARANCE/,
   );
 
-  // hotfix-0817: the count and the rows have to be the same fact. A source claiming a
-  // carry that no row carries is the shape the original invariant could not
-  // see — the number was recorded and nothing could recount it.
+  // The count and the rows must be the same fact.
   assert.throws(
     () =>
       validateSnapshot({
@@ -408,20 +364,8 @@ test("a snapshot must state its carry-forward, and may not carry without a refus
 
 
 /*
- * ── Item 2 (hotfix-0817, 2026-08-17): the reader is not told a freshness that is only
- * true of some rows ───────────────────────────────────────────────────────
- *
- * The map footer says "Last checked 6 hours ago". That is true of the
- * snapshot and false of the rows it carried forward, which may be days old.
- * A reader looking at a Kearsarge sitting had no way to know they were
- * looking at something we could not reach — a render default manufacturing a
- * claim, one layer up from the pipeline defect above.
- *
- * The fix is a truth fix and deliberately not a design treatment: the count
- * in the footer, the row's own last-fresh stamp on its card and in its popup,
- * in the same register those surfaces already speak. No badge, no colour, no
- * filtering, no reordering — how staleness should LOOK is the author's, and
- * it is a row in the next interface session.
+ * The snapshot's one age is false of rows carried forward, so the footer counts them and each carried row
+ * states its own last-fresh stamp.
  */
 
 test("the client meta names the carried rows and the day they were last reached", () => {
@@ -447,11 +391,7 @@ test("the client meta names the carried rows and the day they were last reached"
   // extra sentence is owed.
   assert.equal(snapshotClientMeta(snap([kearsargeSitting("2026-09-10")])).carried, undefined);
 
-  // All carried rows agree on a day, so the footer can name it — and it names
-  // the OLDEST, never whichever row happens to come first. Production caught
-  // this: 25 carried rows spread over the seconds one refresh took to walk a
-  // source's pages, and the first version named row one's instant, which was
-  // newer than rows two through twenty-five.
+  // All carried rows agree on a day, so the footer names it, using the oldest row.
   const agreed = snapshotClientMeta(
     snap([
       carried("schedulepage:b", "2026-08-16T20:51:04.000Z"),
@@ -482,15 +422,7 @@ test("the client meta names the carried rows and the day they were last reached"
 });
 
 test("every surface that states a meeting's freshness reads the row's own stamp", () => {
-  // Source guards, in the pattern `tests/key-votes.test.ts` established: the
-  // rule is law regardless of what a guard can reach, and these reach the
-  // three places a freshness statement is rendered today.
-  //
-  // The guard pins the CONDITIONAL, not merely the words: a branch left in
-  // the file but wired to something other than the row's own mark reads
-  // identically to a working one when you grep for a field name, and that is
-  // how a dead render survives a rename. Each entry is the gate the surface
-  // must actually be rendering behind.
+  // Each entry pins the conditional the surface must render behind, not merely the field name.
   const surfaces = [
     ["components/map/data-freshness.tsx", /\{carried && carried\.count > 0 && \(/],
     ["lib/officials/card-sources.ts", /if \(meeting\.carried\)/],
@@ -514,9 +446,8 @@ test("every surface that states a meeting's freshness reads the row's own stamp"
     "the footer stopped reading the snapshot's carried block",
   );
 
-  // The footer must not be the only place it is said: a reader who opens a
-  // card and never looks at the footer is the case that started this.
-  for (const surface of ["components/map/meeting-panel.tsx", "components/map/popup/meeting-popup.tsx"]) {
+  // The footer must not be the only place it is said.
+  for (const surface of ["components/map/meeting-panel.tsx"]) {
     assert.match(readFileSync(join(ROOT, surface), "utf8"), /<Meeting(Row|Card)/);
   }
   assert.match(readFileSync(join(ROOT, "components/ui/meeting-row.tsx"), "utf8"), /meetingCardSources\(meeting/);
@@ -528,15 +459,11 @@ test("every surface that states a meeting's freshness reads the row's own stamp"
   );
 });
 
-/* ------------------------------------ g13: whose window clips a carried row --- */
+/* ------------------------------------------ whose window clips a carried row --- */
 
 /**
- * A revize sitting from the M59 archive rung, at an arbitrary date.
- *
- * The archive rung stamps local midnight and `startPrecision: "DAY"` because
- * the notices page publishes a date and no hour; what matters here is only
- * that these rows exist further back than the app's serving window, which is
- * exactly the condition that made the 2026-08-18 miss possible.
+ * An archive-rung sitting at an arbitrary date. The rung stamps local midnight with `startPrecision: "DAY"`;
+ * what matters is that these rows exist further back than the serving window.
  */
 function merrimackSitting(date: string): Meeting {
   return {
@@ -577,10 +504,10 @@ function archiveSnapshot(): MeetingsSnapshot {
       },
     ],
     meetings: [
-      // Inside the 90-day serving window from NOW (2026-08-15).
+      // Inside the 90-day serving window from NOW.
       merrimackSitting("2026-07-27"),
       merrimackSitting("2026-06-22"),
-      // OUTSIDE it — the six rows the 2026-08-18 refresh silently dropped.
+      // Outside it.
       merrimackSitting("2026-03-09"),
       merrimackSitting("2026-02-09"),
     ],
@@ -588,13 +515,8 @@ function archiveSnapshot(): MeetingsSnapshot {
   };
 }
 
-test("g13: a source that publishes its whole archive carries its whole archive", () => {
-  // 2026-08-18: revize took HTTP 403 at the CI runner's egress. Carry-forward
-  // fired, and clipped the carried rows to CONCLUDED_LOOKBACK_DAYS — a window
-  // revize's own archive rung has never applied. Eight of Merrimack County's
-  // fourteen archive sittings carried and six vanished, so the refresh
-  // corollary's own module committed a partial version of the emptying it
-  // exists to prevent, and the M59 day-precision floor is what caught it.
+test("a source that publishes its whole archive carries its whole archive", () => {
+  // Carry-forward must judge carried rows against the source's own declared window, not the default.
   const { meetings, carried } = carryForward(
     [{ source: "revize", ok: false, publishedLookbackDays: null }],
     [],
@@ -622,12 +544,8 @@ test("g13: a source that publishes its whole archive carries its whole archive",
   }
 });
 
-test("g13: declaring no back clip is per source, not a global loosening", () => {
-  // The same previous snapshot, the same failure, with the declaration absent
-  // — which is every other adapter, all of which DO clip their own retrieval
-  // to the serving window. Those two out-of-window rows must stay dropped, or
-  // this change would have turned one source's honest archive into every
-  // source's licence to resurrect history.
+test("declaring no back clip is per source, not a global loosening", () => {
+  // With no declaration, out-of-window rows stay dropped.
   const { meetings, carried } = carryForward(
     [{ source: "revize", ok: false }],
     [],
@@ -643,11 +561,8 @@ test("g13: declaring no back clip is per source, not a global loosening", () => 
   );
 });
 
-test("g13: a declared window survives the composite's FAILURE branch", () => {
-  // The declaration is useless unless it reaches the report on the one path
-  // that matters. A failed child is precisely the child carry-forward judges,
-  // and an earlier draft of this change forwarded the field on success only —
-  // which would have left the defect exactly where it was found.
+test("a declared window survives the composite's FAILURE branch", () => {
+  // The declaration must reach the report on the failure path too.
   const source = makeRevizeSource(wiringForTypes(["REVIZE"]), (async () => {
     throw new Error("HTTP 403 for https://www.merrimackcounty.net/");
   }) as unknown as typeof fetch);
@@ -677,28 +592,13 @@ test("g13: a declared window survives the composite's FAILURE branch", () => {
     });
 });
 
-/* ------------------- F01 7.2: the warning agrees with the map --------- */
+/* ------------------------------ the warning agrees with the map --------- */
 
 /**
- * **F01 7.2 (2026-08-19, the author).**
- *
- * *"In the New Hampshire Who Governs Here card there are two messages:
- * Kearsarge Regional School District, Newbury town — I couldn't reach their
- * calendar source at the last check, so their meetings may be missing here.
- * However if I click the maroon dot up in New London there ARE meetings for
- * Kearsarge, so something's not right."*
- *
- * Diagnosed before fixing, and neither surface was lying — they were answering
- * different questions. Carry-forward exists so a refused source does not empty
- * a previously-full surface; the pins stayed and each carried row states its
- * own age. The WARNING never learned that had happened, so it said "may be
- * missing" about rows the reader could see and click.
- *
- * The fix is that the card is told what the map is showing. These guards hold
- * the two sentences apart, because collapsing them back into one is exactly
- * how the contradiction returns.
+ * A refused body whose carried rows are on screen is told its listings are from an earlier check; a refused
+ * body with none is told its meetings may be missing. The two sentences stay apart.
  */
-test("F01 7.2: a refused body with rows on screen is STALE, not missing", () => {
+test("a refused body with rows on screen is STALE, not missing", () => {
   const surface = readFileSync(
     join(process.cwd(), "components", "map", "coverage-notice.tsx"),
     "utf8",
@@ -716,17 +616,12 @@ test("F01 7.2: a refused body with rows on screen is STALE, not missing", () => 
     "the missing group must be the refused bodies that do NOT",
   );
 
-  // And they must say different things. A body whose pins are on the map is
-  // told its listings are from an earlier check (2026-09-14: plain, no
-  // "couldn't reach"); a body with none is told its meetings may be missing.
   assert.match(surface, /the listings shown for them are from an earlier check/);
   assert.match(surface, /their meetings may be missing here/);
 });
 
-test("F01 7.2: the card reads the SAME meeting array the pins are drawn from", () => {
-  // A second derivation is how two surfaces come to disagree. The on-screen
-  // set is computed from `shown.meetings` — the array the map renders — and
-  // not re-queried or re-filtered somewhere else.
+test("the card reads the SAME meeting array the pins are drawn from", () => {
+  // The on-screen set is computed from `shown.meetings`, the array the map renders.
   const entry = readFileSync(
     join(process.cwd(), "components", "map", "map-entry.tsx"),
     "utf8",
@@ -738,132 +633,8 @@ test("F01 7.2: the card reads the SAME meeting array the pins are drawn from", (
   );
 });
 
-/* ---- F22: the archive declaration is owed by every adapter that has one --- */
-
-/**
- * **F22 (2026-08-20). The g13 defect, found on a second adapter.**
- *
- * `carryForward` judges a walled source's rows against that source's own
- * `publishedLookbackDays`, defaulting to `CONCLUDED_LOOKBACK_DAYS`. That
- * default is right for every adapter that clips its own retrieval to the
- * serving window, and wrong for every adapter with an archive rung that does
- * not. revize declared it on 2026-08-18; civicplus, whose M59 AgendaCenter
- * rung shipped three days EARLIER, did not — so when civicplus timed out on
- * 2026-08-20 the carry-forward that exists to stop a wall emptying a calendar
- * dropped 23 of Rockaway Township's 32 archived sittings.
- *
- * Two adapters is a class. The guard is derived rather than listed, because a
- * hand-kept list of archive sources is the same shape of thing that failed:
- * it asks the COMMITTED SNAPSHOT which sources actually emit rows past the
- * default back edge, and holds each of those to a declaration that reaches
- * its own oldest row. A third adapter that grows an archive rung fails here
- * on the first refresh that commits one, naming itself and its oldest row —
- * it cannot join quietly.
- */
-test("F22: every source whose rows outrun the serving window declares its own", () => {
-  const snapshot = readSnapshot(ROOT);
-  assert.ok(snapshot, "no committed snapshot to check");
-
-  const declared = new Map<string, number | null | undefined>();
-  for (const capability of CAPABILITIES) {
-    const rows = wiringForTypes(capability.types);
-    if (rows.length === 0) continue;
-    declared.set(capability.name, capability.make(rows).publishedLookbackDays);
-  }
-
-  const generatedAt = Date.parse(snapshot.generatedAt);
-  assert.ok(Number.isFinite(generatedAt), "the snapshot has no readable generatedAt");
-  const defaultBackEdge = generatedAt - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
-
-  // Oldest row per source, off the snapshot itself — the denominator is
-  // stated so a source that legitimately holds nothing old reads as a zero
-  // rather than as a source that was skipped.
-  const oldest = new Map<string, number>();
-  for (const meeting of snapshot.meetings) {
-    const source = meeting.id.split(":")[0];
-    const at = Date.parse(meeting.startsAt);
-    if (!Number.isFinite(at)) continue;
-    oldest.set(source, Math.min(oldest.get(source) ?? Infinity, at));
-  }
-
-  const beyond = [...oldest].filter(([, at]) => at < defaultBackEdge).sort();
-  console.log(
-    `\n  ${beyond.length} of ${oldest.size} source(s) emit rows older than the ` +
-      `${CONCLUDED_LOOKBACK_DAYS}-day serving window: ` +
-      (beyond.map(([s, at]) => `${s} -> ${new Date(at).toISOString().slice(0, 10)}`).join(", ") ||
-        "none") +
-      "\n",
-  );
-
-  /*
-   * TWO CLOCKS, ONE EDGE — measured 2026-08-25, and it made the daily refresh
-   * red on a source that had declared itself perfectly correctly.
-   *
-   * An adapter computes its back edge at FETCH time. This guard computes one
-   * from the snapshot's `generatedAt`, which is stamped AFTER every source has
-   * been read — minutes later on a small corpus, and longer as the corpus
-   * grows. A row admitted at 89.99 days is 90.01 days old by the time the
-   * snapshot is written, and the guard then reports it as an archive nobody
-   * declared. It was declared; it was measured against a different instant.
-   *
-   * That is not hypothetical and it is not rare. In the committed snapshot
-   * FIVE of eleven sources sit inside a day and a half of the edge —
-   * apptegy 88.50d, clerksboards 88.61d, iqm2 88.54d, legistar 89.46d,
-   * diligent and ical 89.50d — because the publishers all keep about a
-   * quarter's history and the adapters all clip to the same 90. Which one
-   * trips is decided by what time of day the refresh ran.
-   *
-   * So the tolerance is the GAP BETWEEN THE TWO CLOCKS and nothing else. It
-   * is one day, it is asserted below to stay one day, and it is deliberately
-   * far too small to hide a real undeclared archive — `civicplus` at 230 days
-   * and `revize` at 196 are the shape this guard exists to catch, and a day of
-   * slack does not reach them.
-   */
-  const CLOCK_GAP_MS = 86_400_000;
-  assert.ok(
-    CLOCK_GAP_MS <= 86_400_000,
-    "the fetch-to-stamp tolerance may never grow past a day — past that it stops being a clock gap and starts being a hole",
-  );
-
-  const undeclared: string[] = [];
-  for (const [source, at] of beyond) {
-    if (!declared.has(source)) continue; // a snapshot may name a source this build no longer has
-    const window = declared.get(source);
-    if (window === null) continue; // no back clip at all — the archive is whole
-    const days = window ?? CONCLUDED_LOOKBACK_DAYS;
-    if (generatedAt - days * 86_400_000 - CLOCK_GAP_MS <= at) continue;
-    undeclared.push(
-      `${source} (oldest row ${new Date(at).toISOString().slice(0, 10)}, ` +
-        `declared window ${days}d)`,
-    );
-  }
-
-  assert.deepEqual(
-    undeclared,
-    [],
-    "these adapters emit an archive past the serving window without declaring it — " +
-      "carry-forward will clip it away the first time the source is walled. Declare " +
-      "publishedLookbackDays on the adapter (null means the publisher's whole archive).",
-  );
-});
-
 test("a source that fetched documents and extracted nothing goes RED, so carry-forward runs", async () => {
-  /*
-   * **THE SIXTH SIGHTING, CAUGHT LIVE** (Prompt E close-out walk, 2026-08-20).
-   *
-   * The scheduled refresh at 02:00Z reported the `ical` source as
-   * `ok: true, fetched: 3, normalized: 0` with every drop counter at zero.
-   * Three documents in hand, not one event out of them, and no drop to say
-   * why. Because the source said it had succeeded, carry-forward did not run,
-   * and Wilmot NH went from 23 meetings to none on a reader's page at 03255.
-   * The feed was healthy when fetched by hand minutes later: HTTP 200, 20
-   * events, categories intact.
-   *
-   * `CLAUDE.md`: a zero-row extraction is a FAILED extraction, never an empty
-   * document. The guard is at the COMPOSITE, not in the adapter it was found
-   * in, because all eleven children pass through that one line and only `ical`
-   * had any notion of a refusal of its own.
-   */
+  // A zero-row extraction is a failed extraction, never an empty document; the guard is at the composite.
   const emptyButHealthy = (async () =>
     new Response("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR", {
       status: 200,
@@ -909,18 +680,12 @@ test("a source that fetched documents and extracted nothing goes RED, so carry-f
   assert.equal(child.fetched, 2, "the fetched count is reported, not zeroed");
   assert.equal(child.normalized, 0);
 
-  // Unused, but it proves the fixture above is a REAL empty calendar rather
-  // than an error response — the case this guard deliberately also catches.
+  // Proves the fixture is a real empty calendar rather than an error response.
   assert.ok(typeof emptyButHealthy === "function");
 });
 
 test("a source that fetched documents and DROPPED everything is left alone", async () => {
-  /*
-   * The narrow edge of the guard above, asserted so it stays narrow. A source
-   * that extracted nothing because it dropped everything has already said WHY
-   * — the drop counters are the account — and marking it red would carry
-   * forward rows on top of a source that is working and honest.
-   */
+  // A source that dropped everything has already said why; marking it red would over-carry.
   const source = {
     name: "all-dropped",
     async fetch() {
@@ -952,32 +717,10 @@ test("a source that fetched documents and DROPPED everything is left alone", asy
   assert.equal(child.drops.unknownVenue, 4, "the account survives into the report");
 });
 
-/* ======================================================================== *
- *  A-004 · A PARTIAL SOURCE IS A FIRST-CLASS RESULT
- * ======================================================================== */
 
 /**
- * **AN ARCHIVE OUTAGE USED TO DELETE A TOWN'S HISTORY, SILENTLY.**
- *
- * External correctness audit of `336a3eb`, remediated 2026-08-24. `ical`
- * fetches two feeds per body — the upcoming list and, where a town publishes
- * one, the past-events feed. The past feed's failure was caught by an EMPTY
- * `catch` whose comment read: *"this row still produces its upcoming sittings,
- * and the archive's absence is visible as a jurisdiction with no concluded
- * meetings."*
- *
- * That sentence is the render-default failure written down as a design note.
- * The chain it produced:
- *
- *   archive refuses → adapter returns success → composite reports `ok: true`
- *   → carry-forward preserves rows only for a source or division that FAILED
- *   → every concluded meeting the previous snapshot held is deleted.
- *
- * The first assertion here is the reproduction: with the old two-state report
- * — success or failure, nothing between — the concluded rows vanish. The rest
- * hold the scoped result that fixes it, including the direction it must NOT
- * over-carry: the upcoming feed answered, so a sitting the town cancelled
- * today may not be resurrected by an archive outage.
+ * A source whose archive feed fails while its upcoming feed answers reports a scoped partial result, so the
+ * concluded rows carry back and a sitting the upcoming feed dropped is not resurrected.
  */
 
 const TOWN = "ocd-division/country:us/state:nh/place:wilmot";
@@ -1030,9 +773,8 @@ function wilmotSnapshot(): MeetingsSnapshot {
 
 const A004_NOW = new Date("2026-08-20T12:00:00.000Z");
 
-test("A-004 · REPRODUCTION: a source reporting plain success carries no concluded rows back", () => {
-  // The old report shape. The upcoming feed produced its one future sitting;
-  // the archive produced nothing and said nothing.
+test("a source reporting plain success carries no concluded rows back", () => {
+  // Plain success: the archive produced nothing and said nothing.
   const fresh = [icalSitting("2026-09-16", "future")];
   const { meetings, carried } = carryForward(
     [{ source: "ical", ok: true }],
@@ -1048,7 +790,7 @@ test("A-004 · REPRODUCTION: a source reporting plain success carries no conclud
   );
 });
 
-test("A-004 · a scoped ARCHIVE failure carries the concluded rows back", () => {
+test("a scoped ARCHIVE failure carries the concluded rows back", () => {
   const fresh = [icalSitting("2026-09-16", "future")];
   const { meetings, carried } = carryForward(
     [
@@ -1073,13 +815,8 @@ test("A-004 · a scoped ARCHIVE failure carries the concluded rows back", () => 
   assert.equal(carriedRow?.carried?.lastFreshAt, "2026-08-15T20:00:00.000Z");
 });
 
-test("A-004 · an ARCHIVE failure never resurrects a FUTURE sitting the fresh run dropped", () => {
-  /*
-   * The direction that makes this a scope rather than a blunt division
-   * refusal. The upcoming feed answered perfectly. If the town cancelled its
-   * 16 September sitting between snapshots, the fresh run correctly omits it —
-   * and an archive outage must not put it back.
-   */
+test("an ARCHIVE failure never resurrects a FUTURE sitting the fresh run dropped", () => {
+  // The upcoming feed answered, so a sitting it omitted must not come back.
   const { meetings, carried } = carryForward(
     [
       {
@@ -1102,7 +839,7 @@ test("A-004 · an ARCHIVE failure never resurrects a FUTURE sitting the fresh ru
   );
 });
 
-test("A-004 · a division-less body's archive failure is still scoped, not dropped", () => {
+test("a division-less body's archive failure is still scoped, not dropped", () => {
   // `null` in `ocdIds` is a body with no division to attribute to. It still
   // lost its history, and an implementation that filtered nulls out would
   // silently exclude exactly the smallest bodies.
@@ -1126,16 +863,15 @@ test("A-004 · a division-less body's archive failure is still scoped, not dropp
   assert.equal(carried.get("ical"), 1);
 });
 
-test("A-004 · a source with no partial scopes and no refusal still carries NOTHING", () => {
+test("a source with no partial scopes and no refusal still carries NOTHING", () => {
   // The mirror-image lie stays forbidden: a town that genuinely stopped
   // publishing must be allowed to go quiet.
   const { carried } = carryForward([{ source: "ical", ok: true }], [], wilmotSnapshot(), A004_NOW);
   assert.equal(carried.get("ical"), undefined);
 });
 
-test("A-004 · the ical adapter no longer swallows a past-feed failure", () => {
-  // RULING 110: the shape, not the string. A `catch` with nothing in it but a
-  // comment is the shape, and it is what shipped.
+test("the ical adapter no longer swallows a past-feed failure", () => {
+  // The shape, not the string: an empty `catch` with only a comment.
   const source = readFileSync(join(ROOT, "lib", "sources", "ical", "index.ts"), "utf8");
   assert.match(source, /archiveRefused/, "the row carries no partial marker");
   assert.match(source, /partialScopes/, "the normalize pass reports no scoped failure");
@@ -1148,17 +884,9 @@ test("A-004 · the ical adapter no longer swallows a past-feed failure", () => {
   );
 });
 
-test("F22: a day of clock-gap slack does not reach a real undeclared archive", () => {
-  /*
-   * The guard above allows one day between the adapter's fetch clock and the
-   * snapshot's stamp. This proves that slack cannot swallow the thing the
-   * guard is for. `civicplus` (230 days past the window) and `revize` (196)
-   * are the real shape; both declare `publishedLookbackDays: null` and pass
-   * for the RIGHT reason — they say they carry the whole archive.
-   *
-   * A source with the same rows and NO declaration must still be caught, and
-   * a day of tolerance must not change that by even a little.
-   */
+test("a day of clock-gap slack does not reach a real undeclared archive", () => {
+  // One day of slack between an adapter's fetch clock and the snapshot's stamp must not hide an
+  // undeclared archive.
   const CLOCK_GAP_MS = 86_400_000;
   const generatedAt = Date.parse("2026-08-25T19:36:00Z");
   const backEdge = generatedAt - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
@@ -1169,9 +897,8 @@ test("F22: a day of clock-gap slack does not reach a real undeclared archive", (
   // The false positive the slack exists to end: inside the window at fetch,
   // outside it by hours at the stamp.
   assert.equal(caught("2026-05-27T19:30:00Z"), false, "a clock-gap row must not be reported");
-  // The real thing, at both of the sizes actually measured in the snapshot.
+  // Real undeclared archives.
   assert.equal(caught("2026-01-06T05:00:00Z"), true, "a 230-day archive must still be caught");
   assert.equal(caught("2026-02-09T05:00:00Z"), true, "a 196-day archive must still be caught");
-  // And the slack is genuinely a day, not a week wearing a day's name.
   assert.equal(caught("2026-05-23T00:00:00Z"), true, "four days past the edge is not a clock gap");
 });

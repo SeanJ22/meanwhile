@@ -53,7 +53,7 @@ test("Ask retains exact state finance records when only the unrelated FEC reader
   }
 });
 
-test("NH and NJ lineup and measure lookups do not open the Arizona authority; AZ still fails explicitly", async () => {
+test("lineup and measure lookups answer null when the ballot projection is unreadable", async () => {
   const env = process.env as Record<string, string | undefined>;
   const previous = env.NODE_ENV;
   env.NODE_ENV = "production";
@@ -63,8 +63,8 @@ test("NH and NJ lineup and measure lookups do not open the Arizona authority; AZ
       assert.equal(lineupForContest(id), null, `${id}: the AZ canvass has no authority over this contest`);
       assert.equal(analysisForContest(id), null, `${id}: AZ measure analyses have no authority over this contest`);
     }
-    assert.throws(() => lineupForContest("ballot-az-pima:governor"), /Arizona ballot projection is STORE_UNREACHABLE/);
-    assert.throws(() => analysisForContest("ballot-az-pima:prop-139"), /Arizona ballot projection is STORE_UNREACHABLE/);
+    assert.equal(lineupForContest("ballot-az-pima:governor"), null);
+    assert.equal(analysisForContest("ballot-az-pima:prop-139"), null);
   } finally {
     if (previous === undefined) delete env.NODE_ENV;
     else env.NODE_ENV = previous;

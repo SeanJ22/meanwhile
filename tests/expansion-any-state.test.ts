@@ -1,34 +1,23 @@
 /**
- * **A SEND IN ANY REGISTERED STATE CREATES WORK, AND THE WORK REACHES READERS
- * WITH NO CODE CHANGE.** (2026-09-25. docs/rulings.md §1.)
+ * A Send in any registered state creates work, and the work reaches readers with no code change. A state with no
+ * reviewed registry reads its registration as one (`lib/registration/jurisdictions.ts`).
  *
- * Until now a Send outside Arizona, New Hampshire and New Jersey stopped before
- * any work was created: only those three have a reviewed jurisdiction registry,
- * so the plan named every other state's governments NO_JURISDICTION_REGISTRY.
- * Every state is registered, though, and a state with no reviewed registry now
- * reads its registration as one (`lib/registration/jurisdictions.ts`).
+ * Every step is the production path on the in-memory stores, against the committed Ohio and Puerto Rico registration
+ * references, the committed Census files and the committed national ZIP index. Nothing reaches the network, no model
+ * is called, and nothing names Ohio's governments in code:
  *
- * Every step below is the production path on the in-memory stores, against the
- * committed Ohio and Puerto Rico registration references, the committed Census
- * files and the committed national ZIP index. Nothing reaches the network, no
- * model is called, and nothing names Ohio's governments in code:
- *
- * 1. Admin's preview counts the governments a Send for Franklin County, Ohio
- *    would create work for, from registration, by the runner's rule;
- * 2. the owner's Send (`expansion.scope.set`, the gateway's own door) is read
- *    by the runner, which reads Ohio's promoted registration, places the
- *    county's governments and creates exactly that many obligations, each
- *    labelled as coming from registration;
+ * 1. Admin's preview counts the governments a county Send would create work for, from registration, by the runner's
+ *    rule;
+ * 2. the owner's Send (`expansion.scope.set`) is read by the runner, which reads the promoted registration, places the
+ *    county's governments and creates exactly that many obligations, each labelled as coming from registration;
  * 3. the next cycle's providers keep that work in the corpus;
- * 4. the FREE discovery walk takes the City of Columbus first, at the web
- *    address the Census of Governments records for it, robots first, while the
- *    paid lane remains governed by the owner's separate pause and budgets;
- * 5. it finds the city's iCal feed on the city's own host; the automatic
- *    reviewer accepts it for the city's registered body; the crosswalk, the
- *    wiring and Ohio's derived family promote; and the Reader shows the
- *    sittings under the City Council of Columbus;
- * 6. a Send for a Puerto Rico municipio creates discovery needs that honestly
- *    say `find-own-site`: the territory's governments carry no web address.
+ * 4. the free discovery walk takes a city first, at the web address the Census of Governments records for it, robots
+ *    first, while the paid lane remains governed by the owner's separate pause and budgets;
+ * 5. it finds the city's iCal feed on the city's own host; the automatic reviewer accepts it for the city's
+ *    registered body; the crosswalk, the wiring and the state's derived family promote; and the Reader shows the
+ *    sittings under the city council;
+ * 6. a Send for a Puerto Rico municipio creates discovery needs that say `find-own-site`: the territory's
+ *    governments carry no web address.
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -61,7 +50,6 @@ import { applyDispatchWork, dispatchWorkReading, planDispatchWork, scopeWorkTarg
 import type { PlannedScope } from "../lib/control-plane/expansion/membership.ts";
 import { loadExpansionPlan, readTerritoryIndex } from "../lib/control-plane/expansion/runner-load.ts";
 import { registrationGovernmentsPlaced, stateSendPreviewSentence, type PreviewCode } from "../lib/control-plane/expansion/send-preview.ts";
-import { scopeCreationSentence } from "../lib/control-plane/expansion/view.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import type { ActionRequest } from "../lib/control-plane/gateway/contract.ts";
 import { submit } from "../lib/control-plane/gateway/gateway.ts";
@@ -114,12 +102,10 @@ const COLUMBUS_HOST = "www.columbus.gov";
 const COLUMBUS_ROUTE = `https://${COLUMBUS_HOST}/calendar/city-council.ics`;
 const ALLOW: RecordedReply = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" };
 
-/* The reviewed registries exactly as the runner holds them: the three reviewed states, from their committed seeds. */
-installOperationalReferenceBundle(operationalReferenceBundle({
-  az: JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")) as JurisdictionRegistry,
-  nh: JSON.parse(readFileSync(join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")) as JurisdictionRegistry,
-  nj: JSON.parse(readFileSync(join(ROOT, "data/states/nj/jurisdictions/nj.json"), "utf8")) as JurisdictionRegistry,
-}));
+/* The reviewed registries as the runner holds them, from the jurisdiction registry fixture. */
+installOperationalReferenceBundle(operationalReferenceBundle(
+  JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<"az" | "nh" | "nj", JurisdictionRegistry>,
+));
 
 const sha = (value: unknown): string => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
 
@@ -343,12 +329,10 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.deepEqual(target.reordered, { obligations: 0, of: 0 }, "nothing stood on a clock here to reorder");
   const n = target.units.placed;
   assert.match(target.says.join(" "), new RegExp(`${n} of the ${n} governments here come from registration \\(the 2022 Census of Governments; OH version ${versionId}\\)`));
-  assert.match(scopeCreationSentence(target), /come from registration \(the 2022 Census of Governments\): their state has no reviewed registry/);
 
   const created = (await repos.obligations.list()).map((row) => row.value).filter((o) => o.materializedBy === OWNER_DISPATCH);
   assert.equal(created.length, n * 8, "the store holds exactly what the runner counted");
-  // The real gateway/runner marks survive the publisher's bounded list. This
-  // is the same exact-reference filter Admin reads, not a geographic guess.
+  // The real gateway/runner marks survive the publisher's bounded list: the same exact-reference filter Admin reads.
   const assignmentSources = await readAllAssignmentSources(repos, { nowIso: T_CYCLE, activation: null, pilotZips: [] });
   const publishedWork = buildAssignmentView(assignmentSources, { perGroup: 1 });
   const instruction = created[0]!.assignments![0]!.assignmentKey;

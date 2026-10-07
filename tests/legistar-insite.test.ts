@@ -1,41 +1,3 @@
-/**
- * **THE SEPTEMBER SITTINGS THAT WERE THERE ALL ALONG.** (2026-08-28.)
- *
- * A prior session measured that `webapi.legistar.com/v1/pima/events` returns
- * zero rows for September 2026, reconciled the seven August rows it did return,
- * and concluded the county's September sittings "exist only as a recurring
- * schedule rule". **The measurement reproduces exactly and is true. The
- * inference was false.** Pima publishes all three individually, on its own
- * portal, with a date, a time, a room and a meeting kind — including a 1:00 PM
- * study session on 8 September that no recurrence rule in this repository could
- * have produced, because the committed rule text gives study sessions no time
- * at all.
- *
- * ## Why the existing tests could not have caught it
- *
- * `tests/fixtures/legistar-pima-events.json` is the only recorded Legistar
- * corpus, and **every one of its eighteen events carries
- * `EventAgendaStatusName: "Final"`.** A fixture in which every meeting is
- * already published is structurally incapable of expressing a meeting that is
- * published on the portal and absent from the API — the case is not failed by
- * it, it is inexpressible in it. That fixture is left exactly as it is, and the
- * documents below are new.
- *
- * ## What is recorded here, and what it is evidence of
- *
- * Every fixture in this file was retrieved live on 2026-08-28 and none of it is
- * fetched at test time (repo law: no live calls in tests).
- *
- * - `legistar-insite-pima-calendar-next-month.html` — the portal grid, 3 rows,
- *   3 `meeting_NotViewable`.
- * - `legistar-insite-pima-calendar-this-month.html` — 7 rows, 0 not viewable.
- * - `legistar-insite-pima-webapi-aug-oct.json` — the API over the same span:
- *   the 7 August sittings, and **zero for September**.
- * - `legistar-insite-mesa-calendar-next-month.html` — **the unnamed control**:
- *   15 rows, 12 not viewable, on a tenant nobody was looking at.
- * - `legistar-insite-pima-feed.xml` — the calendar RSS, carrying `pubDate`.
- * - `legistar-insite-pima-ical-138157{5,6,7}.ics` — the per-meeting exports.
- */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -79,7 +41,6 @@ import type { Meeting } from "../lib/sources/types.ts";
 const FIXTURES = join(import.meta.dirname, "fixtures");
 const fixture = (name: string) => readFileSync(join(FIXTURES, name), "utf8");
 
-/** The instant every clock-dependent assertion below is judged against. */
 const NOW = new Date("2026-08-28T12:00:00Z");
 
 const PIMA_LAST_MONTH = fixture("legistar-insite-pima-calendar-last-month.html");
@@ -96,13 +57,7 @@ const WEBAPI_AUG_OCT = JSON.parse(
   fixture("legistar-insite-pima-webapi-aug-oct.json"),
 ) as Record<string, unknown>[];
 
-/**
- * One retrieved range, with the fields a real reading carries.
- *
- * `noRecords` is READ OFF THE FIXTURE rather than passed in, because it is the
- * page's own statement and a test that could assert it by hand would be able to
- * fake the one signal that licenses a zero.
- */
+/** `noRecords` is read off the page itself so a test cannot assert the zero-licensing signal by hand. */
 export function win(
   range: InSiteRange,
   html: string,
@@ -136,7 +91,6 @@ function pimaReading(
   };
 }
 
-/** The WebAPI rows, normalized by the adapter that owns that route. */
 function webapiMeetings(events: Record<string, unknown>[] = WEBAPI_AUG_OCT): Meeting[] {
   const raw = events.map((event) => ({
     event,
@@ -146,10 +100,6 @@ function webapiMeetings(events: Record<string, unknown>[] = WEBAPI_AUG_OCT): Mee
   })) as unknown as LegistarEventWithClient[];
   return legistarNormalize(raw, NOW).meetings;
 }
-
-// ---------------------------------------------------------------------------
-// (a) A route's silence is not a body's calendar
-// ---------------------------------------------------------------------------
 
 test("the WebAPI returns ZERO September rows — the measurement, reproduced", () => {
   const september = WEBAPI_AUG_OCT.filter((event) =>
@@ -196,10 +146,6 @@ test("(a) zero rows from /events does NOT mean the county has no September sitti
   );
 });
 
-// ---------------------------------------------------------------------------
-// (b) The three records, exactly
-// ---------------------------------------------------------------------------
-
 test("(b) the three Pima sittings reach the canonical layer with date, time, kind, location and provenance", () => {
   const result = normalizeWithDrops([pimaReading()], NOW);
   const september = result.meetings
@@ -219,9 +165,6 @@ test("(b) the three Pima sittings reach the canonical layer with date, time, kin
     );
     assert.equal(meeting.jurisdiction, "Pima County, AZ");
     assert.equal(meeting.provenance.sourceOrg, "Pima County Clerk of the Board");
-    // The grid IS the publication for a sitting with no detail page. A
-    // constructed MeetingDetail link would be a citation pointing at a door
-    // that does not open.
     assert.equal(meeting.provenance.sourceUrl, "https://pima.legistar.com/Calendar.aspx");
     assert.equal(
       meeting.agendaUrl,
@@ -258,10 +201,6 @@ test("(b) the accounting conserves: every grid row is produced, dropped or named
   );
 });
 
-// ---------------------------------------------------------------------------
-// (c) The named regression
-// ---------------------------------------------------------------------------
-
 test("(c) NAMED REGRESSION: the 8 September 1:00 PM Study Session survives to the canonical layer", () => {
   const meetings = normalizeWithDrops([pimaReading()], NOW).meetings;
   const study = meetings.find((m) => m.id === "legistar-insite:pima:1381575");
@@ -279,9 +218,6 @@ test("(c) NAMED REGRESSION: the 8 September 1:00 PM Study Session survives to th
     "Pima County Administration Building, Board of Supervisors Hearing Room",
   );
 
-  // The committed rule text is "2nd and 4th Tuesday, 5:00 PM" and gives study
-  // sessions no time at all. 1:00 PM is therefore a fact only the record could
-  // supply, which is exactly why it is the regression worth naming.
   assert.notEqual(study.startsAt.slice(11, 16), "17:00");
 });
 
@@ -291,18 +227,13 @@ test("(c) its own iCalendar export agrees, and its FLOATING time is not read as 
   assert.deepEqual(ics.start, { year: 2026, month: 9, day: 8, hour: 13, minute: 0 });
   assert.equal(ics.description, "Study Session");
 
-  // `DTSTART:20260908T130000` carries no `Z` and no `TZID`. Read as UTC it
-  // would render as 6:00 AM in Phoenix — silently, and on a public notice.
+  // `DTSTART:20260908T130000` carries no `Z` and no `TZID`: it is floating local time, not UTC.
   const asUtc = new Date("2026-09-08T13:00:00Z").toISOString();
   const meetings = normalizeWithDrops([pimaReading()], NOW).meetings;
   const study = meetings.find((m) => m.id === "legistar-insite:pima:1381575")!;
   assert.notEqual(new Date(study.startsAt).toISOString(), asUtc);
   assert.equal(new Date(study.startsAt).toISOString(), "2026-09-08T20:00:00.000Z");
 });
-
-// ---------------------------------------------------------------------------
-// (d) and (g) One sitting, two routes, disjoint ids
-// ---------------------------------------------------------------------------
 
 test("the two routes number the same sittings differently — 7 of 7 agree on time, 0 of 7 on id", () => {
   const api = webapiMeetings();
@@ -343,7 +274,6 @@ test("(g) NEGATIVE CONTROL: a viewable sitting carried by BOTH routes is not dou
   );
   assert.equal(merged.collapsed, 7, "and it says out loud that it collapsed seven");
 
-  // Every August instant appears exactly once.
   const instants = august.map((m) => m.startsAt);
   assert.equal(new Set(instants).size, instants.length);
 });
@@ -361,19 +291,12 @@ test("(d) the richer record wins: the API row supersedes the portal row on the s
     assert.ok(meeting.agendaUrl, `${meeting.id} won without the agenda that made it richer`);
   }
 
-  // And the portal is not merely losing — it supplied every September row.
   for (const meeting of merged.filter((m) => m.startsAt.startsWith("2026-09"))) {
     assert.ok(meeting.id.startsWith("legistar-insite:"));
   }
 });
 
 test("(d) a September sitting APPEARING in /events later deduplicates rather than doubling", () => {
-  /*
-   * The future state, modelled on the recorded August rows rather than
-   * imagined: same body, same room, same shape of record, with the agenda file
-   * a finalised sitting carries. It is a TEST SCENARIO for the merge — nothing
-   * here is written to a fixture or presented as a retrieval.
-   */
   const finalised = webapiMeetings([
     {
       ...WEBAPI_AUG_OCT[2],
@@ -397,7 +320,6 @@ test("(d) a September sitting APPEARING in /events later deduplicates rather tha
   );
   assert.ok(at5pm[0].agendaUrl);
 
-  // The 1:00 PM study session is untouched: the API row is a different sitting.
   assert.equal(
     merged.rows.filter((m) => m.startsAt === "2026-09-08T13:00:00-07:00").length,
     1,
@@ -409,20 +331,10 @@ test("(d) a September sitting APPEARING in /events later deduplicates rather tha
   );
 });
 
-// ---------------------------------------------------------------------------
-// (e) Supersession and cancellation
-// ---------------------------------------------------------------------------
-
 test("(e) a cancellation on the portal supersedes the earlier future record", () => {
   const before = normalizeWithDrops([pimaReading()], NOW).meetings;
 
-  /*
-   * A constructed variant of the recorded document: the same grid with the 22
-   * September row's `<em>` carrying the word a clerk writes when a sitting is
-   * called off. The portal has no cancellation FIELD — the WebAPI has none
-   * either — so free text is the only honest signal, and it is deliberately
-   * narrow: a meeting wrongly marked canceled keeps someone at home.
-   */
+  // The portal has no cancellation field, so free text in the row's `<em>` is the only signal.
   const canceledGrid = PIMA_NEXT_MONTH.replace(
     'href="View.ashx?M=IC&amp;ID=1381577&amp;GUID=00EFD752-6A28-42D3-B329-E717E49891D0"',
     'href="View.ashx?M=IC&amp;ID=1381577&amp;GUID=00EFD752-6A28-42D3-B329-E717E49891D0" data-variant="canceled"',
@@ -473,8 +385,7 @@ test("(e) a rescheduled sitting is named as rescheduled, with both times", () =>
     "2026-09-08T17:00:00-07:00",
   );
 
-  // The sitting KEY moved with it, which is exactly why supersession is keyed
-  // on the source's own identifier and not on the key.
+  // Supersession is keyed on the source's own identifier, because the sitting key moves.
   assert.notEqual(
     sittingKey({ ...before[0] }),
     sittingKey({ ...after[0] }),
@@ -500,10 +411,6 @@ test("(e) a row missing from the later reading is NOT reported as a cancellation
   );
 });
 
-// ---------------------------------------------------------------------------
-// (f) The unnamed control — the class, not the instance
-// ---------------------------------------------------------------------------
-
 test("(f) UNNAMED CONTROL: Mesa loses 12 of 15 September sittings through the API alone", () => {
   const rows = parseCalendarRows(MESA_NEXT_MONTH);
   assert.equal(rows.length, 15, "Mesa's own portal publishes fifteen sittings next month");
@@ -512,8 +419,6 @@ test("(f) UNNAMED CONTROL: Mesa loses 12 of 15 September sittings through the AP
   assert.equal(notViewable.length, 12);
   assert.equal(rows.length - notViewable.length, 3);
 
-  // The discriminator is a property of the ROW, not of the tenant: every
-  // not-viewable row has no meeting-detail href, and every viewable one does.
   for (const row of rows) {
     assert.equal(
       row.detailHref === null,
@@ -522,9 +427,6 @@ test("(f) UNNAMED CONTROL: Mesa loses 12 of 15 September sittings through the AP
     );
   }
 
-  // Nobody named Mesa. It was chosen because it is the tenant the diagnosis was
-  // NOT derived from, and it behaves identically — which is what makes this a
-  // class defect of the vendor rather than a Pima configuration.
   assert.ok(
     INSITE_TENANTS.some((t) => t.slug === "mesa"),
     "the control has to be wired, or it only ever proves the parser",
@@ -544,10 +446,6 @@ test("(f) Pima and Mesa are the same shape, measured the same way", () => {
     "and the month the API DOES cover is the month with nothing hidden — the same finding from the other side",
   );
 });
-
-// ---------------------------------------------------------------------------
-// Publication clocks, per-field provenance, and the fixture that could not
-// ---------------------------------------------------------------------------
 
 test("the two routes run on different publication clocks, and the feed says so", () => {
   const items = parseCalendarFeed(PIMA_FEED);
@@ -609,13 +507,7 @@ test("the existing Legistar fixture is STRUCTURALLY INCAPABLE of expressing this
     ["Final"],
     "every recorded event is already published, so no test built on it could ever have seen an unpublished one",
   );
-  // Left exactly as it was found. This test asserts a property of it; it is not
-  // a request to change it.
 });
-
-// ---------------------------------------------------------------------------
-// The transport, driven without a network
-// ---------------------------------------------------------------------------
 
 test("fetch drives the ASP.NET postback and reads back the range that was rendered", async () => {
   const seen: { url: string; method: string; body: string | null }[] = [];
@@ -637,9 +529,6 @@ test("fetch drives the ASP.NET postback and reads back the range that was render
         headers: { "content-type": "application/xml" },
       });
     }
-    // The tenant answers with the range it was asked for — the fixtures are
-    // the real pages for the real ranges, so this drives the parse rather than
-    // a stand-in for it.
     const asked = body
       ? new URLSearchParams(body).get("ctl00$ContentPlaceHolder1$lstYears")
       : null;
@@ -682,15 +571,12 @@ test("fetch drives the ASP.NET postback and reads back the range that was render
     "the Telerik combo reads its selection from _ClientState; the text input alone is a silent no-op",
   );
 
-  // The per-meeting iCalendar export is a FALLBACK, not a per-row fetch: every
-  // row here published its own time, so nothing asked for one.
+  // The per-meeting iCalendar export is a fallback, fetched only for rows with no time.
   assert.equal(seen.filter((r) => r.url.includes("View.ashx")).length, 0);
   assert.deepEqual(raw[0].icalByInsiteId, {});
 });
 
 test("a postback that silently did not take is visible, not parsed as if it had", () => {
-  // The real failure, reproduced: HTTP 200, 231 KB of correct markup, and the
-  // filter unchanged. Only the rendered selection tells them apart.
   assert.equal(renderedRange(PIMA_THIS_MONTH), "This Month");
   assert.equal(renderedRange(PIMA_NEXT_MONTH), "Next Month");
 
@@ -710,26 +596,13 @@ test("the calendar feed URL is read off the page, never constructed from a store
     "https://mesa.legistar.com/Feed.ashx?M=Calendar&ID=43473386&GUID=d64aed36-08da-4c35-8ebd-8a6fe5567c74",
   );
 
-  // The pair recorded on the client is a RECORD of what was seen under a named
-  // range, not a template. The two must not be confused, so the client states
-  // the range it belongs to.
   const pima = LEGISTAR_CLIENTS.find((c) => c.slug === "pima")!;
   assert.equal(pima.insiteHost, "pima.legistar.com");
   assert.equal(pima.insiteFeed?.range, "Next Month");
   assert.equal(pima.insiteFeed?.id, "43473383");
 });
 
-// ---------------------------------------------------------------------------
-// The grid's own page size — a route answering completely about part of itself
-// ---------------------------------------------------------------------------
-
 test("a PAGED grid is an incomplete enumeration, and it is reported rather than counted", () => {
-  /*
-   * Mesa's "This Year" filter answers `items 1 to 100 of 148` behind a two-page
-   * pager. A parse that counted only rows would report 100 sittings and a clean
-   * 200 for a range holding 148 — the same failure this whole adapter exists to
-   * correct, one layer down.
-   */
   const pager = parseGridPager(MESA_THIS_YEAR_PAGED);
   assert.ok(pager, "the recorded page carries a pager and the parser must read it");
   assert.deepEqual(pager, {
@@ -780,13 +653,6 @@ test("a PAGED grid is an incomplete enumeration, and it is reported rather than 
 });
 
 test("the SECOND page is walked, and the completed range reports no shortfall", () => {
-  /*
-   * The correction to the test above. Reporting the shortfall was right and it
-   * was never the finish: a range this adapter cannot enumerate is a range
-   * whose sittings a reader does not get. Mesa's "This Year" is 148 rows behind
-   * a two-page pager, both pages recorded here from one live session — 100 + 48
-   * = 148, and the two pages share no InSite id.
-   */
   const page1 = parseGridPager(MESA_THIS_YEAR_PAGED)!;
   const page2 = parseGridPager(MESA_THIS_YEAR_PAGE2)!;
   assert.equal(page2.page, 2);
@@ -827,13 +693,7 @@ test("the SECOND page is walked, and the completed range reports no shortfall", 
 });
 
 test("a page target is READ OFF THE PAGER, never derived from the control index", () => {
-  /*
-   * The measured trap. Posting a guessed "next page" control at Pima's All
-   * Years grid returned **page 3** — 200, right range, 100 well-formed rows,
-   * and a hundred sittings skipped with every check passing. Telerik states the
-   * page each link goes to in its own onclick, so the mapping is a fact off the
-   * document.
-   */
+  // Telerik states each link's page in its own onclick; a guessed control index can land on the wrong page.
   const targets = parseGridPageTargets(MESA_THIS_YEAR_PAGED);
   assert.deepEqual([...targets.keys()], [1, 2], "both numbered pages are published");
   assert.notEqual(targets.get(1), targets.get(2), "two pages, two distinct postback targets");
@@ -857,13 +717,6 @@ test("a single-page range reports no shortfall — the check is not a blanket wa
 });
 
 test("the range set reaches the whole PUBLISHED future, not one month of it", () => {
-  /*
-   * This test used to assert the opposite — three calendar months, chosen to
-   * stay inside the grid's 100-row page. That was a range set picked to avoid
-   * writing a pager walk, and it cost eleven of Pima's fourteen published
-   * future sittings. The pager walk is written; the ranges are the ones that
-   * reach the record.
-   */
   assert.ok(
     RANGES.includes("This Year"),
     'without "This Year" the adapter cannot see past next month — measured 3 sittings against 14',
@@ -878,8 +731,6 @@ test("the range set reaches the whole PUBLISHED future, not one month of it", ()
     "the backward reach is unchanged; this correction is about the future only",
   );
 
-  // Pima's "This Year" is unpaged at 46 rows and holds the whole horizon; the
-  // ranges that DO page are walked rather than trusted, which is the other test.
   assert.equal(parseGridPager(PIMA_THIS_YEAR), null);
   assert.equal(
     parseCalendarRows(PIMA_THIS_YEAR).length,
@@ -889,14 +740,7 @@ test("the range set reaches the whole PUBLISHED future, not one month of it", ()
 });
 
 test("a zero is only ever the PUBLISHER'S zero", () => {
-  /*
-   * RULING 100, at the range level. Pima's "Next Year" is the measured positive:
-   * HTTP 200, the grid rendered, `rgNoRecords`, and the sentence "No records
-   * were found." — Pima County saying it has filed no 2027 sittings yet.
-   *
-   * A zero WITHOUT that sentence is a failed retrieval, and the adapter reports
-   * it as an incomplete scope rather than folding it into the union as nothing.
-   */
+  // A zero without the publisher's "No records were found." is a failed retrieval, not an empty calendar.
   assert.equal(parseCalendarRows(PIMA_NEXT_YEAR).length, 0);
   assert.equal(
     parseGridNoRecords(PIMA_NEXT_YEAR),
@@ -922,8 +766,6 @@ test("a zero is only ever the PUBLISHER'S zero", () => {
     "a publisher's own zero is a complete answer, not a shortfall",
   );
 
-  // The same zero with the sentence stripped: an identical row count, an
-  // opposite verdict. Nothing else about the page changes.
   const silent = PIMA_NEXT_YEAR.replace(/No records were found\./g, "&nbsp;");
   assert.notEqual(silent, PIMA_NEXT_YEAR, "the variant did not apply — the test would prove nothing");
   assert.equal(parseCalendarRows(silent).length, 0, "still the same zero rows");
@@ -937,10 +779,6 @@ test("a zero is only ever the PUBLISHER'S zero", () => {
     "the two readings produce the same meetings — only the honesty of the zero differs",
   );
 });
-
-// ---------------------------------------------------------------------------
-// Registration, and the wall that is not an absence
-// ---------------------------------------------------------------------------
 
 test("the portal route is registered on the same bodies, BELOW the API route", () => {
   const names = CAPABILITIES.map((c) => c.name);
@@ -961,8 +799,6 @@ test("the portal route is registered on the same bodies, BELOW the API route", (
 
 test("pima.granicus.com is recorded as an UNBUILT route, its robots.txt reading kept as evidence, with no claim about what it holds", () => {
   assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.host, "pima.granicus.com");
-  // Owner decision 2026-09-25: robots.txt is recorded and blocks nothing, so the
-  // state is ours (no adapter yet), not a permission wall.
   assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.state, "NOT_BUILT");
   assert.match(GRANICUS_LIVE_PROCEEDINGS_ROUTE.rule, /Disallow: \//);
   assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.robotsBlocks, false);
@@ -999,22 +835,12 @@ test("every tenant states a body, a zone and a sourced venue — no room name is
   }
 });
 
-/**
- * **A MOVED CLERK PAGE IS NOT FOLLOWED OFF ITS REGISTERED ROUTE.** (2026-09-24.)
- * Pima County moved its schedule page to www.pima.gov/board-of-supervisors-
- * meeting-schedule. The read followed the move, answered 200 there, and the
- * unregistered final URL refused the whole InSite partition with the 14
- * upcoming sittings the grid carries (SEMANTIC_INVALID, FINAL_ROUTE_NOT_REGISTERED,
- * every read from 11:14Z). Driven here through the real acquisition capture,
- * with the network stubbed the way production answered.
- */
 test("a clerk schedule page that moved is not followed: the grid's sittings survive, no retained response leaves the registered routes, and the move is named", async () => {
   const { captureSourceAcquisitions } = await import("../lib/sources/acquisition-trace.ts");
   const { authorityFor } = await import("../lib/civic-data/source-authority.ts");
   const pima = INSITE_TENANTS.find((t) => t.slug === "pima")!;
   assert.ok(pima.clerkScheduleUrl, "Pima declares its clerk schedule page");
-  // The 2026-09-24 move is registered (C18); the guard is for the next one,
-  // so the page is made to move again, to an address nobody has read.
+  // The page is made to move to an address nobody has registered.
   const MOVED = "https://www.pima.gov/government/board-of-supervisors/schedule";
   const BY_RANGE: Record<string, string> = {
     "Last Month": PIMA_LAST_MONTH,
@@ -1052,8 +878,6 @@ test("a clerk schedule page that moved is not followed: the grid's sittings surv
   }) as typeof fetch;
   let captured: Awaited<ReturnType<typeof captureSourceAcquisitions<LegistarInSiteRaw[]>>>;
   try {
-    // The injected fetch defers to the global the capture wraps, so every
-    // response is seen exactly as production's capture sees it.
     const source = makeLegistarInSiteSource({
       fetchImpl: ((u: RequestInfo | URL, i?: RequestInit) => globalThis.fetch(u, i)) as typeof fetch,
       tenants: [pima],
@@ -1076,7 +900,6 @@ test("a clerk schedule page that moved is not followed: the grid's sittings surv
     const final = authorityFor("meetings-public-bodies", "MEETING", row.finalUrl);
     assert.ok(final.ok, `${row.finalUrl} would refuse the partition: ${final.ok ? "" : final.code}`);
   }
-  // The new URL stays unregistered until its permission is read.
   const unregistered = authorityFor("meetings-public-bodies", "MEETING", MOVED);
   assert.equal(unregistered.ok ? null : unregistered.code, "FINAL_ROUTE_NOT_REGISTERED");
 
@@ -1088,13 +911,6 @@ test("a clerk schedule page that moved is not followed: the grid's sittings surv
   assert.match(clerk.note ?? "", /UNKNOWN, not absent/);
 });
 
-/*
- * C18 (2026-09-24): Pima County's schedule now lives at
- * www.pima.gov/board-of-supervisors-meeting-schedule. robots.txt read that day
- * groups `User-agent: *` with Siteimprove (Crawl-delay: 20, nothing
- * disallowed), so the page is read there, and its answer is a registered route.
- * The body is the page's own tables as read that day.
- */
 test("Pima's clerk schedule is read at the county's current page, and that page is a registered route", async () => {
   const { captureSourceAcquisitions } = await import("../lib/sources/acquisition-trace.ts");
   const { authorityFor } = await import("../lib/civic-data/source-authority.ts");

@@ -8,12 +8,8 @@ import { STALL_REPORT_PREFIX, progressLines } from "../lib/control-plane/schedul
 const boundModule = JSON.stringify(new URL("../lib/control-plane/scheduler/post-cutoff-bound.ts", import.meta.url).href);
 const independentModule = JSON.stringify(new URL("../lib/ops/independent-runtime-pass.ts", import.meta.url).href);
 
-/*
- * The returned live failure (River, 2026-10-06 ~01:10Z): on the 23:13:58Z production cycle the research child's last
- * output was at 23:30:50Z, after the dispatch cutoff, and it was killed as RESEARCH_CHILD_NO_PROGRESS at 23:40:50Z while
- * it joined its discovery lanes. Here the runner's limits are scaled down in the same proportion as production's: a lane
- * that is still running and prints nothing after the cutoff, for longer than the runner's no-progress window.
- */
+// The runner's limits scaled down in proportion: a lane that is still running and prints nothing after the dispatch
+// cutoff, for longer than the runner's no-progress window.
 const NO_PROGRESS_MS = 1_000;
 const QUIET_MS = Math.round(NO_PROGRESS_MS * (RUNTIME_NO_PROGRESS_MS - POST_CUTOFF_QUIET_LEAD_MS) / RUNTIME_NO_PROGRESS_MS);
 const roundChild = (bounded: boolean) => `
@@ -110,12 +106,8 @@ test("the round races its post-cutoff waits against the quiet limit and names wh
   assert.doesNotMatch(publications, /MAX_SAFE_INTEGER/);
 });
 
-/*
- * Sean, 2026-10-06 12:07 AM EDT: release 6's first round was killed after 43 minutes; the stall answer read "pending:
- * campaign-sites; last phase: occurrence-and-debt-commit". The lane now carries its own bound at the dispatch cutoff plus
- * a settle time, and the round's quiet clock reads output by the runner's rule, so a line the runner ignores (a repeat,
- * a beat) cannot hold a wait open past the runner's kill.
- */
+// The lane carries its own bound at the dispatch cutoff plus a settle time, and the round's quiet clock reads output
+// by the runner's rule, so a line the runner ignores cannot hold a wait open past the runner's kill.
 const roundWithStuckCampaignSites = `
   import { untilQuietLimit, watchOutputClock } from ${boundModule};
   import { runIndependentRuntimePass } from ${independentModule};

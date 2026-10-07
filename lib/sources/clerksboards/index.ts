@@ -1,10 +1,8 @@
 /**
  * @freshness-reads-here
  *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * The clock stamps in this file are minted by the code path that performs the read: the freshness date
+ * is taken at the moment of the fetch.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -32,52 +30,29 @@ import {
 } from "../normalize-account.ts";
 
 /**
- * The Tucson City Clerk's boards application — tracker **D29**.
+ * A city clerk's boards application: `<host>/boards/?board=<id>` server-renders one page per board,
+ * committee or commission with the current agenda (its title carries the date, and "(Canceled)" when it
+ * is), the meeting location as published, and the meeting schedule (enumerated dates or an "Nth weekday
+ * of each month" rule).
  *
- * `clerksboards.tucsonaz.gov/boards/?board=<id>` server-renders one page per
- * board, committee or commission with numbered sections the Clerk maintains:
- * the current agenda (title carries the meeting date, and "(Canceled)" when
- * it is), the meeting location as published, and the meeting schedule —
- * either the year's dates enumerated or an "Nth weekday of each month" rule.
- * Found as the embedded frame behind the directory at tucsonaz.gov, which
- * renders nothing to a plain client; the frame's own host serves everything.
- * (The main site's bot wall admits this project's identified User-Agent and
- * refuses anonymous crawlers — the polite UA is load-bearing here.)
+ * Meeting instances come from the body's own published schedule, a sourced claim citing the page. A
+ * schedule this parser cannot read produces zero instances and a counted drop, never a guess; a
+ * virtual-only location is kept online, counted placeless; a location the venue cache cannot cite, or a
+ * blank one, is kept with no pin and its gap named, counted as unknownVenue.
  *
- * **Meeting instances come from the body's own published schedule.** The
- * schedule on this page is the Clerk's notice of when the body meets — the
- * same content as the statutory annual Public Notice Statement — so an
- * instance expanded from it is a sourced claim citing the page. A schedule
- * this parser cannot read produces zero instances and a counted drop, never
- * a guess; a location that is virtual-only is kept online, counted placeless
- * (D18); a location the venue cache cannot cite, or a blank one, is kept with
- * no pin and its gap named, counted as unknownVenue (the venue-gap class,
- * 2026-09-23).
- *
- * Cancellation is claimed only from the Clerk's own published signal: a
- * current-agenda title containing "(Canceled)" cancels exactly the instance
- * whose date the title names.
+ * Cancellation is claimed only from the clerk's own signal: a current-agenda title containing
+ * "(Canceled)" cancels exactly the instance whose date the title names.
  */
 
 const SOURCE_NAME = "clerksboards";
 
-/**
- * The fetch window IS the served window (M76, 2026-08-15).
- *
- * These were literal 60 and 30 with a comment claiming they matched the
- * cascade. The served lookback moved 30 -> 90 and the adapters did not, so
- * every source quietly dropped sixty days of published, retrievable history
- * at the fetch — invisible to every count check, because each adapter
- * honestly reported what it had asked for. Deriving them is what makes the
- * drift impossible rather than merely noticed.
- */
+/** The fetch window is the served window, derived from the serving constants so the two cannot drift. */
 const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
 /**
- * The Past Agendas list is the only part of this adapter that carries concluded records (each citing its agenda PDF),
- * so it holds the full held window back (DB-05, 120 days). The schedule's own dates stay on the shown window: whether a
- * schedule "places a sitting in the window" is what sends a board to the list (R8), and a wider window would let an old
- * schedule date satisfy that and hide the very sittings the list exists to supply.
+ * The Past Agendas list is the only part of this adapter that carries concluded records, so it holds
+ * the full held window back. The schedule's own dates stay on the shown window, so an old schedule date
+ * cannot hide the sittings the list exists to supply.
  */
 const PAST_AGENDA_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
@@ -94,13 +69,12 @@ export interface ClerksBoardsRaw {
 }
 
 const BOARD_PAGE = "https://clerksboards.tucsonaz.gov/boards/";
-/** Where the portal this adapter was built on keeps its agenda documents; a door names its own with `documentHost`. */
+/** The default agenda document host; a door names its own with `documentHost`. */
 const DEFAULT_DOCUMENT_HOST = "assets.tucsonaz.gov";
 
 /**
- * DB-18: the portal's boards page, from the door's own `portalUrl` when it
- * names one, so another place running this product is a door row and not a
- * code edit. A row without it reads the page this adapter was built on.
+ * The portal's boards page, from the door's own `portalUrl` when it names one, so another place is a door
+ * row and not a code edit.
  */
 export function boardPortalUrl(config?: Readonly<Record<string, string | undefined>>): string {
   const named = config?.portalUrl?.trim();
@@ -204,10 +178,8 @@ const MONTH_NAMES = [
 function monthsInParens(text: string): number[] | null {
   const paren = /\(([^)]*)\)/.exec(text);
   if (!paren) return null;
-  // An EXCEPTION parenthetical also names months, and they mean the
-  // opposite: not "these are the months" but "these months move". Reading
-  // one as a month set would restrict a monthly board to two sittings a
-  // year. (D67, 2026-08-19.)
+  // An exception parenthetical also names months, meaning "these months move", not "these are the
+  // months".
   if (/except/i.test(paren[1])) return null;
   const months: number[] = [];
   for (const token of paren[1].toLowerCase().split(/[^a-z]+/)) {
@@ -219,20 +191,8 @@ function monthsInParens(text: string): number[] | null {
 }
 
 /**
- * **A season restriction on a recurrence** — `2nd Tuesday of each month
- * September through May @ 6:00 p.m.` (board 40). Returns the 1-12 months the
- * rule actually covers, or null when no restriction is written.
- *
- * D67, fixed 2026-08-19 (g20). The parser read past this clause entirely, so
- * a board that publishes nine sittings a year would have been given twelve —
- * June, July and August dates the body never scheduled, printed under its
- * name. It produced no wrong date in the serving window only because the
- * recurrence loop walks five months from the window start; the defect was
- * one window widening away from being visible, which is not the same as
- * being absent.
- *
- * The range WRAPS. September through May is nine months across a year
- * boundary, and reading it as an ascending span would return nothing at all.
+ * A season restriction on a recurrence (`2nd Tuesday of each month September through May`). Returns the
+ * 1-12 months the rule covers, or null when none is written. The range wraps across the year boundary.
  */
 function monthRestriction(text: string): Set<number> | null {
   const span = new RegExp(
@@ -257,17 +217,8 @@ function monthRestriction(text: string): Set<number> | null {
 }
 
 /**
- * **A per-month date override** — `1st Thursday of each month @ 9:00 a.m.
- * (except January it will be 01/08/26 and July will be 07/09/26)` (boards 58
- * and 59). Returns month → the published date for that month.
- *
- * The other half of D67, and a different shape from the restriction above:
- * this does not remove a sitting, it MOVES one. Reading past it printed the
- * ordinary Nth-weekday date for January and July — two dates a year, on both
- * boards, that the Clerk had explicitly said were different.
- *
- * Only read out of a parenthetical containing "except", so an ordinary date
- * elsewhere in the text cannot be mistaken for an exception.
+ * A per-month date override (`... (except January it will be 01/08/26 and July will be 07/09/26)`).
+ * Returns month → the published date. Read only out of a parenthetical containing "except".
  */
 function monthOverrides(text: string): Map<number, { y: number; mo: number; d: number }> {
   const out = new Map<number, { y: number; mo: number; d: number }>();
@@ -350,38 +301,23 @@ export interface ScheduleTally {
 }
 
 /**
- * Expand the published schedule text into concrete dates.
- *
- * Two grammars the Clerk actually uses, nothing looser:
- *  A. Enumerated dates — `1/28, 2/25, …, 12/30/2026, 1/27/2027; @ 12:30 p.m.`
- *     A date without a year takes the year of the next entry that has one,
- *     which is how the page itself reads.
- *  B. Recurrence — `1st Wednesday of each month @ 8:00 a.m.` (also `; at`,
- *     and `of the month`, which one board writes and which is the same rule).
- *  C. A month-restricted Nth-weekday rule — `Quarterly basis: every 3 months
- *     on the 3rd Monday (Jan, Apr, Jul, and Oct) @ 5:30 p.m.` The months come
- *     from the parenthetical; "quarterly" with no months named is declined,
- *     because the word alone does not place a date.
- *  D. Dates written with month NAMES — `January 22, April 16, 2026 and July
- *     and October 2026 TBD @ 9:30 a.m.` A month with no day is a sitting the
- *     body has not scheduled yet: it yields no date and is never rounded.
- *
- * Anything else — "Meets as required", "Quarterly", a novel format — returns
- * null so the caller counts the drop. Never guessed.
+ * Expand the published schedule text into concrete dates. The grammars the clerk actually uses:
+ *  A. Enumerated dates: `1/28, 2/25, …, 12/30/2026, 1/27/2027; @ 12:30 p.m.` A date without a year takes
+ *     the year of the next entry that has one.
+ *  B. Recurrence: `1st Wednesday of each month @ 8:00 a.m.` (also `; at`, and `of the month`).
+ *  C. A month-restricted Nth-weekday rule: `Quarterly basis: every 3 months on the 3rd Monday (Jan, Apr,
+ *     Jul, and Oct) @ 5:30 p.m.` "Quarterly" with no months named is declined.
+ *  D. Month names: `January 22, April 16, 2026 and July and October 2026 TBD @ 9:30 a.m.` A month with no
+ *     day yields no date and is never rounded.
+ * Anything else ("Meets as required", a novel format) returns null so the caller counts the drop.
  */
 export function expandSchedule(
   scheduleText: string,
   windowStart: Date,
   windowEnd: Date,
   /**
-   * What the expansion set aside, counted (2026-09-25): published dates that
-   * fall outside the window, and months the body named with no day ("July and
-   * October 2026 TBD"). Without it a board whose every published date had
-   * passed returned `[]` with nothing counted, and the pass read as a failed
-   * extraction — Tucson's Industrial Development Authority ("… 5/21, 6/18/2026")
-   * and Convention Center Commission ("January 22, April 16, 2026 and July and
-   * October 2026 TBD") failed every read that way until the Past Agendas
-   * fallback, and would again once those agendas age out of the lookback.
+   * What the expansion set aside, counted: published dates outside the window, and months named with no
+   * day. Without it a board whose every published date had passed would read as a failed extraction.
    */
   tally?: ScheduleTally,
 ): ScheduleInstance[] | null {
@@ -403,10 +339,7 @@ export function expandSchedule(
     "i",
   ).exec(scheduleText);
   if (recur) {
-    // D67 (2026-08-19, g20). A recurrence may carry a SEASON — "September
-    // through May" — and per-month DATE OVERRIDES — "(except January it will
-    // be 01/08/26...)". Both were read past, so the expansion was broader
-    // than what the body published. A qualifier we cannot read declines the
+    // A recurrence may carry a season and per-month date overrides; a qualifier we cannot read declines the
     // whole board rather than expanding around it.
     const restriction = monthRestriction(scheduleText);
     const overrides = monthOverrides(scheduleText);
@@ -417,18 +350,7 @@ export function expandSchedule(
     const out: ScheduleInstance[] = [];
     const cursor = new Date(windowStart);
     cursor.setUTCDate(1);
-    /*
-     * Walk the WINDOW, not a fixed five months (D67, 2026-08-19).
-     *
-     * The old loop walked exactly five iterations, which happens to match
-     * today's window — 90 days back plus 60 forward. That coincidence is
-     * what hid this whole defect: a season restriction being read past could
-     * not produce a wrong date while the loop never reached June. Bounding
-     * the walk by the window instead makes the restriction observable, keeps
-     * the output identical at today's window, and stops the fix from being
-     * one constant change away from useless. The 24 is a runaway guard, the
-     * same one grammar C uses.
-     */
+    // Walk the window, not a fixed number of months; 24 is a runaway guard.
     for (let i = 0; i < 24; i++) {
       const y = cursor.getUTCFullYear();
       const mo = cursor.getUTCMonth() + 1;
@@ -450,13 +372,8 @@ export function expandSchedule(
     return out;
   }
 
-  // Grammar C: a quarterly (or any month-restricted) Nth-weekday rule —
-  // `Quarterly basis: every 3 months on the 3rd Monday (Jan, Apr, Jul, and
-  // Oct) @ 5:30 p.m.` (board 128). This is grammar B with the months named
-  // instead of "each month", and it is fully determined: the parenthetical
-  // says which months, so nothing is inferred about where a quarter starts.
-  // A rule that says "quarterly" WITHOUT naming the months still returns
-  // null — the word alone does not place a single date.
+  // Grammar C: grammar B with the months named instead of "each month". A rule that says "quarterly"
+  // without naming months returns null.
   const nthAny = new RegExp(
     "(1st|2nd|3rd|4th|5th)\\s+(" + WEEKDAYS.join("|") + ")",
     "i",
@@ -485,20 +402,9 @@ export function expandSchedule(
     }
   }
 
-  // Grammar D: dates written with month NAMES — `January 22, April 16, 2026
-  // and July and October 2026 TBD @ 9:30 a.m.` (board 15). Same right-to-left
-  // year assignment as grammar A, because the Clerk writes the year once at
-  // the end of a run.
-  //
-  // The day group must be followed by a non-digit: without that, "October
-  // 2026" parsed as day 20 and left the year unset — a date the body never
-  // published, invented by a greedy quantifier.
-  //
-  // **A month with no day is a month the body has not scheduled yet.** It
-  // contributes NO date and is not rounded to the 1st — "July 2026 TBD" means
-  // the body has told us it will meet and has not said when, which is a
-  // different thing from a date we could print. Silently dropping it would
-  // read as a body that meets twice a year; see `tbdMonths` on the result.
+  // Grammar D: dates written with month names, years assigned right to left as in grammar A. The day group
+  // must be followed by a non-digit, or "October 2026" would parse as day 20. A month with no day
+  // contributes no date (see `tbdMonths` on the result).
   const named = [
     ...scheduleText.matchAll(
       new RegExp(
@@ -610,27 +516,12 @@ function localDateKey(instant: Date, timeZone: string): string {
 }
 
 /**
- * **A BOARD WHOSE SCHEDULE PLACES NOTHING STILL PUBLISHES WHEN IT MET.**
- * (2026-09-25, R8.)
- *
- * Tucson's Industrial Development Authority (board 43) publishes a schedule
- * that ends 6/18/2026, and the Convention Center Commission (board 15) one
- * whose July and October dates are "TBD". Inside the served window both
- * expand to zero sittings, so both bodies showed none — while each board's
- * Past Agendas list dates the sittings it actually held: `IDA Agenda 07-16-26`,
- * `IDA Agenda (Special Meeting) 07-28-26`, `TCCC Agenda 07-16-26`.
- *
- * Each concluded sitting here is dated by the Clerk's own agenda title and
- * cites that agenda PDF. Only the BODY'S OWN agendas count: the title must be
- * `<the board's abbreviation or name> Agenda [(qualifier)] <date>`, so
- * `IDA Property Committee Agenda` and `IDA Finance Subcommittee Agenda` — other
- * bodies — and `IDA Public Notice` — not an agenda — are not sittings of the
- * board. Where one date carries several agendas the newest-listed wins (a
- * revision or a cancellation is posted after the original), and "(Canceled)"
- * cancels exactly that date. The list carries no start time, so none is
- * claimed: the sitting is `DAY` precision (M59). Only dates before today,
- * inside the served lookback, are emitted — the list is a record of meetings
- * held, not a schedule.
+ * A board whose schedule places nothing in the window still publishes when it met: each concluded
+ * sitting is dated by the clerk's own agenda title and cites that agenda PDF. Only the body's own agendas
+ * count (`<the board's abbreviation or name> Agenda [(qualifier)] <date>`); a subcommittee's agenda or a
+ * public notice is not a sitting. Where one date carries several agendas the newest-listed wins, and
+ * "(Canceled)" cancels that date. No start time is claimed (`DAY` precision). Only dates before today,
+ * inside the served lookback, are emitted.
  */
 export function concludedSittingsFromPastAgendas(
   entries: readonly PastAgendaEntry[],
@@ -693,22 +584,9 @@ export function makeClerksBoardsSource(
     const windowEnd = new Date(now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000);
     let keptButPlaceless = 0;
 
-    /*
-     * A-002 · THIS ADAPTER IS THE ONE THAT CANNOT ALWAYS COUNT, and it is why
-     * `COULD_NOT_ASSERT` exists rather than being a formality.
-     *
-     * The logical record here is a SCHEDULE INSTANCE — a sitting expanded out
-     * of "the third Tuesday of each month". Where the schedule expands, the
-     * count is exact. Where the Clerk writes "Meets as required", or writes a
-     * rule this parser does not know, ONE counted drop stands in for an
-     * unknowable number of sittings, and the comment below has said so since
-     * the adapter was written.
-     *
-     * An unknowable number cannot be conserved against. Guessing one would be
-     * worse than saying so, so the pass records that it could not assert a
-     * count — RULING 100's second state — and the report carries that rather
-     * than a number nobody measured.
-     */
+    // This adapter cannot always count. The logical record is a schedule instance; where the clerk writes
+    // "Meets as required" or an unknown rule, one counted drop stands in for an unknowable number of
+    // sittings, so the pass records COULD_NOT_ASSERT rather than an unmeasured number.
     let considered = 0;
     let outOfWindow = 0;
     let cannotAssert = false;
@@ -720,14 +598,13 @@ export function makeClerksBoardsSource(
       const tally: ScheduleTally = { outsideWindow: 0, tbdMonths: 0 };
       const expanded = page.scheduleText ? expandSchedule(page.scheduleText, windowStart, windowEnd, tally) : null;
       if (expanded !== null) {
-        // What the schedule published and this window does not serve, counted
-        // rather than silently absent (2026-09-25).
+        // What the schedule published and this window does not serve, counted.
         considered += tally.outsideWindow + tally.tbdMonths;
         outOfWindow += tally.outsideWindow;
         drops.unplaceableInTime += tally.tbdMonths;
       }
-      // A schedule that places nothing in the window falls back to the
-      // sittings the board's own Past Agendas list dates (R8, 2026-09-25).
+      // A schedule that places nothing in the window falls back to the sittings the board's own Past Agendas
+      // list dates.
       const pastSittings = (expanded === null || expanded.length === 0) && pastAgendaHtml !== undefined
         ? concludedSittingsFromPastAgendas(
             parsePastAgendaList(pastAgendaHtml, wiring.config.documentHost), page.boardName,
@@ -747,13 +624,8 @@ export function makeClerksBoardsSource(
       considered += sittingCount;
 
       const location = page.location?.trim() ?? "";
-      /*
-       * A meeting held online is KEPT (D18). No building means no coordinates
-       * and no pin, but it is a real public meeting a reader could attend.
-       * Tucson's Clerk publishes "Microsoft Teams (Virtual)" for bodies that
-       * meet this way and no join link beside it, so joinUrl is null and
-       * renders as the gap it is.
-       */
+      // A meeting held online is kept: no building means no pin, but it is a real public meeting. No join link
+      // is published, so `joinUrl` is null.
       const online = location && isPlacelessLocation(location)
         ? { label: location, joinUrl: null }
         : null;
@@ -764,13 +636,8 @@ export function makeClerksBoardsSource(
         keptButPlaceless += sittingCount;
       }
       const venue = online || !location ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location) ?? null;
-      /*
-       * No reviewed venue never suppresses a sitting (the venue-gap class,
-       * 2026-09-23): every instance is published with no pin and its gap
-       * named — the page's own "Meeting Location" text verbatim, or the page's
-       * silence where it states none — and counted as `unknownVenue`, kept.
-       * Both cases used to `continue` past every instance of the body.
-       */
+      // No reviewed venue never suppresses a sitting: every instance is published with no pin and its gap
+      // named (the page's own "Meeting Location" text verbatim, or its silence), counted as `unknownVenue`.
       const venueGap = !online && !venue ? unplacedVenueGap(location, wiring.publishingOrg) : null;
       if (venueGap) {
         drops.unknownVenue += sittingCount;

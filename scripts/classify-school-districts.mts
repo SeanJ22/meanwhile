@@ -1,138 +1,38 @@
 /**
- * `pnpm schools:classify` — **independent district or dependent system, per
- * rendered district.** (DEF-2, 2026-08-22, the author's 8/22 walkthrough, item
- * 11. Rewritten 2026-08-23, item 2.)
+ * `pnpm schools:classify` — independent district or dependent system, for every
+ * Census school district (unified, elementary, secondary) nationally.
  *
- * ## Why this has to be answered before a card can describe a school district
- *
- * `data/reference/` holds **12,546 independent school districts** and **1,313
- * dependent school systems**, and the second kind **are not governments** —
- * they are departments of a city, a county or the state. A card that gave a
- * dependent system the independent definition would tell a reader to go and
- * vote for a school board that does not exist, and to go to a superintendent
- * who answers to a mayor.
- *
- * So each rendered district is STAMPED, and the stamp comes from the Census
- * Bureau's own classification rather than from the district's name.
- *
- * ## What changed on 2026-08-23, and it was a false zero
- *
- * This asked `data/derived/census-nces-crosswalk.csv`, which is the
- * INTERSECTION of the Census and NCES — 9,776 matched pairs. The crosswalk's
- * own report states what it leaves out: **4,083 Census school systems have no
- * NCES match and are therefore absent from it entirely.** Asking the
- * intersection a question only the Census can answer returned `UNCLASSIFIED`
- * for **219 of 514** rendered districts, which read as a gap in the data and
- * was a gap in the lookup.
- *
- * `lib/registry/census-school-systems.ts` now reads the two Census files
- * DIRECTLY, over four one-to-one branches, and keeps the crosswalk for the one
- * thing it is good at — knowing NCES's house style for a system whose Census
- * kind is already established.
- *
- * **A district that no branch reaches is `UNCLASSIFIED`, and an unclassified
- * district gets NO class definition.** That is the deliberate direction to
- * fail: guessing INDEPENDENT because most districts are would be a claim about
- * who governs a reader's schools, made on a base rate. The number is printed,
- * every unmatched district is named, and it is a gap rather than an error.
+ * A dependent school system is not a government: it is a department of a city,
+ * county or state, with no board a reader elects. The class comes from the
+ * Census of Governments' own classification, never from the district's name.
+ * A district no match branch reaches is `UNCLASSIFIED` and gets no class
+ * definition; guessing INDEPENDENT on a base rate would be a claim about who
+ * governs a reader's schools.
  *
  * ```
- * pnpm schools:classify
+ * pnpm schools:classify [--tiger=<the directory holding the Census files>]
  * ```
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { buildCensusSchoolIndex } from "../lib/registry/census-school-systems.ts";
 import type { MatchBranch } from "../lib/registry/census-school-systems.ts";
-import { declaredSourceStamp } from "../lib/ops/source-stamp.ts";
+import { nationalDivisionIds, type Layer } from "./lib/national-division-ids.mts";
 
 const ROOT = process.cwd();
+const TIGER = process.argv.find((a) => a.startsWith("--tiger="))?.slice(8) ?? join(ROOT, ".cache", "tiger");
+const SCHOOL_LAYERS: ReadonlySet<Layer> = new Set(["unsd", "elsd", "scsd"]);
 
-/**
- * **THE STAMP IS CARRIED FROM THE SOURCE, NOT READ OFF THE CLOCK.**
- * (2026-08-24. It was `today()`, and that made this artifact unreproducible.)
- *
- * Every input to this generator is a COMMITTED file — the 2022 Census of
- * Governments and its dependent-school-systems companion. Nothing it reads can
- * change without a commit. So a clock call in the output meant two things, both
- * wrong:
- *
- * 1. **The artifact differed every day**, which broke RULING 92's byte-identity
- *    check the first time a date rolled over mid-session. A "pure" generator
- *    whose output moves on its own is not pure, and the test was right.
- * 2. **The date claimed a currency the data does not have.** RULING 107: a READ
- *    stamp answers *how current is this DATA* and is mintable only from
- *    evidence of a read, or CARRIED forward from one. A RUN stamp answers *when
- *    did this PROGRAM run* and may never be written into a freshness field.
- *    `generatedAt` on a file about 2022 data was a run stamp doing a read
- *    stamp's job — printing today over a dataset nobody had re-read.
- *
- * Carrying it from the source's own last commit is the honest form: it is the
- * day this data entered the repo, it moves only when the data does, and it is
- * the same on every machine.
- *
- * **There is no clock fallback.** Where git cannot answer, this FAILS rather
- * than stamping today — filling in a plausible date is the fabrication rule,
- * and it is exactly what the old line did every time it ran.
- */
-const SOURCE_FILES = [
-  "data/reference/census_govt_units_2022.csv",
-  "data/reference/census_govt_units_2022_dependent_school_systems.csv",
-] as const;
-
-const AS_OF: string = declaredSourceStamp({
-  /*
-   * DECLARED, not derived. The first version asked git for the sources' last
-   * commit date, which is right on a full clone and WRONG on CI: actions/checkout
-   * uses fetch-depth 1, so `git log -1 -- <file>` returns the TIP's date for
-   * every file, with no error. main went red at a6c72a7 over exactly that.
-   *
-   * Both source files last changed on 2026-08-20. When one is replaced, this
-   * line is changed in the same commit — which is a diff a reviewer can see, and
-   * is the same mechanism tests/guard-census.json uses to let a guard leave.
-   */
-  readOn: "2026-08-20",
-  sources: SOURCE_FILES,
-});
-
-
-
-const FIPS: Record<string, string> = {};
-{
-  // State postal → FIPS, read from the crosswalk itself rather than hardcoded:
-  // a hand-kept state table is the separator-broken-allowlist defect waiting
-  // to happen, and this file already carries both columns on every row.
-  const lines = readFileSync(join(ROOT, "data", "derived", "census-nces-crosswalk.csv"), "utf8").split(/\r?\n/);
-  const header = lines[0].split(",");
-  const iFips = header.indexOf("fips_state");
-  const iState = header.indexOf("state");
-  for (let i = 1; i < lines.length; i++) {
-    const c = lines[i].split(",");
-    if (c.length > Math.max(iFips, iState) && c[iState]) FIPS[c[iState]] = c[iFips];
-  }
-}
-
-interface Division {
-  ocdId: string;
-  divisionType: string;
-  label: string;
-  state: string;
-}
-const registry = JSON.parse(readFileSync(join(ROOT, "lib", "registry", "registry.json"), "utf8")) as {
-  divisions: Division[];
-};
-
-/**
- * TIGER fills territory no district covers with a placeholder feature. It is
- * not a district and must never be classified as one — the same pseudo-entity
- * filter `build-zip-governments.mts` applies, applied here for the same reason.
- */
+/** TIGER fills territory no district covers with a placeholder feature; it is not a district. */
 function isPseudo(label: string): boolean {
   return /\b(not defined|unorganized|no unified school district)\b/i.test(label);
 }
 
+const postalOf = (ocdId: string): string => (/\/state:([a-z]{2})\b/.exec(ocdId)?.[1] ?? "").toUpperCase();
+
 const index = buildCensusSchoolIndex(ROOT);
+const national = nationalDivisionIds(ROOT, TIGER);
 
 const stamp: Record<string, "INDEPENDENT" | "DEPENDENT" | "UNCLASSIFIED"> = {};
 const branchOf: Record<string, MatchBranch> = {};
@@ -149,18 +49,17 @@ let unclassified = 0;
 let pseudo = 0;
 const unmatched: string[] = [];
 
-for (const d of registry.divisions) {
-  if (d.divisionType !== "school_district") continue;
+for (const d of national.divisions.values()) {
+  if (!SCHOOL_LAYERS.has(d.layer)) continue;
   if (isPseudo(d.label)) {
     pseudo++;
     continue;
   }
-  const fips = FIPS[d.state] ?? "";
-  const hit = index.lookup(fips, d.label);
+  const hit = index.lookup(d.statefp, d.label);
   if (hit === null) {
     stamp[d.ocdId] = "UNCLASSIFIED";
     unclassified++;
-    unmatched.push(`${d.state} ${d.label}`);
+    unmatched.push(`${postalOf(d.ocdId)} ${d.label}`);
     continue;
   }
   stamp[d.ocdId] = hit.kind;
@@ -172,10 +71,9 @@ for (const d of registry.divisions) {
 
 const total = independent + dependent + unclassified;
 const out = {
-  generatedAt: AS_OF,
   generator: "pnpm schools:classify (scripts/classify-school-districts.mts)",
   source:
-    "data/reference/census_govt_units_2022.csv (gov_type = SCHOOL DISTRICT) and data/reference/census_govt_units_2022_dependent_school_systems.csv — the 2022 Census of Governments' own INDEPENDENT/DEPENDENT classification, read directly. data/derived/census-nces-crosswalk.csv supplies NCES name aliases only.",
+    "Divisions: the 2023 Census cartographic-boundary school district layers (unified, elementary, secondary; ids from scripts/lib/national-division-ids.mts). Class: data/reference/census_govt_units_2022.csv (gov_type = SCHOOL DISTRICT) and data/reference/census_govt_units_2022_dependent_school_systems.csv — the 2022 Census of Governments' own INDEPENDENT/DEPENDENT classification, read directly. data/derived/census-nces-crosswalk.csv supplies NCES name aliases only.",
   note:
     "A district with no match is UNCLASSIFIED and gets no class definition. Guessing INDEPENDENT on a base rate would be a claim about who governs a reader's schools.",
   censusRowsRead: index.counts,
@@ -202,8 +100,6 @@ console.log(
   `  matched by branch — EXACT ${byBranch.EXACT}, RELAXED ${byBranch.RELAXED}, NCES_ALIAS ${byBranch.NCES_ALIAS}, PLACE_RELAXED ${byBranch.PLACE_RELAXED}, INTERSTATE ${byBranch.INTERSTATE}`,
 );
 if (unmatched.length > 0) {
-  // RULING 105: every one is NAMED. A count of what is still dark is not a
-  // list of it, and only the list can be worked next session.
   console.log(`\n  unmatched, all ${unmatched.length} of them:`);
   for (const u of unmatched) console.log(`    ${u}`);
 }

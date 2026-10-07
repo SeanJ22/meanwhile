@@ -53,26 +53,10 @@ import { POST } from "@/app/api/admin/chat/route.ts";
 import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 /**
- * **ADM-C7 — the contextual operator chat, proven without a model.**
- * (2026-09-06, the Operator Control Room brief.)
- *
- * The brief's load-bearing rule for this surface is a prohibition: *do not
- * invoke a model merely to answer an exact database/status question when a
- * typed deterministic query exists.* Everything below is what obeying it buys —
- * a classifier and a query set that are pure functions, so the console's
- * answers can be asserted exactly rather than sampled.
- *
- * The four acceptance clauses are proven by name:
- *
- *   1  a deterministic status question              — "the seven questions"
- *   2  a contextual cross-domain explanation        — "blocking the Fleet"
- *   3  one permitted typed action through chat      — "propose, confirm, submit"
- *   4  the SAME receipt semantics as the UI control — "the receipt is the
- *      gateway's" plus the source-text guard that no receipt is built here
- *
- * And the five refusals the brief names are each proven to refuse: arbitrary
- * shell, arbitrary SQL, bypassing action authority, merging or deploying by
- * prose, and activating promotion by prose.
+ * The contextual operator chat, proven without a model: no model is invoked to answer an exact status question
+ * when a typed deterministic query exists, so the classifier and query set are pure and their answers asserted
+ * exactly. Chat actions come from the gateway registry and carry the gateway's own receipt; arbitrary shell, SQL,
+ * bypassing action authority, and merging or deploying by prose are refused.
  */
 
 const ROOT = join(import.meta.dirname, "..");
@@ -422,7 +406,7 @@ test("the vocabulary an action is known by comes from its own type and label", (
 });
 
 /* ========================================================================== */
-/* ACCEPTANCE 1 — A DETERMINISTIC STATUS QUESTION                             */
+/* A DETERMINISTIC STATUS QUESTION                                            */
 /* ========================================================================== */
 
 test("acceptance 1: a status question is answered from the records, with a denominator, and without a model", () => {
@@ -457,7 +441,7 @@ test("every answer carries usedModel false, a needs-you line, and a source or a 
 });
 
 /* ========================================================================== */
-/* ACCEPTANCE 2 — A CONTEXTUAL CROSS-DOMAIN EXPLANATION                       */
+/* A CONTEXTUAL CROSS-DOMAIN EXPLANATION                                      */
 /* ========================================================================== */
 
 test("acceptance 2: 'what is blocking the Fleet' crosses four domains in one answer", () => {
@@ -544,7 +528,7 @@ test("a decision already recorded leaves the waiting count at once", () => {
     chosenOption: "Yes",
     consequenceShown: "it opens",
     decidedAt: "2026-09-06T17:00:00.000Z",
-    state: "PENDING_CANONICALIZATION",
+    state: "RECORDED",
     canonicalRef: null,
     refusedReason: null,
     adminSessionRef: "adm_test",
@@ -592,7 +576,7 @@ test("the integration question never invents a pull request status, and names th
 });
 
 /* ========================================================================== */
-/* ACCEPTANCE 3 & 4 — ONE PERMITTED TYPED ACTION, AND THE GATEWAY'S RECEIPT   */
+/* ONE PERMITTED TYPED ACTION, AND THE GATEWAY'S RECEIPT                      */
 /* ========================================================================== */
 
 function receiptFor(request: ActionRequest, label: string): ActionOutcome {
@@ -739,7 +723,7 @@ test("a confirmation whose token does not match what the console proposed submit
 });
 
 /* ========================================================================== */
-/* THE REFUSALS THE BRIEF NAMES                                               */
+/* THE REFUSALS                                                               */
 /* ========================================================================== */
 
 test("chat may not bypass action authority: an owner-gated action is refused in the gateway's own words", async () => {
@@ -770,16 +754,11 @@ test("chat may not bypass action authority: an owner-gated action is refused in 
   });
   assert.equal(outcome.ok, false);
 
-  /*
-   * And the prose form of the same thing is no longer refused a step earlier:
-   * promotion is automatic under rulings section 3, so "open a record class" is
-   * not one of the things chat may never do.
-   */
+  // Promotion is automatic, so opening a record class by prose is not refused.
   const byProse = await respondToOperator({ gateway: bound.gateway, actorRef: "adm_test" }, fullContext(), {
     text: "open a record class for meeting times",
     from: "/admin/chat",
   });
-  // Rulings section 3 (Sean, 2026-09-29): verified facts publish automatically, so chat has no promotion refusal to give.
   assert.notEqual(byProse.kind, "PROHIBITED");
 });
 
@@ -833,22 +812,13 @@ test("the chat's controls ARE the gateway's registry, matched by the words the g
   assert.deepEqual([...bound.registry], [...actionDefinitions()], "the registry is the gateway's, not a list kept in the chat");
   assert.ok(bound.registry.length >= 5, `expected the gateway to declare several controls, saw ${bound.registry.length}`);
 
-  /*
-   * What the page OFFERS is the registry filtered by the gateway's own
-   * authority ladder: a control the chat may never invoke is not something the
-   * owner should be told he can ask for. The registry declares at least one of
-   * each, so this is a real filter and not a no-op.
-   */
+  // The page offers the registry filtered by the gateway's own authority ladder.
   const offered = everyControl();
   const allowed = actionDefinitions().filter((d) => authorityPermits(CHAT_CALLER, d.authority));
   assert.deepEqual([...offered], allowed.map((d) => d.label));
   assert.ok(offered.length < actionDefinitions().length, "some declared controls are out of the chat's reach");
 
-  /*
-   * The registry as it stands, matched by ordinary words. These are the
-   * gateway's OWN labels and types — nothing in the chat names an action — so
-   * this is also the proof that a control added there becomes askable here.
-   */
+  // The gateway's own labels and types, matched by ordinary words: a control added there becomes askable here.
   const cases: readonly [string, string][] = [
     ["try this work again wi-4f2a9c1b3d5e", "fleet.retryWorkItem"],
     ["retry this eligible work item wi-4f2a9c1b3d5e", "fleet.retryWorkItem"],
@@ -874,16 +844,8 @@ test("'deploy the fleet' is a control and 'deploy to production' is not", () => 
 });
 
 test("the gateway's registry declares no way to delegate work to an agent, so the chat offers none", () => {
-  /*
-   * The brief asks for "Ask Codex to review this exact PR", "Have Claude
-   * investigate this bounded defect" and "Ask both independently whether this
-   * release is safe". The Agent Bridge exists (lib/control-plane/agents/) and
-   * the gateway registry does not declare an action that opens a job on it.
-   * The chat therefore cannot ask for one — and must not, because minting an
-   * action name here would be the second privileged path §3.5 forbids. The
-   * day the registry declares one, it becomes askable with no edit to the chat,
-   * which is what the case above proves.
-   */
+  // The gateway registry declares no action that opens an agent job, so chat cannot ask for one; minting an action
+  // name here would be a second privileged path.
   const agentish = actionDefinitions().filter((d) => /agent|codex|claude|delegate|investigate/i.test(`${d.type} ${d.label}`));
   assert.deepEqual(agentish, [], "if this fails the registry now declares agent work and the chat already reaches it");
   const routed = classify("ask codex to review this exact PR 293", actionDefinitions());
@@ -904,8 +866,7 @@ test("only the records a question needs are read", () => {
   assert.ok(requiredReads("COMPARE_ENVIRONMENTS").includes("environments"));
   assert.ok(!requiredReads("WAITING_ON_YOU").includes("environments"), "answering the owner queue never reaches another origin");
   assert.deepEqual(readsFor("what is the weather in Tucson", []), []);
-  // A proposal quotes the console's pulse revision — the same value the gateway
-  // compares against — and needs nothing else.
+  // A proposal quotes the console's pulse revision, the same value the gateway compares against.
   assert.deepEqual([...readsFor("try this work again wi-4f2a9c1b3d5e", actionDefinitions())], ["pulse"]);
 });
 
@@ -967,11 +928,7 @@ test("no environment variable's name can reach the browser through the chat", ()
   }
   assert.deepEqual(offenders, [], "a variable's name belongs in a server log, never in a body a browser reads");
 
-  /*
-   * And the one sentence that would have carried one: `openControlPlane`'s own
-   * detail names the variable by design, so the chat answers with a sentence of
-   * its own instead of forwarding it.
-   */
+  // The control plane's own detail names the variable, so the chat answers with a sentence of its own.
   assert.doesNotMatch(STORE_WOULD_NOT_OPEN, /WTP_|DATABASE_URL/);
   assert.ok(STORE_WOULD_NOT_OPEN.length > 60, "and it still says what happened");
 });

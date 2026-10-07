@@ -20,15 +20,9 @@ import {
 import { extractRosterTables } from "../lib/extract/roster-table.ts";
 import { parseRoster } from "../lib/hunt/wikipedia.ts";
 
-/* ========================================================================== */
-/* RULING 100 — a partial extraction that reconciles is a FAILED extraction   */
-/* ========================================================================== */
-
 /**
- * The three NJ Hunt 6 defects this guard is built from, and the shape they
- * share: none threw, two returned a NON-ZERO row count, and every instrument
- * in the repo read them as healthy because every instrument was asking
- * whether something came back rather than whether the document had been read.
+ * A partial extraction that reconciles is a failed extraction. None of these throw, and some return a non-zero row
+ * count, so the check is whether the document was read in full, not whether something came back.
  */
 
 test("a stated count that beats the row count reports PARTIAL, not EXTRACTED", () => {
@@ -83,10 +77,6 @@ test("more rows than the source states is OVER — reported, never silent, never
   assert.match(r.count.reason, /1 more than the document claims/);
 });
 
-/* -------------------------------------------------------------------------- */
-/* The second state is the load-bearing half                                  */
-/* -------------------------------------------------------------------------- */
-
 test("a source stating no count is NOT_ASSERTABLE — a named state, never a pass", () => {
   const r = extracted("ROSTER_TABLE", "s", 10, [1, 2], {}, "this page carries no membership sentence");
   assert.equal(r.outcome, "EXTRACTED");
@@ -123,13 +113,8 @@ test("the census counts what could be checked at all", () => {
   assert.deepEqual(census, { MATCHED: 1, SHORT: 1, OVER: 0, NOT_ASSERTABLE: 1 });
 });
 
-/* -------------------------------------------------------------------------- */
-/* Reading a stated count out of prose                                        */
-/* -------------------------------------------------------------------------- */
-
 test("statedCountIn reads the shapes a body's own page actually uses", () => {
   const cases: Array<[string, number]> = [
-    // Rockaway Township, verbatim in substance — the case that cost four people.
     ["The Township Council is comprised of nine members, with one member elected from each of six wards", 9],
     ["The governing body is composed of five members", 5],
     ["Pequannock's Township Council was composed of five members", 5],
@@ -149,11 +134,7 @@ test("statedCountIn reads the shapes a body's own page actually uses", () => {
 });
 
 test("a bare count in unrelated prose is NOT read as a seat count", () => {
-  /*
-   * A wrong denominator is worse than none: it fails a correct extraction and
-   * sends a session hunting a person who does not exist. So every shape is
-   * anchored, and this sentence must not match.
-   */
+  /* A wrong denominator fails a correct extraction, so every shape is anchored and this sentence must not match. */
   assert.equal(statedCountIn("Nine members of the public spoke at the hearing."), null);
   assert.equal(statedCountIn("The town has nine parks and two libraries."), null);
 });
@@ -171,16 +152,8 @@ test("numberFrom reads digits and English number words, and nothing else", () =>
   assert.equal(numberFrom(undefined), null);
 });
 
-/* -------------------------------------------------------------------------- */
-/* Wired at the two sites that actually lost people                           */
-/* -------------------------------------------------------------------------- */
-
 test("parseRoster carries an assertion against the article's own composition sentence", () => {
-  /*
-   * The Rockaway Township shape, reduced to what matters: the article states
-   * nine and the roster sentence is cut short. Before RULING 100 this returned
-   * a clean parse with five people on a nine-member council.
-   */
+  /* The article states nine and the roster sentence is cut short. */
   const section =
     "The Township is governed within the Faulkner Act, formally known as the Optional " +
     "Municipal Charter Law, under the Mayor-Council system of New Jersey municipal " +
@@ -209,9 +182,8 @@ test("parseRoster on an article stating no size reports NOT_ASSERTABLE, not a pa
 });
 
 test("an empty roster parse still carries the denominator it failed against", () => {
-  // The Pequannock shape before the copula list grew: the sentence exists, the
-  // article states a size, and the parse returns nothing. ZERO_ROWS catches
-  // this one — but the assertion is what says HOW MANY were lost.
+  // The sentence states a size and the parse returns nothing. ZERO_ROWS catches this; the assertion says how many
+  // were lost.
   const section = "The Township Council is composed of five members. No roster is given here.";
   const parsed = parseRoster(section, "Township Council");
   assert.equal(parsed.officials.length, 0);

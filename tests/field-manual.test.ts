@@ -49,7 +49,7 @@ test("source knowledge keeps every role's payload and scopes dead ends to their 
 
 test("fieldManualEntryId is deterministic per (source,key) and namespaced", () => {
   assert.equal(fieldManualEntryId("knowledge.json", "az:meetings"), fieldManualEntryId("knowledge.json", "az:meetings"));
-  assert.notEqual(fieldManualEntryId("knowledge.json", "az:meetings"), fieldManualEntryId("branch-manifest", "az:meetings"));
+  assert.notEqual(fieldManualEntryId("knowledge.json", "az:meetings"), fieldManualEntryId("other-source", "az:meetings"));
   assert.match(fieldManualEntryId("a", "b"), /^fm-[0-9a-f]{24}$/);
 });
 
@@ -57,7 +57,6 @@ test("upsertEntries only grows: a re-import updates in place and never removes",
   let store = emptyFieldManual();
   store = upsertEntries(store, [entry({ id: "fm-a", states: ["nh"] }), entry({ id: "fm-b" })], "2026-09-19");
   assert.equal(store.entries.length, 2);
-  // Re-import fm-a with a NEW jurisdiction and a fresher date: unions states, keeps fm-b.
   store = upsertEntries(store, [entry({ id: "fm-a", states: ["nj"], observedAt: "2026-09-19", title: "updated" })], "2026-09-20");
   assert.equal(store.entries.length, 2, "the store grew or held, never shrank");
   const a = store.entries.find((e) => e.id === "fm-a")!;

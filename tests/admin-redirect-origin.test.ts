@@ -1,20 +1,8 @@
 /**
- * **EVERY ADMIN REDIRECT LANDS ON THE ADMIN HOST.** (2026-09-23.)
- *
- * The owner pressed "Pause research" at 17:25Z. The intent was recorded and
- * the runner honored it, but the browser was sent to
- * the public host's /admin/research and got a 404. The route built its
- * 303 Location from `request.url`, and on Netlify an `/api/*` function sees the
- * site's primary host there, not the admin host the request actually came in
- * on. Middleware 404s every admin path off the admin host, so a write that
- * succeeded ended on an error page.
- *
- * Nine redirects in seven routes shared that base. Every one of them now builds
- * its Location from `ADMIN_ORIGIN`, the origin the handler has already required
- * with `isAdminHostRequest`, so a request that reached the redirect came to
- * that origin by definition. Each `destination` is still validated as a path
- * (`consoleReturnPath` / `loginPathFor`) before it is joined, so the fixed base
- * can never become an open redirect.
+ * Every admin redirect lands on the admin host. On Netlify an `/api/*` function sees the site's
+ * primary host in `request.url`, so every Location is built from `ADMIN_ORIGIN` (already required
+ * by `isAdminHostRequest`). Each destination is validated as a path before it is joined, so the
+ * fixed base can never become an open redirect.
  */
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -34,8 +22,6 @@ const PUBLIC_HOST = new URL(PUBLIC_SITE_ORIGIN).host;
 
 /** The routes that answer a form submit with a 303, and how many redirects each builds. */
 const REDIRECTING_ROUTES: Readonly<Record<string, number>> = {
-  "app/api/admin/research/route.ts": 1,
-  "app/api/admin/decision/route.ts": 1,
   "app/api/admin/session/route.ts": 2,
   "app/api/admin/action/route.ts": 1,
   "app/(admin)/admin/auth/google/route.ts": 1,

@@ -1,41 +1,11 @@
-/**
- * EVERY JOB NAMES ITS OWN CAUSE BEFORE IT DIES.
- * (2026-08-26, the sources-and-incumbency session. Item 8a of that brief. It is
- * RULING 164 — a workflow reports every failure, not just the first — carried
- * one step further: reporting a failure is not the same as NAMING it.)
- *
- * **`Error: Process completed with exit code 1` is not an error message. It is
- * the absence of one.** Sean has been pasting workflow logs that end in exactly
- * that line, and every failure has therefore been handled as an incident rather
- * than as a class, so the next one arrives looking new.
- *
- * This is the class list. A workflow's last step runs `pnpm diagnose` on the
- * failure path, which reads the job's own log and prints:
- *
- *   - for a KNOWN class, the class and the remedy in plain words
- *   - for an UNKNOWN failure, that it is unknown, loudly, with what it saw
- *
- * **The unknown case is the load-bearing one.** An unrecognised failure is the
- * one most worth a person's attention, and today it is indistinguishable from
- * the six that are already understood. A diagnoser that printed nothing when it
- * recognised nothing would be the capture script reporting `0 offenders` about
- * a panel it never opened (RULING 159).
- *
- * **The class list only grows.** A cause diagnosed once is never diagnosed
- * twice: the shape goes in here, with the remedy, and every workflow inherits
- * it because they all call the same step.
- */
+/** Every job names its own cause before it dies: a job log read into named failure classes with plain remedies. */
 
 /** One recognised way a job in this repository dies. */
 export interface FailureClass {
   readonly id: string;
   /** What a reader should do, in plain words. Never "see the logs". */
   readonly remedy: string;
-  /**
-   * The shapes this class takes in a job log. SHAPES, not strings (RULING 110)
-   * — each is proved against a real captured log line in
-   * `tests/failure-classes.test.ts`.
-   */
+  /** The shapes this class takes in a job log, each proved against a captured log line. */
   readonly shapes: readonly RegExp[];
 }
 
@@ -93,18 +63,7 @@ export const FAILURE_CLASSES: readonly FailureClass[] = [
     shapes: [/✖ failing tests:/, /ELIFECYCLE\s+Test failed/],
   },
   {
-    /*
-     * Added 2026-08-28, the day this class was diagnosed as UNKNOWN while the
-     * log said exactly what was wrong. Production was two migrations behind the
-     * merged code, and the shape that makes it dangerous is that NOTHING LOOKED
-     * BROKEN: every insert naming a column those migrations add failed, the
-     * route caught it, and the page was still served. A reader saw a working
-     * site while the writes went nowhere.
-     *
-     * The remedy names BOTH orderings on purpose. Migrate-always-first is wrong
-     * for a contract migration, whose whole point is that it must not precede
-     * the code that stops needing what it removes.
-     */
+    // Production behind merged migrations looks healthy while writes fail; the remedy names both orderings.
     id: "schema-out-of-sync",
     remedy:
       "Production is missing a committed migration, named above by tag. If it is EXPAND, apply it " +
@@ -125,13 +84,7 @@ export interface Diagnosis {
   readonly message: string;
 }
 
-/**
- * Read a job log and name what killed it.
- *
- * EVERY matching class is reported, not the first (RULING 164). A run that hit
- * a credential problem AND a stale source has two things wrong with it, and
- * naming one sends the reader back for a second round.
- */
+/** Read a job log and name what killed it; every matching class is reported, not just the first. */
 export function diagnose(log: string, tail: readonly string[] = []): Diagnosis {
   const hits = FAILURE_CLASSES.filter((c) => c.shapes.some((s) => s.test(log)));
 

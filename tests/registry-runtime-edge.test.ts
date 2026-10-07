@@ -99,8 +99,6 @@ test("the registry-runtime edge value is request-scoped: absent by default (runn
 });
 
 test("an unchanged authority version carries its served artifact forward; the runner never re-reads it", async () => {
-  // Every reader-repair pass once read each authority family whole (30.8 MB on
-  // 2026-09-23, 24 MB of it registry-runtime) only to find it unchanged.
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "rt-edge-")));
   const value = registryRuntimeFirstSeed().value;
   const first = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });

@@ -4,8 +4,8 @@ build_state: RELEASES 13 and 14 MERGED to main (049f86206; PRs #719, #720). rive
 worker: river
 provider: Claude (scheduled resume)
 run_id: session_01EJWrnyFbffUajJtnCW6EWs-cleanup2
-lock: river-cleanup2-session_01EJWrnyFbffUajJtnCW6EWs
-heartbeat: 2026-10-07T06:50:14Z
+lock: none
+heartbeat: 2026-10-07T17:54:34Z
 
 ## RELEASE 13 — the cleanup release: MERGED (read first)
 

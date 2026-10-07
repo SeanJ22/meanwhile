@@ -1,9 +1,10 @@
 /**
  * When a method starts working somewhere, it is queued in every place whose
  * door has the same kind of website (`planSpread`): a free try everywhere, a
- * paid try only inside places the owner has sent money to. A queued try is the fix
- * map's "untried here" row for that place, which every worker there reads at
- * the head of its untried methods; a place with a result is never queued again.
+ * paid try only inside places the owner has sent money to. A queued try is the
+ * fix map's "untried here" row for that place, with why it was queued; a worker
+ * there is offered the method with where it worked. A place with a result is
+ * never queued again.
  */
 
 import { isTransferableMethod, type FieldManualEntry } from "../control-plane/field-manual.ts";

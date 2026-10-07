@@ -67,6 +67,7 @@ import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { BULK_ACTIONS } from "./bulk-actions.ts";
+import { LEAD_ACTIONS } from "../leads/actions.ts";
 import { DOOR_ACTIONS } from "../../doors/actions.ts";
 import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
 import { settingDefinition, settingUndo, settingValueWords, SPEND_CEILING_LOG_KEY, withLoggedChange, withSetting, type SettingValue } from "../settings.ts";
@@ -1203,6 +1204,7 @@ const REGISTRY: readonly RegisteredAction[] = [
   },
 
   ...BULK_ACTIONS,
+  ...LEAD_ACTIONS,
 
   ...DOOR_ACTIONS,
 

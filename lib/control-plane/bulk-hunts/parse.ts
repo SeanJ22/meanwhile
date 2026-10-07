@@ -99,7 +99,7 @@ export function csvRows(text: string, delimiter: string): string[][] {
   return rows;
 }
 
-function delimiterOf(firstLine: string): string {
+export function delimiterOf(firstLine: string): string {
   const counts = [",", "\t", ";"].map((d) => [d, firstLine.split(d).length - 1] as const);
   counts.sort((a, b) => b[1] - a[1]);
   return counts[0][1] > 0 ? counts[0][0] : ",";

@@ -10,7 +10,7 @@ import { ActionDialog, type DialogSend } from "./action-dialog.tsx";
 import { ChangesView } from "./changes-view.tsx";
 import { ChatView } from "./chat-view.tsx";
 import { actionDef, isZipPlace, type PreviewContext } from "./actions.ts";
-import { BulkHunts, bulkPickOf, type BulkItem, type BulkMission, type BulkPick } from "./bulk-hunts.tsx";
+import { BulkHunts, bulkPickOf, type BulkItem, type BulkLead, type BulkMission, type BulkPick } from "./bulk-hunts.tsx";
 import type { SectionId } from "./contract.ts";
 import { V6Context, VIEWS, type Detail, type V6, type View } from "./context.tsx";
 import { DetailPanel } from "./details.tsx";
@@ -199,6 +199,21 @@ export function CommandCenter(props: CommandCenterProps) {
     void props.executor.send(receipt, { def, target: "hunts", scopeKey, option: null, words: "", amount: "", selectedItems: [], payload: { items: JSON.stringify([...send.items, ...send.missions.map((m) => ({ geography: m.geography, budgetUsd: m.budgetUsd, group: null }))]), priority: String(send.priority) } }, update);
   };
 
+  const doSendLeads = (leads: readonly BulkLead[]) => {
+    const def = actionDef("leads-send");
+    const key = newActionKey();
+    if (sendingKeys.current.has(key)) return;
+    sendingKeys.current.add(key);
+    const receipt = startReceipt({
+      key, def, target: "leads", targetName: `${leads.length.toLocaleString("en-US")} link${leads.length === 1 ? "" : "s"}`, label: def.label,
+      scopeKey, scopeName: place.name, level: "global", at: new Date().toISOString(), simulated: props.mode === "sample",
+    });
+    update(receipt);
+    setBulk(null);
+    void props.executor.send(receipt, { def, target: "leads", scopeKey, option: null, words: "", amount: "", selectedItems: [],
+      payload: { rows: JSON.stringify(leads.map((l) => ({ link: l.link, notes: l.notes }))) } }, update);
+  };
+
   const openDetail = (d: Detail) => {
     setStack((st) => [...st, { view, detail }].slice(-20));
     setDetail(d);
@@ -294,7 +309,7 @@ export function CommandCenter(props: CommandCenterProps) {
               ))}
             </nav>
             {props.mode === "sample" ? <span className={s.badge}>SAMPLE DATA</span> : null}
-            <button type="button" className={s.navBtn} onClick={() => setBulk({ pick: isZipPlace(scopeKey) ? null : bulkPickOf(scopeKey, place.name) })}>Start many hunts</button>
+            <button type="button" className={s.navBtn} onClick={() => setBulk({ pick: isZipPlace(scopeKey) ? null : bulkPickOf(scopeKey, place.name) })}>Start hunts or send leads</button>
             <form className={s.search} role="search" onSubmit={(e) => { e.preventDefault(); if (query.trim()) openDetail({ type: "search", query: query.trim() }); }}>
               <input className={s.input} aria-label="Search everything in the selected place" placeholder="Search bodies, people, meetings, requirements, failures" value={query}
                 onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === "Escape") setQuery(""); }} />
@@ -386,6 +401,8 @@ export function CommandCenter(props: CommandCenterProps) {
             initialPick={bulk.pick}
             blocked={whyNotRef({ kind: "hunt-start-many", target: "hunts" })}
             onSend={doSendBulk}
+            leadsBlocked={whyNotRef({ kind: "leads-send", target: "leads" })}
+            onSendLeads={doSendLeads}
             onClose={() => setBulk(null)}
           />
         )}

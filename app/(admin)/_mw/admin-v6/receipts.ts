@@ -102,9 +102,15 @@ export function confirmationOf(body: unknown): Confirmation | null {
   const c = body && typeof body === "object" ? (body as { confirmation?: unknown }).confirmation : null;
   if (!c || typeof c !== "object") return null;
   const x = c as Partial<Confirmation>;
-  const okState = x.state === "applied" || x.state === "waiting" || x.state === "not-needed" || x.state === "unread" || x.state === "not-picked-up";
+  const okState = x.state === "applied" || x.state === "waiting" || x.state === "not-needed" || x.state === "unread" || x.state === "not-picked-up" || x.state === "working";
   return okState && typeof x.words === "string" ? { state: x.state as Confirmation["state"], at: typeof x.at === "string" ? x.at : null, words: x.words,
-    ...(x.plan && typeof x.plan === "object" ? { plan: x.plan } : {}), ...(x.progress && typeof x.progress === "object" ? { progress: x.progress } : {}) } : null;
+    ...(x.plan && typeof x.plan === "object" ? { plan: x.plan } : {}), ...(x.progress && typeof x.progress === "object" ? { progress: x.progress } : {}),
+    ...(Array.isArray(x.items) ? { items: x.items } : {}) } : null;
+}
+
+/** An order's parts as the receipt lists them. */
+function itemsOf(c: Pick<Confirmation, "items">): Pick<UiReceipt, "items"> | Record<string, never> {
+  return c.items ? { items: c.items.map((i) => ({ name: i.name, status: i.status, note: i.note, label: i.label })) } : {};
 }
 
 /**
@@ -123,13 +129,16 @@ export function applyConfirmation(prev: UiReceipt, c: Confirmation, at: string):
       steps: [...prev.steps, { label: "Runner confirmed", at: c.at ?? at }],
       says: c.words,
       lifecycle: { ...prev.lifecycle, workersReceived: c.at ?? at },
-      ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), notPickedUp: false,
+      ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), ...itemsOf(c), notPickedUp: false,
     };
   }
+  if (c.state === "working") return { ...prev, status: "running", statusWords: STATUS_WORDS.running, says: c.words, notPickedUp: false,
+    lifecycle: { ...prev.lifecycle, workStarted: prev.lifecycle.workStarted ?? at },
+    ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), ...itemsOf(c) };
   if (c.state === "not-picked-up") return { ...prev, status: "queued", statusWords: "Not picked up", says: c.words, notPickedUp: true,
-    ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}) };
+    ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), ...itemsOf(c) };
   if (c.state === "waiting" || c.state === "unread") return { ...prev, status: "queued", statusWords: STATUS_WORDS.queued, says: c.words, notPickedUp: false,
-    ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}) };
+    ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), ...itemsOf(c) };
   return prev;
 }
 
@@ -171,8 +180,9 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
         status: "done",
         statusWords: def.doneWords.split(".")[0] || STATUS_WORDS.done,
         steps: step(body.replayed ? "Already saved earlier" : "Saved"),
-        says: `${def.doneWords}${body.replayed ? " This was the earlier send; nothing was done twice." : ""}`,
+        says: `${confirmation?.items ? confirmation.words : def.doneWords}${body.replayed ? " This was the earlier send; nothing was done twice." : ""}`,
         lifecycle: { ...prev.lifecycle, saved: r.completedAt ?? r.startedAt ?? at },
+        ...(confirmation?.items ? { ...itemsOf(confirmation), ...(confirmation.progress ? { progress: confirmation.progress } : {}), ...(confirmation.plan ? { plan: confirmation.plan } : {}) } : {}),
       };
     }
     // QUEUED or IN_PROGRESS: saved, not finished. Unless the runner already confirmed it (a replay).

@@ -92,7 +92,8 @@ async function look(url: string, fetchFn: SweepFetch): Promise<{ result: SweepFe
   }
 }
 
-function retryAfterMs(value: string | null | undefined, now: number): number | null {
+/** A Retry-After value (seconds or an HTTP date) as milliseconds from `now`; null when absent or unreadable. */
+export function retryAfterMs(value: string | null | undefined, now: number): number | null {
   if (!value) return null;
   if (/^\d+$/.test(value.trim())) return Number(value) * 1000;
   const at = Date.parse(value);

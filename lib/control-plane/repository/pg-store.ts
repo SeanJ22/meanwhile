@@ -4,11 +4,13 @@ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import type { LeadOrder } from "../leads/order.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
 /** The Postgres control-plane provider, implementing the same `ControlPlaneRepositories` interfaces as the file store. */
 
+import { createHash } from "node:crypto";
 import { neon, Pool, neonConfig } from "@neondatabase/serverless";
 import type {
   CacheObservationRecord,
@@ -853,6 +855,26 @@ export async function pgArtifactsByCanonicalUrl(sql: Sql, url: string, limit: nu
   return rows.map(row => parseValue<ArtifactRecord>(row.record, "cp_log_artifacts source capture"));
 }
 
+/** Page size for one batched source lookup. */
+const CAPTURED_URLS_PAGE = 1000;
+
+/** Which exact canonical URLs have a capture: one indexed read per thousand, on the same md5 expression as the source index. */
+export async function pgCapturedCanonicalUrls(sql: Sql, urls: readonly string[], options: PgRepositoryBounds = {}): Promise<ReadonlySet<string>> {
+  const run = boundedRunner(sql, "cp_log_artifacts", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const held = new Set<string>();
+  const unique = [...new Set(urls)];
+  for (let at = 0; at < unique.length; at += CAPTURED_URLS_PAGE) {
+    const page = unique.slice(at, at + CAPTURED_URLS_PAGE);
+    const rows = await run("capturedCanonicalUrls", "PAGE", CAPTURED_URLS_SQL,
+      [page.map((url) => createHash("md5").update(url, "utf8").digest("hex")), page]) as Record<string, unknown>[];
+    for (const row of rows) held.add(String(row.url));
+  }
+  return held;
+}
+
+export const CAPTURED_URLS_SQL = `SELECT DISTINCT record->>'canonicalUrl' AS url FROM cp_log_artifacts
+     WHERE md5(record->>'canonicalUrl') = ANY($1::text[]) AND record->>'canonicalUrl' = ANY($2::text[])`;
+
 /** Locks use one pinned WebSocket transaction. HTTP queries have no shared session. */
 function pgLockManager(connectionString: string): LockManager {
   return {
@@ -1242,6 +1264,7 @@ export async function createPgRepositories(
     dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions", bounded),
     artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts", bounded),
     artifactsByCanonicalUrl: (url, limit) => pgArtifactsByCanonicalUrl(sql, url, limit, bounded),
+    capturedCanonicalUrls: (urls) => pgCapturedCanonicalUrls(sql, urls, bounded),
     adminEvidenceCopyRequests: pgAggregateRepository<AdminEvidenceCopyRequest>(sql, "AdminEvidenceCopyRequest", "cp_admin_evidence_copy_requests", bounded),
     costs: pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded),
     ownerSnapshots: pgAggregateRepository<OwnerSnapshot>(
@@ -1285,6 +1308,7 @@ export async function createPgRepositories(
     adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),
     askGapObservations: pgAggregateRepository<AskGapObservation>(sql, "AskGapObservation", "cp_ask_gap_observations", bounded),
     doors: pgAggregateRepository<DoorRecord>(sql, "Door", "cp_doors", bounded),
+    leadOrders: pgAggregateRepository<LeadOrder>(sql, "LeadOrder", "cp_lead_orders", bounded),
     budget,
     spendHolds: pgSpendHoldRepository(sql, bounds),
     locks,

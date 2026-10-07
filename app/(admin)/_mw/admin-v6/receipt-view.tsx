@@ -8,6 +8,22 @@ import { acceptedLine, doneWithChange, oneSentence, ORDER_STEPS, orderStepsReach
 import { ActionButton, cx, ReceiptChip, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
+const ITEMS_SHOWN = 12;
+const ITEM_WORDS: Readonly<Record<UiReceipt["status"], string>> = { done: "Done", partial: "Partly done", refused: "Refused", failed: "Failed", unknown: "Result unknown", queued: "Queued", read: "Read", running: "Running" };
+
+function ItemList(props: { readonly items: UiReceipt["items"] }) {
+  return (
+    <ul className={s.stack} style={{ gap: 4, margin: 0, paddingLeft: 0, listStyle: "none" }} aria-label="Result for each item">
+      {props.items.map((it, i) => (
+        <li key={i} className={s.small} style={{ overflowWrap: "anywhere" }}>
+          <span className={cx(STATUS_TONE[it.status] === "good" ? s.textGood : STATUS_TONE[it.status] === "warn" ? s.textWarn : s.textInfo)}>{it.label ?? ITEM_WORDS[it.status]}</span>
+          {" · "}{it.name}{it.note ? <span className={s.dim}> — {it.note}</span> : null}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compact?: boolean }) {
   const v = useV6();
   const r = props.receipt;
@@ -45,14 +61,13 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
       )}
       {doneWithChange(r) && <p className={cx(s.p, s.small)}>{doneWithChange(r)}</p>}
       {!!r.items.length && (
-        <ul className={s.stack} style={{ gap: 4, margin: 0, paddingLeft: 0, listStyle: "none" }} aria-label="Result for each item">
-          {r.items.map((it, i) => (
-            <li key={i} className={s.small}>
-              <span className={cx(STATUS_TONE[it.status] === "good" ? s.textGood : STATUS_TONE[it.status] === "warn" ? s.textWarn : s.textInfo)}>{({ done: "Done", partial: "Partly done", refused: "Refused", failed: "Failed", unknown: "Result unknown", queued: "Queued", read: "Read", running: "Running" })[it.status]}</span>
-              {" · "}{it.name}{it.note ? <span className={s.dim}> — {it.note}</span> : null}
-            </li>
-          ))}
-        </ul>
+        <ItemList items={r.items.slice(0, ITEMS_SHOWN)} />
+      )}
+      {r.items.length > ITEMS_SHOWN && (
+        <details className={s.small}>
+          <summary style={{ cursor: "pointer" }}>Show all {r.items.length.toLocaleString("en-US")}</summary>
+          <ItemList items={r.items.slice(ITEMS_SHOWN)} />
+        </details>
       )}
       {!props.compact && (
         <>

@@ -4,6 +4,7 @@ import { RUNNER_ID } from "../admin-data.ts";
 import type { ActionReceipt } from "./contract.ts";
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { formatEastern } from "../eastern-time.ts";
+import { isLeadOrder, leadCounts, leadCountsWords, leadItems, LEADS_ACTION, rowOpen, type LeadOrder } from "../leads/order.ts";
 
 export type ConfirmationState =
   | "applied"
@@ -11,7 +12,9 @@ export type ConfirmationState =
   | "not-needed"
   | "unread"
   /** Saved, the runner has not taken it, and it is overdue: its heartbeat is silent or a round due after the save has passed. */
-  | "not-picked-up";
+  | "not-picked-up"
+  /** The runner has started on it and has not finished. */
+  | "working";
 
 export interface OrderPlan {
   readonly who: string;
@@ -26,10 +29,20 @@ export interface OrderProgress {
   readonly of: number | null;
 }
 
+/** One part of an order, as order tracking lists it. */
+export interface OrderItem {
+  readonly name: string;
+  readonly status: "done" | "failed" | "queued" | "running";
+  readonly label: string;
+  readonly note: string;
+}
+
 export interface Confirmation {
   readonly state: ConfirmationState;
   readonly plan?: OrderPlan;
   readonly progress?: OrderProgress;
+  /** Each part's own status, for an order made of many. */
+  readonly items?: readonly OrderItem[];
   readonly at: string | null;
   readonly words: string;
 }
@@ -98,6 +111,7 @@ interface AssignmentReading {
 
 /** Has the runner picked this receipt's action up? Never throws: an unreadable record is "unread". */
 export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now()): Promise<Confirmation> {
+  if (receipt.type === LEADS_ACTION && receipt.outcome !== "REFUSED") return confirmLeads(repos, receipt, nowMs);
   let core = await confirmCore(repos, receipt);
   if (receipt.outcome === "REFUSED") return core;
   let nextRound: string | null = null;
@@ -107,6 +121,28 @@ export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: A
     if (core.state === "waiting") core = notPickedUp(core, beat, receipt, nowMs);
   } catch { }
   return { ...core, plan: orderPlan(receipt, nextRound), progress: orderProgress(receipt, core) };
+}
+
+/** A leads order, from its own rows: each row's status, how many are finished, and whether the runner has started. */
+async function confirmLeads(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number): Promise<Confirmation> {
+  let beat: RunnerHeartbeat | null = null;
+  let order: LeadOrder | null = null;
+  try {
+    beat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
+    const row = await repos.leadOrders.read(receipt.receiptId);
+    order = row !== null && isLeadOrder(row.value) ? row.value : null;
+  } catch { }
+  if (order === null) return { state: "unread", at: null, words: "Saved. Runner status —", plan: leadsPlan(receipt, null, beat) };
+  const counts = leadCounts(order);
+  const base = { plan: leadsPlan(receipt, counts.queued, beat), progress: { done: order.rows.filter((r) => !rowOpen(r)).length, of: counts.total }, items: leadItems(order) };
+  if (!order.open) return { ...base, state: "applied", at: order.updatedAt, words: `Done: ${leadCountsWords(counts)}` };
+  if (counts.tested > 0) return { ...base, state: "working", at: null, words: `Testing links: ${leadCountsWords(counts)}` };
+  const waiting: Confirmation = { state: "waiting", at: null, words: `Saved. Waiting for the runner to test ${counts.queued.toLocaleString("en-US")} link${counts.queued === 1 ? "" : "s"}.` };
+  return { ...base, ...notPickedUp(waiting, beat, receipt, nowMs) };
+}
+
+function leadsPlan(receipt: Pick<ActionReceipt, "label">, toTest: number | null, beat: Pick<RunnerHeartbeat, "nextCycleDueAt"> | null): OrderPlan {
+  return { who: "Runner", change: receipt.label, creates: toTest !== null && toTest > 0 ? toTest : null, resultsBy: beat?.nextCycleDueAt ?? null };
 }
 
 /** A runner that has not beaten for this long is silent. Rounds beat far more often than this. */

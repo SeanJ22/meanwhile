@@ -212,6 +212,7 @@ import {
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { knownRecipes, RECIPE_KIND } from "../lib/hunt/meetings-recipes.ts";
 import { runSpreadPass, sentMoneyPlaces } from "../lib/method/spread-pass.ts";
+import { LEADS_PASS_BUDGET_MS, runLeadsPass } from "../lib/control-plane/leads/plain-test.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
@@ -3117,6 +3118,30 @@ for (const row of cycle.deferred) {
 }
 
 
+
+/* ------------------------------------------------- test the owner's research leads --- */
+
+if (!dry && !canary) {
+  const leads = await pending.step("leads:test", () => runLeadsPass({ repos,
+    get: (() => {
+      const opened = fleetSafety.guardedOpenBytes("public-web", "research-leads", fetch, { followRedirects: false });
+      return async ({ url, headers, timeoutMs }) => {
+        const got = await opened({ url, headers, timeoutMs });
+        return { status: got.status, body: got.bytes, contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
+      };
+    })(),
+    now: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)),
+    sizeFor: websiteSize,
+    sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
+    deadlineMs: Date.now() + LEADS_PASS_BUDGET_MS })).catch((error: unknown) => {
+    runtimeConditions.push(`the owner's research leads were not tested this round: ${error instanceof Error ? error.message : String(error)}`);
+    return null;
+  });
+  if (leads && leads.orders > 0) {
+    console.log(`  research leads: ${leads.tested} tested across ${leads.orders} order(s): ${leads.works} work, ${leads.paid} sent to paid work, ${leads.failed} failed, ${leads.waiting} waiting; ${leads.lessons} lesson(s) saved` +
+      (leads.lessonError ? `; lessons not saved (${leads.lessonError})` : ""));
+  }
+}
 
 /* ------------------------------------------------- spread what started working --- */
 

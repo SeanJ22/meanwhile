@@ -753,7 +753,7 @@ export interface FixView {
 
 export type ActionKind =
   | "contain" | "uncontain" | "recheck" | "workfirst" | "fixfirst" | "stopmethod" | "scope-stop" | "stoprepeats"
-  | "decide" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop"
+  | "decide" | "hunt-start" | "hunt-start-many" | "leads-send" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop"
   | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume"
   | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
@@ -788,6 +788,8 @@ export interface ReceiptItem {
   readonly name: string;
   readonly status: ReceiptStatus;
   readonly note: string;
+  /** The item's own status words, when they say more than its status. */
+  readonly label?: string;
 }
 
 export interface UiReceipt {

@@ -32,6 +32,9 @@ import {
   validateIntentNote,
 } from "../lib/control-plane/research-view.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const flag = (name: string): string | null => {
   const hit = process.argv.slice(2).find((a) => a.startsWith(`--${name}=`));

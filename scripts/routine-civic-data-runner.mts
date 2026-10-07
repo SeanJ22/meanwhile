@@ -158,6 +158,9 @@ import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
 } from "../lib/civic-data/runtime-authority.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 // An uncaught error ends this process through one sanitized protocol line naming the step (lib/ops/fatal-line.ts).
 let step = "reading its task selection";

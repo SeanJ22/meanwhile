@@ -58,6 +58,9 @@ import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-polic
 import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
 import { US_STATES } from "../lib/control-plane/readiness/catalog.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 const NOW = new Date();
 const NOW_ISO = NOW.toISOString();
 const HEAD = headSha();

@@ -70,7 +70,7 @@ import {
   type HoldDecision,
   type SpendHoldStore,
 } from "../expansion/spend-holds.ts";
-import { heldAggregateList, heldCopiesFromEnv, heldLogReadAll, type HeldCopies } from "./incremental-reads.ts";
+import type { HeldCopies } from "./incremental-reads.ts";
 import {
   CONTROL_PLANE_CONNECT_MAX_ATTEMPTS,
   withControlPlaneConnectRetry,
@@ -145,6 +145,14 @@ export interface PgRepositoryBounds {
   readonly rowClass?: Exclude<ControlPlaneCallClass, "PAGE">;
   /** Where `list()` and `readAll()` keep their held copies; null reads every whole table as a first read. */
   readonly copies?: HeldCopies | null;
+}
+
+/* Runner processes install the held copies (`readFromHeldCopies`); civic-data commands never import their writer. */
+let heldCopiesFor: ((connectionString: string, schemaVersion: number) => HeldCopies | null) | null = null;
+
+/** Where this process's repositories keep their held copies; see incremental-reads.ts `readFromHeldCopies`. */
+export function installHeldCopies(open: (connectionString: string, schemaVersion: number) => HeldCopies | null): void {
+  heldCopiesFor = open;
 }
 
 /** Bounds transport fan-out across repositories and clients in this process, so many ready rows share HTTP capacity. */
@@ -308,7 +316,10 @@ export function pgAggregateRepository<T>(
     return { rows: out, through };
   }
 
-  const held = heldAggregateList<T>(table, listChangedSince, options.copies ?? null);
+  const copies = options.copies ?? null;
+  const held = <O>(out: (row: Persisted<T>) => O): Promise<O[]> => copies === null
+    ? listChangedSince(null).then(changed => changed.rows.map(out))
+    : copies.aggregateList(table, listChangedSince, out);
 
   return {
     read,
@@ -520,7 +531,10 @@ export function pgAppendOnlyRepository<T>(
     return { records: out, through };
   }
 
-  const heldAll = heldLogReadAll<T>(table, readChangedSince, options.copies ?? null);
+  const copies = options.copies ?? null;
+  const heldAll = (): Promise<T[]> => copies === null
+    ? readChangedSince(null).then(changed => changed.records.map(entry => entry.record))
+    : copies.logReadAll(table, readChangedSince);
 
   return {
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
@@ -1060,7 +1074,7 @@ export async function createPgRepositories(
       } finally { await pool.end(); }
     },
   });
-  const bounded: PgRepositoryBounds = { bounds, copies: heldCopiesFromEnv(connectionString, BOOTSTRAP_VERSION) };
+  const bounded: PgRepositoryBounds = { bounds, copies: heldCopiesFor?.(connectionString, BOOTSTRAP_VERSION) ?? null };
   if (!options.skipBootstrap) {
     /* The bootstrap is idempotent and is this process's first Neon I/O, so its transient connect failures are retried. */
     await withControlPlaneConnectRetry(() => bootstrap(sql, nowIso, bounds), {

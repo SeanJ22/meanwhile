@@ -9,6 +9,9 @@
  */
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { runBreakPatternPass } from "../lib/method/break-patterns.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const now = new Date().toISOString();
 const url = controlPlaneUrlFromEnv();

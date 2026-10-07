@@ -402,6 +402,9 @@ import { today } from "./doc-dates.mjs";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import { countVitalSign } from "../lib/db/transfer-by-caller.ts";
 import { VITAL_COUNTERS } from "../lib/control-plane/vital-signs.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
   { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });

@@ -6,6 +6,7 @@ import { test } from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
 import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { databaseTransferFetch } from "../lib/db/transfer.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { boundedQuery } from "../lib/control-plane/repository/request-bounds.ts";
 import { pathToFileURL } from "node:url";
 import {
@@ -63,6 +64,7 @@ test("a whole-table read answered from its held copy still counts its bytes unde
       : answer(["id", "revision", "updated_at", "value"], [["door-a", "1", "2026-10-02T00:00:00.000Z", "{\"status\":\"OPEN\"}"]]));
   }, row => { countNeonBytes(row.database, row.responseBytes); });
   try {
+    readFromHeldCopies();
     const repos = await createPgRepositories(process.env.WTP_CONTROL_PLANE_DATABASE_URL!, undefined, { skipBootstrap: true });
     for (let i = 0; i < 2; i++) assert.equal((await repos.doors.list()).length, 1);
     assert.ok(readdirSync(dir).length === 1, "the copy was kept on the runner's disk");

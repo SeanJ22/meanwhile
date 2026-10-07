@@ -15,6 +15,9 @@ import { recheckProvenFixes } from "../lib/control-plane/fix-standing.ts";
 import type { AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { createFixMapRepository } from "../lib/method/fix-map.ts";
 import { memoryFixMap } from "../lib/method/fix-map-record.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const now = new Date().toISOString();
 

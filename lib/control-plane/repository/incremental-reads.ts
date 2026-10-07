@@ -15,6 +15,7 @@ import { join } from "node:path";
 import { createInterface } from "node:readline";
 import { finished } from "node:stream/promises";
 import { withCallerSite } from "../../db/transfer-by-caller.ts";
+import { installHeldCopies } from "./pg-store.ts";
 import type { ChangedRecord, ChangedRecords, ChangedRows, Persisted } from "./types.ts";
 
 /** How far before a copy's read clock the next read reaches back; every control-plane write is one bounded statement shorter than this. */
@@ -37,30 +38,54 @@ export function databaseIdentity(connectionString: string): string {
   return createHash("sha256").update(`${host}/${database}`).digest("hex").slice(0, 16);
 }
 
-/** One directory of held copies (one database, one schema version) and this process's per-table queue. */
+/** One directory of held copies: one database, one schema version. */
 export interface HeldCopies {
   readonly dir: string;
+  /** `list()` for one aggregate table: rows in id order, each mapped by `out` as the copy streams. */
+  aggregateList<T, O>(table: string, changedSince: (since: string | null) => Promise<ChangedRows<T>>, out: (row: Persisted<T>) => O): Promise<O[]>;
+  /** `readAll()` for one log table: records in key then position order. */
+  logReadAll<T>(table: string, changedSince: (since: string | null) => Promise<ChangedRecords<T>>): Promise<T[]>;
+}
+
+/** The directory, this process's log, and its per-table queue: one read of a table at a time here; other processes rely on the atomic rename. */
+interface CopyDir {
+  readonly dir: string;
   readonly log: (line: string) => void;
-  /** One read of a table at a time in this process; other processes rely on the atomic rename. */
   serial<R>(table: string, operation: () => Promise<R>): Promise<R>;
 }
 
-const heldByDir = new Map<string, HeldCopies>();
-
-/** The held copies under `dir`, one instance per directory per process. */
-export function heldCopiesIn(dir: string, log: (line: string) => void = line => console.warn(line)): HeldCopies {
-  const known = heldByDir.get(dir);
-  if (known) return known;
+/** Held copies under `dir`, with their own queue. A process opens a directory once (`heldCopiesIn`). */
+export function openHeldCopies(dir: string, options: { readonly log?: (line: string) => void; readonly slackMs?: number } = {}): HeldCopies {
+  const slackMs = options.slackMs ?? INCREMENTAL_READS_SLACK_MS;
   const queues = new Map<string, Promise<unknown>>();
-  const copies: HeldCopies = {
+  const copyDir: CopyDir = {
     dir,
-    log,
+    log: options.log ?? (line => console.warn(line)),
     serial(table, operation) {
       const next = (queues.get(table) ?? Promise.resolve()).then(operation, operation);
       queues.set(table, next.catch(() => undefined));
       return next;
     },
   };
+  return {
+    dir,
+    aggregateList: <T, O>(table: string, changedSince: (since: string | null) => Promise<ChangedRows<T>>, out: (row: Persisted<T>) => O) =>
+      withCallerSite(() => readHeld(copyDir, table, aggregateLayout<T>(), slackMs, changedSince, out)),
+    logReadAll: <T>(table: string, changedSince: (since: string | null) => Promise<ChangedRecords<T>>) => withCallerSite(() =>
+      readHeld(copyDir, table, logLayout<T>(), slackMs, async (since: string | null) => {
+        const changed = await changedSince(since);
+        return { rows: changed.records, through: changed.through };
+      }, entry => entry.record)),
+  };
+}
+
+const heldByDir = new Map<string, HeldCopies>();
+
+/** The held copies under `dir`, one instance per directory per process. */
+export function heldCopiesIn(dir: string): HeldCopies {
+  const known = heldByDir.get(dir);
+  if (known) return known;
+  const copies = openHeldCopies(dir);
   heldByDir.set(dir, copies);
   void removeAbandonedWrites(dir);
   return copies;
@@ -98,6 +123,15 @@ export function heldCopiesFromEnv(
       .map(other => rm(join(root, other), { recursive: true, force: true })))).catch(() => {});
   }
   return heldCopiesIn(dir);
+}
+
+/**
+ * Make this process's Postgres control-plane repositories answer whole-table reads from the held copies. Each
+ * runner process that is not a civic-data command calls it once at startup, before it opens the control plane;
+ * civic-data commands never do, so no filesystem writer is reachable from them.
+ */
+export function readFromHeldCopies(env: Readonly<Record<string, string | undefined>> = process.env): void {
+  installHeldCopies((connectionString, schemaVersion) => heldCopiesFromEnv(connectionString, schemaVersion, env));
 }
 
 class UnreadableCopy extends Error {}
@@ -213,7 +247,7 @@ function laterOf(a: string | null, b: string): string {
  * for, so a copy renamed in meanwhile cannot pair an older body with a newer clock.
  */
 async function mergeCopy<R, O>(input: {
-  readonly copies: HeldCopies;
+  readonly copies: CopyDir;
   readonly table: string;
   readonly layout: Layout<R>;
   readonly held: { readonly handle: FileHandle; readonly header: Header } | null;
@@ -297,7 +331,7 @@ async function mergeCopy<R, O>(input: {
 }
 
 async function readHeld<R, O>(
-  copies: HeldCopies | null,
+  copies: CopyDir,
   table: string,
   layout: Layout<R>,
   slackMs: number,
@@ -311,10 +345,6 @@ async function readHeld<R, O>(
     }
     return { rows: changed.rows, through: changed.through };
   };
-  if (copies === null) {
-    const all = await ask(null);
-    return [...all.rows].sort(layout.order).map(out);
-  }
   return copies.serial(table, async () => {
     let handle: FileHandle | null = null;
     try {
@@ -339,30 +369,4 @@ async function readHeld<R, O>(
       await handle?.close();
     }
   });
-}
-
-/** `list()` for one aggregate table: rows in id order, each mapped by `out` as it streams. */
-export function heldAggregateList<T>(
-  table: string,
-  changedSince: (since: string | null) => Promise<ChangedRows<T>>,
-  copies: HeldCopies | null,
-  slackMs: number = INCREMENTAL_READS_SLACK_MS,
-): <O>(out: (row: Persisted<T>) => O) => Promise<O[]> {
-  const layout = aggregateLayout<T>();
-  return out => withCallerSite(() => readHeld(copies, table, layout, slackMs, changedSince, out));
-}
-
-/** `readAll()` for one log table: records in key then position order. */
-export function heldLogReadAll<T>(
-  table: string,
-  changedSince: (since: string | null) => Promise<ChangedRecords<T>>,
-  copies: HeldCopies | null,
-  slackMs: number = INCREMENTAL_READS_SLACK_MS,
-): () => Promise<T[]> {
-  const layout = logLayout<T>();
-  const fetch = async (since: string | null) => {
-    const changed = await changedSince(since);
-    return { rows: changed.records, through: changed.through };
-  };
-  return () => withCallerSite(() => readHeld(copies, table, layout, slackMs, fetch, entry => entry.record));
 }

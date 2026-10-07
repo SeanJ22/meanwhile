@@ -171,8 +171,9 @@ test("each call class takes its own bound: a large document row is DOCUMENT, a p
       [() => budgetAggregate.readNarrowed("shared-budget-ledger", {}), "cp_budget.readNarrowed", "POINT", TINY.POINT],
       [() => repos.researchState.read("level-1"), "cp_research_state.read", "DOCUMENT", TINY.DOCUMENT],
       [() => repos.fieldManual.read("live"), "cp_field_manual.read", "DOCUMENT", TINY.DOCUMENT],
-      [() => repos.costs.readAll(), "cp_log_costs.readAll", "PAGE", TINY.PAGE],
-      [() => repos.occurrences.list(), "cp_occurrences.list", "PAGE", TINY.PAGE],
+      [() => repos.costs.readAll(), "cp_log_costs.readChangedSince:clock", "POINT", TINY.POINT],
+      [() => repos.costs.readSince("2026-09-22T00:00:00.000Z"), "cp_log_costs.readSince", "PAGE", TINY.PAGE],
+      [() => repos.occurrences.list(), "cp_occurrences.listChangedSince:clock", "POINT", TINY.POINT],
       [() => repos.ownerDigests.readWhere("owner-digest", ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"), "cp_log_owner_digests.readWhere", "PAGE", TINY.PAGE],
       [() => repos.ownerDigests.readRecentWhere("owner-digest", ["runtimeOutcome", "kind"], "ROUTINE_CIVIC_DATA_SUPERVISOR", 288, { digestId: true }), "cp_log_owner_digests.readRecentWhere", "PAGE", TINY.PAGE],
       [() => repos.ownerDigests.append("owner-digest", "id", { x: 1 } as never, "2026-09-23T00:00:00.000Z"), "cp_log_owner_digests.append:probe", "DOCUMENT", TINY.DOCUMENT],
@@ -336,7 +337,7 @@ test("an answered call is returned untouched, and every timeout is told to the o
   await withHungFetch(true, async () => {
     const repos = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
     await assert.rejects(repos.debts.list());
-    assert.deepEqual(seen, ["cp_debts.list"]);
+    assert.deepEqual(seen, ["cp_debts.listChangedSince:clock"]);
   });
   stop();
 });

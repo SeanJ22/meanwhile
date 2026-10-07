@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
 import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { databaseTransferFetch } from "../lib/db/transfer.ts";
 import { boundedQuery } from "../lib/control-plane/repository/request-bounds.ts";
 import { pathToFileURL } from "node:url";
 import {
@@ -45,6 +46,36 @@ test("a real control-plane read counts its response bytes under the operation an
     neonConfig.fetchFunction = saved.fetch;
     for (const key of Object.keys(process.env)) if (!(key in saved.env)) delete process.env[key];
     Object.assign(process.env, saved.env);
+  }
+});
+
+test("a whole-table read answered from its held copy still counts its bytes under the code that asked", async () => {
+  const saved = { fetch: neonConfig.fetchFunction, env: { ...process.env } };
+  const dir = mkdtempSync(join(tmpdir(), "held-bytes-"));
+  Object.assign(process.env, { WTP_CONTROL_PLANE_READS_DIR: dir,
+    WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@ep-held-bytes-test.us-east-2.aws.neon.tech/neondb" });
+  const answer = (fields: string[], rows: unknown[][]) => JSON.stringify({ command: "SELECT", rowCount: rows.length, rowAsArray: true,
+    fields: fields.map(name => ({ name, dataTypeID: 25 })), rows });
+  // The counter wraps the driver's fetch once per process; an earlier test restored the bare one.
+  neonConfig.fetchFunction = databaseTransferFetch(async (_url, init) => {
+    const body = JSON.parse(String(init?.body));
+    return new Response(/now\(\) AS read_at/.test(body.query) ? answer(["read_at"], [["2026-10-07T00:00:00.000Z"]])
+      : answer(["id", "revision", "updated_at", "value"], [["door-a", "1", "2026-10-02T00:00:00.000Z", "{\"status\":\"OPEN\"}"]]));
+  }, row => { countNeonBytes(row.database, row.responseBytes); });
+  try {
+    const repos = await createPgRepositories(process.env.WTP_CONTROL_PLANE_DATABASE_URL!, undefined, { skipBootstrap: true });
+    for (let i = 0; i < 2; i++) assert.equal((await repos.doors.list()).length, 1);
+    assert.ok(readdirSync(dir).length === 1, "the copy was kept on the runner's disk");
+    const counted = callerBytes("cp_doors.");
+    assert.deepEqual(counted.map(([caller]) => caller.replace(/:\d+$/, "")).sort(), [
+      "cp_doors.listChangedSince ← tests/neon-bytes-by-caller.test.ts",
+      "cp_doors.listChangedSince:clock ← tests/neon-bytes-by-caller.test.ts",
+    ]);
+  } finally {
+    neonConfig.fetchFunction = saved.fetch;
+    for (const key of Object.keys(process.env)) if (!(key in saved.env)) delete process.env[key];
+    Object.assign(process.env, saved.env);
+    rmSync(dir, { recursive: true, force: true });
   }
 });
 

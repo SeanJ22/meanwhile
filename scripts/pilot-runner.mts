@@ -41,6 +41,7 @@ import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { CONTROL_PLANE_READS_DIR_ENV } from "../lib/control-plane/repository/incremental-reads.ts";
 import {
   assertDurableRepositories,
   type ControlPlaneRepositories,
@@ -164,6 +165,8 @@ const ROOT = process.cwd();
    by calling code, rounds, facts) as report lines; this parent alone keeps them here, with its own, and sums the hour. */
 const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
 process.env[VITAL_SIGNS_REPORT_ENV] = "1";
+/* Every runner process answers its whole-table control-plane reads from the same held copies (incremental-reads.ts). */
+process.env[CONTROL_PLANE_READS_DIR_ENV] = join(ROOT, ".runtime", "control-plane", "reads");
 keepNeonBytesInProcess();
 receiveChildVitalSigns(part => { keepNeonBytesPart(VITAL_SIGNS_DIR, part); });
 /** This process's own hour counts, kept beside its children's. */

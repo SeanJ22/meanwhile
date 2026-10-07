@@ -5,7 +5,7 @@ worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01EJWrnyFbffUajJtnCW6EWs-cleanup2
 lock: river-cleanup2-session_01EJWrnyFbffUajJtnCW6EWs
-heartbeat: 2026-10-07T04:36:59Z
+heartbeat: 2026-10-07T04:47:02Z
 
 ## CLEANUP RELEASE — read first (Sean's instruction, Oct 6 evening; session_01EJWrnyFbffUajJtnCW6EWs)
 

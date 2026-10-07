@@ -1,34 +1,69 @@
 # River status
 
-build_state: CLEANUP RELEASE (Sean, Oct 6 evening) — baseline started, BLOCKED on credentials and a local-database decision; nothing deleted yet. river = d89746b; main = c814d4c (release 12); runner stopped
+build_state: CLEANUP RELEASE built and tested; release 13 NOT yet promoted (permission refused to push river and release/13; waiting on Sean). river = d89746b; main = c814d4c (release 12); tested head d63d6e5 on stream/salvage-cleanup-release; runner stopped
 worker: river
-provider: Claude (this run: Opus 5.5 per session; scheduled resume)
+provider: Claude (scheduled resume)
 run_id: session_01EJWrnyFbffUajJtnCW6EWs-cleanup2
 lock: river-cleanup2-session_01EJWrnyFbffUajJtnCW6EWs
 heartbeat: 2026-10-07T06:50:14Z
 
-## CLEANUP RELEASE — read first (Sean's instruction, Oct 6 evening; session_01EJWrnyFbffUajJtnCW6EWs)
+## RELEASE 13 — the cleanup release (read first)
 
-Sean's instruction, in short: work from the repo inventory on board/briefs (inventory/meanwhile-repo-inventory-2026-10-06.csv, one row per file on main c814d4c; do not re-decide it; apply the same rules to river's later files).
-1. Baseline in our own environment: tests, production build, reader pages, Ask and the API for ten random places, every Admin screen via `pnpm admin:walk` with a throwaway local session key (never Sean's Google account), one full runner cycle with --staging against a local database listing every job it starts. Server runner stays off. Missing credential: stop and name it.
-2. Delete every DELETE row timed "cleanup release", outright (no archive, tombstone, history).
-3. Fix everything that used them: FIX rows naming a missing file; every line of the references file; River's search (cleanup/river-search-bare-names-2026-10-06.csv); Sean's second list of built-up paths, bare names and package.json scripts (NOT RECEIVED; re-requested); keep searching past it; rows in both databases.
-4. Strip ruling citations, "(Sean, date)" notes and pilot-ZIP examples from comments; rewrite CLAUDE.md, AGENTS.md and README.md to point only to docs/rulings.md and the system guide. Every kept file read line by line; comments cut to what the code can't say; behavior unchanged.
-5. Baseline again; explain every difference.
-6. "with its replacement" rows untouched this release.
-Then rewrite lane briefs from the inventory (order: what stops free acquisition, then groups A–N, then the rest; each move one release: copy, switch, prove live, delete old; portraits and large reference files to wtp-assets behind the CDN, never Neon; assign line keeper, per-state and national queues, auditor flags, state profiles, "List on search engines" switch). Briefs point only to rulings.md and the inventory. rulings.md never goes in the repo. Fold only READY work that survives the inventory; return the rest. Deletions and fixes ship to main as ONE release. Give Sean the runner restart steps; for live Admin open admin.meanwhileusa.com and stop (Sean signs in).
+**Release number: 13** (branch `release/13`, not created yet). The tested commit is **d63d6e5** on `stream/salvage-cleanup-release`, a fast-forward of river d89746b.
 
-Done:
-- Inventory on board/briefs (41472b1e7); matches main c814d4c exactly: 7,601 files = 3,112 DELETE cleanup release, 101 DELETE with replacement, 2,417 FIX, 1,971 KEEP. river adds 6 files since.
-- Baseline gates on river d89746b: 12/12, 9,944 tests (9,933 pass, 0 fail, 11 skipped), production build PASS. cleanup/baseline/.
-- River's bare-name search: 1,303 lines in 289 kept files beyond the references file.
+**Blocked on one thing.** This session's permission check refused the push that fast-forwards `river` to d63d6e5 and creates `release/13`, twice. Nothing reached river or main. Sean, choose one:
+- allow that push in this session; or
+- run it yourself: `git push origin d63d6e515:river && git push origin d63d6e515:refs/heads/release/13`, then open release/13 → main.
 
-BLOCKED (asked Sean):
-- Missing credentials: ANTHROPIC_API_KEY; CONGRESS_API_KEY, FEC_API_KEY, CENSUS_API_KEY, PLURAL_API_KEY, LEGISCAN_API_KEY, LDA_API_KEY, DATA_GOV_API_KEY, SOCRATA_APP_TOKEN, SAM_GOV_API_KEY, GOOGLE_CIVIC_API_KEY; BRAVE_SEARCH_API_KEY, EXA_API_KEY; NEXT_PUBLIC_MAPTILER_KEY.
-- Decision: copy production reader (we-the-people) and control-plane DBs once, read-only, into a local Postgres (about 3.3 GB read once), or use a staging DB Sean names.
-- WARNING: this environment's DATABASE_URL is production we-the-people as neondb_owner. Never run anything against it.
+The PR text is ready in the session; merge once its CI is green.
 
-Next session: when credentials exist and the DB question is answered, finish the baseline, then delete and fix in a worktree off river (`git reset --hard` is refused by the protected-files guard; use worktrees).
+**Runner restart steps (Sean runs these after release 13 is merged and Netlify has deployed it; nothing here touches the runner until then):**
+1. From Windows PowerShell: `ssh.exe -t -i "$env:USERPROFILE\.ssh\wtp-deploy" root@146.190.74.145`
+2. Update the code to main:
+   ```sh
+   cd /opt/meanwhile
+   runuser -u meanwhile -- git fetch origin main
+   runuser -u meanwhile -- git switch --detach FETCH_HEAD
+   runuser -u meanwhile -- git log -1 --oneline        # expect the release 13 merge
+   runuser -u meanwhile -- pnpm install --frozen-lockfile
+   ```
+3. Start it, and keep it on across reboots:
+   ```sh
+   systemctl enable --now meanwhile-runner.service
+   systemctl is-active meanwhile-runner.service       # expect: active
+   journalctl -u meanwhile-runner.service -n 60 --no-pager
+   ```
+   Expect `pilot-runner · control plane postgres` and `cycle 1 started`, then new cycle numbers. If it restarts over and over or reports a refusal, run `systemctl stop meanwhile-runner.service` and send River the error lines without secrets.
+4. In `/etc/meanwhile/runner.env`, no setting needs to change for this release.
+5. Expected differences from before, all called for by the inventory:
+   - no Drive mirror line;
+   - no tracker-intake job;
+   - Arizona's modelled local campaign-finance records are gone.
+
+**What ships in release 13:**
+- **Deleted (3,134 files):**
+  - the inventory's 3,112 DELETE rows timed "cleanup release";
+  - `scripts/demo-sweep.mts` and its references (tester data is kept);
+  - 21 test files and helpers that only exercised deleted code.
+- **Fixed every use of them:** imports, paths, bare names, `package.json` (255 scripts), config and CI.
+- **Comments cut** in every kept code file, with code unchanged (checked file by file with a comment-free printer diff).
+- **Guides:** `CLAUDE.md`, `AGENTS.md` and `README.md` point only to `docs/rulings.md` and the system guide.
+- **Open States ban removed.**
+- **Folded:** registry READY a1aad625b (DB-10, DB-11, DB-21).
+- **Returned:**
+  - meetings DB-29: adds a file nothing calls (returns/meetings.md);
+  - admin 734ee9633: builds on deleted files (returns/admin.md).
+
+**After-checks against the baseline (cleanup/baseline/), on the same local copy of production:**
+- Reader: 10 of 10 places identical.
+- Admin: 12 of 12 screens identical apart from timestamps.
+- Ask: 30 of 30 identical.
+- Runner cycle: only the three differences listed in the restart steps.
+- Gates on a fresh checkout with no DATABASE_URL: 7,673 tests, 0 failed; lint, tsc, build and standalone build pass. `db:gate` needs CI's read-only secret; run with that read-only URL, it HOLDS (35 of 35 migrations applied).
+
+Lock: River keeps the lock and its heartbeat so river stays at d89746b and the fast-forward stays valid.
+
+Briefs: board/briefs f78f81401 has 2,206 ownership rows; the rows for files this release removed are gone.
 
 ## This run (session_01VH6HDTQ3GQCWMZNKtTULak, claimed the free lock Oct 6, 3:57 PM EDT)
 

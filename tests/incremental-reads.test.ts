@@ -19,7 +19,7 @@ import {
   openHeldCopies,
   type HeldCopies,
 } from "../lib/control-plane/repository/incremental-reads.ts";
-import { projectAggregate, type AggregateRepository, type AppendOnlyRepository, type ChangedRecords, type ChangedRows, type Persisted } from "../lib/control-plane/repository/types.ts";
+import { projectAggregate, type AggregateRepository, type AppendOnlyRepository, type ChangedRecords, type ChangedRows, type HeldSlots, type Persisted } from "../lib/control-plane/repository/types.ts";
 import {
   APPEND_ONLY_LOGS,
   AGGREGATE_KINDS,
@@ -49,8 +49,8 @@ const heldLogReadAll = <T>(table: string, changedSince: (since: string | null) =
 /** Counts the rows each changed-since read hands back. */
 function counted<T>(repo: AggregateRepository<T>) {
   const seen = { calls: 0, rows: 0, since: [] as (string | null)[] };
-  const changedSince = async (since: string | null) => {
-    const out = await repo.listChangedSince!(since);
+  const changedSince = async (since: string | null, held?: HeldSlots) => {
+    const out = await repo.listChangedSince!(since, held);
     seen.calls += 1; seen.rows += out.rows.length; seen.since.push(since);
     return out;
   };
@@ -59,8 +59,8 @@ function counted<T>(repo: AggregateRepository<T>) {
 
 function countedLog<T>(repo: AppendOnlyRepository<T>) {
   const seen = { calls: 0, records: 0 };
-  const changedSince = async (since: string | null) => {
-    const out = await repo.readChangedSince!(since);
+  const changedSince = async (since: string | null, held?: HeldSlots) => {
+    const out = await repo.readChangedSince!(since, held);
     seen.calls += 1; seen.records += out.records.length;
     return out;
   };
@@ -360,6 +360,54 @@ test("Postgres: a recent-where read on the runner holds the query's newest recor
   seen.length = 0;
   await pgAppendOnlyRepository<unknown>(sql, "owner_digests").readRecentWhere("digest", ["kind"], "S", 3, { n: true });
   assert.ok(seen.every((call) => !/changed_at >=/.test(call.text)), "a process with no held copies asks the database");
+});
+
+test("(i) rows stamped inside the slack cross the wire once: later reads leave out the slots the copy already took", async () => {
+  const dir = await temporaryDir();
+  const base = createMemoryRepositories();
+  for (let i = 0; i < 20; i++) await base.workItems.put(`wi-${String(i).padStart(2, "0")}`, item(`wi-${i}`, "first"), NOW);
+  const spy = counted(base.workItems);
+  const list = () => heldAggregateList("cp_work_items", spy.changedSince, processCopies(dir))(row => row);
+  assert.deepEqual(await list(), await base.workItems.list());
+  spy.seen.rows = 0;
+  assert.deepEqual(await list(), await base.workItems.list());
+  assert.equal(spy.seen.rows, 20, "the first read after a whole read asks for its slack once");
+  spy.seen.rows = 0;
+  for (let i = 0; i < 3; i++) assert.deepEqual(await list(), await base.workItems.list());
+  assert.equal(spy.seen.rows, 0, "every row in the slack is already held at its revision");
+  const held = (await base.workItems.read("wi-07"))!;
+  await base.workItems.compareAndSet("wi-07", held.revision, item("wi-7", "second"), NOW);
+  await base.workItems.put("wi-99", item("wi-99", "new"), NOW);
+  assert.deepEqual(await list(), await base.workItems.list());
+  assert.equal(spy.seen.rows, 2, "a row that changed again and a new row come back, nothing else");
+
+  const logs = createMemoryRepositories();
+  for (let i = 0; i < 5; i++) await logs.artifacts.append("wi-a", `art-${i}`, artifact(`art-${i}`, "wi-a"), NOW);
+  const logSpy = countedLog(logs.artifacts);
+  const readAll = () => heldLogReadAll("cp_log_artifacts", logSpy.changedSince, processCopies(dir))();
+  await readAll();
+  await readAll();
+  logSpy.seen.records = 0;
+  await logs.artifacts.append("wi-a", "art-5", artifact("art-5", "wi-a"), NOW);
+  assert.deepEqual(await readAll(), await logs.artifacts.readAll());
+  assert.equal(logSpy.seen.records, 1, "only the appended record crosses the wire");
+});
+
+test("Postgres: a changed-since read names the held slots, and the database leaves them out", async () => {
+  const seen: { text: string; params: readonly unknown[] }[] = [];
+  const sql: Sql = { query: async (text, params = []) => {
+    seen.push({ text, params });
+    return text.includes("SELECT now() AS read_at") ? [{ read_at: NOW }] : [];
+  } };
+  const aggregate = pgAggregateRepository<unknown>(sql, "WorkItem", "cp_work_items");
+  await aggregate.listChangedSince!("2026-10-06T11:58:00.000Z", [["wi-1", 3], ["wi-2", 1]]);
+  assert.match(seen[1]!.text, /WHERE changed_at >= \$1::timestamptz AND NOT EXISTS \(SELECT 1 FROM unnest\(\$2::text\[\], \$3::bigint\[\]\) AS held\(slot, version\) WHERE held\.slot = id AND held\.version = revision\)/);
+  assert.deepEqual(seen[1]!.params, ["2026-10-06T11:58:00.000Z", ["wi-1", "wi-2"], [3, 1]]);
+  seen.length = 0;
+  const log = pgAppendOnlyRepository<unknown>(sql, "artifacts");
+  await log.readChangedSince!("2026-10-06T11:58:00.000Z", [["wi-a", 4]]);
+  assert.match(seen[1]!.text, /WHERE held\.slot = log_key AND held\.version = position\)/);
+  assert.deepEqual(seen[1]!.params, ["2026-10-06T11:58:00.000Z", ["wi-a"], [4]]);
 });
 
 test("Persisted rows survive the copy exactly", async () => {

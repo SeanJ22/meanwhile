@@ -46,6 +46,7 @@ import {
   ConcurrentModification,
   RepositoryLockHeld,
   UnknownAggregate,
+  heldSlotKeys,
   jsonTextAtPath,
   projectAggregate,
   projectRecord,
@@ -57,6 +58,7 @@ import {
   type ArtifactRecord,
   type ControlPlaneRepositories,
   type DispositionCommit,
+  type HeldSlots,
   type LockManager,
   type Persisted,
   type PutOutcome,
@@ -152,10 +154,12 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
 
-    listChangedSince: async (since: string | null) => {
+    listChangedSince: async (since: string | null, held?: HeldSlots) => {
       const through = changeIso(changeClock.now());
       const from = since === null ? null : Date.parse(since);
-      return { through, rows: (await list()).filter((row) => from === null || (changedAt.get(row.id) ?? 0) >= from) };
+      const skip = heldSlotKeys(held);
+      return { through, rows: (await list()).filter((row) => (from === null || (changedAt.get(row.id) ?? 0) >= from) &&
+        !skip.has(`${row.id}\n${row.revision}`)) };
     },
   };
 }
@@ -261,15 +265,16 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
 
     keys: async (): Promise<readonly string[]> => [...partitions.keys()].sort(),
 
-    readChangedSince: async (since: string | null) => {
+    readChangedSince: async (since: string | null, held?: HeldSlots) => {
       const through = changeIso(changeClock.now());
       const from = since === null ? null : Date.parse(since);
+      const skip = heldSlotKeys(held);
       return {
         through,
         records: [...partitions.entries()]
           .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
           .flatMap(([key, entries]) => entries.flatMap((entry, position) =>
-            from !== null && entry.changedAt < from ? []
+            (from !== null && entry.changedAt < from) || skip.has(`${key}\n${position}`) ? []
               : [{ key, recordId: entry.recordId, position, record: jsonCopy(entry.record) }])),
       };
     },

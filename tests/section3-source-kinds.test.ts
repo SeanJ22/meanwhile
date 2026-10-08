@@ -2,8 +2,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { section3Page, section3Record, type Section3Page } from "../lib/control-plane/promotion/section3.ts";
 import { DEFAULT_SOURCE_POLICY, SOURCE_KINDS, SOURCE_KINDS_SETTING } from "../lib/control-plane/promotion/source-kinds.ts";
-import { publicationSourcePolicy } from "../lib/control-plane/promotion/source-settings.ts";
-import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { publicationSourcePolicy, readPublicationSourcePolicy } from "../lib/control-plane/promotion/source-settings.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { withSetting, settingUndo } from "../lib/control-plane/settings.ts";
 const NOW = "2026-10-05T12:00:00.000Z";
 const source = (url: string, text = "<p>Alice Adams Clerk alice@example.test</p>"): Section3Page => ({ url, text, retrievedAt: NOW });
@@ -55,4 +56,18 @@ test("CP-02: all kinds start enabled; a logged setting disables publication but 
   assert.equal(verdict.kind, "REFERENCE");
   assert.match(verdict.reason!, /SOURCE_KIND_DISABLED/);
   assert.deepEqual(settingUndo(configured, "disable-reference")?.value, DEFAULT_SOURCE_POLICY.enabled);
+});
+
+test("CP-02: workers read the policy from the Admin settings alone, the same policy the whole config gives", async () => {
+  const repos = createMemoryRepositories();
+  assert.deepEqual(await readPublicationSourcePolicy(repos), publicationSourcePolicy(null), "no config reads as the defaults");
+  const configured = withSetting(defaultAdminConfig(), { id: "disable-reference", key: SOURCE_KINDS_SETTING,
+    after: { ...DEFAULT_SOURCE_POLICY.enabled, REFERENCE: false }, at: NOW, why: "source setting" });
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, configured, NOW);
+  let whole = 0;
+  const read = repos.adminConfig.read.bind(repos.adminConfig);
+  repos.adminConfig.read = async id => { whole += 1; return read(id); };
+  assert.deepEqual(await readPublicationSourcePolicy(repos), publicationSourcePolicy(configured));
+  assert.equal((await readPublicationSourcePolicy(repos)).enabled.REFERENCE, false);
+  assert.equal(whole, 0, "the whole config is never read for it");
 });

@@ -1,6 +1,6 @@
 import { buildBoxFindings } from "./scout-extraction.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../scheduler/research-policy.ts";
-import { publicationSourcePolicy } from "../promotion/source-settings.ts";
+import { readPublicationSourcePolicy } from "../promotion/source-settings.ts";
 import { backfillBox, boxIndexEnabled, indexReportedFinding, indexScoutFindings } from "../box.ts";
 import { MISSION_BRIEF_LINE_CAP, missionBriefLines, SCOUT_BRIEF_LINE_BUDGET, type MissionBlank } from "./mission-brief.ts";
 import { missionPartOfPlan } from "../expansion/mission-parts.ts";
@@ -125,7 +125,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         artifacts: new Map(allArtifactRows.map(artifact => [artifact.artifactId, artifact])) }, now());
     }
     if (indexFindings && !readIntents([...(await input.repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused) {
-      const sourcePolicy = publicationSourcePolicy((await input.repos.adminConfig.read("current"))?.value ?? null);
+      const sourcePolicy = await readPublicationSourcePolicy(input.repos);
       const built = await buildBoxFindings({ repos: input.repos, items: allWorkRows.map(row => row.value), now, leaseMs: 120_000,
         readCapture: async id => {
           const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);

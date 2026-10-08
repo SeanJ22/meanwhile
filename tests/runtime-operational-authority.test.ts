@@ -74,7 +74,8 @@ test("standing and supervisor outcomes share owner history without conflating th
 
   const latest = await readLatestFreshnessCycleOutcome(repos);
   assert.equal(latest?.outcome.cycleId, "cycle:2");
-  assert.equal(latest?.outcome.state, "FAILED");
+  assert.equal(latest?.digestId, (await repos.ownerDigests.read("owner-digest"))[1].digestId);
+  assert.deepEqual(Object.keys(latest?.outcome ?? {}).sort(), ["cycleId", "incidents", "kind", "registry", "risk"]);
   const history = await repos.ownerDigests.read("owner-digest");
   assert.equal(history.length, 3);
   assert.equal(history[2].runtimeOutcome?.kind, "ROUTINE_CIVIC_DATA_SUPERVISOR");

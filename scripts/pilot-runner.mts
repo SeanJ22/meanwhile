@@ -81,7 +81,9 @@ import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { hostMemoryReading } from "../lib/control-plane/workers/worker-slots.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
-  summarizeNeonBytes, takeNeonBytesHours } from "../lib/db/transfer-by-caller.ts";
+  summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
+import { keepRunnerTransfer } from "../lib/db/transfer.ts";
+import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import { VITAL_COUNTERS, composeVitalSignsRow, formatVitalSignsLine, readHourCosts, writeVitalSignsRow,
   type HourCosts } from "../lib/control-plane/vital-signs.ts";
@@ -169,11 +171,18 @@ process.env[VITAL_SIGNS_REPORT_ENV] = "1";
 /* Every runner process answers its whole-table control-plane reads from the same held copies (incremental-reads.ts). */
 process.env[CONTROL_PLANE_READS_DIR_ENV] = join(ROOT, ".runtime", "control-plane", "reads");
 readFromHeldCopies();
+/* Every runner process reads unchanged civic rows and payload parts from the same disposable copies (civic-read-cache.ts). */
+await startCivicReadCacheHost();
 keepNeonBytesInProcess();
-receiveChildVitalSigns(part => { keepNeonBytesPart(VITAL_SIGNS_DIR, part); });
+/** One process's hour so far: its hour file, and what it added since its last report to the daily transfer rows. */
+function keepHourPart(part: NeonBytesHour): void {
+  keepNeonBytesPart(VITAL_SIGNS_DIR, part);
+  keepRunnerTransfer(part);
+}
+receiveChildVitalSigns(keepHourPart);
 /** This process's own hour counts, kept beside its children's. */
 function keepOwnNeonBytes(nowMs: number): void {
-  for (const part of takeNeonBytesHours(nowMs)) keepNeonBytesPart(VITAL_SIGNS_DIR, part);
+  for (const part of takeNeonBytesHours(nowMs)) keepHourPart(part);
 }
 process.once("exit", () => { keepOwnNeonBytes(Date.now()); });
 // Keep the exact launch path, but do not pass reporting secrets to workers.

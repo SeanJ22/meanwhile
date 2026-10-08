@@ -6,7 +6,8 @@ import { readFileSync } from "node:fs";
 
 import { installDoorRecords } from "../../lib/doors/meeting-doors.ts";
 import { applyDerivedRow, checkDoorDraft, type DoorRecord } from "../../lib/doors/registry.ts";
-import { doorsFromWiringRow } from "../../lib/doors/seed-meetings.ts";
+import { doorsFromWiringRow, seedMeetingDoors } from "../../lib/doors/seed-meetings.ts";
+import { createMemoryRepositories } from "../../lib/control-plane/repository/memory.ts";
 import type { BodySourceWiring } from "../../lib/registry/source-wiring.ts";
 
 const AT = "2026-10-08T12:00:00.000Z";
@@ -26,4 +27,11 @@ export function fixtureDoorRecords(rows: readonly BodySourceWiring[] = FIXTURE_D
 /** Install the fixture doors in this process, as a process installs the registry's. */
 export function installFixtureDoors(rows: readonly BodySourceWiring[] = FIXTURE_DOOR_ROWS): void {
   installDoorRecords(fixtureDoorRecords(rows));
+}
+
+/** In-memory repositories whose door registry holds the fixture doors, as production's registry holds the imported ones. */
+export async function fixtureRepositories(rows: readonly BodySourceWiring[] = FIXTURE_DOOR_ROWS) {
+  const repos = createMemoryRepositories();
+  await seedMeetingDoors({ repo: repos.doors, wiring: rows, derived: [], deriveInputAt: AT, at: AT });
+  return repos;
 }

@@ -676,6 +676,23 @@ export function pgAppendOnlyRepository<T>(
       /* `readWhere` newest first, stopped at `limit`; `limit` bounds the response, so no paging. */
       const jsonPath = jsonPathLiteral(table, path);
       const narrowed = recordProjectionSql(table, projection);
+      if (copies !== null && recordedAtSince === undefined) {
+        /* On the runner the query's newest records are held, and only matches stamped since the copy's clock cross the wire. */
+        return copies.recentWhere(table, JSON.stringify([key, path, value, limit, projection]), limit, async (since) => {
+          const clock = (await run("readRecentWhere:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+          const rows = (await run(
+            "readRecentWhere",
+            "PAGE",
+            `SELECT position, ${narrowed} AS record FROM ${table}
+             WHERE log_key = $1 AND record #>> '${jsonPath}' = $2${since === null ? "" : " AND changed_at >= $4::timestamptz"}
+             ORDER BY position DESC
+             LIMIT $3`,
+            [key, value, Math.max(0, Math.trunc(limit)), ...(since === null ? [] : [since])],
+          )) as Record<string, unknown>[];
+          return { rows: rows.map((r) => ({ position: Number(r.position), record: parseValue<unknown>(r.record, `${table} ${key}`) })),
+            through: new Date(clock[0]?.read_at as string).toISOString() };
+        });
+      }
       const rows = (await run(
         "readRecentWhere",
         "PAGE",

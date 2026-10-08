@@ -841,7 +841,8 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
     env: {
-      ...(pending.task.ownerInvocation || automaticRefreshContract(pending.task.id) ? admittedRuntimeChildEnvironment({
+      // A changed door's publish-now read is its routine partition's own read, so it runs under that routine contract.
+      ...((pending.task.ownerInvocation && pending.task.registeredContractId !== undefined) || automaticRefreshContract(pending.task.id) ? admittedRuntimeChildEnvironment({
         parentEnv: process.env,
         capability: "MANUAL_CONTRACT",
         contract: pending.task.registeredContractId ?? automaticRefreshContract(pending.task.id) ?? pending.task.id,

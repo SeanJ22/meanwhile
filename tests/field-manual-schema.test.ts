@@ -55,9 +55,9 @@ test("where a method works is read per method, never the whole map", async () =>
 test("on the runner a slice is the held copy filtered by the slice rule: a later read moves only changed rows; without a copy it is asked of Postgres", async () => {
   const NOW = "2026-10-08T12:00:00.000Z";
   const entries = [
-    newFieldManualEntry("t", "playbook-scout", { role: "SCOUT", kind: "PLAYBOOK", title: "Scout playbook", summary: "s", outcome: "SUCCEEDED" }),
-    newFieldManualEntry("t", "playbook-parser", { role: "PARSER", kind: "PLAYBOOK", title: "Parser playbook", summary: "s", outcome: "SUCCEEDED" }),
-    newFieldManualEntry("t", "az-lesson", { role: "SCOUT", kind: "LESSON", title: "AZ lesson", summary: "s", outcome: "SUCCEEDED", states: ["az"] }),
+    newFieldManualEntry("t", "playbook-scout", { role: "SCOUT", kind: "PLAYBOOK", title: "Scout playbook", summary: "s", outcome: "YIELDED" }),
+    newFieldManualEntry("t", "playbook-parser", { role: "PARSER", kind: "PLAYBOOK", title: "Parser playbook", summary: "s", outcome: "YIELDED" }),
+    newFieldManualEntry("t", "az-lesson", { role: "SCOUT", kind: "LESSON", title: "AZ lesson", summary: "s", outcome: "YIELDED", states: ["az"] }),
   ];
   const rows = entries.map((value) => ({ id: value.id, revision: 1, updated_at: NOW, value })).sort((a, b) => (a.id < b.id ? -1 : 1));
   const seen: string[] = [];

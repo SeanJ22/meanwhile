@@ -28,6 +28,11 @@ import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
 /** One authoritative lifecycle aggregate in the standing production plane. */
 export const METHOD_CANDIDATE_STORE_ID = "live" as const;
 
+/** The live store with its revision, read as the table's list: on the runner that is its held copy, fetched only when it changed. */
+async function readLiveCandidates(repos: Pick<ControlPlaneRepositories, "methodCandidates">) {
+  return (await repos.methodCandidates.list()).find((row) => row.id === METHOD_CANDIDATE_STORE_ID) ?? null;
+}
+
 export interface ProposedCandidate {
   readonly routeId: string;
   readonly candidateId: string;
@@ -125,7 +130,7 @@ export async function proposeScoutCandidates(input: {
 }): Promise<ProposalReport> {
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const knowledge = await readMethodKnowledge(input.repos);
-    const current = await input.repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
+    const current = await readLiveCandidates(input.repos);
     if (current === null) {
       throw new Error("METHOD_CANDIDATE_STORE_NOT_SEEDED: refusing to treat an absent canonical store as an empty candidate population");
     }
@@ -256,7 +261,7 @@ export async function proposeScoutCandidates(input: {
 
 /** The one canonical store; absence is not an empty candidate population. */
 export async function readMethodCandidateStore(repos: ControlPlaneRepositories): Promise<CandidateStore> {
-  const current = await repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
+  const current = await readLiveCandidates(repos);
   if (current === null) throw new Error("METHOD_CANDIDATE_STORE_NOT_SEEDED");
   if (current.value.storeVersion !== 1 || !Array.isArray(current.value.candidates)) {
     throw new Error("METHOD_CANDIDATE_STORE_UNREADABLE");

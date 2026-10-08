@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { publishNowLane, publishNowDoorTasks, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
+import { publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { DoorRecord } from "../lib/doors/registry.ts";
@@ -62,6 +62,23 @@ test("BX-12: the executable selects only publication work and never holds the ro
   assert.match(runner, /PUBLISH_NOW \? \[\] : await withNationalPlaceTasks/);
   assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
   assert.match(runner, /!PUBLISH_NOW && ONLY === null \? null : selectedTasks/);
+});
+
+test("a publish-now minute with nothing owed ends quietly with exit 0, before any outcome or count", () => {
+  assert.equal(publishNowHasNothingOwed(true, 0, 0), true);
+  assert.equal(publishNowHasNothingOwed(true, 1, 0), false, "owed work runs");
+  assert.equal(publishNowHasNothingOwed(true, 0, 1), false, "a failure on the way is still reported");
+  assert.equal(publishNowHasNothingOwed(false, 0, 0), false, "the routine pass keeps its floor");
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const quiet = runner.indexOf("if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length)) {");
+  assert.ok(quiet > runner.indexOf("const selectedTasks = "), "decided once the minute's tasks are selected");
+  const exit = runner.slice(quiet, runner.indexOf("\n}\n", quiet));
+  assert.match(exit, /console\.log\("publish-now: nothing owed this minute"\);/);
+  assert.match(exit, /await ROUTINE_DATA_PROCESS_LEASE\.release\(\);[\s\S]*process\.exit\(0\);/);
+  assert.doesNotMatch(exit, /supervisorFailures\.push|ownerDigests\.append|RCD_OPERATIONAL_OUTCOME|floored/);
+  for (const later of ["RCD_OPERATIONAL_OUTCOME=", 'floored(\n  "attempted routine source tasks"']) {
+    assert.ok(runner.indexOf(later) > quiet, `${later.split("(")[0]} comes after the quiet exit`);
+  }
 });
 
 test("the standing runner starts publish-now each minute on its own lane, beside the routine pass", () => {

@@ -12,9 +12,15 @@ let moduleMs = 0;
 const engine = Promise.all([
   import("../../app/api/ask/grounded/route.ts"),
   import("../../lib/registry/server.ts"),
-]).then(([module, registry]) => {
+  // The meeting doors Ask's meetings and agendas are read against, from the published door registry.
+  import("../../lib/doors/meeting-doors.ts").then(async (doors) => {
+    const ready = await doors.ensureMeetingDoors();
+    if (!ready.ready) console.warn(`ASK_MEETING_DOORS_UNREAD: ${ready.reason}`);
+    return doors;
+  }),
+]).then(([module, registry, doors]) => {
   moduleMs = performance.now() - moduleStarted;
-  return { POST: module.POST, prefetchReaderGeography: registry.prefetchReaderGeography };
+  return { POST: module.POST, prefetchReaderGeography: registry.prefetchReaderGeography, ensureMeetingDoors: doors.ensureMeetingDoors };
 });
 
 const groundedAsk = async (request: Request, context: { waitUntil(work: Promise<unknown>): void; server?: { region?: string } }): Promise<Response> => {
@@ -22,7 +28,8 @@ const groundedAsk = async (request: Request, context: { waitUntil(work: Promise<
   const startedAt = Date.now();
   const processAgeMs = Math.round(process.uptime() * 1000);
   const ordinal = ++requests;
-  const { POST, prefetchReaderGeography } = await engine;
+  const { POST, prefetchReaderGeography, ensureMeetingDoors } = await engine;
+  void ensureMeetingDoors();
   // Start the same file reads used by the Reader beside the first request's
   // manifest/network reads, as /api/meetings and representation already do.
   // This is work for this cold invocation, not a timer or a keep-warm request.

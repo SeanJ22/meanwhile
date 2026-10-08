@@ -27,6 +27,7 @@ import { platformFingerprintEntries } from "../lib/control-plane/platform-finger
 import { COVERAGE_AUDITS } from "../lib/registry/coverage-audit.ts";
 import { LEGISTAR_CLIENTS } from "../lib/sources/legistar/client-registry.ts";
 import { INSITE_TENANTS } from "../lib/sources/legistar-insite/tenant-registry.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
@@ -272,6 +273,8 @@ function fromTiers(): FieldManualEntry[] {
 
 async function main(): Promise<void> {
   const now0 = new Date().toISOString();
+  const doors = await ensureMeetingDoors();
+  if (!doors.ready) throw new Error(`the vendor tenants come from the meeting doors, which could not be read: ${doors.reason}`);
   let repos: ControlPlaneRepositories;
   if (target === "control-plane") {
     const url = controlPlaneUrlFromEnv();

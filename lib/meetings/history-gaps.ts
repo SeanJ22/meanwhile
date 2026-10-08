@@ -41,25 +41,18 @@ export function allHistoryGaps(): HistoryGap[] {
   return [...gapsByBodyId().values()];
 }
 
+/** The body's history gap, read on the server from the doors installed there and sent with the body. */
+export function historyGapFor(bodyId: string): HistoryGap | null {
+  return gapsByBodyId().get(bodyId) ?? null;
+}
+
 export function historyGapsFor(
   bodies: readonly Pick<CoveredBody, "bodyId">[],
 ): HistoryGap[] {
-  const out: HistoryGap[] = [];
-  for (const body of bodies) {
-    const gap = gapsByBodyId().get(body.bodyId);
-    if (gap) out.push(gap);
-  }
-  return out;
+  return bodies.flatMap((body) => historyGapFor(body.bodyId) ?? []);
 }
 
 /** The sentence the empty Concluded surface renders, or null when there is nothing honest to add. */
-export function concludedGapNote(
-  askingForConcluded: boolean,
-  bodies: readonly Pick<CoveredBody, "bodyId">[],
-): string | null {
-  return concludedGapNoteFor(askingForConcluded, historyGapsFor(bodies));
-}
-
 export function concludedGapNoteFor(
   askingForConcluded: boolean,
   gaps: readonly HistoryGap[],

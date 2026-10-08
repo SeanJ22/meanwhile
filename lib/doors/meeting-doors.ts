@@ -19,7 +19,7 @@ import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicData
 import { installDoorHosts } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
 import { refreshCuratedBodyStatus } from "../registry/curated-bodies.ts";
-import { installMeetingDoors, type BodySourceWiring } from "../registry/source-wiring.ts";
+import { activeWiring, installMeetingDoors, type BodySourceWiring } from "../registry/source-wiring.ts";
 import { refreshLegistarClients } from "../sources/legistar/client-registry.ts";
 import { refreshInSiteTenants } from "../sources/legistar-insite/tenant-registry.ts";
 import { DOOR_STATUSES, type DoorRecord, type DoorStatus } from "./registry.ts";
@@ -186,8 +186,18 @@ export interface MeetingDoorsInstall {
   readonly outcomes: OutcomePartitionRefresh;
 }
 
-/** Puts these doors where every reader of meeting doors looks: the adapters' rows, the hosts, the partitions, the tenants and the live boards. */
-export function installDoorRecords(doors: readonly DoorRecord[]): MeetingDoorsInstall {
+/** How long a process keeps the doors it installed before it reads the published version again. */
+export const MEETING_DOORS_REFRESH_MS = 5 * 60_000;
+
+let installed: { readonly at: number; readonly versionId: string } | null = null;
+let pending: Promise<MeetingDoorsReady> | null = null;
+
+/**
+ * Puts these doors where every reader of meeting doors looks: the adapters' rows, the hosts, the partitions, the
+ * tenants and the live boards. `from` names what they were read from (the registry, or a published version).
+ */
+export function installDoorRecords(doors: readonly DoorRecord[], from = "the door registry", at = Date.now()): MeetingDoorsInstall {
+  installed = { at, versionId: from };
   const rows: BodySourceWiring[] = wiringRowsFromDoors(doors);
   installMeetingDoors(rows);
   installDoorHosts(meetingDoorHosts(doors));
@@ -199,41 +209,35 @@ export function installDoorRecords(doors: readonly DoorRecord[]): MeetingDoorsIn
   return { rows: rows.length, partitions, outcomes };
 }
 
-/** How long a process keeps the doors it installed before it reads the published version again. */
-export const MEETING_DOORS_REFRESH_MS = 5 * 60_000;
-
-let installed: { readonly at: number; readonly versionId: string } | null = null;
-let pending: Promise<MeetingDoorsReady> | null = null;
-
 export type MeetingDoorsReady =
   | { readonly ready: true; readonly versionId: string; readonly rows: number; readonly skipped: readonly string[] }
   | { readonly ready: false; readonly reason: string };
 
 /**
- * The published doors, installed in this process: read once, then again when older than `MEETING_DOORS_REFRESH_MS`.
- * When the version cannot be read the doors already installed stay; a process that never read them has none.
+ * The published doors, installed in this process. A process that has none waits for the first read. One that has
+ * them answers at once, and once they are older than `MEETING_DOORS_REFRESH_MS` reads the published version again
+ * behind that answer. A version that cannot be read leaves the installed doors in place until the next try.
  */
 export async function ensureMeetingDoors(options: PromotedCivicDataReadOptions & { readonly clock?: () => number } = {}): Promise<MeetingDoorsReady> {
   const now = (options.clock ?? Date.now)();
-  if (installed !== null && now - installed.at < MEETING_DOORS_REFRESH_MS && pending === null) {
-    return { ready: true, versionId: installed.versionId, rows: -1, skipped: [] };
-  }
+  const current = (): MeetingDoorsReady => ({ ready: true, versionId: installed!.versionId, rows: activeWiring().length, skipped: [] });
+  if (installed !== null && now - installed.at < MEETING_DOORS_REFRESH_MS) return current();
   pending ??= (async (): Promise<MeetingDoorsReady> => {
     try {
       const read = await readMeetingDoors({ ...options, bypassCache: true });
-      if (read.kind !== "PROMOTED") {
-        return installed !== null ? { ready: true, versionId: installed.versionId, rows: -1, skipped: [] }
-          : { ready: false, reason: `the published meeting doors could not be read (${read.kind}${"detail" in read ? `: ${read.detail}` : ""})` };
-      }
-      const done = installDoorRecords(read.value.doors.map((door) => asRecord(door, read.metadata.promotedAt ?? new Date(now).toISOString())));
-      installed = { at: now, versionId: read.metadata.versionId ?? "unnamed" };
-      return { ready: true, versionId: read.metadata.versionId ?? "unnamed", rows: done.rows, skipped: done.partitions.skipped };
+      if (read.kind !== "PROMOTED") throw new Error(`${read.kind}${"detail" in read && read.detail ? `: ${read.detail}` : ""}`);
+      const versionId = read.metadata.versionId ?? "unnamed";
+      const done = installDoorRecords(read.value.doors.map((door) => asRecord(door, read.metadata.promotedAt ?? new Date(now).toISOString())), versionId, now);
+      return { ready: true, versionId, rows: done.rows, skipped: done.partitions.skipped };
     } catch (error) {
-      return installed !== null ? { ready: true, versionId: installed.versionId, rows: -1, skipped: [] }
-        : { ready: false, reason: `the published meeting doors could not be read (${error instanceof Error ? error.message : String(error)})` };
+      if (installed !== null) {
+        installed = { ...installed, at: now };
+        return current();
+      }
+      return { ready: false, reason: `the published meeting doors could not be read (${error instanceof Error ? error.message : String(error)})` };
     } finally {
       pending = null;
     }
   })();
-  return pending;
+  return installed !== null ? current() : pending;
 }

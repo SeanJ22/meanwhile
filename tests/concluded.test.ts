@@ -4,7 +4,6 @@ import test from "node:test";
 import { CONCLUDED_LOOKBACK_DAYS } from "../lib/meetings/constants.ts";
 import {
   allHistoryGaps,
-  concludedGapNote,
   concludedGapNoteFor,
   historyGapsFor,
 } from "../lib/meetings/history-gaps.ts";
@@ -123,9 +122,9 @@ test("a body that publishes no history says so, in plain language", () => {
 test("the gap note fires only when the reader asks about the past", () => {
   const cleanBody = [{ bodyId: "ocd-division/country:us/state:az/county:pima#governing" }];
 
-  assert.equal(concludedGapNote(false, cleanBody), null, "not asking, no note");
+  assert.equal(concludedGapNoteFor(false, historyGapsFor(cleanBody)), null, "not asking, no note");
   assert.equal(
-    concludedGapNote(true, cleanBody),
+    concludedGapNoteFor(true, historyGapsFor(cleanBody)),
     null,
     "a body that does publish history gets no excuse made for it",
   );

@@ -213,6 +213,7 @@ import {
 import { knownRecipes, RECIPE_KIND } from "../lib/hunt/meetings-recipes.ts";
 import { runSpreadPass, sentMoneyPlaces, spreadLine } from "../lib/method/spread-pass.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
+import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
@@ -672,6 +673,12 @@ if (!legacyOperationalReference && !azOperationalReference) throw new Error(
   "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: neither the scoped AZ pointer nor the legacy reviewed pointer could be read",
 );
 await preloadCandidateEnrichmentAuthorities();
+
+/* The meeting doors this cycle's meeting work, facts and Ask gaps are read against, straight from the registry. */
+{
+  const doors = await refreshDoorsForPass(repos.doors);
+  console.log(`  meeting doors: ${doors.rows} read from the registry${doors.reason ? ` — ${doors.reason}` : ""}`);
+}
 
 /*
  * One CAS lease on the fixed aggregate id `nightly-window` serializes cycle

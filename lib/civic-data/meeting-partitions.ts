@@ -101,31 +101,44 @@ export function meetingAcquisitionFailureDomain(
   return `meeting-upstream:${host}`;
 }
 
+/** The partition contract one route of one body runs under; a door's own, or a route kind's for the release firewall. */
+export function meetingRoutePartition(
+  meetingSource: string,
+  bodyId: string,
+  door: { readonly wiring: BodySourceWiring | null; readonly ocdId: string | null; readonly acquisitionFailureDomain: string },
+): MeetingPartitionContract {
+  const { readerConsumers, ...policy } = MEETING_PARTITION_POLICY;
+  return {
+    ...policy,
+    id: meetingPartitionId(meetingSource, bodyId),
+    scope: meetingPartitionScope(meetingSource, bodyId),
+    acquisitionAdapter: {
+      authorityMode: "REGISTERED_SOURCE_ROUTES" as const,
+      command: ["scripts/ingest.ts", "composite", "--promote", `--only-partition=${meetingPartitionId(meetingSource, bodyId)}`],
+    },
+    readerProjection: {
+      id: `meetings-partition:${meetingSource}:${bodyId}`,
+      consumers: readerConsumers,
+    },
+    lkgBehavior:
+      `Only ${meetingSource}/${bodyId} may move this pointer. A refusal leaves this partition's prior GOOD version live without delaying any other source/body.`,
+    bootstrapFixturePaths: [],
+    meetingSource,
+    acquisitionFailureDomain: door.acquisitionFailureDomain,
+    bodyId,
+    ocdId: door.ocdId,
+    wiring: door.wiring,
+    derivedFamily: null,
+  };
+}
+
 /** A door that could not be built into work is left out with its reason; the other doors are not held back by it. */
 function buildMeetingPartitions(wirings: readonly BodySourceWiring[], skipped: string[] = []): MeetingPartitionContract[] {
-  const { readerConsumers, ...policy } = MEETING_PARTITION_POLICY;
   const doorPartitions = (wiring: BodySourceWiring): MeetingPartitionContract[] =>
-    meetingSourceNamesForWiring(wiring).map((meetingSource) => ({
-      ...policy,
-      id: meetingPartitionId(meetingSource, wiring.bodyId),
-      scope: meetingPartitionScope(meetingSource, wiring.bodyId),
-      acquisitionAdapter: {
-        authorityMode: "REGISTERED_SOURCE_ROUTES" as const,
-        command: ["scripts/ingest.ts", "composite", "--promote", `--only-partition=${meetingPartitionId(meetingSource, wiring.bodyId)}`],
-      },
-      readerProjection: {
-        id: `meetings-partition:${meetingSource}:${wiring.bodyId}`,
-        consumers: readerConsumers,
-      },
-      lkgBehavior:
-        `Only ${meetingSource}/${wiring.bodyId} may move this pointer. A refusal leaves this partition's prior GOOD version live without delaying any other source/body.`,
-      bootstrapFixturePaths: [],
-      meetingSource,
-      acquisitionFailureDomain: meetingAcquisitionFailureDomain(meetingSource, wiring),
-      bodyId: wiring.bodyId,
-      ocdId: wiring.ocdId,
+    meetingSourceNamesForWiring(wiring).map((meetingSource) => meetingRoutePartition(meetingSource, wiring.bodyId, {
       wiring,
-      derivedFamily: null,
+      ocdId: wiring.ocdId,
+      acquisitionFailureDomain: meetingAcquisitionFailureDomain(meetingSource, wiring),
     }));
   const partitions: MeetingPartitionContract[] = [];
   const ids = new Set<string>();
@@ -263,6 +276,13 @@ export interface MeetingPartitionRefresh {
   readonly skipped: readonly string[];
 }
 
+const refreshListeners: (() => void)[] = [];
+
+/** Lists built from the meeting partitions (task lists, scope maps) register here and are rebuilt after every refresh. */
+export function onMeetingPartitionsRefreshed(listener: () => void): void {
+  refreshListeners.push(listener);
+}
+
 /** All lists are built first and swapped in only if every check passes; otherwise the last good lists stay. */
 export function refreshMeetingPartitions(wirings: readonly BodySourceWiring[] = activeWiring()): MeetingPartitionRefresh {
   const skipped: string[] = [];
@@ -274,6 +294,7 @@ export function refreshMeetingPartitions(wirings: readonly BodySourceWiring[] = 
     HELD_MEETING_PARTITIONS.splice(0, HELD_MEETING_PARTITIONS.length, ...held);
     SITTING_WINDOW_SOURCES.clear();
     for (const [id, ids] of sources) SITTING_WINDOW_SOURCES.set(id, ids);
+    for (const listener of refreshListeners) listener();
     return { refreshed: true, partitions: contracts.length, reason: null, skipped };
   } catch (error) {
     return {

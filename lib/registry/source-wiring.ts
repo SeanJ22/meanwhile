@@ -33,7 +33,7 @@ export interface BodySourceWiring {
   noticeUrl?: string;
   /**
    * Whether this row's route serves concluded meetings. Absent means yes. Set to `false` only when the
-   * published route genuinely carries no past sitting. Not a coverage status. Read by `concludedGapNote()`
+   * published route genuinely carries no past sitting. Not a coverage status. Sent with the body (`historyGapFor()`)
    * so the Concluded filter can say why a jurisdiction is empty.
    */
   publishesHistory?: false;
@@ -41,6 +41,32 @@ export interface BodySourceWiring {
   historyGapReason?: string;
   /** When the URLs in config were last confirmed working. */
   verifiedAt: string;
+}
+
+/** The one route each single-route agenda-source type runs. LEGISTAR names its routes per row (`LEGISTAR_ROUTES`). */
+const MEETING_ROUTE_BY_TYPE: Partial<Record<AgendaSourceType, string>> = {
+  CIVICPLUS: "civicplus",
+  ONBASE: "onbase",
+  APPTEGY: "apptegy",
+  DILIGENT: "diligent",
+  CIVICWEB: "diligent",
+  CIVICCLERK: "civicclerk",
+  CLERKSBOARDS: "clerksboards",
+  BOARDBOOK: "boardbook",
+  IQM2: "iqm2",
+  REVIZE: "revize",
+  SCHEDULEPAGE: "schedulepage",
+  ICAL: "ical",
+  PIMA_EDU: "pima-edu",
+  OFFICIAL_PAGE_EVENTS: "official-page-events",
+  DOCUMENT_LISTING: "document-listing",
+  SUITEONE: "suiteone",
+};
+const LEGISTAR_ROUTES = ["legistar", "legistar-insite"] as const;
+
+/** Every built-in adapter route a meeting door can run, once each. */
+export function meetingRouteKinds(): readonly string[] {
+  return [...new Set([...LEGISTAR_ROUTES, ...Object.values(MEETING_ROUTE_BY_TYPE)])];
 }
 
 /**
@@ -55,30 +81,12 @@ export interface BodySourceWiring {
 export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly string[] {
   if (row.agendaSourceType === "LEGISTAR") {
     const routes = row.config.sourceRoutes?.split(",").map((route) => route.trim()).filter(Boolean) ?? [];
-    if (routes.length === 0 || routes.some((route) => route !== "legistar" && route !== "legistar-insite")) {
+    if (routes.length === 0 || routes.some((route) => !(LEGISTAR_ROUTES as readonly string[]).includes(route))) {
       throw new Error(`MEETING_SOURCE_ROUTES_INVALID:${row.bodyId}`);
     }
     return [...new Set(routes)];
   }
-  const routeByType: Partial<Record<AgendaSourceType, string>> = {
-    CIVICPLUS: "civicplus",
-    ONBASE: "onbase",
-    APPTEGY: "apptegy",
-    DILIGENT: "diligent",
-    CIVICWEB: "diligent",
-    CIVICCLERK: "civicclerk",
-    CLERKSBOARDS: "clerksboards",
-    BOARDBOOK: "boardbook",
-    IQM2: "iqm2",
-    REVIZE: "revize",
-    SCHEDULEPAGE: "schedulepage",
-    ICAL: "ical",
-    PIMA_EDU: "pima-edu",
-    OFFICIAL_PAGE_EVENTS: "official-page-events",
-    DOCUMENT_LISTING: "document-listing",
-    SUITEONE: "suiteone",
-  };
-  const route = routeByType[row.agendaSourceType];
+  const route = MEETING_ROUTE_BY_TYPE[row.agendaSourceType];
   if (route) {
     const retired = retiredMeetingRoute(route, row.bodyId);
     if (retired) {

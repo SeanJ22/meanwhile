@@ -4,8 +4,8 @@ build_state: RELEASE 15 MERGED to main (4385853, PR #722: Haiku 5.5 everywhere; 
 worker: river
 provider: Claude (scheduled resume)
 run_id: session_01D8EZAejHqhy9XbGCw6G6bL-r15
-lock: session_01D8EZAejHqhy9XbGCw6G6bL
-heartbeat: 2026-10-08T18:15:33Z
+lock: none
+heartbeat: 2026-10-08T19:52:32Z
 
 ## RELEASE 15 — Haiku 5.5: MERGED (Oct 7, 2026)
 

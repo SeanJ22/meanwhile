@@ -1,0 +1,16 @@
+{
+  "n": 19,
+  "branch": "release/19",
+  "river_sha": "e845b4b75b6f078a1f86a1dc5752f18eb0ec6df0",
+  "tested_sha": "e845b4b75b6f078a1f86a1dc5752f18eb0ec6df0",
+  "steps": [
+    "CM-01"
+  ],
+  "lanes": [
+    "cycle-memory"
+  ],
+  "integration_from": 126,
+  "integration_count": 127,
+  "pr": null,
+  "at": "2026-10-08T12:33:27Z"
+}
